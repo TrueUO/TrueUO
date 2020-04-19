@@ -15,10 +15,10 @@ namespace Server.SkillHandlers
     {
         public static void Initialize()
         {
-            SkillInfo.Table[(int)SkillName.Imbuing].Callback = new SkillUseCallback(OnUse);
+            SkillInfo.Table[(int)SkillName.Imbuing].Callback = OnUse;
 
-            CommandSystem.Register("GetTotalWeight", AccessLevel.GameMaster, new CommandEventHandler(GetTotalWeight_OnCommand));
-            CommandSystem.Register("GetTotalMods", AccessLevel.GameMaster, new CommandEventHandler(GetTotalMods_OnCommand));
+            CommandSystem.Register("GetTotalWeight", AccessLevel.GameMaster, GetTotalWeight_OnCommand);
+            CommandSystem.Register("GetTotalMods", AccessLevel.GameMaster, GetTotalMods_OnCommand);
         }
 
         private static void OnLogin(LoginEventArgs e)
@@ -946,7 +946,7 @@ namespace Server.SkillHandlers
         [Description("Displays the total mods, ie AOS attributes for the targeted item.")]
         public static void GetTotalMods_OnCommand(CommandEventArgs e)
         {
-            e.Mobile.BeginTarget(12, false, TargetFlags.None, new TargetCallback(GetTotalMods_OnTarget));
+            e.Mobile.BeginTarget(12, false, TargetFlags.None, GetTotalMods_OnTarget);
             e.Mobile.SendMessage("Target the item to get total AOS Attributes.");
         }
 
@@ -1292,7 +1292,7 @@ namespace Server.SkillHandlers
         [Description("Displays the total imbuing weight of the targeted item.")]
         public static void GetTotalWeight_OnCommand(CommandEventArgs e)
         {
-            e.Mobile.BeginTarget(12, false, TargetFlags.None, new TargetCallback(GetTotalWeight_OnTarget));
+            e.Mobile.BeginTarget(12, false, TargetFlags.None, GetTotalWeight_OnTarget);
             e.Mobile.SendMessage("Target the item to get total imbuing weight.");
         }
 
