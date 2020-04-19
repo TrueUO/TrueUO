@@ -186,10 +186,8 @@ namespace Server.SkillHandlers
             if (NonCraftableImbuable(item))
                 return false;
 
-            foreach (CraftSystem system in CraftSystem.Systems)
-            {
-                var crItem = CraftItem.GetCraftItem(item);
-            }
+            if (CraftItem.GetCraftItem(item) != null)
+                return false;
 
             return true;
         }
