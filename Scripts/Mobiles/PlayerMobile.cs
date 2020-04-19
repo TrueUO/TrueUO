@@ -1680,7 +1680,7 @@ namespace Server.Mobiles
         public override void OnSubItemRemoved(Item item)
         {
             if (Engines.UOStore.UltimaStore.HasPendingItem(this))
-                Timer.DelayCall<PlayerMobile>(TimeSpan.FromSeconds(1.5), Engines.UOStore.UltimaStore.CheckPendingItem, this);
+                Timer.DelayCall(TimeSpan.FromSeconds(1.5), Engines.UOStore.UltimaStore.CheckPendingItem, this);
         }
 
         public override void AggressiveAction(Mobile aggressor, bool criminal)
@@ -1879,8 +1879,6 @@ namespace Server.Mobiles
             {
                 if (IsPlayer())
                 {
-                    int str = base.Str;
-
                     return Math.Min(base.Str, StrMaxCap);
                 }
 
@@ -2419,7 +2417,7 @@ namespace Server.Mobiles
             if (item == null || !item.IsChildOf(this))
             {
                 if (target)
-                    BeginTarget(-1, false, TargetFlags.None, new TargetCallback(ToggleItemInsurance_Callback));
+                    BeginTarget(-1, false, TargetFlags.None, ToggleItemInsurance_Callback);
 
                 SendLocalizedMessage(1060871, "", 0x23); // You can only insure items that you have equipped or that are in your backpack
             }
@@ -2431,14 +2429,14 @@ namespace Server.Mobiles
 
                 if (target)
                 {
-                    BeginTarget(-1, false, TargetFlags.None, new TargetCallback(ToggleItemInsurance_Callback));
+                    BeginTarget(-1, false, TargetFlags.None, ToggleItemInsurance_Callback);
                     SendLocalizedMessage(1060868, "", 0x23); // Target the item you wish to toggle insurance status on <ESC> to cancel
                 }
             }
             else if (!CanInsure(item))
             {
                 if (target)
-                    BeginTarget(-1, false, TargetFlags.None, new TargetCallback(ToggleItemInsurance_Callback));
+                    BeginTarget(-1, false, TargetFlags.None, ToggleItemInsurance_Callback);
 
                 SendLocalizedMessage(1060869, "", 0x23); // You cannot insure that
             }
@@ -2466,7 +2464,7 @@ namespace Server.Mobiles
 
                 if (target)
                 {
-                    BeginTarget(-1, false, TargetFlags.None, new TargetCallback(ToggleItemInsurance_Callback));
+                    BeginTarget(-1, false, TargetFlags.None, ToggleItemInsurance_Callback);
                     SendLocalizedMessage(1060868, "", 0x23); // Target the item you wish to toggle insurance status on <ESC> to cancel
                 }
             }
@@ -2900,7 +2898,7 @@ namespace Server.Mobiles
 
             if (house != null && house.IsCoOwner(this))
             {
-                SendGump(new WarningGump(1060635, 30720, 1062006, 32512, 420, 280, new WarningGumpCallback(ClearCoOwners_Callback), house));
+                SendGump(new WarningGump(1060635, 30720, 1062006, 32512, 420, 280, ClearCoOwners_Callback, house));
             }
         }
 
@@ -5919,25 +5917,6 @@ namespace Server.Mobiles
 
         [CommandProperty(AccessLevel.GameMaster)]
         public ChampionTitleInfo ChampionTitles { get { return m_ChampionTitles; } set { } }
-
-        private void ToggleChampionTitleDisplay()
-        {
-            if (!CheckAlive())
-            {
-                return;
-            }
-
-            if (DisplayChampionTitle)
-            {
-                SendLocalizedMessage(1062419, "", 0x23); // You have chosen to hide your monster kill title.
-            }
-            else
-            {
-                SendLocalizedMessage(1062418, "", 0x23); // You have chosen to display your monster kill title.
-            }
-
-            DisplayChampionTitle = !DisplayChampionTitle;
-        }
 
         [PropertyObject]
         public class ChampionTitleInfo
