@@ -408,7 +408,7 @@ namespace Server.Spells
         {
             int span = (((6 * caster.Skills.EvalInt.Fixed) / 50) + 1);
 
-            if (caster.Spell is CurseSpell && Spells.SkillMasteries.ResilienceSpell.UnderEffects(target))
+            if (caster.Spell is CurseSpell && SkillMasteries.ResilienceSpell.UnderEffects(target))
                 span /= 2;
 
             return TimeSpan.FromSeconds(span);
@@ -502,7 +502,7 @@ namespace Server.Spells
                 return false;
             }
 
-            if (Server.Engines.ArenaSystem.PVPArenaSystem.IsFriendly(from, to))
+            if (Engines.ArenaSystem.PVPArenaSystem.IsFriendly(from, to))
             {
                 return false;
             }
@@ -639,7 +639,7 @@ namespace Server.Spells
                     continue;
                 }
 
-                if (id is Mobile && !SpellHelper.ValidIndirectTarget(caster, (Mobile)id))
+                if (id is Mobile && !ValidIndirectTarget(caster, (Mobile)id))
                 {
                     continue;
                 }
@@ -688,7 +688,7 @@ namespace Server.Spells
 
             Point3D p = new Point3D(caster);
 
-            if (SpellHelper.FindValidSpawnLocation(map, ref p, true))
+            if (FindValidSpawnLocation(map, ref p, true))
             {
                 BaseCreature.Summon(creature, summoned, caster, p, sound, duration);
                 return;
@@ -774,7 +774,7 @@ namespace Server.Spells
             new TravelValidator(IsTombOfKings),
             new TravelValidator(IsMazeOfDeath),
             new TravelValidator(IsSAEntrance),
-            new TravelValidator(IsEodon),
+            new TravelValidator(IsEodon)
         };
 
         private static readonly bool[,] m_Rules = new bool[,]
@@ -827,12 +827,12 @@ namespace Server.Spells
                 if (caster.IsPlayer())
                 {
                     // Jail region
-                    if (caster.Region.IsPartOf<Regions.Jail>())
+                    if (caster.Region.IsPartOf<Jail>())
                     {
                         caster.SendLocalizedMessage(1114345); // You'll need a better jailbreak plan than that!
                         return false;
                     }
-                    else if (caster.Region is Regions.GreenAcres)
+                    else if (caster.Region is GreenAcres)
                     {
                         caster.SendLocalizedMessage(502360); // You cannot teleport into that area.
                         return false;
@@ -906,7 +906,7 @@ namespace Server.Spells
                 m.SendLocalizedMessage(1005564, "", 0x22); // Wouldst thou flee during the heat of battle??
                 return false;
             }
-            else if (Server.Misc.WeightOverloading.IsOverloaded(m))
+            else if (WeightOverloading.IsOverloaded(m))
             {
                 m.SendLocalizedMessage(502359, "", 0x22); // Thou art too encumbered to move.
                 return false;
@@ -1004,7 +1004,7 @@ namespace Server.Spells
             if (map != Map.Malas)
                 return false;
 
-            int x = loc.X, y = loc.Y, z = loc.Z;
+            int x = loc.X, y = loc.Y;
 
             bool r1 = (x >= 0 && y >= 0 && x <= 128 && y <= 128);
             bool r2 = (x >= 45 && y >= 320 && x < 195 && y < 710);
@@ -1153,8 +1153,8 @@ namespace Server.Spells
         //magic reflection
         public static bool CheckReflect(int circle, Mobile caster, ref Mobile target)
         {
-            IDamageable c = caster as IDamageable;
-            IDamageable t = target as IDamageable;
+            IDamageable c = caster;
+            IDamageable t = target;
 
             bool reflect = CheckReflect(circle, ref c, ref t);
 
@@ -1169,7 +1169,7 @@ namespace Server.Spells
 
         public static bool CheckReflect(int circle, IDamageable caster, ref Mobile target)
         {
-            IDamageable t = target as IDamageable;
+            IDamageable t = target;
 
             bool reflect = CheckReflect(circle, ref caster, ref t);
 
@@ -1181,7 +1181,7 @@ namespace Server.Spells
 
         public static bool CheckReflect(int circle, Mobile caster, ref IDamageable target)
         {
-            IDamageable c = caster as IDamageable;
+            IDamageable c = caster;
 
             bool reflect = CheckReflect(circle, ref c, ref target);
 
@@ -1193,7 +1193,7 @@ namespace Server.Spells
 
         public static bool CheckReflect(int circle, ref Mobile caster, ref IDamageable target, DamageType type = DamageType.Spell)
         {
-            IDamageable c = caster as IDamageable;
+            IDamageable c = caster;
 
             bool reflect = CheckReflect(circle, ref c, ref target);
 
@@ -1215,7 +1215,7 @@ namespace Server.Spells
 
             if (type >= DamageType.Spell)
             {
-                if (target != null && defender is Mobile)
+                if (target != null)
                 {
                     Clone clone = MirrorImage.GetDeflect(target, (Mobile)defender);
 
@@ -1264,13 +1264,10 @@ namespace Server.Spells
 
                     Mobile temp = caster;
                     source = target;
-                    target = temp;
                 }
             }
             else if (target is BaseCreature)
             {
-                reflect = false;
-
                 ((BaseCreature)target).CheckReflect(caster, ref reflect);
 
                 if (reflect)
@@ -1392,10 +1389,10 @@ namespace Server.Spells
                     target.DFA = dfa;
                 }
 
-                int damageGiven = AOS.Damage(damageable, from, iDamage, phys, fire, cold, pois, nrgy, chaos, direct, dtype);
+                AOS.Damage(damageable, @from, iDamage, phys, fire, cold, pois, nrgy, chaos, direct, dtype);
 
                 if (target != null)
-                    Spells.Mysticism.SpellPlagueSpell.OnMobileDamaged(target);
+                    Mysticism.SpellPlagueSpell.OnMobileDamaged(target);
 
                 if (target != null && target.DFA != DFAlgorithm.Standard)
                 {
@@ -1556,7 +1553,7 @@ namespace Server.Spells
                 }
 
                 if (target != null)
-                    Spells.Mysticism.SpellPlagueSpell.OnMobileDamaged(target);
+                    Mysticism.SpellPlagueSpell.OnMobileDamaged(target);
 
                 if (m_Spell != null)
                     m_Spell.RemoveDelayedDamageContext(m_Target);
@@ -1734,7 +1731,7 @@ namespace Server.Spells
 
                     if (!((Body)transformSpell.Body).IsHuman)
                     {
-                        Mobiles.IMount mt = caster.Mount;
+                        IMount mt = caster.Mount;
 
                         if (mt != null)
                             mt.Rider = null;

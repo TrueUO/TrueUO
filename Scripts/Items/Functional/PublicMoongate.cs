@@ -500,7 +500,7 @@ namespace Server.Items
                 {
                     checkLists = PMList.Lists;
                 }
-                else if (Server.Engines.VvV.VvVSigil.ExistsOn(mobile))
+                else if (Engines.VvV.VvVSigil.ExistsOn(mobile))
                 {
                     checkLists = PMList.SigilLists;
                 }
@@ -624,7 +624,7 @@ namespace Server.Items
                 m_Mobile.SendLocalizedMessage(1019004); // You are not allowed to travel there.
                 return;
             }
-            else if (Server.Engines.VvV.VvVSigil.ExistsOn(m_Mobile) && list.Map != Server.Engines.VvV.ViceVsVirtueSystem.Facet)
+            else if (Engines.VvV.VvVSigil.ExistsOn(m_Mobile) && list.Map != Engines.VvV.ViceVsVirtueSystem.Facet)
             {
                 m_Mobile.SendLocalizedMessage(1019004); // You are not allowed to travel there.
                 return;
