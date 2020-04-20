@@ -6,7 +6,7 @@ using System;
 
 namespace Server
 {
-    public class ShardSettings
+    public static class ShardSettings
     {
         [CallPriority(Int32.MinValue)]
         public static void Configure()
