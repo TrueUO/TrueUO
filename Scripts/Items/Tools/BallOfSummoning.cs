@@ -111,13 +111,13 @@ namespace Server.Items
             {
                 if (Pet == null)
                 {
-                    list.Add(new BallEntry(new BallCallback(LinkPet), 6180));
+                    list.Add(new BallEntry(LinkPet, 6180));
                 }
                 else
                 {
-                    list.Add(new BallEntry(new BallCallback(CastSummonPet), 6181));
-                    list.Add(new BallEntry(new BallCallback(UpdatePetName), 6183));
-                    list.Add(new BallEntry(new BallCallback(UnlinkPet), 6182));
+                    list.Add(new BallEntry(CastSummonPet, 6181));
+                    list.Add(new BallEntry(UpdatePetName, 6183));
+                    list.Add(new BallEntry(UnlinkPet, 6182));
                 }
             }
         }
@@ -401,12 +401,6 @@ namespace Server.Items
             public override bool CheckFizzle()
             {
                 return true;
-            }
-
-            public void Stop()
-            {
-                m_Stop = true;
-                Disturb(DisturbType.Hurt, false, false);
             }
 
             public override bool CheckDisturb(DisturbType type, bool checkFirst, bool resistable)

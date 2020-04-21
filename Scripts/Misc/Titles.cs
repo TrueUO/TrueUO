@@ -118,8 +118,6 @@ namespace Server.Misc
             else if ((karma + offset) < MinKarma)
                 offset = MinKarma - karma;
 
-            bool wasPositiveKarma = (karma >= 0);
-
             m.Karma += offset;
 
             if (message)
@@ -208,8 +206,6 @@ namespace Server.Misc
         {
             StringBuilder title = new StringBuilder();
 
-            bool showSkillTitle = beheld.ShowFameTitle && ((beholder == beheld) || (beheld.Fame >= 5000));
-
             if (beheld.ShowFameTitle && beheld is PlayerMobile && ((PlayerMobile)beheld).FameKarmaTitle != null)
             {
                 title.AppendFormat(((PlayerMobile)beheld).FameKarmaTitle, beheld.Name, beheld.Female ? "Lady" : "Lord");
@@ -225,8 +221,6 @@ namespace Server.Misc
 
             if (beheld is PlayerMobile && ((PlayerMobile)beheld).DisplayChampionTitle)
             {
-                PlayerMobile.ChampionTitleInfo info = ((PlayerMobile)beheld).ChampionTitles;
-
                 if (((PlayerMobile)beheld).CurrentChampTitle != null)
                     title.AppendFormat(((PlayerMobile)beheld).CurrentChampTitle);
             }
@@ -277,8 +271,6 @@ namespace Server.Misc
 
         private static Skill GetHighestSkill(Mobile m)
         {
-            Skills skills = m.Skills;
-
             Skill highest = null;
 
             for (int i = 0; i < m.Skills.Length; ++i)
@@ -287,7 +279,7 @@ namespace Server.Misc
 
                 if (highest == null || check.BaseFixedPoint > highest.BaseFixedPoint)
                     highest = check;
-                else if (highest != null && highest.Lock != SkillLock.Up && check.Lock == SkillLock.Up && check.BaseFixedPoint == highest.BaseFixedPoint)
+                else if (highest.Lock != SkillLock.Up && check.Lock == SkillLock.Up && check.BaseFixedPoint == highest.BaseFixedPoint)
                     highest = check;
             }
 

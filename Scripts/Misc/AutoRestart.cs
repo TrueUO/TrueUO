@@ -25,8 +25,8 @@ namespace Server.Misc
 
         public static void Initialize()
         {
-            CommandSystem.Register("Restart", AccessLevel.Administrator, new CommandEventHandler(Restart_OnCommand));
-            CommandSystem.Register("Shutdown", AccessLevel.Administrator, new CommandEventHandler(Shutdown_OnCommand));
+            CommandSystem.Register("Restart", AccessLevel.Administrator, Restart_OnCommand);
+            CommandSystem.Register("Shutdown", AccessLevel.Administrator, Shutdown_OnCommand);
 
             if (Enabled)
             {
