@@ -179,7 +179,7 @@ namespace Server.Engines.Craft
                     if (tool.Charges == 0)
                     {
                         from.SendLocalizedMessage(1019073);// This item is out of charges.
-                        m_Addon.Using = false;
+                        m_Addon.User = null;
                         return;
                     }
 
@@ -210,7 +210,7 @@ namespace Server.Engines.Craft
                         if (!CheckDeed(from))
                         {
                             if (m_Addon != null)
-                                m_Addon.Using = false;
+                                m_Addon.User = null;
 
                             return;
                         }
@@ -220,7 +220,7 @@ namespace Server.Engines.Craft
                             from.SendLocalizedMessage(500426); // You can't repair that.
 
                             if (m_Addon != null)
-                                m_Addon.Using = false;
+                                m_Addon.User = null;
 
                             return;
                         }
