@@ -1389,7 +1389,7 @@ namespace Server.Spells
                     target.DFA = dfa;
                 }
 
-                AOS.Damage(damageable, @from, iDamage, phys, fire, cold, pois, nrgy, chaos, direct, dtype);
+                int damageGiven = AOS.Damage(damageable, from, iDamage, phys, fire, cold, pois, nrgy, chaos, direct, dtype);
 
                 if (target != null)
                     Mysticism.SpellPlagueSpell.OnMobileDamaged(target);
