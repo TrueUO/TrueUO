@@ -35,24 +35,21 @@ namespace Server.Mobiles
             AddItem(beard);
         }
 
+        public ExodusArchZealot(Serial serial) : base(serial)
+        {
+        }
+
         public override bool OnDragDrop(Mobile from, Item dropped)
         {
-            if (from.InRange(Location, 2))
+            if (from.InRange(Location, 2) && from.Race == Race.Gargoyle && dropped.GetType() == typeof(ExodusSacrificalDagger))
             {
-                if (from.Race == Race.Gargoyle && dropped.GetType() == typeof(ExodusSacrificalDagger))
-                {
-                    dropped.Delete();
-                    from.AddToBackpack(new ExodusSacrificalGargishDagger());
+                dropped.Delete();
+                from.AddToBackpack(new ExodusSacrificalGargishDagger());
 
-                    return true;
-                }
+                return true;
             }
 
             return base.OnDragDrop(from, dropped);
-        }
-
-        public ExodusArchZealot(Serial serial) : base(serial)
-        {
         }
 
         public override void GetContextMenuEntries(Mobile from, List<ContextMenuEntry> list)
@@ -76,12 +73,10 @@ namespace Server.Mobiles
         public class ExodusArchZealotGumpEntry : ContextMenuEntry
         {
             private readonly Mobile m_Mobile;
-            private readonly Mobile m_Giver;
 
             public ExodusArchZealotGumpEntry(Mobile from, Mobile giver) : base(6146, 3)
             {
                 m_Mobile = from;
-                m_Giver = giver;
             }
 
             public override void OnClick()
@@ -298,9 +293,9 @@ namespace Server.Mobiles
 
         }
 
-        public override void OnResponse(NetState state, RelayInfo info) //Function for GumpButtonType.Reply Buttons 
+        public override void OnResponse(NetState sender, RelayInfo info) //Function for GumpButtonType.Reply Buttons 
         {
-            Mobile from = state.Mobile;
+            Mobile from = sender.Mobile;
 
             switch (info.ButtonID)
             {

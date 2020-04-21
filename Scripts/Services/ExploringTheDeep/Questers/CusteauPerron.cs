@@ -47,38 +47,38 @@ namespace Server.Mobiles
             list.Add(1072269); // Quest Giver
         }
 
-        public override void OnDoubleClick(Mobile m)
+        public override void OnDoubleClick(Mobile from)
         {
-            if (!(m is PlayerMobile))
+            if (!(from is PlayerMobile))
                 return;
 
-            PlayerMobile pm = (PlayerMobile)m;
+            PlayerMobile pm = (PlayerMobile)from;
 
             if (pm.ExploringTheDeepQuest == ExploringTheDeepQuestChain.CusteauPerronHouse)
             {
-                if (!m.HasGump(typeof(CousteauPerronGump)))
+                if (!from.HasGump(typeof(CousteauPerronGump)))
                 {
-                    m.SendGump(new CousteauPerronGump(m));
+                    from.SendGump(new CousteauPerronGump(from));
                     pm.ExploringTheDeepQuest = ExploringTheDeepQuestChain.CusteauPerron;
                 }
             }
             else if (pm.ExploringTheDeepQuest == ExploringTheDeepQuestChain.Sorcerers)
             {
-                if (!m.HasGump(typeof(CousteauPerronCompleteGump)))
+                if (!from.HasGump(typeof(CousteauPerronCompleteGump)))
                 {
-                    m.SendGump(new CousteauPerronCompleteGump(m));
+                    from.SendGump(new CousteauPerronCompleteGump(from));
                 }
             }
             else if (pm.ExploringTheDeepQuest == ExploringTheDeepQuestChain.CollectTheComponent)
             {
-                if (!m.HasGump(typeof(CousteauPerronPlansGump)))
+                if (!from.HasGump(typeof(CousteauPerronPlansGump)))
                 {
-                    m.SendGump(new CousteauPerronPlansGump(m));
+                    from.SendGump(new CousteauPerronPlansGump(from));
                 }
             }
             else
             {
-                m.SendLocalizedMessage(1154325); // You feel as though by doing this you are missing out on an important part of your journey...
+                from.SendLocalizedMessage(1154325); // You feel as though by doing this you are missing out on an important part of your journey...
             }
         }
 
@@ -196,8 +196,6 @@ namespace Server.Gumps
 
         public override void OnResponse(NetState state, RelayInfo info) //Function for GumpButtonType.Reply Buttons 
         {
-            Mobile from = state.Mobile;
-
             switch (info.ButtonID)
             {
                 case 0:
@@ -257,10 +255,8 @@ namespace Server.Gumps
             AddButton(345, 440, 0xF7, 0xF8, 0, GumpButtonType.Reply, 0);//OK
         }
 
-        public override void OnResponse(NetState state, RelayInfo info)
+        public override void OnResponse(NetState sender, RelayInfo info)
         {
-            Mobile from = state.Mobile;
-
             switch (info.ButtonID)
             {
                 case 0:
@@ -320,10 +316,8 @@ namespace Server.Gumps
             AddButton(345, 440, 0xF7, 0xF8, 0, GumpButtonType.Reply, 0);//OK
         }
 
-        public override void OnResponse(NetState state, RelayInfo info)
+        public override void OnResponse(NetState sender, RelayInfo info)
         {
-            Mobile from = state.Mobile;
-
             switch (info.ButtonID)
             {
                 case 0:
