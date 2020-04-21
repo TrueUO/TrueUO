@@ -1262,7 +1262,7 @@ namespace Server.Spells
                 {
                     target.FixedEffect(0x37B9, 10, 5);
 
-                    Mobile temp = caster;
+                    Mobile = caster;
                     source = target;
                 }
             }
