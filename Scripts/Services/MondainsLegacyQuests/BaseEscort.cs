@@ -122,7 +122,7 @@ namespace Server.Engines.Quests
             if (reader.ReadBool())
             {
                 DateTime deleteTime = reader.ReadDeltaTime();
-                m_DeleteTimer = Timer.DelayCall(deleteTime - DateTime.UtcNow, new TimerCallback(Delete));
+                m_DeleteTimer = Timer.DelayCall(deleteTime - DateTime.UtcNow, Delete);
             }
         }
 
@@ -167,7 +167,7 @@ namespace Server.Engines.Quests
             if (m != null)
                 m_EscortTable.Remove(m);
 
-            m_DeleteTimer = Timer.DelayCall(TimeSpan.FromSeconds(45.0), new TimerCallback(Delete));
+            m_DeleteTimer = Timer.DelayCall(TimeSpan.FromSeconds(45.0), Delete);
         }
 
         public virtual bool AcceptEscorter(Mobile m)
@@ -255,7 +255,7 @@ namespace Server.Engines.Quests
 
                     StopFollow();
                     m_EscortTable.Remove(master);
-                    m_DeleteTimer = Timer.DelayCall(TimeSpan.FromSeconds(5.0), new TimerCallback(Delete));
+                    m_DeleteTimer = Timer.DelayCall(TimeSpan.FromSeconds(5.0), Delete);
 
                     return null;
                 }
@@ -313,7 +313,7 @@ namespace Server.Engines.Quests
 
                         StopFollow();
                         m_EscortTable.Remove(escorter);
-                        m_DeleteTimer = Timer.DelayCall(TimeSpan.FromSeconds(5.0), new TimerCallback(Delete));
+                        m_DeleteTimer = Timer.DelayCall(TimeSpan.FromSeconds(5.0), Delete);
 
                         // fame
                         Misc.Titles.AwardFame(escorter, escort.Fame, true);
@@ -367,7 +367,7 @@ namespace Server.Engines.Quests
 
                 if (region != null && Region.IsPartOf(region))
                 {
-                    m_DeleteTimer = Timer.DelayCall(TimeSpan.FromSeconds(5.0), new TimerCallback(Delete));
+                    m_DeleteTimer = Timer.DelayCall(TimeSpan.FromSeconds(5.0), Delete);
                     m_Checked = true;
                 }
             }
@@ -401,14 +401,13 @@ namespace Server.Engines.Quests
             {
                 BaseEscort escort = (BaseEscort)escortquest.Quester;
 
-                Timer.DelayCall(TimeSpan.FromSeconds(3), new TimerCallback(
-                delegate
+                Timer.DelayCall(TimeSpan.FromSeconds(3), delegate
                 {
                     escort.Say(500901); // Ack!  My escort has come to haunt me!
                     owner.SendLocalizedMessage(1071194); // You have failed your escort quest…
                     owner.PlaySound(0x5B3);
                     escort.Delete();
-                }));
+                });
             }
         }
     }

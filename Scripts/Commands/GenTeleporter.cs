@@ -64,8 +64,8 @@ namespace Server.Commands
 
         public static void Initialize()
         {
-            CommandSystem.Register("TelGen", AccessLevel.Administrator, new CommandEventHandler(GenTeleporter_OnCommand));
-            CommandSystem.Register("TelGenDelete", AccessLevel.Administrator, new CommandEventHandler(TelGenDelete_OnCommand));
+            CommandSystem.Register("TelGen", AccessLevel.Administrator, GenTeleporter_OnCommand);
+            CommandSystem.Register("TelGenDelete", AccessLevel.Administrator, TelGenDelete_OnCommand);
         }
 
         private static void TelGenDelete_OnCommand(CommandEventArgs e)

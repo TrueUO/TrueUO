@@ -105,7 +105,7 @@ public class MadelineHarteCompleteGump : Gump
 {
     public static void Initialize()
     {
-        CommandSystem.Register("MadelineHarteComplete", AccessLevel.GameMaster, new CommandEventHandler(MadelineHarteCompleteGump_OnCommand));
+        CommandSystem.Register("MadelineHarteComplete", AccessLevel.GameMaster, MadelineHarteCompleteGump_OnCommand);
     }
 
     private static void MadelineHarteCompleteGump_OnCommand(CommandEventArgs e)
@@ -144,7 +144,7 @@ public class MadelineHarteCompleteGump : Gump
         AddHtmlLocalized(140, 45, 250, 24, 1154327, 0x7FFF, false, false); // Exploring the Deep
 
         AddPage(1);
-        AddHtmlLocalized(107, 140, 300, 150, 1154302, 0x7FFF, false, true); // Oh! Youíve found his hat! Did you...*pauses and appears to begin to cry but regains her composureî Oh, I see.  At least he showed Valor...I thank you for give me closure.  I had a chance to read the note from Cousteau, this should be what you need.
+        AddHtmlLocalized(107, 140, 300, 150, 1154302, 0x7FFF, false, true); // Oh! You‚Äôve found his hat! Did you...*pauses and appears to begin to cry but regains her composure‚Äù Oh, I see.  At least he showed Valor...I thank you for give me closure.  I had a chance to read the note from Cousteau, this should be what you need.
 
         AddButton(345, 440, 0xF7, 0xF8, 0, GumpButtonType.Reply, 0);//OK
     }
@@ -167,7 +167,7 @@ public class MadelineHarteGump : Gump
 {
     public static void Initialize()
     {
-        CommandSystem.Register("MadelineHarte", AccessLevel.GameMaster, new CommandEventHandler(MadelineHarteGump_OnCommand));
+        CommandSystem.Register("MadelineHarte", AccessLevel.GameMaster, MadelineHarteGump_OnCommand);
     }
 
     private static void MadelineHarteGump_OnCommand(CommandEventArgs e)
@@ -206,7 +206,7 @@ public class MadelineHarteGump : Gump
         AddHtmlLocalized(140, 45, 250, 24, 1154327, 0x7FFF, false, false); // Exploring the Deep
 
         AddPage(1);
-        AddHtmlLocalized(107, 140, 300, 150, 1154300, 0x7FFF, false, true); // *You notice a woman whimpering as she struggles through manipulating the spinning wheel, you smile at her and hand her the note* Oh, hello, *wipes tear*...Iím sorry did you need something...Itís just that...*begins crying again*...my son Willem has been killed Destard! If only I had something to remember him by...
+        AddHtmlLocalized(107, 140, 300, 150, 1154300, 0x7FFF, false, true); // *You notice a woman whimpering as she struggles through manipulating the spinning wheel, you smile at her and hand her the note* Oh, hello, *wipes tear*...I‚Äôm sorry did you need something...It‚Äôs just that...*begins crying again*...my son Willem has been killed Destard! If only I had something to remember him by...
 
         AddHtmlLocalized(145, 300, 250, 24, 1154301, 0x7FFF, false, false); // Willem went to Destard?
         AddButton(115, 300, 0x26B0, 0x26B1, 0, GumpButtonType.Page, 2);
