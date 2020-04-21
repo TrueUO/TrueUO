@@ -4275,7 +4275,7 @@ namespace Server.Multis
             return false;
         }
 
-        public new bool IsLockedDown(Item check)
+        public bool IsLockedDown(Item check)
         {
             if (check == null)
                 return false;
@@ -4286,7 +4286,7 @@ namespace Server.Multis
             return (LockDowns.ContainsKey(check) || VendorRentalContracts.Contains(check));
         }
 
-        public new bool IsSecure(Item item)
+        public bool IsSecure(Item item)
         {
             if (item == null)
                 return false;

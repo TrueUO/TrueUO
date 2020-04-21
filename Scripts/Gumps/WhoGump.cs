@@ -275,9 +275,6 @@ namespace Server.Gumps
         private class InternalComparer : IComparer<Mobile>
         {
             public static readonly IComparer<Mobile> Instance = new InternalComparer();
-            public InternalComparer()
-            {
-            }
 
             public int Compare(Mobile x, Mobile y)
             {
