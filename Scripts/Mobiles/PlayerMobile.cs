@@ -723,7 +723,7 @@ namespace Server.Mobiles
                 {
                     object[] objs = type.GetCustomAttributes(typeof(FlipableAttribute), true);
 
-                    if (objs != null && objs.Length > 0)
+                    if (objs.Length > 0)
                     {
                         FlipableAttribute fp = objs[0] as FlipableAttribute;
 
@@ -989,7 +989,7 @@ namespace Server.Mobiles
                 max += 5; //Intended to go after the 60 max from curse
             }
 
-            if (type != ResistanceType.Physical && 60 < max && Spells.Fourth.CurseSpell.UnderEffect(this))
+            if (type != ResistanceType.Physical && 60 < max && CurseSpell.UnderEffect(this))
             {
                 max -= 10;
                 //max = 60;
@@ -1482,7 +1482,7 @@ namespace Server.Mobiles
                     #region Vice Vs Virtue
                     IVvVItem vvvItem = item as IVvVItem;
 
-                    if (vvvItem != null && vvvItem.IsVvVItem && !Engines.VvV.ViceVsVirtueSystem.IsVvV(from))
+                    if (vvvItem != null && vvvItem.IsVvVItem && !ViceVsVirtueSystem.IsVvV(from))
                     {
                         from.AddToBackpack(item);
                         moved = true;
@@ -1679,8 +1679,8 @@ namespace Server.Mobiles
 
         public override void OnSubItemRemoved(Item item)
         {
-            if (Server.Engines.UOStore.UltimaStore.HasPendingItem(this))
-                Timer.DelayCall<PlayerMobile>(TimeSpan.FromSeconds(1.5), Server.Engines.UOStore.UltimaStore.CheckPendingItem, this);
+            if (Engines.UOStore.UltimaStore.HasPendingItem(this))
+                Timer.DelayCall(TimeSpan.FromSeconds(1.5), Engines.UOStore.UltimaStore.CheckPendingItem, this);
         }
 
         public override void AggressiveAction(Mobile aggressor, bool criminal)
@@ -1930,8 +1930,6 @@ namespace Server.Mobiles
             {
                 if (IsPlayer())
                 {
-                    int str = base.Str;
-
                     return Math.Min(base.Str, StrMaxCap);
                 }
 
@@ -2031,7 +2029,7 @@ namespace Server.Mobiles
             {
                 bool check = base.CheckMovement(d, out newZ);
 
-                if (check && VvVSigil.ExistsOn(this, true) && !Server.Engines.VvV.VvVSigil.CheckMovement(this, d))
+                if (check && VvVSigil.ExistsOn(this, true) && !VvVSigil.CheckMovement(this, d))
                 {
                     SendLocalizedMessage(1155414); // You may not remove the sigil from the battle region!
                     return false;
@@ -2469,7 +2467,7 @@ namespace Server.Mobiles
             if (item == null || !item.IsChildOf(this))
             {
                 if (target)
-                    BeginTarget(-1, false, TargetFlags.None, new TargetCallback(ToggleItemInsurance_Callback));
+                    BeginTarget(-1, false, TargetFlags.None, ToggleItemInsurance_Callback);
 
                 SendLocalizedMessage(1060871, "", 0x23); // You can only insure items that you have equipped or that are in your backpack
             }
@@ -2481,14 +2479,14 @@ namespace Server.Mobiles
 
                 if (target)
                 {
-                    BeginTarget(-1, false, TargetFlags.None, new TargetCallback(ToggleItemInsurance_Callback));
+                    BeginTarget(-1, false, TargetFlags.None, ToggleItemInsurance_Callback);
                     SendLocalizedMessage(1060868, "", 0x23); // Target the item you wish to toggle insurance status on <ESC> to cancel
                 }
             }
             else if (!CanInsure(item))
             {
                 if (target)
-                    BeginTarget(-1, false, TargetFlags.None, new TargetCallback(ToggleItemInsurance_Callback));
+                    BeginTarget(-1, false, TargetFlags.None, ToggleItemInsurance_Callback);
 
                 SendLocalizedMessage(1060869, "", 0x23); // You cannot insure that
             }
@@ -2516,7 +2514,7 @@ namespace Server.Mobiles
 
                 if (target)
                 {
-                    BeginTarget(-1, false, TargetFlags.None, new TargetCallback(ToggleItemInsurance_Callback));
+                    BeginTarget(-1, false, TargetFlags.None, ToggleItemInsurance_Callback);
                     SendLocalizedMessage(1060868, "", 0x23); // Target the item you wish to toggle insurance status on <ESC> to cancel
                 }
             }
@@ -2531,8 +2529,8 @@ namespace Server.Mobiles
                 cost = 800;
             else if (imbueWeight > 0)
                 cost = Math.Min(800, Math.Max(10, imbueWeight));
-            else if (Mobiles.GenericBuyInfo.BuyPrices.ContainsKey(item.GetType()))
-                cost = Math.Min(800, Math.Max(10, Mobiles.GenericBuyInfo.BuyPrices[item.GetType()]));
+            else if (GenericBuyInfo.BuyPrices.ContainsKey(item.GetType()))
+                cost = Math.Min(800, Math.Max(10, GenericBuyInfo.BuyPrices[item.GetType()]));
             else if (item.LootType == LootType.Newbied)
                 cost = 10;
 
@@ -2950,7 +2948,7 @@ namespace Server.Mobiles
 
             if (house != null && house.IsCoOwner(this))
             {
-                SendGump(new WarningGump(1060635, 30720, 1062006, 32512, 420, 280, new WarningGumpCallback(ClearCoOwners_Callback), house));
+                SendGump(new WarningGump(1060635, 30720, 1062006, 32512, 420, 280, ClearCoOwners_Callback, house));
             }
         }
 
@@ -3057,9 +3055,9 @@ namespace Server.Mobiles
 
             Region r = Region.Find(Location, Map);
 
-            if (r is Server.Engines.ArenaSystem.ArenaRegion)
+            if (r is Engines.ArenaSystem.ArenaRegion)
             {
-                if (!((Server.Engines.ArenaSystem.ArenaRegion)r).AllowItemEquip(this, item))
+                if (!((Engines.ArenaSystem.ArenaRegion)r).AllowItemEquip(this, item))
                 {
                     return false;
                 }
@@ -3068,7 +3066,7 @@ namespace Server.Mobiles
             #region Vice Vs Virtue
             IVvVItem vvvItem = item as IVvVItem;
 
-            if (vvvItem != null && vvvItem.IsVvVItem && !Engines.VvV.ViceVsVirtueSystem.IsVvV(this))
+            if (vvvItem != null && vvvItem.IsVvVItem && !ViceVsVirtueSystem.IsVvV(this))
             {
                 return false;
             }
@@ -3566,7 +3564,7 @@ namespace Server.Mobiles
 
             m_NonAutoreinsuredItems = 0;
             m_InsuranceCost = 0;
-            m_InsuranceAward = base.FindMostRecentDamager(false);
+            m_InsuranceAward = FindMostRecentDamager(false);
 
             if (m_InsuranceAward is BaseCreature)
             {
@@ -4122,7 +4120,7 @@ namespace Server.Mobiles
             }
 
             //Skill Masteries
-            if (Spells.SkillMasteries.ResilienceSpell.UnderEffects(this) && 0.25 > Utility.RandomDouble())
+            if (ResilienceSpell.UnderEffects(this) && 0.25 > Utility.RandomDouble())
             {
                 return ApplyPoisonResult.Immune;
             }
@@ -4348,7 +4346,7 @@ namespace Server.Mobiles
                             int points = (int)reader.ReadLong();
                             if (points > 0)
                             {
-                                Server.Engines.Points.PointsSystem.QueensLoyalty.ConvertFromOldSystem(this, points);
+                                PointsSystem.QueensLoyalty.ConvertFromOldSystem(this, points);
                             }
 
                             reader.ReadInt(); // Old m_Level
@@ -5099,7 +5097,7 @@ namespace Server.Mobiles
 
             if (TestCenter.Enabled)
             {
-                Server.Engines.VvV.VvVPlayerEntry entry = Server.Engines.Points.PointsSystem.ViceVsVirtue.GetPlayerEntry<Server.Engines.VvV.VvVPlayerEntry>(this);
+                VvVPlayerEntry entry = PointsSystem.ViceVsVirtue.GetPlayerEntry<VvVPlayerEntry>(this);
 
                 list.Add(String.Format("Kills: {0} / Deaths: {1} / Assists: {2}", // no cliloc for this!
                     entry == null ? "0" : entry.Kills.ToString(), entry == null ? "0" : entry.Deaths.ToString(), entry == null ? "0" : entry.Assists.ToString()));
@@ -5415,7 +5413,7 @@ namespace Server.Mobiles
             }
 
             BaseGuild guild = Guild;
-            bool vvv = Server.Engines.VvV.ViceVsVirtueSystem.IsVvV(this) && (ViceVsVirtueSystem.EnhancedRules || Map == ViceVsVirtueSystem.Facet);
+            bool vvv = ViceVsVirtueSystem.IsVvV(this) && (ViceVsVirtueSystem.EnhancedRules || Map == ViceVsVirtueSystem.Facet);
 
             if (m_OverheadTitle != null)
             {
@@ -5523,7 +5521,7 @@ namespace Server.Mobiles
                 SkillName mastery = Skills.CurrentMastery;
                 Skills.CurrentMastery = SkillName.Alchemy;
 
-                Server.Spells.SkillMasteries.MasteryInfo.OnMasteryChanged(this, mastery);
+                MasteryInfo.OnMasteryChanged(this, mastery);
             }
 
             TransformContext context = TransformationSpellHelper.GetContext(this);
@@ -5969,25 +5967,6 @@ namespace Server.Mobiles
 
         [CommandProperty(AccessLevel.GameMaster)]
         public ChampionTitleInfo ChampionTitles { get { return m_ChampionTitles; } set { } }
-
-        private void ToggleChampionTitleDisplay()
-        {
-            if (!CheckAlive())
-            {
-                return;
-            }
-
-            if (DisplayChampionTitle)
-            {
-                SendLocalizedMessage(1062419, "", 0x23); // You have chosen to hide your monster kill title.
-            }
-            else
-            {
-                SendLocalizedMessage(1062418, "", 0x23); // You have chosen to display your monster kill title.
-            }
-
-            DisplayChampionTitle = !DisplayChampionTitle;
-        }
 
         [PropertyObject]
         public class ChampionTitleInfo

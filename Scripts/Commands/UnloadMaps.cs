@@ -14,12 +14,12 @@ namespace Server.Commands
 
         public static void Initialize()
         {
-            CommandSystem.Register("UnloadTrammel", AccessLevel.Administrator, new CommandEventHandler(UnloadTrammel_OnCommand));
-            CommandSystem.Register("UnloadMalas", AccessLevel.Administrator, new CommandEventHandler(UnloadMalas_OnCommand));
-            CommandSystem.Register("UnloadIlshenar", AccessLevel.Administrator, new CommandEventHandler(UnloadIlshenar_OnCommand));
-            CommandSystem.Register("UnloadTokuno", AccessLevel.Administrator, new CommandEventHandler(UnloadTokuno_OnCommand));
-            CommandSystem.Register("UnloadFelucca", AccessLevel.Administrator, new CommandEventHandler(UnloadFelucca_OnCommand));
-            CommandSystem.Register("UnloadTermur", AccessLevel.Administrator, new CommandEventHandler(UnloadTermur_OnCommand));
+            CommandSystem.Register("UnloadTrammel", AccessLevel.Administrator, UnloadTrammel_OnCommand);
+            CommandSystem.Register("UnloadMalas", AccessLevel.Administrator, UnloadMalas_OnCommand);
+            CommandSystem.Register("UnloadIlshenar", AccessLevel.Administrator, UnloadIlshenar_OnCommand);
+            CommandSystem.Register("UnloadTokuno", AccessLevel.Administrator, UnloadTokuno_OnCommand);
+            CommandSystem.Register("UnloadFelucca", AccessLevel.Administrator, UnloadFelucca_OnCommand);
+            CommandSystem.Register("UnloadTermur", AccessLevel.Administrator, UnloadTermur_OnCommand);
         }
 
         [Usage("[Unloadtrammel")]
@@ -334,7 +334,7 @@ namespace Server.Gumps
                         {
                             // Get the array of switches selected
                             ArrayList Selections = new ArrayList(info.Switches);
-                            string prefix = Server.Commands.CommandSystem.Prefix;
+                            string prefix = CommandSystem.Prefix;
 
                             // Now unloading any selected maps
 
@@ -720,7 +720,7 @@ namespace Server.Gumps
                         {
                             // Get the array of switches selected
                             ArrayList Selections = new ArrayList(info.Switches);
-                            string prefix = Server.Commands.CommandSystem.Prefix;
+                            string prefix = CommandSystem.Prefix;
 
                             // Now unloading any selected maps
 
@@ -985,7 +985,7 @@ namespace Server.Gumps
                         {
                             // Get the array of switches selected
                             ArrayList Selections = new ArrayList(info.Switches);
-                            string prefix = Server.Commands.CommandSystem.Prefix;
+                            string prefix = CommandSystem.Prefix;
 
                             // Now unloading any selected maps
 
@@ -1139,7 +1139,7 @@ namespace Server.Gumps
                         {
                             // Get the array of switches selected
                             ArrayList Selections = new ArrayList(info.Switches);
-                            string prefix = Server.Commands.CommandSystem.Prefix;
+                            string prefix = CommandSystem.Prefix;
 
                             // Now unloading any selected maps
 
@@ -1261,7 +1261,7 @@ namespace Server.Gumps
                         {
                             // Get the array of switches selected
                             ArrayList Selections = new ArrayList(info.Switches);
-                            string prefix = Server.Commands.CommandSystem.Prefix;
+                            string prefix = CommandSystem.Prefix;
 
                             // Now unloading any selected maps
 
@@ -1619,7 +1619,7 @@ namespace Server.Gumps
                         {
                             // Get the array of switches selected
                             ArrayList Selections = new ArrayList(info.Switches);
-                            string prefix = Server.Commands.CommandSystem.Prefix;
+                            string prefix = CommandSystem.Prefix;
 
                             // Now unloading any selected maps
 

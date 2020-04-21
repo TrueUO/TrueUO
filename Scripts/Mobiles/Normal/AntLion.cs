@@ -104,7 +104,7 @@ namespace Server.Mobiles
 
         private void DoTunnel(Mobile combatant)
         {
-            PublicOverheadMessage(Server.Network.MessageType.Regular, 0x3B3, false, "* The ant lion begins tunneling into the ground *");
+            PublicOverheadMessage(Network.MessageType.Regular, 0x3B3, false, "* The ant lion begins tunneling into the ground *");
             Effects.SendTargetParticles(this, 0x36B0, 20, 10, 1734, 0, 5044, EffectLayer.Head, 0);
 
             Frozen = true;
@@ -159,7 +159,7 @@ namespace Server.Mobiles
         {
             if (_Tunneling && !Hidden && 0.25 > Utility.RandomDouble())
             {
-                PublicOverheadMessage(Server.Network.MessageType.Regular, 0x3B3, false, "* You interrupt the ant lion's digging! *");
+                PublicOverheadMessage(Network.MessageType.Regular, 0x3B3, false, "* You interrupt the ant lion's digging! *");
 
                 Frozen = false;
                 Hidden = false;
@@ -206,7 +206,7 @@ namespace Server.Mobiles
             MovingEffect(m, 0x36D4, 1, 0, false, false, 0x3F, 0);
 
             TimeSpan delay = TimeSpan.FromSeconds(GetDistanceToSqrt(m) / 5.0);
-            Timer.DelayCall<Mobile>(delay, new TimerStateCallback<Mobile>(EndAcidBreath), m);
+            Timer.DelayCall(delay, new TimerStateCallback<Mobile>(EndAcidBreath), m);
 
             m_NextAcidBreath = DateTime.Now + TimeSpan.FromSeconds(5);
         }

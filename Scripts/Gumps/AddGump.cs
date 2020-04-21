@@ -76,7 +76,7 @@ namespace Server.Gumps
 
         public static void Initialize()
         {
-            CommandSystem.Register("AddMenu", AccessLevel.GameMaster, new CommandEventHandler(AddMenu_OnCommand));
+            CommandSystem.Register("AddMenu", AccessLevel.GameMaster, AddMenu_OnCommand);
         }
 
         public static List<Type> Match(string match)
@@ -236,7 +236,7 @@ namespace Server.Gumps
                     else if (p is Mobile)
                         p = ((Mobile)p).Location;
 
-                    Server.Commands.Add.Invoke(from, new Point3D(p), new Point3D(p), new string[] { m_Type.Name });
+                    Commands.Add.Invoke(from, new Point3D(p), new Point3D(p), new string[] { m_Type.Name });
 
                     from.Target = new InternalTarget(m_Type, m_SearchResults, m_SearchString, m_Page);
                 }

@@ -1,4 +1,4 @@
-﻿using Server.Commands;
+using Server.Commands;
 using Server.Mobiles;
 using System;
 
@@ -77,8 +77,8 @@ namespace Server.Items
 
         public static void Initialize()
         {
-            CommandSystem.Register("ArisenGenerate", AccessLevel.Owner, new CommandEventHandler(ArisenGenerate_OnCommand));
-            CommandSystem.Register("ArisenDelete", AccessLevel.Owner, new CommandEventHandler(ArisenDelete_OnCommand));
+            CommandSystem.Register("ArisenGenerate", AccessLevel.Owner, ArisenGenerate_OnCommand);
+            CommandSystem.Register("ArisenDelete", AccessLevel.Owner, ArisenDelete_OnCommand);
         }
 
         [Usage("ArisenGenerate")]
@@ -232,7 +232,7 @@ namespace Server.Items
             writer.WriteEncodedInt(m_Spawners.Length);
 
             for (int i = 0; i < m_Spawners.Length; i++)
-                writer.WriteItem<XmlSpawner>(m_Spawners[i]);
+                writer.WriteItem(m_Spawners[i]);
         }
 
         public override void Deserialize(GenericReader reader)

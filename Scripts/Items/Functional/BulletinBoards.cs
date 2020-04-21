@@ -98,7 +98,7 @@ namespace Server.Items
 
         public static void Initialize()
         {
-            PacketHandlers.Register(0x71, 0, true, new OnPacketReceive(BBClientRequest));
+            PacketHandlers.Register(0x71, 0, true, BBClientRequest);
         }
 
         public static void BBClientRequest(NetState state, PacketReader pvSrc)
@@ -405,7 +405,7 @@ namespace Server.Items
             return m_Time.ToString("MMM dd, yyyy");
         }
 
-        public override bool CheckTarget(Mobile from, Server.Targeting.Target targ, object targeted)
+        public override bool CheckTarget(Mobile from, Targeting.Target targ, object targeted)
         {
             return false;
         }

@@ -254,7 +254,7 @@ namespace Server.Items
             writer.Write(m_Helpers != null);
 
             if (m_Helpers != null)
-                writer.WriteMobileList<BaseCreature>(m_Helpers);
+                writer.WriteMobileList(m_Helpers);
 
             // version 0			
             writer.Write(Peerless);
@@ -322,7 +322,7 @@ namespace Server.Items
                         reader.ReadBool();
 
                     if (Peerless == null && m_Helpers.Count > 0)
-                        Timer.DelayCall(TimeSpan.FromSeconds(30), new TimerCallback(CleanupHelpers));
+                        Timer.DelayCall(TimeSpan.FromSeconds(30), CleanupHelpers);
 
                     break;
             }
@@ -570,7 +570,7 @@ namespace Server.Items
             ColUtility.SafeDelete(MasterKeys);
 
             ColUtility.Free(MasterKeys);
-            m_DeadlineTimer = Timer.DelayCall(DelayAfterBossSlain, new TimerCallback(FinishSequence));
+            m_DeadlineTimer = Timer.DelayCall(DelayAfterBossSlain, FinishSequence);
         }
 
         public virtual bool MobileIsInBossArea(Mobile check)
@@ -642,7 +642,7 @@ namespace Server.Items
             else
                 Deadline = DateTime.UtcNow + TimeSpan.FromHours(1);
 
-            m_SlayTimer = Timer.DelayCall(TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(5), new TimerCallback(DeadlineCheck));
+            m_SlayTimer = Timer.DelayCall(TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(5), DeadlineCheck);
             m_SlayTimer.Priority = TimerPriority.OneMinute;
         }
 

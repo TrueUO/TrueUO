@@ -63,7 +63,7 @@ namespace Server.Items
 
         public static void Initialize()
         {
-            CommandSystem.Register("RandomTalisman", AccessLevel.GameMaster, new CommandEventHandler(RandomTalisman_OnCommand));
+            CommandSystem.Register("RandomTalisman", AccessLevel.GameMaster, RandomTalisman_OnCommand);
         }
 
         [Usage("RandomTalisman <count>")]
@@ -477,7 +477,7 @@ namespace Server.Items
                     MaxHitPoints--;
 
                     if (Parent is Mobile)
-                        ((Mobile)Parent).LocalOverheadMessage(Server.Network.MessageType.Regular, 0x3B2, 1061121); // Your equipment is severely damaged.
+                        ((Mobile)Parent).LocalOverheadMessage(Network.MessageType.Regular, 0x3B2, 1061121); // Your equipment is severely damaged.
 
                     if (m_MaxHitPoints == 0)
                     {
@@ -1201,7 +1201,7 @@ namespace Server.Items
         public virtual void StartTimer()
         {
             if (m_Timer == null || !m_Timer.Running)
-                m_Timer = Timer.DelayCall(TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(10), new TimerCallback(Slice));
+                m_Timer = Timer.DelayCall(TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(10), Slice);
         }
 
         public virtual void StopTimer()

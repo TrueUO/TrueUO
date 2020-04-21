@@ -91,9 +91,9 @@ namespace Server.Commands
 
         public static void Initialize()
         {
-            CommandSystem.Register("Createworld", AccessLevel.Administrator, new CommandEventHandler(Create_OnCommand));
-            CommandSystem.Register("DeleteWorld", AccessLevel.Administrator, new CommandEventHandler(Delete_OnCommand));
-            CommandSystem.Register("RecreateWorld", AccessLevel.Administrator, new CommandEventHandler(Recreate_OnCommand));
+            CommandSystem.Register("Createworld", AccessLevel.Administrator, Create_OnCommand);
+            CommandSystem.Register("DeleteWorld", AccessLevel.Administrator, Delete_OnCommand);
+            CommandSystem.Register("RecreateWorld", AccessLevel.Administrator, Recreate_OnCommand);
         }
 
         [Usage("CreateWorld [nogump]")]
@@ -173,20 +173,20 @@ namespace Server.Commands
         public static void DoCommands(int[] selections, GumpType type, Mobile from)
         {
             World.Broadcast(0x35, false, "The world is generating. This may take some time...");
-            string prefix = Server.Commands.CommandSystem.Prefix;
+            string prefix = CommandSystem.Prefix;
 
             string error = null;
             WorldCreating = true;
 
             foreach (int sel in selections)
             {
-                foreach (CreateWorld.CommandEntry entry in CreateWorld.Commands)
+                foreach (CommandEntry entry in Commands)
                 {
                     if (entry.CheckID == sel)
                     {
                         switch (type)
                         {
-                            case CreateWorld.GumpType.Create:
+                            case GumpType.Create:
                                 from.Say("Generating " + entry.Name);
 
                                 if (CanGenerate(entry, ref error))
@@ -205,7 +205,7 @@ namespace Server.Commands
                                 }
 
                                 break;
-                            case CreateWorld.GumpType.Delete:
+                            case GumpType.Delete:
                                 if (!String.IsNullOrEmpty(entry.DeleteCommand))
                                 {
                                     from.Say("Deleting " + entry.Name);
@@ -532,11 +532,11 @@ namespace Server.Gumps
                 case 119:
                     return WeakEntityCollection.HasCollection("newshame");
                 case 120:
-                    return Server.Engines.NewMagincia.MaginciaBazaar.Instance != null;
+                    return Engines.NewMagincia.MaginciaBazaar.Instance != null;
                 case 121:
                     return WeakEntityCollection.HasCollection("highseas") || CharydbisSpawner.SpawnInstance != null;
                 case 122:
-                    return Server.Engines.CityLoyalty.CityLoyaltySystem.Cities != null && Server.Engines.CityLoyalty.CityLoyaltySystem.Cities.Count > 0 && Server.Engines.CityLoyalty.CityLoyaltySystem.Cities[0].Stone != null;
+                    return Engines.CityLoyalty.CityLoyaltySystem.Cities != null && Engines.CityLoyalty.CityLoyaltySystem.Cities.Count > 0 && Engines.CityLoyalty.CityLoyaltySystem.Cities[0].Stone != null;
                 case 123:
                     return HasItem(typeof(DungeonHitchingPost), new Point3D(6428, 2677, 0), Map.Trammel) &&
                            HasItem(typeof(DungeonHitchingPost), new Point3D(6428, 2677, 0), Map.Felucca);
@@ -545,9 +545,9 @@ namespace Server.Gumps
                 case 125:
                     return BedrollSpawner.Instances != null && BedrollSpawner.Instances.Count > 0;
                 case 126:
-                    return Server.Engines.TreasuresOfKotlCity.KotlBattleSimulator.Instance != null;
+                    return Engines.TreasuresOfKotlCity.KotlBattleSimulator.Instance != null;
                 case 128:
-                    return Server.Engines.CannedEvil.ChampionSystem.AllSpawns.Count > 0;
+                    return Engines.CannedEvil.ChampionSystem.AllSpawns.Count > 0;
             }
 
             return false;

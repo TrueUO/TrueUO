@@ -282,11 +282,6 @@ namespace Server.Misc
 
         public static int MobileNotoriety(Mobile source, IDamageable damageable)
         {
-            if (damageable is PublicMoongate)
-            {
-                return Notoriety.Innocent;
-            }
-
             Mobile target = damageable as Mobile;
 
             if (target == null)

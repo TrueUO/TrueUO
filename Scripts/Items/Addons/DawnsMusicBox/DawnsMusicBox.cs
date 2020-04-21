@@ -9,7 +9,7 @@ namespace Server.Items
 {
     public sealed class StopMusic : Packet
     {
-        public static readonly Packet Instance = Packet.SetStatic(new StopMusic());
+        public static readonly Packet Instance = SetStatic(new StopMusic());
         public StopMusic()
             : base(0x6D, 3)
         {
@@ -72,7 +72,7 @@ namespace Server.Items
         {
         }
 
-        public override int LabelNumber => 1075198;// Dawn’s Music Box
+        public override int LabelNumber => 1075198;// Dawnâ€™s Music Box
         public List<MusicName> Tracks => m_Tracks;
         [CommandProperty(AccessLevel.GameMaster)]
         public SecureLevel Level
@@ -261,7 +261,7 @@ namespace Server.Items
                 m_ItemID = ItemID;
 
             m.Send(new PlayMusic(music));
-            m_Timer = Timer.DelayCall(TimeSpan.FromSeconds(0.5), TimeSpan.FromSeconds(0.5), 4, new TimerCallback(Animate));
+            m_Timer = Timer.DelayCall(TimeSpan.FromSeconds(0.5), TimeSpan.FromSeconds(0.5), 4, Animate);
         }
 
         public void EndMusic(Mobile m)

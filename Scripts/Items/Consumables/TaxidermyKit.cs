@@ -170,9 +170,9 @@ namespace Server.Items
                     {
                         int index = lic.KillEntry.KillIndex;
 
-                        if (index >= 0 && index < Server.Engines.HuntsmasterChallenge.HuntingTrophyInfo.Infos.Count)
+                        if (index >= 0 && index < Engines.HuntsmasterChallenge.HuntingTrophyInfo.Infos.Count)
                         {
-                            Server.Engines.HuntsmasterChallenge.HuntingTrophyInfo info = Server.Engines.HuntsmasterChallenge.HuntingTrophyInfo.Infos[index];
+                            Engines.HuntsmasterChallenge.HuntingTrophyInfo info = Engines.HuntsmasterChallenge.HuntingTrophyInfo.Infos[index];
 
                             if (info != null)
                             {
@@ -445,7 +445,7 @@ namespace Server.Items
                     }
             }
 
-            Timer.DelayCall(TimeSpan.Zero, new TimerCallback(FixMovingCrate));
+            Timer.DelayCall(TimeSpan.Zero, FixMovingCrate);
         }
 
         private void FixMovingCrate()

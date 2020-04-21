@@ -58,7 +58,7 @@ namespace Server.Gumps
 
         public static void Initialize()
         {
-            CommandSystem.Register("ToTAdmin", AccessLevel.Administrator, new CommandEventHandler(ToTAdmin_OnCommand));
+            CommandSystem.Register("ToTAdmin", AccessLevel.Administrator, ToTAdmin_OnCommand);
         }
 
         [Usage("ToTAdmin")]
@@ -113,7 +113,7 @@ namespace Server.Gumps
                 TreasuresOfTokuno.DropEra = TreasuresOfTokunoEra.None;
                 from.SendMessage("Treasures of Tokuno Drops have been deactivated");
 
-                Server.Engines.SeasonalEvents.SeasonalEventSystem.OnToTDeactivated(from);
+                Engines.SeasonalEvents.SeasonalEventSystem.OnToTDeactivated(from);
             }
             else if (button >= 2)
             {

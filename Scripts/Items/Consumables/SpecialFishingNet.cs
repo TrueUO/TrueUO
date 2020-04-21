@@ -134,7 +134,7 @@ namespace Server.Items
             else if (IsChildOf(from.Backpack))
             {
                 from.SendLocalizedMessage(1010484); // Where do you wish to use the net?
-                from.BeginTarget(-1, true, TargetFlags.None, new TargetCallback(OnTarget));
+                from.BeginTarget(-1, true, TargetFlags.None, OnTarget);
             }
             else
             {
@@ -231,7 +231,7 @@ namespace Server.Items
 
                 LandTile t = map.Tiles.GetLandTile(tx, ty);
 
-                if (t.Z == p.Z && ((t.ID >= 0xA8 && t.ID <= 0xAB) || (t.ID >= 0x136 && t.ID <= 0x137)) && !Spells.SpellHelper.CheckMulti(new Point3D(tx, ty, p.Z), map))
+                if (t.Z == p.Z && ((t.ID >= 0xA8 && t.ID <= 0xAB) || (t.ID >= 0x136 && t.ID <= 0x137)) && !SpellHelper.CheckMulti(new Point3D(tx, ty, p.Z), map))
                 {
                     x = tx;
                     y = ty;

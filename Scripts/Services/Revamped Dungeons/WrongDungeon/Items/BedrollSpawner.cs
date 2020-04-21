@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -160,7 +160,7 @@ namespace Server.Items
             Bedrolls = new List<WrongBedrollBase>();
             MysteriousTunnels = new List<MysteriousTunnel>();
             Timer.DelayCall(TimeSpan.FromSeconds(10), CheckRespawn);
-            m_Timer = Timer.DelayCall(RestartDelay, RestartDelay, new TimerCallback(CheckRespawn));
+            m_Timer = Timer.DelayCall(RestartDelay, RestartDelay, CheckRespawn);
             m_Timer.Start();
 
             if (Instances == null)
@@ -293,7 +293,7 @@ namespace Server.Items
             if (next < DateTime.UtcNow)
                 next = DateTime.UtcNow;
 
-            m_Timer = Timer.DelayCall(next - DateTime.UtcNow, RestartDelay, new TimerCallback(CheckRespawn));
+            m_Timer = Timer.DelayCall(next - DateTime.UtcNow, RestartDelay, CheckRespawn);
             m_Timer.Start();
 
             Bedrolls = new List<WrongBedrollBase>();
@@ -319,7 +319,7 @@ namespace Server.Items
 
             if (version == 0)
             {
-                Timer.DelayCall<Map>(TimeSpan.FromSeconds(5), map =>
+                Timer.DelayCall(TimeSpan.FromSeconds(5), map =>
                     {
                         EnchantedHotItem.SpawnChests(map);
                         Console.WriteLine("Hot Item chests spawned for {0}.", Map);

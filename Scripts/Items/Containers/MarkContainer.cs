@@ -132,8 +132,8 @@ namespace Server.Items
         }
         public static void Initialize()
         {
-            CommandSystem.Register("SecretLocGen", AccessLevel.Administrator, new CommandEventHandler(SecretLocGen_OnCommand));
-            CommandSystem.Register("SecretLocDelete", AccessLevel.Administrator, new CommandEventHandler(SecretLocDelete_OnCommand));
+            CommandSystem.Register("SecretLocGen", AccessLevel.Administrator, SecretLocGen_OnCommand);
+            CommandSystem.Register("SecretLocDelete", AccessLevel.Administrator, SecretLocDelete_OnCommand);
         }
 
         [Usage("SecretLocDelete")]
@@ -159,7 +159,7 @@ namespace Server.Items
 
             e.Mobile.SendMessage("Secret mark containers have been created.");
 
-            Server.Engines.GenerateForgottenPyramid.Generate(e.Mobile);
+            Engines.GenerateForgottenPyramid.Generate(e.Mobile);
         }
 
         public void StopTimer()

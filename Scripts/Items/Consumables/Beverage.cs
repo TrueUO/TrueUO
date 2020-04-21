@@ -186,7 +186,7 @@ namespace Server.Items
         {
             if (Quantity > 0 && Content == BeverageType.HotCocoa)
             {
-                from.PublicOverheadMessage(Network.MessageType.Regular, 0x3B2, 1155739); // *You sip from the mug*
+                from.PublicOverheadMessage(MessageType.Regular, 0x3B2, 1155739); // *You sip from the mug*
                 Pour_OnTarget(from, from);
             }
             else
@@ -237,7 +237,7 @@ namespace Server.Items
         {
             if (Quantity > 0 && Content == BeverageType.GreenTea)
             {
-                from.PublicOverheadMessage(Network.MessageType.Regular, 0x3B2, 1155739); // *You sip from the mug*
+                from.PublicOverheadMessage(MessageType.Regular, 0x3B2, 1155739); // *You sip from the mug*
                 Pour_OnTarget(from, from);
             }
             else
@@ -288,7 +288,7 @@ namespace Server.Items
         {
             if (Quantity > 0 && Content == BeverageType.Coffee)
             {
-                from.PublicOverheadMessage(Network.MessageType.Regular, 0x3B2, 1155739); // *You sip from the mug*
+                from.PublicOverheadMessage(MessageType.Regular, 0x3B2, 1155739); // *You sip from the mug*
                 Pour_OnTarget(from, from);
             }
             else
@@ -658,9 +658,9 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             if (CheckType("PitcherWater") || CheckType("GlassPitcher"))
-                base.InternalDeserialize(reader, false);
+                InternalDeserialize(reader, false);
             else
-                base.InternalDeserialize(reader, true);
+                InternalDeserialize(reader, true);
 
             int version = reader.ReadInt();
 
@@ -1097,7 +1097,7 @@ namespace Server.Items
 
         public static void Initialize()
         {
-            EventSink.Login += new LoginEventHandler(EventSink_Login);
+            EventSink.Login += EventSink_Login;
         }
 
         private static void EventSink_Login(LoginEventArgs e)
@@ -1180,7 +1180,7 @@ namespace Server.Items
                         }
 
                         // *hic*
-                        m_Drunk.PublicOverheadMessage(Network.MessageType.Regular, 0x3B2, 500849);
+                        m_Drunk.PublicOverheadMessage(MessageType.Regular, 0x3B2, 500849);
                     }
 
                     if (m_Drunk.BAC <= 0)
@@ -1394,12 +1394,12 @@ namespace Server.Items
                 if (!Fillable || !ValidateUse(from, true))
                     return;
 
-                from.BeginTarget(-1, true, TargetFlags.None, new TargetCallback(Fill_OnTarget));
+                from.BeginTarget(-1, true, TargetFlags.None, Fill_OnTarget);
                 SendLocalizedMessageTo(from, 500837); // Fill from what?
             }
             else if (Pourable && ValidateUse(from, true))
             {
-                from.BeginTarget(-1, true, TargetFlags.None, new TargetCallback(Pour_OnTarget));
+                from.BeginTarget(-1, true, TargetFlags.None, Pour_OnTarget);
                 from.SendLocalizedMessage(1010086); // What do you want to use this on?
             }
         }
