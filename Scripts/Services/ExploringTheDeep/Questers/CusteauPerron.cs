@@ -194,7 +194,7 @@ namespace Server.Gumps
 
         }
 
-        public override void OnResponse(NetState state, RelayInfo info) //Function for GumpButtonType.Reply Buttons 
+        public override void OnResponse(NetState sender, RelayInfo info) //Function for GumpButtonType.Reply Buttons 
         {
             switch (info.ButtonID)
             {
