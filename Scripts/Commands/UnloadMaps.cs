@@ -8,10 +8,6 @@ namespace Server.Commands
 {
     public class Unload
     {
-        public Unload()
-        {
-        }
-
         public static void Initialize()
         {
             CommandSystem.Register("UnloadTrammel", AccessLevel.Administrator, UnloadTrammel_OnCommand);

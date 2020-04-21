@@ -58,10 +58,6 @@ namespace Server.Commands
         private static readonly string m_Path = Path.Combine("Data", "teleporters.csv");
         private static readonly char[] m_Sep = { ',' };
 
-        public GenTeleporter()
-        {
-        }
-
         public static void Initialize()
         {
             CommandSystem.Register("TelGen", AccessLevel.Administrator, GenTeleporter_OnCommand);
@@ -129,9 +125,6 @@ namespace Server.Commands
         {
             private static readonly Queue m_Queue = new Queue();
             private int m_Count;
-            public TeleportersCreator()
-            {
-            }
 
             public static bool FindTeleporter(Map map, Point3D p)
             {

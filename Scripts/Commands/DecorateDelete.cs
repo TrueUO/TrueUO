@@ -112,10 +112,6 @@ namespace Server.Commands
         }
         #endregion
 
-        public DecorationListDelete()
-        {
-        }
-
         private static readonly Type typeofStatic = typeof(Static);
         private static readonly Type typeofLocalizedStatic = typeof(LocalizedStatic);
         private static readonly Type typeofBaseDoor = typeof(BaseDoor);
