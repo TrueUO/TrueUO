@@ -371,7 +371,7 @@ namespace Server.Items
             private static readonly SpellInfo m_Info = new SpellInfo("Ball Of Summoning", "", 230);
             private readonly BallOfSummoning m_Ball;
             private readonly Mobile m_Caster;
-            private bool m_Stop;
+
             public PetSummoningSpell(BallOfSummoning ball, Mobile caster)
                 : base(caster, null, m_Info)
             {
@@ -411,21 +411,9 @@ namespace Server.Items
                 return true;
             }
 
-            public override void DoHurtFizzle()
-            {
-                if (!m_Stop)
-                    base.DoHurtFizzle();
-            }
-
-            public override void DoFizzle()
-            {
-                if (!m_Stop)
-                    base.DoFizzle();
-            }
-
             public override void OnDisturb(DisturbType type, bool message)
             {
-                if (message && !m_Stop)
+                if (message)
                     Caster.SendLocalizedMessage(1080074); // You have been disrupted while attempting to summon your pet!
             }
 

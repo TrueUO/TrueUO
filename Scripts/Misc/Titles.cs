@@ -219,10 +219,9 @@ namespace Server.Misc
                 title.Append(beheld.Name);
             }
 
-            if (beheld is PlayerMobile && ((PlayerMobile)beheld).DisplayChampionTitle)
+            if (beheld is PlayerMobile && (((PlayerMobile)beheld).CurrentChampTitle != null) && ((PlayerMobile)beheld).DisplayChampionTitle)
             {
-                if (((PlayerMobile)beheld).CurrentChampTitle != null)
-                    title.AppendFormat(((PlayerMobile)beheld).CurrentChampTitle);
+                title.AppendFormat(((PlayerMobile)beheld).CurrentChampTitle);
             }
 
             string customTitle = beheld.Title;
