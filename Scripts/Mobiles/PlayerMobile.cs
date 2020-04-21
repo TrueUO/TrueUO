@@ -1685,27 +1685,78 @@ namespace Server.Mobiles
 
         public override void AggressiveAction(Mobile aggressor, bool criminal)
         {
-            base.AggressiveAction(aggressor, criminal);
-
+            // This will update aggressor for the aggressors master
             if (aggressor is BaseCreature && ((BaseCreature)aggressor).ControlMaster != null && ((BaseCreature)aggressor).ControlMaster != this)
             {
                 Mobile aggressiveMaster = ((BaseCreature)aggressor).ControlMaster;
 
-                if (NotorietyHandlers.CheckAggressor(Aggressors, aggressor))
+                // First lets find out if the creatures master is in our aggressor list
+                AggressorInfo info = Aggressors.FirstOrDefault(i => i.Attacker == aggressiveMaster);
+
+                if (info != null)
                 {
+                    // already in the list, so we're refreshing it
+                    info.Refresh();
+                    info.CriminalAggression = criminal;
+                }
+                else
+                {
+                    // not in the list, so we're adding it
                     Aggressors.Add(AggressorInfo.Create(aggressiveMaster, this, criminal));
-                    aggressiveMaster.Delta(MobileDelta.Noto);
 
-                    if (NotorietyHandlers.CheckAggressed(aggressor.Aggressed, this))
-                        aggressiveMaster.Aggressed.Add(AggressorInfo.Create(aggressiveMaster, this, criminal));
-
-                    if (aggressiveMaster is PlayerMobile || (aggressiveMaster is BaseCreature && !((BaseCreature)aggressiveMaster).IsMonster))
+                    if (CanSee(aggressiveMaster) && NetState != null)
                     {
-                        BuffInfo.AddBuff(this, new BuffInfo(BuffIcon.HeatOfBattleStatus, 1153801, 1153827, Aggression.CombatHeatDelay, this, true));
-                        BuffInfo.AddBuff(aggressiveMaster, new BuffInfo(BuffIcon.HeatOfBattleStatus, 1153801, 1153827, Aggression.CombatHeatDelay, aggressiveMaster, true));
+                        NetState.Send(MobileIncoming.Create(NetState, this, aggressiveMaster));
                     }
+
+                    UpdateAggrExpire();
+                }
+
+                // Now, if I am in the creatures master aggressor list, it needs to be refreshed
+                info = aggressiveMaster.Aggressors.FirstOrDefault(i => i.Attacker == this);
+
+                if (info != null)
+                {
+                    info.Refresh();
+                }
+
+                info = Aggressed.FirstOrDefault(i => i.Defender == aggressiveMaster);
+
+                if (info != null)
+                {
+                    info.Refresh();
+                }
+
+                // next lets find out if we're on the creatures master aggressed list
+                info = aggressiveMaster.Aggressed.FirstOrDefault(i => i.Defender == this);
+
+                if (info != null)
+                {
+                    // already in the list, so we're refreshing it
+                    info.Refresh();
+                    info.CriminalAggression = criminal;
+                }
+                else
+                {
+                    // not in the list, so we're adding it
+                    aggressor.Aggressed.Add(AggressorInfo.Create(aggressiveMaster, this, criminal));
+
+                    if (CanSee(aggressiveMaster) && NetState != null)
+                    {
+                        NetState.Send(MobileIncoming.Create(NetState, this, aggressiveMaster));
+                    }
+
+                    UpdateAggrExpire();
+                }
+
+                if (aggressiveMaster is PlayerMobile || (aggressiveMaster is BaseCreature && !((BaseCreature)aggressiveMaster).IsMonster))
+                {
+                    BuffInfo.AddBuff(this, new BuffInfo(BuffIcon.HeatOfBattleStatus, 1153801, 1153827, Aggression.CombatHeatDelay, this, true));
+                    BuffInfo.AddBuff(aggressiveMaster, new BuffInfo(BuffIcon.HeatOfBattleStatus, 1153801, 1153827, Aggression.CombatHeatDelay, aggressiveMaster, true));
                 }
             }
+
+            base.AggressiveAction(aggressor, criminal);
         }
 
         public override void DoHarmful(IDamageable damageable, bool indirect)
@@ -2059,8 +2110,7 @@ namespace Server.Mobiles
 
             BestialSetHelper.OnHeal(this, from, ref amount);
 
-            // Removed until we can figure out the endless loop, or do a complete refactor
-            /*if (amount > 0 && from != null && from != this)
+            if (amount > 0 && from != null && from != this)
             {
                 for (int i = Aggressed.Count - 1; i >= 0; i--)
                 {
@@ -2091,7 +2141,7 @@ namespace Server.Mobiles
                         from.DoHarmful(info.Attacker, true);
                     }
                 }
-            }*/
+            }
         }
 
         public override bool AllowItemUse(Item item)

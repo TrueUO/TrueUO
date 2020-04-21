@@ -1131,7 +1131,7 @@ namespace Server
         public virtual void GetChildNameProperties(ObjectPropertyList list, Item item)
         { }
 
-        private void UpdateAggrExpire()
+        public void UpdateAggrExpire()
         {
             if (m_Deleted || (m_Aggressors.Count == 0 && m_Aggressed.Count == 0))
             {
