@@ -14,7 +14,7 @@ namespace Server.Commands
 
         public static void Initialize()
         {
-            CommandSystem.Register("GenGameDocs", AccessLevel.GameMaster, new CommandEventHandler(GenGameDocs_OnCommand));
+            CommandSystem.Register("GenGameDocs", AccessLevel.GameMaster, GenGameDocs_OnCommand);
         }
 
         private static void GenGameDocs_OnCommand(CommandEventArgs e)
