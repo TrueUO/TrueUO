@@ -1,7 +1,6 @@
 #region References
 using Server.Engines.ArenaSystem;
 using Server.Engines.PartySystem;
-using Server.Engines.Quests;
 using Server.Engines.VvV;
 using Server.Guilds;
 using Server.Items;
