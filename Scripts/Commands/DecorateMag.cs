@@ -68,9 +68,6 @@ namespace Server.Commands
         private int m_ItemID;
         private string[] m_Params;
         private ArrayList m_Entries;
-        public DecorationListMag()
-        {
-        }
 
         public static ArrayList ReadAll(string path)
         {

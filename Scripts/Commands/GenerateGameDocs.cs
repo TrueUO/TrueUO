@@ -145,10 +145,6 @@ namespace Server.Commands
             private readonly HashSet<String> headerSet = new HashSet<string>();
             private readonly List<String> allHeaders = new List<string>();
 
-            public CsvFile()
-            {
-            }
-
             public void AddRow()
             {
                 currentRow = new Dictionary<String, String>();

@@ -85,10 +85,6 @@ namespace Server.Commands
 
         public static bool WorldCreating { get; set; }
 
-        public CreateWorld()
-        {
-        }
-
         public static void Initialize()
         {
             CommandSystem.Register("Createworld", AccessLevel.Administrator, Create_OnCommand);

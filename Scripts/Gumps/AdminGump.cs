@@ -1381,10 +1381,6 @@ namespace Server.Gumps
         {
             public static readonly IComparer Instance = new SharedAccountComparer();
 
-            public SharedAccountComparer()
-            {
-            }
-
             public int Compare(object x, object y)
             {
                 DictionaryEntry a = (DictionaryEntry)x;
@@ -3226,10 +3222,6 @@ namespace Server.Gumps
         {
             public static readonly IComparer Instance = new NetStateComparer();
 
-            public NetStateComparer()
-            {
-            }
-
             public int Compare(object x, object y)
             {
                 if (x == null && y == null)
@@ -3267,10 +3259,6 @@ namespace Server.Gumps
         private class AccountComparer : IComparer
         {
             public static readonly IComparer Instance = new AccountComparer();
-
-            public AccountComparer()
-            {
-            }
 
             public int Compare(object x, object y)
             {
