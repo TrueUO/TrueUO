@@ -16,10 +16,6 @@ namespace Server.Mobiles
 
         public virtual int EffectRange => 5;
 
-        public AreaEffect()
-        {
-        }
-
         public static bool CheckThinkTrigger(BaseCreature bc)
         {
             AbilityProfile profile = PetTrainingHelper.GetAbilityProfile(bc);
@@ -189,10 +185,6 @@ namespace Server.Mobiles
 
     public class AuraOfEnergy : AreaEffect
     {
-        public AuraOfEnergy()
-        {
-        }
-
         public override void DoEffect(BaseCreature creature, Mobile defender)
         {
             AOS.Damage(defender, creature, Utility.RandomMinMax(20, 30), 0, 0, 0, 0, 100);
@@ -213,10 +205,6 @@ namespace Server.Mobiles
         public override int ManaCost => 100;
 
         public static Dictionary<Mobile, Timer> _Table;
-
-        public AuraOfNausea()
-        {
-        }
 
         public override void DoEffect(BaseCreature creature, Mobile defender)
         {
@@ -267,10 +255,6 @@ namespace Server.Mobiles
 
     public class EssenceOfDisease : AreaEffect
     {
-        public EssenceOfDisease()
-        {
-        }
-
         public override void DoEffect(BaseCreature creature, Mobile defender)
         {
             AOS.Damage(defender, creature, Utility.RandomMinMax(20, 30), 0, 0, 0, 100, 0);
@@ -285,10 +269,6 @@ namespace Server.Mobiles
 
     public class EssenceOfEarth : AreaEffect
     {
-        public EssenceOfEarth()
-        {
-        }
-
         public override void DoEffect(BaseCreature creature, Mobile defender)
         {
             AOS.Damage(defender, creature, Utility.RandomMinMax(20, 30), 100, 0, 0, 0, 0);
@@ -306,10 +286,6 @@ namespace Server.Mobiles
         public override int ManaCost => 30;
 
         private bool _DoingEffect;
-
-        public ExplosiveGoo()
-        {
-        }
 
         public override void DoEffects(BaseCreature creature, Mobile combatant)
         {
@@ -356,10 +332,6 @@ namespace Server.Mobiles
         public override double TriggerChance => 0.4;
         public override int EffectRange => 10;
         public override int ManaCost => 50;
-
-        public PoisonBreath()
-        {
-        }
 
         public override void DoEffect(BaseCreature creature, Mobile m)
         {
@@ -426,10 +398,6 @@ namespace Server.Mobiles
         public override int EffectRange => 10;
         public override int ManaCost => 0;
         public override bool RequiresCombatant => false;
-
-        public AuraDamage()
-        {
-        }
 
         public override TimeSpan GetCooldown(BaseCreature bc)
         {
