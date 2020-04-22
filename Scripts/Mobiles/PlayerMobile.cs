@@ -1779,7 +1779,7 @@ namespace Server.Mobiles
             }
         }
 
-        public override bool CanBeHarmful(IDamageable damageable, bool message, bool ignoreOurBlessedness)
+        public override bool CanBeHarmful(IDamageable damageable, bool message, bool ignoreOurBlessedness, bool ignorePeaceCheck = false)
         {
             Mobile target = damageable as Mobile;
 
@@ -1788,7 +1788,7 @@ namespace Server.Mobiles
                 return false;
             }
 
-            if (Peaced)
+            if (Peaced && !ignorePeaceCheck)
             {
                 //!+ TODO: message
                 return false;

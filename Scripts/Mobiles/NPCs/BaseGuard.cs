@@ -24,7 +24,7 @@ namespace Server.Mobiles
 
         public abstract Mobile Focus { get; set; }
 
-        public override bool CanBeHarmful(IDamageable target, bool message, bool ignoreOurBlessedness)
+        public override bool CanBeHarmful(IDamageable target, bool message, bool ignoreOurBlessedness, bool ignorePeaceCheck = false)
         {
             if (target is Mobile && ((Mobile)target).GuardImmune)
             {

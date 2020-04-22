@@ -6109,7 +6109,7 @@ namespace Server.Mobiles
             }
         }
 
-        public override bool CanBeHarmful(IDamageable damageable, bool message, bool ignoreOurBlessedness)
+        public override bool CanBeHarmful(IDamageable damageable, bool message, bool ignoreOurBlessedness, bool ignorePeaceCheck = false)
         {
             Mobile target = damageable as Mobile;
 
