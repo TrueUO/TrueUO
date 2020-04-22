@@ -1779,7 +1779,7 @@ namespace Server.Mobiles
             }
         }
 
-        public override bool CanBeHarmful(IDamageable damageable, bool message, bool ignoreOurBlessedness, bool ignorePeaceCheck = false)
+        public override bool CanBeHarmful(IDamageable damageable, bool message, bool ignoreOurBlessedness, bool ignorePeaceCheck)
         {
             Mobile target = damageable as Mobile;
 
@@ -1819,7 +1819,7 @@ namespace Server.Mobiles
                 return false;
             }
 
-            return base.CanBeHarmful(damageable, message, ignoreOurBlessedness);
+            return base.CanBeHarmful(damageable, message, ignoreOurBlessedness, ignorePeaceCheck);
         }
 
         public override bool CanBeBeneficial(Mobile target, bool message, bool allowDead)
