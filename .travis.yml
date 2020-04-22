@@ -2,11 +2,12 @@ language: csharp
 solution: ServUO.sln
 mono: latest
 
+dist: trusty
+
 addons:
   sonarcloud:
     organization: "trueuo"
-    token:
-      secure: "cde63470587bfba0838f9b4a2447f9104a705568" # encrypted value of your token
+    token: "0ad51db5cb52de20e106fabd76bed0bfc63a25d7" # encrypted value of your token
 
 script:
   # the following command line builds the project, runs the tests with coverage and then execute the SonarCloud analysis
