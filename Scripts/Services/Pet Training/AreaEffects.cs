@@ -423,7 +423,7 @@ namespace Server.Mobiles
                     def.Direct,
                     DamageType.SpellAOE);
 
-                creature.DoHarmful(m);
+                //creature.DoHarmful(m); // Need to re-look at this.
                 m.RevealingAction();
             }
 
