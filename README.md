@@ -1,8 +1,8 @@
 # [ServUO]
 
-[![GitHub issues](https://img.shields.io/github/issues/servuo/servuo.svg)](https://github.com/ServUO/ServUO/issues)
+[![GitHub issues](https://img.shields.io/github/issues/servuo/servuo.svg)](https://github.com/TrueUO/TrueUO/issues)
 
-[![Discord](https://img.shields.io/discord/110970849628000256.svg)](https://discord.gg/0cQjvnFUN26nRt7y)
+[![Discord](https://img.shields.io/discord/110970849628000256.svg)](https://discord.gg/spjepdC)
 [![GitHub contributors](https://img.shields.io/github/contributors/servuo/servuo.svg)](https://github.com/ServUO/ServUO/graphs/contributors)
 [![GitHub](https://img.shields.io/github/license/servuo/servuo.svg?color=a)](https://github.com/ServUO/ServUO/blob/master/LICENSE)
 
