@@ -78,7 +78,9 @@ namespace Server.Gumps
             if (filter != null && (filter = filter.Trim()).Length == 0)
                 filter = null;
             else
-                filter = filter.ToLower();
+            {
+                filter = filter?.ToLower();
+            }
 
             List<Mobile> list = new List<Mobile>();
             List<NetState> states = NetState.Instances;
@@ -275,9 +277,6 @@ namespace Server.Gumps
         private class InternalComparer : IComparer<Mobile>
         {
             public static readonly IComparer<Mobile> Instance = new InternalComparer();
-            public InternalComparer()
-            {
-            }
 
             public int Compare(Mobile x, Mobile y)
             {

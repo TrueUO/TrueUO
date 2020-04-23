@@ -7741,6 +7741,11 @@ namespace Server
 
         public virtual bool CanBeHarmful(IDamageable target, bool message, bool ignoreOurBlessedness)
         {
+            return CanBeHarmful(target, message, ignoreOurBlessedness, false);
+        }
+
+        public virtual bool CanBeHarmful(IDamageable target, bool message, bool ignoreOurBlessedness, bool ignorePeaceCheck)
+        {
             if (target == null)
             {
                 return false;

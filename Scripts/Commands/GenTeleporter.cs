@@ -7,10 +7,11 @@ namespace Server.Commands
 {
     class Location : IComparable
     {
-        public int X;
-        public int Y;
-        public int Z;
-        public Map Map;
+        public int X { get; set; }
+        public int Y { get; set; }
+        public int Z { get; set; }
+        public Map Map { get; set; }
+
         public Location(int x, int y, int z, Map m)
         {
             X = x;
@@ -40,6 +41,11 @@ namespace Server.Commands
                 X, Y, Z, Map.MapID);
             return hashString.GetHashCode();
         }
+
+        public override bool Equals(object o)
+        {
+            return o is Location && ((Location)o).X == X && ((Location)o).Y == Y && ((Location)o).Z == Z && ((Location)o).Map == Map;
+        }
     }
     class TelDef
     {
@@ -57,10 +63,6 @@ namespace Server.Commands
     {
         private static readonly string m_Path = Path.Combine("Data", "teleporters.csv");
         private static readonly char[] m_Sep = { ',' };
-
-        public GenTeleporter()
-        {
-        }
 
         public static void Initialize()
         {
@@ -129,9 +131,6 @@ namespace Server.Commands
         {
             private static readonly Queue m_Queue = new Queue();
             private int m_Count;
-            public TeleportersCreator()
-            {
-            }
 
             public static bool FindTeleporter(Map map, Point3D p)
             {

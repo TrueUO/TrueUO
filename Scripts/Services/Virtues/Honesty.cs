@@ -1,10 +1,4 @@
 #region References
-using Server.Engines.CannedEvil;
-using Server.Items;
-using Server.Mobiles;
-using Server.Multis;
-using Server.Network;
-using Server.Regions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,29 +6,30 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+
+using Server.Engines.CannedEvil;
+using Server.Items;
+using Server.Mobiles;
+using Server.Multis;
+using Server.Network;
+using Server.Regions;
 #endregion
 
 namespace Server.Services.Virtues
 {
     public static class HonestyVirtue
     {
-        /// <summary>
-        /// Set this to false if you are having memory shortages. True means points are validated at compile time and reduces run time processing
-        /// to randomly choose a point. Making it false will dramatically decrease program memory usage and compile time, however will choose
-        /// each random point at runtime.
-        /// </summary>
-        public static readonly bool UseSpawnArea = false;
-
         public static bool Enabled { get; set; }
         public static int MaxGeneration { get; set; }
         public static bool TrammelGeneration { get; set; }
+        public static bool UseSpawnArea { get; set; }
 
         private static readonly string[] _Regions =
             {"Britain", "Minoc", "Magincia", "Trinsic", "Jhelom", "Moonglow", "Skara Brae", "Yew"};
 
         private const TileFlag _Filter = TileFlag.Wet | TileFlag.Roof | TileFlag.Impassable;
 
-        private static readonly List<Item> _Items;
+        private static readonly HashSet<Item> _Items;
 
         private static SpawnArea _FeluccaArea, _TrammelArea;
 
@@ -43,8 +38,9 @@ namespace Server.Services.Virtues
             Enabled = Config.Get("Honesty.Enabled", true);
             MaxGeneration = Config.Get("Honesty.MaxGeneration", 1000);
             TrammelGeneration = !Siege.SiegeShard && Config.Get("Honesty.TrammelGeneration", true);
+            UseSpawnArea = Config.Get("Honesty.UseSpawnArea", true);
 
-            _Items = new List<Item>(MaxGeneration);
+            _Items = new HashSet<Item>(MaxGeneration);
         }
 
         private static void GenerateImages()
@@ -74,7 +70,7 @@ namespace Server.Services.Virtues
 
             if (Enabled)
             {
-                _Items.AddRange(World.Items.Values.Where(item => item.HonestyItem));
+                _Items.UnionWith(World.Items.Values.Where(item => item.HonestyItem));
 
                 GenerateHonestyItems();
 
@@ -120,15 +116,9 @@ namespace Server.Services.Virtues
 
         private static void PruneTaken()
         {
-            _Items.RemoveAll(ItemFlags.GetTaken);
+            _Items.RemoveWhere(ItemFlags.GetTaken);
         }
 
-        /*
-		private static bool ValidateSpawnPoint(Map map, int x, int y, int z)
-		{
-			return TreasureMap.ValidateLocation(x, y, map);
-		}
-		*/
         private static Point3D GetRandom(Map map)
         {
             if (map == null)
@@ -137,7 +127,7 @@ namespace Server.Services.Virtues
             int fw = map.MapID <= 1 ? 5119 : map.Width;
             int fh = map.MapID <= 1 ? 4095 : map.Height;
 
-            int x, y, z = 0;
+            int x, y, z;
 
             do
             {
@@ -173,13 +163,9 @@ namespace Server.Services.Virtues
             Region reg = Region.Find(p, map);
 
             //no-go in towns, houses, dungeons and champspawns
-            if (reg != null)
+            if (reg != null && (reg.IsPartOf<TownRegion>() || reg.IsPartOf<DungeonRegion>() || reg.IsPartOf<ChampionSpawnRegion>() || reg.IsPartOf<HouseRegion>()))
             {
-                if (reg.IsPartOf<TownRegion>() || reg.IsPartOf<DungeonRegion>() || reg.IsPartOf<ChampionSpawnRegion>() ||
-                    reg.IsPartOf<HouseRegion>())
-                {
-                    return false;
-                }
+                return false;
             }
 
             //check for house within 5 tiles
@@ -366,9 +352,9 @@ namespace Server.Services.Virtues
 
                 if (!String.IsNullOrWhiteSpace(socket.HonestyRegion) && BaseVendor.AllVendors.Count >= 10)
                 {
-                    List<BaseVendor> matchedVendors = BaseVendor.AllVendors.Where(vendor => (vendor.Map == socket.Owner.Map && vendor.Region.IsPartOf(socket.HonestyRegion))).ToList<BaseVendor>();
+                    List<BaseVendor> matchedVendors = BaseVendor.AllVendors.Where(vendor => (vendor.Map == socket.Owner.Map && vendor.Region.IsPartOf(socket.HonestyRegion))).ToList();
 
-                    if (matchedVendors != null && matchedVendors.Count > 0)
+                    if (matchedVendors.Count > 0)
                     {
                         socket.HonestyOwner = matchedVendors[Utility.Random(matchedVendors.Count)];
                     }

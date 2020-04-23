@@ -1779,7 +1779,7 @@ namespace Server.Mobiles
             }
         }
 
-        public override bool CanBeHarmful(IDamageable damageable, bool message, bool ignoreOurBlessedness)
+        public override bool CanBeHarmful(IDamageable damageable, bool message, bool ignoreOurBlessedness, bool ignorePeaceCheck)
         {
             Mobile target = damageable as Mobile;
 
@@ -1788,7 +1788,7 @@ namespace Server.Mobiles
                 return false;
             }
 
-            if (Peaced)
+            if (Peaced && !ignorePeaceCheck)
             {
                 //!+ TODO: message
                 return false;
@@ -1819,7 +1819,7 @@ namespace Server.Mobiles
                 return false;
             }
 
-            return base.CanBeHarmful(damageable, message, ignoreOurBlessedness);
+            return base.CanBeHarmful(damageable, message, ignoreOurBlessedness, ignorePeaceCheck);
         }
 
         public override bool CanBeBeneficial(Mobile target, bool message, bool allowDead)
@@ -5536,7 +5536,7 @@ namespace Server.Mobiles
         {
             if (IsPlayer())
             {
-                IgnoreMobiles = false;
+                IgnoreMobiles = TransformationSpellHelper.UnderTransformation(this, typeof(WraithFormSpell));
             }
             else
             {
@@ -6509,12 +6509,15 @@ namespace Server.Mobiles
 
                 if (pet == null || pet.Deleted)
                 {
-                    pet.IsStabled = false;
-                    pet.StabledBy = null;
-
-                    if (Stabled.Contains(pet))
+                    if (pet != null)
                     {
-                        Stabled.Remove(pet);
+                        pet.IsStabled = false;
+                        pet.StabledBy = null;
+
+                        if (Stabled.Contains(pet))
+                        {
+                            Stabled.Remove(pet);
+                        }
                     }
 
                     continue;
