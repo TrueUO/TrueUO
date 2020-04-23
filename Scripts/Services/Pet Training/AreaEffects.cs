@@ -395,7 +395,7 @@ namespace Server.Mobiles
     public class AuraDamage : AreaEffect
     {
         public override double TriggerChance => 0.4;
-        public override int EffectRange => 10;
+        public override int EffectRange => 3;
         public override int ManaCost => 0;
         public override bool RequiresCombatant => false;
 
@@ -423,7 +423,7 @@ namespace Server.Mobiles
                     def.Direct,
                     DamageType.SpellAOE);
 
-                //creature.DoHarmful(m); // Need to re-look at this.
+                creature.DoHarmful(m); // Need to re-look at this.
                 m.RevealingAction();
             }
 
@@ -436,7 +436,6 @@ namespace Server.Mobiles
         public class AuraDefinition
         {
             public TimeSpan Cooldown { get; set; }
-            public int Range { get; set; }
 
             public int Damage { get; set; }
             public int Physical { get; set; }
@@ -450,19 +449,18 @@ namespace Server.Mobiles
             public Type[] Uses { get; private set; }
 
             public AuraDefinition()
-                : this(TimeSpan.FromSeconds(5), 4, 5, 0, 0, 0, 0, 0, 0, 100, new Type[] { })
+                : this(TimeSpan.FromSeconds(5), 5, 0, 0, 0, 0, 0, 0, 100, new Type[] { })
             {
             }
 
             public AuraDefinition(params Type[] uses)
-                : this(TimeSpan.FromSeconds(5), 2, 5, 0, 100, 0, 0, 0, 0, 0, uses)
+                : this(TimeSpan.FromSeconds(5), 5, 0, 100, 0, 0, 0, 0, 0, uses)
             {
             }
 
-            public AuraDefinition(TimeSpan cooldown, int range, int baseDamage, int phys, int fire, int cold, int poison, int energy, int chaos, int direct, Type[] uses)
+            public AuraDefinition(TimeSpan cooldown, int baseDamage, int phys, int fire, int cold, int poison, int energy, int chaos, int direct, Type[] uses)
             {
                 Cooldown = cooldown;
-                Range = range;
                 Damage = baseDamage;
                 Physical = phys;
                 Fire = fire;
@@ -488,13 +486,11 @@ namespace Server.Mobiles
                 Definitions.Add(defaul);
 
                 cora = new AuraDefinition(typeof(CoraTheSorceress));
-                cora.Range = 3;
                 cora.Damage = 10;
                 cora.Fire = 0;
                 Definitions.Add(cora);
 
                 fireAura = new AuraDefinition(typeof(FlameElemental), typeof(FireDaemon), typeof(LesserFlameElemental));
-                fireAura.Range = 5;
                 fireAura.Damage = 7;
                 Definitions.Add(fireAura);
 
