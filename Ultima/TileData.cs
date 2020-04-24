@@ -959,7 +959,7 @@ namespace Ultima
                     {
                         if ((i & 0x1F) == 0)
                         {
-                            bin.Write(landheader[j++]); //header
+                            bin.Write(landheader[j++]); 
                         }
 
                         bin.Write((int)m_LandData[i].Flags);
@@ -986,7 +986,7 @@ namespace Ultima
                     {
                         if ((i & 0x1F) == 0)
                         {
-                            bin.Write(itemheader[j++]); // header
+                            bin.Write(itemheader[j++]); 
                         }
 
                         bin.Write((int)m_ItemData[i].Flags);
