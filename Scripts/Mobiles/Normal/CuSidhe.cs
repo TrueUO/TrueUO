@@ -21,7 +21,7 @@ namespace Server.Mobiles
             double chance = Utility.RandomDouble() * 23301;
 
             if (chance <= 1)
-                Hue = Utility.RandomList(0x487, 0x489);
+                Hue = 0x489;
             else if (chance <= 301)
                 Hue = Utility.RandomList(0x657, 0x515, 0x4B1, 0x481, 0x482, 0x455);
             else if (chance <= 3301)
