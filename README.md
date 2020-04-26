@@ -1,10 +1,7 @@
 # [ServUO]
 
-[![GitHub issues](https://img.shields.io/github/issues/servuo/servuo.svg)](https://github.com/ServUO/ServUO/issues)
-
-[![Discord](https://img.shields.io/discord/110970849628000256.svg)](https://discord.gg/0cQjvnFUN26nRt7y)
-[![GitHub contributors](https://img.shields.io/github/contributors/servuo/servuo.svg)](https://github.com/ServUO/ServUO/graphs/contributors)
-[![GitHub](https://img.shields.io/github/license/servuo/servuo.svg?color=a)](https://github.com/ServUO/ServUO/blob/master/LICENSE)
+[![GitHub issues](https://img.shields.io/github/issues/trueuo/trueuo.svg)](https://github.com/TrueUO/TrueUO/issues)
+[![GitHub](https://img.shields.io/github/license/servuo/servuo.svg?color=a)](https://github.com/TrueUO/TrueUO/blob/master/LICENSE)
 
 
 ServUO is a community driven Ultima Online Server Emulator written in C#.
