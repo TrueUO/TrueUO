@@ -6172,7 +6172,7 @@ namespace Server
             if (m_HitsTimer != null)
                 m_HitsTimer.Stop();
 
-            if (CanRegenHits && Hits < HitsMax)
+            if (CanRegenHits && Hits < HitsMax) 
             {
                 if (m_HitsTimer == null)
                 {
