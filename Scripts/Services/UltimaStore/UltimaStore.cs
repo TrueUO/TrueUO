@@ -188,6 +188,7 @@ namespace Server.Engines.UOStore
             // decorations
             cat = StoreCategory.Decorations;
             Register<DecorativeKitchenSet>(1158970, 1158971, 0, 0x9CE8, 0, 1200, cat);
+            Register<MetalLadderDeed>(1159478, 1159479, 0xA55C, 0, 0, 400, cat);
             Register<SquirrelMailbox>(1158859, 1158857, 0xA207, 0, 0, 400, cat);
             Register<BarrelMailbox>(1158859, 1158857, 0xA1F7, 0, 0, 400, cat);
             Register<DecorativeBlackwidowDeed>(1157897, 1157898, 0, 0x9CD7, 0, 600, cat);
