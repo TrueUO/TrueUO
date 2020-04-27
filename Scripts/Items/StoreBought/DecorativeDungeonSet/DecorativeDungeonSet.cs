@@ -16,7 +16,6 @@ namespace Server.Items
             DropItem(new DungeonBullDeed());
 
             Bag bag = new Bag();
-            // Needs fencing added
             DropItem(bag);
         }
 
