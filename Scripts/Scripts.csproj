@@ -8629,9 +8629,6 @@
     <Compile Include="Misc\WeightOverloading.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Misc\WelcomeTimer.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Abilities\Enhancement.cs">
       <SubType>Code</SubType>
     </Compile>
