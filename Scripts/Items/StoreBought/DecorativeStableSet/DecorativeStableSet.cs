@@ -14,10 +14,92 @@ namespace Server.Items
             DropItem(new Feedbag());
             DropItem(new CowPie());
 
-            Bag bag = new Bag();
-            // Needs fencing added
+            var box = new WoodenBox();
+
+            var item = new DecorativeStableFencing(FencingType.CornerPiece);
+            box.DropItem(item);
+
+            item = new DecorativeStableFencing(FencingType.EastFacingPieces);
+            box.DropItem(item);
+
+            item = new DecorativeStableFencing(FencingType.EastFacingPieces);
+            box.DropItem(item);
+
+            item = new DecorativeStableFencing(FencingType.EastFacingPieces);
+            box.DropItem(item);
+
+            item = new DecorativeStableFencing(FencingType.EastFacingPieces);
+            box.DropItem(item);
+
+            item = new DecorativeStableFencing(FencingType.EastFacingPieces);
+            box.DropItem(item);
+
+            item = new DecorativeStableFencing(FencingType.EastFacingPieces);
+            box.DropItem(item);
+
+            item = new DecorativeStableFencing(FencingType.EastFacingPieces);
+            box.DropItem(item);
+
+            item = new DecorativeStableFencing(FencingType.EastFacingPieces);
+            box.DropItem(item);
+
+            item = new DecorativeStableFencing(FencingType.EastFacingPieces);
+            box.DropItem(item);
+
+            item = new DecorativeStableFencing(FencingType.SouthFacingPieces);
+            box.DropItem(item);
+
+            item = new DecorativeStableFencing(FencingType.SouthFacingPieces);
+            box.DropItem(item);
+
+            item = new DecorativeStableFencing(FencingType.SouthFacingPieces);
+            box.DropItem(item);
+
+            item = new DecorativeStableFencing(FencingType.SouthFacingPieces);
+            box.DropItem(item);
+
+            item = new DecorativeStableFencing(FencingType.SouthFacingPieces);
+            box.DropItem(item);
+
+            item = new DecorativeStableFencing(FencingType.SouthFacingPieces);
+            box.DropItem(item);
+
+            item = new DecorativeStableFencing(FencingType.SouthFacingPieces);
+            box.DropItem(item);
+
+            item = new DecorativeStableFencing(FencingType.SouthFacingPieces);
+            box.DropItem(item);
+
+            item = new DecorativeStableFencing(FencingType.SouthFacingPieces);
+            box.DropItem(item);
+
+            item = new DecorativeStableFencing(FencingType.NWCornerPiece);
+            box.DropItem(item);
+
+            item = new DecorativeStableFencing(FencingType.NWCornerPiece);
+            box.DropItem(item);
+
+            item = new DecorativeStableFencing(FencingType.GateSouth);
+            box.DropItem(item);
+
+            item = new DecorativeStableFencing(FencingType.GateSouth);
+            box.DropItem(item);
+
+            item = new DecorativeStableFencing(FencingType.GateEast);
+            box.DropItem(item);
+
+            item = new DecorativeStableFencing(FencingType.GateEast);
+            box.DropItem(item);
+
+            item = new DecorativeStableFencing(FencingType.Arch);
+            box.DropItem(item);
+
+            DropItem(box);
+
+            var bag = new Bag();
             DropItem(bag);
         }
+
 
         public DecorativeStableSet(Serial serial)
             : base(serial)
@@ -33,7 +115,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            var version = reader.ReadInt();
         }
     }
 }
