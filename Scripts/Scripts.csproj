@@ -499,6 +499,7 @@
     <Compile Include="Items\Addons\GadgetryTable.cs" />
     <Compile Include="Items\StoreBought\DecorativeDungeonSet\DecorativeDungeonSet.cs" />
     <Compile Include="Items\StoreBought\DecorativeKitchenSet.cs" />
+    <Compile Include="Items\StoreBought\DecorativeStableSet\DecorativeStableFencing.cs" />
     <Compile Include="Items\StoreBought\DecorativeStableSet\DecorativeStableSet.cs" />
     <Compile Include="Items\Consumables\EmbroideryTool.cs" />
     <Compile Include="Items\Damageable\Beacon.cs" />
