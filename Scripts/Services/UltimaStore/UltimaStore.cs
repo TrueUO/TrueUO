@@ -367,7 +367,7 @@ namespace Server.Engines.UOStore
                 return;
             }
 
-            if (!Enabled || (Configuration.Expansion != Expansion.None && Core.Expansion < Configuration.Expansion))
+            if (!Enabled)
             {
                 // The promo code redemption system is currently unavailable. Please try again later.
                 user.SendLocalizedMessage(1062904);
