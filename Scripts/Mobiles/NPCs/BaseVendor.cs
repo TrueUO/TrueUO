@@ -459,13 +459,10 @@ namespace Server.Mobiles
             {
                 return;
             }
-            #region SA
             else if (CheckTerMur())
             {
                 return;
             }
-            #endregion
-
             else if (CheckNecromancer())
             {
                 return;
@@ -544,7 +541,7 @@ namespace Server.Mobiles
             if (map != Map.TerMur || Server.Spells.SpellHelper.IsEodon(map, Location))
                 return false;
 
-            if (Body != 0x29A || Body != 0x29B)
+            if (Body != 0x29A && Body != 0x29B)
                 TurnToGargRace();
 
             return true;
@@ -850,9 +847,6 @@ namespace Server.Mobiles
                         break;
                 }
             }
-
-            if (!Siege.SiegeShard)
-                PackGold(100, 200);
         }
         #endregion
 
