@@ -2631,7 +2631,7 @@ namespace Server.Network
         }
 
         public SupportedFeatures(NetState ns)
-            : base(0xB9, ns.ExtendedSupportedFeatures ? 5 : 3)
+            : base(0xB9, 5)
         {
             FeatureFlags flags = ExpansionInfo.CoreExpansion.SupportedFeatures;
 
@@ -2654,14 +2654,7 @@ namespace Server.Network
                 }
             }
 
-            if (ns.ExtendedSupportedFeatures)
-            {
-                m_Stream.Write((uint)flags);
-            }
-            else
-            {
-                m_Stream.Write((ushort)flags);
-            }
+            m_Stream.Write((uint)flags);
         }
     }
 
@@ -2887,23 +2880,9 @@ namespace Server.Network
                 name = "";
             }
 
-            int type;
+            int type = 6;
 
-            if (ns != null && ns.ExtendedStatus)
-            {
-                type = 6;
-                EnsureCapacity(ns.IsEnhancedClient ? 151 : 121);
-            }
-            else if (ns != null && ns.SupportsExpansion(Expansion.ML))
-            {
-                type = 5;
-                EnsureCapacity(91);
-            }
-            else
-            {
-                type = 4;
-                EnsureCapacity(88);
-            }
+            EnsureCapacity(ns != null && ns.IsEnhancedClient ? 151 : 121);
 
             m_Stream.Write(m.Serial);
             m_Stream.WriteAsciiFixed(name, 30);
@@ -2931,48 +2910,39 @@ namespace Server.Network
             m_Stream.Write((short)(m.PhysicalResistance));
             m_Stream.Write((short)(Mobile.BodyWeight + m.TotalWeight));
 
-            if (type >= 5)
-            {
-                m_Stream.Write((short)m.MaxWeight);
-                m_Stream.Write((byte)(m.Race.RaceID + 1)); // Would be 0x00 if it's a non-ML enabled account but...
-            }
+            m_Stream.Write((short)m.MaxWeight);
+            m_Stream.Write((byte)(m.Race.RaceID + 1)); // Would be 0x00 if it's a non-ML enabled account but...
 
             m_Stream.Write((short)m.StatCap);
 
             m_Stream.Write((byte)m.Followers);
             m_Stream.Write((byte)m.FollowersMax);
 
-            if (type >= 4)
+            m_Stream.Write((short)m.FireResistance); // Fire
+            m_Stream.Write((short)m.ColdResistance); // Cold
+            m_Stream.Write((short)m.PoisonResistance); // Poison
+            m_Stream.Write((short)m.EnergyResistance); // Energy
+            m_Stream.Write((short)m.Luck); // Luck
+
+            IWeapon weapon = m.Weapon;
+
+            int min = 0, max = 0;
+
+            if (weapon != null)
             {
-                m_Stream.Write((short)m.FireResistance); // Fire
-                m_Stream.Write((short)m.ColdResistance); // Cold
-                m_Stream.Write((short)m.PoisonResistance); // Poison
-                m_Stream.Write((short)m.EnergyResistance); // Energy
-                m_Stream.Write((short)m.Luck); // Luck
-
-                IWeapon weapon = m.Weapon;
-
-                int min = 0, max = 0;
-
-                if (weapon != null)
-                {
-                    weapon.GetStatusDamage(m, out min, out max);
-                }
-
-                m_Stream.Write((short)min); // Damage min
-                m_Stream.Write((short)max); // Damage max
-
-                m_Stream.Write(m.TithingPoints);
+                weapon.GetStatusDamage(m, out min, out max);
             }
 
-            if (type >= 6)
-            {
-                int count = ns.IsEnhancedClient ? 28 : 14;
+            m_Stream.Write((short)min); // Damage min
+            m_Stream.Write((short)max); // Damage max
 
-                for (int i = 0; i <= count; ++i)
-                {
-                    m_Stream.Write((short)m.GetAOSStatus(i));
-                }
+            m_Stream.Write(m.TithingPoints);
+
+            int count = ns.IsEnhancedClient ? 28 : 14;
+
+            for (int i = 0; i <= count; ++i)
+            {
+                m_Stream.Write((short)m.GetAOSStatus(i));
             }
         }
     }
@@ -3000,20 +2970,10 @@ namespace Server.Network
                 type = 0;
                 EnsureCapacity(43);
             }
-            else if (ns != null && ns.ExtendedStatus)
+            else
             {
                 type = 6;
                 EnsureCapacity(isEnhancedClient ? 151 : 121);
-            }
-            else if (ns != null && ns.SupportsExpansion(Expansion.ML))
-            {
-                type = 5;
-                EnsureCapacity(91);
-            }
-            else
-            {
-                type = 4;
-                EnsureCapacity(88);
             }
 
             m_Stream.Write(beheld.Serial);
@@ -3048,48 +3008,39 @@ namespace Server.Network
                 m_Stream.Write((short)(beheld.PhysicalResistance));
                 m_Stream.Write((short)(Mobile.BodyWeight + beheld.TotalWeight));
 
-                if (type >= 5)
-                {
-                    m_Stream.Write((short)beheld.MaxWeight);
-                    m_Stream.Write((byte)(beheld.Race.RaceID + 1)); // Would be 0x00 if it's a non-ML enabled account but...
-                }
+                m_Stream.Write((short)beheld.MaxWeight);
+                m_Stream.Write((byte)(beheld.Race.RaceID + 1)); // Would be 0x00 if it's a non-ML enabled account but...
 
                 m_Stream.Write((short)beheld.StatCap);
 
                 m_Stream.Write((byte)beheld.Followers);
                 m_Stream.Write((byte)beheld.FollowersMax);
 
-                if (type >= 4)
+                m_Stream.Write((short)beheld.FireResistance); // Fire
+                m_Stream.Write((short)beheld.ColdResistance); // Cold
+                m_Stream.Write((short)beheld.PoisonResistance); // Poison
+                m_Stream.Write((short)beheld.EnergyResistance); // Energy
+                m_Stream.Write((short)beheld.Luck); // Luck
+
+                IWeapon weapon = beheld.Weapon;
+
+                int min = 0, max = 0;
+
+                if (weapon != null)
                 {
-                    m_Stream.Write((short)beheld.FireResistance); // Fire
-                    m_Stream.Write((short)beheld.ColdResistance); // Cold
-                    m_Stream.Write((short)beheld.PoisonResistance); // Poison
-                    m_Stream.Write((short)beheld.EnergyResistance); // Energy
-                    m_Stream.Write((short)beheld.Luck); // Luck
-
-                    IWeapon weapon = beheld.Weapon;
-
-                    int min = 0, max = 0;
-
-                    if (weapon != null)
-                    {
-                        weapon.GetStatusDamage(beheld, out min, out max);
-                    }
-
-                    m_Stream.Write((short)min); // Damage min
-                    m_Stream.Write((short)max); // Damage max
-
-                    m_Stream.Write(beheld.TithingPoints);
+                    weapon.GetStatusDamage(beheld, out min, out max);
                 }
 
-                if (type >= 6)
-                {
-                    int count = isEnhancedClient ? 28 : 14;
+                m_Stream.Write((short)min); // Damage min
+                m_Stream.Write((short)max); // Damage max
 
-                    for (int i = 0; i <= count; ++i)
-                    {
-                        m_Stream.Write((short)beheld.GetAOSStatus(i));
-                    }
+                m_Stream.Write(beheld.TithingPoints);
+
+                int count = isEnhancedClient ? 28 : 14;
+
+                for (int i = 0; i <= count; ++i)
+                {
+                    m_Stream.Write((short)beheld.GetAOSStatus(i));
                 }
             }
         }

@@ -3033,7 +3033,7 @@ namespace Server.Multis
 
             foreach (NetState state in eable)
             {
-                if (!state.HighSeas || state.Mobile == null || state.Mobile.InUpdateRange(Location))
+                if (state.Mobile == null || state.Mobile.InUpdateRange(Location))
                     continue;
 
                 state.Send(RemovePacket);
