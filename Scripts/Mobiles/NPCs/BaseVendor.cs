@@ -552,7 +552,12 @@ namespace Server.Mobiles
         {
             Map map = Map;
 
-            if (map != Map.Malas || !Region.IsPartOf("Umbra"))
+            if (map != Map.Malas)
+            {
+                return false;
+            }
+
+            if (!Region.IsPartOf("Umbra"))
             {
                 return false;
             }
