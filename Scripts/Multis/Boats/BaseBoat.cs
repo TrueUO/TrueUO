@@ -12,9 +12,9 @@ namespace Server.Multis
 {
     public enum BoatOrder
     {
-        Move,
-        Course,
-        Single
+        PlayerControled,
+        CourseFull,
+        CourseSingle
     }
 
     public enum DamageLevel
@@ -168,9 +168,6 @@ namespace Server.Multis
         public bool IsPiloted => Pilot != null;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int Speed { get; set; }
-
-        [CommandProperty(AccessLevel.GameMaster)]
         public bool Anchored { get; set; }
 
         private string m_ShipName;
@@ -297,6 +294,7 @@ namespace Server.Multis
         {
         }
         #endregion
+
         #endregion
 
         public virtual BaseDockedBoat DockedBoat => null;
@@ -305,6 +303,7 @@ namespace Server.Multis
 
         public static List<BaseBoat> Boats => m_Instances;
 
+        #region Constructors
         public BaseBoat(Direction direction)
             : this(direction, false)
         {
@@ -344,15 +343,16 @@ namespace Server.Multis
             m_Instances.Add(this);
         }
 
+        public BaseBoat(Serial serial)
+            : base(serial)
+        {
+        }
+        #endregion
+
         public void RowBoat_Tick_Callback()
         {
             if (!GetMobilesOnBoard().Any())
                 Delete();
-        }
-
-        public BaseBoat(Serial serial)
-            : base(serial)
-        {
         }
 
         public override bool ForceShowProperties => true;
@@ -828,6 +828,7 @@ namespace Server.Multis
             return false;
         }
 
+        #region Speed
         /*
         * Intervals:
         *       drift forward
@@ -847,13 +848,11 @@ namespace Server.Multis
         * 'walking' in piloting mode has a 1s interval, speed 0x2
         */
 
-        // Legacy clients will continue to see the old-style movement, but speeds are adjusted
-        private static readonly bool NewBoatMovement = true;
-
         private static readonly int SlowSpeed = 1;
-        private static readonly int FastSpeed = NewBoatMovement ? 1 : 3;
-        private static readonly int SlowDriftSpeed = 1;
-        private static readonly int FastDriftSpeed = 1;
+        private static readonly int FastSpeed = 1;
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int Speed { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public int FastInterval { get; set; } = 250;
@@ -871,16 +870,18 @@ namespace Server.Multis
         public TimeSpan FastDriftInterval => NormalInt;
         public TimeSpan SlowDriftInterval => SlowInt;
 
-        private static readonly Direction Forward = Direction.North;
-        private static readonly Direction ForwardLeft = Direction.Up;
-        private static readonly Direction ForwardRight = Direction.Right;
-        private static readonly Direction Backward = Direction.South;
-        private static readonly Direction BackwardLeft = Direction.Left;
-        private static readonly Direction BackwardRight = Direction.Down;
-        private static readonly Direction Left = Direction.West;
-        private static readonly Direction Right = Direction.East;
-        private static readonly Direction Port = Left;
-        private static readonly Direction Starboard = Right;
+        #endregion
+
+        #region Movement Offset
+        private Direction Forward { get => Facing; }
+        private Direction ForwardLeft { get => (Facing - 1) & Direction.Mask; }
+        private Direction ForwardRight { get => (Facing + 1) & Direction.Mask; }
+        private Direction Backward { get => (Facing - 4) & Direction.Mask; }
+        private Direction BackwardLeft { get => (Facing - 3) & Direction.Mask; }
+        private Direction BackwardRight { get => (Facing + 3) & Direction.Mask; }
+        private Direction Left { get => (Facing - 2) & Direction.Mask; }
+        private Direction Right { get => (Facing + 2) & Direction.Mask; }
+        #endregion
 
         private bool m_Decaying;
 
@@ -920,9 +921,9 @@ namespace Server.Multis
                 return false;
             }
 
-            bool drift = dir != Forward;
-            TimeSpan interval = drift ? NormalInt : FastInt;
-            int speed = drift ? FastDriftSpeed : FastSpeed;
+            // For now, need to clean out and refactor how this info is used here
+            TimeSpan interval = FastInt;
+            int speed = FastSpeed;
 
             if (StartMove(dir, speed, 0x1, interval, true, true))
             {
@@ -1681,7 +1682,7 @@ namespace Server.Multis
             }
 
             Speed = Owner is BaseShipCaptain ? SlowSpeed : FastSpeed;
-            Order = single ? BoatOrder.Single : BoatOrder.Course;
+            Order = single ? BoatOrder.CourseSingle : BoatOrder.CourseFull;
 
             if (m_MoveTimer != null)
                 m_MoveTimer.Stop();
@@ -1720,38 +1721,38 @@ namespace Server.Multis
                             case 0x42: SetName(e); break;
                             case 0x43: RemoveName(e.Mobile); break;
                             case 0x44: GiveName(e.Mobile); break;
-                            case 0x45: StartMove(Forward, true); break;
-                            case 0x46: StartMove(Backward, true); break;
-                            case 0x47: StartMove(Left, true); break;
-                            case 0x48: StartMove(Right, true); break;
-                            case 0x4B: StartMove(ForwardLeft, true); break;
-                            case 0x4C: StartMove(ForwardRight, true); break;
-                            case 0x4D: StartMove(BackwardLeft, true); break;
-                            case 0x4E: StartMove(BackwardRight, true); break;
-                            case 0x4F: StopMove(true); break;
-                            case 0x50: StartMove(Left, false); break;
-                            case 0x51: StartMove(Right, false); break;
-                            case 0x52: StartMove(Forward, false); break;
-                            case 0x53: StartMove(Backward, false); break;
-                            case 0x54: StartMove(ForwardLeft, false); break;
-                            case 0x55: StartMove(ForwardRight, false); break;
-                            case 0x56: StartMove(BackwardRight, false); break;
-                            case 0x57: StartMove(BackwardLeft, false); break;
-                            case 0x58: OneMove(Left); break;
-                            case 0x59: OneMove(Right); break;
-                            case 0x5A: OneMove(Forward); break;
-                            case 0x5B: OneMove(Backward); break;
-                            case 0x5C: OneMove(ForwardLeft); break;
-                            case 0x5D: OneMove(ForwardRight); break;
-                            case 0x5E: OneMove(BackwardRight); break;
-                            case 0x5F: OneMove(BackwardLeft); break;
+                            case 0x45: Order = BoatOrder.PlayerControled; StartMove(Forward, true); break;
+                            case 0x46: Order = BoatOrder.PlayerControled; StartMove(Backward, true); break;
+                            case 0x47: Order = BoatOrder.PlayerControled; StartMove(Left, true); break;
+                            case 0x48: Order = BoatOrder.PlayerControled; StartMove(Right, true); break;
+                            case 0x4B: Order = BoatOrder.PlayerControled; StartMove(ForwardLeft, true); break;
+                            case 0x4C: Order = BoatOrder.PlayerControled; StartMove(ForwardRight, true); break;
+                            case 0x4D: Order = BoatOrder.PlayerControled; StartMove(BackwardLeft, true); break;
+                            case 0x4E: Order = BoatOrder.PlayerControled; StartMove(BackwardRight, true); break;
+                            case 0x4F: Order = BoatOrder.PlayerControled; StopMove(true); break;
+                            case 0x50: Order = BoatOrder.PlayerControled; StartMove(Left, false); break;
+                            case 0x51: Order = BoatOrder.PlayerControled; StartMove(Right, false); break;
+                            case 0x52: Order = BoatOrder.PlayerControled; StartMove(Forward, false); break;
+                            case 0x53: Order = BoatOrder.PlayerControled; StartMove(Backward, false); break;
+                            case 0x54: Order = BoatOrder.PlayerControled; StartMove(ForwardLeft, false); break;
+                            case 0x55: Order = BoatOrder.PlayerControled; StartMove(ForwardRight, false); break;
+                            case 0x56: Order = BoatOrder.PlayerControled; StartMove(BackwardRight, false); break;
+                            case 0x57: Order = BoatOrder.PlayerControled; StartMove(BackwardLeft, false); break;
+                            case 0x58: Order = BoatOrder.PlayerControled; OneMove(Left); break;
+                            case 0x59: Order = BoatOrder.PlayerControled; OneMove(Right); break;
+                            case 0x5A: Order = BoatOrder.PlayerControled; OneMove(Forward); break;
+                            case 0x5B: Order = BoatOrder.PlayerControled; OneMove(Backward); break;
+                            case 0x5C: Order = BoatOrder.PlayerControled; OneMove(ForwardLeft); break;
+                            case 0x5D: Order = BoatOrder.PlayerControled; OneMove(ForwardRight); break;
+                            case 0x5E: Order = BoatOrder.PlayerControled; OneMove(BackwardRight); break;
+                            case 0x5F: Order = BoatOrder.PlayerControled; OneMove(BackwardLeft); break;
                             case 0x49:
-                            case 0x65: StartTurn(2, true); break; // turn right
+                            case 0x65: Order = BoatOrder.PlayerControled; StartTurn(2, true); break; // turn right
                             case 0x4A:
-                            case 0x66: StartTurn(-2, true); break; // turn left
-                            case 0x67: StartTurn(-4, true); break; // turn around, come about
-                            case 0x68: StartMove(Forward, true); break;
-                            case 0x69: StopMove(true); break;
+                            case 0x66: Order = BoatOrder.PlayerControled; StartTurn(-2, true); break; // turn left
+                            case 0x67: Order = BoatOrder.PlayerControled; StartTurn(-4, true); break; // turn around, come about
+                            case 0x68: Order = BoatOrder.PlayerControled; StartMove(Forward, true); break;
+                            case 0x69: Order = BoatOrder.PlayerControled; StopMove(true); break;
                             case 0x6A: break; // Lower Anchor
                             case 0x6B: break; // Raise Anchor
                             case 0x60: GiveNavPoint(); break; // nav
@@ -1796,10 +1797,10 @@ namespace Server.Multis
 
             if (m_MoveTimer != null)
             {
-                if (Order == BoatOrder.Move)
+                if (Order == BoatOrder.PlayerControled)
                 {
                     resume = true;
-                    resumeDir = Moving;
+                    resumeDir = (Direction)(((int)Moving) + offset) & Direction.Mask;
                     fast = m_ClientSpeed == 0x4;
                 }
 
@@ -1899,13 +1900,11 @@ namespace Server.Multis
                 return false;
             }
 
-            bool drift = dir != Forward && dir != ForwardLeft && dir != ForwardRight;
-            int speed = fast ? (drift ? FastDriftSpeed : FastSpeed) : (drift ? SlowDriftSpeed : SlowSpeed);
-            TimeSpan interval = GetMovementInterval(fast, drift, out int clientSpeed);
-
+            int speed = fast ? FastSpeed : SlowSpeed;        
+            TimeSpan interval = GetMovementInterval(fast, out int clientSpeed);
             if (StartMove(dir, speed, clientSpeed, interval, false, true))
             {
-                if (TillerMan != null)
+                if (TillerMan != null && Order == BoatOrder.PlayerControled)
                     TillerManSay(501429); // Aye aye sir.
 
                 return true;
@@ -1944,8 +1943,6 @@ namespace Server.Multis
                     m_ClientSpeed = clientSpeed;
                 }
             }
-
-            Order = BoatOrder.Move;
 
             if (m_MoveTimer != null)
                 m_MoveTimer.Stop();
@@ -2022,7 +2019,7 @@ namespace Server.Multis
                         }
                         else if (tile.Z >= p.Z && !isWater)
                         {
-                            if (Owner is BaseShipCaptain && !Owner.Deleted && Order == BoatOrder.Course)
+                            if (Owner is BaseShipCaptain && !Owner.Deleted && Order == BoatOrder.CourseFull)
                             {
                                 ((BaseShipCaptain)Owner).CheckBlock(tile, new Point3D(tx, ty, tile.Z));
                             }
@@ -2069,7 +2066,7 @@ namespace Server.Multis
                         continue;
                 }
 
-                if (Owner is BaseShipCaptain && !Owner.Deleted && Order == BoatOrder.Course)
+                if (Owner is BaseShipCaptain && !Owner.Deleted && Order == BoatOrder.CourseFull)
                 {
                     ((BaseShipCaptain)Owner).CheckBlock(e, e.Location);
                 }
@@ -2230,7 +2227,7 @@ namespace Server.Multis
             else // Right, Down, Left and Up
                 maxSpeed = Math.Min(adx, ady);
 
-            return (Direction)((iDir - (int)Facing) & 0x7);
+            return (Direction)iDir;
         }
 
         public bool DoMovement(bool message, bool single)
@@ -2238,7 +2235,7 @@ namespace Server.Multis
             Direction dir;
             int speed, clientSpeed;
 
-            if (Order == BoatOrder.Move)
+            if (Order == BoatOrder.PlayerControled)
             {
                 dir = Moving;
                 speed = Speed;
@@ -2273,14 +2270,14 @@ namespace Server.Multis
 
                 if (maxSpeed == 0)
                 {
-                    if (message && Order == BoatOrder.Single && TillerMan != null)
+                    if (message && Order == BoatOrder.CourseSingle && TillerMan != null)
                         TillerManSay(1042874, (NextNavPoint + 1).ToString()); // We have arrived at nav point ~1_POINT_NUM~ , sir.
 
                     if (NextNavPoint + 1 < BoatCourse.Waypoints.Count)
                     {
                         NextNavPoint++;
 
-                        if (Order == BoatOrder.Course)
+                        if (Order == BoatOrder.CourseFull)
                         {
                             if (message && TillerMan != null)
                                 TillerManSay(1042875, (NextNavPoint + 1).ToString()); // Heading to nav point ~1_POINT_NUM~, sir.
@@ -2294,7 +2291,7 @@ namespace Server.Multis
                     {
                         NextNavPoint = -1;
 
-                        if (message && Order == BoatOrder.Course && TillerMan != null)
+                        if (message && Order == BoatOrder.CourseFull && TillerMan != null)
                             TillerManSay(502515); // The course is completed, sir.
 
                         if (Owner is BaseShipCaptain)
@@ -2304,13 +2301,29 @@ namespace Server.Multis
                     }
                 }
 
-                if (dir == Left || dir == BackwardLeft || dir == Backward)
+                // TODO: Throw this logic in a new Turn method overload, not this methods job to do it
+                int turn;
+                int offset = ((int)Facing) - ((int)dir);
+                if (Math.Abs(offset) > 4)
+                    turn = offset < 0 ? (8 - Math.Abs(offset)) * (-1) : 8 - offset;
+                else
+                    turn = -offset;
+
+                switch (turn)
                 {
-                    return Turn(-2, true, true, dir, true);
-                }
-                else if (dir == Right || dir == BackwardRight)
-                {
-                    return Turn(2, true, true, dir, true);
+                    case -2:
+                        return Turn(-2, true, true, (Facing - 2) & Direction.Mask, true);
+                    case -3:
+                        return Turn(-2, true, true, (Facing - 3) & Direction.Mask, true);
+                    case 2:
+                        return Turn(2, true, true, (Facing + 2) & Direction.Mask, true);
+                    case 3:
+                        return Turn(2, true, true, (Facing + 3) & Direction.Mask, true);
+                    case 4:
+                    case -4:
+                        return Turn(4, true, true, (Facing + 4) & Direction.Mask, true);
+                    default:
+                        break;
                 }
 
                 speed = Math.Min(Speed, maxSpeed);
@@ -2330,10 +2343,11 @@ namespace Server.Multis
             int rx = 0, ry = 0;
             Direction d;
 
+            //TODO: Clean this up
             if (Pilot == null)
             {
-                d = (Direction)(((int)m_Facing + (int)dir) & 0x7);
-                Movement.Movement.Offset((Direction)(((int)m_Facing + (int)dir) & 0x7), ref rx, ref ry);
+                d = dir;
+                Movement.Movement.Offset(dir, ref rx, ref ry);
             }
             else
             {
@@ -2398,7 +2412,7 @@ namespace Server.Multis
                 }
             }
 
-            if (!NewBoatMovement || Math.Abs(xOffset) > 1 || Math.Abs(yOffset) > 1)
+             if (Math.Abs(xOffset) > 1 || Math.Abs(yOffset) > 1)
             {
                 Teleport(xOffset, yOffset, 0);
             }
@@ -3010,7 +3024,7 @@ namespace Server.Multis
 
         public virtual void SendContainerPacket()
         {
-            if (!NewBoatMovement || NoMoveHS || Map == null)
+            if (NoMoveHS || Map == null)
                 return;
 
             IPooledEnumerable eable = Map.GetClientsInRange(Location, Core.GlobalRadarRange);
@@ -3162,27 +3176,15 @@ namespace Server.Multis
             }
         }
 
-        public virtual TimeSpan GetMovementInterval(bool fast, bool drifting, out int clientSpeed)
+        public virtual TimeSpan GetMovementInterval(bool fast, out int clientSpeed)
         {
             if (fast)
             {
-                if (drifting)
-                {
-                    clientSpeed = 0x3;
-                    return NormalInt;
-                }
-
                 clientSpeed = 0x4;
                 return FastInt;
             }
             else
             {
-                if (drifting)
-                {
-                    clientSpeed = 0x2;
-                    return SlowInt;
-                }
-
                 clientSpeed = 0x3;
                 return NormalInt;
             }
