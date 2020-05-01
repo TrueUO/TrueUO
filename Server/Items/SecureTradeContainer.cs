@@ -106,7 +106,7 @@ namespace Server.Items
         {
             if (child is VirtualCheck)
             {
-                return AccountGold.Enabled && (m.NetState == null || !m.NetState.NewSecureTrading);
+                return AccountGold.Enabled;
             }
 
             return base.IsChildVisibleTo(m, child);
