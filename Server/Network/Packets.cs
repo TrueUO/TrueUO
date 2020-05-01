@@ -2865,116 +2865,39 @@ namespace Server.Network
         }
     }
 
-    public sealed class MobileStatusExtended : Packet
-    {
-        public MobileStatusExtended(Mobile m)
-            : this(m, m.NetState)
-        { }
-
-        public MobileStatusExtended(Mobile m, NetState ns)
-            : base(0x11)
-        {
-            string name = m.Name;
-            if (name == null)
-            {
-                name = "";
-            }
-
-            int type = 6;
-
-            EnsureCapacity(ns != null && ns.IsEnhancedClient ? 151 : 121);
-
-            m_Stream.Write(m.Serial);
-            m_Stream.WriteAsciiFixed(name, 30);
-
-            m_Stream.Write((short)m.Hits);
-            m_Stream.Write((short)m.HitsMax);
-
-            m_Stream.Write(m.CanBeRenamedBy(m));
-
-            m_Stream.Write((byte)type);
-
-            m_Stream.Write(m.Female);
-
-            m_Stream.Write((short)m.Str);
-            m_Stream.Write((short)m.Dex);
-            m_Stream.Write((short)m.Int);
-
-            m_Stream.Write((short)m.Stam);
-            m_Stream.Write((short)m.StamMax);
-
-            m_Stream.Write((short)m.Mana);
-            m_Stream.Write((short)m.ManaMax);
-
-            m_Stream.Write(m.TotalGold);
-            m_Stream.Write((short)(m.PhysicalResistance));
-            m_Stream.Write((short)(Mobile.BodyWeight + m.TotalWeight));
-
-            m_Stream.Write((short)m.MaxWeight);
-            m_Stream.Write((byte)(m.Race.RaceID + 1)); // Would be 0x00 if it's a non-ML enabled account but...
-
-            m_Stream.Write((short)m.StatCap);
-
-            m_Stream.Write((byte)m.Followers);
-            m_Stream.Write((byte)m.FollowersMax);
-
-            m_Stream.Write((short)m.FireResistance); // Fire
-            m_Stream.Write((short)m.ColdResistance); // Cold
-            m_Stream.Write((short)m.PoisonResistance); // Poison
-            m_Stream.Write((short)m.EnergyResistance); // Energy
-            m_Stream.Write((short)m.Luck); // Luck
-
-            IWeapon weapon = m.Weapon;
-
-            int min = 0, max = 0;
-
-            if (weapon != null)
-            {
-                weapon.GetStatusDamage(m, out min, out max);
-            }
-
-            m_Stream.Write((short)min); // Damage min
-            m_Stream.Write((short)max); // Damage max
-
-            m_Stream.Write(m.TithingPoints);
-
-            int count = ns.IsEnhancedClient ? 28 : 14;
-
-            for (int i = 0; i <= count; ++i)
-            {
-                m_Stream.Write((short)m.GetAOSStatus(i));
-            }
-        }
-    }
-
     public sealed class MobileStatus : Packet
     {
-        public MobileStatus(Mobile beholder, Mobile beheld)
-            : this(beholder, beheld, beheld.NetState)
-        { }
+        public MobileStatus( Mobile m )
+			: this( m, m )
+		{
+		}
 
-        public MobileStatus(Mobile beholder, Mobile beheld, NetState ns)
+        public MobileStatus(Mobile beholder, Mobile beheld)
             : base(0x11)
         {
             string name = beheld.Name;
+
             if (name == null)
             {
                 name = "";
             }
 
-            int type;
+            int type = 0;
+
+            if (beholder == beheld)
+                type = 6;
+
             bool isEnhancedClient = beholder.NetState != null && beholder.NetState.IsEnhancedClient;
 
-            if (beholder != beheld)
-            {
-                type = 0;
-                EnsureCapacity(43);
-            }
+            int size;
+            if (type == 0)
+                size = 43;
+            else if (isEnhancedClient)
+                size = 151;
             else
-            {
-                type = 6;
-                EnsureCapacity(isEnhancedClient ? 151 : 121);
-            }
+                size = 121;
+
+            EnsureCapacity(size);
 
             m_Stream.Write(beheld.Serial);
 

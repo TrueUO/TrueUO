@@ -11132,7 +11132,7 @@ namespace Server
 
                 if (sendPublicStats || sendPrivateStats)
                 {
-                    ourState.Send(new MobileStatusExtended(m, m_NetState));
+                    ourState.Send(new MobileStatus(m));
                 }
                 else if (sendAll)
                 {
@@ -12096,7 +12096,7 @@ namespace Server
         {
             if (from.Map == Map && Utility.InUpdateRange(this, from) && from.CanSee(this))
             {
-                from.Send(new MobileStatus(from, this, m_NetState));
+                from.Send(new MobileStatus(from, this));
             }
 
             if (from == this)

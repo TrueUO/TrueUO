@@ -1029,7 +1029,7 @@ namespace Server.Mobiles
 
                 from.Send(new DisplayBuyList(this));
 
-                from.Send(new MobileStatusExtended(from)); //make sure their gold amount is sent
+                from.Send(new MobileStatus(from)); //make sure their gold amount is sent
 
                 if (opls != null)
                 {
