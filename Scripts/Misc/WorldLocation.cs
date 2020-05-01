@@ -28,20 +28,5 @@ namespace Server
         {
             return String.Format("({0}, {1}, {2}) [{3}]", Location.X, Location.Y, Location.Z, Map == null ? "(Null)" : Map.ToString());
         }
-
-        public override bool Equals(object o)
-        {
-            if (!(o is WorldLocation) || ((WorldLocation)o).Map != Map)
-            {
-                return false;
-            }
-
-            return base.Equals(o);
-        }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
     }
 }
