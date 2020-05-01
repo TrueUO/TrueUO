@@ -2,6 +2,7 @@
 using Server.Mobiles;
 using Server.Network;
 using Server.Spells;
+using Server.Regions;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -248,7 +249,6 @@ namespace Server.Items
         {
             if (!m.CanBeginAction(typeof(Teleporter)))
             {
-                m.SendMessage("Teleport in progress...");
                 return;
             }
 
@@ -257,15 +257,7 @@ namespace Server.Items
                 return;
             }
 
-            if (m_Delay > TimeSpan.Zero)
-            {
-                DelayedTeleport(m);
-            }
-            else
-            {
-                // Allow OnMoveOver to return before processing the map/location changes
-                Timer.DelayCall(DoTeleport, m);
-            }
+            DelayedTeleport(m);
         }
 
         private void DelayedTeleport(Mobile m)
@@ -274,20 +266,14 @@ namespace Server.Items
 
             m.Frozen = true;
 
-            m.SendMessage(
-                "Teleporting in {0:#,0.##} second{1}",
-                m_Delay.TotalSeconds,
-                m_Delay.TotalSeconds != 1 ? "s" : String.Empty);
-
-            Timer.DelayCall(m_Delay, DelayedTeleportCallback, m);
+            Timer.DelayCall(m_Delay > TeleportRegion.Delay ? m_Delay : TeleportRegion.Delay, DelayedTeleportCallback, m);
         }
 
         private void DelayedTeleportCallback(Mobile m)
         {
-            m.EndAction(typeof(Teleporter));
+            Timer.DelayCall(TimeSpan.FromMilliseconds(250), () => m.EndAction(typeof(Teleporter)));
 
             m.Frozen = false;
-
             DoTeleport(m);
         }
 
@@ -315,7 +301,6 @@ namespace Server.Items
             }
 
             BaseCreature.TeleportPets(m, p, map);
-
             m.MoveToWorld(p, map);
 
             if (m_DestEffect && sendEffect)
