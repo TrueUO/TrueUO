@@ -242,10 +242,10 @@ namespace Server.Items
         {
             // i = runic, r = reforg, l = loot
             // 1 = melee, 2 = ranged, 3 = armor, 4 = sheild, 5 = hat, 6 = jewels
-            Register(1, new ItemPropertyInfo(AosAttribute.DefendChance, 1075620, 110, typeof(RelicFragment), typeof(Tourmaline), typeof(EssenceSingularity), 1, 1, 15, 1111947,
+            Register(1, new ItemPropertyInfo(AosAttribute.DefendChance, 1075620, 110, typeof(RelicFragment), typeof(Tourmaline), typeof(BrilliantAmber), 1, 1, 15, 1111947,
                 new PropInfo(1, 15, 15, new int[] { 20 }), new PropInfo(2, 25, 25, new int[] { 30, 35 }), new PropInfo(3, 0, 5), new PropInfo(4, 15, 15, new int[] { 20 }), new PropInfo(5, 0, 5), new PropInfo(6, 15, 15, new int[] { 20 })));
 
-            Register(2, new ItemPropertyInfo(AosAttribute.AttackChance, 1075616, 130, typeof(EnchantedEssence), typeof(Tourmaline), typeof(EssencePrecision), 1, 1, 15, 1111958,
+            Register(2, new ItemPropertyInfo(AosAttribute.AttackChance, 1075616, 130, typeof(RelicFragment), typeof(Amber), typeof(LuminescentFungi), 1, 1, 15, 1111958,
                 new PropInfo(1, 15, 15, new int[] { 20 }), new PropInfo(2, 25, 25, new int[] { 30, 35 }), new PropInfo(3, 0, 5), new PropInfo(4, 15, 15, new int[] { 20 }), new PropInfo(5, 0, 5), new PropInfo(6, 15, 15, new int[] { 20 })));
 
             Register(3, new ItemPropertyInfo(AosAttribute.RegenHits, 1075627, 100, typeof(EnchantedEssence), typeof(Tourmaline), typeof(SeedOfRenewal), 1, 1, 2, 1111994,
