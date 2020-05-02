@@ -10,7 +10,12 @@ using System.Text;
 
 namespace Server.Items
 {
-    public class Teleporter : Item
+    public interface ITeleporter
+    {
+        void DoTeleport(Mobile m);
+    }
+
+    public class Teleporter : Item, ITeleporter
     {
         private bool m_Active, m_Creatures, m_CombatCheck, m_CriminalCheck;
         private Point3D m_PointDest;
