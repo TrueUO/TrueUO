@@ -2245,9 +2245,6 @@
 		<tiles from="(6574, 889, 0)" frommap="Felucca" to="(6472, 869, 20)" tomap="Felucca" />
 	</Teleporter>
 	<Teleporter>
-		<tiles from="(589, 1637, 0)" frommap="Felucca" to="(6575, 888, 0)" tomap="Felucca" />
-	</Teleporter>
-	<Teleporter>
 		<tiles from="(311, 786, 0)" frommap="Felucca" to="(5750, 350, 5)" tomap="Felucca" />
 		<tiles from="(311, 786, -24)" frommap="Felucca" to="(314, 784, 0)" tomap="Felucca" />
 	</Teleporter>
@@ -2619,9 +2616,6 @@
 	<Teleporter>
 		<tiles from="(6575, 889, 0)" frommap="Trammel" to="(6473, 869, 20)" tomap="Trammel" />
 		<tiles from="(6574, 889, 0)" frommap="Trammel" to="(6472, 869, 20)" tomap="Trammel" />
-	</Teleporter>
-	<Teleporter>
-		<tiles from="(589, 1637, 0)" frommap="Trammel" to="(6575, 888, 0)" tomap="Trammel" />
 	</Teleporter>
 	<Teleporter>
 		<tiles from="(6440, 2677, 20)" frommap="Trammel" to="(1477, 1471, -8)" tomap="Trammel" />
