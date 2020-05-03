@@ -63,7 +63,7 @@ namespace Server.Gumps
                 m_Value = maxInt;
             }
 
-            double currentIntensity = Math.Floor((m_Value / (double)maxInt) * 100);
+            double currentIntensity = Math.Floor((m_Value / (double)maxInt) * m_Info.Weight);
 
             // Set context
             context.LastImbued = m_Item;
@@ -76,7 +76,7 @@ namespace Server.Gumps
             m_TotalProps = Imbuing.GetTotalMods(m_Item, m_ID);
 
             if (maxInt <= 1)
-                currentIntensity = 100;
+                currentIntensity = m_Info.Weight;
 
             int propWeight = (int)Math.Floor((weight / (double)maxInt) * m_Value);
 
