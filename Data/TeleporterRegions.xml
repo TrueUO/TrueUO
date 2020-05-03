@@ -3245,4 +3245,10 @@
 		<tiles from="(575, 2464, 0)" frommap="TerMur" to="(543, 2304, 0)" tomap="TerMur" />
 		<tiles from="(576, 2464, 0)" frommap="TerMur" to="(544, 2304, 0)" tomap="TerMur" />
 	</Teleporter>
+	<SiegeTeleporter>
+		<tiles from="(4596, 3568, 75)" frommap="Felucca" to="(1128, 1212, -2)" tomap="TerMur" ItemID="0xF6C" Hue="1175" />
+	</SiegeTeleporter>
+	<SiegeTeleporter>
+		<tiles from="(1128, 1212, -2)" frommap="TerMur" to="(4596, 3568, 75)" tomap="Felucca" ItemID="0xF6C" Hue="1175" />
+	</SiegeTeleporter>
 </TeleporterRegions>
