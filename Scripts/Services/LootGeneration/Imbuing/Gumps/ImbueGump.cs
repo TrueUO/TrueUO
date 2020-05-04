@@ -175,11 +175,11 @@ namespace Server.Gumps
 
                 if (m_ID == 41)                                                    // - Mage Weapon Value ( i.e [Mage Weapon -25] )
                 {
-                    AddLabel(250, 370, IceHue, String.Format("-{0}", 30 - m_Value));
+                    AddLabel(250, 370, IceHue, string.Format("-{0}", 30 - m_Value));
                 }
                 else if (maxInt <= 8 || m_ID == 21 || m_ID == 17)                 // - Show Property Value as just Number ( i.e [Mana Regen 2] )
                 {
-                    AddLabel(256, 370, IceHue, String.Format("{0}", m_Value));      // - Show Property Value as % ( i.e [Hit Fireball 25%] )
+                    AddLabel(m_Value > 9 ? 252 : 256, 370, IceHue, string.Format("{0}", m_Value));      // - Show Property Value as % ( i.e [Hit Fireball 25%] )
                 }
                 else
                 {
@@ -199,7 +199,7 @@ namespace Server.Gumps
                         }
                     }
 
-                    AddLabel(256, 370, IceHue, String.Format("{0}%", val));
+                    AddLabel(val > 9 ? 252 : 256, 370, IceHue, string.Format("{0}%", val));
                 }
 
                 // Buttons
