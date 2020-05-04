@@ -1754,7 +1754,7 @@ namespace Server.SkillHandlers
         {
             typeof(MagicalResidue),     typeof(EnchantedEssence),       typeof(RelicFragment),
 
-            typeof(SeedOfRenewal),        typeof(ChagaMushroom),          typeof(CrystalShards),
+            typeof(SeedOfRenewal),      typeof(ChagaMushroom),          typeof(CrystalShards),
             typeof(BottleIchor),        typeof(ReflectiveWolfEye),      typeof(FaeryDust),
             typeof(BouraPelt),          typeof(SilverSnakeSkin),        typeof(ArcanicRuneStone),
             typeof(SlithTongue),        typeof(VoidOrb),                typeof(RaptorTeeth),
