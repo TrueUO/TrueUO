@@ -140,11 +140,11 @@ namespace Server.Misc
 
             if (a != null)
             {
-                var tag = a.GetTag(tagName);
+                var tag = a.GetTag(m.Serial.ToString() + ' ' + tagName);
 
                 if (tag == null)
                 {
-                    a.AddTag(tagName, DateTime.Now.ToString());
+                    a.AddTag(m.Serial.ToString() + ' ' + tagName, DateTime.Now.ToString());
                     return true;
                 }
             }
