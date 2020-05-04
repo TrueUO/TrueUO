@@ -68,60 +68,54 @@ namespace Server.Misc
 
                     if (split.Length == 2)
                     {
-                        try
-                        {
-                            string name = split[1];
+                        string name = split[1];
 
-                            if (Insensitive.Equals(name, "resources"))
+                        if (Insensitive.Equals(name, "resources"))
+                        {
+                            if (CanGive(from, "Resources"))
                             {
-                                if (CanGive(from, "Resources"))
-                                {
-                                    GiveResources(from);
-                                    from.SendMessage("Resources have been added to your bank");
-                                }
-                            }
-                            else if (Insensitive.Equals(name, "arties"))
-                            {
-                                if (CanGive(from, "Artifacts"))
-                                {
-                                    GiveArtifacts(from);
-                                    from.SendMessage("Artifacts have been added to your bank");
-                                }
-                            }
-                            else if (Insensitive.Equals(name, "air"))
-                            {
-                                if (CanGive(from, "Air"))
-                                {
-                                    GiveAirFreshner(from);
-                                    from.SendMessage("Air Freshner has been added to your bank.");
-                                }
-                            }
-                            else if (Insensitive.Equals(name, "seeds"))
-                            {
-                                if (CanGive(from, "Seeds"))
-                                {
-                                    GiveSeeds(from);
-                                    from.SendMessage("Seeds have been added to your bank.");
-                                }
-                            }
-                            else if (Insensitive.Equals(name, "tokens"))
-                            {
-                                if (CanGive(from, "Tokens"))
-                                {
-                                    GiveTokens(from);
-                                }
-                            }
-                            else if (Insensitive.Equals(name, "masteries"))
-                            {
-                                if (CanGive(from, "Masteries"))
-                                {
-                                    GiveMasteries(from);
-                                    from.SendMessage("Masteries have been added to your bank.");
-                                }
+                                GiveResources(from);
+                                from.SendMessage("Resources have been added to your bank");
                             }
                         }
-                        catch
+                        else if (Insensitive.Equals(name, "arties"))
                         {
+                            if (CanGive(from, "Artifacts"))
+                            {
+                                GiveArtifacts(from);
+                                from.SendMessage("Artifacts have been added to your bank");
+                            }
+                        }
+                        else if (Insensitive.Equals(name, "air"))
+                        {
+                            if (CanGive(from, "Air"))
+                            {
+                                GiveAirFreshner(from);
+                                from.SendMessage("Air Freshner has been added to your bank.");
+                            }
+                        }
+                        else if (Insensitive.Equals(name, "seeds"))
+                        {
+                            if (CanGive(from, "Seeds"))
+                            {
+                                GiveSeeds(from);
+                                from.SendMessage("Seeds have been added to your bank.");
+                            }
+                        }
+                        else if (Insensitive.Equals(name, "tokens"))
+                        {
+                            if (CanGive(from, "Tokens"))
+                            {
+                                GiveTokens(from);
+                            }
+                        }
+                        else if (Insensitive.Equals(name, "masteries"))
+                        {
+                            if (CanGive(from, "Masteries"))
+                            {
+                                GiveMasteries(from);
+                                from.SendMessage("Masteries have been added to your bank.");
+                            }
                         }
                     }
                 }
