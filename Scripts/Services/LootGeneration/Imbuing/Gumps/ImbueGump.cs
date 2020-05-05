@@ -65,7 +65,6 @@ namespace Server.Gumps
                 m_Value = maxInt;
             }
 
-            //double currentIntensity = Math.Floor((m_Value / (double)maxInt) * m_Info.Weight);
             double currentIntensity = Math.Floor(((m_Value - start) / ((double)maxInt - start)) * m_Info.Weight);
 
             // Set context
