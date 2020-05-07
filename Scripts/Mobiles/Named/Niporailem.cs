@@ -111,12 +111,9 @@ namespace Server.Mobiles
         {
             base.OnGaveMeleeAttack(defender);//encounter during fight
 
-            if (0.2 > Utility.RandomDouble())
+            if (0.2 > Utility.RandomDouble() && defender.GetStatMod("Niporailem Str Curse") == null)
             {
-                if (defender.GetStatMod("Niporailem Str Curse") == null)
-                {
-                    defender.AddStatMod(new StatMod(StatType.Str, "Niporailem Str Curse", -30, TimeSpan.FromSeconds(15.0)));
-                }
+                defender.AddStatMod(new StatMod(StatType.Str, "Niporailem Str Curse", -30, TimeSpan.FromSeconds(15.0)));
             }
         }
         /// <summary>
@@ -127,7 +124,7 @@ namespace Server.Mobiles
         /// </summary>
         public override void OnThink()
         {
-            base.OnThink();// 	Fool’s Gold
+            base.OnThink(); // Fool’s Gold
 
             if (0.1 > Utility.RandomDouble() && DateTime.UtcNow > m_NextAbilityTime && Combatant != null && InRange(Combatant, RangePerception)) // as per OSI, no check for LOS
             {
