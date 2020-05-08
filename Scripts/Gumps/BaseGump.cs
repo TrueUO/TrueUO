@@ -423,7 +423,7 @@ namespace Server.Gumps
 
         public void AddTooltip(int cliloc, string format, params string[] args)
         {
-            AddTooltip(cliloc, String.Format(format, args));
+            base.AddTooltip(cliloc, String.Format(format, args));
         }
 
         public void AddTooltip(int[] clilocs)
