@@ -34,7 +34,7 @@ namespace Server.Spells.Bushido
         {
             HonorableExecutionInfo info = m_Table[target] as HonorableExecutionInfo;
 
-            if (info == null || !info.m_Penalty)
+            if (info == null || info.m_SwingBonus == 0 && !info.m_Penalty)
                 return;
 
             info.Clear();
