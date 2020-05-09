@@ -83,6 +83,8 @@ namespace Server.Spells.Bushido
                 info = new HonorableExecutionInfo(attacker, swingBonus);
                 info.m_Timer = Timer.DelayCall(TimeSpan.FromSeconds(20.0), new TimerStateCallback(EndEffect), info);
 
+                BuffInfo.AddBuff(attacker, new BuffInfo(BuffIcon.HonorableExecution, 1060595, 1153807, TimeSpan.FromSeconds(20.0), attacker, string.Format("{0}", swingBonus)));
+
                 m_Table[attacker] = info;
             }
             else
