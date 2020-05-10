@@ -748,7 +748,7 @@
     <Compile Include="Mobiles\NPCs\Mannequin\Property\SkillBonusAttribute.cs" />
     <Compile Include="Mobiles\NPCs\Mannequin\Property\SlayerAttribute.cs" />
     <Compile Include="Mobiles\NPCs\Mannequin\Property\WeaponAttributeProperty.cs" />
-    <Compile Include="Services\Expansions\High Seas\Multis\GalleonItem.cs" />
+    <Compile Include="Multis\Boats\Galleons\GalleonItem.cs" />
     <Compile Include="Services\Seasonal Events\ForsakenFoes\Mobile\MiningCooperativeMerchant.cs" />
     <Compile Include="Mobiles\NPCs\CommissionPlayerVendor.cs" />
     <Compile Include="Multis\ContestHouses.cs" />
@@ -3174,13 +3174,7 @@
     <Compile Include="Services\Doom\GaryRoom.cs" />
     <Compile Include="Services\Doom\GuardianRoom.cs" />
     <Compile Include="Services\Expansions\High Seas\Generate.cs" />
-    <Compile Include="Services\Expansions\High Seas\Gumps\BaseShipGump.cs" />
     <Compile Include="Services\Expansions\High Seas\Gumps\BountyBoard.cs" />
-    <Compile Include="Services\Expansions\High Seas\Gumps\CannonGump.cs" />
-    <Compile Include="Services\Expansions\High Seas\Gumps\GrantAccessGump.cs" />
-    <Compile Include="Services\Expansions\High Seas\Gumps\ShipAccessListGump.cs" />
-    <Compile Include="Services\Expansions\High Seas\Gumps\ShipPlacementGump.cs" />
-    <Compile Include="Services\Expansions\High Seas\Gumps\ShipSecurityGump.cs" />
     <Compile Include="Services\Expansions\High Seas\Items\Artifacts\CorgulsEnchantedSash.cs" />
     <Compile Include="Services\Expansions\High Seas\Items\Artifacts\CorgulsHandbookOnMysticism.cs" />
     <Compile Include="Services\Expansions\High Seas\Items\Artifacts\CorgulsHandbookOnTheUndead.cs" />
@@ -3258,22 +3252,6 @@
     <Compile Include="Services\Expansions\High Seas\Mobiles\Vendors\SBInfos\SBCrabFisher.cs" />
     <Compile Include="Services\Expansions\High Seas\Mobiles\Vendors\SBInfos\SBSeaMarketTavernKeeper.cs" />
     <Compile Include="Services\Expansions\High Seas\Mobiles\Vendors\SeaMarketTavernKeeper.cs" />
-    <Compile Include="Services\Expansions\High Seas\Multis\BaseGalleon.cs" />
-    <Compile Include="Services\Expansions\High Seas\Multis\BoatMountItem.cs" />
-    <Compile Include="Services\Expansions\High Seas\Multis\BritannianShip.cs" />
-    <Compile Include="Services\Expansions\High Seas\Multis\GalleonContainer.cs" />
-    <Compile Include="Services\Expansions\High Seas\Multis\GalleonHold.cs" />
-    <Compile Include="Services\Expansions\High Seas\Multis\GalleonPilot.cs" />
-    <Compile Include="Services\Expansions\High Seas\Multis\GargishGalleon.cs" />
-    <Compile Include="Services\Expansions\High Seas\Multis\MooringLine.cs" />
-    <Compile Include="Services\Expansions\High Seas\Multis\OrcishGalleon.cs" />
-    <Compile Include="Services\Expansions\High Seas\Multis\Rowboat.cs" />
-    <Compile Include="Services\Expansions\High Seas\Multis\ShipRune.cs" />
-    <Compile Include="Services\Expansions\High Seas\Multis\ShipTracking.cs" />
-    <Compile Include="Services\Expansions\High Seas\Multis\ShipWheel.cs" />
-    <Compile Include="Services\Expansions\High Seas\Multis\TokunoGalleon.cs" />
-    <Compile Include="Services\Expansions\High Seas\Network\PacketHandlers.cs" />
-    <Compile Include="Services\Expansions\High Seas\Network\Packets.cs" />
     <Compile Include="Services\Expansions\High Seas\Persistence.cs" />
     <Compile Include="Services\Expansions\High Seas\Quests\ProfessionalBountyQuest\BountyQuestObjective.cs" />
     <Compile Include="Services\Expansions\High Seas\Quests\ProfessionalBountyQuest\Items\BindingPole.cs" />
@@ -8676,6 +8654,28 @@
     <Compile Include="Multis\BaseHouse.cs">
       <SubType>Code</SubType>
     </Compile>
+	<Compile Include="Multis\Boats\Galleons\Network\GalleonPacketHandlers.cs" />
+	<Compile Include="Multis\Boats\Galleons\Network\GalleonPackets.cs" />
+	<Compile Include="Multis\Boats\Galleons\BaseGalleon.cs" />
+    <Compile Include="Multis\Boats\Galleons\BoatMountItem.cs" />
+    <Compile Include="Multis\Boats\Galleons\BritannianShip.cs" />
+    <Compile Include="Multis\Boats\Galleons\GalleonContainer.cs" />
+    <Compile Include="Multis\Boats\Galleons\GalleonHold.cs" />
+    <Compile Include="Multis\Boats\Galleons\GalleonPilot.cs" />
+    <Compile Include="Multis\Boats\Galleons\GargishGalleon.cs" />
+    <Compile Include="Multis\Boats\Galleons\MooringLine.cs" />
+    <Compile Include="Multis\Boats\Galleons\OrcishGalleon.cs" />
+    <Compile Include="Multis\Boats\Galleons\Rowboat.cs" />
+    <Compile Include="Multis\Boats\Galleons\ShipRune.cs" />
+    <Compile Include="Multis\Boats\Galleons\ShipTracking.cs" />
+    <Compile Include="Multis\Boats\Galleons\ShipWheel.cs" />
+    <Compile Include="Multis\Boats\Galleons\TokunoGalleon.cs" />
+	<Compile Include="Multis\Boats\Gumps\BaseShipGump.cs" />
+	<Compile Include="Multis\Boats\Gumps\CannonGump.cs" />
+	<Compile Include="Multis\Boats\Gumps\GrantAccessGump.cs" />
+	<Compile Include="Multis\Boats\Gumps\ShipAccessListGump.cs" />
+	<Compile Include="Multis\Boats\Gumps\ShipPlacementGump.cs" />
+	<Compile Include="Multis\Boats\Gumps\ShipSecurityGump.cs" />
     <Compile Include="Multis\Boats\BaseBoat.cs">
       <SubType>Code</SubType>
     </Compile>
