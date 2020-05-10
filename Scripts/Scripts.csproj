@@ -766,7 +766,6 @@
     <Compile Include="Services\Astronomy\Willebrord.cs" />
     <Compile Include="Services\DailyRares.cs" />
     <Compile Include="Services\Expansions\High Seas\Items\Cannons and Ammo\ShipCannon.cs" />
-    <Compile Include="Services\Expansions\Time Of Legends\AuctionSafe\AuctionMap.cs" />
     <Compile Include="Services\GiftGiving\HolidayGiftBox2018.cs" />
     <Compile Include="Services\Harvest\Core\BonusHarvestResource.cs" />
     <Compile Include="Services\Harvest\Core\HarvestBank.cs" />
@@ -975,7 +974,13 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Items\Equipment\Weapons\PaladinSword.cs" />
-    <Compile Include="Items\Functional\AcidVine.cs" />
+    <Compile Include="Items\Functional\AcidVine.cs" />	
+	<Compile Include="Items\Functional\AuctionSafe\Auction.cs" />
+	<Compile Include="Items\Functional\AuctionSafe\AuctionMap.cs" />
+	<Compile Include="Items\Functional\AuctionSafe\AuctionSafe.cs" />
+	<Compile Include="Items\Functional\AuctionSafe\BidEntry.cs" />
+	<Compile Include="Items\Functional\AuctionSafe\BidHistory.cs" />
+	<Compile Include="Items\Functional\AuctionSafe\Gumps.cs" />	
     <Compile Include="Items\Functional\Automaton\AutomatonActuator.cs" />
     <Compile Include="Items\Functional\Automaton\AutomatonStatue.cs" />
     <Compile Include="Items\Functional\Automaton\BlackrockAutomaton.cs" />
@@ -3264,11 +3269,6 @@
     <Compile Include="Services\Expansions\High Seas\Regions\WarpRegion.cs" />
     <Compile Include="Services\Expansions\High Seas\Spawners\BountyQuestSpawner.cs" />
     <Compile Include="Services\Expansions\High Seas\Spawners\CharybdisSpawner.cs" />
-    <Compile Include="Services\Expansions\Time Of Legends\AuctionSafe\Auction.cs" />
-    <Compile Include="Services\Expansions\Time Of Legends\AuctionSafe\AuctionSafe.cs" />
-    <Compile Include="Services\Expansions\Time Of Legends\AuctionSafe\BidEntry.cs" />
-    <Compile Include="Services\Expansions\Time Of Legends\AuctionSafe\BidHistory.cs" />
-    <Compile Include="Services\Expansions\Time Of Legends\AuctionSafe\Gumps.cs" />
     <Compile Include="Services\Expansions\Time Of Legends\Items\CardOfSemidar.cs" />
     <Compile Include="Services\Expansions\Time Of Legends\Items\ClimbingVine.cs" />
     <Compile Include="Services\Expansions\Time Of Legends\Items\EodonRewardTitleScroll.cs" />
