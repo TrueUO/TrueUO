@@ -67,8 +67,6 @@ namespace Server.Mobiles
             Item bs = new BodySash(0x794); // dark purple
             bs.LootType = LootType.Blessed;
             SetWearable(bs);
-
-            PackGold(400, 600);
         }
 
         public override void OnKilledBy(Mobile m)
@@ -79,6 +77,11 @@ namespace Server.Mobiles
             {
                 ExodusChest.GiveRituelItem(m);
             }
+        }
+
+        public override void GenerateLoot()
+        {
+            AddLoot(LootPack.LootGold(400, 600));
         }
 
         public override bool CanBeParagon => false;

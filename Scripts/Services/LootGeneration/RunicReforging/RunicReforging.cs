@@ -183,9 +183,10 @@ namespace Server.Items
                         prefixCol = new List<NamedInfoCol>();
                         prefixCol.AddRange(m_PrefixSuffixInfo[prefixID][index]);
                     }
-                    catch
+                    catch (Exception e)
                     {
                         Console.WriteLine("Error: Prefix not in collection: {0}", prefixID);
+                        Server.Diagnostics.ExceptionLogging.LogException(e);
                     }
                 }
 
@@ -198,9 +199,10 @@ namespace Server.Items
                     {
                         suffixCol.AddRange(m_PrefixSuffixInfo[suffixID][index]);
                     }
-                    catch
+                    catch (Exception e)
                     {
                         Console.WriteLine("Error: Suffix not in collection: {0}", suffixID);
+                        Server.Diagnostics.ExceptionLogging.LogException(e);
                     }
                 }
 

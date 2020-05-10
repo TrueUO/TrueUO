@@ -1,3 +1,4 @@
+using System;
 using Server.Items;
 
 namespace Server.Mobiles
@@ -51,8 +52,6 @@ namespace Server.Mobiles
                 case 3: PackItem(new VengefulSpiritScroll()); break;
                 case 4: PackItem(new WitherScroll()); break;
             }
-
-            PackNecroReg(17, 24);
         }
 
         public Lich(Serial serial)
@@ -70,6 +69,8 @@ namespace Server.Mobiles
         {
             AddLoot(LootPack.Rich);
             AddLoot(LootPack.MedScrolls, 2);
+            AddLoot(LootPack.NecroRegs, 17, 24);
+            AddLoot(LootPack.RandomLootItem(new Type[] { typeof(LichFormScroll), typeof(PoisonStrikeScroll), typeof(StrangleScroll), typeof(VengefulSpiritScroll), typeof(WitherScroll) }, false, true));
         }
 
         public override void Serialize(GenericWriter writer)

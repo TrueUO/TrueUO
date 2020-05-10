@@ -43,7 +43,6 @@ namespace Server.Mobiles
             else
                 PackItem(new Log(10));
 
-            PackReg(3);
             PackItem(new Engines.Plants.Seed());
             PackItem(new Engines.Plants.Seed());
         }
@@ -57,6 +56,7 @@ namespace Server.Mobiles
         public override void GenerateLoot()
         {
             AddLoot(LootPack.Average, 2);
+            AddLoot(LootPack.MageryRegs, 3);
         }
 
         public override void Serialize(GenericWriter writer)

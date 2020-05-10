@@ -48,7 +48,6 @@ namespace Server.Mobiles
                 case 2: PackItem(new StrangleScroll()); break;
                 case 3: PackItem(new LichFormScroll()); break;
             }
-            PackReg(23);
         }
 
         public override int GetDeathSound()
@@ -75,6 +74,7 @@ namespace Server.Mobiles
             AddLoot(LootPack.Average);
             AddLoot(LootPack.Meager);
             AddLoot(LootPack.MedScrolls, 2);
+            AddLoot(LootPack.MageryRegs, 23);
         }
 
         public override void Serialize(GenericWriter writer)

@@ -1549,8 +1549,9 @@ namespace Server.Multis
                 using (StreamWriter op = new StreamWriter("comp_val.log", true))
                     op.WriteLine("{0}\t{1}\tInvalid ItemID 0x{2:X4}", state, state.Mobile, itemID);
             }
-            catch
+            catch (Exception e)
             {
+                Server.Diagnostics.ExceptionLogging.LogException(e);
             }
         }
 
@@ -2601,8 +2602,9 @@ namespace Server.Multis
                             using (StreamWriter op = new StreamWriter("dsd_exceptions.txt", true))
                                 op.WriteLine(e);
                         }
-                        catch
+                        catch (Exception ex)
                         {
+                            Server.Diagnostics.ExceptionLogging.LogException(ex);
                         }
                     }
                     finally

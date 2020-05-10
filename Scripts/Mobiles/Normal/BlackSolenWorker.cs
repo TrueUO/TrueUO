@@ -37,11 +37,7 @@ namespace Server.Mobiles
             Fame = 1500;
             Karma = -1500;
 
-            PackGold(Utility.Random(100, 180));
-
             SolenHelper.PackPicnicBasket(this);
-
-            PackItem(new ZoogiFungus());
         }
 
         public BlackSolenWorker(Serial serial)
@@ -76,7 +72,9 @@ namespace Server.Mobiles
 
         public override void GenerateLoot()
         {
-            AddLoot(LootPack.Gems, Utility.RandomMinMax(1, 2));
+            AddLoot(LootPack.Gems, 1, 2);
+            AddLoot(LootPack.LootGold(100, 180));
+            AddLoot(LootPack.LootItem(typeof(ZoogiFungus), 100.0, 1, false, true));
         }
 
         public override bool IsEnemy(Mobile m)

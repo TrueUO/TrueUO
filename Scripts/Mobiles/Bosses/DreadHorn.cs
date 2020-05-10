@@ -48,17 +48,9 @@ namespace Server.Mobiles
             Fame = 32000;
             Karma = -32000;
 
-            PackResources(8);
-            PackTalismans(5);
-
             m_Change = DateTime.UtcNow;
             m_Stomp = DateTime.UtcNow;
             m_Teleport = DateTime.UtcNow;
-
-            for (int i = 0; i < Utility.RandomMinMax(1, 3); i++)
-            {
-                PackItem(Loot.RandomScroll(0, Loot.ArcanistScrollTypes.Length, SpellbookType.Arcanist));
-            }
         }
 
         public override void GenerateLoot()
@@ -67,6 +59,9 @@ namespace Server.Mobiles
             AddLoot(LootPack.LowScrolls, 4);
             AddLoot(LootPack.MedScrolls, 4);
             AddLoot(LootPack.HighScrolls, 4);
+            AddLoot(LootPack.ArcanistScrolls, Utility.RandomMinMax(1, 6));
+            AddLoot(LootPack.PeerlessResource, 8);
+            AddLoot(LootPack.Talisman, 5);
         }
 
         public override void OnThink()

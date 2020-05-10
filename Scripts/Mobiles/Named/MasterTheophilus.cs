@@ -43,10 +43,6 @@ namespace Server.Mobiles
             AddItem(new Shoes(0x537));
             AddItem(new Robe(0x452));
 
-            PackReg(7);
-            PackReg(7);
-            PackReg(8);
-
             for (int i = 0; i < Utility.RandomMinMax(0, 1); i++)
             {
                 PackItem(Loot.RandomScroll(0, Loot.ArcanistScrollTypes.Length, SpellbookType.Arcanist));
@@ -84,6 +80,7 @@ namespace Server.Mobiles
             AddLoot(LootPack.UltraRich, 3);
             AddLoot(LootPack.MedScrolls, 4);
             AddLoot(LootPack.HighScrolls, 4);
+            AddLoot(LootPack.MageryRegs, 22);
         }
 
         public override void Serialize(GenericWriter writer)

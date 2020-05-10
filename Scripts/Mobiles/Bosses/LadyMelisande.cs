@@ -40,18 +40,10 @@ namespace Server.Mobiles
             SetSkill(SkillName.Necromancy, 120);
             SetSkill(SkillName.SpiritSpeak, 120);
 
-            PackResources(8);
-            PackTalismans(5);
-
             Timer.DelayCall(TimeSpan.FromSeconds(1), SpawnSatyrs);
 
             Fame = 25000;
             Karma = -25000;
-
-            for (int i = 0; i < Utility.RandomMinMax(0, 1); i++)
-            {
-                PackItem(Loot.RandomScroll(0, Loot.ArcanistScrollTypes.Length, SpellbookType.Arcanist));
-            }
 
             SetAreaEffect(AreaEffect.AuraOfNausea);
         }
@@ -60,6 +52,9 @@ namespace Server.Mobiles
         {
             AddLoot(LootPack.SuperBoss, 8);
             AddLoot(LootPack.Parrot, 1);
+            AddLoot(LootPack.ArcanistScrolls, Utility.RandomMinMax(1, 6));
+            AddLoot(LootPack.PeerlessResource, 8);
+            AddLoot(LootPack.Talisman, 5);
         }
 
         public override void OnDeath(Container c)

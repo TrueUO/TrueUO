@@ -638,8 +638,9 @@ namespace Server.Items
 
                 return Activator.CreateInstance(m_Type, args) as BaseHouse;
             }
-            catch
+            catch (Exception e)
             {
+                Server.Diagnostics.ExceptionLogging.LogException(e);
             }
 
             return null;

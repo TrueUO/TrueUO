@@ -1,3 +1,4 @@
+using System;
 using Server.Items;
 
 namespace Server.Mobiles
@@ -81,8 +82,6 @@ namespace Server.Mobiles
             Item cloak = new Cloak(0x486); // dark purple
             cloak.LootType = LootType.Blessed;
             SetWearable(cloak);
-
-            PackGold(400, 600);
         }
 
         public override void OnKilledBy(Mobile m)
@@ -97,25 +96,9 @@ namespace Server.Mobiles
 
         public override void GenerateLoot()
         {
-            if (Utility.RandomDouble() < 0.1)
-            {
-                switch (Utility.Random(4))
-                {
-                    case 0:
-                        PackItem(new ExodusSummoningRite());
-                        break;
-                    case 1:
-                        PackItem(new ExodusSacrificalDagger());
-                        break;
-                    case 2:
-                        PackItem(new RobeofRite());
-                        break;
-                    case 3:
-                        PackItem(new ExodusSummoningAlter());
-                        break;
-                }
-            }
-        }
+            AddLoot(LootPack.RandomLootItem(new Type[] { typeof(ExodusSummoningRite), typeof(ExodusSacrificalDagger), typeof(RobeofRite), typeof(ExodusSummoningAlter) }, 1.0, 1, false, false));
+            AddLoot(LootPack.LootGold(400, 600));
+    }
 
         public override bool CanBeParagon => false;
 

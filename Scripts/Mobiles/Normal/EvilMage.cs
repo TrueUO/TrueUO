@@ -44,8 +44,6 @@ namespace Server.Mobiles
             Fame = 2500;
             Karma = -2500;
 
-            PackReg(6);
-
             switch (Utility.Random(18))
             {
                 case 0: PackItem(new BloodOathScroll()); break;
@@ -77,6 +75,7 @@ namespace Server.Mobiles
         {
             AddLoot(LootPack.Average);
             AddLoot(LootPack.MedScrolls);
+            AddLoot(LootPack.MageryRegs, 6);
         }
 
         public override void Serialize(GenericWriter writer)

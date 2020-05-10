@@ -111,7 +111,7 @@ namespace Server.Items
 
                 if (i == 0)
                 {
-                    item = Loot.RandomScroll(0, Loot.RegularScrollTypes.Length, SpellbookType.Regular);
+                    item = Loot.RandomScroll(0, Loot.MageryScrollTypes.Length, SpellbookType.Regular);
                 }
                 else
                 {
