@@ -322,9 +322,6 @@
     <Compile Include="Gumps\ConfirmHeritageGump.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Gumps\ConfirmHouseResize.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Gumps\ConfirmMountStatuetteGump.cs" />
     <Compile Include="Gumps\ConfirmReleaseGump.cs">
       <SubType>Code</SubType>
@@ -348,15 +345,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Gumps\HonorSelf.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Gumps\HouseDemolishGump.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Gumps\HouseGump.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Gumps\HouseTransferGump.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Gumps\NoticeGump.cs">
@@ -395,9 +383,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Gumps\RunebookGump.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Gumps\SetSecureLevelGump.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Gumps\SkillsGump.cs">
@@ -2768,7 +2753,6 @@
     <Compile Include="Mobiles\Void Creatures\Relanord.cs" />
     <Compile Include="Mobiles\Void Creatures\UsagralemBallem.cs" />
     <Compile Include="Mobiles\Void Creatures\Vasanord.cs" />
-    <Compile Include="Multis\HouseTeleporterTile.cs" />
     <Compile Include="Quests\ALittleSomething.cs" />
     <Compile Include="Quests\AmbitiousSolenQueen\AmbitiousQueenQuest.cs" />
     <Compile Include="Quests\AmbitiousSolenQueen\Conversations.cs" />
@@ -8651,9 +8635,6 @@
     <Compile Include="Mobiles\AI\VendorAI.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Multis\BaseHouse.cs">
-      <SubType>Code</SubType>
-    </Compile>
 	<Compile Include="Multis\Boats\Galleons\Network\GalleonPacketHandlers.cs" />
 	<Compile Include="Multis\Boats\Galleons\Network\GalleonPackets.cs" />
 	<Compile Include="Multis\Boats\Galleons\BaseGalleon.cs" />
@@ -8676,118 +8657,51 @@
 	<Compile Include="Multis\Boats\Gumps\ShipAccessListGump.cs" />
 	<Compile Include="Multis\Boats\Gumps\ShipPlacementGump.cs" />
 	<Compile Include="Multis\Boats\Gumps\ShipSecurityGump.cs" />
-    <Compile Include="Multis\Boats\BaseBoat.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Multis\Boats\BaseBoatDeed.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Multis\Boats\BaseDockedBoat.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Multis\Boats\ConfirmDryDockGump.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Multis\Boats\Hold.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Multis\Boats\LargeBoat.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Multis\Boats\LargeDragonBoat.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Multis\Boats\MediumBoat.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Multis\Boats\MediumDragonBoat.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Multis\Boats\Plank.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Multis\Boats\RenameBoatPrompt.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Multis\Boats\SmallBoat.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Multis\Boats\SmallDragonBoat.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Multis\Boats\Strandedness.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Multis\Boats\TillerMan.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Multis\Camps\BankerCamp.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Multis\Camps\BaseCamp.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Multis\Camps\BrigandCamp.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Multis\Camps\ElfBrigandCamp.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Multis\Camps\HealerCamp.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Multis\Camps\HumanBrigandCamp.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Multis\Camps\LizardmenCamp.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Multis\Camps\MageCamp.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Multis\Camps\OrcCamp.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Multis\Boats\BaseBoat.cs" />
+    <Compile Include="Multis\Boats\BaseBoatDeed.cs" />
+    <Compile Include="Multis\Boats\BaseDockedBoat.cs" />
+    <Compile Include="Multis\Boats\ConfirmDryDockGump.cs" />
+    <Compile Include="Multis\Boats\Hold.cs" />
+    <Compile Include="Multis\Boats\LargeBoat.cs" />
+    <Compile Include="Multis\Boats\LargeDragonBoat.cs" />
+    <Compile Include="Multis\Boats\MediumBoat.cs" />
+    <Compile Include="Multis\Boats\MediumDragonBoat.cs" />
+    <Compile Include="Multis\Boats\Plank.cs" />
+    <Compile Include="Multis\Boats\RenameBoatPrompt.cs" />
+    <Compile Include="Multis\Boats\SmallBoat.cs" />
+    <Compile Include="Multis\Boats\SmallDragonBoat.cs" />
+    <Compile Include="Multis\Boats\Strandedness.cs" />
+    <Compile Include="Multis\Boats\TillerMan.cs" />
+    <Compile Include="Multis\Camps\BankerCamp.cs" />
+    <Compile Include="Multis\Camps\BaseCamp.cs" />
+    <Compile Include="Multis\Camps\BrigandCamp.cs" />
+    <Compile Include="Multis\Camps\ElfBrigandCamp.cs" />
+    <Compile Include="Multis\Camps\HealerCamp.cs" />
+    <Compile Include="Multis\Camps\HumanBrigandCamp.cs" />
+    <Compile Include="Multis\Camps\LizardmenCamp.cs" />
+    <Compile Include="Multis\Camps\MageCamp.cs" />
+    <Compile Include="Multis\Camps\OrcCamp.cs" />
     <Compile Include="Multis\Camps\PrisonerCamp.cs" />
-    <Compile Include="Multis\Camps\RatCamp.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Multis\ComponentVerification.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Multis\Deeds.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Multis\DynamicDecay.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Multis\HouseFoundation.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Multis\HousePlacement.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Multis\HousePlacementTool.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Multis\Houses.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Multis\HouseSign.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Multis\HouseTeleporter.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Multis\MovingCrate.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Multis\NoHousingItem.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Multis\PreviewHouse.cs">
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="Multis\Camps\RatCamp.cs" />
+	<Compile Include="Multis\Houses\Gumps\ConfirmHouseResize.cs" />
+	<Compile Include="Multis\Houses\Gumps\HouseDemolishGump.cs" />
+	<Compile Include="Multis\Houses\Gumps\HouseGump.cs" />
+	<Compile Include="Multis\Houses\Gumps\HouseTransferGump.cs" />
+	<Compile Include="Multis\Houses\Gumps\SetSecureLevelGump.cs" />
+	<Compile Include="Multis\Houses\BaseHouse.cs" />
+    <Compile Include="Multis\Houses\ComponentVerification.cs" />
+    <Compile Include="Multis\Houses\Deeds.cs" />
+    <Compile Include="Multis\Houses\DynamicDecay.cs" />
+    <Compile Include="Multis\Houses\HouseFoundation.cs" />
+    <Compile Include="Multis\Houses\HousePlacement.cs" />
+    <Compile Include="Multis\Houses\HousePlacementTool.cs" />
+    <Compile Include="Multis\Houses\Houses.cs" />
+    <Compile Include="Multis\Houses\HouseSign.cs" />
+    <Compile Include="Multis\Houses\HouseTeleporter.cs" />
+	<Compile Include="Multis\Houses\HouseTeleporterTile.cs" />
+    <Compile Include="Multis\Houses\MovingCrate.cs" />
+    <Compile Include="Multis\Houses\NoHousingItem.cs" />
+    <Compile Include="Multis\Houses\PreviewHouse.cs" />
     <Compile Include="Quests\Collector\CollectorQuest.cs">
       <SubType>Code</SubType>
     </Compile>
