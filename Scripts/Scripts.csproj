@@ -744,12 +744,6 @@
     <Compile Include="Quests\TieredQuests\PercolemTieredQuests.cs" />
     <Compile Include="Quests\TieredQuests\ThepemTieredQuests.cs" />
     <Compile Include="Quests\TieredQuests\ZosilemTieredQuests.cs" />
-    <Compile Include="Services\22nd Anniversary\Anniversary22GiftToken.cs" />
-    <Compile Include="Services\22nd Anniversary\Items\CopperPortraits.cs" />
-    <Compile Include="Services\22nd Anniversary\Items\CopperShipRelief.cs" />
-    <Compile Include="Services\22nd Anniversary\Items\CopperSunflower.cs" />
-    <Compile Include="Services\22nd Anniversary\Items\CopperWings.cs" />
-    <Compile Include="Services\22nd Anniversary\Giver.cs" />
     <Compile Include="Services\Astronomy\21st Anniversary Gifts\Anniversary21Card.cs" />
     <Compile Include="Services\Astronomy\21st Anniversary Gifts\Anniversary21GiftToken.cs" />
     <Compile Include="Services\Astronomy\21st Anniversary Gifts\AnniversaryBag21st.cs" />
@@ -3026,13 +3020,6 @@
     <Compile Include="Mobiles\NPCs\Zeefzorpul.cs" />
     <Compile Include="Quests\WitchApprentice\Objectives.cs" />
     <Compile Include="Quests\WitchApprentice\WitchApprenticeQuest.cs" />
-    <Compile Include="Services\18th Anniversary\18th AnniversaryBag.cs" />
-    <Compile Include="Services\18th Anniversary\AnniversaryCard.cs" />
-    <Compile Include="Services\18th Anniversary\AnniversaryPlate.cs" />
-    <Compile Include="Services\18th Anniversary\AnniversaryVaseShort.cs" />
-    <Compile Include="Services\18th Anniversary\AnniversaryVaseTall.cs" />
-    <Compile Include="Services\18th Anniversary\EnchantedTimepiece.cs" />
-    <Compile Include="Services\18th Anniversary\Giver.cs" />
     <Compile Include="Services\Armor Refinement\ArmorRefiner.cs" />
     <Compile Include="Services\Armor Refinement\Gumps.cs" />
     <Compile Include="Services\Armor Refinement\Items.cs" />
@@ -10707,6 +10694,19 @@
     <Compile Include="Skills\Tracking.cs">
       <SubType>Code</SubType>
     </Compile>
+	<Compile Include="Services\GiftGiving\18thAnniversary\18thAnniversaryBag.cs" />
+    <Compile Include="Services\GiftGiving\18thAnniversary\AnniversaryCard.cs" />
+    <Compile Include="Services\GiftGiving\18thAnniversary\AnniversaryPlate.cs" />
+    <Compile Include="Services\GiftGiving\18thAnniversary\AnniversaryVaseShort.cs" />
+    <Compile Include="Services\GiftGiving\18thAnniversary\AnniversaryVaseTall.cs" />
+    <Compile Include="Services\GiftGiving\18thAnniversary\EnchantedTimepiece.cs" />
+    <Compile Include="Services\GiftGiving\18thAnniversary\Giver.cs" />	
+	<Compile Include="Services\GiftGiving\22ndAnniversary\Anniversary22GiftToken.cs" />
+    <Compile Include="Services\GiftGiving\22ndAnniversary\Items\CopperPortraits.cs" />
+    <Compile Include="Services\GiftGiving\22ndAnniversary\Items\CopperShipRelief.cs" />
+    <Compile Include="Services\GiftGiving\22ndAnniversary\Items\CopperSunflower.cs" />
+    <Compile Include="Services\GiftGiving\22ndAnniversary\Items\CopperWings.cs" />
+    <Compile Include="Services\GiftGiving\22ndAnniversary\Giver.cs" />	
     <Compile Include="Services\GiftGiving\GiftGiving.cs">
       <SubType>Code</SubType>
     </Compile>
