@@ -816,8 +816,9 @@ namespace Server.Engines.Doom
                     m_Creatures.Add(mob);
                 }
             }
-            catch
+            catch (Exception e)
             {
+                Server.Diagnostics.ExceptionLogging.LogException(e);
             }
         }
 

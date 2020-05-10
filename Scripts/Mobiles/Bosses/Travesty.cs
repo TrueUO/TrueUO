@@ -86,17 +86,17 @@ namespace Server.Mobiles
 
             Fame = 30000;
             Karma = -30000;
-
-            PackTalismans(5);
-            PackResources(8);
-
-            for (int i = 0; i < Utility.RandomMinMax(1, 6); i++)
-            {
-                PackItem(Loot.RandomScroll(0, Loot.ArcanistScrollTypes.Length, SpellbookType.Arcanist));
-            }
         }
 
         public override bool ShowFameTitle => false;
+
+        public override void GenerateLoot()
+        {
+            AddLoot(LootPack.SuperBoss, 8);
+            AddLoot(LootPack.ArcanistScrolls, Utility.RandomMinMax(1, 6));
+            AddLoot(LootPack.PeerlessResource, 8);
+            AddLoot(LootPack.Talisman, 5);
+        }
 
         public Travesty(Serial serial)
             : base(serial)
@@ -156,11 +156,6 @@ namespace Server.Mobiles
             }
 
             base.OnDamage(amount, from, willKill);
-        }
-
-        public override void GenerateLoot()
-        {
-            AddLoot(LootPack.SuperBoss, 8);
         }
 
         public override void Serialize(GenericWriter writer)

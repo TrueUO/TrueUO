@@ -38,10 +38,13 @@ namespace Server.Mobiles
             SetSkill(SkillName.Tactics, 30.1, 49.0);
             SetSkill(SkillName.Wrestling, 41.1, 49.8);
 
-            PackGold(50, 70);
-
             Fame = 2500;
             Karma = -2500;
+        }
+
+        public override void GenerateLoot()
+        {
+            AddLoot(LootPack.LootGold(50, 70));
         }
 
         public override bool OnBeforeDeath()

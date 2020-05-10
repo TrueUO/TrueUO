@@ -425,12 +425,14 @@ namespace Server.Mobiles
         {
             RangeFight = 7;
 
-            PackGold(60, 70);
-            PackReg(1, 3);
-
             Bandage b = new Bandage();
             b.Amount = Utility.RandomMinMax(3, 5);
             PackItem(b);
+        }
+
+         public override void GenerateLoot()
+        {
+            AddLoot(LootPack.MageryRegs, 1, 3);
         }
 
         public override void BuildBody()

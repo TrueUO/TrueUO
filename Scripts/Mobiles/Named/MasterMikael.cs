@@ -38,9 +38,6 @@ namespace Server.Mobiles
             Fame = 18000;
             Karma = -18000;
 
-            PackReg(3);
-            PackNecroReg(1, 10);
-
             for (int i = 0; i < Utility.RandomMinMax(0, 1); i++)
             {
                 PackItem(Loot.RandomScroll(0, Loot.ArcanistScrollTypes.Length, SpellbookType.Arcanist));
@@ -75,6 +72,8 @@ namespace Server.Mobiles
             AddLoot(LootPack.UltraRich, 2);
             AddLoot(LootPack.MedScrolls, 2);
             AddLoot(LootPack.HighScrolls, 2);
+            AddLoot(LootPack.MageryRegs, 3);
+            AddLoot(LootPack.NecroRegs, 1, 10);
         }
 
         // TODO: Special move?

@@ -476,7 +476,7 @@ namespace Server.Engines.Auction
                 BidHistory = null;
                 Viewers = null;
             }
-            catch { }
+            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
         }
 
         public void ResendGumps(PlayerMobile player)

@@ -46,7 +46,6 @@ namespace Server.Mobiles
             Fame = 1000;
             Karma = -1000;
 
-            PackReg(10, 15);
             PackItem(new Bandage(Utility.RandomMinMax(1, 15)));
 
             if (0.1 > Utility.RandomDouble())
@@ -71,6 +70,7 @@ namespace Server.Mobiles
         public override void GenerateLoot()
         {
             AddLoot(LootPack.Average);
+            AddLoot(LootPack.MageryRegs, 10, 15);
         }
 
         public override bool IsEnemy(Mobile m)

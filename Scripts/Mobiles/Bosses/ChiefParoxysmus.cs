@@ -36,8 +36,6 @@ namespace Server.Mobiles
             SetSkill(SkillName.Anatomy, 120.0);
             SetSkill(SkillName.Poisoning, 120.0);
 
-            PackResources(8);
-            PackTalismans(5);
             Timer.DelayCall(TimeSpan.FromSeconds(1), SpawnBulbous);  //BulbousPutrification
 
             Fame = 25000;
@@ -57,6 +55,8 @@ namespace Server.Mobiles
         public override void GenerateLoot()
         {
             AddLoot(LootPack.SuperBoss, 8);
+            AddLoot(LootPack.PeerlessResource, 8);
+            AddLoot(LootPack.Talisman, 5);
         }
 
         public override void OnDeath(Container c)

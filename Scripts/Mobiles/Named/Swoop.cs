@@ -36,8 +36,6 @@ namespace Server.Mobiles
             Fame = 18000;
             Karma = 0;
 
-            PackReg(4);
-
             Tamable = false;
 
             for (int i = 0; i < Utility.RandomMinMax(0, 1); i++)
@@ -80,9 +78,6 @@ namespace Server.Mobiles
                     case 19: c.DropItem(new MyrmidonChest()); break;
                 }
             }
-
-            if (Utility.RandomDouble() < 0.1)
-                c.DropItem(new ParrotItem());
         }
 
         public Swoop(Serial serial)
@@ -100,6 +95,8 @@ namespace Server.Mobiles
         {
             AddLoot(LootPack.UltraRich, 2);
             AddLoot(LootPack.HighScrolls);
+            AddLoot(LootPack.MageryRegs, 4);
+            AddLoot(LootPack.Parrot, 1);
         }
 
         public override void Serialize(GenericWriter writer)

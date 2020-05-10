@@ -65,7 +65,6 @@ namespace Server.Mobiles
             AddItem(new RangerLegs());
 
             PackItem(new Arrow(20));
-            PackGold(10, 75);
         }
 
         public HireRangerArcher(Serial serial)

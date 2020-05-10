@@ -257,8 +257,9 @@ namespace Server
                 ReadNode(root, "Spellweaving", ref m_Spellweaving);
                 ReadNode(root, "PublicDonations", ref m_PublicDonations);
             }
-            catch
+            catch (Exception e)
             {
+                Server.Diagnostics.ExceptionLogging.LogException(e);
             }
 
             if (!FindItem(new Point3D(1431, 1696, 0), Map.Trammel, 0x307F))
@@ -310,7 +311,7 @@ namespace Server
             }
             catch (Exception e)
             {
-                Console.WriteLine("Error while updating 'Settings.xml': {0}", e);
+                Server.Diagnostics.ExceptionLogging.LogException(e);
             }
         }
 

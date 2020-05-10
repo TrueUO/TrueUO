@@ -39,8 +39,6 @@ namespace Server.Mobiles
             Fame = 3000;
             Karma = -3000;
 
-            PackReg(6);
-
             switch (Utility.Random(8))
             {
                 case 0: PackItem(new CorpseSkinScroll()); break;
@@ -69,6 +67,7 @@ namespace Server.Mobiles
         {
             AddLoot(LootPack.Average);
             AddLoot(LootPack.LowScrolls);
+            AddLoot(LootPack.MageryRegs, 6);
         }
 
         public override bool IsEnemy(Mobile m)

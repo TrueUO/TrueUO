@@ -44,9 +44,6 @@ namespace Server.Mobiles
             Fame = 500;
             Karma = -500;
 
-            PackReg(1, 2);
-            PackGem(1, 2);
-
             PackItem(new ExecutionersCap());
 
             if (0.33 > Utility.RandomDouble())
@@ -66,6 +63,8 @@ namespace Server.Mobiles
         public override void GenerateLoot()
         {
             AddLoot(LootPack.Rich, 1);
+            AddLoot(LootPack.MageryRegs, Utility.RandomMinMax(1, 2));
+            AddLoot(LootPack.Gems, Utility.RandomMinMax(1, 2));
         }
 
         public MudPie(Serial serial)
@@ -118,9 +117,6 @@ namespace Server.Mobiles
             Fame = 4000;
             Karma = -4000;
 
-            PackReg(1, 2);
-            PackGem(1, 2);
-
             PackItem(new Granite());
             PackItem(new Sand());
 
@@ -140,6 +136,8 @@ namespace Server.Mobiles
         public override void GenerateLoot()
         {
             AddLoot(LootPack.FilthyRich, 2);
+            AddLoot(LootPack.MageryRegs, Utility.RandomMinMax(1, 2));
+            AddLoot(LootPack.Gems, Utility.RandomMinMax(1, 2));
         }
 
         public StoneElemental(Serial serial)
@@ -207,7 +205,6 @@ namespace Server.Mobiles
 
             Fame = 3500;
             Karma = -3500;
-            PackGem(1);
 
             PackItem(new Saltpeter(Utility.RandomMinMax(1, 5)));
             PackItem(new Potash(Utility.RandomMinMax(1, 5)));
@@ -236,6 +233,7 @@ namespace Server.Mobiles
         public override void GenerateLoot()
         {
             AddLoot(LootPack.Rich, 2);
+            AddLoot(LootPack.Gems);
         }
 
         public CaveTroll(Serial serial)
@@ -855,8 +853,6 @@ namespace Server.Mobiles
             AddItem(new Robe(1156));
             AddItem(new Sandals());
 
-            PackReg(31);
-
             Utility.AssignRandomHair(this);
 
             Fame = 22000;
@@ -948,6 +944,7 @@ namespace Server.Mobiles
         {
             AddLoot(LootPack.UltraRich, 2);
             AddLoot(LootPack.HighScrolls, Utility.RandomMinMax(5, 20));
+            AddLoot(LootPack.MageryRegs, 31);
         }
 
         public BurningMage(Serial serial)
@@ -1639,8 +1636,6 @@ namespace Server.Mobiles
             SetSkill(SkillName.DetectHidden, 80.0);
             SetSkill(SkillName.Parry, 90.0, 100.0);
 
-            PackReg(7, 11);
-
             int scrolls = Utility.RandomMinMax(4, 6);
 
             Fame = 8500;
@@ -1669,6 +1664,7 @@ namespace Server.Mobiles
         {
             AddLoot(LootPack.FilthyRich, 2);
             AddLoot(LootPack.HighScrolls, Utility.RandomMinMax(1, 8));
+            AddLoot(LootPack.MageryRegs, Utility.RandomMinMax(7, 11));
         }
 
         public DiseasedBloodElemental(Serial serial)
