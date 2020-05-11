@@ -734,9 +734,9 @@
     <Compile Include="Mobiles\NPCs\Mannequin\Property\SlayerAttribute.cs" />
     <Compile Include="Mobiles\NPCs\Mannequin\Property\WeaponAttributeProperty.cs" />
     <Compile Include="Multis\Boats\Galleons\GalleonItem.cs" />
+    <Compile Include="Multis\Houses\ContestHouses.cs" />
     <Compile Include="Services\Seasonal Events\ForsakenFoes\Mobile\MiningCooperativeMerchant.cs" />
     <Compile Include="Mobiles\NPCs\CommissionPlayerVendor.cs" />
-    <Compile Include="Multis\ContestHouses.cs" />
     <Compile Include="Quests\The Ritual\Items.cs" />
     <Compile Include="Quests\The Ritual\Mobiles.cs" />
     <Compile Include="Quests\The Ritual\Puzzle.cs" />
@@ -968,13 +968,13 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Items\Equipment\Weapons\PaladinSword.cs" />
-    <Compile Include="Items\Functional\AcidVine.cs" />	
-	<Compile Include="Items\Functional\AuctionSafe\Auction.cs" />
-	<Compile Include="Items\Functional\AuctionSafe\AuctionMap.cs" />
-	<Compile Include="Items\Functional\AuctionSafe\AuctionSafe.cs" />
-	<Compile Include="Items\Functional\AuctionSafe\BidEntry.cs" />
-	<Compile Include="Items\Functional\AuctionSafe\BidHistory.cs" />
-	<Compile Include="Items\Functional\AuctionSafe\Gumps.cs" />	
+    <Compile Include="Items\Functional\AcidVine.cs" />
+    <Compile Include="Items\Functional\AuctionSafe\Auction.cs" />
+    <Compile Include="Items\Functional\AuctionSafe\AuctionMap.cs" />
+    <Compile Include="Items\Functional\AuctionSafe\AuctionSafe.cs" />
+    <Compile Include="Items\Functional\AuctionSafe\BidEntry.cs" />
+    <Compile Include="Items\Functional\AuctionSafe\BidHistory.cs" />
+    <Compile Include="Items\Functional\AuctionSafe\Gumps.cs" />
     <Compile Include="Items\Functional\Automaton\AutomatonActuator.cs" />
     <Compile Include="Items\Functional\Automaton\AutomatonStatue.cs" />
     <Compile Include="Items\Functional\Automaton\BlackrockAutomaton.cs" />
@@ -1982,7 +1982,7 @@
     <Compile Include="Mobiles\Named\Gnaw.cs" />
     <Compile Include="Mobiles\Named\GrayGoblinMageRenowned.cs" />
     <Compile Include="Mobiles\Named\GreenGoblinAlchemistRenowned.cs" />
-	<Compile Include="Mobiles\Named\Niporailem.cs" />
+    <Compile Include="Mobiles\Named\Niporailem.cs" />
     <Compile Include="Mobiles\Named\NightTerror.cs" />
     <Compile Include="Mobiles\Named\Grim.cs" />
     <Compile Include="Mobiles\Named\Grobu.cs" />
@@ -2117,8 +2117,8 @@
     <Compile Include="Mobiles\Normal\CrystalVortex.cs" />
     <Compile Include="Mobiles\Normal\CrystalWisp.cs" />
     <Compile Include="Mobiles\Normal\Cursed.cs" />
-	<Compile Include="Mobiles\Normal\CursedMetallicKnight.cs" />
-	<Compile Include="Mobiles\Normal\CursedMetallicMage.cs" />
+    <Compile Include="Mobiles\Normal\CursedMetallicKnight.cs" />
+    <Compile Include="Mobiles\Normal\CursedMetallicMage.cs" />
     <Compile Include="Mobiles\Normal\CursedSoul.cs" />
     <Compile Include="Mobiles\Normal\CuSidhe.cs" />
     <Compile Include="Mobiles\Normal\Cyclops.cs" />
@@ -8618,9 +8618,9 @@
     <Compile Include="Mobiles\AI\VendorAI.cs">
       <SubType>Code</SubType>
     </Compile>
-	<Compile Include="Multis\Boats\Galleons\Network\GalleonPacketHandlers.cs" />
-	<Compile Include="Multis\Boats\Galleons\Network\GalleonPackets.cs" />
-	<Compile Include="Multis\Boats\Galleons\BaseGalleon.cs" />
+    <Compile Include="Multis\Boats\Galleons\Network\GalleonPacketHandlers.cs" />
+    <Compile Include="Multis\Boats\Galleons\Network\GalleonPackets.cs" />
+    <Compile Include="Multis\Boats\Galleons\BaseGalleon.cs" />
     <Compile Include="Multis\Boats\Galleons\BoatMountItem.cs" />
     <Compile Include="Multis\Boats\Galleons\BritannianShip.cs" />
     <Compile Include="Multis\Boats\Galleons\GalleonContainer.cs" />
@@ -8634,12 +8634,12 @@
     <Compile Include="Multis\Boats\Galleons\ShipTracking.cs" />
     <Compile Include="Multis\Boats\Galleons\ShipWheel.cs" />
     <Compile Include="Multis\Boats\Galleons\TokunoGalleon.cs" />
-	<Compile Include="Multis\Boats\Gumps\BaseShipGump.cs" />
-	<Compile Include="Multis\Boats\Gumps\CannonGump.cs" />
-	<Compile Include="Multis\Boats\Gumps\GrantAccessGump.cs" />
-	<Compile Include="Multis\Boats\Gumps\ShipAccessListGump.cs" />
-	<Compile Include="Multis\Boats\Gumps\ShipPlacementGump.cs" />
-	<Compile Include="Multis\Boats\Gumps\ShipSecurityGump.cs" />
+    <Compile Include="Multis\Boats\Gumps\BaseShipGump.cs" />
+    <Compile Include="Multis\Boats\Gumps\CannonGump.cs" />
+    <Compile Include="Multis\Boats\Gumps\GrantAccessGump.cs" />
+    <Compile Include="Multis\Boats\Gumps\ShipAccessListGump.cs" />
+    <Compile Include="Multis\Boats\Gumps\ShipPlacementGump.cs" />
+    <Compile Include="Multis\Boats\Gumps\ShipSecurityGump.cs" />
     <Compile Include="Multis\Boats\BaseBoat.cs" />
     <Compile Include="Multis\Boats\BaseBoatDeed.cs" />
     <Compile Include="Multis\Boats\BaseDockedBoat.cs" />
@@ -8666,12 +8666,12 @@
     <Compile Include="Multis\Camps\OrcCamp.cs" />
     <Compile Include="Multis\Camps\PrisonerCamp.cs" />
     <Compile Include="Multis\Camps\RatCamp.cs" />
-	<Compile Include="Multis\Houses\Gumps\ConfirmHouseResize.cs" />
-	<Compile Include="Multis\Houses\Gumps\HouseDemolishGump.cs" />
-	<Compile Include="Multis\Houses\Gumps\HouseGump.cs" />
-	<Compile Include="Multis\Houses\Gumps\HouseTransferGump.cs" />
-	<Compile Include="Multis\Houses\Gumps\SetSecureLevelGump.cs" />
-	<Compile Include="Multis\Houses\BaseHouse.cs" />
+    <Compile Include="Multis\Houses\Gumps\ConfirmHouseResize.cs" />
+    <Compile Include="Multis\Houses\Gumps\HouseDemolishGump.cs" />
+    <Compile Include="Multis\Houses\Gumps\HouseGump.cs" />
+    <Compile Include="Multis\Houses\Gumps\HouseTransferGump.cs" />
+    <Compile Include="Multis\Houses\Gumps\SetSecureLevelGump.cs" />
+    <Compile Include="Multis\Houses\BaseHouse.cs" />
     <Compile Include="Multis\Houses\ComponentVerification.cs" />
     <Compile Include="Multis\Houses\Deeds.cs" />
     <Compile Include="Multis\Houses\DynamicDecay.cs" />
@@ -8681,7 +8681,7 @@
     <Compile Include="Multis\Houses\Houses.cs" />
     <Compile Include="Multis\Houses\HouseSign.cs" />
     <Compile Include="Multis\Houses\HouseTeleporter.cs" />
-	<Compile Include="Multis\Houses\HouseTeleporterTile.cs" />
+    <Compile Include="Multis\Houses\HouseTeleporterTile.cs" />
     <Compile Include="Multis\Houses\MovingCrate.cs" />
     <Compile Include="Multis\Houses\NoHousingItem.cs" />
     <Compile Include="Multis\Houses\PreviewHouse.cs" />
@@ -9347,17 +9347,17 @@
     <Compile Include="Services\Dungeons\DespiseRevamped\DespiseController.cs" />
     <Compile Include="Services\Dungeons\DespiseRevamped\Region.cs" />
     <Compile Include="Services\Dungeons\DespiseRevamped\Setup.cs" />
-	<Compile Include="Services\Dungeons\Doom\GaryRoom.cs" />
-	<Compile Include="Services\Dungeons\Doom\GauntletSpawner.cs" />
-	<Compile Include="Services\Dungeons\Doom\GuardianRoom.cs" />
-	<Compile Include="Services\Dungeons\Doom\LeverPuzzleController.cs" />
-	<Compile Include="Services\Dungeons\Doom\LeverPuzzleItems.cs" />
-	<Compile Include="Services\Dungeons\Doom\LeverPuzzleRegions.cs" />
-	<Compile Include="Services\Dungeons\Khaldun\KhaldunGen.cs" />
-	<Compile Include="Services\Dungeons\Khaldun\KhaldunPitTeleporter.cs" />
-	<Compile Include="Services\Dungeons\Khaldun\PuzzleChest.cs" />
-	<Compile Include="Services\Dungeons\Khaldun\RaisableItem.cs" />
-	<Compile Include="Services\Dungeons\Khaldun\RaiseSwitch.cs" />	
+    <Compile Include="Services\Dungeons\Doom\GaryRoom.cs" />
+    <Compile Include="Services\Dungeons\Doom\GauntletSpawner.cs" />
+    <Compile Include="Services\Dungeons\Doom\GuardianRoom.cs" />
+    <Compile Include="Services\Dungeons\Doom\LeverPuzzleController.cs" />
+    <Compile Include="Services\Dungeons\Doom\LeverPuzzleItems.cs" />
+    <Compile Include="Services\Dungeons\Doom\LeverPuzzleRegions.cs" />
+    <Compile Include="Services\Dungeons\Khaldun\KhaldunGen.cs" />
+    <Compile Include="Services\Dungeons\Khaldun\KhaldunPitTeleporter.cs" />
+    <Compile Include="Services\Dungeons\Khaldun\PuzzleChest.cs" />
+    <Compile Include="Services\Dungeons\Khaldun\RaisableItem.cs" />
+    <Compile Include="Services\Dungeons\Khaldun\RaiseSwitch.cs" />
     <Compile Include="Services\Dungeons\ShameRevamped\Generate.cs" />
     <Compile Include="Services\Dungeons\ShameRevamped\Items\CorrosiveAsh.cs" />
     <Compile Include="Services\Dungeons\ShameRevamped\Items\CursedOilstone.cs" />
@@ -9818,7 +9818,7 @@
     </Compile>
     <Compile Include="Services\LoyaltySystem\LoyaltyRating.cs" />
     <Compile Include="Services\LoyaltySystem\LoyaltyRatingGump.cs" />
-	<Compile Include="Services\MondainsLegacy.cs" />
+    <Compile Include="Services\MondainsLegacy.cs" />
     <Compile Include="Services\Paragon.cs" />
     <Compile Include="Services\Party\AddPartyTarget.cs">
       <SubType>Code</SubType>
@@ -10694,19 +10694,19 @@
     <Compile Include="Skills\Tracking.cs">
       <SubType>Code</SubType>
     </Compile>
-	<Compile Include="Services\GiftGiving\18thAnniversary\18thAnniversaryBag.cs" />
+    <Compile Include="Services\GiftGiving\18thAnniversary\18thAnniversaryBag.cs" />
     <Compile Include="Services\GiftGiving\18thAnniversary\AnniversaryCard.cs" />
     <Compile Include="Services\GiftGiving\18thAnniversary\AnniversaryPlate.cs" />
     <Compile Include="Services\GiftGiving\18thAnniversary\AnniversaryVaseShort.cs" />
     <Compile Include="Services\GiftGiving\18thAnniversary\AnniversaryVaseTall.cs" />
     <Compile Include="Services\GiftGiving\18thAnniversary\EnchantedTimepiece.cs" />
-    <Compile Include="Services\GiftGiving\18thAnniversary\Giver.cs" />	
-	<Compile Include="Services\GiftGiving\22ndAnniversary\Anniversary22GiftToken.cs" />
+    <Compile Include="Services\GiftGiving\18thAnniversary\Giver.cs" />
+    <Compile Include="Services\GiftGiving\22ndAnniversary\Anniversary22GiftToken.cs" />
     <Compile Include="Services\GiftGiving\22ndAnniversary\Items\CopperPortraits.cs" />
     <Compile Include="Services\GiftGiving\22ndAnniversary\Items\CopperShipRelief.cs" />
     <Compile Include="Services\GiftGiving\22ndAnniversary\Items\CopperSunflower.cs" />
     <Compile Include="Services\GiftGiving\22ndAnniversary\Items\CopperWings.cs" />
-    <Compile Include="Services\GiftGiving\22ndAnniversary\Giver.cs" />	
+    <Compile Include="Services\GiftGiving\22ndAnniversary\Giver.cs" />
     <Compile Include="Services\GiftGiving\GiftGiving.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -10719,7 +10719,7 @@
     <Compile Include="Services\TestCenter.cs">
       <SubType>Code</SubType>
     </Compile>
-	<Compile Include="Services\TimeOfLegends.cs" />
+    <Compile Include="Services\TimeOfLegends.cs" />
     <Compile Include="Items\Internal\ResGate.cs">
       <SubType>Code</SubType>
     </Compile>
