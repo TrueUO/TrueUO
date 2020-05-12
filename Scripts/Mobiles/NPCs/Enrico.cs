@@ -2,10 +2,10 @@ using Server.Mobiles;
 
 namespace Server.Items
 {
-    public class SkeletonKey : BaseCollectionMobile
+    public class Enrico : BaseCollectionMobile
     {
         [Constructable]
-        public SkeletonKey()
+        public Enrico()
             : base("Enrico", "the thief")
         {
             StartTier = 10000000;
@@ -14,7 +14,7 @@ namespace Server.Items
             DonationLabel = 1073443; // Skeleton Key Section Donation Representative.
         }
 
-        public SkeletonKey(Serial serial)
+        public Enrico(Serial serial)
             : base(serial)
         {
         }
