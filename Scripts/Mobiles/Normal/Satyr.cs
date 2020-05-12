@@ -40,11 +40,6 @@ namespace Server.Mobiles
 
             Fame = 5000;
             Karma = 0;
-
-            for (int i = 0; i < Utility.RandomMinMax(0, 1); i++)
-            {
-                PackItem(Loot.RandomScroll(0, Loot.ArcanistScrollTypes.Length, SpellbookType.Arcanist));
-            }
         }
 
         public override TribeType Tribe => TribeType.Fey;
@@ -53,6 +48,7 @@ namespace Server.Mobiles
         {
             AddLoot(LootPack.Rich);
             AddLoot(LootPack.MedScrolls);
+            AddLoot(LootPack.ArcanistScrolls, 0, 1);
         }
 
         public override bool CanDiscord => true;

@@ -585,54 +585,64 @@ namespace Server
 
         public static readonly LootPack Parrot = new LootPack(new[] { new LootPackEntry(false, false, new LootPackItem[] { new LootPackItem(typeof(ParrotItem), 1) }, 10.00, 1) });
         public static readonly LootPack Talisman = new LootPack(new[] { new LootPackEntry(false, false, new LootPackItem[] { new LootPackItem(typeof(RandomTalisman), 1) }, 100.00, 1) });
-        public static readonly LootPack Bandage = new LootPack(new[] { new LootPackEntry(false, true, new LootPackItem[] { new LootPackItem(typeof(Bandage), 1) }, 2.0, 1) });
 
         public static readonly LootPack PeculiarSeed1 = new LootPack(new[] { new LootPackEntry(false, true, new LootPackItem[] { new LootPackItem(e => Engines.Plants.Seed.RandomPeculiarSeed(1), 1) }, 33.3, 1) });
         public static readonly LootPack PeculiarSeed2 = new LootPack(new[] { new LootPackEntry(false, true, new LootPackItem[] { new LootPackItem(e => Engines.Plants.Seed.RandomPeculiarSeed(2), 1) }, 33.3, 1) });
         public static readonly LootPack PeculiarSeed3 = new LootPack(new[] { new LootPackEntry(false, true, new LootPackItem[] { new LootPackItem(e => Engines.Plants.Seed.RandomPeculiarSeed(3), 1)}, 33.3, 1) });
+        public static readonly LootPack PeculiarSeed4 = new LootPack(new[] { new LootPackEntry(false, true, new LootPackItem[] { new LootPackItem(e => Engines.Plants.Seed.RandomPeculiarSeed(4), 1) }, 33.3, 1) });
         public static readonly LootPack BonsaiSeed = new LootPack(new[] { new LootPackEntry(false, true, new LootPackItem[] { new LootPackItem(e => Engines.Plants.Seed.RandomBonsaiSeed(), 1) }, 25.0, 1) });
 
-        public static LootPack LootItem<T>()
+        public static LootPack LootItem<T>() where T : Item
         {
             return new LootPack(new[] { new LootPackEntry(false, false, new LootPackItem[] { new LootPackItem(typeof(T), 1) }, 100.0, 1) });
         }
 
-        public static LootPack LootItem<T>(bool resource)
+        public static LootPack LootItem<T>(bool resource) where T : Item
         {
             return new LootPack(new[] { new LootPackEntry(false, resource, new LootPackItem[] { new LootPackItem(typeof(T), 1) }, 100.0, 1) });
         }
 
-        public static LootPack LootItem<T>(double chance)
+        public static LootPack LootItem<T>(double chance) where T : Item
         {
             return new LootPack(new[] { new LootPackEntry(false, false, new LootPackItem[] { new LootPackItem(typeof(T), 1) }, chance, 1) });
         }
 
-        public static LootPack LootItem<T>(double chance, bool resource)
+        public static LootPack LootItem<T>(double chance, bool resource) where T : Item
         {
             return new LootPack(new[] { new LootPackEntry(false, resource, new LootPackItem[] { new LootPackItem(typeof(T), 1) }, chance, 1) });
         }
 
-        public static LootPack LootItem<T>(bool onSpawn, bool onSteal)
+        public static LootPack LootItem<T>(bool onSpawn, bool onSteal) where T : Item
         {
             return new LootPack(new[] { new LootPackEntry(onSpawn, onSteal, new LootPackItem[] { new LootPackItem(typeof(T), 1) }, 100.0, 1) });
         }
 
-        public static LootPack LootItem<T>(int amount)
+        public static LootPack LootItem<T>(int amount) where T : Item
         {
             return new LootPack(new[] { new LootPackEntry(false, false, new LootPackItem[] { new LootPackItem(typeof(T), 1) }, 100.0, amount) });
         }
 
-        public static LootPack LootItem<T>(int amount, bool resource)
+        public static LootPack LootItem<T>(int min, int max) where T : Item
+        {
+            return new LootPack(new[] { new LootPackEntry(false, false, new LootPackItem[] { new LootPackItem(typeof(T), 1) }, 100.0, Utility.RandomMinMax(min, max)) });
+        }
+
+        public static LootPack LootItem<T>(int min, int max, bool resource) where T : Item
+        {
+            return new LootPack(new[] { new LootPackEntry(false, resource, new LootPackItem[] { new LootPackItem(typeof(T), 1) }, 100.0, Utility.RandomMinMax(min, max)) });
+        }
+
+        public static LootPack LootItem<T>(int amount, bool resource) where T : Item
         {
             return new LootPack(new[] { new LootPackEntry(false, resource, new LootPackItem[] { new LootPackItem(typeof(T), 1) }, 100.0, amount) });
         }
 
-        public static LootPack LootItem<T>(double chance, int amount)
+        public static LootPack LootItem<T>(double chance, int amount) where T : Item
         {
             return new LootPack(new[] { new LootPackEntry(false, false, new LootPackItem[] { new LootPackItem(typeof(T), 1) }, chance, amount) });
         }
 
-        public static LootPack LootItem<T>(double chance, int amount, bool spawnTime, bool onSteal)
+        public static LootPack LootItem<T>(double chance, int amount, bool spawnTime, bool onSteal) where T : Item
         {
             return new LootPack(new[] { new LootPackEntry(spawnTime, onSteal, new LootPackItem[] { new LootPackItem(typeof(T), 1) }, chance, amount) });
         }

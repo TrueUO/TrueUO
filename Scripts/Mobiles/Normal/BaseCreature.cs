@@ -5055,23 +5055,38 @@ namespace Server.Mobiles
 
         public virtual void AddLoot(LootPack pack, int min, int max)
         {
+            AddLoot(pack, Utility.RandomMinMax(min, max), 100.0);
+        }
+
+        public virtual void AddLoot(LootPack pack, int min, int max, double chance)
+        {
             if (min > max)
                 min = max;
 
-            AddLoot(pack, Utility.RandomMinMax(min, max));
+            AddLoot(pack, Utility.RandomMinMax(min, max), chance);
         }
 
         public virtual void AddLoot(LootPack pack, int amount)
         {
+            AddLoot(pack, amount, 100.0);
+        }
+
+        public virtual void AddLoot(LootPack pack, int amount, double chance)
+        {
             for (int i = 0; i < amount; ++i)
             {
-                AddLoot(pack);
+                AddLoot(pack, chance);
             }
         }
 
         public virtual void AddLoot(LootPack pack)
         {
-            if (Summoned || pack == null)
+            AddLoot(pack, 100.0);
+        }
+
+        public virtual void AddLoot(LootPack pack, double chance)
+        {
+            if (Summoned || pack == null || (chance < 100.0 && Utility.RandomDouble() > chance / 100))
             {
                 return;
             }

@@ -38,7 +38,6 @@ namespace Server.Mobiles
             Fame = 1700;
             Karma = -1700;
 
-            PackItem(new RawFishSteak(3));
             for (int i = 0; i < 2; i++)
             {
                 switch (Utility.Random(6))
@@ -72,6 +71,8 @@ namespace Server.Mobiles
         {
             AddLoot(LootPack.Meager);
             AddLoot(LootPack.Average);
+            AddLoot(LootPack.LootItem<RawFishSteak>(3, true));
+            AddLoot(LootPack.RandomLootItem(new [] { typeof(Gears), typeof(Hinge), typeof(Axle) }, 50.0, 1));
         }
 
         public override int GetAngerSound()

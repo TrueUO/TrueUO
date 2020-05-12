@@ -40,6 +40,14 @@ namespace Server.Mobiles
             SolenHelper.PackPicnicBasket(this);
         }
 
+        public override void GenerateLoot()
+        {
+            AddLoot(LootPack.Gems, 1, 2);
+            AddLoot(LootPack.LootGold(100, 180));
+            AddLoot(LootPack.LootItem<ZoogiFungus>(100.0, 1, false, true));
+            AddLoot(LootPack.LootItemCallback(SolenHelper.PackPicnicBasket, 1.0, 1, false, false));
+        }
+
         public BlackSolenWorker(Serial serial)
             : base(serial)
         {
@@ -68,13 +76,6 @@ namespace Server.Mobiles
         public override int GetDeathSound()
         {
             return 0x8E;
-        }
-
-        public override void GenerateLoot()
-        {
-            AddLoot(LootPack.Gems, 1, 2);
-            AddLoot(LootPack.LootGold(100, 180));
-            AddLoot(LootPack.LootItem<ZoogiFungus>(100.0, 1, false, true));
         }
 
         public override bool IsEnemy(Mobile m)

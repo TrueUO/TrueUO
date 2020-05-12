@@ -37,15 +37,19 @@ namespace Server.Mobiles
             Fame = 1400;
             Karma = -1400;
 
-            if (Utility.RandomDouble() < .5)
-                PackItem(Engines.Plants.Seed.RandomBonsaiSeed());
-
             Tamable = true;
             MinTameSkill = 41.1;
             ControlSlots = 1;
 
             SetWeaponAbility(WeaponAbility.CrushingBlow);
             SetSpecialAbility(SpecialAbility.PoisonSpit);
+        }
+
+        public override void GenerateLoot()
+        {
+            AddLoot(LootPack.LowScrolls, 1);
+            AddLoot(LootPack.Potions, 1);
+            AddLoot(LootPack.BonsaiSeed);
         }
 
         public DeathwatchBeetle(Serial serial)
@@ -80,12 +84,6 @@ namespace Server.Mobiles
             return 0x4F0;
         }
 
-        public override void GenerateLoot()
-        {
-            AddLoot(LootPack.LowScrolls, 1);
-            AddLoot(LootPack.Potions, 1);
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -96,11 +94,6 @@ namespace Server.Mobiles
         {
             base.Deserialize(reader);
             int version = reader.ReadInt();
-
-            if (version == 0)
-            {
-                SetWeaponAbility(WeaponAbility.CrushingBlow);
-            }
         }
     }
 }

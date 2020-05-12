@@ -9,11 +9,6 @@ namespace Server.Mobiles
         {
             Name = "a crystal wisp";
             Hue = 0x482;
-
-            for (int i = 0; i < Utility.RandomMinMax(0, 1); i++)
-            {
-                PackItem(Loot.RandomScroll(0, Loot.ArcanistScrollTypes.Length, SpellbookType.Arcanist));
-            }
         }
 
         public CrystalWisp(Serial serial)
@@ -24,6 +19,7 @@ namespace Server.Mobiles
         public override void GenerateLoot()
         {
             AddLoot(LootPack.MedScrolls);
+            AddLoot(LootPack.ArcanistScrolls, 0, 1);
         }
 
         public override void Serialize(GenericWriter writer)
