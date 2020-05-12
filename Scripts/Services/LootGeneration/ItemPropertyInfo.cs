@@ -804,9 +804,9 @@ namespace Server.Items
         /// <param name="attribute"></param>
         /// <param name="item"></param>
         /// <returns></returns>
-        public static int GetScale(Item item, object attribute, bool imbuing)
+        public static int GetScale(Item item, object attribute, bool loot)
         {
-            return GetScale(item, GetID(attribute), imbuing);
+            return GetScale(item, GetID(attribute), loot);
         }
 
         public static int GetScale(Item item, int id, bool loot)
