@@ -74,7 +74,7 @@ namespace Server.Mobiles
         {
             AddLoot(LootPack.Gems, Utility.RandomMinMax(1, 2));
             AddLoot(LootPack.LootGold(100, 180));
-            AddLoot(LootPack.LootItem(typeof(ZoogiFungus)));
+            AddLoot(LootPack.LootItem<ZoogiFungus>());
         }
 
         public override bool IsEnemy(Mobile m)

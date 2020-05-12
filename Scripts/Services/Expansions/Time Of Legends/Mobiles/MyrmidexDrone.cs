@@ -45,14 +45,17 @@ namespace Server.Mobiles
         public override void GenerateLoot()
         {
             AddLoot(LootPack.LootGold(50, 70));
+            AddLoot(LootPack.LootItemCallback(TryDropEggsac, 25.0, Utility.RandomMinMax(1, 5), false, false));
         }
 
-        public override bool OnBeforeDeath()
+        private Item TryDropEggsac(IEntity e)
         {
-            if (Region.IsPartOf("MyrmidexBattleground") && 0.25 > Utility.RandomDouble())
-                PackItem(new MyrmidexEggsac(Utility.RandomMinMax(1, 5)));
+            if (Region.Find(e.Location, e.Map).IsPartOf("MyrmidexBattleground"))
+            {
+                return new MyrmidexEggsac();
+            }
 
-            return base.OnBeforeDeath();
+            return null;
         }
 
         public override int Meat => 4;

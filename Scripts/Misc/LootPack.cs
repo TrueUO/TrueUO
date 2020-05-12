@@ -592,34 +592,49 @@ namespace Server
         public static readonly LootPack PeculiarSeed3 = new LootPack(new[] { new LootPackEntry(false, true, new LootPackItem[] { new LootPackItem(e => Engines.Plants.Seed.RandomPeculiarSeed(3), 1)}, 33.3, 1) });
         public static readonly LootPack BonsaiSeed = new LootPack(new[] { new LootPackEntry(false, true, new LootPackItem[] { new LootPackItem(e => Engines.Plants.Seed.RandomBonsaiSeed(), 1) }, 25.0, 1) });
 
-        public static LootPack LootItem(Type type)
+        public static LootPack LootItem<T>()
         {
-            return new LootPack(new[] { new LootPackEntry(false, false, new LootPackItem[] { new LootPackItem(type, 1) }, 100.0, 1) });
+            return new LootPack(new[] { new LootPackEntry(false, false, new LootPackItem[] { new LootPackItem(typeof(T), 1) }, 100.0, 1) });
         }
 
-        public static LootPack LootItem(Type type, double chance)
+        public static LootPack LootItem<T>(bool resource)
         {
-            return new LootPack(new[] { new LootPackEntry(false, false, new LootPackItem[] { new LootPackItem(type, 1) }, chance, 1) });
+            return new LootPack(new[] { new LootPackEntry(false, resource, new LootPackItem[] { new LootPackItem(typeof(T), 1) }, 100.0, 1) });
         }
 
-        public static LootPack LootItem(Type type, bool onSpawn, bool onSteal)
+        public static LootPack LootItem<T>(double chance)
         {
-            return new LootPack(new[] { new LootPackEntry(onSpawn, onSteal, new LootPackItem[] { new LootPackItem(type, 1) }, 100.0, 1) });
+            return new LootPack(new[] { new LootPackEntry(false, false, new LootPackItem[] { new LootPackItem(typeof(T), 1) }, chance, 1) });
         }
 
-        public static LootPack LootItem(Type type, int amount)
+        public static LootPack LootItem<T>(double chance, bool resource)
         {
-            return new LootPack(new[] { new LootPackEntry(false, false, new LootPackItem[] { new LootPackItem(type, 1) }, 100.0, amount) });
+            return new LootPack(new[] { new LootPackEntry(false, resource, new LootPackItem[] { new LootPackItem(typeof(T), 1) }, chance, 1) });
         }
 
-        public static LootPack LootItem(Type type, double chance, int amount)
+        public static LootPack LootItem<T>(bool onSpawn, bool onSteal)
         {
-            return new LootPack(new[] { new LootPackEntry(false, false, new LootPackItem[] { new LootPackItem(type, 1) }, chance, amount) });
+            return new LootPack(new[] { new LootPackEntry(onSpawn, onSteal, new LootPackItem[] { new LootPackItem(typeof(T), 1) }, 100.0, 1) });
         }
 
-        public static LootPack LootItem(Type type, double chance, int amount, bool spawnTime, bool onSteal)
+        public static LootPack LootItem<T>(int amount)
         {
-            return new LootPack(new[] { new LootPackEntry(spawnTime, onSteal, new LootPackItem[] { new LootPackItem(type, 1) }, chance, amount) });
+            return new LootPack(new[] { new LootPackEntry(false, false, new LootPackItem[] { new LootPackItem(typeof(T), 1) }, 100.0, amount) });
+        }
+
+        public static LootPack LootItem<T>(int amount, bool resource)
+        {
+            return new LootPack(new[] { new LootPackEntry(false, resource, new LootPackItem[] { new LootPackItem(typeof(T), 1) }, 100.0, amount) });
+        }
+
+        public static LootPack LootItem<T>(double chance, int amount)
+        {
+            return new LootPack(new[] { new LootPackEntry(false, false, new LootPackItem[] { new LootPackItem(typeof(T), 1) }, chance, amount) });
+        }
+
+        public static LootPack LootItem<T>(double chance, int amount, bool spawnTime, bool onSteal)
+        {
+            return new LootPack(new[] { new LootPackEntry(spawnTime, onSteal, new LootPackItem[] { new LootPackItem(typeof(T), 1) }, chance, amount) });
         }
 
         public static LootPack RandomLootItem(Type[] types)
@@ -632,6 +647,11 @@ namespace Server
             return RandomLootItem(types, 100.0, 1, onSpawn, onSteal);
         }
 
+        public static LootPack RandomLootItem(Type[] types, double chance, int amount)
+        {
+            return RandomLootItem(types, chance, amount, false, false);
+        }
+
         public static LootPack RandomLootItem(Type[] types, double chance, int amount, bool onSpawn, bool onSteal)
         {
             var items = new LootPackItem[types.Length];
@@ -642,6 +662,11 @@ namespace Server
             }
 
             return new LootPack(new[] { new LootPackEntry(onSpawn, onSteal, items, chance, amount) });
+        }
+
+        public static LootPack LootItemCallback(Func<IEntity, Item> callback)
+        {
+            return new LootPack(new[] { new LootPackEntry(false, false, new LootPackItem[] { new LootPackItem(callback, 1) }, 100.0, 1) });
         }
 
         public static LootPack LootItemCallback(Func<IEntity, Item> callback, double chance, int amount, bool onSpawn, bool onSteal)

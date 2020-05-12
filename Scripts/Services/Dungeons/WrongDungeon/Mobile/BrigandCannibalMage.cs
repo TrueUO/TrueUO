@@ -37,13 +37,13 @@ namespace Server.Mobiles
             Fame = 14500;
             Karma = -14500;
 
-            if (Utility.RandomDouble() < 0.75)
-            {
-                PackItem(new SeveredHumanEars());
-            }
-
             AI = AIType.AI_NecroMage;
             SetSpecialAbility(SpecialAbility.LifeLeech);
+        }
+
+        public override void GenerateLoot()
+        {
+            AddLoot(LootPack.LootItem<SeveredHumanEars>(75.0));
         }
 
         public BrigandCannibalMage(Serial serial)

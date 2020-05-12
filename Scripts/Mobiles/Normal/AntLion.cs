@@ -51,8 +51,8 @@ namespace Server.Mobiles
             AddLoot(LootPack.Average, 2);
             AddLoot(LootPack.PeculiarSeed3);
             AddLoot(LootPack.Bones);
-            AddLoot(LootPack.LootItem(typeof(Bone), 100.0, 3, false, true));
-            AddLoot(LootPack.LootItem(typeof(FertileDirt), 100.0, Utility.RandomMinMax(1, 5), false, true));
+            AddLoot(LootPack.LootItem<Bone>(100.0, 3, false, true));
+            AddLoot(LootPack.LootItem<FertileDirt>(100.0, Utility.RandomMinMax(1, 5), false, true));
 
             AddLoot(LootPack.LootItemCallback(RandomOre, 100.0, Utility.RandomMinMax(1, 10), false, true));
             AddLoot(LootPack.LootItemCallback(RandomSkeleton, 7.0, 1, false, true));

@@ -1,3 +1,4 @@
+using System;
 using Server.Items;
 
 namespace Server.Mobiles
@@ -33,11 +34,6 @@ namespace Server.Mobiles
 
             Fame = 18000;
             Karma = -18000;
-
-            PackItem(new PowerCrystal());
-            PackItem(new ArcaneGem());
-            PackItem(new ClockworkAssembly());
-
         }
 
         public override void GenerateLoot()
@@ -45,24 +41,11 @@ namespace Server.Mobiles
             AddLoot(LootPack.Average);
             AddLoot(LootPack.Rich);
 
-            if (Utility.RandomDouble() < 0.1)
-            {
-                switch (Utility.Random(4))
-                {
-                    case 0:
-                        PackItem(new ExodusSummoningRite());
-                        break;
-                    case 1:
-                        PackItem(new ExodusSacrificalDagger());
-                        break;
-                    case 2:
-                        PackItem(new RobeofRite());
-                        break;
-                    case 3:
-                        PackItem(new ExodusSummoningAlter());
-                        break;
-                }
-            }
+            AddLoot(LootPack.LootItem<PowerCrystal>());
+            AddLoot(LootPack.LootItem<ArcaneGem>());
+            AddLoot(LootPack.LootItem<ClockworkAssembly>());
+
+            AddLoot(LootPack.RandomLootItem(new Type[] { typeof(ExodusSummoningRite), typeof(ExodusSacrificalDagger), typeof(RobeofRite), typeof(ExodusSummoningAlter) }, 10.0, 1));
 
             m_FieldActive = CanUseField;
         }

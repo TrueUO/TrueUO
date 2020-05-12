@@ -1,3 +1,4 @@
+using System;
 using Server.Items;
 
 namespace Server.Mobiles
@@ -39,19 +40,6 @@ namespace Server.Mobiles
 
             Fame = 14500;
             Karma = -14500;
-
-            switch (Utility.Random(16))
-            {
-                case 0: PackItem(new BloodOathScroll()); break;
-                case 1: PackItem(new CurseWeaponScroll()); break;
-                case 2: PackItem(new StrangleScroll()); break;
-                case 3: PackItem(new LichFormScroll()); break;
-            }
-
-            if (Utility.RandomDouble() < 0.75)
-            {
-                PackItem(new SeveredHumanEars());
-            }
         }
 
         public Archmage(Serial serial)
@@ -71,6 +59,8 @@ namespace Server.Mobiles
             AddLoot(LootPack.Meager);
             AddLoot(LootPack.MedScrolls, 2);
             AddLoot(LootPack.MageryRegs, 23);
+            AddLoot(LootPack.RandomLootItem(new Type[] { typeof(BloodOathScroll), typeof(CurseWeaponScroll), typeof(StrangleScroll), typeof(LichFormScroll) }, false, true));
+            AddLoot(LootPack.LootItem<SeveredHumanEars>(75.0, 1));
         }
 
         public override void Serialize(GenericWriter writer)

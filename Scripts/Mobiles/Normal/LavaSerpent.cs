@@ -54,8 +54,8 @@ namespace Server.Mobiles
         public override void GenerateLoot()
         {
             AddLoot(LootPack.Average);
-            AddLoot(LootPack.LootItem(typeof(SulfurousAsh), 100.0, 1, false, true));
-            AddLoot(LootPack.LootItem(typeof(Bone), 100.0, 1, false, true));
+            AddLoot(LootPack.LootItem<SulfurousAsh>(100.0, 1, false, true));
+            AddLoot(LootPack.LootItem<Bone>(100.0, 1, false, true));
             AddLoot(LootPack.BodyParts);
         }
 
