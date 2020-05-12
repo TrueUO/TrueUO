@@ -217,9 +217,6 @@ namespace Server.Engines.Blackthorn
 
         public virtual void EquipSpecialty()
         {
-            if (AbilityProfile != null && AbilityProfile.HasAbility(SpecialAbility.Heal))
-                PackItem(new Bandage(Utility.RandomMinMax(10, 25)));
-
             SetWearable(new ThighBoots());
             SetWearable(new BodySash(), Utility.RandomSlimeHue());
 
@@ -496,6 +493,17 @@ namespace Server.Engines.Blackthorn
         public override void GenerateLoot()
         {
             AddLoot(LootPack.UltraRich, 2);
+            AddLoot(LootPack.LootItemCallback(CheckAbilityLootItem, 100.0, Utility.RandomMinMax(10, 25), false, true));
+        }
+
+        protected Item CheckAbilityLootItem(IEntity e)
+        {
+            if (AbilityProfile != null && AbilityProfile.HasAbility(SpecialAbility.Heal))
+            {
+                return new Bandage();
+            }
+
+            return null;
         }
 
         public Invader(Serial serial)

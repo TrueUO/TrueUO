@@ -44,27 +44,16 @@ namespace Server.Mobiles
             Fame = 500;
             Karma = -500;
 
-            PackItem(new ExecutionersCap());
-
-            if (0.33 > Utility.RandomDouble())
-                PackItem(new ExecutionersCap());
-
             SetSpecialAbility(SpecialAbility.StickySkin);
         }
-
-        public override void OnDeath(Container c)
-        {
-            base.OnDeath(c);
-
-            if (0.05 > Utility.RandomDouble() && Region.Find(c.Location, c.Map).IsPartOf("Shame"))
-                c.DropItem(new ShameCrystal());
-        }
-
         public override void GenerateLoot()
         {
             AddLoot(LootPack.Rich, 1);
             AddLoot(LootPack.MageryRegs, Utility.RandomMinMax(1, 2));
             AddLoot(LootPack.Gems, Utility.RandomMinMax(1, 2));
+            AddLoot(LootPack.LootItem<ExecutionersCap>());
+            AddLoot(LootPack.LootItem<ExecutionersCap>(33.0));
+            AddLoot(LootPack.LootItemCallback(ClayGolem.CheckSpawnCrystal, 5.0, 1, false, false));
         }
 
         public MudPie(Serial serial)
@@ -117,18 +106,7 @@ namespace Server.Mobiles
             Fame = 4000;
             Karma = -4000;
 
-            PackItem(new Granite());
-            PackItem(new Sand());
-
             SetSpecialAbility(SpecialAbility.ColossalRage);
-        }
-
-        public override void OnDeath(Container c)
-        {
-            base.OnDeath(c);
-
-            if (0.15 > Utility.RandomDouble() && Region.Find(c.Location, c.Map).IsPartOf("Shame"))
-                c.DropItem(new ShameCrystal());
         }
 
         public override int TreasureMapLevel => 2;
@@ -138,6 +116,9 @@ namespace Server.Mobiles
             AddLoot(LootPack.FilthyRich, 2);
             AddLoot(LootPack.MageryRegs, Utility.RandomMinMax(1, 2));
             AddLoot(LootPack.Gems, Utility.RandomMinMax(1, 2));
+            AddLoot(LootPack.LootItem<Granite>());
+            AddLoot(LootPack.LootItem<Sand>());
+            AddLoot(LootPack.LootItemCallback(ClayGolem.CheckSpawnCrystal, 15.0, 1, false, false));
         }
 
         public StoneElemental(Serial serial)
@@ -206,12 +187,18 @@ namespace Server.Mobiles
             Fame = 3500;
             Karma = -3500;
 
-            PackItem(new Saltpeter(Utility.RandomMinMax(1, 5)));
-            PackItem(new Potash(Utility.RandomMinMax(1, 5)));
-            PackItem(new Charcoal(Utility.RandomMinMax(1, 5)));
-            PackItem(new BlackPowder(Utility.RandomMinMax(1, 5)));
-
             SetWeaponAbility(WeaponAbility.ArmorIgnore);
+        }
+
+        public override void GenerateLoot()
+        {
+            AddLoot(LootPack.Rich, 2);
+            AddLoot(LootPack.Gems);
+            AddLoot(LootPack.LootItem<Saltpeter>(100.0, Utility.RandomMinMax(1, 5), false, true));
+            AddLoot(LootPack.LootItem<Potash>(100.0, Utility.RandomMinMax(1, 5), false, true));
+            AddLoot(LootPack.LootItem<Charcoal>(100.0, Utility.RandomMinMax(1, 5), false, true));
+            AddLoot(LootPack.LootItem<BlackPowder>(100.0, Utility.RandomMinMax(1, 5), false, true));
+            AddLoot(LootPack.LootItemCallback(ClayGolem.CheckSpawnCrystal, 10.0, 1, false, false));
         }
 
         public override MeatType MeatType => MeatType.Ribs;
@@ -223,18 +210,9 @@ namespace Server.Mobiles
 
             if (Wall != null)
                 Wall.OnTrollKilled();
-
-            if (0.10 > Utility.RandomDouble() && Region.Find(c.Location, c.Map).IsPartOf("Shame"))
-                c.DropItem(new ShameCrystal());
         }
 
         public override int TreasureMapLevel => 1;
-
-        public override void GenerateLoot()
-        {
-            AddLoot(LootPack.Rich, 2);
-            AddLoot(LootPack.Gems);
-        }
 
         public CaveTroll(Serial serial)
             : base(serial)
@@ -287,25 +265,24 @@ namespace Server.Mobiles
 
             Fame = 4500;
             Karma = -4500;
-
-            PackItem(new ExecutionersCap());
-        }
-
-        public override void SpawnPackItems()
-        {
-        }
-
-        public override void OnDeath(Container c)
-        {
-            base.OnDeath(c);
-
-            if (0.2 > Utility.RandomDouble() && Region.Find(c.Location, c.Map).IsPartOf("Shame"))
-                c.DropItem(new ShameCrystal());
         }
 
         public override void GenerateLoot()
         {
             AddLoot(LootPack.Rich, 2);
+            AddLoot(LootPack.LootItem<ExecutionersCap>());
+            AddLoot(LootPack.LootItemCallback(SpawnGears, 20.0, 1, false, false));
+            AddLoot(LootPack.LootItemCallback(CheckSpawnCrystal, 20.0, 1, false, false));
+        }
+
+        public static Item CheckSpawnCrystal(IEntity e)
+        {
+            if (Region.Find(e.Location, e.Map).IsPartOf("Shame"))
+            {
+                return new ShameCrystal();
+            }
+
+            return null;
         }
 
         public ClayGolem(Serial serial)
@@ -355,17 +332,10 @@ namespace Server.Mobiles
             SetSpecialAbility(SpecialAbility.ColossalRage);
         }
 
-        public override void OnDeath(Container c)
-        {
-            base.OnDeath(c);
-
-            if (0.08 > Utility.RandomDouble() && Region.Find(c.Location, c.Map).IsPartOf("Shame"))
-                c.DropItem(new ShameCrystal());
-        }
-
         public override void GenerateLoot()
         {
             AddLoot(LootPack.Rich, 1);
+            AddLoot(LootPack.LootItemCallback(ClayGolem.CheckSpawnCrystal, 20.0, 1, false, false));
         }
 
         public GreaterEarthElemental(Serial serial)
@@ -416,23 +386,15 @@ namespace Server.Mobiles
             Fame = 3500;
             Karma = -3500;
 
-            PackItem(new FertileDirt());
-            PackItem(new ExecutionersCap());
-
             SetSpecialAbility(SpecialAbility.ColossalRage);
-        }
-
-        public override void OnDeath(Container c)
-        {
-            base.OnDeath(c);
-
-            if (0.08 > Utility.RandomDouble() && Region.Find(c.Location, c.Map).IsPartOf("Shame"))
-                c.DropItem(new ShameCrystal());
         }
 
         public override void GenerateLoot()
         {
             AddLoot(LootPack.Rich, 2);
+            AddLoot(LootPack.LootItemCallback(ClayGolem.CheckSpawnCrystal, 20.0, 1, false, false));
+            AddLoot(LootPack.LootItem<FertileDirt>());
+            AddLoot(LootPack.LootItem<ExecutionersCap>());
         }
 
         public MudElemental(Serial serial)
@@ -482,17 +444,10 @@ namespace Server.Mobiles
             Karma = -4500;
         }
 
-        public override void OnDeath(Container c)
-        {
-            base.OnDeath(c);
-
-            if (0.10 > Utility.RandomDouble() && Region.Find(c.Location, c.Map).IsPartOf("Shame"))
-                c.DropItem(new ShameCrystal());
-        }
-
         public override void GenerateLoot()
         {
             AddLoot(LootPack.Rich, 2);
+            AddLoot(LootPack.LootItemCallback(ClayGolem.CheckSpawnCrystal, 20.0, 1, false, false));
         }
 
         public GreaterAirElemental(Serial serial)
@@ -547,17 +502,10 @@ namespace Server.Mobiles
             SetSpecialAbility(SpecialAbility.DragonBreath);
         }
 
-        public override void OnDeath(Container c)
-        {
-            base.OnDeath(c);
-
-            if (0.10 > Utility.RandomDouble() && Region.Find(c.Location, c.Map).IsPartOf("Shame"))
-                c.DropItem(new ShameCrystal());
-        }
-
         public override void GenerateLoot()
         {
             AddLoot(LootPack.Rich, 2);
+            AddLoot(LootPack.LootItemCallback(ClayGolem.CheckSpawnCrystal, 10.0, 1, false, false));
         }
 
         public MoltenEarthElemental(Serial serial)
@@ -619,7 +567,6 @@ namespace Server.Mobiles
             Fame = 3500;
             Karma = -3500;
 
-            PackItem(new SulfurousAsh(5));
             SetSpecialAbility(SpecialAbility.DragonBreath);
             SetAreaEffect(AreaEffect.AuraDamage);
         }
@@ -629,19 +576,13 @@ namespace Server.Mobiles
             m.SendLocalizedMessage(1008112); // The intense heat is damaging you!
         }
 
-        public override void OnDeath(Container c)
-        {
-            base.OnDeath(c);
-
-            if (0.10 > Utility.RandomDouble() && Region.Find(c.Location, c.Map).IsPartOf("Shame"))
-                c.DropItem(new ShameCrystal());
-        }
-
         public override int TreasureMapLevel => 2;
 
         public override void GenerateLoot()
         {
             AddLoot(LootPack.Rich, 2);
+            AddLoot(LootPack.LootItemCallback(ClayGolem.CheckSpawnCrystal, 10.0, 1, false, false));
+            AddLoot(LootPack.LootItem<SulfurousAsh>(5, false));
         }
 
         public LesserFlameElemental(Serial serial)
@@ -703,17 +644,10 @@ namespace Server.Mobiles
             Karma = -3500;
         }
 
-        public override void OnDeath(Container c)
-        {
-            base.OnDeath(c);
-
-            if (0.10 > Utility.RandomDouble() && Region.Find(c.Location, c.Map).IsPartOf("Shame"))
-                c.DropItem(new ShameCrystal());
-        }
-
         public override void GenerateLoot()
         {
             AddLoot(LootPack.Rich, 2);
+            AddLoot(LootPack.LootItemCallback(ClayGolem.CheckSpawnCrystal, 10.0, 1, false, false));
         }
 
         public LesserWindElemental(Serial serial)
@@ -785,17 +719,10 @@ namespace Server.Mobiles
             base.AlterMeleeDamageFrom(from, ref damage);
         }
 
-        public override void OnDeath(Container c)
-        {
-            base.OnDeath(c);
-
-            if (0.15 > Utility.RandomDouble() && Region.Find(c.Location, c.Map).IsPartOf("Shame"))
-                c.DropItem(new ShameCrystal());
-        }
-
         public override void GenerateLoot()
         {
             AddLoot(LootPack.Rich, 3);
+            AddLoot(LootPack.LootItemCallback(ClayGolem.CheckSpawnCrystal, 15.0, 1, false, false));
         }
 
         public EternalGazer(Serial serial)
@@ -863,14 +790,6 @@ namespace Server.Mobiles
 
         public override bool CanRummageCorpses => true;
         public override bool AlwaysMurderer => true;
-
-        public override void OnDeath(Container c)
-        {
-            base.OnDeath(c);
-
-            if (0.33 > Utility.RandomDouble() && Region.Find(c.Location, c.Map).IsPartOf("Shame"))
-                c.DropItem(new ShameCrystal(4));
-        }
 
         public override void OnDamagedBySpell(Mobile from)
         {
@@ -945,6 +864,7 @@ namespace Server.Mobiles
             AddLoot(LootPack.UltraRich, 2);
             AddLoot(LootPack.HighScrolls, Utility.RandomMinMax(5, 20));
             AddLoot(LootPack.MageryRegs, 31);
+            AddLoot(LootPack.LootItemCallback(ClayGolem.CheckSpawnCrystal, 33.0, 5, false, false));
         }
 
         public BurningMage(Serial serial)
@@ -1079,17 +999,10 @@ namespace Server.Mobiles
             }
         }
 
-        public override void OnDeath(Container c)
-        {
-            base.OnDeath(c);
-
-            if (0.33 > Utility.RandomDouble() && Region.Find(c.Location, c.Map).IsPartOf("Shame"))
-                c.DropItem(new ShameCrystal(5));
-        }
-
         public override void GenerateLoot()
         {
             AddLoot(LootPack.FilthyRich, 2);
+            AddLoot(LootPack.LootItemCallback(ClayGolem.CheckSpawnCrystal, 33.0, 5, false, false));
         }
 
         public CrazedMage(Serial serial)
@@ -1215,19 +1128,12 @@ namespace Server.Mobiles
             }
         }
 
-        public override void OnDeath(Container c)
-        {
-            base.OnDeath(c);
-
-            if (0.33 > Utility.RandomDouble() && Region.Find(c.Location, c.Map).IsPartOf("Shame"))
-                c.DropItem(new ShameCrystal(3));
-        }
-
         public override int TreasureMapLevel => 2;
 
         public override void GenerateLoot()
         {
             AddLoot(LootPack.Rich, 2);
+            AddLoot(LootPack.LootItemCallback(ClayGolem.CheckSpawnCrystal, 33.0, 3, false, false));
         }
 
         public CorruptedMage(Serial serial)
@@ -1279,17 +1185,10 @@ namespace Server.Mobiles
             SetSkill(SkillName.EvalInt, 115, 125);
         }
 
-        public override void OnDeath(Container c)
-        {
-            base.OnDeath(c);
-
-            if (0.33 > Utility.RandomDouble() && Region.Find(c.Location, c.Map).IsPartOf("Shame"))
-                c.DropItem(new ShameCrystal(3));
-        }
-
         public override void GenerateLoot()
         {
             AddLoot(LootPack.Rich, 2);
+            AddLoot(LootPack.LootItemCallback(ClayGolem.CheckSpawnCrystal, 33.0, 3, false, false));
         }
 
         public VileMage(Serial serial)
@@ -1424,17 +1323,10 @@ namespace Server.Mobiles
             NextTeleport = DateTime.UtcNow + TimeSpan.FromSeconds(Utility.RandomMinMax(30, 60));
         }
 
-        public override void OnDeath(Container c)
-        {
-            base.OnDeath(c);
-
-            if (0.33 > Utility.RandomDouble() && Region.Find(c.Location, c.Map).IsPartOf("Shame"))
-                c.DropItem(new ShameCrystal(5));
-        }
-
         public override void GenerateLoot()
         {
             AddLoot(LootPack.FilthyRich, 2);
+            AddLoot(LootPack.LootItemCallback(ClayGolem.CheckSpawnCrystal, 33.0, 5, false, false));
         }
 
         public ChaosVortex(Serial serial)
@@ -1564,20 +1456,11 @@ namespace Server.Mobiles
             NextTeleport = DateTime.UtcNow + TimeSpan.FromSeconds(Utility.RandomMinMax(30, 60));
         }
 
-        public override void OnDeath(Container c)
-        {
-            base.OnDeath(c);
-
-            if (0.33 > Utility.RandomDouble() && Region.Find(c.Location, c.Map).IsPartOf("Shame"))
-                c.DropItem(new ShameCrystal(5));
-
-            if (0.2 > Utility.RandomDouble())
-                c.DropItem(new VoidCore());
-        }
-
         public override void GenerateLoot()
         {
             AddLoot(LootPack.UltraRich, 2);
+            AddLoot(LootPack.LootItemCallback(ClayGolem.CheckSpawnCrystal, 33.0, 5, false, false));
+            AddLoot(LootPack.LootItem<VoidCore>(20.0));
         }
 
         public UnboundEnergyVortex(Serial serial)
@@ -1652,19 +1535,12 @@ namespace Server.Mobiles
         public override Poison HitPoison => Poison.Lethal;
         public override Poison PoisonImmune => Poison.Parasitic;
 
-        public override void OnDeath(Container c)
-        {
-            base.OnDeath(c);
-
-            if (0.33 > Utility.RandomDouble() && Region.Find(c.Location, c.Map).IsPartOf("Shame"))
-                c.DropItem(new ShameCrystal(5));
-        }
-
         public override void GenerateLoot()
         {
             AddLoot(LootPack.FilthyRich, 2);
             AddLoot(LootPack.HighScrolls, Utility.RandomMinMax(1, 8));
             AddLoot(LootPack.MageryRegs, Utility.RandomMinMax(7, 11));
+            AddLoot(LootPack.LootItemCallback(ClayGolem.CheckSpawnCrystal, 33.0, 5, false, false));
         }
 
         public DiseasedBloodElemental(Serial serial)
@@ -1721,14 +1597,7 @@ namespace Server.Mobiles
         public override void GenerateLoot()
         {
             AddLoot(LootPack.Rich, 1);
-        }
-
-        public override void OnDeath(Container c)
-        {
-            base.OnDeath(c);
-
-            if (0.10 > Utility.RandomDouble() && Region.Find(c.Location, c.Map).IsPartOf("Shame"))
-                c.DropItem(new ShameCrystal());
+            AddLoot(LootPack.LootItemCallback(ClayGolem.CheckSpawnCrystal, 10.0, 1, false, false));
         }
 
         public GreaterWaterElemental(Serial serial)
@@ -1787,14 +1656,7 @@ namespace Server.Mobiles
         {
             AddLoot(LootPack.UltraRich, 1);
             AddLoot(LootPack.FilthyRich, 1);
-        }
-
-        public override void OnDeath(Container c)
-        {
-            base.OnDeath(c);
-
-            if (0.10 > Utility.RandomDouble() && Region.Find(c.Location, c.Map).IsPartOf("Shame"))
-                c.DropItem(new ShameCrystal(5));
+            AddLoot(LootPack.LootItemCallback(ClayGolem.CheckSpawnCrystal, 10.0, 5, false, false));
         }
 
         public ShameGreaterPoisonElemental(Serial serial)
@@ -1850,14 +1712,7 @@ namespace Server.Mobiles
         {
             AddLoot(LootPack.UltraRich, 1);
             AddLoot(LootPack.FilthyRich, 1);
-        }
-
-        public override void OnDeath(Container c)
-        {
-            base.OnDeath(c);
-
-            if (0.10 > Utility.RandomDouble() && Region.Find(c.Location, c.Map).IsPartOf("Shame"))
-                c.DropItem(new ShameCrystal(5));
+            AddLoot(LootPack.LootItemCallback(ClayGolem.CheckSpawnCrystal, 10.0, 5, false, false));
         }
 
         public GreaterBloodElemental(Serial serial)
@@ -1902,17 +1757,10 @@ namespace Server.Mobiles
             Karma = -3500;
         }
 
-        public override void OnDeath(Container c)
-        {
-            base.OnDeath(c);
-
-            if (0.08 > Utility.RandomDouble() && Region.Find(c.Location, c.Map).IsPartOf("Shame"))
-                c.DropItem(new ShameCrystal());
-        }
-
         public override void GenerateLoot()
         {
             AddLoot(LootPack.Rich, 1);
+            AddLoot(LootPack.LootItemCallback(ClayGolem.CheckSpawnCrystal, 8.0, 1, false, false));
         }
 
         public ShameEarthElemental(Serial serial)

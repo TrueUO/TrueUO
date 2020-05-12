@@ -61,7 +61,7 @@ namespace Server.Mobiles
         {
             AddLoot(LootPack.UltraRich, 3);
             AddLoot(LootPack.Gems, 2);
-            AddLoot(LootPack.LootItem(typeof(Bone), false, true));
+            AddLoot(LootPack.LootItem<Bone>(false, true));
             AddLoot(LootPack.ArcanistScrolls);
         }
 
