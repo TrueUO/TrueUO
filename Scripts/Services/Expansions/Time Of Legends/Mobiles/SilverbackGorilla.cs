@@ -50,6 +50,7 @@ namespace Server.Mobiles
         public override void GenerateLoot()
         {
             AddLoot(LootPack.LootGold(60, 70));
+            AddLoot(LootPack.LootItemCallback(TryDropBannana, 25.0, Utility.RandomMinMax(1, 5), false, false));
         }
 
         public override void OnActionCombat()
@@ -82,12 +83,12 @@ namespace Server.Mobiles
             });
         }
 
-        public override bool OnBeforeDeath()
+        private Item TryDropBannana(IEntity e)
         {
-            if (Region.IsPartOf("GreatApeLair") && 0.25 > Utility.RandomDouble())
-                PackItem(new PerfectBanana(Utility.RandomMinMax(1, 5)));
+            if (Region.Find(e.Location, e.Map).IsPartOf("GreatApeLair"))
+                return new PerfectBanana();
 
-            return base.OnBeforeDeath();
+            return null;
         }
 
         public SilverbackGorilla(Serial serial)

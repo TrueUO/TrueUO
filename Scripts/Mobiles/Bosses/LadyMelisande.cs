@@ -55,38 +55,11 @@ namespace Server.Mobiles
             AddLoot(LootPack.ArcanistScrolls, Utility.RandomMinMax(1, 6));
             AddLoot(LootPack.PeerlessResource, 8);
             AddLoot(LootPack.Talisman, 5);
-        }
-
-        public override void OnDeath(Container c)
-        {
-            base.OnDeath(c);
-
-            c.DropItem(new DiseasedBark());
-            c.DropItem(new EternallyCorruptTree());
-
-            int drop = Utility.Random(4, 8);
-
-            for (int i = 0; i < drop; i++)
-                c.DropItem(new MelisandesFermentedWine());
-
-            if (Utility.RandomDouble() < 0.6)
-                c.DropItem(new ParrotItem());
-
-            if (Utility.RandomDouble() < 0.2225)
-            {
-                switch (Utility.Random(3))
-                {
-                    case 0:
-                        c.DropItem(new MelisandesHairDye());
-                        break;
-                    case 1:
-                        c.DropItem(new MelisandesCorrodedHatchet());
-                        break;
-                    case 2:
-                        c.DropItem(new AlbinoSquirrelImprisonedInCrystal());
-                        break;
-                }
-            }
+            AddLoot(LootPack.LootItem<DiseasedBark>());
+            AddLoot(LootPack.LootItem<EternallyCorruptTree>());
+            AddLoot(LootPack.LootItem<MelisandesFermentedWine>(4, 8));
+            AddLoot(LootPack.LootItem<ParrotItem>(60.0));
+            AddLoot(LootPack.RandomLootItem(new[] { typeof(MelisandesHairDye), typeof(MelisandesCorrodedHatchet), typeof(AlbinoSquirrelImprisonedInCrystal) }, 22.25, 1));
         }
 
         public override void OnThink()

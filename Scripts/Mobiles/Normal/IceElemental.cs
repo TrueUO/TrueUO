@@ -39,8 +39,6 @@ namespace Server.Mobiles
             Fame = 4000;
             Karma = -4000;
 
-            PackItem(new BlackPearl());
-
             SetAreaEffect(AreaEffect.AuraDamage);
         }
 
@@ -64,6 +62,7 @@ namespace Server.Mobiles
             AddLoot(LootPack.Average, 2);
             AddLoot(LootPack.Gems, 2);
             AddLoot(LootPack.MageryRegs, 3);
+            AddLoot(LootPack.LootItem<BlackPearl>());
         }
 
         public override void Serialize(GenericWriter writer)

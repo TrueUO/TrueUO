@@ -97,17 +97,21 @@ namespace Server.Mobiles
             AddLoot(LootPack.LootItem<ArcaneGem>(20.0, 1, false, true));
             AddLoot(LootPack.LootItem<Gears>(25.0));
 
-            AddLoot(LootPack.LootItemCallback(SpawnGears, 20.0, 1, false, false));
+            AddLoot(LootPack.LootItemCallback(SpawnGears, 5.0, 1, false, false));
         }
 
-        protected Item SpawnGears(IEntity e)
+        public static Item SpawnGears(IEntity e)
         {
-            if (!IsParagon)
+            if (!(e is BaseCreature) || !((BaseCreature)e).IsParagon)
             {
                 if (0.75 > Utility.RandomDouble())
+                {
                     return DawnsMusicGear.RandomCommon;
+                }
                 else
+                {
                     return DawnsMusicGear.RandomUncommon;
+                }
             }
             else
             {

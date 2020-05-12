@@ -40,9 +40,6 @@ namespace Server.Mobiles
             Fame = 15200;
             Karma = -15200;
 
-            if (0.25 > Utility.RandomDouble())
-                PackItem(Engines.Plants.Seed.RandomBonsaiSeed());
-
             SetWeaponAbility(WeaponAbility.ColdWind);
         }
 
@@ -64,6 +61,7 @@ namespace Server.Mobiles
             AddLoot(LootPack.FilthyRich);
             AddLoot(LootPack.Rich);
             AddLoot(LootPack.MageryRegs, 3);
+            AddLoot(LootPack.BonsaiSeed);
         }
 
         public override void Serialize(GenericWriter writer)

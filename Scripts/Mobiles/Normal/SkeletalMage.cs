@@ -39,8 +39,6 @@ namespace Server.Mobiles
 
             Fame = 3000;
             Karma = -3000;
-
-            PackItem(new Bone());
         }
 
         public SkeletalMage(Serial serial)
@@ -59,6 +57,7 @@ namespace Server.Mobiles
             AddLoot(LootPack.Potions);
             AddLoot(LootPack.MageryRegs, 3);
             AddLoot(LootPack.NecroRegs, 3, 10);
+            AddLoot(LootPack.LootItem<Bone>());
         }
 
         public override void Serialize(GenericWriter writer)

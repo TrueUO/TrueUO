@@ -271,7 +271,7 @@ namespace Server.Mobiles
         {
             AddLoot(LootPack.Rich, 2);
             AddLoot(LootPack.LootItem<ExecutionersCap>());
-            AddLoot(LootPack.LootItemCallback(SpawnGears, 20.0, 1, false, false));
+            AddLoot(LootPack.LootItemCallback(SpawnGears, 5.0, 1, false, false));
             AddLoot(LootPack.LootItemCallback(CheckSpawnCrystal, 20.0, 1, false, false));
         }
 
