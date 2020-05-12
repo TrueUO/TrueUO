@@ -49,14 +49,7 @@ namespace Server.Mobiles
         {
             AddLoot(LootPack.Meager);
             AddLoot(LootPack.LootItem<MandrakeRoot>(3, true));
-
-            if (LootStage == LootStage.Death)
-            {
-                if (0.25 > Utility.RandomDouble())
-                    AddLoot(LootPack.LootItem<Board>(10));
-                else
-                    AddLoot(LootPack.LootItem<Log>(10));
-            }
+            AddLoot(LootPack.LootItems(new[] { new LootPackItem(typeof(Board), 1), new LootPackItem(typeof(Log), 3) }, 10));
         }
 
         public override void Serialize(GenericWriter writer)

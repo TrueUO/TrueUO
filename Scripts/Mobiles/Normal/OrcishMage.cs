@@ -38,17 +38,6 @@ namespace Server.Mobiles
 
             Fame = 3000;
             Karma = -3000;
-
-            switch (Utility.Random(8))
-            {
-                case 0: PackItem(new CorpseSkinScroll()); break;
-            }
-
-            if (0.05 > Utility.RandomDouble())
-                PackItem(new OrcishKinMask());
-
-            if (0.5 > Utility.RandomDouble())
-                PackItem(new Yeast());
         }
 
         public OrcishMage(Serial serial)
@@ -68,6 +57,9 @@ namespace Server.Mobiles
             AddLoot(LootPack.Average);
             AddLoot(LootPack.LowScrolls);
             AddLoot(LootPack.MageryRegs, 6);
+            AddLoot(LootPack.LootItem<CorpseSkinScroll>(12.5));
+            AddLoot(LootPack.LootItem<OrcishKinMask>(5.0));
+            AddLoot(LootPack.LootItem<Yeast>(50.0));
         }
 
         public override bool IsEnemy(Mobile m)

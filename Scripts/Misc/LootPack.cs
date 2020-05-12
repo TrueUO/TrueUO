@@ -119,6 +119,9 @@ namespace Server
             {
                 LootPackEntry entry = m_Entries[i];
 
+                if (!entry.CanGenerate(stage))
+                    continue;
+
                 bool shouldAdd = (entry.Chance > Utility.Random(10000));
 
                 if (!shouldAdd && checkLuck)
@@ -316,6 +319,8 @@ namespace Server
 
 
         public static readonly LootPackItem[] GemItems = new[] { new LootPackItem(typeof(Amber), 1) };
+        public static readonly LootPackItem[] RareGemItems = new[] { new LootPackItem(typeof(BlueDiamond), 1) };
+
 
         public static readonly LootPackItem[] MageryRegItems = new[]
         {
@@ -576,6 +581,7 @@ namespace Server
         public static readonly LootPack PeerlessResource = new LootPack(new[] { new LootPackEntry(false, true, PeerlessResourceItems, 100.00, 1) });
 
         public static readonly LootPack Gems = new LootPack(new[] { new LootPackEntry(false, true, GemItems, 100.00, 1) });
+        public static readonly LootPack RareGems = new LootPack(new[] { new LootPackEntry(false, true, RareGemItems, 100.00, 1) });
 
         public static readonly LootPack Potions = new LootPack(new[] { new LootPackEntry(false, true, PotionItems, 100.00, 1) });
         public static readonly LootPack BodyParts = new LootPack(new[] { new LootPackEntry(false, true, LootBodyParts, 100.00, 1) });
@@ -591,6 +597,36 @@ namespace Server
         public static readonly LootPack PeculiarSeed3 = new LootPack(new[] { new LootPackEntry(false, true, new LootPackItem[] { new LootPackItem(e => Engines.Plants.Seed.RandomPeculiarSeed(3), 1)}, 33.3, 1) });
         public static readonly LootPack PeculiarSeed4 = new LootPack(new[] { new LootPackEntry(false, true, new LootPackItem[] { new LootPackItem(e => Engines.Plants.Seed.RandomPeculiarSeed(4), 1) }, 33.3, 1) });
         public static readonly LootPack BonsaiSeed = new LootPack(new[] { new LootPackEntry(false, true, new LootPackItem[] { new LootPackItem(e => Engines.Plants.Seed.RandomBonsaiSeed(), 1) }, 25.0, 1) });
+
+        public static LootPack LootItems(LootPackItem[] items)
+        {
+            return new LootPack(new[] { new LootPackEntry(false, false, items, 100.0, 1) });
+        }
+
+        public static LootPack LootItems(LootPackItem[] items, int amount)
+        {
+            return new LootPack(new[] { new LootPackEntry(false, false, items, 100.0, amount) });
+        }
+
+        public static LootPack LootItems(LootPackItem[] items, double chance)
+        {
+            return new LootPack(new[] { new LootPackEntry(false, false, items, chance, 1) });
+        }
+
+        public static LootPack LootItems(LootPackItem[] items, double chance, int amount)
+        {
+            return new LootPack(new[] { new LootPackEntry(false, false, items, chance, amount) });
+        }
+
+        public static LootPack LootItems(LootPackItem[] items, double chance, int amount, bool resource)
+        {
+            return new LootPack(new[] { new LootPackEntry(false, resource, items, chance, amount) });
+        }
+
+        public static LootPack LootItems(LootPackItem[] items, double chance, int amount, bool spawn, bool steal)
+        {
+            return new LootPack(new[] { new LootPackEntry(spawn, steal, items, chance, amount) });
+        }
 
         public static LootPack LootItem<T>() where T : Item
         {
@@ -765,24 +801,29 @@ namespace Server
             return e.Map == Map.TerMur || (!IsInTokuno(e) && !IsMondain(e) && Utility.RandomBool());
         }
 
-        public Item Construct(IEntity from, int luckChance, LootStage stage, bool hasBeenStolenFrom)
+        public bool CanGenerate(LootStage stage)
         {
             switch (stage)
             {
                 case LootStage.Spawning:
                     if (!m_AtSpawnTime)
-                        return null;
+                        return false;
                     break;
                 case LootStage.Stolen:
                     if (!m_OnStolen)
-                        return null;
+                        return false;
                     break;
                 case LootStage.Death:
                     if (m_OnStolen && hasBeenStolenFrom)
-                        return null;
+                        return false;
                     break;
             }
 
+            return true;
+        }
+
+        public Item Construct(IEntity from, int luckChance, LootStage stage, bool hasBeenStolenFrom)
+        {
             int totalChance = 0;
 
             for (int i = 0; i < m_Items.Length; ++i)
@@ -819,45 +860,6 @@ namespace Server
             }
 
             return null;
-        }
-
-        private int GetRandomOldBonus()
-        {
-            int rnd = Utility.RandomMinMax(m_MinIntensity, m_MaxIntensity);
-
-            if (50 > rnd)
-            {
-                return 1;
-            }
-            else
-            {
-                rnd -= 50;
-            }
-
-            if (25 > rnd)
-            {
-                return 2;
-            }
-            else
-            {
-                rnd -= 25;
-            }
-
-            if (14 > rnd)
-            {
-                return 3;
-            }
-            else
-            {
-                rnd -= 14;
-            }
-
-            if (8 > rnd)
-            {
-                return 4;
-            }
-
-            return 5;
         }
 
         public Item Mutate(IEntity from, int luckChance, Item item)
@@ -1120,6 +1122,10 @@ namespace Server
                 else if (m_Type == typeof(Amber)) // gem
                 {
                     item = Loot.RandomGem();
+                }
+                else if (m_Type == typeof(BlueDiamond)) // rare gem
+                {
+                    item = Loot.RandomRareGem();
                 }
                 else
                 {

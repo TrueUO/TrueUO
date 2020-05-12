@@ -96,49 +96,21 @@ namespace Server.Mobiles
             AddLoot(LootPack.ArcanistScrolls, Utility.RandomMinMax(1, 6));
             AddLoot(LootPack.PeerlessResource, 8);
             AddLoot(LootPack.Talisman, 5);
+            AddLoot(LootPack.LootItem<EyeOfTheTravesty>());
+            AddLoot(LootPack.LootItem<OrdersFromMinax>());
+
+            AddLoot(LootPack.RandomLootItem(new[] { typeof(TravestysSushiPreparations), typeof(TravestysFineTeakwoodTray), typeof(TravestysCollectionOfShells) }));
+
+            AddLoot(LootPack.LootItem<ParrotItem>(60.0));
+            AddLoot(LootPack.LootItem<TragicRemainsOfTravesty>(10.0));
+            AddLoot(LootPack.LootItem<ImprisonedDog>(5.0));
+            AddLoot(LootPack.LootItem<MarkOfTravesty>(5.0));
+            AddLoot(LootPack.LootItem<MalekisHonor>(2.5));
         }
 
         public Travesty(Serial serial)
             : base(serial)
         {
-        }
-
-        public override void OnDeath(Container c)
-        {
-            base.OnDeath(c);
-
-            c.DropItem(new EyeOfTheTravesty());
-            c.DropItem(new OrdersFromMinax());
-
-            switch (Utility.Random(3))
-            {
-                case 0:
-                    c.DropItem(new TravestysSushiPreparations());
-                    break;
-                case 1:
-                    c.DropItem(new TravestysFineTeakwoodTray());
-                    break;
-                case 2:
-                    c.DropItem(new TravestysCollectionOfShells());
-                    break;
-            }
-
-            if (Utility.RandomDouble() < 0.6)
-                c.DropItem(new ParrotItem());
-
-            if (Utility.RandomDouble() < 0.1)
-                c.DropItem(new TragicRemainsOfTravesty());
-
-            if (Utility.RandomDouble() < 0.05)
-                c.DropItem(new ImprisonedDog());
-
-            if (Utility.RandomDouble() < 0.05)
-                c.DropItem(new MarkOfTravesty());
-
-            if (Utility.RandomDouble() < 0.025)
-            {
-                c.DropItem(new MalekisHonor());
-            }
         }
 
         public override void OnDamage(int amount, Mobile from, bool willKill)

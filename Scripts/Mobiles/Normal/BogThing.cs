@@ -37,14 +37,6 @@ namespace Server.Mobiles
 
             Fame = 8000;
             Karma = -8000;
-
-            if (0.25 > Utility.RandomDouble())
-                PackItem(new Board(10));
-            else
-                PackItem(new Log(10));
-
-            PackItem(new Engines.Plants.Seed());
-            PackItem(new Engines.Plants.Seed());
         }
 
         public BogThing(Serial serial)
@@ -57,6 +49,8 @@ namespace Server.Mobiles
         {
             AddLoot(LootPack.Average, 2);
             AddLoot(LootPack.MageryRegs, 3);
+            AddLoot(LootPack.LootItems(new[] { new LootPackItem(typeof(Board), 1), new LootPackItem(typeof(Log), 3) }, 10));
+            AddLoot(LootPack.LootItem<Engines.Plants.Seed>(), 2);
         }
 
         public override void Serialize(GenericWriter writer)

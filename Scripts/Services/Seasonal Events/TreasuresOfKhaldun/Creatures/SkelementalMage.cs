@@ -79,8 +79,6 @@ namespace Server.Mobiles
 
             Fame = 3000;
             Karma = -3000;
-
-            PackItem(new Bone());
         }
 
         public SkelementalMage(Serial serial)
@@ -99,6 +97,7 @@ namespace Server.Mobiles
             AddLoot(LootPack.Potions);
             AddLoot(LootPack.MageryRegs, 3);
             AddLoot(LootPack.NecroRegs, Utility.RandomMinMax(3, 10));
+            AddLoot(LootPack.LootItem<Bone>());
         }
 
         public override void OnBeforeDamage(Mobile from, ref int totalDamage, Server.DamageType type)

@@ -46,13 +46,6 @@ namespace Server.Mobiles
             Fame = 1000;
             Karma = -1000;
 
-            PackItem(new Bandage(Utility.RandomMinMax(1, 15)));
-
-            if (0.1 > Utility.RandomDouble())
-            {
-                PackItem(new TribalBerry());
-            }
-
             AddItem(new BoneArms());
             AddItem(new BoneLegs());
             AddItem(new DeerMask());
@@ -71,6 +64,8 @@ namespace Server.Mobiles
         {
             AddLoot(LootPack.Average);
             AddLoot(LootPack.MageryRegs, 10, 15);
+            AddLoot(LootPack.LootItem<TribalBerry>(10.0, true));
+            AddLoot(LootPack.LootItem<Bandage>(1, 15));
         }
 
         public override bool IsEnemy(Mobile m)
