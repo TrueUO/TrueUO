@@ -962,7 +962,7 @@ namespace Server.Items
 
         private static int CalculateValue(Item item, object attribute, int min, int max, int perclow, int perchigh, ref int budget, int luckchance, bool reforged)
         {
-            int scale = Math.Max(1, ItemPropertyInfo.GetScale(item, attribute));
+            int scale = Math.Max(1, ItemPropertyInfo.GetScale(item, attribute, true));
 
             if (scale > 0 && min < scale)
             {
@@ -1536,7 +1536,7 @@ namespace Server.Items
                     value = Utility.RandomMinMax(min, max);
                 }
 
-                int scale = ItemPropertyInfo.GetScale(item, id);
+                int scale = ItemPropertyInfo.GetScale(item, id, true);
 
                 if (scale > 1 && value > scale)
                 {

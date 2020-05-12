@@ -786,7 +786,7 @@ namespace Server.Items
                 if (loot)
                 {
                     // Loot min intensity is always the lowest scale value.
-                    return GetScale(item, id);
+                    return GetScale(item, id, loot);
                 }
                 else
                 {
@@ -804,15 +804,20 @@ namespace Server.Items
         /// <param name="attribute"></param>
         /// <param name="item"></param>
         /// <returns></returns>
-        public static int GetScale(Item item, object attribute)
+        public static int GetScale(Item item, object attribute, bool loot)
         {
-            return GetScale(item, GetID(attribute));
+            return GetScale(item, GetID(attribute), loot);
         }
 
-        public static int GetScale(Item item, int id)
+        public static int GetScale(Item item, int id, bool loot)
         {
             if (Table.ContainsKey(id))
             {
+                if (loot && id >= 151 && id <= 183)
+                {
+                    return 5;
+                }
+
                 PropInfo info = Table[id].GetItemTypeInfo(GetItemType(item));
 
                 if (info != null && info.Scale >= 0)
