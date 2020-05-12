@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using Server.Network;
 
 namespace Server.Items
 {
@@ -19,22 +20,32 @@ namespace Server.Items
             if (from.InRange(Location, 3))
             {
                 if (from.AccessLevel == AccessLevel.Player && IsInCooldown(from))
-                    from.SendLocalizedMessage(1113413); // You have recently participated in this challenge. You must wait 24 hours to try again.
+                {
+                    from.SendLocalizedMessage(1113386); // You are too tired to attempt solving more puzzles at this time.
+                }
                 else if (from.Backpack != null)
                 {
-                    Item item = from.Backpack.FindItemByType(typeof(UnderworldPuzzleItem));
+                    var item = from.Backpack.FindItemByType(typeof(UnderworldPuzzleItem));
 
                     if (item != null)
-                        from.SendMessage("You already have a puzzle board.");
+                    {
+                        from.SendLocalizedMessage(501885); // You already own one of those!
+                    }
                     else
                     {
-                        from.AddToBackpack(new UnderworldPuzzleItem());
-                        from.SendMessage("You recieve a puzzle piece.");
+                        UnderworldPuzzleItem puzzle = new UnderworldPuzzleItem();
+                        from.AddToBackpack(puzzle);
+                        from.SendLocalizedMessage(1072223); // An item has been placed in your backpack.
+                        puzzle.SendTimeRemainingMessage(from);
 
                         if (from.AccessLevel == AccessLevel.Player)
                             m_Table[from] = DateTime.UtcNow + TimeSpan.FromHours(24);
                     }
                 }
+            }
+            else
+            {
+                from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1019045); // I can't reach that.
             }
         }
 
@@ -49,7 +60,19 @@ namespace Server.Items
             return m_Table.ContainsKey(from);
         }
 
-        public UnderworldPuzzleBox(Serial serial) : base(serial)
+        public override bool OnDragDrop(Mobile from, Item dropped)
+        {
+            from.SendLocalizedMessage(1113513); // You cannot put items there.
+            return false;
+        }
+
+        public override void DisplayTo(Mobile to)
+        {
+            to.SendLocalizedMessage(1005213); // You can't do that
+        }
+
+        public UnderworldPuzzleBox(Serial serial)
+            : base(serial)
         {
         }
 

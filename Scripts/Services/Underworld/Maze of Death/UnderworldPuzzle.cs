@@ -6,37 +6,13 @@ namespace Server.Items
 {
     public class UnderworldPuzzleItem : BaseDecayingItem
     {
-        public static readonly int MaxAttempts = 8;
-
-        private readonly UnderworldPuzzleSolution m_Solution;
-        private UnderworldPuzzleSolution m_CurrentSolution;
-        private int m_Attempts;
-
-        public UnderworldPuzzleSolution Solution => m_Solution;
-        public UnderworldPuzzleSolution CurrentSolution { get { return m_CurrentSolution; } set { m_CurrentSolution = value; } }
+        public UnderworldPuzzleSolution Solution { get; }
+        public UnderworldPuzzleSolution CurrentSolution { get; set; }
 
         public override int LabelNumber => 1113379;  // Puzzle Board
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int Attempts
-        {
-            get { return m_Attempts; }
-            set
-            {
-                m_Attempts = value;
-
-                /*if (m_Solution != null && m_Attempts >= m_Solution.MaxAttempts)
-                {
-                    m_Solution = new UnderworldPuzzleSolution();
-                    m_CurrentSolution = new UnderworldPuzzleSolution(m_Solution.Index);
-                    m_Attempts = 0;
-
-                    Mobile m = (Mobile)RootParent;
-                    if (m != null)
-                        m.SendMessage("You failed to complete the puzzle board.");
-                }*/
-            }
-        }
+        public int Attempts { get; set; }
 
         public override int Lifespan => 1800;
 
@@ -44,11 +20,14 @@ namespace Server.Items
         public UnderworldPuzzleItem()
             : base(0x2AAA)
         {
-            Hue = 914;
-            m_Attempts = 0;
+            LootType = LootType.Blessed;
+            Weight = 5.0;
+            Hue = 0x281;
 
-            m_Solution = new UnderworldPuzzleSolution();
-            m_CurrentSolution = new UnderworldPuzzleSolution(m_Solution.Index);
+            Attempts = 0;
+
+            Solution = new UnderworldPuzzleSolution();
+            CurrentSolution = new UnderworldPuzzleSolution(Solution.Index);
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -64,7 +43,7 @@ namespace Server.Items
 
         public bool SubmitSolution(Mobile m, UnderworldPuzzleSolution solution)
         {
-            if (solution.Matches(m_Solution))
+            if (solution.Matches(Solution))
             {
                 Item item = Loot.Construct(m_Rewards[Utility.Random(m_Rewards.Length)]);
 
@@ -81,7 +60,7 @@ namespace Server.Items
                 }
 
                 m.PlaySound(0x3D);
-                m.SendLocalizedMessage(1113579); // Correct Code Entered. Crystal Lock Disengaged.
+                m.PublicOverheadMessage(MessageType.Regular, 0x3B2, 1113579); // Correct Code Entered. Crystal Lock Disengaged.
 
                 Delete();
                 return true;
@@ -90,12 +69,12 @@ namespace Server.Items
             return false;
         }
 
-        private readonly Type[] m_Rewards = new Type[]
+        private readonly Type[] m_Rewards =
         {
             typeof(VoidEssence),        typeof(SilverSerpentVenom), typeof(ScouringToxin),
             typeof(ToxicVenomSac),      typeof(MouldingBoard),      typeof(DoughBowl),
             typeof(HornedTotemPole),    typeof(LargeSquarePillow),  typeof(LargeDiamondPillow),
-            typeof(DustyPillow),        typeof(StatuePedestal),		/*typeof(FlouredBreadBoard),*/
+            typeof(DustyPillow),        typeof(StatuePedestal),		typeof(FlouredBreadBoard),
             typeof(LuckyCoin),
         };
 
@@ -103,9 +82,7 @@ namespace Server.Items
         {
             base.OnDelete();
 
-            Mobile m = RootParent as Mobile;
-
-            if (m != null)
+            if (RootParent is Mobile m)
                 m.CloseGump(typeof(UnderworldPuzzleGump));
         }
 
@@ -157,19 +134,14 @@ namespace Server.Items
     {
         public const int Length = 4;
 
-        private readonly PuzzlePiece[] m_Rows = new PuzzlePiece[Length];
-        public PuzzlePiece[] Rows => m_Rows;
+        public PuzzlePiece[] Rows { get; } = new PuzzlePiece[Length];
+        public int Index { get; private set; }
+        public int MaxAttempts { get; private set; }
 
-        private int m_Index;
-        private int m_MaxAttempts;
-
-        public int Index => m_Index;
-        public int MaxAttempts => m_MaxAttempts;
-
-        public PuzzlePiece First { get { return m_Rows[0]; } set { m_Rows[0] = value; } }
-        public PuzzlePiece Second { get { return m_Rows[1]; } set { m_Rows[1] = value; } }
-        public PuzzlePiece Third { get { return m_Rows[2]; } set { m_Rows[2] = value; } }
-        public PuzzlePiece Fourth { get { return m_Rows[3]; } set { m_Rows[3] = value; } }
+        public PuzzlePiece First { get { return Rows[0]; } set { Rows[0] = value; } }
+        public PuzzlePiece Second { get { return Rows[1]; } set { Rows[1] = value; } }
+        public PuzzlePiece Third { get { return Rows[2]; } set { Rows[2] = value; } }
+        public PuzzlePiece Fourth { get { return Rows[3]; } set { Rows[3] = value; } }
 
         public UnderworldPuzzleSolution()
         {
@@ -198,9 +170,9 @@ namespace Server.Items
         {
             int matches = 0;
 
-            for (int i = 0; i < m_Rows.Length; i++)
+            for (int i = 0; i < Rows.Length; i++)
             {
-                if (m_Rows[i] == check.Rows[i])
+                if (Rows[i] == check.Rows[i])
                     matches++;
             }
 
@@ -209,127 +181,127 @@ namespace Server.Items
 
         public void PickRandom()
         {
-            m_Index = Utility.Random(16);
-            switch (m_Index)
+            Index = Utility.Random(16);
+            switch (Index)
             {
                 case 0: //Good To Go
                     First = PuzzlePiece.RedSingle;
                     Second = PuzzlePiece.BlueSingle;
                     Third = PuzzlePiece.RedSingle;
                     Fourth = PuzzlePiece.GreenSingle;
-                    m_MaxAttempts = 6;
+                    MaxAttempts = 6;
                     break;
                 case 1: //Good To Go
                     First = PuzzlePiece.GreenDouble;
                     Second = PuzzlePiece.RedBar;
                     Third = PuzzlePiece.None;
                     Fourth = PuzzlePiece.BlueTriple;
-                    m_MaxAttempts = 6;
+                    MaxAttempts = 6;
                     break;
                 case 2: //Good To Go
                     First = PuzzlePiece.None;
                     Second = PuzzlePiece.None;
                     Third = PuzzlePiece.RedBar;
                     Fourth = PuzzlePiece.RedTriple;
-                    m_MaxAttempts = 4;
+                    MaxAttempts = 4;
                     break;
                 case 3: //Good To Go
                     First = PuzzlePiece.BlueDouble;
                     Second = PuzzlePiece.None;
                     Third = PuzzlePiece.GreenDouble;
                     Fourth = PuzzlePiece.GreenDouble;
-                    m_MaxAttempts = 7;
+                    MaxAttempts = 7;
                     break;
                 case 4: //Good To Go
                     First = PuzzlePiece.BlueSingle;
                     Second = PuzzlePiece.GreenSingle;
                     Third = PuzzlePiece.GreenDouble;
                     Fourth = PuzzlePiece.RedBar;
-                    m_MaxAttempts = 7;
+                    MaxAttempts = 7;
                     break;
                 case 5: //Good To Go
                     First = PuzzlePiece.GreenDouble;
                     Second = PuzzlePiece.BlueBar;
                     Third = PuzzlePiece.RedSingle;
                     Fourth = PuzzlePiece.BlueSingle;
-                    m_MaxAttempts = 8;
+                    MaxAttempts = 8;
                     break;
                 case 6: //Good To Go
                     First = PuzzlePiece.GreenSingle;
                     Second = PuzzlePiece.RedSingle;
                     Third = PuzzlePiece.BlueDouble;
                     Fourth = PuzzlePiece.GreenBar;
-                    m_MaxAttempts = 5;
+                    MaxAttempts = 5;
                     break;
                 case 7: //Good To Go
                     First = PuzzlePiece.BlueDouble;
                     Second = PuzzlePiece.None;
                     Third = PuzzlePiece.BlueTriple;
                     Fourth = PuzzlePiece.None;
-                    m_MaxAttempts = 4;
+                    MaxAttempts = 4;
                     break;
                 case 8: //Good To Go
                     First = PuzzlePiece.GreenSingle;
                     Second = PuzzlePiece.GreenBar;
                     Third = PuzzlePiece.RedDouble;
                     Fourth = PuzzlePiece.RedSingle;
-                    m_MaxAttempts = 7;
+                    MaxAttempts = 7;
                     break;
                 case 9: //Good to Go
                     First = PuzzlePiece.BlueSingle;
                     Second = PuzzlePiece.GreenDouble;
                     Third = PuzzlePiece.None;
                     Fourth = PuzzlePiece.GreenTriple;
-                    m_MaxAttempts = 6;
+                    MaxAttempts = 6;
                     break;
                 case 10: //Good To Go
                     First = PuzzlePiece.BlueSingle;
                     Second = PuzzlePiece.RedSingle;
                     Third = PuzzlePiece.RedTriple;
                     Fourth = PuzzlePiece.None;
-                    m_MaxAttempts = 6;
+                    MaxAttempts = 6;
                     break;
                 case 11: //Good To Go
                     First = PuzzlePiece.GreenSingle;
                     Second = PuzzlePiece.None;
                     Third = PuzzlePiece.GreenTriple;
                     Fourth = PuzzlePiece.GreenDouble;
-                    m_MaxAttempts = 5;
+                    MaxAttempts = 5;
                     break;
                 case 12: //Good to Go
                     First = PuzzlePiece.RedTriple;
                     Second = PuzzlePiece.None;
                     Third = PuzzlePiece.None;
                     Fourth = PuzzlePiece.RedTriple;
-                    m_MaxAttempts = 6;
+                    MaxAttempts = 6;
                     break;
                 case 13: //Good To Go
                     First = PuzzlePiece.None;
                     Second = PuzzlePiece.BlueTriple;
                     Third = PuzzlePiece.GreenSingle;
                     Fourth = PuzzlePiece.BlueDouble;
-                    m_MaxAttempts = 7;
+                    MaxAttempts = 7;
                     break;
                 case 14: //Good To Go
                     First = PuzzlePiece.BlueTriple;
                     Second = PuzzlePiece.None;
                     Third = PuzzlePiece.BlueTriple;
                     Fourth = PuzzlePiece.None;
-                    m_MaxAttempts = 6;
+                    MaxAttempts = 6;
                     break;
                 case 15: //Good to Go
                     First = PuzzlePiece.RedSingle;
                     Second = PuzzlePiece.BlueDouble;
                     Third = PuzzlePiece.RedDouble;
                     Fourth = PuzzlePiece.GreenSingle;
-                    m_MaxAttempts = 6;
+                    MaxAttempts = 6;
                     break;
             }
         }
 
         public void LoadStartSolution(int index)
         {
-            m_Index = index;
+            Index = index;
 
             switch (index)
             {
@@ -447,7 +419,7 @@ namespace Server.Items
         }
 
         public UnderworldPuzzleGump(Mobile from, UnderworldPuzzleItem item, int row)
-            : base(45, 45)
+            : base(5, 30)
         {
             if (row > 3) row = 3;
             if (row < 0) row = 0;
