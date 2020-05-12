@@ -318,7 +318,7 @@ namespace Server.SkillHandlers
 
             Type gem = def.GemRes;
             Type primary = def.PrimaryRes;
-            Type special = def.SpecialRes;
+            Type special = ItemPropertyInfo.GetSpecialRes(i, id, def.SpecialRes);
 
             context.Imbue_ModVal = def.Weight;
 
