@@ -118,33 +118,34 @@ namespace Server.Engines.MyrmidexInvasion
         private void Spawn(bool tribe, params Type[] types)
         {
             if (Map == null || NextSpawn > DateTime.UtcNow)
+            {
                 return;
+            }
 
             NextSpawn = DateTime.UtcNow + TimeSpan.FromMinutes(10);
 
-            for (int i = 0; i < 5; i++)
+            for (var i = 0; i < 5; i++)
             {
-                Type t = types[Utility.Random(types.Length)];
+                var t = types[Utility.Random(types.Length)];
                 BaseCreature bc = null;
 
                 if (t.IsSubclassOf(typeof(BaseEodonTribesman)))
-                    bc = Activator.CreateInstance(t, new object[] { EodonTribe.Barrab }) as BaseCreature;
+                {
+                    bc = Activator.CreateInstance(t, EodonTribe.Barrab) as BaseCreature;
+                }
                 else
+                {
                     bc = Activator.CreateInstance(t) as BaseCreature;
+                }
 
                 if (bc != null)
                 {
-                    Rectangle2D rec = new Rectangle2D(X, Y, 3, 3);
-                    Point3D p = Location;
+                    var rec = new Rectangle2D(X - 5, Y - 5, 10, 10);
+                    var p = Location;
 
                     bc.NoLootOnDeath = true;
 
-                    /*do
-                    {
-                        p = Map.GetRandomSpawnPoint(rec);
-                    }
-                    while (p == Location || !Map.CanSpawnMobile(p));*/
-                    for (int j = 0; j < 20; j++)
+                    for (var j = 0; j < 20; j++)
                     {
                         p = Map.GetRandomSpawnPoint(rec);
 
