@@ -1,5 +1,3 @@
-using Server.Items;
-
 namespace Server.Mobiles
 {
     [CorpseName("a minotaur general corpse")]
@@ -38,6 +36,11 @@ namespace Server.Mobiles
             Karma = -18000;
         }
 
+        public MinotaurGeneral(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void GenerateLoot()
         {
             AddLoot(LootPack.UltraRich, 2);
@@ -45,11 +48,6 @@ namespace Server.Mobiles
         }
 
         public override int TreasureMapLevel => 4;
-
-        public MinotaurGeneral(Serial serial)
-            : base(serial)
-        {
-        }
 
         public override void Serialize(GenericWriter writer)
         {

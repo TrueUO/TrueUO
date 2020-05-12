@@ -1,4 +1,3 @@
-using Server.Engines.Plants;
 using Server.Items;
 using System;
 
@@ -43,6 +42,11 @@ namespace Server.Mobiles
 
             Fame = 5000;
             Karma = 5000;
+        }
+
+        public MLDryad(Serial serial)
+            : base(serial)
+        {
         }
 
         public override void GenerateLoot()
@@ -138,11 +142,6 @@ namespace Server.Mobiles
         }
 
         #endregion
-
-        public MLDryad(Serial serial)
-            : base(serial)
-        {
-        }
 
         public override void Serialize(GenericWriter writer)
         {

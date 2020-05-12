@@ -1,5 +1,3 @@
-using Server.Items;
-
 namespace Server.Mobiles
 {
     [CorpseName("a satyr's corpse")]
@@ -42,6 +40,11 @@ namespace Server.Mobiles
             Karma = 0;
         }
 
+        public Satyr(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override TribeType Tribe => TribeType.Fey;
 
         public override void GenerateLoot()
@@ -56,11 +59,6 @@ namespace Server.Mobiles
         public override bool CanProvoke => true;
 
         public override int Meat => 1;
-
-        public Satyr(Serial serial)
-            : base(serial)
-        {
-        }
 
         public override void Serialize(GenericWriter writer)
         {

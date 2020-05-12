@@ -45,16 +45,16 @@ namespace Server.Mobiles
             SetSpecialAbility(SpecialAbility.PoisonSpit);
         }
 
+        public DeathwatchBeetle(Serial serial)
+           : base(serial)
+        {
+        }
+
         public override void GenerateLoot()
         {
             AddLoot(LootPack.LowScrolls, 1);
             AddLoot(LootPack.Potions, 1);
             AddLoot(LootPack.BonsaiSeed);
-        }
-
-        public DeathwatchBeetle(Serial serial)
-            : base(serial)
-        {
         }
 
         public override int Hides => 8;
@@ -93,7 +93,7 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

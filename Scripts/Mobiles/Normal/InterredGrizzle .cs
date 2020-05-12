@@ -1,5 +1,3 @@
-using Server.Items;
-
 namespace Server.Mobiles
 {
     [CorpseName("an interred grizzle corpse")]
@@ -42,12 +40,13 @@ namespace Server.Mobiles
             Fame = 3700;  // Guessed
             Karma = -3700;  // Guessed
         }
-        public override bool CanBeParagon => false;
 
         public InterredGrizzle(Serial serial)
             : base(serial)
         {
         }
+
+        public override bool CanBeParagon => false;
 
         public override int TreasureMapLevel => 4;
 

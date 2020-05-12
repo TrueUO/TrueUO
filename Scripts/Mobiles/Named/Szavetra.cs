@@ -1,5 +1,3 @@
-using Server.Items;
-
 namespace Server.Mobiles
 {
     [CorpseName("a Szavetra corpse")]
@@ -40,14 +38,14 @@ namespace Server.Mobiles
             SetSpecialAbility(SpecialAbility.LifeDrain);
         }
 
-        public override void GenerateLoot()
-        {
-            AddLoot(LootPack.ArcanistScrolls);
-        }
-
         public Szavetra(Serial serial)
             : base(serial)
         {
+        }
+
+        public override void GenerateLoot()
+        {
+            AddLoot(LootPack.ArcanistScrolls);
         }
 
         public override bool CanBeParagon => false;
