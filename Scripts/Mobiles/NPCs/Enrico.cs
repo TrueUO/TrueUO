@@ -2,6 +2,7 @@ using Server.Mobiles;
 
 namespace Server.Items
 {
+    [TypeAlias("Server.Items.SkeletonKey")]
     public class Enrico : BaseCollectionMobile
     {
         [Constructable]

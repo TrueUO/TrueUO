@@ -360,7 +360,7 @@ namespace Server.Engines.Craft
             return (item.LabelNumber >= 1073505 && item.LabelNumber <= 1073552) || (item.LabelNumber >= 1073111 && item.LabelNumber <= 1075040);
         }
 
-        private static readonly Type[] ArmorMateryalRestriction =
+        private static readonly Type[] ArmorType =
         {
             typeof(RingmailGloves),    typeof(RingmailGlovesOfMining),
             typeof(PlateGloves),   typeof(LeatherGloves)
@@ -389,7 +389,7 @@ namespace Server.Engines.Craft
                 if ((armor.RequiredRace != null && armor.RequiredRace == Race.Gargoyle && !armor.IsArtifact))
                     return false;
 
-                if (ArmorMateryalRestriction.Any(t => t == armor.GetType()) && armor.Resource > CraftResource.Iron)
+                if (ArmorType.Any(t => t == armor.GetType()) && armor.Resource > CraftResource.Iron)
                     return false;
             }
 
