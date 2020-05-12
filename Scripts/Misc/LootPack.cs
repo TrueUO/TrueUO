@@ -119,7 +119,7 @@ namespace Server
             {
                 LootPackEntry entry = m_Entries[i];
 
-                if (!entry.CanGenerate(stage))
+                if (!entry.CanGenerate(stage, hasBeenStolenFrom))
                     continue;
 
                 bool shouldAdd = (entry.Chance > Utility.Random(10000));
@@ -801,7 +801,7 @@ namespace Server
             return e.Map == Map.TerMur || (!IsInTokuno(e) && !IsMondain(e) && Utility.RandomBool());
         }
 
-        public bool CanGenerate(LootStage stage)
+        public bool CanGenerate(LootStage stage, bool hasBeenStolenFrom)
         {
             switch (stage)
             {
