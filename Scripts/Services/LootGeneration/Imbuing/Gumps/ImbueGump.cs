@@ -52,7 +52,7 @@ namespace Server.Gumps
             int minInt = ItemPropertyInfo.GetMinIntensity(m_Item, m_ID);
             int maxInt = ItemPropertyInfo.GetMaxIntensity(m_Item, m_ID, true);
             int weight = m_Info.Weight;
-            int scale = ItemPropertyInfo.GetScale(m_Item, m_ID);
+            int scale = ItemPropertyInfo.GetScale(m_Item, m_ID, false);
             int start = minInt - scale;
 
             if (m_Value < minInt)
@@ -290,7 +290,7 @@ namespace Server.Gumps
                     }
                 case 10051: // Decrease Mod Value [<]
                     {
-                        m_Value = Math.Max(ItemPropertyInfo.GetMinIntensity(m_Item, m_Info.ID), m_Value - ItemPropertyInfo.GetScale(m_Item, m_Info.ID));
+                        m_Value = Math.Max(ItemPropertyInfo.GetMinIntensity(m_Item, m_Info.ID), m_Value - ItemPropertyInfo.GetScale(m_Item, m_Info.ID, false));
                         Refresh();
 
                         break;
@@ -311,7 +311,7 @@ namespace Server.Gumps
                     }
                 case 10054: // Increase Mod Value [>]
                     {
-                        m_Value = Math.Min(ItemPropertyInfo.GetMaxIntensity(m_Item, m_Info.ID, true), m_Value + ItemPropertyInfo.GetScale(m_Item, m_Info.ID));
+                        m_Value = Math.Min(ItemPropertyInfo.GetMaxIntensity(m_Item, m_Info.ID, true), m_Value + ItemPropertyInfo.GetScale(m_Item, m_Info.ID, false));
                         Refresh();
 
                         break;
