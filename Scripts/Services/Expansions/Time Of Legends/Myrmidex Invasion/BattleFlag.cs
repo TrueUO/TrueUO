@@ -117,7 +117,7 @@ namespace Server.Engines.MyrmidexInvasion
 
         private void Spawn(bool tribe, params Type[] types)
         {
-            if (Map == null)
+            if (Map == null || NextSpawn > DateTime.UtcNow)
                 return;
 
             NextSpawn = DateTime.UtcNow + TimeSpan.FromMinutes(10);
@@ -139,24 +139,40 @@ namespace Server.Engines.MyrmidexInvasion
 
                     bc.NoLootOnDeath = true;
 
-                    do
+                    /*do
                     {
                         p = Map.GetRandomSpawnPoint(rec);
                     }
-                    while (p == Location || !Map.CanSpawnMobile(p));
-
-                    bc.MoveToWorld(p, Map);
-
-                    if (tribe)
+                    while (p == Location || !Map.CanSpawnMobile(p));*/
+                    for (int j = 0; j < 20; j++)
                     {
-                        bc.Home = new Point3D(914, 1872, 0);
+                        p = Map.GetRandomSpawnPoint(rec);
+
+                        if (Map.CanSpawnMobile(p))
+                        {
+                            break;
+                        }
+                    }
+
+                    if (p == Location)
+                    {
+                        bc.Delete();
                     }
                     else
                     {
-                        bc.Home = new Point3D(913, 1792, 0);
-                    }
+                        bc.MoveToWorld(p, Map);
 
-                    bc.RangeHome = 15;
+                        if (tribe)
+                        {
+                            bc.Home = new Point3D(914, 1872, 0);
+                        }
+                        else
+                        {
+                            bc.Home = new Point3D(913, 1792, 0);
+                        }
+
+                        bc.RangeHome = 15;
+                    }
                 }
             }
         }

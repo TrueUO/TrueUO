@@ -36,16 +36,15 @@ namespace Server.Mobiles
             Fame = 18000;
             Karma = -18000;
 
-            PackItem(new PowerCrystal());
-            PackItem(new ArcaneGem());
-            PackItem(new ClockworkAssembly());
-
             m_FieldActive = CanUseField;
         }
 
         public override void GenerateLoot()
         {
             AddLoot(LootPack.Rich);
+            AddLoot(LootPack.LootItem<PowerCrystal>());
+            AddLoot(LootPack.LootItem<ArcaneGem>());
+            AddLoot(LootPack.LootItem<ClockworkAssembly>());
         }
 
         public override void OnKilledBy(Mobile m)

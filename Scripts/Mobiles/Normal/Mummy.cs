@@ -54,8 +54,8 @@ namespace Server.Mobiles
             AddLoot(LootPack.Rich);
             AddLoot(LootPack.Gems);
             AddLoot(LootPack.Potions);
-            AddLoot(LootPack.LootItem(typeof(Bandage), 100.0, 10, false, true));
-            AddLoot(LootPack.LootItem(typeof(Garlic), 100.0, 5, false, true));
+            AddLoot(LootPack.LootItem<Bandage>(100.0, 10, false, true));
+            AddLoot(LootPack.LootItem<Garlic>(100.0, 5, false, true));
             AddLoot(LootPack.PeculiarSeed3);
         }
 

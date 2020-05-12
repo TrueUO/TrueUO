@@ -36,10 +36,6 @@ namespace Server.Mobiles
             Fame = 18000;
             Karma = -18000;
 
-            PackItem(new PowerCrystal());
-            PackItem(new ArcaneGem());
-            PackItem(new ClockworkAssembly());
-
             m_FieldActive = CanUseField;
         }
 
@@ -56,6 +52,9 @@ namespace Server.Mobiles
         public override void GenerateLoot()
         {
             AddLoot(LootPack.Average);
+            AddLoot(LootPack.LootItem<PowerCrystal>(false, true));
+            AddLoot(LootPack.LootItem<ArcaneGem>(false, true));
+            AddLoot(LootPack.LootItem<ClockworkAssembly>(false, true));
         }
 
         public ExodusDrone(Serial serial) : base(serial)

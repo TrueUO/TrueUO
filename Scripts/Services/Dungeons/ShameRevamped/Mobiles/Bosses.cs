@@ -203,8 +203,6 @@ namespace Server.Mobiles
             Fame = 4500;
             Karma = -4500;
 
-            PackItem(new SulfurousAsh(5));
-
             SetSpecialAbility(SpecialAbility.DragonBreath);
             SetAreaEffect(AreaEffect.AuraDamage);
         }
@@ -217,6 +215,7 @@ namespace Server.Mobiles
         public override void GenerateLoot()
         {
             AddLoot(LootPack.UltraRich, 1);
+            AddLoot(LootPack.LootItem<SulfurousAsh>(5, true));
         }
 
         public override void OnDeath(Container c)

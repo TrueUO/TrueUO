@@ -5047,7 +5047,6 @@ namespace Server.Mobiles
                 }
             }
 
-            //m_Spawning = false;
             KillersLuck = 0;
         }
 

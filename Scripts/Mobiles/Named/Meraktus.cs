@@ -63,11 +63,6 @@ namespace Server.Mobiles
             Fame = 70000;
             Karma = -70000;
 
-            for (int i = 0; i < Utility.RandomMinMax(0, 1); i++)
-            {
-                PackItem(Loot.RandomScroll(0, Loot.ArcanistScrollTypes.Length, SpellbookType.Arcanist));
-            }
-
             NoKillAwards = true;
 
             Timer.DelayCall(TimeSpan.FromSeconds(1), SpawnTormented);
@@ -80,10 +75,11 @@ namespace Server.Mobiles
             AddLoot(LootPack.SuperBoss, 5);
             AddLoot(LootPack.Talisman, 5);
             AddLoot(LootPack.PeerlessResource, 8);
-            AddLoot(LootPack.LootItem(typeof(MalletAndChisel)));
+            AddLoot(LootPack.LootItem<MalletAndChisel>());
             AddLoot(LootPack.RandomLootItem(new Type[] { typeof(MinotaurHedge), typeof(BonePile), typeof(LightYarn) }, 100.0, 1, false, true));
-            AddLoot(LootPack.LootItem(typeof(TormentedChains), 50.0, 1));
-            AddLoot(LootPack.LootItem(typeof(CrimsonCincture), 2.25, 1));
+            AddLoot(LootPack.LootItem<TormentedChains>(50.0, 1));
+            AddLoot(LootPack.LootItem<CrimsonCincture>(2.25, 1));
+            AddLoot(LootPack.ArcanistScrolls, 1);
         }
 
         public override int GetAngerSound()

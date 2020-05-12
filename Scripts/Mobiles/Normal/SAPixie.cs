@@ -47,7 +47,7 @@ namespace Server.Mobiles
             AddLoot(LootPack.LowScrolls);
             AddLoot(LootPack.Gems, 2);
             AddLoot(LootPack.Statue);
-            AddLoot(LootPack.LootItem(typeof(PixieLeg), 33.0, 1, false, true));
+            AddLoot(LootPack.LootItem<PixieLeg>(33.0, 1, false, true));
         }
 
         public override HideType HideType => HideType.Spined;

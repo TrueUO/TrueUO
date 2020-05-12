@@ -51,8 +51,8 @@ namespace Server.Mobiles
             AddLoot(LootPack.UltraRich, 3);
             AddLoot(LootPack.MageryScrolls, 1, 7);
             AddLoot(LootPack.Gems, 2);
-            AddLoot(LootPack.LootItem(typeof(Arrow), 35));
-            AddLoot(LootPack.LootItem(typeof(Bolt), 25));
+            AddLoot(LootPack.LootItem<Arrow>(35));
+            AddLoot(LootPack.LootItem<Bolt>(25));
         }
 
         public override void Serialize(GenericWriter writer)
