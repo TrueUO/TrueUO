@@ -34,12 +34,20 @@ namespace Server.Items
                     else
                     {
                         UnderworldPuzzleItem puzzle = new UnderworldPuzzleItem();
-                        from.AddToBackpack(puzzle);
-                        from.SendLocalizedMessage(1072223); // An item has been placed in your backpack.
-                        puzzle.SendTimeRemainingMessage(from);
 
-                        if (from.AccessLevel == AccessLevel.Player)
-                            m_Table[from] = DateTime.UtcNow + TimeSpan.FromHours(24);
+                        if (from.PlaceInBackpack(puzzle))
+                        {
+                            from.AddToBackpack(puzzle);
+                            from.SendLocalizedMessage(1072223); // An item has been placed in your backpack.
+                            puzzle.SendTimeRemainingMessage(from);
+
+                            if (from.AccessLevel == AccessLevel.Player)
+                                m_Table[from] = DateTime.UtcNow + TimeSpan.FromHours(24);
+                        }
+                        else
+                        {
+                            puzzle.Delete();
+                        }
                     }
                 }
             }

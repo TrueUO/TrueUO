@@ -43,6 +43,9 @@ namespace Server.Items
 
         public bool SubmitSolution(Mobile m, UnderworldPuzzleSolution solution)
         {
+            if (m == null)
+                return false;
+
             if (solution.Matches(Solution))
             {
                 Item item = Loot.Construct(m_Rewards[Utility.Random(m_Rewards.Length)]);
@@ -60,13 +63,16 @@ namespace Server.Items
                 }
 
                 m.PlaySound(0x3D);
-                m.PublicOverheadMessage(MessageType.Regular, 0x3B2, 1113579); // Correct Code Entered. Crystal Lock Disengaged.
+                m.PrivateOverheadMessage(MessageType.Regular, 0x3B2, 1113579, m.NetState); // Correct Code Entered. Crystal Lock Disengaged.
 
                 Delete();
                 return true;
             }
-
-            return false;
+            else
+            {
+                PrivateOverheadMessage(MessageType.Regular, 0x3B2, 1150177, m.NetState); // Incorrect Code Sequence. Access Denied.
+                return false;
+            }
         }
 
         private readonly Type[] m_Rewards =
@@ -431,30 +437,43 @@ namespace Server.Items
             m_Solution = item.Solution;
             m_CurrentSolution = item.CurrentSolution;
 
-            AddBackground(50, 50, 500, 200, 9250);
+            AddBackground( 55, 45, 500, 200, 0x2422 );
+			AddImage( 75, 83, 0x2423 );
+			AddImage( 65, 118, 0x2423 );
+			AddImage( 75, 153, 0x2423 );
+			AddImage( 65, 188, 0x2423 );
+			AddImage( 108, 55, 0x2427 );
+			AddImage( 86, 65, 0x2427 );
+			AddBackground( 75, 65, 86, 153, 0x2422 );
+			AddBackground( 192, 65, 137, 153, 0x2422 );
+			AddBackground( 397, 65, 137, 153, 0x2422 );
+			AddBackground( 55, 270, 195, 110, 0x2422 );
+			AddImage( 205, 77, 0x52 );
+			AddImage( 205, 110, 0x52 );
+			AddImage( 205, 143, 0x52 );
+			AddImage( 410, 77, 0x52 );
+			AddImage( 410, 110, 0x52 );
+			AddImage( 410, 143, 0x52 );
+			AddImage( 5, 5, 0x28C8 );
 
-            AddImageTiled(85, 210, 17, 150, 9255);
-            AddImageTiled(110, 63, 17, 150, 9255);
+            AddButton(160, 320, 0xF2, 0xF1, 8, GumpButtonType.Reply, 0); // Cancel
+            AddButton(80, 320, 0xEF, 0xF0, 7, GumpButtonType.Reply, 0); // Apply
+            AddButton(120, 345, 0x7DB, 0x7DB, 0, GumpButtonType.Reply, 0);	// Log out
 
-            AddImageTiled(140, 90, 250, 17, 9251);
-            AddImageTiled(60, 125, 350, 17, 9251);
-            AddImageTiled(140, 160, 250, 17, 9251);
-            AddImageTiled(60, 195, 350, 17, 9251);
+            AddHtmlLocalized(72, 285, 170, 20, 1150180, false, false); // Command Functions: 
+            AddHtml(200, 285, 100, 20, string.Format("{0}/{1}", m_Item.Attempts, m_Solution.MaxAttempts), false, false);
 
-            AddBackground(70, 70, 90, 155, 9250);
-            AddBackground(200, 70, 140, 155, 9250);
-            AddBackground(390, 70, 140, 155, 9250);
+            if (from.Skills[SkillName.Lockpicking].Base >= 100.0)
+            {
+                int locked = m_Solution.GetMatches(m_CurrentSolution);
+                AddHtmlLocalized(72, 300, 170, 20, 1150179, false, false); // Crystals Locked  : 
+                AddHtml(200, 300, 100, 20, locked.ToString(), false, false);
+            }
 
-            AddBackground(50, 280, 200, 120, 9250);
-
-            AddImage(0, 0, 10400);
-            AddImage(0, 170, 10401);
-            AddImage(0, 350, 10402);
-
-            AddButton(105, 87, row == 0 ? 208 : 209, row == 0 ? 209 : 208, 1, GumpButtonType.Reply, 0);
-            AddButton(105, 122, row == 1 ? 208 : 209, row == 0 ? 209 : 208, 2, GumpButtonType.Reply, 0);
-            AddButton(105, 157, row == 2 ? 208 : 209, row == 0 ? 209 : 208, 3, GumpButtonType.Reply, 0);
-            AddButton(105, 192, row == 3 ? 208 : 209, row == 0 ? 209 : 208, 4, GumpButtonType.Reply, 0);
+            AddButton(108, 82, row == 0 ? 208 : 209, row == 0 ? 209 : 208, 1, GumpButtonType.Reply, 0);
+            AddButton(108, 115, row == 1 ? 208 : 209, row == 0 ? 209 : 208, 2, GumpButtonType.Reply, 0);
+            AddButton(108, 148, row == 2 ? 208 : 209, row == 0 ? 209 : 208, 3, GumpButtonType.Reply, 0);
+            AddButton(108, 181, row == 3 ? 208 : 209, row == 0 ? 209 : 208, 4, GumpButtonType.Reply, 0);
 
             AddPiece(0, true, m_Solution.First);
             AddPiece(1, true, m_Solution.Second);
@@ -470,39 +489,25 @@ namespace Server.Items
             {
                 if (i == row && m_CurrentSolution.Rows[i] != PuzzlePiece.None && m_Item.Attempts < m_Solution.MaxAttempts)
                 {
-                    AddButton(85, 87 + (i * 35), 2650, 2650, 5, GumpButtonType.Reply, 0); //Up
-                    AddButton(125, 87 + (i * 35), 2648, 2648, 6, GumpButtonType.Reply, 0); //Down
+                    AddButton(88, 82 + (i * 33), 2650, 2650, 5, GumpButtonType.Reply, 0); //Up
+                    AddButton(128, 82 + (i * 33), 2648, 2648, 6, GumpButtonType.Reply, 0); //Down
                 }
                 else
                 {
-                    AddImage(85, 87 + (i * 35), 2709);
-                    AddImage(125, 87 + (i * 35), 2709);
+                    AddImage(88, 82 + (i * 33), 2709);
+                    AddImage(128, 82 + (i * 33), 2709);
                 }
             }
 
-            AddButton(85, 87 + (row * 35), 2650, 2650, 5, GumpButtonType.Reply, 0); //Up
-            AddButton(125, 87 + (row * 35), 2648, 2648, 6, GumpButtonType.Reply, 0); //Down
-
-            AddHtmlLocalized(65, 295, 130, 16, 1150180, false, false); // Command Functions: 
-            AddLabel(200, 295, 0, String.Format("{0}/{1}", m_Item.Attempts, m_Solution.MaxAttempts));
-
-            if (from.Skills[SkillName.Lockpicking].Base >= 100.0)
-            {
-                int locked = m_Solution.GetMatches(m_CurrentSolution);
-                AddHtmlLocalized(65, 310, 120, 16, 1150179, false, false); // Crystals Locked  : 
-                AddLabel(190, 310, 0, locked.ToString());
-            }
-
-            AddButton(80, 335, 2124, 2123, 7, GumpButtonType.Reply, 0); // Okay
-            AddButton(160, 335, 2073, 2072, 8, GumpButtonType.Reply, 0); // Cancel
-            AddButton(120, 360, 2011, 2010, 0, GumpButtonType.Reply, 0); // Logout
+            AddButton(88, 82 + (row * 35), 2650, 2650, 5, GumpButtonType.Reply, 0); //Up
+            AddButton(128, 82 + (row * 35), 2648, 2648, 6, GumpButtonType.Reply, 0); //Down
         }
 
         private void AddPiece(int row, bool right, PuzzlePiece piece)
         {
             int id = GetPuzzlePieceID(piece);
-            int x = right ? 405 : 215;
-            int y = 82 + (35 * row);
+            int x = right ? 410 : 205;
+            int y = 76 + (33 * row);
 
             switch (piece)
             {
