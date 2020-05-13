@@ -2374,7 +2374,7 @@ namespace Server.Mobiles
                             // check for the delayinsec entry
                             bool delayinsec = false;
                             try { delayinsec = bool.Parse((string)dr["DelayInSec"]); }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
 
                             valid_entry = true;
                             try { doubleEntry = double.Parse((string)dr["MinDelay"]); }
@@ -4518,7 +4518,7 @@ namespace Server.Mobiles
                 {
                     fs = File.Open(filename, FileMode.Open, FileAccess.Read);
                 }
-                catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                catch { }
                 
                 if (fs == null)
                 {
@@ -4540,7 +4540,7 @@ namespace Server.Mobiles
                 {
                     files = Directory.GetFiles(filename, "*.xml");
                 }
-                catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                catch { }
                 if (files != null && files.Length > 0)
                 {
                     if (from != null)
@@ -4558,7 +4558,7 @@ namespace Server.Mobiles
                 {
                     dirs = Directory.GetDirectories(filename);
                 }
-                catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                catch { }
                 if (dirs != null && dirs.Length > 0)
                 {
                     foreach (string dir in dirs)
@@ -4640,7 +4640,7 @@ namespace Server.Mobiles
                         // Each row makes up a single spawner
                         string SpawnName = "Spawner";
                         try { SpawnName = (string)dr["Name"]; }
-                        catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                        catch { }
 
                         // Check if there is any spawner name criteria specified on the unload
                         if (SpawnerPrefix == null || (SpawnerPrefix.Length == 0) || (SpawnName.StartsWith(SpawnerPrefix) == true))
@@ -4662,7 +4662,7 @@ namespace Server.Mobiles
 
                             // Try to get the "map" field, but in case it doesn't exist, catch and discard the exception
                             try { XmlMapName = (string)dr["Map"]; }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
 
                             // Convert the xml map value to a real map object
                             if (string.Compare(XmlMapName, Map.Trammel.Name, true) == 0 || XmlMapName == "Trammel")
@@ -4696,7 +4696,7 @@ namespace Server.Mobiles
                                 {
                                     SpawnMap = Map.Parse(XmlMapName);
                                 }
-                                catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                catch { }
                                 OtherCount++;
                             }
 
@@ -4734,7 +4734,7 @@ namespace Server.Mobiles
             {
                 fs.Close();
             }
-            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+            catch { }
 
             if (from != null)
                 from.SendMessage("{0}/{8} spawner(s) were unloaded using file {1} [Trammel={2}, Felucca={3}, Ilshenar={4}, Malas={5}, Tokuno={6}, Other={7}].",
@@ -4880,7 +4880,7 @@ namespace Server.Mobiles
                 {
                     files = Directory.GetFiles(filename, "*.map");
                 }
-                catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                catch { }
                 if (files != null && files.Length > 0)
                 {
                     from.SendMessage("Importing {0} .map files from directory {1}", files.Length, filename);
@@ -4897,7 +4897,7 @@ namespace Server.Mobiles
                 {
                     dirs = Directory.GetDirectories(filename);
                 }
-                catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                catch { }
                 if (dirs != null && dirs.Length > 0)
                 {
                     foreach (string dir in dirs)
@@ -4944,7 +4944,7 @@ namespace Server.Mobiles
                 {
                     overridemap = int.Parse(args[1]);
                 }
-                catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                catch { }
             }
             else
                 if (args.Length == 2 && (args[0].ToLower() == "overridemintime"))
@@ -4953,7 +4953,7 @@ namespace Server.Mobiles
                 {
                     overridemintime = double.Parse(args[1]);
                 }
-                catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                catch { }
             }
             else
                     if (args.Length == 2 && (args[0].ToLower() == "overridemaxtime"))
@@ -4962,7 +4962,7 @@ namespace Server.Mobiles
                 {
                     overridemaxtime = double.Parse(args[1]);
                 }
-                catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                catch { }
             }
             else
                         // look for a spawn spec line
@@ -5201,7 +5201,7 @@ namespace Server.Mobiles
                 {
                     overridemap = int.Parse(args[1]);
                 }
-                catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                catch { }
             }
             else
                 if (args.Length == 2 && (args[0].ToLower() == "overridemintime"))
@@ -5210,7 +5210,7 @@ namespace Server.Mobiles
                 {
                     overridemintime = double.Parse(args[1]);
                 }
-                catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                catch { }
             }
             else
                     if (args.Length == 2 && (args[0].ToLower() == "overridemaxtime"))
@@ -5219,7 +5219,7 @@ namespace Server.Mobiles
                 {
                     overridemaxtime = double.Parse(args[1]);
                 }
-                catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                catch { }
             }
             else
                         // look for a spawn spec line
@@ -5673,7 +5673,7 @@ namespace Server.Mobiles
 
                                         }
                                     }
-                                    catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                    catch { }
                                 }
                                 if (minDelay != TimeSpan.FromSeconds(int.Parse(GetText(entrynode["MinDelay"], "05:00"))))
                                 {
@@ -5688,7 +5688,7 @@ namespace Server.Mobiles
 
                                         }
                                     }
-                                    catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                    catch { }
                                 }
                                 if (maxDelay != TimeSpan.FromSeconds(int.Parse(GetText(entrynode["MaxDelay"], "10:00"))))
                                 {
@@ -5703,7 +5703,7 @@ namespace Server.Mobiles
 
                                         }
                                     }
-                                    catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                    catch { }
                                 }
                                 if (homeRange != int.Parse(GetText(entrynode["WalkRange"], "10")))
                                 {
@@ -5718,7 +5718,7 @@ namespace Server.Mobiles
 
                                         }
                                     }
-                                    catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                    catch { }
                                 }
                                 if (spawnRange != int.Parse(GetText(entrynode["SpawnRange"], "4")))
                                 {
@@ -5733,7 +5733,7 @@ namespace Server.Mobiles
 
                                         }
                                     }
-                                    catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                    catch { }
                                 }
                             }
 
@@ -5759,7 +5759,7 @@ namespace Server.Mobiles
                                         op.WriteLine();
                                     }
                                 }
-                                catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                catch { }
                                 from.SendMessage("Inconsistent entry count detected at {0} {1}.", location, map);
                                 break;
                             }
@@ -5778,7 +5778,7 @@ namespace Server.Mobiles
                                 op.WriteLine();
                             }
                         }
-                        catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                        catch { }
                     }
                 }
             }
@@ -5844,7 +5844,7 @@ namespace Server.Mobiles
                 {
                     fs = File.Open(filename, FileMode.Open, FileAccess.Read);
                 }
-                catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                catch { }
 
                 if (fs == null)
                 {
@@ -5867,7 +5867,7 @@ namespace Server.Mobiles
                 {
                     files = Directory.GetFiles(filename, "*.xml");
                 }
-                catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                catch { }
                 if (files != null && files.Length > 0)
                 {
                     if (from != null)
@@ -5885,7 +5885,7 @@ namespace Server.Mobiles
                 {
                     dirs = Directory.GetDirectories(filename);
                 }
-                catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                catch { }
                 if (dirs != null && dirs.Length > 0)
                 {
                     foreach (string dir in dirs)
@@ -6025,7 +6025,7 @@ namespace Server.Mobiles
                             if (!loadnew)
                             {
                                 try { SpawnId = new Guid((string)dr["UniqueId"]); }
-                                catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                catch { }
                             }
                             else
                             {
@@ -6067,15 +6067,15 @@ namespace Server.Mobiles
                             int ContainerY = 0;
                             int ContainerZ = 0;
                             try { InContainer = bool.Parse((string)dr["InContainer"]); }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
                             if (InContainer)
                             {
                                 try { ContainerX = int.Parse((string)dr["ContainerX"]); }
-                                catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                catch { }
                                 try { ContainerY = int.Parse((string)dr["ContainerY"]); }
-                                catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                catch { }
                                 try { ContainerZ = int.Parse((string)dr["ContainerZ"]); }
-                                catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                catch { }
                             }
 
                             // Get the map (default to the mobiles map) if the relative distance is too great, then use the defined map
@@ -6122,7 +6122,7 @@ namespace Server.Mobiles
                                     {
                                         SpawnMap = Map.Parse(XmlMapName);
                                     }
-                                    catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                    catch { }
                                     OtherCount++;
                                 }
                             }
@@ -6167,7 +6167,7 @@ namespace Server.Mobiles
                             // Try load the IsRelativeHomeRange (default to true)
                             bool SpawnIsRelativeHomeRange = true;
                             try { SpawnIsRelativeHomeRange = bool.Parse((string)dr["IsHomeRangeRelative"]); }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
 
 
                             int SpawnHomeRange = 5;
@@ -6180,7 +6180,7 @@ namespace Server.Mobiles
                             //deal with double format for delay.  default is the old minute format
                             bool delay_in_sec = false;
                             try { delay_in_sec = bool.Parse((string)dr["DelayInSec"]); }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
                             TimeSpan SpawnMinDelay = TimeSpan.FromMinutes(5);
                             TimeSpan SpawnMaxDelay = TimeSpan.FromMinutes(10);
 
@@ -6188,37 +6188,37 @@ namespace Server.Mobiles
                             if (delay_in_sec)
                             {
                                 try { SpawnMinDelay = TimeSpan.FromSeconds(int.Parse((string)dr["MinDelay"])); }
-                                catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                catch { }
                                 try { SpawnMaxDelay = TimeSpan.FromSeconds(int.Parse((string)dr["MaxDelay"])); }
-                                catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                catch { }
                             }
                             else
                             {
                                 try { SpawnMinDelay = TimeSpan.FromMinutes(int.Parse((string)dr["MinDelay"])); }
-                                catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                catch { }
                                 try { SpawnMaxDelay = TimeSpan.FromMinutes(int.Parse((string)dr["MaxDelay"])); }
-                                catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                catch { }
                             }
                             TimeSpan SpawnMinRefractory = TimeSpan.FromMinutes(0);
                             try { SpawnMinRefractory = TimeSpan.FromMinutes(double.Parse((string)dr["MinRefractory"])); }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
 
                             TimeSpan SpawnMaxRefractory = TimeSpan.FromMinutes(0);
                             try { SpawnMaxRefractory = TimeSpan.FromMinutes(double.Parse((string)dr["MaxRefractory"])); }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
 
                             TimeSpan SpawnTODStart = TimeSpan.FromMinutes(0);
                             try { SpawnTODStart = TimeSpan.FromMinutes(double.Parse((string)dr["TODStart"])); }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
 
                             TimeSpan SpawnTODEnd = TimeSpan.FromMinutes(0);
                             try { SpawnTODEnd = TimeSpan.FromMinutes(double.Parse((string)dr["TODEnd"])); }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
 
                             int todmode = (int)TODModeType.Realtime;
                             TODModeType SpawnTODMode = TODModeType.Realtime;
                             try { todmode = int.Parse((string)dr["TODMode"]); }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
                             switch (todmode)
                             {
                                 case (int)TODModeType.Gametime:
@@ -6231,90 +6231,90 @@ namespace Server.Mobiles
 
                             int SpawnKillReset = defKillReset;
                             try { SpawnKillReset = int.Parse((string)dr["KillReset"]); }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
 
                             string SpawnProximityMessage = null;
                             // proximity message
                             try { SpawnProximityMessage = (string)dr["ProximityTriggerMessage"]; }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
 
                             string SpawnItemTriggerName = null;
                             try { SpawnItemTriggerName = (string)dr["ItemTriggerName"]; }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
 
                             string SpawnNoItemTriggerName = null;
                             try { SpawnNoItemTriggerName = (string)dr["NoItemTriggerName"]; }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
 
                             string SpawnSpeechTrigger = null;
                             try { SpawnSpeechTrigger = (string)dr["SpeechTrigger"]; }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
 
                             string SpawnSkillTrigger = null;
                             try { SpawnSkillTrigger = (string)dr["SkillTrigger"]; }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
 
                             string SpawnMobTriggerName = null;
                             try { SpawnMobTriggerName = (string)dr["MobTriggerName"]; }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
                             string SpawnMobPropertyName = null;
                             try { SpawnMobPropertyName = (string)dr["MobPropertyName"]; }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
                             string SpawnPlayerPropertyName = null;
                             try { SpawnPlayerPropertyName = (string)dr["PlayerPropertyName"]; }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
 
                             double SpawnTriggerProbability = 1;
                             try { SpawnTriggerProbability = double.Parse((string)dr["TriggerProbability"]); }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
 
                             int SpawnSequentialSpawning = -1;
                             try { SpawnSequentialSpawning = int.Parse((string)dr["SequentialSpawning"]); }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
 
                             string SpawnRegionName = null;
                             try { SpawnRegionName = (string)dr["RegionName"]; }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
 
                             string SpawnConfigFile = null;
                             try { SpawnConfigFile = (string)dr["ConfigFile"]; }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
 
                             bool SpawnAllowGhost = false;
                             try { SpawnAllowGhost = bool.Parse((string)dr["AllowGhostTriggering"]); }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
 
                             bool SpawnAllowNPC = false;
                             try { SpawnAllowNPC = bool.Parse((string)dr["AllowNPCTriggering"]); }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
 
                             bool SpawnSpawnOnTrigger = false;
                             try { SpawnSpawnOnTrigger = bool.Parse((string)dr["SpawnOnTrigger"]); }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
 
                             bool SpawnSmartSpawning = false;
                             try { SpawnSmartSpawning = bool.Parse((string)dr["SmartSpawning"]); }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
 
                             bool TickReset = false;
                             try { TickReset = bool.Parse((string)dr["TickReset"]); }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
 
                             string SpawnObjectPropertyName = null;
                             try { SpawnObjectPropertyName = (string)dr["ObjectPropertyName"]; }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
 
                             // read in the object proximity target, this will be an object name, so have to do a search
                             // to find the item in the world.  Also have to test for redundancy
                             string triggerObjectName = null;
                             try { triggerObjectName = (string)dr["ObjectPropertyItemName"]; }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
 
                             // read in the target for the set command, this will be an object name, so have to do a search
                             // to find the item in the world.  Also have to test for redundancy
                             string setObjectName = null;
                             try { setObjectName = (string)dr["SetPropertyItemName"]; }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
 
                             // we will assign this during the self-reference resolution pass
                             Item SpawnSetPropertyItem = null;
@@ -6327,32 +6327,32 @@ namespace Server.Mobiles
                             // Try to get the "Duration" field, but in case it doesn't exist, catch and discard the exception
                             TimeSpan SpawnDuration = TimeSpan.FromMinutes(0);
                             try { SpawnDuration = TimeSpan.FromMinutes(double.Parse((string)dr["Duration"])); }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
 
                             TimeSpan SpawnDespawnTime = TimeSpan.FromHours(0);
                             try { SpawnDespawnTime = TimeSpan.FromHours(double.Parse((string)dr["DespawnTime"])); }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
                             int SpawnProximityRange = -1;
                             // Try to get the "ProximityRange" field, but in case it doesn't exist, catch and discard the exception
                             try { SpawnProximityRange = int.Parse((string)dr["ProximityRange"]); }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
 
                             int SpawnProximityTriggerSound = 0;
                             // Try to get the "ProximityTriggerSound" field, but in case it doesn't exist, catch and discard the exception
                             try { SpawnProximityTriggerSound = int.Parse((string)dr["ProximityTriggerSound"]); }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
 
                             int SpawnAmount = 1;
                             try { SpawnAmount = int.Parse((string)dr["Amount"]); }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
 
                             bool SpawnExternalTriggering = false;
                             try { SpawnExternalTriggering = bool.Parse((string)dr["ExternalTriggering"]); }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
 
                             string waypointstr = null;
                             try { waypointstr = (string)dr["Waypoint"]; }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
 
                             WayPoint SpawnWaypoint = GetWaypoint(waypointstr);
 
@@ -6433,7 +6433,7 @@ namespace Server.Mobiles
                                 // log it
                                 long fileposition = -1;
                                 try { fileposition = fs.Position; }
-                                catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                catch { }
                                 try
                                 {
                                     using (StreamWriter op = new StreamWriter("badxml.log", true))
@@ -6442,7 +6442,7 @@ namespace Server.Mobiles
                                         op.WriteLine();
                                     }
                                 }
-                                catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                catch { }
                             }
                             else
                                 if (questionable_spawner)
@@ -6454,7 +6454,7 @@ namespace Server.Mobiles
                                 // log it
                                 long fileposition = -1;
                                 try { fileposition = fs.Position; }
-                                catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                catch { }
                                 try
                                 {
                                     using (StreamWriter op = new StreamWriter("badxml.log", true))
@@ -6464,7 +6464,7 @@ namespace Server.Mobiles
                                         op.WriteLine();
                                     }
                                 }
-                                catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                catch { }
                             }
                             if (!bad_spawner)
                             {
@@ -6578,14 +6578,14 @@ namespace Server.Mobiles
                         if (!loadrelative)
                         {
                             try { XmlMapName = (string)dr["Map"]; }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
 
                             // Convert the xml map value to a real map object
                             try
                             {
                                 SpawnMap = Map.Parse(XmlMapName);
                             }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
                         }
 
                         bool found_spawner = false;
@@ -6615,7 +6615,7 @@ namespace Server.Mobiles
                             // resolve item name references since they may have referred to spawners that were just created
                             string setObjectName = null;
                             try { setObjectName = (string)dr["SetPropertyItemName"]; }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
                             if (setObjectName != null && setObjectName.Length > 0)
                             {
                                 // try to parse out the type information if it has also been saved
@@ -6658,12 +6658,14 @@ namespace Server.Mobiles
                                             op.WriteLine();
                                         }
                                     }
-                                    catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                    catch { }
                                 }
                             }
+
                             string triggerObjectName = null;
                             try { triggerObjectName = (string)dr["ObjectPropertyItemName"]; }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
+
                             if (triggerObjectName != null && triggerObjectName.Length > 0)
                             {
                                 string[] typeargs = triggerObjectName.Split(",".ToCharArray(), 2);
@@ -6705,7 +6707,7 @@ namespace Server.Mobiles
                                             op.WriteLine();
                                         }
                                     }
-                                    catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                    catch { }
                                 }
                             }
                         }
@@ -6717,7 +6719,7 @@ namespace Server.Mobiles
             {
                 fs.Close();
             }
-            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+            catch { }
 
             if (from != null)
                 from.SendMessage("{0} spawner(s) were created from file {1} [Trammel={2}, Felucca={3}, Ilshenar={4}, Malas={5}, Tokuno={6} Other={7}].",
@@ -7415,7 +7417,7 @@ namespace Server.Mobiles
             {
                 stream.Close();
             }
-            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+            catch { }
             // Indicate how many spawners were written
             if (from != null)
             {
@@ -9703,7 +9705,7 @@ namespace Server.Mobiles
                         {
                             int sernum = -1;
                             try { sernum = (int)Convert.ToUInt64(wayargs[1].Substring(2), 16); }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch { }
 
                             if (sernum > -1)
                             {
@@ -9790,7 +9792,7 @@ namespace Server.Mobiles
                 {
                     return (bool)(prop.GetValue(o, null));
                 }
-                catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                catch { }
             }
 
             return false;
@@ -10271,7 +10273,7 @@ namespace Server.Mobiles
                                     {
                                         start = int.Parse(positionargs[1]);
                                     }
-                                    catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                    catch { }
                                 }
                                 if (positionargs != null && positionargs.Length > 2)
                                 {
@@ -10279,7 +10281,7 @@ namespace Server.Mobiles
                                     {
                                         end = int.Parse(positionargs[2]);
                                     }
-                                    catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                    catch { }
                                 }
                                 if (includetilelist == null)
                                 {
@@ -10314,7 +10316,7 @@ namespace Server.Mobiles
                                     {
                                         start = int.Parse(positionargs[1]);
                                     }
-                                    catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                    catch { }
                                 }
                                 if (positionargs != null && positionargs.Length > 2)
                                 {
@@ -10322,7 +10324,7 @@ namespace Server.Mobiles
                                     {
                                         end = int.Parse(positionargs[2]);
                                     }
-                                    catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                    catch { }
                                 }
                                 if (excludetilelist == null)
                                 {
@@ -10357,7 +10359,7 @@ namespace Server.Mobiles
                                 {
                                     fillinc = int.Parse(positionargs[1]);
                                 }
-                                catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                catch { }
                             }
                             break;
                         case SpawnPositionType.RelXY:
@@ -10374,7 +10376,7 @@ namespace Server.Mobiles
                                     xinc = int.Parse(positionargs[1]);
                                     yinc = int.Parse(positionargs[2]);
                                 }
-                                catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                catch { }
                             }
                             if (positionargs != null && positionargs.Length > 3)
                             {
@@ -10382,7 +10384,7 @@ namespace Server.Mobiles
                                 {
                                     zinc = int.Parse(positionargs[3]);
                                 }
-                                catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                catch { }
                             }
                             break;
                         case SpawnPositionType.Waypoint:
@@ -10399,7 +10401,7 @@ namespace Server.Mobiles
                                 {
                                     positionrange = int.Parse(positionargs[2]);
                                 }
-                                catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                catch { }
                             }
 
                             // find a list of items that match the waypoint prefix
@@ -10438,7 +10440,7 @@ namespace Server.Mobiles
                                 {
                                     positionrange = int.Parse(positionargs[1]);
                                 }
-                                catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                catch { }
                             }
                             break;
                     }
@@ -11089,7 +11091,7 @@ namespace Server.Mobiles
                         {
                             paramValues = Add.ParseValues(paramList, typewordargs);
                         }
-                        catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                        catch { }
 
                         if (paramValues == null)
                             continue;
@@ -11099,7 +11101,7 @@ namespace Server.Mobiles
                         {
                             o = Activator.CreateInstance(type, paramValues);
                         }
-                        catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                        catch { }
                     }
                     else
                     {
@@ -11108,7 +11110,7 @@ namespace Server.Mobiles
                         {
                             o = Activator.CreateInstance(type);
                         }
-                        catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                        catch { }
                     }
 
                     // successfully constructed the object, otherwise try another matching constructor
@@ -12424,39 +12426,39 @@ namespace Server.Mobiles
                                     string parmstr = GetParm(s, ":MX=");
                                     int maxCount = 1;
                                     try { maxCount = int.Parse(parmstr); }
-                                    catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                    catch { }
 
                                     // SubGroup
                                     parmstr = GetParm(s, ":SB=");
 
                                     int subGroup = 0;
                                     try { subGroup = int.Parse(parmstr); }
-                                    catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                    catch { }
 
                                     // SequentialSpawnResetTime
                                     parmstr = GetParm(s, ":RT=");
                                     double resetTime = 0;
                                     try { resetTime = double.Parse(parmstr); }
-                                    catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                    catch { }
 
                                     // SequentialSpawnResetTo
                                     parmstr = GetParm(s, ":TO=");
                                     int resetTo = 0;
                                     try { resetTo = int.Parse(parmstr); }
-                                    catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                    catch { }
 
                                     // KillsNeeded
                                     parmstr = GetParm(s, ":KL=");
                                     int killsNeeded = 0;
                                     try { killsNeeded = int.Parse(parmstr); }
-                                    catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                    catch { }
 
                                     // RestrictKills
                                     parmstr = GetParm(s, ":RK=");
                                     bool restrictKills = false;
                                     if (parmstr != null)
                                         try { restrictKills = (int.Parse(parmstr) == 1); }
-                                        catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                        catch { }
 
                                     // ClearOnAdvance
                                     parmstr = GetParm(s, ":CA=");
@@ -12467,31 +12469,31 @@ namespace Server.Mobiles
                                         clearAdvance = false;
                                     if (parmstr != null)
                                         try { clearAdvance = (int.Parse(parmstr) == 1); }
-                                        catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                        catch { }
 
                                     // MinDelay
                                     parmstr = GetParm(s, ":DN=");
                                     double minD = -1;
                                     try { minD = double.Parse(parmstr); }
-                                    catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                    catch { }
 
                                     // MaxDelay
                                     parmstr = GetParm(s, ":DX=");
                                     double maxD = -1;
                                     try { maxD = double.Parse(parmstr); }
-                                    catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                    catch { }
 
                                     // SpawnsPerTick
                                     parmstr = GetParm(s, ":SP=");
                                     int spawnsPer = 1;
                                     try { spawnsPer = int.Parse(parmstr); }
-                                    catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                    catch { }
 
                                     // PackRange
                                     parmstr = GetParm(s, ":PR=");
                                     int packRange = -1;
                                     try { packRange = int.Parse(parmstr); }
-                                    catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                                    catch { }
 
                                     // Create the spawn object and store it in the array list
                                     SpawnObject so = new SpawnObject(SpawnObjectDetails[0], maxCount, subGroup, resetTime, resetTo, killsNeeded,

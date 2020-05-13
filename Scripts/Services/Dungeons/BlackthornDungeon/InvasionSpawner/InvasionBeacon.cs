@@ -10,6 +10,12 @@ namespace Server.Engines.Blackthorn
 
         public override bool CanDamage => Controller == null || Controller.BeaconVulnerable;
 
+        [Constructable]
+        public InvasionBeacon()
+            : this(null)
+        {
+        }
+
         public InvasionBeacon(InvasionController controller)
         {
             Controller = controller;
