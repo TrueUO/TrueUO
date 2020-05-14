@@ -1,5 +1,6 @@
 using Server.Gumps;
 using Server.Items;
+using Server.Network;
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
@@ -8,202 +9,95 @@ namespace Server.Regions
 {
     public class MazeOfDeathRegion : Region
     {
+        private static readonly Point2D[] _Points =
+        {
+            new Point2D(1062, 1060), new Point2D(1062, 1059), new Point2D(1062, 1058), new Point2D(1061, 1058),
+            new Point2D(1060, 1058), new Point2D(1060, 1057), new Point2D(1059, 1057), new Point2D(1059, 1056),
+            new Point2D(1059, 1055), new Point2D(1060, 1055), new Point2D(1060, 1054), new Point2D(1060, 1053),
+            new Point2D(1059, 1053), new Point2D(1059, 1052), new Point2D(1059, 1051), new Point2D(1059, 1050),
+            new Point2D(1058, 1050), new Point2D(1058, 1049), new Point2D(1057, 1049), new Point2D(1057, 1048),
+            new Point2D(1057, 1047), new Point2D(1057, 1046), new Point2D(1058, 1047), new Point2D(1059, 1047),
+            new Point2D(1059, 1046), new Point2D(1059, 1045), new Point2D(1059, 1044), new Point2D(1060, 1044),
+            new Point2D(1061, 1044), new Point2D(1061, 1043), new Point2D(1060, 1042), new Point2D(1059, 1042),
+            new Point2D(1058, 1042), new Point2D(1057, 1042), new Point2D(1061, 1042), new Point2D(1061, 1041),
+            new Point2D(1061, 1042), new Point2D(1062, 1042), new Point2D(1062, 1041), new Point2D(1062, 1040),
+            new Point2D(1063, 1040), new Point2D(1063, 1041), new Point2D(1063, 1040), new Point2D(1063, 1039),
+            new Point2D(1062, 1039), new Point2D(1062, 1038), new Point2D(1061, 1038), new Point2D(1061, 1037),
+            new Point2D(1060, 1037), new Point2D(1059, 1037), new Point2D(1058, 1037), new Point2D(1057, 1037),
+            new Point2D(1057, 1036), new Point2D(1057, 1035), new Point2D(1058, 1035), new Point2D(1059, 1035),
+            new Point2D(1057, 1034), new Point2D(1057, 1033), new Point2D(1057, 1032), new Point2D(1058, 1032),
+            new Point2D(1059, 1032), new Point2D(1060, 1032), new Point2D(1060, 1031), new Point2D(1060, 1030),
+            new Point2D(1060, 1029), new Point2D(1061, 1029), new Point2D(1061, 1028), new Point2D(1061, 1027),
+            new Point2D(1062, 1027), new Point2D(1063, 1027), new Point2D(1064, 1027), new Point2D(1061, 1026),
+            new Point2D(1062, 1026), new Point2D(1063, 1026), new Point2D(1064, 1026), new Point2D(1061, 1026),
+            new Point2D(1061, 1025), new Point2D(1061, 1024), new Point2D(1061, 1023), new Point2D(1061, 1022),
+            new Point2D(1060, 1026), new Point2D(1059, 1026), new Point2D(1058, 1026), new Point2D(1058, 1025),
+            new Point2D(1058, 1024), new Point2D(1058, 1023), new Point2D(1058, 1022), new Point2D(1058, 1021),
+            new Point2D(1057, 1021), new Point2D(1057, 1020), new Point2D(1057, 1019), new Point2D(1057, 1018),
+            new Point2D(1058, 1018), new Point2D(1059, 1018), new Point2D(1060, 1018), new Point2D(1061, 1018),
+            new Point2D(1061, 1017), new Point2D(1061, 1016), new Point2D(1061, 1015), new Point2D(1061, 1014),
+            new Point2D(1061, 1013), new Point2D(1061, 1012), new Point2D(1061, 1011), new Point2D(1061, 1010),
+            new Point2D(1060, 1010), new Point2D(1059, 1010), new Point2D(1059, 1009), new Point2D(1059, 1008),
+            new Point2D(1059, 1007), new Point2D(1059, 1006), new Point2D(1059, 1005), new Point2D(1059, 1004),
+            new Point2D(1058, 1004), new Point2D(1057, 1004), new Point2D(1057, 1003), new Point2D(1057, 1002),
+            new Point2D(1057, 1001), new Point2D(1057, 1000), new Point2D(1057, 999), new Point2D(1058, 999),
+            new Point2D(1059, 999), new Point2D(1060, 999), new Point2D(1061, 999), new Point2D(1062, 999),
+            new Point2D(1063, 999), new Point2D(1063, 998), new Point2D(1063, 997), new Point2D(1063, 996),
+            new Point2D(1063, 995), new Point2D(1063, 994), new Point2D(1062, 994), new Point2D(1061, 994),
+            new Point2D(1061, 993), new Point2D(1061, 992), new Point2D(1061, 991)
+        };
+
         public static void Initialize()
         {
             new MazeOfDeathRegion();
 
-            m_Path = new List<Point3D>();
+            Path = new List<Point2D>();
 
-            m_Path.Add(new Point3D(1062, 1060, -42));
-            m_Path.Add(new Point3D(1062, 1059, -42));
-            m_Path.Add(new Point3D(1062, 1058, -42));
-            m_Path.Add(new Point3D(1061, 1058, -42));
-            m_Path.Add(new Point3D(1060, 1058, -42));
-            m_Path.Add(new Point3D(1060, 1057, -42));
-            m_Path.Add(new Point3D(1059, 1057, -42));
-            m_Path.Add(new Point3D(1059, 1056, -42));
-            m_Path.Add(new Point3D(1059, 1055, -42));
-            m_Path.Add(new Point3D(1060, 1055, -42));
-            m_Path.Add(new Point3D(1060, 1054, -42));
-            m_Path.Add(new Point3D(1060, 1053, -42));
-            m_Path.Add(new Point3D(1059, 1053, -42));
-            m_Path.Add(new Point3D(1059, 1052, -42));
-            m_Path.Add(new Point3D(1059, 1051, -42));
-            m_Path.Add(new Point3D(1059, 1050, -42));
-            m_Path.Add(new Point3D(1058, 1050, -42));
-            m_Path.Add(new Point3D(1058, 1049, -42));
-            m_Path.Add(new Point3D(1057, 1049, -42));
-            m_Path.Add(new Point3D(1057, 1048, -42));
-            m_Path.Add(new Point3D(1057, 1047, -42));
-            m_Path.Add(new Point3D(1057, 1046, -42));
-            m_Path.Add(new Point3D(1058, 1047, -42));
-            m_Path.Add(new Point3D(1059, 1047, -42));
-            m_Path.Add(new Point3D(1059, 1046, -42));
-            m_Path.Add(new Point3D(1059, 1045, -42));
-            m_Path.Add(new Point3D(1059, 1044, -42));
-            m_Path.Add(new Point3D(1060, 1044, -42));
-            m_Path.Add(new Point3D(1061, 1044, -42));
-            m_Path.Add(new Point3D(1061, 1043, -42));
-            m_Path.Add(new Point3D(1060, 1042, -42));
-
-            m_Path.Add(new Point3D(1059, 1042, -42));
-            m_Path.Add(new Point3D(1058, 1042, -42));
-            m_Path.Add(new Point3D(1057, 1042, -42));
-
-            m_Path.Add(new Point3D(1061, 1042, -42));
-            m_Path.Add(new Point3D(1061, 1041, -42));
-            m_Path.Add(new Point3D(1061, 1042, -42));
-            m_Path.Add(new Point3D(1062, 1042, -42));
-            m_Path.Add(new Point3D(1062, 1041, -42));
-            m_Path.Add(new Point3D(1062, 1040, -42));
-            m_Path.Add(new Point3D(1063, 1040, -42));
-            m_Path.Add(new Point3D(1063, 1041, -42));
-            m_Path.Add(new Point3D(1063, 1040, -42));
-            m_Path.Add(new Point3D(1063, 1039, -42));
-            m_Path.Add(new Point3D(1062, 1039, -42));
-            m_Path.Add(new Point3D(1062, 1038, -42));
-            m_Path.Add(new Point3D(1061, 1038, -42));
-            m_Path.Add(new Point3D(1061, 1037, -42));
-            m_Path.Add(new Point3D(1060, 1037, -42));
-            m_Path.Add(new Point3D(1059, 1037, -42));
-            m_Path.Add(new Point3D(1058, 1037, -42));
-            m_Path.Add(new Point3D(1057, 1037, -42));
-            m_Path.Add(new Point3D(1057, 1036, -42));
-            m_Path.Add(new Point3D(1057, 1035, -42));
-
-            m_Path.Add(new Point3D(1058, 1035, -42));
-            m_Path.Add(new Point3D(1059, 1035, -42));
-
-            m_Path.Add(new Point3D(1057, 1034, -42));
-            m_Path.Add(new Point3D(1057, 1033, -42));
-            m_Path.Add(new Point3D(1057, 1032, -42));
-            m_Path.Add(new Point3D(1058, 1032, -42));
-            m_Path.Add(new Point3D(1059, 1032, -42));
-            m_Path.Add(new Point3D(1060, 1032, -42));
-            m_Path.Add(new Point3D(1060, 1031, -42));
-            m_Path.Add(new Point3D(1060, 1030, -42));
-            m_Path.Add(new Point3D(1060, 1029, -42));
-            m_Path.Add(new Point3D(1061, 1029, -42));
-            m_Path.Add(new Point3D(1061, 1028, -42));
-
-            m_Path.Add(new Point3D(1061, 1027, -42));
-            m_Path.Add(new Point3D(1062, 1027, -42));
-            m_Path.Add(new Point3D(1063, 1027, -42));
-            m_Path.Add(new Point3D(1064, 1027, -42));
-            m_Path.Add(new Point3D(1061, 1026, -42));
-            m_Path.Add(new Point3D(1062, 1026, -42));
-            m_Path.Add(new Point3D(1063, 1026, -42));
-            m_Path.Add(new Point3D(1064, 1026, -42));
-
-            m_Path.Add(new Point3D(1061, 1026, -42));
-            m_Path.Add(new Point3D(1061, 1025, -42));
-            m_Path.Add(new Point3D(1061, 1024, -42));
-            m_Path.Add(new Point3D(1061, 1023, -42));
-            m_Path.Add(new Point3D(1061, 1022, -42));
-
-            m_Path.Add(new Point3D(1060, 1026, -42));
-            m_Path.Add(new Point3D(1059, 1026, -42));
-            m_Path.Add(new Point3D(1058, 1026, -42));
-
-            m_Path.Add(new Point3D(1058, 1025, -42));
-            m_Path.Add(new Point3D(1058, 1024, -42));
-            m_Path.Add(new Point3D(1058, 1023, -42));
-            m_Path.Add(new Point3D(1058, 1022, -42));
-            m_Path.Add(new Point3D(1058, 1021, -42));
-
-            m_Path.Add(new Point3D(1057, 1021, -42));
-
-            m_Path.Add(new Point3D(1057, 1020, -42));
-            m_Path.Add(new Point3D(1057, 1019, -42));
-            m_Path.Add(new Point3D(1057, 1018, -42));
-
-            m_Path.Add(new Point3D(1058, 1018, -42));
-            m_Path.Add(new Point3D(1059, 1018, -42));
-            m_Path.Add(new Point3D(1060, 1018, -42));
-            m_Path.Add(new Point3D(1061, 1018, -42));
-
-            m_Path.Add(new Point3D(1061, 1017, -42));
-            m_Path.Add(new Point3D(1061, 1016, -42));
-            m_Path.Add(new Point3D(1061, 1015, -42));
-            m_Path.Add(new Point3D(1061, 1014, -42));
-            m_Path.Add(new Point3D(1061, 1013, -42));
-            m_Path.Add(new Point3D(1061, 1012, -42));
-            m_Path.Add(new Point3D(1061, 1011, -42));
-            m_Path.Add(new Point3D(1061, 1010, -42));
-
-            m_Path.Add(new Point3D(1060, 1010, -42));
-            m_Path.Add(new Point3D(1059, 1010, -42));
-
-            m_Path.Add(new Point3D(1059, 1009, -42));
-            m_Path.Add(new Point3D(1059, 1008, -42));
-            m_Path.Add(new Point3D(1059, 1007, -42));
-            m_Path.Add(new Point3D(1059, 1006, -42));
-            m_Path.Add(new Point3D(1059, 1005, -42));
-            m_Path.Add(new Point3D(1059, 1004, -42));
-
-            m_Path.Add(new Point3D(1058, 1004, -42));
-            m_Path.Add(new Point3D(1057, 1004, -42));
-
-            m_Path.Add(new Point3D(1057, 1003, -42));
-            m_Path.Add(new Point3D(1057, 1002, -42));
-            m_Path.Add(new Point3D(1057, 1001, -42));
-            m_Path.Add(new Point3D(1057, 1000, -42));
-            m_Path.Add(new Point3D(1057, 999, -42));
-
-            m_Path.Add(new Point3D(1058, 999, -42));
-            m_Path.Add(new Point3D(1059, 999, -42));
-            m_Path.Add(new Point3D(1060, 999, -42));
-            m_Path.Add(new Point3D(1061, 999, -42));
-            m_Path.Add(new Point3D(1062, 999, -42));
-            m_Path.Add(new Point3D(1063, 999, -42));
-
-            m_Path.Add(new Point3D(1063, 998, -42));
-            m_Path.Add(new Point3D(1063, 997, -42));
-            m_Path.Add(new Point3D(1063, 996, -42));
-            m_Path.Add(new Point3D(1063, 995, -42));
-            m_Path.Add(new Point3D(1063, 994, -42));
-
-            m_Path.Add(new Point3D(1062, 994, -42));
-            m_Path.Add(new Point3D(1061, 994, -42));
-
-            m_Path.Add(new Point3D(1061, 993, -42));
-            m_Path.Add(new Point3D(1061, 992, -42));
-            m_Path.Add(new Point3D(1061, 991, -42));
-            m_Path.Add(new Point3D(1061, 990, -42));
+            foreach (var point in _Points)
+            {
+                Path.Add(point);
+            }
 
             //Add some randoms
             int toAdd = 33;
 
             while (toAdd > 0)
             {
-                int x = Utility.RandomMinMax(m_TrapBounds.X, m_TrapBounds.X + m_TrapBounds.Width);
-                int y = Utility.RandomMinMax(m_TrapBounds.Y, m_TrapBounds.Y + m_TrapBounds.Height);
-                int z = -42;
+                int x = Utility.RandomMinMax(m_TrapCorridor.X, m_TrapCorridor.X + m_TrapCorridor.Width);
+                int y = Utility.RandomMinMax(m_TrapCorridor.Y, m_TrapCorridor.Y + m_TrapCorridor.Height);
 
-                Point3D p = new Point3D(x, y, z);
+                Point2D p = new Point2D(x, y);
 
-                if (!m_Path.Contains(p))
+                if (!Path.Contains(p))
                 {
-                    m_Path.Add(p);
+                    Path.Add(p);
                     toAdd--;
                 }
             }
         }
 
-        private static readonly Rectangle2D[] m_Bounds = new Rectangle2D[]
+        private static Rectangle2D m_FrontEntrance = new Rectangle2D(1057, 1062, 8, 6);
+        private static Rectangle2D m_Room = new Rectangle2D(1065, 1055, 11, 11);
+        private static Rectangle2D m_Corridor = new Rectangle2D(1056, 990, 9, 72);        
+        private static Rectangle2D m_PuzzleRoom = new Rectangle2D(1065, 1023, 8, 8);
+        private static Rectangle2D m_RearEntrance = new Rectangle2D(1056, 986, 9, 4);
+
+        private static readonly Rectangle2D[] m_Bounds =
         {
-            new Rectangle2D(1057, 1028, 16, 40),
-            new Rectangle2D(1057, 990, 16, 38)
+            m_FrontEntrance,
+            m_Room,
+            m_Corridor,
+            m_PuzzleRoom,
+            m_RearEntrance
         };
 
-        private static Rectangle2D m_TrapBounds = new Rectangle2D(1057, 990, 7, 71);
+        private static Rectangle2D m_DeathBounds = new Rectangle2D(1057, 1062, 7, 5);
+        private static Rectangle2D m_TrapCorridor = new Rectangle2D(1056, 991, 9, 70);
 
-        private static List<Point3D> m_Path;
-        public static List<Point3D> Path => m_Path;
+        public static List<Point2D> Path { get; private set; }
 
-        private static Rectangle2D m_Entrance = new Rectangle2D(1057, 1062, 7, 5);
-
-        public MazeOfDeathRegion() : base("Maze of Death", Map.TerMur, Region.DefaultPriority, m_Bounds)
+        public MazeOfDeathRegion()
+            : base("Maze of Death", Map.TerMur, DefaultPriority, m_Bounds)
         {
             Register();
         }
@@ -224,7 +118,7 @@ namespace Server.Regions
 
         public override bool OnTarget(Mobile m, Target t, object o)
         {
-            if (m.AccessLevel == AccessLevel.Player && t is Server.Spells.Third.TeleportSpell.InternalTarget)
+            if (m.AccessLevel == AccessLevel.Player && t is Spells.Third.TeleportSpell.InternalTarget)
             {
                 m.SendLocalizedMessage(501802); // that spell doesn't seem to work.
                 return false;
@@ -235,60 +129,63 @@ namespace Server.Regions
 
         public override void OnEnter(Mobile m)
         {
-            if (m.Backpack == null)
-                return;
-
-            if (m.NetState != null)
+            if (m.Alive)
             {
-                m.Paralyze(TimeSpan.FromSeconds(2));
-                m.PrivateOverheadMessage(Server.Network.MessageType.Regular, 33, 1113580, m.NetState); // You are filled with a sense of dread and impending doom!
-                m.PrivateOverheadMessage(Server.Network.MessageType.Regular, 0x3B2, 1113581, m.NetState); // I might need something to help me navigate through this.
-
-                if (m.Backpack.FindItemByType(typeof(GoldenCompass)) != null)
+                if (m_FrontEntrance.Contains(m.Location) || m_RearEntrance.Contains(m.Location))
                 {
-                    m.CloseGump(typeof(CompassDirectionGump));
-                    m.SendGump(new CompassDirectionGump(m));
+                    m.Frozen = true;
+
+                    m.LocalOverheadMessage(MessageType.Regular, 33, 1113580); // You are filled with a sense of dread and impending doom!
+
+                    Timer.DelayCall(TimeSpan.FromSeconds(2.0), new TimerCallback(
+                        delegate
+                        {
+                            if (m.Backpack.FindItemByType<GoldenCompass>(false) != null)
+                            {
+                                m.LocalOverheadMessage(MessageType.Regular, 946, 1113582); // I better proceed with caution.
+                        }
+                            else
+                            {
+                                m.LocalOverheadMessage(MessageType.Regular, 946, 1113581); // I might need something to help me navigate through this.
+                        }
+
+                            Timer.DelayCall(TimeSpan.FromSeconds(2.0), delegate { m.Frozen = false; });
+                        }
+                    ));
                 }
             }
-
-            base.OnEnter(m);
-        }
-
-        public override void OnExit(Mobile m)
-        {
-            m.CloseGump(typeof(CompassDirectionGump));
-            base.OnExit(m);
         }
 
         public override void OnLocationChanged(Mobile m, Point3D oldLocation)
         {
             base.OnLocationChanged(m, oldLocation);
 
-            if (oldLocation.X > 1063 && m.Location.X <= 1063)
+            if (m != null)
             {
-                if (m.Backpack != null && m.Backpack.FindItemByType(typeof(GoldenCompass)) != null)
-                    m.SendLocalizedMessage(1113582); // I better proceed with caution.
-                else
-                    m.SendLocalizedMessage(1113581); // I might need something to help me navigate through this.
-            }
-            else if (oldLocation.Y == 991 && m.Location.Y == 990)
-            {
-                if (m.HasGump(typeof(CompassDirectionGump)))
-                    m.SendLocalizedMessage(1113585); // The compass' arrows flicker. You must be near the right location.
-            }
-
-            if (m != null && m.Backpack != null)
-            {
-                Item item = m.Backpack.FindItemByType(typeof(GoldenCompass));
-
-                if (m.Alive && !m_Path.Contains(m.Location) && m_TrapBounds.Contains(m.Location))
-                    SpringTrap(m);
-
-                else if (m.Alive && m.HasGump(typeof(CompassDirectionGump)))
+                if (m.Alive)
                 {
-                    //May need to check old gump to get x,y so new gump opens in same spot!
-                    m.CloseGump(typeof(CompassDirectionGump));
-                    m.SendGump(new CompassDirectionGump(m));
+                    if (m_TrapCorridor.Contains(m.Location) && !Path.Contains(new Point2D(m.Location.X, m.Location.Y)))
+                    {
+                        SpringTrap(m);
+                    }
+                    else if (m_Corridor.Contains(m.Location) && m.Backpack != null)
+                    {
+                        Item item = m.Backpack.FindItemByType(typeof(GoldenCompass));
+
+                        if (item != null)
+                        {
+                            m.CloseGump(typeof(CompassDirectionGump));
+                            m.SendGump(new CompassDirectionGump(m));
+                        }
+                    }
+                    else if (m.HasGump(typeof(CompassDirectionGump)))
+                    {
+                        m.CloseGump(typeof(CompassDirectionGump));
+                    }
+                }
+                else if (m_TrapCorridor.Contains(m.Location))
+                {
+                    m.MoveToWorld(new Point3D(1060, 1066, -42), Map.TerMur);
                 }
             }
         }
@@ -297,7 +194,7 @@ namespace Server.Regions
         {
             base.OnDeath(m);
 
-            if (m.Player && m_TrapBounds.Contains(m.Location))
+            if (m.Player && m_TrapCorridor.Contains(m.Location))
                 Timer.DelayCall(TimeSpan.FromSeconds(3), new TimerStateCallback(Kick_Callback), m);
         }
 
@@ -337,7 +234,7 @@ namespace Server.Regions
                     break;
             }
 
-            from.LocalOverheadMessage(Server.Network.MessageType.Regular, 0xEE, cliloc);
+            from.LocalOverheadMessage(MessageType.Regular, 0xEE, cliloc);
         }
 
         public void Kick_Callback(object o)
@@ -353,8 +250,8 @@ namespace Server.Regions
             if (from == null || from.Map == null)
                 return;
 
-            int x = Utility.RandomMinMax(m_Entrance.X, m_Entrance.X + m_Entrance.Width);
-            int y = Utility.RandomMinMax(m_Entrance.Y, m_Entrance.Y + m_Entrance.Height);
+            int x = Utility.RandomMinMax(m_DeathBounds.X, m_DeathBounds.X + m_DeathBounds.Width);
+            int y = Utility.RandomMinMax(m_DeathBounds.Y, m_DeathBounds.Y + m_DeathBounds.Height);
             int z = from.Map.GetAverageZ(x, y);
 
             Point3D p = new Point3D(x, y, z);
@@ -364,7 +261,7 @@ namespace Server.Regions
             if (from.Player && !from.Alive && from.Corpse != null)
                 from.Corpse.MoveToWorld(p, Map.TerMur);
 
-            from.SendMessage("You have been teleported to the beginning of the maze.");
+            from.SendLocalizedMessage(1113566); // You will find your remains at the entrance of the maze.
         }
     }
 }
