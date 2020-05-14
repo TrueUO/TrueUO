@@ -9655,8 +9655,8 @@
     <Compile Include="Services\UltimaStore\SystemConfig.cs" />
     <Compile Include="Services\UltimaStore\UltimaStore.cs" />
     <Compile Include="Services\UltimaStore\UltimaStoreGump.cs" />
-    <Compile Include="Services\Underworld\Navrey%27s Lair\NavreysController.cs" />
-    <Compile Include="Services\Underworld\Navrey%27s Lair\NavreysPillar.cs" />
+    <Compile Include="Services\Dungeons\Underworld\Navrey%27s Lair\NavreysController.cs" />
+    <Compile Include="Services\Dungeons\Underworld\Navrey%27s Lair\NavreysPillar.cs" />
     <Compile Include="Services\Vendor Searching\VendorSearchCriteria.cs" />
     <Compile Include="Services\Vendor Searching\VendorSearch.cs" />
     <Compile Include="Services\Vendor Searching\VendorSearchGump.cs" />
@@ -10414,28 +10414,28 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Services\TrickOrTreat.cs" />
-    <Compile Include="Services\Underworld\ExperimentalRoom\ExperimentalBook.cs">
+    <Compile Include="Services\Dungeons\Underworld\ExperimentalRoom\ExperimentalBook.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\Underworld\ExperimentalRoom\ExperimentalGem.cs">
+    <Compile Include="Services\Dungeons\Underworld\ExperimentalRoom\ExperimentalGem.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\Underworld\ExperimentalRoom\ExperimentalRoomChest.cs">
+    <Compile Include="Services\Dungeons\Underworld\ExperimentalRoom\ExperimentalRoomChest.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\Underworld\ExperimentalRoom\ExperimentalRoomController.cs">
+    <Compile Include="Services\Dungeons\Underworld\ExperimentalRoom\ExperimentalRoomController.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\Underworld\ExperimentalRoom\ExperimentalRoomDoor.cs">
+    <Compile Include="Services\Dungeons\Underworld\ExperimentalRoom\ExperimentalRoomDoor.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\Underworld\ExperimentalRoom\ExperimentalRoomRewards.cs">
+    <Compile Include="Services\Dungeons\Underworld\ExperimentalRoom\ExperimentalRoomRewards.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\Underworld\ExperimentalRoom\Region.cs">
+    <Compile Include="Services\Dungeons\Underworld\ExperimentalRoom\Region.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\Underworld\Generate.cs">
+    <Compile Include="Services\Dungeons\Underworld\Generate.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Items\Addons\FountainOfFortune.cs">
@@ -10447,49 +10447,49 @@
     <Compile Include="Items\Artifacts\Equipment\Clothing\SolesOfProvidence.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\Underworld\Maze of Death\CompassDirectionGump.cs">
+    <Compile Include="Services\Dungeons\Underworld\Maze of Death\CompassDirectionGump.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\Underworld\Maze of Death\GoldenCompass.cs">
+    <Compile Include="Services\Dungeons\Underworld\Maze of Death\GoldenCompass.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\Underworld\Maze of Death\Region.cs">
+    <Compile Include="Services\Dungeons\Underworld\Maze of Death\Region.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\Underworld\Maze of Death\Rewards.cs">
+    <Compile Include="Services\Dungeons\Underworld\Maze of Death\Rewards.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\Underworld\Maze of Death\RolledMapOfTheUnderworld.cs">
+    <Compile Include="Services\Dungeons\Underworld\Maze of Death\RolledMapOfTheUnderworld.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\Underworld\Maze of Death\UnderworldPuzzle.cs">
+    <Compile Include="Services\Dungeons\Underworld\Maze of Death\UnderworldPuzzle.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\Underworld\Maze of Death\UnderworldPuzzleBox.cs">
+    <Compile Include="Services\Dungeons\Underworld\Maze of Death\UnderworldPuzzleBox.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\Underworld\PuzzleRoom\CopperPuzzleKey.cs">
+    <Compile Include="Services\Dungeons\Underworld\PuzzleRoom\CopperPuzzleKey.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\Underworld\PuzzleRoom\GoldPuzzleKey.cs">
+    <Compile Include="Services\Dungeons\Underworld\PuzzleRoom\GoldPuzzleKey.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\Underworld\PuzzleRoom\MagicKey.cs">
+    <Compile Include="Services\Dungeons\Underworld\PuzzleRoom\MagicKey.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\Underworld\PuzzleRoom\MastermindPuzzleItem.cs">
+    <Compile Include="Services\Dungeons\Underworld\PuzzleRoom\MastermindPuzzleItem.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\Underworld\PuzzleRoom\MazePuzzleItem.cs">
+    <Compile Include="Services\Dungeons\Underworld\PuzzleRoom\MazePuzzleItem.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\Underworld\PuzzleRoom\PuzzleBook.cs">
+    <Compile Include="Services\Dungeons\Underworld\PuzzleRoom\PuzzleBook.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\Underworld\PuzzleRoom\PuzzleBox.cs">
+    <Compile Include="Services\Dungeons\Underworld\PuzzleRoom\PuzzleBox.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Services\Underworld\PuzzleRoom\PuzzleRoomTeleporter.cs">
+    <Compile Include="Services\Dungeons\Underworld\PuzzleRoom\PuzzleRoomTeleporter.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Services\VeteranRewards\Character Statue Maker\CharacterStatue.cs">
