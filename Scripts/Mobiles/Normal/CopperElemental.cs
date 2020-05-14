@@ -7,12 +7,6 @@ namespace Server.Mobiles
     {
         [Constructable]
         public CopperElemental()
-            : this(25)
-        {
-        }
-
-        [Constructable]
-        public CopperElemental(int oreAmount)
             : base(AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4)
         {
             Name = "a copper elemental";
