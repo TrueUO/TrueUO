@@ -8,6 +8,12 @@ namespace Server.Mobiles
     {
         [Constructable]
         public DullCopperElemental()
+            : this(2)
+        {
+        }
+
+        [Constructable]
+        public DullCopperElemental(int oreAmount)
             : base(AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4)
         {
             Name = "a dull copper elemental";

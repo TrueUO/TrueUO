@@ -8,6 +8,12 @@ namespace Server.Mobiles
     {
         [Constructable]
         public ValoriteElemental()
+            : this(25)
+        {
+        }
+
+        [Constructable]
+        public ValoriteElemental(int oreAmount)
             : base(AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4)
         {
             Name = "a valorite elemental";
