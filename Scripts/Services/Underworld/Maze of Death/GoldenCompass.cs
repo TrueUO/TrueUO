@@ -9,6 +9,8 @@ namespace Server.Items
         private int m_Span;
 
         public override int Lifespan => m_Span;
+        public override bool UseSeconds => false;
+
         public override int LabelNumber => 1113578;  // a golden compass
 
         [Constructable]

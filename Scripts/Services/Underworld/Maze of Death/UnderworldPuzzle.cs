@@ -16,6 +16,8 @@ namespace Server.Items
 
         public override int Lifespan => 1800;
 
+        public override bool UseSeconds => false;
+
         [Constructable]
         public UnderworldPuzzleItem()
             : base(0x2AAA)
