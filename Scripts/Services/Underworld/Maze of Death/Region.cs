@@ -63,8 +63,8 @@ namespace Server.Regions
 
             while (toAdd > 0)
             {
-                int x = Utility.RandomMinMax(m_TrapBounds.X, m_TrapBounds.X + m_TrapBounds.Width);
-                int y = Utility.RandomMinMax(m_TrapBounds.Y, m_TrapBounds.Y + m_TrapBounds.Height);
+                int x = Utility.RandomMinMax(m_TrapCorridor.X, m_TrapCorridor.X + m_TrapCorridor.Width);
+                int y = Utility.RandomMinMax(m_TrapCorridor.Y, m_TrapCorridor.Y + m_TrapCorridor.Height);
 
                 Point2D p = new Point2D(x, y);
 
@@ -76,21 +76,28 @@ namespace Server.Regions
             }
         }
 
+        private static Rectangle2D m_FrontEntrance = new Rectangle2D(1057, 1062, 8, 6);
+        private static Rectangle2D m_Room = new Rectangle2D(1065, 1055, 11, 11);
+        private static Rectangle2D m_Corridor = new Rectangle2D(1056, 990, 9, 72);        
+        private static Rectangle2D m_PuzzleRoom = new Rectangle2D(1065, 1023, 8, 8);
+        private static Rectangle2D m_RearEntrance = new Rectangle2D(1056, 986, 9, 4);
+
         private static readonly Rectangle2D[] m_Bounds =
         {
-            new Rectangle2D(1056, 986, 9, 82), // Corridor
-            new Rectangle2D(1065, 1023, 8, 8), // Puzzle Room
-            new Rectangle2D(1065, 1055, 11, 11), // Room
+            m_FrontEntrance,
+            m_Room,
+            m_Corridor,
+            m_PuzzleRoom,
+            m_RearEntrance
         };
 
-        private static Rectangle2D m_TrapBounds = new Rectangle2D(1057, 991, 7, 70);
+        private static Rectangle2D m_DeathBounds = new Rectangle2D(1057, 1062, 7, 5);
+        private static Rectangle2D m_TrapCorridor = new Rectangle2D(1056, 991, 9, 70);
 
         public static List<Point2D> Path { get; private set; }
 
-        private static Rectangle2D m_Entrance = new Rectangle2D(1057, 1062, 7, 5);
-
         public MazeOfDeathRegion()
-            : base("Maze of Death", Map.TerMur, Region.DefaultPriority, m_Bounds)
+            : base("Maze of Death", Map.TerMur, DefaultPriority, m_Bounds)
         {
             Register();
         }
@@ -124,25 +131,28 @@ namespace Server.Regions
         {
             if (m.Alive)
             {
-                m.Frozen = true;
+                if (m_FrontEntrance.Contains(m.Location) || m_RearEntrance.Contains(m.Location))
+                {
+                    m.Frozen = true;
 
-                m.LocalOverheadMessage(MessageType.Regular, 33, 1113580); // You are filled with a sense of dread and impending doom!
+                    m.LocalOverheadMessage(MessageType.Regular, 33, 1113580); // You are filled with a sense of dread and impending doom!
 
-                Timer.DelayCall(TimeSpan.FromSeconds(2.0), new TimerCallback(
-                    delegate
-                    {
-                        if (m.Backpack.FindItemByType<GoldenCompass>(false) != null)
+                    Timer.DelayCall(TimeSpan.FromSeconds(2.0), new TimerCallback(
+                        delegate
                         {
-                            m.LocalOverheadMessage(MessageType.Regular, 946, 1113582); // I better proceed with caution.
+                            if (m.Backpack.FindItemByType<GoldenCompass>(false) != null)
+                            {
+                                m.LocalOverheadMessage(MessageType.Regular, 946, 1113582); // I better proceed with caution.
                         }
-                        else
-                        {
-                            m.LocalOverheadMessage(MessageType.Regular, 946, 1113581); // I might need something to help me navigate through this.
+                            else
+                            {
+                                m.LocalOverheadMessage(MessageType.Regular, 946, 1113581); // I might need something to help me navigate through this.
                         }
 
-                        Timer.DelayCall(TimeSpan.FromSeconds(2.0), delegate { m.Frozen = false; });
-                    }
-                ));
+                            Timer.DelayCall(TimeSpan.FromSeconds(2.0), delegate { m.Frozen = false; });
+                        }
+                    ));
+                }
             }
         }
 
@@ -150,28 +160,30 @@ namespace Server.Regions
         {
             base.OnLocationChanged(m, oldLocation);
 
-            if (m != null && m.Backpack != null)
+            if (m != null)
             {
                 if (m.Alive)
                 {
-                    Item item = m.Backpack.FindItemByType(typeof(GoldenCompass));
-
-                    if (item != null &&  m.Location.Y <= 1061 && m.Location.Y >= 990)
+                    if (m_TrapCorridor.Contains(m.Location) && !Path.Contains(new Point2D(m.Location.X, m.Location.Y)))
                     {
-                        m.CloseGump(typeof(CompassDirectionGump));
-                        m.SendGump(new CompassDirectionGump(m));
+                        SpringTrap(m);
+                    }
+                    else if (m_Corridor.Contains(m.Location) && m.Backpack != null)
+                    {
+                        Item item = m.Backpack.FindItemByType(typeof(GoldenCompass));
+
+                        if (item != null)
+                        {
+                            m.CloseGump(typeof(CompassDirectionGump));
+                            m.SendGump(new CompassDirectionGump(m));
+                        }
                     }
                     else if (m.HasGump(typeof(CompassDirectionGump)))
                     {
                         m.CloseGump(typeof(CompassDirectionGump));
                     }
-
-                    if (!Path.Contains(new Point2D(m.Location.X, m.Location.Y)) && m_TrapBounds.Contains(m.Location))
-                    {
-                        SpringTrap(m);
-                    }
                 }
-                else if (m.Location.X < 1064 && m.Location.Y <= 1062 && m.Location.Y >= 989)
+                else if (m_TrapCorridor.Contains(m.Location))
                 {
                     m.MoveToWorld(new Point3D(1060, 1066, -42), Map.TerMur);
                 }
@@ -182,7 +194,7 @@ namespace Server.Regions
         {
             base.OnDeath(m);
 
-            if (m.Player && m_TrapBounds.Contains(m.Location))
+            if (m.Player && m_TrapCorridor.Contains(m.Location))
                 Timer.DelayCall(TimeSpan.FromSeconds(3), new TimerStateCallback(Kick_Callback), m);
         }
 
@@ -238,8 +250,8 @@ namespace Server.Regions
             if (from == null || from.Map == null)
                 return;
 
-            int x = Utility.RandomMinMax(m_Entrance.X, m_Entrance.X + m_Entrance.Width);
-            int y = Utility.RandomMinMax(m_Entrance.Y, m_Entrance.Y + m_Entrance.Height);
+            int x = Utility.RandomMinMax(m_DeathBounds.X, m_DeathBounds.X + m_DeathBounds.Width);
+            int y = Utility.RandomMinMax(m_DeathBounds.Y, m_DeathBounds.Y + m_DeathBounds.Height);
             int z = from.Map.GetAverageZ(x, y);
 
             Point3D p = new Point3D(x, y, z);
