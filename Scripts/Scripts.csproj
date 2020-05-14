@@ -452,6 +452,102 @@
     <Compile Include="Items\Addons\TheKingsCollection\BullTapestry.cs" />
     <Compile Include="Items\Addons\TheKingsCollection\HorsePainting.cs" />
     <Compile Include="Items\Addons\Craft Addons\GlassKiln.cs" />
+    <Compile Include="Items\Aquariums\AncientAquariumFishingNet.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\ArrowCrab.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\BandedCoralShrimp.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\BangaiCardinalfish.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\BarrelSponge.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\Beaugregory.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\BlackDurgeon.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\BlueHermitCrab.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\ChironexJelly.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\ChocolateChipSeastar.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\CleanerShrimp.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\ClownTriggerfish.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\EagleRay.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\ElkhornCoral.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\FalseClownfish.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\FeatherDuster.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\Filefish.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\Fireclam.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\FireCoral.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\FlamingoTongue.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\FrenchAngelfish.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\Frogfish.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\GiantAnemone.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\GrayAngelfish.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\HippoTang.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\HorshoeCrab.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\HumpbackGrouper.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\LeafySeaDragon.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\LionsManeJelly.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\MagnificentShrimpgoby.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\Mandarinfish.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\MantisShrimp.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\MoorishIdol.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\Octopus.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\OrageElephantEarSponge.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\PicassoTriggerfish.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\PJCardinalfish.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\PorcupineFish.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\PygmySeahorse.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\QueenTrigger.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\RockBeauty.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\Scorpionfish.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\SeaFan.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\SeaUrchin.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\SergeantMajor.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\Spadefish.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\SpinyLobster.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\SpottedBlueRay.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\SpottedParrotfish.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\Squid.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\Squirrelfish.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\StaghornCoral.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\TreeCoral.cs" />
+    <Compile Include="Items\Aquariums\AncientFish\YellowBoxfish.cs" />
+    <Compile Include="Items\Aquariums\Aquarium.cs" />
+    <Compile Include="Items\Aquariums\AquariumFishingNet.cs" />
+    <Compile Include="Items\Aquariums\AquariumFood.cs" />
+    <Compile Include="Items\Aquariums\AquariumGump.cs" />
+    <Compile Include="Items\Aquariums\AquariumState.cs" />
+    <Compile Include="Items\Aquariums\BaseFish.cs" />
+    <Compile Include="Items\Aquariums\FishBowl.cs" />
+    <Compile Include="Items\Aquariums\Fish\AlbinoCourtesanFish.cs" />
+    <Compile Include="Items\Aquariums\Fish\AlbinoFrog.cs" />
+    <Compile Include="Items\Aquariums\Fish\BritainCrownFish.cs" />
+    <Compile Include="Items\Aquariums\Fish\FandancerFish.cs" />
+    <Compile Include="Items\Aquariums\Fish\GoldenBroadtail.cs" />
+    <Compile Include="Items\Aquariums\Fish\Jellyfish.cs" />
+    <Compile Include="Items\Aquariums\Fish\KillerFrog.cs" />
+    <Compile Include="Items\Aquariums\Fish\LongClawCrab.cs" />
+    <Compile Include="Items\Aquariums\Fish\MakotoCourtesanFish.cs" />
+    <Compile Include="Items\Aquariums\Fish\MinocBlueFish.cs" />
+    <Compile Include="Items\Aquariums\Fish\NujelmHoneyFish.cs" />
+    <Compile Include="Items\Aquariums\Fish\PurpleFrog.cs" />
+    <Compile Include="Items\Aquariums\Fish\RedDartFish.cs" />
+    <Compile Include="Items\Aquariums\Fish\Shrimp.cs" />
+    <Compile Include="Items\Aquariums\Fish\SmallMouthSuckerFin.cs" />
+    <Compile Include="Items\Aquariums\Fish\SpeckledCrab.cs" />
+    <Compile Include="Items\Aquariums\Fish\SpinedScratcherFish.cs" />
+    <Compile Include="Items\Aquariums\Fish\SpottedBuccaneer.cs" />
+    <Compile Include="Items\Aquariums\Fish\VesperReefTiger.cs" />
+    <Compile Include="Items\Aquariums\Fish\YellowFinBluebelly.cs" />
+    <Compile Include="Items\Aquariums\Reward Fish\BrineShrimp.cs" />
+    <Compile Include="Items\Aquariums\Reward Fish\Coral.cs" />
+    <Compile Include="Items\Aquariums\Reward Fish\FullMoonFish.cs" />
+    <Compile Include="Items\Aquariums\Reward Fish\SeaHorse.cs" />
+    <Compile Include="Items\Aquariums\Reward Fish\StrippedFlakeFish.cs" />
+    <Compile Include="Items\Aquariums\Reward Fish\StrippedSosarianSwill.cs" />
+    <Compile Include="Items\Aquariums\Rewards\AquariumMessage.cs" />
+    <Compile Include="Items\Aquariums\Rewards\CaptainBlackheartsFishingPole.cs" />
+    <Compile Include="Items\Aquariums\Rewards\CraftysFishingHat.cs" />
+    <Compile Include="Items\Aquariums\Rewards\FishBones.cs" />
+    <Compile Include="Items\Aquariums\Rewards\IslandStatue.cs" />
+    <Compile Include="Items\Aquariums\Rewards\Shell.cs" />
+    <Compile Include="Items\Aquariums\Rewards\ToyBoat.cs" />
+    <Compile Include="Items\Aquariums\Rewards\WaterloggedBoots.cs" />
+    <Compile Include="Items\Aquariums\VacationWafer.cs" />
     <Compile Include="Items\Artifacts\Decorative\GildedStatue.cs" />
     <Compile Include="Items\Artifacts\Decorative\KingsPainting.cs" />
     <Compile Include="Items\Artifacts\Decorative\MedusasFloorTileAddon.cs" />
@@ -483,6 +579,7 @@
     <Compile Include="Items\Addons\BuffetTable.cs" />
     <Compile Include="Items\Addons\FormalDiningTable.cs" />
     <Compile Include="Items\Addons\GadgetryTable.cs" />
+    <Compile Include="Items\Resource\SaltedSerpentSteaks.cs" />
     <Compile Include="Items\StoreBought\DecorativeDungeonSet\DecorativeDungeonSet.cs" />
     <Compile Include="Items\StoreBought\DecorativeKitchenSet.cs" />
     <Compile Include="Items\StoreBought\DecorativeStableSet\DecorativeStableFencing.cs" />
@@ -1051,9 +1148,6 @@
     <Compile Include="Items\Quest\TyballsKey.cs" />
     <Compile Include="Items\Quest\UnicornRibs.cs" />
     <Compile Include="Items\Quest\YellowKey1.cs" />
-    <Compile Include="Items\Resource\BaseFish.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Items\Resource\HotGoo.cs" />
     <Compile Include="Items\Artifacts\Talismans\FrostguardTalisman.cs" />
     <Compile Include="Items\Artifacts\Talismans\JadeSnakeHead.cs" />
@@ -1926,14 +2020,6 @@
     <Compile Include="Items\Addons\LoomSouthAddon.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Items\Addons\Aquarium\Rewards\AquariumMessage.cs" />
-    <Compile Include="Items\Addons\Aquarium\Rewards\CaptainBlackheartsFishingPole.cs" />
-    <Compile Include="Items\Addons\Aquarium\Rewards\CraftysFishingHat.cs" />
-    <Compile Include="Items\Addons\Aquarium\Rewards\FishBones.cs" />
-    <Compile Include="Items\Addons\Aquarium\Rewards\IslandStatue.cs" />
-    <Compile Include="Items\Addons\Aquarium\Rewards\Shell.cs" />
-    <Compile Include="Items\Addons\Aquarium\Rewards\ToyBoat.cs" />
-    <Compile Include="Items\Addons\Aquarium\Rewards\WaterloggedBoots.cs" />
     <Compile Include="Misc\Siege.cs" />
     <Compile Include="Misc\SpawnerPersistence.cs" />
     <Compile Include="Misc\UntamedPetsCleaning.cs" />
@@ -3527,105 +3613,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Items\Addons\WaterVat.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Items\Addons\Aquarium\Aquarium.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Items\Addons\Aquarium\AquariumFishingNet.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Items\Addons\Aquarium\AquariumFood.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Items\Addons\Aquarium\AquariumGump.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Items\Addons\Aquarium\AquariumState.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Items\Addons\Aquarium\FishBowl.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Items\Addons\Aquarium\Fish\AlbinoCourtesanFish.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Items\Addons\Aquarium\Fish\AlbinoFrog.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Items\Addons\Aquarium\Fish\BritainCrownFish.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Items\Addons\Aquarium\Fish\FandancerFish.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Items\Addons\Aquarium\Fish\GoldenBroadtail.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Items\Addons\Aquarium\Fish\Jellyfish.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Items\Addons\Aquarium\Fish\KillerFrog.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Items\Addons\Aquarium\Fish\LongClawCrab.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Items\Addons\Aquarium\Fish\MakotoCourtesanFish.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Items\Addons\Aquarium\Fish\MinocBlueFish.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Items\Addons\Aquarium\Fish\NujelmHoneyFish.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Items\Addons\Aquarium\Fish\PurpleFrog.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Items\Addons\Aquarium\Fish\RedDartFish.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Items\Addons\Aquarium\Fish\Shrimp.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Items\Addons\Aquarium\Fish\SmallMouthSuckerFin.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Items\Addons\Aquarium\Fish\SpeckledCrab.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Items\Addons\Aquarium\Fish\SpinedScratcherFish.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Items\Addons\Aquarium\Fish\SpottedBuccaneer.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Items\Addons\Aquarium\Fish\VesperReefTiger.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Items\Addons\Aquarium\Fish\YellowFinBluebelly.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Items\Addons\Aquarium\Reward Fish\BrineShrimp.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Items\Addons\Aquarium\Reward Fish\Coral.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Items\Addons\Aquarium\Reward Fish\FullMoonFish.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Items\Addons\Aquarium\Reward Fish\SeaHorse.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Items\Addons\Aquarium\Reward Fish\StrippedFlakeFish.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Items\Addons\Aquarium\Reward Fish\StrippedSosarianSwill.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Items\Addons\Aquarium\VacationWafer.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Items\Artifacts\Equipment\Armor\CastOffZombieSkin.cs">
