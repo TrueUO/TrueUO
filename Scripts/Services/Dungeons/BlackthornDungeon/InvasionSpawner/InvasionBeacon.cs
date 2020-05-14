@@ -42,7 +42,13 @@ namespace Server.Engines.Blackthorn
         public override bool OnBeforeDestroyed()
         {
             if (Controller != null)
+            {
                 Controller.OnBeaconDestroyed();
+            }
+            else
+            {
+                Timer.DelayCall(TimeSpan.FromSeconds(10), Delete);
+            }
 
             return base.OnBeforeDestroyed();
         }
