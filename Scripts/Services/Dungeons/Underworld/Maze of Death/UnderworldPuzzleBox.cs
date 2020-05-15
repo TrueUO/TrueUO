@@ -17,43 +17,37 @@ namespace Server.Items
 
         public override void OnDoubleClick(Mobile from)
         {
-            if (from.InRange(Location, 3))
-            {
-                if (from.AccessLevel == AccessLevel.Player && IsInCooldown(from))
-                {
-                    from.SendLocalizedMessage(1113386); // You are too tired to attempt solving more puzzles at this time.
-                }
-                else if (from.Backpack != null)
-                {
-                    var item = from.Backpack.FindItemByType(typeof(UnderworldPuzzleItem));
-
-                    if (item != null)
-                    {
-                        from.SendLocalizedMessage(501885); // You already own one of those!
-                    }
-                    else
-                    {
-                        UnderworldPuzzleItem puzzle = new UnderworldPuzzleItem();
-
-                        if (from.PlaceInBackpack(puzzle))
-                        {
-                            from.AddToBackpack(puzzle);
-                            from.SendLocalizedMessage(1072223); // An item has been placed in your backpack.
-                            puzzle.SendTimeRemainingMessage(from);
-
-                            if (from.AccessLevel == AccessLevel.Player)
-                                m_Table[from] = DateTime.UtcNow + TimeSpan.FromHours(24);
-                        }
-                        else
-                        {
-                            puzzle.Delete();
-                        }
-                    }
-                }
-            }
-            else
+            if (!from.InRange(Location, 3))
             {
                 from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1019045); // I can't reach that.
+                return;
+            }
+
+            if (from.IsPlayer() && IsInCooldown(from))
+            {
+                from.SendLocalizedMessage(1113386); // You are too tired to attempt solving more puzzles at this time.
+                return;
+            }
+
+            if (from.Backpack != null)
+            {
+                var item = from.Backpack.FindItemByType(typeof(UnderworldPuzzleItem));
+
+                if (item != null)
+                {
+                    from.SendLocalizedMessage(501885); // You already own one of those!
+                }
+                else
+                {
+                    UnderworldPuzzleItem puzzle = new UnderworldPuzzleItem();
+
+                    from.AddToBackpack(puzzle);
+                    from.SendLocalizedMessage(1072223); // An item has been placed in your backpack.
+                    puzzle.SendTimeRemainingMessage(from);
+
+                    if (from.AccessLevel == AccessLevel.Player)
+                        m_Table[from] = DateTime.UtcNow + TimeSpan.FromHours(24);
+                }
             }
         }
 

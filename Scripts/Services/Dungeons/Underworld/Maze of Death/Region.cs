@@ -129,30 +129,27 @@ namespace Server.Regions
 
         public override void OnEnter(Mobile m)
         {
-            if (m.Alive)
+            if (m.Alive && (m_FrontEntrance.Contains(m.Location) || m_RearEntrance.Contains(m.Location)))
             {
-                if (m_FrontEntrance.Contains(m.Location) || m_RearEntrance.Contains(m.Location))
-                {
-                    m.Frozen = true;
+                m.Frozen = true;
 
-                    m.LocalOverheadMessage(MessageType.Regular, 33, 1113580); // You are filled with a sense of dread and impending doom!
+                m.LocalOverheadMessage(MessageType.Regular, 33, 1113580); // You are filled with a sense of dread and impending doom!
 
-                    Timer.DelayCall(TimeSpan.FromSeconds(2.0), new TimerCallback(
-                        delegate
+                Timer.DelayCall(TimeSpan.FromSeconds(2.0), new TimerCallback(
+                    delegate
+                    {
+                        if (m.Backpack.FindItemByType<GoldenCompass>(false) != null)
                         {
-                            if (m.Backpack.FindItemByType<GoldenCompass>(false) != null)
-                            {
-                                m.LocalOverheadMessage(MessageType.Regular, 946, 1113582); // I better proceed with caution.
+                            m.LocalOverheadMessage(MessageType.Regular, 946, 1113582); // I better proceed with caution.
                         }
-                            else
-                            {
-                                m.LocalOverheadMessage(MessageType.Regular, 946, 1113581); // I might need something to help me navigate through this.
+                        else
+                        {
+                            m.LocalOverheadMessage(MessageType.Regular, 946, 1113581); // I might need something to help me navigate through this.
                         }
 
-                            Timer.DelayCall(TimeSpan.FromSeconds(2.0), delegate { m.Frozen = false; });
-                        }
-                    ));
-                }
+                        Timer.DelayCall(TimeSpan.FromSeconds(2.0), delegate { m.Frozen = false; });
+                    }
+                ));
             }
         }
 
