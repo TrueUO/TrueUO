@@ -56,7 +56,7 @@ namespace Server.Regions
                 }
             }
 
-            Timer.DelayCall(TimeSpan.FromMilliseconds(250), () =>
+            Timer.DelayCall(TimeSpan.FromMilliseconds(500), () =>
             {
                 m.SendEverything();
             });
