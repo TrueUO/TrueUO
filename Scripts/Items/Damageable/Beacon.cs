@@ -19,8 +19,8 @@ namespace Server.Items
             }
             set
             {
-                if (value)
-                    DoEffects();
+                if (value && !Deleted)
+                    DoEffects(Location, Map);
             }
         }
 
@@ -38,7 +38,7 @@ namespace Server.Items
             }
         }
 
-        public List<Item> Rubble { get; set; }
+        public List<BeaconRubble> Rubble { get; set; }
         public override double IDChange => 0.50;
 
         public Beacon()
@@ -73,20 +73,27 @@ namespace Server.Items
 
         public override bool OnBeforeDestroyed()
         {
-            List<Item> delete = new List<Item>();
+            List<BeaconRubble> delete = new List<BeaconRubble>();
 
             if (Rubble != null)
             {
-                foreach (Item i in Rubble.Where(item => item.Z > Z))
+                foreach (var i in Rubble)
                 {
-                    i.Delete();
-                    delete.Add(i);
+                    if (i.Z > Z)
+                    {
+                        i.Delete();
+                        delete.Add(i);
+                    }
+                    else
+                    {
+                        i.SetDelete(TimeSpan.FromMinutes(2));
+                    }
                 }
 
                 delete.ForEach(i => Rubble.Remove(i));
             }
 
-            DoEffects();
+            DoEffects(Location, Map);
 
             if (Component != null)
             {
@@ -106,7 +113,7 @@ namespace Server.Items
             return true;
         }
 
-        private void DoEffects()
+        private void DoEffects(Point3D location, Map map)
         {
             int range = 8;
 
@@ -115,9 +122,9 @@ namespace Server.Items
             {
                 Timer.DelayCall(TimeSpan.FromMilliseconds(i * 50), o =>
                     {
-                        Misc.Geometry.Circle2D(Location, Map, o, (pnt, map) =>
+                        Misc.Geometry.Circle2D(location, map, o, (pnt, m) =>
                         {
-                            Effects.SendLocationEffect(pnt, map, 0x3709, 30, 20, 0, 2);
+                            Effects.SendLocationEffect(pnt, m, 0x3709, 30, 20, 0, 2);
                         });
                     }, i);
             }
@@ -127,9 +134,9 @@ namespace Server.Items
             {
                 for (int i = 0; i < range + 3; i++)
                 {
-                    Misc.Geometry.Circle2D(Location, Map, i, (pnt, map) =>
+                    Misc.Geometry.Circle2D(location, map, i, (pnt, m) =>
                     {
-                        Effects.SendLocationEffect(pnt, map, 0x36CB, 14, 10, 2498, 2);
+                        Effects.SendLocationEffect(pnt, m, 0x36CB, 14, 10, 2498, 2);
                     });
                 }
             });
@@ -141,9 +148,9 @@ namespace Server.Items
                 {
                     Timer.DelayCall(TimeSpan.FromMilliseconds(i * 50), o =>
                     {
-                        Misc.Geometry.Circle2D(Location, Map, o, (pnt, map) =>
+                        Misc.Geometry.Circle2D(location, map, o, (pnt, m) =>
                         {
-                            Effects.SendLocationEffect(pnt, map, Utility.RandomBool() ? 14000 : 14013, 14, 20, 2018, 0);
+                            Effects.SendLocationEffect(pnt, m, Utility.RandomBool() ? 14000 : 14013, 14, 20, 2018, 0);
                         });
                     }, i);
                 }
@@ -192,18 +199,23 @@ namespace Server.Items
         {
         }
 
-        private void AddRubble(Item i, Point3D p)
+        private void AddRubble(BeaconRubble i, Point3D p)
         {
             i.MoveToWorld(p, Map);
 
             if (Rubble == null)
-                Rubble = new List<Item>();
+                Rubble = new List<BeaconRubble>();
 
             Rubble.Add(i);
         }
 
         public virtual void DoAreaAttack()
         {
+            if (Map == null)
+            {
+                return;
+            }
+
             List<Mobile> list = new List<Mobile>();
             IPooledEnumerable eable = Map.GetMobilesInRange(Location, 8);
 
@@ -262,11 +274,12 @@ namespace Server.Items
 
             for (int i = 0; i < count; i++)
             {
-                Item item = reader.ReadItem();
+                BeaconRubble item = reader.ReadItem() as BeaconRubble;
+
                 if (item != null)
                 {
                     if (Rubble == null)
-                        Rubble = new List<Item>();
+                        Rubble = new List<BeaconRubble>();
 
                     Rubble.Add(item);
                 }
@@ -326,9 +339,14 @@ namespace Server.Items
         {
             Beacon = beacon;
 
-            if (duration != TimeSpan.Zero)
+            SetDelete(duration);
+        }
+
+        public void SetDelete(TimeSpan ts)
+        {
+            if (ts != TimeSpan.Zero)
             {
-                Timer.DelayCall(duration, Delete);
+                Timer.DelayCall(ts, Delete);
             }
         }
 
