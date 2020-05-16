@@ -8,9 +8,7 @@ namespace Server.Items
         public AncientAquariumFishNet()
         {
             ItemID = 0xDC8;
-
-            if (Hue == 0x8A0)
-                Hue = 0x240;
+            Hue = 2967;
         }
 
         public AncientAquariumFishNet(Serial serial)
