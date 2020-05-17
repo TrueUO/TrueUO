@@ -668,6 +668,11 @@ namespace Server
             return new LootPack(new[] { new LootPackEntry(false, resource, new LootPackItem[] { new LootPackItem(typeof(T), 1) }, 100.0, Utility.RandomMinMax(min, max)) });
         }
 
+        public static LootPack LootItem<T>(int min, int max, bool spawnTime, bool onSteal) where T : Item
+        {
+            return new LootPack(new[] { new LootPackEntry(spawnTime, onSteal, new LootPackItem[] { new LootPackItem(typeof(T), 1) }, 100.0, Utility.RandomMinMax(min, max)) });
+        }
+
         public static LootPack LootItem<T>(int amount, bool resource) where T : Item
         {
             return new LootPack(new[] { new LootPackEntry(false, resource, new LootPackItem[] { new LootPackItem(typeof(T), 1) }, 100.0, amount) });
