@@ -167,7 +167,6 @@ namespace Server.Mobiles
         }
 
         public int MountedID => Transparent ? TransparentMountedID : NonTransparentMountedID;
-
         public int MountedHue => Transparent ? TransparentMountedHue : NonTransparentMountedHue;
 
         [CommandProperty(AccessLevel.GameMaster)]

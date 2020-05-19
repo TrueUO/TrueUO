@@ -143,7 +143,26 @@ namespace Server
 
                 if (item != null)
                 {
-                    if (item.Stackable)
+                    if (from is BaseCreature && item.LootType == LootType.Blessed)
+                    {
+                        Timer.DelayCall(TimeSpan.FromMilliseconds(25), () =>
+                        {
+                            var corpse = ((BaseCreature)from).Corpse;
+
+                            if (corpse != null)
+                            {
+                                if (!corpse.TryDropItem((BaseCreature)from, item, false))
+                                {
+                                    corpse.DropItem(item);
+                                }
+                            }
+                            else
+                            {
+                                item.Delete();
+                            }
+                        });
+                    }
+                    else if (item.Stackable)
                     {
                         cont.DropItemStacked(item);
                     }
