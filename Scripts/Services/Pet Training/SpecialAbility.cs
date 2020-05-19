@@ -41,7 +41,7 @@ namespace Server.Mobiles
                     SpecialAbility ability = null;
 
                     SpecialAbility[] abilties = profile.EnumerateSpecialAbilities().Where(m =>
-                        (type == DamageType.Melee && m.TriggerOnDoMeleeDamage || type >= DamageType.Spell && m.TriggerOnDoSpellDamage) &&
+                        ((type == DamageType.Melee && m.TriggerOnDoMeleeDamage) || (type >= DamageType.Spell && m.TriggerOnDoSpellDamage)) &&
                         !m.IsInCooldown(attacker)).ToArray();
 
                     if (abilties != null && abilties.Length > 0)
@@ -66,7 +66,7 @@ namespace Server.Mobiles
                     SpecialAbility ability = null;
 
                     SpecialAbility[] abilties = profile.EnumerateSpecialAbilities().Where(m =>
-                        (type == DamageType.Melee && m.TriggerOnGotMeleeDamage || type >= DamageType.Spell && m.TriggerOnGotSpellDamage) &&
+                        ((type == DamageType.Melee && m.TriggerOnGotMeleeDamage) || (type >= DamageType.Spell && m.TriggerOnGotSpellDamage)) &&
                         !m.IsInCooldown(defender)).ToArray();
 
                     if (abilties != null && abilties.Length > 0)
