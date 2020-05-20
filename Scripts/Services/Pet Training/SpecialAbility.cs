@@ -1454,8 +1454,8 @@ namespace Server.Mobiles
                 }
                 else
                 {
-                    var dam = AOS.Damage(Defender, Attacker, 5, 0, 0, 0, 0, 100);
-                    Attacker.Hits = Math.Min(Attacker.HitsMax, Attacker.Hits + dam);
+                    var dam = AOS.Damage(Defender, Attacker, 2, 0, 0, 0, 0, 100);
+                    Attacker.Hits = Math.Min(Attacker.HitsMax, Attacker.Hits + 2);
 
                     Ticks++;
                 }
