@@ -125,7 +125,6 @@ namespace Server.Commands
                         }
                         catch (Exception e)
                         {
-                            Server.Diagnostics.ExceptionLogging.LogException(e);
                         }
 
                         if (o == null)
@@ -221,7 +220,6 @@ namespace Server.Commands
                 }
                 catch (Exception e)
                 {
-                    Server.Diagnostics.ExceptionLogging.LogException(e);
                 }
 
                 if (o == null)
@@ -294,7 +292,6 @@ namespace Server.Commands
                     }
                     catch (Exception e)
                     {
-                        Server.Diagnostics.ExceptionLogging.LogException(e);
                     }
 
                     if (o == null)
