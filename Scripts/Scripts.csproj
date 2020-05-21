@@ -4605,9 +4605,6 @@
     <Compile Include="Items\Equipment\Clothing\Cloaks.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Items\Equipment\Clothing\Gargoyle Accessories.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Items\Equipment\Clothing\LeatherTalons.cs">
       <SubType>Code</SubType>
     </Compile>
