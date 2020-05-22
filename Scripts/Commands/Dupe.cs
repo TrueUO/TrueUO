@@ -123,7 +123,7 @@ namespace Server.Commands
                         {
                             o = Activator.CreateInstance(t, true) as Item;
                         }
-                        catch (Exception e)
+                        catch
                         {
                         }
 
@@ -218,7 +218,7 @@ namespace Server.Commands
                 {
                     o = Activator.CreateInstance(t, true) as Item;
                 }
-                catch (Exception e)
+                catch
                 {
                 }
 
@@ -290,7 +290,7 @@ namespace Server.Commands
                     {
                         o = Activator.CreateInstance(t, true) as Item;
                     }
-                    catch (Exception e)
+                    catch
                     {
                     }
 

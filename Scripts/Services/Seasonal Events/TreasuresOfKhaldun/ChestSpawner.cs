@@ -96,7 +96,7 @@ namespace Server.Engines.Khaldun
 
                 AddChest(Chest);
 
-                Point3D p = Point3D.Zero;
+                Point3D p;
 
                 do
                 {
