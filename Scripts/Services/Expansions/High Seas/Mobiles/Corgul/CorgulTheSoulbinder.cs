@@ -387,11 +387,11 @@ namespace Server.Mobiles
                 return;
 
             var killer = bc.FindMostRecentDamager(false);
-            var bc = killer as BaseCreature;
+            var creature = killer as BaseCreature;
 
-            if (bc != null)
+            if (creature != null)
             {
-                killer = bc.GetMaster();
+                killer = creature.GetMaster();
             }
 
             if (killer is PlayerMobile && Utility.RandomDouble() < ChampionSystem.ScrollChance * 10)
