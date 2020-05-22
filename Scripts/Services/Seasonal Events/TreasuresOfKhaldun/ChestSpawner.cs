@@ -21,18 +21,22 @@ namespace Server.Engines.Khaldun
 
         public void Remove(ISpawnable spawn)
         {
-            if (spawn is KhaldunChest)
+            var chest = spawn as KhaldunChest;
+
+            if (chest != null)
             {
-                RemoveChest((KhaldunChest)spawn);
+                RemoveChest(chest);
             }
         }
 
         public void GetSpawnProperties(ISpawnable spawn, ObjectPropertyList list)
         {
+            // We're not using this
         }
 
         public void GetSpawnContextEntries(ISpawnable spawn, Mobile m, List<ContextMenuEntry> list)
         {
+            // We're not using this
         }
 
         public void AddChest(KhaldunChest Chest)

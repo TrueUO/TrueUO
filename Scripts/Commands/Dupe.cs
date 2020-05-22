@@ -117,7 +117,7 @@ namespace Server.Commands
 
                     for (int i = 0; i < _Amount; i++)
                     {
-                        Item o = null;
+                        Item o;
 
                         try
                         {
@@ -125,6 +125,7 @@ namespace Server.Commands
                         }
                         catch
                         {
+                            o = null;
                         }
 
                         if (o == null)
@@ -212,7 +213,7 @@ namespace Server.Commands
                     }
                 }
 
-                Item o = null;
+                Item o;
 
                 try
                 {
@@ -220,6 +221,7 @@ namespace Server.Commands
                 }
                 catch
                 {
+                    o = null;
                 }
 
                 if (o == null)
@@ -284,7 +286,7 @@ namespace Server.Commands
                         }
                     }
 
-                    Item o = null;
+                    Item o;
 
                     try
                     {
@@ -292,6 +294,7 @@ namespace Server.Commands
                     }
                     catch
                     {
+                        o = null;
                     }
 
                     if (o == null)
