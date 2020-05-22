@@ -214,8 +214,6 @@ namespace Server.Items
         {
             base.Serialize(writer);
             writer.Write(0); // version
-
-            DelayedDelete();
         }
 
         public override void Deserialize(GenericReader reader)
@@ -223,7 +221,7 @@ namespace Server.Items
             base.Deserialize(reader);
             reader.ReadInt();
 
-            DelayedDelete();
+            Delete();
         }
     }
 }
