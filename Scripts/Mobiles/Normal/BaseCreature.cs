@@ -2970,6 +2970,10 @@ namespace Server.Mobiles
                         return true;
                     }
                 }
+                else
+                {
+                    PrivateOverheadMessage(MessageType.Regular, 0x3B2, 1043257, from.NetState); // The animal shies away.
+                }
             }
 
             return false;
