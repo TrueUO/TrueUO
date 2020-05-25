@@ -2842,6 +2842,11 @@ namespace Server.Mobiles
 
         public virtual bool CheckFoodPreference(Item f)
         {
+            if (FavoriteFood == FoodType.None)
+            {
+                return false;
+            }
+
             if (CheckFoodPreference(f, FoodType.Eggs, m_Eggs))
             {
                 return true;
@@ -2887,25 +2892,12 @@ namespace Server.Mobiles
                 return false;
             }
 
-            Type fedType = fed.GetType();
-            bool contains = false;
-
-            for (int i = 0; !contains && i < types.Length; ++i)
-            {
-                contains = (fedType == types[i]);
-            }
-
-            return contains;
+            return types.Any(t => t == fed.GetType());
         }
 
         public virtual bool CheckFeed(Mobile from, Item dropped)
         {
-            if (!IsDeadPet && Controlled && (ControlMaster == from || IsPetFriend(from))) /*&&
-                (dropped is Food || dropped is Gold || dropped is CookableFood || dropped is Head || dropped is LeftArm ||
-                 dropped is LeftLeg || dropped is Torso || dropped is RightArm || dropped is RightLeg || dropped is IronIngot ||
-                 dropped is DullCopperIngot || dropped is ShadowIronIngot || dropped is CopperIngot || dropped is BronzeIngot ||
-                 dropped is GoldIngot || dropped is AgapiteIngot || dropped is VeriteIngot || dropped is ValoriteIngot))*/
-            // Why do we need all this crap, when its checked in CheckFootPreference?
+            if (!IsDeadPet && Controlled && (ControlMaster == from || IsPetFriend(from)))
             {
                 Item f = dropped;
 
@@ -3013,20 +3005,27 @@ namespace Server.Mobiles
 
         public override bool OnDragDrop(Mobile from, Item dropped)
         {
+            bool canDrop = false;
+
             if (CheckFeed(from, dropped))
             {
-                return true;
+                canDrop = true;
             }
-            if (CheckGold(from, dropped))
+            if (!canDrop && CheckGold(from, dropped))
+            {
+                canDrop = true;
+            }
+            if (!canDrop && !from.InRange(Location, 2) && base.OnDragDrop(from, dropped))
             {
                 return true;
-            }
-            if (!from.InRange(Location, 2))
-            {
-                return base.OnDragDrop(from, dropped);
             }
 
-            return false;
+            if (!canDrop)
+            {
+                PrivateOverheadMessage(MessageType.Regular, 0x3B2, 1043257, from.NetState); // The animal shies away.
+            }
+
+            return canDrop;
         }
 
         protected virtual BaseAI ForcedAI => null;
@@ -5601,6 +5600,33 @@ namespace Server.Mobiles
         public bool IsHighestDamager(Mobile m)
         {
             return LootingRights != null && LootingRights.Count > 0 && LootingRights[0].m_Mobile == m;
+        }
+
+        public Mobile RandomPlayerWithLootingRights()
+        {
+            var rights = GetLootingRights();
+
+            if (rights == null)
+            {
+                return null;
+            }
+
+            for (int i = rights.Count - 1; i >= 0; --i)
+            {
+                var ds = rights[i];
+
+                if (!ds.m_HasRight)
+                {
+                    rights.RemoveAt(i);
+                }
+            }
+
+            if (rights.Count > 0)
+            {
+                return rights[Utility.Random(rights.Count)].m_Mobile;
+            }
+
+            return null;
         }
 
         public List<DamageStore> GetLootingRights()
