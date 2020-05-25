@@ -75,7 +75,7 @@ namespace Server.Engines.Craft
 
         private static readonly Type[] m_TailorClothNonColorables = new Type[]
         {
-            typeof(DeerMask), typeof(BearMask), typeof(OrcMask), typeof(TribalMask), typeof(HornedTribalMask)
+            typeof(DeerMask), typeof(BearMask), typeof(OrcMask), typeof(TribalMask), typeof(HornedTribalMask), typeof(CuffsOfTheArchmage)
         };
 
         // singleton instance
