@@ -1507,7 +1507,7 @@ namespace Server.Items
                     // Successful block removes the Honorable Execution penalty.
                     HonorableExecution.RemovePenalty(defender);
 
-                    if (CounterAttack.IsCountering(defender) && defender.InRange(attacker.Location, 1))
+                    if (CounterAttack.IsCountering(defender))
                     {
                         if (weapon != null)
                         {
