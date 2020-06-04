@@ -3410,20 +3410,6 @@ namespace Server.Multis
                 if (RelocatedEntities.Count > 0)
                     Timer.DelayCall(TimeSpan.Zero, RestoreRelocatedEntities);
 
-                //if (m_Owner == null && m_Friends.Count == 0 && m_CoOwners.Count == 0)
-                //    Timer.DelayCall(TimeSpan.FromSeconds(10.0), new TimerCallback(Delete));
-            }
-        }
-
-        private void FixRentalContracts()
-        {
-            List<Item> list = new List<Item>(VendorRentalContracts.Where(c => c.RootParent != null || FindHouseAt(c) != this));
-
-            foreach (Item contract in list)
-            {
-                VendorRentalContracts.Remove(contract);
-                contract.IsLockedDown = false;
-                contract.Movable = true;
             }
         }
 
@@ -3444,20 +3430,6 @@ namespace Server.Multis
             {
                 item.Delete();
             }
-        }
-
-        private void FixLockdowns_Sandbox()
-        {
-            Dictionary<Item, Mobile> lockDowns = new Dictionary<Item, Mobile>();
-
-            foreach (KeyValuePair<Item, Mobile> kvp in LockDowns)
-            {
-                if (kvp.Key is Container)
-                    lockDowns.Add(kvp.Key, kvp.Value);
-            }
-
-            foreach (KeyValuePair<Item, Mobile> kvp in lockDowns)
-                SetLockdown(kvp.Value, kvp.Key, true);
         }
 
         public static void HandleDeletion(Mobile mob)
