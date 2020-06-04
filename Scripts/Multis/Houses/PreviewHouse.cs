@@ -81,7 +81,6 @@ namespace Server.Multis
             }
         }
 
-
         public PreviewHouse(Serial serial)
             : base(serial)
         {
