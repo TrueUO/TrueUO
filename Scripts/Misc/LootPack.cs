@@ -901,8 +901,6 @@ namespace Server
                     }
 
                     int bonusProps = GetBonusProperties();
-                    int min = MinIntensity;
-                    int max = MaxIntensity;
 
                     if (bonusProps < MaxProps && LootPack.CheckLuck(luckChance))
                     {
