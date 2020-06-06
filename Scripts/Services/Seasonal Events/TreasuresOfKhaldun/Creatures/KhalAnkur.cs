@@ -330,16 +330,29 @@ namespace Server.Mobiles
             AddLoot(LootPack.UltraRich, 3);
             AddLoot(LootPack.Meager);
         }
+        
+        private int _120GPowerScrolls = 4;
+        private int _120GJPowerScrolls = 4;
 
-        private int _120Scrolls = 4;
-
-        public override Item CreateRandomPowerScroll()
+        public override Item CreateRandomPowerScroll(bool justice)
         {
-            if (_120Scrolls > 0)
+            if (justice)
             {
-                _120Scrolls--;
+                if (_120GJPowerScrolls > 0)
+                {
+                    _120GJPowerScrolls--;
 
-                return PowerScroll.CreateRandomNoCraft(20, 20);
+                    return PowerScroll.CreateRandomNoCraft(20, 20);
+                }
+            }
+            else
+            {
+                if (_120GPowerScrolls > 0)
+                {
+                    _120GPowerScrolls--;
+
+                    return PowerScroll.CreateRandomNoCraft(20, 20);
+                }
             }
 
             return base.CreateRandomPowerScroll();

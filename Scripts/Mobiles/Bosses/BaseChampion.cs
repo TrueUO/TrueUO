@@ -223,7 +223,7 @@ namespace Server.Mobiles
 
                     if (chance > Utility.Random(100))
                     {
-                        var powerScroll = CreateRandomPowerScroll();
+                        var powerScroll = CreateRandomPowerScroll(true);
 
                         prot.SendLocalizedMessage(1049368); // You have been rewarded for your dedication to Justice!
 
@@ -241,7 +241,7 @@ namespace Server.Mobiles
             }
         }
 
-        public virtual Item CreateRandomPowerScroll()
+        public virtual Item CreateRandomPowerScroll(bool justice = false)
         {
             int level;
             double random = Utility.RandomDouble();
