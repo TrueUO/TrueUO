@@ -339,7 +339,11 @@ namespace Server.Mobiles
             {
                 _120Scrolls--;
 
-                return PowerScroll.CreateRandomNoCraft(20, 20);
+                var ps = PowerScroll.CreateRandomNoCraft(20, 20);
+
+                ps.ShardBound = true;
+
+                return ps;
             }
 
             return base.CreateRandomPowerScroll();

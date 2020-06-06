@@ -92,7 +92,15 @@ namespace Server.Items
             {
                 BaseHouse house = BaseHouse.FindHouseAt(this);
 
-                if (dropped.GetType() != ScrollType)
+                var CheckSB = false;
+
+                if (dropped is PowerScroll ps && ps.ShardBound)
+                {
+                    m.SendLocalizedMessage(1155693); // This item is impermissible and can not be added to the book.
+                    CheckSB = true;
+                }
+
+                if (dropped.GetType() != ScrollType || CheckSB)
                 {
                     m.SendLocalizedMessage(BadDropMessage);
                 }

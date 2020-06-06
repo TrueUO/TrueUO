@@ -45,6 +45,8 @@ namespace Server.Items
 
         private static readonly List<SkillName> _Skills = new List<SkillName>();
 
+        public bool ShardBound { get; set; }
+
         public PowerScroll()
             : this(SkillName.Alchemy, 0.0)
         {
@@ -52,12 +54,22 @@ namespace Server.Items
 
         [Constructable]
         public PowerScroll(SkillName skill, double value)
+            : this(skill, value, false)
+        {
+        }
+
+        [Constructable]
+        public PowerScroll(SkillName skill, double value, bool sb)
             : base(skill, value)
         {
             Hue = 0x481;
 
+            ShardBound = sb;
+
             if (Value == 105.0 || skill == SkillName.Blacksmith || skill == SkillName.Tailoring)
+            {
                 LootType = LootType.Regular;
+            }
         }
 
         public PowerScroll(Serial serial)
@@ -133,6 +145,16 @@ namespace Server.Items
                 list.Add("a power scroll of {0} ({1} Skill)", GetName(), Value);
         }
 
+        public override void GetProperties(ObjectPropertyList list)
+        {
+            base.GetProperties(list);
+
+            if (ShardBound)
+            {
+                list.Add(1155536); // Shard Bound
+            }
+        }
+
         public override bool CanUse(Mobile from)
         {
             if (!base.CanUse(from))
@@ -176,8 +198,9 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
+            writer.Write(1); // version
 
-            writer.Write(0); // version
+            writer.Write(ShardBound);
         }
 
         public override void Deserialize(GenericReader reader)
@@ -185,6 +208,11 @@ namespace Server.Items
             base.Deserialize(reader);
 
             int version = (InheritsItem ? 0 : reader.ReadInt()); // Required for SpecialScroll insertion
+
+            if (version > 0)
+            {
+                ShardBound = reader.ReadBool();
+            }
 
             if (Value == 105.0 || Skill == SkillName.Blacksmith || Skill == SkillName.Tailoring)
             {
