@@ -332,30 +332,31 @@ namespace Server.Mobiles
         }
         
         private int _120GPowerScrolls = 4;
+
+        public override Item GetPowerScroll()
+        {
+            if (_120GPowerScrolls > 0)
+            {
+                _120GPowerScrolls--;
+
+                return PowerScroll.CreateRandomNoCraft(20, 20);
+            }
+
+            return GetPowerScroll();
+        }
+
         private int _120GJPowerScrolls = 4;
 
-        public override Item CreateRandomPowerScroll(bool justice)
+        public override Item GetJusticePowerScroll()
         {
-            if (justice)
+            if (_120GJPowerScrolls > 0)
             {
-                if (_120GJPowerScrolls > 0)
-                {
-                    _120GJPowerScrolls--;
+                _120GJPowerScrolls--;
 
-                    return PowerScroll.CreateRandomNoCraft(20, 20);
-                }
-            }
-            else
-            {
-                if (_120GPowerScrolls > 0)
-                {
-                    _120GPowerScrolls--;
-
-                    return PowerScroll.CreateRandomNoCraft(20, 20);
-                }
+                return PowerScroll.CreateRandomNoCraft(20, 20);
             }
 
-            return base.CreateRandomPowerScroll();
+            return base.GetJusticePowerScroll();
         }
 
         public override void Serialize(GenericWriter writer)
