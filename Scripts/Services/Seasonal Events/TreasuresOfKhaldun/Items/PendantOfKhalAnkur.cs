@@ -34,14 +34,15 @@ namespace Server.Items
             : base(0xA1C9)
         {
             Weight = 1;
-
             Charges = 1;
-            //Caddellite Infused
+
             Attributes.BonusHits = 10;
             Attributes.BonusMana = 15;
             Attributes.EnhancePotions = 35;
             Attributes.LowerManaCost = 10;
             ArmorAttributes.MageArmor = 1;
+
+            AttachSocket(new Caddellite());
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -132,7 +133,7 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(0);
+            writer.Write(1);
 
             writer.Write(m_Charges);
             writer.Write(ChargeTime);
@@ -148,6 +149,11 @@ namespace Server.Items
 
             if (Parent != null && Parent is Mobile && ChargeTime > 0)
                 m_Timer = Timer.DelayCall(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1), Slice);
+
+            if (version == 0)
+            {
+                AttachSocket(new Caddellite());
+            }
         }
     }
 }
