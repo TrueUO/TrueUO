@@ -1152,7 +1152,7 @@ namespace Server.Items
             if (info != null && info.Defender == defender)
                 bonus -= info.DefenseChanceMalus;
 
-            int max = 45 + BaseArmor.GetRefinedDefenseChance(defender);
+            int max = 45 + BaseArmor.GetRefinedDefenseChance(defender) + WhiteTigerFormSpell.GetDefenseCap(defender);
 
             // Defense Chance Increase = 45%
             if (bonus > max)
