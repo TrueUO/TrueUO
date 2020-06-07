@@ -9439,6 +9439,10 @@
     <Compile Include="Services\Seasonal Events\ForsakenFoes\Mobile\Worker.cs" />
     <Compile Include="Services\Seasonal Events\ForsakenFoes\Mobile\Follower.cs" />
     <Compile Include="Services\Seasonal Events\ForsakenFoes\Rewards.cs" />
+    <Compile Include="Services\Seasonal Events\JollyRoger\Addons\IversRoundingAddon.cs" />
+    <Compile Include="Services\Seasonal Events\JollyRoger\Addons\AdmiralJacksShipwreckAddon.cs" />
+    <Compile Include="Services\Seasonal Events\JollyRoger\Generate.cs" />
+    <Compile Include="Services\Seasonal Events\JollyRoger\Items\JackCorpse.cs" />
     <Compile Include="Services\Seasonal Events\KrampusEncounter\Items\BarbedWhip.cs" />
     <Compile Include="Services\Seasonal Events\KrampusEncounter\Items\BladedWhip.cs" />
     <Compile Include="Services\Seasonal Events\KrampusEncounter\Items\Branch.cs" />
