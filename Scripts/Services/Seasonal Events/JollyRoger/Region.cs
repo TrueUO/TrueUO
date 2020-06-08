@@ -1,10 +1,8 @@
-using Server.Gumps;
-using Server.Items;
 using Server.Network;
-using Server.Targeting;
-using System;
 using System.Collections.Generic;
 using System.Linq;
+using Server.Spells.Seventh;
+using Server.Spells.Sixth;
 
 namespace Server.Regions
 {
@@ -13,6 +11,42 @@ namespace Server.Regions
         public static void Initialize()
         {
             new WellOfSoulsRegion();
+        }
+
+        private static Rectangle2D _Bound = new Rectangle2D(2246, 1537, 36, 40);
+
+        public WellOfSoulsRegion()
+            : base("Well Of Souls", Map.Ilshenar, DefaultPriority, _Bound)
+        {
+            Register();
+        }
+
+        public override bool OnBeginSpellCast(Mobile m, ISpell s)
+        {
+            if (m.IsPlayer())
+            {
+                if (s is MarkSpell)
+                {
+                    m.SendLocalizedMessage(501802); // Thy spell doth not appear to work...
+                    return false;
+                }
+
+                if (s is GateTravelSpell)
+                {
+                    m.SendLocalizedMessage(501035); // You cannot teleport from here to the destination.
+                    return false;
+                }
+            }
+
+            return base.OnBeginSpellCast(m, s);
+        }
+    }
+
+    public class WellOfSoulsVirtuesRegion : Region
+    {
+        public static void Initialize()
+        {
+            new WellOfSoulsVirtuesRegion();
         }
 
         private static Rectangle2D m_Spirituality = new Rectangle2D(2262, 1561, 4, 4);
@@ -36,8 +70,8 @@ namespace Server.Regions
             { m_Sacrifice, "Sacrificing" }
         };
 
-        public WellOfSoulsRegion()
-            : base("Well Of Souls", Map.Ilshenar, DefaultPriority, m_Bounds.Keys.ToArray())
+        public WellOfSoulsVirtuesRegion()
+            : base("Well Of Souls Virtues", Map.Ilshenar, DefaultPriority, m_Bounds.Keys.ToArray())
         {
             Register();
         }

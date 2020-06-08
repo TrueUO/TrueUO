@@ -190,6 +190,12 @@ namespace Server.Engines.JollyRoge
                 sp.SpawnRange = 15;
                 sp.MoveToWorld(new Point3D(468, 2091, 7), Map.Trammel);
                 sp.Respawn();
+
+                if (SherryTheMouse.InstanceTram == null)
+                {
+                    SherryTheMouse.InstanceTram = new SherryTheMouse();
+                    SherryTheMouse.InstanceTram.MoveToWorld(new Point3D(1347, 1644, 72), Map.Trammel);
+                }
             }
 
             if (AdmiralJacksShipwreckAddon.InstanceFel == null)
@@ -230,6 +236,12 @@ namespace Server.Engines.JollyRoge
             sp.SpawnRange = 15;
             sp.MoveToWorld(new Point3D(468, 2091, 7), Map.Felucca);
             sp.Respawn();
+
+            if (SherryTheMouse.InstanceFel == null)
+            {
+                SherryTheMouse.InstanceFel = new SherryTheMouse();
+                SherryTheMouse.InstanceFel.MoveToWorld(new Point3D(1347, 1644, 72), Map.Felucca);
+            }
         }
     }
 }
