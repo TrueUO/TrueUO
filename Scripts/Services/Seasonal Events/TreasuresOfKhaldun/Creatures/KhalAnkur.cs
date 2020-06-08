@@ -342,7 +342,7 @@ namespace Server.Mobiles
                 return PowerScroll.CreateRandomNoCraft(20, 20);
             }
 
-            return GetPowerScroll();
+            return base.GetPowerScroll();
         }
 
         private int _120GJPowerScrolls = 4;
