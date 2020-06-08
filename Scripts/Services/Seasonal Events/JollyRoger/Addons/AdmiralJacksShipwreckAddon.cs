@@ -634,7 +634,6 @@ namespace Server.Items
             AddComplexComponent(this, 41983, 0, 11, 31, 1150, -1, "", 1);// 561
             AddComplexComponent(this, 41983, -1, 11, 31, 1150, -1, "", 1);// 562
             AddComplexComponent(this, 41983, 2, 11, 31, 1150, -1, "", 1);// 563
-            AddComplexComponent(this, 4084, -3, 12, 14, 1150, -1, "", 1);// 573
             AddComplexComponent(this, 2275, 1, -9, 21, 1154, -1, "", 1);// 1406
             AddComplexComponent(this, 2278, -1, -11, 21, 1150, -1, "", 1);// 1437
             AddComplexComponent(this, 2275, -3, -12, 21, 1154, -1, "", 1);// 1453

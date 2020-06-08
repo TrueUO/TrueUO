@@ -1,6 +1,9 @@
 using Server.Engines.Points;
 using Server.Items;
 using System;
+using Server.Commands;
+using Server.Engines.Fellowship;
+using Server.Mobiles;
 
 namespace Server.Engines.JollyRoge
 {
@@ -9,6 +12,13 @@ namespace Server.Engines.JollyRoge
         public static void Initialize()
         {
             EventSink.WorldSave += OnWorldSave;
+
+            CommandSystem.Register("GenJollyRoger", AccessLevel.Administrator, Generate);
+        }
+
+        public static void Generate(CommandEventArgs e)
+        {
+            Generate();
         }
 
         private static void OnWorldSave(WorldSaveEventArgs e)
@@ -93,10 +103,52 @@ namespace Server.Engines.JollyRoge
 
         #endregion
 
+        public static string[] Ghost =
+        {
+            "Ghost,One",
+            "Ghost,Two",
+            "Ghost,Three",
+            "Ghost,Four",
+            "Ghost,Five",
+        };
+
+        public static readonly string EntityName = "JollyRoger";
 
         public static void Generate()
         {
             BaseMulti shipwreck;
+            Item item;
+            XmlSpawner sp;
+            Static st;
+
+            XmlSpawner.SpawnObject[] so = new XmlSpawner.SpawnObject[Ghost.Length];
+
+            for (int i = 0; i < Ghost.Length; i++)
+            {
+                so[i] = new XmlSpawner.SpawnObject(Ghost[i], 1);
+            }
+
+            Item tele = new Teleporter(new Point3D(2264, 1574, -28), Map.Ilshenar);
+            tele.MoveToWorld(new Point3D(1528, 1341, -3), Map.Ilshenar);
+            WeakEntityCollection.Add(EntityName, tele);
+
+            if (HawkwindSpeak.Instance == null)
+            {
+                HawkwindSpeak.Instance = new HawkwindSpeak();
+                HawkwindSpeak.Instance.MoveToWorld(new Point3D(2267, 1563, -28), Map.Ilshenar);
+            }
+
+            if (HawkwindTimeLord.Instance == null)
+            {
+                HawkwindTimeLord.Instance = new HawkwindTimeLord();
+                HawkwindTimeLord.Instance.MoveToWorld(new Point3D(2263, 1554, -28), Map.Ilshenar);
+            }
+
+            st = new Static(0x1e5d);
+            st.MoveToWorld(new Point3D(2263, 1549, -28), Map.Ilshenar);
+
+            st = new Static(0x1e5c);
+            st.MoveToWorld(new Point3D(2264, 1549, -28), Map.Ilshenar);
 
             if (!Siege.SiegeShard)
             {
@@ -109,6 +161,9 @@ namespace Server.Engines.JollyRoge
                 shipwreck = new BaseMulti(33);
                 shipwreck.MoveToWorld(new Point3D(4268, 568, 0), Map.Trammel);
 
+                item = new ShipwreckBook();
+                item.MoveToWorld(new Point3D(4266, 572, 0), Map.Trammel);
+
                 if (JackCorpse.InstanceTram == null)
                 {
                     JackCorpse.InstanceTram = new JackCorpse();
@@ -120,6 +175,21 @@ namespace Server.Engines.JollyRoge
                     IversRoundingAddon.InstanceTram = new IversRoundingAddon();
                     IversRoundingAddon.InstanceTram.MoveToWorld(new Point3D(449, 2083, -5), Map.Trammel);
                 }
+
+                item = new IRTeleporter();
+                item.MoveToWorld(new Point3D(450, 2083, 34), Map.Trammel);
+
+                if (Shamino.InstanceTram == null)
+                {
+                    Shamino.InstanceTram = new Shamino();
+                    Shamino.InstanceTram.MoveToWorld(new Point3D(450, 2082, 34), Map.Trammel);
+                }
+
+                sp = new XmlSpawner(Guid.NewGuid(), 0, 0, 0, 0, "#JollyRogerGhost", 5, TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(10), TimeSpan.FromMinutes(0), -1, 0x1F4, 1, 0, 10, false, so, TimeSpan.FromMinutes(0), TimeSpan.FromMinutes(0), TimeSpan.FromMinutes(0), TimeSpan.FromMinutes(0), null, null, null, null, null, null, null, null, null, 1, null, false, XmlSpawner.TODModeType.Realtime, 1, false, -1, null, false, false, false, null, TimeSpan.FromHours(0), null, false, null);
+                WeakEntityCollection.Add(EntityName, sp);
+                sp.SpawnRange = 15;
+                sp.MoveToWorld(new Point3D(468, 2091, 7), Map.Trammel);
+                sp.Respawn();
             }
 
             if (AdmiralJacksShipwreckAddon.InstanceFel == null)
@@ -130,6 +200,9 @@ namespace Server.Engines.JollyRoge
 
             shipwreck = new BaseMulti(33);
             shipwreck.MoveToWorld(new Point3D(4268, 568, 0), Map.Felucca);
+
+            item = new ShipwreckBook();
+            item.MoveToWorld(new Point3D(4266, 572, 0), Map.Felucca);
 
             if (JackCorpse.InstanceFel == null)
             {
@@ -142,6 +215,21 @@ namespace Server.Engines.JollyRoge
                 IversRoundingAddon.InstanceFel = new IversRoundingAddon();
                 IversRoundingAddon.InstanceFel.MoveToWorld(new Point3D(449, 2083, -5), Map.Felucca);
             }
+
+            item = new IRTeleporter();
+            item.MoveToWorld(new Point3D(450, 2083, 34), Map.Felucca);
+
+            if (Shamino.InstanceFel == null)
+            {
+                Shamino.InstanceFel = new Shamino();
+                Shamino.InstanceFel.MoveToWorld(new Point3D(450, 2082, 34), Map.Felucca);
+            }
+
+            sp = new XmlSpawner(Guid.NewGuid(), 0, 0, 0, 0, "#JollyRogerGhost", 5, TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(10), TimeSpan.FromMinutes(0), -1, 0x1F4, 1, 0, 10, false, so, TimeSpan.FromMinutes(0), TimeSpan.FromMinutes(0), TimeSpan.FromMinutes(0), TimeSpan.FromMinutes(0), null, null, null, null, null, null, null, null, null, 1, null, false, XmlSpawner.TODModeType.Realtime, 1, false, -1, null, false, false, false, null, TimeSpan.FromHours(0), null, false, null);
+            WeakEntityCollection.Add(EntityName, sp);
+            sp.SpawnRange = 15;
+            sp.MoveToWorld(new Point3D(468, 2091, 7), Map.Felucca);
+            sp.Respawn();
         }
     }
 }

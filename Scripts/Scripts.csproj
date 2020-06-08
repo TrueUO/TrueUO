@@ -9442,7 +9442,14 @@
     <Compile Include="Services\Seasonal Events\JollyRoger\Addons\IversRoundingAddon.cs" />
     <Compile Include="Services\Seasonal Events\JollyRoger\Addons\AdmiralJacksShipwreckAddon.cs" />
     <Compile Include="Services\Seasonal Events\JollyRoger\Generate.cs" />
+    <Compile Include="Services\Seasonal Events\JollyRoger\Items\ShipwreckBook.cs" />
     <Compile Include="Services\Seasonal Events\JollyRoger\Items\JackCorpse.cs" />
+    <Compile Include="Services\Seasonal Events\JollyRoger\Mobile\HawkwindSpeak.cs" />
+    <Compile Include="Services\Seasonal Events\JollyRoger\Mobile\Ghost.cs" />
+    <Compile Include="Services\Seasonal Events\JollyRoger\Mobile\HawkwindTimeLord.cs" />
+    <Compile Include="Services\Seasonal Events\JollyRoger\Mobile\Shamino.cs" />
+    <Compile Include="Services\Seasonal Events\JollyRoger\Region.cs" />
+    <Compile Include="Services\Seasonal Events\JollyRoger\Teleporter\IversRoundingWhirlpool.cs" />
     <Compile Include="Services\Seasonal Events\KrampusEncounter\Items\BarbedWhip.cs" />
     <Compile Include="Services\Seasonal Events\KrampusEncounter\Items\BladedWhip.cs" />
     <Compile Include="Services\Seasonal Events\KrampusEncounter\Items\Branch.cs" />

@@ -1,5 +1,6 @@
 using Server.Gumps;
 using Server.Network;
+using System.Linq;
 
 namespace Server.Items
 {
@@ -18,6 +19,11 @@ namespace Server.Items
         public FellowshipMedallion(Serial serial)
             : base(serial)
         {
+        }
+
+        public static bool IsDressed(Mobile from)
+        {
+            return from.Items.Any(i => (i is FellowshipMedallion || i is GargishFellowshipMedallion) && i.Parent is Mobile mobile && mobile.FindItemOnLayer(i.Layer) == i);
         }
 
         public override void OnDoubleClick(Mobile from)
