@@ -1,4 +1,3 @@
-using Server.Items;
 using Server.Mobiles;
 using Server.Multis;
 using Server.Network;
@@ -85,61 +84,15 @@ namespace Server.Gumps
                     }
                     else
                     {
-                        Item toGive = null;
+                        Banker.Deposit(m_Mobile, m_House.Price, true);
 
-                        if (m_House.IsAosRules)
-                        {
-                            if (m_House.Price > 0)
-                            {
-                                Banker.Deposit(m_Mobile, m_House.Price, true);
+                        m_House.RemoveKeys(m_Mobile);
 
-                                m_House.RemoveKeys(m_Mobile);
+                        var region = new TempNoHousingRegion(m_House, m_Mobile);
+                        Timer.DelayCall(m_House.RestrictedPlacingTime, region.Unregister);
 
-                                var region = new TempNoHousingRegion(m_House, m_Mobile);
-                                Timer.DelayCall(m_House.RestrictedPlacingTime, region.Unregister);
-
-                                m_House.Delete();
-                                return;
-                            }
-                            else
-                            {
-                                toGive = m_House.GetDeed();
-                            }
-                        }
-                        else
-                        {
-                            toGive = m_House.GetDeed();
-
-                            if (toGive == null && m_House.Price > 0)
-                                toGive = new BankCheck(m_House.Price);
-                        }
-
-                        if (toGive != null)
-                        {
-                            BankBox box = m_Mobile.BankBox;
-
-                            if (box.TryDropItem(m_Mobile, toGive, false))
-                            {
-                                if (toGive is BankCheck)
-                                    m_Mobile.SendLocalizedMessage(1060397, ((BankCheck)toGive).Worth.ToString()); // ~1_AMOUNT~ gold has been deposited into your bank box.
-
-                                m_House.RemoveKeys(m_Mobile);
-
-                                var region = new TempNoHousingRegion(m_House, m_Mobile);
-                                Timer.DelayCall(m_House.RestrictedPlacingTime, region.Unregister);
-
-                                m_House.Delete();
-                            }
-                            else
-                            {
-                                toGive.Delete();
-                                m_Mobile.SendLocalizedMessage(500390); // Your bank box is full.
-                            }
-                        }
-                        else
-                        {
-                            m_Mobile.SendMessage("Unable to refund house.");
-                        }
+                        m_House.Delete();
+                        return;
                     }
                 }
                 else

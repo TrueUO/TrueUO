@@ -1,5 +1,4 @@
 using Server.Items;
-using Server.Multis.Deeds;
 
 namespace Server.Multis
 {
@@ -24,25 +23,6 @@ namespace Server.Multis
         public override Rectangle2D[] Area => AreaArray;
         public override Point3D BaseBanLocation => new Point3D(2, 4, 0);
         public override HousePlacementEntry ConvertEntry => HousePlacementEntry.TwoStoryFoundations[0];
-        public override HouseDeed GetDeed()
-        {
-            switch (ItemID)
-            {
-                case 0x64:
-                    return new StonePlasterHouseDeed();
-                case 0x66:
-                    return new FieldStoneHouseDeed();
-                case 0x68:
-                    return new SmallBrickHouseDeed();
-                case 0x6A:
-                    return new WoodHouseDeed();
-                case 0x6C:
-                    return new WoodPlasterHouseDeed();
-                case 0x6E:
-                default:
-                    return new ThatchedRoofCottageDeed();
-            }
-        }
 
         public override void Serialize(GenericWriter writer)
         {
@@ -83,10 +63,6 @@ namespace Server.Multis
         public override int ConvertOffsetY => -1;
         public override Rectangle2D[] Area => AreaArray;
         public override Point3D BaseBanLocation => new Point3D(4, 8, 0);
-        public override HouseDeed GetDeed()
-        {
-            return new BrickHouseDeed();
-        }
 
         public override void Serialize(GenericWriter writer)
         {
@@ -124,17 +100,6 @@ namespace Server.Multis
 
         public override Rectangle2D[] Area => AreaArray;
         public override Point3D BaseBanLocation => new Point3D(2, 8, 0);
-        public override HouseDeed GetDeed()
-        {
-            switch (ItemID)
-            {
-                case 0x76:
-                    return new TwoStoryWoodPlasterHouseDeed();
-                case 0x78:
-                default:
-                    return new TwoStoryStonePlasterHouseDeed();
-            }
-        }
 
         public override void Serialize(GenericWriter writer)
         {
@@ -175,10 +140,6 @@ namespace Server.Multis
         public override int ConvertOffsetY => -1;
         public override Rectangle2D[] Area => AreaArray;
         public override Point3D BaseBanLocation => new Point3D(5, 8, 0);
-        public override HouseDeed GetDeed()
-        {
-            return new TowerDeed();
-        }
 
         public override void Serialize(GenericWriter writer)
         {
@@ -213,10 +174,6 @@ namespace Server.Multis
 
         public override Rectangle2D[] Area => AreaArray;
         public override Point3D BaseBanLocation => new Point3D(5, 13, 0);
-        public override HouseDeed GetDeed()
-        {
-            return new KeepDeed();
-        }
 
         public override void Serialize(GenericWriter writer)
         {
@@ -261,11 +218,6 @@ namespace Server.Multis
             return p.X >= X - 10 && p.X <= X + 10 && p.Y >= Y - 10 && p.Y <= Y + 10;
         }
 
-        public override HouseDeed GetDeed()
-        {
-            return new CastleDeed();
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -305,10 +257,6 @@ namespace Server.Multis
         public override int ConvertOffsetY => -1;
         public override Rectangle2D[] Area => AreaArray;
         public override Point3D BaseBanLocation => new Point3D(1, 8, 0);
-        public override HouseDeed GetDeed()
-        {
-            return new LargePatioDeed();
-        }
 
         public override void Serialize(GenericWriter writer)
         {
@@ -345,10 +293,6 @@ namespace Server.Multis
         public override int ConvertOffsetY => -1;
         public override Rectangle2D[] Area => AreaArray;
         public override Point3D BaseBanLocation => new Point3D(1, 8, 0);
-        public override HouseDeed GetDeed()
-        {
-            return new LargeMarbleDeed();
-        }
 
         public override void Serialize(GenericWriter writer)
         {
@@ -384,10 +328,6 @@ namespace Server.Multis
         public override HousePlacementEntry ConvertEntry => HousePlacementEntry.TwoStoryFoundations[6];
         public override Rectangle2D[] Area => AreaArray;
         public override Point3D BaseBanLocation => new Point3D(1, 4, 0);
-        public override HouseDeed GetDeed()
-        {
-            return new SmallTowerDeed();
-        }
 
         public override void Serialize(GenericWriter writer)
         {
@@ -425,10 +365,6 @@ namespace Server.Multis
         public override HousePlacementEntry ConvertEntry => HousePlacementEntry.TwoStoryFoundations[12];
         public override Rectangle2D[] Area => AreaArray;
         public override Point3D BaseBanLocation => new Point3D(5, 8, 0);
-        public override HouseDeed GetDeed()
-        {
-            return new LogCabinDeed();
-        }
 
         public override void Serialize(GenericWriter writer)
         {
@@ -465,10 +401,6 @@ namespace Server.Multis
         public override int ConvertOffsetY => -1;
         public override Rectangle2D[] Area => AreaArray;
         public override Point3D BaseBanLocation => new Point3D(4, 6, 0);
-        public override HouseDeed GetDeed()
-        {
-            return new SandstonePatioDeed();
-        }
 
         public override void Serialize(GenericWriter writer)
         {
@@ -507,10 +439,6 @@ namespace Server.Multis
         public override HousePlacementEntry ConvertEntry => HousePlacementEntry.TwoStoryFoundations[31];
         public override Rectangle2D[] Area => AreaArray;
         public override Point3D BaseBanLocation => new Point3D(3, 8, 0);
-        public override HouseDeed GetDeed()
-        {
-            return new VillaDeed();
-        }
 
         public override void Serialize(GenericWriter writer)
         {
@@ -556,17 +484,6 @@ namespace Server.Multis
         public override Rectangle2D[] Area => (ItemID == 0x40A2 ? AreaArray1 : AreaArray2);
         public override Point3D BaseBanLocation => new Point3D(3, 4, 0);
         public override HousePlacementEntry ConvertEntry => HousePlacementEntry.TwoStoryFoundations[0];
-        public override HouseDeed GetDeed()
-        {
-            switch (ItemID)
-            {
-                case 0xA0:
-                    return new StoneWorkshopDeed();
-                case 0xA2:
-                default:
-                    return new MarbleWorkshopDeed();
-            }
-        }
 
         public override void Serialize(GenericWriter writer)
         {
