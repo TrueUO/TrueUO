@@ -98,6 +98,7 @@ namespace Server.Items
             base.AddWeightProperty(list);
 
             list.Add(1158732, Charges.ToString()); // Meteor Breath Charges: ~1_VAL~
+            list.Add(1158662); // Caddellite Infused
         }
 
         public MaskOfKhalAnkur(Serial serial)
