@@ -150,6 +150,12 @@ namespace Server.Engines.JollyRoge
             st = new Static(0x1e5c);
             st.MoveToWorld(new Point3D(2264, 1549, -28), Map.Ilshenar);
 
+            item = new CastleTrapDoor(new Point3D(982, 1126, 65), Map.Ilshenar, false);
+            item.MoveToWorld(new Point3D(1316, 231, -26), Map.Ilshenar);
+
+            item = new CastleTrapDoor(new Point3D(1316, 231, -26), Map.Ilshenar, true);
+            item.MoveToWorld(new Point3D(982, 1126, 65), Map.Ilshenar);
+
             if (!Siege.SiegeShard)
             {
                 if (AdmiralJacksShipwreckAddon.InstanceTram == null)
