@@ -9443,6 +9443,7 @@
     <Compile Include="Services\Seasonal Events\JollyRoger\Addons\IversRoundingAddon.cs" />
     <Compile Include="Services\Seasonal Events\JollyRoger\Addons\AdmiralJacksShipwreckAddon.cs" />
     <Compile Include="Services\Seasonal Events\JollyRoger\Generate.cs" />
+    <Compile Include="Services\Seasonal Events\JollyRoger\Items\SheetMusicForStones.cs" />
     <Compile Include="Services\Seasonal Events\JollyRoger\Items\ShipwreckBook.cs" />
     <Compile Include="Services\Seasonal Events\JollyRoger\Items\JackCorpse.cs" />
     <Compile Include="Services\Seasonal Events\JollyRoger\Items\SandalwoodBox.cs" />
