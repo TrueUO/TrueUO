@@ -80,14 +80,11 @@ namespace Server.Mobiles
             return base.GetAngerSound();
         }
 
-        public override bool HandlesOnSpeech(Mobile from)
-        {
-            return from == GetMaster();
-        }
-
         public override void OnSpeech(SpeechEventArgs e)
         {
-            if (e.Handled || _NextTrick > DateTime.UtcNow)
+            base.OnSpeech(e);
+
+            if (_NextTrick > DateTime.UtcNow)
             {
                 return;
             }
@@ -98,6 +95,7 @@ namespace Server.Mobiles
             {
                 _NextTrick = DateTime.UtcNow + TimeSpan.FromSeconds(10);
 
+                e.Handled = true;
                 Map myMap = Map;
                 Point3D p = Location;
 
