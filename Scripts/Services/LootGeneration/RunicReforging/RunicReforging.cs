@@ -136,8 +136,7 @@ namespace Server.Items
 
             if (props != null)
             {
-                ApplyReforgedProperties(item, new List<int>(props), prefix, suffix, budget, perclow, perchigh, maxmods, luckchance, tool, option);
-                ColUtility.Free(props);
+                ApplyReforgedProperties(item, props, prefix, suffix, budget, perclow, perchigh, maxmods, luckchance, tool, option);
             }
         }
 
@@ -1986,7 +1985,7 @@ namespace Server.Items
                 if (mods < RandomItemGenerator.MaxProps - 1 && LootPack.CheckLuck(luckchance))
                     mods++;
 
-                List<int> props = new List<int>(ItemPropertyInfo.LookupLootTable(item));
+                var props = ItemPropertyInfo.LookupLootTable(item);
                 bool powerful = IsPowerful(budget);
 
                 ApplyReforgedProperties(item, props, prefix, suffix, budget, perclow, perchigh, mods, luckchance);
@@ -2061,8 +2060,6 @@ namespace Server.Items
                     case ReforgedSuffix.EnchantedOrigin: item.Hue = 1171; break;
                     case ReforgedSuffix.Doom: item.Hue = 2301; break;
                 }
-
-                ColUtility.Free(props);
             }
         }
 
