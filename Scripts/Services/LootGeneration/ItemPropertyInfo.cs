@@ -559,7 +559,7 @@ namespace Server.Items
                 new PropInfo(3, 0, 3), new PropInfo(5, 0, 3)));
 
             Register(220, new ItemPropertyInfo(AosArmorAttribute.ReactiveParalyze, 1154660, 140, 0, 1, 1, 1152400,
-                new PropInfo(1, 0, 1), new PropInfo(4, 0, 1)));
+                new PropInfo(4, 0, 1)));
 
             Register(221, new ItemPropertyInfo(AosArmorAttribute.SoulCharge, 1116536, 140, 5, 5, 30, 1152391,
                 new PropInfo(4, 0, 30)));
