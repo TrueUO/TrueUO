@@ -23,7 +23,7 @@ namespace Server.Items
 
             if (smfs != null && !smfs.Active)
             {
-                var box = from.Map.GetItemsInRange(from.Location, 3).Where(x => x is SandalwoodBox).FirstOrDefault() as SandalwoodBox;
+                var box = from.Map.GetItemsInRange(from.Location, 3).Where(x => x.ItemID == 19724 && x.Hue == 1111).FirstOrDefault();
 
                 if (box != null)
                 {

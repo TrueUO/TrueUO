@@ -24,23 +24,18 @@ namespace Server.Items
         {
         }
 
-        public override bool OnMoveOver(Mobile m)
+        public override void OnDoubleClick(Mobile m)
         {
-            if (m.IsPlayer())
+            if (FellowshipMedallion.IsDressed(m) || _Exit)
             {
-                if (FellowshipMedallion.IsDressed(m) || _Exit)
-                {
-                    BaseCreature.TeleportPets(m, _PointDest, _Map);
-                    m.MoveToWorld(_PointDest, _Map);
-                }
-                else
-                {
-                    m.PrivateOverheadMessage(MessageType.Regular, 0x47E, 1159385,
-                        m.NetState); // * Your connection to the ethereal void is not honed, you cannot pass... *
-                }
+                BaseCreature.TeleportPets(m, _PointDest, _Map);
+                m.MoveToWorld(_PointDest, _Map);
             }
-
-            return base.OnMoveOver(m);
+            else
+            {
+                m.PrivateOverheadMessage(MessageType.Regular, 0x47E, 1159385,
+                    m.NetState); // * Your connection to the ethereal void is not honed, you cannot pass... *
+            }
         }
 
         public override void Serialize(GenericWriter writer)

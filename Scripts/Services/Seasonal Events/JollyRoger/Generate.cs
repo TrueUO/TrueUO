@@ -99,6 +99,12 @@ namespace Server.Engines.JollyRoge
                 IversRoundingAddon.InstanceFel.Delete();
                 IversRoundingAddon.InstanceFel = null;
             }
+
+            if (CastleAddon.Instance == null)
+            {
+                CastleAddon.Instance.Delete();
+                CastleAddon.Instance = null;
+            }
         }
 
         #endregion
@@ -120,6 +126,7 @@ namespace Server.Engines.JollyRoge
             Item item;
             XmlSpawner sp;
             Static st;
+            DarkWoodDoor door;
 
             XmlSpawner.SpawnObject[] so = new XmlSpawner.SpawnObject[Ghost.Length];
 
@@ -155,6 +162,63 @@ namespace Server.Engines.JollyRoge
 
             item = new CastleTrapDoor(new Point3D(1316, 231, -26), Map.Ilshenar, true);
             item.MoveToWorld(new Point3D(982, 1126, 65), Map.Ilshenar);
+
+            if (CastleAddon.Instance == null)
+            {
+                CastleAddon.Instance = new CastleAddon();
+                CastleAddon.Instance.MoveToWorld(new Point3D(994, 1140, 43), Map.Ilshenar);
+            }
+
+            door = new DarkWoodDoor(DoorFacing.WestCCW);
+            door.MoveToWorld(new Point3D(981, 1131, 65), Map.Ilshenar);
+
+            door = new DarkWoodDoor(DoorFacing.SouthCCW);
+            door.MoveToWorld(new Point3D(990, 1134, 48), Map.Ilshenar);
+
+            door = new DarkWoodDoor(DoorFacing.NorthCW);
+            door.MoveToWorld(new Point3D(990, 1133, 48), Map.Ilshenar);
+
+            door = new DarkWoodDoor(DoorFacing.WestCW);
+            door.MoveToWorld(new Point3D(998, 1131, 48), Map.Ilshenar);
+
+            door = new DarkWoodDoor(DoorFacing.WestCCW);
+            door.MoveToWorld(new Point3D(1012, 1131, 48), Map.Ilshenar);
+
+            door = new DarkWoodDoor(DoorFacing.EastCCW);
+            door.MoveToWorld(new Point3D(1004, 1136, 48), Map.Ilshenar);
+            
+            door = new DarkWoodDoor(DoorFacing.WestCW);
+            door.MoveToWorld(new Point3D(1003, 1136, 48), Map.Ilshenar);
+
+            door = new DarkWoodDoor(DoorFacing.WestCCW);
+            door.MoveToWorld(new Point3D(1003, 1141, 48), Map.Ilshenar);
+
+            door = new DarkWoodDoor(DoorFacing.EastCW);
+            door.MoveToWorld(new Point3D(1004, 1141, 48), Map.Ilshenar);
+
+            door = new DarkWoodDoor(DoorFacing.SouthCCW);
+            door.MoveToWorld(new Point3D(990, 1154, 48), Map.Ilshenar);
+
+            door = new DarkWoodDoor(DoorFacing.NorthCW);
+            door.MoveToWorld(new Point3D(990, 1153, 48), Map.Ilshenar);
+
+            door = new DarkWoodDoor(DoorFacing.NorthCCW);
+            door.MoveToWorld(new Point3D(995, 1153, 48), Map.Ilshenar);
+
+            door = new DarkWoodDoor(DoorFacing.SouthCW);
+            door.MoveToWorld(new Point3D(995, 1154, 48), Map.Ilshenar);
+
+            door = new DarkWoodDoor(DoorFacing.SouthCCW);
+            door.MoveToWorld(new Point3D(1001, 1154, 48), Map.Ilshenar);
+
+            door = new DarkWoodDoor(DoorFacing.NorthCW);
+            door.MoveToWorld(new Point3D(1001, 1153, 48), Map.Ilshenar);
+
+            door = new DarkWoodDoor(DoorFacing.NorthCCW);
+            door.MoveToWorld(new Point3D(1006, 1154, 48), Map.Ilshenar);
+
+            door = new DarkWoodDoor(DoorFacing.SouthCW);
+            door.MoveToWorld(new Point3D(1006, 1155, 48), Map.Ilshenar);
 
             if (!Siege.SiegeShard)
             {

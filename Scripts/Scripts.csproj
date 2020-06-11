@@ -9447,7 +9447,6 @@
     <Compile Include="Services\Seasonal Events\JollyRoger\Items\SheetMusicForStones.cs" />
     <Compile Include="Services\Seasonal Events\JollyRoger\Items\ShipwreckBook.cs" />
     <Compile Include="Services\Seasonal Events\JollyRoger\Items\JackCorpse.cs" />
-    <Compile Include="Services\Seasonal Events\JollyRoger\Items\SandalwoodBox.cs" />
     <Compile Include="Services\Seasonal Events\JollyRoger\Mobile\HawkwindSpeak.cs" />
     <Compile Include="Services\Seasonal Events\JollyRoger\Mobile\Ghost.cs" />
     <Compile Include="Services\Seasonal Events\JollyRoger\Mobile\SherryTheMouse.cs" />
