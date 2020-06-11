@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Server.Engines.Quests;
+using Server.Engines.SphynxFortune;
 using Server.Gumps;
 using Server.Items;
 using Server.Mobiles;
@@ -9,39 +11,120 @@ using Server.Network;
 
 namespace Server.Engines.Fellowship
 {
-    public class SherryStrongBox : Item
+    public class BoxArray
     {
-        public List<Mobile> Permission;
+        public Mobile Mobile { get; set; }
+        public bool Reward { get; set; }
+
+        public BoxArray(Mobile m, bool r)
+        {
+            Mobile = m;
+            Reward = r;
+        }
+    }
+
+    public class SherryStrongBox : Container
+    {
+        public static List<BoxArray> Permission = new List<BoxArray>();
+        public static string FilePath = Path.Combine("Saves/Misc", "SherryStrongBox.bin");
 
         [Constructable]
         public SherryStrongBox()
             : base(0xE80)
         {
             Weight = 0.0;
+            Movable = false;
+        }
 
-            Permission = new List<Mobile>();
+        public override bool DisplaysContent => false;
+
+        public static void AddPermission(Mobile from)
+        {
+            if (Permission.Any(x => x.Mobile != from))
+            {
+                Permission.Add(new BoxArray(from, false));
+            }
         }
 
         public override void OnDoubleClick(Mobile from)
         {
             if (from.InRange(GetWorldLocation(), 2))
             {
-                if (Permission.Any(x => x == from))
+                if (Permission != null)
                 {
-                    Item item = new SheetMusicForStones();
-                    from.AddToBackpack(item);
-                    from.SendLocalizedMessage(1152339, item.Name.ToString()); // A reward of ~1_ITEM~ has been placed in your backpack.
-                    Permission.Remove(from);
-                }
-                else
-                {
-                    PrivateOverheadMessage(MessageType.Regular, 0x47E, 500648, from.NetState); // This chest seems to be locked.
+                    var p = Permission.Where(x => x.Mobile == from).FirstOrDefault();
+
+                    if (p != null)
+                    {
+                        if (!p.Reward)
+                        {
+                            Item item = new SheetMusicForStones();
+                            from.AddToBackpack(item);
+                            from.SendLocalizedMessage(1152339,
+                                item.Name.ToString()); // A reward of ~1_ITEM~ has been placed in your backpack.
+                        }
+                        else
+                        {
+                            base.OnDoubleClick(from);
+                        }
+                    }
+                    else
+                    {
+                        PrivateOverheadMessage(MessageType.Regular, 0x47E, 500648,
+                            from.NetState); // This chest seems to be locked.
+                    }
                 }
             }
             else
             {
                 from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1019045); // I can't reach that.
             }
+        }
+
+        public static void Configure()
+        {
+            EventSink.WorldSave += OnSave;
+            EventSink.WorldLoad += OnLoad;
+        }
+
+        public static void OnSave(WorldSaveEventArgs e)
+        {
+            Persistence.Serialize(
+                FilePath,
+                writer =>
+                {
+                    writer.Write(0);
+
+                    writer.Write(Permission.Count);
+
+                    Permission.ForEach(s =>
+                    {
+                        writer.Write(s.Mobile);
+                        writer.Write(s.Reward);
+                    });
+                });
+        }
+
+        public static void OnLoad()
+        {
+            Persistence.Deserialize(
+                FilePath,
+                reader =>
+                {
+                    int version = reader.ReadInt();
+                    int count = reader.ReadInt();
+
+                    for (int i = count; i > 0; i--)
+                    {
+                        Mobile m = reader.ReadMobile();
+                        bool r = reader.ReadBool();
+
+                        if (m != null)
+                        {
+                            Permission.Add(new BoxArray(m, r));
+                        }
+                    }
+                });
         }
 
         public SherryStrongBox(Serial serial)
@@ -53,30 +136,12 @@ namespace Server.Engines.Fellowship
         {
             base.Serialize(writer);
             writer.Write(0); // version
-
-            writer.Write(Permission == null ? 0 : Permission.Count);
-
-            if (Permission != null)
-            {
-                Permission.ForEach(x => writer.Write(x));
-            }
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
             int version = reader.ReadInt();
-
-            Permission = new List<Mobile>();
-
-            int permissoncount = reader.ReadInt();
-            for (int x = 0; x < permissoncount; x++)
-            {
-                Mobile m = reader.ReadMobile();
-
-                if (m != null)
-                    Permission.Add(m);
-            }
         }
     }
 
@@ -86,12 +151,16 @@ namespace Server.Engines.Fellowship
         public string Note { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
+        public int Sound { get; set; }
+
+        [CommandProperty(AccessLevel.GameMaster)]
         public SherryTheMouse Controller { get; set; }
 
         [Constructable]
         public SherryLute()
             : base(0xEB3)
         {
+            Movable = false;
             Weight = 0.0;
         }
 
@@ -101,64 +170,70 @@ namespace Server.Engines.Fellowship
             {
                 from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1019045); // I can't reach that.
             }
-            else
+            else if (Controller != null)
             {
-                from.PlaySound(0x4C);
                 PrivateOverheadMessage(MessageType.Regular, 0x47E, 1159341, from.NetState, Note); // *You strum the lute, it is tuned to ~1_NOTE~*
 
-                if (Controller != null)
+                if (Controller._List.ContainsKey(from))
                 {
-                    if (Controller._List.ContainsKey(from))
+                    if (Controller._List.Any(x => x.Key == from && x.Value.Contains(Note)))
                     {
-                        if (Controller._List.Any(x => x.Key == from && x.Value.Contains(Note)))
+                        from.PlaySound(0x4C);
+                        Controller._List.Remove(from);
+                    }
+                    else
+                    {
+                        var temp = Controller._List[from].ToList();
+                        temp.Add(Note);
+
+                        bool correct = false;
+
+                        int i;
+
+                        for (i = 0; i < temp.Count; i++)
                         {
-                            Controller._List.Remove(from);
-                        }
-                        else
-                        {
-                            var temp = Controller._List[from].ToList();
-                            temp.Add(Note);
-
-                            bool correct = false;
-
-                            int i;
-
-                            for (i = 0; i < temp.Count; i++)
+                            if (temp[i] == Controller.Notes[i].Note)
                             {
-                                if (temp[i] == Controller.Notes[i])
-                                {
-                                    correct = true;
-                                }
-                                else
-                                {
-                                    correct = false;
-                                }
-                            }
-
-                            if (correct)
-                            {
-                                Controller._List[from] = temp.ToArray();
-                                //Controller._List[from].ToList().ForEach(x => Console.WriteLine(x));
+                                correct = true;
                             }
                             else
                             {
-                                Controller._List.Remove(from);
-                            }
-
-                            if (i == 8)
-                            {
-                                from.PrivateOverheadMessage(MessageType.Regular, 0x47E, 1159342, from.NetState); // *You hear a click as the chest in the corner unlocks!*
-                                Controller.Box.Permission.Add(from);
-                                Controller._List.Remove(from);
-                                Controller.ChangeNotes();
+                                correct = false;
                             }
                         }
+
+                        if (correct)
+                        {
+                            Controller._List[from] = temp.ToArray();
+                            from.PlaySound(Sound);
+                            //Controller._List[from].ToList().ForEach(x => Console.WriteLine(x));
+                        }
+                        else
+                        {
+                            Controller._List.Remove(from);
+                            from.PlaySound(0x4C);
+                        }
+
+                        if (i == 8)
+                        {
+                            from.PlaySound(511);
+                            from.PrivateOverheadMessage(MessageType.Regular, 0x47E, 1159342, from.NetState); // *You hear a click as the chest in the corner unlocks!*
+                            from.PlaySound(1048);
+                            SherryStrongBox.AddPermission(from);
+                            Controller._List.Remove(from);
+                            Controller.ChangeNotes();
+                        }
                     }
-                    else if (Controller.Notes[0] == Note)
-                    {
-                        Controller._List.Add(from, new[] { Note });
-                        //Controller._List[from].ToList().ForEach(x => Console.WriteLine(x));
-                    }                   
+                }
+                else if (Controller.Notes[0].Note == Note)
+                {
+                    Controller._List.Add(from, new[] { Note });
+                    //Controller._List[from].ToList().ForEach(x => Console.WriteLine(x));
+                    from.PlaySound(Sound);
+                }
+                else
+                {
+                    from.PlaySound(0x4C);
                 }
             }
         }
@@ -187,6 +262,18 @@ namespace Server.Engines.Fellowship
         }
     }
 
+    public class NoteArray
+    {
+        public string Note { get; set; }
+        public int Sound { get; set; }
+
+        public NoteArray(string n, int s)
+        {
+            Note = n;
+            Sound = s;
+        }
+    }
+
     public class SherryTheMouse : BaseQuester
     {
         public static SherryTheMouse InstanceTram { get; set; }
@@ -195,7 +282,7 @@ namespace Server.Engines.Fellowship
         public SherryStrongBox Box { get; set; }
         public List<SherryLute> LuteList;
         public Dictionary<Mobile, string[]> _List;
-        public string[] NoteList;
+        public List<NoteArray> NoteList;
 
         [Constructable]
         public SherryTheMouse()
@@ -218,7 +305,8 @@ namespace Server.Engines.Fellowship
 
                     SherryLute sl = new SherryLute();
                     LuteList.Add(sl);
-                    sl.Note = NoteList[i];
+                    sl.Note = NoteList[i].Note;
+                    sl.Sound = NoteList[i].Sound;
                     sl.Controller = this;
 
                     sl.MoveToWorld(p, Map);
@@ -261,20 +349,29 @@ namespace Server.Engines.Fellowship
                 {
                     if (LuteList[i] != null)
                     {
-                        LuteList[i].Note = NoteList[i];
+                        LuteList[i].Note = NoteList[i].Note;
+                        LuteList[i].Sound = NoteList[i].Sound;
                     }
                 }
             }
         }
 
-        public string[] RandomNotes()
+        public List<NoteArray> RandomNotes()
         {
-            return Notes.ToList().Select(x => new { n = x, rand = Notes[Utility.Random(8)] }).OrderBy(x => x.rand).Select(x => x.n).ToArray();
+            return Notes.Select(x => new { n = x, rand = Utility.Random(Notes.Count) }).OrderBy(x => x.rand).Select(x => x.n).ToList();
         }
 
-        public string[] Notes = new string[]
+        public List<NoteArray> Notes = new List<NoteArray>()
         {
-            "C4", "D", "E", "F", "G", "A", "B", "C5"
+            new NoteArray("C4", 0x4D),
+            new NoteArray( "C4", 0x4D ),
+            new NoteArray( "D", 0x409 ),
+            new NoteArray( "E", 0x40E ),
+            new NoteArray( "F", 0x410 ),
+            new NoteArray( "G", 0x414 ),
+            new NoteArray( "A", 0x3FD ),
+            new NoteArray( "B", 0x401 ),
+            new NoteArray( "C5", 0x405 )
         };
 
         private readonly Point3D[] LuteLocations = new Point3D[]

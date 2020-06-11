@@ -7,6 +7,8 @@ namespace Server.Items
     {
         public override int LabelNumber => 1159343; // Sheet Music for Stones
 
+        public bool Active { get; set; }
+
         [Constructable]
         public SheetMusicForStones()
             : base(0xEBF)
@@ -29,7 +31,8 @@ namespace Server.Items
             from.SendSound(from.Female ? 0x30B : 0x41A);
         }
 
-        public SheetMusicForStones(Serial serial) : base(serial)
+        public SheetMusicForStones(Serial serial)
+            : base(serial)
         {
         }
 
@@ -38,12 +41,16 @@ namespace Server.Items
             base.Serialize(writer);
             writer.Write(0); // version
 
+            writer.Write(Active);
+
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
             int version = reader.ReadInt();
+
+            Active = reader.ReadBool();
         }
     }
 }
