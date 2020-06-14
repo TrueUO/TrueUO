@@ -100,7 +100,7 @@ namespace Server.Mobiles
             {
                 BaseHouse house = ((PlayerVendor)Parent).House;
 
-                if (house != null && house.IsAosRules && !house.CheckAosStorage(1 + item.TotalItems + plusItems))
+                if (house != null && !house.CheckAosStorage(1 + item.TotalItems + plusItems))
                 {
                     if (message)
                         m.SendLocalizedMessage(1061839); // This action would exceed the secure storage limit of the house.
@@ -589,7 +589,7 @@ namespace Server.Mobiles
 
             if (list.Count > 0 || HoldGold > 0) // No case 1
             {
-                if ((!toBackpack || Map == Map.Internal) && House != null && House.IsAosRules) // Case 2
+                if ((!toBackpack || Map == Map.Internal) && House != null) // Case 2
                 {
                     if (House.IsOwner(Owner)) // Move to moving crate
                     {
@@ -626,7 +626,7 @@ namespace Server.Mobiles
                         House.VendorInventories.Add(inventory);
                     }
                 }
-                else if ((toBackpack || House == null || !House.IsAosRules) && Map != Map.Internal) // Case 3 - Move to backpack
+                else if ((toBackpack || House == null) && Map != Map.Internal) // Case 3 - Move to backpack
                 {
                     Container backpack = new Backpack();
 
