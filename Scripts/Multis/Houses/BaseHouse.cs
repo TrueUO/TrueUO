@@ -421,17 +421,6 @@ namespace Server.Multis
 
             fromLockdowns += GetCommissionVendorLockdowns();
 
-            if (!NewVendorSystem)
-            {
-                foreach (Mobile vendor in PlayerVendors)
-                {
-                    if (vendor.Backpack != null)
-                    {
-                        fromVendors += vendor.Backpack.TotalItems;
-                    }
-                }
-            }
-
             if (MovingCrate != null)
             {
                 fromMovingCrate += MovingCrate.TotalItems;
@@ -460,7 +449,7 @@ namespace Server.Multis
             return false;
         }
 
-        public virtual int GetNewVendorSystemMaxVendors()
+        public virtual int GetVendorSystemMaxVendors()
         {
             HousePlacementEntry hpe = GetAosEntry();
 
@@ -472,13 +461,7 @@ namespace Server.Multis
 
         public virtual bool CanPlaceNewVendor()
         {
-            if (!IsAosRules)
-                return true;
-
-            if (!NewVendorSystem)
-                return CheckAosLockdowns(10);
-
-            return (PlayerVendors.Count + VendorRentalContracts.Count) < GetNewVendorSystemMaxVendors();
+            return (PlayerVendors.Count + VendorRentalContracts.Count) < GetVendorSystemMaxVendors();
         }
 
         public const int MaximumBarkeepCount = 2;
@@ -1031,9 +1014,6 @@ namespace Server.Multis
 
             if (Secures != null)
                 v += Secures.Where(x => !LockDowns.ContainsKey(x.Item)).Count();
-
-            if (!NewVendorSystem)
-                v += PlayerVendors.Count * 10;
 
             return v;
         }
@@ -2174,7 +2154,7 @@ namespace Server.Multis
             if (Deleted || !from.CheckAlive() || !IsOwner(from))
                 return;
 
-            if (NewVendorSystem && HasPersonalVendors)
+            if (HasPersonalVendors)
             {
                 from.SendLocalizedMessage(1062467); // You cannot trade this house while you still have personal vendors inside.
             }
@@ -2238,7 +2218,7 @@ namespace Server.Multis
             if (Deleted || !from.CheckAlive() || !IsOwner(from))
                 return;
 
-            if (NewVendorSystem && HasPersonalVendors)
+            if (HasPersonalVendors)
             {
                 from.SendLocalizedMessage(1062467); // You cannot trade this house while you still have personal vendors inside.
             }

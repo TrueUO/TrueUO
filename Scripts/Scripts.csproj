@@ -3233,7 +3233,7 @@
     <Compile Include="Services\CleanUpBritannia\PointExchange.cs" />
     <Compile Include="Services\CommunityCollections\CommunityCollectionGump.cs" />
     <Compile Include="Services\Expansions\High Seas\Generate.cs" />
-    <Compile Include="Services\Expansions\High Seas\Gumps\BountyBoard.cs" />
+    <Compile Include="Services\Expansions\High Seas\Quests\ProfessionalBountyQuest\BountyBoard.cs" />
     <Compile Include="Services\Expansions\High Seas\Items\Artifacts\CorgulsEnchantedSash.cs" />
     <Compile Include="Services\Expansions\High Seas\Items\Artifacts\CorgulsHandbookOnMysticism.cs" />
     <Compile Include="Services\Expansions\High Seas\Items\Artifacts\CorgulsHandbookOnTheUndead.cs" />
@@ -3258,7 +3258,6 @@
     <Compile Include="Services\Expansions\High Seas\Items\Cannons and Ammo\Matches.cs" />
     <Compile Include="Services\Expansions\High Seas\Items\Cannons and Ammo\PowderCharge.cs" />
     <Compile Include="Services\Expansions\High Seas\Items\Cannons and Ammo\Ramrod.cs" />
-    <Compile Include="Services\Expansions\High Seas\Items\Cannons and Ammo\SpecialAmmo.cs" />
     <Compile Include="Services\Expansions\High Seas\Items\Cannons and Ammo\Swab.cs" />
     <Compile Include="Services\Expansions\High Seas\Items\CorgulAltar.cs" />
     <Compile Include="Services\Expansions\High Seas\Items\Fish\Bait.cs" />
