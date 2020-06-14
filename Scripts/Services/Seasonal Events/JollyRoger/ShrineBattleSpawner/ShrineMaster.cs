@@ -428,7 +428,7 @@ namespace Server.Engines.JollyRoger
             if (Combatant == null)
                 return;
 
-            if (Blessed && _Controller != null && _Controller.MasterCheck(this))
+            if (Blessed && _Controller != null && _Controller.MasterBlessCheck(this))
             {
                 Blessed = false;
             }
@@ -528,6 +528,7 @@ namespace Server.Engines.JollyRoger
                     if (_Controller != null)
                     {
                         WOSAnkhOfSacrifice.AddReward(drop, _Controller.Shrine);
+                        _Controller.OnMasterDestroyed();
                     }
 
                     drop.SendLocalizedMessage(1159318); // You notice the Fellowship Insignia on your fallen foe's equipment and decide it may be of some value...

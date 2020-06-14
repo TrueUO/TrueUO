@@ -1,5 +1,6 @@
 using Server.Items;
 using Server.Mobiles;
+using Server.Regions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,15 +9,15 @@ namespace Server.Engines.JollyRoger
 
 {
     public enum Shrine
-    {
-        Humility,
+    {        
         Valor,
         Spirituality,
         Sacrifice,
         Justice,
-        Compassion,
+        Humility,
         Honor,
         Honesty,
+        Compassion
     }
 
     public enum MasterType
@@ -33,9 +34,23 @@ namespace Server.Engines.JollyRoger
         Nature
     }
 
+    public class ShrineBattleRegion : BaseRegion
+    {
+        public ShrineBattleController _Controller { get; set; }
+
+        public ShrineBattleRegion(ShrineBattleController controller)
+            : base("asd", controller.Map, DefaultPriority, controller._RegionTable[(int)controller.Shrine])
+        {
+            _Controller = controller;
+        }
+    }
+
     public class ShrineBattleController : Item
     {
-        public static bool Enabled = true;
+        [CommandProperty(AccessLevel.Administrator)]
+        public bool Enabled { get; set; }
+
+        private ShrineBattleRegion m_Region;
 
         [CommandProperty(AccessLevel.Administrator)]
         public bool ForceRespawn
@@ -50,6 +65,7 @@ namespace Server.Engines.JollyRoger
                     return;
 
                 RemoveSpawn();
+                Enabled = true;
                 BeginInvasion();
             }
         }
@@ -58,7 +74,25 @@ namespace Server.Engines.JollyRoger
 
         [CommandProperty(AccessLevel.GameMaster)]
         public Shrine Shrine { get; set; }
-        
+
+        private int _Count;
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int FragmentCount
+        {
+            get { return _Count; }
+            set
+            {
+                _Count = value;
+
+                if (_Count == 8)
+                {
+                    Enabled = true;
+                    _Count = 0;
+                }
+            }
+        }
+
         [CommandProperty(AccessLevel.GameMaster)]
         public int SpawnCount
         {
@@ -83,9 +117,12 @@ namespace Server.Engines.JollyRoger
 
         public Dictionary<BaseCreature, List<BaseCreature>> Spawn { get; set; }
 
-        public ShrineBattleController(Map map)
+        [Constructable]
+        public ShrineBattleController(Shrine shrine)
             : base(3796)
         {
+            Shrine = shrine;
+
             Movable = false;
             Visible = false;
 
@@ -93,6 +130,30 @@ namespace Server.Engines.JollyRoger
 
             if (Enabled)
                 Timer.DelayCall(TimeSpan.FromSeconds(10), BeginInvasion);
+        }
+
+        public override void OnMapChange()
+        {
+            UpdateRegion();
+        }
+
+        public override void OnAfterDelete()
+        {
+            base.OnAfterDelete();
+
+            UpdateRegion();
+        }
+
+        public void UpdateRegion()
+        {
+            if (m_Region != null)
+                m_Region.Unregister();
+
+            if (!Deleted && Map != Map.Internal)
+            {
+                m_Region = new ShrineBattleRegion(this);
+                m_Region.Register();
+            }
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -117,6 +178,18 @@ namespace Server.Engines.JollyRoger
             new Type[] { typeof(SwampTentacle), typeof(PlagueBeast), typeof(Bogling), typeof(FeralTreefellow) },
         };
 
+        public readonly Rectangle2D[] _RegionTable =
+        {
+            new Rectangle2D(2262, 1561, 4, 4),
+            new Rectangle2D(2262, 1561, 4, 4),
+            new Rectangle2D(2262, 1561, 4, 4),
+            new Rectangle2D(2262, 1561, 4, 4),
+            new Rectangle2D(2262, 1561, 4, 4),
+            new Rectangle2D(1856, 873, 4, 4),
+            new Rectangle2D(2262, 1561, 4, 4),
+            new Rectangle2D(1856, 873, 4, 4),
+        };
+
         public void BeginInvasion()
         {
             if (!Enabled)
@@ -135,9 +208,11 @@ namespace Server.Engines.JollyRoger
 
                 do
                 {
-                    p = Map.Malas.GetRandomSpawnPoint(spawnrec);
+                    p = Map.GetRandomSpawnPoint(spawnrec);
                 }
-                while (p == Point3D.Zero || !Map.Malas.CanSpawnMobile(p));
+                while (p == Point3D.Zero || !Map.CanSpawnMobile(p));
+
+                Console.WriteLine(string.Format("{0} {1} {2}", p.X, p.Y, p.Z));
 
                 MasterType type = (MasterType)Utility.Random(9);
 
@@ -168,6 +243,7 @@ namespace Server.Engines.JollyRoger
                 }
 
                 Spawn[capt] = list;
+                capt.MoveToWorld(p, Map);
             }
         }
 
@@ -206,7 +282,16 @@ namespace Server.Engines.JollyRoger
             return false;
         }
 
-        public bool MasterCheck(ShrineMaster master)
+        public void OnMasterDestroyed()
+        {
+            if (Spawn != null && Spawn.Any(x => !x.Key.Alive))
+            {
+                RemoveSpawn();
+                Enabled = false;
+            }
+        }
+
+        public bool MasterBlessCheck(ShrineMaster master)
         {
             return master != null && Spawn != null && Spawn.ContainsKey(master) && Spawn[master].Any(x => !x.Alive);
         }
@@ -269,6 +354,8 @@ namespace Server.Engines.JollyRoger
             }
 
             copy.Clear();
+
+            Enabled = false;
         }
 
         public ShrineBattleController(Serial serial)
@@ -282,6 +369,7 @@ namespace Server.Engines.JollyRoger
             writer.Write(0);
 
             writer.Write((int)Shrine);
+            writer.Write(_Count);
 
             writer.Write(Spawn == null ? 0 : Spawn.Count);
             foreach (KeyValuePair<BaseCreature, List<BaseCreature>> kvp in Spawn)
@@ -302,6 +390,7 @@ namespace Server.Engines.JollyRoger
             Spawn = new Dictionary<BaseCreature, List<BaseCreature>>();
 
             Shrine = (Shrine)reader.ReadInt();
+            _Count = reader.ReadInt();
 
             int count = reader.ReadInt();
             for (int i = 0; i < count; i++)
@@ -328,6 +417,8 @@ namespace Server.Engines.JollyRoger
                     list.Clear();
                 }
             }
+
+            Timer.DelayCall(TimeSpan.Zero, UpdateRegion);
         }
 
         public static void Initialize()

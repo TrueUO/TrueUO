@@ -114,6 +114,19 @@ namespace Server.Mobiles
         Red,
         Black
     }
+
+    public enum ShrineTitle
+    {
+        None,
+        Valiant,
+        Spiritual,
+        Sacrificing,
+        Just,
+        Humble,
+        Honorable,
+        Honest,
+        Compassionate
+    }
     #endregion
 
     public partial class PlayerMobile : Mobile, IHonorTarget
@@ -4295,6 +4308,9 @@ namespace Server.Mobiles
 
             switch (version)
             {
+                case 41:
+                    m_ShrineTitle = reader.ReadInt();
+                    goto case 40;
                 case 40: // Version 40, moved gauntlet points, virtua artys and TOT turn ins to PointsSystem
                 case 39: // Version 39, removed ML quest save/load
                 case 38:
@@ -4761,7 +4777,9 @@ namespace Server.Mobiles
 
             base.Serialize(writer);
 
-            writer.Write(40); // version
+            writer.Write(41); // version
+
+            writer.Write(m_ShrineTitle);
 
             writer.Write(NextGemOfSalvationUse);
 
@@ -5058,6 +5076,9 @@ namespace Server.Mobiles
         {
             base.GetProperties(list);
 
+            if (m_ShrineTitle > 0)
+                list.Add(m_ShrineTitle);
+
             if (m_SubtitleSkillTitle != null)
                 list.Add(1042971, m_SubtitleSkillTitle);
 
@@ -5344,6 +5365,7 @@ namespace Server.Mobiles
         private string m_CurrentChampTitle;
         private string m_OverheadTitle;
         private int m_CurrentVeteranTitle;
+        private int m_ShrineTitle;
 
         public string FameKarmaTitle
         {
@@ -5379,6 +5401,12 @@ namespace Server.Mobiles
         {
             get { return m_CurrentVeteranTitle; }
             set { m_CurrentVeteranTitle = value; InvalidateProperties(); }
+        }
+
+        public int ShrineTitle
+        {
+            get { return m_ShrineTitle; }
+            set { m_ShrineTitle = value; InvalidateProperties(); }
         }
 
         public override bool ShowAccessTitle
