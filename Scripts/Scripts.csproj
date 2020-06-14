@@ -9439,10 +9439,13 @@
     <Compile Include="Services\Seasonal Events\ForsakenFoes\Mobile\Worker.cs" />
     <Compile Include="Services\Seasonal Events\ForsakenFoes\Mobile\Follower.cs" />
     <Compile Include="Services\Seasonal Events\ForsakenFoes\Rewards.cs" />
+    <Compile Include="Services\Seasonal Events\JollyRoger\Addons\WellofSoulsAnkhOfSacrifice.cs" />
     <Compile Include="Services\Seasonal Events\JollyRoger\Addons\CastleAddon.cs" />
     <Compile Include="Services\Seasonal Events\JollyRoger\Addons\IversRoundingAddon.cs" />
     <Compile Include="Services\Seasonal Events\JollyRoger\Addons\AdmiralJacksShipwreckAddon.cs" />
     <Compile Include="Services\Seasonal Events\JollyRoger\Generate.cs" />
+    <Compile Include="Services\Seasonal Events\JollyRoger\ShrineBattleSpawner\ShrineMaster.cs" />
+    <Compile Include="Services\Seasonal Events\JollyRoger\ShrineBattleSpawner\ShrineBattleController.cs" />
     <Compile Include="Services\Seasonal Events\JollyRoger\Items\LuteTunedToStones.cs" />
     <Compile Include="Services\Seasonal Events\JollyRoger\Items\SheetMusicForStones.cs" />
     <Compile Include="Services\Seasonal Events\JollyRoger\Items\MysteriousFragment.cs" />

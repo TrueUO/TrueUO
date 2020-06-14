@@ -157,6 +157,8 @@ namespace Server.Engines.JollyRoge
             st = new Static(0x1e5c);
             st.MoveToWorld(new Point3D(2264, 1549, -28), Map.Ilshenar);
 
+            /* Castle Sallé Dacil Decorations */
+
             item = new CastleTrapDoor(new Point3D(982, 1126, 65), Map.Ilshenar, false);
             item.MoveToWorld(new Point3D(1316, 231, -26), Map.Ilshenar);
 
@@ -186,7 +188,7 @@ namespace Server.Engines.JollyRoge
 
             door = new DarkWoodDoor(DoorFacing.EastCCW);
             door.MoveToWorld(new Point3D(1004, 1136, 48), Map.Ilshenar);
-            
+
             door = new DarkWoodDoor(DoorFacing.WestCW);
             door.MoveToWorld(new Point3D(1003, 1136, 48), Map.Ilshenar);
 
@@ -222,6 +224,8 @@ namespace Server.Engines.JollyRoge
 
             if (!Siege.SiegeShard)
             {
+                /* Admiral Jack's Shipwreck Decorations */
+
                 if (AdmiralJacksShipwreckAddon.InstanceTram == null)
                 {
                     AdmiralJacksShipwreckAddon.InstanceTram = new AdmiralJacksShipwreckAddon();
@@ -239,6 +243,8 @@ namespace Server.Engines.JollyRoge
                     JackCorpse.InstanceTram = new JackCorpse();
                     JackCorpse.InstanceTram.MoveToWorld(new Point3D(4267, 574, 0), Map.Trammel);
                 }
+
+                /* Iver's Rounding Decorations */
 
                 if (IversRoundingAddon.InstanceTram == null)
                 {
@@ -260,6 +266,16 @@ namespace Server.Engines.JollyRoge
                 sp.SpawnRange = 15;
                 sp.MoveToWorld(new Point3D(468, 2091, 7), Map.Trammel);
                 sp.Respawn();
+
+                /* Castle British Decorations */
+
+                for (int i = 0; i < SherryTheMouse.LuteLocations.Length; i++)
+                {
+                    Point3D p = SherryTheMouse.LuteLocations[i];
+
+                    st = new Static(0xEBB);
+                    st.MoveToWorld(new Point3D(p.X, p.Y, 72), Map.Trammel);
+                }
 
                 if (SherryTheMouse.InstanceTram == null)
                 {
@@ -306,6 +322,14 @@ namespace Server.Engines.JollyRoge
             sp.SpawnRange = 15;
             sp.MoveToWorld(new Point3D(468, 2091, 7), Map.Felucca);
             sp.Respawn();
+
+            for (int i = 0; i < SherryTheMouse.LuteLocations.Length; i++)
+            {
+                Point3D p = SherryTheMouse.LuteLocations[i];
+
+                st = new Static(0xEBB);
+                st.MoveToWorld(new Point3D(p.X, p.Y, 72), Map.Felucca);
+            }
 
             if (SherryTheMouse.InstanceFel == null)
             {

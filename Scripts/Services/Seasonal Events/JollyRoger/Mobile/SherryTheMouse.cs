@@ -374,7 +374,7 @@ namespace Server.Engines.Fellowship
             new NoteArray( "C5", 0x405 )
         };
 
-        private readonly Point3D[] LuteLocations = new Point3D[]
+        public readonly static Point3D[] LuteLocations = new Point3D[]
         {
             new Point3D(1350, 1646, 80), new Point3D(1350, 1650, 80), new Point3D(1350, 1655, 80), new Point3D(1350, 1659, 80),
             new Point3D(1355, 1646, 80), new Point3D(1355, 1650, 80), new Point3D(1355, 1655, 80), new Point3D(1355, 1659, 80)
