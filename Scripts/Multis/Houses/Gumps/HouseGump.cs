@@ -1086,15 +1086,8 @@ namespace Server.Gumps
                                     {
                                         m_House.Public = true;
 
-                                        if (BaseHouse.NewVendorSystem)
-                                        {
-                                            // This house is now public. The owner may now place vendors and vendor rental contracts.
-                                            from.SendGump(new NoticeGump(1060637, 30720, 501886, 32512, 320, 180, PublicPrivateNotice_Callback, m_House));
-                                        }
-                                        else
-                                        {
-                                            from.SendGump(new NoticeGump(1060637, 30720, "This house is now public. Friends of the house may now have vendors working out of this building.", 0xF8C000, 320, 180, PublicPrivateNotice_Callback, m_House));
-                                        }
+                                        // This house is now public. The owner may now place vendors and vendor rental contracts.
+                                        from.SendGump(new NoticeGump(1060637, 30720, 501886, 32512, 320, 180, PublicPrivateNotice_Callback, m_House));
 
                                         Region r = m_House.Region;
                                         List<Mobile> list = r.GetMobiles();
@@ -1301,7 +1294,7 @@ namespace Server.Gumps
                                 {
                                     if (isOwner)
                                     {
-                                        if (BaseHouse.NewVendorSystem && m_House.HasPersonalVendors)
+                                        if (m_House.HasPersonalVendors)
                                         {
                                             from.SendLocalizedMessage(1062467); // You cannot trade this house while you still have personal vendors inside.
                                         }
