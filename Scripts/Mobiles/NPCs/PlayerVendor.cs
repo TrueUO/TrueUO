@@ -469,6 +469,7 @@ namespace Server.Mobiles
                     {
                         if (version < 3)
                         {
+                            // Removed old vendor changeover
                             reader.ReadBool();
                         }
 
