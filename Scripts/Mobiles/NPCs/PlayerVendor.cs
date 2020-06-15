@@ -396,10 +396,9 @@ namespace Server.Mobiles
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(2); // version
+            writer.Write(3); // version
 
             writer.Write(VendorSearch);
-            writer.Write(BaseHouse.NewVendorSystem);
             writer.Write(m_ShopName);
             writer.WriteDeltaTime(NextPayTime);
             writer.Write(House);
@@ -424,10 +423,9 @@ namespace Server.Mobiles
             base.Deserialize(reader);
             int version = reader.ReadInt();
 
-            bool newVendorSystem = false;
-
             switch (version)
             {
+                case 3:
                 case 2:
                     {
                         VendorSearch = reader.ReadBool();
@@ -436,7 +434,11 @@ namespace Server.Mobiles
                     }
                 case 1:
                     {
-                        newVendorSystem = reader.ReadBool();
+                        if(version < 3)
+                        {
+                            reader.ReadBool();
+                        }
+                        
                         m_ShopName = reader.ReadString();
                         NextPayTime = reader.ReadDeltaTime();
                         House = (BaseHouse)reader.ReadItem();
@@ -472,30 +474,6 @@ namespace Server.Mobiles
 
                         break;
                     }
-            }
-
-            bool newVendorSystemActivated = BaseHouse.NewVendorSystem && !newVendorSystem;
-
-            if (version < 1 || newVendorSystemActivated)
-            {
-                if (version < 1)
-                {
-                    m_ShopName = "Shop Not Yet Named";
-                    Timer.DelayCall(TimeSpan.Zero, new TimerStateCallback(UpgradeFromVersion0), newVendorSystemActivated);
-                }
-                else
-                {
-                    Timer.DelayCall(TimeSpan.Zero, FixDresswear);
-                }
-
-                if (!IsCommission)
-                    NextPayTime = DateTime.UtcNow + PayTimer.GetInterval();
-
-                if (newVendorSystemActivated)
-                {
-                    HoldGold += BankAccount;
-                    BankAccount = 0;
-                }
             }
 
             if (version == 1)
@@ -1191,33 +1169,6 @@ namespace Server.Mobiles
                 list.AddRange(Backpack.Items);
 
             return list;
-        }
-
-        private void UpgradeFromVersion0(object newVendorSystem)
-        {
-            List<Item> toRemove = new List<Item>();
-
-            foreach (VendorItem vi in m_SellItems.Values)
-                if (!CanBeVendorItem(vi.Item))
-                    toRemove.Add(vi.Item);
-                else
-                    vi.Description = Utility.FixHtml(vi.Description);
-
-            foreach (Item item in toRemove)
-                RemoveVendorItem(item);
-
-            House = BaseHouse.FindHouseAt(this);
-
-            if ((bool)newVendorSystem)
-                ActivateNewVendorSystem();
-        }
-
-        private void ActivateNewVendorSystem()
-        {
-            FixDresswear();
-
-            if (House != null && !House.IsOwner(Owner))
-                Destroy(false);
         }
 
         private void FixDresswear()
