@@ -1170,14 +1170,6 @@ namespace Server.Mobiles
 
             return list;
         }
-        
-        private void ActivateNewVendorSystem()
-        {
-            FixDresswear();
-
-            if (House != null && !House.IsOwner(Owner))
-                Destroy(false);
-        }
 
         private void FixDresswear()
         {
