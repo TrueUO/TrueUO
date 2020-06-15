@@ -423,8 +423,6 @@ namespace Server.Mobiles
             base.Deserialize(reader);
             int version = reader.ReadInt();
 
-            bool newVendorSystem = false;
-
             switch (version)
             {
                 case 3:
@@ -1172,26 +1170,7 @@ namespace Server.Mobiles
 
             return list;
         }
-
-        private void UpgradeFromVersion0(object newVendorSystem)
-        {
-            List<Item> toRemove = new List<Item>();
-
-            foreach (VendorItem vi in m_SellItems.Values)
-                if (!CanBeVendorItem(vi.Item))
-                    toRemove.Add(vi.Item);
-                else
-                    vi.Description = Utility.FixHtml(vi.Description);
-
-            foreach (Item item in toRemove)
-                RemoveVendorItem(item);
-
-            House = BaseHouse.FindHouseAt(this);
-
-            if ((bool)newVendorSystem)
-                ActivateNewVendorSystem();
-        }
-
+        
         private void ActivateNewVendorSystem()
         {
             FixDresswear();
