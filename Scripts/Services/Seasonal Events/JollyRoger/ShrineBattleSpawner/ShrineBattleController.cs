@@ -47,8 +47,23 @@ namespace Server.Engines.JollyRoger
 
     public class ShrineBattleController : Item
     {
-        [CommandProperty(AccessLevel.Administrator)]
-        public bool Enabled { get; set; }
+        private bool m_Active;
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public bool Active
+        {
+            get
+            {
+                return m_Active;
+            }
+            set
+            {
+                if (value)
+                    BeginInvasion();
+                else
+                    RemoveSpawn();
+            }
+        }
 
         private ShrineBattleRegion m_Region;
 
@@ -74,25 +89,8 @@ namespace Server.Engines.JollyRoger
         [CommandProperty(AccessLevel.GameMaster)]
         public Shrine Shrine { get; set; }
 
-        private int _Count;
-
         [CommandProperty(AccessLevel.GameMaster)]
-        public int FragmentCount
-        {
-            get { return _Count; }
-            set
-            {
-                _Count = value;
-
-                if (_Count == 8)
-                {
-                    RemoveSpawn();
-                    BeginInvasion();
-
-                    _Count = 0;
-                }
-            }
-        }
+        public int FragmentCount { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public int SpawnCount
@@ -128,9 +126,6 @@ namespace Server.Engines.JollyRoger
             Visible = false;
 
             Spawn = new Dictionary<BaseCreature, List<BaseCreature>>();
-
-            if (Enabled)
-                Timer.DelayCall(TimeSpan.FromSeconds(10), BeginInvasion);
         }
 
         public override void OnMapChange()
@@ -175,7 +170,7 @@ namespace Server.Engines.JollyRoger
             new Type[] { typeof(RagingGrizzlyBear), typeof(GreaterMongbat), typeof(DireWolf), typeof(GiantRat), typeof(Troglodyte) },
             new Type[] { typeof(IceElemental), typeof(SnowElemental), typeof(IceFiend), typeof(FrostTroll), typeof(IceSerpent) },
             new Type[] { typeof(DreadSpider), typeof(GiantBlackWidow), typeof(Scorpion), typeof(TerathanWarrior), typeof(WolfSpider) },
-            new Type[] { typeof(InsaneDryad), typeof(CuSidhe), typeof(Wisp), typeof(Satyr), typeof(Centaur) },
+            new Type[] { typeof(MLDryad), typeof(CuSidhe), typeof(Wisp), typeof(Satyr), typeof(Centaur) },
             new Type[] { typeof(SwampTentacle), typeof(PlagueBeast), typeof(Bogling), typeof(FeralTreefellow) },
         };
 
@@ -193,9 +188,10 @@ namespace Server.Engines.JollyRoger
 
         public void BeginInvasion()
         {
-            Enabled = true;
+            if (m_Active || Deleted)
+                return;
 
-            RemoveSpawn();
+            m_Active = true;
 
             List<Rectangle2D> SpawnZones = Defs[Shrine].ToList();
 
@@ -219,6 +215,11 @@ namespace Server.Engines.JollyRoger
                     if (Map.CanSpawnMobile(pnt.X, pnt.Y, pnt.Z))
                         points.Add(pnt);
                 });
+
+                if (points.Count == 0)
+                {
+                    points.Add(p);
+                }
 
                 Console.WriteLine(points.Count());
 
@@ -269,13 +270,12 @@ namespace Server.Engines.JollyRoger
             if (Spawn != null && Spawn.Any(x => !x.Key.Alive))
             {
                 RemoveSpawn();
-                Enabled = false;
             }
         }
 
         public bool MasterBlessCheck(ShrineMaster master)
         {
-            return master != null && Spawn != null && Spawn.ContainsKey(master) && Spawn[master].Any(x => !x.Alive);
+            return master != null && Spawn != null && Spawn.ContainsKey(master) && !Spawn[master].Any(x => x.Alive);
         }
 
         public void CleanupSpawn()
@@ -317,8 +317,10 @@ namespace Server.Engines.JollyRoger
 
         public void RemoveSpawn()
         {
-            if (Spawn == null)
+            if (!m_Active || Deleted || Spawn == null)
                 return;
+
+            m_Active = false;
 
             Dictionary<BaseCreature, List<BaseCreature>> copy = Spawn;
             Spawn = new Dictionary<BaseCreature, List<BaseCreature>>();
@@ -336,8 +338,6 @@ namespace Server.Engines.JollyRoger
             }
 
             copy.Clear();
-
-            Enabled = false;
         }
 
         public ShrineBattleController(Serial serial)
@@ -350,8 +350,9 @@ namespace Server.Engines.JollyRoger
             base.Serialize(writer);
             writer.Write(0);
 
+            writer.Write(m_Active);
             writer.Write((int)Shrine);
-            writer.Write(_Count);
+            writer.Write(FragmentCount);
 
             writer.Write(Spawn == null ? 0 : Spawn.Count);
             foreach (KeyValuePair<BaseCreature, List<BaseCreature>> kvp in Spawn)
@@ -371,8 +372,9 @@ namespace Server.Engines.JollyRoger
 
             Spawn = new Dictionary<BaseCreature, List<BaseCreature>>();
 
+            m_Active = reader.ReadBool();
             Shrine = (Shrine)reader.ReadInt();
-            _Count = reader.ReadInt();
+            FragmentCount = reader.ReadInt();
 
             int count = reader.ReadInt();
             for (int i = 0; i < count; i++)

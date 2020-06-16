@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Server.Spells.Seventh;
 using Server.Spells.Sixth;
+using Server.Engines.JollyRoger;
+using Server.Items;
 
 namespace Server.Regions
 {
@@ -42,6 +44,20 @@ namespace Server.Regions
         }
     }
 
+    public class VirtueDef
+    {
+        public Shrine Shrine { get; set; }
+        public Rectangle2D Area { get; set; }
+        public string Title { get; set; }
+
+        public VirtueDef(Shrine shrine, Rectangle2D area, string title)
+        {
+            Shrine = shrine;
+            Area = area;
+            Title = title;
+        }
+    }
+
     public class WellOfSoulsVirtuesRegion : Region
     {
         public static void Initialize()
@@ -49,45 +65,72 @@ namespace Server.Regions
             new WellOfSoulsVirtuesRegion();
         }
 
-        private static Rectangle2D m_Spirituality = new Rectangle2D(2262, 1561, 4, 4);
-        private static Rectangle2D m_Compassion = new Rectangle2D(2248, 1557, 4, 4);
-        private static Rectangle2D m_Honor = new Rectangle2D(2248, 1547, 4, 4);        
-        private static Rectangle2D m_Honesty = new Rectangle2D(2255, 1541, 4, 4);
-        private static Rectangle2D m_Humility = new Rectangle2D(2262, 1539, 4, 4);
-        private static Rectangle2D m_Justice = new Rectangle2D(2269, 1541, 4, 4);
-        private static Rectangle2D m_Valor = new Rectangle2D(2276, 1547, 4, 4);
-        private static Rectangle2D m_Sacrifice = new Rectangle2D(2276, 1557, 4, 4);
-
-        private static readonly Dictionary<Rectangle2D, string> m_Bounds = new Dictionary<Rectangle2D, string>()
+        public static readonly List<VirtueDef> Virtue = new List<VirtueDef>()
         {
-            { m_Spirituality, "Spiritual" },
-            { m_Compassion, "Compassionate" },
-            { m_Honor,"Honorable" },
-            { m_Honesty,"Honest" },
-            { m_Humility,"Humble" },
-            { m_Justice,"Just" },
-            { m_Valor,"Valiant" },
-            { m_Sacrifice, "Sacrificing" }
+            new VirtueDef(Shrine.Spirituality, new Rectangle2D(2262, 1561, 4, 4), "Spiritual"),
+            new VirtueDef(Shrine.Compassion, new Rectangle2D(2248, 1557, 4, 4), "Compassionate"),
+            new VirtueDef(Shrine.Honor, new Rectangle2D(2248, 1547, 4, 4), "Honorable"),
+            new VirtueDef(Shrine.Honesty, new Rectangle2D(2255, 1541, 4, 4), "Honest"),
+            new VirtueDef(Shrine.Humility, new Rectangle2D(2262, 1539, 4, 4), "Humble"),
+            new VirtueDef(Shrine.Justice, new Rectangle2D(2269, 1541, 4, 4) , "Just"),
+            new VirtueDef(Shrine.Valor, new Rectangle2D(2276, 1547, 4, 4), "Valiant"),
+            new VirtueDef(Shrine.Sacrifice, new Rectangle2D(2276, 1557, 4, 4), "Sacrificing"),
         };
 
         public WellOfSoulsVirtuesRegion()
-            : base("Well Of Souls Virtues", Map.Ilshenar, DefaultPriority, m_Bounds.Keys.ToArray())
+            : base("Well Of Souls Virtues", Map.Ilshenar, DefaultPriority, Virtue.Select(x => x.Area).ToArray())
         {
             Register();
         }
 
         public override void OnEnter(Mobile m)
         {
-            string s = "";
+            var virtue = Virtue.FirstOrDefault(x => x.Area.Contains(m.Location));
 
-            foreach (var st in m_Bounds.Where(st => st.Key.Contains(m.Location)))
+            var list = WOSAnkhOfSacrifice._List.FirstOrDefault(x => x.Mobile == m);
+
+            if (list != null && list.Shrine != null)
             {
-                s = st.Value;
+                var s = list.Shrine.FirstOrDefault(x => x.Shrine == virtue.Shrine);
+
+                if (s != null && s.MasterDeath >= 3)
+                {
+                    if (!list.Cloak && list.Shrine.Count == 8 && !list.Shrine.Any(x => x.MasterDeath < 3))
+                    {
+                        var item = new CloakOfTheVirtuous();
+
+                        if (m.Backpack == null || !m.Backpack.TryDropItem(m, item, false))
+                        {
+                            m.SendLocalizedMessage(1152337,
+                                item.ToString()); // A reward of ~1_ITEM~ will be delivered to you once you free up room in your backpack.
+                            item.Delete();
+                        }
+                        else
+                        {
+                            m.PrivateOverheadMessage(MessageType.Regular, 0x47E, 1159339,
+                                m.NetState); // Thous hast proven thou walks the path of Virtue!
+                            WOSAnkhOfSacrifice._List.FirstOrDefault(x => x.Mobile == m).Cloak = true;
+                            m.SendLocalizedMessage(1152339,
+                                item.ToString()); // A reward of ~1_ITEM~ has been placed in your backpack.
+                            m.PlaySound(0x419);
+                        }
+                    }
+                    else
+                    {
+                        m.PrivateOverheadMessage(MessageType.Regular, 0x47E, false,
+                            string.Format("*Thou are truly {0}...*", virtue.Title), m.NetState);
+                        m.PlaySound(532);
+                        m.FixedEffect(0x376A, 72, 1);
+                    }
+                }
+                else
+                {
+                    m.PrivateOverheadMessage(MessageType.Regular, 0x47E, false, string.Format("*Thou are not truly {0}...*", virtue.Title), m.NetState);
+                }
             }
-
-            if (!string.IsNullOrEmpty(s))
+            else
             {
-                m.PrivateOverheadMessage(MessageType.Regular, 0x47E, false, string.Format("*Thou are not truly {0}...*", s), m.NetState);
+                m.PrivateOverheadMessage(MessageType.Regular, 0x47E, false, string.Format("*Thou are not truly {0}...*", virtue.Title), m.NetState);
             }
         }
     }

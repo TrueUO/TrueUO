@@ -8,29 +8,45 @@ using System.Linq;
 
 namespace Server.Items
 {
+    public class ShrineDef
+    {
+        public Shrine Shrine { get; set; }
+        public int Hue { get; set; }
+        public int TitleCliloc { get; set; }
+
+        public ShrineDef(Shrine s, int h, int tc)
+        {
+            Shrine = s;
+            Hue = h;
+            TitleCliloc = tc;
+        }
+    }
+
     public class MysteriousFragment : Item
     {
         public override int LabelNumber => 1159025;  // mysterious fragment
 
-        private Timer m_Timer;
+        private Timer _Timer;
+
+        private ShrineBattleController _Controller;
 
         [Constructable]
         public MysteriousFragment()
             : base(0x1F13)
         {
-            Hue = Utility.RandomList(_Color.Values.ToArray());
+            Hue = Utility.RandomList(ShrineDef.Select(x => x.Hue).ToArray());
         }
 
-        public static readonly Dictionary<Shrine, int> _Color = new Dictionary<Shrine, int>()
+        public static readonly List<ShrineDef> ShrineDef = new List<ShrineDef>()
         {
-            { Shrine.Spirituality, 2500 },
-            { Shrine.Compassion, 1912 },
-            { Shrine.Honor, 1918 },
-            { Shrine.Honesty, 1916 },
-            { Shrine.Humility, 1910 },
-            { Shrine.Justice, 1914 },
-            { Shrine.Valor, 1920 },
-            { Shrine.Sacrifice, 1922 }
+            new ShrineDef(Shrine.Spirituality, 2500, 1159320),
+            new ShrineDef(Shrine.Compassion, 1912, 1159321),
+            new ShrineDef(Shrine.Honor, 1918, 1159322),
+            new ShrineDef(Shrine.Honesty, 1916, 1159323),
+            new ShrineDef(Shrine.Humility, 1910, 1159324),
+            new ShrineDef(Shrine.Justice, 1914 , 1159325),
+            new ShrineDef(Shrine.Valor, 1920, 1159326),
+            new ShrineDef(Shrine.Sacrifice, 1922, 1159327),
         };
 
         public override void OnDoubleClick(Mobile from)
@@ -55,38 +71,42 @@ namespace Server.Items
 
             var region = (ShrineBattleRegion)Region.Find(new Point3D(p.X, p.Y, p.Z), from.Map).GetRegion(typeof(ShrineBattleRegion));
 
-            if (region != null && region._Controller != null && !region._Controller.Enabled && _Color.ToList().Find(x => x.Value == Hue).Key == region._Controller.Shrine)
+            if (region != null && region._Controller != null)
             {
-                if (m_Timer != null)
+                _Controller = region._Controller;
+            }
+
+            if (!_Controller.Active && _Controller.FragmentCount < 8 &&
+                ShrineDef.FirstOrDefault(x => x.Hue == Hue).Shrine == _Controller.Shrine)
+            {
+                if (_Timer != null)
                 {
-                    m_Timer.Stop();
+                    _Timer.Stop();
                 }
+
+                _Controller.FragmentCount++;
 
                 from.PrivateOverheadMessage(MessageType.Regular, 0x47E, 1159028, from.NetState); // *The fragment settles into the ground and surges with power as it begins to sink!*
                 Effects.SendPacket(Location, Map, new GraphicalEffect(EffectType.FixedXYZ, Serial.Zero, Serial.Zero, 0x3735, Location, Location, 1, 120, true, true));
                 from.PlaySound(0x5C);
-                m_Timer = new FragmentTimer(region._Controller, this, from);
-                m_Timer.Start();
+                _Timer = new FragmentTimer(this, from);
+                _Timer.Start();
             }
 
             return drop;
         }
 
-        public override bool DropToMobile(Mobile from, Mobile target, Point3D p)
-        {
-            if (m_Timer != null)
-            {
-                m_Timer.Stop();
-            }
-
-            return true;
-        }
-
         public override bool OnDragLift(Mobile from)
         {
-            if (m_Timer != null)
+            if (_Controller != null)
             {
-                m_Timer.Stop();
+                _Controller.FragmentCount--;
+                _Controller = null;
+            }
+
+            if (_Timer != null)
+            {
+                _Timer.Stop();
             }
 
             return true;
@@ -94,14 +114,12 @@ namespace Server.Items
 
         private class FragmentTimer : Timer
         {
-            private readonly ShrineBattleController _Controller;
-            private readonly Item _Item;
+            private readonly MysteriousFragment _Item;
             private readonly Mobile _Mobile;
 
-            public FragmentTimer(ShrineBattleController controller, Item item, Mobile m)
+            public FragmentTimer(MysteriousFragment item, Mobile m)
                 : base(TimeSpan.FromSeconds(5.0))
             {
-                _Controller = controller;
                 _Item = item;
                 _Mobile = m;
                 Priority = TimerPriority.FiveSeconds;
@@ -109,21 +127,27 @@ namespace Server.Items
 
             protected override void OnTick()
             {
-                if (_Controller != null && _Item != null && _Mobile != null)
+                if (_Item != null && _Item._Controller != null && _Mobile != null)
                 {
-                    _Controller.FragmentCount++;
-
-                    _Item.Delete();
                     Effects.SendPacket(_Item.Location, _Item.Map, new GraphicalEffect(EffectType.FixedXYZ, Serial.Zero, Serial.Zero, 0x377A, _Item.Location, _Item.Location, 1, 72, true, true));
 
                     _Mobile.PrivateOverheadMessage(MessageType.Regular, 0x47E, 1159029, _Mobile.NetState); // *You feel a slight energy pulse through you...*
                     Effects.SendPacket(_Mobile.Location, _Mobile.Map, new GraphicalEffect(EffectType.FixedFrom, _Mobile.Serial, Serial.Zero, 0x377A, _Mobile.Location, _Mobile.Location, 1, 72, true, true));
                     _Mobile.PlaySound(0x202);
 
-                    if (_Mobile is PlayerMobile pm)
+                    if (_Item._Controller.FragmentCount == 8)
                     {
-                        pm.ShrineTitle = 1159320 + (int)_Controller.Shrine;
+                        _Item._Controller.Active = true;
+                        _Item._Controller.FragmentCount = 0;
                     }
+
+                    var cliloc = ShrineDef.FirstOrDefault(x => x.Hue == _Item.Hue).TitleCliloc;
+
+                    if (_Mobile is PlayerMobile pm && pm.ShrineTitle != cliloc)
+                    {
+                        pm.ShrineTitle = cliloc;
+                    }
+                    _Item.Delete();
                 }
             }
         }

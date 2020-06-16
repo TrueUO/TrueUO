@@ -9444,6 +9444,7 @@
     <Compile Include="Services\Seasonal Events\JollyRoger\Addons\IversRoundingAddon.cs" />
     <Compile Include="Services\Seasonal Events\JollyRoger\Addons\AdmiralJacksShipwreckAddon.cs" />
     <Compile Include="Services\Seasonal Events\JollyRoger\Generate.cs" />
+    <Compile Include="Services\Seasonal Events\JollyRoger\Items\CloakOfTheVirtuous.cs" />
     <Compile Include="Services\Seasonal Events\JollyRoger\Items\Tabard.cs" />
     <Compile Include="Services\Seasonal Events\JollyRoger\ShrineBattleSpawner\ShrineMaster.cs" />
     <Compile Include="Services\Seasonal Events\JollyRoger\ShrineBattleSpawner\ShrineBattleController.cs" />

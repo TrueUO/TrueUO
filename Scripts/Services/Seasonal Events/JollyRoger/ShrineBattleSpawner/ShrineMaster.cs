@@ -13,7 +13,7 @@ namespace Server.Engines.JollyRoger
     {
         public static SkillName RandomSpecialty()
         {
-            return _Specialties.ElementAt(Utility.RandomList(_Specialties.Count)).Key;
+            return _Specialties.ElementAt(Utility.Random(_Specialties.Count - 1)).Key;
         }
 
         private static readonly Dictionary<SkillName, string> _Specialties = new Dictionary<SkillName, string>()
@@ -519,7 +519,7 @@ namespace Server.Engines.JollyRoger
             {
                 Timer.DelayCall(TimeSpan.FromMilliseconds(i * 50), o =>
                 {
-                    Server.Misc.Geometry.Circle2D(Location, m, o, (pnt, map) =>
+                    Misc.Geometry.Circle2D(Location, m, o, (pnt, map) =>
                     {
                         Effects.SendLocationEffect(pnt, map, Utility.RandomBool() ? 14000 : 14013, 14, 20, 2018, 0);
                     });

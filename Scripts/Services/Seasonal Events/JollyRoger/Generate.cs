@@ -135,6 +135,8 @@ namespace Server.Engines.JollyRoge
                 so[i] = new XmlSpawner.SpawnObject(Ghost[i], 1);
             }
 
+            /*  Well of Souls Decorations */
+
             Item tele = new Teleporter(new Point3D(2264, 1574, -28), Map.Ilshenar);
             tele.MoveToWorld(new Point3D(1528, 1341, -3), Map.Ilshenar);
             WeakEntityCollection.Add(EntityName, tele);
@@ -151,11 +153,13 @@ namespace Server.Engines.JollyRoge
                 HawkwindTimeLord.Instance.MoveToWorld(new Point3D(2263, 1554, -28), Map.Ilshenar);
             }
 
-            st = new Static(0x1e5d);
-            st.MoveToWorld(new Point3D(2263, 1549, -28), Map.Ilshenar);
+            item = new WOSAnkhOfSacrifice();
+            item.MoveToWorld(new Point3D(2263, 1549, -28), Map.Ilshenar);
 
-            st = new Static(0x1e5c);
-            st.MoveToWorld(new Point3D(2264, 1549, -28), Map.Ilshenar);
+            st = new Static(0x18dc);
+            st.Hue = 2401;
+            st.Name = "Essence Of A Nascent Time Gate";
+            st.MoveToWorld(new Point3D(2263, 1553, -28), Map.Ilshenar);
 
             /* Castle Sallé Dacil Decorations */
 

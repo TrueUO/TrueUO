@@ -1,7 +1,9 @@
 using Server.Engines.JollyRoger;
 using Server.Gumps;
+using Server.Mobiles;
 using Server.Network;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Server.Items
@@ -17,6 +19,14 @@ namespace Server.Items
         {
             Mobile = m;
             Shrine = s;
+        }
+
+        public RewardArray(Mobile m, List<ShrineArray> s, bool tabard, bool cloak)
+        {
+            Mobile = m;
+            Shrine = s;
+            Tabard = tabard;
+            Cloak = cloak;
         }
     }
 
@@ -35,6 +45,7 @@ namespace Server.Items
     public class WOSAnkhOfSacrifice : BaseAddon
     {
         public static List<RewardArray> _List = new List<RewardArray>();
+        public static string FilePath = Path.Combine("Saves/Misc", "ShrineBattleReward.bin");
 
         [Constructable]
         public WOSAnkhOfSacrifice()
@@ -49,19 +60,87 @@ namespace Server.Items
         {
         }
 
-        public override bool HandlesOnMovement => true;
+        public static void Configure()
+        {
+            EventSink.WorldSave += OnSave;
+            EventSink.WorldLoad += OnLoad;
+        }
 
+        public static void OnSave(WorldSaveEventArgs e)
+        {
+            Persistence.Serialize(
+                FilePath,
+                writer =>
+                {
+                    writer.Write(0);
+
+                    writer.Write(_List.Count);
+
+                    _List.ForEach(l =>
+                    {
+                        writer.Write(l.Mobile);
+                        writer.Write(l.Tabard);
+                        writer.Write(l.Cloak);
+
+                        writer.Write(l.Shrine.Count);
+
+                        l.Shrine.ForEach(s =>
+                        {
+                            writer.Write((int)s.Shrine);
+                            writer.Write(s.MasterDeath);
+                        });
+                    });
+                });
+        }
+
+        public static void OnLoad()
+        {
+            Persistence.Deserialize(
+                FilePath,
+                reader =>
+                {
+                    int version = reader.ReadInt();
+                    int count = reader.ReadInt();
+
+                    for (int i = count; i > 0; i--)
+                    {
+                        Mobile m = reader.ReadMobile();
+                        bool t = reader.ReadBool();
+                        bool c = reader.ReadBool();
+
+                        var temp = new List<ShrineArray>();
+
+                        int sc = reader.ReadInt();
+
+                        for (int s = sc; s > 0; s--)
+                        {
+                            Shrine sh = (Shrine)reader.ReadInt();
+                            int md = reader.ReadInt();
+
+                            temp.Add(new ShrineArray(sh, md));
+                        }
+
+                        if (m != null)
+                        {
+                            _List.Add(new RewardArray(m, temp, t, c));
+                        }
+                    }
+                });
+        }
+        
         public static void AddReward(Mobile m, Shrine shrine)
         {
-            if (_List.Any(x => x.Mobile == m))
+            var list = _List.FirstOrDefault(x => x.Mobile == m);
+
+            if (list != null && list.Shrine != null)
             {
-                if (_List.Any(x => x.Shrine.Any(y => y.Shrine == shrine)))
+                if (list.Shrine.Any(y => y.Shrine == shrine))
                 {
-                    _List.Find(x => x.Mobile == m).Shrine.Find(y => y.Shrine == shrine).MasterDeath++;
+                    _List.FirstOrDefault(x => x.Mobile == m).Shrine.FirstOrDefault(y => y.Shrine == shrine).MasterDeath++;
                 }
                 else
                 {
-                    _List.Where(x => x.Mobile == m).FirstOrDefault().Shrine.Add(new ShrineArray(shrine, 1));
+                    _List.FirstOrDefault(x => x.Mobile == m).Shrine.Add(new ShrineArray(shrine, 1));
                 }
             }
             else
@@ -73,20 +152,48 @@ namespace Server.Items
 
                 var ra = new RewardArray(m, sa);
 
-
                 _List.Add(ra);
             }
         }
 
-        public static void RemoveReward(Mobile m, Shrine shrine)
-        {
-
-        }
-
-
         public override void OnComponentUsed(AddonComponent component, Mobile from)
         {
+            var l = _List.FirstOrDefault(x => x.Mobile == from);
 
+            if (from is PlayerMobile pm && pm.ShrineTitle > 0 && l != null && l.Shrine != null)
+            {
+                var shrine = MysteriousFragment.ShrineDef.Find(x => x.TitleCliloc == pm.ShrineTitle).Shrine;
+
+                var s = l.Shrine.FirstOrDefault(y => y.Shrine == shrine);
+
+                if (s != null)
+                {
+                    var count = s.MasterDeath;
+
+                    if (count >= 8)
+                    {
+                        from.CloseGump(typeof(TabardRewardGump));
+                        from.SendGump(new TabardRewardGump(shrine));
+                    }
+                    else if (count < 3)
+                    {
+                        from.SendLocalizedMessage(1159362); // Thou art virtuous, but have not truly fought for virtue.
+                    }
+                    else
+                    {
+                        from.SendLocalizedMessage(1159370,
+                            shrine.ToString()); // Thou art virtuous, but have not truly fought for ~1_VIRTUE~
+                    }
+                }
+                else
+                {
+                    from.SendLocalizedMessage(1159361); // Thou art not virtuous...
+                }
+            }
+            else
+            {
+                from.SendLocalizedMessage(1159361); // Thou art not virtuous...
+            }
         }
 
         public override void Serialize(GenericWriter writer)
@@ -106,9 +213,13 @@ namespace Server.Items
 
     public class TabardRewardGump : Gump
     {
-        public TabardRewardGump()
+        public Shrine _Shrine { get; set; }
+
+        public TabardRewardGump(Shrine shrine)
             : base(100, 100)
         {
+            _Shrine = shrine;
+
             AddPage(0);
 
             AddBackground(0, 0, 370, 470, 0x6DB);
@@ -158,14 +269,8 @@ namespace Server.Items
                         }
                         else
                         {
-                            var shrine = l.Shrine.FirstOrDefault(x => x.MasterDeath >= 8).Shrine;
-
-                            if (shrine != null)
-                            {
-                                from.CloseGump(typeof(TabardClaimGump));
-                                from.SendGump(
-                                    new TabardClaimGump(shrine));
-                            }
+                            from.CloseGump(typeof(TabardClaimConfirmGump));
+                            from.SendGump(new TabardClaimConfirmGump(_Shrine));
                         }
                     }
 
@@ -181,11 +286,11 @@ namespace Server.Items
         }
     }
 
-    public class TabardClaimGump : Gump
+    public class TabardClaimConfirmGump : Gump
     {
         public Shrine _Shrine { get; set; }
 
-        public TabardClaimGump(Shrine shrine)
+        public TabardClaimConfirmGump(Shrine shrine)
             : base(340, 340)
         {
             _Shrine = shrine;
@@ -218,6 +323,7 @@ namespace Server.Items
                 }
                 else
                 {
+                    WOSAnkhOfSacrifice._List.FirstOrDefault(x => x.Mobile == from).Tabard = true;
                     from.SendLocalizedMessage(1152340); // A reward item has been placed in your backpack.
                     from.PlaySound(0x419);
                 }
@@ -249,10 +355,21 @@ namespace Server.Items
             {
                 Mobile from = sender.Mobile;
 
-                var item = from.Backpack.FindItemByType(typeof(Tabard));
+                var robe = from.Backpack.FindItemByType(typeof(HawkwindsRobe));
 
-                if (item != null)
+                if (robe != null)
                 {
+                    var tabard = (Tabard)from.Backpack.FindItemByType(typeof(Tabard));
+
+                    if (tabard != null && !tabard.Converted)
+                    {
+                        robe.Delete();
+                        tabard.CovertRobe();
+                    }
+                    else
+                    {
+                        from.SendLocalizedMessage(1159372); // The item you wish to apply special properties TO could not be found in your main backpack.  Please check your backpack and try again.
+                    }
                 }
                 else
                 {
