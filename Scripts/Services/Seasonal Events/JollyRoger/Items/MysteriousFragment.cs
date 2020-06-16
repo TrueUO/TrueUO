@@ -39,14 +39,14 @@ namespace Server.Items
 
         public static readonly List<ShrineDef> ShrineDef = new List<ShrineDef>()
         {
-            new ShrineDef(Shrine.Spirituality, 2500, 1159320),
-            new ShrineDef(Shrine.Compassion, 1912, 1159321),
-            new ShrineDef(Shrine.Honor, 1918, 1159322),
-            new ShrineDef(Shrine.Honesty, 1916, 1159323),
+            new ShrineDef(Shrine.Spirituality, 2500, 1159321),
+            new ShrineDef(Shrine.Compassion, 1912, 1159327),
+            new ShrineDef(Shrine.Honor, 1918, 1159325),
+            new ShrineDef(Shrine.Honesty, 1916, 1159326),
             new ShrineDef(Shrine.Humility, 1910, 1159324),
-            new ShrineDef(Shrine.Justice, 1914 , 1159325),
-            new ShrineDef(Shrine.Valor, 1920, 1159326),
-            new ShrineDef(Shrine.Sacrifice, 1922, 1159327),
+            new ShrineDef(Shrine.Justice, 1914 , 1159323),
+            new ShrineDef(Shrine.Valor, 1920, 1159320),
+            new ShrineDef(Shrine.Sacrifice, 1922, 1159322),
         };
 
         public override void OnDoubleClick(Mobile from)
@@ -89,7 +89,7 @@ namespace Server.Items
                 from.PrivateOverheadMessage(MessageType.Regular, 0x47E, 1159028, from.NetState); // *The fragment settles into the ground and surges with power as it begins to sink!*
                 Effects.SendPacket(Location, Map, new GraphicalEffect(EffectType.FixedXYZ, Serial.Zero, Serial.Zero, 0x3735, Location, Location, 1, 120, true, true));
                 from.PlaySound(0x5C);
-                _Timer = new FragmentTimer(this, from);
+                _Timer = new FragmentTimer(this, from, _Controller.FragmentCount);
                 _Timer.Start();
             }
 
@@ -114,15 +114,17 @@ namespace Server.Items
 
         private class FragmentTimer : Timer
         {
+            private readonly int _Count;
             private readonly MysteriousFragment _Item;
             private readonly Mobile _Mobile;
 
-            public FragmentTimer(MysteriousFragment item, Mobile m)
+            public FragmentTimer(MysteriousFragment item, Mobile m, int count)
                 : base(TimeSpan.FromSeconds(5.0))
             {
                 _Item = item;
                 _Mobile = m;
-                Priority = TimerPriority.FiveSeconds;
+                _Count = count;
+                Priority = TimerPriority.FiftyMS;
             }
 
             protected override void OnTick()
@@ -135,7 +137,7 @@ namespace Server.Items
                     Effects.SendPacket(_Mobile.Location, _Mobile.Map, new GraphicalEffect(EffectType.FixedFrom, _Mobile.Serial, Serial.Zero, 0x377A, _Mobile.Location, _Mobile.Location, 1, 72, true, true));
                     _Mobile.PlaySound(0x202);
 
-                    if (_Item._Controller.FragmentCount == 8)
+                    if (_Item._Controller.FragmentCount == 8 && _Count == 8)
                     {
                         _Item._Controller.Active = true;
                         _Item._Controller.FragmentCount = 0;
@@ -147,6 +149,7 @@ namespace Server.Items
                     {
                         pm.ShrineTitle = cliloc;
                     }
+
                     _Item.Delete();
                 }
             }

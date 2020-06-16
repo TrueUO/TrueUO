@@ -220,9 +220,7 @@ namespace Server.Engines.JollyRoger
                 {
                     points.Add(p);
                 }
-
-                Console.WriteLine(points.Count());
-
+                
                 MasterType type = (MasterType)Utility.Random(9);
 
                 List<BaseCreature> list = new List<BaseCreature>();
@@ -241,8 +239,6 @@ namespace Server.Engines.JollyRoger
                     list.Add(bc);
 
                     Point3D point = points[Utility.Random(points.Count)];
-
-                    Console.WriteLine(points.Count);
 
                     SpawnMobile(bc, point);
                 }
@@ -267,7 +263,7 @@ namespace Server.Engines.JollyRoger
 
         public void OnMasterDestroyed()
         {
-            if (Spawn != null && Spawn.Any(x => !x.Key.Alive))
+            if (Spawn != null && !Spawn.Any(x => x.Key.Alive))
             {
                 RemoveSpawn();
             }
