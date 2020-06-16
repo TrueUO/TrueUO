@@ -281,12 +281,17 @@ namespace Server.Engines.JollyRoge
                     st.MoveToWorld(new Point3D(p.X, p.Y, 72), Map.Trammel);
                 }
 
+                st = new Static(0x118F);
+                st.MoveToWorld(new Point3D(1347, 1642, 72), Map.Trammel);
+
                 if (SherryTheMouse.InstanceTram == null)
                 {
                     SherryTheMouse.InstanceTram = new SherryTheMouse();
                     SherryTheMouse.InstanceTram.MoveToWorld(new Point3D(1347, 1644, 72), Map.Trammel);
                 }
             }
+
+            /* Admiral Jack's Shipwreck Decorations */
 
             if (AdmiralJacksShipwreckAddon.InstanceFel == null)
             {
@@ -305,6 +310,8 @@ namespace Server.Engines.JollyRoge
                 JackCorpse.InstanceFel = new JackCorpse();
                 JackCorpse.InstanceFel.MoveToWorld(new Point3D(4267, 574, 0), Map.Felucca);
             }
+
+            /* Iver's Rounding Decorations */
 
             if (IversRoundingAddon.InstanceFel == null)
             {
@@ -327,6 +334,8 @@ namespace Server.Engines.JollyRoge
             sp.MoveToWorld(new Point3D(468, 2091, 7), Map.Felucca);
             sp.Respawn();
 
+            /* Castle British Decorations */
+
             for (int i = 0; i < SherryTheMouse.LuteLocations.Length; i++)
             {
                 Point3D p = SherryTheMouse.LuteLocations[i];
@@ -334,6 +343,9 @@ namespace Server.Engines.JollyRoge
                 st = new Static(0xEBB);
                 st.MoveToWorld(new Point3D(p.X, p.Y, 72), Map.Felucca);
             }
+
+            st = new Static(0x118F);
+            st.MoveToWorld(new Point3D(1347, 1642, 72), Map.Felucca);
 
             if (SherryTheMouse.InstanceFel == null)
             {
