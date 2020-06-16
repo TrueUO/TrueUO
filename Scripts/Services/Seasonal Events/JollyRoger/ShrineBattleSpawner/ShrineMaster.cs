@@ -8,28 +8,26 @@ using System.Linq;
 
 namespace Server.Engines.JollyRoger
 {
+    [CorpseName("a human corpse")]
     public class ShrineMaster : BaseCreature
     {
         public static SkillName RandomSpecialty()
         {
-            return _Specialties[Utility.Random(_Specialties.Length)];
+            return _Specialties.ElementAt(Utility.RandomList(_Specialties.Count)).Key;
         }
 
-        private static readonly SkillName[] _Specialties =
+        private static readonly Dictionary<SkillName, string> _Specialties = new Dictionary<SkillName, string>()
         {
-            SkillName.Swords,
-            SkillName.Fencing,
-            SkillName.Macing,
-            SkillName.Archery,
-            SkillName.Magery,
-            SkillName.Mysticism,
-            SkillName.Spellweaving,
-            SkillName.Bushido,
-            SkillName.Bushido,
-            SkillName.Ninjitsu,
-            SkillName.Chivalry,
-            SkillName.Necromancy,
-            SkillName.Poisoning
+            {SkillName.Swords,  "the Swordsman"},
+            {SkillName.Fencing, "the Fencer"},
+            {SkillName.Macing, "the Macer"},
+            {SkillName.Archery, "the Archer"},
+            {SkillName.Magery, "the Wizard"},
+            {SkillName.Mysticism, "the Mystic"},
+            {SkillName.Bushido, "the Sampire"},
+            {SkillName.Necromancy, "the Necromancer"},
+            {SkillName.Poisoning, "the Assassin"},
+            {SkillName.Peacemaking, "the Bard"}
         };
 
         private MasterType _Type;
@@ -98,30 +96,13 @@ namespace Server.Engines.JollyRoger
 
             SetBody();
 
-            string title;
-
-            if (_Sampire)
-            {
-                title = "the sampire";
-            }
-            else if (specialty == SkillName.Magery)
-            {
-                title = "the wizard";
-            }
-            else
-            {
-                title = String.Format("the {0}", Skills[specialty].Info.Title);
-                if (Female && title.EndsWith("man"))
-                    title = title.Substring(0, title.Length - 3) + "woman";
-            }
-
-            Title = title;
+            Title = _Specialties[specialty];
 
             SetStr(250);
             SetDex(SpellCaster ? 150 : 200);
             SetInt(SpellCaster ? 1000 : 5000);
 
-            SetHits(8000, 12000);
+            SetHits(20000, 25000);
 
             if (AI == AIType.AI_Melee)
                 SetDamage(22, 30);
@@ -148,7 +129,112 @@ namespace Server.Engines.JollyRoger
                     });
             }
 
-            SetAreaEffect(AreaEffect.AuraOfEnergy);
+            SetAbility();
+        }
+
+        public virtual void SetSkills()
+        {
+            SetSkill(SkillName.Wrestling, MinSkill, MaxSkill);
+            SetSkill(SkillName.Tactics, MinSkill, MaxSkill);
+            SetSkill(SkillName.Anatomy, MinSkill, MaxSkill);
+
+            switch (_Specialty)
+            {
+                case SkillName.Swords: // Swordsman
+                    SetSkill(SkillName.Swords, MinSkill, MaxSkill);
+                    SetSkill(SkillName.Tactics, MinSkill, MaxSkill);
+                    SetSkill(SkillName.Parry, MinSkill, MaxSkill);
+                    SetSkill(SkillName.Bushido, MinSkill, MaxSkill);
+                    break;
+                case SkillName.Fencing: // Fencer
+                    SetSkill(SkillName.Fencing, MinSkill, MaxSkill);
+                    SetSkill(SkillName.Tactics, MinSkill, MaxSkill);
+                    SetSkill(SkillName.Parry, MinSkill, MaxSkill);
+                    SetSkill(SkillName.Ninjitsu, MinSkill, MaxSkill);
+                    break;
+                case SkillName.Macing: // Macer
+                    SetSkill(SkillName.Macing, MinSkill, MaxSkill);
+                    SetSkill(SkillName.Tactics, MinSkill, MaxSkill);
+                    SetSkill(SkillName.Parry, MinSkill, MaxSkill);
+                    break;
+                case SkillName.Archery: // Archer
+                    SetSkill(SkillName.Archery, MinSkill, MaxSkill);
+                    SetSkill(SkillName.MagicResist, MinSkill, MaxSkill);
+                    SetSkill(SkillName.Swords, MinSkill, MaxSkill);
+                    SetSkill(SkillName.Tactics, MinSkill, MaxSkill);
+                    break;
+                case SkillName.Magery: // Wizard
+                    SetSkill(SkillName.Magery, MinSkill, MaxSkill);
+                    SetSkill(SkillName.EvalInt, MinSkill, MaxSkill);
+                    SetSkill(SkillName.Meditation, MinSkill, MaxSkill);
+                    SetSkill(SkillName.MagicResist, MinSkill, MaxSkill);
+                    break;
+                case SkillName.Mysticism: // Mystic
+                    SetSkill(SkillName.Mysticism, MinSkill, MaxSkill);
+                    SetSkill(SkillName.Focus, MinSkill, MaxSkill);
+                    SetSkill(SkillName.Meditation, MinSkill, MaxSkill);
+                    SetSkill(SkillName.MagicResist, MinSkill, MaxSkill);
+                    break;
+                case SkillName.Necromancy: // Necromancer
+                    SetSkill(SkillName.Necromancy, MinSkill, MaxSkill);
+                    SetSkill(SkillName.SpiritSpeak, MinSkill, MaxSkill);
+                    SetSkill(SkillName.MagicResist, MinSkill, MaxSkill);
+                    break;
+                case SkillName.Bushido: // Sampire
+                    SetSkill(SkillName.Chivalry, MinSkill, MaxSkill);
+                    SetSkill(SkillName.Bushido, MinSkill, MaxSkill);
+                    SetSkill(SkillName.Necromancy, MinSkill, MaxSkill);
+                    SetSkill(SkillName.SpiritSpeak, MinSkill, MaxSkill);
+                    SetSkill(SkillName.Swords, MinSkill, MaxSkill);
+                    SetSkill(SkillName.Parry, MinSkill, MaxSkill);
+                    break;
+                case SkillName.Poisoning: // Assassin
+                    SetSkill(SkillName.Hiding, MinSkill, MaxSkill);
+                    SetSkill(SkillName.Stealth, MinSkill, MaxSkill);
+                    SetSkill(SkillName.Poisoning, MinSkill, MaxSkill);
+                    SetSkill(SkillName.Swords, MinSkill, MaxSkill);
+                    SetSkill(SkillName.Fencing, MinSkill, MaxSkill);
+                    SetSkill(SkillName.Ninjitsu, MinSkill, MaxSkill);
+                    break;
+                case SkillName.Peacemaking: // Bard
+                    SetSkill(SkillName.Musicianship, MinSkill, MaxSkill);
+                    SetSkill(SkillName.Peacemaking, MinSkill, MaxSkill);
+                    break;
+            }
+        }
+
+        public virtual void SetAbility()
+        {
+            switch (_Specialty)
+            {
+                case SkillName.Peacemaking:
+                    SetSpecialAbility(SpecialAbility.HowlOfCacophony);
+                    break;
+                case SkillName.Swords:
+                    SetSpecialAbility(SpecialAbility.AngryFire);
+                    SetSpecialAbility(SpecialAbility.SearingWounds);
+                    SetWeaponAbility(WeaponAbility.FrenziedWhirlwind);
+                    break;
+                case SkillName.Fencing:
+                    SetWeaponAbility(WeaponAbility.Feint);
+                    SetWeaponAbility(WeaponAbility.ArmorIgnore);
+                    break;
+                case SkillName.Macing:
+                    SetWeaponAbility(WeaponAbility.CrushingBlow);
+                    break;
+                case SkillName.Archery:
+                    SetWeaponAbility(WeaponAbility.PsychicAttack);
+                    SetWeaponAbility(WeaponAbility.ForceArrow);
+                    SetWeaponAbility(WeaponAbility.ParalyzingBlow);
+                    break;
+                case SkillName.Necromancy:
+                    SetSpecialAbility(SpecialAbility.ManaDrain);
+                    SetSpecialAbility(SpecialAbility.LifeLeech);
+                    break;
+                case SkillName.Poisoning:
+                    SetAreaEffect(AreaEffect.PoisonBreath);
+                    break;
+            }
         }
 
         public virtual void SetBody()
@@ -180,43 +266,6 @@ namespace Server.Engines.JollyRoger
             SetResistance(ResistanceType.Cold, MinResist, MaxResist);
             SetResistance(ResistanceType.Poison, MinResist, MaxResist);
             SetResistance(ResistanceType.Energy, MinResist, MaxResist);
-        }
-
-        public virtual void SetSkills()
-        {
-            SetSkill(SkillName.Fencing, MinSkill, MaxSkill);
-            SetSkill(SkillName.Macing, MinSkill, MaxSkill);
-            SetSkill(SkillName.MagicResist, MinSkill, MaxSkill);
-            SetSkill(SkillName.Swords, MinSkill, MaxSkill);
-            SetSkill(SkillName.Tactics, MinSkill, MaxSkill);
-            SetSkill(SkillName.Wrestling, MinSkill, MaxSkill);
-            SetSkill(SkillName.Archery, MinSkill, MaxSkill);
-            SetSkill(SkillName.Parry, MinSkill, MaxSkill);
-
-            if (SpellCaster)
-            {
-                SetSkill(SkillName.Magery, MinSkill, MaxSkill);
-                SetSkill(SkillName.EvalInt, MinSkill, MaxSkill);
-            }
-
-            if (Skills[_Specialty].Base < MinSkill)
-                SetSkill(_Specialty, MinSkill, MaxSkill);
-
-            if (_Sampire)
-            {
-                SetSkill(SkillName.Necromancy, MinSkill, MaxSkill);
-            }
-
-            if (_Sampire || _Specialty == SkillName.Necromancy)
-            {
-                SetSkill(SkillName.SpiritSpeak, MinSkill, MaxSkill);
-            }
-
-            if (_Specialty == SkillName.Ninjitsu)
-            {
-                SetSkill(SkillName.Hiding, 100);
-                SetSkill(SkillName.Stealth, 100);
-            }
         }
 
         public virtual void EquipSpecialty()
@@ -425,15 +474,15 @@ namespace Server.Engines.JollyRoger
         {
             base.OnThink();
 
-            if (Combatant == null)
-                return;
-
             if (Blessed && _Controller != null && _Controller.MasterBlessCheck(this))
             {
                 Blessed = false;
             }
 
-            if (!Utility.InRange(Location, Home, 50))
+            if (Combatant == null)
+                return;
+
+            if (!Utility.InRange(Location, Home, 20))
             {
                 Timer.DelayCall(TimeSpan.FromSeconds(5), () => { Location = Home; });
             }

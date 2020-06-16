@@ -39,7 +39,7 @@ namespace Server.Engines.JollyRoger
         public ShrineBattleController _Controller { get; set; }
 
         public ShrineBattleRegion(ShrineBattleController controller)
-            : base("asd", controller.Map, DefaultPriority, controller._RegionTable[(int)controller.Shrine])
+            : base("Fragment Region", controller.Map, DefaultPriority, controller._RegionTable[(int)controller.Shrine])
         {
             _Controller = controller;
         }
@@ -65,7 +65,6 @@ namespace Server.Engines.JollyRoger
                     return;
 
                 RemoveSpawn();
-                Enabled = true;
                 BeginInvasion();
             }
         }
@@ -87,7 +86,9 @@ namespace Server.Engines.JollyRoger
 
                 if (_Count == 8)
                 {
-                    Enabled = true;
+                    RemoveSpawn();
+                    BeginInvasion();
+
                     _Count = 0;
                 }
             }
@@ -192,8 +193,7 @@ namespace Server.Engines.JollyRoger
 
         public void BeginInvasion()
         {
-            if (!Enabled)
-                return;
+            Enabled = true;
 
             RemoveSpawn();
 
@@ -212,12 +212,17 @@ namespace Server.Engines.JollyRoger
                 }
                 while (p == Point3D.Zero || !Map.CanSpawnMobile(p));
 
-                Console.WriteLine(string.Format("{0} {1} {2}", p.X, p.Y, p.Z));
+                List<Point3D> points = new List<Point3D>();
+
+                Misc.Geometry.Circle2D(p, Map, 4, (pnt, map) =>
+                {
+                    if (Map.CanSpawnMobile(pnt.X, pnt.Y, pnt.Z))
+                        points.Add(pnt);
+                });
+
+                Console.WriteLine(points.Count());
 
                 MasterType type = (MasterType)Utility.Random(9);
-
-                ShrineMaster capt = new ShrineMaster(type, this);
-                capt.Blessed = true;
 
                 List<BaseCreature> list = new List<BaseCreature>();
 
@@ -232,54 +237,31 @@ namespace Server.Engines.JollyRoger
                         bc.FightMode = FightMode.Aggressor;
                     }
 
-                    if (SpawnMobile(bc, new Rectangle2D(p.X - 10, p.Y - 10, 10, 10)))
-                    {
-                        list.Add(bc);
-                    }
-                    else
-                    {
-                        bc.Delete();
-                    }
+                    list.Add(bc);
+
+                    Point3D point = points[Utility.Random(points.Count)];
+
+                    Console.WriteLine(points.Count);
+
+                    SpawnMobile(bc, point);
                 }
 
+                ShrineMaster capt = new ShrineMaster(type, this);
+                capt.Blessed = true;
+                capt._Controller = this;
                 Spawn[capt] = list;
-                capt.MoveToWorld(p, Map);
+                SpawnMobile(capt, p);
             }
         }
 
-        private bool SpawnMobile(BaseCreature bc, Rectangle2D spawnrec)
+        public void SpawnMobile(BaseCreature bc, Point3D p)
         {
-            if (Map == null)
-                return false;
-
-            if (bc != null)
-            {
-                for (int i = 0; i < 25; i++)
-                {
-                    Point3D p = Map.GetRandomSpawnPoint(spawnrec);
-                    bool exempt = false;
-
-                    if (spawnrec.X == 6444 && spawnrec.Y == 2446)
-                    {
-                        exempt = true;
-                        p.Z = -2;
-                    }
-
-                    if (exempt || Map.CanFit(p.X, p.Y, p.Z, 16, false, false, true))
-                    {
-                        bc.MoveToWorld(p, Map);
-                        bc.Home = p;
-                        bc.SeeksHome = true;
-                        bc.RangeHome = Utility.RandomMinMax(5, 10);
-                        bc.CanSwim = false;
-                        bc.Tamable = false;
-
-                        return true;
-                    }
-                }
-            }
-
-            return false;
+            bc.MoveToWorld(p, Map);
+            bc.Home = p;
+            bc.SeeksHome = true;
+            bc.RangeHome = Utility.RandomMinMax(5, 10);
+            bc.CanSwim = false;
+            bc.Tamable = false;
         }
 
         public void OnMasterDestroyed()

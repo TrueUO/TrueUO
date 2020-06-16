@@ -21,7 +21,7 @@ namespace Server.Items
             Hue = Utility.RandomList(_Color.Values.ToArray());
         }
 
-        private static readonly Dictionary<Shrine, int> _Color = new Dictionary<Shrine, int>()
+        public static readonly Dictionary<Shrine, int> _Color = new Dictionary<Shrine, int>()
         {
             { Shrine.Spirituality, 2500 },
             { Shrine.Compassion, 1912 },
