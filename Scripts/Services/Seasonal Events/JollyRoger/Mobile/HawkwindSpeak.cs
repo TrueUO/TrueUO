@@ -2,8 +2,7 @@ using System;
 using Server.Engines.Quests;
 using Server.Mobiles;
 
-namespace Server.Engines.Fellowship
-
+namespace Server.Engines.JollyRoger
 {
     public class HawkwindSpeak : BaseQuester
     {

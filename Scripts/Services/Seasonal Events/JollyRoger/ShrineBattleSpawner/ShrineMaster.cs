@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Server.Misc;
 using Server.Network;
+using Server.Engines.Points;
 
 namespace Server.Engines.JollyRoger
 {
@@ -707,7 +708,7 @@ namespace Server.Engines.JollyRoger
 
                     if (_Controller != null)
                     {
-                        WOSAnkhOfSacrifice.AddReward(drop, _Controller.Shrine);
+                        JollyRogerData.AddReward(drop, _Controller.Shrine);
                         _Controller.OnMasterDestroyed();
                     }
 

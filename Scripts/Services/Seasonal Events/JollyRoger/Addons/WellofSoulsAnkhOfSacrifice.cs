@@ -1,52 +1,14 @@
 using Server.Engines.JollyRoger;
+using Server.Engines.Points;
 using Server.Gumps;
 using Server.Mobiles;
 using Server.Network;
-using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 
 namespace Server.Items
 {
-    public class RewardArray
-    {
-        public Mobile Mobile { get; set; }
-        public List<ShrineArray> Shrine { get; set; }
-        public bool Tabard { get; set; }
-        public bool Cloak { get; set; }
-
-        public RewardArray(Mobile m, List<ShrineArray> s)
-        {
-            Mobile = m;
-            Shrine = s;
-        }
-
-        public RewardArray(Mobile m, List<ShrineArray> s, bool tabard, bool cloak)
-        {
-            Mobile = m;
-            Shrine = s;
-            Tabard = tabard;
-            Cloak = cloak;
-        }
-    }
-
-    public class ShrineArray
-    {
-        public Shrine Shrine { get; set; }
-        public int MasterDeath { get; set; }
-
-        public ShrineArray(Shrine s, int c)
-        {
-            Shrine = s;
-            MasterDeath = c;
-        }
-    }
-
     public class WOSAnkhOfSacrifice : BaseAddon
     {
-        public static List<RewardArray> _List = new List<RewardArray>();
-        public static string FilePath = Path.Combine("Saves/Misc", "ShrineBattleReward.bin");
-
         [Constructable]
         public WOSAnkhOfSacrifice()
             : base()
@@ -58,107 +20,11 @@ namespace Server.Items
         public WOSAnkhOfSacrifice(Serial serial)
             : base(serial)
         {
-        }
-
-        public static void Configure()
-        {
-            EventSink.WorldSave += OnSave;
-            EventSink.WorldLoad += OnLoad;
-        }
-
-        public static void OnSave(WorldSaveEventArgs e)
-        {
-            Persistence.Serialize(
-                FilePath,
-                writer =>
-                {
-                    writer.Write(0);
-
-                    writer.Write(_List.Count);
-
-                    _List.ForEach(l =>
-                    {
-                        writer.Write(l.Mobile);
-                        writer.Write(l.Tabard);
-                        writer.Write(l.Cloak);
-
-                        writer.Write(l.Shrine.Count);
-
-                        l.Shrine.ForEach(s =>
-                        {
-                            writer.Write((int)s.Shrine);
-                            writer.Write(s.MasterDeath);
-                        });
-                    });
-                });
-        }
-
-        public static void OnLoad()
-        {
-            Persistence.Deserialize(
-                FilePath,
-                reader =>
-                {
-                    int version = reader.ReadInt();
-                    int count = reader.ReadInt();
-
-                    for (int i = count; i > 0; i--)
-                    {
-                        Mobile m = reader.ReadMobile();
-                        bool t = reader.ReadBool();
-                        bool c = reader.ReadBool();
-
-                        var temp = new List<ShrineArray>();
-
-                        int sc = reader.ReadInt();
-
-                        for (int s = sc; s > 0; s--)
-                        {
-                            Shrine sh = (Shrine)reader.ReadInt();
-                            int md = reader.ReadInt();
-
-                            temp.Add(new ShrineArray(sh, md));
-                        }
-
-                        if (m != null)
-                        {
-                            _List.Add(new RewardArray(m, temp, t, c));
-                        }
-                    }
-                });
-        }
-        
-        public static void AddReward(Mobile m, Shrine shrine)
-        {
-            var list = _List.FirstOrDefault(x => x.Mobile == m);
-
-            if (list != null && list.Shrine != null)
-            {
-                if (list.Shrine.Any(y => y.Shrine == shrine))
-                {
-                    _List.FirstOrDefault(x => x.Mobile == m).Shrine.FirstOrDefault(y => y.Shrine == shrine).MasterDeath++;
-                }
-                else
-                {
-                    _List.FirstOrDefault(x => x.Mobile == m).Shrine.Add(new ShrineArray(shrine, 1));
-                }
-            }
-            else
-            {
-                var sa = new List<ShrineArray>
-                {
-                    new ShrineArray(shrine, 1)
-                };
-
-                var ra = new RewardArray(m, sa);
-
-                _List.Add(ra);
-            }
-        }
+        }       
 
         public override void OnComponentUsed(AddonComponent component, Mobile from)
         {
-            var l = _List.FirstOrDefault(x => x.Mobile == from);
+            var l = JollyRogerData._List.FirstOrDefault(x => x.Mobile == from);
 
             if (from is PlayerMobile pm && pm.ShrineTitle > 0 && l != null && l.Shrine != null)
             {
@@ -259,7 +125,7 @@ namespace Server.Items
                 }
                 case 1:
                 {
-                    var l = WOSAnkhOfSacrifice._List.FirstOrDefault(x => x.Mobile == from);
+                    var l = JollyRogerData._List.FirstOrDefault(x => x.Mobile == from);
 
                     if (l != null)
                     {
@@ -323,7 +189,7 @@ namespace Server.Items
                 }
                 else
                 {
-                    WOSAnkhOfSacrifice._List.FirstOrDefault(x => x.Mobile == from).Tabard = true;
+                    JollyRogerData._List.FirstOrDefault(x => x.Mobile == from).Tabard = true;
                     from.SendLocalizedMessage(1152340); // A reward item has been placed in your backpack.
                     from.PlaySound(0x419);
                 }
