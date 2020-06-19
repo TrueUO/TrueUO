@@ -3,6 +3,7 @@ using Server.Items;
 using System;
 using Server.Commands;
 using Server.Engines.Fellowship;
+using Server.Engines.JollyRoger;
 using Server.Mobiles;
 
 namespace Server.Engines.JollyRoge
@@ -289,6 +290,32 @@ namespace Server.Engines.JollyRoge
                     SherryTheMouse.InstanceTram = new SherryTheMouse();
                     SherryTheMouse.InstanceTram.MoveToWorld(new Point3D(1347, 1644, 72), Map.Trammel);
                 }
+
+                /* Shrine Battle Controller */
+
+                item = new ShrineBattleController(Shrine.Compassion);
+                item.MoveToWorld(new Point3D(1859, 878, -1), Map.Trammel);
+
+                item = new ShrineBattleController(Shrine.Honesty);
+                item.MoveToWorld(new Point3D(4211, 564, 65), Map.Trammel);
+
+                item = new ShrineBattleController(Shrine.Honor);
+                item.MoveToWorld(new Point3D(1728, 3531, 3), Map.Trammel);
+
+                item = new ShrineBattleController(Shrine.Humility);
+                item.MoveToWorld(new Point3D(4272, 3692, 0), Map.Trammel);
+
+                item = new ShrineBattleController(Shrine.Justice);
+                item.MoveToWorld(new Point3D(1298, 629, 16), Map.Trammel);
+
+                item = new ShrineBattleController(Shrine.Sacrifice);
+                item.MoveToWorld(new Point3D(3352, 287, 4), Map.Trammel);
+
+                item = new ShrineBattleController(Shrine.Spirituality);
+                item.MoveToWorld(new Point3D(1600, 2488, 5), Map.Trammel);
+
+                item = new ShrineBattleController(Shrine.Valor);
+                item.MoveToWorld(new Point3D(2489, 3927, 5), Map.Trammel);
             }
 
             /* Admiral Jack's Shipwreck Decorations */
@@ -352,6 +379,32 @@ namespace Server.Engines.JollyRoge
                 SherryTheMouse.InstanceFel = new SherryTheMouse();
                 SherryTheMouse.InstanceFel.MoveToWorld(new Point3D(1347, 1644, 72), Map.Felucca);
             }
+
+            /* Shrine Battle Controller */
+
+            item = new ShrineBattleController(Shrine.Compassion);
+            item.MoveToWorld(new Point3D(1859, 878, -1), Map.Felucca);
+
+            item = new ShrineBattleController(Shrine.Honesty);
+            item.MoveToWorld(new Point3D(4211, 564, 65), Map.Felucca);
+
+            item = new ShrineBattleController(Shrine.Honor);
+            item.MoveToWorld(new Point3D(1728, 3531, 3), Map.Felucca);
+
+            item = new ShrineBattleController(Shrine.Humility);
+            item.MoveToWorld(new Point3D(4272, 3692, 0), Map.Felucca);
+
+            item = new ShrineBattleController(Shrine.Justice);
+            item.MoveToWorld(new Point3D(1298, 629, 16), Map.Felucca);
+
+            item = new ShrineBattleController(Shrine.Sacrifice);
+            item.MoveToWorld(new Point3D(3352, 287, 4), Map.Felucca);
+
+            item = new ShrineBattleController(Shrine.Spirituality);
+            item.MoveToWorld(new Point3D(1600, 2488, 5), Map.Felucca);
+
+            item = new ShrineBattleController(Shrine.Valor);
+            item.MoveToWorld(new Point3D(2489, 3927, 5), Map.Felucca);
         }
     }
 }

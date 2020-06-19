@@ -37,8 +37,9 @@ namespace Server.Engines.JollyRoger
     public class ShrineBattleRegion : BaseRegion
     {
         public ShrineBattleController _Controller { get; set; }
+
         public ShrineBattleRegion(ShrineBattleController controller)
-            : base("Fragment Region", controller.Map, DefaultPriority, ShrineBattleController._FragmentRegionTable[(int)controller.Shrine])
+            : base(string.Format("{0} Fragment Region", controller.Shrine.ToString()), controller.Map, DefaultPriority, ShrineBattleController._FragmentRegionTable[(int)controller.Shrine])
         {
             _Controller = controller;
         }
