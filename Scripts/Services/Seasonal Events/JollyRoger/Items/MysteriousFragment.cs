@@ -139,8 +139,8 @@ namespace Server.Items
 
                     if (_Item._Controller.FragmentCount == 8 && _Count == 8)
                     {
-                        _Item._Controller.Active = true;
                         _Item._Controller.FragmentCount = 0;
+                        Timer.DelayCall(TimeSpan.FromSeconds(5), () => _Item._Controller.Active = true);
                     }
 
                     var cliloc = ShrineDef.FirstOrDefault(x => x.Hue == _Item.Hue).TitleCliloc;

@@ -37,9 +37,8 @@ namespace Server.Engines.JollyRoger
     public class ShrineBattleRegion : BaseRegion
     {
         public ShrineBattleController _Controller { get; set; }
-
         public ShrineBattleRegion(ShrineBattleController controller)
-            : base("Fragment Region", controller.Map, DefaultPriority, controller._RegionTable[(int)controller.Shrine])
+            : base("Fragment Region", controller.Map, DefaultPriority, ShrineBattleController._FragmentRegionTable[(int)controller.Shrine])
         {
             _Controller = controller;
         }
@@ -174,16 +173,16 @@ namespace Server.Engines.JollyRoger
             new Type[] { typeof(SwampTentacle), typeof(PlagueBeast), typeof(Bogling), typeof(FeralTreefellow) },
         };
 
-        public readonly Rectangle2D[] _RegionTable =
+        public static readonly Rectangle2D[] _FragmentRegionTable =
         {
-            new Rectangle2D(2262, 1561, 4, 4),
-            new Rectangle2D(2262, 1561, 4, 4),
-            new Rectangle2D(2262, 1561, 4, 4),
-            new Rectangle2D(2262, 1561, 4, 4),
-            new Rectangle2D(2262, 1561, 4, 4),
-            new Rectangle2D(1856, 873, 4, 4),
-            new Rectangle2D(2262, 1561, 4, 4),
-            new Rectangle2D(1856, 873, 4, 4),
+            new Rectangle2D(2488, 3928, 6, 6), // Valor
+            new Rectangle2D(1600, 2489, 2, 2), // Spirituality
+            new Rectangle2D(3352, 286, 6, 7), // Sacrifice
+            new Rectangle2D(1297, 629, 8, 8), // Justice
+            new Rectangle2D(4270, 3694, 7, 6), // Humility
+            new Rectangle2D(1723, 3526, 5, 3), // Honor
+            new Rectangle2D(4208, 561, 6, 6), // Honesty
+            new Rectangle2D(1856, 873, 4, 4), // Compassion
         };
 
         public void BeginInvasion()

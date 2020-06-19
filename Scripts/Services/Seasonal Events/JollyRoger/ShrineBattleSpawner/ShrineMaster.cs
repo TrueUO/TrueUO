@@ -5,41 +5,48 @@ using Server.Spells.Necromancy;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Server.Misc;
+using Server.Network;
 
 namespace Server.Engines.JollyRoger
 {
+    public enum MasterTitle
+    {
+        Swordsman,
+        Fencer,
+        Macer,
+        Archer,
+        Wizard,
+        Sampire,
+        Necromancer,
+        Assassin,
+        Bard,
+        Rogue,
+        Mystic
+    }
+
     [CorpseName("a human corpse")]
     public class ShrineMaster : BaseCreature
     {
-        public static SkillName RandomSpecialty()
+        public static MasterTitle RandomSpecialty()
         {
-            return _Specialties.ElementAt(Utility.Random(_Specialties.Count - 1)).Key;
+            var master = Enum.GetValues(typeof(MasterTitle));
+            return (MasterTitle)master.GetValue(Utility.Random(master.Length));
         }
 
-        private static readonly Dictionary<SkillName, string> _Specialties = new Dictionary<SkillName, string>()
-        {
-            {SkillName.Swords,  "the Swordsman"},
-            {SkillName.Fencing, "the Fencer"},
-            {SkillName.Macing, "the Macer"},
-            {SkillName.Archery, "the Archer"},
-            {SkillName.Magery, "the Wizard"},
-            {SkillName.Mysticism, "the Mystic"},
-            {SkillName.Bushido, "the Sampire"},
-            {SkillName.Necromancy, "the Necromancer"},
-            {SkillName.Poisoning, "the Assassin"},
-            {SkillName.Peacemaking, "the Bard"}
-        };
-
         private MasterType _Type;
-        private SkillName _Specialty;
+        private MasterTitle _Specialty;
 
-        private bool _Sampire;
         private DateTime _NextSpecial;
 
         public override bool AlwaysMurderer => true;
         public override double HealChance => AI == AIType.AI_Melee || AI == AIType.AI_Paladin ? 1.0 : 0.0;
         public override double WeaponAbilityChance => AI == AIType.AI_Melee || AI == AIType.AI_Paladin ? 0.4 : 0.1;
-        public override bool CanStealth => _Specialty == SkillName.Ninjitsu;
+        public override bool CanStealth => _Specialty == MasterTitle.Assassin || _Specialty == MasterTitle.Rogue;
+        public override bool CanPeace => _Specialty == MasterTitle.Bard;
+        public override bool AutoDispel => _Specialty == MasterTitle.Wizard;
+        public override bool AlwaysAttackable => _Specialty == MasterTitle.Archer;
+        public override Poison PoisonImmune => _Specialty == MasterTitle.Assassin ? Poison.Lethal : null;
 
         public override WeaponAbility GetWeaponAbility()
         {
@@ -54,7 +61,6 @@ namespace Server.Engines.JollyRoger
         }
 
         public override bool UseSmartAI => true;
-        public virtual bool CanDoSpecial => SpellCaster;
 
         public virtual double MinSkill => 105.0;
         public virtual double MaxSkill => 130.0;
@@ -73,15 +79,12 @@ namespace Server.Engines.JollyRoger
         public ShrineBattleController _Controller { get; set; }
 
         [Constructable]
-        public ShrineMaster(SkillName specialty, MasterType type, ShrineBattleController controller)
+        public ShrineMaster(MasterTitle specialty, MasterType type, ShrineBattleController controller)
             : base(GetAI(specialty), FightMode.Closest, 10, 1, .2, .1)
         {
             _Specialty = specialty;
             _Type = type;
             _Controller = _Controller;
-
-            if (_Specialty == SkillName.Bushido && Utility.RandomBool())
-                _Sampire = true;
 
             if (Female = Utility.RandomBool())
             {
@@ -96,7 +99,7 @@ namespace Server.Engines.JollyRoger
 
             SetBody();
 
-            Title = _Specialties[specialty];
+            Title = "the " + specialty.ToString();
 
             SetStr(250);
             SetDex(SpellCaster ? 150 : 200);
@@ -120,7 +123,7 @@ namespace Server.Engines.JollyRoger
 
             _NextSpecial = DateTime.UtcNow;
 
-            if (_Sampire)
+            if (specialty == MasterTitle.Sampire)
             {
                 Timer.DelayCall(TimeSpan.FromSeconds(1), () =>
                     {
@@ -128,8 +131,17 @@ namespace Server.Engines.JollyRoger
                         spell.Cast();
                     });
             }
+        }
 
-            SetAbility();
+        public override void OnDoubleClick(Mobile from)
+        {
+            if (Blessed)
+            {
+                from.SendLocalizedMessage(1071372); // It's covered with treasure guardian's magical power. To touch it, you need to beat them!
+                return;
+            }
+
+            base.OnDoubleClick(from);
         }
 
         public virtual void SetSkills()
@@ -140,47 +152,59 @@ namespace Server.Engines.JollyRoger
 
             switch (_Specialty)
             {
-                case SkillName.Swords: // Swordsman
+                case MasterTitle.Swordsman: // Swordsman
                     SetSkill(SkillName.Swords, MinSkill, MaxSkill);
                     SetSkill(SkillName.Tactics, MinSkill, MaxSkill);
                     SetSkill(SkillName.Parry, MinSkill, MaxSkill);
                     SetSkill(SkillName.Bushido, MinSkill, MaxSkill);
+                    SetSpecialAbility(SpecialAbility.AngryFire);
+                    SetSpecialAbility(SpecialAbility.SearingWounds);
+                    SetWeaponAbility(WeaponAbility.FrenziedWhirlwind);
                     break;
-                case SkillName.Fencing: // Fencer
+                case MasterTitle.Fencer: // Fencer
                     SetSkill(SkillName.Fencing, MinSkill, MaxSkill);
                     SetSkill(SkillName.Tactics, MinSkill, MaxSkill);
                     SetSkill(SkillName.Parry, MinSkill, MaxSkill);
                     SetSkill(SkillName.Ninjitsu, MinSkill, MaxSkill);
+                    SetWeaponAbility(WeaponAbility.Feint);
+                    SetWeaponAbility(WeaponAbility.ArmorIgnore);
                     break;
-                case SkillName.Macing: // Macer
+                case MasterTitle.Macer: // Macer
                     SetSkill(SkillName.Macing, MinSkill, MaxSkill);
                     SetSkill(SkillName.Tactics, MinSkill, MaxSkill);
                     SetSkill(SkillName.Parry, MinSkill, MaxSkill);
+                    SetWeaponAbility(WeaponAbility.CrushingBlow);
                     break;
-                case SkillName.Archery: // Archer
+                case MasterTitle.Archer: // Archer
                     SetSkill(SkillName.Archery, MinSkill, MaxSkill);
                     SetSkill(SkillName.MagicResist, MinSkill, MaxSkill);
                     SetSkill(SkillName.Swords, MinSkill, MaxSkill);
                     SetSkill(SkillName.Tactics, MinSkill, MaxSkill);
+                    SetWeaponAbility(WeaponAbility.PsychicAttack);
+                    SetWeaponAbility(WeaponAbility.ForceArrow);
+                    SetWeaponAbility(WeaponAbility.ParalyzingBlow);
                     break;
-                case SkillName.Magery: // Wizard
+                case MasterTitle.Wizard: // Wizard
                     SetSkill(SkillName.Magery, MinSkill, MaxSkill);
                     SetSkill(SkillName.EvalInt, MinSkill, MaxSkill);
                     SetSkill(SkillName.Meditation, MinSkill, MaxSkill);
                     SetSkill(SkillName.MagicResist, MinSkill, MaxSkill);
+                    SetAreaEffect(AreaEffect.AuraDamage);
                     break;
-                case SkillName.Mysticism: // Mystic
+                case MasterTitle.Mystic: // Mystic
                     SetSkill(SkillName.Mysticism, MinSkill, MaxSkill);
                     SetSkill(SkillName.Focus, MinSkill, MaxSkill);
                     SetSkill(SkillName.Meditation, MinSkill, MaxSkill);
                     SetSkill(SkillName.MagicResist, MinSkill, MaxSkill);
                     break;
-                case SkillName.Necromancy: // Necromancer
+                case MasterTitle.Necromancer: // Necromancer
                     SetSkill(SkillName.Necromancy, MinSkill, MaxSkill);
                     SetSkill(SkillName.SpiritSpeak, MinSkill, MaxSkill);
                     SetSkill(SkillName.MagicResist, MinSkill, MaxSkill);
+                    SetSpecialAbility(SpecialAbility.ManaDrain);
+                    SetSpecialAbility(SpecialAbility.LifeLeech);
                     break;
-                case SkillName.Bushido: // Sampire
+                case MasterTitle.Sampire: // Sampire
                     SetSkill(SkillName.Chivalry, MinSkill, MaxSkill);
                     SetSkill(SkillName.Bushido, MinSkill, MaxSkill);
                     SetSkill(SkillName.Necromancy, MinSkill, MaxSkill);
@@ -188,51 +212,27 @@ namespace Server.Engines.JollyRoger
                     SetSkill(SkillName.Swords, MinSkill, MaxSkill);
                     SetSkill(SkillName.Parry, MinSkill, MaxSkill);
                     break;
-                case SkillName.Poisoning: // Assassin
+                case MasterTitle.Assassin: // Assassin
                     SetSkill(SkillName.Hiding, MinSkill, MaxSkill);
                     SetSkill(SkillName.Stealth, MinSkill, MaxSkill);
                     SetSkill(SkillName.Poisoning, MinSkill, MaxSkill);
                     SetSkill(SkillName.Swords, MinSkill, MaxSkill);
                     SetSkill(SkillName.Fencing, MinSkill, MaxSkill);
                     SetSkill(SkillName.Ninjitsu, MinSkill, MaxSkill);
+                    SetAreaEffect(AreaEffect.PoisonBreath);
                     break;
-                case SkillName.Peacemaking: // Bard
+                case MasterTitle.Bard: // Bard
                     SetSkill(SkillName.Musicianship, MinSkill, MaxSkill);
                     SetSkill(SkillName.Peacemaking, MinSkill, MaxSkill);
-                    break;
-            }
-        }
-
-        public virtual void SetAbility()
-        {
-            switch (_Specialty)
-            {
-                case SkillName.Peacemaking:
                     SetSpecialAbility(SpecialAbility.HowlOfCacophony);
                     break;
-                case SkillName.Swords:
-                    SetSpecialAbility(SpecialAbility.AngryFire);
-                    SetSpecialAbility(SpecialAbility.SearingWounds);
-                    SetWeaponAbility(WeaponAbility.FrenziedWhirlwind);
-                    break;
-                case SkillName.Fencing:
-                    SetWeaponAbility(WeaponAbility.Feint);
-                    SetWeaponAbility(WeaponAbility.ArmorIgnore);
-                    break;
-                case SkillName.Macing:
-                    SetWeaponAbility(WeaponAbility.CrushingBlow);
-                    break;
-                case SkillName.Archery:
-                    SetWeaponAbility(WeaponAbility.PsychicAttack);
-                    SetWeaponAbility(WeaponAbility.ForceArrow);
-                    SetWeaponAbility(WeaponAbility.ParalyzingBlow);
-                    break;
-                case SkillName.Necromancy:
-                    SetSpecialAbility(SpecialAbility.ManaDrain);
-                    SetSpecialAbility(SpecialAbility.LifeLeech);
-                    break;
-                case SkillName.Poisoning:
-                    SetAreaEffect(AreaEffect.PoisonBreath);
+                case MasterTitle.Rogue: // Rogue
+                    SetSkill(SkillName.Archery, MinSkill, MaxSkill);
+                    SetSkill(SkillName.MagicResist, MinSkill, MaxSkill);
+                    SetSkill(SkillName.Swords, MinSkill, MaxSkill);
+                    SetSkill(SkillName.Tactics, MinSkill, MaxSkill);
+                    SetSkill(SkillName.Poisoning, MinSkill, MaxSkill);
+                    SetAreaEffect(AreaEffect.EssenceOfDisease);
                     break;
             }
         }
@@ -246,8 +246,8 @@ namespace Server.Engines.JollyRoger
                         Race = Race.Human;
                     else
                         Race = Race.Elf; break;
-                case SkillName.Archery:
-                case SkillName.Spellweaving: Race = Race.Elf; break;
+                case MasterTitle.Mystic: Race = Race.Gargoyle;
+                    break;
             }
 
             HairItemID = Race.RandomHair(Female);
@@ -270,114 +270,130 @@ namespace Server.Engines.JollyRoger
 
         public virtual void EquipSpecialty()
         {
-            SetWearable(new ThighBoots());
-            SetWearable(new BodySash(), Utility.RandomSlimeHue());
-
             switch (_Specialty)
             {
-                case SkillName.Chivalry:
-                    SetWearable(RandomSwordWeapon());
-                    PaladinEquip();
+                case MasterTitle.Bard:
+                    SetWearable(new QuarterStaff());
+                    SetWearable(new FeatheredHat(1308));
+
+                    if (Female)
+                    {
+                        SetWearable(new HideFemaleChest());
+                    }
+                    else
+                    {
+                        SetWearable(new HideChest());
+                    }
+
+                    SetWearable(new HidePauldrons());
+                    SetWearable(new HideGorget());
+                    SetWearable(new LeafGloves());
+                    SetWearable(new LeatherSkirt());
+                    SetWearable(new ThighBoots());
+                    SetWearable(new BodySash(1308));
                     break;
-                case SkillName.Swords:
-                    SetWearable(RandomSwordWeapon());
-                    StandardMeleeEquip();
+                case MasterTitle.Macer:
+                    SetWearable(new WarMace());
+                    SetWearable(new PlateArms());
+                    SetWearable(new PlateLegs());
+                    SetWearable(new PlateGloves());
+                    SetWearable(new PlateHelm());
+                    SetWearable(new PlateChest());
+                    SetWearable(new HeaterShield());
+                    SetWearable(new Surcoat());
                     break;
-                case SkillName.Fencing:
+                case MasterTitle.Rogue:
+                    SetWearable(new RepeatingCrossbow());
+                    SetWearable(new LeatherGloves());
+                    SetWearable(new Doublet());
+                    SetWearable(new Cap());
+                    SetWearable(new QuiverOfInfinity());
+                    SetWearable(new LeatherArms());
+                    SetWearable(new LeatherLegs());
+                    SetWearable(new Sandals());
+                    break;
+                case MasterTitle.Archer:
+                    SetWearable(new MagicalShortbow());
+                    SetWearable(new RingmailGloves());
+                    SetWearable(new ChainChest());
+                    SetWearable(new BodySash(1193));
+                    SetWearable(new ThighBoots());
+                    SetWearable(new Cap());
+                    SetWearable(new QuiverOfInfinity());
+                    break;
+                case MasterTitle.Wizard:
+                    SetWearable(new Kilt(1156));
+
+                    if (Female)
+                    {
+                        SetWearable(new LeatherBustierArms(), 2498);
+                    }
+                    else
+                    {
+                        SetWearable(new LeatherArms(), 2498);
+                    }
+
+                    SetWearable(new LeatherGloves(), 2498);
+                    SetWearable(new BodySash(1156));
+                    SetWearable(new WizardsHat(1156));
+                    SetWearable(new Sandals(2498));
+                    SetWearable(new Spellbook());
+                    break;
+                case MasterTitle.Mystic:
+                    SetWearable(new MysticBook((uint)0xFFF));
+                    SetWearable(new GargishFancyRobe());
+                    SetWearable(new GargishEarrings());
+                    SetWearable(new GargishClothWingArmor());
+                    SetWearable(new LeatherTalons());
+                    break;
+                case MasterTitle.Sampire:
+                    SetWearable(new DoubleAxe(), 1858);
+                    SetWearable(new Epaulette(), 1192);
+                    SetWearable(new ChainChest());
+                    SetWearable(new ChainLegs());
+                    SetWearable(new RingmailGloves(), 1863);
+                    SetWearable(new ElvenBoots());
+                    SetWearable(new BodySash(1866));
+                    SetWearable(new RoyalCirclet());
+                    break;
+                case MasterTitle.Necromancer:
+                    SetWearable(new NecromancerSpellbook());
+                    SetWearable(new BoneChest(), 1910);
+                    SetWearable(new BoneLegs(), 1910);
+                    SetWearable(new LeatherGloves(), 1175);
+                    SetWearable(new Sandals());
+                    SetWearable(new Cloak(), 1157);
+                    SetWearable(new GoldNecklace());
+                    break;
+                case MasterTitle.Assassin:
+                    SetWearable(new AssassinSpike());
+                    SetWearable(new LeatherChest(), 2051);
+                    SetWearable(new LeatherLegs(), 2051);
+                    SetWearable(new LeatherGloves());
+                    SetWearable(new LeatherGorget(), 2051);
+                    SetWearable(new Sandals());
+                    SetWearable(new LeatherNinjaBelt());
+                    SetWearable(new Doublet(), 2051);
+                    SetWearable(new LeatherNinjaHood(), 2051);
+                    break;
+                case MasterTitle.Swordsman:
+                    SetWearable(new PaladinSword());
+                    PackItem(new Daisho());
+                    PackItem(new Wakizashi());
+                    SetWearable(new NorseHelm(), 2406);
+                    SetWearable(new PlateArms(), 2406); ;
+                    SetWearable(new DragonGloves(), 2406);
+                    SetWearable(new DragonChest(), 2406);
+                    SetWearable(new PlateLegs(), 2406);
+                    SetWearable(new LeatherNinjaBelt(), 2726);
+                    SetWearable(new BodySash(2726));
+                    SetWearable(new Cloak(), 2726);
+                    break;
+                case MasterTitle.Fencer:
                     SetWearable(RandomFencingWeapon());
                     StandardMeleeEquip();
                     break;
-                case SkillName.Macing:
-                    SetWearable(RandomMaceWeapon());
-                    StandardMeleeEquip();
-                    break;
-                case SkillName.Archery:
-                    SetWearable(RandomArhceryWeapon());
-                    StandardMeleeEquip();
-                    break;
-                case SkillName.Magery:
-                    SetWearable(RandomMageWeapon());
-                    StandardMageEquip();
-                    break;
-                case SkillName.Mysticism:
-                    SetWearable(RandomMageWeapon());
-                    StandardMageEquip();
-                    break;
-                case SkillName.Spellweaving:
-                    SetWearable(RandomMageWeapon());
-                    StandardMageEquip();
-                    break;
-                case SkillName.Necromancy:
-                    SetWearable(RandomMageWeapon());
-                    StandardMageEquip();
-                    break;
-                case SkillName.Bushido:
-                    BaseWeapon w = RandomSamuraiWeapon() as BaseWeapon;
-                    SetWearable(w);
-
-                    SetWearable(new LeatherSuneate());
-                    SetWearable(new LeatherJingasa());
-                    SetWearable(new LeatherDo());
-                    SetWearable(new LeatherHiroSode());
-                    SetWearable(new SamuraiTabi(Utility.RandomNondyedHue()));
-
-                    if (_Sampire)
-                        w.WeaponAttributes.HitLeechHits = 100;
-
-                    SetSkill(SkillName.Parry, 120);
-                    break;
-                case SkillName.Ninjitsu:
-                    SetWearable(RandomNinjaWeapon());
-
-                    LeatherNinjaBelt belt = new LeatherNinjaBelt();
-                    belt.UsesRemaining = 20;
-                    belt.Poison = Poison.Greater;
-                    belt.PoisonCharges = 20;
-                    SetWearable(belt);
-
-                    for (int i = 0; i < 2; i++)
-                    {
-                        Fukiya f = new Fukiya();
-                        f.UsesRemaining = 10;
-                        f.Poison = Poison.Greater;
-                        f.PoisonCharges = 10;
-                        f.Movable = false;
-                        PackItem(f);
-                    }
-
-                    SetWearable(new NinjaTabi());
-                    SetWearable(new LeatherNinjaJacket());
-                    SetWearable(new LeatherNinjaHood());
-                    SetWearable(new LeatherNinjaPants());
-                    SetWearable(new LeatherNinjaMitts());
-
-                    break;
-                case SkillName.Poisoning:
-                    BaseWeapon wep = RandomAssassinWeapon() as BaseWeapon;
-                    wep.Poison = Poison.Lethal;
-                    wep.PoisonCharges = 100;
-                    SetWearable(wep);
-
-                    SetWearable(new LeatherChest());
-                    SetWearable(new LeatherLegs());
-                    SetWearable(new LeatherGloves());
-                    SetWearable(new LeatherGorget());
-                    break;
             }
-        }
-
-        private void PaladinEquip()
-        {
-            SetWearable(Loot.Construct(new Type[] { typeof(Bascinet), typeof(Helmet), typeof(PlateHelm) }), 1153);
-
-            SetWearable(new PlateChest());
-            SetWearable(new PlateLegs());
-            SetWearable(new PlateGloves());
-            SetWearable(new PlateGorget());
-            SetWearable(new PlateArms());
-            SetWearable(new MetalKiteShield());
-
-            SetSkill(SkillName.Parry, 120);
         }
 
         private void StandardMeleeEquip()
@@ -390,36 +406,22 @@ namespace Server.Engines.JollyRoger
             SetWearable(new LeatherGorget());
         }
 
-        private void StandardMageEquip()
+        public static AIType GetAI(MasterTitle title)
         {
-            bool mage = AI == AIType.AI_Mage;
-
-            SetWearable(new WizardsHat(), mage ? Utility.RandomBlueHue() : Utility.RandomRedHue());
-            SetWearable(new Robe(), mage ? Utility.RandomBlueHue() : Utility.RandomRedHue());
-            SetWearable(new LeatherGloves());
-        }
-
-        public static AIType GetAI(SkillName skill)
-        {
-            switch (skill)
+            switch (title)
             {
                 default: return AIType.AI_Melee;
-                case SkillName.Ninjitsu: return AIType.AI_Ninja;
-                case SkillName.Bushido: return AIType.AI_Samurai;
-                case SkillName.Chivalry: return AIType.AI_Paladin;
-                case SkillName.Magery: return AIType.AI_Mage;
-                case SkillName.Necromancy: return AIType.AI_NecroMage;
-                case SkillName.Spellweaving: return AIType.AI_Spellweaving;
-                case SkillName.Mysticism: return AIType.AI_Mystic;
+                case MasterTitle.Swordsman: return AIType.AI_Samurai;
+                case MasterTitle.Fencer: return AIType.AI_Ninja;
+                case MasterTitle.Sampire: return AIType.AI_Samurai;
+                case MasterTitle.Macer: return AIType.AI_Melee;
+                case MasterTitle.Archer: return AIType.AI_Archer;
+                case MasterTitle.Wizard: return AIType.AI_Mage;
+                case MasterTitle.Mystic: return AIType.AI_Mystic;
+                case MasterTitle.Necromancer: return AIType.AI_Necro;
+                case MasterTitle.Assassin: return AIType.AI_Ninja;
+                case MasterTitle.Bard: return AIType.AI_Melee;
             }
-        }
-
-        public Item RandomSwordWeapon()
-        {
-            if (Race == Race.Elf)
-                return Loot.Construct(new Type[] { typeof(ElvenMachete), typeof(RadiantScimitar) });
-
-            return Loot.Construct(new Type[] { typeof(Broadsword), typeof(Longsword), typeof(Katana), typeof(Halberd), typeof(Bardiche), typeof(VikingSword) });
         }
 
         public Item RandomFencingWeapon()
@@ -428,39 +430,6 @@ namespace Server.Engines.JollyRoger
                 return Loot.Construct(new Type[] { typeof(Leafblade), typeof(WarCleaver), typeof(AssassinSpike) });
 
             return Loot.Construct(new Type[] { typeof(Kryss), typeof(Spear), typeof(ShortSpear), typeof(Lance), typeof(Pike) });
-        }
-
-        public Item RandomMaceWeapon()
-        {
-            return Loot.Construct(new Type[] { typeof(Mace), typeof(WarHammer), typeof(WarAxe), typeof(BlackStaff), typeof(QuarterStaff), typeof(WarMace), typeof(DiamondMace), typeof(Scepter) });
-        }
-
-        public Item RandomArhceryWeapon()
-        {
-            if (Race == Race.Elf)
-                return Loot.Construct(new Type[] { typeof(MagicalShortbow), typeof(ElvenCompositeLongbow) });
-
-            return Loot.Construct(new Type[] { typeof(Bow), typeof(Crossbow), typeof(HeavyCrossbow), typeof(CompositeBow), typeof(RepeatingCrossbow) });
-        }
-
-        public Item RandomMageWeapon()
-        {
-            return Loot.Construct(new Type[] { typeof(Spellbook), typeof(GnarledStaff), typeof(BlackStaff), typeof(QuarterStaff), typeof(WildStaff) });
-        }
-
-        public Item RandomSamuraiWeapon()
-        {
-            return Loot.Construct(new Type[] { typeof(Lajatang), typeof(Wakizashi), typeof(NoDachi) });
-        }
-
-        public Item RandomNinjaWeapon()
-        {
-            return Loot.Construct(new Type[] { typeof(Wakizashi), typeof(Tessen), typeof(Nunchaku), typeof(Daisho), typeof(Sai), typeof(Tekagi), typeof(Kama), typeof(Katana) });
-        }
-
-        public Item RandomAssassinWeapon()
-        {
-            return Loot.Construct(new Type[] { typeof(Cleaver), typeof(ButcherKnife), typeof(Kryss), typeof(Dagger) });
         }
 
         public override void GetProperties(ObjectPropertyList list)
@@ -476,6 +445,17 @@ namespace Server.Engines.JollyRoger
 
             if (Blessed && _Controller != null && _Controller.MasterBlessCheck(this))
             {
+                for (int i = 1; i < 4; i++)
+                {
+                    Timer.DelayCall(TimeSpan.FromMilliseconds(i * 50), o =>
+                    {
+                        Geometry.Circle2D(Location, Map, o, (pnt, map) =>
+                        {
+                            Effects.SendLocationEffect(pnt, map, 0x36B0, 14, 14, 2053, 0);
+                        });
+                    }, i);
+                }
+
                 Blessed = false;
             }
 
@@ -487,13 +467,28 @@ namespace Server.Engines.JollyRoger
                 Timer.DelayCall(TimeSpan.FromSeconds(5), () => { Location = Home; });
             }
 
-            if (CanDoSpecial && InRange(Combatant, 4) && 0.1 > Utility.RandomDouble() && _NextSpecial < DateTime.UtcNow)
+            if (0.1 > Utility.RandomDouble() && _NextSpecial < DateTime.UtcNow)
             {
-                DoSpecial();
+                switch (_Specialty)
+                {
+                    case MasterTitle.Macer:
+                        Teleport();
+                        break;
+                    case MasterTitle.Swordsman:
+                        ChangeWeapon();
+                        break;
+                    case MasterTitle.Wizard:
+                        if (0.5 > Utility.RandomDouble())
+                            DoNuke(Location);
+                        else
+                            DoDismount((Mobile)Combatant);
+                        break;
+
+                }
 
                 _NextSpecial = DateTime.UtcNow + TimeSpan.FromSeconds(Utility.RandomMinMax(30, 60));
             }
-            else if (_Sampire)
+            else if (_Specialty == MasterTitle.Sampire)
             {
                 if (0.1 > Utility.RandomDouble() && Weapon is BaseWeapon && !CurseWeaponSpell.IsCursed(this, (BaseWeapon)Weapon))
                 {
@@ -508,49 +503,185 @@ namespace Server.Engines.JollyRoger
             }
         }
 
-        private void DoSpecial()
+        private void ChangeWeapon()
         {
-            if (Map == null || Map == Map.Internal)
+            if (Backpack == null)
                 return;
 
-            Map m = Map;
+            Item item = FindItemOnLayer(Layer.OneHanded);
 
-            for (int i = 0; i < 4; i++)
+            if (item == null)
+                item = FindItemOnLayer(Layer.TwoHanded);
+
+            List<BaseWeapon> weapons = new List<BaseWeapon>();
+
+            foreach (Item i in Backpack.Items)
             {
-                Timer.DelayCall(TimeSpan.FromMilliseconds(i * 50), o =>
-                {
-                    Misc.Geometry.Circle2D(Location, m, o, (pnt, map) =>
-                    {
-                        Effects.SendLocationEffect(pnt, map, Utility.RandomBool() ? 14000 : 14013, 14, 20, 2018, 0);
-                    });
-                }, i);
+                if (i is BaseWeapon && i != item)
+                    weapons.Add((BaseWeapon)i);
             }
 
-            Timer.DelayCall(TimeSpan.FromMilliseconds(200), () =>
+            if (weapons.Count > 0)
+            {
+                if (item != null)
+                    Backpack.DropItem(item);
+
+                AddItem(weapons[Utility.Random(weapons.Count)]);
+            }
+
+            ColUtility.Free(weapons);
+        }
+
+        private void Teleport()
+        {
+            var toTele = SpellHelper.AcquireIndirectTargets(this, Location, Map, 12).OfType<PlayerMobile>().ToList();
+
+            if (toTele.Count > 0)
+            {
+                PlayerMobile from = toTele[Utility.Random(toTele.Count)];
+
+                if (from != null)
                 {
-                    if (m != null)
-                    {
-                        List<Mobile> list = new List<Mobile>();
-                        IPooledEnumerable eable = m.GetMobilesInRange(Location, 4);
+                    Combatant = from;
 
-                        foreach (Mobile mob in eable)
-                        {
-                            if (mob.AccessLevel > AccessLevel.Player)
-                                continue;
+                    from.MoveToWorld(GetSpawnPosition(1), Map);
+                    from.FixedParticles(0x376A, 9, 32, 0x13AF, EffectLayer.Waist);
+                    from.PlaySound(0x1FE);
+                }
+            }
 
-                            if (mob is PlayerMobile || (mob is BaseCreature && ((BaseCreature)mob).GetMaster() is PlayerMobile) && CanBeHarmful(mob))
-                                list.Add(mob);
-                        }
+            ColUtility.Free(toTele);
+        }
 
-                        list.ForEach(mob =>
-                            {
-                                AOS.Damage(mob, this, Utility.RandomMinMax(80, 90), 0, 0, 0, 0, 0, 100, 0);
-                            });
+        public void DoNuke(Point3D p)
+        {
+            if (!Alive || Map == null)
+            {
+                return;
+            }
 
-                        list.Clear();
-                        list.TrimExcess();
-                    }
+            var range = 8;
+
+            //Flame Columns
+            for (var i = 0; i < 2; i++)
+            {
+                Geometry.Circle2D(Location, Map, i, (pnt, map) =>
+                {
+                    Effects.SendLocationParticles(EffectItem.Create(pnt, map, EffectItem.DefaultDuration), 0x3709, 10, 30, 5052);
                 });
+            }
+
+            //Flash then boom
+            Timer.DelayCall(TimeSpan.FromSeconds(1.5), () =>
+            {
+                if (Alive && Map != null)
+                {
+                    var flash = ScreenLightFlash.Instance;
+                    IPooledEnumerable e = Map.GetClientsInRange(p, range * 4 + 5);
+
+                    foreach (NetState ns in e)
+                    {
+                        if (ns.Mobile != null)
+                        {
+                            ns.Mobile.Send(flash);
+                        }
+                    }
+
+                    e.Free();
+
+                    for (var i = 0; i < range; i++)
+                    {
+                        Geometry.Circle2D(Location, Map, i, (pnt, map) =>
+                        {
+                            Effects.SendLocationEffect(pnt, map, 14000, 14, 10, Utility.RandomMinMax(2497, 2499), 2);
+                        });
+                    }
+                }
+            });
+
+            IPooledEnumerable eable = GetMobilesInRange(range);
+
+            foreach (Mobile m in eable)
+            {
+                if ((m is PlayerMobile || m is BaseCreature && ((BaseCreature)m).GetMaster() is PlayerMobile) && CanBeHarmful(m))
+                {
+                    Timer.DelayCall(TimeSpan.FromSeconds(1.75), new TimerStateCallback(DoDamage_Callback), m);
+                }
+            }
+
+            eable.Free();
+        }
+
+        private void DoDamage_Callback(object o)
+        {
+            var m = o as Mobile;
+            var map = Map;
+
+            if (m != null && map != null)
+            {
+                DoHarmful(m);
+                AOS.Damage(m, this, Utility.RandomMinMax(100, 150), 50, 50, 0, 0, 0);
+
+                var d = Utility.GetDirection(this, m);
+                var range = 0;
+                var x = m.X;
+                var y = m.Y;
+                var orx = x;
+                var ory = y;
+
+                while (range < 12)
+                {
+                    range++;
+                    var lastx = x;
+                    var lasty = y;
+
+                    Movement.Movement.Offset(d, ref x, ref y);
+
+                    if (!map.CanSpawnMobile(x, y, map.GetAverageZ(x, y)))
+                    {
+                        m.MoveToWorld(new Point3D(lastx, lasty, map.GetAverageZ(lastx, lasty)), Map);
+                        break;
+                    }
+
+                    if (range >= 12 && (orx != x || ory != y))
+                    {
+                        m.MoveToWorld(new Point3D(x, y, map.GetAverageZ(x, y)), Map);
+                    }
+                }
+
+                m.Paralyze(TimeSpan.FromSeconds(3));
+            }
+        }
+
+        public void DoDismount(Mobile m)
+        {
+            MovingParticles(m, 0x36D4, 7, 0, false, true, 9502, 4019, 0x160);
+            PlaySound(0x15E);
+
+            var range = m.GetDistanceToSqrt(this);
+
+            Timer.DelayCall(TimeSpan.FromMilliseconds(250 * range), () =>
+            {
+                var mount = m.Mount;
+
+                if (mount != null)
+                {
+                    if (m is PlayerMobile)
+                    {
+                        ((PlayerMobile)m).SetMountBlock(BlockMountType.Dazed, TimeSpan.FromSeconds(10), true);
+                    }
+                    else
+                    {
+                        mount.Rider = null;
+                    }
+                }
+                else if (m.Flying)
+                {
+                    ((PlayerMobile)m).SetMountBlock(BlockMountType.Dazed, TimeSpan.FromSeconds(10), true);
+                }
+
+                AOS.Damage(m, this, Utility.RandomMinMax(15, 25), 100, 0, 0, 0, 0);
+            });
         }
 
         public override void OnDeath(Container c)
@@ -621,7 +752,6 @@ namespace Server.Engines.JollyRoger
 
             writer.Write((int)_Specialty);
             writer.Write((int)_Type);
-            writer.Write(_Sampire);
         }
 
         public override void Deserialize(GenericReader reader)
@@ -629,9 +759,8 @@ namespace Server.Engines.JollyRoger
             base.Deserialize(reader);
             int version = reader.ReadInt();
 
-            _Specialty = (SkillName)reader.ReadInt();
+            _Specialty = (MasterTitle)reader.ReadInt();
             _Type = (MasterType)reader.ReadInt();
-            _Sampire = reader.ReadBool();
 
             _NextSpecial = DateTime.UtcNow;
         }

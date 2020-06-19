@@ -1286,6 +1286,20 @@ namespace Server.Mobiles
                 (EtherealMount)from.Mount);
             }
 
+            var medallion = FellowshipMedallion.CheckMedallion(from);
+
+            if (medallion != null)
+            {
+                if (medallion is FellowshipMedallion fm)
+                {
+                    fm.Start((PlayerMobile)from);
+                }
+                else if (medallion is GargishFellowshipMedallion gfm)
+                {
+                    gfm.Start((PlayerMobile)from);
+                }
+            }
+
             from.CheckStatTimers();
         }
 

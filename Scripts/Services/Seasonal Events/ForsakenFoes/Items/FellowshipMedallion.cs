@@ -1,6 +1,8 @@
+using System;
 using Server.Gumps;
 using Server.Network;
 using System.Linq;
+using Server.Mobiles;
 
 namespace Server.Items
 {
@@ -10,7 +12,7 @@ namespace Server.Items
 
         [Constructable]
         public FellowshipMedallion()
-            : base(0xA429) // 0xa42a gargoyle id
+            : base(0xA429)
         {
             Weight = 1.0;
             Layer = Layer.Neck;
@@ -23,7 +25,69 @@ namespace Server.Items
 
         public static bool IsDressed(Mobile from)
         {
-            return from.Items.Any(i => (i is FellowshipMedallion || i is GargishFellowshipMedallion) && i.Parent is Mobile mobile && mobile.FindItemOnLayer(i.Layer) == i);
+            return CheckMedallion(from) != null;
+        }
+
+        public static Item CheckMedallion(Mobile from)
+        {
+            return from.Items.FirstOrDefault(i => (i is FellowshipMedallion || i is GargishFellowshipMedallion) && i.Parent is Mobile mobile && mobile.FindItemOnLayer(i.Layer) == i);
+        }
+
+        private Timer m_Timer;
+
+        public override void OnMapChange()
+        {
+            if (RootParent != null && RootParent is PlayerMobile pm)
+            {
+                if (pm.Map == Map.Internal)
+                {
+                    Start(pm);
+                }
+                else
+                {
+                    Stop();
+                }
+            }
+
+            base.OnMapChange();
+        }
+
+        public override void OnAdded(object parent)
+        {
+            base.OnAdded(parent);
+
+            if (parent is PlayerMobile pm)
+            {
+                Start(pm);
+            }
+        }
+
+        public override void OnRemoved(object parent)
+        {
+            base.OnRemoved(parent);
+
+            Stop();
+        }
+
+        public void Start(PlayerMobile pm)
+        {
+            if (pm != null)
+            {
+                if (m_Timer == null || !m_Timer.Running)
+                {
+                    m_Timer = new InternalTimer(pm);
+                    m_Timer.Start();
+                }
+            }
+        }
+
+        public void Stop()
+        {
+            if (m_Timer != null)
+            {
+                m_Timer.Stop();
+                m_Timer = null;
+            }
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -40,12 +104,48 @@ namespace Server.Items
         {
             base.Serialize(writer);
             writer.Write(0); // version
+
+            writer.Write(m_Timer!=null);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
             int version = reader.ReadInt();
+
+            bool timer = reader.ReadBool();
+
+            if (timer && RootParent is PlayerMobile pm)
+            {
+                Start(pm);
+            }
+        }
+    }
+
+    public class InternalTimer : Timer
+    {
+        private readonly Mobile _Mobile;
+
+        public InternalTimer(Mobile m)
+            : base(TimeSpan.FromSeconds(12), TimeSpan.FromSeconds(12))
+        {
+            _Mobile = m;
+
+            Priority = TimerPriority.OneSecond;
+        }
+
+        protected override void OnTick()
+        {
+            if (_Mobile != null && _Mobile.NetState != null && _Mobile.Alive)
+            {
+                _Mobile.PrivateOverheadMessage(MessageType.Regular, 0x21, 1159298 + Utility.Random(11),
+                    _Mobile.NetState);
+                _Mobile.PlaySound(1664);
+            }
+            else
+            {
+                Stop();
+            }
         }
     }
 
@@ -90,6 +190,63 @@ namespace Server.Items
                 from.SendGump(new FellowshipMedallionGump(this));
                 from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1157722, "its origin"); // *Your proficiency in ~1_SKILL~ reveals more about the item*
                 from.PlaySound(1050);
+            }
+        }
+
+        private Timer m_Timer;
+
+        public override void OnMapChange()
+        {
+            if (RootParent != null && RootParent is PlayerMobile pm)
+            {
+                if (pm.Map == Map.Internal)
+                {
+                    Start(pm);
+                }
+                else
+                {
+                    Stop();
+                }
+            }
+
+            base.OnMapChange();
+        }
+
+        public override void OnAdded(object parent)
+        {
+            base.OnAdded(parent);
+
+            if (parent is PlayerMobile pm)
+            {
+                Start(pm);
+            }
+        }
+
+        public override void OnRemoved(object parent)
+        {
+            base.OnRemoved(parent);
+
+            Stop();
+        }
+
+        public void Start(PlayerMobile pm)
+        {
+            if (pm != null)
+            {
+                if (m_Timer == null || !m_Timer.Running)
+                {
+                    m_Timer = new InternalTimer(pm);
+                    m_Timer.Start();
+                }
+            }
+        }
+
+        public void Stop()
+        {
+            if (m_Timer != null)
+            {
+                m_Timer.Stop();
+                m_Timer = null;
             }
         }
 
