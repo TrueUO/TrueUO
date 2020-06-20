@@ -536,7 +536,7 @@ namespace Server.Mobiles
             if (m.AccessLevel >= AccessLevel.GameMaster)
                 return true;
 
-            if (BaseHouse.NewVendorSystem && House != null)
+            if (House != null)
             {
                 return House.IsOwner(m);
             }
