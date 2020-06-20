@@ -1,7 +1,6 @@
 using Server.Engines.Points;
 using Server.Items;
 using System;
-using Server.Commands;
 using Server.Engines.JollyRoger;
 using Server.Mobiles;
 
@@ -12,13 +11,6 @@ namespace Server.Engines.JollyRoge
         public static void Initialize()
         {
             EventSink.WorldSave += OnWorldSave;
-
-            CommandSystem.Register("GenJollyRoger", AccessLevel.Administrator, Generate);
-        }
-
-        public static void Generate(CommandEventArgs e)
-        {
-            Generate();
         }
 
         private static void OnWorldSave(WorldSaveEventArgs e)
