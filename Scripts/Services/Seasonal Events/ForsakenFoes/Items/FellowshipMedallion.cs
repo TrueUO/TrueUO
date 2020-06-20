@@ -1,8 +1,8 @@
-using System;
 using Server.Gumps;
-using Server.Network;
-using System.Linq;
 using Server.Mobiles;
+using Server.Network;
+using System;
+using System.Linq;
 
 namespace Server.Items
 {
@@ -71,13 +71,10 @@ namespace Server.Items
 
         public void Start(PlayerMobile pm)
         {
-            if (pm != null)
+            if (pm != null && m_Timer == null || !m_Timer.Running)
             {
-                if (m_Timer == null || !m_Timer.Running)
-                {
-                    m_Timer = new InternalTimer(pm);
-                    m_Timer.Start();
-                }
+                m_Timer = new InternalTimer(pm);
+                m_Timer.Start();
             }
         }
 

@@ -107,7 +107,7 @@ namespace Server.Engines.JollyRoger
                     if (kvp.Key.Alive)
                         count++;
 
-                    count += kvp.Value.Where(bc => bc.Alive).Count();
+                    count += kvp.Value.Count(bc => bc.Alive);
                 }
 
                 return count;

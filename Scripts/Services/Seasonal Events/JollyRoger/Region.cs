@@ -1,12 +1,11 @@
-using System;
+using Server.Engines.JollyRoger;
+using Server.Engines.Points;
+using Server.Items;
 using Server.Network;
-using System.Collections.Generic;
-using System.Linq;
 using Server.Spells.Seventh;
 using Server.Spells.Sixth;
-using Server.Engines.JollyRoger;
-using Server.Items;
-using Server.Engines.Points;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Server.Regions
 {
@@ -14,7 +13,7 @@ namespace Server.Regions
     {
         public static void Initialize()
         {
-            new WellOfSoulsRegion();
+            var wellOfSoulsRegion = new WellOfSoulsRegion();
         }
 
         private static Rectangle2D _Bound = new Rectangle2D(2246, 1537, 36, 40);
@@ -62,11 +61,6 @@ namespace Server.Regions
 
     public class WellOfSoulsVirtuesRegion : Region
     {
-        public static void Initialize()
-        {
-            new WellOfSoulsVirtuesRegion();
-        }
-
         public static readonly List<VirtueDef> Virtue = new List<VirtueDef>()
         {
             new VirtueDef(Shrine.Spirituality, new Rectangle2D(2262, 1561, 4, 4), "Spiritual"),

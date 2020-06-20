@@ -52,7 +52,7 @@ namespace Server.Engines.JollyRoger
             {
                 if (Permission != null)
                 {
-                    var p = Permission.Where(x => x.Mobile == from).FirstOrDefault();
+                    var p = Permission.FirstOrDefault(x => x.Mobile == from);
 
                     if (p != null)
                     {
@@ -206,7 +206,6 @@ namespace Server.Engines.JollyRoger
                         {
                             Controller._List[from] = temp.ToArray();
                             from.PlaySound(Sound);
-                            //Controller._List[from].ToList().ForEach(x => Console.WriteLine(x));
                         }
                         else
                         {
@@ -228,7 +227,6 @@ namespace Server.Engines.JollyRoger
                 else if (Controller.Notes[0].Note == Note)
                 {
                     Controller._List.Add(from, new[] { Note });
-                    //Controller._List[from].ToList().ForEach(x => Console.WriteLine(x));
                     from.PlaySound(Sound);
                 }
                 else

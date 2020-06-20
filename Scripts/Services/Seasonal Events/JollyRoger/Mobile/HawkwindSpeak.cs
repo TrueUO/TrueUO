@@ -36,13 +36,10 @@ namespace Server.Engines.JollyRoger
                 return;
             }
 
-            if (m is PlayerMobile && m.InRange(this, 10))
+            if (m is PlayerMobile && m.InRange(this, 10) && _Timer == null)
             {
-                if (_Timer == null)
-                {
-                    _Timer = new MessageTimer(this);
-                    _Timer.Start();
-                }
+                _Timer = new MessageTimer(this);
+                _Timer.Start();
             }
         }
 
@@ -87,13 +84,10 @@ namespace Server.Engines.JollyRoger
                     _Mobile.Say(m_Messages[m_State++], 946);
                 }
 
-                if (m_State == m_Messages.Length)
+                if (m_State == m_Messages.Length && _Mobile._Timer != null)
                 {
-                    if (_Mobile._Timer != null)
-                    {
-                        _Mobile._Timer.Stop();
-                        _Mobile._Timer = null;
-                    }
+                    _Mobile._Timer.Stop();
+                    _Mobile._Timer = null;
                 }
             }
         }

@@ -1,11 +1,10 @@
 #region
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using Server.Engines.JollyRoger;
 using Server.Engines.SeasonalEvents;
 using Server.Mobiles;
+using System.Collections.Generic;
+using System.Linq;
 
 #endregion
 
@@ -25,10 +24,6 @@ namespace Server.Engines.Points
 
         public bool Enabled { get; set; }
         public bool QuestContentGenerated { get; set; }
-
-        public override void SendMessage(PlayerMobile from, double old, double points, bool quest)
-        {
-        }
 
         public static readonly List<ShrineDef> ShrineDef = new List<ShrineDef>
         {
