@@ -114,19 +114,6 @@ namespace Server.Mobiles
         Red,
         Black
     }
-
-    public enum ShrineTitle
-    {
-        None,
-        Valiant,
-        Spiritual,
-        Sacrificing,
-        Just,
-        Humble,
-        Honorable,
-        Honest,
-        Compassionate
-    }
     #endregion
 
     public partial class PlayerMobile : Mobile, IHonorTarget
