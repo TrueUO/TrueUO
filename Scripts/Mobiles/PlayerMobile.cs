@@ -6497,7 +6497,7 @@ namespace Server.Mobiles
                         continue;
                     }
 
-                    if (!pet.CanAutoStable)
+                    if (!pet.CanAutoStable || Stabled.Count >= AnimalTrainer.GetMaxStabled(this))
                     {
                         continue;
                     }
