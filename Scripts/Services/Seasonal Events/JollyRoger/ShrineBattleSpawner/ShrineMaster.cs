@@ -271,6 +271,8 @@ namespace Server.Engines.JollyRoger
 
         public virtual void EquipSpecialty()
         {
+            Item item;
+
             switch (_Specialty)
             {
                 case MasterTitle.Bard:
@@ -378,9 +380,18 @@ namespace Server.Engines.JollyRoger
                     SetWearable(new LeatherNinjaHood(), 2051);
                     break;
                 case MasterTitle.Swordsman:
-                    SetWearable(new PaladinSword());
-                    PackItem(new Daisho());
-                    PackItem(new Wakizashi());
+                    item = new PaladinSword();
+                    item.LootType = LootType.Blessed;
+                    SetWearable(item);
+
+                    item = new Daisho();
+                    item.LootType = LootType.Blessed;
+                    PackItem(item);
+
+                    item = new Wakizashi();
+                    item.LootType = LootType.Blessed;
+                    PackItem(item);
+
                     SetWearable(new NorseHelm(), 2406);
                     SetWearable(new PlateArms(), 2406); ;
                     SetWearable(new DragonGloves(), 2406);
@@ -391,20 +402,33 @@ namespace Server.Engines.JollyRoger
                     SetWearable(new Cloak(), 2726);
                     break;
                 case MasterTitle.Fencer:
-                    SetWearable(RandomFencingWeapon());
-                    StandardMeleeEquip();
+                    item = new Lajatang();
+                    item.LootType = LootType.Blessed;
+                    SetWearable(item);
+
+                    item = new Sai();
+                    item.LootType = LootType.Blessed;
+                    PackItem(item);
+
+                    item = new Tekagi();
+                    item.LootType = LootType.Blessed;
+                    PackItem(item);
+
+                    if (Female)
+                    {
+                        SetWearable(new LeatherBustierArms());
+                        SetWearable(new LeatherSkirt());
+                    }
+                    else
+                    {
+                        SetWearable(new LeatherChest());
+                        SetWearable(new LeatherLegs());
+                    }
+
+                    SetWearable(new BoneArms());
+                    SetWearable(new ThighBoots());
                     break;
             }
-        }
-
-        private void StandardMeleeEquip()
-        {
-            SetWearable(Loot.Construct(new Type[] { typeof(Bascinet), typeof(Helmet), typeof(LeatherCap), typeof(RoyalCirclet) }));
-
-            SetWearable(new ChainChest());
-            SetWearable(new ChainLegs());
-            SetWearable(new RingmailGloves());
-            SetWearable(new LeatherGorget());
         }
 
         public static AIType GetAI(MasterTitle title)
@@ -416,6 +440,7 @@ namespace Server.Engines.JollyRoger
                 case MasterTitle.Fencer: return AIType.AI_Ninja;
                 case MasterTitle.Sampire: return AIType.AI_Samurai;
                 case MasterTitle.Macer: return AIType.AI_Melee;
+                case MasterTitle.Rogue:
                 case MasterTitle.Archer: return AIType.AI_Archer;
                 case MasterTitle.Wizard: return AIType.AI_Mage;
                 case MasterTitle.Mystic: return AIType.AI_Mystic;
@@ -475,6 +500,7 @@ namespace Server.Engines.JollyRoger
                     case MasterTitle.Macer:
                         Teleport();
                         break;
+                    case MasterTitle.Fencer:
                     case MasterTitle.Swordsman:
                         ChangeWeapon();
                         break;
