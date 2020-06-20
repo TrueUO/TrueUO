@@ -280,7 +280,7 @@ namespace Server.Engines.JollyRoger
         public static SherryTheMouse InstanceFel { get; set; }
 
         public SherryStrongBox Box { get; set; }
-        public List<SherryLute> LuteList;
+        public List<Item> LuteList;
         public Dictionary<Mobile, string[]> _List;
         public List<NoteArray> NoteList;
 
@@ -288,7 +288,7 @@ namespace Server.Engines.JollyRoger
         public SherryTheMouse()
             : base("the Mouse")
         {
-            LuteList = new List<SherryLute>();
+            LuteList = new List<Item>();
             _List = new Dictionary<Mobile, string[]>();
 
             NoteList = RandomNotes();
@@ -349,8 +349,8 @@ namespace Server.Engines.JollyRoger
                 {
                     if (LuteList[i] != null)
                     {
-                        LuteList[i].Note = NoteList[i].Note;
-                        LuteList[i].Sound = NoteList[i].Sound;
+                        ((SherryLute)LuteList[i]).Note = NoteList[i].Note;
+                        ((SherryLute)LuteList[i]).Sound = NoteList[i].Sound;
                     }
                 }
             }
@@ -412,10 +412,10 @@ namespace Server.Engines.JollyRoger
 
             writer.Write(Box);
 
-            writer.Write(LuteList == null ? 0 : LuteList.Count);
-
             if (LuteList != null)
             {
+                writer.Write(LuteList.Count);
+
                 LuteList.ForEach(x => writer.Write(x));
             }
         }
@@ -425,12 +425,15 @@ namespace Server.Engines.JollyRoger
             base.Deserialize(reader);
             int version = reader.ReadInt();
 
-            Box = reader.ReadItem() as SherryStrongBox;
+            LuteList = new List<Item>();
+
+            Box = (SherryStrongBox)reader.ReadItem();
 
             int lutecount = reader.ReadInt();
+
             for (int x = 0; x < lutecount; x++)
             {
-                SherryLute l = reader.ReadItem() as SherryLute;
+                var l = reader.ReadItem();
 
                 if (l != null)
                     LuteList.Add(l);

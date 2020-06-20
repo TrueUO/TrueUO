@@ -233,6 +233,8 @@ namespace Server.Engines.JollyRoger
                     SetSkill(SkillName.Swords, MinSkill, MaxSkill);
                     SetSkill(SkillName.Tactics, MinSkill, MaxSkill);
                     SetSkill(SkillName.Poisoning, MinSkill, MaxSkill);
+                    SetSkill(SkillName.Hiding, MinSkill, MaxSkill);
+                    SetSkill(SkillName.Stealth, MinSkill, MaxSkill);
                     SetAreaEffect(AreaEffect.EssenceOfDisease);
                     break;
             }
@@ -485,6 +487,11 @@ namespace Server.Engines.JollyRoger
                 Blessed = false;
             }
 
+            if (!Hidden && 0.1 > Utility.RandomDouble() && (_Specialty == MasterTitle.Rogue || _Specialty == MasterTitle.Assassin))
+            {
+                HideSelf();
+            }
+
             if (Combatant == null)
                 return;
 
@@ -493,7 +500,7 @@ namespace Server.Engines.JollyRoger
                 Timer.DelayCall(TimeSpan.FromSeconds(5), () => { Location = Home; });
             }
 
-            if (0.1 > Utility.RandomDouble() && _NextSpecial < DateTime.UtcNow)
+            if (0.3 > Utility.RandomDouble() && _NextSpecial < DateTime.UtcNow)
             {
                 switch (_Specialty)
                 {
@@ -709,6 +716,20 @@ namespace Server.Engines.JollyRoger
 
                 AOS.Damage(m, this, Utility.RandomMinMax(15, 25), 100, 0, 0, 0, 0);
             });
+        }
+
+        private void HideSelf()
+        {
+            if (Core.TickCount >= NextSkillTime)
+            {
+                Effects.SendLocationParticles(
+                    EffectItem.Create(Location, Map, EffectItem.DefaultDuration), 0x3728, 10, 10, 2023);
+
+                PlaySound(0x22F);
+                Hidden = true;
+
+                UseSkill(SkillName.Stealth);
+            }
         }
 
         public override void OnDeath(Container c)
