@@ -584,8 +584,8 @@ namespace Server.Items
 
         public Type Type => m_Type;
         public int Description => m_Description;
-        public int Storage => BaseHouse.NewVendorSystem ? m_NewStorage : m_Storage;
-        public int Lockdowns => BaseHouse.NewVendorSystem ? m_NewLockdowns : m_Lockdowns;
+        public int Storage => m_NewStorage;
+        public int Lockdowns => m_NewLockdowns;
         public int Vendors => m_Vendors;
         public int Cost => m_Cost;
         public int MultiID => m_MultiID;
@@ -702,7 +702,6 @@ namespace Server.Items
                             {
                                 if (!Banker.Withdraw(from, m_Cost, true))
                                 {
-                                    house.RemoveKeys(from);
                                     house.Delete();
                                     from.SendLocalizedMessage(1060646); // You do not have the funds available in your bank box to purchase this house.  Try placing a smaller house, or adding gold or checks to your bank box.
                                     return;
