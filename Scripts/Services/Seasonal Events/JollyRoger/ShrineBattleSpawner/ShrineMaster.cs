@@ -452,14 +452,6 @@ namespace Server.Engines.JollyRoger
             }
         }
 
-        public Item RandomFencingWeapon()
-        {
-            if (Race == Race.Elf)
-                return Loot.Construct(new Type[] { typeof(Leafblade), typeof(WarCleaver), typeof(AssassinSpike) });
-
-            return Loot.Construct(new Type[] { typeof(Kryss), typeof(Spear), typeof(ShortSpear), typeof(Lance), typeof(Pike) });
-        }
-
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);
@@ -755,7 +747,7 @@ namespace Server.Engines.JollyRoger
 
                     if (_Controller != null)
                     {
-                        JollyRogerData.AddReward(drop, _Controller.Shrine);
+                        JollyRogerData.AddMasterKill(drop, _Controller.Shrine);
                         _Controller.OnMasterDestroyed();
                     }
 

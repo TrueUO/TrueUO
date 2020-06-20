@@ -1,6 +1,7 @@
 using System.Linq;
 using Server.Engines.Craft;
 using Server.Engines.JollyRoger;
+using Server.Engines.Points;
 
 namespace Server.Items
 {
@@ -22,7 +23,7 @@ namespace Server.Items
             _Shrine = shrine;
 
             Weight = 3;
-            Hue = MysteriousFragment.ShrineDef.FirstOrDefault(x => x.Shrine == shrine).Hue;
+            Hue = JollyRogerData.GetShrineHue(shrine);
             StrRequirement = 0;
         }
 

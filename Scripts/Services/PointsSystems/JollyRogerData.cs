@@ -1,8 +1,13 @@
+#region
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Server.Engines.JollyRoger;
 using Server.Engines.SeasonalEvents;
 using Server.Mobiles;
-using System.Collections.Generic;
-using System.Linq;
+
+#endregion
 
 namespace Server.Engines.Points
 {
@@ -25,7 +30,44 @@ namespace Server.Engines.Points
         {
         }
 
-        public static void AddReward(Mobile m, Shrine shrine)
+        public static readonly List<ShrineDef> ShrineDef = new List<ShrineDef>
+        {
+            new ShrineDef(Shrine.Spirituality, 2500, 1159321),
+            new ShrineDef(Shrine.Compassion, 1912, 1159327),
+            new ShrineDef(Shrine.Honor, 1918, 1159325),
+            new ShrineDef(Shrine.Honesty, 1916, 1159326),
+            new ShrineDef(Shrine.Humility, 1910, 1159324),
+            new ShrineDef(Shrine.Justice, 1914 , 1159323),
+            new ShrineDef(Shrine.Valor, 1920, 1159320),
+            new ShrineDef(Shrine.Sacrifice, 1922, 1159322)
+        };
+
+        public static int FragmentRandomHue()
+        {
+            return Utility.RandomList(ShrineDef.Select(x => x.Hue).ToArray());
+        }
+
+        public static int GetShrineHue(Shrine shrine)
+        {
+            return ShrineDef.FirstOrDefault(x => x.Shrine == shrine).Hue;
+        }
+
+        public static Shrine GetShrine(int cliloc)
+        {
+            return ShrineDef.Find(x => x.TitleCliloc == cliloc).Shrine;
+        }
+
+        public static Shrine GetShrine(Item item)
+        {
+            return ShrineDef.FirstOrDefault(x => x.Hue == item.Hue).Shrine;
+        }
+
+        public static int GetTitle(Shrine shrine)
+        {
+            return ShrineDef.FirstOrDefault(x => x.Shrine == shrine).TitleCliloc;
+        }
+
+        public static void AddMasterKill(Mobile m, Shrine shrine)
         {
             var list = _List.FirstOrDefault(x => x.Mobile == m);
 
@@ -37,19 +79,70 @@ namespace Server.Engines.Points
                 }
                 else
                 {
-                    _List.FirstOrDefault(x => x.Mobile == m).Shrine.Add(new ShrineArray(shrine, 1));
+                    _List.FirstOrDefault(x => x.Mobile == m).Shrine.Add(new ShrineArray { Shrine = shrine, MasterDeath = 1 });
                 }
             }
             else
             {
                 var sa = new List<ShrineArray>
                 {
-                    new ShrineArray(shrine, 1)
+                    new ShrineArray {Shrine = shrine, MasterDeath = 1 }
                 };
 
                 var ra = new RewardArray(m, sa);
 
                 _List.Add(ra);
+            }
+        }
+
+        public static void FragmentIncrease(Mobile m, Shrine shrine)
+        {
+            if (m == null)
+            {
+                return;
+            }
+
+            var list = _List.FirstOrDefault(x => x.Mobile == m);
+
+            if (list != null && list.Shrine != null)
+            {
+                if (list.Shrine.Any(y => y.Shrine == shrine))
+                {
+                    _List.FirstOrDefault(x => x.Mobile == m).Shrine.FirstOrDefault(y => y.Shrine == shrine).FragmentCount++;
+                }
+                else
+                {
+                    _List.FirstOrDefault(x => x.Mobile == m).Shrine.Add(new ShrineArray { Shrine = shrine, FragmentCount = 1 });
+                }
+            }
+            else
+            {
+                var sa = new List<ShrineArray>
+                {
+                    new ShrineArray {Shrine = shrine, FragmentCount = 1 }
+                };
+
+                var ra = new RewardArray(m, sa);
+
+                _List.Add(ra);
+            }
+
+            TitleCheck(m, shrine);
+        }
+
+        public static void TitleCheck(Mobile m, Shrine shrine)
+        {
+            var list = _List.FirstOrDefault(x => x.Mobile == m);
+
+            if (list != null && list.Shrine != null)
+            {
+                var count = list.Shrine.FirstOrDefault(x => x.Shrine == shrine).FragmentCount;
+                var title = GetTitle(shrine);
+
+                if (m is PlayerMobile pm && (pm.ShrineTitle == 0 || pm.ShrineTitle != title && list.Shrine.Any(x => x.FragmentCount < count && x.Shrine != shrine)))
+                {
+                    pm.ShrineTitle = title;
+                }
             }
         }
 
@@ -74,6 +167,7 @@ namespace Server.Engines.Points
                 l.Shrine.ForEach(s =>
                 {
                     writer.Write((int)s.Shrine);
+                    writer.Write(s.FragmentCount);
                     writer.Write(s.MasterDeath);
                 });
             });
@@ -82,32 +176,33 @@ namespace Server.Engines.Points
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            var version = reader.ReadInt();
 
             switch (version)
             {
-                case 1:
+                case 0:
                     Enabled = reader.ReadBool();
                     QuestContentGenerated = reader.ReadBool();
 
-                    int count = reader.ReadInt();
+                    var count = reader.ReadInt();
 
-                    for (int i = count; i > 0; i--)
+                    for (var i = count; i > 0; i--)
                     {
-                        Mobile m = reader.ReadMobile();
-                        bool t = reader.ReadBool();
-                        bool c = reader.ReadBool();
+                        var m = reader.ReadMobile();
+                        var t = reader.ReadBool();
+                        var c = reader.ReadBool();
 
                         var temp = new List<ShrineArray>();
 
-                        int sc = reader.ReadInt();
+                        var scount = reader.ReadInt();
 
-                        for (int s = sc; s > 0; s--)
+                        for (var s = scount; s > 0; s--)
                         {
-                            Shrine sh = (Shrine)reader.ReadInt();
-                            int md = reader.ReadInt();
+                            var sh = (Shrine)reader.ReadInt();
+                            var fc = reader.ReadInt();
+                            var md = reader.ReadInt();
 
-                            temp.Add(new ShrineArray(sh, md));
+                            temp.Add(new ShrineArray { Shrine = sh, FragmentCount = fc, MasterDeath = md });
                         }
 
                         if (m != null)
@@ -117,6 +212,20 @@ namespace Server.Engines.Points
                     }
                     break;
             }
+        }
+    }
+
+    public class ShrineDef
+    {
+        public Shrine Shrine { get; set; }
+        public int Hue { get; set; }
+        public int TitleCliloc { get; set; }
+
+        public ShrineDef(Shrine s, int h, int tc)
+        {
+            Shrine = s;
+            Hue = h;
+            TitleCliloc = tc;
         }
     }
 
@@ -145,12 +254,7 @@ namespace Server.Engines.Points
     public class ShrineArray
     {
         public Shrine Shrine { get; set; }
+        public int FragmentCount { get; set; }
         public int MasterDeath { get; set; }
-
-        public ShrineArray(Shrine s, int c)
-        {
-            Shrine = s;
-            MasterDeath = c;
-        }
     }
 }

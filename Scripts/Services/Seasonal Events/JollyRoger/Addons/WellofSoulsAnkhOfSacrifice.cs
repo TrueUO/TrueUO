@@ -28,7 +28,7 @@ namespace Server.Items
 
             if (from is PlayerMobile pm && pm.ShrineTitle > 0 && l != null && l.Shrine != null)
             {
-                var shrine = MysteriousFragment.ShrineDef.Find(x => x.TitleCliloc == pm.ShrineTitle).Shrine;
+                var shrine = JollyRogerData.GetShrine(pm.ShrineTitle);
 
                 var s = l.Shrine.FirstOrDefault(y => y.Shrine == shrine);
 

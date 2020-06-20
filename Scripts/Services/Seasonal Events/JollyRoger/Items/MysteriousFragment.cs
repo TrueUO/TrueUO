@@ -1,27 +1,11 @@
 using Server.Engines.JollyRoger;
 using Server.Gumps;
-using Server.Mobiles;
 using Server.Network;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using Server.Engines.Points;
 
 namespace Server.Items
 {
-    public class ShrineDef
-    {
-        public Shrine Shrine { get; set; }
-        public int Hue { get; set; }
-        public int TitleCliloc { get; set; }
-
-        public ShrineDef(Shrine s, int h, int tc)
-        {
-            Shrine = s;
-            Hue = h;
-            TitleCliloc = tc;
-        }
-    }
-
     public class MysteriousFragment : Item
     {
         public override int LabelNumber => 1159025;  // mysterious fragment
@@ -34,20 +18,8 @@ namespace Server.Items
         public MysteriousFragment()
             : base(0x1F13)
         {
-            Hue = Utility.RandomList(ShrineDef.Select(x => x.Hue).ToArray());
+            Hue = JollyRogerData.FragmentRandomHue();
         }
-
-        public static readonly List<ShrineDef> ShrineDef = new List<ShrineDef>()
-        {
-            new ShrineDef(Shrine.Spirituality, 2500, 1159321),
-            new ShrineDef(Shrine.Compassion, 1912, 1159327),
-            new ShrineDef(Shrine.Honor, 1918, 1159325),
-            new ShrineDef(Shrine.Honesty, 1916, 1159326),
-            new ShrineDef(Shrine.Humility, 1910, 1159324),
-            new ShrineDef(Shrine.Justice, 1914 , 1159323),
-            new ShrineDef(Shrine.Valor, 1920, 1159320),
-            new ShrineDef(Shrine.Sacrifice, 1922, 1159322),
-        };
 
         public override void OnDoubleClick(Mobile from)
         {
@@ -77,7 +49,7 @@ namespace Server.Items
             }
 
             if (!_Controller.Active && _Controller.FragmentCount < 8 &&
-                ShrineDef.FirstOrDefault(x => x.Hue == Hue).Shrine == _Controller.Shrine)
+                JollyRogerData.GetShrine(this) == _Controller.Shrine)
             {
                 if (_Timer != null)
                 {
@@ -143,12 +115,7 @@ namespace Server.Items
                         Timer.DelayCall(TimeSpan.FromSeconds(5), () => _Item._Controller.Active = true);
                     }
 
-                    var cliloc = ShrineDef.FirstOrDefault(x => x.Hue == _Item.Hue).TitleCliloc;
-
-                    if (_Mobile is PlayerMobile pm && pm.ShrineTitle != cliloc)
-                    {
-                        pm.ShrineTitle = cliloc;
-                    }
+                    JollyRogerData.FragmentIncrease(_Mobile, _Item._Controller.Shrine);
 
                     _Item.Delete();
                 }

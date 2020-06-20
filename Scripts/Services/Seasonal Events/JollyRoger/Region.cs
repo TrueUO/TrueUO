@@ -1,3 +1,4 @@
+using System;
 using Server.Network;
 using System.Collections.Generic;
 using System.Linq;
@@ -89,7 +90,7 @@ namespace Server.Regions
             var virtue = Virtue.FirstOrDefault(x => x.Area.Contains(m.Location));
 
             var list = JollyRogerData._List.FirstOrDefault(x => x.Mobile == m);
-
+            
             if (list != null && list.Shrine != null)
             {
                 var s = list.Shrine.FirstOrDefault(x => x.Shrine == virtue.Shrine);
@@ -120,8 +121,9 @@ namespace Server.Regions
                     {
                         m.PrivateOverheadMessage(MessageType.Regular, 0x47E, false,
                             string.Format("*Thou are truly {0}...*", virtue.Title), m.NetState);
-                        m.PlaySound(532);
-                        m.FixedEffect(0x376A, 72, 1);
+
+                        m.FixedParticles(0x376A, 1, 72, 0x13B5, EffectLayer.Waist);
+                        m.PlaySound(0x1F2);
                     }
                 }
                 else
