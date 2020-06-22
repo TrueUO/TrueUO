@@ -1,12 +1,8 @@
-#region
-
 using Server.Engines.JollyRoger;
 using Server.Engines.SeasonalEvents;
 using Server.Mobiles;
 using System.Collections.Generic;
 using System.Linq;
-
-#endregion
 
 namespace Server.Engines.Points
 {
@@ -25,6 +21,8 @@ namespace Server.Engines.Points
         public bool Enabled { get; set; }
         public bool QuestContentGenerated { get; set; }
 
+        public static Dictionary<PlayerMobile, int> ShrineTitles { get; set; } = new Dictionary<PlayerMobile, int>();
+
         private static readonly List<ShrineDef> ShrineDef = new List<ShrineDef>
         {
             new ShrineDef(Shrine.Spirituality, 2500, 1159321),
@@ -36,6 +34,31 @@ namespace Server.Engines.Points
             new ShrineDef(Shrine.Valor, 1920, 1159320),
             new ShrineDef(Shrine.Sacrifice, 1922, 1159322)
         };
+
+        public static void DisplayTitle(PlayerMobile pm, ObjectPropertyList list)
+        {
+            var title = GetShrineTitle(pm);
+
+            if (title > 0)
+            {
+                list.Add(title);
+            }
+        }
+
+        public static int GetShrineTitle(PlayerMobile pm)
+        {
+            if (ShrineTitles.ContainsKey(pm))
+            {
+                return ShrineTitles[pm];
+            }
+
+            return 0;
+        }
+
+        public static void SetShrineTitle(PlayerMobile pm, int title)
+        {
+            ShrineTitles[pm] = title;
+        }
 
         public static RewardArray GetList(Mobile m)
         {
@@ -143,15 +166,17 @@ namespace Server.Engines.Points
         public static void TitleCheck(Mobile m, Shrine shrine)
         {
             var list = _List.FirstOrDefault(x => x.Mobile == m);
+            var pm = m as PlayerMobile;
 
-            if (list != null && list.Shrine != null)
+            if (pm != null && list != null && list.Shrine != null)
             {
                 var count = list.Shrine.FirstOrDefault(x => x.Shrine == shrine).FragmentCount;
-                var title = GetTitle(shrine);
+                var playerTitle = GetShrineTitle(pm);
+                var shrineTitle = GetTitle(shrine);
 
-                if (m is PlayerMobile pm && (pm.ShrineTitle == 0 || pm.ShrineTitle != title && list.Shrine.Any(x => x.FragmentCount < count && x.Shrine != shrine)))
+                if ((playerTitle == 0 || playerTitle != shrineTitle) && list.Shrine.Any(x => x.FragmentCount < count && x.Shrine != shrine))
                 {
-                    pm.ShrineTitle = title;
+                    SetShrineTitle(pm, shrineTitle);
                 }
             }
         }
@@ -181,6 +206,14 @@ namespace Server.Engines.Points
                     writer.Write(s.MasterDeath);
                 });
             });
+
+            writer.Write(ShrineTitles.Count);
+
+            foreach (var kvp in ShrineTitles)
+            {
+                writer.WriteMobile<PlayerMobile>(kvp.Key);
+                writer.Write(kvp.Value);
+            }
         }
 
         public override void Deserialize(GenericReader reader)
@@ -218,6 +251,19 @@ namespace Server.Engines.Points
                         if (m != null)
                         {
                             _List.Add(new RewardArray(m, temp, t, c));
+                        }
+                    }
+
+                    count = reader.ReadInt();
+
+                    for (int i = 0; i < count; i++)
+                    {
+                        var pm = reader.ReadMobile<PlayerMobile>();
+                        var title = reader.ReadInt();
+
+                        if (pm != null)
+                        {
+                            ShrineTitles[pm] = title;
                         }
                     }
                     break;

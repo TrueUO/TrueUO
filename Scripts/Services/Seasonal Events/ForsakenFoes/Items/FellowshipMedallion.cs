@@ -6,7 +6,12 @@ using System.Linq;
 
 namespace Server.Items
 {
-    public class FellowshipMedallion : Item
+    public interface IFellowshipMedallion
+    {
+        void Start(PlayerMobile pm);
+    }
+
+    public class FellowshipMedallion : Item, IFellowshipMedallion
     {
         public override int LabelNumber => 1159248;  // Fellowship Medallion
 
@@ -28,9 +33,9 @@ namespace Server.Items
             return CheckMedallion(from) != null;
         }
 
-        public static Item CheckMedallion(Mobile from)
+        public static IFellowshipMedallion CheckMedallion(Mobile from)
         {
-            return from.Items.FirstOrDefault(i => (i is FellowshipMedallion || i is GargishFellowshipMedallion) && i.Parent is Mobile mobile && mobile.FindItemOnLayer(i.Layer) == i);
+            return from.Items.FirstOrDefault(i => (i is IFellowshipMedallion) && i.Parent is Mobile mobile && mobile.FindItemOnLayer(i.Layer) == i) as IFellowshipMedallion;
         }
 
         private Timer m_Timer;
@@ -117,6 +122,26 @@ namespace Server.Items
                 Start(pm);
             }
         }
+
+        public static void Initialize()
+        {
+            EventSink.Login += OnLogin;
+        }
+
+        public static void OnLogin(LoginEventArgs e)
+        {
+            var pm = e.Mobile as PlayerMobile;
+
+            if (pm != null)
+            {
+                var medallion = CheckMedallion(pm);
+
+                if (medallion != null)
+                {
+                    medallion.Start(pm);
+                }
+            }
+        }
     }
 
     public class InternalTimer : Timer
@@ -161,7 +186,7 @@ namespace Server.Items
         }
     }
 
-    public class GargishFellowshipMedallion : GargishNecklace
+    public class GargishFellowshipMedallion : GargishNecklace, IFellowshipMedallion
     {
         public override int LabelNumber => 1159248;  // Fellowship Medallion
 

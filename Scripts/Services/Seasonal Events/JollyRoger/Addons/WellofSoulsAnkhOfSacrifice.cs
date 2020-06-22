@@ -25,30 +25,39 @@ namespace Server.Items
         public override void OnComponentUsed(AddonComponent c, Mobile from)
         {
             var l = JollyRogerData.GetList(from);
+            var pm = from as PlayerMobile;
 
-            if (from is PlayerMobile pm && pm.ShrineTitle > 0 && l != null && l.Shrine != null)
+            if (pm != null && l != null && l.Shrine != null)
             {
-                var shrine = JollyRogerData.GetShrine(pm.ShrineTitle);
+                var title = JollyRogerData.GetShrineTitle(pm);
 
-                var s = l.Shrine.FirstOrDefault(y => y.Shrine == shrine);
-
-                if (s != null)
+                if (title > 0)
                 {
-                    var count = s.MasterDeath;
+                    var shrine = JollyRogerData.GetShrine(title);
+                    var s = l.Shrine.FirstOrDefault(y => y.Shrine == shrine);
 
-                    if (count >= 8)
+                    if (s != null)
                     {
-                        from.CloseGump(typeof(TabardRewardGump));
-                        from.SendGump(new TabardRewardGump(shrine));
-                    }
-                    else if (count < 3)
-                    {
-                        from.SendLocalizedMessage(1159362); // Thou art virtuous, but have not truly fought for virtue.
+                        var count = s.MasterDeath;
+
+                        if (count >= 8)
+                        {
+                            from.CloseGump(typeof(TabardRewardGump));
+                            from.SendGump(new TabardRewardGump(shrine));
+                        }
+                        else if (count < 3)
+                        {
+                            from.SendLocalizedMessage(1159362); // Thou art virtuous, but have not truly fought for virtue.
+                        }
+                        else
+                        {
+                            from.SendLocalizedMessage(1159370,
+                                shrine.ToString()); // Thou art virtuous, but have not truly fought for ~1_VIRTUE~
+                        }
                     }
                     else
                     {
-                        from.SendLocalizedMessage(1159370,
-                            shrine.ToString()); // Thou art virtuous, but have not truly fought for ~1_VIRTUE~
+                        from.SendLocalizedMessage(1159361); // Thou art not virtuous...
                     }
                 }
                 else
