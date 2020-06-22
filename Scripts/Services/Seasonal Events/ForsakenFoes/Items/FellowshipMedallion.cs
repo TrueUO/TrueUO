@@ -149,7 +149,7 @@ namespace Server.Items
         private readonly Mobile _Mobile;
 
         public InternalTimer(Mobile m)
-            : base(TimeSpan.FromSeconds(12), TimeSpan.FromSeconds(12))
+            : base(TimeSpan.FromMinutes(12), TimeSpan.FromMinutes(12))
         {
             _Mobile = m;
 
