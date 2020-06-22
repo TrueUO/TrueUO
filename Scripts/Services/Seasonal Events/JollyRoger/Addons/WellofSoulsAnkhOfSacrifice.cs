@@ -22,7 +22,7 @@ namespace Server.Items
         {
         }       
 
-        public override void OnComponentUsed(AddonComponent component, Mobile from)
+        public override void OnComponentUsed(AddonComponent c, Mobile from)
         {
             var l = JollyRogerData._List.FirstOrDefault(x => x.Mobile == from);
 
@@ -72,7 +72,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
 
         }
     }

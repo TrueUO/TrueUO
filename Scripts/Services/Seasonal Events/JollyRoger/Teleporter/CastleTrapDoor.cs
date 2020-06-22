@@ -24,17 +24,17 @@ namespace Server.Items
         {
         }
 
-        public override void OnDoubleClick(Mobile m)
+        public override void OnDoubleClick(Mobile from)
         {
-            if (FellowshipMedallion.IsDressed(m) || _Exit)
+            if (FellowshipMedallion.IsDressed(from) || _Exit)
             {
-                BaseCreature.TeleportPets(m, _PointDest, _Map);
-                m.MoveToWorld(_PointDest, _Map);
+                BaseCreature.TeleportPets(from, _PointDest, _Map);
+                from.MoveToWorld(_PointDest, _Map);
             }
             else
             {
-                m.PrivateOverheadMessage(MessageType.Regular, 0x47E, 1159385,
-                    m.NetState); // * Your connection to the ethereal void is not honed, you cannot pass... *
+                from.PrivateOverheadMessage(MessageType.Regular, 0x47E, 1159385,
+                    from.NetState); // * Your connection to the ethereal void is not honed, you cannot pass... *
             }
         }
 
@@ -51,7 +51,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             _PointDest = reader.ReadPoint3D();
             _Map = reader.ReadMap();

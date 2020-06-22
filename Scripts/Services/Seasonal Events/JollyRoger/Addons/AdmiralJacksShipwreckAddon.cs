@@ -681,7 +681,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            var version = reader.ReadInt();
+            reader.ReadInt();
 
             if (Map == Map.Trammel)
             {

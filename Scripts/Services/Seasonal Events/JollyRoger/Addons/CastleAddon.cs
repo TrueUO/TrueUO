@@ -710,9 +710,9 @@ namespace Server.Items
             });
         }
 
-        public override void OnLocationChange(Point3D oldLocation)
+        public override void OnLocationChange(Point3D oldLoc)
         {
-            base.OnLocationChange(oldLocation);
+            base.OnLocationChange(oldLoc);
 
             if (CastleCarpet != null)
             {
@@ -879,7 +879,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            var version = reader.ReadInt();
+            reader.ReadInt();
 
             CastleCarpet = reader.ReadItem();
             NightDecoration = reader.ReadItem();
@@ -2004,7 +2004,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -2212,7 +2212,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

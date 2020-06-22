@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Server.Engines.Quests;
-using Server.Engines.SphynxFortune;
 using Server.Gumps;
 using Server.Items;
 using Server.Mobiles;
@@ -26,7 +25,7 @@ namespace Server.Engines.JollyRoger
     public class SherryStrongBox : Container
     {
         private static List<BoxArray> Permission = new List<BoxArray>();
-        public static string FilePath = Path.Combine("Saves/Misc", "SherryStrongBox.bin");
+        private static string FilePath = Path.Combine("Saves/Misc", "SherryStrongBox.bin");
 
         [Constructable]
         public SherryStrongBox()
@@ -278,9 +277,9 @@ namespace Server.Engines.JollyRoger
         public static SherryTheMouse InstanceFel { get; set; }
 
         public SherryStrongBox Box { get; set; }
-        public List<Item> LuteList;
+        private List<Item> LuteList;
         public Dictionary<Mobile, string[]> _List;
-        public List<NoteArray> NoteList;
+        private List<NoteArray> NoteList;
 
         [Constructable]
         public SherryTheMouse()

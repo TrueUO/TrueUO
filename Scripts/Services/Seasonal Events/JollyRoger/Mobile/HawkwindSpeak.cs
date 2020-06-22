@@ -6,7 +6,7 @@ namespace Server.Engines.JollyRoger
 {
     public class HawkwindSpeak : BaseQuester
     {
-        public MessageTimer _Timer;
+        private MessageTimer _Timer;
 
         public static HawkwindSpeak Instance { get; set; }
 
@@ -74,7 +74,7 @@ namespace Server.Engines.JollyRoger
             public MessageTimer(HawkwindSpeak m)
                 : base(TimeSpan.FromSeconds(5.0), TimeSpan.FromSeconds(10.0))
             {
-                _Mobile = m; ;
+                _Mobile = m;
             }
 
             protected override void OnTick()

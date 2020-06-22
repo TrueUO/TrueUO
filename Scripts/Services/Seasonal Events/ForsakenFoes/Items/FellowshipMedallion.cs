@@ -37,7 +37,7 @@ namespace Server.Items
 
         public override void OnMapChange()
         {
-            if (RootParent != null && RootParent is PlayerMobile pm)
+            if (RootParent is PlayerMobile pm)
             {
                 if (pm.Map == Map.Internal)
                 {
@@ -108,7 +108,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             bool timer = reader.ReadBool();
 

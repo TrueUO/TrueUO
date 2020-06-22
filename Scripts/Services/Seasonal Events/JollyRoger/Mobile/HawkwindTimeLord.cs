@@ -1,8 +1,6 @@
 using Server.Engines.Quests;
 using Server.Gumps;
-using Server.Items;
 using Server.Mobiles;
-using Server.Network;
 
 namespace Server.Engines.JollyRoger
 {
@@ -59,7 +57,7 @@ namespace Server.Engines.JollyRoger
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             Instance = this;
         }

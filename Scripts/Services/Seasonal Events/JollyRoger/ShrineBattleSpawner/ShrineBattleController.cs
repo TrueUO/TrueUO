@@ -84,7 +84,7 @@ namespace Server.Engines.JollyRoger
             }
         }
 
-        public static Dictionary<Shrine, Rectangle2D[]> Defs;
+        private static Dictionary<Shrine, Rectangle2D[]> Defs;
 
         [CommandProperty(AccessLevel.GameMaster)]
         public Shrine Shrine { get; set; }

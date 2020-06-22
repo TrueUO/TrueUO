@@ -393,7 +393,7 @@ namespace Server.Engines.JollyRoger
                     PackItem(item);
 
                     SetWearable(new NorseHelm(), 2406);
-                    SetWearable(new PlateArms(), 2406); ;
+                    SetWearable(new PlateArms(), 2406);
                     SetWearable(new DragonGloves(), 2406);
                     SetWearable(new DragonChest(), 2406);
                     SetWearable(new PlateLegs(), 2406);
@@ -690,9 +690,9 @@ namespace Server.Engines.JollyRoger
 
                 if (mount != null)
                 {
-                    if (m is PlayerMobile)
+                    if (m is PlayerMobile pm)
                     {
-                        ((PlayerMobile)m).SetMountBlock(BlockMountType.Dazed, TimeSpan.FromSeconds(10), true);
+                        pm.SetMountBlock(BlockMountType.Dazed, TimeSpan.FromSeconds(10), true);
                     }
                     else
                     {
@@ -795,7 +795,7 @@ namespace Server.Engines.JollyRoger
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             _Specialty = (MasterTitle)reader.ReadInt();
             _Type = (MasterType)reader.ReadInt();

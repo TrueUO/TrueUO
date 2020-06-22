@@ -1,4 +1,3 @@
-using System.Linq;
 using Server.Engines.Craft;
 using Server.Engines.JollyRoger;
 using Server.Engines.Points;
@@ -58,13 +57,13 @@ namespace Server.Items
             writer.Write(0); // version
 
             writer.Write((int)_Shrine);
-            writer.Write((bool)Converted);
+            writer.Write(Converted);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             _Shrine = (Shrine)reader.ReadInt();
             Converted = reader.ReadBool();
