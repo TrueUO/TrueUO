@@ -61,7 +61,7 @@ namespace Server.Regions
 
     public class WellOfSoulsVirtuesRegion : Region
     {
-        public static readonly List<VirtueDef> Virtue = new List<VirtueDef>()
+        private static readonly List<VirtueDef> Virtue = new List<VirtueDef>()
         {
             new VirtueDef(Shrine.Spirituality, new Rectangle2D(2262, 1561, 4, 4), "Spiritual"),
             new VirtueDef(Shrine.Compassion, new Rectangle2D(2248, 1557, 4, 4), "Compassionate"),

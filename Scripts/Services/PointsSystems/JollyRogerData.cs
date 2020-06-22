@@ -25,7 +25,7 @@ namespace Server.Engines.Points
         public bool Enabled { get; set; }
         public bool QuestContentGenerated { get; set; }
 
-        public static readonly List<ShrineDef> ShrineDef = new List<ShrineDef>
+        private static readonly List<ShrineDef> ShrineDef = new List<ShrineDef>
         {
             new ShrineDef(Shrine.Spirituality, 2500, 1159321),
             new ShrineDef(Shrine.Compassion, 1912, 1159327),

@@ -25,7 +25,7 @@ namespace Server.Engines.JollyRoger
 
     public class SherryStrongBox : Container
     {
-        public static List<BoxArray> Permission = new List<BoxArray>();
+        private static List<BoxArray> Permission = new List<BoxArray>();
         public static string FilePath = Path.Combine("Saves/Misc", "SherryStrongBox.bin");
 
         [Constructable]

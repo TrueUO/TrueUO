@@ -226,7 +226,7 @@ namespace Server.Engines.JollyRoge
 
         #endregion
 
-        public static string[] Ghost =
+        private static string[] Ghost =
         {
             "Ghost,One",
             "Ghost,Two",
