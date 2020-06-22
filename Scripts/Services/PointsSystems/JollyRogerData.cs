@@ -12,7 +12,7 @@ namespace Server.Engines.Points
 {
     public class JollyRogerData : PointsSystem
     {
-        public static List<RewardArray> _List = new List<RewardArray>();
+        private static List<RewardArray> _List = new List<RewardArray>();
 
         public override PointsType Loyalty => PointsType.JollyRogerData;
         public override TextDefinition Name => "Jolly Roger";
@@ -36,6 +36,21 @@ namespace Server.Engines.Points
             new ShrineDef(Shrine.Valor, 1920, 1159320),
             new ShrineDef(Shrine.Sacrifice, 1922, 1159322)
         };
+
+        public static RewardArray GetList(Mobile m)
+        {
+            return _List.FirstOrDefault(x => x.Mobile == m);
+        }
+
+        public static void SetCloak(Mobile m, bool b)
+        {
+            GetList(m).Cloak = b;
+        }
+
+        public static void SetTabard(Mobile m, bool t)
+        {
+            GetList(m).Tabard = t;
+        }
 
         public static int FragmentRandomHue()
         {

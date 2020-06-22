@@ -194,7 +194,7 @@ namespace Server.Items
 
         public override void OnMapChange()
         {
-            if (RootParent != null && RootParent is PlayerMobile pm)
+            if (RootParent is PlayerMobile pm)
             {
                 if (pm.Map == Map.Internal)
                 {

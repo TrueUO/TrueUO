@@ -83,7 +83,7 @@ namespace Server.Regions
         {
             var virtue = Virtue.FirstOrDefault(x => x.Area.Contains(m.Location));
 
-            var list = JollyRogerData._List.FirstOrDefault(x => x.Mobile == m);
+            var list = JollyRogerData.GetList(m);
             
             if (list != null && list.Shrine != null)
             {
@@ -105,7 +105,7 @@ namespace Server.Regions
                         {
                             m.PrivateOverheadMessage(MessageType.Regular, 0x47E, 1159339,
                                 m.NetState); // Thous hast proven thou walks the path of Virtue!
-                            JollyRogerData._List.FirstOrDefault(x => x.Mobile == m).Cloak = true;
+                            JollyRogerData.SetCloak(m, true);
                             m.SendLocalizedMessage(1152339,
                                 item.ToString()); // A reward of ~1_ITEM~ has been placed in your backpack.
                             m.PlaySound(0x419);

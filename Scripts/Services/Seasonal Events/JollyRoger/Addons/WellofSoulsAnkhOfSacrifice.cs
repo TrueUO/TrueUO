@@ -24,7 +24,7 @@ namespace Server.Items
 
         public override void OnComponentUsed(AddonComponent c, Mobile from)
         {
-            var l = JollyRogerData._List.FirstOrDefault(x => x.Mobile == from);
+            var l = JollyRogerData.GetList(from);
 
             if (from is PlayerMobile pm && pm.ShrineTitle > 0 && l != null && l.Shrine != null)
             {
@@ -125,7 +125,7 @@ namespace Server.Items
                 }
                 case 1:
                 {
-                    var l = JollyRogerData._List.FirstOrDefault(x => x.Mobile == from);
+                    var l = JollyRogerData.GetList(from);
 
                     if (l != null)
                     {
@@ -189,7 +189,7 @@ namespace Server.Items
                 }
                 else
                 {
-                    JollyRogerData._List.FirstOrDefault(x => x.Mobile == from).Tabard = true;
+                    JollyRogerData.SetTabard(from, true);
                     from.SendLocalizedMessage(1152340); // A reward item has been placed in your backpack.
                     from.PlaySound(0x419);
                 }
