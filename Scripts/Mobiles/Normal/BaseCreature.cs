@@ -5387,6 +5387,9 @@ namespace Server.Mobiles
                 list.Add(1080078); // guarding
             }
 
+            if (this is IRepairableMobile && GetMaster() != null)
+                list.Add(1113697); // (Golem)
+
             if (Summoned && !IsAnimatedDead && !IsNecroFamiliar && !(this is Clone))
             {
                 list.Add(1049646); // (summoned)
