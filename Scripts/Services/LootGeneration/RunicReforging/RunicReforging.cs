@@ -72,29 +72,17 @@ namespace Server.Items
     {
         public static bool CanReforge(Mobile from, Item item, CraftSystem crsystem)
         {
-            CraftItem crItem = null;
             bool allowableSpecial = m_AllowableTable.ContainsKey(item.GetType());
 
             if (!allowableSpecial)
             {
-                crItem = CraftItem.GetCraftItem(item);
-            }
+                CraftItem crItem = CraftItem.GetCraftItem(item);
 
-            CraftSystem system = null;
-
-            if (!allowableSpecial)
-            {
-                system = CraftItem.GetCraftSystem(item.GetType());                
-            }
-            else
-            {
-                system = m_AllowableTable[item.GetType()];
-            }
-
-            if (system != null && system != crsystem || crItem == null && !allowableSpecial)
-            {
-                from.SendLocalizedMessage(1152279); // You cannot re-forge that item with this tool.
-                return false;
+                if (crItem == null)
+                {
+                    from.SendLocalizedMessage(1152279); // You cannot re-forge that item with this tool.
+                    return false;
+                }
             }
 
             bool goodtogo = true;
@@ -114,13 +102,11 @@ namespace Server.Items
 
             if (mods > maxmods)
                 goodtogo = false;
-            else if (m_AllowableTable.ContainsKey(item.GetType()) && m_AllowableTable[item.GetType()] != crsystem)
-                goodtogo = false;
             else if (item is IResource && !CraftResources.IsStandard(((IResource)item).Resource))
                 goodtogo = false;
             else if (item.LootType == LootType.Blessed || item.LootType == LootType.Newbied)
                 goodtogo = false;
-            else if (item is BaseWeapon && Server.Spells.Mysticism.EnchantSpell.IsUnderSpellEffects(from, (BaseWeapon)item))
+            else if (item is BaseWeapon && Spells.Mysticism.EnchantSpell.IsUnderSpellEffects(from, (BaseWeapon)item))
                 goodtogo = false;
             else if (item is BaseWeapon && ((BaseWeapon)item).FocusWeilder != null)
                 goodtogo = false;
@@ -136,6 +122,25 @@ namespace Server.Items
             if (!goodtogo)
             {
                 from.SendLocalizedMessage(1152113); // You cannot reforge that item.
+            }
+            else
+            {
+                CraftSystem system;
+
+                if (!allowableSpecial)
+                {
+                    system = CraftItem.GetCraftSystem(item.GetType());
+                }
+                else
+                {
+                    system = m_AllowableTable[item.GetType()];
+                }
+
+                if (system != null && system != crsystem)
+                {
+                    from.SendLocalizedMessage(1152279); // You cannot re-forge that item with this tool.
+                    goodtogo = false;
+                }
             }
 
             return goodtogo;
