@@ -1845,6 +1845,12 @@ namespace Server
 
             protected override void OnTick()
             {
+                if (m_Owner == null)
+                {
+                    Stop();
+                    return;
+                }
+
                 if (m_Owner.Deleted)
                 {
                     Stop();
@@ -1881,6 +1887,12 @@ namespace Server
 
             protected override void OnTick()
             {
+                if (m_Owner == null)
+                {
+                    Stop();
+                    return;
+                }
+
                 if (m_Owner.Deleted)
                 {
                     Stop();
@@ -1920,6 +1932,12 @@ namespace Server
 
             protected override void OnTick()
             {
+                if (m_Owner == null)
+                {
+                    Stop();
+                    return;
+                }
+
                 if (m_Owner.Deleted)
                 {
                     Stop();
