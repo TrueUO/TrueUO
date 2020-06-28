@@ -166,6 +166,36 @@ namespace Server.Engines.Craft
             return crItem;
         }
 
+        public static CraftSystem GetCraftSystem(Type type, bool subClass = false)
+        {
+            CraftSystem sys = null;
+
+            for (int i = 0; i < CraftSystem.Systems.Count; i++)
+            {
+                var system = CraftSystem.Systems[i];
+
+                if (system.CraftItems == null)
+                {
+                    continue;
+                }
+
+                CraftItem crItem = system.CraftItems.SearchFor(type);
+
+                if (crItem == null && subClass)
+                {
+                    crItem = system.CraftItems.SearchForSubclass(type);
+                }
+
+                if (crItem != null)
+                {
+                    sys = system;
+                    break;
+                }
+            }
+
+            return sys;
+        }
+
         private static readonly Dictionary<Type, int> _itemIds = new Dictionary<Type, int>();
 
         public static int ItemIDOf(Type type)

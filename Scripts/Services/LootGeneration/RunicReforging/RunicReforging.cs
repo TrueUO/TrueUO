@@ -80,7 +80,18 @@ namespace Server.Items
                 crItem = CraftItem.GetCraftItem(item);
             }
 
-            if (crItem == null && !allowableSpecial)
+            CraftSystem system = null;
+
+            if (!allowableSpecial)
+            {
+                system = CraftItem.GetCraftSystem(item.GetType());                
+            }
+            else
+            {
+                system = m_AllowableTable[item.GetType()];
+            }
+
+            if (system != null && system != crsystem || crItem == null && !allowableSpecial)
             {
                 from.SendLocalizedMessage(1152279); // You cannot re-forge that item with this tool.
                 return false;
@@ -116,6 +127,8 @@ namespace Server.Items
             else if (!allowableSpecial && ((item is BaseWeapon && !((BaseWeapon)item).PlayerConstructed) || (item is BaseArmor && !((BaseArmor)item).PlayerConstructed)))
                 goodtogo = false;
             else if (!allowableSpecial && item is BaseClothing && !(item is BaseHat))
+                goodtogo = false;
+            else if (!allowableSpecial && item is BaseJewel)
                 goodtogo = false;
             else if (Imbuing.IsInNonImbueList(item.GetType()))
                 goodtogo = false;
