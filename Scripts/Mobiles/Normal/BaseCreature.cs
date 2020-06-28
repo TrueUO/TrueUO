@@ -992,26 +992,31 @@ namespace Server.Mobiles
             }
             set
             {
-                Mobile initialFocus = InitialFocus;
+                if (Deleted)
+                    return;
 
-                if (base.Combatant == null)
+                var c = base.Combatant;
+
+                if (c == value)
+                    return;
+
+                if (AttacksFocus)
                 {
-                    if (value is Mobile && AttacksFocus)
+                    Mobile focus = InitialFocus;
+
+                    if (c != null)
                     {
-                        InitialFocus = (Mobile)value;
+                        if (focus != null && focus != value && InRange(focus.Location, RangePerception) && CanSee(focus))
+                            value = focus;
+                    }
+                    else
+                    {
+                        if (focus == null && value is Mobile m)
+                            InitialFocus = m;
                     }
                 }
-                else if (AttacksFocus &&
-                        initialFocus != null &&
-                        value != initialFocus &&
-                        !initialFocus.Hidden &&
-                        Map == initialFocus.Map &&
-                        InRange(initialFocus.Location, RangePerception))
-                {
-                    //Keeps focus
-                    base.Combatant = initialFocus;
-                    return;
-                }
+                else
+                    InitialFocus = null;
 
                 base.Combatant = value;
 
@@ -1083,6 +1088,8 @@ namespace Server.Mobiles
                 return true;
             }
         }
+
+        public bool IsGolem => this is IRepairableMobile && GetMaster() != null;
 
         public virtual bool TaintedLifeAura => false;
         public virtual bool BreathImmune => false;
@@ -5386,6 +5393,9 @@ namespace Server.Mobiles
             {
                 list.Add(1080078); // guarding
             }
+
+            if (IsGolem)
+                list.Add(1113697); // (Golem)
 
             if (Summoned && !IsAnimatedDead && !IsNecroFamiliar && !(this is Clone))
             {

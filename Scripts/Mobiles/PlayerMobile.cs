@@ -2244,6 +2244,13 @@ namespace Server.Mobiles
 
             if (from == this)
             {
+                #region TOL Shadowguard
+                if (ShadowguardController.GetInstance(Location, Map) != null)
+                {
+                    list.Add(new ExitEntry(this));
+                }
+                #endregion
+
                 if (Alive)
                 {
                     list.Add(new SearchVendors(this));
@@ -2322,13 +2329,6 @@ namespace Server.Mobiles
                 }
                 #endregion
 
-                #region TOL Shadowguard
-                if (ShadowguardController.GetInstance(Location, Map) != null)
-                {
-                    list.Add(new ExitEntry(this));
-                }
-                #endregion
-
                 if (DisabledPvpWarning)
                 {
                     list.Add(new CallbackEntry(1113797, EnablePvpWarning));
@@ -2368,14 +2368,9 @@ namespace Server.Mobiles
                     list.Add(new CallbackEntry(1077728, () => OpenTrade(from))); // Trade
                 }
 
-                BaseHouse curhouse = BaseHouse.FindHouseAt(this);
-
-                if (curhouse != null)
+                if (Alive && EjectPlayerEntry.CheckAccessible(from, this))
                 {
-                    if (Alive && curhouse.IsFriend(from))
-                    {
-                        list.Add(new EjectPlayerEntry(from, this));
-                    }
+                    list.Add(new EjectPlayerEntry(from, this));
                 }
             }
         }
