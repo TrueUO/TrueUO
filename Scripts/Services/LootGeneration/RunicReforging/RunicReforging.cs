@@ -114,8 +114,6 @@ namespace Server.Items
 
                 if (mods > maxmods)
                     goodtogo = false;
-                //else if (m_AllowableTable.ContainsKey(item.GetType()) && m_AllowableTable[item.GetType()] != crsystem)
-                //    goodtogo = false;
                 else if (item is IResource && !CraftResources.IsStandard(((IResource)item).Resource))
                     goodtogo = false;
                 else if (item.LootType == LootType.Blessed || item.LootType == LootType.Newbied)
@@ -124,7 +122,7 @@ namespace Server.Items
                     goodtogo = false;
                 else if (item is BaseWeapon && ((BaseWeapon)item).FocusWeilder != null)
                     goodtogo = false;
-                else if (!allowableSpecial && ((item is IQuality && !((IQuality)item).PlayerConstructed)))
+                else if (!allowableSpecial && (item is IQuality && !((IQuality)item).PlayerConstructed))
                     goodtogo = false;
                 else if (!allowableSpecial && item is BaseClothing && !(item is BaseHat))
                     goodtogo = false;
