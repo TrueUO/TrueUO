@@ -2747,6 +2747,9 @@ namespace Server.Items
             if (item is BaseArmor)
                 return ((BaseArmor)item).WeaponAttributes;
 
+            if(item is BaseClothing)
+                return ((BaseClothing)item).WeaponAttributes;
+
             return null;
         }
 
