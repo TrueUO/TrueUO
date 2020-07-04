@@ -35,7 +35,7 @@ namespace Server.Spells.SkillMasteries
         public virtual int UpkeepCancelMessage => 1156111;  // You do not have enough mana to keep your ability active.
         public virtual int OutOfRangeMessage => 1156098;  // Your target is no longer in range of your ability.
         public virtual int DisruptMessage => 1156110;  // Your ability was canceled.
-        public virtual int ExpireMessage => 0;  // Your ability was canceled. 
+        public virtual int ExpireMessage => 0;
 
         public virtual bool CancelsWeaponAbility => false;
         public virtual bool CancelsSpecialMove => CancelsWeaponAbility;
