@@ -12,7 +12,7 @@ namespace Server.Items
         bool EnhancedBait { get; }
     }
 
-    public class FishingPole : Item, ICraftable, IUsesRemaining, IResource, IQuality, IBaitable
+    public class FishingPole : Item, IUsesRemaining, IResource, IQuality, IBaitable
     {
         private Type m_BaitType;
         private bool m_EnhancedBait;

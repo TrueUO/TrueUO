@@ -1084,7 +1084,7 @@ namespace Server.Items
         {
         }
 
-        public void OnFlip(Mobile from)
+        public void OnFlip(Mobile m)
         {
             switch (ItemID)
             {

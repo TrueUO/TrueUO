@@ -35,7 +35,7 @@ namespace Server.Items
         {
         }
 
-        public override bool AllowEquipedCast(Mobile m)
+        public override bool AllowEquipedCast(Mobile from)
         {
             return true;
         }

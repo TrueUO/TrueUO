@@ -238,8 +238,6 @@ namespace Server.Items
             InvalidateLocations();
 
             Map map = from.Map;
-            Point3D fromLoc = from.Location;
-
             Region reg = from.Region;
 
             if (reg.Parent != null)
@@ -252,10 +250,12 @@ namespace Server.Items
             Type item = null;
             bool enhanced = false;
 
-            if (harvestItem is IBaitable)
+            var baitable = harvestItem as IBaitable;
+
+            if (baitable != null)
             {
-                bait = ((IBaitable)harvestItem).BaitType;
-                enhanced = ((IBaitable)harvestItem).EnhancedBait;
+                bait = baitable.BaitType;
+                enhanced = baitable.EnhancedBait;
             }
 
             var infos = GetInfoFor(from);
