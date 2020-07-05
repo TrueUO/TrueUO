@@ -281,7 +281,7 @@ namespace Server.Spells.SkillMasteries
             if (Timer != null)
             {
                 if (ExpireMessage > 0)
-                Caster.SendLocalizedMessage(ExpireMessage);
+                    Caster.SendLocalizedMessage(ExpireMessage);
 
                 Timer.Stop();
                 Timer = null;
