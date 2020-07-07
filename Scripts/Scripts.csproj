@@ -815,6 +815,7 @@
     <Compile Include="Mobiles\Normal\HungryCoconutCrab.cs" />
     <Compile Include="Mobiles\Normal\SkeletalCat.cs" />
     <Compile Include="Mobiles\Normal\TheButcher.cs" />
+    <Compile Include="Mobiles\Normal\Capybara.cs" />
     <Compile Include="Mobiles\Normal\Triton.cs" />
     <Compile Include="Mobiles\Normal\Eowmu.cs" />
     <Compile Include="Mobiles\NPCs\Gardener.cs" />
@@ -833,6 +834,11 @@
     <Compile Include="Mobiles\NPCs\Mannequin\Property\WeaponAttributeProperty.cs" />
     <Compile Include="Multis\Boats\Galleons\GalleonItem.cs" />
     <Compile Include="Multis\Houses\ContestHouses.cs" />
+    <Compile Include="Services\GiftGiving\23rdAnniversary\Anniversary23GiftToken.cs" />
+    <Compile Include="Services\GiftGiving\23rdAnniversary\Giver.cs" />
+    <Compile Include="Services\GiftGiving\23rdAnniversary\Items\SilverPlatedTome.cs" />
+    <Compile Include="Services\GiftGiving\23rdAnniversary\Items\SilverPlatedBubblingCauldronAddon.cs" />
+    <Compile Include="Services\GiftGiving\23rdAnniversary\Items\SilverPlatedLamppost.cs" />
     <Compile Include="Services\PointsSystems\JollyRogerData.cs" />
     <Compile Include="Services\Seasonal Events\ForsakenFoes\Mobile\MiningCooperativeMerchant.cs" />
     <Compile Include="Mobiles\NPCs\CommissionPlayerVendor.cs" />
@@ -11402,7 +11408,9 @@
   <ItemGroup>
     <None Include="Services\TreasureMaps\desktop.ini" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Items\StoreBought\DecorativeMagesSet\" />
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSHARP.targets" />
   <ProjectExtensions>
     <VisualStudio AllowExistingFolder="true" />
