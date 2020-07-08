@@ -39,9 +39,15 @@ namespace Server.Items
 
             SetSecureLevelEntry.AddTo(from, this, list);
 
+            BaseHouse house = BaseHouse.FindHouseAt(this);
+
             if (!IsLockedDown && !IsSecure)
             {
                 from.SendLocalizedMessage(1112573); // This must be locked down or secured in order to use it.
+            }
+            else if (house != null && !house.IsCoOwner(from))
+            {
+                from.SendLocalizedMessage(500447); // That is not accessible.
             }
             else
             {
@@ -59,8 +65,6 @@ namespace Server.Items
             {
                 _Mobile = from;
                 _GuildStone = gs;
-
-                Enabled = gs.HasAccces(from);
             }
 
             public override void OnClick()
@@ -88,6 +92,15 @@ namespace Server.Items
             {
                 from.CloseGump(typeof(GuildInformationGump));
                 from.SendGump(new GuildInformationGump(this, Guild));
+            }
+        }
+
+        public override void OnLockDownChange()
+        {
+            if (!IsLockedDown)
+            {
+                Guild = null;
+                InvalidateProperties();
             }
         }
 
@@ -153,15 +166,20 @@ namespace Server.Items
                         itemIDs = fp.ItemIDs;
                     }
                 }
+                else
+                {
+                    itemIDs = new[] {i.ItemID};
+                }
 
-                AddItem(30, 150, itemIDs[1] == null ? itemIDs[0] : itemIDs[1]);
+                AddItem(30, 150, itemIDs.Length == 1 ? itemIDs[0] : itemIDs[1]);
                 AddItem(450, 150, itemIDs[0]);
                 AddImage(5, 0, 0x15A0);
+                AddImage(425, 0, 0x15A0);
             }
         }
     }
 
-    [Flipable(0xED4, 0xED5)]
+    [Flipable(0xED5, 0xED4)]
     public class LegacyGuildstone : DecorativeGuildstone
     {
         [Constructable]
