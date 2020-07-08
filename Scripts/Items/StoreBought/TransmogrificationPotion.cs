@@ -283,6 +283,8 @@ namespace Server.Items
                             return;
                         }
 
+                        m.CloseGump(typeof(TransmogrificationPotionGump));
+
                         m.PlaySound(491);
 
                         _Item.SourceObject.ItemID = _Item.DestinationObject.ItemID;
