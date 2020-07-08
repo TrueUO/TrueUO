@@ -589,6 +589,7 @@
     <Compile Include="Items\StoreBought\DecorativeMagesSet\DecorativeMagesRug.cs" />
     <Compile Include="Items\StoreBought\DecorativeMagesSet\DecorativeSpecimenShelve.cs" />
     <Compile Include="Items\StoreBought\DecorativeGuildStone.cs" />
+    <Compile Include="Items\StoreBought\DecorativeMagesSet\DecorativeMagesSet.cs" />
     <Compile Include="Items\StoreBought\DecorativeStableSet\DecorativeStableFencing.cs" />
     <Compile Include="Items\StoreBought\DecorativeStableSet\DecorativeStableSet.cs" />
     <Compile Include="Items\Consumables\EmbroideryTool.cs" />

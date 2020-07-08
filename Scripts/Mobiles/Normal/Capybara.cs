@@ -61,7 +61,7 @@ namespace Server.Mobiles
         public Capybara(string name)
             : base(name, 1527, 0x3ED3, AIType.AI_Animal, FightMode.Aggressor, 10, 1, 0.2, 0.4)
         {
-            BaseSoundID = 0x5A;
+            BaseSoundID = 0xCC;
 
             SetStr(400);
             SetDex(125);
