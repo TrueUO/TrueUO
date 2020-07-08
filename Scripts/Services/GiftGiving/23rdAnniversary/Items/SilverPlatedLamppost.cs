@@ -17,7 +17,6 @@ namespace Server.Items
             LitID = _LitItemID[Utility.Random(_LitItemID.Length)];
             Duration = TimeSpan.Zero;
             Burning = false;
-            Light = LightType.Circle300;
             Weight = 1.0;
         }
 
