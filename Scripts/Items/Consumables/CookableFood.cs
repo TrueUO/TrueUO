@@ -282,9 +282,6 @@ namespace Server.Items
             base.Deserialize(reader);
 
             int version = reader.ReadInt();
-
-            if (version == 0 && Weight == 1)
-                Weight = -1;
         }
 
         public override Food Cook()
@@ -587,12 +584,6 @@ namespace Server.Items
             base.Deserialize(reader);
 
             int version = reader.ReadInt();
-
-            if (ItemID == 0x1040)
-                ItemID = 0x1083;
-
-            if (Hue == 51)
-                Hue = 0;
         }
 
         public override Food Cook()
@@ -664,12 +655,6 @@ namespace Server.Items
 			base.Deserialize( reader );
 
 			int version = reader.ReadInt();
-
-			if ( ItemID == 0x1040 )
-				ItemID = 0x1083;
-
-			if ( Hue == 51 )
-				Hue = 0;
 		}
 
 		public override Food Cook()
@@ -751,14 +736,6 @@ namespace Server.Items
             base.Deserialize(reader);
 
             int version = reader.ReadInt();
-
-            if (version < 1)
-            {
-                Stackable = true;
-
-                if (Weight == 0.5)
-                    Weight = 1.0;
-            }
         }
 
         public override Food Cook()
