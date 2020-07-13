@@ -12,7 +12,7 @@ namespace Server.Items
 
         public bool PlayerConstructed => true;
 
-        public CookableFood(int itemID, int cookingLevel)
+        public CookableFood(int itemID)
             : base(itemID)
         {
         }
@@ -53,20 +53,10 @@ namespace Server.Items
             base.Deserialize(reader);
             int version = reader.ReadInt();
 
-            switch (version)
-            {
-                case 3:
-                case 2:
-                    {
-                        _Quality = (ItemQuality)reader.ReadInt();
-                        goto case 1;
-                    }
-                case 1:
-                    {
-                        reader.ReadInt();
-                        break;
-                    }
-            }
+            _Quality = (ItemQuality)reader.ReadInt();
+
+            if (version < 3)
+                reader.ReadInt();
         }
     }
 
@@ -80,7 +70,7 @@ namespace Server.Items
 
         [Constructable]
         public RawRibs(int amount)
-            : base(0x9F1, 10)
+            : base(0x9F1)
         {
             Weight = 1.0;
             Stackable = true;
@@ -107,6 +97,9 @@ namespace Server.Items
 
     public class RawDinoRibs : CookableFood
     {
+        public override int LabelNumber => 1126045; // raw dino ribs
+        public override double DefaultWeight => 0.1;
+
         [Constructable]
         public RawDinoRibs()
             : this(1)
@@ -115,9 +108,8 @@ namespace Server.Items
 
         [Constructable]
         public RawDinoRibs(int amount)
-            : base(0xA425, 10)
+            : base(0xA425)
         {
-            Weight = 1.0;
             Stackable = true;
             Amount = amount;
         }
@@ -142,6 +134,9 @@ namespace Server.Items
 
     public class RawSeaSerpentSteak : CookableFood
     {
+        public override int LabelNumber => 1126041; // raw serpent steak
+        public override double DefaultWeight => 0.1;
+
         [Constructable]
         public RawSeaSerpentSteak()
             : this(1)
@@ -150,9 +145,8 @@ namespace Server.Items
 
         [Constructable]
         public RawSeaSerpentSteak(int amount)
-            : base(0xA421, 10)
+            : base(0xA421)
         {
-            Weight = 1.0;
             Stackable = true;
             Amount = amount;
         }
@@ -185,7 +179,7 @@ namespace Server.Items
 
         [Constructable]
         public RawLambLeg(int amount)
-            : base(0x1609, 10)
+            : base(0x1609)
         {
             Stackable = true;
             Amount = amount;
@@ -205,7 +199,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -213,7 +207,7 @@ namespace Server.Items
     {
         [Constructable]
         public RawChickenLeg()
-            : base(0x1607, 10)
+            : base(0x1607)
         {
             Weight = 1.0;
             Stackable = true;
@@ -247,7 +241,7 @@ namespace Server.Items
 
         [Constructable]
         public RawBird(int amount)
-            : base(0x9B9, 10)
+            : base(0x9B9)
         {
             Weight = 1.0;
             Stackable = true;
@@ -278,7 +272,7 @@ namespace Server.Items
 
         [Constructable]
         public UnbakedPeachCobbler()
-            : base(0x1042, 25)
+            : base(0x1042)
         {
             Weight = 1.0;
         }
@@ -307,7 +301,7 @@ namespace Server.Items
 
         [Constructable]
         public UnbakedFruitPie()
-            : base(0x1042, 25)
+            : base(0x1042)
         {
             Weight = 1.0;
         }
@@ -336,7 +330,7 @@ namespace Server.Items
 
         [Constructable]
         public UnbakedMeatPie()
-            : base(0x1042, 25)
+            : base(0x1042)
         {
             Weight = 1.0;
         }
@@ -365,7 +359,7 @@ namespace Server.Items
 
         [Constructable]
         public UnbakedPumpkinPie()
-            : base(0x1042, 25)
+            : base(0x1042)
         {
             Weight = 1.0;
         }
@@ -394,7 +388,7 @@ namespace Server.Items
 
         [Constructable]
         public UnbakedApplePie()
-            : base(0x1042, 25)
+            : base(0x1042)
         {
             Weight = 1.0;
         }
@@ -423,7 +417,7 @@ namespace Server.Items
 
         [Constructable]
         public UncookedCheesePizza()
-            : base(0x1083, 20)
+            : base(0x1083)
         {
             Weight = 1.0;
         }
@@ -452,7 +446,7 @@ namespace Server.Items
 
         [Constructable]
         public UncookedSausagePizza()
-            : base(0x1083, 20)
+            : base(0x1083)
         {
             Weight = 1.0;
         }
@@ -481,7 +475,7 @@ namespace Server.Items
 
         [Constructable]
         public UnbakedQuiche()
-            : base(0x1042, 25)
+            : base(0x1042)
         {
             Weight = 1.0;
         }
@@ -514,7 +508,7 @@ namespace Server.Items
 
         [Constructable]
         public Eggs(int amount)
-            : base(0x9B5, 15)
+            : base(0x9B5)
         {
             Weight = 1.0;
             Stackable = true;
@@ -545,7 +539,7 @@ namespace Server.Items
 
         [Constructable]
         public BrightlyColoredEggs()
-            : base(0x9B5, 15)
+            : base(0x9B5)
         {
             Weight = 0.5;
             Hue = 3 + (Utility.Random(20) * 5);
@@ -575,7 +569,7 @@ namespace Server.Items
 
         [Constructable]
         public EasterEggs()
-            : base(0x9B5, 15)
+            : base(0x9B5)
         {
             Weight = 0.5;
             Hue = 3 + (Utility.Random(20) * 5);
@@ -603,7 +597,7 @@ namespace Server.Items
     {
         [Constructable]
         public CookieMix()
-            : base(0x103F, 20)
+            : base(0x103F)
         {
             Weight = 1.0;
         }
@@ -632,7 +626,7 @@ namespace Server.Items
 
         [Constructable]
         public CakeMix()
-            : base(0x103F, 40)
+            : base(0x103F)
         {
             Weight = 1.0;
         }
@@ -667,7 +661,7 @@ namespace Server.Items
 
         [Constructable]
         public RawFishSteak(int amount)
-            : base(0x097A, 10)
+            : base(0x097A)
         {
             Stackable = true;
             Amount = amount;
@@ -704,7 +698,7 @@ namespace Server.Items
 
         [Constructable]
         public RawRotwormMeat(int amount)
-            : base(0x2DB9, 10)
+            : base(0x2DB9)
         {
             Stackable = true;
             Weight = 0.1;
