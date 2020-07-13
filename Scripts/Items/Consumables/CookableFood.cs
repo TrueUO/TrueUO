@@ -207,11 +207,6 @@ namespace Server.Items
             base.Deserialize(reader);
             int version = reader.ReadInt();
         }
-
-        public override Food Cook()
-        {
-            return new LambLeg();
-        }
     }
 
     public class RawChickenLeg : CookableFood
@@ -447,13 +442,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
-        }
-
-        public override Food Cook()
-        {
-            return new CheesePizza();
+            reader.ReadInt();
         }
     }
 
@@ -486,42 +475,6 @@ namespace Server.Items
         }
     }
 
-#if false
-	// ********** UncookedPizza **********
-	public class UncookedPizza : CookableFood
-	{
-		[Constructable]
-		public UncookedPizza() : base( 0x1083, 20 )
-		{
-			Weight = 1.0;
-		}
-
-		public UncookedPizza( Serial serial ) : base( serial )
-		{
-		}
-
-		public override void Serialize( GenericWriter writer )
-		{
-			base.Serialize( writer );
-
-			writer.Write( (int) 0 ); // version
-		}
-
-		public override void Deserialize( GenericReader reader )
-		{
-			base.Deserialize( reader );
-
-			int version = reader.ReadInt();
-		}
-
-		public override Food Cook()
-		{
-			return new Pizza();
-		}
-	}
-#endif
-
-    // ********** UnbakedQuiche **********
     public class UnbakedQuiche : CookableFood
     {
         public override int LabelNumber => 1041339;// unbaked quiche
@@ -582,13 +535,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
-        }
-
-        public override Food Cook()
-        {
-            return new FriedEggs();
+            reader.ReadInt();
         }
     }
 
