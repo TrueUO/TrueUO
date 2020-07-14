@@ -191,6 +191,10 @@ namespace Server.SkillHandlers
             if (target.Blessed || (target is BaseCreature && ((BaseCreature)target).IsInvulnerable))
                 return false;
 
+            // pet owner, guild/alliance, party
+            if (!Spells.SpellHelper.ValidIndirectTarget(target, src))
+                reutrn false;
+            
             // Checked aggressed/aggressors
             if (src.Aggressed.Any(x => x.Defender == target) || src.Aggressors.Any(x => x.Attacker == target))
                 return true;
