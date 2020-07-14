@@ -663,11 +663,6 @@ namespace Server.AccountVault
                     eable.Free();
                     return toFind;
                 }
-                /*foreach (var lookingFor in eable.OfType<T>().Where(entity => predicate == null || predicate(entity)))
-                {
-                    eable.Free();
-                    return lookingFor;
-                }*/
             }
 
             if (eable != null)
