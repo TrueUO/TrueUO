@@ -193,7 +193,7 @@ namespace Server.SkillHandlers
 
             // pet owner, guild/alliance, party
             if (!Spells.SpellHelper.ValidIndirectTarget(target, src))
-                reutrn false;
+                return false;
             
             // Checked aggressed/aggressors
             if (src.Aggressed.Any(x => x.Defender == target) || src.Aggressors.Any(x => x.Attacker == target))
