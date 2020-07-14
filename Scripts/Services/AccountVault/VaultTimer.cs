@@ -2,8 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-using Server.AccountVault;
-
 namespace Server.AccountVault
 {
     public static class VaultTimer

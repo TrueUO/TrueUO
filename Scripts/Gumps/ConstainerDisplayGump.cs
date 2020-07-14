@@ -151,9 +151,11 @@ namespace Server.Gumps
                     list.Add(item);
                 }
 
-                if (item is Container)
+                var cont = item as Container;
+
+                if (cont != null)
                 {
-                    AllContents(list, (Container)item);
+                    AllContents(list, cont);
                 }
             }
         }

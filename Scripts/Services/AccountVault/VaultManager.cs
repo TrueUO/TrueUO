@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using Server.Mobiles;
 using Server.Items;
 using Server.ContextMenus;
 using Server.Gumps;
-using Server.Engines.UOStore;
 
 namespace Server.AccountVault
 {
@@ -59,10 +57,10 @@ namespace Server.AccountVault
         {
             base.AddCustomContextEntries(from, list);
 
-            if (from.Alive && from.InRange(Location, 8))
+            if (SystemSettings.Enabled && from.Alive && from.InRange(Location, 8))
             {
                 var vault = AccountVault.GetVault(from);
-                var inRange = vault == null ? false : from.Region.IsPartOf(this.Region);
+                var inRange = vault != null && from.Region.IsPartOf(this.Region);
 
                 var open = new OpenVaultEntry(this);
                 open.Enabled = vault != null && inRange && !from.Criminal;
@@ -141,7 +139,7 @@ namespace Server.AccountVault
             public RentVaultEntry(VaultManager manager)
                  : base(1157733, 8)
             {
-                Manager = Manager;
+                Manager = manager;
             }
 
             public override void OnClick()

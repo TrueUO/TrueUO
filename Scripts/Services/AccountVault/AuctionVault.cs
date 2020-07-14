@@ -63,7 +63,7 @@ namespace Server.AccountVault
             if (item != null)
             {
                 var name = Auction.AuctionItemName();
-                var vaultCont = item as AccountVaultContainer; // TODO: Convert this to IAuctionableContainer if the need ever arises
+                var vaultCont = item as AccountVaultContainer;
 
                 if (vaultCont != null)
                 {
@@ -106,31 +106,22 @@ namespace Server.AccountVault
             {
                 var pm = from as PlayerMobile;
 
-                if (pm != null)
+                if (pm != null && _Auction != null)
                 {
-                    if (_Auction != null)
+                    if (_Auction.InClaimPeriod)
                     {
-                        if (_Auction.InClaimPeriod)
+                        if (_Auction.HighestBid != null && pm == Auction.HighestBid.Mobile)
                         {
-                            if (_Auction.HighestBid != null && pm == Auction.HighestBid.Mobile)
-                            {
-                                _Auction.ClaimPrize(pm);
-                            }
-                            else
-                            {
-                                if (!pm.HasGump(typeof(AuctionBidGump)))
-                                {
-                                    pm.SendGump(new AuctionBidGump(pm, this));
-                                }
-                            }
+                            _Auction.ClaimPrize(pm);
                         }
-                        else if (Auction.OnGoing)
+                        else if (!pm.HasGump(typeof(AuctionBidGump)))
                         {
-                            if (!pm.HasGump(typeof(AuctionBidGump)))
-                            {
-                                pm.SendGump(new AuctionBidGump(pm, this));
-                            }
+                            pm.SendGump(new AuctionBidGump(pm, this));
                         }
+                    }
+                    else if (Auction.OnGoing && !pm.HasGump(typeof(AuctionBidGump)))
+                    {
+                        pm.SendGump(new AuctionBidGump(pm, this));
                     }
                 }
             }
@@ -167,7 +158,7 @@ namespace Server.AccountVault
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             Index = reader.ReadInt();
 

@@ -2,7 +2,6 @@ using Server.Accounting;
 using Server.Engines.NewMagincia;
 using Server.Items;
 using Server.Mobiles;
-using Server.AccountVault;
 
 using System;
 using System.Collections.Generic;

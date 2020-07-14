@@ -105,6 +105,11 @@ namespace Server.AccountVault
 
         public override void OnDoubleClick(Mobile from)
         {
+            if (!SystemSettings.Enabled)
+            {
+                return;
+            }
+
             var pm = from as PlayerMobile;
 
             if (pm == null || pm.Account == null || !InRange(from.Location, 3))
@@ -177,8 +182,8 @@ namespace Server.AccountVault
                     _Container = reader.ReadItem<AccountVaultContainer>();
                     PastDue = reader.ReadBool();
                     Index = reader.ReadInt();
-                    goto case 2;
-                case 2:
+                    goto case 0;
+                case 0:
                     Account = reader.ReadString();
                     Balance = reader.ReadInt();
                     NextRent = reader.ReadDateTime();
@@ -240,7 +245,6 @@ namespace Server.AccountVault
 
             InvalidateProperties();
 
-            //Hue = 1177;
             BaseGump.SendGump(new VaultActionsGump(from, this));
             BaseGump.SendGump(new NewVaultPurchaseGump(from, this));
         }
@@ -652,14 +656,25 @@ namespace Server.AccountVault
             {
                 eable = map.GetObjectsInRange(loc, i);
 
-                foreach (var lookingFor in eable.OfType<T>().Where(entity => predicate == null || predicate(entity)))
+                var toFind = eable.OfType<T>().FirstOrDefault(entity => predicate == null || predicate(entity));
+
+                if (toFind != null)
+                {
+                    eable.Free();
+                    return toFind;
+                }
+                /*foreach (var lookingFor in eable.OfType<T>().Where(entity => predicate == null || predicate(entity)))
                 {
                     eable.Free();
                     return lookingFor;
-                }
+                }*/
             }
 
-            eable.Free();
+            if (eable != null)
+            {
+                eable.Free();
+            }
+
             return default(T);
         }
 

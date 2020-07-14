@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 using Server.AccountVault;
 using Server.Mobiles;
@@ -30,46 +29,49 @@ namespace Server.Items
         {
         }
 
-        public override void OnDoubleClick(Mobile m)
+        public override void OnDoubleClick(Mobile from)
         {
-            if (IsChildOf(m.Backpack))
+            if (IsChildOf(from.Backpack))
             {
                 if (!SystemSettings.UseTokens)
                 {
-                    m.SendMessage("Account Vaults are not set up on this shard for Tokens. Contact staff regarding a refund.");
+                    from.SendMessage("Account Vaults are not set up on this shard for Tokens. Contact staff regarding a refund.");
                 }
                 else
                 {
-                    var pm = m as PlayerMobile;
+                    var pm = from as PlayerMobile;
 
-                    if (pm != null && Account != null && (m.Account == null || m.Account.Username != Account))
+                    if (pm != null)
                     {
-                        m.SendLocalizedMessage(1071296); // This item is Account Bound and your character is not bound to it. You cannot use this item.
-                    }
-                    else
-                    {
-                        var storeProf = UltimaStore.GetProfile(pm, true);
-
-                        if (storeProf.VaultTokens >= SystemSettings.MaxTokenBalance)
+                        if (Account != null && (pm.Account == null || pm.Account.Username != Account))
                         {
-                            pm.SendLocalizedMessage(1158194); // You cannot increase the number of vault credits on this character.
+                            pm.SendLocalizedMessage(1071296); // This item is Account Bound and your character is not bound to it. You cannot use this item.
                         }
                         else
                         {
-                            storeProf.VaultTokens++;
+                            var storeProf = UltimaStore.GetProfile(pm, true);
 
-                            pm.SendLocalizedMessage(1158193, storeProf.VaultTokens.ToString());
+                            if (storeProf.VaultTokens >= SystemSettings.MaxTokenBalance)
+                            {
+                                pm.SendLocalizedMessage(1158194); // You cannot increase the number of vault credits on this character.
+                            }
+                            else
+                            {
+                                storeProf.VaultTokens++;
 
-                            Delete();
-                            // You have increased your storage vault credit on this character. Your total credit count is now ~1_VAL~.
-                            // Visit the nearest Vault Manager to rent a storage vault.
+                                pm.SendLocalizedMessage(1158193, storeProf.VaultTokens.ToString());
+
+                                Delete();
+                                // You have increased your storage vault credit on this character. Your total credit count is now ~1_VAL~.
+                                // Visit the nearest Vault Manager to rent a storage vault.
+                            }
                         }
                     }
                 }
             }
             else
             {
-                m.SendLocalizedMessage(1062334); // This item must be in your backpack to be used.
+                from.SendLocalizedMessage(1062334); // This item must be in your backpack to be used.
             }
         }
 
@@ -91,7 +93,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             Account = reader.ReadString();
         }

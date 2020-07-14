@@ -53,6 +53,7 @@ namespace Server.Engines.Auction
 
         public void OnAuctionTray()
         {
+            // Nothing to do here
         }
 
         public void ClaimPrize(Mobile m)

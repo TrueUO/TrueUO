@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Globalization;
 
@@ -11,17 +10,17 @@ namespace Server.AccountVault
     internal static class SystemSettings
     {
         public static bool Enabled = true;
-        public static bool UseTokens = true;
+        public static readonly bool UseTokens = true;
 
-        internal static int RentGoldValue = 50000;
-        internal static int MaxGoldBalance = 1000000;
+        internal static readonly int RentGoldValue = 50000;
+        internal static readonly int MaxGoldBalance = 1000000;
 
-        internal static int RentTokenValue = 1;
-        internal static int MaxTokenBalance = 3;
+        internal static readonly int RentTokenValue = 1;
+        internal static readonly int MaxTokenBalance = 3;
 
-        internal static TimeSpan RentTimeSpan = TimeSpan.FromDays(30);
-        internal static TimeSpan PastDuePeriod = TimeSpan.FromDays(7);
-        internal static TimeSpan ClaimPeriod = TimeSpan.FromHours(3);
+        internal static readonly TimeSpan RentTimeSpan = TimeSpan.FromDays(30);
+        internal static readonly TimeSpan PastDuePeriod = TimeSpan.FromDays(7);
+        internal static readonly TimeSpan ClaimPeriod = TimeSpan.FromHours(3);
 
         internal static int AuctionDuration = 480;
 

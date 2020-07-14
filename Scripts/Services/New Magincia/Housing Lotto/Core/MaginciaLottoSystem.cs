@@ -460,7 +460,6 @@ namespace Server.Engines.NewMagincia
         public static void OnLogin(LoginEventArgs e)
         {
             Mobile from = e.Mobile;
-            Account acct = from.Account as Account;
             CheckMessages(from);
 
             var messages = GetMessages(from);
@@ -477,27 +476,6 @@ namespace Server.Engines.NewMagincia
 
             GetWinnerGump(from);
         }
-
-        /*private bool HasMessage(Mobile m)
-        {
-            if (m_MessageQueue.ContainsKey(from))
-            {
-                if (m_MessageQueue[from] == null || m_MessageQueue[from].Count == 0)
-                {
-                    m_MessageQueue.Remove(from);
-                }
-                else
-                {
-                    return true;
-                }
-            }
-            else if (from.Account != null)
-            {
-                return m_MessageQueue.Any(kvp => kvp.Key.Account != null && kvp.Key.Account.Username == from.Account.Username && kvp.Value.Any(message => message.AccountBound));
-            }
-
-            return false;
-        }*/
 
         public void PruneMessages()
         {
@@ -559,7 +537,7 @@ namespace Server.Engines.NewMagincia
 
             if (list != null)
             {
-                list.OrderBy(message => message.Expires);
+                list = list.OrderBy(message => message.Expires).ToList();
             }
 
             return list;

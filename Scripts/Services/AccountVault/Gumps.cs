@@ -1,7 +1,6 @@
 using Server.Gumps;
 using Server.Mobiles;
 using Server.Prompts;
-using Server.Items;
 using Server.Engines.UOStore;
 
 using System.Globalization;
@@ -62,8 +61,6 @@ namespace Server.AccountVault
             AddHtmlLocalized(10, 33, 165, 18, 1157990, 0x90D, false, false); // Vault Tokens
             AddLabel(185, 33, 0, tokens ? store.VaultTokens.ToString() : "N/A"); // vault token count
 
-            var storeProfile = UltimaStore.GetProfile(User, false);
-
             AddHtmlLocalized(10, 51, 165, 18, 1157985, 0x90D, false, false); // Vault Rent Account:
 
             if (Vault.PastDue)
@@ -74,8 +71,6 @@ namespace Server.AccountVault
             {
                 AddLabel(185, 51, 0, Vault.Balance.ToString("N0", CultureInfo.GetCultureInfo("en-US"))); // vault rent account count
             }
-
-            var account = User.Account;
 
             AddHtmlLocalized(10, 69, 165, 18, 1156044, 0x90D, false, false); // Total Gold:
             AddLabel(185, 69, 0, acct != null ? acct.TotalGold.ToString("N0", CultureInfo.GetCultureInfo("en-US")) : "0");
@@ -93,7 +88,7 @@ namespace Server.AccountVault
             }
             else
             {
-                AddTooltip(string.Format("Transfers gold from the player's bank to the vault rent account; capped at 6,000 gold. Funds added to the vault rent account will be used for auto payments of the vault rent.", SystemSettings.MaxBalance.ToString("N0", CultureInfo.GetCultureInfo("en-US"))));
+                AddTooltip(string.Format("Transfers gold from the player's bank to the vault rent account; capped at {0} gold. Funds added to the vault rent account will be used for auto payments of the vault rent.", SystemSettings.MaxBalance.ToString("N0", CultureInfo.GetCultureInfo("en-US"))));
             }
             AddButton(15, 141, 0xFA5, 0xFA6, 102, GumpButtonType.Reply, 0);
 
@@ -182,7 +177,7 @@ namespace Server.AccountVault
 
         public static int VaultCount(string region)
         {
-            return AccountVault.Vaults.Where(v => Region.Find(v.GetWorldLocation(), v.Map).IsPartOf(region)).Count();
+            return AccountVault.Vaults.Count(v => Region.Find(v.GetWorldLocation(), v.Map).IsPartOf(region));
         }
     }
 }
