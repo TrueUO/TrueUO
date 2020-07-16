@@ -4397,7 +4397,7 @@ namespace Server
             }
         }
 
-        private static int m_ActionDelay = 1000;
+        private static int m_ActionDelay = 750;
 
         public static int ActionDelay { get { return m_ActionDelay; } set { m_ActionDelay = value; } }
 

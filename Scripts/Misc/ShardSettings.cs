@@ -23,7 +23,7 @@ namespace Server
 
             AOS.DisableStatInfluences();
 
-            Mobile.ActionDelay = 500;
+            Mobile.ActionDelay = 750;
             Mobile.AOSStatusHandler = AOS.GetStatus;
         }
     }
