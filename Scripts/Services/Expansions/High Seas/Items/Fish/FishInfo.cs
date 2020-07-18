@@ -288,7 +288,7 @@ namespace Server.Items
                     else if (shore && skill >= 50.0)
                         item = BaseHighseasFish.ShoreFish[Utility.Random(BaseHighseasFish.ShoreFish.Length)];
                 }
-                else if (fishing && skill >= 50.0 && chance >= Utility.RandomDouble())
+                else if (!fishing && skill >= 50.0 && chance >= Utility.RandomDouble())
                 {
                     item = BaseHighseasFish.LobstersAndCrabs[Utility.Random(BaseHighseasFish.LobstersAndCrabs.Length)];
                 }
@@ -405,7 +405,7 @@ namespace Server.Items
 
         public static bool IsDungeon(Point3D pnt, Map map, Region region)
         {
-            return region.IsPartOf<DungeonRegion>() || IsMondainDungeon(region) || Server.Spells.SpellHelper.IsTrammelWind(map, pnt) || Server.Spells.SpellHelper.IsFeluccaWind(map, pnt);
+            return region.IsPartOf<DungeonRegion>() || IsMondainDungeon(region) || SpellHelper.IsTrammelWind(map, pnt) || SpellHelper.IsFeluccaWind(map, pnt);
         }
 
         public static bool IsMondainDungeon(Region region)
