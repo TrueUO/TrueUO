@@ -10,7 +10,7 @@ namespace Server.Engines.Quests
     public class BaseEscort : MondainQuester
     {
         private static readonly TimeSpan m_EscortDelay = TimeSpan.FromMinutes(5.0);
-        private static readonly Dictionary<Mobile, Mobile> m_EscortTable = new Dictionary<Mobile, Mobile>();
+        public static readonly Dictionary<Mobile, Mobile> m_EscortTable = new Dictionary<Mobile, Mobile>();
         private Timer m_DeleteTimer;
         private bool m_Checked;
 
