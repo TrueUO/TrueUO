@@ -183,7 +183,12 @@ namespace Server.Spells.SkillMasteries
             else
             {
                 DoEffects();
-                Caster.Mana -= upkeep;
+
+                if (upkeep > 0)
+                {
+                    Caster.Mana -= upkeep;
+                }
+
                 return true;
             }
 
