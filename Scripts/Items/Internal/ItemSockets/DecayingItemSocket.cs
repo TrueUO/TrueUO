@@ -63,7 +63,7 @@ namespace Server.Items
                 }
                 else
                 {
-                    item.Delete();
+                    Owner.Delete();
                 }
             }
             else
