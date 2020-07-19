@@ -149,5 +149,27 @@ namespace Server.Spells.SkillMasteries
 
             return 1.0;
         }
+
+        public override int GetUpkeep()
+        {
+            var upkeep = base.GetUpkeep();
+
+            if (CastSkill != SkillName.Provocation && Caster.Skills[SkillName.Provocation].Base > 100.0)
+            {
+                upkeep--;
+            }
+
+            if (CastSkill != SkillName.Peacemaking && Caster.Skills[SkillName.Peacemaking].Base > 100.0)
+            {
+                upkeep--;
+            }
+
+            if (CastSkill != SkillName.Discordance && Caster.Skills[SkillName.Discordance].Base > 100.0)
+            {
+                upkeep--;
+            }
+
+            return upkeep;
+        }
     }
 }
