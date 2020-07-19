@@ -14,7 +14,7 @@ namespace Server.Spells.SkillMasteries
             );
 
         public override double RequiredSkill => 90;
-        public override double UpKeep => 4;
+        public override double UpKeep => 8;
         public override int RequiredMana => 16;
         public override SkillName CastSkill => SkillName.Provocation;
         public override bool PartyEffects => true;

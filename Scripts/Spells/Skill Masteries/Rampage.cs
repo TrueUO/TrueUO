@@ -21,7 +21,7 @@ namespace Server.Spells.SkillMasteries
             );
 
         public override int RequiredMana => 20;
-        public override int DamageThreshold => 1;
+        public override int DamageThreshold => 0;
 
         public override SkillName CastSkill => SkillName.Wrestling;
 

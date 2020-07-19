@@ -2901,7 +2901,7 @@ namespace Server.Mobiles
                 return false;
             }
 
-            return types.Any(t => t == fed.GetType());
+            return types.Any(t => t == fed.GetType() || fed.GetType().IsSubclassOf(t));
         }
 
         public virtual bool CheckFeed(Mobile from, Item dropped)
@@ -2978,10 +2978,6 @@ namespace Server.Mobiles
                         dropped.Delete();
                         return true;
                     }
-                }
-                else
-                {
-                    PrivateOverheadMessage(MessageType.Regular, 0x3B2, 1043257, from.NetState); // The animal shies away.
                 }
             }
 

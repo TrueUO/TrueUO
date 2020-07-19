@@ -14,7 +14,7 @@ namespace Server.Spells.SkillMasteries
             );
 
         public override double RequiredSkill => 90;
-        public override double UpKeep => 5;
+        public override double UpKeep => 8;
         public override int RequiredMana => 18;
         public override bool PartyEffects => true;
         public override SkillName CastSkill => SkillName.Peacemaking;
