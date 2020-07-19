@@ -367,6 +367,10 @@ namespace Server.Engines.Shadowguard
             }
         }
 
+        public override void OnTick()
+        {
+        }
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -394,7 +398,10 @@ namespace Server.Engines.Shadowguard
                 ShadowguardCypress tree = reader.ReadItem() as ShadowguardCypress;
 
                 if (tree != null)
+                {
+                    tree.Encounter = this;
                     Trees.Add(tree);
+                }
             }
 
             count = reader.ReadInt();
