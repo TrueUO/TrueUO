@@ -126,7 +126,7 @@ namespace Server.Engines.Shadowguard
         public ShadowguardCypress Tree { get; private set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public OrchardEncounter Encounter { get; private set; }
+        public OrchardEncounter Encounter { get; set; }
 
         private bool _Thrown;
         private bool _EatenByPet;
@@ -298,9 +298,7 @@ namespace Server.Engines.Shadowguard
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(0);
-
-            writer.Write(Tree);
+            writer.Write(1);
         }
 
         public override void Deserialize(GenericReader reader)
@@ -308,7 +306,10 @@ namespace Server.Engines.Shadowguard
             base.Deserialize(reader);
             int version = reader.ReadInt();
 
-            Tree = reader.ReadItem() as ShadowguardCypress;
+            if (version == 0)
+            {
+                reader.ReadItem();
+            }
         }
     }
 
