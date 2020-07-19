@@ -1102,20 +1102,20 @@ namespace Server.Mobiles
             SpillAcid(null, Amount);
         }
 
-        public void SpillAcid(Mobile target, int Amount)
+        public void SpillAcid(Mobile target, int amount)
         {
             if ((target != null && target.Map == null) || Map == null)
             {
                 return;
             }
 
-            for (int i = 0; i < Amount; ++i)
+            for (int i = 0; i < amount; ++i)
             {
                 Point3D loc = Location;
                 Map map = Map;
                 Item acid = NewHarmfulItem();
 
-                if (target != null && target.Map != null && Amount == 1)
+                if (target != null && target.Map != null && amount == 1)
                 {
                     loc = target.Location;
                     map = target.Map;

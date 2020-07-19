@@ -81,7 +81,7 @@ namespace Server.Spells.SkillMasteries
                 Caster.SendLocalizedMessage(1115664); // You are not on the correct path for using this mastery ability.
             else if (Caster is PlayerMobile && !MasteryInfo.HasLearned(Caster, CastSkill))
                 Caster.SendLocalizedMessage(1115664); // You are not on the correct path for using this mastery ability.
-            else if (Caster.Mana < mana)
+            else if (CheckManaBeforeCast && Caster.Mana < mana)
                 Caster.SendLocalizedMessage(1060174, mana.ToString()); // You must have at least ~1_MANA_REQUIREMENT~ Mana to use this ability.
             else
             {
@@ -676,9 +676,9 @@ namespace Server.Spells.SkillMasteries
             return null;
         }
 
-        public static IEnumerable<SkillMasterySpell> GetSpellsForParty(Mobile from)
+        public static IEnumerable<SkillMasterySpell> GetSpellsForParty(Mobile from, SkillName? allowed)
         {
-            foreach (var spell in EnumerateSpells(from).Where(s => s.PartyEffects))
+            foreach (var spell in EnumerateSpells(from).Where(s => s.PartyEffects && (allowed == null || s.CastSkill != allowed)))
             {
                 yield return spell;
             }
@@ -689,7 +689,7 @@ namespace Server.Spells.SkillMasteries
             {
                 foreach (PartyMemberInfo info in p.Members)
                 {
-                    foreach (var spell in EnumerateSpells(info.Mobile).Where(s => s.PartyEffects))
+                    foreach (var spell in EnumerateSpells(info.Mobile).Where(s => s.PartyEffects && (allowed == null || s.CastSkill != allowed)))
                     {
                         yield return spell;
                     }
@@ -697,9 +697,9 @@ namespace Server.Spells.SkillMasteries
             }
         }
 
-        public static void CancelPartySpells(Mobile m)
+        public void CancelPartySpells(Mobile m)
         {
-            foreach (var spell in GetSpellsForParty(m))
+            foreach (var spell in GetSpellsForParty(m, CastSkill))
             {
                 spell.Expire();
             }
@@ -964,11 +964,6 @@ namespace Server.Spells.SkillMasteries
             {
                 Timer.Stop();
                 Timer = null;
-            }
-
-            if (PartyEffects)
-            {
-                CancelPartySpells(Caster);
             }
 
             Timer = new UpkeepTimer(this);
