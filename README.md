@@ -24,3 +24,9 @@ GPL v2
 
    [ServUO]: <https://www.servuo.com>
    [Quickstart]: <https://www.servuo.com/wiki/startup/>
+
+### UO SERVER
+----
+server address:	ultimaonline.duckdns.org port 2593
+
+unencrypted client support
