@@ -257,7 +257,7 @@ namespace Server.Mobiles
 
                 }
 
-                Region r = Region.Regions.FirstOrDefault(r => r.Map == item.Map && !string.IsNullOrEmpty(r.Name) && r.Name.ToLower() == regionname.ToLower());
+                Region r = Region.Regions.FirstOrDefault(reg => reg.Map == item.Map && !string.IsNullOrEmpty(reg.Name) && reg.Name.ToLower() == regionname.ToLower());
 
                 if (r == null) return false;
                 return (r.Contains(loc));
@@ -267,7 +267,7 @@ namespace Server.Mobiles
             {
                 Mobile mob = (Mobile)o;
 
-                Region r = Region.Regions.FirstOrDefault(r => r.Map == mob.Map && !string.IsNullOrEmpty(r.Name) && r.Name.ToLower() == regionname.ToLower());
+                Region r = Region.Regions.FirstOrDefault(reg => reg.Map == mob.Map && !string.IsNullOrEmpty(reg.Name) && reg.Name.ToLower() == regionname.ToLower());
 
                 if (r == null) return false;
                 return (r.Contains(mob.Location));
