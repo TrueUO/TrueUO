@@ -13,8 +13,6 @@ namespace Server.Items
             Hue = Utility.RandomList(0x21, 0x4AC, 0x41C, 0xA21);
         }
 
-        public override int Lifespan => 43200;
-
         public RareSerpentEgg(Serial serial)
             : base(serial)
         {
