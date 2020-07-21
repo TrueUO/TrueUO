@@ -1123,13 +1123,20 @@ namespace Server.Mobiles
                 else
                 {
                     bool validLocation = false;
+
                     for (int j = 0; !validLocation && j < 10; ++j)
                     {
                         loc = new Point3D(loc.X + (Utility.Random(0, 3) - 2), loc.Y + (Utility.Random(0, 3) - 2), loc.Z);
-                        loc.Z = map.GetAverageZ(loc.X, loc.Y);
+
+                        if (!map.CanFit(loc, 16, false, false))
+                        {
+                            SpellHelper.AdjustField(ref loc, map, 16, true);
+                        }
+
                         validLocation = map.CanFit(loc, 16, false, false);
                     }
                 }
+
                 acid.MoveToWorld(loc, map);
             }
         }
