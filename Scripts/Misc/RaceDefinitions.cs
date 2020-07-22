@@ -528,14 +528,14 @@ namespace Server.Misc
                 return Race.Gargoyle;
             }
 
-            if (ElfOnlyIDs.Any(id => id == itemID))
-            {
-                return Race.Elf;
-            }
-
             var elfOrHuman = item as ICanBeElfOrHuman;
 
-            if (elfOrHuman != null && elfOrHuman.ElfOnly)
+            if (elfOrHuman != null)
+            {
+                return elfOrHuman.ElfOnly ? Race.Elf : Race.Human;
+            }
+
+            if (ElfOnlyIDs.Any(id => id == itemID))
             {
                 return Race.Elf;
             }
@@ -617,8 +617,6 @@ namespace Server.Misc
             0x2D25, 0x2D26, 0x2D27, 0x2D28, 0x2D29, 0x2D2A, 0x2D2B,
             0x2D2C, 0x2D2D, 0x2D2E, 0x2D2F, 0x2D30, 0x2D31, 0x2D32,
             0x2D33, 0x2D34, 0x2D35, 0x316A, 0x316B, 0x316C, 0x316D,
-                
-            0x2FB8,                                                 // Glasses
 
             0x2FB9, 0x2FBA,                                         // Robes
 
