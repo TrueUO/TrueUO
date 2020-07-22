@@ -543,12 +543,14 @@ namespace Server.Misc
             return Race.Human;
         }
 
-        public static Type[] AllRaceTypes = new[]
-        {
+        public static Type[] AllRaceTypes { get { return _AllRaceTypes; } }
+        private static Type[] _AllRaceTypes = new[]
+         {
             typeof(BootsOfBallast)
         };
 
-        public static int[] AllRaceIDs = new[]
+        public static int[] AllRaceIDs { get { return _AllRaceIDs; } }
+        private static int[] _AllRaceIDs = new[]
         {
             0xA289, 0xA28A, 0xA28B, 0xA291, 0xA292, 0xA293, // whips
             0xE85, 0xE86, // Tools
@@ -556,7 +558,8 @@ namespace Server.Misc
             0xE81,
         };
 
-        public static int[] GargoyleOnlyIDs = new[]
+        public static int[] GargoyleOnlyIDs { get { return _GargoyleOnlyIDs; } }
+        private static int[] _GargoyleOnlyIDs = new[]
         {
             0x283, 0x284, 0x286, 0x287, 0x288, 0x289, 0x28A,        // Armor
             0x301, 0x302, 0x303, 0x304, 0x305, 0x306, 0x310, 0x311, 
@@ -598,7 +601,8 @@ namespace Server.Misc
             0xA1C9, 0xA1CA                                          // Special
         };
 
-        public static int[] ElfOnlyIDs = new[]
+        public static int[] ElfOnlyIDs { get { return _ElfOnlyIDs; } }
+        private static int[] _ElfOnlyIDs = new[]
         {
             0x2B67, 0x2B68, 0x2B69, 0x2B6A, 0x2B6B, 0x2B6C, 0x2B6D, // Armor
             0x2B6E, 0x2B6F, 0x2B70, 0x2B71, 0x2B72, 0x2B73, 0x2B74,

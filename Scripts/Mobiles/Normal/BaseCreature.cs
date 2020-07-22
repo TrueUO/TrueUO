@@ -2613,8 +2613,6 @@ namespace Server.Mobiles
                 m_RemoveStep = reader.ReadInt();
             }
 
-            TimeSpan deleteTime = TimeSpan.Zero;
-
             if (version >= 17)
             {
                 if (version < 32)
