@@ -2621,7 +2621,7 @@ namespace Server.Mobiles
 
                     if (span > TimeSpan.Zero)
                     {
-                        DeleteTime = DateTime.UtcNow + reader.ReadTimeSpan();
+                        DeleteTime = DateTime.UtcNow + span;
                     }
                 }
                 else
