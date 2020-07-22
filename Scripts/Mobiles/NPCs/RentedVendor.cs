@@ -54,7 +54,7 @@ namespace Server.Mobiles
         private int m_RenewalPrice;
         private int m_RentalGold;
         private DateTime m_RentalExpireTime;
-        private Timer m_RentalExpireTimer;
+        //private Timer m_RentalExpireTimer;
 
         public RentedVendor(Mobile owner, BaseHouse house, VendorRentalDuration duration, int rentalPrice, bool landlordRenew, int rentalGold)
             : base(owner, house)
@@ -67,8 +67,8 @@ namespace Server.Mobiles
             m_RentalGold = rentalGold;
 
             m_RentalExpireTime = DateTime.UtcNow + duration.Duration;
-            m_RentalExpireTimer = new RentalExpireTimer(this, duration.Duration);
-            m_RentalExpireTimer.Start();
+            //m_RentalExpireTimer = new RentalExpireTimer(this, duration.Duration);
+            //m_RentalExpireTimer.Start();
         }
 
         public RentedVendor(Serial serial)
@@ -196,13 +196,6 @@ namespace Server.Mobiles
             to.SendLocalizedMessage(1062464, days.ToString() + "\t" + hours.ToString()); // The rental contract on this vendor will expire in ~1_DAY~ day(s) and ~2_HOUR~ hour(s).
         }
 
-        public override void OnAfterDelete()
-        {
-            base.OnAfterDelete();
-
-            m_RentalExpireTimer.Stop();
-        }
-
         public override void Destroy(bool toBackpack)
         {
             if (RentalGold > 0 && House != null)
@@ -285,9 +278,9 @@ namespace Server.Mobiles
 
             m_RentalExpireTime = reader.ReadDeltaTime();
 
-            TimeSpan delay = m_RentalExpireTime - DateTime.UtcNow;
-            m_RentalExpireTimer = new RentalExpireTimer(this, delay > TimeSpan.Zero ? delay : TimeSpan.Zero);
-            m_RentalExpireTimer.Start();
+            //TimeSpan delay = m_RentalExpireTime - DateTime.UtcNow;
+            //m_RentalExpireTimer = new RentalExpireTimer(this, delay > TimeSpan.Zero ? delay : TimeSpan.Zero);
+            //m_RentalExpireTimer.Start();
         }
 
         private class ContractOptionsEntry : ContextMenuEntry
