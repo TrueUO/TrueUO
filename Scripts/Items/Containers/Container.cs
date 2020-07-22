@@ -287,6 +287,34 @@ namespace Server.Items
             }
         }
 
+        public virtual void AddLoot(LootPack pack)
+        {
+            AddLoot(pack, 100.0);
+        }
+
+        public virtual void AddLoot(LootPack pack, int amount)
+        {
+            AddLoot(pack, amount, 100.0);
+        }
+
+        public virtual void AddLoot(LootPack pack, int amount, double chance)
+        {
+            for (int i = 0; i < amount; i++)
+            {
+                AddLoot(pack, chance);
+            }
+        }
+
+        public virtual void AddLoot(LootPack pack, double chance)
+        {
+            if (chance < 100.0 && Utility.RandomDouble() > chance / 100)
+            {
+                return;
+            }
+
+            pack.Generate(this);
+        }
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -1032,6 +1060,64 @@ namespace Server.Items
             base.Deserialize(reader);
 
             int version = reader.ReadInt();
+        }
+    }
+
+    public class SOSChest : LockableContainer, IFlipable
+    {
+        public override int LabelNumber
+        {
+            get
+            {
+                if (ItemID >= 0xA306)
+                {
+                    return 1015097; // Chest
+                }
+
+                return base.LabelNumber;
+            }
+        }
+
+        [Constructable]
+        public SOSChest(int id)
+            : base(id)
+        {
+        }
+
+        public void OnFlip(Mobile m)
+        {
+            switch (ItemID)
+            {
+                case 0xE40: ItemID++; break;
+                case 0xE41: ItemID--; break;
+                case 0xE42: ItemID++; break;
+                case 0xE43: ItemID--; break;
+                case 0xA306: ItemID++; break;
+                case 0xA307: ItemID--; break;
+                case 0xA308: ItemID++; break;
+                case 0xA309: ItemID--; break;
+                case 0xA30A: ItemID++; break;
+                case 0xA30B: ItemID--; break;
+            }
+        }
+
+        public SOSChest(Serial serial)
+            : base(serial)
+        {
+        }
+
+        public override void Serialize(GenericWriter writer)
+        {
+            base.Serialize(writer);
+
+            writer.Write(0); // version
+        }
+
+        public override void Deserialize(GenericReader reader)
+        {
+            base.Deserialize(reader);
+
+            reader.ReadInt();
         }
     }
 

@@ -41,14 +41,16 @@ namespace Server.Mobiles
             ControlSlots = 4;
             MinTameSkill = 98.7;
 
-            if (Utility.RandomDouble() < .33)
-                PackItem(Engines.Plants.Seed.RandomBonsaiSeed());
-
-            if (Utility.RandomDouble() < .33)
-                PackItem(Engines.Plants.Seed.RandomPeculiarSeed(4));
-
             SetWeaponAbility(WeaponAbility.Dismount);
             SetSpecialAbility(SpecialAbility.GraspingClaw);
+        }
+
+        public override void GenerateLoot()
+        {
+            AddLoot(LootPack.FilthyRich, 3);
+            AddLoot(LootPack.Gems, 4);
+            AddLoot(LootPack.PeculiarSeed4);
+            AddLoot(LootPack.BonsaiSeed);
         }
 
         public Hiryu(Serial serial)
@@ -92,12 +94,6 @@ namespace Server.Mobiles
             return 0x4FB;
         }
 
-        public override void GenerateLoot()
-        {
-            AddLoot(LootPack.FilthyRich, 3);
-            AddLoot(LootPack.Gems, 4);
-        }
-
         public override void OnAfterTame(Mobile tamer)
         {
             if (Owners.Count == 0)
@@ -105,8 +101,8 @@ namespace Server.Mobiles
                 RawStr = (int)Math.Max(1, RawStr * 0.5);
                 RawDex = (int)Math.Max(1, RawDex * 0.5);
 
-                HitsMaxSeed = RawStr;
-                Hits = RawStr;
+                HitsMaxSeed = (int)Math.Max(1, HitsMaxSeed * 0.5);
+                Hits = HitsMaxSeed;
 
                 StamMaxSeed = RawDex;
                 Stam = RawDex;

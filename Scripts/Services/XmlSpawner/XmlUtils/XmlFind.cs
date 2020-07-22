@@ -234,7 +234,9 @@ namespace Server.Mobiles
 
         private static bool TestRegion(object o, string regionname)
         {
-            if (regionname == null) return false;
+            if (regionname == null)
+                return false;
+
             if (o is Item)
             {
                 Item item = (Item)o;
@@ -254,33 +256,19 @@ namespace Server.Mobiles
                     }
 
                 }
-                //Region r = Region.GetByName(regionname, item.Map);
 
-                Region r = null;
-
-                try
-                {
-                    r = item.Map.Regions[regionname];
-                }
-                catch { }
+                Region r = Region.Regions.FirstOrDefault(reg => reg.Map == item.Map && !string.IsNullOrEmpty(reg.Name) && reg.Name.ToLower() == regionname.ToLower());
 
                 if (r == null) return false;
                 return (r.Contains(loc));
 
             }
-            else
-                if (o is Mobile)
+            else if (o is Mobile)
             {
                 Mobile mob = (Mobile)o;
 
-                Region r = null;
-                try
-                {
-                    r = mob.Map.Regions[regionname];
-                }
-                catch { }
+                Region r = Region.Regions.FirstOrDefault(reg => reg.Map == mob.Map && !string.IsNullOrEmpty(reg.Name) && reg.Name.ToLower() == regionname.ToLower());
 
-                //Region r = Region.GetByName(regionname, mob.Map);
                 if (r == null) return false;
                 return (r.Contains(mob.Location));
 
@@ -429,7 +417,7 @@ namespace Server.Mobiles
             {
                 tokunomap = Map.Parse("Tokuno");
             }
-            catch { }
+            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
 
             // if the type is specified then get the search type
             if (criteria.Dosearchtype && criteria.Searchtype != null)
@@ -1923,7 +1911,7 @@ namespace Server.Mobiles
             if (tr != null && tr.Text != null && tr.Text.Length > 0)
             {
                 try { m_SearchCriteria.Searchage = double.Parse(tr.Text); }
-                catch { }
+                catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
             }
 
             // read the text entries for the search criteria
@@ -1932,7 +1920,7 @@ namespace Server.Mobiles
             if (tr != null && tr.Text != null && tr.Text.Length > 0)
             {
                 try { m_SearchCriteria.Searchrange = int.Parse(tr.Text); }
-                catch { }
+                catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
             }
 
             tr = info.GetTextEntry(101);        // type info
@@ -1957,12 +1945,10 @@ namespace Server.Mobiles
 
 
             tr = info.GetTextEntry(400);        // displayfrom info
-            try
+            if (tr != null)
             {
-                DisplayFrom = int.Parse(tr.Text);
+                DisplayFrom = Utility.ToInt32(tr.Text);
             }
-            catch { }
-
 
             tr = info.GetTextEntry(300);        // savefilename info
             if (tr != null)
@@ -2381,7 +2367,7 @@ namespace Server.Mobiles
                                             {
                                                 ((Item)o).Delete();
                                             }
-                                            catch { }
+                                            catch (Exception ex) { Server.Diagnostics.ExceptionLogging.LogException(ex); }
                                         }
                                         else
                                             // block player deletion
@@ -2391,7 +2377,7 @@ namespace Server.Mobiles
                                             {
                                                 ((Mobile)o).Delete();
                                             }
-                                            catch { }
+                                            catch (Exception ex) { Server.Diagnostics.ExceptionLogging.LogException(ex); }
                                         }
                                     }
 

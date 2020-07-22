@@ -142,8 +142,10 @@ namespace Server.Misc
                     outValue = iphe.AddressList[iphe.AddressList.Length - 1];
                 }
             }
-            catch
-            { }
+            catch(Exception e)
+            {
+                Server.Diagnostics.ExceptionLogging.LogException(e);
+            }
         }
 
         private static bool HasPublicIPAddress()
@@ -246,7 +248,6 @@ namespace Server.Misc
                 }
                 catch
                 {
-                    ip = null;
                 }
 
                 if (ip != null)

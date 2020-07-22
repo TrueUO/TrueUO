@@ -27,22 +27,6 @@ namespace Server.Items
             Hits = HitsMax;
         }
 
-        public override void OnHalfDamage()
-        {
-            /*IPooledEnumerable eable = this.Map.GetMobilesInRange(this.Location, 20);
-
-            foreach (Mobile m in eable)
-            {
-                if (m.NetState != null)
-                    m.PrivateOverheadMessage(Server.Network.MessageType.Regular, 1154, 1154551, m.NetState); // *Minax's Beacon surges with energy into an invulnerable state! Defeat her Captains to weaken the Beacon's defenses!*
-            }
-
-            eable.Free();
-
-            if (Controller != null)
-                Timer.DelayCall(TimeSpan.FromSeconds(1), () => Controller.SpawnWave());*/
-        }
-
         public override bool CheckAreaDamage(Mobile from, int amount)
         {
             if (amount >= 5000)
@@ -68,13 +52,10 @@ namespace Server.Items
 
                 for (int i = 0; i < eligables.Count; i++)
                 {
-                    if (0.25 > Utility.RandomDouble())
-                    {
-                        Mobile winner = eligables[i];
+                    Mobile winner = eligables[i];
 
-                        winner.AddToBackpack(new MaritimeCargo(CargoQuality.Mythical));
-                        winner.SendLocalizedMessage(1158907); // You recover maritime trade cargo!
-                    }
+                    winner.AddToBackpack(new MaritimeCargo(CargoQuality.Mythical));
+                    winner.SendLocalizedMessage(1158907); // You recover maritime trade cargo!
                 }
             }
 
@@ -82,16 +63,6 @@ namespace Server.Items
                 Controller.OnBeaconDestroyed();
 
             return base.OnBeforeDestroyed();
-        }
-
-        public override void Delete()
-        {
-            base.Delete();
-
-            if (Controller != null && !Controller.Deleted)
-            {
-                Controller.Delete();
-            }
         }
 
         public PlunderBeacon(Serial serial)

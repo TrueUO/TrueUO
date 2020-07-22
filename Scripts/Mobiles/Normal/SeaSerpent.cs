@@ -42,13 +42,6 @@ namespace Server.Mobiles
             CanSwim = true;
             CantWalk = true;
 
-            if (Utility.RandomBool())
-                PackItem(new SulfurousAsh(4));
-            else
-                PackItem(new BlackPearl(4));
-
-            PackItem(new RawFishSteak());
-
             SetSpecialAbility(SpecialAbility.DragonBreath);
         }
 
@@ -57,6 +50,8 @@ namespace Server.Mobiles
         {
         }
 
+        public override int Meat => 5;
+        public override MeatType MeatType => MeatType.SeaSerpentSteak;
         public override int TreasureMapLevel => Utility.RandomList(1, 2);
         public override int Hides => 10;
         public override HideType HideType => HideType.Horned;
@@ -66,6 +61,8 @@ namespace Server.Mobiles
         public override void GenerateLoot()
         {
             AddLoot(LootPack.Meager);
+            AddLoot(LootPack.LootItem<RawFishSteak>());
+            AddLoot(LootPack.RandomLootItem(new[] { typeof(SulfurousAsh), typeof(BlackPearl) }, 100.0, 4, false, true));
         }
 
         public override void Serialize(GenericWriter writer)

@@ -403,9 +403,9 @@ namespace Server.Commands
 
                 return objectCount;
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                Console.WriteLine(ex);
+                Server.Diagnostics.ExceptionLogging.LogException(e);
                 return 0;
             }
         }

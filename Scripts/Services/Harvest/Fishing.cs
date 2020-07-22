@@ -459,15 +459,24 @@ namespace Server.Engines.Harvest
                         }
                         else
                         {
-                            if (Utility.RandomBool())
-                                chest = new MetalGoldenChest();
-                            else
-                                chest = new WoodenChest();
-                        }
-
-                        if (sos.IsAncient)
-                        {
-                            chest.Hue = 0x481;
+                            switch (sos.Level)
+                            {
+                                case 0: chest = new SOSChest(Utility.RandomBool() ? 0xE43 : 0xE41); break;
+                                case 1: chest = new SOSChest(0xA306); break;
+                                case 2: chest = new SOSChest(Utility.RandomBool() ? 0xE43 : 0xE41); break;
+                                case 3: chest = new SOSChest(0xA308); break;
+                                default:
+                                    if (.33 > Utility.RandomDouble())
+                                    {
+                                        chest = new SOSChest(0xA30A);
+                                    }
+                                    else
+                                    {
+                                        chest = new SOSChest(Utility.RandomBool() ? 0xE41 : 0xE43);
+                                        chest.Hue = 0x481;
+                                    }
+                                    break;
+                            }
                         }
 
                         TreasureMapChest.Fill(from, chest, Math.Max(1, Math.Min(4, sos.Level)), true);
@@ -538,7 +547,7 @@ namespace Server.Engines.Harvest
                 return true; // we don't want to give the item to the player, it's on the serpent
             }
 
-            if (item is BigFish || item is WoodenChest || item is MetalGoldenChest)
+            if (item is BigFish || item is LockableContainer)
                 placeAtFeet = true;
 
             #region High Seas

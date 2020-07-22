@@ -3146,7 +3146,10 @@ namespace Server.Multis
 
         public void Refresh(Mobile from = null)
         {
-            // DJR - Shouldn't this only be for the owner of the boat?
+            if (from != null && Owner != null && from.Account != Owner.Account)
+            {
+                return;
+            }
 
             if (from != null && Status > 1043010)
             {

@@ -120,28 +120,100 @@ namespace Server.Spells.Mysticism
 
         public static void DoExplosion(Mobile from, Mobile caster, bool initial, int amount)
         {
-            double prim = caster.Skills[SkillName.Mysticism].Value;
-            double sec = caster.Skills[SkillName.Imbuing].Value;
+            double damage = BonusDamage(caster) + Utility.RandomMinMax(22, 24);
 
-            if (caster.Skills[SkillName.Focus].Value > sec)
-                sec = caster.Skills[SkillName.Focus].Value;
+            if (initial)
+            {
+                var sdiBonus = SpellHelper.GetSpellDamageBonus(caster, from, SkillName.Mysticism, from is PlayerMobile);
 
-            int damage = (int)((prim + sec) / 12) + Utility.RandomMinMax(1, 6);
-
-            if (amount > 1)
-                damage /= amount;
+                damage *= (100 + sdiBonus);
+                damage /= 100;
+            }
+            else
+            {
+                switch (amount)
+                {
+                    default: break;
+                    case 0: 
+                    case 1: damage /= 2; break;
+                    case 2: damage /= 1.66; break;
+                    case 3: damage /= 1.33; break;
+                }
+            }
 
             from.PlaySound(0x658);
 
             from.FixedParticles(0x375A, 1, 17, 9919, 1161, 7, EffectLayer.Waist);
             from.FixedParticles(0x3728, 1, 13, 9502, 1161, 7, (EffectLayer)255);
 
-            int sdiBonus = SpellHelper.GetSpellDamageBonus(caster, from, SkillName.Mysticism, from is PlayerMobile);
+            SpellHelper.Damage(null, TimeSpan.Zero, from, caster, (int)damage, 0, 0, 0, 0, 0, DFAlgorithm.Standard, 100, 0);
+        }
 
-            damage *= (100 + sdiBonus);
-            damage /= 100;
+        public static int BonusDamage(Mobile caster)
+        {
+            var skill = Math.Max(caster.Skills[SkillName.Focus].Value, caster.Skills[SkillName.Imbuing].Value);
 
-            SpellHelper.Damage(null, TimeSpan.Zero, from, caster, damage, 0, 0, 0, 0, 0, DFAlgorithm.Standard, 100, 0);
+            if (skill <= 20)
+            {
+                return 0;
+            }
+
+            if (skill <= 25)
+            {
+                return 2;
+            }
+
+            if (skill <= 30)
+            {
+                return 4;
+            }
+
+            if (skill <= 35)
+            {
+                return 7;
+            }
+
+            if (skill <= 40)
+            {
+                return 9;
+            }
+
+            if (skill <= 50)
+            {
+                return 13;
+            }
+
+            if (skill <= 60)
+            {
+                return 18;
+            }
+
+            if (skill <= 70)
+            {
+                return 22;
+            }
+
+            if (skill <= 80)
+            {
+                return 28;
+            }
+
+            if (skill <= 90)
+            {
+                return 32;
+            }
+
+            if (skill <= 100)
+            {
+                return 37;
+            }
+
+            if (skill <= 110)
+            {
+                return 41;
+            }
+
+            return 46;
         }
 
         public static void RemoveFromList(Mobile from)

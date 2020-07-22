@@ -39,8 +39,9 @@ namespace Server
             LifeStealers = 0x00000100,
             LootNerf2 = 0x00000200,
             RemoveUnused = 0x00000400,
-            RemoveUnused2 =     0x00000800,
+            RemoveUnused2 = 0x00000800,
             RemoveTeleporters = 0x00001000,
+            DestardSpawners = 0x00002000
         }
 
         public static string FilePath = Path.Combine("Saves/Misc", "SpawnerPresistence.bin");
@@ -166,6 +167,12 @@ namespace Server
             {
                 case 12:
                 case 11:
+                    if ((VersionFlag & SpawnerVersion.DestardSpawners) == 0)
+                    {
+                        UpdateDestardSpawners();
+                        VersionFlag |= SpawnerVersion.DestardSpawners;
+                    }
+
                     if ((VersionFlag & SpawnerVersion.RemoveTeleporters) == 0)
                     {
                         RemoveTeleporters();
@@ -285,8 +292,16 @@ namespace Server
             Utility.PopColor();
         }
 
+        #region Update Destard Spawners
+        public static void UpdateDestardSpawners()
+        {
+            ReplaceSpawnersByRegionName("Destard", Map.Trammel, "Destard");
+            ReplaceSpawnersByRegionName("Destard", Map.Felucca, "Destard");
+        }
+    #endregion
+
         #region Remove Teleporters
-        public static void RemoveTeleporters()
+    public static void RemoveTeleporters()
         {
             WeakEntityCollection.Delete("tel");
             var delCount = 0;
@@ -1156,7 +1171,10 @@ namespace Server
                     files = new List<string>(Directory.GetFiles(filename, "*.xml"));
                     dirs = Directory.GetDirectories(filename);
                 }
-                catch { }
+                catch (Exception e)
+                {
+                    Server.Diagnostics.ExceptionLogging.LogException(e);
+                }
 
                 if (dirs != null && dirs.Length > 0)
                 {
@@ -1167,7 +1185,10 @@ namespace Server
                             string[] dirFiles = Directory.GetFiles(dir, "*.xml");
                             files.AddRange(dirFiles);
                         }
-                        catch { }
+                        catch (Exception e)
+                        {
+                            Server.Diagnostics.ExceptionLogging.LogException(e);
+                        }
                     }
                 }
 
@@ -1187,7 +1208,10 @@ namespace Server
                         {
                             fs = File.Open(file, FileMode.Open, FileAccess.Read);
                         }
-                        catch { }
+                        catch (Exception e)
+                        {
+                            Server.Diagnostics.ExceptionLogging.LogException(e);
+                        }
 
                         if (fs == null)
                         {
@@ -1220,7 +1244,10 @@ namespace Server
                                     {
                                         id = (string)dr["UniqueId"];
                                     }
-                                    catch { }
+                                    catch (Exception e)
+                                    {
+                                        Server.Diagnostics.ExceptionLogging.LogException(e);
+                                    }
 
                                     bool convert = id != null && ConvertSpawner(id, dr);
 
@@ -1234,7 +1261,10 @@ namespace Server
                                             loc = new Point3D(int.Parse((string)dr["CentreX"]), int.Parse((string)dr["CentreY"]), int.Parse((string)dr["CentreZ"]));
                                             spawnMap = Map.Parse((string)dr["Map"]);
                                         }
-                                        catch { }
+                                        catch (Exception e)
+                                        {
+                                            Server.Diagnostics.ExceptionLogging.LogException(e);
+                                        }
 
                                         if (loc != Point3D.Zero && spawnMap != null && spawnMap != Map.Internal)
                                         {
@@ -1381,7 +1411,10 @@ namespace Server
                     files = new List<string>(Directory.GetFiles(filename, "*.xml"));
                     dirs = Directory.GetDirectories(filename);
                 }
-                catch { }
+                catch (Exception e)
+                {
+                    Server.Diagnostics.ExceptionLogging.LogException(e);
+                }
 
                 if (dirs != null && dirs.Length > 0)
                 {
@@ -1392,7 +1425,10 @@ namespace Server
                             string[] dirFiles = Directory.GetFiles(dir, "*.xml");
                             files.AddRange(dirFiles);
                         }
-                        catch { }
+                        catch (Exception e)
+                        {
+                            Server.Diagnostics.ExceptionLogging.LogException(e);
+                        }
                     }
                 }
 
@@ -1413,7 +1449,10 @@ namespace Server
                         {
                             fs = File.Open(file, FileMode.Open, FileAccess.Read);
                         }
-                        catch { }
+                        catch (Exception e)
+                        {
+                            Server.Diagnostics.ExceptionLogging.LogException(e);
+                        }
 
                         if (fs == null)
                         {
@@ -1446,7 +1485,10 @@ namespace Server
                                     {
                                         id = (string)dr["UniqueId"];
                                     }
-                                    catch { }
+                                    catch (Exception e)
+                                    {
+                                        Server.Diagnostics.ExceptionLogging.LogException(e);
+                                    }
 
                                     if (DeleteSpawner(id))
                                     {
@@ -1489,7 +1531,10 @@ namespace Server
                 {
                     files = new List<string>(Directory.GetFiles(directory, filename + ".xml"));
                 }
-                catch { }
+                catch (Exception e)
+                {
+                    Server.Diagnostics.ExceptionLogging.LogException(e);
+                }
 
                 ToConsole(String.Format("Found {0} Xmlspawner files for removal.", files == null ? "0" : files.Count.ToString()), files != null && files.Count > 0 ? ConsoleColor.Green : ConsoleColor.Red);
                 ToConsole("Deleting spawners...", ConsoleColor.Cyan);
@@ -1506,7 +1551,10 @@ namespace Server
                         {
                             fs = File.Open(file, FileMode.Open, FileAccess.Read);
                         }
-                        catch { }
+                        catch (Exception e)
+                        {
+                            Server.Diagnostics.ExceptionLogging.LogException(e);
+                        }
 
                         if (fs == null)
                         {
@@ -1539,7 +1587,10 @@ namespace Server
                                     {
                                         id = (string)dr["UniqueId"];
                                     }
-                                    catch { }
+                                    catch (Exception e)
+                                    {
+                                        Server.Diagnostics.ExceptionLogging.LogException(e);
+                                    }
 
                                     if (DeleteSpawner(id))
                                     {
@@ -1580,7 +1631,10 @@ namespace Server
                     files = new List<string>(Directory.GetFiles(filename, "*.xml"));
                     dirs = Directory.GetDirectories(filename);
                 }
-                catch { }
+                catch (Exception e)
+                {
+                    Server.Diagnostics.ExceptionLogging.LogException(e);
+                }
 
                 if (dirs != null && dirs.Length > 0)
                 {
@@ -1591,7 +1645,10 @@ namespace Server
                             string[] dirFiles = Directory.GetFiles(dir, "*.xml");
                             files.AddRange(dirFiles);
                         }
-                        catch { }
+                        catch (Exception e)
+                        {
+                            Server.Diagnostics.ExceptionLogging.LogException(e);
+                        }
                     }
                 }
 
@@ -1612,7 +1669,10 @@ namespace Server
                         {
                             fs = File.Open(file, FileMode.Open, FileAccess.Read);
                         }
-                        catch { }
+                        catch (Exception e)
+                        {
+                            Server.Diagnostics.ExceptionLogging.LogException(e);
+                        }
 
                         if (fs == null)
                         {
@@ -1645,7 +1705,10 @@ namespace Server
                                     {
                                         id = (string)dr["UniqueId"];
                                     }
-                                    catch { }
+                                    catch (Exception e)
+                                    {
+                                        Server.Diagnostics.ExceptionLogging.LogException(e);
+                                    }
 
                                     if (DeleteSpawner(id))
                                     {
@@ -1679,7 +1742,10 @@ namespace Server
                                                 eable.Free();
                                             }
                                         }
-                                        catch { }
+                                        catch (Exception e)
+                                        {
+                                            Server.Diagnostics.ExceptionLogging.LogException(e);
+                                        }
 
                                         if (!deleted)
                                         {

@@ -69,13 +69,12 @@ namespace Server.Items
                 Donations.Add(from, amount);
             }
 
-            from.SendMessage(1159032, string.Format("{0}", Donations[from].ToString())); // The Fellowship thanks you for your donation. You have donated ~1_val~ worth of goods!
+            from.SendLocalizedMessage(1159032, string.Format("{0}", Donations[from].ToString())); // The Fellowship thanks you for your donation. You have donated ~1_val~ worth of goods!
 
             if (Donations[from] >= 450000000)
             {
                 from.SendLocalizedMessage(1152339, string.Format("{0}", Donations[from].ToString())); // A reward of ~1_ITEM~ has been placed in your backpack.
                 from.AddToBackpack(new FellowshipCoin());
-                Donations[from] -= 450000000;
             }
 
             item.Delete();

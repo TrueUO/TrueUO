@@ -8,6 +8,8 @@ using Server.Spells.Fifth;
 using Server.Spells.Ninjitsu;
 using Server.Spells.Seventh;
 using Server.Targeting;
+using Server.Multis;
+
 using System;
 using System.Collections;
 #endregion
@@ -57,6 +59,7 @@ namespace Server.SkillHandlers
                 object root = toSteal.RootParent;
 
                 StealableArtifactsSpawner.StealableInstance si = null;
+
                 if (toSteal.Parent == null || !toSteal.Movable)
                 {
                     si = toSteal is AddonComponent ? StealableArtifactsSpawner.GetStealableInstance(((AddonComponent)toSteal).Addon) : StealableArtifactsSpawner.GetStealableInstance(toSteal);
@@ -185,7 +188,7 @@ namespace Server.SkillHandlers
                 }
                 else if (root is Mobile && !m_Thief.CanBeHarmful((Mobile)root))
                 { }
-                else if (root is Corpse)
+                else if (root is Corpse || !CheckHouse(toSteal, root))
                 {
                     m_Thief.SendLocalizedMessage(502710); // You can't steal that!
                 }
@@ -296,6 +299,25 @@ namespace Server.SkillHandlers
                 return stolen;
             }
 
+            private bool CheckHouse(Item stolen, object root)
+            {
+                var house = BaseHouse.FindHouseAt(stolen);
+
+                if (house != null)
+                {
+                    var rootItem = root as Item;
+
+                    if (rootItem != null)
+                    {
+                        SecureInfo secure = house.GetSecureInfoFor(rootItem);
+
+                        return secure != null && house.HasSecureAccess(m_Thief, secure);
+                    }
+                }
+
+                return true;
+            }
+
             protected override void OnTarget(Mobile from, object target)
             {
                 from.RevealingAction();
@@ -311,19 +333,40 @@ namespace Server.SkillHandlers
                 }
                 else if (target is Mobile)
                 {
-                    Container pack = ((Mobile)target).Backpack;
+                    var bc = target as BaseCreature;
+                    root = target;
 
-                    if (pack != null && pack.Items.Count > 0)
+                    if (bc != null && from is PlayerMobile)
                     {
-                        int randomIndex = Utility.Random(pack.Items.Count);
+                        if (bc.Controlled || bc.Summoned)
+                        {
+                            from.SendLocalizedMessage(502708); //You can't steal from this.
+                        }
+                        if (bc.HasBeenStolen)
+                        {
+                            from.SendLocalizedMessage(1094948); //That creature has already been stolen from.  There is nothing left to steal.
+                        }
+                        else
+                        {
+                            from.SendLocalizedMessage(1010579); // You reach into the backpack... and try to take something.
 
-                        root = target;
-                        stolen = TryStealItem(pack.Items[randomIndex], ref caught);
+                            Engines.CreatureStealing.StealingHandler.HandleSteal(bc, (PlayerMobile)from, ref stolen);
+
+                            if (stolen == null)
+                            {
+                                if (!bc.StealPackGenerated)
+                                {
+                                    bc.GenerateLoot(LootStage.Stolen);
+                                }
+
+                                StealRandom((Mobile)target, ref caught, ref stolen);
+                            }
+                        }
                     }
-
-                    if (target is BaseCreature && from is PlayerMobile)
+                    else
                     {
-                        Engines.CreatureStealing.StealingHandler.HandleSteal(target as BaseCreature, from as PlayerMobile);
+                        from.SendLocalizedMessage(1010579); // You reach into the backpack... and try to take something.
+                        StealRandom((Mobile)target, ref caught, ref stolen);
                     }
                 }
                 else
@@ -348,6 +391,11 @@ namespace Server.SkillHandlers
                     {
                         // do not return stolen containers or stackable items
                         StolenItem.Add(stolen, m_Thief, root as Mobile);
+                    }
+
+                    if (target is BaseCreature)
+                    {
+                        ((BaseCreature)target).HasBeenStolen = true;
                     }
                 }
 
@@ -393,6 +441,20 @@ namespace Server.SkillHandlers
 
                     pm.PermaFlags.Add((Mobile)root);
                     pm.Delta(MobileDelta.Noto);
+                }
+            }
+
+            private void StealRandom(Mobile target, ref bool caught, ref Item stolen)
+            {
+                Container pack = target.Backpack;
+
+                if (pack != null && pack.Items.Count > 0)
+                {
+                    stolen = TryStealItem(pack.Items[Utility.Random(pack.Items.Count)], ref caught);
+                }
+                else
+                {
+                    m_Thief.SendLocalizedMessage(1010578); // You reach into the backpack... but find it's empty.
                 }
             }
         }

@@ -33,7 +33,11 @@ namespace Server.Engines.Craft
         KrampusMinionEarrings = 463,
         EnchantedPicnicBasket = 464,
 
-        Telescope = 465
+        Telescope = 465,
+
+        BarbedWhip = 466,
+        SpikedWhip = 467,
+        BladedWhip = 468
     }
 
     public class DefTinkering : CraftSystem
@@ -399,17 +403,14 @@ namespace Server.Engines.Craft
             index = AddCraft(typeof(DragonLamp), 1044050, 1098404, 75.0, 125.0, typeof(IronIngot), 1044036, 8, 1044253);
             AddRes(index, typeof(Candelabra), 1011213, 1, 1154172);
             AddRes(index, typeof(WorkableGlass), 1154170, 1, 1154171);
-            SetNeededThemePack(index, ThemePack.Kings);
 
             index = AddCraft(typeof(StainedGlassLamp), 1044050, 1098408, 75.0, 125.0, typeof(IronIngot), 1044036, 8, 1044253);
             AddRes(index, typeof(Candelabra), 1011213, 1, 1154172);
             AddRes(index, typeof(WorkableGlass), 1154170, 1, 1154171);
-            SetNeededThemePack(index, ThemePack.Kings);
 
             index = AddCraft(typeof(TallDoubleLamp), 1044050, 1098414, 75.0, 125.0, typeof(IronIngot), 1044036, 8, 1044253);
             AddRes(index, typeof(Candelabra), 1011213, 1, 1154172);
             AddRes(index, typeof(WorkableGlass), 1154170, 1, 1154171);
-            SetNeededThemePack(index, ThemePack.Kings);
 
             index = AddCraft(typeof(CraftableHouseItem), 1044050, 1155851, 40.0, 90.0, typeof(IronIngot), 1044036, 8, 1044253);
             SetData(index, CraftableItemType.CurledMetalSignHanger);
@@ -488,6 +489,18 @@ namespace Server.Engines.Craft
             index = AddCraft(typeof(WeatheredBronzeArcherDeed), 1044050, 1156884, 85.0, 135.0, typeof(IronIngot), 1038039, 200, 1044253);
             AddRecipe(index, (int)TinkerRecipes.WeatheredBronzeArcherSculpture);
 
+            index = AddCraft(typeof(BarbedWhip), 1044050, 1159281, 75.0, 125.0, typeof(IronIngot), 1044036, 5, 1044037);
+            AddRes(index, typeof(Leather), 1044462, 10, 1044463);
+            AddRecipe(index, (int)TinkerRecipes.BarbedWhip);
+
+            index = AddCraft(typeof(SpikedWhip), 1044050, 1159282, 75.0, 125.0, typeof(IronIngot), 1044036, 5, 1044037);
+            AddRes(index, typeof(Leather), 1044462, 10, 1044463);
+            AddRecipe(index, (int)TinkerRecipes.SpikedWhip);
+
+            index = AddCraft(typeof(BladedWhip), 1044050, 1159283, 75.0, 125.0, typeof(IronIngot), 1044036, 5, 1044037);
+            AddRes(index, typeof(Leather), 1044462, 10, 1044463);
+            AddRecipe(index, (int)TinkerRecipes.BladedWhip);
+
             #endregion
 
             #region Assemblies
@@ -555,14 +568,12 @@ namespace Server.Engines.Craft
             AddRes(index, typeof(CloseHelm), 1025128, 1, 1044253);
             AddRes(index, typeof(Broadsword), 1015055, 1, 1044253);
             ForceNonExceptional(index);
-            SetNeededThemePack(index, ThemePack.Gothic);
 
             index = AddCraft(typeof(AdvancedTrainingDummyEastDeed), 1044051, 1150596, 90.0, 120.0, typeof(TrainingDummyEastDeed), 1044335, 1, 1044253);
             AddRes(index, typeof(PlateChest), 1025141, 1, 1044253);
             AddRes(index, typeof(CloseHelm), 1025128, 1, 1044253);
             AddRes(index, typeof(Broadsword), 1015055, 1, 1044253);
             ForceNonExceptional(index);
-            SetNeededThemePack(index, ThemePack.Gothic);
 
             index = AddCraft(typeof(DistillerySouthAddonDeed), 1044051, 1150663, 90.0, 110.0, typeof(MetalKeg), 1150675, 2, 1044253);
             AddRes(index, typeof(HeatingStand), 1011224, 4, 1044253);
@@ -585,6 +596,12 @@ namespace Server.Engines.Craft
             AddRes(index, typeof(WorkableGlass), 1154170, 1, 1154171);
             AddRes(index, typeof(SextantParts), 1044175, 1, 1044253);
             AddRecipe(index, (int)TinkerRecipes.Telescope);
+
+            index = AddCraft(typeof(OracleOfTheSea), 1044051, 1150184, 100.0, 120, typeof(IronIngot), 1044036, 3, 1044037);
+            AddRes(index, typeof(WorkableGlass), 1154170, 2, 1154171);
+            AddRes(index, typeof(OceanSapphire), 1159162, 3, 1044253);
+            SetItemHue(index, 1265);
+            ForceNonExceptional(index);
             #endregion
 
             #region Traps

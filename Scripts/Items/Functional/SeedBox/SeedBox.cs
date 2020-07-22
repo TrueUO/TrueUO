@@ -11,7 +11,7 @@ using System.Linq;
 namespace Server.Engines.Plants
 {
     [FlipableAttribute(19288, 19290)]
-    public class SeedBox : Container, IRewardItem, ISecurable
+    public class SeedBox : Container, IRewardItem
     {
         public static readonly int MaxSeeds = 5000;
         public static readonly int MaxUnique = 300;
@@ -44,10 +44,12 @@ namespace Server.Engines.Plants
         [CommandProperty(AccessLevel.GameMaster)]
         public int UniqueCount => Entries == null ? 0 : Entries.Where(e => e != null && e.Seed != null && e.Seed.Amount > 0).Count();
 
+        public override int DefaultMaxWeight { get { return 0; } }
         public override double DefaultWeight => 10.0;
 
         [Constructable]
-        public SeedBox() : base(19288)
+        public SeedBox()
+            : base(19288)
         {
             Entries = new List<SeedEntry>();
 
@@ -76,6 +78,7 @@ namespace Server.Engines.Plants
         public override void GetContextMenuEntries(Mobile from, List<ContextMenuEntry> list)
         {
             base.GetContextMenuEntries(from, list);
+
             SetSecureLevelEntry.AddTo(from, this, list);
         }
 
@@ -116,8 +119,6 @@ namespace Server.Engines.Plants
 
         public override bool OnDragDropInto(Mobile from, Item item, Point3D p)
         {
-            from.SendMessage("HACKER! GET YOUR STEAM OUT OF HERE!!!");
-
             return false;
         }
 

@@ -41,8 +41,6 @@ namespace Server.Mobiles
 
             Fame = 23000;
             Karma = -23000;
-
-            PackNecroReg(100, 200);
         }
 
         public AncientLich(Serial serial)
@@ -50,12 +48,18 @@ namespace Server.Mobiles
         {
         }
 
+		public override bool CanFlee => false;
+		
         public override TribeType Tribe => TribeType.Undead;
-
+		
         public override bool Unprovokable => true;
+		
         public override bool BleedImmune => true;
+		
         public override Poison PoisonImmune => Poison.Lethal;
+		
         public override int TreasureMapLevel => 5;
+		
         public override int GetIdleSound()
         {
             return 0x19D;
@@ -85,6 +89,7 @@ namespace Server.Mobiles
         {
             AddLoot(LootPack.FilthyRich, 3);
             AddLoot(LootPack.MedScrolls, 2);
+            AddLoot(LootPack.NecroRegs, 100, 200);
         }
 
         public override void Serialize(GenericWriter writer)

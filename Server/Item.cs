@@ -997,21 +997,15 @@ namespace Server
             return info.m_Items;
         }
 
-        #region Mondain's Legacy
         public static Bitmap GetBitmap(int itemID)
         {
             try
             {
                 return Ultima.Art.GetStatic(itemID);
             }
-            catch
+            catch (Exception e)
             {
-                if (Core.Debug)
-                {
-                    Utility.PushColor(ConsoleColor.Red);
-                    Console.WriteLine("Ultima Art: Unable to read client files.");
-                    Utility.PopColor();
-                }
+                Server.Diagnostics.ExceptionLogging.LogException(e);
             }
 
             return null;
@@ -1035,7 +1029,6 @@ namespace Server
             Measure(bmp, out xMin, out yMin, out xMax, out yMax);
             return new Size(xMax - xMin, yMax - yMin);
         }
-        #endregion
 
         private void SetFlag(ImplFlag flag, bool value)
         {
@@ -5154,14 +5147,14 @@ namespace Server
                 int zStart = checkZ - z;
                 int zEnd = checkTop - z;
 
-                if (zStart >= 20 || zEnd < 0)
+                if (zStart >= 17 || zEnd < 0)
                     continue;
 
                 if (zStart < 0)
                     zStart = 0;
 
-                if (zEnd > 19)
-                    zEnd = 19;
+                if (zEnd > 16)
+                    zEnd = 16;
 
                 int bitCount = zEnd - zStart;
 
@@ -6031,17 +6024,18 @@ namespace Server
         #endregion
     }
 
+    [PropertyObject]
     public class ItemSocket
     {
+        private DateTime _Expires;
+
         [CommandProperty(AccessLevel.GameMaster)]
         public Item Owner { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public DateTime Expires { get; set; }
+        public DateTime Expires { get { return _Expires; } set { _Expires = value; CheckTimer(); } }
 
         public virtual TimeSpan TickDuration => TimeSpan.FromMinutes(1);
-
-        public Timer Timer { get; set; }
 
         public ItemSocket()
             : this(TimeSpan.Zero)
@@ -6053,26 +6047,37 @@ namespace Server
             if (duration != TimeSpan.Zero)
             {
                 Expires = DateTime.UtcNow + duration;
+            }
+        }
 
-                BeginTimer();
+        public override string ToString()
+        {
+            return "...";
+        }
+
+        public void CheckTimer()
+        {
+            if (Expires != DateTime.MinValue)
+            {
+                if (!SocketTimer.HasTimer(this))
+                {
+                    SocketTimer.RegisterTimer(this);
+                }
+            }
+            else if(SocketTimer.HasTimer(this))
+            {
+                SocketTimer.RemoveTimer(this);
             }
         }
 
         protected void BeginTimer()
         {
-            EndTimer();
-
-            Timer = Timer.DelayCall(TickDuration, TickDuration, OnTick);
-            Timer.Start();
+            SocketTimer.RegisterTimer(this);
         }
 
         protected void EndTimer()
         {
-            if (Timer != null)
-            {
-                Timer.Stop();
-                Timer = null;
-            }
+            SocketTimer.RemoveTimer(this);
         }
 
         protected virtual void OnTick()
@@ -6085,8 +6090,7 @@ namespace Server
 
         public virtual void Remove()
         {
-            EndTimer();
-
+            SocketTimer.RemoveTimer(this);
             Owner.RemoveItemSocket(this);
         }
 
@@ -6106,12 +6110,9 @@ namespace Server
             {
                 newSocket = Activator.CreateInstance(GetType()) as ItemSocket;
             }
-            catch
+            catch (Exception e)
             {
-                Console.WriteLine(
-                    "Warning: 0x{0:X}: Item socket must have a zero paramater constructor to be separated from a stack. '{1}'.",
-                    Owner.Serial.Value,
-                    GetType().Name);
+                Server.Diagnostics.ExceptionLogging.LogException(e);
             }
 
             if (newSocket != null)
@@ -6120,7 +6121,7 @@ namespace Server
 
                 if (newSocket.Expires != DateTime.MinValue)
                 {
-                    newSocket.BeginTimer();
+                    SocketTimer.RegisterTimer(this);
                 }
 
                 newSocket.OnAfterDuped(this);
@@ -6143,21 +6144,8 @@ namespace Server
         {
             reader.ReadInt(); // version
 
-            Expires = reader.ReadDateTime();
-
-            if (Expires != DateTime.MinValue)
-            {
-                if (Expires < DateTime.UtcNow)
-                {
-                    return;
-                }
-                else
-                {
-                    BeginTimer();
-                }
-            }
-
             owner.AttachSocket(this);
+            Expires = reader.ReadDateTime();
         }
 
         public static void Save(ItemSocket socket, GenericWriter writer)
@@ -6172,6 +6160,78 @@ namespace Server
             ItemSocket socket = Activator.CreateInstance(typeName) as ItemSocket;
 
             socket.Deserialize(item, reader);
+        }
+
+        private class SocketTimer : Timer
+        {
+            public static SocketTimer Instance { get; private set; }
+            public Dictionary<ItemSocket, DateTime> TimerRegistry { get; set; } = new Dictionary<ItemSocket, DateTime>();
+
+            public SocketTimer()
+                : base(TimeSpan.FromMilliseconds(10), TimeSpan.FromMilliseconds(10))
+            {
+                Instance = this;
+                Start();
+            }
+
+            public static bool HasTimer(ItemSocket socket)
+            {
+                return Instance != null && Instance.TimerRegistry.ContainsKey(socket);
+            }
+
+            public static void RegisterTimer(ItemSocket socket)
+            {
+                var timer = Instance;
+
+                if (timer == null)
+                {
+                    timer = new SocketTimer();
+                }
+
+                timer.TimerRegistry[socket] = DateTime.UtcNow + socket.TickDuration;
+            }
+
+            public static void RemoveTimer(ItemSocket socket)
+            {
+                var timer = Instance;
+
+                if (timer != null)
+                {
+                    if (timer.TimerRegistry.ContainsKey(socket))
+                    {
+                        timer.TimerRegistry.Remove(socket);
+                    }
+
+                    if (timer.TimerRegistry.Count == 0)
+                    {
+                        timer.Stop();
+                        Instance = null;
+                    }
+                }
+            }
+
+            protected override void OnTick()
+            {
+                var list = new List<ItemSocket>();
+
+                foreach (var socket in TimerRegistry.Keys.Where(s => TimerRegistry[s] < DateTime.UtcNow))
+                {
+                    list.Add(socket);
+                }
+
+                for (int i = 0; i < list.Count; i++)
+                {
+                    var socket = list[i];
+                    socket.OnTick();
+
+                    if (TimerRegistry.ContainsKey(socket))
+                    {
+                        TimerRegistry[socket] = DateTime.UtcNow + socket.TickDuration;
+                    }
+                }
+
+                ColUtility.Free(list);
+            }
         }
     }
 }

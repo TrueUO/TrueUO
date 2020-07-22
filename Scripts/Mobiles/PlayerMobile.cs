@@ -566,8 +566,10 @@ namespace Server.Mobiles
                         {
                             ammo = Activator.CreateInstance(kvp.Key) as Item;
                         }
-                        catch
-                        { }
+                        catch (Exception e)
+                        {
+                            Server.Diagnostics.ExceptionLogging.LogException(e);
+                        }
 
                         if (ammo != null)
                         {
@@ -886,38 +888,46 @@ namespace Server.Mobiles
         {
             PlayerMobile pm = e.Mobile as PlayerMobile;
 
-            if (pm != null && pm.Backpack != null && pm.Alive && e.List != null && e.List.Count > 0)
+            if (pm.IsStaff() || Core.TickCount - pm.NextActionTime >= 0)
             {
-                Container pack = pm.Backpack;
-
-                e.List.ForEach(serial =>
+                if (pm != null && pm.Backpack != null && pm.Alive && e.List != null && e.List.Count > 0)
                 {
-                    Item item = pack.Items.FirstOrDefault(i => i.Serial == serial);
+                    Container pack = pm.Backpack;
 
-                    if (item != null)
+                    e.List.ForEach(serial =>
                     {
-                        Item toMove = pm.FindItemOnLayer(item.Layer);
+                        Item item = pack.Items.FirstOrDefault(i => i.Serial == serial);
 
-                        if (toMove != null)
+                        if (item != null)
                         {
-                            //pack.DropItem(toMove);
-                            toMove.Internalize();
+                            Item toMove = pm.FindItemOnLayer(item.Layer);
 
-                            if (!pm.EquipItem(item))
+                            if (toMove != null)
                             {
-                                pm.EquipItem(toMove);
+                                toMove.Internalize();
+
+                                if (!pm.EquipItem(item))
+                                {
+                                    pm.EquipItem(toMove);
+                                }
+                                else
+                                {
+                                    pack.DropItem(toMove);
+                                }
                             }
                             else
                             {
-                                pack.DropItem(toMove);
+                                pm.EquipItem(item);
                             }
                         }
-                        else
-                        {
-                            pm.EquipItem(item);
-                        }
-                    }
-                });
+                    });
+
+                    pm.NextActionTime = Core.TickCount + (Mobile.ActionDelay * e.List.Count);
+                }
+            }
+            else
+            {
+                pm.SendActionMessage();
             }
         }
 
@@ -925,21 +935,29 @@ namespace Server.Mobiles
         {
             PlayerMobile pm = e.Mobile as PlayerMobile;
 
-            if (pm != null && pm.Backpack != null && pm.Alive && e.List != null && e.List.Count > 0)
+            if (pm.IsStaff() || Core.TickCount - pm.NextActionTime >= 0)
             {
-                Container pack = pm.Backpack;
-
-                List<Item> worn = new List<Item>(pm.Items);
-
-                foreach (Item item in worn)
+                if (pm != null && pm.Backpack != null && pm.Alive && e.List != null && e.List.Count > 0)
                 {
-                    if (e.List.Contains((int)item.Layer))
-                    {
-                        pack.TryDropItem(pm, item, false);
-                    }
-                }
+                    Container pack = pm.Backpack;
 
-                ColUtility.Free(worn);
+                    List<Item> worn = new List<Item>(pm.Items);
+
+                    foreach (Item item in worn)
+                    {
+                        if (e.List.Contains((int)item.Layer))
+                        {
+                            pack.TryDropItem(pm, item, false);
+                        }
+                    }
+
+                    pm.NextActionTime = Core.TickCount + Mobile.ActionDelay;
+                    ColUtility.Free(worn);
+                }
+            }
+            else
+            {
+                pm.SendActionMessage();
             }
         }
         #endregion
@@ -1324,30 +1342,31 @@ namespace Server.Mobiles
                     }
 
                     Item item = items[i];
+                    bool drop = false;
 
-                    bool morph = from.FindItemOnLayer(Layer.Earrings) is MorphEarrings;
+                    if (!RaceDefinitions.ValidateEquipment(from, item, false))
+                    {
+                        drop = true;
+                    }
 
                     if (item is BaseWeapon)
                     {
                         BaseWeapon weapon = (BaseWeapon)item;
 
-                        bool drop = false;
-
-                        if (dex < weapon.DexRequirement)
+                        if (!drop)
                         {
-                            drop = true;
-                        }
-                        else if (str < AOS.Scale(weapon.StrRequirement, 100 - weapon.GetLowerStatReq()))
-                        {
-                            drop = true;
-                        }
-                        else if (intel < weapon.IntRequirement)
-                        {
-                            drop = true;
-                        }
-                        else if (weapon.RequiredRace != null && weapon.RequiredRace != Race && !morph)
-                        {
-                            drop = true;
+                            if (dex < weapon.DexRequirement)
+                            {
+                                drop = true;
+                            }
+                            else if (str < AOS.Scale(weapon.StrRequirement, 100 - weapon.GetLowerStatReq()))
+                            {
+                                drop = true;
+                            }
+                            else if (intel < weapon.IntRequirement)
+                            {
+                                drop = true;
+                            }
                         }
 
                         if (drop)
@@ -1368,37 +1387,34 @@ namespace Server.Mobiles
                     {
                         BaseArmor armor = (BaseArmor)item;
 
-                        bool drop = false;
-
-                        if (!armor.AllowMaleWearer && !from.Female && from.AccessLevel < AccessLevel.GameMaster)
+                        if (!drop)
                         {
-                            drop = true;
-                        }
-                        else if (!armor.AllowFemaleWearer && from.Female && from.AccessLevel < AccessLevel.GameMaster)
-                        {
-                            drop = true;
-                        }
-                        else if (armor.RequiredRace != null && armor.RequiredRace != Race && !morph)
-                        {
-                            drop = true;
-                        }
-                        else
-                        {
-                            int strBonus = armor.ComputeStatBonus(StatType.Str), strReq = armor.ComputeStatReq(StatType.Str);
-                            int dexBonus = armor.ComputeStatBonus(StatType.Dex), dexReq = armor.ComputeStatReq(StatType.Dex);
-                            int intBonus = armor.ComputeStatBonus(StatType.Int), intReq = armor.ComputeStatReq(StatType.Int);
-
-                            if (dex < dexReq || (dex + dexBonus) < 1)
+                            if (!armor.AllowMaleWearer && !from.Female && from.AccessLevel < AccessLevel.GameMaster)
                             {
                                 drop = true;
                             }
-                            else if (str < strReq || (str + strBonus) < 1)
+                            else if (!armor.AllowFemaleWearer && from.Female && from.AccessLevel < AccessLevel.GameMaster)
                             {
                                 drop = true;
                             }
-                            else if (intel < intReq || (intel + intBonus) < 1)
+                            else
                             {
-                                drop = true;
+                                int strBonus = armor.ComputeStatBonus(StatType.Str), strReq = armor.ComputeStatReq(StatType.Str);
+                                int dexBonus = armor.ComputeStatBonus(StatType.Dex), dexReq = armor.ComputeStatReq(StatType.Dex);
+                                int intBonus = armor.ComputeStatBonus(StatType.Int), intReq = armor.ComputeStatReq(StatType.Int);
+
+                                if (dex < dexReq || (dex + dexBonus) < 1)
+                                {
+                                    drop = true;
+                                }
+                                else if (str < strReq || (str + strBonus) < 1)
+                                {
+                                    drop = true;
+                                }
+                                else if (intel < intReq || (intel + intBonus) < 1)
+                                {
+                                    drop = true;
+                                }
                             }
                         }
 
@@ -1428,28 +1444,25 @@ namespace Server.Mobiles
                     {
                         BaseClothing clothing = (BaseClothing)item;
 
-                        bool drop = false;
-
-                        if (!clothing.AllowMaleWearer && !from.Female && from.AccessLevel < AccessLevel.GameMaster)
+                        if (!drop)
                         {
-                            drop = true;
-                        }
-                        else if (!clothing.AllowFemaleWearer && from.Female && from.AccessLevel < AccessLevel.GameMaster)
-                        {
-                            drop = true;
-                        }
-                        else if (clothing.RequiredRace != null && clothing.RequiredRace != Race && !morph)
-                        {
-                            drop = true;
-                        }
-                        else
-                        {
-                            int strBonus = clothing.ComputeStatBonus(StatType.Str);
-                            int strReq = clothing.ComputeStatReq(StatType.Str);
-
-                            if (str < strReq || (str + strBonus) < 1)
+                            if (!clothing.AllowMaleWearer && !from.Female && from.AccessLevel < AccessLevel.GameMaster)
                             {
                                 drop = true;
+                            }
+                            else if (!clothing.AllowFemaleWearer && from.Female && from.AccessLevel < AccessLevel.GameMaster)
+                            {
+                                drop = true;
+                            }
+                            else
+                            {
+                                int strBonus = clothing.ComputeStatBonus(StatType.Str);
+                                int strReq = clothing.ComputeStatReq(StatType.Str);
+
+                                if (str < strReq || (str + strBonus) < 1)
+                                {
+                                    drop = true;
+                                }
                             }
                         }
 
@@ -1468,15 +1481,12 @@ namespace Server.Mobiles
                             moved = true;
                         }
                     }
-                    else if (item is BaseQuiver)
+                    else if (item is BaseQuiver && drop)
                     {
-                        if (Race == Race.Gargoyle)
-                        {
-                            from.AddToBackpack(item);
+                        from.AddToBackpack(item);
 
-                            from.SendLocalizedMessage(1062002, "quiver"); // You can no longer wear your ~1_ARMOR~
-                            moved = true;
-                        }
+                        from.SendLocalizedMessage(1062002, "quiver"); // You can no longer wear your ~1_ARMOR~
+                        moved = true;
                     }
 
                     #region Vice Vs Virtue
@@ -1497,7 +1507,7 @@ namespace Server.Mobiles
             }
             catch (Exception e)
             {
-                Console.WriteLine(e);
+                Server.Diagnostics.ExceptionLogging.LogException(e);
             }
             finally
             {
@@ -2242,6 +2252,13 @@ namespace Server.Mobiles
 
             if (from == this)
             {
+                #region TOL Shadowguard
+                if (ShadowguardController.GetInstance(Location, Map) != null)
+                {
+                    list.Add(new ExitEntry(this));
+                }
+                #endregion
+
                 if (Alive)
                 {
                     list.Add(new SearchVendors(this));
@@ -2293,10 +2310,7 @@ namespace Server.Mobiles
                         list.Add(new CallbackEntry(6204, GetVendor));
                     }
 
-                    if (house.IsAosRules)
-                    {
-                        list.Add(new CallbackEntry(6207, LeaveHouse));
-                    }
+                    list.Add(new CallbackEntry(6207, LeaveHouse));
                 }
 
                 list.Add(new CallbackEntry(RefuseTrades ? 1154112 : 1154113, ToggleTrades)); // Allow Trades / Refuse Trades				
@@ -2320,13 +2334,6 @@ namespace Server.Mobiles
 
                         list.Add(new VoidPoolInfo(this, controller));
                     }
-                }
-                #endregion
-
-                #region TOL Shadowguard
-                if (ShadowguardController.GetInstance(Location, Map) != null)
-                {
-                    list.Add(new ExitEntry(this));
                 }
                 #endregion
 
@@ -2369,14 +2376,9 @@ namespace Server.Mobiles
                     list.Add(new CallbackEntry(1077728, () => OpenTrade(from))); // Trade
                 }
 
-                BaseHouse curhouse = BaseHouse.FindHouseAt(this);
-
-                if (curhouse != null)
+                if (Alive && EjectPlayerEntry.CheckAccessible(from, this))
                 {
-                    if (Alive && curhouse.IsAosRules && curhouse.IsFriend(from))
-                    {
-                        list.Add(new EjectPlayerEntry(from, this));
-                    }
+                    list.Add(new EjectPlayerEntry(from, this));
                 }
             }
         }
@@ -5056,6 +5058,8 @@ namespace Server.Mobiles
         {
             base.GetProperties(list);
 
+            JollyRogerData.DisplayTitle(this, list);
+
             if (m_SubtitleSkillTitle != null)
                 list.Add(1042971, m_SubtitleSkillTitle);
 
@@ -6469,7 +6473,7 @@ namespace Server.Mobiles
                         continue;
                     }
 
-                    if (!pet.CanAutoStable)
+                    if (!pet.CanAutoStable || Stabled.Count >= AnimalTrainer.GetMaxStabled(this))
                     {
                         continue;
                     }

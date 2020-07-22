@@ -77,7 +77,7 @@ namespace Server.Commands
             csv.AddValue("Dex Requirement", wep.DexRequirement);
             csv.AddValue("Int Requirement", wep.IntRequirement);
             csv.AddValue("Skill", wep.Skill);
-            csv.AddValue("Race", wep.RequiredRace);
+            //csv.AddValue("Race", wep.RequiredRace);
             csv.AddValue("Speed", wep.Speed);
             csv.AddValue("Min Damage", wep.MinDamage);
             csv.AddValue("Max Damage", wep.MaxDamage);
@@ -122,20 +122,21 @@ namespace Server.Commands
             if (ctor == null)
                 return;
 
-            object obj;
+            object obj = null;
+
             try
             {
                 obj = ctor.Invoke(new object[] { });
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return;
+                Server.Diagnostics.ExceptionLogging.LogException(e);
             }
 
-            if (obj == null)
-                return;
-
-            proc(obj);
+            if (obj != null)
+            {
+                proc(obj);
+            }
         }
 
         private class CsvFile

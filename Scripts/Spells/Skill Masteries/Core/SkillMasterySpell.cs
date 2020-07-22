@@ -27,14 +27,15 @@ namespace Server.Spells.SkillMasteries
         public virtual double UpKeep => 0;
         public virtual int RequiredMana => 10;
         public virtual bool PartyEffects => false;
-        public virtual int DamageThreshold => 45;
+        public virtual int DamageThreshold => 100;
         public virtual bool DamageCanDisrupt => false;
         public virtual double TickTime => 2;
         public virtual int PartyRange => 12;
 
         public virtual int UpkeepCancelMessage => 1156111;  // You do not have enough mana to keep your ability active.
         public virtual int OutOfRangeMessage => 1156098;  // Your target is no longer in range of your ability.
-        public virtual int DisruptMessage => 1156110;  // Your ability was canceled. 
+        public virtual int DisruptMessage => 1156110;  // Your ability was canceled.
+        public virtual int ExpireMessage => 0;
 
         public virtual bool CancelsWeaponAbility => false;
         public virtual bool CancelsSpecialMove => CancelsWeaponAbility;
@@ -80,7 +81,7 @@ namespace Server.Spells.SkillMasteries
                 Caster.SendLocalizedMessage(1115664); // You are not on the correct path for using this mastery ability.
             else if (Caster is PlayerMobile && !MasteryInfo.HasLearned(Caster, CastSkill))
                 Caster.SendLocalizedMessage(1115664); // You are not on the correct path for using this mastery ability.
-            else if (Caster.Mana < mana)
+            else if (CheckManaBeforeCast && Caster.Mana < mana)
                 Caster.SendLocalizedMessage(1060174, mana.ToString()); // You must have at least ~1_MANA_REQUIREMENT~ Mana to use this ability.
             else
             {
@@ -182,7 +183,12 @@ namespace Server.Spells.SkillMasteries
             else
             {
                 DoEffects();
-                Caster.Mana -= upkeep;
+
+                if (upkeep > 0)
+                {
+                    Caster.Mana -= upkeep;
+                }
+
                 return true;
             }
 
@@ -267,18 +273,23 @@ namespace Server.Spells.SkillMasteries
             if (UpKeep == 0)
                 return 0;
 
-            double mod = CollectiveBonus;
+            var upkeep = GetUpkeep();
 
-            double upkeep = UpKeep;
-            int mana = (int)(upkeep - ((upkeep * mod) / 4.5));
+            return ScaleMana(upkeep);
+        }
 
-            return ScaleMana(mana);
+        public virtual int GetUpkeep()
+        {
+            return (int)(UpKeep + (PartyCount() / 5));
         }
 
         public virtual void Expire(bool disrupt = false)
         {
             if (Timer != null)
             {
+                if (ExpireMessage > 0)
+                    Caster.SendLocalizedMessage(ExpireMessage);
+
                 Timer.Stop();
                 Timer = null;
             }
@@ -290,20 +301,17 @@ namespace Server.Spells.SkillMasteries
             RemoveStatMods();
             EndEffects();
 
-            Caster.Delta(MobileDelta.WeaponDamage);
+            OnExpire();
+        }
 
-            if (Target != null)
-                Target.Delta(MobileDelta.WeaponDamage);
-
-            if (PartyList != null)
+        public int PartyCount()
+        {
+            if (!PartyEffects || PartyList == null)
             {
-                foreach (Mobile m in PartyList)
-                    m.Delta(MobileDelta.WeaponDamage);
-
-                ColUtility.Free(PartyList);
+                return 0;
             }
 
-            OnExpire();
+            return PartyList.Count;
         }
 
         public virtual void OnExpire()
@@ -668,6 +676,35 @@ namespace Server.Spells.SkillMasteries
             return null;
         }
 
+        public static IEnumerable<SkillMasterySpell> GetSpellsForParty(Mobile from, SkillName? allowed)
+        {
+            foreach (var spell in EnumerateSpells(from).Where(s => s.PartyEffects && (allowed == null || s.CastSkill != allowed)))
+            {
+                yield return spell;
+            }
+
+            Party p = Party.Get(from);
+
+            if (p != null)
+            {
+                foreach (PartyMemberInfo info in p.Members)
+                {
+                    foreach (var spell in EnumerateSpells(info.Mobile).Where(s => s.PartyEffects && (allowed == null || s.CastSkill != allowed)))
+                    {
+                        yield return spell;
+                    }
+                }
+            }
+        }
+
+        public void CancelPartySpells(Mobile m)
+        {
+            foreach (var spell in GetSpellsForParty(m, CastSkill))
+            {
+                spell.Expire();
+            }
+        }
+
         private static readonly object _Lock = new object();
 
         public static void CheckTable(Mobile m)
@@ -778,6 +815,19 @@ namespace Server.Spells.SkillMasteries
                     }
                 }
             }
+
+            Caster.Delta(MobileDelta.WeaponDamage);
+
+            if (Target != null)
+                Target.Delta(MobileDelta.WeaponDamage);
+
+            if (PartyList != null)
+            {
+                foreach (Mobile m in PartyList)
+                    m.Delta(MobileDelta.WeaponDamage);
+
+                ColUtility.Free(PartyList);
+            }
         }
 
         /// <summary>
@@ -795,7 +845,7 @@ namespace Server.Spells.SkillMasteries
 
             foreach (SkillMasterySpell sp in EnumerateSpells(victim))
             {
-                if (sp.DamageCanDisrupt && damage > sp.DamageThreshold)
+                if (sp.DamageCanDisrupt && damage >= Utility.Random(sp.DamageThreshold))
                     sp.Expire(true);
 
                 sp.OnDamaged(damager, victim, type, ref damage);
@@ -938,7 +988,9 @@ namespace Server.Spells.SkillMasteries
             if (PartyList != null)
             {
                 foreach (Mobile m in PartyList)
+                {
                     m.Delta(MobileDelta.WeaponDamage);
+                }
             }
         }
 

@@ -132,7 +132,7 @@ namespace Server.Misc
         {
             Region r = m.Region;
 
-            if (r.IsPartOf<Server.Regions.HouseRegion>() || Server.Multis.BaseBoat.FindBoatAt(m, m.Map) != null)
+            if (r.IsPartOf<Regions.HouseRegion>() || Multis.BaseBoat.FindBoatAt(m, m.Map) != null)
                 return false;
 
             if (r.IsPartOf("Yomotsu Mines") || r.IsPartOf("Fan Dancer's Dojo"))
@@ -218,9 +218,9 @@ namespace Server.Misc
                 {
                     i = Activator.CreateInstance(m_LesserArtifacts[(int)DropEra - 1][Utility.Random(m_LesserArtifacts[(int)DropEra - 1].Length)]) as Item;
                 }
-                catch
+                catch (Exception e)
                 {
-                    return;
+                    Server.Diagnostics.ExceptionLogging.LogException(e);
                 }
 
                 if (i != null)

@@ -1,4 +1,4 @@
-﻿using Server.Items;
+using Server.Items;
 
 namespace Server.Mobiles
 {
@@ -70,19 +70,30 @@ namespace Server.Mobiles
             switch (Utility.Random(4))
             {
                 default:
-                case 0: bow = new CompositeBow(); PackItem(new Arrow(25)); break;
-                case 1: bow = new Crossbow(); PackItem(new Bolt(25)); break;
-                case 2: bow = new Bow(); PackItem(new Arrow(25)); break;
-                case 3: bow = new HeavyCrossbow(); PackItem(new Bolt(25)); break;
+                case 0: bow = new CompositeBow();break;
+                case 1: bow = new Crossbow(); break;
+                case 2: bow = new Bow(); break;
+                case 3: bow = new HeavyCrossbow(); break;
             }
 
             AddItem(bow);
         }
 
-
         public override void GenerateLoot()
         {
             AddLoot(LootPack.FilthyRich, 2);
+            AddLoot(LootPack.LootItem<Arrow>(25, true));
+            AddLoot(LootPack.LootItem<Bolt>(25, true));
+        }
+
+        public override bool OnBeforeDeath()
+        {
+            if (Region.IsPartOf<Regions.CorgulRegion>())
+            {
+                CorgulTheSoulBinder.CheckDropSOT(this);
+            }
+
+            return base.OnBeforeDeath();
         }
 
         public SoulboundPirateRaider(Serial serial)

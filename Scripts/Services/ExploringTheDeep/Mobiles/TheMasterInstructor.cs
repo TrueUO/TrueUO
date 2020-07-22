@@ -59,8 +59,6 @@ namespace Server.Mobiles
             Fame = 23000;
             Karma = -23000;
 
-            PackNecroReg(30, 275);
-
             Timer SelfDeleteTimer = new InternalSelfDeleteTimer(this);
             SelfDeleteTimer.Start();
         }
@@ -111,7 +109,7 @@ namespace Server.Mobiles
 
         public override bool OnBeforeDeath()
         {
-            Mobile killer = DemonKnight.FindRandomPlayer(this);
+            Mobile killer = RandomPlayerWithLootingRights();
 
             if (killer != null)
             {
@@ -153,6 +151,7 @@ namespace Server.Mobiles
         public override void GenerateLoot()
         {
             AddLoot(LootPack.FilthyRich, 3);
+            AddLoot(LootPack.NecroRegs, 30, 275);
         }
 
         public override void Serialize(GenericWriter writer)

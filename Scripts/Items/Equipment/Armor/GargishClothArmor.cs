@@ -52,17 +52,15 @@ namespace Server.Items
 
                     return true;
                 }
-                catch
+                catch (Exception e)
                 {
+                    Server.Diagnostics.ExceptionLogging.LogException(e);
                 }
             }
 
             from.SendLocalizedMessage(502440); // Scissors can not be used on that to produce anything.
             return false;
         }
-
-        public override Race RequiredRace => Race.Gargoyle;
-        public override bool CanBeWornByGargoyles => true;
 
         public GargishClothArmsArmor(Serial serial)
             : base(serial)
@@ -81,11 +79,6 @@ namespace Server.Items
         public override ArmorMaterialType MaterialType => ArmorMaterialType.Leather;
         public override CraftResource DefaultResource => CraftResource.None;
         public override ArmorMeditationAllowance DefMedAllowance => ArmorMeditationAllowance.All;
-
-        public override int OnCraft(int quality, bool makersMark, Mobile from, CraftSystem craftSystem, Type typeRes, ITool tool, CraftItem craftItem, int resHue)
-        {
-            return base.OnCraft(quality, makersMark, from, craftSystem, null, tool, craftItem, resHue);
-        }
 
         public override void Serialize(GenericWriter writer)
         {
@@ -183,17 +176,15 @@ namespace Server.Items
 
                     return true;
                 }
-                catch
+                catch (Exception e)
                 {
+                    Server.Diagnostics.ExceptionLogging.LogException(e);
                 }
             }
 
             from.SendLocalizedMessage(502440); // Scissors can not be used on that to produce anything.
             return false;
         }
-
-        public override Race RequiredRace => Race.Gargoyle;
-        public override bool CanBeWornByGargoyles => true;
 
         public GargishClothChestArmor(Serial serial)
             : base(serial)
@@ -212,11 +203,6 @@ namespace Server.Items
         public override ArmorMaterialType MaterialType => ArmorMaterialType.Leather;
         public override CraftResource DefaultResource => CraftResource.None;
         public override ArmorMeditationAllowance DefMedAllowance => ArmorMeditationAllowance.All;
-
-        public override int OnCraft(int quality, bool makersMark, Mobile from, CraftSystem craftSystem, Type typeRes, ITool tool, CraftItem craftItem, int resHue)
-        {
-            return base.OnCraft(quality, makersMark, from, craftSystem, null, tool, craftItem, resHue);
-        }
 
         public override void Serialize(GenericWriter writer)
         {
@@ -315,17 +301,15 @@ namespace Server.Items
 
                     return true;
                 }
-                catch
+                catch (Exception e)
                 {
+                    Server.Diagnostics.ExceptionLogging.LogException(e);
                 }
             }
 
             from.SendLocalizedMessage(502440); // Scissors can not be used on that to produce anything.
             return false;
         }
-
-        public override Race RequiredRace => Race.Gargoyle;
-        public override bool CanBeWornByGargoyles => true;
 
         public GargishClothLegsArmor(Serial serial)
             : base(serial)
@@ -344,11 +328,6 @@ namespace Server.Items
         public override ArmorMaterialType MaterialType => ArmorMaterialType.Leather;
         public override CraftResource DefaultResource => CraftResource.None;
         public override ArmorMeditationAllowance DefMedAllowance => ArmorMeditationAllowance.All;
-
-        public override int OnCraft(int quality, bool makersMark, Mobile from, CraftSystem craftSystem, Type typeRes, ITool tool, CraftItem craftItem, int resHue)
-        {
-            return base.OnCraft(quality, makersMark, from, craftSystem, null, tool, craftItem, resHue);
-        }
 
         public override void Serialize(GenericWriter writer)
         {
@@ -447,21 +426,14 @@ namespace Server.Items
 
                     return true;
                 }
-                catch
+                catch (Exception e)
                 {
+                    Server.Diagnostics.ExceptionLogging.LogException(e);
                 }
             }
 
             from.SendLocalizedMessage(502440); // Scissors can not be used on that to produce anything.
             return false;
-        }
-
-        public override Race RequiredRace => Race.Gargoyle;
-        public override bool CanBeWornByGargoyles => true;
-
-        public override int OnCraft(int quality, bool makersMark, Mobile from, CraftSystem craftSystem, Type typeRes, ITool tool, CraftItem craftItem, int resHue)
-        {
-            return base.OnCraft(quality, makersMark, from, craftSystem, null, tool, craftItem, resHue);
         }
 
         public GargishClothKiltArmor(Serial serial)

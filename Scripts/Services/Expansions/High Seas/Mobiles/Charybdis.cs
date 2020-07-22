@@ -71,10 +71,10 @@ namespace Server.Mobiles
             SetSkill(SkillName.Wrestling, 120.1, 121.2);
             SetSkill(SkillName.Tactics, 120.15, 123.1);
             SetSkill(SkillName.MagicResist, 165.2, 178.7);
-            SetSkill(SkillName.Anatomy, 111.0, 111.7);
+            SetSkill(SkillName.Anatomy, 24.4, 25.6);
             SetSkill(SkillName.Magery, 134.6, 140.5);
-            SetSkill(SkillName.EvalInt, 200.8, 243.6);
-            SetSkill(SkillName.Meditation, 565);
+            SetSkill(SkillName.EvalInt, 135.6, 144.9);
+            SetSkill(SkillName.Meditation, 22.8, 70.3);
 
             Fame = 32000;
             Karma = -32000;
@@ -210,6 +210,11 @@ namespace Server.Mobiles
 
         public void DoTeleportEffects(Point3D p, Map map)
         {
+            if (map == null || map == Map.Internal)
+            {
+                return;
+            }
+
             for (int x = -2; x <= 2; x++)
             {
                 for (int y = -2; y <= 2; y++)
@@ -217,7 +222,7 @@ namespace Server.Mobiles
                     if (Math.Abs(x) == 2 && Math.Abs(y) == 2)
                         continue;
 
-                    Point3D pnt = new Point3D(p.X + x, p.Y + y, Map.GetAverageZ(p.X + x, p.Y + y));
+                    Point3D pnt = new Point3D(p.X + x, p.Y + y, map.GetAverageZ(p.X + x, p.Y + y));
                     Effects.SendLocationEffect(pnt, map, 0x3728, 16, 4);
                 }
             }
@@ -642,6 +647,20 @@ namespace Server.Mobiles
         public override void GenerateLoot()
         {
             AddLoot(LootPack.SuperBoss, 8);
+            AddLoot(LootPack.LootItemCallback(RandomGoody, 10.0, 1, false, false));
+        }
+
+        private Item RandomGoody(IEntity e)
+        {
+            switch (Utility.Random(5))
+            {
+                default:
+                case 0: return new RecipeScroll(1102);
+                case 1: return new RecipeScroll(1103);
+                case 2: return new HungryCoconutCrabStatue();
+                case 3: return new LeurociansMempoOfFortune();
+                case 4: return new CaptainsHeartyRum();
+            }
         }
 
         public Charydbis(Serial serial)

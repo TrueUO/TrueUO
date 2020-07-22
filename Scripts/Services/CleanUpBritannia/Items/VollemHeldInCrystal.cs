@@ -1,4 +1,6 @@
-﻿using Server.Gumps;
+using System;
+
+using Server.Gumps;
 using Server.Mobiles;
 
 namespace Server.Items
@@ -46,6 +48,8 @@ namespace Server.Items
 
     public class VollemHeld : Vollem
     {
+        public override bool IsMechanical => false;
+
         [Constructable]
         public VollemHeld()
             : base()
@@ -60,13 +64,18 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(0); // version
+            writer.Write(1); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
             int version = reader.ReadInt();
+
+            if (version == 0)
+            {
+                PetTrainingHelper.GetAbilityProfile(this, true).TokunoTame = true;
+            }
         }
     }
 }

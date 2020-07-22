@@ -192,12 +192,12 @@ namespace Server.SkillHandlers
             return true;
         }
 
-        private static bool IsSpecialImbuable(Item item)
+        public static bool IsSpecialImbuable(Item item)
         {
             return IsSpecialImbuable(item.GetType());
         }
 
-        private static bool IsSpecialImbuable(Type type)
+        public static bool IsSpecialImbuable(Type type)
         {
             if (_SpecialImbuable.Any(i => i == type))
                 return true;
@@ -214,7 +214,8 @@ namespace Server.SkillHandlers
             typeof(VirtuososCap), typeof(VirtuososCollar), typeof(VirtuososEarpieces), typeof(VirtuososKidGloves), typeof(VirtuososKilt),
             typeof(VirtuososNecklace), typeof(VirtuososTunic), typeof(BestialArms), typeof(BestialEarrings), typeof(BestialGloves), typeof(BestialGorget),
             typeof(BestialHelm), typeof(BestialKilt), typeof(BestialLegs), typeof(BestialNecklace), typeof(BarbedWhip), typeof(BladedWhip),
-            typeof(SpikedWhip), typeof(SkullGnarledStaff), typeof(GargishSkullGnarledStaff), typeof(SkullLongsword), typeof(GargishSkullLongsword), typeof(JukaBow)
+            typeof(SpikedWhip), typeof(SkullGnarledStaff), typeof(GargishSkullGnarledStaff), typeof(SkullLongsword), typeof(GargishSkullLongsword), typeof(JukaBow),
+            typeof(SlayerLongbow)
         };
 
         private static readonly Type[] _NonCraftables =
@@ -318,7 +319,7 @@ namespace Server.SkillHandlers
 
             Type gem = def.GemRes;
             Type primary = def.PrimaryRes;
-            Type special = def.SpecialRes;
+            Type special = ItemPropertyInfo.GetSpecialRes(i, id, def.SpecialRes);
 
             context.Imbue_ModVal = def.Weight;
 
@@ -890,7 +891,7 @@ namespace Server.SkillHandlers
         public static int GetGemAmount(Item item, int id, int value)
         {
             int max = ItemPropertyInfo.GetMaxIntensity(item, id, true);
-            int inc = ItemPropertyInfo.GetScale(item, id);
+            int inc = ItemPropertyInfo.GetScale(item, id, false);
 
             if (max == 1 && inc == 0)
                 return 10;
@@ -906,7 +907,7 @@ namespace Server.SkillHandlers
         public static int GetPrimaryAmount(Item item, int id, int value)
         {
             int max = ItemPropertyInfo.GetMaxIntensity(item, id, true);
-            int inc = ItemPropertyInfo.GetScale(item, id);
+            int inc = ItemPropertyInfo.GetScale(item, id, false);
 
             //if (item is BaseJewel && id == 12)
             //    max /= 2;
@@ -2005,6 +2006,11 @@ namespace Server.SkillHandlers
             if (value <= 0 && id != 16)
             {
                 return 0;
+            }
+
+            if (id == 61 && !(item is BaseRanged))
+            {
+                id = 63;
             }
 
             if ((item is BaseWeapon || item is BaseShield) && id == 16)

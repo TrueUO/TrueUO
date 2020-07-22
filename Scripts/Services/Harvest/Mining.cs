@@ -339,7 +339,7 @@ namespace Server.Engines.Harvest
                         if (map == null)
                             return;
 
-                        if (Activator.CreateInstance(res.Types[2], new object[] { 25 }) is BaseCreature spawned)
+                        if (Activator.CreateInstance(res.Types[2]) is BaseCreature spawned)
                         {
                             int offset = Utility.Random(8) * 2;
 
@@ -374,8 +374,9 @@ namespace Server.Engines.Harvest
                             spawned.Combatant = from;
                         }
                     }
-                    catch
+                    catch (Exception e)
                     {
+                        Server.Diagnostics.ExceptionLogging.LogException(e);
                     }
                 }
             }
@@ -417,7 +418,7 @@ namespace Server.Engines.Harvest
 
                     if (!dungeon)
                     {
-                        niter.MoveToWorld(new Point3D(loc.X, loc.Y, from.Z + 3), from.Map);
+                        niter.MoveToWorld(new Point3D(loc.X, loc.Y, from.Z), from.Map);
                         from.SendLocalizedMessage(1149918, niter.Size.ToString()); //You have uncovered a ~1_SIZE~ deposit of niter! Mine it to obtain saltpeter.
                         NiterDeposit.AddBank(bank);
                         return true;

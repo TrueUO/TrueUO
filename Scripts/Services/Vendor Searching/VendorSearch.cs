@@ -496,46 +496,12 @@ namespace Server.Engines.VendorSearching
 
         public static bool IsGargoyle(Item item)
         {
-            if (item is BaseArmor)
-            {
-                return ((BaseArmor)item).RequiredRace == Race.Gargoyle;
-            }
-            else if (item is BaseWeapon)
-            {
-                return ((BaseWeapon)item).RequiredRace == Race.Gargoyle;
-            }
-            else if (item is BaseClothing)
-            {
-                return ((BaseClothing)item).RequiredRace == Race.Gargoyle;
-            }
-            else if (item is BaseJewel)
-            {
-                return ((BaseJewel)item).RequiredRace == Race.Gargoyle;
-            }
-
-            return false;
+            return Race.Gargoyle.ValidateEquipment(item);
         }
 
         public static bool IsElf(Item item)
         {
-            if (item is BaseArmor)
-            {
-                return ((BaseArmor)item).RequiredRace == Race.Elf;
-            }
-            else if (item is BaseWeapon)
-            {
-                return ((BaseWeapon)item).RequiredRace == Race.Elf;
-            }
-            else if (item is BaseClothing)
-            {
-                return ((BaseClothing)item).RequiredRace == Race.Elf;
-            }
-            else if (item is BaseJewel)
-            {
-                return ((BaseJewel)item).RequiredRace == Race.Elf;
-            }
-
-            return false;
+            return Race.Elf.ValidateEquipment(item);
         }
 
         public static SearchCriteria AddNewContext(PlayerMobile pm)
@@ -618,7 +584,7 @@ namespace Server.Engines.VendorSearching
             {
                 StringList = new Ultima.StringList("enu");
             }
-            catch { }
+            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
 
             CommandSystem.Register("GetOPLString", AccessLevel.Administrator, e =>
                 {
@@ -769,8 +735,9 @@ namespace Server.Engines.VendorSearching
                     parms[0] = StringList.GetString(Convert.ToInt32(args.Substring(1, parms[0].Length - 1)));
                 }
             }
-            catch
+            catch (Exception e)
             {
+                Server.Diagnostics.ExceptionLogging.LogException(e);
                 return null;
             }
 
@@ -1239,7 +1206,7 @@ namespace Server.Engines.VendorSearching
     public class SearchItem
     {
         public PlayerVendor Vendor { get; set; }
-        public AuctionSafe AuctionSafe { get; set; }
+        public IAuctionItem AuctionSafe { get; set; }
         public Item Item { get; set; }
         public int Price { get; set; }
         public bool IsChild { get; set; }
@@ -1254,7 +1221,7 @@ namespace Server.Engines.VendorSearching
             IsAuction = false;
         }
 
-        public SearchItem(AuctionSafe auctionsafe, Item item, int price, bool isChild)
+        public SearchItem(IAuctionItem auctionsafe, Item item, int price, bool isChild)
         {
             AuctionSafe = auctionsafe;
             Item = item;

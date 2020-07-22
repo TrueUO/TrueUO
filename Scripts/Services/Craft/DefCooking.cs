@@ -18,7 +18,11 @@ namespace Server.Engines.Craft
         BlackrockStew = 604,
         Hamburger = 605,
         HotDog = 606,
-        Sausage = 607
+        Sausage = 607,
+
+        GrilledSerpentSteak = 608,
+        BBQDinoRibs = 609,
+        WakuChicken = 610
     }
     #endregion
 
@@ -133,6 +137,13 @@ namespace Server.Engines.Craft
             AddRes(index, typeof(BaseBeverage), 1046458, 1, 1044253);
             AddRes(index, typeof(SackFlourOpen), 1044468, 1, 1151092);
             SetItemHue(index, 1281);
+
+            index = AddCraft(typeof(FishOilFlask), 1044495, 1150863, 60.0, 110.0, typeof(CoffeeGrounds), 1155735, 1, 1155734);
+            AddRes(index, typeof(RawFishSteak), 1044476, 8, 1044253);
+            SetUseAllRes(index, true);
+
+            index = AddCraft(typeof(FreshSeasoning), 1044495, 1159200, 75.0, 125.0, typeof(DriedHerbs), 1023137, 1, 1044253);
+            AddRes(index, typeof(Salt), 1159201, 3, 1044253);
             #endregion
 
             #region Preparations
@@ -201,6 +212,13 @@ namespace Server.Engines.Craft
 
             index = AddCraft(typeof(Charcoal), 1044496, 1116303, 0.0, 50.0, typeof(Board), 1044041, 1, 1044351);
             SetUseAllRes(index, true);
+            SetNeedHeat(index, true);
+
+            index = AddCraft(typeof(Bait), 1044496, 1159164, 100.0, 140.0, typeof(SamuelsSecretSauce), 1116338, 1, 1044253);
+            AddRes(index, typeof(RawFishSteak), 1044476, 50, 1044253);
+            AddRes(index, typeof(SaltedSerpentSteaks), 1159163, 3, 1044253);
+            AddCreateItem(index, CraftCharydbisBait);
+            SetForceSuccess(index, 5);
             SetNeedHeat(index, true);
             #endregion
 
@@ -307,7 +325,6 @@ namespace Server.Engines.Craft
             index = AddCraft(typeof(BowlOfBlackrockStew), 1044498, 1115752, 30.0, 70.0, typeof(BowlOfRotwormStew), 1031706, 1, 1044253);
             AddRes(index, typeof(SmallPieceofBlackrock), 1153836, 1, 1044253);
             SetNeedHeat(index, true);
-            SetUseAllRes(index, true);
             SetItemHue(index, 1954);
             AddRecipe(index, (int)CookRecipes.BlackrockStew);
             ForceNonExceptional(index);
@@ -316,24 +333,42 @@ namespace Server.Engines.Craft
             SetUseAllRes(index, true);
             SetNeedHeat(index, true);
 
-            index = AddCraft(typeof(Hamburger), 1044498, 1125202, 40.0, 80.0, typeof(BreadLoaf), 1024155, 1, 1044253);
+            index = AddCraft(typeof(Hamburger), 1044498, 1125202, 45.0, 95.0, typeof(BreadLoaf), 1024155, 1, 1044253);
             AddRes(index, typeof(RawRibs), 1044485, 1, 1044253);
             AddRes(index, typeof(Lettuce), 1023184, 1, 1044253);
             SetNeedHeat(index, true);
-            SetUseAllRes(index, true);
             AddRecipe(index, (int)CookRecipes.Hamburger);
 
-            index = AddCraft(typeof(HotDog), 1044498, 1125200, 40.0, 80.0, typeof(BreadLoaf), 1024155, 1, 1044253);
+            index = AddCraft(typeof(HotDog), 1044498, 1125200, 45.0, 95.0, typeof(BreadLoaf), 1024155, 1, 1044253);
             AddRes(index, typeof(Sausage), 1125198, 1, 1044253);
             SetNeedHeat(index, true);
-            SetUseAllRes(index, true);
             AddRecipe(index, (int)CookRecipes.HotDog);
 
-            index = AddCraft(typeof(CookableSausage), 1044498, 1125198, 30.0, 70.0, typeof(Ham), 1022515, 1, 1044253);
+            index = AddCraft(typeof(CookableSausage), 1044498, 1125198, 45.0, 95.0, typeof(Ham), 1022515, 1, 1044253);
             AddRes(index, typeof(DriedHerbs), 1023137, 1, 1044253);
             SetNeedHeat(index, true);
-            SetUseAllRes(index, true);
             AddRecipe(index, (int)CookRecipes.Sausage);
+
+            index = AddCraft(typeof(GrilledSerpentSteak), 1044498, 1159197, 45.0, 95.0, typeof(RawSeaSerpentSteak), 1126043, 1, 1044253);
+            AddRes(index, typeof(FreshSeasoning), 1159200, 1, 1044253);
+            SetNeedHeat(index, true);
+            SetUseAllRes(index, true);
+            AddRecipe(index, (int)CookRecipes.GrilledSerpentSteak);
+
+            index = AddCraft(typeof(BBQDinoRibs), 1044498, 1159198, 45.0, 95.0, typeof(RawDinoRibs), 1126045, 1, 1044253);
+            AddRes(index, typeof(FreshSeasoning), 1159200, 1, 1044253);
+            AddRes(index, typeof(SackOfSugar), 1079997, 1, 1044253);
+            AddRes(index, typeof(SamuelsSecretSauce), 1116338, 1, 1044253);
+            SetNeedHeat(index, true);
+            SetUseAllRes(index, true);
+            AddRecipe(index, (int)CookRecipes.BBQDinoRibs);
+
+            index = AddCraft(typeof(WakuChicken), 1044498, 1159199, 45.0, 95.0, typeof(RawBird), 1044470, 1, 1044253);
+            AddRes(index, typeof(DriedHerbs), 1023137, 1, 1044253);
+            AddRes(index, typeof(SamuelsSecretSauce), 1116338, 1, 1044253);
+            SetNeedHeat(index, true);
+            SetUseAllRes(index, true);
+            AddRecipe(index, (int)CookRecipes.WakuChicken);
             #endregion
 
             #region Enchanted
@@ -515,6 +550,15 @@ namespace Server.Engines.Craft
             SetNeedMaker(index, true);
             ForceNonExceptional(index);
             #endregion
+        }
+
+        private Item CraftCharydbisBait(Mobile m, CraftItem craftItem, ITool tool)
+        {
+            var bait = new Bait();
+            bait.Index = 35;
+            bait.UsesRemaining = 5;
+
+            return bait;
         }
     }
 }

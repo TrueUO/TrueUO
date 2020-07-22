@@ -367,6 +367,7 @@ namespace Server.Items
 
             Item arty = null;
             Item special = null;
+            Item newSpecial = null;
 
             if (isSos)
             {
@@ -377,6 +378,16 @@ namespace Server.Items
                 else if (0.009 * level > Utility.RandomDouble())
                     special = new TreasureMap(Utility.RandomMinMax(level, Math.Min(7, level + 1)), cont.Map);
 
+                if (level >= 4)
+                {
+                    switch (Utility.Random(4))
+                    {
+                        case 0: newSpecial = new AncientAquariumFishNet(); break;
+                        case 1: newSpecial = new LiveRock(); break;
+                        case 2: newSpecial = new SaltedSerpentSteaks(); break;
+                        case 3: newSpecial = new OceanSapphire(); break;
+                    }
+                }
             }
             else
             {
@@ -411,6 +422,11 @@ namespace Server.Items
                 {
                     special = GetRandomSpecial(level, cont.Map);
                 }
+
+                if (Engines.Points.PointsSystem.JollyRogerData.Enabled && .30 > Utility.RandomDouble())
+                {
+                    cont.DropItem(new MysteriousFragment());
+                }
             }
 
             if (arty != null)
@@ -424,6 +440,9 @@ namespace Server.Items
 
             if (special != null)
                 cont.DropItem(special);
+
+            if (newSpecial != null)
+                cont.DropItem(newSpecial);
 
             int rolls = 2;
 
@@ -558,7 +577,10 @@ namespace Server.Items
                 {
                     BaseCreature spawn = TreasureMap.Spawn(Level, GetWorldLocation(), Map, from, false);
 
-                    spawn.Hue = 2725;
+                    if (spawn != null)
+                    {
+                        spawn.Hue = 2725;
+                    }
                 }
             }
 

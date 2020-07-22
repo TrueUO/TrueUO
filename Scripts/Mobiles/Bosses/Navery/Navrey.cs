@@ -59,11 +59,6 @@ namespace Server.Mobiles
             Fame = 24000;
             Karma = -24000;
 
-            for (int i = 0; i < Utility.RandomMinMax(1, 3); i++)
-            {
-                PackItem(Loot.RandomScroll(0, Loot.MysticismScrollTypes.Length, SpellbookType.Mystic));
-            }
-
             SetSpecialAbility(SpecialAbility.Webbing);
         }
 
@@ -82,7 +77,7 @@ namespace Server.Mobiles
         {
             int random = Utility.Random(typelist.Length);
             Item item = Loot.Construct(typelist[random]);
-            DistributeArtifact(DemonKnight.FindRandomPlayer(bc), item);
+            DistributeArtifact(bc.RandomPlayerWithLootingRights(), item);
         }
 
         public static void DistributeArtifact(Mobile to, Item artifact)
@@ -108,6 +103,7 @@ namespace Server.Mobiles
         public override void GenerateLoot()
         {
             AddLoot(LootPack.SuperBoss, 3);
+            AddLoot(LootPack.MysticScrolls, 1, 3);
         }
 
         public override void OnDeath(Container c)

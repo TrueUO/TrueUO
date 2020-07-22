@@ -140,16 +140,6 @@ namespace Server.Gumps
 
                 int amount = 0;
 
-                /*if (item.Type == typeof(Gold) && acct != null)
-                    amount = acct.TotalGold + m_Owner.Backpack.GetAmount(item.Type);
-                else if (item.Type == typeof(RedScales))
-                    amount = GetScales(m_Owner.Backpack);
-                else if (item.Type == typeof(Fish))
-                    amount = GetFishyItems(m_Owner.Backpack);
-                else if (item.Type == typeof(Crab) || item.Type == typeof(Lobster))
-                    amount = GetCrabsAndLobsters(m_Owner.Backpack);
-                else if (m_Owner.Backpack != null)
-                    amount = m_Owner.Backpack.GetAmount(item.Type);*/
                 if (item.Type == typeof(Gold) && acct != null)
                 {
                     amount = acct.TotalGold + m_Owner.Backpack.GetAmount(item.Type);
@@ -618,7 +608,7 @@ namespace Server.Gumps
         public static int GetTypes(PlayerMobile pm, CollectionItem colItem)
         {
             Type type = colItem.Type;
-            bool derives = type == typeof(RedScales) || type == typeof(Fish) || type == typeof(Crab) || type == typeof(Lobster);
+            bool derives = type == typeof(BaseScales) || type == typeof(Fish) || type == typeof(Crab) || type == typeof(Lobster);
 
             int count = 0;
 
@@ -643,7 +633,7 @@ namespace Server.Gumps
         public static List<Item> FindTypes(PlayerMobile pm, CollectionItem colItem)
         {
             Type type = colItem.Type;
-            bool derives = type == typeof(RedScales) || type == typeof(Fish) || type == typeof(Crab) || type == typeof(Lobster);
+            bool derives = type == typeof(BaseScales) || type == typeof(Fish) || type == typeof(Crab) || type == typeof(Lobster);
 
             List<Item> list = new List<Item>();
 

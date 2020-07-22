@@ -12,6 +12,8 @@ using Server.Spells.Ninjitsu;
 using Server.Spells.Sixth;
 using Server.Spells.SkillMasteries;
 using Server.Spells.Spellweaving;
+using Server.Misc;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -769,11 +771,6 @@ namespace Server.Items
             return false;
         }
 
-        public virtual Race RequiredRace => null;
-        //On OSI, there are no weapons with race requirements, this is for custom stuff
-
-        public virtual bool CanBeWornByGargoyles => false;
-
         public override bool CanEquip(Mobile from)
         {
             if (from.IsPlayer())
@@ -802,29 +799,8 @@ namespace Server.Items
                 }
             }
 
-            bool morph = from.FindItemOnLayer(Layer.Earrings) is MorphEarrings;
-
-            if (from.Race == Race.Gargoyle && !CanBeWornByGargoyles && from.IsPlayer())
+            if (!RaceDefinitions.ValidateEquipment(from, this))
             {
-                from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1111708); // Gargoyles can't wear this.
-                return false;
-            }
-
-            if (RequiredRace != null && from.Race != RequiredRace && !morph)
-            {
-                if (RequiredRace == Race.Elf)
-                {
-                    from.SendLocalizedMessage(1072203); // Only Elves may use this.
-                }
-                else if (RequiredRace == Race.Gargoyle)
-                {
-                    from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1111707); // Only gargoyles can wear this.
-                }
-                else
-                {
-                    from.SendMessage("Only {0} may use ", RequiredRace.PluralName);
-                }
-
                 return false;
             }
             else if (from.Dex < DexRequirement)
@@ -979,6 +955,7 @@ namespace Server.Items
                     FocusWeilder = null;
 
                 SkillMasterySpell.OnWeaponRemoved(m, this);
+                ForceOfNature.Remove(m);
 
                 if (IsSetItem && m_SetEquipped)
                 {
@@ -1152,7 +1129,7 @@ namespace Server.Items
             if (info != null && info.Defender == defender)
                 bonus -= info.DefenseChanceMalus;
 
-            int max = 45 + BaseArmor.GetRefinedDefenseChance(defender);
+            int max = 45 + BaseArmor.GetRefinedDefenseChance(defender) + WhiteTigerFormSpell.GetDefenseCap(defender);
 
             // Defense Chance Increase = 45%
             if (bonus > max)
@@ -1507,7 +1484,7 @@ namespace Server.Items
                     // Successful block removes the Honorable Execution penalty.
                     HonorableExecution.RemovePenalty(defender);
 
-                    if (CounterAttack.IsCountering(defender) && defender.InRange(attacker.Location, 1))
+                    if (CounterAttack.IsCountering(defender))
                     {
                         if (weapon != null)
                         {
@@ -1924,6 +1901,8 @@ namespace Server.Items
                 percentageBonus += (int)(move.GetDamageScalar(attacker, defender) * 100) - 100;
             }
 
+            percentageBonus += (int)(ForceOfNature.GetDamageScalar(attacker, defender) * 100) - 100;
+
             if (ConsecratedContext != null && ConsecratedContext.Owner == attacker)
             {
                 percentageBonus += ConsecratedContext.ConsecrateDamageBonus;
@@ -2069,8 +2048,6 @@ namespace Server.Items
                 }
             }
 
-            percentageBonus += ForceOfNature.GetBonus(attacker, defender);
-
             if (m_ExtendedWeaponAttributes.AssassinHoned > 0 && GetOppositeDir(attacker.Direction) == defender.Direction)
             {
                 if (!ranged || 0.5 > Utility.RandomDouble())
@@ -2155,8 +2132,8 @@ namespace Server.Items
             bool sparks = false;
             if (a == null && move == null)
             {
-                if (m_ExtendedWeaponAttributes.BoneBreaker > 0)
-                    damage += BoneBreakerContext.CheckHit(attacker, defender);
+                if (m_ExtendedWeaponAttributes.BoneBreaker > 0 && !AnimalForm.UnderTransformation(attacker))
+                    BoneBreakerContext.CheckHit(attacker, defender);
 
                 if (m_ExtendedWeaponAttributes.HitSwarm > 0 && Utility.Random(100) < m_ExtendedWeaponAttributes.HitSwarm)
                     SwarmContext.CheckHit(attacker, defender);
@@ -2204,6 +2181,8 @@ namespace Server.Items
 
                 damage += (int)inc;
             }
+
+            damage += WhirlwindAttack.DamageBonus(attacker, defender);
 
             damageGiven = AOS.Damage(
                 defender,
@@ -2454,6 +2433,8 @@ namespace Server.Items
             {
                 a.OnHit(attacker, defender, damage);
             }
+
+            ForceOfNature.OnHit(attacker, defender);
 
             if (move != null)
             {
@@ -2896,7 +2877,12 @@ namespace Server.Items
 
             for (int i = 0; i < count; i++)
             {
-                AddBlood(defender, m.GetRandomSpawnPoint(b), m);
+                var p = m.GetRandomSpawnPoint(b);
+                p.Z = defender.Z;
+
+                SpellHelper.AdjustField(ref p, m, 16, false);
+
+                AddBlood(defender, p, m);
             }
         }
 
@@ -4525,17 +4511,14 @@ namespace Server.Items
                 m_AosSkillBonuses.GetProperties(list);
             }
 
-            if (RequiredRace == Race.Elf)
+            if (RaceDefinitions.GetRequiredRace(this) == Race.Elf)
             {
                 list.Add(1075086); // Elves Only
             }
-
-            #region Stygian Abyss
-            else if (RequiredRace == Race.Gargoyle)
+            else if (RaceDefinitions.GetRequiredRace(this) == Race.Gargoyle)
             {
                 list.Add(1111709); // Gargoyles Only
             }
-            #endregion
 
             if (ArtifactRarity > 0)
             {
