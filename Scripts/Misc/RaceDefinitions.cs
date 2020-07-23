@@ -553,9 +553,10 @@ namespace Server.Misc
         private static int[] _AllRaceIDs = new[]
         {
             0xA289, 0xA28A, 0xA28B, 0xA291, 0xA292, 0xA293, // whips
-            0xE85, 0xE86, // Tools
-            0x1F03, 0x1F04, // Robe
-            0xE81,
+            0xE85, 0xE86,                                   // Tools
+            0x1F03, 0x1F04,                                 // Robe
+            0xE81,                                          // Crook
+            0x1086, 0x108A, 0x1F06, 0x1F09                  // Rings/Bracelet
         };
 
         public static int[] GargoyleOnlyIDs { get { return _GargoyleOnlyIDs; } }
