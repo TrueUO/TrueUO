@@ -16,36 +16,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Server
-{
-    public class DefensiveSpell
-    {
-        public static void Nullify(Mobile from)
-        {
-            if (!from.CanBeginAction(typeof(DefensiveSpell)))
-                new InternalTimer(from).Start();
-        }
-
-        private class InternalTimer : Timer
-        {
-            private readonly Mobile m_Mobile;
-
-            public InternalTimer(Mobile m)
-                : base(TimeSpan.FromMinutes(1.0))
-            {
-                m_Mobile = m;
-
-                Priority = TimerPriority.OneSecond;
-            }
-
-            protected override void OnTick()
-            {
-                m_Mobile.EndAction(typeof(DefensiveSpell));
-            }
-        }
-    }
-}
-
 namespace Server.Spells
 {
     public enum TravelCheckType
@@ -1162,12 +1132,12 @@ namespace Server.Spells
         }
 
         //magic reflection
-        public static bool CheckReflect(int circle, Mobile caster, ref Mobile target)
+        public static bool CheckReflect(Spell spell, Mobile caster, ref Mobile target)
         {
             IDamageable c = caster as IDamageable;
             IDamageable t = target as IDamageable;
 
-            bool reflect = CheckReflect(circle, ref c, ref t);
+            bool reflect = CheckReflect(spell, ref c, ref t);
 
             if (c is Mobile)
                 caster = (Mobile)c;
@@ -1178,11 +1148,11 @@ namespace Server.Spells
             return reflect;
         }
 
-        public static bool CheckReflect(int circle, IDamageable caster, ref Mobile target)
+        public static bool CheckReflect(Spell spell, IDamageable caster, ref Mobile target)
         {
             IDamageable t = target as IDamageable;
 
-            bool reflect = CheckReflect(circle, ref caster, ref t);
+            bool reflect = CheckReflect(spell, ref caster, ref t);
 
             if (t is Mobile)
                 caster = (Mobile)t;
@@ -1190,11 +1160,11 @@ namespace Server.Spells
             return reflect;
         }
 
-        public static bool CheckReflect(int circle, Mobile caster, ref IDamageable target)
+        public static bool CheckReflect(Spell spell, Mobile caster, ref IDamageable target)
         {
             IDamageable c = caster as IDamageable;
 
-            bool reflect = CheckReflect(circle, ref c, ref target);
+            bool reflect = CheckReflect(spell, ref c, ref target);
 
             if (c is Mobile)
                 caster = (Mobile)c;
@@ -1202,11 +1172,11 @@ namespace Server.Spells
             return reflect;
         }
 
-        public static bool CheckReflect(int circle, ref Mobile caster, ref IDamageable target, DamageType type = DamageType.Spell)
+        public static bool CheckReflect(Spell spell, ref Mobile caster, ref IDamageable target)
         {
             IDamageable c = caster as IDamageable;
 
-            bool reflect = CheckReflect(circle, ref c, ref target);
+            bool reflect = CheckReflect(spell, ref c, ref target);
 
             if (c is Mobile)
                 caster = (Mobile)c;
@@ -1214,83 +1184,72 @@ namespace Server.Spells
             return reflect;
         }
 
-        public static bool CheckReflect(int circle, ref Mobile caster, ref Mobile target)
+        public static bool CheckReflect(Spell spell, ref Mobile caster, ref Mobile target)
         {
-            return CheckReflect(circle, caster, ref target);
+            return CheckReflect(spell, caster, ref target);
         }
 
-        public static bool CheckReflect(int circle, ref IDamageable source, ref IDamageable defender, DamageType type = DamageType.Spell)
+        public static bool CheckReflect(Spell spell, ref IDamageable source, ref IDamageable defender)
         {
             bool reflect = false;
-            Mobile target = defender as Mobile;
 
-            if (type >= DamageType.Spell)
+            if (spell.SpellDamageType == DamageType.Spell)
             {
-                if (target != null && defender is Mobile)
-                {
-                    Clone clone = MirrorImage.GetDeflect(target, (Mobile)defender);
+                Mobile target = defender as Mobile;
+                Clone clone = MirrorImage.GetDeflect(target, (Mobile)defender);
 
-                    if (clone != null)
-                    {
-                        defender = clone;
-                        return false;
-                    }
+                if (clone != null)
+                {
+                    defender = clone;
+                    return false;
                 }
-                else if (defender is DamageableItem && ((DamageableItem)defender).CheckReflect(circle, source))
+
+                if (defender is DamageableItem && ((DamageableItem)defender).CheckReflect(spell, source))
                 {
                     IDamageable temp = source;
                     source = defender;
                     defender = temp;
                     return true;
                 }
-            }
 
-            Mobile caster = source as Mobile;
+                var caster = source as Mobile;
 
-            if (target == null || caster == null)
-                return false;
-
-            if (target.MagicDamageAbsorb > 0)
-            {
-                ++circle;
-
-                target.MagicDamageAbsorb -= circle;
-
-                // This order isn't very intuitive, but you have to nullify reflect before target gets switched
-
-                reflect = (target.MagicDamageAbsorb >= 0);
-
-                if (target is BaseCreature)
-                    ((BaseCreature)target).CheckReflect(caster, ref reflect);
-
-                if (target.MagicDamageAbsorb <= 0)
+                if (caster != null)
                 {
-                    target.MagicDamageAbsorb = 0;
-                    DefensiveSpell.Nullify(target);
-                }
+                    if (target != null)
+                    {
+                        var context = MagicReflectSpell.GetContext(target);
 
-                if (reflect)
-                {
-                    target.FixedEffect(0x37B9, 10, 5);
+                        if (context != null)
+                        {
+                            reflect = MagicReflectSpell.CheckReflectDamage(target, spell);
 
-                    Mobile temp = caster;
-                    source = target;
-                    target = temp;
-                }
-            }
-            else if (target is BaseCreature)
-            {
-                reflect = false;
+                            if (reflect)
+                            {
+                                IDamageable temp = source;
+                                source = defender;
+                                defender = temp;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        var bc = defender as BaseCreature;
 
-                ((BaseCreature)target).CheckReflect(caster, ref reflect);
+                        if (bc != null)
+                        {
+                            ((BaseCreature)target).CheckReflect(caster, ref reflect);
 
-                if (reflect)
-                {
-                    target.FixedEffect(0x37B9, 10, 5);
+                            if (reflect)
+                            {
+                                target.FixedEffect(0x37B9, 10, 5);
 
-                    IDamageable temp = source;
-                    source = defender;
-                    defender = temp;
+                                IDamageable temp = source;
+                                source = defender;
+                                defender = temp;
+                            }
+                        }
+                    }
                 }
             }
 
