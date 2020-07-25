@@ -1195,15 +1195,6 @@ namespace Server.Spells
 
             if (spell.SpellDamageType == DamageType.Spell)
             {
-                Mobile target = defender as Mobile;
-                Clone clone = MirrorImage.GetDeflect(target, (Mobile)defender);
-
-                if (clone != null)
-                {
-                    defender = clone;
-                    return false;
-                }
-
                 if (defender is DamageableItem && ((DamageableItem)defender).CheckReflect(spell, source))
                 {
                     IDamageable temp = source;
@@ -1213,26 +1204,33 @@ namespace Server.Spells
                 }
 
                 var caster = source as Mobile;
+                var target = defender as Mobile;
 
-                if (caster != null)
+                if (caster != null && target != null)
                 {
-                    if (target != null)
+                    Clone clone = MirrorImage.GetDeflect(target, (Mobile)defender);
+
+                    if (clone != null)
                     {
-                        var context = MagicReflectSpell.GetContext(target);
+                        defender = clone;
+                        return false;
+                    }
 
-                        if (context != null)
+                    var context = MagicReflectSpell.GetContext(target);
+
+                    if (context != null)
+                    {
+                        reflect = MagicReflectSpell.CheckReflectDamage(target, spell);
+
+                        if (reflect)
                         {
-                            reflect = MagicReflectSpell.CheckReflectDamage(target, spell);
-
-                            if (reflect)
-                            {
-                                IDamageable temp = source;
-                                source = defender;
-                                defender = temp;
-                            }
+                            IDamageable temp = source;
+                            source = defender;
+                            defender = temp;
                         }
                     }
-                    else
+
+                    if (!reflect)
                     {
                         var bc = defender as BaseCreature;
 

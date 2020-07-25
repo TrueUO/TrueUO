@@ -2179,8 +2179,6 @@ namespace Server.Mobiles
                     }
                 }
             }
-            //no cliloc for this?
-            //SayTo( seller, true, "Thank you! I bought {0} item{1}. Here is your {2}gp.", Sold, (Sold > 1 ? "s" : ""), GiveGold );
 
             return true;
         }
@@ -2208,8 +2206,6 @@ namespace Server.Mobiles
 
                     int maxAmount = gbi.MaxAmount;
                     int doubled = 0;
-                    //int bought = gbi.TotalBought;
-                    //int sold = gbi.TotalSold;
 
                     switch (maxAmount)
                     {

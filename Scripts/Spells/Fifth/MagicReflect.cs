@@ -59,7 +59,8 @@ namespace Server.Spells.Fifth
                         new ResistanceMod(ResistanceType.Energy,    otherMod)
                     };
 
-                    m_Table.Add(context = new MagicReflectContext(Caster, mods));
+                    context = new MagicReflectContext(Caster, mods);
+                    m_Table.Add(context);
 
                     for (int i = 0; i < mods.Length; ++i)
                         targ.AddResistanceMod(mods[i]);
