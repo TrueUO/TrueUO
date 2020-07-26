@@ -146,7 +146,7 @@ namespace Server.Items
 
         public override bool OnDragDropInto(Mobile from, Item item, Point3D p)
         {
-            return true;
+            return false;
         }
 
         public override void OnItemRemoved(Item item)
