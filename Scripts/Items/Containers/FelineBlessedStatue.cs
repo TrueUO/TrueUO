@@ -57,7 +57,7 @@ namespace Server.Items
         {
             BaseHouse house = BaseHouse.FindHouseAt(this);
 
-            if (house != null && house.IsLockedDown(this) || house.IsSecure(this))
+            if (house != null && (house.IsLockedDown(this) || house.IsSecure(this)))
             {
                 if (!from.InRange(GetWorldLocation(), 1))
                 {
