@@ -33,7 +33,7 @@ namespace Server.Items
 
         public override int DefaultGumpID => 0x116;
 
-        public virtual void OnFlip(Mobile from)
+        public virtual void OnFlip(Mobile m)
         {
             if (ItemID == 0x1947)
             {

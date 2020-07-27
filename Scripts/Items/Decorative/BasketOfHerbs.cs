@@ -8,7 +8,7 @@ namespace Server.Items
     {
         public override int LabelNumber => 1075493; // Basket of Herbs
 
-        public static Dictionary<Mobile, BasketOfHerbs> _Table = new Dictionary<Mobile, BasketOfHerbs>();
+        private static readonly Dictionary<Mobile, BasketOfHerbs> _Table = new Dictionary<Mobile, BasketOfHerbs>();
         private SkillMod m_SkillMod;
 
         [Constructable]
@@ -59,19 +59,19 @@ namespace Server.Items
 
         public static void CheckBonus(Mobile m)
         {
-            if (m != null && _Table.ContainsKey(m))
+            if (m != null && _Table.ContainsKey(m) && _Table[m] != null)
             {
-                if (_Table[m] != null)
-                {
-                    _Table[m].RemoveBonus();
-                }
+                _Table[m].RemoveBonus();
             }
         }
 
         public void AddBonus(Mobile m)
         {
-            m_SkillMod = new DefaultSkillMod(SkillName.Cooking, true, 10);
-            m_SkillMod.ObeyCap = true;
+            m_SkillMod = new DefaultSkillMod(SkillName.Cooking, true, 10)
+            {
+                ObeyCap = true
+            };
+
             m.AddSkillMod(m_SkillMod);
 
             _Table[m] = this;
