@@ -622,6 +622,11 @@ namespace Server.Mobiles
             {
                 Placeholder.Delete();
             }
+            
+            if(PlayerVendors.Contains(this))
+            {
+                PlayerVendors.Remove(this);
+            }
         }
 
         public override bool IsSnoop(Mobile from)
@@ -1602,7 +1607,7 @@ namespace Server.Mobiles
 
         protected override void OnTick()
         {
-            var list = PlayerVendor.PlayerVendors.Where(v => !v.IsCommission && v.NextPayTime <= DateTime.UtcNow).ToList();
+            var list = PlayerVendor.PlayerVendors.Where(v => !v.Deleted && !v.IsCommission && v.NextPayTime <= DateTime.UtcNow).ToList();
 
             for (int i = 0; i < list.Count; i++)
             {
@@ -1627,7 +1632,7 @@ namespace Server.Mobiles
 
             ColUtility.Free(list);
 
-            var rentals = PlayerVendor.PlayerVendors.OfType<RentedVendor>().Where(rv => rv.RentalExpireTime <= DateTime.UtcNow).ToList();
+            var rentals = PlayerVendor.PlayerVendors.OfType<RentedVendor>().Where(rv => !rv.Deleted && rv.RentalExpireTime <= DateTime.UtcNow).ToList();
 
             for (int i = 0; i < rentals.Count; i++)
             {
