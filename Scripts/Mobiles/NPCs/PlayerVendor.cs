@@ -622,6 +622,11 @@ namespace Server.Mobiles
             {
                 Placeholder.Delete();
             }
+            
+            if(PlayerVendors.Contains(this))
+            {
+                PlayerVendors.Remove(this);
+            }
         }
 
         public override bool IsSnoop(Mobile from)
