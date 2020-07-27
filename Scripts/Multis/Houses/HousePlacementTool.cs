@@ -44,7 +44,7 @@ namespace Server.Items
 
         [Constructable]
         public HousePlacementTool()
-            : base(0x14F6)
+            : this(0x14F6)
         {
         }
 
