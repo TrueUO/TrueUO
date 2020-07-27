@@ -564,6 +564,8 @@ namespace Server.Mobiles
                             {
                                 Banker.Deposit(House.MovingCrate, HoldGold);
                             }
+                            
+                            HoldGold = 0;
                         }
 
                         foreach (Item item in list)
@@ -598,6 +600,8 @@ namespace Server.Mobiles
                         {
                             Banker.Deposit(backpack, HoldGold);
                         }
+                        
+                        HoldGold = 0;
                     }
 
                     foreach (Item item in list)
