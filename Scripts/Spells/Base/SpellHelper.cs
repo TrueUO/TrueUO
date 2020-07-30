@@ -589,7 +589,7 @@ namespace Server.Spells
 
         public static bool IsGuildAllyOrParty(Mobile from, Mobile to)
         {
-            return IsGuild(from, to) && IsParty(from, to);
+            return IsGuild(from, to) || IsParty(from, to);
         }
 
         public static bool IsGuild(Mobile from, Mobile to)
