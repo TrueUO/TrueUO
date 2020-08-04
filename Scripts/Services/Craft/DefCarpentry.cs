@@ -88,12 +88,12 @@ namespace Server.Engines.Craft
             return 0;
         }
 
-        private Type[] _RetainsColor = new[]
+        private readonly Type[] _RetainsColor = new[]
         {
             typeof(BasePlayerBB)
         };
 
-        public override bool RetainsColorFrom(CraftItem item, Type resType)
+        public override bool RetainsColorFrom(CraftItem item, Type type)
         {
             var itemType = item.ItemType;
 
@@ -102,7 +102,7 @@ namespace Server.Engines.Craft
                 return true;
             }
 
-            return base.RetainsColorFrom(item, resType);
+            return base.RetainsColorFrom(item, type);
         }
 
         public override void PlayCraftEffect(Mobile from)
