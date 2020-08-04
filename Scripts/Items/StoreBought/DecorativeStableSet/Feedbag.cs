@@ -5,7 +5,9 @@ namespace Server.Items
     public class Feedbag : BaseContainer
     {
         public override int LabelNumber => 1126235;  // feedbag
+		public override int DefaultGumpID => 0x3D;
 
+		[Constructable]
         public Feedbag()
             : base(0xA4E3)
         {
