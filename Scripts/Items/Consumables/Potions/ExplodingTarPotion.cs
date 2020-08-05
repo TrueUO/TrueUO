@@ -1,11 +1,9 @@
 using Server.Misc;
-using Server.Mobiles;
 using Server.Network;
 using Server.Spells;
 using Server.Targeting;
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -97,10 +95,7 @@ namespace Server.Items
 
             foreach (Mobile m in SpellHelper.AcquireIndirectTargets(from, loc, map, Radius).OfType<Mobile>())
             {
-                if (m != from)
-                {
-                    AddEffects(m);
-                }
+                AddEffects(m);
             }
         }
 
