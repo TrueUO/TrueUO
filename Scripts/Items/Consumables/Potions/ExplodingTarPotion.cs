@@ -93,11 +93,11 @@ namespace Server.Items
 
             Timer.DelayCall(TimeSpan.FromSeconds(1), new TimerStateCallback(CircleEffect2), new object[] { loc, map });
 
-            foreach (Mobile m in SpellHelper.AcquireIndirectTargets(from, loc, map, Radius))
+            foreach (Mobile IDamageable in SpellHelper.AcquireIndirectTargets(from, loc, map, Radius))
             {
-                if (m != from)
+                if (IDamageable != from)
                 {
-                    AddEffects(m);
+                    AddEffects(IDamageable);
                 }
             }
         }
