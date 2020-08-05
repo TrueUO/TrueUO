@@ -3,9 +3,11 @@ using Server.Mobiles;
 using Server.Network;
 using Server.Spells;
 using Server.Targeting;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Server.Items
 {
@@ -93,7 +95,7 @@ namespace Server.Items
 
             Timer.DelayCall(TimeSpan.FromSeconds(1), new TimerStateCallback(CircleEffect2), new object[] { loc, map });
 
-            foreach (Mobile m in SpellHelper.AcquireIndirectTargets(from, loc, map, Radius))
+            foreach (Mobile m in SpellHelper.AcquireIndirectTargets(from, loc, map, Radius).OfType<Mobile>())
             {
                 if (m != from)
                 {
