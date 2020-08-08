@@ -3,12 +3,8 @@ using System.IO;
 
 namespace Server.Engines.Auction
 {
-    public class VaultLogging
+    public static class VaultLogging
     {
-        protected VaultLogging()
-        {
-        }
-
         public static string LogDirectory { get; set; }
 
         static VaultLogging()
