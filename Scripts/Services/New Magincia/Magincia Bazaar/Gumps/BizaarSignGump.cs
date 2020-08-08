@@ -464,33 +464,22 @@ namespace Server.Engines.NewMagincia
 
                         if (!m_Plot.IsOwner(from))
                         {
-                            try
+                            amount = Utility.ToInt32(relay.Text);
+
+                            if (amount > 0)
                             {
-                                amount = Convert.ToInt32(relay.Text);
+                                double r = (double)amount / 1000;
+                                amount = (int)(Math.Floor(r) * 1000.0);
 
-                                if (amount > 0)
-                                {
-                                    double r = (double)amount / 1000;
-                                    amount = (int)(Math.Floor(r) * 1000.0);
-
-                                    if (amount < 1000)
-                                        amount = 1000;
-                                }
-                                else if (!hasBiddingPlot)
-                                {
-                                    from.SendGump(new StallBidGump(from, m_Plot));
-                                    return;
-                                }
+                                if (amount < 1000)
+                                    amount = 1000;
 
                                 from.SendGump(new ConfirmBidGump(from, m_Plot, m_Plot, amount, amount <= 0));
-                                return;
                             }
-                            catch (Exception e)
+                            else
                             {
-                                Server.Diagnostics.ExceptionLogging.LogException(e);
+                                from.SendGump(new StallBidGump(from, m_Plot));
                             }
-
-                            from.SendGump(new StallBidGump(from, m_Plot));
                         }
                     }
                     break;

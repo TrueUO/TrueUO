@@ -26,7 +26,7 @@ namespace Server.Spells
         private readonly Item m_Scroll;
         private readonly SpellInfo m_Info;
         private SpellState m_State;
-        private long m_StartCastTime;
+        private long m_CastTime;
         private IDamageable m_InstantTarget;
 
         public int ID => SpellRegistry.GetRegistryNumber(this);
@@ -39,7 +39,7 @@ namespace Server.Spells
         public string Mantra => m_Info.Mantra;
         public Type[] Reagents => m_Info.Reagents;
         public Item Scroll => m_Scroll;
-        public long StartCastTime => m_StartCastTime;
+        public long CastTime => m_CastTime;
 
         public IDamageable InstantTarget { get { return m_InstantTarget; } set { m_InstantTarget = value; } }
 
@@ -541,7 +541,6 @@ namespace Server.Spells
             }
         }
 
-        private CastTimer m_CastTimer;
         private AnimTimer m_AnimTimer;
 
         public void Disturb(DisturbType type)
@@ -574,10 +573,7 @@ namespace Server.Spells
 
                 OnDisturb(type, true);
 
-                if (m_CastTimer != null)
-                {
-                    m_CastTimer.Stop();
-                }
+                CastTimer.RemoveTimer(this);
 
                 if (m_AnimTimer != null)
                 {
@@ -672,8 +668,6 @@ namespace Server.Spells
 
         public virtual bool Cast()
         {
-            m_StartCastTime = Core.TickCount;
-
             if (m_Caster.Spell is Spell && ((Spell)m_Caster.Spell).State == SpellState.Sequencing)
             {
                 ((Spell)m_Caster.Spell).Disturb(DisturbType.NewCast);
@@ -707,10 +701,6 @@ namespace Server.Spells
             else if (CheckNextSpellTime && Core.TickCount - m_Caster.NextSpellTime < 0)
             {
                 m_Caster.SendLocalizedMessage(502644); // You have not yet recovered from casting a spell.
-            }
-            else if (m_Caster is PlayerMobile && ((PlayerMobile)m_Caster).PeacedUntil > DateTime.UtcNow)
-            {
-                m_Caster.SendLocalizedMessage(1072060); // You cannot cast a spell while calmed.
             }
             else if (!CheckManaBeforeCast || m_Caster.Mana >= ScaleMana(GetMana()))
             {
@@ -747,13 +737,7 @@ namespace Server.Spells
 
                     SayMantra();
 
-                    /*
-                     * EA seems to use some type of spell variation, of -100 ms + timer resolution.
-                     * Using the below millisecond dropoff with a 50ms timer resolution seems to be exact
-                     * to EA.
-                     */
-
-                    TimeSpan castDelay = GetCastDelay().Subtract(TimeSpan.FromMilliseconds(100));
+                    TimeSpan castDelay = GetCastDelay();
 
                     if (ShowHandMovement && !(m_Scroll is SpellStone) && (m_Caster.Body.IsHuman || (m_Caster.Player && m_Caster.Body.IsMonster)))
                     {
@@ -782,20 +766,10 @@ namespace Server.Spells
                     }
 
                     WeaponAbility.ClearCurrentAbility(m_Caster);
+                    m_CastTime = Core.TickCount + (long)castDelay.TotalMilliseconds;
 
-                    m_CastTimer = new CastTimer(this, castDelay);
-                    //m_CastTimer.Start();
-
+                    CastTimer.AddTimer(this);
                     OnBeginCast();
-
-                    if (castDelay > TimeSpan.Zero)
-                    {
-                        m_CastTimer.Start();
-                    }
-                    else
-                    {
-                        m_CastTimer.Tick();
-                    }
 
                     return true;
                 }
@@ -813,6 +787,33 @@ namespace Server.Spells
         }
 
         public abstract void OnCast();
+
+        private void SequenceSpell()
+        {
+            m_State = SpellState.Sequencing;
+            m_Caster.OnSpellCast(this);
+
+            Caster.Delta(MobileDelta.Flags);
+
+            if (m_Caster.Region != null)
+            {
+                m_Caster.Region.OnSpellCast(m_Caster, this);
+            }
+
+            m_Caster.NextSpellTime = Core.TickCount + (int)GetCastRecovery().TotalMilliseconds;
+
+            Target originalTarget = m_Caster.Target;
+
+            if (InstantTarget == null || !OnCastInstantTarget())
+            {
+                OnCast();
+            }
+
+            if (m_Caster.Player && m_Caster.Target != originalTarget && Caster.Target != null)
+            {
+                m_Caster.Target.BeginTimeout(m_Caster, TimeSpan.FromSeconds(30.0));
+            }
+        }
 
         #region Enhanced Client
         public bool OnCastInstantTarget()
@@ -1243,56 +1244,76 @@ namespace Server.Spells
 
         private class CastTimer : Timer
         {
-            private readonly Spell m_Spell;
+            private static CastTimer _Instance;
 
-            public CastTimer(Spell spell, TimeSpan castDelay)
-                : base(castDelay)
+            public static CastTimer Instance
             {
-                m_Spell = spell;
+                get
+                {
+                    if (_Instance == null)
+                    {
+                        _Instance = new CastTimer();
+                    }
 
+                    return _Instance;
+                }
+            }
+
+            public static int MaxSpells { get; set; }
+
+            public List<Spell> Registry { get; set; } = new List<Spell>();
+
+            public CastTimer()
+                : base(TimeSpan.FromMilliseconds(100), TimeSpan.FromMilliseconds(100))
+            {
                 Priority = TimerPriority.FiftyMS;
+            }
+
+            public static void AddTimer(Spell spell)
+            {
+                Instance.Registry.Insert(0, spell);
+
+                if (!Instance.Running)
+                {
+                    Instance.Start();
+                }
+            }
+
+            public static void RemoveTimer(Spell spell)
+            {
+                Instance.Registry.Remove(spell);
+
+                if (Instance.Registry.Count == 0 && Instance.Running)
+                {
+                    Instance.Stop();
+                }
             }
 
             protected override void OnTick()
             {
-                if (m_Spell == null || m_Spell.m_Caster == null)
+                var resistry = Instance.Registry;
+
+                if (resistry.Count > MaxSpells)
                 {
-                    return;
+                    MaxSpells = resistry.Count;
                 }
-                else if (m_Spell.m_State == SpellState.Casting && m_Spell.m_Caster.Spell == m_Spell)
+
+                for (int i = resistry.Count - 1; i >= 0; i--)
                 {
-                    m_Spell.m_State = SpellState.Sequencing;
-                    m_Spell.m_CastTimer = null;
-                    m_Spell.m_Caster.OnSpellCast(m_Spell);
+                    var spell = resistry[i];
 
-                    m_Spell.Caster.Delta(MobileDelta.Flags);
+                    /*
+                     * EA seems to use some type of spell variation, of -50 ms to make up for timer resolution.
+                     * Using the below millisecond dropoff with a 50ms timer resolution seems to be exact
+                     * to EA.
+                     */
 
-                    if (m_Spell.m_Caster.Region != null)
+                    if (spell.CastTime - 50 < Core.TickCount)
                     {
-                        m_Spell.m_Caster.Region.OnSpellCast(m_Spell.m_Caster, m_Spell);
+                        spell.SequenceSpell();
+                        RemoveTimer(spell);
                     }
-
-                    m_Spell.m_Caster.NextSpellTime = Core.TickCount + (int)m_Spell.GetCastRecovery().TotalMilliseconds;
-
-                    Target originalTarget = m_Spell.m_Caster.Target;
-
-                    if (m_Spell.InstantTarget == null || !m_Spell.OnCastInstantTarget())
-                    {
-                        m_Spell.OnCast();
-                    }
-
-                    if (m_Spell.m_Caster.Player && m_Spell.m_Caster.Target != originalTarget && m_Spell.Caster.Target != null)
-                    {
-                        m_Spell.m_Caster.Target.BeginTimeout(m_Spell.m_Caster, TimeSpan.FromSeconds(30.0));
-                    }
-
-                    m_Spell.m_CastTimer = null;
                 }
-            }
-
-            public void Tick()
-            {
-                OnTick();
             }
         }
 
