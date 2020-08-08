@@ -98,7 +98,7 @@ namespace Server.Spells.Fourth
 
         public override bool CheckCast()
         {
-            if (Server.Engines.VvV.VvVSigil.ExistsOn(Caster))
+            if (Engines.VvV.VvVSigil.ExistsOn(Caster))
             {
                 Caster.SendLocalizedMessage(1061632); // You can't do that while carrying the sigil.
                 return false;
