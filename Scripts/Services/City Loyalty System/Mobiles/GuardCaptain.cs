@@ -211,6 +211,7 @@ namespace Server.Engines.CityLoyalty
         {
             base.Deserialize(reader);
             int version = reader.ReadInt();
+			Frozen = true;
 
             City = (City)reader.ReadInt();
 

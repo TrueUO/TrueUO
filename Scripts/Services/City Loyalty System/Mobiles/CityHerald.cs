@@ -183,6 +183,7 @@ namespace Server.Engines.CityLoyalty
         {
             base.Serialize(writer);
             writer.Write(0);
+			
             writer.Write((int)City);
             writer.Write(_Announcement);
             writer.Write(AnnouncementExpires);
@@ -192,6 +193,8 @@ namespace Server.Engines.CityLoyalty
         {
             base.Deserialize(reader);
             int v = reader.ReadInt();
+			Frozen = true;
+			
             City = (City)reader.ReadInt();
             _Announcement = reader.ReadString();
             AnnouncementExpires = reader.ReadDateTime();
