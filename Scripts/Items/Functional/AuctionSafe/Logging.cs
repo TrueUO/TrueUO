@@ -1,11 +1,14 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
 
 namespace Server.Engines.Auction
 {
     public class VaultLogging
     {
+        protected VaultLogging()
+        {
+        }
+
         public static string LogDirectory { get; set; }
 
         static VaultLogging()
