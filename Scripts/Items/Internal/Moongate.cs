@@ -96,8 +96,6 @@ namespace Server.Items
 
             if (m.IsPlayer() || !m.Hidden)
                 m.PlaySound(0x1FE);
-
-            CityTradeSystem.OnQuickTravelUsed(m);
         }
 
         public virtual void UseGate(Mobile m)
@@ -107,6 +105,10 @@ namespace Server.Items
             if (Server.Engines.VvV.VvVSigil.ExistsOn(m))
             {
                 m.SendLocalizedMessage(1061632); // You can't do that while carrying the sigil.
+            }
+            else if (CityTradeSystem.HasTrade(m))
+            {
+                m.SendLocalizedMessage(1151733); // You cannot do that while carrying a Trade Order.
             }
             else if (TargetMap == Map.Felucca && m is PlayerMobile && ((PlayerMobile)m).Young)
             {

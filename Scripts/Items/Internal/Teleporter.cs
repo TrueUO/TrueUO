@@ -228,6 +228,12 @@ namespace Server.Items
                 return false;
             }
 
+            if (CityTradeSystem.HasTrade(m))
+            {
+                m.SendLocalizedMessage(1151733); // You cannot do that while carrying a Trade Order.
+                return false;
+            }
+
             return true;
         }
 
@@ -308,8 +314,6 @@ namespace Server.Items
 
             BaseCreature.TeleportPets(m, p, map);
             m.MoveToWorld(p, map);                     
-
-            CityTradeSystem.OnQuickTravelUsed(m);
 
             if (m_DestEffect && sendEffect)
             {
