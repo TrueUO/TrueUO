@@ -1,6 +1,6 @@
+using Server.Engines.CityLoyalty;
 using Server.Mobiles;
 using Server.Items;
-
 using System;
 using System.Xml;
 using System.Collections.Generic;
@@ -62,6 +62,7 @@ namespace Server.Regions
                     {
                         BaseCreature.TeleportPets(m, destinationPoint, destinationMap);
                         m.MoveToWorld(destinationPoint, destinationMap);
+                        CityTradeSystem.OnQuickTravelUsed(m);
                         m.Frozen = false;
 
                         Timer.DelayCall(TimeSpan.FromMilliseconds(250), () => m.EndAction(typeof(Teleporter)));

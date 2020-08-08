@@ -1,4 +1,5 @@
 #region References
+using Server.Engines.CityLoyalty;
 using Server.Mobiles;
 using Server.Network;
 using Server.Spells;
@@ -306,7 +307,9 @@ namespace Server.Items
             }
 
             BaseCreature.TeleportPets(m, p, map);
-            m.MoveToWorld(p, map);
+            m.MoveToWorld(p, map);                     
+
+            CityTradeSystem.OnQuickTravelUsed(m);
 
             if (m_DestEffect && sendEffect)
             {

@@ -1,4 +1,5 @@
 using Server.ContextMenus;
+using Server.Engines.CityLoyalty;
 using Server.Gumps;
 using Server.Items;
 using Server.Mobiles;
@@ -489,9 +490,11 @@ namespace Server.Multis
                     Point3D p = target.GetWorldTop();
                     Map map = target.Map;
 
-                    Server.Mobiles.BaseCreature.TeleportPets(m, p, map);
+                    BaseCreature.TeleportPets(m, p, map);
+                    m.MoveToWorld(p, map);                   
 
-                    m.MoveToWorld(p, map);
+                    CityTradeSystem.OnQuickTravelUsed(m);
+
 
                     if (!m.Hidden || m.IsPlayer())
                     {

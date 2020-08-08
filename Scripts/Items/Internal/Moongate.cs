@@ -1,4 +1,5 @@
 #region References
+using Server.Engines.CityLoyalty;
 using Server.Gumps;
 using Server.Misc;
 using Server.Mobiles;
@@ -95,6 +96,8 @@ namespace Server.Items
 
             if (m.IsPlayer() || !m.Hidden)
                 m.PlaySound(0x1FE);
+
+            CityTradeSystem.OnQuickTravelUsed(m);
         }
 
         public virtual void UseGate(Mobile m)
