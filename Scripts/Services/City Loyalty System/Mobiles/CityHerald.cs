@@ -93,7 +93,7 @@ namespace Server.Engines.CityLoyalty
 
             EquipItem(new GoldRing());
 
-            CantWalk = true;
+            Frozen = true;
         }
 
         public override void GetContextMenuEntries(Mobile from, List<ContextMenuEntry> list)
