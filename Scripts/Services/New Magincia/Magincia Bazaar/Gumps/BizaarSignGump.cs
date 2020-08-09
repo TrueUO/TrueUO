@@ -460,7 +460,6 @@ namespace Server.Engines.NewMagincia
                     {
                         int amount = 0;
                         TextRelay relay = info.TextEntries[0];
-                        bool hasBiddingPlot = MaginciaBazaar.GetBiddingPlot(from) != null || MaginciaBazaar.NextAvailable.ContainsKey(from);
 
                         if (!m_Plot.IsOwner(from))
                         {
