@@ -1259,8 +1259,6 @@ namespace Server.Spells
                 }
             }
 
-            public static int MaxSpells { get; set; }
-
             public List<Spell> Registry { get; set; } = new List<Spell>();
 
             public CastTimer()
@@ -1291,28 +1289,27 @@ namespace Server.Spells
 
             protected override void OnTick()
             {
-                var resistry = Instance.Registry;
+                var registry = Instance.Registry;
 
-                if (resistry.Count > MaxSpells)
+                if (registry.Count > 0)
                 {
-                    MaxSpells = resistry.Count;
-                }
-
-                for (int i = resistry.Count - 1; i >= 0; i--)
-                {
-                    var spell = resistry[i];
-
-                    /*
-                     * EA seems to use some type of spell variation, of -50 ms to make up for timer resolution.
-                     * Using the below millisecond dropoff with a 50ms timer resolution seems to be exact
-                     * to EA.
-                     */
-
-                    if (spell.CastTime - 50 < Core.TickCount)
+                    for (int i = registry.Count - 1; i >= 0; i--)
                     {
-                        spell.SequenceSpell();
-                        RemoveTimer(spell);
+                        var spell = registry[i];
+
+                        /*
+                         * EA seems to use some type of spell variation, of -50 ms to make up for timer resolution.
+                         * Using the below millisecond dropoff with a 50ms timer resolution seems to be exact
+                         * to EA.
+                         */
+
+                        if (spell.CastTime - 50 < Core.TickCount)
+                        {
+                            spell.SequenceSpell();
+                            RemoveTimer(spell);
+                        }
                     }
+
                 }
             }
         }
