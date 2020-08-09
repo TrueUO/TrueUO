@@ -143,7 +143,8 @@ namespace Server.Engines.CityLoyalty
                 return crate.Items.Where(i => Match(i.GetType())).Sum(item => item.Amount);
             }
 
-            public static Type[][] Interchangeables = new Type[][]
+            public static Type[][] Interchangeables { get { return _Interchangeables; } }
+            public static Type[][] _Interchangeables = new Type[][]
             {
                 new Type[] { typeof(PewterBowlOfPeas), typeof(WoodenBowlOfPeas) },
                 new Type[] { typeof(PewterBowlOfCarrots), typeof(WoodenBowlOfCarrots) },
