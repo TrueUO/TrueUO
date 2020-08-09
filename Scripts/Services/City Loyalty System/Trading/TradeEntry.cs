@@ -144,7 +144,7 @@ namespace Server.Engines.CityLoyalty
             }
 
             public static Type[][] Interchangeables { get { return _Interchangeables; } }
-            public static Type[][] _Interchangeables = new Type[][]
+            private static Type[][] _Interchangeables = new Type[][]
             {
                 new Type[] { typeof(PewterBowlOfPeas), typeof(WoodenBowlOfPeas) },
                 new Type[] { typeof(PewterBowlOfCarrots), typeof(WoodenBowlOfCarrots) },
