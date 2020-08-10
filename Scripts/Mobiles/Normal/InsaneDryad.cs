@@ -166,7 +166,7 @@ namespace Server.Mobiles
 
         public void AreaUndress()
         {
-            if (Combatant == null || Deleted || !Alive || m_NextUndress > DateTime.UtcNow || 0.005 < Utility.RandomDouble())
+            if (Combatant == null || Deleted || !Alive || m_NextUndress > DateTime.UtcNow || 0.05 < Utility.RandomDouble())
                 return;
 
             IPooledEnumerable eable = GetMobilesInRange(RangePerception);
