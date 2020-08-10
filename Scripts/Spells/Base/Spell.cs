@@ -1246,8 +1246,6 @@ namespace Server.Spells
         {
             private static CastTimer _Instance;
 
-            private readonly object _TimerLock = new object();
-
             public static CastTimer Instance
             {
                 get
