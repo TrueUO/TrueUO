@@ -1307,7 +1307,7 @@ namespace Server.Spells
                         }
                         catch (Exception e)
                         {
-                            Server.Diagnostics.ExceptionLogging.LogException(e, string.Format("Count: {0}; Index: {1}", registry.Count, i));
+                            Diagnostics.ExceptionLogging.LogException(e);
                         }
                     }
 
