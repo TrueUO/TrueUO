@@ -43,6 +43,8 @@ namespace Server.Spells
 
         public IDamageable InstantTarget { get { return m_InstantTarget; } set { m_InstantTarget = value; } }
 
+        public bool Disturbed { get; set; }
+
         private static readonly TimeSpan NextSpellDelay = TimeSpan.FromSeconds(0.75);
         private static TimeSpan AnimateDelay = TimeSpan.FromSeconds(1.5);
 
@@ -431,7 +433,6 @@ namespace Server.Spells
 
         public virtual double GetDamageSkill(Mobile m)
         {
-            //m.CheckSkill( DamageSkill, 0.0, m.Skills[DamageSkill].Cap );
             return m.Skills[DamageSkill].Value;
         }
 
@@ -571,9 +572,8 @@ namespace Server.Spells
                 m_Caster.Spell = null;
                 Caster.Delta(MobileDelta.Flags);
 
+                Disturbed = true;
                 OnDisturb(type, true);
-
-                CastTimer.RemoveTimer(this);
 
                 if (m_AnimTimer != null)
                 {
@@ -1277,16 +1277,6 @@ namespace Server.Spells
                 }
             }
 
-            public static void RemoveTimer(Spell spell)
-            {
-                Instance.Registry.Remove(spell);
-
-                if (Instance.Registry.Count == 0 && Instance.Running)
-                {
-                    Instance.Stop();
-                }
-            }
-
             protected override void OnTick()
             {
                 var registry = Instance.Registry;
@@ -1295,18 +1285,29 @@ namespace Server.Spells
                 {
                     for (int i = registry.Count - 1; i >= 0; i--)
                     {
-                        var spell = registry[i];
-
-                        /*
-                         * EA seems to use some type of spell variation, of -50 ms to make up for timer resolution.
-                         * Using the below millisecond dropoff with a 50ms timer resolution seems to be exact
-                         * to EA.
-                         */
-
-                        if (spell.CastTime - 50 < Core.TickCount)
+                        try
                         {
-                            spell.SequenceSpell();
-                            RemoveTimer(spell);
+                            var spell = registry[i];
+
+                            if (spell.Disturbed || !spell.Caster.Alive || spell.Caster.Deleted || spell.Caster.IsDeadBondedPet)
+                            {
+                                registry.RemoveAt(i);
+                            }
+                            else if (spell.CastTime - 50 < Core.TickCount)
+                            {
+                                /*
+                                 * EA seems to use some type of spell variation, of -50 ms to make up for timer resolution.
+                                 * Using the below millisecond dropoff with a 50ms timer resolution seems to be exact
+                                 * to EA.
+                                 */
+
+                                spell.SequenceSpell();
+                                registry.RemoveAt(i);
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Diagnostics.ExceptionLogging.LogException(e, string.Format("Count: {0}; Index: {1}", registry.Count, i));
                         }
                     }
 
