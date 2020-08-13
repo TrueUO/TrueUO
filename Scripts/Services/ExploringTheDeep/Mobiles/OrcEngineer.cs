@@ -127,6 +127,7 @@ namespace Server.Mobiles
 		
 		public override void GenerateLoot()
         {
+			// Kept blank to zero out the loot created by it's base class
         }
 
         public override void Serialize(GenericWriter writer)
