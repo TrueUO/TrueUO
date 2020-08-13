@@ -1,3 +1,4 @@
+using Server.Engines.CityLoyalty;
 using Server.Gumps;
 using Server.Mobiles;
 using Server.Network;
@@ -190,6 +191,10 @@ namespace Server.Menus.Questions
             {
                 if (m_Mobile == m_Sender)
                     m_Mobile.SendLocalizedMessage(1010588); // You choose not to go to any city.
+            }
+            else if (CityTradeSystem.HasTrade(m_Mobile))
+            {
+                m_Mobile.SendLocalizedMessage(1151733); // You cannot do that while carrying a Trade Order.
             }
             else
             {
