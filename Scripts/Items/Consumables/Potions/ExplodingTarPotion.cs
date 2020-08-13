@@ -12,7 +12,7 @@ namespace Server.Items
     [TypeAlias("Server.Items.ExplodingTarPotion")]
     public class ExplodingTarPotion : BasePotion
     {
-        public virtual int Radius { get { return 20; } }
+        public virtual int Radius { get { return 4; } }
 
         public override int LabelNumber => 1095147; // Exploding Tar Potion
         public override bool RequireFreeHand => false;
@@ -89,9 +89,9 @@ namespace Server.Items
 
             // Effects
             Effects.PlaySound(loc, map, 0x207);
-            Geometry.Circle2D(loc, map, Radius, TarEffect, 270, 90);
+            //Geometry.Circle2D(loc, map, Radius, TarEffect, 270, 90);
 
-            Timer.DelayCall(TimeSpan.FromSeconds(1), new TimerStateCallback(CircleEffect2), new object[] { loc, map });
+            //Timer.DelayCall(TimeSpan.FromSeconds(1), new TimerStateCallback(CircleEffect2), new object[] { loc, map });
 
             foreach (Mobile m in SpellHelper.AcquireIndirectTargets(from, loc, map, Radius).OfType<Mobile>())
             {
@@ -131,6 +131,13 @@ namespace Server.Items
 
             _SlowEffects[m] = Timer.DelayCall(TimeSpan.FromMinutes(1), mob => RemoveEffects(mob), m);
 
+            m.FixedParticles(0x36B0, 1, 14, 9915, 1109, 0, EffectLayer.Head);
+
+            Timer.DelayCall(TimeSpan.FromMilliseconds(150), () =>
+            {
+                m.FixedParticles(0x3779, 10, 20, 5002, EffectLayer.Head);
+            });
+
             m.SendLocalizedMessage(1095151);
             m.SendSpeedControl(SpeedControlType.WalkSpeed);
         }
@@ -167,7 +174,7 @@ namespace Server.Items
                 }
             }
 
-            _Delay[m] = Timer.DelayCall(TimeSpan.FromSeconds(60), EndDelay_Callback, m);
+            _Delay[m] = Timer.DelayCall(TimeSpan.FromSeconds(120), EndDelay_Callback, m);
         }
 
         public static int GetDelay(Mobile m)
@@ -231,7 +238,6 @@ namespace Server.Items
                 if (p == null || from.Map == null)
                     return;
 
-                // Add delay
                 AddDelay(from);
 
                 SpellHelper.GetSurfaceTop(ref p);
