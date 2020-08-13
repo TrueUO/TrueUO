@@ -124,6 +124,10 @@ namespace Server.Mobiles
             : base(serial)
         {
         }
+		
+		public override void GenerateLoot()
+        {
+        }
 
         public override void Serialize(GenericWriter writer)
         {
