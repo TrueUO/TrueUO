@@ -167,7 +167,7 @@ namespace Server.Mobiles
 
         public override void CheckReflect(Mobile caster, ref bool reflect)
         {
-            reflect = Wisps.Count(w => !w.Deleted && w.InRange(Location, 20)) > 0;
+            reflect = Wisps.Any(w => !w.Deleted && w.InRange(Location, 20));
         }
 
         public override void OnDrainLife(Mobile victim)
