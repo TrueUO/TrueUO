@@ -61,11 +61,11 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public bool Using { get; set; }
 
-        public List<RecipeScrollDefinition> Recipes;
+        public List<RecipeScrollDefinition> Recipes { get; set; }
 
         public RecipeScrollFilter Filter { get; set; }
 
-        public static RecipeScrollDefinition[] Definitions = new RecipeScrollDefinition[]
+        public RecipeScrollDefinition[] Definitions = new RecipeScrollDefinition[]
         {
             new RecipeScrollDefinition(1, 501, Expansion.ML, RecipeSkillName.Tailoring),
             new RecipeScrollDefinition(2, 502, Expansion.ML, RecipeSkillName.Tailoring),
@@ -218,7 +218,28 @@ namespace Server.Items
             new RecipeScrollDefinition(149, 586, Expansion.ML, RecipeSkillName.Tailoring),
             new RecipeScrollDefinition(150, 587, Expansion.ML, RecipeSkillName.Tailoring),
             new RecipeScrollDefinition(151, 588, Expansion.SA, RecipeSkillName.Tailoring),
-            new RecipeScrollDefinition(152, 463, Expansion.SA, RecipeSkillName.Tinkering)
+            new RecipeScrollDefinition(152, 463, Expansion.SA, RecipeSkillName.Tinkering),
+            new RecipeScrollDefinition(153, 153, Expansion.HS, RecipeSkillName.Carpentry),
+            new RecipeScrollDefinition(154, 154, Expansion.HS, RecipeSkillName.Carpentry),
+            new RecipeScrollDefinition(155, 155, Expansion.HS, RecipeSkillName.Carpentry),
+            new RecipeScrollDefinition(156, 608, Expansion.ML, RecipeSkillName.Cooking),
+            new RecipeScrollDefinition(157, 609, Expansion.ML, RecipeSkillName.Cooking),
+            new RecipeScrollDefinition(158, 610, Expansion.ML, RecipeSkillName.Cooking),
+            new RecipeScrollDefinition(159, 1100, Expansion.HS, RecipeSkillName.Tailoring),
+            new RecipeScrollDefinition(160, 1101, Expansion.HS, RecipeSkillName.Tailoring),
+            new RecipeScrollDefinition(161, 1102, Expansion.HS, RecipeSkillName.Tailoring),
+            new RecipeScrollDefinition(162, 1103, Expansion.HS, RecipeSkillName.Tailoring),
+            new RecipeScrollDefinition(163, 1108, Expansion.HS, RecipeSkillName.Tailoring),
+            new RecipeScrollDefinition(164, 1109, Expansion.HS, RecipeSkillName.Tailoring),
+            new RecipeScrollDefinition(165, 1104, Expansion.HS, RecipeSkillName.Tailoring),
+            new RecipeScrollDefinition(166, 1105, Expansion.HS, RecipeSkillName.Tailoring),
+            new RecipeScrollDefinition(167, 1106, Expansion.HS, RecipeSkillName.Tailoring),
+            new RecipeScrollDefinition(168, 1107, Expansion.HS, RecipeSkillName.Tailoring),
+            new RecipeScrollDefinition(169, 1110, Expansion.HS, RecipeSkillName.Tailoring),
+            new RecipeScrollDefinition(170, 1111, Expansion.HS, RecipeSkillName.Tailoring),
+            new RecipeScrollDefinition(171, 466, Expansion.ML, RecipeSkillName.Tinkering),
+            new RecipeScrollDefinition(172, 467, Expansion.ML, RecipeSkillName.Tinkering),
+            new RecipeScrollDefinition(173, 468, Expansion.ML, RecipeSkillName.Tinkering),
         };
 
         [Constructable]
@@ -333,11 +354,10 @@ namespace Server.Items
 
                 if (Recipes.Any(x => x.RecipeID == recipe.RecipeID))
                 {
-
                     Recipes.ForEach(x =>
                     {
                         if (x.RecipeID == recipe.RecipeID)
-                            x.Amount = x.Amount + 1;
+                            x.Amount += 1;
                     });
 
                     InvalidateProperties();

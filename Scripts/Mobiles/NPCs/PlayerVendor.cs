@@ -231,7 +231,6 @@ namespace Server.Mobiles
         private Hashtable m_SellItems;
         private BaseHouse m_House;
         private string m_ShopName;
-        private Timer m_PayTimer;
 
         public double CommissionPerc => 5.25;
         public virtual bool IsCommission => false;
@@ -258,16 +257,8 @@ namespace Server.Mobiles
 
             if (!IsCommission)
             {
-                TimeSpan delay = PayTimer.GetInterval();
-
-                m_PayTimer = new PayTimer(this, delay);
-                m_PayTimer.Start();
-
-                NextPayTime = DateTime.UtcNow + delay;
+                NextPayTime = DateTime.UtcNow + PayTimer.GetInterval();
             }
-
-            if (PlayerVendors == null)
-                PlayerVendors = new List<PlayerVendor>();
 
             PlayerVendors.Add(this);
         }
@@ -308,7 +299,7 @@ namespace Server.Mobiles
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public DateTime NextPayTime { get; private set; }
+        public DateTime NextPayTime { get; set; }
 
         public PlayerVendorPlaceholder Placeholder { get; set; }
 
@@ -481,18 +472,7 @@ namespace Server.Mobiles
                 VendorSearch = true;
             }
 
-            if (!IsCommission)
-            {
-                TimeSpan delay = NextPayTime - DateTime.UtcNow;
-
-                m_PayTimer = new PayTimer(this, delay > TimeSpan.Zero ? delay : TimeSpan.Zero);
-                m_PayTimer.Start();
-            }
-
             Blessed = false;
-
-            if (PlayerVendors == null)
-                PlayerVendors = new List<PlayerVendor>();
 
             PlayerVendors.Add(this);
         }
@@ -584,6 +564,8 @@ namespace Server.Mobiles
                             {
                                 Banker.Deposit(House.MovingCrate, HoldGold);
                             }
+                            
+                            HoldGold = 0;
                         }
 
                         foreach (Item item in list)
@@ -595,6 +577,7 @@ namespace Server.Mobiles
                     {
                         VendorInventory inventory = new VendorInventory(House, Owner, Name, ShopName);
                         inventory.Gold = HoldGold;
+                        HoldGold = 0;
 
                         foreach (Item item in list)
                         {
@@ -618,6 +601,8 @@ namespace Server.Mobiles
                         {
                             Banker.Deposit(backpack, HoldGold);
                         }
+                        
+                        HoldGold = 0;
                     }
 
                     foreach (Item item in list)
@@ -636,16 +621,16 @@ namespace Server.Mobiles
         {
             base.OnAfterDelete();
 
-            if (m_PayTimer != null)
-            {
-                m_PayTimer.Stop();
-            }
-
             House = null;
 
             if (Placeholder != null)
             {
                 Placeholder.Delete();
+            }
+            
+            if(PlayerVendors.Contains(this))
+            {
+                PlayerVendors.Remove(this);
             }
         }
 
@@ -1300,44 +1285,6 @@ namespace Server.Mobiles
             }
         }
 
-        private class PayTimer : Timer
-        {
-            private readonly PlayerVendor m_Vendor;
-
-            public PayTimer(PlayerVendor vendor, TimeSpan delay)
-                : base(delay, GetInterval())
-            {
-                m_Vendor = vendor;
-
-                Priority = TimerPriority.OneMinute;
-            }
-
-            public static TimeSpan GetInterval()
-            {
-                return TimeSpan.FromDays(1.0);
-            }
-
-            protected override void OnTick()
-            {
-                m_Vendor.NextPayTime = DateTime.UtcNow + Interval;
-
-                int pay;
-                int totalGold;
-
-                pay = m_Vendor.ChargePerRealWorldDay;
-                totalGold = m_Vendor.HoldGold;
-
-                if (pay > totalGold)
-                {
-                    m_Vendor.Destroy(false);
-                }
-                else
-                {                   
-                    m_Vendor.HoldGold -= pay;
-                }
-            }
-        }
-
         [PlayerVendorTarget]
         private class PVBuyTarget : Target
         {
@@ -1559,7 +1506,7 @@ namespace Server.Mobiles
             }
         }
 
-        public static List<PlayerVendor> PlayerVendors { get; set; }
+        public static List<PlayerVendor> PlayerVendors { get; set; } = new List<PlayerVendor>();
     }
 
     public class PlayerVendorPlaceholder : Item
@@ -1642,6 +1589,77 @@ namespace Server.Mobiles
             {
                 m_Placeholder.Delete();
             }
+        }
+    }
+
+    public class PayTimer : Timer
+    {
+        public static void Initialize()
+        {
+            var timer = new PayTimer();
+            timer.Start();
+        }  
+
+        public PayTimer()
+            : base(TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1))
+        {
+        }
+
+        public static TimeSpan GetInterval()
+        {
+            return TimeSpan.FromDays(1.0);
+        }
+
+        protected override void OnTick()
+        {
+            var list = PlayerVendor.PlayerVendors.Where(v => !v.Deleted && !v.IsCommission && v.NextPayTime <= DateTime.UtcNow).ToList();
+
+            for (int i = 0; i < list.Count; i++)
+            {
+                var vendor = list[i];
+                vendor.NextPayTime = DateTime.UtcNow + GetInterval();
+
+                int pay;
+                int totalGold;
+
+                pay = vendor.ChargePerRealWorldDay;
+                totalGold = vendor.HoldGold;
+
+                if (pay > totalGold)
+                {
+                    vendor.Destroy(false);
+                }
+                else
+                {
+                    vendor.HoldGold -= pay;
+                }
+            }
+
+            ColUtility.Free(list);
+
+            var rentals = PlayerVendor.PlayerVendors.OfType<RentedVendor>().Where(rv => !rv.Deleted && rv.RentalExpireTime <= DateTime.UtcNow).ToList();
+
+            for (int i = 0; i < rentals.Count; i++)
+            {
+                var vendor = rentals[i];
+                int renewalPrice = vendor.RenewalPrice;
+
+                if (vendor.Renew && vendor.HoldGold >= renewalPrice)
+                {
+                    vendor.HoldGold -= renewalPrice;
+                    vendor.RentalGold += renewalPrice;
+
+                    vendor.RentalPrice = renewalPrice;
+
+                    vendor.RentalExpireTime = DateTime.UtcNow + vendor.RentalDuration.Duration;
+                }
+                else
+                {
+                    vendor.Destroy(false);
+                }
+            }
+
+            ColUtility.Free(rentals);
         }
     }
 }

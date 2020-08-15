@@ -1909,10 +1909,7 @@ namespace Server
 
                 if (m_Owner.CanRegenStam)
                 {
-                    if (!m_Owner.Player)
-                        m_Owner.Stam += (int)(m_Owner.StamMax * 0.01);
-                    else
-                        m_Owner.Stam++;
+                    m_Owner.Stam++;
                 }
 
                 Delay = Interval = GetStamRegenRate(m_Owner);
@@ -1954,10 +1951,7 @@ namespace Server
 
                 if (m_Owner.CanRegenMana) // m_Owner.Alive )
                 {
-                    if (!m_Owner.Player)
-                        m_Owner.Mana += (int)(m_Owner.ManaMax * 0.01);
-                    else
-                        m_Owner.Mana++;
+                    m_Owner.Mana++;
                 }
 
                 Delay = Interval = GetManaRegenRate(m_Owner);
@@ -4397,9 +4391,7 @@ namespace Server
             }
         }
 
-        private static int m_ActionDelay = 500;
-
-        public static int ActionDelay { get { return m_ActionDelay; } set { m_ActionDelay = value; } }
+        public static int ActionDelay { get; set; } = 750;
 
         public virtual void Lift(Item item, int amount, out bool rejected, out LRReason reject)
         {
@@ -4562,7 +4554,7 @@ namespace Server
                                 from.Send(new PlaySound(liftSound, from));
                             }
 
-                            from.NextActionTime = Core.TickCount + m_ActionDelay;
+                            from.NextActionTime = Core.TickCount + ActionDelay;
 
                             if (fixMap != null && shouldFix)
                             {

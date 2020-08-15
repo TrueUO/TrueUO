@@ -16,36 +16,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Server
-{
-    public class DefensiveSpell
-    {
-        public static void Nullify(Mobile from)
-        {
-            if (!from.CanBeginAction(typeof(DefensiveSpell)))
-                new InternalTimer(from).Start();
-        }
-
-        private class InternalTimer : Timer
-        {
-            private readonly Mobile m_Mobile;
-
-            public InternalTimer(Mobile m)
-                : base(TimeSpan.FromMinutes(1.0))
-            {
-                m_Mobile = m;
-
-                Priority = TimerPriority.OneSecond;
-            }
-
-            protected override void OnTick()
-            {
-                m_Mobile.EndAction(typeof(DefensiveSpell));
-            }
-        }
-    }
-}
-
 namespace Server.Spells
 {
     public enum TravelCheckType
@@ -65,38 +35,49 @@ namespace Server.Spells
         private static readonly SkillName[] _Schools =
         {
             SkillName.Magery,
+            SkillName.Mysticism,
+            SkillName.Necromancy,
             SkillName.AnimalTaming,
             SkillName.Musicianship,
-            SkillName.Mysticism,
             SkillName.Spellweaving,
             SkillName.Chivalry,
-            SkillName.Necromancy,
-            SkillName.Bushido,
-            SkillName.Ninjitsu
-        };
-
-        private static readonly SkillName[] _TOLSchools =
-        {
-            SkillName.Magery,
-            SkillName.AnimalTaming,
-            SkillName.Musicianship,
-            SkillName.Mysticism,
-            SkillName.Spellweaving,
-            SkillName.Chivalry,
-            SkillName.Necromancy,
             SkillName.Bushido,
             SkillName.Ninjitsu,
-            SkillName.Parry
+            SkillName.Parry,
+            SkillName.EvalInt,
+            SkillName.SpiritSpeak,
+            SkillName.Focus,
+            SkillName.Imbuing
         };
+
+        private static bool IsExempt(SkillName main, SkillName secondary)
+        {
+            switch (main)
+            {
+                default: return false;
+                case SkillName.Magery: return secondary == SkillName.EvalInt;
+                case SkillName.Necromancy: return secondary == SkillName.SpiritSpeak;
+                case SkillName.Mysticism: return secondary == SkillName.Focus || secondary == SkillName.Imbuing;
+            }
+        }
 
         public static bool HasSpellFocus(Mobile m, SkillName focus)
         {
-            SkillName[] list = _TOLSchools;
+            bool foundExempt = false;
 
-            foreach (SkillName skill in list)
+            foreach (SkillName skill in _Schools)
             {
                 if (skill != focus && m.Skills[skill].Value >= 30.0)
-                    return false;
+                {
+                    if (!foundExempt && IsExempt(focus, skill))
+                    {
+                        foundExempt = true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+                }
             }
 
             return true;
@@ -106,7 +87,7 @@ namespace Server.Spells
         {
             if (HasSpellFocus(m, castskill))
             {
-                return 30;
+                return 25;
             }
             else
             {
@@ -497,84 +478,60 @@ namespace Server.Spells
                 return true;
             }
 
-            if (to.Hidden && to.AccessLevel > from.AccessLevel)
+            if (to.Hidden && to.AccessLevel > from.AccessLevel || Server.Engines.ArenaSystem.PVPArenaSystem.IsFriendly(from, to))
             {
                 return false;
             }
 
-            if (Server.Engines.ArenaSystem.PVPArenaSystem.IsFriendly(from, to))
+            CheckResponsible(ref from);
+            CheckResponsible(ref to);
+
+            var noto = Notoriety.Compute(from, to);
+
+            if (noto == Notoriety.Enemy)
+            {
+                return true;
+            }
+
+            if (IsGuildAllyOrParty(from, to))
             {
                 return false;
             }
 
-            if (from is BaseCreature && ((BaseCreature)from).GetMaster() != null)
+            var toCreature = to as BaseCreature;
+
+            if (toCreature != null && (toCreature.Controlled || toCreature.Summoned))
             {
-                from = ((BaseCreature)from).GetMaster();
-            }
+                var master = toCreature.GetMaster();
 
-            if (to is BaseCreature && ((BaseCreature)to).GetMaster() != null)
-            {
-                to = ((BaseCreature)to).GetMaster();
-            }
-
-            Guild fromGuild = GetGuildFor(from);
-            Guild toGuild = GetGuildFor(to);
-
-            if (fromGuild != null && toGuild != null && (fromGuild == toGuild || fromGuild.IsAlly(toGuild)))
-            {
-                return false;
-            }
-
-            Party p = Party.Get(from);
-
-            if (p != null && p.Contains(to))
-            {
-                return false;
-            }
-
-            if (to is BaseCreature)
-            {
-                BaseCreature c = (BaseCreature)to;
-
-                if (c.Controlled || c.Summoned)
+                if (master == from || IsParty(master, from))
                 {
-                    if (c.ControlMaster == from || c.SummonMaster == from)
-                    {
-                        return false;
-                    }
-
-                    if (p != null && (p.Contains(c.ControlMaster) || p.Contains(c.SummonMaster)))
-                    {
-                        return false;
-                    }
+                    return false;
                 }
             }
 
-            if (from is BaseCreature)
-            {
-                BaseCreature c = (BaseCreature)from;
+            var fromCreature = from as BaseCreature;
 
-                if (c.Controlled || c.Summoned)
+            if (fromCreature != null)
+            {
+                if (fromCreature.Controlled || fromCreature.Summoned)
                 {
-                    if (c.ControlMaster == to || c.SummonMaster == to)
+                    var master = fromCreature.GetMaster();
+
+                    if (master == to)
                     {
                         return false;
                     }
 
-                    p = Party.Get(to);
-
-                    if (p != null && (p.Contains(c.ControlMaster) || p.Contains(c.SummonMaster)))
+                    if (IsParty(master, to))
                     {
                         return false;
                     }
                 }
                 else
                 {
-                    if (to.Player)
-                    {
-                        return true;
-                    }
-                    if (to is BaseCreature && (((BaseCreature)to).Controlled || ((BaseCreature)to).Summoned) && ((BaseCreature)to).GetMaster() is PlayerMobile)
+                    if (to.Player ||
+                        (toCreature != null && (toCreature.Controlled || toCreature.Summoned) && toCreature.GetMaster() is PlayerMobile))
                     {
                         return true;
                     }
@@ -582,35 +539,69 @@ namespace Server.Spells
             }
 
             // Non-enemy monsters will no longer flag area spells on each other
-            if (from is BaseCreature && to is BaseCreature)
+            if (fromCreature != null && toCreature != null)
             {
-                BaseCreature fromBC = (BaseCreature)from;
-                BaseCreature toBC = (BaseCreature)to;
+                if (fromCreature.GetMaster() is BaseCreature)
+                {
+                    fromCreature = fromCreature.GetMaster() as BaseCreature;
+                }
 
-                if (fromBC.GetMaster() is BaseCreature)
-                    fromBC = fromBC.GetMaster() as BaseCreature;
+                if (toCreature.GetMaster() is BaseCreature)
+                {
+                    toCreature = toCreature.GetMaster() as BaseCreature;
+                }
 
-                if (toBC.GetMaster() is BaseCreature)
-                    toBC = toBC.GetMaster() as BaseCreature;
-
-                if (toBC.IsEnemy(fromBC))   //Natural Enemies
+                if (toCreature.IsEnemy(fromCreature))   //Natural Enemies
                 {
                     return true;
                 }
 
                 //All involved are monsters- no damage. If falls through this statement, normal noto rules apply
-                if (!toBC.Controlled && !toBC.Summoned && !fromBC.Controlled && !fromBC.Summoned) //All involved are monsters- no damage
+                if (!toCreature.Controlled && !toCreature.Summoned && !fromCreature.Controlled && !fromCreature.Summoned) //All involved are monsters- no damage
                 {
                     return false;
                 }
             }
 
-            if (to is BaseCreature && !((BaseCreature)to).Controlled && ((BaseCreature)to).InitialInnocent)
+            if (toCreature != null && !toCreature.Controlled && toCreature.InitialInnocent)
             {
                 return true;
             }
 
-            return (Notoriety.Compute(from, to) != Notoriety.Innocent || from.Murderer);
+            return (noto != Notoriety.Innocent || from.Murderer);
+        }
+
+        public static bool CheckResponsible(ref Mobile m)
+        {
+            var bc = m as BaseCreature;
+
+            if (bc != null && bc.GetMaster() != null)
+            {
+                m = bc.GetMaster();
+                return true;
+            }
+
+            return false;
+        }
+
+        public static bool IsGuildAllyOrParty(Mobile from, Mobile to)
+        {
+            return IsGuild(from, to) || IsParty(from, to);
+        }
+
+        public static bool IsGuild(Mobile from, Mobile to)
+        {
+            Guild fromGuild = GetGuildFor(from);
+            Guild toGuild = GetGuildFor(to);
+
+            return fromGuild != null && toGuild != null && (fromGuild == toGuild || fromGuild.IsAlly(toGuild));
+        }
+
+        public static bool IsParty(Mobile from, Mobile to)
+        {
+            Party p = Party.Get(from);
+
+            return p != null && p.Contains(to);
         }
 
         public static IEnumerable<IDamageable> AcquireIndirectTargets(Mobile caster, IPoint3D p, Map map, int range)
@@ -639,7 +630,7 @@ namespace Server.Spells
                     continue;
                 }
 
-                if (id is Mobile && !SpellHelper.ValidIndirectTarget(caster, (Mobile)id))
+                if (id is Mobile && !ValidIndirectTarget(caster, (Mobile)id))
                 {
                     continue;
                 }
@@ -1151,12 +1142,12 @@ namespace Server.Spells
         }
 
         //magic reflection
-        public static bool CheckReflect(int circle, Mobile caster, ref Mobile target)
+        public static bool CheckReflect(Spell spell, Mobile caster, ref Mobile target)
         {
             IDamageable c = caster as IDamageable;
             IDamageable t = target as IDamageable;
 
-            bool reflect = CheckReflect(circle, ref c, ref t);
+            bool reflect = CheckReflect(spell, ref c, ref t);
 
             if (c is Mobile)
                 caster = (Mobile)c;
@@ -1167,11 +1158,11 @@ namespace Server.Spells
             return reflect;
         }
 
-        public static bool CheckReflect(int circle, IDamageable caster, ref Mobile target)
+        public static bool CheckReflect(Spell spell, IDamageable caster, ref Mobile target)
         {
             IDamageable t = target as IDamageable;
 
-            bool reflect = CheckReflect(circle, ref caster, ref t);
+            bool reflect = CheckReflect(spell, ref caster, ref t);
 
             if (t is Mobile)
                 caster = (Mobile)t;
@@ -1179,11 +1170,11 @@ namespace Server.Spells
             return reflect;
         }
 
-        public static bool CheckReflect(int circle, Mobile caster, ref IDamageable target)
+        public static bool CheckReflect(Spell spell, Mobile caster, ref IDamageable target)
         {
             IDamageable c = caster as IDamageable;
 
-            bool reflect = CheckReflect(circle, ref c, ref target);
+            bool reflect = CheckReflect(spell, ref c, ref target);
 
             if (c is Mobile)
                 caster = (Mobile)c;
@@ -1191,11 +1182,11 @@ namespace Server.Spells
             return reflect;
         }
 
-        public static bool CheckReflect(int circle, ref Mobile caster, ref IDamageable target, DamageType type = DamageType.Spell)
+        public static bool CheckReflect(Spell spell, ref Mobile caster, ref IDamageable target)
         {
             IDamageable c = caster as IDamageable;
 
-            bool reflect = CheckReflect(circle, ref c, ref target);
+            bool reflect = CheckReflect(spell, ref c, ref target);
 
             if (c is Mobile)
                 caster = (Mobile)c;
@@ -1203,19 +1194,29 @@ namespace Server.Spells
             return reflect;
         }
 
-        public static bool CheckReflect(int circle, ref Mobile caster, ref Mobile target)
+        public static bool CheckReflect(Spell spell, ref Mobile caster, ref Mobile target)
         {
-            return CheckReflect(circle, caster, ref target);
+            return CheckReflect(spell, caster, ref target);
         }
 
-        public static bool CheckReflect(int circle, ref IDamageable source, ref IDamageable defender, DamageType type = DamageType.Spell)
+        public static bool CheckReflect(Spell spell, ref IDamageable source, ref IDamageable defender)
         {
             bool reflect = false;
-            Mobile target = defender as Mobile;
 
-            if (type >= DamageType.Spell)
+            if (spell.SpellDamageType == DamageType.Spell)
             {
-                if (target != null && defender is Mobile)
+                if (defender is DamageableItem && ((DamageableItem)defender).CheckReflect(spell, source))
+                {
+                    IDamageable temp = source;
+                    source = defender;
+                    defender = temp;
+                    return true;
+                }
+
+                var caster = source as Mobile;
+                var target = defender as Mobile;
+
+                if (caster != null && target != null)
                 {
                     Clone clone = MirrorImage.GetDeflect(target, (Mobile)defender);
 
@@ -1224,62 +1225,39 @@ namespace Server.Spells
                         defender = clone;
                         return false;
                     }
-                }
-                else if (defender is DamageableItem && ((DamageableItem)defender).CheckReflect(circle, source))
-                {
-                    IDamageable temp = source;
-                    source = defender;
-                    defender = temp;
-                    return true;
-                }
-            }
 
-            Mobile caster = source as Mobile;
+                    var context = MagicReflectSpell.GetContext(target);
 
-            if (target == null || caster == null)
-                return false;
+                    if (context != null)
+                    {
+                        reflect = MagicReflectSpell.CheckReflectDamage(target, spell);
 
-            if (target.MagicDamageAbsorb > 0)
-            {
-                ++circle;
+                        if (reflect)
+                        {
+                            IDamageable temp = source;
+                            source = defender;
+                            defender = temp;
+                        }
+                    }
 
-                target.MagicDamageAbsorb -= circle;
+                    if (!reflect)
+                    {
+                        var bc = defender as BaseCreature;
 
-                // This order isn't very intuitive, but you have to nullify reflect before target gets switched
+                        if (bc != null)
+                        {
+                            ((BaseCreature)target).CheckReflect(caster, ref reflect);
 
-                reflect = (target.MagicDamageAbsorb >= 0);
+                            if (reflect)
+                            {
+                                target.FixedEffect(0x37B9, 10, 5);
 
-                if (target is BaseCreature)
-                    ((BaseCreature)target).CheckReflect(caster, ref reflect);
-
-                if (target.MagicDamageAbsorb <= 0)
-                {
-                    target.MagicDamageAbsorb = 0;
-                    DefensiveSpell.Nullify(target);
-                }
-
-                if (reflect)
-                {
-                    target.FixedEffect(0x37B9, 10, 5);
-
-                    Mobile temp = caster;
-                    source = target;
-                    target = temp;
-                }
-            }
-            else if (target is BaseCreature)
-            {
-                reflect = false;
-
-                ((BaseCreature)target).CheckReflect(caster, ref reflect);
-
-                if (reflect)
-                {
-                    target.FixedEffect(0x37B9, 10, 5);
-
-                    IDamageable temp = source;
-                    source = defender;
-                    defender = temp;
+                                IDamageable temp = source;
+                                source = defender;
+                                defender = temp;
+                            }
+                        }
+                    }
                 }
             }
 

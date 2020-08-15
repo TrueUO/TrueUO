@@ -120,22 +120,22 @@ namespace Server.Engines.Shadowguard
         Pride
     }
 
-    public class ShadowguardApple : BaseDecayingItem
+    public class ShadowguardApple : Apple
     {
         [CommandProperty(AccessLevel.GameMaster)]
-        public ShadowguardCypress Tree { get; set; }
+        public ShadowguardCypress Tree { get; private set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public OrchardEncounter Encounter { get; set; }
 
-        public bool _Thrown;
+        private bool _Thrown;
 
-        public override int Lifespan => 30;
-
-        public ShadowguardApple(OrchardEncounter encounter, ShadowguardCypress tree) : base(0x9D0)
+        public ShadowguardApple(OrchardEncounter encounter, ShadowguardCypress tree)
         {
             Encounter = encounter;
             Tree = tree;
+
+            AttachSocket(new DecayingItemSocket(30, true));
         }
 
         public override void AddNameProperty(ObjectPropertyList list)
@@ -285,9 +285,7 @@ namespace Server.Engines.Shadowguard
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(0);
-
-            writer.Write(Tree);
+            writer.Write(1);
         }
 
         public override void Deserialize(GenericReader reader)
@@ -295,7 +293,10 @@ namespace Server.Engines.Shadowguard
             base.Deserialize(reader);
             int version = reader.ReadInt();
 
-            Tree = reader.ReadItem() as ShadowguardCypress;
+            if (version == 0)
+            {
+                reader.ReadItem();
+            }
         }
     }
 
@@ -462,12 +463,19 @@ namespace Server.Engines.Shadowguard
             set
             {
                 _Purified = value;
+
+                if (value)
+                {
+                    Hue = 0;
+                }
+
                 InvalidateProperties();
             }
         }
 
         [Constructable]
-        public Phylactery() : base(17076)
+        public Phylactery()
+            : base(0x4686)
         {
             Hue = 2075;
         }

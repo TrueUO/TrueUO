@@ -155,7 +155,6 @@ namespace Server.Mobiles
         {
         }
 
-        [Constructable]
         public InfernalOoze(Mobile owner, bool corrosive, int damage = 40)
             : base(0x122A)
         {

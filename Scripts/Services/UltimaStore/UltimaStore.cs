@@ -187,6 +187,7 @@ namespace Server.Engines.UOStore
 
             // decorations
             cat = StoreCategory.Decorations;
+            Register<DecorativeGardenSculpture>(1159464, 1159465, 0xA565, 0, 0, 400, cat);
             Register<WineRack>(1159462, 1159463, 0xA568, 0, 0, 400, cat);
             Register<DecorativeDungeonSet>(1159468, 1159475, 0, 0x9D40, 0, 1200, cat);
             Register<MetalLadderDeed>(1159478, 1159479, 0xA55C, 0, 0, 400, cat);
@@ -303,6 +304,12 @@ namespace Server.Engines.UOStore
 
             // misc
             cat = StoreCategory.Misc;
+
+            if (Server.AccountVault.SystemSettings.UseTokens)
+            {
+                Register<VaultToken>(1158315, 1158316, 0x9FE8, 0, 0, 300, cat);
+            }
+
             Register<SoulstoneToken>(1158404, 1158405, 0x2A93, 0, 2598, 1000, cat, ConstructSoulstone);
             Register<BagOfBulkOrderCovers>(1071116, 1157603, 0, 0x9CC6, 0, 200, cat, ConstructBOBCoverOne);
 
@@ -348,6 +355,11 @@ namespace Server.Engines.UOStore
             Register(new StoreEntry(itemType, name, tooltip, itemID, gumpID, hue, cost, cat, constructor));
         }
 
+        public static StoreEntry GetEntry(Type t)
+        {
+            return Entries.FirstOrDefault(e => e.ItemType == t);
+        }
+
         public static void Register(StoreEntry entry)
         {
             Entries.Add(entry);
@@ -363,7 +375,7 @@ namespace Server.Engines.UOStore
             OpenStore(state.Mobile as PlayerMobile);
         }
 
-        public static void OpenStore(PlayerMobile user)
+        public static void OpenStore(PlayerMobile user, StoreEntry forcedEntry = null)
         {
             if (user == null || user.NetState == null)
             {
@@ -394,7 +406,7 @@ namespace Server.Engines.UOStore
 
             if (!user.HasGump(typeof(UltimaStoreGump)))
             {
-                BaseGump.SendGump(new UltimaStoreGump(user));
+                BaseGump.SendGump(new UltimaStoreGump(user, forcedEntry));
             }
         }
 
@@ -671,8 +683,13 @@ namespace Server.Engines.UOStore
             return str ?? String.Empty;
         }
 
-        public static List<StoreEntry> GetList(StoreCategory cat)
+        public static List<StoreEntry> GetList(StoreCategory cat, StoreEntry forcedEntry = null)
         {
+            if (forcedEntry != null)
+            {
+                return new List<StoreEntry>() { forcedEntry };
+            }
+
             return Entries.Where(e => e.Category == cat).ToList();
         }
 

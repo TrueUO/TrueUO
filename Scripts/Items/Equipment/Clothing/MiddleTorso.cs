@@ -177,9 +177,6 @@ namespace Server.Items
             base.Deserialize(reader);
 
             int version = reader.ReadInt();
-
-            if (Weight == 3.0)
-                Weight = 6.0;
         }
     }
 
@@ -245,9 +242,6 @@ namespace Server.Items
             base.Serialize(writer);
 
             writer.Write(0); // version
-
-            if (Weight == 2.0)
-                Weight = 1.0;
         }
 
         public override void Deserialize(GenericReader reader)
@@ -351,8 +345,6 @@ namespace Server.Items
         {
         }
 
-        public override Race RequiredRace => Race.Gargoyle;
-        public override bool CanBeWornByGargoyles => true;
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);

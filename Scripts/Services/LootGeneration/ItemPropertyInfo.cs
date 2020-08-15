@@ -280,11 +280,11 @@ namespace Server.Items
             Register(11, new ItemPropertyInfo(AosAttribute.BonusMana, 1075631, 110, typeof(EnchantedEssence), typeof(Sapphire), typeof(LuminescentFungi), 1, 1, 8, 1112002,
                 new PropInfo(1, 0, 5), new PropInfo(2, 0, 5), new PropInfo(3, 8, 8, new int[] { 9, 10 }), new PropInfo(4, 0, 5), new PropInfo(5, 8, 8, new int[] { 9, 10 }), new PropInfo(6, 0, 5)));
 
-            Register(12, new ItemPropertyInfo(AosAttribute.WeaponDamage, 1079399, 100, typeof(EnchantedEssence), typeof(Citrine), typeof(CrystalShards), 5, 1, 50, 1112005,
+            Register(12, new ItemPropertyInfo(AosAttribute.WeaponDamage, 1079399, 100, typeof(EnchantedEssence), typeof(Citrine), typeof(CrystalShards), 1, 1, 50, 1112005,
                 new PropInfo(1, 50, 50, new int[] { 55, 60, 65, 70 }), new PropInfo(2, 50, 50, new int[] { 55, 60, 65, 70 }), new PropInfo(4, 0, 35), new PropInfo(6, 25, 25, new int[] { 30, 35 })));
 
             Register(13, new ItemPropertyInfo(AosAttribute.WeaponSpeed, 1075629, 110, typeof(RelicFragment), typeof(Tourmaline), typeof(EssenceControl), 5, 5, 30, 1112045,
-                new PropInfo(1, 30, 30, new int[] { 35, 40 }), new PropInfo(4, 0, 5, new int[] { 10 }), new PropInfo(6, 0, 5, new int[] { 10 })));
+                new PropInfo(1, 30, 30, new int[] { 35, 40 }), new PropInfo(2, 30, 30, new int[] { 35, 40 }), new PropInfo(4, 0, 5, new int[] { 10 }), new PropInfo(6, 0, 5, new int[] { 10 })));
 
             Register(14, new ItemPropertyInfo(AosAttribute.SpellDamage, 1075628, 100, typeof(EnchantedEssence), typeof(Emerald), typeof(CrystalShards), 1, 1, 12, 1112041,
                 new PropInfo(6, 12, 12, new int[] { 14, 16, 18 })));
@@ -723,8 +723,8 @@ namespace Server.Items
             {
                 PropInfo info = Table[id].GetItemTypeInfo(GetItemType(item));
 
-                // First, we try to get the max intensity from the PropInfo. If null or we're getting an intensity for imbuing purpopses, we go to the default MaxIntenity
-                if (info == null || (imbuing && !_ForceUseNewTable.Any(i => i == id)))
+                // First, we try to get the max intensity from the PropInfo. If null or we're getting an intensity for special imbuing purpopses, we go to the default MaxIntenity
+                if (info == null || (imbuing && !ForcesNewLootMax(item, id)))
                 {
                     if (item is BaseWeapon && (id == 25 || id == 27))
                     {
@@ -745,6 +745,23 @@ namespace Server.Items
             }
 
             return 0;
+        }
+
+        /// <summary>
+        /// We may want to force the new loot tables for items such as ranged weapons that have a different max than melee, think hci/dci (15/25).
+        /// This will be bypassed for special items, such as clockwork leggings
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        public static bool ForcesNewLootMax(Item item, int id)
+        {
+            if (Server.SkillHandlers.Imbuing.IsSpecialImbuable(item.GetType()))
+            {
+                return false;
+            }
+
+            return _ForceUseNewTable.Any(i => i == id);
         }
 
         public static int[] GetMaxOvercappedRange(Item item, int id)
@@ -830,6 +847,11 @@ namespace Server.Items
                     if (id == 21)
                     {
                         return 10;
+                    }
+
+                    if (id == 12)
+                    {
+                        return 5;
                     }
                 }
 

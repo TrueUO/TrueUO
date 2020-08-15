@@ -256,8 +256,9 @@ namespace Server.Engines.Quests
 
                         if (slay != null)
                         {
-                            AddHtmlLocalized(98, offset, 30, 16, 1072204, 0x15F90, false, false); // Slay	
-                            AddLabel(133, offset, 0x481, slay.MaxProgress + " " + slay.Name); // %count% + %name%
+                            AddHtmlLocalized(98, offset, 30, 16, 1072204, 0x15F90, false, false); // Slay
+                            AddLabel(133, offset, 0x481, slay.MaxProgress.ToString()); // Count
+                            AddLabel(163, offset, 0x481, slay.Name); // Name 
 
                             offset += 16;
 
@@ -270,36 +271,46 @@ namespace Server.Engines.Quests
 
                                     offset += 16;
                                 }
-                                continue;
                             }
 
-                            if (slay.Region != null)
+                            if (slay.Region != null || slay.Label > 0)
                             {
                                 AddHtmlLocalized(103, offset, 312, 20, 1018327, 0x15F90, false, false); // Location
-                                AddHtmlObject(223, offset, 312, 20, slay.Region, White, false, false); // %location%
+
+                                if (slay.Label > 0)
+                                {
+                                    AddHtmlLocalized(223, offset, 312, 20, slay.Label, 0xFFFFFF, false, false);
+                                }
+                                else
+                                {
+                                    AddHtmlObject(223, offset, 312, 20, slay.Region, White, false, false); // %location%
+                                }
 
                                 offset += 16;
                             }
 
-                            AddHtmlLocalized(103, offset, 120, 16, 3000087, 0x15F90, false, false); // Total			
-                            AddLabel(223, offset, 0x481, slay.CurProgress.ToString());  // %current progress%
-
-                            offset += 16;
-
-                            if (ReturnTo() != null)
+                            if (!m_Offer)
                             {
-                                AddHtmlLocalized(103, offset, 120, 16, 1074782, 0x15F90, false, false); // Return to	
-                                AddLabel(223, offset, 0x481, ReturnTo());  // %return to%		
+                                AddHtmlLocalized(103, offset, 120, 16, 3000087, 0x15F90, false, false); // Total			
+                                AddLabel(223, offset, 0x481, slay.CurProgress.ToString());  // %current progress%
 
                                 offset += 16;
-                            }
 
-                            if (slay.Timed)
-                            {
-                                AddHtmlLocalized(103, offset, 120, 16, 1062379, 0x15F90, false, false); // Est. time remaining:
-                                AddLabel(223, offset, 0x481, FormatSeconds(slay.Seconds)); // %est. time remaining%
+                                if (ReturnTo() != null)
+                                {
+                                    AddHtmlLocalized(103, offset, 120, 16, 1074782, 0x15F90, false, false); // Return to	
+                                    AddLabel(223, offset, 0x481, ReturnTo());  // %return to%		
 
-                                offset += 16;
+                                    offset += 16;
+                                }
+
+                                if (slay.Timed)
+                                {
+                                    AddHtmlLocalized(103, offset, 120, 16, 1062379, 0x15F90, false, false); // Est. time remaining:
+                                    AddLabel(223, offset, 0x481, FormatSeconds(slay.Seconds)); // %est. time remaining%
+
+                                    offset += 16;
+                                }
                             }
                         }
                     }

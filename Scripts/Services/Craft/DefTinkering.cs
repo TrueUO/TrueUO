@@ -33,7 +33,11 @@ namespace Server.Engines.Craft
         KrampusMinionEarrings = 463,
         EnchantedPicnicBasket = 464,
 
-        Telescope = 465
+        Telescope = 465,
+
+        BarbedWhip = 466,
+        SpikedWhip = 467,
+        BladedWhip = 468
     }
 
     public class DefTinkering : CraftSystem
@@ -485,6 +489,18 @@ namespace Server.Engines.Craft
             index = AddCraft(typeof(WeatheredBronzeArcherDeed), 1044050, 1156884, 85.0, 135.0, typeof(IronIngot), 1038039, 200, 1044253);
             AddRecipe(index, (int)TinkerRecipes.WeatheredBronzeArcherSculpture);
 
+            index = AddCraft(typeof(BarbedWhip), 1044050, 1159281, 75.0, 125.0, typeof(IronIngot), 1044036, 5, 1044037);
+            AddRes(index, typeof(Leather), 1044462, 10, 1044463);
+            AddRecipe(index, (int)TinkerRecipes.BarbedWhip);
+
+            index = AddCraft(typeof(SpikedWhip), 1044050, 1159282, 75.0, 125.0, typeof(IronIngot), 1044036, 5, 1044037);
+            AddRes(index, typeof(Leather), 1044462, 10, 1044463);
+            AddRecipe(index, (int)TinkerRecipes.SpikedWhip);
+
+            index = AddCraft(typeof(BladedWhip), 1044050, 1159283, 75.0, 125.0, typeof(IronIngot), 1044036, 5, 1044037);
+            AddRes(index, typeof(Leather), 1044462, 10, 1044463);
+            AddRecipe(index, (int)TinkerRecipes.BladedWhip);
+
             #endregion
 
             #region Assemblies
@@ -681,15 +697,15 @@ namespace Server.Engines.Craft
 
             // Add every material you want the player to be able to choose from
             // This will override the overridable material
-            AddSubRes(typeof(IronIngot), 1044022, 00.0, 1044036, 1044267);
-            AddSubRes(typeof(DullCopperIngot), 1044023, 65.0, 1044036, 1044268);
-            AddSubRes(typeof(ShadowIronIngot), 1044024, 70.0, 1044036, 1044268);
-            AddSubRes(typeof(CopperIngot), 1044025, 75.0, 1044036, 1044268);
-            AddSubRes(typeof(BronzeIngot), 1044026, 80.0, 1044036, 1044268);
-            AddSubRes(typeof(GoldIngot), 1044027, 85.0, 1044036, 1044268);
-            AddSubRes(typeof(AgapiteIngot), 1044028, 90.0, 1044036, 1044268);
-            AddSubRes(typeof(VeriteIngot), 1044029, 95.0, 1044036, 1044268);
-            AddSubRes(typeof(ValoriteIngot), 1044030, 99.0, 1044036, 1044268);
+            AddSubRes(typeof(IronIngot), 1044022, 00.0, 1044036, 1044269);
+            AddSubRes(typeof(DullCopperIngot), 1044023, 65.0, 1044036, 1044269);
+            AddSubRes(typeof(ShadowIronIngot), 1044024, 70.0, 1044036, 1044269);
+            AddSubRes(typeof(CopperIngot), 1044025, 75.0, 1044036, 1044269);
+            AddSubRes(typeof(BronzeIngot), 1044026, 80.0, 1044036, 1044269);
+            AddSubRes(typeof(GoldIngot), 1044027, 85.0, 1044036, 1044269);
+            AddSubRes(typeof(AgapiteIngot), 1044028, 90.0, 1044036, 1044269);
+            AddSubRes(typeof(VeriteIngot), 1044029, 95.0, 1044036, 1044269);
+            AddSubRes(typeof(ValoriteIngot), 1044030, 99.0, 1044036, 1044269);
 
             MarkOption = true;
             Repair = true;

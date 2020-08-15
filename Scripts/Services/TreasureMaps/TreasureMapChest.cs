@@ -591,37 +591,41 @@ namespace Server.Items
         {
             ExecuteTrap(from);
 
-            if (!AncientGuardians.Any(g => g.Alive))
+            if (!AncientGuardians.Any(g => g != null && g.Alive))
             {
                 BaseCreature spawn = TreasureMap.Spawn(Level, GetWorldLocation(), Map, from, false);
-                spawn.NoLootOnDeath = true;
 
-                spawn.Name = "Ancient Chest Guardian";
-                spawn.Title = "(Guardian)";
-                spawn.Tamable = false;
-
-                if (spawn.HitsMaxSeed >= 0)
-                    spawn.HitsMaxSeed = (int)(spawn.HitsMaxSeed * Paragon.HitsBuff);
-
-                spawn.RawStr = (int)(spawn.RawStr * Paragon.StrBuff);
-                spawn.RawInt = (int)(spawn.RawInt * Paragon.IntBuff);
-                spawn.RawDex = (int)(spawn.RawDex * Paragon.DexBuff);
-
-                spawn.Hits = spawn.HitsMax;
-                spawn.Mana = spawn.ManaMax;
-                spawn.Stam = spawn.StamMax;
-
-                spawn.Hue = 1960;
-
-                for (int i = 0; i < spawn.Skills.Length; i++)
+                if (spawn != null)
                 {
-                    Skill skill = spawn.Skills[i];
+                    spawn.NoLootOnDeath = true;
 
-                    if (skill.Base > 0.0)
-                        skill.Base *= Paragon.SkillsBuff;
+                    spawn.Name = "Ancient Chest Guardian";
+                    spawn.Title = "(Guardian)";
+                    spawn.Tamable = false;
+
+                    if (spawn.HitsMaxSeed >= 0)
+                        spawn.HitsMaxSeed = (int)(spawn.HitsMaxSeed * Paragon.HitsBuff);
+
+                    spawn.RawStr = (int)(spawn.RawStr * Paragon.StrBuff);
+                    spawn.RawInt = (int)(spawn.RawInt * Paragon.IntBuff);
+                    spawn.RawDex = (int)(spawn.RawDex * Paragon.DexBuff);
+
+                    spawn.Hits = spawn.HitsMax;
+                    spawn.Mana = spawn.ManaMax;
+                    spawn.Stam = spawn.StamMax;
+
+                    spawn.Hue = 1960;
+
+                    for (int i = 0; i < spawn.Skills.Length; i++)
+                    {
+                        Skill skill = spawn.Skills[i];
+
+                        if (skill.Base > 0.0)
+                            skill.Base *= Paragon.SkillsBuff;
+                    }
+
+                    AncientGuardians.Add(spawn);
                 }
-
-                AncientGuardians.Add(spawn);
             }
         }
 

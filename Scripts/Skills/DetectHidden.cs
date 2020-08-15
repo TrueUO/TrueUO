@@ -3,6 +3,8 @@ using Server.Mobiles;
 using Server.Multis;
 using Server.Network;
 using Server.Targeting;
+using Server.Spells;
+
 using System;
 using System.Linq;
 
@@ -85,7 +87,7 @@ namespace Server.SkillHandlers
                             if (src.AccessLevel >= trg.AccessLevel && (ss >= ts || houseCheck) && Utility.RandomDouble() > shadow)
                             {
                                 if ((trg is ShadowKnight && (trg.X != p.X || trg.Y != p.Y)) ||
-                                     (!houseCheck && !CanDetect(src, trg)))
+                                     (!houseCheck && !CanDetect(src, trg, true)))
                                     continue;
 
                                 trg.RevealingAction();
@@ -149,7 +151,7 @@ namespace Server.SkillHandlers
 
             foreach (Mobile m in eable)
             {
-                if (m == null || m == src || m is ShadowKnight || !CanDetect(src, m))
+                if (m == null || m == src || m is ShadowKnight || !CanDetect(src, m, false))
                     continue;
 
                 double ts = (m.Skills[SkillName.Hiding].Value + m.Skills[SkillName.Stealth].Value) / 2;
@@ -179,27 +181,44 @@ namespace Server.SkillHandlers
             eable.Free();
         }
 
-        public static bool CanDetect(Mobile src, Mobile target)
+        public static bool CanDetect(Mobile src, Mobile target, bool direct)
         {
             if (src.Map == null || target.Map == null || !src.CanBeHarmful(target, false, false, true))
+            {
                 return false;
+            }
 
             // No invulnerable NPC's
             if (src.Blessed || (src is BaseCreature && ((BaseCreature)src).IsInvulnerable))
+            {
                 return false;
+            }
 
             if (target.Blessed || (target is BaseCreature && ((BaseCreature)target).IsInvulnerable))
+            {
                 return false;
+            }
+
+            SpellHelper.CheckResponsible(ref src);
+            SpellHelper.CheckResponsible(ref target);
+
+            if (src.Map.Rules == MapRules.FeluccaRules && direct)
+            {
+                return !SpellHelper.IsGuildAllyOrParty(src, target);
+            }
 
             // pet owner, guild/alliance, party
-            if (!Spells.SpellHelper.ValidIndirectTarget(target, src))
+            if (!SpellHelper.ValidIndirectTarget(target, src))
+            {
                 return false;
+            }
 
             // Checked aggressed/aggressors
             if (src.Aggressed.Any(x => x.Defender == target) || src.Aggressors.Any(x => x.Attacker == target))
+            {
                 return true;
+            }
 
-            // In Fel or Follow the same rules as indirect spells such as wither
             return src.Map.Rules == MapRules.FeluccaRules;
         }
     }

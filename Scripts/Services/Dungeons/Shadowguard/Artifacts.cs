@@ -148,7 +148,6 @@ namespace Server.Items
     public class BalakaisShamanStaffGargoyle : BaseWand
     {
         public override int LabelNumber => 1156125;
-
         public override bool IsArtifact => true;
 
         public override int InitMinHits => 255;

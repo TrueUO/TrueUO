@@ -65,9 +65,6 @@ namespace Server.Items
             base.Deserialize(reader);
 
             int version = reader.ReadInt();
-
-            if (Weight == 4.0)
-                Weight = 3.0;
         }
     }
 
@@ -199,8 +196,6 @@ namespace Server.Items
         {
         }
 
-        public override Race RequiredRace => Race.Gargoyle;
-        public override bool CanBeWornByGargoyles => true;
         public override void OnAdded(object parent)
         {
             base.OnAdded(parent);
@@ -224,9 +219,6 @@ namespace Server.Items
         {
             base.Deserialize(reader);
             int version = reader.ReadInt();
-
-            if (Layer != Layer.Gloves)
-                Layer = Layer.Gloves;
         }
     }
 
@@ -250,8 +242,6 @@ namespace Server.Items
         {
         }
 
-        public override Race RequiredRace => Race.Gargoyle;
-        public override bool CanBeWornByGargoyles => true;
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -262,9 +252,6 @@ namespace Server.Items
         {
             base.Deserialize(reader);
             int version = reader.ReadInt();
-
-            if (Layer != Layer.Gloves)
-                Layer = Layer.Gloves;
         }
     }
 
@@ -288,8 +275,6 @@ namespace Server.Items
         {
         }
 
-        public override Race RequiredRace => Race.Gargoyle;
-        public override bool CanBeWornByGargoyles => true;
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -300,9 +285,6 @@ namespace Server.Items
         {
             base.Deserialize(reader);
             int version = reader.ReadInt();
-
-            if (Layer != Layer.Gloves)
-                Layer = Layer.Gloves;
         }
     }
 

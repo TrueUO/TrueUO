@@ -25,7 +25,7 @@ namespace Server.Spells.SkillMasteries
 
         public override double UpKeep => 35;
         public override int RequiredMana => 50;
-        public override int DamageThreshold => 1;
+        public override int DamageThreshold => 0;
         public override bool DamageCanDisrupt => true;
         public override double TickTime => 3;
 
@@ -66,7 +66,7 @@ namespace Server.Spells.SkillMasteries
                     }
                     else
                     {
-                        SpellHelper.CheckReflect(0, Caster, ref m);
+                        SpellHelper.CheckReflect(this, Caster, ref m);
                         _Location = Caster.Location;
 
                         m.FixedParticles(0x374A, 1, 15, 5054, 0x7A2, 7, EffectLayer.Head);
