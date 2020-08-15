@@ -74,12 +74,6 @@ namespace Server.Items
             LootType = LootType.Blessed;
         }
 
-        private static readonly int[] _Hues =
-        {
-            190, 41, 97, 117, 98, 224, 73, 27, 79, 114, 173, 25, 69, 28, 118, 171, 201, 60,
-            138, 208, 18, 28, 148, 90
-        };
-
         public SilverPlatedBubblingCauldronDeed(Serial serial)
             : base(serial)
         {

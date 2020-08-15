@@ -171,7 +171,7 @@ namespace Server.Items
                     itemIDs = new[] {i.ItemID};
                 }
 
-                AddItem(30, 150, itemIDs.Length == 1 ? itemIDs[0] : itemIDs[1]);
+                AddItem(30, 150, itemIDs != null && itemIDs.Length == 1 ? itemIDs[0] : itemIDs[1]);
                 AddItem(450, 150, itemIDs[0]);
                 AddImage(5, 0, 0x15A0);
                 AddImage(425, 0, 0x15A0);
