@@ -252,7 +252,7 @@ namespace Server.Menus.Questions
 
             protected override void OnTick()
             {
-                if (m_Mobile.NetState == null || DateTime.UtcNow > m_End)
+                if (m_Mobile.NetState == null || DateTime.UtcNow > m_End || CityTradeSystem.HasTrade(m_Mobile))
                 {
                     m_Mobile.Frozen = false;
                     m_Mobile.CloseGump(typeof(StuckMenu));
