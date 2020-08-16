@@ -23,6 +23,11 @@ namespace Server.Items
             LootType = LootType.Blessed;
         }
 
+        public DecorativeGuildstone(Serial serial)
+            : base(serial)
+        {
+        }
+
         public bool HasAccces(Mobile m)
         {
             if (m.AccessLevel >= AccessLevel.GameMaster)
@@ -102,11 +107,6 @@ namespace Server.Items
                 Guild = null;
                 InvalidateProperties();
             }
-        }
-
-        public DecorativeGuildstone(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void GetProperties(ObjectPropertyList list)

@@ -41,6 +41,11 @@ namespace Server.Items
                 AddComponent(new AddonComponent(list[i, 0]), list[i, 1], list[i, 2], list[i, 3]);
         }
 
+        public DecorativeMagesRugAddon(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override bool RetainDeedHue => true;
 
         public virtual bool Dye(Mobile from, DyeTub sender)
@@ -50,11 +55,6 @@ namespace Server.Items
 
             Hue = sender.DyedHue;
             return true;
-        }
-
-        public DecorativeMagesRugAddon(Serial serial)
-            : base(serial)
-        {
         }
         
         public override void Serialize(GenericWriter writer)
@@ -84,6 +84,11 @@ namespace Server.Items
         public DecorativeMagesRugAddonDeed()
         {
             LootType = LootType.Blessed;
+        }
+
+        public DecorativeMagesRugAddonDeed(Serial serial)
+            : base(serial)
+        {
         }
 
         public virtual bool Dye(Mobile from, DyeTub sender)
@@ -118,11 +123,6 @@ namespace Server.Items
 
             if (!Deleted && IsChildOf(from.Backpack))
                 base.OnDoubleClick(from);
-        }
-
-        public DecorativeMagesRugAddonDeed(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)

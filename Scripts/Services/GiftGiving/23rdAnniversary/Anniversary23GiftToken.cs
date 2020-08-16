@@ -14,6 +14,11 @@ namespace Server.Items
             LootType = LootType.Blessed;
         }
 
+        public Anniversary23GiftToken(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void OnDoubleClick(Mobile from)
         {
             if (IsChildOf(from.Backpack))
@@ -71,11 +76,6 @@ namespace Server.Items
                         break;
                     }
             }
-        }
-
-        public Anniversary23GiftToken(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
