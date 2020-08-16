@@ -159,27 +159,23 @@ namespace Server.Items
 
                 if (objs.Length > 0)
                 {
-                    FlipableAttribute fp = objs[0] as FlipableAttribute;
+                    var fp = objs[0] as FlipableAttribute;
 
                     if (fp != null)
                     {
                         itemIDs = fp.ItemIDs;
                     }
                 }
-                else
-                {
-                    itemIDs = new[] {i.ItemID};
-                }
 
-                AddItem(30, 150, itemIDs != null && itemIDs.Length == 1 ? itemIDs[0] : itemIDs[1]);
-                AddItem(450, 150, itemIDs[0]);
+                AddItem(30, 150, itemIDs != null ? itemIDs[1] : i.ItemID);
+                AddItem(450, 150, i.ItemID);
                 AddImage(5, 0, 0x15A0);
                 AddImage(425, 0, 0x15A0);
             }
         }
     }
 
-    [Flipable(0xED5, 0xED4)]
+    [Flipable(0xED4, 0xED5)]
     public class LegacyGuildstone : DecorativeGuildstone
     {
         [Constructable]
