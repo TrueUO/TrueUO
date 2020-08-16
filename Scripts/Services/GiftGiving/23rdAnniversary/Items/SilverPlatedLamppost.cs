@@ -20,15 +20,15 @@ namespace Server.Items
             Weight = 1.0;
         }
 
-        private static readonly int[] _LitItemID =
-        {
-            0xA5BB, 0xA5C0, 0xA5C5, 0xA5CA
-        };
-
         public SilverPlatedLamppost(Serial serial)
             : base(serial)
         {
         }
+
+        private static readonly int[] _LitItemID =
+        {
+            0xA5BB, 0xA5C0, 0xA5C5, 0xA5CA
+        };
 
         public override int LitItemID => LitID;
         public override int UnlitItemID => 0xA5BA;

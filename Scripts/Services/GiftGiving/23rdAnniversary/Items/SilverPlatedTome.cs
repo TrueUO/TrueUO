@@ -18,6 +18,11 @@ namespace Server.Items
             _DisplayName = string.Format("{0} of {1}", _Titles[Utility.Random(_Titles.Length)], _Names[Utility.Random(_Names.Length)]);
         }
 
+        public SilverPlatedTome(Serial serial)
+            : base(serial)
+        {
+        }
+
         private static readonly int[] _Hues =
         {
             254, 39, 235, 194, 179, 54, 15, 101, 174, 46, 154, 237, 152, 8, 51, 56, 25,
@@ -30,11 +35,6 @@ namespace Server.Items
             {
                 list.Add(1159515, _DisplayName); // The Tale of the ~1_VAL~
             }
-        }
-
-        public SilverPlatedTome(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
