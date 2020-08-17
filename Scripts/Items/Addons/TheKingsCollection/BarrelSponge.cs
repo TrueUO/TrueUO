@@ -84,9 +84,7 @@ namespace Server.Items
 
         public override void GetProperties(ObjectPropertyList list, AddonComponent component)
         {
-            base.GetProperties(list);
-
-            list.Add(1154175, ResourceCount.ToString()); // Powder Charges: ~1_COUNT~
+            list.Add(1154178, ResourceCount.ToString()); // Potions: ~1_COUNT~
         }
 
         private class BarrelSpongeComponent : LocalizedAddonComponent
