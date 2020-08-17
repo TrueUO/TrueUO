@@ -69,8 +69,6 @@ namespace Server.Items
 
         public override void GetProperties(ObjectPropertyList list, AddonComponent c)
         {
-            base.GetProperties(list);
-
             list.Add(1154175, ResourceCount.ToString()); // Powder Charges: ~1_COUNT~
         }
 
