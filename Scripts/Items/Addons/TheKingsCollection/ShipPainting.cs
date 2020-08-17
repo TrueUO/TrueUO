@@ -67,7 +67,7 @@ namespace Server.Items
 
         public override BaseAddonDeed Deed => new ShipPaintingDeed();
 
-        public override void GetProperties(ObjectPropertyList list, AddonComponent component)
+        public override void GetProperties(ObjectPropertyList list, AddonComponent c)
         {
             base.GetProperties(list);
 
