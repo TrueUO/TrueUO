@@ -82,7 +82,7 @@ namespace Server.Items
 
         public override BaseAddonDeed Deed => new BarrelSpongeDeed();
 
-        public override void GetProperties(ObjectPropertyList list, AddonComponent component)
+        public override void GetProperties(ObjectPropertyList list, AddonComponent c)
         {
             list.Add(1154178, ResourceCount.ToString()); // Potions: ~1_COUNT~
         }
