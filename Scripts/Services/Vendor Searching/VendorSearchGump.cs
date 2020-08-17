@@ -476,7 +476,7 @@ namespace Server.Engines.VendorSearching
 
                         if (!_GivenTo[item.Item].Contains(User))
                         {
-                            VendorSearchMap map = new VendorSearchMap(item.Item, item.IsAuction);
+                            VendorSearchMap map = new VendorSearchMap(item);
 
                             if (User.Backpack == null || !User.Backpack.TryDropItem(User, map, false))
                                 map.Delete();
