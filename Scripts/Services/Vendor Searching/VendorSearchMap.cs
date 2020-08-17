@@ -38,9 +38,9 @@ namespace Server.Items
         public int TimeRemaining => DeleteTime <= DateTime.UtcNow ? 0 : (int)(DeleteTime - DateTime.UtcNow).TotalMinutes;
 
         public VendorSearchMap(SearchItem item)
-            : base(item.Item.Map)
+            : base(item.Map)
         {
-            var map = item.Item.Map;
+            var map = item.Map;
 
             LootType = LootType.Blessed;
             Hue = RecallRune.CalculateHue(map, null, true);
