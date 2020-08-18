@@ -23,12 +23,6 @@ namespace Server.Items
         {
         }
 
-        private static readonly int[] _Hues =
-        {
-            254, 39, 235, 194, 179, 54, 15, 101, 174, 46, 154, 237, 152, 8, 51, 56, 25,
-            91, 243, 85, 14, 250, 121, 248, 77, 94, 231, 119, 108, 191, 73
-        };
-
         public override void AddNameProperty(ObjectPropertyList list)
         {
             if (!string.IsNullOrEmpty(_DisplayName))
