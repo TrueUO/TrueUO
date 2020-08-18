@@ -111,8 +111,6 @@ namespace Server.Network
         {
             lock (this)
                 m_Queue.Enqueue(ns);
-
-            Core.Set();
         }
 
         public void Slice()

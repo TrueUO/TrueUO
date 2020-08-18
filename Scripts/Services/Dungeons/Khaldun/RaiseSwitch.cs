@@ -134,8 +134,6 @@ namespace Server.Items
                 : base(delay)
             {
                 m_RaiseSwitch = raiseSwitch;
-
-                Priority = ComputePriority(delay);
             }
 
             protected override void OnTick()

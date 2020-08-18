@@ -4048,8 +4048,6 @@ namespace Server.Network
 
         public void OnSend()
         {
-            Core.Set();
-
             lock (this)
             {
                 if ((m_State & (PacketState.Acquired | PacketState.Static)) == 0)

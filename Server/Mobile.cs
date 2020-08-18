@@ -10864,8 +10864,6 @@ namespace Server
 
                 m_DeltaQueue.Add(this);
             }
-
-            Core.Set();
         }
 
         private bool m_NoMoveHS;

@@ -33,7 +33,6 @@ namespace Server
         public static bool Crashed => _Crashed;
 
         private static bool _Crashed;
-        private static Thread _TimerThread;
         private static string _BaseDirectory;
         private static string _ExePath;
 
@@ -100,40 +99,38 @@ namespace Server
 
         public static MultiTextWriter MultiConsoleOut { get; private set; }
 
-        /* 
-		 * DateTime.Now and DateTime.UtcNow are based on actual system clock time.
-		 * The resolution is acceptable but large clock jumps are possible and cause issues.
-		 * GetTickCount and GetTickCount64 have poor resolution.
-		 * GetTickCount64 is unavailable on Windows XP and Windows Server 2003.
-		 * Stopwatch.GetTimestamp() (QueryPerformanceCounter) is high resolution, but
-		 * somewhat expensive to call because of its defference to DateTime.Now,
-		 * which is why Stopwatch has been used to verify HRT before calling GetTimestamp(),
-		 * enabling the usage of DateTime.UtcNow instead.
-		 */
+        /* In this game engine, time is divided into fixed-size, discrete intervals often called
+		 * 'ticks'. A tick constitutes one loop through the main engine loop (see the Run()
+		 * function). Below, define a target for how long a game engine tick should be in milliseconds.
+		 * A server running at 40Hz, for instance, has 25ms ticks. This is just a request - the actual
+		 * number will be a power of two in hardware ticks. */
+		private static readonly int REQUESTED_MILLISECONDS_PER_TICK = 25;
 
-        private static readonly bool _HighRes = Stopwatch.IsHighResolution;
+        /* Hardware provides time in units also called ticks, but these ticks are different for each
+		 * system. Calculate the number of hardware ticks in a millisecond. */
+		public static readonly long HW_TICKS_PER_MILLISECOND = Stopwatch.Frequency / 1000;
 
-        private static readonly double _HighFrequency = 1000.0 / Stopwatch.Frequency;
-        private const double _LowFrequency = 1000.0 / TimeSpan.TicksPerSecond;
+        /* Figure out how many hardware ticks are in the requested game engine tick size, then round
+		 * to the nearest power of two less than that value. This will be the smallest resolution of
+		 * time kept in the game engine. A power of two is used because this value is often used
+		 * as a divisor in other calculations. Dividing in general is slow, but dividing by a power
+		 * of two is fast. */
+		public static readonly int HW_TICKS_PER_ENGINE_TICK_POW_2 = (int)Math.Log(REQUESTED_MILLISECONDS_PER_TICK * HW_TICKS_PER_MILLISECOND, 2);
+		public static readonly long HW_TICKS_PER_ENGINE_TICK = 1 << HW_TICKS_PER_ENGINE_TICK_POW_2;
 
-        private static bool _UseHRT;
+        /* Calculate the actual number of milliseconds per game engine tick, after rounding the hardware
+		 * ticks to the nearest power of two. */
+		public static readonly double MILLISECONDS_PER_ENGINE_TICK = (double)HW_TICKS_PER_ENGINE_TICK / HW_TICKS_PER_MILLISECOND;
 
-        public static bool UsingHighResolutionTiming => _UseHRT && _HighRes && !Unix;
+        /* Cached value of the current time, in units of timer ticks.
+		 * This value is updated each time the main game engine loops around. */
+		private static long m_Now = Stopwatch.GetTimestamp() >> HW_TICKS_PER_ENGINE_TICK_POW_2;
+		
+		/* Return the number of game engine ticks elapsed since the last
+		 * system reboot. */
+		public static long Now { get { return m_Now; } }
 
-        public static long TickCount => (long)Ticks;
-
-        public static double Ticks
-        {
-            get
-            {
-                if (_UseHRT && _HighRes && !Unix)
-                {
-                    return Stopwatch.GetTimestamp() * _HighFrequency;
-                }
-
-                return DateTime.UtcNow.Ticks * _LowFrequency;
-            }
-        }
+        public static long TickCount { get { return (long)(Now * MILLISECONDS_PER_ENGINE_TICK); } }
 
         public static readonly bool Is64Bit = Environment.Is64BitProcess;
 
@@ -309,13 +306,6 @@ namespace Server
 
         public static bool Closing { get; private set; }
 
-        private static int _CycleIndex = 1;
-        private static readonly float[] _CyclesPerSecond = new float[100];
-
-        public static float CyclesPerSecond => _CyclesPerSecond[(_CycleIndex - 1) % _CyclesPerSecond.Length];
-
-        public static float AverageCPS => _CyclesPerSecond.Take(_CycleIndex).Average();
-
         public static void Kill()
         {
             Kill(false);
@@ -352,17 +342,8 @@ namespace Server
                 EventSink.InvokeShutdown(new ShutdownEventArgs());
             }
 
-            Timer.TimerThread.Set();
-
             if (Debug)
                 Console.WriteLine("done");
-        }
-
-        private static readonly AutoResetEvent _Signal = new AutoResetEvent(true);
-
-        public static void Set()
-        {
-            _Signal.Set();
         }
 
         public static void Main(string[] args)
@@ -399,10 +380,6 @@ namespace Server
                 else if (Insensitive.Equals(a, "-vb"))
                 {
                     VBdotNet = true;
-                }
-                else if (Insensitive.Equals(a, "-usehrt"))
-                {
-                    _UseHRT = true;
                 }
                 else if (Insensitive.Equals(a, "-noconsole"))
                 {
@@ -465,13 +442,6 @@ namespace Server
             {
                 Directory.SetCurrentDirectory(BaseDirectory);
             }
-
-            Timer.TimerThread ttObj = new Timer.TimerThread();
-
-            _TimerThread = new Thread(ttObj.TimerMain)
-            {
-                Name = "Timer Thread"
-            };
 
             Version ver = Assembly.GetName().Version;
             DateTime buildDate = new DateTime(2000, 1, 1).AddDays(ver.Build).AddSeconds(ver.Revision * 2);
@@ -568,15 +538,6 @@ namespace Server
                 Utility.PopColor();
             }
 
-            if (_UseHRT)
-            {
-                Utility.PushColor(ConsoleColor.DarkYellow);
-                Console.WriteLine(
-                    "Core: Requested high resolution timing ({0})",
-                    UsingHighResolutionTiming ? "Supported" : "Unsupported");
-                Utility.PopColor();
-            }
-
             Utility.PushColor(ConsoleColor.DarkYellow);
             Console.WriteLine("RandomImpl: {0} ({1})", RandomImpl.Type.Name, RandomImpl.IsHardwareRNG ? "Hardware" : "Software");
             Utility.PopColor();
@@ -610,11 +571,7 @@ namespace Server
             Region.Load();
             World.Load();
 
-            ScriptCompiler.Invoke("Initialize");
-
-            MessagePump messagePump = MessagePump = new MessagePump();
-
-            _TimerThread.Start();
+            MessagePump = new MessagePump();
 
             foreach (Map m in Map.AllMaps)
             {
@@ -625,48 +582,62 @@ namespace Server
 
             EventSink.InvokeServerStarted();
 
-            try
-            {
-                long now, last = TickCount;
+            Run();
+		}
 
-                const int sampleInterval = 100;
-                const float ticksPerSecond = 1000.0f * sampleInterval;
+		private static void Run()
+		{
+			try
+			{
+				long last = Now;
+				long next;
 
-                long sample = 0;
+				while (!Closing)
+				{
+					/* First, get the current time */
+					next = Stopwatch.GetTimestamp() >> HW_TICKS_PER_ENGINE_TICK_POW_2;
 
-                while (!Closing)
-                {
-                    _Signal.WaitOne();
+					/* Figure out how many ticks should have occurred between the last time through
+					 * the loop and now. The goal is to execute the loop only once every
+					 * MILLISECONDS_PER_ENGINE_TICK. */
+					if (next == last)
+					{
+						/* The loop is currently running fast. Sleep a little while */
+						Thread.Sleep((int)MILLISECONDS_PER_ENGINE_TICK / 2);
+						continue;
+					}
 
-                    Mobile.ProcessDeltaQueue();
-                    Item.ProcessDeltaQueue();
+					if (next > (last + 2))
+					{
+						/* If more than two ticks occurred since we last got here, the server is falling behind. */
+						Console.WriteLine("Game Engine Unable to Keep up with Tick Rate");
+					}
 
-                    Timer.Slice();
-                    messagePump.Slice();
+					last = next;
 
-                    NetState.FlushAll();
-                    NetState.ProcessDisposedQueue();
+					while (Now < next)
+					{
+						/* Advance the current time by 1 tick */
+						m_Now++;
 
-                    if (Slice != null)
-                    {
-                        Slice();
-                    }
+						Mobile.ProcessDeltaQueue();
+						Item.ProcessDeltaQueue();
 
-                    if (sample++ % sampleInterval != 0)
-                    {
-                        continue;
-                    }
+						Timer.Slice();
+						MessagePump.Slice();
 
-                    now = TickCount;
-                    _CyclesPerSecond[_CycleIndex++ % _CyclesPerSecond.Length] = ticksPerSecond / (now - last);
-                    last = now;
-                }
-            }
-            catch (Exception e)
-            {
-                CurrentDomain_UnhandledException(null, new UnhandledExceptionEventArgs(e, true));
-            }
-        }
+						NetState.FlushAll();
+						NetState.ProcessDisposedQueue();
+
+						Slice?.Invoke();
+					}
+				}
+			}
+			catch (Exception e)
+			{
+				CurrentDomain_UnhandledException(null, new UnhandledExceptionEventArgs(e, true));
+			}
+		}
 
         public static string Arguments
         {
@@ -702,11 +673,6 @@ namespace Server
                 if (VBdotNet)
                 {
                     Utility.Separate(sb, "-vb", " ");
-                }
-
-                if (_UseHRT)
-                {
-                    Utility.Separate(sb, "-usehrt", " ");
                 }
 
                 if (NoConsole)

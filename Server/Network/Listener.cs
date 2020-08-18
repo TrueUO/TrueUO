@@ -216,8 +216,6 @@ namespace Server.Network
             {
                 m_Accepted.Enqueue(socket);
             }
-
-            Core.Set();
         }
 
         private void Release(Socket socket)
