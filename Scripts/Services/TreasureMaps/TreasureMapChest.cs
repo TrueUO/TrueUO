@@ -418,14 +418,9 @@ namespace Server.Items
                     else if (0.15 > Utility.RandomDouble())
                         special = GetRandomSpecial(level, cont.Map);
                 }
-                else if (.10 > Utility.RandomDouble())
+                else if (0.10 > Utility.RandomDouble())
                 {
                     special = GetRandomSpecial(level, cont.Map);
-                }
-
-                if (Engines.Points.PointsSystem.JollyRogerData.Enabled && .30 > Utility.RandomDouble())
-                {
-                    cont.DropItem(new MysteriousFragment());
                 }
             }
 
@@ -443,6 +438,9 @@ namespace Server.Items
 
             if (newSpecial != null)
                 cont.DropItem(newSpecial);
+
+            if (Engines.Points.PointsSystem.JollyRogerData.Enabled && 0.15 > Utility.RandomDouble())
+                cont.DropItem(new MysteriousFragment());
 
             int rolls = 2;
 
