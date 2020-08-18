@@ -32,8 +32,7 @@ namespace Server.Items
 
             switch (size)
             {
-                default:
-                case Size.Small: list = _Small; break;
+                default: list = _Small; break;
                 case Size.Large: list = _Large; break;
             }
 
