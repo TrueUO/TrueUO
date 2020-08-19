@@ -21,4 +21,28 @@ namespace Server.ContextMenus
                 Callback(From);
         }
     }
+
+    public class SimpleContextMenuEntry<T> : ContextMenuEntry
+    {
+        public Mobile From { get; private set; }
+        public T State { get; private set; }
+        public Action<Mobile, T> Callback { get; set; }
+
+        public SimpleContextMenuEntry(Mobile from, int localization, Action<Mobile, T> callback, T state, int range = -1, bool enabled = true) : base(localization, range)
+        {
+            From = from;
+            State = state;
+            Callback = callback;
+
+            Enabled = enabled;
+        }
+
+        public override void OnClick()
+        {
+            if (Callback != null)
+            {
+                Callback(From, State);
+            }
+        }
+    }
 }
