@@ -67,7 +67,7 @@ namespace Server.Items
 
         public override BaseAddonDeed Deed => new ShipPaintingDeed();
 
-        public override void GetProperties(ObjectPropertyList list, AddonComponent component)
+        public override void GetProperties(ObjectPropertyList list, AddonComponent c)
         {
             list.Add(1154175, ResourceCount.ToString()); // Powder Charges: ~1_COUNT~
         }
