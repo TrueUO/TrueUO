@@ -3,6 +3,8 @@ using Server.Engines.Quests;
 using Server.Gumps;
 using Server.Items;
 using Server.Network;
+using Server.SkillHandlers;
+
 using System;
 using System.Collections.Generic;
 
@@ -11,8 +13,8 @@ namespace Server.Mobiles
     [CorpseName("a wisp corpse")]
     public class MysteriousWisp : BaseCreature
     {
-        public static readonly int MinBudget = 200;
-        public static readonly int MaxBudget = 200;
+        public static readonly int MinBudget = 300;
+        public static readonly int MaxBudget = 600;
         public static readonly int ItemCount = 10;
 
         [CommandProperty(AccessLevel.GameMaster)]
@@ -225,16 +227,35 @@ namespace Server.Mobiles
                         case 2: item = Loot.RandomArmorOrShieldOrWeaponOrJewelry(true, false, false); break;
                     }
 
-                    RunicReforging.GenerateRandomItem(item, null, Utility.RandomMinMax(MinBudget, MaxBudget), 0, ReforgedPrefix.None, ReforgedSuffix.None);
-                    item.Movable = false;
-                    PackItem(item);
+                    var failSafe = 0;
+                    bool success = true;
+
+                    do
+                    {
+                        RunicReforging.GenerateRandomItem(item, null, Utility.RandomMinMax(MinBudget, MaxBudget), 0, ReforgedPrefix.None, ReforgedSuffix.None);
+
+                        if (++failSafe == 25 && Imbuing.GetTotalWeight(item, -1, false, true) == 0)
+                        {
+                            item.Delete();
+                            success = false;
+                            i--;
+                            break;
+                        }
+                    }
+                    while (Imbuing.GetTotalWeight(item, -1, false, true) == 0);
+
+                    if (success)
+                    {
+                        item.Movable = false;
+                        PackItem(item);
+                    }
                 }
             }
         }
 
         public int GetCostFor(Item item)
         {
-            return (int)((double)Server.SkillHandlers.Imbuing.GetTotalWeight(item, -1, false, true) * 2.18);
+            return (int)((double)Imbuing.GetTotalWeight(item, -1, false, true) * 2.18);
         }
 
         public void TryBuyItem(Mobile from, Item item)
@@ -342,7 +363,7 @@ namespace Server.Mobiles
                         wisp.TryBuyItem(m, i);
                     }
                 },
-                item));
+                item, nonlocalUse: true));
 
                 list.Add(new SimpleContextMenuEntry<Item>(from, 1153469, (m, i) => // Move
                 {
@@ -351,7 +372,7 @@ namespace Server.Mobiles
                         DropItem(i);
                     }
                 },
-                item));
+                item, nonlocalUse: true));
             }
 
             public BuyBackpack(Serial serial)
