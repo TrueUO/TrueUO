@@ -1,8 +1,6 @@
 using Server.ContextMenus;
 using Server.Engines.Quests;
-using Server.Gumps;
 using Server.Items;
-using Server.Network;
 using System;
 using System.Collections.Generic;
 
@@ -82,27 +80,24 @@ namespace Server.Mobiles
                 }
             }
 
-            if (from is PlayerMobile pm)
+            if (from is PlayerMobile pm && QuestHelper.CheckDoneOnce(pm, typeof(WishesOfTheWispQuest), null, false))
             {
-                if (QuestHelper.CheckDoneOnce(pm, typeof(WishesOfTheWispQuest), null, false))
+                WhisperingWithWispsQuest q = QuestHelper.GetQuest<WhisperingWithWispsQuest>(pm);
+
+                if (q == null)
                 {
-                    WhisperingWithWispsQuest q = QuestHelper.GetQuest<WhisperingWithWispsQuest>(pm);
+                    BaseQuest quest = QuestHelper.RandomQuest(pm, new Type[] { typeof(WhisperingWithWispsQuest) }, this);
 
-                    if (q == null)
+                    if (quest != null)
                     {
-                        BaseQuest quest = QuestHelper.RandomQuest(pm, new Type[] { typeof(WhisperingWithWispsQuest) }, this);
-
-                        if (quest != null)
-                        {
-                            pm.CloseGump(typeof(MondainQuestGump));
-                            pm.SendGump(new MondainQuestGump(quest));
-                        }
-                    }
-                    else if (q.Completed)
-                    {
-                        q.CompleteQuest();
+                        pm.CloseGump(typeof(MondainQuestGump));
+                        pm.SendGump(new MondainQuestGump(quest));
                     }
                 }
+                else if (q.Completed)
+                {
+                    q.CompleteQuest();
+                }           
             }
         }
 
@@ -182,8 +177,6 @@ namespace Server.Mobiles
             1153463,
             1153467
         };
-
-        private readonly Dictionary<Item, int> m_ItemTable = new Dictionary<Item, int>();
 
         private void DoRestock()
         {
