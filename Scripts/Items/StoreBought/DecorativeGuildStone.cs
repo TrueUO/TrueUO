@@ -93,6 +93,12 @@ namespace Server.Items
             {
                 from.SendLocalizedMessage(1159489); // The guild this stone is linked to is no longer valid.
             }
+            else if (Guild.Leader == null)
+            {
+                from.SendLocalizedMessage(1159489); // The guild this stone is linked to is no longer valid.
+                Guild = null;
+                InvalidateProperties();
+            }
             else
             {
                 from.CloseGump(typeof(GuildInformationGump));
