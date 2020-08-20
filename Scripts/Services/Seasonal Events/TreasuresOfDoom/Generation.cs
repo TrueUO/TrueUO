@@ -20,7 +20,7 @@ namespace Server.Engines.TreasuresOfDoom
                 Elizabeth.Instance.MoveToWorld(Elizabeth.SpawnLocation, Map.Malas);
             }
 
-            if (PointsSystem.TreasuresOfDoom.Enabled)
+            if (PointsSystem.TreasuresOfDoom.IsRunning)
             {
                 if (VaseSpawner.Instance == null)
                 {
@@ -49,7 +49,7 @@ namespace Server.Engines.TreasuresOfDoom
         {
             DoomData doom = PointsSystem.TreasuresOfDoom;
 
-            if (doom.Enabled && !doom.InSeason)
+            if (doom.IsRunning && !doom.InSeason)
             {
                 if (timed)
                 {
@@ -58,7 +58,6 @@ namespace Server.Engines.TreasuresOfDoom
                         Utility.WriteConsoleColor(ConsoleColor.Green, "Auto Disabling Treasures of Doom");
 
                         Remove();
-                        doom.Enabled = false;
                     });
                 }
                 else
@@ -66,10 +65,9 @@ namespace Server.Engines.TreasuresOfDoom
                     Utility.WriteConsoleColor(ConsoleColor.Green, "Auto Disabling Treasures of Doom");
 
                     Remove();
-                    doom.Enabled = false;
                 }
             }
-            else if (!doom.Enabled && doom.InSeason)
+            else if (!doom.IsRunning && doom.InSeason)
             {
                 if (timed)
                 {
@@ -78,7 +76,6 @@ namespace Server.Engines.TreasuresOfDoom
                         Utility.WriteConsoleColor(ConsoleColor.Green, "Enabling Treasures of Doom");
 
                         Generate();
-                        doom.Enabled = true;
                     });
                 }
                 else
@@ -86,7 +83,6 @@ namespace Server.Engines.TreasuresOfDoom
                     Utility.WriteConsoleColor(ConsoleColor.Green, "Enabling Treasures of Doom");
 
                     Generate();
-                    doom.Enabled = true;
                 }
             }
         }

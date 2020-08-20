@@ -59,7 +59,7 @@ namespace Server.Engines.Fellowship
         {
             FellowshipData fellowship = PointsSystem.FellowshipData;
 
-            if (fellowship.Enabled && !fellowship.InSeason)
+            if (fellowship.IsRunning && !fellowship.InSeason)
             {
                 if (timed)
                 {
@@ -68,7 +68,6 @@ namespace Server.Engines.Fellowship
                         Utility.WriteConsoleColor(ConsoleColor.Green, "Disabling The Fellowship");
 
                         Remove();
-                        fellowship.Enabled = false;
                     });
                 }
                 else
@@ -76,10 +75,9 @@ namespace Server.Engines.Fellowship
                     Utility.WriteConsoleColor(ConsoleColor.Green, "Auto Disabling The Fellowship");
 
                     Remove();
-                    fellowship.Enabled = false;
                 }
             }
-            else if (!fellowship.Enabled && fellowship.InSeason)
+            else if (!fellowship.IsRunning && fellowship.InSeason)
             {
                 if (timed)
                 {
@@ -88,7 +86,6 @@ namespace Server.Engines.Fellowship
                         Utility.WriteConsoleColor(ConsoleColor.Green, "Enabling The Fellowship");
 
                         Generate();
-                        fellowship.Enabled = true;
 
                         if (!fellowship.QuestContentGenerated)
                         {
@@ -102,7 +99,6 @@ namespace Server.Engines.Fellowship
                     Utility.WriteConsoleColor(ConsoleColor.Green, "Auto Enabling The Fellowship");
 
                     Generate();
-                    fellowship.Enabled = true;
 
                     if (!fellowship.QuestContentGenerated)
                     {

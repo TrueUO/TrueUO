@@ -15,11 +15,10 @@ namespace Server.Engines.SorcerersDungeon
         public override double MaxPoints => double.MaxValue;
         public override bool ShowOnLoyaltyGump => false;
 
-        public bool Enabled { get; set; }
-
         private readonly TextDefinition m_Name = null;
 
         public bool InSeason => SeasonalEventSystem.IsActive(EventType.SorcerersDungeon);
+        public bool IsRunning => SeasonalEventSystem.IsRunning(EventType.SorcerersDungeon);
 
         public SorcerersDungeonData()
         {
@@ -43,7 +42,7 @@ namespace Server.Engines.SorcerersDungeon
                 TOSDSpawner.Instance.OnCreatureDeath(bc);
             }
 
-            if (!Enabled || bc.Controlled || bc.Summoned || !damager.Alive)
+            if (!IsRunning || bc.Controlled || bc.Summoned || !damager.Alive)
                 return;
 
             Region r = bc.Region;
@@ -97,9 +96,7 @@ namespace Server.Engines.SorcerersDungeon
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(0);
-
-            writer.Write(Enabled);
+            writer.Write(1);
 
             if (TOSDSpawner.Instance != null)
             {
@@ -126,7 +123,10 @@ namespace Server.Engines.SorcerersDungeon
 
             int version = reader.ReadInt();
 
-            Enabled = reader.ReadBool();
+            if (version == 0)
+            {
+                reader.ReadBool();
+            }
 
             if (reader.ReadInt() == 0)
             {

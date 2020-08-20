@@ -15,9 +15,7 @@ namespace Server.Engines.Points
         public override bool ShowOnLoyaltyGump => false;
 
         public bool InSeason => SeasonalEventSystem.IsActive(EventType.TreasuresOfKhaldun);
-
-        public bool Enabled { get; set; }
-        public bool QuestContentGenerated { get; set; }
+        public bool IsRunning => SeasonalEventSystem.IsRunning(EventType.TreasuresOfKhaldun);
 
         private readonly TextDefinition m_Name = null;
 
@@ -88,13 +86,10 @@ namespace Server.Engines.Points
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(2);
+            writer.Write(3);
 
             KhaldunTastyTreat.Save(writer);
             PotionOfGloriousFortune.Save(writer);
-
-            writer.Write(Enabled);
-            writer.Write(QuestContentGenerated);
 
             writer.Write(DungeonPoints.Count);
             foreach (KeyValuePair<Mobile, int> kvp in DungeonPoints)
@@ -112,13 +107,27 @@ namespace Server.Engines.Points
 
             switch (version)
             {
+                case 3:
                 case 2:
                     KhaldunTastyTreat.Load(reader);
                     PotionOfGloriousFortune.Load(reader);
                     goto case 1;
                 case 1:
-                    Enabled = reader.ReadBool();
-                    QuestContentGenerated = reader.ReadBool();
+                    if (version == 2)
+                    {
+                        reader.ReadBool();
+                        var questGenerated = reader.ReadBool();
+
+                        Timer.DelayCall(() =>
+                        {
+                            var khaldun = SeasonalEventSystem.GetEvent(EventType.TreasuresOfKhaldun);
+
+                            if (khaldun != null)
+                            {
+                                khaldun.QuestContentGenerated = questGenerated;
+                            }
+                        });
+                    }
                     goto case 0;
                 case 0:
                     int count = reader.ReadInt();

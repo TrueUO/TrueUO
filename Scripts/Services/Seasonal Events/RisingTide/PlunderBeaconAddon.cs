@@ -537,7 +537,7 @@ namespace Server.Items
 
         public static void Initialize()
         {
-            if (Server.Engines.Points.PointsSystem.RisingTide.Enabled)
+            if (Server.Engines.Points.PointsSystem.RisingTide.IsRunning)
             {
                 EventSink.CreatureDeath += OnCreatureDeath;
             }

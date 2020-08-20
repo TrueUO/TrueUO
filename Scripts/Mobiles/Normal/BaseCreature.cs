@@ -792,7 +792,7 @@ namespace Server.Mobiles
             }
         }
 
-        public static bool IsSoulboundEnemies => PointsSystem.FellowshipData.Enabled;
+        public static bool IsSoulboundEnemies => PointsSystem.FellowshipData.IsRunning;
 
         public static Type[] _SoulboundCreatures =
         {

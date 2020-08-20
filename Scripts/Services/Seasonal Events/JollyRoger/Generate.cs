@@ -22,7 +22,7 @@ namespace Server.Engines.JollyRoge
         {
             JollyRogerData jollyroger = PointsSystem.JollyRogerData;
 
-            if (jollyroger.Enabled && !jollyroger.InSeason)
+            if (jollyroger.IsRunning && !jollyroger.InSeason)
             {
                 if (timed)
                 {
@@ -31,7 +31,6 @@ namespace Server.Engines.JollyRoge
                         Utility.WriteConsoleColor(ConsoleColor.Green, "Disabling Jolly Roger");
 
                         Remove();
-                        jollyroger.Enabled = false;
                     });
                 }
                 else
@@ -39,10 +38,9 @@ namespace Server.Engines.JollyRoge
                     Utility.WriteConsoleColor(ConsoleColor.Green, "Auto Disabling Jolly Roger");
 
                     Remove();
-                    jollyroger.Enabled = false;
                 }
             }
-            else if (!jollyroger.Enabled && jollyroger.InSeason)
+            else if (!jollyroger.IsRunning && jollyroger.InSeason)
             {
                 if (timed)
                 {
@@ -51,7 +49,6 @@ namespace Server.Engines.JollyRoge
                         Utility.WriteConsoleColor(ConsoleColor.Green, "Enabling Jolly Roger");
 
                         Generate();
-                        jollyroger.Enabled = true;
 
                         if (!jollyroger.QuestContentGenerated)
                         {
@@ -65,7 +62,6 @@ namespace Server.Engines.JollyRoge
                     Utility.WriteConsoleColor(ConsoleColor.Green, "Auto Enabling Jolly Roger");
 
                     Generate();
-                    jollyroger.Enabled = true;
 
                     if (!jollyroger.QuestContentGenerated)
                     {

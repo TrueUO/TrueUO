@@ -20,7 +20,7 @@ namespace Server.Engines.RisingTide
                 BlackMarketMerchant.InstanceFel.MoveToWorld(BlackMarketMerchant.SpawnLocation, Map.Felucca);
             }
 
-            if (PointsSystem.RisingTide.Enabled && PlunderBeaconSpawner.Spawner == null)
+            if (PointsSystem.RisingTide.IsRunning && PlunderBeaconSpawner.Spawner == null)
             {
                 new PlunderBeaconSpawner();
             }
@@ -35,7 +35,7 @@ namespace Server.Engines.RisingTide
         {
             Points.RisingTide risingTide = PointsSystem.RisingTide;
 
-            if (risingTide.Enabled && !risingTide.InSeason)
+            if (risingTide.IsRunning && !risingTide.InSeason)
             {
                 if (timed)
                 {
@@ -44,7 +44,6 @@ namespace Server.Engines.RisingTide
                         Utility.WriteConsoleColor(ConsoleColor.Green, "Auto Disabling Rising Tide");
 
                         Remove();
-                        risingTide.Enabled = false;
                     });
                 }
                 else
@@ -52,10 +51,9 @@ namespace Server.Engines.RisingTide
                     Utility.WriteConsoleColor(ConsoleColor.Green, "Auto Disabling Rising Tide");
 
                     Remove();
-                    risingTide.Enabled = false;
                 }
             }
-            else if (!risingTide.Enabled && risingTide.InSeason)
+            else if (!risingTide.IsRunning && risingTide.InSeason)
             {
                 if (timed)
                 {
@@ -64,7 +62,6 @@ namespace Server.Engines.RisingTide
                         Utility.WriteConsoleColor(ConsoleColor.Green, "Enabling Rising Tide");
 
                         Generate();
-                        risingTide.Enabled = true;
                     });
                 }
                 else
@@ -72,7 +69,6 @@ namespace Server.Engines.RisingTide
                     Utility.WriteConsoleColor(ConsoleColor.Green, "Enabling Rising Tide");
 
                     Generate();
-                    risingTide.Enabled = true;
                 }
             }
         }

@@ -15,6 +15,7 @@ namespace Server.Engines.Points
         public override bool ShowOnLoyaltyGump => false;
 
         public bool InSeason => SeasonalEventSystem.IsActive(EventType.TreasuresOfDoom);
+        public bool IsRunning => SeasonalEventSystem.IsRunning(EventType.TreasuresOfDoom);
 
         private readonly TextDefinition m_Name = null;
 
@@ -81,14 +82,11 @@ namespace Server.Engines.Points
         }
 
         public Dictionary<Mobile, int> DungeonPoints { get; set; }
-        public bool Enabled { get; set; }
 
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(0);
-
-            writer.Write(Enabled);
+            writer.Write(1);
 
             writer.Write(DungeonPoints.Count);
             foreach (KeyValuePair<Mobile, int> kvp in DungeonPoints)
@@ -104,7 +102,10 @@ namespace Server.Engines.Points
 
             int version = reader.ReadInt();
 
-            Enabled = reader.ReadBool();
+            if (version == 0)
+            {
+                reader.ReadBool();
+            }
 
             int count = reader.ReadInt();
             for (int i = 0; i < count; i++)

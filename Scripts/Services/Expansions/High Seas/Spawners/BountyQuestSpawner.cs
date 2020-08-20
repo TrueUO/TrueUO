@@ -657,7 +657,7 @@ namespace Server.Engines.Quests
 
                 RefinementComponent.Roll(hold, 3, 0.25);
 
-                if (Server.Engines.Points.PointsSystem.RisingTide.Enabled)
+                if (Server.Engines.Points.PointsSystem.RisingTide.IsRunning)
                 {
                     hold.DropItem(new MaritimeCargo());
                     hold.DropItem(new MaritimeCargo());

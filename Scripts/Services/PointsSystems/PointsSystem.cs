@@ -34,6 +34,7 @@ namespace Server.Engines.Points
         SkaraBrae,
         NewMagincia,
         Vesper,
+        // End City Loyalty System
 
         Blackthorn,
         CleanUpBritannia,

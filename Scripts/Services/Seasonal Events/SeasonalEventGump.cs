@@ -27,7 +27,7 @@ namespace Server.Engines.SeasonalEvents
 
             for (int i = 0; i < SeasonalEventSystem.Entries.Count; i++)
             {
-                SeasonalEventEntry entry = SeasonalEventSystem.Entries[i];
+                SeasonalEvent entry = SeasonalEventSystem.Entries[i];
 
                 int hue = entry.IsActive() ? 167 : 137;
 
@@ -64,7 +64,7 @@ namespace Server.Engines.SeasonalEvents
 
                 if (id >= 0 && id < SeasonalEventSystem.Entries.Count)
                 {
-                    SeasonalEventEntry entry = SeasonalEventSystem.Entries[id];
+                    SeasonalEvent entry = SeasonalEventSystem.Entries[id];
 
                     if (entry.EventType == EventType.TreasuresOfTokuno)
                     {
@@ -89,14 +89,14 @@ namespace Server.Engines.SeasonalEvents
 
     public class EditEventGump : BaseGump
     {
-        public SeasonalEventEntry Entry { get; set; }
+        public SeasonalEvent Entry { get; set; }
 
         private int _Month;
         private int _Day;
         private int _Duration;
         private EventStatus _Status;
 
-        public EditEventGump(PlayerMobile pm, SeasonalEventEntry entry)
+        public EditEventGump(PlayerMobile pm, SeasonalEvent entry)
             : base(pm, 100, 100)
         {
             pm.CloseGump(typeof(EditEventGump));
