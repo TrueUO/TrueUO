@@ -293,20 +293,16 @@ namespace Server.Network
 
 					if (throttler != null)
 					{
+                        if (!throttler(ns, out bool drop) && (!drop))
+                        {
+                            m_Throttled.Enqueue(ns);
+                        }
+                        else
+                        {
+                            buffer.Dequeue(new byte[packetLength], 0, packetLength);
+                        }
 
-						if (!throttler(ns, out bool drop))
-						{
-							if (!drop)
-							{
-								m_Throttled.Enqueue(ns);
-							}
-							else
-							{
-								buffer.Dequeue(new byte[packetLength], 0, packetLength);
-							}
-
-							return;
-						}
+						return;
 					}
 
 					PacketReceiveProfile prof = null;
