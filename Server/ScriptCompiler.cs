@@ -9,9 +9,9 @@ using System.Text;
 
 namespace Server
 {
-    public static class ScriptCompiler
-    {
-        public static Assembly[] Assemblies { get; set; }
+	public static class ScriptCompiler
+	{
+		public static Assembly[] Assemblies { get; set; }
 
         public static bool Compile(bool debug, bool cache)
         {
