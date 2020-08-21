@@ -791,13 +791,9 @@ namespace Server
 
 	public class MovementEventArgs : EventArgs
 	{
-		private Mobile m_Mobile;
-		private Direction m_Direction;
-		private bool m_Blocked;
-
-		public Mobile Mobile => m_Mobile;
-		public Direction Direction => m_Direction;
-		public bool Blocked { get => m_Blocked; set => m_Blocked = value; }
+        public Mobile Mobile { get; private set; }
+        public Direction Direction { get; private set; }
+        public bool Blocked { get; set; }
 
 		private static readonly Queue<MovementEventArgs> m_Pool = new Queue<MovementEventArgs>();
 
@@ -809,9 +805,9 @@ namespace Server
 			{
 				args = m_Pool.Dequeue();
 
-				args.m_Mobile = mobile;
-				args.m_Direction = dir;
-				args.m_Blocked = false;
+				args.Mobile = mobile;
+				args.Direction = dir;
+				args.Blocked = false;
 			}
 			else
 			{
@@ -823,8 +819,8 @@ namespace Server
 
 		public MovementEventArgs(Mobile mobile, Direction dir)
 		{
-			m_Mobile = mobile;
-			m_Direction = dir;
+			Mobile = mobile;
+			Direction = dir;
 		}
 
 		public void Free()
