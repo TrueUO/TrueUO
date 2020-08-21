@@ -1944,7 +1944,7 @@ namespace Server
 
 		private static TimeSpan m_DDT = TimeSpan.FromMinutes(Config.Get("General.DefaultItemDecayTime", 60));
 
-		public static TimeSpan DefaultDecayTime { get => m_DDT; set => m_DDT = value; }
+		public static TimeSpan DefaultDecayTime { get; set; }
 
 		[CommandProperty(AccessLevel.GameMaster)]
 		public virtual int DecayMultiplier => 1;
