@@ -35,6 +35,7 @@ using Server.Spells.Seventh;
 using Server.Spells.Sixth;
 using Server.Spells.SkillMasteries;
 using Server.Targeting;
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -5043,7 +5044,7 @@ namespace Server.Mobiles
         {
             base.GetProperties(list);
 
-            JollyRogerData.DisplayTitle(this, list);
+            Engines.JollyRoger.JollyRogerData.DisplayTitle(this, list);
 
             if (m_SubtitleSkillTitle != null)
                 list.Add(1042971, m_SubtitleSkillTitle);

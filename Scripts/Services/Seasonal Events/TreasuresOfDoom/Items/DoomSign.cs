@@ -1,6 +1,8 @@
 using Server.Engines.Points;
 using Server.Gumps;
 using Server.Network;
+using Server.Engines.TreasuresOfDoom;
+
 using System;
 using System.Collections.Generic;
 
@@ -23,7 +25,7 @@ namespace Server.Items
 
         public override void OnDoubleClick(Mobile m)
         {
-            if (PointsSystem.TreasuresOfDoom.InSeason && m.InRange(GetWorldLocation(), 2))
+            if (TreasuresOfDoomEvent.Instance.Running && m.InRange(GetWorldLocation(), 2))
             {
                 Gump gump = new Gump(150, 150);
 
@@ -33,7 +35,7 @@ namespace Server.Items
             }
         }
 
-        public override bool HandlesOnMovement => PointsSystem.TreasuresOfDoom.InSeason;
+        public override bool HandlesOnMovement => TreasuresOfDoomEvent.Instance.Running;
 
         public override void OnMovement(Mobile m, Point3D oldLocation)
         {

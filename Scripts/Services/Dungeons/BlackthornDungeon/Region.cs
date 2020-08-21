@@ -33,7 +33,7 @@ namespace Server.Engines.Blackthorn
 
         public void OnTick()
         {
-            if (!PointsSystem.FellowshipData.IsRunning)
+            if (!Server.Engines.Fellowship.ForsakenFoesEvent.Instance.Running)
             {
                 foreach (Mobile m in GetEnumeratedMobiles().Where(m => m is PlayerMobile && m.AccessLevel == AccessLevel.Player))
                 {

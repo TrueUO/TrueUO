@@ -439,7 +439,7 @@ namespace Server.Items
             if (newSpecial != null)
                 cont.DropItem(newSpecial);
 
-            if (Engines.Points.PointsSystem.JollyRogerData.IsRunning && 0.15 > Utility.RandomDouble())
+            if (Server.Engines.JollyRoger.JollyRogerEvent.Instance.Running && 0.15 > Utility.RandomDouble())
                 cont.DropItem(new MysteriousFragment());
 
             int rolls = 2;

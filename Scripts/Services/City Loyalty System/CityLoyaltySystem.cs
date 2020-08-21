@@ -1153,7 +1153,7 @@ namespace Server.Engines.CityLoyalty
 
             if (CityTradeSystem.KrampusEncounterActive)
             {
-                KrampusEncounter.Encounter.OnTradeComplete(from, entry);
+                KrampusEvent.Instance.OnTradeComplete(from, entry);
             }
         }
 

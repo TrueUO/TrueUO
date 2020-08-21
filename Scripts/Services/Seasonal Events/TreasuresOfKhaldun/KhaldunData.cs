@@ -1,6 +1,8 @@
 using Server.Engines.SeasonalEvents;
 using Server.Items;
 using Server.Mobiles;
+using Server.Engines.Khaldun;
+
 using System;
 using System.Collections.Generic;
 
@@ -13,9 +15,6 @@ namespace Server.Engines.Points
         public override bool AutoAdd => true;
         public override double MaxPoints => double.MaxValue;
         public override bool ShowOnLoyaltyGump => false;
-
-        public bool InSeason => SeasonalEventSystem.IsActive(EventType.TreasuresOfKhaldun);
-        public bool IsRunning => SeasonalEventSystem.IsRunning(EventType.TreasuresOfKhaldun);
 
         private readonly TextDefinition m_Name = null;
 
@@ -33,7 +32,7 @@ namespace Server.Engines.Points
         {
             BaseCreature bc = victim as BaseCreature;
 
-            if (!InSeason || bc == null || bc.Controlled || bc.Summoned || !damager.Alive || damager.Deleted || bc.IsChampionSpawn)
+            if (!TreasuresOfKhaldunEvent.Instance.Running || bc == null || bc.Controlled || bc.Summoned || !damager.Alive || damager.Deleted || bc.IsChampionSpawn)
                 return;
 
             Region r = bc.Region;
@@ -120,7 +119,7 @@ namespace Server.Engines.Points
 
                         Timer.DelayCall(() =>
                         {
-                            var khaldun = SeasonalEventSystem.GetEvent(EventType.TreasuresOfKhaldun);
+                            var khaldun = SeasonalEventSystem.GetEvent<TreasuresOfKhaldunEvent>();
 
                             if (khaldun != null)
                             {

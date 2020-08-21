@@ -1,7 +1,9 @@
 using Server.Engines.Points;
 using Server.Engines.SeasonalEvents;
+using Server.Engines.SorcerersDungeon;
 using Server.Items;
 using Server.Mobiles;
+
 using System;
 using System.Collections.Generic;
 
@@ -16,9 +18,6 @@ namespace Server.Engines.SorcerersDungeon
         public override bool ShowOnLoyaltyGump => false;
 
         private readonly TextDefinition m_Name = null;
-
-        public bool InSeason => SeasonalEventSystem.IsActive(EventType.SorcerersDungeon);
-        public bool IsRunning => SeasonalEventSystem.IsRunning(EventType.SorcerersDungeon);
 
         public SorcerersDungeonData()
         {
@@ -42,7 +41,7 @@ namespace Server.Engines.SorcerersDungeon
                 TOSDSpawner.Instance.OnCreatureDeath(bc);
             }
 
-            if (!IsRunning || bc.Controlled || bc.Summoned || !damager.Alive)
+            if (!SorcerersDungeonEvent.Instance.Running || bc.Controlled || bc.Summoned || !damager.Alive)
                 return;
 
             Region r = bc.Region;

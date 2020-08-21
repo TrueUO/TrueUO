@@ -1,6 +1,8 @@
 using Server.Engines.SeasonalEvents;
 using Server.Items;
 using Server.Mobiles;
+using Server.Engines.RisingTide;
+
 using System;
 using System.Linq;
 
@@ -14,9 +16,6 @@ namespace Server.Engines.Points
         public override double MaxPoints => double.MaxValue;
         public override bool ShowOnLoyaltyGump => false;
 
-        public bool InSeason => SeasonalEventSystem.IsActive(EventType.RisingTide);
-        public bool IsRunning => SeasonalEventSystem.IsRunning(EventType.RisingTide);
-
         private readonly TextDefinition m_Name = null;
 
         public static readonly double CargoChance = 0.1;
@@ -28,7 +27,7 @@ namespace Server.Engines.Points
 
         public override void ProcessKill(Mobile victim, Mobile damager)
         {
-            if (IsRunning && victim is BaseCreature && damager is PlayerMobile)
+            if (RisingTideEvent.Instance.Running && victim is BaseCreature && damager is PlayerMobile)
             {
                 BaseCreature bc = victim as BaseCreature;
                 PlunderBeaconAddon beacon = GetPlunderBeacon(bc);

@@ -1,6 +1,8 @@
 using Server.ContextMenus;
 using Server.Engines.Points;
 using Server.Items;
+using Server.Engines.Khaldun;
+
 using System;
 using System.Collections.Generic;
 
@@ -61,7 +63,7 @@ namespace Server.Engines.Khaldun
                     Chests.Remove(Chest);
                 }
 
-                if (PointsSystem.TreasuresOfDoom.InSeason && Chests.Count < ChestCount)
+                if (TreasuresOfKhaldunEvent.Instance.Running && Chests.Count < ChestCount)
                 {
                     Timer.DelayCall(TimeSpan.FromSeconds(Utility.RandomMinMax(30, 60)), () =>
                     {

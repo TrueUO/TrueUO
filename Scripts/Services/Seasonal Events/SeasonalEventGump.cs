@@ -23,6 +23,7 @@ namespace Server.Engines.SeasonalEvents
             AddHtml(10, 40, 190, 20, "System Name", false, false);
             AddHtml(200, 40, 75, 20, "Status", false, false);
             AddHtml(275, 40, 150, 20, "Season", false, false);
+            AddHtml(400, 40, 50, 20, "Props", false, false);
             AddHtml(450, 40, 50, 20, "Edit", false, false);
 
             for (int i = 0; i < SeasonalEventSystem.Entries.Count; i++)
@@ -45,6 +46,7 @@ namespace Server.Engines.SeasonalEvents
                     AddLabel(275, y, hue, String.Format("{0}/{1} - {2}/{3}", entry.MonthStart.ToString(), entry.DayStart.ToString(), end.Month.ToString(), end.Day.ToString()));
                 }
 
+                AddButton(400, y, 4029, 4030, i + 100, GumpButtonType.Reply, 0);
                 AddButton(450, y, 4029, 4030, i + 10, GumpButtonType.Reply, 0);
                 y += 25;
             }
@@ -58,13 +60,26 @@ namespace Server.Engines.SeasonalEvents
             if (info.ButtonID == 0)
                 return;
 
-            if (info.ButtonID >= 10)
+            if (info.ButtonID >= 100)
+            {
+                int id = info.ButtonID - 100;
+                Refresh();
+
+                if (id >= 0 && id < SeasonalEventSystem.Entries.Count)
+                {
+                    var entry = SeasonalEventSystem.Entries[id];
+
+                    User.SendGump(new PropertiesGump(User, entry));
+                    User.SendMessage("You are viewing props for {0}", entry.Name);
+                }
+            }
+            else if (info.ButtonID >= 10)
             {
                 int id = info.ButtonID - 10;
 
                 if (id >= 0 && id < SeasonalEventSystem.Entries.Count)
                 {
-                    SeasonalEvent entry = SeasonalEventSystem.Entries[id];
+                    var entry = SeasonalEventSystem.Entries[id];
 
                     if (entry.EventType == EventType.TreasuresOfTokuno)
                     {

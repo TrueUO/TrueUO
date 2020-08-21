@@ -1,9 +1,10 @@
 using Server.Commands;
 using Server.Engines.Fellowship;
-using Server.Engines.JollyRoge;
+using Server.Engines.JollyRoger;
 using Server.Engines.Khaldun;
 using Server.Engines.RisingTide;
 using Server.Engines.SorcerersDungeon;
+using Server.Engines.TreasuresOfKotlCity;
 using Server.Engines.TreasuresOfDoom;
 using Server.Engines.ArtisanFestival;
 using Server.Gumps;
@@ -66,14 +67,14 @@ namespace Server.Engines.SeasonalEvents
         {
             Entries.Add(new SeasonalEvent(EventType.TreasuresOfTokuno, "Treasures of Tokuno", EventStatus.Inactive));
             Entries.Add(new SeasonalEvent(EventType.VirtueArtifacts, "Virtue Artifacts", EventStatus.Active));
-            Entries.Add(new SeasonalEvent(EventType.TreasuresOfKotlCity, "Treasures of Kotl", EventStatus.Inactive, 10, 1, 60));
+            Entries.Add(new TreasuresOfKotlCityEvent(EventType.TreasuresOfKotlCity, "Treasures of Kotl", EventStatus.Inactive, 10, 1, 60)); ;
             Entries.Add(new SorcerersDungeonEvent(EventType.SorcerersDungeon, "Sorcerer's Dungeon", EventStatus.Seasonal, 10, 1, 60));
-            Entries.Add(new SeasonalEvent(EventType.TreasuresOfDoom, "Treasures of Doom", EventStatus.Seasonal, 10, 1, 60));
-            Entries.Add(new SeasonalEvent(EventType.TreasuresOfKhaldun, "Treasures of Khaldun", EventStatus.Seasonal, 10, 1, 60));
-            Entries.Add(new SeasonalEvent(EventType.KrampusEncounter, "Krampus Encounter", EventStatus.Seasonal, 12, 1, 60));
-            Entries.Add(new SeasonalEvent(EventType.RisingTide, "Rising Tide", EventStatus.Active));
-            Entries.Add(new SeasonalEvent(EventType.Fellowship, "Fellowship", EventStatus.Inactive));
-            Entries.Add(new SeasonalEvent(EventType.JollyRoger, "Jolly Roger", EventStatus.Inactive));
+            Entries.Add(new TreasuresOfDoomEvent(EventType.TreasuresOfDoom, "Treasures of Doom", EventStatus.Seasonal, 10, 1, 60));
+            Entries.Add(new TreasuresOfKhaldunEvent(EventType.TreasuresOfKhaldun, "Treasures of Khaldun", EventStatus.Seasonal, 10, 1, 60));
+            Entries.Add(new KrampusEvent(EventType.KrampusEncounter, "Krampus Encounter", EventStatus.Seasonal, 12, 1, 60));
+            Entries.Add(new RisingTideEvent(EventType.RisingTide, "Rising Tide", EventStatus.Active));
+            Entries.Add(new ForsakenFoesEvent(EventType.Fellowship, "Fellowship", EventStatus.Inactive));
+            Entries.Add(new JollyRogerEvent(EventType.JollyRoger, "Jolly Roger", EventStatus.Inactive));
             Entries.Add(new ArtisanFestivalEvent(EventType.ArtisanFestival, "Artisan Festival", EventStatus.Seasonal, 12, 1, 30));
         }
 
@@ -109,6 +110,11 @@ namespace Server.Engines.SeasonalEvents
             }
 
             return false;
+        }
+
+        public static TEvent GetEvent<TEvent>() where TEvent : SeasonalEvent
+        {
+            return Entries.FirstOrDefault(e => e.GetType() == typeof(TEvent)) as TEvent;
         }
 
         public static SeasonalEvent GetEvent(EventType type)
@@ -161,7 +167,9 @@ namespace Server.Engines.SeasonalEvents
 
                     for (int i = 0; i < count; i++)
                     {
-                        SeasonalEvent entry = GetEvent((EventType)reader.ReadInt());
+                        var type = (EventType)reader.ReadInt();
+                        Console.WriteLine(type);
+                        SeasonalEvent entry = GetEvent(type);
                         entry.Deserialize(reader);
                     }
                 });
@@ -273,39 +281,6 @@ namespace Server.Engines.SeasonalEvents
             }
         }
 
-        /*public void OnStatusChange()
-        {
-            switch (EventType)
-            {
-                case EventType.TreasuresOfDoom:
-                    TreasuresOfDoomGeneration.CheckEnabled();
-                    break;
-                case EventType.TreasuresOfKhaldun:
-                    TreasuresOfKhaldunGeneration.CheckEnabled();
-                    break;
-                case EventType.SorcerersDungeon:
-                    SorcerersDungeonGenerate.CheckEnabled();
-                    break;
-                case EventType.KrampusEncounter:
-                    KrampusEncounter.CheckEnabled();
-                    break;
-                case EventType.RisingTide:
-                    RisingTideGeneration.CheckEnabled();
-                    break;
-                case EventType.Fellowship:
-                    ForsakenFoesGeneration.CheckEnabled();
-                    break;
-                case EventType.JollyRoger:
-                    JollyRogerGeneration.CheckEnabled();
-                    break;
-                case EventType.ArtisanFestival:
-                    ArtisanFestivalGeneration.CheckEnabled();
-                    break;
-            }
-
-            Running = IsActive();
-        }*/
-
         public virtual void CheckEnabled()
         {
             if (Running && !IsActive())
@@ -316,7 +291,7 @@ namespace Server.Engines.SeasonalEvents
             }
             else if (!Running && IsActive())
             {
-                Utility.WriteConsoleColor(ConsoleColor.Green, string.Format("Enabling {1}", Name));
+                Utility.WriteConsoleColor(ConsoleColor.Green, string.Format("Enabling {0}", Name));
 
                 Generate();
             }
@@ -348,7 +323,7 @@ namespace Server.Engines.SeasonalEvents
         public virtual void Deserialize(GenericReader reader)
         {
             var v = reader.ReadInt(); // version
-
+            Console.WriteLine("{0} Version: {1}", GetType().Name, v);
             switch (v)
             {
                 case 1:
@@ -366,12 +341,6 @@ namespace Server.Engines.SeasonalEvents
             if (v == 0)
             {
                 Running = IsActive();
-                InheritInsertion = true;
-            }
-
-            // TODO: Remvove this
-            if (v == 1)
-            {
                 InheritInsertion = true;
             }
         }

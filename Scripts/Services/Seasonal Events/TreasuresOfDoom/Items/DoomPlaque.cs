@@ -1,6 +1,8 @@
 using Server.Engines.Points;
 using Server.Network;
 using Server.Prompts;
+using Server.Engines.TreasuresOfDoom;
+
 using System;
 using System.Collections.Generic;
 
@@ -35,7 +37,7 @@ namespace Server.Items
 
         public override void OnMovement(Mobile m, Point3D oldLocation)
         {
-            if (PointsSystem.TreasuresOfDoom.InSeason && m.Player && m.InRange(Location, 3) && m.InLOS(this))
+            if (TreasuresOfDoomEvent.Instance.Running && m.Player && m.InRange(Location, 3) && m.InLOS(this))
             {
                 if (NextMessage == null)
                 {
