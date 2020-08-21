@@ -100,7 +100,7 @@ namespace Server
 
         public static MultiTextWriter MultiConsoleOut { get; private set; }
 
-        /* 
+        /*
 		 * DateTime.Now and DateTime.UtcNow are based on actual system clock time.
 		 * The resolution is acceptable but large clock jumps are possible and cause issues.
 		 * GetTickCount and GetTickCount64 have poor resolution.
@@ -365,7 +365,7 @@ namespace Server
             _Signal.Set();
         }
 
-        public static void Main(string[] args)
+        public static void Setup(string[] args)
         {
 #if DEBUG
             Debug = true;
@@ -612,9 +612,7 @@ namespace Server
 
             ScriptCompiler.Invoke("Initialize");
 
-            MessagePump messagePump = MessagePump = new MessagePump();
-
-            _TimerThread.Start();
+            MessagePump = new MessagePump();
 
             foreach (Map m in Map.AllMaps)
             {
@@ -622,8 +620,13 @@ namespace Server
             }
 
             NetState.Initialize();
+        }
 
+        public static void Run()
+        {
             EventSink.InvokeServerStarted();
+
+            _TimerThread.Start();
 
             try
             {
@@ -642,7 +645,7 @@ namespace Server
                     Item.ProcessDeltaQueue();
 
                     Timer.Slice();
-                    messagePump.Slice();
+                    MessagePump.Slice();
 
                     NetState.FlushAll();
                     NetState.ProcessDisposedQueue();
@@ -843,7 +846,7 @@ namespace Server
                         new FileStream(FileName, append ? FileMode.Append : FileMode.Create, FileAccess.Write, FileShare.Read)))
             {
                 writer.WriteLine(">>>Logging started on {0:f}.", DateTime.Now);
-                //f = Tuesday, April 10, 2001 3:51 PM 
+                //f = Tuesday, April 10, 2001 3:51 PM
             }
 
             _NewLine = true;
