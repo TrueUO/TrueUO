@@ -17,14 +17,13 @@ namespace Server.ContextMenus
 
         public override void OnClick()
         {
-            if (Callback != null)
-                Callback(From);
+            Callback?.Invoke(From);
         }
     }
 
     public class SimpleContextMenuEntry<T> : ContextMenuEntry
     {
-        private bool _NonLocalUse;
+        private readonly bool _NonLocalUse;
 
         public Mobile From { get; private set; }
         public T State { get; private set; }
