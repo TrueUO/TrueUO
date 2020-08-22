@@ -241,7 +241,7 @@ namespace Server
 						Console.WriteLine("Error: Type '{0}' was not found.", typeName);
 					}
 
-					throw new ArgumentNullException(string.Format("Bad type '{0}'", typeName));
+					throw new Exception(string.Format("Bad type '{0}'", typeName));
 				}
 
 				ConstructorInfo ctor = t.GetConstructor(m_SerialTypeArray);
@@ -252,7 +252,7 @@ namespace Server
 				}
 				else
 				{
-					throw new ArgumentNullException(string.Format("Type '{0}' does not have a serialization constructor", t));
+					throw new Exception(string.Format("Type '{0}' does not have a serialization constructor", t));
 				}
 			}
 
