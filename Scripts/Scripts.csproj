@@ -15,7 +15,7 @@
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <DefineConstants>DEBUG;TRACE</DefineConstants>
   </PropertyGroup>
-  
+
   <PropertyGroup>
     <DefineConstants>NEWTIMERS;ServUO</DefineConstants>
   </PropertyGroup>

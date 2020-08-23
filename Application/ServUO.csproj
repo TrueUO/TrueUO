@@ -22,7 +22,7 @@
   <PropertyGroup>
     <DefineConstants>NEWTIMERS;ServUO</DefineConstants>
   </PropertyGroup>
-  
+
   <ItemGroup>
     <ProjectReference Include="..\Scripts\Scripts.csproj" />
     <ProjectReference Include="..\Server\Server.csproj" />
