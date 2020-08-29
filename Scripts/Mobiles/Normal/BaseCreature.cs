@@ -1,7 +1,6 @@
 #region References
 using Server.ContextMenus;
 using Server.Engines.PartySystem;
-using Server.Engines.Points;
 using Server.Engines.Quests.Doom;
 using Server.Engines.VvV;
 using Server.Items;
@@ -792,7 +791,7 @@ namespace Server.Mobiles
             }
         }
 
-        public static bool IsSoulboundEnemies => PointsSystem.FellowshipData.Enabled;
+        public static bool IsSoulboundEnemies => Server.Engines.Fellowship.ForsakenFoesEvent.Instance.Running;
 
         public static Type[] _SoulboundCreatures =
         {
@@ -3006,10 +3005,12 @@ namespace Server.Mobiles
             {
                 canDrop = true;
             }
+            
             if (!canDrop && CheckGold(from, dropped))
             {
                 canDrop = true;
             }
+            
             if (!canDrop && !from.InRange(Location, 2) && base.OnDragDrop(from, dropped))
             {
                 return true;
