@@ -1,5 +1,4 @@
 using Server.Items;
-using Server.Mobiles;
 
 using System;
 using System.Linq;
@@ -26,7 +25,12 @@ namespace Server.Engines.ArtisanFestival
         {
         }
 
-        public void OnFlip(Mobile from)
+        public RewardLantern(Serial serial)
+            : base(serial)
+        {
+        }
+
+        public void OnFlip(Mobile m)
         {
             var list = IDTable.FirstOrDefault(l => l.Any(id => id == ItemID));
 
@@ -101,11 +105,6 @@ namespace Server.Engines.ArtisanFestival
             new int[] { 0xA07C, 0xA080, 0xA07D, 0xA081 }
         };
 
-        public RewardLantern(Serial serial)
-            : base(serial)
-        {
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -136,7 +135,12 @@ namespace Server.Engines.ArtisanFestival
         {
         }
 
-        public void OnFlip(Mobile from)
+        public RewardPillow(Serial serial)
+          : base(serial)
+        {
+        }
+
+        public void OnFlip(Mobile m)
         {
             var list = IDTable.FirstOrDefault(l => l.Any(id => id == ItemID));
 
@@ -183,11 +187,6 @@ namespace Server.Engines.ArtisanFestival
             new int[] { 0xA09B, 0xA09C },
         };
 
-        public RewardPillow(Serial serial)
-           : base(serial)
-        {
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -218,7 +217,12 @@ namespace Server.Engines.ArtisanFestival
         {
         }
 
-        public void OnFlip(Mobile from)
+        public RewardPainting(Serial serial)
+            : base(serial)
+        {
+        }
+
+        public void OnFlip(Mobile m)
         {
             var list = IDTable.FirstOrDefault(l => l.Any(id => id == ItemID));
 
@@ -265,11 +269,6 @@ namespace Server.Engines.ArtisanFestival
             new int[] { 0xA0AA, 0xA0A9 },
         };
 
-        public RewardPainting(Serial serial)
-           : base(serial)
-        {
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -297,6 +296,11 @@ namespace Server.Engines.ArtisanFestival
 
         public RewardSculpture(Mobile m)
             : base(GetID(m))
+        {
+        }
+
+        public RewardSculpture(Serial serial)
+           : base(serial)
         {
         }
 
@@ -361,11 +365,6 @@ namespace Server.Engines.ArtisanFestival
             new int[] { 0xA4A3, 0xA4A4 },
             new int[] { 0xA4A8, 0xA4A9 }
         };
-
-        public RewardSculpture(Serial serial)
-           : base(serial)
-        {
-        }
 
         public override void Serialize(GenericWriter writer)
         {

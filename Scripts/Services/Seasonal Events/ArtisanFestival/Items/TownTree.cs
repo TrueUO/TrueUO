@@ -78,7 +78,7 @@ namespace Server.Engines.ArtisanFestival
 
         public void CheckTreeID()
         {
-            var tree = Components.FirstOrDefault(comp => comp is TownTreeComponent) as AddonComponent;
+            var tree = Components.FirstOrDefault(comp => comp is TownTreeComponent);
 
             if (tree != null)
             {
@@ -125,7 +125,7 @@ namespace Server.Engines.ArtisanFestival
 
             if ((int)_Stage != 5)
             {
-                var star = Components.FirstOrDefault(comp => comp.ItemID == 0x9E97) as AddonComponent;
+                var star = Components.FirstOrDefault(comp => comp.ItemID == 0x9E97);
 
                 if (star != null)
                 {

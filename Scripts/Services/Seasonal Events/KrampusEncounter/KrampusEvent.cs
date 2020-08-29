@@ -1,6 +1,4 @@
-using Server.Commands;
 using Server.Engines.CityLoyalty;
-using Server.Gumps;
 using Server.Items;
 using Server.Mobiles;
 using Server.Network;
@@ -190,7 +188,7 @@ namespace Server.Engines.SeasonalEvents
             TotalTradesComplete = 0;
         }
 
-        public Type[][] _SpawnTypes =
+        private readonly Type[][] _SpawnTypes =
         {
             new Type[] { typeof(FrostOoze), typeof(FrostSpider) },
             new Type[] { typeof(SnowElemental), typeof(IceElemental) },
@@ -200,7 +198,7 @@ namespace Server.Engines.SeasonalEvents
             new Type[] { typeof(Krampus) }
         };
 
-        public Type[] _WetSpawnTypes =
+        private readonly Type[] _WetSpawnTypes =
         {
             typeof(SeaSerpent), typeof(DeepSeaSerpent), typeof(Kraken), typeof(WaterElemental)
         };
@@ -265,7 +263,7 @@ namespace Server.Engines.SeasonalEvents
             }
         }
 
-        public static string FilePath = Path.Combine("Saves/Misc", "KrampusEncounter.bin");
+        private static readonly string FilePath = Path.Combine("Saves/Misc", "KrampusEncounter.bin");
 
         public static void Configure()
         {
@@ -291,7 +289,10 @@ namespace Server.Engines.SeasonalEvents
                             {
                                 Instance.Deserialize(reader, 1);
                             }
-                            catch { }
+                            catch (Exception e)
+                            {
+                                Server.Diagnostics.ExceptionLogging.LogException(e);
+                            }
                         });
                     }
 
@@ -301,24 +302,12 @@ namespace Server.Engines.SeasonalEvents
                         {
                             System.IO.File.Delete(FilePath);
                         }
-                        catch { }
+                        catch (Exception e)
+                        {
+                            Server.Diagnostics.ExceptionLogging.LogException(e);
+                        }
                     });
                 });
         }
-
-        /*public static void Initialize()
-        {
-            CommandSystem.Register("KrampusEncounter", AccessLevel.Administrator, e =>
-            {
-                if (Encounter != null)
-                {
-                    e.Mobile.SendGump(new PropertiesGump(e.Mobile, Encounter));
-                }
-                else
-                {
-                    e.Mobile.SendMessage("Encounter null");
-                }
-            });
-        }*/
     }
 }

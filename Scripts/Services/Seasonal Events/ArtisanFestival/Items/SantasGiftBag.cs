@@ -1,8 +1,6 @@
 using Server.Items;
 using Server.Mobiles;
 
-using System.Linq;
-
 namespace Server.Engines.ArtisanFestival
 {
     public class SantasGiftBag : Item
@@ -16,9 +14,14 @@ namespace Server.Engines.ArtisanFestival
             Movable = false;
         }
 
-        public override void OnDoubleClick(Mobile m)
+        public SantasGiftBag(Serial serial)
+            : base(serial)
         {
-            if (m is PlayerMobile pm && m.InRange(GetWorldLocation(), 3))
+        }
+
+        public override void OnDoubleClick(Mobile from)
+        {
+            if (from is PlayerMobile pm && from.InRange(GetWorldLocation(), 3))
             {
                 var festival = ArtisanFestivalEvent.Instance;
 
@@ -52,11 +55,6 @@ namespace Server.Engines.ArtisanFestival
                     }
                 }
             }
-        }
-
-        public SantasGiftBag(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)

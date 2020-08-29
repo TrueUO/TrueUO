@@ -132,9 +132,7 @@ namespace Server.Engines.CityLoyalty
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(2);
-
-            writer.Write(ArtisanBodPoints);
+            writer.Write(1);
 
             writer.Write(ShowGainMessage);
 
@@ -158,7 +156,7 @@ namespace Server.Engines.CityLoyalty
             switch (version)
             {
                 case 2:
-                    ArtisanBodPoints = reader.ReadDouble();
+                    reader.ReadInt();
                     goto case 1;
                 case 1:
                     ShowGainMessage = reader.ReadBool();

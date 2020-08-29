@@ -381,9 +381,13 @@ namespace Server.Engines.CityLoyalty
 
                     if (e.Love > 10)
                     {
-                        double convert = e.Love / 75;
-                        e.Love -= (int)convert;
-                        e.Neutrality += (int)convert;
+                        double convert = (double)e.Love / 75.0;
+
+                        if (convert > 0.0)
+                        {
+                            e.Love -= (int)convert;
+                            e.Neutrality += (int)convert;
+                        }
                     }
                 }
             }

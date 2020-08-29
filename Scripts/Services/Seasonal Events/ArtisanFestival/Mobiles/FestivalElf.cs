@@ -4,13 +4,12 @@ using Server.Engines.BulkOrders;
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.ArtisanFestival
 {
     public class FestivalElf : BaseVendor
     {
-        protected override List<SBInfo> SBInfos { get { return null; } }
+        protected override List<SBInfo> SBInfos { get { return new List<SBInfo>(); } }
         public override bool IsActiveVendor => false;
 
         public override void InitSBInfo()
@@ -27,6 +26,11 @@ namespace Server.Engines.ArtisanFestival
         {
         }
 
+        public FestivalElf(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void InitOutfit()
         {
             SetWearable(new FancyShirt(), 0x26);
@@ -40,34 +44,31 @@ namespace Server.Engines.ArtisanFestival
 
         public override bool OnDragDrop(Mobile from, Item dropped)
         {
-            if (from is PlayerMobile pm)
+            if (from is PlayerMobile pm && dropped is IBOD bod)
             {
-                if (dropped is IBOD bod)
+                if (!bod.Complete)
                 {
-                    if (!bod.Complete)
-                    {
-                        SayTo(from, 1045131, 0x3B2); // You have not completed the order yet.
-                        return false;
-                    }
+                    SayTo(from, 1045131, 0x3B2); // You have not completed the order yet.
+                    return false;
+                }
 
-                    var festival = ArtisanFestivalEvent.Instance;
+                var festival = ArtisanFestivalEvent.Instance;
 
-                    if (festival.Running && !festival.ClaimPeriod)
-                    {
-                        int points = 0;
-                        double banked = 0.0;
+                if (festival.Running && !festival.ClaimPeriod)
+                {
+                    int points = 0;
+                    double banked = 0.0;
 
-                        if (bod is SmallBOD)
-                            BulkOrderSystem.ComputePoints((SmallBOD)dropped, out points, out banked);
-                        else
-                            BulkOrderSystem.ComputePoints((LargeBOD)dropped, out points, out banked);
+                    if (bod is SmallBOD)
+                        BulkOrderSystem.ComputePoints((SmallBOD)dropped, out points, out banked);
+                    else
+                        BulkOrderSystem.ComputePoints((LargeBOD)dropped, out points, out banked);
 
-                        festival.OnBodTurnIn(pm, this, banked);
-                        Say(1157204, pm.Name, 1150); // Ho! Ho! Thank ye ~1_PLAYER~ for giving me a Bulk Order Deed!
+                    festival.OnBodTurnIn(pm, this, banked);
+                    Say(1157204, pm.Name, 1150); // Ho! Ho! Thank ye ~1_PLAYER~ for giving me a Bulk Order Deed!
 
-                        dropped.Delete();
-                        return false;
-                    }
+                    dropped.Delete();
+                    return false;
                 }
             }
 
@@ -81,11 +82,6 @@ namespace Server.Engines.ArtisanFestival
                 Say(1157279, 1150); // Ho ho ho! Santa has delivered gifts to those lucky participants in this City!  Use the gift bag to claim your prize!
                 _NextTalk = DateTime.UtcNow + TimeSpan.FromMinutes(3);
             }
-        }
-
-        public FestivalElf(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)

@@ -96,10 +96,13 @@ namespace Server.Engines.TreasuresOfKotlCity
         {
             IPooledEnumerable eable = map.GetItemsInRange(p, 0);
 
-            foreach (var item in eable.OfType<T>())
+            foreach (var item in eable)
             {
-                eable.Free();
-                return true;
+                if (item.GetType() == typeof(T))
+                {
+                    eable.Free();
+                    return true;
+                }
             }
 
             eable.Free();

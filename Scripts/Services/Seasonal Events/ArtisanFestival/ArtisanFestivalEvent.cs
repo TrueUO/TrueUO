@@ -27,7 +27,7 @@ namespace Server.Engines.ArtisanFestival
 
         public static ArtisanFestivalEvent Instance { get; set; }
 
-        public static City[] Cities = new[]
+        private static readonly City[] Cities = new[]
         {
             City.Britain, City.Jhelom, City.Minoc, City.Moonglow, City.NewMagincia, City.SkaraBrae, City.Trinsic, City.Vesper, City.Yew
         };
@@ -46,7 +46,7 @@ namespace Server.Engines.ArtisanFestival
 
                 if (old != _Stage)
                 {
-                    ChangeStage(old, _Stage);
+                    ChangeStage(_Stage);
                 }
             }
         }
@@ -242,7 +242,7 @@ namespace Server.Engines.ArtisanFestival
             return list;
         }
 
-        private void ChangeStage(int oldStage, int newStage)
+        private void ChangeStage(int newStage)
         {
             if (newStage > -1)
             {
@@ -442,35 +442,31 @@ namespace Server.Engines.ArtisanFestival
             {
                 for (int i = 0; i < 30; i++)
                 {
-                    var spawnPoint = Point3D.Zero;
+                    Point3D spawnPoint;
 
-                    do
+                    var temp = new Point3D(Utility.RandomMinMax(tree.X - 5, tree.X + 5), Utility.RandomMinMax(tree.Y - 5, tree.Y + 5), tree.Z);
+
+                    IPooledEnumerable eable = map.GetItemsInRange(temp, 0);
+                    var spawnZ = temp.Z;
+
+                    foreach (var comp in eable.OfType<AddonComponent>().Where(c => c.ItemID >= 0x46A2 && c.ItemID < 0x46A7))
                     {
-                        var temp = new Point3D(Utility.RandomMinMax(tree.X - 5, tree.X + 5), Utility.RandomMinMax(tree.Y - 5, tree.Y + 5), tree.Z);
-
-                        IPooledEnumerable eable = map.GetItemsInRange(temp, 0);
-                        var spawnZ = temp.Z;
-
-                        foreach (var comp in eable.OfType<AddonComponent>().Where(c => c.ItemID >= 0x46A2 && c.ItemID < 0x46A7))
-                        {
-                            spawnZ = Math.Max(spawnZ, comp.Z + 5);
-                        }
-
-                        eable.Free();
-
-                        if (spawnZ != TownTree.Z)
-                        {
-                            spawnPoint = temp;
-                            spawnPoint.Z = spawnZ;
-                        }
-                        else
-                        {
-                            Server.Spells.SpellHelper.AdjustField(ref temp, map, 20, false);
-
-                            spawnPoint = temp;
-                        }
+                        spawnZ = Math.Max(spawnZ, comp.Z + 5);
                     }
-                    while (spawnPoint == Point3D.Zero);
+
+                    eable.Free();
+
+                    if (spawnZ != TownTree.Z)
+                    {
+                        spawnPoint = temp;
+                        spawnPoint.Z = spawnZ;
+                    }
+                    else
+                    {
+                        Server.Spells.SpellHelper.AdjustField(ref temp, map, 20, false);
+
+                        spawnPoint = temp;
+                    }
 
                     var component = new AddonComponent(Utility.Random(0x46A2, 6));
                     component.Hue = Utility.RandomMinMax(1, 500);
@@ -534,11 +530,6 @@ namespace Server.Engines.ArtisanFestival
 
                 Timer.DelayCall(() => elf.Say(loc, 1150));
             }
-        }
-
-        private double TotalPoints()
-        {
-            return PointTable.Sum(kvp => kvp.Value);
         }
 
         private void FireworkShow(IEntity e)

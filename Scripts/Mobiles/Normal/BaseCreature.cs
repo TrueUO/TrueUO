@@ -1,7 +1,6 @@
 #region References
 using Server.ContextMenus;
 using Server.Engines.PartySystem;
-using Server.Engines.Points;
 using Server.Engines.Quests.Doom;
 using Server.Engines.VvV;
 using Server.Items;

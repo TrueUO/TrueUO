@@ -68,7 +68,7 @@ namespace Server.Engines.SeasonalEvents
         {
             Entries.Add(new SeasonalEvent(EventType.TreasuresOfTokuno, "Treasures of Tokuno", EventStatus.Inactive));
             Entries.Add(new SeasonalEvent(EventType.VirtueArtifacts, "Virtue Artifacts", EventStatus.Active));
-            Entries.Add(new TreasuresOfKotlCityEvent(EventType.TreasuresOfKotlCity, "Treasures of Kotl", EventStatus.Inactive, 10, 1, 60)); ;
+            Entries.Add(new TreasuresOfKotlCityEvent(EventType.TreasuresOfKotlCity, "Treasures of Kotl", EventStatus.Inactive, 10, 1, 60));
             Entries.Add(new SorcerersDungeonEvent(EventType.SorcerersDungeon, "Sorcerer's Dungeon", EventStatus.Seasonal, 10, 1, 60));
             Entries.Add(new TreasuresOfDoomEvent(EventType.TreasuresOfDoom, "Treasures of Doom", EventStatus.Seasonal, 10, 1, 60));
             Entries.Add(new TreasuresOfKhaldunEvent(EventType.TreasuresOfKhaldun, "Treasures of Khaldun", EventStatus.Seasonal, 10, 1, 60));

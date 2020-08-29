@@ -19,14 +19,19 @@ namespace Server.Engines.ArtisanFestival
             DropItem(RandomGift(m));
         }
 
+        public SpecialGift(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void AddNameProperty(ObjectPropertyList list)
         {
             list.Add(1157163, _Owner != null ? _Owner.Name : "Somebody"); // A Special Gift for ~1_NAME~ 
         }
 
-        public override void OnDoubleClick(Mobile m)
+        public override void OnDoubleClick(Mobile from)
         {
-            if (m is PlayerMobile pm && m.InRange(GetWorldLocation(), 3))
+            if (from is PlayerMobile pm && from.InRange(GetWorldLocation(), 3))
             {
                 if (_Owner == null || pm == _Owner)
                 {
@@ -48,11 +53,6 @@ namespace Server.Engines.ArtisanFestival
                 case 2: return new RewardPainting(m);
                 case 3: return new RewardSculpture(m);
             }
-        }
-
-        public SpecialGift(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
@@ -85,14 +85,14 @@ namespace Server.Engines.ArtisanFestival
         {
         }
 
-        public override void OnDoubleClick(Mobile m)
+        public override void OnDoubleClick(Mobile from)
         {
-            if (IsChildOf(m.Backpack))
+            if (IsChildOf(from.Backpack))
             {
-                var gift = new SpecialGift(m);
+                var gift = new SpecialGift(from);
                 gift.Hue = Hue;
 
-                m.Backpack.DropItem(gift);
+                from.Backpack.DropItem(gift);
                 Delete();
             }
         }

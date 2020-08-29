@@ -1,8 +1,5 @@
-using Server.Engines.Points;
 using Server.Items;
 using Server.Engines.SeasonalEvents;
-
-using System;
 
 namespace Server.Engines.RisingTide
 {
@@ -44,7 +41,7 @@ namespace Server.Engines.RisingTide
 
             if (PlunderBeaconSpawner.Spawner == null)
             {
-                new PlunderBeaconSpawner();
+                PlunderBeaconSpawner.Spawner = new PlunderBeaconSpawner();
             }
         }
 
@@ -70,7 +67,7 @@ namespace Server.Engines.RisingTide
 
             if (Instance.Running && PlunderBeaconSpawner.Spawner == null)
             {
-                new PlunderBeaconSpawner();
+                PlunderBeaconSpawner.Spawner = new PlunderBeaconSpawner();
             }
         }
     }

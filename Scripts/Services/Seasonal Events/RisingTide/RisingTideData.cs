@@ -114,7 +114,9 @@ namespace Server.Engines.Points
 
             if (reader.ReadInt() == 0)
             {
-                PlunderBeaconSpawner spawner = new PlunderBeaconSpawner();
+                var spawner = new PlunderBeaconSpawner();
+                PlunderBeaconSpawner.Spawner = spawner;
+
                 spawner.Deserialize(reader);
             }
         }
