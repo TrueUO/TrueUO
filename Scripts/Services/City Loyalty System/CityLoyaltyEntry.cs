@@ -155,9 +155,6 @@ namespace Server.Engines.CityLoyalty
 
             switch (version)
             {
-                case 2:
-                    reader.ReadInt();
-                    goto case 1;
                 case 1:
                     ShowGainMessage = reader.ReadBool();
                     goto case 0;
