@@ -439,9 +439,6 @@ namespace Server.Items
             if (newSpecial != null)
                 cont.DropItem(newSpecial);
 
-            if (Server.Engines.JollyRoger.JollyRogerEvent.Instance.Running && 0.15 > Utility.RandomDouble())
-                cont.DropItem(new MysteriousFragment());
-
             int rolls = 2;
 
             if (level >= 5)
