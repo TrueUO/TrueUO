@@ -2,8 +2,6 @@ using Server.Engines.SeasonalEvents;
 using Server.Commands;
 using Server.Items;
 
-using System.Linq;
-
 namespace Server.Engines.TreasuresOfKotlCity
 {
     public class TreasuresOfKotlCityEvent : SeasonalEvent
