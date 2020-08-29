@@ -129,11 +129,11 @@ namespace Server.Items
 
                     if (hm > 1000)
                     {
-                        es.SoulPoint += hm / 1000;
+                        es.SoulPoint += (double)hm/1000;
                     }
                     else
                     {
-                        es.SoulPoint += hm / 100;
+                        es.SoulPoint += (double)hm/100;
                     }
                 }
             }
