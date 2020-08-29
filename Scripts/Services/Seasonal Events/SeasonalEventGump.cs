@@ -43,7 +43,14 @@ namespace Server.Engines.SeasonalEvents
                 {
                     DateTime end = new DateTime(DateTime.Now.Year, entry.MonthStart, entry.DayStart, 0, 0, 0) + TimeSpan.FromDays(entry.Duration);
 
-                    AddLabel(275, y, hue, String.Format("{0}/{1} - {2}/{3}", entry.MonthStart.ToString(), entry.DayStart.ToString(), end.Month.ToString(), end.Day.ToString()));
+                    if (entry.Duration > -1)
+                    {
+                        AddLabel(275, y, hue, String.Format("{0}/{1} - {2}/{3}", entry.MonthStart.ToString(), entry.DayStart.ToString(), end.Month.ToString(), end.Day.ToString()));
+                    }
+                    else
+                    {
+                        AddLabel(275, y, hue, String.Format("{0}/{1} - Completion", entry.MonthStart.ToString(), entry.DayStart.ToString()));
+                    }
                 }
 
                 AddButton(400, y, 4029, 4030, i + 100, GumpButtonType.Reply, 0);
@@ -94,6 +101,7 @@ namespace Server.Engines.SeasonalEvents
             }
             else if (info.ButtonID == 1)
             {
+                SeasonalEventSystem.ClearEntries();
                 SeasonalEventSystem.LoadEntries();
                 User.SendMessage("All event entries have been restored to default.");
 

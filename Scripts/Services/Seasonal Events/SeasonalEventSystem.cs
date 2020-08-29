@@ -38,6 +38,7 @@ namespace Server.Engines.SeasonalEvents
         Inactive,
         Active,
         Seasonal,
+        Dynamic
     }
 
     public interface ISeasonalEventObject
@@ -58,7 +59,7 @@ namespace Server.Engines.SeasonalEvents
 
             EventSink.WorldSave += OnSave;
             EventSink.WorldLoad += OnLoad;
-            EventSink.AfterWorldSave += AfterSafe;
+            EventSink.AfterWorldSave += AfterSave;
 
             CommandSystem.Register("SeasonSystemGump", AccessLevel.Administrator, SendGump);
         }
@@ -75,7 +76,12 @@ namespace Server.Engines.SeasonalEvents
             Entries.Add(new RisingTideEvent(EventType.RisingTide, "Rising Tide", EventStatus.Active));
             Entries.Add(new ForsakenFoesEvent(EventType.Fellowship, "Fellowship", EventStatus.Inactive));
             Entries.Add(new JollyRogerEvent(EventType.JollyRoger, "Jolly Roger", EventStatus.Inactive));
-            Entries.Add(new ArtisanFestivalEvent(EventType.ArtisanFestival, "Artisan Festival", EventStatus.Seasonal, 12, 1, 30));
+            Entries.Add(new ArtisanFestivalEvent(EventType.ArtisanFestival, "Artisan Festival", EventStatus.Seasonal, 12, 1, -1));
+        }
+
+        public static void ClearEntries()
+        {
+            Entries.Clear();
         }
 
         [Usage("SeasonSystemGump")]
@@ -168,14 +174,14 @@ namespace Server.Engines.SeasonalEvents
                     for (int i = 0; i < count; i++)
                     {
                         var type = (EventType)reader.ReadInt();
-                        Console.WriteLine(type);
+
                         SeasonalEvent entry = GetEvent(type);
                         entry.Deserialize(reader);
                     }
                 });
         }
 
-        public static void AfterSafe(AfterWorldSaveEventArgs e)
+        public static void AfterSave(AfterWorldSaveEventArgs e)
         {
             for (int i = 0; i < Entries.Count; i++)
             {
@@ -188,9 +194,10 @@ namespace Server.Engines.SeasonalEvents
     public class SeasonalEvent
     {
         private EventStatus _Status;
+        private int _Duration;
 
         [CommandProperty(AccessLevel.Administrator)]
-        public EventStatus Status
+        public virtual EventStatus Status
         {
             get
             {
@@ -222,9 +229,27 @@ namespace Server.Engines.SeasonalEvents
         public int DayStart { get; set; }
 
         [CommandProperty(AccessLevel.Administrator)]
-        public int Duration { get; set; }
+        public int Duration
+        {
+            get { return _Duration; }
+            set
+            {
+                if (!FreezeDuration)
+                {
+                    _Duration = value;
+                }
+            }
+        }
 
-        public bool Running { get; private set; }
+        [CommandProperty(AccessLevel.Administrator)]
+        public bool Running { get; protected set; }
+
+        public virtual bool FreezeDuration { get { return false; } }
+
+        public override string ToString()
+        {
+            return "...";
+        }
 
         public SeasonalEvent(EventType type, string name, EventStatus status)
         {
@@ -233,7 +258,7 @@ namespace Server.Engines.SeasonalEvents
             _Status = status;
             MonthStart = 1;
             DayStart = 1;
-            Duration = 365;
+            _Duration = 365;
         }
 
         public SeasonalEvent(EventType type, string name, EventStatus status, int month, int day, int duration)
@@ -243,14 +268,14 @@ namespace Server.Engines.SeasonalEvents
             _Status = status;
             MonthStart = month;
             DayStart = day;
-            Duration = duration;
+            _Duration = duration;
         }
 
         /// <summary>
         /// Dynamically checks if this event is active or not, based on time of year/override
         /// </summary>
         /// <returns></returns>
-        public bool IsActive()
+        public virtual bool IsActive()
         {
             // ToT uses its own system, this just reads it
             if (EventType == EventType.TreasuresOfTokuno)
@@ -276,7 +301,14 @@ namespace Server.Engines.SeasonalEvents
                         DateTime now = DateTime.Now;
                         DateTime starts = new DateTime(now.Year, MonthStart, DayStart, 0, 0, 0);
 
-                        return now > starts && now < starts + TimeSpan.FromDays(Duration);
+                        if (Duration == -1)
+                        {
+                            return now.Month == MonthStart && now.Day == DayStart;
+                        }
+                        else
+                        {
+                            return now > starts && now < starts + TimeSpan.FromDays(Duration);
+                        }
                     }
             }
         }
@@ -323,7 +355,7 @@ namespace Server.Engines.SeasonalEvents
         public virtual void Deserialize(GenericReader reader)
         {
             var v = reader.ReadInt(); // version
-            Console.WriteLine("{0} Version: {1}", GetType().Name, v);
+
             switch (v)
             {
                 case 1:
@@ -334,7 +366,7 @@ namespace Server.Engines.SeasonalEvents
 
                     MonthStart = reader.ReadInt();
                     DayStart = reader.ReadInt();
-                    Duration = reader.ReadInt();
+                    _Duration = reader.ReadInt();
                     break;
             }
 
