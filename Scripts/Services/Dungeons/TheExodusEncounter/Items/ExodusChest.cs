@@ -144,7 +144,6 @@ namespace Server.Items
             if (0.25 > Utility.RandomDouble())
             {
                 item = new SmokeBomb(Utility.Random(3, 6));
-                DropItem(item);
             }
 
             if (0.25 > Utility.RandomDouble())
