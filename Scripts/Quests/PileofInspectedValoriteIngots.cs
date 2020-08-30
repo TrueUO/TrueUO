@@ -6,9 +6,7 @@ namespace Server.Items
         public PileofInspectedValoriteIngots()
             : base(0x1BEA)
         {
-            Name = "Pile of Inspected Valorite Ingots";
-
-            Hue = 2219;
+            Hue = CraftResources.GetHue(CraftResource.Valorite);
         }
 
         public PileofInspectedValoriteIngots(Serial serial)
