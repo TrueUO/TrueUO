@@ -1,8 +1,6 @@
 using Server.Items;
 using Server.Mobiles;
 
-using System.Linq;
-
 namespace Server.Engines.ArtisanFestival
 {
     public class SpecialGift : BaseContainer
