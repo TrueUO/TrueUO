@@ -304,11 +304,11 @@ namespace Server.Engines.ArtisanFestival
         {
         }
 
-        public override void OnDoubleClick(Mobile m)
+        public override void OnDoubleClick(Mobile from)
         {
-            if (!Active && !IsChildOf(m.Backpack))
+            if (!Active && !IsChildOf(from.Backpack))
             {
-                m.SendLocalizedMessage(1042001); // That must be in your pack for you to use it.
+                from.SendLocalizedMessage(1042001); // That must be in your pack for you to use it.
             }
             else
             {
