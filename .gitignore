@@ -47,3 +47,5 @@ System.Drawing.Common.dll
 
 !/Data/*
 !/bin/rosyln/*
+
+/Data/PVPTournamentSystemData
