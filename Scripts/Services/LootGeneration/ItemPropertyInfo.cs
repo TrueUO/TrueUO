@@ -271,10 +271,10 @@ namespace Server.Items
             // i = runic, r = reforg, l = loot
             // 1 = melee, 2 = ranged, 3 = armor, 4 = sheild, 5 = hat, 6 = jewels
             Register(1, new ItemPropertyInfo(AosAttribute.DefendChance, 1075620, 110, typeof(RelicFragment), typeof(Tourmaline), typeof(EssenceSingularity), 1, 1, 15, 1111947,
-                new PropInfo(1, 15, 15, new int[] { 20 }), new PropInfo(2, 25, 25, new int[] { 30, 35 }), new PropInfo(3, 0, 5, true), new PropInfo(4, 15, 15, new int[] { 20 }, true), new PropInfo(5, 0, 5, true), new PropInfo(6, 15, 15, new int[] { 20 })));
+                new PropInfo(1, 15, 15, new int[] { 20 }), new PropInfo(2, 25, 25, new int[] { 30, 35 }), new PropInfo(3, 0, 5, true), new PropInfo(4, 15, 15, new int[] { 20 }), new PropInfo(5, 0, 5, true), new PropInfo(6, 15, 15, new int[] { 20 })));
 
             Register(2, new ItemPropertyInfo(AosAttribute.AttackChance, 1075616, 130, typeof(RelicFragment), typeof(Amber), typeof(EssencePrecision), 1, 1, 15, 1111958,
-                new PropInfo(1, 15, 15, new int[] { 20 }), new PropInfo(2, 25, 25, new int[] { 30, 35 }), new PropInfo(3, 0, 5, true), new PropInfo(4, 15, 15, new int[] { 20 }, true), new PropInfo(5, 0, 5, true), new PropInfo(6, 15, 15, new int[] { 20 })));
+                new PropInfo(1, 15, 15, new int[] { 20 }), new PropInfo(2, 25, 25, new int[] { 30, 35 }), new PropInfo(3, 0, 5, true), new PropInfo(4, 15, 15, new int[] { 20 }), new PropInfo(5, 0, 5, true), new PropInfo(6, 15, 15, new int[] { 20 })));
 
             Register(3, new ItemPropertyInfo(AosAttribute.RegenHits, 1075627, 100, typeof(EnchantedEssence), typeof(Tourmaline), typeof(SeedOfRenewal), 1, 1, 2, 1111994,
                 new PropInfo(1, 3, 0, 9), new PropInfo(2, 3, 0, 9), new PropInfo(3, 2, 2, new int[] { 4 }), new PropInfo(4, 0, 2, new int[] { 4 }), new PropInfo(5, 2, 2, new int[] { 4 })));
@@ -728,7 +728,7 @@ namespace Server.Items
 
         public static int GetMaxIntensity(Item item, object attribute)
         {
-            return GetMaxIntensity(item, GetID(attribute), false);
+            return GetMaxIntensity(item, GetID(attribute), false, false);
         }
 
         /// <summary>
@@ -737,15 +737,16 @@ namespace Server.Items
         /// <param name="item">item to check</param>
         /// <param name="id">property id</param>
         /// <param name="imbuing">true for imbuing, false for loot</param>
+        /// <param name="applyingProperty">are we calling this to assign a property value</param>
         /// <returns></returns>
-        public static int GetMaxIntensity(Item item, int id, bool imbuing)
+        public static int GetMaxIntensity(Item item, int id, bool imbuing, bool applyingProperty = false)
         {
             if (Table.ContainsKey(id))
             {
                 PropInfo info = Table[id].GetItemTypeInfo(GetItemType(item));
 
                 // First, we try to get the max intensity from the PropInfo. If null or we're getting an intensity for special imbuing purpopses, we go to the default MaxIntenity
-                if (info == null || info.UseStandardMax || (imbuing && !ForcesNewLootMax(item, id)))
+                if (info == null || (!applyingProperty && info.UseStandardMax) || (imbuing && !ForcesNewLootMax(item, id)))
                 {
                     if (item is BaseWeapon && (id == 25 || id == 27))
                     {
