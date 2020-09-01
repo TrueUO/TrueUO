@@ -3,6 +3,7 @@ using Server.Multis;
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 #endregion
 
 namespace Server.Items
@@ -81,6 +82,8 @@ namespace Server.Items
 
         public virtual bool RetainDeedHue => Hue != 0 && CraftResources.GetHue(Resource) != Hue;
 
+        public virtual bool RetainComponentHue => false;
+
         public virtual void OnChop(Mobile from)
         {
             BaseHouse house = BaseHouse.FindHouseAt(this);
@@ -120,10 +123,13 @@ namespace Server.Items
 
                 if (deed != null)
                 {
-                    if (RetainDeedHue)
-                        deed.Hue = hue;
-                    else
-                        deed.Hue = 0;
+                    if (!RetainComponentHue)
+                    {
+                        if (RetainDeedHue)
+                            deed.Hue = hue;
+                        else
+                            deed.Hue = 0;
+                    }
 
                     deed.IsReDeed = true;
 
