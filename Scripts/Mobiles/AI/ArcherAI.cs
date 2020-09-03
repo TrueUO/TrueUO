@@ -59,17 +59,10 @@ namespace Server.Mobiles
                 }
             }
 
-            if (!m_Mobile.Controlled && !m_Mobile.Summoned && m_Mobile.CanFlee)
+            if (!m_Mobile.Controlled && !m_Mobile.Summoned && m_Mobile.CheckCanFlee())
             {
-                if (m_Mobile.Hits < m_Mobile.HitsMax * 20 / 100)
-                {
-                    // We are low on health, should we flee?
-                    if (Utility.Random(100) <= Math.Max(10, 10 + c.Hits - m_Mobile.Hits))
-                    {
-                        m_Mobile.DebugSay("I am going to flee from {0}", c.Name);
-                        Action = ActionType.Flee;
-                    }
-                }
+                m_Mobile.DebugSay("I am going to flee from {0}", c.Name);
+                Action = ActionType.Flee;
             }
 
             return true;
@@ -96,7 +89,7 @@ namespace Server.Mobiles
         {
             Mobile c = m_Mobile.Combatant as Mobile;
 
-            if (m_Mobile.Hits > (m_Mobile.HitsMax / 2))
+            if (m_Mobile.CheckBreakFlee())
             {
                 // If I have a target, go back and fight them
                 if (c != null && m_Mobile.GetDistanceToSqrt(c) <= m_Mobile.RangePerception * 2)
