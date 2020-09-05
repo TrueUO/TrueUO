@@ -1,7 +1,3 @@
-#region References
-using System;
-#endregion
-
 namespace Server.Mobiles
 {
     public class MeleeAI : BaseAI
