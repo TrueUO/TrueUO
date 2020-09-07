@@ -2,6 +2,7 @@ using Server.Accounting;
 using Server.Network;
 using System;
 using System.Collections;
+using System.IO.Compression;
 using System.Text;
 
 namespace Server.RemoteAdmin
@@ -223,9 +224,15 @@ namespace Server.RemoteAdmin
                 byte[] dest = new byte[(int)(length * 1.001) + 10];
                 int destSize = dest.Length;
 
-                ZLibError error = Compression.Pack(dest, ref destSize, source, length, ZLibQuality.Default);
+                var error = Zlib.Pack(
+                    dest,
+                    ref destSize,
+                    source,
+                    length,
+                    ZlibQuality.Default
+                );
 
-                if (error != ZLibError.Okay)
+                if (error != ZlibError.Okay)
                 {
                     Console.WriteLine("WARNING: Unable to compress admin packet, zlib error: {0}", error);
                     return p;

@@ -16,7 +16,7 @@
 
 @PAUSE
 
-dotnet build -c Debug
+dotnet build -c Debug -r win-x64
 
 @ECHO:
 @ECHO: Done!

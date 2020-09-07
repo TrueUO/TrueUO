@@ -175,16 +175,16 @@ namespace Server.Engines.Shadowguard
                 Table = null;
         }
 
-        public void OnEncounterComplete(ShadowguardEncounter encounter, bool expired)
+        public void OnEncounterComplete(ShadowguardEncounter enc, bool expired)
         {
-            Encounters.Remove(encounter);
+            Encounters.Remove(enc);
             CheckQueue();
 
             if (!expired)
             {
-                foreach (PlayerMobile pm in encounter.Region.GetEnumeratedMobiles().OfType<PlayerMobile>())
+                foreach (PlayerMobile pm in enc.Region.GetEnumeratedMobiles().OfType<PlayerMobile>())
                 {
-                    AddToTable(pm, encounter.Encounter);
+                    AddToTable(pm, enc.Encounter);
                 }
             }
         }
@@ -208,9 +208,9 @@ namespace Server.Engines.Shadowguard
             }
         }
 
-        public void AddEncounter(ShadowguardEncounter encounter)
+        public void AddEncounter(ShadowguardEncounter enc)
         {
-            Encounters.Add(encounter);
+            Encounters.Add(enc);
         }
 
         public bool HasCompletedEncounter(Mobile m, EncounterType encounter)
