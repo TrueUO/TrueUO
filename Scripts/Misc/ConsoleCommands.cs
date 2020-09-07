@@ -1,4 +1,4 @@
-#region References
+/*#region References
 using Server.Accounting;
 using Server.Engines.Help;
 using Server.Network;
@@ -557,4 +557,4 @@ namespace Server.Misc
             World.Broadcast(hue, false, ac, message);
         }
     }
-}
+}*/

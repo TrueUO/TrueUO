@@ -23,6 +23,10 @@
   <PropertyGroup>
     <DefineConstants>NEWTIMERS;ServUO</DefineConstants>
   </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <PlatformTarget>x64</PlatformTarget>
+  </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Scripts\Scripts.csproj" />
