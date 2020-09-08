@@ -6598,7 +6598,9 @@ namespace Server.Mobiles
             Mobile target = GetBardTarget(Controlled);
 
             if (target == null || !target.InLOS(this) || !InRange(target.Location, BaseInstrument.GetBardRange(this, SkillName.Discordance)) || CheckInstrument() == null)
+            {
                 return false;
+            }
 
             if (AbilityProfile != null && AbilityProfile.HasAbility(MagicalAbility.Discordance) && Mana < 25)
             {
@@ -6613,7 +6615,9 @@ namespace Server.Mobiles
                 Spell = null;
 
             if (!UseSkill(SkillName.Discordance))
+            {
                 return false;
+            }
 
             if (Target is Discordance.DiscordanceTarget)
             {
@@ -6687,10 +6691,7 @@ namespace Server.Mobiles
 
             if (inst == null)
             {
-                if (Backpack == null)
-                    return null;
-
-                inst = Backpack.FindItemByType(typeof(BaseInstrument)) as BaseInstrument;
+                inst = Backpack == null ? null : Backpack.FindItemByType(typeof(BaseInstrument)) as BaseInstrument;
 
                 if (inst == null)
                 {
