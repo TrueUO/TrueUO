@@ -6600,7 +6600,6 @@ namespace Server.Mobiles
             if (target == null || !target.InLOS(this) || !InRange(target.Location, BaseInstrument.GetBardRange(this, SkillName.Discordance)) || CheckInstrument() == null)
                 return false;
 
-            // TODO: get mana
             if (AbilityProfile != null && AbilityProfile.HasAbility(MagicalAbility.Discordance) && Mana < 25)
             {
                 return false;
