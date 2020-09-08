@@ -69,8 +69,7 @@ namespace Server.Engines.Reports
         {
             return name.ToLower().Replace(' ', '_');
         }
-
-        [Obsolete]
+        
         public void Render()
         {
             Console.WriteLine("Reports: {0}: Render started", m_Title);
@@ -138,7 +137,6 @@ namespace Server.Engines.Reports
             }
         }
 
-        [Obsolete]
         public void RenderFull()
         {
             string filePath = Path.Combine(m_OutputDirectory, "reports.html");
@@ -168,7 +166,6 @@ namespace Server.Engines.Reports
             }
         }
 
-        [Obsolete]
         public void RenderFull(HtmlTextWriter html)
         {
             html.RenderBeginTag(HtmlTag.Html);
@@ -196,7 +193,7 @@ namespace Server.Engines.Reports
             }
 
             html.RenderBeginTag(HtmlTag.Center);
-            TimeZone tz = TimeZone.CurrentTimeZone;
+            TimeZoneInfo tz = TimeZoneInfo.Local;
             bool isDaylight = tz.IsDaylightSavingTime(m_TimeStamp);
             TimeSpan utcOffset = tz.GetUtcOffset(m_TimeStamp);
 
@@ -208,7 +205,6 @@ namespace Server.Engines.Reports
             html.RenderEndTag();
         }
 
-        [Obsolete]
         public void RenderSingle(PersistableObject obj)
         {
             string filePath = Path.Combine(m_OutputDirectory, SafeFileName(FindNameFrom(obj)) + ".html");
@@ -220,7 +216,6 @@ namespace Server.Engines.Reports
             }
         }
 
-        [Obsolete]
         public void RenderSingle(PersistableObject obj, HtmlTextWriter html)
         {
             html.RenderBeginTag(HtmlTag.Html);
@@ -247,7 +242,7 @@ namespace Server.Engines.Reports
 
             html.Write("<br>");
 
-            TimeZone tz = TimeZone.CurrentTimeZone;
+            TimeZoneInfo tz = TimeZoneInfo.Local;
             bool isDaylight = tz.IsDaylightSavingTime(m_TimeStamp);
             TimeSpan utcOffset = tz.GetUtcOffset(m_TimeStamp);
 
