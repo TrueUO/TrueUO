@@ -26,8 +26,8 @@ ServUO is a community driven Ultima Online Server Emulator written in C#.
     - `net` for .NET 5.0
 
 #### Example
-- Windows (Debug Mode): "Publish.cmd win core Debug"
-- Windows (Release Mode): "Publish.cmd win core Release"
+- Windows (Debug Mode): `./publish.cmd win core Debug`
+- Windows (Release Mode): `./publish.cmd win core Release`
 
 https://www.servuo.com
 
