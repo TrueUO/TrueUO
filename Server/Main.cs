@@ -136,14 +136,16 @@ namespace Server
 			}
 		}
 
-		public static readonly bool Is64Bit = Environment.Is64BitProcess;
-
 		public static bool MultiProcessor { get; private set; }
 		public static int ProcessorCount { get; private set; }
 
-		public static bool Unix { get; private set; }
+        public static bool IsWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+        public static bool IsDarwin = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+        public static bool IsFreeBSD = RuntimeInformation.IsOSPlatform(OSPlatform.FreeBSD);
+        public static bool IsLinux = RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || IsFreeBSD;
+        public static bool Unix = IsDarwin || IsFreeBSD || IsLinux;
 
-		public static string FindDataFile(string path)
+        public static string FindDataFile(string path)
 		{
 			if (DataDirectories.Count == 0)
 			{
@@ -497,7 +499,11 @@ namespace Server
 #endif
 			Utility.PopColor();
 
-			string s = Arguments;
+            Utility.PushColor(ConsoleColor.Yellow);
+            Console.WriteLine("Core: Running on {0}\n", RuntimeInformation.FrameworkDescription);
+            Utility.PopColor();
+
+            string s = Arguments;
 
 			if (s.Length > 0)
 			{
@@ -509,58 +515,25 @@ namespace Server
 			ProcessorCount = Environment.ProcessorCount;
 
 			if (ProcessorCount > 1)
-			{
+            { 
 				MultiProcessor = true;
 			}
 
-			if (MultiProcessor || Is64Bit)
+			if (MultiProcessor)
 			{
 				Utility.PushColor(ConsoleColor.Green);
 				Console.WriteLine(
-					"Core: Optimizing for {0} {2}processor{1}",
+					"Core: Optimizing for {0} processor{1}",
 					ProcessorCount,
-					ProcessorCount == 1 ? "" : "s",
-					Is64Bit ? "64-bit " : "");
+					ProcessorCount == 1 ? "" : "s");
 				Utility.PopColor();
 			}
 
-			string dotnet = null;
-
-			if (Type.GetType("Mono.Runtime") != null)
-			{
-				MethodInfo displayName = Type.GetType("Mono.Runtime").GetMethod("GetDisplayName", BindingFlags.NonPublic | BindingFlags.Static);
-
-				if (displayName != null)
-				{
-					dotnet = displayName.Invoke(null, null).ToString();
-
-					Utility.PushColor(ConsoleColor.Yellow);
-					Console.WriteLine("Core: Unix environment detected");
-					Utility.PopColor();
-
-					Unix = true;
-				}
-			}
-			else
-			{
-				m_ConsoleEventHandler = OnConsoleEvent;
-				UnsafeNativeMethods.SetConsoleCtrlHandler(m_ConsoleEventHandler, true);
-			}
-
-#if NETFX_472
-			dotnet = "4.7.2";
-#endif
-
-#if NETFX_48
-			dotnet = "4.8";
-#endif
-
-			if (string.IsNullOrEmpty(dotnet))
-				dotnet = "MONO/CSC/Unknown";
-
-			Utility.PushColor(ConsoleColor.Green);
-			Console.WriteLine("Core: Compiled for " + (Unix ? "MONO and running on {0}" : ".NET {0}"), dotnet);
-			Utility.PopColor();
+            if (IsWindows)
+            {
+                m_ConsoleEventHandler = OnConsoleEvent;
+                UnsafeNativeMethods.SetConsoleCtrlHandler(m_ConsoleEventHandler, true);
+            }
 
 			if (GCSettings.IsServerGC)
 			{

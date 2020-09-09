@@ -217,16 +217,7 @@ namespace Ultima
             string dir = null;
             for (int i = knownRegkeys.Length - 1; i >= 0; i--)
             {
-                string exePath;
-
-                if (Environment.Is64BitOperatingSystem)
-                {
-                    exePath = GetPath(string.Format(@"Wow6432Node\{0}", knownRegkeys[i]));
-                }
-                else
-                {
-                    exePath = GetPath(knownRegkeys[i]);
-                }
+                string exePath = GetPath(string.Format(@"Wow6432Node\{0}", knownRegkeys[i]));
 
                 if (exePath != null)
                 {
