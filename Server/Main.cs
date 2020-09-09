@@ -188,7 +188,7 @@ namespace Server
 		public static bool EJ => Expansion >= Expansion.EJ;
 		#endregion
 
-		public static string ExePath => _ExePath ?? (_ExePath = Assembly.Location);
+		public static string ExePath => _ExePath ?? (_ExePath = Path.ChangeExtension(Assembly.Location, ".exe"));
 
 		public static string BaseDirectory
 		{
