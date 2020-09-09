@@ -30,19 +30,18 @@
 /Distribution/*.json
 /Distribution/*.config
 
+
+
 *.pdb
 *.exe
 *.exe.mdb
 *.suo
 *.idea
 *.log
-*.bin
 *.csproj.user
 *.DotSettings.user
 *.ini
 
-!Publish.sh
-
-!/Data/*
+!publish.sh
 
 /Data/PVPTournamentSystemData
