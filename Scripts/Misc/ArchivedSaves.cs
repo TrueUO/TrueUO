@@ -222,7 +222,7 @@ namespace Server.Misc
             // Do not use async packing during a crash state or when closing.
             if (!Async || Core.Crashed || Core.Closing)
             {
-                _Pack.Invoke(source);
+                InternalPack(source);
                 return;
             }
 
@@ -283,7 +283,7 @@ namespace Server.Misc
             // Do not use async pruning during a crash state or when closing.
             if (!Async || Core.Crashed || Core.Closing)
             {
-                _Prune.Invoke(threshold);
+                InternalPrune(threshold);
                 return;
             }
 
