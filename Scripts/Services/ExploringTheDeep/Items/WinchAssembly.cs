@@ -400,7 +400,6 @@ namespace Server.Items
 
         public void Reset()
         {
-            Console.WriteLine("Resetting!");
             Z = 10;
             Hue = 2969;
         }
