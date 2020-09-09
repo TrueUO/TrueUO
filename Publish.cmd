@@ -47,7 +47,7 @@ IF "%~2" == "" (
   )
 )
 
-IF "%~3" == "" or "%~3" == "release" (
+IF "%~3" == "" IF "%~3" == "release" (
   SET c=-c Release
 ) ELSE (
   SET c=-c Debug
