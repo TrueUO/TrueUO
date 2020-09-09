@@ -48,6 +48,11 @@ namespace Server.Items
             ActiveID = activeid;
         }
 
+        public AnvilofArtifactsComponent(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);
@@ -84,11 +89,6 @@ namespace Server.Items
 
                 }, 8));
             }
-        }
-
-        public AnvilofArtifactsComponent(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
@@ -139,9 +139,14 @@ namespace Server.Items
             {
                 AddComponent(new AnvilofArtifactsComponent(0xA108, 0xA103), 0, 0, 0);
             }
-        }        
+        }
 
-        public override void OnComponentUsed(AddonComponent component, Mobile from)
+        public AnvilofArtifactsAddon(Serial serial)
+            : base(serial)
+        {
+        }
+
+        public override void OnComponentUsed(AddonComponent c, Mobile from)
         {
             BaseHouse house = BaseHouse.FindHouseAt(from);
 
@@ -159,17 +164,12 @@ namespace Server.Items
             }
         }       
 
-        public AnvilofArtifactsAddon(Serial serial)
-            : base(serial)
-        {
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write((int)0);
+            writer.Write(0);
 
-            writer.Write((int)m_UsesRemaining);
+            writer.Write(m_UsesRemaining);
         }
 
         public override void Deserialize(GenericReader reader)
@@ -211,16 +211,16 @@ namespace Server.Items
             UsesRemaining = uses;
         }
 
+        public AnvilofArtifactsDeed(Serial serial)
+           : base(serial)
+        {
+        }
+
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);
 
             list.Add(1060584, UsesRemaining.ToString()); // uses remaining: ~1_val~
-        }
-
-        public AnvilofArtifactsDeed(Serial serial)
-            : base(serial)
-        {
         }
 
         public void GetOptions(RewardOptionList list)
@@ -253,9 +253,9 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write((int)0);
+            writer.Write(0);
 
-            writer.Write((int)m_UsesRemaining);
+            writer.Write(m_UsesRemaining);
         }
 
         public override void Deserialize(GenericReader reader)
