@@ -33,7 +33,6 @@
 *.pdb
 *.exe
 *.exe.mdb
-*.sh
 *.suo
 *.idea
 *.log
@@ -41,6 +40,8 @@
 *.csproj.user
 *.DotSettings.user
 *.ini
+
+!Publish.sh
 
 !/Data/*
 
