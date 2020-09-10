@@ -330,35 +330,39 @@ namespace Server
 
 			if (restart)
 			{
-                if (IsWindows)
-                {
-                    Process.Start(ExePath, Arguments);
-                }
-                else
-                {
-                    var process = new Process
-                    {
-                        StartInfo = new ProcessStartInfo
-                        {
-                            FileName = "dotnet",
-                            Arguments = ExePath,
-                            UseShellExecute = true,
-                            RedirectStandardOutput = false,
-                            RedirectStandardError = false,
-                            CreateNoWindow = true
-                        }
-
-                    };
-
-                    process.Start();
-                    process.WaitForExit();
-                }
+                Restart();
 			}
 
 			Process.Kill();
 		}
 
-		private static void HandleClosed()
+        public static void Restart()
+        {
+            if (IsWindows)
+            {
+                Process.Start(ExePath, Arguments);
+            }
+            else
+            {
+                var process = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = "dotnet",
+                        Arguments = ExePath,
+                        UseShellExecute = true,
+                        RedirectStandardOutput = false,
+                        RedirectStandardError = false,
+                        CreateNoWindow = true
+                    }
+
+                };
+
+                process.Start();
+            }
+        }
+
+        private static void HandleClosed()
 		{
 			if (Closing)
 			{

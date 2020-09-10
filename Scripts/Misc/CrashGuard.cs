@@ -84,7 +84,7 @@ namespace Server.Misc
 
             try
             {
-                Process.Start(Core.ExePath, Core.Arguments);
+                Core.Restart();
                 Console.WriteLine("done");
 
                 e.Close = true;
