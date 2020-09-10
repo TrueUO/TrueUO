@@ -2,6 +2,7 @@ using System;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
 using System.Threading;
+using MimeKit;
 
 namespace Server.Misc
 {
@@ -33,7 +34,7 @@ namespace Server.Misc
 
         private static readonly Regex _pattern = new Regex(@"^[a-z0-9.+_-]+@([a-z0-9-]+\.)+[a-z]+$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        private static SmtpClient _Client;
+        private static MailKit.Net.Smtp.SmtpClient _Client;
 
         public static bool IsValid(string address)
         {
@@ -45,30 +46,37 @@ namespace Server.Misc
 
         public static void Configure()
         {
-            if (EmailServer != null)
+            if (EmailServer != null && EmailUsername != null)
             {
-                _Client = new SmtpClient(EmailServer, EmailPort);
-                if (EmailUsername != null)
-                {
-                    _Client.Credentials = new System.Net.NetworkCredential(EmailUsername, EmailPassword);
-                }
-                if (EmailSsl)
-                    _Client.EnableSsl = true;
+                _Client = new MailKit.Net.Smtp.SmtpClient();
             }
         }
 
         public static bool Send(MailMessage message)
         {
+            var msg = new MimeMessage();
+
+            msg.From.Add(new MailboxAddress("", message.From.ToString()));
+            msg.To.Add(new MailboxAddress("", message.To.ToString()));
+            msg.Subject = message.Subject;
+            msg.Body = new TextPart("plain") { Text = message.Body };
+
             try
             {
                 lock (_Client)
                 {
-                    _Client.Send(message);
+                    if (EmailServer != null && EmailUsername != null)
+                    {
+                        _Client.Connect(EmailServer, EmailPort, EmailSsl);
+                        _Client.Authenticate(EmailUsername, EmailPassword);
+                        _Client.Send(msg);
+                        _Client.Disconnect(true);
+                    }
                 }
             }
             catch (Exception e)
             {
-                Server.Diagnostics.ExceptionLogging.LogException(e);
+                Diagnostics.ExceptionLogging.LogException(e);
                 return false;
             }
 
