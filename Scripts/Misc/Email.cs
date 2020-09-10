@@ -1,5 +1,4 @@
 using System;
-using System.Net.Mail;
 using System.Text.RegularExpressions;
 using System.Threading;
 using MimeKit;
@@ -52,24 +51,23 @@ namespace Server.Misc
             }
         }
 
-        public static bool Send(MailMessage message)
+        public static bool Send(MimeMessage message)
         {
-            var msg = new MimeMessage();
-
-            msg.From.Add(new MailboxAddress("", message.From.ToString()));
-            msg.To.Add(new MailboxAddress("", message.To.ToString()));
-            msg.Subject = message.Subject;
-            msg.Body = new TextPart("plain") { Text = message.Body };
-
             try
             {
                 lock (_Client)
                 {
                     if (EmailServer != null && EmailUsername != null)
                     {
+                        /* Optional Use
+                         * using MailKit.Security;
+                         * _Client.ServerCertificateValidationCallback = (s, c, h, e) => true;
+                         * _Client.Connect(EmailServer, EmailPort, SecureSocketOptions.StartTls);
+                        */
+
                         _Client.Connect(EmailServer, EmailPort, EmailSsl);
                         _Client.Authenticate(EmailUsername, EmailPassword);
-                        _Client.Send(msg);
+                        _Client.Send(message);
                         _Client.Disconnect(true);
                     }
                 }
@@ -83,14 +81,14 @@ namespace Server.Misc
             return true;
         }
 
-        public static void AsyncSend(MailMessage message)
+        public static void AsyncSend(MimeMessage message)
         {
             ThreadPool.QueueUserWorkItem(SendCallback, message);
         }
 
         private static void SendCallback(object state)
         {
-            MailMessage message = (MailMessage)state;
+            MimeMessage message = (MimeMessage)state;
 
             if (Send(message))
                 Console.WriteLine("Sent e-mail '{0}' to '{1}'.", message.Subject, message.To);

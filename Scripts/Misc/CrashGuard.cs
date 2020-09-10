@@ -1,10 +1,10 @@
+using MimeKit;
 using Server.Accounting;
 using Server.Network;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Net.Mail;
 
 namespace Server.Misc
 {
@@ -38,13 +38,16 @@ namespace Server.Misc
         {
             Console.Write("Crash: Sending email...");
 
-            MailMessage message = new MailMessage(Email.FromAddress, Email.CrashAddresses);
-
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress("", Email.FromAddress));
+            message.To.Add(new MailboxAddress("", Email.CrashAddresses));
             message.Subject = "Automated ServUO Crash Report";
 
-            message.Body = "Automated ServUO Crash Report. See attachment for details.";
+            var builder = new BodyBuilder();
+            builder.TextBody = "Automated ServUO Crash Report. See attachment for details.";
+            builder.Attachments.Add(filePath);
 
-            message.Attachments.Add(new Attachment(filePath));
+            message.Body = builder.ToMessageBody();
 
             if (Email.Send(message))
                 Console.WriteLine("done");
