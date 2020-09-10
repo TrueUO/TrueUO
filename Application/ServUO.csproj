@@ -11,8 +11,8 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <StartupObject>ServUO.ServUO</StartupObject>
     <RootNamespace>Server</RootNamespace>
-	<PublishDir>..\..\Distribution</PublishDir>
-	<OutDir>..\..\Distribution</OutDir>
+	<PublishDir>..\Distribution</PublishDir>
+	<OutDir>..\Distribution</OutDir>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">

@@ -1,4 +1,5 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Library</OutputType>
@@ -10,8 +11,8 @@
     <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <RootNamespace>Server</RootNamespace>
-	<PublishDir>..\..\Distribution</PublishDir>
-	<OutDir>..\..\Distribution</OutDir>
+	<PublishDir>..\Distribution</PublishDir>
+	<OutDir>..\Distribution</OutDir>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">

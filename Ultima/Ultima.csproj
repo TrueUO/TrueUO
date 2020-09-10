@@ -10,8 +10,8 @@
     <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <RootNamespace>Server</RootNamespace>
-	<PublishDir>..\..\Distribution</PublishDir>
-	<OutDir>..\..\Distribution</OutDir>
+	<PublishDir>..\Distribution</PublishDir>
+	<OutDir>..\Distribution</OutDir>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
