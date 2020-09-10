@@ -199,7 +199,7 @@ namespace Server.Items
 
         [Constructable]
         public AnvilofArtifactsDeed()
-            : this(18)
+            : this(15)
         {
         }
 
