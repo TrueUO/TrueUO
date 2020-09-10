@@ -190,7 +190,7 @@ namespace Server
 		public static bool EJ => Expansion >= Expansion.EJ;
 		#endregion
 
-		public static string ExePath => _ExePath ?? (_ExePath = Path.ChangeExtension(Assembly.Location, ".exe"));
+		public static string ExePath => _ExePath ?? (_ExePath = IsWindows ? Path.ChangeExtension(Assembly.Location, ".exe") : Assembly.Location);
 
 		public static string BaseDirectory
 		{
@@ -330,7 +330,29 @@ namespace Server
 
 			if (restart)
 			{
-				Process.Start(ExePath, Arguments);
+                if (IsWindows)
+                {
+                    Process.Start(ExePath, Arguments);
+                }
+                else
+                {
+                    var process = new Process
+                    {
+                        StartInfo = new ProcessStartInfo
+                        {
+                            FileName = "dotnet",
+                            Arguments = ExePath,
+                            UseShellExecute = true,
+                            RedirectStandardOutput = false,
+                            RedirectStandardError = false,
+                            CreateNoWindow = true
+                        }
+
+                    };
+
+                    process.Start();
+                    process.WaitForExit();
+                }
 			}
 
 			Process.Kill();
