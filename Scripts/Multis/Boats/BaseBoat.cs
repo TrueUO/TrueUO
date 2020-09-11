@@ -3056,7 +3056,7 @@ namespace Server.Multis
         }
 
         #endregion
-
+         
         public void CheckExit(object o)
         {
             if (o is CorgulRegion)
