@@ -3,8 +3,6 @@ solution: ServUO.sln
 mono: none
 dotnet: 3.1.402
 
-dist: trusty
-
 addons:
   sonarcloud:
     organization: "trueuo"
