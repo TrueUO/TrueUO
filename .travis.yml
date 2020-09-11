@@ -1,6 +1,7 @@
 language: csharp
 solution: ServUO.sln
-mono: latest
+mono: none
+dotnet: 3.1.8
 
 dist: trusty
 
@@ -12,3 +13,4 @@ addons:
 script:
   # the following command line builds the project, runs the tests with coverage and then execute the SonarCloud analysis
   - sonar-scanner
+   - dotnet restore
