@@ -97,7 +97,7 @@ namespace Server.Engines.BulkOrders
 
                 BulkOrderSystem.ComputePoints(deed, out points, out banked);
 
-                AddHtmlLocalized(75, y, 300, 20, 1157301, String.Format("{0}\t{1}", points, banked.ToString("0.000000")), 0x7FFF, false, false); // Worth ~1_POINTS~ turn in points and ~2_POINTS~ bank points.
+                AddHtmlLocalized(75, y, 300, 20, 1157301, string.Format("{0}\t{1}", points, banked.ToString("0.000000")), 0x7FFF, false, false); // Worth ~1_POINTS~ turn in points and ~2_POINTS~ bank points.
                 y += 24;
 
                 AddButton(125, y, 4005, 4007, 3, GumpButtonType.Reply, 0);
@@ -153,7 +153,7 @@ namespace Server.Engines.BulkOrders
             }
             else if (info.ButtonID == 4) // combine from container
             {
-                m_From.BeginTarget(-1, false, Server.Targeting.TargetFlags.None, (m, targeted) =>
+                m_From.BeginTarget(-1, false, Targeting.TargetFlags.None, (m, targeted) =>
                 {
                     if (!m_Deed.Deleted && targeted is Container)
                     {

@@ -1538,7 +1538,7 @@ namespace Server.Multis
             }
             catch (Exception e)
             {
-                Server.Diagnostics.ExceptionLogging.LogException(e);
+                Diagnostics.ExceptionLogging.LogException(e);
             }
         }
 
@@ -2505,7 +2505,7 @@ namespace Server.Multis
             lock (m_DeflatedBufferPool)
                 m_DeflatedBufferPool.ReleaseBuffer(m_DeflatedBuffer);
 
-            m_Stream.Seek(15, System.IO.SeekOrigin.Begin);
+            m_Stream.Seek(15, SeekOrigin.Begin);
 
             Write((short)totalLength); // Buffer length
             Write((byte)planeCount); // Plane count
@@ -2605,7 +2605,7 @@ namespace Server.Multis
                         }
                         catch (Exception ex)
                         {
-                            Server.Diagnostics.ExceptionLogging.LogException(ex);
+                            Diagnostics.ExceptionLogging.LogException(ex);
                         }
                     }
                     finally

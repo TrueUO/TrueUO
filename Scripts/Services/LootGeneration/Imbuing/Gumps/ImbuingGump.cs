@@ -185,7 +185,7 @@ namespace Server.Gumps
                 else if (m is PlayerMobile && Imbuing.CanUnravelItem(m, item))
                 {
                     m.BeginAction(typeof(Imbuing));
-                    BaseGump.SendGump(new UnravelGump((PlayerMobile)m, item));
+                    SendGump(new UnravelGump((PlayerMobile)m, item));
                 }
             }
 
@@ -274,7 +274,7 @@ namespace Server.Gumps
                     if (unraveled)
                     {
                         m.BeginAction(typeof(Imbuing));
-                        BaseGump.SendGump(new UnravelContainerGump((PlayerMobile)m, cont));
+                        SendGump(new UnravelContainerGump((PlayerMobile)m, cont));
                     }
                     else
                     {
@@ -296,7 +296,7 @@ namespace Server.Gumps
                     Imbuing.CanUnravelItem(User, y, true);
                 });
 
-                User.SendLocalizedMessage(1111814, String.Format("{0}\t{1}", 0, c.Items.Count)); // Unraveled: ~1_COUNT~/~2_NUM~ items
+                User.SendLocalizedMessage(1111814, string.Format("{0}\t{1}", 0, c.Items.Count)); // Unraveled: ~1_COUNT~/~2_NUM~ items
             }
 
             private class UnravelContainerGump : BaseGump
@@ -360,7 +360,7 @@ namespace Server.Gumps
                         User.SendLocalizedMessage(1072223); // An item has been placed in your backpack.
                     }
 
-                    User.SendLocalizedMessage(1111814, String.Format("{0}\t{1}", count, m_List.Count));
+                    User.SendLocalizedMessage(1111814, string.Format("{0}\t{1}", count, m_List.Count));
 
                     ColUtility.Free(m_List);
                 }
@@ -414,7 +414,7 @@ namespace Server.Gumps
                     context.ImbMenu_Cat = 1;
 
                 m.CloseGump(typeof(ImbuingGump));
-                BaseGump.SendGump(new ImbueSelectGump((PlayerMobile)m, item));
+                SendGump(new ImbueSelectGump((PlayerMobile)m, item));
             }
         }
 

@@ -269,7 +269,7 @@ namespace Server.Engines.Quests.RitualQuest
             }
 
             public BexilRegion()
-                : base("Bexil Region", Map.TerMur, Region.DefaultPriority, new Rectangle2D(386, 3356, 35, 51))
+                : base("Bexil Region", Map.TerMur, DefaultPriority, new Rectangle2D(386, 3356, 35, 51))
             {
                 Register();
                 SetupRegion();

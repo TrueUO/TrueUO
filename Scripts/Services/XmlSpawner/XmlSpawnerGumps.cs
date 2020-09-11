@@ -390,7 +390,7 @@ namespace Server.Mobiles
                             }
                         }
                     }
-                    catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                    catch (Exception e) { Diagnostics.ExceptionLogging.LogException(e); }
 
                 }
                 // open a new text entry gump
@@ -558,7 +558,7 @@ namespace Server.Mobiles
             // Add sequential spawn state
             if (m_Spawner.SequentialSpawn >= 0)
             {
-                AddLabel(15, 365, 33, String.Format("{0}", m_Spawner.SequentialSpawn));
+                AddLabel(15, 365, 33, string.Format("{0}", m_Spawner.SequentialSpawn));
             }
 
             // Add Current / Max count labels
@@ -629,7 +629,7 @@ namespace Server.Mobiles
             {
                 if (page != i / MaxEntriesPerPage) continue;
 
-                string str = String.Empty;
+                string str = string.Empty;
                 int texthue = 0;
                 int background = 0xBBC;
 
@@ -884,7 +884,7 @@ namespace Server.Mobiles
                                 SpawnObjects.Add(new XmlSpawner.SpawnObject(from, m_Spawner, str, 0));
                             }
                             else
-                                m_Spawner.status_str = String.Format("{0} is not a valid type name.", str);
+                                m_Spawner.status_str = string.Format("{0} is not a valid type name.", str);
                             //from.SendMessage( "{0} is not a valid type name.", str );
                         }
 
@@ -1116,7 +1116,7 @@ namespace Server.Mobiles
                 {
                     int maxval = 0;
                     try { maxval = Convert.ToInt32(temcnt.Text, 10); }
-                    catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                    catch (Exception e) { Diagnostics.ExceptionLogging.LogException(e); }
                     if (maxval < 0) maxval = 0;
 
                     m_Spawner.SpawnObjects[i].MaxCount = maxval;
@@ -1130,7 +1130,7 @@ namespace Server.Mobiles
                     {
                         int grpval = 0;
                         try { grpval = Convert.ToInt32(tegrp.Text, 10); }
-                        catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                        catch (Exception e) { Diagnostics.ExceptionLogging.LogException(e); }
                         if (grpval < 0) grpval = 0;
 
                         m_Spawner.SpawnObjects[i].SubGroup = grpval;
@@ -1151,7 +1151,7 @@ namespace Server.Mobiles
                         {
                             double grpval = 0;
                             try { grpval = Convert.ToDouble(tegrp.Text); }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch (Exception e) { Diagnostics.ExceptionLogging.LogException(e); }
                             if (grpval < 0) grpval = 0;
 
                             m_Spawner.SpawnObjects[i].SequentialResetTime = 0;
@@ -1164,7 +1164,7 @@ namespace Server.Mobiles
                         {
                             int grpval = 0;
                             try { grpval = Convert.ToInt32(tegrp.Text, 10); }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch (Exception e) { Diagnostics.ExceptionLogging.LogException(e); }
                             if (grpval < 0) grpval = 0;
 
                             m_Spawner.SpawnObjects[subgroupindex].SequentialResetTo = grpval;
@@ -1175,7 +1175,7 @@ namespace Server.Mobiles
                         {
                             int grpval = 0;
                             try { grpval = Convert.ToInt32(tegrp.Text, 10); }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch (Exception e) { Diagnostics.ExceptionLogging.LogException(e); }
                             if (grpval < 0) grpval = 0;
 
                             m_Spawner.SpawnObjects[subgroupindex].KillsNeeded = grpval;
@@ -1191,7 +1191,7 @@ namespace Server.Mobiles
                         {
                             double grpval = -1;
                             try { grpval = Convert.ToDouble(tegrp.Text); }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch (Exception e) { Diagnostics.ExceptionLogging.LogException(e); }
                             if (grpval < 0) grpval = -1;
 
                             // if this value has changed, then update the next spawn time
@@ -1217,7 +1217,7 @@ namespace Server.Mobiles
                         {
                             double grpval = -1;
                             try { grpval = Convert.ToDouble(tegrp.Text); }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch (Exception e) { Diagnostics.ExceptionLogging.LogException(e); }
                             if (grpval < 0) grpval = -1;
 
                             // if this value has changed, then update the next spawn time
@@ -1243,7 +1243,7 @@ namespace Server.Mobiles
                         {
                             int grpval = 1;
                             try { grpval = int.Parse(tegrp.Text); }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch (Exception e) { Diagnostics.ExceptionLogging.LogException(e); }
                             if (grpval < 0) grpval = 1;
 
                             // if this value has changed, then update the next spawn time
@@ -1266,7 +1266,7 @@ namespace Server.Mobiles
                         {
                             int grpval = 1;
                             try { grpval = int.Parse(tegrp.Text); }
-                            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                            catch (Exception e) { Diagnostics.ExceptionLogging.LogException(e); }
                             if (grpval < 0) grpval = 1;
 
                             // if this value has changed, then update 
@@ -1289,7 +1289,7 @@ namespace Server.Mobiles
             {
                 int maxval = 0;
                 try { maxval = Convert.ToInt32(temax.Text, 10); }
-                catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                catch (Exception e) { Diagnostics.ExceptionLogging.LogException(e); }
                 if (maxval < 0) maxval = 0;
                 // if the maxcount of the spawner has been altered external to the interface (e.g. via props, or by the running spawner itself
                 // then that change will override the text entry
@@ -1439,15 +1439,15 @@ namespace Server.Mobiles
                             args[4] = m_ShowGump;
                             args[5] = page;
 
-                            XmlTextEntryBook book = new XmlTextEntryBook(0, String.Empty, m_Spawner.Name, 20, true, ProcessSpawnerBookEntry, args);
+                            XmlTextEntryBook book = new XmlTextEntryBook(0, string.Empty, m_Spawner.Name, 20, true, ProcessSpawnerBookEntry, args);
 
                             m_Spawner.m_TextEntryBook.Add(book);
 
-                            book.Title = String.Format("Entry {0}", index);
+                            book.Title = string.Format("Entry {0}", index);
                             book.Author = m_Spawner.Name;
 
                             // fill the contents of the book with the current text entry data
-                            string text = String.Empty;
+                            string text = string.Empty;
                             if (m_Spawner.SpawnObjects != null && index < m_Spawner.SpawnObjects.Length)
                             {
                                 text = m_Spawner.SpawnObjects[index].TypeName;

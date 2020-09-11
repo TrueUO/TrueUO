@@ -191,20 +191,20 @@ namespace Server.Misc
                 try { File.Delete(dest); }
                 catch (Exception e)
                 {
-                    Server.Diagnostics.ExceptionLogging.LogException(e);
+                    Diagnostics.ExceptionLogging.LogException(e);
                 }
 
                 ZipFile.CreateFromDirectory(source, dest, CompressionLevel.Optimal, false);
             }
             catch (Exception e)
             {
-                Server.Diagnostics.ExceptionLogging.LogException(e);
+                Diagnostics.ExceptionLogging.LogException(e);
             }
 
             try { Directory.Delete(source, true); }
             catch (Exception e)
             {
-                Server.Diagnostics.ExceptionLogging.LogException(e);
+                Diagnostics.ExceptionLogging.LogException(e);
             }
 
             sw.Stop();
@@ -259,13 +259,13 @@ namespace Server.Misc
                     }
                     catch (Exception e)
                     {
-                        Server.Diagnostics.ExceptionLogging.LogException(e);
+                        Diagnostics.ExceptionLogging.LogException(e);
                     }
                 }
             }
             catch (Exception e)
             {
-                Server.Diagnostics.ExceptionLogging.LogException(e);
+                Diagnostics.ExceptionLogging.LogException(e);
             }
 
             sw.Stop();

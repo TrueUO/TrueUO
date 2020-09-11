@@ -167,7 +167,7 @@ namespace Server.Engines.Craft
 
         public static bool IsAnvilReady(Mobile m)
         {
-            var entry = CraftContext.GetAnvilEntry(m, false);
+            var entry = GetAnvilEntry(m, false);
 
             if (entry != null)
             {

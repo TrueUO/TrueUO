@@ -2,7 +2,7 @@ namespace Server.Items
 {
     public class VirtueShield : BaseShield, Server.Engines.Craft.IRepairable
     {
-        public Server.Engines.Craft.CraftSystem RepairSystem => Server.Engines.Craft.DefBlacksmithy.CraftSystem;
+        public Server.Engines.Craft.CraftSystem RepairSystem => Engines.Craft.DefBlacksmithy.CraftSystem;
         public override int BasePhysicalResistance => 8;
         public override int BaseFireResistance => 8;
         public override int BaseColdResistance => 8;

@@ -40,7 +40,7 @@ namespace Server.RemoteAdmin
 
             try
             {
-                m_Output = new StreamWriter(Path.Combine(directory, String.Format(LogSubDirectory + "{0}.log", DateTime.UtcNow.ToString("yyyyMMdd"))), true);
+                m_Output = new StreamWriter(Path.Combine(directory, string.Format(LogSubDirectory + "{0}.log", DateTime.UtcNow.ToString("yyyyMMdd"))), true);
 
                 m_Output.AutoFlush = true;
 
@@ -51,7 +51,7 @@ namespace Server.RemoteAdmin
             catch (Exception e)
             {
                 Console.WriteLine("RemoteAdminLogging: Failed to initialize LogWriter.");
-                Server.Diagnostics.ExceptionLogging.LogException(e);
+                Diagnostics.ExceptionLogging.LogException(e);
                 m_Enabled = false;
             }
         }
@@ -70,7 +70,7 @@ namespace Server.RemoteAdmin
             for (int i = 0; i < args.Length; i++)
                 args[i] = Commands.CommandLogging.Format(args[i]);
 
-            WriteLine(state, String.Format(format, args));
+            WriteLine(state, string.Format(format, args));
         }
 
         public static void WriteLine(NetState state, string text)
@@ -94,14 +94,14 @@ namespace Server.RemoteAdmin
                 Commands.CommandLogging.AppendPath(ref path, LogBaseDirectory);
                 Commands.CommandLogging.AppendPath(ref path, LogSubDirectory);
                 Commands.CommandLogging.AppendPath(ref path, accesslevel);
-                path = Path.Combine(path, String.Format("{0}.log", name));
+                path = Path.Combine(path, string.Format("{0}.log", name));
 
                 using (StreamWriter sw = new StreamWriter(path, true))
                     sw.WriteLine("{0}: {1}: {2}", DateTime.UtcNow, statestr, text);
             }
             catch (Exception e)
             {
-                Server.Diagnostics.ExceptionLogging.LogException(e);
+                Diagnostics.ExceptionLogging.LogException(e);
             }
         }
     }

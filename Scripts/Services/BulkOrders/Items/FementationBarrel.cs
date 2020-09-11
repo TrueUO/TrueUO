@@ -111,7 +111,7 @@ namespace Server.Items
                 {
                     if (_BadBatch)
                     {
-                        from.PrivateOverheadMessage(Server.Network.MessageType.Regular, 1154, 1157258, from.NetState); // *You gently taste the fermentation...it's spoiled! You should probably empty the barrel*
+                        from.PrivateOverheadMessage(Network.MessageType.Regular, 1154, 1157258, from.NetState); // *You gently taste the fermentation...it's spoiled! You should probably empty the barrel*
                     }
                     else if (_BottlesRemaining > 0)
                     {
@@ -250,7 +250,7 @@ namespace Server.Items
                                 text = text.Trim();
                                 text = Utility.FixHtml(text);
 
-                                if (text.Length > 15 || !Server.Guilds.BaseGuildGump.CheckProfanity(text))
+                                if (text.Length > 15 || !Guilds.BaseGuildGump.CheckProfanity(text))
                                 {
                                     mob.SendMessage("That label is unacceptable. Please try again.");
                                 }
@@ -408,7 +408,7 @@ namespace Server.Items
 
         public override void AddNameProperty(ObjectPropertyList list)
         {
-            list.Add(1049519, String.Format("#{0}", (1157248 + (int)_FruitType).ToString())); // a bottle of ~1_DRINK_NAME~
+            list.Add(1049519, string.Format("#{0}", (1157248 + (int)_FruitType).ToString())); // a bottle of ~1_DRINK_NAME~
         }
 
         public override void GetProperties(ObjectPropertyList list)

@@ -261,7 +261,7 @@ namespace Server.Engines.Quests
                 if (!Completed)
                 {
                     Owner.PlaySound(UpdateSound);
-                    Owner.SendLocalizedMessage(1156535, String.Format("{0}\t{1}", obj.CurProgress.ToString(), obj.MaxProgress.ToString())); // You have rescued ~1_count~ of ~2_max~ Dragon Turtle Hatchlings.
+                    Owner.SendLocalizedMessage(1156535, string.Format("{0}\t{1}", obj.CurProgress.ToString(), obj.MaxProgress.ToString())); // You have rescued ~1_count~ of ~2_max~ Dragon Turtle Hatchlings.
                 }
                 else
                 {
@@ -401,11 +401,11 @@ namespace Server.Engines.Quests
                                 }
                                 else if (0.55 > chance)
                                 {
-                                    m.PrivateOverheadMessage(Server.Network.MessageType.Regular, 1154, 1156507, m.NetState); // *You uncover a lava rock and carefully store it for later!*
+                                    m.PrivateOverheadMessage(MessageType.Regular, 1154, 1156507, m.NetState); // *You uncover a lava rock and carefully store it for later!*
                                     quest.Update(m);
                                 }
                                 else
-                                    m.LocalOverheadMessage(Server.Network.MessageType.Regular, 0x3B2, 1156509); // You loosen some dirt but fail to find anything.
+                                    m.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1156509); // You loosen some dirt but fail to find anything.
                             }
                             else
                                 m.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1156509); // You loosen some dirt but fail to find anything.
@@ -442,7 +442,7 @@ namespace Server.Engines.Quests
                 if (!Completed)
                 {
                     Owner.PlaySound(UpdateSound);
-                    Owner.SendLocalizedMessage(1156539, String.Format("{0}\t{1}", obj.CurProgress.ToString(), obj.MaxProgress.ToString())); // You have recovered ~1_count~ of ~2_max~ Lava Rocks.
+                    Owner.SendLocalizedMessage(1156539, string.Format("{0}\t{1}", obj.CurProgress.ToString(), obj.MaxProgress.ToString())); // You have recovered ~1_count~ of ~2_max~ Lava Rocks.
                 }
                 else
                 {
@@ -548,7 +548,7 @@ namespace Server.Engines.Quests
                 if (!Completed)
                 {
                     Owner.PlaySound(UpdateSound);
-                    Owner.SendLocalizedMessage(1156543, String.Format("{0}\t{1}", obj.CurProgress.ToString(), obj.MaxProgress.ToString())); // You have rescued ~1_count~ of ~2_max~ tiger cubs.
+                    Owner.SendLocalizedMessage(1156543, string.Format("{0}\t{1}", obj.CurProgress.ToString(), obj.MaxProgress.ToString())); // You have rescued ~1_count~ of ~2_max~ tiger cubs.
                 }
                 else
                 {

@@ -40,7 +40,7 @@ namespace Server.Engines.Quests
                 catch (Exception e)
                 {
                     Console.WriteLine("Quest Save Failure: {0}", Utility.FormatDelegate(serializer));
-                    Server.Diagnostics.ExceptionLogging.LogException(e);
+                    Diagnostics.ExceptionLogging.LogException(e);
 
                     writer.Write(0L);
 
@@ -129,10 +129,10 @@ namespace Server.Engines.Quests
                 writer.Write((byte)0x1);
                 writer.Write((int)obj);
             }
-            else if (obj is String)
+            else if (obj is string)
             {
                 writer.Write((byte)0x2);
-                writer.Write((String)obj);
+                writer.Write((string)obj);
             }
             else if (obj is Item)
             {

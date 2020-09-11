@@ -83,7 +83,7 @@ namespace Server.Spells.Mysticism
                     Caster.DoHarmful(id);
                     SpellHelper.Damage(this, id, damage, 0, 0, 100, 0, 0);
 
-                    Server.Effects.SendTargetParticles(id, 0x374A, 1, 15, 9502, 97, 3, (EffectLayer)255, 0);
+                    Effects.SendTargetParticles(id, 0x374A, 1, 15, 9502, 97, 3, (EffectLayer)255, 0);
                 }
 
                 ColUtility.Free(list);

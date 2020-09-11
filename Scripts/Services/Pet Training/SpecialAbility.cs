@@ -538,7 +538,7 @@ namespace Server.Mobiles
 
             if (def.AttacksMultipleTargets)
             {
-                List<Mobile> list = Server.Spells.SpellHelper.AcquireIndirectTargets(creature, target, creature.Map, 5).OfType<Mobile>().Where(m => m.InRange(creature.Location, MaxRange)).ToList();
+                List<Mobile> list = Spells.SpellHelper.AcquireIndirectTargets(creature, target, creature.Map, 5).OfType<Mobile>().Where(m => m.InRange(creature.Location, MaxRange)).ToList();
 
                 for (int i = 0; i < 5; i++)
                 {
@@ -600,7 +600,7 @@ namespace Server.Mobiles
 
         public void BreathDealDamage(BaseCreature creature, Mobile target, DragonBreathDefinition def)
         {
-            if (!Server.Spells.Bushido.Evasion.CheckSpellEvasion(target))
+            if (!Spells.Bushido.Evasion.CheckSpellEvasion(target))
             {
                 AOS.Damage(
                     target,
@@ -1206,7 +1206,7 @@ namespace Server.Mobiles
 
         public override void DoEffects(BaseCreature creature, Mobile defender, ref int damage)
         {
-            Server.Effects.SendBoltEffect(defender, true);
+            Effects.SendBoltEffect(defender, true);
             AOS.Damage(defender, creature, Utility.RandomMinMax(15, 20), 0, 0, 0, 0, 100);
         }
     }
@@ -1649,7 +1649,7 @@ namespace Server.Mobiles
             timer = new ExpireTimer(defender, mods, TimeSpan.FromSeconds(5.0));
             timer.Start();
 
-            BuffInfo.AddBuff(defender, new BuffInfo(BuffIcon.RuneBeetleCorruption, 1153796, 1153823, TimeSpan.FromSeconds(5.0), defender, String.Format("{0}\t{1}\t{2}\t{3}\t{4}", phy, cold, poison, energy, fire)));
+            BuffInfo.AddBuff(defender, new BuffInfo(BuffIcon.RuneBeetleCorruption, 1153796, 1153823, TimeSpan.FromSeconds(5.0), defender, string.Format("{0}\t{1}\t{2}\t{3}\t{4}", phy, cold, poison, energy, fire)));
 
             _Table[defender] = timer;
         }
@@ -1787,7 +1787,7 @@ namespace Server.Mobiles
                 attacker.AddStatMod(new StatMod(StatType.Int, "BloodWorm_Int", -Int, TimeSpan.FromSeconds(60)));
 
                 // -~1_STR~ strength.<br>-~2_INT~ intelligence.<br>-~3_DEX~ dexterity.<br> Drains all stamina.
-                BuffInfo.AddBuff(attacker, new BuffInfo(BuffIcon.BloodwormAnemia, 1153797, 1153824, String.Format("{0}\t{1}\t{2}", str, dex, Int)));
+                BuffInfo.AddBuff(attacker, new BuffInfo(BuffIcon.BloodwormAnemia, 1153797, 1153824, string.Format("{0}\t{1}\t{2}", str, dex, Int)));
 
                 _Table.Add(attacker, timer);
             }
