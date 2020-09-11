@@ -3,7 +3,6 @@ using Server.Accounting;
 using Server.Network;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 
 namespace Server.Misc
@@ -14,6 +13,7 @@ namespace Server.Misc
         private static readonly bool SaveBackup = true;
         private static readonly bool RestartServer = true;
         private static readonly bool GenerateReport = true;
+
         public static void Initialize()
         {
             if (Enabled) // If enabled, register our crash event handler
@@ -188,7 +188,7 @@ namespace Server.Misc
                     op.WriteLine();
                     op.WriteLine("ServUO Version {0}.{1}, Build {2}.{3}", ver.Major, ver.Minor, ver.Build, ver.Revision);
                     op.WriteLine("Operating System: {0}", Environment.OSVersion);
-                    op.WriteLine(".NET Framework: {0}", Environment.Version);
+                    op.WriteLine(".NET Core: {0}", Environment.Version);
                     op.WriteLine("Time: {0}", DateTime.UtcNow);
 
                     try
