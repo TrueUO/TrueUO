@@ -709,11 +709,8 @@ namespace Server
 
 			protected override void OnTick()
 			{
-				if (m_Callback != null)
-				{
-					m_Callback();
-				}
-			}
+                m_Callback?.Invoke();
+            }
 
 			public override string ToString()
 			{
@@ -741,11 +738,8 @@ namespace Server
 
 			protected override void OnTick()
 			{
-				if (m_Callback != null)
-				{
-					m_Callback(m_State);
-				}
-			}
+                m_Callback?.Invoke(m_State);
+            }
 
 			public override string ToString()
 			{
@@ -773,11 +767,8 @@ namespace Server
 
 			protected override void OnTick()
 			{
-				if (m_Callback != null)
-				{
-					m_Callback(m_State);
-				}
-			}
+                m_Callback?.Invoke(m_State);
+            }
 
 			public override string ToString()
 			{
@@ -807,11 +798,8 @@ namespace Server
 
 			protected override void OnTick()
 			{
-				if (m_Callback != null)
-				{
-					m_Callback(m_State1, m_State2);
-				}
-			}
+                m_Callback?.Invoke(m_State1, m_State2);
+            }
 
 			public override string ToString()
 			{
@@ -843,11 +831,8 @@ namespace Server
 
 			protected override void OnTick()
 			{
-				if (m_Callback != null)
-				{
-					m_Callback(m_State1, m_State2, m_State3);
-				}
-			}
+                m_Callback?.Invoke(m_State1, m_State2, m_State3);
+            }
 
 			public override string ToString()
 			{
@@ -881,11 +866,8 @@ namespace Server
 
 			protected override void OnTick()
 			{
-				if (m_Callback != null)
-				{
-					m_Callback(m_State1, m_State2, m_State3, m_State4);
-				}
-			}
+                m_Callback?.Invoke(m_State1, m_State2, m_State3, m_State4);
+            }
 
 			public override string ToString()
 			{

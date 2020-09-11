@@ -18,8 +18,7 @@ namespace Server.Engines.Quests
 
         public override void OnClick()
         {
-            if (m_Callback != null)
-                m_Callback();
+            m_Callback?.Invoke();
         }
     }
 }

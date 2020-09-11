@@ -16,10 +16,7 @@ namespace Ultima
 
         public static void FireFileSaveEvent()
         {
-            if (FileSaveEvent != null)
-            {
-                FileSaveEvent();
-            }
+            FileSaveEvent?.Invoke();
         }
 
         private static bool m_CacheData = true;

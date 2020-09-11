@@ -237,8 +237,7 @@ namespace Server.Gumps
         {
             if (from.InRange(Owner.Location, 5) && Item != null)
             {
-                if (ConfirmCallback != null)
-                    ConfirmCallback(Item, Index);
+                ConfirmCallback?.Invoke(Item, Index);
             }
         }
     }

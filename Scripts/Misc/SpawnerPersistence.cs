@@ -1037,8 +1037,7 @@ namespace Server
 
                     if (t == typeCheck || (t != null && inherits && t.IsSubclassOf(typeCheck)))
                     {
-                        if (action != null)
-                            action(spawner);
+                        action?.Invoke(spawner);
 
                         return true;
                     }
@@ -1049,8 +1048,7 @@ namespace Server
 
                     if ((lookFor == null || spawnObject.IndexOf(lookFor) >= 0) && (exempt == null || spawnObject.IndexOf(exempt.ToLower()) <= 0))
                     {
-                        if (action != null)
-                            action(spawner);
+                        action?.Invoke(spawner);
 
                         return true;
                     }

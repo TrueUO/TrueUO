@@ -114,14 +114,11 @@ namespace Server.Gumps
 
             if (confirm)
             {
-                if (ConfirmCallback != null)
-                {
-                    ConfirmCallback(User, State);
-                }
+                ConfirmCallback?.Invoke(User, State);
             }
-            else if (CloseCallback != null)
+            else
             {
-                CloseCallback(User, State);
+                CloseCallback?.Invoke(User, State);
             }
         }
     }
@@ -234,14 +231,11 @@ namespace Server.Gumps
 
             if (confirm)
             {
-                if (ConfirmCallback != null)
-                {
-                    ConfirmCallback(User, State);
-                }
+                ConfirmCallback?.Invoke(User, State);
             }
-            else if (CloseCallback != null)
+            else
             {
-                CloseCallback(User, State);
+                CloseCallback?.Invoke(User, State);
             }
         }
     }

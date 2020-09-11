@@ -29,8 +29,7 @@ namespace Server.Items
 
             if (info.ButtonID != 0)
             {
-                if (Callback != null)
-                    Callback(info.ButtonID == 1);
+                Callback?.Invoke(info.ButtonID == 1);
             }
         }
     }

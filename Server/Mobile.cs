@@ -2624,11 +2624,8 @@ namespace Server
 
 			protected override void OnTarget(Mobile from, object targeted)
 			{
-				if (m_Callback != null)
-				{
-					m_Callback(from, targeted);
-				}
-			}
+                m_Callback?.Invoke(from, targeted);
+            }
 		}
 
 		public Target BeginTarget(int range, bool allowGround, TargetFlags flags, TargetCallback callback)
@@ -2654,11 +2651,8 @@ namespace Server
 
 			protected override void OnTarget(Mobile from, object targeted)
 			{
-				if (m_Callback != null)
-				{
-					m_Callback(from, targeted, m_State);
-				}
-			}
+                m_Callback?.Invoke(from, targeted, m_State);
+            }
 		}
 
 		public Target BeginTarget(int range, bool allowGround, TargetFlags flags, TargetStateCallback callback, object state)
@@ -2684,11 +2678,8 @@ namespace Server
 
 			protected override void OnTarget(Mobile from, object targeted)
 			{
-				if (m_Callback != null)
-				{
-					m_Callback(from, targeted, m_State);
-				}
-			}
+                m_Callback?.Invoke(from, targeted, m_State);
+            }
 		}
 
 		public Target BeginTarget<T>(int range, bool allowGround, TargetFlags flags, TargetStateCallback<T> callback, T state)
@@ -2781,11 +2772,8 @@ namespace Server
 
 			public override void OnResponse(Mobile from, string text)
 			{
-				if (m_Callback != null)
-				{
-					m_Callback(from, text);
-				}
-			}
+                m_Callback?.Invoke(from, text);
+            }
 
 			public override void OnCancel(Mobile from)
 			{
@@ -2793,11 +2781,11 @@ namespace Server
 				{
 					m_Callback(from, "");
 				}
-				else if (m_CancelCallback != null)
-				{
-					m_CancelCallback(from, "");
-				}
-			}
+				else
+                {
+                    m_CancelCallback?.Invoke(from, "");
+                }
+            }
 		}
 
 		public Prompt BeginPrompt(PromptCallback callback, PromptCallback cancelCallback)
@@ -2850,11 +2838,8 @@ namespace Server
 
 			public override void OnResponse(Mobile from, string text)
 			{
-				if (m_Callback != null)
-				{
-					m_Callback(from, text, m_State);
-				}
-			}
+                m_Callback?.Invoke(from, text, m_State);
+            }
 
 			public override void OnCancel(Mobile from)
 			{
@@ -2862,11 +2847,11 @@ namespace Server
 				{
 					m_Callback(from, "", m_State);
 				}
-				else if (m_CancelCallback != null)
-				{
-					m_CancelCallback(from, "", m_State);
-				}
-			}
+				else
+                {
+                    m_CancelCallback?.Invoke(from, "", m_State);
+                }
+            }
 		}
 
 		public Prompt BeginPrompt(PromptStateCallback callback, PromptStateCallback cancelCallback, object state)
@@ -2919,11 +2904,8 @@ namespace Server
 
 			public override void OnResponse(Mobile from, string text)
 			{
-				if (m_Callback != null)
-				{
-					m_Callback(from, text, m_State);
-				}
-			}
+                m_Callback?.Invoke(from, text, m_State);
+            }
 
 			public override void OnCancel(Mobile from)
 			{
@@ -2931,11 +2913,11 @@ namespace Server
 				{
 					m_Callback(from, "", m_State);
 				}
-				else if (m_CancelCallback != null)
-				{
-					m_CancelCallback(from, "", m_State);
-				}
-			}
+				else
+                {
+                    m_CancelCallback?.Invoke(from, "", m_State);
+                }
+            }
 		}
 
 		public Prompt BeginPrompt<T>(PromptStateCallback<T> callback, PromptStateCallback<T> cancelCallback, T state)
@@ -11887,12 +11869,9 @@ namespace Server
 
 		public void SendMessage(int hue, string text)
 		{
-			if (OnSendMessage != null)
-			{
-				OnSendMessage(hue, text, false);
-			}
+            OnSendMessage?.Invoke(hue, text, false);
 
-			NetState ns = m_NetState;
+            NetState ns = m_NetState;
 
 			if (ns != null)
 			{
@@ -11917,12 +11896,9 @@ namespace Server
 
 		public void SendAsciiMessage(int hue, string text)
 		{
-			if (OnSendMessage != null)
-			{
-				OnSendMessage(hue, text, true);
-			}
+            OnSendMessage?.Invoke(hue, text, true);
 
-			NetState ns = m_NetState;
+            NetState ns = m_NetState;
 
 			if (ns != null)
 			{

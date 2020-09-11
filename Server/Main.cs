@@ -650,12 +650,9 @@ namespace Server
 					NetState.FlushAll();
 					NetState.ProcessDisposedQueue();
 
-					if (Slice != null)
-					{
-						Slice();
-					}
+                    Slice?.Invoke();
 
-					if (sample++ % sampleInterval != 0)
+                    if (sample++ % sampleInterval != 0)
 					{
 						continue;
 					}

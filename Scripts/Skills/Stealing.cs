@@ -493,10 +493,7 @@ namespace Server.SkillHandlers
 
         public static void InvokeItemStoken(ItemStolenEventArgs e)
         {
-            if (ItemStolen != null)
-            {
-                ItemStolen(e);
-            }
+            ItemStolen?.Invoke(e);
         }
     }
 
