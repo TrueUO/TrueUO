@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Threading;
+using System.Threading.Tasks;
 
 namespace Server.Misc
 {
@@ -67,14 +68,11 @@ namespace Server.Misc
 
         public static MergeType Merge { get; set; }
 
-        private static readonly List<IAsyncResult> _Tasks = new List<IAsyncResult>(0x40);
+        private static readonly List<Task> _Tasks = new List<Task>(0x40);
 
         private static readonly object _TaskRoot = ((ICollection)_Tasks).SyncRoot;
 
         private static readonly AutoResetEvent _Sync = new AutoResetEvent(true);
-
-        private static readonly Action<string> _Pack = InternalPack;
-        private static readonly Action<DateTime> _Prune = InternalPrune;
 
         public static int PendingTasks
         {
@@ -136,7 +134,7 @@ namespace Server.Misc
 
         private static void WaitForTaskCompletion()
         {
-            if (!Core.Crashed && !Core.Closing)
+            if (!Enabled || !Core.Crashed && !Core.Closing)
                 return;
 
             int pending = PendingTasks;
@@ -154,6 +152,14 @@ namespace Server.Misc
             }
 
             Utility.WriteConsoleColor(ConsoleColor.Cyan, "Archives: All tasks completed.");
+        }
+
+        private static void EndTask(Task r)
+        {
+            lock (_TaskRoot)
+                _Tasks.Remove(r);
+
+            _Sync.Set();
         }
 
         private static void InternalPack(string source)
@@ -206,31 +212,29 @@ namespace Server.Misc
             Utility.WriteConsoleColor(ConsoleColor.Cyan, "Archives: Packing done in {0:F1} seconds.", sw.Elapsed.TotalSeconds);
         }
 
+        private static void InternalPack(object source)
+        {
+            InternalPack((string)source);
+        }
+
         private static void BeginPack(string source)
         {
             // Do not use async packing during a crash state or when closing.
             if (!Async || Core.Crashed || Core.Closing)
             {
-                _Pack.Invoke(source);
+                InternalPack(source);
                 return;
             }
 
             _Sync.Reset();
 
-            IAsyncResult t = _Pack.BeginInvoke(source, EndPack, source);
+            Task t = Task.Factory.StartNew(InternalPack, source).ContinueWith(EndTask);
+
+            if (t.IsCompleted)
+                return;
 
             lock (_TaskRoot)
                 _Tasks.Add(t);
-        }
-
-        private static void EndPack(IAsyncResult r)
-        {
-            _Pack.EndInvoke(r);
-
-            lock (_TaskRoot)
-                _Tasks.Remove(r);
-
-            _Sync.Set();
         }
 
         private static void InternalPrune(DateTime threshold)
@@ -269,31 +273,29 @@ namespace Server.Misc
             Utility.WriteConsoleColor(ConsoleColor.Cyan, "Archives: Pruning done in {0:F1} seconds.", sw.Elapsed.TotalSeconds);
         }
 
+        private static void InternalPrune(object threshold)
+        {
+            InternalPrune((DateTime)threshold);
+        }
+
         private static void BeginPrune(DateTime threshold)
         {
             // Do not use async pruning during a crash state or when closing.
             if (!Async || Core.Crashed || Core.Closing)
             {
-                _Prune.Invoke(threshold);
+                InternalPrune(threshold);
                 return;
             }
 
             _Sync.Reset();
 
-            IAsyncResult t = _Prune.BeginInvoke(threshold, EndPrune, threshold);
+            Task t = Task.Factory.StartNew(InternalPrune, threshold).ContinueWith(EndTask);
+
+            if (t.IsCompleted)
+                return;
 
             lock (_TaskRoot)
                 _Tasks.Add(t);
-        }
-
-        private static void EndPrune(IAsyncResult r)
-        {
-            _Prune.EndInvoke(r);
-
-            lock (_TaskRoot)
-                _Tasks.Remove(r);
-
-            _Sync.Set();
         }
     }
 }
