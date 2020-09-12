@@ -3,12 +3,11 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
-using Server.Network;
 #endregion
 
 namespace Server
 {
-	public static class MultiData
+    public static class MultiData
 	{
 		public static Dictionary<int, MultiComponentList> Components => m_Components;
 		private static readonly Dictionary<int, MultiComponentList> m_Components;
