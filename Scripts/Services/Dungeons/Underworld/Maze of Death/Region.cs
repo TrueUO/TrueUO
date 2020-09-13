@@ -1,5 +1,6 @@
 using Server.Gumps;
 using Server.Items;
+using Server.Mobiles;
 using Server.Network;
 using Server.Targeting;
 using System;
@@ -129,7 +130,7 @@ namespace Server.Regions
 
         public override void OnEnter(Mobile m)
         {
-            if (m.Alive && (m_FrontEntrance.Contains(m.Location) || m_RearEntrance.Contains(m.Location)))
+            if (m is PlayerMobile && m.Alive && (m_FrontEntrance.Contains(m.Location) || m_RearEntrance.Contains(m.Location)))
             {
                 m.Frozen = true;
 
@@ -138,7 +139,7 @@ namespace Server.Regions
                 Timer.DelayCall(TimeSpan.FromSeconds(2.0), new TimerCallback(
                     delegate
                     {
-                        if (m.Backpack.FindItemByType<GoldenCompass>(false) != null)
+                        if (m != null && m.Backpack != null && m.Backpack.FindItemByType<GoldenCompass>(false) != null)
                         {
                             m.LocalOverheadMessage(MessageType.Regular, 946, 1113582); // I better proceed with caution.
                         }
@@ -157,33 +158,28 @@ namespace Server.Regions
         {
             base.OnLocationChanged(m, oldLocation);
 
-            if (m != null)
+            if (m != null && m.Alive)
             {
-                if (m.Alive)
+                if (m_TrapCorridor.Contains(m.Location) && !Path.Contains(new Point2D(m.Location.X, m.Location.Y)))
                 {
-                    if (m_TrapCorridor.Contains(m.Location) && !Path.Contains(new Point2D(m.Location.X, m.Location.Y)))
-                    {
-                        SpringTrap(m);
-                    }
-                    else if (m_Corridor.Contains(m.Location) && m.Backpack != null)
-                    {
-                        Item item = m.Backpack.FindItemByType(typeof(GoldenCompass));
-
-                        if (item != null)
-                        {
-                            m.CloseGump(typeof(CompassDirectionGump));
-                            m.SendGump(new CompassDirectionGump(m));
-                        }
-                    }
-                    else if (m.HasGump(typeof(CompassDirectionGump)))
+                    SpringTrap(m);
+                }
+                else if (m_Corridor.Contains(m.Location) && m.Backpack != null)
+                {
+                    if (m.Backpack != null && m.Backpack.FindItemByType(typeof(GoldenCompass)) != null)
                     {
                         m.CloseGump(typeof(CompassDirectionGump));
+                        m.SendGump(new CompassDirectionGump(m));
                     }
                 }
-                else if (m_TrapCorridor.Contains(m.Location))
+                else if (m.HasGump(typeof(CompassDirectionGump)))
                 {
-                    m.MoveToWorld(new Point3D(1060, 1066, -42), Map.TerMur);
+                    m.CloseGump(typeof(CompassDirectionGump));
                 }
+            }
+            else if (m_TrapCorridor.Contains(m.Location))
+            {
+                m.MoveToWorld(new Point3D(1060, 1066, -42), Map.TerMur);
             }
         }
 
