@@ -92,7 +92,6 @@ namespace Server.Items
         {
             switch (ItemID)
             {
-                default:
                 case 0xA102:
                     ItemID = 0xA109;
                     break;
