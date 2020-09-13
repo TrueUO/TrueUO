@@ -288,6 +288,8 @@ namespace Server.Multis
 
     public class GothicRoseCastle : BaseContestHouse
     {
+        public override Rectangle2D[] Area => AreaArray;
+
         private static readonly Rectangle2D[] AreaArray = new Rectangle2D[]
         {
             new Rectangle2D(-15, -15, 31, 31),
