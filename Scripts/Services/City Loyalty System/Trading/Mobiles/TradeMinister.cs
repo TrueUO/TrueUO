@@ -323,8 +323,8 @@ namespace Server.Engines.CityLoyalty
             base.Deserialize(reader);
             int v = reader.ReadInt();
             City = (City)reader.ReadInt();
-			
-			Frozen = true;
+
+            Frozen = true;
 
             if (CitySystem != null)
                 CitySystem.Minister = this;

@@ -77,7 +77,7 @@ namespace Server.Items
 
             if (!allowableSpecial)
             {
-                system = CraftSystem.GetSystem(item.GetType());                
+                system = CraftSystem.GetSystem(item.GetType());
             }
             else
             {
@@ -2748,7 +2748,7 @@ namespace Server.Items
             if (item is BaseArmor)
                 return ((BaseArmor)item).WeaponAttributes;
 
-            if(item is BaseClothing)
+            if (item is BaseClothing)
                 return ((BaseClothing)item).WeaponAttributes;
 
             return null;

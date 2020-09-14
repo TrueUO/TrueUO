@@ -493,7 +493,7 @@ namespace Server.Engines.Shadowguard
             }
         }
 
-       
+
         public override void OnGotMeleeAttack(Mobile m)
         {
             base.OnGotMeleeAttack(m);

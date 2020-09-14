@@ -131,10 +131,10 @@ namespace Server.Engines.ArtisanFestival
                 {
                     star.Addon = null;
                     Components.Remove(star);
-                    
+
                     star.Delete();
                 }
-            }      
+            }
         }
 
         public override void Serialize(GenericWriter writer)

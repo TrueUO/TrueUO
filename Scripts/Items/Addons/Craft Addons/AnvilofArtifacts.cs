@@ -182,7 +182,7 @@ namespace Server.Items
             {
                 from.SendLocalizedMessage(502092); // You must be in your house to do this.
             }
-        }       
+        }
 
         public override void Serialize(GenericWriter writer)
         {
@@ -195,7 +195,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();            
+            int version = reader.ReadInt();
 
             m_UsesRemaining = reader.ReadInt();
         }
@@ -361,7 +361,7 @@ namespace Server.Items
 
                 AddHtmlLocalized(60, 170, 125, 18, 1114513, "#1159451", 0x6B55, false, false); // <DIV ALIGN=CENTER>~1_TOKEN~</DIV>
                 AddHtmlLocalized(60, 188, 125, 18, 1152355, string.Format("{0}", 15 + armslorebonus), 0x6B55, false, false); // <CENTER>Total Must Equal ~1_VAL~</CENTER>
-                
+
                 for (int i = 0; i < _ResistOrder.Length; i++)
                 {
                     AddHtmlLocalized(60, 206 + (18 * i), 125, 18, 1114514, string.Format("#{0}", 1061158 + (int)_ResistOrder[i]), 0x6B45, false, false); // <DIV ALIGN=RIGHT>~1_TOKEN~</DIV>
@@ -371,7 +371,7 @@ namespace Server.Items
 
                 AddHtmlLocalized(60, 314, 125, 18, 1114513, "#1159450", 0x6B55, false, false); // <DIV ALIGN=CENTER>~1_TOKEN~</DIV>
                 AddHtmlLocalized(60, 332, 125, 18, 1152355, string.Format("{0}", 6 + armslorebonus), 0x6B55, false, false); // <CENTER>Total Must Equal ~1_VAL~</CENTER>
-                
+
                 for (int i = 0; i < _ResistOrder.Length; i++)
                 {
                     AddHtmlLocalized(60, 350 + (18 * i), 125, 18, 1114514, string.Format("#{0}", 1061158 + (int)_ResistOrder[i]), 0x6B45, false, false); // <DIV ALIGN=RIGHT>~1_TOKEN~</DIV>

@@ -53,7 +53,7 @@ namespace Server.Mobiles
             AddLoot(LootPack.Meager);
             AddLoot(LootPack.Average);
             AddLoot(LootPack.LootItem<RawFishSteak>(3, true));
-            AddLoot(LootPack.RandomLootItem(new [] { typeof(Gears), typeof(Hinge), typeof(Axle) }, 50.0, 1));
+            AddLoot(LootPack.RandomLootItem(new[] { typeof(Gears), typeof(Hinge), typeof(Axle) }, 50.0, 1));
             AddLoot(LootPack.PeculiarSeed2);
         }
 

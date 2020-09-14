@@ -45,19 +45,19 @@ namespace Server.Mobiles
         }
 
         public override bool AutoDispel => true;
-		
+
         public override bool BleedImmune => true;
-		
+
         public override bool ReacquireOnMovement => true;
-		
+
         public override int Hides => 20;
-		
-        public override int Meat => 19; 
-		
+
+        public override int Meat => 19;
+
         public override HideType HideType => HideType.Barbed;
-		
+
         public override Poison PoisonImmune => Poison.Lethal;
-		
+
         public override TribeType Tribe => TribeType.Undead;
 
         public override void GenerateLoot()

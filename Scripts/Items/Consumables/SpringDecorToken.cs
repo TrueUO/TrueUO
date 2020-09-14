@@ -1,5 +1,4 @@
 using Server.Gumps;
-using System;
 
 namespace Server.Items
 {
@@ -19,7 +18,7 @@ namespace Server.Items
             : base(serial)
         {
         }
-        
+
         public override void OnDoubleClick(Mobile from)
         {
             if (IsChildOf(from.Backpack))

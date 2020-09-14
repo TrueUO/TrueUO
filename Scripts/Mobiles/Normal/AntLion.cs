@@ -42,7 +42,7 @@ namespace Server.Mobiles
 
             Fame = 4500;
             Karma = -4500;
-           
+
             SetSpecialAbility(SpecialAbility.DragonBreath);
         }
 

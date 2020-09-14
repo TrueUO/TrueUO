@@ -24,7 +24,7 @@ namespace Server.Items
 
         private static readonly int[][] IDs =
         {
-			new[] { 1126213, 42189, 42190 },    // Arch
+            new[] { 1126213, 42189, 42190 },    // Arch
 			new[] { 1126197, 42171 },           // NWCornerPiece
 			new[] { 1126197, 42172, 42173 },    // SouthFacingPieces
 			new[] { 1126197, 42173, 42172 },    // EastFacingPieces
@@ -34,7 +34,7 @@ namespace Server.Items
 		};
 
         private FencingType _Type;
-        
+
         [CommandProperty(AccessLevel.GameMaster)]
         public bool CanFlip
         {

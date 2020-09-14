@@ -3,7 +3,7 @@ namespace Server.Items
     public class DivineCountenance : HornedTribalMask
     {
         public override bool IsArtifact => true;
-		public override int LabelNumber => 1061289;// Divine Countenance
+        public override int LabelNumber => 1061289;// Divine Countenance
         public override int ArtifactRarity => 11;
         public override int BasePhysicalResistance => 8;
         public override int BaseFireResistance => 6;
@@ -11,7 +11,7 @@ namespace Server.Items
         public override int BaseEnergyResistance => 25;
         public override int InitMinHits => 255;
         public override int InitMaxHits => 255;
-		
+
         [Constructable]
         public DivineCountenance()
         {
@@ -26,7 +26,7 @@ namespace Server.Items
             : base(serial)
         {
         }
-        
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);

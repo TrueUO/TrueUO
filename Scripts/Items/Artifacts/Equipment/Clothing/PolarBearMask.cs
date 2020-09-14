@@ -3,12 +3,12 @@ namespace Server.Items
     public class PolarBearMask : BearMask
     {
         public override bool IsArtifact => true;
-		public override int LabelNumber => 1070637;
+        public override int LabelNumber => 1070637;
         public override int BasePhysicalResistance => 15;
         public override int BaseColdResistance => 21;
         public override int InitMinHits => 255;
         public override int InitMaxHits => 255;
-		
+
         [Constructable]
         public PolarBearMask()
         {

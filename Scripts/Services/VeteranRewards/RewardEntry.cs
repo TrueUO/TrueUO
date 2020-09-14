@@ -10,7 +10,7 @@ namespace Server.Engines.VeteranRewards
         private readonly string m_NameString;
         private readonly object[] m_Args;
         private RewardList m_List;
-		
+
         public RewardEntry(RewardCategory category, int name, Type itemType, params object[] args)
         {
             m_Category = category;

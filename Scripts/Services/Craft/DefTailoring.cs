@@ -65,13 +65,13 @@ namespace Server.Engines.Craft
     {
         #region Statics
         private static readonly Type[] m_TailorColorables = new Type[]
-   		{
+           {
             typeof(GozaMatEastDeed), typeof(GozaMatSouthDeed),
             typeof(SquareGozaMatEastDeed), typeof(SquareGozaMatSouthDeed),
             typeof(BrocadeGozaMatEastDeed), typeof(BrocadeGozaMatSouthDeed),
             typeof(BrocadeSquareGozaMatEastDeed), typeof(BrocadeSquareGozaMatSouthDeed),
             typeof(SquareGozaMatDeed)
-   		};
+           };
 
         private static readonly Type[] m_TailorClothNonColorables = new Type[]
         {
@@ -707,7 +707,7 @@ namespace Server.Engines.Craft
             Repair = true;
             CanEnhance = true;
             CanAlter = true;
-        } 
+        }
         #endregion
 
         private void CutUpCloth(Mobile m, CraftItem craftItem, ITool tool)

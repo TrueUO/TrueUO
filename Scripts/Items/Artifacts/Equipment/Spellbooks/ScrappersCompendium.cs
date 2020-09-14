@@ -39,7 +39,7 @@ namespace Server.Items
 
         public override int OnCraft(int quality, bool makersMark, Mobile from, CraftSystem craftSystem, Type typeRes, ITool tool, CraftItem craftItem, int resHue)
         {
-            
+
             if (Utility.RandomDouble() < 0.5)
             {
                 double magery = from.Skills.Magery.Value - 100;

@@ -70,7 +70,7 @@ namespace Server.Mobiles
             switch (Utility.Random(4))
             {
                 default:
-                case 0: bow = new CompositeBow();break;
+                case 0: bow = new CompositeBow(); break;
                 case 1: bow = new Crossbow(); break;
                 case 2: bow = new Bow(); break;
                 case 3: bow = new HeavyCrossbow(); break;

@@ -36,7 +36,7 @@ namespace Server.Mobiles
 
             Fame = 5000;
             Karma = -5000;
-            
+
             SetAreaEffect(AreaEffect.PoisonBreath);
         }
 

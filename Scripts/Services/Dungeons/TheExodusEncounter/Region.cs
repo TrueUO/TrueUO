@@ -90,7 +90,7 @@ namespace Server.Engines.Exodus
         {
             typeof(ExodusDrone), typeof(ExodusMinion), typeof(ExodusMinionLord), typeof(ExodusSentinel), typeof(ExodusOverseer),
             typeof(EnslavedGargoyle), typeof(ExodusZealot), typeof(ExodusJuggernaut), typeof(Golem), typeof(GolemController),
-            typeof(GargoyleDestroyer), typeof(DupresChampion) , typeof(DupresKnight), typeof(DupresSquire) 
+            typeof(GargoyleDestroyer), typeof(DupresChampion) , typeof(DupresKnight), typeof(DupresSquire)
         };
 
         private static bool IsDropKeyMobile(BaseCreature bc)
@@ -117,8 +117,8 @@ namespace Server.Engines.Exodus
                     {
                         ExodusChest.GiveRituelItem(killer);
                     }
-                }                
-            }            
+                }
+            }
         }
     }
 }

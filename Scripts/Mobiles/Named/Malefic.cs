@@ -49,7 +49,7 @@ namespace Server.Mobiles
             : base(serial)
         {
         }
-		
+
         public override bool CanBeParagon => false;
         public override bool GivesMLMinorArtifact => true;
 

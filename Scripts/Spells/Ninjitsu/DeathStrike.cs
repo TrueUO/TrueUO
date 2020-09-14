@@ -43,7 +43,7 @@ namespace Server.Spells.Ninjitsu
                 return;
             }
 
-            ClearCurrentMove(attacker);            
+            ClearCurrentMove(attacker);
 
             if (!attacker.CheckSkill(MoveSkill, RequiredSkill - 12.5, RequiredSkill + 37.5))
             {
@@ -107,7 +107,7 @@ namespace Server.Spells.Ninjitsu
                 damage /= 2;
 
             if (info._Steps < 5)
-                damage /= 3;            
+                damage /= 3;
 
             AOS.Damage(info._Target, info._Attacker, damage, 0, 0, 0, 0, 0, 0, 100); // Damage is direct.
 

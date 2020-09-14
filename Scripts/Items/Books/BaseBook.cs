@@ -548,7 +548,7 @@ namespace Server.Items
             else
             {
                 return;
-            }           
+            }
         }
 
         #region ISecurable Members

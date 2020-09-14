@@ -10,7 +10,7 @@ namespace Server.Engines.Craft
     {
         #region Statics
         private static readonly Type typeofBlankScroll = typeof(BlankScroll);
-        private static readonly Type typeofSpellScroll = typeof(SpellScroll); 
+        private static readonly Type typeofSpellScroll = typeof(SpellScroll);
         #endregion
 
         #region Variables
@@ -28,7 +28,7 @@ namespace Server.Engines.Craft
         private const int GreyLabelColor = 0x3DEF;
 
         private bool m_ShowExceptionalChance;
-        private int m_OtherCount; 
+        private int m_OtherCount;
         #endregion
 
         #region Constructor
@@ -304,7 +304,7 @@ namespace Server.Engines.Craft
 
             if (cropScroll)
                 AddHtmlLocalized(170, 302 + (m_OtherCount++ * 20), 360, 18, 1044379, LabelColor, false, false); // Inscribing scrolls also requires a blank scroll and mana.
-        } 
+        }
         #endregion
 
     }

@@ -97,12 +97,12 @@ namespace Server.Mobiles
         public override bool ReacquireOnMovement => true;
 
         public override int Meat => 0;
-		public override int Scales => 0;
+        public override int Scales => 0;
         public override int Hides => 0;
-		
-		public override void GenerateLoot()
+
+        public override void GenerateLoot()
         {
-			// Kept blank to zero out the loot created by it's base class
+            // Kept blank to zero out the loot created by it's base class
         }
 
         public override void OnAfterDelete()

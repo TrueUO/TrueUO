@@ -357,7 +357,7 @@ namespace Server.Engines.Craft
 
             index = AddCraft(typeof(Runebook), 1044294, 1041267, 45.0, 95.0, typeof(BlankScroll), 1044377, 8, 1044378);
             AddRes(index, typeof(RecallScroll), 1044445, 1, 1044253);
-            AddRes(index, typeof(GateTravelScroll), 1044446, 1, 1044253);            
+            AddRes(index, typeof(GateTravelScroll), 1044446, 1, 1044253);
 
             AddCraft(typeof(BulkOrders.BulkOrderBook), 1044294, 1028793, 65.0, 115.0, typeof(BlankScroll), 1044377, 10, 1044378);
 
@@ -372,7 +372,7 @@ namespace Server.Engines.Craft
 
             index = AddCraft(typeof(SpellbookEngraver), 1044294, 1072151, 75.0, 100.0, typeof(Feather), 1044562, 1, 1044563);
             AddRes(index, typeof(BlackPearl), 1015001, 7, 1044253);
-                        
+
             AddCraft(typeof(MysticBook), 1044294, 1031677, 50.0, 100.0, typeof(BlankScroll), 1044377, 10, 1044378);
 
             AddCraft(typeof(NecromancerSpellbook), 1044294, 1074909, 50.0, 100.0, typeof(BlankScroll), 1044377, 10, 1044378);

@@ -153,8 +153,8 @@ namespace Server.Engines.CityLoyalty
         {
             base.Deserialize(reader);
             int v = reader.ReadInt();
-			
-			Frozen = true;
+
+            Frozen = true;
         }
     }
 }

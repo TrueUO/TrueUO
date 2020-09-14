@@ -313,7 +313,7 @@ namespace Server.Items
             }
 
             BaseCreature.TeleportPets(m, p, map);
-            m.MoveToWorld(p, map);                     
+            m.MoveToWorld(p, map);
 
             if (m_DestEffect && sendEffect)
             {

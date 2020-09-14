@@ -238,7 +238,7 @@ namespace Server.Engines.Shadowguard
     }
 
     public class VileTreefellow : FeralTreefellow
-    {		
+    {
         [Constructable]
         public VileTreefellow()
         {
@@ -263,12 +263,12 @@ namespace Server.Engines.Shadowguard
             SetWeaponAbility(WeaponAbility.Dismount);
             SetWeaponAbility(WeaponAbility.ForceOfNature);
         }
-		
-		public VileTreefellow(Serial serial) : base(serial)
+
+        public VileTreefellow(Serial serial) : base(serial)
         {
         }
-		
-		public override bool CanFlee => false; // Per Publish 90 - Treefellows in the Shadowguard Orchard encounter will no longer flee
+
+        public override bool CanFlee => false; // Per Publish 90 - Treefellows in the Shadowguard Orchard encounter will no longer flee
 
         public override void OnGaveMeleeAttack(Mobile defender)
         {

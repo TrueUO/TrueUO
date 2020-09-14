@@ -86,7 +86,7 @@ namespace Server.Engines.Quests
         }
 
         public override void OnAfterDelete()
-        {            
+        {
         }
 
         public override void OnDelete()

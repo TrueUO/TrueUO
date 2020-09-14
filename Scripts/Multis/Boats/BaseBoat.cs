@@ -306,9 +306,9 @@ namespace Server.Multis
         public Direction Facing { get { return m_Facing; } set { SetFacing(value); } }
 
         public IEnumerable<Item> ItemsOnBoard { get { return GetEntitiesOnBoard().OfType<Item>(); } }
-            
+
         public IEnumerable<Mobile> MobilesOnBoard { get { return GetEntitiesOnBoard().OfType<Mobile>(); } }
- 
+
         public override bool HandlesOnSpeech => true;
 
         [CommandProperty(AccessLevel.GameMaster)]
@@ -341,7 +341,7 @@ namespace Server.Multis
         [CommandProperty(AccessLevel.GameMaster)]
         public BoatOrder Order { get; set; }
 
-        public int PlayerCount { get { return MobilesOnBoard.Where(m => m is PlayerMobile).Count(); }  }
+        public int PlayerCount { get { return MobilesOnBoard.Where(m => m is PlayerMobile).Count(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public Mobile Pilot { get; set; }
@@ -3058,7 +3058,7 @@ namespace Server.Multis
         }
 
         #endregion
-         
+
         public void CheckExit(object o)
         {
             if (o is CorgulRegion)

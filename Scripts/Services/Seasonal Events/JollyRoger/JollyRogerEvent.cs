@@ -47,7 +47,7 @@ namespace Server.Engines.JollyRoger
             {
                 item = new Teleporter(new Point3D(1528, 1341, -3), map);
                 item.MoveToWorld(new Point3D(2264, 1574, -28), map);
-            }            
+            }
 
             if (map.FindItem<WOSAnkhOfSacrifice>(new Point3D(2263, 1549, -28)) == null)
             {
@@ -517,7 +517,7 @@ namespace Server.Engines.JollyRoger
             {
                 CastleAddon.Instance.Delete();
                 CastleAddon.Instance = null;
-            }            
+            }
 
             if (HawkwindSpeak.Instance != null)
             {

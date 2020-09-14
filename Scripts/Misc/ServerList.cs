@@ -142,7 +142,7 @@ namespace Server.Misc
                     outValue = iphe.AddressList[iphe.AddressList.Length - 1];
                 }
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 Diagnostics.ExceptionLogging.LogException(e);
             }

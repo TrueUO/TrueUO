@@ -141,25 +141,25 @@ namespace Server.Items
                         switch (Utility.Random(3))
                         {
                             case 0:
-                            {
-                                @from.SendLocalizedMessage(1112585); // Beware! The snake has hatched some of the eggs!!
-                                HatchEggs(@from);
+                                {
+                                    @from.SendLocalizedMessage(1112585); // Beware! The snake has hatched some of the eggs!!
+                                    HatchEggs(@from);
 
-                                break;
-                            }
+                                    break;
+                                }
                             case 1:
-                            {
-                                @from.SendLocalizedMessage(1112584); // The snake searches the nest and finds nothing.
+                                {
+                                    @from.SendLocalizedMessage(1112584); // The snake searches the nest and finds nothing.
 
-                                break;
-                            }
+                                    break;
+                                }
                             case 2:
-                            {
-                                @from.SendLocalizedMessage(1112584); // The snake searches the nest and finds nothing.
-                                Collapse(@from);
+                                {
+                                    @from.SendLocalizedMessage(1112584); // The snake searches the nest and finds nothing.
+                                    Collapse(@from);
 
-                                break;
-                            }
+                                    break;
+                                }
                         }
                     }
 

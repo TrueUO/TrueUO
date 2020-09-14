@@ -6,7 +6,6 @@ using Server.Accounting;
 using Server.Engines.NewMagincia;
 using Server.Engines.UOStore;
 using Server.ContextMenus;
-using Server.Engines.Auction;
 using Server.Spells;
 
 using System;
@@ -718,7 +717,7 @@ namespace Server.AccountVault
         {
             get { return RootParent as AccountVault; }
         }
-        
+
         public AccountVaultContainer(int index)
         {
             _Index = index;

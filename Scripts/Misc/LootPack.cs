@@ -613,7 +613,7 @@ namespace Server
 
         public static readonly LootPack PeculiarSeed1 = new LootPack(new[] { new LootPackEntry(false, true, new LootPackItem[] { new LootPackItem(e => Engines.Plants.Seed.RandomPeculiarSeed(1), 1) }, 33.3, 1) });
         public static readonly LootPack PeculiarSeed2 = new LootPack(new[] { new LootPackEntry(false, true, new LootPackItem[] { new LootPackItem(e => Engines.Plants.Seed.RandomPeculiarSeed(2), 1) }, 33.3, 1) });
-        public static readonly LootPack PeculiarSeed3 = new LootPack(new[] { new LootPackEntry(false, true, new LootPackItem[] { new LootPackItem(e => Engines.Plants.Seed.RandomPeculiarSeed(3), 1)}, 33.3, 1) });
+        public static readonly LootPack PeculiarSeed3 = new LootPack(new[] { new LootPackEntry(false, true, new LootPackItem[] { new LootPackItem(e => Engines.Plants.Seed.RandomPeculiarSeed(3), 1) }, 33.3, 1) });
         public static readonly LootPack PeculiarSeed4 = new LootPack(new[] { new LootPackEntry(false, true, new LootPackItem[] { new LootPackItem(e => Engines.Plants.Seed.RandomPeculiarSeed(4), 1) }, 33.3, 1) });
         public static readonly LootPack BonsaiSeed = new LootPack(new[] { new LootPackEntry(false, true, new LootPackItem[] { new LootPackItem(e => Engines.Plants.Seed.RandomBonsaiSeed(), 1) }, 25.0, 1) });
 
@@ -857,7 +857,7 @@ namespace Server
                 {
                     Item loot = null;
 
-                    if(item.ConstructCallback != null)
+                    if (item.ConstructCallback != null)
                     {
                         loot = item.ConstructCallback(from);
                     }
@@ -999,15 +999,15 @@ namespace Server
             int maxIntensity,
             bool standardLoot)
             : this(atSpawnTime, onStolen, items, chance, new LootPackDice(quantity), maxProps, minIntensity, maxIntensity, standardLoot)
-                { }
+        { }
 
-        public LootPackEntry( bool atSpawnTime, bool onStolen, LootPackItem[] items, double chance, int quantity, int maxProps, int minIntensity, int maxIntensity)
+        public LootPackEntry(bool atSpawnTime, bool onStolen, LootPackItem[] items, double chance, int quantity, int maxProps, int minIntensity, int maxIntensity)
             : this(atSpawnTime, onStolen, items, chance, new LootPackDice(0, 0, quantity), maxProps, minIntensity, maxIntensity, false)
         { }
 
         public LootPackEntry(bool atSpawnTime, bool onStolen, LootPackItem[] items, double chance, int quantity, int maxProps, int minIntensity, int maxIntensity, bool standardLoot)
             : this(atSpawnTime, onStolen, items, chance, new LootPackDice(0, 0, quantity), maxProps, minIntensity, maxIntensity, standardLoot)
-                { }
+        { }
 
         public LootPackEntry(
             bool atSpawnTime,

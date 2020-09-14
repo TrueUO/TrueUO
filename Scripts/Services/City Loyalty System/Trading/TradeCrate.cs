@@ -146,7 +146,7 @@ namespace Server.Engines.CityLoyalty
 
             foreach (TradeEntry.TradeDetails details in Entry.Details)
             {
-                if(details.Match(item.GetType()))
+                if (details.Match(item.GetType()))
                 {
                     int hasAmount = details.Count(this);
 

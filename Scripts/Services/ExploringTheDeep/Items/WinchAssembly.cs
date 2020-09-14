@@ -108,7 +108,7 @@ namespace Server.Items
 
             if (Hatch != null)
             {
-                Hatch.Reset();  
+                Hatch.Reset();
             }
         }
 

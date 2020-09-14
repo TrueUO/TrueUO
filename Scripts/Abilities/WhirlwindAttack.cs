@@ -12,7 +12,7 @@ namespace Server.Items
     {
         public override int BaseMana => 15;
 
-        public static List<WhirlwindAttackContext> Contexts { get; set; } 
+        public static List<WhirlwindAttackContext> Contexts { get; set; }
 
         public override bool OnBeforeDamage(Mobile attacker, Mobile defender)
         {

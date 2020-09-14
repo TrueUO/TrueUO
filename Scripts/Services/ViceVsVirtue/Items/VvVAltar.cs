@@ -11,7 +11,7 @@ namespace Server.Engines.VvV
 
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsActive { get; set; }
-        
+
         public List<Item> Braziers { get; set; }
         public List<Item> Torches { get; set; }
 

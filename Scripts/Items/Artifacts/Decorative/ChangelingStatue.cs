@@ -17,7 +17,7 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1073191;// A Changeling Contribution Statue from the Britannia Royal Zoo.
-		
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);

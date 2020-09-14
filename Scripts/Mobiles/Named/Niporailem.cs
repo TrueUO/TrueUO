@@ -171,7 +171,7 @@ namespace Server.Mobiles
         {
             base.OnDeath(c);
 
-            c.DropItem(new UndyingFlesh());          
+            c.DropItem(new UndyingFlesh());
         }
 
         public Niporailem(Serial serial)

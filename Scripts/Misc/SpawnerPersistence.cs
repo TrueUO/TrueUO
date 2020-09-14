@@ -42,7 +42,7 @@ namespace Server
             RemoveUnused2 = 0x00000800,
             RemoveTeleporters = 0x00001000,
             DestardSpawners = 0x00002000,
-            DoomSpawners    = 0x00004000
+            DoomSpawners = 0x00004000
         }
 
         public static string FilePath = Path.Combine("Saves/Misc", "SpawnerPresistence.bin");
@@ -312,10 +312,10 @@ namespace Server
             ReplaceSpawnersByRegionName("Destard", Map.Trammel, "Destard");
             ReplaceSpawnersByRegionName("Destard", Map.Felucca, "Destard");
         }
-    #endregion
+        #endregion
 
         #region Remove Teleporters
-    public static void RemoveTeleporters()
+        public static void RemoveTeleporters()
         {
             WeakEntityCollection.Delete("tel");
             var delCount = 0;

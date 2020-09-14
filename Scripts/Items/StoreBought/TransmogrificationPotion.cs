@@ -9,7 +9,7 @@ namespace Server.Items
     public class TransmogrificationPotion : Item
     {
         public override int LabelNumber => 1159501;  // Transmogrification Potion
-        
+
         [CommandProperty(AccessLevel.GameMaster)]
         public Item SourceObject { get; set; }
 
@@ -244,57 +244,57 @@ namespace Server.Items
                 switch (info.ButtonID)
                 {
                     case 0:
-                    {
-                        break;
-                    }
+                        {
+                            break;
+                        }
                     case 1:
-                    {
-                        if (!_Item.IsChildOf(m.Backpack))
                         {
-                            m.SendLocalizedMessage(1062334); // This item must be in your backpack to be used.
-                            return;
+                            if (!_Item.IsChildOf(m.Backpack))
+                            {
+                                m.SendLocalizedMessage(1062334); // This item must be in your backpack to be used.
+                                return;
+                            }
+
+                            if (_Item.SourceObject == null || _Item.DestinationObject == null)
+                            {
+                                m.SendLocalizedMessage(1159500); // That is not a valid robe-slot item.
+                                return;
+                            }
+
+                            if (!_Item.SourceObject.IsChildOf(m.Backpack))
+                            {
+                                _Item.SourceObject = null;
+                                m.SendLocalizedMessage(1062334); // This item must be in your backpack to be used.
+                                return;
+                            }
+
+                            if (!_Item.DestinationObject.IsChildOf(m.Backpack))
+                            {
+                                _Item.DestinationObject = null;
+                                m.SendLocalizedMessage(1062334); // This item must be in your backpack to be used.
+                                return;
+                            }
+
+                            if (_Item.CheckMagicalItem(_Item.DestinationObject))
+                            {
+                                m.SendLocalizedMessage(1159504); // The destination item must be free of any magical properties.
+                                return;
+                            }
+
+                            m.CloseGump(typeof(TransmogrificationPotionGump));
+
+                            m.PlaySound(491);
+
+                            _Item.SourceObject.ItemID = _Item.DestinationObject.ItemID;
+                            _Item.SourceObject.Hue = _Item.DestinationObject.Hue;
+                            _Item.SourceObject.LootType = _Item.DestinationObject.LootType;
+                            _Item.SourceObject.Insured = _Item.DestinationObject.Insured;
+
+                            _Item.DestinationObject.Delete();
+                            _Item.Delete();
+
+                            break;
                         }
-
-                        if (_Item.SourceObject == null || _Item.DestinationObject == null)
-                        {
-                            m.SendLocalizedMessage(1159500); // That is not a valid robe-slot item.
-                            return;
-                        }
-
-                        if (!_Item.SourceObject.IsChildOf(m.Backpack))
-                        {
-                            _Item.SourceObject = null;
-                            m.SendLocalizedMessage(1062334); // This item must be in your backpack to be used.
-                            return;
-                        }
-
-                        if (!_Item.DestinationObject.IsChildOf(m.Backpack))
-                        {
-                            _Item.DestinationObject = null;
-                            m.SendLocalizedMessage(1062334); // This item must be in your backpack to be used.
-                            return;
-                        }
-
-                        if (_Item.CheckMagicalItem(_Item.DestinationObject))
-                        {
-                            m.SendLocalizedMessage(1159504); // The destination item must be free of any magical properties.
-                            return;
-                        }
-
-                        m.CloseGump(typeof(TransmogrificationPotionGump));
-
-                        m.PlaySound(491);
-
-                        _Item.SourceObject.ItemID = _Item.DestinationObject.ItemID;
-                        _Item.SourceObject.Hue = _Item.DestinationObject.Hue;
-                        _Item.SourceObject.LootType = _Item.DestinationObject.LootType;
-                        _Item.SourceObject.Insured = _Item.DestinationObject.Insured;
-
-                        _Item.DestinationObject.Delete();
-                        _Item.Delete();
-
-                        break;
-                    }
                 }
             }
         }

@@ -439,11 +439,11 @@ namespace Server.Mobiles
                     }
                 case 1:
                     {
-                        if(version < 3)
+                        if (version < 3)
                         {
                             reader.ReadBool();
                         }
-                        
+
                         m_ShopName = reader.ReadString();
                         NextPayTime = reader.ReadDeltaTime();
                         House = (BaseHouse)reader.ReadItem();
@@ -578,7 +578,7 @@ namespace Server.Mobiles
                             {
                                 Banker.Deposit(House.MovingCrate, HoldGold);
                             }
-                            
+
                             HoldGold = 0;
                         }
 
@@ -615,7 +615,7 @@ namespace Server.Mobiles
                         {
                             Banker.Deposit(backpack, HoldGold);
                         }
-                        
+
                         HoldGold = 0;
                     }
 
@@ -641,8 +641,8 @@ namespace Server.Mobiles
             {
                 Placeholder.Delete();
             }
-            
-            if(PlayerVendors.Contains(this))
+
+            if (PlayerVendors.Contains(this))
             {
                 PlayerVendors.Remove(this);
             }
@@ -735,7 +735,7 @@ namespace Server.Mobiles
                     from.SendLocalizedMessage(1062493); // Your vendor has sufficient funds for operation and cannot accept this gold.
 
                     return false;
-                }                        
+                }
             }
             else
             {
@@ -1612,7 +1612,7 @@ namespace Server.Mobiles
         {
             var timer = new PayTimer();
             timer.Start();
-        }  
+        }
 
         public PayTimer()
             : base(TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1))

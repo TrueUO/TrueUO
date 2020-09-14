@@ -38,9 +38,9 @@ namespace Server.Mobiles
             : base(serial)
         {
         }
-		
+
         public override bool CanBeParagon => false;
-		
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);

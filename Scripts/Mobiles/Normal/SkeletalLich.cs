@@ -49,11 +49,11 @@ namespace Server.Mobiles
         public SkeletalLich(Serial serial) : base(serial)
         {
         }
-		
+
         public override bool BleedImmune => true;
-		
+
         public override Poison PoisonImmune => Poison.Lethal;
-		
+
         public override int TreasureMapLevel => 1;
 
         public override void GenerateLoot()

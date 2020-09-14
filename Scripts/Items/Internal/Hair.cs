@@ -21,7 +21,7 @@ namespace Server.Items
         }
 
         public override bool DisplayLootType => false;
-		
+
         public override bool VerifyMove(Mobile from)
         {
             return (from.AccessLevel >= AccessLevel.GameMaster);

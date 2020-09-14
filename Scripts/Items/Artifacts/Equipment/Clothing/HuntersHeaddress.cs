@@ -3,12 +3,12 @@ namespace Server.Items
     public class HuntersHeaddress : DeerMask
     {
         public override bool IsArtifact => true;
-		public override int LabelNumber => 1061595;// Hunter's Headdress
+        public override int LabelNumber => 1061595;// Hunter's Headdress
         public override int ArtifactRarity => 11;
         public override int BaseColdResistance => 23;
         public override int InitMinHits => 255;
         public override int InitMaxHits => 255;
-		
+
         [Constructable]
         public HuntersHeaddress()
         {

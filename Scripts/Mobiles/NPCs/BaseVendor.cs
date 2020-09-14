@@ -510,7 +510,7 @@ namespace Server.Mobiles
             {
                 Name = NameList.RandomName("tokuno male");
             }
-        }      
+        }
 
         #region SA Change
         public virtual bool CheckTerMur()

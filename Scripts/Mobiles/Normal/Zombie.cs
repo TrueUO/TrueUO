@@ -39,9 +39,9 @@ namespace Server.Mobiles
         }
 
         public override bool BleedImmune => true;
-		
+
         public override Poison PoisonImmune => Poison.Regular;
-		
+
         public override TribeType Tribe => TribeType.Undead;
 
         public override void GenerateLoot()

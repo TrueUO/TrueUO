@@ -1,7 +1,6 @@
 #define BOOKTEXTENTRY
 
 using Server.Network;
-using System;
 
 namespace Server.Items
 {
@@ -227,7 +226,7 @@ namespace Server.Items
             {
                 return;
             }
-            
+
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
             // add the book lines to the entry string
             for (int i = 0; i < book.PagesCount; ++i)
@@ -294,7 +293,7 @@ namespace Server.Items
                 {
                     return;
                 }
-                
+
             }
         }
 #endif

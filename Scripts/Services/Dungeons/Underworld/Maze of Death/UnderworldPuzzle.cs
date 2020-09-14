@@ -82,7 +82,7 @@ namespace Server.Items
             typeof(VoidEssence),        typeof(SilverSerpentVenom), typeof(ScouringToxin),
             typeof(ToxicVenomSac),      typeof(MouldingBoard),      typeof(DoughBowl),
             typeof(HornedTotemPole),    typeof(LargeSquarePillow),  typeof(LargeDiamondPillow),
-            typeof(DustyPillow),        typeof(StatuePedestal),		typeof(FlouredBreadBoard),
+            typeof(DustyPillow),        typeof(StatuePedestal),     typeof(FlouredBreadBoard),
             typeof(LuckyCoin),
         };
 
@@ -439,24 +439,24 @@ namespace Server.Items
             m_Solution = item.Solution;
             m_CurrentSolution = item.CurrentSolution;
 
-            AddBackground( 55, 45, 500, 200, 0x2422 );
-			AddImage( 75, 83, 0x2423 );
-			AddImage( 65, 118, 0x2423 );
-			AddImage( 75, 153, 0x2423 );
-			AddImage( 65, 188, 0x2423 );
-			AddImage( 108, 55, 0x2427 );
-			AddImage( 86, 65, 0x2427 );
-			AddBackground( 75, 65, 86, 153, 0x2422 );
-			AddBackground( 192, 65, 137, 153, 0x2422 );
-			AddBackground( 397, 65, 137, 153, 0x2422 );
-			AddBackground( 55, 270, 195, 110, 0x2422 );
-			AddImage( 205, 77, 0x52 );
-			AddImage( 205, 110, 0x52 );
-			AddImage( 205, 143, 0x52 );
-			AddImage( 410, 77, 0x52 );
-			AddImage( 410, 110, 0x52 );
-			AddImage( 410, 143, 0x52 );
-			AddImage( 5, 5, 0x28C8 );
+            AddBackground(55, 45, 500, 200, 0x2422);
+            AddImage(75, 83, 0x2423);
+            AddImage(65, 118, 0x2423);
+            AddImage(75, 153, 0x2423);
+            AddImage(65, 188, 0x2423);
+            AddImage(108, 55, 0x2427);
+            AddImage(86, 65, 0x2427);
+            AddBackground(75, 65, 86, 153, 0x2422);
+            AddBackground(192, 65, 137, 153, 0x2422);
+            AddBackground(397, 65, 137, 153, 0x2422);
+            AddBackground(55, 270, 195, 110, 0x2422);
+            AddImage(205, 77, 0x52);
+            AddImage(205, 110, 0x52);
+            AddImage(205, 143, 0x52);
+            AddImage(410, 77, 0x52);
+            AddImage(410, 110, 0x52);
+            AddImage(410, 143, 0x52);
+            AddImage(5, 5, 0x28C8);
 
             AddButton(160, 320, 0xF2, 0xF1, 8, GumpButtonType.Reply, 0); // Cancel
             AddButton(80, 320, 0xEF, 0xF0, 7, GumpButtonType.Reply, 0); // Apply

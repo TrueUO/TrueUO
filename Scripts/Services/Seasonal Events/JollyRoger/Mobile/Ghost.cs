@@ -18,7 +18,7 @@ namespace Server.Engines.Fellowship
 
     public class Ghost : BaseQuester
     {
-        public int GumpCliloc{ get; set; }
+        public int GumpCliloc { get; set; }
 
         private InternalTimer _Timer;
 

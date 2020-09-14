@@ -1,7 +1,7 @@
 using System;
 using System.Collections;
 
-namespace 
+namespace
     Server.Commands.Generic
 {
     public sealed class LimitExtension : BaseExtension

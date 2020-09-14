@@ -115,7 +115,7 @@ namespace Server.Engines.Chat
             {
                 m_OutputPerChannel[channel].Dispose();
                 m_OutputPerChannel.Remove(channel);
-            }     
+            }
         }
 
         public static void Log(string channel, string message)

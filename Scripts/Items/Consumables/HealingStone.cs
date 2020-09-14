@@ -253,6 +253,6 @@ namespace Server.Items
                     }
                 }
             }
-        }  
+        }
     }
 }

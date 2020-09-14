@@ -22,14 +22,14 @@ namespace Server.Mobiles
                 Add(new GenericBuyInfo(typeof(Fish), 6, 80, 0x9CD, 0, true));
                 Add(new GenericBuyInfo(typeof(Fish), 6, 80, 0x9CE, 0, true));
                 Add(new GenericBuyInfo(typeof(Fish), 6, 80, 0x9CF, 0, true));
-                Add(new GenericBuyInfo(typeof(FishingPole), 15, 20, 0xDC0, 0));                
+                Add(new GenericBuyInfo(typeof(FishingPole), 15, 20, 0xDC0, 0));
                 Add(new GenericBuyInfo(typeof(AquariumFood), 62, 20, 0xEFC, 0));
                 Add(new GenericBuyInfo(typeof(FishBowl), 6312, 20, 0x241C, 0x482));
                 Add(new GenericBuyInfo(typeof(VacationWafer), 67, 20, 0x971, 0));
                 Add(new GenericBuyInfo(typeof(AquariumNorthDeed), 250002, 20, 0x14F0, 0));
                 Add(new GenericBuyInfo(typeof(AquariumEastDeed), 250002, 20, 0x14F0, 0));
                 Add(new GenericBuyInfo(typeof(AquariumFishNet), 250, 20, 0xDC8, 0x240));
-                Add(new GenericBuyInfo(typeof(NewAquariumBook), 15, 20, 0xFF2, 0));                
+                Add(new GenericBuyInfo(typeof(NewAquariumBook), 15, 20, 0xFF2, 0));
                 Add(new GenericBuyInfo(typeof(SmallElegantAquariumRecipeScroll), 375000, 500, 0x2831, 0));
                 Add(new GenericBuyInfo(typeof(WallMountedAquariumRecipeScroll), 750000, 500, 0x2831, 0));
                 Add(new GenericBuyInfo(typeof(LargeElegantAquariumRecipeScroll), 1250000, 500, 0x2831, 0));

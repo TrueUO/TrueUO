@@ -80,7 +80,7 @@ namespace Server.Regions
 
         private static Rectangle2D m_FrontEntrance = new Rectangle2D(1057, 1062, 8, 6);
         private static Rectangle2D m_Room = new Rectangle2D(1065, 1055, 11, 11);
-        private static Rectangle2D m_Corridor = new Rectangle2D(1056, 990, 9, 72);        
+        private static Rectangle2D m_Corridor = new Rectangle2D(1056, 990, 9, 72);
         private static Rectangle2D m_PuzzleRoom = new Rectangle2D(1065, 1023, 8, 8);
         private static Rectangle2D m_RearEntrance = new Rectangle2D(1056, 986, 9, 4);
 

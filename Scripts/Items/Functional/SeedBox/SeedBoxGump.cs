@@ -31,7 +31,7 @@ namespace Server.Engines.Plants
             AddPage(1);
 
             int start = (Page - 1) * 20;
-            int index = 0;            
+            int index = 0;
 
             for (int i = start; i < Box.Entries.Count && i < start + 20; i++)
             {
@@ -185,31 +185,31 @@ namespace Server.Engines.Plants
 
             AddImageTiledButton(28, 79, 10740, 10740, 3, GumpButtonType.Reply, 0, 0xDCF, hue, -20, 2);
             AddHtmlLocalized(53, 77, 100, 20, 1151841, Entry.Seed.Amount.ToString(), TextHue, false, false); // Remove: ~1_val~
-            
+
             if (index >= 0)
             {
-                AddImageTiledButton(28, 104, 10740, 10740, 4, GumpButtonType.Reply, 0, 0xDCF, hue, -20, 2);                
+                AddImageTiledButton(28, 104, 10740, 10740, 4, GumpButtonType.Reply, 0, 0xDCF, hue, -20, 2);
             }
 
             AddHtmlLocalized(53, 102, 150, 20, 1151851, TextHue, false, false); // Insert Seed Before
 
             if (Box.Entries.Count < SeedBox.MaxUnique)
             {
-                AddImageTiledButton(28, 129, 10740, 10740, 5, GumpButtonType.Reply, 0, 0xDCF, hue, -20, 2);                
+                AddImageTiledButton(28, 129, 10740, 10740, 5, GumpButtonType.Reply, 0, 0xDCF, hue, -20, 2);
             }
 
             AddHtmlLocalized(53, 127, 150, 20, 1151852, TextHue, false, false); // Insert Seed After
 
             if (index < Box.Entries.Count && Box.Entries.Count < SeedBox.MaxUnique)
             {
-                AddImageTiledButton(28, 154, 10740, 10740, 6, GumpButtonType.Reply, 0, 0xDCF, hue, -20, 2);                
+                AddImageTiledButton(28, 154, 10740, 10740, 6, GumpButtonType.Reply, 0, 0xDCF, hue, -20, 2);
             }
 
             AddHtmlLocalized(53, 152, 100, 20, 1151842, TextHue, false, false); // Shift Right
 
             if (index > 0 && Box.Entries[index - 1] == null)
             {
-                AddImageTiledButton(28, 179, 10740, 10740, 7, GumpButtonType.Reply, 0, 0xDCF, hue, -20, 2);                
+                AddImageTiledButton(28, 179, 10740, 10740, 7, GumpButtonType.Reply, 0, 0xDCF, hue, -20, 2);
             }
 
             AddHtmlLocalized(53, 177, 100, 20, 1151843, TextHue, false, false); // Shift Right

@@ -540,7 +540,7 @@ namespace Server.Engines.Craft
         {
             CraftSubRes craftSubRes = new CraftSubRes(type, name, reqSkill, message);
             CraftSubRes2.Add(craftSubRes);
-        } 
+        }
         #endregion
 
     }

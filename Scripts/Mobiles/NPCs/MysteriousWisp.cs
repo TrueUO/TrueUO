@@ -99,7 +99,7 @@ namespace Server.Mobiles
                 else if (q.Completed)
                 {
                     q.CompleteQuest();
-                }           
+                }
             }
         }
 

@@ -381,7 +381,7 @@ namespace Server.Mobiles
 
                         if (toExpire.TotalHours >= 1)
                         {
-                            sb.Append((int) toExpire.TotalHours);
+                            sb.Append((int)toExpire.TotalHours);
                             sb.Append(':');
                             sb.Append(toExpire.Minutes.ToString("D2"));
                         }

@@ -5,13 +5,13 @@ namespace Server.Items
     {
         [Constructable]
         public JukaBow()
-        { 
-		}
+        {
+        }
 
         public JukaBow(Serial serial)
             : base(serial)
-        { 
-		}
+        {
+        }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsModified => Slayer != SlayerName.None;
@@ -54,7 +54,7 @@ namespace Server.Items
 
             if (g == null || !g.IsChildOf(from.Backpack))
             {
-                from.SendMessage("Those are not gears."); 
+                from.SendMessage("Those are not gears.");
             }
             else if (IsModified)
             {

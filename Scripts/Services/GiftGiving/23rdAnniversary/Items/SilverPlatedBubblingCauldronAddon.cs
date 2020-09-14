@@ -84,7 +84,7 @@ namespace Server.Items
         }
 
         public override BaseAddon Addon => new SilverPlatedBubblingCauldronAddon(Hue);
-        
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);

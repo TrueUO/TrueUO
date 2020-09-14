@@ -3,13 +3,13 @@ namespace Server.Items
     public class HatOfTheMagi : WizardsHat
     {
         public override bool IsArtifact => true;
-		public override int LabelNumber => 1061597;// Hat of the Magi
+        public override int LabelNumber => 1061597;// Hat of the Magi
         public override int ArtifactRarity => 11;
         public override int BasePoisonResistance => 20;
         public override int BaseEnergyResistance => 20;
         public override int InitMinHits => 255;
         public override int InitMaxHits => 255;
-		
+
         [Constructable]
         public HatOfTheMagi()
         {

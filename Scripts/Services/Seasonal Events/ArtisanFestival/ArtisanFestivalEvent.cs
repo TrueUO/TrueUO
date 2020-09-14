@@ -680,7 +680,7 @@ namespace Server.Engines.ArtisanFestival
             base.Deserialize(reader);
             int v = InheritInsertion ? 0 : reader.ReadInt();
 
-            if(v > 0)
+            if (v > 0)
             {
                 _Stage = reader.ReadInt();
                 Cycle = (CycleMethod)reader.ReadInt();

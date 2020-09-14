@@ -1,5 +1,4 @@
 #region References
-using System;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -53,11 +52,11 @@ namespace Ultima
 
                             if ((pixel & 0x80) != 0)
                             {
-                                c = 0x8000; 
+                                c = 0x8000;
                             }
                             else
                             {
-                                c = 0xffff; 
+                                c = 0xffff;
                             }
                             for (i = 0; i < count; ++i)
                             {

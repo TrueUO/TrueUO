@@ -47,7 +47,7 @@ namespace Server.Mobiles
         public override TribeType Tribe => TribeType.Undead;
 
         public override Poison PoisonImmune => Poison.Lethal;
-		
+
         public override void GenerateLoot()
         {
             AddLoot(LootPack.Meager);

@@ -3,11 +3,11 @@ namespace Server.Items
     public class TheDryadBow : Bow
     {
         public override bool IsArtifact => true;
-		public override int LabelNumber => 1061090;// The Dryad Bow
+        public override int LabelNumber => 1061090;// The Dryad Bow
         public override int ArtifactRarity => 11;
         public override int InitMinHits => 255;
         public override int InitMaxHits => 255;
-		
+
         private static readonly SkillName[] m_PossibleBonusSkills = new SkillName[]
         {
             SkillName.Archery,

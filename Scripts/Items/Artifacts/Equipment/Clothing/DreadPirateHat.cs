@@ -3,12 +3,12 @@ namespace Server.Items
     public class DreadPirateHat : TricorneHat
     {
         public override bool IsArtifact => true;
-		public override int LabelNumber => 1063467;
+        public override int LabelNumber => 1063467;
         public override int BaseColdResistance => 14;
         public override int BasePoisonResistance => 10;
         public override int InitMinHits => 255;
         public override int InitMaxHits => 255;
-		
+
         [Constructable]
         public DreadPirateHat()
         {
@@ -23,7 +23,7 @@ namespace Server.Items
             : base(serial)
         {
         }
-       
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);

@@ -13,7 +13,7 @@ namespace Server.Regions
     {
         public static readonly int HousePriority = DefaultPriority + 1;
         public static TimeSpan CombatHeatDelay = TimeSpan.FromSeconds(30.0);
-		
+
         private bool m_Recursion;
 
         public HouseRegion(BaseHouse house)

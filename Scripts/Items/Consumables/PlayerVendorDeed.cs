@@ -5,8 +5,8 @@ namespace Server.Items
 {
     public class ContractOfEmployment : Item
     {
-		public override int LabelNumber => 1041243;// a contract of employment
-		
+        public override int LabelNumber => 1041243;// a contract of employment
+
         [Constructable]
         public ContractOfEmployment()
             : base(0x14F0)

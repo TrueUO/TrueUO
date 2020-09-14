@@ -171,5 +171,5 @@ namespace Server.Items
                 }
             }
         }
-    }    
+    }
 }

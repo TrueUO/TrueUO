@@ -31,7 +31,7 @@ namespace Server.Gumps
             {
                 AddHtmlLocalized(35, 10, 400, 20, 1114513, string.Format("#{0}", _Title.Number.ToString()), C32216(0x0d0d0d), false, false);
             }
-            else if(!string.IsNullOrEmpty(_Title.String))
+            else if (!string.IsNullOrEmpty(_Title.String))
             {
                 AddHtml(35, 10, 400, 20, Center(_Title.String), false, false);
             }

@@ -34,7 +34,7 @@ namespace Server.Items
 
         public static IFellowshipMedallion CheckMedallion(Mobile from)
         {
-            return from.FindItemOnLayer(Layer.Neck) as IFellowshipMedallion;            
+            return from.FindItemOnLayer(Layer.Neck) as IFellowshipMedallion;
         }
 
         private Timer m_Timer;

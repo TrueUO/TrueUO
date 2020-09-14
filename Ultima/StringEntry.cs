@@ -83,7 +83,7 @@ namespace Ultima
             {
                 m_Args[i + 1] = args[i];
             }
-            return string.Format(m_FmtTxt, m_Args);		
+            return string.Format(m_FmtTxt, m_Args);
         }
     }
 }

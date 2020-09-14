@@ -330,7 +330,7 @@ namespace Server.Engines.JollyRoger
             {
                 LuteList.ForEach(f => f.Delete());
                 LuteList.Clear();
-            }            
+            }
 
             base.OnDelete();
         }

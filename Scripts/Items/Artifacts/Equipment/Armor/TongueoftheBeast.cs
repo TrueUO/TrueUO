@@ -23,7 +23,7 @@ namespace Server.Items
             : base(serial)
         {
         }
-       
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);

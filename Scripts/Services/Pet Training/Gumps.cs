@@ -393,7 +393,7 @@ namespace Server.Mobiles
 
                             TextDefinition[] loc = PetTrainingHelper.GetLocalization(profile.Advancements[i]);
                             int tooltip = PetTrainingHelper.GetCategoryLocalization(profile.Advancements[i]);
-                            bool skill = profile.Advancements[i] is SkillName;                            
+                            bool skill = profile.Advancements[i] is SkillName;
 
                             if (loc[0] != null)
                             {

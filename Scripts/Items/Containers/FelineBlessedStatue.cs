@@ -21,13 +21,13 @@ namespace Server.Items
         };
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public DateTime NextReagentTime  { get; set; }
+        public DateTime NextReagentTime { get; set; }
 
         [Constructable]
         public FelineBlessedStatue()
             : base(0x1947)
         {
-            Weight = 12;            
+            Weight = 12;
             LootType = LootType.Blessed;
         }
 
@@ -66,7 +66,7 @@ namespace Server.Items
                 else
                 {
                     base.OnDoubleClick(from);
-                }                
+                }
             }
             else
             {
@@ -104,7 +104,7 @@ namespace Server.Items
         public void OnTick()
         {
             if (Movable)
-            {                
+            {
                 StopTimer();
                 return;
             }
@@ -131,7 +131,7 @@ namespace Server.Items
             {
                 if (_Item == null || _Item.Deleted)
                 {
-                    Stop();                    
+                    Stop();
                     return;
                 }
 
@@ -168,7 +168,7 @@ namespace Server.Items
         public override void OnLockDownChange()
         {
             if (IsLockedDown)
-            {                
+            {
                 StartTimer();
             }
         }
@@ -180,7 +180,7 @@ namespace Server.Items
                 if (ItemID == 0x1949 || ItemID == 0x194A)
                 {
                     ItemID -= 2;
-                }                
+                }
             }
             else
             {
@@ -192,8 +192,8 @@ namespace Server.Items
         }
 
         private void DropResource()
-        {            
-            var item = Activator.CreateInstance(m_ResourceTypes[Utility.Random(m_ResourceTypes.Length)]) as Item;           
+        {
+            var item = Activator.CreateInstance(m_ResourceTypes[Utility.Random(m_ResourceTypes.Length)]) as Item;
 
             if (item != null)
             {
@@ -208,7 +208,7 @@ namespace Server.Items
                 {
                     DropItem(item);
 
-                    CheckContainer();                    
+                    CheckContainer();
                 }
             }
         }
@@ -231,7 +231,7 @@ namespace Server.Items
             base.Deserialize(reader);
             reader.ReadInt();
 
-            NextReagentTime  = reader.ReadDateTime();
+            NextReagentTime = reader.ReadDateTime();
 
             if (!Movable)
             {

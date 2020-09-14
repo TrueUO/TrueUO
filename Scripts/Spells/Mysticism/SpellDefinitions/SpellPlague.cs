@@ -134,7 +134,7 @@ namespace Server.Spells.Mysticism
                 switch (amount)
                 {
                     default: break;
-                    case 0: 
+                    case 0:
                     case 1: damage /= 2; break;
                     case 2: damage /= 1.66; break;
                     case 3: damage /= 1.33; break;

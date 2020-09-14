@@ -3,12 +3,12 @@ namespace Server.Items
     public class SpiritOfTheTotem : BearMask
     {
         public override bool IsArtifact => true;
-		public override int LabelNumber => 1061599;// Spirit of the Totem
+        public override int LabelNumber => 1061599;// Spirit of the Totem
         public override int ArtifactRarity => 11;
         public override int BasePhysicalResistance => 20;
         public override int InitMinHits => 255;
         public override int InitMaxHits => 255;
-		
+
         [Constructable]
         public SpiritOfTheTotem()
         {

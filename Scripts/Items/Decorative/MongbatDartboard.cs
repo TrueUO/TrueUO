@@ -41,7 +41,7 @@ namespace Server.Items
             from.Animate(AnimationType.Attack, 4);
             Point3D loc = new Point3D(from.X + 1, from.Y, from.Z + 103);
             Effects.SendPacket(from.Location, from.Map, new GraphicalEffect(EffectType.Moving, from.Serial, Serial.Zero, knife.ItemID, from.Location, loc, 10, 0, true, true));
-            
+
             double rand = Utility.RandomDouble();
 
             int message;

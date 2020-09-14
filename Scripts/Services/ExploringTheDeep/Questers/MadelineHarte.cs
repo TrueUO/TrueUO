@@ -158,9 +158,9 @@ namespace Server.Gumps
             switch (info.ButtonID)
             {
                 case 0:
-                {
-                    break;
-                }
+                    {
+                        break;
+                    }
             }
         }
     }
@@ -228,9 +228,9 @@ namespace Server.Gumps
             switch (info.ButtonID)
             {
                 case 0:
-                {
-                    break;
-                }
+                    {
+                        break;
+                    }
             }
         }
     }

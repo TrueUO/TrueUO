@@ -3,7 +3,7 @@ namespace Server.Items
     public class BurglarsBandana : Bandana
     {
         public override bool IsArtifact => true;
-		public override int LabelNumber => 1063473;
+        public override int LabelNumber => 1063473;
         public override int BasePhysicalResistance => 10;
         public override int BaseFireResistance => 5;
         public override int BaseColdResistance => 7;
@@ -11,7 +11,7 @@ namespace Server.Items
         public override int BaseEnergyResistance => 10;
         public override int InitMinHits => 255;
         public override int InitMaxHits => 255;
-		
+
         [Constructable]
         public BurglarsBandana()
         {

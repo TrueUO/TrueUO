@@ -7,21 +7,21 @@ namespace Server.Items
         private static readonly int[,] _Large =
         {
             {42400, 2, 0, 0}, {42395, 2, 1, 0}, {42410, 2, -2, 0},
-            {42405, 2, -1, 0}, {42399, 1, 0, 0}, {42398, 0, 0, 0},	
-            {42393, 0, 1, 0}, {42390, 1, 2, 0}, {42394, 1, 1, 0},	
-            {42402, -1, 0, 0}, {42397, -1, 1, 0}, {42411, -2, 2, 0},	
-            {42401, -2, 0, 0}, {42396, -2, 1, 0}, {42392, -1, 2, 0},	
-            {42389, 0, 2, 0}, {42409, -1, -2, 0}, {42408, 0, -2, 0},	
+            {42405, 2, -1, 0}, {42399, 1, 0, 0}, {42398, 0, 0, 0},
+            {42393, 0, 1, 0}, {42390, 1, 2, 0}, {42394, 1, 1, 0},
+            {42402, -1, 0, 0}, {42397, -1, 1, 0}, {42411, -2, 2, 0},
+            {42401, -2, 0, 0}, {42396, -2, 1, 0}, {42392, -1, 2, 0},
+            {42389, 0, 2, 0}, {42409, -1, -2, 0}, {42408, 0, -2, 0},
             {42391, 1, -2, 0}, {42404, 1, -1, 0}, {42403, 0, -1, 0},
             {42407, -1, -1, 0}, {42406, -2, -1, 0}
-		};
+        };
 
         private static readonly int[,] _Small =
         {
             {42417, 1, 0, 0}, {42414, 1, 1, 0}, {42456, 1, -1, 0},
             {42454, 0, 0, 0}, {42458, -1, -1, 0}, {42457, 0, -1, 0},
             {42455, -1, 0, 0}, {42416, -1, 1, 0}, {42415, 0, 1, 0}
-		};
+        };
 
         public override BaseAddonDeed Deed => new DecorativeMagesRugAddonDeed();
 
@@ -55,7 +55,7 @@ namespace Server.Items
             Hue = sender.DyedHue;
             return true;
         }
-        
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -133,7 +133,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-             reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

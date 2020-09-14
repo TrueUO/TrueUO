@@ -82,7 +82,7 @@ namespace Server.Engines.NewMagincia
         /// <returns></returns>
         public bool PlayerCanBuy(int amount)
         {
-            return (m_SellLimit == 0 || amount <= ActualSellLimit) && m_Stock > 0 &&  m_SellPricePer > 0;
+            return (m_SellLimit == 0 || amount <= ActualSellLimit) && m_Stock > 0 && m_SellPricePer > 0;
         }
 
         /// <summary>

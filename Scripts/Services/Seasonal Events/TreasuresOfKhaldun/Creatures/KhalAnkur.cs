@@ -330,7 +330,7 @@ namespace Server.Mobiles
             AddLoot(LootPack.UltraRich, 3);
             AddLoot(LootPack.Meager);
         }
-        
+
         private int _120GPowerScrolls = 4;
 
         public override Item GetPowerScroll()

@@ -9,7 +9,7 @@ namespace Server.Engines.JollyRoger
 
 {
     public enum Shrine
-    {        
+    {
         Valor,
         Spirituality,
         Sacrifice,
@@ -220,7 +220,7 @@ namespace Server.Engines.JollyRoger
                 {
                     points.Add(p);
                 }
-                
+
                 MasterType type = (MasterType)Utility.Random(9);
 
                 List<BaseCreature> list = new List<BaseCreature>();

@@ -40,8 +40,8 @@ namespace Server.Mobiles
 
             Fame = 21000;
             Karma = -21000;
-			
-			Tamable = false;
+
+            Tamable = false;
 
             SetWeaponAbility(WeaponAbility.BleedAttack);
             SetWeaponAbility(WeaponAbility.ParalyzingBlow);

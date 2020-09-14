@@ -978,7 +978,7 @@ namespace Server.Engines.Craft
                     types[i] = new[] { baseType };
                 }
 
-                amounts[i] = IsAnvilOfArtifactValid(from, craftSystem)  ? craftRes.Amount * 10 : craftRes.Amount;
+                amounts[i] = IsAnvilOfArtifactValid(from, craftSystem) ? craftRes.Amount * 10 : craftRes.Amount;
 
                 // For stackable items that can ben crafted more than one at a time
                 if (UseAllRes)
@@ -2177,15 +2177,15 @@ namespace Server.Engines.Craft
                     if (items != null)
                     {
                         if (items.Length > 0 && items[0] is IPlantHue)
-                            hue = ((IPlantHue) items[0]).PlantHue;
+                            hue = ((IPlantHue)items[0]).PlantHue;
                         else if (items.Length > 0 && items[0] is IPigmentHue)
-                            phue = ((IPigmentHue) items[0]).PigmentHue;
+                            phue = ((IPigmentHue)items[0]).PigmentHue;
 
                         foreach (Item item in items)
                         {
-                            if (item is IPlantHue && ((IPlantHue) item).PlantHue != hue)
+                            if (item is IPlantHue && ((IPlantHue)item).PlantHue != hue)
                                 return true;
-                            else if (item is IPigmentHue && ((IPigmentHue) item).PigmentHue != phue)
+                            else if (item is IPigmentHue && ((IPigmentHue)item).PigmentHue != phue)
                                 return true;
                         }
 

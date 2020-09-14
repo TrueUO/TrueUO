@@ -453,7 +453,7 @@ namespace Server.Engines.Quests
                 }
 
                 hold.DropItem(new Ramrod());
-                hold.DropItem(new Cannonball(Utility.RandomMinMax(7, 10)));              
+                hold.DropItem(new Cannonball(Utility.RandomMinMax(7, 10)));
                 hold.DropItem(new Grapeshot(Utility.RandomMinMax(7, 10)));
                 hold.DropItem(new PowderCharge(Utility.RandomMinMax(7, 10)));
                 hold.DropItem(new FuseCord(Utility.RandomMinMax(7, 10)));

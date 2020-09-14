@@ -6,7 +6,7 @@ namespace Server.Items
     {
         public override int LabelNumber => 1126496; // shelves
         public override int DefaultGumpID => 0x4D;
-        
+
         [Constructable]
         public DecorativeSpecimenShelve()
             : base(0xA5E8)

@@ -61,7 +61,7 @@ namespace Server.Misc
                         }
                     }
                 }
-                else if(Insensitive.StartsWith(args.Speech, "give"))
+                else if (Insensitive.StartsWith(args.Speech, "give"))
                 {
                     Mobile from = args.Mobile;
 

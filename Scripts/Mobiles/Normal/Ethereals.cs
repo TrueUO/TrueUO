@@ -789,7 +789,7 @@ namespace Server.Mobiles
         public RideablePolarBear(Serial serial)
             : base(serial)
         {
-        }      
+        }
 
         public override void Serialize(GenericWriter writer)
         {
@@ -819,7 +819,7 @@ namespace Server.Mobiles
             : base(serial)
         {
         }
-        
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);

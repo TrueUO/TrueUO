@@ -10,19 +10,19 @@ namespace Server
         #region List definitions
 
         #region SA equipment
-		private static readonly Type[] m_SAJewelryTypes = new[]
+        private static readonly Type[] m_SAJewelryTypes = new[]
         {
             typeof(GargishRing), typeof(GargishBracelet)
         };
         public static Type[] SAJewelryTypes => m_SAJewelryTypes;
-		
-		public static readonly Type[] m_SAShieldTypes = new[] 
-		{
+
+        public static readonly Type[] m_SAShieldTypes = new[]
+        {
             typeof(GargishChaosShield), typeof(GargishKiteShield), typeof(GargishOrderShield), typeof(GargishWoodenShield),
             typeof(LargeStoneShield)
         };
         public static Type[] SAShieldTypes => m_SAShieldTypes;
-		
+
         private static readonly Type[] m_SAWeaponTypes = new[]
         {
             typeof(DiscMace), typeof(GargishTalwar), typeof(Shortblade), typeof(DualPointedSpear), typeof(GlassStaff),
@@ -78,8 +78,8 @@ namespace Server
         public static Type[] MLClothingTypes => m_MLClothingTypes;
         #endregion
 
-		#region SE equipment
-		private static readonly Type[] m_SEArmorTypes = new[]
+        #region SE equipment
+        private static readonly Type[] m_SEArmorTypes = new[]
         {
             typeof(ChainHatsuburi), typeof(LeatherDo), typeof(LeatherHaidate), typeof(LeatherHiroSode), typeof(LeatherJingasa),
             typeof(LeatherMempo), typeof(LeatherNinjaHood), typeof(LeatherNinjaJacket), typeof(LeatherNinjaMitts),
@@ -90,18 +90,18 @@ namespace Server
             , typeof(StuddedSuneate)
         };
         public static Type[] SEArmorTypes => m_SEArmorTypes;
-		
-		private static readonly Type[] m_SEClothingTypes = new[]
+
+        private static readonly Type[] m_SEClothingTypes = new[]
         {
             typeof(ClothNinjaJacket), typeof(FemaleKimono), typeof(Hakama), typeof(HakamaShita), typeof(JinBaori),
             typeof(Kamishimo), typeof(MaleKimono), typeof(NinjaTabi), typeof(Obi), typeof(SamuraiTabi), typeof(TattsukeHakama),
             typeof(Waraji)
         };
         public static Type[] SEClothingTypes => m_SEClothingTypes;
-		
-		private static readonly Type[] m_SEHatTypes = new[] { typeof(ClothNinjaHood), typeof(Kasa) };
+
+        private static readonly Type[] m_SEHatTypes = new[] { typeof(ClothNinjaHood), typeof(Kasa) };
         public static Type[] SEHatTypes => m_SEHatTypes;
-		
+
         private static readonly Type[] m_SEWeaponTypes = new[]
         {
             typeof(Bokuto), typeof(Daisho), typeof(Kama), typeof(Lajatang), typeof(NoDachi), typeof(Nunchaku), typeof(Sai),
@@ -111,30 +111,30 @@ namespace Server
 
         private static readonly Type[] m_SERangedWeaponTypes = new[] { typeof(Yumi) };
         public static Type[] SERangedWeaponTypes => m_SERangedWeaponTypes;
-		#endregion
-		
-		#region Normal equipment
-		private static readonly Type[] m_ClothingTypes = new[]
+        #endregion
+
+        #region Normal equipment
+        private static readonly Type[] m_ClothingTypes = new[]
         {
             typeof(Cloak), typeof(Bonnet), typeof(Cap), typeof(FeatheredHat), typeof(FloppyHat), typeof(JesterHat),
             typeof(Surcoat), typeof(SkullCap), typeof(StrawHat), typeof(TallStrawHat), typeof(TricorneHat), typeof(WideBrimHat),
             typeof(WizardsHat), typeof(BodySash), typeof(Doublet), typeof(Boots), typeof(FullApron), typeof(JesterSuit),
             typeof(Sandals), typeof(Tunic), typeof(Shoes), typeof(Shirt), typeof(Kilt), typeof(Skirt), typeof(FancyShirt),
             typeof(FancyDress), typeof(ThighBoots), typeof(LongPants), typeof(PlainDress), typeof(Robe), typeof(ShortPants),
-            typeof(HalfApron), typeof(FurSarong), typeof(FurCape), typeof(FlowerGarland), typeof(GildedDress), typeof(FurBoots), 
-			typeof(FormalShirt)
+            typeof(HalfApron), typeof(FurSarong), typeof(FurCape), typeof(FlowerGarland), typeof(GildedDress), typeof(FurBoots),
+            typeof(FormalShirt)
         };
         public static Type[] ClothingTypes => m_ClothingTypes;
-		
-		private static readonly Type[] m_HatTypes = new[]
+
+        private static readonly Type[] m_HatTypes = new[]
         {
             typeof(SkullCap), typeof(Bandana), typeof(FloppyHat), typeof(Cap), typeof(WideBrimHat), typeof(StrawHat),
             typeof(TallStrawHat), typeof(WizardsHat), typeof(Bonnet), typeof(FeatheredHat), typeof(TricorneHat),
             typeof(JesterHat), typeof(OrcMask), typeof(TribalMask), typeof(FlowerGarland), typeof(BearMask), typeof(DeerMask)
         };
         public static Type[] HatTypes => m_HatTypes;
-		
-		private static readonly Type[] m_WeaponTypes = new[]
+
+        private static readonly Type[] m_WeaponTypes = new[]
         {
             typeof(Axe), typeof(BattleAxe), typeof(DoubleAxe), typeof(ExecutionersAxe), typeof(Hatchet), typeof(LargeBattleAxe),
             typeof(TwoHandedAxe), typeof(WarAxe), typeof(Club), typeof(Mace), typeof(Maul), typeof(WarHammer), typeof(WarMace),
@@ -142,15 +142,15 @@ namespace Server
             typeof(BlackStaff), typeof(GnarledStaff), typeof(QuarterStaff), typeof(Broadsword), typeof(Cutlass), typeof(Katana),
             typeof(Kryss), typeof(Longsword), typeof(Scimitar), typeof(VikingSword), typeof(Pickaxe), typeof(HammerPick),
             typeof(ButcherKnife), typeof(Cleaver), typeof(Dagger), typeof(SkinningKnife), typeof(ShepherdsCrook),
-			typeof(Scythe), typeof(BoneHarvester), typeof(Scepter), typeof(BladedStaff), typeof(Pike), typeof(DoubleBladedStaff),
+            typeof(Scythe), typeof(BoneHarvester), typeof(Scepter), typeof(BladedStaff), typeof(Pike), typeof(DoubleBladedStaff),
             typeof(Lance), typeof(CrescentBlade), typeof(SmithyHammer), typeof(SledgeHammerWeapon)
-        };	
+        };
         public static Type[] WeaponTypes => m_WeaponTypes;
 
-        private static readonly Type[] m_RangedWeaponTypes = new[] 
-		{ 
-			typeof(Bow), typeof(Crossbow), typeof(HeavyCrossbow), typeof(CompositeBow), typeof(RepeatingCrossbow)
-		};
+        private static readonly Type[] m_RangedWeaponTypes = new[]
+        {
+            typeof(Bow), typeof(Crossbow), typeof(HeavyCrossbow), typeof(CompositeBow), typeof(RepeatingCrossbow)
+        };
         public static Type[] RangedWeaponTypes => m_RangedWeaponTypes;
 
         private static readonly Type[] m_ArmorTypes = new[]
@@ -165,8 +165,8 @@ namespace Server
             typeof(StuddedBustierArms), typeof(StuddedChest), typeof(StuddedGloves), typeof(StuddedGorget), typeof(StuddedLegs)
         };
         public static Type[] ArmorTypes => m_ArmorTypes;
-		
-		private static readonly Type[] m_JewelryTypes = new[]
+
+        private static readonly Type[] m_JewelryTypes = new[]
         {
             typeof(GoldRing), typeof(GoldBracelet), typeof(SilverRing), typeof(SilverBracelet)
         };
@@ -178,8 +178,8 @@ namespace Server
             typeof(WoodenKiteShield), typeof(WoodenShield), typeof(ChaosShield), typeof(OrderShield)
         };
         public static Type[] ShieldTypes => m_ShieldTypes;
-		#endregion
-		
+        #endregion
+
         private static readonly Type[] m_GemTypes = new[]
         {
             typeof(Amber), typeof(Amethyst), typeof(Citrine), typeof(Diamond), typeof(Emerald), typeof(Ruby), typeof(Sapphire),
@@ -196,7 +196,7 @@ namespace Server
         public static Type[] RareGemTypes => m_RareGemTypes;
 
         private static readonly Type[] m_MLResources =
-		{
+        {
             typeof(BlueDiamond), typeof(DarkSapphire), typeof(EcruCitrine), typeof(FireRuby), typeof(PerfectEmerald), typeof(Turquoise), typeof(WhitePearl), typeof(BrilliantAmber),
             typeof(LuminescentFungi), typeof(BarkFragment), typeof(SwitchItem), typeof(ParasiticPlant),
         };
@@ -292,7 +292,7 @@ namespace Server
         {
             typeof(ArcaneCircleScroll), typeof(GiftOfRenewalScroll), typeof(ImmolatingWeaponScroll), typeof(AttuneWeaponScroll),
             typeof(ThunderstormScroll), typeof(NatureFuryScroll),
-			typeof(ReaperFormScroll), typeof(WildfireScroll), typeof(EssenceOfWindScroll), typeof(DryadAllureScroll),
+            typeof(ReaperFormScroll), typeof(WildfireScroll), typeof(EssenceOfWindScroll), typeof(DryadAllureScroll),
             typeof(EtherealVoyageScroll), typeof(WordOfDeathScroll), typeof(GiftOfLifeScroll), typeof(ArcaneEmpowermentScroll)
         };
 
@@ -337,8 +337,8 @@ namespace Server
         };
 
         public static Type[] TavarasJournalTypes => m_TavarasJournalTypes;
-		#endregion
-		
+        #endregion
+
         private static readonly Type[] m_NewWandTypes = new[]
         {
             typeof(FireballWand), typeof(LightningWand), typeof(MagicArrowWand), typeof(GreaterHealWand), typeof(HarmWand),

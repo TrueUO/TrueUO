@@ -89,7 +89,7 @@ namespace Server.Items
             }
 
             m_SkillMod.Remove();
-            m_SkillMod = null;            
+            m_SkillMod = null;
         }
 
         public BasketOfHerbs(Serial serial)

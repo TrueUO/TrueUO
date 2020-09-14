@@ -67,8 +67,8 @@ namespace Server.Items
             : base(serial)
         {
         }
-		
-		public override void OnDoubleClick(Mobile from) // Override double click of the deed to call our target
+
+        public override void OnDoubleClick(Mobile from) // Override double click of the deed to call our target
         {
             if (!IsChildOf(from.Backpack)) // Make sure its in their pack
             {
@@ -93,6 +93,6 @@ namespace Server.Items
         {
             base.Deserialize(reader);
             int version = reader.ReadInt();
-        }        
+        }
     }
 }

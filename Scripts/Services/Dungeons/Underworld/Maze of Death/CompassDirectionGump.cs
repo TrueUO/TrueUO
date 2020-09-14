@@ -17,7 +17,7 @@ namespace Server.Gumps
             Point2D eastLoc = new Point2D(cur.X + 1, cur.Y);
             Point2D southLoc = new Point2D(cur.X, cur.Y + 1);
             Point2D westLoc = new Point2D(cur.X - 1, cur.Y);
-            
+
             //Empty radar
             AddImage(0, 0, 9007);
             AddAlphaRegion(0, 0, 200, 200);

@@ -51,7 +51,7 @@ namespace Server.Mobiles
         {
             AddLoot(LootPack.Rich, 2);
             AddLoot(LootPack.LootGold(1000, 1200));
-    }
+        }
 
         public override void AddCustomContextEntries(Mobile from, List<ContextMenuEntry> list)
         {

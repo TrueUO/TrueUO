@@ -426,7 +426,7 @@ namespace Server.Mobiles
             RangeFight = 7;
         }
 
-         public override void GenerateLoot()
+        public override void GenerateLoot()
         {
             AddLoot(LootPack.MageryRegs, 1, 3);
             AddLoot(LootPack.LootItem<Bandage>(3, 5, false, true));

@@ -7,7 +7,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Server.Misc;
 using Server.Network;
-using Server.Engines.Points;
 
 namespace Server.Engines.JollyRoger
 {
@@ -247,7 +246,8 @@ namespace Server.Engines.JollyRoger
                         Race = Race.Human;
                     else
                         Race = Race.Elf; break;
-                case MasterTitle.Mystic: Race = Race.Gargoyle;
+                case MasterTitle.Mystic:
+                    Race = Race.Gargoyle;
                     break;
             }
 
