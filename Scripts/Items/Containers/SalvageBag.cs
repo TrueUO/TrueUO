@@ -162,7 +162,7 @@ namespace Server.Items
             }
             catch (Exception e)
             {
-                Server.Diagnostics.ExceptionLogging.LogException(e);
+                Diagnostics.ExceptionLogging.LogException(e);
             }
 
             return false;
@@ -230,7 +230,7 @@ namespace Server.Items
                 m_Failure = false;
             }
             else
-                from.SendLocalizedMessage(1079973, String.Format("{0}\t{1}", salvaged, salvaged + notSalvaged)); // Salvaged: ~1_COUNT~/~2_NUM~ blacksmithed items
+                from.SendLocalizedMessage(1079973, string.Format("{0}\t{1}", salvaged, salvaged + notSalvaged)); // Salvaged: ~1_COUNT~/~2_NUM~ blacksmithed items
         }
 
         private void SalvageCloth(Mobile from)
@@ -265,11 +265,11 @@ namespace Server.Items
                 }
             }
 
-            from.SendLocalizedMessage(1079974, String.Format("{0}\t{1}", salvaged, salvaged + notSalvaged)); // Salvaged: ~1_COUNT~/~2_NUM~ tailored items
+            from.SendLocalizedMessage(1079974, string.Format("{0}\t{1}", salvaged, salvaged + notSalvaged)); // Salvaged: ~1_COUNT~/~2_NUM~ tailored items
 
             Container pack = from.Backpack;
 
-            foreach (Item i in (this).FindItemsByType(typeof(Item), true))
+            foreach (Item i in FindItemsByType(typeof(Item), true))
             {
                 if ((i is Leather) || (i is Cloth) || (i is SpinedLeather) || (i is HornedLeather) || (i is BarbedLeather) || (i is Bandage) || (i is Bone))
                 {

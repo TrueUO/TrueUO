@@ -253,7 +253,7 @@ namespace Server.Mobiles
 
             List<Point3D> points = new List<Point3D>();
 
-            Server.Misc.Geometry.Circle2D(loc, pmmap, 7, (pnt, map) =>
+            Misc.Geometry.Circle2D(loc, pmmap, 7, (pnt, map) =>
             {
                 if (map.CanFit(pnt, 0) && InLOS(pnt))
                     points.Add(pnt);
@@ -261,7 +261,7 @@ namespace Server.Mobiles
 
             if (pmmap != Map.Internal && pmmap != null)
             {
-                Server.Misc.Geometry.Circle2D(loc, pmmap, 6, (pnt, map) =>
+                Misc.Geometry.Circle2D(loc, pmmap, 6, (pnt, map) =>
                 {
                     if (map.CanFit(pnt, 0) && InLOS(pnt) && Utility.RandomBool())
                     {
@@ -270,7 +270,7 @@ namespace Server.Mobiles
                     }
                 });
 
-                Server.Misc.Geometry.Circle2D(loc, pmmap, 7, (pnt, map) =>
+                Misc.Geometry.Circle2D(loc, pmmap, 7, (pnt, map) =>
                 {
                     if (map.CanFit(pnt, 0) && InLOS(pnt) && Utility.RandomBool())
                     {

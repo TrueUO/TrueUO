@@ -452,7 +452,7 @@ namespace Server.Items
             SeaMarketBuoy bouy7 = new SeaMarketBuoy();
             SeaMarketBuoy bouy8 = new SeaMarketBuoy();
 
-            Rectangle2D bound = Server.Regions.SeaMarketRegion.Bounds[0];
+            Rectangle2D bound = Regions.SeaMarketRegion.Bounds[0];
 
             bouy1.MoveToWorld(new Point3D(bound.X, bound.Y, -5), Map.Felucca);
             bouy2.MoveToWorld(new Point3D(bound.X, bound.Y, -5), Map.Trammel);

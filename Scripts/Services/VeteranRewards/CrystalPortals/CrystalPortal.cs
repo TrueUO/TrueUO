@@ -71,7 +71,7 @@ namespace Server.Items
                 return false;
             }
 
-            if (Server.Engines.VvV.VvVSigil.ExistsOn(m))
+            if (Engines.VvV.VvVSigil.ExistsOn(m))
             {
                 if (message)
                 {
@@ -228,7 +228,7 @@ namespace Server.Items
 
         public static void ResolveDest(Mobile from, string name, ref Point3D loc, ref Map map)
         {
-            if (String.IsNullOrWhiteSpace(name))
+            if (string.IsNullOrWhiteSpace(name))
             {
                 return;
             }

@@ -48,7 +48,7 @@ namespace Server.Mobiles
         {
             List<SpawnObject> objects = new List<SpawnObject>();
 
-            if (!String.IsNullOrEmpty(spawnName))
+            if (!string.IsNullOrEmpty(spawnName))
                 objects.Add(new SpawnObject(spawnName));
 
             InitSpawner(amount, TimeSpan.FromMinutes(minDelay), TimeSpan.FromMinutes(maxDelay), team, spawnRange, objects);
@@ -918,7 +918,7 @@ namespace Server.Mobiles
                 }
                 catch (Exception e)
                 {
-                    Server.Diagnostics.ExceptionLogging.LogException(e);
+                    Diagnostics.ExceptionLogging.LogException(e);
                 }
             }
 
@@ -1156,7 +1156,7 @@ namespace Server.Mobiles
                 }
                 catch (Exception e)
                 {
-                    Server.Diagnostics.ExceptionLogging.LogException(e);
+                    Diagnostics.ExceptionLogging.LogException(e);
                 }
             }
 

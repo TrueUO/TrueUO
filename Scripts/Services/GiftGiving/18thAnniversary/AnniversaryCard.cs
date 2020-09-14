@@ -8,7 +8,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public string Args { get; set; }
 
-        private readonly string[] _Staff = new string[] { Server.Misc.ServerList.ServerName }; // TODO: Get More
+        private readonly string[] _Staff = new string[] { Misc.ServerList.ServerName }; // TODO: Get More
 
         [Constructable]
         public AnniversaryCard()
@@ -21,7 +21,7 @@ namespace Server.Items
         {
             Hue = 124;
 
-            Args = String.Format("{0}\t{1}", _Staff[Utility.Random(_Staff.Length)], m != null ? m.Name : "you");
+            Args = string.Format("{0}\t{1}", _Staff[Utility.Random(_Staff.Length)], m != null ? m.Name : "you");
         }
 
         public override void AddNameProperty(ObjectPropertyList list)

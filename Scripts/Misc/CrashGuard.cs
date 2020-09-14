@@ -60,7 +60,7 @@ namespace Server.Misc
             }
             catch (Exception e)
             {
-                Server.Diagnostics.ExceptionLogging.LogException(e);
+                Diagnostics.ExceptionLogging.LogException(e);
                 return "";
             }
         }
@@ -115,7 +115,7 @@ namespace Server.Misc
             }
             catch (Exception e)
             {
-                Server.Diagnostics.ExceptionLogging.LogException(e);
+                Diagnostics.ExceptionLogging.LogException(e);
             }
         }
 
@@ -128,8 +128,8 @@ namespace Server.Misc
                 string timeStamp = GetTimeStamp();
 
                 string root = GetRoot();
-                string rootBackup = Combine(root, String.Format("Backups/Crashed/{0}/", timeStamp));
-                string rootOrigin = Combine(root, String.Format("Saves/"));
+                string rootBackup = Combine(root, string.Format("Backups/Crashed/{0}/", timeStamp));
+                string rootOrigin = Combine(root, string.Format("Saves/"));
 
                 // Create new directories
                 CreateDirectory(rootBackup);
@@ -171,7 +171,7 @@ namespace Server.Misc
             try
             {
                 string timeStamp = GetTimeStamp();
-                string fileName = String.Format("Crash {0}.log", timeStamp);
+                string fileName = string.Format("Crash {0}.log", timeStamp);
 
                 string root = GetRoot();
                 string filePath = Combine(root, fileName);
@@ -194,7 +194,7 @@ namespace Server.Misc
                     }
                     catch (Exception ex)
                     {
-                        Server.Diagnostics.ExceptionLogging.LogException(ex);
+                        Diagnostics.ExceptionLogging.LogException(ex);
                     }
 
                     try
@@ -203,7 +203,7 @@ namespace Server.Misc
                     }
                     catch (Exception ex)
                     {
-                        Server.Diagnostics.ExceptionLogging.LogException(ex);
+                        Diagnostics.ExceptionLogging.LogException(ex);
                     }
 
                     op.WriteLine("Exception:");
@@ -258,7 +258,7 @@ namespace Server.Misc
         {
             DateTime now = DateTime.UtcNow;
 
-            return String.Format("{0}-{1}-{2}-{3}-{4}-{5}",
+            return string.Format("{0}-{1}-{2}-{3}-{4}-{5}",
                 now.Day,
                 now.Month,
                 now.Year,
