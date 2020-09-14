@@ -171,9 +171,9 @@ namespace Server.Items
         public virtual AddonFitResult CouldFit(IPoint3D p, Map map, Mobile from, ref BaseHouse house)
         {
             if (Deleted)
+            {
                 return AddonFitResult.Blocked;
-
-            var fromHouse = BaseHouse.FindHouseAt(from.Location, map, 16);
+            }
 
             foreach (AddonComponent c in m_Components)
             {
@@ -189,9 +189,14 @@ namespace Server.Items
                     return AddonFitResult.NotInHouse;
                 }
 
-                if (fromHouse == null || house != fromHouse)
+                if (from != null)
                 {
-                    return AddonFitResult.OwnerNotInHouse;
+                    var fromHouse = BaseHouse.FindHouseAt(from.Location, map, 16);
+
+                    if (fromHouse == null || house != fromHouse)
+                    {
+                        return AddonFitResult.OwnerNotInHouse;
+                    }
                 }
 
                 if (c.NeedsWall)
@@ -236,7 +241,9 @@ namespace Server.Items
             house = BaseHouse.FindHouseAt(p, map, height);
 
             if (house == null || (from != null && !house.IsCoOwner(from)))
+            {
                 return false;
+            }
 
             return true;
         }
