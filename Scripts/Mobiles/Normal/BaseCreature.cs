@@ -5772,9 +5772,9 @@ namespace Server.Mobiles
                 }
             }
         }
+        #endregion
 
         public virtual bool GivesMLMinorArtifact => false;
-        #endregion
 
         public override void OnItemLifted(Mobile from, Item item)
         {
