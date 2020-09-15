@@ -8,7 +8,7 @@ using System;
 
 namespace Server.Items
 {
-    [FlipableAttribute(39958, 39959)]
+    [Flipable(39958, 39959)]
     public class RunicAtlas : Runebook
     {
         public override int MaxEntries => 48;

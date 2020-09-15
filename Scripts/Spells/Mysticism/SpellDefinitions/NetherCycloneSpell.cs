@@ -54,7 +54,7 @@ namespace Server.Spells.Mysticism
                             IPoint3D pnt = new Point3D(x, y, p.Z);
                             SpellHelper.GetSurfaceTop(ref pnt);
 
-                            Timer.DelayCall<Point3D>(TimeSpan.FromMilliseconds(Utility.RandomMinMax(100, 300)), point =>
+                            Timer.DelayCall(TimeSpan.FromMilliseconds(Utility.RandomMinMax(100, 300)), point =>
                             {
                                 Effects.SendLocationEffect(point, map, 0x375A, 8, 11, 0x49A, 0);
                             },

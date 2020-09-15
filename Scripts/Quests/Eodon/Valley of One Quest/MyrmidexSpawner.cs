@@ -88,7 +88,7 @@ namespace Server.Items
                             Spawn.Add(bc);
                             bc.MoveToWorld(p, map);
 
-                            Timer.DelayCall<BaseCreature>(creature => creature.Combatant = Focus, bc);
+                            Timer.DelayCall(creature => creature.Combatant = Focus, bc);
                         }
                     });
 

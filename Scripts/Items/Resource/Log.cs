@@ -1,6 +1,6 @@
 namespace Server.Items
 {
-    [FlipableAttribute(0x1bdd, 0x1be0)]
+    [Flipable(0x1bdd, 0x1be0)]
     public class BaseLog : Item, ICommodity, IAxe, IResource
     {
         private CraftResource m_Resource;

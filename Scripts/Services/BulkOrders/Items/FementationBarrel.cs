@@ -16,7 +16,7 @@ namespace Server.Items
         Plum
     }
 
-    [FlipableAttribute(0x9E36, 0x9E37)]
+    [Flipable(0x9E36, 0x9E37)]
     public class FermentationBarrel : Item
     {
         private static readonly int MinFruit = 20;

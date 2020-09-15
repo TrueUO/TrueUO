@@ -865,7 +865,7 @@ namespace Server.Engines.Shadowguard
             }
         }
 
-        public override bool OnTarget(Mobile m, Server.Targeting.Target t, object o)
+        public override bool OnTarget(Mobile m, Target t, object o)
         {
             if (m.AccessLevel >= AccessLevel.GameMaster)
                 return true;
@@ -892,7 +892,7 @@ namespace Server.Engines.Shadowguard
             if (m.AccessLevel >= AccessLevel.GameMaster && args.Speech != null && args.Speech.ToLower().Trim() == "getprops")
             {
                 if (Instance.Encounter != null)
-                    m.SendGump(new Server.Gumps.PropertiesGump(m, Instance.Encounter));
+                    m.SendGump(new PropertiesGump(m, Instance.Encounter));
                 else
                     m.SendMessage("There is no encounter for this instance at this time.");
             }

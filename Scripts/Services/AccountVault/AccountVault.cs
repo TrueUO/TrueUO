@@ -162,7 +162,7 @@ namespace Server.AccountVault
             base.Serialize(writer);
             writer.Write(1);
 
-            writer.WriteItem<AccountVaultContainer>(_Container);
+            writer.WriteItem(_Container);
             writer.Write(PastDue);
             writer.Write(Index);
 

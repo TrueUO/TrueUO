@@ -86,15 +86,15 @@ namespace Server.Regions
         {
             if (m.AccessLevel == AccessLevel.Player)
             {
-                if (s is Server.Spells.Sixth.MarkSpell || s is Server.Spells.Fourth.RecallSpell || s is Server.Spells.Seventh.GateTravelSpell
-                || s is Server.Spells.Chivalry.SacredJourneySpell)
+                if (s is Spells.Sixth.MarkSpell || s is Spells.Fourth.RecallSpell || s is Spells.Seventh.GateTravelSpell
+                || s is Spells.Chivalry.SacredJourneySpell)
                     return false;
             }
 
             return true;
         }
 
-        public override bool CheckTravel(Mobile m, Point3D newLocation, Server.Spells.TravelCheckType travelType)
+        public override bool CheckTravel(Mobile m, Point3D newLocation, Spells.TravelCheckType travelType)
         {
             return false;
         }

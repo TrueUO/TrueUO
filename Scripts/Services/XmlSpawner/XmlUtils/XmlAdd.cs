@@ -1506,13 +1506,13 @@ namespace Server.Mobiles
                             {
 
                                 // if no string has been entered then just use the full categorized add gump
-                                state.Mobile.CloseGump(typeof(Server.Gumps.XmlCategorizedAddGump));
-                                state.Mobile.SendGump(new Server.Gumps.XmlCategorizedAddGump(state.Mobile, defs.CurrentCategory, defs.CurrentCategoryPage, i, newg));
+                                state.Mobile.CloseGump(typeof(XmlCategorizedAddGump));
+                                state.Mobile.SendGump(new XmlCategorizedAddGump(state.Mobile, defs.CurrentCategory, defs.CurrentCategoryPage, i, newg));
                             }
                             else
                             {
                                 // use the XmlPartialCategorizedAddGump
-                                state.Mobile.CloseGump(typeof(Server.Gumps.XmlPartialCategorizedAddGump));
+                                state.Mobile.CloseGump(typeof(XmlPartialCategorizedAddGump));
 
                                 //Type [] types = (Type[])XmlPartialCategorizedAddGump.Match( defs.NameList[i] ).ToArray( typeof( Type ) );
                                 ArrayList types = XmlPartialCategorizedAddGump.Match(defs.NameList[i]);

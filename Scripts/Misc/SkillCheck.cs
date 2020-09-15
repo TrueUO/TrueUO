@@ -397,7 +397,7 @@ namespace Server.Misc
                 #endregion
 
                 #region Skill Masteries
-                else if (from is BaseCreature && !(from is Server.Engines.Despise.DespiseCreature) && (((BaseCreature)from).Controlled || ((BaseCreature)from).Summoned))
+                else if (from is BaseCreature && !(from is Engines.Despise.DespiseCreature) && (((BaseCreature)from).Controlled || ((BaseCreature)from).Summoned))
                 {
                     Mobile master = ((BaseCreature)from).GetMaster();
 

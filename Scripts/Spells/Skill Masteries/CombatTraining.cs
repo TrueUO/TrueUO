@@ -386,7 +386,7 @@ namespace Server.Spells.SkillMasteries
             if (_RageCooldown == null)
                 _RageCooldown = new Dictionary<Mobile, Timer>();
 
-            _RageCooldown[m] = Server.Timer.DelayCall<Mobile>(TimeSpan.FromSeconds(60), EndRageCooldown, m);
+            _RageCooldown[m] = Server.Timer.DelayCall(TimeSpan.FromSeconds(60), EndRageCooldown, m);
         }
 
         public static bool InRageCooldown(Mobile m)

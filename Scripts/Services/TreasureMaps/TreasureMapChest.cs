@@ -498,7 +498,7 @@ namespace Server.Items
 
         public static Item GetRandomRecipe()
         {
-            List<Server.Engines.Craft.Recipe> recipes = new List<Server.Engines.Craft.Recipe>(Engines.Craft.Recipe.Recipes.Values);
+            List<Engines.Craft.Recipe> recipes = new List<Engines.Craft.Recipe>(Engines.Craft.Recipe.Recipes.Values);
 
             return new RecipeScroll(recipes[Utility.Random(recipes.Count)]);
         }

@@ -134,7 +134,7 @@ namespace Server.Mobiles
         private TimeSpan m_MaxDelay;
         // added a duration parameter for time-limited spawns
         private TimeSpan m_Duration;
-        public List<XmlSpawner.SpawnObject> m_SpawnObjects = new List<XmlSpawner.SpawnObject>(); // List of objects to spawn
+        public List<SpawnObject> m_SpawnObjects = new List<SpawnObject>(); // List of objects to spawn
         private DateTime m_End;
         private DateTime m_RefractEnd;
         private DateTime m_DurEnd;
@@ -646,13 +646,13 @@ namespace Server.Mobiles
                     Type type = SpawnerType.GetType(typestr);
 
                     if (type != null)
-                        m_SpawnObjects.Add(new XmlSpawner.SpawnObject(str, 1));
+                        m_SpawnObjects.Add(new SpawnObject(str, 1));
                     else
                     {
                         // check for special keywords
                         if (typestr != null && (BaseXmlSpawner.IsTypeOrItemKeyword(typestr) || typestr.IndexOf("{") != -1 || typestr.StartsWith("*") || typestr.StartsWith("#")))
                         {
-                            m_SpawnObjects.Add(new XmlSpawner.SpawnObject(str, 1));
+                            m_SpawnObjects.Add(new SpawnObject(str, 1));
                         }
                         else
                             status_str = string.Format("{0} is not a valid type name.", str);
@@ -2149,7 +2149,7 @@ namespace Server.Mobiles
             if (action == null || action.Length <= 0 || attachedto == null || map == null) return;
 
             string status_str = null;
-            Server.Mobiles.XmlSpawner.SpawnObject TheSpawn = new Server.Mobiles.XmlSpawner.SpawnObject(null, 0);
+            SpawnObject TheSpawn = new SpawnObject(null, 0);
 
             TheSpawn.TypeName = action;
             string substitutedtypeName = BaseXmlSpawner.ApplySubstitution(null, attachedto, trigmob, action);
@@ -2605,7 +2605,7 @@ namespace Server.Mobiles
                                 RemoveSpawnObjects();
 
                                 // Create the new array of spawned objects
-                                m_SpawnObjects = new List<XmlSpawner.SpawnObject>();
+                                m_SpawnObjects = new List<SpawnObject>();
 
                                 // Assign the list of objects to spawn
                                 SpawnObjects = Spawns;
@@ -3440,7 +3440,7 @@ namespace Server.Mobiles
 
         public static void Initialize()
         {
-            LoadSettings(new XmlSpawner.AssignSettingsHandler(AssignSettings), "XmlSpawner");
+            LoadSettings(new AssignSettingsHandler(AssignSettings), "XmlSpawner");
 
             // initialize the default waypoint name
             WayPoint tmpwaypoint = new WayPoint();
@@ -7107,12 +7107,12 @@ namespace Server.Mobiles
 
 
             bool save_ok = true;
-            System.IO.FileStream fs = null;
+            FileStream fs = null;
 
             try
             {
                 // Create the FileStream to write with.
-                fs = new System.IO.FileStream(dirname, FileMode.Create);
+                fs = new FileStream(dirname, FileMode.Create);
             }
             catch
             {
@@ -7814,7 +7814,7 @@ namespace Server.Mobiles
             //UpdateTotal(this, TotalType.Items, -1);
 
             // Create the array of spawned objects
-            m_SpawnObjects = new List<XmlSpawner.SpawnObject>();
+            m_SpawnObjects = new List<SpawnObject>();
 
             // Assign the list of objects to spawn
             SpawnObjects = objectsToSpawn;
@@ -11236,7 +11236,7 @@ namespace Server.Mobiles
 
         private class WarnTimer2 : Timer
         {
-            private readonly List<XmlSpawner.WarnTimer2.WarnEntry2> m_List;
+            private readonly List<WarnEntry2> m_List;
 
             private class WarnEntry2
             {
@@ -11255,7 +11255,7 @@ namespace Server.Mobiles
             public WarnTimer2()
                 : base(TimeSpan.FromSeconds(1.0))
             {
-                m_List = new List<XmlSpawner.WarnTimer2.WarnEntry2>();
+                m_List = new List<WarnEntry2>();
                 Start();
             }
 
@@ -11488,7 +11488,7 @@ namespace Server.Mobiles
             if (m_ShowBoundsItems != null && m_ShowBoundsItems.Count > 0)
             {
                 writer.Write(true);
-                writer.WriteItemList<Static>(m_ShowBoundsItems);
+                writer.WriteItemList(m_ShowBoundsItems);
             }
             else
             {
@@ -12036,7 +12036,7 @@ namespace Server.Mobiles
 
                         // Read in the size of the spawn object list
                         int SpawnListSize = reader.ReadInt();
-                        m_SpawnObjects = new List<XmlSpawner.SpawnObject>(SpawnListSize);
+                        m_SpawnObjects = new List<SpawnObject>(SpawnListSize);
                         for (int i = 0; i < SpawnListSize; ++i)
                         {
                             string TypeName = reader.ReadString();
@@ -12342,7 +12342,7 @@ namespace Server.Mobiles
             internal static SpawnObject[] LoadSpawnObjectsFromString(string ObjectList)
             {
                 // Clear the spawn object list
-                List<XmlSpawner.SpawnObject> NewSpawnObjects = new List<XmlSpawner.SpawnObject>();
+                List<SpawnObject> NewSpawnObjects = new List<SpawnObject>();
 
                 if (ObjectList != null && ObjectList.Length > 0)
                 {
@@ -12372,7 +12372,7 @@ namespace Server.Mobiles
                                     {
                                         maxCount = int.Parse(SpawnObjectDetails[1]);
                                     }
-                                    catch (System.Exception)
+                                    catch (Exception)
                                     { // Something went wrong, leave the default amount }
                                     }
 
@@ -12391,7 +12391,7 @@ namespace Server.Mobiles
             internal static SpawnObject[] LoadSpawnObjectsFromString2(string ObjectList)
             {
                 // Clear the spawn object list
-                List<XmlSpawner.SpawnObject> NewSpawnObjects = new List<XmlSpawner.SpawnObject>();
+                List<SpawnObject> NewSpawnObjects = new List<SpawnObject>();
 
                 // spawn object definitions will take the form typestring:MX=int:SB=int:RT=double:TO=int:KL=int
                 // or typestring:MX=int:SB=int:RT=double:TO=int:KL=int:OBJ=typestring...
