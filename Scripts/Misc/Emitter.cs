@@ -26,7 +26,7 @@ namespace Server
 
             m_ModuleBuilder = m_AssemblyBuilder.DefineDynamicModule(assemblyName);
         }
-
+  
         public TypeBuilder DefineType(string typeName, TypeAttributes attrs, Type parentType) =>
             m_ModuleBuilder.DefineType(typeName, attrs, parentType);
     }
