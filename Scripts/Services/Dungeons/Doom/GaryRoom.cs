@@ -70,7 +70,7 @@ namespace Server.Engines.Doom
         public TimeSpan RollDelay => TimeSpan.FromMinutes(Utility.RandomMinMax(12, 15));
 
         public GaryRegion()
-            : base("Gary Region", Map.Malas, Find(_GaryLoc, Map.Malas), _Bounds)
+            : base("Gary Region", Map.Malas, Region.Find(_GaryLoc, Map.Malas), _Bounds)
         {
             Register();
             CheckStuff();
@@ -260,11 +260,11 @@ namespace Server.Engines.Doom
         {
             switch (type)
             {
-                case Spells.TravelCheckType.Mark:
-                case Spells.TravelCheckType.RecallTo:
-                case Spells.TravelCheckType.RecallFrom:
-                case Spells.TravelCheckType.GateTo:
-                case Spells.TravelCheckType.GateFrom:
+                case Server.Spells.TravelCheckType.Mark:
+                case Server.Spells.TravelCheckType.RecallTo:
+                case Server.Spells.TravelCheckType.RecallFrom:
+                case Server.Spells.TravelCheckType.GateTo:
+                case Server.Spells.TravelCheckType.GateFrom:
                     return false;
             }
 
@@ -507,7 +507,7 @@ namespace Server.Engines.Doom
 
         public void Roll(int roll)
         {
-            PublicOverheadMessage(MessageType.Regular, 0x3B2, false, string.Format("- {0} -", (roll + 1).ToString()));
+            PublicOverheadMessage(Server.Network.MessageType.Regular, 0x3B2, false, string.Format("- {0} -", (roll + 1).ToString()));
         }
 
         public Sapphired20(Serial serial)

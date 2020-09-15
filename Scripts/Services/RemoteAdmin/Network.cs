@@ -2,7 +2,6 @@ using Server.Accounting;
 using Server.Network;
 using System;
 using System.Collections;
-using System.IO.Compression;
 using System.Text;
 
 namespace Server.RemoteAdmin
@@ -125,7 +124,7 @@ namespace Server.RemoteAdmin
             }
             else if (cmd == 0xFF)
             {
-                string statStr = string.Format(", Name={0}, Age={1}, Clients={2}, Items={3}, Chars={4}, Mem={5}K, Ver={6}", Misc.ServerList.ServerName, (int)(DateTime.UtcNow - Items.Clock.ServerStart).TotalHours, NetState.Instances.Count, World.Items.Count, World.Mobiles.Count, (int)(GC.GetTotalMemory(false) / 1024), ProtocolVersion);
+                string statStr = string.Format(", Name={0}, Age={1}, Clients={2}, Items={3}, Chars={4}, Mem={5}K, Ver={6}", Misc.ServerList.ServerName, (int)(DateTime.UtcNow - Items.Clock.ServerStart).TotalHours, NetState.Instances.Count, World.Items.Count, World.Mobiles.Count, (int)(System.GC.GetTotalMemory(false) / 1024), ProtocolVersion);
                 state.Send(new UOGInfo(statStr));
                 state.Dispose();
             }
@@ -224,15 +223,9 @@ namespace Server.RemoteAdmin
                 byte[] dest = new byte[(int)(length * 1.001) + 10];
                 int destSize = dest.Length;
 
-                var error = Zlib.Pack(
-                    dest,
-                    ref destSize,
-                    source,
-                    length,
-                    ZlibQuality.Default
-                );
+                ZLibError error = Compression.Pack(dest, ref destSize, source, length, ZLibQuality.Default);
 
-                if (error != ZlibError.Okay)
+                if (error != ZLibError.Okay)
                 {
                     Console.WriteLine("WARNING: Unable to compress admin packet, zlib error: {0}", error);
                     return p;
@@ -268,19 +261,22 @@ namespace Server.RemoteAdmin
 
         public override void Write(char ch)
         {
-            m_OnChar?.Invoke(ch);
+            if (m_OnChar != null)
+                m_OnChar(ch);
         }
 
         public override void Write(string str)
         {
-            m_OnStr?.Invoke(str);
+            if (m_OnStr != null)
+                m_OnStr(str);
         }
 
         public override void WriteLine(string line)
         {
-            m_OnLine?.Invoke(line);
+            if (m_OnLine != null)
+                m_OnLine(line);
         }
 
-        public override System.Text.Encoding Encoding => Encoding.ASCII;
+        public override System.Text.Encoding Encoding => System.Text.Encoding.ASCII;
     }
 }

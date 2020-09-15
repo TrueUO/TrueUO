@@ -298,7 +298,7 @@ namespace Server.Mobiles
                 int hours;
                 int minutes;
 
-                Clock.GetTime(Map, Location.X, Location.Y, out hours, out minutes);
+                Server.Items.Clock.GetTime(Map, Location.X, Location.Y, out hours, out minutes);
                 return (new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, hours, minutes, 0).TimeOfDay);
             }
         }
@@ -465,16 +465,16 @@ namespace Server.Mobiles
 
                     // find the max detection range by examining both spawnrange 
                     // note, sectors will activate when within +-2 sectors
-                    int bufferzone = 2 * Map.SectorSize;
+                    int bufferzone = 2 * Server.Map.SectorSize;
                     int x1 = m_X - bufferzone;
                     int width = m_Width + 2 * bufferzone;
                     int y1 = m_Y - bufferzone;
                     int height = m_Height + 2 * bufferzone;
 
                     // go through all of the sectors within the SpawnRange of the spawner to see if any are active
-                    for (int x = x1; x <= x1 + width; x += Map.SectorSize)
+                    for (int x = x1; x <= x1 + width; x += Server.Map.SectorSize)
                     {
-                        for (int y = y1; y <= y1 + height; y += Map.SectorSize)
+                        for (int y = y1; y <= y1 + height; y += Server.Map.SectorSize)
                         {
                             Sector s = Map.GetSector(new Point3D(x, y, loc.Z));
 
@@ -546,7 +546,7 @@ namespace Server.Mobiles
                                     }
                                     catch (Exception e)
                                     {
-                                        Diagnostics.ExceptionLogging.LogException(e);
+                                        Server.Diagnostics.ExceptionLogging.LogException(e);
                                     }
 
                                     return true;
@@ -1426,7 +1426,7 @@ namespace Server.Mobiles
                 {
                     int hours;
                     int minutes;
-                    Clock.GetTime(Map, Location.X, Location.Y, out hours, out minutes);
+                    Server.Items.Clock.GetTime(Map, Location.X, Location.Y, out hours, out minutes);
                     return (new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, hours, minutes, 0).TimeOfDay);
 
                 }
@@ -1459,7 +1459,7 @@ namespace Server.Mobiles
                 {
                     int hours;
                     int minutes;
-                    Clock.GetTime(Map, Location.X, Location.Y, out hours, out minutes);
+                    Server.Items.Clock.GetTime(Map, Location.X, Location.Y, out hours, out minutes);
                     now = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, hours, minutes, 0);
                 }
                 else
@@ -1621,7 +1621,7 @@ namespace Server.Mobiles
                         }
                         catch (Exception e)
                         {
-                            Diagnostics.ExceptionLogging.LogException(e);
+                            Server.Diagnostics.ExceptionLogging.LogException(e);
                         }
                     }
                     else
@@ -1634,7 +1634,7 @@ namespace Server.Mobiles
                         }
                         catch (Exception e)
                         {
-                            Diagnostics.ExceptionLogging.LogException(e);
+                            Server.Diagnostics.ExceptionLogging.LogException(e);
                         }
                     }
                     try
@@ -1643,7 +1643,7 @@ namespace Server.Mobiles
                     }
                     catch (Exception e)
                     {
-                        Diagnostics.ExceptionLogging.LogException(e);
+                        Server.Diagnostics.ExceptionLogging.LogException(e);
                     }
                 }
 
@@ -2166,7 +2166,7 @@ namespace Server.Mobiles
                 try
                 {
                     string[] arglist = BaseXmlSpawner.ParseString(substitutedtypeName, 3, "/");
-                    object o = CreateObject(type, arglist[0]);
+                    object o = Server.Mobiles.XmlSpawner.CreateObject(type, arglist[0]);
 
                     if (o == null)
                     {
@@ -2196,7 +2196,7 @@ namespace Server.Mobiles
                 }
                 catch (Exception e)
                 {
-                    Diagnostics.ExceptionLogging.LogException(e);
+                    Server.Diagnostics.ExceptionLogging.LogException(e);
                 }
             }
         }
@@ -2241,7 +2241,7 @@ namespace Server.Mobiles
         {
             if (filename == null || filename.Length <= 0) return;
             // Check if the file exists
-            if (File.Exists(filename) == true)
+            if (System.IO.File.Exists(filename) == true)
             {
                 FileStream fs = null;
                 try
@@ -2250,7 +2250,7 @@ namespace Server.Mobiles
                 }
                 catch (Exception e)
                 {
-                    Diagnostics.ExceptionLogging.LogException(e);
+                    Server.Diagnostics.ExceptionLogging.LogException(e);
                 }
 
                 if (fs == null)
@@ -2581,7 +2581,7 @@ namespace Server.Mobiles
                                 }
                                 catch (Exception e)
                                 {
-                                    Diagnostics.ExceptionLogging.LogException(e);
+                                    Server.Diagnostics.ExceptionLogging.LogException(e);
                                 }
                             }
 
@@ -3343,7 +3343,7 @@ namespace Server.Mobiles
                                                             }
                                                             catch (Exception ex)
                                                             {
-                                                                Diagnostics.ExceptionLogging.LogException(ex);
+                                                                Server.Diagnostics.ExceptionLogging.LogException(ex);
                                                             }
                                                             impl.Register(b);
                                                         }
@@ -3426,7 +3426,7 @@ namespace Server.Mobiles
                         {
                             Console.WriteLine("Config error '{0}'='{1}'", argname, value);
                             Console.WriteLine("Error: {0}", e.Message);
-                            Diagnostics.ExceptionLogging.LogException(e);
+                            Server.Diagnostics.ExceptionLogging.LogException(e);
                         }
                     }
 
@@ -3440,7 +3440,7 @@ namespace Server.Mobiles
 
         public static void Initialize()
         {
-            LoadSettings(new XmlSpawner.AssignSettingsHandler(AssignSettings), "XmlSpawner");
+            XmlSpawner.LoadSettings(new XmlSpawner.AssignSettingsHandler(AssignSettings), "XmlSpawner");
 
             // initialize the default waypoint name
             WayPoint tmpwaypoint = new WayPoint();
@@ -3756,55 +3756,55 @@ namespace Server.Mobiles
                 xml.WriteStartElement("XmlDefaults");
 
                 xml.WriteStartElement("defProximityRange");
-                xml.WriteString(defProximityRange.ToString());
+                xml.WriteString(XmlSpawner.defProximityRange.ToString());
                 xml.WriteEndElement();
                 xml.WriteStartElement("defTriggerProbability");
-                xml.WriteString(defTriggerProbability.ToString());
+                xml.WriteString(XmlSpawner.defTriggerProbability.ToString());
                 xml.WriteEndElement();
                 xml.WriteStartElement("defProximityTriggerSound");
-                xml.WriteString(defProximityTriggerSound.ToString());
+                xml.WriteString(XmlSpawner.defProximityTriggerSound.ToString());
                 xml.WriteEndElement();
                 xml.WriteStartElement("defMinRefractory");
-                xml.WriteString(defMinRefractory.ToString());
+                xml.WriteString(XmlSpawner.defMinRefractory.ToString());
                 xml.WriteEndElement();
                 xml.WriteStartElement("defMaxRefractory");
-                xml.WriteString(defMaxRefractory.ToString());
+                xml.WriteString(XmlSpawner.defMaxRefractory.ToString());
                 xml.WriteEndElement();
                 xml.WriteStartElement("defTODStart");
-                xml.WriteString(defTODStart.ToString());
+                xml.WriteString(XmlSpawner.defTODStart.ToString());
                 xml.WriteEndElement();
                 xml.WriteStartElement("defTODEnd");
-                xml.WriteString(defTODEnd.ToString());
+                xml.WriteString(XmlSpawner.defTODEnd.ToString());
                 xml.WriteEndElement();
                 xml.WriteStartElement("defStackAmount");
-                xml.WriteString(defAmount.ToString());
+                xml.WriteString(XmlSpawner.defAmount.ToString());
                 xml.WriteEndElement();
                 xml.WriteStartElement("defDuration");
-                xml.WriteString(defDuration.ToString());
+                xml.WriteString(XmlSpawner.defDuration.ToString());
                 xml.WriteEndElement();
                 xml.WriteStartElement("defIsGroup");
-                xml.WriteString(defIsGroup.ToString());
+                xml.WriteString(XmlSpawner.defIsGroup.ToString());
                 xml.WriteEndElement();
                 xml.WriteStartElement("defTeam");
-                xml.WriteString(defTeam.ToString());
+                xml.WriteString(XmlSpawner.defTeam.ToString());
                 xml.WriteEndElement();
                 xml.WriteStartElement("defRelativeHome");
-                xml.WriteString(defRelativeHome.ToString());
+                xml.WriteString(XmlSpawner.defRelativeHome.ToString());
                 xml.WriteEndElement();
                 xml.WriteStartElement("defSpawnRange");
-                xml.WriteString(defSpawnRange.ToString());
+                xml.WriteString(XmlSpawner.defSpawnRange.ToString());
                 xml.WriteEndElement();
                 xml.WriteStartElement("defHomeRange");
-                xml.WriteString(defHomeRange.ToString());
+                xml.WriteString(XmlSpawner.defHomeRange.ToString());
                 xml.WriteEndElement();
                 xml.WriteStartElement("defMinDelay");
-                xml.WriteString(defMinDelay.ToString());
+                xml.WriteString(XmlSpawner.defMinDelay.ToString());
                 xml.WriteEndElement();
                 xml.WriteStartElement("defMaxDelay");
-                xml.WriteString(defMaxDelay.ToString());
+                xml.WriteString(XmlSpawner.defMaxDelay.ToString());
                 xml.WriteEndElement();
                 xml.WriteStartElement("defTODMode");
-                xml.WriteString(defTODMode.ToString());
+                xml.WriteString(XmlSpawner.defTODMode.ToString());
                 xml.WriteEndElement();
 
                 xml.WriteEndElement();
@@ -3839,99 +3839,99 @@ namespace Server.Mobiles
         private static void LoadDefaults(XmlElement node)
         {
 
-            try { defProximityRange = int.Parse(node["defProximityRange"].InnerText); }
+            try { XmlSpawner.defProximityRange = int.Parse(node["defProximityRange"].InnerText); }
             catch (Exception e)
             {
-                Diagnostics.ExceptionLogging.LogException(e);
+                Server.Diagnostics.ExceptionLogging.LogException(e);
             }
-            try { defTriggerProbability = double.Parse(node["defTriggerProbability"].InnerText); }
+            try { XmlSpawner.defTriggerProbability = double.Parse(node["defTriggerProbability"].InnerText); }
             catch (Exception e)
             {
-                Diagnostics.ExceptionLogging.LogException(e);
+                Server.Diagnostics.ExceptionLogging.LogException(e);
             }
-            try { defProximityTriggerSound = int.Parse(node["defProximityTriggerSound"].InnerText); }
+            try { XmlSpawner.defProximityTriggerSound = int.Parse(node["defProximityTriggerSound"].InnerText); }
             catch (Exception e)
             {
-                Diagnostics.ExceptionLogging.LogException(e);
+                Server.Diagnostics.ExceptionLogging.LogException(e);
             }
-            try { defMinRefractory = TimeSpan.Parse(node["defMinRefractory"].InnerText); }
+            try { XmlSpawner.defMinRefractory = TimeSpan.Parse(node["defMinRefractory"].InnerText); }
             catch (Exception e)
             {
-                Diagnostics.ExceptionLogging.LogException(e);
+                Server.Diagnostics.ExceptionLogging.LogException(e);
             }
-            try { defMaxRefractory = TimeSpan.Parse(node["defMaxRefractory"].InnerText); }
+            try { XmlSpawner.defMaxRefractory = TimeSpan.Parse(node["defMaxRefractory"].InnerText); }
             catch (Exception e)
             {
-                Diagnostics.ExceptionLogging.LogException(e);
+                Server.Diagnostics.ExceptionLogging.LogException(e);
             }
-            try { defTODStart = TimeSpan.Parse(node["defTODStart"].InnerText); }
+            try { XmlSpawner.defTODStart = TimeSpan.Parse(node["defTODStart"].InnerText); }
             catch (Exception e)
             {
-                Diagnostics.ExceptionLogging.LogException(e);
+                Server.Diagnostics.ExceptionLogging.LogException(e);
             }
-            try { defTODEnd = TimeSpan.Parse(node["defTODEnd"].InnerText); }
+            try { XmlSpawner.defTODEnd = TimeSpan.Parse(node["defTODEnd"].InnerText); }
             catch (Exception e)
             {
-                Diagnostics.ExceptionLogging.LogException(e);
+                Server.Diagnostics.ExceptionLogging.LogException(e);
             }
-            try { defAmount = int.Parse(node["defStackAmount"].InnerText); }
+            try { XmlSpawner.defAmount = int.Parse(node["defStackAmount"].InnerText); }
             catch (Exception e)
             {
-                Diagnostics.ExceptionLogging.LogException(e);
+                Server.Diagnostics.ExceptionLogging.LogException(e);
             }
-            try { defDuration = TimeSpan.Parse(node["defDuration"].InnerText); }
+            try { XmlSpawner.defDuration = TimeSpan.Parse(node["defDuration"].InnerText); }
             catch (Exception e)
             {
-                Diagnostics.ExceptionLogging.LogException(e);
+                Server.Diagnostics.ExceptionLogging.LogException(e);
             }
-            try { defIsGroup = bool.Parse(node["defIsGroup"].InnerText); }
+            try { XmlSpawner.defIsGroup = bool.Parse(node["defIsGroup"].InnerText); }
             catch (Exception e)
             {
-                Diagnostics.ExceptionLogging.LogException(e);
+                Server.Diagnostics.ExceptionLogging.LogException(e);
             }
-            try { defTeam = int.Parse(node["defTeam"].InnerText); }
+            try { XmlSpawner.defTeam = int.Parse(node["defTeam"].InnerText); }
             catch (Exception e)
             {
-                Diagnostics.ExceptionLogging.LogException(e);
+                Server.Diagnostics.ExceptionLogging.LogException(e);
             }
-            try { defRelativeHome = bool.Parse(node["defRelativeHome"].InnerText); }
+            try { XmlSpawner.defRelativeHome = bool.Parse(node["defRelativeHome"].InnerText); }
             catch (Exception e)
             {
-                Diagnostics.ExceptionLogging.LogException(e);
+                Server.Diagnostics.ExceptionLogging.LogException(e);
             }
-            try { defSpawnRange = int.Parse(node["defSpawnRange"].InnerText); }
+            try { XmlSpawner.defSpawnRange = int.Parse(node["defSpawnRange"].InnerText); }
             catch (Exception e)
             {
-                Diagnostics.ExceptionLogging.LogException(e);
+                Server.Diagnostics.ExceptionLogging.LogException(e);
             }
-            try { defHomeRange = int.Parse(node["defHomeRange"].InnerText); }
+            try { XmlSpawner.defHomeRange = int.Parse(node["defHomeRange"].InnerText); }
             catch (Exception e)
             {
-                Diagnostics.ExceptionLogging.LogException(e);
+                Server.Diagnostics.ExceptionLogging.LogException(e);
             }
-            try { defMinDelay = TimeSpan.Parse(node["defMinDelay"].InnerText); }
+            try { XmlSpawner.defMinDelay = TimeSpan.Parse(node["defMinDelay"].InnerText); }
             catch (Exception e)
             {
-                Diagnostics.ExceptionLogging.LogException(e);
+                Server.Diagnostics.ExceptionLogging.LogException(e);
             }
-            try { defMaxDelay = TimeSpan.Parse(node["defMaxDelay"].InnerText); }
+            try { XmlSpawner.defMaxDelay = TimeSpan.Parse(node["defMaxDelay"].InnerText); }
             catch (Exception e)
             {
-                Diagnostics.ExceptionLogging.LogException(e);
+                Server.Diagnostics.ExceptionLogging.LogException(e);
             }
             int todmode = 0;
             try { todmode = int.Parse(node["defTODMode"].InnerText); }
             catch (Exception e)
             {
-                Diagnostics.ExceptionLogging.LogException(e);
+                Server.Diagnostics.ExceptionLogging.LogException(e);
             }
             switch (todmode)
             {
                 case (int)TODModeType.Realtime:
-                    defTODMode = TODModeType.Realtime;
+                    XmlSpawner.defTODMode = TODModeType.Realtime;
                     break;
                 case (int)TODModeType.Gametime:
-                    defTODMode = TODModeType.Gametime;
+                    XmlSpawner.defTODMode = TODModeType.Gametime;
                     break;
             }
         }
@@ -3962,8 +3962,8 @@ namespace Server.Mobiles
                     {
                         try
                         {
-                            defMaxDelay = TimeSpan.FromMinutes(Convert.ToDouble(e.Arguments[1]));
-                            m.SendMessage("MaxDelay = {0}", defMaxDelay);
+                            XmlSpawner.defMaxDelay = TimeSpan.FromMinutes(Convert.ToDouble(e.Arguments[1]));
+                            m.SendMessage("MaxDelay = {0}", XmlSpawner.defMaxDelay);
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
@@ -3972,8 +3972,8 @@ namespace Server.Mobiles
                     {
                         try
                         {
-                            defMinDelay = TimeSpan.FromMinutes(Convert.ToDouble(e.Arguments[1]));
-                            m.SendMessage("MinDelay = {0}", defMinDelay);
+                            XmlSpawner.defMinDelay = TimeSpan.FromMinutes(Convert.ToDouble(e.Arguments[1]));
+                            m.SendMessage("MinDelay = {0}", XmlSpawner.defMinDelay);
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
@@ -3982,8 +3982,8 @@ namespace Server.Mobiles
                     {
                         try
                         {
-                            defSpawnRange = Convert.ToInt32(e.Arguments[1]);
-                            m.SendMessage("SpawnRange = {0}", defSpawnRange);
+                            XmlSpawner.defSpawnRange = Convert.ToInt32(e.Arguments[1]);
+                            m.SendMessage("SpawnRange = {0}", XmlSpawner.defSpawnRange);
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
@@ -3992,8 +3992,8 @@ namespace Server.Mobiles
                     {
                         try
                         {
-                            defHomeRange = Convert.ToInt32(e.Arguments[1]);
-                            m.SendMessage("HomeRange = {0}", defHomeRange);
+                            XmlSpawner.defHomeRange = Convert.ToInt32(e.Arguments[1]);
+                            m.SendMessage("HomeRange = {0}", XmlSpawner.defHomeRange);
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
@@ -4002,8 +4002,8 @@ namespace Server.Mobiles
                     {
                         try
                         {
-                            defRelativeHome = Convert.ToBoolean(e.Arguments[1]);
-                            m.SendMessage("RelativeHome = {0}", defRelativeHome);
+                            XmlSpawner.defRelativeHome = Convert.ToBoolean(e.Arguments[1]);
+                            m.SendMessage("RelativeHome = {0}", XmlSpawner.defRelativeHome);
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
@@ -4012,8 +4012,8 @@ namespace Server.Mobiles
                     {
                         try
                         {
-                            defProximityTriggerSound = Convert.ToInt32(e.Arguments[1]);
-                            m.SendMessage("ProximityTriggerSound = {0}", defProximityTriggerSound);
+                            XmlSpawner.defProximityTriggerSound = Convert.ToInt32(e.Arguments[1]);
+                            m.SendMessage("ProximityTriggerSound = {0}", XmlSpawner.defProximityTriggerSound);
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
@@ -4022,8 +4022,8 @@ namespace Server.Mobiles
                     {
                         try
                         {
-                            defProximityRange = Convert.ToInt32(e.Arguments[1]);
-                            m.SendMessage("ProximityRange = {0}", defProximityRange);
+                            XmlSpawner.defProximityRange = Convert.ToInt32(e.Arguments[1]);
+                            m.SendMessage("ProximityRange = {0}", XmlSpawner.defProximityRange);
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
@@ -4032,8 +4032,8 @@ namespace Server.Mobiles
                     {
                         try
                         {
-                            defTriggerProbability = Convert.ToDouble(e.Arguments[1]);
-                            m.SendMessage("TriggerProbability = {0}", defTriggerProbability);
+                            XmlSpawner.defTriggerProbability = Convert.ToDouble(e.Arguments[1]);
+                            m.SendMessage("TriggerProbability = {0}", XmlSpawner.defTriggerProbability);
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
@@ -4042,8 +4042,8 @@ namespace Server.Mobiles
                     {
                         try
                         {
-                            defTODStart = TimeSpan.FromMinutes(Convert.ToDouble(e.Arguments[1]));
-                            m.SendMessage("TODStart = {0}", defTODStart);
+                            XmlSpawner.defTODStart = TimeSpan.FromMinutes(Convert.ToDouble(e.Arguments[1]));
+                            m.SendMessage("TODStart = {0}", XmlSpawner.defTODStart);
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
@@ -4052,8 +4052,8 @@ namespace Server.Mobiles
                     {
                         try
                         {
-                            defTODEnd = TimeSpan.FromMinutes(Convert.ToDouble(e.Arguments[1]));
-                            m.SendMessage("TODEnd = {0}", defTODEnd);
+                            XmlSpawner.defTODEnd = TimeSpan.FromMinutes(Convert.ToDouble(e.Arguments[1]));
+                            m.SendMessage("TODEnd = {0}", XmlSpawner.defTODEnd);
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
@@ -4062,8 +4062,8 @@ namespace Server.Mobiles
                     {
                         try
                         {
-                            defAmount = Convert.ToInt32(e.Arguments[1]);
-                            m.SendMessage("StackAmount = {0}", defAmount);
+                            XmlSpawner.defAmount = Convert.ToInt32(e.Arguments[1]);
+                            m.SendMessage("StackAmount = {0}", XmlSpawner.defAmount);
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
@@ -4072,8 +4072,8 @@ namespace Server.Mobiles
                     {
                         try
                         {
-                            defDuration = TimeSpan.FromMinutes(Convert.ToDouble(e.Arguments[1]));
-                            m.SendMessage("Duration = {0}", defDuration);
+                            XmlSpawner.defDuration = TimeSpan.FromMinutes(Convert.ToDouble(e.Arguments[1]));
+                            m.SendMessage("Duration = {0}", XmlSpawner.defDuration);
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
@@ -4082,8 +4082,8 @@ namespace Server.Mobiles
                     {
                         try
                         {
-                            defIsGroup = Convert.ToBoolean(e.Arguments[1]);
-                            m.SendMessage("Group = {0}", defIsGroup);
+                            XmlSpawner.defIsGroup = Convert.ToBoolean(e.Arguments[1]);
+                            m.SendMessage("Group = {0}", XmlSpawner.defIsGroup);
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
@@ -4092,8 +4092,8 @@ namespace Server.Mobiles
                     {
                         try
                         {
-                            defTeam = Convert.ToInt32(e.Arguments[1]);
-                            m.SendMessage("Team = {0}", defTeam);
+                            XmlSpawner.defTeam = Convert.ToInt32(e.Arguments[1]);
+                            m.SendMessage("Team = {0}", XmlSpawner.defTeam);
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
@@ -4107,13 +4107,13 @@ namespace Server.Mobiles
                             switch (todmode)
                             {
                                 case (int)TODModeType.Gametime:
-                                    defTODMode = TODModeType.Gametime;
+                                    XmlSpawner.defTODMode = TODModeType.Gametime;
                                     break;
                                 case (int)TODModeType.Realtime:
-                                    defTODMode = TODModeType.Realtime;
+                                    XmlSpawner.defTODMode = TODModeType.Realtime;
                                     break;
                             }
-                            m.SendMessage("TODMode = {0}", defTODMode);
+                            m.SendMessage("TODMode = {0}", XmlSpawner.defTODMode);
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
@@ -4122,8 +4122,8 @@ namespace Server.Mobiles
                     {
                         try
                         {
-                            defMaxRefractory = TimeSpan.FromMinutes(Convert.ToDouble(e.Arguments[1]));
-                            m.SendMessage("MaxRefractory = {0}", defMaxRefractory);
+                            XmlSpawner.defMaxRefractory = TimeSpan.FromMinutes(Convert.ToDouble(e.Arguments[1]));
+                            m.SendMessage("MaxRefractory = {0}", XmlSpawner.defMaxRefractory);
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
@@ -4132,8 +4132,8 @@ namespace Server.Mobiles
                     {
                         try
                         {
-                            defMinRefractory = TimeSpan.FromMinutes(Convert.ToDouble(e.Arguments[1]));
-                            m.SendMessage("MinRefractory = {0}", defMinRefractory);
+                            XmlSpawner.defMinRefractory = TimeSpan.FromMinutes(Convert.ToDouble(e.Arguments[1]));
+                            m.SendMessage("MinRefractory = {0}", XmlSpawner.defMinRefractory);
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
@@ -4147,23 +4147,23 @@ namespace Server.Mobiles
             else
             {
                 // just display the values
-                m.SendMessage("TriggerProbability = {0}", defTriggerProbability);
-                m.SendMessage("ProximityRange = {0}", defProximityRange);
-                m.SendMessage("ProximityTriggerSound = {0}", defProximityTriggerSound);
-                m.SendMessage("MinRefractory = {0}", defMinRefractory);
-                m.SendMessage("MaxRefractory = {0}", defMaxRefractory);
-                m.SendMessage("TODStart = {0}", defTODStart);
-                m.SendMessage("TODEnd = {0}", defTODEnd);
-                m.SendMessage("TODMode = {0}", defTODMode);
-                m.SendMessage("StackAmount = {0}", defAmount);
-                m.SendMessage("Duration = {0}", defDuration);
-                m.SendMessage("Group = {0}", defIsGroup);
-                m.SendMessage("Team = {0}", defTeam);
-                m.SendMessage("RelativeHome = {0}", defRelativeHome);
-                m.SendMessage("SpawnRange = {0}", defSpawnRange);
-                m.SendMessage("HomeRange = {0}", defHomeRange);
-                m.SendMessage("MinDelay = {0}", defMinDelay);
-                m.SendMessage("MaxDelay = {0}", defMaxDelay);
+                m.SendMessage("TriggerProbability = {0}", XmlSpawner.defTriggerProbability);
+                m.SendMessage("ProximityRange = {0}", XmlSpawner.defProximityRange);
+                m.SendMessage("ProximityTriggerSound = {0}", XmlSpawner.defProximityTriggerSound);
+                m.SendMessage("MinRefractory = {0}", XmlSpawner.defMinRefractory);
+                m.SendMessage("MaxRefractory = {0}", XmlSpawner.defMaxRefractory);
+                m.SendMessage("TODStart = {0}", XmlSpawner.defTODStart);
+                m.SendMessage("TODEnd = {0}", XmlSpawner.defTODEnd);
+                m.SendMessage("TODMode = {0}", XmlSpawner.defTODMode);
+                m.SendMessage("StackAmount = {0}", XmlSpawner.defAmount);
+                m.SendMessage("Duration = {0}", XmlSpawner.defDuration);
+                m.SendMessage("Group = {0}", XmlSpawner.defIsGroup);
+                m.SendMessage("Team = {0}", XmlSpawner.defTeam);
+                m.SendMessage("RelativeHome = {0}", XmlSpawner.defRelativeHome);
+                m.SendMessage("SpawnRange = {0}", XmlSpawner.defSpawnRange);
+                m.SendMessage("HomeRange = {0}", XmlSpawner.defHomeRange);
+                m.SendMessage("MinDelay = {0}", XmlSpawner.defMinDelay);
+                m.SendMessage("MaxDelay = {0}", XmlSpawner.defMaxDelay);
             }
         }
 
@@ -4325,7 +4325,7 @@ namespace Server.Mobiles
                 {
                     SmartSpawnAccessLevel = (AccessLevel)Enum.Parse(typeof(AccessLevel), e.Arguments[1], true);
                 }
-                catch (Exception ex) { Diagnostics.ExceptionLogging.LogException(ex); }
+                catch (Exception ex) { Server.Diagnostics.ExceptionLogging.LogException(ex); }
             }
             // handle the
             // number of spawners
@@ -4414,7 +4414,7 @@ namespace Server.Mobiles
                 }
                 catch (Exception ex)
                 {
-                    Diagnostics.ExceptionLogging.LogException(ex);
+                    Server.Diagnostics.ExceptionLogging.LogException(ex);
                 }
             }
             int count = 0;
@@ -4510,7 +4510,7 @@ namespace Server.Mobiles
             int total_processed_spawners = 0;
 
             // Check if the file exists
-            if (File.Exists(filename) == true)
+            if (System.IO.File.Exists(filename) == true)
             {
                 FileStream fs = null;
                 try
@@ -4531,7 +4531,7 @@ namespace Server.Mobiles
             }
             else
                 // check to see if it is a directory
-                if (Directory.Exists(filename) == true)
+                if (System.IO.Directory.Exists(filename) == true)
             {
                 // if so then import all of the .xml files in the directory
                 string[] files = null;
@@ -4805,7 +4805,7 @@ namespace Server.Mobiles
             int total_processed_spawners = 0;
             if (filename == null || filename.Length <= 0 || from == null || from.Deleted) return;
             // Check if the file exists
-            if (File.Exists(filename) == true)
+            if (System.IO.File.Exists(filename) == true)
             {
                 int spawnercount = 0;
                 int badspawnercount = 0;
@@ -4871,7 +4871,7 @@ namespace Server.Mobiles
             }
             else
                 // check to see if it is a directory
-                if (Directory.Exists(filename) == true)
+                if (System.IO.Directory.Exists(filename) == true)
             {
                 // if so then import all of the .map files in the directory
                 string[] files = null;
@@ -5836,7 +5836,7 @@ namespace Server.Mobiles
 
 
             // Check if the file exists
-            if (File.Exists(filename) == true)
+            if (System.IO.File.Exists(filename) == true)
             {
                 FileStream fs = null;
                 try
@@ -5858,7 +5858,7 @@ namespace Server.Mobiles
             }
             else
                 // check to see if it is a directory
-                if (Directory.Exists(filename) == true)
+                if (System.IO.Directory.Exists(filename) == true)
             {
                 // if so then load all of the .xml files in the directory
                 string[] files = null;
@@ -6754,11 +6754,11 @@ namespace Server.Mobiles
 
             string dirname = null;
 
-            if (Directory.Exists(XmlSpawnDir) == true)
+            if (System.IO.Directory.Exists(XmlSpawnDir) == true)
             {
                 // get it from the defaults directory if it exists
                 dirname = string.Format("{0}/{1}", XmlSpawnDir, filename);
-                found = File.Exists(dirname) || Directory.Exists(dirname);
+                found = System.IO.File.Exists(dirname) || System.IO.Directory.Exists(dirname);
             }
 
             if (!found)
@@ -6776,11 +6776,11 @@ namespace Server.Mobiles
 
             string dirname = null;
 
-            if (Directory.Exists(XmlMultiDir) == true)
+            if (System.IO.Directory.Exists(XmlMultiDir) == true)
             {
                 // get it from the defaults directory if it exists
                 dirname = string.Format("{0}/{1}", XmlMultiDir, filename);
-                found = File.Exists(dirname) || Directory.Exists(dirname);
+                found = System.IO.File.Exists(dirname) || System.IO.Directory.Exists(dirname);
             }
 
             if (!found)
@@ -7015,7 +7015,7 @@ namespace Server.Mobiles
 
             string dirname;
 
-            if (Directory.Exists(XmlSpawnDir) && filename != null && !filename.StartsWith("/") && !filename.StartsWith("\\"))
+            if (System.IO.Directory.Exists(XmlSpawner.XmlSpawnDir) && filename != null && !filename.StartsWith("/") && !filename.StartsWith("\\"))
             {
                 // put it in the defaults directory if it exists
                 dirname = string.Format("{0}/{1}", XmlSpawnDir, filename);
@@ -7059,7 +7059,7 @@ namespace Server.Mobiles
             string filename = e.Arguments[0].ToString();
 
             string dirname;
-            if (Directory.Exists(XmlSpawnDir) && filename != null && !filename.StartsWith("/") && !filename.StartsWith("\\"))
+            if (System.IO.Directory.Exists(XmlSpawner.XmlSpawnDir) && filename != null && !filename.StartsWith("/") && !filename.StartsWith("\\"))
             {
                 // put it in the defaults directory if it exists
                 dirname = string.Format("{0}/{1}", XmlSpawnDir, filename);
@@ -7112,7 +7112,7 @@ namespace Server.Mobiles
             try
             {
                 // Create the FileStream to write with.
-                fs = new System.IO.FileStream(dirname, FileMode.Create);
+                fs = new System.IO.FileStream(dirname, System.IO.FileMode.Create);
             }
             catch
             {

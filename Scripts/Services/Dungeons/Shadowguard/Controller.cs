@@ -175,16 +175,16 @@ namespace Server.Engines.Shadowguard
                 Table = null;
         }
 
-        public void OnEncounterComplete(ShadowguardEncounter enc, bool expired)
+        public void OnEncounterComplete(ShadowguardEncounter encounter, bool expired)
         {
-            Encounters.Remove(enc);
+            Encounters.Remove(encounter);
             CheckQueue();
 
             if (!expired)
             {
-                foreach (PlayerMobile pm in enc.Region.GetEnumeratedMobiles().OfType<PlayerMobile>())
+                foreach (PlayerMobile pm in encounter.Region.GetEnumeratedMobiles().OfType<PlayerMobile>())
                 {
-                    AddToTable(pm, enc.Encounter);
+                    AddToTable(pm, encounter.Encounter);
                 }
             }
         }
@@ -208,9 +208,9 @@ namespace Server.Engines.Shadowguard
             }
         }
 
-        public void AddEncounter(ShadowguardEncounter enc)
+        public void AddEncounter(ShadowguardEncounter encounter)
         {
-            Encounters.Add(enc);
+            Encounters.Add(encounter);
         }
 
         public bool HasCompletedEncounter(Mobile m, EncounterType encounter)
@@ -663,7 +663,7 @@ namespace Server.Engines.Shadowguard
 
         private static void OnDisconnected(DisconnectedEventArgs e)
         {
-            ShadowguardEncounter encounter = GetEncounter(e.Mobile.Location, e.Mobile.Map);
+            ShadowguardEncounter encounter = ShadowguardController.GetEncounter(e.Mobile.Location, e.Mobile.Map);
 
             if (encounter != null)
                 encounter.CheckPlayerStatus(e.Mobile);
@@ -833,7 +833,7 @@ namespace Server.Engines.Shadowguard
         public ShadowguardInstance Instance { get; private set; }
 
         public ShadowguardRegion(Rectangle2D bounds, string regionName, ShadowguardInstance instance)
-            : base(string.Format("Shadowguard_{0}", regionName), Map.TerMur, DefaultPriority, bounds)
+            : base(string.Format("Shadowguard_{0}", regionName), Map.TerMur, Region.DefaultPriority, bounds)
         {
             Instance = instance;
         }
@@ -876,7 +876,7 @@ namespace Server.Engines.Shadowguard
             if (o is StaticTarget && ((StaticTarget)o).Z > m.Z + 3)
                 return false;
 
-            if (t.Flags == TargetFlags.Harmful)
+            if (t.Flags == Server.Targeting.TargetFlags.Harmful)
             {
                 if (o is LadyMinax || (o is ShadowguardGreaterDragon && ((ShadowguardGreaterDragon)o).Z > m.Z))
                     return false;
