@@ -389,7 +389,7 @@ namespace Server.Spells
         {
             int span = (((6 * caster.Skills.EvalInt.Fixed) / 50) + 1);
 
-            if (caster.Spell is CurseSpell && Spells.SkillMasteries.ResilienceSpell.UnderEffects(target))
+            if (caster.Spell is CurseSpell && SkillMasteries.ResilienceSpell.UnderEffects(target))
                 span /= 2;
 
             return TimeSpan.FromSeconds(span);
@@ -478,7 +478,7 @@ namespace Server.Spells
                 return true;
             }
 
-            if (to.Hidden && to.AccessLevel > from.AccessLevel || Server.Engines.ArenaSystem.PVPArenaSystem.IsFriendly(from, to))
+            if (to.Hidden && to.AccessLevel > from.AccessLevel || Engines.ArenaSystem.PVPArenaSystem.IsFriendly(from, to))
             {
                 return false;
             }
@@ -679,7 +679,7 @@ namespace Server.Spells
 
             Point3D p = new Point3D(caster);
 
-            if (SpellHelper.FindValidSpawnLocation(map, ref p, true))
+            if (FindValidSpawnLocation(map, ref p, true))
             {
                 BaseCreature.Summon(creature, summoned, caster, p, sound, duration);
                 return;
@@ -897,7 +897,7 @@ namespace Server.Spells
                 m.SendLocalizedMessage(1005564, "", 0x22); // Wouldst thou flee during the heat of battle??
                 return false;
             }
-            else if (Server.Misc.WeightOverloading.IsOverloaded(m))
+            else if (WeightOverloading.IsOverloaded(m))
             {
                 m.SendLocalizedMessage(502359, "", 0x22); // Thou art too encumbered to move.
                 return false;
@@ -1373,7 +1373,7 @@ namespace Server.Spells
                 int damageGiven = AOS.Damage(damageable, from, iDamage, phys, fire, cold, pois, nrgy, chaos, direct, dtype);
 
                 if (target != null)
-                    Spells.Mysticism.SpellPlagueSpell.OnMobileDamaged(target);
+                    Mysticism.SpellPlagueSpell.OnMobileDamaged(target);
 
                 if (target != null && target.DFA != DFAlgorithm.Standard)
                 {
@@ -1534,7 +1534,7 @@ namespace Server.Spells
                 }
 
                 if (target != null)
-                    Spells.Mysticism.SpellPlagueSpell.OnMobileDamaged(target);
+                    Mysticism.SpellPlagueSpell.OnMobileDamaged(target);
 
                 if (m_Spell != null)
                     m_Spell.RemoveDelayedDamageContext(m_Target);

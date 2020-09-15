@@ -149,7 +149,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            if (BaseWoodBoard.UpdatingBaseClass)
+            if (UpdatingBaseClass)
                 return;
             int version = reader.ReadInt();
         }

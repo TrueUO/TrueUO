@@ -191,7 +191,7 @@ namespace Server.Mobiles
                     {
                         if (item is BaseWeapon)
                         {
-                            var crItem = Server.Engines.Craft.CraftItem.GetCraftItem(item.GetType(), true);
+                            var crItem = Engines.Craft.CraftItem.GetCraftItem(item.GetType(), true);
 
                             if (crItem != null)
                             {

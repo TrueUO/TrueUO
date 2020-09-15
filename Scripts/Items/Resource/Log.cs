@@ -144,7 +144,7 @@ namespace Server.Items
         {
             base.Deserialize(reader);
             //don't deserialize anything on update
-            if (BaseLog.UpdatingBaseLogClass)
+            if (UpdatingBaseLogClass)
                 return;
 
             int version = reader.ReadInt();

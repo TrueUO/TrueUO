@@ -28,7 +28,7 @@ namespace Server.Mobiles
             }
             catch (Exception e)
             {
-                Server.Diagnostics.ExceptionLogging.LogException(e);
+                Diagnostics.ExceptionLogging.LogException(e);
             }
         }
 
@@ -160,7 +160,7 @@ namespace Server.Mobiles
             }
             catch (Exception e)
             {
-                Server.Diagnostics.ExceptionLogging.LogException(e);
+                Diagnostics.ExceptionLogging.LogException(e);
                 LogMessage(m_Delimiter);
             }
         }

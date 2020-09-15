@@ -463,7 +463,7 @@ namespace Server.Engines.ArtisanFestival
                     }
                     else
                     {
-                        Server.Spells.SpellHelper.AdjustField(ref temp, map, 20, false);
+                        Spells.SpellHelper.AdjustField(ref temp, map, 20, false);
 
                         spawnPoint = temp;
                     }
@@ -541,11 +541,11 @@ namespace Server.Engines.ArtisanFestival
 
             for (int i = 2; i <= 8; i += 2)
             {
-                Server.Timer.DelayCall(TimeSpan.FromMilliseconds((i - 2) * 600), o =>
+                Timer.DelayCall(TimeSpan.FromMilliseconds((i - 2) * 600), o =>
                 {
-                    Server.Misc.Geometry.Circle2D(e.Location, e.Map, o, (pnt, map) =>
+                    Misc.Geometry.Circle2D(e.Location, e.Map, o, (pnt, map) =>
                     {
-                        Server.Engines.VvV.VvVAltar.LaunchFireworks(pnt, map);
+                        VvV.VvVAltar.LaunchFireworks(pnt, map);
                     });
                 }, i);
             }

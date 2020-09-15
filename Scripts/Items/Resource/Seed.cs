@@ -221,7 +221,7 @@ namespace Server.Engines.Plants
                         from.SendLocalizedMessage(1150367); // This plot already has a plant!
                     else
                     {
-                        Server.Multis.BaseHouse house = Server.Multis.BaseHouse.FindHouseAt(addon);
+                        Server.Multis.BaseHouse house = Multis.BaseHouse.FindHouseAt(addon);
 
                         if (house != null)
                         {

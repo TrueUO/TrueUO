@@ -15,7 +15,7 @@ namespace Server.Regions
 
             Timer.DelayCall(TimeSpan.FromSeconds(30), () =>
             {
-                foreach (CorgulRegion reg in Region.Regions.OfType<CorgulRegion>())
+                foreach (CorgulRegion reg in Regions.OfType<CorgulRegion>())
                 {
                     if (reg.Altar != null && reg.Altar.Activated)
                         continue;
@@ -36,7 +36,7 @@ namespace Server.Regions
         public CorgulAltar Altar => m_Altar;
 
         public CorgulRegion(Rectangle2D rec, CorgulAltar altar)
-            : base("Corgul Boss Region", altar.Map, Region.DefaultPriority, new Rectangle2D[] { rec })
+            : base("Corgul Boss Region", altar.Map, DefaultPriority, new Rectangle2D[] { rec })
         {
             //MarkBounds(rec);
             m_Altar = altar;
@@ -204,7 +204,7 @@ namespace Server.Regions
         {
             Mobile from = e.Mobile;
 
-            Region reg = Region.Find(from.Location, from.Map);
+            Region reg = Find(from.Location, from.Map);
 
             if (reg is CorgulRegion)
             {
