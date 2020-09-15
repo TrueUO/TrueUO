@@ -129,7 +129,7 @@ namespace Server.Engines.Quests
             return true;
         }
 
-        public static void OnBossSlain(Server.Engines.Despise.DespiseBoss boss)
+        public static void OnBossSlain(Despise.DespiseBoss boss)
         {
             foreach (DamageStore ds in boss.GetLootingRights())
             {

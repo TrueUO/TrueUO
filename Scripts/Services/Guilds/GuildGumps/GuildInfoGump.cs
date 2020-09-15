@@ -150,7 +150,7 @@ namespace Server.Guilds
                     }
                     else
                     {
-                        pm.SendGump(new Server.Engines.VvV.ConfirmSignupGump(pm));
+                        pm.SendGump(new Engines.VvV.ConfirmSignupGump(pm));
                     }
                     break;
                 case 9:
@@ -170,7 +170,7 @@ namespace Server.Guilds
                     }
                     break;
                 case 10:
-                    pm.SendGump(new Server.Engines.VvV.ViceVsVirtueLeaderboardGump(pm));
+                    pm.SendGump(new Engines.VvV.ViceVsVirtueLeaderboardGump(pm));
                     break;
             }
         }

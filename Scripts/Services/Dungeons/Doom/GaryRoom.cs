@@ -256,7 +256,7 @@ namespace Server.Engines.Doom
             g.SayTo(m, 1080098); // Ah... visitors!
         }
 
-        public override bool CheckTravel(Mobile traveller, Point3D p, Server.Spells.TravelCheckType type)
+        public override bool CheckTravel(Mobile traveller, Point3D p, Spells.TravelCheckType type)
         {
             switch (type)
             {

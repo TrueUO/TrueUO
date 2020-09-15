@@ -20,7 +20,7 @@ namespace Server.Items
             if (CharydbisSpawner.SpawnInstance == null)
                 e.Mobile.SendMessage("Charydbis spawner does not exist.");
             else
-                e.Mobile.SendGump(new Server.Gumps.PropertiesGump(e.Mobile, CharydbisSpawner.SpawnInstance));
+                e.Mobile.SendGump(new Gumps.PropertiesGump(e.Mobile, CharydbisSpawner.SpawnInstance));
         }
 
         public static void DeleteHS(CommandEventArgs e)

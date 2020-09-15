@@ -2200,7 +2200,7 @@ namespace Server.Engines.Craft
             return false;
         }
 
-        public class ChooseResTarget : Server.Targeting.Target
+        public class ChooseResTarget : Targeting.Target
         {
             private readonly CraftItem m_CraftItem;
             private readonly CraftSystem m_CraftSystem;
@@ -2231,7 +2231,7 @@ namespace Server.Engines.Craft
                 m_CraftItem.Craft(from, m_CraftSystem, ItemTypeRes, m_Tool);
             }
 
-            protected override void OnTargetCancel(Mobile from, Server.Targeting.TargetCancelType cancelType)
+            protected override void OnTargetCancel(Mobile from, Targeting.TargetCancelType cancelType)
             {
                 from.EndAction(typeof(CraftSystem));
                 from.SendGump(new CraftGump(from, m_CraftSystem, m_Tool, null));

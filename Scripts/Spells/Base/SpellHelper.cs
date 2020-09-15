@@ -818,12 +818,12 @@ namespace Server.Spells
                 if (caster.IsPlayer())
                 {
                     // Jail region
-                    if (caster.Region.IsPartOf<Regions.Jail>())
+                    if (caster.Region.IsPartOf<Jail>())
                     {
                         caster.SendLocalizedMessage(1114345); // You'll need a better jailbreak plan than that!
                         return false;
                     }
-                    else if (caster.Region is Regions.GreenAcres)
+                    else if (caster.Region is GreenAcres)
                     {
                         caster.SendLocalizedMessage(502360); // You cannot teleport into that area.
                         return false;
@@ -1712,7 +1712,7 @@ namespace Server.Spells
 
                     if (!((Body)transformSpell.Body).IsHuman)
                     {
-                        Mobiles.IMount mt = caster.Mount;
+                        IMount mt = caster.Mount;
 
                         if (mt != null)
                             mt.Rider = null;

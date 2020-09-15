@@ -277,6 +277,6 @@ namespace Server.RemoteAdmin
                 m_OnLine(line);
         }
 
-        public override System.Text.Encoding Encoding => Encoding.ASCII;
+        public override Encoding Encoding => Encoding.ASCII;
     }
 }

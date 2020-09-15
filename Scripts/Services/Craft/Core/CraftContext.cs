@@ -326,7 +326,7 @@ namespace Server.Engines.Craft
             }
 
             writer.Write(Ready);
-            writer.WriteItem<AnvilofArtifactsAddon>(_Anvil);
+            writer.WriteItem(_Anvil);
         }
 
         public void Deserialize(GenericReader reader)
