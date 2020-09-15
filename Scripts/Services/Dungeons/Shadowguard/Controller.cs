@@ -663,7 +663,7 @@ namespace Server.Engines.Shadowguard
 
         private static void OnDisconnected(DisconnectedEventArgs e)
         {
-            ShadowguardEncounter encounter = ShadowguardController.GetEncounter(e.Mobile.Location, e.Mobile.Map);
+            ShadowguardEncounter encounter = GetEncounter(e.Mobile.Location, e.Mobile.Map);
 
             if (encounter != null)
                 encounter.CheckPlayerStatus(e.Mobile);
@@ -833,7 +833,7 @@ namespace Server.Engines.Shadowguard
         public ShadowguardInstance Instance { get; private set; }
 
         public ShadowguardRegion(Rectangle2D bounds, string regionName, ShadowguardInstance instance)
-            : base(string.Format("Shadowguard_{0}", regionName), Map.TerMur, Region.DefaultPriority, bounds)
+            : base(string.Format("Shadowguard_{0}", regionName), Map.TerMur, DefaultPriority, bounds)
         {
             Instance = instance;
         }
@@ -876,7 +876,7 @@ namespace Server.Engines.Shadowguard
             if (o is StaticTarget && ((StaticTarget)o).Z > m.Z + 3)
                 return false;
 
-            if (t.Flags == Server.Targeting.TargetFlags.Harmful)
+            if (t.Flags == TargetFlags.Harmful)
             {
                 if (o is LadyMinax || (o is ShadowguardGreaterDragon && ((ShadowguardGreaterDragon)o).Z > m.Z))
                     return false;

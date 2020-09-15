@@ -244,7 +244,7 @@ namespace Server.Engines.JollyRoger
 
                         Timer.DelayCall(() =>
                         {
-                            var jolly = Server.Engines.SeasonalEvents.SeasonalEventSystem.GetEvent<JollyRogerEvent>();
+                            var jolly = SeasonalEvents.SeasonalEventSystem.GetEvent<JollyRogerEvent>();
 
                             if (jolly != null)
                             {

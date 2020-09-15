@@ -584,7 +584,7 @@ namespace Server.Engines.VendorSearching
             {
                 StringList = new Ultima.StringList("enu");
             }
-            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+            catch (Exception e) { Diagnostics.ExceptionLogging.LogException(e); }
 
             CommandSystem.Register("GetOPLString", AccessLevel.Administrator, e =>
                 {

@@ -511,7 +511,7 @@ namespace Server.Engines.Quests
         {
             if (InRange(m.Location, 2) && !InRange(oldLocation, 2))
             {
-                PrivateOverheadMessage(Server.Network.MessageType.Regular, 1154, 1158137, m.NetState); // *You notice the skeleton clutching a small journal...*
+                PrivateOverheadMessage(MessageType.Regular, 1154, 1158137, m.NetState); // *You notice the skeleton clutching a small journal...*
             }
         }
 

@@ -40,7 +40,7 @@ namespace Server.Items
                 }
                 else
                 {
-                    from.PrivateOverheadMessage(Server.Network.MessageType.Regular, 0x3B2, 1019045, from.NetState);
+                    from.PrivateOverheadMessage(Network.MessageType.Regular, 0x3B2, 1019045, from.NetState);
                 }
             }
             else

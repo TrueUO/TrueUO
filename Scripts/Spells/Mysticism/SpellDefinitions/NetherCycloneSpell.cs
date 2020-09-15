@@ -71,7 +71,7 @@ namespace Server.Spells.Mysticism
                             continue;
                         }
 
-                        Server.Effects.SendTargetParticles(d, 0x374A, 1, 15, 9502, 97, 3, (EffectLayer)255, 0);
+                        Effects.SendTargetParticles(d, 0x374A, 1, 15, 9502, 97, 3, (EffectLayer)255, 0);
 
                         double damage = GetNewAosDamage(50, 1, 5, d);
 

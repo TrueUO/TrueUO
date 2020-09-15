@@ -1108,7 +1108,7 @@ namespace Server.Mobiles
 
                 if (plookup != null)
                 {
-                    if (BaseXmlSpawner.IsProtected(type, propname))
+                    if (IsProtected(type, propname))
                         return "Property is protected.";
 
                     ptype = plookup.PropertyType;
@@ -1124,7 +1124,7 @@ namespace Server.Mobiles
                     {
                         if (Insensitive.Equals(p.Name, propname))
                         {
-                            if (BaseXmlSpawner.IsProtected(type, propname))
+                            if (IsProtected(type, propname))
                                 return "Property is protected.";
 
                             ptype = p.PropertyType;
@@ -1148,7 +1148,7 @@ namespace Server.Mobiles
                     if (!plookup.CanWrite)
                         return "Property is read only.";
 
-                    if (BaseXmlSpawner.IsProtected(type, propname))
+                    if (IsProtected(type, propname))
                         return "Property is protected.";
 
                     string returnvalue = InternalSetValue(null, o, plookup, value, false, index);
@@ -1168,7 +1168,7 @@ namespace Server.Mobiles
                             if (!p.CanWrite)
                                 return "Property is read only.";
 
-                            if (BaseXmlSpawner.IsProtected(type, propname))
+                            if (IsProtected(type, propname))
                                 return "Property is protected.";
 
                             string returnvalue = InternalSetValue(null, o, p, value, false, index);
@@ -1209,7 +1209,7 @@ namespace Server.Mobiles
 
                 if (plookup != null)
                 {
-                    if (BaseXmlSpawner.IsProtected(type, arglist[0]))
+                    if (IsProtected(type, arglist[0]))
                         return "Property is protected.";
 
                     ptype = plookup.PropertyType;
@@ -1226,7 +1226,7 @@ namespace Server.Mobiles
                     {
                         if (Insensitive.Equals(p.Name, arglist[0]))
                         {
-                            if (BaseXmlSpawner.IsProtected(type, arglist[0]))
+                            if (IsProtected(type, arglist[0]))
                                 return "Property is protected.";
 
                             ptype = p.PropertyType;
@@ -1253,7 +1253,7 @@ namespace Server.Mobiles
                     if (!plookup.CanWrite)
                         return "Property is read only.";
 
-                    if (BaseXmlSpawner.IsProtected(type, name))
+                    if (IsProtected(type, name))
                         return "Property is protected.";
 
                     if (plookup.PropertyType == typeof(Server.Mobile))
@@ -1277,7 +1277,7 @@ namespace Server.Mobiles
                             if (!p.CanWrite)
                                 return "Property is read only.";
 
-                            if (BaseXmlSpawner.IsProtected(type, name))
+                            if (IsProtected(type, name))
                                 return "Property is protected.";
 
                             if (p.PropertyType == typeof(Server.Mobile))
@@ -2230,7 +2230,7 @@ namespace Server.Mobiles
                                     string filestring = null;
 
                                     // read in the string from the file
-                                    if (System.IO.File.Exists(filename) == true)
+                                    if (File.Exists(filename) == true)
                                     {
                                         try
                                         {
@@ -3892,7 +3892,7 @@ namespace Server.Mobiles
                     string filestring = null;
 
                     // read in the string from the file
-                    if (System.IO.File.Exists(filename) == true)
+                    if (File.Exists(filename) == true)
                     {
                         try
                         {
@@ -6499,12 +6499,12 @@ namespace Server.Mobiles
             Server.Mobiles.XmlSpawner.SpawnObject TheSpawn = new Server.Mobiles.XmlSpawner.SpawnObject(null, 0);
 
             TheSpawn.TypeName = action;
-            string substitutedtypeName = BaseXmlSpawner.ApplySubstitution(null, attachedto, trigmob, action);
-            string typeName = BaseXmlSpawner.ParseObjectType(substitutedtypeName);
+            string substitutedtypeName = ApplySubstitution(null, attachedto, trigmob, action);
+            string typeName = ParseObjectType(substitutedtypeName);
 
-            if (BaseXmlSpawner.IsTypeOrItemKeyword(typeName))
+            if (IsTypeOrItemKeyword(typeName))
             {
-                BaseXmlSpawner.SpawnTypeKeyword(attachedto, TheSpawn, typeName, substitutedtypeName, true, trigmob, loc, map, out status_str);
+                SpawnTypeKeyword(attachedto, TheSpawn, typeName, substitutedtypeName, true, trigmob, loc, map, out status_str);
             }
             else
             {
@@ -6512,8 +6512,8 @@ namespace Server.Mobiles
                 Type type = SpawnerType.GetType(typeName);
                 try
                 {
-                    string[] arglist = BaseXmlSpawner.ParseString(substitutedtypeName, 3, "/");
-                    object o = Server.Mobiles.XmlSpawner.CreateObject(type, arglist[0]);
+                    string[] arglist = ParseString(substitutedtypeName, 3, "/");
+                    object o = XmlSpawner.CreateObject(type, arglist[0]);
 
                     if (o == null)
                     {
@@ -6532,13 +6532,13 @@ namespace Server.Mobiles
                         m.Location = loc;
                         m.Map = map;
 
-                        BaseXmlSpawner.ApplyObjectStringProperties(null, substitutedtypeName, m, trigmob, attachedto, out status_str);
+                        ApplyObjectStringProperties(null, substitutedtypeName, m, trigmob, attachedto, out status_str);
                     }
                     else
                             if (o is Item)
                     {
                         Item item = (Item)o;
-                        BaseXmlSpawner.AddSpawnItem(null, attachedto, TheSpawn, item, loc, map, trigmob, false, substitutedtypeName, out status_str);
+                        AddSpawnItem(null, attachedto, TheSpawn, item, loc, map, trigmob, false, substitutedtypeName, out status_str);
                     }
                 }
                 catch { }
@@ -6677,7 +6677,7 @@ namespace Server.Mobiles
 
             // apply the parsed arguments from the typestring using setcommand
             // be sure to do this after setting map and location so that errors dont place the mob on the internal map
-            BaseXmlSpawner.ApplyObjectStringProperties(spawner, propertyString, item, trigmob, spawner, out status_str);
+            ApplyObjectStringProperties(spawner, propertyString, item, trigmob, spawner, out status_str);
         }
 
         public static bool SpawnTypeKeyword(object invoker, XmlSpawner.SpawnObject TheSpawn, string typeName, string substitutedtypeName, bool requiresurface,
