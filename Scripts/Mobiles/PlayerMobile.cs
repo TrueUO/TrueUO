@@ -5190,13 +5190,7 @@ namespace Server.Mobiles
         public Dictionary<QuestChain, BaseChain> Chains => MondainQuestData.GetChains(this);
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool Peaced
-        {
-            get
-            {
-                return PeacedUntil > DateTime.UtcNow;
-            }
-        }
+        public bool Peaced => PeacedUntil > DateTime.UtcNow;
 
         private Dictionary<Collection, int> m_Collections;
         private List<object> m_RewardTitles;

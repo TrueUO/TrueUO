@@ -714,11 +714,8 @@ namespace Server.AccountVault
 
         public VaultAuctionClaimTimer DeadlineTimer { get; set; }
 
-        public AccountVault Vault
-        {
-            get { return RootParent as AccountVault; }
-        }
-        
+        public AccountVault Vault => RootParent as AccountVault;
+
         public AccountVaultContainer(int index)
         {
             _Index = index;

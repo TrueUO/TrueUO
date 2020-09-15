@@ -13,7 +13,7 @@ namespace Server.Items
     [Flipable(0x194B, 0x194C)]
     public class SurveyorsScope : HousePlacementTool
     {
-        public override int LabelNumber { get { return 1026475; } } // surveyor's scope
+        public override int LabelNumber => 1026475;  // surveyor's scope
 
         [Constructable]
         public SurveyorsScope()
