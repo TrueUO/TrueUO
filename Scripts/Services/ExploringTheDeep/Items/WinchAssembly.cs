@@ -76,12 +76,12 @@ namespace Server.Items
         public override int LabelNumber => 1154433;  // Winch Assembly
         public override bool ForceShowProperties => true;
 
-        public override Type[] Keys { get { return new Type[] { typeof(BearingAssembly), typeof(FlyWheel), typeof(PowerCore), typeof(WireSpool) }; } }
-        public override int KeyCount { get { return 0; } }
-        public override MasterKey MasterKey { get { return null; } }
+        public override Type[] Keys => new Type[] { typeof(BearingAssembly), typeof(FlyWheel), typeof(PowerCore), typeof(WireSpool) };
+        public override int KeyCount => 0;
+        public override MasterKey MasterKey => null;
 
-        public override BasePeerless Boss { get { return new Shadowlord(); } }
-        public override Rectangle2D[] BossBounds { get { return new Rectangle2D[] { new Rectangle2D(6399, 1631, 38, 38) }; } }
+        public override BasePeerless Boss => new Shadowlord();
+        public override Rectangle2D[] BossBounds => new Rectangle2D[] { new Rectangle2D(6399, 1631, 38, 38) };
 
         [CommandProperty(AccessLevel.GameMaster)]
         public Hatch Hatch { get; set; }
