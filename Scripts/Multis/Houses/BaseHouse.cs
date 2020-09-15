@@ -1245,7 +1245,7 @@ namespace Server.Multis
         public virtual bool IsStairArea(Point3D p)
         {
             bool frontStairs;
-            return IsStairArea(p, out fronStairs);
+            return IsStairArea(p, out frontStairs);
         }
 
         public virtual bool IsStairArea(Point3D p, out bool frontStairs)
