@@ -286,31 +286,31 @@ namespace Server.Engines.Quests
                                     AddHtmlObject(223, offset, 312, 20, slay.Region, White, false, false); // %location%
                                 }
 
-                                if (m_Offer)
-                                    continue;
-
                                 offset += 16;
                             }
 
-                            AddHtmlLocalized(103, offset, 120, 16, 3000087, 0x15F90, false, false); // Total			
-                            AddLabel(223, offset, 0x481, slay.CurProgress.ToString());  // %current progress%
-
-                            offset += 16;
-
-                            if (ReturnTo() != null)
+                            if (!m_Offer)
                             {
-                                AddHtmlLocalized(103, offset, 120, 16, 1074782, 0x15F90, false, false); // Return to	
-                                AddLabel(223, offset, 0x481, ReturnTo());  // %return to%		
+                                AddHtmlLocalized(103, offset, 120, 16, 3000087, 0x15F90, false, false); // Total			
+                                AddLabel(223, offset, 0x481, slay.CurProgress.ToString());  // %current progress%
 
                                 offset += 16;
-                            }
 
-                            if (slay.Timed)
-                            {
-                                AddHtmlLocalized(103, offset, 120, 16, 1062379, 0x15F90, false, false); // Est. time remaining:
-                                AddLabel(223, offset, 0x481, FormatSeconds(slay.Seconds)); // %est. time remaining%
+                                if (ReturnTo() != null)
+                                {
+                                    AddHtmlLocalized(103, offset, 120, 16, 1074782, 0x15F90, false, false); // Return to	
+                                    AddLabel(223, offset, 0x481, ReturnTo());  // %return to%		
 
-                                offset += 16;
+                                    offset += 16;
+                                }
+
+                                if (slay.Timed)
+                                {
+                                    AddHtmlLocalized(103, offset, 120, 16, 1062379, 0x15F90, false, false); // Est. time remaining:
+                                    AddLabel(223, offset, 0x481, FormatSeconds(slay.Seconds)); // %est. time remaining%
+
+                                    offset += 16;
+                                }
                             }
                         }
                     }
@@ -619,9 +619,9 @@ namespace Server.Engines.Quests
                 string returnTo = m_Quest.StartingMobile.Name;
 
                 if (m_Quest.StartingMobile.Region != null)
-                    returnTo = String.Format("{0} ({1})", returnTo, m_Quest.StartingMobile.Region.Name);
+                    returnTo = string.Format("{0} ({1})", returnTo, m_Quest.StartingMobile.Region.Name);
                 else
-                    returnTo = String.Format("{0}", returnTo);
+                    returnTo = string.Format("{0}", returnTo);
 
                 return returnTo;
             }
@@ -629,7 +629,7 @@ namespace Server.Engines.Quests
             return null;
         }
 
-        public override void OnResponse(Server.Network.NetState state, RelayInfo info)
+        public override void OnResponse(Network.NetState state, RelayInfo info)
         {
             if (m_From != null)
                 m_From.CloseGump(typeof(MondainQuestGump));

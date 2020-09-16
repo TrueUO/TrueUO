@@ -68,7 +68,7 @@ namespace Server.Engines.Quests
             Quest,
             None,
         }
-        public override void OnResponse(Server.Network.NetState state, RelayInfo info)
+        public override void OnResponse(Network.NetState state, RelayInfo info)
         {
             if (info.ButtonID != (int)Buttons.Okay || m_Quest == null)
                 return;
@@ -83,7 +83,7 @@ namespace Server.Engines.Quests
                 m_Quest.OnResign(false);
             }
 
-            if (info.IsSwitched((int)Radios.None) && m_Quest.Owner != null)
+            if (info.IsSwitched((int)Radios.None) && m_Quest.Owner != null && m_Quest.Owner == state.Mobile)
                 m_Quest.Owner.SendGump(new MondainQuestGump(m_Quest.Owner));
         }
     }

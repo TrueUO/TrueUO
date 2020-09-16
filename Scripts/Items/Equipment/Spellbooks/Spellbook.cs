@@ -22,7 +22,7 @@ namespace Server.Items
         Samurai,
         Arcanist,
         Mystic,
-        SkillMasteries
+        SkillMasteries,
     }
 
     public enum BookQuality
@@ -345,7 +345,7 @@ namespace Server.Items
                     {
                         SpecialMove.SetCurrentMove(from, move);
                     }
-                    else
+                    else if (e.Target != null)
                     {
                         Mobile to = World.FindMobile(e.Target.Serial);
                         Item toI = World.FindItem(e.Target.Serial);
@@ -373,7 +373,7 @@ namespace Server.Items
             }
             catch (Exception ex)
             {
-                Server.Diagnostics.ExceptionLogging.LogException(ex);
+                Diagnostics.ExceptionLogging.LogException(ex);
             }
         }
         #endregion

@@ -194,7 +194,7 @@ namespace Server.Engines.Craft
                     minSkill = 0;
 
                 AddHtmlLocalized(170, 132 + (i * 20), 200, 18, AosSkillBonuses.GetLabel(skill.SkillToMake), LabelColor, false, false);
-                AddLabel(430, 132 + (i * 20), LabelHue, String.Format("{0:F1}", minSkill));
+                AddLabel(430, 132 + (i * 20), LabelHue, string.Format("{0:F1}", minSkill));
             }
 
             CraftSubResCol res = (m_CraftItem.UseSubRes2 ? m_CraftSystem.CraftSubRes2 : m_CraftSystem.CraftSubRes);
@@ -215,7 +215,7 @@ namespace Server.Engines.Craft
                 chance = 1.0;
 
             AddHtmlLocalized(170, 80, 250, 18, 1044057, LabelColor, false, false); // Success Chance:
-            AddLabel(430, 80, LabelHue, String.Format("{0:F1}%", chance * 100));
+            AddLabel(430, 80, LabelHue, string.Format("{0:F1}%", chance * 100));
 
             if (m_ShowExceptionalChance)
             {
@@ -225,7 +225,7 @@ namespace Server.Engines.Craft
                     excepChance = 1.0;
 
                 AddHtmlLocalized(170, 100, 250, 18, 1044058, 32767, false, false); // Exceptional Chance:
-                AddLabel(430, 100, LabelHue, String.Format("{0:F1}%", excepChance * 100));
+                AddLabel(430, 100, LabelHue, string.Format("{0:F1}%", excepChance * 100));
             }
         }
 
@@ -244,6 +244,8 @@ namespace Server.Engines.Craft
             bool cropScroll = (m_CraftItem.Resources.Count > 1) &&
                               m_CraftItem.Resources.GetAt(m_CraftItem.Resources.Count - 1).ItemType == typeofBlankScroll &&
                               typeofSpellScroll.IsAssignableFrom(m_CraftItem.ItemType);
+
+            bool anvilOfArtifactCraft = m_CraftItem.IsAnvilOfArtifactValid(m_From, m_CraftSystem);
 
             for (int i = 0; i < m_CraftItem.Resources.Count - (cropScroll ? 1 : 0) && i < 4; i++)
             {
@@ -284,7 +286,14 @@ namespace Server.Engines.Craft
                 else
                     AddLabel(170, 219 + (i * 20), LabelHue, nameString);
 
-                AddLabel(430, 219 + (i * 20), LabelHue, craftResource.Amount.ToString());
+                var amount = craftResource.Amount;
+
+                if (anvilOfArtifactCraft)
+                {
+                    amount *= 10;
+                }
+
+                AddLabel(430, 219 + (i * 20), LabelHue, amount.ToString());
             }
 
             if (m_CraftItem.NameNumber == 1041267) // runebook

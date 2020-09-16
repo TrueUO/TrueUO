@@ -2,7 +2,6 @@ using Server.Engines.Quests;
 using Server.Engines.Quests.Collector;
 using Server.Items;
 using Server.Mobiles;
-using Server.Network;
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
@@ -224,7 +223,7 @@ namespace Server.Engines.Harvest
                         {
                             if (sp.Charydbis == null && !sp.HasSpawned && sp.CurrentLocation.Contains(loc))
                             {
-                                Server.Multis.BaseBoat boat = Server.Multis.BaseBoat.FindBoatAt(from, from.Map);
+                                Multis.BaseBoat boat = Multis.BaseBoat.FindBoatAt(from, from.Map);
                                 sp.SpawnCharydbis(from, loc, sp.Map, boat);
                                 sp.HasSpawned = true;
                                 pole.OnFishedHarvest(from, true);
@@ -286,7 +285,7 @@ namespace Server.Engines.Harvest
 
         private bool IsDeepWater(Point3D p, Map map)
         {
-            return Items.SpecialFishingNet.ValidateDeepWater(map, p.X, p.Y) && (map == Map.Trammel || map == Map.Felucca || map == Map.Tokuno);
+            return SpecialFishingNet.ValidateDeepWater(map, p.X, p.Y) && (map == Map.Trammel || map == Map.Felucca || map == Map.Tokuno);
         }
 
         public override bool CheckResources(Mobile from, Item tool, HarvestDefinition def, Map map, Point3D loc, bool timed)
@@ -636,13 +635,13 @@ namespace Server.Engines.Harvest
                         from.SendLocalizedMessage(1043297, "a fish");
                     }
                     else
-                        from.SendLocalizedMessage(1043297, String.Format("#{0}", item.LabelNumber));
+                        from.SendLocalizedMessage(1043297, string.Format("#{0}", item.LabelNumber));
 
                     return;
                 }
                 else if (item.LabelNumber > 0)
                 {
-                    from.SendLocalizedMessage(1043297, String.Format("#{0}", item.LabelNumber));
+                    from.SendLocalizedMessage(1043297, string.Format("#{0}", item.LabelNumber));
                     return;
                 }
                 else

@@ -1,6 +1,6 @@
+using Server.Engines.CityLoyalty;
 using Server.Mobiles;
 using Server.Items;
-
 using System;
 using System.Xml;
 using System.Collections.Generic;
@@ -33,12 +33,12 @@ namespace Server.Regions
 
         private static Region GetParent(Rectangle3D[] recs, Map map)
         {
-            return Region.Find(new Point3D(recs[0].Start.X, recs[0].Start.Y, recs[0].Start.Z), map);
+            return Find(new Point3D(recs[0].Start.X, recs[0].Start.Y, recs[0].Start.Z), map);
         }
 
         public override void OnEnter(Mobile m)
         {
-            if (m is PlayerMobile && m.CanBeginAction(typeof(Teleporter)))
+            if (m is PlayerMobile && m.CanBeginAction(typeof(Teleporter)) && !CityTradeSystem.HasTrade(m))
             {
                 DoTeleport(m);
             }
@@ -62,6 +62,7 @@ namespace Server.Regions
                     {
                         BaseCreature.TeleportPets(m, destinationPoint, destinationMap);
                         m.MoveToWorld(destinationPoint, destinationMap);
+
                         m.Frozen = false;
 
                         Timer.DelayCall(TimeSpan.FromMilliseconds(250), () => m.EndAction(typeof(Teleporter)));
@@ -118,12 +119,12 @@ namespace Server.Regions
 
                     if (fromMap == null)
                     {
-                        throw new ArgumentException(String.Format("Map parsed as null: {0}", from));
+                        throw new ArgumentException(string.Format("Map parsed as null: {0}", from));
                     }
 
                     if (toMap == null)
                     {
-                        throw new ArgumentException(String.Format("Map parsed as null: {0}", to));
+                        throw new ArgumentException(string.Format("Map parsed as null: {0}", to));
                     }
 
                     if (Siege.SiegeShard && (fromMap == Map.Trammel || toMap == Map.Trammel))

@@ -3,6 +3,7 @@ using Server.Engines.Points;
 using Server.Engines.SeasonalEvents;
 using Server.Items;
 using Server.Mobiles;
+
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -99,7 +100,10 @@ namespace Server.Engines.CityLoyalty
         public static readonly TimeSpan LoveAtrophyDuration = TimeSpan.FromHours(40);
         public static Map SystemMap => Siege.SiegeShard ? Map.Felucca : Map.Trammel;
 
-        public override TextDefinition Name => new TextDefinition(String.Format("{0}", City.ToString()));
+        public bool ArtisanFestivalActive => SeasonalEventSystem.IsActive(EventType.ArtisanFestival);
+        public static readonly bool AwakeingEventActive = false;
+
+        public override TextDefinition Name => new TextDefinition(string.Format("{0}", City.ToString()));
         public override bool AutoAdd => false;
         public override double MaxPoints => double.MaxValue;
         public override PointsType Loyalty => PointsType.None;
@@ -259,9 +263,6 @@ namespace Server.Engines.CityLoyalty
         {
             City = city;
 
-            if (Cities == null)
-                Cities = new List<CityLoyaltySystem>();
-
             Election = new CityElection(this);
             CitizenWait = new Dictionary<Mobile, DateTime>();
 
@@ -372,18 +373,24 @@ namespace Server.Engines.CityLoyalty
                 entry.Hate -= (int)convert;
             }
 
-            // TODO: Re-Enable this for The Awakening Event
-            /*foreach (CityLoyaltySystem sys in Cities.Where(s => s.City != this.City))
-			{
-                CityLoyaltyEntry e = sys.GetPlayerEntry<CityLoyaltyEntry>(from, true);
+            if (AwakeingEventActive)
+            {
+                foreach (CityLoyaltySystem sys in Cities.Where(s => s.City != this.City))
+                {
+                    CityLoyaltyEntry e = sys.GetPlayerEntry<CityLoyaltyEntry>(from, true);
 
-				if(e.Love > 10)
-				{
-					double convert = e.Love / 75;
-                    e.Love -= (int)convert;
-                    e.Neutrality += (int)convert;
-				}
-			}*/
+                    if (e.Love > 10)
+                    {
+                        double convert = (double)e.Love / 75.0;
+
+                        if (convert > 0.0)
+                        {
+                            e.Love -= (int)convert;
+                            e.Neutrality += (int)convert;
+                        }
+                    }
+                }
+            }
 
             if (message && entry.ShowGainMessage)
             {
@@ -675,7 +682,7 @@ namespace Server.Engines.CityLoyalty
 
         private static DateTime _NextAtrophy;
 
-        public static List<CityLoyaltySystem> Cities { get; private set; }
+        public static List<CityLoyaltySystem> Cities { get; private set; } = new List<CityLoyaltySystem>();
 
         public static bool HasTradeDeal(Mobile m, TradeDeal deal)
         {
@@ -738,17 +745,17 @@ namespace Server.Engines.CityLoyalty
         {
             switch (deal)
             {
-                case TradeDeal.OrderOfEngineers: m.AddStatMod(new StatMod(StatType.Dex, String.Format("TradeDeal_{0}", StatType.Dex), 3, TimeSpan.Zero)); break;
-                case TradeDeal.MiningCooperative: m.AddStatMod(new StatMod(StatType.Str, String.Format("TradeDeal_{0}", StatType.Str), 3, TimeSpan.Zero)); break;
-                case TradeDeal.LeagueOfRangers: m.AddStatMod(new StatMod(StatType.Int, String.Format("TradeDeal_{0}", StatType.Int), 3, TimeSpan.Zero)); break;
+                case TradeDeal.OrderOfEngineers: m.AddStatMod(new StatMod(StatType.Dex, string.Format("TradeDeal_{0}", StatType.Dex), 3, TimeSpan.Zero)); break;
+                case TradeDeal.MiningCooperative: m.AddStatMod(new StatMod(StatType.Str, string.Format("TradeDeal_{0}", StatType.Str), 3, TimeSpan.Zero)); break;
+                case TradeDeal.LeagueOfRangers: m.AddStatMod(new StatMod(StatType.Int, string.Format("TradeDeal_{0}", StatType.Int), 3, TimeSpan.Zero)); break;
             }
         }
 
         public static void RemoveTradeDeal(Mobile m)
         {
-            m.RemoveStatMod(String.Format("TradeDeal_{0}", StatType.Dex));
-            m.RemoveStatMod(String.Format("TradeDeal_{0}", StatType.Str));
-            m.RemoveStatMod(String.Format("TradeDeal_{0}", StatType.Int));
+            m.RemoveStatMod(string.Format("TradeDeal_{0}", StatType.Dex));
+            m.RemoveStatMod(string.Format("TradeDeal_{0}", StatType.Str));
+            m.RemoveStatMod(string.Format("TradeDeal_{0}", StatType.Int));
         }
 
         public static void OnBODTurnIn(Mobile from, int gold)
@@ -824,22 +831,24 @@ namespace Server.Engines.CityLoyalty
 
                 if (DateTime.UtcNow > _NextAtrophy)
                 {
-                    // TODO: Re-Enable this for The Awakening Event
-                    /*sys.PlayerTable.ForEach(t =>
+                    if (AwakeingEventActive)
                     {
-                        CityLoyaltyEntry entry = t as CityLoyaltyEntry;
-
-                        if (entry != null && entry.Player != null)
+                        sys.PlayerTable.ForEach(t =>
                         {
-                            PlayerMobile owner = entry.Player;
+                            CityLoyaltyEntry entry = t as CityLoyaltyEntry;
 
-                            entry.Neutrality -= entry.Neutrality / 50;
-                            entry.Hate -= entry.Hate / 50;
+                            if (entry != null && entry.Player != null)
+                            {
+                                PlayerMobile owner = entry.Player;
 
-                            if (owner.LastOnline + LoveAtrophyDuration < DateTime.UtcNow)
-                                entry.Love -= entry.Love / 75;
-                        }
-                    });*/
+                                entry.Neutrality -= entry.Neutrality / 50;
+                                entry.Hate -= entry.Hate / 50;
+
+                                if (owner.LastOnline + LoveAtrophyDuration < DateTime.UtcNow)
+                                    entry.Love -= entry.Love / 75;
+                            }
+                        });
+                    }
 
                     _NextAtrophy = DateTime.UtcNow + TimeSpan.FromDays(1);
                 }
@@ -882,20 +891,11 @@ namespace Server.Engines.CityLoyalty
 
         public static bool HasCitizenship(Mobile from)
         {
-            foreach (CityLoyaltySystem sys in Cities)
-            {
-                if (sys.IsCitizen(from))
-                    return true;
-            }
-
-            return false;
+            return Cities.Any(sys => sys.IsCitizen(from));
         }
 
         public static bool HasCitizenship(Mobile from, City city)
         {
-            if (Cities == null)
-                return false;
-
             CityLoyaltySystem sys = Cities.FirstOrDefault(s => s.City == city);
 
             return sys != null && sys.IsCitizen(from);
@@ -903,9 +903,6 @@ namespace Server.Engines.CityLoyalty
 
         public static CityLoyaltySystem GetCitizenship(Mobile from, bool staffIsCitizen = true)
         {
-            if (Cities == null)
-                return null;
-
             return Cities.FirstOrDefault(sys => sys.IsCitizen(from, staffIsCitizen));
         }
 
@@ -919,10 +916,10 @@ namespace Server.Engines.CityLoyalty
                 {
                     CityLoyaltyEntry entry = city.GetPlayerEntry<CityLoyaltyEntry>(pm, true);
 
-                    if (entry != null && !String.IsNullOrEmpty(entry.CustomTitle))
+                    if (entry != null && !string.IsNullOrEmpty(entry.CustomTitle))
                     {
-                        prefix = String.Format("{0} {1} the {2}", prefix, pm.Name, entry.CustomTitle);
-                        list.Add(1154017, String.Format("{0}\t{1}", prefix, city.Definition.Name)); // ~1_TITLE~ of ~2_CITY~
+                        prefix = string.Format("{0} {1} the {2}", prefix, pm.Name, entry.CustomTitle);
+                        list.Add(1154017, string.Format("{0}\t{1}", prefix, city.Definition.Name)); // ~1_TITLE~ of ~2_CITY~
                         return true;
                     }
                 }
@@ -945,8 +942,8 @@ namespace Server.Engines.CityLoyalty
             {
                 CityLoyaltyEntry entry = city.GetPlayerEntry<CityLoyaltyEntry>(pm, true);
 
-                if (entry != null && !String.IsNullOrEmpty(entry.CustomTitle))
-                    str = String.Format("{0}\t{1}", entry.CustomTitle, city.Definition.Name);
+                if (entry != null && !string.IsNullOrEmpty(entry.CustomTitle))
+                    str = string.Format("{0}\t{1}", entry.CustomTitle, city.Definition.Name);
             }
 
             return str != null;
@@ -1083,22 +1080,22 @@ namespace Server.Engines.CityLoyalty
             new LoyaltyRating[] { LoyaltyRating.Commended }, 																		// Tier 1
 			new LoyaltyRating[] { LoyaltyRating.Esteemed, LoyaltyRating.Respected }, 												// Tier 2
 			new LoyaltyRating[] { LoyaltyRating.Honored, LoyaltyRating.Admired, LoyaltyRating.Adored }, 							// Tier 3
-			new LoyaltyRating[] { LoyaltyRating.Lauded, LoyaltyRating.Exalted, LoyaltyRating.Revered, LoyaltyRating.Venerated  },// Tier 4
+			new LoyaltyRating[] { LoyaltyRating.Lauded, LoyaltyRating.Exalted, LoyaltyRating.Revered, LoyaltyRating.Venerated  },   // Tier 4
 		};
 
         public static LoyaltyRating[][] _HateLoyaltyTable =
         {
             new LoyaltyRating[] { LoyaltyRating.Disfavored }, 																		// Tier 1
-			new LoyaltyRating[] { LoyaltyRating.Disliked, LoyaltyRating.Detested }, 													// Tier 2
+			new LoyaltyRating[] { LoyaltyRating.Disliked, LoyaltyRating.Detested }, 											    // Tier 2
 			new LoyaltyRating[] { LoyaltyRating.Loathed, LoyaltyRating.Despised, LoyaltyRating.Reviled }, 							// Tier 3
-			new LoyaltyRating[] { LoyaltyRating.Scorned, LoyaltyRating.Shunned, LoyaltyRating.Villified, LoyaltyRating.Abhorred  }, 	// Tier 4
+			new LoyaltyRating[] { LoyaltyRating.Scorned, LoyaltyRating.Shunned, LoyaltyRating.Villified, LoyaltyRating.Abhorred  }, // Tier 4
 		};
 
         public static LoyaltyRating[][] _NuetralLoyaltyTable =
         {
             new LoyaltyRating[] { LoyaltyRating.Doubted }, 							// Tier 1
 			new LoyaltyRating[] { LoyaltyRating.Distrusted }, 						// Tier 2
-			new LoyaltyRating[] { LoyaltyRating.Disgraced }, 							// Tier 3
+			new LoyaltyRating[] { LoyaltyRating.Disgraced }, 						// Tier 3
 			new LoyaltyRating[] { LoyaltyRating.Denigrated }, 						// Tier 4
 		};
 
@@ -1147,7 +1144,7 @@ namespace Server.Engines.CityLoyalty
             if (gold > 0)
             {
                 origin.AddToTreasury(from, gold);
-                from.SendLocalizedMessage(1154761, String.Format("{0}\t{1}", gold.ToString("N0", CultureInfo.GetCultureInfo("en-US")), origin.Definition.Name)); // ~1_val~ gold has been deposited into the ~2_NAME~ City treasury for your efforts!
+                from.SendLocalizedMessage(1154761, string.Format("{0}\t{1}", gold.ToString("N0", CultureInfo.GetCultureInfo("en-US")), origin.Definition.Name)); // ~1_val~ gold has been deposited into the ~2_NAME~ City treasury for your efforts!
             }
 
             if (entry.Distance > 0)
@@ -1160,7 +1157,7 @@ namespace Server.Engines.CityLoyalty
 
             if (CityTradeSystem.KrampusEncounterActive)
             {
-                KrampusEncounter.Encounter.OnTradeComplete(from, entry);
+                KrampusEvent.Instance.OnTradeComplete(from, entry);
             }
         }
 
@@ -1308,18 +1305,6 @@ namespace Server.Engines.CityLoyalty
                         Board = new CityMessageBoard(City, 0xA0C5);
                         Board.MoveToWorld(Definition.BoardLocation, SystemMap);
                         Console.WriteLine("City Message Board for {0} Converted!", City.ToString());
-                        /*if (Board != null)
-                        {
-                            //Board.ItemID = 0xA0C5;
-                            //board.MoveToWorld(Definition.BoardLocation, SystemMap);
-
-
-                            Console.WriteLine("City Message Board for {0} Converted!", City.ToString());
-                        }
-                        else
-                        {
-                            Console.WriteLine("City Message Board for {0} not found!", City.ToString());
-                        }*/
                     });
             }
         }

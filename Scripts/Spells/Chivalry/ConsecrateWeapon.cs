@@ -107,11 +107,11 @@ namespace Server.Spells.Chivalry
                 }
 
                 weapon.ConsecratedContext = context;
-                context.Timer = Timer.DelayCall<Mobile>(duration, RemoveEffects, Caster);
+                context.Timer = Timer.DelayCall(duration, RemoveEffects, Caster);
 
                 m_Table[Caster] = context;
 
-                BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.ConsecrateWeapon, 1151385, 1151386, duration, Caster, String.Format("{0}\t{1}", context.ConsecrateProcChance, context.ConsecrateDamageBonus)));
+                BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.ConsecrateWeapon, 1151385, 1151386, duration, Caster, string.Format("{0}\t{1}", context.ConsecrateProcChance, context.ConsecrateDamageBonus)));
             }
 
             FinishSequence();

@@ -121,6 +121,41 @@ namespace Server.Items
         }
     }
 
+    public class Shochu : BaseBeverage
+    {
+        public override int LabelNumber => 1075497; // Shochu
+        public override int MaxQuantity => 5;
+
+        [Constructable]
+        public Shochu()
+            : base(0x1956)
+        {
+            Hue = 700;
+            LootType = LootType.Blessed;
+        }
+
+        public override int ComputeItemID()
+        {
+            return 0x1956;
+        }
+
+        public Shochu(Serial serial)
+            : base(serial)
+        {
+        }
+
+        public override void Serialize(GenericWriter writer)
+        {
+            base.Serialize(writer);
+            writer.Write(0); // version
+        }
+        public override void Deserialize(GenericReader reader)
+        {
+            base.Deserialize(reader);
+            reader.ReadInt();
+        }
+    }
+
     public class Jug : BaseBeverage
     {
         public override int BaseLabelNumber => 1042965;// a jug of Ale
@@ -866,7 +901,7 @@ namespace Server.Items
         {
             if (_Resource > CraftResource.Iron)
             {
-                list.Add(1053099, "#{0}\t{1}", CraftResources.GetLocalizationNumber(_Resource), String.Format("#{0}", LabelNumber.ToString())); // ~1_oretype~ ~2_armortype~
+                list.Add(1053099, "#{0}\t{1}", CraftResources.GetLocalizationNumber(_Resource), string.Format("#{0}", LabelNumber.ToString())); // ~1_oretype~ ~2_armortype~
             }
             else
             {
@@ -1486,7 +1521,7 @@ namespace Server.Items
 
         protected bool CheckType(string name)
         {
-            return (World.LoadingType == String.Format("Server.Items.{0}", name));
+            return (World.LoadingType == string.Format("Server.Items.{0}", name));
         }
 
         public override void Deserialize(GenericReader reader)

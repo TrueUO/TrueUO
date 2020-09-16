@@ -64,7 +64,7 @@ namespace Server.Spells.Necromancy
 
         public void ApplyEffects(Mobile m, double strength = 1.0)
         {
-            //SpellHelper.CheckReflect( (int)this.Circle, Caster, ref m );	//Irrelevent after AoS
+            SpellHelper.CheckReflect(this, Caster, ref m);
 
             /* Temporarily chokes off the air suply of the target with poisonous fumes.
              * The target is inflicted with poison damage over time.
@@ -87,7 +87,7 @@ namespace Server.Spells.Necromancy
             m.FixedParticles(0x36CB, 1, 9, 9911, 67, 5, EffectLayer.Head);
             m.FixedParticles(0x374A, 1, 17, 9502, 1108, 4, (EffectLayer)255);
 
-            if (Server.Spells.Mysticism.StoneFormSpell.CheckImmunity(m))
+            if (Mysticism.StoneFormSpell.CheckImmunity(m))
             {
                 Caster.SendLocalizedMessage(1095250); // Your target resists strangle.
             }
@@ -104,7 +104,7 @@ namespace Server.Spells.Necromancy
                     spiritlevel = 4;
                 int d_MinDamage = (int)(4.0 * strength);
                 int d_MaxDamage = (int)(((spiritlevel + 1) * 3) * strength);
-                string args = String.Format("{0}\t{1}", d_MinDamage, d_MaxDamage);
+                string args = string.Format("{0}\t{1}", d_MinDamage, d_MaxDamage);
 
                 int i_Count = (int)spiritlevel;
                 int i_MaxCount = i_Count;

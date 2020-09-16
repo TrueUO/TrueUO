@@ -33,7 +33,7 @@ namespace Server.Engines.CityLoyalty
         public override double MaxPoints => double.MaxValue;
         public override bool ShowOnLoyaltyGump => false;
 
-        public static bool KrampusEncounterActive => KrampusEncounter.Enabled && KrampusEncounter.Encounter != null;
+        public static bool KrampusEncounterActive => KrampusEvent.Instance.Running;
 
         public static Dictionary<Mobile, TradeOrderCrate> ActiveTrades { get; private set; }
         public static Dictionary<BaseCreature, DateTime> Ambushers { get; private set; }
@@ -84,15 +84,15 @@ namespace Server.Engines.CityLoyalty
             {
                 minister.SayTo(from, 1151722); // It appears you are already delivering a trade order. Deliver your current order before requesting another.
             }
-            else if (KrampusEncounterActive && (KrampusEncounter.Encounter.Krampus != null || KrampusEncounter.Encounter.KrampusSpawning))
+            else if (KrampusEncounterActive && (KrampusEvent.Instance.Krampus != null || KrampusEvent.Instance.KrampusSpawning))
             {
-                Point3D p = KrampusEncounter.Encounter.SpawnLocation;
-                Map map = KrampusEncounter.Encounter.SpawnMap;
+                Point3D p = KrampusEvent.Instance.SpawnLocation;
+                Map map = KrampusEvent.Instance.SpawnMap;
 
                 minister.SayTo(
                     from,
                     1158790,
-                    String.Format("{0}\t{1}",
+                    string.Format("{0}\t{1}",
                     WorldLocationInfo.GetLocationString(p, map),
                     Sextant.GetCoords(p, map)), 1150);
                 // Take notice! The vile Krampus has been spotted near ~2_where~ at ~1_coords~!  New Trade Orders are suspended until Krampus has been defeated!
@@ -157,7 +157,7 @@ namespace Server.Engines.CityLoyalty
             TradeMinister minister = turninMobile as TradeMinister;
 
             if (from.AccessLevel == AccessLevel.Player && minister != null && minister.City != entry.Destination)
-                turninMobile.SayTo(from, 1151738, String.Format("#{0}", CityLoyaltySystem.GetCityLocalization(entry.Destination))); // Begging thy pardon, but those goods are destined for the City of ~1_city~
+                turninMobile.SayTo(from, 1151738, string.Format("#{0}", CityLoyaltySystem.GetCityLocalization(entry.Destination))); // Begging thy pardon, but those goods are destined for the City of ~1_city~
             else if (!order.Fulfilled)
                 turninMobile.SayTo(from, 1151732); // This trade order has not been fulfilled.  Fill the trade order with all necessary items and try again.
             else
@@ -229,7 +229,7 @@ namespace Server.Engines.CityLoyalty
         public override void OnPlayerAdded(PlayerMobile m)
         {
             m.Backpack.DropItem(new MysteriousNote());
-            m.PrivateOverheadMessage(Server.Network.MessageType.Regular, 1150, 1151734, m.NetState); // *A passerby slips a rolled bit of parchment into your hand...*
+            m.PrivateOverheadMessage(Network.MessageType.Regular, 1150, 1151734, m.NetState); // *A passerby slips a rolled bit of parchment into your hand...*
         }
 
         public static void CancelTradeOrder(Mobile from, TradeOrderCrate crate)
@@ -239,15 +239,24 @@ namespace Server.Engines.CityLoyalty
 
             if (from != null)
             {
-                crate.Items.ForEach(i =>
+                var items = new List<Item>(crate.Items);
+
+                for (int i = 0; i < items.Count; i++)
                 {
-                    from.Backpack.DropItem(i);
-                });
+                    from.Backpack.DropItem(items[i]);
+                }
 
-                CityTradeEntry entry = CityLoyaltySystem.CityTrading.GetPlayerEntry<CityTradeEntry>(from as PlayerMobile, true);
+                ColUtility.Free(items);
 
-                if (entry != null)
-                    entry.Canceled++;
+                if (from is PlayerMobile pm)
+                {
+                    CityTradeEntry entry = CityLoyaltySystem.CityTrading.GetPlayerEntry<CityTradeEntry>(pm, true);
+
+                    if (entry != null)
+                    {
+                        entry.Canceled++;
+                    }
+                }
             }
 
             crate.Delete();
@@ -293,7 +302,7 @@ namespace Server.Engines.CityLoyalty
             }
         }
 
-        public static void OnPublicMoongateUsed(Mobile from)
+        public static void OnQuickTravelUsed(Mobile from)
         {
             if (ActiveTrades.ContainsKey(from))
             {
@@ -530,7 +539,7 @@ namespace Server.Engines.CityLoyalty
                 }
             }
 
-            m.LocalOverheadMessage(Server.Network.MessageType.Regular, 1150, 1155479); // *Your keen senses alert you to an incoming ambush of attackers!*
+            m.LocalOverheadMessage(Network.MessageType.Regular, 1150, 1155479); // *Your keen senses alert you to an incoming ambush of attackers!*
             m.SendLocalizedMessage(1049330, "", 0x22); // You have been ambushed! Fight for your honor!!!
         }
 
@@ -538,7 +547,7 @@ namespace Server.Engines.CityLoyalty
         {
             if (KrampusEncounterActive)
             {
-                return KrampusEncounter.Encounter.GetCreatureTypes(m, wet);
+                return KrampusEvent.Instance.GetCreatureTypes(m, wet);
             }
 
             return wet ? _SeaTypes : _LandTypes;

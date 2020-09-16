@@ -121,8 +121,8 @@ namespace Server.Engines.Points
                     switch (tmap.Level)
                     {
                         default:
-                        case 0:
-                        case 1: return 50;
+                        case 0: return 50;
+                        case 1: return 100;
                         case 2: return 250;
                         case 3: return 750;
                         case 4: return 1000;
@@ -867,7 +867,7 @@ namespace Server.Engines.Points
                 PointsExchange[a.Username] = 0;
                 AwardPoints(m, points, false, false);
 
-                m.SendLocalizedMessage(1158453, String.Format("{0}\t{1}", points.ToString("N0"), ((int)GetPoints(m)).ToString("N0"))); // You have withdrawn ~1_VALUE~ Cleanup Britannia Points.  You now have ~2_VALUE~ points.
+                m.SendLocalizedMessage(1158453, string.Format("{0}\t{1}", points.ToString("N0"), ((int)GetPoints(m)).ToString("N0"))); // You have withdrawn ~1_VALUE~ Cleanup Britannia Points.  You now have ~2_VALUE~ points.
                 return true;
             }
 

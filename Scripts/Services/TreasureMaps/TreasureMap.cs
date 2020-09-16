@@ -148,8 +148,8 @@ namespace Server.Items
         private static readonly Type[][] m_EodonSpawnTypes = new Type[][]
         {
             new Type[] { typeof(MyrmidexLarvae), typeof(SilverbackGorilla), typeof(Panther), typeof(WildTiger) },
-            new Type[] { typeof(AcidElemental), typeof(SandVortex), typeof(Lion), typeof(SabertoothedTiger) },
-            new Type[] { typeof(AcidElemental), typeof(SandVortex), typeof(Lion), typeof(SabertoothedTiger) },
+            new Type[] { typeof(AcidElemental), typeof(SandVortex), typeof(Lion), typeof(SabreToothedTiger) },
+            new Type[] { typeof(AcidElemental), typeof(SandVortex), typeof(Lion), typeof(SabreToothedTiger) },
             new Type[] { typeof(Infernus), typeof(FireElemental), typeof(Dimetrosaur), typeof(Saurosaurus) },
             new Type[] { typeof(Infernus), typeof(FireElemental), typeof(Dimetrosaur), typeof(Saurosaurus) },
             new Type[] { typeof(KotlAutomaton), typeof(MyrmidexDrone), typeof(Allosaurus), typeof(Triceratops) },
@@ -483,7 +483,7 @@ namespace Server.Items
                 }
             }
 
-            string n = (ld.Name ?? String.Empty).ToLower();
+            string n = (ld.Name ?? string.Empty).ToLower();
 
             if (n != "dirt" && n != "grass" && n != "jungle" && n != "forest" && n != "snow")
             {
@@ -500,7 +500,7 @@ namespace Server.Items
                     return false;
                 }
 
-                n = (td.Name ?? String.Empty).ToLower();
+                n = (td.Name ?? string.Empty).ToLower();
 
                 if (n != "dirt" && n != "grass" && n != "jungle" && n != "forest" && n != "snow")
                 {
@@ -682,7 +682,7 @@ namespace Server.Items
                 }
                 catch (Exception e)
                 {
-                    Server.Diagnostics.ExceptionLogging.LogException(e);
+                    Diagnostics.ExceptionLogging.LogException(e);
                     return null;
                 }
 

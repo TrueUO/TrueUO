@@ -106,7 +106,7 @@ namespace Server.Engines.Blackthorn
             }
             else
             {
-                title = String.Format("the {0}", Skills[specialty].Info.Title);
+                title = string.Format("the {0}", Skills[specialty].Info.Title);
                 if (Female && title.EndsWith("man"))
                     title = title.Substring(0, title.Length - 3) + "woman";
             }
@@ -456,7 +456,7 @@ namespace Server.Engines.Blackthorn
             {
                 Timer.DelayCall(TimeSpan.FromMilliseconds(i * 50), o =>
                 {
-                    Server.Misc.Geometry.Circle2D(Location, m, o, (pnt, map) =>
+                    Misc.Geometry.Circle2D(Location, m, o, (pnt, map) =>
                     {
                         Effects.SendLocationEffect(pnt, map, Utility.RandomBool() ? 14000 : 14013, 14, 20, 2018, 0);
                     });

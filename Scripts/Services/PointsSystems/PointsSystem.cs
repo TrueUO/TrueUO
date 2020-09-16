@@ -1,6 +1,8 @@
 using Server.Engines.ArenaSystem;
 using Server.Engines.CityLoyalty;
 using Server.Engines.SorcerersDungeon;
+using Server.Engines.Fellowship;
+using Server.Engines.JollyRoger;
 using Server.Engines.VvV;
 using Server.Misc;
 using Server.Mobiles;
@@ -34,6 +36,7 @@ namespace Server.Engines.Points
         SkaraBrae,
         NewMagincia,
         Vesper,
+        // End City Loyalty System
 
         Blackthorn,
         CleanUpBritannia,
@@ -137,7 +140,7 @@ namespace Server.Engines.Points
             if (quest)
                 from.SendLocalizedMessage(1113719, ((int)points).ToString(), 0x26); //You have received ~1_val~ loyalty points as a reward for completing the quest. 
             else
-                from.SendLocalizedMessage(1115920, String.Format("{0}\t{1}", Name.ToString(), ((int)points).ToString()));  // Your loyalty to ~1_GROUP~ has increased by ~2_AMOUNT~;Original
+                from.SendLocalizedMessage(1115920, string.Format("{0}\t{1}", Name.ToString(), ((int)points).ToString()));  // Your loyalty to ~1_GROUP~ has increased by ~2_AMOUNT~;Original
         }
 
         public virtual bool DeductPoints(Mobile from, double points, bool message = false)
@@ -153,7 +156,7 @@ namespace Server.Engines.Points
                 entry.Points -= points;
 
                 if (message)
-                    from.SendLocalizedMessage(1115921, String.Format("{0}\t{1}", Name.ToString(), ((int)points).ToString()));  // Your loyalty to ~1_GROUP~ has decreased by ~2_AMOUNT~;Original
+                    from.SendLocalizedMessage(1115921, string.Format("{0}\t{1}", Name.ToString(), ((int)points).ToString()));  // Your loyalty to ~1_GROUP~ has decreased by ~2_AMOUNT~;Original
             }
 
             return true;
@@ -332,7 +335,7 @@ namespace Server.Engines.Points
                         }
                         catch
                         {
-                            throw new Exception(String.Format("Points System Failed Load: {0} Last Loaded...", loaded.ToString()));
+                            throw new Exception(string.Format("Points System Failed Load: {0} Last Loaded...", loaded.ToString()));
                         }
                     }
                 });

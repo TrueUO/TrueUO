@@ -510,7 +510,7 @@ namespace Server.Items
                 {
                     checkLists = PMList.Lists;
                 }
-                else if (Server.Engines.VvV.VvVSigil.ExistsOn(mobile))
+                else if (Engines.VvV.VvVSigil.ExistsOn(mobile))
                 {
                     checkLists = PMList.SigilLists;
                 }
@@ -643,7 +643,7 @@ namespace Server.Items
                 m_Mobile.SendLocalizedMessage(1019004); // You are not allowed to travel there.
                 return;
             }
-            else if (Server.Engines.VvV.VvVSigil.ExistsOn(m_Mobile) && map != Server.Engines.VvV.ViceVsVirtueSystem.Facet)
+            else if (Engines.VvV.VvVSigil.ExistsOn(m_Mobile) && map != Engines.VvV.ViceVsVirtueSystem.Facet)
             {
                 m_Mobile.SendLocalizedMessage(1019004); // You are not allowed to travel there.
                 return;
@@ -674,7 +674,7 @@ namespace Server.Items
 
             Effects.PlaySound(entry.Location, map, 0x1FE);
 
-            CityTradeSystem.OnPublicMoongateUsed(m_Mobile);
+            CityTradeSystem.OnQuickTravelUsed(m_Mobile);
         }
 
         private void RenderPage(int index, int offset)

@@ -19,9 +19,6 @@ namespace Server.Services.TownCryer
         {
             base.AddGumpLayout();
 
-            //AddPage(1);
-            //AddImageTiled(58, 213, 397, 271, 0x24B2);
-
             if (Entry.Body.Number > 0)
             {
                 AddHtmlLocalized(58, 213, 397, 271, Entry.Body.Number, C32216(0x080808), false, true);
@@ -37,7 +34,7 @@ namespace Server.Services.TownCryer
             AddImage(468, 213, Entry.GumpImage);
             AddImage(50, 532, 0x60C);
 
-            if (!String.IsNullOrEmpty(Entry.InfoUrl))
+            if (!string.IsNullOrEmpty(Entry.InfoUrl))
             {
                 AddButton(147, 600, 0x627, 0x628, 1, GumpButtonType.Reply, 0);
             }
@@ -55,7 +52,7 @@ namespace Server.Services.TownCryer
                 case 0:
                     TownCryerGump gump = new TownCryerGump(User, Cryer);
                     gump.Category = TownCryerGump.GumpCategory.News;
-                    BaseGump.SendGump(gump);
+                    SendGump(gump);
                     break;
                 case 1:
                     User.LaunchBrowser(Entry.InfoUrl);
@@ -68,15 +65,23 @@ namespace Server.Services.TownCryer
                     }
                     else
                     {
-                        BaseQuest quest = QuestHelper.Construct(Entry.QuestType) as BaseQuest;
+                        BaseQuest quest = QuestHelper.Construct(Entry.QuestType);
 
-                        if (quest != null && (!QuestHelper.CheckDoneOnce(User, quest, Cryer, true) || User.AccessLevel > AccessLevel.Player))
+                        if (quest != null)
                         {
                             quest.Owner = User;
                             quest.Quester = Cryer;
 
-                            User.CloseGump(typeof(MondainQuestGump));
-                            User.SendGump(new MondainQuestGump(quest));
+                            if (quest.CanOffer() && (!QuestHelper.CheckDoneOnce(User, quest, Cryer, true) || User.AccessLevel > AccessLevel.Player))
+                            {
+                                User.CloseGump(typeof(MondainQuestGump));
+                                User.SendGump(new MondainQuestGump(quest));
+                            }
+                            else
+                            {
+                                quest.Owner = null;
+                                quest.Quester = null;
+                            }
                         }
                     }
                     break;

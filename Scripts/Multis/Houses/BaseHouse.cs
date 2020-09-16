@@ -1242,6 +1242,47 @@ namespace Server.Multis
             typeof(PotionKeg)
         };
 
+        public virtual bool IsStairArea(Point3D p)
+        {
+            bool frontStairs;
+            return IsStairArea(p, out frontStairs);
+        }
+
+        public virtual bool IsStairArea(Point3D p, out bool frontStairs)
+        {
+            MultiComponentList mcl = Components;
+
+            int x = p.X - (X + mcl.Min.X);
+            int y = p.Y - (Y + mcl.Min.Y);
+
+            StaticTile[] tiles = mcl.Tiles[x][y];
+            int dir = 0;
+            frontStairs = false;
+
+            if (tiles.Length == 1)
+            {
+                var id = tiles[0].ID & TileData.MaxItemValue;
+
+                if (HouseFoundation.IsStair(id, ref dir) || HouseFoundation.IsStairBlock(id))
+                {
+                    frontStairs = true;
+                    return true;
+                }
+            }
+
+            for (int j = 0; j < tiles.Length; ++j)
+            {
+                int id = tiles[j].ID & TileData.MaxItemValue;
+
+                if (HouseFoundation.IsStair(id, ref dir) || HouseFoundation.IsStairBlock(id))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public virtual bool IsInside(Point3D p, int height)
         {
             if (Deleted)
@@ -2059,7 +2100,7 @@ namespace Server.Multis
                 bool valid = m_House != null && Sextant.Format(m_House.Location, m_House.Map, ref xLong, ref yLat, ref xMins, ref yMins, ref xEast, ref ySouth);
 
                 if (valid)
-                    location = String.Format("{0}° {1}'{2}, {3}° {4}'{5}", yLat, yMins, ySouth ? "S" : "N", xLong, xMins, xEast ? "E" : "W");
+                    location = string.Format("{0}° {1}'{2}, {3}° {4}'{5}", yLat, yMins, ySouth ? "S" : "N", xLong, xMins, xEast ? "E" : "W");
                 else
                     location = "unknown";
 
@@ -4007,7 +4048,7 @@ namespace Server.Multis
                     }
                     else
                     {
-                        m.SendMessage("You already own {0} houses, you may not place any more!", BaseHouse.AccountHouseLimit.ToString());
+                        m.SendMessage("You already own {0} houses, you may not place any more!", AccountHouseLimit.ToString());
                     }
                 }
 

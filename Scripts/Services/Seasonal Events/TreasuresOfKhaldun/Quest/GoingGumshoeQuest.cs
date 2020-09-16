@@ -9,8 +9,6 @@ namespace Server.Engines.Khaldun
 {
     public class GoingGumshoeQuest : BaseQuest
     {
-        public override bool DoneOnce => true;
-
         /* Going Gumshoe */
         public override object Title => 1158588;
 
@@ -52,6 +50,13 @@ namespace Server.Engines.Khaldun
             int version = reader.ReadInt();
         }
 
+        public override bool CanOffer()
+        {
+            return !QuestHelper.HasQuest<GoingGumshoeQuest2>(Owner) &&
+                !QuestHelper.HasQuest<GoingGumshoeQuest3>(Owner) &&
+                !QuestHelper.HasQuest<GoingGumshoeQuest4>(Owner);
+        }
+
         private class InternalObjective : BaseObjective
         {
             public override object ObjectiveDescription => Quest.Uncomplete;
@@ -79,8 +84,6 @@ namespace Server.Engines.Khaldun
 
     public class GoingGumshoeQuest2 : BaseQuest
     {
-        public override bool DoneOnce => true;
-
         /* Going Gumshoe */
         public override object Title => 1158588;
 
@@ -234,8 +237,6 @@ namespace Server.Engines.Khaldun
 
     public class GoingGumshoeQuest3 : BaseQuest
     {
-        public override bool DoneOnce => true;
-
         /* Going Gumshoe */
         public override object Title => 1158588;
 
@@ -318,7 +319,7 @@ namespace Server.Engines.Khaldun
                     {
                         quest.FoundCipherBook = true;
 
-                        from.PrivateOverheadMessage(Server.Network.MessageType.Regular, 0x47E, 1158713, from.NetState);
+                        from.PrivateOverheadMessage(Network.MessageType.Regular, 0x47E, 1158713, from.NetState);
                         // *You find the cipher text hidden among the books! Return to the Cryptologist to tell him where it is!*
 
                         Region region = Region.Find(from.Location, from.Map);
@@ -407,8 +408,8 @@ namespace Server.Engines.Khaldun
             public QuestRegion()
                 : base("Going Gumshoe Quest Region",
                         Map.Trammel,
-                        Region.DefaultPriority,
-                        GoingGumshoeQuest3.Bounds)
+                        DefaultPriority,
+                        Bounds)
             {
                 Register();
             }
@@ -425,7 +426,7 @@ namespace Server.Engines.Khaldun
 
                     if (quest != null && !quest.FoundCipherBook && 0.2 > Utility.RandomDouble())
                     {
-                        Rectangle2D rec = GoingGumshoeQuest3.Bounds.FirstOrDefault(b => b.Contains(m.Location));
+                        Rectangle2D rec = Bounds.FirstOrDefault(b => b.Contains(m.Location));
 
                         if (rec.Contains(quest.BookCase) && CanGiveMessage(m))
                         {
@@ -473,8 +474,6 @@ namespace Server.Engines.Khaldun
 
     public class GoingGumshoeQuest4 : BaseQuest
     {
-        public override bool DoneOnce => true;
-
         /* Going Gumshoe */
         public override object Title => 1158588;
 
@@ -522,6 +521,8 @@ namespace Server.Engines.Khaldun
             }
 
             base.GiveRewards();
+
+            Owner.DoneQuests.Add(new QuestRestartInfo(typeof(GoingGumshoeQuest), TimeSpan.Zero));
         }
 
         public override void Serialize(GenericWriter writer)

@@ -1,4 +1,5 @@
 #region References
+using Server.Engines.CityLoyalty;
 using Server.Mobiles;
 using Server.Network;
 using Server.Spells;
@@ -227,6 +228,12 @@ namespace Server.Items
                 return false;
             }
 
+            if (CityTradeSystem.HasTrade(m))
+            {
+                m.SendLocalizedMessage(1151733); // You cannot do that while carrying a Trade Order.
+                return false;
+            }
+
             return true;
         }
 
@@ -306,7 +313,7 @@ namespace Server.Items
             }
 
             BaseCreature.TeleportPets(m, p, map);
-            m.MoveToWorld(p, map);
+            m.MoveToWorld(p, map);                     
 
             if (m_DestEffect && sendEffect)
             {
@@ -606,7 +613,7 @@ namespace Server.Items
             {
                 Mobile m = e.Mobile;
 
-                if (!m.InRange(GetWorldLocation(), m_Range) || Server.Engines.CityLoyalty.CityTradeSystem.HasTrade(m))
+                if (!m.InRange(GetWorldLocation(), m_Range) || CityTradeSystem.HasTrade(m))
                 {
                     return;
                 }
@@ -753,16 +760,16 @@ namespace Server.Items
             if (ts.TotalHours >= 1)
             {
                 int h = (int)Math.Round(ts.TotalHours);
-                return String.Format("{0} hour{1}", h, (h == 1) ? "" : "s");
+                return string.Format("{0} hour{1}", h, (h == 1) ? "" : "s");
             }
             else if (ts.TotalMinutes >= 1)
             {
                 int m = (int)Math.Round(ts.TotalMinutes);
-                return String.Format("{0} minute{1}", m, (m == 1) ? "" : "s");
+                return string.Format("{0} minute{1}", m, (m == 1) ? "" : "s");
             }
 
             int s = Math.Max((int)Math.Round(ts.TotalSeconds), 0);
-            return String.Format("{0} second{1}", s, (s == 1) ? "" : "s");
+            return string.Format("{0} second{1}", s, (s == 1) ? "" : "s");
         }
 
         public override void StartTeleport(Mobile m)
@@ -1415,7 +1422,7 @@ namespace Server.Items
         {
             if (!from.InRange(Location, 3) || !from.InLOS(this) || !from.CanSee(this))
             {
-                from.LocalOverheadMessage(Network.MessageType.Regular, 0x3B2, 1019045); // I can't reach that.
+                from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1019045); // I can't reach that.
             }
             else
             {

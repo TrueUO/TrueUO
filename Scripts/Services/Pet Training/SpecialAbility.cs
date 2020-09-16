@@ -538,7 +538,7 @@ namespace Server.Mobiles
 
             if (def.AttacksMultipleTargets)
             {
-                List<Mobile> list = Server.Spells.SpellHelper.AcquireIndirectTargets(creature, target, creature.Map, 5).OfType<Mobile>().Where(m => m.InRange(creature.Location, MaxRange)).ToList();
+                List<Mobile> list = Spells.SpellHelper.AcquireIndirectTargets(creature, target, creature.Map, 5).OfType<Mobile>().Where(m => m.InRange(creature.Location, MaxRange)).ToList();
 
                 for (int i = 0; i < 5; i++)
                 {
@@ -600,7 +600,7 @@ namespace Server.Mobiles
 
         public void BreathDealDamage(BaseCreature creature, Mobile target, DragonBreathDefinition def)
         {
-            if (!Server.Spells.Bushido.Evasion.CheckSpellEvasion(target))
+            if (!Spells.Bushido.Evasion.CheckSpellEvasion(target))
             {
                 AOS.Damage(
                     target,
@@ -1206,7 +1206,7 @@ namespace Server.Mobiles
 
         public override void DoEffects(BaseCreature creature, Mobile defender, ref int damage)
         {
-            Server.Effects.SendBoltEffect(defender, true);
+            Effects.SendBoltEffect(defender, true);
             AOS.Damage(defender, creature, Utility.RandomMinMax(15, 20), 0, 0, 0, 0, 100);
         }
     }
@@ -1520,46 +1520,58 @@ namespace Server.Mobiles
         public override void DoEffects(BaseCreature creature, Mobile defender, ref int damage)
         {
             if (_Table != null && _Table.ContainsKey(defender))
+            {
                 return;
+            }
 
-            else if (_Table == null)
+            if (_Table == null)
+            {
                 _Table = new Dictionary<Mobile, InternalTimer>();
+            }
 
-            defender.PlaySound(0x1324);
-            defender.SendLocalizedMessage(1234567); // The creature gives you a particular vicious bite.
-            Effects.SendLocationParticles(EffectItem.Create(defender.Location, defender.Map, EffectItem.DefaultDuration), 0x37CC, 1, 40, 97, 3, 9917, 0);
+            defender.SendLocalizedMessage(1112472); // You've suffered a vicious bite!
+            defender.SendLocalizedMessage(1113211); // The kepetch gives you a particularly vicious bite!
 
-            _Table[defender] = new InternalTimer(creature, defender);
+            Effects.SendPacket(defender.Location, defender.Map, new ParticleEffect(EffectType.FixedFrom, defender.Serial, Serial.Zero, 0x37CC, defender.Location, defender.Location, 1, 10, false, false, 0, 0, 0, 1003, 1, defender.Serial, 8, 0));
+
+            _Table[defender] = new InternalTimer(defender);
         }
 
         private class InternalTimer : Timer
         {
-            public BaseCreature Attacker { get; set; }
-            public Mobile Defender { get; set; }
+            private Mobile Defender { get; }
+            private int Damage { get; set; }
 
-            private int _Tick;
-
-            public InternalTimer(BaseCreature creature, Mobile defender)
-                : base(TimeSpan.FromSeconds(20), TimeSpan.FromSeconds(20))
+            public InternalTimer(Mobile defender)
+                : base(TimeSpan.FromMinutes(1.0), TimeSpan.FromSeconds(20.0), 10)
             {
-                Attacker = creature;
                 Defender = defender;
+                Damage = 5;
                 Start();
             }
 
             protected override void OnTick()
             {
-                _Tick++;
-
-                AOS.Damage(Defender, Attacker, _Tick * 5, 0, 0, 0, 0, 0, 0, 100);
-                Defender.SendLocalizedMessage(1112473); //Your vicious wound is festering!
-
-                if (_Tick >= 20 || !Defender.Alive || Defender.IsDeadBondedPet)
+                if (!Defender.Alive || Defender.IsDeadBondedPet)
                 {
                     Stop();
 
                     if (_Table.ContainsKey(Defender))
+                    {
                         _Table.Remove(Defender);
+                    }
+                }
+                else
+                {
+                    Defender.Damage(Damage);
+                    Defender.SendLocalizedMessage(1112473); // Your vicious wound is festering!
+
+                    Damage += 5;
+
+                    if (Damage > 50)
+                    {
+                        _Table.Remove(Defender);
+                    }
                 }
             }
         }
@@ -1637,7 +1649,7 @@ namespace Server.Mobiles
             timer = new ExpireTimer(defender, mods, TimeSpan.FromSeconds(5.0));
             timer.Start();
 
-            BuffInfo.AddBuff(defender, new BuffInfo(BuffIcon.RuneBeetleCorruption, 1153796, 1153823, TimeSpan.FromSeconds(5.0), defender, String.Format("{0}\t{1}\t{2}\t{3}\t{4}", phy, cold, poison, energy, fire)));
+            BuffInfo.AddBuff(defender, new BuffInfo(BuffIcon.RuneBeetleCorruption, 1153796, 1153823, TimeSpan.FromSeconds(5.0), defender, string.Format("{0}\t{1}\t{2}\t{3}\t{4}", phy, cold, poison, energy, fire)));
 
             _Table[defender] = timer;
         }
@@ -1775,7 +1787,7 @@ namespace Server.Mobiles
                 attacker.AddStatMod(new StatMod(StatType.Int, "BloodWorm_Int", -Int, TimeSpan.FromSeconds(60)));
 
                 // -~1_STR~ strength.<br>-~2_INT~ intelligence.<br>-~3_DEX~ dexterity.<br> Drains all stamina.
-                BuffInfo.AddBuff(attacker, new BuffInfo(BuffIcon.BloodwormAnemia, 1153797, 1153824, String.Format("{0}\t{1}\t{2}", str, dex, Int)));
+                BuffInfo.AddBuff(attacker, new BuffInfo(BuffIcon.BloodwormAnemia, 1153797, 1153824, string.Format("{0}\t{1}\t{2}", str, dex, Int)));
 
                 _Table.Add(attacker, timer);
             }
@@ -2166,7 +2178,8 @@ namespace Server.Mobiles
     /// This is the Succubus/Semidar type life drain. This is not a trainable pet ability
     /// </summary>
     public class LifeDrain : SpecialAbility
-    {        public override bool TriggerOnDoMeleeDamage => true;
+    {
+        public override bool TriggerOnDoMeleeDamage => true;
         public override bool TriggerOnGotMeleeDamage => true;
         public override bool NaturalAbility => true;
         public override TimeSpan CooldownDuration => TimeSpan.FromSeconds(1);

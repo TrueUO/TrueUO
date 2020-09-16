@@ -99,7 +99,7 @@ namespace Server
             else if (def.m_String != null)
             {
                 if (stringColor >= 0)
-                    g.AddHtml(x, y, width, height, String.Format("<BASEFONT COLOR=#{0:X6}>{1}</BASEFONT>", stringColor, def.m_String), back, scroll);
+                    g.AddHtml(x, y, width, height, string.Format("<BASEFONT COLOR=#{0:X6}>{1}</BASEFONT>", stringColor, def.m_String), back, scroll);
                 else
                     g.AddHtml(x, y, width, height, def.m_String, back, scroll);
             }
@@ -108,6 +108,17 @@ namespace Server
         public static void AddHtmlText(Gump g, int x, int y, int width, int height, TextDefinition def, bool back, bool scroll)
         {
             AddHtmlText(g, x, y, width, height, def, back, scroll, -1, -1);
+        }
+
+        public static void AddTooltip(Gump g, TextDefinition def)
+        {
+            if (def == null)
+                return;
+
+            if (def.Number > 0)
+                g.AddTooltip(def.Number);
+            else if (def.String != null)
+                g.AddTooltip(def.String);
         }
 
         public static void SendMessageTo(Mobile m, TextDefinition def)
@@ -143,7 +154,7 @@ namespace Server
         public override string ToString()
         {
             if (m_Number > 0)
-                return String.Concat("#", m_Number.ToString());
+                return string.Concat("#", m_Number.ToString());
             else if (m_String != null)
                 return m_String;
 
@@ -153,9 +164,9 @@ namespace Server
         public string Format(bool propsGump)
         {
             if (m_Number > 0)
-                return String.Format("{0} (0x{0:X})", m_Number);
+                return string.Format("{0} (0x{0:X})", m_Number);
             else if (m_String != null)
-                return String.Format("\"{0}\"", m_String);
+                return string.Format("\"{0}\"", m_String);
 
             return propsGump ? "-empty-" : "empty";
         }

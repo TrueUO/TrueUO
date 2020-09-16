@@ -24,7 +24,7 @@ namespace Server.Engines.Craft
             typeof(Blight), typeof(Corruption), typeof(Muculent), typeof(Scourge), typeof(Putrefaction), typeof(Taint),
 
             // Tailoring
-            typeof(MidnightBracers), typeof(CrimsonCincture), typeof(GargishCrimsonCincture), typeof(LeurociansMempoOfFortune),
+            typeof(MidnightBracers), typeof(CrimsonCincture), typeof(GargishCrimsonCincture), typeof(LeurociansMempoOfFortune), typeof(TheScholarsHalo),
 
             // Blacksmithy
             typeof(LeggingsOfBane), typeof(GauntletsOfNobility),
@@ -47,7 +47,7 @@ namespace Server.Engines.Craft
 
             for (int i = 0; i < Systems.Count; i++)
             {
-                var system = CraftSystem.Systems[i];
+                var system = Systems[i];
 
                 if (system.CraftItems == null)
                 {

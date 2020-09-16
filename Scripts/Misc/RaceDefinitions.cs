@@ -467,7 +467,7 @@ namespace Server.Misc
 
         public static bool ValidateEquipment(Mobile from, Item equipment, bool message)
         {
-            if (AllRaceTypes.Any(type => type == equipment.GetType()) || AllRaceIDs.Any(id => id == equipment.ItemID))
+            if ((AllRaceTypes.Any(type => type == equipment.GetType()) || AllRaceIDs.Any(id => id == equipment.ItemID)) && ValidateElfOrHuman(from, equipment))
             {
                 return true;
             }
@@ -519,6 +519,18 @@ namespace Server.Misc
             return true;
         }
 
+        public static bool ValidateElfOrHuman(Mobile from, Item equipment)
+        {
+            var elfOrHuman = equipment as ICanBeElfOrHuman;
+
+            if (elfOrHuman != null)
+            {
+                return from.Race == Race.Elf || !elfOrHuman.ElfOnly;
+            }
+
+            return true;
+        }
+
         public static Race GetRequiredRace(Item item)
         {
             var itemID = item.ItemID;
@@ -528,14 +540,14 @@ namespace Server.Misc
                 return Race.Gargoyle;
             }
 
-            if (ElfOnlyIDs.Any(id => id == itemID))
-            {
-                return Race.Elf;
-            }
-
             var elfOrHuman = item as ICanBeElfOrHuman;
 
-            if (elfOrHuman != null && elfOrHuman.ElfOnly)
+            if (elfOrHuman != null)
+            {
+                return elfOrHuman.ElfOnly ? Race.Elf : Race.Human;
+            }
+
+            if (ElfOnlyIDs.Any(id => id == itemID))
             {
                 return Race.Elf;
             }
@@ -543,28 +555,31 @@ namespace Server.Misc
             return Race.Human;
         }
 
-        public static Type[] AllRaceTypes { get { return _AllRaceTypes; } }
+        public static Type[] AllRaceTypes => _AllRaceTypes;
         private static Type[] _AllRaceTypes = new[]
          {
-            typeof(BootsOfBallast)
+            typeof(BootsOfBallast), typeof(DetectiveCredentials)
         };
 
-        public static int[] AllRaceIDs { get { return _AllRaceIDs; } }
+        public static int[] AllRaceIDs => _AllRaceIDs;
         private static int[] _AllRaceIDs = new[]
         {
             0xA289, 0xA28A, 0xA28B, 0xA291, 0xA292, 0xA293, // whips
-            0xE85, 0xE86, // Tools
-            0x1F03, 0x1F04, // Robe
-            0xE81,
+            0xE85, 0xE86,                                   // Tools
+            0x1F03, 0x1F04, 0x26AE,                         // Robe & Arcane Robe
+            0xE81,                                          // Crook
+            0x1086, 0x108A, 0x1F06, 0x1F09                  // Rings/Bracelet
         };
 
-        public static int[] GargoyleOnlyIDs { get { return _GargoyleOnlyIDs; } }
+        public static int[] GargoyleOnlyIDs => _GargoyleOnlyIDs;
         private static int[] _GargoyleOnlyIDs = new[]
         {
-            0x283, 0x284, 0x286, 0x287, 0x288, 0x289, 0x28A,        // Armor
+            0x283, 0x284, 0x285, 0x286, 0x287, 0x288, 0x289, 0x28A, // Armor
             0x301, 0x302, 0x303, 0x304, 0x305, 0x306, 0x310, 0x311, 
             0x307, 0x308, 0x309, 0x30A, 0x30B, 0x30C, 0x30D, 0x30E, 
-            0x403, 0x404, 0x405, 0x406, 0x407, 0x408, 0x409, 0x40A, 
+            0x403, 0x404, 0x405, 0x406, 0x407, 0x408, 0x409, 0x40A,
+
+            0x41D8, 0x41D9, 0x42DE, 0x42DF,                         // Talons
 
             0x8FD, 0x8FE, 0x8FF, 0x900, 0x901, 0x902, 0x903, 0x904, // Weapons
             0x905, 0x906, 0x907, 0x908, 0x909, 0x90A, 0x90B, 0x90C,
@@ -593,7 +608,7 @@ namespace Server.Misc
 
             0x4210, 0x4211, 0x4212, 0x4213, 0x4D0A, 0x4D0B,        // Jewelry
 
-            0x450D, 0x450E,                                         // Belts
+            0x450D, 0x450E, 0x50D8,                                 // Belts and Half Apron
             0x457E, 0x457F, 0x45A4, 0x45A5,                         // Wing Armor
             0x45B1, 0x45B3, 0x4644, 0x4645,                         // Glasses
             0x46AA, 0x46AB, 0x46B4, 0x46B5,                         // Sashes
@@ -601,7 +616,7 @@ namespace Server.Misc
             0xA1C9, 0xA1CA                                          // Special
         };
 
-        public static int[] ElfOnlyIDs { get { return _ElfOnlyIDs; } }
+        public static int[] ElfOnlyIDs => _ElfOnlyIDs;
         private static int[] _ElfOnlyIDs = new[]
         {
             0x2B67, 0x2B68, 0x2B69, 0x2B6A, 0x2B6B, 0x2B6C, 0x2B6D, // Armor
@@ -612,13 +627,6 @@ namespace Server.Misc
             0x3170, 0x3171, 0x3172, 0x3173, 0x3174, 0x3175, 0x3176,
             0x3177, 0x3178, 0x3179, 0x317A, 0x317B, 0x317C, 0x317D,
             0x317E, 0x317F, 0x3180, 0x3181,
-
-            0x2D1E, 0x2D1F, 0x2D20, 0x2D21, 0x2D22, 0x2D23, 0x2D24, // Weapons
-            0x2D25, 0x2D26, 0x2D27, 0x2D28, 0x2D29, 0x2D2A, 0x2D2B,
-            0x2D2C, 0x2D2D, 0x2D2E, 0x2D2F, 0x2D30, 0x2D31, 0x2D32,
-            0x2D33, 0x2D34, 0x2D35, 0x316A, 0x316B, 0x316C, 0x316D,
-                
-            0x2FB8,                                                 // Glasses
 
             0x2FB9, 0x2FBA,                                         // Robes
 

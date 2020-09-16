@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace Server.Engines.Plants
 {
-    [FlipableAttribute(19288, 19290)]
+    [Flipable(19288, 19290)]
     public class SeedBox : Container, IRewardItem
     {
         public static readonly int MaxSeeds = 5000;
@@ -44,7 +44,7 @@ namespace Server.Engines.Plants
         [CommandProperty(AccessLevel.GameMaster)]
         public int UniqueCount => Entries == null ? 0 : Entries.Where(e => e != null && e.Seed != null && e.Seed.Amount > 0).Count();
 
-        public override int DefaultMaxWeight { get { return 0; } }
+        public override int DefaultMaxWeight => 0;
         public override double DefaultWeight => 10.0;
 
         [Constructable]
@@ -309,8 +309,8 @@ namespace Server.Engines.Plants
                 list.Add(1076220); // 4th Year Veteran Reward
             }
 
-            list.Add(1151847, String.Format("{0}\t{1}", TotalCount.ToString(), MaxSeeds.ToString())); // Seeds in Box: ~1_val~ / ~2_val~
-            list.Add(1151848, String.Format("{0}\t{1}", UniqueCount.ToString(), MaxUnique.ToString())); // Unique Seeds In Box: ~1_val~ / ~2_val~
+            list.Add(1151847, string.Format("{0}\t{1}", TotalCount.ToString(), MaxSeeds.ToString())); // Seeds in Box: ~1_val~ / ~2_val~
+            list.Add(1151848, string.Format("{0}\t{1}", UniqueCount.ToString(), MaxUnique.ToString())); // Unique Seeds In Box: ~1_val~ / ~2_val~
         }
 
         private void CheckEntries()

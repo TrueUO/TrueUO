@@ -12,7 +12,7 @@ namespace Server.Mobiles
 {
     public static class GuideHelper
     {
-        private static readonly Dictionary<string, List<GuideVertex>> m_GraphDefinitions = new Dictionary<string, List<GuideVertex>>();
+        private static readonly Dictionary<string, List<Vertex>> m_GraphDefinitions = new Dictionary<string, List<Vertex>>();
         private static readonly List<int> m_ShopDefinitions = new List<int>();
         private static readonly char[] m_Separators = new char[] { '\t', ' ' };
         private static readonly string m_Delimiter = "--------------------------------------------------------------------------";
@@ -28,13 +28,13 @@ namespace Server.Mobiles
             }
             catch (Exception e)
             {
-                Server.Diagnostics.ExceptionLogging.LogException(e);
+                Diagnostics.ExceptionLogging.LogException(e);
             }
         }
 
-        public static GuideVertex FindVertex(List<GuideVertex> list, int id)
+        public static Vertex FindVertex(List<Vertex> list, int id)
         {
-            foreach (GuideVertex v in list)
+            foreach (Vertex v in list)
             {
                 if (v.ID == id)
                     return v;
@@ -64,12 +64,12 @@ namespace Server.Mobiles
                     {
                         string line = reader.ReadLine();
 
-                        if (!String.IsNullOrEmpty(line) && !line.StartsWith("#"))
+                        if (!string.IsNullOrEmpty(line) && !line.StartsWith("#"))
                         {
                             string[] split = line.Split(m_Separators, StringSplitOptions.RemoveEmptyEntries);
 
                             if (split != null && split.Length > 1)
-                                m_ShopDefinitions.Add(Int32.Parse(split[1]));
+                                m_ShopDefinitions.Add(int.Parse(split[1]));
                         }
                     }
                 }
@@ -79,15 +79,15 @@ namespace Server.Mobiles
                     using (FileStream stream = File.OpenRead(file))
                     using (StreamReader reader = new StreamReader(stream))
                     {
-                        List<GuideVertex> list = new List<GuideVertex>();
-                        GuideVertex current = null;
-                        GuideVertex neighbour = null;
+                        List<Vertex> list = new List<Vertex>();
+                        Vertex current = null;
+                        Vertex neighbour = null;
 
                         while (!reader.EndOfStream)
                         {
                             string line = reader.ReadLine();
 
-                            if (!String.IsNullOrEmpty(line))
+                            if (!string.IsNullOrEmpty(line))
                             {
                                 string[] split = line.Split(m_Separators, StringSplitOptions.RemoveEmptyEntries);
                                 int num;
@@ -98,12 +98,12 @@ namespace Server.Mobiles
                                     {
                                         for (int i = 1; i < split.Length; i++)
                                         {
-                                            num = Int32.Parse(split[i]);
+                                            num = int.Parse(split[i]);
                                             neighbour = FindVertex(list, num);
 
                                             if (neighbour == null)
                                             {
-                                                neighbour = new GuideVertex(num);
+                                                neighbour = new Vertex(num);
                                                 list.Add(neighbour);
                                             }
 
@@ -117,12 +117,12 @@ namespace Server.Mobiles
                                     {
                                         for (int i = 1; i < split.Length; i++)
                                         {
-                                            num = Int32.Parse(split[i]);
+                                            num = int.Parse(split[i]);
 
                                             if (num >= 0 && num < m_ShopDefinitions.Count)
                                                 current.Shops.Add(num);
                                             else
-                                                throw new Exception(String.Format("Invalid shop ID: {0}", num));
+                                                throw new Exception(string.Format("Invalid shop ID: {0}", num));
                                         }
                                     }
                                 }
@@ -130,26 +130,26 @@ namespace Server.Mobiles
                                 {
                                     if (split.Length > 5)
                                     {
-                                        num = Int32.Parse(split[1]);
+                                        num = int.Parse(split[1]);
                                         neighbour = FindVertex(list, num);
 
                                         if (neighbour != null)
                                             current = neighbour;
                                         else
                                         {
-                                            current = new GuideVertex(num);
+                                            current = new Vertex(num);
                                             list.Add(current);
                                         }
 
                                         Point3D location = new Point3D();
-                                        location.X = Int32.Parse(split[2]);
-                                        location.Y = Int32.Parse(split[3]);
-                                        location.Z = Int32.Parse(split[4]);
+                                        location.X = int.Parse(split[2]);
+                                        location.Y = int.Parse(split[3]);
+                                        location.Z = int.Parse(split[4]);
                                         current.Location = location;
-                                        current.Teleporter = Boolean.Parse(split[5]);
+                                        current.Teleporter = bool.Parse(split[5]);
                                     }
                                     else
-                                        throw new Exception(String.Format("Incomplete vertex definition!"));
+                                        throw new Exception(string.Format("Incomplete vertex definition!"));
                                 }
                             }
                         }
@@ -160,7 +160,7 @@ namespace Server.Mobiles
             }
             catch (Exception e)
             {
-                Server.Diagnostics.ExceptionLogging.LogException(e);
+                Diagnostics.ExceptionLogging.LogException(e);
                 LogMessage(m_Delimiter);
             }
         }
@@ -171,7 +171,7 @@ namespace Server.Mobiles
 
             if (m.Region != null)
             {
-                GuideVertex closest = ClosestVetrex(m.Region.Name, m.Location);
+                Vertex closest = ClosestVetrex(m.Region.Name, m.Location);
 
                 if (closest != null)
                     m.SendGump(new GuideVertexEditGump(closest, m.Map, m.Region.Name));
@@ -182,18 +182,18 @@ namespace Server.Mobiles
                 m.SendLocalizedMessage(1076113); // There are no shops nearby.  Please try again when you get to a town or city.
         }
 
-        public static GuideVertex ClosestVetrex(string town, Point3D location)
+        public static Vertex ClosestVetrex(string town, Point3D location)
         {
             if (town == null || !m_GraphDefinitions.ContainsKey(town))
                 return null;
 
-            List<GuideVertex> vertices = m_GraphDefinitions[town];
+            List<Vertex> vertices = m_GraphDefinitions[town];
 
-            GuideVertex closest = null;
-            double min = Int32.MaxValue;
+            Vertex closest = null;
+            double min = int.MaxValue;
             double distance;
 
-            foreach (GuideVertex v in vertices)
+            foreach (Vertex v in vertices)
             {
                 distance = Math.Sqrt(Math.Pow(location.X - v.Location.X, 2) + Math.Pow(location.Y - v.Location.Y, 2));
 
@@ -207,21 +207,21 @@ namespace Server.Mobiles
             return closest;
         }
 
-        public static Dictionary<int, GuideVertex> FindShops(string town, Point3D location)
+        public static Dictionary<int, Vertex> FindShops(string town, Point3D location)
         {
             if (town == null || !m_GraphDefinitions.ContainsKey(town))
                 return null;
 
-            List<GuideVertex> vertices = m_GraphDefinitions[town];
-            Dictionary<int, GuideVertex> shops = new Dictionary<int, GuideVertex>();
+            List<Vertex> vertices = m_GraphDefinitions[town];
+            Dictionary<int, Vertex> shops = new Dictionary<int, Vertex>();
 
-            foreach (GuideVertex v in vertices)
+            foreach (Vertex v in vertices)
             {
                 foreach (int shop in v.Shops)
                 {
                     if (shops.ContainsKey(shop))
                     {
-                        GuideVertex d = shops[shop];
+                        Vertex d = shops[shop];
 
                         if (v.DistanceTo(location) < d.DistanceTo(location))
                             shops[shop] = v;
@@ -237,25 +237,25 @@ namespace Server.Mobiles
             return null;
         }
 
-        public static List<GuideVertex> Dijkstra(string town, GuideVertex source, GuideVertex destination)
+        public static List<Vertex> Dijkstra(string town, Vertex source, Vertex destination)
         {
             if (town == null || !m_GraphDefinitions.ContainsKey(town))
                 return null;
 
-            Heap<GuideVertex> heap = new Heap<GuideVertex>();
-            List<GuideVertex> path = new List<GuideVertex>();
+            Heap<Vertex> heap = new Heap<Vertex>();
+            List<Vertex> path = new List<Vertex>();
             heap.Push(source);
 
-            foreach (GuideVertex v in m_GraphDefinitions[town])
+            foreach (Vertex v in m_GraphDefinitions[town])
             {
-                v.Distance = Int32.MaxValue;
+                v.Distance = int.MaxValue;
                 v.Previous = null;
                 v.Visited = false;
                 v.Removed = false;
             }
 
             source.Distance = 0;
-            GuideVertex from;
+            Vertex from;
             int dist = 0;
 
             while (heap.Count > 0)
@@ -275,7 +275,7 @@ namespace Server.Mobiles
                     return path;
                 }
 
-                foreach (GuideVertex v in from.Vertices)
+                foreach (Vertex v in from.Vertices)
                 {
                     if (!v.Removed)
                     {
@@ -300,11 +300,11 @@ namespace Server.Mobiles
 
         public class GuideVertexEditGump : Gump
         {
-            private readonly GuideVertex m_Vertex;
+            private readonly Vertex m_Vertex;
             private readonly Map m_Map;
             private readonly string m_Town;
             private readonly Item m_Item;
-            public GuideVertexEditGump(GuideVertex vertex, Map map, string town)
+            public GuideVertexEditGump(Vertex vertex, Map map, string town)
                 : base(50, 50)
             {
                 m_Vertex = vertex;
@@ -365,8 +365,8 @@ namespace Server.Mobiles
                 if (!m_GraphDefinitions.ContainsKey(town))
                     return;
 
-                List<GuideVertex> list = m_GraphDefinitions[town];
-                string path = Core.BaseDirectory + String.Format("\\Data\\Guide\\{0}.graph", town);
+                List<Vertex> list = m_GraphDefinitions[town];
+                string path = Core.BaseDirectory + string.Format("\\Data\\Guide\\{0}.graph", town);
 
                 using (FileStream stream = new FileStream(path, FileMode.Create))
                 using (StreamWriter writer = new StreamWriter(stream))
@@ -376,16 +376,16 @@ namespace Server.Mobiles
                     writer.WriteLine("# {S:}ShopID{tab, }ShopID{tab, }...");
                     writer.WriteLine("# {N:}VertexID{tab, }VertexID{tab, }...");
 
-                    foreach (GuideVertex v in list)
+                    foreach (Vertex v in list)
                     {
-                        writer.WriteLine(String.Format("V:\t{0}\t{1}\t{2}\t{3}\t{4}", v.ID, v.Location.X, v.Location.Y, v.Location.Z, v.Teleporter.ToString()));
+                        writer.WriteLine(string.Format("V:\t{0}\t{1}\t{2}\t{3}\t{4}", v.ID, v.Location.X, v.Location.Y, v.Location.Z, v.Teleporter.ToString()));
 
                         if (v.Shops.Count > 0)
                         {
                             writer.Write("S:");
 
                             foreach (int i in v.Shops)
-                                writer.Write(String.Format("\t{0}", i));
+                                writer.Write(string.Format("\t{0}", i));
 
                             writer.WriteLine();
                         }
@@ -394,8 +394,8 @@ namespace Server.Mobiles
                         {
                             writer.Write("N:");
 
-                            foreach (GuideVertex n in v.Vertices)
-                                writer.Write(String.Format("\t{0}", n.ID));
+                            foreach (Vertex n in v.Vertices)
+                                writer.Write(string.Format("\t{0}", n.ID));
 
                             writer.WriteLine();
                         }
@@ -404,16 +404,16 @@ namespace Server.Mobiles
             }
         }
 
-        public class GuideVertex : IComparable<GuideVertex>
+        public class GuideVertex : IComparable<Vertex>
         {
             public bool m_Visited;
             public bool m_Removed;
             private readonly int m_ID;
-            private readonly List<GuideVertex> m_Vertices = new List<GuideVertex>();
+            private readonly List<Vertex> m_Vertices = new List<Vertex>();
             private readonly List<int> m_Shops = new List<int>();
             private Point3D m_Location;
             private bool m_Teleporter;
-            private GuideVertex m_Previous;
+            private Vertex m_Previous;
             private int m_Distance;
             public GuideVertex(int id)
                 : this(id, Point3D.Zero)
@@ -425,7 +425,7 @@ namespace Server.Mobiles
                 m_ID = id;
                 m_Location = location;
                 m_Previous = null;
-                m_Distance = Int32.MaxValue;
+                m_Distance = int.MaxValue;
                 m_Visited = false;
                 m_Removed = false;
             }
@@ -442,7 +442,7 @@ namespace Server.Mobiles
                     m_Location = value;
                 }
             }
-            public List<GuideVertex> Vertices => m_Vertices;
+            public List<Vertex> Vertices => m_Vertices;
             public List<int> Shops => m_Shops;
             public bool Teleporter
             {
@@ -455,7 +455,7 @@ namespace Server.Mobiles
                     m_Teleporter = value;
                 }
             }
-            public GuideVertex Previous
+            public Vertex Previous
             {
                 get
                 {
@@ -499,7 +499,7 @@ namespace Server.Mobiles
                     m_Removed = value;
                 }
             }
-            public int DistanceTo(GuideVertex to)
+            public int DistanceTo(Vertex to)
             {
                 return Math.Abs(m_Location.X - to.Location.X) + Math.Abs(m_Location.Y - to.Location.Y);
             }
@@ -509,7 +509,7 @@ namespace Server.Mobiles
                 return Math.Abs(m_Location.X - to.X) + Math.Abs(m_Location.Y - to.Y);
             }
 
-            public int CompareTo(GuideVertex o)
+            public int CompareTo(Vertex o)
             {
                 if (o != null)
                     return m_Distance - o.Distance;
@@ -717,7 +717,7 @@ namespace Server.Mobiles
                         }
                         else
                         {
-                            Timer.DelayCall<Mobile>(TimeSpan.FromSeconds(3), CommandFollow, m);
+                            Timer.DelayCall(TimeSpan.FromSeconds(3), CommandFollow, m);
                             Say(1076051); // We have reached our destination
                             CommandStop(m);
                         }

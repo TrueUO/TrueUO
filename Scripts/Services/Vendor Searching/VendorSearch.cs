@@ -584,7 +584,7 @@ namespace Server.Engines.VendorSearching
             {
                 StringList = new Ultima.StringList("enu");
             }
-            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+            catch (Exception e) { Diagnostics.ExceptionLogging.LogException(e); }
 
             CommandSystem.Register("GetOPLString", AccessLevel.Administrator, e =>
                 {
@@ -735,9 +735,8 @@ namespace Server.Engines.VendorSearching
                     parms[0] = StringList.GetString(Convert.ToInt32(args.Substring(1, parms[0].Length - 1)));
                 }
             }
-            catch (Exception e)
+            catch
             {
-                Server.Diagnostics.ExceptionLogging.LogException(e);
                 return null;
             }
 
@@ -1211,6 +1210,8 @@ namespace Server.Engines.VendorSearching
         public int Price { get; set; }
         public bool IsChild { get; set; }
         public bool IsAuction { get; set; }
+
+        public Map Map => Vendor != null ? Vendor.Map : AuctionSafe != null ? AuctionSafe.Map : null;
 
         public SearchItem(PlayerVendor vendor, Item item, int price, bool isChild)
         {

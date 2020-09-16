@@ -57,7 +57,7 @@ namespace Server.Engines.Craft
         AssassinsCowl = 1108,
         MagesHood = 1109,
         CowlOfTheMaceAndShield = 1110,
-        MagesHoodOfScholarlyInsight = 1111
+        MagesHoodOfScholarlyInsight = 1111,
 
     }
 
@@ -65,13 +65,13 @@ namespace Server.Engines.Craft
     {
         #region Statics
         private static readonly Type[] m_TailorColorables = new Type[]
-   {
+   		{
             typeof(GozaMatEastDeed), typeof(GozaMatSouthDeed),
             typeof(SquareGozaMatEastDeed), typeof(SquareGozaMatSouthDeed),
             typeof(BrocadeGozaMatEastDeed), typeof(BrocadeGozaMatSouthDeed),
             typeof(BrocadeSquareGozaMatEastDeed), typeof(BrocadeSquareGozaMatSouthDeed),
             typeof(SquareGozaMatDeed)
-   };
+   		};
 
         private static readonly Type[] m_TailorClothNonColorables = new Type[]
         {
@@ -698,10 +698,10 @@ namespace Server.Engines.Craft
 
             // Add every material you want the player to be able to choose from
             // This will override the overridable material
-            AddSubRes(typeof(Leather), 1049150, 00.0, 1044462, 1049311);
-            AddSubRes(typeof(SpinedLeather), 1049151, 65.0, 1044462, 1049311);
-            AddSubRes(typeof(HornedLeather), 1049152, 80.0, 1044462, 1049311);
-            AddSubRes(typeof(BarbedLeather), 1049153, 99.0, 1044462, 1049311);
+            AddSubRes(typeof(Leather), 1049150, 0.0, 1044462, 1049312);
+            AddSubRes(typeof(SpinedLeather), 1049151, 65.0, 1044462, 1049312);
+            AddSubRes(typeof(HornedLeather), 1049152, 80.0, 1044462, 1049312);
+            AddSubRes(typeof(BarbedLeather), 1049153, 99.0, 1044462, 1049312);
 
             MarkOption = true;
             Repair = true;

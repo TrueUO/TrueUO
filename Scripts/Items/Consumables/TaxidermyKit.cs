@@ -6,7 +6,7 @@ using System;
 
 namespace Server.Items
 {
-    [FlipableAttribute(0x1EBA, 0x1EBB)]
+    [Flipable(0x1EBA, 0x1EBB)]
     public class TaxidermyKit : Item
     {
         public override int LabelNumber => 1041279;  // a taxidermy kit
@@ -360,7 +360,7 @@ namespace Server.Items
 
             if (DateCaught != DateTime.MinValue)
             {
-                list.Add(String.Format("[{0}]", DateCaught.ToShortDateString()));
+                list.Add(string.Format("[{0}]", DateCaught.ToShortDateString()));
             }
         }
 

@@ -28,7 +28,7 @@ namespace Server.Engines.CityLoyalty
 
                 foreach (TradeEntry.TradeDetails details in Entry.Details)
                 {
-                    if (GetAmount(details.ItemType) < details.Amount)
+                    if (details.Count(this) < details.Amount)
                         return false;
                 }
 
@@ -95,7 +95,7 @@ namespace Server.Engines.CityLoyalty
         {
             base.GetProperties(list);
 
-            list.Add(1151737, String.Format("#{0}", CityLoyaltySystem.CityLocalization(Entry.Destination))); // Destination City: ~1_city~
+            list.Add(1151737, string.Format("#{0}", CityLoyaltySystem.CityLocalization(Entry.Destination))); // Destination City: ~1_city~
             list.Add(1076255); // NO-TRADE
 
             int weight = Items.Sum(x => x.Amount);
@@ -109,9 +109,9 @@ namespace Server.Engines.CityLoyalty
                 for (int i = 0; i < Entry.Details.Count; i++)
                 {
                     if (Utility.ToInt32(Entry.Details[i].Name) > 0)
-                        list.Add(1116453 + i, String.Format("#{0}\t{1}\t{2}", Entry.Details[i].Name, GetAmount(Entry.Details[i].ItemType), Entry.Details[i].Amount)); // ~1_val~: ~2_val~/~3_val~
+                        list.Add(1116453 + i, string.Format("#{0}\t{1}\t{2}", Entry.Details[i].Name, Entry.Details[i].Count(this), Entry.Details[i].Amount)); // ~1_val~: ~2_val~/~3_val~
                     else
-                        list.Add(1116453 + i, String.Format("{0}\t{1}\t{2}", Entry.Details[i].Name, GetAmount(Entry.Details[i].ItemType), Entry.Details[i].Amount)); // ~1_val~: ~2_val~/~3_val~
+                        list.Add(1116453 + i, string.Format("{0}\t{1}\t{2}", Entry.Details[i].Name, Entry.Details[i].Count(this), Entry.Details[i].Amount)); // ~1_val~: ~2_val~/~3_val~
                 }
             }
 
@@ -146,14 +146,16 @@ namespace Server.Engines.CityLoyalty
 
             foreach (TradeEntry.TradeDetails details in Entry.Details)
             {
-                if (item.GetType() == details.ItemType)
+                if(details.Match(item.GetType()))
                 {
-                    int hasAmount = GetAmount(item.GetType());
+                    int hasAmount = details.Count(this);
 
                     if (hasAmount + item.Amount > details.Amount)
                     {
                         if (message)
+                        {
                             from.SendLocalizedMessage(1151726); // You are trying to add too many of this item to the trade order. Only add the required quantity
+                        }
 
                         break;
                     }
@@ -166,7 +168,9 @@ namespace Server.Engines.CityLoyalty
             }
 
             if (!canAdd && message)
+            {
                 from.SendLocalizedMessage(1151725); // This trade order does not require this item.
+            }
 
             return canAdd;
         }
@@ -212,12 +216,11 @@ namespace Server.Engines.CityLoyalty
                 {
                     foreach (TradeEntry.TradeDetails detail in Crate.Entry.Details)
                     {
-                        Item[] items = Player.Backpack.FindItemsByType(detail.ItemType);
+                        var list = new List<Item>(Player.Backpack.Items);
 
-                        foreach (Item item in items)
+                        foreach (var item in list.Where(i => i.Amount == 1 && Crate.TryAddItem(Player, i, false)))
                         {
-                            if (item.Amount == 1 && Crate.TryAddItem(Player, item, false))
-                                Crate.DropItem(item);
+                            Crate.DropItem(item);
                         }
                     }
                 }

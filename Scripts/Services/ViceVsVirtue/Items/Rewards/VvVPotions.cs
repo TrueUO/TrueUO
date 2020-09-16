@@ -63,7 +63,7 @@ namespace Server.Engines.VvV
         {
             if (IsChildOf(m.Backpack))
             {
-                if (m.AccessLevel == AccessLevel.Player && !ViceVsVirtueSystem.IsVvV(m))
+                if (m.AccessLevel < AccessLevel.Counselor && !ViceVsVirtueSystem.IsVvV(m))
                 {
                     m.SendLocalizedMessage(1155496); // This item can only be used by VvV participants!
                 }
@@ -250,7 +250,7 @@ namespace Server.Engines.VvV
 
         public void AddToCooldown(Mobile m)
         {
-            if (m.AccessLevel > AccessLevel.Player)
+            if (m.AccessLevel >= AccessLevel.Counselor)
                 return;
 
             if (!_Cooldown.ContainsKey(m))
@@ -268,7 +268,7 @@ namespace Server.Engines.VvV
             {
                 DateTime dt = DateTime.UtcNow;
 
-                if (m.AccessLevel == AccessLevel.Player && ViceVsVirtueSystem.Enabled && !ViceVsVirtueSystem.IsVvV(m))
+                if (m.AccessLevel < AccessLevel.Counselor && ViceVsVirtueSystem.Enabled && !ViceVsVirtueSystem.IsVvV(m))
                 {
                     m.SendLocalizedMessage(1155496); // This item can only be used by VvV participants!
                 }
@@ -424,7 +424,7 @@ namespace Server.Engines.VvV
                     {
                         Timer.DelayCall(TimeSpan.FromMilliseconds(i * 170), index =>
                             {
-                                Server.Misc.Geometry.Circle2D(m.Location, m.Map, index, (pnt, map) =>
+                                Misc.Geometry.Circle2D(m.Location, m.Map, index, (pnt, map) =>
                                 {
                                     Effects.SendLocationEffect(pnt, map, 0x3709, 30, 10, 1458, 5);
                                 });
@@ -438,7 +438,7 @@ namespace Server.Engines.VvV
 
                     foreach (Mobile mob in eable)
                     {
-                        if (mob != m && Server.Spells.SpellHelper.ValidIndirectTarget(m, mob) && m.CanBeHarmful(mob, false))
+                        if (mob != m && Spells.SpellHelper.ValidIndirectTarget(m, mob) && m.CanBeHarmful(mob, false))
                         {
                             m.DoHarmful(mob);
                             AOS.Damage(mob, m, Utility.RandomMinMax(40, 60), 0, 100, 0, 0, 0);

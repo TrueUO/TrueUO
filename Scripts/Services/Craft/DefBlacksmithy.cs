@@ -57,7 +57,7 @@ namespace Server.Engines.Craft
 
         // doom 
         BritchesOfWarding = 355,
-        GlovesOfFeudalGrip = 356
+        GlovesOfFeudalGrip = 356,
     }
     #endregion
 
@@ -116,7 +116,7 @@ namespace Server.Engines.Craft
                 Type type = item.GetType();
 
                 bool isAnvil = (type.IsDefined(typeofAnvil, false) || item.ItemID == 4015 || item.ItemID == 4016 ||
-                                item.ItemID == 0x2DD5 || item.ItemID == 0x2DD6);
+                                item.ItemID == 0x2DD5 || item.ItemID == 0x2DD6 || (item.ItemID >= 0xA102 && item.ItemID <= 0xA10D));
                 bool isForge = (type.IsDefined(typeofForge, false) || item.ItemID == 4017 ||
                                 (item.ItemID >= 6522 && item.ItemID <= 6569) || item.ItemID == 0x2DD8) ||
                                 item.ItemID == 0xA531 || item.ItemID == 0xA535;
@@ -814,15 +814,15 @@ namespace Server.Engines.Craft
 
             // Add every material you want the player to be able to choose from
             // This will override the overridable material
-            AddSubRes(typeof(IronIngot), 1044022, 00.0, 1044036, 1044267);
-            AddSubRes(typeof(DullCopperIngot), 1044023, 65.0, 1044036, 1044268);
-            AddSubRes(typeof(ShadowIronIngot), 1044024, 70.0, 1044036, 1044268);
-            AddSubRes(typeof(CopperIngot), 1044025, 75.0, 1044036, 1044268);
-            AddSubRes(typeof(BronzeIngot), 1044026, 80.0, 1044036, 1044268);
-            AddSubRes(typeof(GoldIngot), 1044027, 85.0, 1044036, 1044268);
-            AddSubRes(typeof(AgapiteIngot), 1044028, 90.0, 1044036, 1044268);
-            AddSubRes(typeof(VeriteIngot), 1044029, 95.0, 1044036, 1044268);
-            AddSubRes(typeof(ValoriteIngot), 1044030, 99.0, 1044036, 1044268);
+            AddSubRes(typeof(IronIngot), 1044022, 00.0, 1044036, 1044269);
+            AddSubRes(typeof(DullCopperIngot), 1044023, 65.0, 1044036, 1044269);
+            AddSubRes(typeof(ShadowIronIngot), 1044024, 70.0, 1044036, 1044269);
+            AddSubRes(typeof(CopperIngot), 1044025, 75.0, 1044036, 1044269);
+            AddSubRes(typeof(BronzeIngot), 1044026, 80.0, 1044036, 1044269);
+            AddSubRes(typeof(GoldIngot), 1044027, 85.0, 1044036, 1044269);
+            AddSubRes(typeof(AgapiteIngot), 1044028, 90.0, 1044036, 1044269);
+            AddSubRes(typeof(VeriteIngot), 1044029, 95.0, 1044036, 1044269);
+            AddSubRes(typeof(ValoriteIngot), 1044030, 99.0, 1044036, 1044269);
 
             SetSubRes2(typeof(RedScales), 1060875);
 

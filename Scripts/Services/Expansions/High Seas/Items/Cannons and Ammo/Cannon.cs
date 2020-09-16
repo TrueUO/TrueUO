@@ -266,7 +266,7 @@ namespace Server.Items
         {
             Region r = Region.Find(from.Location, from.Map);
 
-            if (r is Server.Regions.GuardedRegion && !((Server.Regions.GuardedRegion)r).IsDisabled())
+            if (r is Regions.GuardedRegion && !((Regions.GuardedRegion)r).IsDisabled())
             {
                 from.SendMessage("You are forbidden from discharging cannons within the town limits.");
                 return false;
@@ -764,7 +764,7 @@ namespace Server.Items
             percRepaired += Durability;
             if (percRepaired > 100) percRepaired = 100;
 
-            from.SendLocalizedMessage(1116605, String.Format("{0}\t{1}", ((int)temp).ToString(), ((int)percRepaired).ToString())); //You make repairs to the cannon using ~1_METAL~ ingots. The cannon is now ~2_DMGPCT~% repaired.
+            from.SendLocalizedMessage(1116605, string.Format("{0}\t{1}", ((int)temp).ToString(), ((int)percRepaired).ToString())); //You make repairs to the cannon using ~1_METAL~ ingots. The cannon is now ~2_DMGPCT~% repaired.
         }
 
         public bool VerifyAmmo(Type type)
@@ -1124,10 +1124,10 @@ namespace Server.Items
         {
             base.GetProperties(list);
 
-            list.Add(1116025, String.Format("#{0}", m_Cleaned ? 1116031 : 1116032)); //Cleaned: ~1_VALUE~
-            list.Add(1116026, String.Format("#{0}", m_Charged ? 1116031 : 1116032)); //Charged: ~1_VALUE~
+            list.Add(1116025, string.Format("#{0}", m_Cleaned ? 1116031 : 1116032)); //Cleaned: ~1_VALUE~
+            list.Add(1116026, string.Format("#{0}", m_Charged ? 1116031 : 1116032)); //Charged: ~1_VALUE~
             list.Add(1116027, AmmoInfo.GetAmmoName(this).ToString()); //Ammo: ~1_VALUE~
-            list.Add(1116028, String.Format("#{0}", m_Primed ? 1116031 : 1116032)); //Primed: ~1_VALUE~
+            list.Add(1116028, string.Format("#{0}", m_Primed ? 1116031 : 1116032)); //Primed: ~1_VALUE~
             list.Add(1116580 + (int)m_DamageState);
         }
 
@@ -1205,7 +1205,7 @@ namespace Server.Items
             public override void OnClick()
             {
                 if (m_Cannon != null)
-                    m_From.Target = new BaseCannon.LoadCannonTarget(m_Cannon);
+                    m_From.Target = new LoadCannonTarget(m_Cannon);
             }
         }
         private class PrimeContext : ContextMenuEntry

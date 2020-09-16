@@ -52,7 +52,7 @@ namespace Server.Engines.Quests
                 // give it 10 tries to generate quest
                 for (int i = 0; i < 10; i++)
                 {
-                    quest = Construct(quests[Utility.Random(quests.Length)]) as BaseQuest;
+                    quest = Construct(quests[Utility.Random(quests.Length)]);
                 }
             }
 
@@ -153,11 +153,11 @@ namespace Server.Engines.Quests
                         string str;
 
                         if (ts.TotalDays > 1)
-                            str = String.Format("I cannot offer this quest again for about {0} more days.", ts.TotalDays);
+                            str = string.Format("I cannot offer this quest again for about {0} more days.", ts.TotalDays);
                         else if (ts.TotalHours > 1)
-                            str = String.Format("I cannot offer this quest again for about {0} more hours.", ts.TotalHours);
+                            str = string.Format("I cannot offer this quest again for about {0} more hours.", ts.TotalHours);
                         else if (ts.TotalMinutes > 1)
-                            str = String.Format("I cannot offer this quest again for about {0} more minutes.", ts.TotalMinutes);
+                            str = string.Format("I cannot offer this quest again for about {0} more minutes.", ts.TotalMinutes);
                         else
                             str = "I can offer this quest again very soon.";
 
@@ -219,15 +219,15 @@ namespace Server.Engines.Quests
 
                         if (ts.Days > 0)
                         {
-                            player.SendLocalizedMessage(1158377, String.Format("{0}\t{1}", ts.Days.ToString(), "day[s]"));
+                            player.SendLocalizedMessage(1158377, string.Format("{0}\t{1}", ts.Days.ToString(), "day[s]"));
                         }
                         else if (ts.Hours > 0)
                         {
-                            player.SendLocalizedMessage(1158377, String.Format("{0}\t{1}", ts.Hours.ToString(), "hour[s]"));
+                            player.SendLocalizedMessage(1158377, string.Format("{0}\t{1}", ts.Hours.ToString(), "hour[s]"));
                         }
                         else
                         {
-                            player.SendLocalizedMessage(1158377, String.Format("{0}\t{1}", ts.Minutes.ToString(), "minute[s]"));
+                            player.SendLocalizedMessage(1158377, string.Format("{0}\t{1}", ts.Minutes.ToString(), "minute[s]"));
                         }
 
                         return false;
@@ -821,18 +821,19 @@ namespace Server.Engines.Quests
             return false;
         }
 
-        public static object Construct(Type type)
+        public static BaseQuest Construct(Type type)
         {
             if (type == null)
+            {
                 return null;
+            }
 
             try
             {
-                return Activator.CreateInstance(type);
+                return Activator.CreateInstance(type) as BaseQuest;
             }
-            catch (Exception e)
+            catch
             {
-                Server.Diagnostics.ExceptionLogging.LogException(e);
                 return null;
             }
         }

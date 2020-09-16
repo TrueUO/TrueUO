@@ -221,7 +221,7 @@ namespace Server.Engines.Quests
                 Region = QuestHelper.ValidateRegion(region) ? region : null;
 
                 if (Region == null)
-                    Console.WriteLine(String.Format("Invalid region name ('{0}') in '{1}' objective!", region, GetType()));
+                    Console.WriteLine(string.Format("Invalid region name ('{0}') in '{1}' objective!", region, GetType()));
             }
         }
 
@@ -510,7 +510,7 @@ namespace Server.Engines.Quests
 
             while (amount > 0 && !Failed)
             {
-                Item item = QuestHelper.Construct(m_Delivery) as Item;
+                Item item = Loot.Construct(m_Delivery);
 
                 if (item == null)
                 {
@@ -637,7 +637,7 @@ namespace Server.Engines.Quests
                 Region = QuestHelper.ValidateRegion(region) ? region : null;
 
                 if (Region == null)
-                    Console.WriteLine(String.Format("Invalid region name ('{0}') in '{1}' objective!", region, GetType()));
+                    Console.WriteLine(string.Format("Invalid region name ('{0}') in '{1}' objective!", region, GetType()));
             }
 
             Fame = fame;
@@ -694,7 +694,7 @@ namespace Server.Engines.Quests
                 m_Leave = leaveRegion;
 
                 if (m_Region == null)
-                    Console.WriteLine(String.Format("Invalid region name ('{0}') in '{1}' objective!", region, GetType()));
+                    Console.WriteLine(string.Format("Invalid region name ('{0}') in '{1}' objective!", region, GetType()));
             }
         }
 

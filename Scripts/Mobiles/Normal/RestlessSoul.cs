@@ -44,7 +44,7 @@ namespace Server.Mobiles
         {
         }
 
-        public override bool AlwaysMurderer => true;
+        public override bool AlwaysAttackable => true;
         public override bool BleedImmune => true;
         public override int TreasureMapLevel => 2;
         public override void GenerateLoot()
@@ -62,7 +62,7 @@ namespace Server.Mobiles
 
             for (int i = 0; i < list.Count; ++i)
             {
-                if (list[i] is ContextMenus.PaperdollEntry)
+                if (list[i] is PaperdollEntry)
                     list.RemoveAt(i--);
             }
         }

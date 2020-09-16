@@ -3,6 +3,7 @@ namespace Server.Items
     public class PhantomStaff : WildStaff
     {
         public override bool IsArtifact => true;
+
         [Constructable]
         public PhantomStaff()
         {

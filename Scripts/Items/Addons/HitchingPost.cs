@@ -9,7 +9,7 @@ using System.Collections.Generic;
 
 namespace Server.Items
 {
-    [FlipableAttribute(0x14E7, 0x14E8)]
+    [Flipable(0x14E7, 0x14E8)]
     public class HitchingPost : Item, ISecurable
     {
         public override int LabelNumber => m_Replica ? 1071127 : 1025351;// hitching post (replica)
@@ -162,7 +162,7 @@ namespace Server.Items
                         continue;
 
                     AddButton(15, 39 + (i * 20), 10006, 10006, i + 1, GumpButtonType.Reply, 0);
-                    AddHtml(32, 35 + (i * 20), 275, 18, String.Format("<BASEFONT COLOR=#C0C0EE>{0}</BASEFONT>", pet.Name), false, false);
+                    AddHtml(32, 35 + (i * 20), 275, 18, string.Format("<BASEFONT COLOR=#C0C0EE>{0}</BASEFONT>", pet.Name), false, false);
                 }
             }
 

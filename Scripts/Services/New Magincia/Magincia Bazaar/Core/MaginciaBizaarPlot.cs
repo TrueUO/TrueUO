@@ -78,17 +78,6 @@ namespace Server.Engines.NewMagincia
         {
             get
             {
-                /*if(m_Auction == null)
-				{
-					TimeSpan ts;
-					if(m_Owner == null)
-						ts = MaginciaBazaar.GetLongAuctionTime;
-					else
-						ts = MaginciaBazaar.GetShortAuctionTime;
-						
-					m_Auction = new MaginciaPlotAuction(this, ts);
-				}*/
-
                 return m_Auction;
             }
             set { m_Auction = value; }
@@ -293,7 +282,7 @@ namespace Server.Engines.NewMagincia
 
         public bool TrySetShopName(Mobile from, string text)
         {
-            if (text == null || !Server.Guilds.BaseGuildGump.CheckProfanity(text) || text.Length == 0 || text.Length > 40)
+            if (text == null || !Guilds.BaseGuildGump.CheckProfanity(text) || text.Length == 0 || text.Length > 40)
                 return false;
 
             m_ShopName = text;
@@ -409,7 +398,7 @@ namespace Server.Engines.NewMagincia
         {
             m_ID = id;
             m_Location = pnt;
-            m_Map = Server.Map.Maps[mapID];
+            m_Map = Map.Maps[mapID];
         }
 
         public override string ToString()

@@ -321,13 +321,8 @@ namespace Server.Mobiles
             }
         }
 
-        public int ChargePerDay
-        {
-            get
-            {
-                return ChargePerRealWorldDay / 12;
-            }
-        }
+        public int ChargePerDay => ChargePerRealWorldDay / 12;
+
         public int ChargePerRealWorldDay
         {
             get
@@ -340,7 +335,7 @@ namespace Server.Mobiles
 
                 int perDay = (int)(60 + (total / 500) * 3);
 
-                MerchantsTrinket trinket = FindItemOnLayer(Layer.Earrings) as MerchantsTrinket;
+                var trinket = GetMerchantsTrinket();
 
                 if (trinket != null)
                 {
@@ -350,6 +345,19 @@ namespace Server.Mobiles
                 return perDay;
             }
         }
+
+        public MerchantsTrinket GetMerchantsTrinket()
+        {
+            var trinket = FindItemOnLayer(Layer.Earrings) as MerchantsTrinket;
+
+            if (trinket != null && trinket.UsesRemaining > 0)
+            {
+                return trinket;
+            }
+
+            return null;
+        }
+
         public static void TryToBuy(Item item, Mobile from)
         {
             PlayerVendor vendor = item.RootParent as PlayerVendor;
@@ -564,6 +572,8 @@ namespace Server.Mobiles
                             {
                                 Banker.Deposit(House.MovingCrate, HoldGold);
                             }
+                            
+                            HoldGold = 0;
                         }
 
                         foreach (Item item in list)
@@ -575,6 +585,7 @@ namespace Server.Mobiles
                     {
                         VendorInventory inventory = new VendorInventory(House, Owner, Name, ShopName);
                         inventory.Gold = HoldGold;
+                        HoldGold = 0;
 
                         foreach (Item item in list)
                         {
@@ -598,6 +609,8 @@ namespace Server.Mobiles
                         {
                             Banker.Deposit(backpack, HoldGold);
                         }
+                        
+                        HoldGold = 0;
                     }
 
                     foreach (Item item in list)
@@ -621,6 +634,11 @@ namespace Server.Mobiles
             if (Placeholder != null)
             {
                 Placeholder.Delete();
+            }
+            
+            if(PlayerVendors.Contains(this))
+            {
+                PlayerVendors.Remove(this);
             }
         }
 
@@ -1602,18 +1620,15 @@ namespace Server.Mobiles
 
         protected override void OnTick()
         {
-            var list = PlayerVendor.PlayerVendors.Where(v => !v.IsCommission && v.NextPayTime <= DateTime.UtcNow).ToList();
+            var list = PlayerVendor.PlayerVendors.Where(v => !v.Deleted && !v.IsCommission && v.NextPayTime <= DateTime.UtcNow).ToList();
 
             for (int i = 0; i < list.Count; i++)
             {
                 var vendor = list[i];
                 vendor.NextPayTime = DateTime.UtcNow + GetInterval();
 
-                int pay;
-                int totalGold;
-
-                pay = vendor.ChargePerRealWorldDay;
-                totalGold = vendor.HoldGold;
+                var pay = vendor.ChargePerRealWorldDay;
+                var totalGold = vendor.HoldGold;
 
                 if (pay > totalGold)
                 {
@@ -1622,17 +1637,23 @@ namespace Server.Mobiles
                 else
                 {
                     vendor.HoldGold -= pay;
+
+                    var trinket = vendor.GetMerchantsTrinket();
+
+                    if (trinket != null)
+                    {
+                        trinket.UsesRemaining--;
+                    }
                 }
             }
 
             ColUtility.Free(list);
 
-            var rentals = PlayerVendor.PlayerVendors.OfType<RentedVendor>().Where(rv => rv.RentalExpireTime <= DateTime.UtcNow).ToList();
+            var rentals = PlayerVendor.PlayerVendors.OfType<RentedVendor>().Where(rv => !rv.Deleted && rv.RentalExpireTime <= DateTime.UtcNow).ToList();
 
             for (int i = 0; i < rentals.Count; i++)
             {
                 var vendor = rentals[i];
-
                 int renewalPrice = vendor.RenewalPrice;
 
                 if (vendor.Renew && vendor.HoldGold >= renewalPrice)

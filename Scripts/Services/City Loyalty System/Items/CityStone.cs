@@ -28,17 +28,14 @@ namespace Server.Engines.CityLoyalty
         {
             if (CityLoyaltySystem.Enabled && CityLoyaltySystem.IsSetup() && from is PlayerMobile && from.InRange(from.Location, 3))
             {
-                if (from is PlayerMobile && City != null && City.IsCitizen(from))
-                    BaseGump.SendGump(new CityStoneGump(from as PlayerMobile, City));
-                else
-                    from.SendLocalizedMessage(1153888); // Only Citizens of this City may use the Election Stone. 
+                BaseGump.SendGump(new CityStoneGump(from as PlayerMobile, City));
             }
         }
 
         public override void AddNameProperty(ObjectPropertyList list)
         {
             if (City != null)
-                list.Add(1153887, String.Format("#{0}", CityLoyaltySystem.GetCityLocalization(City.City)));
+                list.Add(1153887, string.Format("#{0}", CityLoyaltySystem.GetCityLocalization(City.City)));
         }
 
         public override void GetProperties(ObjectPropertyList list)
@@ -65,7 +62,7 @@ namespace Server.Engines.CityLoyalty
             }
 
             list.Add(1154023, City.Treasury > 0 ? City.Treasury.ToString("N0", CultureInfo.GetCultureInfo("en-US")) : City.Treasury.ToString()); // City Treasury Balance: ~1_AMT~
-            list.Add(1154059, String.Format("#{0}", City.ActiveTradeDeal == TradeDeal.None ? 1011051 : (int)City.ActiveTradeDeal - 12)); // Current Trade Deal: ~1_GUILD~
+            list.Add(1154059, string.Format("#{0}", City.ActiveTradeDeal == TradeDeal.None ? 1011051 : (int)City.ActiveTradeDeal - 12)); // Current Trade Deal: ~1_GUILD~
             list.Add(1154907, City.CompletedTrades.ToString(CultureInfo.GetCultureInfo("en-US"))); // Trade Orders Delivered: ~1_val~
         }
 
@@ -142,7 +139,7 @@ namespace Server.Engines.CityLoyalty
                             if (targeted is IPoint3D)
                             {
                                 IPoint3D p = targeted as IPoint3D;
-                                Server.Spells.SpellHelper.GetSurfaceTop(ref p);
+                                Spells.SpellHelper.GetSurfaceTop(ref p);
                                 BallotBox box = new BallotBox();
 
                                 if (CheckLocation(m, box, p))

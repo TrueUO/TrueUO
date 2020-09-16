@@ -4,7 +4,6 @@ using Server.Targeting;
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Spells.Necromancy
 {
@@ -313,7 +312,7 @@ namespace Server.Spells.Necromancy
             }
             catch (Exception e)
             {
-                Server.Diagnostics.ExceptionLogging.LogException(e);
+                Diagnostics.ExceptionLogging.LogException(e);
             }
 
             if (summoned == null)
@@ -400,7 +399,7 @@ namespace Server.Spells.Necromancy
             {
                 if (Summon.Deleted)
                 {
-                    AnimateDeadSpell.Unregister(this);
+                    Unregister(this);
                     Stop();
                 }
                 else
@@ -412,7 +411,7 @@ namespace Server.Spells.Necromancy
                     else
                     {
                         Summon.Kill();
-                        AnimateDeadSpell.Unregister(this);
+                        Unregister(this);
                         Stop();
                     }
                 }

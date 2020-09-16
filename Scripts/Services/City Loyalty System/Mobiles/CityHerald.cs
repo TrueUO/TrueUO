@@ -27,7 +27,7 @@ namespace Server.Engines.CityLoyalty
             }
             set
             {
-                if (String.IsNullOrEmpty(value))
+                if (string.IsNullOrEmpty(value))
                 {
                     AnnouncementExpires = DateTime.MinValue;
 
@@ -93,7 +93,7 @@ namespace Server.Engines.CityLoyalty
 
             EquipItem(new GoldRing());
 
-            CantWalk = true;
+            Frozen = true;
         }
 
         public override void GetContextMenuEntries(Mobile from, List<ContextMenuEntry> list)
@@ -154,7 +154,7 @@ namespace Server.Engines.CityLoyalty
 
         public void DoAnnouncement()
         {
-            if (!String.IsNullOrEmpty(_Announcement))
+            if (!string.IsNullOrEmpty(_Announcement))
             {
                 PublicOverheadMessage(MessageType.Regular, 0x3B2, 502976); // Hear ye! Hear ye!
                 Timer.DelayCall(TimeSpan.FromSeconds(3), () =>
@@ -183,6 +183,7 @@ namespace Server.Engines.CityLoyalty
         {
             base.Serialize(writer);
             writer.Write(0);
+			
             writer.Write((int)City);
             writer.Write(_Announcement);
             writer.Write(AnnouncementExpires);
@@ -192,6 +193,8 @@ namespace Server.Engines.CityLoyalty
         {
             base.Deserialize(reader);
             int v = reader.ReadInt();
+			Frozen = true;
+			
             City = (City)reader.ReadInt();
             _Announcement = reader.ReadString();
             AnnouncementExpires = reader.ReadDateTime();

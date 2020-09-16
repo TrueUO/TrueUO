@@ -32,6 +32,9 @@ namespace Server.Engines.CityLoyalty
         public bool ShowGainMessage { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
+        public double ArtisanBodPoints { get; set; }
+
+        [CommandProperty(AccessLevel.GameMaster)]
         public LoyaltyRating LoyaltyRating => CityLoyaltySystem.GetCityInstance(City).GetLoyaltyRating(Player, this);
 
         private bool _Utilizing;
@@ -83,7 +86,7 @@ namespace Server.Engines.CityLoyalty
 
         public override string ToString()
         {
-            return String.Format("{0} {1}", City.ToString(), IsCitizen ? "[Citizen]" : String.Empty);
+            return string.Format("{0} {1}", City.ToString(), IsCitizen ? "[Citizen]" : string.Empty);
         }
 
         public void DeclareCitizenship()
@@ -114,7 +117,7 @@ namespace Server.Engines.CityLoyalty
                 Player.AddRewardTitle(loc);
 
                 Titles |= title;
-                Player.SendLocalizedMessage(1073625, String.Format("#{0}", loc.ToString())); // The title "~1_TITLE~" has been bestowed upon you.
+                Player.SendLocalizedMessage(1073625, string.Format("#{0}", loc.ToString())); // The title "~1_TITLE~" has been bestowed upon you.
             }
         }
 

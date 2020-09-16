@@ -1,6 +1,7 @@
-using Server.Engines.SeasonalEvents;
 using Server.Items;
 using Server.Mobiles;
+using Server.Engines.RisingTide;
+
 using System;
 using System.Linq;
 
@@ -14,7 +15,6 @@ namespace Server.Engines.Points
         public override double MaxPoints => double.MaxValue;
         public override bool ShowOnLoyaltyGump => false;
 
-        public bool InSeason => SeasonalEventSystem.IsActive(EventType.RisingTide);
         private readonly TextDefinition m_Name = null;
 
         public static readonly double CargoChance = 0.1;
@@ -26,7 +26,7 @@ namespace Server.Engines.Points
 
         public override void ProcessKill(Mobile victim, Mobile damager)
         {
-            if (Enabled && victim is BaseCreature && damager is PlayerMobile)
+            if (RisingTideEvent.Instance.Running && victim is BaseCreature && damager is PlayerMobile)
             {
                 BaseCreature bc = victim as BaseCreature;
                 PlunderBeaconAddon beacon = GetPlunderBeacon(bc);
@@ -84,14 +84,10 @@ namespace Server.Engines.Points
             return null;
         }
 
-        public bool Enabled { get; set; }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(0);
-
-            writer.Write(Enabled);
+            writer.Write(1);
 
             if (PlunderBeaconSpawner.Spawner != null)
             {
@@ -110,11 +106,16 @@ namespace Server.Engines.Points
 
             int version = reader.ReadInt();
 
-            Enabled = reader.ReadBool();
+            if (version == 0)
+            {
+                reader.ReadBool();
+            }
 
             if (reader.ReadInt() == 0)
             {
-                PlunderBeaconSpawner spawner = new PlunderBeaconSpawner();
+                var spawner = new PlunderBeaconSpawner();
+                PlunderBeaconSpawner.Spawner = spawner;
+
                 spawner.Deserialize(reader);
             }
         }

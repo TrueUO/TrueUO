@@ -37,7 +37,7 @@ namespace Server.Engines.Shadowguard
                 else
                 {
                     m.SendLocalizedMessage(1010086); // What do you want to use this on?
-                    m.BeginTarget(10, false, Server.Targeting.TargetFlags.None, (from, targeted) =>
+                    m.BeginTarget(10, false, Targeting.TargetFlags.None, (from, targeted) =>
                     {
                         if (0.25 > Utility.RandomDouble() && m.BAC > 0)
                         {
@@ -129,7 +129,6 @@ namespace Server.Engines.Shadowguard
         public OrchardEncounter Encounter { get; set; }
 
         private bool _Thrown;
-        private bool _EatenByPet;
 
         public ShadowguardApple(OrchardEncounter encounter, ShadowguardCypress tree)
         {
@@ -150,7 +149,7 @@ namespace Server.Engines.Shadowguard
             if (IsChildOf(m.Backpack) && Tree != null)
             {
                 m.SendLocalizedMessage(1010086); // What do you want to use this on?
-                m.BeginTarget(10, false, Server.Targeting.TargetFlags.None, (from, targeted) =>
+                m.BeginTarget(10, false, Targeting.TargetFlags.None, (from, targeted) =>
                 {
                     _Thrown = true;
 
@@ -237,7 +236,7 @@ namespace Server.Engines.Shadowguard
         {
             base.OnDelete();
 
-            if (!_Thrown && !_EatenByPet && Encounter != null)
+            if (!_Thrown && Encounter != null)
             {
                 foreach (PlayerMobile pm in Encounter.Region.GetEnumeratedMobiles().OfType<PlayerMobile>())
                 {
@@ -267,18 +266,6 @@ namespace Server.Engines.Shadowguard
                     Encounter.AddSpawn(creature);
                 }
             }
-        }
-
-        public override bool DropToMobile(Mobile from, Mobile target, Point3D p)
-        {
-            var bc = target as BaseCreature;
-
-            if (bc != null && !bc.IsDeadPet && bc.Controlled && (bc.ControlMaster == from || bc.IsPetFriend(from)))
-            {
-                _EatenByPet = true;
-            }
-
-            return base.DropToMobile(from, target, p);
         }
 
         public override void Delete()
@@ -498,7 +485,7 @@ namespace Server.Engines.Shadowguard
             if (IsChildOf(m.Backpack))
             {
                 m.SendLocalizedMessage(1010086); // What do you want to use this on?
-                m.BeginTarget(3, false, Server.Targeting.TargetFlags.None, (from, targeted) =>
+                m.BeginTarget(3, false, Targeting.TargetFlags.None, (from, targeted) =>
                 {
                     if (targeted is PurifyingFlames)
                     {
@@ -558,7 +545,7 @@ namespace Server.Engines.Shadowguard
                                 int ticks = 1;
                                 Timer.DelayCall(TimeSpan.FromMilliseconds(50), TimeSpan.FromMilliseconds(50), 2, () =>
                                 {
-                                    Server.Misc.Geometry.Circle2D(p, map, ticks, (pnt, mob) =>
+                                    Misc.Geometry.Circle2D(p, map, ticks, (pnt, mob) =>
                                     {
                                         Effects.PlaySound(pnt, mob, 0x307);
                                         Effects.SendLocationEffect(pnt, mob, Utility.RandomBool() ? 14000 : 14013, 20, 2018, 0);

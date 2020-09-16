@@ -15,9 +15,7 @@ namespace Server.Items
 
         public bool CheckWhenHidden => true;
 
-        public static Type[] RituelItem => m_RituelItem;
-
-        private static readonly Type[] m_RituelItem = new Type[]
+        public static Type[] RituelItem { get; } = new Type[]
         {
             typeof(ExodusSummoningRite), typeof(ExodusSacrificalDagger), typeof(RobeofRite), typeof(ExodusSummoningAlter), typeof(CapturedEssence)
         };
@@ -80,7 +78,7 @@ namespace Server.Items
         {
             if (Utility.RandomDouble() < 0.2)
             {
-                Item item = Activator.CreateInstance(m_RituelItem[Utility.Random(m_RituelItem.Length - 1)]) as Item;
+                Item item = Activator.CreateInstance(RituelItem[Utility.Random(RituelItem.Length - 1)]) as Item;
                 DropItem(item);
             }
 
@@ -181,7 +179,7 @@ namespace Server.Items
 
         public static void GiveRituelItem(Mobile m)
         {
-            Item item = Activator.CreateInstance(m_RituelItem[Utility.Random(m_RituelItem.Length - 1)]) as Item;
+            Item item = Activator.CreateInstance(RituelItem[Utility.Random(RituelItem.Length - 1)]) as Item;
             m.PlaySound(0x5B4);
 
             if (item == null)
@@ -216,7 +214,7 @@ namespace Server.Items
         public ExodusChest ExodusChest => m_Chest;
 
         public ExodusChestRegion(ExodusChest chest)
-            : base(null, chest.Map, Region.Find(chest.Location, chest.Map), new Rectangle2D(chest.Location.X - 2, chest.Location.Y - 2, 5, 5))
+            : base(null, chest.Map, Find(chest.Location, chest.Map), new Rectangle2D(chest.Location.X - 2, chest.Location.Y - 2, 5, 5))
         {
             m_Chest = chest;
         }

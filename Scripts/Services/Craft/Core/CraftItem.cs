@@ -230,7 +230,7 @@ namespace Server.Engines.Craft
                     }
                     catch (Exception e)
                     {
-                        Server.Diagnostics.ExceptionLogging.LogException(e);
+                        Diagnostics.ExceptionLogging.LogException(e);
                     }
 
                     if (item != null)
@@ -402,7 +402,7 @@ namespace Server.Engines.Craft
             typeof(BaseWeapon), typeof(BaseArmor), typeof(BaseClothing), typeof(BaseJewel), typeof(DragonBardingDeed),
             typeof(BaseAddonDeed), typeof(BaseAddon),
             typeof(PlantPigment), typeof(SoftenedReeds), typeof(DryReeds), typeof(PlantClippings),
-            typeof(MedusaLightScales), typeof(MedusaDarkScales)
+            typeof(MedusaLightScales), typeof(MedusaDarkScales),
         };
 
         private static readonly Type[] m_ClothColoredItemTable =
@@ -419,13 +419,12 @@ namespace Server.Engines.Craft
             typeof(Board), typeof(Log),
             typeof(BaseIngot), typeof(BaseOre), typeof(BaseLeather), typeof(BaseHides), typeof(AbyssalCloth), typeof(UncutCloth), typeof(Cloth),
             typeof(BaseGranite), typeof(BaseScales), typeof(PlantClippings), typeof(DryReeds), typeof(SoftenedReeds),
-            typeof(PlantPigment), typeof(BaseContainer)
+            typeof(PlantPigment), typeof(BaseContainer),
         };
 
         private static readonly Type[] m_MarkableTable =
         {
-            typeof(BlueDiamondRing), typeof(BrilliantAmberBracelet), typeof(DarkSapphireBracelet), typeof(EcruCitrineRing),
-            typeof(FireRubyBracelet), typeof(PerfectEmeraldRing), typeof(TurqouiseRing), typeof(WhitePearlBracelet),
+            typeof(BaseBracelet), typeof(BaseRing),
             typeof(BaseContainer), typeof(CraftableFurniture),
 
             typeof(BaseArmor), typeof(BaseWeapon), typeof(BaseClothing), typeof(BaseInstrument), typeof(BaseTool),
@@ -480,18 +479,6 @@ namespace Server.Engines.Craft
             }
 
             return false;
-        }
-
-        public static bool RetainsColor(Type type)
-        {
-            bool inItemTable = false;
-
-            for (int i = 0; !inItemTable && i < m_ColoredItemTable.Length; ++i)
-            {
-                inItemTable = (type == m_ColoredItemTable[i] || type.IsSubclassOf(m_ColoredItemTable[i]));
-            }
-
-            return inItemTable;
         }
 
         public bool RetainsColorFrom(CraftSystem system, Type type)
@@ -991,7 +978,7 @@ namespace Server.Engines.Craft
                     types[i] = new[] { baseType };
                 }
 
-                amounts[i] = craftRes.Amount;
+                amounts[i] = IsAnvilOfArtifactValid(from, craftSystem)  ? craftRes.Amount * 10 : craftRes.Amount;
 
                 // For stackable items that can ben crafted more than one at a time
                 if (UseAllRes)
@@ -1011,7 +998,7 @@ namespace Server.Engines.Craft
                             {
                                 message = res.MessageNumber;
                             }
-                            else if (!String.IsNullOrEmpty(res.MessageString))
+                            else if (!string.IsNullOrEmpty(res.MessageString))
                             {
                                 message = res.MessageString;
                             }
@@ -1194,7 +1181,7 @@ namespace Server.Engines.Craft
                 {
                     message = res.MessageNumber;
                 }
-                else if (res.MessageString != null && res.MessageString != String.Empty)
+                else if (res.MessageString != null && res.MessageString != string.Empty)
                 {
                     message = res.MessageString;
                 }
@@ -1248,7 +1235,7 @@ namespace Server.Engines.Craft
                 m_ResAmount = amount;
             }
 
-            if (CaddelliteCraft && (!item.HasSocket<Caddellite>() || !Server.Engines.Points.PointsSystem.Khaldun.InSeason))
+            if (CaddelliteCraft && (!item.HasSocket<Caddellite>() || !Khaldun.TreasuresOfKhaldunEvent.Instance.Running))
             {
                 CaddelliteCraft = false;
             }
@@ -1268,6 +1255,19 @@ namespace Server.Engines.Craft
             }
 
             return true;
+        }
+
+        public bool IsAnvilOfArtifactValid(Mobile from, CraftSystem system)
+        {
+            if (CraftContext.IsAnvilReady(from) && ItemType.IsSubclassOf(typeof(BaseArmor)) && !ItemType.IsSubclassOf(typeof(BaseShield)))
+            {
+                bool allRequiredSkills = true;
+                double chance = GetSuccessChance(from, null, system, false, ref allRequiredSkills);
+
+                return GetExceptionalChance(system, chance, from) > 0.0;
+            }
+
+            return false;
         }
 
         public double GetExceptionalChance(CraftSystem system, double chance, Mobile from)
@@ -1449,7 +1449,7 @@ namespace Server.Engines.Craft
             {
                 CraftSkill craftSkill = Skills.GetAt(i);
 
-                Server.Misc.SkillCheck.CheckSkill(from, craftSkill.SkillToMake, craftSkill.MinSkill - MinSkillOffset, craftSkill.MaxSkill, amount);
+                Misc.SkillCheck.CheckSkill(from, craftSkill.SkillToMake, craftSkill.MinSkill - MinSkillOffset, craftSkill.MaxSkill, amount);
             }
         }
 
@@ -1579,7 +1579,7 @@ namespace Server.Engines.Craft
                 case Expansion.TOL:
                     return 1155875; // You must have the Time of Legends expansion to use this feature.
                 default:
-                    return String.Format("The \"{0}\" expansion is required to attempt this item.", ExpansionInfo.GetInfo(expansion).Name);
+                    return string.Format("The \"{0}\" expansion is required to attempt this item.", ExpansionInfo.GetInfo(expansion).Name);
             }
         }
 
@@ -2099,7 +2099,7 @@ namespace Server.Engines.Craft
                         }
                         catch (Exception e)
                         {
-                            Server.Diagnostics.ExceptionLogging.LogException(e);
+                            Diagnostics.ExceptionLogging.LogException(e);
                         }
 
                         if (cc != null)
@@ -2200,7 +2200,7 @@ namespace Server.Engines.Craft
             return false;
         }
 
-        public class ChooseResTarget : Server.Targeting.Target
+        public class ChooseResTarget : Targeting.Target
         {
             private readonly CraftItem m_CraftItem;
             private readonly CraftSystem m_CraftSystem;
@@ -2208,14 +2208,14 @@ namespace Server.Engines.Craft
             private readonly ITool m_Tool;
 
             public ChooseResTarget(Mobile from, CraftItem craftitem, CraftSystem craftSystem, Type typeRes, ITool tool)
-                : base(-1, false, Server.Targeting.TargetFlags.None)
+                : base(-1, false, Targeting.TargetFlags.None)
             {
                 m_CraftItem = craftitem;
                 m_CraftSystem = craftSystem;
                 ItemTypeRes = typeRes;
                 m_Tool = tool;
 
-                CraftItem.AddResTarget(from);
+                AddResTarget(from);
             }
 
             protected override void OnTarget(Mobile from, object targeted)
@@ -2231,7 +2231,7 @@ namespace Server.Engines.Craft
                 m_CraftItem.Craft(from, m_CraftSystem, ItemTypeRes, m_Tool);
             }
 
-            protected override void OnTargetCancel(Mobile from, Server.Targeting.TargetCancelType cancelType)
+            protected override void OnTargetCancel(Mobile from, Targeting.TargetCancelType cancelType)
             {
                 from.EndAction(typeof(CraftSystem));
                 from.SendGump(new CraftGump(from, m_CraftSystem, m_Tool, null));
@@ -2239,7 +2239,7 @@ namespace Server.Engines.Craft
 
             protected override void OnTargetFinish(Mobile from)
             {
-                CraftItem.RemoveResTarget(from);
+                RemoveResTarget(from);
             }
         }
     }

@@ -418,14 +418,9 @@ namespace Server.Items
                     else if (0.15 > Utility.RandomDouble())
                         special = GetRandomSpecial(level, cont.Map);
                 }
-                else if (.10 > Utility.RandomDouble())
+                else if (0.10 > Utility.RandomDouble())
                 {
                     special = GetRandomSpecial(level, cont.Map);
-                }
-
-                if (Engines.Points.PointsSystem.JollyRogerData.Enabled && .30 > Utility.RandomDouble())
-                {
-                    cont.DropItem(new MysteriousFragment());
                 }
             }
 
@@ -503,7 +498,7 @@ namespace Server.Items
 
         public static Item GetRandomRecipe()
         {
-            List<Server.Engines.Craft.Recipe> recipes = new List<Server.Engines.Craft.Recipe>(Server.Engines.Craft.Recipe.Recipes.Values);
+            List<Engines.Craft.Recipe> recipes = new List<Engines.Craft.Recipe>(Engines.Craft.Recipe.Recipes.Values);
 
             return new RecipeScroll(recipes[Utility.Random(recipes.Count)]);
         }
@@ -591,37 +586,41 @@ namespace Server.Items
         {
             ExecuteTrap(from);
 
-            if (!AncientGuardians.Any(g => g.Alive))
+            if (!AncientGuardians.Any(g => g != null && g.Alive))
             {
                 BaseCreature spawn = TreasureMap.Spawn(Level, GetWorldLocation(), Map, from, false);
-                spawn.NoLootOnDeath = true;
 
-                spawn.Name = "Ancient Chest Guardian";
-                spawn.Title = "(Guardian)";
-                spawn.Tamable = false;
-
-                if (spawn.HitsMaxSeed >= 0)
-                    spawn.HitsMaxSeed = (int)(spawn.HitsMaxSeed * Paragon.HitsBuff);
-
-                spawn.RawStr = (int)(spawn.RawStr * Paragon.StrBuff);
-                spawn.RawInt = (int)(spawn.RawInt * Paragon.IntBuff);
-                spawn.RawDex = (int)(spawn.RawDex * Paragon.DexBuff);
-
-                spawn.Hits = spawn.HitsMax;
-                spawn.Mana = spawn.ManaMax;
-                spawn.Stam = spawn.StamMax;
-
-                spawn.Hue = 1960;
-
-                for (int i = 0; i < spawn.Skills.Length; i++)
+                if (spawn != null)
                 {
-                    Skill skill = spawn.Skills[i];
+                    spawn.NoLootOnDeath = true;
 
-                    if (skill.Base > 0.0)
-                        skill.Base *= Paragon.SkillsBuff;
+                    spawn.Name = "Ancient Chest Guardian";
+                    spawn.Title = "(Guardian)";
+                    spawn.Tamable = false;
+
+                    if (spawn.HitsMaxSeed >= 0)
+                        spawn.HitsMaxSeed = (int)(spawn.HitsMaxSeed * Paragon.HitsBuff);
+
+                    spawn.RawStr = (int)(spawn.RawStr * Paragon.StrBuff);
+                    spawn.RawInt = (int)(spawn.RawInt * Paragon.IntBuff);
+                    spawn.RawDex = (int)(spawn.RawDex * Paragon.DexBuff);
+
+                    spawn.Hits = spawn.HitsMax;
+                    spawn.Mana = spawn.ManaMax;
+                    spawn.Stam = spawn.StamMax;
+
+                    spawn.Hue = 1960;
+
+                    for (int i = 0; i < spawn.Skills.Length; i++)
+                    {
+                        Skill skill = spawn.Skills[i];
+
+                        if (skill.Base > 0.0)
+                            skill.Base *= Paragon.SkillsBuff;
+                    }
+
+                    AncientGuardians.Add(spawn);
                 }
-
-                AncientGuardians.Add(spawn);
             }
         }
 
@@ -791,7 +790,7 @@ namespace Server.Items
                 AOS.Damage(from, damage, 0, 100, 0, 0, 0);
 
                 // Your skin blisters from the heat!
-                from.LocalOverheadMessage(Network.MessageType.Regular, 0x2A, 503000);
+                from.LocalOverheadMessage(MessageType.Regular, 0x2A, 503000);
 
                 Effects.SendLocationEffect(from.Location, from.Map, 0x36BD, 15, 10);
                 Effects.PlaySound(from.Location, from.Map, 0x307);

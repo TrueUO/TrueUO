@@ -112,6 +112,7 @@ namespace Server.Mobiles
         Triton = Chivalry | Discordance | MageryMastery | Mysticism | Poisoning | Spellweaving | Bushido | Ninjitsu | BattleDefense | Bashing | Piercing | Slashing | WrestlingMastery,
         CoconutCrab = GreaterDragon | BattleDefense | Bashing | Piercing | Slashing | WrestlingMastery,
         Vollem = Variety1 | Chivalry | Discordance | MageryMastery | Mysticism | Poisoning | Spellweaving | BattleDefense | Tokuno,
+        Capybara = Poisoning | Piercing | Bashing | Slashing | WrestlingMastery
     }
 
     public static class PetTrainingHelper
@@ -777,7 +778,7 @@ namespace Server.Mobiles
                 new TrainingDefinition(typeof(Ridgeback), Class.Clawed, MagicalAbility.StandardClawedOrTailed, SpecialAbilityClawed, WepAbility1, AreaEffectNone, 1, 3),
                 new TrainingDefinition(typeof(RuddyBoura), Class.Tailed, MagicalAbility.StandardClawedOrTailed, SpecialAbilityTailed, WepAbility1, AreaEffectNone, 2, 3),
                 new TrainingDefinition(typeof(RuneBeetle), Class.Insectoid, MagicalAbility.RuneBeetle, SpecialAbilityNone, WepAbilityNone, AreaEffectNone, 3, 5),
-                new TrainingDefinition(typeof(SabertoothedTiger), Class.ClawedAndTailed, MagicalAbility.SabreToothedTiger, SpecialAbilitySabreTri, WepAbility1, AreaEffectNone, 2, 5),
+                new TrainingDefinition(typeof(SabreToothedTiger), Class.ClawedAndTailed, MagicalAbility.SabreToothedTiger, SpecialAbilitySabreTri, WepAbility1, AreaEffectNone, 2, 5),
                 //new TrainingDefinition(typeof(SakkhranBirdOfPrey), Class.MagicalAndTailed, MagicalAbility.None, SpecialAbilityNone, WepAbilityNone, AreaEffectNone, 1, 1),
                 new TrainingDefinition(typeof(Saurosaurus), Class.Tailed, MagicalAbility.Poisoning, SpecialAbilityNone, WepAbilityNone, AreaEffectNone, 3, 5),
                 new TrainingDefinition(typeof(SavageRidgeback), Class.Clawed, MagicalAbility.None, SpecialAbilityNone, WepAbilityNone, AreaEffectNone, 1, 3),
@@ -820,6 +821,7 @@ namespace Server.Mobiles
                 new TrainingDefinition(typeof(HungryCoconutCrab), Class.None, MagicalAbility.StandardClawedOrTailed, SpecialAbilityAnimalStandard, WepAbility1, AreaEffectNone, 1, 2),
                 new TrainingDefinition(typeof(SkeletalCat), Class.ClawedTailedAndNecromantic, MagicalAbility.Hellcat, SpecialAbilitySkeletalCat, WepAbility4, AreaEffectArea3, 2, 4),
                 new TrainingDefinition(typeof(CoconutCrab), Class.None, MagicalAbility.CoconutCrab, SpecialAbilityCoconutCrab, WepAbility2, AreaEffectArea2, 1, 3),
+                new TrainingDefinition(typeof(Capybara), Class.Clawed, MagicalAbility.Capybara, SpecialAbilityClawed, WepAbility1, AreaEffectNone, 1, 3),
             };
             #endregion
         }
@@ -1707,13 +1709,13 @@ namespace Server.Mobiles
         public static void Initialize()
         {
             // Syntax: [PetTrainTest <PetType>
-            Server.Commands.CommandSystem.Register("PetTrainTest", AccessLevel.GameMaster, e =>
+            Commands.CommandSystem.Register("PetTrainTest", AccessLevel.GameMaster, e =>
             {
                 Mobile m = e.Mobile;
 
                 string arg = e.GetString(0);
 
-                if (!String.IsNullOrEmpty(arg))
+                if (!string.IsNullOrEmpty(arg))
                 {
                     Type t = ScriptCompiler.FindTypeByName(arg);
 
@@ -1749,7 +1751,7 @@ namespace Server.Mobiles
 
                                 Timer.DelayCall(TimeSpan.FromSeconds(.25), () =>
                                 {
-                                    bc.PrivateOverheadMessage(Server.Network.MessageType.Regular, 0x3B2, 502799, m.NetState);
+                                    bc.PrivateOverheadMessage(Network.MessageType.Regular, 0x3B2, 502799, m.NetState);
                                     // It seems to accept you as master.
                                     bc.OnAfterTame(m);
 
@@ -1758,7 +1760,7 @@ namespace Server.Mobiles
 
                                     bc.Owners.Add(m);
 
-                                    PetTrainingHelper.GetAbilityProfile(bc, true).OnTame();
+                                    GetAbilityProfile(bc, true).OnTame();
                                 });
                             }
                         }

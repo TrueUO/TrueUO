@@ -66,7 +66,7 @@ namespace Server.Spells.SkillMasteries
                     }
                     else
                     {
-                        SpellHelper.CheckReflect(0, Caster, ref m);
+                        SpellHelper.CheckReflect(this, Caster, ref m);
                         _Location = Caster.Location;
 
                         m.FixedParticles(0x374A, 1, 15, 5054, 0x7A2, 7, EffectLayer.Head);
@@ -79,7 +79,7 @@ namespace Server.Spells.SkillMasteries
                         _Mod = new ResistanceMod(ResistanceType.Energy, -mod);
                         m.AddResistanceMod(_Mod);
 
-                        BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.DeathRay, 1155896, 1156085, String.Format("{0}\t{1}", ((int)damage).ToString(), m.Name))); // Deals ~2_DAMAGE~ to ~1_NAME~ every 3 seconds while in range. Preforming any action will end spell.
+                        BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.DeathRay, 1155896, 1156085, string.Format("{0}\t{1}", ((int)damage).ToString(), m.Name))); // Deals ~2_DAMAGE~ to ~1_NAME~ every 3 seconds while in range. Preforming any action will end spell.
                         BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.DeathRayDebuff, 1155896, 1156086, mod.ToString())); // Energy Resist Debuff: ~1_VAL~%
 
                         Target = m;

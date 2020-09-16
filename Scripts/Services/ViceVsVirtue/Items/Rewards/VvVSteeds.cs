@@ -43,15 +43,15 @@ namespace Server.Engines.VvV
             list.Add(1154937); // vvv item
         }
 
-        public override void OnDoubleClick(Mobile m)
+        public override void OnDoubleClick(Mobile from)
         {
-            if (!ViceVsVirtueSystem.IsVvV(m))
+            if (!ViceVsVirtueSystem.IsVvV(from) && from.AccessLevel == AccessLevel.Player)
             {
-                m.SendLocalizedMessage(1155496); // This item can only be used by VvV participants!
+                from.SendLocalizedMessage(1155496); // This item can only be used by VvV participants!
                 return;
             }
 
-            base.OnDoubleClick(m);
+            base.OnDoubleClick(from);
         }
 
         public VvVSteedStatuette(Serial serial) : base(serial)
@@ -113,7 +113,7 @@ namespace Server.Engines.VvV
                     Timer.DelayCall(TimeSpan.FromSeconds(1), () =>
                     {
                         if (!Deleted && ControlMaster != null)
-                            ControlMaster.PrivateOverheadMessage(Server.Network.MessageType.Regular, 1154, cliloc, ControlMaster.NetState);
+                            ControlMaster.PrivateOverheadMessage(Network.MessageType.Regular, 1154, cliloc, ControlMaster.NetState);
                     });
                 }
 
@@ -181,9 +181,21 @@ namespace Server.Engines.VvV
             }
 
             if (ControlMaster != null && ControlMaster.NetState != null)
-                ControlMaster.PrivateOverheadMessage(Server.Network.MessageType.Regular, 1154, 1155550, ControlMaster.NetState); // *Your steed has depleted it's battle readiness!*
+                ControlMaster.PrivateOverheadMessage(Network.MessageType.Regular, 1154, 1155550, ControlMaster.NetState); // *Your steed has depleted it's battle readiness!*
 
             Delete();
+        }
+
+        public override void OnDoubleClick(Mobile from)
+        {
+            if (!ViceVsVirtueSystem.IsVvV(from) && from.AccessLevel == AccessLevel.Player)
+            {
+                from.SendLocalizedMessage(1155561); // You are no longer in Vice vs Virtue!
+            }
+            else
+            {
+                base.OnDoubleClick(from);
+            }
         }
 
         public override void OnDeath(Container c)

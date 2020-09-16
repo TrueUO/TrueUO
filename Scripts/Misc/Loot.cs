@@ -782,13 +782,14 @@ namespace Server
         public static Item Construct(Type type)
         {
             Item item;
+
             try
             {
                 item = Activator.CreateInstance(type) as Item;
             }
             catch (Exception e)
             {
-                Server.Diagnostics.ExceptionLogging.LogException(e);
+                Diagnostics.ExceptionLogging.LogException(e);
                 return null;
             }
 

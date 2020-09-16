@@ -206,7 +206,7 @@ namespace Server.Items
                     catch (Exception e)
                     {
                         Console.WriteLine("Error: Prefix not in collection: {0}", prefixID);
-                        Server.Diagnostics.ExceptionLogging.LogException(e);
+                        Diagnostics.ExceptionLogging.LogException(e);
                     }
                 }
 
@@ -222,7 +222,7 @@ namespace Server.Items
                     catch (Exception e)
                     {
                         Console.WriteLine("Error: Suffix not in collection: {0}", suffixID);
-                        Server.Diagnostics.ExceptionLogging.LogException(e);
+                        Diagnostics.ExceptionLogging.LogException(e);
                     }
                 }
 
@@ -1154,13 +1154,13 @@ namespace Server.Items
 
         public static void Configure()
         {
-            Server.Commands.CommandSystem.Register("GetCreatureScore", AccessLevel.GameMaster, e =>
+            Commands.CommandSystem.Register("GetCreatureScore", AccessLevel.GameMaster, e =>
                 {
-                    e.Mobile.BeginTarget(12, false, Server.Targeting.TargetFlags.None, (from, targeted) =>
+                    e.Mobile.BeginTarget(12, false, TargetFlags.None, (from, targeted) =>
                         {
                             if (targeted is BaseCreature)
                             {
-                                ((BaseCreature)targeted).PrivateOverheadMessage(Server.Network.MessageType.Regular, 0x25, false, GetDifficultyFor((BaseCreature)targeted).ToString(), e.Mobile.NetState);
+                                ((BaseCreature)targeted).PrivateOverheadMessage(Network.MessageType.Regular, 0x25, false, GetDifficultyFor((BaseCreature)targeted).ToString(), e.Mobile.NetState);
                             }
                         });
                 });
@@ -1209,11 +1209,12 @@ namespace Server.Items
                         new NamedInfoCol(AosAttribute.BonusMana, WeaponStamManaLMCTable),
                         new NamedInfoCol(AosAttribute.BonusInt, DexIntTable),
                         new NamedInfoCol(AosAttribute.LowerManaCost, WeaponStamManaLMCTable),
+                        new NamedInfoCol(AosAttribute.RegenMana, WeaponRegenTable),
                         /*new NamedInfoCol(AosAttribute.LowerRegCost, LowerRegTable), */
                     },
                     new NamedInfoCol[] // armor
                     {
-                        new NamedInfoCol(AosAttribute.LowerRegCost, LowerRegTable),
+                        new NamedInfoCol(AosAttribute.BonusInt, DexIntTable),
                         new NamedInfoCol(AosAttribute.BonusMana, ArmorStamManaLMCTable),
                         new NamedInfoCol(AosAttribute.LowerManaCost, ArmorStamManaLMCTable),
                         new NamedInfoCol(AosAttribute.RegenMana, ArmorRegenTable),
@@ -1749,7 +1750,7 @@ namespace Server.Items
             }
             else
             {
-                list.Add(1151758, String.Format("{0}\t#{1}", name, GetSuffixName(suffix)));// ~1_ITEM~ of ~2_SUFFIX~
+                list.Add(1151758, string.Format("{0}\t#{1}", name, GetSuffixName(suffix)));// ~1_ITEM~ of ~2_SUFFIX~
             }
         }
 
@@ -2631,7 +2632,7 @@ namespace Server.Items
         public static bool ApplyProperty(Item item, int id, int perclow, int perchigh, ref int budget, int luckchance, bool reforged, bool powerful)
         {
             int min = ItemPropertyInfo.GetMinIntensity(item, id);
-            int naturalMax = ItemPropertyInfo.GetMaxIntensity(item, id, false);
+            int naturalMax = ItemPropertyInfo.GetMaxIntensity(item, id, false, true);
             int max = naturalMax;
             int[] overcap = null;
 
@@ -2659,8 +2660,8 @@ namespace Server.Items
                     value = naturalMax;
                 }
             }
-            Imbuing.SetProperty(item, id, value);
 
+            Imbuing.SetProperty(item, id, value);
             budget -= Imbuing.GetIntensityForID(item, id, -1, value);
 
             return true;
@@ -3286,7 +3287,7 @@ namespace Server.Items
                 }
             }
 
-            SpawnerPersistence.ToConsole(String.Format("Removed Self Repair from {0} items.", fix));
+            SpawnerPersistence.ToConsole(string.Format("Removed Self Repair from {0} items.", fix));
         }
 
         public static void ItemNerfVersion6()
@@ -3347,7 +3348,7 @@ namespace Server.Items
                 }
             }
 
-            SpawnerPersistence.ToConsole(String.Format("Cleauned up {0} items: {1} fc2, {2} non-Armor eater, {3} non armor casting focus, {4} brittle jewels converted to Antique.", fc2 + eater + focus + brittle, fc2, eater, focus, brittle));
+            SpawnerPersistence.ToConsole(string.Format("Cleauned up {0} items: {1} fc2, {2} non-Armor eater, {3} non armor casting focus, {4} brittle jewels converted to Antique.", fc2 + eater + focus + brittle, fc2, eater, focus, brittle));
         }
         #endregion
     }

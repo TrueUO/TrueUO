@@ -1,4 +1,5 @@
 #region References
+using Server.Engines.CityLoyalty;
 using Server.Gumps;
 using Server.Misc;
 using Server.Mobiles;
@@ -101,9 +102,13 @@ namespace Server.Items
         {
             ClientFlags flags = m.NetState == null ? ClientFlags.None : m.NetState.Flags;
 
-            if (Server.Engines.VvV.VvVSigil.ExistsOn(m))
+            if (Engines.VvV.VvVSigil.ExistsOn(m))
             {
                 m.SendLocalizedMessage(1061632); // You can't do that while carrying the sigil.
+            }
+            else if (CityTradeSystem.HasTrade(m))
+            {
+                m.SendLocalizedMessage(1151733); // You cannot do that while carrying a Trade Order.
             }
             else if (TargetMap == Map.Felucca && m is PlayerMobile && ((PlayerMobile)m).Young)
             {

@@ -3,6 +3,7 @@ namespace Server.Items
     public class Boomstick : WildStaff
     {
         public override bool IsArtifact => true;
+
         [Constructable]
         public Boomstick()
             : base()

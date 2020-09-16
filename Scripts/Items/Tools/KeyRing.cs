@@ -164,7 +164,7 @@ namespace Server.Items
         {
             if (_Resource > CraftResource.Iron)
             {
-                list.Add(1053099, "#{0}\t{1}", CraftResources.GetLocalizationNumber(_Resource), String.Format("#{0}", LabelNumber.ToString())); // ~1_oretype~ ~2_armortype~
+                list.Add(1053099, "#{0}\t{1}", CraftResources.GetLocalizationNumber(_Resource), string.Format("#{0}", LabelNumber.ToString())); // ~1_oretype~ ~2_armortype~
             }
             else
             {
@@ -200,7 +200,7 @@ namespace Server.Items
             writer.Write(_Crafter);
             writer.Write((int)_Quality);
 
-            writer.WriteItemList<Key>(m_Keys);
+            writer.WriteItemList(m_Keys);
         }
 
         public override void Deserialize(GenericReader reader)
