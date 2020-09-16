@@ -1816,7 +1816,7 @@ namespace Server.Mobiles
 
             if (m_Mobile.DeleteOnRelease || m_Mobile.IsDeadPet)
             {
-                Timer.DelayCall(TimeSpan.FromSeconds(2), m_Mobile.Delete);
+                Timer.DelayCall(TimeSpan.FromSeconds(1), m_Mobile.Delete);
             }
             else
             {
@@ -1861,9 +1861,6 @@ namespace Server.Mobiles
             }
 
             m_Mobile.DebugSay("My master told me to stop.");
-
-            //if (!DirectionLocked)
-            //	m_Mobile.Direction = m_Mobile.GetDirectionTo(m_Mobile.ControlMaster);
 
             m_Mobile.Home = m_Mobile.Location;
 
