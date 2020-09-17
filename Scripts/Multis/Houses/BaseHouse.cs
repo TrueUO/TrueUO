@@ -1915,9 +1915,10 @@ namespace Server.Multis
 
             if (m_Trash == null || m_Trash.Deleted)
             {
-                m_Trash = new TrashBarrel();
-
-                m_Trash.Movable = false;
+                m_Trash = new TrashBarrel
+                {
+                    Movable = false
+                };
                 m_Trash.MoveToWorld(from.Location, from.Map);
 
                 from.SendLocalizedMessage(502121); /* You have a new trash barrel.
@@ -2704,10 +2705,12 @@ namespace Server.Multis
                 }
             }
 
-            StrongBox sb = new StrongBox(from, this);
-            sb.Movable = false;
-            sb.IsLockedDown = false;
-            sb.IsSecure = true;
+            StrongBox sb = new StrongBox(from, this)
+            {
+                Movable = false,
+                IsLockedDown = false,
+                IsSecure = true
+            };
             Secures.Add(new SecureInfo(sb, SecureLevel.CoOwners, from));
             sb.MoveToWorld(from.Location, from.Map);
         }

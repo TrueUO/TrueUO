@@ -2627,8 +2627,10 @@ namespace Server.Mobiles
             }
             else if (!DoMove(m_Mobile.GetDirectionTo(p), true))
             {
-                m_Path = new PathFollower(m_Mobile, p);
-                m_Path.Mover = DoMoveImpl;
+                m_Path = new PathFollower(m_Mobile, p)
+                {
+                    Mover = DoMoveImpl
+                };
 
                 if (m_Path.Follow(run, 1))
                 {
@@ -2702,8 +2704,10 @@ namespace Server.Mobiles
 
                             if (!DoMove(dirTo, true) && needCloser)
                             {
-                                m_Path = new PathFollower(m_Mobile, p);
-                                m_Path.Mover = DoMoveImpl;
+                                m_Path = new PathFollower(m_Mobile, p)
+                                {
+                                    Mover = DoMoveImpl
+                                };
 
                                 if (m_Path.Follow(bRun, 1))
                                 {
