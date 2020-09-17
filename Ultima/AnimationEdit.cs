@@ -1017,8 +1017,10 @@ namespace Ultima
                                 break;
                             }
                         }
-                        Raw raw = new Raw();
-                        raw.run = j - i;
+                        Raw raw = new Raw
+                        {
+                            run = j - i
+                        };
                         raw.offx = j - raw.run - centerx;
                         raw.offx += 512;
                         raw.offy = Y - centery - bit.Height;

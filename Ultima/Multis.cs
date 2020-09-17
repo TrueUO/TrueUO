@@ -220,12 +220,14 @@ namespace Ultima
                                             hue = binbin.ReadInt32();
                                             break;
                                     }
-                                    MultiComponentList.MultiTileEntry tempitem = new MultiComponentList.MultiTileEntry();
-                                    tempitem.m_ItemID = (ushort)index;
-                                    tempitem.m_Flags = TileFlag.Background;
-                                    tempitem.m_OffsetX = (short)x;
-                                    tempitem.m_OffsetY = (short)y;
-                                    tempitem.m_OffsetZ = (short)z;
+                                    MultiComponentList.MultiTileEntry tempitem = new MultiComponentList.MultiTileEntry
+                                    {
+                                        m_ItemID = (ushort)index,
+                                        m_Flags = TileFlag.Background,
+                                        m_OffsetX = (short)x,
+                                        m_OffsetY = (short)y,
+                                        m_OffsetZ = (short)z
+                                    };
                                     arr.Add(tempitem);
                                 }
                                 data[1] = new MultiComponentList(arr);
@@ -311,12 +313,14 @@ namespace Ultima
                     newtiles.RemoveAt(j);
                 }
             }
-            MultiComponentList.MultiTileEntry invisitem = new MultiComponentList.MultiTileEntry();
-            invisitem.m_ItemID = 0x1; // and create a new invis
-            invisitem.m_OffsetX = 0;
-            invisitem.m_OffsetY = 0;
-            invisitem.m_OffsetZ = 0;
-            invisitem.m_Flags = 0;
+            MultiComponentList.MultiTileEntry invisitem = new MultiComponentList.MultiTileEntry
+            {
+                m_ItemID = 0x1, // and create a new invis
+                m_OffsetX = 0,
+                m_OffsetY = 0,
+                m_OffsetZ = 0,
+                m_Flags = 0
+            };
             newtiles.Insert(0, invisitem);
             return newtiles;
         }
@@ -881,9 +885,11 @@ namespace Ultima
                     using (StreamReader ip = new StreamReader(FileName))
                     {
                         string line;
-                        MultiTileEntry tempitem = new MultiTileEntry();
-                        tempitem.m_ItemID = 0xFFFF;
-                        tempitem.m_Flags = TileFlag.Background;
+                        MultiTileEntry tempitem = new MultiTileEntry
+                        {
+                            m_ItemID = 0xFFFF,
+                            m_Flags = TileFlag.Background
+                        };
 
                         while ((line = ip.ReadLine()) != null)
                         {
