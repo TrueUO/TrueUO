@@ -161,7 +161,7 @@ namespace Server.AccountVault
             base.Serialize(writer);
             writer.Write(1);
 
-            writer.WriteItem<AccountVaultContainer>(_Container);
+            writer.WriteItem(_Container);
             writer.Write(PastDue);
             writer.Write(Index);
 
@@ -713,11 +713,8 @@ namespace Server.AccountVault
 
         public VaultAuctionClaimTimer DeadlineTimer { get; set; }
 
-        public AccountVault Vault
-        {
-            get { return RootParent as AccountVault; }
-        }
-        
+        public AccountVault Vault => RootParent as AccountVault;
+
         public AccountVaultContainer(int index)
         {
             _Index = index;

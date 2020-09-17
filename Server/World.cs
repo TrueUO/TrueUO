@@ -323,11 +323,11 @@ namespace Server
 							try
 							{
 								ctorArgs[0] = (Serial)serial;
-								m = (Mobile)(ctor.Invoke(ctorArgs));
+								m = (Mobile)ctor.Invoke(ctorArgs);
 							}
 							catch (Exception ex)
 							{
-								Server.Diagnostics.ExceptionLogging.LogException(ex);
+                                Diagnostics.ExceptionLogging.LogException(ex);
 							}
 
 							if (m != null)
@@ -385,11 +385,11 @@ namespace Server
 							try
 							{
 								ctorArgs[0] = (Serial)serial;
-								item = (Item)(ctor.Invoke(ctorArgs));
+								item = (Item)ctor.Invoke(ctorArgs);
 							}
 							catch (Exception e)
 							{
-								Server.Diagnostics.ExceptionLogging.LogException(e);
+                                Diagnostics.ExceptionLogging.LogException(e);
 							}
 
 							if (item != null)
@@ -755,7 +755,7 @@ namespace Server
 			}
 			catch (Exception ex)
 			{
-				Server.Diagnostics.ExceptionLogging.LogException(ex);
+                Diagnostics.ExceptionLogging.LogException(ex);
 			}
 		}
 

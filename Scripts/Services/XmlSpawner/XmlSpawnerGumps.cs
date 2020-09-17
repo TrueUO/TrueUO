@@ -1555,19 +1555,19 @@ namespace Server.Mobiles
                                 state.Mobile.SendGump(newg);
 
                                 // if no string has been entered then just use the full categorized add gump
-                                state.Mobile.CloseGump(typeof(Server.Gumps.XmlCategorizedAddGump));
-                                state.Mobile.SendGump(new Server.Gumps.XmlCategorizedAddGump(state.Mobile, i, newg));
+                                state.Mobile.CloseGump(typeof(XmlCategorizedAddGump));
+                                state.Mobile.SendGump(new XmlCategorizedAddGump(state.Mobile, i, newg));
                             }
                             else
                             {
                                 // use the XmlPartialCategorizedAddGump
-                                state.Mobile.CloseGump(typeof(Server.Gumps.XmlPartialCategorizedAddGump));
+                                state.Mobile.CloseGump(typeof(XmlPartialCategorizedAddGump));
 
                                 //Type [] types = (Type[])XmlPartialCategorizedAddGump.Match( categorystring ).ToArray( typeof( Type ) );
                                 ArrayList types = XmlPartialCategorizedAddGump.Match(categorystring);
 
 
-                                XmlSpawnerGump.ReplacementEntry re = new XmlSpawnerGump.ReplacementEntry();
+                                ReplacementEntry re = new ReplacementEntry();
                                 re.Typename = entrystring;
                                 re.Index = i;
                                 re.Color = 0x1436;

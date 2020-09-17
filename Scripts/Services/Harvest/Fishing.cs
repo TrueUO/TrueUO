@@ -223,7 +223,7 @@ namespace Server.Engines.Harvest
                         {
                             if (sp.Charydbis == null && !sp.HasSpawned && sp.CurrentLocation.Contains(loc))
                             {
-                                Server.Multis.BaseBoat boat = Multis.BaseBoat.FindBoatAt(from, from.Map);
+                                Multis.BaseBoat boat = Multis.BaseBoat.FindBoatAt(from, from.Map);
                                 sp.SpawnCharydbis(from, loc, sp.Map, boat);
                                 sp.HasSpawned = true;
                                 pole.OnFishedHarvest(from, true);

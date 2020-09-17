@@ -65,7 +65,7 @@ namespace Server.Engines.Quests.RitualQuest
             {
                 Order[i] = Tiles[Utility.Random(Tiles.Count)];
 
-                Timer.DelayCall<PuzzleTile, int>(TimeSpan.FromSeconds(i * WhiteLength), (tile, index) =>
+                Timer.DelayCall(TimeSpan.FromSeconds(i * WhiteLength), (tile, index) =>
                 {
                     tile.Hue = White;
 

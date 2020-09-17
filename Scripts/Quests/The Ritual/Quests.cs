@@ -297,7 +297,7 @@ namespace Server.Engines.Quests.RitualQuest
                 }
             }
 
-            public override bool CheckTravel(Mobile traveller, Point3D p, Server.Spells.TravelCheckType type)
+            public override bool CheckTravel(Mobile traveller, Point3D p, Spells.TravelCheckType type)
             {
                 return false;
             }

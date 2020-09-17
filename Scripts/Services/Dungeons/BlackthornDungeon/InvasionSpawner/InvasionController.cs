@@ -111,7 +111,7 @@ namespace Server.Engines.Blackthorn
         {
             if (from.AccessLevel > AccessLevel.GameMaster)
             {
-                from.SendGump(new Server.Gumps.PropertiesGump(from, this));
+                from.SendGump(new Gumps.PropertiesGump(from, this));
             }
         }
 

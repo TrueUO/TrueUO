@@ -117,7 +117,7 @@ namespace Server.Mobiles
         {
             if (0.1 > Utility.RandomDouble() && m_NextMirrorImage < DateTime.UtcNow)
             {
-                new Server.Spells.Ninjitsu.MirrorImage(this, null).Cast();
+                new Spells.Ninjitsu.MirrorImage(this, null).Cast();
 
                 m_NextMirrorImage = DateTime.UtcNow + TimeSpan.FromSeconds(Utility.RandomMinMax(20, 45));
             }

@@ -18,7 +18,7 @@ namespace Server
 
     public static class MondainsLegacy
     {
-        public static Type[] Artifacts { get { return m_Artifacts; } }
+        public static Type[] Artifacts => m_Artifacts;
         private static readonly Type[] m_Artifacts = new Type[]
         {
             typeof(AegisOfGrace), typeof(BladeDance), typeof(BloodwoodSpirit), typeof(Bonesmasher),

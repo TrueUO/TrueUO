@@ -102,7 +102,7 @@ namespace Ultima
             IsCached_NoStatics_NoPatch = false;
         }
 
-        public bool LoadedMatrix => (m_Tiles != null);
+        public bool LoadedMatrix => m_Tiles != null;
 
         public TileMatrix Tiles
         {
@@ -215,7 +215,7 @@ namespace Ultima
                 {
                     IsCached_NoStatics = true;
                 }
-                cache = (statics ? m_Cache : m_Cache_NoStatics);
+                cache = statics ? m_Cache : m_Cache_NoStatics;
             }
             else
             {
@@ -227,7 +227,7 @@ namespace Ultima
                 {
                     IsCached_NoStatics_NoPatch = true;
                 }
-                cache = (statics ? m_Cache_NoPatch : m_Cache_NoStatics_NoPatch);
+                cache = statics ? m_Cache_NoPatch : m_Cache_NoStatics_NoPatch;
             }
 
             if (cache == null)
@@ -286,11 +286,11 @@ namespace Ultima
             short[][][] cache;
             if (UseDiff)
             {
-                cache = (statics ? m_Cache : m_Cache_NoStatics);
+                cache = statics ? m_Cache : m_Cache_NoStatics;
             }
             else
             {
-                cache = (statics ? m_Cache_NoPatch : m_Cache_NoStatics_NoPatch);
+                cache = statics ? m_Cache_NoPatch : m_Cache_NoStatics_NoPatch;
             }
 
             if (cache == null)
@@ -459,7 +459,7 @@ namespace Ultima
 
                                 while (pTiles < pEnd)
                                 {
-                                    *pvData++ = pColors[(pTiles++)->m_ID];
+                                    *pvData++ = pColors[pTiles++->m_ID];
                                 }
                             }
                         }
@@ -620,7 +620,7 @@ namespace Ultima
                                 int length = m_IndexReader.ReadInt32();
                                 int extra = m_IndexReader.ReadInt32();
 
-                                if (((lookup < 0 || length <= 0) && (!map.Tiles.PendingStatic(x, y))) || (map.Tiles.IsStaticBlockRemoved(x, y)))
+                                if (((lookup < 0 || length <= 0) && (!map.Tiles.PendingStatic(x, y))) || map.Tiles.IsStaticBlockRemoved(x, y))
                                 {
                                     binidx.Write(-1); // lookup
                                     binidx.Write(-1); // length
@@ -710,7 +710,7 @@ namespace Ultima
                                                 bool first = true;
                                                 for (int k = 0; k < j; ++k)
                                                 {
-                                                    if ((tilelist[k].m_ID == tile.m_ID) && ((tilelist[k].m_X == tile.m_X) && (tilelist[k].m_Y == tile.m_Y)) &&
+                                                    if ((tilelist[k].m_ID == tile.m_ID) && (tilelist[k].m_X == tile.m_X) && (tilelist[k].m_Y == tile.m_Y) &&
                                                         (tilelist[k].m_Z == tile.m_Z) && (tilelist[k].m_Hue == tile.m_Hue))
                                                     {
                                                         first = false;
@@ -742,7 +742,7 @@ namespace Ultima
                                                     for (int k = 0; k < j; ++k)
                                                     {
                                                         if ((tilelist[k].m_ID == pending[i].m_ID) &&
-                                                            ((tilelist[k].m_X == pending[i].m_X) && (tilelist[k].m_Y == pending[i].m_Y)) &&
+                                                            (tilelist[k].m_X == pending[i].m_X) && (tilelist[k].m_Y == pending[i].m_Y) &&
                                                             (tilelist[k].m_Z == pending[i].m_Z) && (tilelist[k].m_Hue == pending[i].m_Hue))
                                                         {
                                                             first = false;

@@ -781,7 +781,7 @@ namespace Server.Engines.ArenaSystem
             }
         }
 
-        private class InternalTarget : Server.Targeting.Target
+        private class InternalTarget : Targeting.Target
         {
             public PVPArena Arena { get; private set; }
             public ArenaDuel Duel { get; private set; }

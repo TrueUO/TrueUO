@@ -1254,10 +1254,15 @@ namespace Server.Multis
 
             int x = p.X - (X + mcl.Min.X);
             int y = p.Y - (Y + mcl.Min.Y);
+            frontStairs = false;
 
+            if (x < 0 || x >= mcl.Width || y < 0 || y >= mcl.Height)
+            {
+                return false;
+            }
+            
             StaticTile[] tiles = mcl.Tiles[x][y];
             int dir = 0;
-            frontStairs = false;
 
             if (tiles.Length == 1)
             {

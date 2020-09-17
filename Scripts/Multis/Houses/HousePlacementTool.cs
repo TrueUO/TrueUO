@@ -13,7 +13,7 @@ namespace Server.Items
     [Flipable(0x194B, 0x194C)]
     public class SurveyorsScope : HousePlacementTool
     {
-        public override int LabelNumber { get { return 1026475; } } // surveyor's scope
+        public override int LabelNumber => 1026475;  // surveyor's scope
 
         [Constructable]
         public SurveyorsScope()
@@ -145,7 +145,7 @@ namespace Server.Items
             }
         }
 
-        public override void OnResponse(Server.Network.NetState sender, RelayInfo info)
+        public override void OnResponse(NetState sender, RelayInfo info)
         {
             if (!m_From.CheckAlive() || m_From.Backpack == null || !m_Tool.IsChildOf(m_From.Backpack))
                 return;

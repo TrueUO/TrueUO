@@ -20,7 +20,7 @@ namespace Server.Items
             City = city;
         }
 
-        public override bool CanPostGreeting(Server.Multis.BaseHouse house, Mobile m)
+        public override bool CanPostGreeting(Multis.BaseHouse house, Mobile m)
         {
             CityLoyaltySystem sys = CitySystem;
 

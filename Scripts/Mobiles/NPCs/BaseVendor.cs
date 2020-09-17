@@ -2430,9 +2430,9 @@ namespace Server.Mobiles
             object state = convert.Armor;
 
             RemoveConvertEntry(convert);
-            from.CloseGump(typeof(Server.Gumps.ConfirmCallbackGump));
+            from.CloseGump(typeof(Gumps.ConfirmCallbackGump));
 
-            from.SendGump(new Server.Gumps.ConfirmCallbackGump((PlayerMobile)from, 1049004, 1154115, state, null,
+            from.SendGump(new Gumps.ConfirmCallbackGump((PlayerMobile)from, 1049004, 1154115, state, null,
                 (m, obj) =>
                 {
                     BaseArmor ar = obj as BaseArmor;

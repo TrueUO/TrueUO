@@ -1816,7 +1816,7 @@ namespace Server.Mobiles
 
             if (m_Mobile.DeleteOnRelease || m_Mobile.IsDeadPet)
             {
-                Timer.DelayCall(TimeSpan.FromSeconds(2), m_Mobile.Delete);
+                Timer.DelayCall(TimeSpan.FromSeconds(1), m_Mobile.Delete);
             }
             else
             {

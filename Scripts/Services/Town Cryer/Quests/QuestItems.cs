@@ -283,7 +283,7 @@ namespace Server.Engines.Quests
             else
             {
                 from.SendLocalizedMessage(503033); // Where do you wish to dig?
-                from.Target = new TreasureMap.DigTarget(this);
+                from.Target = new DigTarget(this);
             }
         }
 

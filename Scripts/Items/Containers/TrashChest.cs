@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Server.Items
 {
-    [FlipableAttribute(0xE41, 0xE40)]
+    [Flipable(0xE41, 0xE40)]
     public class TrashChest : BaseTrash
     {
         [Constructable]

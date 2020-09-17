@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.IO.Compression;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
@@ -270,7 +269,7 @@ namespace Server.Network
 			EnsureCapacity(256);
 
 			Container BuyPack = vendor.FindItemOnLayer(Layer.ShopBuy) as Container;
-			m_Stream.Write((BuyPack == null ? Serial.MinusOne : BuyPack.Serial));
+			m_Stream.Write(BuyPack == null ? Serial.MinusOne : BuyPack.Serial);
 
 			m_Stream.Write((byte)list.Count);
 
@@ -324,8 +323,8 @@ namespace Server.Network
 					name = "";
 				}
 
-				m_Stream.Write((ushort)(name.Length));
-				m_Stream.WriteAsciiFixed(name, (ushort)(name.Length));
+				m_Stream.Write((ushort)name.Length);
+				m_Stream.WriteAsciiFixed(name, (ushort)name.Length);
 			}
 		}
 	}
@@ -358,7 +357,7 @@ namespace Server.Network
 			: base(0xAF, 13)
 		{
 			m_Stream.Write(killed.Serial);
-			m_Stream.Write((corpse == null ? Serial.Zero : corpse.Serial));
+			m_Stream.Write(corpse == null ? Serial.Zero : corpse.Serial);
 			m_Stream.Write(0);
 		}
 	}
@@ -614,7 +613,7 @@ namespace Server.Network
 
 		public static Packet Instantiate(bool dead)
 		{
-			return (dead ? Dead : Alive);
+			return dead ? Dead : Alive;
 		}
 
 		public DeathStatus(bool dead)
@@ -862,7 +861,7 @@ namespace Server.Network
 
 			IEntity target = menu.Target;
 
-			m_Stream.Write((target == null ? Serial.MinusOne : target.Serial));
+			m_Stream.Write(target == null ? Serial.MinusOne : target.Serial);
 
 			m_Stream.Write((byte)length);
 
@@ -926,7 +925,7 @@ namespace Server.Network
 
 			EnsureCapacity(12 + header.Length + (footer.Length * 2) + (body.Length * 2));
 
-			m_Stream.Write((realSerial ? m.Serial : Serial.Zero));
+			m_Stream.Write(realSerial ? m.Serial : Serial.Zero);
 			m_Stream.WriteAsciiNull(header);
 			m_Stream.WriteBigUniNull(footer);
 			m_Stream.WriteBigUniNull(body);
@@ -1830,7 +1829,7 @@ namespace Server.Network
 
 		public static Packet Instantiate(bool mode)
 		{
-			return (mode ? InWarMode : InPeaceMode);
+			return mode ? InWarMode : InPeaceMode;
 		}
 
 		public SetWarMode(bool mode)
@@ -2303,7 +2302,7 @@ namespace Server.Network
 				return;
 			}
 
-			int wantLength = 1 + ((buffer.Length * 1024) / 1000);
+			int wantLength = 1 + (buffer.Length * 1024 / 1000);
 
 			wantLength += 4095;
 			wantLength &= ~4095;
@@ -2320,9 +2319,9 @@ namespace Server.Network
 
 			int packLength = m_PackBuffer.Length;
 
-            Zlib.Pack(m_PackBuffer, ref packLength, buffer, length, ZlibQuality.Default);
+			Compression.Pack(m_PackBuffer, ref packLength, buffer, length, ZLibQuality.Default);
 
-            m_Stream.Write((4 + packLength));
+			m_Stream.Write(4 + packLength);
 			m_Stream.Write(length);
 			m_Stream.Write(m_PackBuffer, 0, packLength);
 
@@ -2689,7 +2688,7 @@ namespace Server.Network
 			if (Enabled && max != 0)
 			{
 				stream.Write((short)Maximum);
-				stream.Write((short)((cur * Maximum) / max));
+				stream.Write((short)(cur * Maximum / max));
 			}
 			else
 			{
@@ -2702,7 +2701,7 @@ namespace Server.Network
 		{
 			if (Enabled && max != 0)
 			{
-				stream.Write((short)((cur * Maximum) / max));
+				stream.Write((short)(cur * Maximum / max));
 				stream.Write((short)Maximum);
 			}
 			else
@@ -2949,7 +2948,7 @@ namespace Server.Network
 				WriteAttr(beheld.Mana, beheld.ManaMax);
 
 				m_Stream.Write(beheld.TotalGold);
-				m_Stream.Write((short)(beheld.PhysicalResistance));
+				m_Stream.Write((short)beheld.PhysicalResistance);
 				m_Stream.Write((short)(Mobile.BodyWeight + beheld.TotalWeight));
 
 				m_Stream.Write((short)beheld.MaxWeight);
@@ -3139,7 +3138,7 @@ namespace Server.Network
 		{
 			m_Beheld = beheld;
 
-			int m_Version = ++(m_VersionTL.Value);
+			int m_Version = ++m_VersionTL.Value;
 			int[] m_DupedLayers = m_DupedLayersTL.Value;
 
 			List<Item> eq = beheld.Items;
@@ -3651,7 +3650,7 @@ namespace Server.Network
 
 			if (count > 6)
 			{
-				flags |= (CharacterListFlags.SeventhCharacterSlot | CharacterListFlags.SixthCharacterSlot);
+				flags |= CharacterListFlags.SeventhCharacterSlot | CharacterListFlags.SixthCharacterSlot;
 			}
 			// 7th Character Slot - TODO: Is SixthCharacterSlot Required?
 			else if (count == 6)
@@ -3660,7 +3659,7 @@ namespace Server.Network
 			}
 			else if (a.Limit == 1)
 			{
-				flags |= (CharacterListFlags.SlotLimit | CharacterListFlags.OneCharacterSlot); // Limit Characters & One Character
+				flags |= CharacterListFlags.SlotLimit | CharacterListFlags.OneCharacterSlot; // Limit Characters & One Character
 			}
 
 			if (IsEnhancedClient)
@@ -3846,7 +3845,7 @@ namespace Server.Network
 
 		public IPEndPoint Address { get; set; }
 
-        public ServerInfo(string name, int fullPercent, TimeZoneInfo tz, IPEndPoint address)
+		public ServerInfo(string name, int fullPercent, TimeZone tz, IPEndPoint address)
 		{
 			Name = name;
 			FullPercent = fullPercent;
@@ -3907,7 +3906,7 @@ namespace Server.Network
 
 			m_Stream.Write(serial);
 			m_Stream.Write((short)gumpID);
-			m_Stream.Write((short)(unknown.Length));
+			m_Stream.Write((short)unknown.Length);
 			m_Stream.WriteAsciiFixed(unknown, unknown.Length);
 			m_Stream.Write((short)(caption.Length + 1));
 			m_Stream.WriteAsciiFixed(caption, caption.Length + 1);
@@ -4116,7 +4115,7 @@ namespace Server.Network
 							}
 							catch (Exception e)
 							{
-								Server.Diagnostics.ExceptionLogging.LogException(e);
+                                ExceptionLogging.LogException(e);
 							}
 						}
 
@@ -4163,9 +4162,9 @@ namespace Server.Network
 				lock (m_CompressorBuffers)
 					buffer = m_CompressorBuffers.AcquireBuffer();
 
-                NetworkCompression.Compress(m_CompiledBuffer, 0, length, buffer, out length);
+				Compression.Compress(m_CompiledBuffer, 0, length, buffer, ref length);
 
-                if (length <= 0)
+				if (length <= 0)
 				{
 					Console.WriteLine(
 						"Warning: Compression buffer overflowed on packet 0x{0:X2} ('{1}') (length={2})",

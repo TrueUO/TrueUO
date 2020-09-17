@@ -77,7 +77,7 @@ namespace Server.Engines.Auction
         public List<HistoryEntry> BidHistory { get; set; }
         public List<PlayerMobile> Viewers { get; set; }
 
-        public bool PublicAuction { get { return Owner == null; } }
+        public bool PublicAuction => Owner == null;
 
         public Auction(Mobile owner, IAuctionItem item)
         {

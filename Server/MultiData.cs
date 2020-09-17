@@ -714,7 +714,7 @@ namespace Server
 				{
 					int xOffset = allTiles[i].m_OffsetX + m_Center.m_X;
 					int yOffset = allTiles[i].m_OffsetY + m_Center.m_Y;
-					int itemID = ((allTiles[i].m_ItemID & TileData.MaxItemValue) | 0x10000);
+					int itemID = (allTiles[i].m_ItemID & TileData.MaxItemValue) | 0x10000;
 
 					tiles[xOffset][yOffset].Add((ushort)itemID, (sbyte)allTiles[i].m_OffsetZ);
 				}
@@ -772,8 +772,8 @@ namespace Server
 			}
 
 			m_Center = new Point2D(-m_Min.m_X, -m_Min.m_Y);
-			m_Width = (m_Max.m_X - m_Min.m_X) + 1;
-			m_Height = (m_Max.m_Y - m_Min.m_Y) + 1;
+			m_Width = m_Max.m_X - m_Min.m_X + 1;
+			m_Height = m_Max.m_Y - m_Min.m_Y + 1;
 
 			TileList[][] tiles = new TileList[m_Width][];
 			m_Tiles = new StaticTile[m_Width][][];
@@ -795,7 +795,7 @@ namespace Server
 				{
 					int xOffset = allTiles[i].m_OffsetX + m_Center.m_X;
 					int yOffset = allTiles[i].m_OffsetY + m_Center.m_Y;
-					int itemID = ((allTiles[i].m_ItemID & TileData.MaxItemValue) | 0x10000);
+					int itemID = (allTiles[i].m_ItemID & TileData.MaxItemValue) | 0x10000;
 
 					tiles[xOffset][yOffset].Add((ushort)itemID, (sbyte)allTiles[i].m_OffsetZ);
 				}
@@ -850,8 +850,8 @@ namespace Server
 			}
 
 			m_Center = new Point2D(-m_Min.m_X, -m_Min.m_Y);
-			m_Width = (m_Max.m_X - m_Min.m_X) + 1;
-			m_Height = (m_Max.m_Y - m_Min.m_Y) + 1;
+			m_Width = m_Max.m_X - m_Min.m_X + 1;
+			m_Height = m_Max.m_Y - m_Min.m_Y + 1;
 
 			TileList[][] tiles = new TileList[m_Width][];
 			m_Tiles = new StaticTile[m_Width][][];
@@ -873,7 +873,7 @@ namespace Server
 				{
 					int xOffset = allTiles[i].m_OffsetX + m_Center.m_X;
 					int yOffset = allTiles[i].m_OffsetY + m_Center.m_Y;
-					int itemID = ((allTiles[i].m_ItemID & TileData.MaxItemValue) | 0x10000);
+					int itemID = (allTiles[i].m_ItemID & TileData.MaxItemValue) | 0x10000;
 
 					tiles[xOffset][yOffset].Add((ushort)itemID, (sbyte)allTiles[i].m_OffsetZ);
 				}
@@ -948,12 +948,12 @@ namespace Server
 				c += ((uint)s[k + 10]) << 16;
 				c += ((uint)s[k + 11]) << 24;
 
-				a -= c; a ^= ((c << 4) | (c >> 28)); c += b;
-				b -= a; b ^= ((a << 6) | (a >> 26)); a += c;
-				c -= b; c ^= ((b << 8) | (b >> 24)); b += a;
-				a -= c; a ^= ((c << 16) | (c >> 16)); c += b;
-				b -= a; b ^= ((a << 19) | (a >> 13)); a += c;
-				c -= b; c ^= ((b << 4) | (b >> 28)); b += a;
+				a -= c; a ^= (c << 4) | (c >> 28); c += b;
+				b -= a; b ^= (a << 6) | (a >> 26); a += c;
+				c -= b; c ^= (b << 8) | (b >> 24); b += a;
+				a -= c; a ^= (c << 16) | (c >> 16); c += b;
+				b -= a; b ^= (a << 19) | (a >> 13); a += c;
+				c -= b; c ^= (b << 4) | (b >> 28); b += a;
 
 				length -= 12;
 				k += 12;
@@ -977,13 +977,13 @@ namespace Server
 					case 1: a += s[k]; break;
 				}
 
-				c ^= b; c -= ((b << 14) | (b >> 18));
-				a ^= c; a -= ((c << 11) | (c >> 21));
-				b ^= a; b -= ((a << 25) | (a >> 7));
-				c ^= b; c -= ((b << 16) | (b >> 16));
-				a ^= c; a -= ((c << 4) | (c >> 28));
-				b ^= a; b -= ((a << 14) | (a >> 18));
-				c ^= b; c -= ((b << 24) | (b >> 8));
+				c ^= b; c -= (b << 14) | (b >> 18);
+				a ^= c; a -= (c << 11) | (c >> 21);
+				b ^= a; b -= (a << 25) | (a >> 7);
+				c ^= b; c -= (b << 16) | (b >> 16);
+				a ^= c; a -= (c << 4) | (c >> 28);
+				b ^= a; b -= (a << 14) | (a >> 18);
+				c ^= b; c -= (b << 24) | (b >> 8);
 			}
 
 			return ((ulong)b << 32) | c;

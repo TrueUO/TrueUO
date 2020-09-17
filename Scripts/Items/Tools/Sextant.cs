@@ -4,7 +4,7 @@ namespace Server.Items
 {
     public class MarinersBrassSextant : Sextant
     {
-        public override int LabelNumber { get { return 1075499; } } // Mariner's Brass Sextant
+        public override int LabelNumber => 1075499;  // Mariner's Brass Sextant
 
         [Constructable]
         public MarinersBrassSextant()
