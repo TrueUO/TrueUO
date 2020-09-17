@@ -695,12 +695,14 @@ namespace Ultima
                                         int j = 0;
                                         for (int i = 0; i < count; ++i)
                                         {
-                                            StaticTile tile = new StaticTile();
-                                            tile.m_ID = m_StaticsReader.ReadUInt16();
-                                            tile.m_X = m_StaticsReader.ReadByte();
-                                            tile.m_Y = m_StaticsReader.ReadByte();
-                                            tile.m_Z = m_StaticsReader.ReadSByte();
-                                            tile.m_Hue = m_StaticsReader.ReadInt16();
+                                            StaticTile tile = new StaticTile
+                                            {
+                                                m_ID = m_StaticsReader.ReadUInt16(),
+                                                m_X = m_StaticsReader.ReadByte(),
+                                                m_Y = m_StaticsReader.ReadByte(),
+                                                m_Z = m_StaticsReader.ReadSByte(),
+                                                m_Hue = m_StaticsReader.ReadInt16()
+                                            };
 
                                             if ((tile.m_ID >= 0) && (tile.m_ID <= Art.GetMaxItemID()))
                                             {
