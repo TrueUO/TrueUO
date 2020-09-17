@@ -187,12 +187,13 @@ namespace Server.Misc
                     break;
                 case "save recompile":
                     {
-                        AutoRestart.TimedShutdown(false, true, true);
+                        AutoSave.Save();
+                        AutoRestart.ReCompile();
                     }
                     break;
                 case "nosave recompile":
                     {
-                        AutoRestart.TimedShutdown(false, true, false);
+                        AutoRestart.ReCompile();
                     }
                     break;
                 case "restart nosave":

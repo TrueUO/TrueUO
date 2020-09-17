@@ -66,8 +66,9 @@ namespace Server.Misc
 
                 DelayCall(TimeSpan.FromSeconds(1), () =>
                     {
+                        AutoSave.Save();
                         Restarting = true;
-                        TimedShutdown(true, recompile, true);
+                        TimedShutdown(true, recompile);
                     });
             }
         }
@@ -86,9 +87,10 @@ namespace Server.Misc
 
                 DelayCall(TimeSpan.FromSeconds(1), () =>
                 {
+                    AutoSave.Save();
                     Restarting = true;
 
-                    TimedShutdown(false, true);
+                    TimedShutdown(false);
                 });
             }
         }
@@ -128,26 +130,22 @@ namespace Server.Misc
                 return;
             }
 
+            AutoSave.Save();
             Restarting = true;
 
-            TimedShutdown(true, true);
+            TimedShutdown(true);
         }
 
-        private static void TimedShutdown(bool restart, bool save)
+        private static void TimedShutdown(bool restart)
         {
-            TimedShutdown(restart, false, save);
+            TimedShutdown(restart, false);
         }
 
-        public static void TimedShutdown(bool restart, bool recompile, bool save)
+        private static void TimedShutdown(bool restart, bool recompile)
         {
             World.Broadcast(0x22, true, string.Format("The server will be going down in about {0} seconds!", RestartDelay.TotalSeconds.ToString()));
             DelayCall(RestartDelay, (rest, recomp) =>
                 {
-                    if (save)
-                    {
-                        AutoSave.Save();
-                    }
-
                     if (recomp)
                     {
                         ReCompile();
@@ -160,7 +158,7 @@ namespace Server.Misc
                 restart, recompile);
         }
 
-        private static void ReCompile()
+        public static void ReCompile()
         {
             string directory = Path.GetDirectoryName(Core.BaseDirectory);
             string file = Core.IsWindows ? "publish.cmd" : "publish.sh";
