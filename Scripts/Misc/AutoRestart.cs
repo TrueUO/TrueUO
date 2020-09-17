@@ -138,14 +138,19 @@ namespace Server.Misc
             TimedShutdown(restart, false, save);
         }
 
-        private static void TimedShutdown(bool restart, bool recompile, bool save)
+        public static void TimedShutdown(bool restart, bool recompile, bool save)
         {
             World.Broadcast(0x22, true, string.Format("The server will be going down in about {0} seconds!", RestartDelay.TotalSeconds.ToString()));
             DelayCall(RestartDelay, (rest, recomp) =>
                 {
+                    if (save)
+                    {
+                        AutoSave.Save();
+                    }
+
                     if (recomp)
                     {
-                        ReCompile(save);
+                        ReCompile();
                     }
                     else
                     {
@@ -155,7 +160,7 @@ namespace Server.Misc
                 restart, recompile);
         }
 
-        public static void ReCompile(bool save)
+        private static void ReCompile()
         {
             string directory = Path.GetDirectoryName(Core.BaseDirectory);
             string file = Core.IsWindows ? "publish.cmd" : "publish.sh";
@@ -167,11 +172,6 @@ namespace Server.Misc
             }
             else
             {
-                if (save)
-                {
-                    AutoSave.Save();
-                }
-
                 string buildmode = Core.Debug ? "Debug" : "Release";
 
                 // determing os
