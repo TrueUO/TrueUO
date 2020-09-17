@@ -34,7 +34,7 @@ fi
 if [[ -z $1 ]]; then
   c="-c Release"
 else
-  config="$(tr '[:lower:]' '[:upper:]' <<< ${3:0:1})${3:1}"
+  config="$(tr '[:lower:]' '[:upper:]' <<< ${1:0:1})${1:1}"
   c="-c $config"
 fi
 

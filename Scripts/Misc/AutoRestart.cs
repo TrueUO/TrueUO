@@ -188,7 +188,7 @@ namespace Server.Misc
                 {
                     // linux command based os
                     p.StartInfo.WorkingDirectory = directory;
-                    p.StartInfo.FileName = "/bin/sh";
+                    p.StartInfo.FileName = "/bin/bash";
                     p.StartInfo.Arguments = file + " " + buildmode;
                     p.StartInfo.UseShellExecute = true;
                 }
