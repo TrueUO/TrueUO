@@ -1,11 +1,10 @@
 #region References
-using System;
-using System.IO;
-using System.Linq;
-using System.Threading;
 using Server.Accounting;
 using Server.Engines.Help;
 using Server.Network;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 #endregion
 
 namespace Server.Misc
@@ -13,13 +12,12 @@ namespace Server.Misc
     internal static class ServerConsole
     {
         private static bool _HearConsole;
-        private static PageEntry[] _Pages;
 
         public static void Initialize()
         {
             EventSink.ServerStarted += () =>
             {
-                ThreadPool.QueueUserWorkItem(ConsoleListen);
+                ListenCommands();
 
                 if (_HearConsole)
                 {
@@ -38,22 +36,46 @@ namespace Server.Misc
                 {
                     if (args.Mobile.Region.Name.Length > 0)
                     {
-                        Console.WriteLine("" + args.Mobile.Name + " (" + args.Mobile.Region.Name + "): " + args.Speech + "");
+                        Console.WriteLine(args.Mobile.Name + " (" + args.Mobile.Region.Name + "): " + args.Speech);
                     }
                     else
                     {
                         Console.WriteLine("" + args.Mobile.Name + ": " + args.Speech + "");
                     }
                 }
-                catch
-                { }
+                catch (Exception e)
+                {
+                    Diagnostics.ExceptionLogging.LogException(e);
+                }
             };
         }
 
-        public static void ConsoleListen(Object stateInfo)
+        private static void ListenCommands()
         {
-            ProcessCommand(Console.ReadLine());
+            var task = Task.Factory.StartNew(() =>
+            {
+                string line;
+
+                while ((line = Console.ReadLine()) != null)
+                {
+                    if (Core.Crashed || Core.Closing || World.Loading || World.Saving)
+                    {
+                        return;
+                    }
+
+                    if (string.IsNullOrEmpty(line))
+                    {
+                        return;
+                    }
+
+                    ProcessCommand(line);
+                }
+            });
+
+            Task.WhenAny(task, Task.Delay(TimeSpan.FromMilliseconds(250)));
         }
+
+        private static PageEntry[] _Pages;
 
         private static void ProcessCommand(string input)
         {
@@ -62,28 +84,36 @@ namespace Server.Misc
             if (_Pages != null)
             {
                 HandlePaging(input);
+                return;
             }
-            else if (input.StartsWith("pages", StringComparison.OrdinalIgnoreCase))
+
+            if (input.StartsWith("pages", StringComparison.OrdinalIgnoreCase))
             {
                 HandlePaging(input.Substring(5).Trim());
+                return;
             }
-            else if (input.StartsWith("bc", StringComparison.OrdinalIgnoreCase))
+
+            if (input.StartsWith("bc", StringComparison.OrdinalIgnoreCase))
             {
                 string sub = input.Substring(2).Trim();
 
                 BroadcastMessage(AccessLevel.Player, 0x35, string.Format("[Admin] {0}", sub));
 
                 Console.WriteLine("[World]: {0}", sub);
+                return;
             }
-            else if (input.StartsWith("sc", StringComparison.OrdinalIgnoreCase))
+
+            if (input.StartsWith("sc", StringComparison.OrdinalIgnoreCase))
             {
                 string sub = input.Substring(2).Trim();
 
                 BroadcastMessage(AccessLevel.Counselor, 0x32, string.Format("[Admin] {0}", sub));
 
                 Console.WriteLine("[Staff]: {0}", sub);
+                return;
             }
-            else if (input.StartsWith("ban", StringComparison.OrdinalIgnoreCase))
+
+            if (input.StartsWith("ban", StringComparison.OrdinalIgnoreCase))
             {
                 string sub = input.Substring(3).Trim();
 
@@ -92,6 +122,7 @@ namespace Server.Misc
                 if (states.Count == 0)
                 {
                     Console.WriteLine("There are no players online.");
+                    return;
                 }
 
                 NetState ns = states.Find(o => o.Account != null && o.Mobile != null && Insensitive.StartsWith(sub, o.Mobile.RawName));
@@ -102,8 +133,11 @@ namespace Server.Misc
 
                     ns.Dispose();
                 }
+
+                return;
             }
-            else if (input.StartsWith("kick", StringComparison.OrdinalIgnoreCase))
+
+            if (input.StartsWith("kick", StringComparison.OrdinalIgnoreCase))
             {
                 string sub = input.Substring(4).Trim();
 
@@ -112,6 +146,7 @@ namespace Server.Misc
                 if (states.Count == 0)
                 {
                     Console.WriteLine("There are no players online.");
+                    return;
                 }
 
                 NetState ns = states.Find(o => o.Account != null && o.Mobile != null && Insensitive.StartsWith(sub, o.Mobile.RawName));
@@ -122,114 +157,88 @@ namespace Server.Misc
 
                     ns.Dispose();
                 }
+
+                return;
             }
-            else
+
+            switch (input)
             {
-                switch (input.Trim())
-                {
-                    case "crash":
-                        {
-                            Timer.DelayCall(() => { throw new Exception("Forced Crash"); });
-                        }
-                        break;
-                    case "shutdown":
-                        {
-                            AutoSave.Save();
-                            Core.Kill(false);
-                        }
-                        break;
-                    case "shutdown nosave":
-                        {
-                            Core.Kill(false);
-                        }
-                        break;
-                    case "restart":
-                        {
-                            AutoSave.Save();
-                            Core.Kill(true);
-                        }
-                        break;
-                    case "save recompile":
-                        {
-                            var path = AutoRestart.RecompilePath;
-
-                            if (!File.Exists(path))
-                            {
-                                Console.WriteLine("Unable to Re-Compile due to missing file: {0}", AutoRestart.RecompilePath);
-                            }
-                            else
-                            {
-                                AutoSave.Save();
-
-                                System.Diagnostics.Process.Start(path);
-                                Core.Kill();
-                            }
-                        }
-                        break;
-                    case "nosave recompile":
-                        {
-                            var path = AutoRestart.RecompilePath;
-
-                            if (!File.Exists(path))
-                            {
-                                Console.WriteLine("Unable to Re-Compile due to missing file: {0}", AutoRestart.RecompilePath);
-                            }
-                            else
-                            {
-                                System.Diagnostics.Process.Start(path);
-                                Core.Kill();
-                            }
-                        }
-                        break;
-                    case "restart nosave":
-                        {
-                            Core.Kill(true);
-                        }
-                        break;
-                    case "online":
-                        {
-                            System.Collections.Generic.List<NetState> states = NetState.Instances;
-
-                            if (states.Count == 0)
-                            {
-                                Console.WriteLine("There are no users online at this time.");
-                            }
-
-                            foreach (NetState t in states)
-                            {
-                                Account a = t.Account as Account;
-
-                                if (a == null)
-                                {
-                                    continue;
-                                }
-
-                                Mobile m = t.Mobile;
-
-                                if (m != null)
-                                {
-                                    Console.WriteLine("- Account: {0}, Name: {1}, IP: {2}", a.Username, m.Name, t);
-                                }
-                            }
-                        }
-                        break;
-                    case "save":
+                case "crash":
+                    {
+                        Timer.DelayCall(() => { throw new Exception("Forced Crash"); });
+                    }
+                    break;
+                case "shutdown":
+                    {
                         AutoSave.Save();
-                        break;
-                    case "hear": // Credit to Zippy for the HearAll script!
+                        Core.Kill(false);
+                    }
+                    break;
+                case "shutdown nosave":
+                    {
+                        Core.Kill(false);
+                    }
+                    break;
+                case "restart":
+                    {
+                        AutoSave.Save();
+                        Core.Kill(true);
+                    }
+                    break;
+                case "save recompile":
+                    {
+                        AutoRestart.ReCompile(true);
+                    }
+                    break;
+                case "nosave recompile":
+                    {
+                        AutoRestart.ReCompile(false);
+                    }
+                    break;
+                case "restart nosave":
+                    {
+                        Core.Kill(true);
+                    }
+                    break;
+                case "online":
+                    {
+                        System.Collections.Generic.List<NetState> states = NetState.Instances;
+
+                        if (states.Count == 0)
                         {
-                            _HearConsole = !_HearConsole;
-
-                            Console.WriteLine("{0} sending speech to the console.", _HearConsole ? "Now" : "No longer");
+                            Console.WriteLine("There are no users online at this time.");
                         }
-                        break;
-                    default:
-                        DisplayHelp();
-                        break;
-                }
-            }
 
-            ThreadPool.QueueUserWorkItem(ConsoleListen);
+                        foreach (NetState t in states)
+                        {
+                            if (!(t.Account is Account a))
+                            {
+                                continue;
+                            }
+
+                            Mobile m = t.Mobile;
+
+                            if (m != null)
+                            {
+                                Console.WriteLine("- Account: {0}, Name: {1}, IP: {2}", a.Username, m.Name, t);
+                            }
+                        }
+                    }
+                    break;
+                case "save":
+                    AutoSave.Save();
+                    break;
+                case "hear": // Credit to Zippy for the HearAll script!
+                    {
+                        _HearConsole = !_HearConsole;
+
+                        Console.WriteLine("{0} sending speech to the console.", _HearConsole ? "Now" : "No longer");
+                    }
+                    break;
+                default:
+                    DisplayHelp();
+                    break;
+            }
         }
 
         private static void DisplayHelp()
@@ -353,7 +362,9 @@ namespace Server.Misc
 
             if (sub.StartsWith("remove", StringComparison.OrdinalIgnoreCase))
             {
-                PageEntry page = FindPage(sub, out string[] args);
+                string[] args;
+
+                PageEntry page = FindPage(sub, out args);
 
                 if (page == null)
                 {
@@ -372,7 +383,9 @@ namespace Server.Misc
 
             if (sub.StartsWith("handle", StringComparison.OrdinalIgnoreCase))
             {
-                PageEntry page = FindPage(sub, out string[] args);
+                string[] args;
+
+                PageEntry page = FindPage(sub, out args);
 
                 if (page == null)
                 {
@@ -404,7 +417,9 @@ namespace Server.Misc
 
             if (sub.StartsWith("view", StringComparison.OrdinalIgnoreCase))
             {
-                PageEntry page = FindPage(sub, out string[] args);
+                string[] args;
+
+                PageEntry page = FindPage(sub, out args);
 
                 if (page == null)
                 {
@@ -433,7 +448,9 @@ namespace Server.Misc
 
             if (_Pages != null)
             {
-                PageEntry page = FindPage(sub, out string[] args);
+                string[] args;
+
+                PageEntry page = FindPage(sub, out args);
 
                 if (page != null)
                 {
@@ -480,7 +497,9 @@ namespace Server.Misc
                 }
             }
 
-            if (int.TryParse(sub, out int id) && --id >= 0 && id < _Pages.Length)
+            int id;
+
+            if (int.TryParse(sub, out id) && --id >= 0 && id < _Pages.Length)
             {
                 PageEntry page = _Pages[id];
 

@@ -21,8 +21,6 @@ namespace Server.Misc
         public static int Minutes = Config.Get("AutoRestart.Minute", 0);
         public static int Frequency = Config.Get("AutoRestart.Frequency", 24);
 
-        public static readonly string RecompilePath = Path.Combine(Core.BaseDirectory, Core.Debug ? "Compile.WIN - Debug.bat" : "Compile.WIN - Release.bat");
-
         public AutoRestart()
             : base(TimeSpan.FromSeconds(1.0), TimeSpan.FromSeconds(1.0))
         {
@@ -66,25 +64,10 @@ namespace Server.Misc
 
                 bool recompile = e.Arguments.Length > 0 && e.Arguments[0].ToLower() == "true";
 
-                if (recompile)
-                {
-                    if (!File.Exists(RecompilePath))
-                    {
-                        e.Mobile.SendMessage("Unable to Re-Compile due to missing file: {0}", RecompilePath);
-                        recompile = false;
-                    }
-                    else
-                    {
-                        e.Mobile.SendMessage("Recompiling after restart!");
-                    }
-                }
-
                 DelayCall(TimeSpan.FromSeconds(1), () =>
                     {
-                        AutoSave.Save();
-
                         Restarting = true;
-                        TimedShutdown(true, recompile);
+                        TimedShutdown(true, recompile, true);
                     });
             }
         }
@@ -103,10 +86,9 @@ namespace Server.Misc
 
                 DelayCall(TimeSpan.FromSeconds(1), () =>
                 {
-                    AutoSave.Save();
                     Restarting = true;
 
-                    TimedShutdown(false);
+                    TimedShutdown(false, true);
                 });
             }
         }
@@ -146,26 +128,24 @@ namespace Server.Misc
                 return;
             }
 
-            AutoSave.Save();
             Restarting = true;
 
-            TimedShutdown(true);
+            TimedShutdown(true, true);
         }
 
-        private static void TimedShutdown(bool restart)
+        private static void TimedShutdown(bool restart, bool save)
         {
-            TimedShutdown(restart, false);
+            TimedShutdown(restart, false, save);
         }
 
-        private static void TimedShutdown(bool restart, bool recompile)
+        private static void TimedShutdown(bool restart, bool recompile, bool save)
         {
             World.Broadcast(0x22, true, string.Format("The server will be going down in about {0} seconds!", RestartDelay.TotalSeconds.ToString()));
             DelayCall(RestartDelay, (rest, recomp) =>
                 {
                     if (recomp)
                     {
-                        Process.Start(RecompilePath);
-                        Core.Kill();
+                        ReCompile(save);
                     }
                     else
                     {
@@ -173,6 +153,50 @@ namespace Server.Misc
                     }
                 },
                 restart, recompile);
+        }
+
+        public static void ReCompile(bool save)
+        {
+            string directory = Path.GetDirectoryName(Core.BaseDirectory);
+            string file = Core.IsWindows ? "publish.cmd" : "publish.sh";
+            string path = Path.Combine(directory, file);
+
+            if (!File.Exists(path))
+            {
+                Console.WriteLine("Unable to Re-Compile due to missing file: {0}", path);
+            }
+            else
+            {
+                if (save)
+                {
+                    AutoSave.Save();
+                }
+
+                string buildmode = Core.Debug ? "Debug" : "Release";
+
+                // determing os
+                Process p = new Process();
+
+                if (Core.IsWindows)
+                {
+                    // windows platform
+                    p.StartInfo.WorkingDirectory = directory;
+                    p.StartInfo.FileName = path;
+                    p.StartInfo.Arguments = buildmode;
+                }
+                else
+                {
+                    // linux command based os
+                    p.StartInfo.WorkingDirectory = directory;
+                    p.StartInfo.FileName = "/bin/sh";
+                    p.StartInfo.Arguments = file + buildmode;
+                    p.StartInfo.UseShellExecute = true;
+                }
+
+                p.Start();
+
+                Core.Kill();
+            }
         }
     }
 }

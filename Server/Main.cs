@@ -145,6 +145,8 @@ namespace Server
         public static bool IsLinux = RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || IsFreeBSD;
         public static bool Unix = IsDarwin || IsFreeBSD || IsLinux;
 
+        public static string Framework = RuntimeInformation.FrameworkDescription;
+
         public static string FindDataFile(string path)
 		{
 			if (DataDirectories.Count == 0)
@@ -350,10 +352,7 @@ namespace Server
                     {
                         FileName = "dotnet",
                         Arguments = ExePath,
-                        UseShellExecute = true,
-                        RedirectStandardOutput = false,
-                        RedirectStandardError = false,
-                        CreateNoWindow = true
+                        UseShellExecute = true
                     }
 
                 };
@@ -526,7 +525,7 @@ namespace Server
 			Utility.PopColor();
 
             Utility.PushColor(ConsoleColor.Yellow);
-            Console.WriteLine("Core: Running on {0}\n", RuntimeInformation.FrameworkDescription);
+            Console.WriteLine("Core: Running on {0}\n", Framework);
             Utility.PopColor();
 
             string s = Arguments;
