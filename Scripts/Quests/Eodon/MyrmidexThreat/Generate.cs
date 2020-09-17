@@ -160,7 +160,7 @@ namespace Server.Engines.MyrmidexInvasion
             allegianceIdol = new AllegianceIdol(Allegiance.Myrmidex);
             allegianceIdol.MoveToWorld(new Point3D(176, 1813, 91), map);
 
-            HealerCamp camp = new HealerCamp
+            _ = new HealerCamp
             {
                 Map = Map.TerMur,
                 Location = new Point3D(262, 1716, 80)

@@ -1004,7 +1004,7 @@ namespace Server.Engines.Shadowguard
 
             PackItem(scimitar);
 
-            LesserHiryu hiryu = new LesserHiryu
+            _ = new LesserHiryu
             {
                 Rider = this
             };
