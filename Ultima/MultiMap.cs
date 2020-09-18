@@ -49,7 +49,7 @@ namespace Ultima
                         while (j != len)
                         {
                             pixel = m_StreamBuffer[j++];
-                            count = (pixel & 0x7f);
+                            count = pixel & 0x7f;
 
                             if ((pixel & 0x80) != 0)
                             {
@@ -158,7 +158,7 @@ namespace Ultima
         public static unsafe Bitmap GetFacetImage(int id)
         {
             Bitmap bmp;
-            string path = Files.GetFilePath(String.Format("facet0{0}.mul", id));
+            string path = Files.GetFilePath(string.Format("facet0{0}.mul", id));
             if (path != null)
             {
                 using (BinaryReader reader = new BinaryReader(new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read)))

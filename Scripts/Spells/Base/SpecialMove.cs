@@ -79,7 +79,7 @@ namespace Server.Spells
         {
             if (m.Skills[MoveSkill].Value < RequiredSkill)
             {
-                string args = String.Format("{0}\t{1}\t ", RequiredSkill.ToString("F1"), MoveSkill.ToString());
+                string args = string.Format("{0}\t{1}\t ", RequiredSkill.ToString("F1"), MoveSkill.ToString());
                 m.SendLocalizedMessage(1063013, args); // You need at least ~1_SKILL_REQUIREMENT~ ~2_SKILL_NAME~ skill to use that ability.
                 return false;
             }
@@ -97,12 +97,12 @@ namespace Server.Spells
                 return 0;
             }
 
-            if (!Server.Spells.Necromancy.MindRotSpell.GetMindRotScalar(m, ref scalar))
+            if (!Necromancy.MindRotSpell.GetMindRotScalar(m, ref scalar))
             {
                 scalar = 1.0;
             }
 
-            if (Server.Spells.Mysticism.PurgeMagicSpell.IsUnderCurseEffects(m))
+            if (Mysticism.PurgeMagicSpell.IsUnderCurseEffects(m))
             {
                 scalar += .5;
             }
@@ -188,7 +188,7 @@ namespace Server.Spells
 
         public static void ClearAllMoves(Mobile m)
         {
-            foreach (KeyValuePair<Int32, SpecialMove> kvp in SpellRegistry.SpecialMoves)
+            foreach (KeyValuePair<int, SpecialMove> kvp in SpellRegistry.SpecialMoves)
             {
                 int moveID = kvp.Key;
 

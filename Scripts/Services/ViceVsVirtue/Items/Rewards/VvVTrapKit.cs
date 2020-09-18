@@ -54,7 +54,7 @@ namespace Server.Engines.VvV
                     else
                     {
                         from.SendLocalizedMessage(1155409); // Where do you want to place the trap?
-                        from.BeginTarget(2, true, Server.Targeting.TargetFlags.None, (m, targeted) =>
+                        from.BeginTarget(2, true, TargetFlags.None, (m, targeted) =>
                         {
                             IPoint3D p = targeted as IPoint3D;
 
@@ -121,7 +121,7 @@ namespace Server.Engines.VvV
                             }
                             else
                             {
-                                m.PrivateOverheadMessage(Server.Network.MessageType.Regular, 1154, 1155411, m.NetState); // *You successfully lay the tripwire*
+                                m.PrivateOverheadMessage(Network.MessageType.Regular, 1154, 1155411, m.NetState); // *You successfully lay the tripwire*
                             }
                         }
                     }
@@ -133,7 +133,7 @@ namespace Server.Engines.VvV
             }
             else
             {
-                m.PrivateOverheadMessage(Server.Network.MessageType.Regular, 1154, 1155412, m.NetState); // *You successfully set the trap*
+                m.PrivateOverheadMessage(Network.MessageType.Regular, 1154, 1155412, m.NetState); // *You successfully set the trap*
                 trap = ConstructTrap(m);
             }
 
@@ -192,8 +192,8 @@ namespace Server.Engines.VvV
         {
             base.GetProperties(list);
 
-            list.Add(1154938, String.Format("#{0}", ((int)DeploymentType).ToString())); // Deployment Type: ~1_DEPLOYTYPE~
-            list.Add(1154941, String.Format("#{0}", ((int)TrapType).ToString())); // Damage Type: ~1_DMGTYPE~
+            list.Add(1154938, string.Format("#{0}", ((int)DeploymentType).ToString())); // Deployment Type: ~1_DEPLOYTYPE~
+            list.Add(1154941, string.Format("#{0}", ((int)TrapType).ToString())); // Damage Type: ~1_DMGTYPE~
             list.Add(1154937); // VvV Item
         }
 
@@ -221,7 +221,7 @@ namespace Server.Engines.VvV
 
                 Deed.InvalidateProperties();
 
-                Clicker.PrivateOverheadMessage(Server.Network.MessageType.Regular, 1154, 1155515, Clicker.NetState); // *You adjust the deployment mechanism*
+                Clicker.PrivateOverheadMessage(Network.MessageType.Regular, 1154, 1155515, Clicker.NetState); // *You adjust the deployment mechanism*
             }
         }
 

@@ -373,7 +373,7 @@ namespace Server
 					d = TimeSpan.MaxValue;
 				}
 
-				Server.Diagnostics.ExceptionLogging.LogException(ex);
+                Diagnostics.ExceptionLogging.LogException(ex);
 			}
 
 			Write(d);
@@ -496,7 +496,7 @@ namespace Server
 
 			fixed (byte* pBuffer = m_Buffer)
 			{
-				*((double*)(pBuffer + m_Index)) = value;
+				*(double*)(pBuffer + m_Index) = value;
 			}
 
 			m_Index += 8;
@@ -511,7 +511,7 @@ namespace Server
 
 			fixed (byte* pBuffer = m_Buffer)
 			{
-				*((float*)(pBuffer + m_Index)) = value;
+				*(float*)(pBuffer + m_Index) = value;
 			}
 
 			m_Index += 4;
@@ -1106,7 +1106,7 @@ namespace Server
 			}
 			catch (Exception e)
 			{
-				Server.Diagnostics.ExceptionLogging.LogException(e);
+                Diagnostics.ExceptionLogging.LogException(e);
 
 				if (ticks > 0)
 				{
@@ -1744,7 +1744,7 @@ namespace Server
 					d = TimeSpan.MaxValue;
 				}
 
-				Server.Diagnostics.ExceptionLogging.LogException(ex);
+                Diagnostics.ExceptionLogging.LogException(ex);
 			}
 
 			Write(d);

@@ -16,9 +16,9 @@ namespace Server.Engines.ArenaSystem
         public PVPArena Arena { get; set; }
 
         public ArenaRegion(PVPArena arena)
-            : base(String.Format("Duel Arena {0}", arena.Definition.Name),
+            : base(string.Format("Duel Arena {0}", arena.Definition.Name),
                     arena.Definition.Map,
-                    Region.DefaultPriority,
+                    DefaultPriority,
                     arena.Definition.RegionBounds)
         {
             Arena = arena;
@@ -102,7 +102,7 @@ namespace Server.Engines.ArenaSystem
         {
             if (type == TravelCheckType.TeleportTo)
             {
-                if (Region.Find(traveller.Location, traveller.Map) != this || traveller.Z != p.Z)
+                if (Find(traveller.Location, traveller.Map) != this || traveller.Z != p.Z)
                 {
                     traveller.SendLocalizedMessage(501035); // You cannot teleport from here to the destination.
                     return false;
@@ -167,7 +167,7 @@ namespace Server.Engines.ArenaSystem
 
         public override bool AllowHarmful(Mobile from, IDamageable target)
         {
-            Region theirs = Region.Find(target.Location, target.Map);
+            Region theirs = Find(target.Location, target.Map);
 
             if (theirs is ArenaRegion)
             {
@@ -179,7 +179,7 @@ namespace Server.Engines.ArenaSystem
 
         public override bool AllowBeneficial(Mobile from, Mobile target)
         {
-            Region theirs = Region.Find(target.Location, target.Map);
+            Region theirs = Find(target.Location, target.Map);
 
             if (theirs is ArenaRegion)
             {

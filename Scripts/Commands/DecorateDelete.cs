@@ -260,10 +260,11 @@ namespace Server.Commands
                         }
                     }
 
-                    MarkContainer mc = new MarkContainer(bone, locked);
-
-                    mc.TargetMap = map;
-                    mc.Description = "strange location";
+                    MarkContainer mc = new MarkContainer(bone, locked)
+                    {
+                        TargetMap = map,
+                        Description = "strange location"
+                    };
 
                     item = mc;
                 }
@@ -322,11 +323,12 @@ namespace Server.Commands
                         }
                     }
 
-                    HintItem hi = new HintItem(m_ItemID, range, messageNumber, hintNumber);
-
-                    hi.WarningString = messageString;
-                    hi.HintString = hintString;
-                    hi.ResetDelay = resetDelay;
+                    HintItem hi = new HintItem(m_ItemID, range, messageNumber, hintNumber)
+                    {
+                        WarningString = messageString,
+                        HintString = hintString,
+                        ResetDelay = resetDelay
+                    };
 
                     item = hi;
                 }
@@ -369,10 +371,11 @@ namespace Server.Commands
                         }
                     }
 
-                    WarningItem wi = new WarningItem(m_ItemID, range, messageNumber);
-
-                    wi.WarningString = messageString;
-                    wi.ResetDelay = resetDelay;
+                    WarningItem wi = new WarningItem(m_ItemID, range, messageNumber)
+                    {
+                        WarningString = messageString,
+                        ResetDelay = resetDelay
+                    };
 
                     item = wi;
                 }
@@ -476,7 +479,7 @@ namespace Server.Commands
             }
             catch (Exception e)
             {
-                throw new Exception(String.Format("Bad type: {0}", m_Type), e);
+                throw new Exception(string.Format("Bad type: {0}", m_Type), e);
             }
 
             if (item is BaseAddon)
@@ -1128,7 +1131,7 @@ namespace Server.Commands
             list.m_Type = ScriptCompiler.FindTypeByName(line.Substring(0, indexOf++), true);
 
             if (list.m_Type == null)
-                throw new ArgumentException(String.Format("Type not found for header: '{0}'", line));
+                throw new ArgumentException(string.Format("Type not found for header: '{0}'", line));
 
             line = line.Substring(indexOf);
             indexOf = line.IndexOf('(');
@@ -1237,8 +1240,10 @@ namespace Server.Commands
             // Prism of Light - Trammel
             altar = new PrismOfLightAltar();
             FindItem(6509, 167, 6, Map.Trammel, altar);
-            tele = new PeerlessTeleporter(altar);
-            tele.ItemID = 0xDDA;
+            tele = new PeerlessTeleporter(altar)
+            {
+                ItemID = 0xDDA
+            };
             FindItem(6501, 137, -20, Map.Trammel, tele);
             tele.Delete();
             pillar = new PrismOfLightPillar((PrismOfLightAltar)altar, 0x581);
@@ -1269,8 +1274,10 @@ namespace Server.Commands
             // Prism of Light - Felucca
             altar = new PrismOfLightAltar();
             FindItem(6509, 167, 6, Map.Felucca, altar);
-            tele = new PeerlessTeleporter(altar);
-            tele.ItemID = 0xDDA;
+            tele = new PeerlessTeleporter(altar)
+            {
+                ItemID = 0xDDA
+            };
             FindItem(6501, 137, -20, Map.Felucca, tele);
             tele.Delete();
 

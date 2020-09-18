@@ -17,9 +17,11 @@ namespace Server.Engines.Quests.RitualQuest
                 Instance = new CrystalLotusPuzzle();
                 Instance.MoveToWorld(new Point3D(978, 2876, 37), Map.TerMur);
 
-                Static s = new Static(0x283B);
-                s.Hue = 1152;
-                s.Name = "Pristine Crystal Lotus";
+                Static s = new Static(0x283B)
+                {
+                    Hue = 1152,
+                    Name = "Pristine Crystal Lotus"
+                };
                 s.MoveToWorld(new Point3D(978, 2876, 47), Map.TerMur);
             }
         }
@@ -65,7 +67,7 @@ namespace Server.Engines.Quests.RitualQuest
             {
                 Order[i] = Tiles[Utility.Random(Tiles.Count)];
 
-                Timer.DelayCall<PuzzleTile, int>(TimeSpan.FromSeconds(i * WhiteLength), (tile, index) =>
+                Timer.DelayCall(TimeSpan.FromSeconds(i * WhiteLength), (tile, index) =>
                 {
                     tile.Hue = White;
 
@@ -409,7 +411,7 @@ namespace Server.Engines.Quests.RitualQuest
             }
             else
             {
-                m.LocalOverheadMessage(Server.Network.MessageType.Regular, 0x3B2, 1019045); // I can't reach that.
+                m.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1019045); // I can't reach that.
             }
         }
 

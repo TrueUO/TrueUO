@@ -921,7 +921,7 @@ namespace Ultima
             }
             else
             {
-                return String.Format("anim{0}.mul", fileType);
+                return string.Format("anim{0}.mul", fileType);
             }
         }
     }
@@ -960,7 +960,7 @@ namespace Ultima
             int header;
 
             int xBase = xCenter - 0x200;
-            int yBase = (yCenter + height) - 0x200;
+            int yBase = yCenter + height - 0x200;
 
             if (!flip)
             {

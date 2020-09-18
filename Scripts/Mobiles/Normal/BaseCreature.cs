@@ -791,7 +791,7 @@ namespace Server.Mobiles
             }
         }
 
-        public static bool IsSoulboundEnemies => Server.Engines.Fellowship.ForsakenFoesEvent.Instance.Running;
+        public static bool IsSoulboundEnemies => Engines.Fellowship.ForsakenFoesEvent.Instance.Running;
 
         public static Type[] _SoulboundCreatures =
         {
@@ -1366,7 +1366,7 @@ namespace Server.Mobiles
                 }
                 else
                 {
-                    suffix = String.Concat(suffix, " (Paragon)");
+                    suffix = string.Concat(suffix, " (Paragon)");
                 }
             }
 
@@ -3444,16 +3444,9 @@ namespace Server.Mobiles
             {
                 m_ControlOrder = value;
 
-                if (m_Allured)
+                if (m_Allured && m_ControlOrder != OrderType.None)
                 {
-                    if (m_ControlOrder == OrderType.Release)
-                    {
-                        Say(502003); // Sorry, but no.
-                    }
-                    else if (m_ControlOrder != OrderType.None)
-                    {
-                        Say(1079120); // Very well.
-                    }
+                    Say(1079120); // Very well.
                 }
 
                 if (m_AI != null)
@@ -3617,7 +3610,7 @@ namespace Server.Mobiles
             m.Delete();
         }
 
-        public virtual bool DeleteOnRelease => m_bSummoned;
+        public virtual bool DeleteOnRelease => m_bSummoned || m_Allured;
 
         public virtual void OnGaveMeleeAttack(Mobile defender)
         {
@@ -3732,7 +3725,7 @@ namespace Server.Mobiles
         {
             if (m_bDebugAI)
             {
-                PublicOverheadMessage(MessageType.Regular, 41, false, String.Format(format, args));
+                PublicOverheadMessage(MessageType.Regular, 41, false, string.Format(format, args));
             }
         }
 
@@ -4125,7 +4118,7 @@ namespace Server.Mobiles
                         else
                         {
                             // I will teach thee all I know, if paid the amount in full.  The price is:
-                            Say(1019077, AffixType.Append, String.Format(" {0}", pointsToLearn), "");
+                            Say(1019077, AffixType.Append, string.Format(" {0}", pointsToLearn), "");
                             Say(1043108); // For less I shall teach thee less.
 
                             m_Teaching = skill;
@@ -5103,9 +5096,10 @@ namespace Server.Mobiles
 
             if (backpack == null)
             {
-                backpack = new Backpack();
-
-                backpack.Movable = false;
+                backpack = new Backpack
+                {
+                    Movable = false
+                };
 
                 AddItem(backpack);
             }
@@ -5274,9 +5268,10 @@ namespace Server.Mobiles
 
             if (pack == null)
             {
-                pack = new Backpack();
-
-                pack.Movable = false;
+                pack = new Backpack
+                {
+                    Movable = false
+                };
 
                 AddItem(pack);
             }
@@ -5379,7 +5374,7 @@ namespace Server.Mobiles
         {
             base.AddNameProperties(list);
 
-            if (Controlled && !String.IsNullOrEmpty(EngravedText))
+            if (Controlled && !string.IsNullOrEmpty(EngravedText))
             {
                 list.Add(1157315, EngravedText); // <BASEFONT COLOR=#668cff>Branded: ~1_VAL~<BASEFONT COLOR=#FFFFFF>
             }
@@ -5779,17 +5774,9 @@ namespace Server.Mobiles
                 }
             }
         }
-
-        public virtual bool GivesMLMinorArtifact => false;
         #endregion
 
-        public virtual void OnRelease(Mobile from)
-        {
-            if (m_Allured)
-            {
-                Timer.DelayCall(TimeSpan.FromSeconds(2), Delete);
-            }
-        }
+        public virtual bool GivesMLMinorArtifact => false;
 
         public override void OnItemLifted(Mobile from, Item item)
         {
@@ -6695,11 +6682,13 @@ namespace Server.Mobiles
 
                 if (inst == null)
                 {
-                    inst = new Harp();
-                    inst.SuccessSound = PlayInstrumentSound ? 0x58B : 0;
-                    inst.FailureSound = PlayInstrumentSound ? 0x58C : 0;
-                    inst.Movable = false;
-                    inst.Quality = ItemQuality.Exceptional;
+                    inst = new Harp
+                    {
+                        SuccessSound = PlayInstrumentSound ? 0x58B : 0,
+                        FailureSound = PlayInstrumentSound ? 0x58C : 0,
+                        Movable = false,
+                        Quality = ItemQuality.Exceptional
+                    };
 
                     PackItem(inst);
                 }

@@ -26,16 +26,22 @@ namespace Server.Items
         [Constructable]
         public NestWithEgg()
         {
-            AddonComponent comp = new LocalizedAddonComponent(3518, 1026869);
-            comp.Hue = 449;
+            AddonComponent comp = new LocalizedAddonComponent(3518, 1026869)
+            {
+                Hue = 449
+            };
             AddComponent(comp, 0, 0, 0);
 
-            comp = new LocalizedAddonComponent(3270, 1026869);
-            comp.Hue = 551;
+            comp = new LocalizedAddonComponent(3270, 1026869)
+            {
+                Hue = 551
+            };
             AddComponent(comp, 0, 0, 2);
 
-            comp = new LocalizedAddonComponent(3374, 1026869);
-            comp.Hue = 551;
+            comp = new LocalizedAddonComponent(3374, 1026869)
+            {
+                Hue = 551
+            };
             AddComponent(comp, 0, 0, 2);
 
             comp = new LocalizedAddonComponent(16831, 1112469);
@@ -180,7 +186,7 @@ namespace Server.Items
 
             if (hatchling != null)
             {
-                focus.PublicOverheadMessage(Server.Network.MessageType.Regular, 0x35, 1156496); // *The Hatchling safely burrows into the sand*
+                focus.PublicOverheadMessage(Network.MessageType.Regular, 0x35, 1156496); // *The Hatchling safely burrows into the sand*
                 Timer.DelayCall(TimeSpan.FromSeconds(1), hatchling.Delete);
             }
 

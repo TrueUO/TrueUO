@@ -8,7 +8,7 @@ using System;
 
 namespace Server.Items
 {
-    [FlipableAttribute(39958, 39959)]
+    [Flipable(39958, 39959)]
     public class RunicAtlas : Runebook
     {
         public override int MaxEntries => 48;
@@ -81,8 +81,10 @@ namespace Server.Items
                     if (g != null)
                         from.CloseGump(typeof(RunicAtlasGump));
 
-                    g = new RunicAtlasGump((PlayerMobile)from, this);
-                    g.Page = newPage;
+                    g = new RunicAtlasGump((PlayerMobile)from, this)
+                    {
+                        Page = newPage
+                    };
                     BaseGump.SendGump(g);
                 }
             }
@@ -539,7 +541,7 @@ namespace Server.Items
                     Atlas.Description = Utility.FixHtml(text.Trim());
 
                     from.CloseGump(typeof(RunicAtlasGump));
-                    BaseGump.SendGump(new RunicAtlasGump((PlayerMobile)from, Atlas));
+                    SendGump(new RunicAtlasGump((PlayerMobile)from, Atlas));
                     from.SendLocalizedMessage(1041531); // You have changed the title of the rune book.
                 }
                 else
@@ -556,7 +558,7 @@ namespace Server.Items
                 if (from is PlayerMobile && !Atlas.Deleted && from.InRange(Atlas.GetWorldLocation(), 3))
                 {
                     from.CloseGump(typeof(RunicAtlasGump));
-                    BaseGump.SendGump(new RunicAtlasGump((PlayerMobile)from, Atlas));
+                    SendGump(new RunicAtlasGump((PlayerMobile)from, Atlas));
                 }
             }
         }

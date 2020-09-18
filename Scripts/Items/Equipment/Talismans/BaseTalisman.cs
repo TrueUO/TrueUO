@@ -626,7 +626,7 @@ namespace Server.Items
                     }
                     catch (Exception e)
                     {
-                        Server.Diagnostics.ExceptionLogging.LogException(e);
+                        Diagnostics.ExceptionLogging.LogException(e);
                     }
 
                     if (obj is Item)
@@ -897,7 +897,7 @@ namespace Server.Items
             if (Blessed)
             {
                 if (BlessedFor != null)
-                    list.Add(1072304, !String.IsNullOrEmpty(BlessedFor.Name) ? BlessedFor.Name : "Unnamed Warrior"); // Owned by ~1_name~
+                    list.Add(1072304, !string.IsNullOrEmpty(BlessedFor.Name) ? BlessedFor.Name : "Unnamed Warrior"); // Owned by ~1_name~
                 else
                     list.Add(1072304, "Nobody"); // Owned by ~1_name~
             }

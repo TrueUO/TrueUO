@@ -152,7 +152,7 @@ namespace Server.Engines.NewMagincia
 
                 SendToStables(from, pet);
 
-                from.SendLocalizedMessage(1150380, String.Format("{0}\t{1}", entry.TypeName, pet.Name)); // You have purchased ~1_TYPE~ named "~2_NAME~". The animal is now in the stables and you may retrieve it there.
+                from.SendLocalizedMessage(1150380, string.Format("{0}\t{1}", entry.TypeName, pet.Name)); // You have purchased ~1_TYPE~ named "~2_NAME~". The animal is now in the stables and you may retrieve it there.
                 m_BrokerEntries.Remove(entry);
                 return 0;
             }
@@ -169,7 +169,7 @@ namespace Server.Engines.NewMagincia
             pet.SetControlMaster(null);
             pet.SummonMaster = null;
             pet.IsStabled = true;
-            pet.Loyalty = BaseCreature.MaxLoyalty;
+            pet.Loyalty = MaxLoyalty;
             to.Stabled.Add(pet);
         }
 
@@ -186,7 +186,7 @@ namespace Server.Engines.NewMagincia
             pet.SummonMaster = null;
 
             pet.IsStabled = true;
-            pet.Loyalty = BaseCreature.MaxLoyalty;
+            pet.Loyalty = MaxLoyalty;
 
             pet.Home = Point3D.Zero;
             pet.RangeHome = 10;
@@ -231,7 +231,7 @@ namespace Server.Engines.NewMagincia
 
             protected override void OnTick()
             {
-                PetBroker.SendToBrokerStables(m_Creature);
+                SendToBrokerStables(m_Creature);
             }
         }
 

@@ -133,7 +133,7 @@ namespace Server.Engines.SeasonalEvents
 
                 if (mob != null && CityTradeSystem.HasTrade(mob))
                 {
-                    mob.LocalOverheadMessage(MessageType.Regular, 1150, 1158832, String.Format("{0}\t{1}", WorldLocationInfo.GetLocationString(SpawnLocation, SpawnMap), Sextant.GetCoords(SpawnLocation, SpawnMap))); // *You sense Krampus has been spotted near ~2_where~ at ~1_coords~!*
+                    mob.LocalOverheadMessage(MessageType.Regular, 1150, 1158832, string.Format("{0}\t{1}", WorldLocationInfo.GetLocationString(SpawnLocation, SpawnMap), Sextant.GetCoords(SpawnLocation, SpawnMap))); // *You sense Krampus has been spotted near ~2_where~ at ~1_coords~!*
                 }
             }
 
@@ -145,10 +145,12 @@ namespace Server.Engines.SeasonalEvents
 
         private void SpawnKrampus()
         {
-            Krampus = new Krampus();
-            Krampus.SpawnLocation = SpawnLocation;
-            Krampus.Home = SpawnLocation;
-            Krampus.RangeHome = 5;
+            Krampus = new Krampus
+            {
+                SpawnLocation = SpawnLocation,
+                Home = SpawnLocation,
+                RangeHome = 5
+            };
 
             Krampus.MoveToWorld(SpawnLocation, SpawnMap);
             Krampus.Summon(Krampus, true);
@@ -267,7 +269,7 @@ namespace Server.Engines.SeasonalEvents
 
         public static void Configure()
         {
-            if (System.IO.File.Exists(FilePath))
+            if (File.Exists(FilePath))
             {
                 EventSink.WorldLoad += OnLoad;
             }
@@ -291,7 +293,7 @@ namespace Server.Engines.SeasonalEvents
                             }
                             catch (Exception e)
                             {
-                                Server.Diagnostics.ExceptionLogging.LogException(e);
+                                Diagnostics.ExceptionLogging.LogException(e);
                             }
                         });
                     }
@@ -300,11 +302,11 @@ namespace Server.Engines.SeasonalEvents
                     {
                         try
                         {
-                            System.IO.File.Delete(FilePath);
+                            File.Delete(FilePath);
                         }
                         catch (Exception e)
                         {
-                            Server.Diagnostics.ExceptionLogging.LogException(e);
+                            Diagnostics.ExceptionLogging.LogException(e);
                         }
                     });
                 });

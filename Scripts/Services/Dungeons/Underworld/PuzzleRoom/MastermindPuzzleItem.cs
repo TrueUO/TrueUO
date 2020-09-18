@@ -77,8 +77,8 @@ namespace Server.Items
                 Effects.SendLocationParticles(EffectItem.Create(parent.Location, parent.Map, EffectItem.DefaultDuration), 0x3728, 8, 20, 5042);
                 Effects.PlaySound(parent.Location, parent.Map, 0x201);
 
-                parent.CloseGump(typeof(PuzzleChest.PuzzleGump));
-                parent.CloseGump(typeof(PuzzleChest.StatusGump));
+                parent.CloseGump(typeof(PuzzleGump));
+                parent.CloseGump(typeof(StatusGump));
             }
             else
             {
@@ -101,8 +101,10 @@ namespace Server.Items
             if (m_Key != null)
                 m_Key.Decay();
 
-            ExperimentalGem gem = new ExperimentalGem();
-            gem.Owner = from;
+            ExperimentalGem gem = new ExperimentalGem
+            {
+                Owner = from
+            };
 
             from.AddToBackpack(gem);
 

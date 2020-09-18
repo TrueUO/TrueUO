@@ -249,8 +249,10 @@ namespace Server.Multis
         {
             int dir = GetValueForDirection(Facing);
 
-            GalleonPilot pilot = new GalleonPilot(this);
-            pilot.Direction = direction;
+            GalleonPilot pilot = new GalleonPilot(this)
+            {
+                Direction = direction
+            };
 
             TillerMan = pilot;
             GalleonPilot = pilot;
@@ -857,7 +859,7 @@ namespace Server.Multis
 
         public override DryDockResult CheckDryDock(Mobile from, Mobile dockmaster)
         {
-            if (this is BaseGalleon && (this).GalleonHold.Items.Count > 0)
+            if (this is BaseGalleon && GalleonHold.Items.Count > 0)
                 return DryDockResult.Hold;
 
             Container pack = from.Backpack;

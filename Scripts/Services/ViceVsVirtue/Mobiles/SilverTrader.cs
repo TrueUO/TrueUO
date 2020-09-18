@@ -34,9 +34,11 @@ namespace Server.Engines.VvV
 
         public override void InitOutfit()
         {
-            Robe robe = new Robe();
-            robe.ItemID = 0x2684;
-            robe.Name = "a robe";
+            Robe robe = new Robe
+            {
+                ItemID = 0x2684,
+                Name = "a robe"
+            };
 
             SetWearable(robe, 1109);
 
@@ -225,7 +227,7 @@ namespace Server.Engines.VvV
             {
                 Timer.DelayCall(() =>
                     {
-                        ColUtility.SafeDelete<Item>(Backpack.Items, null);
+                        ColUtility.SafeDelete(Backpack.Items, null);
                     });
             }
 

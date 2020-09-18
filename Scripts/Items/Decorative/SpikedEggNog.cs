@@ -74,7 +74,7 @@ namespace Server.Items
                 return;
             }
 
-            BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.Bleed, 1075829, 1075830, TimeSpan.FromSeconds(12), m, String.Format("{0}\t{1}\t{2}", "1", "10", "2")));
+            BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.Bleed, 1075829, 1075830, TimeSpan.FromSeconds(12), m, string.Format("{0}\t{1}\t{2}", "1", "10", "2")));
 
             m_Timer = new BleedTimer(m, this);
             m_Timer.Start();
@@ -102,8 +102,10 @@ namespace Server.Items
                 m.PlaySound(0x133);
                 AOS.Damage(m, Utility.Random(1, 10), false, 0, 0, 0, 0, 100);
 
-                Blood blood = new Blood();
-                blood.ItemID = Utility.Random(0x122A, 5);
+                Blood blood = new Blood
+                {
+                    ItemID = Utility.Random(0x122A, 5)
+                };
                 blood.MoveToWorld(m.Location, m.Map);
             }
             else

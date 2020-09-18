@@ -51,7 +51,7 @@ namespace Server.Engines.VeteranRewards
             for (int j = 0; j < entries.Count; ++j)
             {
                 //RewardEntry entry = entries[j];
-                if (RewardSystem.HasAccess(mob, entries[j]))
+                if (HasAccess(mob, entries[j]))
                 {
                     return true;
                 }
@@ -127,7 +127,7 @@ namespace Server.Engines.VeteranRewards
 
             TimeSpan totalTime = (DateTime.UtcNow - acct.Created);
 
-            Double level = (totalTime.TotalDays / RewardInterval.TotalDays);
+            double level = (totalTime.TotalDays / RewardInterval.TotalDays);
 
             return level >= 0.5;
         }
@@ -179,7 +179,7 @@ namespace Server.Engines.VeteranRewards
 
             string tag = acct.GetTag("numRewardsChosen");
 
-            if (String.IsNullOrEmpty(tag))
+            if (string.IsNullOrEmpty(tag))
                 cur = 0;
             else
                 cur = Utility.ToInt32(tag);
@@ -650,7 +650,7 @@ namespace Server.Engines.VeteranRewards
 
             if (e.Mobile is PlayerMobile && !((PlayerMobile)e.Mobile).HasStatReward && HasHalfLevel(e.Mobile))
             {
-                Server.Gumps.BaseGump.SendGump(new StatRewardGump((PlayerMobile)e.Mobile));
+                Gumps.BaseGump.SendGump(new StatRewardGump((PlayerMobile)e.Mobile));
             }
 
             if (cur < max)

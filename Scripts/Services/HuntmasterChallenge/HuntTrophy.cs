@@ -69,7 +69,7 @@ namespace Server.Items
             m_DateKilled = killed;
             m_Measurement = measurement;
 
-            if (!String.IsNullOrEmpty(Info.TrophyName.String))
+            if (!string.IsNullOrEmpty(Info.TrophyName.String))
             {
                 Name = Info.TrophyName.String;
             }
@@ -276,8 +276,10 @@ namespace Server.Items
                         }
                         else
                         {
-                            trophy = new HuntTrophy(m_Owner, Index, m_Measurement, m_DateKilled, m_Location);
-                            trophy.ItemID = itemID;
+                            trophy = new HuntTrophy(m_Owner, Index, m_Measurement, m_DateKilled, m_Location)
+                            {
+                                ItemID = itemID
+                            };
                         }
 
                         trophy.MoveToWorld(from.Location, from.Map);

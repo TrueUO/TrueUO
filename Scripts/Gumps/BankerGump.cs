@@ -91,7 +91,7 @@ namespace Server.Gumps
                     break;
                 case 5:
                     User.SendLocalizedMessage(1155865); // Enter amount to deposit:
-                    User.BeginPrompt<Account>(
+                    User.BeginPrompt(
                     (from, text, account) =>
                     {
                         int v = 0;
@@ -100,7 +100,7 @@ namespace Server.Gumps
                         {
                             int canHold = Account.MaxSecureAmount - account.GetSecureAccountAmount(from);
 
-                            if (text != null && !String.IsNullOrEmpty(text))
+                            if (text != null && !string.IsNullOrEmpty(text))
                             {
                                 v = Utility.ToInt32(text);
 
@@ -135,7 +135,7 @@ namespace Server.Gumps
 
                         if (ac != null)
                         {
-                            if (text != null && !String.IsNullOrEmpty(text))
+                            if (text != null && !string.IsNullOrEmpty(text))
                             {
                                 v = Utility.ToInt32(text);
 

@@ -59,11 +59,12 @@ namespace Server.Commands
 
         public static void Export(CategoryEntry ce, string fileName, string title)
         {
-            XmlTextWriter xml = new XmlTextWriter(fileName, System.Text.Encoding.UTF8);
-
-            xml.Indentation = 1;
-            xml.IndentChar = '\t';
-            xml.Formatting = Formatting.Indented;
+            XmlTextWriter xml = new XmlTextWriter(fileName, System.Text.Encoding.UTF8)
+            {
+                Indentation = 1,
+                IndentChar = '\t',
+                Formatting = Formatting.Indented
+            };
 
             xml.WriteStartDocument(true);
 
@@ -218,7 +219,7 @@ namespace Server.Commands
                 }
                 catch (Exception e)
                 {
-                    Server.Diagnostics.ExceptionLogging.LogException(e);
+                    Diagnostics.ExceptionLogging.LogException(e);
                 }
             }
         }
@@ -316,14 +317,14 @@ namespace Server.Commands
             int start = text.IndexOf('(');
 
             if (start < 0)
-                throw new FormatException(String.Format("Input string not correctly formatted ('{0}')", text));
+                throw new FormatException(string.Format("Input string not correctly formatted ('{0}')", text));
 
             m_Title = text.Substring(0, start).Trim();
 
             int end = text.IndexOf(')', ++start);
 
             if (end < start)
-                throw new FormatException(String.Format("Input string not correctly formatted ('{0}')", text));
+                throw new FormatException(string.Format("Input string not correctly formatted ('{0}')", text));
 
             text = text.Substring(start, end - start);
             string[] split = text.Split(';');
@@ -382,12 +383,12 @@ namespace Server.Commands
 
             for (index = 0; index < input.Length; ++index)
             {
-                if (Char.IsLetter(input, index))
+                if (char.IsLetter(input, index))
                     break;
             }
 
             if (index >= input.Length)
-                throw new FormatException(String.Format("Input string not correctly formatted ('{0}')", input));
+                throw new FormatException(string.Format("Input string not correctly formatted ('{0}')", input));
 
             m_Indentation = index;
             m_Text = input.Substring(index);

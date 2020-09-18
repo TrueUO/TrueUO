@@ -22,7 +22,7 @@ namespace Server.Spells.SkillMasteries
 
         public override int RequiredMana => 20;
         public override int DamageThreshold => 0;
-        public override bool CheckManaBeforeCast { get { return !HasSpell(Caster, GetType()); } }
+        public override bool CheckManaBeforeCast => !HasSpell(Caster, GetType());
 
         public override SkillName CastSkill => SkillName.Wrestling;
 
@@ -97,7 +97,7 @@ namespace Server.Spells.SkillMasteries
             _Table[Caster] = c = new RampageContext(this);
 
             BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.Rampage, 1155929, 1155893, TimeSpan.FromSeconds(60), Caster,
-                String.Format("{0}\t{1}\t{1}\t{1}\t{2}\t{3}\t{4}\t{5}",
+                string.Format("{0}\t{1}\t{1}\t{1}\t{2}\t{3}\t{4}\t{5}",
                 (1 + GetMasteryLevel()).ToString(),
                 GetMasteryLevel().ToString(),
                 c.HitsRegen.ToString(),
@@ -136,7 +136,7 @@ namespace Server.Spells.SkillMasteries
 
                 BuffInfo.RemoveBuff(Caster, BuffIcon.Rampage);
                 BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.Rampage, 1155929, 1155893, TimeSpan.FromSeconds(60), Caster,
-                    String.Format("{0}\t{1}\t{1}\t{1}\t{2}\t{3}\t{4}\t{5}",
+                    string.Format("{0}\t{1}\t{1}\t{1}\t{2}\t{3}\t{4}\t{5}",
                     (1 + GetMasteryLevel()).ToString(),
                     GetMasteryLevel().ToString(),
                     c.HitsRegen.ToString(),

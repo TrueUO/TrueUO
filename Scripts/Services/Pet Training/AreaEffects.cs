@@ -138,7 +138,7 @@ namespace Server.Mobiles
                     _Cooldown = new List<BaseCreature>();
 
                 _Cooldown.Add(bc);
-                Timer.DelayCall<BaseCreature>(cooldown, RemoveFromCooldown, bc);
+                Timer.DelayCall(cooldown, RemoveFromCooldown, bc);
             }
         }
 
@@ -220,11 +220,11 @@ namespace Server.Mobiles
                 if (timer != null)
                     timer.Stop();
 
-                _Table[defender] = Timer.DelayCall<Mobile>(TimeSpan.FromSeconds(30), EndNausea, defender);
+                _Table[defender] = Timer.DelayCall(TimeSpan.FromSeconds(30), EndNausea, defender);
             }
             else
             {
-                _Table.Add(defender, Timer.DelayCall<Mobile>(TimeSpan.FromSeconds(30), EndNausea, defender));
+                _Table.Add(defender, Timer.DelayCall(TimeSpan.FromSeconds(30), EndNausea, defender));
             }
 
             defender.Animate(32, 5, 1, true, false, 0); // bow animation
@@ -306,7 +306,7 @@ namespace Server.Mobiles
 
         public override void DoEffect(BaseCreature creature, Mobile defender)
         {
-            Timer.DelayCall<Mobile>(TimeSpan.FromMilliseconds(Utility.RandomMinMax(10, 1000)), m =>
+            Timer.DelayCall(TimeSpan.FromMilliseconds(Utility.RandomMinMax(10, 1000)), m =>
             {
                 if (m.Alive && !m.Deleted && m.Map != null)
                 {
@@ -485,19 +485,25 @@ namespace Server.Mobiles
                 defaul = new AuraDefinition();
                 Definitions.Add(defaul);
 
-                cora = new AuraDefinition(typeof(CoraTheSorceress));
-                cora.Damage = 10;
-                cora.Fire = 0;
+                cora = new AuraDefinition(typeof(CoraTheSorceress))
+                {
+                    Damage = 10,
+                    Fire = 0
+                };
                 Definitions.Add(cora);
 
-                fireAura = new AuraDefinition(typeof(FlameElemental), typeof(FireDaemon), typeof(LesserFlameElemental));
-                fireAura.Damage = 7;
+                fireAura = new AuraDefinition(typeof(FlameElemental), typeof(FireDaemon), typeof(LesserFlameElemental))
+                {
+                    Damage = 7
+                };
                 Definitions.Add(fireAura);
 
-                coldAura = new AuraDefinition(typeof(ColdDrake), typeof(FrostDrake), typeof(FrostDragon), typeof(SnowElemental), typeof(FrostMite), typeof(IceFiend), typeof(IceElemental), typeof(CorporealBrume));
-                coldAura.Damage = 15;
-                coldAura.Fire = 0;
-                coldAura.Cold = 100;
+                coldAura = new AuraDefinition(typeof(ColdDrake), typeof(FrostDrake), typeof(FrostDragon), typeof(SnowElemental), typeof(FrostMite), typeof(IceFiend), typeof(IceElemental), typeof(CorporealBrume))
+                {
+                    Damage = 15,
+                    Fire = 0,
+                    Cold = 100
+                };
                 Definitions.Add(coldAura);
             }
 

@@ -118,12 +118,12 @@ namespace Server.Engines.Plants
             {
                 if (m_ShowType)
                 {
-                    args = String.Format("#{0}\t#{1}", title, typeInfo.Name);
+                    args = string.Format("#{0}\t#{1}", title, typeInfo.Name);
                     return typeInfo.GetSeedLabel(hueInfo);
                 }
                 else
                 {
-                    args = String.Format("#{0}", title);
+                    args = string.Format("#{0}", title);
                     return hueInfo.IsBright() ? 1060839 : 1060838; // [bright] ~1_val~ seed
                 }
             }
@@ -131,12 +131,12 @@ namespace Server.Engines.Plants
             {
                 if (m_ShowType)
                 {
-                    args = String.Format("{0}\t#{1}\t#{2}", Amount, title, typeInfo.Name);
+                    args = string.Format("{0}\t#{1}\t#{2}", Amount, title, typeInfo.Name);
                     return typeInfo.GetSeedLabelPlural(hueInfo);
                 }
                 else
                 {
-                    args = String.Format("{0}\t#{1}", Amount, title);
+                    args = string.Format("{0}\t#{1}", Amount, title);
                     return hueInfo.IsBright() ? 1113491 : 1113490; // ~1_amount~ [bright] ~2_val~ seeds
                 }
             }
@@ -213,15 +213,15 @@ namespace Server.Engines.Plants
 
                     plant.PlantSeed(from, m_Seed);
                 }
-                else if (targeted is Server.Items.GardenAddonComponent)
+                else if (targeted is GardenAddonComponent)
                 {
-                    Server.Items.GardenAddonComponent addon = (Server.Items.GardenAddonComponent)targeted;
+                    GardenAddonComponent addon = (GardenAddonComponent)targeted;
 
                     if (addon.Plant != null)
                         from.SendLocalizedMessage(1150367); // This plot already has a plant!
                     else
                     {
-                        Server.Multis.BaseHouse house = Server.Multis.BaseHouse.FindHouseAt(addon);
+                        Multis.BaseHouse house = Multis.BaseHouse.FindHouseAt(addon);
 
                         if (house != null)
                         {

@@ -47,7 +47,7 @@ namespace Server.Spells.SkillMasteries
         public override int RequiredMana => 40;
         public override bool PartyEffects => false;
         public override SkillName CastSkill => SkillName.AnimalTaming;
-        public override bool CheckManaBeforeCast { get { return !HasSpell(Caster, GetType()); } }
+        public override bool CheckManaBeforeCast => !HasSpell(Caster, GetType());
 
         public TrainingType SpellType { get; set; }
 
@@ -116,7 +116,7 @@ namespace Server.Spells.SkillMasteries
 
             Target.FixedParticles(0x373A, 10, 80, 5018, 0, 0, EffectLayer.Waist);
 
-            BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.CombatTraining, 1155933, 1156107, String.Format("{0}\t{1}\t{2}", SpellType.ToString(), Target.Name, ScaleUpkeep().ToString())));
+            BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.CombatTraining, 1155933, 1156107, string.Format("{0}\t{1}\t{2}", SpellType.ToString(), Target.Name, ScaleUpkeep().ToString())));
             //You train ~2_NAME~ to use ~1_SKILLNAME~.<br>Mana Upkeep: ~3_COST~
 
             FinishSequence();
@@ -386,7 +386,7 @@ namespace Server.Spells.SkillMasteries
             if (_RageCooldown == null)
                 _RageCooldown = new Dictionary<Mobile, Timer>();
 
-            _RageCooldown[m] = Server.Timer.DelayCall<Mobile>(TimeSpan.FromSeconds(60), EndRageCooldown, m);
+            _RageCooldown[m] = Server.Timer.DelayCall(TimeSpan.FromSeconds(60), EndRageCooldown, m);
         }
 
         public static bool InRageCooldown(Mobile m)

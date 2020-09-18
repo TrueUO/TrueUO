@@ -27,7 +27,7 @@ namespace Server.Engines.CityLoyalty
             }
             set
             {
-                if (String.IsNullOrEmpty(value))
+                if (string.IsNullOrEmpty(value))
                 {
                     AnnouncementExpires = DateTime.MinValue;
 
@@ -87,8 +87,10 @@ namespace Server.Engines.CityLoyalty
             EquipItem(new FeatheredHat(1157));
             EquipItem(new LongPants(1908));
 
-            Boots boots = new Boots();
-            boots.Hue = 2012;
+            Boots boots = new Boots
+            {
+                Hue = 2012
+            };
             EquipItem(boots);
 
             EquipItem(new GoldRing());
@@ -154,7 +156,7 @@ namespace Server.Engines.CityLoyalty
 
         public void DoAnnouncement()
         {
-            if (!String.IsNullOrEmpty(_Announcement))
+            if (!string.IsNullOrEmpty(_Announcement))
             {
                 PublicOverheadMessage(MessageType.Regular, 0x3B2, 502976); // Hear ye! Hear ye!
                 Timer.DelayCall(TimeSpan.FromSeconds(3), () =>

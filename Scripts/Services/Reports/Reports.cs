@@ -55,14 +55,15 @@ namespace Server.Engines.Reports
 
         public static void Generate()
         {
-            Snapshot ss = new Snapshot();
-
-            ss.TimeStamp = DateTime.UtcNow;
+            Snapshot ss = new Snapshot
+            {
+                TimeStamp = DateTime.UtcNow
+            };
 
             FillSnapshot(ss);
 
             m_StatsHistory.Snapshots.Add(ss);
-            m_StaffHistory.QueueStats.Add(new QueueStatus(Engines.Help.PageQueue.List.Count));
+            m_StaffHistory.QueueStats.Add(new QueueStatus(Help.PageQueue.List.Count));
 
             ThreadPool.QueueUserWorkItem(UpdateOutput, ss);
         }

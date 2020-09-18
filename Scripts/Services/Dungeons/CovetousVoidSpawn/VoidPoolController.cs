@@ -182,7 +182,7 @@ namespace Server.Engines.VoidPool
         public override void OnDoubleClick(Mobile from)
         {
             if (from.AccessLevel >= AccessLevel.GameMaster)
-                from.SendGump(new Server.Gumps.PropertiesGump(from, this));
+                from.SendGump(new Gumps.PropertiesGump(from, this));
         }
 
         private void OnTick()
@@ -424,7 +424,7 @@ namespace Server.Engines.VoidPool
 
             foreach (Mobile m in list.Where(m => CurrentScore.ContainsKey(m)))
             {
-                m.SendLocalizedMessage(1152650, String.Format("{0}\t{1}\t{2}\t{3}", GetTotalWaves(m), Wave.ToString(), Wave.ToString(), CurrentScore[m]));
+                m.SendLocalizedMessage(1152650, string.Format("{0}\t{1}\t{2}\t{3}", GetTotalWaves(m), Wave.ToString(), Wave.ToString(), CurrentScore[m]));
                 // During the battle, you helped fight back ~1_COUNT~ out of ~2_TOTAL~ waves of enemy forces. Your final wave was ~3_MAX~. Your total score for the battle was ~4_SCORE~ points.
 
                 if (m is PlayerMobile)
@@ -526,7 +526,7 @@ namespace Server.Engines.VoidPool
 
         public void ResetLevel3Spawners(Map map)
         {
-            Server.Region r = Server.Region.Find(new Point3D(5574, 1859, 0), map);
+            Region r = Server.Region.Find(new Point3D(5574, 1859, 0), map);
 
             foreach (Item item in r.GetEnumeratedItems().Where(i => i is ISpawner
                 && i.X >= 5501 && i.X <= 5627 && i.Y >= 1799 && i.Y <= 1927))

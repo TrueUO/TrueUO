@@ -156,7 +156,7 @@ namespace Server.Items
             writer.WriteEncodedInt(0); // version
 
             writer.WriteEncodedInt(m_Charges);
-            writer.WriteItemList<ReceiverCrystal>(m_Receivers);
+            writer.WriteItemList(m_Receivers);
         }
 
         public override void Deserialize(GenericReader reader)
@@ -346,7 +346,7 @@ namespace Server.Items
             if (!Active)
                 return;
 
-            string text = String.Format("{0} says {1}", from.Name, message);
+            string text = string.Format("{0} says {1}", from.Name, message);
 
             if (RootParent is Mobile)
             {
@@ -379,7 +379,7 @@ namespace Server.Items
 
             writer.WriteEncodedInt(0); // version
 
-            writer.WriteItem<BroadcastCrystal>(m_Sender);
+            writer.WriteItem(m_Sender);
         }
 
         public override void Deserialize(GenericReader reader)

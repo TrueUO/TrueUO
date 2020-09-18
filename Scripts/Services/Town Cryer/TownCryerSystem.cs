@@ -383,7 +383,7 @@ namespace Server.Services.TownCryer
                 }
                 catch (Exception e)
                 {
-                    Server.Diagnostics.ExceptionLogging.LogException(e);
+                    Diagnostics.ExceptionLogging.LogException(e);
                     Utility.WriteConsoleColor(ConsoleColor.Cyan, "...FAILED! ***");
                     return;
                 }
@@ -423,17 +423,18 @@ namespace Server.Services.TownCryer
                         }
                         else if (expires > DateTime.Now || expires == DateTime.MinValue)
                         {
-                            TownCryerGreetingEntry entry = new TownCryerGreetingEntry(title, body, -1, link, linktext);
-
-                            entry.PreLoaded = true;
-                            entry.Created = created;
+                            TownCryerGreetingEntry entry = new TownCryerGreetingEntry(title, body, -1, link, linktext)
+                            {
+                                PreLoaded = true,
+                                Created = created
+                            };
 
                             if (expires > created)
                             {
                                 entry.Expires = expires;
                             }
 
-                            TownCryerSystem.AddEntry(entry);
+                            AddEntry(entry);
                             good++;
                         }
                         else
@@ -472,7 +473,7 @@ namespace Server.Services.TownCryer
             }
             catch (Exception e)
             {
-                Server.Diagnostics.ExceptionLogging.LogException(e);
+                Diagnostics.ExceptionLogging.LogException(e);
             }
 
             return datetime;

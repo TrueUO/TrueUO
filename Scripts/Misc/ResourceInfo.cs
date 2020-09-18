@@ -597,7 +597,7 @@ namespace Server.Items
         private static Hashtable m_TypeTable;
 
         /// <summary>
-        /// Registers that '<paramref name="resourceType"/>' uses '<paramref name="resource"/>' so that it can later be queried by <see cref="CraftResources.GetFromType"/>
+        /// Registers that '<paramref name="resourceType"/>' uses '<paramref name="resource"/>' so that it can later be queried by <see cref="GetFromType"/>
         /// </summary>
         public static void RegisterType(Type resourceType, CraftResource resource)
         {
@@ -737,7 +737,7 @@ namespace Server.Items
         {
             CraftResourceInfo info = GetInfo(resource);
 
-            return (info == null ? String.Empty : info.Name);
+            return (info == null ? string.Empty : info.Name);
         }
 
         /// <summary>

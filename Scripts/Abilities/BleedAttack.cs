@@ -40,7 +40,7 @@ namespace Server.Items
                 }
             }
 
-            BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.Bleed, 1075829, 1075830, TimeSpan.FromSeconds(10), m, String.Format("{0}\t{1}\t{2}", "1", "10", "2")));
+            BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.Bleed, 1075829, 1075830, TimeSpan.FromSeconds(10), m, string.Format("{0}\t{1}\t{2}", "1", "10", "2")));
 
             timer = new BleedTimer(from, m, CheckBloodDrink(from));
             m_BleedTable[m] = timer;
@@ -75,8 +75,10 @@ namespace Server.Items
                     from.Heal(damage);
                 }
 
-                Blood blood = new Blood();
-                blood.ItemID = Utility.Random(0x122A, 5);
+                Blood blood = new Blood
+                {
+                    ItemID = Utility.Random(0x122A, 5)
+                };
                 blood.MoveToWorld(m.Location, m.Map);
             }
             else

@@ -194,11 +194,12 @@ namespace Server.Mobiles
                 }
 
                 Point3D start = new Point3D();
-                Point3D finish = new Point3D();
-
-                finish.X = m_ShowerArea.X + Utility.Random(m_ShowerArea.Width);
-                finish.Y = m_ShowerArea.Y + Utility.Random(m_ShowerArea.Height);
-                finish.Z = m_From.Z;
+                Point3D finish = new Point3D
+                {
+                    X = m_ShowerArea.X + Utility.Random(m_ShowerArea.Width),
+                    Y = m_ShowerArea.Y + Utility.Random(m_ShowerArea.Height),
+                    Z = m_From.Z
+                };
 
                 SpellHelper.AdjustField(ref finish, m_Map, 16, false);
 
@@ -423,7 +424,7 @@ namespace Server.Mobiles
                 {
                     int damage = Utility.RandomMinMax(120, 150);
 
-                    Timer.DelayCall(TimeSpan.FromSeconds(.20), new TimerStateCallback(DoDamage_Callback), new object[] { m_Combatant, m_Dragon, damage });
+                    DelayCall(TimeSpan.FromSeconds(.20), new TimerStateCallback(DoDamage_Callback), new object[] { m_Combatant, m_Dragon, damage });
 
                     Stop();
                 }

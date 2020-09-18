@@ -1,6 +1,6 @@
 namespace Server.Items
 {
-    [FlipableAttribute(0x1766, 0x1768)]
+    [Flipable(0x1766, 0x1768)]
     public class Cloth : Item, IScissorable, IDyable, ICommodity
     {
         [Constructable]
@@ -182,9 +182,11 @@ namespace Server.Items
 
             for (int i = 0; i < hues.Length; i++)
             {
-                Cloth cloth = new Cloth();
-                cloth.Hue = hues[i];
-                cloth.Amount = amounts[i];
+                Cloth cloth = new Cloth
+                {
+                    Hue = hues[i],
+                    Amount = amounts[i]
+                };
 
                 if (cloth.Amount > 0)
                     backpack.DropItem(cloth);
