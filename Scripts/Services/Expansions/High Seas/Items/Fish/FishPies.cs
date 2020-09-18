@@ -121,13 +121,17 @@ namespace Server.Items
                     default:
                     case FishPieEffect.None: break;
                     case FishPieEffect.MedBoost:
-                        TimedSkillMod mod1 = new TimedSkillMod(SkillName.Meditation, true, 10.0, Duration);
-                        mod1.ObeyCap = true;
+                        TimedSkillMod mod1 = new TimedSkillMod(SkillName.Meditation, true, 10.0, Duration)
+                        {
+                            ObeyCap = true
+                        };
                         from.AddSkillMod(mod1);
                         break;
                     case FishPieEffect.FocusBoost:
-                        TimedSkillMod mod2 = new TimedSkillMod(SkillName.Focus, true, 10.0, Duration);
-                        mod2.ObeyCap = true;
+                        TimedSkillMod mod2 = new TimedSkillMod(SkillName.Focus, true, 10.0, Duration)
+                        {
+                            ObeyCap = true
+                        };
                         from.AddSkillMod(mod2);
                         break;
                     case FishPieEffect.ColdSoak: break;
@@ -174,7 +178,7 @@ namespace Server.Items
 
             protected override void OnTick()
             {
-                BaseFishPie.RemoveBuff(m_From, m_EffectType);
+                RemoveBuff(m_From, m_EffectType);
             }
         }
 
@@ -203,7 +207,7 @@ namespace Server.Items
             {
                 from.FixedEffect(0x375A, 10, 15);
                 from.PlaySound(0x1E7);
-                from.SendLocalizedMessage(1116285, String.Format("#{0}", LabelNumber)); //You eat the ~1_val~.  Mmm, tasty!
+                from.SendLocalizedMessage(1116285, string.Format("#{0}", LabelNumber)); //You eat the ~1_val~.  Mmm, tasty!
                 Delete();
             }
         }

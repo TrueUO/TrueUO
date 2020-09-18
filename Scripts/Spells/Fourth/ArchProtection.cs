@@ -64,7 +64,7 @@ namespace Server.Spells.Fourth
                     if (m == Caster || (party != null && party.Contains(m)))
                     {
                         Caster.DoBeneficial(m);
-                        Spells.Second.ProtectionSpell.Toggle(Caster, m, true);
+                        Second.ProtectionSpell.Toggle(Caster, m, true);
                     }
                 }
             }
@@ -72,9 +72,9 @@ namespace Server.Spells.Fourth
             FinishSequence();
         }
 
-        private static readonly Dictionary<Mobile, Int32> _Table = new Dictionary<Mobile, Int32>();
+        private static readonly Dictionary<Mobile, int> _Table = new Dictionary<Mobile, int>();
 
-        private static void AddEntry(Mobile m, Int32 v)
+        private static void AddEntry(Mobile m, int v)
         {
             _Table[m] = v;
         }
@@ -107,7 +107,7 @@ namespace Server.Spells.Fourth
 
             protected override void OnTick()
             {
-                ArchProtectionSpell.RemoveEntry(m_Owner);
+                RemoveEntry(m_Owner);
             }
         }
 

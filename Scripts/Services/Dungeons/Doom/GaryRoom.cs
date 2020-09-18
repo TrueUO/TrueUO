@@ -70,7 +70,7 @@ namespace Server.Engines.Doom
         public TimeSpan RollDelay => TimeSpan.FromMinutes(Utility.RandomMinMax(12, 15));
 
         public GaryRegion()
-            : base("Gary Region", Map.Malas, Region.Find(_GaryLoc, Map.Malas), _Bounds)
+            : base("Gary Region", Map.Malas, Find(_GaryLoc, Map.Malas), _Bounds)
         {
             Register();
             CheckStuff();
@@ -256,15 +256,15 @@ namespace Server.Engines.Doom
             g.SayTo(m, 1080098); // Ah... visitors!
         }
 
-        public override bool CheckTravel(Mobile traveller, Point3D p, Server.Spells.TravelCheckType type)
+        public override bool CheckTravel(Mobile traveller, Point3D p, Spells.TravelCheckType type)
         {
             switch (type)
             {
-                case Server.Spells.TravelCheckType.Mark:
-                case Server.Spells.TravelCheckType.RecallTo:
-                case Server.Spells.TravelCheckType.RecallFrom:
-                case Server.Spells.TravelCheckType.GateTo:
-                case Server.Spells.TravelCheckType.GateFrom:
+                case Spells.TravelCheckType.Mark:
+                case Spells.TravelCheckType.RecallTo:
+                case Spells.TravelCheckType.RecallFrom:
+                case Spells.TravelCheckType.GateTo:
+                case Spells.TravelCheckType.GateFrom:
                     return false;
             }
 
@@ -317,8 +317,10 @@ namespace Server.Engines.Doom
                 }
                 else
                 {
-                    Dice = new Sapphired20();
-                    Dice.Movable = false;
+                    Dice = new Sapphired20
+                    {
+                        Movable = false
+                    };
                     Dice.MoveToWorld(_DiceLoc, Map.Malas);
                 }
             }
@@ -341,8 +343,10 @@ namespace Server.Engines.Doom
 
                     if (s == null)
                     {
-                        Statues[i] = new DisplayStatue();
-                        Statues[i].Movable = false;
+                        Statues[i] = new DisplayStatue
+                        {
+                            Movable = false
+                        };
                         Statues[i].MoveToWorld(_StatueLocs[i], Map.Malas);
                     }
                     else
@@ -424,8 +428,10 @@ namespace Server.Engines.Doom
 
             if (!FindObject(typeof(UOBoard), _RulesLoc))
             {
-                UOBoard rules = new UOBoard();
-                rules.Movable = false;
+                UOBoard rules = new UOBoard
+                {
+                    Movable = false
+                };
                 rules.MoveToWorld(_RulesLoc, Map.Malas);
             }
 
@@ -439,9 +445,11 @@ namespace Server.Engines.Doom
 
             if (!FindObject(typeof(ScribesPen), p))
             {
-                ScribesPen pen = new ScribesPen();
-                pen.ItemID = 4032;
-                pen.Movable = false;
+                ScribesPen pen = new ScribesPen
+                {
+                    ItemID = 4032,
+                    Movable = false
+                };
                 pen.MoveToWorld(p, Map.Malas);
             }
         }
@@ -507,7 +515,7 @@ namespace Server.Engines.Doom
 
         public void Roll(int roll)
         {
-            PublicOverheadMessage(Server.Network.MessageType.Regular, 0x3B2, false, String.Format("- {0} -", (roll + 1).ToString()));
+            PublicOverheadMessage(MessageType.Regular, 0x3B2, false, string.Format("- {0} -", (roll + 1).ToString()));
         }
 
         public Sapphired20(Serial serial)

@@ -193,8 +193,10 @@ namespace Server.Engines.CannedEvil
             {
                 if (node.Name.Equals("spawn"))
                 {
-                    spawn = new ChampionSpawn();
-                    spawn.SpawnName = GetAttr(node, "name", "Unamed Spawner");
+                    spawn = new ChampionSpawn
+                    {
+                        SpawnName = GetAttr(node, "name", "Unamed Spawner")
+                    };
                     string value = GetAttr(node, "type", null);
 
                     if (value == null)
@@ -278,7 +280,7 @@ namespace Server.Engines.CannedEvil
 
         private static void Rotate()
         {
-            Dictionary<String, List<ChampionSpawn>> groups = new Dictionary<string, List<ChampionSpawn>>();
+            Dictionary<string, List<ChampionSpawn>> groups = new Dictionary<string, List<ChampionSpawn>>();
             m_LastRotate = DateTime.UtcNow;
 
             foreach (ChampionSpawn spawn in m_AllSpawns.Where(spawn => spawn != null && !spawn.Deleted))

@@ -29,8 +29,10 @@ namespace Server.Items
 
         public static void OnSpun(ISpinningWheel wheel, Mobile from, int hue)
         {
-            Item item = new DarkYarn(3);
-            item.Hue = hue;
+            Item item = new DarkYarn(3)
+            {
+                Hue = hue
+            };
 
             from.AddToBackpack(item);
             from.SendLocalizedMessage(1010576); // You put the balls of yarn in your backpack.
@@ -110,7 +112,7 @@ namespace Server.Items
                         if (m_Wool is TaintedWool)
                             wheel.BeginSpin(TaintedWool.OnSpun, from, m_Wool.Hue);
                         else
-                            wheel.BeginSpin(Wool.OnSpun, from, m_Wool.Hue);
+                            wheel.BeginSpin(OnSpun, from, m_Wool.Hue);
                     }
                 }
                 else
@@ -145,8 +147,10 @@ namespace Server.Items
 
         new public static void OnSpun(ISpinningWheel wheel, Mobile from, int hue)
         {
-            Item item = new DarkYarn(1);
-            item.Hue = hue;
+            Item item = new DarkYarn(1)
+            {
+                Hue = hue
+            };
 
             from.AddToBackpack(item);
             from.SendLocalizedMessage(1010574); // You put a ball of yarn in your backpack.

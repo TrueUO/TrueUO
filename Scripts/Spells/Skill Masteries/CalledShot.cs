@@ -18,7 +18,7 @@ namespace Server.Spells.SkillMasteries
 
         public override SkillName CastSkill => SkillName.Throwing;
         public override SkillName DamageSkill => SkillName.Tactics;
-        public override bool CheckManaBeforeCast { get { return !HasSpell(Caster, GetType()); } }
+        public override bool CheckManaBeforeCast => !HasSpell(Caster, GetType());
 
         private int _HCIBonus;
         private int _DamageBonus;
@@ -74,7 +74,7 @@ namespace Server.Spells.SkillMasteries
 
                 AddToCooldown(TimeSpan.FromSeconds(60));
 
-                BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.CalledShot, 1156025, 1156026, duration, Caster, String.Format("{0}\t{1}", _HCIBonus.ToString(), _DamageBonus.ToString())));
+                BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.CalledShot, 1156025, 1156026, duration, Caster, string.Format("{0}\t{1}", _HCIBonus.ToString(), _DamageBonus.ToString())));
                 //Hit Chance Increase: ~1_VAL~%<br>Damage Increase: ~2_VAL~%
             }
 

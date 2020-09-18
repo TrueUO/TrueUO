@@ -19,7 +19,7 @@ namespace Server.Spells.SkillMasteries
         public override double TickTime => 3;
         public override bool BlocksMovement => false;
         public override TimeSpan CastDelayBase => TimeSpan.FromSeconds(1.0);
-        public override bool CheckManaBeforeCast { get { return !HasSpell(Caster, GetType()); } }
+        public override bool CheckManaBeforeCast => !HasSpell(Caster, GetType());
 
         public override SkillName CastSkill => SkillName.Parry;
 
@@ -55,7 +55,7 @@ namespace Server.Spells.SkillMasteries
 
                 BeginTimer();
 
-                BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.HeightenedSenses, 1155925, 1156062, String.Format("{0}\t{1}", PropertyBonus().ToString(), ScaleUpkeep().ToString()))); // +~1_ARG~% Parry Bonus.<br>Mana Upkeep Cost: ~2_VAL~.
+                BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.HeightenedSenses, 1155925, 1156062, string.Format("{0}\t{1}", PropertyBonus().ToString(), ScaleUpkeep().ToString()))); // +~1_ARG~% Parry Bonus.<br>Mana Upkeep Cost: ~2_VAL~.
             }
 
             FinishSequence();

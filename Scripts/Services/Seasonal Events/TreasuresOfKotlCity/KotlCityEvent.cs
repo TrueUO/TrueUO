@@ -20,7 +20,7 @@ namespace Server.Engines.TreasuresOfKotlCity
 
         protected override void Generate()
         {
-            CommandSystem.Handle(null, Server.Commands.CommandSystem.Prefix + "XmlLoad Spawns/TreasuresOfKotl.xml");
+            CommandSystem.Handle(null, CommandSystem.Prefix + "XmlLoad Spawns/TreasuresOfKotl.xml");
 
             Map map = Map.TerMur;
 
@@ -237,8 +237,10 @@ namespace Server.Engines.TreasuresOfKotlCity
             chest = new KotlRegalChest();
             chest.MoveToWorld(new Point3D(634, 2321, 0), map);
 
-            chest = new KotlRegalChest();
-            chest.ItemID = 0x4D0D;
+            chest = new KotlRegalChest
+            {
+                ItemID = 0x4D0D
+            };
             chest.MoveToWorld(new Point3D(633, 2292, 0), map);
 
             chest = new KotlRegalChest();

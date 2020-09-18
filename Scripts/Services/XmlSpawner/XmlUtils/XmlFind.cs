@@ -47,7 +47,7 @@ namespace Server.Mobiles
 
                 string status_str;
 
-                ArrayList results = XmlFindGump.Search(m_SearchCriteria, out status_str);
+                ArrayList results = Search(m_SearchCriteria, out status_str);
 
                 XmlFindGump gump = new XmlFindGump(m_From, m_From.Location, m_From.Map, true, true, false,
 
@@ -388,7 +388,7 @@ namespace Server.Mobiles
                 if (i is BaseAddon && (i is ArmoryAddon || i is BarAddon || i is BelfryAddon || i is ShadowguardFountainAddon || i is OrchardAddon))
                     return true;
 
-                if (i is BoatMountItem || i is Server.Misc.TreasuresOfTokunoPersistence || i is StealableArtifactsSpawner)
+                if (i is BoatMountItem || i is Misc.TreasuresOfTokunoPersistence || i is StealableArtifactsSpawner)
                     return true;
 
                 if (i is ArisenController)
@@ -417,7 +417,7 @@ namespace Server.Mobiles
             {
                 tokunomap = Map.Parse("Tokuno");
             }
-            catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+            catch (Exception e) { Diagnostics.ExceptionLogging.LogException(e); }
 
             // if the type is specified then get the search type
             if (criteria.Dosearchtype && criteria.Searchtype != null)
@@ -1176,8 +1176,8 @@ namespace Server.Mobiles
                 // display the item list
                 if (m_SearchList != null)
                 {
-                    AddLabel(180, y - 50, 68, String.Format("Found {0} items/mobiles", m_SearchList.Count));
-                    AddLabel(400, y - 50, 68, String.Format("Displaying {0}-{1}", DisplayFrom,
+                    AddLabel(180, y - 50, 68, string.Format("Found {0} items/mobiles", m_SearchList.Count));
+                    AddLabel(400, y - 50, 68, string.Format("Displaying {0}-{1}", DisplayFrom,
                         (DisplayFrom + MaxEntries < m_SearchList.Count ? DisplayFrom + MaxEntries : m_SearchList.Count)));
                     // count the number of selected objects
                     int count = 0;
@@ -1185,7 +1185,7 @@ namespace Server.Mobiles
                     {
                         if (e.Selected) count++;
                     }
-                    AddLabel(600, y - 50, 33, String.Format("Selected {0}", count));
+                    AddLabel(600, y - 50, 33, string.Format("Selected {0}", count));
                 }
 
                 // display the select-all-displayed toggle
@@ -1522,9 +1522,9 @@ namespace Server.Mobiles
                     ystr = arglist[arglist.Length - 1];
                 }
                 if (Dsort)
-                    return String.Compare(ystr, xstr, true);
+                    return string.Compare(ystr, xstr, true);
                 else
-                    return String.Compare(xstr, ystr, true);
+                    return string.Compare(xstr, ystr, true);
             }
         }
 
@@ -1570,9 +1570,9 @@ namespace Server.Mobiles
                     ystr = ((Mobile)y).Name;
                 }
                 if (Dsort)
-                    return String.Compare(ystr, xstr, true);
+                    return string.Compare(ystr, xstr, true);
                 else
-                    return String.Compare(xstr, ystr, true);
+                    return string.Compare(xstr, ystr, true);
             }
         }
 
@@ -1622,9 +1622,9 @@ namespace Server.Mobiles
                         ystr = ((Mobile)y).Map.ToString();
                 }
                 if (Dsort)
-                    return String.Compare(ystr, xstr, true);
+                    return string.Compare(ystr, xstr, true);
                 else
-                    return String.Compare(xstr, ystr, true);
+                    return string.Compare(xstr, ystr, true);
             }
         }
 
@@ -1801,7 +1801,7 @@ namespace Server.Mobiles
             if (System.IO.Directory.Exists(XmlSpawner.XmlSpawnDir) && filename != null && !filename.StartsWith("/") && !filename.StartsWith("\\"))
             {
                 // put it in the defaults directory if it exists
-                dirname = String.Format("{0}/{1}", XmlSpawner.XmlSpawnDir, filename);
+                dirname = string.Format("{0}/{1}", XmlSpawner.XmlSpawnDir, filename);
             }
             else
             {
@@ -1911,7 +1911,7 @@ namespace Server.Mobiles
             if (tr != null && tr.Text != null && tr.Text.Length > 0)
             {
                 try { m_SearchCriteria.Searchage = double.Parse(tr.Text); }
-                catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                catch (Exception e) { Diagnostics.ExceptionLogging.LogException(e); }
             }
 
             // read the text entries for the search criteria
@@ -1920,7 +1920,7 @@ namespace Server.Mobiles
             if (tr != null && tr.Text != null && tr.Text.Length > 0)
             {
                 try { m_SearchCriteria.Searchrange = int.Parse(tr.Text); }
-                catch (Exception e) { Server.Diagnostics.ExceptionLogging.LogException(e); }
+                catch (Exception e) { Diagnostics.ExceptionLogging.LogException(e); }
             }
 
             tr = info.GetTextEntry(101);        // type info
@@ -2003,8 +2003,10 @@ namespace Server.Mobiles
 
                         //m_SearchList = Search(m_SearchCriteria, out status_str);
                         XmlFindThread tobj = new XmlFindThread(state.Mobile, m_SearchCriteria, CommandString);
-                        Thread find = new Thread(tobj.XmlFindThreadMain);
-                        find.Name = "XmlFind Thread";
+                        Thread find = new Thread(tobj.XmlFindThreadMain)
+                        {
+                            Name = "XmlFind Thread"
+                        };
                         find.Start();
 
                         // turn on gump extension
@@ -2244,7 +2246,7 @@ namespace Server.Mobiles
                     }
                 }
 
-                AddLabel(20, 225, 33, String.Format("Bring {0} objects to you?", count));
+                AddLabel(20, 225, 33, string.Format("Bring {0} objects to you?", count));
                 AddRadio(35, 255, 9721, 9724, false, 1); // accept/yes radio
                 AddRadio(135, 255, 9721, 9724, true, 2); // decline/no radio
                 AddHtmlLocalized(72, 255, 200, 30, 1049016, 0x7fff, false, false); // Yes
@@ -2328,7 +2330,7 @@ namespace Server.Mobiles
                     }
                 }
 
-                AddLabel(20, 225, 33, String.Format("Delete {0} objects?", count));
+                AddLabel(20, 225, 33, string.Format("Delete {0} objects?", count));
                 AddRadio(35, 255, 9721, 9724, false, 1); // accept/yes radio
                 AddRadio(135, 255, 9721, 9724, true, 2); // decline/no radio
                 AddHtmlLocalized(72, 255, 200, 30, 1049016, 0x7fff, false, false); // Yes
@@ -2367,7 +2369,7 @@ namespace Server.Mobiles
                                             {
                                                 ((Item)o).Delete();
                                             }
-                                            catch (Exception ex) { Server.Diagnostics.ExceptionLogging.LogException(ex); }
+                                            catch (Exception ex) { Diagnostics.ExceptionLogging.LogException(ex); }
                                         }
                                         else
                                             // block player deletion
@@ -2377,7 +2379,7 @@ namespace Server.Mobiles
                                             {
                                                 ((Mobile)o).Delete();
                                             }
-                                            catch (Exception ex) { Server.Diagnostics.ExceptionLogging.LogException(ex); }
+                                            catch (Exception ex) { Diagnostics.ExceptionLogging.LogException(ex); }
                                         }
                                     }
 

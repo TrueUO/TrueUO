@@ -137,13 +137,15 @@ namespace Server.Engines.Reports
                         {
                             if (sfp == null)
                             {
-                                sfp = new StringFormat();
-                                sfp.Alignment = StringAlignment.Center;
-                                sfp.LineAlignment = StringAlignment.Center;
+                                sfp = new StringFormat
+                                {
+                                    Alignment = StringAlignment.Center,
+                                    LineAlignment = StringAlignment.Center
+                                };
                             }
 
                             float perc = (item.SweepSize * 100.0f) / 360.0f;
-                            string percString = String.Format("{0:F0}%", perc);
+                            string percString = string.Format("{0:F0}%", perc);
 
                             float px = pieRect.X + (pieRect.Width / 2);
                             float py = pieRect.Y + (pieRect.Height / 2);

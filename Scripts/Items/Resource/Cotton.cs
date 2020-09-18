@@ -29,8 +29,10 @@ namespace Server.Items
 
         public static void OnSpun(ISpinningWheel wheel, Mobile from, int hue)
         {
-            Item item = new SpoolOfThread(6);
-            item.Hue = hue;
+            Item item = new SpoolOfThread(6)
+            {
+                Hue = hue
+            };
 
             from.AddToBackpack(item);
             from.SendLocalizedMessage(1010577); // You put the spools of thread in your backpack.
@@ -107,7 +109,7 @@ namespace Server.Items
                     else
                     {
                         m_Cotton.Consume();
-                        wheel.BeginSpin(Cotton.OnSpun, from, m_Cotton.Hue);
+                        wheel.BeginSpin(OnSpun, from, m_Cotton.Hue);
                     }
                 }
                 else

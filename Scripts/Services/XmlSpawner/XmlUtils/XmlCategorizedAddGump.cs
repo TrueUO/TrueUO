@@ -67,10 +67,12 @@ namespace Server.Gumps
                         if (xg != null)
                         {
 
-                            xg.Rentry = new XmlSpawnerGump.ReplacementEntry();
-                            xg.Rentry.Typename = m_Type.Name;
-                            xg.Rentry.Index = index;
-                            xg.Rentry.Color = 0x1436;
+                            xg.Rentry = new XmlSpawnerGump.ReplacementEntry
+                            {
+                                Typename = m_Type.Name,
+                                Index = index,
+                                Color = 0x1436
+                            };
 
                             Timer.DelayCall(TimeSpan.Zero, new TimerStateCallback(XmlSpawnerGump.Refresh_Callback), new object[] { from });
                             //from.CloseGump(typeof(XmlSpawnerGump));
@@ -193,9 +195,10 @@ namespace Server.Gumps
         {
             if (File.Exists(path))
             {
-                XmlTextReader xml = new XmlTextReader(path);
-
-                xml.WhitespaceHandling = WhitespaceHandling.None;
+                XmlTextReader xml = new XmlTextReader(path)
+                {
+                    WhitespaceHandling = WhitespaceHandling.None
+                };
 
                 while (xml.Read())
                 {
@@ -359,7 +362,7 @@ namespace Server.Gumps
             if (!OldStyle)
                 AddImageTiled(x - (OldStyle ? OffsetSize : 0), y, emptyWidth + (OldStyle ? OffsetSize * 2 : 0), EntryHeight, EntryGumpID);
 
-            AddHtml(x + TextOffsetX, y + ((EntryHeight - 20) / 2), emptyWidth - TextOffsetX, EntryHeight, String.Format("<center>{0}</center>", m_Category.Caption), false, false);
+            AddHtml(x + TextOffsetX, y + ((EntryHeight - 20) / 2), emptyWidth - TextOffsetX, EntryHeight, string.Format("<center>{0}</center>", m_Category.Caption), false, false);
 
             x += emptyWidth + OffsetSize;
 

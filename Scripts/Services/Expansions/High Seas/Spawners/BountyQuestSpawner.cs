@@ -305,8 +305,10 @@ namespace Server.Engines.Quests
             {
                 Rectangle2D rec = def.SpawnRegion;
                 OrcishGalleon gal = new OrcishGalleon(Direction.North);
-                PirateCaptain pirate = new PirateCaptain(gal);
-                pirate.Zone = zone;
+                PirateCaptain pirate = new PirateCaptain(gal)
+                {
+                    Zone = zone
+                };
                 gal.Owner = pirate;
                 Point3D p = Point3D.Zero;
                 bool spawned = false;
@@ -785,7 +787,7 @@ namespace Server.Engines.Quests
                     mapitem.AddWorldPin(pnt.X, pnt.Y);
                 }
 
-                mapitem.Name = String.Format("Pirate - Jhelom {0}", i + 1);
+                mapitem.Name = string.Format("Pirate - Jhelom {0}", i + 1);
                 e.Mobile.AddToBackpack(mapitem);
             }
 
@@ -800,7 +802,7 @@ namespace Server.Engines.Quests
                     mapitem.AddWorldPin(pnt.X, pnt.Y);
                 }
 
-                mapitem.Name = String.Format("Pirate - Moonglow {0}", i + 1);
+                mapitem.Name = string.Format("Pirate - Moonglow {0}", i + 1);
                 e.Mobile.AddToBackpack(mapitem);
             }
 
@@ -815,7 +817,7 @@ namespace Server.Engines.Quests
                     mapitem.AddWorldPin(pnt.X, pnt.Y);
                 }
 
-                mapitem.Name = String.Format("Pirate - tokuno {0}", i + 1);
+                mapitem.Name = string.Format("Pirate - tokuno {0}", i + 1);
                 e.Mobile.AddToBackpack(mapitem);
             }
 
@@ -830,7 +832,7 @@ namespace Server.Engines.Quests
                     mapitem.AddWorldPin(pnt.X, pnt.Y);
                 }
 
-                mapitem.Name = String.Format("Merchant - tokuno {0}", i + 1);
+                mapitem.Name = string.Format("Merchant - tokuno {0}", i + 1);
                 e.Mobile.AddToBackpack(mapitem);
             }
             for (int i = 0; i < SpawnDefinition.MerchantTramFelCourses1.Length; i++)
@@ -844,7 +846,7 @@ namespace Server.Engines.Quests
                     mapitem.AddWorldPin(pnt.X, pnt.Y);
                 }
 
-                mapitem.Name = String.Format("Merchant - tram/fel(a) {0}", i + 1);
+                mapitem.Name = string.Format("Merchant - tram/fel(a) {0}", i + 1);
                 e.Mobile.AddToBackpack(mapitem);
             }
             for (int i = 0; i < SpawnDefinition.MerchantTramFelCourses2.Length; i++)
@@ -858,7 +860,7 @@ namespace Server.Engines.Quests
                     mapitem.AddWorldPin(pnt.X, pnt.Y);
                 }
 
-                mapitem.Name = String.Format("Merchant - tram/fel(b) {0}", i + 1);
+                mapitem.Name = string.Format("Merchant - tram/fel(b) {0}", i + 1);
                 e.Mobile.AddToBackpack(mapitem);
             }
 

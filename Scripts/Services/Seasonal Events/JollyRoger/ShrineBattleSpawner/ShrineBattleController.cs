@@ -156,7 +156,7 @@ namespace Server.Engines.JollyRoger
         {
             if (from.AccessLevel > AccessLevel.GameMaster)
             {
-                from.SendGump(new Server.Gumps.PropertiesGump(from, this));
+                from.SendGump(new Gumps.PropertiesGump(from, this));
             }
         }
 
@@ -243,9 +243,11 @@ namespace Server.Engines.JollyRoger
                     SpawnMobile(bc, point);
                 }
 
-                ShrineMaster capt = new ShrineMaster(type, this);
-                capt.Blessed = true;
-                capt._Controller = this;
+                ShrineMaster capt = new ShrineMaster(type, this)
+                {
+                    Blessed = true,
+                    _Controller = this
+                };
                 Spawn[capt] = list;
                 SpawnMobile(capt, p);
             }

@@ -222,7 +222,7 @@ namespace Server.Engines.VvV
 
             if (Battle.OnGoing)
             {
-                SendVvVMessageTo(pm, 1154721, String.Format("#{0}", GetCityLocalization(Battle.City).ToString()));
+                SendVvVMessageTo(pm, 1154721, string.Format("#{0}", GetCityLocalization(Battle.City).ToString()));
                 // A Battle between Vice and Virtue is active! To Arms! The City of ~1_CITY~ is besieged!
 
                 if (Battle != null && Battle.IsInActiveBattle(pm))
@@ -393,7 +393,7 @@ namespace Server.Engines.VvV
 
         public void AddVvVItem(Item item, bool initial = false)
         {
-            if (ViceVsVirtueSystem.Enabled && item is IVvVItem)
+            if (Enabled && item is IVvVItem)
             {
                 ((IVvVItem)item).IsVvVItem = true;
 
@@ -417,27 +417,27 @@ namespace Server.Engines.VvV
             EventSink.Login += OnLogin;
             EventSink.PlayerDeath += OnPlayerDeath;
 
-            Server.Commands.CommandSystem.Register("BattleProps", AccessLevel.GameMaster, e =>
+            Commands.CommandSystem.Register("BattleProps", AccessLevel.GameMaster, e =>
                 {
                     if (Instance.Battle != null)
                         e.Mobile.SendGump(new PropertiesGump(e.Mobile, Instance.Battle));
                 });
 
-            Server.Commands.CommandSystem.Register("ForceStartBattle", AccessLevel.GameMaster, e =>
+            Commands.CommandSystem.Register("ForceStartBattle", AccessLevel.GameMaster, e =>
             {
                 if (Instance.Battle != null && !Instance.Battle.OnGoing)
                     Instance.Battle.Begin();
             });
 
-            Server.Commands.CommandSystem.Register("ExemptCities", AccessLevel.Administrator, e =>
+            Commands.CommandSystem.Register("ExemptCities", AccessLevel.Administrator, e =>
             {
                 e.Mobile.SendGump(new ExemptCitiesGump());
             });
 
-            Server.Commands.CommandSystem.Register("VvVKick", AccessLevel.GameMaster, e =>
+            Commands.CommandSystem.Register("VvVKick", AccessLevel.GameMaster, e =>
             {
                 e.Mobile.SendMessage("Target the person you'd like to remove from VvV.");
-                e.Mobile.BeginTarget(-1, false, Server.Targeting.TargetFlags.None, (from, targeted) =>
+                e.Mobile.BeginTarget(-1, false, Targeting.TargetFlags.None, (from, targeted) =>
                     {
                         if (targeted is PlayerMobile)
                         {
@@ -996,7 +996,7 @@ namespace Server.Engines.VvV
                 });
         }
 
-        private static readonly string _EnhancedRulesNotice = String.Format("Notice: The Vice Vs Virtue system has recently enabled enhanced rules. To avoid any issues and " +
+        private static readonly string _EnhancedRulesNotice = string.Format("Notice: The Vice Vs Virtue system has recently enabled enhanced rules. To avoid any issues and " +
              "unexpected deaths due to the new game mechanics, it is important that you read this message. " +
              "<br><br>New VvV Mechanics:<br><br>" +
              "- VvV combatants are attackable on all facets.<br>" +
@@ -1102,7 +1102,7 @@ namespace Server.Engines.VvV
 
             if (silver > 0)
             {
-                Player.SendLocalizedMessage(1042736, String.Format("{0:N0} silver\t{1}", silver, victim.Name));
+                Player.SendLocalizedMessage(1042736, string.Format("{0:N0} silver\t{1}", silver, victim.Name));
                 // You have earned ~1_SILVER_AMOUNT~ pieces for vanquishing ~2_PLAYER_NAME~!
 
                 Points += silver;

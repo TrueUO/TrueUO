@@ -70,7 +70,7 @@ namespace Server.Items
         }
     }
 
-    [FlipableAttribute(0xEDD, 0xEDE)]
+    [Flipable(0xEDD, 0xEDE)]
     public class HouseRaffleStone : Item
     {
         public static readonly TimeSpan DefaultDuration = TimeSpan.FromDays(7.0);
@@ -347,7 +347,7 @@ namespace Server.Items
             if (m_TicketPrice == 0)
                 return "FREE";
             else
-                return String.Format("{0} gold", m_TicketPrice);
+                return string.Format("{0} gold", m_TicketPrice);
         }
 
         public override void GetProperties(ObjectPropertyList list)
@@ -409,7 +409,7 @@ namespace Server.Items
             }
             else
             {
-                from.SendGump(new WarningGump(1150470, 0x7F00, String.Format("You are about to purchase a raffle ticket for the house plot located at {0}.  The ticket price is {1}.  Tickets are non-refundable and you can only purchase one ticket per account.  Do you wish to continue?", FormatLocation(), FormatPrice()), 0xFFFFFF, 420, 280, Purchase_Callback, null)); // CONFIRM TICKET PURCHASE
+                from.SendGump(new WarningGump(1150470, 0x7F00, string.Format("You are about to purchase a raffle ticket for the house plot located at {0}.  The ticket price is {1}.  Tickets are non-refundable and you can only purchase one ticket per account.  Do you wish to continue?", FormatLocation(), FormatPrice()), 0xFFFFFF, 420, 280, Purchase_Callback, null)); // CONFIRM TICKET PURCHASE
             }
         }
 
@@ -678,7 +678,7 @@ namespace Server.Items
                 : base(from, stone, 5113)// Start
             {
                 if (!stone.ValidLocation())
-                    Flags |= Network.CMEFlags.Disabled;
+                    Flags |= CMEFlags.Disabled;
             }
 
             public override void OnClick()

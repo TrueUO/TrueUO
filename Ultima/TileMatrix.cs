@@ -79,7 +79,7 @@ namespace Ultima
             {
                 mapPath = Files.GetFilePath("map{0}.mul", fileIndex);
 
-                if (String.IsNullOrEmpty(mapPath) || !File.Exists(mapPath))
+                if (string.IsNullOrEmpty(mapPath) || !File.Exists(mapPath))
                 {
                     mapPath = Files.GetFilePath("map{0}LegacyMUL.uop", fileIndex);
                 }
@@ -91,11 +91,11 @@ namespace Ultima
             }
             else
             {
-                mapPath = Path.Combine(path, String.Format("map{0}.mul", fileIndex));
+                mapPath = Path.Combine(path, string.Format("map{0}.mul", fileIndex));
 
                 if (!File.Exists(mapPath))
                 {
-                    mapPath = Path.Combine(path, String.Format("map{0}LegacyMUL.uop", fileIndex));
+                    mapPath = Path.Combine(path, string.Format("map{0}LegacyMUL.uop", fileIndex));
                 }
 
                 if (!File.Exists(mapPath))
@@ -114,7 +114,7 @@ namespace Ultima
             }
             else
             {
-                indexPath = Path.Combine(path, String.Format("staidx{0}.mul", fileIndex));
+                indexPath = Path.Combine(path, string.Format("staidx{0}.mul", fileIndex));
                 if (!File.Exists(indexPath))
                 {
                     indexPath = null;
@@ -127,7 +127,7 @@ namespace Ultima
             }
             else
             {
-                staticsPath = Path.Combine(path, String.Format("statics{0}.mul", fileIndex));
+                staticsPath = Path.Combine(path, string.Format("statics{0}.mul", fileIndex));
                 if (!File.Exists(staticsPath))
                 {
                     staticsPath = null;
@@ -193,7 +193,7 @@ namespace Ultima
                 tiles = m_StaticTiles[x][y] = ReadStaticBlock(x, y);
             }
 
-            if ((Map.UseDiff) && (patch))
+            if (Map.UseDiff && patch)
             {
                 if (Patch.StaticBlocksCount > 0)
                 {
@@ -258,7 +258,7 @@ namespace Ultima
                 tiles = m_LandTiles[x][y] = ReadLandBlock(x, y);
             }
 
-            if ((Map.UseDiff) && (patch))
+            if (Map.UseDiff && patch)
             {
                 if (Patch.LandBlocksCount > 0)
                 {

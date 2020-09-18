@@ -116,7 +116,7 @@ namespace Server.Engines.Despise
         public void SummonWisp_Callback()
         {
             m_Wisp = SummonWisp;
-            BaseCreature.Summon(m_Wisp, true, this, Location, 0, TimeSpan.FromMinutes(90));
+            Summon(m_Wisp, true, this, Location, 0, TimeSpan.FromMinutes(90));
 
             m_SummonTimer = null;
         }
@@ -207,12 +207,16 @@ namespace Server.Engines.Despise
             Fame = 22000;
             Karma = 22000;
 
-            Item boots = new ThighBoots();
-            boots.Hue = 1;
+            Item boots = new ThighBoots
+            {
+                Hue = 1
+            };
 
-            Item scimitar = new Item(5046);
-            scimitar.Hue = 1818;
-            scimitar.Layer = Layer.OneHanded;
+            Item scimitar = new Item(5046)
+            {
+                Hue = 1818,
+                Layer = Layer.OneHanded
+            };
 
             SetNonMovable(boots);
             SetNonMovable(scimitar);
@@ -291,11 +295,15 @@ namespace Server.Engines.Despise
             Fame = 22000;
             Karma = -22000;
 
-            Item boots = new ThighBoots();
-            boots.Hue = 1;
+            Item boots = new ThighBoots
+            {
+                Hue = 1
+            };
 
-            Item staff = new Item(3721);
-            staff.Layer = Layer.TwoHanded;
+            Item staff = new Item(3721)
+            {
+                Layer = Layer.TwoHanded
+            };
 
             SetNonMovable(boots);
             SetNonMovable(new LongPants(1818));

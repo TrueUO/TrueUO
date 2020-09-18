@@ -34,7 +34,7 @@ namespace Server.Services.TownCryer
             AddImage(468, 213, Entry.GumpImage);
             AddImage(50, 532, 0x60C);
 
-            if (!String.IsNullOrEmpty(Entry.InfoUrl))
+            if (!string.IsNullOrEmpty(Entry.InfoUrl))
             {
                 AddButton(147, 600, 0x627, 0x628, 1, GumpButtonType.Reply, 0);
             }
@@ -50,9 +50,11 @@ namespace Server.Services.TownCryer
             switch (info.ButtonID)
             {
                 case 0:
-                    TownCryerGump gump = new TownCryerGump(User, Cryer);
-                    gump.Category = TownCryerGump.GumpCategory.News;
-                    BaseGump.SendGump(gump);
+                    TownCryerGump gump = new TownCryerGump(User, Cryer)
+                    {
+                        Category = TownCryerGump.GumpCategory.News
+                    };
+                    SendGump(gump);
                     break;
                 case 1:
                     User.LaunchBrowser(Entry.InfoUrl);

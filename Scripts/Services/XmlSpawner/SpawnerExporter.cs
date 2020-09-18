@@ -56,7 +56,7 @@ namespace Server.Mobiles
                     }
                 }
 
-                AddResponse(String.Format("{0} spawners exported to Saves/Spawners/{1}.", spawners.Count.ToString(), filename));
+                AddResponse(string.Format("{0} spawners exported to Saves/Spawners/{1}.", spawners.Count.ToString(), filename));
 
                 ExportSpawners(spawners, filename);
             }
@@ -82,11 +82,12 @@ namespace Server.Mobiles
 
                 using (StreamWriter op = new StreamWriter(filePath))
                 {
-                    XmlTextWriter xml = new XmlTextWriter(op);
-
-                    xml.Formatting = Formatting.Indented;
-                    xml.IndentChar = '\t';
-                    xml.Indentation = 1;
+                    XmlTextWriter xml = new XmlTextWriter(op)
+                    {
+                        Formatting = Formatting.Indented,
+                        IndentChar = '\t',
+                        Indentation = 1
+                    };
 
                     xml.WriteStartDocument(true);
 
@@ -190,7 +191,7 @@ namespace Server.Mobiles
                         catch (Exception ex)
                         {
                             failures++;
-                            Server.Diagnostics.ExceptionLogging.LogException(ex);
+                            Diagnostics.ExceptionLogging.LogException(ex);
                         }
                     }
 

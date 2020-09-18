@@ -302,16 +302,20 @@ namespace Server.Mobiles
 
             Container pack;
             //these packs MUST exist, or the client will crash when the packets are sent
-            pack = new Backpack();
-            pack.Layer = Layer.ShopBuy;
-            pack.Movable = false;
-            pack.Visible = false;
+            pack = new Backpack
+            {
+                Layer = Layer.ShopBuy,
+                Movable = false,
+                Visible = false
+            };
             AddItem(pack);
 
-            pack = new Backpack();
-            pack.Layer = Layer.ShopResale;
-            pack.Movable = false;
-            pack.Visible = false;
+            pack = new Backpack
+            {
+                Layer = Layer.ShopResale,
+                Movable = false,
+                Visible = false
+            };
             AddItem(pack);
 
             BribeMultiplier = Utility.Random(10);
@@ -351,9 +355,11 @@ namespace Server.Mobiles
 
                 if (pack == null)
                 {
-                    pack = new Backpack();
-                    pack.Layer = Layer.ShopBuy;
-                    pack.Visible = false;
+                    pack = new Backpack
+                    {
+                        Layer = Layer.ShopBuy,
+                        Visible = false
+                    };
                     AddItem(pack);
                 }
 
@@ -517,7 +523,7 @@ namespace Server.Mobiles
         {
             Map map = Map;
 
-            if (map != Map.TerMur || Server.Spells.SpellHelper.IsEodon(map, Location))
+            if (map != Map.TerMur || Spells.SpellHelper.IsEodon(map, Location))
                 return false;
 
             if (Body != 0x29A && Body != 0x29B)
@@ -665,15 +671,15 @@ namespace Server.Mobiles
 
                 if (split[i].Length > 1)
                 {
-                    split[i] = Char.ToUpper(split[i][0]) + split[i].Substring(1);
+                    split[i] = char.ToUpper(split[i][0]) + split[i].Substring(1);
                 }
                 else if (split[i].Length > 0)
                 {
-                    split[i] = Char.ToUpper(split[i][0]).ToString();
+                    split[i] = char.ToUpper(split[i][0]).ToString();
                 }
             }
 
-            Title = String.Join(" ", split);
+            Title = string.Join(" ", split);
         }
 
         public virtual int GetHairHue()
@@ -685,8 +691,10 @@ namespace Server.Mobiles
         {
             if (Backpack == null)
             {
-                Item backpack = new Backpack();
-                backpack.Movable = false;
+                Item backpack = new Backpack
+                {
+                    Movable = false
+                };
                 AddItem(backpack);
             }
 
@@ -1006,10 +1014,12 @@ namespace Server.Mobiles
 
             if (pack == null)
             {
-                pack = new Backpack();
-                pack.Layer = Layer.ShopBuy;
-                pack.Movable = false;
-                pack.Visible = false;
+                pack = new Backpack
+                {
+                    Layer = Layer.ShopBuy,
+                    Movable = false,
+                    Visible = false
+                };
                 SetWearable(pack);
             }
 
@@ -1026,10 +1036,12 @@ namespace Server.Mobiles
 
             if (pack == null)
             {
-                pack = new Backpack();
-                pack.Layer = Layer.ShopResale;
-                pack.Movable = false;
-                pack.Visible = false;
+                pack = new Backpack
+                {
+                    Layer = Layer.ShopResale,
+                    Movable = false,
+                    Visible = false
+                };
                 SetWearable(pack);
             }
 
@@ -1229,7 +1241,7 @@ namespace Server.Mobiles
                 Titles.AwardFame(from, fame, true);
 
                 OnSuccessfulBulkOrderReceive(from);
-                Server.Engines.CityLoyalty.CityLoyaltySystem.OnBODTurnIn(from, gold);
+                Engines.CityLoyalty.CityLoyaltySystem.OnBODTurnIn(from, gold);
 
                 if (pm != null)
                 {
@@ -1255,7 +1267,7 @@ namespace Server.Mobiles
             {
                 if (dropped.Amount > 0)
                 {
-                    name = String.Format("{0} {1}", dropped.Amount, dropped.Name);
+                    name = string.Format("{0} {1}", dropped.Amount, dropped.Name);
                 }
                 else
                 {
@@ -1264,16 +1276,16 @@ namespace Server.Mobiles
             }
             else
             {
-                name = Server.Engines.VendorSearching.VendorSearch.GetItemName(dropped);
+                name = Engines.VendorSearching.VendorSearch.GetItemName(dropped);
             }
 
-            if (!String.IsNullOrEmpty(name))
+            if (!string.IsNullOrEmpty(name))
             {
-                PrivateOverheadMessage(MessageType.Regular, 0x3B2, true, String.Format("Thou art giving me {0}.", name), from.NetState);
+                PrivateOverheadMessage(MessageType.Regular, 0x3B2, true, string.Format("Thou art giving me {0}.", name), from.NetState);
             }
             else
             {
-                SayTo(from, 1071971, String.Format("#{0}", dropped.LabelNumber.ToString()), 0x3B2); // Thou art giving me ~1_VAL~?
+                SayTo(from, 1071971, string.Format("#{0}", dropped.LabelNumber.ToString()), 0x3B2); // Thou art giving me ~1_VAL~?
             }
 
             if (dropped is Gold)
@@ -1348,7 +1360,7 @@ namespace Server.Mobiles
             SayTo(m, 1152295, 0x3B2); // So you want to do a little business under the table?
             m.SendLocalizedMessage(1152296); // Target a bulk order deed to show to the shopkeeper.
 
-            m.BeginTarget(-1, false, Server.Targeting.TargetFlags.None, (from, targeted) =>
+            m.BeginTarget(-1, false, TargetFlags.None, (from, targeted) =>
             {
                 IBOD bod = targeted as IBOD;
 
@@ -1717,7 +1729,7 @@ namespace Server.Mobiles
 
             if (!bought)
             {
-                if (totalCost <= Int32.MaxValue)
+                if (totalCost <= int.MaxValue)
                 {
                     if (Banker.Withdraw(buyer, (int)totalCost))
                     {
@@ -1869,7 +1881,7 @@ namespace Server.Mobiles
                 }
                 else
                 {
-                    SayTo(buyer, String.Format("The total of thy purchase is {0} gold.  My thanks for the patronage.", totalCost), 0x3B2, true);
+                    SayTo(buyer, string.Format("The total of thy purchase is {0} gold.  My thanks for the patronage.", totalCost), 0x3B2, true);
                 }
             }
             else
@@ -2340,7 +2352,7 @@ namespace Server.Mobiles
 
                                         if (version == 2 && gbi.Stackable)
                                         {
-                                            gbi.Amount = gbi.MaxAmount = BaseVendor.EconomyStockAmount;
+                                            gbi.Amount = gbi.MaxAmount = EconomyStockAmount;
                                         }
                                         else
                                         {
@@ -2430,9 +2442,9 @@ namespace Server.Mobiles
             object state = convert.Armor;
 
             RemoveConvertEntry(convert);
-            from.CloseGump(typeof(Server.Gumps.ConfirmCallbackGump));
+            from.CloseGump(typeof(Gumps.ConfirmCallbackGump));
 
-            from.SendGump(new Server.Gumps.ConfirmCallbackGump((PlayerMobile)from, 1049004, 1154115, state, null,
+            from.SendGump(new Gumps.ConfirmCallbackGump((PlayerMobile)from, 1049004, 1154115, state, null,
                 (m, obj) =>
                 {
                     BaseArmor ar = obj as BaseArmor;
@@ -2475,7 +2487,7 @@ namespace Server.Mobiles
             }
 
             if (armor.ArmorAttributes.MageArmor == 0 &&
-                Server.SkillHandlers.Imbuing.GetTotalMods(armor) > 4)
+                SkillHandlers.Imbuing.GetTotalMods(armor) > 4)
             {
                 from.SendLocalizedMessage(1154119); // This action would exceed a stat cap
                 return false;

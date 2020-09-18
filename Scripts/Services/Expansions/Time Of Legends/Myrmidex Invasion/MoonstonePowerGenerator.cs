@@ -47,40 +47,58 @@ namespace Server.Items
         [Constructable]
         public MoonstonePowerGeneratorAddon(bool link)
         {
-            AddonComponent c = new AddonComponent(39759);
-            c.Hue = 2955;
+            AddonComponent c = new AddonComponent(39759)
+            {
+                Hue = 2955
+            };
             AddComponent(c, 0, 0, 0);
 
-            c = new AddonComponent(39759);
-            c.Hue = 2955;
+            c = new AddonComponent(39759)
+            {
+                Hue = 2955
+            };
             AddComponent(c, -1, 0, 0);
 
-            c = new AddonComponent(39759);
-            c.Hue = 2955;
+            c = new AddonComponent(39759)
+            {
+                Hue = 2955
+            };
             AddComponent(c, 1, 0, 0);
 
-            c = new AddonComponent(39759);
-            c.Hue = 2955;
+            c = new AddonComponent(39759)
+            {
+                Hue = 2955
+            };
             AddComponent(c, 0, -1, 0);
 
-            c = new AddonComponent(39759);
-            c.Hue = 2955;
+            c = new AddonComponent(39759)
+            {
+                Hue = 2955
+            };
             AddComponent(c, 0, 1, 0);
 
-            c = new AddonComponent(39818);
-            c.Hue = 2955;
+            c = new AddonComponent(39818)
+            {
+                Hue = 2955
+            };
             AddComponent(c, -1, -1, 0);
 
-            c = new AddonComponent(39818);
-            c.Hue = 2955;
+            c = new AddonComponent(39818)
+            {
+                Hue = 2955
+            };
             AddComponent(c, -1, 1, 0);
 
-            c = new AddonComponent(39818);
-            c.Hue = 2955;
+            c = new AddonComponent(39818)
+            {
+                Hue = 2955
+            };
             AddComponent(c, 1, -1, 0);
 
-            c = new AddonComponent(39818);
-            c.Hue = 2955;
+            c = new AddonComponent(39818)
+            {
+                Hue = 2955
+            };
             AddComponent(c, 1, 1, 0);
 
             Activator1 = new InternalComponent(40158);
@@ -522,7 +540,7 @@ namespace Server.Items
 
             if (0.033 > Utility.RandomDouble())
             {
-                from.PrivateOverheadMessage(Server.Network.MessageType.Regular, 0x23, 1156855, from.NetState); // *Arcing energy from the generator zaps you!*
+                from.PrivateOverheadMessage(Network.MessageType.Regular, 0x23, 1156855, from.NetState); // *Arcing energy from the generator zaps you!*
                 AOS.Damage(from, Utility.RandomMinMax(50, 100), 0, 0, 0, 0, 100);
                 from.FixedParticles(0x3818, 1, 11, 0x13A8, 0, 0, EffectLayer.Waist);
                 Effects.PlaySound(Location, Map, 0x1DC);

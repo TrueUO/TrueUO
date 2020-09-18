@@ -682,7 +682,7 @@ namespace Server.Items
             chest.LockLevel = chest.RequiredSkill - 10;
             chest.MaxLockLevel = chest.RequiredSkill + 40;
 
-            if (Server.Engines.JollyRoger.JollyRogerEvent.Instance.Running && 0.10 > Utility.RandomDouble())
+            if (Engines.JollyRoger.JollyRogerEvent.Instance.Running && 0.10 > Utility.RandomDouble())
             {
                 chest.DropItem(new MysteriousFragment());
             }
@@ -885,8 +885,10 @@ namespace Server.Items
 
                         if (_DecorativeMinorArtifacts.Any(t => t == deco.GetType()))
                         {
-                            Container pack = new Backpack();
-                            pack.Hue = 1278;
+                            Container pack = new Backpack
+                            {
+                                Hue = 1278
+                            };
 
                             pack.DropItem(deco);
                             chest.DropItem(pack);
@@ -946,8 +948,10 @@ namespace Server.Items
 
                         if (_FunctionalMinorArtifacts.Any(t => t == type))
                         {
-                            Container pack = new Backpack();
-                            pack.Hue = 1278;
+                            Container pack = new Backpack
+                            {
+                                Hue = 1278
+                            };
 
                             pack.DropItem(deco);
                             chest.DropItem(pack);

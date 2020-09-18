@@ -45,11 +45,11 @@ namespace Server.Engines.SeasonalEvents
 
                     if (entry.Duration > -1)
                     {
-                        AddLabel(275, y, hue, String.Format("{0}/{1} - {2}/{3}", entry.MonthStart.ToString(), entry.DayStart.ToString(), end.Month.ToString(), end.Day.ToString()));
+                        AddLabel(275, y, hue, string.Format("{0}/{1} - {2}/{3}", entry.MonthStart.ToString(), entry.DayStart.ToString(), end.Month.ToString(), end.Day.ToString()));
                     }
                     else
                     {
-                        AddLabel(275, y, hue, String.Format("{0}/{1} - Completion", entry.MonthStart.ToString(), entry.DayStart.ToString()));
+                        AddLabel(275, y, hue, string.Format("{0}/{1} - Completion", entry.MonthStart.ToString(), entry.DayStart.ToString()));
                     }
                 }
 
@@ -95,7 +95,7 @@ namespace Server.Engines.SeasonalEvents
                     }
                     else
                     {
-                        BaseGump.SendGump(new EditEventGump(User, entry));
+                        SendGump(new EditEventGump(User, entry));
                     }
                 }
             }
@@ -238,11 +238,11 @@ namespace Server.Engines.SeasonalEvents
 
                     Entry.Duration = _Duration;
 
-                    BaseGump.SendGump(new SeasonalEventGump(User));
+                    SendGump(new SeasonalEventGump(User));
 
                     return;
                 case 10:
-                    BaseGump.SendGump(new SeasonalEventGump(User));
+                    SendGump(new SeasonalEventGump(User));
                     return;
             }
 

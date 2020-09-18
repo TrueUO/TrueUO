@@ -155,7 +155,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public DateTime NextEvaluate { get; set; }
 
-        public override BaseAddonContainerDeed Deed { get { return null; } }
+        public override BaseAddonContainerDeed Deed => null;
 
         public override void OnChop(Mobile from)
         {
@@ -426,7 +426,7 @@ namespace Server.Items
                 list.Add(1074254, "{0}\t{1}\t{2}", m_Water.Added, m_Water.Maintain, m_Water.Improve); // Water Added: ~1_CUR~ Maintain: ~2_NEED~ Improve: ~3_GROW~
         }
 
-        public override bool DisplayWeight { get { return false; } }
+        public override bool DisplayWeight => false;
 
         public override void GetContextMenuEntries(Mobile from, List<ContextMenuEntry> list)
         {
@@ -753,7 +753,7 @@ namespace Server.Items
             }
             catch (Exception e)
             {
-                Server.Diagnostics.ExceptionLogging.LogException(e);
+                Diagnostics.ExceptionLogging.LogException(e);
             }
 
             if (item == null)
@@ -766,7 +766,7 @@ namespace Server.Items
                 return;
             }
 
-            to.SendLocalizedMessage(1074360, String.Format("#{0}", item.LabelNumber)); // You receive a reward: ~1_REWARD~
+            to.SendLocalizedMessage(1074360, string.Format("#{0}", item.LabelNumber)); // You receive a reward: ~1_REWARD~
             to.PlaySound(0x5A3);
 
             m_RewardAvailable = false;
@@ -904,7 +904,7 @@ namespace Server.Items
             LiveCreatures += 1;
 
             if (from != null)
-                from.SendLocalizedMessage(1073632, String.Format("#{0}", fish.LabelNumber)); // You add the following creature to your aquarium: ~1_FISH~
+                from.SendLocalizedMessage(1073632, string.Format("#{0}", fish.LabelNumber)); // You add the following creature to your aquarium: ~1_FISH~
 
             InvalidateProperties();
             return true;
@@ -939,7 +939,7 @@ namespace Server.Items
             AddItem(item);
 
             if (from != null)
-                from.SendLocalizedMessage(1073635, (item.LabelNumber != 0) ? String.Format("#{0}", item.LabelNumber) : item.Name); // You add the following decoration to your aquarium: ~1_NAME~
+                from.SendLocalizedMessage(1073635, (item.LabelNumber != 0) ? string.Format("#{0}", item.LabelNumber) : item.Name); // You add the following decoration to your aquarium: ~1_NAME~
 
             InvalidateProperties();
             return true;

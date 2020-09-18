@@ -34,18 +34,22 @@ namespace Server.Mobiles
         public override void InitOutfit()
         {
             base.InitOutfit();
-            AddItem(new Server.Items.Shoes(0x151));
-            AddItem(new Server.Items.Robe(0x455));
-            AddItem(new Server.Items.FancyShirt(0x455));
+            AddItem(new Items.Shoes(0x151));
+            AddItem(new Items.Robe(0x455));
+            AddItem(new Items.FancyShirt(0x455));
 
-            Item hair = new Item(Utility.RandomList(0x203B, 0x2049, 0x2048, 0x204A));
-            hair.Hue = 0x3c6;
-            hair.Layer = Layer.Hair;
-            hair.Movable = false;
+            Item hair = new Item(Utility.RandomList(0x203B, 0x2049, 0x2048, 0x204A))
+            {
+                Hue = 0x3c6,
+                Layer = Layer.Hair,
+                Movable = false
+            };
             AddItem(hair);
 
-            Item beard = new Item(0x0);
-            beard.Layer = Layer.FacialHair;
+            Item beard = new Item(0x0)
+            {
+                Layer = Layer.FacialHair
+            };
             AddItem(beard);
         }
 

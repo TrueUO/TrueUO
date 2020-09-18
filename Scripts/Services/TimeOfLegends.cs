@@ -54,18 +54,21 @@ namespace Server
             Decorate.Generate("tol", "Data/Decoration/TimeOfLegends/TerMur", Map.TerMur);
             Decorate.Generate("tol", "Data/Decoration/TimeOfLegends/Felucca", Map.Felucca);
 
-            ChampionSpawn sp = new ChampionSpawn();
-
-            sp.Type = ChampionSpawnType.DragonTurtle;
+            ChampionSpawn sp = new ChampionSpawn
+            {
+                Type = ChampionSpawnType.DragonTurtle
+            };
             sp.MoveToWorld(new Point3D(451, 1696, 65), Map.TerMur);
             sp.Active = true;
             WeakEntityCollection.Add("tol", sp);
 
-            sp = new ChampionSpawn();
-            sp.SpawnRadius = 35;
-            sp.SpawnMod = .5;
-            sp.KillsMod = .5;
-            sp.Type = ChampionSpawnType.DragonTurtle;
+            sp = new ChampionSpawn
+            {
+                SpawnRadius = 35,
+                SpawnMod = .5,
+                KillsMod = .5,
+                Type = ChampionSpawnType.DragonTurtle
+            };
             sp.MoveToWorld(new Point3D(7042, 1889, 60), Map.Felucca);
             sp.Active = true;
             WeakEntityCollection.Add("tol", sp);
@@ -74,11 +77,11 @@ namespace Server
             gate.MoveToWorld(new Point3D(719, 1863, 40), Map.TerMur);
 
             ShadowguardController.SetupShadowguard(e.Mobile);
-            Server.Engines.MyrmidexInvasion.GenerateMyrmidexQuest.Generate();
+            Engines.MyrmidexInvasion.GenerateMyrmidexQuest.Generate();
 
             MacawSpawner.Generate();
 
-            CommandSystem.Handle(e.Mobile, Server.Commands.CommandSystem.Prefix + "XmlLoad Spawns/Eodon.xml");
+            CommandSystem.Handle(e.Mobile, CommandSystem.Prefix + "XmlLoad Spawns/Eodon.xml");
 
             e.Mobile.SendMessage("Time Of Legends world generating complete.");
         }
@@ -116,7 +119,7 @@ namespace Server
                 {
                     if (0.33 > Utility.RandomDouble())
                     {
-                        Item item = Server.Loot.Construct(_ArmorDropTypes[Utility.Random(_ArmorDropTypes.Length)]);
+                        Item item = Loot.Construct(_ArmorDropTypes[Utility.Random(_ArmorDropTypes.Length)]);
 
                         if (item != null)
                             c.DropItem(item);

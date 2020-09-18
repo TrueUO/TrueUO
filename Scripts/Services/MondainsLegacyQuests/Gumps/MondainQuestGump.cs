@@ -619,9 +619,9 @@ namespace Server.Engines.Quests
                 string returnTo = m_Quest.StartingMobile.Name;
 
                 if (m_Quest.StartingMobile.Region != null)
-                    returnTo = String.Format("{0} ({1})", returnTo, m_Quest.StartingMobile.Region.Name);
+                    returnTo = string.Format("{0} ({1})", returnTo, m_Quest.StartingMobile.Region.Name);
                 else
-                    returnTo = String.Format("{0}", returnTo);
+                    returnTo = string.Format("{0}", returnTo);
 
                 return returnTo;
             }
@@ -629,7 +629,7 @@ namespace Server.Engines.Quests
             return null;
         }
 
-        public override void OnResponse(Server.Network.NetState state, RelayInfo info)
+        public override void OnResponse(Network.NetState state, RelayInfo info)
         {
             if (m_From != null)
                 m_From.CloseGump(typeof(MondainQuestGump));

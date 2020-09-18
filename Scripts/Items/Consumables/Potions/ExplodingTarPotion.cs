@@ -12,7 +12,7 @@ namespace Server.Items
     [TypeAlias("Server.Items.ExplodingTarPotion")]
     public class ExplodingTarPotion : BasePotion
     {
-        public virtual int Radius { get { return 4; } }
+        public virtual int Radius => 4;
 
         public override int LabelNumber => 1095147; // Exploding Tar Potion
         public override bool RequireFreeHand => false;
@@ -40,7 +40,7 @@ namespace Server.Items
 
             if (delay > 0)
             {
-                from.SendLocalizedMessage(1072529, String.Format("{0}\t{1}", delay, delay > 1 ? "seconds." : "second.")); // You cannot use that for another ~1_NUM~ ~2_TIMEUNITS~
+                from.SendLocalizedMessage(1072529, string.Format("{0}\t{1}", delay, delay > 1 ? "seconds." : "second.")); // You cannot use that for another ~1_NUM~ ~2_TIMEUNITS~
                 return;
             }
 

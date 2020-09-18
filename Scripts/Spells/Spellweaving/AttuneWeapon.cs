@@ -30,7 +30,7 @@ namespace Server.Spells.Spellweaving
             damage -= absorbed;
             defender.MeleeDamageAbsorb -= absorbed;
 
-            defender.SendLocalizedMessage(1075127, String.Format("{0}\t{1}", absorbed, defender.MeleeDamageAbsorb)); // ~1_damage~ point(s) of damage have been absorbed. A total of ~2_remaining~ point(s) of shielding remain.
+            defender.SendLocalizedMessage(1075127, string.Format("{0}\t{1}", absorbed, defender.MeleeDamageAbsorb)); // ~1_damage~ point(s) of damage have been absorbed. A total of ~2_remaining~ point(s) of shielding remain.
 
             if (defender.MeleeDamageAbsorb <= 0)
             {
@@ -132,7 +132,7 @@ namespace Server.Spells.Spellweaving
 
                 m_Table.Remove(m_Mobile);
 
-                Timer.DelayCall(TimeSpan.FromSeconds(120), delegate { m_Mobile.EndAction(typeof(AttuneWeaponSpell)); });
+                DelayCall(TimeSpan.FromSeconds(120), delegate { m_Mobile.EndAction(typeof(AttuneWeaponSpell)); });
                 BuffInfo.RemoveBuff(m_Mobile, BuffIcon.AttuneWeapon);
             }
 

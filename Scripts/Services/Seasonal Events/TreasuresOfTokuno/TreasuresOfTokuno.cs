@@ -220,7 +220,7 @@ namespace Server.Misc
                 }
                 catch (Exception e)
                 {
-                    Server.Diagnostics.ExceptionLogging.LogException(e);
+                    Diagnostics.ExceptionLogging.LogException(e);
                 }
 
                 if (i != null)
@@ -328,8 +328,10 @@ namespace Server.Mobiles
             AddItem(new Backpack());
             AddItem(new Kamishimo(0x483));
 
-            Item item = new LightPlateJingasa();
-            item.Hue = 0x711;
+            Item item = new LightPlateJingasa
+            {
+                Hue = 0x711
+            };
 
             AddItem(item);
         }
@@ -393,7 +395,7 @@ namespace Server.Mobiles
                         if (turnIns == 0)
                             SayTo(pm, 1071013); // Bring me 10 of the lost treasures of Tokuno and I will reward you with a valuable item.
                         else
-                            SayTo(pm, 1070981, String.Format("{0}\t{1}", turnIns, TreasuresOfTokuno.ItemsPerReward)); // You have turned in ~1_COUNT~ minor artifacts. Turn in ~2_NUM~ to receive a reward.
+                            SayTo(pm, 1070981, string.Format("{0}\t{1}", turnIns, TreasuresOfTokuno.ItemsPerReward)); // You have turned in ~1_COUNT~ minor artifacts. Turn in ~2_NUM~ to receive a reward.
 
                         ArrayList buttons = ToTTurnInGump.FindRedeemableItems(pm);
 
@@ -511,7 +513,7 @@ namespace Server.Gumps
             }
             else
             {
-                m_Collector.SayTo(pm, 1070981, String.Format("{0}\t{1}", turnIns, TreasuresOfTokuno.ItemsPerReward)); // You have turned in ~1_COUNT~ minor artifacts. Turn in ~2_NUM~ to receive a reward.
+                m_Collector.SayTo(pm, 1070981, string.Format("{0}\t{1}", turnIns, TreasuresOfTokuno.ItemsPerReward)); // You have turned in ~1_COUNT~ minor artifacts. Turn in ~2_NUM~ to receive a reward.
 
                 ArrayList buttons = FindRedeemableItems(pm);
 
@@ -534,7 +536,7 @@ namespace Server.Gumps
             if (turnIns == 0)
                 m_Collector.SayTo(pm, 1071013); // Bring me 10 of the lost treasures of Tokuno and I will reward you with a valuable item.
             else if (turnIns < TreasuresOfTokuno.ItemsPerReward)	//This case should ALWAYS be true with this gump, jsut a sanity check
-                m_Collector.SayTo(pm, 1070981, String.Format("{0}\t{1}", turnIns, TreasuresOfTokuno.ItemsPerReward)); // You have turned in ~1_COUNT~ minor artifacts. Turn in ~2_NUM~ to receive a reward.
+                m_Collector.SayTo(pm, 1070981, string.Format("{0}\t{1}", turnIns, TreasuresOfTokuno.ItemsPerReward)); // You have turned in ~1_COUNT~ minor artifacts. Turn in ~2_NUM~ to receive a reward.
             else
                 m_Collector.SayTo(pm, 1070982); // When you wish to choose your reward, you have but to approach me again.
         }
@@ -745,7 +747,7 @@ namespace Server.Gumps
             if (pm.AddToBackpack(item))
             {
                 PointsSystem.TreasuresOfTokuno.RemoveTurnIns(pm, TreasuresOfTokuno.ItemsPerReward);
-                m_Collector.SayTo(pm, 1070984, (item.Name == null || item.Name.Length <= 0) ? String.Format("#{0}", item.LabelNumber) : item.Name); // You have earned the gratitude of the Empire. I have placed the ~1_OBJTYPE~ in your backpack.
+                m_Collector.SayTo(pm, 1070984, (item.Name == null || item.Name.Length <= 0) ? string.Format("#{0}", item.LabelNumber) : item.Name); // You have earned the gratitude of the Empire. I have placed the ~1_OBJTYPE~ in your backpack.
             }
             else
             {
@@ -767,7 +769,7 @@ namespace Server.Gumps
             if (turnIns == 0)
                 m_Collector.SayTo(pm, 1071013); // Bring me 10 of the lost treasures of Tokuno and I will reward you with a valuable item.
             else if (turnIns < TreasuresOfTokuno.ItemsPerReward)	//This and above case should ALWAYS be FALSE with this gump, jsut a sanity check
-                m_Collector.SayTo(pm, 1070981, String.Format("{0}\t{1}", turnIns, TreasuresOfTokuno.ItemsPerReward)); // You have turned in ~1_COUNT~ minor artifacts. Turn in ~2_NUM~ to receive a reward.
+                m_Collector.SayTo(pm, 1070981, string.Format("{0}\t{1}", turnIns, TreasuresOfTokuno.ItemsPerReward)); // You have turned in ~1_COUNT~ minor artifacts. Turn in ~2_NUM~ to receive a reward.
             else
                 m_Collector.SayTo(pm, 1070982); // When you wish to choose your reward, you have but to approach me again.
         }

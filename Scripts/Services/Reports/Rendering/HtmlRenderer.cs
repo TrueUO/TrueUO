@@ -105,13 +105,14 @@ namespace Server.Engines.Reports
                 op.Write("quit");
             }
 
-            ProcessStartInfo psi = new ProcessStartInfo();
+            ProcessStartInfo psi = new ProcessStartInfo
+            {
+                FileName = "ftp",
+                Arguments = string.Format("-i -s:\"{0}\"", filePath),
 
-            psi.FileName = "ftp";
-            psi.Arguments = String.Format("-i -s:\"{0}\"", filePath);
-
-            psi.CreateNoWindow = true;
-            psi.WindowStyle = ProcessWindowStyle.Hidden;
+                CreateNoWindow = true,
+                WindowStyle = ProcessWindowStyle.Hidden
+            };
             //psi.UseShellExecute = true;
 
             try
@@ -122,7 +123,7 @@ namespace Server.Engines.Reports
             }
             catch (Exception e)
             {
-                Server.Diagnostics.ExceptionLogging.LogException(e);
+                Diagnostics.ExceptionLogging.LogException(e);
             }
 
             Console.WriteLine("Reports: {0}: Upload complete", m_Title);
@@ -133,7 +134,7 @@ namespace Server.Engines.Reports
             }
             catch (Exception e)
             {
-                Server.Diagnostics.ExceptionLogging.LogException(e);
+                Diagnostics.ExceptionLogging.LogException(e);
             }
         }
 
@@ -276,9 +277,10 @@ namespace Server.Engines.Reports
 
         private void RenderPieChart(PieChart chart, HtmlTextWriter html)
         {
-            PieChartRenderer pieChart = new PieChartRenderer(Color.White);
-
-            pieChart.ShowPercents = chart.ShowPercents;
+            PieChartRenderer pieChart = new PieChartRenderer(Color.White)
+            {
+                ShowPercents = chart.ShowPercents
+            };
 
             string[] labels = new string[chart.Items.Count];
             string[] values = new string[chart.Items.Count];
@@ -301,7 +303,7 @@ namespace Server.Engines.Reports
             html.Write("<!-- ");
 
             html.AddAttribute(HtmlAttr.Href, "#");
-            html.AddAttribute(HtmlAttr.Onclick, String.Format("javascript:window.open('{0}.html','ChildWindow','width={1},height={2},resizable=no,status=no,toolbar=no')", SafeFileName(FindNameFrom(chart)), bmp.Width + 30, bmp.Height + 80));
+            html.AddAttribute(HtmlAttr.Onclick, string.Format("javascript:window.open('{0}.html','ChildWindow','width={1},height={2},resizable=no,status=no,toolbar=no')", SafeFileName(FindNameFrom(chart)), bmp.Width + 30, bmp.Height + 80));
             html.RenderBeginTag(HtmlTag.A);
             html.Write(chart.Name);
             html.RenderEndTag();
@@ -360,11 +362,12 @@ namespace Server.Engines.Reports
 
         private void RenderBarGraph(BarGraph graph, HtmlTextWriter html)
         {
-            BarGraphRenderer barGraph = new BarGraphRenderer(Color.White);
+            BarGraphRenderer barGraph = new BarGraphRenderer(Color.White)
+            {
+                RenderMode = graph.RenderMode,
 
-            barGraph.RenderMode = graph.RenderMode;
-
-            barGraph._regions = graph.Regions;
+                _regions = graph.Regions
+            };
             barGraph.SetTitles(graph.xTitle, null);
 
             if (graph.yTitle != null)
@@ -396,7 +399,7 @@ namespace Server.Engines.Reports
             html.Write("<!-- ");
 
             html.AddAttribute(HtmlAttr.Href, "#");
-            html.AddAttribute(HtmlAttr.Onclick, String.Format("javascript:window.open('{0}.html','ChildWindow','width={1},height={2},resizable=no,status=no,toolbar=no')", SafeFileName(FindNameFrom(graph)), bmp.Width + 30, bmp.Height + 80));
+            html.AddAttribute(HtmlAttr.Onclick, string.Format("javascript:window.open('{0}.html','ChildWindow','width={1},height={2},resizable=no,status=no,toolbar=no')", SafeFileName(FindNameFrom(graph)), bmp.Width + 30, bmp.Height + 80));
             html.RenderBeginTag(HtmlTag.A);
             html.Write(graph.Name);
             html.RenderEndTag();

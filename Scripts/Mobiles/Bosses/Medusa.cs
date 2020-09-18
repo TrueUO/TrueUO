@@ -55,8 +55,10 @@ namespace Server.Mobiles
             Fame = 22000;
             Karma = -22000;
 
-            IronwoodCompositeBow Bow = new IronwoodCompositeBow();
-            Bow.Movable = false;
+            IronwoodCompositeBow Bow = new IronwoodCompositeBow
+            {
+                Movable = false
+            };
             AddItem(Bow);
 
             m_Scales = Utility.RandomMinMax(1, 2) + 7;
@@ -365,7 +367,7 @@ namespace Server.Mobiles
                     target.SolidHueOverride = 761;
 
                     //clone.MoveToWorld(loc, target.Map);
-                    BaseCreature.Summon(clone, false, this, loc, 0, TimeSpan.FromMinutes(90));
+                    Summon(clone, false, this, loc, 0, TimeSpan.FromMinutes(90));
 
                     if (target is BaseCreature && !((BaseCreature)target).Summoned && ((BaseCreature)target).GetMaster() != null)
                         ((BaseCreature)target).GetMaster().SendLocalizedMessage(1113281, null, 43); // Your pet has been petrified!
@@ -424,7 +426,7 @@ namespace Server.Mobiles
                         loc = new Point3D(x, y, z);
                 }
 
-                BaseCreature.Summon(stone, false, this, loc, 0, TimeSpan.FromMinutes(90));
+                Summon(stone, false, this, loc, 0, TimeSpan.FromMinutes(90));
                 //stone.MoveToWorld(loc, map);
                 stone.Frozen = stone.Blessed = true;
                 stone.SolidHueOverride = 761;
@@ -706,12 +708,14 @@ namespace Server.Mobiles
 
         public Item CloneItem(Item item)
         {
-            Item cloned = new Item(item.ItemID);
-            cloned.Layer = item.Layer;
-            cloned.Name = item.Name;
-            cloned.Hue = item.Hue;
-            cloned.Weight = item.Weight;
-            cloned.Movable = false;
+            Item cloned = new Item(item.ItemID)
+            {
+                Layer = item.Layer,
+                Name = item.Name,
+                Hue = item.Hue,
+                Weight = item.Weight,
+                Movable = false
+            };
 
             return cloned;
         }

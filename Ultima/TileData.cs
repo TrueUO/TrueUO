@@ -350,25 +350,25 @@ namespace Ultima
         ///     Whether or not this item is flagged as '<see cref="TileFlag.Background" />'.
         ///     <seealso cref="TileFlag" />
         /// </summary>
-        public bool Background => ((m_Flags & TileFlag.Background) != 0);
+        public bool Background => (m_Flags & TileFlag.Background) != 0;
 
         /// <summary>
         ///     Whether or not this item is flagged as '<see cref="TileFlag.Bridge" />'.
         ///     <seealso cref="TileFlag" />
         /// </summary>
-        public bool Bridge => ((m_Flags & TileFlag.Bridge) != 0);
+        public bool Bridge => (m_Flags & TileFlag.Bridge) != 0;
 
         /// <summary>
         ///     Whether or not this item is flagged as '<see cref="TileFlag.Impassable" />'.
         ///     <seealso cref="TileFlag" />
         /// </summary>
-        public bool Impassable => ((m_Flags & TileFlag.Impassable) != 0);
+        public bool Impassable => (m_Flags & TileFlag.Impassable) != 0;
 
         /// <summary>
         ///     Whether or not this item is flagged as '<see cref="TileFlag.Surface" />'.
         ///     <seealso cref="TileFlag" />
         /// </summary>
-        public bool Surface => ((m_Flags & TileFlag.Surface) != 0);
+        public bool Surface => (m_Flags & TileFlag.Surface) != 0;
 
         /// <summary>
         ///     Gets the weight of this item.
@@ -446,7 +446,7 @@ namespace Ultima
         ///     Whether or not this item is wearable as '<see cref="TileFlag.Wearable" />'.
         ///     <seealso cref="TileFlag" />
         /// </summary>
-        public bool Wearable => ((m_Flags & TileFlag.Wearable) != 0);
+        public bool Wearable => (m_Flags & TileFlag.Wearable) != 0;
 
         public void ReadData(string[] split)
         {
@@ -1042,11 +1042,11 @@ namespace Ultima
                 for (int i = 0; i < m_ItemData.Length; ++i)
                 {
                     ItemData tile = m_ItemData[i];
-                    Tex.Write(String.Format("0x{0:X4}", i));
-                    Tex.Write(String.Format(";{0}", tile.Name));
+                    Tex.Write(string.Format("0x{0:X4}", i));
+                    Tex.Write(string.Format(";{0}", tile.Name));
                     Tex.Write(";" + tile.Weight);
                     Tex.Write(";" + tile.Quality);
-                    Tex.Write(String.Format(";0x{0:X4}", tile.Animation));
+                    Tex.Write(string.Format(";0x{0:X4}", tile.Animation));
                     Tex.Write(";" + tile.Height);
                     Tex.Write(";" + tile.Hue);
                     Tex.Write(";" + tile.Quantity);
@@ -1109,9 +1109,9 @@ namespace Ultima
                 for (int i = 0; i < m_LandData.Length; ++i)
                 {
                     LandData tile = m_LandData[i];
-                    Tex.Write(String.Format("0x{0:X4}", i));
+                    Tex.Write(string.Format("0x{0:X4}", i));
                     Tex.Write(";" + tile.Name);
-                    Tex.Write(";" + String.Format("0x{0:X4}", tile.TextureID));
+                    Tex.Write(";" + string.Format("0x{0:X4}", tile.TextureID));
                     Tex.Write(";" + tile.Unk1);
 
                     Tex.Write(";" + (((tile.Flags & TileFlag.Background) != 0) ? "1" : "0"));

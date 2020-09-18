@@ -3,7 +3,7 @@ using System;
 
 namespace Server.Items
 {
-    [FlipableAttribute(0x9DB1, 0x9DB2)]
+    [Flipable(0x9DB1, 0x9DB2)]
     public class KotlAutomatonHead : Item, ICraftable
     {
         private bool _Activated;
@@ -23,7 +23,7 @@ namespace Server.Items
 
         public override void AddNameProperty(ObjectPropertyList list)
         {
-            list.Add(1157022, String.Format("#{0}", CraftResources.GetLocalizationNumber(_Resource))); // Rebuilt ~1_MATTYPE~ Automaton Head
+            list.Add(1157022, string.Format("#{0}", CraftResources.GetLocalizationNumber(_Resource))); // Rebuilt ~1_MATTYPE~ Automaton Head
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -67,8 +67,10 @@ namespace Server.Items
 
         public virtual KotlAutomaton GetAutomaton(Mobile master)
         {
-            KotlAutomaton automaton = new KotlAutomaton();
-            automaton.Resource = _Resource;
+            KotlAutomaton automaton = new KotlAutomaton
+            {
+                Resource = _Resource
+            };
 
             return automaton;
         }

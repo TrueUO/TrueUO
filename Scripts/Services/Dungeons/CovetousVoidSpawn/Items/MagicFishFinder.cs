@@ -119,7 +119,7 @@ namespace Server.Items
 
         public string GetDirectionString(Direction d)
         {
-            return String.Format("#{0}", 1152639 + (int)d);
+            return string.Format("#{0}", 1152639 + (int)d);
         }
 
         public static bool HasSchool(Mobile m)
@@ -270,7 +270,7 @@ namespace Server.Items
 
             public void Expire()
             {
-                MagicalFishFinder.ExpireSchool(Map, this);
+                ExpireSchool(Map, this);
             }
         }
     }

@@ -82,8 +82,10 @@ namespace Server.Mobiles
 
             Item hat;
             Item fancyShirt = new FancyShirt();
-            Item shirt = new Shirt(GetRandomShirtHue());
-            shirt.Layer = Layer.OuterTorso;
+            Item shirt = new Shirt(GetRandomShirtHue())
+            {
+                Layer = Layer.OuterTorso
+            };
 
             if (Utility.RandomBool())
                 hat = new Bandana();
@@ -146,9 +148,9 @@ namespace Server.Mobiles
             string args;
 
             if (m_PirateName > 0)
-                args = String.Format("#{0}\t#{1}\t#{2}", m_Adjective, m_Noun, m_PirateName);
+                args = string.Format("#{0}\t#{1}\t#{2}", m_Adjective, m_Noun, m_PirateName);
             else
-                args = String.Format("#{0}\t#{1}\t{2}", m_Adjective, m_Noun, Name);
+                args = string.Format("#{0}\t#{1}\t{2}", m_Adjective, m_Noun, Name);
 
             list.Add(1116690, args);
         }
