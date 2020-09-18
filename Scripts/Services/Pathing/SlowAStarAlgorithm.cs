@@ -44,8 +44,6 @@ namespace Server.PathAlgorithms.SlowAStar
         {
             m_Goal = goal;
 
-            BaseCreature bc = p as BaseCreature;
-
             PathNode curNode;
 
             PathNode goalNode = new PathNode
