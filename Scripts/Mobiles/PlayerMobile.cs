@@ -1997,7 +1997,7 @@ namespace Server.Mobiles
                 }
             }
 
-            if (m_LastDirectionChange + 100 > Core.TickCount)
+            if (m_LastDirectionChange + 75 > Core.TickCount) // The value we want to make sure players are adhearing too when turning in-game. (client catch is at 100ms)
             {
                 return false;
             }
