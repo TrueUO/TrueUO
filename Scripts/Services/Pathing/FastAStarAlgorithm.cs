@@ -1,4 +1,3 @@
-using Server.Mobiles;
 using System.Collections;
 using CalcMoves = Server.Movement.Movement;
 using MoveImpl = Server.Movement.MovementImpl;
@@ -72,8 +71,6 @@ namespace Server.PathAlgorithms.FastAStar
 
             m_OnOpen[m_OpenList] = true;
             m_Touched[m_OpenList] = true;
-
-            BaseCreature bc = p as BaseCreature;
 
             int pathCount, parent;
             int backtrack = 0, depth = 0;

@@ -884,9 +884,9 @@ namespace Server.Mobiles
         {
             PlayerMobile pm = e.Mobile as PlayerMobile;
 
-            if (pm.IsStaff() || Core.TickCount - pm.NextActionTime >= 0)
+            if (pm != null && pm.Backpack != null && pm.Alive && e.List != null && e.List.Count > 0)
             {
-                if (pm != null && pm.Backpack != null && pm.Alive && e.List != null && e.List.Count > 0)
+                if (pm.IsStaff() || Core.TickCount - pm.NextActionTime >= 0)
                 {
                     Container pack = pm.Backpack;
 
@@ -920,20 +920,20 @@ namespace Server.Mobiles
 
                     pm.NextActionTime = Core.TickCount + (ActionDelay * e.List.Count);
                 }
-            }
-            else
-            {
-                pm.SendActionMessage();
-            }
+	            else
+	            {
+	                pm.SendActionMessage();
+	            }
+	        }
         }
 
         public static void UnequipMacro(UnequipMacroEventArgs e)
         {
             PlayerMobile pm = e.Mobile as PlayerMobile;
 
-            if (pm.IsStaff() || Core.TickCount - pm.NextActionTime >= 0)
+            if (pm != null && pm.Backpack != null && pm.Alive && e.List != null && e.List.Count > 0)
             {
-                if (pm != null && pm.Backpack != null && pm.Alive && e.List != null && e.List.Count > 0)
+                if (pm.IsStaff() || Core.TickCount - pm.NextActionTime >= 0)
                 {
                     Container pack = pm.Backpack;
 
@@ -950,11 +950,11 @@ namespace Server.Mobiles
                     pm.NextActionTime = Core.TickCount + ActionDelay;
                     ColUtility.Free(worn);
                 }
-            }
-            else
-            {
-                pm.SendActionMessage();
-            }
+	            else
+	            {
+	                pm.SendActionMessage();
+	            }
+	        }
         }
         #endregion
 
@@ -1923,10 +1923,7 @@ namespace Server.Mobiles
         public override int StamMax => base.StamMax + AosAttributes.GetValue(this, AosAttribute.BonusStam);
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public override int ManaMax => base.ManaMax + AosAttributes.GetValue(this, AosAttribute.BonusMana) +
-                       (Race == Race.Elf ? 20 : 0) +
-                       MasteryInfo.IntuitionBonus(this) +
-                       UraliTranceTonic.GetManaBuff(this);
+        public override int ManaMax => base.ManaMax + AosAttributes.GetValue(this, AosAttribute.BonusMana) + (Race == Race.Elf ? 20 : 0) + MasteryInfo.IntuitionBonus(this) + UraliTranceTonic.GetManaBuff(this);
         #endregion
 
         #region Stat Getters/Setters
