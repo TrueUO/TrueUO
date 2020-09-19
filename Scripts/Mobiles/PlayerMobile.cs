@@ -2000,23 +2000,27 @@ namespace Server.Mobiles
                 }
             }
 
-            int speed = ComputeMovementSpeed(d);
-
-            bool res = base.Move(d);
-
-            if (!res)
+            if (m_LastDirectionChange + 100 > Core.TickCount)
             {
                 return false;
             }
 
+            int speed = ComputeMovementSpeed(d);
+
+            bool result = base.Move(d);
+
+            if (result)
+            {
+                if (!Siege.SiegeShard && Core.TickCount - NextPassiveDetectHidden >= 0)
+                {
+                    DetectHidden.DoPassiveDetect(this);
+                    NextPassiveDetectHidden = Core.TickCount + (int)TimeSpan.FromSeconds(2).TotalMilliseconds;
+                }
+            }
+
             m_NextMovementTime += speed;
 
-            if (!Siege.SiegeShard && Core.TickCount - NextPassiveDetectHidden >= 0)
-            {
-                DetectHidden.DoPassiveDetect(this);
-                NextPassiveDetectHidden = Core.TickCount + (int)TimeSpan.FromSeconds(2).TotalMilliseconds;
-            }
-            return true;
+            return result;
         }
 
         public override bool CheckMovement(Direction d, out int newZ)
@@ -5530,6 +5534,7 @@ namespace Server.Mobiles
         private static readonly int FastwalkThreshold = 400; // Fastwalk prevention will become active after 0.4 seconds
 
         private long m_NextMovementTime;
+        private long m_LastDirectionChange;
         private bool m_HasMoved;
 
         public long NextMovementTime => m_NextMovementTime;
@@ -5559,7 +5564,7 @@ namespace Server.Mobiles
 
         public override void OnBeforeDirectionChange(Direction newDirection)
         {
-            m_NextMovementTime = Core.TickCount + RunMount;
+            m_LastDirectionChange = Core.TickCount;
         }
 
         public static bool MovementThrottle_Callback(NetState ns, out bool drop)
