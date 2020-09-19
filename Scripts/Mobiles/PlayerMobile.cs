@@ -2006,13 +2006,10 @@ namespace Server.Mobiles
 
             bool result = base.Move(d);
 
-            if (result)
+            if (result && !Siege.SiegeShard && Core.TickCount - NextPassiveDetectHidden >= 0)
             {
-                if (!Siege.SiegeShard && Core.TickCount - NextPassiveDetectHidden >= 0)
-                {
-                    DetectHidden.DoPassiveDetect(this);
-                    NextPassiveDetectHidden = Core.TickCount + (int)TimeSpan.FromSeconds(2).TotalMilliseconds;
-                }
+                DetectHidden.DoPassiveDetect(this);
+                NextPassiveDetectHidden = Core.TickCount + (int)TimeSpan.FromSeconds(2).TotalMilliseconds;
             }
 
             m_NextMovementTime += speed;
