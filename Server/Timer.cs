@@ -400,16 +400,12 @@ namespace Server
 
 		public static int BreakCount { get => m_BreakCount; set => m_BreakCount = value; }
 
-		private static int m_QueueCountAtSlice;
-
 		private bool m_Queued;
 
 		public static void Slice()
 		{
 			lock (m_Queue)
 			{
-				m_QueueCountAtSlice = m_Queue.Count;
-
 				int index = 0;
 
 				while (index < m_BreakCount && m_Queue.Count != 0)
