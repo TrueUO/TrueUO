@@ -1,4 +1,3 @@
-using Server.Mobiles;
 using System;
 using CalcMoves = Server.Movement.Movement;
 using MoveImpl = Server.Movement.MovementImpl;
@@ -43,8 +42,6 @@ namespace Server.PathAlgorithms.SlowAStar
         public override Direction[] Find(IPoint3D p, Map map, Point3D start, Point3D goal)
         {
             m_Goal = goal;
-
-            BaseCreature bc = p as BaseCreature;
 
             PathNode curNode;
 
