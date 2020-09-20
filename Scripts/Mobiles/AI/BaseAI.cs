@@ -10,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using MoveImpl = Server.Movement.MovementImpl;
 #endregion
 
 namespace Server.Mobiles

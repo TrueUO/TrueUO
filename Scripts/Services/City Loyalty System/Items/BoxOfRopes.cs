@@ -1,7 +1,6 @@
 using Server.Engines.CityLoyalty;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
