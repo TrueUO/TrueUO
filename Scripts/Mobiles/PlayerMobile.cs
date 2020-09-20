@@ -18,7 +18,6 @@ using Server.Guilds;
 using Server.Gumps;
 using Server.Items;
 using Server.Misc;
-using Server.Movement;
 using Server.Multis;
 using Server.Network;
 using Server.Regions;
@@ -411,9 +410,6 @@ namespace Server.Mobiles
 
         [CommandProperty(AccessLevel.GameMaster)]
         public DateTime LastOnline { get { return m_LastOnline; } set { m_LastOnline = value; } }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public long LastMoved => LastMoveTime;
 
         [CommandProperty(AccessLevel.GameMaster)]
         public TimeSpan NpcGuildGameTime { get { return m_NpcGuildGameTime; } set { m_NpcGuildGameTime = value; } }
@@ -887,9 +883,9 @@ namespace Server.Mobiles
         {
             PlayerMobile pm = e.Mobile as PlayerMobile;
 
-            if (pm.IsStaff() || Core.TickCount - pm.NextActionTime >= 0)
+            if (pm != null && pm.Backpack != null && pm.Alive && e.List != null && e.List.Count > 0)
             {
-                if (pm != null && pm.Backpack != null && pm.Alive && e.List != null && e.List.Count > 0)
+                if (pm.IsStaff() || Core.TickCount - pm.NextActionTime >= 0)
                 {
                     Container pack = pm.Backpack;
 
@@ -923,20 +919,20 @@ namespace Server.Mobiles
 
                     pm.NextActionTime = Core.TickCount + (ActionDelay * e.List.Count);
                 }
-            }
-            else
-            {
-                pm.SendActionMessage();
-            }
+	            else
+	            {
+	                pm.SendActionMessage();
+	            }
+	        }
         }
 
         public static void UnequipMacro(UnequipMacroEventArgs e)
         {
             PlayerMobile pm = e.Mobile as PlayerMobile;
 
-            if (pm.IsStaff() || Core.TickCount - pm.NextActionTime >= 0)
+            if (pm != null && pm.Backpack != null && pm.Alive && e.List != null && e.List.Count > 0)
             {
-                if (pm != null && pm.Backpack != null && pm.Alive && e.List != null && e.List.Count > 0)
+                if (pm.IsStaff() || Core.TickCount - pm.NextActionTime >= 0)
                 {
                     Container pack = pm.Backpack;
 
@@ -953,11 +949,11 @@ namespace Server.Mobiles
                     pm.NextActionTime = Core.TickCount + ActionDelay;
                     ColUtility.Free(worn);
                 }
-            }
-            else
-            {
-                pm.SendActionMessage();
-            }
+	            else
+	            {
+	                pm.SendActionMessage();
+	            }
+	        }
         }
         #endregion
 
@@ -1926,10 +1922,7 @@ namespace Server.Mobiles
         public override int StamMax => base.StamMax + AosAttributes.GetValue(this, AosAttribute.BonusStam);
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public override int ManaMax => base.ManaMax + AosAttributes.GetValue(this, AosAttribute.BonusMana) +
-                       (Race == Race.Elf ? 20 : 0) +
-                       MasteryInfo.IntuitionBonus(this) +
-                       UraliTranceTonic.GetManaBuff(this);
+        public override int ManaMax => base.ManaMax + AosAttributes.GetValue(this, AosAttribute.BonusMana) + (Race == Race.Elf ? 20 : 0) + MasteryInfo.IntuitionBonus(this) + UraliTranceTonic.GetManaBuff(this);
         #endregion
 
         #region Stat Getters/Setters
@@ -2003,32 +1996,24 @@ namespace Server.Mobiles
                 }
             }
 
-            int speed = ComputeMovementSpeed(d);
-
-            bool res;
-
-            if (!Alive)
-            {
-                MovementImpl.IgnoreMovableImpassables = true;
-            }
-
-            res = base.Move(d);
-
-            MovementImpl.IgnoreMovableImpassables = false;
-
-            if (!res)
+            if (m_LastDirectionChange + 75 > Core.TickCount) // The value we want to make sure players are adhearing too when turning in-game. (client catch is at 100ms)
             {
                 return false;
             }
 
-            m_NextMovementTime += speed;
+            int speed = ComputeMovementSpeed(d);
 
-            if (!Siege.SiegeShard && Core.TickCount - NextPassiveDetectHidden >= 0)
+            bool result = base.Move(d);
+
+            if (result && !Siege.SiegeShard && Core.TickCount - NextPassiveDetectHidden >= 0)
             {
                 DetectHidden.DoPassiveDetect(this);
                 NextPassiveDetectHidden = Core.TickCount + (int)TimeSpan.FromSeconds(2).TotalMilliseconds;
             }
-            return true;
+
+            m_NextMovementTime += speed;
+
+            return result;
         }
 
         public override bool CheckMovement(Direction d, out int newZ)
@@ -5536,6 +5521,7 @@ namespace Server.Mobiles
         private static readonly int FastwalkThreshold = 400; // Fastwalk prevention will become active after 0.4 seconds
 
         private long m_NextMovementTime;
+        private long m_LastDirectionChange;
         private bool m_HasMoved;
 
         public long NextMovementTime => m_NextMovementTime;
@@ -5561,6 +5547,11 @@ namespace Server.Mobiles
             }
 
             return (running ? RunFoot : WalkFoot);
+        }
+
+        public override void OnBeforeDirectionChange(Direction newDirection)
+        {
+            m_LastDirectionChange = Core.TickCount;
         }
 
         public static bool MovementThrottle_Callback(NetState ns, out bool drop)
