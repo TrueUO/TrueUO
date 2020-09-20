@@ -1996,11 +1996,6 @@ namespace Server.Mobiles
                 }
             }
 
-            if (m_LastDirectionChange + 75 > Core.TickCount) // The value we want to make sure players are adhearing too when turning in-game. (client catch is at 100ms)
-            {
-                return false;
-            }
-
             int speed = ComputeMovementSpeed(d);
 
             bool result = base.Move(d);
@@ -5527,7 +5522,6 @@ namespace Server.Mobiles
         private static readonly int FastwalkThreshold = 400; // Fastwalk prevention will become active after 0.4 seconds
 
         private long m_NextMovementTime;
-        private long m_LastDirectionChange;
         private bool m_HasMoved;
 
         public long NextMovementTime => m_NextMovementTime;
@@ -5553,11 +5547,6 @@ namespace Server.Mobiles
             }
 
             return (running ? RunFoot : WalkFoot);
-        }
-
-        public override void OnBeforeDirectionChange(Direction newDirection)
-        {
-            m_LastDirectionChange = Core.TickCount;
         }
 
         public static bool MovementThrottle_Callback(NetState ns, out bool drop)
