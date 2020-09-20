@@ -55,13 +55,25 @@ namespace Server.Items
             if (_Cooldown == null)
                 return;
 
-            List<Mobile> list = new List<Mobile>(_Cooldown.Keys);
+            var remove = new List<Mobile>();
 
-            foreach (Mobile m in list.Where(mob => _Cooldown[mob] < DateTime.UtcNow))
-                _Cooldown.Remove(m);
+            foreach (var kvp in _Cooldown)
+            {
+                if (kvp.Value < DateTime.UtcNow)
+                {
+                    remove.Add(kvp.Key);
+                }
+            }
 
-            list.Clear();
-            list.TrimExcess();
+            foreach (var m in remove)
+            {
+                if (_Cooldown.ContainsKey(m))
+                {
+                    _Cooldown.Remove(m);
+                }
+            }
+
+            ColUtility.Free(remove);
         }
 
         public BoxOfRopes(Serial serial)
