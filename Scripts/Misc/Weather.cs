@@ -161,7 +161,7 @@ namespace Server.Misc
             if (facet == null)
                 return null;
 
-            List<Weather> list = null;
+            List<Weather> list;
             m_WeatherByFacet.TryGetValue(facet, out list);
 
             if (list == null)
@@ -191,7 +191,7 @@ namespace Server.Misc
                 if (!isValid)
                     continue;
 
-                _ = new Weather(m_Facets[i], new Rectangle2D[] { area }, temperature, chanceOfPercipitation, chanceOfExtremeTemperature, TimeSpan.FromSeconds(30.0))
+                new Weather(m_Facets[i], new Rectangle2D[] { area }, temperature, chanceOfPercipitation, chanceOfExtremeTemperature, TimeSpan.FromSeconds(30.0))
                 {
                     m_Bounds = bounds,
                     m_MoveSpeed = moveSpeed
