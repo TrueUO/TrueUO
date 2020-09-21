@@ -72,7 +72,7 @@ namespace Server.Mobiles
 
             public InternalSelfDeleteTimer(Mobile p) : base(TimeSpan.FromMinutes(10))
             {
-                Priority = TimerPriority.FiveSeconds;
+                Priority = TimerPriority.ThirtySeconds;
                 Mare = ((OrcEngineer)p);
             }
             protected override void OnTick()

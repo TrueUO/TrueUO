@@ -79,9 +79,9 @@ namespace Server.Mobiles
         {
             private readonly ObsidianWyvern Mare;
 
-            public InternalSelfDeleteTimer(Mobile p) : base(TimeSpan.FromMinutes(60))
+            public InternalSelfDeleteTimer(Mobile p) : base(TimeSpan.FromMinutes(20))
             {
-                Priority = TimerPriority.FiveSeconds;
+                Priority = TimerPriority.ThirtySeconds;
                 Mare = ((ObsidianWyvern)p);
             }
             protected override void OnTick()
