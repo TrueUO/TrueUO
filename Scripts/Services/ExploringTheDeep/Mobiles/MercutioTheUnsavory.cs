@@ -127,7 +127,7 @@ namespace Server.Mobiles
 
             public InternalSelfDeleteTimer(Mobile p) : base(TimeSpan.FromMinutes(10))
             {
-                Priority = TimerPriority.ThirtySeconds;
+                Priority = TimerPriority.FiveSeconds;
                 Mare = ((MercutioTheUnsavory)p);
             }
             protected override void OnTick()

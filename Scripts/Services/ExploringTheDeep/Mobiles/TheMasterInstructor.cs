@@ -67,9 +67,9 @@ namespace Server.Mobiles
         {
             private readonly TheMasterInstructor Mare;
 
-            public InternalSelfDeleteTimer(Mobile p) : base(TimeSpan.FromMinutes(20))
+            public InternalSelfDeleteTimer(Mobile p) : base(TimeSpan.FromMinutes(10))
             {
-                Priority = TimerPriority.ThirtySeconds;
+                Priority = TimerPriority.FiveSeconds;
                 Mare = ((TheMasterInstructor)p);
             }
 
