@@ -69,6 +69,7 @@ namespace Server.Items
 
                         pumpkin.ItemID = pumpkin.PumpkinDefinition[Utility.Random(pumpkin.PumpkinDefinition.Length)].UnlitItemID;
                         pumpkin.CarvedBy = from.Name;
+                        pumpkin.InvalidateProperties();
 
                         from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1154339); // *You carefully carve the pumpkin*
 
@@ -225,6 +226,8 @@ namespace Server.Items
 
     public class CarvablePlainPumpkin : BaseCarvablePumpkin
     {
+        public override bool ForceShowProperties => true;
+
         public override PumpkinDefinition[] PumpkinDefinition => new PumpkinDefinition[]
                 {
                      new PumpkinDefinition(0x9F23, 0x9F24),
