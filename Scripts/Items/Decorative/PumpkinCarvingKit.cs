@@ -63,15 +63,18 @@ namespace Server.Items
                 {
                     BaseCarvablePumpkin pumpkin = (BaseCarvablePumpkin)targeted;
 
-                    from.PlaySound(0x249);
+                    if (pumpkin.CarvedBy == null)
+                    {
+                        from.PlaySound(0x249);
 
-                    pumpkin.ItemID = pumpkin.PumpkinDefinition[Utility.Random(pumpkin.PumpkinDefinition.Length)].UnlitItemID;
-                    pumpkin.CarvedBy = from.Name;
+                        pumpkin.ItemID = pumpkin.PumpkinDefinition[Utility.Random(pumpkin.PumpkinDefinition.Length)].UnlitItemID;
+                        pumpkin.CarvedBy = from.Name;
+                        pumpkin.InvalidateProperties();
 
-                    from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1154339); // *You carefully carve the pumpkin*
+                        from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1154339); // *You carefully carve the pumpkin*
 
-                    m_Item.Delete();
-
+                        m_Item.Delete();
+                    }
                 }
                 else
                 {
@@ -223,6 +226,8 @@ namespace Server.Items
 
     public class CarvablePlainPumpkin : BaseCarvablePumpkin
     {
+        public override bool ForceShowProperties => true;
+
         public override PumpkinDefinition[] PumpkinDefinition => new PumpkinDefinition[]
                 {
                      new PumpkinDefinition(0x9F23, 0x9F24),
