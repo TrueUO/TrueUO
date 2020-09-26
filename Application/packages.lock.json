@@ -876,10 +876,10 @@
         "dependencies": {
           "HtmlTextWriter": "2.1.0",
           "MailKit": "2.8.0",
+          "Microsoft.Win32.Registry": "4.7.0",
           "Server": "1.0.0",
           "System.Dynamic.Runtime": "4.3.0",
-          "System.Text.Encodings.Web": "4.7.1",
-          "Ultima": "1.0.0"
+          "System.Text.Encodings.Web": "4.7.1"
         }
       },
       "server": {
@@ -887,15 +887,8 @@
         "dependencies": {
           "System.Diagnostics.EventLog": "4.7.0",
           "System.Diagnostics.PerformanceCounter": "4.7.0",
-          "Ultima": "1.0.0",
+          "System.Drawing.Common": "4.7.0",
           "Zlib.Bindings": "1.2.0"
-        }
-      },
-      "ultima": {
-        "type": "Project",
-        "dependencies": {
-          "Microsoft.Win32.Registry": "4.7.0",
-          "System.Drawing.Common": "4.7.0"
         }
       }
     },

@@ -30,12 +30,12 @@
   <ItemGroup>
     <PackageReference Include="HtmlTextWriter" Version="2.1.0" />
     <PackageReference Include="MailKit" Version="2.8.0" />
+    <PackageReference Include="Microsoft.Win32.Registry" Version="4.7.0" />
     <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0" />
     <PackageReference Include="System.Text.Encodings.Web" Version="4.7.1" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Server\Server.csproj" />
-    <ProjectReference Include="..\Ultima\Ultima.csproj" />
   </ItemGroup>
 </Project>
