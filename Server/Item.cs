@@ -998,37 +998,6 @@ namespace Server
 			return info.m_Items;
 		}
 
-		public static Bitmap GetBitmap(int itemID)
-		{
-			try
-			{
-				return Ultima.Art.GetStatic(itemID);
-			}
-			catch (Exception e)
-			{
-                Diagnostics.ExceptionLogging.LogException(e);
-			}
-
-			return null;
-		}
-
-		public static void Measure(Bitmap bmp, out int xMin, out int yMin, out int xMax, out int yMax)
-		{
-			Ultima.Art.Measure(bmp, out xMin, out yMin, out xMax, out yMax);
-		}
-
-		public static Rectangle MeasureBound(Bitmap bmp)
-		{
-			Measure(bmp, out int xMin, out int yMin, out int xMax, out int yMax);
-			return new Rectangle(xMin, yMin, xMax - xMin, yMax - yMin);
-		}
-
-		public static Size MeasureSize(Bitmap bmp)
-		{
-			Measure(bmp, out int xMin, out int yMin, out int xMax, out int yMax);
-			return new Size(xMax - xMin, yMax - yMin);
-		}
-
 		private void SetFlag(ImplFlag flag, bool value)
 		{
 			if (value)

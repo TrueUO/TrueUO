@@ -38,23 +38,10 @@ namespace Server
                 rec = new Rectangle2D(0, 0, 0, 0);
             }
 
-            if (rec.X == 0 && rec.Y == 0 && rec.Width == 0 && rec.Height == 0)
-            {
-                int mx, my;
-                mx = my = 0;
-
-                Item.Measure(Item.GetBitmap(m_ItemID), out m_X, out m_Y, out mx, out my);
-
-                m_Width = mx - m_X;
-                m_Height = my - m_Y;
-            }
-            else
-            {
-                m_X = rec.X;
-                m_Y = rec.Y;
-                m_Width = rec.Width;
-                m_Height = rec.Height;
-            }
+            m_X = rec.X;
+            m_Y = rec.Y;
+            m_Width = rec.Width;
+            m_Height = rec.Height;
         }
 
         public Type Type => m_Type;  // image info

@@ -17,7 +17,7 @@ namespace Server.Engines.VendorSearching
     public class VendorSearch
     {
         public static string FilePath = Path.Combine("Saves/Misc", "VendorSearch.bin");
-        public static Ultima.StringList StringList { get; private set; }
+        public static StringList StringList { get; private set; }
 
         public static List<SearchItem> DoSearchAuction(Mobile m, SearchCriteria criteria)
         {
@@ -582,7 +582,7 @@ namespace Server.Engines.VendorSearching
         {
             try
             {
-                StringList = new Ultima.StringList("enu");
+                StringList = new StringList("enu");
             }
             catch (Exception e) { Diagnostics.ExceptionLogging.LogException(e); }
 
@@ -740,7 +740,7 @@ namespace Server.Engines.VendorSearching
                 return null;
             }
 
-            Ultima.StringEntry entry = StringList.GetEntry((int)number);
+            StringEntry entry = StringList.GetEntry((int)number);
 
             if (entry != null)
             {
