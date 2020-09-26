@@ -31,8 +31,4 @@
     <PackageReference Include="Zlib.Bindings" Version="1.2.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Ultima\Ultima.csproj" />
-  </ItemGroup>
-
 </Project>
