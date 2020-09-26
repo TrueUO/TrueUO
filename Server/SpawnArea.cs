@@ -16,7 +16,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
-using System.Threading.Tasks;
 #endregion
 
 namespace Server
@@ -179,15 +178,6 @@ namespace Server
 			Region = region;
 			Filters = filters;
 			Validator = validator;
-		}
-
-		private static unsafe void SetPixel(int x, int y, BitmapData data)
-		{
-			int index = (y * data.Stride) + (x * 2);
-			byte* pixel = (byte*)data.Scan0.ToPointer();
-
-			pixel[index + 0] = (PixelColor >> 0) & 0xFF;
-			pixel[index + 1] = (PixelColor >> 8) & 0xFF;
 		}
 
 		public bool Contains(int x, int y)
