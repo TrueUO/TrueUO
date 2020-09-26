@@ -13,8 +13,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.Linq;
 #endregion
 
@@ -24,8 +22,6 @@ namespace Server
 
 	public sealed class SpawnArea : ICollection<Point3D>
 	{
-		private static readonly Bitmap _EmptyImage;
-
 		private static readonly TileFlag[] _EmptyFilters;
 		private static readonly TileFlag[] _AllFilters;
 
@@ -37,8 +33,6 @@ namespace Server
 
 		static SpawnArea()
 		{
-			_EmptyImage = new Bitmap(1, 1, PixelFormat.Format16bppRgb555);
-
 			_EmptyFilters = new TileFlag[0];
 
 			_AllFilters = Enum.GetValues(typeof(TileFlag)).Cast<TileFlag>().Where(f => f != TileFlag.None).ToArray();
