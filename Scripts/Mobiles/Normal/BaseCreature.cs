@@ -6283,7 +6283,9 @@ namespace Server.Mobiles
             creature.SetHits(
                 (int)Math.Floor(creature.HitsMax * (1 + ArcaneEmpowermentSpell.GetSpellBonus(caster, false) / 100.0)));
 
-            new UnsummonTimer(caster, creature, duration).Start();
+            var timer = new UnsummonTimer(caster, creature, duration);
+            timer.Start();
+
             creature.m_SummonEnd = DateTime.UtcNow + duration;
 
             creature.MoveToWorld(p, caster.Map);
