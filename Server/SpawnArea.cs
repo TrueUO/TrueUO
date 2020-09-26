@@ -13,10 +13,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.Linq;
-using System.Threading.Tasks;
 #endregion
 
 namespace Server
@@ -25,8 +22,6 @@ namespace Server
 
 	public sealed class SpawnArea : ICollection<Point3D>
 	{
-		private static readonly Bitmap _EmptyImage;
-
 		private static readonly TileFlag[] _EmptyFilters;
 		private static readonly TileFlag[] _AllFilters;
 
@@ -38,8 +33,6 @@ namespace Server
 
 		static SpawnArea()
 		{
-			_EmptyImage = new Bitmap(1, 1, PixelFormat.Format16bppRgb555);
-
 			_EmptyFilters = new TileFlag[0];
 
 			_AllFilters = Enum.GetValues(typeof(TileFlag)).Cast<TileFlag>().Where(f => f != TileFlag.None).ToArray();
@@ -179,15 +172,6 @@ namespace Server
 			Region = region;
 			Filters = filters;
 			Validator = validator;
-		}
-
-		private static unsafe void SetPixel(int x, int y, BitmapData data)
-		{
-			int index = (y * data.Stride) + (x * 2);
-			byte* pixel = (byte*)data.Scan0.ToPointer();
-
-			pixel[index + 0] = (PixelColor >> 0) & 0xFF;
-			pixel[index + 1] = (PixelColor >> 8) & 0xFF;
 		}
 
 		public bool Contains(int x, int y)
