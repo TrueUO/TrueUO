@@ -313,7 +313,7 @@ namespace Server
                     {
                         totalDamage /= 2; // Controlled creatures do 50% less damage to players.
                     }
-                    else if (toCreature != null && !toCreature.Summoned && !toCreature.Allured && toCreature.Controlled) // Tamed pets only.
+                    else if (toCreature != null && toCreature.Controlled && !toCreature.Summoned && !toCreature.Allured) // Tamed pets only.
                     {
                         totalDamage += (int)(totalDamage * 0.25); // How much extra damage will monsters do to tamed pets?
                     }
