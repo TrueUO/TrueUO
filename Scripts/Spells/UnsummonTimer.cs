@@ -51,7 +51,7 @@ namespace Server.Spells
 
         protected override void OnTick()
         {
-            for (int i = 0; i < Creatures.Count; i++)
+            for (int i = Creatures.Count - 1; i >= 0; i--)
             {
                 var bc = Creatures[i];
 
