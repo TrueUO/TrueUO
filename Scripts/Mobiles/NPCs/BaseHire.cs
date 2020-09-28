@@ -367,7 +367,6 @@ namespace Server.Mobiles
 
                 if (!Instance.Hires.Contains(hire))
                 {
-                    Console.WriteLine("ADding hire: {0}", hire);
                     Instance.Hires.Add(hire);
                 }
             }
