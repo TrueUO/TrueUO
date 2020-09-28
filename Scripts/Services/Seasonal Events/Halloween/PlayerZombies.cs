@@ -307,12 +307,9 @@ namespace Server.Engines.Events
 
         public override void OnDelete()
         {
-            if (HalloweenHauntings.ReAnimated != null && m_DeadPlayer != null && !m_DeadPlayer.Deleted)
+            if (HalloweenHauntings.ReAnimated != null && m_DeadPlayer != null && !m_DeadPlayer.Deleted && HalloweenHauntings.ReAnimated.Count > 0 && HalloweenHauntings.ReAnimated.ContainsKey(m_DeadPlayer))
             {
-                if (HalloweenHauntings.ReAnimated.Count > 0 && HalloweenHauntings.ReAnimated.ContainsKey(m_DeadPlayer))
-                {
-                    HalloweenHauntings.ReAnimated.Remove(m_DeadPlayer);
-                }
+                HalloweenHauntings.ReAnimated.Remove(m_DeadPlayer);
             }
         }
 
