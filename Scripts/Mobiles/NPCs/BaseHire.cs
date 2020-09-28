@@ -381,7 +381,6 @@ namespace Server.Mobiles
 
                 if (Instance.Hires.Contains(hire))
                 {
-                    Console.WriteLine("Removing Hire: {0}", hire);
                     Instance.Hires.Remove(hire);
 
                     if (Instance.Hires.Count == 0)
