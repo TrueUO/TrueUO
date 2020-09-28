@@ -320,13 +320,10 @@ namespace Server.Engines.Quests
             {
                 Type type = qs.GetType();
 
-                if (_QuestTable.TryGetValue(type.FullName, out referenceTable))
+                if (_QuestTable.TryGetValue(type.FullName, out referenceTable) && referenceTable.Length > 0 && !referenceTable[0].Contains('.'))
                 {
-                    if (referenceTable.Length > 0 && !referenceTable[0].Contains('.'))
-                    {
-                        for (int i = 0; i < referenceTable.Length; i++)
-                            referenceTable[i] = $"{type.Namespace}.{referenceTable[i]}";
-                    }
+                    for (int i = 0; i < referenceTable.Length; i++)
+                        referenceTable[i] = $"{type.Namespace}.{referenceTable[i]}";
                 }
             }
             else

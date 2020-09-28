@@ -1,5 +1,3 @@
-using System;
-
 namespace Server.Engines.Quests.Haven
 {
     public class LostScrollOfPowerConversation : QuestConversation

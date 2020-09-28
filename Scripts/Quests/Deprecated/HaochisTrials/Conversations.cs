@@ -1,5 +1,3 @@
-using System;
-
 namespace Server.Engines.Quests.Samurai
 {
     public class GainKarmaConversation : QuestConversation
