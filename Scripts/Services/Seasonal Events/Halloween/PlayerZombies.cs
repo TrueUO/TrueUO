@@ -75,16 +75,13 @@ namespace Server.Engines.Events
 
         public static void EventSink_PlayerDeath(PlayerDeathEventArgs e)
         {
-            if (e.Mobile != null && !e.Mobile.Deleted) /* not sure .. better safe than sorry? */
+            if (e.Mobile != null && !e.Mobile.Deleted && e.Mobile is PlayerMobile) /* not sure .. better safe than sorry? */
             {
-                if (e.Mobile is PlayerMobile)
-                {
-                    PlayerMobile player = e.Mobile as PlayerMobile;
+                PlayerMobile player = e.Mobile as PlayerMobile;
 
-                    if (m_Timer.Running && !m_DeathQueue.Contains(player) && m_DeathQueue.Count < m_DeathQueueLimit)
-                    {
-                        m_DeathQueue.Add(player);
-                    }
+                if (m_Timer.Running && !m_DeathQueue.Contains(player) && m_DeathQueue.Count < m_DeathQueueLimit)
+                {
+                    m_DeathQueue.Add(player);
                 }
             }
         }
@@ -198,6 +195,7 @@ namespace Server.Engines.Events
     {
         private static readonly string m_Name = "Zombie Skeleton";
         private PlayerMobile m_DeadPlayer;
+
         public ZombieSkeleton()
             : this(null)
         {
@@ -267,6 +265,11 @@ namespace Server.Engines.Events
             }
         }
 
+        public ZombieSkeleton(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void GenerateLoot()
         {
             AddLoot(LootPack.Meager);
@@ -298,25 +301,17 @@ namespace Server.Engines.Events
             return null;
         }
 
-        public ZombieSkeleton(Serial serial)
-            : base(serial)
-        {
-        }
-
         public override bool BleedImmune => true;
 
         public override Poison PoisonImmune => Poison.Regular;
 
         public override void OnDelete()
         {
-            if (HalloweenHauntings.ReAnimated != null)
+            if (HalloweenHauntings.ReAnimated != null && m_DeadPlayer != null && !m_DeadPlayer.Deleted)
             {
-                if (m_DeadPlayer != null && !m_DeadPlayer.Deleted)
+                if (HalloweenHauntings.ReAnimated.Count > 0 && HalloweenHauntings.ReAnimated.ContainsKey(m_DeadPlayer))
                 {
-                    if (HalloweenHauntings.ReAnimated.Count > 0 && HalloweenHauntings.ReAnimated.ContainsKey(m_DeadPlayer))
-                    {
-                        HalloweenHauntings.ReAnimated.Remove(m_DeadPlayer);
-                    }
+                    HalloweenHauntings.ReAnimated.Remove(m_DeadPlayer);
                 }
             }
         }
