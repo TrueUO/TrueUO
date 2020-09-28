@@ -12,7 +12,7 @@ namespace Server.Engines.Events
         public static TimeSpan OneSecond = TimeSpan.FromSeconds(1);
         public static void Initialize()
         {
-            if (DateTime.UtcNow >= HolidaySettings.StartHalloween && DateTime.UtcNow <= HolidaySettings.FinishHalloween)
+            if (DateTime.UtcNow >= HalloweenSettings.StartHalloween && DateTime.UtcNow <= HalloweenSettings.FinishHalloween)
             {
                 EventSink.Speech += EventSink_Speech;
             }
@@ -205,13 +205,13 @@ namespace Server.Engines.Events
 
                                 if (Utility.RandomDouble() <= .01 && from.Skills.Begging.Value >= 100)
                                 {
-                                    from.AddToBackpack(HolidaySettings.RandomGMBeggerItem);
+                                    from.AddToBackpack(HalloweenSettings.RandomGMBeggerItem);
 
                                     from.SendLocalizedMessage(1076777); /* You receive a special treat! */
                                 }
                                 else
                                 {
-                                    from.AddToBackpack(HolidaySettings.RandomTreat);
+                                    from.AddToBackpack(HalloweenSettings.RandomTreat);
 
                                     from.SendLocalizedMessage(1076769);   /* You receive some candy. */
                                 }
