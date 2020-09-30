@@ -130,7 +130,7 @@ namespace Server.Items
 
         public override void OnSecureChange()
         {
-            if (IsSecure)
+            if (!World.Loading && IsSecure)
             {
                 StartTimer();
             }
@@ -138,7 +138,7 @@ namespace Server.Items
 
         public override void OnLockDownChange()
         {
-            if (IsLockedDown)
+            if (!World.Loading && IsLockedDown)
             {                
                 StartTimer();
             }
@@ -203,6 +203,14 @@ namespace Server.Items
             reader.ReadInt();
 
             NextReagentTime  = reader.ReadDateTime();
+
+            if (!Movable)
+            {
+                if (IsLockedDown || IsSecure)
+                {
+                    StartTimer();
+                }
+            }
         }
     }
 }

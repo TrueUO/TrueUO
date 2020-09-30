@@ -13,15 +13,19 @@ namespace Server
 
         public static void Initialize()
         {
-            CommandSystem.Register("CheckTimers", AccessLevel.Administrator, e =>
+            if (Debug)
             {
-                foreach (var kvp in Timers)
+                CommandSystem.Register("CheckTimers", AccessLevel.Administrator, e =>
                 {
-                    Utility.WriteConsoleColor(ConsoleColor.Green, "Timer ID: {0}", kvp.Key);
+                    foreach (var kvp in Timers)
+                    {
+                        Utility.WriteConsoleColor(ConsoleColor.Green, "Timer ID: {0}", kvp.Key);
 
-                    Console.WriteLine("Priority: {0}", kvp.Value.Priority);
-                }
-            });
+                        Console.WriteLine("Delay/Interval: {0}", kvp.Value.Interval);
+                        Console.WriteLine("Timer Priority: {0}", kvp.Value.Priority);
+                    }
+                });
+            }
         }
 
         public static Dictionary<string, Timer> Timers { get; set; } = new Dictionary<string, Timer>();
@@ -66,7 +70,7 @@ namespace Server
 
             if (!timer.Registry.ContainsKey(instance))
             {
-                if (Debug) Console.WriteLine("Adding to the timer registry!");
+                if (Debug) Console.WriteLine("Adding {0} to the timer registry!", instance);
                 timer.Registry[instance] = DateTime.UtcNow + duration;
             }
             else if (Debug)
@@ -98,10 +102,16 @@ namespace Server
         {
             var timer = GetTimerFor(id, instance);
 
+            if (Debug) Console.WriteLine("Updating Registry for {0} - {1}...", id, instance);
             if (timer != null)
             {
+                if (Debug) Console.WriteLine("Complete!");
                 timer.Registry[instance] = DateTime.UtcNow + duration;
                 return true;
+            }
+            else
+            {
+                Console.WriteLine("Failed, timer not found");
             }
 
             return false;
@@ -208,18 +218,27 @@ namespace Server
 
             if (instances.Count > 500)
             {
-                Parallel.ForEach(instances, inst =>
+                Parallel.ForEach(instances, instance =>
                 {
-                    if (Registry.ContainsKey(inst))
+                    if (Registry.ContainsKey(instance))
                     {
-                        if (Callback != null)
+                        if (IsDeleted(instance))
                         {
-                            Callback(inst);
+                            if (TimerRegistry.Debug) Console.WriteLine("Removing from Registry [Deleted]: {0}", instance);
+                            Registry.Remove(instance);
                         }
-
-                        if (RemoveOnExpire || (CheckDeleted && inst is IEntity e && e.Deleted))
+                        else
                         {
-                            Registry.Remove(inst);
+                            if (Callback != null)
+                            {
+                                Callback(instance);
+                            }
+
+                            if (IsExpired(instance))
+                            {
+                                if (TimerRegistry.Debug) Console.WriteLine("Removing from Registry [Processed]: {0}", instance);
+                                Registry.Remove(instance);
+                            }
                         }
                     }
                 });
@@ -230,8 +249,9 @@ namespace Server
                 {
                     var instance = instances[i];
 
-                    if (CheckDeleted && instance is IEntity e && e.Deleted)
+                    if (IsDeleted(instance))
                     {
+                        if (TimerRegistry.Debug) Console.WriteLine("Removing from Registry [Deleted]: {0}", instance);
                         Registry.Remove(instance);
                     }
                     else
@@ -242,8 +262,9 @@ namespace Server
                             Callback(instance);
                         }
 
-                        if (RemoveOnExpire)
+                        if (IsExpired(instance))
                         {
+                            if (TimerRegistry.Debug) Console.WriteLine("Removing from Registry [Processed]: {0}", instance);
                             Registry.Remove(instance);
                         }
                     }
@@ -256,6 +277,16 @@ namespace Server
                     TimerRegistry.UnregisterTimer(this);
                 }
             }
+        }
+
+        private bool IsExpired(T instance)
+        {
+            return RemoveOnExpire && (!Registry.ContainsKey(instance) || Registry[instance] < DateTime.UtcNow);
+        }
+
+        private bool IsDeleted(T instance)
+        {
+            return CheckDeleted && instance is IEntity e && e.Deleted;
         }
     }
 }
