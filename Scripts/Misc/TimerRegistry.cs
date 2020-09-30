@@ -83,17 +83,14 @@ namespace Server
         {
             var timer = GetTimer(id, instance);
 
-            if (timer != null)
+            if (timer != null && timer.Registry.ContainsKey(instance))
             {
-                if (timer.Registry.ContainsKey(instance))
-                {
-                    timer.Registry.Remove(instance);
-                    if (Debug) Console.WriteLine("Removing {0} from the registry", instance);
+                timer.Registry.Remove(instance);
+                if (Debug) Console.WriteLine("Removing {0} from the registry", instance);
 
-                    if (timer.Registry.Count == 0)
-                    {
-                        UnregisterTimer(timer);
-                    }
+                if (timer.Registry.Count == 0)
+                {
+                    UnregisterTimer(timer);
                 }
             }
         }
@@ -134,12 +131,9 @@ namespace Server
 
         public static RegistryTimer<T> GetTimerFor<T>(string id, T instance)
         {
-            if (Timers.ContainsKey(id))
+            if (Timers.ContainsKey(id) && Timers[id] is RegistryTimer<T> timer && timer.Registry.ContainsKey(instance))
             {
-                if (Timers[id] is RegistryTimer<T> timer && timer.Registry.ContainsKey(instance))
-                {
-                    return Timers[id] as RegistryTimer<T>;
-                }
+                return Timers[id] as RegistryTimer<T>;
             }
 
             return null;
@@ -258,7 +252,6 @@ namespace Server
                     {
                         if (Callback != null)
                         {
-                            //if (TimerRegistry.Debug) Console.WriteLine("Callback");
                             Callback(instance);
                         }
 

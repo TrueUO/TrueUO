@@ -103,7 +103,7 @@ namespace Server.Items
         {
             base.Deserialize(reader);
 
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
 
             if (UsesRemaining < 20)
             {

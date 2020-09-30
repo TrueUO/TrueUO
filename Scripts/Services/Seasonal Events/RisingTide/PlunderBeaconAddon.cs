@@ -417,8 +417,6 @@ namespace Server.Items
             }
 
             _CheckSpawn = true;
-
-            //Timer = Timer.DelayCall(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1), OnTick);
         }
 
         #region Components

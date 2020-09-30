@@ -204,12 +204,9 @@ namespace Server.Items
 
             NextReagentTime  = reader.ReadDateTime();
 
-            if (!Movable)
+            if (IsLockedDown || IsSecure)
             {
-                if (IsLockedDown || IsSecure)
-                {
-                    StartTimer();
-                }
+                StartTimer();
             }
         }
     }

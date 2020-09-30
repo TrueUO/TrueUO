@@ -156,29 +156,31 @@ namespace Server
             {
                 yield return Map.Internal.DefaultRegion;
             }
-
-            Sector sector = map.GetSector(p);
-            List<RegionRect> list = sector.RegionRects;
-            bool found = false;
-
-            for (int i = 0; i < list.Count; ++i)
+            else
             {
-                RegionRect regRect = list[i];
+                Sector sector = map.GetSector(p);
+                List<RegionRect> list = sector.RegionRects;
+                bool found = false;
 
-                if (regRect.Contains(p))
+                for (int i = 0; i < list.Count; ++i)
                 {
-                    if (!found)
+                    RegionRect regRect = list[i];
+
+                    if (regRect.Contains(p))
                     {
-                        found = true;
+                        if (!found)
+                        {
+                            found = true;
+                        }
+
+                        yield return regRect.Region;
                     }
-
-                    yield return regRect.Region;
                 }
-            }
 
-            if (!found)
-            {
-                yield return map.DefaultRegion;
+                if (!found)
+                {
+                    yield return map.DefaultRegion;
+                }
             }
         }
 
