@@ -406,31 +406,27 @@ namespace Server.Items
 
         private static readonly TimeSpan m_DefaultDecayTime = TimeSpan.FromMinutes(7.0);
         private static readonly TimeSpan m_BoneDecayTime = TimeSpan.FromMinutes(7.0);
+        private static readonly string m_TimerID = "CorpseDecayTimer";
 
-        private Timer m_DecayTimer;
         private DateTime m_DecayTime;
 
         public void BeginDecay(TimeSpan delay)
         {
-            if (m_DecayTimer != null)
-            {
-                m_DecayTimer.Stop();
-            }
-
             m_DecayTime = DateTime.UtcNow + delay;
 
-            m_DecayTimer = new InternalTimer(this, delay);
-            m_DecayTimer.Start();
+            TimerRegistry.Register(m_TimerID, this, delay, c => DoDecay());
         }
 
-        public override void OnAfterDelete()
+        private void DoDecay()
         {
-            if (m_DecayTimer != null)
+            if (!GetFlag(CorpseFlag.NoBones))
             {
-                m_DecayTimer.Stop();
+                TurnToBones();
             }
-
-            m_DecayTimer = null;
+            else
+            {
+                Delete();
+            }
         }
 
         private class InternalTimer : Timer
@@ -735,9 +731,10 @@ namespace Server.Items
                 }
             }
 
-            writer.Write(m_DecayTimer != null);
+            bool decaying = TimerRegistry.HasTimer(m_TimerID, this);
+            writer.Write(decaying);
 
-            if (m_DecayTimer != null)
+            if (decaying)
             {
                 writer.WriteDeltaTime(m_DecayTime);
             }

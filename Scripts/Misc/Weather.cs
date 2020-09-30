@@ -34,7 +34,8 @@ namespace Server.Misc
             if (list != null)
                 list.Add(this);
 
-            Timer.DelayCall(TimeSpan.FromSeconds((0.2 + (Utility.RandomDouble() * 0.8)) * interval.TotalSeconds), interval, OnTick);
+            TimerRegistry.Register("WeatherTimer", this, interval, TimeSpan.FromSeconds((0.2 + (Utility.RandomDouble() * 0.8)) * interval.TotalSeconds), false, weather => weather.OnTick());
+            //Timer.DelayCall(TimeSpan.FromSeconds((0.2 + (Utility.RandomDouble() * 0.8)) * interval.TotalSeconds), interval, OnTick);
         }
 
         public Map Facet => m_Facet;
