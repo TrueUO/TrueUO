@@ -2,11 +2,6 @@
   "version": 1,
   "dependencies": {
     ".NETCoreApp,Version=v3.1": {
-      "HtmlTextWriter": {
-        "type": "Transitive",
-        "resolved": "2.1.0",
-        "contentHash": "q4G1qqM4GeWTnktWnRHmZLcZTWYllEan/Qnenc6nQdITlpny6h1fn9tMWfY+kdBEP+oIYqzqbi+tswCVGBVnJw=="
-      },
       "MailKit": {
         "type": "Transitive",
         "resolved": "2.9.0",
@@ -409,7 +404,6 @@
       "scripts": {
         "type": "Project",
         "dependencies": {
-          "HtmlTextWriter": "2.1.0",
           "MailKit": "2.9.0",
           "Microsoft.Win32.Registry": "4.7.0",
           "Server": "1.0.0",

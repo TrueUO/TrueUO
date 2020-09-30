@@ -2,12 +2,6 @@
   "version": 1,
   "dependencies": {
     ".NETCoreApp,Version=v3.1": {
-      "HtmlTextWriter": {
-        "type": "Direct",
-        "requested": "[2.1.0, )",
-        "resolved": "2.1.0",
-        "contentHash": "q4G1qqM4GeWTnktWnRHmZLcZTWYllEan/Qnenc6nQdITlpny6h1fn9tMWfY+kdBEP+oIYqzqbi+tswCVGBVnJw=="
-      },
       "MailKit": {
         "type": "Direct",
         "requested": "[2.9.0, )",
