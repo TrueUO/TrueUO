@@ -1350,10 +1350,8 @@ namespace Server.Engines.CannedEvil
                         m_Champion = reader.ReadMobile();
                         m_RestartDelay = reader.ReadTimeSpan();
 
-                        Console.WriteLine("1");
                         if (reader.ReadBool())
                         {
-                            Console.WriteLine("2");
                             m_RestartTime = reader.ReadDeltaTime();
                             BeginRestart(m_RestartTime - DateTime.UtcNow);
                         }
