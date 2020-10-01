@@ -6,9 +6,6 @@ namespace Server.Items
 {
     public class FelineBlessedStatue : BaseContainer, IFlipable
     {
-        public static readonly TimeSpan RespawnDuration = TimeSpan.FromDays(1);
-        public static readonly string TimerID = "FelineStatueTimer";
-
         public override int LabelNumber => 1075494; // Blessed Statue
 
         private static readonly Type[] m_ResourceTypes = new Type[]
@@ -77,37 +74,69 @@ namespace Server.Items
             }
         }
 
+        private Timer Timer { get; set; }
+
         public void StartTimer()
         {
             if (NextReagentTime == DateTime.MinValue)
             {
-                NextReagentTime = DateTime.UtcNow + RespawnDuration;
-            }
-            else if (NextReagentTime < DateTime.UtcNow)
-            {
-                NextReagentTime = DateTime.UtcNow + TimeSpan.FromSeconds(10);
+                NextReagentTime = DateTime.UtcNow + TimeSpan.FromDays(1);
             }
 
-            TimerRegistry.Register(TimerID, this, NextReagentTime - DateTime.UtcNow, false, statue => OnTick(statue));
+            if (Timer == null)
+            {
+                Timer = new InternalTimer(this);
+            }
+
+            Timer.Start();
         }
 
         public void StopTimer()
         {
-            TimerRegistry.RemoveFromRegistry(TimerID, this);
+            if (Timer != null)
+            {
+                Timer.Stop();
+                Timer = null;
+                NextReagentTime = DateTime.MinValue;
+            }
         }
 
-        public static void OnTick(FelineBlessedStatue statue)
+        public void OnTick()
         {
-            if (statue.Movable)
-            {
-                statue.StopTimer();
+            if (Movable)
+            {                
+                StopTimer();
                 return;
             }
 
-            statue.DropResource();
+            if (NextReagentTime < DateTime.UtcNow)
+            {
+                DropResource();
+                NextReagentTime = DateTime.UtcNow + TimeSpan.FromDays(1.0);
+            }
+        }
 
-            TimerRegistry.UpdateRegistry(TimerID, statue, RespawnDuration);
-            statue.NextReagentTime = DateTime.UtcNow + RespawnDuration;
+        private class InternalTimer : Timer
+        {
+            private readonly FelineBlessedStatue _Item;
+
+            public InternalTimer(FelineBlessedStatue item)
+                : base(TimeSpan.FromHours(1.0), TimeSpan.FromHours(1.0))
+            {
+                Priority = TimerPriority.OneMinute;
+                _Item = item;
+            }
+
+            protected override void OnTick()
+            {
+                if (_Item == null || _Item.Deleted)
+                {
+                    Stop();                    
+                    return;
+                }
+
+                _Item.OnTick();
+            }
         }
 
         public override bool TryDropItem(Mobile from, Item dropped, bool sendFullMessage)
@@ -130,7 +159,7 @@ namespace Server.Items
 
         public override void OnSecureChange()
         {
-            if (!World.Loading && IsSecure)
+            if (IsSecure)
             {
                 StartTimer();
             }
@@ -138,7 +167,7 @@ namespace Server.Items
 
         public override void OnLockDownChange()
         {
-            if (!World.Loading && IsLockedDown)
+            if (IsLockedDown)
             {                
                 StartTimer();
             }
@@ -177,7 +206,7 @@ namespace Server.Items
                 }
                 else
                 {
-                    DropItemStacked(item);
+                    DropItem(item);
 
                     CheckContainer();                    
                 }
@@ -204,7 +233,7 @@ namespace Server.Items
 
             NextReagentTime  = reader.ReadDateTime();
 
-            if (IsLockedDown || IsSecure)
+            if (!Movable)
             {
                 StartTimer();
             }

@@ -9,16 +9,13 @@ namespace Server.Engines.Quests
 {
     public class BaseEscort : MondainQuester
     {
-        private static readonly string m_TimerID = "BaseEscortDelete";
         private static readonly TimeSpan m_EscortDelay = TimeSpan.FromMinutes(5.0);
         private static readonly Dictionary<Mobile, Mobile> m_EscortTable = new Dictionary<Mobile, Mobile>();
-
+        private Timer m_DeleteTimer;
         private bool m_Checked;
 
         public BaseQuest Quest { get; set; }
         public DateTime LastSeenEscorter { get; set; }
-
-        public bool IsDeleting { get { return TimerRegistry.HasTimer(m_TimerID, this); } }
 
         public BaseEscort()
             : base()
@@ -108,9 +105,12 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(1); // version
+            writer.Write(0); // version
 
-            writer.Write(IsDeleting);
+            writer.Write(m_DeleteTimer != null);
+
+            if (m_DeleteTimer != null)
+                writer.WriteDeltaTime(m_DeleteTimer.Next);
         }
 
         public override void Deserialize(GenericReader reader)
@@ -120,12 +120,8 @@ namespace Server.Engines.Quests
 
             if (reader.ReadBool())
             {
-                if (version == 0)
-                {
-                    reader.ReadDeltaTime();
-                }
-
-                Delete();
+                DateTime deleteTime = reader.ReadDeltaTime();
+                m_DeleteTimer = Timer.DelayCall(deleteTime - DateTime.UtcNow, Delete);
             }
         }
 
@@ -170,7 +166,7 @@ namespace Server.Engines.Quests
             if (m != null)
                 m_EscortTable.Remove(m);
 
-            TimerRegistry.Register(m_TimerID, this, TimeSpan.FromSeconds(45), escort => escort.Delete());
+            m_DeleteTimer = Timer.DelayCall(TimeSpan.FromSeconds(45.0), Delete);
         }
 
         public virtual bool AcceptEscorter(Mobile m)
@@ -179,7 +175,7 @@ namespace Server.Engines.Quests
             {
                 return false;
             }
-            else if (IsDeleting)
+            else if (m_DeleteTimer != null)
             {
                 Say(500898); // I am sorry, but I do not wish to go anywhere.
                 return false;
@@ -258,8 +254,7 @@ namespace Server.Engines.Quests
 
                     StopFollow();
                     m_EscortTable.Remove(master);
-
-                    TimerRegistry.Register(m_TimerID, this, TimeSpan.FromSeconds(5.0), e => e.Delete());
+                    m_DeleteTimer = Timer.DelayCall(TimeSpan.FromSeconds(5.0), Delete);
 
                     return null;
                 }
@@ -317,8 +312,7 @@ namespace Server.Engines.Quests
 
                         StopFollow();
                         m_EscortTable.Remove(escorter);
-
-                        TimerRegistry.Register(m_TimerID, this, TimeSpan.FromSeconds(5), e => e.Delete());
+                        m_DeleteTimer = Timer.DelayCall(TimeSpan.FromSeconds(5.0), Delete);
 
                         // fame
                         Misc.Titles.AwardFame(escorter, escort.Fame, true);
@@ -372,7 +366,7 @@ namespace Server.Engines.Quests
 
                 if (region != null && Region.IsPartOf(region))
                 {
-                    TimerRegistry.Register(m_TimerID, this, TimeSpan.FromSeconds(5), escort => escort.Delete());
+                    m_DeleteTimer = Timer.DelayCall(TimeSpan.FromSeconds(5.0), Delete);
                     m_Checked = true;
                 }
             }

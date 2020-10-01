@@ -4,7 +4,7 @@ namespace Server.Items
 {
     public abstract class BaseDungeonChest : LockableContainer
     {
-        public static readonly string m_DeleteTimerID = "DungeonChest";
+        private ChestTimer m_DeleteTimer;
 
         public override int DefaultGumpID => 0x42;
         public override int DefaultDropSound => 0x42;
@@ -32,9 +32,7 @@ namespace Server.Items
         {
             base.Serialize(writer);
 
-            writer.Write(1);
-
-            writer.Write(TimerRegistry.HasTimer(m_DeleteTimerID, this));
+            writer.Write(0);
         }
 
         public override void Deserialize(GenericReader reader)
@@ -43,10 +41,8 @@ namespace Server.Items
 
             int version = reader.ReadInt();
 
-            if (version == 1 && reader.ReadBool())
-            {
+            if (!Locked)
                 StartDeleteTimer();
-            }
         }
 
         public override void OnTelekinesis(Mobile from)
@@ -91,7 +87,28 @@ namespace Server.Items
 
         private void StartDeleteTimer()
         {
-            TimerRegistry.Register(m_DeleteTimerID, this, TimeSpan.FromMinutes(Utility.RandomMinMax(2, 5)), chest => chest.Delete());
+            if (m_DeleteTimer == null)
+                m_DeleteTimer = new ChestTimer(this);
+            else
+                m_DeleteTimer.Delay = TimeSpan.FromSeconds(Utility.Random(1, 2));
+
+            m_DeleteTimer.Start();
+        }
+
+        private class ChestTimer : Timer
+        {
+            private readonly BaseDungeonChest m_Chest;
+
+            public ChestTimer(BaseDungeonChest chest) : base(TimeSpan.FromMinutes(Utility.Random(2, 5)))
+            {
+                m_Chest = chest;
+                Priority = TimerPriority.OneMinute;
+            }
+
+            protected override void OnTick()
+            {
+                m_Chest.Delete();
+            }
         }
     }
 }

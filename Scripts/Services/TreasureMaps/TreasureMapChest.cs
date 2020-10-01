@@ -60,8 +60,6 @@ namespace Server.Items
             typeof(EssenceOrder),   typeof(EssencePassion),   typeof(EssencePersistence), typeof(EssenceSingularity)
         };
 
-        private static readonly TimeSpan _DeleteTime = TimeSpan.FromHours(3);
-
         private List<Item> m_Lifted = new List<Item>();
 
         private ChestQuality _Quality;
@@ -77,13 +75,14 @@ namespace Server.Items
         {
             Owner = owner;
             Level = level;
-            DeleteTime = DateTime.UtcNow + _DeleteTime;
+            DeleteTime = DateTime.UtcNow + TimeSpan.FromHours(3.0);
 
             Temporary = temporary;
             Guardians = new List<Mobile>();
             AncientGuardians = new List<Mobile>();
 
-            TimerRegistry.Register("TreasureMapChest", this, _DeleteTime, chest => chest.Delete());
+            Timer = new DeleteTimer(this, DeleteTime);
+            Timer.Start();
         }
 
         public TreasureMapChest(Serial serial)
@@ -706,9 +705,10 @@ namespace Server.Items
                     }
             }
 
-            if (!Temporary && DeleteTime > DateTime.UtcNow)
+            if (!Temporary)
             {
-                TimerRegistry.Register("TreasureMapChest", this, DeleteTime - DateTime.UtcNow, chest => chest.Delete());
+                Timer = new DeleteTimer(this, DeleteTime);
+                Timer.Start();
             }
             else
             {
@@ -941,6 +941,22 @@ namespace Server.Items
                     return;
 
                 m_Chest.BeginRemove(m_From);
+            }
+        }
+
+        private class DeleteTimer : Timer
+        {
+            private readonly Item m_Item;
+            public DeleteTimer(Item item, DateTime time)
+                : base(time - DateTime.UtcNow)
+            {
+                m_Item = item;
+                Priority = TimerPriority.OneMinute;
+            }
+
+            protected override void OnTick()
+            {
+                m_Item.Delete();
             }
         }
     }
