@@ -1,7 +1,9 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Linq;
+using System.Reflection;
 
 using Server.Commands;
 
@@ -13,19 +15,23 @@ namespace Server
 
         public static void Initialize()
         {
-            if (Debug)
+            CommandSystem.Register("CheckTimers", AccessLevel.Administrator, e =>
             {
-                CommandSystem.Register("CheckTimers", AccessLevel.Administrator, e =>
+                foreach (var kvp in Timers)
                 {
-                    foreach (var kvp in Timers)
-                    {
-                        Utility.WriteConsoleColor(ConsoleColor.Green, "Timer ID: {0}", kvp.Key);
+                    Utility.WriteConsoleColor(ConsoleColor.Green, "Timer ID: {0}", kvp.Key);
 
-                        Console.WriteLine("Delay/Interval: {0}", kvp.Value.Interval);
-                        Console.WriteLine("Timer Priority: {0}", kvp.Value.Priority);
+                    Console.WriteLine("Delay/Interval: {0}", kvp.Value.Interval);
+                    Console.WriteLine("Timer Priority: {0}", kvp.Value.Priority);
+
+                    var dic = kvp.Value.GetType().GetProperty("Registry").GetValue(kvp.Value, null) as IDictionary;
+
+                    if (dic != null)
+                    {
+                        Console.WriteLine("Registered elements: {0}", dic.Count);
                     }
-                });
-            }
+                }
+            });
         }
 
         public static Dictionary<string, Timer> Timers { get; set; } = new Dictionary<string, Timer>();
@@ -35,9 +41,19 @@ namespace Server
             Register(id, instance, duration, TimeSpan.Zero, true, true, callback);
         }
 
+        public static void Register<T>(string id, T instance, TimeSpan duration, TimerPriority? priority, Action<T> callback)
+        {
+            Register(id, instance, duration, TimeSpan.Zero, true, true, priority, callback);
+        }
+
         public static void Register<T>(string id, T instance, TimeSpan duration, TimeSpan delay, Action<T> callback)
         {
-            Register(id, instance, duration, delay, true, true, callback);
+            Register(id, instance, duration, delay, true, true, null, callback);
+        }
+
+        public static void Register<T>(string id, T instance, TimeSpan duration, TimeSpan delay, TimerPriority? priority, Action<T> callback)
+        {
+            Register(id, instance, duration, delay, true, true, priority, callback);
         }
 
         public static void Register<T>(string id, T instance, TimeSpan duration, bool removeOnExpire, Action<T> callback)
@@ -47,10 +63,20 @@ namespace Server
 
         public static void Register<T>(string id, T instance, TimeSpan duration, TimeSpan delay, bool removeOnExpire, Action<T> callback)
         {
-            Register(id, instance, duration, delay, removeOnExpire, true, callback);
+            Register(id, instance, duration, delay, removeOnExpire, true, null, callback);
+        }
+
+        public static void Register<T>(string id, T instance, TimeSpan duration, TimeSpan delay, bool removeOnExpire, TimerPriority? priority, Action<T> callback)
+        {
+            Register(id, instance, duration, delay, removeOnExpire, true, priority, callback);
         }
 
         public static void Register<T>(string id, T instance, TimeSpan duration, TimeSpan delay, bool removeOnExpire, bool checkDeleted, Action<T> callback)
+        {
+            Register(id, instance, duration, delay, removeOnExpire, true, null, callback);
+        }
+
+        public static void Register<T>(string id, T instance, TimeSpan duration, TimeSpan delay, bool removeOnExpire, bool checkDeleted, TimerPriority? priority, Action<T> callback)
         {
             var timer = GetTimer(id, instance);
 
@@ -59,7 +85,7 @@ namespace Server
             if (timer == null)
             {
                 if (Debug) Console.WriteLine("Timer not Found, creating new one...");
-                timer = new RegistryTimer<T>(delay == TimeSpan.Zero ? ProcessDelay(duration) : delay, callback, removeOnExpire, checkDeleted);
+                timer = new RegistryTimer<T>(delay == TimeSpan.Zero ? ProcessDelay(duration) : delay, callback, removeOnExpire, checkDeleted, priority);
                 Timers[id] = timer;
                 timer.Start();
             }
@@ -71,7 +97,7 @@ namespace Server
             if (!timer.Registry.ContainsKey(instance))
             {
                 if (Debug) Console.WriteLine("Adding {0} to the timer registry!", instance);
-                timer.Registry[instance] = DateTime.UtcNow + duration;
+                timer.Registry[instance] = Core.TickCount + (long)duration.TotalMilliseconds;
             }
             else if (Debug)
             {
@@ -103,10 +129,10 @@ namespace Server
             if (timer != null)
             {
                 if (Debug) Console.WriteLine("Complete!");
-                timer.Registry[instance] = DateTime.UtcNow + duration;
+                timer.Registry[instance] = Core.TickCount + (long)duration.TotalMilliseconds;
                 return true;
             }
-            else
+            else if (Debug)
             {
                 Console.WriteLine("Failed, timer not found");
             }
@@ -192,89 +218,64 @@ namespace Server
 
     public class RegistryTimer<T> : Timer
     {
-        public Dictionary<T, DateTime> Registry { get; set; } = new Dictionary<T, DateTime>();
+        public Dictionary<T, long> Registry { get; set; } = new Dictionary<T, long>();
 
         public Action<T> Callback { get; set; }
         public bool RemoveOnExpire { get; set; }
         public bool CheckDeleted { get; set; }
 
-        public RegistryTimer(TimeSpan delay, Action<T> callback, bool removeOnExpire, bool checkDeleted)
+        public RegistryTimer(TimeSpan delay, Action<T> callback, bool removeOnExpire, bool checkDeleted, TimerPriority? priority)
             : base(delay, delay)
         {
             Callback = callback;
             RemoveOnExpire = removeOnExpire;
             CheckDeleted = checkDeleted;
+
+            if (priority != null)
+            {
+                Priority = (TimerPriority)priority;
+            }
         }
 
         protected override void OnTick()
         {
-            List<T> instances = Registry.Keys.Where(v => Registry[v] < DateTime.UtcNow || (CheckDeleted && v is IEntity e && e.Deleted)).ToList();
+            List<T> instances = Registry.Keys.Where(v => Registry[v] <= Core.TickCount || (CheckDeleted && v is IEntity e && e.Deleted)).ToList();
 
-            if (instances.Count > 500)
+            for (int i = 0; i < instances.Count; i++)
             {
-                Parallel.ForEach(instances, instance =>
-                {
-                    if (Registry.ContainsKey(instance))
-                    {
-                        if (IsDeleted(instance))
-                        {
-                            if (TimerRegistry.Debug) Console.WriteLine("Removing from Registry [Deleted]: {0}", instance);
-                            Registry.Remove(instance);
-                        }
-                        else
-                        {
-                            if (Callback != null)
-                            {
-                                Callback(instance);
-                            }
+                var instance = instances[i];
 
-                            if (IsExpired(instance))
-                            {
-                                if (TimerRegistry.Debug) Console.WriteLine("Removing from Registry [Processed]: {0}", instance);
-                                Registry.Remove(instance);
-                            }
-                        }
+                if (IsDeleted(instance))
+                {
+                    if (TimerRegistry.Debug) Console.WriteLine("Removing from Registry [Deleted]: {0}", instance);
+                    Registry.Remove(instance);
+                }
+                else
+                {
+                    if (Callback != null)
+                    {
+                        Callback(instance);
                     }
-                });
-            }
-            else
-            {
-                for (int i = 0; i < instances.Count; i++)
-                {
-                    var instance = instances[i];
 
-                    if (IsDeleted(instance))
+                    if (IsExpired(instance))
                     {
-                        if (TimerRegistry.Debug) Console.WriteLine("Removing from Registry [Deleted]: {0}", instance);
+                        if (TimerRegistry.Debug) Console.WriteLine("Removing from Registry [Processed]: {0}", instance);
                         Registry.Remove(instance);
                     }
-                    else
-                    {
-                        if (Callback != null)
-                        {
-                            Callback(instance);
-                        }
-
-                        if (IsExpired(instance))
-                        {
-                            if (TimerRegistry.Debug) Console.WriteLine("Removing from Registry [Processed]: {0}", instance);
-                            Registry.Remove(instance);
-                        }
-                    }
                 }
+            }
 
-                ColUtility.Free(instances);
+            ColUtility.Free(instances);
 
-                if (Registry.Count == 0)
-                {
-                    TimerRegistry.UnregisterTimer(this);
-                }
+            if (Registry.Count == 0)
+            {
+                TimerRegistry.UnregisterTimer(this);
             }
         }
 
         private bool IsExpired(T instance)
         {
-            return RemoveOnExpire && (!Registry.ContainsKey(instance) || Registry[instance] < DateTime.UtcNow);
+            return RemoveOnExpire && (!Registry.ContainsKey(instance) || Registry[instance] <= Core.TickCount);
         }
 
         private bool IsDeleted(T instance)
