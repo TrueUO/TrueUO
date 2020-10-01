@@ -1,34 +1,25 @@
 using Server.Engines.Craft;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Server.Items
 {
     public class HammerOfHephaestus : AncientSmithyHammer
     {
-        public static readonly TimeSpan RechargDuration = TimeSpan.FromMinutes(5);
-        public static readonly string TimerID = "HammerOfHephaestusTimer";
+        private static readonly List<HammerOfHephaestus> _Instances = new List<HammerOfHephaestus>();
 
-        [CommandProperty(AccessLevel.GameMaster)]
-        public override int UsesRemaining
+        public static void Initialize()
         {
-            get { return base.UsesRemaining; }
-            set
+            Timer.DelayCall(TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(5), Tick_Callback);
+        }
+
+        private static void Tick_Callback()
+        {
+            foreach (HammerOfHephaestus hammer in _Instances.Where(h => h != null && !h.Deleted && h.UsesRemaining < 20))
             {
-                var uses = value;
-
-                base.UsesRemaining = uses;
-
-                if (uses < 20)
-                {
-                    if (!TimerRegistry.UpdateRegistry(TimerID, this, RechargDuration))
-                    {
-                        TimerRegistry.Register(TimerID, this, RechargDuration, false, hammer => Tick_Callback(hammer));
-                    }
-                }
-                else
-                {
-                    TimerRegistry.RemoveFromRegistry(TimerID, this);
-                }
+                hammer.UsesRemaining++;
+                hammer.InvalidateProperties();
             }
         }
 
@@ -38,11 +29,20 @@ namespace Server.Items
         {
             LootType = LootType.Blessed;
             Hue = 0x0;
+
+            _Instances.Add(this);
         }
 
         public HammerOfHephaestus(Serial serial)
             : base(serial)
         {
+        }
+
+        public override void Delete()
+        {
+            base.Delete();
+
+            _Instances.Remove(this);
         }
 
         public override int LabelNumber => 1077740;// Hammer of Hephaestus
@@ -77,12 +77,6 @@ namespace Server.Items
             }
         }
 
-        public static void Tick_Callback(HammerOfHephaestus hammer)
-        {
-            hammer.UsesRemaining = Math.Min(20, hammer.UsesRemaining + 1);
-            hammer.InvalidateProperties();
-        }
-
         public override bool CanEquip(Mobile from)
         {
             if (UsesRemaining > 0)
@@ -103,12 +97,12 @@ namespace Server.Items
         {
             base.Deserialize(reader);
 
-            reader.ReadEncodedInt();
+            int version = reader.ReadEncodedInt();
 
-            if (UsesRemaining < 20)
-            {
-                TimerRegistry.Register(TimerID, this, RechargDuration, false, hammer => Tick_Callback(hammer));
-            }
+            if (version == 0 && Hue == 0x482)
+                Hue = 0x0;
+
+            _Instances.Add(this);
         }
     }
 }

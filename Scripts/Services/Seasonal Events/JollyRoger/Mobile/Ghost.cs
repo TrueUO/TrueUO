@@ -20,11 +20,16 @@ namespace Server.Engines.Fellowship
     {
         public int GumpCliloc{ get; set; }
 
+        private InternalTimer _Timer;
+
         [Constructable]
         public Ghost(GhostType type)
             : base("the Ghost")
         {
             GumpCliloc = (int)type;
+
+            _Timer = new InternalTimer(this);
+            _Timer.Start();
         }
 
         public override bool DisallowAllMoves => Hidden;
@@ -64,6 +69,44 @@ namespace Server.Engines.Fellowship
             }
         }
 
+        public class InternalTimer : Timer
+        {
+            private readonly Ghost _Mobile;
+
+            public InternalTimer(Ghost mobile)
+                : base(TimeSpan.FromSeconds(1.0), TimeSpan.FromSeconds(1.0))
+            {
+                Priority = TimerPriority.TwoFiftyMS;
+                _Mobile = mobile;
+            }
+
+            protected override void OnTick()
+            {
+                Clock.GetTime(_Mobile.Map, _Mobile.Location.X, _Mobile.Location.Y, out int hours, out int minutes);
+
+                if (hours >= 0 && hours < 4)
+                {
+                    if (_Mobile.Hidden)
+                        _Mobile.Hidden = false;
+                }
+                else
+                {
+                    if (!_Mobile.Hidden)
+                        _Mobile.Hidden = true;
+                }
+            }
+        }
+
+        public override void OnAfterDelete()
+        {
+            if (_Timer != null)
+                _Timer.Stop();
+
+            _Timer = null;
+
+            base.OnAfterDelete();
+        }
+
         public override void OnTalk(PlayerMobile player, bool contextMenu)
         {
         }
@@ -95,37 +138,6 @@ namespace Server.Engines.Fellowship
             }
         }
 
-        private DateTime _NextTimeCheck;
-
-        public override void OnThink()
-        {
-            base.OnThink();
-
-            if (_NextTimeCheck > DateTime.UtcNow)
-            {
-                return;
-            }
-
-            Clock.GetTime(Map, Location.X, Location.Y, out int hours, out int minutes);
-
-            if (hours >= 0 && hours < 4)
-            {
-                if (Hidden)
-                {
-                    Hidden = false;
-                }
-            }
-            else
-            {
-                if (!Hidden)
-                {
-                    Hidden = true;
-                }
-            }
-
-            _NextTimeCheck = DateTime.UtcNow + TimeSpan.FromSeconds(5);
-        }
-
         public Ghost(Serial serial)
             : base(serial)
         {
@@ -145,6 +157,9 @@ namespace Server.Engines.Fellowship
             reader.ReadInt();
 
             GumpCliloc = reader.ReadInt();
+
+            _Timer = new InternalTimer(this);
+            _Timer.Start();
         }
     }
 }

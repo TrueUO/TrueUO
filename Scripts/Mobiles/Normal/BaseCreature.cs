@@ -2506,8 +2506,7 @@ namespace Server.Mobiles
                 if (m_bSummoned)
                 {
                     m_SummonEnd = reader.ReadDeltaTime();
-                    Console.WriteLine((m_SummonEnd - DateTime.UtcNow).ToString());
-                    TimerRegistry.Register<BaseCreature>("UnsummonTimer", this, m_SummonEnd - DateTime.UtcNow, c => c.Delete()); 
+                    UnsummonTimer.Register(this);
                 }
 
                 m_iControlSlots = reader.ReadInt();
@@ -5255,7 +5254,7 @@ namespace Server.Mobiles
 
         public void PackItem(Item item)
         {
-            if ((Summoned && item.Movable) || item == null)
+            if (Summoned || item == null)
             {
                 if (item != null)
                 {
@@ -6285,7 +6284,7 @@ namespace Server.Mobiles
                 (int)Math.Floor(creature.HitsMax * (1 + ArcaneEmpowermentSpell.GetSpellBonus(caster, false) / 100.0)));
 
             creature.m_SummonEnd = DateTime.UtcNow + duration;
-            TimerRegistry.Register<BaseCreature>("UnsummonTimer", creature, duration, c => c.Delete());
+            UnsummonTimer.Register(creature);
 
             creature.MoveToWorld(p, caster.Map);
 

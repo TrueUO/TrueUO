@@ -401,37 +401,59 @@ namespace Server.Items
             SetFlag(CorpseFlag.NoBones, true);
             SetFlag(CorpseFlag.IsBones, true);
 
-            var delay = m_BoneDecayTime;
-            m_DecayTime = DateTime.UtcNow + delay;
-
-            if (!TimerRegistry.UpdateRegistry(m_TimerID, this, delay))
-            {
-                TimerRegistry.Register(m_TimerID, this, delay, c => c.DoDecay());
-            }
+            BeginDecay(m_BoneDecayTime);
         }
 
         private static readonly TimeSpan m_DefaultDecayTime = TimeSpan.FromMinutes(7.0);
         private static readonly TimeSpan m_BoneDecayTime = TimeSpan.FromMinutes(7.0);
-        private static readonly string m_TimerID = "CorpseDecayTimer";
 
+        private Timer m_DecayTimer;
         private DateTime m_DecayTime;
 
         public void BeginDecay(TimeSpan delay)
         {
+            if (m_DecayTimer != null)
+            {
+                m_DecayTimer.Stop();
+            }
+
             m_DecayTime = DateTime.UtcNow + delay;
 
-            TimerRegistry.Register(m_TimerID, this, delay, c => c.DoDecay());
+            m_DecayTimer = new InternalTimer(this, delay);
+            m_DecayTimer.Start();
         }
 
-        private void DoDecay()
+        public override void OnAfterDelete()
         {
-            if (!GetFlag(CorpseFlag.NoBones))
+            if (m_DecayTimer != null)
             {
-                TurnToBones();
+                m_DecayTimer.Stop();
             }
-            else
+
+            m_DecayTimer = null;
+        }
+
+        private class InternalTimer : Timer
+        {
+            private readonly Corpse m_Corpse;
+
+            public InternalTimer(Corpse c, TimeSpan delay)
+                : base(delay)
             {
-                Delete();
+                m_Corpse = c;
+                Priority = TimerPriority.FiveSeconds;
+            }
+
+            protected override void OnTick()
+            {
+                if (!m_Corpse.GetFlag(CorpseFlag.NoBones))
+                {
+                    m_Corpse.TurnToBones();
+                }
+                else
+                {
+                    m_Corpse.Delete();
+                }
             }
         }
 
@@ -713,10 +735,9 @@ namespace Server.Items
                 }
             }
 
-            bool decaying = m_DecayTime != DateTime.MinValue;
-            writer.Write(decaying);
+            writer.Write(m_DecayTimer != null);
 
-            if (decaying)
+            if (m_DecayTimer != null)
             {
                 writer.WriteDeltaTime(m_DecayTime);
             }
@@ -758,6 +779,7 @@ namespace Server.Items
                     {
                         // Version 11, we move all bools to a CorpseFlag
                         m_Flags = (CorpseFlag)reader.ReadInt();
+
                         m_TimeOfDeath = reader.ReadDeltaTime();
 
                         int count = reader.ReadInt();
@@ -794,6 +816,115 @@ namespace Server.Items
                         m_Kills = reader.ReadInt();
 
                         m_EquipItems = reader.ReadStrongItemList();
+                        break;
+                    }
+                case 10:
+                    {
+                        m_TimeOfDeath = reader.ReadDeltaTime();
+
+                        goto case 9;
+                    }
+                case 9:
+                    {
+                        int count = reader.ReadInt();
+
+                        for (int i = 0; i < count; ++i)
+                        {
+                            Item item = reader.ReadItem();
+
+                            if (reader.ReadBool())
+                            {
+                                SetRestoreInfo(item, reader.ReadPoint3D());
+                            }
+                            else if (item != null)
+                            {
+                                SetRestoreInfo(item, item.Location);
+                            }
+                        }
+
+                        goto case 8;
+                    }
+                case 8:
+                    {
+                        SetFlag(CorpseFlag.VisitedByTaxidermist, reader.ReadBool());
+
+                        goto case 7;
+                    }
+                case 7:
+                    {
+                        if (reader.ReadBool())
+                        {
+                            BeginDecay(reader.ReadDeltaTime() - DateTime.UtcNow);
+                        }
+
+                        goto case 6;
+                    }
+                case 6:
+                    {
+                        m_Looters = reader.ReadStrongMobileList();
+                        m_Killer = reader.ReadMobile();
+
+                        goto case 5;
+                    }
+                case 5:
+                    {
+                        SetFlag(CorpseFlag.Carved, reader.ReadBool());
+
+                        goto case 4;
+                    }
+                case 4:
+                    {
+                        m_Aggressors = reader.ReadStrongMobileList();
+
+                        goto case 3;
+                    }
+                case 3:
+                    {
+                        m_Owner = reader.ReadMobile();
+
+                        goto case 2;
+                    }
+                case 2:
+                    {
+                        SetFlag(CorpseFlag.NoBones, reader.ReadBool());
+
+                        goto case 1;
+                    }
+                case 1:
+                    {
+                        m_CorpseName = reader.ReadString();
+
+                        goto case 0;
+                    }
+                case 0:
+                    {
+                        if (version < 10)
+                        {
+                            m_TimeOfDeath = DateTime.UtcNow;
+                        }
+
+                        if (version < 7)
+                        {
+                            BeginDecay(m_DefaultDecayTime);
+                        }
+
+                        if (version < 6)
+                        {
+                            m_Looters = new List<Mobile>();
+                        }
+
+                        if (version < 4)
+                        {
+                            m_Aggressors = new List<Mobile>();
+                        }
+
+                        m_AccessLevel = (AccessLevel)reader.ReadInt();
+                        reader.ReadInt(); // guild reserve
+                        m_Kills = reader.ReadInt();
+                        SetFlag(CorpseFlag.Criminal, reader.ReadBool());
+
+                        m_EquipItems = reader.ReadStrongItemList();
+
                         break;
                     }
             }

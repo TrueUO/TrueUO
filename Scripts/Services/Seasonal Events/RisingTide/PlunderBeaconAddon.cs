@@ -10,7 +10,6 @@ namespace Server.Items
     public class PlunderBeaconAddon : BaseAddon
     {
         public static readonly int MaxSpawn = 5;
-        private static readonly string _TimerID = "PlunderBeacon";
 
         [CommandProperty(AccessLevel.GameMaster)]
         public PlunderBeacon Beacon { get; set; }
@@ -24,6 +23,7 @@ namespace Server.Items
 
         public override BaseAddonDeed Deed => null;
 
+        public Timer Timer { get; set; }
         public DateTime NextShoot { get; set; }
         public DateTime NextSpawn { get; set; }
         public bool InitialSpawn { get; set; }
@@ -61,6 +61,8 @@ namespace Server.Items
             AddCannon(Direction.East, CannonPower.Light, 2, -2, 12, false);
             AddCannon(Direction.East, CannonPower.Light, 2, 0, 12, false);
             AddCannon(Direction.East, CannonPower.Light, 2, 2, 12, false);
+
+            Timer = Timer.DelayCall(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1), OnTick);
         }
 
         private void AddCannon(Direction d, CannonPower type, int xOffset, int yOffset, int zOffset, bool oper = true)
@@ -189,12 +191,19 @@ namespace Server.Items
 
         public override void OnSectorActivate()
         {
-            TimerRegistry.Register(_TimerID, this, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1), false, addon => addon.OnTick());
+            if (Timer == null)
+            {
+                Timer = Timer.DelayCall(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1), OnTick);
+            }
         }
 
         public override void OnSectorDeactivate()
         {
-            TimerRegistry.RemoveFromRegistry(_TimerID, this);
+            if (Timer != null && SpawnCount() >= MaxSpawn)
+            {
+                Timer.Stop();
+                Timer = null;
+            }
         }
 
         private bool _CheckSpawn;
@@ -318,6 +327,12 @@ namespace Server.Items
                 Beacon.Delete();
             }
 
+            if (Timer != null)
+            {
+                Timer.Stop();
+                Timer = null;
+            }
+
             foreach (BaseCreature bc in Crew.Where(c => c != null && !c.Deleted))
             {
                 bc.Kill();
@@ -417,6 +432,8 @@ namespace Server.Items
             }
 
             _CheckSpawn = true;
+
+            Timer = Timer.DelayCall(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1), OnTick);
         }
 
         #region Components

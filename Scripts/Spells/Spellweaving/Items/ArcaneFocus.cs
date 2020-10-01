@@ -2,30 +2,26 @@ using System;
 
 namespace Server.Items
 {
-    public class ArcaneFocus : BaseDecayingItem
+    public class ArcaneFocus : TransientItem
     {
         private int m_StrengthBonus;
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int StrengthBonus
+        [Constructable]
+        public ArcaneFocus()
+            : this(TimeSpan.FromHours(1), 1)
         {
-            get { return m_StrengthBonus; }
-            set { m_StrengthBonus = value; }
         }
 
         [Constructable]
-        public ArcaneFocus()
-            : this(3600, 1)
+        public ArcaneFocus(int lifeSpan, int strengthBonus)
+            : this(TimeSpan.FromSeconds(lifeSpan), strengthBonus)
         {
         }
 
-        public ArcaneFocus(int lifeSpan, int strengthBonus)
-            : base(0x3155)
+        public ArcaneFocus(TimeSpan lifeSpan, int strengthBonus)
+            : base(0x3155, lifeSpan)
         {
             LootType = LootType.Blessed;
             m_StrengthBonus = strengthBonus;
-
-            TimeLeft = lifeSpan;
         }
 
         public ArcaneFocus(Serial serial)
@@ -34,14 +30,20 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1032629;// Arcane Focus
-        public override bool Nontransferable => true;
-
-        public override void HandleInvalidTransfer(Mobile from)
+        [CommandProperty(AccessLevel.GameMaster)]
+        public int StrengthBonus
         {
-            from.SendLocalizedMessage(1073480); // Your arcane focus disappears.
-            Delete();
+            get
+            {
+                return m_StrengthBonus;
+            }
+            set
+            {
+                m_StrengthBonus = value;
+            }
         }
-
+        public override TextDefinition InvalidTransferMessage => 1073480;// Your arcane focus disappears.
+        public override bool Nontransferable => true;
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);

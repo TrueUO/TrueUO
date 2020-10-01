@@ -133,7 +133,7 @@ namespace Server.Movement
             int stepTop = startTop + StepHeight;
             int checkTop = startZ + PersonHeight;
 
-            bool ignoreDoors = AlwaysIgnoreDoors(p);
+            bool ignoreDoors = (AlwaysIgnoreDoors(p) || m == null || !m.Alive || m.Body.BodyID == 0x3DB || m.IsDeadBondedPet);
             bool ignoreSpellFields = m is PlayerMobile && map != Map.Felucca;
 
             #region Tiles
@@ -681,12 +681,7 @@ namespace Server.Movement
 
         public static bool AlwaysIgnoreDoors(IPoint3D p)
         {
-            if (p is Mobile m)
-            {
-                return !m.Alive || m.Body.BodyID == 0x3DBb || m.IsDeadBondedPet;
-            }
-
-            return true;
+            return p is BaseCreature bc && bc.CanOpenDoors;
         }
     }
 }

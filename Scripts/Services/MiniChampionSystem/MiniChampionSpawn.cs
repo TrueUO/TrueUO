@@ -14,8 +14,6 @@ namespace Server.Engines.MiniChamps
         }
 
         private static readonly List<MiniChamp> Controllers = new List<MiniChamp>();
-        private static readonly string m_TimerID = "MiniChampTimer";
-        private static readonly string m_RestartTimerID = "MiniChampRestartTimer";
 
         [Usage("GenMiniChamp")]
         [Description("MiniChampion Generator")]
@@ -137,6 +135,7 @@ namespace Server.Engines.MiniChamps
         private int m_Level;
         private int m_SpawnRange;
         private TimeSpan m_RestartDelay;
+        private Timer m_Timer, m_RestartTimer;
 
         [CommandProperty(AccessLevel.GameMaster)]
         public Point3D BossSpawnPoint { get; set; }
@@ -206,7 +205,16 @@ namespace Server.Engines.MiniChamps
 
             m_Active = true;
 
-            StartTimer();
+            if (m_Timer != null)
+                m_Timer.Stop();
+
+            m_Timer = new SliceTimer(this);
+            m_Timer.Start();
+
+            if (m_RestartTimer != null)
+                m_RestartTimer.Stop();
+
+            m_RestartTimer = null;
 
             AdvanceLevel();
             InvalidateProperties();
@@ -223,20 +231,16 @@ namespace Server.Engines.MiniChamps
             ClearSpawn();
             Despawn();
 
-            TimerRegistry.RemoveFromRegistry(m_TimerID, this);
-            TimerRegistry.RemoveFromRegistry(m_RestartTimerID, this);
+            if (m_Timer != null)
+                m_Timer.Stop();
 
+            m_Timer = null;
+
+            if (m_RestartTimer != null)
+                m_RestartTimer.Stop();
+
+            m_RestartTimer = null;
             InvalidateProperties();
-        }
-
-        private void StartTimer()
-        {
-            TimerRegistry.Register(m_TimerID, this, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1), false, spawner => spawner.OnSlice());
-        }
-
-        private void StartRestartTimer()
-        {
-            TimerRegistry.Register(m_RestartTimerID, this, m_RestartDelay, spawner => spawner.Start());
         }
 
         public void Despawn()
@@ -330,7 +334,7 @@ namespace Server.Engines.MiniChamps
             {
                 Stop();
 
-                StartRestartTimer();
+                m_RestartTimer = Timer.DelayCall(m_RestartDelay, Start);
             }
         }
 
@@ -463,11 +467,12 @@ namespace Server.Engines.MiniChamps
 
                         if (m_Active)
                         {
-                            StartTimer();
+                            m_Timer = new SliceTimer(this);
+                            m_Timer.Start();
                         }
                         else
                         {
-                            StartRestartTimer();
+                            m_RestartTimer = Timer.DelayCall(m_RestartDelay, Start);
                         }
 
                         break;
@@ -475,6 +480,22 @@ namespace Server.Engines.MiniChamps
             }
 
             Controllers.Add(this);
+        }
+    }
+
+    public class SliceTimer : Timer
+    {
+        private readonly MiniChamp m_Controller;
+
+        public SliceTimer(MiniChamp controller)
+            : base(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1))
+        {
+            m_Controller = controller;
+        }
+
+        protected override void OnTick()
+        {
+            m_Controller.OnSlice();
         }
     }
 }

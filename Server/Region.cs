@@ -150,41 +150,7 @@ namespace Server
 			return map.DefaultRegion;
 		}
 
-        public static IEnumerable<Region> FindRegions(Point3D p, Map map)
-        {
-            if (map == null)
-            {
-                yield return Map.Internal.DefaultRegion;
-            }
-            else
-            {
-                Sector sector = map.GetSector(p);
-                List<RegionRect> list = sector.RegionRects;
-                bool found = false;
-
-                for (int i = 0; i < list.Count; ++i)
-                {
-                    RegionRect regRect = list[i];
-
-                    if (regRect.Contains(p))
-                    {
-                        if (!found)
-                        {
-                            found = true;
-                        }
-
-                        yield return regRect.Region;
-                    }
-                }
-
-                if (!found)
-                {
-                    yield return map.DefaultRegion;
-                }
-            }
-        }
-
-        private static Type m_DefaultRegionType = typeof(Region);
+		private static Type m_DefaultRegionType = typeof(Region);
 		public static Type DefaultRegionType { get => m_DefaultRegionType; set => m_DefaultRegionType = value; }
 
 		private static TimeSpan m_StaffLogoutDelay = TimeSpan.Zero;

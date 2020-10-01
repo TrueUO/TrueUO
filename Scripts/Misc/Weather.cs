@@ -8,8 +8,6 @@ namespace Server.Misc
     public class Weather
     {
         private static readonly Dictionary<Map, List<Weather>> m_WeatherByFacet = new Dictionary<Map, List<Weather>>();
-        private static readonly string m_TimerID = "WeatherTimer";
-
         private static Map[] m_Facets;
         private readonly Map m_Facet;
         private Rectangle2D[] m_Area;
@@ -36,7 +34,7 @@ namespace Server.Misc
             if (list != null)
                 list.Add(this);
 
-            TimerRegistry.Register(m_TimerID, this, interval, TimeSpan.FromSeconds((0.2 + (Utility.RandomDouble() * 0.8)) * interval.TotalSeconds), false, weather => weather.OnTick());
+            Timer.DelayCall(TimeSpan.FromSeconds((0.2 + (Utility.RandomDouble() * 0.8)) * interval.TotalSeconds), interval, OnTick);
         }
 
         public Map Facet => m_Facet;
