@@ -593,10 +593,6 @@ namespace Server.Engines.CannedEvil
 
                     if (m.Deleted)
                     {
-                        if (m.Corpse != null && !m.Corpse.Deleted)
-                        {
-                            ((Corpse)m.Corpse).BeginDecay(TimeSpan.FromMinutes(1));
-                        }
                         m_Creatures.RemoveAt(i);
                         --i;
 

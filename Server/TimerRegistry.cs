@@ -12,6 +12,7 @@ namespace Server
     public static class TimerRegistry
     {
         public static readonly bool Debug = false;
+        private static readonly int _RegistryThreshold = 250;
 
         public static void Initialize()
         {
@@ -21,20 +22,30 @@ namespace Server
                 {
                     Utility.WriteConsoleColor(ConsoleColor.Green, "Timer ID: {0}", kvp.Key);
 
-                    Console.WriteLine("Delay/Interval: {0}", kvp.Value.Interval);
-                    Console.WriteLine("Timer Priority: {0}", kvp.Value.Priority);
+                    int elements = 0;
+                    int timerCount = kvp.Value.Count;
 
-                    var dic = kvp.Value.GetType().GetProperty("Registry").GetValue(kvp.Value, null) as IDictionary;
-
-                    if (dic != null)
+                    for (int i = 0; i < kvp.Value.Count; i++)
                     {
-                        Console.WriteLine("Registered elements: {0}", dic.Count);
+                        var timer = kvp.Value[i];
+                        Console.WriteLine("Delay/Interval: {0}", kvp.Value[i].Interval);
+                        Console.WriteLine("Timer Priority: {0}", kvp.Value[i].Priority);
+
+                        var dic = kvp.Value[i].GetType().GetProperty("Registry").GetValue(kvp.Value[i], null) as IDictionary;
+
+                        if (dic != null)
+                        {
+                            elements += dic.Count;
+                        }
                     }
+
+                    Console.WriteLine("Timers: {0}", timerCount);
+                    Console.WriteLine("Registered elements: {0}!", elements);
                 }
             });
         }
 
-        public static Dictionary<string, Timer> Timers { get; set; } = new Dictionary<string, Timer>();
+        public static Dictionary<string, List<Timer>> Timers { get; set; } = new Dictionary<string, List<Timer>>();
 
         public static void Register<T>(string id, T instance, TimeSpan duration, Action<T> callback)
         {
@@ -78,7 +89,12 @@ namespace Server
 
         public static void Register<T>(string id, T instance, TimeSpan duration, TimeSpan delay, bool removeOnExpire, bool checkDeleted, TimerPriority? priority, Action<T> callback)
         {
-            var timer = GetTimer(id, instance);
+            if (HasTimer(id, instance))
+            {
+                return;
+            }
+
+            var timer = GetTimer(id, instance, true);
 
             if(Debug) Console.WriteLine("Registering: {0} - {1}...", id, instance);
 
@@ -86,7 +102,8 @@ namespace Server
             {
                 if (Debug) Console.WriteLine("Timer not Found, creating new one...");
                 timer = new RegistryTimer<T>(delay == TimeSpan.Zero ? ProcessDelay(duration) : delay, callback, removeOnExpire, checkDeleted, priority);
-                Timers[id] = timer;
+
+                Timers[id].Add(timer);
                 timer.Start();
             }
             else if(Debug)
@@ -107,7 +124,7 @@ namespace Server
 
         public static void RemoveFromRegistry<T>(string id, T instance)
         {
-            var timer = GetTimer(id, instance);
+            var timer = GetTimerFor(id, instance);
 
             if (timer != null && timer.Registry.ContainsKey(instance))
             {
@@ -140,16 +157,15 @@ namespace Server
             return false;
         }
 
-        public static RegistryTimer<T> GetTimer<T>(string id, T instance)
+        public static RegistryTimer<T> GetTimer<T>(string id, T instance, bool create)
         {
             if (Timers.ContainsKey(id))
             {
-                if (!(Timers[id] is RegistryTimer<T>))
-                {
-                    throw new ArgumentException("Type names must be the same for each identifier. T instance is not the same type as RegistryTimer<T>", instance.GetType().Name);
-                }
-
-                return Timers[id] as RegistryTimer<T>;
+                return Timers[id].FirstOrDefault(t => t is RegistryTimer<T> regTimer && regTimer.Registry.Count < _RegistryThreshold) as RegistryTimer<T>;
+            }
+            else if (create)
+            {
+                Timers[id] = new List<Timer>();
             }
 
             return null;
@@ -157,9 +173,9 @@ namespace Server
 
         public static RegistryTimer<T> GetTimerFor<T>(string id, T instance)
         {
-            if (Timers.ContainsKey(id) && Timers[id] is RegistryTimer<T> timer && timer.Registry.ContainsKey(instance))
+            if (Timers.ContainsKey(id))
             {
-                return Timers[id] as RegistryTimer<T>;
+                return Timers[id].FirstOrDefault(t => t is RegistryTimer<T> timer && timer.Registry.ContainsKey(instance)) as RegistryTimer<T>;
             }
 
             return null;
@@ -177,8 +193,13 @@ namespace Server
 
             if (!string.IsNullOrEmpty(id) && Timers.ContainsKey(id))
             {
-                if (Debug) Console.WriteLine("Remove {0} from the timer list", id);
-                Timers.Remove(id);
+                Timers[id].Remove(timer);
+
+                if (Timers[id].Count == 0)
+                {
+                    if (Debug) Console.WriteLine("Remove {0} from the timer list", id);
+                    Timers.Remove(id);
+                }
             }
         }
 
@@ -186,7 +207,7 @@ namespace Server
         {
             foreach (var kvp in Timers)
             {
-                if (kvp.Value == timer)
+                if (kvp.Value.Any(t => t == timer))
                 {
                     return kvp.Key;
                 }

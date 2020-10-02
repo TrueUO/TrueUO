@@ -1814,6 +1814,7 @@ namespace Server
             }
         }
 
+        #region Regeneration
         private static bool m_GlobalRegenThroughPoison = true;
 
         public static bool GlobalRegenThroughPoison { get => m_GlobalRegenThroughPoison; set => m_GlobalRegenThroughPoison = value; }
@@ -1825,11 +1826,13 @@ namespace Server
         public static readonly string _StamRegenTimerPlayerID = _StamRegenTimerID + "Player";
         public static readonly string _ManaRegenTimerPlayerID = _ManaRegenTimerID + "Player";
 
+        private bool m_InternalCanRegen;
+
         public virtual bool RegenThroughPoison => m_GlobalRegenThroughPoison;
 
-        public virtual bool CanRegenHits => Alive && !Deleted && (RegenThroughPoison || !Poisoned);
-        public virtual bool CanRegenStam => Alive && !Deleted;
-        public virtual bool CanRegenMana => Alive && !Deleted;
+        public virtual bool CanRegenHits => Alive && !Deleted && (RegenThroughPoison || !Poisoned) && m_InternalCanRegen;
+        public virtual bool CanRegenStam => Alive && !Deleted && m_InternalCanRegen;
+        public virtual bool CanRegenMana => Alive && !Deleted && m_InternalCanRegen;
 
         private void HitsOnTick()
         {
@@ -1869,6 +1872,7 @@ namespace Server
                 }
             }
         }
+        #endregion
 
         #region Timers
         private class LogoutTimer : Timer
@@ -5356,13 +5360,17 @@ namespace Server
 				{
 					m_LastKiller = from;
 
+                    m_InternalCanRegen = false;
+
 					Hits = 0;
 
 					if (oldHits >= 0)
 					{
 						Kill();
 					}
-				}
+
+                    m_InternalCanRegen = true;
+                }
 				else
 				{
 					FatigueHandler(this, amount, DFA);
@@ -5912,6 +5920,8 @@ namespace Server
 
 						m_ExpireCriminal.Start();
 					}
+
+                    m_InternalCanRegen = true;
 
 					if (ShouldCheckStatTimers)
 					{
@@ -7862,14 +7872,21 @@ namespace Server
 					m_Str = value;
 					Delta(MobileDelta.Stat | MobileDelta.Hits);
 
-					if (Hits < HitsMax)
-					{
-                        TimerRegistry.Register(Player ? _HitsRegenTimerPlayerID : _HitsRegenTimerID, this, GetHitsRegenRate(this), Player ? TimeSpan.FromMilliseconds(50) : TimeSpan.FromMilliseconds(250), false, TimerPriority.TenMS, mobile => mobile.HitsOnTick());
+                    if (CanRegenHits)
+                    {
+                        if (Hits < HitsMax)
+                        {
+                            TimerRegistry.Register(Player ? _HitsRegenTimerPlayerID : _HitsRegenTimerID, this, GetHitsRegenRate(this), Player ? TimeSpan.FromMilliseconds(50) : TimeSpan.FromMilliseconds(250), false, TimerPriority.TenMS, mobile => mobile.HitsOnTick());
+                        }
+                        else if (Hits > HitsMax)
+                        {
+                            Hits = HitsMax;
+                        }
                     }
-					else if (Hits > HitsMax)
-					{
-						Hits = HitsMax;
-					}
+                    else
+                    {
+                        TimerRegistry.RemoveFromRegistry(Player ? _HitsRegenTimerPlayerID : _HitsRegenTimerID, this);
+                    }
 
 					OnRawStrChange(oldValue);
 					OnRawStatChange(StatType.Str, oldValue);
@@ -7941,14 +7958,21 @@ namespace Server
 					m_Dex = value;
 					Delta(MobileDelta.Stat | MobileDelta.Stam);
 
-					if (Stam < StamMax)
-					{
-                        TimerRegistry.Register(Player ? _StamRegenTimerPlayerID : _StamRegenTimerID, this, GetStamRegenRate(this), Player ? TimeSpan.FromMilliseconds(50) : TimeSpan.FromMilliseconds(250), false, TimerPriority.TenMS, mobile => mobile.StamOnTick());
+                    if (CanRegenStam)
+                    {
+                        if (Stam < StamMax)
+                        {
+                            TimerRegistry.Register(Player ? _StamRegenTimerPlayerID : _StamRegenTimerID, this, GetStamRegenRate(this), Player ? TimeSpan.FromMilliseconds(50) : TimeSpan.FromMilliseconds(250), false, TimerPriority.TenMS, mobile => mobile.StamOnTick());
+                        }
+                        else if (Stam > StamMax)
+                        {
+                            Stam = StamMax;
+                        }
                     }
-					else if (Stam > StamMax)
-					{
-						Stam = StamMax;
-					}
+                    else
+                    {
+                        TimerRegistry.RemoveFromRegistry(Player ? _StamRegenTimerPlayerID : _StamRegenTimerID, this);
+                    }
 
 					OnRawDexChange(oldValue);
 					OnRawStatChange(StatType.Dex, oldValue);
@@ -8020,14 +8044,21 @@ namespace Server
 					m_Int = value;
 					Delta(MobileDelta.Stat | MobileDelta.Mana);
 
-					if (Mana < ManaMax)
-					{
-                        TimerRegistry.Register(Player ? _ManaRegenTimerPlayerID : _ManaRegenTimerID, this, GetManaRegenRate(this), Player ? TimeSpan.FromMilliseconds(50) : TimeSpan.FromMilliseconds(250), false, TimerPriority.TenMS, mobile => mobile.ManaOnTick());
+                    if (CanRegenMana)
+                    {
+                        if (Mana < ManaMax)
+                        {
+                            TimerRegistry.Register(Player ? _ManaRegenTimerPlayerID : _ManaRegenTimerID, this, GetManaRegenRate(this), Player ? TimeSpan.FromMilliseconds(50) : TimeSpan.FromMilliseconds(250), false, TimerPriority.TenMS, mobile => mobile.ManaOnTick());
+                        }
+                        else if (Mana > ManaMax)
+                        {
+                            Mana = ManaMax;
+                        }
                     }
-					else if (Mana > ManaMax)
-					{
-						Mana = ManaMax;
-					}
+                    else
+                    {
+                        TimerRegistry.RemoveFromRegistry(Player ? _ManaRegenTimerPlayerID : _ManaRegenTimerID, this);
+                    }
 
 					OnRawIntChange(oldValue);
 					OnRawStatChange(StatType.Int, oldValue);
@@ -9266,7 +9297,10 @@ namespace Server
 		public virtual void OnAfterSpawn()
 		{ }
 
-		[CommandProperty(AccessLevel.GameMaster)]
+        protected virtual void OnCreate()
+        { }
+
+        [CommandProperty(AccessLevel.GameMaster)]
 		public bool Poisoned => m_Poison != null;
 
 		[CommandProperty(AccessLevel.GameMaster)]
@@ -10667,7 +10701,12 @@ namespace Server
 				m_TypeRef = World.m_MobileTypes.Count - 1;
 			}
 
-			Timer.DelayCall(EventSink.InvokeMobileCreated, new MobileCreatedEventArgs(this));
+			Timer.DelayCall(() =>
+            {
+                EventSink.InvokeMobileCreated(new MobileCreatedEventArgs(this));
+                m_InternalCanRegen = true;
+                OnCreate();
+            });
 		}
 
 		public void DefaultMobileInit()
