@@ -385,6 +385,10 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public Mobile Owner => m_Owner;
 
+        #region Decay
+        private static readonly string m_TimerID = "CorpseDecayTimer";
+        private DateTime m_DecayTime;
+
         public void TurnToBones()
         {
             if (Deleted)
@@ -401,26 +405,20 @@ namespace Server.Items
             SetFlag(CorpseFlag.NoBones, true);
             SetFlag(CorpseFlag.IsBones, true);
 
-            var delay = m_BoneDecayTime;
+            var delay = Owner != null ? Owner.CorpseDecayTime : Mobile.DefaultCorpseDecay;
             m_DecayTime = DateTime.UtcNow + delay;
 
             if (!TimerRegistry.UpdateRegistry(m_TimerID, this, delay))
             {
-                TimerRegistry.Register(m_TimerID, this, delay, c => c.DoDecay());
+                TimerRegistry.Register(m_TimerID, this, delay, TimerPriority.FiveSeconds, c => c.DoDecay());
             }
         }
-
-        private static readonly TimeSpan m_DefaultDecayTime = TimeSpan.FromMinutes(7.0);
-        private static readonly TimeSpan m_BoneDecayTime = TimeSpan.FromMinutes(7.0);
-        private static readonly string m_TimerID = "CorpseDecayTimer";
-
-        private DateTime m_DecayTime;
 
         public void BeginDecay(TimeSpan delay)
         {
             m_DecayTime = DateTime.UtcNow + delay;
 
-            TimerRegistry.Register(m_TimerID, this, delay, c => c.DoDecay());
+            TimerRegistry.Register(m_TimerID, this, delay, TimerPriority.FiveSeconds, c => c.DoDecay());
         }
 
         private void DoDecay()
@@ -434,6 +432,7 @@ namespace Server.Items
                 Delete();
             }
         }
+        #endregion
 
         public static string GetCorpseName(Mobile m)
         {
@@ -584,7 +583,7 @@ namespace Server.Items
             m_Aggressors = new List<Mobile>(owner.Aggressors.Count + owner.Aggressed.Count);
             //bool addToAggressors = !( owner is BaseCreature );
 
-            bool isBaseCreature = (owner is BaseCreature);
+            BaseCreature bc = owner as BaseCreature;
 
             TimeSpan lastTime = TimeSpan.MaxValue;
 
@@ -598,7 +597,7 @@ namespace Server.Items
                     lastTime = (DateTime.UtcNow - info.LastCombatTime);
                 }
 
-                if (!isBaseCreature && !info.CriminalAggression)
+                if (bc == null && !info.CriminalAggression)
                 {
                     m_Aggressors.Add(info.Attacker);
                 }
@@ -614,17 +613,16 @@ namespace Server.Items
                     lastTime = (DateTime.UtcNow - info.LastCombatTime);
                 }
 
-                if (!isBaseCreature)
+                if (bc == null)
                 {
                     m_Aggressors.Add(info.Defender);
                 }
             }
 
-            if (isBaseCreature)
+            if (bc != null)
             {
-                BaseCreature bc = (BaseCreature)owner;
-
                 Mobile master = bc.GetMaster();
+
                 if (master != null)
                 {
                     m_Aggressors.Add(master);
@@ -642,8 +640,7 @@ namespace Server.Items
                 }
             }
 
-            BeginDecay(m_DefaultDecayTime);
-
+            BeginDecay(owner.CorpseDecayTime);
             DevourCorpse();
 
             if (owner is PlayerMobile)
