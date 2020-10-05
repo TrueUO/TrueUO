@@ -1,5 +1,4 @@
 #region References
-using System;
 using System.Collections;
 using System.Drawing;
 using System.Drawing.Imaging;
@@ -8,7 +7,7 @@ using System.IO;
 
 namespace Server
 {
-	public static class GumpData
+    public static class GumpData
     {
 #if MONO
 		public const PixelFormat PixelFormat = System.Drawing.Imaging.PixelFormat.Format32bppArgb;
