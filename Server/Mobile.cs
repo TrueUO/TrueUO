@@ -731,10 +731,17 @@ namespace Server
         private bool m_DisplayGuildAbbr;
         private Mobile m_GuildFealty;
         private DateTime[] m_StuckMenuUses;
+        private Timer m_ExpireCombatant;
+        private Timer m_ExpireCriminal;
+        private Timer m_ExpireAggrTimer;
+        private Timer m_LogoutTimer;
+        private Timer m_CombatTimer;
         private long m_NextSkillTime;
         private long m_NextActionMessage;
         private bool m_Paralyzed;
+        private ParalyzedTimer m_ParaTimer;
         private bool m_Frozen;
+        private FrozenTimer m_FrozenTimer;
         private int m_AllowedStealthSteps;
         private int m_Hunger;
         private int m_NameHue = -1;
@@ -1124,6 +1131,82 @@ namespace Server
         public virtual void GetChildNameProperties(ObjectPropertyList list, Item item)
         { }
 
+        public void UpdateAggrExpire()
+        {
+            if (m_Deleted || (m_Aggressors.Count == 0 && m_Aggressed.Count == 0))
+            {
+                StopAggrExpire();
+            }
+            else if (m_ExpireAggrTimer == null)
+            {
+                m_ExpireAggrTimer = new ExpireAggressorsTimer(this);
+                m_ExpireAggrTimer.Start();
+            }
+        }
+
+        private void StopAggrExpire()
+        {
+            if (m_ExpireAggrTimer != null)
+            {
+                m_ExpireAggrTimer.Stop();
+            }
+
+            m_ExpireAggrTimer = null;
+        }
+
+        private void CheckAggrExpire()
+        {
+            for (int i = m_Aggressors.Count - 1; i >= 0; --i)
+            {
+                if (i >= m_Aggressors.Count)
+                {
+                    continue;
+                }
+
+                AggressorInfo info = m_Aggressors[i];
+
+                if (info.Expired)
+                {
+                    Mobile attacker = info.Attacker;
+                    attacker.RemoveAggressed(this);
+
+                    m_Aggressors.RemoveAt(i);
+                    info.Free();
+
+                    if (m_NetState != null && Utility.InUpdateRange(this, attacker) && CanSee(attacker))
+                    {
+                        m_NetState.Send(MobileIncoming.Create(m_NetState, this, attacker));
+                    }
+                }
+            }
+
+            for (int i = m_Aggressed.Count - 1; i >= 0; --i)
+            {
+                if (i >= m_Aggressed.Count)
+                {
+                    continue;
+                }
+
+                AggressorInfo info = m_Aggressed[i];
+
+                if (info.Expired)
+                {
+                    Mobile defender = info.Defender;
+                    defender.RemoveAggressor(this);
+
+                    m_Aggressed.RemoveAt(i);
+                    info.Free();
+
+                    if (m_NetState != null && Utility.InUpdateRange(this, defender) && CanSee(defender))
+                    {
+                        m_NetState.Send(MobileIncoming.Create(m_NetState, this, defender));
+                    }
+                }
+            }
+
+            UpdateAggrExpire();
+        }
+
         public List<Mobile> Stabled => m_Stabled;
 
         [CommandProperty(AccessLevel.Counselor, AccessLevel.GameMaster)]
@@ -1368,6 +1451,8 @@ namespace Server
         [CommandProperty(AccessLevel.GameMaster)]
         public int BaseSoundID { get => m_BaseSoundID; set => m_BaseSoundID = value; }
 
+        public long NextCombatTime { get => m_NextCombatTime; set => m_NextCombatTime = value; }
+
         public bool BeginAction(object toLock)
         {
             if (_actions == null)
@@ -1462,6 +1547,28 @@ namespace Server
         [CommandProperty(AccessLevel.GameMaster)]
         public int AllowedStealthSteps { get => m_AllowedStealthSteps; set => m_AllowedStealthSteps = value; }
 
+        /* Logout:
+		*
+		* When a client logs into mobile x
+		*  - if ( x is Internalized ) move x to logout location and map
+		*
+		* When a client attached to a mobile disconnects
+		*  - LogoutTimer is started
+		*	   - Delay is taken from Region.GetLogoutDelay to allow insta-logout regions.
+		*     - OnTick : Location and map are stored, and mobile is internalized
+		*
+		* Some things to consider:
+		*  - An internalized person getting killed (say, by poison). Where does the body go?
+		*  - Regions now have a GetLogoutDelay( Mobile m ); virtual function (see above)
+		*/
+        private Point3D m_LogoutLocation;
+        private Map m_LogoutMap;
+
+        public virtual TimeSpan GetLogoutDelay()
+        {
+            return Region.GetLogoutDelay(this);
+        }
+
         private StatLockType m_StrLock, m_DexLock, m_IntLock;
 
         private Item m_Holding;
@@ -1505,9 +1612,6 @@ namespace Server
 
         public long LastMoveTime { get => m_LastMoveTime; set => m_LastMoveTime = value; }
 
-        private static readonly string _ParaTimerID = "ParalyzeTimer";
-        private static readonly string _FrozenTimerID = "FreezeTimer";
-
         [CommandProperty(AccessLevel.GameMaster)]
         public virtual bool Paralyzed
         {
@@ -1521,7 +1625,11 @@ namespace Server
 
                     SendLocalizedMessage(m_Paralyzed ? 502381 : 502382);
 
-                    TimerRegistry.RemoveFromRegistry(_ParaTimerID, this);
+                    if (m_ParaTimer != null)
+                    {
+                        m_ParaTimer.Stop();
+                        m_ParaTimer = null;
+                    }
                 }
             }
         }
@@ -1537,7 +1645,11 @@ namespace Server
                     m_Frozen = value;
                     Delta(MobileDelta.Flags);
 
-                    TimerRegistry.RemoveFromRegistry(_FrozenTimerID, this);
+                    if (m_FrozenTimer != null)
+                    {
+                        m_FrozenTimer.Stop();
+                        m_FrozenTimer = null;
+                    }
                 }
             }
         }
@@ -1548,7 +1660,8 @@ namespace Server
             {
                 Paralyzed = true;
 
-                TimerRegistry.Register(_ParaTimerID, this, duration, m => m.Paralyzed = false);
+                m_ParaTimer = new ParalyzedTimer(this, duration);
+                m_ParaTimer.Start();
             }
         }
 
@@ -1558,7 +1671,8 @@ namespace Server
             {
                 Frozen = true;
 
-                TimerRegistry.Register(_FrozenTimerID, this, duration, m => m.Frozen = false);
+                m_FrozenTimer = new FrozenTimer(this, duration);
+                m_FrozenTimer.Start();
             }
         }
 
@@ -1685,10 +1799,9 @@ namespace Server
             }
         }
 
-        #region Timers
-
         #region Regeneration
         private static bool m_GlobalRegenThroughPoison = true;
+
         public static bool GlobalRegenThroughPoison { get => m_GlobalRegenThroughPoison; set => m_GlobalRegenThroughPoison = value; }
 
         public static readonly string _HitsRegenTimerID = "HitsRegenTimer";
@@ -1746,240 +1859,177 @@ namespace Server
         }
         #endregion
 
-        #region Aggro Timer
-        private static readonly string _ExpireAggroTimerID = "ExpireAggroTimer";
-
-        public void UpdateAggrExpire()
+        #region Timers
+        private class LogoutTimer : Timer
         {
-            if (m_Deleted || (m_Aggressors.Count == 0 && m_Aggressed.Count == 0))
-            {
-                StopAggrExpire();
-            }
-            else if (!TimerRegistry.HasTimer(_ExpireAggroTimerID, this))
-            {
-                TimerRegistry.Register(_ExpireAggroTimerID, this, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(5), false, TimerPriority.OneSecond, m => m.AggroExpireOnTick());
-            }
-        }
+            private readonly Mobile m_Mobile;
 
-        private void AggroExpireOnTick()
-        {
-            if (Deleted || (Aggressors.Count == 0 && Aggressed.Count == 0))
+            public LogoutTimer(Mobile m)
+                : base(TimeSpan.FromDays(1.0))
             {
-                StopAggrExpire();
+                Priority = TimerPriority.OneSecond;
+                m_Mobile = m;
             }
-            else
-            {
-                CheckAggrExpire();
-            }
-        }
 
-        private void StopAggrExpire()
-        {
-            TimerRegistry.RemoveFromRegistry(_ExpireAggroTimerID, this);
-        }
-
-        private void CheckAggrExpire()
-        {
-            for (int i = m_Aggressors.Count - 1; i >= 0; --i)
+            protected override void OnTick()
             {
-                if (i >= m_Aggressors.Count)
+                if (m_Mobile.m_Map != Map.Internal)
                 {
-                    continue;
+                    EventSink.InvokeLogout(new LogoutEventArgs(m_Mobile));
+
+                    m_Mobile.m_LogoutLocation = m_Mobile.m_Location;
+                    m_Mobile.m_LogoutMap = m_Mobile.m_Map;
+
+                    m_Mobile.Internalize();
                 }
+            }
+        }
 
-                AggressorInfo info = m_Aggressors[i];
+        private class ParalyzedTimer : Timer
+        {
+            private readonly Mobile m_Mobile;
 
-                if (info.Expired)
+            public ParalyzedTimer(Mobile m, TimeSpan duration)
+                : base(duration)
+            {
+                Priority = TimerPriority.TwentyFiveMS;
+                m_Mobile = m;
+            }
+
+            protected override void OnTick()
+            {
+                m_Mobile.Paralyzed = false;
+            }
+        }
+
+        private class FrozenTimer : Timer
+        {
+            private readonly Mobile m_Mobile;
+
+            public FrozenTimer(Mobile m, TimeSpan duration)
+                : base(duration)
+            {
+                Priority = TimerPriority.TwentyFiveMS;
+                m_Mobile = m;
+            }
+
+            protected override void OnTick()
+            {
+                m_Mobile.Frozen = false;
+            }
+        }
+
+        private class CombatTimer : Timer
+        {
+            private readonly Mobile m_Mobile;
+
+            public CombatTimer(Mobile m)
+                : base(TimeSpan.FromSeconds(0.0), TimeSpan.FromSeconds(0.01), 0)
+            {
+                m_Mobile = m;
+
+                if (!m_Mobile.m_Player && m_Mobile.m_Dex <= 100)
                 {
-                    Mobile attacker = info.Attacker;
-                    attacker.RemoveAggressed(this);
+                    Priority = TimerPriority.FiftyMS;
+                }
+            }
 
-                    m_Aggressors.RemoveAt(i);
-                    info.Free();
+            protected override void OnTick()
+            {
+                if (Core.TickCount - m_Mobile.m_NextCombatTime >= 0)
+                {
+                    IDamageable combatant = m_Mobile.Combatant;
 
-                    if (m_NetState != null && Utility.InUpdateRange(this, attacker) && CanSee(attacker))
+                    // If no combatant, wrong map, one of us is a ghost, or cannot see, or deleted, then stop combat
+                    if (combatant == null || combatant.Deleted || m_Mobile.m_Deleted || combatant.Map != m_Mobile.m_Map ||
+                        !combatant.Alive || !m_Mobile.Alive || !m_Mobile.CanSee(combatant) || (combatant is Mobile && ((Mobile)combatant).IsDeadBondedPet) ||
+                        m_Mobile.IsDeadBondedPet)
                     {
-                        m_NetState.Send(MobileIncoming.Create(m_NetState, this, attacker));
+                        m_Mobile.Combatant = null;
+                        return;
+                    }
+
+                    IWeapon weapon = m_Mobile.Weapon;
+
+                    if (!m_Mobile.InRange(combatant, weapon.MaxRange))
+                    {
+                        return;
+                    }
+
+                    if (m_Mobile.InLOS(combatant))
+                    {
+                        weapon.OnBeforeSwing(m_Mobile, combatant); //OnBeforeSwing for checking in regards to being hidden and whatnot
+                        m_Mobile.RevealingAction();
+                        m_Mobile.m_NextCombatTime = Core.TickCount + (int)weapon.OnSwing(m_Mobile, combatant).TotalMilliseconds;
                     }
                 }
             }
+        }
 
-            for (int i = m_Aggressed.Count - 1; i >= 0; --i)
+        private class ExpireCombatantTimer : Timer
+        {
+            private readonly Mobile m_Mobile;
+
+            public ExpireCombatantTimer(Mobile m)
+                : base(TimeSpan.FromMinutes(1.0))
             {
-                if (i >= m_Aggressed.Count)
+                Priority = TimerPriority.FiveSeconds;
+                m_Mobile = m;
+            }
+
+            protected override void OnTick()
+            {
+                m_Mobile.Combatant = null;
+            }
+        }
+
+        private static TimeSpan m_ExpireCriminalDelay = TimeSpan.FromMinutes(2.0);
+
+        public static TimeSpan ExpireCriminalDelay { get => m_ExpireCriminalDelay; set => m_ExpireCriminalDelay = value; }
+
+        private class ExpireCriminalTimer : Timer
+        {
+            private readonly Mobile m_Mobile;
+
+            public ExpireCriminalTimer(Mobile m)
+                : base(m_ExpireCriminalDelay)
+            {
+                Priority = TimerPriority.FiveSeconds;
+                m_Mobile = m;
+            }
+
+            protected override void OnTick()
+            {
+                m_Mobile.Criminal = false;
+            }
+        }
+
+        private class ExpireAggressorsTimer : Timer
+        {
+            private readonly Mobile m_Mobile;
+
+            public ExpireAggressorsTimer(Mobile m)
+                : base(TimeSpan.FromSeconds(5.0), TimeSpan.FromSeconds(5.0))
+            {
+                m_Mobile = m;
+                Priority = TimerPriority.FiveSeconds;
+            }
+
+            protected override void OnTick()
+            {
+                if (m_Mobile.Deleted || (m_Mobile.Aggressors.Count == 0 && m_Mobile.Aggressed.Count == 0))
                 {
-                    continue;
+                    m_Mobile.StopAggrExpire();
                 }
-
-                AggressorInfo info = m_Aggressed[i];
-
-                if (info.Expired)
+                else
                 {
-                    Mobile defender = info.Defender;
-                    defender.RemoveAggressor(this);
-
-                    m_Aggressed.RemoveAt(i);
-                    info.Free();
-
-                    if (m_NetState != null && Utility.InUpdateRange(this, defender) && CanSee(defender))
-                    {
-                        m_NetState.Send(MobileIncoming.Create(m_NetState, this, defender));
-                    }
+                    m_Mobile.CheckAggrExpire();
                 }
             }
-
-            UpdateAggrExpire();
         }
         #endregion
-
-        #region Expire Combatant Timer
-        private static readonly string _ExpireCombatantTimerID = "ExpireCombatantTimer";
-
-        private void StartExpireCombatantTimer()
-        {
-            TimerRegistry.Register(_ExpireCombatantTimerID, this, TimeSpan.FromMinutes(1), false, TimerPriority.FiveSeconds, m => m.CheckExpireCombatant());
-        }
-
-        private void RemoveCombatantTimer()
-        {
-            TimerRegistry.RemoveFromRegistry(_ExpireCombatantTimerID, this);
-        }
-
-        private void CheckExpireCombatantTimer()
-        {
-            if (!TimerRegistry.UpdateRegistry(_ExpireCombatantTimerID, this, TimeSpan.FromMinutes(1)))
-            {
-                StartExpireCombatantTimer();
-            }
-        }
-
-        private void CheckExpireCombatant()
-        {
-            Combatant = null;
-        }
-        #endregion
-
-        #region Logout
-        /* Logout:
-        *
-        * When a client logs into mobile x
-        *  - if ( x is Internalized ) move x to logout location and map
-        *
-        * When a client attached to a mobile disconnects
-        *  - LogoutTimer is started
-        *	   - Delay is taken from Region.GetLogoutDelay to allow insta-logout regions.
-        *     - OnTick : Location and map are stored, and mobile is internalized
-        *
-        * Some things to consider:
-        *  - An internalized person getting killed (say, by poison). Where does the body go?
-        *  - Regions now have a GetLogoutDelay( Mobile m ); virtual function (see above)
-        */
-        private Point3D m_LogoutLocation;
-        private Map m_LogoutMap;
-
-        private static readonly string _LogoutTimerID = "LogoutTimer";
-
-        public virtual TimeSpan GetLogoutDelay()
-        {
-            return Region.GetLogoutDelay(this);
-        }
-
-        private void DoLogout()
-        {
-            if (m_Map != Map.Internal)
-            {
-                EventSink.InvokeLogout(new LogoutEventArgs(this));
-
-                m_LogoutLocation = m_Location;
-                m_LogoutMap = m_Map;
-
-                Internalize();
-            }
-        }
-        #endregion
-
-        #region Combat Timer
-        private static readonly string _CombatTimerPlayerID = "CombatTimerPlayer";
-        private static readonly string _CombatTimerID = "CombatTimer";
 
         private long m_NextCombatTime;
-        public long NextCombatTime { get => m_NextCombatTime; set => m_NextCombatTime = value; }
-
-        private bool UsePlayerCombatTimer()
-        {
-            return Player || m_Dex > 100;
-        }
-
-        private void StartCombatTimer()
-        {
-            var playerTimer = UsePlayerCombatTimer();
-
-            TimerRegistry.Register(
-                playerTimer ? _CombatTimerPlayerID : _CombatTimerID,
-                this,
-                TimeSpan.FromSeconds(0.01),
-                false,
-                playerTimer ? TimerPriority.EveryTick : TimerPriority.FiftyMS,
-                m => CombatTimerOnTick());
-        }
-
-        private void RemoveCombatTimer()
-        {
-            TimerRegistry.RemoveFromRegistry(UsePlayerCombatTimer() ? _CombatTimerPlayerID : _CombatTimerID, this);
-        }
-
-        private void CombatTimerOnTick()
-        {
-            if (Core.TickCount - m_NextCombatTime >= 0)
-            {
-                IDamageable combatant = Combatant;
-
-                // If no combatant, wrong map, one of us is a ghost, or cannot see, or deleted, then stop combat
-                if (combatant == null || combatant.Deleted || m_Deleted || combatant.Map != m_Map ||
-                    !combatant.Alive || !Alive || !CanSee(combatant) || (combatant is Mobile && ((Mobile)combatant).IsDeadBondedPet) ||
-                    IsDeadBondedPet)
-                {
-                    Combatant = null;
-                    return;
-                }
-
-                IWeapon weapon = Weapon;
-
-                if (!InRange(combatant, weapon.MaxRange))
-                {
-                    return;
-                }
-
-                if (InLOS(combatant))
-                {
-                    weapon.OnBeforeSwing(this, combatant);
-                    RevealingAction();
-                    m_NextCombatTime = Core.TickCount + (int)weapon.OnSwing(this, combatant).TotalMilliseconds;
-                }
-            }
-        }
-        #endregion
-
-        #region Expire Crimimnal
-        private static readonly string _ExpireCrimID = "ExpireCriminalTimer";
-        private static TimeSpan _ExpireCriminalDelay = TimeSpan.FromMinutes(2.0);
-
-        public static TimeSpan ExpireCriminalDelay { get => _ExpireCriminalDelay; set => _ExpireCriminalDelay = value; }
-
-        private void StartCrimDelayTimer()
-        {
-            if (!TimerRegistry.UpdateRegistry(_ExpireCrimID, this, _ExpireCriminalDelay))
-            {
-                TimerRegistry.Register(_ExpireCrimID, this, _ExpireCriminalDelay, TimerPriority.FiveSeconds, m => m.Criminal = false);
-            }
-        }
-
-        private void StopCrimDelayTimer()
-        {
-            TimerRegistry.RemoveFromRegistry(_ExpireCrimID, this);
-        }
-        #endregion
-        #endregion
 
         [CommandProperty(AccessLevel.GameMaster)]
         public long NextSkillTime { get => m_NextSkillTime; set => m_NextSkillTime = value; }
@@ -2054,13 +2104,34 @@ namespace Server
 
                     if (m_Combatant == null)
                     {
-                        RemoveCombatantTimer();
-                        RemoveCombatTimer();
+                        if (m_ExpireCombatant != null)
+                        {
+                            m_ExpireCombatant.Stop();
+                        }
+
+                        if (m_CombatTimer != null)
+                        {
+                            m_CombatTimer.Stop();
+                        }
+
+                        m_ExpireCombatant = null;
+                        m_CombatTimer = null;
                     }
                     else
                     {
-                        CheckExpireCombatantTimer();
-                        StartCombatTimer();
+                        if (m_ExpireCombatant == null)
+                        {
+                            m_ExpireCombatant = new ExpireCombatantTimer(this);
+                        }
+
+                        m_ExpireCombatant.Start();
+
+                        if (m_CombatTimer == null)
+                        {
+                            m_CombatTimer = new CombatTimer(this);
+                        }
+
+                        m_CombatTimer.Start();
                     }
 
                     if (m_Combatant != null && CanBeHarmful(m_Combatant, false))
@@ -2128,7 +2199,12 @@ namespace Server
 
             if (Combatant == aggressor)
             {
-                CheckExpireCombatantTimer();
+                if (m_ExpireCombatant == null)
+                    m_ExpireCombatant = new ExpireCombatantTimer(this);
+                else
+                    m_ExpireCombatant.Stop();
+
+                m_ExpireCombatant.Start();
             }
 
             bool addAggressor = true;
@@ -3629,9 +3705,39 @@ namespace Server
                 m_PoisonTimer.Stop();
             }
 
+            if (m_CombatTimer != null)
+            {
+                m_CombatTimer.Stop();
+            }
+
+            if (m_ExpireCombatant != null)
+            {
+                m_ExpireCombatant.Stop();
+            }
+
+            if (m_LogoutTimer != null)
+            {
+                m_LogoutTimer.Stop();
+            }
+
+            if (m_ExpireCriminal != null)
+            {
+                m_ExpireCriminal.Stop();
+            }
+
             if (m_WarmodeTimer != null)
             {
                 m_WarmodeTimer.Stop();
+            }
+
+            if (m_ParaTimer != null)
+            {
+                m_ParaTimer.Stop();
+            }
+
+            if (m_FrozenTimer != null)
+            {
+                m_FrozenTimer.Stop();
             }
 
             if (m_AutoManifestTimer != null)
@@ -3742,14 +3848,20 @@ namespace Server
 			{
 				Paralyzed = false;
 
-                TimerRegistry.RemoveFromRegistry(_ParaTimerID, this);
-            }
+				if (m_ParaTimer != null)
+				{
+					m_ParaTimer.Stop();
+				}
+			}
 
 			if (Frozen)
 			{
 				Frozen = false;
 
-                TimerRegistry.RemoveFromRegistry(_FrozenTimerID, this);
+				if (m_FrozenTimer != null)
+				{
+					m_FrozenTimer.Stop();
+				}
 			}
 
 			List<Item> content = new List<Item>();
@@ -5788,16 +5900,30 @@ namespace Server
 						m_Map.OnEnter(this);
 					}
 
-                    if (m_Criminal)
-                    {
-                        StartCrimDelayTimer();
-                    }
+					if (m_Criminal)
+					{
+						if (m_ExpireCriminal == null)
+						{
+							m_ExpireCriminal = new ExpireCriminalTimer(this);
+						}
+
+						m_ExpireCriminal.Start();
+					}
 
                     m_InternalCanRegen = true;
 
 					if (ShouldCheckStatTimers)
 					{
 						CheckStatTimers();
+					}
+
+					if (!m_Player && m_Dex <= 100 && m_CombatTimer != null)
+					{
+						m_CombatTimer.Priority = TimerPriority.FiftyMS;
+					}
+					else if (m_CombatTimer != null)
+					{
+						m_CombatTimer.Priority = TimerPriority.EveryTick;
 					}
 
 					UpdateRegion();
@@ -6117,6 +6243,15 @@ namespace Server
 			{
 				m_Player = value;
 				InvalidateProperties();
+
+				if (!m_Player && m_Dex <= 100 && m_CombatTimer != null)
+				{
+					m_CombatTimer.Priority = TimerPriority.FiftyMS;
+				}
+				else if (m_CombatTimer != null)
+				{
+					m_CombatTimer.Priority = TimerPriority.EveryTick;
+				}
 
 				CheckStatTimers();
 			}
@@ -7528,9 +7663,17 @@ namespace Server
 				Combatant = target;
 			}
 
-            CheckExpireCombatantTimer();
+			if (m_ExpireCombatant == null)
+			{
+				m_ExpireCombatant = new ExpireCombatantTimer(this);
+			}
+			else
+			{
+				m_ExpireCombatant.Stop();
+			}
 
-        }
+			m_ExpireCombatant.Start();
+		}
 
 		public virtual bool HarmfulCheck(IDamageable target)
 		{
@@ -8531,26 +8674,35 @@ namespace Server
 						OnDisconnected();
 						EventSink.InvokeDisconnected(new DisconnectedEventArgs(this));
 
-                        // Disconnected, start the logout timer
-                        var logoutDelay = GetLogoutDelay();
-                        if (!TimerRegistry.UpdateRegistry(_LogoutTimerID, this, logoutDelay))
-                        {
-                            TimerRegistry.Register(_LogoutTimerID, this, logoutDelay, TimerPriority.OneSecond, m => m.DoLogout());
-                        }
+						// Disconnected, start the logout timer
+
+						if (m_LogoutTimer == null)
+						{
+							m_LogoutTimer = new LogoutTimer(this);
+						}
+						else
+						{
+							m_LogoutTimer.Stop();
+						}
+
+						m_LogoutTimer.Delay = GetLogoutDelay();
+						m_LogoutTimer.Start();
 					}
 					else
 					{
 						OnConnected();
 						EventSink.InvokeConnected(new ConnectedEventArgs(this));
 
-                        // Connected, stop the logout timer and if needed, move to the world
+						// Connected, stop the logout timer and if needed, move to the world
 
-                        if (TimerRegistry.HasTimer(_LogoutTimerID, this))
-                        {
-                            TimerRegistry.RemoveFromRegistry(_LogoutTimerID, this);
-                        }
+						if (m_LogoutTimer != null)
+						{
+							m_LogoutTimer.Stop();
+						}
 
-                        if (m_Map == Map.Internal && m_LogoutMap != null)
+						m_LogoutTimer = null;
+
+						if (m_Map == Map.Internal && m_LogoutMap != null)
 						{
 							CharacterOut = true;
 							Map = m_LogoutMap;
@@ -11229,11 +11381,21 @@ namespace Server
 
 				if (m_Criminal)
 				{
-                    StartCrimDelayTimer();
+					if (m_ExpireCriminal == null)
+					{
+						m_ExpireCriminal = new ExpireCriminalTimer(this);
+					}
+					else
+					{
+						m_ExpireCriminal.Stop();
+					}
+
+					m_ExpireCriminal.Start();
 				}
-				else
+				else if (m_ExpireCriminal != null)
 				{
-                    StopCrimDelayTimer();
+					m_ExpireCriminal.Stop();
+					m_ExpireCriminal = null;
 				}
 			}
 		}
