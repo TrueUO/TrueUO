@@ -6127,7 +6127,6 @@ namespace Server
 			get => m_Player;
 			set
 			{
-                var old = value;
 				m_Player = value;
 				InvalidateProperties();
 
