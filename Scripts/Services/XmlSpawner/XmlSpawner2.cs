@@ -6859,7 +6859,7 @@ namespace Server.Mobiles
                     e.Mobile.SendMessage("Usage:  {0} <SpawnFile or directory> [SpawnerPrefixFilter]", e.Command);
                 }
             }
-            else if (m != null)
+            else
             {
                 e.Mobile.SendMessage("You do not have rights to perform this command.");
             }
