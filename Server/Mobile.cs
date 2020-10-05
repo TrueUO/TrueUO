@@ -2056,23 +2056,11 @@ namespace Server
                     {
                         RemoveCombatantTimer();
                         RemoveCombatTimer();
-                        /*if (m_CombatTimer != null)
-                        {
-                            m_CombatTimer.Stop();
-                        }
-
-                        m_CombatTimer = null;*/
                     }
                     else
                     {
                         CheckExpireCombatantTimer();
                         StartCombatTimer();
-                        /*if (m_CombatTimer == null)
-                        {
-                            m_CombatTimer = new CombatTimer(this);
-                        }
-
-                        m_CombatTimer.Start();*/
                     }
 
                     if (m_Combatant != null && CanBeHarmful(m_Combatant, false))
