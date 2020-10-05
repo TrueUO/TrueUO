@@ -77,8 +77,6 @@ namespace Server.Mobiles
         {
             if (m.Alive && !m.Hidden && m is PlayerMobile)
             {
-                PlayerMobile pm = (PlayerMobile)m;
-
                 if (InLOS(m) && InRange(m, 8) && !InRange(oldLocation, 8) && DateTime.UtcNow >= _NextTalk)
                 {
                     if (Utility.Random(100) < 50)

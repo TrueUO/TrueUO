@@ -1,4 +1,4 @@
-﻿using Server.Gumps;
+using Server.Gumps;
 using Server.Mobiles;
 using Server.Network;
 
@@ -25,11 +25,6 @@ namespace Server.Items
 
         public override void OnDoubleClick(Mobile from)
         {
-            if (!(from is PlayerMobile))
-                return;
-
-            PlayerMobile mobile = (PlayerMobile)from;
-
             if (!from.HasGump(typeof(SorcerersScrollGump)))
             {
                 from.SendGump(new SorcerersScrollGump(from));
