@@ -7722,7 +7722,8 @@ namespace Server
                             TimerRegistry.Register(
                                 Player ? _HitsRegenTimerPlayerID : _HitsRegenTimerID,
                                 this,
-                                GetHitsRegenRate(this), Player ? TimeSpan.FromMilliseconds(50) : TimeSpan.FromMilliseconds(250),
+                                GetHitsRegenRate(this),
+                                Player ? TimeSpan.FromMilliseconds(50) : TimeSpan.FromMilliseconds(250),
                                 false, TimerPriority.TenMS,
                                 mobile => mobile.HitsOnTick());
                         }
