@@ -1,7 +1,7 @@
 namespace Server.Items
 {
     [Furniture]
-    public class ScarecrowMailbox : Mailbox, IFlipable
+    public class ScarecrowMailbox : Mailbox
     {
         public override int LabelNumber => 1113927;  // Mailbox
         public override int DefaultGumpID => 0x9D39;
