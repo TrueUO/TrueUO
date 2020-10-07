@@ -1,7 +1,7 @@
 namespace Server.Items
 {
     [Furniture]
-    public class DolphinMailbox : Mailbox, IFlipable
+    public class DolphinMailbox : Mailbox
     {
         public override int LabelNumber => 1113927;  // Mailbox
         public override int DefaultGumpID => 0x6D3;	
