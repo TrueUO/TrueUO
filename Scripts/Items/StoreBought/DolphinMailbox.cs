@@ -4,11 +4,9 @@ namespace Server.Items
     public class DolphinMailbox : Mailbox, IFlipable
     {
         public override int LabelNumber => 1113927;  // Mailbox
-        public override int DefaultGumpID => 0x6D3;
-		
+        public override int DefaultGumpID => 0x6D3;	
         public override int SouthMailBoxID => 0xA204;
         public override int SouthEmptyMailBoxID => 0xA205;
-		
         public override int EastMailBoxID => 0xA202;	
         public override int EastEmptyMailBoxID => 0xA203;
 
