@@ -9438,7 +9438,6 @@ namespace Server.Mobiles
             // go through the tiles and see if any are at the Z location
             foreach (object o in tiles)
             {
-
                 if (o is StaticTile)
                 {
                     StaticTile i = (StaticTile)o;

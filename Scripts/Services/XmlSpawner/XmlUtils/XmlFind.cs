@@ -1967,7 +1967,7 @@ namespace Server.Mobiles
                     {
                         Refresh(state);
 
-                        state.Mobile.SendGump(new XmlConfirmBringGump(state.Mobile, m_SearchList));
+                        state.Mobile.SendGump(new XmlConfirmBringGump(m_SearchList));
                         return;
                     }
                 case 155: // Return the player to the starting loc
@@ -2154,8 +2154,7 @@ namespace Server.Mobiles
                         break;
                     }
             }
-            // Create a new gump
-            //m_Spawner.OnDoubleClick( state.Mobile);
+            // Refresh the gump
             Refresh(state);
         }
 
@@ -2163,7 +2162,7 @@ namespace Server.Mobiles
         {
             private readonly ArrayList SearchList;
 
-            public XmlConfirmBringGump(Mobile from, ArrayList searchlist)
+            public XmlConfirmBringGump(ArrayList searchlist)
                 : base(0, 0)
             {
                 SearchList = searchlist;
@@ -2244,14 +2243,11 @@ namespace Server.Mobiles
         {
             private readonly ArrayList SearchList;
 
-            private readonly Mobile From;
-
             public XmlConfirmDeleteGump(Mobile from, ArrayList searchlist)
                 : base(0, 0)
             {
                 SearchList = searchlist;
 
-                From = from;
                 Closable = false;
                 Dragable = true;
                 AddPage(0);

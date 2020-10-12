@@ -1416,7 +1416,7 @@ namespace Server.Mobiles
                     {
                         if (defs.LastSpawner == null || defs.LastSpawner.Deleted) break;
                         Refresh(state.Mobile);
-                        state.Mobile.SendGump(new XmlAddConfirmDeleteGump(state.Mobile, defs.LastSpawner));
+                        state.Mobile.SendGump(new XmlAddConfirmDeleteGump(defs.LastSpawner));
                         return;
                     }
                 case 157: // Reset last spawner
@@ -1646,14 +1646,13 @@ namespace Server.Mobiles
         {
             private readonly XmlSpawner LastSpawner;
 
-            public XmlAddConfirmDeleteGump(Mobile from, XmlSpawner lastSpawner) : base(0, 0)
+            public XmlAddConfirmDeleteGump(XmlSpawner lastSpawner) : base(0, 0)
             {
                 LastSpawner = lastSpawner;
                 Closable = false;
                 Dragable = true;
                 AddPage(0);
                 AddBackground(10, 200, 200, 130, 5054);
-
 
                 AddLabel(20, 225, 33, "Delete Last Spawner?");
                 AddRadio(35, 255, 9721, 0x86A, false, 1); // accept/yes radio
