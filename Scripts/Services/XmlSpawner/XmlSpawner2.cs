@@ -293,18 +293,6 @@ namespace Server.Mobiles
 
         public bool DisableGlobalAutoReset { get { return m_DisableGlobalAutoReset; } set { m_DisableGlobalAutoReset = value; } }
 
-        public bool DoDefrag
-        {
-            get { return false; }
-            set
-            {
-                if (value)
-                {
-                    Defrag(true);
-                }
-            }
-        }
-
         private readonly bool sectorIsActive = false;
         private bool UseSectorActivate;
 
@@ -7627,46 +7615,6 @@ namespace Server.Mobiles
                 InvalidateProperties();
         }
 
-        public void DeleteGumpTags()
-        {
-            if (m_SpawnObjects == null) return;
-            bool removed = false;
-            List<BaseXmlSpawner.KeywordTag> ToDelete = new List<BaseXmlSpawner.KeywordTag>();
-            foreach (SpawnObject so in m_SpawnObjects)
-            {
-                for (int x = 0; x < so.SpawnedObjects.Count; x++)
-                {
-                    object o = so.SpawnedObjects[x];
-                    if (o is BaseXmlSpawner.KeywordTag)
-                    {
-                        BaseXmlSpawner.KeywordTag sot = (BaseXmlSpawner.KeywordTag)o;
-                        // clear the gump tags
-                        if (sot.Type == 1)
-                        {
-                            ToDelete.Add(sot);
-                            so.SpawnedObjects.Remove(o);
-                            x--;
-                            removed = true;
-                        }
-
-                    }
-                }
-            }
-
-            for (int x = ToDelete.Count - 1; x >= 0; --x)//BaseXmlSpawner.KeywordTag i in ToDelete)
-            {
-                BaseXmlSpawner.KeywordTag i = ToDelete[x];
-                if (i != null && !i.Deleted)
-                {
-                    i.Delete();
-                }
-            }
-
-            // Check if anything has been removed
-            if (removed)
-                InvalidateProperties();
-        }
-
         public void DeleteTag(BaseXmlSpawner.KeywordTag tag)
         {
             if (m_SpawnObjects == null) return;
@@ -10257,15 +10205,6 @@ namespace Server.Mobiles
             }
 
             return Location;
-        }
-
-        public int GetCreatureMax(int index)
-        {
-            Defrag(false);
-
-            if (m_SpawnObjects == null) return 0;
-
-            return m_SpawnObjects[index].MaxCount;
         }
 
         private void DeleteFromList(List<object> list)
