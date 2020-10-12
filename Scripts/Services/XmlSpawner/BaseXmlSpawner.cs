@@ -370,17 +370,9 @@ namespace Server.Mobiles
 
         public static void Configure()
         {
-            // set up the keyword hash tables
-            // already set at startup time
-            /*typeKeywordHash = new Hashtable();
-			typemodKeywordHash = new Hashtable();
-			valueKeywordHash = new Hashtable();
-			valuemodKeywordHash = new Hashtable();*/
-
             // Type keywords
             // spawned as primary objects
             AddTypeKeyword("SET");
-            AddTypeKeyword("SETVAR");
             AddTypeKeyword("SETONTRIGMOB");
             AddTypeKeyword("SETONCARRIED");
             AddTypeKeyword("SETONNEARBY");
@@ -443,7 +435,6 @@ namespace Server.Mobiles
             AddValueKeyword("RNDBOOL");
             AddValueKeyword("RNDLIST");
             AddValueKeyword("RNDSTRLIST");
-            AddValueKeyword("MY");
             AddValueKeyword("GET");
             AddValueKeyword("GETONMOB");
             AddValueKeyword("GETONCARRIED");
@@ -2215,7 +2206,7 @@ namespace Server.Mobiles
                                     string filestring = null;
 
                                     // read in the string from the file
-                                    if (File.Exists(filename) == true)
+                                    if (File.Exists(filename))
                                     {
                                         try
                                         {
@@ -3875,7 +3866,7 @@ namespace Server.Mobiles
                     string filestring = null;
 
                     // read in the string from the file
-                    if (File.Exists(filename) == true)
+                    if (File.Exists(filename))
                     {
                         try
                         {

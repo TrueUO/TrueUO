@@ -1052,7 +1052,7 @@ namespace Server.Mobiles
                 InvalidateProperties();
 
                 // Check if the spawner is showing its bounds
-                if (ShowBounds == true)
+                if (ShowBounds)
                 {
                     ShowBounds = false;
                     ShowBounds = true;
@@ -1090,7 +1090,7 @@ namespace Server.Mobiles
                 //InvalidateProperties();
 
                 // Check if the spawner is showing its bounds
-                if (ShowBounds == true)
+                if (ShowBounds)
                 {
                     ShowBounds = false;
                     ShowBounds = true;
@@ -4514,7 +4514,7 @@ namespace Server.Mobiles
             int total_processed_spawners = 0;
 
             // Check if the file exists
-            if (File.Exists(filename) == true)
+            if (File.Exists(filename))
             {
                 FileStream fs = null;
                 try
@@ -4535,47 +4535,47 @@ namespace Server.Mobiles
             }
             else
                 // check to see if it is a directory
-                if (Directory.Exists(filename) == true)
-            {
-                // if so then import all of the .xml files in the directory
-                string[] files = null;
-                try
+                if (Directory.Exists(filename))
                 {
-                    files = Directory.GetFiles(filename, "*.xml");
-                }
-                catch { }
-                if (files != null && files.Length > 0)
-                {
+                    // if so then import all of the .xml files in the directory
+                    string[] files = null;
+                    try
+                    {
+                        files = Directory.GetFiles(filename, "*.xml");
+                    }
+                    catch { }
+                    if (files != null && files.Length > 0)
+                    {
+                        if (from != null)
+                            from.SendMessage("UnLoading {0} .xml files from directory {1}", files.Length, filename);
+                        foreach (string file in files)
+                        {
+                            XmlUnLoadFromFile(file, SpawnerPrefix, from, out processedmaps, out processedspawners);
+                            total_processed_maps += processedmaps;
+                            total_processed_spawners += processedspawners;
+                        }
+                    }
+                    // recursively search subdirectories for more .xml files
+                    string[] dirs = null;
+                    try
+                    {
+                        dirs = Directory.GetDirectories(filename);
+                    }
+                    catch { }
+                    if (dirs != null && dirs.Length > 0)
+                    {
+                        foreach (string dir in dirs)
+                        {
+                            XmlUnLoadFromFile(dir, SpawnerPrefix, from, out processedmaps, out processedspawners);
+                            total_processed_maps += processedmaps;
+                            total_processed_spawners += processedspawners;
+                        }
+                    }
                     if (from != null)
-                        from.SendMessage("UnLoading {0} .xml files from directory {1}", files.Length, filename);
-                    foreach (string file in files)
-                    {
-                        XmlUnLoadFromFile(file, SpawnerPrefix, from, out processedmaps, out processedspawners);
-                        total_processed_maps += processedmaps;
-                        total_processed_spawners += processedspawners;
-                    }
+                        from.SendMessage("UnLoaded a total of {0} .xml files and {2} spawners from directory {1}", total_processed_maps, filename, total_processed_spawners);
+                    processedmaps = total_processed_maps;
+                    processedspawners = total_processed_spawners;
                 }
-                // recursively search subdirectories for more .xml files
-                string[] dirs = null;
-                try
-                {
-                    dirs = Directory.GetDirectories(filename);
-                }
-                catch { }
-                if (dirs != null && dirs.Length > 0)
-                {
-                    foreach (string dir in dirs)
-                    {
-                        XmlUnLoadFromFile(dir, SpawnerPrefix, from, out processedmaps, out processedspawners);
-                        total_processed_maps += processedmaps;
-                        total_processed_spawners += processedspawners;
-                    }
-                }
-                if (from != null)
-                    from.SendMessage("UnLoaded a total of {0} .xml files and {2} spawners from directory {1}", total_processed_maps, filename, total_processed_spawners);
-                processedmaps = total_processed_maps;
-                processedspawners = total_processed_spawners;
-            }
             else
             {
                 if (from != null)
@@ -5840,7 +5840,7 @@ namespace Server.Mobiles
 
 
             // Check if the file exists
-            if (File.Exists(filename) == true)
+            if (File.Exists(filename))
             {
                 FileStream fs = null;
                 try
@@ -5862,7 +5862,7 @@ namespace Server.Mobiles
             }
             else
                 // check to see if it is a directory
-                if (Directory.Exists(filename) == true)
+                if (Directory.Exists(filename))
             {
                 // if so then load all of the .xml files in the directory
                 string[] files = null;
@@ -6754,7 +6754,7 @@ namespace Server.Mobiles
 
             string dirname = null;
 
-            if (Directory.Exists(XmlSpawnDir) == true)
+            if (Directory.Exists(XmlSpawnDir))
             {
                 // get it from the defaults directory if it exists
                 dirname = string.Format("{0}/{1}", XmlSpawnDir, filename);
@@ -6776,7 +6776,7 @@ namespace Server.Mobiles
 
             string dirname = null;
 
-            if (Directory.Exists(XmlMultiDir) == true)
+            if (Directory.Exists(XmlMultiDir))
             {
                 // get it from the defaults directory if it exists
                 dirname = string.Format("{0}/{1}", XmlMultiDir, filename);
@@ -7076,7 +7076,7 @@ namespace Server.Mobiles
                 dirname = filename;
             }
 
-            if (SaveAllMaps == true)
+            if (SaveAllMaps)
                 e.Mobile.SendMessage(string.Format("Saving {0} objects{1} to file {2} from {3}.", "XmlSpawner",
                     ((SpawnerPrefix != null && SpawnerPrefix.Length > 0) ? " beginning with " + SpawnerPrefix : string.Empty), dirname, e.Mobile.Map));
             else
@@ -7089,7 +7089,7 @@ namespace Server.Mobiles
             // Add each spawn point to the list
             foreach (Item i in World.Items.Values)
             {
-                if (i is XmlSpawner && !i.Deleted && ((SaveAllMaps == true) || (i.Map == e.Mobile.Map))
+                if (i is XmlSpawner && !i.Deleted && (SaveAllMaps || i.Map == e.Mobile.Map)
                     //check for mob carried spawners and ignore them
                     && !(i.RootParent is Mobile)
                     && (SpawnerPrefix == null || (SpawnerPrefix.Length == 0) || (i.Name != null && i.Name.StartsWith(SpawnerPrefix))))
@@ -7446,7 +7446,7 @@ namespace Server.Mobiles
                 if (e.Arguments != null && e.Arguments.Length > 0)
                     SpawnerPrefix = e.Arguments[0];
 
-                if (WipeAll == true)
+                if (WipeAll)
                     e.Mobile.SendMessage("Removing ALL XmlSpawner objects from the world{0}.", ((SpawnerPrefix != null && SpawnerPrefix.Length > 0) ? " beginning with " + SpawnerPrefix : string.Empty));
                 else
                     e.Mobile.SendMessage("Removing ALL XmlSpawner objects from {0}{1}.", e.Mobile.Map, ((SpawnerPrefix != null && SpawnerPrefix.Length > 0) ? " beginning with " + SpawnerPrefix : string.Empty));
@@ -7456,7 +7456,7 @@ namespace Server.Mobiles
                 List<Item> ToDelete = new List<Item>();
                 foreach (Item i in World.Items.Values)
                 {
-                    if ((i is XmlSpawner) && (WipeAll == true || i.Map == e.Mobile.Map) && (i.Deleted == false))
+                    if ((i is XmlSpawner) && (WipeAll || i.Map == e.Mobile.Map) && (i.Deleted == false))
                     {
                         // Check if there is a delete condition
                         if (SpawnerPrefix == null || (SpawnerPrefix.Length == 0) || (i.Name.StartsWith(SpawnerPrefix)))
@@ -7474,7 +7474,7 @@ namespace Server.Mobiles
                 foreach (Item i in ToDelete)
                     i.Delete();
 
-                if (WipeAll == true)
+                if (WipeAll)
                     e.Mobile.SendMessage("Removed {0} XmlSpawner objects from the world.", Count);
                 else
                     e.Mobile.SendMessage("Removed {0} XmlSpawner objects from {1}.", Count, e.Mobile.Map);
@@ -7511,7 +7511,7 @@ namespace Server.Mobiles
                 if (e.Arguments != null && e.Arguments.Length > 0)
                     SpawnerPrefix = e.Arguments[0];
 
-                if (RespawnAll == true)
+                if (RespawnAll)
                     e.Mobile.SendMessage("Respawning ALL XmlSpawner objects from the world{0}.", ((SpawnerPrefix != null && SpawnerPrefix.Length > 0) ? " beginning with " + SpawnerPrefix : string.Empty));
                 else
                     e.Mobile.SendMessage("Respawning ALL XmlSpawner objects from {0}{1}.", e.Mobile.Map, ((SpawnerPrefix != null && SpawnerPrefix.Length > 0) ? " beginning with " + SpawnerPrefix : string.Empty));
@@ -7524,7 +7524,7 @@ namespace Server.Mobiles
                     try
                     {
 
-                        if ((i is XmlSpawner) && (RespawnAll == true || i.Map == e.Mobile.Map) && (i.Deleted == false))
+                        if ((i is XmlSpawner) && (RespawnAll || i.Map == e.Mobile.Map) && (i.Deleted == false))
                         {
                             // Check if there is a respawn condition
                             if ((SpawnerPrefix == null) || (SpawnerPrefix.Length == 0) || (i.Name != null && i.Name.StartsWith(SpawnerPrefix)))
@@ -7546,7 +7546,7 @@ namespace Server.Mobiles
                     CheckXmlSpawner.Respawn();
                 }
 
-                if (RespawnAll == true)
+                if (RespawnAll)
                     e.Mobile.SendMessage("Respawned {0} XmlSpawner objects from the world.", Count);
                 else
                     e.Mobile.SendMessage("Respawned {0} XmlSpawner objects from {1}.", Count, e.Mobile.Map);
@@ -7975,7 +7975,7 @@ namespace Server.Mobiles
             DeleteFromList(deleteilist, deletemlist);
 
             // Check if anything has been removed
-            if (removed == true)
+            if (removed)
                 InvalidateProperties();
 
             // increment the killcount based upon the number of items that were removed from the spawnlist (i.e. were spawned but now are gone, presumed killed)
@@ -7998,7 +7998,7 @@ namespace Server.Mobiles
                     {
                         BaseXmlSpawner.KeywordTag sot = (BaseXmlSpawner.KeywordTag)o;
                         // clear the tags except for gump and delay tags
-                        if (sot != null && sot.Type == 2)
+                        if (sot.Type == 2)
                         {
                             ToDelete.Add(sot);
                             so.SpawnedObjects.Remove(o);
@@ -8034,7 +8034,7 @@ namespace Server.Mobiles
                     {
                         BaseXmlSpawner.KeywordTag sot = (BaseXmlSpawner.KeywordTag)o;
                         // clear the tags except for gump and delay tags
-                        if (sot != null && (all || ((sot.Flags & BaseXmlSpawner.KeywordFlags.Defrag) != 0)))
+                        if ((all || ((sot.Flags & BaseXmlSpawner.KeywordFlags.Defrag) != 0)))
                         {
                             ToDelete.Add(sot);
                             so.SpawnedObjects.Remove(o);
@@ -8059,7 +8059,7 @@ namespace Server.Mobiles
             if (all) m_KeywordTagList.Clear();
 
             // Check if anything has been removed
-            if (removed == true)
+            if (removed)
                 InvalidateProperties();
         }
 
@@ -8077,7 +8077,7 @@ namespace Server.Mobiles
                     {
                         BaseXmlSpawner.KeywordTag sot = (BaseXmlSpawner.KeywordTag)o;
                         // clear the gump tags
-                        if (sot != null && sot.Type == 1)
+                        if (sot.Type == 1)
                         {
                             ToDelete.Add(sot);
                             so.SpawnedObjects.Remove(o);
@@ -8099,7 +8099,7 @@ namespace Server.Mobiles
             }
 
             // Check if anything has been removed
-            if (removed == true)
+            if (removed)
                 InvalidateProperties();
         }
 
@@ -8117,7 +8117,7 @@ namespace Server.Mobiles
                     {
                         BaseXmlSpawner.KeywordTag sot = (BaseXmlSpawner.KeywordTag)o;
                         // clear the matching tags
-                        if (sot != null && sot == tag)
+                        if (sot == tag)
                         {
                             ToDelete.Add(sot);
                             so.SpawnedObjects.Remove(o);
@@ -8139,7 +8139,7 @@ namespace Server.Mobiles
             }
 
             // Check if anything has been removed
-            if (removed == true)
+            if (removed)
                 InvalidateProperties();
         }
 
@@ -9133,7 +9133,7 @@ namespace Server.Mobiles
 
                                     // Check if this spawner uses absolute (from spawnER location)
                                     // or relative (from spawnED location) as the mobiles home point
-                                    if (m_HomeRangeIsRelative == true)
+                                    if (m_HomeRangeIsRelative)
                                         c.Home = m.Location; // Mobiles spawned location is the home point
                                     else
                                         c.Home = Location; // Spawners location is the home point
@@ -9335,7 +9335,7 @@ namespace Server.Mobiles
             get { return false; }
             set
             {
-                if (value == true)
+                if (value)
                 {
                     // see if a region definition needs updating
                     if (m_Region == null && m_RegionName != null && RegionName != string.Empty)
@@ -9368,7 +9368,7 @@ namespace Server.Mobiles
         public void Stop()
         {
 
-            if (m_Running == true)
+            if (m_Running)
             {
                 // turn off all timers
                 if (m_Timer != null)
@@ -11059,14 +11059,10 @@ namespace Server.Mobiles
             // ok, there are args in the typename, so we need to invoke the proper constructor
             ConstructorInfo[] ctors = type.GetConstructors();
 
-            if (ctors == null) return null;
-
             // go through all the constructors for this type
             for (int i = 0; i < ctors.Length; ++i)
             {
                 ConstructorInfo ctor = ctors[i];
-
-                if (ctor == null) continue;
 
                 // if requireconstructable is true, then allow either condition
 #if (RESTRICTCONSTRUCTABLE)
