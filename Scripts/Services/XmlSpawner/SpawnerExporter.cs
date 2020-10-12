@@ -51,7 +51,7 @@ namespace Server.Mobiles
                     if (list[i] is Spawner)
                     {
                         Spawner spawner = (Spawner)list[i];
-                        if (spawner != null && !spawner.Deleted && spawner.Map != Map.Internal && spawner.Parent == null)
+                        if (!spawner.Deleted && spawner.Map != Map.Internal && spawner.Parent == null)
                             spawners.Add(spawner);
                     }
                 }

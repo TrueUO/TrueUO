@@ -328,7 +328,6 @@ namespace Server.Mobiles
             {
                 case 0: // Close
                     {
-                        update_entry = false;
                         break;
                     }
                 case 1: // Okay
@@ -967,8 +966,6 @@ namespace Server.Mobiles
 
                 // add a new spawn entry
                 m_Spawner.m_SpawnObjects.Add(new XmlSpawner.SpawnObject(from, m_Spawner, entry, 1));
-
-                m_Index = m_Spawner.SpawnObjects.Length - 1;
 
                 // and bump the maxcount of the spawner
                 m_Spawner.MaxCount++;

@@ -1,9 +1,9 @@
-using Server.Mobiles;
-using Server.Network;
 using System;
 using System.Collections;
 using System.IO;
 using System.Xml;
+using Server.Mobiles;
+using Server.Network;
 
 /*
 ** Modified from RunUO 1.0.0 CategorizedAddGump.cs
@@ -41,12 +41,10 @@ namespace Server.Gumps
             }
             else
             {
-                if (gump is XmlAddGump)
+                if (gump is XmlAddGump xmladdgump)
                 {
-                    XmlAddGump xmladdgump = (XmlAddGump)gump;
-
                     //Commands.Handle( from, String.Format( "{0}Add {1}", Commands.CommandPrefix, m_Type.Name ) );
-                    if (xmladdgump != null && xmladdgump.defs != null && xmladdgump.defs.NameList != null &&
+                    if (xmladdgump.defs != null && xmladdgump.defs.NameList != null &&
                         index >= 0 && index < xmladdgump.defs.NameList.Length)
                     {
 
@@ -56,9 +54,9 @@ namespace Server.Gumps
                     from.SendGump(new XmlCategorizedAddGump(from, m_Parent, page, index, xmladdgump));
                 }
                 else
-                    if (gump is XmlSpawnerGump)
+                    if (gump is XmlSpawnerGump spawnerGump)
                 {
-                    XmlSpawner m_Spawner = ((XmlSpawnerGump)gump).m_Spawner;
+                    XmlSpawner m_Spawner = spawnerGump.m_Spawner;
 
                     if (m_Spawner != null)
                     {
@@ -267,10 +265,9 @@ namespace Server.Gumps
         private static readonly int EntryCount = 15;
 
         private static readonly int TotalWidth = OffsetSize + EntryWidth + OffsetSize + SetWidth + OffsetSize;
-        private static readonly int TotalHeight = OffsetSize + ((EntryHeight + OffsetSize) * (EntryCount + 1));
 
         private static readonly int BackWidth = BorderSize + TotalWidth + BorderSize;
-        private static readonly int BackHeight = BorderSize + TotalHeight + BorderSize;
+
         private readonly Mobile m_Owner;
         private readonly XmlAddCAGCategory m_Category;
         private int m_Page;
@@ -302,7 +299,7 @@ namespace Server.Gumps
             {
                 XmlAddGump xmladdgump = (XmlAddGump)gump;
 
-                if (xmladdgump != null && xmladdgump.defs != null)
+                if (xmladdgump.defs != null)
                 {
                     xmladdgump.defs.CurrentCategory = category;
                     xmladdgump.defs.CurrentCategoryPage = page;

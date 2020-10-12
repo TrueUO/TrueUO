@@ -2009,7 +2009,7 @@ namespace Server.Mobiles
         {
             base.OnDelete();
 
-            if (ShowBounds == true)
+            if (ShowBounds)
                 ShowBounds = false;
 
             RemoveSpawnObjects();

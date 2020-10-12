@@ -176,7 +176,6 @@ namespace Server.Mobiles
         private enum typeKeyword
         {
             SET,
-            SETVAR,
             SETONTRIGMOB,
             SETONCARRIED,
             SETONSPAWN,
@@ -194,20 +193,16 @@ namespace Server.Mobiles
             BROWSER,
             SENDMSG,
             SENDASCIIMSG,
-            MUSIC,
             RESURRECT,
-            POISON,
             DAMAGE,
             EFFECT,
             MEFFECT,
-            SOUND,
             WAITUNTIL,
             WHILE,
             IF,
             GOTO,
             CAST,
             BCAST,
-            BSOUND,
             COMMAND,
             SPAWN,
             DESPAWN
@@ -215,14 +210,11 @@ namespace Server.Mobiles
 
         private enum typemodKeyword
         {
-            MUSIC,
-            POISON,
             DAMAGE,
             EFFECT,
             BOLTEFFECT,
             MEFFECT,
             PEFFECT,
-            SOUND,
             SAY,
             SPEECH,
             ANIMATE,
@@ -261,7 +253,6 @@ namespace Server.Mobiles
             RNDSTRLIST,
             TRIGSKILL,
             PLAYERSINRANGE,
-            MY,
             RANDNAME
         }
 
@@ -7476,7 +7467,7 @@ namespace Server.Mobiles
                                 // get the gump constructor type
                                 gumptypestr = gumpkeywordargs[3].Trim();
                             }
-                            Type type = SpawnerType.GetType(gumptypestr); ;
+                            Type type = SpawnerType.GetType(gumptypestr);
 
                             if (type == null)
                             {

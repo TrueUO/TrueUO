@@ -1,8 +1,9 @@
 
-using Server.Mobiles;
 using System;
 using System.Collections;
 using System.Reflection;
+using Server.Mobiles;
+using Server.Network;
 
 /*
 ** Modified from RunUO 1.0.0 AddGump.cs
@@ -24,10 +25,10 @@ namespace Server.Gumps
         public XmlPartialCategorizedAddGump(Mobile from, string searchString, int page, ArrayList searchResults, bool explicitSearch, int entryindex, Gump gump) : base(50, 50)
         {
 
-            if (gump is XmlSpawnerGump)
+            if (gump is XmlSpawnerGump spawnerGump)
             {
                 // keep track of the spawner for xmlspawnergumps
-                m_Spawner = ((XmlSpawnerGump)gump).m_Spawner;
+                m_Spawner = spawnerGump.m_Spawner;
             }
 
             // keep track of the gump
@@ -178,7 +179,7 @@ namespace Server.Gumps
         }
 
 
-        public override void OnResponse(Network.NetState sender, RelayInfo info)
+        public override void OnResponse(NetState sender, RelayInfo info)
         {
             Mobile from = sender.Mobile;
 
@@ -224,13 +225,12 @@ namespace Server.Gumps
 
                             Type type = ((SearchEntry)m_SearchResults[index]).EntryType;
 
-                            if (m_Gump is XmlAddGump && type != null)
+                            if (m_Gump is XmlAddGump mXmlAddGump && type != null)
                             {
-                                XmlAddGump m_XmlAddGump = (XmlAddGump)m_Gump;
-                                if (type != null && m_XmlAddGump.defs != null && m_XmlAddGump.defs.NameList != null &&
-                                    m_EntryIndex >= 0 && m_EntryIndex < m_XmlAddGump.defs.NameList.Length)
+                                if (mXmlAddGump.defs != null && mXmlAddGump.defs.NameList != null &&
+                                    m_EntryIndex >= 0 && m_EntryIndex < mXmlAddGump.defs.NameList.Length)
                                 {
-                                    m_XmlAddGump.defs.NameList[m_EntryIndex] = type.Name;
+                                    mXmlAddGump.defs.NameList[m_EntryIndex] = type.Name;
                                     XmlAddGump.Refresh(from, true);
                                 }
                             }

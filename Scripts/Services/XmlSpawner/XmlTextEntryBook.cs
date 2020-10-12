@@ -27,7 +27,6 @@ namespace Server.Items
         {
 
             int pagenum = 0;
-            BookPageInfo[] pages = Pages;
             int current = 0;
 
             // break up the text into single line length pieces
@@ -79,7 +78,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             Delete();
         }
@@ -147,7 +146,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 #if (BOOKTEXTENTRY)
         public override void OnDoubleClick(Mobile from)
@@ -168,18 +167,15 @@ namespace Server.Items
         public static void ContentChange(NetState state, PacketReader pvSrc)
         {
             // need to deal with actual books
-            string entryText = string.Empty;
-            Mobile from = state.Mobile;
-
             int serial = pvSrc.ReadInt32();
 
             Item bookitem = World.FindItem(serial);
 
             // first try it as a normal basebook
-            if (bookitem is BaseBook)
+            if (bookitem is BaseBook baseBook)
             {
                 // do the base book content change
-                BaseContentChange(bookitem as BaseBook, state, pvSrc);
+                BaseContentChange(baseBook, state, pvSrc);
                 return;
             }
 
