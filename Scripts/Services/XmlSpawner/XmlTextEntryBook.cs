@@ -29,7 +29,7 @@ namespace Server.Items
             // break up the text into single line length pieces
             while (text != null && current < text.Length)
             {
-                int lineCount = 10;
+                const int lineCount = 10;
                 string[] lines = new string[lineCount];
 
                 // place the line on the page
@@ -128,10 +128,6 @@ namespace Server.Items
 
             for (int i = 0; i < m_Pages.Length; ++i)
                 m_Pages[i] = new BookPageInfo();
-        }
-
-        public BaseEntryBook(Serial serial) : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)

@@ -891,17 +891,11 @@ namespace Server.Mobiles
                     int xpos = i / MaxEntriesPerColumn * 155;
                     int ypos = (i % MaxEntriesPerColumn) * 22 + 30;
 
-
                     // background for search results area
                     AddImageTiled(xpos + 205, ypos, 116, 23, 0x52);
 
                     // has this been selected for category info specification?
-                    if (i == defs.CategorySelectionIndex)
-                    {
-                        AddImageTiled(xpos + 206, ypos + 1, 114, 21, 0x1436);
-                    }
-                    else
-                        AddImageTiled(xpos + 206, ypos + 1, 114, 21, 0xBBC);
+                    AddImageTiled(xpos + 206, ypos + 1, 114, 21, i == defs.CategorySelectionIndex ? 0x1436 : 0xBBC);
 
                     bool sel = false;
                     if (defs.SelectionList != null && i < defs.SelectionList.Length)
@@ -913,9 +907,6 @@ namespace Server.Mobiles
                     string namestr = null;
                     if (defs.NameList != null && i < defs.NameList.Length)
                         namestr = defs.NameList[i];
-
-                    // display the name
-                    //AddLabel( 280, 22 * i + 31, texthue, namestr );
 
                     AddTextEntry(xpos + 208, ypos + 1, 110, 21, texthue, 1000 + i, namestr);
                     // display the selection button
@@ -1328,29 +1319,13 @@ namespace Server.Mobiles
                     }
                 case 115: // SaveDefs
                     {
-                        string filename;
-                        if (!string.IsNullOrEmpty(defaults.DefsExt))
-                        {
-                            filename = string.Format("{0}-{1}-{2}", defaults.AccountName, defaults.PlayerName, defaults.DefsExt);
-                        }
-                        else
-                        {
-                            filename = string.Format("{0}-{1}", defaults.AccountName, defaults.PlayerName);
-                        }
+                        var filename = !string.IsNullOrEmpty(defaults.DefsExt) ? string.Format("{0}-{1}-{2}", defaults.AccountName, defaults.PlayerName, defaults.DefsExt) : string.Format("{0}-{1}", defaults.AccountName, defaults.PlayerName);
                         DoSaveDefs(state.Mobile, filename);
                         break;
                     }
                 case 116: // LoadDefs
                     {
-                        string filename;
-                        if (!string.IsNullOrEmpty(defaults.DefsExt))
-                        {
-                            filename = string.Format("{0}-{1}-{2}", defaults.AccountName, defaults.PlayerName, defaults.DefsExt);
-                        }
-                        else
-                        {
-                            filename = string.Format("{0}-{1}", defaults.AccountName, defaults.PlayerName);
-                        }
+                        var filename = !string.IsNullOrEmpty(defaults.DefsExt) ? string.Format("{0}-{1}-{2}", defaults.AccountName, defaults.PlayerName, defaults.DefsExt) : string.Format("{0}-{1}", defaults.AccountName, defaults.PlayerName);
                         DoLoadDefs(state.Mobile, filename);
                         break;
                     }
@@ -1397,13 +1372,10 @@ namespace Server.Mobiles
                         break;
                     }
                 case 306:  // TOD mode
-                    {
-                        if (defaults.TODMode == XmlSpawner.TODModeType.Realtime)
-                            defaults.TODMode = XmlSpawner.TODModeType.Gametime;
-                        else
-                            defaults.TODMode = XmlSpawner.TODModeType.Realtime;
-                        break;
-                    }
+                {
+                    defaults.TODMode = defaults.TODMode == XmlSpawner.TODModeType.Realtime ? XmlSpawner.TODModeType.Gametime : XmlSpawner.TODModeType.Realtime;
+                    break;
+                }
                 case 1000:  // GoTo
                     {
                         // then go to it
