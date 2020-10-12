@@ -137,24 +137,6 @@ namespace Server.Mobiles
             return t.IsDefined(typeofCustomEnum, false);
         }
 
-        public static string ParsedType(Type type)
-        {
-            if (type == null) return null;
-
-            string s = type.ToString();
-
-            if (s == null) return null;
-
-            string[] args = s.Split(Type.Delimiter);
-
-            if (args != null && args.Length > 0)
-            {
-                return args[args.Length - 1];
-            }
-
-            return null;
-        }
-
         public static bool CheckType(object o, string typename)
         {
             if (typename == null || o == null) return false;
@@ -1369,7 +1351,6 @@ namespace Server.Mobiles
                 bool found;
                 try
                 {
-
                     if (o is Item)
                     {
                         ptype = typeof(bool);
@@ -4624,7 +4605,6 @@ namespace Server.Mobiles
                 foreach (Item i in source.Items)
                 {
                     // check the type and name
-
                     Type itemtype = i.GetType();
 
                     if (!i.Deleted && CheckNameMatch(targetname, i.Name) && (typestr == null ||
@@ -4707,7 +4687,6 @@ namespace Server.Mobiles
                 {
                     foreach (Mobile m in mobilelist)
                     {
-
                         // check the type and name
                         Type mobtype = m.GetType();
 
