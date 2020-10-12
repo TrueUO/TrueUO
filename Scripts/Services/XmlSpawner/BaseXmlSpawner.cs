@@ -4854,61 +4854,6 @@ namespace Server.Mobiles
             return null;
         }
 
-        public static Item SearchMobileForItemType(Mobile m, string targetName, bool searchbank)
-        {
-            if (m != null && !m.Deleted && targetName != null && targetName.Length > 0)
-            {
-                Type targetType = SpawnerType.GetType(targetName);
-
-                // go through all of the items in the pack
-                List<Item> packlist = m.Items;
-
-                for (int i = 0; i < packlist.Count; ++i)
-                {
-                    Item item = packlist[i];
-
-                    // dont search bank boxes
-                    if (item is BankBox && !searchbank) continue;
-
-                    // recursively search containers
-                    if (item != null && !item.Deleted)
-                    {
-                        if (item is Container)
-                        {
-                            Item itemTarget = SearchPackForItemType((Container)item, targetName);
-
-                            if (itemTarget != null) return itemTarget;
-                        }
-                        // test the item type against the trigger string
-                        if ((item.GetType() == targetType))
-                        {
-                            //found it
-                            return item;
-                        }
-                    }
-                }
-                // now check any item that might be held
-                Item held = m.Holding;
-
-                if (held != null && !held.Deleted)
-                {
-                    if (held is Container)
-                    {
-                        Item itemTarget = SearchPackForItemType((Container)held, targetName);
-
-                        if (itemTarget != null) return itemTarget;
-                    }
-                    // test the item name against the trigger string
-                    if (held.GetType() == targetType)
-                    {
-                        //found it
-                        return held;
-                    }
-                }
-            }
-            return null;
-        }
-
         public static Item SearchPackForItem(Container pack, string targetName, string typestr)
         {
             if (pack != null && !pack.Deleted)
@@ -4986,35 +4931,6 @@ namespace Server.Mobiles
                                 itemlist.Add(item);
                             }
                         }
-                    }
-                }
-            }
-            return itemlist;
-        }
-
-        public static List<Item> SearchPackListForItemType(Container pack, string targetName, List<Item> itemlist)
-        {
-            if (pack != null && !pack.Deleted && targetName != null && targetName.Length > 0)
-            {
-                Type targetType = SpawnerType.GetType(targetName);
-
-                if (targetType == null) return null;
-
-                // go through all of the items in the pack
-                List<Item> packlist = pack.Items;
-
-                for (int i = 0; i < packlist.Count; ++i)
-                {
-                    Item item = packlist[i];
-                    if (item != null && !item.Deleted && item is Container)
-                    {
-                        itemlist = SearchPackListForItemType((Container)item, targetName, itemlist);
-                    }
-                    // test the item name against the trigger string
-                    if (item != null && !item.Deleted && (item.GetType().IsSubclassOf(targetType) || item.GetType().Equals(targetType)))
-                    {
-                        //found it
-                        itemlist.Add(item);
                     }
                 }
             }
