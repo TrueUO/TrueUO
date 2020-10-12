@@ -126,13 +126,11 @@ namespace Server.Items
 
         private class SetStealableTarget : Target
         {
-            private readonly CommandEventArgs m_e;
             private readonly bool m_state;
-            private readonly bool set = false;
+            private readonly bool set;
 
             public SetStealableTarget(CommandEventArgs e, bool state) : base(30, false, TargetFlags.None)
             {
-                m_e = e;
                 m_state = state;
                 if (e.Arguments.Length > 0)
                 {

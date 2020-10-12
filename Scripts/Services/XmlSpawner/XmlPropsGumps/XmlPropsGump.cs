@@ -427,22 +427,20 @@ namespace Server.Gumps
             {
                 return "-null-";
             }
-            if (o is string)
+            if (o is string s1)
             {
-                return string.Format("\"{0}\"", (string)o);
+                return string.Format("\"{0}\"", s1);
             }
             if (o is bool)
             {
                 return o.ToString();
             }
-            if (o is char)
+            if (o is char c)
             {
-                return string.Format("0x{0:X} '{1}'", (int)(char)o, (char)o);
+                return string.Format("0x{0:X} '{1}'", (int)c, c);
             }
-            if (o is Serial)
+            if (o is Serial s)
             {
-                Serial s = (Serial)o;
-
                 if (s.IsValid)
                 {
                     if (s.IsItem)
@@ -465,17 +463,17 @@ namespace Server.Gumps
             {
                 return o.ToString();
             }
-            if (o is Mobile)
+            if (o is Mobile mobile)
             {
-                return string.Format("(M) 0x{0:X} \"{1}\"", ((Mobile)o).Serial.Value, ((Mobile)o).Name);
+                return string.Format("(M) 0x{0:X} \"{1}\"", mobile.Serial.Value, mobile.Name);
             }
-            if (o is Item)
+            if (o is Item item)
             {
-                return string.Format("(I) 0x{0:X}", ((Item)o).Serial);
+                return string.Format("(I) 0x{0:X}", item.Serial);
             }
-            if (o is Type)
+            if (o is Type type)
             {
-                return ((Type)o).Name;
+                return type.Name;
             }
 
             return o.ToString();

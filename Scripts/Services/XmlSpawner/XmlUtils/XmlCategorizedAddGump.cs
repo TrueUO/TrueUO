@@ -272,7 +272,7 @@ namespace Server.Gumps
         private readonly XmlAddCAGCategory m_Category;
         private int m_Page;
 
-        private readonly int m_Index = -1;
+        private readonly int m_Index;
         private readonly Gump m_Gump;
         private readonly XmlSpawner m_Spawner;
 

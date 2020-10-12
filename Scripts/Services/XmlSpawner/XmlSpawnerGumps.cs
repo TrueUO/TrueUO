@@ -421,13 +421,13 @@ namespace Server.Mobiles
 
     public class XmlSpawnerGump : Gump
     {
-        private static int nclicks = 0;
+        private static int nclicks;
         public XmlSpawner m_Spawner;
         public const int MaxSpawnEntries = 60;
         private const int MaxEntriesPerPage = 15;
-        public int m_ShowGump = 0;
+        public int m_ShowGump;
         public bool AllowGumpUpdate = true;
-        public int xoffset = 0;
+        public int xoffset;
         public int initial_maxcount;
         public int page;
         public ReplacementEntry Rentry;
@@ -1005,10 +1005,8 @@ namespace Server.Mobiles
                 foreach (Gump g in ns.Gumps)
                 {
 
-                    if (g is XmlSpawnerGump)
+                    if (g is XmlSpawnerGump xg)
                     {
-                        XmlSpawnerGump xg = (XmlSpawnerGump)g;
-
                         // clear the gump status on the spawner associated with the gump
                         if (xg.m_Spawner != null)
                         {
@@ -1042,9 +1040,8 @@ namespace Server.Mobiles
 
         private bool ValidGotoObject(Mobile from, object o)
         {
-            if (o is Item)
+            if (o is Item i)
             {
-                Item i = o as Item;
                 if (!i.Deleted && (i.Map != null) && (i.Map != Map.Internal))
                     return true;
 
@@ -1054,9 +1051,8 @@ namespace Server.Mobiles
                 }
             }
             else
-                if (o is Mobile)
+                if (o is Mobile m)
             {
-                Mobile m = o as Mobile;
                 if (!m.Deleted && (m.Map != null) && (m.Map != Map.Internal))
                     return true;
 

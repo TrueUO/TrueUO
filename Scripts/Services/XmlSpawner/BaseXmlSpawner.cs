@@ -492,7 +492,7 @@ namespace Server.Mobiles
             private XmlSpawner m_Spawner;
             public string m_Condition;
             public int m_Goto;
-            public bool Deleted = false;
+            public bool Deleted;
             public int Serial = -1;
             public Mobile m_TrigMob;
             public string Typename;
@@ -1082,15 +1082,12 @@ namespace Server.Mobiles
             {
                 PropertyInfo plookup = LookupPropertyInfo(spawner, type, propname);
 
-
-                Type ptype;
                 object po;
                 if (plookup != null)
                 {
                     if (IsProtected(type, propname))
                         return "Property is protected.";
 
-                    ptype = plookup.PropertyType;
                     po = plookup.GetValue(o, null);
 
                     // now set the nested attribute using the new property list
@@ -1105,8 +1102,6 @@ namespace Server.Mobiles
                         {
                             if (IsProtected(type, propname))
                                 return "Property is protected.";
-
-                            ptype = p.PropertyType;
 
                             po = p.GetValue(o, null);
 
@@ -1184,15 +1179,11 @@ namespace Server.Mobiles
                 // use the lookup table for optimization if possible
                 PropertyInfo plookup = LookupPropertyInfo(spawner, type, arglist[0]);
 
-
-                Type ptype;
                 object po;
                 if (plookup != null)
                 {
                     if (IsProtected(type, arglist[0]))
                         return "Property is protected.";
-
-                    ptype = plookup.PropertyType;
 
                     po = plookup.GetValue(o, null);
 
@@ -1208,8 +1199,6 @@ namespace Server.Mobiles
                         {
                             if (IsProtected(type, arglist[0]))
                                 return "Property is protected.";
-
-                            ptype = p.PropertyType;
 
                             po = p.GetValue(o, null);
 
@@ -2793,8 +2782,8 @@ namespace Server.Mobiles
                                 {
                                     int y = 0;
                                     int z = 0;
-
                                     int x;
+
                                     if (!int.TryParse(keywordargs[3], out x) || !int.TryParse(keywordargs[4], out y) || !int.TryParse(keywordargs[5], out z))
                                     { status_str = "Improper effect location format"; }
                                     eloc1 = new Point3D(x, y, z);

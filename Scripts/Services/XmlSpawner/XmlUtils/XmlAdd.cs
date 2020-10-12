@@ -977,9 +977,9 @@ namespace Server.Mobiles
             Point3D itemloc;
             if (x.Parent != null)
             {
-                if (x.RootParent is Container)
+                if (x.RootParent is Container container)
                 {
-                    itemloc = ((Container)(x.RootParent)).Location;
+                    itemloc = ((Container)container).Location;
                 }
                 else
                 {
@@ -1099,9 +1099,9 @@ namespace Server.Mobiles
                 };
 
                 // if the object is a container, then place it in the container
-                if (targeted is Container)
+                if (targeted is Container container)
                 {
-                    ((Container)targeted).DropItem(spawner);
+                    container.DropItem(spawner);
                 }
                 else
                 {
@@ -1112,8 +1112,8 @@ namespace Server.Mobiles
                         spawner.Delete();
                         return;
                     }
-                    if (p is Item)
-                        p = ((Item)p).GetWorldTop();
+                    if (p is Item item)
+                        p = item.GetWorldTop();
 
                     spawner.MoveToWorld(new Point3D(p), from.Map);
 

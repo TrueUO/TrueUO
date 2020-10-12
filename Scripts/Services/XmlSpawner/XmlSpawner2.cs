@@ -61,10 +61,9 @@ namespace Server.Mobiles
         private static int defaultTriggerSound = 0x1F4;          // click and sparkle sound by default  (0x1F4) , click sound (0x3A4)
         public static string XmlSpawnDir = "XmlSpawner";            // default directory for saving/loading .xml files with [xmlload [xmlsave
         public static string XmlMultiDir = "XmlMultis";
-        private static string XmlConfigsDir = "XmlSpawnerConfigs";  // default directory for loading .xml config files with LoadConfig
         private const int MaxSmartSectorListSize = 1024;        // maximum sector list size for use in smart spawning. This gives a 512x512 tile range.
 
-        private static string defwaypointname = null;            // default waypoint name will get assigned in Initialize
+        private static string defwaypointname;            // default waypoint name will get assigned in Initialize
         private const string XmlTableName = "Properties";
         private const string XmlDataSetName = "XmlSpawner";
         public static AccessLevel DiskAccessLevel = AccessLevel.Administrator; // minimum access level required by commands that can access the disk such as XmlLoad, XmlSave, and the Save function of XmlEdit
@@ -89,8 +88,8 @@ namespace Server.Mobiles
         private static TimeSpan defTODEnd = TimeSpan.FromMinutes(0);
         private static TimeSpan defDuration = TimeSpan.FromMinutes(0);
         private static TimeSpan defDespawnTime = TimeSpan.FromHours(0);
-        private static bool defIsGroup = false;
-        private static int defTeam = 0;
+        private static bool defIsGroup;
+        private static int defTeam;
         private static int defProximityTriggerSound = defaultTriggerSound;
         private static int defAmount = 1;
         private static bool defRelativeHome = true;
@@ -102,7 +101,7 @@ namespace Server.Mobiles
         private static TODModeType defTODMode = TODModeType.Realtime;
 
         private static Timer m_GlobalSectorTimer;
-        private static bool SmartSpawningSystemEnabled = false;
+        private static bool SmartSpawningSystemEnabled;
 
         private static WarnTimer2 m_WarnTimer;
 
@@ -120,8 +119,8 @@ namespace Server.Mobiles
 
         private string m_Name = string.Empty;
         private string m_UniqueId = string.Empty;
-        private bool m_PlayerCreated = false;
-        private bool m_HomeRangeIsRelative = false;
+        private bool m_PlayerCreated;
+        private bool m_HomeRangeIsRelative;
         private int m_Team;
         private int m_HomeRange;
         // added a amount parameter for stacked item spawns
@@ -179,9 +178,9 @@ namespace Server.Mobiles
         private Mobile m_mob_who_triggered;
         private Item m_SetPropertyItem;
 
-        private bool m_skipped = false;
+        private bool m_skipped;
         private int m_KillReset = defKillReset;      // number of spawn ticks that pass without kills before killcount gets reset to zero
-        private int m_spawncheck = 0;
+        private int m_spawncheck;
         private TODModeType m_TODMode = TODModeType.Realtime;
         private string m_GumpState;
         private bool m_ExternalTriggering;
@@ -195,12 +194,12 @@ namespace Server.Mobiles
         public List<XmlTextEntryBook> m_TextEntryBook;
         private XmlSpawnerGump m_SpawnerGump;
 
-        private bool m_AllowGhostTriggering = false;
-        private bool m_AllowNPCTriggering = false;
+        private bool m_AllowGhostTriggering;
+        private bool m_AllowNPCTriggering;
         private string m_ConfigFile;
-        private bool m_OnHold = false;
-        private bool m_HoldSequence = false;
-        private bool m_SpawnOnTrigger = false;
+        private bool m_OnHold;
+        private bool m_HoldSequence;
+        private bool m_SpawnOnTrigger;
 
         private List<MovementInfo> m_MovementList;
         private MovementTimer m_MovementTimer;
@@ -214,35 +213,35 @@ namespace Server.Mobiles
         private string m_SkillTrigger;
         private bool m_skillTriggerActivated;
         private SkillName m_skill_that_triggered;
-        private bool m_FreeRun = false;     // override for all other triggering modes
+        private bool m_FreeRun;     // override for all other triggering modes
         private SkillName m_SkillTriggerName;
         private double m_SkillTriggerMin;
         private double m_SkillTriggerMax;
         private int m_SkillTriggerSuccess;
         private Map currentmap;
 
-        public bool m_IsInactivated = false;
-        private bool m_SmartSpawning = false;
+        public bool m_IsInactivated;
+        private bool m_SmartSpawning;
         private SectorTimer m_SectorTimer;
 
         private List<Static> m_ShowBoundsItems = new List<Static>();
 
         public List<BaseXmlSpawner.TypeInfo> PropertyInfoList = null;   // used to optimize property info lookup used by set and get property methods.
 
-        private Dictionary<string, List<Item>> spawnPositionWayTable = null;  // used to optimize #waypoint lookup
+        private Dictionary<string, List<Item>> spawnPositionWayTable;  // used to optimize #waypoint lookup
 
-        private bool inrespawn = false;
+        private bool inrespawn;
 
-        private List<Sector> sectorList = null;
+        private List<Sector> sectorList;
 
         private bool m_DisableGlobalAutoReset;
 
         private Point3D mostRecentSpawnPosition = Point3D.Zero;
 
-        private int m_MovingPlayerCount = 0;
-        private int m_FastestPlayerSpeed = 0;
+        private int m_MovingPlayerCount;
+        private int m_FastestPlayerSpeed;
 
-        private bool m_DebugThis = false;
+        private bool m_DebugThis;
 
         private TimerPriority m_BasePriority = TimerPriority.OneSecond;
         #endregion
@@ -337,7 +336,7 @@ namespace Server.Mobiles
         }
 
         private readonly bool sectorIsActive = false;
-        private bool UseSectorActivate = false;
+        private bool UseSectorActivate;
 
         public bool SingleSector => UseSectorActivate;
 
@@ -415,7 +414,7 @@ namespace Server.Mobiles
             }
         }
 
-        private static int totalSectorsMonitored = 0;
+        private static int totalSectorsMonitored;
 
 
         public bool HasActiveSectors
@@ -2034,7 +2033,7 @@ namespace Server.Mobiles
             XmlSpawnerSkillCheck.UnRegisterSkillTrigger(this, SkillName.Alchemy, Map, true);
         }
 
-        static bool IgnoreLocationChange = false;
+        static bool IgnoreLocationChange;
         public override void OnLocationChange(Point3D oldLocation)
         {
             if (IgnoreLocationChange)
@@ -2064,7 +2063,7 @@ namespace Server.Mobiles
             ResetSectorList();
 
             // Check if the spawner is showing its bounds
-            if (ShowBounds == true)
+            if (ShowBounds)
             {
                 ShowBounds = false;
                 ShowBounds = true;
@@ -2244,7 +2243,7 @@ namespace Server.Mobiles
         {
             if (filename == null || filename.Length <= 0) return;
             // Check if the file exists
-            if (File.Exists(filename) == true)
+            if (File.Exists(filename))
             {
                 FileStream fs = null;
                 try
@@ -3167,9 +3166,6 @@ namespace Server.Mobiles
                     break;
                 case "SmartSpawnAccessLevel":
                     SmartSpawnAccessLevel = (AccessLevel)Enum.Parse(typeof(AccessLevel), value, true);
-                    break;
-                case "XmlConfigsDir":
-                    XmlConfigsDir = value;
                     break;
                 case "defaultTriggerSound":
                     defaultTriggerSound = ConvertToInt(value);
@@ -4809,7 +4805,7 @@ namespace Server.Mobiles
             int total_processed_spawners = 0;
             if (filename == null || filename.Length <= 0 || from == null || from.Deleted) return;
             // Check if the file exists
-            if (File.Exists(filename) == true)
+            if (File.Exists(filename))
             {
                 int spawnercount = 0;
                 int badspawnercount = 0;
@@ -8530,7 +8526,7 @@ namespace Server.Mobiles
 
         #region Spawn methods
 
-        int killcount_held = 0;
+        int killcount_held;
 
         public void OnTick()
         {
@@ -12194,14 +12190,14 @@ namespace Server.Mobiles
             private int m_SubGroup;
             private int m_SequentialResetTo;
             private int m_KillsNeeded;
-            private bool m_RestrictKillsToSubgroup = false;
+            private bool m_RestrictKillsToSubgroup;
             private bool m_ClearOnAdvance = true;
             private double m_MinDelay = -1;
             private double m_MaxDelay = -1;
             private int m_SpawnsPerTick = 1;
-            private bool m_Disabled = false;
+            private bool m_Disabled;
             private int m_PackRange = -1;
-            private bool m_Ignore = false;
+            private bool m_Ignore;
             // temporary variable used to calculate weighted spawn probabilities
             public bool Available;
 
