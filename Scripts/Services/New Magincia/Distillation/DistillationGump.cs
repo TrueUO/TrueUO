@@ -9,7 +9,6 @@ namespace Server.Engines.Distillation
 {
     public class DistillationGump : Gump
     {
-        private const int LabelHue = 0x480;
         private const int LabelColor = 0x7FFF;
         private const int FontColor = 0xFFFFFF;
 

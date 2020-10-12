@@ -5,7 +5,7 @@ using System;
 
 namespace Server.Items
 {
-    public class Hoe : BaseAxe, IUsesRemaining
+    public class Hoe : BaseAxe
     {
         public override int LabelNumber => 1150482;  // hoe
 

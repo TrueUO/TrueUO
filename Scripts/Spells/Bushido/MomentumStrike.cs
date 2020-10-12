@@ -17,6 +17,9 @@ namespace Server.Spells.Bushido
 
             BaseWeapon weapon = attacker.Weapon as BaseWeapon;
 
+            if (weapon == null)
+                return;
+
             List<Mobile> targets = new List<Mobile>();
             IPooledEnumerable eable = attacker.GetMobilesInRange(weapon.MaxRange);
 
