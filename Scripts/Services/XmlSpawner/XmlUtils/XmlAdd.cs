@@ -1050,7 +1050,7 @@ namespace Server.Mobiles
 
             public PlaceSpawnerTarget(NetState state) : base(30, true, TargetFlags.None)
             {
-                if (state == null || state.Mobile == null) return;
+                if (state?.Mobile == null) return;
 
                 // read the text entries for default values
                 defs = null;
@@ -1147,7 +1147,7 @@ namespace Server.Mobiles
 
         public override void OnResponse(NetState state, RelayInfo info)
         {
-            if (info == null || state == null || state.Mobile == null) return;
+            if (info == null || state?.Mobile == null) return;
             if (info.Switches.Length > 0)
             {
                 int radiostate = info.Switches[0];
@@ -1160,41 +1160,41 @@ namespace Server.Mobiles
             }
 
             TextRelay tr = info.GetTextEntry(100);        // mindelay
-            if (tr != null && tr.Text != null && tr.Text.Length > 0)
+            if (tr?.Text != null && tr.Text.Length > 0)
             {
                 try { defs.MinDelay = TimeSpan.FromMinutes(double.Parse(tr.Text)); }
                 catch (Exception e) { ExceptionLogging.LogException(e); }
             }
             tr = info.GetTextEntry(101);        // maxdelay info
-            if (tr != null && tr.Text != null && tr.Text.Length > 0)
+            if (tr?.Text != null && tr.Text.Length > 0)
             {
                 try { defs.MaxDelay = TimeSpan.FromMinutes(double.Parse(tr.Text)); }
                 catch (Exception e) { ExceptionLogging.LogException(e); }
             }
 
             tr = info.GetTextEntry(102);        // min refractory
-            if (tr != null && tr.Text != null && tr.Text.Length > 0)
+            if (tr?.Text != null && tr.Text.Length > 0)
             {
                 try { defs.RefractMin = TimeSpan.FromMinutes(double.Parse(tr.Text)); }
                 catch (Exception e) { ExceptionLogging.LogException(e); }
             }
 
             tr = info.GetTextEntry(103);        // max refractory
-            if (tr != null && tr.Text != null && tr.Text.Length > 0)
+            if (tr?.Text != null && tr.Text.Length > 0)
             {
                 try { defs.RefractMax = TimeSpan.FromMinutes(double.Parse(tr.Text)); }
                 catch (Exception e) { ExceptionLogging.LogException(e); }
             }
 
             tr = info.GetTextEntry(104);        // TOD start
-            if (tr != null && tr.Text != null && tr.Text.Length > 0)
+            if (tr?.Text != null && tr.Text.Length > 0)
             {
                 try { defs.TODStart = TimeSpan.FromHours(double.Parse(tr.Text)); }
                 catch (Exception e) { ExceptionLogging.LogException(e); }
             }
 
             tr = info.GetTextEntry(105);        // TOD end
-            if (tr != null && tr.Text != null && tr.Text.Length > 0)
+            if (tr?.Text != null && tr.Text.Length > 0)
             {
                 try { defs.TODEnd = TimeSpan.FromHours(double.Parse(tr.Text)); }
                 catch (Exception e) { ExceptionLogging.LogException(e); }
@@ -1211,49 +1211,49 @@ namespace Server.Mobiles
 
 
             tr = info.GetTextEntry(107);        // HomeRange
-            if (tr != null && tr.Text != null && tr.Text.Length > 0)
+            if (tr?.Text != null && tr.Text.Length > 0)
             {
                 try { defs.HomeRange = int.Parse(tr.Text); }
                 catch (Exception e) { ExceptionLogging.LogException(e); }
             }
 
             tr = info.GetTextEntry(108);        // SpawnRange
-            if (tr != null && tr.Text != null && tr.Text.Length > 0)
+            if (tr?.Text != null && tr.Text.Length > 0)
             {
                 try { defs.SpawnRange = int.Parse(tr.Text); }
                 catch (Exception e) { ExceptionLogging.LogException(e); }
             }
 
             tr = info.GetTextEntry(109);        // ProximityRange
-            if (tr != null && tr.Text != null && tr.Text.Length > 0)
+            if (tr?.Text != null && tr.Text.Length > 0)
             {
                 try { defs.ProximityRange = int.Parse(tr.Text); }
                 catch (Exception e) { ExceptionLogging.LogException(e); }
             }
 
             tr = info.GetTextEntry(110);        // Team
-            if (tr != null && tr.Text != null && tr.Text.Length > 0)
+            if (tr?.Text != null && tr.Text.Length > 0)
             {
                 try { defs.Team = int.Parse(tr.Text); }
                 catch (Exception e) { ExceptionLogging.LogException(e); }
             }
 
             tr = info.GetTextEntry(111);        // Duration
-            if (tr != null && tr.Text != null && tr.Text.Length > 0)
+            if (tr?.Text != null && tr.Text.Length > 0)
             {
                 try { defs.Duration = TimeSpan.FromMinutes(double.Parse(tr.Text)); }
                 catch (Exception e) { ExceptionLogging.LogException(e); }
             }
 
             tr = info.GetTextEntry(112);        // ProximitySound
-            if (tr != null && tr.Text != null && tr.Text.Length > 0)
+            if (tr?.Text != null && tr.Text.Length > 0)
             {
                 try { defs.ProximitySound = int.Parse(tr.Text); }
                 catch (Exception e) { ExceptionLogging.LogException(e); }
             }
 
             tr = info.GetTextEntry(113);        // Kill reset
-            if (tr != null && tr.Text != null && tr.Text.Length > 0)
+            if (tr?.Text != null && tr.Text.Length > 0)
             {
                 try { defs.KillReset = int.Parse(tr.Text); }
                 catch (Exception e) { ExceptionLogging.LogException(e); }
@@ -1301,7 +1301,7 @@ namespace Server.Mobiles
             }
 
             tr = info.GetTextEntry(121);        // Trigger probability
-            if (tr != null && tr.Text != null && tr.Text.Length > 0)
+            if (tr?.Text != null && tr.Text.Length > 0)
             {
                 try { defs.TriggerProbability = double.Parse(tr.Text); }
                 catch (Exception e) { ExceptionLogging.LogException(e); }
@@ -1316,7 +1316,7 @@ namespace Server.Mobiles
             }
 
             tr = info.GetTextEntry(123);        // DespawnTime
-            if (tr != null && tr.Text != null && tr.Text.Length > 0)
+            if (tr?.Text != null && tr.Text.Length > 0)
             {
                 try { defs.DespawnTime = TimeSpan.FromHours(double.Parse(tr.Text)); }
                 catch (Exception e) { ExceptionLogging.LogException(e); }
@@ -1331,7 +1331,7 @@ namespace Server.Mobiles
             }
 
             tr = info.GetTextEntry(125);        // AutoNumberValue
-            if (tr != null && tr.Text != null && tr.Text.Length > 0)
+            if (tr?.Text != null && tr.Text.Length > 0)
             {
                 try { defs.AutoNumberValue = int.Parse(tr.Text); }
                 catch (Exception e) { ExceptionLogging.LogException(e); }
@@ -1602,44 +1602,44 @@ namespace Server.Mobiles
 
             public override void OnResponse(NetState state, RelayInfo info)
             {
-                if (info == null || state == null || state.Mobile == null) return;
+                if (info == null || state?.Mobile == null) return;
 
                 // read the text entries for default values
                 XmlSpawnerDefaults.DefaultEntry defs = XmlSpawnerDefaults.GetDefaults(state.Account.ToString(), state.Mobile.Name);
                 if (defs == null) return;
 
                 TextRelay tr = info.GetTextEntry(100);        // AddGumpX
-                if (tr != null && tr.Text != null && tr.Text.Length > 0)
+                if (tr?.Text != null && tr.Text.Length > 0)
                 {
                     try { defs.AddGumpX = int.Parse(tr.Text); }
                     catch (Exception e) { ExceptionLogging.LogException(e); }
                 }
                 tr = info.GetTextEntry(101);        // AddGumpY info
-                if (tr != null && tr.Text != null && tr.Text.Length > 0)
+                if (tr?.Text != null && tr.Text.Length > 0)
                 {
                     try { defs.AddGumpY = int.Parse(tr.Text); }
                     catch (Exception e) { ExceptionLogging.LogException(e); }
                 }
                 tr = info.GetTextEntry(102);        // SpawnerGumpX info
-                if (tr != null && tr.Text != null && tr.Text.Length > 0)
+                if (tr?.Text != null && tr.Text.Length > 0)
                 {
                     try { defs.SpawnerGumpX = int.Parse(tr.Text); }
                     catch (Exception e) { ExceptionLogging.LogException(e); }
                 }
                 tr = info.GetTextEntry(103);        // SpawnerGumpY info
-                if (tr != null && tr.Text != null && tr.Text.Length > 0)
+                if (tr?.Text != null && tr.Text.Length > 0)
                 {
                     try { defs.SpawnerGumpY = int.Parse(tr.Text); }
                     catch (Exception e) { ExceptionLogging.LogException(e); }
                 }
                 tr = info.GetTextEntry(104);        // FindGumpX info
-                if (tr != null && tr.Text != null && tr.Text.Length > 0)
+                if (tr?.Text != null && tr.Text.Length > 0)
                 {
                     try { defs.FindGumpX = int.Parse(tr.Text); }
                     catch (Exception e) { ExceptionLogging.LogException(e); }
                 }
                 tr = info.GetTextEntry(105);        // FindGumpY info
-                if (tr != null && tr.Text != null && tr.Text.Length > 0)
+                if (tr?.Text != null && tr.Text.Length > 0)
                 {
                     try { defs.FindGumpY = int.Parse(tr.Text); }
                     catch (Exception e) { ExceptionLogging.LogException(e); }
@@ -1675,7 +1675,7 @@ namespace Server.Mobiles
 
             public override void OnResponse(NetState state, RelayInfo info)
             {
-                if (info == null || state == null || state.Mobile == null) return;
+                if (info == null || state?.Mobile == null) return;
 
                 int radiostate = -1;
                 if (info.Switches.Length > 0)

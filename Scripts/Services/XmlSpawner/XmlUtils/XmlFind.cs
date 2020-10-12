@@ -767,7 +767,7 @@ namespace Server.Mobiles
         [Description("Finds objects in the world")]
         public static void XmlFind_OnCommand(CommandEventArgs e)
         {
-            if (e == null || e.Mobile == null) return;
+            if (e?.Mobile == null) return;
 
             Account acct = e.Mobile.Account as Account;
             int x = 0;
@@ -1846,7 +1846,7 @@ namespace Server.Mobiles
 
         public override void OnResponse(NetState state, RelayInfo info)
         {
-            if (info == null || state == null || state.Mobile == null || m_SearchCriteria == null) return;
+            if (info == null || state?.Mobile == null || m_SearchCriteria == null) return;
 
             int radiostate = -1;
             if (info.Switches.Length > 0)
@@ -1857,7 +1857,7 @@ namespace Server.Mobiles
             // read the text entries for the search criteria
             TextRelay tr = info.GetTextEntry(105);        // range info
             m_SearchCriteria.Searchage = 0;
-            if (tr != null && tr.Text != null && tr.Text.Length > 0)
+            if (tr?.Text != null && tr.Text.Length > 0)
             {
                 try { m_SearchCriteria.Searchage = double.Parse(tr.Text); }
                 catch (Exception e) { ExceptionLogging.LogException(e); }
@@ -1866,7 +1866,7 @@ namespace Server.Mobiles
             // read the text entries for the search criteria
             tr = info.GetTextEntry(100);        // range info
             m_SearchCriteria.Searchrange = -1;
-            if (tr != null && tr.Text != null && tr.Text.Length > 0)
+            if (tr?.Text != null && tr.Text.Length > 0)
             {
                 try { m_SearchCriteria.Searchrange = int.Parse(tr.Text); }
                 catch (Exception e) { ExceptionLogging.LogException(e); }
@@ -2205,7 +2205,7 @@ namespace Server.Mobiles
             }
             public override void OnResponse(NetState state, RelayInfo info)
             {
-                if (info == null || state == null || state.Mobile == null) return;
+                if (info == null || state?.Mobile == null) return;
 
                 int radiostate = -1;
 
@@ -2289,7 +2289,7 @@ namespace Server.Mobiles
             }
             public override void OnResponse(NetState state, RelayInfo info)
             {
-                if (info == null || state == null || state.Mobile == null) return;
+                if (info == null || state?.Mobile == null) return;
 
                 int radiostate = -1;
                 if (info.Switches.Length > 0)

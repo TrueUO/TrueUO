@@ -227,8 +227,7 @@ namespace Server.Gumps
 
                             if (m_Gump is XmlAddGump mXmlAddGump && type != null)
                             {
-                                if (mXmlAddGump.defs != null && mXmlAddGump.defs.NameList != null &&
-                                    m_EntryIndex >= 0 && m_EntryIndex < mXmlAddGump.defs.NameList.Length)
+                                if (mXmlAddGump.defs?.NameList != null && m_EntryIndex >= 0 && m_EntryIndex < mXmlAddGump.defs.NameList.Length)
                                 {
                                     mXmlAddGump.defs.NameList[m_EntryIndex] = type.Name;
                                     XmlAddGump.Refresh(from, true);
