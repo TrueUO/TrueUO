@@ -1339,12 +1339,12 @@ namespace Server.Mobiles
                     {
                         if (item.RootParent is Mobile mobile)
                         {
-                            itemloc = ((Mobile)mobile).Location;
+                            itemloc = mobile.Location;
                         }
                         else
                             if (item.RootParent is Container container)
                         {
-                            itemloc = ((Container)container).Location;
+                            itemloc = container.Location;
                         }
                         else
                         {
@@ -1596,21 +1596,6 @@ namespace Server.Mobiles
                 if (Dsort)
                     return string.Compare(ystr, xstr, true);
                 return string.Compare(xstr, ystr, true);
-            }
-        }
-
-        private class ListEntrySorter : IComparer
-        {
-            private readonly bool Dsort;
-
-            public ListEntrySorter(bool descend)
-            {
-                Dsort = descend;
-            }
-
-            public int Compare(object x, object y)
-            {
-                return 0;
             }
         }
 

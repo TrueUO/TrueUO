@@ -979,7 +979,7 @@ namespace Server.Mobiles
             {
                 if (x.RootParent is Container container)
                 {
-                    itemloc = ((Container)container).Location;
+                    itemloc = container.Location;
                 }
                 else
                 {
