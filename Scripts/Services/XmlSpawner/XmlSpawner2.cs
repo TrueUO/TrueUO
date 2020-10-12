@@ -9286,20 +9286,6 @@ namespace Server.Mobiles
             }
         }
 
-        private void RefreshNextSpawnTimes()
-        {
-
-            if (m_SpawnObjects != null && m_SpawnObjects.Count > 0)
-            {
-                for (int i = 0; i < m_SpawnObjects.Count; i++)
-                {
-                    SpawnObject so = m_SpawnObjects[i];
-
-                    RefreshNextSpawnTime(so);
-                }
-            }
-        }
-
         public bool HasIndividualSpawnTimes()
         {
 

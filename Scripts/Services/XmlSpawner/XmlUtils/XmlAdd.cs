@@ -1434,7 +1434,7 @@ namespace Server.Mobiles
                 case 180: // Set Options
                     {
                         Refresh(state.Mobile);
-                        state.Mobile.SendGump(new XmlAddOptionsGump(state.Mobile, defs.LastSpawner));
+                        state.Mobile.SendGump(new XmlAddOptionsGump(state.Mobile));
                         return;
                     }
                 case 200: // gump extension
@@ -1520,33 +1520,20 @@ namespace Server.Mobiles
                                 ArrayList types = XmlPartialCategorizedAddGump.Match(defs.NameList[i]);
                                 state.Mobile.SendGump(new XmlPartialCategorizedAddGump(state.Mobile, defs.NameList[i], 0, types, true, i, newg));
                             }
+
                             return;
-                            /*
-                            if(match == null || match.Length == 0)
-                            {
-                                state.Mobile.SendGump( new Server.Gumps.XmlCategorizedAddGump( state.Mobile, i, this ) );
-                            } else
-                            {
-                                state.Mobile.SendGump( new Server.Gumps.XmlLookupCategorizedAddGump( state.Mobile, match, 0,
-                                (Type[])Server.Gumps.AddGump.Match( match ).ToArray( typeof( Type ) ), true ) );
-                            }
-                            */
-
-
                         }
                         break;
                     }
             }
             // Create a new gump
-            //m_Spawner.OnDoubleClick( state.Mobile);
             Refresh(state.Mobile);
         }
 
         private class XmlAddOptionsGump : Gump
         {
-            public XmlAddOptionsGump(Mobile from, XmlSpawner lastSpawner) : base(0, 0)
+            public XmlAddOptionsGump(Mobile from) : base(0, 0)
             {
-                // read the text entries for default values
                 // read the text entries for default values
                 Account acct = from.Account as Account;
                 XmlSpawnerDefaults.DefaultEntry defs = null;

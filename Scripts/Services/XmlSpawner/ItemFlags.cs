@@ -81,12 +81,10 @@ namespace Server.Items
 
         private class GetFlagTarget : Target
         {
-            private readonly CommandEventArgs m_e;
             private readonly int m_flag;
 
             public GetFlagTarget(CommandEventArgs e, int flag) : base(30, false, TargetFlags.None)
             {
-                m_e = e;
                 m_flag = flag;
             }
             protected override void OnTarget(Mobile from, object targeted)

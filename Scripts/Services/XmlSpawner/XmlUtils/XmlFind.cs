@@ -1433,7 +1433,7 @@ namespace Server.Mobiles
                 else
                                 if (Sortselect)
                 {
-                    m_SearchList.Sort(new ListSelectSorter(m_From, Descendingsort));
+                    m_SearchList.Sort(new ListSelectSorter(Descendingsort));
                 }
             }
         }
@@ -1661,7 +1661,7 @@ namespace Server.Mobiles
         {
             private readonly bool Dsort;
 
-            public ListSelectSorter(Mobile from, bool descend)
+            public ListSelectSorter(bool descend)
             {
                 Dsort = descend;
             }
@@ -1980,7 +1980,7 @@ namespace Server.Mobiles
                     {
                         Refresh(state);
 
-                        state.Mobile.SendGump(new XmlConfirmDeleteGump(state.Mobile, m_SearchList));
+                        state.Mobile.SendGump(new XmlConfirmDeleteGump(m_SearchList));
                         return;
                     }
                 case 157: // Reset selected items
@@ -2243,7 +2243,7 @@ namespace Server.Mobiles
         {
             private readonly ArrayList SearchList;
 
-            public XmlConfirmDeleteGump(Mobile from, ArrayList searchlist)
+            public XmlConfirmDeleteGump(ArrayList searchlist)
                 : base(0, 0)
             {
                 SearchList = searchlist;

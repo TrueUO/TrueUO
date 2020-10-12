@@ -257,7 +257,6 @@ namespace Server.Items
             }
             else if (book.Writable && from.InRange(book.GetWorldLocation(), 1))
             {
-                // Older clients handled multpile pages per packet
                 // Newer clients packets are 1 page per packet
                 if (pageCount != 1)
                     return;
@@ -279,9 +278,6 @@ namespace Server.Items
                                 return;
 
                         book.Pages[index].Lines = lines;
-                    }
-                    else
-                    {
                     }
                 }
             }
