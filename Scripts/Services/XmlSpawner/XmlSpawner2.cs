@@ -3427,18 +3427,12 @@ namespace Server.Mobiles
 
             // initialize the default waypoint name
             WayPoint tmpwaypoint = new WayPoint();
-            if (tmpwaypoint != null)
-            {
-                defwaypointname = tmpwaypoint.Name;
-                tmpwaypoint.Delete();
-            }
-            // 2004.02.08 :: Omega Red
-            // initialize m_Region fields after world load (now, regions are loaded)
-            // Now this gets handled in OnTick
+
+            defwaypointname = tmpwaypoint.Name;
+            tmpwaypoint.Delete();
 
             int count = 0;
             int regional = 0;
-            //int timercount=0;
 
             foreach (Item item in World.Items.Values)
             {
@@ -3719,15 +3713,11 @@ namespace Server.Mobiles
 
         private static void XmlSaveDefaults(string filePath, Mobile m)
         {
-
-            if (filePath == null || filePath.Length < 1) return;
+            if (filePath == null || filePath.Length < 1)
+                return;
 
             using (StreamWriter op = new StreamWriter(filePath))
             {
-                if (op == null)
-                {
-                    m.SendMessage("unable to open file {0}", filePath);
-                }
                 XmlTextWriter xml = new XmlTextWriter(op)
                 {
                     Formatting = Formatting.Indented,
@@ -4611,7 +4601,7 @@ namespace Server.Mobiles
             if (fileerror) return;
 
             // Check that at least a single table was loaded
-            if (ds.Tables != null && ds.Tables.Count > 0)
+            if (ds.Tables.Count > 0)
             {
                 // Add each spawn point to the current map
                 if (ds.Tables[SpawnTablePointName] != null && ds.Tables[SpawnTablePointName].Rows.Count > 0)
@@ -5282,7 +5272,7 @@ namespace Server.Mobiles
                 }
                 if (mindelay > maxdelay) maxdelay = mindelay;
 
-                if (!badspawn && typenames != null && typenames.Length > 0)
+                if (!badspawn && typenames.Length > 0)
                 {
                     // everything seems ok so go ahead and make the spawner
                     // check for map override
@@ -11035,7 +11025,7 @@ namespace Server.Mobiles
                 ParameterInfo[] paramList = ctor.GetParameters();
 
                 // and compare with the argument list provided
-                if (paramList != null && typearglen == paramList.Length)
+                if (typearglen == paramList.Length)
                 {
                     // this is a constructor that takes args and matches the number of args passed in to CreateObject
                     if (paramList.Length > 0)
