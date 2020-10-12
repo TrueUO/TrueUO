@@ -91,7 +91,6 @@ namespace Server.Items
             private int m_Tick, m_Hits;
 
             public Mobile Target => m_Target;
-            public Mobile From => m_From;
             public int Hits { get { return m_Hits; } set { m_Hits = value; } }
             public DateTime LastHit { get { return m_LastHit; } set { m_LastHit = value; } }
 

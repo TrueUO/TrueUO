@@ -72,9 +72,6 @@ namespace Server.Gumps
         private static readonly int TotalWidth = OffsetSize + NameWidth + OffsetSize + ValueWidth + OffsetSize + SetWidth + OffsetSize;
         private static readonly int TotalHeight = OffsetSize + ((EntryHeight + OffsetSize) * (EntryCount + 1));
 
-        private static readonly int BackWidth = BorderSize + TotalWidth + BorderSize;
-        private static readonly int BackHeight = BorderSize + TotalHeight + BorderSize;
-
         public XmlPropertiesGump(Mobile mobile, object o) : base(GumpOffsetX, GumpOffsetY)
         {
             m_Mobile = mobile;
@@ -629,64 +626,6 @@ namespace Server.Gumps
             }
 
             throw new Exception("bad");
-        }
-
-        private static string GetStringFromObject(object o)
-        {
-            if (o == null)
-            {
-                return "-null-";
-            }
-            else if (o is string)
-            {
-                return string.Format("\"{0}\"", (string)o);
-            }
-            else if (o is bool)
-            {
-                return o.ToString();
-            }
-            else if (o is char)
-            {
-                return string.Format("0x{0:X} '{1}'", (int)(char)o, (char)o);
-            }
-            else if (o is Serial)
-            {
-                Serial s = (Serial)o;
-
-                if (s.IsValid)
-                {
-                    if (s.IsItem)
-                    {
-                        return string.Format("(I) 0x{0:X}", s.Value);
-                    }
-                    else if (s.IsMobile)
-                    {
-                        return string.Format("(M) 0x{0:X}", s.Value);
-                    }
-                }
-
-                return string.Format("(?) 0x{0:X}", s.Value);
-            }
-            else if (o is byte || o is sbyte || o is short || o is ushort || o is int || o is uint || o is long || o is ulong)
-            {
-                return string.Format("{0} (0x{0:X})", o);
-            }
-            else if (o is Mobile)
-            {
-                return string.Format("(M) 0x{0:X} \"{1}\"", ((Mobile)o).Serial.Value, ((Mobile)o).Name);
-            }
-            else if (o is Item)
-            {
-                return string.Format("(I) 0x{0:X}", ((Item)o).Serial);
-            }
-            else if (o is Type)
-            {
-                return ((Type)o).Name;
-            }
-            else
-            {
-                return o.ToString();
-            }
         }
 
         private class PropertySorter : IComparer

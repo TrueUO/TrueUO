@@ -38,7 +38,7 @@ namespace Server.Spells.Bushido
         public override bool OnBeforeSwing(Mobile attacker, Mobile defender)
         {
             /* no mana drain before actual hit */
-            bool enoughMana = CheckMana(attacker, false);
+            CheckMana(attacker, false);
             return Validate(attacker);
         }
 

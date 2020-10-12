@@ -105,7 +105,6 @@ namespace Server.Spells.Spellweaving
                 m_Timer.Start();
             }
 
-            public Mobile Defender => m_Defender;
             public int FCMalus => m_FCMalus;
             public int SSIMalus => m_SSIMalus;
             public ExpireTimer Timer => m_Timer;

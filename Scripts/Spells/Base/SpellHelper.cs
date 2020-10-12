@@ -120,7 +120,6 @@ namespace Server.Spells
         #endregion 
 
         private static readonly TimeSpan AosDamageDelay = TimeSpan.FromSeconds(1.0);
-        private static readonly TimeSpan OldDamageDelay = TimeSpan.FromSeconds(0.5);
 
         public static TimeSpan GetDamageDelayForSpell(Spell sp)
         {

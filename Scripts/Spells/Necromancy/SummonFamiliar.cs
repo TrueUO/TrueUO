@@ -141,8 +141,6 @@ namespace Server.Spells.Necromancy
             }
         }
 
-        private static readonly Hashtable m_Table = new Hashtable();
-
         public override void OnResponse(NetState sender, RelayInfo info)
         {
             int index = info.ButtonID - 1;

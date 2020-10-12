@@ -45,7 +45,6 @@ namespace Server.Spells
 
         public bool Disturbed { get; set; }
 
-        private static readonly TimeSpan NextSpellDelay = TimeSpan.FromSeconds(0.75);
         private static TimeSpan AnimateDelay = TimeSpan.FromSeconds(1.5);
 
         public virtual SkillName CastSkill => SkillName.Magery;
