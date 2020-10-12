@@ -756,15 +756,7 @@ namespace Server.Mobiles
                         {
                             // if the next spawn tick of the spawner will occur after the subgroup is available for spawning
                             // then report the next spawn tick since that is the earliest that the subgroup can actually be spawned
-                            if ((DateTime.UtcNow + m_Spawner.NextSpawn) > m_Spawner.SpawnObjects[i].NextSpawn)
-                            {
-                                strnext = m_Spawner.NextSpawn.ToString();
-                            }
-                            else
-                            {
-                                // estimate the earliest the next spawn could occur as the first spawn tick after reaching the subgroup nextspawn 
-                                strnext = (m_Spawner.SpawnObjects[i].NextSpawn - DateTime.UtcNow + m_Spawner.NextSpawn).ToString();
-                            }
+                            strnext = (DateTime.UtcNow + m_Spawner.NextSpawn) > m_Spawner.SpawnObjects[i].NextSpawn ? m_Spawner.NextSpawn.ToString() : (m_Spawner.SpawnObjects[i].NextSpawn - DateTime.UtcNow + m_Spawner.NextSpawn).ToString();
                         }
                         else
                         {
@@ -1161,7 +1153,7 @@ namespace Server.Mobiles
                     tegrp = info.GetTextEntry(1300 + i);
                     if (tegrp != null)
                     {
-                        if (tegrp.Text != null && tegrp.Text.Length > 0)
+                        if (!string.IsNullOrEmpty(tegrp.Text))
                         {
                             double grpval = -1;
                             try { grpval = Convert.ToDouble(tegrp.Text); }
@@ -1187,7 +1179,7 @@ namespace Server.Mobiles
                     tegrp = info.GetTextEntry(1400 + i);
                     if (tegrp != null)
                     {
-                        if (tegrp.Text != null && tegrp.Text.Length > 0)
+                        if (!string.IsNullOrEmpty(tegrp.Text))
                         {
                             double grpval = -1;
                             try { grpval = Convert.ToDouble(tegrp.Text); }
@@ -1213,7 +1205,7 @@ namespace Server.Mobiles
                     tegrp = info.GetTextEntry(1500 + i);
                     if (tegrp != null)
                     {
-                        if (tegrp.Text != null && tegrp.Text.Length > 0)
+                        if (!string.IsNullOrEmpty(tegrp.Text))
                         {
                             int grpval = 1;
                             try { grpval = int.Parse(tegrp.Text); }
@@ -1236,7 +1228,7 @@ namespace Server.Mobiles
                     tegrp = info.GetTextEntry(1600 + i);
                     if (tegrp != null)
                     {
-                        if (tegrp.Text != null && tegrp.Text.Length > 0)
+                        if (!string.IsNullOrEmpty(tegrp.Text))
                         {
                             int grpval = 1;
                             try { grpval = int.Parse(tegrp.Text); }
@@ -1309,29 +1301,24 @@ namespace Server.Mobiles
                         break;
                     }
                 case 200: // gump extension
-                    {
-                        if (m_ShowGump > 1)
-                            state.Mobile.SendGump(new XmlSpawnerGump(m_Spawner, X, Y, -1, xoffset, page));
-                        else
-                            state.Mobile.SendGump(new XmlSpawnerGump(m_Spawner, X, Y, m_ShowGump + 2, xoffset, page));
-                        return;
-                    }
+                {
+                    state.Mobile.SendGump(m_ShowGump > 1
+                        ? new XmlSpawnerGump(m_Spawner, X, Y, -1, xoffset, page)
+                        : new XmlSpawnerGump(m_Spawner, X, Y, m_ShowGump + 2, xoffset, page));
+                    return;
+                }
                 case 201: // gump text extension
-                    {
-                        if (xoffset > 0)
-                            state.Mobile.SendGump(new XmlSpawnerGump(m_Spawner, X, Y, m_ShowGump, 0, page));
-                        else
-                            state.Mobile.SendGump(new XmlSpawnerGump(m_Spawner, X, Y, m_ShowGump, 250, page));
-                        return;
-                    }
+                {
+                    state.Mobile.SendGump(xoffset > 0
+                        ? new XmlSpawnerGump(m_Spawner, X, Y, m_ShowGump, 0, page)
+                        : new XmlSpawnerGump(m_Spawner, X, Y, m_ShowGump, 250, page));
+                    return;
+                }
                 case 700: // Start/stop spawner
-                    {
-                        if (m_Spawner.Running)
-                            m_Spawner.Running = false;
-                        else
-                            m_Spawner.Running = true;
-                        break;
-                    }
+                {
+                    m_Spawner.Running = !m_Spawner.Running;
+                    break;
+                }
                 case 701: // Complete reset
                     {
                         m_Spawner.Reset();
@@ -1522,7 +1509,7 @@ namespace Server.Mobiles
                             }
 
 
-                            if (categorystring == null || categorystring.Length == 0)
+                            if (string.IsNullOrEmpty(categorystring))
                             {
 
                                 XmlSpawnerGump newg = new XmlSpawnerGump(m_Spawner, X, Y, m_ShowGump, xoffset, page);

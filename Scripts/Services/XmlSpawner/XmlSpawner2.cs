@@ -88,7 +88,7 @@ namespace Server.Mobiles
         private static TimeSpan defTODStart = TimeSpan.FromMinutes(0);
         private static TimeSpan defTODEnd = TimeSpan.FromMinutes(0);
         private static TimeSpan defDuration = TimeSpan.FromMinutes(0);
-        private static TimeSpan defDespawnTime = TimeSpan.FromHours(0);
+        private static readonly TimeSpan defDespawnTime = TimeSpan.FromHours(0);
         private static bool defIsGroup;
         private static int defTeam;
         private static int defProximityTriggerSound = defaultTriggerSound;
@@ -10695,8 +10695,8 @@ namespace Server.Mobiles
             private class WarnEntry2
             {
                 public Point3D m_Point;
-                public Map m_Map;
-                public string m_Name;
+                public readonly Map m_Map;
+                public readonly string m_Name;
 
                 public WarnEntry2(Point3D p, Map map, string name)
                 {

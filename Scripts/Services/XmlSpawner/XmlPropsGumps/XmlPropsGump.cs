@@ -157,10 +157,9 @@ namespace Server.Gumps
                     // look for the default value of the equivalent property in the XmlSpawnerDefaults.DefaultEntry class
 
                     int huemodifier = TextHue;
-                    FieldInfo finfo = null;
                     XmlSpawnerDefaults.DefaultEntry de = new XmlSpawnerDefaults.DefaultEntry();
                     Type ftype = de.GetType();
-                    finfo = ftype.GetField(prop.Name);
+                    var finfo = ftype.GetField(prop.Name);
                     // is there an equivalent default field?
                     if (finfo != null)
                     {
@@ -288,10 +287,10 @@ namespace Server.Gumps
 #if (NEWTIMERS)
                                 object obj = prop.GetValue(m_Object, null);
 
-                                if (obj != null)
-                                    from.SendGump(new XmlPropertiesGump(from, obj, m_Stack, new PropertiesGump.StackEntry(m_Object, prop)));
-                                else
-                                    from.SendGump(new XmlPropertiesGump(from, m_Object, m_Stack, m_List, m_Page));
+                                from.SendGump(obj != null
+                                    ? new XmlPropertiesGump(from, obj, m_Stack,
+                                        new PropertiesGump.StackEntry(m_Object, prop))
+                                    : new XmlPropertiesGump(from, m_Object, m_Stack, m_List, m_Page));
 #else
 							from.SendGump( new XmlPropertiesGump( from, prop.GetValue( m_Object, null ), m_Stack, m_Object ) );
 #endif

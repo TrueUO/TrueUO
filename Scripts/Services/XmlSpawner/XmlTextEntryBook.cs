@@ -20,10 +20,6 @@ namespace Server.Items
             m_bookcallback = callback;
         }
 
-        public XmlTextEntryBook(Serial serial) : base(serial)
-        {
-        }
-
         public void FillTextEntryBook(string text)
         {
 

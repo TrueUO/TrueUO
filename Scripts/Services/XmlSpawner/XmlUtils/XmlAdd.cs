@@ -11,38 +11,6 @@ using Server.Items;
 using Server.Network;
 using Server.Targeting;
 
-/*
-** XmlAdd
-** Version 1.00
-** updated 4/19/04
-** ArteGordon
-**
-** version 1.04
-** update 8/08/04
-** - the add button now uses targeting to place spawners rather than just putting them at the location of the placer.
-**
-** version 1.03
-** update 8/07/04
-**
-** - changed the selection buttons to checkboxes, and changed their gump art for space reasons.
-** - added the smartspawning option
-**
-** Changelog
-** version 1.02
-** update 7/14/04
-** - the duration entry was not being applied to added spawners  (Thanks to BlackNova for pointing this out).
-**
-** version 1.02
-** update 7/14/04
-** - added the SkillTrigger entry
-**
-** version 1.01
-** update 4/22/04
-** - added a spawn entry selection list
-** - added named save and load defaults options
-**
-*/
-
 namespace Server.Mobiles
 {
     public class XmlSpawnerDefaults
@@ -644,9 +612,6 @@ namespace Server.Mobiles
         {
             if (from == null || from.Deleted) return;
 
-            int y;
-            int yinc;
-
 
             defs = null;
 
@@ -695,8 +660,8 @@ namespace Server.Mobiles
                 AddAlphaRegion(0, 0, 200, 500);
             }
 
-            y = 3;
-            yinc = 20;
+            var y = 3;
+            var yinc = 20;
             // add the min/maxdelay entries
             AddImageTiled(5, y, 40, 19, 0xBBC);
             AddTextEntry(5, y, 40, 19, 0, 100, defs.MinDelay.TotalMinutes.ToString());
@@ -1128,7 +1093,6 @@ namespace Server.Mobiles
                     // bump the autonumber
                     defs.AutoNumberValue++;
 
-                //from.CloseGump(typeof(XmlAddGump));
                 Refresh(m_state.Mobile, true);
 
                 // open the spawner gump 
@@ -1139,11 +1103,9 @@ namespace Server.Mobiles
 
         public override void OnResponse(NetState state, RelayInfo info)
         {
-            if (info == null || state?.Mobile == null) return;
-            if (info.Switches.Length > 0)
-            {
-                int radiostate = info.Switches[0];
-            }
+            if (info == null || state?.Mobile == null)
+                return;
+
             // read the text entries for default values
             XmlSpawnerDefaults.DefaultEntry defaults = XmlSpawnerDefaults.GetDefaults(state.Account.ToString(), state.Mobile.Name);
             if (defaults.IgnoreUpdate)
@@ -1367,7 +1329,7 @@ namespace Server.Mobiles
                 case 115: // SaveDefs
                     {
                         string filename;
-                        if (defaults.DefsExt != null && defaults.DefsExt.Length > 0)
+                        if (!string.IsNullOrEmpty(defaults.DefsExt))
                         {
                             filename = string.Format("{0}-{1}-{2}", defaults.AccountName, defaults.PlayerName, defaults.DefsExt);
                         }
@@ -1381,7 +1343,7 @@ namespace Server.Mobiles
                 case 116: // LoadDefs
                     {
                         string filename;
-                        if (defaults.DefsExt != null && defaults.DefsExt.Length > 0)
+                        if (!string.IsNullOrEmpty(defaults.DefsExt))
                         {
                             filename = string.Format("{0}-{1}-{2}", defaults.AccountName, defaults.PlayerName, defaults.DefsExt);
                         }
@@ -1501,8 +1463,11 @@ namespace Server.Mobiles
                                 state.Mobile.CloseGump(typeof(XmlPartialCategorizedAddGump));
 
                                 //Type [] types = (Type[])XmlPartialCategorizedAddGump.Match( defs.NameList[i] ).ToArray( typeof( Type ) );
-                                ArrayList types = XmlPartialCategorizedAddGump.Match(defaults.NameList[i]);
-                                state.Mobile.SendGump(new XmlPartialCategorizedAddGump(state.Mobile, defaults.NameList[i], 0, types, true, i, newg));
+                                if (defaults.NameList != null)
+                                {
+                                    ArrayList types = XmlPartialCategorizedAddGump.Match(defaults.NameList[i]);
+                                    state.Mobile.SendGump(new XmlPartialCategorizedAddGump(state.Mobile, defaults.NameList[i], 0, types, true, i, newg));
+                                }
                             }
 
                             return;
