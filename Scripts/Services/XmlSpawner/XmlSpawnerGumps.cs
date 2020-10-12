@@ -1004,15 +1004,11 @@ namespace Server.Mobiles
 
                 foreach (Gump g in ns.Gumps)
                 {
-
-                    if (g is XmlSpawnerGump xg)
+                    // clear the gump status on the spawner associated with the gump
+                    if (g is XmlSpawnerGump xg && xg.m_Spawner != null)
                     {
-                        // clear the gump status on the spawner associated with the gump
-                        if (xg.m_Spawner != null)
-                        {
-                            // and add the old gump to the removal list
-                            refresh.Add(xg);
-                        }
+                        // and add the old gump to the removal list
+                        refresh.Add(xg);
                     }
                 }
 
