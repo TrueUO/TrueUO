@@ -105,7 +105,7 @@ namespace Server.Mobiles
                 }
             }
 
-            private void ExportSpawner(Spawner spawner, XmlTextWriter xml)
+            private void ExportSpawner(Spawner spawner, XmlWriter xml)
             {
                 xml.WriteStartElement("spawner");
 
@@ -209,7 +209,7 @@ namespace Server.Mobiles
             }
         }
 
-        private static string GetText(XmlElement node, string defaultValue)
+        private static string GetText(XmlNode node, string defaultValue)
         {
             if (node == null)
                 return defaultValue;
@@ -217,7 +217,7 @@ namespace Server.Mobiles
             return node.InnerText;
         }
 
-        private static void ImportSpawner(XmlElement node)
+        private static void ImportSpawner(XmlNode node)
         {
             int count = int.Parse(GetText(node["count"], "1"));
             int homeRange = int.Parse(GetText(node["homerange"], "4"));

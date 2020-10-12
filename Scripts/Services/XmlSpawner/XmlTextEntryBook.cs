@@ -236,7 +236,7 @@ namespace Server.Items
 
             // send the book text off to be processed by invoking the callback if it is a textentry book
             XmlTextEntryBook tebook = book as XmlTextEntryBook;
-            if (tebook != null && tebook.m_bookcallback != null)
+            if (tebook?.m_bookcallback != null)
             {
                 tebook.m_bookcallback(state.Mobile, tebook.m_args, sb.ToString());
             }

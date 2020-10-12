@@ -267,25 +267,6 @@ namespace Server.Mobiles
 
         public int FastestPlayerSpeed { get { return m_FastestPlayerSpeed; } set { m_FastestPlayerSpeed = value; } }
 
-        public int NearbyPlayerCount
-        {
-            get
-            {
-                int count = 0;
-                if (ProximityRange >= 0)
-                {
-                    IPooledEnumerable eable = GetMobilesInRange(ProximityRange);
-                    foreach (Mobile m in eable)
-                    {
-                        if (m != null && m.Player) count++;
-                    }
-
-                    eable.Free();
-                }
-                return count;
-            }
-        }
-
         public Point3D MostRecentSpawnPosition
         {
             get { return mostRecentSpawnPosition; }

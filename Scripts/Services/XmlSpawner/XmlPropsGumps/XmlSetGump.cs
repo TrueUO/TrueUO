@@ -39,16 +39,6 @@ namespace Server.Gumps
         public static readonly int SetButtonID1 = PropsConfig.SetButtonID1;
         public static readonly int SetButtonID2 = PropsConfig.SetButtonID2;
 
-        public static readonly int PrevWidth = PropsConfig.PrevWidth;
-        public static readonly int PrevOffsetX = PropsConfig.PrevOffsetX, PrevOffsetY = PropsConfig.PrevOffsetY;
-        public static readonly int PrevButtonID1 = PropsConfig.PrevButtonID1;
-        public static readonly int PrevButtonID2 = PropsConfig.PrevButtonID2;
-
-        public static readonly int NextWidth = PropsConfig.NextWidth;
-        public static readonly int NextOffsetX = PropsConfig.NextOffsetX, NextOffsetY = PropsConfig.NextOffsetY;
-        public static readonly int NextButtonID1 = PropsConfig.NextButtonID1;
-        public static readonly int NextButtonID2 = PropsConfig.NextButtonID2;
-
         public static readonly int OffsetSize = PropsConfig.OffsetSize;
 
         public static readonly int EntryHeight = PropsConfig.EntryHeight;
