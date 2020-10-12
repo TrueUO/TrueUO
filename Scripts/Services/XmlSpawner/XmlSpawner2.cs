@@ -1173,13 +1173,6 @@ namespace Server.Mobiles
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool HomeRangeIsRelative
-        {
-            get { return m_HomeRangeIsRelative; }
-            set { m_HomeRangeIsRelative = value; }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
         public int Team
         {
             get { return m_Team; }
