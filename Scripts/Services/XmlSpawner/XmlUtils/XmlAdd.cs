@@ -1544,12 +1544,8 @@ namespace Server.Mobiles
 
         private class XmlAddOptionsGump : Gump
         {
-            private readonly Mobile From;
-            private readonly XmlSpawner LastSpawner;
-
             public XmlAddOptionsGump(Mobile from, XmlSpawner lastSpawner) : base(0, 0)
             {
-
                 // read the text entries for default values
                 // read the text entries for default values
                 Account acct = from.Account as Account;
@@ -1561,8 +1557,6 @@ namespace Server.Mobiles
 
                 if (defs == null) return;
 
-                From = from;
-                LastSpawner = lastSpawner;
                 Closable = true;
                 Dragable = true;
                 AddPage(0);
@@ -1650,13 +1644,10 @@ namespace Server.Mobiles
 
         private class XmlAddConfirmDeleteGump : Gump
         {
-            private readonly Mobile From;
             private readonly XmlSpawner LastSpawner;
 
             public XmlAddConfirmDeleteGump(Mobile from, XmlSpawner lastSpawner) : base(0, 0)
             {
-
-                From = from;
                 LastSpawner = lastSpawner;
                 Closable = false;
                 Dragable = true;

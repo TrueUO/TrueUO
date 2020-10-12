@@ -273,7 +273,6 @@ namespace Server.Gumps
 
         private readonly int m_Index;
         private readonly Gump m_Gump;
-        private readonly XmlSpawner m_Spawner;
 
         public XmlCategorizedAddGump(Mobile owner, int index, Gump gump) : this(owner, XmlAddCAGCategory.Root, 0, index, gump)
         {
@@ -305,9 +304,6 @@ namespace Server.Gumps
             else
                 if (gump is XmlSpawnerGump spawnerGump)
             {
-                m_Spawner = spawnerGump.m_Spawner;
-
-
             }
 
             Initialize(page);

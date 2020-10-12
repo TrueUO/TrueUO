@@ -1659,12 +1659,10 @@ namespace Server.Mobiles
 
         private class ListSelectSorter : IComparer
         {
-            private readonly Mobile From;
             private readonly bool Dsort;
 
             public ListSelectSorter(Mobile from, bool descend)
             {
-                From = from;
                 Dsort = descend;
             }
 
@@ -2165,14 +2163,11 @@ namespace Server.Mobiles
         {
             private readonly ArrayList SearchList;
 
-            private readonly Mobile From;
-
             public XmlConfirmBringGump(Mobile from, ArrayList searchlist)
                 : base(0, 0)
             {
                 SearchList = searchlist;
 
-                From = from;
                 Closable = false;
                 Dragable = true;
                 AddPage(0);
