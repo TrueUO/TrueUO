@@ -319,7 +319,7 @@ namespace Server.Mobiles
 
         public override void OnResponse(NetState state, RelayInfo info)
         {
-            if (info == null || state == null || state.Mobile == null) return;
+            if (info == null || state?.Mobile == null) return;
 
             if (m_Spawner == null || m_Spawner.Deleted)
                 return;
@@ -998,7 +998,7 @@ namespace Server.Mobiles
 
             NetState ns = from.NetState;
 
-            if (ns != null && ns.Gumps != null)
+            if (ns?.Gumps != null)
             {
 
                 ArrayList refresh = new ArrayList();
@@ -1137,7 +1137,7 @@ namespace Server.Mobiles
                     {
                         // check the *reset time* entry
                         tegrp = info.GetTextEntry(1000 + i);
-                        if (tegrp != null && tegrp.Text != null && tegrp.Text.Length > 0)
+                        if (tegrp?.Text != null && tegrp.Text.Length > 0)
                         {
                             double grpval = 0;
                             try { grpval = Convert.ToDouble(tegrp.Text); }
@@ -1150,7 +1150,7 @@ namespace Server.Mobiles
                         }
                         // check the *reset to* entry
                         tegrp = info.GetTextEntry(1100 + i);
-                        if (tegrp != null && tegrp.Text != null && tegrp.Text.Length > 0)
+                        if (tegrp?.Text != null && tegrp.Text.Length > 0)
                         {
                             int grpval = 0;
                             try { grpval = Convert.ToInt32(tegrp.Text, 10); }
@@ -1161,7 +1161,7 @@ namespace Server.Mobiles
                         }
                         // check the kills entry
                         tegrp = info.GetTextEntry(1200 + i);
-                        if (tegrp != null && tegrp.Text != null && tegrp.Text.Length > 0)
+                        if (tegrp?.Text != null && tegrp.Text.Length > 0)
                         {
                             int grpval = 0;
                             try { grpval = Convert.ToInt32(tegrp.Text, 10); }
@@ -1525,7 +1525,7 @@ namespace Server.Mobiles
 
                             TextRelay te = info.GetTextEntry(i);
 
-                            if (te != null && te.Text != null)
+                            if (te?.Text != null)
                             {
                                 // get the string
 

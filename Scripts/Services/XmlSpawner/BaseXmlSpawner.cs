@@ -488,11 +488,6 @@ namespace Server.Mobiles
             {
             }
 
-            public KeywordTag(string typename, XmlSpawner spawner, TimeSpan delay, string condition, int gotogroup)
-                : this(typename, spawner, 0, delay, TimeSpan.Zero, condition, gotogroup)
-            {
-            }
-
             public KeywordTag(string typename, XmlSpawner spawner, TimeSpan delay, TimeSpan timeout, string condition, int gotogroup)
                 : this(typename, spawner, 0, delay, timeout, condition, gotogroup)
             {
@@ -1006,9 +1001,9 @@ namespace Server.Mobiles
 
                 if (TryParse(keywordargs[1], true, out skillname))
                 {
-                    if (o is Mobile)
+                    if (o is Mobile mobile)
                     {
-                        Skill skill = ((Mobile)o).Skills[skillname];
+                        Skill skill = mobile.Skills[skillname];
                         double d;
                         if (double.TryParse(value, NumberStyles.Any, CultureInfo.InvariantCulture, out d))
                         {
@@ -1027,12 +1022,12 @@ namespace Server.Mobiles
 
             if (keywordargs[0] == "STEALABLE")
             {
-                if (o is Item)
+                if (o is Item item)
                 {
                     bool b;
                     if (bool.TryParse(value, out b))
                     {
-                        ItemFlags.SetStealable((Item)o, b);
+                        ItemFlags.SetStealable(item, b);
                         return "Property has been set.";
                     }
 
@@ -1299,9 +1294,9 @@ namespace Server.Mobiles
 
                 if (TryParse(keywordargs[1], true, out skillname))
                 {
-                    if (o is Mobile)
+                    if (o is Mobile mobile)
                     {
-                        Skill skill = ((Mobile)o).Skills[skillname];
+                        Skill skill = mobile.Skills[skillname];
                         ptype = skill.Value.GetType();
 
                         return string.Format("{0} = {1}", skillname, skill.Value);
@@ -1318,18 +1313,18 @@ namespace Server.Mobiles
                 bool found;
                 try
                 {
-                    if (o is Mobile)
+                    if (o is Mobile mobile)
                     {
-                        ptype = ((Mobile)o).Serial.GetType();
+                        ptype = mobile.Serial.GetType();
 
-                        return string.Format("Serial = {0}", ((Mobile)o).Serial);
+                        return string.Format("Serial = {0}", mobile.Serial);
                     }
 
-                    if (o is Item)
+                    if (o is Item item)
                     {
-                        ptype = ((Item)o).Serial.GetType();
+                        ptype = item.Serial.GetType();
 
-                        return string.Format("Serial = {0}", ((Item)o).Serial);
+                        return string.Format("Serial = {0}", item.Serial);
                     }
 
                     return "Object is not item/mobile";
@@ -1351,10 +1346,10 @@ namespace Server.Mobiles
                 bool found;
                 try
                 {
-                    if (o is Item)
+                    if (o is Item item)
                     {
                         ptype = typeof(bool);
-                        return string.Format("Stealable = {0}", ItemFlags.GetStealable((Item)o));
+                        return string.Format("Stealable = {0}", ItemFlags.GetStealable(item));
                     }
 
                     return "Object is not an item";
@@ -2463,7 +2458,7 @@ namespace Server.Mobiles
                                     // get the list of items being carried of the specified type
                                     Type targetType = SpawnerType.GetType(typestr);
 
-                                    if (targetType != null && trigmob != null && trigmob.Backpack != null)
+                                    if (targetType != null && trigmob?.Backpack != null)
                                     {
                                         Item[] items = trigmob.Backpack.FindItemsByType(targetType, true);
 
@@ -2546,7 +2541,7 @@ namespace Server.Mobiles
                             {
                                 if (value_keywordargs.Length > 1)
                                 {
-                                    if (spawner != null && spawner.TriggerSkill != null)
+                                    if (spawner?.TriggerSkill != null)
                                     {
                                         string skillstr = null;
                                         // syntax is TRIGSKILL,name|value|cap|base
@@ -2730,15 +2725,15 @@ namespace Server.Mobiles
 
                                 // by default just use the spawn location
 
-                                if (o is Mobile)
+                                if (o is Mobile mobile)
                                 {
-                                    eloc2 = ((Mobile)o).Location;
-                                    emap = ((Mobile)o).Map;
+                                    eloc2 = mobile.Location;
+                                    emap = mobile.Map;
                                 }
-                                else if (o is Item)
+                                else if (o is Item item)
                                 {
-                                    eloc2 = ((Item)o).Location;
-                                    emap = ((Item)o).Map;
+                                    eloc2 = item.Location;
+                                    emap = item.Map;
                                 }
 
                                 if (keywordargs.Length > 8)
@@ -2774,9 +2769,9 @@ namespace Server.Mobiles
                                     Effects.SendPacket(eloc1, emap, new HuedEffect(EffectType.Moving, -1, -1, effect, eloc1, eloc2, speed, duration, false, false, 0, 0));
                                 }
                                 else
-                                    if (effect >= 0 && refobject is IEntity && o is IEntity)
+                                    if (effect >= 0 && refobject is IEntity entity && o is IEntity)
                                 {
-                                    Effects.SendMovingEffect((IEntity)refobject, (IEntity)o, effect, speed, duration, false, false);
+                                    Effects.SendMovingEffect(entity, (IEntity)o, effect, speed, duration, false, false);
                                 }
                                 if (arglist.Length < 2) break;
                                 remainder = singlearglist[1];
@@ -2808,15 +2803,15 @@ namespace Server.Mobiles
                                 // by default just use the spawn location
                                 Point3D eloc;
                                 Map emap = Map.Internal;
-                                if (o is Mobile)
+                                if (o is Mobile mobile)
                                 {
-                                    eloc = ((Mobile)o).Location;
-                                    emap = ((Mobile)o).Map;
+                                    eloc = mobile.Location;
+                                    emap = mobile.Map;
                                 }
-                                else if (o is Item)
+                                else if (o is Item item)
                                 {
-                                    eloc = ((Item)o).Location;
-                                    emap = ((Item)o).Map;
+                                    eloc = item.Location;
+                                    emap = item.Map;
                                 }
                                 else
                                 {
@@ -2870,15 +2865,15 @@ namespace Server.Mobiles
                             }
                             else if (kw == typemodKeyword.DELETE)
                             {
-                                if (o is Item)
+                                if (o is Item item)
                                 {
-                                    ((Item)o).Delete();
+                                    item.Delete();
                                 }
-                                else if (o is Mobile)
+                                else if (o is Mobile mobile)
                                 {
-                                    if (!((Mobile)o).Player)
+                                    if (!mobile.Player)
                                     {
-                                        ((Mobile)o).Delete();
+                                        mobile.Delete();
                                     }
                                 }
 
@@ -3944,7 +3939,7 @@ namespace Server.Mobiles
                         // get the list of items being carried of the specified type
                         Type targetType = SpawnerType.GetType(typestr);
 
-                        if (targetType != null && trigmob != null && trigmob.Backpack != null)
+                        if (targetType != null && trigmob?.Backpack != null)
                         {
                             Item[] items = trigmob.Backpack.FindItemsByType(targetType, true);
 
@@ -3979,7 +3974,7 @@ namespace Server.Mobiles
                     int.TryParse(arglist[1], out range);
 
                     // count nearby players
-                    if (spawner != null && spawner.SpawnRegion != null && range < 0)
+                    if (spawner?.SpawnRegion != null && range < 0)
                     {
                         foreach (Mobile p in spawner.SpawnRegion.GetPlayers())
                         {
@@ -4009,7 +4004,7 @@ namespace Server.Mobiles
                 }
                 else if ((kw == valueKeyword.TRIGSKILL) && arglist.Length > 1)
                 {
-                    if (spawner != null && spawner.TriggerSkill != null)
+                    if (spawner?.TriggerSkill != null)
                     {
                         // syntax is TRIGSKILL,name|value|cap|base
                         if (arglist[1].ToLower() == "name")
@@ -4600,7 +4595,7 @@ namespace Server.Mobiles
         private static void GetItemsIn(Item source, string targetname, Type targettype, string typestr, ref List<object> nearbylist, string proptest)
         {
             string status_str;
-            if (source != null && source.Items != null && nearbylist != null)
+            if (source?.Items != null && nearbylist != null)
             {
                 foreach (Item i in source.Items)
                 {
@@ -6031,7 +6026,7 @@ namespace Server.Mobiles
 
         public static void PublicOverheadMobileMessage(Mobile mob, MessageType type, int hue, int font, string text, bool noLineOfSight)
         {
-            if (mob != null && mob.Map != null)
+            if (mob?.Map != null)
             {
                 Packet p = null;
 
@@ -6061,7 +6056,7 @@ namespace Server.Mobiles
 
         public static void PublicOverheadItemMessage(Item item, MessageType type, int hue, int font, string text)
         {
-            if (item != null && item.Map != null)
+            if (item?.Map != null)
             {
                 Packet p = null;
                 Point3D worldLoc = item.GetWorldLocation();
@@ -6781,7 +6776,7 @@ namespace Server.Mobiles
                                                 }
                                             }
                                         }
-                                        else if (invoker != null && invoker is IEntity)
+                                        else if (invoker is IEntity)
                                         {
                                             IPooledEnumerable eable = map.GetMobilesInRange(((IEntity)invoker).Location, range);
                                             foreach (Mobile m in eable)
@@ -6819,7 +6814,7 @@ namespace Server.Mobiles
                                                 }
                                             }
                                         }
-                                        else if (invoker != null && invoker is IEntity)
+                                        else if (invoker is IEntity)
                                         {
                                             foreach (Item i in map.GetItemsInRange(((IEntity)invoker).Location, range))
                                             {
@@ -7129,7 +7124,7 @@ namespace Server.Mobiles
                                     entryindex = -1;
                             }
 
-                            if (targetspawner == null || targetspawner.SpawnObjects == null) return true;
+                            if (targetspawner?.SpawnObjects == null) return true;
 
                             for (int i = 0; i < targetspawner.SpawnObjects.Length; i++)
                             {
@@ -7137,7 +7132,7 @@ namespace Server.Mobiles
 
                                 // is this references by entrystring or entryindex?
                                 if ((entryindex == i)
-                                || (entryindex == -1 && targetobj != null && targetobj.TypeName != null && targetobj.TypeName.IndexOf(entrystring) >= 0))
+                                || (entryindex == -1 && targetobj?.TypeName != null && targetobj.TypeName.IndexOf(entrystring) >= 0))
                                 {
                                     // set the properties on the spawn entry object
                                     ApplyObjectStringProperties(spawner, substitutedtypeName, targetobj, triggermob, spawner, out status_str);
@@ -7153,7 +7148,7 @@ namespace Server.Mobiles
                             // the syntax is SETONPARENT/prop/value/prop2/value...
                             string[] arglist = ParseSlashArgs(substitutedtypeName, 3);
 
-                            if (invoker != null && (invoker is Item))
+                            if (invoker is Item)
                             {
                                 ApplyObjectStringProperties(spawner, substitutedtypeName, ((Item)invoker).Parent, triggermob, invoker, out status_str);
                             }
