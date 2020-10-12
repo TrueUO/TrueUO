@@ -1229,34 +1229,6 @@ namespace Server.Mobiles
             return "Property not found.";
         }
 
-        public static string GetBasicPropertyValue(object o, string propname, out Type ptype)
-        {
-            ptype = null;
-
-            if (o == null || propname == null) return null;
-
-            Type type = o.GetType();
-
-            PropertyInfo[] props = type.GetProperties();
-
-            foreach (PropertyInfo p in props)
-            {
-
-                if (Insensitive.Equals(p.Name, propname))
-                {
-                    if (!p.CanRead)
-                        return null;
-
-                    ptype = p.PropertyType;
-
-                    string value = InternalGetValue(o, p, -1);
-
-                    return ParseGetValue(value, ptype);
-                }
-            }
-            return null;
-        }
-
         public static string GetPropertyValue(XmlSpawner spawner, object o, string name, out Type ptype)
         {
             ptype = null;
@@ -4086,13 +4058,6 @@ namespace Server.Mobiles
             return null;
         }
 
-        public static bool CheckSubstitutedPropertyString(XmlSpawner spawner, object o, string testString, Mobile trigmob, out string status_str)
-        {
-            string substitutedtest = ApplySubstitution(spawner, o, trigmob, testString);
-
-            return CheckPropertyString(spawner, o, substitutedtest, trigmob, out status_str);
-        }
-
         public static bool CheckPropertyString(XmlSpawner spawner, object o, string testString, Mobile trigmob, out string status_str)
         {
             status_str = null;
@@ -4819,39 +4784,6 @@ namespace Server.Mobiles
                 }
             }
             return itemlist;
-        }
-
-        public static Item SearchPackForItemType(Container pack, string targetName)
-        {
-            if (pack != null && !pack.Deleted && targetName != null && targetName.Length > 0)
-            {
-                Type targetType = SpawnerType.GetType(targetName);
-
-                // go through all of the items in the pack
-                List<Item> packlist = pack.Items;
-
-                for (int i = 0; i < packlist.Count; ++i)
-                {
-                    Item item = packlist[i];
-
-                    if (item != null && !item.Deleted)
-                    {
-                        if (item is Container)
-                        {
-                            Item itemTarget = SearchPackForItemType((Container)item, targetName);
-
-                            if (itemTarget != null) return itemTarget;
-                        }
-                        // test the item name against the trigger string
-                        if (item.GetType() == targetType)
-                        {
-                            //found it
-                            return item;
-                        }
-                    }
-                }
-            }
-            return null;
         }
 
         public static Item SearchPackForItem(Container pack, string targetName, string typestr)
@@ -5853,15 +5785,6 @@ namespace Server.Mobiles
             return args;
         }
 
-        public static string[] ParseSpaceArgs(string str, int nitems)
-        {
-            if (str == null) return null;
-            str = str.Trim();
-
-            string[] args = str.Split(spacedelim, nitems);
-            return args;
-        }
-
         public static string[] ParseCommaArgs(string str, int nitems)
         {
             if (str == null) return null;
@@ -6219,117 +6142,13 @@ namespace Server.Mobiles
 
             eable.Free();
         }
-
-        public static void ExecuteActions(Mobile mob, object attachedto, string actions)
-        {
-            if (actions == null || actions.Length <= 0) return;
-            // execute any action associated with it
-            // allow for multiple action strings on a single line separated by a semicolon
-
-            string[] args = actions.Split(';');
-
-            for (int j = 0; j < args.Length; j++)
-            {
-                ExecuteAction(mob, attachedto, args[j]);
-            }
-
-        }
-
-        public static void ExecuteAction(Mobile trigmob, object attachedto, string action)
-        {
-            Point3D loc = Point3D.Zero;
-            Map map = null;
-            if (attachedto is IEntity)
-            {
-                loc = ((IEntity)attachedto).Location;
-                map = ((IEntity)attachedto).Map;
-            }
-
-            if (action == null || action.Length <= 0 || attachedto == null || map == null) return;
-            XmlSpawner.SpawnObject TheSpawn = new XmlSpawner.SpawnObject(null, 0)
-            {
-                TypeName = action
-            };
-            string substitutedtypeName = ApplySubstitution(null, attachedto, trigmob, action);
-            string typeName = ParseObjectType(substitutedtypeName);
-
-
-            string status_str;
-            if (IsTypeOrItemKeyword(typeName))
-            {
-                SpawnTypeKeyword(attachedto, TheSpawn, typeName, substitutedtypeName, true, trigmob, loc, map, out status_str);
-            }
-            else
-            {
-                // its a regular type descriptor so find out what it is
-                Type type = SpawnerType.GetType(typeName);
-                try
-                {
-                    string[] arglist = ParseString(substitutedtypeName, 3, "/");
-                    object o = XmlSpawner.CreateObject(type, arglist[0]);
-
-                    if (o == null)
-                    {
-                        status_str = "invalid type specification: " + arglist[0];
-                    }
-                    else
-                        if (o is Mobile)
-                    {
-                        Mobile m = (Mobile)o;
-                        if (m is BaseCreature)
-                        {
-                            BaseCreature c = (BaseCreature)m;
-                            c.Home = loc; // Spawners location is the home point
-                        }
-
-                        m.Location = loc;
-                        m.Map = map;
-
-                        ApplyObjectStringProperties(null, substitutedtypeName, m, trigmob, attachedto, out status_str);
-                    }
-                    else
-                            if (o is Item)
-                    {
-                        Item item = (Item)o;
-                        AddSpawnItem(null, attachedto, TheSpawn, item, loc, map, trigmob, false, substitutedtypeName, out status_str);
-                    }
-                }
-                catch { }
-            }
-        }
         #endregion
 
         #region Spawn methods
-
-
-        public static void AddSpawnItem(XmlSpawner spawner, XmlSpawner.SpawnObject theSpawn, Item item, Point3D location, Map map, Mobile trigmob, bool requiresurface,
-            string propertyString, out string status_str)
-        {
-            AddSpawnItem(spawner, spawner, theSpawn, item, location, map, trigmob, requiresurface, null, propertyString, false, out status_str);
-        }
-
         public static void AddSpawnItem(XmlSpawner spawner, object invoker, XmlSpawner.SpawnObject theSpawn, Item item, Point3D location, Map map, Mobile trigmob, bool requiresurface,
             string propertyString, out string status_str)
         {
             AddSpawnItem(spawner, invoker, theSpawn, item, location, map, trigmob, requiresurface, null, propertyString, false, out status_str);
-        }
-
-        public static void AddSpawnItem(XmlSpawner spawner, XmlSpawner.SpawnObject theSpawn, Item item, Point3D location, Map map, Mobile trigmob, bool requiresurface,
-            string propertyString, bool smartspawn, out string status_str)
-        {
-            AddSpawnItem(spawner, spawner, theSpawn, item, location, map, trigmob, requiresurface, null, propertyString, smartspawn, out status_str);
-        }
-
-        public static void AddSpawnItem(XmlSpawner spawner, XmlSpawner.SpawnObject theSpawn, Item item, Point3D location, Map map, Mobile trigmob, bool requiresurface,
-            List<XmlSpawner.SpawnPositionInfo> spawnpositioning, string propertyString, out string status_str)
-        {
-            AddSpawnItem(spawner, spawner, theSpawn, item, location, map, trigmob, requiresurface, spawnpositioning, propertyString, false, out status_str);
-        }
-
-        public static void AddSpawnItem(XmlSpawner spawner, object invoker, XmlSpawner.SpawnObject theSpawn, Item item, Point3D location, Map map, Mobile trigmob, bool requiresurface,
-            List<XmlSpawner.SpawnPositionInfo> spawnpositioning, string propertyString, out string status_str)
-        {
-            AddSpawnItem(spawner, invoker, theSpawn, item, location, map, trigmob, requiresurface, spawnpositioning, propertyString, false, out status_str);
         }
 
         public static void AddSpawnItem(XmlSpawner spawner, XmlSpawner.SpawnObject theSpawn, Item item, Point3D location, Map map, Mobile trigmob, bool requiresurface,
@@ -6438,20 +6257,6 @@ namespace Server.Mobiles
         {
             return SpawnTypeKeyword(invoker, TheSpawn, typeName, substitutedtypeName, requiresurface, null,
                 triggermob, location, map, null, out status_str, 0);
-        }
-
-        public static bool SpawnTypeKeyword(object invoker, XmlSpawner.SpawnObject TheSpawn, string typeName, string substitutedtypeName, bool requiresurface,
-            Mobile triggermob, Point3D location, Map map, XmlGumpCallback gumpcallback, out string status_str, byte loops)
-        {
-            return SpawnTypeKeyword(invoker, TheSpawn, typeName, substitutedtypeName, requiresurface, null,
-                triggermob, location, map, gumpcallback, out status_str, loops);
-        }
-
-        public static bool SpawnTypeKeyword(object invoker, XmlSpawner.SpawnObject TheSpawn, string typeName, string substitutedtypeName, bool requiresurface,
-            List<XmlSpawner.SpawnPositionInfo> spawnpositioning, Mobile triggermob, Point3D location, Map map, out string status_str, byte loops)
-        {
-            return SpawnTypeKeyword(invoker, TheSpawn, typeName, substitutedtypeName, requiresurface, spawnpositioning,
-                triggermob, location, map, null, out status_str, loops);
         }
 
         public static bool SpawnTypeKeyword(object invoker, XmlSpawner.SpawnObject TheSpawn, string typeName, string substitutedtypeName, bool requiresurface,
@@ -8217,18 +8022,6 @@ namespace Server.Mobiles
             }
 
             return list;
-        }
-
-        /// <summary>
-        /// Converts the string representation of the name value of one or more enumerated constants to an equivalent enumerated object. A parameter specifies whether the operation is case-sensitive (default: false). The return value indicates whether the conversion succeeded.
-        /// </summary>
-        /// <param name="tocheck"> The string representation of the enumeration name or underlying value to convert.</param>
-        /// <param name="result">result: if the method returns true, it's a TEnum whose value is represented by value. Otherwise uninitialized parameter.</param>
-        /// <returns> true if the value parameter was converted successfully; otherwise, false. </returns>
-        /// <exception cref="ArgumentException"> TEnum is not an enumeration type. </exception>
-        public static bool TryParse<TEnum>(string tocheck, out TEnum result) where TEnum : struct, IConvertible
-        {
-            return TryParse(tocheck, false, out result);
         }
 
         /// <summary>

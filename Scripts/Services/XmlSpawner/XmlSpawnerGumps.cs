@@ -947,7 +947,7 @@ namespace Server.Mobiles
             int m_Y = (int)args[3];
             int m_Extension = (int)args[4];
             int m_page = (int)args[5];
-            if (m_Spawner == null || m_Spawner.SpawnObjects == null) return;
+            if (m_Spawner?.SpawnObjects == null) return;
 
             // place the book text into the spawn entry
             if (m_Index < m_Spawner.SpawnObjects.Length)

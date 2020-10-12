@@ -62,7 +62,6 @@ namespace Server.Mobiles
         private static int ShowItemId = 0x3E57;                 // ships mast
         private static int defaultTriggerSound = 0x1F4;          // click and sparkle sound by default  (0x1F4) , click sound (0x3A4)
         public static string XmlSpawnDir = "XmlSpawner";            // default directory for saving/loading .xml files with [xmlload [xmlsave
-        public static string XmlMultiDir = "XmlMultis";
         private const int MaxSmartSectorListSize = 1024;        // maximum sector list size for use in smart spawning. This gives a 512x512 tile range.
 
         private static string defwaypointname;            // default waypoint name will get assigned in Initialize
@@ -267,12 +266,6 @@ namespace Server.Mobiles
 
         public int FastestPlayerSpeed { get { return m_FastestPlayerSpeed; } set { m_FastestPlayerSpeed = value; } }
 
-        public Point3D MostRecentSpawnPosition
-        {
-            get { return mostRecentSpawnPosition; }
-            set { mostRecentSpawnPosition = value; }
-        }
-
         public TimeSpan GameTOD
         {
             get
@@ -287,13 +280,7 @@ namespace Server.Mobiles
 
         public TimeSpan RealTOD => DateTime.UtcNow.TimeOfDay;
 
-        public int RealDay => DateTime.UtcNow.Day;
-
-        public int RealMonth => DateTime.UtcNow.Month;
-
         public DayOfWeek RealDayOfWeek => DateTime.UtcNow.DayOfWeek;
-
-        public MoonPhase MoonPhase => Clock.GetMoonPhase(Map, Location.X, Location.Y);
 
         public XmlSpawnerGump SpawnerGump
         {
@@ -320,8 +307,6 @@ namespace Server.Mobiles
 
         private readonly bool sectorIsActive = false;
         private bool UseSectorActivate;
-
-        public bool SingleSector => UseSectorActivate;
 
         public bool InActivationRange(Sector s1, Sector s2)
         {
@@ -1216,12 +1201,6 @@ namespace Server.Mobiles
             get { return m_killcount; }
             set { m_killcount = value; }
         }
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int KillReset
-        {
-            get { return m_KillReset; }
-            set { m_KillReset = value; }
-        }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public double TriggerProbability
@@ -1411,9 +1390,6 @@ namespace Server.Mobiles
             {
                 if (m_TODStart == m_TODEnd) return true;
                 DateTime now;
-                DateTime TOD_start;
-                DateTime TOD_end;
-                DateTime day_start;
 
                 if (m_TODMode == TODModeType.Gametime)
                 {
@@ -1427,10 +1403,10 @@ namespace Server.Mobiles
                     // calculate the time window
                     now = DateTime.UtcNow;
                 }
-                day_start = new DateTime(now.Year, now.Month, now.Day);
+                var day_start = new DateTime(now.Year, now.Month, now.Day);
                 // calculate the starting TOD window by adding the TODStart to day_start
-                TOD_start = day_start + m_TODStart;
-                TOD_end = day_start + m_TODEnd;
+                var TOD_start = day_start + m_TODStart;
+                var TOD_end = day_start + m_TODEnd;
 
 
                 // handle the case when TODstart is before midnight and end is after
@@ -1737,13 +1713,6 @@ namespace Server.Mobiles
         {
             get { return m_ConfigFile; }
             set { m_ConfigFile = value; }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool LoadConfig
-        {
-            get { return false; }
-            set { if (value) LoadXmlConfig(ConfigFile); }
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
@@ -2091,10 +2060,10 @@ namespace Server.Mobiles
         {
             Point3D loc = Point3D.Zero;
             Map map = null;
-            if (attachedto is IEntity)
+            if (attachedto is IEntity entity)
             {
-                loc = ((IEntity)attachedto).Location;
-                map = ((IEntity)attachedto).Map;
+                loc = entity.Location;
+                map = entity.Map;
             }
 
             if (action == null || action.Length <= 0 || attachedto == null || map == null) return;
@@ -2124,13 +2093,10 @@ namespace Server.Mobiles
                     {
                         status_str = "invalid type specification: " + arglist[0];
                     }
-                    else
-                        if (o is Mobile)
+                    else if (o is Mobile m)
                     {
-                        Mobile m = (Mobile)o;
-                        if (m is BaseCreature)
+                        if (m is BaseCreature c)
                         {
-                            BaseCreature c = (BaseCreature)m;
                             c.Home = loc; // Spawners location is the home point
                         }
 
@@ -2139,10 +2105,8 @@ namespace Server.Mobiles
 
                         BaseXmlSpawner.ApplyObjectStringProperties(null, substitutedtypeName, m, trigmob, attachedto, out status_str);
                     }
-                    else
-                            if (o is Item)
+                    else if (o is Item item)
                     {
-                        Item item = (Item)o;
                         BaseXmlSpawner.AddSpawnItem(null, attachedto, TheSpawn, item, loc, map, trigmob, false, substitutedtypeName, out status_str);
                     }
                 }
@@ -2155,7 +2119,7 @@ namespace Server.Mobiles
 
         private static void RemoveFromSectorTable(Sector s, XmlSpawner spawner)
         {
-            if (s == null || s.Owner == null || s.Owner == Map.Internal || GlobalSectorTable[s.Owner.MapID] == null) return;
+            if (s?.Owner == null || s.Owner == Map.Internal || GlobalSectorTable[s.Owner.MapID] == null) return;
 
             // find the sector
             List<XmlSpawner> spawnerlist;
@@ -3533,30 +3497,6 @@ namespace Server.Mobiles
             }
         }
 
-        [Usage("TagList property")]
-        [Description("Lists the keyword taglist for a spawner")]
-        public static void ShowTagList_OnCommand(CommandEventArgs e)
-        {
-            e.Mobile.Target = new TagListTarget(e);
-        }
-
-        private class TagListTarget : Target
-        {
-            private readonly CommandEventArgs m_e;
-
-            public TagListTarget(CommandEventArgs e)
-                : base(30, false, TargetFlags.None)
-            {
-                m_e = e;
-            }
-            protected override void OnTarget(Mobile from, object targeted)
-            {
-                if (targeted is XmlSpawner)
-                    ((XmlSpawner)targeted).ShowTagList((XmlSpawner)targeted);
-
-            }
-        }
-
         public void ShowTagList(XmlSpawner spawner)
         {
             int count = 0;
@@ -4256,7 +4196,7 @@ namespace Server.Mobiles
         [Description("Returns the spawn reduction due to SmartSpawning.")]
         public static void SmartStat_OnCommand(CommandEventArgs e)
         {
-            if (e == null || e.Mobile == null) return;
+            if (e?.Mobile == null) return;
 
             if (e.Arguments.Length > 1 && e.Arguments[0].ToLower() == "accesslevel" && e.Mobile.AccessLevel >= AccessLevel.Administrator)
             {
@@ -4642,15 +4582,14 @@ namespace Server.Mobiles
                             XmlSpawner OldSpawner = null;
                             foreach (Item i in World.Items.Values)
                             {
-                                if (i is XmlSpawner)
+                                if (i is XmlSpawner checkXmlSpawner)
                                 {
-                                    XmlSpawner CheckXmlSpawner = (XmlSpawner)i;
                                     // Check if the spawners GUID is the same as the one being unloaded
                                     // and that the spawners map is the same as the one being unloaded
-                                    if ((CheckXmlSpawner.UniqueId == SpawnId.ToString())
+                                    if ((checkXmlSpawner.UniqueId == SpawnId.ToString())
                                         /*&& ( CheckXmlSpawner.Map == SpawnMap )*/ )
                                     {
-                                        OldSpawner = (XmlSpawner)i;
+                                        OldSpawner = checkXmlSpawner;
                                         if (OldSpawner != null)
                                         {
                                             spawners_deleted++;
@@ -5390,7 +5329,7 @@ namespace Server.Mobiles
 
                     XmlElement root = doc["spawners"];
                     int successes = 0, failures = 0;
-                    if (root != null && root.GetElementsByTagName("spawner") != null)
+                    if (root?.GetElementsByTagName("spawner") != null)
                     {
                         foreach (XmlElement spawner in root.GetElementsByTagName("spawner"))
                         {
@@ -5589,19 +5528,6 @@ namespace Server.Mobiles
 
             XmlLoadFromFile(filename, SpawnerPrefix, from, from.Location, from.Map, loadrelative, maxrange, loadnew, out processedmaps, out processedspawners);
         }
-
-        public static void XmlLoadFromFile(string filename, string SpawnerPrefix, Point3D fromloc, Map frommap, bool loadrelative, int maxrange, bool loadnew, out int processedmaps, out int processedspawners)
-        {
-            XmlLoadFromFile(filename, SpawnerPrefix, null, fromloc, frommap, loadrelative, maxrange, loadnew, out processedmaps, out processedspawners);
-
-        }
-
-        public static void XmlLoadFromFile(string filename, string SpawnerPrefix, bool loadnew, out int processedmaps, out int processedspawners)
-        {
-            XmlLoadFromFile(filename, SpawnerPrefix, null, Point3D.Zero, Map.Internal, false, 0, loadnew, out processedmaps, out processedspawners);
-
-        }
-
 
         public static void XmlLoadFromStream(Stream fs, string filename, string SpawnerPrefix, Mobile from, Point3D fromloc, Map frommap, bool loadrelative, int maxrange, bool loadnew, out int processedmaps, out int processedspawners)
         {
@@ -6062,27 +5988,25 @@ namespace Server.Mobiles
                             {
                                 foreach (Item i in World.Items.Values)
                                 {
-                                    if (i is XmlSpawner)
+                                    if (i is XmlSpawner checkXmlSpawner)
                                     {
-                                        XmlSpawner CheckXmlSpawner = (XmlSpawner)i;
-
                                         // Check if the spawners GUID is the same as the one being loaded
                                         // and that the spawners map is the same as the one being loaded
-                                        if ((CheckXmlSpawner.UniqueId == SpawnId.ToString())
+                                        if ((checkXmlSpawner.UniqueId == SpawnId.ToString())
                                             /* && ( CheckXmlSpawner.Map == SpawnMap || loadrelative)*/ )
                                         {
-                                            OldSpawner = (XmlSpawner)i;
+                                            OldSpawner = checkXmlSpawner;
                                             found_spawner = true;
                                         }
                                     }
 
                                     //look for containers with the spawn coordinates if the incontainer flag is set
-                                    if (InContainer && !found_container && (i is Container) && (SpawnCentreX == i.Location.X) && (SpawnCentreY == i.Location.Y) &&
-                                        (SpawnCentreZ == i.Location.Z || SpawnCentreZ == short.MinValue))
+                                    if (InContainer && !found_container && (i is Container container) && (SpawnCentreX == container.Location.X) && (SpawnCentreY == container.Location.Y) &&
+                                        (SpawnCentreZ == container.Location.Z || SpawnCentreZ == short.MinValue))
                                     {
                                         // assume this is the container that the spawner was in
                                         found_container = true;
-                                        spawn_container = i as Container;
+                                        spawn_container = container;
                                     }
                                     // ok we can break if we have handled both the spawner and any containers
                                     if (found_spawner && (found_container || !InContainer))
@@ -6260,16 +6184,14 @@ namespace Server.Mobiles
                         XmlSpawner OldSpawner = null;
                         foreach (Item i in World.Items.Values)
                         {
-                            if (i is XmlSpawner)
+                            if (i is XmlSpawner checkXmlSpawner)
                             {
-                                XmlSpawner CheckXmlSpawner = (XmlSpawner)i;
-
                                 // Check if the spawners GUID is the same as the one being loaded
                                 // and that the spawners map is the same as the one being loaded
-                                if ((CheckXmlSpawner.UniqueId == SpawnId.ToString())
+                                if ((checkXmlSpawner.UniqueId == SpawnId.ToString())
                                     /* && ( CheckXmlSpawner.Map == SpawnMap || loadrelative) */)
                                 {
-                                    OldSpawner = (XmlSpawner)i;
+                                    OldSpawner = checkXmlSpawner;
                                     found_spawner = true;
                                 }
                             }
@@ -6427,28 +6349,6 @@ namespace Server.Mobiles
             {
                 // get it from the defaults directory if it exists
                 dirname = string.Format("{0}/{1}", XmlSpawnDir, filename);
-                found = File.Exists(dirname) || Directory.Exists(dirname);
-            }
-
-            if (!found)
-            {
-                // otherwise just get it from the main installation dir
-                dirname = filename;
-            }
-
-            return dirname;
-        }
-
-        public static string LocateMultiFile(string filename)
-        {
-            bool found = false;
-
-            string dirname = null;
-
-            if (Directory.Exists(XmlMultiDir))
-            {
-                // get it from the defaults directory if it exists
-                dirname = string.Format("{0}/{1}", XmlMultiDir, filename);
                 found = File.Exists(dirname) || Directory.Exists(dirname);
             }
 
@@ -6655,7 +6555,7 @@ namespace Server.Mobiles
 
             public override void Execute(CommandEventArgs e, object obj)
             {
-                if (e == null || e.Mobile == null || e.Arguments == null) return;
+                if (e?.Mobile == null || e.Arguments == null) return;
 
                 if (e.Arguments.Length < 1)
                 {
@@ -6710,7 +6610,7 @@ namespace Server.Mobiles
 
         private static void SaveSpawns(CommandEventArgs e, bool SaveAllMaps, bool oldformat)
         {
-            if (e == null || e.Mobile == null || e.Arguments == null || e.Arguments.Length < 1) return;
+            if (e?.Mobile == null || e.Arguments == null || e.Arguments.Length < 1) return;
 
             if (e.Mobile.AccessLevel < DiskAccessLevel)
             {
@@ -6769,11 +6669,6 @@ namespace Server.Mobiles
 
             // save the list
             SaveSpawnList(e.Mobile, saveslist, dirname, oldformat, true);
-        }
-
-        public static bool SaveSpawnList(List<XmlSpawner> savelist, Stream stream)
-        {
-            return SaveSpawnList(null, savelist, null, stream, false, false);
         }
 
         public static bool SaveSpawnList(Mobile from, List<XmlSpawner> savelist, string dirname, bool oldformat, bool verbose)
@@ -6912,7 +6807,7 @@ namespace Server.Mobiles
             // Add each spawn point to the new table
             foreach (XmlSpawner sp in savelist)
             {
-                if (sp == null || sp.Map == null || sp.Deleted)
+                if (sp?.Map == null || sp.Deleted)
                     continue;
 
                 if (verbose && from != null)
@@ -7104,7 +6999,7 @@ namespace Server.Mobiles
 
         private static void WipeSpawners(CommandEventArgs e, bool WipeAll)
         {
-            if (e == null || e.Mobile == null) return;
+            if (e?.Mobile == null) return;
 
             if (e.Mobile.AccessLevel >= AccessLevel.Administrator)
             {
@@ -7169,7 +7064,7 @@ namespace Server.Mobiles
 
         private static void RespawnSpawners(CommandEventArgs e, bool RespawnAll)
         {
-            if (e == null || e.Mobile == null) return;
+            if (e?.Mobile == null) return;
 
             if (e.Mobile.AccessLevel >= AccessLevel.Administrator)
             {
@@ -9176,7 +9071,7 @@ namespace Server.Mobiles
 
         public static SpawnObject GetSpawnObject(XmlSpawner spawner, int sgroup)
         {
-            if (spawner == null || spawner.m_SpawnObjects == null) return (null);
+            if (spawner?.m_SpawnObjects == null) return (null);
             for (int i = 0; i < spawner.m_SpawnObjects.Count; i++)
             {
                 // find the first entry with matching subgroup id
@@ -9191,7 +9086,7 @@ namespace Server.Mobiles
 
         public static object GetSpawned(XmlSpawner spawner, int sgroup)
         {
-            if (spawner == null || spawner.m_SpawnObjects == null) return (null);
+            if (spawner?.m_SpawnObjects == null) return (null);
             for (int i = 0; i < spawner.m_SpawnObjects.Count; i++)
             {
                 // find the first entry with matching subgroup id
@@ -9211,7 +9106,7 @@ namespace Server.Mobiles
         {
             List<object> newlist = new List<object>();
 
-            if (spawner == null || spawner.m_SpawnObjects == null) return (null);
+            if (spawner?.m_SpawnObjects == null) return (null);
             for (int i = 0; i < spawner.m_SpawnObjects.Count; i++)
             {
                 // find the first entry with matching subgroup id
@@ -9772,7 +9667,7 @@ namespace Server.Mobiles
 
         private void FindRegionTileLocations(ref List<Point3D> locations, Region r, List<int> includetilelist, List<int> excludetilelist, TileFlag tileflag, bool checkitems, int spawnerZ)
         {
-            if (r == null || r.Area == null) return;
+            if (r?.Area == null) return;
 
             int count = r.Area.Length;
 
