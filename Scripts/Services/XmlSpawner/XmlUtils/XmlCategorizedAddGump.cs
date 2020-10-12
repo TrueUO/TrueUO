@@ -302,9 +302,6 @@ namespace Server.Gumps
                     xmladdgump.defs.CurrentCategoryPage = page;
                 }
             }
-            else if (gump is XmlSpawnerGump)
-            {
-            }
 
             Initialize(page);
         }

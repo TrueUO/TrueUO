@@ -611,18 +611,19 @@ namespace Server.Mobiles
                             }
                         }
                     }
-                    if (criteria.Dosearchspawnentry && !hasentry) continue;
+
+                    if (criteria.Dosearchspawnentry && !hasentry)
+                        continue;
 
                     // check for err
-                    if (criteria.Dosearcherr)
+                    if (i is XmlSpawner spawnerThis && spawnerThis.status_str != null && criteria.Dosearcherr)
                     {
                         // see what kind of spawner it is and check the status
-                        if (i is XmlSpawner spawner && spawner.status_str != null)
-                        {
-                            hasspawnerr = true;
-                        }
+                        hasspawnerr = true;
                     }
-                    if (criteria.Dosearcherr && !hasspawnerr) continue;
+
+                    if (criteria.Dosearcherr && !hasspawnerr)
+                        continue;
 
 
                     // satisfied all conditions so add it

@@ -5026,61 +5026,6 @@ namespace Server.Mobiles
             return itemlist;
         }
 
-        public static List<Item> FindItemListByType(Mobile m, string targetName, bool searchbank)
-        {
-            List<Item> itemlist = new List<Item>();
-
-            if (m != null && !m.Deleted && targetName != null && targetName.Length > 0)
-            {
-                Type targetType = SpawnerType.GetType(targetName);
-
-                // go through all of the items on the mobile
-                List<Item> packlist = m.Items;
-
-                for (int i = 0; i < packlist.Count; ++i)
-                {
-                    Item item = packlist[i];
-
-                    // dont search bank boxes
-                    if (item is BankBox && !searchbank) continue;
-
-                    // recursively search containers
-                    if (item != null && !item.Deleted)
-                    {
-                        if (item is Container)
-                        {
-                            itemlist = SearchPackListForItemType((Container)item, targetName, itemlist);
-                        }
-                        // test the item name against the trigger string
-                        if (item.GetType().IsSubclassOf(targetType) || item.GetType().Equals(targetType))
-                        {
-                            //found it
-                            // add the item to the list
-                            itemlist.Add(item);
-                        }
-                    }
-                }
-                // now check any item that might be held
-                Item held = m.Holding;
-
-                if (held != null && !held.Deleted)
-                {
-                    if (held is Container)
-                    {
-                        itemlist = SearchPackListForItemType((Container)held, targetName, itemlist);
-                    }
-                    // test the item name against the trigger string
-                    if (held.GetType().IsSubclassOf(targetType) || held.GetType().Equals(targetType))
-                    {
-                        //found it
-                        // add the item to the list
-                        itemlist.Add(held);
-                    }
-                }
-            }
-            return itemlist;
-        }
-
         public static bool CheckForNotCarried(Mobile m, string objectivestr)
         {
             if (m == null || objectivestr == null) return true;
