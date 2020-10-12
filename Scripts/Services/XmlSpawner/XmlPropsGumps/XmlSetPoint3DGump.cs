@@ -1,9 +1,9 @@
-using Server.Commands;
-using Server.Network;
-using Server.Targeting;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using Server.Commands;
+using Server.Network;
+using Server.Targeting;
 
 namespace Server.Gumps
 {

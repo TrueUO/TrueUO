@@ -1,8 +1,8 @@
 #define CLIENT6017
 
+using System;
 using Server.Items;
 using Server.Network;
-using System;
 
 namespace Server.Engines.XmlSpawner2
 {

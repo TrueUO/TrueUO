@@ -1,10 +1,11 @@
-using Server.Commands;
-using Server.Commands.Generic;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Xml;
+using Server.Commands;
+using Server.Commands.Generic;
+using Server.Diagnostics;
 
 /*
 ** Sno's distro spawner importer/exporter
@@ -33,7 +34,7 @@ namespace Server.Mobiles
             {
                 AccessLevel = AccessLevel.Administrator;
                 Supports = CommandSupport.Area | CommandSupport.Region | CommandSupport.Global | CommandSupport.Multi | CommandSupport.Single;
-                Commands = new string[] { "ExportSpawner" };
+                Commands = new[] { "ExportSpawner" };
                 ObjectTypes = ObjectTypes.Items;
                 Usage = "ExportSpawner <filename>";
                 Description = "Exports all Spawner objects to the specified filename.";
@@ -191,7 +192,7 @@ namespace Server.Mobiles
                         catch (Exception ex)
                         {
                             failures++;
-                            Diagnostics.ExceptionLogging.LogException(ex);
+                            ExceptionLogging.LogException(ex);
                         }
                     }
 

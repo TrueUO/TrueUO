@@ -1,10 +1,10 @@
-using Server.Commands;
-using Server.Items;
-using Server.Targeting;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using Server.Commands;
+using Server.Items;
+using Server.Targeting;
 
 namespace Server.Gumps
 {

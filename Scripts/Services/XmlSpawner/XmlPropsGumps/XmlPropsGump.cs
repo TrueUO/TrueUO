@@ -1,9 +1,10 @@
-using Server.Commands.Generic;
-using Server.Network;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
+using Server.Commands.Generic;
+using Server.Mobiles;
+using Server.Network;
 using CPA = Server.CommandPropertyAttribute;
 
 namespace Server.Gumps
@@ -173,7 +174,7 @@ namespace Server.Gumps
 
                     int huemodifier = TextHue;
                     FieldInfo finfo = null;
-                    Mobiles.XmlSpawnerDefaults.DefaultEntry de = new Mobiles.XmlSpawnerDefaults.DefaultEntry();
+                    XmlSpawnerDefaults.DefaultEntry de = new XmlSpawnerDefaults.DefaultEntry();
                     Type ftype = de.GetType();
                     if (ftype != null)
                         finfo = ftype.GetField(prop.Name);
@@ -205,11 +206,11 @@ namespace Server.Gumps
             }
         }
 
-        public static string[] m_BoolNames = new string[] { "True", "False" };
-        public static object[] m_BoolValues = new object[] { true, false };
+        public static string[] m_BoolNames = { "True", "False" };
+        public static object[] m_BoolValues = { true, false };
 
-        public static string[] m_PoisonNames = new string[] { "None", "Lesser", "Regular", "Greater", "Deadly", "Lethal" };
-        public static object[] m_PoisonValues = new object[] { null, Poison.Lesser, Poison.Regular, Poison.Greater, Poison.Deadly, Poison.Lethal };
+        public static string[] m_PoisonNames = { "None", "Lesser", "Regular", "Greater", "Deadly", "Lethal" };
+        public static object[] m_PoisonValues = { null, Poison.Lesser, Poison.Regular, Poison.Greater, Poison.Deadly, Poison.Lethal };
 
         public override void OnResponse(NetState state, RelayInfo info)
         {
@@ -386,14 +387,12 @@ namespace Server.Gumps
         private static readonly Type typeofPropertyObject = typeof(PropertyObjectAttribute);
         private static readonly Type typeofNoSort = typeof(NoSortAttribute);
 
-        private static readonly Type[] typeofReal = new Type[]
-            {
+        private static readonly Type[] typeofReal = {
                 typeof( float ),
                 typeof( double )
             };
 
-        private static readonly Type[] typeofNumeric = new Type[]
-            {
+        private static readonly Type[] typeofNumeric = {
                 typeof( byte ),
                 typeof( short ),
                 typeof( int ),
@@ -447,7 +446,8 @@ namespace Server.Gumps
                     {
                         return string.Format("(I) 0x{0:X}", s.Value);
                     }
-                    else if (s.IsMobile)
+
+                    if (s.IsMobile)
                     {
                         return string.Format("(M) 0x{0:X}", s.Value);
                     }
@@ -515,8 +515,7 @@ namespace Server.Gumps
 
             if (attrs.Length > 0)
                 return attrs[0] as CPA;
-            else
-                return null;
+            return null;
         }
 
         private ArrayList GetGroups(Type objectType, PropertyInfo[] props)
@@ -571,7 +570,8 @@ namespace Server.Gumps
             {
                 return s;
             }
-            else if (t == typeof(byte) || t == typeof(sbyte) || t == typeof(short) || t == typeof(ushort) || t == typeof(int) || t == typeof(uint) || t == typeof(long) || t == typeof(ulong))
+
+            if (t == typeof(byte) || t == typeof(sbyte) || t == typeof(short) || t == typeof(ushort) || t == typeof(int) || t == typeof(uint) || t == typeof(long) || t == typeof(ulong))
             {
                 if (s.StartsWith("0x"))
                 {
@@ -579,23 +579,21 @@ namespace Server.Gumps
                     {
                         return Convert.ChangeType(Convert.ToUInt64(s.Substring(2), 16), t);
                     }
-                    else
-                    {
-                        return Convert.ChangeType(Convert.ToInt64(s.Substring(2), 16), t);
-                    }
+
+                    return Convert.ChangeType(Convert.ToInt64(s.Substring(2), 16), t);
                 }
-                else
-                {
-                    return Convert.ChangeType(s, t);
-                }
+
+                return Convert.ChangeType(s, t);
             }
-            else if (t == typeof(double) || t == typeof(float))
+
+            if (t == typeof(double) || t == typeof(float))
             {
                 return Convert.ChangeType(s, t);
             }
-            else if (t.IsDefined(typeof(ParsableAttribute), false))
+
+            if (t.IsDefined(typeof(ParsableAttribute), false))
             {
-                MethodInfo parseMethod = t.GetMethod("Parse", new Type[] { typeof(string) });
+                MethodInfo parseMethod = t.GetMethod("Parse", new[] { typeof(string) });
 
                 return parseMethod.Invoke(null, new object[] { s });
             }
@@ -615,9 +613,9 @@ namespace Server.Gumps
             {
                 if (x == null && y == null)
                     return 0;
-                else if (x == null)
+                if (x == null)
                     return -1;
-                else if (y == null)
+                if (y == null)
                     return 1;
 
                 PropertyInfo a = x as PropertyInfo;
@@ -657,9 +655,9 @@ namespace Server.Gumps
             {
                 if (x == null && y == null)
                     return 0;
-                else if (x == null)
+                if (x == null)
                     return -1;
-                else if (y == null)
+                if (y == null)
                     return 1;
 
                 if (!(x is DictionaryEntry) || !(y is DictionaryEntry))

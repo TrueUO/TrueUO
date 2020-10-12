@@ -1,5 +1,6 @@
 #define BOOKTEXTENTRY
 
+using System.Text;
 using Server.Network;
 
 namespace Server.Items
@@ -223,7 +224,7 @@ namespace Server.Items
                 return;
             }
             
-            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+            StringBuilder sb = new StringBuilder();
             // add the book lines to the entry string
             for (int i = 0; i < book.PagesCount; ++i)
             {
@@ -253,7 +254,6 @@ namespace Server.Items
             if (state.IsEnhancedClient && pageCount == 1)
             {
                 book.ContentChangeEC(state, pvSrc);
-                return;
             }
             else if (book.Writable && from.InRange(book.GetWorldLocation(), 1))
             {
@@ -282,14 +282,8 @@ namespace Server.Items
                     }
                     else
                     {
-                        return;
                     }
                 }
-                else
-                {
-                    return;
-                }
-                
             }
         }
 #endif

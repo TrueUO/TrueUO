@@ -1,6 +1,7 @@
-using Server.Commands;
-using Server.Targeting;
 using System;
+using Server.Commands;
+using Server.Diagnostics;
+using Server.Targeting;
 
 namespace Server.Items
 {
@@ -25,8 +26,7 @@ namespace Server.Items
         {
             if (target != null)
                 return target.GetSavedFlag(StealableFlag);
-            else
-                return false;
+            return false;
         }
 
         public static void SetTaken(Item target, bool value)
@@ -41,8 +41,7 @@ namespace Server.Items
         {
             if (target != null)
                 return target.GetSavedFlag(TakenFlag);
-            else
-                return false;
+            return false;
         }
 
         [Usage("Flag flagfield")]
@@ -75,7 +74,7 @@ namespace Server.Items
                 }
                 catch (Exception ex)
                 {
-                    Diagnostics.ExceptionLogging.LogException(ex);
+                    ExceptionLogging.LogException(ex);
                 }
             }
         }
