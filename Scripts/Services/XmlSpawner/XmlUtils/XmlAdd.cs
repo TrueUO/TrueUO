@@ -1153,8 +1153,8 @@ namespace Server.Mobiles
                 int radiostate = info.Switches[0];
             }
             // read the text entries for default values
-            XmlSpawnerDefaults.DefaultEntry defs = XmlSpawnerDefaults.GetDefaults(state.Account.ToString(), state.Mobile.Name);
-            if (defs.IgnoreUpdate)
+            XmlSpawnerDefaults.DefaultEntry defaults = XmlSpawnerDefaults.GetDefaults(state.Account.ToString(), state.Mobile.Name);
+            if (defaults.IgnoreUpdate)
             {
                 return;
             }
@@ -1162,41 +1162,41 @@ namespace Server.Mobiles
             TextRelay tr = info.GetTextEntry(100);        // mindelay
             if (tr?.Text != null && tr.Text.Length > 0)
             {
-                try { defs.MinDelay = TimeSpan.FromMinutes(double.Parse(tr.Text)); }
+                try { defaults.MinDelay = TimeSpan.FromMinutes(double.Parse(tr.Text)); }
                 catch (Exception e) { ExceptionLogging.LogException(e); }
             }
             tr = info.GetTextEntry(101);        // maxdelay info
             if (tr?.Text != null && tr.Text.Length > 0)
             {
-                try { defs.MaxDelay = TimeSpan.FromMinutes(double.Parse(tr.Text)); }
+                try { defaults.MaxDelay = TimeSpan.FromMinutes(double.Parse(tr.Text)); }
                 catch (Exception e) { ExceptionLogging.LogException(e); }
             }
 
             tr = info.GetTextEntry(102);        // min refractory
             if (tr?.Text != null && tr.Text.Length > 0)
             {
-                try { defs.RefractMin = TimeSpan.FromMinutes(double.Parse(tr.Text)); }
+                try { defaults.RefractMin = TimeSpan.FromMinutes(double.Parse(tr.Text)); }
                 catch (Exception e) { ExceptionLogging.LogException(e); }
             }
 
             tr = info.GetTextEntry(103);        // max refractory
             if (tr?.Text != null && tr.Text.Length > 0)
             {
-                try { defs.RefractMax = TimeSpan.FromMinutes(double.Parse(tr.Text)); }
+                try { defaults.RefractMax = TimeSpan.FromMinutes(double.Parse(tr.Text)); }
                 catch (Exception e) { ExceptionLogging.LogException(e); }
             }
 
             tr = info.GetTextEntry(104);        // TOD start
             if (tr?.Text != null && tr.Text.Length > 0)
             {
-                try { defs.TODStart = TimeSpan.FromHours(double.Parse(tr.Text)); }
+                try { defaults.TODStart = TimeSpan.FromHours(double.Parse(tr.Text)); }
                 catch (Exception e) { ExceptionLogging.LogException(e); }
             }
 
             tr = info.GetTextEntry(105);        // TOD end
             if (tr?.Text != null && tr.Text.Length > 0)
             {
-                try { defs.TODEnd = TimeSpan.FromHours(double.Parse(tr.Text)); }
+                try { defaults.TODEnd = TimeSpan.FromHours(double.Parse(tr.Text)); }
                 catch (Exception e) { ExceptionLogging.LogException(e); }
             }
 
@@ -1205,7 +1205,7 @@ namespace Server.Mobiles
             {
                 string txt = tr.Text;
                 if (txt != null && txt.Length == 0) txt = null;
-                defs.SpeechTrigger = txt;
+                defaults.SpeechTrigger = txt;
             }
 
 
@@ -1213,67 +1213,67 @@ namespace Server.Mobiles
             tr = info.GetTextEntry(107);        // HomeRange
             if (tr?.Text != null && tr.Text.Length > 0)
             {
-                try { defs.HomeRange = int.Parse(tr.Text); }
+                try { defaults.HomeRange = int.Parse(tr.Text); }
                 catch (Exception e) { ExceptionLogging.LogException(e); }
             }
 
             tr = info.GetTextEntry(108);        // SpawnRange
             if (tr?.Text != null && tr.Text.Length > 0)
             {
-                try { defs.SpawnRange = int.Parse(tr.Text); }
+                try { defaults.SpawnRange = int.Parse(tr.Text); }
                 catch (Exception e) { ExceptionLogging.LogException(e); }
             }
 
             tr = info.GetTextEntry(109);        // ProximityRange
             if (tr?.Text != null && tr.Text.Length > 0)
             {
-                try { defs.ProximityRange = int.Parse(tr.Text); }
+                try { defaults.ProximityRange = int.Parse(tr.Text); }
                 catch (Exception e) { ExceptionLogging.LogException(e); }
             }
 
             tr = info.GetTextEntry(110);        // Team
             if (tr?.Text != null && tr.Text.Length > 0)
             {
-                try { defs.Team = int.Parse(tr.Text); }
+                try { defaults.Team = int.Parse(tr.Text); }
                 catch (Exception e) { ExceptionLogging.LogException(e); }
             }
 
             tr = info.GetTextEntry(111);        // Duration
             if (tr?.Text != null && tr.Text.Length > 0)
             {
-                try { defs.Duration = TimeSpan.FromMinutes(double.Parse(tr.Text)); }
+                try { defaults.Duration = TimeSpan.FromMinutes(double.Parse(tr.Text)); }
                 catch (Exception e) { ExceptionLogging.LogException(e); }
             }
 
             tr = info.GetTextEntry(112);        // ProximitySound
             if (tr?.Text != null && tr.Text.Length > 0)
             {
-                try { defs.ProximitySound = int.Parse(tr.Text); }
+                try { defaults.ProximitySound = int.Parse(tr.Text); }
                 catch (Exception e) { ExceptionLogging.LogException(e); }
             }
 
             tr = info.GetTextEntry(113);        // Kill reset
             if (tr?.Text != null && tr.Text.Length > 0)
             {
-                try { defs.KillReset = int.Parse(tr.Text); }
+                try { defaults.KillReset = int.Parse(tr.Text); }
                 catch (Exception e) { ExceptionLogging.LogException(e); }
             }
 
             tr = info.GetTextEntry(114);        // Spawner name
             if (tr != null)
-                defs.SpawnerName = tr.Text;
+                defaults.SpawnerName = tr.Text;
 
             // DefsExt entry
             tr = info.GetTextEntry(115);        // save def str
             if (tr != null)
-                defs.DefsExt = tr.Text;
+                defaults.DefsExt = tr.Text;
 
             tr = info.GetTextEntry(117);        // trigger on carried
             if (tr != null)
             {
                 string txt = tr.Text;
                 if (txt != null && txt.Length == 0) txt = null;
-                defs.TriggerOnCarried = txt;
+                defaults.TriggerOnCarried = txt;
             }
 
             tr = info.GetTextEntry(118);        // no trigger on carried
@@ -1281,7 +1281,7 @@ namespace Server.Mobiles
             {
                 string txt = tr.Text;
                 if (txt != null && txt.Length == 0) txt = null;
-                defs.NoTriggerOnCarried = txt;
+                defaults.NoTriggerOnCarried = txt;
             }
 
             tr = info.GetTextEntry(119);        // proximity message
@@ -1289,7 +1289,7 @@ namespace Server.Mobiles
             {
                 string txt = tr.Text;
                 if (txt != null && txt.Length == 0) txt = null;
-                defs.ProximityMsg = txt;
+                defaults.ProximityMsg = txt;
             }
 
             tr = info.GetTextEntry(120);        // player trig prop
@@ -1297,13 +1297,13 @@ namespace Server.Mobiles
             {
                 string txt = tr.Text;
                 if (txt != null && txt.Length == 0) txt = null;
-                defs.PlayerTriggerProp = txt;
+                defaults.PlayerTriggerProp = txt;
             }
 
             tr = info.GetTextEntry(121);        // Trigger probability
             if (tr?.Text != null && tr.Text.Length > 0)
             {
-                try { defs.TriggerProbability = double.Parse(tr.Text); }
+                try { defaults.TriggerProbability = double.Parse(tr.Text); }
                 catch (Exception e) { ExceptionLogging.LogException(e); }
             }
 
@@ -1312,13 +1312,13 @@ namespace Server.Mobiles
             {
                 string txt = tr.Text;
                 if (txt != null && txt.Length == 0) txt = null;
-                defs.TriggerObjectProp = txt;
+                defaults.TriggerObjectProp = txt;
             }
 
             tr = info.GetTextEntry(123);        // DespawnTime
             if (tr?.Text != null && tr.Text.Length > 0)
             {
-                try { defs.DespawnTime = TimeSpan.FromHours(double.Parse(tr.Text)); }
+                try { defaults.DespawnTime = TimeSpan.FromHours(double.Parse(tr.Text)); }
                 catch (Exception e) { ExceptionLogging.LogException(e); }
             }
 
@@ -1327,37 +1327,37 @@ namespace Server.Mobiles
             {
                 string txt = tr.Text;
                 if (txt != null && txt.Length == 0) txt = null;
-                defs.SkillTrigger = txt;
+                defaults.SkillTrigger = txt;
             }
 
             tr = info.GetTextEntry(125);        // AutoNumberValue
             if (tr?.Text != null && tr.Text.Length > 0)
             {
-                try { defs.AutoNumberValue = int.Parse(tr.Text); }
+                try { defaults.AutoNumberValue = int.Parse(tr.Text); }
                 catch (Exception e) { ExceptionLogging.LogException(e); }
             }
 
 
             // fill the NameList from the text entries
-            if (defs.ShowExtension)
+            if (defaults.ShowExtension)
                 for (int i = 0; i < MaxEntries; i++)
                 {
                     tr = info.GetTextEntry(1000 + i);
-                    if (defs.NameList != null && i < defs.NameList.Length && tr != null)
+                    if (defaults.NameList != null && i < defaults.NameList.Length && tr != null)
                     {
-                        defs.NameList[i] = tr.Text;
+                        defaults.NameList[i] = tr.Text;
                     }
                 }
 
-            defs.Group = info.IsSwitched(304);
-            defs.HomeRangeIsRelative = info.IsSwitched(305);
-            defs.AutoNumber = info.IsSwitched(306);
-            defs.SequentialSpawn = (info.IsSwitched(307) ? 0 : -1);
-            defs.ExternalTriggering = info.IsSwitched(308);
-            defs.AllowGhostTrig = info.IsSwitched(309);
-            defs.SpawnOnTrigger = info.IsSwitched(311);
-            defs.SmartSpawning = info.IsSwitched(310);
-            defs.AllowNPCTrig = info.IsSwitched(312);
+            defaults.Group = info.IsSwitched(304);
+            defaults.HomeRangeIsRelative = info.IsSwitched(305);
+            defaults.AutoNumber = info.IsSwitched(306);
+            defaults.SequentialSpawn = (info.IsSwitched(307) ? 0 : -1);
+            defaults.ExternalTriggering = info.IsSwitched(308);
+            defaults.AllowGhostTrig = info.IsSwitched(309);
+            defaults.SpawnOnTrigger = info.IsSwitched(311);
+            defaults.SmartSpawning = info.IsSwitched(310);
+            defaults.AllowNPCTrig = info.IsSwitched(312);
 
             switch (info.ButtonID)
             {
@@ -1375,13 +1375,13 @@ namespace Server.Mobiles
                 case 115: // SaveDefs
                     {
                         string filename;
-                        if (defs.DefsExt != null && defs.DefsExt.Length > 0)
+                        if (defaults.DefsExt != null && defaults.DefsExt.Length > 0)
                         {
-                            filename = string.Format("{0}-{1}-{2}", defs.AccountName, defs.PlayerName, defs.DefsExt);
+                            filename = string.Format("{0}-{1}-{2}", defaults.AccountName, defaults.PlayerName, defaults.DefsExt);
                         }
                         else
                         {
-                            filename = string.Format("{0}-{1}", defs.AccountName, defs.PlayerName);
+                            filename = string.Format("{0}-{1}", defaults.AccountName, defaults.PlayerName);
                         }
                         DoSaveDefs(state.Mobile, filename);
                         break;
@@ -1389,13 +1389,13 @@ namespace Server.Mobiles
                 case 116: // LoadDefs
                     {
                         string filename;
-                        if (defs.DefsExt != null && defs.DefsExt.Length > 0)
+                        if (defaults.DefsExt != null && defaults.DefsExt.Length > 0)
                         {
-                            filename = string.Format("{0}-{1}-{2}", defs.AccountName, defs.PlayerName, defs.DefsExt);
+                            filename = string.Format("{0}-{1}-{2}", defaults.AccountName, defaults.PlayerName, defaults.DefsExt);
                         }
                         else
                         {
-                            filename = string.Format("{0}-{1}", defs.AccountName, defs.PlayerName);
+                            filename = string.Format("{0}-{1}", defaults.AccountName, defaults.PlayerName);
                         }
                         DoLoadDefs(state.Mobile, filename);
                         break;
@@ -1403,32 +1403,32 @@ namespace Server.Mobiles
                 case 117: // Restore Defaults
                     {
                         state.Mobile.SendMessage("Restoring defaults");
-                        XmlSpawnerDefaults.RestoreDefs(defs);
+                        XmlSpawnerDefaults.RestoreDefs(defaults);
                         break;
                     }
                 case 155: // Return the player to the starting loc
                     {
-                        m_From.Location = defs.StartingLoc;
-                        m_From.Map = defs.StartingMap;
+                        m_From.Location = defaults.StartingLoc;
+                        m_From.Map = defaults.StartingMap;
                         break;
                     }
                 case 156: // Delete last spawner
                     {
-                        if (defs.LastSpawner == null || defs.LastSpawner.Deleted) break;
+                        if (defaults.LastSpawner == null || defaults.LastSpawner.Deleted) break;
                         Refresh(state.Mobile);
-                        state.Mobile.SendGump(new XmlAddConfirmDeleteGump(defs.LastSpawner));
+                        state.Mobile.SendGump(new XmlAddConfirmDeleteGump(defaults.LastSpawner));
                         return;
                     }
                 case 157: // Reset last spawner
                     {
-                        if (defs.LastSpawner != null && !defs.LastSpawner.Deleted)
-                            defs.LastSpawner.DoReset = true;
+                        if (defaults.LastSpawner != null && !defaults.LastSpawner.Deleted)
+                            defaults.LastSpawner.DoReset = true;
                         break;
                     }
                 case 158: // Respawn last spawner
                     {
-                        if (defs.LastSpawner != null && !defs.LastSpawner.Deleted)
-                            defs.LastSpawner.DoRespawn = true;
+                        if (defaults.LastSpawner != null && !defaults.LastSpawner.Deleted)
+                            defaults.LastSpawner.DoRespawn = true;
                         break;
                     }
                 case 180: // Set Options
@@ -1439,39 +1439,39 @@ namespace Server.Mobiles
                     }
                 case 200: // gump extension
                     {
-                        defs.ShowExtension = !defs.ShowExtension;
+                        defaults.ShowExtension = !defaults.ShowExtension;
                         break;
                     }
                 case 306:  // TOD mode
                     {
-                        if (defs.TODMode == XmlSpawner.TODModeType.Realtime)
-                            defs.TODMode = XmlSpawner.TODModeType.Gametime;
+                        if (defaults.TODMode == XmlSpawner.TODModeType.Realtime)
+                            defaults.TODMode = XmlSpawner.TODModeType.Gametime;
                         else
-                            defs.TODMode = XmlSpawner.TODModeType.Realtime;
+                            defaults.TODMode = XmlSpawner.TODModeType.Realtime;
                         break;
                     }
                 case 1000:  // GoTo
                     {
                         // then go to it
-                        DoGoTo(defs.LastSpawner);
+                        DoGoTo(defaults.LastSpawner);
                         break;
                     }
                 case 1001:  // Show Gump
                     {
                         Refresh(state.Mobile);
-                        DoShowGump(state.Mobile, defs.LastSpawner);
+                        DoShowGump(state.Mobile, defaults.LastSpawner);
                         break;
                     }
                 case 1002:  // Show Props
                     {
                         Refresh(state.Mobile);
-                        DoShowProps(defs.LastSpawner);
+                        DoShowProps(defaults.LastSpawner);
                         break;
                     }
                 case 3999: // clear selections
                     {
                         // clear the selections
-                        if (defs.SelectionList != null) Array.Clear(defs.SelectionList, 0, defs.SelectionList.Length);
+                        if (defaults.SelectionList != null) Array.Clear(defaults.SelectionList, 0, defaults.SelectionList.Length);
                         break;
                     }
                 case 9998:  // refresh the gump
@@ -1483,33 +1483,25 @@ namespace Server.Mobiles
                         if (info.ButtonID >= 4000 && info.ButtonID < 4000 + MaxEntries)
                         {
                             int i = info.ButtonID - 4000;
-                            if (defs.SelectionList != null && i >= 0 && i < defs.SelectionList.Length)
+                            if (defaults.SelectionList != null && i >= 0 && i < defaults.SelectionList.Length)
                             {
-                                defs.SelectionList[i] = !defs.SelectionList[i];
+                                defaults.SelectionList[i] = !defaults.SelectionList[i];
                             }
                         }
                         if (info.ButtonID >= 5000 && info.ButtonID < 5000 + MaxEntries)
                         {
                             int i = info.ButtonID - 5000;
-                            /*
-                            string match = null;
-                            if(defs.NameList[i] != null)
-                            {
-                                match = defs.NameList[i].Trim();
-                            }
-                            */
 
-                            defs.CategorySelectionIndex = i;
-                            XmlAddGump newg = new XmlAddGump(state.Mobile, defs.StartingLoc, defs.StartingMap, false, defs.ShowExtension, 0, 0);
+                            defaults.CategorySelectionIndex = i;
+                            XmlAddGump newg = new XmlAddGump(state.Mobile, defaults.StartingLoc, defaults.StartingMap, false, defaults.ShowExtension, 0, 0);
 
                             state.Mobile.SendGump(newg);
 
-                            if (defs.NameList[i] == null || defs.NameList[i].Length == 0)
+                            if (defaults.NameList[i] == null || defaults.NameList[i].Length == 0)
                             {
-
                                 // if no string has been entered then just use the full categorized add gump
                                 state.Mobile.CloseGump(typeof(XmlCategorizedAddGump));
-                                state.Mobile.SendGump(new XmlCategorizedAddGump(state.Mobile, defs.CurrentCategory, defs.CurrentCategoryPage, i, newg));
+                                state.Mobile.SendGump(new XmlCategorizedAddGump(state.Mobile, defaults.CurrentCategory, defaults.CurrentCategoryPage, i, newg));
                             }
                             else
                             {
@@ -1517,8 +1509,8 @@ namespace Server.Mobiles
                                 state.Mobile.CloseGump(typeof(XmlPartialCategorizedAddGump));
 
                                 //Type [] types = (Type[])XmlPartialCategorizedAddGump.Match( defs.NameList[i] ).ToArray( typeof( Type ) );
-                                ArrayList types = XmlPartialCategorizedAddGump.Match(defs.NameList[i]);
-                                state.Mobile.SendGump(new XmlPartialCategorizedAddGump(state.Mobile, defs.NameList[i], 0, types, true, i, newg));
+                                ArrayList types = XmlPartialCategorizedAddGump.Match(defaults.NameList[i]);
+                                state.Mobile.SendGump(new XmlPartialCategorizedAddGump(state.Mobile, defaults.NameList[i], 0, types, true, i, newg));
                             }
 
                             return;

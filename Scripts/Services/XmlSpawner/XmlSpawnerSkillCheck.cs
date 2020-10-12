@@ -115,17 +115,10 @@ namespace Server.Mobiles
                 // is it one of the standard 52 skills
                 if (index >= 0 && (int)index < MaxSkills)
                 {
-                    if (maplist[(int)index] == null)
-                        maplist[(int)index] = new ArrayList();
-
-                    return maplist[(int)index];
+                    return maplist[(int) index] ?? (maplist[(int) index] = new ArrayList());
                 }
 
-                if (maplist[MaxSkills] == null)
-                    maplist[MaxSkills] = new ArrayList();
-
-                return maplist[MaxSkills];
-
+                return maplist[MaxSkills] ?? (maplist[MaxSkills] = new ArrayList());
             }
         }
 
@@ -220,17 +213,11 @@ namespace Server.Mobiles
             // determine whether there are any registered objects for this skill
             foreach (RegisteredSkill rs in skilllist)
             {
-                if (rs.sid == skill.SkillName)
+                // if so then invoke their skill handlers
+                if (rs.sid == skill.SkillName && rs.target is XmlSpawner spawner && spawner.HandlesOnSkillUse)
                 {
-                    // if so then invoke their skill handlers
-                    if (rs.target is XmlSpawner spawner)
-                    {
-                        if (spawner.HandlesOnSkillUse)
-                        {
-                            // call the spawner handler
-                            spawner.OnSkillUse(m, skill, success);
-                        }
-                    }
+                    // call the spawner handler
+                    spawner.OnSkillUse(m, skill, success);
                 }
             }
         }

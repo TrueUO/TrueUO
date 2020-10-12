@@ -293,6 +293,7 @@ namespace Server.Gumps
 
             m_Index = index;
             m_Gump = gump;
+
             if (gump is XmlAddGump xmladdgump)
             {
                 if (xmladdgump.defs != null)
@@ -301,8 +302,7 @@ namespace Server.Gumps
                     xmladdgump.defs.CurrentCategoryPage = page;
                 }
             }
-            else
-                if (gump is XmlSpawnerGump spawnerGump)
+            else if (gump is XmlSpawnerGump)
             {
             }
 

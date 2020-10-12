@@ -216,7 +216,7 @@ namespace Server.Gumps
                 {
                     try
                     {
-                        CommandLogging.LogChangeProperty(m_Mobile, m_Object, m_Property.Name, toSet == null ? "(null)" : toSet.ToString());
+                        CommandLogging.LogChangeProperty(m_Mobile, m_Object, m_Property.Name, toSet.ToString());
                         m_Property.SetValue(m_Object, toSet, null);
                     }
                     catch
@@ -231,7 +231,6 @@ namespace Server.Gumps
 
         public override void OnResponse(NetState sender, RelayInfo info)
         {
-            object toSet;
             bool shouldSet, shouldSend = true;
             object viewProps = null;
 
@@ -241,7 +240,6 @@ namespace Server.Gumps
                     {
                         m_Mobile.SendGump(new XmlPropertiesGump(m_Mobile, m_Object, m_Stack, m_List, m_Page));
 
-                        toSet = null;
                         shouldSet = false;
                         shouldSend = false;
 
@@ -250,14 +248,12 @@ namespace Server.Gumps
                 case 1: // Change by Target
                     {
                         m_Mobile.Target = new XmlSetObjectTarget(m_Property, m_Mobile, m_Object, m_Stack, m_Type, m_Page, m_List);
-                        toSet = null;
                         shouldSet = false;
                         shouldSend = false;
                         break;
                     }
                 case 2: // Change by Serial
                     {
-                        toSet = null;
                         shouldSet = false;
                         shouldSend = false;
 
@@ -268,14 +264,12 @@ namespace Server.Gumps
                     }
                 case 3: // Nullify
                     {
-                        toSet = null;
                         shouldSet = true;
 
                         break;
                     }
                 case 4: // View Properties
                     {
-                        toSet = null;
                         shouldSet = false;
 
                         object obj = m_Property.GetValue(m_Object, null);
@@ -291,7 +285,6 @@ namespace Server.Gumps
                     }
                 default:
                     {
-                        toSet = null;
                         shouldSet = false;
 
                         break;
@@ -302,7 +295,7 @@ namespace Server.Gumps
             {
                 try
                 {
-                    CommandLogging.LogChangeProperty(m_Mobile, m_Object, m_Property.Name, toSet == null ? "(null)" : toSet.ToString());
+                    CommandLogging.LogChangeProperty(m_Mobile, m_Object, m_Property.Name, "(null)");
                     m_Property.SetValue(m_Object, null, null);
                 }
                 catch

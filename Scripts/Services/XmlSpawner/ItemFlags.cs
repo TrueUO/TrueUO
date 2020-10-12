@@ -64,7 +64,7 @@ namespace Server.Items
             }
             if (!error)
             {
-                e.Mobile.Target = new GetFlagTarget(e, flag);
+                e.Mobile.Target = new GetFlagTarget(flag);
             }
             else
             {
@@ -83,7 +83,7 @@ namespace Server.Items
         {
             private readonly int m_flag;
 
-            public GetFlagTarget(CommandEventArgs e, int flag) : base(30, false, TargetFlags.None)
+            public GetFlagTarget(int flag) : base(30, false, TargetFlags.None)
             {
                 m_flag = flag;
             }

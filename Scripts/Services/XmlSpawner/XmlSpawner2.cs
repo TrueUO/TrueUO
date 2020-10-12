@@ -596,15 +596,6 @@ namespace Server.Mobiles
             }
         }
 
-        public int ActiveSectorCount
-        {
-            get
-            {
-                if (sectorList != null) return sectorList.Count;
-                return 0;
-            }
-        }
-
         public bool PlayerCreated
         {
             get { return m_PlayerCreated; }
