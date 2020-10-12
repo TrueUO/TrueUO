@@ -101,34 +101,9 @@ namespace Server.Spells.Second
             FinishSequence();
         }
 
-        #region SA
         public static bool HasProtection(Mobile m)
         {
             return m_Table.ContainsKey(m);
-        }
-        #endregion
-
-        private class InternalTimer : Timer
-        {
-            private readonly Mobile m_Caster;
-            public InternalTimer(Mobile caster)
-                : base(TimeSpan.FromSeconds(0))
-            {
-                double val = caster.Skills[SkillName.Magery].Value * 2.0;
-                if (val < 15)
-                    val = 15;
-                else if (val > 240)
-                    val = 240;
-
-                m_Caster = caster;
-                Delay = TimeSpan.FromSeconds(val);
-                Priority = TimerPriority.OneSecond;
-            }
-
-            protected override void OnTick()
-            {
-                Registry.Remove(m_Caster);
-            }
         }
     }
 }

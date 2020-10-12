@@ -1,6 +1,5 @@
 using Server.Engines.PartySystem;
 using Server.Targeting;
-using System;
 using System.Collections.Generic;
 
 namespace Server.Spells.Fourth
@@ -86,28 +85,6 @@ namespace Server.Spells.Fourth
                 int v = _Table[m];
                 _Table.Remove(m);
                 m.EndAction(typeof(ArchProtectionSpell));
-            }
-        }
-
-        private class InternalTimer : Timer
-        {
-            private readonly Mobile m_Owner;
-
-            public InternalTimer(Mobile target, Mobile caster)
-                : base(TimeSpan.FromSeconds(0))
-            {
-                double time = caster.Skills[SkillName.Magery].Value * 1.2;
-                if (time > 144)
-                    time = 144;
-                Delay = TimeSpan.FromSeconds(time);
-                Priority = TimerPriority.OneSecond;
-
-                m_Owner = target;
-            }
-
-            protected override void OnTick()
-            {
-                RemoveEntry(m_Owner);
             }
         }
 
