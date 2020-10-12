@@ -8471,7 +8471,7 @@ namespace Server.Mobiles
         public static bool TryParse<TEnum>(string tocheck, bool ignorecase, out TEnum result) where TEnum : struct, IConvertible
         {
             bool boolean = (tocheck == null ? false : Enum.IsDefined(typeof(TEnum), tocheck));
-            result = (boolean ? (TEnum)Enum.Parse(typeof(TEnum), tocheck) : default(TEnum));
+            result = (boolean ? (TEnum)Enum.Parse(typeof(TEnum), tocheck) : default);
             return boolean;
         }
         #endregion

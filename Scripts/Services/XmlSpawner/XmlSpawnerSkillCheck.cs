@@ -216,22 +216,7 @@ namespace Server.Mobiles
         {
             if (!(m is PlayerMobile) || skill == null) return;
 
-            /*
-            // first check for any attachments that might support OnSkillUse
-            ArrayList list = XmlAttach.FindAttachments(m);
-            if(list != null && list.Count > 0)
-            {
-                foreach(XmlAttachment a in list)
-                {
-                    if(a != null && !a.Deleted && a.HandlesOnSkillUse)
-                    {
-                        a.OnSkillUse(m, skill, success);
-                    }
-                }
-            }
-            */
-
-            // then check for registered skills
+            // check for registered skills
             ArrayList skilllist = RegisteredSkill.TriggerList(skill.SkillName, m.Map);
 
             if (skilllist == null) return;
@@ -242,10 +227,8 @@ namespace Server.Mobiles
                 if (rs.sid == skill.SkillName)
                 {
                     // if so then invoke their skill handlers
-                    if (rs.target is XmlSpawner)
+                    if (rs.target is XmlSpawner spawner)
                     {
-                        XmlSpawner spawner = (XmlSpawner)rs.target;
-
                         if (spawner.HandlesOnSkillUse)
                         {
                             // call the spawner handler

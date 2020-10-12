@@ -38,8 +38,6 @@ namespace Server.Gumps
         public static readonly int SetButtonID1 = PropsConfig.SetButtonID1;
         public static readonly int SetButtonID2 = PropsConfig.SetButtonID2;
 
-        public static readonly int PrevWidth = PropsConfig.PrevWidth;
-
         public static readonly int NextWidth = PropsConfig.NextWidth;
 
         public static readonly int OffsetSize = PropsConfig.OffsetSize;
@@ -296,10 +294,10 @@ namespace Server.Gumps
                                 from.SendGump(new XmlSetListOptionGump(prop, from, m_Object, m_Stack, m_Page, m_List, m_PoisonNames, m_PoisonValues));
                             else if (IsType(type, typeofMap))
                                 from.SendGump(new XmlSetListOptionGump(prop, from, m_Object, m_Stack, m_Page, m_List, Map.GetMapNames(), Map.GetMapValues()));
-                            else if (IsType(type, typeofSkills) && m_Object is Mobile)
+                            else if (IsType(type, typeofSkills) && m_Object is Mobile mobile)
                             {
-                                from.SendGump(new XmlPropertiesGump(from, m_Object, m_Stack, m_List, m_Page));
-                                from.SendGump(new SkillsGump(from, (Mobile)m_Object));
+                                from.SendGump(new XmlPropertiesGump(from, mobile, m_Stack, m_List, m_Page));
+                                from.SendGump(new SkillsGump(from, mobile));
                             }
                             else if (HasAttribute(type, typeofPropertyObject, true))
                             {
@@ -429,19 +427,19 @@ namespace Server.Gumps
             {
                 return "-null-";
             }
-            else if (o is string)
+            if (o is string)
             {
                 return string.Format("\"{0}\"", (string)o);
             }
-            else if (o is bool)
+            if (o is bool)
             {
                 return o.ToString();
             }
-            else if (o is char)
+            if (o is char)
             {
                 return string.Format("0x{0:X} '{1}'", (int)(char)o, (char)o);
             }
-            else if (o is Serial)
+            if (o is Serial)
             {
                 Serial s = (Serial)o;
 
@@ -459,30 +457,28 @@ namespace Server.Gumps
 
                 return string.Format("(?) 0x{0:X}", s.Value);
             }
-            else if (o is byte || o is sbyte || o is short || o is ushort || o is int || o is uint || o is long || o is ulong)
+            if (o is byte || o is sbyte || o is short || o is ushort || o is int || o is uint || o is long || o is ulong)
             {
                 return string.Format("{0} (0x{0:X})", o);
             }
-            else if (o is double)
+            if (o is double)
             {
                 return o.ToString();
             }
-            else if (o is Mobile)
+            if (o is Mobile)
             {
                 return string.Format("(M) 0x{0:X} \"{1}\"", ((Mobile)o).Serial.Value, ((Mobile)o).Name);
             }
-            else if (o is Item)
+            if (o is Item)
             {
                 return string.Format("(I) 0x{0:X}", ((Item)o).Serial);
             }
-            else if (o is Type)
+            if (o is Type)
             {
                 return ((Type)o).Name;
             }
-            else
-            {
-                return o.ToString();
-            }
+
+            return o.ToString();
         }
 
         private ArrayList BuildList()

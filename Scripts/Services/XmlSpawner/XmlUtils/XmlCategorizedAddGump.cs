@@ -295,10 +295,8 @@ namespace Server.Gumps
 
             m_Index = index;
             m_Gump = gump;
-            if (gump is XmlAddGump)
+            if (gump is XmlAddGump xmladdgump)
             {
-                XmlAddGump xmladdgump = (XmlAddGump)gump;
-
                 if (xmladdgump.defs != null)
                 {
                     xmladdgump.defs.CurrentCategory = category;
@@ -306,9 +304,9 @@ namespace Server.Gumps
                 }
             }
             else
-                if (gump is XmlSpawnerGump)
+                if (gump is XmlSpawnerGump spawnerGump)
             {
-                m_Spawner = ((XmlSpawnerGump)gump).m_Spawner;
+                m_Spawner = spawnerGump.m_Spawner;
 
 
             }
@@ -406,9 +404,8 @@ namespace Server.Gumps
 
                 AddButton(x + SetOffsetX, y + SetOffsetY, SetButtonID1, SetButtonID2, i + 4, GumpButtonType.Reply, 0);
 
-                if (node is XmlAddCAGObject)
+                if (node is XmlAddCAGObject obj)
                 {
-                    XmlAddCAGObject obj = (XmlAddCAGObject)node;
                     int itemID = obj.ItemID;
 
                     Rectangle2D bounds = ItemBounds.Table[itemID];

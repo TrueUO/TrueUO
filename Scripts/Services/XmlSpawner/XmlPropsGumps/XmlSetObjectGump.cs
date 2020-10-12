@@ -32,7 +32,6 @@ namespace Server.Gumps
         public static readonly int TextOffsetX = PropsConfig.TextOffsetX;
 
         public static readonly int OffsetGumpID = PropsConfig.OffsetGumpID;
-        public static readonly int HeaderGumpID = PropsConfig.HeaderGumpID;
         public static readonly int EntryGumpID = PropsConfig.EntryGumpID;
         public static readonly int BackGumpID = PropsConfig.BackGumpID;
         public static readonly int SetGumpID = PropsConfig.SetGumpID;

@@ -243,14 +243,14 @@ namespace Server.Mobiles
                 Point3D loc = item.Location;
                 if (item.Parent != null && item.RootParent != null)
                 {
-                    if (item.RootParent is Mobile)
+                    if (item.RootParent is Mobile mobile)
                     {
-                        loc = ((Mobile)item.RootParent).Location;
+                        loc = mobile.Location;
                     }
                     else
-                        if (item.RootParent is Container)
+                        if (item.RootParent is Container container)
                     {
-                        loc = ((Container)item.RootParent).Location;
+                        loc = container.Location;
                     }
 
                 }
@@ -346,24 +346,20 @@ namespace Server.Mobiles
         // test for valid items/mobs on the internal map
         private static bool TestValidInternal(object o)
         {
-            if (o is Mobile)
+            if (o is Mobile m)
             {
-                Mobile m = (Mobile)o;
-
                 if (m.Map != Map.Internal || m.Account != null ||
-                    (m is IMount && ((IMount)m).Rider != null) ||
+                    (m is IMount mount && mount.Rider != null) ||
                     (m is GalleonPilot) || m is PetParrot ||
                     (GenericBuyInfo.IsDisplayCache(m)) ||
                     (m is EffectMobile) ||
-                    (m is BaseCreature && ((BaseCreature)m).IsStabled) ||
+                    (m is BaseCreature creature && creature.IsStabled) ||
                     (m is PlayerVendor && BaseHouse.AllHouses.Any(x => x.InternalizedVendors.Contains(m))))
                     return true;
             }
             else
-                if (o is Item)
+                if (o is Item i)
             {
-                Item i = (Item)o;
-
                 // note, in order to test for a vendors display container that contains valid internal map items 
                 if (i.Map != Map.Internal || i.Parent != null || i is Fists || i is MountItem || i is EffectItem || i.HeldBy != null ||
                     i is MovingCrate || i is SpawnPersistence || GenericBuyInfo.IsDisplayCache(i) || i.GetType().DeclaringType == typeof(GenericBuyInfo))
@@ -376,9 +372,9 @@ namespace Server.Mobiles
                     return true;
 
                 // Ignores shadowguard addons that are internalized while not in use
-                if (i is AddonComponent)
+                if (i is AddonComponent component)
                 {
-                    BaseAddon addon = ((AddonComponent)i).Addon;
+                    BaseAddon addon = component.Addon;
 
                     if (addon != null && (addon is ArmoryAddon || addon is BarAddon || addon is BelfryAddon || addon is ShadowguardFountainAddon || addon is OrchardAddon))
                         return true;
@@ -588,10 +584,10 @@ namespace Server.Mobiles
                                     }
                                 }
                             }
-                            else if (i is Spawner)
+                            else if (i is Spawner spawner)
                             {
                                 // search the entries of the spawner
-                                foreach (SpawnObject obj in ((Spawner)i).SpawnObjects)
+                                foreach (SpawnObject obj in spawner.SpawnObjects)
                                 {
                                     string so = obj.SpawnName;
 
@@ -633,10 +629,10 @@ namespace Server.Mobiles
                     if (criteria.Dosearcherr)
                     {
                         // see what kind of spawner it is
-                        if (i is XmlSpawner)
+                        if (i is XmlSpawner spawner)
                         {
                             // check the status of the spawner
-                            if (((XmlSpawner)i).status_str != null)
+                            if (spawner.status_str != null)
                             {
                                 hasspawnerr = true;
                             }
