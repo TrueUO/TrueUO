@@ -10,34 +10,18 @@ using Server.Gumps;
 using Server.Items;
 using Server.Network;
 
-/*
-** Changelog
-**
-** 8/15/04
-** - fixed a crash bug when using the goto spawn button on an empty spawn entry
-**
-** 8/10/04
-** - added a goto-spawn button in the spawner gump (to the right of the text entry area, next to the text entry gump button) that will take you to the location of
-** currently spawned objects for a given spawner entry.  If there are multiple spawned objects for an entry, it will cycle through them with repeated clicks.
-** Useful for tracking down spawns.
-** 3/23/04
-** changed spawner name font color for 3dclient compatibility
-*/
-
 namespace Server.Mobiles
 {
     public class HelpGump : Gump
     {
         public XmlSpawner m_Spawner;
-        private readonly XmlSpawnerGump m_SpawnerGump;
 
-        public HelpGump(XmlSpawner spawner, XmlSpawnerGump spawnergump, int X, int Y)
+        public HelpGump(XmlSpawner spawner, int X, int Y)
             : base(X, Y)
         {
             if (spawner == null || spawner.Deleted)
                 return;
             m_Spawner = spawner;
-            m_SpawnerGump = spawnergump;
 
             AddPage(0);
 
@@ -1303,7 +1287,7 @@ namespace Server.Mobiles
                 case 1: // Help
                     {
                         //state.Mobile.SendGump( new XmlSpawnerGump(m_Spawner, this.X, this.Y, this.m_ShowGump));
-                        state.Mobile.SendGump(new HelpGump(m_Spawner, this, X + 290, Y));
+                        state.Mobile.SendGump(new HelpGump(m_Spawner, X + 290, Y));
                         break;
                     }
                 case 2: // Bring everything home
@@ -1477,10 +1461,10 @@ namespace Server.Mobiles
                                         if (o != null)
                                         {
                                             Map m = m_Spawner.Map;
-                                            if (o is Item)
-                                                m = ((Item)o).Map;
-                                            if (o is Mobile)
-                                                m = ((Mobile)o).Map;
+                                            if (o is Item item)
+                                                m = item.Map;
+                                            if (o is Mobile mobile)
+                                                m = mobile.Map;
 
                                             state.Mobile.Location = new Point3D(o);
                                             state.Mobile.Map = m;

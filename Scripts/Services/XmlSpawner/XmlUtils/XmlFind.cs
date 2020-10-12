@@ -801,11 +801,6 @@ namespace Server.Mobiles
             e.Mobile.SendGump(new XmlFindGump(e.Mobile, e.Mobile.Location, e.Mobile.Map, typename, range, dorange, x, y));
         }
 
-        public XmlFindGump(Mobile from, Point3D startloc, Map startmap, int x, int y)
-            : this(from, startloc, startmap, null, x, y)
-        {
-        }
-
         public XmlFindGump(Mobile from, Point3D startloc, Map startmap, string type, int x, int y)
             : this(from, startloc, startmap, type, -1, false, x, y)
         {

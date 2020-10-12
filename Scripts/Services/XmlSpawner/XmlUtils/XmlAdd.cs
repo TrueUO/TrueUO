@@ -192,8 +192,6 @@ namespace Server.Mobiles
 
     }
 
-
-
     public class XmlAddGump : Gump
     {
         private const int MaxEntries = 40;
@@ -202,11 +200,9 @@ namespace Server.Mobiles
         private const string DefsTablePointName = "Values";
         private const string DefsDir = "SpawnerDefs";
 
-        private static readonly int StartingXoffset = 440;
         private readonly Mobile m_From;
 
         public XmlSpawnerDefaults.DefaultEntry defs;
-
 
         private string NameListToString()
         {
@@ -642,10 +638,6 @@ namespace Server.Mobiles
 
             e.Mobile.SendGump(new XmlAddGump(e.Mobile, e.Mobile.Location, e.Mobile.Map, true, false, x, y));
 
-        }
-
-        public XmlAddGump(Mobile from, Point3D startloc, Map startmap) : this(from, startloc, startmap, true, false, StartingXoffset, 0)
-        {
         }
 
         public XmlAddGump(Mobile from, Point3D startloc, Map startmap, bool firststart, bool extension, int gumpx, int gumpy) : base(gumpx, gumpy)
@@ -1497,7 +1489,7 @@ namespace Server.Mobiles
 
                             state.Mobile.SendGump(newg);
 
-                            if (defaults.NameList[i] == null || defaults.NameList[i].Length == 0)
+                            if (defaults.NameList != null && (defaults.NameList[i] == null || defaults.NameList[i].Length == 0))
                             {
                                 // if no string has been entered then just use the full categorized add gump
                                 state.Mobile.CloseGump(typeof(XmlCategorizedAddGump));

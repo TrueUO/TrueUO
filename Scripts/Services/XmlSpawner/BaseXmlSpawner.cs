@@ -23,8 +23,8 @@ namespace Server.Mobiles
 
         private class ProtectedProperty
         {
-            public Type ObjectType;
-            public string Name;
+            public readonly Type ObjectType;
+            public readonly string Name;
 
             public ProtectedProperty(Type type, string name)
             {
@@ -631,7 +631,7 @@ namespace Server.Mobiles
                 private readonly XmlSpawner m_Spawner;
                 private readonly string m_Condition;
                 private readonly int m_Goto;
-                private TimeSpan m_Repeatdelay;
+                private readonly TimeSpan m_Repeatdelay;
 
                 public KeywordTimer(XmlSpawner spawner, KeywordTag tag, TimeSpan delay, TimeSpan repeatdelay, string condition, int gotogroup)
                     : base(delay)

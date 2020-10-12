@@ -278,10 +278,6 @@ namespace Server.Mobiles
             }
         }
 
-        public TimeSpan RealTOD => DateTime.UtcNow.TimeOfDay;
-
-        public DayOfWeek RealDayOfWeek => DateTime.UtcNow.DayOfWeek;
-
         public XmlSpawnerGump SpawnerGump
         {
             get { return m_SpawnerGump; }
@@ -2134,11 +2130,6 @@ namespace Server.Mobiles
             }
             sectorList = null;
             UseSectorActivate = false;
-
-            //IsInactivated = false;
-
-            // force an update of the sector list
-            bool sectorrefresh = HasActiveSectors;
         }
 
         public void LoadXmlConfig(string filename)
@@ -9006,7 +8997,7 @@ namespace Server.Mobiles
         {
             public int Compare(SpawnObject a, SpawnObject b)
             {
-                if (a.SubGroup == b.SubGroup)
+                if (a != null && b != null && a.SubGroup == b.SubGroup)
                 {
                     // use the entry order as the secondary sort factor
                     return a.EntryOrder - b.EntryOrder;
@@ -11113,32 +11104,35 @@ namespace Server.Mobiles
             writer.Write(nso);
             for (int i = 0; i < nso; ++i)
             {
-                SpawnObject so = m_SpawnObjects[i];
-
-                // Write the type and maximum count
-                writer.Write(so.TypeName);
-                writer.Write(so.ActualMaxCount);
-
-                // Write the spawned object information
-                writer.Write(so.SpawnedObjects.Count);
-                for (int x = 0; x < so.SpawnedObjects.Count; ++x)
+                if (m_SpawnObjects != null)
                 {
-                    object o = so.SpawnedObjects[x];
+                    SpawnObject so = m_SpawnObjects[i];
 
-                    if (o is Item)
-                        writer.Write((Item)o);
-                    else if (o is Mobile)
-                        writer.Write((Mobile)o);
-                    else
+                    // Write the type and maximum count
+                    writer.Write(so.TypeName);
+                    writer.Write(so.ActualMaxCount);
+
+                    // Write the spawned object information
+                    writer.Write(so.SpawnedObjects.Count);
+                    for (int x = 0; x < so.SpawnedObjects.Count; ++x)
                     {
-                        // if this is a keyword tag then add some more info
-                        if (o is BaseXmlSpawner.KeywordTag)
-                        {
-                            writer.Write(-1 * ((BaseXmlSpawner.KeywordTag)o).Serial - 2);
-                        }
+                        object o = so.SpawnedObjects[x];
+
+                        if (o is Item)
+                            writer.Write((Item)o);
+                        else if (o is Mobile)
+                            writer.Write((Mobile)o);
                         else
                         {
-                            writer.Write(Serial.MinusOne);
+                            // if this is a keyword tag then add some more info
+                            if (o is BaseXmlSpawner.KeywordTag)
+                            {
+                                writer.Write(-1 * ((BaseXmlSpawner.KeywordTag)o).Serial - 2);
+                            }
+                            else
+                            {
+                                writer.Write(Serial.MinusOne);
+                            }
                         }
                     }
                 }

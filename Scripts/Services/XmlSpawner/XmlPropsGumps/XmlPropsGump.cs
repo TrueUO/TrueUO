@@ -150,21 +150,7 @@ namespace Server.Gumps
                     AddImageTiled(x - OffsetSize, y, TotalWidth, EntryHeight, BackGumpID + 4);
                     propcount++;
                 }
-                else
-                /*if ( o is Type )
-				{
-					Type type = (Type)o;
-
-					AddImageTiled( x, y, TypeWidth, EntryHeight, EntryGumpID );
-					AddLabelCropped( x + TextOffsetX, y, TypeWidth - TextOffsetX, EntryHeight, TextHue, type.Name );
-					x += TypeWidth + OffsetSize;
-
-					if ( SetGumpID != 0 )
-						AddImageTiled( x, y, SetWidth, EntryHeight, SetGumpID );
-				}
-				else
-                */
-                if (o is PropertyInfo prop)
+                else if (o is PropertyInfo prop)
                 {
                     propcount++;
 
@@ -174,8 +160,7 @@ namespace Server.Gumps
                     FieldInfo finfo = null;
                     XmlSpawnerDefaults.DefaultEntry de = new XmlSpawnerDefaults.DefaultEntry();
                     Type ftype = de.GetType();
-                    if (ftype != null)
-                        finfo = ftype.GetField(prop.Name);
+                    finfo = ftype.GetField(prop.Name);
                     // is there an equivalent default field?
                     if (finfo != null)
                     {
@@ -534,15 +519,18 @@ namespace Server.Gumps
 
                         while (true)
                         {
-                            Type baseType = type.BaseType;
+                            if (!(type is null))
+                            {
+                                Type baseType = type.BaseType;
 
-                            if (baseType == null || baseType == typeofObject)
-                                break;
+                                if (baseType == null || baseType == typeofObject)
+                                    break;
 
-                            if (baseType.GetProperty(prop.Name, prop.PropertyType) != null)
-                                type = baseType;
-                            else
-                                break;
+                                if (baseType.GetProperty(prop.Name, prop.PropertyType) != null)
+                                    type = baseType;
+                                else
+                                    break;
+                            }
                         }
 
                         ArrayList list = (ArrayList)groups[type];
@@ -593,7 +581,7 @@ namespace Server.Gumps
             {
                 MethodInfo parseMethod = t.GetMethod("Parse", new[] { typeof(string) });
 
-                return parseMethod.Invoke(null, new object[] { s });
+                if (!(parseMethod is null)) return parseMethod.Invoke(null, new object[] {s});
             }
 
             throw new Exception("bad");
