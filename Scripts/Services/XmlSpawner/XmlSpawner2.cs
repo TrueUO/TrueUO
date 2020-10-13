@@ -165,8 +165,8 @@ namespace Server.Mobiles
         private int m_KillReset = defKillReset;      // number of spawn ticks that pass without kills before killcount gets reset to zero
         private int m_spawncheck;
         private DateTime m_SeqEnd;
-        private Region m_Region;    // 2004.02.08 :: Omega Red
-        private string m_RegionName = string.Empty; // 2004.02.08 :: Omega Red
+        private Region m_Region;    
+        private string m_RegionName = string.Empty; 
 
         public List<XmlTextEntryBook> m_TextEntryBook;
 
@@ -453,7 +453,6 @@ namespace Server.Mobiles
                                     return true;
                                 }
                             }
-
                         }
                     }
 
@@ -810,7 +809,6 @@ namespace Server.Mobiles
                     {
                         m_Region = region;
                         m_RegionName = region.Name;
-                        //InvalidateProperties();
                         return;
                     }
                 }
@@ -943,8 +941,6 @@ namespace Server.Mobiles
 
                 m_X = Location.X - m_SpawnRange;
                 m_Y = Location.Y - m_SpawnRange;
-
-                //InvalidateProperties();
 
                 // Check if the spawner is showing its bounds
                 if (ShowBounds)
@@ -1316,7 +1312,6 @@ namespace Server.Mobiles
             get { return m_SkillTrigger; }
             set
             {
-
                 SkillName news = XmlSpawnerSkillCheck.RegisteredSkill.Invalid;
                 double minval = -1;
                 double maxval = -1;
@@ -1508,8 +1503,6 @@ namespace Server.Mobiles
                         DoGlobalSectorTimer(TimeSpan.FromSeconds(1));
                     }
                 }
-
-                //IsInactivated = false; 
             }
         }
 
@@ -1773,7 +1766,6 @@ namespace Server.Mobiles
                 return false;
             }
         }
-
 
         public static void SpawnerGumpCallback(Mobile from, object invoker, string response)
         {
@@ -2155,8 +2147,6 @@ namespace Server.Mobiles
 
                     // reset skill triggering if it was set
                     m_skillTriggerActivated = false;
-                    // reset external triggering if it was set
-                    //this.m_ExternalTrigger = false;
                 }
             }
         }
@@ -2241,7 +2231,6 @@ namespace Server.Mobiles
             // wasnt on the list so add it
             if (add)
             {
-
                 // is the list at max throttling length?
                 if (m_MovementList.Count > MaxMoveCheck)
                 {
@@ -2250,7 +2239,6 @@ namespace Server.Mobiles
                 }
                 else
                 {
-
                     m_MovementList.Add(new MovementInfo(m));
                 }
             }
@@ -2320,19 +2308,12 @@ namespace Server.Mobiles
 
         public override void OnMovement(Mobile m, Point3D oldLocation)
         {
-
             if (m_Running && m_ProximityRange >= 0 && ValidPlayerTrig(m) && CanSpawn)
             {
                 // check to see if player is within range of the spawner
                 if (Parent == null && Utility.InRange(m.Location, Location, m_ProximityRange))
                 {
-                    // add some throttling code here.
-                    // add the player to a list that gets cleared every few seconds, checking for redundancy then trigger off of the list instead of off of
-                    // the actual movement stream
-
                     AddToMovementList(m);
-
-                    // check the triggers in the OnTick for the list handler instead of here
                 }
                 else
                 {
@@ -2622,7 +2603,6 @@ namespace Server.Mobiles
                             ExceptionLogging.LogException(e);
                         }
                     }
-
                 }
                 if (nsettings > 0)
                 {
@@ -2679,7 +2659,6 @@ namespace Server.Mobiles
             CommandSystem.Register("XmlSpawnerRespawn", AccessLevel.Seer, Respawn_OnCommand);
             CommandSystem.Register("XmlSpawnerRespawnAll", AccessLevel.Seer, RespawnAll_OnCommand);
 
-            // ok, I'm lazy. I dont like all that typing, so these are two aliases for the longer commands
             CommandSystem.Register("XmlShow", AccessLevel.Administrator, ShowSpawnPoints_OnCommand);
             CommandSystem.Register("XmlHide", AccessLevel.Administrator, HideSpawnPoints_OnCommand);
             CommandSystem.Register("XmlHome", AccessLevel.GameMaster, XmlHome_OnCommand);
@@ -2707,13 +2686,10 @@ namespace Server.Mobiles
             CommandSystem.Register("XmlTrace", AccessLevel.Administrator, new CommandEventHandler(XmlTrace_OnCommand));
             CommandSystem.Register("XmlResetTrace", AccessLevel.Administrator, new CommandEventHandler(XmlResetTrace_OnCommand));
 #endif
-
         }
-
         #endregion
 
         #region Commands
-
         [Usage("XmlGet property")]
         [Description("Returns value of the property on the targeted object.")]
         public static void XmlGetValue_OnCommand(CommandEventArgs e)
@@ -2739,8 +2715,8 @@ namespace Server.Mobiles
                 {
                     return;
                 }
-                from.SendMessage("{0}", result);
 
+                from.SendMessage("{0}", result);
             }
         }
 
@@ -2988,7 +2964,6 @@ namespace Server.Mobiles
 
         private static void LoadDefaults(XmlNode node)
         {
-
             try { defProximityRange = int.Parse(node["defProximityRange"].InnerText); }
             catch (Exception e)
             {
@@ -3101,14 +3076,11 @@ namespace Server.Mobiles
                     {
                         XmlSaveDefaults(e.Arguments[1], m);
                     }
-                    else
-                        if (e.Arguments[0].ToLower() == "load")
+                    else if (e.Arguments[0].ToLower() == "load")
                     {
                         XmlLoadDefaults(e.Arguments[1], m);
                     }
-                    else
-                            // try to set the property
-                            if (e.Arguments[0].ToLower() == "maxdelay")
+                    else if (e.Arguments[0].ToLower() == "maxdelay")
                     {
                         try
                         {
@@ -3117,8 +3089,7 @@ namespace Server.Mobiles
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
-                    else
-                                if (e.Arguments[0].ToLower() == "mindelay")
+                    else if (e.Arguments[0].ToLower() == "mindelay")
                     {
                         try
                         {
@@ -3127,8 +3098,7 @@ namespace Server.Mobiles
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
-                    else
-                                    if (e.Arguments[0].ToLower() == "spawnrange")
+                    else if (e.Arguments[0].ToLower() == "spawnrange")
                     {
                         try
                         {
@@ -3137,8 +3107,7 @@ namespace Server.Mobiles
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
-                    else
-                                        if (e.Arguments[0].ToLower() == "homerange")
+                    else if (e.Arguments[0].ToLower() == "homerange")
                     {
                         try
                         {
@@ -3147,8 +3116,7 @@ namespace Server.Mobiles
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
-                    else
-                                            if (e.Arguments[0].ToLower() == "relativehome")
+                    else if (e.Arguments[0].ToLower() == "relativehome")
                     {
                         try
                         {
@@ -3157,8 +3125,7 @@ namespace Server.Mobiles
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
-                    else
-                                                if (e.Arguments[0].ToLower() == "proximitytriggersound")
+                    else if (e.Arguments[0].ToLower() == "proximitytriggersound")
                     {
                         try
                         {
@@ -3167,8 +3134,7 @@ namespace Server.Mobiles
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
-                    else
-                                                    if (e.Arguments[0].ToLower() == "proximityrange")
+                    else if (e.Arguments[0].ToLower() == "proximityrange")
                     {
                         try
                         {
@@ -3177,8 +3143,7 @@ namespace Server.Mobiles
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
-                    else
-                                                        if (e.Arguments[0].ToLower() == "triggerprobability")
+                    else if (e.Arguments[0].ToLower() == "triggerprobability")
                     {
                         try
                         {
@@ -3187,8 +3152,7 @@ namespace Server.Mobiles
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
-                    else
-                                                            if (e.Arguments[0].ToLower() == "todstart")
+                    else if (e.Arguments[0].ToLower() == "todstart")
                     {
                         try
                         {
@@ -3197,8 +3161,7 @@ namespace Server.Mobiles
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
-                    else
-                                                                if (e.Arguments[0].ToLower() == "todend")
+                    else if (e.Arguments[0].ToLower() == "todend")
                     {
                         try
                         {
@@ -3207,8 +3170,7 @@ namespace Server.Mobiles
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
-                    else
-                                                                    if (e.Arguments[0].ToLower() == "stackamount")
+                    else if (e.Arguments[0].ToLower() == "stackamount")
                     {
                         try
                         {
@@ -3217,8 +3179,7 @@ namespace Server.Mobiles
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
-                    else
-                                                                        if (e.Arguments[0].ToLower() == "duration")
+                    else if (e.Arguments[0].ToLower() == "duration")
                     {
                         try
                         {
@@ -3227,8 +3188,7 @@ namespace Server.Mobiles
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
-                    else
-                                                                            if (e.Arguments[0].ToLower() == "group")
+                    else if (e.Arguments[0].ToLower() == "group")
                     {
                         try
                         {
@@ -3237,8 +3197,7 @@ namespace Server.Mobiles
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
-                    else
-                                                                                if (e.Arguments[0].ToLower() == "team")
+                    else if (e.Arguments[0].ToLower() == "team")
                     {
                         try
                         {
@@ -3247,8 +3206,7 @@ namespace Server.Mobiles
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
-                    else
-                                                                                    if (e.Arguments[0].ToLower() == "todmode")
+                    else if (e.Arguments[0].ToLower() == "todmode")
                     {
                         try
                         {
@@ -3266,8 +3224,7 @@ namespace Server.Mobiles
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
-                    else
-                                                                                        if (e.Arguments[0].ToLower() == "maxrefractory")
+                    else if (e.Arguments[0].ToLower() == "maxrefractory")
                     {
                         try
                         {
@@ -3276,8 +3233,7 @@ namespace Server.Mobiles
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
-                    else
-                                                                                            if (e.Arguments[0].ToLower() == "minrefractory")
+                    else if (e.Arguments[0].ToLower() == "minrefractory")
                     {
                         try
                         {
@@ -3315,7 +3271,6 @@ namespace Server.Mobiles
                 m.SendMessage("MaxDelay = {0}", defMaxDelay);
             }
         }
-
 
         [Usage("XmlSpawnerShowAll")]
         [Aliases("XmlShow")]
@@ -3361,7 +3316,6 @@ namespace Server.Mobiles
 
                     xml_item.m_ShowContainerStatic = s;
                 }
-
             }
         }
 
@@ -3462,7 +3416,6 @@ namespace Server.Mobiles
         }
 
         [Usage("SmartStat [accesslevel Player/Counselor/GameMaster/Seer/Administrator]")]
-
         [Description("Returns the spawn reduction due to SmartSpawning.")]
         public static void SmartStat_OnCommand(CommandEventArgs e)
         {
@@ -3515,12 +3468,8 @@ namespace Server.Mobiles
             }
 
             int percent = 0;
-            //if((currentcount + savings) > 0)
-            //{
-            //	percent = 100*savings/(currentcount + savings);
-            //}
-
             int maxpercent = 0;
+
             if (totalcount > 0)
             {
                 percent = 100 * savings / totalcount;
@@ -3546,11 +3495,9 @@ namespace Server.Mobiles
         }
 
         [Usage("OptimalSmartSpawning [max spawn/homerange diff]")]
-
         [Description("Activates SmartSpawning on XmlSpawners that are well-suited for use of this feature.")]
         public static void OptimalSmartSpawning_OnCommand(CommandEventArgs e)
         {
-
             int maxdiff = 1;
             if (e.Arguments.Length > 0)
             {
@@ -3622,11 +3569,10 @@ namespace Server.Mobiles
                     }
                 }
             }
+
             e.Mobile.SendMessage("Configured {0} XmlSpawners for SmartSpawning using maxdiff of {1}", count, maxdiff);
             e.Mobile.SendMessage("Estimated item/mob reduction is {0}", maxcount);
-
         }
-
 
         [Usage("XmlSpawnerWipe [SpawnerPrefixFilter]")]
         [Description("Removes all XmlSpawner objects from the current map.")]
@@ -3644,7 +3590,6 @@ namespace Server.Mobiles
 
         public static void XmlUnLoadFromFile(string filename, string SpawnerPrefix, Mobile from, out int processedmaps, out int processedspawners)
         {
-
             processedmaps = 0;
             processedspawners = 0;
             if (filename == null || filename.Length <= 0) return;
@@ -3670,7 +3615,6 @@ namespace Server.Mobiles
                 }
 
                 XmlUnLoadFromStream(fs, filename, SpawnerPrefix, from, out processedmaps, out processedspawners);
-
             }
             else
                 // check to see if it is a directory
@@ -4047,11 +3991,6 @@ namespace Server.Mobiles
 
         private static void ParseNewMapFormat(Mobile from, string filename, string line, string[] args, int linenumber, ref int spawnercount, ref int badspawnercount, ref int overridemap, ref double overridemintime, ref double overridemaxtime)
         {
-            // format of each .map line is * Dragon:Wyvern 5209 965 -40 2 2 10 50 30 1
-            //  * typename:typename:... x y z map mindelay maxdelay homerange spawnrange maxcount
-            // or
-            //  * typename:typename:... x y z map mindelay maxdelay homerange spawnrange spawnid maxcount
-            // ## are comments
             // overridemap mapnumber
             // map 0 is tram+fel
             // map 1 is fel
@@ -4074,8 +4013,7 @@ namespace Server.Mobiles
                 }
                 catch { }
             }
-            else
-                if (args.Length == 2 && args[0].ToLower() == "overridemintime")
+            else if (args.Length == 2 && args[0].ToLower() == "overridemintime")
             {
                 try
                 {
@@ -4083,8 +4021,7 @@ namespace Server.Mobiles
                 }
                 catch { }
             }
-            else
-                    if (args.Length == 2 && args[0].ToLower() == "overridemaxtime")
+            else if (args.Length == 2 && args[0].ToLower() == "overridemaxtime")
             {
                 try
                 {
@@ -4092,11 +4029,8 @@ namespace Server.Mobiles
                 }
                 catch { }
             }
-            else
-                        // look for a spawn spec line
-                        if (args.Length > 0 && args[0] == "*")
+            else if (args.Length > 0 && args[0] == "*")
             {
-
                 bool badspawn = false;
                 int x = 0;
                 int y = 0;
@@ -4224,7 +4158,6 @@ namespace Server.Mobiles
                             {
                                 hasvendor = false;
                             }
-
                         }
                     }
 
@@ -4247,8 +4180,6 @@ namespace Server.Mobiles
                     {
                         SpawnRange = hasvendor ? 0 : spawnrange, PlayerCreated = true
                     };
-
-
 
                     spawner.MoveToWorld(new Point3D(x, y, z), spawnmap);
                     if (spawner.Map == Map.Internal)
@@ -5093,13 +5024,9 @@ namespace Server.Mobiles
                                 TheSpawn.NextSpawn = TimeSpan.Zero;
                                 TheSpawn.ResetNextSpawnTimes();
 
-
                                 // Send a message to the client that the spawner is created
                                 if (from != null && verbose)
                                     from.SendMessage(188, "Created '{0}' in {1} at {2}", TheSpawn.Name, TheSpawn.Map.Name, TheSpawn.Location.ToString());
-
-                                // Do a total respawn
-                                //TheSpawn.Respawn();
 
                                 // Increment the count
                                 TotalCount++;
@@ -5294,7 +5221,6 @@ namespace Server.Mobiles
             }
             processedmaps = 1;
             processedspawners = TotalCount;
-
         }
 
         public static string LocateFile(string filename)
@@ -5972,9 +5898,6 @@ namespace Server.Mobiles
                         // Check if there is a delete condition
                         if (string.IsNullOrEmpty(SpawnerPrefix) || i.Name.StartsWith(SpawnerPrefix))
                         {
-                            // Send a message to the client that the spawner is being deleted
-                            //e.Mobile.SendMessage(33, "Removing '{0}' in {1} at {2}", i.Name, i.Map.Name, i.Location.ToString());
-
                             ToDelete.Add(i);
                             Count++;
                         }
@@ -6689,7 +6612,6 @@ namespace Server.Mobiles
             return -1;
         }
 
-
         // get spawn indices randomly from all available spawns of a group
         private int RandomSpawnIndex(int sgroup)
         {
@@ -7066,34 +6988,26 @@ namespace Server.Mobiles
 
                         bool triedtospawn = Respawn();
 
-                        if (triedtospawn) ClearGOTOTags();
+                        if (triedtospawn)
+                            ClearGOTOTags();
 
                         // dont advance if the spawn isnt triggered after resetting
-                        if (!triedtospawn) HoldSequence = true;
-
-
+                        if (!triedtospawn) HoldSequence =
+                            true;
                     }
-                    else
-                        if (TotalSpawnedObjects <= 0)
+                    else if (TotalSpawnedObjects <= 0)
                     {
-
                         // advance the sequential spawn index if it is enabled
                         AdvanceSequential();
 
-                        //bool hadhold = HoldSequence;
-
-                        //HoldSequence = false;
-
                         bool triedtospawn = Respawn();
 
-                        if (triedtospawn) ClearGOTOTags();
-
-                        //if(!triedtospawn) HoldSequence = hadhold;
+                        if (triedtospawn)
+                            ClearGOTOTags();
                     }
                 }
                 else
                 {
-
                     if (CheckForSequentialReset())
                     {
                         // it has expired so reset the sequential spawn level
@@ -7108,31 +7022,20 @@ namespace Server.Mobiles
                         AdvanceSequential();
                     }
 
-                    // keep track of the hold flag before trying to spawn in case no spawn attempt is made
-                    //bool hadhold = HoldSequence;
-
-                    // clear the hold flag to see if any of the spawned entries try to set it
-                    //HoldSequence = false;
-
                     // try to spawn.  If spawning conditions such as triggering or TOD are not met, then it returns false
                     bool triedtospawn = Spawn(false, 0);
 
                     if (triedtospawn) ClearGOTOTags();
-                    // this will maintain any sequential holds if spawning was suppressed due to triggering
-                    // if nothing was spawned or triggered, then restore the hold status to previous state
-                    //if(!triedtospawn) HoldSequence = hadhold;
 
                     if (!FreeRun)
                     {
                         TriggerMob = null;
                         m_skill_that_triggered = XmlSpawnerSkillCheck.RegisteredSkill.Invalid;
                     }
-
                 }
 
                 // remove any keyword tags that were made except for WAIT type
                 ClearTags(false);
-
 
                 // and clear triggering flags
                 if (!OnHold && !FreeRun)
@@ -8352,7 +8255,7 @@ namespace Server.Mobiles
 
         public Rectangle2D SpawnerBounds => new Rectangle2D(m_X, m_Y, m_Width + 1, m_Height + 1);
 
-        private void FindTileLocations(ref List<Point3D> locations, Map map, int startx, int starty, int width, int height, List<int> includetilelist, List<int> excludetilelist, TileFlag tileflag, bool checkitems, int spawnerZ)
+        private static void FindTileLocations(ref List<Point3D> locations, Map map, int startx, int starty, int width, int height, List<int> includetilelist, List<int> excludetilelist, TileFlag tileflag, bool checkitems, int spawnerZ)
         {
             if (width < 0 || height < 0 || map == null) return;
 
@@ -9140,8 +9043,8 @@ namespace Server.Mobiles
             {
                 object o = so.SpawnedObjects[i];
 
-                if (o is Item || o is Mobile) deletelist.Add(o);
-
+                if (o is Item || o is Mobile)
+                    deletelist.Add(o);
             }
 
             DeleteFromList(deletelist);
@@ -9198,8 +9101,8 @@ namespace Server.Mobiles
                         continue;
                     }
 
-                    if (o is Item || o is Mobile) deletelist.Add(o);
-
+                    if (o is Item || o is Mobile)
+                        deletelist.Add(o);
                 }
             }
 
@@ -9741,7 +9644,6 @@ namespace Server.Mobiles
                     writer.Write(m_SpawnObjects[i].PackRange);
                 }
             }
-
 
             // Version 27
             if (m_SpawnObjects != null)
@@ -10530,11 +10432,9 @@ namespace Server.Mobiles
 
             public int PackRange { get; set; } = -1;
 
-
             // command loggable constructor
             public SpawnObject(Mobile from, XmlSpawner spawner, string name, int maxamount)
             {
-
                 if (from != null && spawner != null)
                 {
                     bool found = false;

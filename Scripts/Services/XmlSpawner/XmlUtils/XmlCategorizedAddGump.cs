@@ -236,7 +236,7 @@ namespace Server.Gumps
         private static readonly bool PrevLabel = false, NextLabel = false;
 
         private static readonly int PrevLabelOffsetX = PrevWidth + 1;
-        private static readonly int PrevLabelOffsetY = 0;
+        private const int PrevLabelOffsetY = 0;
 
         private const int NextLabelOffsetX = -29;
         private const int NextLabelOffsetY = 0;

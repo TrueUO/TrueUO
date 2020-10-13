@@ -4592,8 +4592,8 @@ namespace Server.Mobiles
                             if (proptest == null || CheckPropertyString(null, i, proptest, null, out status_str))
                                 nearbylist.Add(i);
                         }
-
                     }
+
                     itemlist.Free();
                 }
             }
@@ -4605,8 +4605,7 @@ namespace Server.Mobiles
                 {
                     mobilelist = ((Item)invoker).GetMobilesInRange(range);
                 }
-                else
-                    if (invoker is Mobile)
+                else if (invoker is Mobile)
                 {
                     mobilelist = ((Mobile)invoker).GetMobilesInRange(range);
                 }
@@ -4818,9 +4817,9 @@ namespace Server.Mobiles
                     if (item != null && !item.Deleted)
                     {
 
-                        if (item is Container)
+                        if (item is Container container)
                         {
-                            itemlist.AddRange(SearchPackForItems((Container)item, targetName, typestr));
+                            itemlist.AddRange(SearchPackForItems(container, targetName, typestr));
                         }
                         // test the item name against the trigger string since it's not a container
                         else if (CheckNameMatch(targetName, item.Name))
