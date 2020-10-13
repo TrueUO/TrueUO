@@ -16,8 +16,6 @@
 
 [.NET Framework 4.8] Runtime and SDK
 
-[https://dotnet.microsoft.com/download/dotnet-core/3.1] SDK
-
 
 #### Windows
 
