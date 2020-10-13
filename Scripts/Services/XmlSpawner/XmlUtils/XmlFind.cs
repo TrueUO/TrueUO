@@ -1543,11 +1543,9 @@ namespace Server.Mobiles
                     if (item1.Map != null)
                         xstr = item1.Map.ToString();
                 }
-                else
-                    if (x is Mobile mobile)
+                else if (x is Mobile mobile && mobile.Map != null)
                 {
-                    if (mobile.Map != null)
-                        xstr = mobile.Map.ToString();
+                    xstr = mobile.Map.ToString();
                 }
 
                 if (y is Item item)
@@ -1555,11 +1553,9 @@ namespace Server.Mobiles
                     if (item.Map != null)
                         ystr = item.Map.ToString();
                 }
-                else
-                    if (y is Mobile mobile)
+                else if (y is Mobile mobile && mobile.Map != null)
                 {
-                    if (mobile.Map != null)
-                        ystr = mobile.Map.ToString();
+                    ystr = mobile.Map.ToString();
                 }
                 if (Dsort)
                     return string.Compare(ystr, xstr, true);

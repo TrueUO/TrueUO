@@ -4661,13 +4661,9 @@ namespace Server.Mobiles
                         }
                         // test the item name against the trigger string
                         // if a typestring has been specified then check against that as well
-                        if (CheckNameMatch(targetName, item.Name))
+                        if (CheckNameMatch(targetName, item.Name) && typeStr == null || CheckType(item, typeStr))
                         {
-                            if (typeStr == null || CheckType(item, typeStr))
-                            {
-                                //found it
-                                return item;
-                            }
+                            return item;
                         }
                     }
                 }
@@ -4720,13 +4716,9 @@ namespace Server.Mobiles
                         }
                         // test the item name against the trigger string
                         // if a typestring has been specified then check against that as well
-                        else if (CheckNameMatch(targetName, item.Name))
+                        else if (CheckNameMatch(targetName, item.Name) && typeStr == null || CheckType(item, typeStr))
                         {
-                            if (typeStr == null || CheckType(item, typeStr))
-                            {
-                                //found it
-                                itemlist.Add(item);
-                            }
+                            itemlist.Add(item);
                         }
                     }
                 }
@@ -4781,13 +4773,10 @@ namespace Server.Mobiles
                             if (itemTarget != null) return itemTarget;
                         }
                         // test the item name against the trigger string
-                        if (CheckNameMatch(targetName, item.Name))
+                        if (CheckNameMatch(targetName, item.Name) && targettype == null || item.GetType().Equals(targettype) || item.GetType().IsSubclassOf(targettype))
                         {
-                            if (targettype == null || item.GetType().Equals(targettype) || item.GetType().IsSubclassOf(targettype))
-                            {
-                                //found it
-                                return item;
-                            }
+                            //found it
+                            return item;
                         }
                     }
                 }

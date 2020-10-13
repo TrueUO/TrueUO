@@ -5069,16 +5069,10 @@ namespace Server.Mobiles
                         XmlSpawner OldSpawner = null;
                         foreach (Item i in World.Items.Values)
                         {
-                            if (i is XmlSpawner checkXmlSpawner)
+                            if (i is XmlSpawner checkXmlSpawner && checkXmlSpawner.UniqueId == SpawnId.ToString())
                             {
-                                // Check if the spawners GUID is the same as the one being loaded
-                                // and that the spawners map is the same as the one being loaded
-                                if (checkXmlSpawner.UniqueId == SpawnId.ToString()
-                                    /* && ( CheckXmlSpawner.Map == SpawnMap || loadrelative) */)
-                                {
-                                    OldSpawner = checkXmlSpawner;
-                                    found_spawner = true;
-                                }
+                                OldSpawner = checkXmlSpawner;
+                                found_spawner = true;
                             }
 
                             if (found_spawner)
@@ -5893,14 +5887,10 @@ namespace Server.Mobiles
                 List<Item> ToDelete = new List<Item>();
                 foreach (Item i in World.Items.Values)
                 {
-                    if (i is XmlSpawner && (WipeAll || i.Map == e.Mobile.Map) && i.Deleted == false)
+                    if (i is XmlSpawner && (WipeAll || i.Map == e.Mobile.Map) && i.Deleted == false && string.IsNullOrEmpty(SpawnerPrefix) || i.Name.StartsWith(SpawnerPrefix))
                     {
-                        // Check if there is a delete condition
-                        if (string.IsNullOrEmpty(SpawnerPrefix) || i.Name.StartsWith(SpawnerPrefix))
-                        {
-                            ToDelete.Add(i);
-                            Count++;
-                        }
+                        ToDelete.Add(i);
+                        Count++;
                     }
                 }
 
