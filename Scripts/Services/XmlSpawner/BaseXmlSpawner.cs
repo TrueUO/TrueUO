@@ -94,8 +94,7 @@ namespace Server.Mobiles
             if (!(method is null))
                 return method.Invoke(o, m_ParseParams);
 
-            else
-                return false;
+            return false;
         }
 
         private static readonly Type[] m_NumericTypes = {
