@@ -6840,9 +6840,7 @@ namespace Server.Mobiles
                     dr["CentreX"] = sp.Location.X;
                     dr["CentreY"] = sp.Location.Y;
                     dr["CentreZ"] = sp.Location.Z;
-                    //dr["ContainerX"] = 0;
-                    //dr["ContainerY"] = 0;
-                    //dr["ContainerZ"] = 0;
+
                     dr["InContainer"] = false;
                 }
                 dr["Range"] = sp.m_HomeRange;
@@ -8977,7 +8975,6 @@ namespace Server.Mobiles
             inrespawn = false;
         }
 
-
         public void SortSpawns()
         {
             if (m_SpawnObjects == null) return;
@@ -8997,16 +8994,15 @@ namespace Server.Mobiles
         {
             public int Compare(SpawnObject a, SpawnObject b)
             {
-                if (a != null && b != null && a.SubGroup == b.SubGroup)
+                if (a.SubGroup == b.SubGroup)
                 {
                     // use the entry order as the secondary sort factor
                     return a.EntryOrder - b.EntryOrder;
                 }
-
-                return a.SubGroup - b.SubGroup;
+                else
+                    return a.SubGroup - b.SubGroup;
             }
         }
-
 
         public static SpawnObject GetSpawnObject(XmlSpawner spawner, int sgroup)
         {
