@@ -112,7 +112,7 @@ namespace Server.Gumps
             Nodes = new XmlAddCAGNode[0];
         }
 
-        public XmlAddCAGCategory(XmlAddCAGCategory parent, XmlTextReader xml)
+        public XmlAddCAGCategory(XmlAddCAGCategory parent, XmlReader xml)
         {
             Parent = parent;
 
@@ -238,11 +238,11 @@ namespace Server.Gumps
         private static readonly int PrevLabelOffsetX = PrevWidth + 1;
         private static readonly int PrevLabelOffsetY = 0;
 
-        private static readonly int NextLabelOffsetX = -29;
-        private static readonly int NextLabelOffsetY = 0;
+        private const int NextLabelOffsetX = -29;
+        private const int NextLabelOffsetY = 0;
 
-        private static readonly int EntryWidth = 180;
-        private static readonly int EntryCount = 15;
+        private const int EntryWidth = 180;
+        private const int EntryCount = 15;
 
         private static readonly int TotalWidth = OffsetSize + EntryWidth + OffsetSize + SetWidth + OffsetSize;
 

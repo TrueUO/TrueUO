@@ -194,7 +194,6 @@ namespace Server.Mobiles
 
         public bool m_IsInactivated;
         private bool m_SmartSpawning;
-        private SectorTimer m_SectorTimer;
 
         private List<Static> m_ShowBoundsItems = new List<Static>();
 
@@ -565,7 +564,7 @@ namespace Server.Mobiles
             }
             set
             {
-                m_skill_that_triggered = value != null ? value.SkillName : XmlSpawnerSkillCheck.RegisteredSkill.Invalid;
+                m_skill_that_triggered = value?.SkillName ?? XmlSpawnerSkillCheck.RegisteredSkill.Invalid;
             }
         }
 
@@ -779,11 +778,10 @@ namespace Server.Mobiles
 
                 m_Region = value;
 
-                m_RegionName = m_Region != null ? m_Region.Name : null;
+                m_RegionName = m_Region?.Name;
             }
         }
 
-        // 2004.02.08 :: Omega Red
         [CommandProperty(AccessLevel.GameMaster)]
         public string RegionName
         {
@@ -1134,32 +1132,11 @@ namespace Server.Mobiles
         [CommandProperty(AccessLevel.GameMaster)]
         public string NoTriggerOnCarried { get; set; }
 
-
         [CommandProperty(AccessLevel.GameMaster)]
         public string TriggerObjectProp { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public string TriggerObjectName
-        {
-            get
-            {
-                if (TriggerObject == null || TriggerObject.Deleted) return null;
-                return TriggerObject.Name;
-            }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
         public Item TriggerObject { get; set; }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public string SetItemName
-        {
-            get
-            {
-                if (SetItem == null || SetItem.Deleted) return null;
-                return SetItem.Name;
-            }
-        }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public Item SetItem { get; set; }
@@ -1671,14 +1648,7 @@ namespace Server.Mobiles
         {
             base.GetProperties(list);
 
-            if (m_Running)
-            {
-                list.Add(1060742); // active
-            }
-            else
-            {
-                list.Add(1060743); // inactive
-            }
+            list.Add(m_Running ? 1060742 : 1060743); // Active / Inactive
 
             // add whitespace to the beginning to avoid any problem with names that begin with # and are interpreted as cliloc ids
             list.Add(1042971, " " + Name); // ~1_val~
@@ -1856,66 +1826,6 @@ namespace Server.Mobiles
             }
 
             return Convert.ToInt32(value);
-        }
-
-        public static void ExecuteAction(object attachedto, Mobile trigmob, string action)
-        {
-            Point3D loc = Point3D.Zero;
-            Map map = null;
-            if (attachedto is IEntity entity)
-            {
-                loc = entity.Location;
-                map = entity.Map;
-            }
-
-            if (action == null || action.Length <= 0 || attachedto == null || map == null) return;
-            SpawnObject TheSpawn = new SpawnObject(null, 0)
-            {
-                TypeName = action
-            };
-            string substitutedtypeName = BaseXmlSpawner.ApplySubstitution(null, attachedto, trigmob, action);
-            string typeName = BaseXmlSpawner.ParseObjectType(substitutedtypeName);
-
-            string status_str;
-            if (BaseXmlSpawner.IsTypeOrItemKeyword(typeName))
-            {
-                BaseXmlSpawner.SpawnTypeKeyword(attachedto, TheSpawn, typeName, substitutedtypeName, true, trigmob, loc, map, out status_str);
-            }
-            else
-            {
-                // its a regular type descriptor so find out what it is
-                Type type = SpawnerType.GetType(typeName);
-                try
-                {
-                    string[] arglist = BaseXmlSpawner.ParseString(substitutedtypeName, 3, "/");
-                    object o = CreateObject(type, arglist[0]);
-
-                    if (o == null)
-                    {
-                        status_str = "invalid type specification: " + arglist[0];
-                    }
-                    else if (o is Mobile m)
-                    {
-                        if (m is BaseCreature c)
-                        {
-                            c.Home = loc; // Spawners location is the home point
-                        }
-
-                        m.Location = loc;
-                        m.Map = map;
-
-                        BaseXmlSpawner.ApplyObjectStringProperties(null, substitutedtypeName, m, trigmob, attachedto, out status_str);
-                    }
-                    else if (o is Item item)
-                    {
-                        BaseXmlSpawner.AddSpawnItem(null, attachedto, TheSpawn, item, loc, map, trigmob, false, substitutedtypeName, out status_str);
-                    }
-                }
-                catch (Exception e)
-                {
-                    ExceptionLogging.LogException(e);
-                }
-            }
         }
 
         private static void RemoveFromSectorTable(Sector s, XmlSpawner spawner)
@@ -2174,12 +2084,7 @@ namespace Server.Mobiles
                     needs_player_trigger = true;
                     string status_str;
 
-                    if (BaseXmlSpawner.TestMobProperty(this, m, PlayerTriggerProp, null, out status_str))
-                    {
-                        has_player_trigger = true;
-                    }
-                    else
-                        has_player_trigger = false;
+                    has_player_trigger = BaseXmlSpawner.TestMobProperty(this, m, PlayerTriggerProp, null, out status_str);
                     if (!string.IsNullOrEmpty(status_str))
                     {
                         this.status_str = status_str;
@@ -3099,7 +3004,7 @@ namespace Server.Mobiles
             }
         }
 
-        private static void LoadDefaults(XmlElement node)
+        private static void LoadDefaults(XmlNode node)
         {
 
             try { defProximityRange = int.Parse(node["defProximityRange"].InnerText); }
@@ -7790,7 +7695,6 @@ namespace Server.Mobiles
             return Point3D.Zero;
         }
 
-
         //used by the reset button in the gump
         public void ResetAllFlags()
         {
@@ -9161,7 +9065,7 @@ namespace Server.Mobiles
             return Location;
         }
 
-        private void DeleteFromList(List<object> list)
+        private static void DeleteFromList(List<object> list)
         {
             if (list == null) return;
 
@@ -9332,7 +9236,7 @@ namespace Server.Mobiles
             // Find the spawn object and increment its count by one
             foreach (SpawnObject so in m_SpawnObjects)
             {
-                if (so.TypeName.ToUpper() == SpawnObjectName.ToUpper())
+                if (String.Equals(so.TypeName, SpawnObjectName, StringComparison.CurrentCultureIgnoreCase))
                 {
 
                     // Add one to the total count
@@ -9369,7 +9273,7 @@ namespace Server.Mobiles
                 // Find the spawn object and increment its count by one
                 foreach (SpawnObject so in m_SpawnObjects)
                 {
-                    if (so.TypeName.ToUpper() == SpawnObjectName.ToUpper())
+                    if (String.Equals(so.TypeName, SpawnObjectName, StringComparison.CurrentCultureIgnoreCase))
                     {
                         // Set the spawn
                         TheSpawn = so;
@@ -9597,16 +9501,6 @@ namespace Server.Mobiles
                     }
                 }
             }
-        }
-
-        public void DoSectorTimer(TimeSpan delay)
-        {
-            if (m_SectorTimer != null)
-                m_SectorTimer.Stop();
-
-            m_SectorTimer = new SectorTimer(this, delay);
-
-            m_SectorTimer.Start();
         }
 
         private class SectorTimer : Timer
