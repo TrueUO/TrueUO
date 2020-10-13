@@ -119,13 +119,10 @@ namespace Server.Mobiles
         #region Variable declarations
 
         private string m_Name = string.Empty;
-        private string m_UniqueId = string.Empty;
-        private bool m_PlayerCreated;
         private bool m_HomeRangeIsRelative;
         private int m_Team;
         private int m_HomeRange;
         // added a amount parameter for stacked item spawns
-        private int m_StackAmount;
         // this is actually redundant with the width height spec for spawning area
         // just an easier way of specifying it
         private int m_SpawnRange;
@@ -147,7 +144,6 @@ namespace Server.Mobiles
         private int m_Y;
         private int m_Width;
         private int m_Height;
-        private WayPoint m_WayPoint;
 
         private Static m_ShowContainerStatic;
         private bool m_proximityActivated;
@@ -158,49 +154,25 @@ namespace Server.Mobiles
         // time after proximity activation when the spawn cannot be reactivated
         private TimeSpan m_MinRefractory;
         private TimeSpan m_MaxRefractory;
-        private string m_ItemTriggerName;
-        private string m_NoItemTriggerName;
-        private Item m_ObjectPropertyItem;
-        private string m_ObjectPropertyName;
         public string status_str;
         public int m_killcount;
         // added proximity range sensor
         private int m_ProximityRange;
         // sound played when a proximity triggered spawner is tripped by a player
         // set this to zero if you dont want to hear anything
-        private int m_ProximityTriggerSound;
-        private string m_ProximityTriggerMessage;
-        private string m_SpeechTrigger;
         private bool m_speechTriggerActivated;
-        private string m_MobPropertyName;
-        private string m_MobTriggerName;
-        private string m_PlayerPropertyName;
-        private double m_TriggerProbability = defTriggerProbability;
-        private Mobile m_mob_who_triggered;
-        private Item m_SetPropertyItem;
 
         private bool m_skipped;
         private int m_KillReset = defKillReset;      // number of spawn ticks that pass without kills before killcount gets reset to zero
         private int m_spawncheck;
-        private TODModeType m_TODMode = TODModeType.Realtime;
-        private string m_GumpState;
-        private bool m_ExternalTriggering;
-        private bool m_ExternalTrigger;
-        private int m_SequentialSpawning = -1;      // off by default
         private DateTime m_SeqEnd;
         private Region m_Region;    // 2004.02.08 :: Omega Red
         private string m_RegionName = string.Empty; // 2004.02.08 :: Omega Red
-        private AccessLevel m_TriggerAccessLevel = AccessLevel.Player;
 
         public List<XmlTextEntryBook> m_TextEntryBook;
-        private XmlSpawnerGump m_SpawnerGump;
 
-        private bool m_AllowGhostTriggering;
-        private bool m_AllowNPCTriggering;
-        private string m_ConfigFile;
         private bool m_OnHold;
         private bool m_HoldSequence;
-        private bool m_SpawnOnTrigger;
 
         private List<MovementInfo> m_MovementList;
         private MovementTimer m_MovementTimer;
@@ -214,7 +186,6 @@ namespace Server.Mobiles
         private string m_SkillTrigger;
         private bool m_skillTriggerActivated;
         private SkillName m_skill_that_triggered;
-        private bool m_FreeRun;     // override for all other triggering modes
         private SkillName m_SkillTriggerName;
         private double m_SkillTriggerMin;
         private double m_SkillTriggerMax;
@@ -235,16 +206,8 @@ namespace Server.Mobiles
 
         private List<Sector> sectorList;
 
-        private bool m_DisableGlobalAutoReset;
-
         private Point3D mostRecentSpawnPosition = Point3D.Zero;
 
-        private int m_MovingPlayerCount;
-        private int m_FastestPlayerSpeed;
-
-        private bool m_DebugThis;
-
-        private TimerPriority m_BasePriority = TimerPriority.OneSecond;
         #endregion
 
         #region Property Overrides
@@ -258,13 +221,13 @@ namespace Server.Mobiles
 
         #region Properties
 
-        public TimerPriority BasePriority { get { return m_BasePriority; } set { m_BasePriority = value; } }
+        public TimerPriority BasePriority { get; set; } = TimerPriority.OneSecond;
 
-        public bool DebugThis { get { return m_DebugThis; } set { m_DebugThis = value; } }
+        public bool DebugThis { get; set; }
 
-        public int MovingPlayerCount { get { return m_MovingPlayerCount; } set { m_MovingPlayerCount = value; } }
+        public int MovingPlayerCount { get; set; }
 
-        public int FastestPlayerSpeed { get { return m_FastestPlayerSpeed; } set { m_FastestPlayerSpeed = value; } }
+        public int FastestPlayerSpeed { get; set; }
 
         public TimeSpan GameTOD
         {
@@ -278,16 +241,9 @@ namespace Server.Mobiles
             }
         }
 
-        public XmlSpawnerGump SpawnerGump
-        {
-            get { return m_SpawnerGump; }
-            set
-            {
-                m_SpawnerGump = value;
-            }
-        }
+        public XmlSpawnerGump SpawnerGump { get; set; }
 
-        public bool DisableGlobalAutoReset { get { return m_DisableGlobalAutoReset; } set { m_DisableGlobalAutoReset = value; } }
+        public bool DisableGlobalAutoReset { get; set; }
 
         private readonly bool sectorIsActive = false;
         private bool UseSectorActivate;
@@ -546,11 +502,7 @@ namespace Server.Mobiles
             }
         }
 
-        public bool PlayerCreated
-        {
-            get { return m_PlayerCreated; }
-            set { m_PlayerCreated = value; }
-        }
+        public bool PlayerCreated { get; set; }
 
         public bool OnHold
         {
@@ -628,17 +580,13 @@ namespace Server.Mobiles
             }
         }
 
-        public string UniqueId => m_UniqueId;
+        public string UniqueId { get; private set; } = string.Empty;
 
         // does not perform a defrag, so less accurate but can be used while looping through world object enums
         public int SafeCurrentCount => SafeTotalSpawnedObjects;
 
 
-        public bool FreeRun
-        {
-            get { return m_FreeRun; }
-            set { m_FreeRun = value; }
-        }
+        public bool FreeRun { get; set; }
 
         public bool CanFreeSpawn
         {
@@ -646,10 +594,10 @@ namespace Server.Mobiles
             {
                 // allow free spawning if proximity sensing is off and if all of the potential free-spawning triggers are disabled
                 if (Running && m_ProximityRange == -1 &&
-                    (m_ObjectPropertyName == null || m_ObjectPropertyName.Length == 0) &&
-                    (m_MobPropertyName == null || m_MobPropertyName.Length == 0 ||
-                    m_MobTriggerName == null || m_MobTriggerName.Length == 0) &&
-                    !m_ExternalTriggering)
+                    (TriggerObjectProp == null || TriggerObjectProp.Length == 0) &&
+                    (MobTriggerProp == null || MobTriggerProp.Length == 0 ||
+                    MobTriggerName == null || MobTriggerName.Length == 0) &&
+                    !ExternalTriggering)
                     return true;
                 return false;
             }
@@ -830,7 +778,7 @@ namespace Server.Mobiles
             {
                 if (value)
                 {
-                    m_SpawnerGump = null;
+                    SpawnerGump = null;
                 }
             }
         }
@@ -1096,25 +1044,13 @@ namespace Server.Mobiles
         public int CurrentCount => TotalSpawnedObjects;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public WayPoint WayPoint
-        {
-            get { return m_WayPoint; }
-            set { m_WayPoint = value; }
-        }
+        public WayPoint WayPoint { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool ExternalTriggering
-        {
-            get { return m_ExternalTriggering; }
-            set { m_ExternalTriggering = value; }
-        }
+        public bool ExternalTriggering { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool ExtTrigState
-        {
-            get { return m_ExternalTrigger; }
-            set { m_ExternalTrigger = value; }
-        }
+        public bool ExtTrigState { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public bool Running
@@ -1148,11 +1084,8 @@ namespace Server.Mobiles
             set { m_Team = value; InvalidateProperties(); }
         }
         [CommandProperty(AccessLevel.GameMaster)]
-        public int StackAmount
-        {
-            get { return m_StackAmount; }
-            set { m_StackAmount = value; }
-        }
+        public int StackAmount { get; set; }
+
         [CommandProperty(AccessLevel.GameMaster)]
         public TimeSpan MinDelay
         {
@@ -1187,11 +1120,7 @@ namespace Server.Mobiles
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public double TriggerProbability
-        {
-            get { return m_TriggerProbability; }
-            set { m_TriggerProbability = value; }
-        }
+        public double TriggerProbability { get; set; } = defTriggerProbability;
 
         //added refractory period support
         [CommandProperty(AccessLevel.GameMaster)]
@@ -1223,90 +1152,58 @@ namespace Server.Mobiles
             }
         }
         [CommandProperty(AccessLevel.GameMaster)]
-        public string TriggerOnCarried
-        {
-            get { return m_ItemTriggerName; }
-            set { m_ItemTriggerName = value; }
+        public string TriggerOnCarried { get; set; }
 
-        }
         [CommandProperty(AccessLevel.GameMaster)]
-        public string NoTriggerOnCarried
-        {
-            get { return m_NoItemTriggerName; }
-            set { m_NoItemTriggerName = value; }
-
-        }
+        public string NoTriggerOnCarried { get; set; }
 
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public string TriggerObjectProp
-        {
-            get { return m_ObjectPropertyName; }
-            set { m_ObjectPropertyName = value; }
-        }
+        public string TriggerObjectProp { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public string TriggerObjectName
         {
             get
             {
-                if (m_ObjectPropertyItem == null || m_ObjectPropertyItem.Deleted) return null;
-                return m_ObjectPropertyItem.Name;
+                if (TriggerObject == null || TriggerObject.Deleted) return null;
+                return TriggerObject.Name;
             }
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public Item TriggerObject
-        {
-            get { return m_ObjectPropertyItem; }
-            set { m_ObjectPropertyItem = value; }
-        }
+        public Item TriggerObject { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public string SetItemName
         {
             get
             {
-                if (m_SetPropertyItem == null || m_SetPropertyItem.Deleted) return null;
-                return m_SetPropertyItem.Name;
+                if (SetItem == null || SetItem.Deleted) return null;
+                return SetItem.Name;
             }
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public Item SetItem
-        {
-            get
-            {
-                return m_SetPropertyItem;
-            }
-            set { m_SetPropertyItem = value; }
-        }
+        public Item SetItem { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public string MobTriggerProp
-        {
-            get { return m_MobPropertyName; }
-            set { m_MobPropertyName = value; }
-        }
+        public string MobTriggerProp { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public string MobTriggerName
-        {
-            get { return m_MobTriggerName; }
-            set { m_MobTriggerName = value; }
-        }
+        public string MobTriggerName { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public Mobile MobTriggerId
         {
             get
             {
-                if (m_MobTriggerName == null) return null;
+                if (MobTriggerName == null) return null;
 
                 // try to parse out the type information if it has also been saved
-                string[] typeargs = m_MobTriggerName.Split(",".ToCharArray(), 2);
+                string[] typeargs = MobTriggerName.Split(",".ToCharArray(), 2);
                 string typestr = null;
-                string namestr = m_MobTriggerName;
+                string namestr = MobTriggerName;
 
                 if (typeargs.Length > 1)
                 {
@@ -1318,11 +1215,7 @@ namespace Server.Mobiles
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public string PlayerTriggerProp
-        {
-            get { return m_PlayerPropertyName; }
-            set { m_PlayerPropertyName = value; }
-        }
+        public string PlayerTriggerProp { get; set; }
 
         // time of day activation
         [CommandProperty(AccessLevel.GameMaster)]
@@ -1345,7 +1238,7 @@ namespace Server.Mobiles
         {
             get
             {
-                if (m_TODMode == TODModeType.Gametime)
+                if (TODMode == TODModeType.Gametime)
                 {
                     int hours;
                     int minutes;
@@ -1361,11 +1254,7 @@ namespace Server.Mobiles
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public TODModeType TODMode
-        {
-            get { return m_TODMode; }
-            set { m_TODMode = value; }
-        }
+        public TODModeType TODMode { get; set; } = TODModeType.Realtime;
 
         [CommandProperty(AccessLevel.GameMaster)]
         public bool TODInRange
@@ -1375,7 +1264,7 @@ namespace Server.Mobiles
                 if (m_TODStart == m_TODEnd) return true;
                 DateTime now;
 
-                if (m_TODMode == TODModeType.Gametime)
+                if (TODMode == TODModeType.Gametime)
                 {
                     int hours;
                     int minutes;
@@ -1473,26 +1362,14 @@ namespace Server.Mobiles
 
         // proximity trigger sound parameter
         [CommandProperty(AccessLevel.GameMaster)]
-        public int ProximitySound
-        {
-            get { return m_ProximityTriggerSound; }
-            set { m_ProximityTriggerSound = value; }
-        }
+        public int ProximitySound { get; set; }
 
         // proximity trigger message parameter
         [CommandProperty(AccessLevel.GameMaster)]
-        public string ProximityMsg
-        {
-            get { return m_ProximityTriggerMessage; }
-            set { m_ProximityTriggerMessage = value; }
-        }
+        public string ProximityMsg { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public string SpeechTrigger
-        {
-            get { return m_SpeechTrigger; }
-            set { m_SpeechTrigger = value; }
-        }
+        public string SpeechTrigger { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public string SkillTrigger
@@ -1606,11 +1483,7 @@ namespace Server.Mobiles
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool SpawnOnTrigger
-        {
-            get { return m_SpawnOnTrigger; }
-            set { m_SpawnOnTrigger = value; }
-        }
+        public bool SpawnOnTrigger { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public bool Group
@@ -1620,18 +1493,10 @@ namespace Server.Mobiles
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public string GumpState
-        {
-            get { return m_GumpState; }
-            set { m_GumpState = value; }
-        }
+        public string GumpState { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int SequentialSpawn
-        {
-            get { return m_SequentialSpawning; }
-            set { m_SequentialSpawning = value; }
-        }
+        public int SequentialSpawn { get; set; } = -1;
 
         [CommandProperty(AccessLevel.GameMaster)]
         public TimeSpan NextSeqReset
@@ -1649,11 +1514,7 @@ namespace Server.Mobiles
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public AccessLevel TriggerAccessLevel
-        {
-            get { return m_TriggerAccessLevel; }
-            set { m_TriggerAccessLevel = value; }
-        }
+        public AccessLevel TriggerAccessLevel { get; set; } = AccessLevel.Player;
 
 
         [CommandProperty(AccessLevel.GameMaster)]
@@ -1679,32 +1540,16 @@ namespace Server.Mobiles
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool AllowGhostTrig
-        {
-            get { return m_AllowGhostTriggering; }
-            set { m_AllowGhostTriggering = value; }
-        }
+        public bool AllowGhostTrig { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool AllowNPCTrig
-        {
-            get { return m_AllowNPCTriggering; }
-            set { m_AllowNPCTriggering = value; }
-        }
+        public bool AllowNPCTrig { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public string ConfigFile
-        {
-            get { return m_ConfigFile; }
-            set { m_ConfigFile = value; }
-        }
+        public string ConfigFile { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public Mobile TriggerMob
-        {
-            get { return m_mob_who_triggered; }
-            set { m_mob_who_triggered = value; }
-        }
+        public Mobile TriggerMob { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public bool SmartSpawning
@@ -1824,7 +1669,7 @@ namespace Server.Mobiles
 
         public override void OnDoubleClick(Mobile from)
         {
-            if (from == null || from.Deleted || from.AccessLevel < AccessLevel.GameMaster || (m_SpawnerGump != null && SomeOneHasGumpOpen)) return;
+            if (from == null || from.Deleted || from.AccessLevel < AccessLevel.GameMaster || (SpawnerGump != null && SomeOneHasGumpOpen)) return;
 
             // clear any text entry books that might still be around
             DeleteTextEntryBook();
@@ -2228,7 +2073,7 @@ namespace Server.Mobiles
                             valid_entry = true;
                             try { intEntry = int.Parse((string)dr["SequentialSpawning"]); }
                             catch { valid_entry = false; }
-                            if (valid_entry) { m_SequentialSpawning = intEntry; }
+                            if (valid_entry) { SequentialSpawn = intEntry; }
 
                             valid_entry = true;
                             try { intEntry = int.Parse((string)dr["ProximityRange"]); }
@@ -2238,12 +2083,12 @@ namespace Server.Mobiles
                             valid_entry = true;
                             try { strEntry = (string)dr["ProximityTriggerMessage"]; }
                             catch { valid_entry = false; }
-                            if (valid_entry) { m_ProximityTriggerMessage = strEntry; }
+                            if (valid_entry) { ProximityMsg = strEntry; }
 
                             valid_entry = true;
                             try { strEntry = (string)dr["SpeechTrigger"]; }
                             catch { valid_entry = false; }
-                            if (valid_entry) { m_SpeechTrigger = strEntry; }
+                            if (valid_entry) { SpeechTrigger = strEntry; }
 
                             valid_entry = true;
                             try { strEntry = (string)dr["SkillTrigger"]; }
@@ -2253,17 +2098,17 @@ namespace Server.Mobiles
                             valid_entry = true;
                             try { intEntry = int.Parse((string)dr["ProximityTriggerSound"]); }
                             catch { valid_entry = false; }
-                            if (valid_entry) { m_ProximityTriggerSound = intEntry; }
+                            if (valid_entry) { ProximitySound = intEntry; }
 
                             valid_entry = true;
                             try { strEntry = (string)dr["ItemTriggerName"]; }
                             catch { valid_entry = false; }
-                            if (valid_entry) { m_ItemTriggerName = strEntry; }
+                            if (valid_entry) { TriggerOnCarried = strEntry; }
 
                             valid_entry = true;
                             try { strEntry = (string)dr["NoItemTriggerName"]; }
                             catch { valid_entry = false; }
-                            if (valid_entry) { m_NoItemTriggerName = strEntry; }
+                            if (valid_entry) { NoTriggerOnCarried = strEntry; }
 
                             // check for the delayinsec entry
                             bool delayinsec = false;
@@ -2313,12 +2158,12 @@ namespace Server.Mobiles
                             valid_entry = true;
                             try { intEntry = int.Parse((string)dr["TODMode"]); }
                             catch { valid_entry = false; }
-                            if (valid_entry) { m_TODMode = (TODModeType)intEntry; }
+                            if (valid_entry) { TODMode = (TODModeType)intEntry; }
 
                             valid_entry = true;
                             try { intEntry = int.Parse((string)dr["Amount"]); }
                             catch { valid_entry = false; }
-                            if (valid_entry) { m_StackAmount = intEntry; }
+                            if (valid_entry) { StackAmount = intEntry; }
 
                             valid_entry = true;
                             try { intEntry = int.Parse((string)dr["MaxCount"]); }
@@ -2338,7 +2183,7 @@ namespace Server.Mobiles
                             valid_entry = true;
                             try { strEntry = (string)dr["WayPoint"]; }
                             catch { valid_entry = false; }
-                            if (valid_entry) { m_WayPoint = GetWaypoint(strEntry); }
+                            if (valid_entry) { WayPoint = GetWaypoint(strEntry); }
 
                             valid_entry = true;
                             try { intEntry = int.Parse((string)dr["KillReset"]); }
@@ -2348,12 +2193,12 @@ namespace Server.Mobiles
                             valid_entry = true;
                             try { doubleEntry = double.Parse((string)dr["TriggerProbability"]); }
                             catch { valid_entry = false; }
-                            if (valid_entry) { m_TriggerProbability = doubleEntry; }
+                            if (valid_entry) { TriggerProbability = doubleEntry; }
 
                             valid_entry = true;
                             try { boolEntry = bool.Parse((string)dr["ExternalTriggering"]); }
                             catch { valid_entry = false; }
-                            if (valid_entry) { m_ExternalTriggering = boolEntry; }
+                            if (valid_entry) { ExternalTriggering = boolEntry; }
 
                             valid_entry = true;
                             try { boolEntry = bool.Parse((string)dr["IsGroup"]); }
@@ -2368,17 +2213,17 @@ namespace Server.Mobiles
                             valid_entry = true;
                             try { boolEntry = bool.Parse((string)dr["AllowGhostTriggering"]); }
                             catch { valid_entry = false; }
-                            if (valid_entry) { m_AllowGhostTriggering = boolEntry; }
+                            if (valid_entry) { AllowGhostTrig = boolEntry; }
 
                             valid_entry = true;
                             try { boolEntry = bool.Parse((string)dr["AllowNPCTriggering"]); }
                             catch { valid_entry = false; }
-                            if (valid_entry) { m_AllowNPCTriggering = boolEntry; }
+                            if (valid_entry) { AllowNPCTrig = boolEntry; }
 
                             valid_entry = true;
                             try { boolEntry = bool.Parse((string)dr["SpawnOnTrigger"]); }
                             catch { valid_entry = false; }
-                            if (valid_entry) { m_SpawnOnTrigger = boolEntry; }
+                            if (valid_entry) { SpawnOnTrigger = boolEntry; }
 
                             valid_entry = true;
                             try { boolEntry = bool.Parse((string)dr["SmartSpawning"]); }
@@ -2398,7 +2243,7 @@ namespace Server.Mobiles
                             catch { valid_entry = false; }
                             if (valid_entry)
                             {
-                                m_PlayerPropertyName = strEntry;
+                                PlayerTriggerProp = strEntry;
                             }
 
                             valid_entry = true;
@@ -2406,7 +2251,7 @@ namespace Server.Mobiles
                             catch { valid_entry = false; }
                             if (valid_entry)
                             {
-                                m_MobPropertyName = strEntry;
+                                MobTriggerProp = strEntry;
                             }
 
                             valid_entry = true;
@@ -2414,7 +2259,7 @@ namespace Server.Mobiles
                             catch { valid_entry = false; }
                             if (valid_entry)
                             {
-                                m_MobTriggerName = strEntry;
+                                MobTriggerName = strEntry;
                             }
 
                             valid_entry = true;
@@ -2422,7 +2267,7 @@ namespace Server.Mobiles
                             catch { valid_entry = false; }
                             if (valid_entry)
                             {
-                                m_ObjectPropertyName = strEntry;
+                                TriggerObjectProp = strEntry;
                             }
 
                             valid_entry = true;
@@ -2439,7 +2284,7 @@ namespace Server.Mobiles
                                     namestr = typeargs[0];
                                     typestr = typeargs[1];
                                 }
-                                m_ObjectPropertyItem = BaseXmlSpawner.FindItemByName(this, namestr, typestr);
+                                TriggerObject = BaseXmlSpawner.FindItemByName(this, namestr, typestr);
                             }
 
                             valid_entry = true;
@@ -2456,7 +2301,7 @@ namespace Server.Mobiles
                                     namestr = typeargs[0];
                                     typestr = typeargs[1];
                                 }
-                                m_SetPropertyItem = BaseXmlSpawner.FindItemByName(this, namestr, typestr);
+                                SetItem = BaseXmlSpawner.FindItemByName(this, namestr, typestr);
                             }
 
                             valid_entry = true;
@@ -2637,7 +2482,7 @@ namespace Server.Mobiles
         private bool ValidPlayerTrig(Mobile m)
         {
             if (m == null || m.Deleted) return false;
-            return ((m.Player || m_AllowNPCTriggering) && (m.AccessLevel <= TriggerAccessLevel) && ((!m.Body.IsGhost && !m_AllowGhostTriggering) || (m.Body.IsGhost && m_AllowGhostTriggering)));
+            return ((m.Player || AllowNPCTrig) && (m.AccessLevel <= TriggerAccessLevel) && ((!m.Body.IsGhost && !AllowGhostTrig) || (m.Body.IsGhost && AllowGhostTrig)));
         }
 
         private bool AllowTriggering => m_Running && !m_refractActivated && TODInRange && CanSpawn;
@@ -2658,7 +2503,7 @@ namespace Server.Mobiles
             }
 
             // if the spawnontrigger flag is set, then spawn immediately
-            if (m_SpawnOnTrigger)
+            if (SpawnOnTrigger)
             {
                 NextSpawn = TimeSpan.Zero;
                 ResetNextSpawnTimes();
@@ -2699,10 +2544,10 @@ namespace Server.Mobiles
                 // if a low demand one has already failed.
 
                 // check for external triggering
-                if (m_ExternalTriggering && !m_ExternalTrigger) return;
+                if (ExternalTriggering && !ExtTrigState) return;
 
                 // if speech triggering is set then test for successful activation
-                if (m_SpeechTrigger != null && m_SpeechTrigger.Length > 0)
+                if (SpeechTrigger != null && SpeechTrigger.Length > 0)
                 {
                     needs_speech_trigger = true;
                 }
@@ -2719,12 +2564,12 @@ namespace Server.Mobiles
 
                 // if item property triggering is set then test for the property value
                 //
-                if (m_ObjectPropertyName != null && m_ObjectPropertyName.Length > 0)
+                if (TriggerObjectProp != null && TriggerObjectProp.Length > 0)
                 {
                     needs_object_trigger = true;
                     string status_str;
 
-                    if (BaseXmlSpawner.TestItemProperty(this, m_ObjectPropertyItem, m_ObjectPropertyName, null, out status_str))
+                    if (BaseXmlSpawner.TestItemProperty(this, TriggerObject, TriggerObjectProp, null, out status_str))
                     {
                         has_object_trigger = true;
                     }
@@ -2740,12 +2585,12 @@ namespace Server.Mobiles
                 if (needs_object_trigger && !has_object_trigger) return;
 
                 // if player property triggering is set then look for the mob and test properties
-                if (m_PlayerPropertyName != null && m_PlayerPropertyName.Length > 0)
+                if (PlayerTriggerProp != null && PlayerTriggerProp.Length > 0)
                 {
                     needs_player_trigger = true;
                     string status_str;
 
-                    if (BaseXmlSpawner.TestMobProperty(this, m, m_PlayerPropertyName, null, out status_str))
+                    if (BaseXmlSpawner.TestMobProperty(this, m, PlayerTriggerProp, null, out status_str))
                     {
                         has_player_trigger = true;
                     }
@@ -2761,14 +2606,14 @@ namespace Server.Mobiles
                 if (needs_player_trigger && !has_player_trigger) return;
 
                 // if mob property triggering is set then look for the mob and test properties
-                if (m_MobPropertyName != null && m_MobPropertyName.Length > 0 &&
-                    m_MobTriggerName != null && m_MobTriggerName.Length > 0)
+                if (MobTriggerProp != null && MobTriggerProp.Length > 0 &&
+                    MobTriggerName != null && MobTriggerName.Length > 0)
                 {
                     needs_mob_trigger = true;
 
                     string status_str;
 
-                    if (BaseXmlSpawner.TestMobProperty(this, MobTriggerId, m_MobPropertyName, null, out status_str))
+                    if (BaseXmlSpawner.TestMobProperty(this, MobTriggerId, MobTriggerProp, null, out status_str))
                     {
                         has_mob_trigger = true;
                     }
@@ -2785,49 +2630,49 @@ namespace Server.Mobiles
                 if (needs_mob_trigger && !has_mob_trigger) return;
 
                 // if player-carried item triggering is set then test for the presence of an item on the player an in their pack
-                if (m_ItemTriggerName != null && m_ItemTriggerName.Length > 0)
+                if (TriggerOnCarried != null && TriggerOnCarried.Length > 0)
                 {
                     //enable_triggering = false;
                     needs_item_trigger = true;
 
-                    has_item_trigger = BaseXmlSpawner.CheckForCarried(m, m_ItemTriggerName);
+                    has_item_trigger = BaseXmlSpawner.CheckForCarried(m, TriggerOnCarried);
                 }
                 // check to see if we have to continue
                 if (needs_item_trigger && !has_item_trigger) return;
 
                 // if player-carried noitem triggering is set then test for the presence of an item in the players pack that should block triggering
-                if (m_NoItemTriggerName != null && m_NoItemTriggerName.Length > 0)
+                if (NoTriggerOnCarried != null && NoTriggerOnCarried.Length > 0)
                 {
                     needs_noitem_trigger = true;
 
-                    has_noitem_trigger = BaseXmlSpawner.CheckForNotCarried(m, m_NoItemTriggerName);
+                    has_noitem_trigger = BaseXmlSpawner.CheckForNotCarried(m, NoTriggerOnCarried);
                 }
                 // check to see if we have to continue
                 if (needs_noitem_trigger && !has_noitem_trigger) return;
 
                 // if this was called without being proximity triggered then check to see that the non-movement triggers were enabled.
-                if (!hasproximity && !needs_object_trigger && !needs_mob_trigger && !m_ExternalTriggering) return;
+                if (!hasproximity && !needs_object_trigger && !needs_mob_trigger && !ExternalTriggering) return;
 
                 // all of the necessary trigger conditions have been met so go ahead and trigger
                 // after you make the probability check
 
-                if (Utility.RandomDouble() < m_TriggerProbability)
+                if (Utility.RandomDouble() < TriggerProbability)
                 {
 
                     // play a sound indicating the spawner has been triggered
-                    if (m_ProximityTriggerSound > 0 && m != null && !m.Deleted)
-                        m.PlaySound(m_ProximityTriggerSound);
+                    if (ProximitySound > 0 && m != null && !m.Deleted)
+                        m.PlaySound(ProximitySound);
 
                     // display the trigger message
-                    if (m_ProximityTriggerMessage != null && m_ProximityTriggerMessage.Length > 0 && m != null && !m.Deleted)
-                        m.PublicOverheadMessage(MessageType.Regular, 0x3B2, false, m_ProximityTriggerMessage);
+                    if (ProximityMsg != null && ProximityMsg.Length > 0 && m != null && !m.Deleted)
+                        m.PublicOverheadMessage(MessageType.Regular, 0x3B2, false, ProximityMsg);
 
                     // enable spawning at the next ontick
                     // this will also start the refractory timer and send the triggering indicators
                     ProximityActivated = true;
 
                     // keep track of who triggered this
-                    m_mob_who_triggered = m;
+                    TriggerMob = m;
 
                     // keep track of the skill that triggered this
                     if (s != null)
@@ -2885,7 +2730,7 @@ namespace Server.Mobiles
         }
 
 
-        public override bool HandlesOnSpeech => (m_Running && m_SpeechTrigger != null && m_SpeechTrigger.Length > 0);
+        public override bool HandlesOnSpeech => (m_Running && SpeechTrigger != null && SpeechTrigger.Length > 0);
 
         public override void OnSpeech(SpeechEventArgs e)
         {
@@ -2896,7 +2741,7 @@ namespace Server.Mobiles
                 if (!Utility.InRange(e.Mobile.Location, Location, m_ProximityRange))
                     return;
 
-                if (m_SpeechTrigger != null && e.Speech.ToLower().IndexOf(m_SpeechTrigger.ToLower()) >= 0)
+                if (SpeechTrigger != null && e.Speech.ToLower().IndexOf(SpeechTrigger.ToLower()) >= 0)
                 {
                     e.Handled = true;
 
@@ -4980,7 +4825,7 @@ namespace Server.Mobiles
                         spawner.SpawnRange = spawnrange;
                     }
 
-                    spawner.m_PlayerCreated = true;
+                    spawner.PlayerCreated = true;
 
                     spawner.MoveToWorld(new Point3D(x, y, z), spawnmap);
                     if (spawner.Map == Map.Internal)
@@ -5007,7 +4852,7 @@ namespace Server.Mobiles
                             TimeSpan.FromHours(0), null, false, null)
                         {
                             SpawnRange = spawnrange,
-                            m_PlayerCreated = true
+                            PlayerCreated = true
                         };
 
                         spawner.MoveToWorld(new Point3D(x, y, z), spawnmap);
@@ -5236,7 +5081,7 @@ namespace Server.Mobiles
                         spawner.SpawnRange = spawnrange;
                     }
 
-                    spawner.m_PlayerCreated = true;
+                    spawner.PlayerCreated = true;
 
                     spawner.MoveToWorld(new Point3D(x, y, z), spawnmap);
                     if (spawner.Map == Map.Internal)
@@ -5263,7 +5108,7 @@ namespace Server.Mobiles
                             TimeSpan.FromHours(0), null, false, null)
                         {
                             SpawnRange = spawnrange,
-                            m_PlayerCreated = true
+                            PlayerCreated = true
                         };
 
                         spawner.MoveToWorld(new Point3D(x, y, z), spawnmap);
@@ -5391,7 +5236,7 @@ namespace Server.Mobiles
             {
                 spawner.SpawnRange = homeRange;
             }
-            spawner.m_PlayerCreated = true;
+            spawner.PlayerCreated = true;
 
             spawner.MoveToWorld(location, map);
             if (!IsValidMapLocation(location, spawner.Map))
@@ -6050,7 +5895,7 @@ namespace Server.Mobiles
                                     SpawnSetPropertyItem, SpawnIsGroup, SpawnTODMode, SpawnKillReset, SpawnExternalTriggering, SpawnSequentialSpawning,
                                     SpawnRegionName, SpawnAllowGhost, SpawnAllowNPC, SpawnSpawnOnTrigger, SpawnConfigFile, SpawnDespawnTime, SpawnSkillTrigger, SpawnSmartSpawning, SpawnWaypoint)
                                 {
-                                    m_DisableGlobalAutoReset = TickReset
+                                    DisableGlobalAutoReset = TickReset
                                 };
                                 //TheSpawn.Group = SpawnIsGroup;\
 
@@ -6202,14 +6047,14 @@ namespace Server.Mobiles
                                 if (loadnew)
                                 {
                                     string tmpsetObjectName = string.Format("{0}-{1}", namestr, newloadid);
-                                    OldSpawner.m_SetPropertyItem = BaseXmlSpawner.FindItemByName(null, tmpsetObjectName, typestr);
+                                    OldSpawner.SetItem = BaseXmlSpawner.FindItemByName(null, tmpsetObjectName, typestr);
                                 }
                                 // if this fails then try the original
-                                if (OldSpawner.m_SetPropertyItem == null)
+                                if (OldSpawner.SetItem == null)
                                 {
-                                    OldSpawner.m_SetPropertyItem = BaseXmlSpawner.FindItemByName(null, namestr, typestr);
+                                    OldSpawner.SetItem = BaseXmlSpawner.FindItemByName(null, namestr, typestr);
                                 }
-                                if (OldSpawner.m_SetPropertyItem == null)
+                                if (OldSpawner.SetItem == null)
                                 {
                                     failedsetitemcount++;
                                     if (from != null)
@@ -6251,14 +6096,14 @@ namespace Server.Mobiles
                                 if (loadnew)
                                 {
                                     string tmptriggerObjectName = string.Format("{0}-{1}", namestr, newloadid);
-                                    OldSpawner.m_ObjectPropertyItem = BaseXmlSpawner.FindItemByName(null, tmptriggerObjectName, typestr);
+                                    OldSpawner.TriggerObject = BaseXmlSpawner.FindItemByName(null, tmptriggerObjectName, typestr);
                                 }
                                 // if this fails then try the original
-                                if (OldSpawner.m_ObjectPropertyItem == null)
+                                if (OldSpawner.TriggerObject == null)
                                 {
-                                    OldSpawner.m_ObjectPropertyItem = BaseXmlSpawner.FindItemByName(null, namestr, typestr);
+                                    OldSpawner.TriggerObject = BaseXmlSpawner.FindItemByName(null, namestr, typestr);
                                 }
-                                if (OldSpawner.m_ObjectPropertyItem == null)
+                                if (OldSpawner.TriggerObject == null)
                                 {
                                     failedobjectitemcount++;
                                     if (from != null)
@@ -6800,7 +6645,7 @@ namespace Server.Mobiles
                 dr["Name"] = sp.Name;
 
                 // Set the unqiue id
-                dr["UniqueId"] = sp.m_UniqueId;
+                dr["UniqueId"] = sp.UniqueId;
 
                 // Get the map name
                 dr["Map"] = sp.Map.Name;
@@ -6867,59 +6712,59 @@ namespace Server.Mobiles
                 // additional parameters
                 dr["TODStart"] = sp.m_TODStart.TotalMinutes;
                 dr["TODEnd"] = sp.m_TODEnd.TotalMinutes;
-                dr["TODMode"] = (int)sp.m_TODMode;
+                dr["TODMode"] = (int)sp.TODMode;
                 dr["KillReset"] = sp.m_KillReset;
                 dr["MinRefractory"] = sp.m_MinRefractory.TotalMinutes;
                 dr["MaxRefractory"] = sp.m_MaxRefractory.TotalMinutes;
                 dr["Duration"] = sp.m_Duration.TotalMinutes;
                 dr["DespawnTime"] = sp.m_DespawnTime.TotalHours;
-                dr["ExternalTriggering"] = sp.m_ExternalTriggering;
+                dr["ExternalTriggering"] = sp.ExternalTriggering;
 
                 dr["ProximityRange"] = sp.m_ProximityRange;
-                dr["ProximityTriggerSound"] = sp.m_ProximityTriggerSound;
-                dr["ProximityTriggerMessage"] = sp.m_ProximityTriggerMessage;
-                if (sp.m_ObjectPropertyItem != null && !sp.m_ObjectPropertyItem.Deleted)
-                    dr["ObjectPropertyItemName"] = string.Format("{0},{1}", sp.m_ObjectPropertyItem.Name,
-                        sp.m_ObjectPropertyItem.GetType().Name);
+                dr["ProximityTriggerSound"] = sp.ProximitySound;
+                dr["ProximityTriggerMessage"] = sp.ProximityMsg;
+                if (sp.TriggerObject != null && !sp.TriggerObject.Deleted)
+                    dr["ObjectPropertyItemName"] = string.Format("{0},{1}", sp.TriggerObject.Name,
+                        sp.TriggerObject.GetType().Name);
                 else
                     dr["ObjectPropertyItemName"] = null;
-                dr["ObjectPropertyName"] = sp.m_ObjectPropertyName;
-                if (sp.m_SetPropertyItem != null && !sp.m_SetPropertyItem.Deleted)
-                    dr["SetPropertyItemName"] = string.Format("{0},{1}", sp.m_SetPropertyItem.Name,
-                        sp.m_SetPropertyItem.GetType().Name);
+                dr["ObjectPropertyName"] = sp.TriggerObjectProp;
+                if (sp.SetItem != null && !sp.SetItem.Deleted)
+                    dr["SetPropertyItemName"] = string.Format("{0},{1}", sp.SetItem.Name,
+                        sp.SetItem.GetType().Name);
                 else
                     dr["SetPropertyItemName"] = null;
-                dr["ItemTriggerName"] = sp.m_ItemTriggerName;
-                dr["NoItemTriggerName"] = sp.m_NoItemTriggerName;
-                dr["MobTriggerName"] = sp.m_MobTriggerName;
-                dr["MobPropertyName"] = sp.m_MobPropertyName;
-                dr["PlayerPropertyName"] = sp.m_PlayerPropertyName;
-                dr["TriggerProbability"] = sp.m_TriggerProbability;
-                dr["SequentialSpawning"] = sp.m_SequentialSpawning;
+                dr["ItemTriggerName"] = sp.TriggerOnCarried;
+                dr["NoItemTriggerName"] = sp.NoTriggerOnCarried;
+                dr["MobTriggerName"] = sp.MobTriggerName;
+                dr["MobPropertyName"] = sp.MobTriggerProp;
+                dr["PlayerPropertyName"] = sp.PlayerTriggerProp;
+                dr["TriggerProbability"] = sp.TriggerProbability;
+                dr["SequentialSpawning"] = sp.SequentialSpawn;
                 dr["RegionName"] = sp.m_RegionName;
-                dr["AllowGhostTriggering"] = sp.m_AllowGhostTriggering;
-                dr["AllowNPCTriggering"] = sp.m_AllowNPCTriggering;
-                dr["SpawnOnTrigger"] = sp.m_SpawnOnTrigger;
-                dr["ConfigFile"] = sp.m_ConfigFile;
+                dr["AllowGhostTriggering"] = sp.AllowGhostTrig;
+                dr["AllowNPCTriggering"] = sp.AllowNPCTrig;
+                dr["SpawnOnTrigger"] = sp.SpawnOnTrigger;
+                dr["ConfigFile"] = sp.ConfigFile;
                 dr["SmartSpawning"] = sp.m_SmartSpawning;
-                dr["TickReset"] = sp.m_DisableGlobalAutoReset;
+                dr["TickReset"] = sp.DisableGlobalAutoReset;
 
-                dr["SpeechTrigger"] = sp.m_SpeechTrigger;
+                dr["SpeechTrigger"] = sp.SpeechTrigger;
                 dr["SkillTrigger"] = sp.m_SkillTrigger;
-                dr["Amount"] = sp.m_StackAmount;
+                dr["Amount"] = sp.StackAmount;
                 dr["Team"] = sp.m_Team;
 
                 // assign the waypoint based on the waypoint name if it deviates from the default waypoint name, otherwise do it by serial
                 string waystr = null;
-                if (sp.m_WayPoint != null)
+                if (sp.WayPoint != null)
                 {
-                    if ((sp.m_WayPoint.Name != defwaypointname) && (sp.m_WayPoint.Name != null) && (sp.m_WayPoint.Name.Length > 0))
+                    if ((sp.WayPoint.Name != defwaypointname) && (sp.WayPoint.Name != null) && (sp.WayPoint.Name.Length > 0))
                     {
-                        waystr = sp.m_WayPoint.Name;
+                        waystr = sp.WayPoint.Name;
                     }
                     else
                     {
-                        waystr = string.Format("SERIAL,{0}", sp.m_WayPoint.Serial);
+                        waystr = string.Format("SERIAL,{0}", sp.WayPoint.Serial);
                     }
                 }
                 dr["WayPoint"] = waystr;
@@ -7208,8 +7053,8 @@ namespace Server.Mobiles
         public XmlSpawner()
             : base(BaseItemId)
         {
-            m_PlayerCreated = true;
-            m_UniqueId = Guid.NewGuid().ToString();
+            PlayerCreated = true;
+            UniqueId = Guid.NewGuid().ToString();
             SpawnRange = defSpawnRange;
 
             InitSpawn(0, 0, m_Width, m_Height, string.Empty, 0, defMinDelay, defMaxDelay, defDuration,
@@ -7222,8 +7067,8 @@ namespace Server.Mobiles
         public XmlSpawner(int amount, int minDelay, int maxDelay, int team, int homeRange, string creatureName)
             : base(BaseItemId)
         {
-            m_PlayerCreated = true;
-            m_UniqueId = Guid.NewGuid().ToString();
+            PlayerCreated = true;
+            UniqueId = Guid.NewGuid().ToString();
             SpawnRange = homeRange;
             SpawnObject[] so = new SpawnObject[1];
             so[0] = new SpawnObject(creatureName, amount);
@@ -7238,8 +7083,8 @@ namespace Server.Mobiles
         public XmlSpawner(int amount, int minDelay, int maxDelay, int team, int homeRange, int spawnRange, string creatureName)
             : base(BaseItemId)
         {
-            m_PlayerCreated = true;
-            m_UniqueId = Guid.NewGuid().ToString();
+            PlayerCreated = true;
+            UniqueId = Guid.NewGuid().ToString();
             SpawnRange = spawnRange;
             SpawnObject[] so = new SpawnObject[1];
             so[0] = new SpawnObject(creatureName, amount);
@@ -7254,8 +7099,8 @@ namespace Server.Mobiles
         public XmlSpawner(string creatureName)
             : base(BaseItemId)
         {
-            m_PlayerCreated = true;
-            m_UniqueId = Guid.NewGuid().ToString();
+            PlayerCreated = true;
+            UniqueId = Guid.NewGuid().ToString();
             SpawnObject[] so = new SpawnObject[1];
             so[0] = new SpawnObject(creatureName, 1);
             SpawnRange = defSpawnRange;
@@ -7274,7 +7119,7 @@ namespace Server.Mobiles
             bool allowghost, bool allownpc, bool spawnontrigger, string configfile, TimeSpan despawnTime, string skillTrigger, bool smartSpawning, WayPoint wayPoint)
             : base(BaseItemId)
         {
-            m_UniqueId = uniqueId.ToString();
+            UniqueId = uniqueId.ToString();
             InitSpawn(x, y, width, height, name, maxCount, minDelay, maxDelay, duration,
                 proximityRange, proximityTriggerSound, amount, team, homeRange, isRelativeHomeRange, spawnObjects, minRefractory, maxRefractory, todstart, todend,
                 objectPropertyItem, objectPropertyName, proximityMessage, itemTriggerName, noitemTriggerName, speechTrigger, mobTriggerName, mobPropertyName, playerPropertyName,
@@ -7319,42 +7164,42 @@ namespace Server.Mobiles
             m_MaxRefractory = maxRefractory;
             m_TODStart = todstart;
             m_TODEnd = todend;
-            m_TODMode = todMode;
+            TODMode = todMode;
             m_KillReset = killReset;
             m_Duration = duration;
             m_DespawnTime = despawnTime;
             m_ProximityRange = proximityRange;
-            m_ProximityTriggerSound = proximityTriggerSound;
+            ProximitySound = proximityTriggerSound;
             m_proximityActivated = false;
             m_durActivated = false;
             m_refractActivated = false;
             m_Count = maxCount;
             m_Team = team;
-            m_StackAmount = amount;
+            StackAmount = amount;
             m_HomeRange = homeRange;
             m_HomeRangeIsRelative = isRelativeHomeRange;
-            m_ObjectPropertyItem = objectPropertyItem;
-            m_ObjectPropertyName = objectPropertyName;
-            m_ProximityTriggerMessage = proximityMessage;
-            m_ItemTriggerName = itemTriggerName;
-            m_NoItemTriggerName = noitemTriggerName;
-            m_SpeechTrigger = speechTrigger;
+            TriggerObject = objectPropertyItem;
+            TriggerObjectProp = objectPropertyName;
+            ProximityMsg = proximityMessage;
+            TriggerOnCarried = itemTriggerName;
+            NoTriggerOnCarried = noitemTriggerName;
+            SpeechTrigger = speechTrigger;
             SkillTrigger = skillTrigger;        // note this will register the skill as well
-            m_MobTriggerName = mobTriggerName;
-            m_MobPropertyName = mobPropertyName;
-            m_PlayerPropertyName = playerPropertyName;
-            m_TriggerProbability = triggerProbability;
-            m_SetPropertyItem = setPropertyItem;
-            m_ExternalTriggering = externalTriggering;
-            m_ExternalTrigger = false;
-            m_SequentialSpawning = sequentialSpawning;
+            MobTriggerName = mobTriggerName;
+            MobTriggerProp = mobPropertyName;
+            PlayerTriggerProp = playerPropertyName;
+            TriggerProbability = triggerProbability;
+            SetItem = setPropertyItem;
+            ExternalTriggering = externalTriggering;
+            ExtTrigState = false;
+            SequentialSpawn = sequentialSpawning;
             RegionName = regionName;
-            m_AllowGhostTriggering = allowghost;
-            m_AllowNPCTriggering = allownpc;
-            m_SpawnOnTrigger = spawnontrigger;
+            AllowGhostTrig = allowghost;
+            AllowNPCTrig = allownpc;
+            SpawnOnTrigger = spawnontrigger;
             m_SmartSpawning = smartSpawning;
             ConfigFile = configfile;
-            m_WayPoint = wayPoint;
+            WayPoint = wayPoint;
 
             // set the totalitem property to -1 so that it doesnt show up in the item count of containers
             //TotalItems = -1;
@@ -7901,7 +7746,7 @@ namespace Server.Mobiles
             {
                 // if it is greater than zero then initiate reset
                 SpawnObject s = m_SpawnObjects[spawnindex];
-                m_SequentialSpawning = s.SequentialResetTo;
+                SequentialSpawn = s.SequentialResetTo;
 
                 InitiateSequentialReset(sgroup);
 
@@ -7918,11 +7763,11 @@ namespace Server.Mobiles
         {
             // check the SequentialResetTime on the subgroup
             // cant do resets on subgroup 0
-            if (m_SequentialSpawning == 0) return false;
+            if (SequentialSpawn == 0) return false;
 
             // this will get the index of the first spawn entry in the subgroup
             // it will have the subgroup timer settings
-            int spawnindex = GetCurrentSequentialSpawnIndex(m_SequentialSpawning);
+            int spawnindex = GetCurrentSequentialSpawnIndex(SequentialSpawn);
 
             if (spawnindex >= 0)
             {
@@ -7964,9 +7809,9 @@ namespace Server.Mobiles
         public void ResetSequential()
         {
             // go back to the lowest level
-            if (m_SequentialSpawning >= 0)
+            if (SequentialSpawn >= 0)
             {
-                m_SequentialSpawning = NextSequentialIndex(-1);
+                SequentialSpawn = NextSequentialIndex(-1);
             }
 
             // reset the nextspawn times
@@ -7986,7 +7831,7 @@ namespace Server.Mobiles
             if (!((m_proximityActivated || CanFreeSpawn) && TODInRange)) return false;
 
             // if kills needed is greater than zero then check the killcount as well
-            int spawnindex = GetCurrentSequentialSpawnIndex(m_SequentialSpawning);
+            int spawnindex = GetCurrentSequentialSpawnIndex(SequentialSpawn);
 
             int killsneeded = 0;
             int subgroup = -1;
@@ -8000,13 +7845,13 @@ namespace Server.Mobiles
             }
 
             // advance the sequential spawn index if it is enabled and kills needed have been satisfied
-            if (m_SequentialSpawning >= 0 && (killsneeded == 0 || KillCount >= killsneeded))
+            if (SequentialSpawn >= 0 && (killsneeded == 0 || KillCount >= killsneeded))
             {
-                m_SequentialSpawning = NextSequentialIndex(m_SequentialSpawning);
+                SequentialSpawn = NextSequentialIndex(SequentialSpawn);
 
                 // set the sequential reset based on the current sequence state
                 // this will be checked in the spawner OnTick to determine whether to Reset the sequential state
-                InitiateSequentialReset(m_SequentialSpawning);
+                InitiateSequentialReset(SequentialSpawn);
 
                 // clear the spawns if there is a killcount on the level
                 if (killsneeded >= 0)
@@ -8058,7 +7903,7 @@ namespace Server.Mobiles
             // note, tags only last a single ontick except for WAIT type
             ClearTags(false);
 
-            if (!m_DisableGlobalAutoReset && startcount == m_killcount && !m_refractActivated && !m_skipped)
+            if (!DisableGlobalAutoReset && startcount == m_killcount && !m_refractActivated && !m_skipped)
             {
                 m_spawncheck--;
             }
@@ -8124,7 +7969,7 @@ namespace Server.Mobiles
                     if (CheckForSequentialReset())
                     {
                         // it has expired so reset the sequential spawn level
-                        SeqResetTo(m_SequentialSpawning);
+                        SeqResetTo(SequentialSpawn);
 
                         bool triedtospawn = Respawn();
 
@@ -8159,7 +8004,7 @@ namespace Server.Mobiles
                     if (CheckForSequentialReset())
                     {
                         // it has expired so reset the sequential spawn level
-                        SeqResetTo(m_SequentialSpawning);
+                        SeqResetTo(SequentialSpawn);
 
                         // dont advance if the spawn isnt triggered after resetting
                         HoldSequence = true;
@@ -8186,7 +8031,7 @@ namespace Server.Mobiles
 
                     if (!FreeRun)
                     {
-                        m_mob_who_triggered = null;
+                        TriggerMob = null;
                         m_skill_that_triggered = XmlSpawnerSkillCheck.RegisteredSkill.Invalid;
                     }
 
@@ -8261,11 +8106,11 @@ namespace Server.Mobiles
                 int SpawnIndex;
 
                 // see if sequential spawning has been selected
-                if (m_SequentialSpawning >= 0)
+                if (SequentialSpawn >= 0)
                 {
                     // if so then use its value to get the index of the first available spawn entry in the next subgroup to be spawned
                     // note, if the current sequence finds a zero group then the spawn will be picked at random from it
-                    SpawnIndex = GetCurrentAvailableSequentialSpawnIndex(m_SequentialSpawning);
+                    SpawnIndex = GetCurrentAvailableSequentialSpawnIndex(SequentialSpawn);
                 }
                 else
                 {
@@ -8426,7 +8271,7 @@ namespace Server.Mobiles
                 }
 
                 // check for string substitions
-                string substitutedtypeName = BaseXmlSpawner.ApplySubstitution(this, this, m_mob_who_triggered, TheSpawn.TypeName);
+                string substitutedtypeName = BaseXmlSpawner.ApplySubstitution(this, this, TriggerMob, TheSpawn.TypeName);
 
                 // random positioning is the default
                 List<SpawnPositionInfo> spawnpositioning = null;
@@ -8454,43 +8299,43 @@ namespace Server.Mobiles
                             switch (keyvalueargs[0])
                             {
                                 case "#NOITEMID":
-                                    spawnpositioning.Add(new SpawnPositionInfo(SpawnPositionType.NoItemID, m_mob_who_triggered, keyvalueargs));
+                                    spawnpositioning.Add(new SpawnPositionInfo(SpawnPositionType.NoItemID, TriggerMob, keyvalueargs));
                                     break;
                                 case "#ITEMID":
-                                    spawnpositioning.Add(new SpawnPositionInfo(SpawnPositionType.ItemID, m_mob_who_triggered, keyvalueargs));
+                                    spawnpositioning.Add(new SpawnPositionInfo(SpawnPositionType.ItemID, TriggerMob, keyvalueargs));
                                     break;
                                 case "#NOTILES":
-                                    spawnpositioning.Add(new SpawnPositionInfo(SpawnPositionType.NoTiles, m_mob_who_triggered, keyvalueargs));
+                                    spawnpositioning.Add(new SpawnPositionInfo(SpawnPositionType.NoTiles, TriggerMob, keyvalueargs));
                                     break;
                                 case "#TILES":
-                                    spawnpositioning.Add(new SpawnPositionInfo(SpawnPositionType.Tiles, m_mob_who_triggered, keyvalueargs));
+                                    spawnpositioning.Add(new SpawnPositionInfo(SpawnPositionType.Tiles, TriggerMob, keyvalueargs));
                                     break;
                                 case "#WET":
-                                    spawnpositioning.Add(new SpawnPositionInfo(SpawnPositionType.Wet, m_mob_who_triggered, keyvalueargs));
+                                    spawnpositioning.Add(new SpawnPositionInfo(SpawnPositionType.Wet, TriggerMob, keyvalueargs));
                                     break;
                                 case "#XFILL":
-                                    spawnpositioning.Add(new SpawnPositionInfo(SpawnPositionType.RowFill, m_mob_who_triggered, keyvalueargs));
+                                    spawnpositioning.Add(new SpawnPositionInfo(SpawnPositionType.RowFill, TriggerMob, keyvalueargs));
                                     break;
                                 case "#YFILL":
-                                    spawnpositioning.Add(new SpawnPositionInfo(SpawnPositionType.ColFill, m_mob_who_triggered, keyvalueargs));
+                                    spawnpositioning.Add(new SpawnPositionInfo(SpawnPositionType.ColFill, TriggerMob, keyvalueargs));
                                     break;
                                 case "#EDGE":
-                                    spawnpositioning.Add(new SpawnPositionInfo(SpawnPositionType.Perimeter, m_mob_who_triggered, keyvalueargs));
+                                    spawnpositioning.Add(new SpawnPositionInfo(SpawnPositionType.Perimeter, TriggerMob, keyvalueargs));
                                     break;
                                 case "#PLAYER":
-                                    spawnpositioning.Add(new SpawnPositionInfo(SpawnPositionType.Player, m_mob_who_triggered, keyvalueargs));
+                                    spawnpositioning.Add(new SpawnPositionInfo(SpawnPositionType.Player, TriggerMob, keyvalueargs));
                                     break;
                                 case "#WAYPOINT":
-                                    spawnpositioning.Add(new SpawnPositionInfo(SpawnPositionType.Waypoint, m_mob_who_triggered, keyvalueargs));
+                                    spawnpositioning.Add(new SpawnPositionInfo(SpawnPositionType.Waypoint, TriggerMob, keyvalueargs));
                                     break;
                                 case "#RELXY":
-                                    spawnpositioning.Add(new SpawnPositionInfo(SpawnPositionType.RelXY, m_mob_who_triggered, keyvalueargs));
+                                    spawnpositioning.Add(new SpawnPositionInfo(SpawnPositionType.RelXY, TriggerMob, keyvalueargs));
                                     break;
                                 case "#DXY":
-                                    spawnpositioning.Add(new SpawnPositionInfo(SpawnPositionType.DeltaLocation, m_mob_who_triggered, keyvalueargs));
+                                    spawnpositioning.Add(new SpawnPositionInfo(SpawnPositionType.DeltaLocation, TriggerMob, keyvalueargs));
                                     break;
                                 case "#XY":
-                                    spawnpositioning.Add(new SpawnPositionInfo(SpawnPositionType.Location, m_mob_who_triggered, keyvalueargs));
+                                    spawnpositioning.Add(new SpawnPositionInfo(SpawnPositionType.Location, TriggerMob, keyvalueargs));
                                     break;
                                 case "#CONDITION":
                                     // test the specified condition string
@@ -8500,7 +8345,7 @@ namespace Server.Mobiles
                                     if (ckeyvalueargs.Length > 1)
                                     {
                                         // dont spawn if it fails the test
-                                        if (!BaseXmlSpawner.CheckPropertyString(this, this, ckeyvalueargs[1], m_mob_who_triggered, out status_str)) return false;
+                                        if (!BaseXmlSpawner.CheckPropertyString(this, this, ckeyvalueargs[1], TriggerMob, out status_str)) return false;
 
                                     }
                                     else
@@ -8542,7 +8387,7 @@ namespace Server.Mobiles
                     string status_str = null;
 
                     bool completedtypespawn = BaseXmlSpawner.SpawnTypeKeyword(this, TheSpawn, typeName, substitutedtypeName, requiresurface, spawnpositioning,
-                        m_mob_who_triggered, Location, Map, SpawnerGumpCallback, out status_str, loops);
+                        TriggerMob, Location, Map, SpawnerGumpCallback, out status_str, loops);
 
                     if (status_str != null)
                     {
@@ -8614,7 +8459,7 @@ namespace Server.Mobiles
                             {
                                 BaseCreature c = (BaseCreature)m;
                                 c.RangeHome = m_HomeRange;
-                                c.CurrentWayPoint = m_WayPoint;
+                                c.CurrentWayPoint = WayPoint;
 
                                 if (m_Team > 0)
                                     c.Team = m_Team;
@@ -8637,7 +8482,7 @@ namespace Server.Mobiles
                             // be sure to do this after setting map and location so that errors dont place the mob on the internal map
                             string status_str;
 
-                            BaseXmlSpawner.ApplyObjectStringProperties(this, substitutedtypeName, m, m_mob_who_triggered, this, out status_str);
+                            BaseXmlSpawner.ApplyObjectStringProperties(this, substitutedtypeName, m, TriggerMob, this, out status_str);
 
                             if (status_str != null)
                             {
@@ -8658,7 +8503,7 @@ namespace Server.Mobiles
 
                             string status_str;
 
-                            BaseXmlSpawner.AddSpawnItem(this, TheSpawn, item, Location, map, m_mob_who_triggered, requiresurface, spawnpositioning, substitutedtypeName, smartspawn, out status_str);
+                            BaseXmlSpawner.AddSpawnItem(this, TheSpawn, item, Location, map, TriggerMob, requiresurface, spawnpositioning, substitutedtypeName, smartspawn, out status_str);
 
                             if (status_str != null)
                             {
@@ -8775,13 +8620,13 @@ namespace Server.Mobiles
         public void ResetAllFlags()
         {
             m_proximityActivated = false;
-            m_ExternalTrigger = false;
+            ExtTrigState = false;
             m_durActivated = false;
             m_refractActivated = false;
-            m_mob_who_triggered = null;
+            TriggerMob = null;
             m_skill_that_triggered = XmlSpawnerSkillCheck.RegisteredSkill.Invalid;
             m_killcount = 0;
-            m_GumpState = null;
+            GumpState = null;
             FreeRun = false;
         }
 
@@ -8867,8 +8712,8 @@ namespace Server.Mobiles
                     m_RefractoryTimer.Stop();
                 m_Running = false;
                 m_proximityActivated = false;
-                m_ExternalTrigger = false;
-                m_mob_who_triggered = null;
+                ExtTrigState = false;
+                TriggerMob = null;
                 m_skill_that_triggered = XmlSpawnerSkillCheck.RegisteredSkill.Invalid;
             }
         }
@@ -8923,7 +8768,7 @@ namespace Server.Mobiles
             }
             if (!FreeRun)
             {
-                m_mob_who_triggered = null;
+                TriggerMob = null;
                 m_skill_that_triggered = XmlSpawnerSkillCheck.RegisteredSkill.Invalid;
             }
 
@@ -8966,7 +8811,7 @@ namespace Server.Mobiles
 
             if (!FreeRun)
             {
-                m_mob_who_triggered = null;
+                TriggerMob = null;
                 m_skill_that_triggered = XmlSpawnerSkillCheck.RegisteredSkill.Invalid;
             }
 
@@ -8999,8 +8844,8 @@ namespace Server.Mobiles
                     // use the entry order as the secondary sort factor
                     return a.EntryOrder - b.EntryOrder;
                 }
-                else
-                    return a.SubGroup - b.SubGroup;
+
+                return a.SubGroup - b.SubGroup;
             }
         }
 
@@ -10871,9 +10716,9 @@ namespace Server.Mobiles
 
             writer.Write(32); // version
                               // version 31
-            writer.Write(m_DisableGlobalAutoReset);
+            writer.Write(DisableGlobalAutoReset);
             // Version 30
-            writer.Write(m_AllowNPCTriggering);
+            writer.Write(AllowNPCTrig);
 
             // Version 29
             if (m_SpawnObjects != null)
@@ -10913,7 +10758,7 @@ namespace Server.Mobiles
             }
 
             // Version 26
-            writer.Write(m_SpawnOnTrigger);
+            writer.Write(SpawnOnTrigger);
 
             // Version 24
             if (m_SpawnObjects != null)
@@ -10952,8 +10797,8 @@ namespace Server.Mobiles
             // Version 22
             writer.Write(m_SkillTrigger);
             writer.Write((int)m_skill_that_triggered);
-            writer.Write(m_FreeRun);
-            writer.Write(m_mob_who_triggered);
+            writer.Write(FreeRun);
+            writer.Write(TriggerMob);
             // Version 21
             writer.Write(m_DespawnTime);
             // Version 20
@@ -10966,7 +10811,7 @@ namespace Server.Mobiles
                 }
             }
             // Version 19
-            writer.Write(m_ConfigFile);
+            writer.Write(ConfigFile);
             writer.Write(m_OnHold);
             writer.Write(m_HoldSequence);
             // compute the number of tags to save
@@ -10987,12 +10832,12 @@ namespace Server.Mobiles
                 }
             }
             // Version 18
-            writer.Write(m_AllowGhostTriggering);
+            writer.Write(AllowGhostTrig);
             // Version 17
             // removed in version 25
             //writer.Write( m_TextEntryBook);
             // Version 16
-            writer.Write(m_SequentialSpawning);
+            writer.Write(SequentialSpawn);
             // write out the remaining time until sequential reset
             writer.Write(NextSeqReset);
             // Write the spawn object list
@@ -11011,17 +10856,17 @@ namespace Server.Mobiles
             writer.Write(m_RegionName);
 
             // Version 15
-            writer.Write(m_ExternalTriggering);
-            writer.Write(m_ExternalTrigger);
+            writer.Write(ExternalTriggering);
+            writer.Write(ExtTrigState);
 
             // Version 14
-            writer.Write(m_NoItemTriggerName);
+            writer.Write(NoTriggerOnCarried);
 
             // Version 13
-            writer.Write(m_GumpState);
+            writer.Write(GumpState);
 
             // Version 12
-            int todtype = (int)m_TODMode;
+            int todtype = (int)TODMode;
             writer.Write(todtype);
 
             // Version 11
@@ -11030,35 +10875,35 @@ namespace Server.Mobiles
             writer.Write(m_spawncheck);
 
             // Version 10
-            writer.Write(m_SetPropertyItem);
+            writer.Write(SetItem);
 
             // Version 9
-            writer.Write(m_TriggerProbability);
+            writer.Write(TriggerProbability);
 
             // Version 8
-            writer.Write(m_MobPropertyName);
-            writer.Write(m_MobTriggerName);
-            writer.Write(m_PlayerPropertyName);
+            writer.Write(MobTriggerProp);
+            writer.Write(MobTriggerName);
+            writer.Write(PlayerTriggerProp);
 
             // Version 7
-            writer.Write(m_SpeechTrigger);
+            writer.Write(SpeechTrigger);
 
             // Version 6
-            writer.Write(m_ItemTriggerName);
+            writer.Write(TriggerOnCarried);
 
             // Version 5
-            writer.Write(m_ProximityTriggerMessage);
-            writer.Write(m_ObjectPropertyItem);
-            writer.Write(m_ObjectPropertyName);
+            writer.Write(ProximityMsg);
+            writer.Write(TriggerObject);
+            writer.Write(TriggerObjectProp);
             writer.Write(m_killcount);
 
             // Version 4
             writer.Write(m_ProximityRange);
-            writer.Write(m_ProximityTriggerSound);
+            writer.Write(ProximitySound);
             writer.Write(m_proximityActivated);
             writer.Write(m_durActivated);
             writer.Write(m_refractActivated);
-            writer.Write(m_StackAmount);
+            writer.Write(StackAmount);
             writer.Write(m_TODStart);
             writer.Write(m_TODEnd);
             writer.Write(m_MinRefractory);
@@ -11073,7 +10918,7 @@ namespace Server.Mobiles
             writer.Write(m_Duration);
 
             // Version 1
-            writer.Write(m_UniqueId);
+            writer.Write(UniqueId);
             writer.Write(m_HomeRangeIsRelative);
 
             // Version 0
@@ -11082,7 +10927,7 @@ namespace Server.Mobiles
             writer.Write(m_Y);
             writer.Write(m_Width);
             writer.Write(m_Height);
-            writer.Write(m_WayPoint);
+            writer.Write(WayPoint);
             writer.Write(m_Group);
             writer.Write(m_MinDelay);
             writer.Write(m_MaxDelay);
@@ -11162,12 +11007,12 @@ namespace Server.Mobiles
                 case 32:
                 case 31:
                     {
-                        m_DisableGlobalAutoReset = reader.ReadBool();
+                        DisableGlobalAutoReset = reader.ReadBool();
                         goto case 30;
                     }
                 case 30:
                     {
-                        m_AllowNPCTriggering = reader.ReadBool();
+                        AllowNPCTrig = reader.ReadBool();
                         goto case 29;
                     }
                 case 29:
@@ -11209,7 +11054,7 @@ namespace Server.Mobiles
                     }
                 case 26:
                     {
-                        m_SpawnOnTrigger = reader.ReadBool();
+                        SpawnOnTrigger = reader.ReadBool();
 
                         if (version < 32)
                         {
@@ -11264,8 +11109,8 @@ namespace Server.Mobiles
                     {
                         SkillTrigger = reader.ReadString();    // note this will also register the skill
                         m_skill_that_triggered = (SkillName)reader.ReadInt();
-                        m_FreeRun = reader.ReadBool();
-                        m_mob_who_triggered = reader.ReadMobile();
+                        FreeRun = reader.ReadBool();
+                        TriggerMob = reader.ReadMobile();
                         goto case 21;
                     }
                 case 21:
@@ -11285,7 +11130,7 @@ namespace Server.Mobiles
                     }
                 case 19:
                     {
-                        m_ConfigFile = reader.ReadString();
+                        ConfigFile = reader.ReadString();
                         m_OnHold = reader.ReadBool();
                         m_HoldSequence = reader.ReadBool();
 
@@ -11309,7 +11154,7 @@ namespace Server.Mobiles
                     }
                 case 18:
                     {
-                        m_AllowGhostTriggering = reader.ReadBool();
+                        AllowGhostTrig = reader.ReadBool();
                         goto case 17;
                     }
                 case 17:
@@ -11319,7 +11164,7 @@ namespace Server.Mobiles
                 case 16:
                     {
                         hasnewobjectinfo = true;
-                        m_SequentialSpawning = reader.ReadInt();
+                        SequentialSpawn = reader.ReadInt();
                         TimeSpan seqdelay = reader.ReadTimeSpan();
                         m_SeqEnd = DateTime.UtcNow + seqdelay;
 
@@ -11343,18 +11188,18 @@ namespace Server.Mobiles
                     }
                 case 15:
                     {
-                        m_ExternalTriggering = reader.ReadBool();
-                        m_ExternalTrigger = reader.ReadBool();
+                        ExternalTriggering = reader.ReadBool();
+                        ExtTrigState = reader.ReadBool();
                         goto case 14;
                     }
                 case 14:
                     {
-                        m_NoItemTriggerName = reader.ReadString();
+                        NoTriggerOnCarried = reader.ReadString();
                         goto case 13;
                     }
                 case 13:
                     {
-                        m_GumpState = reader.ReadString();
+                        GumpState = reader.ReadString();
                         goto case 12;
                     }
                 case 12:
@@ -11363,10 +11208,10 @@ namespace Server.Mobiles
                         switch (todtype)
                         {
                             case (int)TODModeType.Gametime:
-                                m_TODMode = TODModeType.Gametime;
+                                TODMode = TODModeType.Gametime;
                                 break;
                             case (int)TODModeType.Realtime:
-                                m_TODMode = TODModeType.Realtime;
+                                TODMode = TODModeType.Realtime;
                                 break;
                         }
                         goto case 11;
@@ -11380,36 +11225,36 @@ namespace Server.Mobiles
                     }
                 case 10:
                     {
-                        m_SetPropertyItem = reader.ReadItem();
+                        SetItem = reader.ReadItem();
                         goto case 9;
                     }
                 case 9:
                     {
-                        m_TriggerProbability = reader.ReadDouble();
+                        TriggerProbability = reader.ReadDouble();
                         goto case 8;
                     }
                 case 8:
                     {
-                        m_MobPropertyName = reader.ReadString();
-                        m_MobTriggerName = reader.ReadString();
-                        m_PlayerPropertyName = reader.ReadString();
+                        MobTriggerProp = reader.ReadString();
+                        MobTriggerName = reader.ReadString();
+                        PlayerTriggerProp = reader.ReadString();
                         goto case 7;
                     }
                 case 7:
                     {
-                        m_SpeechTrigger = reader.ReadString();
+                        SpeechTrigger = reader.ReadString();
                         goto case 6;
                     }
                 case 6:
                     {
-                        m_ItemTriggerName = reader.ReadString();
+                        TriggerOnCarried = reader.ReadString();
                         goto case 5;
                     }
                 case 5:
                     {
-                        m_ProximityTriggerMessage = reader.ReadString();
-                        m_ObjectPropertyItem = reader.ReadItem();
-                        m_ObjectPropertyName = reader.ReadString();
+                        ProximityMsg = reader.ReadString();
+                        TriggerObject = reader.ReadItem();
+                        TriggerObjectProp = reader.ReadString();
                         m_killcount = reader.ReadInt();
                         goto case 4;
                     }
@@ -11417,11 +11262,11 @@ namespace Server.Mobiles
                     {
                         haveproximityrange = true;
                         m_ProximityRange = reader.ReadInt();
-                        m_ProximityTriggerSound = reader.ReadInt();
+                        ProximitySound = reader.ReadInt();
                         m_proximityActivated = reader.ReadBool();
                         m_durActivated = reader.ReadBool();
                         m_refractActivated = reader.ReadBool();
-                        m_StackAmount = reader.ReadInt();
+                        StackAmount = reader.ReadInt();
                         m_TODStart = reader.ReadTimeSpan();
                         m_TODEnd = reader.ReadTimeSpan();
                         m_MinRefractory = reader.ReadTimeSpan();
@@ -11450,7 +11295,7 @@ namespace Server.Mobiles
                     }
                 case 1:
                     {
-                        m_UniqueId = reader.ReadString();
+                        UniqueId = reader.ReadString();
                         m_HomeRangeIsRelative = reader.ReadBool();
                         goto case 0;
                     }
@@ -11472,7 +11317,7 @@ namespace Server.Mobiles
                         {
                             m_ProximityRange = -1;
                         }
-                        m_WayPoint = reader.ReadItem() as WayPoint;
+                        WayPoint = reader.ReadItem() as WayPoint;
                         m_Group = reader.ReadBool();
                         m_MinDelay = reader.ReadTimeSpan();
                         m_MaxDelay = reader.ReadTimeSpan();
@@ -11644,19 +11489,6 @@ namespace Server.Mobiles
 
         public class SpawnObject
         {
-            private string m_TypeName;
-            private int m_MaxCount;
-            private int m_SubGroup;
-            private int m_SequentialResetTo;
-            private int m_KillsNeeded;
-            private bool m_RestrictKillsToSubgroup;
-            private bool m_ClearOnAdvance = true;
-            private double m_MinDelay = -1;
-            private double m_MaxDelay = -1;
-            private int m_SpawnsPerTick = 1;
-            private bool m_Disabled;
-            private int m_PackRange = -1;
-            private bool m_Ignore;
             // temporary variable used to calculate weighted spawn probabilities
             public bool Available;
 
@@ -11670,7 +11502,8 @@ namespace Server.Mobiles
             public bool SpawnedThisTick;
 
             // these are externally accessible to the SETONSPAWNENTRY keyword
-            public string TypeName { get { return m_TypeName; } set { m_TypeName = value; } }
+            public string TypeName { get; set; }
+
             public int MaxCount
             {
                 get
@@ -11680,25 +11513,32 @@ namespace Server.Mobiles
                         return 0;
                     }
 
-                    return m_MaxCount;
+                    return ActualMaxCount;
                 }
                 set
                 {
-                    m_MaxCount = value;
+                    ActualMaxCount = value;
                 }
             }
-            public int ActualMaxCount { get { return m_MaxCount; } set { m_MaxCount = value; } }
-            public int SubGroup { get { return m_SubGroup; } set { m_SubGroup = value; } }
-            public int SpawnsPerTick { get { return m_SpawnsPerTick; } set { m_SpawnsPerTick = value; } }
-            public int SequentialResetTo { get { return m_SequentialResetTo; } set { m_SequentialResetTo = value; } }
-            public int KillsNeeded { get { return m_KillsNeeded; } set { m_KillsNeeded = value; } }
-            public bool RestrictKillsToSubgroup { get { return m_RestrictKillsToSubgroup; } set { m_RestrictKillsToSubgroup = value; } }
-            public bool ClearOnAdvance { get { return m_ClearOnAdvance; } set { m_ClearOnAdvance = value; } }
-            public double MinDelay { get { return m_MinDelay; } set { m_MinDelay = value; } }
-            public double MaxDelay { get { return m_MaxDelay; } set { m_MaxDelay = value; } }
-            public bool Disabled { get { return m_Disabled; } set { m_Disabled = value; } }
-            public bool Ignore { get { return m_Ignore; } set { m_Ignore = value; } }
-            public int PackRange { get { return m_PackRange; } set { m_PackRange = value; } }
+            public int ActualMaxCount { get; set; }
+
+            public int SubGroup { get; set; }
+
+            public int SpawnsPerTick { get; set; } = 1;
+            public int SequentialResetTo { get; set; }
+
+            public int KillsNeeded { get; set; }
+
+            public bool RestrictKillsToSubgroup { get; set; }
+
+            public bool ClearOnAdvance { get; set; } = true;
+            public double MinDelay { get; set; } = -1;
+            public double MaxDelay { get; set; } = -1;
+            public bool Disabled { get; set; }
+
+            public bool Ignore { get; set; }
+
+            public int PackRange { get; set; } = -1;
 
 
             // command loggable constructor

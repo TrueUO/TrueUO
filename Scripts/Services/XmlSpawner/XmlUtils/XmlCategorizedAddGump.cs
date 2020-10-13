@@ -21,21 +21,19 @@ namespace Server.Gumps
 
     public class XmlAddCAGObject : XmlAddCAGNode
     {
-        private readonly Type m_Type;
-        private readonly int m_ItemID;
-        private readonly int m_Hue;
-        private readonly XmlAddCAGCategory m_Parent;
+        public Type Type { get; }
 
-        public Type Type => m_Type;
-        public int ItemID => m_ItemID;
-        public int Hue => m_Hue;
-        public XmlAddCAGCategory Parent => m_Parent;
+        public int ItemID { get; }
 
-        public override string Caption => (m_Type == null ? "bad type" : m_Type.Name);
+        public int Hue { get; }
+
+        public XmlAddCAGCategory Parent { get; }
+
+        public override string Caption => (Type == null ? "bad type" : Type.Name);
 
         public override void OnClick(Mobile from, int page, int index, Gump gump)
         {
-            if (m_Type == null)
+            if (Type == null)
             {
                 from.SendMessage("That is an invalid type name.");
             }
@@ -47,10 +45,10 @@ namespace Server.Gumps
                     if (xmladdgump.defs?.NameList != null && index >= 0 && index < xmladdgump.defs.NameList.Length)
                     {
 
-                        xmladdgump.defs.NameList[index] = m_Type.Name;
+                        xmladdgump.defs.NameList[index] = Type.Name;
                         XmlAddGump.Refresh(from, true);
                     }
-                    from.SendGump(new XmlCategorizedAddGump(from, m_Parent, page, index, xmladdgump));
+                    from.SendGump(new XmlCategorizedAddGump(from, Parent, page, index, xmladdgump));
                 }
                 else
                     if (gump is XmlSpawnerGump spawnerGump)
@@ -66,7 +64,7 @@ namespace Server.Gumps
 
                             xg.Rentry = new XmlSpawnerGump.ReplacementEntry
                             {
-                                Typename = m_Type.Name,
+                                Typename = Type.Name,
                                 Index = index,
                                 Color = 0x1436
                             };
@@ -82,30 +80,28 @@ namespace Server.Gumps
 
         public XmlAddCAGObject(XmlAddCAGCategory parent, XmlTextReader xml)
         {
-            m_Parent = parent;
+            Parent = parent;
 
             if (xml.MoveToAttribute("type"))
-                m_Type = ScriptCompiler.FindTypeByFullName(xml.Value, false);
+                Type = ScriptCompiler.FindTypeByFullName(xml.Value, false);
 
             if (xml.MoveToAttribute("gfx"))
-                m_ItemID = XmlConvert.ToInt32(xml.Value);
+                ItemID = XmlConvert.ToInt32(xml.Value);
 
             if (xml.MoveToAttribute("hue"))
-                m_Hue = XmlConvert.ToInt32(xml.Value);
+                Hue = XmlConvert.ToInt32(xml.Value);
         }
     }
 
     public class XmlAddCAGCategory : XmlAddCAGNode
     {
-        private readonly string m_Title;
-        private readonly XmlAddCAGNode[] m_Nodes;
-        private readonly XmlAddCAGCategory m_Parent;
+        public string Title { get; }
 
-        public string Title => m_Title;
-        public XmlAddCAGNode[] Nodes => m_Nodes;
-        public XmlAddCAGCategory Parent => m_Parent;
+        public XmlAddCAGNode[] Nodes { get; }
 
-        public override string Caption => m_Title;
+        public XmlAddCAGCategory Parent { get; }
+
+        public override string Caption => Title;
 
         public override void OnClick(Mobile from, int page, int index, Gump gump)
         {
@@ -114,27 +110,27 @@ namespace Server.Gumps
 
         private XmlAddCAGCategory()
         {
-            m_Title = "no data";
-            m_Nodes = new XmlAddCAGNode[0];
+            Title = "no data";
+            Nodes = new XmlAddCAGNode[0];
         }
 
         public XmlAddCAGCategory(XmlAddCAGCategory parent, XmlTextReader xml)
         {
-            m_Parent = parent;
+            Parent = parent;
 
             if (xml.MoveToAttribute("title"))
             {
-                m_Title = xml.Value == "Add Menu" ? "XmlAdd Menu" : xml.Value;
+                Title = xml.Value == "Add Menu" ? "XmlAdd Menu" : xml.Value;
             }
             else
-                m_Title = "empty";
+                Title = "empty";
 
-            if (m_Title == "Docked")
-                m_Title = "Docked 2";
+            if (Title == "Docked")
+                Title = "Docked 2";
 
             if (xml.IsEmptyElement)
             {
-                m_Nodes = new XmlAddCAGNode[0];
+                Nodes = new XmlAddCAGNode[0];
             }
             else
             {
@@ -166,7 +162,7 @@ namespace Server.Gumps
                 }
 
 
-                m_Nodes = (XmlAddCAGNode[])nodes.ToArray(typeof(XmlAddCAGNode));
+                Nodes = (XmlAddCAGNode[])nodes.ToArray(typeof(XmlAddCAGNode));
 
             }
         }
