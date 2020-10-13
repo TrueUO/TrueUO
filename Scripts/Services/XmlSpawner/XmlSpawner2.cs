@@ -4503,7 +4503,6 @@ namespace Server.Mobiles
                 int overridemap = -1;
                 double overridemintime = -1;
                 double overridemaxtime = -1;
-                bool newformat = false;
                 try
                 {
                     // Create an instance of StreamReader to read from a file.
@@ -4527,22 +4526,13 @@ namespace Server.Mobiles
                             if (line.IndexOf('|') >= 0)
                             {
                                 args = line.Trim().Split('|');
-                                newformat = true;
                             }
                             else
                             {
                                 args = line.Trim().Split(' ');
                             }
 
-                            // determine the format of this line and parse accordingly
-                            if (newformat)
-                            {
-                                ParseNewMapFormat(from, filename, line, args, linenumber, ref spawnercount, ref badspawnercount, ref overridemap, ref overridemintime, ref overridemaxtime);
-                            }
-                            else
-                            {
-                                ParseOldMapFormat(from, filename, line, args, linenumber, ref spawnercount, ref badspawnercount, ref overridemap, ref overridemintime, ref overridemaxtime);
-                            }
+                            ParseNewMapFormat(from, filename, line, args, linenumber, ref spawnercount, ref badspawnercount, ref overridemap, ref overridemintime, ref overridemaxtime);
 
                         }
                         sr.Close();
@@ -4853,254 +4843,6 @@ namespace Server.Mobiles
             }
         }
 
-        private static void ParseOldMapFormat(Mobile from, string filename, string line, string[] args, int linenumber, ref int spawnercount, ref int badspawnercount, ref int overridemap, ref double overridemintime, ref double overridemaxtime)
-        {
-            // format of each .map line is * Dragon:Wyvern 5209 965 -40 2 2 10 50 30 1
-            //  * typename:typename:... x y z map mindelay maxdelay homerange spawnrange maxcount
-            // or
-            //  * typename:typename:... x y z map mindelay maxdelay homerange spawnrange spawnid maxcount
-            // ## are comments
-            // overridemap mapnumber
-            // map 0 is tram+fel
-            // map 1 is fel
-            // map 2 is tram
-            // map 3 is ilsh
-            // map 4 is mal
-            // map 5 is tokuno
-            //
-            // * | typename:typename:... | | | | | | x | y | z | map | mindelay maxdelay homerange spawnrange spawnid maxcount | maxcount2 | maxcount2 | maxcount3 | maxcount4 | maxcount5
-            // the new format of each .map line is  * |Dragon:Wyvern| spawns:spawns| | | | | 5209 | 965 | -40 | 2 | 2 | 10 | 50 | 30 | 1
-
-            if (args == null || from == null) return;
-
-            // look for the override keyword
-            if (args.Length == 2 && (args[0].ToLower() == "overridemap"))
-            {
-                try
-                {
-                    overridemap = int.Parse(args[1]);
-                }
-                catch { }
-            }
-            else
-                if (args.Length == 2 && (args[0].ToLower() == "overridemintime"))
-            {
-                try
-                {
-                    overridemintime = double.Parse(args[1]);
-                }
-                catch { }
-            }
-            else
-                    if (args.Length == 2 && (args[0].ToLower() == "overridemaxtime"))
-            {
-                try
-                {
-                    overridemaxtime = double.Parse(args[1]);
-                }
-                catch { }
-            }
-            else
-                        // look for a spawn spec line
-                        if (args.Length > 0 && (args[0] == "*"))
-            {
-                bool badspawn = false;
-                int x = 0;
-                int y = 0;
-                int z = 0;
-                int map = 0;
-                double mindelay = 0;
-                double maxdelay = 0;
-                int homerange = 0;
-                int spawnrange = 0;
-                int maxcount = 0;
-                string[] typenames = null;
-                if (args.Length != 11 && args.Length != 12)
-                {
-                    badspawn = true;
-                    from.SendMessage("Invalid arg count {1} at line {0}", linenumber, args.Length);
-                }
-                else
-                {
-                    // get the list of spawns
-                    typenames = args[1].Split(':');
-                    // parse the rest of the args
-
-                    if (args.Length == 11)
-                    {
-
-                        try
-                        {
-                            x = int.Parse(args[2]);
-                            y = int.Parse(args[3]);
-                            z = int.Parse(args[4]);
-                            map = int.Parse(args[5]);
-                            mindelay = double.Parse(args[6]);
-                            maxdelay = double.Parse(args[7]);
-                            homerange = int.Parse(args[8]);
-                            spawnrange = int.Parse(args[9]);
-                            maxcount = int.Parse(args[10]);
-
-                        }
-                        catch { from.SendMessage("Parsing error at line {0}", linenumber); badspawn = true; }
-                    }
-                    else
-                        if (args.Length == 12)
-                    {
-
-                        try
-                        {
-                            x = int.Parse(args[2]);
-                            y = int.Parse(args[3]);
-                            z = int.Parse(args[4]);
-                            map = int.Parse(args[5]);
-                            mindelay = double.Parse(args[6]);
-                            maxdelay = double.Parse(args[7]);
-                            homerange = int.Parse(args[8]);
-                            spawnrange = int.Parse(args[9]);
-                            int spawnid = int.Parse(args[10]);
-                            maxcount = int.Parse(args[11]);
-
-                        }
-                        catch { from.SendMessage("Parsing error at line {0}", linenumber); badspawn = true; }
-                    }
-                }
-
-
-                // apply mi/maxdelay overrides
-                if (overridemintime != -1)
-                {
-                    mindelay = overridemintime;
-                }
-                if (overridemaxtime != -1)
-                {
-                    maxdelay = overridemaxtime;
-                }
-                if (mindelay > maxdelay) maxdelay = mindelay;
-
-                if (!badspawn && typenames.Length > 0)
-                {
-                    // everything seems ok so go ahead and make the spawner
-                    // check for map override
-                    if (overridemap >= 0) map = overridemap;
-                    Map spawnmap = Map.Internal;
-                    switch (map)
-                    {
-                        case 0:
-                            spawnmap = Map.Felucca;
-                            // note it also does trammel
-                            break;
-                        case 1:
-                            spawnmap = Map.Felucca;
-                            break;
-                        case 2:
-                            spawnmap = Map.Trammel;
-                            break;
-                        case 3:
-                            spawnmap = Map.Ilshenar;
-                            break;
-                        case 4:
-                            spawnmap = Map.Malas;
-                            break;
-                        case 5:
-                            spawnmap = Map.Tokuno;
-                            break;
-                    }
-
-                    if (!IsValidMapLocation(x, y, spawnmap))
-                    {
-                        // invalid so dont spawn it
-                        badspawnercount++;
-                        from.SendMessage("Invalid map/location at line {0}", linenumber);
-                        from.SendMessage("Bad spawn at line {1}: {0}", line, linenumber);
-                        return;
-                    }
-
-                    // allow it to make an xmlspawner instead
-                    // first add all of the creatures on the list
-                    SpawnObject[] so = new SpawnObject[typenames.Length];
-
-                    bool hasvendor = true;
-                    for (int i = 0; i < typenames.Length; i++)
-                    {
-                        so[i] = new SpawnObject(typenames[i], maxcount);
-
-                        // check the type to see if there are vendors on it
-                        Type type = SpawnerType.GetType(typenames[i]);
-
-                        // check for vendor-only spawners which get special spawnrange treatment
-                        if (type != null && (type != typeof(BaseVendor) && !type.IsSubclassOf(typeof(BaseVendor))))
-                        {
-                            hasvendor = false;
-                        }
-
-                    }
-
-                    // assign it a unique id
-                    Guid SpawnId = Guid.NewGuid();
-
-                    // and give it a name based on the spawner count and file
-                    string spawnername = string.Format("{0}#{1}", Path.GetFileNameWithoutExtension(filename), spawnercount);
-
-                    // Create the new xml spawner
-                    XmlSpawner spawner = new XmlSpawner(SpawnId, x, y, 0, 0, spawnername, maxcount,
-                        TimeSpan.FromMinutes(mindelay), TimeSpan.FromMinutes(maxdelay), TimeSpan.FromMinutes(0), -1, defaultTriggerSound, 1,
-                        0, homerange, false, so, TimeSpan.FromMinutes(0), TimeSpan.FromMinutes(0), TimeSpan.FromMinutes(0),
-                        TimeSpan.FromMinutes(0), null, null, null, null, null,
-                        null, null, null, null, 1, null, false, defTODMode, defKillReset, false, -1, null, false, false, false, null,
-                        TimeSpan.FromHours(0), null, false, null);
-
-                    spawner.SpawnRange = hasvendor ? 0 : spawnrange;
-
-                    spawner.PlayerCreated = true;
-
-                    spawner.MoveToWorld(new Point3D(x, y, z), spawnmap);
-                    if (spawner.Map == Map.Internal)
-                    {
-                        badspawnercount++;
-                        spawner.Delete();
-                        from.SendMessage("Invalid map at line {0}", linenumber);
-                        from.SendMessage("Bad spawn at line {1}: {0}", line, linenumber);
-                        return;
-                    }
-                    spawnercount++;
-                    // handle the special case of map 0 that also needs to do trammel
-                    if (map == 0)
-                    {
-                        spawnmap = Map.Trammel;
-                        // assign it a unique id
-                        SpawnId = Guid.NewGuid();
-                        // Create the new xml spawner
-                        spawner = new XmlSpawner(SpawnId, x, y, 0, 0, spawnername, maxcount,
-                            TimeSpan.FromMinutes(mindelay), TimeSpan.FromMinutes(maxdelay), TimeSpan.FromMinutes(0), -1, defaultTriggerSound, 1,
-                            0, homerange, false, so, TimeSpan.FromMinutes(0), TimeSpan.FromMinutes(0), TimeSpan.FromMinutes(0),
-                            TimeSpan.FromMinutes(0), null, null, null, null, null,
-                            null, null, null, null, 1, null, false, defTODMode, defKillReset, false, -1, null, false, false, false, null,
-                            TimeSpan.FromHours(0), null, false, null)
-                        {
-                            SpawnRange = spawnrange,
-                            PlayerCreated = true
-                        };
-
-                        spawner.MoveToWorld(new Point3D(x, y, z), spawnmap);
-                        if (spawner.Map == Map.Internal)
-                        {
-                            badspawnercount++;
-                            spawner.Delete();
-                            from.SendMessage("Bad spawn at line {1}: {0}", line, linenumber);
-                            return;
-                        }
-                        spawnercount++;
-                    }
-                }
-                else
-                {
-                    badspawnercount++;
-                    from.SendMessage("Bad spawn at line {1}: {0}", line, linenumber);
-                }
-            }
-        }
-
         [Usage("XmlImportSpawners filename")]
         [Description("Loads xml files created by Sno's xml exporter as xmlspawners.")]
         public static void XmlImportSpawners_OnCommand(CommandEventArgs e)
@@ -5234,7 +4976,6 @@ namespace Server.Mobiles
 
             if (filename == null || filename.Length <= 0) return;
 
-
             // Check if the file exists
             if (File.Exists(filename))
             {
@@ -5324,7 +5065,6 @@ namespace Server.Mobiles
 
         public static void XmlLoadFromStream(Stream fs, string filename, string SpawnerPrefix, Mobile from, Point3D fromloc, Map frommap, bool loadrelative, int maxrange, bool loadnew, out int processedmaps, out int processedspawners, bool verbose)
         {
-
             processedmaps = 0;
             processedspawners = 0;
 
@@ -5332,7 +5072,6 @@ namespace Server.Mobiles
 
             // assign an id that will be used to distinguish the newly loaded spawners by appending it to their name
             Guid newloadid = Guid.NewGuid();
-
 
             int TotalCount = 0;
             int TrammelCount = 0;
@@ -5541,7 +5280,6 @@ namespace Server.Mobiles
                                 SpawnMap = frommap;
                             }
 
-
                             if (SpawnMap == Map.Internal) bad_spawner = true;
 
                             // Try load the IsRelativeHomeRange (default to true)
@@ -5682,18 +5420,6 @@ namespace Server.Mobiles
 
                             string SpawnObjectPropertyName = null;
                             try { SpawnObjectPropertyName = (string)dr["ObjectPropertyName"]; }
-                            catch { }
-
-                            // read in the object proximity target, this will be an object name, so have to do a search
-                            // to find the item in the world.  Also have to test for redundancy
-                            string triggerObjectName = null;
-                            try { triggerObjectName = (string)dr["ObjectPropertyItemName"]; }
-                            catch { }
-
-                            // read in the target for the set command, this will be an object name, so have to do a search
-                            // to find the item in the world.  Also have to test for redundancy
-                            string setObjectName = null;
-                            try { setObjectName = (string)dr["SetPropertyItemName"]; }
                             catch { }
 
                             // we will assign this during the self-reference resolution pass

@@ -229,7 +229,6 @@ namespace Server.Mobiles
 
             int team = int.Parse(GetText(node["team"], "0"));
 
-            bool.Parse(GetText(node["group"], "False"));
             TimeSpan maxDelay = TimeSpan.Parse(GetText(node["maxdelay"], "10:00"));
             TimeSpan minDelay = TimeSpan.Parse(GetText(node["mindelay"], "05:00"));
             List<string> creaturesName = LoadCreaturesName(node["creaturesname"]);
