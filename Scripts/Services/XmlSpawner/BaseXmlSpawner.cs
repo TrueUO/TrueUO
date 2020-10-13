@@ -1281,27 +1281,21 @@ namespace Server.Mobiles
 
             if (keywordargs[0] == "SERIAL")
             {
-                try
+                if (o is Mobile mobile)
                 {
-                    if (o is Mobile mobile)
-                    {
-                        ptype = mobile.Serial.GetType();
+                    ptype = mobile.Serial.GetType();
 
-                        return string.Format("Serial = {0}", mobile.Serial);
-                    }
-
-                    if (o is Item item)
-                    {
-                        ptype = item.Serial.GetType();
-
-                        return string.Format("Serial = {0}", item.Serial);
-                    }
-
-                    return "Object is not item/mobile";
+                    return string.Format("Serial = {0}", mobile.Serial);
                 }
-                catch { }
 
-                return "Serial not found.";
+                if (o is Item item)
+                {
+                    ptype = item.Serial.GetType();
+
+                    return string.Format("Serial = {0}", item.Serial);
+                }
+
+                return "Object is not item/mobile";
             }
 
             if (keywordargs[0] == "TYPE")
@@ -2507,39 +2501,33 @@ namespace Server.Mobiles
                             }
                             else if (kw == valuemodKeyword.TRIGSKILL)
                             {
-                                if (value_keywordargs.Length > 1)
+                                if (value_keywordargs.Length > 1 && spawner?.TriggerSkill != null)
                                 {
-                                    if (spawner?.TriggerSkill != null)
+                                    string skillstr = null;
+                                    // syntax is TRIGSKILL,name|value|cap|base
+                                    if (value_keywordargs[1].ToLower() == "name")
                                     {
-                                        string skillstr = null;
-                                        // syntax is TRIGSKILL,name|value|cap|base
-                                        if (value_keywordargs[1].ToLower() == "name")
-                                        {
-                                            skillstr = spawner.TriggerSkill.Name;
-                                        }
-                                        else
-                                            if (value_keywordargs[1].ToLower() == "value")
-                                        {
-                                            skillstr = spawner.TriggerSkill.Value.ToString();
-                                        }
-                                        else
-                                                if (value_keywordargs[1].ToLower() == "cap")
-                                        {
-                                            skillstr = spawner.TriggerSkill.Cap.ToString();
-                                        }
-                                        else
-                                                    if (value_keywordargs[1].ToLower() == "base")
-                                        {
-                                            skillstr = spawner.TriggerSkill.Base.ToString();
-                                        }
+                                        skillstr = spawner.TriggerSkill.Name;
+                                    }
+                                    else if (value_keywordargs[1].ToLower() == "value")
+                                    {
+                                        skillstr = spawner.TriggerSkill.Value.ToString();
+                                    }
+                                    else if (value_keywordargs[1].ToLower() == "cap")
+                                    {
+                                        skillstr = spawner.TriggerSkill.Cap.ToString();
+                                    }
+                                    else if (value_keywordargs[1].ToLower() == "base")
+                                    {
+                                        skillstr = spawner.TriggerSkill.Base.ToString();
+                                    }
 
-                                        string result = SetPropertyValue(spawner, o, arglist[0], skillstr);
-                                        // see if it was successful
-                                        if (result != "Property has been set.")
-                                        {
-                                            status_str = arglist[0] + " : " + result;
-                                            no_error = false;
-                                        }
+                                    string result = SetPropertyValue(spawner, o, arglist[0], skillstr);
+                                    // see if it was successful
+                                    if (result != "Property has been set.")
+                                    {
+                                        status_str = arglist[0] + " : " + result;
+                                        no_error = false;
                                     }
                                 }
                                 if (arglist.Length < 3) break;
@@ -2837,12 +2825,9 @@ namespace Server.Mobiles
                                 {
                                     item.Delete();
                                 }
-                                else if (o is Mobile mobile)
+                                else if (o is Mobile mobile && !mobile.Player)
                                 {
-                                    if (!mobile.Player)
-                                    {
-                                        mobile.Delete();
-                                    }
+                                    mobile.Delete();
                                 }
 
                                 if (arglist.Length < 2) break;
