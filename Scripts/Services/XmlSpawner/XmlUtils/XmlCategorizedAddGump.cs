@@ -124,11 +124,7 @@ namespace Server.Gumps
 
             if (xml.MoveToAttribute("title"))
             {
-                if (xml.Value == "Add Menu")
-                    m_Title = "XmlAdd Menu";
-                else
-                    m_Title = xml.Value;
-
+                m_Title = xml.Value == "Add Menu" ? "XmlAdd Menu" : xml.Value;
             }
             else
                 m_Title = "empty";
@@ -177,16 +173,7 @@ namespace Server.Gumps
 
         private static XmlAddCAGCategory m_Root;
 
-        public static XmlAddCAGCategory Root
-        {
-            get
-            {
-                if (m_Root == null)
-                    m_Root = Load("Data/objects.xml");
-
-                return m_Root;
-            }
-        }
+        public static XmlAddCAGCategory Root => m_Root ?? (m_Root = Load("Data/objects.xml"));
 
         public static XmlAddCAGCategory Load(string path)
         {

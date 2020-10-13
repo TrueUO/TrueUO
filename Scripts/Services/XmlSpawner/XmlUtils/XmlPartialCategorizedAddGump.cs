@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Reflection;
 using Server.Mobiles;
 using Server.Network;
@@ -106,14 +107,14 @@ namespace Server.Gumps
             public Type EntryType;
             public ParameterInfo[] Parameters;
         }
-        private static void Match(string match, Type[] types, ArrayList results)
+        private static void Match(string match, IReadOnlyList<Type> types, IList results)
         {
             if (match.Length == 0)
                 return;
 
             match = match.ToLower();
 
-            for (int i = 0; i < types.Length; ++i)
+            for (int i = 0; i < types.Count; ++i)
             {
                 Type t = types[i];
 

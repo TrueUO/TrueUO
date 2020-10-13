@@ -25,7 +25,7 @@ namespace Server.Mobiles
 
             AddPage(0);
 
-            int width = 370;
+            const int width = 370;
 
             AddBackground(20, 0, width, 480, 5054);
 
@@ -976,7 +976,6 @@ namespace Server.Mobiles
 
             if (ns?.Gumps != null)
             {
-
                 ArrayList refresh = new ArrayList();
 
                 foreach (Gump g in ns.Gumps)
@@ -992,12 +991,11 @@ namespace Server.Mobiles
                 // close all of the currently opened spawner gumps
                 from.CloseGump(typeof(XmlSpawnerGump));
 
-
                 // reopen the closed gumps from the gump collection
                 foreach (XmlSpawnerGump g in refresh)
                 {
                     // reopen a new gump for the spawner
-                    if (g.m_Spawner != null /*&& g.m_Spawner.SpawnerGump == g */)
+                    if (g.m_Spawner != null)
                     {
                         // flag the current gump on the spawner as closed
                         g.m_Spawner.GumpReset = true;
@@ -1010,8 +1008,7 @@ namespace Server.Mobiles
             }
         }
 
-
-        private bool ValidGotoObject(Mobile from, object o)
+        private static bool ValidGotoObject(Mobile from, object o)
         {
             if (o is Item i)
             {

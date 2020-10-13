@@ -255,7 +255,7 @@ namespace Server.Mobiles
 
                 }
 
-                Region r = Region.Regions.FirstOrDefault(reg => reg.Map == item.Map && !string.IsNullOrEmpty(reg.Name) && reg.Name.ToLower() == regionname.ToLower());
+                Region r = Region.Regions.FirstOrDefault(reg => reg.Map == item.Map && !string.IsNullOrEmpty(reg.Name) && string.Equals(reg.Name, regionname, StringComparison.CurrentCultureIgnoreCase));
 
                 if (r == null) return false;
                 return (r.Contains(loc));
@@ -264,7 +264,7 @@ namespace Server.Mobiles
 
             if (o is Mobile mob)
             {
-                Region r = Region.Regions.FirstOrDefault(reg => reg.Map == mob.Map && !string.IsNullOrEmpty(reg.Name) && reg.Name.ToLower() == regionname.ToLower());
+                Region r = Region.Regions.FirstOrDefault(reg => reg.Map == mob.Map && !string.IsNullOrEmpty(reg.Name) && string.Equals(reg.Name, regionname, StringComparison.CurrentCultureIgnoreCase));
 
                 if (r == null) return false;
                 return (r.Contains(mob.Location));
@@ -874,7 +874,7 @@ namespace Server.Mobiles
             m_SearchList = searchlist;
 
             // prepare the page
-            int height = 500;
+            const int height = 500;
             AddPage(0);
             if (m_ShowExtension)
             {
@@ -1795,7 +1795,7 @@ namespace Server.Mobiles
                     foreach (BaseCommand c in TargetCommands.AllCommands)
                     {
                         // find the matching command
-                        if (c.Commands[0].ToLower() == args[0].ToLower())
+                        if (string.Equals(c.Commands[0], args[0], StringComparison.CurrentCultureIgnoreCase))
                         {
                             bool flushToLog = false;
 

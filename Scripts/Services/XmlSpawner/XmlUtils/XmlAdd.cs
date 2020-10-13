@@ -338,16 +338,7 @@ namespace Server.Mobiles
             // Write out the file
             bool file_error = false;
             string dirname;
-            if (Directory.Exists(DefsDir))
-            {
-                // put it in the defaults directory if it exists
-                dirname = string.Format("{0}/{1}.defs", DefsDir, filename);
-            }
-            else
-            {
-                // otherwise just put it in the main installation dir
-                dirname = string.Format("{0}.defs", filename);
-            }
+            dirname = Directory.Exists(DefsDir) ? string.Format("{0}/{1}.defs", DefsDir, filename) : string.Format("{0}.defs", filename);
             try
             {
                 ds.WriteXml(dirname);
