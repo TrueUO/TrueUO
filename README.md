@@ -15,6 +15,7 @@
 #### Requirements
 
 [.NET Framework 4.8] Runtime and SDK
+[.NET Core 3.1] SDK
 
 
 #### Windows
