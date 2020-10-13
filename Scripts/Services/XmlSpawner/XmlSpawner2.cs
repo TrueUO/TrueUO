@@ -324,7 +324,6 @@ namespace Server.Mobiles
 
         private static int totalSectorsMonitored;
 
-
         public bool HasActiveSectors
         {
             get
@@ -585,7 +584,6 @@ namespace Server.Mobiles
         // does not perform a defrag, so less accurate but can be used while looping through world object enums
         public int SafeCurrentCount => SafeTotalSpawnedObjects;
 
-
         public bool FreeRun { get; set; }
 
         public bool CanFreeSpawn
@@ -602,7 +600,6 @@ namespace Server.Mobiles
                 return false;
             }
         }
-
 
         public SpawnObject[] SpawnObjects
         {
@@ -656,7 +653,6 @@ namespace Server.Mobiles
 
                 foreach (BaseXmlSpawner.KeywordTag sot in m_KeywordTagList)
                 {
-
                     // check for any keyword tag with the holdsequence flag
                     if (sot != null && !sot.Deleted && ((sot.Flags & BaseXmlSpawner.KeywordFlags.HoldSequence) != 0))
                     {
@@ -666,8 +662,8 @@ namespace Server.Mobiles
 
                 // no hold flags were set
                 return false;
-
             }
+
             set { m_HoldSequence = value; }
         }
 
@@ -675,9 +671,8 @@ namespace Server.Mobiles
         {
             get
             {
-                if (OnHold) return false;
-
-
+                if (OnHold)
+                    return false;
 
                 if (m_Group)
                 {
@@ -2671,7 +2666,6 @@ namespace Server.Mobiles
                     // keep track of the skill that triggered this
                     m_skill_that_triggered = s != null ? s.SkillName : XmlSpawnerSkillCheck.RegisteredSkill.Invalid;
 
-
                 }
                 else
                 {
@@ -2715,7 +2709,6 @@ namespace Server.Mobiles
                 }
             }
         }
-
 
         public override bool HandlesOnSpeech => (m_Running && SpeechTrigger != null && SpeechTrigger.Length > 0);
 
@@ -7759,7 +7752,6 @@ namespace Server.Mobiles
                     }
                 }
             }
-
         }
 
         // select and spawn something
@@ -7768,7 +7760,6 @@ namespace Server.Mobiles
         {
             if (m_SpawnObjects != null && m_SpawnObjects.Count > 0 && (m_proximityActivated || CanFreeSpawn) && TODInRange)
             {
-
                 m_HoldSequence = false;
 
                 // if the spawner is full then dont bother
@@ -8653,7 +8644,9 @@ namespace Server.Mobiles
         }
         public static bool IsValidMapLocation(Point2D location, Map map)
         {
-            if (map == null || map == Map.Internal) return false;
+            if (map == null || map == Map.Internal)
+                return false;
+
             // check the location relative to the current map to make sure it is valid
             if (location.X < 0 || location.X > map.Width || location.Y < 0 || location.Y > map.Height)
             {

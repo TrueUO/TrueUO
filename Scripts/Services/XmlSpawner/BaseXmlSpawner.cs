@@ -278,7 +278,6 @@ namespace Server.Mobiles
 
         private static readonly char[] slashdelim = new char[1] { '/' };
         private static readonly char[] commadelim = new char[1] { ',' };
-        private static readonly char[] spacedelim = new char[1] { ' ' };
         private static readonly char[] semicolondelim = new char[1] { ';' };
         private static readonly char[] literalend = new char[1] { '§' };
         #endregion
@@ -647,7 +646,7 @@ namespace Server.Mobiles
                 protected override void OnTick()
                 {
                     // if a condition is available then test it
-                    if (m_Condition != null && m_Condition.Length > 0 && m_Spawner != null && m_Spawner.Running)
+                    if (!string.IsNullOrEmpty(m_Condition) && m_Spawner != null && m_Spawner.Running)
                     {
                         // if the test is valid then terminate the timer
                         string status_str;
@@ -1304,7 +1303,8 @@ namespace Server.Mobiles
 
                 return "Serial not found.";
             }
-            else if (keywordargs[0] == "TYPE")
+
+            if (keywordargs[0] == "TYPE")
             {
                 ptype = typeof(Type);
 
@@ -1547,7 +1547,7 @@ namespace Server.Mobiles
 
                     //string[] value_keywordargs = ParseString(groupedarglist[0],10,",");
                     string[] value_keywordargs = groupedarglist[0].Trim().Split(',');
-                    if (groupargstring != null && groupargstring.Length > 0)
+                    if (!string.IsNullOrEmpty(groupargstring))
                     {
 
                         if (value_keywordargs != null && value_keywordargs.Length > 0)
@@ -3509,7 +3509,7 @@ namespace Server.Mobiles
             // need to handle comma args that may be grouped with the () such as the (ATTACHMENT,args) arg
 
             string[] arglist = groupedarglist[0].Trim().Split(',');
-            if (groupargstring != null && groupargstring.Length > 0)
+            if (!string.IsNullOrEmpty(groupargstring))
             {
                 if (arglist.Length > 0)
                     arglist[arglist.Length - 1] = groupargstring;
@@ -4052,7 +4052,7 @@ namespace Server.Mobiles
 
             if (o == null) return false;
 
-            if (testString == null || testString.Length < 1)
+            if (string.IsNullOrEmpty(testString))
             {
                 status_str = "Null property test string";
                 return false;
@@ -4795,9 +4795,9 @@ namespace Server.Mobiles
                     if (item != null && !item.Deleted)
                     {
 
-                        if (item is Container)
+                        if (item is Container container)
                         {
-                            Item itemTarget = SearchPackForItem((Container)item, targetName, typestr);
+                            Item itemTarget = SearchPackForItem(container, targetName, typestr);
 
                             if (itemTarget != null) return itemTarget;
                         }
@@ -5569,7 +5569,7 @@ namespace Server.Mobiles
             // go through the string looking for instances of {keyword}
             string remaining = typeName;
 
-            while (remaining != null && remaining.Length > 0)
+            while (!string.IsNullOrEmpty(remaining))
             {
 
                 int startindex = remaining.IndexOf('{');
@@ -5646,7 +5646,7 @@ namespace Server.Mobiles
                 // find the first arg if it is there
                 string[] typeargs = null;
                 int argstart = 0;
-                if (itemtypestring != null && itemtypestring.Length > 0)
+                if (!string.IsNullOrEmpty(itemtypestring))
                     argstart = itemtypestring.IndexOf(",") + 1;
 
                 if (argstart > 1 && argstart < itemtypestring.Length)
@@ -6808,7 +6808,7 @@ namespace Server.Mobiles
                                     targetspawner = FindSpawnerByName(spawner, spawnerstr);
                                 }
                             }
-                            if (entrystring == null || entrystring.Length == 0)
+                            if (string.IsNullOrEmpty(entrystring))
                             {
                                 status_str = "invalid entrystring in SETONSPAWNENTRY";
                                 return false;
@@ -8004,7 +8004,7 @@ namespace Server.Mobiles
         /// <exception cref="ArgumentException"> TEnum is not an enumeration type. </exception>
         public static bool TryParse<TEnum>(string tocheck, bool ignorecase, out TEnum result) where TEnum : struct, IConvertible
         {
-            bool boolean = (tocheck == null ? false : Enum.IsDefined(typeof(TEnum), tocheck));
+            bool boolean = tocheck != null && Enum.IsDefined(typeof(TEnum), tocheck);
             result = (boolean ? (TEnum)Enum.Parse(typeof(TEnum), tocheck) : default);
             return boolean;
         }
