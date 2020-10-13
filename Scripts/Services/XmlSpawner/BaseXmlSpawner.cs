@@ -3494,12 +3494,11 @@ namespace Server.Mobiles
             // need to handle comma args that may be grouped with the () such as the (ATTACHMENT,args) arg
 
             string[] arglist = groupedarglist[0].Trim().Split(',');
-            if (!string.IsNullOrEmpty(groupargstring))
-            {
-                if (arglist.Length > 0)
-                    arglist[arglist.Length - 1] = groupargstring;
-            }
 
+            if (!string.IsNullOrEmpty(groupargstring) && arglist.Length > 0)
+            {
+                arglist[arglist.Length - 1] = groupargstring;
+            }
 
             string pname = arglist[0].Trim();
             char startc = str[0];

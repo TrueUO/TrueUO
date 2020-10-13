@@ -837,7 +837,6 @@ namespace Server.Mobiles
             }
         }
 
-
         [CommandProperty(AccessLevel.GameMaster)]
         public Point3D X1_Y1
         {
@@ -1334,7 +1333,6 @@ namespace Server.Mobiles
             }
         }
 
-
         // proximity range activated?
         [CommandProperty(AccessLevel.GameMaster)]
         public bool ProximityActivated
@@ -1508,7 +1506,6 @@ namespace Server.Mobiles
 
         [CommandProperty(AccessLevel.GameMaster)]
         public AccessLevel TriggerAccessLevel { get; set; } = AccessLevel.Player;
-
 
         [CommandProperty(AccessLevel.GameMaster)]
         public bool DoRespawn
@@ -1784,7 +1781,6 @@ namespace Server.Mobiles
                 IgnoreLocationChange = false;
                 return;
             }
-
 
             // calculate the positional shift
             if (oldLocation.X > 0 && oldLocation.Y > 0)
@@ -4370,26 +4366,23 @@ namespace Server.Mobiles
                             XmlSpawner OldSpawner = null;
                             foreach (Item i in World.Items.Values)
                             {
-                                if (i is XmlSpawner checkXmlSpawner)
-                                {
-                                    // Check if the spawners GUID is the same as the one being unloaded
-                                    // and that the spawners map is the same as the one being unloaded
-                                    if ((checkXmlSpawner.UniqueId == SpawnId.ToString())
-                                        /*&& ( CheckXmlSpawner.Map == SpawnMap )*/ )
-                                    {
-                                        OldSpawner = checkXmlSpawner;
-                                        if (OldSpawner != null)
-                                        {
-                                            spawners_deleted++;
-                                            OldSpawner.Delete();
-                                        }
+                                // Check if the spawners GUID is the same as the one being unloaded
+                                // and that the spawners map is the same as the one being unloaded
 
-                                        break;
+                                if (i is XmlSpawner checkXmlSpawner && checkXmlSpawner.UniqueId == SpawnId.ToString())
+                                {
+                                    OldSpawner = checkXmlSpawner;
+                                    if (OldSpawner != null)
+                                    {
+                                        spawners_deleted++;
+                                        OldSpawner.Delete();
                                     }
+
+                                    break;
                                 }
                             }
-
                         }
+
                         TotalCount++;
                     }
                 }
@@ -5479,16 +5472,12 @@ namespace Server.Mobiles
                             {
                                 foreach (Item i in World.Items.Values)
                                 {
-                                    if (i is XmlSpawner checkXmlSpawner)
+                                    // Check if the spawners GUID is the same as the one being loaded
+                                    // and that the spawners map is the same as the one being loaded
+                                    if (i is XmlSpawner checkXmlSpawner && checkXmlSpawner.UniqueId == SpawnId.ToString())
                                     {
-                                        // Check if the spawners GUID is the same as the one being loaded
-                                        // and that the spawners map is the same as the one being loaded
-                                        if ((checkXmlSpawner.UniqueId == SpawnId.ToString())
-                                            /* && ( CheckXmlSpawner.Map == SpawnMap || loadrelative)*/ )
-                                        {
-                                            OldSpawner = checkXmlSpawner;
-                                            found_spawner = true;
-                                        }
+                                        OldSpawner = checkXmlSpawner;
+                                        found_spawner = true;
                                     }
 
                                     //look for containers with the spawn coordinates if the incontainer flag is set
@@ -6325,9 +6314,9 @@ namespace Server.Mobiles
                 // check to see if this is in a container
                 if (sp.RootParent is Container container)
                 {
-                    dr["CentreX"] = ((Container)container).Location.X;
-                    dr["CentreY"] = ((Container)container).Location.Y;
-                    dr["CentreZ"] = ((Container)container).Location.Z;
+                    dr["CentreX"] = container.Location.X;
+                    dr["CentreY"] = container.Location.Y;
+                    dr["CentreZ"] = container.Location.Z;
                     dr["ContainerX"] = sp.Location.X;
                     dr["ContainerY"] = sp.Location.Y;
                     dr["ContainerZ"] = sp.Location.Z;
@@ -7104,17 +7093,14 @@ namespace Server.Mobiles
                 for (int x = 0; x < so.SpawnedObjects.Count; x++)
                 {
                     object o = so.SpawnedObjects[x];
-                    if (o is BaseXmlSpawner.KeywordTag sot)
+
+                    if (o is BaseXmlSpawner.KeywordTag sot && sot == tag)
                     {
                         // clear the matching tags
-                        if (sot == tag)
-                        {
-                            ToDelete.Add(sot);
-                            so.SpawnedObjects.Remove(o);
-                            x--;
-                            removed = true;
-                        }
-
+                        ToDelete.Add(sot);
+                        so.SpawnedObjects.Remove(o);
+                        x--;
+                        removed = true;
                     }
                 }
             }
