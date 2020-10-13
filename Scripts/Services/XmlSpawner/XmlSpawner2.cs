@@ -5377,7 +5377,7 @@ namespace Server.Mobiles
             if (fileerror) return;
 
             // Check that at least a single table was loaded
-            if (ds.Tables != null && ds.Tables.Count > 0)
+            if (ds.Tables.Count > 0)
             {
                 // Add each spawn point to the current map
                 if (ds.Tables[SpawnTablePointName] != null && ds.Tables[SpawnTablePointName].Rows.Count > 0)
@@ -5861,16 +5861,11 @@ namespace Server.Mobiles
                                 {
                                     DisableGlobalAutoReset = TickReset
                                 };
-                                //TheSpawn.Group = SpawnIsGroup;\
-
 
                                 // Try to find a valid Z height if required (SpawnCentreZ = short.MinValue)
                                 int NewZ = 0;
 
-
                                 // Check if relative loading is set.  If so then try loading at the z-offset position first with no surface requirement, then try auto
-                                /*if(loadrelative && SpawnMap.CanFit( SpawnCentreX, SpawnCentreY, OrigZ - SpawnRelZ, SpawnFitSize,true, false,false )) */
-
                                 if (loadrelative && HasTileSurface(SpawnMap, SpawnCentreX, SpawnCentreY, OrigZ - SpawnRelZ))
                                 {
 

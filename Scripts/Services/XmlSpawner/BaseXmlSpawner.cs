@@ -144,7 +144,7 @@ namespace Server.Mobiles
             // test the type
             Type objecttype = o.GetType();
             Type targettype = SpawnerType.GetType(typename);
-            if (objecttype != null && targettype != null && (objecttype.Equals(targettype) || objecttype.IsSubclassOf(targettype)))
+            if (targettype != null && (objecttype.Equals(targettype) || objecttype.IsSubclassOf(targettype)))
             {
                 return true;
 
@@ -1282,7 +1282,6 @@ namespace Server.Mobiles
 
             if (keywordargs[0] == "SERIAL")
             {
-                bool found;
                 try
                 {
                     if (o is Mobile mobile)
@@ -1301,10 +1300,9 @@ namespace Server.Mobiles
 
                     return "Object is not item/mobile";
                 }
-                catch { found = false; }
+                catch { }
 
-                if (!found)
-                    return "Serial not found.";
+                return "Serial not found.";
             }
             else if (keywordargs[0] == "TYPE")
             {
@@ -1315,7 +1313,6 @@ namespace Server.Mobiles
             }
             else if (keywordargs[0] == "STEALABLE")
             {
-                bool found;
                 try
                 {
                     if (o is Item item)
@@ -1326,10 +1323,9 @@ namespace Server.Mobiles
 
                     return "Object is not an item";
                 }
-                catch { found = false; }
+                catch { }
 
-                if (!found)
-                    return "Stealable flag not found.";
+                return "Stealable flag not found.";
             }
 
             // do a bit of parsing to handle array references
@@ -3515,7 +3511,7 @@ namespace Server.Mobiles
             string[] arglist = groupedarglist[0].Trim().Split(',');
             if (groupargstring != null && groupargstring.Length > 0)
             {
-                if (arglist != null && arglist.Length > 0)
+                if (arglist.Length > 0)
                     arglist[arglist.Length - 1] = groupargstring;
             }
 
@@ -3884,7 +3880,6 @@ namespace Server.Mobiles
                     int amount = 0;
 
                     string typestr = arglist[1];
-                    if (typestr != null)
                     {
                         string namestr = "*";
                         bool banksearch = false;
@@ -4230,7 +4225,7 @@ namespace Server.Mobiles
                         status_str = "invalid timespan comparison : {0}" + testString;
                     }
                 }
-                else if (haslessthan)
+                else
                 {
                     TimeSpan ts1, ts2;
                     if (TimeSpan.TryParse(value1, out ts1) && TimeSpan.TryParse(value2, out ts2))
@@ -4283,7 +4278,7 @@ namespace Server.Mobiles
                         status_str = "invalid DateTime comparison : {0}" + testString;
                     }
                 }
-                else if (haslessthan)
+                else
                 {
                     DateTime dt1, dt2;
                     if (DateTime.TryParse(value1, out dt1) && DateTime.TryParse(value2, out dt2))
@@ -4328,7 +4323,7 @@ namespace Server.Mobiles
                     }
                     catch { status_str = "invalid int comparison : {0}" + testString; }
                 }
-                else if (haslessthan)
+                else
                 {
                     try
                     {
@@ -4369,7 +4364,7 @@ namespace Server.Mobiles
                     }
                     catch { status_str = "invalid int comparison : {0}" + testString; }
                 }
-                else if (haslessthan)
+                else
                 {
                     try
                     {
@@ -4410,7 +4405,7 @@ namespace Server.Mobiles
                     }
                     catch { status_str = "invalid int comparison : {0}" + testString; }
                 }
-                else if (haslessthan)
+                else
                 {
                     try
                     {
@@ -4456,7 +4451,7 @@ namespace Server.Mobiles
                     }
                     else { status_str = "invalid int comparison : {0}" + testString; }
                 }
-                else if (haslessthan)
+                else
                 {
                     if (double.TryParse(value1, NumberStyles.Any, CultureInfo.InvariantCulture, out val1) && double.TryParse(value2, NumberStyles.Any, CultureInfo.InvariantCulture, out val2))
                     {
@@ -4514,7 +4509,7 @@ namespace Server.Mobiles
                     }
                     else { status_str = "invalid double comparison : {0}" + testString; }
                 }
-                else if (haslessthan)
+                else
                 {
                     if (double.TryParse(value1, NumberStyles.Any, CultureInfo.InvariantCulture, out val1) && double.TryParse(value2, NumberStyles.Any, CultureInfo.InvariantCulture, out val2))
                     {
@@ -4561,7 +4556,7 @@ namespace Server.Mobiles
                     Type itemtype = i.GetType();
 
                     if (!i.Deleted && CheckNameMatch(targetname, i.Name) && (typestr == null ||
-                        (itemtype != null && targettype != null && (itemtype.Equals(targettype) || itemtype.IsSubclassOf(targettype)))))
+                        (targettype != null && (itemtype.Equals(targettype) || itemtype.IsSubclassOf(targettype)))))
                     {
                         if (proptest == null || CheckPropertyString(null, i, proptest, null, out status_str))
                             nearbylist.Add(i);
@@ -4612,7 +4607,7 @@ namespace Server.Mobiles
                         }
                         else
                             if (!i.Deleted && CheckNameMatch(targetname, i.Name) && (typestr == null ||
-                                (itemtype != null && targettype != null && (itemtype.Equals(targettype) || itemtype.IsSubclassOf(targettype)))))
+                                (targettype != null && (itemtype.Equals(targettype) || itemtype.IsSubclassOf(targettype)))))
                         {
                             if (proptest == null || CheckPropertyString(null, i, proptest, null, out status_str))
                                 nearbylist.Add(i);
@@ -5089,7 +5084,7 @@ namespace Server.Mobiles
                 {
 
                     if (typestr == null ||
-                        (itemtype != null && targettype != null && (itemtype.Equals(targettype) || itemtype.IsSubclassOf(targettype))))
+                        (targettype != null && (itemtype.Equals(targettype) || itemtype.IsSubclassOf(targettype))))
                     {
                         founditem = item;
                         count++;
@@ -5132,7 +5127,7 @@ namespace Server.Mobiles
             {
                 Type mobtype = mobile.GetType();
                 if (!mobile.Deleted && ((name.Length == 0 || string.Compare(mobile.Name, name, true) == 0)) && (typestr == null ||
-                    (mobtype != null && targettype != null && (mobtype.Equals(targettype) || mobtype.IsSubclassOf(targettype)))))
+                    (targettype != null && (mobtype.Equals(targettype) || mobtype.IsSubclassOf(targettype)))))
                 {
 
                     foundmobile = mobile;
@@ -5299,7 +5294,7 @@ namespace Server.Mobiles
                     if (name.Length == 0 || string.Compare(item.Name, name, true) == 0)
                 {
                     if (typestr == null ||
-                        (item.GetType() != null && targettype != null && (item.GetType().Equals(targettype) || item.GetType().IsSubclassOf(targettype))))
+                        (targettype != null && (item.GetType().Equals(targettype) || item.GetType().IsSubclassOf(targettype))))
                     {
                         founditem = item;
                         break;
@@ -5361,7 +5356,7 @@ namespace Server.Mobiles
                 {
 
                     if (typestr == null ||
-                        (m.GetType() != null && targettype != null && (m.GetType().Equals(targettype) || m.GetType().IsSubclassOf(targettype))))
+                        (targettype != null && (m.GetType().Equals(targettype) || m.GetType().IsSubclassOf(targettype))))
                     {
                         foundmobile = m;
                         break;
@@ -5806,7 +5801,7 @@ namespace Server.Mobiles
             int lastindex = 0;
             int index = 0;
             List<string> strargs = new List<string>();
-            while (index >= 0)
+            while (true)
             {
                 // go through the string and find the first instance of the separator
                 index = str.IndexOf(separator);
@@ -6621,11 +6616,9 @@ namespace Server.Mobiles
                     case typeKeyword.SETONPETS:
                         {
                             // the syntax is SETONPETS,range[,name]/prop/value/prop/value...
-
                             string[] arglist = ParseSlashArgs(substitutedtypeName, 3);
                             string typestr = "BaseCreature";
                             string targetname = "*";
-                            bool searchcontainers = false;
 
                             int range;
                             if (arglist.Length > 0)
@@ -6656,13 +6649,10 @@ namespace Server.Mobiles
 
                             Type targettype = null;
 
-                            if (typestr != null)
-                            {
-                                targettype = SpawnerType.GetType(typestr);
-                            }
+                            targettype = SpawnerType.GetType(typestr);
 
                             // get all of the nearby pets
-                            List<object> nearbylist = GetNearbyObjects(triggermob, targetname, targettype, typestr, range, searchcontainers, null);
+                            List<object> nearbylist = GetNearbyObjects(triggermob, targetname, targettype, typestr, range, false, null);
 
                             // apply the properties to everything on the list
                             foreach (object nearbyobj in nearbylist)
@@ -7822,7 +7812,7 @@ namespace Server.Mobiles
 
                                     // get the targeting method from the spell
                                     // note, the precedence is important as the target call should override oncast if it is present
-                                    if (spelltype != null && (spelltargetmethod = spelltype.GetMethod("Target")) != null)
+                                    if ((spelltargetmethod = spelltype.GetMethod("Target")) != null)
                                     {
 
                                     }
