@@ -65,8 +65,7 @@ namespace Server.Mobiles
         private const int MaxSmartSectorListSize = 1024;        // maximum sector list size for use in smart spawning. This gives a 512x512 tile range.
 
         private static string defwaypointname;            // default waypoint name will get assigned in Initialize
-        private const string XmlTableName = "Properties";
-        private const string XmlDataSetName = "XmlSpawner";
+
         public static AccessLevel DiskAccessLevel = AccessLevel.Administrator; // minimum access level required by commands that can access the disk such as XmlLoad, XmlSave, and the Save function of XmlEdit
 #if (RESTRICTCONSTRUCTABLE)
 		public static AccessLevel ConstructableAccessLevel = AccessLevel.GameMaster; // only allow spawning of objects that have Constructable access restrictions at this level or lower. Must define RESTRICTCONSTRUCTABLE to enable this.
@@ -359,10 +358,10 @@ namespace Server.Mobiles
                     // is this container held?
                     if (Parent != null)
                     {
-                        if (RootParent is Mobile mobile)
+                        if (RootParent is Mobile)
                             loc = ((Mobile)RootParent).Location;
                         else
-                            if (RootParent is Item item)
+                            if (RootParent is Item)
                             loc = ((Item)RootParent).Location;
                     }
 
@@ -1269,20 +1268,7 @@ namespace Server.Mobiles
                 InvalidateProperties();
             }
         }
-        [CommandProperty(AccessLevel.GameMaster)]
-        public TimeSpan DurationOver
-        {
-            get
-            {
-                if (m_durActivated)
-                    return m_DurEnd - DateTime.UtcNow;
-                return TimeSpan.FromSeconds(0);
-            }
-            set
-            {
-                DoTimer2(value);
-            }
-        }
+
         // proximity range parameter
         [CommandProperty(AccessLevel.GameMaster)]
         public int ProximityRange
@@ -2670,10 +2656,6 @@ namespace Server.Mobiles
                         spawner.RegionName = spawner.RegionName;    // invoke set(RegionName)
                         regional++;
                     }
-
-                    // check for smart spawning and restart timers after deser if needed
-                    // note, HasActiveSectors will recalculate the sector list and UseSectorActivate property
-                    bool recalc_sectors = spawner.HasActiveSectors;
 
                     spawner.RestoreISpawner();
                 }
@@ -9236,7 +9218,7 @@ namespace Server.Mobiles
             // Find the spawn object and increment its count by one
             foreach (SpawnObject so in m_SpawnObjects)
             {
-                if (String.Equals(so.TypeName, SpawnObjectName, StringComparison.CurrentCultureIgnoreCase))
+                if (string.Equals(so.TypeName, SpawnObjectName, StringComparison.CurrentCultureIgnoreCase))
                 {
 
                     // Add one to the total count
@@ -9273,7 +9255,7 @@ namespace Server.Mobiles
                 // Find the spawn object and increment its count by one
                 foreach (SpawnObject so in m_SpawnObjects)
                 {
-                    if (String.Equals(so.TypeName, SpawnObjectName, StringComparison.CurrentCultureIgnoreCase))
+                    if (string.Equals(so.TypeName, SpawnObjectName, StringComparison.CurrentCultureIgnoreCase))
                     {
                         // Set the spawn
                         TheSpawn = so;
