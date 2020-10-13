@@ -151,11 +151,9 @@ namespace Server.Mobiles
             if (targettype != null && (objecttype.Equals(targettype) || objecttype.IsSubclassOf(targettype)))
             {
                 return true;
-
             }
 
             return false;
-
         }
 
         private enum typeKeyword
@@ -5457,7 +5455,6 @@ namespace Server.Mobiles
 
                         // and get the type info from it
                         itemtypestr = tempitemarg[0];
-
                     }
                     else
                     {
@@ -5466,10 +5463,8 @@ namespace Server.Mobiles
                     }
 
                     // test the drop probability
-                    if (Utility.RandomDouble() >= drop_probability) return true;
-
-                    // is it a valid item specification?
-                    string baseitemtype = ParseObjectType(itemtypestr);
+                    if (Utility.RandomDouble() >= drop_probability)
+                        return true;
 
                     Type type = SpawnerType.GetType(ParseObjectType(itemtypestr));
 
@@ -5503,7 +5498,6 @@ namespace Server.Mobiles
 
                             return false;
                         }
-
                     }
                     else
                     {
@@ -5546,7 +5540,6 @@ namespace Server.Mobiles
 
             while (!string.IsNullOrEmpty(remaining))
             {
-
                 int startindex = remaining.IndexOf('{');
 
                 if (startindex == -1 || startindex + 1 >= remaining.Length)

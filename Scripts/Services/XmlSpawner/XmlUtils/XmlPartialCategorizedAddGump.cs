@@ -13,12 +13,11 @@ namespace Server.Gumps
         private readonly ArrayList m_SearchResults;
         private readonly int m_Page;
         private readonly Gump m_Gump;
-        private readonly int m_EntryIndex = -1;
+        private readonly int m_EntryIndex;
         private readonly XmlSpawner m_Spawner;
 
         public XmlPartialCategorizedAddGump(Mobile from, string searchString, int page, ArrayList searchResults, bool explicitSearch, int entryindex, Gump gump) : base(50, 50)
         {
-
             if (gump is XmlSpawnerGump spawnerGump)
             {
                 // keep track of the spawner for xmlspawnergumps
@@ -27,7 +26,6 @@ namespace Server.Gumps
 
             // keep track of the gump
             m_Gump = gump;
-
 
             m_SearchString = searchString;
             m_SearchResults = searchResults;
@@ -124,7 +122,7 @@ namespace Server.Gumps
 
                     for (int j = 0; j < ctors.Length; ++j)
                     {
-                        if ( /*ctors[j].GetParameters().Length == 0 && */ ctors[j].IsDefined(typeof(ConstructableAttribute), false))
+                        if (ctors[j].IsDefined(typeof(ConstructableAttribute), false))
                         {
                             SearchEntry s = new SearchEntry
                             {
@@ -172,7 +170,6 @@ namespace Server.Gumps
             }
         }
 
-
         public override void OnResponse(NetState sender, RelayInfo info)
         {
             Mobile from = sender.Mobile;
@@ -216,7 +213,6 @@ namespace Server.Gumps
 
                         if (index >= 0 && index < m_SearchResults.Count)
                         {
-
                             Type type = ((SearchEntry)m_SearchResults[index]).EntryType;
 
                             if (m_Gump is XmlAddGump mXmlAddGump && type != null)
@@ -234,7 +230,6 @@ namespace Server.Gumps
 
                                 if (xg != null)
                                 {
-
                                     xg.Rentry = new XmlSpawnerGump.ReplacementEntry
                                     {
                                         Typename = type.Name,
@@ -243,8 +238,6 @@ namespace Server.Gumps
                                     };
 
                                     Timer.DelayCall(TimeSpan.Zero, new TimerStateCallback(XmlSpawnerGump.Refresh_Callback), new object[] { from });
-                                    //from.CloseGump(typeof(XmlSpawnerGump));
-                                    //from.SendGump( new XmlSpawnerGump(xg.m_Spawner, xg.X, xg.Y, xg.m_ShowGump, xg.xoffset, xg.page, xg.Rentry) );
                                 }
                             }
                         }
