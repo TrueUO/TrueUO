@@ -268,10 +268,8 @@ namespace Server.Mobiles
                     {
                         object o = so.SpawnedObjects[x];
 
-                        if (o is BaseCreature)
+                        if (o is BaseCreature b)
                         {
-                            BaseCreature b = (BaseCreature)o;
-
                             // if the mob is damaged or outside of smartspawning detection range then return true
                             if ((b.Hits < b.HitsMax) || (b.Mana < b.ManaMax) || (b.Stam < b.StamMax) || (b.Map != Map))
                             {
@@ -362,10 +360,10 @@ namespace Server.Mobiles
                     // is this container held?
                     if (Parent != null)
                     {
-                        if (RootParent is Mobile)
+                        if (RootParent is Mobile mobile)
                             loc = ((Mobile)(RootParent)).Location;
                         else
-                            if (RootParent is Item)
+                            if (RootParent is Item item)
                             loc = ((Item)(RootParent)).Location;
                     }
 
@@ -1622,13 +1620,13 @@ namespace Server.Mobiles
                 for (int i = 0; i < so.SpawnedObjects.Count; ++i)
                 {
                     object o = so.SpawnedObjects[i];
-                    if (o is Item)
+                    if (o is Item item)
                     {
-                        ((Item)o).Spawner = this;
+                        item.Spawner = this;
                     }
-                    else if (o is Mobile)
+                    else if (o is Mobile mobile)
                     {
-                        ((Mobile)o).Spawner = this;
+                        mobile.Spawner = this;
                     }
                 }
             }
@@ -1843,9 +1841,8 @@ namespace Server.Mobiles
         public static void SpawnerGumpCallback(Mobile from, object invoker, string response)
         {
             // assign the response to the gumpstate
-            if (invoker is XmlSpawner)
+            if (invoker is XmlSpawner xs)
             {
-                XmlSpawner xs = (XmlSpawner)invoker;
                 xs.GumpState = response;
             }
         }
@@ -3169,10 +3166,10 @@ namespace Server.Mobiles
 
             foreach (Item item in World.Items.Values)
             {
-                if (item is XmlSpawner)
+                if (item is XmlSpawner xmlSpawner)
                 {
                     count++;
-                    XmlSpawner spawner = ((XmlSpawner)item);
+                    XmlSpawner spawner = xmlSpawner;
 
                     if (spawner.RegionName != null && spawner.RegionName != string.Empty)
                     {
@@ -3312,7 +3309,6 @@ namespace Server.Mobiles
             }
         }
 
-
         // added in targeting for the [xmlhome command
         private class XmlHomeTarget : Target
         {
@@ -3327,24 +3323,22 @@ namespace Server.Mobiles
             {
                 XmlSpawner spawner = null;
 
-                if (targeted is XmlSpawner)
+                if (targeted is XmlSpawner xmlSpawner)
                 {
                     if (m_e.GetString(0) == "status")
                     {
-                        ((XmlSpawner)targeted).ReportStatus();
+                        xmlSpawner.ReportStatus();
                         return;
                     }
                 }
 
-
-                if (targeted is Mobile)
+                if (targeted is Mobile mobile1)
                 {
-                    spawner = ((Mobile)targeted).Spawner as XmlSpawner;
+                    spawner = mobile1.Spawner as XmlSpawner;
                 }
-                else
-                    if (targeted is Item)
+                else if (targeted is Item item)
                 {
-                    spawner = ((Item)targeted).Spawner as XmlSpawner;
+                    spawner = item.Spawner as XmlSpawner;
                 }
 
                 if (spawner == null)
@@ -3377,21 +3371,20 @@ namespace Server.Mobiles
                                     from.SendMessage("Spawner is in a container");
                                 }
                             }
-                            else
-                                if (m_e.GetString(0) == "send")
+                            else if (m_e.GetString(0) == "send")
                             {
                                 // make sure the spawner is not in a container.
                                 if (spawner.Parent == null)
                                 {
-                                    if (o is Item)
+                                    if (o is Item item)
                                     {
-                                        ((Item)o).Location = new Point3D(spawner.Location);
-                                        ((Item)o).Map = spawner.Map;
+                                        item.Location = new Point3D(spawner.Location);
+                                        item.Map = spawner.Map;
                                     }
-                                    if (o is Mobile)
+                                    if (o is Mobile mobile)
                                     {
-                                        ((Mobile)o).Location = new Point3D(spawner.Location);
-                                        ((Mobile)o).Map = spawner.Map;
+                                        mobile.Location = new Point3D(spawner.Location);
+                                        mobile.Map = spawner.Map;
                                     }
                                 }
                                 else
@@ -3399,8 +3392,7 @@ namespace Server.Mobiles
                                     from.SendMessage("Spawner is in a container");
                                 }
                             }
-                            else
-                                    if (m_e.GetString(0) == "gump")
+                            else if (m_e.GetString(0) == "gump")
                             {
                                 spawner.OnDoubleClick(from);
                             }
@@ -3878,19 +3870,18 @@ namespace Server.Mobiles
             {
                 // does the spawner already have a static attached to it? could happen if two showall commands are issued in a row.
                 // if so then dont add another
-                if ((xml_item.m_ShowContainerStatic == null || xml_item.m_ShowContainerStatic.Deleted) && xml_item.RootParent is Container)
+                if ((xml_item.m_ShowContainerStatic == null || xml_item.m_ShowContainerStatic.Deleted) && xml_item.RootParent is Container rootItem)
                 {
-                    Container root_item = (Container)xml_item.RootParent;
                     // calculate a world location for the static.  Position it just above the container
-                    int x = root_item.Location.X;
-                    int y = root_item.Location.Y;
-                    int z = root_item.Location.Z + 10;
+                    int x = rootItem.Location.X;
+                    int y = rootItem.Location.Y;
+                    int z = rootItem.Location.Z + 10;
 
                     Static s = new Static(ShowItemId)
                     {
                         Visible = false
                     };
-                    s.MoveToWorld(new Point3D(x, y, z), root_item.Map);
+                    s.MoveToWorld(new Point3D(x, y, z), rootItem.Map);
 
                     xml_item.m_ShowContainerStatic = s;
                 }
@@ -3906,19 +3897,18 @@ namespace Server.Mobiles
             List<Item> ToDelete = new List<Item>();
             foreach (Item item in World.Items.Values)
             {
-                if (item is XmlSpawner)
+                if (item is XmlSpawner xmlItem)
                 {
-                    item.Visible = false;
-                    item.Movable = false;
-                    item.Hue = 0;
-                    item.ItemID = BaseItemId;
+                    xmlItem.Visible = false;
+                    xmlItem.Movable = false;
+                    xmlItem.Hue = 0;
+                    xmlItem.ItemID = BaseItemId;
 
                     // get rid of the external static marker for container-held spawners
                     // check anything that might have been tagged with a container static
-                    XmlSpawner xml_item = (XmlSpawner)item;
-                    if (xml_item.m_ShowContainerStatic != null && !xml_item.m_ShowContainerStatic.Deleted)
+                    if (xmlItem.m_ShowContainerStatic != null && !xmlItem.m_ShowContainerStatic.Deleted)
                     {
-                        ToDelete.Add(item);
+                        ToDelete.Add(xmlItem);
                     }
                 }
             }
@@ -4024,11 +4014,8 @@ namespace Server.Mobiles
             int savings = 0;
             foreach (Item item in World.Items.Values)
             {
-                if (item is XmlSpawner)
+                if (item is XmlSpawner spawner)
                 {
-
-                    XmlSpawner spawner = (XmlSpawner)item;
-
                     if (spawner.Deleted) continue;
 
                     totalcount += spawner.MaxCount;
@@ -4104,11 +4091,8 @@ namespace Server.Mobiles
             int maxcount = 0;
             foreach (Item item in World.Items.Values)
             {
-                if (item is XmlSpawner)
+                if (item is XmlSpawner spawner)
                 {
-
-                    XmlSpawner spawner = (XmlSpawner)item;
-
                     // determine whether this spawner is a good candidate
 
                     if (spawner.Deleted) continue;
@@ -6159,12 +6143,12 @@ namespace Server.Mobiles
             // Add each spawn point to the list
             foreach (Item i in World.Items.Values)
             {
-                if (i is XmlSpawner && !i.Deleted && (SaveAllMaps || i.Map == e.Mobile.Map)
+                if (i is XmlSpawner spawner && !spawner.Deleted && (SaveAllMaps || spawner.Map == e.Mobile.Map)
                     //check for mob carried spawners and ignore them
-                    && !(i.RootParent is Mobile)
-                    && (SpawnerPrefix == null || (SpawnerPrefix.Length == 0) || (i.Name != null && i.Name.StartsWith(SpawnerPrefix))))
+                    && !(spawner.RootParent is Mobile)
+                    && (SpawnerPrefix == null || (SpawnerPrefix.Length == 0) || (spawner.Name != null && spawner.Name.StartsWith(SpawnerPrefix))))
                 {
-                    saveslist.Add((XmlSpawner)i);
+                    saveslist.Add(spawner);
                 }
             }
 
@@ -6339,11 +6323,11 @@ namespace Server.Mobiles
                 dr["Height"] = sp.m_Height;
 
                 // check to see if this is in a container
-                if (sp.RootParent is Container)
+                if (sp.RootParent is Container container)
                 {
-                    dr["CentreX"] = ((Container)(sp.RootParent)).Location.X;
-                    dr["CentreY"] = ((Container)(sp.RootParent)).Location.Y;
-                    dr["CentreZ"] = ((Container)(sp.RootParent)).Location.Z;
+                    dr["CentreX"] = ((Container)container).Location.X;
+                    dr["CentreY"] = ((Container)container).Location.Y;
+                    dr["CentreZ"] = ((Container)container).Location.Z;
                     dr["ContainerX"] = sp.Location.X;
                     dr["ContainerY"] = sp.Location.Y;
                     dr["ContainerZ"] = sp.Location.Z;
@@ -6908,9 +6892,8 @@ namespace Server.Mobiles
                 {
                     object o = so.SpawnedObjects[x];
 
-                    if (o is Item)
+                    if (o is Item item)
                     {
-                        Item item = (Item)o;
                         bool despawned = false;
                         // check to see if the despawn time has elapsed.  If so, then delete it if it hasnt been picked up or stolen.
                         if (DespawnTime.TotalHours > 0 && !item.Deleted && (item.LastMoved < DateTime.UtcNow - DespawnTime) && (item.Parent == Parent)
@@ -6930,7 +6913,7 @@ namespace Server.Mobiles
                         if (item.Deleted || despawned || (item.Parent != Parent) // different container
                             || (ItemFlags.GetTaken(item) && (item.Parent == null || (item.Parent != Parent))))   // taken and in the world, or a different container
                         {
-                            so.SpawnedObjects.Remove(o);
+                            so.SpawnedObjects.Remove(item);
                             x--;
                             removed = true;
                             // if sequential spawning is active and the RestrictKillsToSubgroup flag is set, then check to see if
@@ -6947,10 +6930,8 @@ namespace Server.Mobiles
                             }
                         }
                     }
-                    else if (o is Mobile)
+                    else if (o is Mobile m)
                     {
-                        Mobile m = (Mobile)o;
-
                         bool despawned = false;
                         // check to see if the despawn time has elapsed.  If so, and the sector is not active then delete it.
                         if (DespawnTime.TotalHours > 0 && !m.Deleted && (m.CreationTime < DateTime.UtcNow - DespawnTime)
@@ -6964,7 +6945,7 @@ namespace Server.Mobiles
                         if (m.Deleted || despawned)
                         {
                             // Remove the delete mobile from the list
-                            so.SpawnedObjects.Remove(o);
+                            so.SpawnedObjects.Remove(m);
                             x--;
                             removed = true;
                             // if sequential spawning is active and the RestrictKillsToSubgroup flag is set, then check to see if
@@ -6980,14 +6961,13 @@ namespace Server.Mobiles
                                 total_removed++;
                             }
                         }
-                        else if (m is BaseCreature)
+                        else if (m is BaseCreature b)
                         {
-                            BaseCreature b = (BaseCreature)m;
                             // Check if the creature has been tamed or previously tamed and released
                             // and if it is, remove it from the list of spawns
                             if (b.Controlled || b.IsStabled || (b.Owners != null && b.Owners.Count > 0))
                             {
-                                so.SpawnedObjects.Remove(o);
+                                so.SpawnedObjects.Remove(m);
                                 x--;
                                 removed = true;
                                 // if sequential spawning is active and the RestrictKillsToSubgroup flag is set, then check to see if
@@ -7005,10 +6985,8 @@ namespace Server.Mobiles
                             }
                         }
                     }
-                    else
-                        if (o is BaseXmlSpawner.KeywordTag)
+                    else if (o is BaseXmlSpawner.KeywordTag tag)
                     {
-                        BaseXmlSpawner.KeywordTag tag = (BaseXmlSpawner.KeywordTag)o;
                         if (tag.Deleted)
                         {
                             so.SpawnedObjects.Remove(o);
@@ -7049,9 +7027,8 @@ namespace Server.Mobiles
                 for (int x = 0; x < so.SpawnedObjects.Count; x++)
                 {
                     object o = so.SpawnedObjects[x];
-                    if (o is BaseXmlSpawner.KeywordTag)
+                    if (o is BaseXmlSpawner.KeywordTag sot)
                     {
-                        BaseXmlSpawner.KeywordTag sot = (BaseXmlSpawner.KeywordTag)o;
                         // clear the tags except for gump and delay tags
                         if (sot.Type == 2)
                         {
@@ -7085,9 +7062,8 @@ namespace Server.Mobiles
                 for (int x = 0; x < so.SpawnedObjects.Count; x++)
                 {
                     object o = so.SpawnedObjects[x];
-                    if (o is BaseXmlSpawner.KeywordTag)
+                    if (o is BaseXmlSpawner.KeywordTag sot)
                     {
-                        BaseXmlSpawner.KeywordTag sot = (BaseXmlSpawner.KeywordTag)o;
                         // clear the tags except for gump and delay tags
                         if ((all || ((sot.Flags & BaseXmlSpawner.KeywordFlags.Defrag) != 0)))
                         {
@@ -7128,9 +7104,8 @@ namespace Server.Mobiles
                 for (int x = 0; x < so.SpawnedObjects.Count; x++)
                 {
                     object o = so.SpawnedObjects[x];
-                    if (o is BaseXmlSpawner.KeywordTag)
+                    if (o is BaseXmlSpawner.KeywordTag sot)
                     {
-                        BaseXmlSpawner.KeywordTag sot = (BaseXmlSpawner.KeywordTag)o;
                         // clear the matching tags
                         if (sot == tag)
                         {
@@ -8077,17 +8052,15 @@ namespace Server.Mobiles
                     }
                     try
                     {
-                        if (o is Mobile)
+                        if (o is Mobile m)
                         {
                             // if this is in any container such as a pack the xyz values are invalid as map coords so dont spawn the mob
                             if (Parent is Container)
                             {
-                                ((Mobile)o).Delete();
+                                m.Delete();
 
                                 return true;
                             }
-
-                            Mobile m = (Mobile)o;
 
                             // add the mobile to the spawned list
                             TheSpawn.SpawnedObjects.Add(m);
@@ -8105,9 +8078,8 @@ namespace Server.Mobiles
 
                             m.MoveToWorld(loc, map);
 
-                            if (m is BaseCreature)
+                            if (m is BaseCreature c)
                             {
-                                BaseCreature c = (BaseCreature)m;
                                 c.RangeHome = m_HomeRange;
                                 c.CurrentWayPoint = WayPoint;
 
@@ -8116,7 +8088,7 @@ namespace Server.Mobiles
 
                                 // Check if this spawner uses absolute (from spawnER location)
                                 // or relative (from spawnED location) as the mobiles home point
-                                c.Home = m_HomeRangeIsRelative ? m.Location : Location;
+                                c.Home = m_HomeRangeIsRelative ? c.Location : Location;
                             }
 
                             // if the object has an OnSpawned method, then invoke it
@@ -8144,10 +8116,8 @@ namespace Server.Mobiles
                             return true;
                         }
 
-                        if (o is Item)
+                        if (o is Item item)
                         {
-                            Item item = (Item)o;
-
                             string status_str;
 
                             BaseXmlSpawner.AddSpawnItem(this, TheSpawn, item, Location, map, TriggerMob, requiresurface, spawnpositioning, substitutedtypeName, smartspawn, out status_str);
@@ -8246,14 +8216,14 @@ namespace Server.Mobiles
                     for (int i = 0; i < so.SpawnedObjects.Count; ++i)
                     {
                         object o = so.SpawnedObjects[i];
-                        if (o is Item)
+                        if (o is Item item)
                         {
-                            return ((Item)o).Location;
+                            return item.Location;
                         }
 
-                        if (o is Mobile)
+                        if (o is Mobile mobile)
                         {
-                            return ((Mobile)o).Location;
+                            return mobile.Location;
                         }
                     }
                 }
@@ -8293,17 +8263,13 @@ namespace Server.Mobiles
                 {
                     object o = so.SpawnedObjects[i];
 
-                    if (o is Mobile)
+                    if (o is Mobile m)
                     {
-                        Mobile m = (Mobile)o;
-
                         m.Map = Map;
                         m.Location = new Point3D(Location);
                     }
-                    else if (o is Item)
+                    else if (o is Item item)
                     {
-                        Item item = (Item)o;
-
                         item.MoveToWorld(Location, Map);
                     }
                 }
@@ -8680,8 +8646,8 @@ namespace Server.Mobiles
                             {
                                 IEntity e = World.FindEntity(sernum);
 
-                                if (e is WayPoint)
-                                    waypoint = e as WayPoint;
+                                if (e is WayPoint point)
+                                    waypoint = point;
 
                             }
                         }
@@ -8690,9 +8656,9 @@ namespace Server.Mobiles
                     {
                         // just look it up by name
                         Item wayitem = BaseXmlSpawner.FindItemByName(null, wayargs[0], "WayPoint");
-                        if (wayitem is WayPoint)
+                        if (wayitem is WayPoint point)
                         {
-                            waypoint = wayitem as WayPoint;
+                            waypoint = point;
                         }
                     }
                 }
@@ -9680,10 +9646,10 @@ namespace Server.Mobiles
 
             foreach (object o in list)
             {
-                if (o is Item)
-                    ((Item)o).Delete();
-                else if (o is Mobile)
-                    ((Mobile)o).Delete();
+                if (o is Item item)
+                    item.Delete();
+                else if (o is Mobile mobile)
+                    mobile.Delete();
             }
         }
 
@@ -10594,16 +10560,16 @@ namespace Server.Mobiles
                     {
                         object o = so.SpawnedObjects[x];
 
-                        if (o is Item)
-                            writer.Write((Item)o);
-                        else if (o is Mobile)
-                            writer.Write((Mobile)o);
+                        if (o is Item item)
+                            writer.Write(item);
+                        else if (o is Mobile mobile)
+                            writer.Write(mobile);
                         else
                         {
                             // if this is a keyword tag then add some more info
-                            if (o is BaseXmlSpawner.KeywordTag)
+                            if (o is BaseXmlSpawner.KeywordTag tag)
                             {
-                                writer.Write(-1 * ((BaseXmlSpawner.KeywordTag)o).Serial - 2);
+                                writer.Write(-1 * tag.Serial - 2);
                             }
                             else
                             {
