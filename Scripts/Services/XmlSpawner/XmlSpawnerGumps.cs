@@ -658,8 +658,8 @@ namespace Server.Mobiles
 
 
                 // increment/decrement buttons
-                AddButton(15, 22 * (i % MaxEntriesPerPage) + 34, 0x15E0, 0x15E4, 6 + (i * 2), GumpButtonType.Reply, 0);
-                AddButton(30, 22 * (i % MaxEntriesPerPage) + 34, 0x15E2, 0x15E6, 7 + (i * 2), GumpButtonType.Reply, 0);
+                AddButton(15, 22 * (i % MaxEntriesPerPage) + 34, 0x15E0, 0x15E4, 6 + i * 2, GumpButtonType.Reply, 0);
+                AddButton(30, 22 * (i % MaxEntriesPerPage) + 34, 0x15E2, 0x15E6, 7 + i * 2, GumpButtonType.Reply, 0);
 
                 // categorization gump button
                 AddButton(171 + xoffset - 18, 22 * (i % MaxEntriesPerPage) + 34, 0x15E1, 0x15E5, 5000 + i, GumpButtonType.Reply, 0);
@@ -756,7 +756,7 @@ namespace Server.Mobiles
                         {
                             // if the next spawn tick of the spawner will occur after the subgroup is available for spawning
                             // then report the next spawn tick since that is the earliest that the subgroup can actually be spawned
-                            strnext = (DateTime.UtcNow + m_Spawner.NextSpawn) > m_Spawner.SpawnObjects[i].NextSpawn ? m_Spawner.NextSpawn.ToString() : (m_Spawner.SpawnObjects[i].NextSpawn - DateTime.UtcNow + m_Spawner.NextSpawn).ToString();
+                            strnext = DateTime.UtcNow + m_Spawner.NextSpawn > m_Spawner.SpawnObjects[i].NextSpawn ? m_Spawner.NextSpawn.ToString() : (m_Spawner.SpawnObjects[i].NextSpawn - DateTime.UtcNow + m_Spawner.NextSpawn).ToString();
                         }
                         else
                         {
@@ -915,15 +915,14 @@ namespace Server.Mobiles
 
         public static void ProcessSpawnerBookEntry(Mobile from, object[] args, string entry)
         {
-            if (from == null || args == null || args.Length < 6) return;
+            if (from == null || args == null || args.Length < 2)
+                return;
 
             XmlSpawner m_Spawner = (XmlSpawner)args[0];
             int m_Index = (int)args[1];
-            int m_X = (int)args[2];
-            int m_Y = (int)args[3];
-            int m_Extension = (int)args[4];
-            int m_page = (int)args[5];
-            if (m_Spawner?.SpawnObjects == null) return;
+
+            if (m_Spawner?.SpawnObjects == null)
+                return;
 
             // place the book text into the spawn entry
             if (m_Index < m_Spawner.SpawnObjects.Length)
@@ -932,8 +931,7 @@ namespace Server.Mobiles
 
                 if (so.TypeName != entry)
                 {
-                    CommandLogging.WriteLine(from, "{0} {1} changed XmlSpawner {2} '{3}' [{4}, {5}] ({6}) : {7} to {8}", from.AccessLevel, CommandLogging.Format(from), m_Spawner.Serial, m_Spawner.Name, m_Spawner.GetWorldLocation().X, m_Spawner.GetWorldLocation().Y, m_Spawner.Map, so.TypeName, entry);
-
+                    CommandLogging.WriteLine(from, "{0} {1} changed XmlSpawner {2} '{3}' [{4}, {5}] ({6}) : {7} to {8}", from.AccessLevel, CommandLogging.Format(from), m_Spawner.Serial, m_Spawner.Name, entry);
                 }
 
                 so.TypeName = entry;
@@ -950,11 +948,6 @@ namespace Server.Mobiles
 
             // refresh the spawner gumps			
             RefreshSpawnerGumps(from);
-
-            // and refresh the current one
-            //from.SendGump( new XmlSpawnerGump(m_Spawner, m_X, m_Y, m_Extension,0, m_page) );
-
-            // return the text entry focus to the book.  Havent figured out how to do that yet.
         }
 
 
@@ -1012,7 +1005,7 @@ namespace Server.Mobiles
         {
             if (o is Item i)
             {
-                if (!i.Deleted && (i.Map != null) && (i.Map != Map.Internal))
+                if (!i.Deleted && i.Map != null && i.Map != Map.Internal)
                     return true;
 
                 if (from != null && !from.Deleted)
@@ -1023,7 +1016,7 @@ namespace Server.Mobiles
             else
                 if (o is Mobile m)
             {
-                if (!m.Deleted && (m.Map != null) && (m.Map != Map.Internal))
+                if (!m.Deleted && m.Map != null && m.Map != Map.Internal)
                     return true;
 
                 if (from != null && !from.Deleted)

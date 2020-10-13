@@ -40,7 +40,7 @@ namespace Server.Mobiles
             // search through the protected list for a matching entry
             foreach (ProtectedProperty p in ProtectedPropertiesList)
             {
-                if ((p.ObjectType == type || type.IsSubclassOf(p.ObjectType)) && (property.ToLower() == p.Name.ToLower()))
+                if ((p.ObjectType == type || type.IsSubclassOf(p.ObjectType)) && property.ToLower() == p.Name.ToLower())
                 {
                     return true;
                 }
@@ -79,7 +79,7 @@ namespace Server.Mobiles
 
         private static bool IsParsable(Type t)
         {
-            return (t == typeofTimeSpan || t.IsDefined(typeofParsable, false));
+            return t == typeofTimeSpan || t.IsDefined(typeofParsable, false);
         }
 
         private static readonly Type[] m_ParseTypes = { typeof(string) };
@@ -91,7 +91,11 @@ namespace Server.Mobiles
 
             m_ParseParams[0] = value;
 
-            return method.Invoke(o, m_ParseParams);
+            if (!(method is null))
+                return method.Invoke(o, m_ParseParams);
+
+            else
+                return false;
         }
 
         private static readonly Type[] m_NumericTypes = {
@@ -103,28 +107,28 @@ namespace Server.Mobiles
 
         public static bool IsNumeric(Type t)
         {
-            return (Array.IndexOf(m_NumericTypes, t) >= 0);
+            return Array.IndexOf(m_NumericTypes, t) >= 0;
         }
 
         private static readonly Type typeofType = typeof(Type);
 
         private static bool IsType(Type t)
         {
-            return (t == typeofType);
+            return t == typeofType;
         }
 
         private static readonly Type typeofChar = typeof(char);
 
         private static bool IsChar(Type t)
         {
-            return (t == typeofChar);
+            return t == typeofChar;
         }
 
         private static readonly Type typeofString = typeof(string);
 
         private static bool IsString(Type t)
         {
-            return (t == typeofString);
+            return t == typeofString;
         }
 
         private static bool IsEnum(Type t)
@@ -298,19 +302,19 @@ namespace Server.Mobiles
         public static bool IsTypeKeyword(string typeName)
         {
             if (string.IsNullOrEmpty(typeName) || !char.IsUpper(typeName[0])) return false;
-            return (typeKeywordHash.ContainsKey(typeName));
+            return typeKeywordHash.ContainsKey(typeName);
         }
 
         public static bool IsTypemodKeyword(string typeName)
         {
             if (string.IsNullOrEmpty(typeName) || !char.IsUpper(typeName[0])) return false;
-            return (typemodKeywordHash.ContainsKey(typeName));
+            return typemodKeywordHash.ContainsKey(typeName);
         }
 
         public static bool IsTypeOrItemKeyword(string typeName)
         {
             if (string.IsNullOrEmpty(typeName) || !char.IsUpper(typeName[0])) return false;
-            return (typeKeywordHash.ContainsKey(typeName));
+            return typeKeywordHash.ContainsKey(typeName);
         }
 
         private static void AddTypeKeyword(string name)
@@ -710,7 +714,7 @@ namespace Server.Mobiles
         public static string TagInfo(KeywordTag tag)
         {
             if (tag != null)
-                return (string.Format("{0} : type={1} cond={2} go={3} del={4} end={5}", tag.Typename, tag.Type, tag.m_Condition, tag.m_Goto, tag.m_Delay, tag.m_End));
+                return string.Format("{0} : type={1} cond={2} go={3} del={4} end={5}", tag.Typename, tag.Type, tag.m_Condition, tag.m_Goto, tag.m_Delay, tag.m_End);
             return null;
         }
 
@@ -735,7 +739,7 @@ namespace Server.Mobiles
                     return spawner.m_KeywordTagList[i];
                 }
             }
-            return (null);
+            return null;
         }
 
         #endregion
@@ -750,7 +754,7 @@ namespace Server.Mobiles
             {
                 value = p.GetValue(o, null);
             }
-            else if ((type.GetInterface("IList") != null) && index >= 0)
+            else if (type.GetInterface("IList") != null && index >= 0)
             {
                 try
                 {
@@ -782,12 +786,12 @@ namespace Server.Mobiles
 
         public static bool IsItem(Type type)
         {
-            return (type != null && (type == typeof(Item) || type.IsSubclassOf(typeof(Item))));
+            return type != null && (type == typeof(Item) || type.IsSubclassOf(typeof(Item)));
         }
 
         public static bool IsMobile(Type type)
         {
-            return (type != null && (type == typeof(Mobile) || type.IsSubclassOf(typeof(Mobile))));
+            return type != null && (type == typeof(Mobile) || type.IsSubclassOf(typeof(Mobile)));
         }
 
         public static string ConstructFromString(PropertyInfo p, Type type, object obj, string value, ref object constructed)
@@ -883,7 +887,7 @@ namespace Server.Mobiles
                     toSet = World.FindEntity(Convert.ToInt32(valstr, 16));
 
                     // now check to make sure the object returned is consistent with the type
-                    if (!((toSet is Mobile && IsMobile(type)) || (toSet is Item && IsItem(type))))
+                    if (!(toSet is Mobile && IsMobile(type) || toSet is Item && IsItem(type)))
                     {
                         return "Item/Mobile type mismatch. cannot assign.";
                     }
@@ -893,7 +897,7 @@ namespace Server.Mobiles
                     return "That is not properly formatted. not convertible.";
                 }
             }
-            else if ((type.GetInterface("IList") != null))
+            else if (type.GetInterface("IList") != null)
             {
                 try
                 {
@@ -946,7 +950,7 @@ namespace Server.Mobiles
                 {
                     p.SetValue(o, toSet, null);
                 }
-                else if ((ptype.GetInterface("IList") != null) && index >= 0)
+                else if (ptype.GetInterface("IList") != null && index >= 0)
                 {
                     try
                     {
@@ -1066,7 +1070,7 @@ namespace Server.Mobiles
                     po = plookup.GetValue(o, null);
 
                     // now set the nested attribute using the new property list
-                    return (SetPropertyValue(spawner, po, arglist[1], value));
+                    return SetPropertyValue(spawner, po, arglist[1], value);
                 }
 
                 // is a nested property with attributes so first get the property
@@ -1080,7 +1084,7 @@ namespace Server.Mobiles
                         po = p.GetValue(o, null);
 
                         // now set the nested attribute using the new property list
-                        return (SetPropertyValue(spawner, po, arglist[1], value));
+                        return SetPropertyValue(spawner, po, arglist[1], value);
                     }
                 }
             }
@@ -1158,7 +1162,7 @@ namespace Server.Mobiles
                     po = plookup.GetValue(o, null);
 
                     // now set the nested attribute using the new property list
-                    return (SetPropertyObject(spawner, po, arglist[1], value));
+                    return SetPropertyObject(spawner, po, arglist[1], value);
                 }
 
                 foreach (PropertyInfo p in props)
@@ -1171,7 +1175,7 @@ namespace Server.Mobiles
                         po = p.GetValue(o, null);
 
                         // now set the nested attribute using the new property list
-                        return (SetPropertyObject(spawner, po, arglist[1], value));
+                        return SetPropertyObject(spawner, po, arglist[1], value);
 
                     }
                 }
@@ -1356,7 +1360,7 @@ namespace Server.Mobiles
                     {
                         po = plookup.GetValue(o, null);
                     }
-                    else if ((ptype.GetInterface("IList") != null) && index >= 0)
+                    else if (ptype.GetInterface("IList") != null && index >= 0)
                     {
                         try
                         {
@@ -1370,7 +1374,7 @@ namespace Server.Mobiles
                         po = plookup.GetValue(o, null);
                     }
                     // now set the nested attribute using the new property list
-                    return (GetPropertyValue(spawner, po, arglist[1], out ptype));
+                    return GetPropertyValue(spawner, po, arglist[1], out ptype);
                 }
 
                 // is a nested property with attributes so first get the property
@@ -1387,7 +1391,7 @@ namespace Server.Mobiles
                         {
                             po = p.GetValue(o, null);
                         }
-                        else if ((ptype.GetInterface("IList") != null) && index >= 0)
+                        else if (ptype.GetInterface("IList") != null && index >= 0)
                         {
                             try
                             {
@@ -1401,7 +1405,7 @@ namespace Server.Mobiles
                             po = p.GetValue(o, null);
                         }
                         // now set the nested attribute using the new property list
-                        return (GetPropertyValue(spawner, po, arglist[1], out ptype));
+                        return GetPropertyValue(spawner, po, arglist[1], out ptype);
                     }
                 }
             }
@@ -2707,8 +2711,7 @@ namespace Server.Mobiles
                                     eloc2 = new Point3D(x, y, z);
                                     hasloc = true;
                                 }
-                                else
-                                    if (keywordargs.Length > 5)
+                                else if (keywordargs.Length > 5)
                                 {
                                     int y = 0;
                                     int z = 0;
@@ -2723,8 +2726,7 @@ namespace Server.Mobiles
                                 {
                                     Effects.SendPacket(eloc1, emap, new HuedEffect(EffectType.Moving, -1, -1, effect, eloc1, eloc2, speed, duration, false, false, 0, 0));
                                 }
-                                else
-                                    if (effect >= 0 && refobject is IEntity entity && o is IEntity)
+                                else if (effect >= 0 && refobject is IEntity entity && o is IEntity)
                                 {
                                     Effects.SendMovingEffect(entity, (IEntity)o, effect, speed, duration, false, false);
                                 }
@@ -3365,7 +3367,7 @@ namespace Server.Mobiles
                     }
                 }
             }
-            return (no_error);
+            return no_error;
         }
         #endregion
 
@@ -3503,7 +3505,7 @@ namespace Server.Mobiles
             char startc = str[0];
 
             // first see whether it is a standard numeric value
-            if ((startc == '.') || (startc == '-') || (startc == '+') || (startc >= '0' && startc <= '9'))
+            if (startc == '.' || startc == '-' || startc == '+' || startc >= '0' && startc <= '9')
             {
                 // determine the type
                 ptype = str.IndexOf(".") >= 0 ? typeof(double) : typeof(int);
@@ -3523,7 +3525,7 @@ namespace Server.Mobiles
             }
             // or a bool
 
-            if ((str.ToLower()) == "true" || (str.ToLower() == "false"))
+            if (str.ToLower() == "true" || str.ToLower() == "false")
             {
                 ptype = typeof(bool);
                 return str;
@@ -3535,7 +3537,7 @@ namespace Server.Mobiles
                 valueKeyword kw = valueKeywordHash[pname];
 
                 //if(pname == "GETONMOB" && arglist.Length > 2)
-                if ((kw == valueKeyword.GETONMOB) && arglist.Length > 2)
+                if (kw == valueKeyword.GETONMOB && arglist.Length > 2)
                 {
                     // syntax is GETONMOB,mobname[,mobtype],property
 
@@ -3555,7 +3557,7 @@ namespace Server.Mobiles
                     return ParseGetValue(getvalue, ptype);
                 }
 
-                if ((kw == valueKeyword.GET) && arglist.Length > 2)
+                if (kw == valueKeyword.GET && arglist.Length > 2)
                 {
                     // syntax is GET,[itemname -OR- SETITEM][,itemtype],property
 
@@ -3593,7 +3595,7 @@ namespace Server.Mobiles
                     return ParseGetValue(getvalue, ptype);
                 }
 
-                if ((kw == valueKeyword.GETONCARRIED) && arglist.Length > 2)
+                if (kw == valueKeyword.GETONCARRIED && arglist.Length > 2)
                 {
                     // syntax is GETONCARRIED,itemname[,itemtype][,equippedonly],property
 
@@ -3627,7 +3629,7 @@ namespace Server.Mobiles
                     return ParseGetValue(getvalue, ptype);
                 }
 
-                if ((kw == valueKeyword.GETONNEARBY) && arglist.Length > 3)
+                if (kw == valueKeyword.GETONNEARBY && arglist.Length > 3)
                 {
                     // syntax is GETONNEARBY,range,name[,type][,searchcontainers],property
                     // or GETONNEARBY,range,name[,type][,searchcontainers],[ATTACHMENT,type,name,property]
@@ -3675,14 +3677,14 @@ namespace Server.Mobiles
                     else
                         return null;
                 }
-                else if ((kw == valueKeyword.GETONTRIGMOB) && arglist.Length > 1)
+                else if (kw == valueKeyword.GETONTRIGMOB && arglist.Length > 1)
                 {
                     // syntax is GETONTRIGMOB,property
                     string getvalue = GetPropertyValue(spawner, trigmob, arglist[1], out ptype);
 
                     return ParseGetValue(getvalue, ptype);
                 }
-                else if ((kw == valueKeyword.GETONPARENT) && arglist.Length > 1)
+                else if (kw == valueKeyword.GETONPARENT && arglist.Length > 1)
                 {
                     // syntax is GETONPARENT,property
 
@@ -3695,7 +3697,7 @@ namespace Server.Mobiles
 
                     return ParseGetValue(getvalue, ptype);
                 }
-                else if ((kw == valueKeyword.GETONTHIS) && arglist.Length > 1)
+                else if (kw == valueKeyword.GETONTHIS && arglist.Length > 1)
                 {
                     // syntax is GETONTHIS,property
 
@@ -3703,7 +3705,7 @@ namespace Server.Mobiles
 
                     return ParseGetValue(getvalue, ptype);
                 }
-                else if ((kw == valueKeyword.GETONSPAWN) && arglist.Length > 2)
+                else if (kw == valueKeyword.GETONSPAWN && arglist.Length > 2)
                 {
                     // syntax is GETONSPAWN[,spawnername],subgroup,property
                     // get the target from the spawn list
@@ -3750,7 +3752,7 @@ namespace Server.Mobiles
 
                     return ParseGetValue(getvalue, ptype);
                 }
-                else if ((kw == valueKeyword.GETFROMFILE) && arglist.Length > 1)
+                else if (kw == valueKeyword.GETFROMFILE && arglist.Length > 1)
                 {
                     // syntax is GETFROMFILE,filename
                     ptype = typeof(string);
@@ -3782,7 +3784,7 @@ namespace Server.Mobiles
 
                     return filestring;
                 }
-                else if ((kw == valueKeyword.GETACCOUNTTAG) && arglist.Length > 1)
+                else if (kw == valueKeyword.GETACCOUNTTAG && arglist.Length > 1)
                 {
                     // syntax is GETACCOUNTTAG,tagname
                     ptype = typeof(string);
@@ -3801,7 +3803,7 @@ namespace Server.Mobiles
                     }
                     return tagvalue;
                 }
-                else if ((kw == valueKeyword.RND) && arglist.Length > 2)
+                else if (kw == valueKeyword.RND && arglist.Length > 2)
                 {
                     // syntax is RND,min,max
                     string randvalue = "0";
@@ -3812,7 +3814,7 @@ namespace Server.Mobiles
                     // return the random number as the value
                     return randvalue;
                 }
-                else if ((kw == valueKeyword.RNDBOOL))
+                else if (kw == valueKeyword.RNDBOOL)
                 {
                     // syntax is RNDBOOL
 
@@ -3821,7 +3823,7 @@ namespace Server.Mobiles
                     // return the random number as the value
                     return Utility.RandomBool().ToString();
                 }
-                else if ((kw == valueKeyword.RNDLIST) && arglist.Length > 1)
+                else if (kw == valueKeyword.RNDLIST && arglist.Length > 1)
                 {
                     // syntax is RNDLIST,val1,val2,...
 
@@ -3836,7 +3838,7 @@ namespace Server.Mobiles
                     return arglist[randindex];
 
                 }
-                else if ((kw == valueKeyword.RNDSTRLIST) && arglist.Length > 1)
+                else if (kw == valueKeyword.RNDSTRLIST && arglist.Length > 1)
                 {
                     // syntax is RNDSTRLIST,val1,val2,...
                     ptype = typeof(string);
@@ -3854,7 +3856,7 @@ namespace Server.Mobiles
 
                     return arglist[randindex];
                 }
-                else if ((kw == valueKeyword.AMOUNTCARRIED) && arglist.Length > 1)
+                else if (kw == valueKeyword.AMOUNTCARRIED && arglist.Length > 1)
                 {
                     // syntax is AMOUNTCARRIED,itemtype[,banksearch[,itemname]]
 
@@ -3905,7 +3907,7 @@ namespace Server.Mobiles
 
                     return amount.ToString();
                 }
-                else if ((kw == valueKeyword.PLAYERSINRANGE) && arglist.Length > 1)
+                else if (kw == valueKeyword.PLAYERSINRANGE && arglist.Length > 1)
                 {
                     // syntax is PLAYERSINRANGE,range
 
@@ -3945,7 +3947,7 @@ namespace Server.Mobiles
 
                     return nplayers.ToString();
                 }
-                else if ((kw == valueKeyword.TRIGSKILL) && arglist.Length > 1)
+                else if (kw == valueKeyword.TRIGSKILL && arglist.Length > 1)
                 {
                     if (spawner?.TriggerSkill != null)
                     {
@@ -3977,7 +3979,7 @@ namespace Server.Mobiles
 
                     return null;
                 }
-                if ((kw == valueKeyword.RANDNAME) && arglist.Length > 1)
+                if (kw == valueKeyword.RANDNAME && arglist.Length > 1)
                 {
                     // syntax is RANDNAME,nametype
                     return NameList.RandomName(arglist[1]);
@@ -4061,16 +4063,16 @@ namespace Server.Mobiles
             int orposition = testString.IndexOf("|");
 
             // combine them based upon the operator
-            if ((andposition > 0 && orposition <= 0) || (andposition > 0 && andposition < orposition))
+            if (andposition > 0 && orposition <= 0 || andposition > 0 && andposition < orposition)
             {
                 // and operator
-                return (first && second);
+                return first && second;
             }
 
-            if ((orposition > 0 && andposition <= 0) || (orposition > 0 && orposition < andposition))
+            if (orposition > 0 && andposition <= 0 || orposition > 0 && orposition < andposition)
             {
                 // or operator
-                return (first || second);
+                return first || second;
             }
 
             // should never get here
@@ -4315,7 +4317,7 @@ namespace Server.Mobiles
                     catch { status_str = "invalid int comparison : {0}" + testString; }
                 }
             }
-            else if ((ptype2 == typeof(double)) && IsNumeric(ptype1))
+            else if (ptype2 == typeof(double) && IsNumeric(ptype1))
             {
                 if (hasequal)
                 {
@@ -4356,7 +4358,7 @@ namespace Server.Mobiles
                     catch { status_str = "invalid int comparison : {0}" + testString; }
                 }
             }
-            else if ((ptype1 == typeof(double)) && IsNumeric(ptype2))
+            else if (ptype1 == typeof(double) && IsNumeric(ptype2))
             {
                 if (hasequal)
                 {
@@ -4397,7 +4399,7 @@ namespace Server.Mobiles
                     catch { status_str = "invalid int comparison : {0}" + testString; }
                 }
             }
-            else if ((ptype1 == typeof(double)) && (ptype2 == typeof(double)))
+            else if (ptype1 == typeof(double) && ptype2 == typeof(double))
             {
                 double val1;
                 double val2;
@@ -4525,7 +4527,7 @@ namespace Server.Mobiles
             // a "*" targetname will match anything
             // a null or empty targetname will match a null name
             // otherwise the strings must match
-            return (targetname == "*") || (name == targetname) || (targetname != null && targetname.Length == 0 && name == null);
+            return targetname == "*" || name == targetname || targetname != null && targetname.Length == 0 && name == null;
         }
 
         private static void GetItemsIn(Item source, string targetname, Type targettype, string typestr, ref List<object> nearbylist, string proptest)
@@ -4539,7 +4541,7 @@ namespace Server.Mobiles
                     Type itemtype = i.GetType();
 
                     if (!i.Deleted && CheckNameMatch(targetname, i.Name) && (typestr == null ||
-                        (targettype != null && (itemtype.Equals(targettype) || itemtype.IsSubclassOf(targettype)))))
+                        targettype != null && (itemtype.Equals(targettype) || itemtype.IsSubclassOf(targettype))))
                     {
                         if (proptest == null || CheckPropertyString(null, i, proptest, null, out status_str))
                             nearbylist.Add(i);
@@ -4550,7 +4552,6 @@ namespace Server.Mobiles
                         GetItemsIn(i, targetname, targettype, typestr, ref nearbylist, proptest);
                     }
                 }
-
             }
         }
 
@@ -4574,7 +4575,6 @@ namespace Server.Mobiles
                     itemlist = ((Mobile)invoker).GetItemsInRange(range);
                 }
 
-
                 if (itemlist != null)
                 {
                     foreach (Item i in itemlist)
@@ -4590,7 +4590,7 @@ namespace Server.Mobiles
                         }
                         else
                             if (!i.Deleted && CheckNameMatch(targetname, i.Name) && (typestr == null ||
-                                (targettype != null && (itemtype.Equals(targettype) || itemtype.IsSubclassOf(targettype)))))
+                                targettype != null && (itemtype.Equals(targettype) || itemtype.IsSubclassOf(targettype))))
                         {
                             if (proptest == null || CheckPropertyString(null, i, proptest, null, out status_str))
                                 nearbylist.Add(i);
@@ -4622,7 +4622,7 @@ namespace Server.Mobiles
                         Type mobtype = m.GetType();
 
                         if (!m.Deleted && CheckNameMatch(targetname, m.Name) && (typestr == null ||
-                            (targettype != null && (mobtype.Equals(targettype) || mobtype.IsSubclassOf(targettype)))))
+                            targettype != null && (mobtype.Equals(targettype) || mobtype.IsSubclassOf(targettype))))
                         {
                             if (proptest == null || CheckPropertyString(null, m, proptest, null, out status_str))
                                 nearbylist.Add(m);
@@ -4667,7 +4667,7 @@ namespace Server.Mobiles
                         // if a typestring has been specified then check against that as well
                         if (CheckNameMatch(targetName, item.Name))
                         {
-                            if ((typeStr == null || CheckType(item, typeStr)))
+                            if (typeStr == null || CheckType(item, typeStr))
                             {
                                 //found it
                                 return item;
@@ -4726,7 +4726,7 @@ namespace Server.Mobiles
                         // if a typestring has been specified then check against that as well
                         else if (CheckNameMatch(targetName, item.Name))
                         {
-                            if ((typeStr == null || CheckType(item, typeStr)))
+                            if (typeStr == null || CheckType(item, typeStr))
                             {
                                 //found it
                                 itemlist.Add(item);
@@ -4787,7 +4787,7 @@ namespace Server.Mobiles
                         // test the item name against the trigger string
                         if (CheckNameMatch(targetName, item.Name))
                         {
-                            if (targettype == null || (item.GetType().Equals(targettype) || item.GetType().IsSubclassOf(targettype)))
+                            if (targettype == null || item.GetType().Equals(targettype) || item.GetType().IsSubclassOf(targettype))
                             {
                                 //found it
                                 return item;
@@ -4828,7 +4828,7 @@ namespace Server.Mobiles
                         // test the item name against the trigger string since it's not a container
                         else if (CheckNameMatch(targetName, item.Name))
                         {
-                            if (targettype == null || (item.GetType().Equals(targettype) || item.GetType().IsSubclassOf(targettype)))
+                            if (targettype == null || item.GetType().Equals(targettype) || item.GetType().IsSubclassOf(targettype))
                             {
                                 //found it
                                 itemlist.Add(item);
@@ -4872,16 +4872,16 @@ namespace Server.Mobiles
             // similarly for the & operator
 
             // combine them based upon the operator
-            if ((andposition > 0 && orposition <= 0) || (andposition > 0 && andposition < orposition))
+            if (andposition > 0 && orposition <= 0 || andposition > 0 && andposition < orposition)
             {
                 // and operator (see explanation above)
-                return (first || second);
+                return first || second;
             }
 
-            if ((orposition > 0 && andposition <= 0) || (orposition > 0 && orposition < andposition))
+            if (orposition > 0 && andposition <= 0 || orposition > 0 && orposition < andposition)
             {
                 // or operator (see explanation above)
-                return (first && second);
+                return first && second;
             }
 
             // should never get here
@@ -4937,7 +4937,7 @@ namespace Server.Mobiles
             if (testitem != null)
             {
                 // is the equippedonly flag set?  If so then see if the item is equipped
-                if ((equippedonly && testitem.Parent == m) || !equippedonly)
+                if (equippedonly && testitem.Parent == m || !equippedonly)
                     has_no_such_item = false;
 
             }
@@ -4967,16 +4967,16 @@ namespace Server.Mobiles
             int orposition = objectivestr.IndexOf("|");
 
             // combine them based upon the operator
-            if ((andposition > 0 && orposition <= 0) || (andposition > 0 && andposition < orposition))
+            if (andposition > 0 && orposition <= 0 || andposition > 0 && andposition < orposition)
             {
                 // and operator
-                return (first && second);
+                return first && second;
             }
 
-            if ((orposition > 0 && andposition <= 0) || (orposition > 0 && orposition < andposition))
+            if (orposition > 0 && andposition <= 0 || orposition > 0 && orposition < andposition)
             {
                 // or operator
-                return (first || second);
+                return first || second;
             }
 
             // should never get here
@@ -5032,7 +5032,7 @@ namespace Server.Mobiles
             if (testitem != null)
             {
                 // is the equippedonly flag set?  If so then see if the item is equipped
-                if ((equippedonly && testitem.Parent == m) || !equippedonly)
+                if (equippedonly && testitem.Parent == m || !equippedonly)
                     has_valid_item = true;
 
             }
@@ -5067,7 +5067,7 @@ namespace Server.Mobiles
                 {
 
                     if (typestr == null ||
-                        (targettype != null && (itemtype.Equals(targettype) || itemtype.IsSubclassOf(targettype))))
+                        targettype != null && (itemtype.Equals(targettype) || itemtype.IsSubclassOf(targettype)))
                     {
                         founditem = item;
                         count++;
@@ -5083,7 +5083,7 @@ namespace Server.Mobiles
                 // add this to the recent search list
                 AddToRecentItemSearchList(fromspawner, founditem);
 
-                return (founditem);
+                return founditem;
             }
 
             return null;
@@ -5109,8 +5109,8 @@ namespace Server.Mobiles
             foreach (Mobile mobile in World.Mobiles.Values)
             {
                 Type mobtype = mobile.GetType();
-                if (!mobile.Deleted && ((name.Length == 0 || string.Compare(mobile.Name, name, true) == 0)) && (typestr == null ||
-                    (targettype != null && (mobtype.Equals(targettype) || mobtype.IsSubclassOf(targettype)))))
+                if (!mobile.Deleted && (name.Length == 0 || string.Compare(mobile.Name, name, true) == 0) && (typestr == null ||
+                    targettype != null && (mobtype.Equals(targettype) || mobtype.IsSubclassOf(targettype))))
                 {
 
                     foundmobile = mobile;
@@ -5126,7 +5126,7 @@ namespace Server.Mobiles
                 // add this to the recent search list
                 AddToRecentMobileSearchList(fromspawner, foundmobile);
 
-                return (foundmobile);
+                return foundmobile;
             }
 
             return null;
@@ -5160,7 +5160,7 @@ namespace Server.Mobiles
                 if (item is XmlSpawner)
                 {
                     XmlSpawner spawner = (XmlSpawner)item;
-                    if (!spawner.Deleted && (string.Compare(spawner.Name, name, true) == 0))
+                    if (!spawner.Deleted && string.Compare(spawner.Name, name, true) == 0)
                     {
                         foundspawner = spawner;
 
@@ -5177,7 +5177,7 @@ namespace Server.Mobiles
                 // add this to the recent search list
                 AddToRecentSpawnerSearchList(fromspawner, foundspawner);
 
-                return (foundspawner);
+                return foundspawner;
             }
 
             return null;
@@ -5230,7 +5230,7 @@ namespace Server.Mobiles
                     spawner.RecentSpawnerSearchList.Remove(i);
             }
 
-            return (foundspawner);
+            return foundspawner;
         }
 
         public static void AddToRecentItemSearchList(XmlSpawner spawner, Item target)
@@ -5277,7 +5277,7 @@ namespace Server.Mobiles
                     if (name.Length == 0 || string.Compare(item.Name, name, true) == 0)
                 {
                     if (typestr == null ||
-                        (targettype != null && (item.GetType().Equals(targettype) || item.GetType().IsSubclassOf(targettype))))
+                        targettype != null && (item.GetType().Equals(targettype) || item.GetType().IsSubclassOf(targettype)))
                     {
                         founditem = item;
                         break;
@@ -5291,7 +5291,7 @@ namespace Server.Mobiles
                     spawner.RecentItemSearchList.Remove(i);
             }
 
-            return (founditem);
+            return founditem;
         }
 
         public static void AddToRecentMobileSearchList(XmlSpawner spawner, Mobile target)
@@ -5339,7 +5339,7 @@ namespace Server.Mobiles
                 {
 
                     if (typestr == null ||
-                        (targettype != null && (m.GetType().Equals(targettype) || m.GetType().IsSubclassOf(targettype))))
+                        targettype != null && (m.GetType().Equals(targettype) || m.GetType().IsSubclassOf(targettype)))
                     {
                         foundmobile = m;
                         break;
@@ -5353,7 +5353,7 @@ namespace Server.Mobiles
                     spawner.RecentMobileSearchList.Remove(i);
             }
 
-            return (foundmobile);
+            return foundmobile;
         }
         #endregion
 
@@ -5381,7 +5381,7 @@ namespace Server.Mobiles
             }
 
             Mobile m = null;
-            if (o is Mobile || (o is Container))
+            if (o is Mobile || o is Container)
             {
                 Container pack = null;
 
@@ -5411,14 +5411,6 @@ namespace Server.Mobiles
                 {
                     // handle the nested item property specification using <>
                     string itemargstring = null;
-
-                    // itemtypestr will be the actual item type to be created.  In the simple form  it will be arglist[1]
-                    // for the string /arg1/ADD/arg2/arg3/arg4/arg5 arglist [0] will contain ADD , arglist[1] will be arg2,
-                    // and arglist[2] will be arg3/arg4/arg5
-                    // if nested property specs
-                    // arglist[1] will be <arg2 and arglist[2] will be arg3/ar4>/arg5
-                    // the drop probability will be in probargs
-                    string[] probargs = ParseCommaArgs(arglist[0], 2);
 
                     string itemtypestr = arglist[1];
 
@@ -5611,7 +5603,7 @@ namespace Server.Mobiles
                 string[] typeargs = ParseCommaArgs(arglist[0], 2);
                 if (typeargs.Length > 1)
                 {
-                    return (typeargs[0]);
+                    return typeargs[0];
                 }
                 return arglist[0];
             }
@@ -5636,7 +5628,7 @@ namespace Server.Mobiles
                 {
                     typeargs = ParseCommaArgs(itemtypestring.Substring(argstart), 15);
                 }
-                return (typeargs);
+                return typeargs;
 
             }
 
@@ -5711,7 +5703,7 @@ namespace Server.Mobiles
                     if (index >= 0)
                     {
                         // check the char before it and after it to ignore </ and />
-                        if ((index > 0 && str[index - 1] == '<') || (index < length - 1 && str[index + 1] == '>'))
+                        if (index > 0 && str[index - 1] == '<' || index < length - 1 && str[index + 1] == '>')
                         {
                             // skip it
                             searchindex = index + 1;
@@ -5926,7 +5918,7 @@ namespace Server.Mobiles
 
             try
             {
-                if ((range > 0) || (triggermob != null && !triggermob.Deleted))
+                if (range > 0 || triggermob != null && !triggermob.Deleted)
                 {
                     if (range > 0)
                     {
@@ -6025,7 +6017,7 @@ namespace Server.Mobiles
             }
             try
             {
-                if (range >= 0 || (triggermob != null && !triggermob.Deleted))
+                if (range >= 0 || triggermob != null && !triggermob.Deleted)
                 {
                     // apply the poison to all players within range if range is > 0
                     if (range >= 0)
@@ -6437,7 +6429,6 @@ namespace Server.Mobiles
                                         return false;
                                     }
 
-                                    string remaining = arglist[1];
                                     if (typeof(Mobile).IsAssignableFrom(objecttype))
                                     {
                                         List<Mobile> mobs = new List<Mobile>();
@@ -6812,8 +6803,8 @@ namespace Server.Mobiles
                                 XmlSpawner.SpawnObject targetobj = targetspawner.SpawnObjects[i];
 
                                 // is this references by entrystring or entryindex?
-                                if ((entryindex == i)
-                                || (entryindex == -1 && targetobj?.TypeName != null && targetobj.TypeName.IndexOf(entrystring) >= 0))
+                                if (entryindex == i
+                                || entryindex == -1 && targetobj?.TypeName != null && targetobj.TypeName.IndexOf(entrystring) >= 0)
                                 {
                                     // set the properties on the spawn entry object
                                     ApplyObjectStringProperties(spawner, substitutedtypeName, targetobj, triggermob, spawner, out status_str);
@@ -6827,8 +6818,6 @@ namespace Server.Mobiles
                     case typeKeyword.SETONPARENT:
                         {
                             // the syntax is SETONPARENT/prop/value/prop2/value...
-                            string[] arglist = ParseSlashArgs(substitutedtypeName, 3);
-
                             if (invoker is Item)
                             {
                                 ApplyObjectStringProperties(spawner, substitutedtypeName, ((Item)invoker).Parent, triggermob, invoker, out status_str);
@@ -7017,7 +7006,7 @@ namespace Server.Mobiles
 
                             // prepare the keyword tag for the gump
                             KeywordTag newtag = new KeywordTag(substitutedtypeName, spawner, 1);
-                            if (triggermob != null && !triggermob.Deleted && (triggermob is PlayerMobile))
+                            if (triggermob != null && !triggermob.Deleted && triggermob is PlayerMobile)
                             {
                                 object[] gumpargs = new object[7];
                                 gumpargs[0] = invoker;
@@ -7088,7 +7077,7 @@ namespace Server.Mobiles
                                 return false;
                             }
 
-                            if (triggermob != null && !triggermob.Deleted && (triggermob is PlayerMobile))
+                            if (triggermob != null && !triggermob.Deleted && triggermob is PlayerMobile)
                             {
                                 triggermob.LaunchBrowser(url);
                             }
@@ -7141,7 +7130,7 @@ namespace Server.Mobiles
                                 status_str = "invalid SENDMSG specification";
                                 return false;
                             }
-                            if (triggermob != null && !triggermob.Deleted && (triggermob is PlayerMobile))
+                            if (triggermob != null && !triggermob.Deleted && triggermob is PlayerMobile)
                             {
                                 //triggermob.SendMessage(msgText);
                                 triggermob.Send(new UnicodeMessage(Serial.MinusOne, -1, MessageType.Regular, hue, font, "ENU", "System", msgText));
@@ -7195,7 +7184,7 @@ namespace Server.Mobiles
                                 status_str = "invalid SENDASCIIMSG specification";
                                 return false;
                             }
-                            if (triggermob != null && !triggermob.Deleted && (triggermob is PlayerMobile))
+                            if (triggermob != null && !triggermob.Deleted && triggermob is PlayerMobile)
                             {
                                 triggermob.Send(new AsciiMessage(Serial.MinusOne, -1, MessageType.Regular, hue, font, "System", msgText));
                             }
@@ -7774,7 +7763,7 @@ namespace Server.Mobiles
                                         if (keywordarg2 == 0)
                                         {
                                             // this is invalid so dont cast
-                                            throw (new ArgumentNullException());
+                                            throw new ArgumentNullException();
                                         }
                                         object[] polyargs = new object[3];
                                         polyargs[0] = caster;
@@ -7784,7 +7773,7 @@ namespace Server.Mobiles
 
                                         if (spell == null)
                                         {
-                                            throw (new ArgumentNullException());
+                                            throw new ArgumentNullException();
                                         }
                                         spell.State = SpellState.Sequencing;
                                     }
@@ -7803,7 +7792,7 @@ namespace Server.Mobiles
                                     }
                                     else
                                     {
-                                        throw (new ArgumentNullException());
+                                        throw new ArgumentNullException();
                                     }
                                     // Get the parameters for the target method.
                                     ParameterInfo[] spelltargetparms = spelltargetmethod.GetParameters();
@@ -7836,7 +7825,7 @@ namespace Server.Mobiles
                                         else
                                         {
                                             // dont handle any other types of args
-                                            throw (new ArgumentNullException());
+                                            throw new ArgumentNullException();
                                         }
                                     }
                                     // set the spell on the caster
@@ -7985,7 +7974,7 @@ namespace Server.Mobiles
         public static bool TryParse<TEnum>(string tocheck, bool ignorecase, out TEnum result) where TEnum : struct, IConvertible
         {
             bool boolean = tocheck != null && Enum.IsDefined(typeof(TEnum), tocheck);
-            result = (boolean ? (TEnum)Enum.Parse(typeof(TEnum), tocheck) : default);
+            result = boolean ? (TEnum)Enum.Parse(typeof(TEnum), tocheck) : default;
             return boolean;
         }
         #endregion

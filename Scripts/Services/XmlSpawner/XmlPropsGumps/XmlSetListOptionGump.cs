@@ -98,7 +98,7 @@ namespace Server.Gumps
                 if (count > EntryCount)
                     count = EntryCount;
 
-                int totalHeight = OffsetSize + ((count + 2) * (EntryHeight + OffsetSize));
+                int totalHeight = OffsetSize + (count + 2) * (EntryHeight + OffsetSize);
                 int backHeight = BorderSize + totalHeight + BorderSize;
 
                 AddBackground(0, 0, BackWidth, backHeight, BackGumpID);
@@ -109,7 +109,7 @@ namespace Server.Gumps
                 int x = BorderSize + OffsetSize;
                 int y = BorderSize + OffsetSize;
 
-                int emptyWidth = TotalWidth - PrevWidth - NextWidth - (OffsetSize * 4) - (OldStyle ? SetWidth + OffsetSize : 0);
+                int emptyWidth = TotalWidth - PrevWidth - NextWidth - OffsetSize * 4 - (OldStyle ? SetWidth + OffsetSize : 0);
 
                 AddImageTiled(x, y, PrevWidth, EntryHeight, HeaderGumpID);
 
@@ -151,7 +151,7 @@ namespace Server.Gumps
         private void AddRect(int index, string str, int button)
         {
             int x = BorderSize + OffsetSize;
-            int y = BorderSize + OffsetSize + ((index + 1) * (EntryHeight + OffsetSize));
+            int y = BorderSize + OffsetSize + (index + 1) * (EntryHeight + OffsetSize);
 
             AddImageTiled(x, y, EntryWidth, EntryHeight, EntryGumpID);
             AddLabelCropped(x + TextOffsetX, y, EntryWidth - TextOffsetX, EntryHeight, TextHue, str);
@@ -174,7 +174,7 @@ namespace Server.Gumps
                 try
                 {
                     object toSet = m_Values[index];
-                    CommandLogging.LogChangeProperty(m_Mobile, m_Object, m_Property.Name, (toSet == null ? "(-null-)" : toSet.ToString()));
+                    CommandLogging.LogChangeProperty(m_Mobile, m_Object, m_Property.Name, toSet == null ? "(-null-)" : toSet.ToString());
                     m_Property.SetValue(m_Object, toSet, null);
                 }
                 catch
