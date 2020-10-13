@@ -590,8 +590,8 @@ namespace Server.Mobiles
             {
                 // allow free spawning if proximity sensing is off and if all of the potential free-spawning triggers are disabled
                 if (Running && m_ProximityRange == -1 &&
-                    (TriggerObjectProp == null || TriggerObjectProp.Length == 0) &&
-                    (MobTriggerProp == null || MobTriggerProp.Length == 0 ||
+                    string.IsNullOrEmpty(TriggerObjectProp) &&
+                    (string.IsNullOrEmpty(MobTriggerProp) ||
                     MobTriggerName == null || MobTriggerName.Length == 0) &&
                     !ExternalTriggering)
                     return true;
@@ -4857,14 +4857,14 @@ namespace Server.Mobiles
                 e.Mobile.SendMessage("Usage: [XmlImportSpawners <filename>");
         }
 
-        private static string GetText(XmlElement node, string defaultValue)
+        private static string GetText(XmlNode node, string defaultValue)
         {
             if (node == null)
                 return defaultValue;
             return node.InnerText;
         }
 
-        private static void ImportSpawner(XmlElement node, Mobile from)
+        private static void ImportSpawner(XmlNode node, Mobile from)
         {
             int count = int.Parse(GetText(node["count"], "1"));
             int homeRange = int.Parse(GetText(node["homerange"], "4"));
@@ -6542,7 +6542,7 @@ namespace Server.Mobiles
                 if (RespawnAll)
                     e.Mobile.SendMessage("Respawning ALL XmlSpawner objects from the world{0}.", ((SpawnerPrefix != null && SpawnerPrefix.Length > 0) ? " beginning with " + SpawnerPrefix : string.Empty));
                 else
-                    e.Mobile.SendMessage("Respawning ALL XmlSpawner objects from {0}{1}.", e.Mobile.Map, ((SpawnerPrefix != null && SpawnerPrefix.Length > 0) ? " beginning with " + SpawnerPrefix : string.Empty));
+                    e.Mobile.SendMessage("Respawning ALL XmlSpawner objects from {0}{1}.", e.Mobile.Map, !string.IsNullOrEmpty(SpawnerPrefix) ? " beginning with " + SpawnerPrefix : string.Empty);
 
                 // Respawn Xml spawner's in the world based on the mobiles current map
                 int Count = 0;
@@ -6793,7 +6793,7 @@ namespace Server.Mobiles
             m_Running = true;
             m_Group = isGroup;
 
-            if ((name != null) && (name.Length > 0))
+            if (!string.IsNullOrEmpty(name))
                 Name = name;
             else
                 Name = "Spawner";
@@ -7731,10 +7731,8 @@ namespace Server.Mobiles
                 }
 
                 // Pick a spawn object to spawn
-                int SpawnIndex;
-
                 // see if sequential spawning has been selected
-                SpawnIndex = SequentialSpawn >= 0 ? GetCurrentAvailableSequentialSpawnIndex(SequentialSpawn) : RandomAvailableSpawnIndex();
+                var SpawnIndex = SequentialSpawn >= 0 ? GetCurrentAvailableSequentialSpawnIndex(SequentialSpawn) : RandomAvailableSpawnIndex();
 
                 // no spawns are available so no point in continuing
                 if (SpawnIndex < 0)
@@ -8053,9 +8051,7 @@ namespace Server.Mobiles
 
                             m.Spawner = this;
 
-                            Point3D loc;
-
-                            loc = GetSpawnPosition(requiresurface, packrange, packcoord, spawnpositioning, m);
+                            var loc = GetSpawnPosition(requiresurface, packrange, packcoord, spawnpositioning, m);
 
                             if (!smartspawn)
                             {
@@ -8612,7 +8608,7 @@ namespace Server.Mobiles
             WayPoint waypoint = null;
 
             // try parsing the waypoint name to determine the waypoint. object syntax is "SERIAL,sernumber" or "waypointname"
-            if (waypointstr != null && waypointstr.Length > 0)
+            if (!string.IsNullOrEmpty(waypointstr))
             {
                 string[] wayargs = BaseXmlSpawner.ParseString(waypointstr, 2, ",");
                 if (wayargs != null && wayargs.Length > 0)
@@ -8679,7 +8675,7 @@ namespace Server.Mobiles
             return false;
         }
 
-        private bool CheckHoldSmartSpawning(object o)
+        private static bool CheckHoldSmartSpawning(object o)
         {
             if (o == null) return false;
 
@@ -8767,7 +8763,7 @@ namespace Server.Mobiles
             LandTile lt = map.Tiles.GetLandTile(x, y);
             int lowZ = 0, avgZ = 0, topZ = 0;
 
-            bool surface, impassable;
+            bool surface;
             bool wet = false;
 
             map.GetAverageZ(x, y, ref lowZ, ref avgZ, ref topZ);
@@ -8778,7 +8774,7 @@ namespace Server.Mobiles
                 Console.WriteLine("landtile at {0},{1},{2} lowZ={3} avgZ={4} topZ={5}", x, y, z, lowZ, avgZ, topZ);
             }
 
-            impassable = (landFlags & TileFlag.Impassable) != 0;
+            var impassable = (landFlags & TileFlag.Impassable) != 0;
             if (checkmob)
             {
                 wet = (landFlags & TileFlag.Wet) != 0;
@@ -9599,8 +9595,7 @@ namespace Server.Mobiles
 
                 // try to find a valid spawn location using the z coord of the spawner
                 // relax the normal surface requirement for mobiles if the flag is set
-                bool fit;
-                fit = requiresurface ? CanSpawnMobile(x, y, defaultZ, mob) : Map.CanFit(x, y, defaultZ, SpawnFitSize, true, false, false);
+                var fit = requiresurface ? CanSpawnMobile(x, y, defaultZ, mob) : Map.CanFit(x, y, defaultZ, SpawnFitSize, true, false, false);
 
                 // if that fails then try to find a valid z coord
                 if (fit)
@@ -9639,7 +9634,7 @@ namespace Server.Mobiles
             }
         }
 
-        private void DeleteFromList(List<Item> listi, List<Mobile> listm)
+        private static void DeleteFromList(List<Item> listi, List<Mobile> listm)
         {
             if (listi != null)
             {
@@ -10890,7 +10885,7 @@ namespace Server.Mobiles
                     {
                         m_Name = reader.ReadString();
                         // backward compatibility with old name storage
-                        if (m_Name != null && m_Name != string.Empty) Name = m_Name;
+                        if (!string.IsNullOrEmpty(m_Name)) Name = m_Name;
                         m_X = reader.ReadInt();
                         m_Y = reader.ReadInt();
                         m_Width = reader.ReadInt();
@@ -11222,7 +11217,7 @@ namespace Server.Mobiles
                 // Clear the spawn object list
                 List<SpawnObject> NewSpawnObjects = new List<SpawnObject>();
 
-                if (ObjectList != null && ObjectList.Length > 0)
+                if (!string.IsNullOrEmpty(ObjectList))
                 {
                     // Split the string based on the object separator first ':'
                     string[] SpawnObjectList = ObjectList.Split(':');
@@ -11273,7 +11268,7 @@ namespace Server.Mobiles
 
                 // spawn object definitions will take the form typestring:MX=int:SB=int:RT=double:TO=int:KL=int
                 // or typestring:MX=int:SB=int:RT=double:TO=int:KL=int:OBJ=typestring...
-                if (ObjectList != null && ObjectList.Length > 0)
+                if (!string.IsNullOrEmpty(ObjectList))
                 {
                     string[] SpawnObjectList = BaseXmlSpawner.SplitString(ObjectList, ":OBJ=");
 
@@ -11336,7 +11331,7 @@ namespace Server.Mobiles
 
                                     // ClearOnAdvance
                                     parmstr = GetParm(s, ":CA=");
-                                    bool clearAdvance = true;
+                                    var clearAdvance = true;
                                     // if kills needed is zero, then set CA to false by default.  This maintains consistency with the
                                     // previous default behavior for old spawn specs that havent specified CA
                                     if (killsNeeded == 0)

@@ -70,15 +70,13 @@ namespace Server.Gumps
                             };
 
                             Timer.DelayCall(TimeSpan.Zero, new TimerStateCallback(XmlSpawnerGump.Refresh_Callback), new object[] { from });
-                            //from.CloseGump(typeof(XmlSpawnerGump));
-                            //from.SendGump( new XmlSpawnerGump(xg.m_Spawner, xg.X, xg.Y, xg.m_ShowGump, xg.xoffset, xg.page, xg.Rentry) );
                         }
                     }
                 }
             }
         }
 
-        public XmlAddCAGObject(XmlAddCAGCategory parent, XmlTextReader xml)
+        public XmlAddCAGObject(XmlAddCAGCategory parent, XmlReader xml)
         {
             Parent = parent;
 

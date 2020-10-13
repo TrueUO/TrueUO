@@ -622,7 +622,7 @@ namespace Server.Gumps
                 m_Start = start;
             }
 
-            private static readonly Type typeofObject = typeof(object);
+            private static readonly Type _TypeofObject = typeof(object);
 
             private int GetDistance(Type type)
             {
@@ -630,7 +630,7 @@ namespace Server.Gumps
 
                 int dist;
 
-                for (dist = 0; current != null && current != typeofObject && current != type; ++dist)
+                for (dist = 0; current != null && current != _TypeofObject && current != type; ++dist)
                     current = current.BaseType;
 
                 return dist;

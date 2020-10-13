@@ -1305,7 +1305,8 @@ namespace Server.Mobiles
                 return string.Format("Type = {0}", o.GetType().Name);
 
             }
-            else if (keywordargs[0] == "STEALABLE")
+
+            if (keywordargs[0] == "STEALABLE")
             {
                 try
                 {
@@ -1492,9 +1493,7 @@ namespace Server.Mobiles
                 terminated = true;
             }
 
-            string[] arglist;
-
-            arglist = ParseSlashArgs(str, 2);
+            var arglist = ParseSlashArgs(str, 2);
 
             string remainder = null;
 
@@ -5633,7 +5632,7 @@ namespace Server.Mobiles
                 if (!string.IsNullOrEmpty(itemtypestring))
                     argstart = itemtypestring.IndexOf(",") + 1;
 
-                if (argstart > 1 && argstart < itemtypestring.Length)
+                if (itemtypestring != null && argstart > 1 && argstart < itemtypestring.Length)
                 {
                     typeargs = ParseCommaArgs(itemtypestring.Substring(argstart), 15);
                 }
@@ -6843,17 +6842,15 @@ namespace Server.Mobiles
                         {
                             // syntax TAKEGIVE[,quantity[,true*,[type]]]/itemnametotake/GIVE/itemtypetogive *search in banca
                             string[] arglist = ParseSlashArgs(substitutedtypeName, 5);
-                            string targetName;
                             string typestr = null;
-                            string[] givelist;
                             if (arglist.Length < 4)
                             {
                                 status_str = "invalid TAKEGIVE specification";
                                 return false;
                             }
 
-                            givelist = new string[arglist.Length - 2];
-                            targetName = arglist[1];
+                            var givelist = new string[arglist.Length - 2];
+                            var targetName = arglist[1];
                             Array.Copy(arglist, 2, givelist, 0, arglist.Length - 2);
                             string[] keywordargs = ParseString(arglist[0], 4, ",");
                             string[] givekeywordargs = ParseString(givelist[0], 2, ",");
@@ -7759,8 +7756,7 @@ namespace Server.Mobiles
                                 Parent = caster
                             };
 
-                            Spell spell;
-                            spell = hasnumber ? SpellRegistry.NewSpell(spellnumber, caster, cwand) : SpellRegistry.NewSpell(keywordargs[1], caster, cwand);
+                            var spell = hasnumber ? SpellRegistry.NewSpell(spellnumber, caster, cwand) : SpellRegistry.NewSpell(keywordargs[1], caster, cwand);
 
                             if (spell != null)
                             {
