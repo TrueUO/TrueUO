@@ -44,11 +44,11 @@ namespace Server.Gumps
         public static readonly int EntryHeight = PropsConfig.EntryHeight;
         public static readonly int BorderSize = PropsConfig.BorderSize;
 
-        private static readonly int NameWidth = 103;
-        private static readonly int ValueWidth = 82;
+        private const int NameWidth = 103;
+        private const int ValueWidth = 82;
 
-        private static readonly int EntryCount = 66;
-        private static readonly int ColumnEntryCount = 22;
+        private const int EntryCount = 66;
+        private const int ColumnEntryCount = 22;
 
         private static readonly int TypeWidth = NameWidth + OffsetSize + ValueWidth;
 
@@ -344,9 +344,9 @@ namespace Server.Gumps
             return type == check || type.IsSubclassOf(check);
         }
 
-        private static bool IsType(Type type, Type[] check)
+        private static bool IsType(Type type, IReadOnlyList<Type> check)
         {
-            for (int i = 0; i < check.Length; ++i)
+            for (int i = 0; i < check.Count; ++i)
                 if (IsType(type, check[i]))
                     return true;
 
@@ -500,11 +500,11 @@ namespace Server.Gumps
             return null;
         }
 
-        private ArrayList GetGroups(Type objectType, PropertyInfo[] props)
+        private ArrayList GetGroups(Type objectType, IReadOnlyList<PropertyInfo> props)
         {
             Hashtable groups = new Hashtable();
 
-            for (int i = 0; i < props.Length; ++i)
+            for (int i = 0; i < props.Count; ++i)
             {
                 PropertyInfo prop = props[i];
 

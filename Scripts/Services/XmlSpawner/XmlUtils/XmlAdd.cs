@@ -198,7 +198,7 @@ namespace Server.Mobiles
             return sb.ToString();
         }
 
-        private string[] StringToNameList(string namelist)
+        private static string[] StringToNameList(string namelist)
         {
             string[] newlist = new string[MaxEntries];
             string[] tmplist = namelist.Split(':');
@@ -210,7 +210,7 @@ namespace Server.Mobiles
             return newlist;
         }
 
-        private bool[] StringToSelectionList(string selectionlist)
+        private static bool[] StringToSelectionList(string selectionlist)
         {
             bool[] newlist = new bool[MaxEntries];
             string[] tmplist = selectionlist.Split(':');
@@ -237,8 +237,6 @@ namespace Server.Mobiles
             ds.Tables.Add(DefsTablePointName);
 
             // Create spawn point schema
-            //ds.Tables[DefsTablePointName].Columns.Add( "AccountName" );
-            //ds.Tables[DefsTablePointName].Columns.Add( "PlayerName" );
             ds.Tables[DefsTablePointName].Columns.Add("MinDelay");
             ds.Tables[DefsTablePointName].Columns.Add("MaxDelay");
             ds.Tables[DefsTablePointName].Columns.Add("SpawnRange");
@@ -271,7 +269,6 @@ namespace Server.Mobiles
             ds.Tables[DefsTablePointName].Columns.Add("TrigProb");
             ds.Tables[DefsTablePointName].Columns.Add("PlayerTrigProp");
             ds.Tables[DefsTablePointName].Columns.Add("TrigObjectProp");
-            //ds.Tables[DefsTablePointName].Columns.Add( "DefsExt" );
             ds.Tables[DefsTablePointName].Columns.Add("NameList");
             ds.Tables[DefsTablePointName].Columns.Add("SelectionList");
             ds.Tables[DefsTablePointName].Columns.Add("AddGumpX");
@@ -337,8 +334,7 @@ namespace Server.Mobiles
 
             // Write out the file
             bool file_error = false;
-            string dirname;
-            dirname = Directory.Exists(DefsDir) ? string.Format("{0}/{1}.defs", DefsDir, filename) : string.Format("{0}.defs", filename);
+            var dirname = Directory.Exists(DefsDir) ? string.Format("{0}/{1}.defs", DefsDir, filename) : string.Format("{0}.defs", filename);
             try
             {
                 ds.WriteXml(dirname);
@@ -909,7 +905,7 @@ namespace Server.Mobiles
             }
         }
 
-        private void DoGoTo(XmlSpawner x)
+        private void DoGoTo(Item x)
         {
             if (m_From == null || m_From.Deleted) return;
             if (x == null || x.Deleted || x.Map == null) return;
@@ -933,14 +929,14 @@ namespace Server.Mobiles
             m_From.Map = x.Map;
         }
 
-        private void DoShowProps(XmlSpawner x)
+        private void DoShowProps(IEntity x)
         {
             if (m_From == null || m_From.Deleted) return;
             if (x == null || x.Deleted || x.Map == null) return;
             m_From.SendGump(new PropertiesGump(m_From, x));
         }
 
-        private static void DoShowGump(Mobile from, XmlSpawner x)
+        private static void DoShowGump(Mobile from, Item x)
         {
             if (from == null || from.Deleted) return;
             if (x == null || x.Deleted || x.Map == null || x.Map == Map.Internal) return;

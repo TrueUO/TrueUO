@@ -2489,7 +2489,6 @@ namespace Server.Mobiles
 
         private void ActivateTrigger()
         {
-
             // reset the timer
             DoTimer();
 
@@ -2514,14 +2513,10 @@ namespace Server.Mobiles
 
             // reset skill triggering if it was set
             m_skillTriggerActivated = false;
-
-            // reset external triggering if it was set
-            //this.m_ExternalTrigger = false;
         }
 
         public void CheckTriggers(Mobile m, Skill s, bool hasproximity)
         {
-
             // only proximity trigger when no spawns have already been triggered
             if (AllowTriggering && !m_proximityActivated)
             {
@@ -2658,7 +2653,6 @@ namespace Server.Mobiles
 
                 if (Utility.RandomDouble() < TriggerProbability)
                 {
-
                     // play a sound indicating the spawner has been triggered
                     if (ProximitySound > 0 && m != null && !m.Deleted)
                         m.PlaySound(ProximitySound);
@@ -2675,14 +2669,7 @@ namespace Server.Mobiles
                     TriggerMob = m;
 
                     // keep track of the skill that triggered this
-                    if (s != null)
-                    {
-                        m_skill_that_triggered = s.SkillName;
-                    }
-                    else
-                    {
-                        m_skill_that_triggered = XmlSpawnerSkillCheck.RegisteredSkill.Invalid;
-                    }
+                    m_skill_that_triggered = s != null ? s.SkillName : XmlSpawnerSkillCheck.RegisteredSkill.Invalid;
 
 
                 }
@@ -4815,15 +4802,7 @@ namespace Server.Mobiles
                             null, null, null, null, 1, null, false, defTODMode, defKillReset, false, -1, null, false, false, false, null,
                             TimeSpan.FromHours(0), null, false, null);
 
-                    if (hasvendor)
-                    {
-                        // force vendor spawners to behave like the distro
-                        spawner.SpawnRange = 0;
-                    }
-                    else
-                    {
-                        spawner.SpawnRange = spawnrange;
-                    }
+                    spawner.SpawnRange = hasvendor ? 0 : spawnrange;
 
                     spawner.PlayerCreated = true;
 
@@ -5071,15 +5050,7 @@ namespace Server.Mobiles
                         null, null, null, null, 1, null, false, defTODMode, defKillReset, false, -1, null, false, false, false, null,
                         TimeSpan.FromHours(0), null, false, null);
 
-                    if (hasvendor)
-                    {
-                        // force vendor spawners to behave like the distro
-                        spawner.SpawnRange = 0;
-                    }
-                    else
-                    {
-                        spawner.SpawnRange = spawnrange;
-                    }
+                    spawner.SpawnRange = hasvendor ? 0 : spawnrange;
 
                     spawner.PlayerCreated = true;
 
@@ -5228,14 +5199,7 @@ namespace Server.Mobiles
                 TimeSpan.FromMinutes(0), null, null, null, null, null,
                 null, null, null, null, 1, null, group, defTODMode, defKillReset, false, -1, null, false, false, false, null, defDespawnTime, null, false, null);
 
-            if (hasvendor)
-            {
-                spawner.SpawnRange = 0;
-            }
-            else
-            {
-                spawner.SpawnRange = homeRange;
-            }
+            spawner.SpawnRange = hasvendor ? 0 : homeRange;
             spawner.PlayerCreated = true;
 
             spawner.MoveToWorld(location, map);
@@ -6427,8 +6391,7 @@ namespace Server.Mobiles
 
             m.SendMessage("Saving object in folder {0} - file {1} - spawner {2}.", dirname, filename, xmlspawner);
 
-            List<XmlSpawner> saveslist = new List<XmlSpawner>(1);
-            saveslist.Add(xmlspawner);
+            List<XmlSpawner> saveslist = new List<XmlSpawner>(1) {xmlspawner};
             SaveSpawnList(m, saveslist, dirname, false, true);
         }
 
@@ -6542,7 +6505,6 @@ namespace Server.Mobiles
             int TokunoCount = 0;
             int OtherCount = 0;
 
-
             // Create the data set
             DataSet ds = new DataSet(SpawnDataSetName);
 
@@ -6613,14 +6575,7 @@ namespace Server.Mobiles
             ds.Tables[SpawnTablePointName].Columns.Add("IsGroup");
             ds.Tables[SpawnTablePointName].Columns.Add("IsRunning");
             ds.Tables[SpawnTablePointName].Columns.Add("IsHomeRangeRelative");
-            if (oldformat)
-            {
-                ds.Tables[SpawnTablePointName].Columns.Add("Objects");
-            }
-            else
-            {
-                ds.Tables[SpawnTablePointName].Columns.Add("Objects2");
-            }
+            ds.Tables[SpawnTablePointName].Columns.Add(oldformat ? "Objects" : "Objects2");
 
             // Always export sorted by UUID to help diffs
             savelist.Sort((a, b) =>
@@ -8106,17 +8061,7 @@ namespace Server.Mobiles
                 int SpawnIndex;
 
                 // see if sequential spawning has been selected
-                if (SequentialSpawn >= 0)
-                {
-                    // if so then use its value to get the index of the first available spawn entry in the next subgroup to be spawned
-                    // note, if the current sequence finds a zero group then the spawn will be picked at random from it
-                    SpawnIndex = GetCurrentAvailableSequentialSpawnIndex(SequentialSpawn);
-                }
-                else
-                {
-                    // if sequential spawning is not set then select the next spawn at random
-                    SpawnIndex = RandomAvailableSpawnIndex();
-                }
+                SpawnIndex = SequentialSpawn >= 0 ? GetCurrentAvailableSequentialSpawnIndex(SequentialSpawn) : RandomAvailableSpawnIndex();
 
                 // no spawns are available so no point in continuing
                 if (SpawnIndex < 0)
@@ -8361,14 +8306,7 @@ namespace Server.Mobiles
                     }
 
                     // get the rest of the spawn entry
-                    if (args.Length > 1)
-                    {
-                        substitutedtypeName = args[1].Trim();
-                    }
-                    else
-                    {
-                        substitutedtypeName = string.Empty;
-                    }
+                    substitutedtypeName = args.Length > 1 ? args[1].Trim() : string.Empty;
                 }
 
 
@@ -8466,10 +8404,7 @@ namespace Server.Mobiles
 
                                 // Check if this spawner uses absolute (from spawnER location)
                                 // or relative (from spawnED location) as the mobiles home point
-                                if (m_HomeRangeIsRelative)
-                                    c.Home = m.Location; // Mobiles spawned location is the home point
-                                else
-                                    c.Home = Location; // Spawners location is the home point
+                                c.Home = m_HomeRangeIsRelative ? m.Location : Location;
                             }
 
                             // if the object has an OnSpawned method, then invoke it
@@ -8839,7 +8774,7 @@ namespace Server.Mobiles
         {
             public int Compare(SpawnObject a, SpawnObject b)
             {
-                if (a.SubGroup == b.SubGroup)
+                if (a != null && b != null && a.SubGroup == b.SubGroup)
                 {
                     // use the entry order as the secondary sort factor
                     return a.EntryOrder - b.EntryOrder;
@@ -9999,14 +9934,7 @@ namespace Server.Mobiles
                 // try to find a valid spawn location using the z coord of the spawner
                 // relax the normal surface requirement for mobiles if the flag is set
                 bool fit;
-                if (requiresurface)
-                {
-                    fit = CanSpawnMobile(x, y, defaultZ, mob);
-                }
-                else
-                {
-                    fit = Map.CanFit(x, y, defaultZ, SpawnFitSize, true, false, false);
-                }
+                fit = requiresurface ? CanSpawnMobile(x, y, defaultZ, mob) : Map.CanFit(x, y, defaultZ, SpawnFitSize, true, false, false);
 
                 // if that fails then try to find a valid z coord
                 if (fit)
@@ -10016,14 +9944,7 @@ namespace Server.Mobiles
 
                 z = Map.GetAverageZ(x, y);
 
-                if (requiresurface)
-                {
-                    fit = CanSpawnMobile(x, y, z, mob);
-                }
-                else
-                {
-                    fit = Map.CanFit(x, y, z, SpawnFitSize, true, false, false);
-                }
+                fit = requiresurface ? CanSpawnMobile(x, y, z, mob) : Map.CanFit(x, y, z, SpawnFitSize, true, false, false);
 
                 if (fit)
                 {

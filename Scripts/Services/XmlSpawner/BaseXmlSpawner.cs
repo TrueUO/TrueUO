@@ -3527,14 +3527,7 @@ namespace Server.Mobiles
             if ((startc == '.') || (startc == '-') || (startc == '+') || (startc >= '0' && startc <= '9'))
             {
                 // determine the type
-                if (str.IndexOf(".") >= 0)
-                {
-                    ptype = typeof(double);
-                }
-                else
-                {
-                    ptype = typeof(int);
-                }
+                ptype = str.IndexOf(".") >= 0 ? typeof(double) : typeof(int);
                 return str;
             }
 
@@ -4651,7 +4644,7 @@ namespace Server.Mobiles
                         Type mobtype = m.GetType();
 
                         if (!m.Deleted && CheckNameMatch(targetname, m.Name) && (typestr == null ||
-                            (mobtype != null && targettype != null && (mobtype.Equals(targettype) || mobtype.IsSubclassOf(targettype)))))
+                            (targettype != null && (mobtype.Equals(targettype) || mobtype.IsSubclassOf(targettype)))))
                         {
                             if (proptest == null || CheckPropertyString(null, m, proptest, null, out status_str))
                                 nearbylist.Add(m);
@@ -5484,10 +5477,7 @@ namespace Server.Mobiles
                         {
                             // but have to get rid of any trailing / that might be after the >
                             string[] trailstr = ParseSlashArgs(itemargs[1], 2);
-                            if (trailstr.Length > 1)
-                                remainder = trailstr[1];
-                            else
-                                remainder = itemargs[1];
+                            remainder = trailstr.Length > 1 ? trailstr[1] : itemargs[1];
                         }
                         else
                             remainder = "";
@@ -5502,10 +5492,7 @@ namespace Server.Mobiles
                     else
                     {
                         // otherwise its just a regular case with arglist[2] containing the rest of the arguments
-                        if (arglist.Length > 2)
-                            remainder = arglist[2];
-                        else
-                            remainder = "";
+                        remainder = arglist.Length > 2 ? arglist[2] : "";
                     }
 
                     // test the drop probability
@@ -7798,16 +7785,9 @@ namespace Server.Mobiles
                                 Parent = caster
                             };
 
-
                             Spell spell;
-                            if (hasnumber)
-                            {
-                                spell = SpellRegistry.NewSpell(spellnumber, caster, cwand);
-                            }
-                            else
-                            {
-                                spell = SpellRegistry.NewSpell(keywordargs[1], caster, cwand);
-                            }
+                            spell = hasnumber ? SpellRegistry.NewSpell(spellnumber, caster, cwand) : SpellRegistry.NewSpell(keywordargs[1], caster, cwand);
+
                             if (spell != null)
                             {
                                 bool casterror = false;
@@ -7847,7 +7827,7 @@ namespace Server.Mobiles
 
                                     }
                                     // if it doesnt have it then check for self targeted types
-                                    else if (spelltype != null && (spelltargetmethod = spelltype.GetMethod("OnCast")) != null)
+                                    else if ((spelltargetmethod = spelltype.GetMethod("OnCast")) != null)
                                     {
 
                                     }
@@ -7861,7 +7841,7 @@ namespace Server.Mobiles
                                     // selftarg will have none
                                     object[] targetargs = null;
                                     // check the parameters
-                                    if (spelltargetparms != null && spelltargetparms.Length > 0)
+                                    if (spelltargetparms.Length > 0)
                                     {
                                         if (spelltargetparms[0].ParameterType == typeof(Mobile))
                                         {
@@ -7895,7 +7875,7 @@ namespace Server.Mobiles
                                     spelltargetmethod.Invoke(spell, targetargs);
 
                                     // get rid of the placeholder wand
-                                    if (cwand != null && !cwand.Deleted)
+                                    if (!cwand.Deleted)
                                         cwand.Delete();
                                 }
                                 catch

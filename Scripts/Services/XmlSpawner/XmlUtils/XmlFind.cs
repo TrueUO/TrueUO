@@ -867,9 +867,7 @@ namespace Server.Mobiles
             m_ShowExtension = extension;
             Descendingsort = descend;
 
-            m_SearchCriteria = criteria;
-
-            if (m_SearchCriteria == null) m_SearchCriteria = new SearchCriteria();
+            m_SearchCriteria = criteria ?? new SearchCriteria();
 
             m_SearchList = searchlist;
 
@@ -1222,10 +1220,7 @@ namespace Server.Mobiles
 
                             if (item.RootParent is Mobile m)
                             {
-                                if (m.Player)
-                                    texthue = 44;
-                                else
-                                    texthue = 24;
+                                texthue = m.Player ? 44 : 24;
                                 locstr = m.Location.ToString();
                                 ownstr = m.Name;
                             }
@@ -1234,14 +1229,7 @@ namespace Server.Mobiles
                             {
                                 texthue = 5;
                                 locstr = c.Location.ToString();
-                                if (c.Name != null)
-                                {
-                                    ownstr = c.Name;
-                                }
-                                else
-                                {
-                                    ownstr = c.ItemData.Name;
-                                }
+                                ownstr = c.Name ?? c.ItemData.Name;
                             }
 
                         }
