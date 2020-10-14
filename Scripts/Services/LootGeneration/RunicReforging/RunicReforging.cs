@@ -2922,7 +2922,7 @@ namespace Server.Items
         #endregion
 
         #region Weapon Tables
-        public static int[][] ElementalDamageTable =
+        public static readonly int[][] ElementalDamageTable =
         {
             new int[] { 60, 70, 80, 100, 100, 100, 100 },
             new int[] { 80, 100, 100, 100, 100, 100, 100 },
@@ -2933,7 +2933,7 @@ namespace Server.Items
         };
 
         // Hit magic, area, HLA
-        public static int[][] HitWeaponTable1 =
+        public static readonly int[][] HitWeaponTable1 =
         {
             new int[] { 30, 50, 50, 60, 70, 70, 70 },
             new int[] { 50, 60, 70, 70, 70, 70, 70 },
@@ -2944,7 +2944,7 @@ namespace Server.Items
         };
 
         // hit fatigue, mana drain, HLD
-        public static int[][] HitWeaponTable2 =
+        public static readonly int[][] HitWeaponTable2 =
         {
             new int[] { 30, 40, 50, 50, 60, 70, 70 },
             new int[] { 50, 50, 50, 60, 70, 70, 70 },
@@ -2954,7 +2954,7 @@ namespace Server.Items
             new int[] { 70, 70, 70, 70, 70, 70, 70 },
         };
 
-        public static int[][] WeaponVelocityTable =
+        public static readonly int[][] WeaponVelocityTable =
         {
             new int[] { 25, 35, 40, 40, 40, 45, 50 },
             new int[] { 40, 40, 40, 45, 50, 50, 50 },
@@ -2964,7 +2964,7 @@ namespace Server.Items
             new int[] { 45, 50, 50, 50, 50, 50, 50 },
         };
 
-        public static int[][] HitsAndManaLeechTable =
+        public static readonly int[][] HitsAndManaLeechTable =
         {
             new int[] { 15, 25, 25, 30, 35, 35, 35 },
             new int[] { 25, 25, 30, 35, 35, 35, 35 },
@@ -2974,7 +2974,7 @@ namespace Server.Items
             new int[] { 35, 35, 35, 35, 35, 35, 35 },
         };
 
-        public static int[][] HitStamLeechTable =
+        public static readonly int[][] HitStamLeechTable =
         {
             new int[] { 30, 50, 50, 60, 70, 70, 70 },
             new int[] { 50, 60, 70, 70, 70, 70, 70 },
@@ -2984,7 +2984,7 @@ namespace Server.Items
             new int[] { 70, 70, 70, 70, 70, 70, 70 },
         };
 
-        public static int[][] LuckTable =
+        public static readonly int[][] LuckTable =
         {
             new int[] { 80, 100, 100, 120, 140, 150, 150 },
             new int[] { 100, 120, 140, 150, 150, 150, 150 },
@@ -2994,7 +2994,7 @@ namespace Server.Items
             new int[] { 150, 150, 150, 150, 150, 150, 150 },
         };
 
-        public static int[][] MageWeaponTable =
+        public static readonly int[][] MageWeaponTable =
         {
             new int[] { 25, 20, 20, 20, 20, 15, 15 },
             new int[] { 20, 20, 20, 15, 15, 15, 15 },
@@ -3004,7 +3004,7 @@ namespace Server.Items
             new int[] { 15, 15, 15, 15, 15, 15, 15 },
         };
 
-        public static int[][] WeaponRegenTable =
+        public static readonly int[][] WeaponRegenTable =
         {
             new int[] { 2, 3, 6, 6, 6, 6, 6 },
             new int[] { 3, 6, 6, 6, 6, 6, 6 },
@@ -3014,7 +3014,7 @@ namespace Server.Items
             new int[] { 6, 9, 9, 9, 9, 9, 9 },
         };
 
-        public static int[][] WeaponHitsTable =
+        public static readonly int[][] WeaponHitsTable =
         {
             new int[] { 2, 3, 3, 3, 4, 4, 4 },
             new int[] { 3, 3, 4, 4, 4, 4, 4 },
@@ -3024,7 +3024,7 @@ namespace Server.Items
             new int[] { 4, 4, 4, 4, 4, 4, 4 },
         };
 
-        public static int[][] WeaponStamManaLMCTable =
+        public static readonly int[][] WeaponStamManaLMCTable =
         {
             new int[] { 2, 4, 4, 4, 5, 5, 5 },
             new int[] { 4, 4, 5, 5, 5, 5, 5 },
@@ -3034,7 +3034,7 @@ namespace Server.Items
             new int[] { 5, 5, 5, 5, 5, 5, 5 },
         };
 
-        public static int[][] WeaponStrTable =
+        public static readonly int[][] WeaponStrTable =
         {
             new int[] { 2, 4, 4, 4, 5, 5, 5 },
             new int[] { 4, 4, 5, 5, 5, 5, 5 },
@@ -3044,7 +3044,7 @@ namespace Server.Items
             new int[] { 5, 5, 5, 5, 5, 5, 5 },
         };
 
-        public static int[][] WeaponHCITable =
+        public static readonly int[][] WeaponHCITable =
         {
             new int[] { 5, 10, 15, 15, 15, 20, 20 },
             new int[] { 15, 15, 15, 20, 20, 20, 20 },
@@ -3054,7 +3054,7 @@ namespace Server.Items
             new int[] { 20, 20, 20, 20, 20, 20, 20 },
         };
 
-        public static int[][] WeaponDCITable =
+        public static readonly int[][] WeaponDCITable =
         {
             new int[] { 10, 15, 15, 15, 20, 20, 20 },
             new int[] { 15, 15, 20, 20, 20, 20, 20 },
@@ -3064,7 +3064,7 @@ namespace Server.Items
             new int[] { 20, 20, 20, 20, 20, 20, 20 },
         };
 
-        public static int[][] WeaponDamageTable =
+        public static readonly int[][] WeaponDamageTable =
         {
             new int[] { 30, 50, 50, 60, 70, 70, 70 },
             new int[] { 50, 60, 70, 70, 70, 70, 70 },
@@ -3074,7 +3074,7 @@ namespace Server.Items
             new int[] { 70, 70, 70, 70, 70, 70, 70 },
         };
 
-        public static int[][] WeaponEnhancePots =
+        public static readonly int[][] WeaponEnhancePots =
         {
             new int[] { 5, 10, 10, 10, 10, 15, 15 },
             new int[] { 10, 10, 10, 15, 15, 15, 15 },
@@ -3084,7 +3084,7 @@ namespace Server.Items
             new int[] { 15, 15, 15, 15, 15, 15, 15 },
         };
 
-        public static int[][] WeaponWeaponSpeedTable =
+        public static readonly int[][] WeaponWeaponSpeedTable =
         {
             new int[] { 20, 30, 30, 35, 40, 40, 40 },
             new int[] { 30, 35, 40, 40, 40, 40, 40 },
