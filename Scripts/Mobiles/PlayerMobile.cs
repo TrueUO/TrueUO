@@ -3394,7 +3394,7 @@ namespace Server.Mobiles
 
             if (willKill && from is PlayerMobile)
             {
-                Timer.DelayCall(TimeSpan.FromSeconds(10), ((PlayerMobile)@from).RecoverAmmo);
+                Timer.DelayCall(TimeSpan.FromSeconds(10), ((PlayerMobile)from).RecoverAmmo);
             }
 
             #region Mondain's Legacy
