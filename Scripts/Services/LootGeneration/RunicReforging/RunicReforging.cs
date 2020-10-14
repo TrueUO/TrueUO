@@ -2860,7 +2860,7 @@ namespace Server.Items
 
         #region Tables
         #region All
-        public static int[][] DexIntTable =
+        public static readonly int[][] DexIntTable =
         {
             new int[] { 3, 4, 4, 4, 5, 5, 5 },
             new int[] { 4, 4, 5, 5, 5, 5, 5 },
@@ -2870,7 +2870,7 @@ namespace Server.Items
             new int[] { 5, 5, 5, 5, 5, 5, 5 },
         };
 
-        public static int[][] LowerStatReqTable =
+        public static readonly int[][] LowerStatReqTable =
         {
             new int[] { 60, 70, 80, 100, 100, 100, 100 },
             new int[] { 80, 100, 100, 100, 100, 100, 100 },
@@ -2880,7 +2880,7 @@ namespace Server.Items
             new int[] { 100, 100, 100, 100, 100, 100, 100 },
         };
 
-        public static int[][] SelfRepairTable =
+        public static readonly int[][] SelfRepairTable =
         {
             new int[] { 2, 4, 0, 0, 0, 0, 0 },
             new int[] { 5, 5, 0, 0, 0, 0, 0 },
@@ -2890,7 +2890,7 @@ namespace Server.Items
             new int[] { 7, 7, 0, 0, 0, 0, 0 },
         };
 
-        public static int[][] DurabilityTable =
+        public static readonly int[][] DurabilityTable =
         {
             new int[] { 90, 100, 0, 0, 0, 0, 0 },
             new int[] { 110, 140, 0, 0, 0, 0, 0 },
@@ -2900,7 +2900,7 @@ namespace Server.Items
             new int[] { 150, 150, 0, 0, 0, 0, 0 },
         };
 
-        public static int[][] ResistTable =
+        public static readonly int[][] ResistTable =
         {
             new int[] { 10, 15, 15, 15, 20, 20, 20 },
             new int[] { 15, 15, 15, 20, 20, 20, 20 },
@@ -2910,7 +2910,7 @@ namespace Server.Items
             new int[] { 20, 20, 20, 20, 20, 20, 20 },
         };
 
-        public static int[][] EaterTable =
+        public static readonly int[][] EaterTable =
         {
             new int[] { 9, 12, 12, 15, 15, 15, 15 },
             new int[] { 12, 15, 15, 15, 15, 15, 15 },
