@@ -36,9 +36,6 @@ namespace Server.Items
         {
             base.Deserialize(reader);
             int version = reader.ReadInt();
-
-            if (Hue == 1150 || Hue == 0)
-                Hue = 1902;
         }
     }
 
@@ -78,9 +75,6 @@ namespace Server.Items
         {
             base.Deserialize(reader);
             int version = reader.ReadInt();
-
-            if (Hue == 1150 || Hue == 0)
-                Hue = 1902;
         }
     }
 }
