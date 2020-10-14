@@ -10,7 +10,7 @@ namespace Server.Mobiles
 
         public int LabelHue => User?.NetState != null && User.NetState.IsEnhancedClient ? 0x386 : 0x384;
 
-        public SpawnerGump(Mobile m, Spawner spawner)
+        public SpawnerGump(IEntity m, Spawner spawner)
             : base(m as PlayerMobile)
         {
             Spawner = spawner;

@@ -43,7 +43,7 @@ namespace Server.Mobiles
 
         [Constructable]
         public Spawner(int amount, int minDelay, int maxDelay, int team, int spawnRange, string spawnName)
-            : base(0x1f13)
+            : base(0x18DB)
         {
             List<SpawnObject> objects = new List<SpawnObject>();
 
@@ -55,8 +55,8 @@ namespace Server.Mobiles
         }
 
         public Spawner(int amount, TimeSpan minDelay, TimeSpan maxDelay, int team, int spawnRange,
-            List<string> spawnNames)
-            : base(0x1f13)
+            IEnumerable<string> spawnNames)
+            : base(0x18DB)
         {
             List<SpawnObject> objects = new List<SpawnObject>();
 
@@ -70,7 +70,7 @@ namespace Server.Mobiles
 
         public Spawner(int amount, TimeSpan minDelay, TimeSpan maxDelay, int team, int spawnRange,
             List<SpawnObject> objects)
-            : base(0x1f13)
+            : base(0x18DB)
         {
             InitSpawner(amount, minDelay, maxDelay, team, spawnRange, objects);
         }
@@ -358,12 +358,9 @@ namespace Server.Mobiles
                         {
                             remove = true;
                         }
-                        else if (m is BaseCreature bc)
+                        else if (m is BaseCreature bc && (bc.Controlled || bc.IsStabled))
                         {
-                            if (bc.Controlled || bc.IsStabled)
-                            {
-                                remove = true;
-                            }
+                            remove = true;
                         }
                     }
 
@@ -619,7 +616,7 @@ namespace Server.Mobiles
 
         public int GetSpawnCount(SpawnObject so)
         {
-            return so != null ? so.CurrentCount : 0;
+            return so?.CurrentCount ?? 0;
         }
 
         public void DoTimer()

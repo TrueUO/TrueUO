@@ -33,13 +33,13 @@ namespace Server.Mobiles
         }
 
         public ProximitySpawner(int amount, TimeSpan minDelay, TimeSpan maxDelay, int team, int homeRange,
-            List<string> spawnNames)
+            IEnumerable<string> spawnNames)
             : base(amount, minDelay, maxDelay, team, homeRange, spawnNames)
         {
         }
 
         public ProximitySpawner(int amount, TimeSpan minDelay, TimeSpan maxDelay, int team, int homeRange,
-            List<string> spawnNames, int triggerRange, TextDefinition spawnMessage, bool instantFlag)
+            IEnumerable<string> spawnNames, int triggerRange, TextDefinition spawnMessage, bool instantFlag)
             : base(amount, minDelay, maxDelay, team, homeRange, spawnNames)
         {
             TriggerRange = triggerRange;
