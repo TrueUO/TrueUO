@@ -851,7 +851,6 @@ namespace Server.Mobiles
         private static void Targeted_Skill(TargetedSkillEventArgs e)
         {
             Mobile from = e.Mobile;
-            int SkillId = e.SkillID;
             IEntity target = e.Target;
 
             if (from == null || target == null)
@@ -2098,7 +2097,7 @@ namespace Server.Mobiles
 
             BestialSetHelper.OnHeal(this, from, ref amount);
 
-            if (amount > 0 && from != null && from != this)
+            if (amount > 0 && from != this)
             {
                 for (int i = Aggressed.Count - 1; i >= 0; i--)
                 {
@@ -2536,19 +2535,6 @@ namespace Server.Mobiles
 
             SendLocalizedMessage(1060881, "", 0x23); // You have selected to automatically reinsure all insured items upon death
             AutoRenewInsurance = true;
-        }
-
-        private void CancelRenewInventoryInsurance()
-        {
-            if (!CheckAlive())
-            {
-                return;
-            }
-
-            if (!HasGump(typeof(CancelRenewInventoryInsuranceGump)))
-            {
-                SendGump(new CancelRenewInventoryInsuranceGump(this, null));
-            }
         }
 
         #region Siege Bless Item
@@ -4252,11 +4238,6 @@ namespace Server.Mobiles
             }
         }
 
-        private void RevertHair()
-        {
-            SetHairMods(-1, -1);
-        }
-
         public BOBFilter BOBFilter => BulkOrderSystem.GetBOBFilter(this);
 
         public override void Deserialize(GenericReader reader)
@@ -5372,7 +5353,7 @@ namespace Server.Mobiles
 
             string suffix = "";
 
-            if (PropertyTitle && Title != null && Title.Length > 0)
+            if (PropertyTitle && !string.IsNullOrEmpty(Title))
             {
                 suffix = Title;
             }
