@@ -4805,23 +4805,19 @@ namespace Server.Mobiles
 
                     if (item != null && !item.Deleted)
                     {
-
                         if (item is Container container)
                         {
                             itemlist.AddRange(SearchPackForItems(container, targetName, typestr));
                         }
                         // test the item name against the trigger string since it's not a container
-                        else if (CheckNameMatch(targetName, item.Name))
+                        else if (CheckNameMatch(targetName, item.Name) && targettype == null || item.GetType().Equals(targettype) || item.GetType().IsSubclassOf(targettype))
                         {
-                            if (targettype == null || item.GetType().Equals(targettype) || item.GetType().IsSubclassOf(targettype))
-                            {
-                                //found it
-                                itemlist.Add(item);
-                            }
+                            itemlist.Add(item);
                         }
                     }
                 }
             }
+
             return itemlist;
         }
 
@@ -4912,6 +4908,7 @@ namespace Server.Mobiles
                         typestr = objstr[objoffset];
                     }
                 }
+
                 objoffset++;
             }
 
@@ -4919,13 +4916,11 @@ namespace Server.Mobiles
             Item testitem = SearchMobileForItem(m, itemname, typestr, false, equippedonly);
 
             // found the item
-            if (testitem != null)
+            if (testitem != null && equippedonly && testitem.Parent == m || !equippedonly)
             {
-                // is the equippedonly flag set?  If so then see if the item is equipped
-                if (equippedonly && testitem.Parent == m || !equippedonly)
-                    has_no_such_item = false;
-
+                has_no_such_item = false;
             }
+
             return has_no_such_item;
         }
 

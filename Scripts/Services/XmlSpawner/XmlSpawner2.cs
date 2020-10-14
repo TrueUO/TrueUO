@@ -8211,9 +8211,8 @@ namespace Server.Mobiles
                 {
                     Mobile m = mobs[i];
 
-                    if (m.Location.X == x && m.Location.Y == y && (m.AccessLevel == AccessLevel.Player || !m.Hidden))
-                        if (m.Z + 16 > z && z + height > m.Z)
-                            return false;
+                    if (m.Location.X == x && m.Location.Y == y && (m.AccessLevel == AccessLevel.Player || !m.Hidden) && m.Z + 16 > z && z + height > m.Z)
+                        return false;
                 }
             }
 
@@ -9374,46 +9373,6 @@ namespace Server.Mobiles
                             }
                         }
                     }
-                }
-            }
-        }
-
-        private class SectorTimer : Timer
-        {
-            private readonly XmlSpawner m_Spawner;
-
-            public SectorTimer(XmlSpawner spawner, TimeSpan delay)
-                : base(delay, delay)
-            {
-                Priority = TimerPriority.OneSecond;
-                m_Spawner = spawner;
-            }
-
-            protected override void OnTick()
-            {
-                // check the sectors
-                if (m_Spawner != null && !m_Spawner.Deleted && m_Spawner.Running && m_Spawner.IsInactivated)
-                {
-                    if (m_Spawner.SmartSpawning)
-                    {
-                        if (m_Spawner.HasActiveSectors)
-                        {
-                            Stop();
-
-                            m_Spawner.SmartRespawn();
-                        }
-                    }
-                    else
-                    {
-                        Stop();
-
-                        m_Spawner.IsInactivated = false;
-                    }
-                }
-                else
-                {
-                    Stop();
-
                 }
             }
         }
