@@ -8,7 +8,7 @@ namespace Server.Items
         [Constructable]
         public KotlBlackRod()
         {
-            Hue = 1150;
+            Hue = 1902;
 
             WeaponAttributes.MageWeapon = 30;
             Attributes.SpellChanneling = 1;
@@ -46,7 +46,7 @@ namespace Server.Items
         [Constructable]
         public GargishKotlBlackRod()
         {
-            Hue = 1150;
+            Hue = 1902;
 
             WeaponAttributes.MageWeapon = 30;
             Attributes.SpellChanneling = 1;
