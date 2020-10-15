@@ -149,7 +149,6 @@ namespace Server.Mobiles
                 Searchtype = type;
                 Searchname = name;
                 Searchspawnentry = entry;
-
             }
 
             public SearchCriteria()
@@ -276,30 +275,25 @@ namespace Server.Mobiles
                     // false means allow only mobs less than the age
                     if ((DateTime.UtcNow - mob.CreationTime) < TimeSpan.FromHours(age)) return true;
                 }
-
             }
+
             return false;
         }
 
         private static void IgnoreManagedInternal(object i, ref ArrayList ignoreList)
         {
-
             // ignore valid internalized commodity deed items
-            if (i is CommodityDeed deed)
+            if (i is CommodityDeed deed && deed.Commodity != null && deed.Commodity.Map == Map.Internal)
             {
-                if (deed.Commodity != null && deed.Commodity.Map == Map.Internal)
-                    ignoreList.Add(deed.Commodity);
+                ignoreList.Add(deed.Commodity);
             }
 
             // ignore valid internalized keyring keys
-            if (i is KeyRing keyring)
+            if (i is KeyRing keyring && keyring.Keys != null)
             {
-                if (keyring.Keys != null)
+                foreach (Key k in keyring.Keys)
                 {
-                    foreach (Key k in keyring.Keys)
-                    {
-                        ignoreList.Add(k);
-                    }
+                    ignoreList.Add(k);
                 }
             }
 
@@ -601,23 +595,20 @@ namespace Server.Mobiles
                             }
                         }
                     }
-                    if (criteria.Dosearchspawnentry && !hasentry) continue;
 
-                    // check for err
+                    if (criteria.Dosearchspawnentry && !hasentry)
+                        continue;
+
                     if (criteria.Dosearcherr)
                     {
-                        // see what kind of spawner it is
-                        if (i is XmlSpawner spawner)
+                        if (i is XmlSpawner spawner && spawner.status_str != null)
                         {
-                            // check the status of the spawner
-                            if (spawner.status_str != null)
-                            {
-                                hasspawnerr = true;
-                            }
+                            hasspawnerr = true;
                         }
                     }
-                    if (criteria.Dosearcherr && !hasspawnerr) continue;
 
+                    if (criteria.Dosearcherr && !hasspawnerr)
+                        continue;
 
                     // satisfied all conditions so add it
                     newarray.Add(new SearchEntry(i));
