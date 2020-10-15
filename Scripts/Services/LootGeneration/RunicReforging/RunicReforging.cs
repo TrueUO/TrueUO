@@ -3096,7 +3096,7 @@ namespace Server.Items
         #endregion
 
         #region Ranged Weapons
-        public static int[][] RangedLuckTable =
+        public static readonly int[][] RangedLuckTable =
         {
             new int[] { 90, 120, 120, 140, 170, 170, 170 },
             new int[] { 120, 140, 160, 170, 170, 170, 170 },
@@ -3106,7 +3106,7 @@ namespace Server.Items
             new int[] { 170, 170, 170, 170, 170, 170, 170 },
         };
 
-        public static int[][] RangedHCITable =
+        public static readonly int[][] RangedHCITable =
         {
             new int[] { 15, 25, 25, 30, 35, 35, 35 },
             new int[] { 25, 30, 35, 35, 35, 35, 35 },
@@ -3116,7 +3116,7 @@ namespace Server.Items
             new int[] { 35, 35, 35, 35, 35, 35, 35 },
         };
 
-        public static int[][] RangedDCITable =
+        public static readonly int[][] RangedDCITable =
         {
             new int[] {  },
             new int[] {  },
@@ -3128,7 +3128,7 @@ namespace Server.Items
         #endregion
 
         #region Armor Tables
-        public static int[][] LowerRegTable =
+        public static readonly int[][] LowerRegTable =
         {
             new int[] { 10, 20, 20, 20, 25, 25, 25 },
             new int[] { 20, 20, 25, 25, 25, 25, 25 },
@@ -3138,7 +3138,7 @@ namespace Server.Items
             new int[] { 25, 25, 25, 25, 25, 25, 25 },
         };
 
-        public static int[][] ArmorHitsTable =
+        public static readonly int[][] ArmorHitsTable =
         {
             new int[] { 3, 5, 5, 6, 7, 7, 7 },
             new int[] { 5, 6, 7, 7, 7, 7, 7 },
@@ -3148,7 +3148,7 @@ namespace Server.Items
             new int[] { 7, 7, 7, 7, 7, 7, 7 },
         };
 
-        public static int[][] ArmorStrTable =
+        public static readonly int[][] ArmorStrTable =
         {
             new int[] { 3, 4, 4, 4, 5, 5, 5 },
             new int[] { 4, 4, 5, 5, 5, 5, 5 },
@@ -3158,7 +3158,7 @@ namespace Server.Items
             new int[] { 5, 5, 5, 5, 5, 5, 5 },
         };
 
-        public static int[][] ArmorRegenTable =
+        public static readonly int[][] ArmorRegenTable =
         {
             new int[] { 2, 3, 3, 3, 4, 4, 4 },
             new int[] { 3, 3, 4, 4, 4, 4, 4 },
@@ -3168,7 +3168,7 @@ namespace Server.Items
             new int[] { 4, 4, 4, 4, 4, 4, 4 },
         };
 
-        public static int[][] ArmorStamManaLMCTable =
+        public static readonly int[][] ArmorStamManaLMCTable =
         {
             new int[] { 4, 8, 8, 8, 10, 10, 10 },
             new int[] { 8, 8, 10, 10, 10, 10, 10 },
@@ -3178,7 +3178,7 @@ namespace Server.Items
             new int[] { 10, 10, 10, 10, 10, 10, 10 },
         };
 
-        public static int[][] ArmorEnhancePotsTable =
+        public static readonly int[][] ArmorEnhancePotsTable =
         {
             new int[] { 2, 2, 3, 3, 3, 3, 3 },
             new int[] { 3, 3, 3, 3, 3, 3, 3 },
@@ -3188,7 +3188,7 @@ namespace Server.Items
             new int[] { 3, 3, 3, 3, 3, 3, 3 },
         };
 
-        public static int[][] ArmorHCIDCITable =
+        public static readonly int[][] ArmorHCIDCITable =
         {
             new int[] { 4, 4, 5, 5, 5, 5, 5 },
             new int[] { 5, 5, 5, 5, 5, 5, 5 },
@@ -3198,7 +3198,7 @@ namespace Server.Items
             new int[] { 5, 5, 5, 5, 5, 5, 5 },
         };
 
-        public static int[][] ArmorCastingFocusTable =
+        public static readonly int[][] ArmorCastingFocusTable =
         {
             new int[] { 1, 2, 2, 2, 3, 3, 3 },
             new int[] { 2, 2, 3, 3, 3, 3, 3 },
@@ -3208,7 +3208,7 @@ namespace Server.Items
             new int[] { 3, 3, 3, 3, 3, 3, 3 },
         };
 
-        public static int[][] ShieldWeaponSpeedTable =
+        public static readonly int[][] ShieldWeaponSpeedTable =
         {
             new int[] { 5, 5, 5, 5, 10, 10, 10 },
             new int[] { 5, 5, 10, 10, 10, 10, 10 },
@@ -3218,7 +3218,7 @@ namespace Server.Items
             new int[] { 10, 10, 10, 10, 10, 10, 10 },
         };
 
-        public static int[][] ShieldSoulChargeTable =
+        public static readonly int[][] ShieldSoulChargeTable =
         {
             new int[] { 15, 20, 20, 20, 25, 25, 25 },
             new int[] { 20, 20, 25, 30, 30, 30, 30 },
