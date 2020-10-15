@@ -164,8 +164,6 @@ namespace Server.Gumps
                 x = BorderSize + OffsetSize + column * (ValueWidth + NameWidth + OffsetSize * 2 + SetOffsetX + SetWidth);
                 y += EntryHeight + OffsetSize;
 
-
-
                 object o = m_List[index];
 
                 if (o == null)
@@ -173,21 +171,7 @@ namespace Server.Gumps
                     AddImageTiled(x - OffsetSize, y, TotalWidth, EntryHeight, BackGumpID + 4);
                     propcount++;
                 }
-                else
-                /*if ( o is Type )
-				{
-					Type type = (Type)o;
-
-					AddImageTiled( x, y, TypeWidth, EntryHeight, EntryGumpID );
-					AddLabelCropped( x + TextOffsetX, y, TypeWidth - TextOffsetX, EntryHeight, TextHue, type.Name );
-					x += TypeWidth + OffsetSize;
-
-					if ( SetGumpID != 0 )
-						AddImageTiled( x, y, SetWidth, EntryHeight, SetGumpID );
-				}
-				else
-                */
-                if (o is PropertyInfo)
+                else if (o is PropertyInfo)
                 {
                     propcount++;
 
@@ -229,11 +213,11 @@ namespace Server.Gumps
             }
         }
 
-        public static string[] m_BoolNames = new string[] { "True", "False" };
-        public static object[] m_BoolValues = new object[] { true, false };
+        public static string[] m_BoolNames = { "True", "False" };
+        public static object[] m_BoolValues = { true, false };
 
-        public static string[] m_PoisonNames = new string[] { "None", "Lesser", "Regular", "Greater", "Deadly", "Lethal" };
-        public static object[] m_PoisonValues = new object[] { null, Poison.Lesser, Poison.Regular, Poison.Greater, Poison.Deadly, Poison.Lethal };
+        public static string[] m_PoisonNames = { "None", "Lesser", "Regular", "Greater", "Deadly", "Lethal" };
+        public static object[] m_PoisonValues = { null, Poison.Lesser, Poison.Regular, Poison.Greater, Poison.Deadly, Poison.Lethal };
 
         public override void OnResponse(NetState state, RelayInfo info)
         {
@@ -377,7 +361,7 @@ namespace Server.Gumps
         {
             object[] objs = type.GetCustomAttributes(check, inherit);
 
-            return (objs != null && objs.Length > 0);
+            return (objs.Length > 0);
         }
 
         private static bool IsType(Type type, Type check)
@@ -410,14 +394,14 @@ namespace Server.Gumps
         private static readonly Type typeofPropertyObject = typeof(PropertyObjectAttribute);
         private static readonly Type typeofNoSort = typeof(NoSortAttribute);
 
-        private static readonly Type[] typeofReal = new Type[]
-            {
+        private static readonly Type[] typeofReal =
+        {
                 typeof( float ),
                 typeof( double )
-            };
+        };
 
-        private static readonly Type[] typeofNumeric = new Type[]
-            {
+        private static readonly Type[] typeofNumeric =
+        {
                 typeof( byte ),
                 typeof( short ),
                 typeof( int ),
@@ -426,7 +410,7 @@ namespace Server.Gumps
                 typeof( ushort ),
                 typeof( uint ),
                 typeof( ulong )
-            };
+        };
 
         private string ValueToString(PropertyInfo prop)
         {

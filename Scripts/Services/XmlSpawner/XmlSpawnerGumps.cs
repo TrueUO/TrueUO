@@ -9,20 +9,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-/*
-** Changelog
-**
-** 8/15/04
-** - fixed a crash bug when using the goto spawn button on an empty spawn entry
-**
-** 8/10/04
-** - added a goto-spawn button in the spawner gump (to the right of the text entry area, next to the text entry gump button) that will take you to the location of
-** currently spawned objects for a given spawner entry.  If there are multiple spawned objects for an entry, it will cycle through them with repeated clicks.
-** Useful for tracking down spawns.
-** 3/23/04
-** changed spawner name font color for 3dclient compatibility
-*/
-
 namespace Server.Mobiles
 {
     public class HelpGump : Gump
@@ -1213,7 +1199,7 @@ namespace Server.Mobiles
                     tegrp = info.GetTextEntry(1400 + i);
                     if (tegrp != null)
                     {
-                        if (tegrp.Text != null && tegrp.Text.Length > 0)
+                        if (!string.IsNullOrEmpty(tegrp.Text))
                         {
                             double grpval = -1;
                             try { grpval = Convert.ToDouble(tegrp.Text); }
@@ -1239,7 +1225,7 @@ namespace Server.Mobiles
                     tegrp = info.GetTextEntry(1500 + i);
                     if (tegrp != null)
                     {
-                        if (tegrp.Text != null && tegrp.Text.Length > 0)
+                        if (!string.IsNullOrEmpty(tegrp.Text))
                         {
                             int grpval = 1;
                             try { grpval = int.Parse(tegrp.Text); }
@@ -1262,7 +1248,7 @@ namespace Server.Mobiles
                     tegrp = info.GetTextEntry(1600 + i);
                     if (tegrp != null)
                     {
-                        if (tegrp.Text != null && tegrp.Text.Length > 0)
+                        if (!string.IsNullOrEmpty(tegrp.Text))
                         {
                             int grpval = 1;
                             try { grpval = int.Parse(tegrp.Text); }
@@ -1527,9 +1513,6 @@ namespace Server.Mobiles
                         {
                             int i = info.ButtonID - 5000;
 
-
-
-
                             string categorystring = null;
                             string entrystring = null;
 
@@ -1547,8 +1530,7 @@ namespace Server.Mobiles
                                 entrystring = te.Text;
                             }
 
-
-                            if (categorystring == null || categorystring.Length == 0)
+                            if (string.IsNullOrEmpty(categorystring))
                             {
 
                                 XmlSpawnerGump newg = new XmlSpawnerGump(m_Spawner, X, Y, m_ShowGump, xoffset, page);

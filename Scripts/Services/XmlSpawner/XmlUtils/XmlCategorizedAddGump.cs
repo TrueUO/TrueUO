@@ -46,7 +46,7 @@ namespace Server.Gumps
                     XmlAddGump xmladdgump = (XmlAddGump)gump;
 
                     //Commands.Handle( from, String.Format( "{0}Add {1}", Commands.CommandPrefix, m_Type.Name ) );
-                    if (xmladdgump != null && xmladdgump.defs != null && xmladdgump.defs.NameList != null &&
+                    if (xmladdgump.defs != null && xmladdgump.defs.NameList != null &&
                         index >= 0 && index < xmladdgump.defs.NameList.Length)
                     {
 
@@ -302,7 +302,7 @@ namespace Server.Gumps
             {
                 XmlAddGump xmladdgump = (XmlAddGump)gump;
 
-                if (xmladdgump != null && xmladdgump.defs != null)
+                if (xmladdgump.defs != null)
                 {
                     xmladdgump.defs.CurrentCategory = category;
                     xmladdgump.defs.CurrentCategoryPage = page;

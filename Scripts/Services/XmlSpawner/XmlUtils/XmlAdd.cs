@@ -9,38 +9,6 @@ using System.Collections;
 using System.Data;
 using System.IO;
 
-/*
-** XmlAdd
-** Version 1.00
-** updated 4/19/04
-** ArteGordon
-**
-** version 1.04
-** update 8/08/04
-** - the add button now uses targeting to place spawners rather than just putting them at the location of the placer.
-**
-** version 1.03
-** update 8/07/04
-**
-** - changed the selection buttons to checkboxes, and changed their gump art for space reasons.
-** - added the smartspawning option
-**
-** Changelog
-** version 1.02
-** update 7/14/04
-** - the duration entry was not being applied to added spawners  (Thanks to BlackNova for pointing this out).
-**
-** version 1.02
-** update 7/14/04
-** - added the SkillTrigger entry
-**
-** version 1.01
-** update 4/22/04
-** - added a spawn entry selection list
-** - added named save and load defaults options
-**
-*/
-
 namespace Server.Mobiles
 {
     public class XmlSpawnerDefaults
@@ -183,14 +151,11 @@ namespace Server.Mobiles
             defs.AutoNumber = false;
             defs.AutoNumberValue = 0;
 
-
             if (defs.SelectionList != null) Array.Clear(defs.SelectionList, 0, defs.SelectionList.Length);
             if (defs.NameList != null) Array.Clear(defs.NameList, 0, defs.NameList.Length);
         }
 
     }
-
-
 
     public class XmlAddGump : Gump
     {
@@ -459,7 +424,7 @@ namespace Server.Mobiles
                 }
 
                 // Check that at least a single table was loaded
-                if (ds.Tables != null && ds.Tables.Count > 0)
+                if (ds.Tables.Count > 0)
                 {
                     // Add each spawn point to the current map
                     if (ds.Tables[DefsTablePointName] != null && ds.Tables[DefsTablePointName].Rows.Count > 0)
@@ -1388,7 +1353,7 @@ namespace Server.Mobiles
                 case 116: // LoadDefs
                     {
                         string filename;
-                        if (defs.DefsExt != null && defs.DefsExt.Length > 0)
+                        if (!string.IsNullOrEmpty(defs.DefsExt))
                         {
                             filename = string.Format("{0}-{1}-{2}", defs.AccountName, defs.PlayerName, defs.DefsExt);
                         }
@@ -1401,7 +1366,7 @@ namespace Server.Mobiles
                     }
                 case 117: // Restore Defaults
                     {
-                        state.Mobile.SendMessage(string.Format("Restoring defaults"));
+                        state.Mobile.SendMessage("Restoring defaults");
                         XmlSpawnerDefaults.RestoreDefs(defs);
                         break;
                     }
@@ -1568,7 +1533,7 @@ namespace Server.Mobiles
                 AddBackground(0, 0, 300, 130, 5054);
 
 
-                AddLabel(20, 5, 0, string.Format("Options"));
+                AddLabel(20, 5, 0, "Options");
                 // add the AddGumpX/Y entries
                 AddImageTiled(5, 30, 40, 21, 0xBBC);
                 AddTextEntry(5, 30, 40, 21, 0, 100, defs.AddGumpX.ToString());
@@ -1663,7 +1628,7 @@ namespace Server.Mobiles
                 AddBackground(10, 200, 200, 130, 5054);
 
 
-                AddLabel(20, 225, 33, string.Format("Delete Last Spawner?"));
+                AddLabel(20, 225, 33, "Delete Last Spawner?");
                 AddRadio(35, 255, 9721, 0x86A, false, 1); // accept/yes radio
                 AddRadio(135, 255, 9721, 0x86A, true, 2); // decline/no radio
                 AddHtmlLocalized(72, 255, 200, 30, 1049016, 0x7fff, false, false); // Yes
