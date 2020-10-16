@@ -599,12 +599,9 @@ namespace Server.Mobiles
                     if (criteria.Dosearchspawnentry && !hasentry)
                         continue;
 
-                    if (criteria.Dosearcherr)
+                    if (criteria.Dosearcherr && i is XmlSpawner hasSpawn && hasSpawn.status_str != null)
                     {
-                        if (i is XmlSpawner spawner && spawner.status_str != null)
-                        {
-                            hasspawnerr = true;
-                        }
+                        hasspawnerr = true;
                     }
 
                     if (criteria.Dosearcherr && !hasspawnerr)
