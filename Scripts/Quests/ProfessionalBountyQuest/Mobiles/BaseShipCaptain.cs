@@ -153,8 +153,6 @@ namespace Server.Mobiles
                 }
 
                 gal.AutoAddCannons(this);
-
-                return;
             }
             else
             {
@@ -369,7 +367,8 @@ namespace Server.Mobiles
                 m_NextMoveCheck = DateTime.UtcNow + TimeSpan.FromSeconds(m_Galleon.TurnDelay);
                 return;
             }
-            else if (dir == Direction.East || dir == Direction.Down)
+
+            if (dir == Direction.East || dir == Direction.Down)
             {
                 m_Galleon.Turn(2 * flee, true);
                 m_NextMoveCheck = DateTime.UtcNow + TimeSpan.FromSeconds(m_Galleon.TurnDelay);
@@ -387,31 +386,26 @@ namespace Server.Mobiles
 
             foreach (IShipCannon cannon in cannons.OfType<IShipCannon>())
             {
-                if (cannon != null)
+                if (m_ShootTable.ContainsKey(cannon) && m_ShootTable[cannon] > DateTime.UtcNow)
+                        continue;
+
+                Direction facing = cannon.GetFacing();
+
+                if (shootAtBoat && HasTarget(focus, cannon, true))
                 {
-                    if (m_ShootTable.ContainsKey(cannon) && m_ShootTable[cannon] > DateTime.UtcNow)
-                        continue;
-
-                    Direction facing = cannon.GetFacing();
-
-                    if (shootAtBoat && HasTarget(focus, cannon, true))
-                    {
-                        cannon.AmmoType = AmmunitionType.Cannonball;
-                        //cannon.LoadedAmmo = cannon.LoadTypes[0];
-                    }
-                    else if (!shootAtBoat && HasTarget(focus, cannon, false))
-                    {
-                        cannon.AmmoType = AmmunitionType.Grapeshot;
-                        //cannon.LoadedAmmo = cannon.LoadTypes[1];
-                    }
-                    else
-                    {
-                        continue;
-                    }
-
-                    cannon.Shoot(this);
-                    m_ShootTable[cannon] = DateTime.UtcNow + ShootFrequency + TimeSpan.FromSeconds(Utility.RandomMinMax(0, 3));
+                    cannon.AmmoType = AmmunitionType.Cannonball;
                 }
+                else if (!shootAtBoat && HasTarget(focus, cannon, false))
+                {
+                    cannon.AmmoType = AmmunitionType.Grapeshot;
+                }
+                else
+                {
+                    continue;
+                }
+
+                cannon.Shoot(this);
+                m_ShootTable[cannon] = DateTime.UtcNow + ShootFrequency + TimeSpan.FromSeconds(Utility.RandomMinMax(0, 3));
             }
         }
 

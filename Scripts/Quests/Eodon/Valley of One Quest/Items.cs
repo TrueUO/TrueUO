@@ -448,13 +448,11 @@ namespace Server.Items
 
         private class InternalGump : Gump
         {
-            public Action<BananaHoardSize> Callback { get; set; }
-            public PlayerMobile User { get; set; }
+            public Action<BananaHoardSize> Callback { get; }
 
             public InternalGump(PlayerMobile p, Action<BananaHoardSize> callback) : base(50, 50)
             {
                 Callback = callback;
-                User = p;
 
                 AddGumpLayout();
             }

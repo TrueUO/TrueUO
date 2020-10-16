@@ -54,7 +54,7 @@ namespace Server.Engines.Quests.TimeLord
         }
 
         public static Type[] Targets => _Targets;
-        private static readonly Type[] _Targets = new Type[]
+        private static readonly Type[] _Targets =
         {
             typeof(Semidar), typeof(Mephitis), typeof(Rikktor), typeof(LordOaks), typeof(Neira), typeof(Barracoon), typeof(Serado), typeof(Meraktus), typeof(Ilhenir),
             typeof(Twaulo), typeof(AbyssalInfernal), typeof(PrimevalLich), typeof(CorgulTheSoulBinder), typeof(CorgulTheSoulBinder) /*dragon turtle*/,

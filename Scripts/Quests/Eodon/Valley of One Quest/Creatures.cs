@@ -171,7 +171,7 @@ namespace Server.Mobiles
         private class FreezeItem : Item
         {
             public Item Static { get; private set; }
-            public BaseCreature Owner { get; private set; }
+            public BaseCreature Owner { get; }
 
             public FreezeItem(int id, BaseCreature owner)
                 : base(id)
