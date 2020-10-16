@@ -1281,22 +1281,6 @@ namespace Server
             return ConvertSpawner(spawner, ref c);
         }
 
-        private static bool DeleteSpawner(string id)
-        {
-            if (id == null)
-                return false;
-
-            XmlSpawner spawner = World.Items.Values.OfType<XmlSpawner>().FirstOrDefault(s => s.UniqueId == id);
-
-            if (spawner != null)
-            {
-                spawner.Delete();
-                return true;
-            }
-
-            return false;
-        }
-
         private static bool ConvertSpawner(XmlSpawner spawner, ref int keep)
         {
             if (spawner != null)
@@ -1331,6 +1315,22 @@ namespace Server
                 };
 
                 newSpawner.MoveToWorld(spawner.Location, spawner.Map);
+                spawner.Delete();
+                return true;
+            }
+
+            return false;
+        }
+
+        private static bool DeleteSpawner(string id)
+        {
+            if (id == null)
+                return false;
+
+            XmlSpawner spawner = World.Items.Values.OfType<XmlSpawner>().FirstOrDefault(s => s.UniqueId == id);
+
+            if (spawner != null)
+            {
                 spawner.Delete();
                 return true;
             }

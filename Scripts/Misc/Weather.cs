@@ -205,7 +205,7 @@ namespace Server.Misc
         {
             for (int i = 0; i < m_Facets.Length; ++i)
             {
-                var weather = new Weather(m_Facets[i], area, temperature, chanceOfPercipitation, chanceOfExtremeTemperature, TimeSpan.FromSeconds(30.0));
+                new Weather(m_Facets[i], area, temperature, chanceOfPercipitation, chanceOfExtremeTemperature, TimeSpan.FromSeconds(30.0));
             }
         }
 

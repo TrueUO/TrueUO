@@ -890,12 +890,9 @@ namespace Server
                 if (StandardLootItem && (item is BaseWeapon || item is BaseArmor || item is BaseJewel || item is BaseHat))
                 {
                     // Try to generate a new random item based on the creature killed
-                    if (RandomItemGenerator.Enabled && from is BaseCreature creature)
+                    if (RandomItemGenerator.Enabled && from is BaseCreature creature && RandomItemGenerator.GenerateRandomItem(item, creature.LastKiller, creature))
                     {
-                        if (RandomItemGenerator.GenerateRandomItem(item, creature.LastKiller, creature))
-                        {
-                            return item;
-                        }
+                        return item;
                     }
 
                     int bonusProps = GetBonusProperties();

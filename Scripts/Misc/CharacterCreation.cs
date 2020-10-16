@@ -308,22 +308,6 @@ namespace Server.Misc
                 stat = max;
         }
 
-        private static void SetStats(Mobile m, int str, int dex, int intel)
-        {
-            int max = 90;
-
-            FixStats(ref str, ref dex, ref intel, max);
-
-            if (str < 10 || str > 60 || dex < 10 || dex > 60 || intel < 10 || intel > 60 || (str + dex + intel) != max)
-            {
-                str = 10;
-                dex = 10;
-                intel = 10;
-            }
-
-            m.InitStats(str, dex, intel);
-        }
-
         private static void SetName(Mobile m, string name)
         {
             name = name.Trim();
@@ -353,6 +337,22 @@ namespace Server.Misc
             }
 
             return (total == 100 || total == 120);
+        }
+
+        private static void SetStats(Mobile m, int str, int dex, int intel)
+        {
+            int max = 90;
+
+            FixStats(ref str, ref dex, ref intel, max);
+
+            if (str < 10 || str > 60 || dex < 10 || dex > 60 || intel < 10 || intel > 60 || (str + dex + intel) != max)
+            {
+                str = 10;
+                dex = 10;
+                intel = 10;
+            }
+
+            m.InitStats(str, dex, intel);
         }
 
         private static void SetStats(Mobile m, int prof, int str, int dex, int intel)
