@@ -1,4 +1,4 @@
-﻿using Server.Gumps;
+using Server.Gumps;
 using Server.Prompts;
 
 namespace Server.Network
@@ -23,7 +23,7 @@ namespace Server.Network
 
 	public class PromptGumpStub : Gump
 	{
-		public Mobile User { get; private set; }
+		public Mobile User { get; }
 
 		public override int GetTypeID()
 		{
@@ -35,16 +35,16 @@ namespace Server.Network
 		{
 			User = to;
 
-			Serial senderSerial = prompt.Sender != null ? prompt.Sender.Serial : to.Serial;
+			Serial senderSerial = prompt.Sender?.Serial ?? to.Serial;
 
 			Serial = senderSerial;
 
-			Intern("TEXTENTRY");
-			Intern(senderSerial.Value.ToString());
-			Intern(to.Serial.Value.ToString());
-			Intern(prompt.TypeId.ToString());
-			Intern(prompt.MessageCliloc.ToString()); // TODO: Is there a way to include args here?
-			Intern("1"); // 0 = Ascii response, 1 = Unicode Response
+			Intern("TEXTENTRY", false);
+			Intern(senderSerial.Value.ToString(), false);
+			Intern(to.Serial.Value.ToString(), false);
+			Intern(prompt.TypeId.ToString(), false);
+			Intern(prompt.MessageCliloc.ToString(), false); // TODO: Is there a way to include args here?
+			Intern("1", false); // 0 = Ascii response, 1 = Unicode Response
 
 			AddBackground(50, 50, 540, 350, 0xA28);
 
@@ -60,7 +60,7 @@ namespace Server.Network
 
 		public Packet GetPacket()
 		{
-			return GetPacketFor(User != null ? User.NetState : null);
+			return GetPacketFor(User?.NetState);
 		}
 	}
 }
