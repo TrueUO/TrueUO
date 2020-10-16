@@ -19,7 +19,6 @@ using CV = Server.ClientVersion;
 
 namespace Server.Network
 {
-	[Flags]
     public enum MessageType
 	{
 		Regular = 0x00,

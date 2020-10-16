@@ -964,12 +964,9 @@ namespace Server.Network
 
 			int hue = item.Hue;
 
-			if (item.Parent is Mobile mob)
+			if (item.Parent is Mobile mob && mob.SolidHueOverride >= 0)
 			{
-                if (mob.SolidHueOverride >= 0)
-				{
-					hue = mob.SolidHueOverride;
-				}
+                hue = mob.SolidHueOverride;
 			}
 
 			m_Stream.Write(item.Serial);
@@ -3740,7 +3737,8 @@ namespace Server.Network
 		}
 	}
 
-	public enum AffixType : byte
+	[Flags]
+    public enum AffixType : byte
 	{
 		Append = 0x00,
 		Prepend = 0x01,
