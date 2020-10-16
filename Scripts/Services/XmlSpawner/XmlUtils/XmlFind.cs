@@ -1545,10 +1545,9 @@ namespace Server.Mobiles
                     if (item.Map != null)
                         xstr = item.Map.ToString();
                 }
-                else if (x is Mobile mobile)
+                else if (x is Mobile mobile && mobile.Map != null)
                 {
-                    if (mobile.Map != null)
-                        xstr = mobile.Map.ToString();
+                    xstr = mobile.Map.ToString();
                 }
 
                 if (y is Item item1)
@@ -1556,10 +1555,9 @@ namespace Server.Mobiles
                     if (item1.Map != null)
                         ystr = item1.Map.ToString();
                 }
-                else if (y is Mobile mobile)
+                else if (y is Mobile mobile && mobile.Map != null)
                 {
-                    if (mobile.Map != null)
-                        ystr = mobile.Map.ToString();
+                    ystr = mobile.Map.ToString();
                 }
 
                 if (Dsort)

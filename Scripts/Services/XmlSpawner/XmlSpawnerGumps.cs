@@ -962,7 +962,6 @@ namespace Server.Mobiles
             RefreshSpawnerGumps(from);
         }
 
-
 #endif
 
         public static void Refresh_Callback(object state)
@@ -981,32 +980,25 @@ namespace Server.Mobiles
 
             if (ns?.Gumps != null)
             {
-
                 ArrayList refresh = new ArrayList();
 
                 foreach (Gump g in ns.Gumps)
                 {
-
-                    if (g is XmlSpawnerGump xg)
+                    // clear the gump status on the spawner associated with the gump
+                    if (g is XmlSpawnerGump xg && xg.m_Spawner != null)
                     {
-                        // clear the gump status on the spawner associated with the gump
-                        if (xg.m_Spawner != null)
-                        {
-                            // and add the old gump to the removal list
-                            refresh.Add(xg);
-                        }
+                        refresh.Add(xg);
                     }
                 }
 
                 // close all of the currently opened spawner gumps
                 from.CloseGump(typeof(XmlSpawnerGump));
 
-
                 // reopen the closed gumps from the gump collection
                 foreach (XmlSpawnerGump g in refresh)
                 {
                     // reopen a new gump for the spawner
-                    if (g.m_Spawner != null /*&& g.m_Spawner.SpawnerGump == g */)
+                    if (g.m_Spawner != null)
                     {
                         // flag the current gump on the spawner as closed
                         g.m_Spawner.GumpReset = true;
