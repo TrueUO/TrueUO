@@ -2196,7 +2196,7 @@ namespace Server.Gumps
                                 {
                                     index -= 2;
 
-                                    if (m_List != null && index >= 0 && index < m_List.Count)
+                                    if (m_List != null && index < m_List.Count)
                                     {
                                         NetState ns = m_List[index] as NetState;
 
@@ -2858,7 +2858,7 @@ namespace Server.Gumps
                                 {
                                     index -= 4;
 
-                                    if (m_List != null && index >= 0 && index < m_List.Count)
+                                    if (m_List != null && index < m_List.Count)
                                         from.SendGump(new AdminGump(from, AdminGumpPage.FirewallInfo, 0, null, null, m_List[index]));
 
                                     break;
@@ -3028,7 +3028,7 @@ namespace Server.Gumps
                     }
                 case 8:
                     {
-                        if (m_List != null && index >= 0 && index < m_List.Count)
+                        if (m_List != null && index < m_List.Count)
                         {
                             Account a = m_State as Account;
 
@@ -3055,7 +3055,7 @@ namespace Server.Gumps
                     }
                 case 9:
                     {
-                        if (m_List != null && index >= 0 && index < m_List.Count)
+                        if (m_List != null && index < m_List.Count)
                         {
                             if (m_PageType == AdminGumpPage.AccountDetails_Access_ClientIPs)
                             {
@@ -3082,7 +3082,7 @@ namespace Server.Gumps
                     }
                 case 10:
                     {
-                        if (m_List != null && index >= 0 && index < m_List.Count)
+                        if (m_List != null && index < m_List.Count)
                         {
                             if (m_PageType == AdminGumpPage.AccountDetails_Access_ClientIPs)
                             {
