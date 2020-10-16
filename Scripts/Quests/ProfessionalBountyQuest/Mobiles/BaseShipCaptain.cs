@@ -214,7 +214,7 @@ namespace Server.Mobiles
                 return;
             }
 
-            if (gal != null && !gal.Deleted)
+            if (!gal.Deleted)
                 gal.ForceDecay();
         }
 
@@ -658,7 +658,7 @@ namespace Server.Mobiles
             int count = reader.ReadInt();
             for (int i = 0; i < count; i++)
             {
-                Mobile mob = reader.ReadMobile() as Mobile;
+                Mobile mob = reader.ReadMobile();
                 if (mob != null && !mob.Deleted && mob.Alive)
                     m_Crew.Add(mob);
             }

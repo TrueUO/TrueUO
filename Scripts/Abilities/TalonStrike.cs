@@ -49,7 +49,6 @@ namespace Server.Items
         private class InternalTimer : Timer
         {
             private readonly Mobile m_Defender;
-            private readonly Mobile m_Attacker;
             private readonly double DamagePerTick;
             private double m_DamageRemaining;
             private double m_DamageToDo;
@@ -59,8 +58,6 @@ namespace Server.Items
                 m_Defender = defender;
                 m_DamageRemaining = totalDamage;
                 Priority = TimerPriority.TwentyFiveMS;
-
-                m_Attacker = attacker;
 
                 DamagePerTick = (double)totalDamage / 12 + .01;
             }
@@ -84,7 +81,6 @@ namespace Server.Items
 
                 if (damage > 0)
                 {
-                    //m_Defender.Damage( damage, m_Attacker, false );
                     m_Defender.Hits -= damage;	//Don't show damage, don't disrupt
                     m_DamageToDo -= damage;
                 }

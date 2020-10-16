@@ -703,7 +703,7 @@ namespace Server.Engines.Quests
                 writer.Write((int)kvp.Key);
                 writer.Write(kvp.Value.Count);
                 foreach (BaseShipCaptain capt in kvp.Value)
-                    writer.Write(capt as Mobile);
+                    writer.Write(capt);
             }
 
             writer.Write(m_Bounties.Count);

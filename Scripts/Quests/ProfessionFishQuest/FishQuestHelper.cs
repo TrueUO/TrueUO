@@ -359,7 +359,7 @@ namespace Server.Engines.Quests
 
             for (int i = 0; i < quests.Count; i++)
             {
-                ProfessionalFisherQuest quest = quests[i] as ProfessionalFisherQuest;
+                ProfessionalFisherQuest quest = quests[i];
 
                 if (quest.Quester is Mobile && (Mobile)quest.Quester == quester)
                 {

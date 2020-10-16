@@ -50,8 +50,7 @@ namespace Server.Engines.Quests.TimeLord
 
             SkillMasteryPrimer primer = new SkillMasteryPrimer(Mastery, 1);
 
-            if (primer != null)
-                From.AddToBackpack(primer);
+            From.AddToBackpack(primer);
         }
 
         public static Type[] Targets => _Targets;
