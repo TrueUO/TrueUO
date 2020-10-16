@@ -65,22 +65,25 @@ namespace Server.Network
 		{
 			if (input == null)
 			{
-				throw new ArgumentNullException("input");
-			}
-			else if (offset < 0 || offset >= input.Length)
-			{
-				throw new ArgumentOutOfRangeException("offset");
-			}
-			else if (count < 0 || count > input.Length)
-			{
-				throw new ArgumentOutOfRangeException("count");
-			}
-			else if ((input.Length - offset) < count)
-			{
-				throw new ArgumentException();
+				throw new ArgumentNullException(nameof(input));
 			}
 
-			length = 0;
+            if (offset < 0 || offset >= input.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(offset));
+            }
+
+            if (count < 0 || count > input.Length)
+            {
+                throw new ArgumentOutOfRangeException(nameof(count));
+            }
+
+            if ((input.Length - offset) < count)
+            {
+                throw new ArgumentException();
+            }
+
+            length = 0;
 
 			if (count > DefiniteOverflow)
 			{
@@ -158,8 +161,7 @@ namespace Server.Network
 						}
 
 						length = (int)(pOutput - pOutputBuffer);
-						return;
-					}
+                    }
 				}
 			}
 		}

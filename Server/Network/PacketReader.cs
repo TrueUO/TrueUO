@@ -258,7 +258,7 @@ namespace Server.Network
 			index = 0;
 
 			byte[] buffer = new byte[count];
-			int value = 0;
+			int value;
 
 			while (m_Index < bound && (value = m_Data[m_Index++]) != 0)
 			{
@@ -312,7 +312,7 @@ namespace Server.Network
 			index = 0;
 
 			byte[] buffer = new byte[count];
-			int value = 0;
+			int value;
 
 			while (m_Index < m_Size && (value = m_Data[m_Index++]) != 0)
 			{
@@ -364,7 +364,7 @@ namespace Server.Network
 			index = 0;
 
 			byte[] buffer = new byte[count];
-			int value = 0;
+			int value;
 
 			while (m_Index < m_Size && (value = m_Data[m_Index++]) != 0)
 			{

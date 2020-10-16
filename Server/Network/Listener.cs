@@ -41,9 +41,9 @@ namespace Server.Network
 
 			m_OnAccept = OnAccept;
 			try
-			{
-				IAsyncResult res = m_Listener.BeginAccept(m_OnAccept, m_Listener);
-			}
+            {
+                m_Listener.BeginAccept(m_OnAccept, m_Listener);
+            }
 			catch (SocketException ex)
 			{
 				NetState.TraceException(ex);
@@ -52,7 +52,7 @@ namespace Server.Network
 			{ }
 		}
 
-		private Socket Bind(IPEndPoint ipep)
+		private static Socket Bind(IPEndPoint ipep)
 		{
 			Socket s = new Socket(ipep.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
@@ -70,11 +70,9 @@ namespace Server.Network
 			}
 			catch (Exception e)
 			{
-				if (e is SocketException)
+				if (e is SocketException se)
 				{
-					SocketException se = (SocketException)e;
-
-					if (se.ErrorCode == 10048)
+                    if (se.ErrorCode == 10048)
 					{
 						// WSAEADDRINUSE
 						Utility.PushColor(ConsoleColor.Red);
@@ -116,7 +114,7 @@ namespace Server.Network
 				foreach (NetworkInterface adapter in adapters)
 				{
 					IPInterfaceProperties properties = adapter.GetIPProperties();
-					foreach (IPAddressInformation unicast in properties.UnicastAddresses)
+					foreach (UnicastIPAddressInformation unicast in properties.UnicastAddresses)
 					{
 						if (ipep.AddressFamily == unicast.Address.AddressFamily)
 						{
@@ -145,7 +143,7 @@ namespace Server.Network
 			}
 
 			Utility.PushColor(ConsoleColor.DarkGreen);
-			Console.WriteLine(@"----------------------------------------------------------------------");
+			Console.WriteLine("----------------------------------------------------------------------");
 			Utility.PopColor();
 		}
 
@@ -192,7 +190,7 @@ namespace Server.Network
 			{ }
 		}
 
-		private bool VerifySocket(Socket socket)
+		private static bool VerifySocket(Socket socket)
 		{
 			try
 			{
@@ -220,7 +218,7 @@ namespace Server.Network
 			Core.Set();
 		}
 
-		private void Release(Socket socket)
+		private static void Release(Socket socket)
 		{
 			try
 			{

@@ -19,7 +19,8 @@ using CV = Server.ClientVersion;
 
 namespace Server.Network
 {
-	public enum MessageType
+	[Flags]
+    public enum MessageType
 	{
 		Regular = 0x00,
 		System = 0x01,
@@ -184,17 +185,15 @@ namespace Server.Network
 		}
 
 		public static PacketHandler GetExtendedHandler(int packetID)
-		{
-			if (packetID >= 0 && packetID < 0x100)
+        {
+            if (packetID >= 0 && packetID < 0x100)
 			{
 				return m_ExtendedHandlersLow[packetID];
 			}
-			else
-			{
-				m_ExtendedHandlersHigh.TryGetValue(packetID, out PacketHandler handler);
-				return handler;
-			}
-		}
+
+            m_ExtendedHandlersHigh.TryGetValue(packetID, out PacketHandler handler);
+            return handler;
+        }
 
 		public static void RemoveExtendedHandler(int packetID)
 		{
@@ -221,17 +220,15 @@ namespace Server.Network
 		}
 
 		public static EncodedPacketHandler GetEncodedHandler(int packetID)
-		{
-			if (packetID >= 0 && packetID < 0x100)
+        {
+            if (packetID >= 0 && packetID < 0x100)
 			{
 				return m_EncodedHandlersLow[packetID];
 			}
-			else
-			{
-				m_EncodedHandlersHigh.TryGetValue(packetID, out EncodedPacketHandler handler);
-				return handler;
-			}
-		}
+
+            m_EncodedHandlersHigh.TryGetValue(packetID, out EncodedPacketHandler handler);
+            return handler;
+        }
 
 		public static void RemoveEncodedHandler(int packetID)
 		{
@@ -418,13 +415,14 @@ namespace Server.Network
 			{
 				return;
 			}
-			else if (vendor.Deleted || !Utility.RangeCheck(vendor.Location, state.Mobile.Location, 10))
-			{
-				state.Send(new EndVendorBuy(vendor));
-				return;
-			}
 
-			if (flag == 0x02)
+            if (vendor.Deleted || !Utility.RangeCheck(vendor.Location, state.Mobile.Location, 10))
+            {
+                state.Send(new EndVendorBuy(vendor));
+                return;
+            }
+
+            if (flag == 0x02)
 			{
 				msgSize -= 1 + 2 + 4 + 1;
 
@@ -468,13 +466,14 @@ namespace Server.Network
 			{
 				return;
 			}
-			else if (vendor.Deleted || !Utility.RangeCheck(vendor.Location, state.Mobile.Location, 10))
-			{
-				state.Send(new EndVendorSell(vendor));
-				return;
-			}
 
-			int count = pvSrc.ReadUInt16();
+            if (vendor.Deleted || !Utility.RangeCheck(vendor.Location, state.Mobile.Location, 10))
+            {
+                state.Send(new EndVendorSell(vendor));
+                return;
+            }
+
+            int count = pvSrc.ReadUInt16();
 			if (count < 100 && pvSrc.Size == (1 + 2 + 4 + 2 + (count * 6)))
 			{
 				List<SellItemResponse> sellList = new List<SellItemResponse>(count);
@@ -756,8 +755,8 @@ namespace Server.Network
 		{ }
 
 		public static bool VerifyGC(NetState state)
-		{
-			if (state.Mobile == null || state.Mobile.IsPlayer())
+        {
+            if (state.Mobile == null || state.Mobile.IsPlayer())
 			{
 				if (state.Running)
 				{
@@ -767,11 +766,9 @@ namespace Server.Network
 				state.Dispose();
 				return false;
 			}
-			else
-			{
-				return true;
-			}
-		}
+
+            return true;
+        }
 
 		public static void TextCommand(NetState state, PacketReader pvSrc)
 		{
@@ -927,7 +924,7 @@ namespace Server.Network
 			Mobile from = state.Mobile;
 			Prompt p = from.Prompt;
 
-			if (from != null && p != null && p.Sender.Serial == serial && p.TypeId == prompt)
+			if (p != null && p.Sender.Serial == serial && p.TypeId == prompt)
 			{
 				from.Prompt = null;
 
@@ -1120,10 +1117,10 @@ namespace Server.Network
 			{
 				Item item = World.FindItem(dest);
 
-				if (item is BaseMulti && ((BaseMulti)item).AllowsRelativeDrop)
+				if (item is BaseMulti multi && multi.AllowsRelativeDrop)
 				{
-					loc.m_X += item.X;
-					loc.m_Y += item.Y;
+					loc.m_X += multi.X;
+					loc.m_Y += multi.Y;
 					from.Drop(loc);
 				}
 				else
@@ -1197,8 +1194,7 @@ namespace Server.Network
 					else if (Target.TargetIDValidation && t.TargetID != targetID)
 					{
 						// Prevent fake target, reported by AssistUO Team!
-						return;
-					}
+                    }
 					else
 					{
 						object toTarget;
@@ -1294,13 +1290,13 @@ namespace Server.Network
 					{
 						foreach (GumpEntry e in gump.Entries)
 						{
-							if (e is GumpButton && ((GumpButton)e).ButtonID == buttonID)
+							if (e is GumpButton button && button.ButtonID == buttonID)
 							{
 								buttonExists = true;
 								break;
 							}
 
-							if (e is GumpImageTileButton && ((GumpImageTileButton)e).ButtonID == buttonID)
+							if (e is GumpImageTileButton tileButton && tileButton.ButtonID == buttonID)
 							{
 								buttonExists = true;
 								break;
@@ -1687,8 +1683,8 @@ namespace Server.Network
 			}
 		}
 
-		public static int[] m_ValidAnimations = new[]
-		{
+		public static int[] m_ValidAnimations =
+        {
 			6, 21, 32, 33, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119,
 			120, 121, 123, 124, 125, 126, 127, 128
 		};
@@ -2060,9 +2056,9 @@ namespace Server.Network
 						{
 							p = entity.Location;
 						}
-						else if (entity is Item)
+						else if (entity is Item item)
 						{
-							p = ((Item)entity).GetWorldLocation();
+							p = item.GetWorldLocation();
 						}
 						else
 						{
@@ -2242,8 +2238,10 @@ namespace Server.Network
 
 		public static PlayCharCallback ThirdPartyAuthCallback = null, ThirdPartyHackedCallback = null;
 
-		private static readonly byte[] m_ThirdPartyAuthKey = new byte[]
-		{0x9, 0x11, 0x83, (byte)'+', 0x4, 0x17, 0x83, 0x5, 0x24, 0x85, 0x7, 0x17, 0x87, 0x6, 0x19, 0x88,};
+		private static readonly byte[] m_ThirdPartyAuthKey =
+        {
+            0x9, 0x11, 0x83, (byte)'+', 0x4, 0x17, 0x83, 0x5, 0x24, 0x85, 0x7, 0x17, 0x87, 0x6, 0x19, 0x88
+        };
 
 		private class LoginTimer : Timer
 		{
@@ -2296,7 +2294,7 @@ namespace Server.Network
 					bool match = true;
 					for (int i = 0; match && i < m_ThirdPartyAuthKey.Length; i++)
 					{
-						match = match && pvSrc.ReadByte() == m_ThirdPartyAuthKey[i];
+						match = pvSrc.ReadByte() == m_ThirdPartyAuthKey[i];
 					}
 
 					if (match)
@@ -2646,10 +2644,8 @@ namespace Server.Network
 
 			bool female = (genderRace % 2) != 0;
 
-			Race race = null;
-
-			byte raceID = (byte)(genderRace < 4 ? 0 : ((genderRace / 2) - 1));
-			race = Race.Races[raceID];
+            byte raceID = (byte)(genderRace < 4 ? 0 : ((genderRace / 2) - 1));
+			var race = Race.Races[raceID];
 
 			if (race == null)
 			{
@@ -3087,11 +3083,9 @@ namespace Server.Network
 			int beardID = pvSrc.ReadInt16();
 
 			int pantsHue = shirtHue; // Obsolete
-			Race race = null;
-			bool female = false;
 
-			female = gender != 0;
-			race = Race.Races[(byte)(genderRace - 1)]; //SA client sends race packet one higher than KR, so this is neccesary
+            var female = gender != 0;
+			var race = Race.Races[(byte)(genderRace - 1)];
 			if (race == null)
 				race = Race.DefaultRace;
 
