@@ -28,23 +28,21 @@ namespace Server.Misc
                     items.Add(item);
                     continue;
                 }
-                else if (item is CommodityDeed)
-                {
-                    CommodityDeed deed = (CommodityDeed)item;
 
+                if (item is CommodityDeed deed)
+                {
                     if (deed.Commodity != null)
                         validItems.Add(deed.Commodity);
 
                     continue;
                 }
-                else if (item is BaseHouse)
-                {
-                    BaseHouse house = (BaseHouse)item;
 
+                if (item is BaseHouse house)
+                {
                     foreach (RelocatedEntity relEntity in house.RelocatedEntities)
                     {
-                        if (relEntity.Entity is Item)
-                            validItems.Add((Item)relEntity.Entity);
+                        if (relEntity.Entity is Item entity)
+                            validItems.Add(entity);
                     }
 
                     foreach (VendorInventory inventory in house.VendorInventories)
@@ -53,9 +51,8 @@ namespace Server.Misc
                             validItems.Add(subItem);
                     }
                 }
-                else if (item is BankBox)
+                else if (item is BankBox box)
                 {
-                    BankBox box = (BankBox)item;
                     Mobile owner = box.Owner;
 
                     if (owner == null)
@@ -75,15 +72,15 @@ namespace Server.Misc
                 {
                     object rootParent = item.RootParent;
 
-                    if (rootParent is Mobile)
+                    if (rootParent is Mobile rootMobile)
                     {
-                        Mobile rootMobile = (Mobile)rootParent;
                         if (item.Parent != rootMobile && rootMobile.IsPlayer())
                         {
                             items.Add(item);
                             continue;
                         }
-                        else if (item.Parent == rootMobile)
+
+                        if (item.Parent == rootMobile)
                         {
                             hairCleanup.Add(rootMobile);
                             continue;
@@ -146,8 +143,7 @@ namespace Server.Misc
                 item is TreasureMap || item is MessageInABottle ||
                 item is BaseArmor || item is BaseWeapon ||
                 item is BaseClothing ||
-                item is BaseJewel ||
-                item is BasePotion
+                item is BaseJewel
             #region Champion artifacts
                 ||
                 item is SkullPole ||

@@ -25,16 +25,14 @@ namespace Server.Misc
 
         public static Point2D ArcPoint(Point3D loc, int radius, int angle)
         {
-            int sideA, sideB;
-
             if (angle < 0)
                 angle = 0;
 
             if (angle > 90)
                 angle = 90;
 
-            sideA = (int)Math.Round(radius * Math.Sin(DegreesToRadians(angle)));
-            sideB = (int)Math.Round(radius * Math.Cos(DegreesToRadians(angle)));
+            var sideA = (int)Math.Round(radius * Math.Sin(DegreesToRadians(angle)));
+            var sideB = (int)Math.Round(radius * Math.Cos(DegreesToRadians(angle)));
 
             return new Point2D(loc.X - sideB, loc.Y - sideA);
         }

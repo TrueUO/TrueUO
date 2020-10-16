@@ -47,13 +47,22 @@ namespace Server.Misc
         {
             if (EmailServer != null)
             {
-                _Client = new SmtpClient(EmailServer, EmailPort);
+                lock (_Client)
+                {
+                    _Client = new SmtpClient(EmailServer, EmailPort);
+                }
                 if (EmailUsername != null)
                 {
-                    _Client.Credentials = new System.Net.NetworkCredential(EmailUsername, EmailPassword);
+                    lock (_Client)
+                    {
+                        _Client.Credentials = new System.Net.NetworkCredential(EmailUsername, EmailPassword);
+                    }
                 }
                 if (EmailSsl)
-                    _Client.EnableSsl = true;
+                    lock (_Client)
+                    {
+                        _Client.EnableSsl = true;
+                    }
             }
         }
 

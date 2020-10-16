@@ -179,8 +179,9 @@ namespace Server.Misc
                 if (CountAccounts)
                 {
                     // count accounts
-                    foreach (Account acc in Accounts.GetAccounts())
+                    foreach (var account in Accounts.GetAccounts())
                     {
+                        var acc = (Account) account;
                         for (int i = 0; i < acc.Length; i++)
                         {
                             Mobile mob = acc[i];
@@ -226,7 +227,7 @@ namespace Server.Misc
                     }
                 }
 
-                writer.WriteLine(string.Format("Language statistics. Numbers show how many {0} use the specified language.", CountAccounts ? "accounts" : "playermobile"));
+                writer.WriteLine("Language statistics. Numbers show how many {0} use the specified language.", CountAccounts ? "accounts" : "playermobile");
                 writer.WriteLine("====================================================================================================");
                 writer.WriteLine();
 
@@ -235,7 +236,7 @@ namespace Server.Misc
                 list.Sort(InternationalCodeComparer.Instance);
 
                 foreach (InternationalCodeCounter c in list)
-                    writer.WriteLine(string.Format("{0}‎ : {1}", GetFormattedInfo(c.Code), c.Count));
+                    writer.WriteLine("{0}‎ : {1}", GetFormattedInfo(c.Code), c.Count);
 
                 e.Mobile.SendMessage("Languages list generated.");
             }
@@ -257,7 +258,7 @@ namespace Server.Misc
             return string.Format("Unknown code {0}", code);
         }
 
-        struct InternationalCode
+        private readonly struct InternationalCode
         {
             readonly string m_Code;
             readonly string m_Language;

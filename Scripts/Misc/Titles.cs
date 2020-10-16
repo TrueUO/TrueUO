@@ -72,10 +72,8 @@ namespace Server.Misc
         {
             int karma = m.Karma;
 
-            if (m.Talisman is BaseTalisman)
+            if (m.Talisman is BaseTalisman talisman)
             {
-                BaseTalisman talisman = (BaseTalisman)m.Talisman;
-
                 if (talisman.KarmaLoss > 0)
                     offset *= (1 + (int)(((double)talisman.KarmaLoss) / 100));
                 else if (talisman.KarmaLoss < 0)
@@ -91,7 +89,7 @@ namespace Server.Misc
 
             if (offset > 0)
             {
-                if (m is PlayerMobile && ((PlayerMobile)m).KarmaLocked)
+                if (m is PlayerMobile mobile && mobile.KarmaLocked)
                     return;
 
                 if (karma >= MaxKarma)
@@ -171,7 +169,10 @@ namespace Server.Misc
             return list;
         }
 
-        public static string[] HarrowerTitles = new string[] { "Spite", "Opponent", "Hunter", "Venom", "Executioner", "Annihilator", "Champion", "Assailant", "Purifier", "Nullifier" };
+        public static string[] HarrowerTitles =
+        {
+            "Spite", "Opponent", "Hunter", "Venom", "Executioner", "Annihilator", "Champion", "Assailant", "Purifier", "Nullifier"
+        };
 
         public static string ComputeFameTitle(Mobile beheld)
         {
@@ -206,9 +207,9 @@ namespace Server.Misc
         {
             StringBuilder title = new StringBuilder();
 
-            if (beheld.ShowFameTitle && beheld is PlayerMobile && ((PlayerMobile)beheld).FameKarmaTitle != null)
+            if (beheld.ShowFameTitle && beheld is PlayerMobile mobile && mobile.FameKarmaTitle != null)
             {
-                title.AppendFormat(((PlayerMobile)beheld).FameKarmaTitle, beheld.Name, beheld.Female ? "Lady" : "Lord");
+                title.AppendFormat(mobile.FameKarmaTitle, mobile.Name, mobile.Female ? "Lady" : "Lord");
             }
             else if (beheld.ShowFameTitle || (beholder == beheld))
             {
@@ -219,15 +220,15 @@ namespace Server.Misc
                 title.Append(beheld.Name);
             }
 
-            if (beheld is PlayerMobile && (((PlayerMobile)beheld).CurrentChampTitle != null) && ((PlayerMobile)beheld).DisplayChampionTitle)
+            if (beheld is PlayerMobile playerMobile && (playerMobile.CurrentChampTitle != null) && playerMobile.DisplayChampionTitle)
             {
-                title.AppendFormat(((PlayerMobile)beheld).CurrentChampTitle);
+                title.AppendFormat(playerMobile.CurrentChampTitle);
             }
 
             string customTitle = beheld.Title;
 
-            if (beheld is PlayerMobile && ((PlayerMobile)beheld).PaperdollSkillTitle != null)
-                title.Append(", ").Append(((PlayerMobile)beheld).PaperdollSkillTitle);
+            if (beheld is PlayerMobile mobile1 && mobile1.PaperdollSkillTitle != null)
+                title.Append(", ").Append(mobile1.PaperdollSkillTitle);
             else if (beheld is BaseVendor)
                 title.AppendFormat(" {0}", customTitle);
 
@@ -285,7 +286,7 @@ namespace Server.Misc
             return highest;
         }
 
-        private static readonly string[,] m_Levels = new string[,]
+        private static readonly string[,] m_Levels =
         {
             { "Neophyte", "Neophyte", "Neophyte" },
             { "Novice", "Novice", "Novice" },
@@ -326,7 +327,7 @@ namespace Server.Misc
             return (fp - 300) / 100;
         }
 
-        private static readonly FameEntry[] m_FameEntries = new FameEntry[]
+        private static readonly FameEntry[] m_FameEntries =
         {
             new FameEntry(1249, new KarmaEntry[]
             {

@@ -591,17 +591,13 @@ namespace Server
         {
             ActionOnSpawner(typeof(BaseCamp), null, null, null, spawner =>
             {
-                if (spawner is XmlSpawner)
+                if (spawner is XmlSpawner s1)
                 {
-                    XmlSpawner s = spawner as XmlSpawner;
-
-                    s.MinDelay = TimeSpan.FromMinutes(5);
-                    s.MaxDelay = TimeSpan.FromMinutes(10);
+                    s1.MinDelay = TimeSpan.FromMinutes(5);
+                    s1.MaxDelay = TimeSpan.FromMinutes(10);
                 }
-                else if (spawner is Spawner)
+                else if (spawner is Spawner s)
                 {
-                    Spawner s = spawner as Spawner;
-
                     s.MinDelay = TimeSpan.FromMinutes(5);
                     s.MaxDelay = TimeSpan.FromMinutes(10);
                 }
@@ -746,7 +742,7 @@ namespace Server
                     string typeName = obj.TypeName.ToLower();
                     string lookingFor = current.ToLower();
 
-                    if (typeName != null && typeName.IndexOf(lookingFor) >= 0)
+                    if (typeName.IndexOf(lookingFor) >= 0)
                     {
                         toDelete.Add(spawner);
                         break;
@@ -794,7 +790,7 @@ namespace Server
         {
             int count = 0;
 
-            foreach (ISpawner spawner in World.Items.Values.OfType<ISpawner>().Where(s => s is Item && ((Item)s).Name != null && ((Item)s).Name.ToLower().IndexOf(name.ToLower()) >= 0))
+            foreach (ISpawner spawner in World.Items.Values.OfType<ISpawner>().Where(s => s is Item item && item.Name != null && item.Name.ToLower().IndexOf(name.ToLower()) >= 0))
             {
                 if (Replace(spawner, current, replace, check))
                     count++;
@@ -807,11 +803,9 @@ namespace Server
         {
             bool replaced = false;
 
-            if (spwner is XmlSpawner)
+            if (spwner is XmlSpawner spawner1)
             {
-                XmlSpawner spawner = (XmlSpawner)spwner;
-
-                foreach (XmlSpawner.SpawnObject obj in spawner.SpawnObjects)
+                foreach (XmlSpawner.SpawnObject obj in spawner1.SpawnObjects)
                 {
                     if (obj == null || obj.TypeName == null)
                         continue;
@@ -819,7 +813,7 @@ namespace Server
                     string typeName = obj.TypeName.ToLower();
                     string lookingFor = current.ToLower();
 
-                    if (typeName != null && typeName.IndexOf(lookingFor) >= 0)
+                    if (typeName.IndexOf(lookingFor) >= 0)
                     {
                         if (string.IsNullOrEmpty(check) || typeName.IndexOf(check) < 0)
                         {
@@ -831,10 +825,8 @@ namespace Server
                     }
                 }
             }
-            else if (spwner is Spawner)
+            else if (spwner is Spawner spawner)
             {
-                Spawner spawner = (Spawner)spwner;
-
                 for (int i = 0; i < spawner.SpawnObjects.Count; i++)
                 {
                     SpawnObject so = spawner.SpawnObjects[i];
@@ -842,7 +834,7 @@ namespace Server
                     string typeName = so.SpawnName.ToLower();
                     string lookingFor = current.ToLower();
 
-                    if (typeName != null && typeName.IndexOf(lookingFor) >= 0)
+                    if (typeName.IndexOf(lookingFor) >= 0)
                     {
                         if (string.IsNullOrEmpty(check) || typeName.IndexOf(check) < 0)
                         {
@@ -862,6 +854,7 @@ namespace Server
         /// Removes a SpawnerObject string, either the string or entire line
         /// </summary>
         /// <param name="toRemove">string to remove from line</param>
+        /// <param name="predicate"></param>
         public static void Remove(string toRemove, Func<XmlSpawner, bool> predicate = null)
         {
             int count = 0;
@@ -893,7 +886,7 @@ namespace Server
                 string typeName = obj.TypeName.ToLower();
                 string lookingFor = toRemove.ToLower();
 
-                if (typeName != null && typeName.IndexOf(lookingFor) >= 0)
+                if (typeName.IndexOf(lookingFor) >= 0)
                 {
                     remove.Add(obj);
                 }
@@ -926,70 +919,25 @@ namespace Server
 
             newItem.MoveToWorld(p, map);
 
-            if (newItem is XmlSpawner)
+            if (newItem is XmlSpawner spawner)
             {
-                ((XmlSpawner)newItem).DoRespawn = true;
+                spawner.DoRespawn = true;
             }
-            else if (newItem is Teleporter)
+            else if (newItem is Teleporter teleporter)
             {
-                ((Teleporter)newItem).MapDest = map;
+                teleporter.MapDest = map;
             }
         }
 
         /// <summary>
         /// performs a pre-specified action (use lamba with action) if the conditions are met
         /// </summary>
+        /// <param name="typeCheck"></param>
         /// <param name="lineCheck">Condition for a specific string in the spawn object line</param>
         /// <param name="nameCheck">Condition for the spawner name</param>
         /// <param name="exempt">Condition to prevent action being performed on spawner</param>
         /// <param name="action">action to be performed, setup in calling method</param>
-        /*public static void ActionOnSpawner(string lineCheck, string nameCheck, string exempt, Action<XmlSpawner> action, bool inherits = false)
-        {
-            int count = 0;
-
-            if (action != null)
-            {
-                List<XmlSpawner> list = World.Items.Values.OfType<XmlSpawner>().Where(s => nameCheck == null || s.Name.ToLower().IndexOf(nameCheck.ToLower()) >= 0).ToList();
-
-                foreach (var spawner in list)
-                {
-                    if (ActionOnSpawner(spawner, lineCheck, exempt, action, inherits))
-                        count++;
-                }
-
-                ColUtility.Free(list);
-            }
-
-            ToConsole(String.Format("Spawner Action: Performed action to {0} spawners{1}.", count.ToString(), lineCheck != null ? " containing " + lineCheck + "." : "."));
-        }
-
-        public static bool ActionOnSpawner(XmlSpawner spawner, string lineCheck, string exempt, Action<XmlSpawner> action, bool inherits)
-        {
-            foreach (var obj in spawner.SpawnObjects.Where(o => !String.IsNullOrEmpty(o.TypeName)))
-            {
-                if (obj == null || obj.TypeName == null)
-                    continue;
-
-                string spawnObject = obj.TypeName.ToLower();
-                string lookFor = lineCheck != null ? lineCheck.ToLower() : null;
-
-                if ((lookFor == null || spawnObject.IndexOf(lookFor) >= 0) && (exempt == null || spawnObject.IndexOf(exempt.ToLower()) >= 0))
-                {
-                    action(spawner);
-                    return true;
-                }
-            }
-
-            return false;
-        }*/
-
-        /// <summary>
-        /// performs a pre-specified action (use lamba with action) if the conditions are met
-        /// </summary>
-        /// <param name="lineCheck">Condition for a specific string in the spawn object line</param>
-        /// <param name="nameCheck">Condition for the spawner name</param>
-        /// <param name="exempt">Condition to prevent action being performed on spawner</param>
-        /// <param name="action">action to be performed, setup in calling method</param>
+        /// <param name="inherits"></param>
         public static void ActionOnSpawner(Type typeCheck, string lineCheck, string nameCheck, string exempt, Action<ISpawner> action, bool inherits = false)
         {
             int count = 0;
@@ -997,7 +945,7 @@ namespace Server
             if (action != null)
             {
                 List<ISpawner> list = World.Items.Values.OfType<ISpawner>().Where(s =>
-                    nameCheck == null || (s is Item && ((Item)s).Name != null && ((Item)s).Name.ToLower().IndexOf(nameCheck.ToLower()) >= 0)).ToList();
+                    nameCheck == null || (s is Item item && item.Name != null && item.Name.ToLower().IndexOf(nameCheck.ToLower()) >= 0)).ToList();
 
                 foreach (ISpawner spawner in list)
                 {
@@ -1064,13 +1012,13 @@ namespace Server
         {
             string[] list = null;
 
-            if (spawner is XmlSpawner && ((XmlSpawner)spawner).SpawnObjects != null && ((XmlSpawner)spawner).SpawnObjects.Length > 0)
+            if (spawner is XmlSpawner xmlSpawner && xmlSpawner.SpawnObjects != null && xmlSpawner.SpawnObjects.Length > 0)
             {
-                list = ((XmlSpawner)spawner).SpawnObjects.Select(obj => obj.TypeName).ToArray();
+                list = xmlSpawner.SpawnObjects.Select(obj => obj.TypeName).ToArray();
             }
-            else if (spawner is Spawner && ((Spawner)spawner).SpawnObjects != null && ((Spawner)spawner).SpawnObjects.Count > 0)
+            else if (spawner is Spawner spawner1 && spawner1.SpawnObjects != null && spawner1.SpawnObjects.Count > 0)
             {
-                List<SpawnObject> names = ((Spawner)spawner).SpawnObjects;
+                List<SpawnObject> names = spawner1.SpawnObjects;
 
                 list = new string[names.Count];
 
@@ -1146,7 +1094,7 @@ namespace Server
             foreach (Item item in list)
                 item.Delete();
 
-            ToConsole(string.Format("Deleted {0} Spawners in {1}.", list.Count, map.ToString()));
+            ToConsole(string.Format("Deleted {0} Spawners in {1}.", list.Count, map));
 
             ColUtility.Free(list);
             eable.Free();
@@ -1175,7 +1123,7 @@ namespace Server
         {
             string filename = "Spawns";
 
-            if (Directory.Exists(filename) == true)
+            if (Directory.Exists(filename))
             {
                 List<string> files = null;
                 string[] dirs = null;
@@ -1206,9 +1154,9 @@ namespace Server
                     }
                 }
 
-                ToConsole(string.Format("Found {0} Xmlspawner files for conversion.", files.Count), files != null && files.Count > 0 ? ConsoleColor.Green : ConsoleColor.Red);
+                ToConsole(string.Format("Found {0} Xmlspawner files for conversion.", files.Count), files.Count > 0 ? ConsoleColor.Green : ConsoleColor.Red);
 
-                if (files != null && files.Count > 0)
+                if (files.Count > 0)
                 {
                     int converted = 0;
                     int failed = 0;
@@ -1263,7 +1211,7 @@ namespace Server
                                         Diagnostics.ExceptionLogging.LogException(e);
                                     }
 
-                                    bool convert = id != null && ConvertSpawner(id, dr);
+                                    bool convert = id != null && ConvertSpawner(id);
 
                                     if (!convert)
                                     {
@@ -1282,7 +1230,7 @@ namespace Server
 
                                         if (loc != Point3D.Zero && spawnMap != null && spawnMap != Map.Internal)
                                         {
-                                            if (!ConvertSpawnerByLocation(loc, spawnMap, dr, ref keep))
+                                            if (!ConvertSpawnerByLocation(loc, spawnMap, ref keep))
                                             {
                                                 failed++;
                                             }
@@ -1318,19 +1266,19 @@ namespace Server
             }
         }
 
-        private static bool ConvertSpawnerByLocation(Point3D p, Map map, DataRow dr, ref int keep)
+        private static bool ConvertSpawnerByLocation(Point3D p, Map map, ref int keep)
         {
             XmlSpawner spawner = World.Items.Values.OfType<XmlSpawner>().FirstOrDefault(s => s.Location == p && s.Map == map);
 
-            return ConvertSpawner(spawner, dr, ref keep);
+            return ConvertSpawner(spawner, ref keep);
         }
 
-        private static bool ConvertSpawner(string id, DataRow dr)
+        private static bool ConvertSpawner(string id)
         {
             XmlSpawner spawner = World.Items.Values.OfType<XmlSpawner>().FirstOrDefault(s => s.UniqueId == id);
 
             int c = 0;
-            return ConvertSpawner(spawner, dr, ref c);
+            return ConvertSpawner(spawner, ref c);
         }
 
         private static bool DeleteSpawner(string id)
@@ -1349,7 +1297,7 @@ namespace Server
             return false;
         }
 
-        private static bool ConvertSpawner(XmlSpawner spawner, DataRow d, ref int keep)
+        private static bool ConvertSpawner(XmlSpawner spawner, ref int keep)
         {
             if (spawner != null)
             {
@@ -1416,7 +1364,7 @@ namespace Server
         {
             string filename = "Spawns";
 
-            if (Directory.Exists(filename) == true)
+            if (Directory.Exists(filename))
             {
                 List<string> files = null;
                 string[] dirs = null;
@@ -1488,7 +1436,7 @@ namespace Server
                             continue;
                         }
 
-                        if (ds.Tables != null && ds.Tables.Count > 0)
+                        if (ds.Tables.Count > 0)
                         {
                             if (ds.Tables["Points"] != null && ds.Tables["Points"].Rows.Count > 0)
                             {
@@ -1538,7 +1486,7 @@ namespace Server
         /// <param name="filename"></param>
         public static void RemoveSpawnsFromXmlFile(string directory, string filename)
         {
-            if (Directory.Exists(directory) == true)
+            if (Directory.Exists(directory))
             {
                 List<string> files = null;
 
@@ -1590,7 +1538,7 @@ namespace Server
                             continue;
                         }
 
-                        if (ds.Tables != null && ds.Tables.Count > 0)
+                        if (ds.Tables.Count > 0)
                         {
                             if (ds.Tables["Points"] != null && ds.Tables["Points"].Rows.Count > 0)
                             {
@@ -1636,7 +1584,7 @@ namespace Server
         {
             string filename = "Spawns";
 
-            if (Directory.Exists(filename) == true)
+            if (Directory.Exists(filename))
             {
                 List<string> files = null;
                 string[] dirs = null;
@@ -1667,11 +1615,11 @@ namespace Server
                     }
                 }
 
-                ToConsole(string.Format("Found {0} Xmlspawner files for conversion.", files.Count), files != null && files.Count > 0 ? ConsoleColor.Green : ConsoleColor.Red);
+                ToConsole(string.Format("Found {0} Xmlspawner files for conversion.", files.Count), files.Count > 0 ? ConsoleColor.Green : ConsoleColor.Red);
                 ToConsole("Deleting spawners...", ConsoleColor.Cyan);
                 long start = Core.TickCount;
 
-                if (files != null && files.Count > 0)
+                if (files.Count > 0)
                 {
                     int deletedxml = 0;
                     int nodelelete = 0;

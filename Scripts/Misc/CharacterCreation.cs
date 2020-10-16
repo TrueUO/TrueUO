@@ -175,10 +175,8 @@ namespace Server.Misc
 
             bool young = false;
 
-            if (newChar is PlayerMobile)
+            if (newChar is PlayerMobile pm)
             {
-                PlayerMobile pm = (PlayerMobile)newChar;
-
                 pm.AutoRenewInsurance = true;
 
                 double skillcap = Config.Get("PlayerCaps.SkillCap", 1000.0d) / 10;
@@ -199,7 +197,7 @@ namespace Server.Misc
 
             AddBackpack(newChar);
 
-            SetStats(newChar, state, args.Profession, args.Str, args.Dex, args.Int);
+            SetStats(newChar, args.Profession, args.Str, args.Dex, args.Int);
             SetSkills(newChar, args.Skills, args.Profession);
 
             Race race = newChar.Race;
@@ -310,7 +308,7 @@ namespace Server.Misc
                 stat = max;
         }
 
-        private static void SetStats(Mobile m, NetState state, int str, int dex, int intel)
+        private static void SetStats(Mobile m, int str, int dex, int intel)
         {
             int max = 90;
 
@@ -357,7 +355,7 @@ namespace Server.Misc
             return (total == 100 || total == 120);
         }
 
-        private static void SetStats(Mobile m, NetState state, int prof, int str, int dex, int intel)
+        private static void SetStats(Mobile m, int prof, int str, int dex, int intel)
         {
             switch (prof)
             {
@@ -412,7 +410,7 @@ namespace Server.Misc
                     }
                 default:
                     {
-                        SetStats(m, state, str, dex, intel);
+                        SetStats(m, str, dex, intel);
 
                         return;
                     }
@@ -650,8 +648,10 @@ namespace Server.Misc
                     }
                 case 7: // Ninja
                     {
-                        int[] hues = new[] { 0x1A8, 0xEC, 0x99, 0x90, 0xB5, 0x336, 0x89 };
-                        //TODO: Verify that's ALL the hues for that above.
+                        int[] hues =
+                        {
+                            0x1A8, 0xEC, 0x99, 0x90, 0xB5, 0x336, 0x89
+                        };
 
                         if (elf || human)
                         {
@@ -1381,25 +1381,6 @@ namespace Server.Misc
                         PackItem(new MysticBook((ulong)0xAB));
                         break;
                     }
-            }
-        }
-
-        private class BadStartMessage : Timer
-        {
-            readonly Mobile m_Mobile;
-            readonly int m_Message;
-
-            public BadStartMessage(Mobile m, int message)
-                : base(TimeSpan.FromSeconds(3.5))
-            {
-                m_Mobile = m;
-                m_Message = message;
-                Start();
-            }
-
-            protected override void OnTick()
-            {
-                m_Mobile.SendLocalizedMessage(m_Message);
             }
         }
     }

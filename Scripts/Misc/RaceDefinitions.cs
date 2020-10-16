@@ -139,7 +139,7 @@ namespace Server.Misc
             {
                 if (hue < 1002)
                     return 1002;
-                else if (hue > 1058)
+                if (hue > 1058)
                     return 1058;
                 else
                     return hue;
@@ -154,7 +154,7 @@ namespace Server.Misc
             {
                 if (hue < 1102)
                     return 1102;
-                else if (hue > 1149)
+                if (hue > 1149)
                     return 1149;
                 else
                     return hue;
@@ -178,7 +178,7 @@ namespace Server.Misc
 
         private class Elf : Race
         {
-            private static readonly int[] m_SkinHues = new[]
+            private static readonly int[] m_SkinHues =
             {
                 0x4DE, 0x76C, 0x835, 0x430, 0x24D, 0x24E, 0x24F, 0x0BF,
                 0x4A7, 0x361, 0x375, 0x367, 0x3E8, 0x3DE, 0x353, 0x903,
@@ -186,7 +186,7 @@ namespace Server.Misc
                 0x53F, 0x381, 0x382, 0x383, 0x76B, 0x3E5, 0x51D, 0x3E6
             };
 
-            private static readonly int[] m_HairHues = new[]
+            private static readonly int[] m_HairHues =
             {
                 0x034, 0x035, 0x036, 0x037, 0x038, 0x039, 0x058, 0x08E,
                 0x08F, 0x090, 0x091, 0x092, 0x101, 0x159, 0x15A, 0x15B,
@@ -335,17 +335,15 @@ namespace Server.Misc
                 {
                     return itemID >= 0x4258 && itemID <= 0x425F;
                 }
-                else
-                {
-                    return ((itemID == 0x4261 || itemID == 0x4262) || (itemID >= 0x4273 && itemID <= 0x4275) || (itemID == 0x42B0 || itemID == 0x42B1) || (itemID == 0x42AA || itemID == 0x42AB));
-                }
+
+                return ((itemID == 0x4261 || itemID == 0x4262) || (itemID >= 0x4273 && itemID <= 0x4275) || (itemID == 0x42B0 || itemID == 0x42B1) || (itemID == 0x42AA || itemID == 0x42AB));
             }
 
             public override int RandomHair(bool female)
             {
                 if (Utility.Random(9) == 0)
                     return 0;
-                else if (!female)
+                if (!female)
                     return 0x4258 + Utility.Random(8);
                 else
                 {
@@ -377,17 +375,21 @@ namespace Server.Misc
             public override bool ValidateFacialHair(bool female, int itemID)
             {
                 if (female)
+                {
                     return false;
-                else
-                    return itemID >= 0x42AD && itemID <= 0x42B0;
+                }
+
+                return itemID >= 0x42AD && itemID <= 0x42B0;
             }
 
             public override int RandomFacialHair(bool female)
             {
                 if (female)
+                {
                     return 0;
-                else
-                    return Utility.RandomList(0, 0x42AD, 0x42AE, 0x42AF, 0x42B0);
+                }
+
+                return Utility.RandomList(0, 0x42AD, 0x42AE, 0x42AF, 0x42B0);
             }
 
             public override bool ValidateFace(bool female, int itemID)
@@ -428,7 +430,7 @@ namespace Server.Misc
                 return Utility.Random(1755, 25) | 0x8000;
             }
 
-            private static readonly int[] m_HornHues = new[]
+            private static readonly int[] m_HornHues =
             {
                 0x709, 0x70B, 0x70D, 0x70F, 0x711, 0x763,
                 0x765, 0x768, 0x76B, 0x6F3, 0x6F1, 0x6EF,
@@ -556,13 +558,13 @@ namespace Server.Misc
         }
 
         public static Type[] AllRaceTypes => _AllRaceTypes;
-        private static Type[] _AllRaceTypes = new[]
-         {
+        private static Type[] _AllRaceTypes =
+        {
             typeof(BootsOfBallast), typeof(DetectiveCredentials)
         };
 
         public static int[] AllRaceIDs => _AllRaceIDs;
-        private static int[] _AllRaceIDs = new[]
+        private static int[] _AllRaceIDs =
         {
             0xA289, 0xA28A, 0xA28B, 0xA291, 0xA292, 0xA293, // whips
             0xE85, 0xE86,                                   // Tools
@@ -572,7 +574,7 @@ namespace Server.Misc
         };
 
         public static int[] GargoyleOnlyIDs => _GargoyleOnlyIDs;
-        private static int[] _GargoyleOnlyIDs = new[]
+        private static int[] _GargoyleOnlyIDs =
         {
             0x283, 0x284, 0x285, 0x286, 0x287, 0x288, 0x289, 0x28A, // Armor
             0x301, 0x302, 0x303, 0x304, 0x305, 0x306, 0x310, 0x311, 
@@ -617,7 +619,7 @@ namespace Server.Misc
         };
 
         public static int[] ElfOnlyIDs => _ElfOnlyIDs;
-        private static int[] _ElfOnlyIDs = new[]
+        private static int[] _ElfOnlyIDs =
         {
             0x2B67, 0x2B68, 0x2B69, 0x2B6A, 0x2B6B, 0x2B6C, 0x2B6D, // Armor
             0x2B6E, 0x2B6F, 0x2B70, 0x2B71, 0x2B72, 0x2B73, 0x2B74,

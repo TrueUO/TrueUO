@@ -72,14 +72,14 @@ namespace Server.Misc
             if (!from.Player)
                 return true; // NPCs have no restrictions
 
-            if (target is BaseCreature && !((BaseCreature)target).Controlled)
+            if (target is BaseCreature creature && !creature.Controlled)
                 return false; // Players cannot heal uncontrolled mobiles
 
-            if (from is PlayerMobile && ((PlayerMobile)from).Young && target is BaseCreature &&
-                ((BaseCreature)target).Controlled)
+            if (from is PlayerMobile mobile && mobile.Young && target is BaseCreature baseCreature &&
+                baseCreature.Controlled)
                 return true;
 
-            if (from is PlayerMobile && ((PlayerMobile)from).Young &&
+            if (from is PlayerMobile playerMobile && playerMobile.Young &&
                 (!(target is PlayerMobile) || !((PlayerMobile)target).Young))
                 return false; // Young players cannot perform beneficial actions towards older players
 
@@ -111,7 +111,7 @@ namespace Server.Misc
 
             if (!from.Player && !(bc != null && bc.GetMaster() != null && bc.GetMaster().IsPlayer()))
             {
-                if (!CheckAggressor(from.Aggressors, target) && !CheckAggressed(from.Aggressed, target) && target is PlayerMobile && ((PlayerMobile)target).CheckYoungProtection(from))
+                if (!CheckAggressor(from.Aggressors, target) && !CheckAggressed(from.Aggressed, target) && target is PlayerMobile mobile && mobile.CheckYoungProtection(from))
                 {
                     return false;
                 }
@@ -120,14 +120,14 @@ namespace Server.Misc
             }
 
             // Summons should follow the same rules as their masters
-            if (from is BaseCreature && ((BaseCreature)from).Summoned && ((BaseCreature)from).SummonMaster != null)
+            if (from is BaseCreature creature && creature.Summoned && creature.SummonMaster != null)
             {
-                from = ((BaseCreature)from).SummonMaster;
+                from = creature.SummonMaster;
             }
 
-            if (target is BaseCreature && ((BaseCreature)target).Summoned && ((BaseCreature)target).SummonMaster != null)
+            if (target is BaseCreature baseCreature && baseCreature.Summoned && baseCreature.SummonMaster != null)
             {
-                target = ((BaseCreature)target).SummonMaster;
+                target = baseCreature.SummonMaster;
             }
 
             Guild fromGuild = GetGuildFor(from.Guild as Guild, from);
@@ -142,19 +142,19 @@ namespace Server.Misc
             if (ViceVsVirtueSystem.Enabled && ViceVsVirtueSystem.EnhancedRules && ViceVsVirtueSystem.IsEnemy(from, damageable))
                 return true;
 
-            if (target is BaseCreature)
+            if (target is BaseCreature creature1)
             {
-                if (((BaseCreature)target).Controlled)
+                if (creature1.Controlled)
                     return false; // Cannot harm other controlled mobiles
 
-                if (((BaseCreature)target).Summoned && from != ((BaseCreature)target).SummonMaster)
+                if (creature1.Summoned && from != creature1.SummonMaster)
                     return false; // Cannot harm other controlled mobiles
             }
 
             if (target.Player)
                 return false; // Cannot harm other players
 
-            if (!(target is BaseCreature && ((BaseCreature)target).InitialInnocent))
+            if (!(target is BaseCreature baseCreature1 && baseCreature1.InitialInnocent))
             {
                 if (Notoriety.Compute(from, target) == Notoriety.Innocent)
                     return false; // Cannot harm innocent mobiles
@@ -289,7 +289,7 @@ namespace Server.Misc
             if (target.Blessed)
                 return Notoriety.Invulnerable;
 
-            if (target is BaseVendor && ((BaseVendor)target).IsInvulnerable)
+            if (target is BaseVendor vendor && vendor.IsInvulnerable)
                 return Notoriety.Invulnerable;
 
             if (target is PlayerVendor || target is TownCrier)
@@ -367,7 +367,7 @@ namespace Server.Misc
             if (ViceVsVirtueSystem.Enabled && ViceVsVirtueSystem.IsEnemy(source, target) && (ViceVsVirtueSystem.EnhancedRules || source.Map == ViceVsVirtueSystem.Facet))
                 return Notoriety.Enemy;
 
-            if (Stealing.ClassicMode && target is PlayerMobile && ((PlayerMobile)target).PermaFlags.Contains(source))
+            if (Stealing.ClassicMode && target is PlayerMobile mobile && mobile.PermaFlags.Contains(source))
                 return Notoriety.CanBeAttacked;
 
             if (bc != null && bc.AlwaysAttackable)
@@ -388,13 +388,13 @@ namespace Server.Misc
             if (CheckAggressor(source.Aggressors, target))
                 return Notoriety.CanBeAttacked;
 
-            if (source is PlayerMobile && CheckPetAggressor((PlayerMobile)source, target))
+            if (source is PlayerMobile playerMobile && CheckPetAggressor(playerMobile, target))
                 return Notoriety.CanBeAttacked;
 
             if (CheckAggressed(source.Aggressed, target))
                 return Notoriety.CanBeAttacked;
 
-            if (source is PlayerMobile && CheckPetAggressed((PlayerMobile)source, target))
+            if (source is PlayerMobile mobile1 && CheckPetAggressed(mobile1, target))
                 return Notoriety.CanBeAttacked;
 
             if (bc != null)
@@ -403,15 +403,16 @@ namespace Server.Misc
                 {
                     return Notoriety.Innocent;
                 }
-                else if (bc.Controlled && bc.ControlOrder == OrderType.Guard && bc.ControlTarget == source)
+
+                if (bc.Controlled && bc.ControlOrder == OrderType.Guard && bc.ControlTarget == source)
                 {
                     return Notoriety.CanBeAttacked;
                 }
             }
 
-            if (source is BaseCreature)
+            if (source is BaseCreature creature)
             {
-                Mobile master = ((BaseCreature)source).GetMaster();
+                Mobile master = creature.GetMaster();
 
                 if (master != null)
                 {

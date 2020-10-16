@@ -119,7 +119,7 @@ namespace Server.Misc
                 AggressorInfo info = list[i];
                 Mobile defender = info.Defender;
 
-                if ((defender is PlayerMobile || (defender is BaseCreature && !((BaseCreature)defender).IsMonster)) &&
+                if ((defender is PlayerMobile || (defender is BaseCreature creature && !creature.IsMonster)) &&
                     (DateTime.UtcNow < info.LastCombatTime + Delay && defender.LastKilled < info.LastCombatTime))
                 {
                     return true;
@@ -138,7 +138,7 @@ namespace Server.Misc
                 AggressorInfo info = list[i];
                 Mobile attacker = info.Attacker;
 
-                if ((attacker is PlayerMobile || (attacker is BaseCreature && !((BaseCreature)attacker).IsMonster)) &&
+                if ((attacker is PlayerMobile || (attacker is BaseCreature creature && !creature.IsMonster)) &&
                     (DateTime.UtcNow < info.LastCombatTime + Delay && attacker.LastKilled < info.LastCombatTime))
                 {
                     return true;

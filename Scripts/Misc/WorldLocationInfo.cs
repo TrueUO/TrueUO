@@ -23,7 +23,7 @@ namespace Server
         }
 
         public static WorldLocationInfo[][] Locations => m_Locations;
-        private static readonly WorldLocationInfo[][] m_Locations = new[]
+        private static readonly WorldLocationInfo[][] m_Locations =
         {
             new[] // Felucca
 			{
@@ -178,7 +178,8 @@ namespace Server
             {
                 return string.Format("somewhere near {0}.", r.Name);
             }
-            else if (r.Name != null && r is DungeonRegion)
+
+            if (r.Name != null && r is DungeonRegion)
             {
                 return string.Format("somewhere in dungeon {0}.", r.Name);
             }

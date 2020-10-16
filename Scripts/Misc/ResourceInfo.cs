@@ -544,7 +544,7 @@ namespace Server.Items
 
     public class CraftResources
     {
-        private static readonly CraftResourceInfo[] m_MetalInfo = new[]
+        private static readonly CraftResourceInfo[] m_MetalInfo =
         {
             new CraftResourceInfo(0x000, 1053109, "Iron", CraftAttributeInfo.Blank, CraftResource.Iron, typeof(IronIngot), typeof(IronOre), typeof(Granite)),
             new CraftResourceInfo(0x973, 1053108, "Dull Copper",    CraftAttributeInfo.DullCopper,  CraftResource.DullCopper, typeof(DullCopperIngot),  typeof(DullCopperOre),  typeof(DullCopperGranite)),
@@ -557,7 +557,7 @@ namespace Server.Items
             new CraftResourceInfo(0x8AB, 1053101, "Valorite", CraftAttributeInfo.Valorite,  CraftResource.Valorite, typeof(ValoriteIngot),  typeof(ValoriteOre), typeof(ValoriteGranite)),
         };
 
-        private static readonly CraftResourceInfo[] m_ScaleInfo = new[]
+        private static readonly CraftResourceInfo[] m_ScaleInfo =
         {
             new CraftResourceInfo(0x66D, 1053129, "Red Scales", CraftAttributeInfo.RedScales, CraftResource.RedScales, typeof(RedScales)),
             new CraftResourceInfo(0x8A8, 1053130, "Yellow Scales",  CraftAttributeInfo.YellowScales,    CraftResource.YellowScales, typeof(YellowScales)),
@@ -567,7 +567,7 @@ namespace Server.Items
             new CraftResourceInfo(0x8B0, 1053134, "Blue Scales",    CraftAttributeInfo.BlueScales, CraftResource.BlueScales, typeof(BlueScales)),
         };
 
-        private static readonly CraftResourceInfo[] m_AOSLeatherInfo = new[]
+        private static readonly CraftResourceInfo[] m_AOSLeatherInfo =
         {
             new CraftResourceInfo(0x000, 1049353, "Normal", CraftAttributeInfo.Blank, CraftResource.RegularLeather, typeof(Leather), typeof(Hides)),
             new CraftResourceInfo(0x8AC, 1049354, "Spined", CraftAttributeInfo.Spined, CraftResource.SpinedLeather, typeof(SpinedLeather),  typeof(SpinedHides)),
@@ -575,7 +575,7 @@ namespace Server.Items
             new CraftResourceInfo(0x851, 1049356, "Barbed", CraftAttributeInfo.Barbed, CraftResource.BarbedLeather, typeof(BarbedLeather),  typeof(BarbedHides)),
         };
 
-        private static readonly CraftResourceInfo[] m_WoodInfo = new[]
+        private static readonly CraftResourceInfo[] m_WoodInfo =
         {
             new CraftResourceInfo(0x000, 1011542, "Normal", CraftAttributeInfo.Blank, CraftResource.RegularWood,    typeof(Log), typeof(Board)),
             new CraftResourceInfo(0x7DA, 1072533, "Oak", CraftAttributeInfo.OakWood, CraftResource.OakWood, typeof(OakLog), typeof(OakBoard)),
@@ -747,30 +747,30 @@ namespace Server.Items
         {
             if (info.Name.IndexOf("Spined") >= 0)
                 return CraftResource.SpinedLeather;
-            else if (info.Name.IndexOf("Horned") >= 0)
+            if (info.Name.IndexOf("Horned") >= 0)
                 return CraftResource.HornedLeather;
-            else if (info.Name.IndexOf("Barbed") >= 0)
+            if (info.Name.IndexOf("Barbed") >= 0)
                 return CraftResource.BarbedLeather;
-            else if (info.Name.IndexOf("Leather") >= 0)
+            if (info.Name.IndexOf("Leather") >= 0)
                 return CraftResource.RegularLeather;
 
             if (info.Level == 0)
                 return CraftResource.Iron;
-            else if (info.Level == 1)
+            if (info.Level == 1)
                 return CraftResource.DullCopper;
-            else if (info.Level == 2)
+            if (info.Level == 2)
                 return CraftResource.ShadowIron;
-            else if (info.Level == 3)
+            if (info.Level == 3)
                 return CraftResource.Copper;
-            else if (info.Level == 4)
+            if (info.Level == 4)
                 return CraftResource.Bronze;
-            else if (info.Level == 5)
+            if (info.Level == 5)
                 return CraftResource.Gold;
-            else if (info.Level == 6)
+            if (info.Level == 6)
                 return CraftResource.Agapite;
-            else if (info.Level == 7)
+            if (info.Level == 7)
                 return CraftResource.Verite;
-            else if (info.Level == 8)
+            if (info.Level == 8)
                 return CraftResource.Valorite;
 
             return CraftResource.None;
@@ -786,11 +786,11 @@ namespace Server.Items
             {
                 if (info.Level == 0)
                     return CraftResource.RegularLeather;
-                else if (info.Level == 1)
+                if (info.Level == 1)
                     return CraftResource.SpinedLeather;
-                else if (info.Level == 2)
+                if (info.Level == 2)
                     return CraftResource.HornedLeather;
-                else if (info.Level == 3)
+                if (info.Level == 3)
                     return CraftResource.BarbedLeather;
 
                 return CraftResource.None;

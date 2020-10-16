@@ -204,7 +204,9 @@ namespace Server.Misc
         public static void AddWeather(int temperature, int chanceOfPercipitation, int chanceOfExtremeTemperature, params Rectangle2D[] area)
         {
             for (int i = 0; i < m_Facets.Length; ++i)
-                new Weather(m_Facets[i], area, temperature, chanceOfPercipitation, chanceOfExtremeTemperature, TimeSpan.FromSeconds(30.0));
+            {
+                var weather = new Weather(m_Facets[i], area, temperature, chanceOfPercipitation, chanceOfExtremeTemperature, TimeSpan.FromSeconds(30.0));
+            }
         }
 
         public static bool CheckWeatherConflict(Map facet, Weather exclude, Rectangle2D area)
@@ -351,9 +353,9 @@ namespace Server.Misc
                 if (m_Stage > 0 && m_MoveSpeed > 0)
                     MoveForward();
 
-                int type, density, temperature;
+                int type, density;
 
-                temperature = m_Temperature;
+                var temperature = m_Temperature;
 
                 if (m_ExtremeTemperature)
                     temperature *= -1;

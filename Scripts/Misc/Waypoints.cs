@@ -114,7 +114,7 @@ namespace Server
             if (m == null || m.Map == null || m.Deleted)
                 return;
 
-            foreach (BaseHealer healer in BaseVendor.AllVendors.OfType<BaseHealer>().Where(h => h != null && !h.Deleted && h.Map == m.Map))
+            foreach (BaseHealer healer in BaseVendor.AllVendors.OfType<BaseHealer>().Where(h => !h.Deleted && h.Map == m.Map))
             {
                 Create(m, healer, WaypointType.Resurrection);
             }
@@ -130,7 +130,7 @@ namespace Server
             if (ns == null)
                 return;
 
-            foreach (BaseHealer healer in BaseVendor.AllVendors.OfType<BaseHealer>().Where(h => h != null && !h.Deleted && h.Map == oldMap))
+            foreach (BaseHealer healer in BaseVendor.AllVendors.OfType<BaseHealer>().Where(h => !h.Deleted && h.Map == oldMap))
             {
                 ns.Send(new RemoveWaypoint(healer.Serial));
             }

@@ -8,7 +8,7 @@ namespace Server
     {
         public static readonly int Port = Config.Get("Server.Port", 2593);
 
-        private static readonly IPEndPoint[] m_ListenerEndPoints = new IPEndPoint[]
+        private static readonly IPEndPoint[] m_ListenerEndPoints =
         {
             new IPEndPoint(IPAddress.Any, Port), // Default: Listen on port 2593 on all IP addresses
  			

@@ -128,9 +128,9 @@ namespace Server.Items
 
             public override void Execute(CommandEventArgs e, object obj)
             {
-                if (obj is ToggleItem)
+                if (obj is ToggleItem item)
                 {
-                    ((ToggleItem)obj).Toggle();
+                    item.Toggle();
                     AddResponse("The item has been toggled.");
                 }
                 else

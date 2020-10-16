@@ -135,7 +135,6 @@ namespace Server
             private readonly PoisonImpl m_Poison;
             private readonly Mobile m_Mobile;
             private Mobile m_From;
-            private int m_LastDamage;
             private int m_Index;
 
             public Mobile From { get { return m_From; } set { m_From = value; } }
@@ -184,8 +183,8 @@ namespace Server
                     m_Mobile.SendLocalizedMessage(502136); // The poison seems to have worn off.
                     m_Mobile.Poison = null;
 
-                    if (m_Mobile is PlayerMobile)
-                        BuffInfo.RemoveBuff((PlayerMobile)m_Mobile, BuffIcon.Poison);
+                    if (m_Mobile is PlayerMobile mobile)
+                        BuffInfo.RemoveBuff(mobile, BuffIcon.Poison);
 
                     Stop();
                     return;
@@ -198,11 +197,9 @@ namespace Server
                 else if (damage > m_Poison.m_Maximum)
                     damage = m_Poison.m_Maximum;
 
-                m_LastDamage = damage;
-
                 if (m_From != null)
                 {
-                    if (m_From is BaseCreature && ((BaseCreature)m_From).RecentSetControl && ((BaseCreature)m_From).GetMaster() == m_Mobile)
+                    if (m_From is BaseCreature creature && creature.RecentSetControl && creature.GetMaster() == m_Mobile)
                     {
                         m_From = null;
                     }

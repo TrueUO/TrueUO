@@ -240,7 +240,7 @@ namespace Server
 
                     if (reflectPhys != 0)
                     {
-                        if (from is ExodusMinion && ((ExodusMinion)from).FieldActive || from is ExodusOverseer && ((ExodusOverseer)from).FieldActive)
+                        if (from is ExodusMinion minion && minion.FieldActive || from is ExodusOverseer overseer && overseer.FieldActive)
                         {
                             from.FixedParticles(0x376A, 20, 10, 0x2530, EffectLayer.Waist);
                             from.PlaySound(0x2F4);
@@ -551,20 +551,18 @@ namespace Server
 
                 if (attribute == AosAttribute.Luck)
                 {
-                    if (obj is BaseWeapon)
-                        value += ((BaseWeapon)obj).GetLuckBonus();
+                    if (obj is BaseWeapon weapon)
+                        value += weapon.GetLuckBonus();
 
-                    if (obj is BaseArmor)
-                        value += ((BaseArmor)obj).GetLuckBonus();
+                    if (obj is BaseArmor armor)
+                        value += armor.GetLuckBonus();
 
-                    if (obj is FishingPole)
-                        value += ((FishingPole)obj).GetLuckBonus();
+                    if (obj is FishingPole pole)
+                        value += pole.GetLuckBonus();
                 }
 
-                if (obj is ISetItem)
+                if (obj is ISetItem item)
                 {
-                    ISetItem item = (ISetItem)obj;
-
                     attrs = item.SetAttributes;
 
                     if (attrs != null && item.LastEquipped)
@@ -602,9 +600,9 @@ namespace Server
                 if (Block.IsBlocking(m))
                     value -= 30;
 
-                if (m is PlayerMobile && m.Race == Race.Gargoyle)
+                if (m is PlayerMobile mobile && mobile.Race == Race.Gargoyle)
                 {
-                    value += ((PlayerMobile)m).GetRacialBerserkBuff(false);
+                    value += mobile.GetRacialBerserkBuff(false);
                 }
 
                 if (BaseFishPie.IsUnderEffects(m, FishPieEffect.WeaponDam))
@@ -620,14 +618,14 @@ namespace Server
 
                 TransformContext context = TransformationSpellHelper.GetContext(m);
 
-                if (context != null && context.Spell is ReaperFormSpell)
-                    value += ((ReaperFormSpell)context.Spell).SpellDamageBonus;
+                if (context != null && context.Spell is ReaperFormSpell spell)
+                    value += spell.SpellDamageBonus;
 
                 value += ArcaneEmpowermentSpell.GetSpellBonus(m, true);
 
-                if (m is PlayerMobile && m.Race == Race.Gargoyle)
+                if (m is PlayerMobile mobile && mobile.Race == Race.Gargoyle)
                 {
-                    value += ((PlayerMobile)m).GetRacialBerserkBuff(true);
+                    value += mobile.GetRacialBerserkBuff(true);
                 }
 
                 if (CityLoyaltySystem.HasTradeDeal(m, TradeDeal.GuildOfArcaneArts))
@@ -675,8 +673,8 @@ namespace Server
 
                 TransformContext context = TransformationSpellHelper.GetContext(m);
 
-                if (context != null && context.Spell is ReaperFormSpell)
-                    value += ((ReaperFormSpell)context.Spell).SwingSpeedBonus;
+                if (context != null && context.Spell is ReaperFormSpell spell)
+                    value += spell.SwingSpeedBonus;
 
                 int discordanceEffect = 0;
 
@@ -809,7 +807,7 @@ namespace Server
 
         public override void SetValue(int bitmask, int value)
         {
-            if (bitmask == (int)AosAttribute.WeaponSpeed && Owner is BaseWeapon)
+            if (bitmask == (int)AosAttribute.WeaponSpeed && Owner is BaseWeapon weapon)
             {
                 ((BaseWeapon)Owner).WeaponAttributes.ScaleLeech(value);
             }
@@ -1321,7 +1319,7 @@ namespace Server
 
         public override void SetValue(int bitmask, int value)
         {
-            if (bitmask == (int)AosWeaponAttribute.DurabilityBonus && Owner is BaseWeapon)
+            if (bitmask == (int)AosWeaponAttribute.DurabilityBonus && Owner is BaseWeapon weapon)
             {
                 ((BaseWeapon)Owner).UnscaleDurability();
             }
@@ -3119,8 +3117,8 @@ namespace Server
                     {
                         dur.MaxHitPoints--;
 
-                        if (item.Parent is Mobile)
-                            ((Mobile)item.Parent).LocalOverheadMessage(Network.MessageType.Regular, 0x3B2, 1061121); // Your equipment is severely damaged.
+                        if (item.Parent is Mobile mobile)
+                            mobile.LocalOverheadMessage(Network.MessageType.Regular, 0x3B2, 1061121); // Your equipment is severely damaged.
                     }
                     else
                     {

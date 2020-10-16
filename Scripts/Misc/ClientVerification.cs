@@ -104,7 +104,7 @@ namespace Server.Misc
 
             ClientVersion required = Required;
 
-            if (required != null && version < required && (m_OldClientResponse == OldClientResponse.Kick || (m_OldClientResponse == OldClientResponse.LenientKick && (DateTime.UtcNow - state.Mobile.CreationTime) > m_AgeLeniency && state.Mobile is PlayerMobile && ((PlayerMobile)state.Mobile).GameTime > m_GameTimeLeniency)))
+            if (required != null && version < required && (m_OldClientResponse == OldClientResponse.Kick || (m_OldClientResponse == OldClientResponse.LenientKick && (DateTime.UtcNow - state.Mobile.CreationTime) > m_AgeLeniency && state.Mobile is PlayerMobile mobile && mobile.GameTime > m_GameTimeLeniency)))
             {
                 kickMessage = string.Format("This server requires your client version be at least {0}.", required);
             }

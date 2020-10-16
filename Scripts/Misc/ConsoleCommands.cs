@@ -16,8 +16,6 @@ namespace Server.Misc
 
         private static string _Command;
 
-        private static Timer _PollTimer;
-
         private static bool _HearConsole;
 
         public static void Initialize()
@@ -59,7 +57,7 @@ namespace Server.Misc
 
         private static void PollCommands()
         {
-            _PollTimer = Timer.DelayCall(TimeSpan.Zero, TimeSpan.FromMilliseconds(100), ProcessCommand);
+            Timer.DelayCall(TimeSpan.Zero, TimeSpan.FromMilliseconds(100), ProcessCommand);
 
             _Listen.BeginInvoke(r => ProcessInput(_Listen.EndInvoke(r)), null);
         }
