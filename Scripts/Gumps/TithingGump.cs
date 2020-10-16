@@ -110,8 +110,6 @@ namespace Server.Gumps
                                 if ((from.TithingPoints + m_Offer) > MaxTithing)
                                     m_Offer = MaxTithing - from.TithingPoints;
 
-                                Container pack = from.Backpack;
-
                                 if (Banker.Withdraw(from, m_Offer, true))
                                 {
                                     // You tithe gold to the shrine as a sign of devotion.
