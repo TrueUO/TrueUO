@@ -108,10 +108,10 @@ namespace Server.Gumps
                                     from.SendLocalizedMessage(1155867); // The amount entered is invalid. Verify that there are sufficient funds to complete this transaction.
                                 else
                                 {
-                                    Banker.Withdraw(@from, v, true);
-                                    account.DepositToSecure(@from, v);
+                                    Banker.Withdraw(from, v, true);
+                                    account.DepositToSecure(from, v);
 
-                                    @from.SendLocalizedMessage(1153188); // Transaction successful:
+                                    from.SendLocalizedMessage(1153188); // Transaction successful:
 
                                     Timer.DelayCall(TimeSpan.FromSeconds(2), SendGump);
                                 }
@@ -139,14 +139,14 @@ namespace Server.Gumps
                             {
                                 v = Utility.ToInt32(text);
 
-                                if (v <= 0 || v > acct.GetSecureAccountAmount(@from))
-                                    @from.SendLocalizedMessage(1155867); // The amount entered is invalid. Verify that there are sufficient funds to complete this transaction.
+                                if (v <= 0 || v > acct.GetSecureAccountAmount(from))
+                                    from.SendLocalizedMessage(1155867); // The amount entered is invalid. Verify that there are sufficient funds to complete this transaction.
                                 else
                                 {
-                                    Banker.Deposit(@from, v, true);
-                                    ac.WithdrawFromSecure(@from, v);
+                                    Banker.Deposit(from, v, true);
+                                    ac.WithdrawFromSecure(from, v);
 
-                                    @from.SendLocalizedMessage(1153188); // Transaction successful:
+                                    from.SendLocalizedMessage(1153188); // Transaction successful:
                                 }
 
                                 Timer.DelayCall(TimeSpan.FromSeconds(2), SendGump);
