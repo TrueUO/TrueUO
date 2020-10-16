@@ -5,14 +5,8 @@ using System.Collections;
 using System.IO;
 using System.Xml;
 
-/*
-** Modified from RunUO 1.0.0 CategorizedAddGump.cs
-** by ArteGordon
-** 2/5/05
-*/
 namespace Server.Gumps
 {
-
     public abstract class XmlAddCAGNode
     {
         public abstract string Caption { get; }
@@ -146,7 +140,6 @@ namespace Server.Gumps
                         {
                             if (!xml.IsEmptyElement)
                             {
-
                                 nodes.Add(new XmlAddCAGCategory(this, xml));
                             }
                         }
@@ -193,8 +186,6 @@ namespace Server.Gumps
         }
     }
 
-
-
     public class XmlCategorizedAddGump : Gump
     {
         public static bool OldStyle = PropsConfig.OldStyle;
@@ -228,7 +219,7 @@ namespace Server.Gumps
 
         public static readonly int OffsetSize = PropsConfig.OffsetSize;
 
-        public static readonly int EntryHeight = 24;//PropsConfig.EntryHeight;
+        public static readonly int EntryHeight = 24;
         public static readonly int BorderSize = PropsConfig.BorderSize;
 
         private static readonly bool PrevLabel = false, NextLabel = false;
@@ -281,10 +272,6 @@ namespace Server.Gumps
                     xmladdgump.defs.CurrentCategory = category;
                     xmladdgump.defs.CurrentCategoryPage = page;
                 }
-            }
-            else
-                if (gump is XmlSpawnerGump)
-            {
             }
 
             Initialize(page);
