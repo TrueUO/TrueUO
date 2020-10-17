@@ -73,6 +73,7 @@ namespace Server.Mobiles
             _NextSpecial = DateTime.UtcNow;
         }
 
+		public override bool SubdueBeforeTame => true;
         public override Poison HitPoison => Poison.Lethal;
         public override bool AlwaysMurderer => !Controlled;
         public override FoodType FavoriteFood => FoodType.BlackrockStew;
