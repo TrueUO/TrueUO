@@ -14,7 +14,7 @@ using System.Linq;
 
 namespace Server.Mobiles
 {
-    public enum AIType // Should other types need to be created used the Unused ones first.
+    public enum AIType // Should other types need to be created, use the Unused ones first.
     {
         AI_Use_Default,
         AI_Melee,
