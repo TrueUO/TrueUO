@@ -636,7 +636,7 @@ namespace Server.Mobiles
                     else
                     {
                         // check for special keywords
-                        if (typestr != null && (BaseXmlSpawner.IsTypeOrItemKeyword(typestr) || typestr.IndexOf("{") != -1 || typestr.StartsWith("*") || typestr.StartsWith("#")))
+                        if (typestr != null && (typestr.IndexOf("{") != -1 || typestr.StartsWith("*") || typestr.StartsWith("#")))
                         {
                             m_SpawnObjects.Add(new SpawnObject(str, 1));
                         }
@@ -2133,49 +2133,42 @@ namespace Server.Mobiles
             string typeName = BaseXmlSpawner.ParseObjectType(substitutedtypeName);
             string status_str;
 
-            if (BaseXmlSpawner.IsTypeOrItemKeyword(typeName))
+            // its a regular type descriptor so find out what it is
+            Type type = SpawnerType.GetType(typeName);
+            try
             {
-                BaseXmlSpawner.SpawnTypeKeyword(attachedto, TheSpawn, typeName, substitutedtypeName, true, trigmob, loc, map, out status_str);
+                string[] arglist = BaseXmlSpawner.ParseString(substitutedtypeName, 3, "/");
+                object o = CreateObject(type, arglist[0]);
+
+                if (o == null)
+                {
+                    status_str = "invalid type specification: " + arglist[0];
+                }
+                else if (o is Mobile)
+                {
+                    Mobile m = (Mobile) o;
+                    if (m is BaseCreature)
+                    {
+                        BaseCreature c = (BaseCreature) m;
+                        c.Home = loc; // Spawners location is the home point
+                    }
+
+                    m.Location = loc;
+                    m.Map = map;
+
+                    BaseXmlSpawner.ApplyObjectStringProperties(null, substitutedtypeName, m, trigmob, attachedto,
+                        out status_str);
+                }
+                else if (o is Item)
+                {
+                    Item item = (Item) o;
+                    BaseXmlSpawner.AddSpawnItem(null, attachedto, TheSpawn, item, loc, map, trigmob, false,
+                        substitutedtypeName, out status_str);
+                }
             }
-            else
+            catch (Exception e)
             {
-                // its a regular type descriptor so find out what it is
-                Type type = SpawnerType.GetType(typeName);
-                try
-                {
-                    string[] arglist = BaseXmlSpawner.ParseString(substitutedtypeName, 3, "/");
-                    object o = CreateObject(type, arglist[0]);
-
-                    if (o == null)
-                    {
-                        status_str = "invalid type specification: " + arglist[0];
-                    }
-                    else
-                        if (o is Mobile)
-                    {
-                        Mobile m = (Mobile)o;
-                        if (m is BaseCreature)
-                        {
-                            BaseCreature c = (BaseCreature)m;
-                            c.Home = loc; // Spawners location is the home point
-                        }
-
-                        m.Location = loc;
-                        m.Map = map;
-
-                        BaseXmlSpawner.ApplyObjectStringProperties(null, substitutedtypeName, m, trigmob, attachedto, out status_str);
-                    }
-                    else
-                            if (o is Item)
-                    {
-                        Item item = (Item)o;
-                        BaseXmlSpawner.AddSpawnItem(null, attachedto, TheSpawn, item, loc, map, trigmob, false, substitutedtypeName, out status_str);
-                    }
-                }
-                catch (Exception e)
-                {
-                    Diagnostics.ExceptionLogging.LogException(e);
-                }
+                Diagnostics.ExceptionLogging.LogException(e);
             }
         }
 
@@ -4418,7 +4411,7 @@ namespace Server.Mobiles
 
                         // if it has basevendors on it or invalid types, then skip it
                         if (typestr == null || type != null && (type == typeof(BaseVendor) || type.IsSubclassOf(typeof(BaseVendor))) ||
-                            type == null && !BaseXmlSpawner.IsTypeOrItemKeyword(typestr) && typestr.IndexOf('{') == -1 && !typestr.StartsWith("*") && !typestr.StartsWith("#"))
+                            type == null && typestr.IndexOf('{') == -1 && !typestr.StartsWith("*") && !typestr.StartsWith("#"))
                         {
                             skipit = true;
                             break;
@@ -8941,151 +8934,121 @@ namespace Server.Mobiles
 
                 string typeName = BaseXmlSpawner.ParseObjectType(substitutedtypeName);
 
-                if (BaseXmlSpawner.IsTypeOrItemKeyword(typeName))
+                // its a regular type descriptor so find out what it is
+                Type type = SpawnerType.GetType(typeName);
+
+                // dont try to spawn invalid types, or Mobile type spawns in containers
+                if (type != null && !(Parent != null && (type == typeof(Mobile) || type.IsSubclassOf(typeof(Mobile)))))
                 {
-                    string status_str = null;
+                    string[] arglist = BaseXmlSpawner.ParseString(substitutedtypeName, 3, "/");
 
-                    bool completedtypespawn = BaseXmlSpawner.SpawnTypeKeyword(this, TheSpawn, typeName, substitutedtypeName, requiresurface, spawnpositioning,
-                        m_mob_who_triggered, Location, Map, SpawnerGumpCallback, out status_str, loops);
+                    object o = CreateObject(type, arglist[0]);
 
-                    if (status_str != null)
+                    if (o == null)
                     {
-                        this.status_str = status_str;
-                    }
-
-                    if (completedtypespawn)
-                    {
-                        // successfully spawned the keyword
-                        // note that returning true means that Spawn will assume that it worked and will not try to respawn something else
-                        // added the duration timer that begins on spawning
-                        DoTimer2(m_Duration);
-
-                        InvalidateProperties();
-
+                        status_str = "invalid type specification: " + arglist[0];
                         return true;
                     }
-                    else
+
+                    try
                     {
-                        return false;
+                        if (o is Mobile)
+                        {
+                            // if this is in any container such as a pack the xyz values are invalid as map coords so dont spawn the mob
+                            if (Parent is Container)
+                            {
+                                ((Mobile) o).Delete();
+                                return true;
+                            }
+
+                            Mobile m = (Mobile) o;
+
+                            // add the mobile to the spawned list
+                            TheSpawn.SpawnedObjects.Add(m);
+
+                            m.Spawner = this;
+
+                            Point3D loc;
+
+                            loc = GetSpawnPosition(requiresurface, packrange, packcoord, spawnpositioning, m);
+
+                            if (!smartspawn)
+                            {
+                                m.OnBeforeSpawn(loc, map);
+                            }
+
+                            m.MoveToWorld(loc, map);
+
+                            if (m is BaseCreature)
+                            {
+                                BaseCreature c = (BaseCreature) m;
+                                c.RangeHome = m_HomeRange;
+                                c.CurrentWayPoint = m_WayPoint;
+
+                                if (m_Team > 0)
+                                    c.Team = m_Team;
+
+                                // Check if this spawner uses absolute (from spawnER location)
+                                // or relative (from spawnED location) as the mobiles home point
+                                if (m_HomeRangeIsRelative)
+                                    c.Home = m.Location; // Mobiles spawned location is the home point
+                                else
+                                    c.Home = Location; // Spawners location is the home point
+                            }
+
+                            // if the object has an OnSpawned method, then invoke it
+                            if (!smartspawn)
+                            {
+                                m.OnAfterSpawn();
+                            }
+
+                            // apply the parsed arguments from the typestring using setcommand
+                            // be sure to do this after setting map and location so that errors dont place the mob on the internal map
+                            string status_str;
+
+                            BaseXmlSpawner.ApplyObjectStringProperties(this, substitutedtypeName, m,
+                                m_mob_who_triggered, this, out status_str);
+
+                            if (status_str != null)
+                            {
+                                this.status_str = status_str;
+                            }
+
+                            InvalidateProperties();
+
+                            // added the duration timer that begins on spawning
+                            DoTimer2(m_Duration);
+
+                            return true;
+                        }
+                        else if (o is Item)
+                        {
+                            Item item = (Item) o;
+
+                            string status_str;
+
+                            BaseXmlSpawner.AddSpawnItem(this, TheSpawn, item, Location, map, m_mob_who_triggered,
+                                requiresurface, spawnpositioning, substitutedtypeName, smartspawn, out status_str);
+
+                            if (status_str != null)
+                            {
+                                this.status_str = status_str;
+                            }
+
+                            InvalidateProperties();
+
+                            // added the duration timer that begins on spawning
+                            DoTimer2(m_Duration);
+
+                            return true;
+                        }
                     }
+                    catch (Exception ex) { Console.WriteLine("When spawning {0}, {1}", o, ex); }
                 }
                 else
                 {
-
-                    // its a regular type descriptor so find out what it is
-                    Type type = SpawnerType.GetType(typeName);
-
-                    // dont try to spawn invalid types, or Mobile type spawns in containers
-                    if (type != null && !(Parent != null && (type == typeof(Mobile) || type.IsSubclassOf(typeof(Mobile)))))
-                    {
-
-                        string[] arglist = BaseXmlSpawner.ParseString(substitutedtypeName, 3, "/");
-
-                        object o = CreateObject(type, arglist[0]);
-
-                        if (o == null)
-                        {
-                            status_str = "invalid type specification: " + arglist[0];
-                            return true;
-                        }
-                        try
-                        {
-                            if (o is Mobile)
-                            {
-                                // if this is in any container such as a pack the xyz values are invalid as map coords so dont spawn the mob
-                                if (Parent is Container)
-                                {
-                                    ((Mobile)o).Delete();
-                                    return true;
-                                }
-
-                                Mobile m = (Mobile)o;
-
-                                // add the mobile to the spawned list
-                                TheSpawn.SpawnedObjects.Add(m);
-
-                                m.Spawner = this;
-
-                                Point3D loc;
-
-                                loc = GetSpawnPosition(requiresurface, packrange, packcoord, spawnpositioning, m);
-
-                                if (!smartspawn)
-                                {
-                                    m.OnBeforeSpawn(loc, map);
-                                }
-
-                                m.MoveToWorld(loc, map);
-
-                                if (m is BaseCreature)
-                                {
-                                    BaseCreature c = (BaseCreature)m;
-                                    c.RangeHome = m_HomeRange;
-                                    c.CurrentWayPoint = m_WayPoint;
-
-                                    if (m_Team > 0)
-                                        c.Team = m_Team;
-
-                                    // Check if this spawner uses absolute (from spawnER location)
-                                    // or relative (from spawnED location) as the mobiles home point
-                                    if (m_HomeRangeIsRelative)
-                                        c.Home = m.Location; // Mobiles spawned location is the home point
-                                    else
-                                        c.Home = Location; // Spawners location is the home point
-                                }
-
-                                // if the object has an OnSpawned method, then invoke it
-                                if (!smartspawn)
-                                {
-                                    m.OnAfterSpawn();
-                                }
-
-                                // apply the parsed arguments from the typestring using setcommand
-                                // be sure to do this after setting map and location so that errors dont place the mob on the internal map
-                                string status_str;
-
-                                BaseXmlSpawner.ApplyObjectStringProperties(this, substitutedtypeName, m, m_mob_who_triggered, this, out status_str);
-
-                                if (status_str != null)
-                                {
-                                    this.status_str = status_str;
-                                }
-
-                                InvalidateProperties();
-
-                                // added the duration timer that begins on spawning
-                                DoTimer2(m_Duration);
-
-                                return true;
-                            }
-                            else if (o is Item)
-                            {
-                                Item item = (Item)o;
-
-                                string status_str;
-
-                                BaseXmlSpawner.AddSpawnItem(this, TheSpawn, item, Location, map, m_mob_who_triggered, requiresurface, spawnpositioning, substitutedtypeName, smartspawn, out status_str);
-
-                                if (status_str != null)
-                                {
-                                    this.status_str = status_str;
-                                }
-
-                                InvalidateProperties();
-
-                                // added the duration timer that begins on spawning
-                                DoTimer2(m_Duration);
-
-                                return true;
-                            }
-                        }
-                        catch (Exception ex) { Console.WriteLine("When spawning {0}, {1}", o, ex); }
-                    }
-                    else
-                    {
-                        status_str = "invalid type specification: " + typeName;
-                        return true;
-                    }
+                    status_str = "invalid type specification: " + typeName;
+                    return true;
                 }
             }
             return false;
@@ -11927,7 +11890,7 @@ namespace Server.Mobiles
 
                             string typeName = BaseXmlSpawner.ParseObjectType(TypeName);
 
-                            if (typeName == null || SpawnerType.GetType(typeName) == null && !BaseXmlSpawner.IsTypeOrItemKeyword(typeName) && typeName.IndexOf('{') == -1 && !typeName.StartsWith("*") && !typeName.StartsWith("#"))
+                            if (typeName == null || SpawnerType.GetType(typeName) == null && typeName.IndexOf('{') == -1 && !typeName.StartsWith("*") && !typeName.StartsWith("#"))
                             {
                                 if (m_WarnTimer == null)
                                     m_WarnTimer = new WarnTimer2();

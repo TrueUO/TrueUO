@@ -21,8 +21,6 @@ namespace Server.Gumps
         public Type Type => m_Type;
         public int ItemID { get; }
 
-        public int Hue { get; }
-
         public XmlAddCAGCategory Parent => m_Parent;
 
         public override string Caption => (m_Type == null ? "bad type" : m_Type.Name);
@@ -80,7 +78,7 @@ namespace Server.Gumps
                 ItemID = XmlConvert.ToInt32(xml.Value);
 
             if (xml.MoveToAttribute("hue"))
-                Hue = XmlConvert.ToInt32(xml.Value);
+                XmlConvert.ToInt32(xml.Value);
         }
     }
 

@@ -861,7 +861,7 @@ namespace Server.Mobiles
                         else
                         {
                             // check for special keywords
-                            if (typestr != null && (BaseXmlSpawner.IsTypeOrItemKeyword(typestr) || typestr.IndexOf("{") != -1 || typestr.StartsWith("*") || typestr.StartsWith("#")))
+                            if (typestr != null && (typestr.IndexOf("{") != -1 || typestr.StartsWith("*") || typestr.StartsWith("#")))
                             {
                                 SpawnObjects.Add(new XmlSpawner.SpawnObject(from, m_Spawner, str, 0));
                             }
