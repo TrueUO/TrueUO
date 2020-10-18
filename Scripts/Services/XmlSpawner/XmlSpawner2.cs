@@ -68,9 +68,7 @@ namespace Server.Mobiles
         private const string XmlTableName = "Properties";
         private const string XmlDataSetName = "XmlSpawner";
         public static AccessLevel DiskAccessLevel = AccessLevel.Administrator; // minimum access level required by commands that can access the disk such as XmlLoad, XmlSave, and the Save function of XmlEdit
-#if (RESTRICTCONSTRUCTABLE)
-		public static AccessLevel ConstructableAccessLevel = AccessLevel.GameMaster; // only allow spawning of objects that have Constructable access restrictions at this level or lower. Must define RESTRICTCONSTRUCTABLE to enable this.
-#endif
+
         private static int MaxMoveCheck = 10; // limit number of players that can be checked for triggering in a single OnMovement tick
 
         #endregion
@@ -117,7 +115,6 @@ namespace Server.Mobiles
         #endregion
 
         #region Variable declarations
-
         private string m_Name = string.Empty;
         private string m_UniqueId = string.Empty;
         private bool m_PlayerCreated = false;
@@ -237,20 +234,16 @@ namespace Server.Mobiles
         private bool m_DisableGlobalAutoReset;
 
         private Point3D mostRecentSpawnPosition = Point3D.Zero;
-
         #endregion
 
         #region Property Overrides
-
         // does not decay
         public override bool Decays => false;
         // is not counted in the normal item count
         public override bool IsVirtualItem => true;
-
         #endregion
 
         #region Properties
-
         public TimerPriority BasePriority { get; set; } = TimerPriority.OneSecond;
 
         public bool DebugThis { get; set; } = false;
@@ -9481,7 +9474,6 @@ namespace Server.Mobiles
             return newlist;
         }
 
-
         public bool HasSubGroups()
         {
             if (m_SpawnObjects == null) return false;
@@ -9500,20 +9492,6 @@ namespace Server.Mobiles
             if (!FreeRun)
             {
                 m_proximityActivated = false;
-            }
-        }
-
-        private void RefreshNextSpawnTimes()
-        {
-
-            if (m_SpawnObjects != null && m_SpawnObjects.Count > 0)
-            {
-                for (int i = 0; i < m_SpawnObjects.Count; i++)
-                {
-                    SpawnObject so = m_SpawnObjects[i];
-
-                    RefreshNextSpawnTime(so);
-                }
             }
         }
 
@@ -9558,12 +9536,9 @@ namespace Server.Mobiles
             }
             else
             {
-
                 TimeSpan delay = TimeSpan.FromSeconds(Utility.RandomMinMax(mind, maxd));
-
                 so.NextSpawn = DateTime.UtcNow + delay;
             }
-
         }
 
         public static bool IsValidMapLocation(int X, int Y, Map map)
@@ -9576,6 +9551,7 @@ namespace Server.Mobiles
             }
             return true;
         }
+
         public static bool IsValidMapLocation(Point3D location, Map map)
         {
             if (map == null || map == Map.Internal) return false;
@@ -9586,6 +9562,7 @@ namespace Server.Mobiles
             }
             return true;
         }
+
         public static bool IsValidMapLocation(Point2D location, Map map)
         {
             if (map == null || map == Map.Internal) return false;
@@ -9610,7 +9587,6 @@ namespace Server.Mobiles
                     // is this a SERIAL specification?
                     if (wayargs[0] == "SERIAL")
                     {
-
                         // look it up by serial
                         if (wayargs.Length > 1)
                         {
@@ -9649,17 +9625,18 @@ namespace Server.Mobiles
 
         private static bool HasTileSurface(Map map, int X, int Y, int Z)
         {
-            if (map == null) return false;
+            if (map == null)
+                return false;
 
             StaticTile[] tiles = map.Tiles.GetStaticTiles(X, Y, true);
             //List<Server.Tile> tiles = map.GetTilesAt(new Point2D(X, Y), true, true, true);
 
-            if (tiles == null) return false;
+            if (tiles == null)
+                return false;
 
             // go through the tiles and see if any are at the Z location
             foreach (object o in tiles)
             {
-
                 if (o is StaticTile)
                 {
                     StaticTile i = (StaticTile)o;
@@ -9676,7 +9653,8 @@ namespace Server.Mobiles
 
         private bool CheckHoldSmartSpawning(object o)
         {
-            if (o == null) return false;
+            if (o == null)
+                return false;
 
             // try looking this up in the lookup table
             if (holdSmartSpawningHash == null)

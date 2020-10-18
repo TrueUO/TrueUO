@@ -25,24 +25,19 @@ namespace Server.Items
         {
             if (target != null)
                 return target.GetSavedFlag(StealableFlag);
-            else
-                return false;
+            return false;
         }
 
         public static void SetTaken(Item target, bool value)
         {
-            if (target != null)
-            {
-                target.SetSavedFlag(TakenFlag, value);
-            }
+            target?.SetSavedFlag(TakenFlag, value);
         }
 
         public static bool GetTaken(Item target)
         {
             if (target != null)
                 return target.GetSavedFlag(TakenFlag);
-            else
-                return false;
+            return false;
         }
 
         [Usage("Flag flagfield")]
@@ -105,7 +100,6 @@ namespace Server.Items
             }
         }
 
-
         [Usage("Stealable [true/false]")]
         [Description("Sets/gets the stealable flag on any item")]
         public static void SetStealable_OnCommand(CommandEventArgs e)
@@ -128,7 +122,7 @@ namespace Server.Items
         {
             private readonly CommandEventArgs m_e;
             private readonly bool m_state;
-            private readonly bool set = false;
+            private readonly bool set;
 
             public SetStealableTarget(CommandEventArgs e, bool state) : base(30, false, TargetFlags.None)
             {

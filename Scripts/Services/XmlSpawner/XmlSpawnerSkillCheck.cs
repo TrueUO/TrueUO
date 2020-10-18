@@ -120,15 +120,11 @@ namespace Server.Mobiles
 
                     return maplist[(int)index];
                 }
-                else
-                // otherwise pull it out of the final slot for unknown skills.  I dont know of a condition that would lead to 
-                // additional skills being registered but it will support them if they are
-                {
-                    if (maplist[MaxSkills] == null)
-                        maplist[MaxSkills] = new ArrayList();
 
-                    return maplist[MaxSkills];
-                }
+                if (maplist[MaxSkills] == null)
+                    maplist[MaxSkills] = new ArrayList();
+
+                return maplist[MaxSkills];
 
             }
         }

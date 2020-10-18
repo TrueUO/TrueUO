@@ -105,7 +105,7 @@ namespace Server.Mobiles
             public bool Dosearchnull;
             public bool Dosearcherr;
             public bool Dosearchage;
-            public bool Dohidevalidint = false;
+            public bool Dohidevalidint;
             public bool Searchagedirection;
             public double Searchage;
             public int Searchrange;
@@ -172,7 +172,7 @@ namespace Server.Mobiles
         private string SaveFilename;
         private string CommandString;
 
-        private bool SelectAll = false;
+        private bool SelectAll;
 
         private ArrayList m_SearchList;
 
@@ -1407,7 +1407,6 @@ namespace Server.Mobiles
             private readonly bool Dsort;
 
             public ListTypeSorter(bool descend)
-                : base()
             {
                 Dsort = descend;
             }
@@ -1472,7 +1471,6 @@ namespace Server.Mobiles
             private readonly bool Dsort;
 
             public ListNameSorter(bool descend)
-                : base()
             {
                 Dsort = descend;
             }
@@ -1522,7 +1520,6 @@ namespace Server.Mobiles
             private readonly bool Dsort;
 
             public ListMapSorter(bool descend)
-                : base()
             {
                 Dsort = descend;
             }
@@ -1575,7 +1572,6 @@ namespace Server.Mobiles
             private readonly bool Dsort;
 
             public ListRangeSorter(Mobile from, bool descend)
-                : base()
             {
                 From = from;
                 Dsort = descend;
@@ -1646,7 +1642,6 @@ namespace Server.Mobiles
             private readonly bool Dsort;
 
             public ListSelectSorter(bool descend)
-                : base()
             {
                 Dsort = descend;
             }

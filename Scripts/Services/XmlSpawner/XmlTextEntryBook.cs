@@ -27,7 +27,6 @@ namespace Server.Items
         {
 
             int pagenum = 0;
-            BookPageInfo[] pages = Pages;
             int current = 0;
 
             // break up the text into single line length pieces
@@ -79,22 +78,17 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             Delete();
         }
     }
 
-    // -------------------------------------------------------------
-    // modifed from Beta-36 distribution version of BaseBook from basebook.cs
-    // adds a hook to allow processing of book text on content change
-    // -------------------------------------------------------------
     public class BaseEntryBook : Item
     {
         private string m_Title;
         private string m_Author;
         private readonly BookPageInfo[] m_Pages;
-        private bool m_Writable;
 
         [CommandProperty(AccessLevel.GameMaster)]
         public string Title
@@ -111,11 +105,7 @@ namespace Server.Items
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool Writable
-        {
-            get { return m_Writable; }
-            set { m_Writable = value; }
-        }
+        public bool Writable { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public int PagesCount => m_Pages.Length;
@@ -128,7 +118,7 @@ namespace Server.Items
             m_Title = title;
             m_Author = author;
             m_Pages = new BookPageInfo[pageCount];
-            m_Writable = writable;
+            Writable = writable;
 
             for (int i = 0; i < m_Pages.Length; ++i)
                 m_Pages[i] = new BookPageInfo();
@@ -147,8 +137,9 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
+
 #if (BOOKTEXTENTRY)
         public override void OnDoubleClick(Mobile from)
         {
@@ -162,15 +153,11 @@ namespace Server.Items
             // This means that BaseEntryBooks will not support header changes (they are not intended to)
 
             //PacketHandlers.Register( 0x66,  0, true, new OnPacketReceive( ContentChange ) );
-
         }
 
         public static void ContentChange(NetState state, PacketReader pvSrc)
         {
             // need to deal with actual books
-            string entryText = string.Empty;
-            Mobile from = state.Mobile;
-
             int serial = pvSrc.ReadInt32();
 
             Item bookitem = World.FindItem(serial);
@@ -238,8 +225,7 @@ namespace Server.Items
             }
 
             // send the book text off to be processed by invoking the callback if it is a textentry book
-            XmlTextEntryBook tebook = book as XmlTextEntryBook;
-            if (tebook != null && tebook.m_bookcallback != null)
+            if (book is XmlTextEntryBook tebook && tebook.m_bookcallback != null)
             {
                 tebook.m_bookcallback(state.Mobile, tebook.m_args, sb.ToString());
             }
@@ -259,7 +245,8 @@ namespace Server.Items
                 book.ContentChangeEC(state, pvSrc);
                 return;
             }
-            else if (book.Writable && from.InRange(book.GetWorldLocation(), 1))
+
+            if (book.Writable && from.InRange(book.GetWorldLocation(), 1))
             {
                 // Older clients handled multpile pages per packet
                 // Newer clients packets are 1 page per packet
