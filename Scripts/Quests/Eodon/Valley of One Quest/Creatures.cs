@@ -148,7 +148,7 @@ namespace Server.Mobiles
             for (int i = 0; i < path.Directions.Length; ++i)
             {
                 Movement.Movement.Offset(path.Directions[i], ref x, ref y);
-                IPoint3D p = new Point3D(x, y, Map.GetAverageZ(x, y)) as IPoint3D;
+                IPoint3D p = new Point3D(x, y, Map.GetAverageZ(x, y));
 
                 Timer.DelayCall(TimeSpan.FromMilliseconds(time), new TimerStateCallback(ManaDrainEffects_Callback), new object[] { p, Map });
 
@@ -171,7 +171,7 @@ namespace Server.Mobiles
         private class FreezeItem : Item
         {
             public Item Static { get; private set; }
-            public BaseCreature Owner { get; private set; }
+            public BaseCreature Owner { get; }
 
             public FreezeItem(int id, BaseCreature owner)
                 : base(id)
