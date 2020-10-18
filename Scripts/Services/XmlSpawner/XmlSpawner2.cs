@@ -7368,14 +7368,10 @@ namespace Server.Mobiles
                 List<Item> ToDelete = new List<Item>();
                 foreach (Item i in World.Items.Values)
                 {
-                    if (i is XmlSpawner && (WipeAll || i.Map == e.Mobile.Map) && i.Deleted == false)
+                    if (i is XmlSpawner && (WipeAll || i.Map == e.Mobile.Map) && i.Deleted == false && string.IsNullOrEmpty(SpawnerPrefix) || i.Name.StartsWith(SpawnerPrefix))
                     {
-                        // Check if there is a delete condition
-                        if (string.IsNullOrEmpty(SpawnerPrefix) || i.Name.StartsWith(SpawnerPrefix))
-                        {
-                            ToDelete.Add(i);
-                            Count++;
-                        }
+                        ToDelete.Add(i);
+                        Count++;
                     }
                 }
 
@@ -7431,14 +7427,10 @@ namespace Server.Mobiles
                 {
                     try
                     {
-                        if (i is XmlSpawner && (RespawnAll || i.Map == e.Mobile.Map) && i.Deleted == false)
+                        if (i is XmlSpawner && (RespawnAll || i.Map == e.Mobile.Map) && i.Deleted == false && string.IsNullOrEmpty(SpawnerPrefix) || i.Name != null && i.Name.StartsWith(SpawnerPrefix))
                         {
-                            // Check if there is a respawn condition
-                            if (string.IsNullOrEmpty(SpawnerPrefix) || i.Name != null && i.Name.StartsWith(SpawnerPrefix))
-                            {
-                                ToRespawn.Add(i);
-                                Count++;
-                            }
+                            ToRespawn.Add(i);
+                            Count++;
                         }
                     }
 
@@ -9855,9 +9847,11 @@ namespace Server.Mobiles
                 {
                     Mobile m = mobs[i];
 
-                    if (m.Location.X == x && m.Location.Y == y && (m.AccessLevel == AccessLevel.Player || !m.Hidden))
-                        if (m.Z + 16 > z && z + height > m.Z)
-                            return false;
+                    if (m.Location.X == x && m.Location.Y == y && (m.AccessLevel == AccessLevel.Player || !m.Hidden) &&
+                        m.Z + 16 > z && z + height > m.Z)
+                    {
+                        return false;
+                    }
                 }
             }
 

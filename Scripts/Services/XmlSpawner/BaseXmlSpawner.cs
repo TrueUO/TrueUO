@@ -2436,68 +2436,6 @@ namespace Server.Mobiles
                                 if (arglist.Length < 3) break;
                                 remainder = arglist[2];
                             }
-                            else if (kw == valuemodKeyword.AMOUNTCARRIED)
-                            {
-                                // syntax is AMOUNTCARRIED,itemtype[[,banksearch],itemname]
-                                int amount = 0;
-
-                                if (value_keywordargs.Length > 1)
-                                {
-                                    string typestr = value_keywordargs[1], namestr = "*";
-                                    bool banksearch = false;
-                                    if (value_keywordargs.Length > 2)
-                                    {
-                                        if (!bool.TryParse(value_keywordargs[2], out banksearch))
-                                        {
-                                            status_str = "Invalid AMOUNTCARRIED banksearch boolean : " + arglist[1];
-                                            no_error = false;
-                                        }
-                                        else if (value_keywordargs.Length > 3)
-                                        {
-                                            namestr = value_keywordargs[3];
-                                        }
-                                    }
-
-                                    // get the list of items being carried of the specified type
-                                    Type targetType = SpawnerType.GetType(typestr);
-
-                                    if (targetType != null && trigmob != null && trigmob.Backpack != null)
-                                    {
-                                        Item[] items = trigmob.Backpack.FindItemsByType(targetType, true);
-
-                                        for (int i = 0; i < items.Length; ++i)
-                                        {
-                                            if (CheckNameMatch(namestr, items[i].Name))
-                                                amount += items[i].Amount;
-                                        }
-                                        if (banksearch && trigmob.BankBox != null)
-                                        {
-                                            items = trigmob.BankBox.FindItemsByType(targetType, true);
-                                            for (int i = 0; i < items.Length; ++i)
-                                            {
-                                                if (CheckNameMatch(namestr, items[i].Name))
-                                                    amount += items[i].Amount;
-                                            }
-                                        }
-                                    }
-
-                                    string result = SetPropertyValue(spawner, o, arglist[0], amount.ToString());
-
-                                    // see if it was successful
-                                    if (result != "Property has been set.")
-                                    {
-                                        status_str = arglist[0] + " : " + result;
-                                        no_error = false;
-                                    }
-                                }
-                                else
-                                {
-                                    status_str = "Invalid AMOUNTCARRIED args : " + arglist[1];
-                                    no_error = false;
-                                }
-                                if (arglist.Length < 3) break;
-                                remainder = arglist[2];
-                            }
                             else if (kw == valuemodKeyword.PLAYERSINRANGE)
                             {
                                 // syntax is PLAYERSINRANGE,range
@@ -3520,12 +3458,10 @@ namespace Server.Mobiles
             // need to handle comma args that may be grouped with the () such as the (ATTACHMENT,args) arg
 
             string[] arglist = groupedarglist[0].Trim().Split(',');
-            if (!string.IsNullOrEmpty(groupargstring))
+            if (!string.IsNullOrEmpty(groupargstring) && arglist.Length > 0)
             {
-                if (arglist.Length > 0)
-                    arglist[arglist.Length - 1] = groupargstring;
+                arglist[arglist.Length - 1] = groupargstring;
             }
-
 
             string pname = arglist[0].Trim();
             char startc = str[0];
@@ -4998,15 +4934,12 @@ namespace Server.Mobiles
             {
                 Type itemtype = item.GetType();
 
-                if (!item.Deleted && (name.Length == 0 || string.Compare(item.Name, name, true) == 0))
+                if (!item.Deleted && (name.Length == 0 || string.Compare(item.Name, name, true) == 0) && typestr == null || targettype != null && (itemtype.Equals(targettype) || itemtype.IsSubclassOf(targettype)))
                 {
-                    if (typestr == null || targettype != null && (itemtype.Equals(targettype) || itemtype.IsSubclassOf(targettype)))
-                    {
-                        founditem = item;
-                        count++;
-                        // added the break in to return the first match instead of forcing uniqueness (overrides the count test)
-                        break;
-                    }
+                    founditem = item;
+                    count++;
+                    // added the break in to return the first match instead of forcing uniqueness (overrides the count test)
+                    break;
                 }
             }
 
@@ -5204,13 +5137,10 @@ namespace Server.Mobiles
                         deletelist = new List<Item>();
                     deletelist.Add(item);
                 }
-                else if (name.Length == 0 || string.Compare(item.Name, name, true) == 0)
+                else if (name.Length == 0 || string.Compare(item.Name, name, true) == 0 && typestr == null || targettype != null && (item.GetType().Equals(targettype) || item.GetType().IsSubclassOf(targettype)))
                 {
-                    if (typestr == null || targettype != null && (item.GetType().Equals(targettype) || item.GetType().IsSubclassOf(targettype)))
-                    {
-                        founditem = item;
-                        break;
-                    }
+                    founditem = item;
+                    break;
                 }
             }
 
@@ -5263,13 +5193,10 @@ namespace Server.Mobiles
                         deletelist = new List<Mobile>();
                     deletelist.Add(m);
                 }
-                else if (name.Length == 0 || string.Compare(m.Name, name, true) == 0)
+                else if (name.Length == 0 || string.Compare(m.Name, name, true) == 0 && typestr == null || targettype != null && (m.GetType().Equals(targettype) || m.GetType().IsSubclassOf(targettype)))
                 {
-                    if (typestr == null || targettype != null && (m.GetType().Equals(targettype) || m.GetType().IsSubclassOf(targettype)))
-                    {
-                        foundmobile = m;
-                        break;
-                    }
+                    foundmobile = m;
+                    break;
                 }
             }
 
