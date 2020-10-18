@@ -6711,28 +6711,6 @@ namespace Server.Mobiles
             return dirname;
         }
 
-        public static string LocateMultiFile(string filename)
-        {
-            bool found = false;
-
-            string dirname = null;
-
-            if (Directory.Exists(XmlMultiDir))
-            {
-                // get it from the defaults directory if it exists
-                dirname = string.Format("{0}/{1}", XmlMultiDir, filename);
-                found = File.Exists(dirname) || Directory.Exists(dirname);
-            }
-
-            if (!found)
-            {
-                // otherwise just get it from the main installation dir
-                dirname = filename;
-            }
-
-            return dirname;
-        }
-
         [Usage("XmlNewLoad <SpawnFile or directory> [SpawnerPrefixFilter]")]
         [Description("Loads new XmlSpawner objects with new GUIDs (no replacement) into the current map of the player.")]
         public static void NewLoad_OnCommand(CommandEventArgs e)
@@ -9033,7 +9011,6 @@ namespace Server.Mobiles
                                 if (Parent is Container)
                                 {
                                     ((Mobile)o).Delete();
-
                                     return true;
                                 }
 

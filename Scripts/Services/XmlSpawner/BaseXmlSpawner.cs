@@ -183,7 +183,6 @@ namespace Server.Mobiles
             SETACCOUNTTAG,
             FOREACH,
             GUMP,
-            BROWSER,
             SENDMSG,
             SENDASCIIMSG,
             RESURRECT,
@@ -1037,23 +1036,6 @@ namespace Server.Mobiles
                 return "Invalid SKILL reference.";
             }
 
-            if (keywordargs[0] == "STEALABLE")
-            {
-                if (o is Item)
-                {
-                    bool b;
-                    if (bool.TryParse(value, out b))
-                    {
-                        ItemFlags.SetStealable((Item)o, b);
-                        return "Property has been set.";
-                    }
-
-                    return "Invalid Stealable assignment.";
-                }
-
-                return "Object is not an item";
-            }
-
             // do a bit of parsing to handle array references
             string[] arraystring = propname.Split('[');
             int index = 0;
@@ -1258,7 +1240,8 @@ namespace Server.Mobiles
         {
             ptype = null;
 
-            if (o == null || propname == null) return null;
+            if (o == null || propname == null)
+                return null;
 
             Type type = o.GetType();
 
@@ -1374,8 +1357,8 @@ namespace Server.Mobiles
                         ptype = typeof(bool);
                         return string.Format("Stealable = {0}", ItemFlags.GetStealable((Item)o));
                     }
-                    else
-                        return "Object is not an item";
+
+                    return "Object is not an item";
                 }
 
                 catch { return "Stealable flag not found."; }
@@ -3581,7 +3564,8 @@ namespace Server.Mobiles
                 return str;
             }
             // then look for a keyword
-            else if (IsValueKeyword(pname))
+
+            if (IsValueKeyword(pname))
             {
                 valueKeyword kw = valueKeywordHash[pname];
 
@@ -3605,7 +3589,8 @@ namespace Server.Mobiles
 
                     return ParseGetValue(getvalue, ptype);
                 }
-                else if ((kw == valueKeyword.GET) && arglist.Length > 2)
+
+                if ((kw == valueKeyword.GET) && arglist.Length > 2)
                 {
                     // syntax is GET,[itemname -OR- SETITEM][,itemtype],property
 
@@ -4025,13 +4010,12 @@ namespace Server.Mobiles
                     // syntax is RANDNAME,nametype
                     return NameList.RandomName(arglist[1]);
                 }
-                else
-                {
-                    // an invalid keyword format will be passed as literal
-                    return str;
-                }
+
+                // an invalid keyword format will be passed as literal
+                return str;
             }
-            else if (literal)
+
+            if (literal)
             {
                 ptype = typeof(string);
                 return str;
@@ -4585,7 +4569,8 @@ namespace Server.Mobiles
         private static void GetItemsIn(Item source, string targetname, Type targettype, string typestr, ref List<object> nearbylist, string proptest)
         {
             string status_str;
-            if (source != null && source.Items != null && nearbylist != null)
+
+            if (source?.Items != null && nearbylist != null)
             {
                 foreach (Item i in source.Items)
                 {
@@ -4686,12 +4671,6 @@ namespace Server.Mobiles
             return nearbylist;
         }
 
-        public static Item SearchMobileForItem(Mobile m, string targetName, string typeStr, bool searchbank)
-        {
-            return SearchMobileForItem(m, targetName, typeStr, searchbank, false);
-        }
-
-
         public static Item SearchMobileForItem(Mobile m, string targetName, string typeStr, bool searchbank, bool equippedonly)
         {
             if (m != null && !m.Deleted)
@@ -4749,153 +4728,7 @@ namespace Server.Mobiles
                     }
                 }
             }
-            return null;
-        }
 
-        public static List<Item> SearchMobileForItems(Mobile m, string targetName, string typeStr, bool searchbank, bool equippedonly)
-        {
-            List<Item> itemlist = new List<Item>();
-            if (m != null && !m.Deleted)
-            {
-                // go through all of the items in the pack
-                List<Item> packlist = m.Items;
-
-                for (int i = 0; i < packlist.Count; ++i)
-                {
-                    Item item = packlist[i];
-
-                    // dont search bank boxes
-                    if (item is BankBox && (!searchbank || equippedonly)) continue;
-
-                    // recursively search containers
-                    if (item != null && !item.Deleted)
-                    {
-                        if (item is Container && !equippedonly)
-                        {
-                            itemlist.AddRange(SearchPackForItems((Container)item, targetName, typeStr));
-                        }
-                        // test the item name against the trigger string
-                        // if a typestring has been specified then check against that as well
-                        else if (CheckNameMatch(targetName, item.Name))
-                        {
-                            if ((typeStr == null || CheckType(item, typeStr)))
-                            {
-                                //found it
-                                itemlist.Add(item);
-                            }
-                        }
-                    }
-                }
-                // now check any item that might be held
-                Item held = m.Holding;
-
-                if (held != null && !held.Deleted && !equippedonly)
-                {
-                    if (held is Container)
-                    {
-                        itemlist.AddRange(SearchPackForItems((Container)held, targetName, typeStr));
-                    }
-                    // test the item name against the trigger string
-                    else if (CheckNameMatch(targetName, held.Name))
-                    {
-                        if (typeStr == null || CheckType(held, typeStr))
-                        {
-                            //found it
-                            itemlist.Add(held);
-                        }
-                    }
-                }
-            }
-
-            return itemlist;
-        }
-
-        public static Item SearchPackForItemType(Container pack, string targetName)
-        {
-            if (pack != null && !pack.Deleted && !string.IsNullOrEmpty(targetName))
-            {
-                Type targetType = SpawnerType.GetType(targetName);
-
-                // go through all of the items in the pack
-                List<Item> packlist = pack.Items;
-
-                for (int i = 0; i < packlist.Count; ++i)
-                {
-                    Item item = packlist[i];
-
-                    if (item != null && !item.Deleted)
-                    {
-                        if (item is Container)
-                        {
-                            Item itemTarget = SearchPackForItemType((Container)item, targetName);
-
-                            if (itemTarget != null) return itemTarget;
-                        }
-                        // test the item name against the trigger string
-                        if (item.GetType() == targetType)
-                        {
-                            //found it
-                            return item;
-                        }
-                    }
-                }
-            }
-
-            return null;
-        }
-
-        public static Item SearchMobileForItemType(Mobile m, string targetName, bool searchbank)
-        {
-            if (m != null && !m.Deleted && !string.IsNullOrEmpty(targetName))
-            {
-                Type targetType = SpawnerType.GetType(targetName);
-
-                // go through all of the items in the pack
-                List<Item> packlist = m.Items;
-
-                for (int i = 0; i < packlist.Count; ++i)
-                {
-                    Item item = packlist[i];
-
-                    // dont search bank boxes
-                    if (item is BankBox && !searchbank) continue;
-
-                    // recursively search containers
-                    if (item != null && !item.Deleted)
-                    {
-                        if (item is Container)
-                        {
-                            Item itemTarget = SearchPackForItemType((Container)item, targetName);
-
-                            if (itemTarget != null) return itemTarget;
-                        }
-                        // test the item type against the trigger string
-                        if ((item.GetType() == targetType))
-                        {
-                            //found it
-                            return item;
-                        }
-                    }
-                }
-                // now check any item that might be held
-                Item held = m.Holding;
-
-                if (held != null && !held.Deleted)
-                {
-                    if (held is Container)
-                    {
-                        Item itemTarget = SearchPackForItemType((Container)held, targetName);
-
-                        if (itemTarget != null) return itemTarget;
-                    }
-                    // test the item name against the trigger string
-                    if (held.GetType() == targetType)
-                    {
-                        //found it
-                        return held;
-                    }
-                }
-            }
             return null;
         }
 
@@ -4938,134 +4771,8 @@ namespace Server.Mobiles
                     }
                 }
             }
+
             return null;
-        }
-
-        public static List<Item> SearchPackForItems(Container pack, string targetName, string typestr)
-        {
-            List<Item> itemlist = new List<Item>();
-            if (pack != null && !pack.Deleted)
-            {
-                Type targettype = null;
-
-                if (typestr != null)
-                {
-                    targettype = SpawnerType.GetType(typestr);
-                }
-
-                // go through all of the items in the pack
-                List<Item> packlist = pack.Items;
-
-                for (int i = 0; i < packlist.Count; ++i)
-                {
-                    Item item = packlist[i];
-
-                    if (item != null && !item.Deleted)
-                    {
-
-                        if (item is Container)
-                        {
-                            itemlist.AddRange(SearchPackForItems((Container)item, targetName, typestr));
-                        }
-                        // test the item name against the trigger string since it's not a container
-                        else if (CheckNameMatch(targetName, item.Name))
-                        {
-                            if (targettype == null || (item.GetType().Equals(targettype) || item.GetType().IsSubclassOf(targettype)))
-                            {
-                                //found it
-                                itemlist.Add(item);
-                            }
-                        }
-                    }
-                }
-            }
-
-            return itemlist;
-        }
-
-        public static List<Item> SearchPackListForItemType(Container pack, string targetName, List<Item> itemlist)
-        {
-            if (pack != null && !pack.Deleted && !string.IsNullOrEmpty(targetName))
-            {
-                Type targetType = SpawnerType.GetType(targetName);
-
-                if (targetType == null) return null;
-
-                // go through all of the items in the pack
-                List<Item> packlist = pack.Items;
-
-                for (int i = 0; i < packlist.Count; ++i)
-                {
-                    Item item = packlist[i];
-                    if (item != null && !item.Deleted && item is Container)
-                    {
-                        itemlist = SearchPackListForItemType((Container)item, targetName, itemlist);
-                    }
-                    // test the item name against the trigger string
-                    if (item != null && !item.Deleted && (item.GetType().IsSubclassOf(targetType) || item.GetType().Equals(targetType)))
-                    {
-                        //found it
-                        itemlist.Add(item);
-                    }
-                }
-            }
-
-            return itemlist;
-        }
-
-        public static List<Item> FindItemListByType(Mobile m, string targetName, bool searchbank)
-        {
-            List<Item> itemlist = new List<Item>();
-
-            if (m != null && !m.Deleted && !string.IsNullOrEmpty(targetName))
-            {
-                Type targetType = SpawnerType.GetType(targetName);
-
-                // go through all of the items on the mobile
-                List<Item> packlist = m.Items;
-
-                for (int i = 0; i < packlist.Count; ++i)
-                {
-                    Item item = packlist[i];
-
-                    // dont search bank boxes
-                    if (item is BankBox && !searchbank) continue;
-
-                    // recursively search containers
-                    if (item != null && !item.Deleted)
-                    {
-                        if (item is Container)
-                        {
-                            itemlist = SearchPackListForItemType((Container)item, targetName, itemlist);
-                        }
-                        // test the item name against the trigger string
-                        if (item.GetType().IsSubclassOf(targetType) || item.GetType().Equals(targetType))
-                        {
-                            //found it
-                            // add the item to the list
-                            itemlist.Add(item);
-                        }
-                    }
-                }
-                // now check any item that might be held
-                Item held = m.Holding;
-
-                if (held != null && !held.Deleted)
-                {
-                    if (held is Container)
-                    {
-                        itemlist = SearchPackListForItemType((Container)held, targetName, itemlist);
-                    }
-                    // test the item name against the trigger string
-                    if (held.GetType().IsSubclassOf(targetType) || held.GetType().Equals(targetType))
-                    {
-                        //found it
-                        // add the item to the list
-                        itemlist.Add(held);
-                    }
-                }
-            }
-            return itemlist;
         }
 
         public static bool CheckForNotCarried(Mobile m, string objectivestr)
@@ -5111,11 +4818,9 @@ namespace Server.Mobiles
                 // or operator (see explanation above)
                 return (first && second);
             }
-            else
-            {
-                // should never get here
-                return false;
-            }
+
+            // should never get here
+            return false;
         }
 
         public static bool SingleCheckForNotCarried(Mobile m, string objectivestr)
@@ -5208,11 +4913,9 @@ namespace Server.Mobiles
                 // or operator
                 return (first || second);
             }
-            else
-            {
-                // should never get here
-                return false;
-            }
+
+            // should never get here
+            return false;
         }
 
         public static bool SingleCheckForCarried(Mobile m, string objectivestr)
@@ -6008,99 +5711,6 @@ namespace Server.Mobiles
                         if (triggermob.Body.IsGhost)
                             triggermob.Resurrect();
 
-                    }
-                }
-            }
-            catch { }
-        }
-
-        public static void ApplyDamageToPlayers(string arglist, Mobile triggermob, object refobject, out string status_str)
-        {
-            status_str = null;
-            Item refitem = null;
-            Mobile refmob = null;
-            if (refobject is Item)
-            {
-                refitem = (Item)refobject;
-            }
-            else if (refobject is Mobile)
-            {
-                refmob = (Mobile)refobject;
-            }
-            // look for the other args. Syntax is DAMAGE,damage,phys,fire,cold,pois,energy[,range][,playeronly]
-            string[] str = ParseString(arglist, 9, ",");
-            bool playeronly = false;
-            int range = -1;
-            int damage = 0, phys = 0, fire = 0, cold = 0, pois = 0, ener = 0;
-            if (str.Length < 3)
-            {
-                // we consider all the damage as physical 
-                if (str.Length > 1 && int.TryParse(str[1], out damage))
-                    phys = 100;
-                else
-                    status_str = "bad damage arg in DAMAGE";
-            }
-            else if (str.Length < 7)
-            {
-                status_str = "missing damage args in DAMAGE";
-            }
-            else if (!int.TryParse(str[1], out damage) |
-                !int.TryParse(str[2], out phys) |
-                !int.TryParse(str[3], out fire) |
-                !int.TryParse(str[4], out cold) |
-                !int.TryParse(str[5], out pois) |
-                !int.TryParse(str[6], out ener))
-            {
-                status_str = "bad damage args in DAMAGE";
-            }
-            if (str.Length > 7)
-            {
-                // get the range arg
-                if (!int.TryParse(str[7], out range))
-                {
-                    range = -1;
-                    status_str = "bad range arg in DAMAGE";
-                }
-            }
-            if (str.Length > 8)
-            {
-                if (str[8].ToLower() == "playeronly")
-                    playeronly = true;
-                else
-                    bool.TryParse(str[8], out playeronly);
-            }
-            try
-            {
-                if (range >= 0 || (triggermob != null && !triggermob.Deleted))
-                {
-                    // apply the poison to all players within range if range is > 0
-                    if (range >= 0)
-                    {
-                        IPooledEnumerable rangelist = null;
-                        if (refitem != null && !refitem.Deleted)
-                        {
-                            rangelist = refitem.GetMobilesInRange(range);
-                        }
-                        else if (refmob != null && !refmob.Deleted)
-                        {
-                            rangelist = refmob.GetMobilesInRange(range);
-                        }
-
-                        if (rangelist != null)
-                        {
-                            foreach (Mobile p in rangelist)
-                            {
-
-                                if (p is PlayerMobile || !playeronly)
-                                    AOS.Damage(p, damage, phys, fire, cold, pois, ener);
-                            }
-                            rangelist.Free();
-                        }
-                    }
-                    else
-                    {
-                        // just apply it to the mob who triggered
-                        AOS.Damage(triggermob, damage, phys, fire, cold, pois, ener);
                     }
                 }
             }
@@ -7753,7 +7363,6 @@ namespace Server.Mobiles
                                     // standard unicode message format
                                     CommandHandlers.BroadcastMessage(AccessLevel.Player, hue, msg);
                                 }
-
                             }
                             else
                             {
@@ -7762,7 +7371,6 @@ namespace Server.Mobiles
                             }
 
                             TheSpawn.SpawnedObjects.Add(new KeywordTag(substitutedtypeName, spawner));
-
                             break;
                         }
                     default:
@@ -7831,7 +7439,7 @@ namespace Server.Mobiles
         /// <exception cref="ArgumentException"> TEnum is not an enumeration type. </exception>
         public static bool TryParse<TEnum>(string tocheck, bool ignorecase, out TEnum result) where TEnum : struct, IConvertible
         {
-            bool boolean = (tocheck == null ? false : Enum.IsDefined(typeof(TEnum), tocheck));
+            bool boolean = tocheck != null && Enum.IsDefined(typeof(TEnum), tocheck);
             result = (boolean ? (TEnum)Enum.Parse(typeof(TEnum), tocheck) : default);
             return boolean;
         }
