@@ -284,16 +284,7 @@ namespace Server.Items
 
                         book.Pages[index].Lines = lines;
                     }
-                    else
-                    {
-                        return;
-                    }
                 }
-                else
-                {
-                    return;
-                }
-                
             }
         }
 #endif
