@@ -211,10 +211,6 @@ namespace Server.Mobiles
         private bool m_skillTriggerActivated;
         private SkillName m_skill_that_triggered;
         private bool m_FreeRun = false;     // override for all other triggering modes
-        private SkillName m_SkillTriggerName;
-        private double m_SkillTriggerMin;
-        private double m_SkillTriggerMax;
-        private int m_SkillTriggerSuccess;
         private Map currentmap;
 
         public bool m_IsInactivated = false;
@@ -402,7 +398,6 @@ namespace Server.Mobiles
         }
 
         private static int totalSectorsMonitored = 0;
-
 
         public bool HasActiveSectors
         {
@@ -648,37 +643,10 @@ namespace Server.Mobiles
             }
         }
 
-        public Skill TriggerSkill
-        {
-            get
-            {
-                if (TriggerMob != null && m_skill_that_triggered >= 0)
-                {
-                    return TriggerMob.Skills[m_skill_that_triggered];
-                }
-                else
-                {
-                    return null;
-                }
-            }
-            set
-            {
-                if (value != null)
-                {
-                    m_skill_that_triggered = value.SkillName;
-                }
-                else
-                {
-                    m_skill_that_triggered = XmlSpawnerSkillCheck.RegisteredSkill.Invalid;
-                }
-            }
-        }
-
         public string UniqueId => m_UniqueId;
 
         // does not perform a defrag, so less accurate but can be used while looping through world object enums
         public int SafeCurrentCount => SafeTotalSpawnedObjects;
-
 
         public bool FreeRun
         {
@@ -1277,8 +1245,7 @@ namespace Server.Mobiles
             {
                 if (m_refractActivated)
                     return m_RefractEnd - DateTime.UtcNow;
-                else
-                    return TimeSpan.FromSeconds(0);
+                return TimeSpan.FromSeconds(0);
             }
             set
             {
@@ -1416,8 +1383,8 @@ namespace Server.Mobiles
                     return new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, hours, minutes, 0).TimeOfDay;
 
                 }
-                else
-                    return DateTime.UtcNow.TimeOfDay;
+
+                return DateTime.UtcNow.TimeOfDay;
 
             }
 
@@ -1465,13 +1432,11 @@ namespace Server.Mobiles
                     else
                         return false;
                 }
+
+                if (now > TOD_start && now < TOD_end)
+                    return true;
                 else
-                {
-                    if (now > TOD_start && now < TOD_end)
-                        return true;
-                    else
-                        return false;
-                }
+                    return false;
 
             }
         }
@@ -1500,8 +1465,7 @@ namespace Server.Mobiles
             {
                 if (m_durActivated)
                     return m_DurEnd - DateTime.UtcNow;
-                else
-                    return TimeSpan.FromSeconds(0);
+                return TimeSpan.FromSeconds(0);
             }
             set
             {
@@ -1563,114 +1527,18 @@ namespace Server.Mobiles
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public string SkillTrigger
-        {
-            get { return m_SkillTrigger; }
-            set
-            {
-
-                SkillName news = XmlSpawnerSkillCheck.RegisteredSkill.Invalid;
-                double minval = -1;
-                double maxval = -1;
-                int successval = 3;  // either success or failure will trigger
-
-                if (value != null)
-                {
-                    // try parsing the skill trigger string for min and maxval
-                    // the string can take the form "skill,[+/-][,minval,maxval]"
-
-                    string[] arglist = BaseXmlSpawner.ParseString(value, 4, ",");
-
-                    if (arglist.Length == 2 || arglist.Length == 4)
-                    {
-                        if (arglist[1] == "+")
-                        {
-                            successval = 1;     // trigger on success only
-                        }
-                        else
-                            if (arglist[1] == "-")
-                        {
-                            successval = 2;     // trigger on failure only
-                        }
-                    }
-
-                    if (arglist.Length == 3)
-                    {
-                        successval = 3;
-                        try
-                        {
-                            minval = double.Parse(arglist[1]);
-                            maxval = double.Parse(arglist[2]);
-                        }
-                        catch (Exception e)
-                        {
-                            Diagnostics.ExceptionLogging.LogException(e);
-                        }
-                    }
-                    else
-                        if (arglist.Length == 4)
-                    {
-                        try
-                        {
-                            minval = double.Parse(arglist[2]);
-                            maxval = double.Parse(arglist[3]);
-                        }
-                        catch (Exception e)
-                        {
-                            Diagnostics.ExceptionLogging.LogException(e);
-                        }
-                    }
-                    try
-                    {
-                        news = (SkillName)Enum.Parse(typeof(SkillName), arglist[0], true);
-                    }
-                    catch (Exception e)
-                    {
-                        Diagnostics.ExceptionLogging.LogException(e);
-                    }
-                }
-
-                // unregister the previous skill if it was assigned
-                if (m_SkillTrigger != null)
-                {
-                    XmlSpawnerSkillCheck.UnRegisterSkillTrigger(this, m_SkillTriggerName, Map, false);
-                }
-
-                // if the skill trigger was valid then register it
-                if (news != XmlSpawnerSkillCheck.RegisteredSkill.Invalid)
-                {
-                    XmlSpawnerSkillCheck.RegisterSkillTrigger(this, news, Map);
-                    m_SkillTrigger = value;
-                    m_SkillTriggerName = news;
-                    m_SkillTriggerMin = minval;
-                    m_SkillTriggerMax = maxval;
-                    m_SkillTriggerSuccess = successval;
-                }
-                else
-                {
-                    m_SkillTrigger = null;
-                    m_SkillTriggerName = XmlSpawnerSkillCheck.RegisteredSkill.Invalid;
-                    m_SkillTriggerMin = -1;
-                    m_SkillTriggerMax = -1;
-                }
-            }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
         public TimeSpan NextSpawn
         {
             get
             {
                 if (m_Running)
                     return m_End - DateTime.UtcNow;
-                else
-                    return TimeSpan.FromSeconds(0);
+                return TimeSpan.FromSeconds(0);
             }
             set
             {
                 Start();
                 DoTimer(value);
-                //InvalidateProperties();
             }
         }
 
@@ -1709,8 +1577,7 @@ namespace Server.Mobiles
             {
                 if (m_Running && m_SeqEnd - DateTime.UtcNow > TimeSpan.Zero)
                     return m_SeqEnd - DateTime.UtcNow;
-                else
-                    return TimeSpan.FromSeconds(0);
+                return TimeSpan.FromSeconds(0);
             }
             set
             {
@@ -1882,16 +1749,9 @@ namespace Server.Mobiles
         {
             base.OnMapChange();
 
-            // unregister the skill trigger on the previous map
-            XmlSpawnerSkillCheck.UnRegisterSkillTrigger(this, m_SkillTriggerName, currentmap, false);
-
-            // register the skill trigger on the new current map
-            XmlSpawnerSkillCheck.RegisterSkillTrigger(this, m_SkillTriggerName, Map);
-
             currentmap = Map;
 
-            // reset the sector list for smart spawning
-            ResetSectorList();
+            ResetSectorList(); // // reset the sector list for smart spawning
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -2005,9 +1865,6 @@ namespace Server.Mobiles
             // if statics were added for marking container held spawners, delete them
             if (m_ShowContainerStatic != null && !m_ShowContainerStatic.Deleted)
                 m_ShowContainerStatic.Delete();
-
-            // unregister all triggerskills that might have been added
-            XmlSpawnerSkillCheck.UnRegisterSkillTrigger(this, SkillName.Alchemy, Map, true);
         }
 
         static bool IgnoreLocationChange = false;
@@ -2107,10 +1964,8 @@ namespace Server.Mobiles
             {
                 return Convert.ToInt32(value.Substring(2), 16);
             }
-            else
-            {
-                return Convert.ToInt32(value);
-            }
+
+            return Convert.ToInt32(value);
         }
 
         public static void ExecuteAction(object attachedto, Mobile trigmob, string action)
@@ -2155,9 +2010,6 @@ namespace Server.Mobiles
 
                     m.Location = loc;
                     m.Map = map;
-
-                    BaseXmlSpawner.ApplyObjectStringProperties(null, substitutedtypeName, m, trigmob, attachedto,
-                        out status_str);
                 }
                 else if (o is Item)
                 {
@@ -2514,7 +2366,6 @@ namespace Server.Mobiles
                                     namestr = typeargs[0];
                                     typestr = typeargs[1];
                                 }
-                                m_ObjectPropertyItem = BaseXmlSpawner.FindItemByName(this, namestr, typestr);
                             }
 
                             valid_entry = true;
@@ -2531,7 +2382,6 @@ namespace Server.Mobiles
                                     namestr = typeargs[0];
                                     typestr = typeargs[1];
                                 }
-                                m_SetPropertyItem = BaseXmlSpawner.FindItemByName(this, namestr, typestr);
                             }
 
                             valid_entry = true;
@@ -2600,57 +2450,8 @@ namespace Server.Mobiles
                     }
                 }
             }
+
             ShowTagList(this);
-            int count = 0;
-            Console.WriteLine("Registered Skills");
-            Console.WriteLine("Felucca");
-            for (int i = 0; i < XmlSpawnerSkillCheck.RegisteredSkill.MaxSkills + 1; i++)
-            {
-
-                if (XmlSpawnerSkillCheck.RegisteredSkill.TriggerList((SkillName)i, Map.Felucca).Count > 0)
-                    Console.WriteLine("\t{0} : {1}", (SkillName)i, XmlSpawnerSkillCheck.RegisteredSkill.TriggerList((SkillName)i, Map.Felucca).Count);
-
-                count += XmlSpawnerSkillCheck.RegisteredSkill.TriggerList((SkillName)i, Map.Felucca).Count;
-            }
-            Console.WriteLine("Trammel");
-            for (int i = 0; i < XmlSpawnerSkillCheck.RegisteredSkill.MaxSkills + 1; i++)
-            {
-
-                if (XmlSpawnerSkillCheck.RegisteredSkill.TriggerList((SkillName)i, Map.Trammel).Count > 0)
-                    Console.WriteLine("\t{0} : {1}", (SkillName)i, XmlSpawnerSkillCheck.RegisteredSkill.TriggerList((SkillName)i, Map.Trammel).Count);
-
-                count += XmlSpawnerSkillCheck.RegisteredSkill.TriggerList((SkillName)i, Map.Trammel).Count;
-            }
-            Console.WriteLine("Ilshenar");
-            for (int i = 0; i < XmlSpawnerSkillCheck.RegisteredSkill.MaxSkills + 1; i++)
-            {
-
-                if (XmlSpawnerSkillCheck.RegisteredSkill.TriggerList((SkillName)i, Map.Ilshenar).Count > 0)
-                    Console.WriteLine("\t{0} : {1}", (SkillName)i, XmlSpawnerSkillCheck.RegisteredSkill.TriggerList((SkillName)i, Map.Ilshenar).Count);
-
-                count += XmlSpawnerSkillCheck.RegisteredSkill.TriggerList((SkillName)i, Map.Ilshenar).Count;
-            }
-            Console.WriteLine("Malas");
-            for (int i = 0; i < XmlSpawnerSkillCheck.RegisteredSkill.MaxSkills + 1; i++)
-            {
-
-                if (XmlSpawnerSkillCheck.RegisteredSkill.TriggerList((SkillName)i, Map.Malas).Count > 0)
-                    Console.WriteLine("\t{0} : {1}", (SkillName)i, XmlSpawnerSkillCheck.RegisteredSkill.TriggerList((SkillName)i, Map.Malas).Count);
-
-                count += XmlSpawnerSkillCheck.RegisteredSkill.TriggerList((SkillName)i, Map.Malas).Count;
-            }
-
-            Console.WriteLine("Tokuno");
-            for (int i = 0; i < XmlSpawnerSkillCheck.RegisteredSkill.MaxSkills + 1; i++)
-            {
-
-                if (XmlSpawnerSkillCheck.RegisteredSkill.TriggerList((SkillName)i, Map.Tokuno).Count > 0)
-                    Console.WriteLine("\t{0} : {1}", (SkillName)i, XmlSpawnerSkillCheck.RegisteredSkill.TriggerList((SkillName)i, Map.Tokuno).Count);
-
-                count += XmlSpawnerSkillCheck.RegisteredSkill.TriggerList((SkillName)i, Map.Tokuno).Count;
-            }
-
-            Console.WriteLine("Total = {0}", count);
         }
 
         #endregion
@@ -2761,12 +2562,9 @@ namespace Server.Mobiles
                 bool needs_object_trigger = false;
                 bool needs_mob_trigger = false;
                 bool needs_player_trigger = false;
-                bool needs_noitem_trigger = false;
                 bool has_object_trigger = false;
                 bool has_mob_trigger = false;
                 bool has_player_trigger = false;
-                bool has_item_trigger = false;
-                bool has_noitem_trigger = true; // assume the player doesnt have the trigger-blocking item until it is found by search
 
                 m_skipped = false;
 
@@ -2859,21 +2657,10 @@ namespace Server.Mobiles
                 {
                     //enable_triggering = false;
                     needs_item_trigger = true;
-
-                    has_item_trigger = BaseXmlSpawner.CheckForCarried(m, m_ItemTriggerName);
                 }
                 // check to see if we have to continue
-                if (needs_item_trigger && !has_item_trigger) return;
-
-                // if player-carried noitem triggering is set then test for the presence of an item in the players pack that should block triggering
-                if (!string.IsNullOrEmpty(m_NoItemTriggerName))
-                {
-                    needs_noitem_trigger = true;
-
-                    has_noitem_trigger = BaseXmlSpawner.CheckForNotCarried(m, m_NoItemTriggerName);
-                }
-                // check to see if we have to continue
-                if (needs_noitem_trigger && !has_noitem_trigger) return;
+                if (needs_item_trigger)
+                    return;
 
                 // if this was called without being proximity triggered then check to see that the non-movement triggers were enabled.
                 if (!hasproximity && !needs_object_trigger && !needs_mob_trigger && !m_ExternalTriggering) return;
@@ -2897,57 +2684,19 @@ namespace Server.Mobiles
 
                     // keep track of who triggered this
                     m_mob_who_triggered = m;
-
-                    // keep track of the skill that triggered this
-                    if (s != null)
-                    {
-                        m_skill_that_triggered = s.SkillName;
-                    }
-                    else
-                    {
-                        m_skill_that_triggered = XmlSpawnerSkillCheck.RegisteredSkill.Invalid;
-                    }
                 }
                 else
                 {
-                    m_skipped = true;
-                    // reset speech triggering if it was set
-
+                    m_skipped = true; // // reset speech triggering if it was set
+                    
                     m_speechTriggerActivated = false;
-
-                    // reset skill triggering if it was set
-                    m_skillTriggerActivated = false;
-                    // reset external triggering if it was set
-                    //this.m_ExternalTrigger = false;
                 }
             }
         }
 
         public bool HandlesOnSkillUse => m_Running && !string.IsNullOrEmpty(m_SkillTrigger);
 
-        // this is the handler for skill use
-        public void OnSkillUse(Mobile m, Skill skill, bool success)
-        {
-            if (m_Running && m_ProximityRange >= 0 && ValidPlayerTrig(m) && CanSpawn && !m_refractActivated && TODInRange)
-            {
-                if (!Utility.InRange(m.Location, Location, m_ProximityRange))
-                    return;
-
-                m_skillTriggerActivated = false;
-
-                // check the skill trigger conditions, Skillname[+/-][,min,max]
-                if (m_SkillTrigger != null && skill.SkillName == m_SkillTriggerName &&
-                    (m_SkillTriggerMin < 0 || skill.Value >= m_SkillTriggerMin) &&
-                    (m_SkillTriggerMax < 0 || skill.Value <= m_SkillTriggerMax) &&
-                    (m_SkillTriggerSuccess == 3 || m_SkillTriggerSuccess == 1 && success || m_SkillTriggerSuccess == 2 && !success))
-                {
-                    // have a skill trigger so flag it and test it
-                    m_skillTriggerActivated = true;
-
-                    CheckTriggers(m, skill, true);
-                }
-            }
-        }
+       
 
         public override bool HandlesOnSpeech => m_Running && !string.IsNullOrEmpty(m_SpeechTrigger);
 
@@ -3155,20 +2904,6 @@ namespace Server.Mobiles
                 case "defHomeRange":
                     defHomeRange = ConvertToInt(value);
                     break;
-                case "BlockKeyword":
-                    {
-                        // parse the keyword list and remove them from the keyword hashtables
-                        string[] keywordlist = value.Split(',');
-
-                        if (keywordlist.Length > 0)
-                        {
-                            for (int i = 0; i < keywordlist.Length; i++)
-                            {
-                                BaseXmlSpawner.RemoveKeyword(keywordlist[i]);
-                            }
-                        }
-                        break;
-                    }
                 case "BlockCommand":
                 case "ChangeCommand":
                     // delay processing of these settings until after all commands have been registered in their Initialize methods
@@ -6238,18 +5973,6 @@ namespace Server.Mobiles
                             try { SpawnObjectPropertyName = (string)dr["ObjectPropertyName"]; }
                             catch { }
 
-                            // read in the object proximity target, this will be an object name, so have to do a search
-                            // to find the item in the world.  Also have to test for redundancy
-                            string triggerObjectName = null;
-                            try { triggerObjectName = (string)dr["ObjectPropertyItemName"]; }
-                            catch { }
-
-                            // read in the target for the set command, this will be an object name, so have to do a search
-                            // to find the item in the world.  Also have to test for redundancy
-                            string setObjectName = null;
-                            try { setObjectName = (string)dr["SetPropertyItemName"]; }
-                            catch { }
-
                             // we will assign this during the self-reference resolution pass
                             Item SpawnSetPropertyItem = null;
 
@@ -6559,13 +6282,8 @@ namespace Server.Mobiles
                                 if (loadnew)
                                 {
                                     string tmpsetObjectName = string.Format("{0}-{1}", namestr, newloadid);
-                                    OldSpawner.m_SetPropertyItem = BaseXmlSpawner.FindItemByName(null, tmpsetObjectName, typestr);
                                 }
-                                // if this fails then try the original
-                                if (OldSpawner.m_SetPropertyItem == null)
-                                {
-                                    OldSpawner.m_SetPropertyItem = BaseXmlSpawner.FindItemByName(null, namestr, typestr);
-                                }
+
                                 if (OldSpawner.m_SetPropertyItem == null)
                                 {
                                     failedsetitemcount++;
@@ -6609,13 +6327,8 @@ namespace Server.Mobiles
                                 if (loadnew)
                                 {
                                     string tmptriggerObjectName = string.Format("{0}-{1}", namestr, newloadid);
-                                    OldSpawner.m_ObjectPropertyItem = BaseXmlSpawner.FindItemByName(null, tmptriggerObjectName, typestr);
                                 }
                                 // if this fails then try the original
-                                if (OldSpawner.m_ObjectPropertyItem == null)
-                                {
-                                    OldSpawner.m_ObjectPropertyItem = BaseXmlSpawner.FindItemByName(null, namestr, typestr);
-                                }
                                 if (OldSpawner.m_ObjectPropertyItem == null)
                                 {
                                     failedobjectitemcount++;
@@ -7691,7 +7404,6 @@ namespace Server.Mobiles
             m_ItemTriggerName = itemTriggerName;
             m_NoItemTriggerName = noitemTriggerName;
             m_SpeechTrigger = speechTrigger;
-            SkillTrigger = skillTrigger;        // note this will register the skill as well
             m_MobTriggerName = mobTriggerName;
             m_MobPropertyName = mobPropertyName;
             m_PlayerPropertyName = playerPropertyName;
@@ -7707,10 +7419,6 @@ namespace Server.Mobiles
             m_SmartSpawning = smartSpawning;
             ConfigFile = configfile;
             m_WayPoint = wayPoint;
-
-            // set the totalitem property to -1 so that it doesnt show up in the item count of containers
-            //TotalItems = -1;
-            //UpdateTotal(this, TotalType.Items, -1);
 
             // Create the array of spawned objects
             m_SpawnObjects = new List<SpawnObject>();
@@ -8135,11 +7843,9 @@ namespace Server.Mobiles
                 // should never get here
                 return -1;
             }
-            else
-            {
-                // no spawns are available
-                return -1;
-            }
+
+            // no spawns are available
+            return -1;
         }
 
 
@@ -8185,11 +7891,9 @@ namespace Server.Mobiles
                 // should never get here
                 return -1;
             }
-            else
-            {
-                // no spawns are available
-                return -1;
-            }
+
+            // no spawns are available
+            return -1;
         }
 
         // return the next subgroup in the sequence.
@@ -8233,8 +7937,7 @@ namespace Server.Mobiles
             // if couldnt find one larger, then it is time to wraparound
             if (largergroup < 0 && sgroup >= 0)
                 return NextSequentialIndex(-1);
-            else
-                return largergroup;
+            return largergroup;
         }
 
         // returns the spawn index of a spawn entry in the current sequential subgroup
@@ -8581,7 +8284,6 @@ namespace Server.Mobiles
                     if (!FreeRun)
                     {
                         m_mob_who_triggered = null;
-                        m_skill_that_triggered = XmlSpawnerSkillCheck.RegisteredSkill.Invalid;
                     }
 
                 }
@@ -8760,10 +8462,6 @@ namespace Server.Mobiles
                         RefreshNextSpawnTime(m_SpawnObjects[i]);
                     }
                     break;
-                }
-                else
-                {
-
                 }
             }
         }
@@ -9002,18 +8700,6 @@ namespace Server.Mobiles
                                 m.OnAfterSpawn();
                             }
 
-                            // apply the parsed arguments from the typestring using setcommand
-                            // be sure to do this after setting map and location so that errors dont place the mob on the internal map
-                            string status_str;
-
-                            BaseXmlSpawner.ApplyObjectStringProperties(this, substitutedtypeName, m,
-                                m_mob_who_triggered, this, out status_str);
-
-                            if (status_str != null)
-                            {
-                                this.status_str = status_str;
-                            }
-
                             InvalidateProperties();
 
                             // added the duration timer that begins on spawning
@@ -9021,7 +8707,8 @@ namespace Server.Mobiles
 
                             return true;
                         }
-                        else if (o is Item)
+
+                        if (o is Item)
                         {
                             Item item = (Item) o;
 
@@ -9128,8 +8815,8 @@ namespace Server.Mobiles
                         {
                             return ((Item)o).Location;
                         }
-                        else
-                            if (o is Mobile)
+
+                        if (o is Mobile)
                         {
                             return ((Mobile)o).Location;
                         }
@@ -9149,7 +8836,6 @@ namespace Server.Mobiles
             m_durActivated = false;
             m_refractActivated = false;
             m_mob_who_triggered = null;
-            m_skill_that_triggered = XmlSpawnerSkillCheck.RegisteredSkill.Invalid;
             m_killcount = 0;
             m_GumpState = null;
             FreeRun = false;
@@ -9237,7 +8923,6 @@ namespace Server.Mobiles
                 m_proximityActivated = false;
                 m_ExternalTrigger = false;
                 m_mob_who_triggered = null;
-                m_skill_that_triggered = XmlSpawnerSkillCheck.RegisteredSkill.Invalid;
             }
         }
 
@@ -9292,7 +8977,6 @@ namespace Server.Mobiles
             if (!FreeRun)
             {
                 m_mob_who_triggered = null;
-                m_skill_that_triggered = XmlSpawnerSkillCheck.RegisteredSkill.Invalid;
             }
 
             ClearTags(true);
@@ -9335,7 +9019,6 @@ namespace Server.Mobiles
             if (!FreeRun)
             {
                 m_mob_who_triggered = null;
-                m_skill_that_triggered = XmlSpawnerSkillCheck.RegisteredSkill.Invalid;
             }
 
             ClearTags(true);
@@ -9368,8 +9051,8 @@ namespace Server.Mobiles
                     // use the entry order as the secondary sort factor
                     return a.EntryOrder - b.EntryOrder;
                 }
-                else
-                    return a.SubGroup - b.SubGroup;
+
+                return a.SubGroup - b.SubGroup;
             }
         }
 
@@ -9558,19 +9241,6 @@ namespace Server.Mobiles
 
                             }
                         }
-                        else
-                        {
-                            // improper serial format
-                        }
-                    }
-                    else
-                    {
-                        // just look it up by name
-                        Item wayitem = BaseXmlSpawner.FindItemByName(null, wayargs[0], "WayPoint");
-                        if (wayitem is WayPoint)
-                        {
-                            waypoint = wayitem as WayPoint;
-                        }
                     }
                 }
             }
@@ -9723,7 +9393,7 @@ namespace Server.Mobiles
 
             if (impassable && avgZ > z && z + height > lowZ)
                 return false;
-            else if (!impassable && z == avgZ && !lt.Ignored)
+            if (!impassable && z == avgZ && !lt.Ignored)
                 hasSurface = true;
 
             if (DebugThis)
@@ -9755,7 +9425,7 @@ namespace Server.Mobiles
 
                 if ((surface || impassable) && staticTiles[i].Z + id.CalcHeight > z && z + height > staticTiles[i].Z)
                     return false;
-                else if (surface && !impassable && z == staticTiles[i].Z + id.CalcHeight)
+                if (surface && !impassable && z == staticTiles[i].Z + id.CalcHeight)
                     hasSurface = true;
 
 
@@ -9794,7 +9464,7 @@ namespace Server.Mobiles
 
                     if ((surface || impassable || checkBlocksFit && item.BlocksFit) && item.Z + id.CalcHeight > z && z + height > item.Z)
                         return false;
-                    else if (surface && !impassable && !item.Movable && z == item.Z + id.CalcHeight)
+                    if (surface && !impassable && !item.Movable && z == item.Z + id.CalcHeight)
                         hasSurface = true;
                 }
             }
@@ -9840,9 +9510,9 @@ namespace Server.Mobiles
 
         public bool HasRegionPoints(Region r)
         {
-            if (r != null && r.Area.Length > 0) return true;
-            else
-                return false;
+            if (r != null && r.Area.Length > 0)
+                return true;
+            return false;
         }
 
         public Rectangle2D SpawnerBounds => new Rectangle2D(m_X, m_Y, m_Width + 1, m_Height + 1);
@@ -10545,24 +10215,21 @@ namespace Server.Mobiles
                 {
                     return new Point3D(x, y, defaultZ);
                 }
+
+                z = Map.GetAverageZ(x, y);
+
+                if (requiresurface)
+                {
+                    fit = CanSpawnMobile(x, y, z, mob);
+                }
                 else
                 {
+                    fit = Map.CanFit(x, y, z, SpawnFitSize, true, false, false);
+                }
 
-                    z = Map.GetAverageZ(x, y);
-
-                    if (requiresurface)
-                    {
-                        fit = CanSpawnMobile(x, y, z, mob);
-                    }
-                    else
-                    {
-                        fit = Map.CanFit(x, y, z, SpawnFitSize, true, false, false);
-                    }
-
-                    if (fit)
-                    {
-                        return new Point3D(x, y, z);
-                    }
+                if (fit)
+                {
+                    return new Point3D(x, y, z);
                 }
             }
 
@@ -10570,10 +10237,8 @@ namespace Server.Mobiles
             {
                 return packcoord;
             }
-            else
-            {
-                return Location;
-            }
+
+            return Location;
         }
 
         public int GetCreatureMax(int index)
@@ -11650,7 +11315,7 @@ namespace Server.Mobiles
                     }
                 case 22:
                     {
-                        SkillTrigger = reader.ReadString();    // note this will also register the skill
+                        reader.ReadString();    // note this will also register the skill
                         m_skill_that_triggered = (SkillName)reader.ReadInt();
                         m_FreeRun = reader.ReadBool();
                         m_mob_who_triggered = reader.ReadMobile();
@@ -12054,10 +11719,8 @@ namespace Server.Mobiles
                     {
                         return 0;
                     }
-                    else
-                    {
-                        return m_MaxCount;
-                    }
+
+                    return m_MaxCount;
                 }
                 set
                 {

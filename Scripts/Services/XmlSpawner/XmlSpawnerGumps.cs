@@ -405,12 +405,12 @@ namespace Server.Mobiles
 
     public class XmlSpawnerGump : Gump
     {
-        private static int nclicks = 0;
+        private static int nclicks;
         public XmlSpawner m_Spawner;
         public const int MaxSpawnEntries = 60;
         private const int MaxEntriesPerPage = 15;
-        public int m_ShowGump = 0;
-        public int xoffset = 0;
+        public int m_ShowGump;
+        public int xoffset;
         public int initial_maxcount;
         public int page;
         public ReplacementEntry Rentry;

@@ -122,11 +122,11 @@ namespace Server.Misc
 
         public static void Initialize()
         {
-            Mobile.SkillCheckLocationHandler = XmlSpawnerSkillCheck.Mobile_SkillCheckLocation;
-            Mobile.SkillCheckDirectLocationHandler = XmlSpawnerSkillCheck.Mobile_SkillCheckDirectLocation;
+            Mobile.SkillCheckLocationHandler = Mobile_SkillCheckLocation;
+            Mobile.SkillCheckDirectLocationHandler = Mobile_SkillCheckDirectLocation;
 
-            Mobile.SkillCheckTargetHandler = XmlSpawnerSkillCheck.Mobile_SkillCheckTarget;
-            Mobile.SkillCheckDirectTargetHandler = XmlSpawnerSkillCheck.Mobile_SkillCheckDirectTarget;
+            Mobile.SkillCheckTargetHandler = Mobile_SkillCheckTarget;
+            Mobile.SkillCheckDirectTargetHandler = Mobile_SkillCheckDirectTarget;
         }
 
         public static bool Mobile_SkillCheckLocation(Mobile from, SkillName skillName, double minSkill, double maxSkill)

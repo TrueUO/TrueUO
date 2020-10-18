@@ -1,6 +1,5 @@
 using Server.Commands;
 using Server.Items;
-using Server.Network;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -163,11 +162,6 @@ namespace Server.Mobiles
 
             return false;
         }
-
-        private enum valuemodKeyword
-        {
-            RANDNAME
-        }
         #endregion
 
         #region Static variable declarations
@@ -178,22 +172,7 @@ namespace Server.Mobiles
         private static readonly char[] literalend = { '§' };
         #endregion
 
-        #region Keywords
-
-        public static void RemoveKeyword(string name)
-        {
-            if (name == null) return;
-
-            name = name.Trim().ToUpper();
-        }
-
-        public static void Configure()
-        {
-        }
-        #endregion
-
         #region KeywordTag
-
         public class KeywordTag
         {
             public KeywordFlags Flags;
@@ -218,16 +197,6 @@ namespace Server.Mobiles
 
             public KeywordTag(string typename, XmlSpawner spawner, int type)
                 : this(typename, spawner, type, TimeSpan.Zero, TimeSpan.Zero, null, -1)
-            {
-            }
-
-            public KeywordTag(string typename, XmlSpawner spawner, TimeSpan delay, string condition, int gotogroup)
-                : this(typename, spawner, 0, delay, TimeSpan.Zero, condition, gotogroup)
-            {
-            }
-
-            public KeywordTag(string typename, XmlSpawner spawner, TimeSpan delay, TimeSpan timeout, string condition, int gotogroup)
-                : this(typename, spawner, 0, delay, timeout, condition, gotogroup)
             {
             }
 
@@ -779,14 +748,12 @@ namespace Server.Mobiles
             {
                 PropertyInfo plookup = LookupPropertyInfo(spawner, type, propname);
 
-                Type ptype;
                 object po;
                 if (plookup != null)
                 {
                     if (IsProtected(type, propname))
                         return "Property is protected.";
 
-                    ptype = plookup.PropertyType;
                     po = plookup.GetValue(o, null);
 
                     // now set the nested attribute using the new property list
@@ -800,8 +767,6 @@ namespace Server.Mobiles
                     {
                         if (IsProtected(type, propname))
                             return "Property is protected.";
-
-                        ptype = p.PropertyType;
 
                         po = p.GetValue(o, null);
 
@@ -869,20 +834,14 @@ namespace Server.Mobiles
 
             if (arglist.Length == 2)
             {
-                // is a nested property with attributes so first get the property
-
                 // use the lookup table for optimization if possible
                 PropertyInfo plookup = LookupPropertyInfo(spawner, type, arglist[0]);
 
-
-                Type ptype;
                 object po;
                 if (plookup != null)
                 {
                     if (IsProtected(type, arglist[0]))
                         return "Property is protected.";
-
-                    ptype = plookup.PropertyType;
 
                     po = plookup.GetValue(o, null);
 
@@ -896,8 +855,6 @@ namespace Server.Mobiles
                     {
                         if (IsProtected(type, arglist[0]))
                             return "Property is protected.";
-
-                        ptype = p.PropertyType;
 
                         po = p.GetValue(o, null);
 
@@ -956,35 +913,6 @@ namespace Server.Mobiles
             }
 
             return "Property not found.";
-        }
-
-        public static string GetBasicPropertyValue(object o, string propname, out Type ptype)
-        {
-            ptype = null;
-
-            if (o == null || propname == null)
-                return null;
-
-            Type type = o.GetType();
-
-            PropertyInfo[] props = type.GetProperties();
-
-            foreach (PropertyInfo p in props)
-            {
-
-                if (Insensitive.Equals(p.Name, propname))
-                {
-                    if (!p.CanRead)
-                        return null;
-
-                    ptype = p.PropertyType;
-
-                    string value = InternalGetValue(o, p, -1);
-
-                    return ParseGetValue(value, ptype);
-                }
-            }
-            return null;
         }
 
         public static string GetPropertyValue(XmlSpawner spawner, object o, string name, out Type ptype)
@@ -1201,217 +1129,6 @@ namespace Server.Mobiles
 
             return "Property not found.";
         }
-
-        public static string ApplyToProperty(XmlSpawner spawner, object getobject, object setobject, string getpropertystring, string setpropertystring)
-        {
-            Type ptype;
-
-            string getvalue = GetPropertyValue(spawner, getobject, getpropertystring, out ptype);
-
-            if (getvalue == null)
-            {
-                return "Null object or property";
-            }
-
-            if (ptype == null)
-            {
-                return getvalue;
-            }
-
-            string value2 = ParseGetValue(getvalue, ptype);
-
-            if (value2 != null)
-            {
-                // set the property value using returned get value as the the value
-                string result = SetPropertyValue(spawner, setobject, setpropertystring, value2);
-
-                // see if it was successful
-                if (result != "Property has been set.")
-                {
-                    return setpropertystring + " : " + result;
-                }
-            }
-
-            return null;
-        }
-
-        // added in arg parsing to handle object property setting
-        public static bool ApplyObjectStringProperties(XmlSpawner spawner, string str, object o, Mobile trigmob, object refobject, out string status_str)
-        {
-            status_str = null;
-
-            if (str == null || str.Length <= 0 || o == null) return false;
-
-            // object strings will be of the form "object/modifier" where the modifier string is of the form "propname/value/propname/value/..."
-            // some keywords do not have value arguments so the modifier could take the form "propname/propname/value/..."
-            // this is handled by parsing into both forms
-
-            // make sure the string is properly terminated to assure proper parsing of any final keywords
-            bool terminated = false;
-            str = str.Trim();
-
-            if (str[str.Length - 1] != '/')
-            {
-                str += "/";
-                terminated = true;
-            }
-
-            string[] arglist;
-
-            arglist = ParseSlashArgs(str, 2);
-
-            string remainder = null;
-
-            // place the modifier section of the string in remainder
-            if (arglist.Length > 1)
-                remainder = arglist[1];
-
-            bool no_error = true;
-
-            // process the modifier string if there is anything
-            while (arglist.Length > 1)
-            {
-                // place into arglist the parsed modifier up to this point
-                // arglist[0] will contain the propname
-                // arglist[1] will contain the value
-                // arglist[2] will contain the reset of the modifier
-                arglist = ParseSlashArgs(remainder, 3);
-
-                // singlearglist will contain the propname and the remainder
-                // for those keywords that do not have value args
-                string[] singlearglist = ParseSlashArgs(remainder, 2);
-
-                if (arglist.Length > 1)
-                {
-                    // handle value keywords that may take comma args
-
-                    // itemarglist[1] will contain arg2/arg3/arg4>/arg5
-                    // additemstr should have the full list of args <arg2/arg3/arg4>/arg5 if they are there.  In the case of /arg1/ADD/arg2
-                    // it will just have arg2
-                    string[] groupedarglist = ParseString(arglist[1], 2, "[");
-                    string groupargstring = null;
-                    if (groupedarglist.Length > 1)
-                    {
-                        // take that argument list that should like like arg2/ag3/arg4>/arg5
-                        // need to find the matching ">"
-
-                        string[] groupargs = ParseToMatchingParen(groupedarglist[1], '[', ']');
-
-                        // and get the first part of the string without the >  so itemargs[0] should be arg2/ag3/arg4
-                        groupargstring = groupargs[0];
-                    }
-
-                    // need to handle comma args that may be grouped with the () such as the (ATTACHMENT,args) arg
-
-                    //string[] value_keywordargs = ParseString(groupedarglist[0],10,",");
-                    string[] value_keywordargs = groupedarglist[0].Trim().Split(',');
-                    if (!string.IsNullOrEmpty(groupargstring))
-                    {
-
-                        if (value_keywordargs != null && value_keywordargs.Length > 0)
-                            value_keywordargs[value_keywordargs.Length - 1] = groupargstring;
-                    }
-
-                    // handle propname keywords that may take comma args
-                    //string[] keywordargs = ParseString(arglist[0],10,",");
-                    string[] keywordargs = arglist[0].Trim().Split(',');
-
-
-                    // this quick optimization can determine whether this is a regular prop/value assignment
-                    // since most prop modification strings will use regular propnames and not keywords, it makes sense to check for that first
-                    if (value_keywordargs[0].Length > 0 && !char.IsUpper(value_keywordargs[0][0]) &&
-                        arglist[0].Length > 0 && !char.IsUpper(arglist[0][0]))
-                    {
-                        // all of this code is also included in the keyword candidate tests
-                        // this is because regular props can also be entered with uppercase so the lowercase test is not definitive
-                        {
-                            // check for the literal char
-                            if (singlearglist[1] != null && singlearglist[1].Length > 0 && singlearglist[1][0] == '@')
-                            {
-                                //support for literal terminator
-                                singlearglist = ParseLiteralTerminator(singlearglist[1]);
-                                string lstr = singlearglist[0];
-                                if (terminated && lstr[lstr.Length - 1] == '/')
-                                    lstr = lstr.Remove(lstr.Length - 1, 1);
-
-                                string result = SetPropertyValue(spawner, o, arglist[0], lstr.Remove(0, 1));
-
-                                // see if it was successful
-                                if (result != "Property has been set.")
-                                {
-                                    status_str = arglist[0] + " : " + result;
-                                    no_error = false;
-                                }
-                                if (singlearglist.Length > 1 && singlearglist[1] != null)
-                                {
-                                    remainder = singlearglist[1];
-                                }
-                                else
-                                {
-                                    break;
-                                }
-                            }
-                            else
-                            {
-                                string result = SetPropertyValue(spawner, o, arglist[0], arglist[1]);
-
-                                // see if it was successful
-                                if (result != "Property has been set.")
-                                {
-                                    status_str = arglist[0] + " : " + result;
-                                    no_error = false;
-                                }
-                                if (arglist.Length < 3) break;
-                                remainder = arglist[2];
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // check for the literal char
-                        if (singlearglist[1] != null && singlearglist[1].Length > 0 && singlearglist[1][0] == '@')
-                        {
-                            //support for literal terminator
-                            singlearglist = ParseLiteralTerminator(singlearglist[1]);
-                            string lstr = singlearglist[0];
-                            if (terminated && lstr[lstr.Length - 1] == '/')
-                                lstr = lstr.Remove(lstr.Length - 1, 1);
-
-                            string result = SetPropertyValue(spawner, o, arglist[0], lstr.Remove(0, 1));
-                            // see if it was successful
-                            if (result != "Property has been set.")
-                            {
-                                status_str = arglist[0] + " : " + result;
-                                no_error = false;
-                            }
-
-                            if (singlearglist.Length > 1 && singlearglist[1] != null)
-                            {
-                                remainder = singlearglist[1];
-                            }
-                            else
-                            {
-                                break;
-                            }
-                        }
-                        else
-                        {
-                            string result = SetPropertyValue(spawner, o, arglist[0], arglist[1]);
-                            // see if it was successful
-                            if (result != "Property has been set.")
-                            {
-                                status_str = arglist[0] + " : " + result;
-                                no_error = false;
-                            }
-
-                            if (arglist.Length < 3) break;
-                            remainder = arglist[2];
-                        }
-                    }
-                }
-            }
-            return (no_error);
-        }
         #endregion
 
         #region Property testing
@@ -1585,13 +1302,11 @@ namespace Server.Mobiles
                 ptype = typeof(string);
                 return str;
             }
-            else
-            {
-                // otherwise treat it as a property name
-                string result = GetPropertyValue(spawner, o, pname, out ptype);
 
-                return ParseGetValue(result, ptype);
-            }
+            // otherwise treat it as a property name
+            string result = GetPropertyValue(spawner, o, pname, out ptype);
+
+            return ParseGetValue(result, ptype);
         }
 
         public static string ParseGetValue(string str, Type ptype)
@@ -1623,13 +1338,6 @@ namespace Server.Mobiles
             }
 
             return null;
-        }
-
-        public static bool CheckSubstitutedPropertyString(XmlSpawner spawner, object o, string testString, Mobile trigmob, out string status_str)
-        {
-            string substitutedtest = ApplySubstitution(spawner, o, trigmob, testString);
-
-            return CheckPropertyString(spawner, o, substitutedtest, trigmob, out status_str);
         }
 
         public static bool CheckPropertyString(XmlSpawner spawner, object o, string testString, Mobile trigmob, out string status_str)
@@ -2111,8 +1819,7 @@ namespace Server.Mobiles
                 {
                     if (value1 == value2) return !invertreturn;
                 }
-                else
-                    if (hasnotequals)
+                else if (hasnotequals)
                 {
                     if (value1 != value2) return !invertreturn;
                 }
@@ -2122,467 +1829,6 @@ namespace Server.Mobiles
         #endregion
 
         #region Search object methods
-
-        private static bool CheckNameMatch(string targetname, string name)
-        {
-            // a "*" targetname will match anything
-            // a null or empty targetname will match a null name
-            // otherwise the strings must match
-            return (targetname == "*") || (name == targetname) || (targetname != null && targetname.Length == 0 && name == null);
-        }
-
-        private static void GetItemsIn(Item source, string targetname, Type targettype, string typestr, ref List<object> nearbylist, string proptest)
-        {
-            string status_str;
-
-            if (source?.Items != null && nearbylist != null)
-            {
-                foreach (Item i in source.Items)
-                {
-                    // check the type and name
-
-                    Type itemtype = i.GetType();
-
-                    if (!i.Deleted && CheckNameMatch(targetname, i.Name) && (typestr == null || targettype != null && (itemtype.Equals(targettype) || itemtype.IsSubclassOf(targettype))))
-                    {
-                        if (proptest == null || CheckPropertyString(null, i, proptest, null, out status_str))
-                            nearbylist.Add(i);
-                    }
-
-                    if (i is Container)
-                    {
-                        GetItemsIn(i, targetname, targettype, typestr, ref nearbylist, proptest);
-                    }
-                }
-
-            }
-        }
-
-        private static List<object> GetNearbyObjects(object invoker, string targetname, Type targettype, string typestr, int range, bool searchcontainers, string proptest)
-        {
-            IPooledEnumerable itemlist = null;
-            IPooledEnumerable mobilelist = null;
-            List<object> nearbylist = new List<object>();
-            string status_str;
-
-            // get nearby items
-            if (targettype == null || targettype == typeof(Item) || targettype.IsSubclassOf(typeof(Item)))
-            {
-                if (invoker is Item)
-                {
-                    itemlist = ((Item)invoker).GetItemsInRange(range);
-                }
-                else
-                    if (invoker is Mobile)
-                {
-                    itemlist = ((Mobile)invoker).GetItemsInRange(range);
-                }
-
-
-                if (itemlist != null)
-                {
-                    foreach (Item i in itemlist)
-                    {
-                        // check the type and name
-
-                        Type itemtype = i.GetType();
-
-                        if (searchcontainers)
-                        {
-                            if (i is Container)
-                                GetItemsIn(i, targetname, targettype, typestr, ref nearbylist, proptest);
-                        }
-                        else if (!i.Deleted && CheckNameMatch(targetname, i.Name) && (typestr == null || targettype != null && (itemtype.Equals(targettype) || itemtype.IsSubclassOf(targettype))))
-                        {
-                            if (proptest == null || CheckPropertyString(null, i, proptest, null, out status_str))
-                                nearbylist.Add(i);
-                        }
-
-                    }
-                    itemlist.Free();
-                }
-            }
-
-            // get nearby mobiles
-            if (targettype == null || targettype == typeof(Mobile) || targettype.IsSubclassOf(typeof(Mobile)))
-            {
-                if (invoker is Item)
-                {
-                    mobilelist = ((Item)invoker).GetMobilesInRange(range);
-                }
-                else
-                    if (invoker is Mobile)
-                {
-                    mobilelist = ((Mobile)invoker).GetMobilesInRange(range);
-                }
-
-                if (mobilelist != null)
-                {
-                    foreach (Mobile m in mobilelist)
-                    {
-
-                        // check the type and name
-                        Type mobtype = m.GetType();
-
-                        if (!m.Deleted && CheckNameMatch(targetname, m.Name) && (typestr == null || targettype != null && (mobtype.Equals(targettype) || mobtype.IsSubclassOf(targettype))))
-                        {
-                            if (proptest == null || CheckPropertyString(null, m, proptest, null, out status_str))
-                                nearbylist.Add(m);
-                        }
-                    }
-                    mobilelist.Free();
-                }
-            }
-            return nearbylist;
-        }
-
-        public static Item SearchMobileForItem(Mobile m, string targetName, string typeStr, bool searchbank, bool equippedonly)
-        {
-            if (m != null && !m.Deleted)
-            {
-                // go through all of the items in the pack
-                List<Item> packlist = m.Items;
-
-                for (int i = 0; i < packlist.Count; ++i)
-                {
-                    Item item = packlist[i];
-
-                    // dont search bank boxes
-                    if (item is BankBox && !searchbank && !equippedonly) continue;
-
-                    // recursively search containers
-                    if (item != null && !item.Deleted)
-                    {
-                        if (item is Container && !equippedonly)
-                        {
-                            Item itemTarget = SearchPackForItem((Container)item, targetName, typeStr);
-
-                            if (itemTarget != null) return itemTarget;
-                        }
-                        // test the item name against the trigger string
-                        // if a typestring has been specified then check against that as well
-                        if (CheckNameMatch(targetName, item.Name))
-                        {
-                            if ((typeStr == null || CheckType(item, typeStr)))
-                            {
-                                //found it
-                                return item;
-                            }
-                        }
-                    }
-                }
-                // now check any item that might be held
-                Item held = m.Holding;
-
-                if (held != null && !held.Deleted && !equippedonly)
-                {
-                    if (held is Container)
-                    {
-                        Item itemTarget = SearchPackForItem((Container)held, targetName, typeStr);
-
-                        if (itemTarget != null) return itemTarget;
-                    }
-                    // test the item name against the trigger string
-                    if (CheckNameMatch(targetName, held.Name))
-                    {
-                        if (typeStr == null || CheckType(held, typeStr))
-                        {
-                            //found it
-                            return held;
-                        }
-                    }
-                }
-            }
-
-            return null;
-        }
-
-        public static Item SearchPackForItem(Container pack, string targetName, string typestr)
-        {
-            if (pack != null && !pack.Deleted)
-            {
-                Type targettype = null;
-
-                if (typestr != null)
-                {
-                    targettype = SpawnerType.GetType(typestr);
-                }
-
-                // go through all of the items in the pack
-                List<Item> packlist = pack.Items;
-
-                for (int i = 0; i < packlist.Count; ++i)
-                {
-                    Item item = packlist[i];
-
-                    if (item != null && !item.Deleted)
-                    {
-
-                        if (item is Container)
-                        {
-                            Item itemTarget = SearchPackForItem((Container)item, targetName, typestr);
-
-                            if (itemTarget != null) return itemTarget;
-                        }
-                        // test the item name against the trigger string
-                        if (CheckNameMatch(targetName, item.Name))
-                        {
-                            if (targettype == null || (item.GetType().Equals(targettype) || item.GetType().IsSubclassOf(targettype)))
-                            {
-                                //found it
-                                return item;
-                            }
-                        }
-                    }
-                }
-            }
-
-            return null;
-        }
-
-        public static bool CheckForNotCarried(Mobile m, string objectivestr)
-        {
-            if (m == null || objectivestr == null) return true;
-
-            // parse the objective string that might be of the form 'obj &| obj &| obj ...'
-            string[] arglist = ParseString(objectivestr, 2, "&|");
-            if (arglist.Length < 2)
-            {
-                // simple test with no and/or operators
-                return SingleCheckForNotCarried(m, objectivestr);
-            }
-
-            // test each half independently and combine the results
-            bool first = SingleCheckForNotCarried(m, arglist[0]);
-
-            // this will recursively parse the property test string with implicit nesting for multiple logical tests of the
-            // form A * B * C * D    being grouped as A * (B * (C * D))
-            bool second = CheckForNotCarried(m, arglist[1]);
-
-            int andposition = objectivestr.IndexOf("&");
-            int orposition = objectivestr.IndexOf("|");
-
-            // for the & operator
-            // notrigger if
-            // notcarrying A | notcarrying B
-            // people will actually think of it as  not(carrying A | carrying B)
-            // which is
-            // notrigger if
-            // notcarrying A && notcarrying B
-            // similarly for the & operator
-
-            // combine them based upon the operator
-            if ((andposition > 0 && orposition <= 0) || (andposition > 0 && andposition < orposition))
-            {
-                // and operator (see explanation above)
-                return (first || second);
-            }
-
-            if ((orposition > 0 && andposition <= 0) || (orposition > 0 && orposition < andposition))
-            {
-                // or operator (see explanation above)
-                return (first && second);
-            }
-
-            // should never get here
-            return false;
-        }
-
-        public static bool SingleCheckForNotCarried(Mobile m, string objectivestr)
-        {
-            if (m == null || objectivestr == null) return true;
-
-            bool has_no_such_item = true;
-
-            // check to see whether there is an objective specification as well.  The format is name[,type][,EQUIPPED][,objective,objective,...]
-            string[] objstr = ParseString(objectivestr, 8, ",");
-            string itemname = objstr[0];
-
-            bool equippedonly = false;
-            string typestr = null;
-            int objoffset = 1;
-            // is there a type specification?
-
-            while (objoffset < objstr.Length)
-            {
-                if (objstr[objoffset] != null && objstr[objoffset].Length > 0)
-                {
-
-                    char startc = objstr[objoffset][0];
-
-                    if (startc >= '0' && startc <= '9')
-                    {
-                        // this is the start of the numeric objective specifications
-                        break;
-                    }
-
-                    if (objstr[objoffset] == "EQUIPPED")
-                    {
-                        equippedonly = true;
-                    }
-                    else
-                    {
-                        // treat as a type specification if it does not begin with a numeric char
-                        // and is not the EQUIPPED keyword
-                        typestr = objstr[objoffset];
-                    }
-                }
-                objoffset++;
-            }
-
-            // look for the item
-            Item testitem = SearchMobileForItem(m, itemname, typestr, false, equippedonly);
-
-            // found the item
-            if (testitem != null)
-            {
-                // is the equippedonly flag set?  If so then see if the item is equipped
-                if ((equippedonly && testitem.Parent == m) || !equippedonly)
-                    has_no_such_item = false;
-
-            }
-            return has_no_such_item;
-        }
-
-        public static bool CheckForCarried(Mobile m, string objectivestr)
-        {
-            if (m == null || objectivestr == null) return true;
-
-            // parse the objective string that might be of the form 'obj &| obj &| obj ...'
-            string[] arglist = ParseString(objectivestr, 2, "&|");
-            if (arglist.Length < 2)
-            {
-                // simple test with no and/or operators
-                return SingleCheckForCarried(m, objectivestr);
-            }
-
-            // test each half independently and combine the results
-            bool first = SingleCheckForCarried(m, arglist[0]);
-
-            // this will recursively parse the property test string with implicit nesting for multiple logical tests of the
-            // form A * B * C * D    being grouped as A * (B * (C * D))
-            bool second = CheckForCarried(m, arglist[1]);
-
-            int andposition = objectivestr.IndexOf("&");
-            int orposition = objectivestr.IndexOf("|");
-
-            // combine them based upon the operator
-            if ((andposition > 0 && orposition <= 0) || (andposition > 0 && andposition < orposition))
-            {
-                // and operator
-                return (first && second);
-            }
-
-            if ((orposition > 0 && andposition <= 0) || (orposition > 0 && orposition < andposition))
-            {
-                // or operator
-                return (first || second);
-            }
-
-            // should never get here
-            return false;
-        }
-
-        public static bool SingleCheckForCarried(Mobile m, string objectivestr)
-        {
-            if (m == null || objectivestr == null) return false;
-
-            bool has_valid_item = false;
-
-            // check to see whether there is an objective specification as well.  The format is name[,type][,EQUIPPED][,objective,objective,...]
-            string[] objstr = ParseString(objectivestr, 8, ",");
-
-            string itemname = objstr[0];
-
-            bool equippedonly = false;
-            string typestr = null;
-            int objoffset = 1;
-            // is there a type specification?
-
-            while (objoffset < objstr.Length)
-            {
-                if (objstr[objoffset] != null && objstr[objoffset].Length > 0)
-                {
-
-                    char startc = objstr[objoffset][0];
-
-                    if (startc >= '0' && startc <= '9')
-                    {
-                        // this is the start of the numeric objective specifications
-                        break;
-                    }
-
-                    if (objstr[objoffset].ToLowerInvariant() == "equipped")
-                    {
-                        equippedonly = true;
-                    }
-                    else
-                    {
-                        // treat as a type specification if it does not begin with a numeric char
-                        // and is not the EQUIPPED keyword
-                        typestr = objstr[objoffset];
-                    }
-                }
-                objoffset++;
-            }
-
-            Item testitem = SearchMobileForItem(m, itemname, typestr, false, equippedonly);
-
-            // found the item
-            if (testitem != null)
-            {
-                // is the equippedonly flag set?  If so then see if the item is equipped
-                if ((equippedonly && testitem.Parent == m) || !equippedonly)
-                    has_valid_item = true;
-
-            }
-            return has_valid_item;
-        }
-
-        public static Item FindItemByName(XmlSpawner fromspawner, string name, string typestr)
-        {
-            if (name == null) return null;
-
-            int count = 0;
-
-            Item founditem = FindInRecentItemSearchList(fromspawner, name, typestr);
-
-            if (founditem != null)
-            {
-                return founditem;
-            }
-
-            Type targettype = null;
-            if (typestr != null)
-            {
-                targettype = SpawnerType.GetType(typestr);
-            }
-
-            // search through all items in the world and find the first one with a matching name
-            foreach (Item item in World.Items.Values)
-            {
-                Type itemtype = item.GetType();
-
-                if (!item.Deleted && (name.Length == 0 || string.Compare(item.Name, name, true) == 0) && typestr == null || targettype != null && (itemtype.Equals(targettype) || itemtype.IsSubclassOf(targettype)))
-                {
-                    founditem = item;
-                    count++;
-                    // added the break in to return the first match instead of forcing uniqueness (overrides the count test)
-                    break;
-                }
-            }
-
-            // if a unique item is found then success
-            if (count == 1)
-            {
-                // add this to the recent search list
-                AddToRecentItemSearchList(fromspawner, founditem);
-
-                return (founditem);
-            }
-
-            return null;
-        }
 
         public static Mobile FindMobileByName(XmlSpawner fromspawner, string name, string typestr)
         {
@@ -2724,62 +1970,6 @@ namespace Server.Mobiles
             }
 
             return (foundspawner);
-        }
-
-        public static void AddToRecentItemSearchList(XmlSpawner spawner, Item target)
-        {
-            if (spawner == null || target == null) return;
-
-            if (spawner.RecentItemSearchList == null)
-            {
-                spawner.RecentItemSearchList = new List<Item>();
-            }
-
-            spawner.RecentItemSearchList.Add(target);
-
-            // check the length and truncate if it gets too long
-            if (spawner.RecentItemSearchList.Count > 100)
-            {
-                spawner.RecentItemSearchList.RemoveAt(0);
-            }
-        }
-
-        public static Item FindInRecentItemSearchList(XmlSpawner spawner, string name, string typestr)
-        {
-            if (spawner == null || name == null || spawner.RecentItemSearchList == null) return null;
-
-            List<Item> deletelist = null;
-            Item founditem = null;
-
-            Type targettype = null;
-            if (typestr != null)
-            {
-                targettype = SpawnerType.GetType(typestr);
-            }
-
-            foreach (Item item in spawner.RecentItemSearchList)
-            {
-                if (item.Deleted)
-                {
-                    // clean it up
-                    if (deletelist == null)
-                        deletelist = new List<Item>();
-                    deletelist.Add(item);
-                }
-                else if (name.Length == 0 || string.Compare(item.Name, name, true) == 0 && typestr == null || targettype != null && (item.GetType().Equals(targettype) || item.GetType().IsSubclassOf(targettype)))
-                {
-                    founditem = item;
-                    break;
-                }
-            }
-
-            if (deletelist != null)
-            {
-                foreach (Item i in deletelist)
-                    spawner.RecentItemSearchList.Remove(i);
-            }
-
-            return (founditem);
         }
 
         public static void AddToRecentMobileSearchList(XmlSpawner spawner, Mobile target)
@@ -3087,12 +2277,11 @@ namespace Server.Mobiles
             if (str == null || separator == null) return null;
 
             int lastindex = 0;
-            int index = 0;
             List<string> strargs = new List<string>();
             while (true)
             {
                 // go through the string and find the first instance of the separator
-                index = str.IndexOf(separator);
+                var index = str.IndexOf(separator);
                 if (index < 0)
                 {
                     // no separator so its the end of the string
@@ -3120,206 +2309,6 @@ namespace Server.Mobiles
         #endregion
 
         #region Keyword support methods
-
-        public static void BroadcastAsciiMessage(AccessLevel ac, int hue, int font, string message)
-        {
-            foreach (NetState state in NetState.Instances)
-            {
-                Mobile m = state.Mobile;
-
-                if (m != null && m.AccessLevel >= ac)
-                    //m.SendMessage(hue, message);
-                    m.Send(new AsciiMessage(Serial.MinusOne, -1, MessageType.Regular, hue, font, "System", message));
-            }
-        }
-
-        public static void PublicOverheadMobileMessage(Mobile mob, MessageType type, int hue, int font, string text, bool noLineOfSight)
-        {
-            if (mob != null && mob.Map != null)
-            {
-                Packet p = null;
-
-                IPooledEnumerable eable = mob.Map.GetClientsInRange(mob.Location);
-
-                foreach (NetState state in eable)
-                {
-                    if (state.Mobile.CanSee(mob) && (noLineOfSight || state.Mobile.InLOS(mob)))
-                    {
-                        if (p == null)
-                        {
-                            p = new AsciiMessage(mob.Serial, mob.Body, type, hue, font, mob.Name, text);
-
-                            p.Acquire();
-
-                        }
-
-                        state.Send(p);
-                    }
-                }
-
-                Packet.Release(p);
-
-                eable.Free();
-            }
-        }
-
-        public static void PublicOverheadItemMessage(Item item, MessageType type, int hue, int font, string text)
-        {
-            if (item != null && item.Map != null)
-            {
-                Packet p = null;
-                Point3D worldLoc = item.GetWorldLocation();
-
-                IPooledEnumerable eable = item.Map.GetClientsInRange(worldLoc, item.GetMaxUpdateRange());
-
-                foreach (NetState state in eable)
-                {
-                    Mobile m = state.Mobile;
-
-                    if (m.CanSee(item) && m.InRange(worldLoc, item.GetUpdateRange(m)))
-                    {
-                        if (p == null)
-                        {
-                            p = new AsciiMessage(item.Serial, item.ItemID, type, hue, font, item.Name, text);
-
-                            p.Acquire();
-                        }
-
-                        state.Send(p);
-                    }
-                }
-
-                Packet.Release(p);
-
-                eable.Free();
-            }
-        }
-
-        public static void ResurrectPlayers(string arglist, Mobile triggermob, object refobject, out string status_str)
-        {
-            status_str = null;
-            Item refitem = null;
-            Mobile refmob = null;
-            if (refobject is Item)
-            {
-                refitem = (Item)refobject;
-            }
-            else
-                if (refobject is Mobile)
-            {
-                refmob = (Mobile)refobject;
-            }
-            // syntax is RESURRECT[,range][,PETS]
-            // look for the range arg
-            string[] str = ParseString(arglist, 3, ",");
-            int range = 0;
-            bool petres = false;
-
-            if (str.Length > 1)
-            {
-
-                if (!int.TryParse(str[1], out range))
-                    status_str = "bad range arg in RESURRECT";
-            }
-            if (str.Length > 2)
-            {
-                // get the range arg
-                if (str[2].ToLower() == "pets")
-                    petres = true;
-                else bool.TryParse(str[2], out petres);
-            }
-
-            try
-            {
-                if ((range > 0) || (triggermob != null && !triggermob.Deleted))
-                {
-                    if (range > 0)
-                    {
-                        IPooledEnumerable rangelist = null;
-                        if (refitem != null && !refitem.Deleted)
-                        {
-                            rangelist = refitem.GetMobilesInRange(range);
-                        }
-                        else if (refmob != null && !refmob.Deleted)
-                        {
-                            rangelist = refmob.GetMobilesInRange(range);
-                        }
-
-                        if (rangelist != null)
-                        {
-                            foreach (Mobile p in rangelist)
-                            {
-                                if (!petres && p is PlayerMobile && p.Body.IsGhost)
-                                {
-                                    p.Resurrect();
-                                }
-                                else if (petres && p is BaseCreature && ((BaseCreature)p).ControlMaster == triggermob && ((BaseCreature)p).Controlled && ((BaseCreature)p).IsDeadPet)
-                                {
-                                    ((BaseCreature)p).ResurrectPet();
-                                }
-                            }
-                            rangelist.Free();
-                        }
-                    }
-                    else
-                    {
-                        // just send it to the mob who triggered
-                        if (triggermob.Body.IsGhost)
-                            triggermob.Resurrect();
-
-                    }
-                }
-            }
-            catch { }
-        }
-
-        public static void SendBoltEffect(IEntity e, int sound, int hue)
-        {
-            Map map = e.Map;
-
-            if (map == null)
-                return;
-
-            if (e is Item)
-                ((Item)e).ProcessDelta();
-            else if (e is Mobile)
-                ((Mobile)e).ProcessDelta();
-
-            Packet preEffect = null, boltEffect = null, playSound = null;
-
-            IPooledEnumerable eable = map.GetClientsInRange(e.Location);
-
-            foreach (NetState state in eable)
-            {
-                if (Effects.SendParticlesTo(state))
-                {
-                    if (preEffect == null)
-                        preEffect = Packet.Acquire(new TargetParticleEffect(e, 0, 10, 5, 0, 0, 5031, 3, 0));
-
-                    state.Send(preEffect);
-                }
-
-                if (boltEffect == null)
-                    boltEffect = Packet.Acquire(new BoltEffect(e, hue));
-
-                state.Send(boltEffect);
-
-                if (sound > 0)
-                {
-                    if (playSound == null)
-                        playSound = Packet.Acquire(new PlaySound(sound, e));
-
-                    state.Send(playSound);
-                }
-            }
-
-            Packet.Release(preEffect);
-            Packet.Release(boltEffect);
-            Packet.Release(playSound);
-
-            eable.Free();
-        }
-
         public static void ExecuteActions(Mobile mob, object attachedto, string actions)
         {
             if (actions == null || actions.Length <= 0) return;
@@ -3379,8 +2368,6 @@ namespace Server.Mobiles
 
                         m.Location = loc;
                         m.Map = map;
-
-                        ApplyObjectStringProperties(null, substitutedtypeName, m, trigmob, attachedto, out status_str);
                     }
                     else
                             if (o is Item)
@@ -3395,36 +2382,10 @@ namespace Server.Mobiles
         #endregion
 
         #region Spawn methods
-
-
-        public static void AddSpawnItem(XmlSpawner spawner, XmlSpawner.SpawnObject theSpawn, Item item, Point3D location, Map map, Mobile trigmob, bool requiresurface,
-            string propertyString, out string status_str)
-        {
-            AddSpawnItem(spawner, spawner, theSpawn, item, location, map, trigmob, requiresurface, null, propertyString, false, out status_str);
-        }
-
         public static void AddSpawnItem(XmlSpawner spawner, object invoker, XmlSpawner.SpawnObject theSpawn, Item item, Point3D location, Map map, Mobile trigmob, bool requiresurface,
             string propertyString, out string status_str)
         {
             AddSpawnItem(spawner, invoker, theSpawn, item, location, map, trigmob, requiresurface, null, propertyString, false, out status_str);
-        }
-
-        public static void AddSpawnItem(XmlSpawner spawner, XmlSpawner.SpawnObject theSpawn, Item item, Point3D location, Map map, Mobile trigmob, bool requiresurface,
-            string propertyString, bool smartspawn, out string status_str)
-        {
-            AddSpawnItem(spawner, spawner, theSpawn, item, location, map, trigmob, requiresurface, null, propertyString, smartspawn, out status_str);
-        }
-
-        public static void AddSpawnItem(XmlSpawner spawner, XmlSpawner.SpawnObject theSpawn, Item item, Point3D location, Map map, Mobile trigmob, bool requiresurface,
-            List<XmlSpawner.SpawnPositionInfo> spawnpositioning, string propertyString, out string status_str)
-        {
-            AddSpawnItem(spawner, spawner, theSpawn, item, location, map, trigmob, requiresurface, spawnpositioning, propertyString, false, out status_str);
-        }
-
-        public static void AddSpawnItem(XmlSpawner spawner, object invoker, XmlSpawner.SpawnObject theSpawn, Item item, Point3D location, Map map, Mobile trigmob, bool requiresurface,
-            List<XmlSpawner.SpawnPositionInfo> spawnpositioning, string propertyString, out string status_str)
-        {
-            AddSpawnItem(spawner, invoker, theSpawn, item, location, map, trigmob, requiresurface, spawnpositioning, propertyString, false, out status_str);
         }
 
         public static void AddSpawnItem(XmlSpawner spawner, XmlSpawner.SpawnObject theSpawn, Item item, Point3D location, Map map, Mobile trigmob, bool requiresurface,
@@ -3522,45 +2483,6 @@ namespace Server.Mobiles
             {
                 item.OnAfterSpawn();
             }
-
-            // apply the parsed arguments from the typestring using setcommand
-            // be sure to do this after setting map and location so that errors dont place the mob on the internal map
-            ApplyObjectStringProperties(spawner, propertyString, item, trigmob, spawner, out status_str);
-        }
-
-        public static bool SpawnTypeKeyword(object invoker, XmlSpawner.SpawnObject TheSpawn, string typeName, string substitutedtypeName, bool requiresurface,
-            Mobile triggermob, Point3D location, Map map, out string status_str)
-        {
-            return SpawnTypeKeyword(invoker, TheSpawn, typeName, substitutedtypeName, requiresurface, null,
-                triggermob, location, map, null, out status_str, 0);
-        }
-
-        public static bool SpawnTypeKeyword(object invoker, XmlSpawner.SpawnObject TheSpawn, string typeName, string substitutedtypeName, bool requiresurface,
-            Mobile triggermob, Point3D location, Map map, XmlGumpCallback gumpcallback, out string status_str, byte loops)
-        {
-            return SpawnTypeKeyword(invoker, TheSpawn, typeName, substitutedtypeName, requiresurface, null,
-                triggermob, location, map, gumpcallback, out status_str, loops);
-        }
-
-        public static bool SpawnTypeKeyword(object invoker, XmlSpawner.SpawnObject TheSpawn, string typeName, string substitutedtypeName, bool requiresurface,
-            List<XmlSpawner.SpawnPositionInfo> spawnpositioning, Mobile triggermob, Point3D location, Map map, out string status_str, byte loops)
-        {
-            return SpawnTypeKeyword(invoker, TheSpawn, typeName, substitutedtypeName, requiresurface, spawnpositioning,
-                triggermob, location, map, null, out status_str, loops);
-        }
-
-        public static bool SpawnTypeKeyword(object invoker, XmlSpawner.SpawnObject TheSpawn, string typeName, string substitutedtypeName, bool requiresurface,
-            List<XmlSpawner.SpawnPositionInfo> spawnpositioning, Mobile triggermob, Point3D location, Map map, XmlGumpCallback gumpcallback, out string status_str, byte loops)
-        {
-            status_str = null;
-
-            if (typeName == null || TheSpawn == null || substitutedtypeName == null) return false;
-
-            XmlSpawner spawner = invoker as XmlSpawner;
-
-            // should never get here
-            status_str = "unrecognized keyword";
-            return false;
         }
 
         #endregion
