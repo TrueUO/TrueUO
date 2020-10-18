@@ -109,19 +109,19 @@ namespace Server.Gumps
         {
             m_Page = page;
 
-            int count = m_List.Count - (page * EntryCount);
+            int count = m_List.Count - page * EntryCount;
 
             if (count < 0)
                 count = 0;
             else if (count > EntryCount)
                 count = EntryCount;
 
-            int lastIndex = (page * EntryCount) + count - 1;
+            int lastIndex = page * EntryCount + count - 1;
 
             if (lastIndex >= 0 && lastIndex < m_List.Count && m_List[lastIndex] == null)
                 --count;
 
-            int totalHeight = OffsetSize + ((EntryHeight + OffsetSize) * (ColumnEntryCount + 1));
+            int totalHeight = OffsetSize + (EntryHeight + OffsetSize) * (ColumnEntryCount + 1);
 
             AddPage(0);
 
@@ -239,7 +239,7 @@ namespace Server.Gumps
                     }
                 default:
                     {
-                        int index = (m_Page * EntryCount) + (info.ButtonID - 3);
+                        int index = m_Page * EntryCount + (info.ButtonID - 3);
 
                         if (index >= 0 && index < m_List.Count)
                         {
@@ -336,7 +336,7 @@ namespace Server.Gumps
         {
             object[] objs = type.GetCustomAttributes(check, inherit);
 
-            return (objs.Length > 0);
+            return objs.Length > 0;
         }
 
         private static bool IsType(Type type, Type check)
@@ -629,7 +629,7 @@ namespace Server.Gumps
                 m_Start = start;
             }
 
-            private static readonly Type typeofObject = typeof(object);
+            private static readonly Type _TypeofObject = typeof(object);
 
             private int GetDistance(Type type)
             {
@@ -637,7 +637,7 @@ namespace Server.Gumps
 
                 int dist;
 
-                for (dist = 0; current != null && current != typeofObject && current != type; ++dist)
+                for (dist = 0; current != null && current != _TypeofObject && current != type; ++dist)
                     current = current.BaseType;
 
                 return dist;

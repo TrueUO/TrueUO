@@ -55,7 +55,7 @@ namespace Server.Gumps
 
             if (searchResults.Count > 0)
             {
-                for (int i = (page * 10); i < ((page + 1) * 10) && i < searchResults.Count; ++i)
+                for (int i = page * 10; i < (page + 1) * 10 && i < searchResults.Count; ++i)
                 {
                     int index = i % 10;
 
@@ -71,8 +71,8 @@ namespace Server.Gumps
                         }
                     }
 
-                    AddLabel(44, 39 + (index * 20), 0x480, labelstr);
-                    AddButton(10, 39 + (index * 20), 4023, 4025, 4 + i, GumpButtonType.Reply, 0);
+                    AddLabel(44, 39 + index * 20, 0x480, labelstr);
+                    AddButton(10, 39 + index * 20, 4023, 4025, 4 + i, GumpButtonType.Reply, 0);
                 }
             }
             else
@@ -90,12 +90,12 @@ namespace Server.Gumps
 
             AddHtmlLocalized(44, 250, 170, 20, 1061028, m_Page > 0 ? 0x7FFF : 0x5EF7, false, false); // Previous page
 
-            if (((m_Page + 1) * 10) < searchResults.Count)
+            if ((m_Page + 1) * 10 < searchResults.Count)
                 AddButton(210, 249, 4005, 4007, 3, GumpButtonType.Reply, 0);
             else
                 AddImage(210, 249, 4005);
 
-            AddHtmlLocalized(244, 250, 170, 20, 1061027, ((m_Page + 1) * 10) < searchResults.Count ? 0x7FFF : 0x5EF7, false, false); // Next page
+            AddHtmlLocalized(244, 250, 170, 20, 1061027, (m_Page + 1) * 10 < searchResults.Count ? 0x7FFF : 0x5EF7, false, false); // Next page
         }
 
         private static readonly Type typeofItem = typeof(Item), typeofMobile = typeof(Mobile);
@@ -180,7 +180,7 @@ namespace Server.Gumps
                 case 1: // Search
                     {
                         TextRelay te = info.GetTextEntry(0);
-                        string match = (te == null ? "" : te.Text.Trim());
+                        string match = te == null ? "" : te.Text.Trim();
 
                         if (match.Length < 3)
                         {

@@ -51,7 +51,6 @@ namespace Server.Mobiles
 
         #region Constant declarations
         public const byte MaxLoops = 10; //maximum number of recursive calls from spawner to itself. this is to prevent stack overflow from xmlspawner scripting
-        public const string Version = "4.00";
         private const int ShowBoundsItemId = 14089;             // 14089 Fire Column // 3555 Campfire // 8708 Skull Pole
         private const string SpawnDataSetName = "Spawns";
         private const string SpawnTablePointName = "Points";
@@ -733,7 +732,6 @@ namespace Server.Mobiles
 
                 // no hold flags were set
                 return false;
-
             }
             set { m_HoldSequence = value; }
         }
@@ -752,13 +750,11 @@ namespace Server.Mobiles
                     else
                         return false;
                 }
+
+                if (IsFull)
+                    return false;
                 else
-                {
-                    if (IsFull)
-                        return false;
-                    else
-                        return true;
-                }
+                    return true;
             }
         }
 
@@ -2053,8 +2049,6 @@ namespace Server.Mobiles
             }
             sectorList = null;
             UseSectorActivate = false;
-
-            //IsInactivated = false;
 
             // force an update of the sector list
             bool sectorrefresh = HasActiveSectors;
@@ -4051,10 +4045,6 @@ namespace Server.Mobiles
             }
 
             int percent = 0;
-            //if((currentcount + savings) > 0)
-            //{
-            //	percent = 100*savings/(currentcount + savings);
-            //}
 
             int maxpercent = 0;
             if (totalcount > 0)
@@ -4064,7 +4054,6 @@ namespace Server.Mobiles
             }
 
             e.Mobile.SendMessage(
-                "Running XmlSpawner version {9}\n" +
                 "Smartspawning access level is {11}\n" +
                 "--------------------------------\n" +
                 "{0} XmlSpawners\n" +
@@ -4078,7 +4067,7 @@ namespace Server.Mobiles
                 "Maximum possible savings is {7}%\n" +
                 "Current savings is {8}%",
                 count, smartcount, inactivecount, totalcount, maxcount, currentcount, savings, maxpercent,
-                percent, Version, totalSectorsMonitored, SmartSpawnAccessLevel);
+                percent, totalSectorsMonitored, SmartSpawnAccessLevel);
         }
 
         [Usage("OptimalSmartSpawning [max spawn/homerange diff]")]
@@ -8530,98 +8519,6 @@ namespace Server.Mobiles
                 // require valid surfaces by default
                 bool requiresurface = true;
 
-                // parse the # function specification for the entry
-                while (substitutedtypeName.StartsWith("#"))
-                {
-                    string[] args = BaseXmlSpawner.ParseSemicolonArgs(substitutedtypeName, 2);
-
-                    if (args.Length > 0)
-                    {
-                        if (spawnpositioning == null)
-                        {
-                            spawnpositioning = new List<SpawnPositionInfo>();
-                        }
-                        // parse any comma args
-                        string[] keyvalueargs = BaseXmlSpawner.ParseCommaArgs(args[0], 10);
-
-                        if (keyvalueargs.Length > 0)
-                        {
-
-                            switch (keyvalueargs[0])
-                            {
-                                case "#NOITEMID":
-                                    spawnpositioning.Add(new SpawnPositionInfo(SpawnPositionType.NoItemID, m_mob_who_triggered, keyvalueargs));
-                                    break;
-                                case "#ITEMID":
-                                    spawnpositioning.Add(new SpawnPositionInfo(SpawnPositionType.ItemID, m_mob_who_triggered, keyvalueargs));
-                                    break;
-                                case "#NOTILES":
-                                    spawnpositioning.Add(new SpawnPositionInfo(SpawnPositionType.NoTiles, m_mob_who_triggered, keyvalueargs));
-                                    break;
-                                case "#TILES":
-                                    spawnpositioning.Add(new SpawnPositionInfo(SpawnPositionType.Tiles, m_mob_who_triggered, keyvalueargs));
-                                    break;
-                                case "#WET":
-                                    spawnpositioning.Add(new SpawnPositionInfo(SpawnPositionType.Wet, m_mob_who_triggered, keyvalueargs));
-                                    break;
-                                case "#XFILL":
-                                    spawnpositioning.Add(new SpawnPositionInfo(SpawnPositionType.RowFill, m_mob_who_triggered, keyvalueargs));
-                                    break;
-                                case "#YFILL":
-                                    spawnpositioning.Add(new SpawnPositionInfo(SpawnPositionType.ColFill, m_mob_who_triggered, keyvalueargs));
-                                    break;
-                                case "#EDGE":
-                                    spawnpositioning.Add(new SpawnPositionInfo(SpawnPositionType.Perimeter, m_mob_who_triggered, keyvalueargs));
-                                    break;
-                                case "#PLAYER":
-                                    spawnpositioning.Add(new SpawnPositionInfo(SpawnPositionType.Player, m_mob_who_triggered, keyvalueargs));
-                                    break;
-                                case "#WAYPOINT":
-                                    spawnpositioning.Add(new SpawnPositionInfo(SpawnPositionType.Waypoint, m_mob_who_triggered, keyvalueargs));
-                                    break;
-                                case "#RELXY":
-                                    spawnpositioning.Add(new SpawnPositionInfo(SpawnPositionType.RelXY, m_mob_who_triggered, keyvalueargs));
-                                    break;
-                                case "#DXY":
-                                    spawnpositioning.Add(new SpawnPositionInfo(SpawnPositionType.DeltaLocation, m_mob_who_triggered, keyvalueargs));
-                                    break;
-                                case "#XY":
-                                    spawnpositioning.Add(new SpawnPositionInfo(SpawnPositionType.Location, m_mob_who_triggered, keyvalueargs));
-                                    break;
-                                case "#CONDITION":
-                                    // test the specified condition string
-                                    // syntax is #CONDITION,proptest
-                                    // reparse with only one arg after the comma, this allows property tests that use commas as well
-                                    string[] ckeyvalueargs = BaseXmlSpawner.ParseCommaArgs(args[0], 2);
-                                    if (ckeyvalueargs.Length > 1)
-                                    {
-                                        // dont spawn if it fails the test
-                                        if (!BaseXmlSpawner.CheckPropertyString(this, this, ckeyvalueargs[1], m_mob_who_triggered, out status_str)) return false;
-
-                                    }
-                                    else
-                                    {
-                                        status_str = "invalid #CONDITION specification: " + args[0];
-                                    }
-                                    break;
-                                default:
-                                    status_str = "invalid # specification: " + args[0];
-                                    break;
-                            }
-                        }
-                    }
-
-                    // get the rest of the spawn entry
-                    if (args.Length > 1)
-                    {
-                        substitutedtypeName = args[1].Trim();
-                    }
-                    else
-                    {
-                        substitutedtypeName = string.Empty;
-                    }
-                }
-
                 if (substitutedtypeName.StartsWith("*"))
                 {
                     requiresurface = false;
@@ -8666,9 +8563,7 @@ namespace Server.Mobiles
 
                             m.Spawner = this;
 
-                            Point3D loc;
-
-                            loc = GetSpawnPosition(requiresurface, packrange, packcoord, spawnpositioning, m);
+                            var loc = GetSpawnPosition(requiresurface, packrange, packcoord, spawnpositioning, m);
 
                             if (!smartspawn)
                             {
@@ -9365,7 +9260,7 @@ namespace Server.Mobiles
             LandTile lt = map.Tiles.GetLandTile(x, y);
             int lowZ = 0, avgZ = 0, topZ = 0;
 
-            bool surface, impassable;
+            bool surface;
             bool wet = false;
 
             map.GetAverageZ(x, y, ref lowZ, ref avgZ, ref topZ);
@@ -9376,7 +9271,7 @@ namespace Server.Mobiles
                 Console.WriteLine("landtile at {0},{1},{2} lowZ={3} avgZ={4} topZ={5}", x, y, z, lowZ, avgZ, topZ);
             }
 
-            impassable = (landFlags & TileFlag.Impassable) != 0;
+            var impassable = (landFlags & TileFlag.Impassable) != 0;
             if (checkmob)
             {
                 wet = (landFlags & TileFlag.Wet) != 0;
@@ -11578,12 +11473,7 @@ namespace Server.Mobiles
                                     // minusone is reserved for unknown types by default
                                     //  minustwo on is used for referencing keyword tags
                                     int tagserial = -1 * (serial + 2);
-                                    // get the tag with that serial and add it
-                                    BaseXmlSpawner.KeywordTag t = BaseXmlSpawner.GetFromTagList(this, tagserial);
-                                    if (t != null)
-                                    {
-                                        TheSpawnObject.SpawnedObjects.Add(t);
-                                    }
+
                                 }
                                 else
                                 {

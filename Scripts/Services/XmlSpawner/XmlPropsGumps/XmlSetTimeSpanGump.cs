@@ -46,7 +46,7 @@ namespace Server.Gumps
         private static readonly int EntryWidth = 212;
 
         private static readonly int TotalWidth = OffsetSize + EntryWidth + OffsetSize + SetWidth + OffsetSize;
-        private static readonly int TotalHeight = OffsetSize + (7 * (EntryHeight + OffsetSize));
+        private static readonly int TotalHeight = OffsetSize + 7 * (EntryHeight + OffsetSize);
 
         private static readonly int BackWidth = BorderSize + TotalWidth + BorderSize;
         private static readonly int BackHeight = BorderSize + TotalHeight + BorderSize;
@@ -83,7 +83,7 @@ namespace Server.Gumps
         private void AddRect(int index, string str, int button, int text)
         {
             int x = BorderSize + OffsetSize;
-            int y = BorderSize + OffsetSize + (index * (EntryHeight + OffsetSize));
+            int y = BorderSize + OffsetSize + index * (EntryHeight + OffsetSize);
 
             AddImageTiled(x, y, EntryWidth, EntryHeight, EntryGumpID);
             AddLabelCropped(x + TextOffsetX, y, EntryWidth - TextOffsetX, EntryHeight, TextHue, str);

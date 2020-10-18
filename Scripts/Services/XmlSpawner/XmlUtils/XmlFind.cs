@@ -204,13 +204,13 @@ namespace Server.Mobiles
                     }
 
                 }
-                return (Utility.InRange(currentloc, loc, range));
+                return Utility.InRange(currentloc, loc, range);
 
             }
             if (o is Mobile mob)
             {
                 if (mob.Map != currentmap) return false;
-                return (Utility.InRange(currentloc, mob.Location, range));
+                return Utility.InRange(currentloc, mob.Location, range);
 
             }
             return false;
@@ -244,7 +244,7 @@ namespace Server.Mobiles
                 if (r == null)
                     return false;
 
-                return (r.Contains(loc));
+                return r.Contains(loc);
             }
 
             if (o is Mobile mob)
@@ -252,7 +252,7 @@ namespace Server.Mobiles
                 Region r = Region.Regions.FirstOrDefault(reg => reg.Map == mob.Map && !string.IsNullOrEmpty(reg.Name) && string.Equals(reg.Name, regionname, StringComparison.CurrentCultureIgnoreCase));
 
                 if (r == null) return false;
-                return (r.Contains(mob.Location));
+                return r.Contains(mob.Location);
 
             }
 
@@ -268,12 +268,12 @@ namespace Server.Mobiles
                 if (direction)
                 {
                     // true means allow only mobs greater than the age
-                    if ((DateTime.UtcNow - mob.CreationTime) > TimeSpan.FromHours(age)) return true;
+                    if (DateTime.UtcNow - mob.CreationTime > TimeSpan.FromHours(age)) return true;
                 }
                 else
                 {
                     // false means allow only mobs less than the age
-                    if ((DateTime.UtcNow - mob.CreationTime) < TimeSpan.FromHours(age)) return true;
+                    if (DateTime.UtcNow - mob.CreationTime < TimeSpan.FromHours(age)) return true;
                 }
             }
 
@@ -320,12 +320,12 @@ namespace Server.Mobiles
             if (o is Mobile m)
             {
                 if (m.Map != Map.Internal || m.Account != null ||
-                    ((m as IMount)?.Rider != null) ||
-                    (m is GalleonPilot) || m is PetParrot ||
-                    (GenericBuyInfo.IsDisplayCache(m)) ||
-                    (m is EffectMobile) ||
-                    (m is BaseCreature creature && creature.IsStabled) ||
-                    (m is PlayerVendor && BaseHouse.AllHouses.Any(x => x.InternalizedVendors.Contains(m))))
+                    (m as IMount)?.Rider != null ||
+                    m is GalleonPilot || m is PetParrot ||
+                    GenericBuyInfo.IsDisplayCache(m) ||
+                    m is EffectMobile ||
+                    m is BaseCreature creature && creature.IsStabled ||
+                    m is PlayerVendor && BaseHouse.AllHouses.Any(x => x.InternalizedVendors.Contains(m)))
                     return true;
             }
             else if (o is Item i)
@@ -437,10 +437,10 @@ namespace Server.Mobiles
                     }
 
                     // check for map
-                    if ((i.Map == Map.Felucca && criteria.Dosearchfel) || (i.Map == Map.Trammel && criteria.Dosearchtram) ||
-                        (i.Map == Map.Malas && criteria.Dosearchmal) || (i.Map == Map.Ilshenar && criteria.Dosearchilsh) ||
-                        (i.Map == Map.TerMur && criteria.Dosearchter) || (i.Map == Map.Internal && criteria.Dosearchint) ||
-                        (i.Map == null && criteria.Dosearchnull))
+                    if (i.Map == Map.Felucca && criteria.Dosearchfel || i.Map == Map.Trammel && criteria.Dosearchtram ||
+                        i.Map == Map.Malas && criteria.Dosearchmal || i.Map == Map.Ilshenar && criteria.Dosearchilsh ||
+                        i.Map == Map.TerMur && criteria.Dosearchter || i.Map == Map.Internal && criteria.Dosearchint ||
+                        i.Map == null && criteria.Dosearchnull)
                     {
                         hasmap = true;
                     }
@@ -461,7 +461,7 @@ namespace Server.Mobiles
                     if (criteria.Dosearchtype && !hastype) continue;
 
                     // check for name
-                    if (criteria.Dosearchname && (i.Name != null) && (criteria.Searchname != null) && (i.Name.ToLower().IndexOf(criteria.Searchname.ToLower()) >= 0))
+                    if (criteria.Dosearchname && i.Name != null && criteria.Searchname != null && i.Name.ToLower().IndexOf(criteria.Searchname.ToLower()) >= 0)
                     {
                         hasname = true;
                     }
@@ -492,7 +492,7 @@ namespace Server.Mobiles
                     if (criteria.Dosearchregion && !hasregion) continue;
 
                     // check for condition
-                    if (criteria.Dosearchcondition && (criteria.Searchcondition != null))
+                    if (criteria.Dosearchcondition && criteria.Searchcondition != null)
                     {
                         // check the property test
                         hascondition = BaseXmlSpawner.CheckPropertyString(null, i, criteria.Searchcondition, null, out status_str);
@@ -509,7 +509,7 @@ namespace Server.Mobiles
                             targetentrytype = SpawnerType.GetType(criteria.Searchspawnentry.ToLower());
                         }
 
-                        if (criteria.Searchspawnentry == null || (targetentrytype == null && criteria.Dosearchspawntype))
+                        if (criteria.Searchspawnentry == null || targetentrytype == null && criteria.Dosearchspawntype)
                         {
                             hasentry = false;
                         }
@@ -643,10 +643,10 @@ namespace Server.Mobiles
                         if (i == null || i.Deleted) continue;
 
                         // check for map
-                        if ((i.Map == Map.Felucca && criteria.Dosearchfel) || (i.Map == Map.Trammel && criteria.Dosearchtram) ||
-                            (i.Map == Map.Malas && criteria.Dosearchmal) || (i.Map == Map.Ilshenar && criteria.Dosearchilsh) ||
-                            (i.Map == Map.TerMur && criteria.Dosearchter) || (i.Map == Map.Internal && criteria.Dosearchint) ||
-                            (i.Map == null && criteria.Dosearchnull))
+                        if (i.Map == Map.Felucca && criteria.Dosearchfel || i.Map == Map.Trammel && criteria.Dosearchtram ||
+                            i.Map == Map.Malas && criteria.Dosearchmal || i.Map == Map.Ilshenar && criteria.Dosearchilsh ||
+                            i.Map == Map.TerMur && criteria.Dosearchter || i.Map == Map.Internal && criteria.Dosearchint ||
+                            i.Map == null && criteria.Dosearchnull)
                         {
                             hasmap = true;
                         }
@@ -694,14 +694,14 @@ namespace Server.Mobiles
                         if (criteria.Dosearchtype && !hastype) continue;
 
                         // check for name
-                        if (criteria.Dosearchname && (i.Name != null) && (criteria.Searchname != null) && (i.Name.ToLower().IndexOf(criteria.Searchname.ToLower()) >= 0))
+                        if (criteria.Dosearchname && i.Name != null && criteria.Searchname != null && i.Name.ToLower().IndexOf(criteria.Searchname.ToLower()) >= 0)
                         {
                             hasname = true;
                         }
                         if (criteria.Dosearchname && !hasname) continue;
 
                         // check for condition
-                        if (criteria.Dosearchcondition && (criteria.Searchcondition != null))
+                        if (criteria.Dosearchcondition && criteria.Searchcondition != null)
                         {
                             // check the property test
                             hascondition = BaseXmlSpawner.CheckPropertyString(null, i, criteria.Searchcondition, null, out status_str);
@@ -1128,7 +1128,7 @@ namespace Server.Mobiles
                 {
                     AddLabel(180, y - 50, 68, string.Format("Found {0} items/mobiles", m_SearchList.Count));
                     AddLabel(400, y - 50, 68, string.Format("Displaying {0}-{1}", DisplayFrom,
-                        (DisplayFrom + MaxEntries < m_SearchList.Count ? DisplayFrom + MaxEntries : m_SearchList.Count)));
+                        DisplayFrom + MaxEntries < m_SearchList.Count ? DisplayFrom + MaxEntries : m_SearchList.Count));
                     // count the number of selected objects
                     int count = 0;
                     foreach (SearchEntry e in m_SearchList)
@@ -1143,7 +1143,7 @@ namespace Server.Mobiles
 
                 AddLabel(610, y, 0x384, "Select All");
                 // display the select-all toggle
-                AddButton(670, y, (SelectAll ? 0xD3 : 0xD2), (SelectAll ? 0xD2 : 0xD3), 3998, GumpButtonType.Reply, 0);
+                AddButton(670, y, SelectAll ? 0xD3 : 0xD2, SelectAll ? 0xD2 : 0xD3, 3998, GumpButtonType.Reply, 0);
 
                 for (int i = 0; i < MaxEntries; i++)
                 {
@@ -1271,7 +1271,7 @@ namespace Server.Mobiles
 
                     // display the selection button
 
-                    AddButton(730, 22 * (i % MaxEntriesPerPage) + 32, (e.Selected ? 0xD3 : 0xD2), (e.Selected ? 0xD2 : 0xD3), 4000 + i, GumpButtonType.Reply, 0);
+                    AddButton(730, 22 * (i % MaxEntriesPerPage) + 32, e.Selected ? 0xD3 : 0xD2, e.Selected ? 0xD2 : 0xD3, 4000 + i, GumpButtonType.Reply, 0);
                 }
             }
         }
@@ -2279,7 +2279,7 @@ namespace Server.Mobiles
                                             }
                                             catch (Exception ex) { Diagnostics.ExceptionLogging.LogException(ex); }
                                         }
-                                        else if ((o is Mobile mobile) && !(mobile.Player))
+                                        else if (o is Mobile mobile && !mobile.Player)
                                         {
                                             try
                                             {

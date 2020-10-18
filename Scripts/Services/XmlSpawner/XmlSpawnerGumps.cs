@@ -656,8 +656,8 @@ namespace Server.Mobiles
 
 
                 // increment/decrement buttons
-                AddButton(15, 22 * (i % MaxEntriesPerPage) + 34, 0x15E0, 0x15E4, 6 + (i * 2), GumpButtonType.Reply, 0);
-                AddButton(30, 22 * (i % MaxEntriesPerPage) + 34, 0x15E2, 0x15E6, 7 + (i * 2), GumpButtonType.Reply, 0);
+                AddButton(15, 22 * (i % MaxEntriesPerPage) + 34, 0x15E0, 0x15E4, 6 + i * 2, GumpButtonType.Reply, 0);
+                AddButton(30, 22 * (i % MaxEntriesPerPage) + 34, 0x15E2, 0x15E6, 7 + i * 2, GumpButtonType.Reply, 0);
 
                 // categorization gump button
                 AddButton(171 + xoffset - 18, 22 * (i % MaxEntriesPerPage) + 34, 0x15E1, 0x15E5, 5000 + i, GumpButtonType.Reply, 0);
@@ -754,7 +754,7 @@ namespace Server.Mobiles
                         {
                             // if the next spawn tick of the spawner will occur after the subgroup is available for spawning
                             // then report the next spawn tick since that is the earliest that the subgroup can actually be spawned
-                            if ((DateTime.UtcNow + m_Spawner.NextSpawn) > m_Spawner.SpawnObjects[i].NextSpawn)
+                            if (DateTime.UtcNow + m_Spawner.NextSpawn > m_Spawner.SpawnObjects[i].NextSpawn)
                             {
                                 strnext = m_Spawner.NextSpawn.ToString();
                             }
@@ -1014,7 +1014,7 @@ namespace Server.Mobiles
         {
             if (o is Item i)
             {
-                if (!i.Deleted && (i.Map != null) && (i.Map != Map.Internal))
+                if (!i.Deleted && i.Map != null && i.Map != Map.Internal)
                     return true;
 
                 if (from != null && !from.Deleted)
@@ -1024,7 +1024,7 @@ namespace Server.Mobiles
             }
             else if (o is Mobile m)
             {
-                if (!m.Deleted && (m.Map != null) && (m.Map != Map.Internal))
+                if (!m.Deleted && m.Map != null && m.Map != Map.Internal)
                     return true;
 
                 if (from != null && !from.Deleted)
