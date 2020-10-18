@@ -299,7 +299,7 @@ namespace Server.Mobiles
                 int minutes;
 
                 Clock.GetTime(Map, Location.X, Location.Y, out hours, out minutes);
-                return (new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, hours, minutes, 0).TimeOfDay);
+                return new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, hours, minutes, 0).TimeOfDay;
             }
         }
 
@@ -346,7 +346,7 @@ namespace Server.Mobiles
             // check to see if the sectors are within +- 2 of one another
             if (s1 == null || s2 == null) return false;
 
-            return (Math.Abs(s1.X - s2.X) < 3 && Math.Abs(s1.Y - s2.Y) < 3);
+            return Math.Abs(s1.X - s2.X) < 3 && Math.Abs(s1.Y - s2.Y) < 3;
         }
 
         public bool HasDamagedOrDistantSpawns
@@ -366,7 +366,7 @@ namespace Server.Mobiles
                             BaseCreature b = (BaseCreature)o;
 
                             // if the mob is damaged or outside of smartspawning detection range then return true
-                            if ((b.Hits < b.HitsMax) || (b.Mana < b.ManaMax) || (b.Stam < b.StamMax) || (b.Map != Map))
+                            if (b.Hits < b.HitsMax || b.Mana < b.ManaMax || b.Stam < b.StamMax || b.Map != Map)
                             {
                                 return true;
                             }
@@ -457,10 +457,10 @@ namespace Server.Mobiles
                     if (Parent != null)
                     {
                         if (RootParent is Mobile)
-                            loc = ((Mobile)(RootParent)).Location;
+                            loc = ((Mobile)RootParent).Location;
                         else
                             if (RootParent is Item)
-                            loc = ((Item)(RootParent)).Location;
+                            loc = ((Item)RootParent).Location;
                     }
 
                     // find the max detection range by examining both spawnrange 
@@ -622,7 +622,7 @@ namespace Server.Mobiles
                 foreach (BaseXmlSpawner.KeywordTag sot in m_KeywordTagList)
                 {
                     // check for any keyword tag with the holdspawn flag
-                    if (sot != null && !sot.Deleted && ((sot.Flags & BaseXmlSpawner.KeywordFlags.HoldSpawn) != 0))
+                    if (sot != null && !sot.Deleted && (sot.Flags & BaseXmlSpawner.KeywordFlags.HoldSpawn) != 0)
                     {
                         return true;
                     }
@@ -706,8 +706,8 @@ namespace Server.Mobiles
             {
                 // allow free spawning if proximity sensing is off and if all of the potential free-spawning triggers are disabled
                 if (Running && m_ProximityRange == -1 &&
-                    (m_ObjectPropertyName == null || m_ObjectPropertyName.Length == 0) &&
-                    (m_MobPropertyName == null || m_MobPropertyName.Length == 0 ||
+                    string.IsNullOrEmpty(m_ObjectPropertyName) &&
+                    (string.IsNullOrEmpty(m_MobPropertyName) ||
                     m_MobTriggerName == null || m_MobTriggerName.Length == 0) &&
                     !m_ExternalTriggering)
                     return true;
@@ -722,7 +722,7 @@ namespace Server.Mobiles
             get { return m_SpawnObjects.ToArray(); }
             set
             {
-                if ((value != null) && (value.Length > 0))
+                if (value != null && value.Length > 0)
                 {
 
                     foreach (SpawnObject so in value)
@@ -771,7 +771,7 @@ namespace Server.Mobiles
                 {
 
                     // check for any keyword tag with the holdsequence flag
-                    if (sot != null && !sot.Deleted && ((sot.Flags & BaseXmlSpawner.KeywordFlags.HoldSequence) != 0))
+                    if (sot != null && !sot.Deleted && (sot.Flags & BaseXmlSpawner.KeywordFlags.HoldSequence) != 0)
                     {
                         return true;
                     }
@@ -816,7 +816,7 @@ namespace Server.Mobiles
             {
                 int nobj = TotalSpawnedObjects;
 
-                return ((nobj >= m_Count) || (nobj >= TotalSpawnObjectCount));
+                return nobj >= m_Count || nobj >= TotalSpawnObjectCount;
             }
         }
 
@@ -991,7 +991,7 @@ namespace Server.Mobiles
         [CommandProperty(AccessLevel.GameMaster)]
         public Point3D X2_Y2
         {
-            get { return new Point3D((m_X + m_Width), (m_Y + m_Height), Z); }
+            get { return new Point3D(m_X + m_Width, m_Y + m_Height, Z); }
             set
             {
                 int X2;
@@ -1040,13 +1040,13 @@ namespace Server.Mobiles
 
                 if (m_HomeRangeIsRelative == false)
                 {
-                    int NewHomeRange = (m_Width > m_Height ? m_Height : m_Width);
-                    m_HomeRange = (NewHomeRange > 0 ? NewHomeRange : 0);
+                    int NewHomeRange = m_Width > m_Height ? m_Height : m_Width;
+                    m_HomeRange = NewHomeRange > 0 ? NewHomeRange : 0;
                 }
 
                 //original test was for less than 1, changed it to less than zero (zero is a valid width, its the default in fact)
                 // Stop the spawner if the width or height is less than 1
-                if ((m_Width < 0) || (m_Height < 0))
+                if (m_Width < 0 || m_Height < 0)
                     Running = false;
 
                 InvalidateProperties();
@@ -1065,7 +1065,7 @@ namespace Server.Mobiles
         [CommandProperty(AccessLevel.GameMaster)]
         public int SpawnRange
         {
-            get { return (m_SpawnRange); }
+            get { return m_SpawnRange; }
             set
             {
                 if (value < 0) return;
@@ -1101,10 +1101,10 @@ namespace Server.Mobiles
         [CommandProperty(AccessLevel.GameMaster)]
         public bool ShowBounds
         {
-            get { return (m_ShowBoundsItems != null && m_ShowBoundsItems.Count > 0); }
+            get { return m_ShowBoundsItems != null && m_ShowBoundsItems.Count > 0; }
             set
             {
-                if ((value == true) && (ShowBounds == false))
+                if (value == true && ShowBounds == false)
                 {
                     if (m_ShowBoundsItems == null) m_ShowBoundsItems = new List<Static>();
 
@@ -1188,7 +1188,7 @@ namespace Server.Mobiles
             set
             {
                 // Don't start the spawner unless the height and width are valid
-                if ((value == true) && (m_Width >= 0) && (m_Height >= 0))
+                if (value == true && m_Width >= 0 && m_Height >= 0)
                 {
                     Start();
                 }
@@ -1429,7 +1429,7 @@ namespace Server.Mobiles
                     int hours;
                     int minutes;
                     Clock.GetTime(Map, Location.X, Location.Y, out hours, out minutes);
-                    return (new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, hours, minutes, 0).TimeOfDay);
+                    return new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, hours, minutes, 0).TimeOfDay;
 
                 }
                 else
@@ -1726,7 +1726,7 @@ namespace Server.Mobiles
         {
             get
             {
-                if (m_Running && ((m_SeqEnd - DateTime.UtcNow) > TimeSpan.Zero))
+                if (m_Running && m_SeqEnd - DateTime.UtcNow > TimeSpan.Zero)
                     return m_SeqEnd - DateTime.UtcNow;
                 else
                     return TimeSpan.FromSeconds(0);
@@ -1920,7 +1920,7 @@ namespace Server.Mobiles
 
         public override void OnDoubleClick(Mobile from)
         {
-            if (from == null || from.Deleted || from.AccessLevel < AccessLevel.GameMaster || (m_SpawnerGump != null && SomeOneHasGumpOpen)) return;
+            if (from == null || from.Deleted || from.AccessLevel < AccessLevel.GameMaster || m_SpawnerGump != null && SomeOneHasGumpOpen) return;
 
             // clear any text entry books that might still be around
             DeleteTextEntryBook();
@@ -2056,8 +2056,8 @@ namespace Server.Mobiles
             {
                 // Keep the original dimensions the same (Width, Height),
                 // just recalculate the new top left corner
-                m_X = X - (m_Width / 2);
-                m_Y = Y - (m_Height / 2);
+                m_X = X - m_Width / 2;
+                m_Y = Y - m_Height / 2;
             }
 
             // reset the sector list for smart spawning
@@ -2745,7 +2745,7 @@ namespace Server.Mobiles
         private bool ValidPlayerTrig(Mobile m)
         {
             if (m == null || m.Deleted) return false;
-            return ((m.Player || m_AllowNPCTriggering) && (m.AccessLevel <= TriggerAccessLevel) && ((!m.Body.IsGhost && !m_AllowGhostTriggering) || (m.Body.IsGhost && m_AllowGhostTriggering)));
+            return (m.Player || m_AllowNPCTriggering) && m.AccessLevel <= TriggerAccessLevel && (!m.Body.IsGhost && !m_AllowGhostTriggering || m.Body.IsGhost && m_AllowGhostTriggering);
         }
 
         private bool AllowTriggering => m_Running && !m_refractActivated && TODInRange && CanSpawn;
@@ -2810,7 +2810,7 @@ namespace Server.Mobiles
                 if (m_ExternalTriggering && !m_ExternalTrigger) return;
 
                 // if speech triggering is set then test for successful activation
-                if (m_SpeechTrigger != null && m_SpeechTrigger.Length > 0)
+                if (!string.IsNullOrEmpty(m_SpeechTrigger))
                 {
                     needs_speech_trigger = true;
                 }
@@ -2818,7 +2818,7 @@ namespace Server.Mobiles
                 if (needs_speech_trigger && !m_speechTriggerActivated) return;
 
                 // if skill triggering is set then test for successful activation
-                if (m_SkillTrigger != null && m_SkillTrigger.Length > 0)
+                if (!string.IsNullOrEmpty(m_SkillTrigger))
                 {
                     needs_skill_trigger = true;
                 }
@@ -2827,7 +2827,7 @@ namespace Server.Mobiles
 
                 // if item property triggering is set then test for the property value
                 //
-                if (m_ObjectPropertyName != null && m_ObjectPropertyName.Length > 0)
+                if (!string.IsNullOrEmpty(m_ObjectPropertyName))
                 {
                     needs_object_trigger = true;
                     string status_str;
@@ -2838,7 +2838,7 @@ namespace Server.Mobiles
                     }
                     else
                         has_object_trigger = false;
-                    if (status_str != null && status_str.Length > 0)
+                    if (!string.IsNullOrEmpty(status_str))
                     {
                         this.status_str = status_str;
                     }
@@ -2848,7 +2848,7 @@ namespace Server.Mobiles
                 if (needs_object_trigger && !has_object_trigger) return;
 
                 // if player property triggering is set then look for the mob and test properties
-                if (m_PlayerPropertyName != null && m_PlayerPropertyName.Length > 0)
+                if (!string.IsNullOrEmpty(m_PlayerPropertyName))
                 {
                     needs_player_trigger = true;
                     string status_str;
@@ -2859,7 +2859,7 @@ namespace Server.Mobiles
                     }
                     else
                         has_player_trigger = false;
-                    if (status_str != null && status_str.Length > 0)
+                    if (!string.IsNullOrEmpty(status_str))
                     {
                         this.status_str = status_str;
                     }
@@ -2869,8 +2869,7 @@ namespace Server.Mobiles
                 if (needs_player_trigger && !has_player_trigger) return;
 
                 // if mob property triggering is set then look for the mob and test properties
-                if (m_MobPropertyName != null && m_MobPropertyName.Length > 0 &&
-                    m_MobTriggerName != null && m_MobTriggerName.Length > 0)
+                if (!string.IsNullOrEmpty(m_MobPropertyName) && !string.IsNullOrEmpty(m_MobTriggerName))
                 {
                     needs_mob_trigger = true;
 
@@ -2883,7 +2882,7 @@ namespace Server.Mobiles
                     else
                         has_mob_trigger = false;
 
-                    if (status_str != null && status_str.Length > 0)
+                    if (!string.IsNullOrEmpty(status_str))
                     {
                         this.status_str = status_str;
                     }
@@ -2893,7 +2892,7 @@ namespace Server.Mobiles
                 if (needs_mob_trigger && !has_mob_trigger) return;
 
                 // if player-carried item triggering is set then test for the presence of an item on the player an in their pack
-                if (m_ItemTriggerName != null && m_ItemTriggerName.Length > 0)
+                if (!string.IsNullOrEmpty(m_ItemTriggerName))
                 {
                     //enable_triggering = false;
                     needs_item_trigger = true;
@@ -2904,7 +2903,7 @@ namespace Server.Mobiles
                 if (needs_item_trigger && !has_item_trigger) return;
 
                 // if player-carried noitem triggering is set then test for the presence of an item in the players pack that should block triggering
-                if (m_NoItemTriggerName != null && m_NoItemTriggerName.Length > 0)
+                if (!string.IsNullOrEmpty(m_NoItemTriggerName))
                 {
                     needs_noitem_trigger = true;
 
@@ -2921,13 +2920,12 @@ namespace Server.Mobiles
 
                 if (Utility.RandomDouble() < m_TriggerProbability)
                 {
-
                     // play a sound indicating the spawner has been triggered
                     if (m_ProximityTriggerSound > 0 && m != null && !m.Deleted)
                         m.PlaySound(m_ProximityTriggerSound);
 
                     // display the trigger message
-                    if (m_ProximityTriggerMessage != null && m_ProximityTriggerMessage.Length > 0 && m != null && !m.Deleted)
+                    if (!string.IsNullOrEmpty(m_ProximityTriggerMessage) && m != null && !m.Deleted)
                         m.PublicOverheadMessage(MessageType.Regular, 0x3B2, false, m_ProximityTriggerMessage);
 
                     // enable spawning at the next ontick
@@ -2946,8 +2944,6 @@ namespace Server.Mobiles
                     {
                         m_skill_that_triggered = XmlSpawnerSkillCheck.RegisteredSkill.Invalid;
                     }
-
-
                 }
                 else
                 {
@@ -2964,25 +2960,23 @@ namespace Server.Mobiles
             }
         }
 
-        public bool HandlesOnSkillUse => (m_Running && m_SkillTrigger != null && m_SkillTrigger.Length > 0);
+        public bool HandlesOnSkillUse => m_Running && !string.IsNullOrEmpty(m_SkillTrigger);
 
         // this is the handler for skill use
         public void OnSkillUse(Mobile m, Skill skill, bool success)
         {
-
             if (m_Running && m_ProximityRange >= 0 && ValidPlayerTrig(m) && CanSpawn && !m_refractActivated && TODInRange)
             {
-
                 if (!Utility.InRange(m.Location, Location, m_ProximityRange))
                     return;
 
                 m_skillTriggerActivated = false;
 
                 // check the skill trigger conditions, Skillname[+/-][,min,max]
-                if (m_SkillTrigger != null && (skill.SkillName == m_SkillTriggerName) &&
-                    ((m_SkillTriggerMin < 0) || (skill.Value >= m_SkillTriggerMin)) &&
-                    ((m_SkillTriggerMax < 0) || (skill.Value <= m_SkillTriggerMax)) &&
-                    ((m_SkillTriggerSuccess == 3) || ((m_SkillTriggerSuccess == 1) && success) || ((m_SkillTriggerSuccess == 2) && !success)))
+                if (m_SkillTrigger != null && skill.SkillName == m_SkillTriggerName &&
+                    (m_SkillTriggerMin < 0 || skill.Value >= m_SkillTriggerMin) &&
+                    (m_SkillTriggerMax < 0 || skill.Value <= m_SkillTriggerMax) &&
+                    (m_SkillTriggerSuccess == 3 || m_SkillTriggerSuccess == 1 && success || m_SkillTriggerSuccess == 2 && !success))
                 {
                     // have a skill trigger so flag it and test it
                     m_skillTriggerActivated = true;
@@ -2992,8 +2986,7 @@ namespace Server.Mobiles
             }
         }
 
-
-        public override bool HandlesOnSpeech => (m_Running && m_SpeechTrigger != null && m_SpeechTrigger.Length > 0);
+        public override bool HandlesOnSpeech => m_Running && !string.IsNullOrEmpty(m_SpeechTrigger);
 
         public override void OnSpeech(SpeechEventArgs e)
         {
@@ -3016,7 +3009,7 @@ namespace Server.Mobiles
             }
         }
 
-        public override bool HandlesOnMovement => (m_Running && m_ProximityRange >= 0);
+        public override bool HandlesOnMovement => m_Running && m_ProximityRange >= 0;
 
         public void AddToMovementList(Mobile m)
         {
@@ -3121,7 +3114,7 @@ namespace Server.Mobiles
             int xDelta = p1.X - p2.X;
             int yDelta = p1.Y - p2.Y;
 
-            return Math.Sqrt((xDelta * xDelta) + (yDelta * yDelta));
+            return Math.Sqrt(xDelta * xDelta + yDelta * yDelta);
         }
 
         public override void OnMovement(Mobile m, Point3D oldLocation)
@@ -3130,7 +3123,7 @@ namespace Server.Mobiles
             if (m_Running && m_ProximityRange >= 0 && ValidPlayerTrig(m) && CanSpawn)
             {
                 // check to see if player is within range of the spawner
-                if ((Parent == null) && Utility.InRange(m.Location, Location, m_ProximityRange))
+                if (Parent == null && Utility.InRange(m.Location, Location, m_ProximityRange))
                 {
                     // add some throttling code here.
                     // add the player to a list that gets cleared every few seconds, checking for redundancy then trigger off of the list instead of off of
@@ -3451,22 +3444,18 @@ namespace Server.Mobiles
                 defwaypointname = tmpwaypoint.Name;
                 tmpwaypoint.Delete();
             }
-            // 2004.02.08 :: Omega Red
-            // initialize m_Region fields after world load (now, regions are loaded)
-            // Now this gets handled in OnTick
 
             int count = 0;
             int regional = 0;
-            //int timercount=0;
 
             foreach (Item item in World.Items.Values)
             {
                 if (item is XmlSpawner)
                 {
                     count++;
-                    XmlSpawner spawner = ((XmlSpawner)item);
+                    XmlSpawner spawner = (XmlSpawner)item;
 
-                    if (spawner.RegionName != null && spawner.RegionName != string.Empty)
+                    if (!string.IsNullOrEmpty(spawner.RegionName))
                     {
                         spawner.RegionName = spawner.RegionName;    // invoke set(RegionName)
                         regional++;
@@ -3694,8 +3683,7 @@ namespace Server.Mobiles
                                     from.SendMessage("Spawner is in a container");
                                 }
                             }
-                            else
-                                if (m_e.GetString(0) == "send")
+                            else if (m_e.GetString(0) == "send")
                             {
                                 // make sure the spawner is not in a container.
                                 if (spawner.Parent == null)
@@ -3716,8 +3704,7 @@ namespace Server.Mobiles
                                     from.SendMessage("Spawner is in a container");
                                 }
                             }
-                            else
-                                    if (m_e.GetString(0) == "gump")
+                            else if (m_e.GetString(0) == "gump")
                             {
                                 spawner.OnDoubleClick(from);
                             }
@@ -3739,7 +3726,7 @@ namespace Server.Mobiles
         private static void XmlSaveDefaults(string filePath, Mobile m)
         {
 
-            if (filePath == null || filePath.Length < 1) return;
+            if (string.IsNullOrEmpty(filePath)) return;
 
             using (StreamWriter op = new StreamWriter(filePath))
             {
@@ -4187,7 +4174,7 @@ namespace Server.Mobiles
                     item.ItemID = ShowItemId;   // Ship Mast (Very tall, easy to see if beneath other objects)
 
                     // find container-held spawners to be marked with an external static
-                    if ((item.Parent != null) && (item.RootParent is Container))
+                    if (item.Parent != null && item.RootParent is Container)
                     {
                         ToShow.Add(item);
                     }
@@ -4467,8 +4454,8 @@ namespace Server.Mobiles
                         Type type = SpawnerType.GetType(typestr);
 
                         // if it has basevendors on it or invalid types, then skip it
-                        if (typestr == null || (type != null && (type == typeof(BaseVendor) || type.IsSubclassOf(typeof(BaseVendor)))) ||
-                            ((type == null) && (!BaseXmlSpawner.IsTypeOrItemKeyword(typestr) && typestr.IndexOf('{') == -1 && !typestr.StartsWith("*") && !typestr.StartsWith("#"))))
+                        if (typestr == null || type != null && (type == typeof(BaseVendor) || type.IsSubclassOf(typeof(BaseVendor))) ||
+                            type == null && !BaseXmlSpawner.IsTypeOrItemKeyword(typestr) && typestr.IndexOf('{') == -1 && !typestr.StartsWith("*") && !typestr.StartsWith("#"))
                         {
                             skipit = true;
                             break;
@@ -4607,7 +4594,7 @@ namespace Server.Mobiles
 
             if (from != null)
                 from.SendMessage(string.Format("UnLoading {0} objects{1} from file {2}.",
-                    "XmlSpawner", ((SpawnerPrefix != null && SpawnerPrefix.Length > 0) ? " beginning with " + SpawnerPrefix : string.Empty), filename));
+                    "XmlSpawner", !string.IsNullOrEmpty(SpawnerPrefix) ? " beginning with " + SpawnerPrefix : string.Empty, filename));
 
             // Create the data set
             DataSet ds = new DataSet(SpawnDataSetName);
@@ -4646,7 +4633,7 @@ namespace Server.Mobiles
                         catch { }
 
                         // Check if there is any spawner name criteria specified on the unload
-                        if (SpawnerPrefix == null || (SpawnerPrefix.Length == 0) || (SpawnName.StartsWith(SpawnerPrefix) == true))
+                        if (string.IsNullOrEmpty(SpawnerPrefix) || SpawnName.StartsWith(SpawnerPrefix) == true)
                         {
                             bool bad_spawner = false;
                             // Try load the GUID (might not work so create a new GUID)
@@ -4712,7 +4699,7 @@ namespace Server.Mobiles
                                     XmlSpawner CheckXmlSpawner = (XmlSpawner)i;
                                     // Check if the spawners GUID is the same as the one being unloaded
                                     // and that the spawners map is the same as the one being unloaded
-                                    if ((CheckXmlSpawner.UniqueId == SpawnId.ToString())
+                                    if (CheckXmlSpawner.UniqueId == SpawnId.ToString()
                                         /*&& ( CheckXmlSpawner.Map == SpawnMap )*/ )
                                     {
                                         OldSpawner = (XmlSpawner)i;
@@ -4941,7 +4928,7 @@ namespace Server.Mobiles
             if (args == null || from == null) return;
 
             // look for the override keyword
-            if (args.Length == 2 && (args[0].ToLower() == "overridemap"))
+            if (args.Length == 2 && args[0].ToLower() == "overridemap")
             {
                 try
                 {
@@ -4950,7 +4937,7 @@ namespace Server.Mobiles
                 catch { }
             }
             else
-                if (args.Length == 2 && (args[0].ToLower() == "overridemintime"))
+                if (args.Length == 2 && args[0].ToLower() == "overridemintime")
             {
                 try
                 {
@@ -4959,7 +4946,7 @@ namespace Server.Mobiles
                 catch { }
             }
             else
-                    if (args.Length == 2 && (args[0].ToLower() == "overridemaxtime"))
+                    if (args.Length == 2 && args[0].ToLower() == "overridemaxtime")
             {
                 try
                 {
@@ -4969,7 +4956,7 @@ namespace Server.Mobiles
             }
             else
                         // look for a spawn spec line
-                        if (args.Length > 0 && (args[0] == "*"))
+                        if (args.Length > 0 && args[0] == "*")
             {
 
                 bool badspawn = false;
@@ -5095,7 +5082,7 @@ namespace Server.Mobiles
                             Type type = SpawnerType.GetType(typenames[k][i]);
 
                             // check for vendor-only spawners which get special spawnrange treatment
-                            if (type != null && (type != typeof(BaseVendor) && !type.IsSubclassOf(typeof(BaseVendor))))
+                            if (type != null && type != typeof(BaseVendor) && !type.IsSubclassOf(typeof(BaseVendor)))
                             {
                                 hasvendor = false;
                             }
@@ -5197,7 +5184,7 @@ namespace Server.Mobiles
             if (args == null || from == null) return;
 
             // look for the override keyword
-            if (args.Length == 2 && (args[0].ToLower() == "overridemap"))
+            if (args.Length == 2 && args[0].ToLower() == "overridemap")
             {
                 try
                 {
@@ -5206,7 +5193,7 @@ namespace Server.Mobiles
                 catch { }
             }
             else
-                if (args.Length == 2 && (args[0].ToLower() == "overridemintime"))
+                if (args.Length == 2 && args[0].ToLower() == "overridemintime")
             {
                 try
                 {
@@ -5215,7 +5202,7 @@ namespace Server.Mobiles
                 catch { }
             }
             else
-                    if (args.Length == 2 && (args[0].ToLower() == "overridemaxtime"))
+                    if (args.Length == 2 && args[0].ToLower() == "overridemaxtime")
             {
                 try
                 {
@@ -5225,7 +5212,7 @@ namespace Server.Mobiles
             }
             else
                         // look for a spawn spec line
-                        if (args.Length > 0 && (args[0] == "*"))
+                        if (args.Length > 0 && args[0] == "*")
             {
                 bool badspawn = false;
                 int x = 0;
@@ -5352,7 +5339,7 @@ namespace Server.Mobiles
                         Type type = SpawnerType.GetType(typenames[i]);
 
                         // check for vendor-only spawners which get special spawnrange treatment
-                        if (type != null && (type != typeof(BaseVendor) && !type.IsSubclassOf(typeof(BaseVendor))))
+                        if (type != null && type != typeof(BaseVendor) && !type.IsSubclassOf(typeof(BaseVendor)))
                         {
                             hasvendor = false;
                         }
@@ -5840,7 +5827,7 @@ namespace Server.Mobiles
 
 
             // Check if the file exists
-            if (File.Exists(filename) == true)
+            if (File.Exists(filename))
             {
                 FileStream fs = null;
                 try
@@ -5860,9 +5847,7 @@ namespace Server.Mobiles
                 XmlLoadFromStream(fs, filename, SpawnerPrefix, from, fromloc, frommap, loadrelative, maxrange, loadnew, out processedmaps, out processedspawners);
 
             }
-            else
-                // check to see if it is a directory
-                if (Directory.Exists(filename) == true)
+            else if (Directory.Exists(filename) == true)
             {
                 // if so then load all of the .xml files in the directory
                 string[] files = null;
@@ -5972,7 +5957,7 @@ namespace Server.Mobiles
 
             if (from != null)
                 from.SendMessage(string.Format("Loading {0} objects{1} from file {2}.", "XmlSpawner",
-                    ((SpawnerPrefix != null && SpawnerPrefix.Length > 0) ? " beginning with " + SpawnerPrefix : string.Empty), filename));
+                    !string.IsNullOrEmpty(SpawnerPrefix) ? " beginning with " + SpawnerPrefix : string.Empty, filename));
 
             // Create the data set
             DataSet ds = new DataSet(SpawnDataSetName);
@@ -6015,7 +6000,7 @@ namespace Server.Mobiles
                         }
 
                         // Check if there is any spawner name criteria specified on the load
-                        if ((SpawnerPrefix == null) || (SpawnerPrefix.Length == 0) || (SpawnName.StartsWith(SpawnerPrefix) == true))
+                        if (string.IsNullOrEmpty(SpawnerPrefix) || SpawnName.StartsWith(SpawnerPrefix) == true)
                         {
                             // Try load the GUID (might not work so create a new GUID)
                             Guid SpawnId = Guid.NewGuid();
@@ -6138,8 +6123,8 @@ namespace Server.Mobiles
 
                             int SpawnRelZ = 0;
                             int OrigZ = SpawnCentreZ;
-                            if (loadrelative && (Math.Abs(relativex - SpawnCentreX) <= maxrange) && (Math.Abs(relativey - SpawnCentreY) <= maxrange)
-                                && (SpawnMap == relativemap))
+                            if (loadrelative && Math.Abs(relativex - SpawnCentreX) <= maxrange && Math.Abs(relativey - SpawnCentreY) <= maxrange
+                                && SpawnMap == relativemap)
                             {
                                 // its within range so shift it
                                 SpawnCentreX -= relativex - fromloc.X;
@@ -6153,7 +6138,7 @@ namespace Server.Mobiles
 
                             // if relative loading has been specified, see if the loaded map is the same as the relativemap and relocate.
                             // if it doesnt match then just leave it
-                            if (loadrelative && (relativemap == SpawnMap))
+                            if (loadrelative && relativemap == SpawnMap)
                             {
                                 SpawnMap = frommap;
                             }
@@ -6399,7 +6384,7 @@ namespace Server.Mobiles
 
                                         // Check if the spawners GUID is the same as the one being loaded
                                         // and that the spawners map is the same as the one being loaded
-                                        if ((CheckXmlSpawner.UniqueId == SpawnId.ToString())
+                                        if (CheckXmlSpawner.UniqueId == SpawnId.ToString()
                                             /* && ( CheckXmlSpawner.Map == SpawnMap || loadrelative)*/ )
                                         {
                                             OldSpawner = (XmlSpawner)i;
@@ -6408,7 +6393,7 @@ namespace Server.Mobiles
                                     }
 
                                     //look for containers with the spawn coordinates if the incontainer flag is set
-                                    if (InContainer && !found_container && (i is Container) && (SpawnCentreX == i.Location.X) && (SpawnCentreY == i.Location.Y) &&
+                                    if (InContainer && !found_container && i is Container && SpawnCentreX == i.Location.X && SpawnCentreY == i.Location.Y &&
                                         (SpawnCentreZ == i.Location.Z || SpawnCentreZ == short.MinValue))
                                     {
                                         // assume this is the container that the spawner was in
@@ -6480,12 +6465,9 @@ namespace Server.Mobiles
                                 {
                                     m_DisableGlobalAutoReset = TickReset
                                 };
-                                //TheSpawn.Group = SpawnIsGroup;\
-
 
                                 // Try to find a valid Z height if required (SpawnCentreZ = short.MinValue)
                                 int NewZ = 0;
-
 
                                 // Check if relative loading is set.  If so then try loading at the z-offset position first with no surface requirement, then try auto
                                 /*if(loadrelative && SpawnMap.CanFit( SpawnCentreX, SpawnCentreY, OrigZ - SpawnRelZ, SpawnFitSize,true, false,false )) */
@@ -6522,9 +6504,9 @@ namespace Server.Mobiles
                                 }
 
                                 // if this is a container held spawner, drop it in the container
-                                if (found_container && (spawn_container != null) && !spawn_container.Deleted)
+                                if (found_container && spawn_container != null && !spawn_container.Deleted)
                                 {
-                                    TheSpawn.Location = (new Point3D(ContainerX, ContainerY, ContainerZ));
+                                    TheSpawn.Location = new Point3D(ContainerX, ContainerY, ContainerZ);
                                     spawn_container.AddItem(TheSpawn);
                                 }
                                 else
@@ -6597,8 +6579,7 @@ namespace Server.Mobiles
 
                                 // Check if the spawners GUID is the same as the one being loaded
                                 // and that the spawners map is the same as the one being loaded
-                                if ((CheckXmlSpawner.UniqueId == SpawnId.ToString())
-                                    /* && ( CheckXmlSpawner.Map == SpawnMap || loadrelative) */)
+                                if (CheckXmlSpawner.UniqueId == SpawnId.ToString())
                                 {
                                     OldSpawner = (XmlSpawner)i;
                                     found_spawner = true;
@@ -6615,7 +6596,8 @@ namespace Server.Mobiles
                             string setObjectName = null;
                             try { setObjectName = (string)dr["SetPropertyItemName"]; }
                             catch { }
-                            if (setObjectName != null && setObjectName.Length > 0)
+
+                            if (!string.IsNullOrEmpty(setObjectName))
                             {
                                 // try to parse out the type information if it has also been saved
                                 string[] typeargs = setObjectName.Split(",".ToCharArray(), 2);
@@ -6657,6 +6639,7 @@ namespace Server.Mobiles
                                             op.WriteLine();
                                         }
                                     }
+
                                     catch { }
                                 }
                             }
@@ -6665,7 +6648,7 @@ namespace Server.Mobiles
                             try { triggerObjectName = (string)dr["ObjectPropertyItemName"]; }
                             catch { }
 
-                            if (triggerObjectName != null && triggerObjectName.Length > 0)
+                            if (!string.IsNullOrEmpty(triggerObjectName))
                             {
                                 string[] typeargs = triggerObjectName.Split(",".ToCharArray(), 2);
                                 string typestr = null;
@@ -6745,7 +6728,6 @@ namespace Server.Mobiles
             }
             processedmaps = 1;
             processedspawners = TotalCount;
-
         }
 
         public static string LocateFile(string filename)
@@ -7078,10 +7060,10 @@ namespace Server.Mobiles
 
             if (SaveAllMaps == true)
                 e.Mobile.SendMessage(string.Format("Saving {0} objects{1} to file {2} from {3}.", "XmlSpawner",
-                    ((SpawnerPrefix != null && SpawnerPrefix.Length > 0) ? " beginning with " + SpawnerPrefix : string.Empty), dirname, e.Mobile.Map));
+                    !string.IsNullOrEmpty(SpawnerPrefix) ? " beginning with " + SpawnerPrefix : string.Empty, dirname, e.Mobile.Map));
             else
                 e.Mobile.SendMessage(string.Format("Saving {0} obejcts{1} to file {2} from the entire world.", "XmlSpawner",
-                    ((SpawnerPrefix != null && SpawnerPrefix.Length > 0) ? " beginning with " + SpawnerPrefix : string.Empty), dirname));
+                    !string.IsNullOrEmpty(SpawnerPrefix) ? " beginning with " + SpawnerPrefix : string.Empty, dirname));
 
 
             List<XmlSpawner> saveslist = new List<XmlSpawner>();
@@ -7089,10 +7071,10 @@ namespace Server.Mobiles
             // Add each spawn point to the list
             foreach (Item i in World.Items.Values)
             {
-                if (i is XmlSpawner && !i.Deleted && ((SaveAllMaps == true) || (i.Map == e.Mobile.Map))
+                if (i is XmlSpawner && !i.Deleted && (SaveAllMaps == true || i.Map == e.Mobile.Map)
                     //check for mob carried spawners and ignore them
                     && !(i.RootParent is Mobile)
-                    && (SpawnerPrefix == null || (SpawnerPrefix.Length == 0) || (i.Name != null && i.Name.StartsWith(SpawnerPrefix))))
+                    && (string.IsNullOrEmpty(SpawnerPrefix) || i.Name != null && i.Name.StartsWith(SpawnerPrefix)))
                 {
                     saveslist.Add((XmlSpawner)i);
                 }
@@ -7109,8 +7091,8 @@ namespace Server.Mobiles
 
         public static bool SaveSpawnList(Mobile from, List<XmlSpawner> savelist, string dirname, bool oldformat, bool verbose)
         {
-            if (dirname == null || dirname.Length == 0) return false;
-
+            if (string.IsNullOrEmpty(dirname))
+                return false;
 
             bool save_ok = true;
             FileStream fs = null;
@@ -7284,9 +7266,9 @@ namespace Server.Mobiles
                 // check to see if this is in a container
                 if (sp.RootParent is Container)
                 {
-                    dr["CentreX"] = ((Container)(sp.RootParent)).Location.X;
-                    dr["CentreY"] = ((Container)(sp.RootParent)).Location.Y;
-                    dr["CentreZ"] = ((Container)(sp.RootParent)).Location.Z;
+                    dr["CentreX"] = ((Container)sp.RootParent).Location.X;
+                    dr["CentreY"] = ((Container)sp.RootParent).Location.Y;
+                    dr["CentreZ"] = ((Container)sp.RootParent).Location.Z;
                     dr["ContainerX"] = sp.Location.X;
                     dr["ContainerY"] = sp.Location.Y;
                     dr["ContainerZ"] = sp.Location.Z;
@@ -7309,8 +7291,8 @@ namespace Server.Mobiles
                 // are lost
                 // flag it then on reading it can be properly handled and still
                 // maintain backward compatibility with older xml files
-                if (((int)sp.m_MinDelay.TotalSeconds - 60 * (int)sp.m_MinDelay.TotalMinutes) > 0 ||
-                    ((int)sp.m_MaxDelay.TotalSeconds - 60 * (int)sp.m_MaxDelay.TotalMinutes) > 0)
+                if ((int)sp.m_MinDelay.TotalSeconds - 60 * (int)sp.m_MinDelay.TotalMinutes > 0 ||
+                    (int)sp.m_MaxDelay.TotalSeconds - 60 * (int)sp.m_MaxDelay.TotalMinutes > 0)
                 {
                     dr["DelayInSec"] = true;
                     dr["MinDelay"] = (int)sp.m_MinDelay.TotalSeconds;
@@ -7372,7 +7354,7 @@ namespace Server.Mobiles
                 string waystr = null;
                 if (sp.m_WayPoint != null)
                 {
-                    if ((sp.m_WayPoint.Name != defwaypointname) && (sp.m_WayPoint.Name != null) && (sp.m_WayPoint.Name.Length > 0))
+                    if (sp.m_WayPoint.Name != defwaypointname && !string.IsNullOrEmpty(sp.m_WayPoint.Name))
                     {
                         waystr = sp.m_WayPoint.Name;
                     }
@@ -7447,23 +7429,20 @@ namespace Server.Mobiles
                     SpawnerPrefix = e.Arguments[0];
 
                 if (WipeAll == true)
-                    e.Mobile.SendMessage("Removing ALL XmlSpawner objects from the world{0}.", ((SpawnerPrefix != null && SpawnerPrefix.Length > 0) ? " beginning with " + SpawnerPrefix : string.Empty));
+                    e.Mobile.SendMessage("Removing ALL XmlSpawner objects from the world{0}.", !string.IsNullOrEmpty(SpawnerPrefix) ? " beginning with " + SpawnerPrefix : string.Empty);
                 else
-                    e.Mobile.SendMessage("Removing ALL XmlSpawner objects from {0}{1}.", e.Mobile.Map, ((SpawnerPrefix != null && SpawnerPrefix.Length > 0) ? " beginning with " + SpawnerPrefix : string.Empty));
+                    e.Mobile.SendMessage("Removing ALL XmlSpawner objects from {0}{1}.", e.Mobile.Map, !string.IsNullOrEmpty(SpawnerPrefix) ? " beginning with " + SpawnerPrefix : string.Empty);
 
                 // Delete Xml spawner's in the world based on the mobiles current map
                 int Count = 0;
                 List<Item> ToDelete = new List<Item>();
                 foreach (Item i in World.Items.Values)
                 {
-                    if ((i is XmlSpawner) && (WipeAll == true || i.Map == e.Mobile.Map) && (i.Deleted == false))
+                    if (i is XmlSpawner && (WipeAll == true || i.Map == e.Mobile.Map) && i.Deleted == false)
                     {
                         // Check if there is a delete condition
-                        if (SpawnerPrefix == null || (SpawnerPrefix.Length == 0) || (i.Name.StartsWith(SpawnerPrefix)))
+                        if (string.IsNullOrEmpty(SpawnerPrefix) || i.Name.StartsWith(SpawnerPrefix))
                         {
-                            // Send a message to the client that the spawner is being deleted
-                            //e.Mobile.SendMessage(33, "Removing '{0}' in {1} at {2}", i.Name, i.Map.Name, i.Location.ToString());
-
                             ToDelete.Add(i);
                             Count++;
                         }
@@ -7512,9 +7491,9 @@ namespace Server.Mobiles
                     SpawnerPrefix = e.Arguments[0];
 
                 if (RespawnAll == true)
-                    e.Mobile.SendMessage("Respawning ALL XmlSpawner objects from the world{0}.", ((SpawnerPrefix != null && SpawnerPrefix.Length > 0) ? " beginning with " + SpawnerPrefix : string.Empty));
+                    e.Mobile.SendMessage("Respawning ALL XmlSpawner objects from the world{0}.", !string.IsNullOrEmpty(SpawnerPrefix) ? " beginning with " + SpawnerPrefix : string.Empty);
                 else
-                    e.Mobile.SendMessage("Respawning ALL XmlSpawner objects from {0}{1}.", e.Mobile.Map, ((SpawnerPrefix != null && SpawnerPrefix.Length > 0) ? " beginning with " + SpawnerPrefix : string.Empty));
+                    e.Mobile.SendMessage("Respawning ALL XmlSpawner objects from {0}{1}.", e.Mobile.Map, !string.IsNullOrEmpty(SpawnerPrefix) ? " beginning with " + SpawnerPrefix : string.Empty);
 
                 // Respawn Xml spawner's in the world based on the mobiles current map
                 int Count = 0;
@@ -7523,11 +7502,10 @@ namespace Server.Mobiles
                 {
                     try
                     {
-
-                        if ((i is XmlSpawner) && (RespawnAll == true || i.Map == e.Mobile.Map) && (i.Deleted == false))
+                        if (i is XmlSpawner && (RespawnAll == true || i.Map == e.Mobile.Map) && i.Deleted == false)
                         {
                             // Check if there is a respawn condition
-                            if ((SpawnerPrefix == null) || (SpawnerPrefix.Length == 0) || (i.Name != null && i.Name.StartsWith(SpawnerPrefix)))
+                            if (string.IsNullOrEmpty(SpawnerPrefix) || i.Name != null && i.Name.StartsWith(SpawnerPrefix))
                             {
                                 ToRespawn.Add(i);
                                 Count++;
@@ -7539,7 +7517,6 @@ namespace Server.Mobiles
                 // Respawn the items in the array list
                 foreach (Item i in ToRespawn)
                 {
-
                     // Send a message to the client that the spawner is being respawned
                     e.Mobile.SendMessage(33, "Respawning '{0}' in {1} at {2}", i.Name, i.Map.Name, i.Location.ToString());
                     XmlSpawner CheckXmlSpawner = (XmlSpawner)i;
@@ -7551,6 +7528,7 @@ namespace Server.Mobiles
                 else
                     e.Mobile.SendMessage("Respawned {0} XmlSpawner objects from {1}.", Count, e.Mobile.Map);
             }
+
             else
                 e.Mobile.SendMessage("You do not have rights to perform this command.");
         }
@@ -7765,7 +7743,7 @@ namespace Server.Mobiles
             m_Running = true;
             m_Group = isGroup;
 
-            if ((name != null) && (name.Length > 0))
+            if (!string.IsNullOrEmpty(name))
                 Name = name;
             else
                 Name = "Spawner";
@@ -7858,8 +7836,8 @@ namespace Server.Mobiles
                         Item item = (Item)o;
                         bool despawned = false;
                         // check to see if the despawn time has elapsed.  If so, then delete it if it hasnt been picked up or stolen.
-                        if (DespawnTime.TotalHours > 0 && !item.Deleted && (item.LastMoved < DateTime.UtcNow - DespawnTime) && (item.Parent == Parent)
-                            && (!ItemFlags.GetTaken(item) || (item.Parent != null && (item.Parent == Parent)))) // can despawn if just moved within the same container
+                        if (DespawnTime.TotalHours > 0 && !item.Deleted && item.LastMoved < DateTime.UtcNow - DespawnTime && item.Parent == Parent
+                            && (!ItemFlags.GetTaken(item) || item.Parent != null && item.Parent == Parent)) // can despawn if just moved within the same container
                         {
                             //item.Delete();
                             deleteilist.Add(item);
@@ -7872,8 +7850,8 @@ namespace Server.Mobiles
                         // the stolen/container flag prevents spawns from being left on the list when players take them and lock them back down on the ground.
                         // If you have made the changes to stealing.cs and container.cs described in xmlspawner2.txt then just uncomment the line below to
                         // enable this check
-                        if (item.Deleted || despawned || (item.Parent != Parent) // different container
-                            || (ItemFlags.GetTaken(item) && (item.Parent == null || (item.Parent != Parent))))   // taken and in the world, or a different container
+                        if (item.Deleted || despawned || item.Parent != Parent // different container
+                            || ItemFlags.GetTaken(item) && (item.Parent == null || item.Parent != Parent))   // taken and in the world, or a different container
                         {
                             so.SpawnedObjects.Remove(o);
                             x--;
@@ -7898,7 +7876,7 @@ namespace Server.Mobiles
 
                         bool despawned = false;
                         // check to see if the despawn time has elapsed.  If so, and the sector is not active then delete it.
-                        if (DespawnTime.TotalHours > 0 && !m.Deleted && (m.CreationTime < DateTime.UtcNow - DespawnTime)
+                        if (DespawnTime.TotalHours > 0 && !m.Deleted && m.CreationTime < DateTime.UtcNow - DespawnTime
                             && m.Map != null && m.Map != Map.Internal && !m.Map.GetSector(m.Location).Active)
                         {
                             //m.Delete();
@@ -7930,7 +7908,7 @@ namespace Server.Mobiles
                             BaseCreature b = (BaseCreature)m;
                             // Check if the creature has been tamed or previously tamed and released
                             // and if it is, remove it from the list of spawns
-                            if (b.Controlled || b.IsStabled || (b.Owners != null && b.Owners.Count > 0))
+                            if (b.Controlled || b.IsStabled || b.Owners != null && b.Owners.Count > 0)
                             {
                                 so.SpawnedObjects.Remove(o);
                                 x--;
@@ -8034,7 +8012,7 @@ namespace Server.Mobiles
                     {
                         BaseXmlSpawner.KeywordTag sot = (BaseXmlSpawner.KeywordTag)o;
                         // clear the tags except for gump and delay tags
-                        if (sot != null && (all || ((sot.Flags & BaseXmlSpawner.KeywordFlags.Defrag) != 0)))
+                        if (sot != null && (all || (sot.Flags & BaseXmlSpawner.KeywordFlags.Defrag) != 0))
                         {
                             ToDelete.Add(sot);
                             so.SpawnedObjects.Remove(o);
@@ -8149,7 +8127,7 @@ namespace Server.Mobiles
 
         private int SubGroupCount(int sgroup)
         {
-            if (m_SpawnObjects == null) return (0);
+            if (m_SpawnObjects == null) return 0;
 
             int nsub = 0;
             for (int i = 0; i < m_SpawnObjects.Count; i++)
@@ -8166,13 +8144,13 @@ namespace Server.Mobiles
         private int RandomAvailableSpawnIndex()
         {
             // get spawn indices randomly from all available spawns independent of group
-            return (RandomAvailableSpawnIndex(-1));
+            return RandomAvailableSpawnIndex(-1);
         }
 
         // get spawn indices randomly from all available spawns of a group
         private int RandomAvailableSpawnIndex(int sgroup)
         {
-            if (m_SpawnObjects == null) return (-1);
+            if (m_SpawnObjects == null) return -1;
 
             int maxrange = 0;
             List<int> sgrouplist = null;
@@ -8202,8 +8180,8 @@ namespace Server.Mobiles
 
                 if (s.SubGroup > 0 && (s.Ignore || s.Disabled)) continue;
 
-                if ((s.MaxCount > s.SpawnedObjects.Count) && (sgroup < 0 || sgroup == s.SubGroup)
-                    && (sgrouplist == null || !sgrouplist.Contains(s.SubGroup)) && (s.SubGroup <= 0 || SubGroupCount(s.SubGroup) + totalcount <= MaxCount))
+                if (s.MaxCount > s.SpawnedObjects.Count && (sgroup < 0 || sgroup == s.SubGroup)
+                                                        && (sgrouplist == null || !sgrouplist.Contains(s.SubGroup)) && (s.SubGroup <= 0 || SubGroupCount(s.SubGroup) + totalcount <= MaxCount))
                 {
                     // keep track of the number of spawn objects that are not at max (hence available for spawning)
                     // this will be used to compute the probabilistic weighting function based on the relative
@@ -8236,19 +8214,19 @@ namespace Server.Mobiles
                         // check to see if the random value maps into the range of the current index
                         if (randindex >= currentrange && randindex < currentrange + s.MaxCount)
                         {
-                            return (i);
+                            return i;
                         }
 
                         currentrange += s.MaxCount;
                     }
                 }
                 // should never get here
-                return (-1);
+                return -1;
             }
             else
             {
                 // no spawns are available
-                return (-1);
+                return -1;
             }
         }
 
@@ -8256,7 +8234,7 @@ namespace Server.Mobiles
         // get spawn indices randomly from all available spawns of a group
         private int RandomSpawnIndex(int sgroup)
         {
-            if (m_SpawnObjects == null) return (-1);
+            if (m_SpawnObjects == null) return -1;
 
             int avail = 0;
             int maxrange = 0;
@@ -8265,7 +8243,7 @@ namespace Server.Mobiles
                 SpawnObject s = m_SpawnObjects[i];
 
                 // keep track of the number of spawn objects that are not at max (hence available for spawning)
-                if (sgroup < 0 || (sgroup == s.SubGroup))
+                if (sgroup < 0 || sgroup == s.SubGroup)
                 {
                     avail++;
                     maxrange += s.MaxCount;
@@ -8284,28 +8262,28 @@ namespace Server.Mobiles
                     SpawnObject s = m_SpawnObjects[i];
 
                     // keep track of the number of spawn objects that are not at max (hence available for spawning)
-                    if (sgroup < 0 || (sgroup == s.SubGroup))
+                    if (sgroup < 0 || sgroup == s.SubGroup)
                     {
                         if (randindex >= currentrange && randindex < currentrange + s.MaxCount)
-                            return (i);
+                            return i;
 
                         currentrange += s.MaxCount;
                     }
                 }
                 // should never get here
-                return (-1);
+                return -1;
             }
             else
             {
                 // no spawns are available
-                return (-1);
+                return -1;
             }
         }
 
         // return the next subgroup in the sequence.
         public int NextSequentialIndex(int sgroup)
         {
-            if (m_SpawnObjects == null || m_SpawnObjects.Count == 0) return (0);
+            if (m_SpawnObjects == null || m_SpawnObjects.Count == 0) return 0;
 
             int finddirection = 1;
             int largergroup = -1;
@@ -8331,7 +8309,7 @@ namespace Server.Mobiles
                 }
                 else
                 {
-                    if ((thisgroup > sgroup) && (thisgroup < largergroup))
+                    if (thisgroup > sgroup && thisgroup < largergroup)
                     {
                         largergroup = thisgroup;
 
@@ -8342,19 +8320,19 @@ namespace Server.Mobiles
 
             // if couldnt find one larger, then it is time to wraparound
             if (largergroup < 0 && sgroup >= 0)
-                return (NextSequentialIndex(-1));
+                return NextSequentialIndex(-1);
             else
-                return (largergroup);
+                return largergroup;
         }
 
         // returns the spawn index of a spawn entry in the current sequential subgroup
         public int GetCurrentAvailableSequentialSpawnIndex(int sgroup)
         {
-            if (sgroup < 0) return (-1);
+            if (sgroup < 0) return -1;
 
-            if (m_SpawnObjects == null) return (-1);
+            if (m_SpawnObjects == null) return -1;
 
-            if (sgroup == 0) return (RandomAvailableSpawnIndex(0));
+            if (sgroup == 0) return RandomAvailableSpawnIndex(0);
 
             //return the first instance of a spawn object that is an available member of the requested subgroup
             for (int j = 0; j < m_SpawnObjects.Count; j++)
@@ -8363,32 +8341,32 @@ namespace Server.Mobiles
 
                 if (s.SubGroup == sgroup && s.MaxCount > s.SpawnedObjects.Count)
                 {
-                    return (j);
+                    return j;
                 }
             }
             // failed to find any spawn entry of the requested subgroup
-            return (-1);
+            return -1;
         }
 
         // returns the spawn index of a spawn entry in the current sequential subgroup
         public int GetCurrentSequentialSpawnIndex(int sgroup)
         {
-            if (sgroup < 0) return (-1);
+            if (sgroup < 0) return -1;
 
-            if (m_SpawnObjects == null) return (-1);
+            if (m_SpawnObjects == null) return -1;
 
-            if (sgroup == 0) return (RandomSpawnIndex(0));
+            if (sgroup == 0) return RandomSpawnIndex(0);
 
             //return the first instance of a spawn object that is an available member of the requested subgroup
             for (int j = 0; j < m_SpawnObjects.Count; j++)
             {
                 if (m_SpawnObjects[j].SubGroup == sgroup)
                 {
-                    return (j);
+                    return j;
                 }
             }
             // failed to find any spawn entry of the requested subgroup
-            return (-1);
+            return -1;
         }
 
         private void SeqResetTo(int sgroup)
@@ -8524,7 +8502,7 @@ namespace Server.Mobiles
             }
 
             // returning true will indicate that all spawns have been cleared and therefore a new spawn can be initiated in the same OnTick
-            return (clearedobjects);
+            return clearedobjects;
         }
         #endregion
 
@@ -8758,7 +8736,7 @@ namespace Server.Mobiles
                 if (IsFull)
                 {
                     ResetProximityActivated();
-                    return (true);
+                    return true;
                 }
 
                 // Pick a spawn object to spawn
@@ -8781,7 +8759,7 @@ namespace Server.Mobiles
                 if (SpawnIndex < 0)
                 {
                     ResetProximityActivated();
-                    return (true);
+                    return true;
                 }
 
                 SpawnObject sobj = m_SpawnObjects[SpawnIndex];
@@ -8803,10 +8781,10 @@ namespace Server.Mobiles
                 }
 
                 ResetProximityActivated();
-                return (true);
+                return true;
             }
             ResetProximityActivated();
-            return (false);
+            return false;
         }
 
         // spawn an individual entry by index up to count times
@@ -8828,7 +8806,7 @@ namespace Server.Mobiles
             int nspawn = so.SpawnsPerTick;
             int scnt = SafeCurrentCount;
 
-            for (int k = 0; (k < nspawn) && (k + socnt < somax) && (k + scnt < MaxCount); k++)
+            for (int k = 0; k < nspawn && k + socnt < somax && k + scnt < MaxCount; k++)
             {
                 if (packrange >= 0 && so.SubGroup > 0 && packcoord == Point3D.Zero)
                 {
@@ -8896,12 +8874,12 @@ namespace Server.Mobiles
             Map map = Map;
 
             // Make sure everything is ok to spawn an object
-            if ((map == null) ||
-                (map == Map.Internal) ||
-                (m_SpawnObjects == null) ||
-                (m_SpawnObjects.Count == 0) ||
-                (index < 0) ||
-                (index >= m_SpawnObjects.Count)
+            if (map == null ||
+                map == Map.Internal ||
+                m_SpawnObjects == null ||
+                m_SpawnObjects.Count == 0 ||
+                index < 0 ||
+                index >= m_SpawnObjects.Count
                 )
                 return false;
 
@@ -8927,8 +8905,8 @@ namespace Server.Mobiles
 
                 // Check that the current object to be spawned has not reached its maximum allowed
                 // and make sure that the maximum spawner count has not been exceeded as well
-                if ((CurrentCreatureCount >= CurrentCreatureMax) ||
-                    (TotalSpawnedObjects >= m_Count))
+                if (CurrentCreatureCount >= CurrentCreatureMax ||
+                    TotalSpawnedObjects >= m_Count)
                 {
                     return false;
                 }
@@ -9033,7 +9011,6 @@ namespace Server.Mobiles
                         substitutedtypeName = string.Empty;
                     }
                 }
-
 
                 if (substitutedtypeName.StartsWith("*"))
                 {
@@ -9241,10 +9218,10 @@ namespace Server.Mobiles
                 // success if any of the subgroup spawned
                 if (didspawn)
                 {
-                    return (true);
+                    return true;
                 }
             }
-            return (false);
+            return false;
         }
 
         #endregion
@@ -9520,7 +9497,7 @@ namespace Server.Mobiles
 
         public static SpawnObject GetSpawnObject(XmlSpawner spawner, int sgroup)
         {
-            if (spawner == null || spawner.m_SpawnObjects == null) return (null);
+            if (spawner == null || spawner.m_SpawnObjects == null) return null;
             for (int i = 0; i < spawner.m_SpawnObjects.Count; i++)
             {
                 // find the first entry with matching subgroup id
@@ -9535,7 +9512,7 @@ namespace Server.Mobiles
 
         public static object GetSpawned(XmlSpawner spawner, int sgroup)
         {
-            if (spawner == null || spawner.m_SpawnObjects == null) return (null);
+            if (spawner == null || spawner.m_SpawnObjects == null) return null;
             for (int i = 0; i < spawner.m_SpawnObjects.Count; i++)
             {
                 // find the first entry with matching subgroup id
@@ -9555,7 +9532,7 @@ namespace Server.Mobiles
         {
             List<object> newlist = new List<object>();
 
-            if (spawner == null || spawner.m_SpawnObjects == null) return (null);
+            if (spawner == null || spawner.m_SpawnObjects == null) return null;
             for (int i = 0; i < spawner.m_SpawnObjects.Count; i++)
             {
                 // find the first entry with matching subgroup id
@@ -9576,7 +9553,7 @@ namespace Server.Mobiles
 
         public bool HasSubGroups()
         {
-            if (m_SpawnObjects == null) return (false);
+            if (m_SpawnObjects == null) return false;
 
             for (int j = 0; j < m_SpawnObjects.Count; j++)
             {
@@ -9694,7 +9671,7 @@ namespace Server.Mobiles
             WayPoint waypoint = null;
 
             // try parsing the waypoint name to determine the waypoint. object syntax is "SERIAL,sernumber" or "waypointname"
-            if (waypointstr != null && waypointstr.Length > 0)
+            if (!string.IsNullOrEmpty(waypointstr))
             {
                 string[] wayargs = BaseXmlSpawner.ParseString(waypointstr, 2, ",");
                 if (wayargs != null && wayargs.Length > 0)
@@ -9756,7 +9733,7 @@ namespace Server.Mobiles
                 {
                     StaticTile i = (StaticTile)o;
 
-                    if ((i.Z + i.Height) == Z)
+                    if (i.Z + i.Height == Z)
                     {
                         return true;
                     }
@@ -9792,7 +9769,7 @@ namespace Server.Mobiles
             {
                 try
                 {
-                    return (bool)(prop.GetValue(o, null));
+                    return (bool)prop.GetValue(o, null);
                 }
                 catch { }
             }
@@ -9880,7 +9857,7 @@ namespace Server.Mobiles
             }
 
 
-            if (impassable && avgZ > z && (z + height) > lowZ)
+            if (impassable && avgZ > z && z + height > lowZ)
                 return false;
             else if (!impassable && z == avgZ && !lt.Ignored)
                 hasSurface = true;
@@ -9912,9 +9889,9 @@ namespace Server.Mobiles
                     }
                 }
 
-                if ((surface || impassable) && (staticTiles[i].Z + id.CalcHeight) > z && (z + height) > staticTiles[i].Z)
+                if ((surface || impassable) && staticTiles[i].Z + id.CalcHeight > z && z + height > staticTiles[i].Z)
                     return false;
-                else if (surface && !impassable && z == (staticTiles[i].Z + id.CalcHeight))
+                else if (surface && !impassable && z == staticTiles[i].Z + id.CalcHeight)
                     hasSurface = true;
 
 
@@ -9951,9 +9928,9 @@ namespace Server.Mobiles
                         }
                     }
 
-                    if ((surface || impassable || (checkBlocksFit && item.BlocksFit)) && (item.Z + id.CalcHeight) > z && (z + height) > item.Z)
+                    if ((surface || impassable || checkBlocksFit && item.BlocksFit) && item.Z + id.CalcHeight > z && z + height > item.Z)
                         return false;
-                    else if (surface && !impassable && !item.Movable && z == (item.Z + id.CalcHeight))
+                    else if (surface && !impassable && !item.Movable && z == item.Z + id.CalcHeight)
                         hasSurface = true;
                 }
             }
@@ -9970,7 +9947,7 @@ namespace Server.Mobiles
                     Mobile m = mobs[i];
 
                     if (m.Location.X == x && m.Location.Y == y && (m.AccessLevel == AccessLevel.Player || !m.Hidden))
-                        if ((m.Z + 16) > z && (z + height) > m.Z)
+                        if (m.Z + 16 > z && z + height > m.Z)
                             return false;
                 }
             }
@@ -10036,14 +10013,14 @@ namespace Server.Mobiles
                     if (excludetilelist != null && excludetilelist.Count > 0)
                     {
                         // also require the tile to be passable
-                        excludetile = ((lflags & TileFlag.Impassable) != 0) || excludetilelist.Contains(ltile.ID & TileData.MaxLandValue);
+                        excludetile = (lflags & TileFlag.Impassable) != 0 || excludetilelist.Contains(ltile.ID & TileData.MaxLandValue);
                     }
                     else
                     {
                         excludetile = false;
                     }
 
-                    if (includetile && !excludetile && ((lflags & tileflag) == tileflag))
+                    if (includetile && !excludetile && (lflags & tileflag) == tileflag)
                     {
                         p = new Point3D(x, y, ltile.Z + ltile.Height);
                         allok = true;
@@ -10069,19 +10046,19 @@ namespace Server.Mobiles
                         // non-excluded tiles must also be passable
                         if (excludetilelist != null && excludetilelist.Count > 0)
                         {
-                            excludetile = ((sflags & TileFlag.Impassable) != 0) || excludetilelist.Contains(stile.ID & TileData.MaxItemValue);
+                            excludetile = (sflags & TileFlag.Impassable) != 0 || excludetilelist.Contains(stile.ID & TileData.MaxItemValue);
                         }
                         else
                         {
                             excludetile = false;
                         }
 
-                        if (includetile && !excludetile && ((sflags & tileflag) == tileflag))
+                        if (includetile && !excludetile && (sflags & tileflag) == tileflag)
                         {
                             //Console.WriteLine("found statictile {0}/{1} at {2},{3},{4}", stile.ID, stile.ID & 0x3fff, x, y, stile.Z + stile.Height);
                             if (p == Point3D.Zero)
                                 p = new Point3D(x, y, stile.Z + stile.Height);
-                            else if (!allok && (p.Z - spawnerZ) > Math.Abs(stile.Z - spawnerZ))
+                            else if (!allok && p.Z - spawnerZ > Math.Abs(stile.Z - spawnerZ))
                                 p = new Point3D(x, y, stile.Z + stile.Height);
                             else if (Math.Abs(ltile.Z - spawnerZ) > Math.Abs(stile.Z - spawnerZ)) //maggiore distanza rispetto allo statico dallo spawner
                                 p = new Point3D(x, y, stile.Z + stile.Height);
@@ -10120,7 +10097,7 @@ namespace Server.Mobiles
                                 excludetile = false;
                             }
 
-                            if (includetile && !excludetile && ((iflags & tileflag) == tileflag))
+                            if (includetile && !excludetile && (iflags & tileflag) == tileflag)
                             {
                                 p = new Point3D(x, y, i.Z + i.ItemData.Height);
                                 allok = true;
@@ -10167,7 +10144,7 @@ namespace Server.Mobiles
             for (int i = 0; i < count; i++)
             {
                 Rectangle3D ra = r.Area[i];
-                total += (FieldArray[i] = (ra.Width * ra.Height));
+                total += FieldArray[i] = ra.Width * ra.Height;
             }
 
             int sum = 0;
@@ -10683,7 +10660,7 @@ namespace Server.Mobiles
                 }
 
                 // skip invalid points
-                if (x < 0 || y < 0 || (x == 0 && y == 0)) continue;
+                if (x < 0 || y < 0 || x == 0 && y == 0) continue;
 
                 // try to find a valid spawn location using the z coord of the spawner
                 // relax the normal surface requirement for mobiles if the flag is set
@@ -11319,7 +11296,7 @@ namespace Server.Mobiles
         public void DoTimer2(TimeSpan delay)
         {
             m_DurEnd = DateTime.UtcNow + delay;
-            if (m_Duration > TimeSpan.FromMinutes(0) || (m_durActivated == true))
+            if (m_Duration > TimeSpan.FromMinutes(0) || m_durActivated == true)
             {
                 if (m_DurTimer != null)
                     m_DurTimer.Stop();
@@ -12007,13 +11984,13 @@ namespace Server.Mobiles
                     {
                         m_Name = reader.ReadString();
                         // backward compatibility with old name storage
-                        if (m_Name != null && m_Name != string.Empty) Name = m_Name;
+                        if (!string.IsNullOrEmpty(m_Name)) Name = m_Name;
                         m_X = reader.ReadInt();
                         m_Y = reader.ReadInt();
                         m_Width = reader.ReadInt();
                         m_Height = reader.ReadInt();
                         //we HAVE to check if the area is even or if coordinates point to the original spawner, otherwise it's custom area!
-                        if (m_Width == m_Height && (m_Width % 2) == 0 && (m_X + m_Width / 2) == X && (m_Y + m_Height / 2) == Y)
+                        if (m_Width == m_Height && m_Width % 2 == 0 && m_X + m_Width / 2 == X && m_Y + m_Height / 2 == Y)
                             m_SpawnRange = m_Width / 2;
                         else
                             m_SpawnRange = -1;
@@ -12050,8 +12027,7 @@ namespace Server.Mobiles
 
                             string typeName = BaseXmlSpawner.ParseObjectType(TypeName);
 
-                            if (typeName == null || ((SpawnerType.GetType(typeName) == null) &&
-                                (!BaseXmlSpawner.IsTypeOrItemKeyword(typeName) && typeName.IndexOf('{') == -1 && !typeName.StartsWith("*") && !typeName.StartsWith("#"))))
+                            if (typeName == null || SpawnerType.GetType(typeName) == null && !BaseXmlSpawner.IsTypeOrItemKeyword(typeName) && typeName.IndexOf('{') == -1 && !typeName.StartsWith("*") && !typeName.StartsWith("#"))
                             {
                                 if (m_WarnTimer == null)
                                     m_WarnTimer = new WarnTimer2();
@@ -12334,10 +12310,10 @@ namespace Server.Mobiles
                     string[] parm = arg[1].Split(':');
                     if (parm.Length > 0)
                     {
-                        return (parm[0]);
+                        return parm[0];
                     }
                 }
-                return (null);
+                return null;
             }
 
 
@@ -12346,7 +12322,7 @@ namespace Server.Mobiles
                 // Clear the spawn object list
                 List<SpawnObject> NewSpawnObjects = new List<SpawnObject>();
 
-                if (ObjectList != null && ObjectList.Length > 0)
+                if (!string.IsNullOrEmpty(ObjectList))
                 {
                     // Split the string based on the object separator first ':'
                     string[] SpawnObjectList = ObjectList.Split(':');
@@ -12397,7 +12373,7 @@ namespace Server.Mobiles
 
                 // spawn object definitions will take the form typestring:MX=int:SB=int:RT=double:TO=int:KL=int
                 // or typestring:MX=int:SB=int:RT=double:TO=int:KL=int:OBJ=typestring...
-                if (ObjectList != null && ObjectList.Length > 0)
+                if (!string.IsNullOrEmpty(ObjectList))
                 {
                     string[] SpawnObjectList = BaseXmlSpawner.SplitString(ObjectList, ":OBJ=");
 
@@ -12455,7 +12431,7 @@ namespace Server.Mobiles
                                     parmstr = GetParm(s, ":RK=");
                                     bool restrictKills = false;
                                     if (parmstr != null)
-                                        try { restrictKills = (int.Parse(parmstr) == 1); }
+                                        try { restrictKills = int.Parse(parmstr) == 1; }
                                         catch { }
 
                                     // ClearOnAdvance
@@ -12466,7 +12442,7 @@ namespace Server.Mobiles
                                     if (killsNeeded == 0)
                                         clearAdvance = false;
                                     if (parmstr != null)
-                                        try { clearAdvance = (int.Parse(parmstr) == 1); }
+                                        try { clearAdvance = int.Parse(parmstr) == 1; }
                                         catch { }
 
                                     // MinDelay

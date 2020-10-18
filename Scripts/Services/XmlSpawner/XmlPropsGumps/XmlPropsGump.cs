@@ -32,7 +32,6 @@ namespace Server.Gumps
         public static readonly int TextOffsetX = PropsConfig.TextOffsetX;
 
         public static readonly int OffsetGumpID = PropsConfig.OffsetGumpID;
-        public static readonly int HeaderGumpID = PropsConfig.HeaderGumpID;
         public static readonly int EntryGumpID = PropsConfig.EntryGumpID;
         public static readonly int BackGumpID = PropsConfig.BackGumpID;
         public static readonly int SetGumpID = PropsConfig.SetGumpID;
@@ -43,14 +42,6 @@ namespace Server.Gumps
         public static readonly int SetButtonID2 = PropsConfig.SetButtonID2;
 
         public static readonly int PrevWidth = PropsConfig.PrevWidth;
-        public static readonly int PrevOffsetX = PropsConfig.PrevOffsetX, PrevOffsetY = PropsConfig.PrevOffsetY;
-        public static readonly int PrevButtonID1 = PropsConfig.PrevButtonID1;
-        public static readonly int PrevButtonID2 = PropsConfig.PrevButtonID2;
-
-        public static readonly int NextWidth = PropsConfig.NextWidth;
-        public static readonly int NextOffsetX = PropsConfig.NextOffsetX, NextOffsetY = PropsConfig.NextOffsetY;
-        public static readonly int NextButtonID1 = PropsConfig.NextButtonID1;
-        public static readonly int NextButtonID2 = PropsConfig.NextButtonID2;
 
         public static readonly int OffsetSize = PropsConfig.OffsetSize;
 
@@ -174,13 +165,12 @@ namespace Server.Gumps
                     propcount++;
 
                     // look for the default value of the equivalent property in the XmlSpawnerDefaults.DefaultEntry class
-
                     int huemodifier = TextHue;
                     FieldInfo finfo = null;
                     Mobiles.XmlSpawnerDefaults.DefaultEntry de = new Mobiles.XmlSpawnerDefaults.DefaultEntry();
                     Type ftype = de.GetType();
-                    if (ftype != null)
-                        finfo = ftype.GetField(prop.Name);
+                    finfo = ftype.GetField(prop.Name);
+
                     // is there an equivalent default field?
                     if (finfo != null)
                     {
@@ -606,7 +596,7 @@ namespace Server.Gumps
             }
             if (t.IsDefined(typeof(ParsableAttribute), false))
             {
-                MethodInfo parseMethod = t.GetMethod("Parse", new Type[] { typeof(string) });
+                MethodInfo parseMethod = t.GetMethod("Parse", new[] { typeof(string) });
 
                 return parseMethod.Invoke(null, new object[] { s });
             }
@@ -700,7 +690,7 @@ namespace Server.Gumps
                 if (a == null || b == null)
                     throw new ArgumentException();
 
-                return a.Name.CompareTo(b.Name);
+                return string.Compare(a.Name, b.Name, StringComparison.Ordinal);
             }
         }
 

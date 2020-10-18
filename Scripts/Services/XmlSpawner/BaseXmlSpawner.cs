@@ -142,11 +142,12 @@ namespace Server.Mobiles
 
             string s = type.ToString();
 
-            if (s == null) return null;
+            if (s == null)
+                return null;
 
             string[] args = s.Split(Type.Delimiter);
 
-            if (args != null && args.Length > 0)
+            if (args.Length > 0)
             {
                 return args[args.Length - 1];
             }
@@ -163,7 +164,7 @@ namespace Server.Mobiles
             // test the type
             Type objecttype = o.GetType();
             Type targettype = SpawnerType.GetType(typename);
-            if (objecttype != null && targettype != null && (objecttype.Equals(targettype) || objecttype.IsSubclassOf(targettype)))
+            if (targettype != null && (objecttype.Equals(targettype) || objecttype.IsSubclassOf(targettype)))
             {
                 return true;
 
@@ -689,7 +690,7 @@ namespace Server.Mobiles
                 protected override void OnTick()
                 {
                     // if a condition is available then test it
-                    if (m_Condition != null && m_Condition.Length > 0 && m_Spawner != null && m_Spawner.Running)
+                    if (!string.IsNullOrEmpty(m_Condition) && m_Spawner != null && m_Spawner.Running)
                     {
                         // if the test is valid then terminate the timer
                         string status_str;
@@ -1412,7 +1413,6 @@ namespace Server.Mobiles
                 bool found;
                 try
                 {
-
                     if (o is Item)
                     {
                         ptype = typeof(bool);
@@ -1650,7 +1650,7 @@ namespace Server.Mobiles
 
                     //string[] value_keywordargs = ParseString(groupedarglist[0],10,",");
                     string[] value_keywordargs = groupedarglist[0].Trim().Split(',');
-                    if (groupargstring != null && groupargstring.Length > 0)
+                    if (!string.IsNullOrEmpty(groupargstring))
                     {
 
                         if (value_keywordargs != null && value_keywordargs.Length > 0)
@@ -3615,7 +3615,7 @@ namespace Server.Mobiles
             // need to handle comma args that may be grouped with the () such as the (ATTACHMENT,args) arg
 
             string[] arglist = groupedarglist[0].Trim().Split(',');
-            if (groupargstring != null && groupargstring.Length > 0)
+            if (!string.IsNullOrEmpty(groupargstring))
             {
                 if (arglist != null && arglist.Length > 0)
                     arglist[arglist.Length - 1] = groupargstring;
@@ -3976,7 +3976,6 @@ namespace Server.Mobiles
                     }
 
                     // return the list entry as the value
-
                     return arglist[randindex];
                 }
                 else if ((kw == valueKeyword.AMOUNTCARRIED) && arglist.Length > 1)
@@ -4171,7 +4170,7 @@ namespace Server.Mobiles
 
             if (o == null) return false;
 
-            if (testString == null || testString.Length < 1)
+            if (string.IsNullOrEmpty(testString))
             {
                 status_str = "Null property test string";
                 return false;
@@ -4896,12 +4895,13 @@ namespace Server.Mobiles
                     }
                 }
             }
+
             return itemlist;
         }
 
         public static Item SearchPackForItemType(Container pack, string targetName)
         {
-            if (pack != null && !pack.Deleted && targetName != null && targetName.Length > 0)
+            if (pack != null && !pack.Deleted && !string.IsNullOrEmpty(targetName))
             {
                 Type targetType = SpawnerType.GetType(targetName);
 
@@ -4929,12 +4929,13 @@ namespace Server.Mobiles
                     }
                 }
             }
+
             return null;
         }
 
         public static Item SearchMobileForItemType(Mobile m, string targetName, bool searchbank)
         {
-            if (m != null && !m.Deleted && targetName != null && targetName.Length > 0)
+            if (m != null && !m.Deleted && !string.IsNullOrEmpty(targetName))
             {
                 Type targetType = SpawnerType.GetType(targetName);
 
@@ -5067,12 +5068,13 @@ namespace Server.Mobiles
                     }
                 }
             }
+
             return itemlist;
         }
 
         public static List<Item> SearchPackListForItemType(Container pack, string targetName, List<Item> itemlist)
         {
-            if (pack != null && !pack.Deleted && targetName != null && targetName.Length > 0)
+            if (pack != null && !pack.Deleted && !string.IsNullOrEmpty(targetName))
             {
                 Type targetType = SpawnerType.GetType(targetName);
 
@@ -5096,6 +5098,7 @@ namespace Server.Mobiles
                     }
                 }
             }
+
             return itemlist;
         }
 
@@ -5103,7 +5106,7 @@ namespace Server.Mobiles
         {
             List<Item> itemlist = new List<Item>();
 
-            if (m != null && !m.Deleted && targetName != null && targetName.Length > 0)
+            if (m != null && !m.Deleted && !string.IsNullOrEmpty(targetName))
             {
                 Type targetType = SpawnerType.GetType(targetName);
 
@@ -5431,7 +5434,6 @@ namespace Server.Mobiles
                 if (!mobile.Deleted && ((name.Length == 0 || string.Compare(mobile.Name, name, true) == 0)) && (typestr == null ||
                     (mobtype != null && targettype != null && (mobtype.Equals(targettype) || mobtype.IsSubclassOf(targettype)))))
                 {
-
                     foundmobile = mobile;
                     count++;
                     // added the break in to return the first match instead of forcing uniqueness (overrides the count test)
@@ -5879,9 +5881,8 @@ namespace Server.Mobiles
             // go through the string looking for instances of {keyword}
             string remaining = typeName;
 
-            while (remaining != null && remaining.Length > 0)
+            while (!string.IsNullOrEmpty(remaining))
             {
-
                 int startindex = remaining.IndexOf('{');
 
                 if (startindex == -1 || startindex + 1 >= remaining.Length)
@@ -5956,7 +5957,7 @@ namespace Server.Mobiles
                 // find the first arg if it is there
                 string[] typeargs = null;
                 int argstart = 0;
-                if (itemtypestring != null && itemtypestring.Length > 0)
+                if (!string.IsNullOrEmpty(itemtypestring))
                     argstart = itemtypestring.IndexOf(",") + 1;
 
                 if (argstart > 1 && argstart < itemtypestring.Length)
@@ -7256,7 +7257,7 @@ namespace Server.Mobiles
                                     }
                                 }
                             }
-                            if (entrystring == null || entrystring.Length == 0)
+                            if (string.IsNullOrEmpty(entrystring))
                             {
                                 status_str = "invalid entrystring in SETONSPAWNENTRY";
                                 return false;
@@ -8480,7 +8481,7 @@ namespace Server.Mobiles
         public static bool TryParse<TEnum>(string tocheck, bool ignorecase, out TEnum result) where TEnum : struct, IConvertible
         {
             bool boolean = (tocheck == null ? false : Enum.IsDefined(typeof(TEnum), tocheck));
-            result = (boolean ? (TEnum)Enum.Parse(typeof(TEnum), tocheck) : default(TEnum));
+            result = (boolean ? (TEnum)Enum.Parse(typeof(TEnum), tocheck) : default);
             return boolean;
         }
         #endregion
