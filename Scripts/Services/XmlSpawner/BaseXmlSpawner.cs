@@ -322,16 +322,6 @@ namespace Server.Mobiles
             return (typeKeywordHash.ContainsKey(typeName));
         }
 
-        private static void AddTypeKeyword(string name)
-        {
-            typeKeywordHash.Add(name, (typeKeyword)Enum.Parse(typeof(typeKeyword), name));
-        }
-
-        private static void AddTypemodKeyword(string name)
-        {
-            typemodKeywordHash.Add(name, (typemodKeyword)Enum.Parse(typeof(typemodKeyword), name));
-        }
-
         private static void AddValueKeyword(string name)
         {
             valueKeywordHash.Add(name, (valueKeyword)Enum.Parse(typeof(valueKeyword), name));
@@ -365,60 +355,6 @@ namespace Server.Mobiles
 			typemodKeywordHash = new Hashtable();
 			valueKeywordHash = new Hashtable();
 			valuemodKeywordHash = new Hashtable();*/
-
-            // Type keywords
-            // spawned as primary objects
-            AddTypeKeyword("SET");
-            AddTypeKeyword("SETVAR");
-            AddTypeKeyword("SETONTRIGMOB");
-            AddTypeKeyword("SETONCARRIED");
-            AddTypeKeyword("SETONNEARBY");
-            AddTypeKeyword("SETONPETS");
-            AddTypeKeyword("SETONSPAWN");
-            AddTypeKeyword("SETONSPAWNENTRY");
-            AddTypeKeyword("SETONMOB");
-            AddTypeKeyword("SETONTHIS");
-            AddTypeKeyword("SETONPARENT");
-            AddTypeKeyword("SETACCOUNTTAG");
-            AddTypeKeyword("FOREACH");
-            AddTypeKeyword("GIVE");
-            AddTypeKeyword("TAKEGIVE");
-            AddTypeKeyword("GUMP");
-            AddTypeKeyword("SENDMSG");
-            AddTypeKeyword("SENDASCIIMSG");
-            AddTypeKeyword("RESURRECT");
-            AddTypeKeyword("EFFECT");
-            AddTypeKeyword("MEFFECT");
-            AddTypeKeyword("WAITUNTIL");
-            AddTypeKeyword("WHILE");
-            AddTypeKeyword("IF");
-            AddTypeKeyword("GOTO");
-            AddTypeKeyword("BCAST");
-            AddTypeKeyword("COMMAND");
-            AddTypeKeyword("SPAWN");
-            AddTypeKeyword("DESPAWN");
-
-            // Typemod keywords
-            // used in place of properties as modifiers of the primary object type
-            AddTypemodKeyword("EFFECT");
-            AddTypemodKeyword("BOLTEFFECT");
-            AddTypemodKeyword("MEFFECT");
-            AddTypemodKeyword("PEFFECT");
-            AddTypemodKeyword("SAY");
-            AddTypemodKeyword("SPEECH");
-            AddTypemodKeyword("ANIMATE");
-            AddTypemodKeyword("OFFSET");
-            AddTypemodKeyword("MSG");
-            AddTypemodKeyword("ASCIIMSG");
-            AddTypemodKeyword("SENDMSG");
-            AddTypemodKeyword("SENDASCIIMSG");
-            AddTypemodKeyword("BCAST");
-            AddTypemodKeyword("ADD");
-            AddTypemodKeyword("EQUIP");
-            AddTypemodKeyword("UNEQUIP");
-            AddTypemodKeyword("DELETE");
-            AddTypemodKeyword("FACETO");
-            AddTypemodKeyword("FLASH");
 
             // Value keywords
             // used in property tests
