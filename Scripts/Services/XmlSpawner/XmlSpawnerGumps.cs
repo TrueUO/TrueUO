@@ -410,7 +410,6 @@ namespace Server.Mobiles
         public const int MaxSpawnEntries = 60;
         private const int MaxEntriesPerPage = 15;
         public int m_ShowGump = 0;
-        public bool AllowGumpUpdate = true;
         public int xoffset = 0;
         public int initial_maxcount;
         public int page;
@@ -1068,8 +1067,6 @@ namespace Server.Mobiles
                 m_Spawner.SpawnerGump = null;
                 return;
             }
-
-            AllowGumpUpdate = true;
 
             for (int i = 0; i < m_Spawner.SpawnObjects.Length; i++)
             {
