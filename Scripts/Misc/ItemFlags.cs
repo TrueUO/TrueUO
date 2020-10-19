@@ -1,6 +1,6 @@
 namespace Server.Items
 {
-    public class ItemFlags
+    public static class ItemFlags
     {
         private const int StealableFlag = 0x00200000;
         private const int TakenFlag = 0x00100000;
