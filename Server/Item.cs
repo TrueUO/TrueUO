@@ -1482,16 +1482,23 @@ namespace Server
 				if (bounce.m_ParentStack is Item ps && !ps.Deleted && ps.IsAccessibleTo(from) && ps.StackWith(from, this))
 				{
 					ClearBounce();
-                    return;
+					return;
 				}
 
 				if (bounce.m_Parent is Item ip)
 				{
-					if (!ip.Deleted && ip.m_Map == bounce.m_Map && ip.GetWorldLocation() == bounce.m_WorldLoc && ip.IsAccessibleTo(from) && (!(ip.RootParent is Mobile rm) || rm.CheckNonlocalDrop(from, this, ip)))
+					if (!ip.Deleted && ip.IsAccessibleTo(from) && (!(ip.RootParent is Mobile rm) || rm.CheckNonlocalDrop(from, this, ip)))
 					{
-						Location = bounce.m_Location;
+						if (!ip.Movable || rm == from || (ip.Map == bounce.m_Map && ip.GetWorldLocation() == bounce.m_WorldLoc))
+						{
+							Location = bounce.m_Location;
 
-						ip.AddItem(this);
+							ip.AddItem(this);
+						}
+					    else
+					    {
+						    MoveToWorld(from.Location, from.Map);
+					    }
 					}
 					else
 					{
