@@ -1487,9 +1487,11 @@ namespace Server
 
 				if (bounce.m_Parent is Item ip)
 				{
-					if (!ip.Deleted && ip.IsAccessibleTo(from) && (!(ip.RootParent is Mobile rm) || rm.CheckNonlocalDrop(from, this, ip)))
+					Mobile rpm = ip.RootParent as Mobile;
+
+					if (!ip.Deleted && ip.IsAccessibleTo(from) && (rpm == null || rpm.CheckNonlocalDrop(from, this, ip)))
 					{
-						if (!ip.Movable || rm == from || (ip.Map == bounce.m_Map && ip.GetWorldLocation() == bounce.m_WorldLoc))
+						if (!ip.Movable || rpm == from || (ip.Map == bounce.m_Map && ip.GetWorldLocation() == bounce.m_WorldLoc))
 						{
 							Location = bounce.m_Location;
 
