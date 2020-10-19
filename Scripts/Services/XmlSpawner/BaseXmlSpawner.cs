@@ -1,13 +1,9 @@
-using Server.Accounting;
 using Server.Commands;
-using Server.Gumps;
 using Server.Items;
 using Server.Network;
-using Server.Spells;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Reflection;
 
 namespace Server.Mobiles
@@ -142,11 +138,9 @@ namespace Server.Mobiles
 
             string s = type.ToString();
 
-            if (s == null) return null;
-
             string[] args = s.Split(Type.Delimiter);
 
-            if (args != null && args.Length > 0)
+            if (args.Length > 0)
             {
                 return args[args.Length - 1];
             }
@@ -163,22 +157,18 @@ namespace Server.Mobiles
             // test the type
             Type objecttype = o.GetType();
             Type targettype = SpawnerType.GetType(typename);
-            if (objecttype != null && targettype != null && (objecttype.Equals(targettype) || objecttype.IsSubclassOf(targettype)))
+            if (targettype != null && (objecttype.Equals(targettype) || objecttype.IsSubclassOf(targettype)))
             {
                 return true;
-
             }
 
             return false;
-
         }
 
         private enum typeKeyword
         {
             SET,
-            SETVAR,
             SETONTRIGMOB,
-            SETONCARRIED,
             SETONSPAWN,
             SETONSPAWNENTRY,
             SETONNEARBY,
@@ -186,28 +176,16 @@ namespace Server.Mobiles
             SETONMOB,
             SETONTHIS,
             SETONPARENT,
-            SETACCOUNTTAG,
             FOREACH,
-            GIVE,
-            TAKEGIVE,
-            GUMP,
-            BROWSER,
             SENDMSG,
             SENDASCIIMSG,
-            MUSIC,
-            RESURRECT,
-            POISON,
-            DAMAGE,
             EFFECT,
             MEFFECT,
-            SOUND,
             WAITUNTIL,
             WHILE,
             IF,
             GOTO,
-            CAST,
             BCAST,
-            BSOUND,
             COMMAND,
             SPAWN,
             DESPAWN
@@ -215,14 +193,10 @@ namespace Server.Mobiles
 
         private enum typemodKeyword
         {
-            MUSIC,
-            POISON,
-            DAMAGE,
             EFFECT,
             BOLTEFFECT,
             MEFFECT,
             PEFFECT,
-            SOUND,
             SAY,
             SPEECH,
             ANIMATE,
@@ -233,8 +207,6 @@ namespace Server.Mobiles
             SENDMSG,
             SENDASCIIMSG,
             BCAST,
-            EQUIP,
-            UNEQUIP,
             DELETE,
             KILL,
             FACETO,
@@ -245,22 +217,15 @@ namespace Server.Mobiles
         private enum valueKeyword
         {
             GET,
-            GETONMOB,
-            GETONCARRIED,
             GETONTRIGMOB,
-            GETONNEARBY,
             GETONSPAWN,
             GETONPARENT,
             GETONTHIS,
-            GETFROMFILE,
-            GETACCOUNTTAG,
-            AMOUNTCARRIED,
             RND,
             RNDBOOL,
             RNDLIST,
             RNDSTRLIST,
             PLAYERSINRANGE,
-            MY,
             RANDNAME
         }
 
@@ -274,14 +239,11 @@ namespace Server.Mobiles
             GETONSPAWN,
             GETONPARENT,
             GETONTHIS,
-            GETFROMFILE,
-            GETACCOUNTTAG,
             AMOUNTCARRIED,
             RND,
             RNDBOOL,
             RNDLIST,
             RNDSTRLIST,
-            MUL,
             INC,
             MOB,
             TRIGMOB,
@@ -302,11 +264,11 @@ namespace Server.Mobiles
         private static readonly Dictionary<string, valueKeyword> valueKeywordHash = new Dictionary<string, valueKeyword>();
         private static readonly Dictionary<string, valuemodKeyword> valuemodKeywordHash = new Dictionary<string, valuemodKeyword>();
 
-        private static readonly char[] slashdelim = new char[1] { '/' };
-        private static readonly char[] commadelim = new char[1] { ',' };
-        private static readonly char[] spacedelim = new char[1] { ' ' };
-        private static readonly char[] semicolondelim = new char[1] { ';' };
-        private static readonly char[] literalend = new char[1] { '§' };
+        private static readonly char[] slashdelim = { '/' };
+        private static readonly char[] commadelim = { ',' };
+        private static readonly char[] spacedelim = { ' ' };
+        private static readonly char[] semicolondelim = { ';' };
+        private static readonly char[] literalend = { '§' };
         #endregion
 
         #region Keywords
@@ -852,7 +814,7 @@ namespace Server.Mobiles
             {
                 try
                 {
-                    MethodInfo info = p.PropertyType.GetMethod("Parse", new Type[] { typeof(string) });
+                    MethodInfo info = p.PropertyType.GetMethod("Parse", new[] { typeof(string) });
                     if (info != null)
                         toSet = info.Invoke(null, new object[] { value });
                     else if (p.PropertyType == typeof(Enum) || p.PropertyType.IsSubclassOf(typeof(Enum)))
@@ -1300,7 +1262,6 @@ namespace Server.Mobiles
 
             if (keywordargs[0] == "SERIAL")
             {
-                bool found;
                 try
                 {
                     if (o is Mobile)
@@ -1319,10 +1280,8 @@ namespace Server.Mobiles
                     else
                         return "Object is not item/mobile";
                 }
-                catch { found = false; }
+                catch { return "Serial not found."; }
 
-                if (!found)
-                    return "Serial not found.";
             }
             else if (keywordargs[0] == "TYPE")
             {
@@ -2119,178 +2078,6 @@ namespace Server.Mobiles
                                 if (arglist.Length < 3) break;
                                 remainder = arglist[2];
                             }
-                            else if (kw == valuemodKeyword.GETFROMFILE)
-                            {
-                                // syntax is GETFROMFILE,filename
-                                if (value_keywordargs.Length > 1)
-                                {
-
-                                    string filename = value_keywordargs[1];
-                                    string filestring = null;
-
-                                    // read in the string from the file
-                                    if (File.Exists(filename) == true)
-                                    {
-                                        try
-                                        {
-                                            // Create an instance of StreamReader to read from a file.
-                                            // The using statement also closes the StreamReader.
-                                            using (StreamReader sr = new StreamReader(filename))
-                                            {
-                                                string line;
-                                                // Read and display lines from the file until the end of
-                                                // the file is reached.
-                                                while ((line = sr.ReadLine()) != null)
-                                                {
-                                                    filestring += line;
-                                                }
-
-                                                sr.Close();
-                                            }
-                                        }
-                                        catch
-                                        {
-                                            status_str = "GETFROMFILE error: " + filename;
-                                            no_error = false;
-                                        }
-                                        // set the property value 
-                                        string result = SetPropertyValue(spawner, o, arglist[0], filestring);
-
-                                        // see if it was successful
-                                        if (result != "Property has been set.")
-                                        {
-                                            status_str = arglist[0] + " : " + result;
-                                            no_error = false;
-                                        }
-                                    }
-
-                                }
-                                else
-                                {
-                                    status_str = "Invalid GETFROMFILE args : " + arglist[1];
-                                    no_error = false;
-                                }
-                                if (arglist.Length < 3) break;
-                                remainder = arglist[2];
-                            }
-                            else if (kw == valuemodKeyword.GETACCOUNTTAG)
-                            {
-                                // syntax is GETACCOUNTTAG,tagname
-
-                                if (value_keywordargs.Length > 1)
-                                {
-
-                                    string tagname = value_keywordargs[1];
-                                    string tagvalue = null;
-
-                                    // get the value of the account tag from the triggering mob
-                                    if (trigmob != null && !trigmob.Deleted)
-                                    {
-                                        Account acct = trigmob.Account as Account;
-                                        if (acct != null)
-                                        {
-                                            tagvalue = acct.GetTag(tagname);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        no_error = false;
-                                    }
-
-                                    if (tagvalue != null)
-                                    {
-                                        // set the property value 
-                                        string result = SetPropertyValue(spawner, o, arglist[0], tagvalue);
-
-                                        // see if it was successful
-                                        if (result != "Property has been set.")
-                                        {
-                                            status_str = arglist[0] + " : " + result;
-                                            no_error = false;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        status_str = "Invalid GETACCOUNTTAG tagname : " + tagname;
-                                        no_error = false;
-                                    }
-                                }
-                                else
-                                {
-                                    status_str = "Invalid GETACCOUNTTAG args : " + arglist[1];
-                                    no_error = false;
-                                }
-                                if (arglist.Length < 3) break;
-                                remainder = arglist[2];
-                            }
-                            else if (kw == valuemodKeyword.MUL)
-                            {
-                                // increment the property value by the amount.  Use the format propname/MUL,min,max/ or propname/MUL,value
-                                if (value_keywordargs.Length > 1)
-                                {
-                                    // get a random number
-                                    string incvalue = "0";
-                                    if (value_keywordargs.Length > 2)
-                                    {
-                                        double d0, d1;
-
-                                        if (double.TryParse(value_keywordargs[1], NumberStyles.Any, CultureInfo.InvariantCulture, out d0) && double.TryParse(value_keywordargs[2], NumberStyles.Any, CultureInfo.InvariantCulture, out d1))
-                                        {
-                                            incvalue = string.Format("{0}", Utility.RandomMinMax((int)(10000 * d0), (int)(10000 * d1)) / 10000.0);
-                                        }
-                                        else { status_str = "Invalid MUL args : " + arglist[1]; no_error = false; }
-                                    }
-                                    else
-                                    {
-                                        incvalue = value_keywordargs[1];
-                                    }
-                                    // get the current property value
-                                    Type ptype;
-                                    string tmpvalue = GetPropertyValue(spawner, o, arglist[0], out ptype);
-
-                                    // see if it was successful
-                                    if (ptype == null)
-                                    {
-                                        status_str = string.Format("Cant find {0}", arglist[0]);
-                                        no_error = false;
-                                    }
-                                    else
-                                    {
-                                        string currentvalue = "0";
-                                        try
-                                        {
-                                            string[] arglist2 = ParseString(tmpvalue, 2, "=");
-                                            string[] arglist3 = ParseString(arglist2[1], 2, " ");
-                                            currentvalue = arglist3[0].Trim();
-                                        }
-                                        catch { }
-                                        string tmpstr = currentvalue;
-                                        // should use the actual ptype info to do the multiplication.  Maybe later.
-                                        double d0, d1;
-                                        if (double.TryParse(currentvalue, NumberStyles.Any, CultureInfo.InvariantCulture, out d0) && double.TryParse(incvalue, NumberStyles.Any, CultureInfo.InvariantCulture, out d1))
-                                        {
-                                            tmpstr = ((int)(d0 * d1)).ToString();
-                                        }
-                                        else { status_str = "Invalid MUL args : " + arglist[1]; no_error = false; }
-
-                                        // set the property value using the incremented value
-                                        string result = SetPropertyValue(spawner, o, arglist[0], tmpstr);
-                                        // see if it was successful
-                                        if (result != "Property has been set.")
-                                        {
-                                            status_str = arglist[0] + " : " + result;
-                                            no_error = false;
-                                        }
-                                    }
-                                }
-                                else
-                                {
-                                    status_str = "Invalid MUL args : " + arglist[1];
-                                    no_error = false;
-                                }
-                                if (arglist.Length < 3) break;
-                                remainder = arglist[2];
-                            }
                             else if (kw == valuemodKeyword.INC)
                             {
                                 // increment the property value by the amount.  Use the format propname/INC,min,max/ or propname/INC,value
@@ -2775,29 +2562,9 @@ namespace Server.Mobiles
                                 if (arglist.Length < 2) break;
                                 remainder = singlearglist[1];
                             }
-                            //
-                            //  Damage keyword
-                            //
-                            else if (kw == typemodKeyword.DAMAGE)
-                            {
-                                // the syntax is DAMAGE,damage,phys,fire,cold,pois,energy[,range][,playeronly]
-                                ApplyDamageToPlayers(arglist[0], o as Mobile, o, out status_str);
-
-                                //ApplyDamageToPlayers(arglist[0], trigmob, refobject, out status_str);
-                                if (status_str != null)
-                                {
-                                    no_error = false;
-                                }
-                                if (arglist.Length < 2) break;
-                                remainder = singlearglist[1];
-                            }
                             else if (kw == typemodKeyword.ADD)
                             {
                                 no_error = AddItemToTarget(spawner, o, keywordargs, arglist, trigmob, refobject, false, out remainder, out status_str);
-                            }
-                            else if (kw == typemodKeyword.EQUIP)
-                            {
-                                no_error = AddItemToTarget(spawner, o, keywordargs, arglist, trigmob, refobject, true, out remainder, out status_str);
                             }
                             else if (kw == typemodKeyword.DELETE)
                             {
@@ -2826,62 +2593,6 @@ namespace Server.Mobiles
 
                                 if (arglist.Length < 2) break;
                                 remainder = singlearglist[1];
-                            }
-                            else if (kw == typemodKeyword.UNEQUIP)
-                            {
-                                // syntax is UNEQUIP,layer[,delete]
-
-                                Layer layer = Layer.Invalid;
-                                bool remove = false;
-
-                                if (keywordargs.Length > 1)
-                                {
-                                    if (!TryParse(keywordargs[1], true, out layer))
-                                    { status_str = "Invalid layer"; }
-                                }
-
-                                if (keywordargs.Length > 2)
-                                {
-                                    if (keywordargs[2] == "delete")
-                                    {
-                                        remove = true;
-                                    }
-                                    else bool.TryParse(keywordargs[2], out remove);
-                                }
-
-                                if (o is Mobile && layer != Layer.Invalid)
-                                {
-                                    Mobile m = (Mobile)o;
-                                    // go through all of the items on the mobile
-                                    List<Item> packlist = m.Items;
-
-                                    for (int i = 0; i < packlist.Count; ++i)
-                                    {
-                                        Item item = packlist[i];
-
-                                        //  check the layer
-                                        // if it matches then unequip it
-                                        if (item.Layer == layer)
-                                        {
-                                            if (remove)
-                                            {
-                                                item.Delete();
-                                            }
-                                            else
-                                            {
-                                                m.AddToBackpack(item);
-                                            }
-                                        }
-                                    }
-                                }
-
-                                if (status_str != null)
-                                {
-                                    no_error = false;
-                                }
-                                if (arglist.Length < 2) break;
-                                remainder = singlearglist[1];
-
                             }
                             else if (kw == typemodKeyword.MSG)
                             {
@@ -3088,7 +2799,7 @@ namespace Server.Mobiles
                                         int[] keywordarray = new int[] { };
                                         if (keyword_number >= 0)
                                         {
-                                            keywordarray = new int[] { keyword_number };
+                                            keywordarray = new[] { keyword_number };
                                         }
                                         ((Mobile)o).DoSpeech(msgstr, keywordarray, MessageType.Regular, 0x3B2);
                                     }
@@ -3482,7 +3193,7 @@ namespace Server.Mobiles
             string[] arglist = groupedarglist[0].Trim().Split(',');
             if (groupargstring != null && groupargstring.Length > 0)
             {
-                if (arglist != null && arglist.Length > 0)
+                if (arglist.Length > 0)
                     arglist[arglist.Length - 1] = groupargstring;
             }
 
@@ -3525,27 +3236,7 @@ namespace Server.Mobiles
             {
                 valueKeyword kw = valueKeywordHash[pname];
 
-                //if(pname == "GETONMOB" && arglist.Length > 2)
-                if ((kw == valueKeyword.GETONMOB) && arglist.Length > 2)
-                {
-                    // syntax is GETONMOB,mobname[,mobtype],property
-
-                    string propname = arglist[2];
-                    string typestr = null;
-
-                    if (arglist.Length > 3)
-                    {
-                        typestr = arglist[2];
-                        propname = arglist[3];
-                    }
-
-                    Mobile testmobile = FindMobileByName(spawner, arglist[1], typestr);
-
-                    string getvalue = GetPropertyValue(spawner, testmobile, propname, out ptype);
-
-                    return ParseGetValue(getvalue, ptype);
-                }
-                else if ((kw == valueKeyword.GET) && arglist.Length > 2)
+                if ((kw == valueKeyword.GET) && arglist.Length > 2)
                 {
                     // syntax is GET,[itemname -OR- SETITEM][,itemtype],property
 
@@ -3581,87 +3272,6 @@ namespace Server.Mobiles
                     string getvalue = GetPropertyValue(spawner, testitem, propname, out ptype);
 
                     return ParseGetValue(getvalue, ptype);
-                }
-                else if ((kw == valueKeyword.GETONCARRIED) && arglist.Length > 2)
-                {
-                    // syntax is GETONCARRIED,itemname[,itemtype][,equippedonly],property
-
-                    string propname = arglist[2];
-                    string typestr = null;
-                    bool equippedonly = false;
-
-                    // if the itemtype arg has been specified then check it
-                    if (arglist.Length > 3)
-                    {
-                        propname = arglist[3];
-                        typestr = arglist[2];
-                    }
-                    if (arglist.Length > 4)
-                    {
-                        propname = arglist[4];
-                        if (arglist[3].ToLower() == "equippedonly")
-                        {
-                            equippedonly = true;
-                        }
-                        else
-                        {
-                            bool.TryParse(arglist[3], out equippedonly);
-                        }
-                    }
-
-                    Item testitem = SearchMobileForItem(trigmob, ParseObjectType(arglist[1]), typestr, false, equippedonly);
-
-                    string getvalue = GetPropertyValue(spawner, testitem, propname, out ptype);
-
-                    return ParseGetValue(getvalue, ptype);
-                }
-                else if ((kw == valueKeyword.GETONNEARBY) && arglist.Length > 3)
-                {
-                    // syntax is GETONNEARBY,range,name[,type][,searchcontainers],property
-                    // or GETONNEARBY,range,name[,type][,searchcontainers],[ATTACHMENT,type,name,property]
-
-                    string targetname = arglist[2];
-                    string propname = arglist[3];
-                    string typestr = null;
-                    bool searchcontainers = false;
-                    int range;
-                    if (!int.TryParse(arglist[1], out range))
-                        range = -1;
-
-                    if (arglist.Length > 4)
-                    {
-                        typestr = arglist[3];
-                        propname = arglist[4];
-                    }
-
-                    if (arglist.Length > 5)
-                    {
-                        bool.TryParse(arglist[4], out searchcontainers);
-                        propname = arglist[5];
-                    }
-
-                    Type targettype = null;
-                    if (typestr != null)
-                    {
-                        targettype = SpawnerType.GetType(typestr);
-                    }
-
-                    if (range >= 0)
-                    {
-                        // get all of the nearby objects
-                        object relativeto = spawner;
-
-                        List<object> nearbylist = GetNearbyObjects(relativeto, targetname, targettype, typestr, range, searchcontainers, null);
-
-                        // apply the properties from the first valid thing on the list
-                        foreach (object nearbyobj in nearbylist)
-                        {
-                            string getvalue = GetPropertyValue(spawner, nearbyobj, propname, out ptype);
-                            return ParseGetValue(getvalue, ptype);
-                        }
-                    }
-                    else
-                        return null;
                 }
                 else if ((kw == valueKeyword.GETONTRIGMOB) && arglist.Length > 1)
                 {
@@ -3740,57 +3350,6 @@ namespace Server.Mobiles
                         return ParseGetValue(getvalue, ptype);
                     }
                 }
-                else if ((kw == valueKeyword.GETFROMFILE) && arglist.Length > 1)
-                {
-                    // syntax is GETFROMFILE,filename
-                    ptype = typeof(string);
-
-                    string filename = arglist[1];
-                    string filestring = null;
-
-                    // read in the string from the file
-                    if (File.Exists(filename) == true)
-                    {
-                        try
-                        {
-                            // Create an instance of StreamReader to read from a file.
-                            // The using statement also closes the StreamReader.
-                            using (StreamReader sr = new StreamReader(filename))
-                            {
-                                string line;
-                                // Read and display lines from the file until the end of
-                                // the file is reached.
-                                while ((line = sr.ReadLine()) != null)
-                                {
-                                    filestring += line;
-                                }
-                                sr.Close();
-                            }
-                        }
-                        catch { }
-                    }
-
-                    return filestring;
-                }
-                else if ((kw == valueKeyword.GETACCOUNTTAG) && arglist.Length > 1)
-                {
-                    // syntax is GETACCOUNTTAG,tagname
-                    ptype = typeof(string);
-
-                    string tagname = arglist[1];
-                    string tagvalue = null;
-
-                    // get the value of the account tag from the triggering mob
-                    if (trigmob != null && !trigmob.Deleted)
-                    {
-                        Account acct = trigmob.Account as Account;
-                        if (acct != null)
-                        {
-                            tagvalue = '"' + acct.GetTag(tagname) + '"';
-                        }
-                    }
-                    return tagvalue;
-                }
                 else if ((kw == valueKeyword.RND) && arglist.Length > 2)
                 {
                     // syntax is RND,min,max
@@ -3843,57 +3402,6 @@ namespace Server.Mobiles
                     // return the list entry as the value
 
                     return arglist[randindex];
-                }
-                else if ((kw == valueKeyword.AMOUNTCARRIED) && arglist.Length > 1)
-                {
-                    // syntax is AMOUNTCARRIED,itemtype[,banksearch[,itemname]]
-
-                    ptype = typeof(int);
-
-                    int amount = 0;
-
-                    string typestr = arglist[1];
-                    if (typestr != null)
-                    {
-                        string namestr = "*";
-                        bool banksearch = false;
-                        if (arglist.Length > 2)
-                        {
-                            if (!bool.TryParse(arglist[2], out banksearch) && arglist[2].ToLowerInvariant() != "banksearch")
-                            {
-                                return null;
-                            }
-                            else if (arglist.Length > 3)
-                            {
-                                namestr = arglist[3];
-                            }
-                        }
-
-                        // get the list of items being carried of the specified type
-                        Type targetType = SpawnerType.GetType(typestr);
-
-                        if (targetType != null && trigmob != null && trigmob.Backpack != null)
-                        {
-                            Item[] items = trigmob.Backpack.FindItemsByType(targetType, true);
-
-                            for (int i = 0; i < items.Length; ++i)
-                            {
-                                if (CheckNameMatch(namestr, items[i].Name))
-                                    amount += items[i].Amount;
-                            }
-                            if (banksearch && trigmob.BankBox != null)
-                            {
-                                items = trigmob.BankBox.FindItemsByType(targetType, true);
-                                for (int i = 0; i < items.Length; ++i)
-                                {
-                                    if (CheckNameMatch(namestr, items[i].Name))
-                                        amount += items[i].Amount;
-                                }
-                            }
-                        }
-                    }
-
-                    return amount.ToString();
                 }
                 else if ((kw == valueKeyword.PLAYERSINRANGE) && arglist.Length > 1)
                 {
@@ -4184,7 +3692,7 @@ namespace Server.Mobiles
                         status_str = "invalid timespan comparison : {0}" + testString;
                     }
                 }
-                else if (haslessthan)
+                else
                 {
                     TimeSpan ts1, ts2;
                     if (TimeSpan.TryParse(value1, out ts1) && TimeSpan.TryParse(value2, out ts2))
@@ -4237,7 +3745,7 @@ namespace Server.Mobiles
                         status_str = "invalid DateTime comparison : {0}" + testString;
                     }
                 }
-                else if (haslessthan)
+                else
                 {
                     DateTime dt1, dt2;
                     if (DateTime.TryParse(value1, out dt1) && DateTime.TryParse(value2, out dt2))
@@ -4282,7 +3790,7 @@ namespace Server.Mobiles
                     }
                     catch { status_str = "invalid int comparison : {0}" + testString; }
                 }
-                else if (haslessthan)
+                else
                 {
                     try
                     {
@@ -4323,7 +3831,7 @@ namespace Server.Mobiles
                     }
                     catch { status_str = "invalid int comparison : {0}" + testString; }
                 }
-                else if (haslessthan)
+                else
                 {
                     try
                     {
@@ -4364,7 +3872,7 @@ namespace Server.Mobiles
                     }
                     catch { status_str = "invalid int comparison : {0}" + testString; }
                 }
-                else if (haslessthan)
+                else
                 {
                     try
                     {
@@ -4410,7 +3918,7 @@ namespace Server.Mobiles
                     }
                     else { status_str = "invalid int comparison : {0}" + testString; }
                 }
-                else if (haslessthan)
+                else
                 {
                     if (double.TryParse(value1, NumberStyles.Any, CultureInfo.InvariantCulture, out val1) && double.TryParse(value2, NumberStyles.Any, CultureInfo.InvariantCulture, out val2))
                     {
@@ -4468,7 +3976,7 @@ namespace Server.Mobiles
                     }
                     else { status_str = "invalid double comparison : {0}" + testString; }
                 }
-                else if (haslessthan)
+                else
                 {
                     if (double.TryParse(value1, NumberStyles.Any, CultureInfo.InvariantCulture, out val1) && double.TryParse(value2, NumberStyles.Any, CultureInfo.InvariantCulture, out val2))
                     {
@@ -4516,7 +4024,7 @@ namespace Server.Mobiles
                     Type itemtype = i.GetType();
 
                     if (!i.Deleted && CheckNameMatch(targetname, i.Name) && (typestr == null ||
-                        (itemtype != null && targettype != null && (itemtype.Equals(targettype) || itemtype.IsSubclassOf(targettype)))))
+                        targettype != null && (itemtype.Equals(targettype) || itemtype.IsSubclassOf(targettype))))
                     {
                         if (proptest == null || CheckPropertyString(null, i, proptest, null, out status_str))
                             nearbylist.Add(i);
@@ -4567,7 +4075,7 @@ namespace Server.Mobiles
                         }
                         else
                             if (!i.Deleted && CheckNameMatch(targetname, i.Name) && (typestr == null ||
-                                (itemtype != null && targettype != null && (itemtype.Equals(targettype) || itemtype.IsSubclassOf(targettype)))))
+                                targettype != null && (itemtype.Equals(targettype) || itemtype.IsSubclassOf(targettype))))
                         {
                             if (proptest == null || CheckPropertyString(null, i, proptest, null, out status_str))
                                 nearbylist.Add(i);
@@ -4600,7 +4108,7 @@ namespace Server.Mobiles
                         Type mobtype = m.GetType();
 
                         if (!m.Deleted && CheckNameMatch(targetname, m.Name) && (typestr == null ||
-                            (mobtype != null && targettype != null && (mobtype.Equals(targettype) || mobtype.IsSubclassOf(targettype)))))
+                            targettype != null && (mobtype.Equals(targettype) || mobtype.IsSubclassOf(targettype))))
                         {
                             if (proptest == null || CheckPropertyString(null, m, proptest, null, out status_str))
                                 nearbylist.Add(m);
@@ -5222,7 +4730,7 @@ namespace Server.Mobiles
                 {
 
                     if (typestr == null ||
-                        (itemtype != null && targettype != null && (itemtype.Equals(targettype) || itemtype.IsSubclassOf(targettype))))
+                        targettype != null && (itemtype.Equals(targettype) || itemtype.IsSubclassOf(targettype)))
                     {
                         founditem = item;
                         count++;
@@ -5240,6 +4748,7 @@ namespace Server.Mobiles
 
                 return (founditem);
             }
+
             else
                 return null;
         }
@@ -5265,9 +4774,8 @@ namespace Server.Mobiles
             {
                 Type mobtype = mobile.GetType();
                 if (!mobile.Deleted && ((name.Length == 0 || string.Compare(mobile.Name, name, true) == 0)) && (typestr == null ||
-                    (mobtype != null && targettype != null && (mobtype.Equals(targettype) || mobtype.IsSubclassOf(targettype)))))
+                    targettype != null && (mobtype.Equals(targettype) || mobtype.IsSubclassOf(targettype))))
                 {
-
                     foundmobile = mobile;
                     count++;
                     // added the break in to return the first match instead of forcing uniqueness (overrides the count test)
@@ -5434,7 +4942,7 @@ namespace Server.Mobiles
                     if (name.Length == 0 || string.Compare(item.Name, name, true) == 0)
                 {
                     if (typestr == null ||
-                        (item.GetType() != null && targettype != null && (item.GetType().Equals(targettype) || item.GetType().IsSubclassOf(targettype))))
+                        targettype != null && (item.GetType().Equals(targettype) || item.GetType().IsSubclassOf(targettype)))
                     {
                         founditem = item;
                         break;
@@ -5496,7 +5004,7 @@ namespace Server.Mobiles
                 {
 
                     if (typestr == null ||
-                        (m.GetType() != null && targettype != null && (m.GetType().Equals(targettype) || m.GetType().IsSubclassOf(targettype))))
+                        targettype != null && (m.GetType().Equals(targettype) || m.GetType().IsSubclassOf(targettype)))
                     {
                         foundmobile = m;
                         break;
@@ -5956,7 +5464,7 @@ namespace Server.Mobiles
             int lastindex = 0;
             int index = 0;
             List<string> strargs = new List<string>();
-            while (index >= 0)
+            while (true)
             {
                 // go through the string and find the first instance of the separator
                 index = str.IndexOf(separator);
@@ -6661,45 +6169,6 @@ namespace Server.Mobiles
 
                             break;
                         }
-                    case typeKeyword.SETACCOUNTTAG:
-                        {
-                            // the syntax is SETACCOUNTTAG,tagname/value
-                            string[] arglist = ParseSlashArgs(substitutedtypeName, 2);
-
-                            if (arglist.Length > 1)
-                            {
-                                string[] objstr = ParseString(arglist[0], 2, ",");
-
-                                if (objstr.Length < 2)
-                                {
-                                    status_str = "missing tagname in SETACCOUNTTAG";
-                                    return false;
-                                }
-
-                                string tagname = objstr[1];
-                                string tagval = arglist[1];
-
-                                // set the tag value
-                                // get the value of the account tag from the triggering mob
-                                if (triggermob != null && !triggermob.Deleted)
-                                {
-                                    Account acct = triggermob.Account as Account;
-                                    if (acct != null)
-                                    {
-                                        acct.SetTag(tagname, tagval);
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                status_str = "no value assigned to SETACCOUNTTAG";
-                                return false;
-                            }
-
-                            TheSpawn.SpawnedObjects.Add(new KeywordTag(substitutedtypeName, spawner));
-
-                            break;
-                        }
                     case typeKeyword.FOREACH:
                         {
                             // the syntax is FOREACH,objecttype[,name][,range]/action
@@ -6926,10 +6395,7 @@ namespace Server.Mobiles
 
                             Type targettype = null;
 
-                            if (typestr != null)
-                            {
-                                targettype = SpawnerType.GetType(typestr);
-                            }
+                            targettype = SpawnerType.GetType(typestr);
 
                             // get all of the nearby pets
                             List<object> nearbylist = GetNearbyObjects(triggermob, targetname, targettype, typestr, range, searchcontainers, null);
@@ -6951,59 +6417,6 @@ namespace Server.Mobiles
                             break;
                         }
 
-                    case typeKeyword.SETONCARRIED:
-                        {
-                            // the syntax is SETONCARRIED,itemname[,itemtype][,equippedonly]/prop/value/prop2/value...
-                            // or SETONCARRIED,itemname[,itemtype]/prop/value
-
-                            // first find the carried item
-                            string[] arglist = ParseSlashArgs(substitutedtypeName, 3);
-                            string typestr = null;
-                            bool equippedonly = false;
-
-                            string itemname;
-                            if (arglist.Length > 0)
-                            {
-                                string[] objstr = ParseString(arglist[0], 4, ",");
-                                if (objstr.Length < 2)
-                                {
-                                    status_str = "missing itemname in SETONCARRIED";
-                                    return false;
-                                }
-
-                                itemname = objstr[1];
-
-                                if (objstr.Length > 2)
-                                {
-                                    typestr = objstr[2];
-                                }
-
-                                if (objstr.Length > 3)
-                                {
-                                    if (objstr[3].ToLower() == "equippedonly")
-                                    {
-                                        equippedonly = true;
-                                    }
-                                    else
-                                    {
-                                        bool.TryParse(objstr[3], out equippedonly);
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                status_str = "missing args to SETONCARRIED";
-                                return false;
-                            }
-
-                            Item testitem = SearchMobileForItem(triggermob, ParseObjectType(itemname), typestr, false, equippedonly);
-
-                            ApplyObjectStringProperties(spawner, substitutedtypeName, testitem, triggermob, invoker, out status_str);
-
-                            TheSpawn.SpawnedObjects.Add(new KeywordTag(substitutedtypeName, spawner));
-
-                            break;
-                        }
                     case typeKeyword.SETONSPAWN:
                         {
                             // the syntax is SETONSPAWN[,spawnername],subgroup/prop/value/prop2/value...
@@ -7133,269 +6546,6 @@ namespace Server.Mobiles
                             if (invoker != null && (invoker is Item))
                             {
                                 ApplyObjectStringProperties(spawner, substitutedtypeName, ((Item)invoker).Parent, triggermob, invoker, out status_str);
-                            }
-
-                            TheSpawn.SpawnedObjects.Add(new KeywordTag(substitutedtypeName, spawner));
-
-                            break;
-                        }
-                    case typeKeyword.TAKEGIVE:
-                        {
-                            // syntax TAKEGIVE[,quantity[,true*,[type]]]/itemnametotake/GIVE/itemtypetogive *search in banca
-                            string[] arglist = ParseSlashArgs(substitutedtypeName, 5);
-                            string targetName;
-                            string typestr = null;
-                            string[] givelist;
-                            if (arglist.Length < 4)
-                            {
-                                status_str = "invalid TAKEGIVE specification";
-                                return false;
-                            }
-                            else
-                            {
-                                givelist = new string[arglist.Length - 2];
-                                targetName = arglist[1];
-                                Array.Copy(arglist, 2, givelist, 0, arglist.Length - 2);
-                            }
-                            string[] keywordargs = ParseString(arglist[0], 4, ",");
-                            string[] givekeywordargs = ParseString(givelist[0], 2, ",");
-                            int quantity = 0;
-                            bool banksearch = false;
-                            bool success = false;
-                            List<Item> toRemove = new List<Item>();
-                            if (keywordargs.Length > 1)
-                            {
-                                if (!int.TryParse(keywordargs[1], out quantity))
-                                {
-                                    status_str = "Invalid TAKE quantity : " + arglist[1];
-                                    return false;
-                                }
-                            }
-                            if (keywordargs.Length > 2)
-                            {
-                                if (!bool.TryParse(keywordargs[2], out banksearch))
-                                {
-                                    status_str = "Invalid TAKE bankflag : " + arglist[1];
-                                    return false;
-                                }
-                            }
-                            if (keywordargs.Length > 3)
-                            {
-                                typestr = keywordargs[3];
-                            }
-                            // search the trigger mob for the named item
-                            Item itemTarget = SearchMobileForItem(triggermob, targetName, typestr, banksearch);
-
-                            // found the item so get rid of it
-                            if (itemTarget != null)
-                            {
-                                // if a quantity was specified and the item is stackable, then try to take the quantity
-                                if (quantity > 0 && itemTarget.Stackable)
-                                {
-                                    List<Item> itemlist = SearchMobileForItems(triggermob, targetName, typestr, banksearch, false);
-                                    itemlist.Reverse();
-                                    int totaltaken = 0;
-                                    int totake = quantity;
-                                    foreach (Item it in itemlist)
-                                    {
-                                        int remaining = it.Amount - quantity;
-                                        if (remaining <= 0)
-                                        {
-                                            int taken = it.Amount;
-                                            totaltaken += taken;
-
-                                            toRemove.Add(it);
-                                            quantity -= taken;
-                                        }
-                                        else
-                                        {
-                                            totaltaken += quantity;
-                                            it.Amount = remaining;
-                                            break;
-                                        }
-                                    }
-
-                                    if (totaltaken >= totake)
-                                    {
-                                        for (int i = toRemove.Count - 1; i >= 0; --i)
-                                            toRemove[i].Delete();
-                                        success = true;
-                                    }
-                                }
-                                else//non stackable, we have to find them all
-                                {
-                                    if (quantity <= 1)
-                                    {
-                                        toRemove.Add(itemTarget);
-                                    }
-                                    else
-                                    {
-                                        List<Item> itemlist = SearchMobileForItems(triggermob, targetName, typestr, banksearch, false);
-                                        itemlist.Reverse();
-
-                                        for (int i = itemlist.Count - 1, totake = quantity; i >= 0 && totake > 0; --i, --totake)
-                                        {
-                                            toRemove.Add(itemlist[i]);
-                                        }
-                                    }
-                                    if (toRemove.Count >= quantity)
-                                    {
-                                        for (int i = toRemove.Count - 1; i >= 0; --i)
-                                            toRemove[i].Delete();
-                                        success = true;
-                                    }
-                                }
-
-                                string remainder;
-                                if (success)
-                                    AddItemToTarget(spawner, triggermob, givekeywordargs, givelist, triggermob, invoker, false, out remainder, out status_str);
-                            }
-                            TheSpawn.SpawnedObjects.Add(new KeywordTag(substitutedtypeName, spawner));
-                            break;
-                        }
-                    case typeKeyword.GIVE:
-                        {
-                            //syntax is GIVE[,probability (0.01=1% 1=100%)]/itemtypetogive
-                            string[] arglist = ParseSlashArgs(substitutedtypeName, 3);
-
-                            string remainder;
-                            if (arglist.Length > 1)
-                            {
-                                // check for any special keywords such as the additem option or the subproperty specification
-                                // note this will be an arg to some property
-                                string[] keywordargs = ParseString(arglist[0], 2, ",");
-                                AddItemToTarget(spawner, triggermob, keywordargs, arglist, triggermob, invoker, false, out remainder, out status_str);
-
-                            }
-                            TheSpawn.SpawnedObjects.Add(new KeywordTag(substitutedtypeName, spawner));
-
-                            break;
-                        }
-                    case typeKeyword.GUMP:
-                        {
-                            // the syntax is GUMP,title,type/string
-                            // can alternatively accept a gump constructor name
-                            // GUMP,title,type,constructorname/string
-                            string[] arglist = ParseSlashArgs(substitutedtypeName, 2);
-                            string gumpText;
-                            if (arglist.Length > 1)
-                            {
-                                gumpText = arglist[1];
-                            }
-                            else
-                            {
-                                status_str = "invalid GUMP specification";
-                                return false;
-                            }
-
-                            string[] gumpkeywordargs = ParseString(arglist[0], 4, ",");
-                            string gumpTitle;
-                            int gumpNumber;
-                            if (gumpkeywordargs.Length > 2)
-                            {
-                                gumpTitle = gumpkeywordargs[1];
-                                if (!int.TryParse(gumpkeywordargs[2], out gumpNumber))
-                                {
-                                    status_str = "Invalid GUMP args";
-                                    return false;
-                                }
-                            }
-                            else
-                            {
-                                status_str = "invalid GUMP specification";
-                                return false;
-                            }
-                            string gumptypestr = "XmlSimpleGump"; // default gump constructor
-
-                            if (gumpkeywordargs.Length > 3)
-                            {
-                                // get the gump constructor type
-                                gumptypestr = gumpkeywordargs[3].Trim();
-                            }
-                            Type type = SpawnerType.GetType(gumptypestr);
-
-                            if (type == null)
-                            {
-                                status_str = "invalid GUMP constructor : " + gumptypestr;
-                                return false;
-                            }
-
-                            // prepare the keyword tag for the gump
-                            KeywordTag newtag = new KeywordTag(substitutedtypeName, spawner, 1);
-                            if (triggermob != null && !triggermob.Deleted && (triggermob is PlayerMobile))
-                            {
-                                object[] gumpargs = new object[7];
-                                gumpargs[0] = invoker;
-                                gumpargs[1] = gumpText;
-                                gumpargs[2] = gumpTitle;
-                                gumpargs[3] = gumpNumber;
-                                gumpargs[4] = newtag;
-                                gumpargs[5] = triggermob;
-                                gumpargs[6] = gumpcallback;
-
-                                object newgump;
-                                //spawner.TriggerMob.SendGump( new XmlSimpleGump(this, gumpText,gumpTitle, gumpType ));
-                                try
-                                {
-                                    newgump = Activator.CreateInstance(type, gumpargs);
-                                }
-                                catch { status_str = "Error in creating gump type : " + gumptypestr; newtag.Delete(); return false; }
-                                if (newgump != null)
-                                {
-                                    if (newgump is Gump)
-                                    {
-                                        triggermob.SendGump((Gump)newgump);
-                                    }
-                                    else if (newgump is Item)
-                                    {
-                                        ((Item)newgump).Delete();
-                                        status_str = gumptypestr + " is not a Gump type";
-                                        newtag.Delete();
-                                        return false;
-                                    }
-                                    else if (newgump is Mobile)
-                                    {
-                                        ((Mobile)newgump).Delete();
-                                        status_str = gumptypestr + " is not a Gump type";
-                                        newtag.Delete();
-                                        return false;
-                                    }
-                                    else
-                                    {
-                                        status_str = gumptypestr + " is not a Gump type";
-                                        newtag.Delete();
-                                        return false;
-                                    }
-                                }
-                            }
-                            TheSpawn.SpawnedObjects.Add(newtag);
-
-                            break;
-                        }
-                    case typeKeyword.BROWSER:
-                        {
-                            // the syntax is BROWSER/url
-                            string[] arglist = ParseSlashArgs(substitutedtypeName, 2);
-                            string url;
-
-                            if (arglist.Length > 1)
-                            {
-                                if (arglist[1] != null && arglist[1].Length > 0 && arglist[1][0] == '@')
-                                {
-                                    url = arglist[1].Substring(1);
-                                }
-                                else
-                                    url = arglist[1];
-                            }
-                            else
-                            {
-                                status_str = "invalid BROWSER specification";
-                                return false;
-                            }
-
-                            if (triggermob != null && !triggermob.Deleted && (triggermob is PlayerMobile))
-                            {
-                                triggermob.LaunchBrowser(url);
                             }
 
                             TheSpawn.SpawnedObjects.Add(new KeywordTag(substitutedtypeName, spawner));
@@ -7988,203 +7138,6 @@ namespace Server.Mobiles
 
                             TheSpawn.SpawnedObjects.Add(new KeywordTag(substitutedtypeName, spawner));
 
-                            break;
-                        }
-                    case typeKeyword.DAMAGE:
-                        {
-                            // the syntax is DAMAGE,damage,phys,fire,cold,pois,energy[,range][,playeronly]
-                            string[] arglist = ParseSlashArgs(substitutedtypeName, 3);
-                            if (arglist.Length > 0)
-                            {
-                                ApplyDamageToPlayers(arglist[0], triggermob, invoker, out status_str);
-                                if (status_str != null)
-                                {
-                                    return false;
-                                }
-                            }
-
-                            TheSpawn.SpawnedObjects.Add(new KeywordTag(substitutedtypeName, spawner));
-
-                            break;
-                        }
-                    case typeKeyword.RESURRECT:
-                        {
-                            // the syntax is RESURRECT[,range][,PETS]
-                            string[] arglist = ParseSlashArgs(substitutedtypeName, 3);
-                            if (arglist.Length > 0)
-                            {
-                                ResurrectPlayers(arglist[0], triggermob, invoker, out status_str);
-                                if (status_str != null)
-                                {
-                                    return false;
-                                }
-                            }
-
-                            TheSpawn.SpawnedObjects.Add(new KeywordTag(substitutedtypeName, spawner));
-
-                            break;
-                        }
-                    case typeKeyword.CAST:
-                        {
-                            string[] arglist = ParseSlashArgs(substitutedtypeName, 3);
-                            // Syntax is CAST,spellnumber[,arg] or CAST,spellname[,arg]
-                            string[] keywordargs = ParseString(arglist[0], 3, ",");
-                            int spellnumber;
-                            bool hasnumber;
-                            // try it as spellnumber
-                            if (keywordargs.Length > 1)
-                            {
-                                hasnumber = int.TryParse(keywordargs[1], out spellnumber);
-                            }
-                            else
-                            {
-                                status_str = "invalid CAST specification";
-                                // note that returning true means that Spawn will assume that it worked and will not try to recast
-                                return true;
-                            }
-                            // call this with the 3 argument version that includes the bodytype arg
-                            int keywordarg2 = 0;
-                            if (keywordargs.Length > 2)
-                            {
-                                int.TryParse(keywordargs[2], out keywordarg2);
-                            }
-
-
-                            // the trigger mob will cast the spells
-
-                            Mobile caster = triggermob;
-                            if (caster == null)
-                            {
-                                // note that returning true means that Spawn will assume that it worked and will not try to recast
-                                return true;
-                            }
-
-                            // make the placeholder wand to avoid reagent and mana use
-                            BaseWand cwand = new ClumsyWand
-                            {
-                                Parent = caster
-                            };
-
-
-                            Spell spell;
-                            if (hasnumber)
-                            {
-                                spell = SpellRegistry.NewSpell(spellnumber, caster, cwand);
-                            }
-                            else
-                            {
-                                spell = SpellRegistry.NewSpell(keywordargs[1], caster, cwand);
-                            }
-                            if (spell != null)
-                            {
-                                bool casterror = false;
-                                try
-                                {
-                                    // deal with the 3 types of spells, mob targeted, location targeted, and self targeted
-                                    // dont go through all of the warm up stuff, get right to the casting
-                                    spell.State = SpellState.Sequencing;
-
-                                    Type spelltype = spell.GetType();
-                                    // deal with any special cases here
-                                    if (spelltype == typeof(Spells.Seventh.PolymorphSpell))
-                                    {
-                                        if (keywordarg2 == 0)
-                                        {
-                                            // this is invalid so dont cast
-                                            throw (new ArgumentNullException());
-                                        }
-                                        object[] polyargs = new object[3];
-                                        polyargs[0] = caster;
-                                        polyargs[1] = cwand;
-                                        polyargs[2] = keywordarg2;
-                                        spell = (Spell)Activator.CreateInstance(spelltype, polyargs);
-
-                                        if (spell == null)
-                                        {
-                                            throw (new ArgumentNullException());
-                                        }
-                                        spell.State = SpellState.Sequencing;
-                                    }
-                                    MethodInfo spelltargetmethod = null;
-
-                                    // get the targeting method from the spell
-                                    // note, the precedence is important as the target call should override oncast if it is present
-                                    if (spelltype != null && (spelltargetmethod = spelltype.GetMethod("Target")) != null)
-                                    {
-
-                                    }
-                                    // if it doesnt have it then check for self targeted types
-                                    else if (spelltype != null && (spelltargetmethod = spelltype.GetMethod("OnCast")) != null)
-                                    {
-
-                                    }
-                                    else
-                                    {
-                                        throw (new ArgumentNullException());
-                                    }
-                                    // Get the parameters for the target method.
-                                    ParameterInfo[] spelltargetparms = spelltargetmethod.GetParameters();
-                                    // target will have one parm
-                                    // selftarg will have none
-                                    object[] targetargs = null;
-                                    // check the parameters
-                                    if (spelltargetparms != null && spelltargetparms.Length > 0)
-                                    {
-                                        if (spelltargetparms[0].ParameterType == typeof(Mobile))
-                                        {
-                                            // set the target parameter
-                                            targetargs = new object[1];
-                                            targetargs[0] = triggermob;
-                                        }
-                                        else if (spelltargetparms[0].ParameterType == typeof(IPoint3D))
-                                        {
-                                            // set the target parameter
-                                            targetargs = new object[1];
-                                            // pick a random point around the caster
-                                            int range = keywordarg2;
-                                            if (range == 0) range = 1;
-                                            int randx = Utility.RandomMinMax(-range, range);
-                                            int randy = Utility.RandomMinMax(-range, range);
-                                            if (randx == 0 && randy == 0) randx = 1;
-                                            targetargs[0] = new Point3D(triggermob.Location.X + randx,
-                                                triggermob.Location.Y + randy,
-                                                triggermob.Location.Z);
-                                        }
-                                        else
-                                        {
-                                            // dont handle any other types of args
-                                            throw (new ArgumentNullException());
-                                        }
-                                    }
-                                    // set the spell on the caster
-                                    caster.Spell = spell;
-                                    // invoke the spell method with the appropriate args
-                                    spelltargetmethod.Invoke(spell, targetargs);
-
-                                    // get rid of the placeholder wand
-                                    if (cwand != null && !cwand.Deleted)
-                                        cwand.Delete();
-                                }
-                                catch
-                                {
-                                    status_str = "bad spell call : " + spell.Name;
-                                    casterror = true;
-                                    // get rid of the placeholder wand
-                                    if (cwand != null && !cwand.Deleted)
-                                        cwand.Delete();
-                                }
-
-                                if (casterror) return true;
-                            }
-                            else
-                            {
-                                status_str = "spell invalid or disabled : " + keywordargs[1];
-
-                                //return true;
-                            }
-
-                            TheSpawn.SpawnedObjects.Add(new KeywordTag(substitutedtypeName, spawner));
-                            // note that returning true means that Spawn assume that it worked and will not try to recast
                             break;
                         }
                     case typeKeyword.BCAST:
