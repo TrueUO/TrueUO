@@ -22,7 +22,6 @@ namespace Server.Gumps
 
         public Type Type => m_Type;
         public int ItemID => m_ItemID;
-        public int Hue => m_Hue;
         public XmlAddCAGCategory Parent => m_Parent;
 
         public override string Caption => (m_Type == null ? "bad type" : m_Type.Name);
@@ -234,7 +233,6 @@ namespace Server.Gumps
         private const int EntryCount = 15;
 
         private static readonly int TotalWidth = OffsetSize + EntryWidth + OffsetSize + SetWidth + OffsetSize;
-        private static readonly int TotalHeight = OffsetSize + ((EntryHeight + OffsetSize) * (EntryCount + 1));
 
         private static readonly int BackWidth = BorderSize + TotalWidth + BorderSize;
         private readonly Mobile m_Owner;

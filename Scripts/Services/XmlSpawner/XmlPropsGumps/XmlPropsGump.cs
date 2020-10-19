@@ -32,7 +32,6 @@ namespace Server.Gumps
         public static readonly int TextOffsetX = PropsConfig.TextOffsetX;
 
         public static readonly int OffsetGumpID = PropsConfig.OffsetGumpID;
-        public static readonly int HeaderGumpID = PropsConfig.HeaderGumpID;
         public static readonly int EntryGumpID = PropsConfig.EntryGumpID;
         public static readonly int BackGumpID = PropsConfig.BackGumpID;
         public static readonly int SetGumpID = PropsConfig.SetGumpID;
@@ -41,16 +40,6 @@ namespace Server.Gumps
         public static readonly int SetOffsetX = PropsConfig.SetOffsetX, SetOffsetY = PropsConfig.SetOffsetY;
         public static readonly int SetButtonID1 = PropsConfig.SetButtonID1;
         public static readonly int SetButtonID2 = PropsConfig.SetButtonID2;
-
-        public static readonly int PrevWidth = PropsConfig.PrevWidth;
-        public static readonly int PrevOffsetX = PropsConfig.PrevOffsetX, PrevOffsetY = PropsConfig.PrevOffsetY;
-        public static readonly int PrevButtonID1 = PropsConfig.PrevButtonID1;
-        public static readonly int PrevButtonID2 = PropsConfig.PrevButtonID2;
-
-        public static readonly int NextWidth = PropsConfig.NextWidth;
-        public static readonly int NextOffsetX = PropsConfig.NextOffsetX, NextOffsetY = PropsConfig.NextOffsetY;
-        public static readonly int NextButtonID1 = PropsConfig.NextButtonID1;
-        public static readonly int NextButtonID2 = PropsConfig.NextButtonID2;
 
         public static readonly int OffsetSize = PropsConfig.OffsetSize;
 
@@ -604,69 +593,6 @@ namespace Server.Gumps
             }
 
             throw new Exception("bad");
-        }
-
-        private static string GetStringFromObject(object o)
-        {
-            if (o == null)
-            {
-                return "-null-";
-            }
-
-            if (o is string s1)
-            {
-                return string.Format("\"{0}\"", s1);
-            }
-
-            if (o is bool)
-            {
-                return o.ToString();
-            }
-
-            if (o is char c)
-            {
-                return string.Format("0x{0:X} '{1}'", (int)c, c);
-            }
-
-            if (o is Serial s)
-            {
-                if (s.IsValid)
-                {
-                    if (s.IsItem)
-                    {
-                        return string.Format("(I) 0x{0:X}", s.Value);
-                    }
-
-                    if (s.IsMobile)
-                    {
-                        return string.Format("(M) 0x{0:X}", s.Value);
-                    }
-                }
-
-                return string.Format("(?) 0x{0:X}", s.Value);
-            }
-
-            if (o is byte || o is sbyte || o is short || o is ushort || o is int || o is uint || o is long || o is ulong)
-            {
-                return string.Format("{0} (0x{0:X})", o);
-            }
-
-            if (o is Mobile mobile)
-            {
-                return string.Format("(M) 0x{0:X} \"{1}\"", mobile.Serial.Value, mobile.Name);
-            }
-
-            if (o is Item item)
-            {
-                return string.Format("(I) 0x{0:X}", item.Serial);
-            }
-
-            if (o is Type type)
-            {
-                return type.Name;
-            }
-
-            return o.ToString();
         }
 
         private class PropertySorter : IComparer
