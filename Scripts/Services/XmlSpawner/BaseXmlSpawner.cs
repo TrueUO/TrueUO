@@ -1027,8 +1027,6 @@ namespace Server.Mobiles
 
             string propname = arglist[0];
 
-            string[] keywordargs = ParseString(propname, 4, ",");
-
             // do a bit of parsing to handle array references
             string[] arraystring = propname.Split('[');
             int index = 0;
