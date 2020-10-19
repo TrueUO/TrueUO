@@ -237,7 +237,6 @@ namespace Server.Gumps
         private static readonly int TotalHeight = OffsetSize + ((EntryHeight + OffsetSize) * (EntryCount + 1));
 
         private static readonly int BackWidth = BorderSize + TotalWidth + BorderSize;
-        private static readonly int BackHeight = BorderSize + TotalHeight + BorderSize;
         private readonly Mobile m_Owner;
         private readonly XmlAddCAGCategory m_Category;
         private int m_Page;

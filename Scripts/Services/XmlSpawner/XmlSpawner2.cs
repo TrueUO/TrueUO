@@ -737,7 +737,6 @@ namespace Server.Mobiles
 
                 foreach (BaseXmlSpawner.KeywordTag sot in m_KeywordTagList)
                 {
-
                     // check for any keyword tag with the holdsequence flag
                     if (sot != null && !sot.Deleted && ((sot.Flags & BaseXmlSpawner.KeywordFlags.HoldSequence) != 0))
                     {
@@ -747,8 +746,8 @@ namespace Server.Mobiles
 
                 // no hold flags were set
                 return false;
-
             }
+
             set { m_HoldSequence = value; }
         }
 
@@ -756,9 +755,8 @@ namespace Server.Mobiles
         {
             get
             {
-                if (OnHold) return false;
-
-
+                if (OnHold)
+                    return false;
 
                 if (m_Group == true)
                 {
@@ -3210,8 +3208,8 @@ namespace Server.Mobiles
                             Diagnostics.ExceptionLogging.LogException(e);
                         }
                     }
-
                 }
+
                 if (nsettings > 0)
                 {
                     Console.WriteLine("{0} settings processed", nsettings);
@@ -9318,7 +9316,6 @@ namespace Server.Mobiles
             return newlist;
         }
 
-
         public bool HasSubGroups()
         {
             if (m_SpawnObjects == null) return (false);
@@ -9337,20 +9334,6 @@ namespace Server.Mobiles
             if (!FreeRun)
             {
                 m_proximityActivated = false;
-            }
-        }
-
-        private void RefreshNextSpawnTimes()
-        {
-
-            if (m_SpawnObjects != null && m_SpawnObjects.Count > 0)
-            {
-                for (int i = 0; i < m_SpawnObjects.Count; i++)
-                {
-                    SpawnObject so = m_SpawnObjects[i];
-
-                    RefreshNextSpawnTime(so);
-                }
             }
         }
 
@@ -10811,7 +10794,8 @@ namespace Server.Mobiles
             {
                 ConstructorInfo ctor = ctors[i];
 
-                if (ctor == null) continue;
+                if (ctor == null)
+                    continue;
 
                 // if requireconstructable is true, then allow either condition
 #if (RESTRICTCONSTRUCTABLE)

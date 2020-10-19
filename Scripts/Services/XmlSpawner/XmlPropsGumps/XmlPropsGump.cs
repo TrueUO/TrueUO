@@ -57,7 +57,6 @@ namespace Server.Gumps
         public static readonly int EntryHeight = PropsConfig.EntryHeight;
         public static readonly int BorderSize = PropsConfig.BorderSize;
 
-
         private static readonly int NameWidth = 103;
         private static readonly int ValueWidth = 82;
 
@@ -67,7 +66,6 @@ namespace Server.Gumps
         private static readonly int TypeWidth = NameWidth + OffsetSize + ValueWidth;
 
         private static readonly int TotalWidth = OffsetSize + NameWidth + OffsetSize + ValueWidth + OffsetSize + SetWidth + OffsetSize;
-        private static readonly int TotalHeight = OffsetSize + ((EntryHeight + OffsetSize) * (EntryCount + 1));
 
         public XmlPropertiesGump(Mobile mobile, object o) : base(GumpOffsetX, GumpOffsetY)
         {
@@ -170,10 +168,10 @@ namespace Server.Gumps
                     // look for the default value of the equivalent property in the XmlSpawnerDefaults.DefaultEntry class
 
                     int huemodifier = TextHue;
-                    FieldInfo finfo = null;
                     Mobiles.XmlSpawnerDefaults.DefaultEntry de = new Mobiles.XmlSpawnerDefaults.DefaultEntry();
                     Type ftype = de.GetType();
-                    finfo = ftype.GetField(prop.Name);
+
+                    var finfo = ftype.GetField(prop.Name);
 
                     // is there an equivalent default field?
                     if (finfo != null)
@@ -600,7 +598,7 @@ namespace Server.Gumps
             }
             if (t.IsDefined(typeof(ParsableAttribute), false))
             {
-                MethodInfo parseMethod = t.GetMethod("Parse", new Type[] { typeof(string) });
+                MethodInfo parseMethod = t.GetMethod("Parse", new[] { typeof(string) });
 
                 return parseMethod.Invoke(null, new object[] { s });
             }

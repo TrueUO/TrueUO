@@ -161,10 +161,6 @@ namespace Server.Items
 
         public static void ContentChange(NetState state, PacketReader pvSrc)
         {
-            // need to deal with actual books
-            string entryText = string.Empty;
-            Mobile from = state.Mobile;
-
             int serial = pvSrc.ReadInt32();
 
             Item bookitem = World.FindItem(serial);
