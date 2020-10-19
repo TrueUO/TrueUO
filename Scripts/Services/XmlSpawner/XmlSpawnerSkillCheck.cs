@@ -5,71 +5,7 @@ namespace Server.Mobiles
 {
     public class XmlSpawnerSkillCheck
     {
-        // alternate skillcheck hooks to replace those in SkillCheck.cs
-        public static bool Mobile_SkillCheckLocation(Mobile from, SkillName skillName, double minSkill, double maxSkill)
-        {
-            Skill skill = from.Skills[skillName];
-
-            if (skill == null)
-                return false;
-
-            // call the default skillcheck handler
-            bool success = SkillCheck.Mobile_SkillCheckLocation(from, skillName, minSkill, maxSkill);
-
-            // call the xmlspawner skillcheck handler
-            CheckSkillUse(from, skill, success);
-
-            return success;
-        }
-
-        public static bool Mobile_SkillCheckDirectLocation(Mobile from, SkillName skillName, double chance)
-        {
-            Skill skill = from.Skills[skillName];
-
-            if (skill == null)
-                return false;
-
-            // call the default skillcheck handler
-            bool success = SkillCheck.Mobile_SkillCheckDirectLocation(from, skillName, chance);
-
-            // call the xmlspawner skillcheck handler
-            CheckSkillUse(from, skill, success);
-
-            return success;
-        }
-
-        public static bool Mobile_SkillCheckTarget(Mobile from, SkillName skillName, object target, double minSkill, double maxSkill)
-        {
-            Skill skill = from.Skills[skillName];
-
-            if (skill == null)
-                return false;
-
-            // call the default skillcheck handler
-            bool success = SkillCheck.Mobile_SkillCheckTarget(from, skillName, target, minSkill, maxSkill);
-
-            // call the xmlspawner skillcheck handler
-            CheckSkillUse(from, skill, success);
-
-            return success;
-        }
-
-        public static bool Mobile_SkillCheckDirectTarget(Mobile from, SkillName skillName, object target, double chance)
-        {
-            Skill skill = from.Skills[skillName];
-
-            if (skill == null)
-                return false;
-
-            // call the default skillcheck handler
-            bool success = SkillCheck.Mobile_SkillCheckDirectTarget(from, skillName, target, chance);
-
-            // call the xmlspawner skillcheck handler
-            CheckSkillUse(from, skill, success);
-
-            return success;
-        }
-
+        // Depreciated - Removing slowly 10/18/2020 - Dan
 
         public class RegisteredSkill
         {
@@ -210,51 +146,5 @@ namespace Server.Mobiles
                 }
             }
         }
-
-        // determines whether  XmlSpawner, XmlAttachment, or XmlQuest OnSkillUse methods should be invoked.
-        public static void CheckSkillUse(Mobile m, Skill skill, bool success)
-        {
-            if (!(m is PlayerMobile) || skill == null) return;
-
-            /*
-            // first check for any attachments that might support OnSkillUse
-            ArrayList list = XmlAttach.FindAttachments(m);
-            if(list != null && list.Count > 0)
-            {
-                foreach(XmlAttachment a in list)
-                {
-                    if(a != null && !a.Deleted && a.HandlesOnSkillUse)
-                    {
-                        a.OnSkillUse(m, skill, success);
-                    }
-                }
-            }
-            */
-
-            // then check for registered skills
-            ArrayList skilllist = RegisteredSkill.TriggerList(skill.SkillName, m.Map);
-
-            if (skilllist == null) return;
-
-            // determine whether there are any registered objects for this skill
-            foreach (RegisteredSkill rs in skilllist)
-            {
-                if (rs.sid == skill.SkillName)
-                {
-                    // if so then invoke their skill handlers
-                    if (rs.target is XmlSpawner)
-                    {
-                        XmlSpawner spawner = (XmlSpawner)rs.target;
-
-                        if (spawner.HandlesOnSkillUse)
-                        {
-                            // call the spawner handler
-                            spawner.OnSkillUse(m, skill, success);
-                        }
-                    }
-                }
-            }
-        }
-
     }
 }
