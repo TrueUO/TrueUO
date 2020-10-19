@@ -11,6 +11,7 @@ using System.Data;
 using System.IO;
 using System.Reflection;
 using System.Xml;
+using Server.Services.XmlSpawner;
 
 namespace Server.Mobiles
 {
@@ -1649,16 +1650,9 @@ namespace Server.Mobiles
                     }
                 }
 
-                // unregister the previous skill if it was assigned
-                if (m_SkillTrigger != null)
-                {
-                    XmlSpawnerSkillCheck.UnRegisterSkillTrigger(this, m_SkillTriggerName, Map, false);
-                }
-
                 // if the skill trigger was valid then register it
                 if (news != XmlSpawnerSkillCheck.RegisteredSkill.Invalid)
                 {
-                    XmlSpawnerSkillCheck.RegisterSkillTrigger(this, news, Map);
                     m_SkillTrigger = value;
                     m_SkillTriggerName = news;
                     m_SkillTriggerMin = minval;
@@ -1906,12 +1900,6 @@ namespace Server.Mobiles
         {
             base.OnMapChange();
 
-            // unregister the skill trigger on the previous map
-            XmlSpawnerSkillCheck.UnRegisterSkillTrigger(this, m_SkillTriggerName, currentmap, false);
-
-            // register the skill trigger on the new current map
-            XmlSpawnerSkillCheck.RegisterSkillTrigger(this, m_SkillTriggerName, Map);
-
             currentmap = Map;
 
             // reset the sector list for smart spawning
@@ -2029,9 +2017,6 @@ namespace Server.Mobiles
             // if statics were added for marking container held spawners, delete them
             if (m_ShowContainerStatic != null && !m_ShowContainerStatic.Deleted)
                 m_ShowContainerStatic.Delete();
-
-            // unregister all triggerskills that might have been added
-            XmlSpawnerSkillCheck.UnRegisterSkillTrigger(this, SkillName.Alchemy, Map, true);
         }
 
         static bool IgnoreLocationChange = false;
@@ -2633,57 +2618,10 @@ namespace Server.Mobiles
                     }
                 }
             }
+
             ShowTagList(this);
             int count = 0;
-            Console.WriteLine("Registered Skills");
-            Console.WriteLine("Felucca");
-            for (int i = 0; i < XmlSpawnerSkillCheck.RegisteredSkill.MaxSkills + 1; i++)
-            {
-
-                if (XmlSpawnerSkillCheck.RegisteredSkill.TriggerList((SkillName)i, Map.Felucca).Count > 0)
-                    Console.WriteLine("\t{0} : {1}", (SkillName)i, XmlSpawnerSkillCheck.RegisteredSkill.TriggerList((SkillName)i, Map.Felucca).Count);
-
-                count += XmlSpawnerSkillCheck.RegisteredSkill.TriggerList((SkillName)i, Map.Felucca).Count;
-            }
-            Console.WriteLine("Trammel");
-            for (int i = 0; i < XmlSpawnerSkillCheck.RegisteredSkill.MaxSkills + 1; i++)
-            {
-
-                if (XmlSpawnerSkillCheck.RegisteredSkill.TriggerList((SkillName)i, Map.Trammel).Count > 0)
-                    Console.WriteLine("\t{0} : {1}", (SkillName)i, XmlSpawnerSkillCheck.RegisteredSkill.TriggerList((SkillName)i, Map.Trammel).Count);
-
-                count += XmlSpawnerSkillCheck.RegisteredSkill.TriggerList((SkillName)i, Map.Trammel).Count;
-            }
-            Console.WriteLine("Ilshenar");
-            for (int i = 0; i < XmlSpawnerSkillCheck.RegisteredSkill.MaxSkills + 1; i++)
-            {
-
-                if (XmlSpawnerSkillCheck.RegisteredSkill.TriggerList((SkillName)i, Map.Ilshenar).Count > 0)
-                    Console.WriteLine("\t{0} : {1}", (SkillName)i, XmlSpawnerSkillCheck.RegisteredSkill.TriggerList((SkillName)i, Map.Ilshenar).Count);
-
-                count += XmlSpawnerSkillCheck.RegisteredSkill.TriggerList((SkillName)i, Map.Ilshenar).Count;
-            }
-            Console.WriteLine("Malas");
-            for (int i = 0; i < XmlSpawnerSkillCheck.RegisteredSkill.MaxSkills + 1; i++)
-            {
-
-                if (XmlSpawnerSkillCheck.RegisteredSkill.TriggerList((SkillName)i, Map.Malas).Count > 0)
-                    Console.WriteLine("\t{0} : {1}", (SkillName)i, XmlSpawnerSkillCheck.RegisteredSkill.TriggerList((SkillName)i, Map.Malas).Count);
-
-                count += XmlSpawnerSkillCheck.RegisteredSkill.TriggerList((SkillName)i, Map.Malas).Count;
-            }
-
-            Console.WriteLine("Tokuno");
-            for (int i = 0; i < XmlSpawnerSkillCheck.RegisteredSkill.MaxSkills + 1; i++)
-            {
-
-                if (XmlSpawnerSkillCheck.RegisteredSkill.TriggerList((SkillName)i, Map.Tokuno).Count > 0)
-                    Console.WriteLine("\t{0} : {1}", (SkillName)i, XmlSpawnerSkillCheck.RegisteredSkill.TriggerList((SkillName)i, Map.Tokuno).Count);
-
-                count += XmlSpawnerSkillCheck.RegisteredSkill.TriggerList((SkillName)i, Map.Tokuno).Count;
-            }
-
-            Console.WriteLine("Total = {0}", count);
+            Console.WriteLine("Registered SkillsTotal = {0}", count);
         }
 
         #endregion
