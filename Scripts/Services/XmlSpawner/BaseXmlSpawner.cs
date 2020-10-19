@@ -339,43 +339,17 @@ namespace Server.Mobiles
 
         public static void Configure()
         {
-            // set up the keyword hash tables
-            // already set at startup time
-            /*typeKeywordHash = new Hashtable();
-			typemodKeywordHash = new Hashtable();
-			valueKeywordHash = new Hashtable();
-			valuemodKeywordHash = new Hashtable();*/
-
             // Type keywords
             // spawned as primary objects
             AddTypeKeyword("SET");
-            AddTypeKeyword("SETVAR");
-            AddTypeKeyword("SETONTRIGMOB");
-            AddTypeKeyword("SETONCARRIED");
-            AddTypeKeyword("SETONNEARBY");
-            AddTypeKeyword("SETONPETS");
-            AddTypeKeyword("SETONSPAWN");
-            AddTypeKeyword("SETONSPAWNENTRY");
-            AddTypeKeyword("SETONMOB");
-            AddTypeKeyword("SETONTHIS");
-            AddTypeKeyword("SETONPARENT");
-            AddTypeKeyword("SETACCOUNTTAG");
-            AddTypeKeyword("FOREACH");
-            AddTypeKeyword("GIVE");
-            AddTypeKeyword("TAKEGIVE");
-            AddTypeKeyword("GUMP");
-            AddTypeKeyword("BROWSER");
             AddTypeKeyword("SENDMSG");
             AddTypeKeyword("SENDASCIIMSG");
-            AddTypeKeyword("RESURRECT");
-            AddTypeKeyword("DAMAGE");
             AddTypeKeyword("EFFECT");
             AddTypeKeyword("MEFFECT");
             AddTypeKeyword("WAITUNTIL");
             AddTypeKeyword("WHILE");
             AddTypeKeyword("IF");
             AddTypeKeyword("GOTO");
-            AddTypeKeyword("CAST");
             AddTypeKeyword("BCAST");
             AddTypeKeyword("COMMAND");
             AddTypeKeyword("SPAWN");
@@ -383,11 +357,6 @@ namespace Server.Mobiles
 
             // Typemod keywords
             // used in place of properties as modifiers of the primary object type
-            AddTypemodKeyword("DAMAGE");
-            AddTypemodKeyword("EFFECT");
-            AddTypemodKeyword("BOLTEFFECT");
-            AddTypemodKeyword("MEFFECT");
-            AddTypemodKeyword("PEFFECT");
             AddTypemodKeyword("SAY");
             AddTypemodKeyword("SPEECH");
             AddTypemodKeyword("ANIMATE");
@@ -398,8 +367,6 @@ namespace Server.Mobiles
             AddTypemodKeyword("SENDASCIIMSG");
             AddTypemodKeyword("BCAST");
             AddTypemodKeyword("ADD");
-            AddTypemodKeyword("EQUIP");
-            AddTypemodKeyword("UNEQUIP");
             AddTypemodKeyword("DELETE");
             AddTypemodKeyword("KILL");
             AddTypemodKeyword("FACETO");
@@ -412,18 +379,6 @@ namespace Server.Mobiles
             AddValueKeyword("RNDBOOL");
             AddValueKeyword("RNDLIST");
             AddValueKeyword("RNDSTRLIST");
-            AddValueKeyword("MY");
-            AddValueKeyword("GET");
-            AddValueKeyword("GETONMOB");
-            AddValueKeyword("GETONCARRIED");
-            AddValueKeyword("AMOUNTCARRIED");
-            AddValueKeyword("GETONTRIGMOB");
-            AddValueKeyword("GETONNEARBY");
-            AddValueKeyword("GETONSPAWN");
-            AddValueKeyword("GETONPARENT");
-            AddValueKeyword("GETONTHIS");
-            AddValueKeyword("GETFROMFILE");
-            AddValueKeyword("GETACCOUNTTAG");
             AddValueKeyword("RANDNAME");
             AddValueKeyword("PLAYERSINRANGE");
 
@@ -433,19 +388,6 @@ namespace Server.Mobiles
             AddValuemodKeyword("RNDBOOL");
             AddValuemodKeyword("RNDLIST");
             AddValuemodKeyword("RNDSTRLIST");
-            AddValuemodKeyword("MY");
-            AddValuemodKeyword("GET");
-            AddValuemodKeyword("GETONMOB");
-            AddValuemodKeyword("GETONCARRIED");
-            AddValuemodKeyword("AMOUNTCARRIED");
-            AddValuemodKeyword("GETONTRIGMOB");
-            AddValuemodKeyword("GETONNEARBY");
-            AddValuemodKeyword("GETONSPAWN");
-            AddValuemodKeyword("GETONPARENT");
-            AddValuemodKeyword("GETONTHIS");
-            AddValuemodKeyword("GETFROMFILE");
-            AddValuemodKeyword("GETACCOUNTTAG");
-            AddValuemodKeyword("MUL");
             AddValuemodKeyword("INC");
             AddValuemodKeyword("MOB");
             AddValuemodKeyword("TRIGMOB");
