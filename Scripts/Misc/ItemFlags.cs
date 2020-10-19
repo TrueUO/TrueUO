@@ -9,7 +9,6 @@ namespace Server.Items
         {
             target?.SetSavedFlag(StealableFlag, value);
         }
-
         public static bool GetStealable(Item target)
         {
             return target != null && target.GetSavedFlag(StealableFlag);
@@ -19,7 +18,6 @@ namespace Server.Items
         {
             target?.SetSavedFlag(TakenFlag, value);
         }
-
         public static bool GetTaken(Item target)
         {
             return target != null && target.GetSavedFlag(TakenFlag);
