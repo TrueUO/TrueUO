@@ -25,9 +25,7 @@ namespace Server.Items
 
         public void FillTextEntryBook(string text)
         {
-
             int pagenum = 0;
-            BookPageInfo[] pages = Pages;
             int current = 0;
 
             // break up the text into single line length pieces
@@ -85,10 +83,6 @@ namespace Server.Items
         }
     }
 
-    // -------------------------------------------------------------
-    // modifed from Beta-36 distribution version of BaseBook from basebook.cs
-    // adds a hook to allow processing of book text on content change
-    // -------------------------------------------------------------
     public class BaseEntryBook : Item
     {
         private string m_Title;
@@ -257,7 +251,6 @@ namespace Server.Items
             if (state.IsEnhancedClient && pageCount == 1)
             {
                 book.ContentChangeEC(state, pvSrc);
-                return;
             }
             else if (book.Writable && from.InRange(book.GetWorldLocation(), 1))
             {
@@ -284,16 +277,7 @@ namespace Server.Items
 
                         book.Pages[index].Lines = lines;
                     }
-                    else
-                    {
-                        return;
-                    }
                 }
-                else
-                {
-                    return;
-                }
-                
             }
         }
 #endif

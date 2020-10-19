@@ -51,7 +51,6 @@ namespace Server.Mobiles
 
         #region Constant declarations
         public const byte MaxLoops = 10; //maximum number of recursive calls from spawner to itself. this is to prevent stack overflow from xmlspawner scripting
-        public const string Version = "4.00";
         private const int ShowBoundsItemId = 14089;             // 14089 Fire Column // 3555 Campfire // 8708 Skull Pole
         private const string SpawnDataSetName = "Spawns";
         private const string SpawnTablePointName = "Points";
@@ -60,8 +59,6 @@ namespace Server.Mobiles
         private static int ShowItemId = 0x3E57;                 // ships mast
         private static int defaultTriggerSound = 0x1F4;          // click and sparkle sound by default  (0x1F4) , click sound (0x3A4)
         public static string XmlSpawnDir = "XmlSpawner";            // default directory for saving/loading .xml files with [xmlload [xmlsave
-        public static string XmlMultiDir = "XmlMultis";
-        private static string XmlConfigsDir = "XmlSpawnerConfigs";  // default directory for loading .xml config files with LoadConfig
         private const int MaxSmartSectorListSize = 1024;        // maximum sector list size for use in smart spawning. This gives a 512x512 tile range.
 
         private static string defwaypointname = null;            // default waypoint name will get assigned in Initialize
@@ -2953,9 +2950,6 @@ namespace Server.Mobiles
                 case "SmartSpawnAccessLevel":
                     SmartSpawnAccessLevel = (AccessLevel)Enum.Parse(typeof(AccessLevel), value, true);
                     break;
-                case "XmlConfigsDir":
-                    XmlConfigsDir = value;
-                    break;
                 case "defaultTriggerSound":
                     defaultTriggerSound = ConvertToInt(value);
                     defProximityTriggerSound = defaultTriggerSound;
@@ -4158,10 +4152,6 @@ namespace Server.Mobiles
             }
 
             int percent = 0;
-            //if((currentcount + savings) > 0)
-            //{
-            //	percent = 100*savings/(currentcount + savings);
-            //}
 
             int maxpercent = 0;
             if (totalcount > 0)
@@ -4171,13 +4161,12 @@ namespace Server.Mobiles
             }
 
             e.Mobile.SendMessage(
-                "Running XmlSpawner version {9}\n" +
-                "Smartspawning access level is {11}\n" +
+                "Smartspawning access level is {10}\n" +
                 "--------------------------------\n" +
                 "{0} XmlSpawners\n" +
                 "{1} are configured for SmartSpawning\n" +
                 "{2} are currently inactivated\n" +
-                "{10} sectors being monitored\n" +
+                "{9} sectors being monitored\n" +
                 "Maximum possible spawn count is {3}\n" +
                 "Maximum possible spawn reduction is {4}\n" +
                 "Current spawn count is {5}\n" +
@@ -4185,7 +4174,7 @@ namespace Server.Mobiles
                 "Maximum possible savings is {7}%\n" +
                 "Current savings is {8}%",
                 count, smartcount, inactivecount, totalcount, maxcount, currentcount, savings, maxpercent,
-                percent, Version, totalSectorsMonitored, SmartSpawnAccessLevel);
+                percent, totalSectorsMonitored, SmartSpawnAccessLevel);
         }
 
         [Usage("OptimalSmartSpawning [max spawn/homerange diff]")]
@@ -6543,28 +6532,6 @@ namespace Server.Mobiles
             {
                 // get it from the defaults directory if it exists
                 dirname = string.Format("{0}/{1}", XmlSpawnDir, filename);
-                found = File.Exists(dirname) || Directory.Exists(dirname);
-            }
-
-            if (!found)
-            {
-                // otherwise just get it from the main installation dir
-                dirname = filename;
-            }
-
-            return dirname;
-        }
-
-        public static string LocateMultiFile(string filename)
-        {
-            bool found = false;
-
-            string dirname = null;
-
-            if (Directory.Exists(XmlMultiDir) == true)
-            {
-                // get it from the defaults directory if it exists
-                dirname = string.Format("{0}/{1}", XmlMultiDir, filename);
                 found = File.Exists(dirname) || Directory.Exists(dirname);
             }
 

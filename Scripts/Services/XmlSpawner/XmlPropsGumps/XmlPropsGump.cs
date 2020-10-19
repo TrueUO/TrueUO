@@ -57,9 +57,6 @@ namespace Server.Gumps
         public static readonly int EntryHeight = PropsConfig.EntryHeight;
         public static readonly int BorderSize = PropsConfig.BorderSize;
 
-        private static readonly bool PrevLabel = OldStyle, NextLabel = OldStyle;
-
-        private static readonly int PrevLabelOffsetX = PrevWidth + 1;
 
         private static readonly int NameWidth = 103;
         private static readonly int ValueWidth = 82;
@@ -71,9 +68,6 @@ namespace Server.Gumps
 
         private static readonly int TotalWidth = OffsetSize + NameWidth + OffsetSize + ValueWidth + OffsetSize + SetWidth + OffsetSize;
         private static readonly int TotalHeight = OffsetSize + ((EntryHeight + OffsetSize) * (EntryCount + 1));
-
-        private static readonly int BackWidth = BorderSize + TotalWidth + BorderSize;
-        private static readonly int BackHeight = BorderSize + TotalHeight + BorderSize;
 
         public XmlPropertiesGump(Mobile mobile, object o) : base(GumpOffsetX, GumpOffsetY)
         {
@@ -179,8 +173,8 @@ namespace Server.Gumps
                     FieldInfo finfo = null;
                     Mobiles.XmlSpawnerDefaults.DefaultEntry de = new Mobiles.XmlSpawnerDefaults.DefaultEntry();
                     Type ftype = de.GetType();
-                    if (ftype != null)
-                        finfo = ftype.GetField(prop.Name);
+                    finfo = ftype.GetField(prop.Name);
+
                     // is there an equivalent default field?
                     if (finfo != null)
                     {
