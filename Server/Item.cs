@@ -1495,6 +1495,10 @@ namespace Server
 
 							ip.AddItem(this);
 						}
+					    else
+					    {
+						    MoveToWorld(from.Location, from.Map);
+					    }
 					}
 					else
 					{
