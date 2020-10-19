@@ -1027,26 +1027,6 @@ namespace Server.Mobiles
 
             string propname = arglist[0];
 
-            string[] keywordargs = ParseString(propname, 4, ",");
-
-            // check for special keywords
-            if (keywordargs[0] == "STEALABLE")
-            {
-                if (o is Item)
-                {
-                    bool b;
-                    if (bool.TryParse(value, out b))
-                    {
-                        ItemFlags.SetStealable((Item)o, b);
-                        return "Property has been set.";
-                    }
-                    else
-                        return "Invalid Stealable assignment.";
-                }
-                else
-                    return "Object is not an item";
-            }
-
             // do a bit of parsing to handle array references
             string[] arraystring = propname.Split('[');
             int index = 0;
@@ -1350,25 +1330,6 @@ namespace Server.Mobiles
 
                 return string.Format("Type = {0}", o.GetType().Name);
 
-            }
-            else if (keywordargs[0] == "STEALABLE")
-            {
-                bool found;
-                try
-                {
-
-                    if (o is Item)
-                    {
-                        ptype = typeof(bool);
-                        return string.Format("Stealable = {0}", ItemFlags.GetStealable((Item)o));
-                    }
-                    else
-                        return "Object is not an item";
-                }
-                catch { found = false; }
-
-                if (!found)
-                    return "Stealable flag not found.";
             }
 
             // do a bit of parsing to handle array references
