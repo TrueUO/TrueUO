@@ -56,8 +56,7 @@ namespace Server.Mobiles
             HoldSpawn = 0x01,
             HoldSequence = 0x02,
             Serialize = 0x04,
-            Defrag = 0x08,
-
+            Defrag = 0x08
         }
 
         public class TypeInfo
@@ -75,7 +74,7 @@ namespace Server.Mobiles
             return (t == typeofTimeSpan || t.IsDefined(typeofParsable, false));
         }
 
-        private static readonly Type[] m_ParseTypes = new Type[] { typeof(string) };
+        private static readonly Type[] m_ParseTypes = { typeof(string) };
         private static readonly object[] m_ParseParams = new object[1];
 
         private static object Parse(object o, Type t, string value)
@@ -87,7 +86,7 @@ namespace Server.Mobiles
             return method.Invoke(o, m_ParseParams);
         }
 
-        private static readonly Type[] m_NumericTypes = new Type[]
+        private static readonly Type[] m_NumericTypes =
         {
             typeof( byte ), typeof( sbyte ),
             typeof( short ), typeof( ushort ),
@@ -788,21 +787,19 @@ namespace Server.Mobiles
                     // now set the nested attribute using the new property list
                     return (SetPropertyValue(spawner, po, arglist[1], value));
                 }
-                else
+
+                // is a nested property with attributes so first get the property
+                foreach (PropertyInfo p in props)
                 {
-                    // is a nested property with attributes so first get the property
-                    foreach (PropertyInfo p in props)
+                    if (Insensitive.Equals(p.Name, propname))
                     {
-                        if (Insensitive.Equals(p.Name, propname))
-                        {
-                            if (IsProtected(type, propname))
-                                return "Property is protected.";
+                        if (IsProtected(type, propname))
+                            return "Property is protected.";
 
-                            po = p.GetValue(o, null);
+                        po = p.GetValue(o, null);
 
-                            // now set the nested attribute using the new property list
-                            return (SetPropertyValue(spawner, po, arglist[1], value));
-                        }
+                        // now set the nested attribute using the new property list
+                        return (SetPropertyValue(spawner, po, arglist[1], value));
                     }
                 }
             }
@@ -824,27 +821,24 @@ namespace Server.Mobiles
 
                     return returnvalue;
                 }
-                else
+                // note, looping through all of the props turns out to be a significant performance bottleneck
+                // good place for optimization
+
+                foreach (PropertyInfo p in props)
                 {
-                    // note, looping through all of the props turns out to be a significant performance bottleneck
-                    // good place for optimization
-
-                    foreach (PropertyInfo p in props)
+                    if (Insensitive.Equals(p.Name, propname))
                     {
-                        if (Insensitive.Equals(p.Name, propname))
-                        {
 
-                            if (!p.CanWrite)
-                                return "Property is read only.";
+                        if (!p.CanWrite)
+                            return "Property is read only.";
 
-                            if (IsProtected(type, propname))
-                                return "Property is protected.";
+                        if (IsProtected(type, propname))
+                            return "Property is protected.";
 
-                            string returnvalue = InternalSetValue(null, o, p, value, false, index);
+                        string returnvalue = InternalSetValue(null, o, p, value, false, index);
 
-                            return returnvalue;
+                        return returnvalue;
 
-                        }
                     }
                 }
             }
@@ -885,22 +879,19 @@ namespace Server.Mobiles
                     // now set the nested attribute using the new property list
                     return (SetPropertyObject(spawner, po, arglist[1], value));
                 }
-                else
+
+                foreach (PropertyInfo p in props)
                 {
-
-                    foreach (PropertyInfo p in props)
+                    if (Insensitive.Equals(p.Name, arglist[0]))
                     {
-                        if (Insensitive.Equals(p.Name, arglist[0]))
-                        {
-                            if (IsProtected(type, arglist[0]))
-                                return "Property is protected.";
+                        if (IsProtected(type, arglist[0]))
+                            return "Property is protected.";
 
-                            po = p.GetValue(o, null);
+                        po = p.GetValue(o, null);
 
-                            // now set the nested attribute using the new property list
-                            return (SetPropertyObject(spawner, po, arglist[1], value));
+                        // now set the nested attribute using the new property list
+                        return (SetPropertyObject(spawner, po, arglist[1], value));
 
-                        }
                     }
                 }
             }
@@ -913,7 +904,6 @@ namespace Server.Mobiles
 
                 if (plookup != null)
                 {
-
                     if (!plookup.CanWrite)
                         return "Property is read only.";
 
@@ -926,34 +916,30 @@ namespace Server.Mobiles
 
                         return "Property has been set.";
                     }
-                    else
-                    {
-                        return "Property is not of type Mobile.";
-                    }
+
+                    return "Property is not of type Mobile.";
                 }
-                else
+
+                foreach (PropertyInfo p in props)
                 {
-                    foreach (PropertyInfo p in props)
+                    if (Insensitive.Equals(p.Name, name))
                     {
-                        if (Insensitive.Equals(p.Name, name))
+
+                        if (!p.CanWrite)
+                            return "Property is read only.";
+
+                        if (IsProtected(type, name))
+                            return "Property is protected.";
+
+                        if (p.PropertyType == typeof(Mobile))
                         {
+                            p.SetValue(o, value, null);
 
-                            if (!p.CanWrite)
-                                return "Property is read only.";
-
-                            if (IsProtected(type, name))
-                                return "Property is protected.";
-
-                            if (p.PropertyType == typeof(Mobile))
-                            {
-                                p.SetValue(o, value, null);
-
-                                return "Property has been set.";
-                            }
-                            else
-                            {
-                                return "Property is not of type Mobile.";
-                            }
+                            return "Property has been set.";
+                        }
+                        else
+                        {
+                            return "Property is not of type Mobile.";
                         }
                     }
                 }
@@ -1011,7 +997,8 @@ namespace Server.Mobiles
                 catch { return "Serial not found."; }
 
             }
-            else if (keywordargs[0] == "TYPE")
+
+            if (keywordargs[0] == "TYPE")
             {
                 ptype = typeof(Type);
 
@@ -1068,38 +1055,36 @@ namespace Server.Mobiles
                     // now set the nested attribute using the new property list
                     return (GetPropertyValue(spawner, po, arglist[1], out ptype));
                 }
-                else
-                {
-                    // is a nested property with attributes so first get the property
-                    foreach (PropertyInfo p in props)
-                    {
-                        //if ( Insensitive.Equals( p.Name, arglist[0] ) )
-                        if (Insensitive.Equals(p.Name, propname))
-                        {
-                            if (!p.CanRead)
-                                return "Property is write only.";
 
-                            ptype = p.PropertyType;
-                            if (ptype.IsPrimitive)
-                            {
-                                po = p.GetValue(o, null);
-                            }
-                            else if ((ptype.GetInterface("IList") != null) && index >= 0)
-                            {
-                                try
-                                {
-                                    object arrayvalue = p.GetValue(o, null);
-                                    po = ((IList<object>)arrayvalue)[index];
-                                }
-                                catch { }
-                            }
-                            else
-                            {
-                                po = p.GetValue(o, null);
-                            }
-                            // now set the nested attribute using the new property list
-                            return (GetPropertyValue(spawner, po, arglist[1], out ptype));
+                // is a nested property with attributes so first get the property
+                foreach (PropertyInfo p in props)
+                {
+                    //if ( Insensitive.Equals( p.Name, arglist[0] ) )
+                    if (Insensitive.Equals(p.Name, propname))
+                    {
+                        if (!p.CanRead)
+                            return "Property is write only.";
+
+                        ptype = p.PropertyType;
+                        if (ptype.IsPrimitive)
+                        {
+                            po = p.GetValue(o, null);
                         }
+                        else if ((ptype.GetInterface("IList") != null) && index >= 0)
+                        {
+                            try
+                            {
+                                object arrayvalue = p.GetValue(o, null);
+                                po = ((IList<object>)arrayvalue)[index];
+                            }
+                            catch { }
+                        }
+                        else
+                        {
+                            po = p.GetValue(o, null);
+                        }
+                        // now set the nested attribute using the new property list
+                        return (GetPropertyValue(spawner, po, arglist[1], out ptype));
                     }
                 }
             }
@@ -1117,21 +1102,19 @@ namespace Server.Mobiles
 
                     return InternalGetValue(o, plookup, index);
                 }
-                else
+
+                // its just a simple single property
+                foreach (PropertyInfo p in props)
                 {
-                    // its just a simple single property
-                    foreach (PropertyInfo p in props)
+                    //if ( Insensitive.Equals( p.Name, name ) )
+                    if (Insensitive.Equals(p.Name, propname))
                     {
-                        //if ( Insensitive.Equals( p.Name, name ) )
-                        if (Insensitive.Equals(p.Name, propname))
-                        {
-                            if (!p.CanRead)
-                                return "Property is write only.";
+                        if (!p.CanRead)
+                            return "Property is write only.";
 
-                            ptype = p.PropertyType;
+                        ptype = p.PropertyType;
 
-                            return InternalGetValue(o, p, index);
-                        }
+                        return InternalGetValue(o, p, index);
                     }
                 }
             }
@@ -1680,32 +1663,29 @@ namespace Server.Mobiles
             {
                 return pinfo;
             }
-            else
+            // if it cant be found, then do the full search and add it to the list
+
+            PropertyInfo[] props = type.GetProperties(BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public);
+
+            foreach (PropertyInfo p in props)
             {
-                // if it cant be found, then do the full search and add it to the list
-
-                PropertyInfo[] props = type.GetProperties(BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public);
-
-                foreach (PropertyInfo p in props)
+                if (Insensitive.Equals(p.Name, propname))
                 {
-                    if (Insensitive.Equals(p.Name, propname))
+                    // did we find the type at least?
+                    if (tinfo == null)
                     {
-                        // did we find the type at least?
-                        if (tinfo == null)
+                        // if not then add the type to the list
+                        tinfo = new TypeInfo
                         {
-                            // if not then add the type to the list
-                            tinfo = new TypeInfo
-                            {
-                                t = type
-                            };
+                            t = type
+                        };
 
-                            spawner.PropertyInfoList.Add(tinfo);
-                        }
-
-                        // and add the property to the tinfo property list
-                        tinfo.plist.Add(p);
-                        return p;
+                        spawner.PropertyInfoList.Add(tinfo);
                     }
+
+                    // and add the property to the tinfo property list
+                    tinfo.plist.Add(p);
+                    return p;
                 }
             }
 
@@ -1767,65 +1747,32 @@ namespace Server.Mobiles
                 }
                 return str;
             }
-            else if (startc == '"' || startc == '(')
+
+            if (startc == '"' || startc == '(')
             {
                 ptype = typeof(string);
                 return str;
             }
-            else if (startc == '#')
+
+            if (startc == '#')
             {
                 ptype = typeof(string);
                 return str.Substring(1);
             }
             // or a bool
-            else if ((str.ToLower()) == "true" || (str.ToLower() == "false"))
+
+            if ((str.ToLower()) == "true" || (str.ToLower() == "false"))
             {
                 ptype = typeof(bool);
                 return str;
             }
             // then look for a keyword
-            else if (IsValueKeyword(pname))
+
+            if (IsValueKeyword(pname))
             {
                 valueKeyword kw = valueKeywordHash[pname];
 
-                if ((kw == valueKeyword.GET) && arglist.Length > 2)
-                {
-                    // syntax is GET,[itemname -OR- SETITEM][,itemtype],property
-
-                    string propname = arglist[2];
-                    string typestr = null;
-
-                    if (arglist.Length > 3)
-                    {
-                        typestr = arglist[2];
-                        propname = arglist[3];
-                    }
-
-                    // is the itemname a serialno?
-                    object testitem = null;
-                    if (arglist[1].StartsWith("0x"))
-                    {
-                        int serial;
-                        if (!int.TryParse(arglist[1].Substring(2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out serial))
-                            serial = -1;
-
-                        if (serial >= 0)
-                            testitem = World.FindEntity(serial);
-                    }
-                    else if (arglist[1] == "SETITEM" && spawner != null && !spawner.Deleted && spawner.SetItem != null)
-                    {
-                        testitem = spawner.SetItem;
-                    }
-                    else
-                    {
-                        testitem = FindItemByName(spawner, arglist[1], typestr);
-                    }
-
-                    string getvalue = GetPropertyValue(spawner, testitem, propname, out ptype);
-
-                    return ParseGetValue(getvalue, ptype);
-                }
-                else if ((kw == valueKeyword.PLAYERSINRANGE) && arglist.Length > 1)
+                if ((kw == valueKeyword.PLAYERSINRANGE) && arglist.Length > 1)
                 {
                     // syntax is PLAYERSINRANGE,range
 
