@@ -1998,7 +1998,7 @@ namespace Server.Mobiles
             {
                 TypeName = action
             };
-            string substitutedtypeName = BaseXmlSpawner.ApplySubstitution(null, attachedto, trigmob, action);
+            string substitutedtypeName = BaseXmlSpawner.ApplySubstitution(null, attachedto, action);
             string typeName = BaseXmlSpawner.ParseObjectType(substitutedtypeName);
 
 
@@ -2624,7 +2624,7 @@ namespace Server.Mobiles
                     needs_object_trigger = true;
                     string status_str;
 
-                    if (BaseXmlSpawner.TestItemProperty(this, m_ObjectPropertyItem, m_ObjectPropertyName, null, out status_str))
+                    if (BaseXmlSpawner.TestItemProperty(this, m_ObjectPropertyItem, m_ObjectPropertyName, out status_str))
                     {
                         has_object_trigger = true;
                     }
@@ -2644,7 +2644,7 @@ namespace Server.Mobiles
                     needs_player_trigger = true;
                     string status_str;
 
-                    if (BaseXmlSpawner.TestMobProperty(this, m, m_PlayerPropertyName, null, out status_str))
+                    if (BaseXmlSpawner.TestMobProperty(this, m, m_PlayerPropertyName, out status_str))
                     {
                         has_player_trigger = true;
                     }
@@ -2666,7 +2666,7 @@ namespace Server.Mobiles
 
                     string status_str;
 
-                    if (BaseXmlSpawner.TestMobProperty(this, MobTriggerId, m_MobPropertyName, null, out status_str))
+                    if (BaseXmlSpawner.TestMobProperty(this, MobTriggerId, m_MobPropertyName, out status_str))
                     {
                         has_mob_trigger = true;
                     }
@@ -8584,7 +8584,7 @@ namespace Server.Mobiles
                 }
 
                 // check for string substitions
-                string substitutedtypeName = BaseXmlSpawner.ApplySubstitution(this, this, m_mob_who_triggered, TheSpawn.TypeName);
+                string substitutedtypeName = BaseXmlSpawner.ApplySubstitution(this, this, TheSpawn.TypeName);
 
                 // random positioning is the default
                 List<SpawnPositionInfo> spawnpositioning = null;
@@ -8658,7 +8658,7 @@ namespace Server.Mobiles
                                     if (ckeyvalueargs.Length > 1)
                                     {
                                         // dont spawn if it fails the test
-                                        if (!BaseXmlSpawner.CheckPropertyString(this, this, ckeyvalueargs[1], m_mob_who_triggered, out status_str)) return false;
+                                        if (!BaseXmlSpawner.CheckPropertyString(this, this, ckeyvalueargs[1], out status_str)) return false;
 
                                     }
                                     else
@@ -9369,7 +9369,7 @@ namespace Server.Mobiles
             // go through the tiles and see if any are at the Z location
             foreach (StaticTile o in tiles)
             {
-                StaticTile i = (StaticTile)o;
+                StaticTile i = o;
 
                 if ((i.Z + i.Height) == Z)
                 {

@@ -495,7 +495,7 @@ namespace Server.Mobiles
                     if (criteria.Dosearchcondition && (criteria.Searchcondition != null))
                     {
                         // check the property test
-                        hascondition = BaseXmlSpawner.CheckPropertyString(null, i, criteria.Searchcondition, null, out status_str);
+                        hascondition = BaseXmlSpawner.CheckPropertyString(null, i, criteria.Searchcondition, out status_str);
                     }
                     if (criteria.Dosearchcondition && !hascondition) continue;
 
@@ -704,7 +704,7 @@ namespace Server.Mobiles
                         if (criteria.Dosearchcondition && (criteria.Searchcondition != null))
                         {
                             // check the property test
-                            hascondition = BaseXmlSpawner.CheckPropertyString(null, i, criteria.Searchcondition, null, out status_str);
+                            hascondition = BaseXmlSpawner.CheckPropertyString(null, i, criteria.Searchcondition, out status_str);
                         }
                         if (criteria.Dosearchcondition && !hascondition) continue;
 

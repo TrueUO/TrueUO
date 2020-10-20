@@ -39,12 +39,6 @@ namespace Server.Mobiles
 
             return false;
         }
-
-        public static void Initialize()
-        {
-            ProtectedPropertiesList.Add(new ProtectedProperty(typeof(Mobile), "accesslevel"));
-            ProtectedPropertiesList.Add(new ProtectedProperty(typeof(Item), "stafflevel"));
-        }
         #endregion
 
         #region Type support
@@ -59,7 +53,7 @@ namespace Server.Mobiles
 
         public class TypeInfo
         {
-            public List<PropertyInfo> plist = new List<PropertyInfo>();      // hold propertyinfo list
+            public List<PropertyInfo> plist = new List<PropertyInfo>(); // hold propertyinfo list
             public Type t;
         }
 
@@ -411,14 +405,8 @@ namespace Server.Mobiles
                     {
                         // if the test is valid then terminate the timer
                         string status_str;
-                        Mobile trigmob = null;
 
-                        if (m_Spawner != null && !m_Spawner.Deleted)
-                        {
-                            trigmob = m_Spawner.TriggerMob;
-                        }
-
-                        if (TestItemProperty(m_Spawner, m_Spawner, m_Condition, trigmob, out status_str))
+                        if (TestItemProperty(m_Spawner, m_Spawner, m_Condition, out status_str))
                         {
                             // spawn the designated subgroup if specified
                             if (m_Goto >= 0 && m_Spawner != null && !m_Spawner.Deleted)
@@ -472,8 +460,8 @@ namespace Server.Mobiles
         {
             if (tag != null)
                 return (string.Format("{0} : type={1} cond={2} go={3} del={4} end={5}", tag.Typename, tag.Type, tag.m_Condition, tag.m_Goto, tag.m_Delay, tag.m_End));
-            else
-                return null;
+
+            return null;
         }
 
         public static void RemoveFromTagList(XmlSpawner spawner, KeywordTag tag)
@@ -1453,7 +1441,7 @@ namespace Server.Mobiles
         #endregion
 
         #region Property testing
-        public static bool TestMobProperty(XmlSpawner spawner, Mobile mobile, string testString, Mobile trigmob, out string status_str)
+        public static bool TestMobProperty(XmlSpawner spawner, Mobile mobile, string testString, out string status_str)
         {
             status_str = null;
             // now make sure the mobile itself is there
@@ -1462,12 +1450,12 @@ namespace Server.Mobiles
                 return false;
             }
 
-            bool testreturn = CheckPropertyString(spawner, mobile, testString, trigmob, out status_str);
+            bool testreturn = CheckPropertyString(spawner, mobile, testString, out status_str);
 
             return testreturn;
         }
 
-        public static bool TestItemProperty(XmlSpawner spawner, Item ObjectPropertyItem, string testString, Mobile trigmob, out string status_str)
+        public static bool TestItemProperty(XmlSpawner spawner, Item ObjectPropertyItem, string testString, out string status_str)
         {
             // now make sure the item itself is there
             if (ObjectPropertyItem == null || ObjectPropertyItem.Deleted)
@@ -1476,7 +1464,7 @@ namespace Server.Mobiles
                 return false;
             }
 
-            bool testreturn = CheckPropertyString(spawner, ObjectPropertyItem, testString, trigmob, out status_str);
+            bool testreturn = CheckPropertyString(spawner, ObjectPropertyItem, testString, out status_str);
 
             return testreturn;
         }
@@ -1545,7 +1533,7 @@ namespace Server.Mobiles
             return null;
         }
 
-        public static string ParseForKeywords(XmlSpawner spawner, object o, string valstr, Mobile trigmob, bool literal, out Type ptype)
+        public static string ParseForKeywords(XmlSpawner spawner, object o, string valstr, bool literal, out Type ptype)
         {
             ptype = null;
 
@@ -1590,14 +1578,8 @@ namespace Server.Mobiles
             if ((startc == '.') || (startc == '-') || (startc == '+') || (startc >= '0' && startc <= '9'))
             {
                 // determine the type
-                if (str.IndexOf(".") >= 0)
-                {
-                    ptype = typeof(double);
-                }
-                else
-                {
-                    ptype = typeof(int);
-                }
+                ptype = str.IndexOf(".") >= 0 ? typeof(double) : typeof(int);
+
                 return str;
             }
 
@@ -1637,7 +1619,7 @@ namespace Server.Mobiles
                     int.TryParse(arglist[1], out range);
 
                     // count nearby players
-                    if (spawner != null && spawner.SpawnRegion != null && range < 0)
+                    if (spawner?.SpawnRegion != null && range < 0)
                     {
                         foreach (Mobile p in spawner.SpawnRegion.GetPlayers())
                         {
@@ -1694,7 +1676,8 @@ namespace Server.Mobiles
             // or
             // propname = value (hexvalue)
 
-            if (str == null) return null;
+            if (str == null)
+                return null;
 
             // find the separator
             string[] arglist = str.Split("=".ToCharArray(), 2);
@@ -1717,11 +1700,12 @@ namespace Server.Mobiles
             return null;
         }
 
-        public static bool CheckPropertyString(XmlSpawner spawner, object o, string testString, Mobile trigmob, out string status_str)
+        public static bool CheckPropertyString(XmlSpawner spawner, object o, string testString, out string status_str)
         {
             status_str = null;
 
-            if (o == null) return false;
+            if (o == null)
+                return false;
 
             if (string.IsNullOrEmpty(testString))
             {
@@ -1732,18 +1716,18 @@ namespace Server.Mobiles
             string[] arglist = ParseString(testString, 2, "&|");
             if (arglist.Length < 2)
             {
-                bool returnval = CheckSingleProperty(spawner, o, testString, trigmob, out status_str);
+                bool returnval = CheckSingleProperty(spawner, o, testString, out status_str);
 
                 // simple conditional test with no and/or operators
                 return returnval;
             }
 
             // test each half independently and combine the results
-            bool first = CheckSingleProperty(spawner, o, arglist[0], trigmob, out status_str);
+            bool first = CheckSingleProperty(spawner, o, arglist[0], out status_str);
 
             // this will recursively parse the property test string with implicit nesting for multiple logical tests of the
             // form A * B * C * D    being grouped as A * (B * (C * D))
-            bool second = CheckPropertyString(spawner, o, arglist[1], trigmob, out status_str);
+            bool second = CheckPropertyString(spawner, o, arglist[1], out status_str);
 
             int andposition = testString.IndexOf("&");
             int orposition = testString.IndexOf("|");
@@ -1765,7 +1749,7 @@ namespace Server.Mobiles
             return false;
         }
 
-        public static bool CheckSingleProperty(XmlSpawner spawner, object o, string testString, Mobile trigmob, out string status_str)
+        public static bool CheckSingleProperty(XmlSpawner spawner, object o, string testString, out string status_str)
         {
             status_str = null;
 
@@ -1822,7 +1806,7 @@ namespace Server.Mobiles
             Type ptype1;
             Type ptype2;
 
-            string value1 = ParseForKeywords(spawner, o, arglist[0].Trim(), trigmob, false, out ptype1);
+            string value1 = ParseForKeywords(spawner, o, arglist[0].Trim(), false, out ptype1);
 
             // see if it was successful
             if (ptype1 == null)
@@ -1833,7 +1817,7 @@ namespace Server.Mobiles
                 //return false;
             }
 
-            string value2 = ParseForKeywords(spawner, o, arglist[1].Trim(), trigmob, false, out ptype2);
+            string value2 = ParseForKeywords(spawner, o, arglist[1].Trim(), false, out ptype2);
 
             // see if it was successful
             if (ptype2 == null)
@@ -2534,8 +2518,7 @@ namespace Server.Mobiles
         #endregion
 
         #region String parsing methods
-
-        public static string ApplySubstitution(XmlSpawner spawner, object o, Mobile trigmob, string typeName)
+        public static string ApplySubstitution(XmlSpawner spawner, object o, string typeName)
         {
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
 
@@ -2573,7 +2556,7 @@ namespace Server.Mobiles
                 // try to evaluate and then substitute the arg
                 Type ptype;
 
-                string value = ParseForKeywords(spawner, o, keypart.Trim(), trigmob, true, out ptype);
+                string value = ParseForKeywords(spawner, o, keypart.Trim(), true, out ptype);
 
                 // trim off the " from strings
                 if (value != null)
@@ -3040,7 +3023,7 @@ namespace Server.Mobiles
                                                 }
                                             }
                                         }
-                                        else if (invoker != null && invoker is IEntity)
+                                        else if (invoker is IEntity)
                                         {
                                             IPooledEnumerable eable = map.GetMobilesInRange(((IEntity)invoker).Location, range);
                                             foreach (Mobile m in eable)
@@ -3078,7 +3061,7 @@ namespace Server.Mobiles
                                                 }
                                             }
                                         }
-                                        else if (invoker != null && invoker is IEntity)
+                                        else if (invoker is IEntity)
                                         {
                                             foreach (Item i in map.GetItemsInRange(((IEntity)invoker).Location, range))
                                             {
@@ -3174,7 +3157,7 @@ namespace Server.Mobiles
                                 return false;
                             }
                             // test the condition
-                            if (TestItemProperty(spawner, spawner, condition, triggermob, out status_str))
+                            if (TestItemProperty(spawner, spawner, condition, out status_str))
                             {
                                 // try to spawn the dogroup
                                 if (spawner != null && !spawner.Deleted)
@@ -3236,7 +3219,7 @@ namespace Server.Mobiles
                             }
 
                             // test the condition
-                            if (TestItemProperty(spawner, spawner, condition, triggermob, out status_str))
+                            if (TestItemProperty(spawner, spawner, condition, out status_str))
                             {
                                 // try to spawn the thengroup
                                 if (thengroup >= 0 && spawner != null && !spawner.Deleted)
