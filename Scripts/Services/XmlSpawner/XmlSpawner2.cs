@@ -207,7 +207,6 @@ namespace Server.Mobiles
         private TimeSpan m_DespawnTime;
 
         private string m_SkillTrigger;
-        private bool m_skillTriggerActivated;
         private SkillName m_skill_that_triggered;
         private bool m_FreeRun = false;     // override for all other triggering modes
 
@@ -537,18 +536,17 @@ namespace Server.Mobiles
                                     return true;
                                 }
                             }
-
                         }
                     }
 
                     UseSectorActivate = false;
                 }
+
                 _TraceStart(2);
                 // go through the sectorlist and see if any of the sectors are active
 
                 foreach (Sector s in sectorList)
                 {
-
                     if (s != null && s.Active && s.Players != null && s.Players.Count > 0)
                     {
 
@@ -1241,52 +1239,15 @@ namespace Server.Mobiles
                 DoTimer3(value);
             }
         }
-        [CommandProperty(AccessLevel.GameMaster)]
-        public string TriggerOnCarried
-        {
-            get { return m_ItemTriggerName; }
-            set { m_ItemTriggerName = value; }
-
-        }
-        [CommandProperty(AccessLevel.GameMaster)]
-        public string NoTriggerOnCarried
-        {
-            get { return m_NoItemTriggerName; }
-            set { m_NoItemTriggerName = value; }
-
-        }
-
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public string TriggerObjectProp
-        {
-            get { return m_ObjectPropertyName; }
-            set { m_ObjectPropertyName = value; }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public string TriggerObjectName
-        {
-            get
-            {
-                if (m_ObjectPropertyItem == null || m_ObjectPropertyItem.Deleted) return null;
-                return m_ObjectPropertyItem.Name;
-            }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public Item TriggerObject
-        {
-            get { return m_ObjectPropertyItem; }
-            set { m_ObjectPropertyItem = value; }
-        }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public string SetItemName
         {
             get
             {
-                if (m_SetPropertyItem == null || m_SetPropertyItem.Deleted) return null;
+                if (m_SetPropertyItem == null || m_SetPropertyItem.Deleted)
+                    return null;
+
                 return m_SetPropertyItem.Name;
             }
         }
@@ -1739,8 +1700,7 @@ namespace Server.Mobiles
 
         public override void OnAfterDuped(Item newItem)
         {
-            // automatically turn off duped spawners
-            ((XmlSpawner)newItem).Running = false;
+            ((XmlSpawner)newItem).Running = false; // automatically turn off duped spawners
 
             base.OnAfterDuped(newItem);
         }
@@ -1751,21 +1711,21 @@ namespace Server.Mobiles
 
             currentmap = Map;
 
-            // reset the sector list for smart spawning
-            ResetSectorList();
+            ResetSectorList(); // reset the sector list for smart spawning
         }
 
         public override void OnDoubleClick(Mobile from)
         {
-            if (from == null || from.Deleted || from.AccessLevel < AccessLevel.GameMaster || (m_SpawnerGump != null && SomeOneHasGumpOpen)) return;
+            if (from == null || from.Deleted || from.AccessLevel < AccessLevel.GameMaster || (m_SpawnerGump != null && SomeOneHasGumpOpen))
+                return;
 
-            // clear any text entry books that might still be around
-            DeleteTextEntryBook();
+            DeleteTextEntryBook(); // clear any text entry books that might still be around
 
             int x = 0;
             int y = 0;
-            // read the text entries for default values
-            Account acct = from.Account as Account;
+            
+            Account acct = from.Account as Account; // read the text entries for default values
+
             if (acct != null)
             {
                 XmlSpawnerDefaults.DefaultEntry defs = XmlSpawnerDefaults.GetDefaults(acct.ToString(), from.Name);
@@ -2533,9 +2493,7 @@ namespace Server.Mobiles
 
         private void ActivateTrigger()
         {
-
-            // reset the timer
-            DoTimer();
+            DoTimer(); // reset the timer
 
             // start the refractory timer to set proximity activated to false, thus enabling another activation
             if (m_MaxRefractory > TimeSpan.FromMinutes(0))
@@ -2555,27 +2513,15 @@ namespace Server.Mobiles
 
             // reset speech triggering if it was set
             m_speechTriggerActivated = false;
-
-            // reset skill triggering if it was set
-            m_skillTriggerActivated = false;
-
-            // reset external triggering if it was set
-            //this.m_ExternalTrigger = false;
         }
 
         public void CheckTriggers(Mobile m, Skill s, bool hasproximity)
         {
-
-            // only proximity trigger when no spawns have already been triggered
-            if (AllowTriggering && !m_proximityActivated)
+            if (AllowTriggering && !m_proximityActivated) // only proximity trigger when no spawns have already been triggered
             {
                 bool needs_speech_trigger = false;
-                bool needs_skill_trigger = false;
-                bool needs_object_trigger = false;
                 bool needs_mob_trigger = false;
                 bool needs_player_trigger = false;
-                bool has_object_trigger = false;
-                bool has_mob_trigger = false;
                 bool has_player_trigger = false;
 
                 m_skipped = false;
@@ -2584,7 +2530,8 @@ namespace Server.Mobiles
                 // if a low demand one has already failed.
 
                 // check for external triggering
-                if (m_ExternalTriggering && !m_ExternalTrigger) return;
+                if (m_ExternalTriggering && !m_ExternalTrigger)
+                    return;
 
                 // if speech triggering is set then test for successful activation
                 if (!string.IsNullOrEmpty(m_SpeechTrigger))
@@ -2592,36 +2539,8 @@ namespace Server.Mobiles
                     needs_speech_trigger = true;
                 }
                 // check to see if we have to continue
-                if (needs_speech_trigger && !m_speechTriggerActivated) return;
-
-                // if skill triggering is set then test for successful activation
-                if (!string.IsNullOrEmpty(m_SkillTrigger))
-                {
-                    needs_skill_trigger = true;
-                }
-                // check to see if we have to continue
-                if (needs_skill_trigger && !m_skillTriggerActivated) return;
-
-                // if item property triggering is set then test for the property value
-                //
-                if (!string.IsNullOrEmpty(m_ObjectPropertyName))
-                {
-                    needs_object_trigger = true;
-                    string status_str;
-
-                    if (BaseXmlSpawner.TestItemProperty(this, m_ObjectPropertyItem, m_ObjectPropertyName, out status_str))
-                    {
-                        has_object_trigger = true;
-                    }
-
-                    if (!string.IsNullOrEmpty(status_str))
-                    {
-                        this.status_str = status_str;
-                    }
-                }
-
-                // check to see if we have to continue
-                if (needs_object_trigger && !has_object_trigger) return;
+                if (needs_speech_trigger && !m_speechTriggerActivated)
+                    return;
 
                 // if player property triggering is set then look for the mob and test properties
                 if (!string.IsNullOrEmpty(m_PlayerPropertyName))
@@ -2641,40 +2560,22 @@ namespace Server.Mobiles
                 }
 
                 // check to see if we have to continue
-                if (needs_player_trigger && !has_player_trigger) return;
-
-                // if mob property triggering is set then look for the mob and test properties
-                if (!string.IsNullOrEmpty(m_MobPropertyName) &&
-                    !string.IsNullOrEmpty(m_MobTriggerName))
-                {
-                    needs_mob_trigger = true;
-
-                    string status_str;
-
-                    if (BaseXmlSpawner.TestMobProperty(this, MobTriggerId, m_MobPropertyName, out status_str))
-                    {
-                        has_mob_trigger = true;
-                    }
-
-                    if (!string.IsNullOrEmpty(status_str))
-                    {
-                        this.status_str = status_str;
-                    }
-                }
+                if (needs_player_trigger && !has_player_trigger)
+                    return;
 
                 // check to see if we have to continue
-                if (needs_mob_trigger && !has_mob_trigger)
+                if (needs_mob_trigger)
                     return;
 
                 // if this was called without being proximity triggered then check to see that the non-movement triggers were enabled.
-                if (!hasproximity && !needs_object_trigger && !needs_mob_trigger && !m_ExternalTriggering) return;
+                if (!hasproximity && !needs_mob_trigger && !m_ExternalTriggering)
+                    return;
 
                 // all of the necessary trigger conditions have been met so go ahead and trigger
                 // after you make the probability check
 
                 if (Utility.RandomDouble() < m_TriggerProbability)
                 {
-
                     // play a sound indicating the spawner has been triggered
                     if (m_ProximityTriggerSound > 0 && m != null && !m.Deleted)
                         m.PlaySound(m_ProximityTriggerSound);
@@ -2693,14 +2594,9 @@ namespace Server.Mobiles
                 else
                 {
                     m_skipped = true;
+
                     // reset speech triggering if it was set
-
                     m_speechTriggerActivated = false;
-
-                    // reset skill triggering if it was set
-                    m_skillTriggerActivated = false;
-                    // reset external triggering if it was set
-                    //this.m_ExternalTrigger = false;
                 }
             }
         }
@@ -2798,7 +2694,6 @@ namespace Server.Mobiles
             protected override void OnTick()
             {
                 // check everyone on the movement list then clear the list
-
                 if (m_Spawner != null && !m_Spawner.Deleted)
                 {
                     if (m_Spawner.m_Running && !m_Spawner.m_proximityActivated && !m_Spawner.m_refractActivated && m_Spawner.TODInRange && m_Spawner.CanSpawn)
@@ -2838,7 +2733,6 @@ namespace Server.Mobiles
 
         public override void OnMovement(Mobile m, Point3D oldLocation)
         {
-
             if (m_Running && m_ProximityRange >= 0 && ValidPlayerTrig(m) && CanSpawn)
             {
                 // check to see if player is within range of the spawner
@@ -2849,16 +2743,11 @@ namespace Server.Mobiles
                     // the actual movement stream
 
                     AddToMovementList(m);
-
-                    // check the triggers in the OnTick for the list handler instead of here
                 }
                 else
                 {
                     // clear any speech triggering
                     m_speechTriggerActivated = false;
-
-                    // clear any skill triggering
-                    m_skillTriggerActivated = false;
                 }
             }
             base.OnMovement(m, oldLocation);
@@ -2920,6 +2809,7 @@ namespace Server.Mobiles
                                 BaseXmlSpawner.RemoveKeyword(keywordlist[i]);
                             }
                         }
+
                         break;
                     }
                 case "BlockCommand":
@@ -3650,14 +3540,11 @@ namespace Server.Mobiles
                     {
                         XmlSaveDefaults(e.Arguments[1], m);
                     }
-                    else
-                        if (e.Arguments[0].ToLower() == "load")
+                    else if (e.Arguments[0].ToLower() == "load")
                     {
                         XmlLoadDefaults(e.Arguments[1], m);
                     }
-                    else
-                            // try to set the property
-                            if (e.Arguments[0].ToLower() == "maxdelay")
+                    else if (e.Arguments[0].ToLower() == "maxdelay")
                     {
                         try
                         {
@@ -3666,8 +3553,7 @@ namespace Server.Mobiles
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
-                    else
-                                if (e.Arguments[0].ToLower() == "mindelay")
+                    else if (e.Arguments[0].ToLower() == "mindelay")
                     {
                         try
                         {
@@ -3676,8 +3562,7 @@ namespace Server.Mobiles
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
-                    else
-                                    if (e.Arguments[0].ToLower() == "spawnrange")
+                    else if (e.Arguments[0].ToLower() == "spawnrange")
                     {
                         try
                         {
@@ -3686,8 +3571,7 @@ namespace Server.Mobiles
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
-                    else
-                                        if (e.Arguments[0].ToLower() == "homerange")
+                    else if (e.Arguments[0].ToLower() == "homerange")
                     {
                         try
                         {
@@ -3696,8 +3580,7 @@ namespace Server.Mobiles
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
-                    else
-                                            if (e.Arguments[0].ToLower() == "relativehome")
+                    else if (e.Arguments[0].ToLower() == "relativehome")
                     {
                         try
                         {
@@ -3706,8 +3589,7 @@ namespace Server.Mobiles
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
-                    else
-                                                if (e.Arguments[0].ToLower() == "proximitytriggersound")
+                    else if (e.Arguments[0].ToLower() == "proximitytriggersound")
                     {
                         try
                         {
@@ -3716,8 +3598,7 @@ namespace Server.Mobiles
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
-                    else
-                                                    if (e.Arguments[0].ToLower() == "proximityrange")
+                    else if (e.Arguments[0].ToLower() == "proximityrange")
                     {
                         try
                         {
@@ -3726,8 +3607,7 @@ namespace Server.Mobiles
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
-                    else
-                                                        if (e.Arguments[0].ToLower() == "triggerprobability")
+                    else if (e.Arguments[0].ToLower() == "triggerprobability")
                     {
                         try
                         {
@@ -3736,8 +3616,7 @@ namespace Server.Mobiles
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
-                    else
-                                                            if (e.Arguments[0].ToLower() == "todstart")
+                    else if (e.Arguments[0].ToLower() == "todstart")
                     {
                         try
                         {
@@ -3746,8 +3625,7 @@ namespace Server.Mobiles
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
-                    else
-                                                                if (e.Arguments[0].ToLower() == "todend")
+                    else if (e.Arguments[0].ToLower() == "todend")
                     {
                         try
                         {
@@ -3756,8 +3634,7 @@ namespace Server.Mobiles
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
-                    else
-                                                                    if (e.Arguments[0].ToLower() == "stackamount")
+                    else if (e.Arguments[0].ToLower() == "stackamount")
                     {
                         try
                         {
@@ -3766,8 +3643,7 @@ namespace Server.Mobiles
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
-                    else
-                                                                        if (e.Arguments[0].ToLower() == "duration")
+                    else if (e.Arguments[0].ToLower() == "duration")
                     {
                         try
                         {
@@ -3776,8 +3652,7 @@ namespace Server.Mobiles
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
-                    else
-                                                                            if (e.Arguments[0].ToLower() == "group")
+                    else if (e.Arguments[0].ToLower() == "group")
                     {
                         try
                         {
@@ -3786,8 +3661,7 @@ namespace Server.Mobiles
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
-                    else
-                                                                                if (e.Arguments[0].ToLower() == "team")
+                    else if (e.Arguments[0].ToLower() == "team")
                     {
                         try
                         {
@@ -3796,8 +3670,7 @@ namespace Server.Mobiles
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
-                    else
-                                                                                    if (e.Arguments[0].ToLower() == "todmode")
+                    else if (e.Arguments[0].ToLower() == "todmode")
                     {
                         try
                         {
@@ -3815,8 +3688,7 @@ namespace Server.Mobiles
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
-                    else
-                                                                                        if (e.Arguments[0].ToLower() == "maxrefractory")
+                    else if (e.Arguments[0].ToLower() == "maxrefractory")
                     {
                         try
                         {
@@ -3825,8 +3697,7 @@ namespace Server.Mobiles
                         }
                         catch { m.SendMessage("invalid value : {0}", e.Arguments[1]); }
                     }
-                    else
-                                                                                            if (e.Arguments[0].ToLower() == "minrefractory")
+                    else if (e.Arguments[0].ToLower() == "minrefractory")
                     {
                         try
                         {
@@ -3864,7 +3735,6 @@ namespace Server.Mobiles
                 m.SendMessage("MaxDelay = {0}", defMaxDelay);
             }
         }
-
 
         [Usage("XmlSpawnerShowAll")]
         [Aliases("XmlShow")]
@@ -4013,7 +3883,6 @@ namespace Server.Mobiles
         }
 
         [Usage("SmartStat [accesslevel Player/Counselor/GameMaster/Seer/Administrator]")]
-
         [Description("Returns the spawn reduction due to SmartSpawning.")]
         public static void SmartStat_OnCommand(CommandEventArgs e)
         {
@@ -4095,11 +3964,9 @@ namespace Server.Mobiles
         }
 
         [Usage("OptimalSmartSpawning [max spawn/homerange diff]")]
-
         [Description("Activates SmartSpawning on XmlSpawners that are well-suited for use of this feature.")]
         public static void OptimalSmartSpawning_OnCommand(CommandEventArgs e)
         {
-
             int maxdiff = 1;
             if (e.Arguments.Length > 0)
             {
@@ -4174,11 +4041,10 @@ namespace Server.Mobiles
                     }
                 }
             }
+
             e.Mobile.SendMessage("Configured {0} XmlSpawners for SmartSpawning using maxdiff of {1}", count, maxdiff);
             e.Mobile.SendMessage("Estimated item/mob reduction is {0}", maxcount);
-
         }
-
 
         [Usage("XmlSpawnerWipe [SpawnerPrefixFilter]")]
         [Description("Removes all XmlSpawner objects from the current map.")]
@@ -4292,8 +4158,6 @@ namespace Server.Mobiles
             int OtherCount = 0;
             int bad_spawner_count = 0;
             int spawners_deleted = 0;
-
-
 
             if (from != null)
                 from.SendMessage(string.Format("UnLoading {0} objects{1} from file {2}.",
@@ -4416,8 +4280,8 @@ namespace Server.Mobiles
                                     }
                                 }
                             }
-
                         }
+
                         TotalCount++;
                     }
                 }
@@ -4437,9 +4301,9 @@ namespace Server.Mobiles
                 if (from != null)
                     from.SendMessage(33, "{0} bad spawners detected.", bad_spawner_count);
             }
+
             processedmaps = 1;
             processedspawners = TotalCount;
-
         }
 
         [Usage("XmlSpawnerUnLoad <SpawnFile or directory> [SpawnerPrefixFilter]")]
