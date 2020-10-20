@@ -231,12 +231,6 @@ namespace Server.Mobiles
 
         private Point3D mostRecentSpawnPosition = Point3D.Zero;
 
-        private int m_MovingPlayerCount = 0;
-        private int m_FastestPlayerSpeed = 0;
-
-        private bool m_DebugThis = false;
-
-        private TimerPriority m_BasePriority = TimerPriority.OneSecond;
         #endregion
 
         #region Property Overrides
@@ -250,13 +244,13 @@ namespace Server.Mobiles
 
         #region Properties
 
-        public TimerPriority BasePriority { get { return m_BasePriority; } set { m_BasePriority = value; } }
+        public TimerPriority BasePriority { get; set; } = TimerPriority.OneSecond;
 
-        public bool DebugThis { get { return m_DebugThis; } set { m_DebugThis = value; } }
+        public bool DebugThis { get; set; } = false;
 
-        public int MovingPlayerCount { get { return m_MovingPlayerCount; } set { m_MovingPlayerCount = value; } }
+        public int MovingPlayerCount { get; set; } = 0;
 
-        public int FastestPlayerSpeed { get { return m_FastestPlayerSpeed; } set { m_FastestPlayerSpeed = value; } }
+        public int FastestPlayerSpeed { get; set; } = 0;
 
         public int NearbyPlayerCount
         {
@@ -869,7 +863,7 @@ namespace Server.Mobiles
 
                 m_Region = value;
 
-                m_RegionName = m_Region != null ? m_Region.Name : null;
+                m_RegionName = m_Region?.Name;
             }
         }
 
@@ -1790,14 +1784,7 @@ namespace Server.Mobiles
         {
             base.GetProperties(list);
 
-            if (m_Running)
-            {
-                list.Add(1060742); // active
-            }
-            else
-            {
-                list.Add(1060743); // inactive
-            }
+            list.Add(m_Running ? 1060742 : 1060743); // Active - Inactive
 
             // add whitespace to the beginning to avoid any problem with names that begin with # and are interpreted as cliloc ids
             list.Add(1042971, " " + Name); // ~1_val~
@@ -2216,12 +2203,18 @@ namespace Server.Mobiles
                             valid_entry = true;
                             try { doubleEntry = double.Parse((string)dr["MinDelay"]); }
                             catch { valid_entry = false; }
-                            if (valid_entry) { if (delayinsec) m_MinDelay = TimeSpan.FromSeconds(doubleEntry); else m_MinDelay = TimeSpan.FromMinutes(doubleEntry); }
+                            if (valid_entry)
+                            {
+                                m_MinDelay = delayinsec ? TimeSpan.FromSeconds(doubleEntry) : TimeSpan.FromMinutes(doubleEntry);
+                            }
 
                             valid_entry = true;
                             try { doubleEntry = double.Parse((string)dr["MaxDelay"]); }
                             catch { valid_entry = false; }
-                            if (valid_entry) { if (delayinsec) m_MaxDelay = TimeSpan.FromSeconds(doubleEntry); else m_MaxDelay = TimeSpan.FromMinutes(doubleEntry); }
+                            if (valid_entry)
+                            {
+                                m_MaxDelay = delayinsec ? TimeSpan.FromSeconds(doubleEntry) : TimeSpan.FromMinutes(doubleEntry);
+                            }
 
                             valid_entry = true;
                             try { doubleEntry = double.Parse((string)dr["Duration"]); }
@@ -4814,15 +4807,7 @@ namespace Server.Mobiles
                             null, null, null, null, 1, null, false, defTODMode, defKillReset, false, -1, null, false, false, false, null,
                             TimeSpan.FromHours(0), null, false, null);
 
-                    if (hasvendor)
-                    {
-                        // force vendor spawners to behave like the distro
-                        spawner.SpawnRange = 0;
-                    }
-                    else
-                    {
-                        spawner.SpawnRange = spawnrange;
-                    }
+                    spawner.SpawnRange = hasvendor ? 0 : spawnrange;
 
                     spawner.m_PlayerCreated = true;
 
@@ -5070,15 +5055,7 @@ namespace Server.Mobiles
                         null, null, null, null, 1, null, false, defTODMode, defKillReset, false, -1, null, false, false, false, null,
                         TimeSpan.FromHours(0), null, false, null);
 
-                    if (hasvendor)
-                    {
-                        // force vendor spawners to behave like the distro
-                        spawner.SpawnRange = 0;
-                    }
-                    else
-                    {
-                        spawner.SpawnRange = spawnrange;
-                    }
+                    spawner.SpawnRange = hasvendor ? 0 : spawnrange;
 
                     spawner.m_PlayerCreated = true;
 
@@ -5152,7 +5129,7 @@ namespace Server.Mobiles
 
                     XmlElement root = doc["spawners"];
                     int successes = 0, failures = 0;
-                    if (root != null && root.GetElementsByTagName("spawner") != null)
+                    if (root?.GetElementsByTagName("spawner") != null)
                     {
                         foreach (XmlElement spawner in root.GetElementsByTagName("spawner"))
                         {
@@ -5227,14 +5204,7 @@ namespace Server.Mobiles
                 TimeSpan.FromMinutes(0), null, null, null, null, null,
                 null, null, null, null, 1, null, group, defTODMode, defKillReset, false, -1, null, false, false, false, null, defDespawnTime, null, false, null);
 
-            if (hasvendor)
-            {
-                spawner.SpawnRange = 0;
-            }
-            else
-            {
-                spawner.SpawnRange = homeRange;
-            }
+            spawner.SpawnRange = hasvendor ? 0 : homeRange;
             spawner.m_PlayerCreated = true;
 
             spawner.MoveToWorld(location, map);
@@ -6878,14 +6848,7 @@ namespace Server.Mobiles
             ds.Tables[SpawnTablePointName].Columns.Add("IsGroup");
             ds.Tables[SpawnTablePointName].Columns.Add("IsRunning");
             ds.Tables[SpawnTablePointName].Columns.Add("IsHomeRangeRelative");
-            if (oldformat)
-            {
-                ds.Tables[SpawnTablePointName].Columns.Add("Objects");
-            }
-            else
-            {
-                ds.Tables[SpawnTablePointName].Columns.Add("Objects2");
-            }
+            ds.Tables[SpawnTablePointName].Columns.Add(oldformat ? "Objects" : "Objects2");
 
             // Always export sorted by UUID to help diffs
             savelist.Sort((a, b) =>
@@ -7418,10 +7381,7 @@ namespace Server.Mobiles
             m_Running = true;
             m_Group = isGroup;
 
-            if (!string.IsNullOrEmpty(name))
-                Name = name;
-            else
-                Name = "Spawner";
+            Name = !string.IsNullOrEmpty(name) ? name : "Spawner";
 
             m_MinDelay = minDelay;
             m_MaxDelay = maxDelay;
@@ -8411,17 +8371,7 @@ namespace Server.Mobiles
                 int SpawnIndex;
 
                 // see if sequential spawning has been selected
-                if (m_SequentialSpawning >= 0)
-                {
-                    // if so then use its value to get the index of the first available spawn entry in the next subgroup to be spawned
-                    // note, if the current sequence finds a zero group then the spawn will be picked at random from it
-                    SpawnIndex = GetCurrentAvailableSequentialSpawnIndex(m_SequentialSpawning);
-                }
-                else
-                {
-                    // if sequential spawning is not set then select the next spawn at random
-                    SpawnIndex = RandomAvailableSpawnIndex();
-                }
+                SpawnIndex = m_SequentialSpawning >= 0 ? GetCurrentAvailableSequentialSpawnIndex(m_SequentialSpawning) : RandomAvailableSpawnIndex();
 
                 // no spawns are available so no point in continuing
                 if (SpawnIndex < 0)
@@ -10271,6 +10221,7 @@ namespace Server.Mobiles
                                     }
                                 }
                             }
+
                             break;
                     }
 
@@ -10282,8 +10233,7 @@ namespace Server.Mobiles
 
                 // try to find a valid spawn location using the z coord of the spawner
                 // relax the normal surface requirement for mobiles if the flag is set
-                bool fit;
-                fit = requiresurface ? CanSpawnMobile(x, y, defaultZ, mob) : Map.CanFit(x, y, defaultZ, SpawnFitSize, true, false, false);
+                var fit = requiresurface ? CanSpawnMobile(x, y, defaultZ, mob) : Map.CanFit(x, y, defaultZ, SpawnFitSize, true, false, false);
 
                 // if that fails then try to find a valid z coord
                 if (fit)
@@ -11765,19 +11715,8 @@ namespace Server.Mobiles
 
         public class SpawnObject
         {
-            private string m_TypeName;
             private int m_MaxCount;
-            private int m_SubGroup;
-            private int m_SequentialResetTo;
-            private int m_KillsNeeded;
-            private bool m_RestrictKillsToSubgroup = false;
-            private bool m_ClearOnAdvance = true;
-            private double m_MinDelay = -1;
-            private double m_MaxDelay = -1;
-            private int m_SpawnsPerTick = 1;
-            private bool m_Disabled = false;
-            private int m_PackRange = -1;
-            private bool m_Ignore = false;
+
             // temporary variable used to calculate weighted spawn probabilities
             public bool Available;
 
@@ -11790,7 +11729,8 @@ namespace Server.Mobiles
             public bool SpawnedThisTick;
 
             // these are externally accessible to the SETONSPAWNENTRY keyword
-            public string TypeName { get { return m_TypeName; } set { m_TypeName = value; } }
+            public string TypeName { get; set; }
+
             public int MaxCount
             {
                 get
@@ -11808,18 +11748,17 @@ namespace Server.Mobiles
                 }
             }
             public int ActualMaxCount { get { return m_MaxCount; } set { m_MaxCount = value; } }
-            public int SubGroup { get { return m_SubGroup; } set { m_SubGroup = value; } }
-            public int SpawnsPerTick { get { return m_SpawnsPerTick; } set { m_SpawnsPerTick = value; } }
-            public int SequentialResetTo { get { return m_SequentialResetTo; } set { m_SequentialResetTo = value; } }
-            public int KillsNeeded { get { return m_KillsNeeded; } set { m_KillsNeeded = value; } }
-            public bool RestrictKillsToSubgroup { get { return m_RestrictKillsToSubgroup; } set { m_RestrictKillsToSubgroup = value; } }
-            public bool ClearOnAdvance { get { return m_ClearOnAdvance; } set { m_ClearOnAdvance = value; } }
-            public double MinDelay { get { return m_MinDelay; } set { m_MinDelay = value; } }
-            public double MaxDelay { get { return m_MaxDelay; } set { m_MaxDelay = value; } }
-            public bool Disabled { get { return m_Disabled; } set { m_Disabled = value; } }
-            public bool Ignore { get { return m_Ignore; } set { m_Ignore = value; } }
-            public int PackRange { get { return m_PackRange; } set { m_PackRange = value; } }
-
+            public int SubGroup { get; set; }
+            public int SpawnsPerTick { get; set; } = 1;
+            public int SequentialResetTo { get; set; }
+            public int KillsNeeded { get; set; }
+            public bool RestrictKillsToSubgroup { get; set; } = false;
+            public bool ClearOnAdvance { get; set; } = true;
+            public double MinDelay { get; set; } = -1;
+            public double MaxDelay { get; set; } = -1;
+            public bool Disabled { get; set; } = false;
+            public bool Ignore { get; set; } = false;
+            public int PackRange { get; set; } = -1;
 
             // command loggable constructor
             public SpawnObject(Mobile from, XmlSpawner spawner, string name, int maxamount)

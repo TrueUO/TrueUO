@@ -16,10 +16,9 @@ namespace Server.Gumps
     public class XmlAddCAGObject : XmlAddCAGNode
     {
         private readonly Type m_Type;
-        private readonly int m_ItemID;
         private readonly XmlAddCAGCategory m_Parent;
 
-        public int ItemID => m_ItemID;
+        public int ItemID { get; }
 
         public override string Caption => (m_Type == null ? "bad type" : m_Type.Name);
 
@@ -73,7 +72,7 @@ namespace Server.Gumps
                 m_Type = ScriptCompiler.FindTypeByFullName(xml.Value, false);
 
             if (xml.MoveToAttribute("gfx"))
-                m_ItemID = XmlConvert.ToInt32(xml.Value);
+                ItemID = XmlConvert.ToInt32(xml.Value);
 
             if (xml.MoveToAttribute("hue"))
                 XmlConvert.ToInt32(xml.Value);

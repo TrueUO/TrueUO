@@ -169,8 +169,8 @@ namespace Server.Items
     {
         public EntryBookHeader(Mobile from, BaseEntryBook book) : base(0xD4)
         {
-            string title = book.Title == null ? "" : book.Title;
-            string author = book.Author == null ? "" : book.Author;
+            string title = book.Title ?? "";
+            string author = book.Author ?? "";
 
             byte[] titleBuffer = Utility.UTF8.GetBytes(title);
             byte[] authorBuffer = Utility.UTF8.GetBytes(author);
