@@ -9,14 +9,9 @@ namespace Server.Items
 
     public class XmlTextEntryBook : BaseEntryBook
     {
-        public XmlTextEntryBookCallback m_bookcallback;
-        public object[] m_args;
-
         public XmlTextEntryBook(int itemID, string title, string author, int pageCount, bool writable,
             XmlTextEntryBookCallback callback, object[] args) : base(itemID, title, author, pageCount, writable)
         {
-            m_args = args;
-            m_bookcallback = callback;
         }
 
         public XmlTextEntryBook(Serial serial) : base(serial)
@@ -148,133 +143,6 @@ namespace Server.Items
         {
             from.Send(new EntryBookHeader(from, this));
             from.Send(new EntryBookPageDetails(this));
-        }
-
-        public static void Initialize()
-        {
-            // This will hijack the default packet handler for basebooks content change.  The header change handlers are left alone and basebook will still handle them.
-            // This means that BaseEntryBooks will not support header changes (they are not intended to)
-
-            //PacketHandlers.Register( 0x66,  0, true, new OnPacketReceive( ContentChange ) );
-
-        }
-
-        public static void ContentChange(NetState state, PacketReader pvSrc)
-        {
-            int serial = pvSrc.ReadInt32();
-
-            Item bookitem = World.FindItem(serial);
-
-            // first try it as a normal basebook
-            if (bookitem is BaseBook)
-            {
-                // do the base book content change
-                BaseContentChange(bookitem as BaseBook, state, pvSrc);
-                return;
-            }
-
-            // then try it as a text entry book
-            BaseEntryBook book = bookitem as BaseEntryBook;
-
-            if (book == null) return;
-
-            // get the number of available pages in the book
-            int pageCount = pvSrc.ReadUInt16();
-
-            // Older clients handled multpile pages per packet
-            // Newer clients packets are 1 page per packet
-            if (pageCount != 1)
-                return;
-
-            // get the current page number being read
-            int index = pvSrc.ReadUInt16();
-
-            if (index >= 1 && index <= book.PagesCount)
-            {
-                --index;
-
-                int lineCount = pvSrc.ReadUInt16();
-
-                if (lineCount <= 10)
-                {
-                    string[] lines = new string[lineCount];
-
-                    for (int j = 0; j < lineCount; ++j)
-                    {
-                        if ((lines[j] = pvSrc.ReadUTF8StringSafe()).Length >= 80)
-                            return;
-                    }
-
-                    book.Pages[index].Lines = lines;
-                }
-                else
-                {
-                    return;
-                }
-            }
-            else
-            {
-                return;
-            }
-            
-            System.Text.StringBuilder sb = new System.Text.StringBuilder();
-            // add the book lines to the entry string
-            for (int i = 0; i < book.PagesCount; ++i)
-            {
-                for (int j = 0; j < book.Pages[i].Lines.Length; j++)
-                {
-                    sb.Append(book.Pages[i].Lines[j]);
-                }
-            }
-
-            // send the book text off to be processed by invoking the callback if it is a textentry book
-            XmlTextEntryBook tebook = book as XmlTextEntryBook;
-            if (tebook != null && tebook.m_bookcallback != null)
-            {
-                tebook.m_bookcallback(state.Mobile, tebook.m_args, sb.ToString());
-            }
-        }
-
-        public static void BaseContentChange(BaseBook book, NetState state, PacketReader pvSrc)
-        {
-            Mobile from = state.Mobile;
-
-            if (book == null)
-                return;
-
-            int pageCount = pvSrc.ReadUInt16();
-
-            if (state.IsEnhancedClient && pageCount == 1)
-            {
-                book.ContentChangeEC(state, pvSrc);
-            }
-            else if (book.Writable && from.InRange(book.GetWorldLocation(), 1))
-            {
-                // Older clients handled multpile pages per packet
-                // Newer clients packets are 1 page per packet
-                if (pageCount != 1)
-                    return;
-
-                int index = pvSrc.ReadUInt16();
-
-                if (index >= 1 && index <= book.PagesCount)
-                {
-                    --index;
-
-                    int lineCount = pvSrc.ReadUInt16();
-
-                    if (lineCount <= 10)
-                    {
-                        string[] lines = new string[lineCount];
-
-                        for (int j = 0; j < lineCount; ++j)
-                            if ((lines[j] = pvSrc.ReadUTF8StringSafe()).Length >= 80)
-                                return;
-
-                        book.Pages[index].Lines = lines;
-                    }
-                }
-            }
         }
 #endif
     }

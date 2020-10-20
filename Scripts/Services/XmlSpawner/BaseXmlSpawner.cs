@@ -254,12 +254,6 @@ namespace Server.Mobiles
             return (typeKeywordHash.ContainsKey(typeName));
         }
 
-        public static bool IsTypemodKeyword(string typeName)
-        {
-            if (string.IsNullOrEmpty(typeName) || !char.IsUpper(typeName[0])) return false;
-            return (typemodKeywordHash.ContainsKey(typeName));
-        }
-
         public static bool IsTypeOrItemKeyword(string typeName)
         {
             if (string.IsNullOrEmpty(typeName) || !char.IsUpper(typeName[0])) return false;
@@ -306,7 +300,6 @@ namespace Server.Mobiles
             // Type keywords
             // spawned as primary objects
             AddTypeKeyword("SET");
-            AddTypeKeyword("WAITUNTIL");
             AddTypeKeyword("WHILE");
             AddTypeKeyword("IF");
             AddTypeKeyword("GOTO");
@@ -314,21 +307,6 @@ namespace Server.Mobiles
             AddTypeKeyword("COMMAND");
             AddTypeKeyword("SPAWN");
             AddTypeKeyword("DESPAWN");
-
-            // Typemod keywords
-            // used in place of properties as modifiers of the primary object type
-            AddTypemodKeyword("SAY");
-            AddTypemodKeyword("SPEECH");
-            AddTypemodKeyword("ANIMATE");
-            AddTypemodKeyword("OFFSET");
-            AddTypemodKeyword("MSG");
-            AddTypemodKeyword("BCAST");
-            AddTypemodKeyword("ADD");
-            AddTypemodKeyword("DELETE");
-            AddTypemodKeyword("KILL");
-            AddTypemodKeyword("FACETO");
-            AddTypemodKeyword("FLASH");
-            AddTypemodKeyword("PRIVMSG");
 
             // Value keywords
             // used in property tests
@@ -341,10 +319,6 @@ namespace Server.Mobiles
 
             // Valuemod keywords
             // used as values in property assignments
-            AddValuemodKeyword("RND");
-            AddValuemodKeyword("RNDBOOL");
-            AddValuemodKeyword("RNDLIST");
-            AddValuemodKeyword("RNDSTRLIST");
             AddValuemodKeyword("INC");
             AddValuemodKeyword("MOB");
             AddValuemodKeyword("TRIGMOB");
@@ -4134,68 +4108,6 @@ namespace Server.Mobiles
                 if (m != null && m.AccessLevel >= ac)
                     //m.SendMessage(hue, message);
                     m.Send(new AsciiMessage(Serial.MinusOne, -1, MessageType.Regular, hue, font, "System", message));
-            }
-        }
-
-        public static void PublicOverheadMobileMessage(Mobile mob, MessageType type, int hue, int font, string text, bool noLineOfSight)
-        {
-            if (mob != null && mob.Map != null)
-            {
-                Packet p = null;
-
-                IPooledEnumerable eable = mob.Map.GetClientsInRange(mob.Location);
-
-                foreach (NetState state in eable)
-                {
-                    if (state.Mobile.CanSee(mob) && (noLineOfSight || state.Mobile.InLOS(mob)))
-                    {
-                        if (p == null)
-                        {
-                            p = new AsciiMessage(mob.Serial, mob.Body, type, hue, font, mob.Name, text);
-
-                            p.Acquire();
-
-                        }
-
-                        state.Send(p);
-                    }
-                }
-
-                Packet.Release(p);
-
-                eable.Free();
-            }
-        }
-
-        public static void PublicOverheadItemMessage(Item item, MessageType type, int hue, int font, string text)
-        {
-            if (item != null && item.Map != null)
-            {
-                Packet p = null;
-                Point3D worldLoc = item.GetWorldLocation();
-
-                IPooledEnumerable eable = item.Map.GetClientsInRange(worldLoc, item.GetMaxUpdateRange());
-
-                foreach (NetState state in eable)
-                {
-                    Mobile m = state.Mobile;
-
-                    if (m.CanSee(item) && m.InRange(worldLoc, item.GetUpdateRange(m)))
-                    {
-                        if (p == null)
-                        {
-                            p = new AsciiMessage(item.Serial, item.ItemID, type, hue, font, item.Name, text);
-
-                            p.Acquire();
-                        }
-
-                        state.Send(p);
-                    }
-                }
-
-                Packet.Release(p);
-
-                eable.Free();
             }
         }
 
