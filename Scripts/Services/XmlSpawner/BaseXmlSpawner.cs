@@ -150,20 +150,16 @@ namespace Server.Mobiles
 
         private enum valueKeyword
         {
-            GET,
             PLAYERSINRANGE,
             RANDNAME
         }
 
         private enum valuemodKeyword
         {
-            GET,
             INC,
             MOB,
             TRIGMOB,
-            MY,
-            PLAYERSINRANGE,
-            RANDNAME
+            PLAYERSINRANGE
         }
         #endregion
 
@@ -937,10 +933,8 @@ namespace Server.Mobiles
 
                             return "Property has been set.";
                         }
-                        else
-                        {
-                            return "Property is not of type Mobile.";
-                        }
+
+                        return "Property is not of type Mobile.";
                     }
                 }
             }
@@ -984,18 +978,18 @@ namespace Server.Mobiles
 
                         return string.Format("Serial = {0}", ((Mobile)o).Serial);
                     }
-                    else
-                        if (o is Item)
+
+                    if (o is Item)
                     {
                         ptype = ((Item)o).Serial.GetType();
 
                         return string.Format("Serial = {0}", ((Item)o).Serial);
                     }
-                    else
-                        return "Object is not item/mobile";
-                }
-                catch { return "Serial not found."; }
 
+                    return "Object is not item/mobile";
+                }
+
+                catch { return "Serial not found."; }
             }
 
             if (keywordargs[0] == "TYPE")
@@ -1120,39 +1114,6 @@ namespace Server.Mobiles
             }
 
             return "Property not found.";
-        }
-
-        public static string ApplyToProperty(XmlSpawner spawner, object getobject, object setobject, string getpropertystring, string setpropertystring)
-        {
-            Type ptype;
-
-            string getvalue = GetPropertyValue(spawner, getobject, getpropertystring, out ptype);
-
-            if (getvalue == null)
-            {
-                return "Null object or property";
-            }
-
-            if (ptype == null)
-            {
-                return getvalue;
-            }
-
-            string value2 = ParseGetValue(getvalue, ptype);
-
-            if (value2 != null)
-            {
-                // set the property value using returned get value as the the value
-                string result = SetPropertyValue(spawner, setobject, setpropertystring, value2);
-
-                // see if it was successful
-                if (result != "Property has been set.")
-                {
-                    return setpropertystring + " : " + result;
-                }
-            }
-
-            return null;
         }
 
         // added in arg parsing to handle object property setting
@@ -1285,94 +1246,7 @@ namespace Server.Mobiles
                         {
                             valuemodKeyword kw = valuemodKeywordHash[value_keywordargs[0]];
 
-                            if (kw == valuemodKeyword.MY)
-                            {
-                                // syntax is MY,property
-                                // note this will be an arg to some property
-                                if (value_keywordargs.Length > 1)
-                                {
-                                    string resultstr = ApplyToProperty(spawner, o, o, value_keywordargs[1], arglist[0]);
-                                    if (resultstr != null)
-                                    {
-                                        status_str = "MY error: " + resultstr;
-                                        no_error = false;
-                                    }
-
-                                }
-                                else
-                                {
-                                    status_str = "Invalid MY args : " + arglist[1];
-                                    no_error = false;
-                                }
-                                if (arglist.Length < 3) break;
-                                remainder = arglist[2];
-                            }
-                            else if (kw == valuemodKeyword.GET)
-                            {
-                                // syntax is GET,[itemname -OR- SETITEM][,itemtype],property
-                                // or GET,itemname[,itemtype],<ATTACHMENT,type,name,property>
-                                // note this will be an arg to some property
-                                if (value_keywordargs.Length > 2)
-                                {
-                                    string propname = value_keywordargs[2];
-                                    string typestr = null;
-
-                                    if (value_keywordargs.Length > 3)
-                                    {
-                                        propname = value_keywordargs[3];
-                                        typestr = value_keywordargs[2];
-                                    }
-                                    // get the current property value
-                                    //Type ptype;
-                                    // get target item
-                                    // is the itemname a serialno?
-                                    object testitem = null;
-                                    if (value_keywordargs[1].StartsWith("0x"))
-                                    {
-                                        int serial;
-                                        if (!int.TryParse(value_keywordargs[1].Substring(2), NumberStyles.HexNumber, CultureInfo.InvariantCulture, out serial))
-                                            serial = -1;
-                                        if (serial >= 0)
-                                            testitem = World.FindEntity(serial);
-                                    }
-                                    else if (value_keywordargs[1] == "SETITEM" && spawner != null && !spawner.Deleted && spawner.SetItem != null)
-                                    {
-                                        testitem = spawner.SetItem;
-                                    }
-                                    else
-                                    {
-                                        testitem = FindItemByName(spawner, value_keywordargs[1], typestr);
-                                    }
-
-                                    string resultstr = ApplyToProperty(spawner, testitem, o, propname, arglist[0]);
-
-                                    if (resultstr != null)
-                                    {
-                                        status_str = "GET error: " + resultstr;
-                                        no_error = false;
-                                    }
-
-                                }
-                                else if (spawner != null && value_keywordargs.Length > 0)
-                                {
-                                    string propname = value_keywordargs[0];
-                                    string resultstr = ApplyToProperty(spawner, spawner.SetItem, o, propname, arglist[0]);
-
-                                    if (resultstr != null)
-                                    {
-                                        status_str = "GET error: " + resultstr;
-                                        no_error = false;
-                                    }
-                                }
-                                else
-                                {
-                                    status_str = "Invalid GET args : " + arglist[1];
-                                    no_error = false;
-                                }
-                                if (arglist.Length < 3) break;
-                                remainder = arglist[2];
-                            }
-                            else if (kw == valuemodKeyword.INC)
+                            if (kw == valuemodKeyword.INC)
                             {
                                 // increment the property value by the amount.  Use the format propname/INC,min,max/ or propname/INC,value
                                 if (value_keywordargs.Length > 1)
@@ -1527,25 +1401,6 @@ namespace Server.Mobiles
                                 if (result != "Property has been set.")
                                 {
                                     status_str = arglist[0] + " : " + result;
-                                    no_error = false;
-                                }
-                                if (arglist.Length < 3) break;
-                                remainder = arglist[2];
-                            }
-                            else if (kw == valuemodKeyword.RANDNAME)
-                            {
-                                if (value_keywordargs.Length > 1)
-                                {
-                                    string result = SetPropertyValue(spawner, o, arglist[0], NameList.RandomName(value_keywordargs[1]));
-                                    // see if it was successful
-                                    if (result != "Property has been set.")
-                                    {
-                                        status_str = arglist[0] + " : " + result;
-                                        no_error = false;
-                                    }
-                                }
-                                else
-                                {
                                     no_error = false;
                                 }
                                 if (arglist.Length < 3) break;
@@ -1817,24 +1672,21 @@ namespace Server.Mobiles
                     // syntax is RANDNAME,nametype
                     return NameList.RandomName(arglist[1]);
                 }
-                else
-                {
-                    // an invalid keyword format will be passed as literal
-                    return str;
-                }
+
+                // an invalid keyword format will be passed as literal
+                return str;
             }
-            else if (literal)
+
+            if (literal)
             {
                 ptype = typeof(string);
                 return str;
             }
-            else
-            {
-                // otherwise treat it as a property name
-                string result = GetPropertyValue(spawner, o, pname, out ptype);
 
-                return ParseGetValue(result, ptype);
-            }
+            // otherwise treat it as a property name
+            string result = GetPropertyValue(spawner, o, pname, out ptype);
+
+            return ParseGetValue(result, ptype);
         }
 
         public static string ParseGetValue(string str, Type ptype)
@@ -1858,17 +1710,13 @@ namespace Server.Mobiles
 
                     return arglist2[0];
                 }
-                else
-                {
-                    // for everything else
-                    // pass on as is
-                    return arglist[1].Trim();
-                }
+
+                // for everything else
+                // pass on as is
+                return arglist[1].Trim();
             }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
 
         public static bool CheckPropertyString(XmlSpawner spawner, object o, string testString, Mobile trigmob, out string status_str)
@@ -1891,35 +1739,33 @@ namespace Server.Mobiles
                 // simple conditional test with no and/or operators
                 return returnval;
             }
+
+            // test each half independently and combine the results
+            bool first = CheckSingleProperty(spawner, o, arglist[0], trigmob, out status_str);
+
+            // this will recursively parse the property test string with implicit nesting for multiple logical tests of the
+            // form A * B * C * D    being grouped as A * (B * (C * D))
+            bool second = CheckPropertyString(spawner, o, arglist[1], trigmob, out status_str);
+
+            int andposition = testString.IndexOf("&");
+            int orposition = testString.IndexOf("|");
+
+            // combine them based upon the operator
+            if ((andposition > 0 && orposition <= 0) || (andposition > 0 && andposition < orposition))
+            {
+                // and operator
+                return (first && second);
+            }
+
+            if ((orposition > 0 && andposition <= 0) || (orposition > 0 && orposition < andposition))
+            {
+                // or operator
+                return (first || second);
+            }
             else
             {
-                // test each half independently and combine the results
-                bool first = CheckSingleProperty(spawner, o, arglist[0], trigmob, out status_str);
-
-                // this will recursively parse the property test string with implicit nesting for multiple logical tests of the
-                // form A * B * C * D    being grouped as A * (B * (C * D))
-                bool second = CheckPropertyString(spawner, o, arglist[1], trigmob, out status_str);
-
-                int andposition = testString.IndexOf("&");
-                int orposition = testString.IndexOf("|");
-
-                // combine them based upon the operator
-                if ((andposition > 0 && orposition <= 0) || (andposition > 0 && andposition < orposition))
-                {
-                    // and operator
-                    return (first && second);
-                }
-                else
-                    if ((orposition > 0 && andposition <= 0) || (orposition > 0 && orposition < andposition))
-                {
-                    // or operator
-                    return (first || second);
-                }
-                else
-                {
-                    // should never get here
-                    return false;
-                }
+                // should never get here
+                return false;
             }
         }
 
@@ -2420,8 +2266,7 @@ namespace Server.Mobiles
                 return (founditem);
             }
 
-            else
-                return null;
+            return null;
         }
 
         public static Mobile FindMobileByName(XmlSpawner fromspawner, string name, string typestr)
@@ -2462,13 +2307,14 @@ namespace Server.Mobiles
 
                 return (foundmobile);
             }
-            else
-                return null;
+
+            return null;
         }
 
         public static XmlSpawner FindSpawnerByName(XmlSpawner fromspawner, string name)
         {
-            if (name == null) return null;
+            if (name == null)
+                return null;
 
             if (name.StartsWith("0x"))
             {
@@ -2480,43 +2326,41 @@ namespace Server.Mobiles
                 catch { }
                 return World.FindEntity(serial) as XmlSpawner;
             }
-            else
+
+            // do a quick search through the recent search list to see if it is there
+            XmlSpawner foundspawner = FindInRecentSpawnerSearchList(fromspawner, name);
+
+            if (foundspawner != null) return foundspawner;
+
+            int count = 0;
+
+            // search through all xmlspawners in the world and find one with a matching name
+            foreach (Item item in World.Items.Values)
             {
-                // do a quick search through the recent search list to see if it is there
-                XmlSpawner foundspawner = FindInRecentSpawnerSearchList(fromspawner, name);
-
-                if (foundspawner != null) return foundspawner;
-
-                int count = 0;
-
-                // search through all xmlspawners in the world and find one with a matching name
-                foreach (Item item in World.Items.Values)
+                if (item is XmlSpawner)
                 {
-                    if (item is XmlSpawner)
+                    XmlSpawner spawner = (XmlSpawner)item;
+                    if (!spawner.Deleted && (string.Compare(spawner.Name, name, true) == 0))
                     {
-                        XmlSpawner spawner = (XmlSpawner)item;
-                        if (!spawner.Deleted && (string.Compare(spawner.Name, name, true) == 0))
-                        {
-                            foundspawner = spawner;
+                        foundspawner = spawner;
 
-                            count++;
-                            // added the break in to return the first match instead of forcing uniqueness (overrides the count test)
-                            break;
-                        }
+                        count++;
+                        // added the break in to return the first match instead of forcing uniqueness (overrides the count test)
+                        break;
                     }
                 }
-
-                // if a unique item is found then success
-                if (count == 1)
-                {
-                    // add this to the recent search list
-                    AddToRecentSpawnerSearchList(fromspawner, foundspawner);
-
-                    return (foundspawner);
-                }
-                else
-                    return null;
             }
+
+            // if a unique item is found then success
+            if (count == 1)
+            {
+                // add this to the recent search list
+                AddToRecentSpawnerSearchList(fromspawner, foundspawner);
+
+                return (foundspawner);
+            }
+
+            return null;
         }
 
         public static void AddToRecentSpawnerSearchList(XmlSpawner spawner, XmlSpawner target)
@@ -2765,8 +2609,8 @@ namespace Server.Mobiles
                 }
                 return arglist[0];
             }
-            else
-                return null;
+
+            return null;
         }
 
         public static string[] ParseObjectArgs(string str)
@@ -2789,8 +2633,8 @@ namespace Server.Mobiles
                 return (typeargs);
 
             }
-            else
-                return null;
+
+            return null;
         }
 
         // take a string of the form str-opendelim-str-closedelim-str-closedelimstr
@@ -3135,10 +2979,8 @@ namespace Server.Mobiles
                                     status_str = "cant find unique item :" + keywordargs[1];
                                     return false;
                                 }
-                                else
-                                {
-                                    ApplyObjectStringProperties(spawner, substitutedtypeName, setitem, triggermob, invoker, out status_str);
-                                }
+
+                                ApplyObjectStringProperties(spawner, substitutedtypeName, setitem, triggermob, invoker, out status_str);
                             }
                             else if (spawner != null)
                             {
@@ -3449,22 +3291,20 @@ namespace Server.Mobiles
                                     status_str = "missing subgroup in DESPAWN";
                                     return false;
                                 }
-                                else
+
+                                string subgroupstr = keywordargs[1];
+                                string spawnerstr = null;
+                                if (keywordargs.Length > 2)
                                 {
-                                    string subgroupstr = keywordargs[1];
-                                    string spawnerstr = null;
-                                    if (keywordargs.Length > 2)
-                                    {
-                                        spawnerstr = keywordargs[1];
-                                        subgroupstr = keywordargs[2];
-                                    }
-                                    if (spawnerstr != null)
-                                    {
-                                        targetspawner = FindSpawnerByName(spawner, spawnerstr);
-                                    }
-                                    if (!int.TryParse(subgroupstr, out subgroup))
-                                        subgroup = -1;
+                                    spawnerstr = keywordargs[1];
+                                    subgroupstr = keywordargs[2];
                                 }
+                                if (spawnerstr != null)
+                                {
+                                    targetspawner = FindSpawnerByName(spawner, spawnerstr);
+                                }
+                                if (!int.TryParse(subgroupstr, out subgroup))
+                                    subgroup = -1;
                             }
                             if (subgroup == -1)
                             {
@@ -3502,22 +3342,20 @@ namespace Server.Mobiles
                                     status_str = "missing subgroup in SPAWN";
                                     return false;
                                 }
-                                else
+
+                                string subgroupstr = keywordargs[1];
+                                string spawnerstr = null;
+                                if (keywordargs.Length > 2)
                                 {
-                                    string subgroupstr = keywordargs[1];
-                                    string spawnerstr = null;
-                                    if (keywordargs.Length > 2)
-                                    {
-                                        spawnerstr = keywordargs[1];
-                                        subgroupstr = keywordargs[2];
-                                    }
-                                    if (spawnerstr != null)
-                                    {
-                                        targetspawner = FindSpawnerByName(spawner, spawnerstr);
-                                    }
-                                    if (!int.TryParse(subgroupstr, out subgroup))
-                                        subgroup = -1;
+                                    spawnerstr = keywordargs[1];
+                                    subgroupstr = keywordargs[2];
                                 }
+                                if (spawnerstr != null)
+                                {
+                                    targetspawner = FindSpawnerByName(spawner, spawnerstr);
+                                }
+                                if (!int.TryParse(subgroupstr, out subgroup))
+                                    subgroup = -1;
                             }
                             if (subgroup == -1)
                             {
@@ -3613,7 +3451,6 @@ namespace Server.Mobiles
                                 {
                                     CommandSystem.Handle(triggermob, string.Format("{0}{1}", CommandSystem.Prefix, arglist[1]));
                                 }
-
                             }
                             else
                             {
@@ -3635,12 +3472,10 @@ namespace Server.Mobiles
                 return true;
             }
             #endregion
-            else
-            {
-                // should never get here
-                status_str = "unrecognized keyword";
-                return false;
-            }
+
+            // should never get here
+            status_str = "unrecognized keyword";
+            return false;
         }
         #endregion
 

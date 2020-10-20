@@ -761,13 +761,11 @@ namespace Server.Mobiles
                     else
                         return false;
                 }
+
+                if (IsFull)
+                    return false;
                 else
-                {
-                    if (IsFull)
-                        return false;
-                    else
-                        return true;
-                }
+                    return true;
             }
         }
 
@@ -8538,10 +8536,6 @@ namespace Server.Mobiles
                     }
                     break;
                 }
-                else
-                {
-
-                }
             }
         }
 
@@ -9363,10 +9357,6 @@ namespace Server.Mobiles
                                     waypoint = e as WayPoint;
 
                             }
-                        }
-                        else
-                        {
-                            // improper serial format
                         }
                     }
                     else
