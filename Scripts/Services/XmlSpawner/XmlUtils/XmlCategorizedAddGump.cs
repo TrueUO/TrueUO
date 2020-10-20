@@ -20,7 +20,6 @@ namespace Server.Gumps
         private readonly XmlAddCAGCategory m_Parent;
 
         public int ItemID => m_ItemID;
-        public XmlAddCAGCategory Parent => m_Parent;
 
         public override string Caption => (m_Type == null ? "bad type" : m_Type.Name);
 

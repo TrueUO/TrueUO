@@ -1,12 +1,8 @@
 #define BOOKTEXTENTRY
-
 using Server.Network;
 
 namespace Server.Items
 {
-
-    public delegate void XmlTextEntryBookCallback(Mobile from, object[] args, string response);
-
     public class XmlTextEntryBook : BaseEntryBook
     {
         public XmlTextEntryBook(int itemID, string title, string author, int pageCount, bool writable) : base(itemID, title, author, pageCount, writable)
@@ -98,7 +94,7 @@ namespace Server.Items
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool Writable { get; set; }
+        public bool Writable { get; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public int PagesCount => m_Pages.Length;

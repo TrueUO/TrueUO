@@ -869,14 +869,7 @@ namespace Server.Mobiles
 
                 m_Region = value;
 
-                if (m_Region != null)
-                {
-                    m_RegionName = m_Region.Name;
-                }
-                else
-                {
-                    m_RegionName = null;
-                }
+                m_RegionName = m_Region != null ? m_Region.Name : null;
             }
         }
 
@@ -2130,13 +2123,12 @@ namespace Server.Mobiles
                     {
                         foreach (DataRow dr in ds.Tables[XmlTableName].Rows)
                         {
-                            bool valid_entry;
                             string strEntry = null;
                             bool boolEntry = true;
                             double doubleEntry = 0;
                             int intEntry = 0;
 
-                            valid_entry = true;
+                            var valid_entry = true;
                             try { strEntry = (string)dr["Name"]; }
                             catch { valid_entry = false; }
                             if (valid_entry) { Name = strEntry; }
@@ -8674,14 +8666,7 @@ namespace Server.Mobiles
                     }
 
                     // get the rest of the spawn entry
-                    if (args.Length > 1)
-                    {
-                        substitutedtypeName = args[1].Trim();
-                    }
-                    else
-                    {
-                        substitutedtypeName = string.Empty;
-                    }
+                    substitutedtypeName = args.Length > 1 ? args[1].Trim() : string.Empty;
                 }
 
 
@@ -8777,10 +8762,7 @@ namespace Server.Mobiles
 
                                 // Check if this spawner uses absolute (from spawnER location)
                                 // or relative (from spawnED location) as the mobiles home point
-                                if (m_HomeRangeIsRelative)
-                                    c.Home = m.Location; // Mobiles spawned location is the home point
-                                else
-                                    c.Home = Location; // Spawners location is the home point
+                                c.Home = m_HomeRangeIsRelative ? m.Location : Location;
                             }
 
                             // if the object has an OnSpawned method, then invoke it
@@ -9468,7 +9450,7 @@ namespace Server.Mobiles
             LandTile lt = map.Tiles.GetLandTile(x, y);
             int lowZ = 0, avgZ = 0, topZ = 0;
 
-            bool surface, impassable;
+            bool surface;
             bool wet = false;
 
             map.GetAverageZ(x, y, ref lowZ, ref avgZ, ref topZ);
@@ -9479,7 +9461,7 @@ namespace Server.Mobiles
                 Console.WriteLine("landtile at {0},{1},{2} lowZ={3} avgZ={4} topZ={5}", x, y, z, lowZ, avgZ, topZ);
             }
 
-            impassable = (landFlags & TileFlag.Impassable) != 0;
+            var impassable = (landFlags & TileFlag.Impassable) != 0;
             if (checkmob)
             {
                 wet = (landFlags & TileFlag.Wet) != 0;
@@ -10301,14 +10283,7 @@ namespace Server.Mobiles
                 // try to find a valid spawn location using the z coord of the spawner
                 // relax the normal surface requirement for mobiles if the flag is set
                 bool fit;
-                if (requiresurface)
-                {
-                    fit = CanSpawnMobile(x, y, defaultZ, mob);
-                }
-                else
-                {
-                    fit = Map.CanFit(x, y, defaultZ, SpawnFitSize, true, false, false);
-                }
+                fit = requiresurface ? CanSpawnMobile(x, y, defaultZ, mob) : Map.CanFit(x, y, defaultZ, SpawnFitSize, true, false, false);
 
                 // if that fails then try to find a valid z coord
                 if (fit)
@@ -10318,14 +10293,7 @@ namespace Server.Mobiles
 
                 z = Map.GetAverageZ(x, y);
 
-                if (requiresurface)
-                {
-                    fit = CanSpawnMobile(x, y, z, mob);
-                }
-                else
-                {
-                    fit = Map.CanFit(x, y, z, SpawnFitSize, true, false, false);
-                }
+                fit = requiresurface ? CanSpawnMobile(x, y, z, mob) : Map.CanFit(x, y, z, SpawnFitSize, true, false, false);
 
                 if (fit)
                 {
