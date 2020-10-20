@@ -2520,7 +2520,6 @@ namespace Server.Mobiles
             if (AllowTriggering && !m_proximityActivated) // only proximity trigger when no spawns have already been triggered
             {
                 bool needs_speech_trigger = false;
-                bool needs_mob_trigger = false;
                 bool needs_player_trigger = false;
                 bool has_player_trigger = false;
 
@@ -2563,12 +2562,8 @@ namespace Server.Mobiles
                 if (needs_player_trigger && !has_player_trigger)
                     return;
 
-                // check to see if we have to continue
-                if (needs_mob_trigger)
-                    return;
-
                 // if this was called without being proximity triggered then check to see that the non-movement triggers were enabled.
-                if (!hasproximity && !needs_mob_trigger && !m_ExternalTriggering)
+                if (!hasproximity && !m_ExternalTriggering)
                     return;
 
                 // all of the necessary trigger conditions have been met so go ahead and trigger
@@ -8212,7 +8207,6 @@ namespace Server.Mobiles
                     }
                 }
             }
-
         }
 
         // select and spawn something

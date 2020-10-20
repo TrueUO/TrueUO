@@ -77,7 +77,6 @@ namespace Server.Items
     {
         private string m_Title;
         private string m_Author;
-        private readonly BookPageInfo[] m_Pages;
 
         [CommandProperty(AccessLevel.GameMaster)]
         public string Title
@@ -97,20 +96,20 @@ namespace Server.Items
         public bool Writable { get; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int PagesCount => m_Pages.Length;
+        public int PagesCount => Pages.Length;
 
-        public BookPageInfo[] Pages => m_Pages;
+        public BookPageInfo[] Pages { get; }
 
         [Constructable]
         public BaseEntryBook(int itemID, string title, string author, int pageCount, bool writable) : base(itemID)
         {
             m_Title = title;
             m_Author = author;
-            m_Pages = new BookPageInfo[pageCount];
+            Pages = new BookPageInfo[pageCount];
             Writable = writable;
 
-            for (int i = 0; i < m_Pages.Length; ++i)
-                m_Pages[i] = new BookPageInfo();
+            for (int i = 0; i < Pages.Length; ++i)
+                Pages[i] = new BookPageInfo();
         }
 
         public BaseEntryBook(Serial serial) : base(serial)

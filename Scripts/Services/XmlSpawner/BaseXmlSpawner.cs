@@ -9,39 +9,6 @@ namespace Server.Mobiles
 {
     public class BaseXmlSpawner
     {
-        #region Initialization
-        private static readonly List<ProtectedProperty> ProtectedPropertiesList = new List<ProtectedProperty>();
-
-        private class ProtectedProperty
-        {
-            public Type ObjectType;
-            public string Name;
-
-            public ProtectedProperty(Type type, string name)
-            {
-                ObjectType = type;
-                Name = name;
-            }
-        }
-
-        public static bool IsProtected(Type type, string property)
-        {
-            if (type == null || property == null) return false;
-
-            // search through the protected list for a matching entry
-            foreach (ProtectedProperty p in ProtectedPropertiesList)
-            {
-                if ((p.ObjectType == type || type.IsSubclassOf(p.ObjectType)) && (property.ToLower() == p.Name.ToLower()))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-        #endregion
-
-        #region Type support
         [Flags]
         public enum KeywordFlags
         {
@@ -125,10 +92,6 @@ namespace Server.Mobiles
         private enum typeKeyword
         {
             SET,
-            FOREACH,
-            WAITUNTIL,
-            WHILE,
-            IF,
             GOTO,
             COMMAND,
             SPAWN,
@@ -153,8 +116,6 @@ namespace Server.Mobiles
             TRIGMOB,
             PLAYERSINRANGE
         }
-        #endregion
-
         #region Static variable declarations
         // name of mobile used to issue commands via the COMMAND keyword.  The accesslevel of the mobile will determine
         // the accesslevel of commands that can be issued.
@@ -239,11 +200,6 @@ namespace Server.Mobiles
 
             public KeywordTag(string typename, XmlSpawner spawner, int type)
                 : this(typename, spawner, type, TimeSpan.Zero, TimeSpan.Zero, null, -1)
-            {
-            }
-
-            public KeywordTag(string typename, XmlSpawner spawner, TimeSpan delay, TimeSpan timeout, string condition, int gotogroup)
-                : this(typename, spawner, 0, delay, timeout, condition, gotogroup)
             {
             }
 
@@ -761,9 +717,6 @@ namespace Server.Mobiles
                 object po;
                 if (plookup != null)
                 {
-                    if (IsProtected(type, propname))
-                        return "Property is protected.";
-
                     po = plookup.GetValue(o, null);
 
                     // now set the nested attribute using the new property list
@@ -775,9 +728,6 @@ namespace Server.Mobiles
                 {
                     if (Insensitive.Equals(p.Name, propname))
                     {
-                        if (IsProtected(type, propname))
-                            return "Property is protected.";
-
                         po = p.GetValue(o, null);
 
                         // now set the nested attribute using the new property list
@@ -796,9 +746,6 @@ namespace Server.Mobiles
                     if (!plookup.CanWrite)
                         return "Property is read only.";
 
-                    if (IsProtected(type, propname))
-                        return "Property is protected.";
-
                     string returnvalue = InternalSetValue(null, o, plookup, value, false, index);
 
                     return returnvalue;
@@ -810,12 +757,8 @@ namespace Server.Mobiles
                 {
                     if (Insensitive.Equals(p.Name, propname))
                     {
-
                         if (!p.CanWrite)
                             return "Property is read only.";
-
-                        if (IsProtected(type, propname))
-                            return "Property is protected.";
 
                         string returnvalue = InternalSetValue(null, o, p, value, false, index);
 
@@ -853,9 +796,6 @@ namespace Server.Mobiles
                 object po;
                 if (plookup != null)
                 {
-                    if (IsProtected(type, arglist[0]))
-                        return "Property is protected.";
-
                     po = plookup.GetValue(o, null);
 
                     // now set the nested attribute using the new property list
@@ -866,9 +806,6 @@ namespace Server.Mobiles
                 {
                     if (Insensitive.Equals(p.Name, arglist[0]))
                     {
-                        if (IsProtected(type, arglist[0]))
-                            return "Property is protected.";
-
                         po = p.GetValue(o, null);
 
                         // now set the nested attribute using the new property list
@@ -889,9 +826,6 @@ namespace Server.Mobiles
                     if (!plookup.CanWrite)
                         return "Property is read only.";
 
-                    if (IsProtected(type, name))
-                        return "Property is protected.";
-
                     if (plookup.PropertyType == typeof(Mobile))
                     {
                         plookup.SetValue(o, value, null);
@@ -909,9 +843,6 @@ namespace Server.Mobiles
 
                         if (!p.CanWrite)
                             return "Property is read only.";
-
-                        if (IsProtected(type, name))
-                            return "Property is protected.";
 
                         if (p.PropertyType == typeof(Mobile))
                         {
@@ -1562,12 +1493,11 @@ namespace Server.Mobiles
             }
 
             // need to handle comma args that may be grouped with the () such as the (ATTACHMENT,args) arg
-
             string[] arglist = groupedarglist[0].Trim().Split(',');
-            if (!string.IsNullOrEmpty(groupargstring))
+
+            if (!string.IsNullOrEmpty(groupargstring) && arglist.Length > 0)
             {
-                if (arglist.Length > 0)
-                    arglist[arglist.Length - 1] = groupargstring;
+                arglist[arglist.Length - 1] = groupargstring;
             }
 
 
@@ -2191,14 +2121,6 @@ namespace Server.Mobiles
         #endregion
 
         #region Search object methods
-        private static bool CheckNameMatch(string targetname, string name)
-        {
-            // a "*" targetname will match anything
-            // a null or empty targetname will match a null name
-            // otherwise the strings must match
-            return (targetname == "*") || (name == targetname) || (targetname != null && targetname.Length == 0 && name == null);
-        }
-
         public static Item FindItemByName(XmlSpawner fromspawner, string name, string typestr)
         {
             if (name == null) return null;
@@ -2237,8 +2159,7 @@ namespace Server.Mobiles
                 }
             }
 
-            // if a unique item is found then success
-            if (count == 1)
+            if (count == 1) // if a unique item is found then success
             {
                 // add this to the recent search list
                 AddToRecentItemSearchList(fromspawner, founditem);
