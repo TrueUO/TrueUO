@@ -131,21 +131,6 @@ namespace Server.Mobiles
             return t.IsDefined(typeofCustomEnum, false);
         }
 
-        public static bool CheckType(object o, string typename)
-        {
-            if (typename == null || o == null) return false;
-
-            // test the type
-            Type objecttype = o.GetType();
-            Type targettype = SpawnerType.GetType(typename);
-            if (targettype != null && (objecttype.Equals(targettype) || objecttype.IsSubclassOf(targettype)))
-            {
-                return true;
-            }
-
-            return false;
-        }
-
         private enum typeKeyword
         {
             SET,
@@ -167,14 +152,6 @@ namespace Server.Mobiles
         private enum valueKeyword
         {
             GET,
-            GETONTRIGMOB,
-            GETONSPAWN,
-            GETONPARENT,
-            GETONTHIS,
-            RND,
-            RNDBOOL,
-            RNDLIST,
-            RNDSTRLIST,
             PLAYERSINRANGE,
             RANDNAME
         }
@@ -182,7 +159,6 @@ namespace Server.Mobiles
         private enum valuemodKeyword
         {
             GET,
-            RND,
             INC,
             MOB,
             TRIGMOB,
@@ -1326,40 +1302,7 @@ namespace Server.Mobiles
                         {
                             valuemodKeyword kw = valuemodKeywordHash[value_keywordargs[0]];
 
-                            if (kw == valuemodKeyword.RND)
-                            {
-                                // generate a random number and use it as the property value.  Use the format /RND,min,max/
-                                if (value_keywordargs.Length > 2)
-                                {
-                                    // get a random number
-                                    string randvalue = "0";
-                                    int min, max;
-                                    if (int.TryParse(value_keywordargs[1], out min) && int.TryParse(value_keywordargs[2], out max))
-                                    {
-                                        randvalue = string.Format("{0}", Utility.RandomMinMax(min, max));
-                                    }
-                                    else
-                                    {
-                                        status_str = "Invalid RND args : " + arglist[1]; no_error = false;
-                                    }
-                                    // set the property value using the random number as the value
-                                    string result = SetPropertyValue(spawner, o, arglist[0], randvalue);
-                                    // see if it was successful
-                                    if (result != "Property has been set.")
-                                    {
-                                        status_str = arglist[0] + " : " + result;
-                                        no_error = false;
-                                    }
-                                }
-                                else
-                                {
-                                    status_str = "Invalid RND args : " + arglist[1];
-                                    no_error = false;
-                                }
-                                if (arglist.Length < 3) break;
-                                remainder = arglist[2];
-                            }
-                            else if (kw == valuemodKeyword.MY)
+                            if (kw == valuemodKeyword.MY)
                             {
                                 // syntax is MY,property
                                 // note this will be an arg to some property
@@ -1881,136 +1824,6 @@ namespace Server.Mobiles
                     string getvalue = GetPropertyValue(spawner, testitem, propname, out ptype);
 
                     return ParseGetValue(getvalue, ptype);
-                }
-                else if ((kw == valueKeyword.GETONTRIGMOB) && arglist.Length > 1)
-                {
-                    // syntax is GETONTRIGMOB,property
-                    string getvalue = GetPropertyValue(spawner, trigmob, arglist[1], out ptype);
-
-                    return ParseGetValue(getvalue, ptype);
-                }
-                else if ((kw == valueKeyword.GETONPARENT) && arglist.Length > 1)
-                {
-                    // syntax is GETONPARENT,property
-
-                    string getvalue = null;
-
-                    if (o is Item)
-                    {
-                        getvalue = GetPropertyValue(spawner, ((Item)o).Parent, arglist[1], out ptype);
-                    }
-
-                    return ParseGetValue(getvalue, ptype);
-                }
-                else if ((kw == valueKeyword.GETONTHIS) && arglist.Length > 1)
-                {
-                    // syntax is GETONTHIS,property
-
-                    string getvalue = GetPropertyValue(spawner, o, arglist[1], out ptype);
-
-                    return ParseGetValue(getvalue, ptype);
-                }
-                else if ((kw == valueKeyword.GETONSPAWN) && arglist.Length > 2)
-                {
-                    // syntax is GETONSPAWN[,spawnername],subgroup,property
-                    // get the target from the spawn list
-                    string subgroupstr = arglist[1];
-                    string propstr = arglist[2];
-                    string spawnerstr = null;
-
-                    if (arglist.Length > 3)
-                    {
-                        spawnerstr = arglist[1];
-                        subgroupstr = arglist[2];
-                        propstr = arglist[3];
-                    }
-
-                    int subgroup;
-                    if (!int.TryParse(subgroupstr, out subgroup))
-                        subgroup = -1;
-
-                    if (subgroup == -1) return null;
-
-                    if (spawnerstr != null)
-                    {
-                        spawner = FindSpawnerByName(spawner, spawnerstr);
-                    }
-
-                    // check for the special COUNT property keyword
-                    if (propstr == "COUNT")
-                    {
-                        ptype = typeof(int);
-
-                        // get all of the currently active spawns with the specified subgroup
-                        List<object> so = XmlSpawner.GetSpawnedList(spawner, subgroup);
-
-                        if (so == null) return "0";
-
-                        // and return the count
-                        return so.Count.ToString();
-                    }
-                    else
-                    {
-                        object targetobj = XmlSpawner.GetSpawned(spawner, subgroup);
-                        if (targetobj == null) return null;
-
-                        string getvalue = GetPropertyValue(spawner, targetobj, propstr, out ptype);
-
-                        return ParseGetValue(getvalue, ptype);
-                    }
-                }
-                else if ((kw == valueKeyword.RND) && arglist.Length > 2)
-                {
-                    // syntax is RND,min,max
-                    string randvalue = "0";
-                    ptype = typeof(int);
-                    int min, max;
-                    if (int.TryParse(arglist[1], out min) && int.TryParse(arglist[2], out max))
-                        randvalue = string.Format("{0}", Utility.RandomMinMax(min, max));
-                    // return the random number as the value
-                    return randvalue;
-                }
-                else if ((kw == valueKeyword.RNDBOOL))
-                {
-                    // syntax is RNDBOOL
-
-                    ptype = typeof(bool);
-
-                    // return the random number as the value
-                    return Utility.RandomBool().ToString();
-                }
-                else if ((kw == valueKeyword.RNDLIST) && arglist.Length > 1)
-                {
-                    // syntax is RNDLIST,val1,val2,...
-
-                    ptype = typeof(int);
-
-                    // compute a random index into the arglist
-
-                    int randindex = Utility.Random(1, arglist.Length - 1);
-
-                    // return the list entry as the value
-
-                    return arglist[randindex];
-
-                }
-                else if ((kw == valueKeyword.RNDSTRLIST) && arglist.Length > 1)
-                {
-                    // syntax is RNDSTRLIST,val1,val2,...
-                    ptype = typeof(string);
-
-                    // compute a random index into the arglist
-
-                    int randindex = Utility.Random(1, arglist.Length - 1);
-                    if (trigmob != null)
-                    {
-                        if (arglist[randindex].Contains("$TRIGNAME"))
-                            arglist[randindex] = arglist[randindex].Replace("$TRIGNAME", trigmob.Name);
-                    }
-
-                    // return the list entry as the value
-
-                    return arglist[randindex];
                 }
                 else if ((kw == valueKeyword.PLAYERSINRANGE) && arglist.Length > 1)
                 {
