@@ -411,7 +411,6 @@ namespace Server.Mobiles
 
         private static int totalSectorsMonitored = 0;
 
-
         public bool HasActiveSectors
         {
             get
@@ -660,7 +659,6 @@ namespace Server.Mobiles
 
         // does not perform a defrag, so less accurate but can be used while looping through world object enums
         public int SafeCurrentCount => SafeTotalSpawnedObjects;
-
 
         public bool FreeRun
         {
@@ -1052,8 +1050,6 @@ namespace Server.Mobiles
 
                 m_X = Location.X - m_SpawnRange;
                 m_Y = Location.Y - m_SpawnRange;
-
-                //InvalidateProperties();
 
                 // Check if the spawner is showing its bounds
                 if (ShowBounds == true)
@@ -2102,8 +2098,6 @@ namespace Server.Mobiles
             sectorList = null;
             UseSectorActivate = false;
 
-            //IsInactivated = false;
-
             // force an update of the sector list
             bool sectorrefresh = HasActiveSectors;
         }
@@ -2112,7 +2106,7 @@ namespace Server.Mobiles
         {
             if (filename == null || filename.Length <= 0) return;
             // Check if the file exists
-            if (File.Exists(filename) == true)
+            if (File.Exists(filename))
             {
                 FileStream fs = null;
                 try
@@ -2631,7 +2625,7 @@ namespace Server.Mobiles
                 if (m_ExternalTriggering && !m_ExternalTrigger) return;
 
                 // if speech triggering is set then test for successful activation
-                if (m_SpeechTrigger != null && m_SpeechTrigger.Length > 0)
+                if (!string.IsNullOrEmpty(m_SpeechTrigger))
                 {
                     needs_speech_trigger = true;
                 }
@@ -2639,7 +2633,7 @@ namespace Server.Mobiles
                 if (needs_speech_trigger && !m_speechTriggerActivated) return;
 
                 // if skill triggering is set then test for successful activation
-                if (m_SkillTrigger != null && m_SkillTrigger.Length > 0)
+                if (!string.IsNullOrEmpty(m_SkillTrigger))
                 {
                     needs_skill_trigger = true;
                 }
@@ -2648,7 +2642,7 @@ namespace Server.Mobiles
 
                 // if item property triggering is set then test for the property value
                 //
-                if (m_ObjectPropertyName != null && m_ObjectPropertyName.Length > 0)
+                if (!string.IsNullOrEmpty(m_ObjectPropertyName))
                 {
                     needs_object_trigger = true;
                     string status_str;
@@ -2659,7 +2653,7 @@ namespace Server.Mobiles
                     }
                     else
                         has_object_trigger = false;
-                    if (status_str != null && status_str.Length > 0)
+                    if (!string.IsNullOrEmpty(status_str))
                     {
                         this.status_str = status_str;
                     }
@@ -2669,7 +2663,7 @@ namespace Server.Mobiles
                 if (needs_object_trigger && !has_object_trigger) return;
 
                 // if player property triggering is set then look for the mob and test properties
-                if (m_PlayerPropertyName != null && m_PlayerPropertyName.Length > 0)
+                if (!string.IsNullOrEmpty(m_PlayerPropertyName))
                 {
                     needs_player_trigger = true;
                     string status_str;
@@ -2680,7 +2674,7 @@ namespace Server.Mobiles
                     }
                     else
                         has_player_trigger = false;
-                    if (status_str != null && status_str.Length > 0)
+                    if (!string.IsNullOrEmpty(status_str))
                     {
                         this.status_str = status_str;
                     }
@@ -2690,8 +2684,8 @@ namespace Server.Mobiles
                 if (needs_player_trigger && !has_player_trigger) return;
 
                 // if mob property triggering is set then look for the mob and test properties
-                if (m_MobPropertyName != null && m_MobPropertyName.Length > 0 &&
-                    m_MobTriggerName != null && m_MobTriggerName.Length > 0)
+                if (!string.IsNullOrEmpty(m_MobPropertyName) &&
+                    !string.IsNullOrEmpty(m_MobTriggerName))
                 {
                     needs_mob_trigger = true;
 
@@ -2704,7 +2698,7 @@ namespace Server.Mobiles
                     else
                         has_mob_trigger = false;
 
-                    if (status_str != null && status_str.Length > 0)
+                    if (!string.IsNullOrEmpty(status_str))
                     {
                         this.status_str = status_str;
                     }
@@ -2714,7 +2708,7 @@ namespace Server.Mobiles
                 if (needs_mob_trigger && !has_mob_trigger) return;
 
                 // if player-carried item triggering is set then test for the presence of an item on the player an in their pack
-                if (m_ItemTriggerName != null && m_ItemTriggerName.Length > 0)
+                if (!string.IsNullOrEmpty(m_ItemTriggerName))
                 {
                     //enable_triggering = false;
                     needs_item_trigger = true;
@@ -2725,11 +2719,9 @@ namespace Server.Mobiles
                 if (needs_item_trigger && !has_item_trigger) return;
 
                 // if player-carried noitem triggering is set then test for the presence of an item in the players pack that should block triggering
-                if (m_NoItemTriggerName != null && m_NoItemTriggerName.Length > 0)
+                if (!string.IsNullOrEmpty(m_NoItemTriggerName))
                 {
                     needs_noitem_trigger = true;
-
-                    has_noitem_trigger = BaseXmlSpawner.CheckForNotCarried(m, m_NoItemTriggerName);
                 }
                 // check to see if we have to continue
                 if (needs_noitem_trigger && !has_noitem_trigger) return;
@@ -2748,7 +2740,7 @@ namespace Server.Mobiles
                         m.PlaySound(m_ProximityTriggerSound);
 
                     // display the trigger message
-                    if (m_ProximityTriggerMessage != null && m_ProximityTriggerMessage.Length > 0 && m != null && !m.Deleted)
+                    if (!string.IsNullOrEmpty(m_ProximityTriggerMessage) && m != null && !m.Deleted)
                         m.PublicOverheadMessage(MessageType.Regular, 0x3B2, false, m_ProximityTriggerMessage);
 
                     // enable spawning at the next ontick
@@ -2773,11 +2765,11 @@ namespace Server.Mobiles
             }
         }
 
-        public override bool HandlesOnSpeech => (m_Running && m_SpeechTrigger != null && m_SpeechTrigger.Length > 0);
+        public override bool HandlesOnSpeech => (m_Running && !string.IsNullOrEmpty(m_SpeechTrigger));
 
         public override void OnSpeech(SpeechEventArgs e)
         {
-            if ( /*!e.Handled && */m_Running && m_ProximityRange >= 0 && ValidPlayerTrig(e.Mobile) && CanSpawn && !m_refractActivated && TODInRange)
+            if (m_Running && m_ProximityRange >= 0 && ValidPlayerTrig(e.Mobile) && CanSpawn && !m_refractActivated && TODInRange)
             {
                 m_speechTriggerActivated = false;
 
@@ -3243,7 +3235,7 @@ namespace Server.Mobiles
                     count++;
                     XmlSpawner spawner = ((XmlSpawner)item);
 
-                    if (spawner.RegionName != null && spawner.RegionName != string.Empty)
+                    if (!string.IsNullOrEmpty(spawner.RegionName))
                     {
                         spawner.RegionName = spawner.RegionName;    // invoke set(RegionName)
                         regional++;
@@ -3493,8 +3485,7 @@ namespace Server.Mobiles
                                     from.SendMessage("Spawner is in a container");
                                 }
                             }
-                            else
-                                    if (m_e.GetString(0) == "gump")
+                            else if (m_e.GetString(0) == "gump")
                             {
                                 spawner.OnDoubleClick(from);
                             }
@@ -3516,7 +3507,7 @@ namespace Server.Mobiles
         private static void XmlSaveDefaults(string filePath, Mobile m)
         {
 
-            if (filePath == null || filePath.Length < 1) return;
+            if (string.IsNullOrEmpty(filePath)) return;
 
             using (StreamWriter op = new StreamWriter(filePath))
             {
@@ -4307,7 +4298,7 @@ namespace Server.Mobiles
             }
             else
                 // check to see if it is a directory
-                if (Directory.Exists(filename) == true)
+                if (Directory.Exists(filename))
             {
                 // if so then import all of the .xml files in the directory
                 string[] files = null;
@@ -4361,9 +4352,8 @@ namespace Server.Mobiles
             processedmaps = 0;
             processedspawners = 0;
 
-            if (fs == null) return;
-
-
+            if (fs == null)
+                return;
 
             int TotalCount = 0;
             int TrammelCount = 0;
@@ -4379,7 +4369,7 @@ namespace Server.Mobiles
 
             if (from != null)
                 from.SendMessage(string.Format("UnLoading {0} objects{1} from file {2}.",
-                    "XmlSpawner", ((SpawnerPrefix != null && SpawnerPrefix.Length > 0) ? " beginning with " + SpawnerPrefix : string.Empty), filename));
+                    "XmlSpawner", (!string.IsNullOrEmpty(SpawnerPrefix) ? " beginning with " + SpawnerPrefix : string.Empty), filename));
 
             // Create the data set
             DataSet ds = new DataSet(SpawnDataSetName);
@@ -5744,7 +5734,7 @@ namespace Server.Mobiles
 
             if (from != null)
                 from.SendMessage(string.Format("Loading {0} objects{1} from file {2}.", "XmlSpawner",
-                    ((SpawnerPrefix != null && SpawnerPrefix.Length > 0) ? " beginning with " + SpawnerPrefix : string.Empty), filename));
+                    (!string.IsNullOrEmpty(SpawnerPrefix) ? " beginning with " + SpawnerPrefix : string.Empty), filename));
 
             // Create the data set
             DataSet ds = new DataSet(SpawnDataSetName);
@@ -6073,18 +6063,6 @@ namespace Server.Mobiles
                             try { SpawnObjectPropertyName = (string)dr["ObjectPropertyName"]; }
                             catch { }
 
-                            // read in the object proximity target, this will be an object name, so have to do a search
-                            // to find the item in the world.  Also have to test for redundancy
-                            string triggerObjectName = null;
-                            try { triggerObjectName = (string)dr["ObjectPropertyItemName"]; }
-                            catch { }
-
-                            // read in the target for the set command, this will be an object name, so have to do a search
-                            // to find the item in the world.  Also have to test for redundancy
-                            string setObjectName = null;
-                            try { setObjectName = (string)dr["SetPropertyItemName"]; }
-                            catch { }
-
                             // we will assign this during the self-reference resolution pass
                             Item SpawnSetPropertyItem = null;
 
@@ -6387,7 +6365,7 @@ namespace Server.Mobiles
                             string setObjectName = null;
                             try { setObjectName = (string)dr["SetPropertyItemName"]; }
                             catch { }
-                            if (setObjectName != null && setObjectName.Length > 0)
+                            if (!string.IsNullOrEmpty(setObjectName))
                             {
                                 // try to parse out the type information if it has also been saved
                                 string[] typeargs = setObjectName.Split(",".ToCharArray(), 2);
@@ -6437,7 +6415,7 @@ namespace Server.Mobiles
                             try { triggerObjectName = (string)dr["ObjectPropertyItemName"]; }
                             catch { }
 
-                            if (triggerObjectName != null && triggerObjectName.Length > 0)
+                            if (!string.IsNullOrEmpty(triggerObjectName))
                             {
                                 string[] typeargs = triggerObjectName.Split(",".ToCharArray(), 2);
                                 string typestr = null;
@@ -6828,10 +6806,10 @@ namespace Server.Mobiles
 
             if (SaveAllMaps == true)
                 e.Mobile.SendMessage(string.Format("Saving {0} objects{1} to file {2} from {3}.", "XmlSpawner",
-                    ((SpawnerPrefix != null && SpawnerPrefix.Length > 0) ? " beginning with " + SpawnerPrefix : string.Empty), dirname, e.Mobile.Map));
+                    !string.IsNullOrEmpty(SpawnerPrefix) ? " beginning with " + SpawnerPrefix : string.Empty, dirname, e.Mobile.Map));
             else
                 e.Mobile.SendMessage(string.Format("Saving {0} obejcts{1} to file {2} from the entire world.", "XmlSpawner",
-                    ((SpawnerPrefix != null && SpawnerPrefix.Length > 0) ? " beginning with " + SpawnerPrefix : string.Empty), dirname));
+                    !string.IsNullOrEmpty(SpawnerPrefix) ? " beginning with " + SpawnerPrefix : string.Empty, dirname));
 
 
             List<XmlSpawner> saveslist = new List<XmlSpawner>();
@@ -6859,7 +6837,7 @@ namespace Server.Mobiles
 
         public static bool SaveSpawnList(Mobile from, List<XmlSpawner> savelist, string dirname, bool oldformat, bool verbose)
         {
-            if (dirname == null || dirname.Length == 0) return false;
+            if (string.IsNullOrEmpty(dirname)) return false;
 
 
             bool save_ok = true;
@@ -7122,7 +7100,7 @@ namespace Server.Mobiles
                 string waystr = null;
                 if (sp.m_WayPoint != null)
                 {
-                    if ((sp.m_WayPoint.Name != defwaypointname) && (sp.m_WayPoint.Name != null) && (sp.m_WayPoint.Name.Length > 0))
+                    if ((sp.m_WayPoint.Name != defwaypointname) && !string.IsNullOrEmpty(sp.m_WayPoint.Name))
                     {
                         waystr = sp.m_WayPoint.Name;
                     }
@@ -7197,9 +7175,9 @@ namespace Server.Mobiles
                     SpawnerPrefix = e.Arguments[0];
 
                 if (WipeAll == true)
-                    e.Mobile.SendMessage("Removing ALL XmlSpawner objects from the world{0}.", ((SpawnerPrefix != null && SpawnerPrefix.Length > 0) ? " beginning with " + SpawnerPrefix : string.Empty));
+                    e.Mobile.SendMessage("Removing ALL XmlSpawner objects from the world{0}.", !string.IsNullOrEmpty(SpawnerPrefix) ? " beginning with " + SpawnerPrefix : string.Empty);
                 else
-                    e.Mobile.SendMessage("Removing ALL XmlSpawner objects from {0}{1}.", e.Mobile.Map, ((SpawnerPrefix != null && SpawnerPrefix.Length > 0) ? " beginning with " + SpawnerPrefix : string.Empty));
+                    e.Mobile.SendMessage("Removing ALL XmlSpawner objects from {0}{1}.", e.Mobile.Map, !string.IsNullOrEmpty(SpawnerPrefix) ? " beginning with " + SpawnerPrefix : string.Empty);
 
                 // Delete Xml spawner's in the world based on the mobiles current map
                 int Count = 0;
@@ -7262,9 +7240,9 @@ namespace Server.Mobiles
                     SpawnerPrefix = e.Arguments[0];
 
                 if (RespawnAll == true)
-                    e.Mobile.SendMessage("Respawning ALL XmlSpawner objects from the world{0}.", ((SpawnerPrefix != null && SpawnerPrefix.Length > 0) ? " beginning with " + SpawnerPrefix : string.Empty));
+                    e.Mobile.SendMessage("Respawning ALL XmlSpawner objects from the world{0}.", !string.IsNullOrEmpty(SpawnerPrefix) ? " beginning with " + SpawnerPrefix : string.Empty);
                 else
-                    e.Mobile.SendMessage("Respawning ALL XmlSpawner objects from {0}{1}.", e.Mobile.Map, ((SpawnerPrefix != null && SpawnerPrefix.Length > 0) ? " beginning with " + SpawnerPrefix : string.Empty));
+                    e.Mobile.SendMessage("Respawning ALL XmlSpawner objects from {0}{1}.", e.Mobile.Map, !string.IsNullOrEmpty(SpawnerPrefix) ? " beginning with " + SpawnerPrefix : string.Empty);
 
                 // Respawn Xml spawner's in the world based on the mobiles current map
                 int Count = 0;
@@ -7515,7 +7493,7 @@ namespace Server.Mobiles
             m_Running = true;
             m_Group = isGroup;
 
-            if ((name != null) && (name.Length > 0))
+            if (!string.IsNullOrEmpty(name))
                 Name = name;
             else
                 Name = "Spawner";
@@ -8859,9 +8837,7 @@ namespace Server.Mobiles
 
                                 m.Spawner = this;
 
-                                Point3D loc;
-
-                                loc = GetSpawnPosition(requiresurface, packrange, packcoord, spawnpositioning, m);
+                                var loc = GetSpawnPosition(requiresurface, packrange, packcoord, spawnpositioning, m);
 
                                 if (!smartspawn)
                                 {
@@ -9422,7 +9398,7 @@ namespace Server.Mobiles
             WayPoint waypoint = null;
 
             // try parsing the waypoint name to determine the waypoint. object syntax is "SERIAL,sernumber" or "waypointname"
-            if (waypointstr != null && waypointstr.Length > 0)
+            if (!string.IsNullOrEmpty(waypointstr))
             {
                 string[] wayargs = BaseXmlSpawner.ParseString(waypointstr, 2, ",");
                 if (wayargs != null && wayargs.Length > 0)
@@ -11736,7 +11712,7 @@ namespace Server.Mobiles
                     {
                         m_Name = reader.ReadString();
                         // backward compatibility with old name storage
-                        if (m_Name != null && m_Name != string.Empty) Name = m_Name;
+                        if (!string.IsNullOrEmpty(m_Name)) Name = m_Name;
                         m_X = reader.ReadInt();
                         m_Y = reader.ReadInt();
                         m_Width = reader.ReadInt();
@@ -12069,13 +12045,12 @@ namespace Server.Mobiles
                 return (null);
             }
 
-
             internal static SpawnObject[] LoadSpawnObjectsFromString(string ObjectList)
             {
                 // Clear the spawn object list
                 List<SpawnObject> NewSpawnObjects = new List<SpawnObject>();
 
-                if (ObjectList != null && ObjectList.Length > 0)
+                if (!string.IsNullOrEmpty(ObjectList))
                 {
                     // Split the string based on the object separator first ':'
                     string[] SpawnObjectList = ObjectList.Split(':');
@@ -12126,7 +12101,7 @@ namespace Server.Mobiles
 
                 // spawn object definitions will take the form typestring:MX=int:SB=int:RT=double:TO=int:KL=int
                 // or typestring:MX=int:SB=int:RT=double:TO=int:KL=int:OBJ=typestring...
-                if (ObjectList != null && ObjectList.Length > 0)
+                if (!string.IsNullOrEmpty(ObjectList))
                 {
                     string[] SpawnObjectList = BaseXmlSpawner.SplitString(ObjectList, ":OBJ=");
 

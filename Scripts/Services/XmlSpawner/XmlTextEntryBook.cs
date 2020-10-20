@@ -9,8 +9,7 @@ namespace Server.Items
 
     public class XmlTextEntryBook : BaseEntryBook
     {
-        public XmlTextEntryBook(int itemID, string title, string author, int pageCount, bool writable,
-            XmlTextEntryBookCallback callback, object[] args) : base(itemID, title, author, pageCount, writable)
+        public XmlTextEntryBook(int itemID, string title, string author, int pageCount, bool writable) : base(itemID, title, author, pageCount, writable)
         {
         }
 
@@ -83,7 +82,6 @@ namespace Server.Items
         private string m_Title;
         private string m_Author;
         private readonly BookPageInfo[] m_Pages;
-        private bool m_Writable;
 
         [CommandProperty(AccessLevel.GameMaster)]
         public string Title
@@ -100,11 +98,7 @@ namespace Server.Items
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool Writable
-        {
-            get { return m_Writable; }
-            set { m_Writable = value; }
-        }
+        public bool Writable { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public int PagesCount => m_Pages.Length;
@@ -117,7 +111,7 @@ namespace Server.Items
             m_Title = title;
             m_Author = author;
             m_Pages = new BookPageInfo[pageCount];
-            m_Writable = writable;
+            Writable = writable;
 
             for (int i = 0; i < m_Pages.Length; ++i)
                 m_Pages[i] = new BookPageInfo();

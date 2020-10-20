@@ -62,7 +62,6 @@ namespace Server.Mobiles
             // these are additional defaults that are not set by XmlAdd but can be used by other routines such as the custom properties gump to determine 
             // whether properties have been changed from spawner default values
             public bool Running = true;
-            public Item SetItem = null;
 
             public bool AutoNumber;
             public int AutoNumberValue;
@@ -154,7 +153,6 @@ namespace Server.Mobiles
             if (defs.SelectionList != null) Array.Clear(defs.SelectionList, 0, defs.SelectionList.Length);
             if (defs.NameList != null) Array.Clear(defs.NameList, 0, defs.NameList.Length);
         }
-
     }
 
     public class XmlAddGump : Gump
@@ -165,11 +163,9 @@ namespace Server.Mobiles
         private const string DefsTablePointName = "Values";
         private const string DefsDir = "SpawnerDefs";
 
-        private const int StartingXoffset = 440;
         private readonly Mobile m_From;
 
         public XmlSpawnerDefaults.DefaultEntry defs;
-
 
         private string NameListToString()
         {
@@ -595,10 +591,6 @@ namespace Server.Mobiles
 
             e.Mobile.SendGump(new XmlAddGump(e.Mobile, e.Mobile.Location, e.Mobile.Map, true, false, x, y));
 
-        }
-
-        public XmlAddGump(Mobile from, Point3D startloc, Map startmap) : this(from, startloc, startmap, true, false, StartingXoffset, 0)
-        {
         }
 
         public XmlAddGump(Mobile from, Point3D startloc, Map startmap, bool firststart, bool extension, int gumpx, int gumpy) : base(gumpx, gumpy)

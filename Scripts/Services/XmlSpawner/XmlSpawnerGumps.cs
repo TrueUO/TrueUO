@@ -916,53 +916,6 @@ namespace Server.Mobiles
             }
         }
 
-
-#if (BOOKTEXTENTRY)
-
-        public static void ProcessSpawnerBookEntry(Mobile from, object[] args, string entry)
-        {
-            if (from == null || args == null || args.Length < 6)
-                return;
-
-            XmlSpawner m_Spawner = (XmlSpawner)args[0];
-
-            int m_Index = (int)args[1];
-            int m_X = (int)args[2];
-            int m_Y = (int)args[3];
-            int m_Extension = (int)args[4];
-            int m_page = (int)args[5];
-
-            if (m_Spawner?.SpawnObjects == null)
-                return;
-
-            // place the book text into the spawn entry
-            if (m_Index < m_Spawner.SpawnObjects.Length)
-            {
-                XmlSpawner.SpawnObject so = m_Spawner.SpawnObjects[m_Index];
-
-                if (so.TypeName != entry)
-                {
-                    CommandLogging.WriteLine(from, "{0} {1} changed XmlSpawner {2} '{3}' [{4}, {5}] ({6}) : {7} to {8}", from.AccessLevel, CommandLogging.Format(from), m_Spawner.Serial, m_Spawner.Name, m_Spawner.GetWorldLocation().X, m_Spawner.GetWorldLocation().Y, m_Spawner.Map, so.TypeName, entry);
-
-                }
-
-                so.TypeName = entry;
-            }
-            else
-            {
-                // add a new spawn entry
-                m_Spawner.m_SpawnObjects.Add(new XmlSpawner.SpawnObject(from, m_Spawner, entry, 1));
-
-                // and bump the maxcount of the spawner
-                m_Spawner.MaxCount++;
-            }
-
-            // refresh the spawner gumps			
-            RefreshSpawnerGumps(from);
-        }
-
-#endif
-
         public static void Refresh_Callback(object state)
         {
             object[] args = (object[])state;
@@ -1391,7 +1344,7 @@ namespace Server.Mobiles
                             args[4] = m_ShowGump;
                             args[5] = page;
 
-                            XmlTextEntryBook book = new XmlTextEntryBook(0, string.Empty, m_Spawner.Name, 20, true, ProcessSpawnerBookEntry, args);
+                            XmlTextEntryBook book = new XmlTextEntryBook(0, string.Empty, m_Spawner.Name, 20, true);
 
                             m_Spawner.m_TextEntryBook.Add(book);
 

@@ -1,6 +1,5 @@
 using Server.Commands;
 using Server.Items;
-using Server.Network;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -132,24 +131,6 @@ namespace Server.Mobiles
             return t.IsDefined(typeofCustomEnum, false);
         }
 
-        public static string ParsedType(Type type)
-        {
-            if (type == null) return null;
-
-            string s = type.ToString();
-
-            string[] args = s.Split(Type.Delimiter);
-
-            if (args.Length > 0)
-            {
-                return args[args.Length - 1];
-            }
-            else
-            {
-                return null;
-            }
-        }
-
         public static bool CheckType(object o, string typename)
         {
             if (typename == null || o == null) return false;
@@ -173,7 +154,6 @@ namespace Server.Mobiles
             WHILE,
             IF,
             GOTO,
-            BCAST,
             COMMAND,
             SPAWN,
             DESPAWN
@@ -260,26 +240,6 @@ namespace Server.Mobiles
             return (typeKeywordHash.ContainsKey(typeName));
         }
 
-        private static void AddTypeKeyword(string name)
-        {
-            typeKeywordHash.Add(name, (typeKeyword)Enum.Parse(typeof(typeKeyword), name));
-        }
-
-        private static void AddTypemodKeyword(string name)
-        {
-            typemodKeywordHash.Add(name, (typemodKeyword)Enum.Parse(typeof(typemodKeyword), name));
-        }
-
-        private static void AddValueKeyword(string name)
-        {
-            valueKeywordHash.Add(name, (valueKeyword)Enum.Parse(typeof(valueKeyword), name));
-        }
-
-        private static void AddValuemodKeyword(string name)
-        {
-            valuemodKeywordHash.Add(name, (valuemodKeyword)Enum.Parse(typeof(valuemodKeyword), name));
-        }
-
         public static void RemoveKeyword(string name)
         {
             if (name == null) return;
@@ -293,37 +253,6 @@ namespace Server.Mobiles
             valueKeywordHash.Remove(name);
 
             valuemodKeywordHash.Remove(name);
-        }
-
-        public static void Configure()
-        {
-            // Type keywords
-            // spawned as primary objects
-            AddTypeKeyword("SET");
-            AddTypeKeyword("WHILE");
-            AddTypeKeyword("IF");
-            AddTypeKeyword("GOTO");
-            AddTypeKeyword("BCAST");
-            AddTypeKeyword("COMMAND");
-            AddTypeKeyword("SPAWN");
-            AddTypeKeyword("DESPAWN");
-
-            // Value keywords
-            // used in property tests
-            AddValueKeyword("RND");
-            AddValueKeyword("RNDBOOL");
-            AddValueKeyword("RNDLIST");
-            AddValueKeyword("RNDSTRLIST");
-            AddValueKeyword("RANDNAME");
-            AddValueKeyword("PLAYERSINRANGE");
-
-            // Valuemod keywords
-            // used as values in property assignments
-            AddValuemodKeyword("INC");
-            AddValuemodKeyword("MOB");
-            AddValuemodKeyword("TRIGMOB");
-            AddValuemodKeyword("RANDNAME");
-            AddValuemodKeyword("PLAYERSINRANGE");
         }
         #endregion
 
@@ -1347,11 +1276,6 @@ namespace Server.Mobiles
                         if (value_keywordargs != null && value_keywordargs.Length > 0)
                             value_keywordargs[value_keywordargs.Length - 1] = groupargstring;
                     }
-
-                    // handle propname keywords that may take comma args
-                    //string[] keywordargs = ParseString(arglist[0],10,",");
-                    string[] keywordargs = arglist[0].Trim().Split(',');
-
 
                     // this quick optimization can determine whether this is a regular prop/value assignment
                     // since most prop modification strings will use regular propnames and not keywords, it makes sense to check for that first
@@ -3020,7 +2944,6 @@ namespace Server.Mobiles
             IPooledEnumerable itemlist = null;
             IPooledEnumerable mobilelist = null;
             List<object> nearbylist = new List<object>();
-            string status_str;
 
             // get nearby items
             if (targettype == null || targettype == typeof(Item) || targettype.IsSubclassOf(typeof(Item)))
@@ -3053,7 +2976,7 @@ namespace Server.Mobiles
                             if (!i.Deleted && CheckNameMatch(targetname, i.Name) && (typestr == null ||
                                 targettype != null && (itemtype.Equals(targettype) || itemtype.IsSubclassOf(targettype))))
                         {
-                            if (proptest == null || CheckPropertyString(null, i, proptest, null, out status_str))
+                            if (proptest == null || CheckPropertyString(null, i, proptest, null, out _))
                                 nearbylist.Add(i);
                         }
 
@@ -3086,7 +3009,7 @@ namespace Server.Mobiles
                         if (!m.Deleted && CheckNameMatch(targetname, m.Name) && (typestr == null ||
                             targettype != null && (mobtype.Equals(targettype) || mobtype.IsSubclassOf(targettype))))
                         {
-                            if (proptest == null || CheckPropertyString(null, m, proptest, null, out status_str))
+                            if (proptest == null || CheckPropertyString(null, m, proptest, null, out _))
                                 nearbylist.Add(m);
                         }
                     }
@@ -3157,40 +3080,6 @@ namespace Server.Mobiles
             return null;
         }
 
-        public static Item SearchPackForItemType(Container pack, string targetName)
-        {
-            if (pack != null && !pack.Deleted && !string.IsNullOrEmpty(targetName))
-            {
-                Type targetType = SpawnerType.GetType(targetName);
-
-                // go through all of the items in the pack
-                List<Item> packlist = pack.Items;
-
-                for (int i = 0; i < packlist.Count; ++i)
-                {
-                    Item item = packlist[i];
-
-                    if (item != null && !item.Deleted)
-                    {
-                        if (item is Container)
-                        {
-                            Item itemTarget = SearchPackForItemType((Container)item, targetName);
-
-                            if (itemTarget != null) return itemTarget;
-                        }
-                        // test the item name against the trigger string
-                        if (item.GetType() == targetType)
-                        {
-                            //found it
-                            return item;
-                        }
-                    }
-                }
-            }
-
-            return null;
-        }
-
         public static Item SearchPackForItem(Container pack, string targetName, string typestr)
         {
             if (pack != null && !pack.Deleted)
@@ -3231,183 +3120,6 @@ namespace Server.Mobiles
                 }
             }
             return null;
-        }
-
-        public static List<Item> SearchPackForItems(Container pack, string targetName, string typestr)
-        {
-            List<Item> itemlist = new List<Item>();
-            if (pack != null && !pack.Deleted)
-            {
-                Type targettype = null;
-
-                if (typestr != null)
-                {
-                    targettype = SpawnerType.GetType(typestr);
-                }
-
-                // go through all of the items in the pack
-                List<Item> packlist = pack.Items;
-
-                for (int i = 0; i < packlist.Count; ++i)
-                {
-                    Item item = packlist[i];
-
-                    if (item != null && !item.Deleted)
-                    {
-
-                        if (item is Container)
-                        {
-                            itemlist.AddRange(SearchPackForItems((Container)item, targetName, typestr));
-                        }
-                        // test the item name against the trigger string since it's not a container
-                        else if (CheckNameMatch(targetName, item.Name))
-                        {
-                            if (targettype == null || (item.GetType().Equals(targettype) || item.GetType().IsSubclassOf(targettype)))
-                            {
-                                //found it
-                                itemlist.Add(item);
-                            }
-                        }
-                    }
-                }
-            }
-            return itemlist;
-        }
-
-        public static List<Item> SearchPackListForItemType(Container pack, string targetName, List<Item> itemlist)
-        {
-            if (pack != null && !pack.Deleted && !string.IsNullOrEmpty(targetName))
-            {
-                Type targetType = SpawnerType.GetType(targetName);
-
-                if (targetType == null) return null;
-
-                // go through all of the items in the pack
-                List<Item> packlist = pack.Items;
-
-                for (int i = 0; i < packlist.Count; ++i)
-                {
-                    Item item = packlist[i];
-                    if (item != null && !item.Deleted && item is Container)
-                    {
-                        itemlist = SearchPackListForItemType((Container)item, targetName, itemlist);
-                    }
-                    // test the item name against the trigger string
-                    if (item != null && !item.Deleted && (item.GetType().IsSubclassOf(targetType) || item.GetType().Equals(targetType)))
-                    {
-                        //found it
-                        itemlist.Add(item);
-                    }
-                }
-            }
-            return itemlist;
-        }
-
-        public static bool CheckForNotCarried(Mobile m, string objectivestr)
-        {
-            if (m == null || objectivestr == null) return true;
-
-            // parse the objective string that might be of the form 'obj &| obj &| obj ...'
-            string[] arglist = ParseString(objectivestr, 2, "&|");
-            if (arglist.Length < 2)
-            {
-                // simple test with no and/or operators
-                return SingleCheckForNotCarried(m, objectivestr);
-            }
-            else
-            {
-                // test each half independently and combine the results
-                bool first = SingleCheckForNotCarried(m, arglist[0]);
-
-                // this will recursively parse the property test string with implicit nesting for multiple logical tests of the
-                // form A * B * C * D    being grouped as A * (B * (C * D))
-                bool second = CheckForNotCarried(m, arglist[1]);
-
-                int andposition = objectivestr.IndexOf("&");
-                int orposition = objectivestr.IndexOf("|");
-
-                // for the & operator
-                // notrigger if
-                // notcarrying A | notcarrying B
-                // people will actually think of it as  not(carrying A | carrying B)
-                // which is
-                // notrigger if
-                // notcarrying A && notcarrying B
-                // similarly for the & operator
-
-                // combine them based upon the operator
-                if ((andposition > 0 && orposition <= 0) || (andposition > 0 && andposition < orposition))
-                {
-                    // and operator (see explanation above)
-                    return (first || second);
-                }
-                else if ((orposition > 0 && andposition <= 0) || (orposition > 0 && orposition < andposition))
-                {
-                    // or operator (see explanation above)
-                    return (first && second);
-                }
-                else
-                {
-                    // should never get here
-                    return false;
-                }
-            }
-        }
-
-        public static bool SingleCheckForNotCarried(Mobile m, string objectivestr)
-        {
-            if (m == null || objectivestr == null) return true;
-
-            bool has_no_such_item = true;
-
-            // check to see whether there is an objective specification as well.  The format is name[,type][,EQUIPPED][,objective,objective,...]
-            string[] objstr = ParseString(objectivestr, 8, ",");
-            string itemname = objstr[0];
-
-            bool equippedonly = false;
-            string typestr = null;
-            int objoffset = 1;
-            // is there a type specification?
-
-            while (objoffset < objstr.Length)
-            {
-                if (objstr[objoffset] != null && objstr[objoffset].Length > 0)
-                {
-
-                    char startc = objstr[objoffset][0];
-
-                    if (startc >= '0' && startc <= '9')
-                    {
-                        // this is the start of the numeric objective specifications
-                        break;
-                    }
-                    else
-                        if (objstr[objoffset] == "EQUIPPED")
-                    {
-                        equippedonly = true;
-                    }
-                    else
-                    {
-                        // treat as a type specification if it does not begin with a numeric char
-                        // and is not the EQUIPPED keyword
-                        typestr = objstr[objoffset];
-                    }
-                }
-                objoffset++;
-            }
-
-            // look for the item
-            Item testitem = SearchMobileForItem(m, itemname, typestr, false, equippedonly);
-
-            // found the item
-            if (testitem != null)
-            {
-                // is the equippedonly flag set?  If so then see if the item is equipped
-                if ((equippedonly && testitem.Parent == m) || !equippedonly)
-                    has_no_such_item = false;
-
-            }
-            return has_no_such_item;
         }
 
         public static bool CheckForCarried(Mobile m, string objectivestr)
@@ -4097,99 +3809,6 @@ namespace Server.Mobiles
 
         #endregion
 
-        #region Keyword support methods
-
-        public static void BroadcastAsciiMessage(AccessLevel ac, int hue, int font, string message)
-        {
-            foreach (NetState state in NetState.Instances)
-            {
-                Mobile m = state.Mobile;
-
-                if (m != null && m.AccessLevel >= ac)
-                    //m.SendMessage(hue, message);
-                    m.Send(new AsciiMessage(Serial.MinusOne, -1, MessageType.Regular, hue, font, "System", message));
-            }
-        }
-
-        public static void ExecuteActions(Mobile mob, object attachedto, string actions)
-        {
-            if (actions == null || actions.Length <= 0) return;
-            // execute any action associated with it
-            // allow for multiple action strings on a single line separated by a semicolon
-
-            string[] args = actions.Split(';');
-
-            for (int j = 0; j < args.Length; j++)
-            {
-                ExecuteAction(mob, attachedto, args[j]);
-            }
-
-        }
-
-        public static void ExecuteAction(Mobile trigmob, object attachedto, string action)
-        {
-            Point3D loc = Point3D.Zero;
-            Map map = null;
-            if (attachedto is IEntity)
-            {
-                loc = ((IEntity)attachedto).Location;
-                map = ((IEntity)attachedto).Map;
-            }
-
-            if (action == null || action.Length <= 0 || attachedto == null || map == null) return;
-            XmlSpawner.SpawnObject TheSpawn = new XmlSpawner.SpawnObject(null, 0)
-            {
-                TypeName = action
-            };
-            string substitutedtypeName = ApplySubstitution(null, attachedto, trigmob, action);
-            string typeName = ParseObjectType(substitutedtypeName);
-
-
-            string status_str;
-            if (IsTypeOrItemKeyword(typeName))
-            {
-                SpawnTypeKeyword(attachedto, TheSpawn, typeName, substitutedtypeName, true, trigmob, loc, map, out status_str);
-            }
-            else
-            {
-                // its a regular type descriptor so find out what it is
-                Type type = SpawnerType.GetType(typeName);
-                try
-                {
-                    string[] arglist = ParseString(substitutedtypeName, 3, "/");
-                    object o = XmlSpawner.CreateObject(type, arglist[0]);
-
-                    if (o == null)
-                    {
-                        status_str = "invalid type specification: " + arglist[0];
-                    }
-                    else
-                        if (o is Mobile)
-                    {
-                        Mobile m = (Mobile)o;
-                        if (m is BaseCreature)
-                        {
-                            BaseCreature c = (BaseCreature)m;
-                            c.Home = loc; // Spawners location is the home point
-                        }
-
-                        m.Location = loc;
-                        m.Map = map;
-
-                        ApplyObjectStringProperties(null, substitutedtypeName, m, trigmob, attachedto, out status_str);
-                    }
-                    else
-                            if (o is Item)
-                    {
-                        Item item = (Item)o;
-                        AddSpawnItem(null, attachedto, TheSpawn, item, loc, map, trigmob, false, substitutedtypeName, out status_str);
-                    }
-                }
-                catch { }
-            }
-        }
-        #endregion
-
         #region Spawn methods
 
         public static void AddSpawnItem(XmlSpawner spawner, object invoker, XmlSpawner.SpawnObject theSpawn, Item item, Point3D location, Map map, Mobile trigmob, bool requiresurface,
@@ -4406,7 +4025,6 @@ namespace Server.Mobiles
                                         return false;
                                     }
 
-                                    string remaining = arglist[1];
                                     if (typeof(Mobile).IsAssignableFrom(objecttype))
                                     {
                                         List<Mobile> mobs = new List<Mobile>();
@@ -4846,66 +4464,6 @@ namespace Server.Mobiles
                             else
                             {
                                 status_str = "insufficient args to COMMAND";
-                            }
-
-                            TheSpawn.SpawnedObjects.Add(new KeywordTag(substitutedtypeName, spawner));
-
-                            break;
-                        }
-                    case typeKeyword.BCAST:
-                        {
-                            // syntax is BCAST[,hue][,font]/message
-
-                            string[] arglist = ParseSlashArgs(substitutedtypeName, 3);
-
-                            int hue = 0x482;
-                            int font = -1;
-
-                            if (arglist.Length > 0)
-                            {
-                                string[] keywordargs = ParseString(arglist[0], 3, ",");
-                                if (keywordargs.Length > 1)
-                                {
-                                    if (!int.TryParse(keywordargs[1], out hue))
-                                    {
-                                        status_str = "invalid hue arg to BCAST";
-                                        hue = 0x482;
-                                    }
-                                }
-                                if (keywordargs.Length > 2)
-                                {
-                                    if (!int.TryParse(keywordargs[2], out font))
-                                    {
-                                        status_str = "invalid font arg to BCAST";
-                                        font = -1;
-                                    }
-                                }
-                            }
-
-                            if (arglist.Length > 1)
-                            {
-                                string msg = arglist[1];
-                                if (arglist[1] != null && arglist[1].Length > 0 && arglist[1][0] == '@')
-                                {
-                                    arglist = ParseSlashArgs(substitutedtypeName, 2);
-                                    msg = arglist[1].Substring(1);
-                                }
-                                if (font >= 0)
-                                {
-                                    // broadcast an ascii message to all players
-                                    BroadcastAsciiMessage(AccessLevel.Player, hue, font, msg);
-                                }
-                                else
-                                {
-                                    // standard unicode message format
-                                    CommandHandlers.BroadcastMessage(AccessLevel.Player, hue, msg);
-                                }
-
-                            }
-                            else
-                            {
-                                status_str = "missing msg arg in BCAST";
-                                return false;
                             }
 
                             TheSpawn.SpawnedObjects.Add(new KeywordTag(substitutedtypeName, spawner));

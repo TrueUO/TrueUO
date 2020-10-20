@@ -17,10 +17,8 @@ namespace Server.Gumps
     {
         private readonly Type m_Type;
         private readonly int m_ItemID;
-        private readonly int m_Hue;
         private readonly XmlAddCAGCategory m_Parent;
 
-        public Type Type => m_Type;
         public int ItemID => m_ItemID;
         public XmlAddCAGCategory Parent => m_Parent;
 
@@ -79,19 +77,17 @@ namespace Server.Gumps
                 m_ItemID = XmlConvert.ToInt32(xml.Value);
 
             if (xml.MoveToAttribute("hue"))
-                m_Hue = XmlConvert.ToInt32(xml.Value);
+                XmlConvert.ToInt32(xml.Value);
         }
     }
 
     public class XmlAddCAGCategory : XmlAddCAGNode
     {
         private readonly string m_Title;
-        private readonly XmlAddCAGNode[] m_Nodes;
-        private readonly XmlAddCAGCategory m_Parent;
 
-        public string Title => m_Title;
-        public XmlAddCAGNode[] Nodes => m_Nodes;
-        public XmlAddCAGCategory Parent => m_Parent;
+        public XmlAddCAGNode[] Nodes { get; }
+
+        public XmlAddCAGCategory Parent { get; }
 
         public override string Caption => m_Title;
 
@@ -103,12 +99,12 @@ namespace Server.Gumps
         private XmlAddCAGCategory()
         {
             m_Title = "no data";
-            m_Nodes = new XmlAddCAGNode[0];
+            Nodes = new XmlAddCAGNode[0];
         }
 
         public XmlAddCAGCategory(XmlAddCAGCategory parent, XmlReader xml)
         {
-            m_Parent = parent;
+            Parent = parent;
 
             if (xml.MoveToAttribute("title"))
             {
@@ -122,7 +118,7 @@ namespace Server.Gumps
 
             if (xml.IsEmptyElement)
             {
-                m_Nodes = new XmlAddCAGNode[0];
+                Nodes = new XmlAddCAGNode[0];
             }
             else
             {
@@ -152,7 +148,7 @@ namespace Server.Gumps
                     Console.WriteLine("XmlCategorizedAddGump: Corrupted Data/objects.xml file detected. Not all XmlCAG objects loaded. {0}", ex);
                 }
 
-                m_Nodes = (XmlAddCAGNode[])nodes.ToArray(typeof(XmlAddCAGNode));
+                Nodes = (XmlAddCAGNode[])nodes.ToArray(typeof(XmlAddCAGNode));
             }
         }
 
