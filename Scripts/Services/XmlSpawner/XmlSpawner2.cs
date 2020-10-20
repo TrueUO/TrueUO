@@ -8357,14 +8357,13 @@ namespace Server.Mobiles
         {
             if (m_SpawnObjects != null && m_SpawnObjects.Count > 0 && (m_proximityActivated || CanFreeSpawn) && TODInRange)
             {
-
                 m_HoldSequence = false;
 
                 // if the spawner is full then dont bother
                 if (IsFull)
                 {
                     ResetProximityActivated();
-                    return (true);
+                    return true;
                 }
 
                 // Pick a spawn object to spawn
@@ -8377,7 +8376,7 @@ namespace Server.Mobiles
                 if (SpawnIndex < 0)
                 {
                     ResetProximityActivated();
-                    return (true);
+                    return true;
                 }
 
                 SpawnObject sobj = m_SpawnObjects[SpawnIndex];
@@ -8399,10 +8398,11 @@ namespace Server.Mobiles
                 }
 
                 ResetProximityActivated();
-                return (true);
+                return true;
             }
+
             ResetProximityActivated();
-            return (false);
+            return false;
         }
 
         // spawn an individual entry by index up to count times
@@ -9555,10 +9555,12 @@ namespace Server.Mobiles
         {
             if (width < 0 || height < 0 || map == null) return;
 
-            if (locations == null) locations = new List<Point3D>();
+            if (locations == null)
+                locations = new List<Point3D>();
 
             bool includetile;
             bool excludetile;
+
             for (int x = startx; x <= startx + width; x++)
             {
                 for (int y = starty; y <= starty + height; y++)
@@ -9673,8 +9675,10 @@ namespace Server.Mobiles
                                 allok = true;
                             }
                         }
+
                         itemslist.Free();
                     }
+
                     if (allok && !excludetile)
                         locations.Add(p);
                 }
@@ -10421,8 +10425,8 @@ namespace Server.Mobiles
                         continue;
                     }
 
-                    if (o is Item || o is Mobile) deletelist.Add(o);
-
+                    if (o is Item || o is Mobile)
+                        deletelist.Add(o);
                 }
             }
 
@@ -10443,7 +10447,6 @@ namespace Server.Mobiles
             {
                 if (so.TypeName.ToUpper() == SpawnObjectName.ToUpper())
                 {
-
                     // Add one to the total count
                     m_Count++;
 
