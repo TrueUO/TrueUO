@@ -206,7 +206,7 @@ namespace Server.Gumps
                 {
                     try
                     {
-                        CommandLogging.LogChangeProperty(m_Mobile, m_Object, m_Property.Name, toSet == null ? "(null)" : toSet.ToString());
+                        CommandLogging.LogChangeProperty(m_Mobile, m_Object, m_Property.Name, toSet.ToString());
                         m_Property.SetValue(m_Object, toSet, null);
                     }
                     catch
@@ -292,7 +292,7 @@ namespace Server.Gumps
             {
                 try
                 {
-                    CommandLogging.LogChangeProperty(m_Mobile, m_Object, m_Property.Name, toSet == null ? "(null)" : toSet.ToString());
+                    CommandLogging.LogChangeProperty(m_Mobile, m_Object, m_Property.Name, "(null)");
                     m_Property.SetValue(m_Object, toSet, null);
                 }
                 catch
