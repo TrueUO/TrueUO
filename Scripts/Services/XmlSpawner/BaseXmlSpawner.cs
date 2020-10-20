@@ -7,8 +7,6 @@ using System.Reflection;
 
 namespace Server.Mobiles
 {
-    public delegate void XmlGumpCallback(Mobile from, object invoker, string response);
-
     public class BaseXmlSpawner
     {
         #region Initialization
@@ -2914,15 +2912,14 @@ namespace Server.Mobiles
             ApplyObjectStringProperties(spawner, propertyString, item, trigmob, spawner, out status_str);
         }
 
-        public static bool SpawnTypeKeyword(object invoker, XmlSpawner.SpawnObject TheSpawn, string typeName, string substitutedtypeName, bool requiresurface,
-            Mobile triggermob, Point3D location, Map map, out string status_str)
+        public static bool SpawnTypeKeyword(object invoker, XmlSpawner.SpawnObject TheSpawn, string typeName, string substitutedtypeName,
+            Mobile triggermob, Map map, out string status_str)
         {
-            return SpawnTypeKeyword(invoker, TheSpawn, typeName, substitutedtypeName, requiresurface, null,
-                triggermob, location, map, null, out status_str, 0);
+            return SpawnTypeKeyword(invoker, TheSpawn, typeName, substitutedtypeName,
+                triggermob, map, out status_str, 0);
         }
 
-        public static bool SpawnTypeKeyword(object invoker, XmlSpawner.SpawnObject TheSpawn, string typeName, string substitutedtypeName, bool requiresurface,
-            List<XmlSpawner.SpawnPositionInfo> spawnpositioning, Mobile triggermob, Point3D location, Map map, XmlGumpCallback gumpcallback, out string status_str, byte loops)
+        public static bool SpawnTypeKeyword(object invoker, XmlSpawner.SpawnObject TheSpawn, string typeName, string substitutedtypeName, Mobile triggermob, Map map, out string status_str, byte loops)
         {
             status_str = null;
 
