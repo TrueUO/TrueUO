@@ -1055,7 +1055,6 @@ namespace Server.Mobiles
                         p = item.GetWorldTop();
 
                     spawner.MoveToWorld(new Point3D(p), from.Map);
-
                 }
 
                 spawner.SpawnRange = defs.SpawnRange;
@@ -1087,11 +1086,6 @@ namespace Server.Mobiles
         {
             if (info == null || state?.Mobile == null)
                 return;
-
-            if (info.Switches.Length > 0)
-            {
-                int radiostate = info.Switches[0];
-            }
 
             // read the text entries for default values
             XmlSpawnerDefaults.DefaultEntry defaults = XmlSpawnerDefaults.GetDefaults(state.Account.ToString(), state.Mobile.Name);

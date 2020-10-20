@@ -680,7 +680,6 @@ namespace Server.Mobiles
             }
         }
 
-
         public SpawnObject[] SpawnObjects
         {
             get { return m_SpawnObjects.ToArray(); }
@@ -1384,11 +1383,9 @@ namespace Server.Mobiles
                     int minutes;
                     Clock.GetTime(Map, Location.X, Location.Y, out hours, out minutes);
                     return (new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, DateTime.UtcNow.Day, hours, minutes, 0).TimeOfDay);
-
                 }
-                else
-                    return DateTime.UtcNow.TimeOfDay;
 
+                return DateTime.UtcNow.TimeOfDay;
             }
 
         }
@@ -1425,7 +1422,6 @@ namespace Server.Mobiles
                 var TOD_start = day_start + m_TODStart;
                 var TOD_end = day_start + m_TODEnd;
 
-
                 // handle the case when TODstart is before midnight and end is after
 
                 if (TOD_start > TOD_end)
@@ -1435,13 +1431,11 @@ namespace Server.Mobiles
                     else
                         return false;
                 }
+
+                if (now > TOD_start && now < TOD_end)
+                    return true;
                 else
-                {
-                    if (now > TOD_start && now < TOD_end)
-                        return true;
-                    else
-                        return false;
-                }
+                    return false;
 
             }
         }
@@ -1985,10 +1979,8 @@ namespace Server.Mobiles
             {
                 return Convert.ToInt32(value.Substring(2), 16);
             }
-            else
-            {
-                return Convert.ToInt32(value);
-            }
+
+            return Convert.ToInt32(value);
         }
 
         public static void ExecuteAction(object attachedto, Mobile trigmob, string action)
@@ -7909,16 +7901,14 @@ namespace Server.Mobiles
                         currentrange += s.MaxCount;
                     }
                 }
+
                 // should never get here
                 return (-1);
             }
-            else
-            {
-                // no spawns are available
-                return (-1);
-            }
-        }
 
+            // no spawns are available
+            return (-1);
+        }
 
         // get spawn indices randomly from all available spawns of a group
         private int RandomSpawnIndex(int sgroup)
@@ -7959,14 +7949,13 @@ namespace Server.Mobiles
                         currentrange += s.MaxCount;
                     }
                 }
+
                 // should never get here
                 return (-1);
             }
-            else
-            {
-                // no spawns are available
-                return (-1);
-            }
+
+            // no spawns are available
+            return (-1);
         }
 
         // return the next subgroup in the sequence.
@@ -8729,127 +8718,123 @@ namespace Server.Mobiles
 
                         return true;
                     }
-                    else
+
+                    return false;
+                }
+
+                // its a regular type descriptor so find out what it is
+                Type type = SpawnerType.GetType(typeName);
+
+                // dont try to spawn invalid types, or Mobile type spawns in containers
+                if (type != null && !(Parent != null && (type == typeof(Mobile) || type.IsSubclassOf(typeof(Mobile)))))
+                {
+
+                    string[] arglist = BaseXmlSpawner.ParseString(substitutedtypeName, 3, "/");
+
+                    object o = CreateObject(type, arglist[0]);
+
+                    if (o == null)
                     {
-                        return false;
+                        status_str = "invalid type specification: " + arglist[0];
+                        return true;
                     }
+                    try
+                    {
+                        if (o is Mobile)
+                        {
+                            // if this is in any container such as a pack the xyz values are invalid as map coords so dont spawn the mob
+                            if (Parent is Container)
+                            {
+                                ((Mobile)o).Delete();
+
+                                return true;
+                            }
+
+                            Mobile m = (Mobile)o;
+
+                            // add the mobile to the spawned list
+                            TheSpawn.SpawnedObjects.Add(m);
+
+                            m.Spawner = this;
+
+                            var loc = GetSpawnPosition(requiresurface, packrange, packcoord, spawnpositioning, m);
+
+                            if (!smartspawn)
+                            {
+                                m.OnBeforeSpawn(loc, map);
+                            }
+
+                            m.MoveToWorld(loc, map);
+
+                            if (m is BaseCreature)
+                            {
+                                BaseCreature c = (BaseCreature)m;
+                                c.RangeHome = m_HomeRange;
+                                c.CurrentWayPoint = m_WayPoint;
+
+                                if (m_Team > 0)
+                                    c.Team = m_Team;
+
+                                // Check if this spawner uses absolute (from spawnER location)
+                                // or relative (from spawnED location) as the mobiles home point
+                                if (m_HomeRangeIsRelative)
+                                    c.Home = m.Location; // Mobiles spawned location is the home point
+                                else
+                                    c.Home = Location; // Spawners location is the home point
+                            }
+
+                            // if the object has an OnSpawned method, then invoke it
+                            if (!smartspawn)
+                            {
+                                m.OnAfterSpawn();
+                            }
+
+                            // apply the parsed arguments from the typestring using setcommand
+                            // be sure to do this after setting map and location so that errors dont place the mob on the internal map
+                            string status_str;
+
+                            BaseXmlSpawner.ApplyObjectStringProperties(this, substitutedtypeName, m, m_mob_who_triggered, this, out status_str);
+
+                            if (status_str != null)
+                            {
+                                this.status_str = status_str;
+                            }
+
+                            InvalidateProperties();
+
+                            // added the duration timer that begins on spawning
+                            DoTimer2(m_Duration);
+
+                            return true;
+                        }
+
+                        if (o is Item)
+                        {
+                            Item item = (Item)o;
+
+                            string status_str;
+
+                            BaseXmlSpawner.AddSpawnItem(this, TheSpawn, item, Location, map, m_mob_who_triggered, requiresurface, spawnpositioning, substitutedtypeName, smartspawn, out status_str);
+
+                            if (status_str != null)
+                            {
+                                this.status_str = status_str;
+                            }
+
+                            InvalidateProperties();
+
+                            // added the duration timer that begins on spawning
+                            DoTimer2(m_Duration);
+
+                            return true;
+                        }
+                    }
+                    catch (Exception ex) { Console.WriteLine("When spawning {0}, {1}", o, ex); }
                 }
                 else
                 {
-
-                    // its a regular type descriptor so find out what it is
-                    Type type = SpawnerType.GetType(typeName);
-
-                    // dont try to spawn invalid types, or Mobile type spawns in containers
-                    if (type != null && !(Parent != null && (type == typeof(Mobile) || type.IsSubclassOf(typeof(Mobile)))))
-                    {
-
-                        string[] arglist = BaseXmlSpawner.ParseString(substitutedtypeName, 3, "/");
-
-                        object o = CreateObject(type, arglist[0]);
-
-                        if (o == null)
-                        {
-                            status_str = "invalid type specification: " + arglist[0];
-                            return true;
-                        }
-                        try
-                        {
-                            if (o is Mobile)
-                            {
-                                // if this is in any container such as a pack the xyz values are invalid as map coords so dont spawn the mob
-                                if (Parent is Container)
-                                {
-                                    ((Mobile)o).Delete();
-
-                                    return true;
-                                }
-
-                                Mobile m = (Mobile)o;
-
-                                // add the mobile to the spawned list
-                                TheSpawn.SpawnedObjects.Add(m);
-
-                                m.Spawner = this;
-
-                                var loc = GetSpawnPosition(requiresurface, packrange, packcoord, spawnpositioning, m);
-
-                                if (!smartspawn)
-                                {
-                                    m.OnBeforeSpawn(loc, map);
-                                }
-
-                                m.MoveToWorld(loc, map);
-
-                                if (m is BaseCreature)
-                                {
-                                    BaseCreature c = (BaseCreature)m;
-                                    c.RangeHome = m_HomeRange;
-                                    c.CurrentWayPoint = m_WayPoint;
-
-                                    if (m_Team > 0)
-                                        c.Team = m_Team;
-
-                                    // Check if this spawner uses absolute (from spawnER location)
-                                    // or relative (from spawnED location) as the mobiles home point
-                                    if (m_HomeRangeIsRelative)
-                                        c.Home = m.Location; // Mobiles spawned location is the home point
-                                    else
-                                        c.Home = Location; // Spawners location is the home point
-                                }
-
-                                // if the object has an OnSpawned method, then invoke it
-                                if (!smartspawn)
-                                {
-                                    m.OnAfterSpawn();
-                                }
-
-                                // apply the parsed arguments from the typestring using setcommand
-                                // be sure to do this after setting map and location so that errors dont place the mob on the internal map
-                                string status_str;
-
-                                BaseXmlSpawner.ApplyObjectStringProperties(this, substitutedtypeName, m, m_mob_who_triggered, this, out status_str);
-
-                                if (status_str != null)
-                                {
-                                    this.status_str = status_str;
-                                }
-
-                                InvalidateProperties();
-
-                                // added the duration timer that begins on spawning
-                                DoTimer2(m_Duration);
-
-                                return true;
-                            }
-                            else if (o is Item)
-                            {
-                                Item item = (Item)o;
-
-                                string status_str;
-
-                                BaseXmlSpawner.AddSpawnItem(this, TheSpawn, item, Location, map, m_mob_who_triggered, requiresurface, spawnpositioning, substitutedtypeName, smartspawn, out status_str);
-
-                                if (status_str != null)
-                                {
-                                    this.status_str = status_str;
-                                }
-
-                                InvalidateProperties();
-
-                                // added the duration timer that begins on spawning
-                                DoTimer2(m_Duration);
-
-                                return true;
-                            }
-                        }
-                        catch (Exception ex) { Console.WriteLine("When spawning {0}, {1}", o, ex); }
-                    }
-                    else
-                    {
-                        status_str = "invalid type specification: " + typeName;
-                        return true;
-                    }
+                    status_str = "invalid type specification: " + typeName;
+                    return true;
                 }
             }
             return false;
@@ -8929,8 +8914,8 @@ namespace Server.Mobiles
                         {
                             return ((Item)o).Location;
                         }
-                        else
-                            if (o is Mobile)
+
+                        if (o is Mobile)
                         {
                             return ((Mobile)o).Location;
                         }
@@ -9166,11 +9151,10 @@ namespace Server.Mobiles
                     // use the entry order as the secondary sort factor
                     return a.EntryOrder - b.EntryOrder;
                 }
-                else
-                    return a.SubGroup - b.SubGroup;
+
+                return a.SubGroup - b.SubGroup;
             }
         }
-
 
         public static SpawnObject GetSpawnObject(XmlSpawner spawner, int sgroup)
         {
@@ -9185,7 +9169,6 @@ namespace Server.Mobiles
             }
             return null;
         }
-
 
         public static object GetSpawned(XmlSpawner spawner, int sgroup)
         {
@@ -9379,22 +9362,18 @@ namespace Server.Mobiles
             if (map == null) return false;
 
             StaticTile[] tiles = map.Tiles.GetStaticTiles(X, Y, true);
-            //List<Server.Tile> tiles = map.GetTilesAt(new Point2D(X, Y), true, true, true);
 
-            if (tiles == null) return false;
+            if (tiles == null)
+                return false;
 
             // go through the tiles and see if any are at the Z location
-            foreach (object o in tiles)
+            foreach (StaticTile o in tiles)
             {
+                StaticTile i = (StaticTile)o;
 
-                if (o is StaticTile)
+                if ((i.Z + i.Height) == Z)
                 {
-                    StaticTile i = (StaticTile)o;
-
-                    if ((i.Z + i.Height) == Z)
-                    {
-                        return true;
-                    }
+                    return true;
                 }
             }
 
@@ -9514,10 +9493,10 @@ namespace Server.Mobiles
                 }
             }
 
-
             if (impassable && avgZ > z && (z + height) > lowZ)
                 return false;
-            else if (!impassable && z == avgZ && !lt.Ignored)
+
+            if (!impassable && z == avgZ && !lt.Ignored)
                 hasSurface = true;
 
             if (DebugThis)
@@ -9526,7 +9505,6 @@ namespace Server.Mobiles
             }
 
             StaticTile[] staticTiles = map.Tiles.GetStaticTiles(x, y, true);
-
 
             for (int i = 0; i < staticTiles.Length; ++i)
             {
@@ -9549,9 +9527,9 @@ namespace Server.Mobiles
 
                 if ((surface || impassable) && (staticTiles[i].Z + id.CalcHeight) > z && (z + height) > staticTiles[i].Z)
                     return false;
-                else if (surface && !impassable && z == (staticTiles[i].Z + id.CalcHeight))
-                    hasSurface = true;
 
+                if (surface && !impassable && z == (staticTiles[i].Z + id.CalcHeight))
+                    hasSurface = true;
 
             }
             if (DebugThis)
@@ -9588,7 +9566,8 @@ namespace Server.Mobiles
 
                     if ((surface || impassable || (checkBlocksFit && item.BlocksFit)) && (item.Z + id.CalcHeight) > z && (z + height) > item.Z)
                         return false;
-                    else if (surface && !impassable && !item.Movable && z == (item.Z + id.CalcHeight))
+
+                    if (surface && !impassable && !item.Movable && z == (item.Z + id.CalcHeight))
                         hasSurface = true;
                 }
             }
@@ -9632,7 +9611,8 @@ namespace Server.Mobiles
 
         public bool HasRegionPoints(Region r)
         {
-            if (r != null && r.Area.Length > 0) return true;
+            if (r != null && r.Area.Length > 0)
+                return true;
             else
                 return false;
         }
@@ -10335,24 +10315,21 @@ namespace Server.Mobiles
                 {
                     return new Point3D(x, y, defaultZ);
                 }
+
+                z = Map.GetAverageZ(x, y);
+
+                if (requiresurface)
+                {
+                    fit = CanSpawnMobile(x, y, z, mob);
+                }
                 else
                 {
+                    fit = Map.CanFit(x, y, z, SpawnFitSize, true, false, false);
+                }
 
-                    z = Map.GetAverageZ(x, y);
-
-                    if (requiresurface)
-                    {
-                        fit = CanSpawnMobile(x, y, z, mob);
-                    }
-                    else
-                    {
-                        fit = Map.CanFit(x, y, z, SpawnFitSize, true, false, false);
-                    }
-
-                    if (fit)
-                    {
-                        return new Point3D(x, y, z);
-                    }
+                if (fit)
+                {
+                    return new Point3D(x, y, z);
                 }
             }
 
@@ -10360,10 +10337,8 @@ namespace Server.Mobiles
             {
                 return packcoord;
             }
-            else
-            {
-                return Location;
-            }
+
+            return Location;
         }
 
         public int GetCreatureMax(int index)
@@ -11838,7 +11813,6 @@ namespace Server.Mobiles
             // temporary variable used to calculate weighted spawn probabilities
             public bool Available;
 
-
             public List<object> SpawnedObjects;
             public string[] PropertyArgs;
             public double SequentialResetTime;
@@ -11857,10 +11831,8 @@ namespace Server.Mobiles
                     {
                         return 0;
                     }
-                    else
-                    {
-                        return m_MaxCount;
-                    }
+
+                    return m_MaxCount;
                 }
                 set
                 {

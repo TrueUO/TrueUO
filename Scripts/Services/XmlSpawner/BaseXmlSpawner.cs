@@ -1762,11 +1762,9 @@ namespace Server.Mobiles
                 // or operator
                 return (first || second);
             }
-            else
-            {
-                // should never get here
-                return false;
-            }
+
+            // should never get here
+            return false;
         }
 
         public static bool CheckSingleProperty(XmlSpawner spawner, object o, string testString, Mobile trigmob, out string status_str)
