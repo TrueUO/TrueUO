@@ -1407,11 +1407,7 @@ namespace Server.Items
             }
             else if (this is Pitcher && Content == BeverageType.Water)
             {
-                if (targ is FillableBarrel)
-                {
-                    ((FillableBarrel)targ).Pour(from, this);
-                }
-                else if (targ is Barrel)
+                if (targ is Barrel)
                 {
                     ((Barrel)targ).Pour(from, this);
                 }
