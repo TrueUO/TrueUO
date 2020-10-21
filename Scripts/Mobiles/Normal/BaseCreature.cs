@@ -189,7 +189,7 @@ namespace Server.Mobiles
             {
                 object[] objs = t.GetCustomAttributes(typeof(FriendlyNameAttribute), false);
 
-                if (objs != null && objs.Length > 0)
+                if (objs.Length > 0)
                 {
                     FriendlyNameAttribute friendly = objs[0] as FriendlyNameAttribute;
 
@@ -418,9 +418,7 @@ namespace Server.Mobiles
         }
 
         #region Bonding
-        public const bool BondingEnabled = true;
-
-        public virtual bool IsBondable => (BondingEnabled && !Summoned && !m_Allured && !(this is IRepairableMobile));
+        public virtual bool IsBondable => (!Summoned && !m_Allured && !(this is IRepairableMobile));
         public virtual TimeSpan BondingDelay => TimeSpan.FromDays(7.0);
         public virtual TimeSpan BondingAbandonDelay => TimeSpan.FromDays(1.0);
 
@@ -730,7 +728,7 @@ namespace Server.Mobiles
             {
                 MasteryInfo[] masteries = MasteryInfo.Infos.Where(i => i.MasterySkill == _Mastery && !i.Passive && (i.SpellType != typeof(BodyGuardSpell) || Controlled)).ToArray();
 
-                if (masteries != null && masteries.Length > 0)
+                if (masteries.Length > 0)
                 {
                     Masteries = masteries;
                 }
@@ -1417,7 +1415,7 @@ namespace Server.Mobiles
 
             int taming = (int)((useBaseSkill ? m.Skills[SkillName.AnimalTaming].Base : m.Skills[SkillName.AnimalTaming].Value) * 10);
             int lore = (int)((useBaseSkill ? m.Skills[SkillName.AnimalLore].Base : m.Skills[SkillName.AnimalLore].Value) * 10);
-            int bonus = 0, chance = 700;
+            int chance = 700;
 
             int SkillBonus = taming - (int)(dMinTameSkill * 10);
             int LoreBonus = lore - (int)(dMinTameSkill * 10);
@@ -1436,7 +1434,7 @@ namespace Server.Mobiles
             SkillBonus *= SkillMod;
             LoreBonus *= LoreMod;
 
-            bonus = (SkillBonus + LoreBonus) / 2;
+            var bonus = (SkillBonus + LoreBonus) / 2;
 
             chance += bonus;
 
@@ -1454,7 +1452,7 @@ namespace Server.Mobiles
             return ((double)chance / 1000);
         }
 
-        public static readonly TimeSpan DeleteTimeSpan = TimeSpan.FromDays(3);
+        public static readonly TimeSpan DeleteTimeSpan = TimeSpan.FromDays(1);
 
         public virtual void BeginDeleteTimer()
         {
@@ -1821,7 +1819,7 @@ namespace Server.Mobiles
 
             if (from is PlayerMobile)
             {
-                Timer.DelayCall(TimeSpan.FromSeconds(10), ((PlayerMobile)@from).RecoverAmmo);
+                Timer.DelayCall(TimeSpan.FromSeconds(10), ((PlayerMobile)from).RecoverAmmo);
             }
 
             base.OnDamage(amount, from, willKill);
@@ -1881,8 +1879,8 @@ namespace Server.Mobiles
         #endregion
 
         #region SA / High Seas Tasty Treats/Vial of Armor Essense
-        private int m_TempDamageBonus = 0;
-        private int m_TempDamageAbsorb = 0;
+        private int m_TempDamageBonus;
+        private int m_TempDamageAbsorb;
 
         public int TempDamageBonus { get { return m_TempDamageBonus; } set { m_TempDamageBonus = value; } }
         public int TempDamageAbsorb { get { return m_TempDamageAbsorb; } set { m_TempDamageAbsorb = value; } }
@@ -1974,7 +1972,7 @@ namespace Server.Mobiles
 
                 if (meat != 0)
                 {
-                    Item m = null;
+                    Item m;
 
                     switch (MeatType)
                     {
@@ -2000,7 +1998,7 @@ namespace Server.Mobiles
 
                 if (hides != 0)
                 {
-                    Item leather = null;
+                    Item leather;
                     bool cutHides = (with is SkinningKnife && from.FindItemOnLayer(Layer.OneHanded) == with) || special || with is ButchersWarCleaver;
 
                     switch (HideType)
@@ -2250,7 +2248,7 @@ namespace Server.Mobiles
             // Version 1
             writer.Write(m_iRangeHome);
 
-            int i = 0;
+            int i;
 
             writer.Write(m_arSpellAttack.Count);
 
@@ -2394,10 +2392,6 @@ namespace Server.Mobiles
             writer.Write(m_CurrentTameSkill);
         }
 
-        private static readonly double[] m_StandardActiveSpeeds = new[] { 0.175, 0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5, 0.6, 0.8 };
-
-        private static readonly double[] m_StandardPassiveSpeeds = new[] { 0.350, 0.2, 0.4, 0.5, 0.6, 0.8, 1.0, 1.2, 1.6, 2.0 };
-
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
@@ -2511,7 +2505,7 @@ namespace Server.Mobiles
                 if (m_bSummoned)
                 {
                     m_SummonEnd = reader.ReadDeltaTime();
-                    TimerRegistry.Register<BaseCreature>("UnsummonTimer", this, m_SummonEnd - DateTime.UtcNow, c => c.Delete()); 
+                    TimerRegistry.Register("UnsummonTimer", this, m_SummonEnd - DateTime.UtcNow, c => c.Delete()); 
                 }
 
                 m_iControlSlots = reader.ReadInt();
@@ -2840,12 +2834,6 @@ namespace Server.Mobiles
             typeof(HoneydewMelon), typeof(YellowGourd), typeof(GreenGourd), typeof(Banana), typeof(Bananas), typeof(Lemon),
             typeof(Lime), typeof(Dates), typeof(Grapes), typeof(Peach), typeof(Pear), typeof(Apple), typeof(Watermelon),
             typeof(Squash), typeof(Cantaloupe), typeof(Carrot), typeof(Cabbage), typeof(Onion), typeof(Lettuce), typeof(Pumpkin)
-        };
-
-        private static readonly Type[] m_Gold = new[]
-        {
-			// white wyrms eat gold..
-			typeof(Gold)
         };
 
         private static readonly Type[] m_Metal = new[]
@@ -5529,9 +5517,8 @@ namespace Server.Mobiles
                 }
 
                 BaseCreature bc = (BaseCreature)de.Damager;
-                Mobile master = null;
 
-                master = bc.GetMaster();
+                var master = bc.GetMaster();
 
                 if (master == m)
                 {
@@ -5576,18 +5563,6 @@ namespace Server.Mobiles
         										|| m_FightMode == FightMode.Weakest 
         										|| m_FightMode == FightMode.Good
         										 );
-
-        private class FKEntry
-        {
-            public Mobile m_Mobile;
-            public int m_Damage;
-
-            public FKEntry(Mobile m, int damage)
-            {
-                m_Mobile = m;
-                m_Damage = damage;
-            }
-        }
 
         public List<DamageStore> LootingRights { get; set; }
 
@@ -5645,7 +5620,6 @@ namespace Server.Mobiles
                 return LootingRights;
 
             List<DamageEntry> damageEntries = DamageEntries;
-            int hitsMax = HitsMax;
 
             List<DamageStore> rights = new List<DamageStore>();
 
@@ -6284,7 +6258,7 @@ namespace Server.Mobiles
                 (int)Math.Floor(creature.HitsMax * (1 + ArcaneEmpowermentSpell.GetSpellBonus(caster, false) / 100.0)));
 
             creature.m_SummonEnd = DateTime.UtcNow + duration;
-            TimerRegistry.Register<BaseCreature>("UnsummonTimer", creature, duration, c => c.Delete());
+            TimerRegistry.Register("UnsummonTimer", creature, duration, c => c.Delete());
 
             creature.MoveToWorld(p, caster.Map);
 
