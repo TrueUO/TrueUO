@@ -1221,7 +1221,7 @@ namespace Server.Items
             {
                 PrivateOverheadMessage(MessageType.Regular, 0x3B2, 500485, from.NetState); // You see nothing useful to carve from the corpse.
             }
-            else if (((Body)Amount).IsHuman && ItemID == 0x2006)
+            else if (m_Owner is PlayerMobile && ((Body)Amount).IsHuman && ItemID == 0x2006)
             {
                 new Blood(0x122D).MoveToWorld(Location, Map);
 
