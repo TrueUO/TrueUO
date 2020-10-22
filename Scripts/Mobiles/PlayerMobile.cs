@@ -4964,7 +4964,7 @@ namespace Server.Mobiles
             if (item is IConditionalVisibility && !((IConditionalVisibility)item).CanBeSeenBy(this))
                 return false;
 
-            if (m_DesignContext != null && m_DesignContext.Foundation.IsHiddenToCustomizer(this, item))
+            if (m_DesignContext != null && m_DesignContext.Foundation.IsHiddenToCustomizer(item))
             {
                 return false;
             }
