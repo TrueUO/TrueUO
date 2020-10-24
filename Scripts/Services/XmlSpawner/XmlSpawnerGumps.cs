@@ -1,6 +1,5 @@
 #define NEWPROPSGUMP
 #define BOOKTEXTENTRY
-
 using Server.Commands;
 using Server.Gumps;
 using Server.Items;
@@ -9,263 +8,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-/*
-** Changelog
-**
-** 8/15/04
-** - fixed a crash bug when using the goto spawn button on an empty spawn entry
-**
-** 8/10/04
-** - added a goto-spawn button in the spawner gump (to the right of the text entry area, next to the text entry gump button) that will take you to the location of
-** currently spawned objects for a given spawner entry.  If there are multiple spawned objects for an entry, it will cycle through them with repeated clicks.
-** Useful for tracking down spawns.
-** 3/23/04
-** changed spawner name font color for 3dclient compatibility
-*/
-
 namespace Server.Mobiles
 {
-    public class HelpGump : Gump
-    {
-        public XmlSpawner m_Spawner;
-        private readonly XmlSpawnerGump m_SpawnerGump;
-
-        public HelpGump(XmlSpawner spawner, XmlSpawnerGump spawnergump, int X, int Y)
-            : base(X, Y)
-        {
-            if (spawner == null || spawner.Deleted)
-                return;
-            m_Spawner = spawner;
-            m_SpawnerGump = spawnergump;
-
-            AddPage(0);
-
-            int width = 370;
-
-            AddBackground(20, 0, width, 480, 5054);
-
-            AddPage(1);
-            //AddAlphaRegion( 20, 0, 220, 554 );
-            AddImageTiled(20, 0, width, 480, 0x52);
-            //AddImageTiled( 24, 6, 213, 261, 0xBBC );
-
-            AddLabel(27, 2, 0x384, "Standalone Keywords NB: ( « stands for < ) ( » stands for > )");
-            AddHtml(25, 20, width - 10, 440,
-                "mobtype[,arg1,arg2,...]\n" +
-                "SET[,itemname o seriale][,itemtype]/prop/value/...\n" +
-                "SETONMOB,nomemob[,mobtype]/prop/value/...\n" +
-                "SETONTHIS[,proptest]/prop/value/...\n" +
-                "SETONTRIGMOB/prop/value/...\n" +
-                "FOREACH,objecttype[,name][,distance]/action (KILL,DAMAGE,etc)\n" +
-                "SETVAR,namevar/value\n" +
-                "SETONNEARBY,distance,name[,type][,searchcontainers (true/false)]/prop/value/...\n" +
-                "SETONPETS,distance[,name]/prop/value/...\n" +
-                "SETONCARRIED,itemname[,itemtype][,equippedonly (true/false)]/prop/value/...\n" +
-                "SETONSPAWN[,spawnername],subgroup/prop/value/...\n" +
-                "SETONSPAWNENTRY[,spawnername],entrystring/prop/value/...\n" +
-                "SETONPARENT/prop/value/...\n" +
-                "TAKEGIVE[,quantity[,searchinbank (true/false),[type]]]/itemnametotake/GIVE/itemtypetogive\n" +
-                "GIVE[,probability (0.01=1% 1=100%)]/itemtypetogive\n" +
-                "GIVE[,probability (0.01=1% 1=100%)]/«itemtypedadare/proprietà/valore/...»\n" +
-                "TAKE[,probability (0.01=1% 1=100%)[,quantity[,searchinbank (true/false)[,itemtype]]]]/nomeitem\n" +
-                "TAKEBYTYPE[,probability (0.01=1% 1=100%)[,quantity[,searchinbank (true/false)]]]/itemtype\n" +
-                "GUMP,titolo,gumptype (*)[,gumpconstructor]/text  *(0=messaggio - 1=yes/no - 2=response - 3=questgump - 4=multiple response)\n" +
-                "BROWSER/url\n" +
-                "SENDMSG[,color]/text\n" +
-                "SENDASCIIMSG[,color][,fontnumber]/text (no accent)\n" +
-                "WAITUNTIL[,duration][,timeout][/condition][/spawngroup]\n" +
-                "WHILE/condition/spawngroup\n" +
-                "SPAWN[,spawnername],subgroup\n" +
-                "IF/condition/thenspawn[/elsespawn]\n" +
-                "DESPAWN[,spawnername],subgroup\n" +
-                "SPAWN[,spawnername],subgroup\n" +
-                "GOTO/subgroup\n" +
-                "COMMAND/command string (pay attention please!)\n" +
-                "MUSIC,musicname[,distance]\n" +
-                "SOUND,soundnumber\n" +
-                "MEFFECT,itemid[,speed][,x,y,z][,x2,y2,z2]\n" +
-                "EFFECT,itemid,duration[,x,y,z] OR EFFECT,itemid,durata[,trigmob]\n" +
-                "POISON,levelname[,distance][,onlyplayers (true/false)]\n" +
-                "DAMAGE,damage,phys,fire,cold,pois,energy[,distance][,onlyplayers (true/false)]\n" +
-                "RESURRECT[,distance][,pets (true/false)]\n" +
-                "CAST,spellnumber[,argomenti] OR CAST,spellname[,argomenti]\n" +
-                "BCAST[,color][,fontnumber]/text\n" +
-                "BSOUND,soundnumber",
-                false, true);
-            AddButton(width - 30, 5, 0x15E1, 0x15E5, 200, GumpButtonType.Page, 2);
-            AddLabel(width - 38, 2, 0x384, "1");
-            AddButton(width - 60, 5, 0x15E3, 0x15E7, 200, GumpButtonType.Page, 4);
-
-            AddPage(2);
-            AddLabel(27, 2, 0x384, "Value and Itemtype Keywords NB: ( « EQUALE TO < ) ( » EQUALS TO > )");
-            AddHtml(25, 20, width - 10, 440,
-                "property/@value\n\n" +
-                "Special KeyWords\n" +
-                "ARMOR,minlevel,maxlevel\n" +
-                "WEAPON,minlevel,maxlevel\n" +
-                "JARMOR,minlevel,maxlevel\n" +
-                "JWEAPON,minlevel,maxlevel\n" +
-                "SARMOR,minlevel,maxlevel\n" +
-                "SHIELD,minlevel,maxlevel\n" +
-                "JEWELRY,minlevel,maxlevel\n" +
-                "ITEM,serial (to find that item)\n" +
-                "SCROLL,mincircle,maxcircle\n" +
-                "LOOT,methodname\n" +
-                "NECROSCROLL,index\n" +
-                "LOOTPACK,loottype\n" +
-                "POTION\n" +
-                "TAKEN (it will help you find item taken during quest, xmlspawners and such)\n" +
-                "GIVEN (equal to TAKEN, but for item given)\n" +
-                "MULTIADDON,filename\n\n" +
-                "{the GET or RND keyword are used inside brachets}\n" +
-                "RND,min,max\n" +
-                "RNDBOOL\n" +
-                "RNDLIST,int1[,int2,...]\n" +
-                "RNDSTRLIST,str1[,str2,...]\n" +
-                "MY,prop (for spawner mob)\n" +
-                "GET,[itemname or serial or SETITEM(*)][,itemtype],prop (*: the setitem of spawner, it's written SETITEM, upper char!)\n" +
-                "GET,[itemname or serial or SETITEM][,itemtype],«ATTACHMENT,type,name,property»\n" +
-                "GETONMOB,mobname[,mobtype],prop\n" +
-                "GETONMOB,mobname[,mobtype],«ATTACHMENT,type,nome,prop»\n" +
-                "GETONCARRIED,itemname[,itemtype][,equippedonly (true/false)],prop\n" +
-                "GETONCARRIED,itemname[,itemtype][,equippedonly (true/false)],«ATTACHMENT,type,nome,prop»\n" +
-                "GETONTRIGMOB,prop\n" +
-                "GETONTRIGMOB,«ATTACHMENT,type,name,prop»\n" +
-                "GETONNEARBY,distance,name[,type][,searchcontainers (true/false)],prop\n" +
-                "GETONNEARBY,distance,name[,type][,searchcontainers (true/false)],«ATTACHMENT,type,name,prop»\n" +
-                "GETONPARENT,prop\n" +
-                "GETONPARENT,«ATTACHMENT,type,name,prop»\n" +
-                "GETONTHIS,prop\n" +
-                "GETONTHIS,«ATTACHMENT,type,name,prop»\n" +
-                "GETONTAKEN,prop\n" +
-                "GETONTAKEN,«ATTACHMENT,type,name,prop»\n" +
-                "GETONGIVEN,prop\n" +
-                "GETONGIVEN,«ATTACHMENT,type,name,prop»\n" +
-                "GETONSPAWN[,nomespawner],subgroup,prop\n" +
-                "GETONSPAWN[,nomespawner],subgroup,COUNT (special - returns the number of objects spawned!)\n" +
-                "GETONSPAWN[,spawnername],subgroup,«ATTACHMENT,type,name,prop»\n" +
-                "GETFROMFILE,filename\n" +
-                "GETACCOUNTTAG,tagname\n" +
-                "MUL,value or MUL,min,max (fractal numbers)\n" +
-                "INC,value or INC,min,max (integer numbers)\n" +
-                "MOB,name[,mobtype] (search the id of a mob by name and eventually by type)\n" +
-                "TRIGMOB\n" +
-                "AMOUNTCARRIED,itemtype[,searchinbank (true/false)][,itemname]\n" +
-                "PLAYERSINRANGE,distance\n" +
-                "TRIGSKILL,name or value or base or cap\n" +
-                "RANDNAME,nametype (female,male etc)\n" +
-                "MUSIC,musicname[,distance]\n" +
-                "SOUND,value\n" +
-                "EFFECT,itemid,duration[,x,y,z]\n" +
-                "BOLTEFFECT[,sound[,color]]\n" +
-                "MEFFECT,itemid[,speed][,x,y,z][,x2,y2,z2]\n" +
-                "PEFFECT,itemid,speed,[x,y,z]\n" +
-                "POISON,level[,distance][,onlyplayers (true/false)]\n" +
-                "DAMAGE,damage,phys,fire,cold,pois,energy[,distance][,onlyplayers (true/false)]\n" +
-                "ADD[,probability (0.01=1% 1=100%)]/itemtype[,args]\n" +
-                "ADD[,probability (0.01=1% 1=100%)]/«itemtype[,args]/prop/value...»\n" +
-                "EQUIP[,probability (0.01=1% 1=100%)]/itemtype[,args]\n" +
-                "EQUIP[,probability (0.01=1% 1=100%)]/«itemtype[,args]/prop/value...»\n" +
-                "DELETE\n" +
-                "KILL\n" +
-                "UNEQUIP,layer[,delete (true/false)]\n" +
-                "ATTACH[,probability (0.01=1% 1=100%)]/attachmenttype[,args]\n" +
-                "ATTACH[,probability (0.01=1% 1=100%)]/«attachmenttype[,args]/prop/value...»\n" +
-                "MSG[,probability (0.01=1% 1=100%)]/text\n" +
-                "ASCIIMSG[,probability (0.01=1% 1=100%)][,color][,fontnumber]/text\n" +
-                "SENDMSG[,probability (0.01=1% 1=100%)][,color]/text\n" +
-                "SENDASCIIMSG[,probability (0.01=1% 1=100%)][,color][,fontnumber]/text\n" +
-                "SAY[,probability (0.01=1% 1=100%)]/text\n" +
-                "SPEECH[,probability (0.01=1% 1=100%)][,keywordnumber]\n" +
-                "OFFSET,x,y,[,z]\n" +
-                "ANIMATE,action[,framecount][,repeatcount][,forward true/false][,repeat true/false][,delay]\n" +
-                "FACETO,x,y (turns the mobile to face in a direction by the coords given)\n" +
-                "FLASH,number (1 fade black - 2 fade white - 3 light flash - 4 light to black flash - 5 black flash SOLO PG)\n" +
-                "PRIVMSG[,probability (0.01=1% 1=100%)][,color]/text (shows a message only to that player)\n" +
-                "BCAST[,color][,font]/message\n" +
-                "always...«ATTACHMENT,type,name,prop» as a property on  GET\n" +
-                "SKILL,skillname\n" +
-                "STEALABLE,stealable (true/false)",
-                false, true);
-            AddButton(width - 30, 5, 0x15E1, 0x15E5, 200, GumpButtonType.Page, 3);
-            AddLabel(width - 41, 2, 0x384, "2");
-            AddButton(width - 60, 5, 0x15E3, 0x15E7, 200, GumpButtonType.Page, 1);
-
-            AddPage(3);
-            AddLabel(27, 2, 0x384, "[ Commands");
-
-            AddHtml(25, 20, width - 10, 440,
-                "XmlAdd [-defaults]\n" +
-                "XmlShow\n" +
-                "XmlHide\n" +
-                "XmlFind\n" +
-                "AddAtt type [args]\n" +
-                "GetAtt [type]\n" +
-                "DelAtt [type][serialno]\n" +
-                "AvailAtt\n" +
-                "SmartStat [accesslevel GameMaster]\n" +
-                "OptimalSmartSpawning [maxdiff]\n" +
-                "XmlSpawnerWipe [prefix]\n" +
-                "XmlSpawnerWipeAll [prefix]\n" +
-                "XmlSpawnerRespawn [prefix]\n" +
-                "XmlSpawnerRespawnAll [prefix]\n" +
-                "XmlHome [go][gump][send]\n" +
-                "XmlUnLoad filename [prefix]\n" +
-                "XmlLoad filename [prefix]\n" +
-                "XmlLoadHere filename [prefix][-maxrange range]\n" +
-                "XmlNewLoad filename [prefix]\n" +
-                "XmlNewLoadHere filename [prefix][-maxrange range]\n" +
-                "XmlSave filename [prefix]\n" +
-                "XmlSaveAll filename [prefix]\n" +
-                "XmlSaveOld filename [prefix]\n" +
-                "XmlSpawnerSaveAll filename [prefix]\n" +
-                "XmlImportSpawners filename\n" +
-                "XmlImportMap filename\n" +
-                "XmlImportMSF filename\n" +
-                "XmlDefaults [defaultpropertyname value]\n" +
-                "XmlGet property\n" +
-                "XmlSet property value",
-                false, true);
-
-            AddButton(width - 30, 5, 0x15E1, 0x15E5, 200, GumpButtonType.Page, 4);
-            AddLabel(width - 41, 2, 0x384, "3");
-            AddButton(width - 60, 5, 0x15E3, 0x15E7, 200, GumpButtonType.Page, 2);
-
-            AddPage(4);
-            AddLabel(27, 2, 0x384, "Quest types");
-            AddHtml(25, 20, width - 10, 180,
-                "KILL,mobtype[,count][,proptest]\n" +
-                "KILLNAMED,mobname[,type][,count][,proptest]\n" +
-                "GIVE,mobname,itemtype[,count][,proptest]\n" +
-                "GIVENAMED,mobname,itemname[,type][,count][,proptest]\n" +
-                "COLLECT,itemtype[,count][,proptest]\n" +
-                "COLLECTNAMED,itemname[,itemtype][,count][,proptest]\n" +
-                "ESCORT[,mobname][,proptest]\n",
-                false, true);
-
-            AddLabel(27, 200, 0x384, "Trigger/NoTriggerOnCarried");
-            AddHtml(25, 220, width - 10, 50,
-                "ATTACHMENT,name,type\n" +
-                "itemname[,type][,EQUIPPED][,objective#,objective#,...]\n",
-                false, true);
-
-            AddLabel(27, 300, 0x384, "GUMPITEMS");
-            AddHtml(25, 320, width - 10, 150,
-                "BUTTON,gumpid,x,y\n" +
-                "HTML,x,y,width,height,text\n" +
-                "IMAGE,gumpid,x,y[,hue]\n" +
-                "IMAGETILED,gumpid,x,y,width,height\n" +
-                "ITEM,itemid,x,y[,hue]\n" +
-                "LABEL,x,y,labelstring[,labelcolor]\n" +
-                "RADIO,gumpid1,gumpid2,x,y[,initialstate]\n" +
-                "TEXTENTRY,x,y,width,height[,text][,textcolor]\n",
-                false, true);
-
-            AddButton(width - 30, 5, 0x15E1, 0x15E5, 200, GumpButtonType.Page, 1);
-            AddLabel(width - 41, 2, 0x384, "4");
-            AddButton(width - 60, 5, 0x15E3, 0x15E7, 200, GumpButtonType.Page, 3);
-        }
-    }
     public class TextEntryGump : Gump
     {
         private readonly XmlSpawner m_Spawner;
@@ -318,17 +62,19 @@ namespace Server.Mobiles
 
         public override void OnResponse(NetState state, RelayInfo info)
         {
-            if (info == null || state == null || state.Mobile == null) return;
+            if (info == null || state?.Mobile == null)
+                return;
 
             if (m_Spawner == null || m_Spawner.Deleted)
                 return;
+
             bool update_entry = false;
             bool edit_entry = false;
+
             switch (info.ButtonID)
             {
                 case 0: // Close
                     {
-                        update_entry = false;
                         break;
                     }
                 case 1: // Okay
@@ -410,15 +156,11 @@ namespace Server.Mobiles
                     m_Spawner.SpawnObjects = m_SpawnerGump.CreateArray(info, state.Mobile);
                 }
             }
-            // Create a new gump
 
-            //m_Spawner.OnDoubleClick( state.Mobile);
             // open a new spawner gump
             state.Mobile.SendGump(new XmlSpawnerGump(m_Spawner, X, Y, m_SpawnerGump.m_ShowGump, m_SpawnerGump.xoffset, m_SpawnerGump.page));
         }
     }
-
-
 
     public class XmlSpawnerGump : Gump
     {
@@ -427,7 +169,6 @@ namespace Server.Mobiles
         public const int MaxSpawnEntries = 60;
         private const int MaxEntriesPerPage = 15;
         public int m_ShowGump = 0;
-        public bool AllowGumpUpdate = true;
         public int xoffset = 0;
         public int initial_maxcount;
         public int page;
@@ -467,14 +208,6 @@ namespace Server.Mobiles
                 // show the fully extended gump with subgroups and reset timer info
                 m_ShowGump = 2;
             }
-            /*
-		else
-			if(spawner.HasSubGroups() || spawner.SequentialSpawn >= 0)
-		{
-			// show partially extended gump with subgroups
-			m_ShowGump = 1;
-		}
-		*/
 
             if (extension > 0)
             {
@@ -486,8 +219,6 @@ namespace Server.Mobiles
             }
 
             // if the expanded gump toggle has been activated then override the auto settings.
-
-
             if (m_ShowGump > 1)
             {
                 AddBackground(0, 0, 670 + xoffset + 30, 474, 5054);
@@ -655,8 +386,6 @@ namespace Server.Mobiles
                     {
                         AddButton(2, 22 * (i % MaxEntriesPerPage) + 36, 0x837, 0x837, 6000 + i, GumpButtonType.Reply, 0);
                     }
-
-
                 }
 
                 bool hasreplacement = false;
@@ -669,9 +398,7 @@ namespace Server.Mobiles
                     background = Rentry.Color;
                     // replacement is one time only.
                     Rentry = null;
-
                 }
-
 
                 // increment/decrement buttons
                 AddButton(15, 22 * (i % MaxEntriesPerPage) + 34, 0x15E0, 0x15E4, 6 + (i * 2), GumpButtonType.Reply, 0);
@@ -689,12 +416,6 @@ namespace Server.Mobiles
                 // background for text entry area
                 AddImageTiled(48, 22 * (i % MaxEntriesPerPage) + 30, 133 + xoffset - 25, 23, 0x52);
                 AddImageTiled(49, 22 * (i % MaxEntriesPerPage) + 31, 131 + xoffset - 25, 21, background);
-
-                // Add page number
-                //AddLabel( 15, 365, 33, String.Format("{0}",(int)(i/MaxEntriesPerPage + 1)) );
-                //AddButton( 38+page*25, 365, 0x8B1+i, 0x8B1+i, 0, GumpButtonType.Page, 1+i );
-
-
 
                 if (i < m_Spawner.SpawnObjects.Length)
                 {
@@ -722,7 +443,6 @@ namespace Server.Mobiles
                     // AddTextEntry(x,y,w,ht,color,id,str)
                     AddTextEntry(270 + xoffset, 22 * (i % MaxEntriesPerPage) + 30, 30, 30, 33, 500 + i, max.ToString());
 
-
                     if (m_ShowGump > 0)
                     {
                         // Add subgroup
@@ -733,7 +453,6 @@ namespace Server.Mobiles
                     if (m_ShowGump > 1)
                     {
                         // Add subgroup timer fields
-
                         string strrst = null;
                         string strto = null;
                         string strkill = null;
@@ -834,13 +553,9 @@ namespace Server.Mobiles
 
                         // add the next spawn time
                         AddLabelCropped(590 + xoffset + 30, yoff, 70, 20, 55, strnext);
-
                     }
-
-                    //AddButton( 20, 22 * (i%MaxEntriesPerPage) + 34, 0x15E3, 0x15E7, 5 + (i * 2), GumpButtonType.Reply, 0 );
                 }
-                // the spawn specification text
-                //if(str != null)
+
                 AddTextEntry(52, 22 * (i % MaxEntriesPerPage) + 31, 119 + xoffset - 25, 21, texthue, i, str);
             }
         }
@@ -928,63 +643,10 @@ namespace Server.Mobiles
                                 m_Spawner.SpawnObjects[i].TypeName = str;
                             }
                         }
-
                     }
                 }
             }
         }
-
-
-#if (BOOKTEXTENTRY)
-
-        public static void ProcessSpawnerBookEntry(Mobile from, object[] args, string entry)
-        {
-            if (from == null || args == null || args.Length < 6) return;
-
-            XmlSpawner m_Spawner = (XmlSpawner)args[0];
-            int m_Index = (int)args[1];
-            int m_X = (int)args[2];
-            int m_Y = (int)args[3];
-            int m_Extension = (int)args[4];
-            int m_page = (int)args[5];
-            if (m_Spawner == null || m_Spawner.SpawnObjects == null) return;
-
-            // place the book text into the spawn entry
-            if (m_Index < m_Spawner.SpawnObjects.Length)
-            {
-                XmlSpawner.SpawnObject so = m_Spawner.SpawnObjects[m_Index];
-
-                if (so.TypeName != entry)
-                {
-                    CommandLogging.WriteLine(from, "{0} {1} changed XmlSpawner {2} '{3}' [{4}, {5}] ({6}) : {7} to {8}", from.AccessLevel, CommandLogging.Format(from), m_Spawner.Serial, m_Spawner.Name, m_Spawner.GetWorldLocation().X, m_Spawner.GetWorldLocation().Y, m_Spawner.Map, so.TypeName, entry);
-
-                }
-
-                so.TypeName = entry;
-            }
-            else
-            {
-
-                // add a new spawn entry
-                m_Spawner.m_SpawnObjects.Add(new XmlSpawner.SpawnObject(from, m_Spawner, entry, 1));
-
-                m_Index = m_Spawner.SpawnObjects.Length - 1;
-
-                // and bump the maxcount of the spawner
-                m_Spawner.MaxCount++;
-            }
-
-            // refresh the spawner gumps			
-            RefreshSpawnerGumps(from);
-
-            // and refresh the current one
-            //from.SendGump( new XmlSpawnerGump(m_Spawner, m_X, m_Y, m_Extension,0, m_page) );
-
-            // return the text entry focus to the book.  Havent figured out how to do that yet.
-        }
-
-
-#endif
 
         public static void Refresh_Callback(object state)
         {
@@ -1000,36 +662,27 @@ namespace Server.Mobiles
 
             NetState ns = from.NetState;
 
-            if (ns != null && ns.Gumps != null)
+            if (ns?.Gumps != null)
             {
-
                 ArrayList refresh = new ArrayList();
 
                 foreach (Gump g in ns.Gumps)
                 {
-
-                    if (g is XmlSpawnerGump)
+                    // clear the gump status on the spawner associated with the gump
+                    if (g is XmlSpawnerGump xg && xg.m_Spawner != null)
                     {
-                        XmlSpawnerGump xg = (XmlSpawnerGump)g;
-
-                        // clear the gump status on the spawner associated with the gump
-                        if (xg.m_Spawner != null)
-                        {
-                            // and add the old gump to the removal list
-                            refresh.Add(xg);
-                        }
+                        refresh.Add(xg);
                     }
                 }
 
                 // close all of the currently opened spawner gumps
                 from.CloseGump(typeof(XmlSpawnerGump));
 
-
                 // reopen the closed gumps from the gump collection
                 foreach (XmlSpawnerGump g in refresh)
                 {
                     // reopen a new gump for the spawner
-                    if (g.m_Spawner != null /*&& g.m_Spawner.SpawnerGump == g */)
+                    if (g.m_Spawner != null)
                     {
                         // flag the current gump on the spawner as closed
                         g.m_Spawner.GumpReset = true;
@@ -1042,12 +695,10 @@ namespace Server.Mobiles
             }
         }
 
-
-        private bool ValidGotoObject(Mobile from, object o)
+        private static bool ValidGotoObject(Mobile from, object o)
         {
-            if (o is Item)
+            if (o is Item i)
             {
-                Item i = o as Item;
                 if (!i.Deleted && (i.Map != null) && (i.Map != Map.Internal))
                     return true;
 
@@ -1056,10 +707,8 @@ namespace Server.Mobiles
                     from.SendMessage("{0} is not available", i);
                 }
             }
-            else
-                if (o is Mobile)
+            else if (o is Mobile m)
             {
-                Mobile m = o as Mobile;
                 if (!m.Deleted && (m.Map != null) && (m.Map != Map.Internal))
                     return true;
 
@@ -1080,11 +729,6 @@ namespace Server.Mobiles
                 return;
             }
 
-            // restrict access to the original creator or someone of higher access level
-            //if (m_Spawner.FirstModifiedBy != null && m_Spawner.FirstModifiedBy != state.Mobile && state.Mobile.AccessLevel <= m_Spawner.FirstModifiedBy.AccessLevel)
-            //return;
-
-
             // Get the current name
             TextRelay tr = info.GetTextEntry(999);
             if (tr != null)
@@ -1103,8 +747,6 @@ namespace Server.Mobiles
                 m_Spawner.SpawnerGump = null;
                 return;
             }
-
-            AllowGumpUpdate = true;
 
             for (int i = 0; i < m_Spawner.SpawnObjects.Length; i++)
             {
@@ -1147,7 +789,7 @@ namespace Server.Mobiles
                     {
                         // check the *reset time* entry
                         tegrp = info.GetTextEntry(1000 + i);
-                        if (tegrp != null && tegrp.Text != null && tegrp.Text.Length > 0)
+                        if (tegrp?.Text != null && tegrp.Text.Length > 0)
                         {
                             double grpval = 0;
                             try { grpval = Convert.ToDouble(tegrp.Text); }
@@ -1160,7 +802,7 @@ namespace Server.Mobiles
                         }
                         // check the *reset to* entry
                         tegrp = info.GetTextEntry(1100 + i);
-                        if (tegrp != null && tegrp.Text != null && tegrp.Text.Length > 0)
+                        if (tegrp?.Text != null && tegrp.Text.Length > 0)
                         {
                             int grpval = 0;
                             try { grpval = Convert.ToInt32(tegrp.Text, 10); }
@@ -1171,7 +813,7 @@ namespace Server.Mobiles
                         }
                         // check the kills entry
                         tegrp = info.GetTextEntry(1200 + i);
-                        if (tegrp != null && tegrp.Text != null && tegrp.Text.Length > 0)
+                        if (tegrp?.Text != null && tegrp.Text.Length > 0)
                         {
                             int grpval = 0;
                             try { grpval = Convert.ToInt32(tegrp.Text, 10); }
@@ -1180,14 +822,13 @@ namespace Server.Mobiles
 
                             m_Spawner.SpawnObjects[subgroupindex].KillsNeeded = grpval;
                         }
-
                     }
 
                     // check the mindelay
                     tegrp = info.GetTextEntry(1300 + i);
                     if (tegrp != null)
                     {
-                        if (tegrp.Text != null && tegrp.Text.Length > 0)
+                        if (!string.IsNullOrEmpty(tegrp.Text))
                         {
                             double grpval = -1;
                             try { grpval = Convert.ToDouble(tegrp.Text); }
@@ -1213,7 +854,7 @@ namespace Server.Mobiles
                     tegrp = info.GetTextEntry(1400 + i);
                     if (tegrp != null)
                     {
-                        if (tegrp.Text != null && tegrp.Text.Length > 0)
+                        if (!string.IsNullOrEmpty(tegrp.Text))
                         {
                             double grpval = -1;
                             try { grpval = Convert.ToDouble(tegrp.Text); }
@@ -1239,7 +880,7 @@ namespace Server.Mobiles
                     tegrp = info.GetTextEntry(1500 + i);
                     if (tegrp != null)
                     {
-                        if (tegrp.Text != null && tegrp.Text.Length > 0)
+                        if (!string.IsNullOrEmpty(tegrp.Text))
                         {
                             int grpval = 1;
                             try { grpval = int.Parse(tegrp.Text); }
@@ -1262,7 +903,7 @@ namespace Server.Mobiles
                     tegrp = info.GetTextEntry(1600 + i);
                     if (tegrp != null)
                     {
-                        if (tegrp.Text != null && tegrp.Text.Length > 0)
+                        if (!string.IsNullOrEmpty(tegrp.Text))
                         {
                             int grpval = 1;
                             try { grpval = int.Parse(tegrp.Text); }
@@ -1312,8 +953,6 @@ namespace Server.Mobiles
                     }
                 case 1: // Help
                     {
-                        //state.Mobile.SendGump( new XmlSpawnerGump(m_Spawner, this.X, this.Y, this.m_ShowGump));
-                        state.Mobile.SendGump(new HelpGump(m_Spawner, this, X + 290, Y));
                         break;
                     }
                 case 2: // Bring everything home
@@ -1335,29 +974,24 @@ namespace Server.Mobiles
                         break;
                     }
                 case 200: // gump extension
-                    {
-                        if (m_ShowGump > 1)
-                            state.Mobile.SendGump(new XmlSpawnerGump(m_Spawner, X, Y, -1, xoffset, page));
-                        else
-                            state.Mobile.SendGump(new XmlSpawnerGump(m_Spawner, X, Y, m_ShowGump + 2, xoffset, page));
-                        return;
-                    }
+                {
+                    state.Mobile.SendGump(m_ShowGump > 1
+                        ? new XmlSpawnerGump(m_Spawner, X, Y, -1, xoffset, page)
+                        : new XmlSpawnerGump(m_Spawner, X, Y, m_ShowGump + 2, xoffset, page));
+                    return;
+                }
                 case 201: // gump text extension
-                    {
-                        if (xoffset > 0)
-                            state.Mobile.SendGump(new XmlSpawnerGump(m_Spawner, X, Y, m_ShowGump, 0, page));
-                        else
-                            state.Mobile.SendGump(new XmlSpawnerGump(m_Spawner, X, Y, m_ShowGump, 250, page));
-                        return;
-                    }
+                {
+                    state.Mobile.SendGump(xoffset > 0
+                        ? new XmlSpawnerGump(m_Spawner, X, Y, m_ShowGump, 0, page)
+                        : new XmlSpawnerGump(m_Spawner, X, Y, m_ShowGump, 250, page));
+                    return;
+                }
                 case 700: // Start/stop spawner
-                    {
-                        if (m_Spawner.Running)
-                            m_Spawner.Running = false;
-                        else
-                            m_Spawner.Running = true;
-                        break;
-                    }
+                {
+                    m_Spawner.Running = !m_Spawner.Running;
+                    break;
+                }
                 case 701: // Complete reset
                     {
                         m_Spawner.Reset();
@@ -1387,11 +1021,8 @@ namespace Server.Mobiles
                     {
                         // Show the props window for the spawner, as well as a new gump
                         state.Mobile.SendGump(new XmlSpawnerGump(m_Spawner, X, Y, m_ShowGump, xoffset, page));
-#if (NEWPROPSGUMP)
+
                         state.Mobile.SendGump(new XmlPropertiesGump(state.Mobile, m_Spawner));
-#else
-					state.Mobile.SendGump( new PropertiesGump( state.Mobile, m_Spawner ) );
-#endif
                         return;
                     }
                 default:
@@ -1404,17 +1035,13 @@ namespace Server.Mobiles
                                 m_Spawner.SpawnObjects[index].RestrictKillsToSubgroup = !m_Spawner.SpawnObjects[index].RestrictKillsToSubgroup;
 
                         }
-                        else
-                            // check the clear on advance flag
-                            if (info.ButtonID >= 400 && info.ButtonID < 400 + MaxSpawnEntries)
+                        else if (info.ButtonID >= 400 && info.ButtonID < 400 + MaxSpawnEntries)
                         {
                             int index = info.ButtonID - 400;
                             if (index < m_Spawner.SpawnObjects.Length)
                                 m_Spawner.SpawnObjects[index].ClearOnAdvance = !m_Spawner.SpawnObjects[index].ClearOnAdvance;
                         }
-                        else
-                                // text entry gump scroll buttons
-                                if (info.ButtonID >= 800 && info.ButtonID < 800 + MaxSpawnEntries)
+                        else if (info.ButtonID >= 800 && info.ButtonID < 800 + MaxSpawnEntries)
                         {
                             // open the text entry gump
                             int index = info.ButtonID - 800;
@@ -1439,7 +1066,7 @@ namespace Server.Mobiles
                             args[4] = m_ShowGump;
                             args[5] = page;
 
-                            XmlTextEntryBook book = new XmlTextEntryBook(0, string.Empty, m_Spawner.Name, 20, true, ProcessSpawnerBookEntry, args);
+                            XmlTextEntryBook book = new XmlTextEntryBook(0, string.Empty, m_Spawner.Name, 20, true);
 
                             m_Spawner.m_TextEntryBook.Add(book);
 
@@ -1462,15 +1089,12 @@ namespace Server.Mobiles
                             // and open it
                             book.OnDoubleClick(state.Mobile);
 
-
 #else
 							state.Mobile.SendGump( new TextEntryGump(m_Spawner,this, index, this.X, this.Y));
 #endif
                             return;
                         }
-                        else
-                                    // goto spawn buttons
-                                    if (info.ButtonID >= 1300 && info.ButtonID < 1300 + MaxSpawnEntries)
+                        else if (info.ButtonID >= 1300 && info.ButtonID < 1300 + MaxSpawnEntries)
                         {
                             nclicks++;
                             // find the location of the spawn at the specified index
@@ -1481,16 +1105,20 @@ namespace Server.Mobiles
                                 if (scount > 0)
                                 {
                                     object so = m_Spawner.SpawnObjects[index].SpawnedObjects[nclicks % scount];
+
                                     if (ValidGotoObject(state.Mobile, so))
                                     {
                                         IPoint3D o = so as IPoint3D;
+
                                         if (o != null)
                                         {
                                             Map m = m_Spawner.Map;
-                                            if (o is Item)
-                                                m = ((Item)o).Map;
-                                            if (o is Mobile)
-                                                m = ((Mobile)o).Map;
+
+                                            if (o is Item item)
+                                                m = item.Map;
+
+                                            if (o is Mobile mobile)
+                                                m = mobile.Map;
 
                                             state.Mobile.Location = new Point3D(o);
                                             state.Mobile.Map = m;
@@ -1499,17 +1127,13 @@ namespace Server.Mobiles
                                 }
                             }
                         }
-                        else
-                                        // page buttons
-                                        if (info.ButtonID >= 4000 && info.ButtonID < 4001 + MaxSpawnEntries / MaxEntriesPerPage)
+                        else if (info.ButtonID >= 4000 && info.ButtonID < 4001 + MaxSpawnEntries / MaxEntriesPerPage)
                         {
                             // which page
                             page = info.ButtonID - 4000;
 
                         }
-                        else
-                                            // toggle the disabled state of the entry
-                                            if (info.ButtonID >= 6000 && info.ButtonID < 6000 + MaxSpawnEntries)
+                        else if (info.ButtonID >= 6000 && info.ButtonID < 6000 + MaxSpawnEntries)
                         {
                             int index = info.ButtonID - 6000;
 
@@ -1522,20 +1146,16 @@ namespace Server.Mobiles
                                     m_Spawner.RemoveSpawnObjects(m_Spawner.SpawnObjects[index]);
                             }
                         }
-                        else
-                                                if (info.ButtonID >= 5000 && info.ButtonID < 5000 + MaxSpawnEntries)
+                        else if (info.ButtonID >= 5000 && info.ButtonID < 5000 + MaxSpawnEntries)
                         {
                             int i = info.ButtonID - 5000;
-
-
-
 
                             string categorystring = null;
                             string entrystring = null;
 
                             TextRelay te = info.GetTextEntry(i);
 
-                            if (te != null && te.Text != null)
+                            if (te?.Text != null)
                             {
                                 // get the string
 
@@ -1547,8 +1167,7 @@ namespace Server.Mobiles
                                 entrystring = te.Text;
                             }
 
-
-                            if (categorystring == null || categorystring.Length == 0)
+                            if (string.IsNullOrEmpty(categorystring))
                             {
 
                                 XmlSpawnerGump newg = new XmlSpawnerGump(m_Spawner, X, Y, m_ShowGump, xoffset, page);
@@ -1582,8 +1201,6 @@ namespace Server.Mobiles
                             }
 
                             return;
-
-
                         }
                         else
                         {
@@ -1607,7 +1224,6 @@ namespace Server.Mobiles
                                         entrystr = str;
                                 }
 #endif
-
                                 if (type == 0) // Add creature
                                 {
                                     m_Spawner.AddSpawnObject(entrystr);
@@ -1616,15 +1232,13 @@ namespace Server.Mobiles
                                 {
                                     m_Spawner.DeleteSpawnObject(state.Mobile, entrystr);
 
-
                                 }
                             }
                         }
                         break;
                     }
             }
-            // Create a new gump
-            //m_Spawner.OnDoubleClick( state.Mobile);
+
             state.Mobile.SendGump(new XmlSpawnerGump(m_Spawner, X, Y, m_ShowGump, xoffset, page, Rentry));
         }
     }

@@ -1232,7 +1232,7 @@ namespace Server.Network
 			: base(0xC7, 49)
 		{
 			m_Stream.Write((byte)type);
-			m_Stream.Write(@from);
+			m_Stream.Write(from);
 			m_Stream.Write(to);
 			m_Stream.Write((short)itemID);
 			m_Stream.Write((short)fromPoint.m_X);
@@ -1279,7 +1279,7 @@ namespace Server.Network
 			: base(0xC7, 49)
 		{
 			m_Stream.Write((byte)type);
-			m_Stream.Write(@from);
+			m_Stream.Write(from);
 			m_Stream.Write(to);
 			m_Stream.Write((short)itemID);
 			m_Stream.Write((short)fromPoint.X);
@@ -1352,7 +1352,7 @@ namespace Server.Network
 			: base(0xC0, 36)
 		{
 			m_Stream.Write((byte)type);
-			m_Stream.Write(@from);
+			m_Stream.Write(from);
 			m_Stream.Write(to);
 			m_Stream.Write((short)itemID);
 			m_Stream.Write((short)fromPoint.m_X);
@@ -1405,7 +1405,7 @@ namespace Server.Network
 			: base(0xC0, 36)
 		{
 			m_Stream.Write((byte)type);
-			m_Stream.Write(@from);
+			m_Stream.Write(from);
 			m_Stream.Write(to);
 			m_Stream.Write((short)itemID);
 			m_Stream.Write((short)fromPoint.X);
@@ -2027,7 +2027,7 @@ namespace Server.Network
 
 			MessageLocalized p;
 
-			if (cache != null && index >= 0 && index < cache.Length)
+			if (cache != null && index < cache.Length)
 			{
 				p = cache[index];
 
