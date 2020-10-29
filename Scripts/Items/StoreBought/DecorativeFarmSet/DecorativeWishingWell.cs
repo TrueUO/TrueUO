@@ -13,6 +13,11 @@ namespace Server.Items
             LootType = LootType.Blessed;
         }
 
+        public DecorativeWishingWell(Serial serial)
+            : base(serial)
+        {
+        }
+
         public void CheckWaterSource(Mobile from, BaseBeverage beverage)
         {
             if (IsLockedDown)
@@ -29,11 +34,6 @@ namespace Server.Items
             {
                 from.SendLocalizedMessage(1114298); // This must be locked down in order to use it.
             }
-        }
-
-        public DecorativeWishingWell(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
