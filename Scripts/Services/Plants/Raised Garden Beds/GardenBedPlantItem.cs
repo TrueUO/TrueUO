@@ -45,9 +45,10 @@ namespace Server.Engines.Plants
         {
             get
             {
-                if (m_Component != null && m_Component.X != X || m_Component.Y != Y || m_Component.Map != Map || m_Component.Deleted)
+                if (m_Component != null)
                 {
-                    m_Component = null;
+                    if (m_Component.X != X || m_Component.Y != Y || m_Component.Map != Map || m_Component.Deleted)
+                        m_Component = null;
                 }
 
                 return m_Component;
@@ -56,9 +57,10 @@ namespace Server.Engines.Plants
             {
                 m_Component = value;
 
-                if (m_Component != null && m_Component.X != X || m_Component.Y != Y || m_Component.Map != Map || m_Component.Deleted)
+                if (m_Component != null)
                 {
-                    m_Component = null;
+                    if (m_Component.X != X || m_Component.Y != Y || m_Component.Map != Map || m_Component.Deleted)
+                        m_Component = null;
                 }
             }
         }
