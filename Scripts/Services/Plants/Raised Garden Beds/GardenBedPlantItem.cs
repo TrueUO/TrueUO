@@ -96,7 +96,7 @@ namespace Server.Engines.Plants
             get { return false; }
             set
             {
-                if (value == true && PlantSystem != null)
+                if (value && PlantSystem != null)
                 {
                     PlantSystem.NextGrowth = DateTime.UtcNow;
                     PlantSystem.DoGrowthCheck();
