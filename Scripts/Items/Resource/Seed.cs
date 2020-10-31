@@ -212,8 +212,10 @@ namespace Server.Engines.Plants
 
                     plant.PlantSeed(from, m_Seed);
                 }
-                else if (targeted is GardenAddonComponent addon)
+                else if (targeted is GardenAddonComponent)
                 {
+                    GardenAddonComponent addon = (GardenAddonComponent)targeted;
+
                     if (addon.Plant != null)
                         from.SendLocalizedMessage(1150367); // This plot already has a plant!
                     else
@@ -228,8 +230,8 @@ namespace Server.Engines.Plants
                                 from.SendGump(new FertileDirtGump(m_Seed, fertileDirt, addon));
                             else
                             {
-                                GardenBedPlantItem dirt = new GardenBedPlantItem();
-                                dirt.MoveToWorld(new Point3D(addon.X, addon.Y, addon.Z + addon.ZLocation()), addon.Map);
+                                RaisedGardenPlantItem dirt = new RaisedGardenPlantItem();
+                                dirt.MoveToWorld(new Point3D(addon.X, addon.Y, addon.Z + 5), addon.Map);
 
                                 dirt.PlantSeed(from, m_Seed);
                                 addon.Plant = dirt;
