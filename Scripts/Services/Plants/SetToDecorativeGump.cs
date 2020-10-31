@@ -86,9 +86,9 @@ namespace Server.Engines.Plants
                             if (from.Backpack != null)
                                 from.Backpack.TryDropItem(from, m_Plant, false);
 
-                            if (m_Plant is GardenBedPlantItem)
+                            if (m_Plant is RaisedGardenPlantItem)
                             {
-                                GardenBedPlantItem rp = m_Plant as GardenBedPlantItem;
+                                RaisedGardenPlantItem rp = m_Plant as RaisedGardenPlantItem;
 
                                 if (rp.Component != null)
                                 {
