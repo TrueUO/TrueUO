@@ -119,6 +119,7 @@ namespace Server.Engines.UOStore
 
             // Equipment
             cat = StoreCategory.Equipment;
+            Register<TransmogrificationPotion>(1159501, 1159496, 0xA1E9, 0, 2741, 1500, cat);
             Register<VirtueShield>(1109616, 1158384, 0x7818, 0, 0, 1500, cat);
             Register<HoodedBritanniaRobe>(1125155, 1158016, 0xA0AB, 0, 0, 1500, cat, ConstructRobe);
             Register<HoodedBritanniaRobe>(1125155, 1158016, 0xA0AC, 0, 0, 1500, cat, ConstructRobe);
@@ -190,6 +191,7 @@ namespace Server.Engines.UOStore
             cat = StoreCategory.Decorations;
             Register<DecorativeGardenSculpture>(1159464, 1159465, 0xA565, 0, 0, 400, cat);
             Register<WineRack>(1159462, 1159463, 0xA568, 0, 0, 400, cat);
+            Register<SpiralStaircaseDeed>(1159480, 1159481, 0, 0x9D41, 0, 1000, cat);
             Register<DecorativeDungeonSet>(1159468, 1159475, 0, 0x9D40, 0, 1200, cat);
             Register<MetalLadderDeed>(1159478, 1159479, 0xA55C, 0, 0, 400, cat);
             Register<DecorativeStableSet>(1159272, 1159278, 0, 0x9D3C, 0, 1200, cat);
@@ -300,6 +302,7 @@ namespace Server.Engines.UOStore
 
             // mounts
             cat = StoreCategory.Mounts;
+            Register<CapybaraStatue>(1159492, 1159493, 0xA57B, 0, 0, 1000, cat);
             Register<CoconutCrabStatue>(1159165, 1159166, 0xA335, 0, 0, 1000, cat);
             Register<SkeletalCatStatue>(1158462, 1158738, 0xA138, 0, 0, 1000, cat);
             Register<EowmuStatue>(1158082, 1158433, 0xA0C0, 0, 0, 1000, cat);
@@ -309,13 +312,23 @@ namespace Server.Engines.UOStore
 
             // misc
             cat = StoreCategory.Misc;
+            Register<PotionOfGloriousFortune>(1158688, 1158739, 0xA1E6, 0, 1195, 200, cat);
+            Register<RookChessPieceGuildstone>(1159490, 1159491, 0xA583, 0, 0, 500, cat);
+            Register<LegacyGuildstone>(1159490, 1159491, 0xED4, 0, 0, 500, cat);
+            Register<KnightChessPieceGuildstone>(1159490, 1159491, 0xA581, 0, 0, 500, cat);
+            Register<AnvilofArtifactsDeed>(1159437, 1159466, 0xA108, 0, 0, 1000, cat);
+            Register<PetWhistle>(1159374, 1159394, 0xA4E7, 0, 0, 200, cat);
+            Register<SoulstoneToken>(1158869, 1158405, 0x32F4, 0, 43, 1000, cat, ConstructSoulstone);
+            Register<SoulstoneToken>(1158870, 1158405, 0x32F4, 0, 53, 1000, cat, ConstructSoulstone);
+            Register<SoulstoneToken>(1158868, 1158405, 0x32F4, 0, 1150, 1000, cat, ConstructSoulstone);
+            Register<SoulstoneToken>(1158867, 1158405, 0x32F4, 0, 1106, 1000, cat, ConstructSoulstone);
 
             if (AccountVault.SystemSettings.UseTokens)
             {
                 Register<VaultToken>(1158315, 1158316, 0x9FE8, 0, 0, 300, cat);
             }
 
-            Register<SoulstoneToken>(1158404, 1158405, 0x2A93, 0, 2598, 1000, cat, ConstructSoulstone);
+            Register<SoulstoneToken>(1158404, 1158405, 0x32F4, 0, 2598, 1000, cat, ConstructSoulstone);
             Register<WeddingChest>(1157895, 1157896, 0, 0x9CCC, 0, 500, cat);
             Register<BagOfBulkOrderCovers>(1071116, 1157603, 0, 0x9CC6, 0, 200, cat, ConstructBOBCoverOne);
 
@@ -546,6 +559,10 @@ namespace Server.Engines.UOStore
                 case 1078835: return new SoulstoneToken(SoulstoneType.Blue);
                 case 1078834: return new SoulstoneToken(SoulstoneType.Green);
                 case 1158404: return new SoulstoneToken(SoulstoneType.Violet);
+                case 1158869: return new SoulstoneToken(SoulstoneType.Orange);
+                case 1158870: return new SoulstoneToken(SoulstoneType.Yellow);
+                case 1158868: return new SoulstoneToken(SoulstoneType.White);
+                case 1158867: return new SoulstoneToken(SoulstoneType.Black);
             }
 
             return null;

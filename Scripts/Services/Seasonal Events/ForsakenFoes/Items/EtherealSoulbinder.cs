@@ -127,14 +127,7 @@ namespace Server.Items
                 {
                     var hm = bc.HitsMax;
 
-                    if (hm > 1000)
-                    {
-                        es.SoulPoint += (double)hm/1000;
-                    }
-                    else
-                    {
-                        es.SoulPoint += (double)hm/100;
-                    }
+                    es.SoulPoint += (double)(hm / hm > 1000 ? 1000 : 100) * PotionOfGloriousFortune.GetBonus(killer, PotionEventType.Soulbinder);
                 }
             }
         }
