@@ -41,14 +41,11 @@ namespace Server.Items
             LootType = LootType.Blessed;
         }
 
-        public override void OnDoubleClick(Mobile m)
+        public override void OnDoubleClick(Mobile from)
         {
-            if (IsChildOf(m.Backpack))
+            if (IsChildOf(from.Backpack) && TryAddEffects(from))
             {
-                if (TryAddEffects(m))
-                {
-                    Consume();
-                }
+                Consume();
             }
         }
 
@@ -176,7 +173,7 @@ namespace Server.Items
             }
         }
 
-        public static string FilePath = Path.Combine("Saves/Misc", "PotionOfGloriousFortune.bin");
+        private static readonly string FilePath = Path.Combine("Saves/Misc", "PotionOfGloriousFortune.bin");
 
         public static void Configure()
         {
@@ -269,16 +266,13 @@ namespace Server.Items
 
         public static void OnLogin(LoginEventArgs e)
         {
-            if (e.Mobile is PlayerMobile pm)
+            if (e.Mobile is PlayerMobile pm && Table != null)
             {
-                if (Table != null)
-                {
-                    var list = Table.FirstOrDefault(x => x.Mobile == pm);
+                var list = Table.FirstOrDefault(x => x.Mobile == pm);
 
-                    if (list != null && UnderEffects(pm, list.Type))
-                    {
-                        BuffInfo.AddBuff(pm, new BuffInfo(BuffIcon.PotionGloriousFortune, 1158688, 1158720, list.Date - DateTime.UtcNow, pm, GetScaler(list.Type).ToString(), true));
-                    }
+                if (list != null && UnderEffects(pm, list.Type))
+                {
+                    BuffInfo.AddBuff(pm, new BuffInfo(BuffIcon.PotionGloriousFortune, 1158688, 1158720, list.Date - DateTime.UtcNow, pm, GetScaler(list.Type).ToString(), true));
                 }
             }
         }
