@@ -189,14 +189,21 @@ namespace Server.Items
                 {
                     writer.Write(0);
 
-                    writer.Write(Table.Count);
-
-                    Table.ForEach(s =>
+                    if (Table != null)
                     {
-                        writer.Write(s.Mobile);
-                        writer.Write(s.Date);
-                        writer.Write((int)s.Type);
-                    });
+                        writer.Write(Table.Count);
+
+                        Table.ForEach(s =>
+                        {
+                            writer.Write(s.Mobile);
+                            writer.Write(s.Date);
+                            writer.Write((int)s.Type);
+                        });
+                    }
+                    else
+                    {
+                        writer.Write(0);
+                    }
                 });
         }
 
