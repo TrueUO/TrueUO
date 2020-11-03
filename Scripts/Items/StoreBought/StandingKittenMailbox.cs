@@ -1,7 +1,7 @@
 namespace Server.Items
 {
     [Furniture]
-    public class StandingKittenMailbox : Mailbox, IFlipable
+    public class StandingKittenMailbox : Mailbox
     {
         public override int LabelNumber => 1113927;  // Mailbox
 
