@@ -99,8 +99,7 @@ namespace Server.Regions
 
         public bool IsStairArea(Item item)
         {
-            bool frontStairs;
-            return House.IsStairArea(item, out frontStairs) && frontStairs;
+            return item.Y >= House.Sign.Y;
         }
 
         public override bool SendInaccessibleMessage(Item item, Mobile from)
