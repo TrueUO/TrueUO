@@ -272,6 +272,9 @@ namespace Server.Items
 
         public override void OnResponse(RelayInfo info)
         {
+            if (Atlas.Deleted || !User.InRange(Atlas.GetWorldLocation(), 3))
+                return;
+
             if (info.ButtonID >= 100 && info.ButtonID < 1000)
             {
                 SelectEntry(info.ButtonID - 100);
