@@ -41,16 +41,8 @@ namespace Server.Mobiles
             {
                 switch (Utility.Random(2))
                 {
-                    case 0:
-                        {
-                            Hue = 191;
-                            break;
-                        }
-                    case 1:
-                        {
-                            Hue = 1166;
-                            break;
-                        }
+                    case 0: { Hue = 191; break; }
+                    case 1: { Hue = 1166; break; }
                 }
             }
         }

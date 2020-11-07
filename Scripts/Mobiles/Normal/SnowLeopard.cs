@@ -35,6 +35,15 @@ namespace Server.Mobiles
             Fame = 450;
             Karma = 0;
 
+            if (Utility.RandomDouble() < 0.05)
+            {
+                switch (Utility.Random(2))
+                {
+                    case 0: { Hue = 1150; break; }
+                    case 1: { Hue = 1154; break; }
+                }
+            }
+
             Tamable = true;
             ControlSlots = 1;
             MinTameSkill = 53.1;

@@ -13,9 +13,6 @@ namespace Server.Mobiles
             Body = 20;
             BaseSoundID = 0x388;
 
-            if (Utility.RandomBool())
-                Hue = 1154;
-
             SetStr(76, 100);
             SetDex(126, 145);
             SetInt(36, 60);
@@ -40,6 +37,15 @@ namespace Server.Mobiles
 
             Fame = 775;
             Karma = -775;
+
+            if (Utility.RandomDouble() < 0.2)
+            {
+                switch (Utility.Random(2))
+                {
+                    case 0: { Hue = 1154; break; }
+                    case 1: { Hue = 2729; break; }
+                }
+            }
 
             Tamable = true;
             ControlSlots = 1;

@@ -43,6 +43,17 @@ namespace Server.Mobiles
             ControlSlots = 4;
             MinTameSkill = 85.0;
 
+            if (Utility.RandomDouble() < 0.05)
+            {
+                switch (Utility.Random(4))
+                {
+                    case 0: { Hue = 33922; break; }
+                    case 1: { Hue = 33934; break; }
+                    case 2: { Hue = 35488; break; }
+                    case 3: { Hue = 34699; break; }
+                }
+            }
+
             SetMagicalAbility(MagicalAbility.MageryMastery);
         }
 
