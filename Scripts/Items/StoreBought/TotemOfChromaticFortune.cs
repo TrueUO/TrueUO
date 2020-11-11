@@ -1,3 +1,5 @@
+using Server.Engines.PartySystem;
+using Server.Guilds;
 using Server.Mobiles;
 using Server.Multis;
 using Server.Regions;
@@ -160,6 +162,41 @@ namespace Server.Items
             Owner = from;
 
             m_Sparkle = new Static(0x375A);
+        }
+
+        public bool IsGuildOrParty(Mobile to)
+        {
+            return IsGuild(to) || IsParty(to);
+        }
+
+        public bool IsGuild(Mobile to)
+        {
+            return Owner.Guild is Guild fromGuild && to.Guild is Guild toGuild && fromGuild == toGuild;
+        }
+
+        public bool IsParty(Mobile to)
+        {
+            var p = Party.Get(Owner);
+
+            return p != null && p.Contains(to);
+        }
+
+        public bool CheckParty(Mobile m)
+        {
+            Party party = Party.Get(Owner);
+
+            if (party != null)
+            {
+                foreach (PartyMemberInfo info in party.Members)
+                {
+                    if (info.Mobile == m)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         public TotemOfChromaticFortuneAddon(Serial serial)

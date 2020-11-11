@@ -178,6 +178,10 @@ namespace Server.SkillHandlers
                             creature.PrivateOverheadMessage(MessageType.Regular, 0x3B2, 1054025, from.NetState);
                             // You must subdue this creature before you can tame it!
                         }
+                        else if (creature.Totem != null && !creature.Totem.Deleted && !creature.Totem.IsGuildOrParty(from))
+                        {
+                            from.SendLocalizedMessage(1157549); // You cannot currently tame that creature.
+                        }
                         else if (DarkWolfFamiliar.CheckMastery(from, creature) || from.Skills[SkillName.AnimalTaming].Value >= creature.CurrentTameSkill)
                         {
                             if (m_BeingTamed.Contains(targeted))

@@ -38,18 +38,30 @@ namespace Server.Mobiles
             Fame = 775;
             Karma = -775;
 
-            if (Utility.RandomDouble() < 0.2)
-            {
-                switch (Utility.Random(2))
-                {
-                    case 0: { Hue = 1154; break; }
-                    case 1: { Hue = 2729; break; }
-                }
-            }
-
             Tamable = true;
             ControlSlots = 1;
             MinTameSkill = 74.7;
+        }
+
+        protected override void OnMapChange(Map oldMap)
+        {
+            base.OnMapChange(oldMap);
+
+            if (!Controlled && Tamable)
+            {
+                if (Utility.RandomDouble() < 0.2 + TotemRareColorChance())
+                {
+                    switch (Utility.Random(2))
+                    {
+                        case 0: { Hue = 1154; break; }
+                        case 1: { Hue = 2729; break; }
+                    }
+                }
+                else if (Totem != null)
+                {
+                    Totem = null;
+                }
+            }
         }
 
         public FrostSpider(Serial serial)
