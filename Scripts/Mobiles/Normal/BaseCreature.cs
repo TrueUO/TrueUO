@@ -3449,11 +3449,6 @@ namespace Server.Mobiles
                     Say(1079120); // Very well.
                 }
 
-                if (m_AI is MageAI ai && Spell != null && DateTime.UtcNow - ai.NextCastTime > TimeSpan.FromSeconds(10))
-                {
-                    Spell = null;
-                }
-
                 if (m_AI != null)
                 {
                     m_AI.OnCurrentOrderChanged();
