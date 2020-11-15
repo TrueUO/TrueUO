@@ -115,11 +115,9 @@ namespace Server.Mobiles
 
                         return true;
                     }
-                    else
-                    {
-                        player.SendGump(new MondainQuestGump(quest, MondainQuestGump.Section.InProgress, false));
-                        quest.InProgress();
-                    }
+
+                    player.SendGump(new MondainQuestGump(quest, MondainQuestGump.Section.InProgress, false));
+                    quest.InProgress();
 
                     return false;
                 }
@@ -303,8 +301,7 @@ namespace Server.Mobiles
             {
                 SayTo(from, 1048053); // You can't stable that!
             }
-            else if ((pet is PackLlama || pet is PackHorse || pet is Beetle) &&
-                     (pet.Backpack != null && pet.Backpack.Items.Count > 0))
+            else if ((pet is PackLlama || pet is PackHorse || pet is Beetle) && pet.Backpack != null && pet.Backpack.Items.Count > 0)
             {
                 SayTo(from, 1042563); // You need to unload your pet.
             }
@@ -413,7 +410,7 @@ namespace Server.Mobiles
 
         public bool CanClaim(Mobile from, BaseCreature pet)
         {
-            return ((from.Followers + pet.ControlSlots) <= from.FollowersMax);
+            return from.Followers + pet.ControlSlots <= from.FollowersMax;
         }
 
         private void DoClaim(Mobile from, BaseCreature pet)
