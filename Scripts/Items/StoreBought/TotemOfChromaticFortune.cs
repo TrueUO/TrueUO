@@ -91,17 +91,32 @@ namespace Server.Items
 
         private bool CheckSpawn(Point3D p)
         {
-            IPooledEnumerable<Item> eable = Map.GetItemsInRange(p, 10);
+            IPooledEnumerable<Item> eable = Map.GetItemsInRange(p, 12);
 
             foreach (Item item in eable)
             {
-                if (item is XmlSpawner s)
+                if (item is XmlSpawner xmlspawn)
                 {
-                    foreach (var so in s.SpawnObjects)
+                    foreach (var so in xmlspawn.SpawnObjects)
                     {
                         foreach (var t in m_Types)
                         {
                             if (t.Name.ToLower() == so.TypeName.ToLower())
+                            {
+                                eable.Free();
+                                return true;
+                            }
+                        }
+                    }
+                }
+
+                if (item is Spawner spawn)
+                {
+                    foreach (var so in spawn.SpawnObjects)
+                    {
+                        foreach (var t in m_Types)
+                        {
+                            if (t.Name.ToLower() == so.SpawnName.ToLower())
                             {
                                 eable.Free();
                                 return true;
