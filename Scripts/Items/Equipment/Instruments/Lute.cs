@@ -68,6 +68,13 @@ namespace Server.Items
                     
                     LuteTunedToStones = true;
 
+                    var neck = from.FindItemOnLayer(Layer.Neck);
+
+                    if (neck != null && (neck is FellowshipMedallion || neck is GargishFellowshipMedallion))
+                    {
+                        neck.Hue = 1151;
+                    }
+
                     smfs.Active = true;
 
                     Gump g = new Gump(100, 100);
