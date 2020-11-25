@@ -44,10 +44,7 @@ namespace Server.ContextMenus
 
         public override void OnClick()
         {
-            if (Callback != null)
-            {
-                Callback(From, State);
-            }
+            Callback?.Invoke(From, State);
         }
     }
 }

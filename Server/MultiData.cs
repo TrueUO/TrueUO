@@ -2,13 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-
-using Server.Network;
+using System.IO.Compression;
 #endregion
 
 namespace Server
 {
-	public static class MultiData
+    public static class MultiData
 	{
 		public static Dictionary<int, MultiComponentList> Components => m_Components;
 		private static readonly Dictionary<int, MultiComponentList> m_Components;
@@ -145,8 +144,8 @@ namespace Server
 					if (flag == 1)
 					{
 						byte[] destData = new byte[decompressedSize];
-						/*ZLibError error = */
-						Compression.Compressor.Decompress(destData, ref decompressedSize, sourceData, compressedSize);
+                        /*ZLibError error = */
+                        Zlib.Unpack(destData, ref decompressedSize, sourceData, compressedSize);
 
 						data = destData;
 					}

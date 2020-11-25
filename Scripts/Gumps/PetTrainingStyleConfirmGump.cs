@@ -63,19 +63,13 @@ namespace Server.Gumps
         {
             if (info.ButtonID == 1)
             {
-                if (ConfirmCallback != null)
-                {
-                    ConfirmCallback();
-                }
+                ConfirmCallback?.Invoke();
 
                 OnConfirm();
             }
             else if (info.ButtonID == 2)
             {
-                if (CancelCallback != null)
-                {
-                    CancelCallback();
-                }
+                CancelCallback?.Invoke();
 
                 OnCancel();
             }

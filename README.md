@@ -1,46 +1,44 @@
 # [ServUO]
 
-[![Build Status](https://travis-ci.com/ServUO/ServUO.svg?branch=master)](https://travis-ci.com/ServUO/ServUO)
-[![GitHub issues](https://img.shields.io/github/issues/servuo/servuo.svg)](https://github.com/ServUO/ServUO/issues)
-[![GitHub release](https://img.shields.io/github/release/servuo/servuo.svg)](https://github.com/ServUO/ServUO/releases)
-[![GitHub repo size](https://img.shields.io/github/repo-size/servuo/servuo.svg)](https://github.com/ServUO/ServUO/)
-[![Discord](https://img.shields.io/discord/110970849628000256.svg)](https://discord.gg/0cQjvnFUN26nRt7y)
-[![GitHub contributors](https://img.shields.io/github/contributors/servuo/servuo.svg)](https://github.com/ServUO/ServUO/graphs/contributors)
-[![GitHub](https://img.shields.io/github/license/servuo/servuo.svg?color=a)](https://github.com/ServUO/ServUO/blob/master/LICENSE)
+[![GitHub issues](https://img.shields.io/github/issues/trueuo/trueuo.svg)](https://github.com/TrueUO/TrueUO/issues)
+[![GitHub](https://img.shields.io/github/license/servuo/servuo.svg?color=a)](https://github.com/TrueUO/TrueUO/blob/master/LICENSE)
 
 
-[ServUO] is a community driven Ultima Online Server Emulator written in C#.
+ServUO is a community driven Ultima Online Server Emulator written in C#.
 
-
+## Publishing a build
 #### Requirements
+- [.NET 5.0 SDK](https://dotnet.microsoft.com/download/dotnet/5.0)
 
-[.NET Framework 4.8] Runtime and SDK
+#### Publishing Builds
+- Using terminal or powershell: `./publish.cmd [release|debug (default: release)] [os]`
+  - Supported `os`:
+    - `win` for Windows 8/10/2019
+    - `osx` for MacOS
+    - `ubuntu.16.04`, `ubuntu.18.04` `ubuntu.20.04` for Ubuntu LTS
+    - `debian.9`, `debian.10` for Debian
+    - `centos.7`, `centos.8` for CentOS
+    - If blank, will use host operating system
+  - Supported `framework`:
+    - `net` for .NET 5.0
 
+#### Example
+- Windows (Debug Mode): `./publish.cmd Debug core win`
+- Windows (Release Mode): `./publish.cmd Release core win`
 
-#### Windows
+https://www.servuo.com
 
-Run `Compile.WIN - Debug.bat` for development environments.
-Run `Compile.WIN - Release.bat` for production environments.
+### Development
 
+Want to contribute? Great!
 
-#### OSX
+You can submit a pull request at any time and we will review it asap!
 
-`brew install mono`  
-`make`
+License
+----
 
-
-#### Ubuntu / Debian
-
-`apt-get install zlib1g-dev`  
-`apt-get install mono-complete`  
-`make`
-
-
-#### Summary
-
-A [Quick Start] guide is available for more information on setting up your world.
+GPL v2
 
 
    [ServUO]: <https://www.servuo.com>
-   [Quick Start]: <https://www.servuo.com/wiki/startup/>
-   [.NET Framework 4.8]: <https://dotnet.microsoft.com/download/dotnet-framework/net48>
+   [Quickstart]: <https://www.servuo.com/wiki/startup/>

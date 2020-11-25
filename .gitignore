@@ -1,57 +1,47 @@
-
-# Project Assemblies
-/Server.dll
+/Ultima/bin
+/Ultima/obj
 /Server/bin
 /Server/obj
-/Scripts.dll
 /Scripts/bin
 /Scripts/obj
-/Application/bin
+/Scripts/Output
+/Scripts/Custom
 /Application/obj
 
-# Common Directories
+/Distribution/Honesty
+/Distribution/Logs
+/Distribution/Backups
+/Distribution/Saves
+/Distribution/Web
+/Distribution/Docs
+/Distribution/Reports
+/Distribution/VitaNexCore
+/Distribution/TheBox
 /.vs
-/Honesty
-/Logs
-/Backups
-/Saves
-/Web
-/Docs
-/Reports
 
-# Custom Directories
-/VitaNexCore
-/Leaderboard
-/UltimaLive
-/TheBox
-/Export
-
-# Common Files
-/firewall.cfg
+/Distribution/staffHistory.xml
+/Distribution/reportHistory.xml
+/Distribution/firewall.cfg
 /drng64.dll
 /drng32.dll
 /libdrng.so
-/System.Drawing.Common.dll
 
-# Custom Files
-/TotalAccountGold.txt
+/Distribution/*.dll
+/Distribution/*.json
+/Distribution/*.config
 
-# Wildcard Files
+
+
 *.pdb
 *.exe
 *.exe.mdb
-*.exe.config
-*.sh
 *.suo
 *.idea
 *.log
-*.bin
 *.csproj.user
 *.DotSettings.user
 *.ini
 
-# Include Data Files
-!/Data/*
+!publish.sh
 
-# Exclude Data Files
 /Data/PVPTournamentSystemData

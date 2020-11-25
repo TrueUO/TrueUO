@@ -188,11 +188,8 @@ namespace Server.Items
 
 		public override void OnSnoop(Mobile from)
 		{
-			if (m_SnoopHandler != null)
-			{
-				m_SnoopHandler(this, from);
-			}
-		}
+            m_SnoopHandler?.Invoke(this, from);
+        }
 
 		public override bool CheckLift(Mobile from, Item item, ref LRReason reject)
 		{
@@ -449,22 +446,16 @@ namespace Server.Items
 
 						if (theirAmount < need)
 						{
-							if (callback != null)
-							{
-								callback(item, theirAmount);
-							}
+                            callback?.Invoke(item, theirAmount);
 
-							item.Delete();
+                            item.Delete();
 							need -= theirAmount;
 						}
 						else
 						{
-							if (callback != null)
-							{
-								callback(item, need);
-							}
+                            callback?.Invoke(item, need);
 
-							item.Consume(need);
+                            item.Consume(need);
 							break;
 						}
 					}
@@ -583,22 +574,16 @@ namespace Server.Items
 
 							if (theirAmount < need)
 							{
-								if (callback != null)
-								{
-									callback(item, theirAmount);
-								}
+                                callback?.Invoke(item, theirAmount);
 
-								item.Delete();
+                                item.Delete();
 								need -= theirAmount;
 							}
 							else
 							{
-								if (callback != null)
-								{
-									callback(item, need);
-								}
+                                callback?.Invoke(item, need);
 
-								item.Consume(need);
+                                item.Consume(need);
 								break;
 							}
 						}
@@ -717,22 +702,16 @@ namespace Server.Items
 
 							if (theirAmount < need)
 							{
-								if (callback != null)
-								{
-									callback(item, theirAmount);
-								}
+                                callback?.Invoke(item, theirAmount);
 
-								item.Delete();
+                                item.Delete();
 								need -= theirAmount;
 							}
 							else
 							{
-								if (callback != null)
-								{
-									callback(item, need);
-								}
+                                callback?.Invoke(item, need);
 
-								item.Consume(need);
+                                item.Consume(need);
 								break;
 							}
 						}
@@ -792,22 +771,16 @@ namespace Server.Items
 
 					if (theirAmount < need)
 					{
-						if (callback != null)
-						{
-							callback(item, theirAmount);
-						}
+                        callback?.Invoke(item, theirAmount);
 
-						item.Delete();
+                        item.Delete();
 						need -= theirAmount;
 					}
 					else
 					{
-						if (callback != null)
-						{
-							callback(item, need);
-						}
+                        callback?.Invoke(item, need);
 
-						item.Consume(need);
+                        item.Consume(need);
 						break;
 					}
 				}
@@ -863,22 +836,16 @@ namespace Server.Items
 
 					if (theirAmount < need)
 					{
-						if (callback != null)
-						{
-							callback(item, theirAmount);
-						}
+                        callback?.Invoke(item, theirAmount);
 
-						item.Delete();
+                        item.Delete();
 						need -= theirAmount;
 					}
 					else
 					{
-						if (callback != null)
-						{
-							callback(item, need);
-						}
+                        callback?.Invoke(item, need);
 
-						item.Consume(need);
+                        item.Consume(need);
 						break;
 					}
 				}
@@ -923,22 +890,16 @@ namespace Server.Items
 
 					if (theirAmount < need)
 					{
-						if (callback != null)
-						{
-							callback(item, theirAmount);
-						}
+                        callback?.Invoke(item, theirAmount);
 
-						item.Delete();
+                        item.Delete();
 						need -= theirAmount;
 					}
 					else
 					{
-						if (callback != null)
-						{
-							callback(item, need);
-						}
+                        callback?.Invoke(item, need);
 
-						item.Consume(need);
+                        item.Consume(need);
 
 						return true;
 					}

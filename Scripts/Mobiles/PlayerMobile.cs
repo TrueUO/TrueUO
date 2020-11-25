@@ -2960,10 +2960,7 @@ namespace Server.Mobiles
 
             public override void OnClick()
             {
-                if (m_Callback != null)
-                {
-                    m_Callback();
-                }
+                m_Callback?.Invoke();
             }
         }
 
@@ -5068,10 +5065,7 @@ namespace Server.Mobiles
                 list.Add(1060433, AosAttributes.GetValue(this, AosAttribute.LowerManaCost).ToString()); // lower mana cost
             }
 
-            if (PlayerProperties != null)
-            {
-                PlayerProperties(new PlayerPropertiesEventArgs(this, list));
-            }
+            PlayerProperties?.Invoke(new PlayerPropertiesEventArgs(this, list));
         }
 
         protected override bool OnMove(Direction d)

@@ -259,8 +259,7 @@ namespace Server.Gumps
                 if (from.Alive && m_HitsScalar > 0)
                     from.Hits = (int)(from.HitsMax * m_HitsScalar);
 
-                if (m_Callback != null)
-                    m_Callback(from);
+                m_Callback?.Invoke(from);
             }
         }
     }

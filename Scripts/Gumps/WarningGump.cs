@@ -67,8 +67,7 @@ namespace Server.Gumps
         {
             if (info.ButtonID == 1 && m_Callback != null)
                 m_Callback(sender.Mobile, true, m_State);
-            else if (m_Callback != null)
-                m_Callback(sender.Mobile, false, m_State);
+            else m_Callback?.Invoke(sender.Mobile, false, m_State);
         }
     }
 }

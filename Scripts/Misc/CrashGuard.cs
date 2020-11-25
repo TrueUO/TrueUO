@@ -1,10 +1,9 @@
+using MimeKit;
 using Server.Accounting;
 using Server.Network;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Net.Mail;
 
 namespace Server.Misc
 {
@@ -14,6 +13,7 @@ namespace Server.Misc
         private static readonly bool SaveBackup = true;
         private static readonly bool RestartServer = true;
         private static readonly bool GenerateReport = true;
+
         public static void Initialize()
         {
             if (Enabled) // If enabled, register our crash event handler
@@ -38,14 +38,16 @@ namespace Server.Misc
         {
             Console.Write("Crash: Sending email...");
 
-            MailMessage message = new MailMessage(Email.FromAddress, Email.CrashAddresses)
-            {
-                Subject = "Automated ServUO Crash Report",
+            var message = new MimeMessage();
+            message.From.Add(new MailboxAddress("", Email.FromAddress));
+            message.To.Add(new MailboxAddress("", Email.CrashAddresses));
+            message.Subject = "Automated ServUO Crash Report";
 
-                Body = "Automated ServUO Crash Report. See attachment for details."
-            };
+            var builder = new BodyBuilder();
+            builder.TextBody = "Automated ServUO Crash Report. See attachment for details.";
+            builder.Attachments.Add(filePath);
 
-            message.Attachments.Add(new Attachment(filePath));
+            message.Body = builder.ToMessageBody();
 
             if (Email.Send(message))
                 Console.WriteLine("done");
@@ -82,7 +84,7 @@ namespace Server.Misc
 
             try
             {
-                Process.Start(Core.ExePath, Core.Arguments);
+                Core.Restart();
                 Console.WriteLine("done");
 
                 e.Close = true;
@@ -186,7 +188,7 @@ namespace Server.Misc
                     op.WriteLine();
                     op.WriteLine("ServUO Version {0}.{1}, Build {2}.{3}", ver.Major, ver.Minor, ver.Build, ver.Revision);
                     op.WriteLine("Operating System: {0}", Environment.OSVersion);
-                    op.WriteLine(".NET Framework: {0}", Environment.Version);
+                    op.WriteLine(".NET Core: {0}", Environment.Version);
                     op.WriteLine("Time: {0}", DateTime.UtcNow);
 
                     try

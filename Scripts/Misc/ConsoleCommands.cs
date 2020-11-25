@@ -4,27 +4,20 @@ using Server.Engines.Help;
 using Server.Network;
 using System;
 using System.Linq;
-using System.Threading;
-using System.IO;
+using System.Threading.Tasks;
 #endregion
 
 namespace Server.Misc
 {
     internal static class ServerConsole
     {
-        private static readonly Func<string> _Listen = Console.ReadLine;
-
-        private static string _Command;
-
-        private static Timer _PollTimer;
-
         private static bool _HearConsole;
 
         public static void Initialize()
         {
             EventSink.ServerStarted += () =>
             {
-                PollCommands();
+                ListenCommands();
 
                 if (_HearConsole)
                 {
@@ -57,38 +50,29 @@ namespace Server.Misc
             };
         }
 
-        private static void PollCommands()
+        private static void ListenCommands()
         {
-            _PollTimer = Timer.DelayCall(TimeSpan.Zero, TimeSpan.FromMilliseconds(100), ProcessCommand);
-
-            _Listen.BeginInvoke(r => ProcessInput(_Listen.EndInvoke(r)), null);
-        }
-
-        private static void ProcessInput(string input)
-        {
-            if (!Core.Crashed && !Core.Closing)
+            var task = Task.Factory.StartNew(() =>
             {
-                Interlocked.Exchange(ref _Command, input);
-            }
-        }
+                string line;
 
-        private static void ProcessCommand()
-        {
-            if (Core.Crashed || Core.Closing || World.Loading || World.Saving)
-            {
-                return;
-            }
+                while ((line = Console.ReadLine()) != null)
+                {
+                    if (Core.Crashed || Core.Closing || World.Loading || World.Saving)
+                    {
+                        return;
+                    }
 
-            if (string.IsNullOrEmpty(_Command))
-            {
-                return;
-            }
+                    if (string.IsNullOrEmpty(line))
+                    {
+                        return;
+                    }
 
-            ProcessCommand(_Command);
+                    ProcessCommand(line);
+                }
+            });
 
-            Interlocked.Exchange(ref _Command, string.Empty);
-
-            _Listen.BeginInvoke(r => ProcessInput(_Listen.EndInvoke(r)), null);
+            Task.WhenAny(task, Task.Delay(TimeSpan.FromMilliseconds(250)));
         }
 
         private static PageEntry[] _Pages;
@@ -177,7 +161,7 @@ namespace Server.Misc
                 return;
             }
 
-            switch (input.Trim())
+            switch (input)
             {
                 case "crash":
                     {
@@ -203,34 +187,13 @@ namespace Server.Misc
                     break;
                 case "save recompile":
                     {
-                        var path = AutoRestart.RecompilePath;
-
-                        if (!File.Exists(path))
-                        {
-                            Console.WriteLine("Unable to Re-Compile due to missing file: {0}", AutoRestart.RecompilePath);
-                        }
-                        else
-                        {
-                            AutoSave.Save();
-
-                            System.Diagnostics.Process.Start(path);
-                            Core.Kill();
-                        }
+                        AutoSave.Save();
+                        AutoRestart.ReCompile();
                     }
                     break;
                 case "nosave recompile":
                     {
-                        var path = AutoRestart.RecompilePath;
-
-                        if (!File.Exists(path))
-                        {
-                            Console.WriteLine("Unable to Re-Compile due to missing file: {0}", AutoRestart.RecompilePath);
-                        }
-                        else
-                        {
-                            System.Diagnostics.Process.Start(path);
-                            Core.Kill();
-                        }
+                        AutoRestart.ReCompile();
                     }
                     break;
                 case "restart nosave":
@@ -249,9 +212,7 @@ namespace Server.Misc
 
                         foreach (NetState t in states)
                         {
-                            Account a = t.Account as Account;
-
-                            if (a == null)
+                            if (!(t.Account is Account a))
                             {
                                 continue;
                             }

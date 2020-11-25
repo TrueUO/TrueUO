@@ -136,14 +136,18 @@ namespace Server
 			}
 		}
 
-		public static readonly bool Is64Bit = Environment.Is64BitProcess;
-
 		public static bool MultiProcessor { get; private set; }
 		public static int ProcessorCount { get; private set; }
 
-		public static bool Unix { get; private set; }
+        public static bool IsWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+        public static bool IsDarwin = RuntimeInformation.IsOSPlatform(OSPlatform.OSX);
+        public static bool IsFreeBSD = RuntimeInformation.IsOSPlatform(OSPlatform.FreeBSD);
+        public static bool IsLinux = RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || IsFreeBSD;
+        public static bool Unix = IsDarwin || IsFreeBSD || IsLinux;
 
-		public static string FindDataFile(string path)
+        public static string Framework = RuntimeInformation.FrameworkDescription;
+
+        public static string FindDataFile(string path)
 		{
 			if (DataDirectories.Count == 0)
 			{
@@ -188,7 +192,7 @@ namespace Server
 		public static bool EJ => Expansion >= Expansion.EJ;
 		#endregion
 
-		public static string ExePath => _ExePath ?? (_ExePath = Assembly.Location);
+		public static string ExePath => _ExePath ?? (_ExePath = IsWindows ? Path.ChangeExtension(Assembly.Location, ".exe") : Assembly.Location);
 
 		public static string BaseDirectory
 		{
@@ -322,49 +326,42 @@ namespace Server
 			Kill(false);
 		}
 
-#if MONO
-		private static string[] SupportedTerminals => new string[]
-		{
-			"xfce4-terminal", "gnome-terminal", "xterm"
-		};
-
-		private static void RebootTerminal(int i = 0)
-		{
-			if(SupportedTerminals.Length > i)
-			{
-				try {
-					if(SupportedTerminals[i] != "xterm")
-						Process.Start(SupportedTerminals[i], $"--working-directory={BaseDirectory} -x ./ServUO.sh");
-					else
-						Process.Start(SupportedTerminals[i], $"-lcc {BaseDirectory} -e ./ServUO.sh");
-					Thread.Sleep(500); // a sleep here to not close the programm to quick, so that the new windows cant start.
-				}
-				catch(System.ComponentModel.Win32Exception)
-				{
-					RebootTerminal(i+1);
-				}
-			}
-		}
-#endif
-
 		public static void Kill(bool restart)
 		{
 			HandleClosed();
 
 			if (restart)
 			{
-#if MONO
-				RebootTerminal();
-				Environment.Exit(0);
+                Restart();
 			}
-#else				
-				Process.Start(ExePath, Arguments);
-			}
+
 			Process.Kill();
-#endif
 		}
 
-		private static void HandleClosed()
+        public static void Restart()
+        {
+            if (IsWindows)
+            {
+                Process.Start(ExePath, Arguments);
+            }
+            else
+            {
+                var process = new Process
+                {
+                    StartInfo = new ProcessStartInfo
+                    {
+                        FileName = "dotnet",
+                        Arguments = ExePath,
+                        UseShellExecute = true
+                    }
+
+                };
+
+                process.Start();
+            }
+        }
+
+        private static void HandleClosed()
 		{
 			if (Closing)
 			{
@@ -527,7 +524,11 @@ namespace Server
 #endif
 			Utility.PopColor();
 
-			string s = Arguments;
+            Utility.PushColor(ConsoleColor.Yellow);
+            Console.WriteLine("Core: Running on {0}\n", Framework);
+            Utility.PopColor();
+
+            string s = Arguments;
 
 			if (s.Length > 0)
 			{
@@ -539,58 +540,25 @@ namespace Server
 			ProcessorCount = Environment.ProcessorCount;
 
 			if (ProcessorCount > 1)
-			{
+            { 
 				MultiProcessor = true;
 			}
 
-			if (MultiProcessor || Is64Bit)
+			if (MultiProcessor)
 			{
 				Utility.PushColor(ConsoleColor.Green);
 				Console.WriteLine(
-					"Core: Optimizing for {0} {2}processor{1}",
+					"Core: Optimizing for {0} processor{1}",
 					ProcessorCount,
-					ProcessorCount == 1 ? "" : "s",
-					Is64Bit ? "64-bit " : "");
+					ProcessorCount == 1 ? "" : "s");
 				Utility.PopColor();
 			}
 
-			string dotnet = null;
-
-			if (Type.GetType("Mono.Runtime") != null)
-			{
-				MethodInfo displayName = Type.GetType("Mono.Runtime").GetMethod("GetDisplayName", BindingFlags.NonPublic | BindingFlags.Static);
-
-				if (displayName != null)
-				{
-					dotnet = displayName.Invoke(null, null).ToString();
-
-					Utility.PushColor(ConsoleColor.Yellow);
-					Console.WriteLine("Core: Unix environment detected");
-					Utility.PopColor();
-
-					Unix = true;
-				}
-			}
-			else
-			{
-				m_ConsoleEventHandler = OnConsoleEvent;
-				UnsafeNativeMethods.SetConsoleCtrlHandler(m_ConsoleEventHandler, true);
-			}
-
-#if NETFX_472
-			dotnet = "4.7.2";
-#endif
-
-#if NETFX_48
-			dotnet = "4.8";
-#endif
-
-			if (string.IsNullOrEmpty(dotnet))
-				dotnet = "MONO/CSC/Unknown";
-
-			Utility.PushColor(ConsoleColor.Green);
-			Console.WriteLine("Core: Compiled for " + (Unix ? "MONO and running on {0}" : ".NET {0}"), dotnet);
-			Utility.PopColor();
+            if (IsWindows)
+            {
+                m_ConsoleEventHandler = OnConsoleEvent;
+                UnsafeNativeMethods.SetConsoleCtrlHandler(m_ConsoleEventHandler, true);
+            }
 
 			if (GCSettings.IsServerGC)
 			{
@@ -681,12 +649,9 @@ namespace Server
 					NetState.FlushAll();
 					NetState.ProcessDisposedQueue();
 
-					if (Slice != null)
-					{
-						Slice();
-					}
+                    Slice?.Invoke();
 
-					if (sample++ % sampleInterval != 0)
+                    if (sample++ % sampleInterval != 0)
 					{
 						continue;
 					}

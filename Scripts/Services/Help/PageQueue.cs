@@ -1,4 +1,5 @@
 #region References
+using MimeKit;
 using Server.Accounting;
 using Server.Commands;
 using Server.Gumps;
@@ -10,7 +11,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net.Mail;
 #endregion
 
 namespace Server.Engines.Help
@@ -464,10 +464,10 @@ namespace Server.Engines.Help
             Mobile sender = entry.Sender;
             DateTime time = DateTime.UtcNow;
 
-            MailMessage mail = new MailMessage(Email.FromAddress, Email.SpeechLogPageAddresses)
-            {
-                Subject = "ServUO Speech Log Page Forwarding"
-            };
+            var mail = new MimeMessage();
+            mail.From.Add(new MailboxAddress("", Email.FromAddress));
+            mail.To.Add(new MailboxAddress("", Email.SpeechLogPageAddresses));
+            mail.Subject = "ServUO Speech Log Page Forwarding";
 
             using (StringWriter writer = new StringWriter())
             {
@@ -512,7 +512,9 @@ namespace Server.Engines.Help
                         speech);
                 }
 
-                mail.Body = writer.ToString();
+                var builder = new BodyBuilder();
+                builder.TextBody = writer.ToString();
+                mail.Body = builder.ToMessageBody();
             }
 
             Email.AsyncSend(mail);
