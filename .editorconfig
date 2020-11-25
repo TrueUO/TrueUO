@@ -8,3 +8,5 @@ charset = utf-8
 trim_trailing_whitespace = true
 insert_final_newline = true
 
+# CA1416: Validate platform compatibility
+dotnet_diagnostic.CA1416.severity = none

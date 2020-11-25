@@ -8,12 +8,10 @@ ServUO is a community driven Ultima Online Server Emulator written in C#.
 
 ## Publishing a build
 #### Requirements
-- [.NET Core 3.1.7 SDK](https://dotnet.microsoft.com/download/dotnet-core/3.1)
-<br />or
-- [.NET 5.0 (Preview) SDK](https://dotnet.microsoft.com/download/dotnet/5.0)
+- [.NET 5.0 SDK](https://dotnet.microsoft.com/download/dotnet/5.0)
 
 #### Publishing Builds
-- Using terminal or powershell: `./publish.cmd [release|debug (default: release)] [framework] [os]`
+- Using terminal or powershell: `./publish.cmd [release|debug (default: release)] [os]`
   - Supported `os`:
     - `win` for Windows 8/10/2019
     - `osx` for MacOS
@@ -22,7 +20,6 @@ ServUO is a community driven Ultima Online Server Emulator written in C#.
     - `centos.7`, `centos.8` for CentOS
     - If blank, will use host operating system
   - Supported `framework`:
-    - `core` for .NET Core 3.1.7
     - `net` for .NET 5.0
 
 #### Example
