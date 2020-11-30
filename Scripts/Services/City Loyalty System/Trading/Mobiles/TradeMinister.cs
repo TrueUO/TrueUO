@@ -5,6 +5,7 @@ using Server.Misc;
 using Server.Mobiles;
 using Server.Network;
 using Server.Targeting;
+using System;
 using System.Collections.Generic;
 
 namespace Server.Engines.CityLoyalty
@@ -22,6 +23,8 @@ namespace Server.Engines.CityLoyalty
 
         [CommandProperty(AccessLevel.GameMaster)]
         public CityPetDonation DonationPost { get; set; }
+
+        public static Dictionary<Mobile, ExpireTimer> List = new Dictionary<Mobile, ExpireTimer>();
 
         public override bool IsInvulnerable => true;
 
@@ -99,9 +102,14 @@ namespace Server.Engines.CityLoyalty
 
             public override void OnClick()
             {
-                if (!CityTradeSystem.HasTrade(Player))
+                if (List.ContainsKey(Player))
+                {
+                    Minister.SayTo(Player, 1151724, 1150); // I don't have a trade order available right now.  Try again in a few minutes or try another Trade Minister.
+                }
+                else if (!CityTradeSystem.HasTrade(Player))
                 {
                     Player.SendGump(new InternalTradeOrderGump(Player as PlayerMobile, Minister));
+                    List[Player] = new ExpireTimer(Player);
                 }
             }
         }
@@ -160,6 +168,28 @@ namespace Server.Engines.CityLoyalty
                         from.Target = new InternalTarget(Minister);
                     }
                 }
+            }
+        }
+
+        public class ExpireTimer : Timer
+        {
+            private readonly Mobile _Mobile;
+
+            public ExpireTimer(Mobile m)
+                : base(TimeSpan.FromMinutes(2))
+            {
+                _Mobile = m;
+                Start();
+            }
+
+            protected override void OnTick()
+            {
+                if (List.ContainsKey(_Mobile))
+                {
+                    List.Remove(_Mobile);
+                }
+
+                Stop();
             }
         }
 
@@ -319,13 +349,15 @@ namespace Server.Engines.CityLoyalty
         {
             base.Serialize(writer);
             writer.Write(0);
+
             writer.Write((int)City);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int v = reader.ReadInt();
+            reader.ReadInt();
+
             City = (City)reader.ReadInt();
 			
 			Frozen = true;
