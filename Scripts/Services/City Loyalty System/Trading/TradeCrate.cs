@@ -160,11 +160,9 @@ namespace Server.Engines.CityLoyalty
 
                         break;
                     }
-                    else
-                    {
-                        canAdd = true;
-                        break;
-                    }
+
+                    canAdd = true;
+                    break;
                 }
             }
 
@@ -193,16 +191,16 @@ namespace Server.Engines.CityLoyalty
             base.UpdateTotal(sender, type, delta);
         }
 
-        public override void AddItem(Item dropped)
+        public override void AddItem(Item item)
         {
-            base.AddItem(dropped);
+            base.AddItem(item);
 
             InvalidateWeight();
         }
 
-        public override void RemoveItem(Item dropped)
+        public override void RemoveItem(Item item)
         {
-            base.RemoveItem(dropped);
+            base.RemoveItem(item);
 
             InvalidateWeight();
         }
@@ -228,8 +226,8 @@ namespace Server.Engines.CityLoyalty
 
         private class FillFromPackEntry : ContextMenuEntry
         {
-            public TradeOrderCrate Crate { get; private set; }
-            public Mobile Player { get; private set; }
+            public TradeOrderCrate Crate { get; }
+            public Mobile Player { get; }
 
             public FillFromPackEntry(TradeOrderCrate crate, Mobile player) : base(1154908, 3) // Fill from pack
             {
@@ -256,8 +254,8 @@ namespace Server.Engines.CityLoyalty
 
         private class CancelOrderEntry : ContextMenuEntry
         {
-            public TradeOrderCrate Crate { get; private set; }
-            public Mobile Player { get; private set; }
+            public TradeOrderCrate Crate { get; }
+            public Mobile Player { get; }
 
             public CancelOrderEntry(TradeOrderCrate crate, Mobile player) : base(1151727, 3) // cancel trade order
             {
@@ -323,7 +321,7 @@ namespace Server.Engines.CityLoyalty
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int v = reader.ReadInt();
+            reader.ReadInt();
 
             Owner = reader.ReadMobile();
             Expires = reader.ReadDateTime();
@@ -334,8 +332,8 @@ namespace Server.Engines.CityLoyalty
 
     public class CancelTradeOrderGump : Gump
     {
-        public TradeOrderCrate Crate { get; private set; }
-        public Mobile Player { get; private set; }
+        public TradeOrderCrate Crate { get; }
+        public Mobile Player { get; }
 
         public CancelTradeOrderGump(TradeOrderCrate crate, Mobile player)
             : base(100, 100)
