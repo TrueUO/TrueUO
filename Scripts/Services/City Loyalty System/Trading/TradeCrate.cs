@@ -49,9 +49,10 @@ namespace Server.Engines.CityLoyalty
             Owner = from;
             Entry = entry;
 
+            Weight = 10.0;
+
             if (CityTradeSystem.KrampusEncounterActive)
-            {
-                Weight = 10.0;
+            {                
                 Hue = Utility.Random(100);
             }
 
@@ -177,15 +178,12 @@ namespace Server.Engines.CityLoyalty
 
         public override int GetTotal(TotalType type)
         {
+            int total = base.GetTotal(type);
+
             if (type == TotalType.Weight)
-            {
-                int weight = base.GetTotal(type);
+                total -= total * 75 / 100;
 
-                if (weight > 0)
-                    return (int)Math.Max(1, (base.GetTotal(type) * .25));
-            }
-
-            return base.GetTotal(type);
+            return total;
         }
 
         public override void UpdateTotal(Item sender, TotalType type, int delta)
