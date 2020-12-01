@@ -24,7 +24,7 @@ namespace Server.Engines.CityLoyalty
         [CommandProperty(AccessLevel.GameMaster)]
         public CityPetDonation DonationPost { get; set; }
 
-        public static Dictionary<Mobile, ExpireTimer> List = new Dictionary<Mobile, ExpireTimer>();
+        public static readonly Dictionary<Mobile, ExpireTimer> List = new Dictionary<Mobile, ExpireTimer>();
 
         public override bool IsInvulnerable => true;
 
@@ -89,8 +89,8 @@ namespace Server.Engines.CityLoyalty
 
         private class TradeOrderEntry : ContextMenuEntry
         {
-            public TradeMinister Minister { get; private set; }
-            public Mobile Player { get; private set; }
+            public TradeMinister Minister { get; }
+            public Mobile Player { get; }
 
             public TradeOrderEntry(Mobile player, TradeMinister minister) : base(1114453, 5) // Get Trade Order
             {
@@ -116,8 +116,8 @@ namespace Server.Engines.CityLoyalty
 
         private class TurnInEntry : ContextMenuEntry
         {
-            public TradeMinister Minister { get; private set; }
-            public Mobile Player { get; private set; }
+            public TradeMinister Minister { get; }
+            public Mobile Player { get; }
 
             public TurnInEntry(Mobile player, TradeMinister minister) : base(1151729, 3) // Turn in a trade order
             {
@@ -138,7 +138,7 @@ namespace Server.Engines.CityLoyalty
 
             private class InternalTarget : Target
             {
-                public TradeMinister Minister { get; private set; }
+                public TradeMinister Minister { get; }
 
                 public InternalTarget(TradeMinister minister) : base(-1, false, TargetFlags.None)
                 {
@@ -204,14 +204,12 @@ namespace Server.Engines.CityLoyalty
                     case 1: return new RewardSign();
                 }
             }
-            else
+
+            switch (Utility.Random(2))
             {
-                switch (Utility.Random(2))
-                {
-                    default:
-                    case 1: return RandomResource(entry);
-                    case 2: return ScrollOfTranscendence.CreateRandom(1, 10);
-                }
+                default:
+                case 1: return RandomResource(entry);
+                case 2: return ScrollOfTranscendence.CreateRandom(1, 10);
             }
         }
 
@@ -285,8 +283,8 @@ namespace Server.Engines.CityLoyalty
 
         public class InternalTradeOrderGump : Gump
         {
-            public TradeMinister Minister { get; private set; }
-            public PlayerMobile User { get; set; }
+            public TradeMinister Minister { get; }
+            public PlayerMobile User { get; }
 
             public InternalTradeOrderGump(PlayerMobile user, TradeMinister minister)
                 : base(100, 100)
