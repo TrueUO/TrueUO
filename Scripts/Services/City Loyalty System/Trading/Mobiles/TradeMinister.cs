@@ -16,7 +16,7 @@ namespace Server.Engines.CityLoyalty
         public City City { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public CityLoyaltySystem CitySystem { get { return CityLoyaltySystem.GetCityInstance(City); } set { } }
+        public CityLoyaltySystem CitySystem => CityLoyaltySystem.GetCityInstance(City);
 
         [CommandProperty(AccessLevel.GameMaster)]
         public CityItemDonation DonationCrate { get; set; }
@@ -24,7 +24,7 @@ namespace Server.Engines.CityLoyalty
         [CommandProperty(AccessLevel.GameMaster)]
         public CityPetDonation DonationPost { get; set; }
 
-        public static readonly Dictionary<Mobile, ExpireTimer> List = new Dictionary<Mobile, ExpireTimer>();
+        private static readonly Dictionary<Mobile, ExpireTimer> List = new Dictionary<Mobile, ExpireTimer>();
 
         public override bool IsInvulnerable => true;
 
