@@ -24,9 +24,9 @@ namespace Server.Engines.CityLoyalty
         [CommandProperty(AccessLevel.GameMaster)]
         public CityPetDonation DonationPost { get; set; }
 
-        private static readonly Dictionary<Mobile, ExpireTimer> List = new Dictionary<Mobile, ExpireTimer>();
-
         public override bool IsInvulnerable => true;
+
+        private static readonly Dictionary<Mobile, ExpireTimer> List = new Dictionary<Mobile, ExpireTimer>();
 
         [Constructable]
         public TradeMinister(City city) : base(AIType.AI_Vendor, FightMode.None, 10, 1, .4, .2)
