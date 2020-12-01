@@ -72,7 +72,7 @@ namespace Server.Items
         /// <summary>
         ///     Was the owner a murderer when he died?
         /// </summary>
-        Murderer = 0x00000200,
+        Murderer = 0x00000200
     }
 
     public class Corpse : Container, ICarvable
@@ -108,7 +108,7 @@ namespace Server.Items
         public static readonly TimeSpan InstancedCorpseTime = TimeSpan.FromMinutes(3.0);
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public virtual bool InstancedCorpse => (DateTime.UtcNow < (TimeOfDeath + InstancedCorpseTime));
+        public virtual bool InstancedCorpse => DateTime.UtcNow < (TimeOfDeath + InstancedCorpseTime);
 
         private Dictionary<Item, InstancedItemInfo> m_InstancedItems;
 
@@ -157,14 +157,9 @@ namespace Server.Items
                 return true;
             }
 
-            if (m_InstancedItems != null)
+            if (m_InstancedItems != null && m_InstancedItems.TryGetValue(child, out InstancedItemInfo info) && (InstancedCorpse || info.Perpetual))
             {
-                InstancedItemInfo info;
-
-                if (m_InstancedItems.TryGetValue(child, out info) && (InstancedCorpse || info.Perpetual))
-                {
-                    return info.IsOwner(m); //IsOwner checks Party stuff.
-                }
+                return info.IsOwner(m); //IsOwner checks Party stuff
             }
 
             return true;
@@ -246,10 +241,10 @@ namespace Server.Items
 
                 if (item.Amount >= attackers.Count)
                 {
-                    int amountPerAttacker = (item.Amount / attackers.Count);
-                    int remainder = (item.Amount % attackers.Count);
+                    int amountPerAttacker = item.Amount / attackers.Count;
+                    int remainder = item.Amount % attackers.Count;
 
-                    for (int j = 0; j < ((remainder == 0) ? attackers.Count - 1 : attackers.Count); j++)
+                    for (int j = 0; j < (remainder == 0 ? attackers.Count - 1 : attackers.Count); j++)
                     {
                         Item splitItem = Mobile.LiftItemDupe(item, item.Amount - amountPerAttacker);
                         //LiftItemDupe automagically adds it as a child item to the corpse
@@ -428,14 +423,9 @@ namespace Server.Items
 
         public static string GetCorpseName(Mobile m)
         {
-            if (m is BaseCreature)
+            if (m is BaseCreature bc && bc.CorpseNameOverride != null)
             {
-                BaseCreature bc = (BaseCreature)m;
-
-                if (bc.CorpseNameOverride != null)
-                {
-                    return bc.CorpseNameOverride;
-                }
+                return bc.CorpseNameOverride;
             }
 
             Type t = m.GetType();
@@ -444,7 +434,7 @@ namespace Server.Items
 
             if (attrs.Length > 0)
             {
-                CorpseNameAttribute attr = attrs[0] as CorpseNameAttribute;
+                var attr = attrs[0] as CorpseNameAttribute;
 
                 if (attr != null)
                 {
@@ -493,9 +483,7 @@ namespace Server.Items
             }
             else
             {
-                PlayerMobile pm = owner as PlayerMobile;
-
-                if (pm != null)
+                if (owner is PlayerMobile pm)
                 {
                     c.RestoreEquip = pm.EquipSnapshot;
                 }
@@ -575,7 +563,7 @@ namespace Server.Items
                 if ((DateTime.UtcNow - info.LastCombatTime) < lastTime)
                 {
                     m_Killer = info.Attacker;
-                    lastTime = (DateTime.UtcNow - info.LastCombatTime);
+                    lastTime = DateTime.UtcNow - info.LastCombatTime;
                 }
 
                 if (bc == null && !info.CriminalAggression)
@@ -588,10 +576,10 @@ namespace Server.Items
             {
                 AggressorInfo info = owner.Aggressed[i];
 
-                if ((DateTime.UtcNow - info.LastCombatTime) < lastTime)
+                if (DateTime.UtcNow - info.LastCombatTime < lastTime)
                 {
                     m_Killer = info.Defender;
-                    lastTime = (DateTime.UtcNow - info.LastCombatTime);
+                    lastTime = DateTime.UtcNow - info.LastCombatTime;
                 }
 
                 if (bc == null)
@@ -639,12 +627,12 @@ namespace Server.Items
 
         public bool GetFlag(CorpseFlag flag)
         {
-            return ((m_Flags & flag) != 0);
+            return (m_Flags & flag) != 0;
         }
 
         public void SetFlag(CorpseFlag flag, bool on)
         {
-            m_Flags = (on ? m_Flags | flag : m_Flags & ~flag);
+            m_Flags = on ? m_Flags | flag : m_Flags & ~flag;
         }
 
         public override void Serialize(GenericWriter writer)
@@ -667,7 +655,7 @@ namespace Server.Items
 
             writer.WriteDeltaTime(TimeOfDeath);
 
-            List<KeyValuePair<Item, Point3D>> list = (m_RestoreTable == null ? null : new List<KeyValuePair<Item, Point3D>>(m_RestoreTable));
+            List<KeyValuePair<Item, Point3D>> list = m_RestoreTable == null ? null : new List<KeyValuePair<Item, Point3D>>(m_RestoreTable);
             int count = list?.Count ?? 0;
 
             writer.Write(count);
@@ -831,7 +819,7 @@ namespace Server.Items
                 }
             }
 
-            return (NotorietyHandlers.CorpseNotoriety(from, this) == Notoriety.Innocent);
+            return NotorietyHandlers.CorpseNotoriety(from, this) == Notoriety.Innocent;
         }
 
         public override bool CheckItemUse(Mobile from, Item item)
@@ -843,7 +831,7 @@ namespace Server.Items
 
             if (item != this)
             {
-                return CanLoot(from, item);
+                return CanLoot(from);
             }
 
             return true;
@@ -856,7 +844,7 @@ namespace Server.Items
                 return false;
             }
 
-            bool canLoot = CanLoot(from, item);
+            bool canLoot = CanLoot(from);
 
             if (m_HasLooted == null)
                 m_HasLooted = new List<Item>();
@@ -918,9 +906,7 @@ namespace Server.Items
 
             public override void OnClick()
             {
-                Corpse corpse = Owner.Target as Corpse;
-
-                if (corpse != null && Owner.From.CheckAlive())
+                if (Owner.Target is Corpse corpse && Owner.From.CheckAlive())
                 {
                     corpse.Open(Owner.From, false);
                 }
@@ -979,7 +965,7 @@ namespace Server.Items
             }
         }
 
-        public bool CanLoot(Mobile from, Item item)
+        public bool CanLoot(Mobile from)
         {
             if (!IsCriminalAction(from))
             {
@@ -996,9 +982,9 @@ namespace Server.Items
             return true;
         }
 
-        public bool CheckLoot(Mobile from, Item item)
+        public bool CheckLoot(Mobile from)
         {
-            if (!CanLoot(from, item))
+            if (!CanLoot(from))
             {
                 if (m_Owner == null || !m_Owner.Player)
                 {
@@ -1032,7 +1018,7 @@ namespace Server.Items
             if (from.IsStaff() || from.InRange(GetWorldLocation(), 2))
             {
                 #region Self Looting
-                bool selfLoot = (checkSelfLoot && (from == m_Owner));
+                bool selfLoot = checkSelfLoot && from == m_Owner;
 
                 if (selfLoot)
                 {
@@ -1062,12 +1048,12 @@ namespace Server.Items
                         Item item = items[i];
                         Point3D loc = item.Location;
 
-                        if ((item.Layer == Layer.Hair || item.Layer == Layer.FacialHair) || !item.Movable)
+                        if (item.Layer == Layer.Hair || item.Layer == Layer.FacialHair || !item.Movable)
                         {
                             continue;
                         }
 
-                        DeathRobe robe = from.FindItemOnLayer(Layer.OuterTorso) as DeathRobe;
+                        var robe = from.FindItemOnLayer(Layer.OuterTorso) as DeathRobe;
 
                         if (robe != null)
                         {
@@ -1078,7 +1064,7 @@ namespace Server.Items
                         {
                             gathered = true;
                         }
-                        else if (pack != null && pack.CheckHold(from, item, false, true))
+                        else if (pack != null && pack.CheckHold(from, item, false, true) && m_RestoreTable.ContainsKey(item))
                         {
                             item.Location = loc;
                             pack.AddItem(item);
@@ -1117,21 +1103,20 @@ namespace Server.Items
                 }
                 #endregion
 
-                if (!CheckLoot(from, null))
+                if (!CheckLoot(from))
                 {
                     return;
                 }
 
                 #region Quests
-                PlayerMobile player = from as PlayerMobile;
 
-                if (player != null)
+                if (from is PlayerMobile player)
                 {
                     QuestSystem qs = player.Quest;
 
                     if (qs is TheSummoningQuest)
                     {
-                        VanquishDaemonObjective obj = qs.FindObjective(typeof(VanquishDaemonObjective)) as VanquishDaemonObjective;
+                        var obj = qs.FindObjective(typeof(VanquishDaemonObjective)) as VanquishDaemonObjective;
 
                         if (obj != null && obj.Completed && obj.CorpseWithSkull == this)
                         {
@@ -1256,9 +1241,9 @@ namespace Server.Items
                     from.CriminalAction(true);
                 }
             }
-            else if (dead is BaseCreature)
+            else if (dead is BaseCreature creature)
             {
-                ((BaseCreature)dead).OnCarve(from, this, item);
+                creature.OnCarve(from, this, item);
             }
             else
             {
