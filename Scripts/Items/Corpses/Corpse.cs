@@ -159,9 +159,7 @@ namespace Server.Items
 
             if (m_InstancedItems != null)
             {
-                InstancedItemInfo info;
-
-                if (m_InstancedItems.TryGetValue(child, out info) && (InstancedCorpse || info.Perpetual))
+                if (m_InstancedItems.TryGetValue(child, out InstancedItemInfo info) && (InstancedCorpse || info.Perpetual))
                 {
                     return info.IsOwner(m); //IsOwner checks Party stuff.
                 }
@@ -428,10 +426,8 @@ namespace Server.Items
 
         public static string GetCorpseName(Mobile m)
         {
-            if (m is BaseCreature)
+            if (m is BaseCreature bc)
             {
-                BaseCreature bc = (BaseCreature)m;
-
                 if (bc.CorpseNameOverride != null)
                 {
                     return bc.CorpseNameOverride;
@@ -444,7 +440,7 @@ namespace Server.Items
 
             if (attrs.Length > 0)
             {
-                CorpseNameAttribute attr = attrs[0] as CorpseNameAttribute;
+                var attr = attrs[0] as CorpseNameAttribute;
 
                 if (attr != null)
                 {
@@ -493,9 +489,7 @@ namespace Server.Items
             }
             else
             {
-                PlayerMobile pm = owner as PlayerMobile;
-
-                if (pm != null)
+                if (owner is PlayerMobile pm)
                 {
                     c.RestoreEquip = pm.EquipSnapshot;
                 }
@@ -918,9 +912,7 @@ namespace Server.Items
 
             public override void OnClick()
             {
-                Corpse corpse = Owner.Target as Corpse;
-
-                if (corpse != null && Owner.From.CheckAlive())
+                if (Owner.Target is Corpse corpse && Owner.From.CheckAlive())
                 {
                     corpse.Open(Owner.From, false);
                 }
@@ -1062,12 +1054,12 @@ namespace Server.Items
                         Item item = items[i];
                         Point3D loc = item.Location;
 
-                        if ((item.Layer == Layer.Hair || item.Layer == Layer.FacialHair) || !item.Movable)
+                        if (item.Layer == Layer.Hair || item.Layer == Layer.FacialHair || !item.Movable)
                         {
                             continue;
                         }
 
-                        DeathRobe robe = from.FindItemOnLayer(Layer.OuterTorso) as DeathRobe;
+                        var robe = from.FindItemOnLayer(Layer.OuterTorso) as DeathRobe;
 
                         if (robe != null)
                         {
@@ -1078,7 +1070,7 @@ namespace Server.Items
                         {
                             gathered = true;
                         }
-                        else if (pack != null && pack.CheckHold(from, item, false, true))
+                        else if (pack != null && pack.CheckHold(from, item, false, true) && m_RestoreTable.ContainsKey(item))
                         {
                             item.Location = loc;
                             pack.AddItem(item);
@@ -1123,15 +1115,14 @@ namespace Server.Items
                 }
 
                 #region Quests
-                PlayerMobile player = from as PlayerMobile;
 
-                if (player != null)
+                if (from is PlayerMobile player)
                 {
                     QuestSystem qs = player.Quest;
 
                     if (qs is TheSummoningQuest)
                     {
-                        VanquishDaemonObjective obj = qs.FindObjective(typeof(VanquishDaemonObjective)) as VanquishDaemonObjective;
+                        var obj = qs.FindObjective(typeof(VanquishDaemonObjective)) as VanquishDaemonObjective;
 
                         if (obj != null && obj.Completed && obj.CorpseWithSkull == this)
                         {
@@ -1256,9 +1247,9 @@ namespace Server.Items
                     from.CriminalAction(true);
                 }
             }
-            else if (dead is BaseCreature)
+            else if (dead is BaseCreature creature)
             {
-                ((BaseCreature)dead).OnCarve(from, this, item);
+                creature.OnCarve(from, this, item);
             }
             else
             {

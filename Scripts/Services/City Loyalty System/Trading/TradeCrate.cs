@@ -188,6 +188,35 @@ namespace Server.Engines.CityLoyalty
             return base.GetTotal(type);
         }
 
+        public override void UpdateTotal(Item sender, TotalType type, int delta)
+        {
+            InvalidateProperties();
+
+            base.UpdateTotal(sender, type, delta);
+        }
+
+        public override void AddItem(Item dropped)
+        {
+            base.AddItem(dropped);
+
+            InvalidateWeight();
+        }
+
+        public override void RemoveItem(Item dropped)
+        {
+            base.RemoveItem(dropped);
+
+            InvalidateWeight();
+        }
+
+        public void InvalidateWeight()
+        {
+            if (RootParent is Mobile m)
+            {
+                m.UpdateTotals();
+            }
+        }
+
         public override void GetContextMenuEntries(Mobile from, List<ContextMenuEntry> list)
         {
             base.GetContextMenuEntries(from, list);
