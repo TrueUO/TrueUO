@@ -327,13 +327,16 @@ namespace Server.Items
         public bool Devoured => (m_Devourer != null);
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool Carved { get { return GetFlag(CorpseFlag.Carved); } set { SetFlag(CorpseFlag.Carved, value); } }
+        public bool Carved { get => GetFlag(CorpseFlag.Carved); set => SetFlag(CorpseFlag.Carved, value);
+        }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool VisitedByTaxidermist { get { return GetFlag(CorpseFlag.VisitedByTaxidermist); } set { SetFlag(CorpseFlag.VisitedByTaxidermist, value); } }
+        public bool VisitedByTaxidermist { get => GetFlag(CorpseFlag.VisitedByTaxidermist); set => SetFlag(CorpseFlag.VisitedByTaxidermist, value);
+        }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool Channeled { get { return GetFlag(CorpseFlag.Channeled); } set { SetFlag(CorpseFlag.Channeled, value); } }
+        public bool Channeled { get => GetFlag(CorpseFlag.Channeled); set => SetFlag(CorpseFlag.Channeled, value);
+        }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public bool Animated { get { return GetFlag(CorpseFlag.Animated); } set { SetFlag(CorpseFlag.Animated, value); } }
@@ -434,9 +437,7 @@ namespace Server.Items
 
             if (attrs.Length > 0)
             {
-                var attr = attrs[0] as CorpseNameAttribute;
-
-                if (attr != null)
+                if (attrs[0] is CorpseNameAttribute attr)
                 {
                     return attr.Name;
                 }
@@ -1053,9 +1054,7 @@ namespace Server.Items
                             continue;
                         }
 
-                        var robe = from.FindItemOnLayer(Layer.OuterTorso) as DeathRobe;
-
-                        if (robe != null)
+                        if (from.FindItemOnLayer(Layer.OuterTorso) is DeathRobe robe)
                         {
                             robe.Delete();
                         }
@@ -1064,7 +1063,7 @@ namespace Server.Items
                         {
                             gathered = true;
                         }
-                        else if (pack != null && pack.CheckHold(from, item, false, true) && m_RestoreTable.ContainsKey(item))
+                        else if (m_RestoreTable != null && pack != null && pack.CheckHold(from, item, false, true) && m_RestoreTable.ContainsKey(item))
                         {
                             item.Location = loc;
                             pack.AddItem(item);
@@ -1109,25 +1108,21 @@ namespace Server.Items
                 }
 
                 #region Quests
-
                 if (from is PlayerMobile player)
                 {
                     QuestSystem qs = player.Quest;
 
                     if (qs is TheSummoningQuest)
                     {
-                        var obj = qs.FindObjective(typeof(VanquishDaemonObjective)) as VanquishDaemonObjective;
-
-                        if (obj != null && obj.Completed && obj.CorpseWithSkull == this)
+                        if (qs.FindObjective(typeof(VanquishDaemonObjective)) is VanquishDaemonObjective obj && obj.Completed && obj.CorpseWithSkull == this)
                         {
                             GoldenSkull sk = new GoldenSkull();
 
                             if (player.PlaceInBackpack(sk))
                             {
                                 obj.CorpseWithSkull = null;
-                                player.SendLocalizedMessage(1050022);
-                                // For your valor in combating the devourer, you have been awarded a golden skull.
                                 qs.Complete();
+                                player.SendLocalizedMessage(1050022); // For your valor in combating the devourer, you have been awarded a golden skull.
                             }
                             else
                             {
