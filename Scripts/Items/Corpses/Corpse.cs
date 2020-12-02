@@ -108,7 +108,7 @@ namespace Server.Items
         public static readonly TimeSpan InstancedCorpseTime = TimeSpan.FromMinutes(3.0);
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public virtual bool InstancedCorpse => DateTime.UtcNow < (TimeOfDeath + InstancedCorpseTime);
+        public virtual bool InstancedCorpse => DateTime.UtcNow < TimeOfDeath + InstancedCorpseTime;
 
         private Dictionary<Item, InstancedItemInfo> m_InstancedItems;
 
@@ -146,7 +146,7 @@ namespace Server.Items
 
                 Party myParty = Party.Get(m_Mobile);
 
-                return (myParty != null && myParty == Party.Get(m));
+                return myParty != null && myParty == Party.Get(m);
             }
         }
 
@@ -324,25 +324,31 @@ namespace Server.Items
         public bool IsBones => GetFlag(CorpseFlag.IsBones);
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool Devoured => (m_Devourer != null);
+        public bool Devoured => m_Devourer != null;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool Carved { get { return GetFlag(CorpseFlag.Carved); } set { SetFlag(CorpseFlag.Carved, value); } }
+        public bool Carved { get => GetFlag(CorpseFlag.Carved); set => SetFlag(CorpseFlag.Carved, value);
+        }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool VisitedByTaxidermist { get { return GetFlag(CorpseFlag.VisitedByTaxidermist); } set { SetFlag(CorpseFlag.VisitedByTaxidermist, value); } }
+        public bool VisitedByTaxidermist { get => GetFlag(CorpseFlag.VisitedByTaxidermist); set => SetFlag(CorpseFlag.VisitedByTaxidermist, value);
+        }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool Channeled { get { return GetFlag(CorpseFlag.Channeled); } set { SetFlag(CorpseFlag.Channeled, value); } }
+        public bool Channeled { get => GetFlag(CorpseFlag.Channeled); set => SetFlag(CorpseFlag.Channeled, value);
+        }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool Animated { get { return GetFlag(CorpseFlag.Animated); } set { SetFlag(CorpseFlag.Animated, value); } }
+        public bool Animated { get => GetFlag(CorpseFlag.Animated); set => SetFlag(CorpseFlag.Animated, value);
+        }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool SelfLooted { get { return GetFlag(CorpseFlag.SelfLooted); } set { SetFlag(CorpseFlag.SelfLooted, value); } }
+        public bool SelfLooted { get => GetFlag(CorpseFlag.SelfLooted); set => SetFlag(CorpseFlag.SelfLooted, value);
+        }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool LootCriminal { get { return GetFlag(CorpseFlag.LootCriminal); } set { SetFlag(CorpseFlag.LootCriminal, value); } }
+        public bool LootCriminal { get => GetFlag(CorpseFlag.LootCriminal); set => SetFlag(CorpseFlag.LootCriminal, value);
+        }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public AccessLevel AccessLevel => m_AccessLevel;
@@ -364,10 +370,12 @@ namespace Server.Items
         public int Kills { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool Criminal { get { return GetFlag(CorpseFlag.Criminal); } set { SetFlag(CorpseFlag.Criminal, value); } }
+        public bool Criminal { get => GetFlag(CorpseFlag.Criminal); set => SetFlag(CorpseFlag.Criminal, value);
+        }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool Murderer { get { return GetFlag(CorpseFlag.Murderer); } set { SetFlag(CorpseFlag.Murderer, value); } }
+        public bool Murderer { get => GetFlag(CorpseFlag.Murderer); set => SetFlag(CorpseFlag.Murderer, value);
+        }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public Mobile Owner => m_Owner;
@@ -432,14 +440,9 @@ namespace Server.Items
 
             object[] attrs = t.GetCustomAttributes(typeof(CorpseNameAttribute), true);
 
-            if (attrs.Length > 0)
+            if (attrs.Length > 0 && attrs[0] is CorpseNameAttribute attr)
             {
-                var attr = attrs[0] as CorpseNameAttribute;
-
-                if (attr != null)
-                {
-                    return attr.Name;
-                }
+                return attr.Name;
             }
 
             return null;
@@ -560,7 +563,7 @@ namespace Server.Items
             {
                 AggressorInfo info = owner.Aggressors[i];
 
-                if ((DateTime.UtcNow - info.LastCombatTime) < lastTime)
+                if (DateTime.UtcNow - info.LastCombatTime < lastTime)
                 {
                     m_Killer = info.Attacker;
                     lastTime = DateTime.UtcNow - info.LastCombatTime;
@@ -1053,9 +1056,7 @@ namespace Server.Items
                             continue;
                         }
 
-                        var robe = from.FindItemOnLayer(Layer.OuterTorso) as DeathRobe;
-
-                        if (robe != null)
+                        if (from.FindItemOnLayer(Layer.OuterTorso) is DeathRobe robe)
                         {
                             robe.Delete();
                         }
@@ -1064,7 +1065,7 @@ namespace Server.Items
                         {
                             gathered = true;
                         }
-                        else if (pack != null && pack.CheckHold(from, item, false, true) && m_RestoreTable.ContainsKey(item))
+                        else if (m_RestoreTable != null && pack != null && pack.CheckHold(from, item, false, true) && m_RestoreTable.ContainsKey(item))
                         {
                             item.Location = loc;
                             pack.AddItem(item);
@@ -1109,31 +1110,24 @@ namespace Server.Items
                 }
 
                 #region Quests
-
                 if (from is PlayerMobile player)
                 {
                     QuestSystem qs = player.Quest;
 
-                    if (qs is TheSummoningQuest)
+                    if (qs is TheSummoningQuest && qs.FindObjective(typeof(VanquishDaemonObjective)) is VanquishDaemonObjective obj && obj.Completed && obj.CorpseWithSkull == this)
                     {
-                        var obj = qs.FindObjective(typeof(VanquishDaemonObjective)) as VanquishDaemonObjective;
+                        GoldenSkull sk = new GoldenSkull();
 
-                        if (obj != null && obj.Completed && obj.CorpseWithSkull == this)
+                        if (player.PlaceInBackpack(sk))
                         {
-                            GoldenSkull sk = new GoldenSkull();
-
-                            if (player.PlaceInBackpack(sk))
-                            {
-                                obj.CorpseWithSkull = null;
-                                player.SendLocalizedMessage(1050022);
-                                // For your valor in combating the devourer, you have been awarded a golden skull.
-                                qs.Complete();
-                            }
-                            else
-                            {
-                                sk.Delete();
-                                player.SendLocalizedMessage(1050023); // You find a golden skull, but your backpack is too full to carry it.
-                            }
+                            obj.CorpseWithSkull = null;
+                            qs.Complete();
+                            player.SendLocalizedMessage(1050022); // For your valor in combating the devourer, you have been awarded a golden skull.
+                        }
+                        else
+                        {
+                            sk.Delete();
+                            player.SendLocalizedMessage(1050023); // You find a golden skull, but your backpack is too full to carry it.
                         }
                     }
                 }
