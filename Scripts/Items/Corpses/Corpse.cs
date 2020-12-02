@@ -440,12 +440,9 @@ namespace Server.Items
 
             object[] attrs = t.GetCustomAttributes(typeof(CorpseNameAttribute), true);
 
-            if (attrs.Length > 0)
+            if (attrs.Length > 0 && attrs[0] is CorpseNameAttribute attr)
             {
-                if (attrs[0] is CorpseNameAttribute attr)
-                {
-                    return attr.Name;
-                }
+                return attr.Name;
             }
 
             return null;
@@ -1117,23 +1114,20 @@ namespace Server.Items
                 {
                     QuestSystem qs = player.Quest;
 
-                    if (qs is TheSummoningQuest)
+                    if (qs is TheSummoningQuest && qs.FindObjective(typeof(VanquishDaemonObjective)) is VanquishDaemonObjective obj && obj.Completed && obj.CorpseWithSkull == this)
                     {
-                        if (qs.FindObjective(typeof(VanquishDaemonObjective)) is VanquishDaemonObjective obj && obj.Completed && obj.CorpseWithSkull == this)
-                        {
-                            GoldenSkull sk = new GoldenSkull();
+                        GoldenSkull sk = new GoldenSkull();
 
-                            if (player.PlaceInBackpack(sk))
-                            {
-                                obj.CorpseWithSkull = null;
-                                qs.Complete();
-                                player.SendLocalizedMessage(1050022); // For your valor in combating the devourer, you have been awarded a golden skull.
-                            }
-                            else
-                            {
-                                sk.Delete();
-                                player.SendLocalizedMessage(1050023); // You find a golden skull, but your backpack is too full to carry it.
-                            }
+                        if (player.PlaceInBackpack(sk))
+                        {
+                            obj.CorpseWithSkull = null;
+                            qs.Complete();
+                            player.SendLocalizedMessage(1050022); // For your valor in combating the devourer, you have been awarded a golden skull.
+                        }
+                        else
+                        {
+                            sk.Delete();
+                            player.SendLocalizedMessage(1050023); // You find a golden skull, but your backpack is too full to carry it.
                         }
                     }
                 }
