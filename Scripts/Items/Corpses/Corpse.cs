@@ -108,7 +108,7 @@ namespace Server.Items
         public static readonly TimeSpan InstancedCorpseTime = TimeSpan.FromMinutes(3.0);
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public virtual bool InstancedCorpse => DateTime.UtcNow < (TimeOfDeath + InstancedCorpseTime);
+        public virtual bool InstancedCorpse => DateTime.UtcNow < TimeOfDeath + InstancedCorpseTime;
 
         private Dictionary<Item, InstancedItemInfo> m_InstancedItems;
 
@@ -146,7 +146,7 @@ namespace Server.Items
 
                 Party myParty = Party.Get(m_Mobile);
 
-                return (myParty != null && myParty == Party.Get(m));
+                return myParty != null && myParty == Party.Get(m);
             }
         }
 
@@ -324,7 +324,7 @@ namespace Server.Items
         public bool IsBones => GetFlag(CorpseFlag.IsBones);
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool Devoured => (m_Devourer != null);
+        public bool Devoured => m_Devourer != null;
 
         [CommandProperty(AccessLevel.GameMaster)]
         public bool Carved { get => GetFlag(CorpseFlag.Carved); set => SetFlag(CorpseFlag.Carved, value);
@@ -339,13 +339,16 @@ namespace Server.Items
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool Animated { get { return GetFlag(CorpseFlag.Animated); } set { SetFlag(CorpseFlag.Animated, value); } }
+        public bool Animated { get => GetFlag(CorpseFlag.Animated); set => SetFlag(CorpseFlag.Animated, value);
+        }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool SelfLooted { get { return GetFlag(CorpseFlag.SelfLooted); } set { SetFlag(CorpseFlag.SelfLooted, value); } }
+        public bool SelfLooted { get => GetFlag(CorpseFlag.SelfLooted); set => SetFlag(CorpseFlag.SelfLooted, value);
+        }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool LootCriminal { get { return GetFlag(CorpseFlag.LootCriminal); } set { SetFlag(CorpseFlag.LootCriminal, value); } }
+        public bool LootCriminal { get => GetFlag(CorpseFlag.LootCriminal); set => SetFlag(CorpseFlag.LootCriminal, value);
+        }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public AccessLevel AccessLevel => m_AccessLevel;
@@ -367,10 +370,12 @@ namespace Server.Items
         public int Kills { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool Criminal { get { return GetFlag(CorpseFlag.Criminal); } set { SetFlag(CorpseFlag.Criminal, value); } }
+        public bool Criminal { get => GetFlag(CorpseFlag.Criminal); set => SetFlag(CorpseFlag.Criminal, value);
+        }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool Murderer { get { return GetFlag(CorpseFlag.Murderer); } set { SetFlag(CorpseFlag.Murderer, value); } }
+        public bool Murderer { get => GetFlag(CorpseFlag.Murderer); set => SetFlag(CorpseFlag.Murderer, value);
+        }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public Mobile Owner => m_Owner;
@@ -561,7 +566,7 @@ namespace Server.Items
             {
                 AggressorInfo info = owner.Aggressors[i];
 
-                if ((DateTime.UtcNow - info.LastCombatTime) < lastTime)
+                if (DateTime.UtcNow - info.LastCombatTime < lastTime)
                 {
                     m_Killer = info.Attacker;
                     lastTime = DateTime.UtcNow - info.LastCombatTime;
