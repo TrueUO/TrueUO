@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Runtime;
 using System.Runtime.InteropServices;
@@ -90,7 +89,7 @@ namespace Server
 		public static bool HaltOnWarning { get; private set; }
 		public static bool VBdotNet { get; private set; }
 
-		public static List<string> DataDirectories { get; private set; }
+		public static List<string> DataDirectories { get; }
 
 		public static Assembly Assembly { get; set; }
 
@@ -315,7 +314,22 @@ namespace Server
 
 		public static float CyclesPerSecond => _CyclesPerSecond[(_CycleIndex - 1) % _CyclesPerSecond.Length];
 
-		public static float AverageCPS => _CyclesPerSecond.Take(_CycleIndex).Average();
+        public static float AverageCPS
+        {
+            get
+            {
+                float t = 0.0f;
+                int c = 0;
+
+                for( int i = 0; i < _CycleIndex && i < _CyclesPerSecond.Length; ++i )
+                {
+                    t += _CyclesPerSecond[i];
+                    ++c;
+                }
+
+                return (t / Math.Max( c, 1 ));
+            }
+        }
 
 		public static void Kill()
 		{
@@ -752,9 +766,9 @@ namespace Server
 			}
 		}
 
-		public static int GlobalUpdateRange { get; set; }
-		public static int GlobalMaxUpdateRange { get; set; }
-		public static int GlobalRadarRange { get; set; }
+		public static int GlobalUpdateRange { get; }
+		public static int GlobalMaxUpdateRange { get; }
+		public static int GlobalRadarRange { get; }
 
 		private static int m_ItemCount, m_MobileCount, m_CustomsCount;
 
@@ -861,7 +875,7 @@ namespace Server
 
 		private bool _NewLine;
 
-		public string FileName { get; private set; }
+		public string FileName { get; }
 
 		public FileLogger(string file)
 			: this(file, false)
