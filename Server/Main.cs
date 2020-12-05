@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
+
 using System.Reflection;
 using System.Runtime;
 using System.Runtime.InteropServices;
@@ -315,7 +315,22 @@ namespace Server
 
 		public static float CyclesPerSecond => _CyclesPerSecond[(_CycleIndex - 1) % _CyclesPerSecond.Length];
 
-		public static float AverageCPS => _CyclesPerSecond.Take(_CycleIndex).Average();
+        public static float AverageCPS
+        {
+            get
+            {
+                float t = 0.0f;
+                int c = 0;
+
+                for( int i = 0; i < _CycleIndex && i < _CyclesPerSecond.Length; ++i )
+                {
+                    t += _CyclesPerSecond[i];
+                    ++c;
+                }
+
+                return (t / Math.Max( c, 1 ));
+            }
+        }
 
 		public static void Kill()
 		{
