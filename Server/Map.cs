@@ -1594,7 +1594,7 @@ namespace Server
 			}
 		}
 
-		private class EntityEnumerator : IPooledEnumerator<IEntity>
+		public sealed class EntityEnumerator : IPooledEnumerator<IEntity>
 		{
 			private Map m_Map;
 			private Rectangle2D m_Bounds;
@@ -1659,10 +1659,12 @@ namespace Server
 
 			public IEntity Current => (IEntity)m_CurrentList[m_CurrentIndex]; 
 
-			object IEnumerator.Current => m_CurrentList[m_CurrentIndex]; 
+			object IEnumerator.Current => m_CurrentList[m_CurrentIndex];
 
-			void IDisposable.Dispose()
-			{ }
+            public void Dispose()
+            {
+                // Cleanup
+            }
 
 			public bool MoveNext()
 			{
@@ -1754,7 +1756,7 @@ namespace Server
 			}
 		}
 
-		private class ItemEnumerator : IPooledEnumerator<Item>
+		public sealed class ItemEnumerator : IPooledEnumerator<Item>
 		{
 			private Map m_Map;
 			private Rectangle2D m_Bounds;
@@ -1818,10 +1820,12 @@ namespace Server
 
 			public Item Current => m_CurrentList[m_CurrentIndex]; 
 
-			object IEnumerator.Current => m_CurrentList[m_CurrentIndex]; 
+			object IEnumerator.Current => m_CurrentList[m_CurrentIndex];
 
-			void IDisposable.Dispose()
-			{ }
+            public void Dispose()
+            {
+                // Cleanup
+            }
 
 			public bool MoveNext()
 			{
@@ -1850,13 +1854,13 @@ namespace Server
 					}
 					else
 					{
-						Item item = m_CurrentList[m_CurrentIndex];
+                        Item item = m_CurrentList[m_CurrentIndex];
 
-						if (!item.Deleted && item.Parent == null && m_Bounds.Contains(item.Location))
-						{
-							return true;
-						}
-					}
+                        if (!item.Deleted && item.Parent == null && m_Bounds.Contains(item.Location))
+                        {
+                            return true;
+                        }
+                    }
 				}
 			}
 
@@ -1876,7 +1880,7 @@ namespace Server
 			}
 		}
 
-		private class MobileEnumerator : IPooledEnumerator<Mobile>
+		public sealed class MobileEnumerator : IPooledEnumerator<Mobile>
 		{
 			private Map m_Map;
 			private Rectangle2D m_Bounds;
@@ -1940,10 +1944,12 @@ namespace Server
 
 			public Mobile Current => m_CurrentList[m_CurrentIndex]; 
 
-			object IEnumerator.Current => m_CurrentList[m_CurrentIndex]; 
+			object IEnumerator.Current => m_CurrentList[m_CurrentIndex];
 
-			void IDisposable.Dispose()
-			{ }
+            public void Dispose()
+            {
+                // Cleanup
+            }
 
 			public bool MoveNext()
 			{
@@ -1998,7 +2004,7 @@ namespace Server
 			}
 		}
 
-		private class MultiTileEnumerator : IPooledEnumerator<StaticTile[]>
+		public sealed class MultiTileEnumerator : IPooledEnumerator<StaticTile[]>
 		{
 			private List<BaseMulti> m_List;
 			private Point2D m_Location;
@@ -2040,10 +2046,12 @@ namespace Server
 
 			public StaticTile[] Current => m_Current; 
 
-			object IEnumerator.Current => m_Current; 
+			object IEnumerator.Current => m_Current;
 
-			void IDisposable.Dispose()
-			{ }
+            public void Dispose()
+            {
+                // Cleanup
+            }
 
 			public bool MoveNext()
 			{
