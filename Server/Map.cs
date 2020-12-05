@@ -129,12 +129,9 @@ namespace Server
 
 			int index;
 
-			if (int.TryParse(value, out index))
+			if (int.TryParse(value, out index) && index >= 0 && index < m_Maps.Length && m_Maps[index] != null)
 			{
-				if (index >= 0 && index < m_Maps.Length && m_Maps[index] != null)
-				{
-					return m_Maps[index];
-				}
+                return m_Maps[index];
 			}
 
 			throw new ArgumentException("Invalid map name");
@@ -1385,8 +1382,8 @@ namespace Server
 					return false;
 				}
 
-				void IDisposable.Dispose()
-				{ }
+                void IDisposable.Dispose()
+                { }
 			}
 		}
 
@@ -1461,10 +1458,7 @@ namespace Server
 
 			public void Dispose()
 			{
-				// Don't return disposed objects to the instance pool
-				//Free();
-
-				if (m_Enumerator != null)
+                if (m_Enumerator != null)
 				{
 					m_Enumerator.Free();
 					m_Enumerator = null;
