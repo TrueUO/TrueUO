@@ -1476,8 +1476,8 @@ namespace Server
 			private Rectangle2D m_Bounds;
 
 			private int m_xSector, m_ySector;
-			private int m_xSectorStart, m_ySectorStart;
-			private int m_xSectorEnd, m_ySectorEnd;
+            private int m_ySectorStart;
+            private int m_xSectorEnd, m_ySectorEnd;
 			private List<NetState> m_CurrentList;
 			private int m_CurrentIndex;
 
@@ -1580,6 +1580,8 @@ namespace Server
 
 			public void Reset()
 			{
+                int m_xSectorStart;
+
 				m_Map.Bound(m_Bounds.Start.m_X, m_Bounds.Start.m_Y, out m_xSectorStart, out m_ySectorStart);
 				m_Map.Bound(m_Bounds.End.m_X - 1, m_Bounds.End.m_Y - 1, out m_xSectorEnd, out m_ySectorEnd);
 
