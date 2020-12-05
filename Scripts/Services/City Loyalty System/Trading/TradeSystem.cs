@@ -500,9 +500,10 @@ namespace Server.Engines.CityLoyalty
                         }
                     }
 
-                    foreach (Skill sk in bc.Skills.Where(s => s.Base > 0))
+                    foreach (Skill sk in bc.Skills)
                     {
-                        sk.Base += sk.Base * (difficulty);
+                        if (sk.Base > 0.0)
+                            sk.Base += sk.Base * (difficulty);
                     }
 
                     bc.RawStr += (int)(bc.RawStr * difficulty);
