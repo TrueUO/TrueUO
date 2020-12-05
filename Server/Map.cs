@@ -1389,7 +1389,7 @@ namespace Server
             }
 		}
 
-		private class PooledEnumerable<T> : IPooledEnumerable<T>, IDisposable
+		public sealed class PooledEnumerable<T> : IPooledEnumerable<T>, IDisposable
 		{
 			private IPooledEnumerator<T> m_Enumerator;
 
