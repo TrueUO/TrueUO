@@ -526,7 +526,7 @@ namespace Server
     ///     Base class representing players, npcs, and creatures.
     /// </summary>
     [System.Runtime.InteropServices.ComVisible(true)]
-    public class Mobile : IEntity, IHued, IComparable<Mobile>, ISerializable, ISpawnable, IDamageable
+    public class Mobile : IHued, IComparable<Mobile>, ISerializable, ISpawnable, IDamageable
     {
         #region CompareTo(...)
         public int CompareTo(IEntity other)
@@ -824,7 +824,7 @@ namespace Server
         private int[] m_Resistances;
 
         protected List<string> m_SlayerVulnerabilities = new List<string>();
-        protected bool m_SpecialSlayerMechanics = false;
+        protected bool m_SpecialSlayerMechanics; // false
 
         public List<string> SlayerVulnerabilities => m_SlayerVulnerabilities;
 
@@ -877,7 +877,7 @@ namespace Server
         {
             if (m_Resistances == null)
             {
-                m_Resistances = new int[5] { int.MinValue, int.MinValue, int.MinValue, int.MinValue, int.MinValue };
+                m_Resistances = new[] { int.MinValue, int.MinValue, int.MinValue, int.MinValue, int.MinValue };
             }
 
             bool delta = false;
@@ -902,7 +902,7 @@ namespace Server
         {
             if (m_Resistances == null)
             {
-                m_Resistances = new int[5] { int.MinValue, int.MinValue, int.MinValue, int.MinValue, int.MinValue };
+                m_Resistances = new[] { int.MinValue, int.MinValue, int.MinValue, int.MinValue, int.MinValue };
             }
 
             int v = (int)type;
@@ -963,7 +963,7 @@ namespace Server
         {
             if (m_Resistances == null)
             {
-                m_Resistances = new int[5] { int.MinValue, int.MinValue, int.MinValue, int.MinValue, int.MinValue };
+                m_Resistances = new[] { int.MinValue, int.MinValue, int.MinValue, int.MinValue, int.MinValue };
             }
 
             for (int i = 0; i < m_Resistances.Length; ++i)
@@ -1098,7 +1098,7 @@ namespace Server
 
             string suffix = "";
 
-            if (PropertyTitle && Title != null && Title.Length > 0)
+            if (PropertyTitle && !string.IsNullOrEmpty(Title))
             {
                 suffix = Title;
             }
@@ -1127,7 +1127,7 @@ namespace Server
         public List<Mobile> Stabled => m_Stabled;
 
         [CommandProperty(AccessLevel.Counselor, AccessLevel.GameMaster)]
-        public VirtueInfo Virtues { get => m_Virtues; set { } }
+        public VirtueInfo Virtues { get => m_Virtues; set => m_Virtues = value; }
 
         public object Party { get => m_Party; set => m_Party = value; }
         public List<SkillMod> SkillMods => m_SkillMods;
@@ -2857,7 +2857,7 @@ namespace Server
             return true;
         }
 
-        private static readonly Packet[][] m_MovingPacketCache = new Packet[2][] { new Packet[8], new Packet[8] };
+        private static readonly Packet[][] m_MovingPacketCache = new Packet[][] { new Packet[8], new Packet[8] };
 
         private bool m_Pushing;
         private bool m_IgnoreMobiles;
@@ -4022,7 +4022,7 @@ namespace Server
 		}
 		#endregion
 
-		private static char[] m_GhostChars = new char[2] { 'o', 'O' };
+		private static char[] m_GhostChars = new char[] { 'o', 'O' };
 
 		public static char[] GhostChars { get => m_GhostChars; set => m_GhostChars = value; }
 
@@ -5143,13 +5143,13 @@ namespace Server
 		public DateTime LastKilled { get => m_LastKilled; set => m_LastKilled = value; }
 
 		/// <summary>
-		///     Overridable. Virtual event invoked when the Mobile is <see cref="Damage">damaged</see>. It is called before
+		///     Overridable. Virtual event invoked when the Mobile is <see cref="OnDamage">damaged</see>. It is called before
 		///     <see
 		///         cref="Hits">
 		///         hit points
 		///     </see>
 		///     are lowered or the Mobile is <see cref="Kill">killed</see>.
-		///     <seealso cref="Damage" />
+		///     <seealso cref="OnDamage" />
 		///     <seealso cref="Hits" />
 		///     <seealso cref="Kill" />
 		/// </summary>
@@ -6289,16 +6289,16 @@ namespace Server
 					using (StreamWriter op = new StreamWriter("LayerConflict.log", true))
 					{
 						op.WriteLine("# {0}", DateTime.UtcNow);
-						op.WriteLine("Offending Mobile: {0} [{1}]", GetType().ToString(), this);
-						op.WriteLine("Offending Item: {0} [{1}]", item, item.GetType().ToString());
-						op.WriteLine("Equipped Item: {0} [{1}]", equipped, equipped.GetType().ToString());
+						op.WriteLine("Offending Mobile: {0} [{1}]", GetType(), this);
+						op.WriteLine("Offending Item: {0} [{1}]", item, item.GetType());
+						op.WriteLine("Equipped Item: {0} [{1}]", equipped, equipped.GetType());
 						op.WriteLine("Layer: {0}", item.Layer.ToString());
 						op.WriteLine();
 					}
 
-					Utility.WriteConsoleColor(ConsoleColor.Red, string.Format("Offending Mobile: {0} [{1}]", GetType().ToString(), this));
-					Utility.WriteConsoleColor(ConsoleColor.Red, string.Format("Offending Item: {0} [{1}]", item, item.GetType().ToString()));
-					Utility.WriteConsoleColor(ConsoleColor.Red, string.Format("Equipped Item: {0} [{1}]", equipped, equipped.GetType().ToString()));
+					Utility.WriteConsoleColor(ConsoleColor.Red, string.Format("Offending Mobile: {0} [{1}]", GetType(), this));
+					Utility.WriteConsoleColor(ConsoleColor.Red, string.Format("Offending Item: {0} [{1}]", item, item.GetType()));
+					Utility.WriteConsoleColor(ConsoleColor.Red, string.Format("Equipped Item: {0} [{1}]", equipped, equipped.GetType()));
 					Utility.WriteConsoleColor(ConsoleColor.Red, string.Format("Layer: {0}", item.Layer.ToString()));
 				}
 				catch (Exception e)
@@ -6556,7 +6556,7 @@ namespace Server
 		}
 
 		[CommandProperty(AccessLevel.Counselor)]
-		public Skills Skills { get => m_Skills; set { } }
+		public Skills Skills { get => m_Skills; set => m_Skills = value; }
 
 		[CommandProperty(AccessLevel.GameMaster)]
 		public bool IgnoreMobiles
@@ -7483,7 +7483,7 @@ namespace Server
 		}
 
 		/// <summary>
-		///     Overridable. Event invoked when the Mobile <see cref="DoHarmful">does a harmful action</see>.
+		///     Overridable. Event invoked when the Mobile <see cref="OnHarmfulAction">does a harmful action</see>.
 		/// </summary>
 		public virtual void OnHarmfulAction(IDamageable target, bool isCriminal)
 		{
@@ -8674,7 +8674,7 @@ namespace Server
 			{
 				BankBox box = item as BankBox;
 
-				if (box != null && IsPlayer() && (box.Owner != this || !box.Opened))
+				if (IsPlayer() && (box.Owner != this || !box.Opened))
 				{
 					return false;
 				}
@@ -10820,7 +10820,7 @@ namespace Server
 				sendFace = true;
 			}
 
-			Packet[][] cache = new Packet[2][] { new Packet[8], new Packet[8] };
+			Packet[][] cache = new Packet[][] { new Packet[8], new Packet[8] };
 
 			NetState ourState = m.m_NetState;
 
@@ -11304,7 +11304,7 @@ namespace Server
 		{
 			if (m_Map != null)
 			{
-				Packet p = null;
+				Packet p;
 
 				if (ascii)
 				{
@@ -11513,7 +11513,7 @@ namespace Server
 		{
 			if (m_Map != null)
 			{
-				Packet p = null;
+				Packet p;
 
 				if (ascii)
 				{
