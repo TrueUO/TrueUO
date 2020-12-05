@@ -1382,8 +1382,11 @@ namespace Server
 					return false;
 				}
 
-                void IDisposable.Dispose()
-                { }
+                public void Dispose()
+                {
+                    Dispose();
+                    GC.SuppressFinalize(this);
+                }
 			}
 		}
 
