@@ -1369,7 +1369,7 @@ namespace Server
 			public void Free()
 			{ }
 
-			private class InternalEnumerator<K> : IEnumerator<K>
+			public sealed class InternalEnumerator<K> : IEnumerator<K>
 			{
 				public void Reset()
 				{ }
@@ -1384,15 +1384,9 @@ namespace Server
 
                 public void Dispose()
                 {
-                    Dispose(true);
-                    GC.SuppressFinalize(this);
-                }
-
-                protected virtual void Dispose(bool disposing)
-                {
                     // Cleanup
                 }
-			}
+            }
 		}
 
 		private class PooledEnumerable<T> : IPooledEnumerable<T>, IDisposable
@@ -1476,7 +1470,7 @@ namespace Server
 		#endregion
 
 		#region Enumerators
-		private class ClientEnumerator : IPooledEnumerator<NetState>
+		public sealed class ClientEnumerator : IPooledEnumerator<NetState>
 		{
 			private Map m_Map;
 			private Rectangle2D m_Bounds;
@@ -1540,12 +1534,14 @@ namespace Server
 
 			public NetState Current => m_CurrentList[m_CurrentIndex]; 
 
-			object IEnumerator.Current => m_CurrentList[m_CurrentIndex]; 
+			object IEnumerator.Current => m_CurrentList[m_CurrentIndex];
 
-			void IDisposable.Dispose()
-			{ }
+            public void Dispose()
+            {
+                // Cleanup
+            }
 
-			public bool MoveNext()
+            public bool MoveNext()
 			{
 				while (true)
 				{
