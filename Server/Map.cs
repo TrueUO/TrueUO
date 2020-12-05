@@ -36,33 +36,7 @@ namespace Server
     [Parsable]
     public class Map : IComparable, IComparable<Map>
 	{
-		#region Compile-Time -> Run-Time Support
-#if Map_NewEnumerables || Map_AllUpdates
-		public static readonly bool NewEnumerables = true;
-#else
-		public static readonly bool NewEnumerables = false;
-#endif
-
-#if Map_UseMaxRange || Map_AllUpdates
-		public static readonly bool UseMaxRange = true;
-#else
-		public static readonly bool UseMaxRange = false;
-#endif
-
-#if Map_PoolFixColumn || Map_AllUpdates
-		public static readonly bool PoolFixColumn = true;
-#else
-		public static readonly bool PoolFixColumn = false;
-#endif
-
-#if Map_InternalProtection || Map_AllUpdates
-		public static readonly bool InternalProtection = true;
-#else
-		public static readonly bool InternalProtection = false;
-#endif
-		#endregion
-
-		public const int SectorSize = 16;
+        public const int SectorSize = 16;
 		public const int SectorShift = 4;
 		public static int SectorActiveRange = 2;
 
