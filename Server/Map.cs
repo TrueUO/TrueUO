@@ -536,13 +536,13 @@ namespace Server
 				}
 			}
 
-
 			if (impassable && avgZ > z && (z + height) > lowZ)
 				return false;
-			else if (!impassable && z == avgZ && !lt.Ignored)
-				hasSurface = true;
 
-			StaticTile[] staticTiles = Tiles.GetStaticTiles(x, y, true);
+            if (!impassable && z == avgZ && !lt.Ignored)
+                hasSurface = true;
+
+            StaticTile[] staticTiles = Tiles.GetStaticTiles(x, y, true);
 
 			for (int i = 0; i < staticTiles.Length; ++i)
 			{
@@ -565,10 +565,11 @@ namespace Server
 
 				if ((surface || impassable) && (staticTiles[i].Z + id.CalcHeight) > z && (z + height) > staticTiles[i].Z)
 					return false;
-				else if (surface && !impassable && z == (staticTiles[i].Z + id.CalcHeight))
-					hasSurface = true;
 
-			}
+                if (surface && !impassable && z == (staticTiles[i].Z + id.CalcHeight))
+                    hasSurface = true;
+
+            }
 
 			Sector sector = GetSector(x, y);
 			List<Item> items = sector.Items;
@@ -599,9 +600,10 @@ namespace Server
 
 					if ((surface || impassable || (checkBlocksFit && item.BlocksFit)) && (item.Z + id.CalcHeight) > z && (z + height) > item.Z)
 						return false;
-					else if (surface && !impassable && !item.Movable && z == (item.Z + id.CalcHeight))
-						hasSurface = true;
-				}
+
+                    if (surface && !impassable && !item.Movable && z == (item.Z + id.CalcHeight))
+                        hasSurface = true;
+                }
 			}
 
 			if (checkMobiles)
@@ -1043,8 +1045,8 @@ namespace Server
 		}
 
 		private Sector InternalGetSector(int x, int y)
-		{
-			if (x >= 0 && x < m_SectorsWidth && y >= 0 && y < m_SectorsHeight)
+        {
+            if (x >= 0 && x < m_SectorsWidth && y >= 0 && y < m_SectorsHeight)
 			{
 				Sector[] xSectors = m_Sectors[x];
 
@@ -1062,11 +1064,9 @@ namespace Server
 
 				return sec;
 			}
-			else
-			{
-				return m_InvalidSector;
-			}
-		}
+
+            return m_InvalidSector;
+        }
 		#endregion
 
 		public void ActivateSectors(int cx, int cy)
@@ -2104,14 +2104,14 @@ namespace Server
 		}
 		#endregion
 
-        public Point3D GetPoint(object o, bool eye)
+        public Point3D GetPoint(object o)
 		{
 			Point3D p;
 
 			if (o is Mobile)
 			{
 				p = ((Mobile)o).Location;
-				p.Z += 14; //eye ? 15 : 10;
+				p.Z += 14;
 			}
 			else if (o is Item)
 			{
@@ -2420,7 +2420,7 @@ namespace Server
 				return true;
 			}
 
-			return LineOfSight(GetPoint(from, true), GetPoint(dest, false));
+			return LineOfSight(GetPoint(from), GetPoint(dest));
 		}
 
 		public bool LineOfSight(Mobile from, Point3D target)
