@@ -609,11 +609,7 @@ namespace Server
 		#region Get*InRange/Bounds
 		public IPooledEnumerable<IEntity> GetObjectsInRange(Point3D p)
 		{
-#if Map_UseMaxRange || Map_AllUpdates
-			return GetObjectsInRange(p, Core.GlobalMaxUpdateRange);
-#else
-			return GetObjectsInRange(p, 18);
-#endif
+            return GetObjectsInRange(p, Core.GlobalMaxUpdateRange);
 		}
 
 		public IPooledEnumerable<IEntity> GetObjectsInRange(Point3D p, int range)
@@ -628,11 +624,7 @@ namespace Server
 
 		public IPooledEnumerable<NetState> GetClientsInRange(Point3D p)
 		{
-#if Map_UseMaxRange || Map_AllUpdates
-			return GetClientsInRange(p, Core.GlobalMaxUpdateRange);
-#else
-			return GetClientsInRange(p, 18);
-#endif
+            return GetClientsInRange(p, Core.GlobalMaxUpdateRange);
 		}
 
 		public IPooledEnumerable<NetState> GetClientsInRange(Point3D p, int range)
@@ -647,11 +639,7 @@ namespace Server
 
 		public IPooledEnumerable<Item> GetItemsInRange(Point3D p)
 		{
-#if Map_UseMaxRange || Map_AllUpdates
-			return GetItemsInRange(p, Core.GlobalMaxUpdateRange);
-#else
-			return GetItemsInRange(p, 18);
-#endif
+            return GetItemsInRange(p, Core.GlobalMaxUpdateRange);
 		}
 
 		public IPooledEnumerable<Item> GetItemsInRange(Point3D p, int range)
@@ -666,11 +654,7 @@ namespace Server
 
 		public IPooledEnumerable<Mobile> GetMobilesInRange(Point3D p)
 		{
-#if Map_UseMaxRange || Map_AllUpdates
-			return GetMobilesInRange(p, Core.GlobalMaxUpdateRange);
-#else
-			return GetMobilesInRange(p, 18);
-#endif
+            return GetMobilesInRange(p, Core.GlobalMaxUpdateRange);
 		}
 
 		public IPooledEnumerable<Mobile> GetMobilesInRange(Point3D p, int range)
