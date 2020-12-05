@@ -90,7 +90,7 @@ namespace Server
 		public static bool HaltOnWarning { get; private set; }
 		public static bool VBdotNet { get; private set; }
 
-		public static List<string> DataDirectories { get; private set; }
+		public static List<string> DataDirectories { get; }
 
 		public static Assembly Assembly { get; set; }
 
@@ -293,7 +293,7 @@ namespace Server
 
 		private static bool OnConsoleEvent(ConsoleEventType type)
 		{
-			if (World.Saving || (Service && type == ConsoleEventType.CTRL_LOGOFF_EVENT))
+			if (World.Saving || Service && type == ConsoleEventType.CTRL_LOGOFF_EVENT)
 			{
 				return true;
 			}
@@ -328,7 +328,7 @@ namespace Server
                     ++c;
                 }
 
-                return (t / Math.Max( c, 1 ));
+                return t / Math.Max( c, 1 );
             }
         }
 
@@ -767,9 +767,9 @@ namespace Server
 			}
 		}
 
-		public static int GlobalUpdateRange { get; set; }
-		public static int GlobalMaxUpdateRange { get; set; }
-		public static int GlobalRadarRange { get; set; }
+		public static int GlobalUpdateRange { get; }
+		public static int GlobalMaxUpdateRange { get; }
+		public static int GlobalRadarRange { get; }
 
 		private static int m_ItemCount, m_MobileCount, m_CustomsCount;
 
@@ -876,7 +876,7 @@ namespace Server
 
 		private bool _NewLine;
 
-		public string FileName { get; private set; }
+		public string FileName { get; }
 
 		public FileLogger(string file)
 			: this(file, false)
