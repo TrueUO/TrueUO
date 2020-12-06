@@ -184,17 +184,15 @@ namespace Server.Network
 		}
 
 		public static PacketHandler GetExtendedHandler(int packetID)
-		{
-			if (packetID >= 0 && packetID < 0x100)
+        {
+            if (packetID >= 0 && packetID < 0x100)
 			{
 				return m_ExtendedHandlersLow[packetID];
 			}
-			else
-			{
-				m_ExtendedHandlersHigh.TryGetValue(packetID, out PacketHandler handler);
-				return handler;
-			}
-		}
+
+            m_ExtendedHandlersHigh.TryGetValue(packetID, out PacketHandler handler);
+            return handler;
+        }
 
 		public static void RemoveExtendedHandler(int packetID)
 		{
@@ -221,17 +219,15 @@ namespace Server.Network
 		}
 
 		public static EncodedPacketHandler GetEncodedHandler(int packetID)
-		{
-			if (packetID >= 0 && packetID < 0x100)
+        {
+            if (packetID >= 0 && packetID < 0x100)
 			{
 				return m_EncodedHandlersLow[packetID];
 			}
-			else
-			{
-				m_EncodedHandlersHigh.TryGetValue(packetID, out EncodedPacketHandler handler);
-				return handler;
-			}
-		}
+
+            m_EncodedHandlersHigh.TryGetValue(packetID, out EncodedPacketHandler handler);
+            return handler;
+        }
 
 		public static void RemoveEncodedHandler(int packetID)
 		{
@@ -418,13 +414,14 @@ namespace Server.Network
 			{
 				return;
 			}
-			else if (vendor.Deleted || !Utility.RangeCheck(vendor.Location, state.Mobile.Location, 10))
-			{
-				state.Send(new EndVendorBuy(vendor));
-				return;
-			}
 
-			if (flag == 0x02)
+            if (vendor.Deleted || !Utility.RangeCheck(vendor.Location, state.Mobile.Location, 10))
+            {
+                state.Send(new EndVendorBuy(vendor));
+                return;
+            }
+
+            if (flag == 0x02)
 			{
 				msgSize -= 1 + 2 + 4 + 1;
 
@@ -468,13 +465,14 @@ namespace Server.Network
 			{
 				return;
 			}
-			else if (vendor.Deleted || !Utility.RangeCheck(vendor.Location, state.Mobile.Location, 10))
-			{
-				state.Send(new EndVendorSell(vendor));
-				return;
-			}
 
-			int count = pvSrc.ReadUInt16();
+            if (vendor.Deleted || !Utility.RangeCheck(vendor.Location, state.Mobile.Location, 10))
+            {
+                state.Send(new EndVendorSell(vendor));
+                return;
+            }
+
+            int count = pvSrc.ReadUInt16();
 			if (count < 100 && pvSrc.Size == (1 + 2 + 4 + 2 + (count * 6)))
 			{
 				List<SellItemResponse> sellList = new List<SellItemResponse>(count);
@@ -756,8 +754,8 @@ namespace Server.Network
 		{ }
 
 		public static bool VerifyGC(NetState state)
-		{
-			if (state.Mobile == null || state.Mobile.IsPlayer())
+        {
+            if (state.Mobile == null || state.Mobile.IsPlayer())
 			{
 				if (state.Running)
 				{
@@ -767,11 +765,9 @@ namespace Server.Network
 				state.Dispose();
 				return false;
 			}
-			else
-			{
-				return true;
-			}
-		}
+
+            return true;
+        }
 
 		public static void TextCommand(NetState state, PacketReader pvSrc)
 		{
@@ -1120,10 +1116,10 @@ namespace Server.Network
 			{
 				Item item = World.FindItem(dest);
 
-				if (item is BaseMulti && ((BaseMulti)item).AllowsRelativeDrop)
+				if (item is BaseMulti multi && multi.AllowsRelativeDrop)
 				{
-					loc.m_X += item.X;
-					loc.m_Y += item.Y;
+					loc.m_X += multi.X;
+					loc.m_Y += multi.Y;
 					from.Drop(loc);
 				}
 				else
@@ -1191,14 +1187,12 @@ namespace Server.Network
 				{
 					if (x == -1 && y == -1 && !serial.IsValid)
 					{
-						// User pressed escape
-						t.Cancel(from, TargetCancelType.Canceled);
+                        t.Cancel(from, TargetCancelType.Canceled); // User pressed escape
 					}
 					else if (Target.TargetIDValidation && t.TargetID != targetID)
 					{
-						// Prevent fake target, reported by AssistUO Team!
-						return;
-					}
+                        t.Cancel(from, TargetCancelType.Canceled); // Prevent fake target.
+                    }
 					else
 					{
 						object toTarget;
@@ -1294,13 +1288,13 @@ namespace Server.Network
 					{
 						foreach (GumpEntry e in gump.Entries)
 						{
-							if (e is GumpButton && ((GumpButton)e).ButtonID == buttonID)
+							if (e is GumpButton button && button.ButtonID == buttonID)
 							{
 								buttonExists = true;
 								break;
 							}
 
-							if (e is GumpImageTileButton && ((GumpImageTileButton)e).ButtonID == buttonID)
+							if (e is GumpImageTileButton tileButton && tileButton.ButtonID == buttonID)
 							{
 								buttonExists = true;
 								break;
@@ -2060,9 +2054,9 @@ namespace Server.Network
 						{
 							p = entity.Location;
 						}
-						else if (entity is Item)
+						else if (entity is Item item)
 						{
-							p = ((Item)entity).GetWorldLocation();
+							p = item.GetWorldLocation();
 						}
 						else
 						{
@@ -2553,11 +2547,11 @@ namespace Server.Network
 					dex,
 					intl,
 					info[cityIndex],
-					new SkillNameValue[3]
+					new[]
 					{
 						new SkillNameValue((SkillName)is1, vs1), new SkillNameValue((SkillName)is2, vs2),
-						new SkillNameValue((SkillName)is3, vs3),
-					},
+						new SkillNameValue((SkillName)is3, vs3)
+                    },
 					shirtHue,
 					pantsHue,
 					hairVal,
@@ -2699,11 +2693,11 @@ namespace Server.Network
 					dex,
 					intl,
 					info[cityIndex],
-					new SkillNameValue[4]
+					new[]
 					{
 						new SkillNameValue((SkillName)is1, vs1), new SkillNameValue((SkillName)is2, vs2),
-						new SkillNameValue((SkillName)is3, vs3), new SkillNameValue((SkillName)is4, vs4),
-					},
+						new SkillNameValue((SkillName)is3, vs3), new SkillNameValue((SkillName)is4, vs4)
+                    },
 					shirtHue,
 					pantsHue,
 					hairVal,
@@ -3121,13 +3115,13 @@ namespace Server.Network
 					name, female, hue,
 					str, dex, intel,
 					info[cityIndex],
-					new SkillNameValue[4]
+					new[]
 					{
 						new SkillNameValue( (SkillName)is1, vs1 ),
 						new SkillNameValue( (SkillName)is2, vs2 ),
 						new SkillNameValue( (SkillName)is3, vs3 ),
-						new SkillNameValue( (SkillName)is4, vs4 ),
-					},
+						new SkillNameValue( (SkillName)is4, vs4 )
+                    },
 					shirtHue, pantsHue,
 					hairID, hairColor,
 					beardID, beardColor,
