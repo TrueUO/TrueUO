@@ -663,7 +663,7 @@ namespace Server
 		Spawner = 0x100
 	}
 
-	public class Item : IEntity, IHued, IComparable<Item>, ISerializable, ISpawnable
+	public class Item : IHued, IComparable<Item>, ISerializable, ISpawnable
 	{
 		public static readonly List<Item> EmptyItems = new List<Item>();
 
@@ -799,7 +799,7 @@ namespace Server
 			}
 		}
 
-		private byte m_GridLocation = 0;
+		private byte m_GridLocation; // 0
 
 		[CommandProperty(AccessLevel.GameMaster)]
 		public byte GridLocation
@@ -1667,32 +1667,34 @@ namespace Server
         }
 
 		public virtual DeathMoveResult OnInventoryDeath(Mobile parent)
-		{
-			if (!Movable)
+        {
+            if (!Movable)
 			{
 				return DeathMoveResult.MoveToBackpack;
 			}
-			else if (parent.KeepsItemsOnDeath)
-			{
-				return DeathMoveResult.MoveToBackpack;
-			}
-			else if (CheckBlessed(parent))
-			{
-				return DeathMoveResult.MoveToBackpack;
-			}
-			else if (CheckNewbied() && parent.Kills < 5)
-			{
-				return DeathMoveResult.MoveToBackpack;
-			}
-			else if (parent.Player && Nontransferable)
-			{
-				return DeathMoveResult.MoveToBackpack;
-			}
-			else
-			{
-				return DeathMoveResult.MoveToCorpse;
-			}
-		}
+
+            if (parent.KeepsItemsOnDeath)
+            {
+                return DeathMoveResult.MoveToBackpack;
+            }
+
+            if (CheckBlessed(parent))
+            {
+                return DeathMoveResult.MoveToBackpack;
+            }
+
+            if (CheckNewbied() && parent.Kills < 5)
+            {
+                return DeathMoveResult.MoveToBackpack;
+            }
+
+            if (parent.Player && Nontransferable)
+            {
+                return DeathMoveResult.MoveToBackpack;
+            }
+
+            return DeathMoveResult.MoveToCorpse;
+        }
 
 		/// <summary>
 		///     Moves the Item to <paramref name="location" />. The Item does not change maps.
@@ -4869,37 +4871,40 @@ namespace Server
 		}
 
 		public virtual bool OnDroppedOnto(Mobile from, Item target)
-		{
-			if (Deleted || from.Deleted || target.Deleted || from.Map != target.Map || from.Map == null || target.Map == null)
+        {
+            if (Deleted || from.Deleted || target.Deleted || from.Map != target.Map || from.Map == null || target.Map == null)
 			{
 				return false;
 			}
-			else if (from.AccessLevel < AccessLevel.GameMaster && !from.InRange(target.GetWorldLocation(), 2))
-			{
-				return false;
-			}
-			else if (!from.CanSee(target) || !from.InLOS(target))
-			{
-				return false;
-			}
-			else if (!target.IsAccessibleTo(from))
-			{
-				return false;
-			}
-			else if (!from.OnDroppedItemOnto(this, target))
-			{
-				return false;
-			}
-			else if (Nontransferable && from.Player && target != from.Backpack && !from.IsStaff())
-			{
-				HandleInvalidTransfer(from);
-				return false;
-			}
-			else
-			{
-				return target.OnDragDrop(from, this);
-			}
-		}
+
+            if (from.AccessLevel < AccessLevel.GameMaster && !from.InRange(target.GetWorldLocation(), 2))
+            {
+                return false;
+            }
+
+            if (!from.CanSee(target) || !from.InLOS(target))
+            {
+                return false;
+            }
+
+            if (!target.IsAccessibleTo(from))
+            {
+                return false;
+            }
+
+            if (!from.OnDroppedItemOnto(this, target))
+            {
+                return false;
+            }
+
+            if (Nontransferable && from.Player && target != from.Backpack && !from.IsStaff())
+            {
+                HandleInvalidTransfer(from);
+                return false;
+            }
+
+            return target.OnDragDrop(from, this);
+        }
 
 		public virtual bool DropToItem(Mobile from, Item target, Point3D p)
 		{
@@ -4914,31 +4919,34 @@ namespace Server
 			{
 				return false;
 			}
-			else if (!from.CanSee(target) || !from.InLOS(target))
-			{
-				return false;
-			}
-			else if (!target.IsAccessibleTo(from))
-			{
-				return false;
-			}
-			else if (root is Mobile && !((Mobile)root).CheckNonlocalDrop(from, this, target))
-			{
-				return false;
-			}
-			else if (!from.OnDroppedItemToItem(this, target, p))
-			{
-				return false;
-			}
-			else if (target is Container && p.m_X != -1 && p.m_Y != -1)
-			{
-				return OnDroppedInto(from, (Container)target, p);
-			}
-			else
-			{
-				return OnDroppedOnto(from, target);
-			}
-		}
+
+            if (!from.CanSee(target) || !from.InLOS(target))
+            {
+                return false;
+            }
+
+            if (!target.IsAccessibleTo(from))
+            {
+                return false;
+            }
+
+            if (root is Mobile && !((Mobile)root).CheckNonlocalDrop(from, this, target))
+            {
+                return false;
+            }
+
+            if (!from.OnDroppedItemToItem(this, target, p))
+            {
+                return false;
+            }
+
+            if (target is Container && p.m_X != -1 && p.m_Y != -1)
+            {
+                return OnDroppedInto(from, (Container)target, p);
+            }
+
+            return OnDroppedOnto(from, target);
+        }
 
 		public virtual bool OnDroppedToWorld(Mobile from, Point3D p)
 		{
@@ -6151,7 +6159,7 @@ namespace Server
 		private class SocketTimer : Timer
 		{
 			public static SocketTimer Instance { get; private set; }
-			public Dictionary<ItemSocket, DateTime> TimerRegistry { get; set; } = new Dictionary<ItemSocket, DateTime>();
+			public Dictionary<ItemSocket, DateTime> TimerRegistry { get; } = new Dictionary<ItemSocket, DateTime>();
 
 			public SocketTimer()
 				: base(TimeSpan.FromMilliseconds(250), TimeSpan.FromMilliseconds(250))

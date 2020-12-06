@@ -508,7 +508,7 @@ namespace Server
     ///     Base class representing players, npcs, and creatures.
     /// </summary>
     [System.Runtime.InteropServices.ComVisible(true)]
-    public class Mobile : IHued, IComparable<Mobile>, ISerializable, ISpawnable, IDamageable
+    public class Mobile : IEntity, IHued, IComparable<Mobile>, ISerializable, ISpawnable, IDamageable
     {
         #region CompareTo(...)
         public int CompareTo(IEntity other)
