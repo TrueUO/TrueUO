@@ -580,8 +580,8 @@ namespace Server
 		}
 
 		public static BounceInfo Deserialize(GenericReader reader)
-		{
-			if (reader.ReadBool())
+        {
+            if (reader.ReadBool())
 			{
 				Map map = reader.ReadMap();
 				Point3D loc = reader.ReadPoint3D();
@@ -606,11 +606,9 @@ namespace Server
 
 				return new BounceInfo(map, loc, worldLoc, parent);
 			}
-			else
-			{
-				return null;
-			}
-		}
+
+            return null;
+        }
 
 		public static void Serialize(BounceInfo info, GenericWriter writer)
 		{
@@ -1639,32 +1637,34 @@ namespace Server
 		{ }
 
 		public virtual DeathMoveResult OnParentDeath(Mobile parent)
-		{
-			if (!Movable)
+        {
+            if (!Movable)
 			{
 				return DeathMoveResult.RemainEquiped;
 			}
-			else if (parent.KeepsItemsOnDeath)
-			{
-				return DeathMoveResult.MoveToBackpack;
-			}
-			else if (CheckBlessed(parent))
-			{
-				return DeathMoveResult.MoveToBackpack;
-			}
-			else if (CheckNewbied() && parent.Kills < 5)
-			{
-				return DeathMoveResult.MoveToBackpack;
-			}
-			else if (parent.Player && Nontransferable)
-			{
-				return DeathMoveResult.MoveToBackpack;
-			}
-			else
-			{
-				return DeathMoveResult.MoveToCorpse;
-			}
-		}
+
+            if (parent.KeepsItemsOnDeath)
+            {
+                return DeathMoveResult.MoveToBackpack;
+            }
+
+            if (CheckBlessed(parent))
+            {
+                return DeathMoveResult.MoveToBackpack;
+            }
+
+            if (CheckNewbied() && parent.Kills < 5)
+            {
+                return DeathMoveResult.MoveToBackpack;
+            }
+
+            if (parent.Player && Nontransferable)
+            {
+                return DeathMoveResult.MoveToBackpack;
+            }
+
+            return DeathMoveResult.MoveToCorpse;
+        }
 
 		public virtual DeathMoveResult OnInventoryDeath(Mobile parent)
 		{
@@ -4323,12 +4323,10 @@ namespace Server
 				Mobile m = state.Mobile;
 
 				if (m != null && m.CanSee(this) && m.InRange(worldLoc, GetUpdateRange(m)))
-				{
-					if (p == null)
-						p = Packet.Acquire(new MessageLocalized(m_Serial, m_ItemID, type, hue, 3, number, Name, args));
-
-					state.Send(p);
-				}
+                {
+                    p = Packet.Acquire(new MessageLocalized(m_Serial, m_ItemID, type, hue, 3, number, Name, args));
+                    state.Send(p);
+                }
 
 				Packet.Release(p);
 			}
@@ -4347,19 +4345,15 @@ namespace Server
 				if (m != null && m.CanSee(this) && m.InRange(worldLoc, GetUpdateRange(m)))
 				{
 					if (ascii)
-					{
-						if (asciip == null)
-							asciip = Packet.Acquire(new AsciiMessage(m_Serial, m_ItemID, type, hue, 3, Name, text));
-
-						state.Send(asciip);
-					}
+                    {
+                        asciip = Packet.Acquire(new AsciiMessage(m_Serial, m_ItemID, type, hue, 3, Name, text));
+                        state.Send(asciip);
+                    }
 					else
-					{
-						if (p == null)
-							p = Packet.Acquire(new UnicodeMessage(m_Serial, m_ItemID, type, hue, 3, m.Language, Name, text));
-
-						state.Send(p);
-					}
+                    {
+                        p = Packet.Acquire(new UnicodeMessage(m_Serial, m_ItemID, type, hue, 3, m.Language, Name, text));
+                        state.Send(p);
+                    }
 				}
 
 				Packet.Release(asciip);
@@ -5636,20 +5630,19 @@ namespace Server
 		}
 
 		public virtual bool CheckLift(Mobile from, Item item, ref LRReason reject)
-		{
-			if (m_Parent is Item)
+        {
+            if (m_Parent is Item)
 			{
 				return ((Item)m_Parent).CheckLift(from, item, ref reject);
 			}
-			else if (m_Parent is Mobile)
-			{
-				return ((Mobile)m_Parent).CheckLift(from, item, ref reject);
-			}
-			else
-			{
-				return true;
-			}
-		}
+
+            if (m_Parent is Mobile)
+            {
+                return ((Mobile)m_Parent).CheckLift(from, item, ref reject);
+            }
+
+            return true;
+        }
 
 		public virtual bool CanTarget => true;
 		public virtual bool DisplayLootType => true;
