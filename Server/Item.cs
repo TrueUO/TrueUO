@@ -624,13 +624,13 @@ namespace Server
 				writer.Write(info.m_Location);
 				writer.Write(info.m_WorldLoc);
 
-				if (info.m_Parent is Mobile)
+				if (info.m_Parent is Mobile mobile)
 				{
-					writer.Write((Mobile)info.m_Parent);
+					writer.Write(mobile);
 				}
-				else if (info.m_Parent is Item)
+				else if (info.m_Parent is Item item)
 				{
-					writer.Write((Item)info.m_Parent);
+					writer.Write(item);
 				}
 				else
 				{
