@@ -55,25 +55,7 @@ namespace Server
 		}
 	}
 
-	public class EquipedSkillMod : SkillMod
-	{
-		private readonly Item m_Item;
-		private readonly Mobile m_Mobile;
-
-		public EquipedSkillMod(SkillName skill, bool relative, double value, Item item, Mobile mobile)
-			: base(skill, relative, value)
-		{
-			m_Item = item;
-			m_Mobile = mobile;
-		}
-
-		public override bool CheckCondition()
-		{
-			return !m_Item.Deleted && !m_Mobile.Deleted && m_Item.Parent == m_Mobile;
-		}
-	}
-
-	public class DefaultSkillMod : SkillMod
+    public class DefaultSkillMod : SkillMod
 	{
 		public DefaultSkillMod(SkillName skill, bool relative, double value)
 			: base(skill, relative, value)
@@ -818,7 +800,7 @@ namespace Server
         private int[] m_Resistances;
 
         protected List<string> m_SlayerVulnerabilities = new List<string>();
-        protected bool m_SpecialSlayerMechanics = false;
+        protected bool m_SpecialSlayerMechanics; // false
 
         public List<string> SlayerVulnerabilities => m_SlayerVulnerabilities;
 
