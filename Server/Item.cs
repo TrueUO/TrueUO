@@ -1078,22 +1078,18 @@ namespace Server
 				{
 					info.m_Bounce = null;
 
-					if (bounce.m_Parent is Item)
+					if (bounce.m_Parent is Item itemParent)
 					{
-						Item parent = (Item)bounce.m_Parent;
-
-						if (!parent.Deleted)
+                        if (!itemParent.Deleted)
 						{
-							parent.OnItemBounceCleared(this);
+							itemParent.OnItemBounceCleared(this);
 						}
 					}
-					else if (bounce.m_Parent is Mobile)
+					else if (bounce.m_Parent is Mobile mobileParent)
 					{
-						Mobile parent = (Mobile)bounce.m_Parent;
-
-						if (!parent.Deleted)
+                        if (!mobileParent.Deleted)
 						{
-							parent.OnItemBounceCleared(this);
+							mobileParent.OnItemBounceCleared(this);
 						}
 					}
 
@@ -1422,13 +1418,13 @@ namespace Server
 		/// </summary>
 		public virtual void GetChildProperties(ObjectPropertyList list, Item item)
 		{
-			if (m_Parent is Item)
+			if (m_Parent is Item itemParent)
 			{
-				((Item)m_Parent).GetChildProperties(list, item);
+				itemParent.GetChildProperties(list, item);
 			}
-			else if (m_Parent is Mobile)
+			else if (m_Parent is Mobile mobileParent)
 			{
-				((Mobile)m_Parent).GetChildProperties(list, item);
+				mobileParent.GetChildProperties(list, item);
 			}
 		}
 
@@ -1445,13 +1441,13 @@ namespace Server
 		/// </summary>
 		public virtual void GetChildNameProperties(ObjectPropertyList list, Item item)
 		{
-			if (m_Parent is Item)
+			if (m_Parent is Item itemParent)
 			{
-				((Item)m_Parent).GetChildNameProperties(list, item);
+				itemParent.GetChildNameProperties(list, item);
 			}
-			else if (m_Parent is Mobile)
+			else if (m_Parent is Mobile mobileParent)
 			{
-				((Mobile)m_Parent).GetChildNameProperties(list, item);
+				mobileParent.GetChildNameProperties(list, item);
 			}
 		}
 
@@ -1591,25 +1587,25 @@ namespace Server
 
 		public virtual void GetChildContextMenuEntries(Mobile from, List<ContextMenuEntry> list, Item item)
 		{
-			if (m_Parent is Item)
+			if (m_Parent is Item itemParent)
 			{
-				((Item)m_Parent).GetChildContextMenuEntries(from, list, item);
+				itemParent.GetChildContextMenuEntries(from, list, item);
 			}
-			else if (m_Parent is Mobile)
+			else if (m_Parent is Mobile mobileParent)
 			{
-				((Mobile)m_Parent).GetChildContextMenuEntries(from, list, item);
+				mobileParent.GetChildContextMenuEntries(from, list, item);
 			}
 		}
 
 		public virtual void GetContextMenuEntries(Mobile from, List<ContextMenuEntry> list)
 		{
-			if (m_Parent is Item)
+			if (m_Parent is Item item)
 			{
-				((Item)m_Parent).GetChildContextMenuEntries(from, list, this);
+				item.GetChildContextMenuEntries(from, list, this);
 			}
-			else if (m_Parent is Mobile)
+			else if (m_Parent is Mobile mobile)
 			{
-				((Mobile)m_Parent).GetChildContextMenuEntries(from, list, this);
+				mobile.GetChildContextMenuEntries(from, list, this);
 			}
 
 			if (from.Region != null)
@@ -2184,25 +2180,25 @@ namespace Server
 
 		public virtual void AppendChildProperties(ObjectPropertyList list)
 		{
-			if (m_Parent is Item)
+			if (m_Parent is Item item)
 			{
-				((Item)m_Parent).GetChildProperties(list, this);
+				item.GetChildProperties(list, this);
 			}
-			else if (m_Parent is Mobile)
+			else if (m_Parent is Mobile mobile)
 			{
-				((Mobile)m_Parent).GetChildProperties(list, this);
+				mobile.GetChildProperties(list, this);
 			}
 		}
 
 		public virtual void AppendChildNameProperties(ObjectPropertyList list)
 		{
-			if (m_Parent is Item)
+			if (m_Parent is Item item)
 			{
-				((Item)m_Parent).GetChildNameProperties(list, this);
+				item.GetChildNameProperties(list, this);
 			}
-			else if (m_Parent is Mobile)
+			else if (m_Parent is Mobile mobile)
 			{
-				((Mobile)m_Parent).GetChildNameProperties(list, this);
+				mobile.GetChildNameProperties(list, this);
 			}
 		}
 

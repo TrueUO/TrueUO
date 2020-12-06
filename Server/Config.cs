@@ -1,4 +1,4 @@
-﻿#region References
+#region References
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -62,7 +62,7 @@ namespace Server
 
 			public override bool Equals(object obj)
 			{
-				return obj is Entry && Equals((Entry)obj);
+				return obj is Entry entry && Equals(entry);
 			}
 
 			public bool Equals(Entry other)

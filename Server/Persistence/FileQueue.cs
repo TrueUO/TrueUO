@@ -26,16 +26,18 @@ namespace Server
 			{
 				throw new ArgumentOutOfRangeException("concurrentWrites");
 			}
-			else if (bufferSize < 1)
-			{
-				throw new ArgumentOutOfRangeException("bufferSize");
-			}
-			else if (callback == null)
-			{
-				throw new ArgumentNullException("callback");
-			}
 
-			syncRoot = new object();
+            if (bufferSize < 1)
+            {
+                throw new ArgumentOutOfRangeException("bufferSize");
+            }
+
+            if (callback == null)
+            {
+                throw new ArgumentNullException("callback");
+            }
+
+            syncRoot = new object();
 
 			active = new Chunk[concurrentWrites];
 			pending = new Queue<Page>();
@@ -71,25 +73,7 @@ namespace Server
 				buffered.length = 0;
 			}
 
-			/*lock ( syncRoot ) {
-            if ( pending.Count > 0 ) {
-            idle.Reset();
-            }
-
-            for ( int slot = 0; slot < active.Length && pending.Count > 0; ++slot ) {
-            if ( active[slot] == null ) {
-            Page page = pending.Dequeue();
-
-            active[slot] = new Chunk( this, slot, page.buffer, 0, page.length );
-
-            ++activeCount;
-
-            callback( active[slot] );
-            }
-            }
-            }*/
-
-			idle.WaitOne();
+            idle.WaitOne();
 		}
 
 		public void Enqueue(byte[] buffer, int offset, int size)
@@ -98,20 +82,22 @@ namespace Server
 			{
 				throw new ArgumentNullException("buffer");
 			}
-			else if (offset < 0)
-			{
-				throw new ArgumentOutOfRangeException("offset");
-			}
-			else if (size < 0)
-			{
-				throw new ArgumentOutOfRangeException("size");
-			}
-			else if ((buffer.Length - offset) < size)
-			{
-				throw new ArgumentException();
-			}
 
-			position += size;
+            if (offset < 0)
+            {
+                throw new ArgumentOutOfRangeException("offset");
+            }
+
+            if (size < 0)
+            {
+                throw new ArgumentOutOfRangeException("size");
+            }
+            else if ((buffer.Length - offset) < size)
+            {
+                throw new ArgumentException();
+            }
+
+            position += size;
 
 			while (size > 0)
 			{

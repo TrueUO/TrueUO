@@ -27,9 +27,11 @@ namespace Server
             get
             {
                 if (StringTable.ContainsKey(number))
+                {
                     return StringTable[number];
-                else
-                    return null;
+                }
+
+                return null;
             }
         }
 
@@ -105,9 +107,11 @@ namespace Server
         public static string CombineArguments(string str, string args)
         {
             if (string.IsNullOrEmpty(args))
+            {
                 return str;
-            else
-                return CombineArguments(str, args.Split(new char[] { '\t' }));
+            }
+
+            return CombineArguments(str, args.Split(new char[] { '\t' }));
         }
 
         public static string CombineArguments(string str, params object[] args)
@@ -159,11 +163,12 @@ namespace Server
 
         private string m_FmtTxt;
 
-        private static readonly Regex m_RegEx = new Regex(
-            @"~(\d+)[_\w]+~",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.CultureInvariant);
+        private static readonly Regex m_RegEx = new Regex(@"~(\d+)[_\w]+~", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.CultureInvariant);
 
-        private static readonly object[] m_Args = new object[] { "", "", "", "", "", "", "", "", "", "", "" };
+        private static readonly object[] m_Args =
+        {
+            "", "", "", "", "", "", "", "", "", "", ""
+        };
 
         public string Format(params object[] args)
         {

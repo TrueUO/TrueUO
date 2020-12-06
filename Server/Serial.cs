@@ -68,16 +68,17 @@ namespace Server
 
 		public int CompareTo(object other)
 		{
-			if (other is Serial)
+			if (other is Serial serial)
 			{
-				return CompareTo((Serial)other);
-			}
-			else if (other == null)
-			{
-				return -1;
+				return CompareTo(serial);
 			}
 
-			throw new ArgumentException();
+            if (other == null)
+            {
+                return -1;
+            }
+
+            throw new ArgumentException();
 		}
 
 		public override bool Equals(object o)
@@ -120,12 +121,7 @@ namespace Server
 			return l.m_Serial <= r.m_Serial;
 		}
 
-		/*public static Serial operator ++ ( Serial l )
-        {
-        return new Serial( l + 1 );
-        }*/
-
-		public override string ToString()
+        public override string ToString()
 		{
 			return string.Format("0x{0:X8}", m_Serial);
 		}

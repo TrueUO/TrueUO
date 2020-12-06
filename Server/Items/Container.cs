@@ -150,16 +150,14 @@ namespace Server.Items
 		public virtual int MaxWeight
 		{
 			get
-			{
-				if (Parent is Container && ((Container)Parent).MaxWeight == 0)
+            {
+                if (Parent is Container && ((Container)Parent).MaxWeight == 0)
 				{
 					return 0;
 				}
-				else
-				{
-					return DefaultMaxWeight;
-				}
-			}
+
+                return DefaultMaxWeight;
+            }
 		}
 
 		[CommandProperty(AccessLevel.GameMaster)]
@@ -272,13 +270,13 @@ namespace Server.Items
 
 			while (parent != null)
 			{
-				if (parent is Container)
+				if (parent is Container containerParent)
 				{
-					return ((Container)parent).CheckHold(m, item, message, checkItems, plusItems, plusWeight);
+					return containerParent.CheckHold(m, item, message, checkItems, plusItems, plusWeight);
 				}
-				else if (parent is Item)
+				else if (parent is Item itemParent)
 				{
-					parent = ((Item)parent).Parent;
+					parent = itemParent.Parent;
 				}
 				else
 				{

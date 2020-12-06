@@ -52,13 +52,13 @@ namespace Server.ContextMenus
 
 			List<ContextMenuEntry> list = new List<ContextMenuEntry>();
 
-			if (target is Mobile)
+			if (target is Mobile mobile)
 			{
-				((Mobile)target).GetContextMenuEntries(from, list);
+				mobile.GetContextMenuEntries(from, list);
 			}
-			else if (target is Item)
+			else if (target is Item item)
 			{
-				((Item)target).GetContextMenuEntries(from, list);
+				item.GetContextMenuEntries(from, list);
 			}
 
 			EventSink.InvokeContextMenu(new ContextMenuEventArgs(From, Target, list));
@@ -128,7 +128,7 @@ namespace Server.ContextMenus
 				return false;
 			}
 
-			if (target is Item && !Utility.InUpdateRange(m, ((Item)target).GetWorldLocation()))
+			if (target is Item item && !Utility.InUpdateRange(m, item.GetWorldLocation()))
 			{
 				return false;
 			}
@@ -145,11 +145,11 @@ namespace Server.ContextMenus
 				return false;
 			}
 
-			if (target is Item)
+			if (target is Item targetedItem)
 			{
-				object root = ((Item)target).RootParent;
+				object root = targetedItem.RootParent;
 
-				if (root is Mobile && root != m && ((Mobile)root).AccessLevel >= m.AccessLevel)
+				if (root is Mobile mobile && mobile != m && mobile.AccessLevel >= m.AccessLevel)
 				{
 					foreach (ContextMenuEntry e in c.Entries.Where(e => !e.NonLocalUse))
 					{

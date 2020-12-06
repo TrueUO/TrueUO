@@ -170,7 +170,8 @@ namespace Server.Network
                 throw new ArgumentOutOfRangeException(
                     "offset", offset, "Offset must be greater than or equal to zero and less than the size of the buffer.");
             }
-            else if (length < 0 || length > buffer.Length)
+
+            if (length < 0 || length > buffer.Length)
             {
                 throw new ArgumentOutOfRangeException(
                     "length", length, "Length cannot be less than zero or greater than the size of the buffer.");

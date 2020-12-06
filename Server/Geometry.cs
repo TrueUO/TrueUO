@@ -62,9 +62,9 @@ namespace Server
 
 		public int CompareTo(object other)
 		{
-			if (other is Point2D)
+			if (other is Point2D point2D)
 			{
-				return CompareTo((Point2D)other);
+				return CompareTo(point2D);
 			}
 
 			if (other == null)
@@ -344,9 +344,9 @@ namespace Server
 
 		public int CompareTo(object other)
 		{
-			if (other is Point3D)
+			if (other is Point3D point3D)
 			{
-				return CompareTo((Point3D)other);
+				return CompareTo(point3D);
 			}
 
 			if (other == null)
