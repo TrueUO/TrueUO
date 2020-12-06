@@ -871,9 +871,9 @@ namespace Server.Network
 			{
 				p = target.Location;
 			}
-			else if (target is Item)
+			else if (target is Item item)
 			{
-				p = ((Item)target).GetWorldLocation();
+				p = item.GetWorldLocation();
 			}
 			else
 			{
@@ -952,9 +952,9 @@ namespace Server.Network
 		{
 			Serial parentSerial;
 
-			if (item.Parent is Mobile)
+			if (item.Parent is Mobile mobile)
 			{
-				parentSerial = ((Mobile)item.Parent).Serial;
+				parentSerial = mobile.Serial;
 			}
 			else
 			{
@@ -964,11 +964,9 @@ namespace Server.Network
 
 			int hue = item.Hue;
 
-			if (item.Parent is Mobile)
+			if (item.Parent is Mobile mob)
 			{
-				Mobile mob = (Mobile)item.Parent;
-
-				if (mob.SolidHueOverride >= 0)
+                if (mob.SolidHueOverride >= 0)
 				{
 					hue = mob.SolidHueOverride;
 				}
@@ -1752,9 +1750,9 @@ namespace Server.Network
 		{
 			Serial parentSerial;
 
-			if (item.Parent is Item)
+			if (item.Parent is Item parent)
 			{
-				parentSerial = ((Item)item.Parent).Serial;
+				parentSerial = parent.Serial;
 			}
 			else
 			{
@@ -2598,8 +2596,10 @@ namespace Server.Network
 
 	public sealed class SeasonChange : Packet
 	{
-		private static readonly SeasonChange[][] m_Cache = new SeasonChange[5][]
-		{new SeasonChange[2], new SeasonChange[2], new SeasonChange[2], new SeasonChange[2], new SeasonChange[2]};
+		private static readonly SeasonChange[][] m_Cache =
+        {
+            new SeasonChange[2], new SeasonChange[2], new SeasonChange[2], new SeasonChange[2], new SeasonChange[2] // 5 Seasons
+        };
 
 		public static SeasonChange Instantiate(int season)
 		{
@@ -2607,8 +2607,8 @@ namespace Server.Network
 		}
 
 		public static SeasonChange Instantiate(int season, bool playSound)
-		{
-			if (season >= 0 && season < m_Cache.Length)
+        {
+            if (season >= 0 && season < m_Cache.Length)
 			{
 				int idx = playSound ? 1 : 0;
 
@@ -2622,11 +2622,9 @@ namespace Server.Network
 
 				return p;
 			}
-			else
-			{
-				return new SeasonChange(season, playSound);
-			}
-		}
+
+            return new SeasonChange(season, playSound);
+        }
 
 		public SeasonChange(int season)
 			: this(season, true)
@@ -2679,9 +2677,9 @@ namespace Server.Network
 
 	public static class AttributeNormalizer
 	{
-		public static int Maximum { get; set; } = 25;
+		public static int Maximum { get; } = 25;
 
-		public static bool Enabled { get; set; } = true;
+		public static bool Enabled { get; } = true;
 
 		public static void Write(PacketWriter stream, int cur, int max)
 		{
@@ -3383,8 +3381,8 @@ namespace Server.Network
 
 	public sealed class MovementAck : Packet
 	{
-		private static readonly MovementAck[][] m_Cache = new MovementAck[8][]
-		{
+		private static readonly MovementAck[][] m_Cache =
+        {
 			new MovementAck[256], new MovementAck[256], new MovementAck[256], new MovementAck[256], new MovementAck[256],
 			new MovementAck[256], new MovementAck[256], new MovementAck[256]
 		};
@@ -3477,14 +3475,14 @@ namespace Server.Network
 			: this(city, building, 0, x, y, z, Map.Trammel)
 		{ }
 
-		public string City { get; set; }
-		public string Building { get; set; }
-		public int Description { get; set; }
+		public string City { get; }
+		public string Building { get; }
+		public int Description { get; }
 		public int X { get => m_Location.X; set => m_Location.X = value; }
 		public int Y { get => m_Location.Y; set => m_Location.Y = value; }
 		public int Z { get => m_Location.Z; set => m_Location.Z = value; }
 		public Point3D Location { get => m_Location; set => m_Location = value; }
-		public Map Map { get; set; }
+		public Map Map { get; }
 	}
 
 	public sealed class CharacterListUpdate : Packet
@@ -3837,13 +3835,13 @@ namespace Server.Network
 
 	public sealed class ServerInfo
 	{
-		public string Name { get; set; }
+		public string Name { get; }
 
-		public int FullPercent { get; set; }
+		public int FullPercent { get; }
 
-		public int TimeZone { get; set; }
+		public int TimeZone { get; }
 
-		public IPEndPoint Address { get; set; }
+		public IPEndPoint Address { get; }
 
 		public ServerInfo(string name, int fullPercent, TimeZone tz, IPEndPoint address)
 		{

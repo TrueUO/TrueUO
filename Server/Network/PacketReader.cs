@@ -118,7 +118,7 @@ namespace Server.Network
 
 		public sbyte ReadSByte()
 		{
-			if ((m_Index + 1) > m_Size)
+			if (m_Index + 1 > m_Size)
 			{
 				return 0;
 			}
@@ -128,7 +128,7 @@ namespace Server.Network
 
 		public bool ReadBoolean()
 		{
-			if ((m_Index + 1) > m_Size)
+			if (m_Index + 1 > m_Size)
 			{
 				return false;
 			}

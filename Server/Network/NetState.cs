@@ -91,10 +91,10 @@ namespace Server.Network
 		public ClientVersion Version { get; set; }
 
 		[CommandProperty(AccessLevel.Administrator, true)]
-		public bool IsUOTDClient => (Flags & ClientFlags.UOTD) != 0 || (Version != null && Version.Type == ClientType.UOTD);
+		public bool IsUOTDClient => (Flags & ClientFlags.UOTD) != 0 || Version != null && Version.Type == ClientType.UOTD;
 
 		[CommandProperty(AccessLevel.Administrator, true)]
-		public bool IsEnhancedClient => IsUOTDClient || (Version != null && Version.Major >= 67);
+		public bool IsEnhancedClient => IsUOTDClient || Version != null && Version.Major >= 67;
 
 		public List<SecureTrade> Trades { get; }
 
@@ -1065,7 +1065,7 @@ namespace Server.Network
 				{
 					ExpansionInfo info = ExpansionInfo.Table[i];
 
-					if ((info.RequiredClient != null && Version >= info.RequiredClient) || ((Flags & info.ClientFlags) != 0))
+					if (info.RequiredClient != null && Version >= info.RequiredClient || (Flags & info.ClientFlags) != 0)
 					{
 						return info;
 					}
@@ -1080,7 +1080,7 @@ namespace Server.Network
 
 		public bool SupportsExpansion(ExpansionInfo info, bool checkCoreExpansion)
 		{
-			if (info == null || (checkCoreExpansion && (int)Core.Expansion < info.ID))
+			if (info == null || checkCoreExpansion && (int)Core.Expansion < info.ID)
 			{
 				return false;
 			}

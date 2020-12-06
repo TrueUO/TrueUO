@@ -203,19 +203,7 @@ namespace Server.Network
 				Encoding.ASCII.GetBytes(value, 0, length, m_Stream.GetBuffer(), (int)m_Stream.Position);
 				m_Stream.Position += size;
 			}
-
-			/*byte[] buffer = Encoding.ASCII.GetBytes( value );
-
-			if ( buffer.Length >= size )
-			{
-				m_Stream.Write( buffer, 0, size );
-			}
-			else
-			{
-				m_Stream.Write( buffer, 0, buffer.Length );
-				Fill( size - buffer.Length );
-			}*/
-		}
+        }
 
 		/// <summary>
 		///     Writes a dynamic-length ASCII-encoded string value to the underlying stream, followed by a 1-byte null character.
@@ -234,12 +222,7 @@ namespace Server.Network
 
 			Encoding.ASCII.GetBytes(value, 0, length, m_Stream.GetBuffer(), (int)m_Stream.Position);
 			m_Stream.Position += length + 1;
-
-			/*byte[] buffer = Encoding.ASCII.GetBytes( value );
-
-			m_Stream.Write( buffer, 0, buffer.Length );
-			m_Stream.WriteByte( 0 );*/
-		}
+        }
 
 		/// <summary>
 		///     Writes a dynamic-length little-endian unicode string value to the underlying stream, followed by a 2-byte null character.
@@ -258,15 +241,7 @@ namespace Server.Network
 
 			m_Stream.Position += Encoding.Unicode.GetBytes(value, 0, length, m_Stream.GetBuffer(), (int)m_Stream.Position);
 			m_Stream.Position += 2;
-
-			/*byte[] buffer = Encoding.Unicode.GetBytes( value );
-
-			m_Stream.Write( buffer, 0, buffer.Length );
-
-			m_Buffer[0] = 0;
-			m_Buffer[1] = 0;
-			m_Stream.Write( m_Buffer, 0, 2 );*/
-		}
+        }
 
 		/// <summary>
 		///     Writes a fixed-length little-endian unicode string value to the underlying stream. To fit (size), the string content is either truncated or padded with null characters.
@@ -294,21 +269,7 @@ namespace Server.Network
 				Encoding.Unicode.GetBytes(value, 0, length, m_Stream.GetBuffer(), (int)m_Stream.Position);
 				m_Stream.Position += size;
 			}
-
-			/*size *= 2;
-
-			byte[] buffer = Encoding.Unicode.GetBytes( value );
-
-			if ( buffer.Length >= size )
-			{
-				m_Stream.Write( buffer, 0, size );
-			}
-			else
-			{
-				m_Stream.Write( buffer, 0, buffer.Length );
-				Fill( size - buffer.Length );
-			}*/
-		}
+        }
 
 		/// <summary>
 		///     Writes a dynamic-length big-endian unicode string value to the underlying stream, followed by a 2-byte null character.
@@ -328,15 +289,7 @@ namespace Server.Network
 			m_Stream.Position += Encoding.BigEndianUnicode.GetBytes(
 				value, 0, length, m_Stream.GetBuffer(), (int)m_Stream.Position);
 			m_Stream.Position += 2;
-
-			/*byte[] buffer = Encoding.BigEndianUnicode.GetBytes( value );
-
-			m_Stream.Write( buffer, 0, buffer.Length );
-
-			m_Buffer[0] = 0;
-			m_Buffer[1] = 0;
-			m_Stream.Write( m_Buffer, 0, 2 );*/
-		}
+        }
 
 		/// <summary>
 		///     Writes a fixed-length big-endian unicode string value to the underlying stream. To fit (size), the string content is either truncated or padded with null characters.
@@ -355,7 +308,7 @@ namespace Server.Network
 
 			m_Stream.SetLength(m_Stream.Length + size);
 
-			if ((length * 2) >= size)
+			if (length * 2 >= size)
 			{
 				m_Stream.Position += Encoding.BigEndianUnicode.GetBytes(
 					value, 0, length, m_Stream.GetBuffer(), (int)m_Stream.Position);
@@ -365,21 +318,7 @@ namespace Server.Network
 				Encoding.BigEndianUnicode.GetBytes(value, 0, length, m_Stream.GetBuffer(), (int)m_Stream.Position);
 				m_Stream.Position += size;
 			}
-
-			/*size *= 2;
-
-			byte[] buffer = Encoding.BigEndianUnicode.GetBytes( value );
-
-			if ( buffer.Length >= size )
-			{
-				m_Stream.Write( buffer, 0, size );
-			}
-			else
-			{
-				m_Stream.Write( buffer, 0, buffer.Length );
-				Fill( size - buffer.Length );
-			}*/
-		}
+        }
 
 		/// <summary>
 		///     Fills the stream from the current position up to (capacity) with 0x00's
