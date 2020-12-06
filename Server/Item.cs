@@ -1085,12 +1085,9 @@ namespace Server
 							itemParent.OnItemBounceCleared(this);
 						}
 					}
-					else if (bounce.m_Parent is Mobile mobileParent)
+					else if (bounce.m_Parent is Mobile mobileParent && !mobileParent.Deleted)
 					{
-                        if (!mobileParent.Deleted)
-						{
-							mobileParent.OnItemBounceCleared(this);
-						}
+                        mobileParent.OnItemBounceCleared(this);
 					}
 
 					VerifyCompactInfo();
