@@ -60,12 +60,13 @@ namespace Server
 			{
 				return null;
 			}
-			else if (str.Length == 0)
-			{
-				return string.Empty;
-			}
 
-			return string.Intern(str);
+            if (str.Length == 0)
+            {
+                return string.Empty;
+            }
+
+            return string.Intern(str);
 		}
 
 		public static void Intern(ref string str)
@@ -719,14 +720,14 @@ namespace Server
 				range = m.NetState.UpdateRange;
 			}
 
-			if (p1 is Item)
+			if (p1 is Item item1)
 			{
-				p1 = ((Item)p1).GetWorldLocation();
+				p1 = item1.GetWorldLocation();
 			}
 
-			if (p2 is Item)
+			if (p2 is Item item2)
 			{
-				p2 = ((Item)p2).GetWorldLocation();
+				p2 = item2.GetWorldLocation();
 			}
 
 			return (p1.X >= (p2.X - range)) && (p1.X <= (p2.X + range)) && (p1.Y >= (p2.Y - range)) && (p1.Y <= (p2.Y + range));
@@ -742,50 +743,42 @@ namespace Server
 			int ady = Math.Abs(dy);
 
 			if (adx >= ady * 3)
-			{
-				if (dx > 0)
+            {
+                if (dx > 0)
 				{
 					return Direction.East;
 				}
-				else
-				{
-					return Direction.West;
-				}
-			}
-			else if (ady >= adx * 3)
-			{
-				if (dy > 0)
-				{
-					return Direction.South;
-				}
-				else
-				{
-					return Direction.North;
-				}
-			}
-			else if (dx > 0)
-			{
-				if (dy > 0)
-				{
-					return Direction.Down;
-				}
-				else
-				{
-					return Direction.Right;
-				}
-			}
-			else
-			{
-				if (dy > 0)
-				{
-					return Direction.Left;
-				}
-				else
-				{
-					return Direction.Up;
-				}
-			}
-		}
+
+                return Direction.West;
+            }
+
+            if (ady >= adx * 3)
+            {
+                if (dy > 0)
+                {
+                    return Direction.South;
+                }
+
+                return Direction.North;
+            }
+
+            if (dx > 0)
+            {
+                if (dy > 0)
+                {
+                    return Direction.Down;
+                }
+
+                return Direction.Right;
+            }
+
+            if (dy > 0)
+            {
+                return Direction.Left;
+            }
+
+            return Direction.Up;
+        }
 
 		public static object GetArrayCap(Array array, int index)
 		{
@@ -793,8 +786,8 @@ namespace Server
 		}
 
 		public static object GetArrayCap(Array array, int index, object emptyValue)
-		{
-			if (array.Length > 0)
+        {
+            if (array.Length > 0)
 			{
 				if (index < 0)
 				{
@@ -807,11 +800,9 @@ namespace Server
 
 				return array.GetValue(index);
 			}
-			else
-			{
-				return emptyValue;
-			}
-		}
+
+            return emptyValue;
+        }
 
 		#region Random
 		/// <summary>
@@ -870,7 +861,7 @@ namespace Server
 			if (Enum.GetValues(typeof(TEnum)) is TEnum[] values && values.Length > 0)
 				return RandomList(values);
 
-			return default(TEnum);
+			return default;
 		}
         
 #if MONO
@@ -914,7 +905,7 @@ namespace Server
 				return RandomList(min, max);
 			}
 
-			return default(TEnum);
+			return default;
 		}
 
 		public static double RandomMinMax(double min, double max)
@@ -950,20 +941,19 @@ namespace Server
 		}
 
 		public static int Random(int from, int count)
-		{
-			if (count == 0)
+        {
+            if (count == 0)
 			{
 				return from;
 			}
-			else if (count > 0)
-			{
-				return from + RandomImpl.Next(count);
-			}
-			else
-			{
-				return from - RandomImpl.Next(-count);
-			}
-		}
+
+            if (count > 0)
+            {
+                return from + RandomImpl.Next(count);
+            }
+
+            return from - RandomImpl.Next(-count);
+        }
 
 		public static int Random(int count)
 		{
@@ -1141,20 +1131,19 @@ namespace Server
 		}
 
 		public static int ClipDyedHue(int hue)
-		{
-			if (hue < 2)
+        {
+            if (hue < 2)
 			{
 				return 2;
 			}
-			else if (hue > 1001)
-			{
-				return 1001;
-			}
-			else
-			{
-				return hue;
-			}
-		}
+
+            if (hue > 1001)
+            {
+                return 1001;
+            }
+
+            return hue;
+        }
 
 		/// <summary>
 		///     Random hue in the range 2-1001
@@ -1177,55 +1166,49 @@ namespace Server
 			return RandomList(0x03, 0x0D, 0x13, 0x1C, 0x21, 0x30, 0x37, 0x3A, 0x44, 0x59);
 		}
 
-		//[Obsolete( "Depreciated, use the methods for the Mobile's race", false )]
 		public static int ClipSkinHue(int hue)
-		{
-			if (hue < 1002)
+        {
+            if (hue < 1002)
 			{
 				return 1002;
 			}
-			else if (hue > 1058)
-			{
-				return 1058;
-			}
-			else
-			{
-				return hue;
-			}
-		}
 
-		//[Obsolete( "Depreciated, use the methods for the Mobile's race", false )]
+            if (hue > 1058)
+            {
+                return 1058;
+            }
+
+            return hue;
+        }
+
 		public static int RandomSkinHue()
 		{
 			return Random(1002, 57) | 0x8000;
 		}
 
-		//[Obsolete( "Depreciated, use the methods for the Mobile's race", false )]
 		public static int ClipHairHue(int hue)
-		{
-			if (hue < 1102)
+        {
+            if (hue < 1102)
 			{
 				return 1102;
 			}
-			else if (hue > 1149)
-			{
-				return 1149;
-			}
-			else
-			{
-				return hue;
-			}
-		}
 
-		//[Obsolete( "Depreciated, use the methods for the Mobile's race", false )]
+            if (hue > 1149)
+            {
+                return 1149;
+            }
+
+            return hue;
+        }
+
 		public static int RandomHairHue()
 		{
 			return Random(1102, 48);
 		}
 		#endregion
 
-		private static readonly SkillName[] m_AllSkills = new[]
-		{
+		private static readonly SkillName[] m_AllSkills =
+        {
 			SkillName.Alchemy, SkillName.Anatomy, SkillName.AnimalLore, SkillName.ItemID, SkillName.ArmsLore, SkillName.Parry,
 			SkillName.Begging, SkillName.Blacksmith, SkillName.Fletching, SkillName.Peacemaking, SkillName.Camping,
 			SkillName.Carpentry, SkillName.Cartography, SkillName.Cooking, SkillName.DetectHidden, SkillName.Discordance,
@@ -1239,11 +1222,13 @@ namespace Server
 			SkillName.Ninjitsu, SkillName.Spellweaving, SkillName.Mysticism, SkillName.Imbuing, SkillName.Throwing
 		};
 
-		private static readonly SkillName[] m_CombatSkills = new[]
-		{SkillName.Archery, SkillName.Swords, SkillName.Macing, SkillName.Fencing, SkillName.Wrestling};
+		private static readonly SkillName[] m_CombatSkills =
+        {
+            SkillName.Archery, SkillName.Swords, SkillName.Macing, SkillName.Fencing, SkillName.Wrestling
+        };
 
-		private static readonly SkillName[] m_CraftSkills = new[]
-		{
+		private static readonly SkillName[] m_CraftSkills =
+        {
 			SkillName.Alchemy, SkillName.Blacksmith, SkillName.Fletching, SkillName.Carpentry, SkillName.Cartography,
 			SkillName.Cooking, SkillName.Inscribe, SkillName.Tailoring, SkillName.Tinkering
 		};
@@ -1692,15 +1677,15 @@ namespace Server
 				return;
 			}
 
-			if (list is T[])
+			if (list is T[] list1)
 			{
-				IterateReverse((T[])list, action);
+				IterateReverse(list1, action);
 				return;
 			}
 
-			if (list is List<T>)
+			if (list is List<T> list2)
 			{
-				IterateReverse((List<T>)list, action);
+				IterateReverse(list2, action);
 				return;
 			}
 

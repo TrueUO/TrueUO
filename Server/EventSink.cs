@@ -242,10 +242,10 @@ namespace Server
 
 	public class WorldBroadcastEventArgs : EventArgs
 	{
-		public int Hue { get; set; }
-		public bool Ascii { get; set; }
-		public AccessLevel Access { get; set; }
-		public string Text { get; set; }
+		public int Hue { get; }
+		public bool Ascii { get; }
+		public AccessLevel Access { get; }
+		public string Text { get; }
 
 		public WorldBroadcastEventArgs(int hue, bool ascii, AccessLevel access, string text)
 		{
@@ -1009,7 +1009,7 @@ namespace Server
 		private readonly int[] m_Keywords;
 
 		public Mobile Mobile => m_Mobile;
-		public string Speech { get; set; }
+		public string Speech { get; }
 		public MessageType Type => m_Type;
 		public int Hue => m_Hue;
 		public int[] Keywords => m_Keywords;
@@ -1269,9 +1269,9 @@ namespace Server
 
 	public class SkillCheckEventArgs : EventArgs
 	{
-		public bool Success { get; set; }
-		public Mobile From { get; set; }
-		public Skill Skill { get; set; }
+		public bool Success { get; }
+		public Mobile From { get; }
+		public Skill Skill { get; }
 
 		public SkillCheckEventArgs(Mobile from, Skill skill, bool success)
 		{
@@ -1325,7 +1325,7 @@ namespace Server
 
 	public class ItemCreatedEventArgs : EventArgs
 	{
-		public Item Item { get; set; }
+		public Item Item { get; }
 
 		public ItemCreatedEventArgs(Item item)
 		{
@@ -1335,7 +1335,7 @@ namespace Server
 
 	public class ItemDeletedEventArgs : EventArgs
 	{
-		public Item Item { get; set; }
+		public Item Item { get; }
 
 		public ItemDeletedEventArgs(Item item)
 		{
@@ -1345,7 +1345,7 @@ namespace Server
 
 	public class MobileCreatedEventArgs : EventArgs
 	{
-		public Mobile Mobile { get; set; }
+		public Mobile Mobile { get; }
 
 		public MobileCreatedEventArgs(Mobile mobile)
 		{
@@ -1355,7 +1355,7 @@ namespace Server
 
 	public class MobileDeletedEventArgs : EventArgs
 	{
-		public Mobile Mobile { get; set; }
+		public Mobile Mobile { get; }
 
 		public MobileDeletedEventArgs(Mobile mobile)
 		{
@@ -1467,8 +1467,8 @@ namespace Server
 
 	public class JoinGuildEventArgs : EventArgs
 	{
-		public Mobile Mobile { get; set; }
-		public BaseGuild Guild { get; set; }
+		public Mobile Mobile { get; }
+		public BaseGuild Guild { get; }
 
 		public JoinGuildEventArgs(Mobile m, BaseGuild g)
 		{
@@ -1479,8 +1479,8 @@ namespace Server
 
 	public class TameCreatureEventArgs : EventArgs
 	{
-		public Mobile Mobile { get; set; }
-		public Mobile Creature { get; set; }
+		public Mobile Mobile { get; }
+		public Mobile Creature { get; }
 
 		public TameCreatureEventArgs(Mobile m, Mobile creature)
 		{
@@ -1491,10 +1491,10 @@ namespace Server
 
 	public class ValidVendorPurchaseEventArgs : EventArgs
 	{
-		public Mobile Mobile { get; set; }
-		public Mobile Vendor { get; set; }
-		public IEntity Bought { get; set; }
-		public int AmountPerUnit { get; set; }
+		public Mobile Mobile { get; }
+		public Mobile Vendor { get; }
+		public IEntity Bought { get; }
+		public int AmountPerUnit { get; }
 
 		public ValidVendorPurchaseEventArgs(Mobile m, Mobile vendor, IEntity bought, int costPer)
 		{
@@ -1507,10 +1507,10 @@ namespace Server
 
 	public class ValidVendorSellEventArgs : EventArgs
 	{
-		public Mobile Mobile { get; set; }
-		public Mobile Vendor { get; set; }
-		public IEntity Sold { get; set; }
-		public int AmountPerUnit { get; set; }
+		public Mobile Mobile { get; }
+		public Mobile Vendor { get; }
+		public IEntity Sold { get; }
+		public int AmountPerUnit { get; }
 
 		public ValidVendorSellEventArgs(Mobile m, Mobile vendor, IEntity sold, int costPer)
 		{
@@ -1523,9 +1523,9 @@ namespace Server
 
 	public class CorpseLootEventArgs : EventArgs
 	{
-		public Mobile Mobile { get; set; }
-		public Container Corpse { get; set; }
-		public Item Looted { get; set; }
+		public Mobile Mobile { get; }
+		public Container Corpse { get; }
+		public Item Looted { get; }
 
 		public CorpseLootEventArgs(Mobile m, Container c, Item looted)
 		{
@@ -1537,9 +1537,9 @@ namespace Server
 
 	public class RepairItemEventArgs : EventArgs
 	{
-		public Mobile Mobile { get; set; }
-		public Item Tool { get; set; }
-		public IEntity Repaired { get; set; }
+		public Mobile Mobile { get; }
+		public Item Tool { get; }
+		public IEntity Repaired { get; }
 
 		public RepairItemEventArgs(Mobile m, Item tool, IEntity repaired)
 		{
@@ -1551,10 +1551,10 @@ namespace Server
 
 	public class AlterItemEventArgs : EventArgs
 	{
-		public Mobile Mobile { get; set; }
-		public Item Tool { get; set; }
-		public Item OldItem { get; set; }
-		public Item NewItem { get; set; }
+		public Mobile Mobile { get; }
+		public Item Tool { get; }
+		public Item OldItem { get; }
+		public Item NewItem { get; }
 
 		public AlterItemEventArgs(Mobile m, Item tool, Item oldItem, Item newItem)
 		{
@@ -1567,8 +1567,8 @@ namespace Server
 
 	public class PlacePlayerVendorEventArgs : EventArgs
 	{
-		public Mobile Mobile { get; set; }
-		public Mobile Vendor { get; set; }
+		public Mobile Mobile { get; }
+		public Mobile Vendor { get; }
 
 		public PlacePlayerVendorEventArgs(Mobile m, Mobile vendor)
 		{
@@ -1579,9 +1579,9 @@ namespace Server
 
 	public class FameChangeEventArgs : EventArgs
 	{
-		public Mobile Mobile { get; set; }
-		public int OldValue { get; set; }
-		public int NewValue { get; set; }
+		public Mobile Mobile { get; }
+		public int OldValue { get; }
+		public int NewValue { get; }
 
 		public FameChangeEventArgs(Mobile m, int oldValue, int newValue)
 		{
@@ -1593,9 +1593,9 @@ namespace Server
 
 	public class KarmaChangeEventArgs : EventArgs
 	{
-		public Mobile Mobile { get; set; }
-		public int OldValue { get; set; }
-		public int NewValue { get; set; }
+		public Mobile Mobile { get; }
+		public int OldValue { get; }
+		public int NewValue { get; }
 
 		public KarmaChangeEventArgs(Mobile m, int oldValue, int newValue)
 		{
@@ -1607,10 +1607,10 @@ namespace Server
 
 	public class VirtueLevelChangeEventArgs : EventArgs
 	{
-		public Mobile Mobile { get; set; }
-		public int OldLevel { get; set; }
-		public int NewLevel { get; set; }
-		public int Virtue { get; set; }
+		public Mobile Mobile { get; }
+		public int OldLevel { get; }
+		public int NewLevel { get; }
+		public int Virtue { get; }
 
 		public VirtueLevelChangeEventArgs(Mobile m, int oldLevel, int newLevel, int virtue)
 		{
@@ -1623,8 +1623,8 @@ namespace Server
 
 	public class PlayerMurderedEventArgs : EventArgs
 	{
-		public Mobile Murderer { get; set; }
-		public Mobile Victim { get; set; }
+		public Mobile Murderer { get; }
+		public Mobile Victim { get; }
 
 		public PlayerMurderedEventArgs(Mobile murderer, Mobile victim)
 		{
@@ -1635,9 +1635,9 @@ namespace Server
 
 	public class AccountGoldChangeEventArgs : EventArgs
 	{
-		public IAccount Account { get; set; }
-		public double OldAmount { get; set; }
-		public double NewAmount { get; set; }
+		public IAccount Account { get; }
+		public double OldAmount { get; }
+		public double NewAmount { get; }
 
 		public AccountGoldChangeEventArgs(IAccount account, double oldAmount, double newAmount)
 		{
@@ -1649,9 +1649,9 @@ namespace Server
 
 	public class ContainerDroppedToEventArgs : EventArgs
 	{
-		public Mobile Mobile { get; set; }
-		public Container Container { get; set; }
-		public Item Dropped { get; set; }
+		public Mobile Mobile { get; }
+		public Container Container { get; }
+		public Item Dropped { get; }
 
 		public ContainerDroppedToEventArgs(Mobile m, Container container, Item dropped)
 		{
@@ -1663,9 +1663,9 @@ namespace Server
 
 	public class TeleportMovementEventArgs : EventArgs
 	{
-		public Mobile Mobile { get; set; }
-		public Point3D OldLocation { get; set; }
-		public Point3D NewLocation { get; set; }
+		public Mobile Mobile { get; }
+		public Point3D OldLocation { get; }
+		public Point3D NewLocation { get; }
 
 		public TeleportMovementEventArgs(Mobile m, Point3D oldLoc, Point3D newLoc)
 		{
@@ -1677,8 +1677,8 @@ namespace Server
 
 	public class MultiDesignQueryEventArgs : EventArgs
 	{
-		public NetState State { get; set; }
-		public BaseMulti Multi { get; set; }
+		public NetState State { get; }
+		public BaseMulti Multi { get; }
 
 		public MultiDesignQueryEventArgs(NetState state, BaseMulti multi)
 		{

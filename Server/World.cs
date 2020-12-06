@@ -511,7 +511,7 @@ namespace Server
 								
 								m.Deserialize(reader);
 
-								if (reader.Position != (entry.Position + entry.Length))
+								if (reader.Position != entry.Position + entry.Length)
 								{
 									throw new Exception(string.Format("***** Bad serialize on {0} *****", m.GetType()));
 								}
@@ -556,7 +556,7 @@ namespace Server
 								
 								item.Deserialize(reader);
 
-								if (reader.Position != (entry.Position + entry.Length))
+								if (reader.Position != entry.Position + entry.Length)
 								{
 									throw new Exception(string.Format("***** Bad serialize on {0} *****", item.GetType()));
 								}
@@ -601,7 +601,7 @@ namespace Server
 							{
 								g.Deserialize(reader);
 
-								if (reader.Position != (entry.Position + entry.Length))
+								if (reader.Position != entry.Position + entry.Length)
 								{
 									throw new Exception(string.Format("***** Bad serialize on Guild {0} *****", g.Id));
 								}
@@ -957,12 +957,13 @@ namespace Server
 			{
 				return FindItem(serial);
 			}
-			else if (serial.IsMobile)
-			{
-				return FindMobile(serial);
-			}
 
-			return null;
+            if (serial.IsMobile)
+            {
+                return FindMobile(serial);
+            }
+
+            return null;
 		}
 
 		public static Mobile FindMobile(Serial serial)
