@@ -4110,7 +4110,7 @@ namespace Server
 			{
 				okay = false;
 			}
-			else if (root != null && root is Mobile mobile && mobile.IsSnoop(this))
+			else if (root is Mobile mobile && mobile.IsSnoop(this))
 			{
 				item.OnSnoop(this);
 			}
@@ -4226,7 +4226,7 @@ namespace Server
 					{
 						object root = item.RootParent;
 
-						if (root != null && root is Mobile mobile && !mobile.CheckNonlocalLift(from, item))
+						if (root is Mobile mobile && !mobile.CheckNonlocalLift(from, item))
 						{
 							reject = LRReason.TryToSteal;
 						}
@@ -6871,12 +6871,9 @@ namespace Server
 							ns.Send(m.RemovePacket);
 						}
 					}
-					else if (o is Item item)
+					else if (o is Item item && InRange(item.Location, item.GetUpdateRange(this)))
 					{
-                        if (InRange(item.Location, item.GetUpdateRange(this)))
-						{
-							ns.Send(item.RemovePacket);
-						}
+                        ns.Send(item.RemovePacket);
 					}
 				}
 
@@ -8639,12 +8636,9 @@ namespace Server
 						return false;
 					}
 				}
-				else if (item.Parent is Mobile mobile)
+				else if (item.Parent is Mobile mobile && !CanSee(mobile))
 				{
-					if (!CanSee(mobile))
-					{
-						return false;
-					}
+                    return false;
 				}
 			}
 
@@ -11856,9 +11850,7 @@ namespace Server
 			}
 		}
 
-		private static readonly string[] m_GuildTypes = { "", " (Chaos)", " (Order)" };
-
-		public virtual bool CanTarget => true;
+        public virtual bool CanTarget => true;
 		public virtual bool ClickTitle => true;
 
 		public virtual bool PropertyTitle => true;
