@@ -926,13 +926,13 @@ namespace Server
 					surface = id.Surface;
 					impassable = id.Impassable;
 
-					if ((surface || impassable || (checkBlocksFit && item.BlocksFit)) && (item.Z + id.CalcHeight) > z &&
+					if ((surface || impassable || checkBlocksFit && item.BlocksFit) && (item.Z + id.CalcHeight) > z &&
 						(z + height) > item.Z)
 					{
 						return false;
 					}
 
-					if (surface && !impassable && !item.Movable && z == (item.Z + id.CalcHeight))
+					if (surface && !impassable && !item.Movable && z == item.Z + id.CalcHeight)
 					{
 						hasSurface = true;
 					}
@@ -1000,13 +1000,13 @@ namespace Server
 				}
 			}
 
-
-			if (impassable && avgZ > z && (z + height) > lowZ)
+            if (impassable && avgZ > z && (z + height) > lowZ)
 				return false;
-			else if (!impassable && z == avgZ && !lt.Ignored)
-				hasSurface = true;
 
-			StaticTile[] staticTiles = Tiles.GetStaticTiles(x, y, true);
+            if (!impassable && z == avgZ && !lt.Ignored)
+                hasSurface = true;
+
+            StaticTile[] staticTiles = Tiles.GetStaticTiles(x, y, true);
 
 			for (int i = 0; i < staticTiles.Length; ++i)
 			{
@@ -1029,11 +1029,10 @@ namespace Server
 
 				if ((surface || impassable) && (staticTiles[i].Z + id.CalcHeight) > z && (z + height) > staticTiles[i].Z)
 					return false;
-				else if (surface && !impassable && z == (staticTiles[i].Z + id.CalcHeight))
-					hasSurface = true;
 
-
-			}
+                if (surface && !impassable && z == (staticTiles[i].Z + id.CalcHeight))
+                    hasSurface = true;
+            }
 
 			Sector sector = GetSector(x, y);
 			List<Item> items = sector.Items;
@@ -1062,11 +1061,12 @@ namespace Server
 						}
 					}
 
-					if ((surface || impassable || (checkBlocksFit && item.BlocksFit)) && (item.Z + id.CalcHeight) > z && (z + height) > item.Z)
+					if ((surface || impassable || checkBlocksFit && item.BlocksFit) && (item.Z + id.CalcHeight) > z && (z + height) > item.Z)
 						return false;
-					else if (surface && !impassable && !item.Movable && z == (item.Z + id.CalcHeight))
-						hasSurface = true;
-				}
+
+                    if (surface && !impassable && !item.Movable && z == (item.Z + id.CalcHeight))
+                        hasSurface = true;
+                }
 			}
 
 			if (checkMobiles)
@@ -1644,8 +1644,8 @@ namespace Server
 		}
 
 		private Sector InternalGetSector(int x, int y)
-		{
-			if (x >= 0 && x < m_SectorsWidth && y >= 0 && y < m_SectorsHeight)
+        {
+            if (x >= 0 && x < m_SectorsWidth && y >= 0 && y < m_SectorsHeight)
 			{
 				Sector[] xSectors = m_Sectors[x];
 
@@ -1663,11 +1663,9 @@ namespace Server
 
 				return sec;
 			}
-			else
-			{
-				return m_InvalidSector;
-			}
-		}
+
+            return m_InvalidSector;
+        }
 		#endregion
 
 		public void ActivateSectors(int cx, int cy)
@@ -1745,13 +1743,12 @@ namespace Server
 
 			GetSector(item).OnEnter(item);
 
-			if (item is BaseMulti)
+			if (item is BaseMulti m)
 			{
-				BaseMulti m = (BaseMulti)item;
-				MultiComponentList mcl = m.Components;
+                MultiComponentList mcl = m.Components;
 
-				Sector start = GetMultiMinSector(item.Location, mcl);
-				Sector end = GetMultiMaxSector(item.Location, mcl);
+				Sector start = GetMultiMinSector(m.Location, mcl);
+				Sector end = GetMultiMaxSector(m.Location, mcl);
 
 				AddMulti(m, start, end);
 			}
@@ -1774,13 +1771,12 @@ namespace Server
 
 			GetSector(item).OnLeave(item);
 
-			if (item is BaseMulti)
+			if (item is BaseMulti m)
 			{
-				BaseMulti m = (BaseMulti)item;
-				MultiComponentList mcl = m.Components;
+                MultiComponentList mcl = m.Components;
 
-				Sector start = GetMultiMinSector(item.Location, mcl);
-				Sector end = GetMultiMaxSector(item.Location, mcl);
+				Sector start = GetMultiMinSector(m.Location, mcl);
+				Sector end = GetMultiMaxSector(m.Location, mcl);
 
 				RemoveMulti(m, start, end);
 			}
@@ -1861,13 +1857,12 @@ namespace Server
 				newSector.OnEnter(item);
 			}
 
-			if (item is BaseMulti)
+			if (item is BaseMulti m)
 			{
-				BaseMulti m = (BaseMulti)item;
-				MultiComponentList mcl = m.Components;
+                MultiComponentList mcl = m.Components;
 
-				Sector start = GetMultiMinSector(item.Location, mcl);
-				Sector end = GetMultiMaxSector(item.Location, mcl);
+				Sector start = GetMultiMinSector(m.Location, mcl);
+				Sector end = GetMultiMaxSector(m.Location, mcl);
 
 				Sector oldStart = GetMultiMinSector(oldLocation, mcl);
 				Sector oldEnd = GetMultiMaxSector(oldLocation, mcl);
@@ -2836,23 +2831,23 @@ namespace Server
 		{
 			Point3D p;
 
-			if (o is Mobile)
+			if (o is Mobile mobile)
 			{
-				p = ((Mobile)o).Location;
+				p = mobile.Location;
 				p.Z += 14; //eye ? 15 : 10;
 			}
-			else if (o is Item)
+			else if (o is Item item)
 			{
-				p = ((Item)o).GetWorldLocation();
-				p.Z += (((Item)o).ItemData.Height / 2) + 1;
+				p = item.GetWorldLocation();
+				p.Z += (item.ItemData.Height / 2) + 1;
 			}
-			else if (o is Point3D)
+			else if (o is Point3D point)
 			{
-				p = (Point3D)o;
+				p = point;
 			}
-			else if (o is LandTarget)
+			else if (o is LandTarget landTarget)
 			{
-				p = ((LandTarget)o).Location;
+				p = landTarget.Location;
 
 				int low = 0, avg = 0, top = 0;
 
@@ -2860,16 +2855,15 @@ namespace Server
 
 				p.Z = top + 1;
 			}
-			else if (o is StaticTarget)
+			else if (o is StaticTarget st)
 			{
-				StaticTarget st = (StaticTarget)o;
-				ItemData id = TileData.ItemTable[st.ItemID & TileData.MaxItemValue];
+                ItemData id = TileData.ItemTable[st.ItemID & TileData.MaxItemValue];
 
 				p = new Point3D(st.X, st.Y, st.Z - id.CalcHeight + (id.Height / 2));
 			}
-			else if (o is IPoint3D)
+			else if (o is IPoint3D point3D)
 			{
-				p = new Point3D((IPoint3D)o);
+				p = new Point3D(point3D);
 			}
 			else
 			{
@@ -2900,7 +2894,7 @@ namespace Server
 
 			Point3D end = dest;
 
-			if (org.X > dest.X || (org.X == dest.X && org.Y > dest.Y) || (org.X == dest.X && org.Y == dest.Y && org.Z > dest.Z))
+			if (org.X > dest.X || org.X == dest.X && org.Y > dest.Y || org.X == dest.X && org.Y == dest.Y && org.Z > dest.Z)
 			{
 				Point3D swap = org;
 
@@ -3138,12 +3132,12 @@ namespace Server
 
 		public bool LineOfSight(object from, object dest)
 		{
-			if (from == dest || (from is Mobile && ((Mobile)from).AccessLevel > AccessLevel.Player))
+			if (from == dest || from is Mobile mobile && mobile.AccessLevel > AccessLevel.Player)
 			{
 				return true;
 			}
 
-			if (dest is Item && from is Mobile && ((Item)dest).RootParent == from)
+			if (dest is Item item && from is Mobile && item.RootParent == from)
 			{
 				return true;
 			}
