@@ -3164,12 +3164,9 @@ namespace Server
                         }
                         m_MoveList.Add(mob);
                     }
-                    else if (o is Item item)
+                    else if (o is Item item && item.HandlesOnMovement)
                     {
-                        if (item.HandlesOnMovement)
-                        {
-                            m_MoveList.Add(item);
-                        }
+                        m_MoveList.Add(item);
                     }
                 }
 
