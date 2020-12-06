@@ -69,12 +69,7 @@ namespace Server
 		{
 			object[] objs = mi.GetCustomAttributes(typeof(CallPriorityAttribute), true);
 
-			if (objs == null)
-			{
-				return 0;
-			}
-
-			if (objs.Length == 0)
+            if (objs.Length == 0)
 			{
 				return 0;
 			}

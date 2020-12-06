@@ -176,7 +176,8 @@ namespace Server.Network
                 throw new ArgumentOutOfRangeException(
                     "length", length, "Length cannot be less than zero or greater than the size of the buffer.");
             }
-            else if ((buffer.Length - offset) < length)
+
+            if ((buffer.Length - offset) < length)
             {
                 throw new ArgumentException("Offset and length do not point to a valid segment within the buffer.");
             }

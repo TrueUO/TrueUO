@@ -585,8 +585,8 @@ namespace Server
 
 		public int Localization => 1044060 + SkillID;
 
-		private static SkillInfo[] m_Table = new SkillInfo[58]
-		{
+		private static SkillInfo[] m_Table =
+        {
 			new SkillInfo(0, "Alchemy", 0.0, 5.0, 5.0, "Alchemist", null, 0.0, 0.5, 0.5, 1.0, StatCode.Int, StatCode.Dex),
 			new SkillInfo(1, "Anatomy", 0.0, 0.0, 0.0, "Biologist", null, 0.15, 0.15, 0.7, 1.0, StatCode.Int, StatCode.Str),
 			new SkillInfo(2, "Animal Lore", 0.0, 0.0, 0.0, "Naturalist", null, 0.0, 0.0, 1.0, 1.0, StatCode.Int, StatCode.Str),
@@ -644,8 +644,8 @@ namespace Server
 			new SkillInfo(54, "Spellweaving", 0.0, 0.0, 0.0, "Arcanist", null, 0.0, 0.0, 0.0, 1.0, StatCode.Int, StatCode.Str, true),
 			new SkillInfo(55, "Mysticism", 0.0, 0.0, 0.0, "Mystic", null, 0.0, 0.0, 0.0, 1.0, StatCode.Str, StatCode.Int, true ),
 			new SkillInfo(56, "Imbuing", 0.0, 0.0, 0.0, "Artificer", null, 0.0, 0.0, 0.0, 1.0, StatCode.Int, StatCode.Str),
-			new SkillInfo(57, "Throwing", 0.0, 0.0, 0.0, "Bladeweaver", null, 0.0, 0.0, 0.0, 1.0, StatCode.Dex, StatCode.Str, true ),
-		};
+			new SkillInfo(57, "Throwing", 0.0, 0.0, 0.0, "Bladeweaver", null, 0.0, 0.0, 0.0, 1.0, StatCode.Dex, StatCode.Str, true )
+        };
 
 		public static SkillInfo[] Table { get => m_Table; set => m_Table = value; }
 	}
@@ -888,22 +888,24 @@ namespace Server
 			{
 				return false;
 			}
-			else if (!from.Region.OnSkillUse(from, skillID))
-			{
-				return false;
-			}
-			else if (!from.AllowSkillUse((SkillName)skillID))
-			{
-				return false;
-			}
 
-			if (skillID >= 0 && skillID < SkillInfo.Table.Length)
+            if (!from.Region.OnSkillUse(from, skillID))
+            {
+                return false;
+            }
+
+            if (!from.AllowSkillUse((SkillName)skillID))
+            {
+                return false;
+            }
+
+            if (skillID >= 0 && skillID < SkillInfo.Table.Length)
 			{
 				SkillInfo info = SkillInfo.Table[skillID];
 
 				if (info.Callback != null)
-				{
-					if (Core.TickCount - from.NextSkillTime >= 0 && (info.UseWhileCasting || from.Spell == null))
+                {
+                    if (Core.TickCount - from.NextSkillTime >= 0 && (info.UseWhileCasting || from.Spell == null))
 					{
 						from.DisruptiveAction();
 
@@ -911,11 +913,9 @@ namespace Server
 
 						return true;
 					}
-					else
-					{
-						from.SendSkillMessage();
-					}
-				}
+
+                    from.SendSkillMessage();
+                }
 				else
 				{
 					from.SendLocalizedMessage(500014); // That skill cannot be used directly.
@@ -987,15 +987,12 @@ namespace Server
 		public Skills(Mobile owner)
 		{
 			m_Owner = owner;
-			m_Cap = Config.Get("PlayerCaps.TotalSkillCap", 7000); ;
+			m_Cap = Config.Get("PlayerCaps.TotalSkillCap", 7000);
 
-			SkillInfo[] info = SkillInfo.Table;
+            SkillInfo[] info = SkillInfo.Table;
 
 			m_Skills = new Skill[info.Length];
-
-			//for ( int i = 0; i < info.Length; ++i )
-			//	m_Skills[i] = new Skill( this, info[i], 0, 1000, SkillLock.Up );
-		}
+        }
 
 		public Skills(Mobile owner, GenericReader reader)
 		{
@@ -1052,10 +1049,7 @@ namespace Server
 						}
 					}
 
-					//for ( int i = count; i < info.Length; ++i )
-					//	m_Skills[i] = new Skill( this, info[i], 0, 1000, SkillLock.Up );
-
-					break;
+                    break;
 				}
 				case 0:
 				{

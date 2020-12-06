@@ -1099,16 +1099,14 @@ namespace Server
         }
 
         public override string ReadString()
-		{
-			if (ReadByte() != 0)
+        {
+            if (ReadByte() != 0)
 			{
 				return m_File.ReadString();
 			}
-			else
-			{
-				return null;
-			}
-		}
+
+            return null;
+        }
 
 		public override DateTime ReadDeltaTime()
 		{
@@ -1119,12 +1117,13 @@ namespace Server
 			{
 				return DateTime.MaxValue;
 			}
-			else if (ticks < 0 && (ticks + now) < 0)
-			{
-				return DateTime.MinValue;
-			}
 
-			try
+            if (ticks < 0 && (ticks + now) < 0)
+            {
+                return DateTime.MinValue;
+            }
+
+            try
 			{
 				return new DateTime(now + ticks);
 			}
@@ -1136,11 +1135,9 @@ namespace Server
 				{
 					return DateTime.MaxValue;
 				}
-				else
-				{
-					return DateTime.MinValue;
-				}
-			}
+
+                return DateTime.MinValue;
+            }
 		}
 
 		public override IPAddress ReadIPAddress()
@@ -1340,11 +1337,9 @@ namespace Server
 
 				return list;
 			}
-			else
-			{
-				return new ArrayList();
-			}
-		}
+
+            return new ArrayList();
+        }
 
 		public override ArrayList ReadMobileList()
 		{
@@ -1366,11 +1361,9 @@ namespace Server
 
 				return list;
 			}
-			else
-			{
-				return new ArrayList();
-			}
-		}
+
+            return new ArrayList();
+        }
 
 		public override ArrayList ReadGuildList()
 		{
@@ -1392,11 +1385,9 @@ namespace Server
 
 				return list;
 			}
-			else
-			{
-				return new ArrayList();
-			}
-		}
+
+            return new ArrayList();
+        }
 
 		public override List<Item> ReadStrongItemList()
 		{
@@ -1423,11 +1414,9 @@ namespace Server
 
 				return list;
 			}
-			else
-			{
-				return new List<T>();
-			}
-		}
+
+            return new List<T>();
+        }
 
 		public override HashSet<Item> ReadItemSet()
 		{
@@ -1454,11 +1443,9 @@ namespace Server
 
 				return set;
 			}
-			else
-			{
-				return new HashSet<T>();
-			}
-		}
+
+            return new HashSet<T>();
+        }
 
 		public override List<Mobile> ReadStrongMobileList()
 		{
@@ -1485,11 +1472,9 @@ namespace Server
 
 				return list;
 			}
-			else
-			{
-				return new List<T>();
-			}
-		}
+
+            return new List<T>();
+        }
 
 		public override HashSet<Mobile> ReadMobileSet()
 		{
@@ -1516,11 +1501,9 @@ namespace Server
 
 				return set;
 			}
-			else
-			{
-				return new HashSet<T>();
-			}
-		}
+
+            return new HashSet<T>();
+        }
 
 		public override List<BaseGuild> ReadStrongGuildList()
 		{
@@ -1547,11 +1530,9 @@ namespace Server
 
 				return list;
 			}
-			else
-			{
-				return new List<T>();
-			}
-		}
+
+            return new List<T>();
+        }
 
 		public override HashSet<BaseGuild> ReadGuildSet()
 		{
@@ -1578,11 +1559,9 @@ namespace Server
 
 				return set;
 			}
-			else
-			{
-				return new HashSet<T>();
-			}
-		}
+
+            return new HashSet<T>();
+        }
 
 		public override Race ReadRace()
 		{

@@ -194,8 +194,8 @@ namespace Server.Targeting
 
                 if (!mobile.CanTarget)
                 {
-                    OnTargetUntargetable(@from, mobile);
-                    OnTargetFinish(@from);
+                    OnTargetUntargetable(from, mobile);
+                    OnTargetFinish(from);
                     return;
                 }
 
@@ -213,8 +213,8 @@ namespace Server.Targeting
 
                 if (!item.CanTarget)
                 {
-                    OnTargetUntargetable(@from, item);
-                    OnTargetFinish(@from);
+                    OnTargetUntargetable(from, item);
+                    OnTargetFinish(from);
                     return;
                 }
 

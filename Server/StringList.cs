@@ -100,7 +100,7 @@ namespace Server
 
         public static string FormatArguments(string entry)
         {
-            return FormatExpression.Replace(entry, new MatchEvaluator(MatchComparison));
+            return FormatExpression.Replace(entry, MatchComparison);
         }
 
         //UO tabbed argument conversion

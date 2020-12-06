@@ -554,6 +554,6 @@ namespace Server
 
 		Failure = 0,
 
-		Success = 1,
-	}
+		Success = 1
+    }
 }

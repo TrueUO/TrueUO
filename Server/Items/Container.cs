@@ -269,20 +269,21 @@ namespace Server.Items
 			object parent = Parent;
 
 			while (parent != null)
-			{
-				if (parent is Container containerParent)
+            {
+                if (parent is Container containerParent)
 				{
 					return containerParent.CheckHold(m, item, message, checkItems, plusItems, plusWeight);
 				}
-				else if (parent is Item itemParent)
-				{
-					parent = itemParent.Parent;
-				}
-				else
-				{
-					break;
-				}
-			}
+
+                if (parent is Item itemParent)
+                {
+                    parent = itemParent.Parent;
+                }
+                else
+                {
+                    break;
+                }
+            }
 
 			return true;
 		}
@@ -487,12 +488,13 @@ namespace Server.Items
 			{
 				throw new ArgumentException();
 			}
-			else if (grouper == null)
-			{
-				throw new ArgumentNullException();
-			}
 
-			Item[][][] items = new Item[types.Length][][];
+            if (grouper == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            Item[][][] items = new Item[types.Length][][];
 			int[][] totals = new int[types.Length][];
 
 			for (int i = 0; i < types.Length; ++i)
@@ -622,12 +624,13 @@ namespace Server.Items
 			{
 				throw new ArgumentException();
 			}
-			else if (grouper == null)
-			{
-				throw new ArgumentNullException();
-			}
 
-			Item[][][] items = new Item[types.Length][][];
+            if (grouper == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            Item[][][] items = new Item[types.Length][][];
 			int[][] totals = new int[types.Length][];
 
 			for (int i = 0; i < types.Length; ++i)
@@ -1342,16 +1345,17 @@ namespace Server.Items
 					{
 						return item;
 					}
-					else if (recurse && item is Container)
-					{
-						Item check = RecurseFindItemByType(item, type, recurse);
 
-						if (check != null)
-						{
-							return check;
-						}
-					}
-				}
+                    if (recurse && item is Container)
+                    {
+                        Item check = RecurseFindItemByType(item, type, recurse);
+
+                        if (check != null)
+                        {
+                            return check;
+                        }
+                    }
+                }
 			}
 
 			return null;
@@ -1381,16 +1385,17 @@ namespace Server.Items
 					{
 						return item;
 					}
-					else if (recurse && item is Container)
-					{
-						Item check = RecurseFindItemByType(item, types, recurse);
 
-						if (check != null)
-						{
-							return check;
-						}
-					}
-				}
+                    if (recurse && item is Container)
+                    {
+                        Item check = RecurseFindItemByType(item, types, recurse);
+
+                        if (check != null)
+                        {
+                            return check;
+                        }
+                    }
+                }
 			}
 
 			return null;
@@ -1780,18 +1785,16 @@ namespace Server.Items
 		}
 
 		public override bool OnDragDrop(Mobile from, Item dropped)
-		{
-			if (TryDropItem(from, dropped, true))
+        {
+            if (TryDropItem(from, dropped, true))
 			{
 				from.SendSound(GetDroppedSound(dropped), GetWorldLocation());
 
 				return true;
 			}
-			else
-			{
-				return false;
-			}
-		}
+
+            return false;
+        }
 
 		public virtual bool TryDropItem(Mobile from, Item dropped, bool sendFullMessage)
 		{
@@ -2151,11 +2154,9 @@ namespace Server.Items
 			{
 				return data;
 			}
-			else
-			{
-				return m_Default;
-			}
-		}
+
+            return m_Default;
+        }
 
 		private readonly int m_GumpID;
 		private readonly Rectangle2D m_Bounds;
