@@ -303,12 +303,9 @@ namespace Server.Mobiles
 
                 from.Target = new AIControlMobileTarget(this, order);
             }
-            else if (from.Target is AIControlMobileTarget t)
+            else if (from.Target is AIControlMobileTarget t && t.Order == order)
             {
-                if (t.Order == order)
-                {
-                    t.AddAI(this);
-                }
+                t.AddAI(this);
             }
         }
 
@@ -332,22 +329,18 @@ namespace Server.Mobiles
                 return;
             }
 
-            if (order == OrderType.Attack)
+            if (order == OrderType.Attack && target is BaseCreature bc)
             {
-                if (target is BaseCreature bc)
+                if (bc.IsScaryToPets && m_Mobile.IsScaredOfScaryThings)
                 {
-                    if (bc.IsScaryToPets && m_Mobile.IsScaredOfScaryThings)
-                    {
-                        m_Mobile.SayTo(from, "Your pet refuses to attack this creature!");
-                        return;
-                    }
+                    m_Mobile.SayTo(from, "Your pet refuses to attack this creature!");
+                    return;
+                }
 
-                    if ((bc is IBlackSolen && SolenHelper.CheckBlackFriendship(from)) ||
-                        (bc is IRedSolen && SolenHelper.CheckRedFriendship(from)))
-                    {
-                        from.SendAsciiMessage("You can not force your pet to attack a creature you are protected from.");
-                        return;
-                    }
+                if (bc is IBlackSolen && SolenHelper.CheckBlackFriendship(from) || bc is IRedSolen && SolenHelper.CheckRedFriendship(from))
+                {
+                    from.SendAsciiMessage("You can not force your pet to attack a creature you are protected from.");
+                    return;
                 }
             }
 
@@ -1325,8 +1318,7 @@ namespace Server.Mobiles
 
             WalkRandomInHome(3, 2, 1);
 
-            if (m_Mobile.Combatant is Mobile mobile && !mobile.Deleted && mobile.Alive &&
-                (!(mobile is Mobile) || !mobile.IsDeadBondedPet))
+            if (m_Mobile.Combatant is Mobile mobile && !mobile.Deleted && mobile.Alive && (!(mobile is Mobile) || !mobile.IsDeadBondedPet))
             {
                 m_Mobile.Warmode = true;
             }
@@ -1359,8 +1351,7 @@ namespace Server.Mobiles
 
                     if (WalkMobileRange(m_Mobile.ControlMaster, 1, bRun, 0, 1))
                     {
-                        if (m_Mobile.Combatant is Mobile mobile && !mobile.Deleted && mobile.Alive &&
-                            (!(mobile is Mobile) || !mobile.IsDeadBondedPet))
+                        if (m_Mobile.Combatant is Mobile mobile && !mobile.Deleted && mobile.Alive && (!(mobile is Mobile) || !mobile.IsDeadBondedPet))
                         {
                             m_Mobile.Warmode = true;
                         }
@@ -1454,8 +1445,7 @@ namespace Server.Mobiles
                 {
                     m_Mobile.DebugSay("I have lost the one to follow. I stay here");
 
-                    if (m_Mobile.Combatant is Mobile mobile && !mobile.Deleted && mobile.Alive &&
-                        (!(mobile is Mobile) || !mobile.IsDeadBondedPet))
+                    if (m_Mobile.Combatant is Mobile mobile && !mobile.Deleted && mobile.Alive && (!(mobile is Mobile) || !mobile.IsDeadBondedPet))
                     {
                         m_Mobile.Warmode = true;
                     }
