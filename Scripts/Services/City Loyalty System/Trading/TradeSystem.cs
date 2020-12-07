@@ -371,6 +371,7 @@ namespace Server.Engines.CityLoyalty
             {
                 if (c.Expired)
                 {
+                    c.Owner.SendMessage("The crate expired...");
                     CancelTradeOrder(c.Owner, c);
                 }
                 else if (c.Entry != null)
