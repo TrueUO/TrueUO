@@ -261,7 +261,7 @@ namespace Server
 		public Point3D GoLocation { get => m_GoLocation; set => m_GoLocation = value; }
 
 		[CommandProperty(AccessLevel.GameMaster)]
-		public MusicName Music { get; }
+		public MusicName Music { get; set; }
 
 		[CommandProperty(AccessLevel.GameMaster)]
 		public bool IsDefault => m_Map.DefaultRegion == this;
