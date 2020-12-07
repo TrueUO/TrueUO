@@ -6874,12 +6874,9 @@ namespace Server
 							ns.Send(m.RemovePacket);
 						}
 					}
-					else if (o is Item item)
+					else if (o is Item item && InRange(item.Location, item.GetUpdateRange(this)))
 					{
-                        if (InRange(item.Location, item.GetUpdateRange(this)))
-						{
-							ns.Send(item.RemovePacket);
-						}
+                        ns.Send(item.RemovePacket);
 					}
 				}
 
@@ -7124,31 +7121,28 @@ namespace Server
 							item.SendInfoTo(ns);
 						}
 					}
-					else if (o is Mobile m)
+					else if (o is Mobile m && Utility.InUpdateRange(this, m) && CanSee(m))
 					{
-                        if (Utility.InUpdateRange(this, m) && CanSee(m))
-						{
-							ns.Send(MobileIncoming.Create(ns, this, m));
+                        ns.Send(MobileIncoming.Create(ns, this, m));
 
-							if (ns.IsEnhancedClient)
-							{
-								ns.Send(new HealthbarPoisonEC(m));
-								ns.Send(new HealthbarYellowEC(m));
-							}
-							else
-							{
-								ns.Send(new HealthbarPoison(m));
-								ns.Send(new HealthbarYellow(m));
-							}
+                        if (ns.IsEnhancedClient)
+                        {
+                            ns.Send(new HealthbarPoisonEC(m));
+                            ns.Send(new HealthbarYellowEC(m));
+                        }
+                        else
+                        {
+                            ns.Send(new HealthbarPoison(m));
+                            ns.Send(new HealthbarYellow(m));
+                        }
 
-							if (m.IsDeadBondedPet)
-							{
-								ns.Send(new BondedStatus(0, m.m_Serial, 1));
-							}
+                        if (m.IsDeadBondedPet)
+                        {
+                            ns.Send(new BondedStatus(0, m.m_Serial, 1));
+                        }
 
-							ns.Send(m.OPLPacket);
-						}
-					}
+                        ns.Send(m.OPLPacket);
+                    }
 				}
 
 				eable.Free();
@@ -8648,12 +8642,9 @@ namespace Server
 						return false;
 					}
 				}
-				else if (item.Parent is Mobile mobileParent)
+				else if (item.Parent is Mobile mobileParent && !CanSee(mobileParent))
 				{
-					if (!CanSee(mobileParent))
-					{
-						return false;
-					}
+                    return false;
 				}
 			}
 
