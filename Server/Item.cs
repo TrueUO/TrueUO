@@ -4090,10 +4090,7 @@ namespace Server
 
 							if (m.CanSee(this) && m.InUpdateRange(worldLoc))
 							{
-								//if ( sendOPLUpdate )
-								//	state.Send( RemovePacket );
-
-								if (p == null)
+                                if (p == null)
 								{
 									p = Packet.Acquire(new EquipUpdate(this));
 								}
@@ -4249,7 +4246,7 @@ namespace Server
 				Packet p = null;
 				Point3D worldLoc = GetWorldLocation();
 
-				IPooledEnumerable<NetState> eable = m_Map.GetClientsInRange(worldLoc, Core.GlobalMaxUpdateRange);
+				IPooledEnumerable<NetState> eable = m_Map.GetClientsInRange(worldLoc, Core.GlobalUpdateRange);
 
 				foreach (NetState state in eable)
 				{
@@ -4293,7 +4290,7 @@ namespace Server
 				Packet p = null;
 				Point3D worldLoc = GetWorldLocation();
 
-				IPooledEnumerable<NetState> eable = m_Map.GetClientsInRange(worldLoc, Core.GlobalMaxUpdateRange);
+				IPooledEnumerable<NetState> eable = m_Map.GetClientsInRange(worldLoc, Core.GlobalUpdateRange);
 
 				foreach (NetState state in eable)
 				{
@@ -5323,7 +5320,7 @@ namespace Server
 				return;
 			}
 
-			IPooledEnumerable eable = Map.GetClientsInRange(Location, Core.GlobalMaxUpdateRange);
+			IPooledEnumerable eable = Map.GetClientsInRange(Location, Core.GlobalUpdateRange);
 			Packet p = Packet.Acquire(new MessageLocalized(m_Serial, m_ItemID, MessageType.Regular, 0x3B2, 3, number, Name, args));
 
 			foreach (NetState ns in eable)
@@ -5337,7 +5334,7 @@ namespace Server
 
 		public void SendLocalizedMessage(MessageType type, int number, AffixType affixType, string affix, string args)
 		{
-			IPooledEnumerable eable = Map.GetClientsInRange(Location, Core.GlobalMaxUpdateRange);
+			IPooledEnumerable eable = Map.GetClientsInRange(Location, Core.GlobalUpdateRange);
 			Packet p = Packet.Acquire(new MessageLocalizedAffix(m_Serial, m_ItemID, type, 0x3B2, 3, number, "", affixType, affix, args));
 
 			foreach (NetState ns in eable)

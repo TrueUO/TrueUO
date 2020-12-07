@@ -3181,10 +3181,6 @@ namespace Server
 
                 Packet[][] cache = m_MovingPacketCache;
 
-                /*for( int i = 0; i < cache.Length; ++i )
-					for (int j = 0; j < cache[i].Length; ++j)
-						Packet.Release( ref cache[i][j] );*/
-
                 foreach (Mobile m in m_MoveClientList)
                 {
                     NetState ns = m.NetState;

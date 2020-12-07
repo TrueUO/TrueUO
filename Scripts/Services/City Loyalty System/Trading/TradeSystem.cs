@@ -124,6 +124,11 @@ namespace Server.Engines.CityLoyalty
 
                     if (t != null)
                     {
+                        if (entry.Details.Any(x => x.ItemType.Name == t.Name))
+                        {
+                            continue;
+                        }
+                        
                         int amount = Utility.RandomList(5, 10, 15, 20);
                         entry.Details.Add(new TradeEntry.TradeDetails(t, worth, amount, name));
                     }
@@ -366,6 +371,7 @@ namespace Server.Engines.CityLoyalty
             {
                 if (c.Expired)
                 {
+                    c.Owner.SendMessage("The crate expired...");
                     CancelTradeOrder(c.Owner, c);
                 }
                 else if (c.Entry != null)
