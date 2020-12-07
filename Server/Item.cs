@@ -626,13 +626,13 @@ namespace Server
 				writer.Write(info.m_Location);
 				writer.Write(info.m_WorldLoc);
 
-				if (info.m_Parent is Mobile)
+				if (info.m_Parent is Mobile mobile)
 				{
-					writer.Write((Mobile)info.m_Parent);
+					writer.Write(mobile);
 				}
-				else if (info.m_Parent is Item)
+				else if (info.m_Parent is Item item)
 				{
-					writer.Write((Item)info.m_Parent);
+					writer.Write(item);
 				}
 				else
 				{
@@ -4323,12 +4323,11 @@ namespace Server
 				Mobile m = state.Mobile;
 
 				if (m != null && m.CanSee(this) && m.InRange(worldLoc, GetUpdateRange(m)))
-				{
-					if (p == null)
-						p = Packet.Acquire(new MessageLocalized(m_Serial, m_ItemID, type, hue, 3, number, Name, args));
+                {
+                    p = Packet.Acquire(new MessageLocalized(m_Serial, m_ItemID, type, hue, 3, number, Name, args));
 
-					state.Send(p);
-				}
+                    state.Send(p);
+                }
 
 				Packet.Release(p);
 			}
@@ -4347,19 +4346,17 @@ namespace Server
 				if (m != null && m.CanSee(this) && m.InRange(worldLoc, GetUpdateRange(m)))
 				{
 					if (ascii)
-					{
-						if (asciip == null)
-							asciip = Packet.Acquire(new AsciiMessage(m_Serial, m_ItemID, type, hue, 3, Name, text));
+                    {
+                        asciip = Packet.Acquire(new AsciiMessage(m_Serial, m_ItemID, type, hue, 3, Name, text));
 
-						state.Send(asciip);
-					}
+                        state.Send(asciip);
+                    }
 					else
-					{
-						if (p == null)
-							p = Packet.Acquire(new UnicodeMessage(m_Serial, m_ItemID, type, hue, 3, m.Language, Name, text));
+                    {
+                        p = Packet.Acquire(new UnicodeMessage(m_Serial, m_ItemID, type, hue, 3, m.Language, Name, text));
 
-						state.Send(p);
-					}
+                        state.Send(p);
+                    }
 				}
 
 				Packet.Release(asciip);
