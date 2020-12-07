@@ -605,10 +605,8 @@ namespace Server
             {
                 return m_DefaultHitsRate;
             }
-            else
-            {
-                return m_HitsRegenRate(m);
-            }
+
+            return m_HitsRegenRate(m);
         }
 
         public static TimeSpan GetStamRegenRate(Mobile m)
@@ -617,10 +615,8 @@ namespace Server
             {
                 return m_DefaultStamRate;
             }
-            else
-            {
-                return m_StamRegenRate(m);
-            }
+
+            return m_StamRegenRate(m);
         }
 
         public static TimeSpan GetManaRegenRate(Mobile m)
@@ -629,10 +625,8 @@ namespace Server
             {
                 return m_DefaultManaRate;
             }
-            else
-            {
-                return m_ManaRegenRate(m);
-            }
+
+            return m_ManaRegenRate(m);
         }
         #endregion
 
@@ -877,7 +871,7 @@ namespace Server
         {
             if (m_Resistances == null)
             {
-                m_Resistances = new int[5] { int.MinValue, int.MinValue, int.MinValue, int.MinValue, int.MinValue };
+                m_Resistances = new[] { int.MinValue, int.MinValue, int.MinValue, int.MinValue, int.MinValue };
             }
 
             bool delta = false;
@@ -902,7 +896,7 @@ namespace Server
         {
             if (m_Resistances == null)
             {
-                m_Resistances = new int[5] { int.MinValue, int.MinValue, int.MinValue, int.MinValue, int.MinValue };
+                m_Resistances = new[] { int.MinValue, int.MinValue, int.MinValue, int.MinValue, int.MinValue };
             }
 
             int v = (int)type;
@@ -963,7 +957,7 @@ namespace Server
         {
             if (m_Resistances == null)
             {
-                m_Resistances = new int[5] { int.MinValue, int.MinValue, int.MinValue, int.MinValue, int.MinValue };
+                m_Resistances = new[] { int.MinValue, int.MinValue, int.MinValue, int.MinValue, int.MinValue };
             }
 
             for (int i = 0; i < m_Resistances.Length; ++i)
@@ -1315,7 +1309,8 @@ namespace Server
             {
                 return false;
             }
-            else if (target == this || IsStaff())
+
+            if (target == this || IsStaff())
             {
                 return true;
             }
@@ -1329,14 +1324,14 @@ namespace Server
             {
                 return false;
             }
-            else if (target == this || IsStaff())
+
+            if (target == this || IsStaff())
             {
                 return true;
             }
-            else if (target is Item)
-            {
-                Item item = (Item)target;
 
+            if (target is Item item)
+            {
                 if (item.RootParent == this)
                 {
                     return true;
@@ -1357,7 +1352,8 @@ namespace Server
             {
                 return false;
             }
-            else if (IsStaff())
+
+            if (IsStaff())
             {
                 return true;
             }
@@ -1379,7 +1375,8 @@ namespace Server
 
                 return true;
             }
-            else if (!_actions.Contains(toLock))
+
+            if (!_actions.Contains(toLock))
             {
                 _actions.Add(toLock);
 
@@ -1936,7 +1933,7 @@ namespace Server
 
                 // If no combatant, wrong map, one of us is a ghost, or cannot see, or deleted, then stop combat
                 if (combatant == null || combatant.Deleted || m_Deleted || combatant.Map != m_Map ||
-                    !combatant.Alive || !Alive || !CanSee(combatant) || (combatant is Mobile && ((Mobile)combatant).IsDeadBondedPet) ||
+                    !combatant.Alive || !Alive || !CanSee(combatant) || combatant is Mobile mobile && mobile.IsDeadBondedPet ||
                     IsDeadBondedPet)
                 {
                     Combatant = null;
@@ -2067,9 +2064,9 @@ namespace Server
                     {
                         DoHarmful(m_Combatant);
 
-                        if (m_Combatant is Mobile)
+                        if (m_Combatant is Mobile mobile)
                         {
-                            ((Mobile)m_Combatant).PlaySound(((Mobile)m_Combatant).GetAngerSound());
+                            mobile.PlaySound(mobile.GetAngerSound());
                         }
                     }
 
@@ -2857,7 +2854,10 @@ namespace Server
             return true;
         }
 
-        private static readonly Packet[][] m_MovingPacketCache = new Packet[2][] { new Packet[8], new Packet[8] };
+        private static readonly Packet[][] m_MovingPacketCache =
+        {
+            new Packet[8], new Packet[8]
+        };
 
         private bool m_Pushing;
         private bool m_IgnoreMobiles;
@@ -3039,7 +3039,8 @@ namespace Server
                                 {
                                     return false;
                                 }
-                                else if (m.X == x && m.Y == y && (m.Z + 15) > newZ && (newZ + 15) > m.Z && !m.OnMoveOver(this))
+
+                                if (m.X == x && m.Y == y && (m.Z + 15) > newZ && (newZ + 15) > m.Z && !m.OnMoveOver(this))
                                 {
                                     return false;
                                 }
@@ -3054,8 +3055,9 @@ namespace Server
                                 {
                                     return false;
                                 }
-                                else if (item.AtWorldPoint(x, y) &&
-                                         (item.Z == newZ || ((item.Z + item.ItemData.Height) >= newZ && (newZ + 15) > item.Z)) && !item.OnMoveOver(this))
+
+                                if (item.AtWorldPoint(x, y) &&
+                                    (item.Z == newZ || ((item.Z + item.ItemData.Height) >= newZ && (newZ + 15) > item.Z)) && !item.OnMoveOver(this))
                                 {
                                     return false;
                                 }
@@ -3157,19 +3159,16 @@ namespace Server
                         continue;
                     }
 
-                    if (o is Mobile)
+                    if (o is Mobile mob)
                     {
-                        Mobile mob = o as Mobile;
                         if (mob.NetState != null)
                         {
                             m_MoveClientList.Add(mob);
                         }
-                        m_MoveList.Add(o);
+                        m_MoveList.Add(mob);
                     }
-                    else if (o is Item)
+                    else if (o is Item item)
                     {
-                        Item item = (Item)o;
-
                         if (item.HandlesOnMovement)
                         {
                             m_MoveList.Add(item);
@@ -3211,13 +3210,13 @@ namespace Server
                 {
                     IEntity o = m_MoveList[i];
 
-                    if (o is Mobile)
+                    if (o is Mobile mobile)
                     {
-                        ((Mobile)o).OnMovement(this, oldLocation);
+                        mobile.OnMovement(this, oldLocation);
                     }
-                    else if (o is Item)
+                    else if (o is Item item)
                     {
-                        ((Item)o).OnMovement(this, oldLocation);
+                        item.OnMovement(this, oldLocation);
                     }
                 }
 
@@ -3298,7 +3297,8 @@ namespace Server
                 {
                     return true;
                 }
-                else if (shoved.m_Hidden && shoved.IsStaff())
+
+                if (shoved.m_Hidden && shoved.IsStaff())
                 {
                     return true;
                 }
@@ -3500,7 +3500,8 @@ namespace Server
             {
                 return;
             }
-            else if (!World.OnDelete(this))
+
+            if (!World.OnDelete(this))
             {
                 return;
             }
@@ -3682,24 +3683,28 @@ namespace Server
 			{
 				return;
 			}
-			else if (!Alive || IsDeadBondedPet)
-			{
-				return;
-			}
-			else if (m_Deleted)
-			{
-				return;
-			}
-			else if (!Region.OnBeforeDeath(this))
-			{
-				return;
-			}
-			else if (!OnBeforeDeath())
-			{
-				return;
-			}
 
-			BankBox box = FindBankNoCreate();
+            if (!Alive || IsDeadBondedPet)
+            {
+                return;
+            }
+
+            if (m_Deleted)
+            {
+                return;
+            }
+
+            if (!Region.OnBeforeDeath(this))
+            {
+                return;
+            }
+
+            if (!OnBeforeDeath())
+            {
+                return;
+            }
+
+            BankBox box = FindBankNoCreate();
 
 			if (box != null && box.Opened)
 			{
@@ -4006,23 +4011,22 @@ namespace Server
 		}
 
 		public virtual int GetDeathSound()
-		{
-			if (m_BaseSoundID != 0)
+        {
+            if (m_BaseSoundID != 0)
 			{
 				return m_BaseSoundID + 4;
 			}
-			else if (m_Body.IsHuman)
-			{
-				return Utility.Random(m_Female ? 0x314 : 0x423, m_Female ? 4 : 5);
-			}
-			else
-			{
-				return -1;
-			}
-		}
+
+            if (m_Body.IsHuman)
+            {
+                return Utility.Random(m_Female ? 0x314 : 0x423, m_Female ? 4 : 5);
+            }
+
+            return -1;
+        }
 		#endregion
 
-		private static char[] m_GhostChars = new char[2] { 'o', 'O' };
+		private static char[] m_GhostChars = { 'o', 'O' };
 
 		public static char[] GhostChars { get => m_GhostChars; set => m_GhostChars = value; }
 
@@ -6267,20 +6271,21 @@ namespace Server
 			{
 				return;
 			}
-			else if (item.Parent is Mobile)
-			{
-				((Mobile)item.Parent).RemoveItem(item);
-			}
-			else if (item.Parent is Item)
-			{
-				((Item)item.Parent).RemoveItem(item);
-			}
-			else
-			{
-				item.SendRemovePacket();
-			}
 
-			Item equipped = FindItemOnLayer(item.Layer);
+            if (item.Parent is Mobile)
+            {
+                ((Mobile)item.Parent).RemoveItem(item);
+            }
+            else if (item.Parent is Item)
+            {
+                ((Item)item.Parent).RemoveItem(item);
+            }
+            else
+            {
+                item.SendRemovePacket();
+            }
+
+            Item equipped = FindItemOnLayer(item.Layer);
 
 			if (equipped != null && equipped != item)
 			{
@@ -6289,16 +6294,16 @@ namespace Server
 					using (StreamWriter op = new StreamWriter("LayerConflict.log", true))
 					{
 						op.WriteLine("# {0}", DateTime.UtcNow);
-						op.WriteLine("Offending Mobile: {0} [{1}]", GetType().ToString(), this);
-						op.WriteLine("Offending Item: {0} [{1}]", item, item.GetType().ToString());
-						op.WriteLine("Equipped Item: {0} [{1}]", equipped, equipped.GetType().ToString());
+						op.WriteLine("Offending Mobile: {0} [{1}]", GetType(), this);
+						op.WriteLine("Offending Item: {0} [{1}]", item, item.GetType());
+						op.WriteLine("Equipped Item: {0} [{1}]", equipped, equipped.GetType());
 						op.WriteLine("Layer: {0}", item.Layer.ToString());
 						op.WriteLine();
 					}
 
-					Utility.WriteConsoleColor(ConsoleColor.Red, string.Format("Offending Mobile: {0} [{1}]", GetType().ToString(), this));
-					Utility.WriteConsoleColor(ConsoleColor.Red, string.Format("Offending Item: {0} [{1}]", item, item.GetType().ToString()));
-					Utility.WriteConsoleColor(ConsoleColor.Red, string.Format("Equipped Item: {0} [{1}]", equipped, equipped.GetType().ToString()));
+					Utility.WriteConsoleColor(ConsoleColor.Red, string.Format("Offending Mobile: {0} [{1}]", GetType(), this));
+					Utility.WriteConsoleColor(ConsoleColor.Red, string.Format("Offending Item: {0} [{1}]", item, item.GetType()));
+					Utility.WriteConsoleColor(ConsoleColor.Red, string.Format("Equipped Item: {0} [{1}]", equipped, equipped.GetType()));
 					Utility.WriteConsoleColor(ConsoleColor.Red, string.Format("Layer: {0}", item.Layer.ToString()));
 				}
 				catch (Exception e)
@@ -6904,21 +6909,20 @@ namespace Server
 		}
 
 		public bool Send(Packet p, bool throwOnOffline)
-		{
-			if (m_NetState != null)
+        {
+            if (m_NetState != null)
 			{
 				m_NetState.Send(p);
 				return true;
 			}
-			else if (throwOnOffline)
-			{
-				throw new MobileNotConnectedException(this, "Packet could not be sent.");
-			}
-			else
-			{
-				return false;
-			}
-		}
+
+            if (throwOnOffline)
+            {
+                throw new MobileNotConnectedException(this, "Packet could not be sent.");
+            }
+
+            return false;
+        }
 
 		#region Gumps/Menus
 		public bool SendHuePicker(HuePicker p)
@@ -6927,21 +6931,20 @@ namespace Server
 		}
 
 		public bool SendHuePicker(HuePicker p, bool throwOnOffline)
-		{
-			if (m_NetState != null)
+        {
+            if (m_NetState != null)
 			{
 				p.SendTo(m_NetState);
 				return true;
 			}
-			else if (throwOnOffline)
-			{
-				throw new MobileNotConnectedException(this, "Hue picker could not be sent.");
-			}
-			else
-			{
-				return false;
-			}
-		}
+
+            if (throwOnOffline)
+            {
+                throw new MobileNotConnectedException(this, "Hue picker could not be sent.");
+            }
+
+            return false;
+        }
 
 		public Gump FindGump(Type type)
 		{
@@ -6967,8 +6970,8 @@ namespace Server
 		}
 
 		public bool CloseGump(Type type)
-		{
-			if (m_NetState != null)
+        {
+            if (m_NetState != null)
 			{
 				Gump gump = FindGump(type);
 
@@ -6983,11 +6986,9 @@ namespace Server
 
 				return true;
 			}
-			else
-			{
-				return false;
-			}
-		}
+
+            return false;
+        }
 
 		[Obsolete("Use CloseGump( Type ) instead.")]
 		public bool CloseGump(Type type, int buttonID)
@@ -7020,11 +7021,9 @@ namespace Server
 
 				return true;
 			}
-			else
-			{
-				return false;
-			}
-		}
+
+            return false;
+        }
 
 		[Obsolete("Use CloseAllGumps() instead.", false)]
 		public bool CloseAllGumps(bool throwOnOffline)
@@ -7049,21 +7048,20 @@ namespace Server
 		}
 
 		public bool SendGump(Gump g, bool throwOnOffline)
-		{
-			if (m_NetState != null)
+        {
+            if (m_NetState != null)
 			{
 				g.SendTo(m_NetState);
 				return true;
 			}
-			else if (throwOnOffline)
-			{
-				throw new MobileNotConnectedException(this, "Gump could not be sent.");
-			}
-			else
-			{
-				return false;
-			}
-		}
+
+            if (throwOnOffline)
+            {
+                throw new MobileNotConnectedException(this, "Gump could not be sent.");
+            }
+
+            return false;
+        }
 
 		public bool SendMenu(IMenu m)
 		{
@@ -7071,21 +7069,20 @@ namespace Server
 		}
 
 		public bool SendMenu(IMenu m, bool throwOnOffline)
-		{
-			if (m_NetState != null)
+        {
+            if (m_NetState != null)
 			{
 				m.SendTo(m_NetState);
 				return true;
 			}
-			else if (throwOnOffline)
-			{
-				throw new MobileNotConnectedException(this, "Menu could not be sent.");
-			}
-			else
-			{
-				return false;
-			}
-		}
+
+            if (throwOnOffline)
+            {
+                throw new MobileNotConnectedException(this, "Menu could not be sent.");
+            }
+
+            return false;
+        }
 		#endregion
 
 		/// <summary>
@@ -7431,8 +7428,8 @@ namespace Server
 			}
 
 			if (target is Mobile)
-			{
-				if (((Mobile)target).m_Blessed || !((Mobile)target).Alive || ((Mobile)target).IsDeadBondedPet)
+            {
+                if (((Mobile)target).m_Blessed || !((Mobile)target).Alive || ((Mobile)target).IsDeadBondedPet)
 				{
 					if (message)
 					{
@@ -7441,11 +7438,12 @@ namespace Server
 
 					return false;
 				}
-				else if (!((Mobile)target).CanBeHarmedBy(this, message))
-				{
-					return false;
-				}
-			}
+
+                if (!((Mobile)target).CanBeHarmedBy(this, message))
+                {
+                    return false;
+                }
+            }
 
 			if (target == this)
 			{
@@ -8624,20 +8622,19 @@ namespace Server
 		}
 
 		public virtual bool CanSee(object o)
-		{
-			if (o is Item)
+        {
+            if (o is Item)
 			{
 				return CanSee((Item)o);
 			}
-			else if (o is Mobile)
-			{
-				return CanSee((Mobile)o);
-			}
-			else
-			{
-				return true;
-			}
-		}
+
+            if (o is Mobile)
+            {
+                return CanSee((Mobile)o);
+            }
+
+            return true;
+        }
 
 		public virtual bool CanSee(Item item)
 		{
@@ -8645,12 +8642,13 @@ namespace Server
 			{
 				return false;
 			}
-			else if (item.Map == Map.Internal)
-			{
-				return false;
-			}
 
-			if (item.Parent != null)
+            if (item.Map == Map.Internal)
+            {
+                return false;
+            }
+
+            if (item.Parent != null)
 			{
 				if (item.Parent is Item)
 				{
@@ -8674,7 +8672,7 @@ namespace Server
 			{
 				BankBox box = item as BankBox;
 
-				if (box != null && IsPlayer() && (box.Owner != this || !box.Opened))
+				if (IsPlayer() && (box.Owner != this || !box.Opened))
 				{
 					return false;
 				}
@@ -9189,8 +9187,8 @@ namespace Server
 			}
 		}
 
-		private static readonly int[] m_InvalidBodies = new int[]
-		{
+		private static readonly int[] m_InvalidBodies =
+        {
 			//32,		// Dunno why is blocked
 			//95,		// Used for Turkey
 			//156,		// Dunno why is blocked
@@ -9280,23 +9278,19 @@ namespace Server
 		public Region Region
 		{
 			get
-			{
-				if (m_Region == null)
-				{
-					if (Map == null)
+            {
+                if (m_Region == null)
+                {
+                    if (Map == null)
 					{
 						return Map.Internal.DefaultRegion;
 					}
-					else
-					{
-						return Map.DefaultRegion;
-					}
-				}
-				else
-				{
-					return m_Region;
-				}
-			}
+
+                    return Map.DefaultRegion;
+                }
+
+                return m_Region;
+            }
 		}
 
 		public void FreeCache()
@@ -9920,11 +9914,9 @@ namespace Server
 				{
 					return m_Weapon = (IWeapon)item;
 				}
-				else
-				{
-					return GetDefaultWeapon();
-				}
-			}
+
+                return GetDefaultWeapon();
+            }
 		}
 
 		public virtual IWeapon GetDefaultWeapon()
@@ -10820,7 +10812,7 @@ namespace Server
 				sendFace = true;
 			}
 
-			Packet[][] cache = new Packet[2][] { new Packet[8], new Packet[8] };
+			Packet[][] cache = { new Packet[8], new Packet[8] };
 
 			NetState ourState = m.m_NetState;
 
@@ -11278,8 +11270,8 @@ namespace Server
 		}
 
 		public bool CheckAlive(bool message)
-		{
-			if (!Alive)
+        {
+            if (!Alive)
 			{
 				if (message)
 				{
@@ -11288,11 +11280,9 @@ namespace Server
 
 				return false;
 			}
-			else
-			{
-				return true;
-			}
-		}
+
+            return true;
+        }
 
 		#region Overhead messages
 		public void PublicOverheadMessage(MessageType type, int hue, bool ascii, string text)
@@ -11892,9 +11882,7 @@ namespace Server
 			}
 		}
 
-		private static readonly string[] m_GuildTypes = new[] { "", " (Chaos)", " (Order)" };
-
-		public virtual bool CanTarget => true;
+        public virtual bool CanTarget => true;
 		public virtual bool ClickTitle => true;
 
 		public virtual bool PropertyTitle => true;
@@ -11903,52 +11891,44 @@ namespace Server
 		public virtual bool ShowAccessTitle => false;
 
 		public bool CheckSkill(SkillName skill, double minSkill, double maxSkill)
-		{
-			if (m_SkillCheckLocationHandler == null)
+        {
+            if (m_SkillCheckLocationHandler == null)
 			{
 				return false;
 			}
-			else
-			{
-				return m_SkillCheckLocationHandler(this, skill, minSkill, maxSkill);
-			}
-		}
+
+            return m_SkillCheckLocationHandler(this, skill, minSkill, maxSkill);
+        }
 
 		public bool CheckSkill(SkillName skill, double chance)
-		{
-			if (m_SkillCheckDirectLocationHandler == null)
+        {
+            if (m_SkillCheckDirectLocationHandler == null)
 			{
 				return false;
 			}
-			else
-			{
-				return m_SkillCheckDirectLocationHandler(this, skill, chance);
-			}
-		}
+
+            return m_SkillCheckDirectLocationHandler(this, skill, chance);
+        }
 
 		public bool CheckTargetSkill(SkillName skill, object target, double minSkill, double maxSkill)
-		{
-			if (m_SkillCheckTargetHandler == null)
+        {
+            if (m_SkillCheckTargetHandler == null)
 			{
 				return false;
 			}
-			else
-			{
-				return m_SkillCheckTargetHandler(this, skill, target, minSkill, maxSkill);
-			}
-		}
+
+            return m_SkillCheckTargetHandler(this, skill, target, minSkill, maxSkill);
+        }
 
 		public bool CheckTargetSkill(SkillName skill, object target, double chance)
-		{
-			if (m_SkillCheckDirectTargetHandler == null)
+        {
+            if (m_SkillCheckDirectTargetHandler == null)
 			{
 				return false;
 			}
-			else
-			{
-				return m_SkillCheckDirectTargetHandler(this, skill, target, chance);
-			}
-		}
+
+            return m_SkillCheckDirectTargetHandler(this, skill, target, chance);
+        }
 
 		public virtual void DisruptiveAction()
 		{
