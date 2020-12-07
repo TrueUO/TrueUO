@@ -4113,7 +4113,7 @@ namespace Server
 			{
 				okay = false;
 			}
-			else if (root != null && root is Mobile mobile && mobile.IsSnoop(this))
+			else if (root is Mobile mobile && mobile.IsSnoop(this))
 			{
 				item.OnSnoop(this);
 			}
@@ -4229,7 +4229,7 @@ namespace Server
 					{
 						object root = item.RootParent;
 
-						if (root != null && root is Mobile mobile && !mobile.CheckNonlocalLift(from, item))
+						if (root is Mobile mobile && !mobile.CheckNonlocalLift(from, item))
 						{
 							reject = LRReason.TryToSteal;
 						}
