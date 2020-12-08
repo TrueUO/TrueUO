@@ -678,14 +678,11 @@ namespace Server.Mobiles
                         return paralyzeField;
                     }
                 }
-                else if (item is FireFieldSpell.FireFieldItem fireField)
+                else if (item is FireFieldSpell.FireFieldItem fireField && fireField.Visible && fireField.Caster != null && m_Mobile != fireField.Caster &&
+                         SpellHelper.ValidIndirectTarget(fireField.Caster, m_Mobile) && fireField.Caster.CanBeHarmful(m_Mobile, false))
                 {
-                    if (fireField.Visible && fireField.Caster != null && m_Mobile != fireField.Caster &&
-                        SpellHelper.ValidIndirectTarget(fireField.Caster, m_Mobile) && fireField.Caster.CanBeHarmful(m_Mobile, false))
-                    {
-                        eable.Free();
-                        return fireField;
-                    }
+                    eable.Free();
+                    return fireField;
                 }
             }
 
