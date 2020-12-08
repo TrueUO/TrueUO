@@ -10,8 +10,8 @@ namespace Server.Network
 	/// </summary>
 	public static class Compression
 	{
-		private static readonly int[] _huffmanTable = new int[514]
-		{
+		private static readonly int[] _huffmanTable =
+        {
 			0x2, 0x000, 0x5, 0x01F, 0x6, 0x022, 0x7, 0x034, 0x7, 0x075, 0x6, 0x028, 0x6, 0x03B, 0x7, 0x032, 0x8, 0x0E0, 0x8,
 			0x062, 0x7, 0x056, 0x8, 0x079, 0x9, 0x19D, 0x8, 0x097, 0x6, 0x02A, 0x7, 0x057, 0x8, 0x071, 0x8, 0x05B, 0x9, 0x1CC,
 			0x8, 0x0A7, 0x7, 0x025, 0x7, 0x04F, 0x8, 0x066, 0x8, 0x07D, 0x9, 0x191, 0x9, 0x1CE, 0x7, 0x03F, 0x9, 0x090, 0x8,
@@ -67,20 +67,23 @@ namespace Server.Network
 			{
 				throw new ArgumentNullException("input");
 			}
-			else if (offset < 0 || offset >= input.Length)
-			{
-				throw new ArgumentOutOfRangeException("offset");
-			}
-			else if (count < 0 || count > input.Length)
-			{
-				throw new ArgumentOutOfRangeException("count");
-			}
-			else if ((input.Length - offset) < count)
-			{
-				throw new ArgumentException();
-			}
 
-			length = 0;
+            if (offset < 0 || offset >= input.Length)
+            {
+                throw new ArgumentOutOfRangeException("offset");
+            }
+
+            if (count < 0 || count > input.Length)
+            {
+                throw new ArgumentOutOfRangeException("count");
+            }
+
+            if ((input.Length - offset) < count)
+            {
+                throw new ArgumentException();
+            }
+
+            length = 0;
 
 			if (count > DefiniteOverflow)
 			{
@@ -158,8 +161,7 @@ namespace Server.Network
 						}
 
 						length = (int)(pOutput - pOutputBuffer);
-						return;
-					}
+                    }
 				}
 			}
 		}
