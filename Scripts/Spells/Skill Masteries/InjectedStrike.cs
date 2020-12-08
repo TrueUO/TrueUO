@@ -83,9 +83,9 @@ namespace Server.Spells.SkillMasteries
             BaseWeapon weapon = GetWeapon();
             BasePoisonPotion potion = GetLastPotion(Caster);
 
-            if (o is BasePoisonPotion)
+            if (o is BasePoisonPotion poisonPotion)
             {
-                potion = o as BasePoisonPotion;
+                potion = poisonPotion;
 
                 if (!potion.IsChildOf(Caster.Backpack))
                 {
@@ -104,7 +104,7 @@ namespace Server.Spells.SkillMasteries
                     }
                 }
             }
-            else if (o is BaseWeapon && weapon != null && (BaseWeapon)o == weapon && potion != null)
+            else if (o is BaseWeapon baseWeapon && weapon != null && baseWeapon == weapon && potion != null)
             {
                 if (CheckSequence())
                 {

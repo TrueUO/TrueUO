@@ -36,7 +36,7 @@ namespace Server.Spells.SkillMasteries
             if (!base.CheckCast())
                 return false;
 
-            if (Caster is PlayerMobile && !((PlayerMobile)Caster).Spellweaving)
+            if (Caster is PlayerMobile pm && !pm.Spellweaving)
             {
                 Caster.SendLocalizedMessage(1073220); // You must have completed the epic arcanist quest to use this ability.
                 return false;
@@ -57,10 +57,9 @@ namespace Server.Spells.SkillMasteries
 
         protected override void OnTarget(object o)
         {
-            if (o is IPoint3D)
+            if (o is IPoint3D p)
             {
                 Map map = Caster.Map;
-                IPoint3D p = o as IPoint3D;
 
                 SpellHelper.GetSurfaceTop(ref p);
 

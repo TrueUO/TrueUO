@@ -89,9 +89,9 @@ namespace Server.Spells.SkillMasteries
                                 }
                             }
 
-                            if (bc is SkeletalDragon)
+                            if (bc is SkeletalDragon dragon)
                             {
-                                Engines.Quests.Doom.BellOfTheDead.TryRemoveDragon((SkeletalDragon)bc);
+                                Engines.Quests.Doom.BellOfTheDead.TryRemoveDragon(dragon);
                             }
 
                             Caster.PlaySound(0x5C4);

@@ -653,10 +653,10 @@ namespace Server.Spells.Ninjitsu
                 }
                 else if (m_Body == 0x114) // Reptalon
                 {
-                    if (m_Mobile.Combatant is Mobile && m_Mobile.Combatant != m_LastTarget)
+                    if (m_Mobile.Combatant is Mobile mobile && m_Mobile.Combatant != m_LastTarget)
                     {
                         m_Counter = 1;
-                        m_LastTarget = (Mobile)m_Mobile.Combatant;
+                        m_LastTarget = mobile;
                     }
 
                     if (m_Mobile.Warmode && m_LastTarget != null && m_LastTarget.Alive && !m_LastTarget.Deleted && m_Counter-- <= 0)

@@ -5,6 +5,7 @@ using Server.Multis;
 using Server.Network;
 using Server.Targeting;
 using System;
+using Server.Engines.NewMagincia;
 
 namespace Server.Spells.Seventh
 {
@@ -113,7 +114,7 @@ namespace Server.Spells.Seventh
             else if (!SpellHelper.CheckTravel(Caster, map, loc, TravelCheckType.GateTo))
             {
             }
-            else if (map == Map.Felucca && Caster is PlayerMobile && ((PlayerMobile)Caster).Young)
+            else if (map == Map.Felucca && Caster is PlayerMobile pm && pm.Young)
             {
                 Caster.SendLocalizedMessage(1049543); // You decide against traveling to Felucca while you are still young.
             }
@@ -302,10 +303,8 @@ namespace Server.Spells.Seventh
 
             protected override void OnTarget(Mobile from, object o)
             {
-                if (o is RecallRune)
+                if (o is RecallRune rune)
                 {
-                    RecallRune rune = (RecallRune)o;
-
                     if (rune.Marked)
                     {
                         if (rune.Type == RecallRuneType.Ship)
@@ -322,9 +321,9 @@ namespace Server.Spells.Seventh
                         from.SendLocalizedMessage(501805); // That rune is not yet marked.
                     }
                 }
-                else if (o is Runebook)
+                else if (o is Runebook book)
                 {
-                    RunebookEntry e = ((Runebook)o).Default;
+                    RunebookEntry e = book.Default;
 
                     if (e != null)
                     {
@@ -342,10 +341,8 @@ namespace Server.Spells.Seventh
                         from.SendLocalizedMessage(502354); // Target is not marked.
                     }
                 }
-                else if (o is Engines.NewMagincia.WritOfLease)
+                else if (o is WritOfLease lease)
                 {
-                    Engines.NewMagincia.WritOfLease lease = (Engines.NewMagincia.WritOfLease)o;
-
                     if (lease.RecallLoc != Point3D.Zero && lease.Facet != null && lease.Facet != Map.Internal)
                         m_Owner.Effect(lease.RecallLoc, lease.Facet, false);
                     else

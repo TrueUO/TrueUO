@@ -141,14 +141,6 @@ namespace Server.Spells.Fifth
             {
                 m_Owner = owner;
 
-                /*
-                int val = ((6 * owner.Skills.Magery.Fixed) / 50) + 1;
-
-                if ( val > 144 )
-                val = 144;
-
-                Delay = TimeSpan.FromSeconds( val );
-                * */
                 Priority = TimerPriority.OneSecond;
             }
 
@@ -156,8 +148,8 @@ namespace Server.Spells.Fifth
             {
                 if (!m_Owner.CanBeginAction(typeof(IncognitoSpell)))
                 {
-                    if (m_Owner is PlayerMobile)
-                        ((PlayerMobile)m_Owner).SetHairMods(-1, -1);
+                    if (m_Owner is PlayerMobile pm)
+                        pm.SetHairMods(-1, -1);
 
                     m_Owner.BodyMod = 0;
                     m_Owner.HueMod = -1;
