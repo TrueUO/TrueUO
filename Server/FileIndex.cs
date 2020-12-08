@@ -72,16 +72,17 @@ namespace Server
 
 				return null;
 			}
-			else if (Stream.Length < e.lookup)
-			{
-				length = extra = 0;
 
-				patched = false;
+            if (Stream.Length < e.lookup)
+            {
+                length = extra = 0;
 
-				return null;
-			}
+                patched = false;
 
-			patched = false;
+                return null;
+            }
+
+            patched = false;
 
 			Stream.Seek(e.lookup, SeekOrigin.Begin);
 

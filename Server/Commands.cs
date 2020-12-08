@@ -110,12 +110,13 @@ namespace Server.Commands
 			{
 				return 0;
 			}
-			else if (obj == null)
-			{
-				return 1;
-			}
 
-			CommandEntry e = obj as CommandEntry;
+            if (obj == null)
+            {
+                return 1;
+            }
+
+            CommandEntry e = obj as CommandEntry;
 
 			if (e == null)
 			{

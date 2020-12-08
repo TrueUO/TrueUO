@@ -8,16 +8,14 @@ namespace Server
 		public int[] Values => m_Values;
 
 		public int GetValue(int index)
-		{
-			if (m_Values == null)
+        {
+            if (m_Values == null)
 			{
 				return 0;
 			}
-			else
-			{
-				return m_Values[index];
-			}
-		}
+
+            return m_Values[index];
+        }
 
 		public void SetValue(int index, int value)
 		{
