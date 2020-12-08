@@ -76,10 +76,24 @@ namespace Server.Mobiles
                     }
             }
 
-            if (Utility.RandomDouble() < 0.05)
-                Hue = 1910;
-
             SetSpecialAbility(SpecialAbility.DragonBreath);
+        }
+
+        protected override void OnMapChange(Map oldMap)
+        {
+            base.OnMapChange(oldMap);
+
+            if (!Controlled && Tamable)
+            {
+                if (Utility.RandomDouble() < 0.05 + TotemRareColorChance())
+                {
+                    Hue = 1910;
+                }
+                else if (Totem != null)
+                {
+                    Totem = null;
+                }
+            }
         }
 
         public Nightmare(Serial serial)

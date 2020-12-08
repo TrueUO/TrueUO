@@ -1400,6 +1400,27 @@ namespace Server.Mobiles
             return GetControlChance(m, false);
         }
 
+        [CommandProperty(AccessLevel.GameMaster)]
+        public TotemOfChromaticFortuneAddon Totem { get; set; }
+
+        public double TotemRareColorChance()
+        {
+            IPooledEnumerable<Item> eable = Map.GetItemsInRange(Location, 15);
+
+            foreach (Item item in eable)
+            {
+                if (item is TotemOfChromaticFortuneAddon t)
+                {
+                    Totem = t;
+                    return 0.1;
+                }
+            }
+
+            eable.Free();
+
+            return 0;
+        }
+
         public virtual double GetControlChance(Mobile m, bool useBaseSkill)
         {
             if (m_CurrentTameSkill <= 29.1 || m_bSummoned || m.AccessLevel >= AccessLevel.GameMaster)
