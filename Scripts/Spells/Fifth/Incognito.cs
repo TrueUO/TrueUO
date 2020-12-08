@@ -18,26 +18,13 @@ namespace Server.Spells.Fifth
 
         private static readonly Hashtable m_Timers = new Hashtable();
 
-        private static readonly int[] m_HairIDs =
-        {
-            0x2044, 0x2045, 0x2046,
-            0x203C, 0x203B, 0x203D,
-            0x2047, 0x2048, 0x2049,
-            0x204A, 0x0000
-        };
-        private static readonly int[] m_BeardIDs =
-        {
-            0x203E, 0x203F, 0x2040,
-            0x2041, 0x204B, 0x204C,
-            0x204D, 0x0000
-        };
-
         public IncognitoSpell(Mobile caster, Item scroll)
             : base(caster, scroll, m_Info)
         {
         }
 
         public override SpellCircle Circle => SpellCircle.Fifth;
+
         public static bool StopTimer(Mobile m)
         {
             Timer t = (Timer)m_Timers[m];
