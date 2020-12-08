@@ -189,7 +189,7 @@ namespace Server.Mobiles
             {
                 object[] objs = t.GetCustomAttributes(typeof(FriendlyNameAttribute), false);
 
-                if (objs != null && objs.Length > 0)
+                if (objs.Length > 0)
                 {
                     FriendlyNameAttribute friendly = objs[0] as FriendlyNameAttribute;
 
@@ -420,7 +420,7 @@ namespace Server.Mobiles
         #region Bonding
         public const bool BondingEnabled = true;
 
-        public virtual bool IsBondable => (BondingEnabled && !Summoned && !m_Allured && !(this is IRepairableMobile));
+        public virtual bool IsBondable => !Summoned && !m_Allured && !(this is IRepairableMobile);
         public virtual TimeSpan BondingDelay => TimeSpan.FromDays(7.0);
         public virtual TimeSpan BondingAbandonDelay => TimeSpan.FromDays(1.0);
 
@@ -542,10 +542,8 @@ namespace Server.Mobiles
             {
                 return _Profile.WeaponAbilities[Utility.Random(_Profile.WeaponAbilities.Length)];
             }
-            else
-            {
-                return GetWeaponAbility();
-            }
+
+            return GetWeaponAbility();
         }
 
         public virtual TrainingDefinition TrainingDefinition => null;
@@ -728,11 +726,11 @@ namespace Server.Mobiles
             }
             else
             {
-                MasteryInfo[] masteries = MasteryInfo.Infos.Where(i => i.MasterySkill == _Mastery && !i.Passive && (i.SpellType != typeof(BodyGuardSpell) || Controlled)).ToArray();
+                MasteryInfo[] mInfo = MasteryInfo.Infos.Where(i => i.MasterySkill == _Mastery && !i.Passive && (i.SpellType != typeof(BodyGuardSpell) || Controlled)).ToArray();
 
-                if (masteries != null && masteries.Length > 0)
+                if (mInfo.Length > 0)
                 {
-                    Masteries = masteries;
+                    Masteries = mInfo;
                 }
             }
         }
@@ -902,7 +900,8 @@ namespace Server.Mobiles
                 {
                     return;
                 }
-                else if (value)
+
+                if (value)
                 {
                     Paragon.Convert(this);
                 }
@@ -1269,7 +1268,7 @@ namespace Server.Mobiles
 
             if (Combatant != m)
             {
-                if (m is PlayerMobile && ((PlayerMobile)m).HonorActive)
+                if (m is PlayerMobile pm && pm.HonorActive)
                 {
                     return false;
                 }
@@ -1334,15 +1333,15 @@ namespace Server.Mobiles
             BaseCreature t = this;
 
             // Summons should have same rules as their master
-            if (c.m_bSummoned && c.SummonMaster != null && c.SummonMaster is BaseCreature)
+            if (c.m_bSummoned && c.SummonMaster != null && c.SummonMaster is BaseCreature creature)
             {
-                c = c.SummonMaster as BaseCreature;
+                c = creature;
             }
 
             // Summons should have same rules as their master
-            if (t.m_bSummoned && t.SummonMaster != null && t.SummonMaster is BaseCreature)
+            if (t.m_bSummoned && t.SummonMaster != null && t.SummonMaster is BaseCreature bc)
             {
-                t = t.SummonMaster as BaseCreature;
+                t = bc;
             }
 
             // Creatures on other teams are my enemies
@@ -1497,7 +1496,7 @@ namespace Server.Mobiles
             return true;
         }
 
-        private static readonly Type[] m_AnimateDeadTypes = new[]
+        private static readonly Type[] m_AnimateDeadTypes =
         {
             typeof(MoundOfMaggots), typeof(HellSteed), typeof(SkeletalMount), typeof(WailingBanshee), typeof(Wraith),
             typeof(SkeletalDragon), typeof(LichLord), typeof(FleshGolem), typeof(Lich), typeof(SkeletalKnight),
@@ -1538,8 +1537,8 @@ namespace Server.Mobiles
         {
             int oldHits = Hits;
 
-            if (Controlled && from is BaseCreature && !((BaseCreature)from).Controlled && !((BaseCreature)from).Summoned)
-                amount = (int)(amount * ((BaseCreature)from).BonusPetDamageScalar);
+            if (Controlled && from is BaseCreature creature && !creature.Controlled && !creature.Summoned)
+                amount = (int)(amount * creature.BonusPetDamageScalar);
 
             amount = base.Damage(amount, from, informMount, checkDisrupt);
 
@@ -1840,9 +1839,9 @@ namespace Server.Mobiles
                 m_ReceivedHonorContext.OnTargetDamaged(from, amount);
             }
 
-            if (from is PlayerMobile)
+            if (from is PlayerMobile pm)
             {
-                Timer.DelayCall(TimeSpan.FromSeconds(10), ((PlayerMobile)@from).RecoverAmmo);
+                Timer.DelayCall(TimeSpan.FromSeconds(10), pm.RecoverAmmo);
             }
 
             base.OnDamage(amount, from, willKill);
@@ -1873,22 +1872,15 @@ namespace Server.Mobiles
 
         public virtual void AlterMeleeDamageFrom(Mobile from, ref int damage)
         {
-            #region Mondain's Legacy
-            if (from != null && from.Talisman is BaseTalisman)
+            if (from != null && from.Talisman is BaseTalisman talisman && talisman.Killer != null && talisman.Killer.Type != null)
             {
-                BaseTalisman talisman = (BaseTalisman)from.Talisman;
+                Type type = talisman.Killer.Type;
 
-                if (talisman.Killer != null && talisman.Killer.Type != null)
+                if (type.IsAssignableFrom(GetType()))
                 {
-                    Type type = talisman.Killer.Type;
-
-                    if (type.IsAssignableFrom(GetType()))
-                    {
-                        damage = (int)(damage * (1 + (double)talisman.Killer.Amount / 100));
-                    }
+                    damage = (int)(damage * (1 + (double)talisman.Killer.Amount / 100));
                 }
             }
-            #endregion
 
             if (m_TempDamageAbsorb > 0 && VialofArmorEssence.UnderInfluence(this))
                 damage -= damage / m_TempDamageAbsorb;
@@ -2292,7 +2284,7 @@ namespace Server.Mobiles
 
             writer.Write(m_bControlled);
             writer.Write(m_ControlMaster);
-            writer.Write(m_ControlTarget is Mobile ? (Mobile)m_ControlTarget : null);
+            writer.Write(m_ControlTarget is Mobile mobile ? mobile : null);
             writer.Write(m_ControlDest);
             writer.Write((int)m_ControlOrder);
             writer.Write(m_dMinTameSkill);
@@ -2415,10 +2407,6 @@ namespace Server.Mobiles
             writer.Write(m_CurrentTameSkill);
         }
 
-        private static readonly double[] m_StandardActiveSpeeds = new[] { 0.175, 0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5, 0.6, 0.8 };
-
-        private static readonly double[] m_StandardPassiveSpeeds = new[] { 0.350, 0.2, 0.4, 0.5, 0.6, 0.8, 1.0, 1.2, 1.6, 2.0 };
-
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
@@ -2532,7 +2520,7 @@ namespace Server.Mobiles
                 if (m_bSummoned)
                 {
                     m_SummonEnd = reader.ReadDeltaTime();
-                    TimerRegistry.Register<BaseCreature>("UnsummonTimer", this, m_SummonEnd - DateTime.UtcNow, c => c.Delete()); 
+                    TimerRegistry.Register("UnsummonTimer", this, m_SummonEnd - DateTime.UtcNow, c => c.Delete()); 
                 }
 
                 m_iControlSlots = reader.ReadInt();
@@ -2790,9 +2778,9 @@ namespace Server.Mobiles
 
         public virtual bool CheckGold(Mobile from, Item dropped)
         {
-            if (dropped is Gold)
+            if (dropped is Gold gold)
             {
-                return OnGoldGiven(from, (Gold)dropped);
+                return OnGoldGiven(from, gold);
             }
 
             return false;
@@ -2841,38 +2829,29 @@ namespace Server.Mobiles
         public override bool ShouldCheckStatTimers => false;
 
         #region Food
-        private static readonly Type[] m_Eggs = new[] { typeof(FriedEggs), typeof(Eggs) };
+        private static readonly Type[] m_Eggs = { typeof(FriedEggs), typeof(Eggs) };
 
-        private static readonly Type[] m_Fish = new[] { typeof(FishSteak), typeof(RawFishSteak) };
+        private static readonly Type[] m_Fish = { typeof(FishSteak), typeof(RawFishSteak) };
 
-        private static readonly Type[] m_GrainsAndHay = new[] { typeof(BreadLoaf), typeof(FrenchBread), typeof(SheafOfHay) };
+        private static readonly Type[] m_GrainsAndHay = { typeof(BreadLoaf), typeof(FrenchBread), typeof(SheafOfHay) };
 
-        private static readonly Type[] m_Meat = new[]
+        private static readonly Type[] m_Meat =
         {
-			/* Cooked */
-			typeof(Bacon), typeof(CookedBird), typeof(Sausage), typeof(Ham), typeof(Ribs), typeof(LambLeg), typeof(ChickenLeg),
-			/* Uncooked */
-			typeof(RawBird), typeof(RawRibs), typeof(RawLambLeg), typeof(RawChickenLeg), /* Body Parts */
+            typeof(Bacon), typeof(CookedBird), typeof(Sausage), typeof(Ham), typeof(Ribs), typeof(LambLeg), typeof(ChickenLeg),
+            typeof(RawBird), typeof(RawRibs), typeof(RawLambLeg), typeof(RawChickenLeg), 
 			typeof(Head), typeof(LeftArm), typeof(LeftLeg), typeof(Torso), typeof(RightArm), typeof(RightLeg)
         };
 
-        private static readonly Type[] m_FruitsAndVegies = new[]
+        private static readonly Type[] m_FruitsAndVegies =
         {
             typeof(HoneydewMelon), typeof(YellowGourd), typeof(GreenGourd), typeof(Banana), typeof(Bananas), typeof(Lemon),
             typeof(Lime), typeof(Dates), typeof(Grapes), typeof(Peach), typeof(Pear), typeof(Apple), typeof(Watermelon),
             typeof(Squash), typeof(Cantaloupe), typeof(Carrot), typeof(Cabbage), typeof(Onion), typeof(Lettuce), typeof(Pumpkin)
         };
 
-        private static readonly Type[] m_Gold = new[]
+        private static readonly Type[] m_Metal =
         {
-			// white wyrms eat gold..
-			typeof(Gold)
-        };
-
-        private static readonly Type[] m_Metal = new[]
-        {
-			// Some Stygian Abyss Monsters eat Metal..
-			typeof(IronIngot), typeof(DullCopperIngot), typeof(ShadowIronIngot), typeof(CopperIngot), typeof(BronzeIngot),
+            typeof(IronIngot), typeof(DullCopperIngot), typeof(ShadowIronIngot), typeof(CopperIngot), typeof(BronzeIngot),
             typeof(GoldIngot), typeof(AgapiteIngot), typeof(VeriteIngot), typeof(ValoriteIngot)
         };
 
@@ -3330,10 +3309,8 @@ namespace Server.Mobiles
             {
                 m_ControlMaster.Followers -= ControlSlots;
 
-                if (m_ControlMaster is PlayerMobile)
+                if (m_ControlMaster is PlayerMobile pm)
                 {
-                    PlayerMobile pm = (PlayerMobile)m_ControlMaster;
-
                     pm.AllFollowers.Remove(this);
 
                     if (pm.AutoStabled.Contains(this))
@@ -3341,7 +3318,7 @@ namespace Server.Mobiles
                         pm.AutoStabled.Remove(this);
                     }
 
-                    NetState ns = m_ControlMaster.NetState;
+                    NetState ns = pm.NetState;
 
                     if (ns != null && ns.IsEnhancedClient && Commandable)
                     {
@@ -3358,9 +3335,9 @@ namespace Server.Mobiles
             {
                 m_SummonMaster.Followers -= ControlSlots;
 
-                if (m_SummonMaster is PlayerMobile)
+                if (m_SummonMaster is PlayerMobile mobile)
                 {
-                    ((PlayerMobile)m_SummonMaster).AllFollowers.Remove(this);
+                    mobile.AllFollowers.Remove(this);
                 }
             }
 
@@ -3401,9 +3378,9 @@ namespace Server.Mobiles
             else if (m_SummonMaster != null)
             {
                 m_SummonMaster.Followers += ControlSlots;
-                if (m_SummonMaster is PlayerMobile)
+                if (m_SummonMaster is PlayerMobile mobile)
                 {
-                    ((PlayerMobile)m_SummonMaster).AllFollowers.Add(this);
+                    mobile.AllFollowers.Add(this);
                 }
             }
         }
@@ -3616,10 +3593,10 @@ namespace Server.Mobiles
 
         public virtual void OnGotMeleeAttack(Mobile attacker)
         {
-            if (AutoDispel && attacker is BaseCreature && ((BaseCreature)attacker).IsDispellable &&
+            if (AutoDispel && attacker is BaseCreature bc && bc.IsDispellable &&
                 AutoDispelChance > Utility.RandomDouble())
             {
-                Dispel(attacker);
+                Dispel(bc);
             }
         }
 
@@ -3659,10 +3636,10 @@ namespace Server.Mobiles
                 }
             }
 
-            if (AutoDispel && defender is BaseCreature && ((BaseCreature)defender).IsDispellable &&
+            if (AutoDispel && defender is BaseCreature bc && bc.IsDispellable &&
                 AutoDispelChance > Utility.RandomDouble())
             {
-                Dispel(defender);
+                Dispel(bc);
             }
 
             if (ColossalRage.HasRage(this) && 0.33 >= Utility.RandomDouble())
@@ -3773,10 +3750,8 @@ namespace Server.Mobiles
                         return -GetDistanceToSqrt(m); // returns closest mobile
                 }
             }
-            else
-            {
-                return double.MinValue;
-            }
+
+            return double.MinValue;
         }
 
         // Turn, - for left, + for right
@@ -3813,21 +3788,9 @@ namespace Server.Mobiles
 
             foreach (Mobile m in eable)
             {
-                if (m is BaseCreature)
+                if (m is BaseCreature bc && bc.Team == Team && !bc.Deleted && m != this && CanSee(bc))
                 {
-                    if (((BaseCreature)m).Team == Team)
-                    {
-                        if (!m.Deleted)
-                        {
-                            if (m != this)
-                            {
-                                if (CanSee(m))
-                                {
-                                    iCount++;
-                                }
-                            }
-                        }
-                    }
+                    iCount++;
                 }
             }
 
@@ -4088,9 +4051,9 @@ namespace Server.Mobiles
                 return false;
             }
 
-            if (m is PlayerMobile)
+            if (m is PlayerMobile pm)
             {
-                return (((PlayerMobile)m).Learning == m_Teaching);
+                return (pm.Learning == m_Teaching);
             }
 
             return true;
@@ -4131,9 +4094,9 @@ namespace Server.Mobiles
 
                             m_Teaching = (SkillName)(-1);
 
-                            if (m is PlayerMobile)
+                            if (m is PlayerMobile pm)
                             {
-                                ((PlayerMobile)m).Learning = (SkillName)(-1);
+                                pm.Learning = (SkillName)(-1);
                             }
                         }
                         else
@@ -4144,9 +4107,9 @@ namespace Server.Mobiles
 
                             m_Teaching = skill;
 
-                            if (m is PlayerMobile)
+                            if (m is PlayerMobile mobile)
                             {
-                                ((PlayerMobile)m).Learning = skill;
+                                mobile.Learning = skill;
                             }
                         }
 
@@ -4221,15 +4184,15 @@ namespace Server.Mobiles
                     master.UpdateAggrExpire();
                 }
 
-                if (aggressor is PlayerMobile || (aggressor is BaseCreature && !((BaseCreature)aggressor).IsMonster))
+                if (aggressor is PlayerMobile || aggressor is BaseCreature bc && !bc.IsMonster)
                 {
                     BuffInfo.AddBuff(master, new BuffInfo(BuffIcon.HeatOfBattleStatus, 1153801, 1153827, Aggression.CombatHeatDelay, master, true));
                     BuffInfo.AddBuff(aggressor, new BuffInfo(BuffIcon.HeatOfBattleStatus, 1153801, 1153827, Aggression.CombatHeatDelay, aggressor, true));
                 }
             }
-            else if (aggressor is BaseCreature)
+            else if (aggressor is BaseCreature creature)
             {
-                var pm = ((BaseCreature)aggressor).GetMaster() as PlayerMobile;
+                var pm = creature.GetMaster() as PlayerMobile;
 
                 if (pm != null)
                 {
@@ -4274,9 +4237,9 @@ namespace Server.Mobiles
 
         public override bool OnMoveOver(Mobile m)
         {
-            if (m is BaseCreature && !((BaseCreature)m).Controlled)
+            if (m is BaseCreature bc && !bc.Controlled)
             {
-                return (!Alive || !m.Alive || IsDeadBondedPet || m.IsDeadBondedPet) || (Hidden && IsStaff());
+                return (!Alive || !bc.Alive || IsDeadBondedPet || bc.IsDeadBondedPet) || (Hidden && IsStaff());
             }
 
             return base.OnMoveOver(m);
@@ -4366,12 +4329,12 @@ namespace Server.Mobiles
                 return false;
             }
 
-            if (target is BaseCreature && ((BaseCreature)target).InitialInnocent && !((BaseCreature)target).Controlled)
+            if (target is BaseCreature bc && bc.InitialInnocent && !bc.Controlled)
             {
                 return false;
             }
 
-            if (target is PlayerMobile && ((PlayerMobile)target).PermaFlags.Count > 0)
+            if (target is PlayerMobile pm && pm.PermaFlags.Count > 0)
             {
                 return false;
             }
@@ -4662,10 +4625,8 @@ namespace Server.Mobiles
                 object[] args = { this, null };
                 return Activator.CreateInstance(type, args) as Spell;
             }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
 
         public Spell GetDefenseSpellRandom()
@@ -4677,10 +4638,8 @@ namespace Server.Mobiles
                 object[] args = { this, null };
                 return Activator.CreateInstance(type, args) as Spell;
             }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
 
         public Spell GetSpellSpecific(Type type)
@@ -5578,7 +5537,8 @@ namespace Server.Mobiles
             {
                 return ControlMaster;
             }
-            else if (Summoned && SummonMaster != null)
+
+            if (Summoned && SummonMaster != null)
             {
                 return SummonMaster;
             }
@@ -5595,7 +5555,7 @@ namespace Server.Mobiles
 
                 Mobile master = GetMaster();
 
-                return master == null || (master is BaseCreature && !((BaseCreature)master).Controlled);
+                return master == null || (master is BaseCreature bc && !bc.Controlled);
             }
         }
 
@@ -5675,7 +5635,6 @@ namespace Server.Mobiles
                 return LootingRights;
 
             List<DamageEntry> damageEntries = DamageEntries;
-            int hitsMax = HitsMax;
 
             List<DamageStore> rights = new List<DamageStore>();
 
@@ -5963,9 +5922,9 @@ namespace Server.Mobiles
                             }
                             else
                             {
-                                if (ds.m_Mobile is PlayerMobile)
+                                if (ds.m_Mobile is PlayerMobile pm)
                                 {
-                                    foreach (Mobile pet in ((PlayerMobile)ds.m_Mobile).AllFollowers.Where(p => DamageEntries.Any(de => de.Damager == p)))
+                                    foreach (Mobile pet in pm.AllFollowers.Where(p => DamageEntries.Any(de => de.Damager == p)))
                                     {
                                         titles.Add(pet);
                                         fame.Add(totalFame);
@@ -6136,12 +6095,12 @@ namespace Server.Mobiles
                 return false;
             }
 
-            if ((target is BaseVendor && ((BaseVendor)target).IsInvulnerable) || target is PlayerVendor || target is TownCrier)
+            if (target is BaseVendor vendor && vendor.IsInvulnerable || target is PlayerVendor || target is TownCrier)
             {
                 return false;
             }
 
-            if (damageable is IDamageableItem && !((IDamageableItem)damageable).CanDamage)
+            if (damageable is IDamageableItem item && !item.CanDamage)
             {
                 return false;
             }
@@ -6314,7 +6273,7 @@ namespace Server.Mobiles
                 (int)Math.Floor(creature.HitsMax * (1 + ArcaneEmpowermentSpell.GetSpellBonus(caster, false) / 100.0)));
 
             creature.m_SummonEnd = DateTime.UtcNow + duration;
-            TimerRegistry.Register<BaseCreature>("UnsummonTimer", creature, duration, c => c.Delete());
+            TimerRegistry.Register("UnsummonTimer", creature, duration, c => c.Delete());
 
             creature.MoveToWorld(p, caster.Map);
 
@@ -6368,7 +6327,8 @@ namespace Server.Mobiles
 
                     return true;
                 }
-                else if (tc >= m_NextHealTime && CanBeBeneficial(this) && (Hits < .78 * HitsMax || Poisoned))
+
+                if (tc >= m_NextHealTime && CanBeBeneficial(this) && (Hits < .78 * HitsMax || Poisoned))
                 {
                     HealStart(this);
                     m_NextHealTime = tc + (int)TimeSpan.FromSeconds(1.0).TotalMilliseconds;
@@ -6401,9 +6361,9 @@ namespace Server.Mobiles
 
         private void Heal_Callback(object state)
         {
-            if (state is Mobile)
+            if (state is Mobile mobile)
             {
-                Heal((Mobile)state);
+                Heal(mobile);
             }
         }
 
@@ -6816,17 +6776,17 @@ namespace Server.Mobiles
 
         public virtual bool TeleportsPets => false;
 
-        private static readonly int[] m_Offsets = new int[]
-            {
-                -1, -1,
-                -1,  0,
-                -1,  1,
-                0, -1,
-                0,  1,
-                1, -1,
-                1,  0,
-                1,  1
-            };
+        private static readonly int[] m_Offsets =
+        {
+            -1, -1,
+            -1,  0,
+            -1,  1,
+            0, -1,
+            0,  1,
+            1, -1,
+            1,  0,
+            1,  1
+        };
 
         public void TryTeleport()
         {
@@ -6853,15 +6813,13 @@ namespace Server.Mobiles
                             to = new Point3D(x, y, Z);
                             break;
                         }
-                        else
-                        {
-                            int z = Map.GetAverageZ(x, y);
 
-                            if (Map.CanSpawnMobile(x, y, z))
-                            {
-                                to = new Point3D(x, y, z);
-                                break;
-                            }
+                        int z = Map.GetAverageZ(x, y);
+
+                        if (Map.CanSpawnMobile(x, y, z))
+                        {
+                            to = new Point3D(x, y, z);
+                            break;
                         }
                     }
 
@@ -6892,7 +6850,7 @@ namespace Server.Mobiles
 
             foreach (Mobile m in eable)
             {
-                bool isPet = m is BaseCreature && ((BaseCreature)m).GetMaster() is PlayerMobile;
+                bool isPet = m is BaseCreature bc && bc.GetMaster() is PlayerMobile;
 
                 if (m != this && (m.Player || (TeleportsPets && isPet)) && CanBeHarmful(m) && CanSee(m))
                 {
@@ -7071,9 +7029,9 @@ namespace Server.Mobiles
             IPooledEnumerable eable = Map.GetItemsInRange(Location, 2);
             foreach (Item item in eable)
             {
-                if (item is Corpse && ((Corpse)item).Items.Count > 0)
+                if (item is Corpse corpse && corpse.Items.Count > 0)
                 {
-                    toRummage = (Corpse)item;
+                    toRummage = corpse;
                     break;
                 }
             }
@@ -7126,11 +7084,13 @@ namespace Server.Mobiles
             {
                 return m_bBardMaster;
             }
-            else if (m_bControlled && m_ControlMaster != null)
+
+            if (m_bControlled && m_ControlMaster != null)
             {
                 return m_ControlMaster;
             }
-            else if (m_bSummoned && m_SummonMaster != null)
+
+            if (m_bSummoned && m_SummonMaster != null)
             {
                 return m_SummonMaster;
             }
@@ -7151,10 +7111,8 @@ namespace Server.Mobiles
                 Combatant = target;
                 BardEndTime = DateTime.UtcNow + TimeSpan.FromSeconds(30.0);
 
-                if (target is BaseCreature)
+                if (target is BaseCreature t)
                 {
-                    BaseCreature t = (BaseCreature)target;
-
                     if (t.Unprovokable || (t.IsParagon && BaseInstrument.GetBaseDifficulty(t) >= 160.0))
                     {
                         return;
@@ -7167,9 +7125,9 @@ namespace Server.Mobiles
                     t.Combatant = this;
                     t.BardEndTime = DateTime.UtcNow + TimeSpan.FromSeconds(30.0);
                 }
-                else if (target is PlayerMobile)
+                else if (target is PlayerMobile mT)
                 {
-                    ((PlayerMobile)target).Combatant = this;
+                    mT.Combatant = this;
                     Combatant = target;
                 }
             }
@@ -7238,19 +7196,13 @@ namespace Server.Mobiles
 
             foreach (Mobile m in eable)
             {
-                if (m is BaseCreature)
+                if (m is BaseCreature pet && pet.Controlled && pet.ControlMaster == master)
                 {
-                    BaseCreature pet = (BaseCreature)m;
-
-                    if (pet.Controlled && pet.ControlMaster == master)
+                    if (!onlyBonded || pet.IsBonded)
                     {
-                        if (!onlyBonded || pet.IsBonded)
+                        if (pet.ControlOrder == OrderType.Guard || pet.ControlOrder == OrderType.Follow || pet.ControlOrder == OrderType.Come)
                         {
-                            if (pet.ControlOrder == OrderType.Guard || pet.ControlOrder == OrderType.Follow ||
-                                pet.ControlOrder == OrderType.Come)
-                            {
-                                move.Add(pet);
-                            }
+                            move.Add(pet);
                         }
                     }
                 }
@@ -7451,14 +7403,12 @@ namespace Server.Mobiles
                 World.Mobiles.Values,
                 m =>
                 {
-                    if (m is BaseMount && ((BaseMount)m).Rider != null)
+                    if (m is BaseMount mount && mount.Rider != null)
                     {
-                        ((BaseCreature)m).OwnerAbandonTime = DateTime.MinValue;
+                        mount.OwnerAbandonTime = DateTime.MinValue;
                     }
-                    else if (m is BaseCreature)
+                    else if (m is BaseCreature c)
                     {
-                        BaseCreature c = (BaseCreature)m;
-
                         if (c.IsDeadPet)
                         {
                             Mobile owner = c.ControlMaster;

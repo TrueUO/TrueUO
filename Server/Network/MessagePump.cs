@@ -105,8 +105,8 @@ namespace Server.Network
 		private static readonly string[] _NoDisplay =
 		{
 			"192.99.10.155",
-			"192.99.69.21",
-		};
+			"192.99.69.21"
+        };
 
 		public void OnReceive(NetState ns)
 		{

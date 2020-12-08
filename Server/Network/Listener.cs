@@ -70,11 +70,9 @@ namespace Server.Network
 			}
 			catch (Exception e)
 			{
-				if (e is SocketException)
+				if (e is SocketException se)
 				{
-					SocketException se = (SocketException)e;
-
-					if (se.ErrorCode == 10048)
+                    if (se.ErrorCode == 10048)
 					{
 						// WSAEADDRINUSE
 						Utility.PushColor(ConsoleColor.Red);
