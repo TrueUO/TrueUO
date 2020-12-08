@@ -255,12 +255,9 @@ namespace Server.Spells
                 object o = ProtectionSpell.Registry[m_Caster];
                 bool disturb = true;
 
-                if (o != null && o is double d)
+                if (o is double d && d > Utility.RandomDouble() * 100.0)
                 {
-                    if (d > Utility.RandomDouble() * 100.0)
-                    {
-                        disturb = false;
-                    }
+                    disturb = false;
                 }
 
                 #region Stygian Abyss

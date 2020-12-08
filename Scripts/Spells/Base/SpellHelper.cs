@@ -268,10 +268,9 @@ namespace Server.Spells
 
         public static bool CanRevealCaster(Mobile m)
         {
-            if (m is BaseCreature c)
+            if (m is BaseCreature c && !c.Controlled)
             {
-                if (!c.Controlled)
-                    return true;
+                return true;
             }
 
             return false;
@@ -820,10 +819,9 @@ namespace Server.Spells
                 }
 
                 // Always allow monsters to teleport
-                if (caster is BaseCreature bc && (type == TravelCheckType.TeleportTo || type == TravelCheckType.TeleportFrom))
+                if (caster is BaseCreature bc && (type == TravelCheckType.TeleportTo || type == TravelCheckType.TeleportFrom) && !bc.Controlled && !bc.Summoned)
                 {
-                    if (!bc.Controlled && !bc.Summoned)
-                        return true;
+                    return true;
                 }
 
                 if (Siege.SiegeShard && !Siege.CheckTravel(caster, loc, map, type))
