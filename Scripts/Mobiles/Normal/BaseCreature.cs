@@ -3767,15 +3767,9 @@ namespace Server.Mobiles
 
             foreach (Mobile m in eable)
             {
-                if (m is BaseCreature bc)
+                if (m is BaseCreature bc && bc.Team == Team && !bc.Deleted && m != this && CanSee(bc))
                 {
-                    if (bc.Team == Team && !bc.Deleted)
-                    {
-                        if (m != this && CanSee(bc))
-                        {
-                            iCount++;
-                        }
-                    }
+                    iCount++;
                 }
             }
 
