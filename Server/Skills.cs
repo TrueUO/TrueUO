@@ -987,15 +987,12 @@ namespace Server
 		public Skills(Mobile owner)
 		{
 			m_Owner = owner;
-			m_Cap = Config.Get("PlayerCaps.TotalSkillCap", 7000); ;
+			m_Cap = Config.Get("PlayerCaps.TotalSkillCap", 7000);
 
 			SkillInfo[] info = SkillInfo.Table;
 
 			m_Skills = new Skill[info.Length];
-
-			//for ( int i = 0; i < info.Length; ++i )
-			//	m_Skills[i] = new Skill( this, info[i], 0, 1000, SkillLock.Up );
-		}
+        }
 
 		public Skills(Mobile owner, GenericReader reader)
 		{

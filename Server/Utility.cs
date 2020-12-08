@@ -60,12 +60,13 @@ namespace Server
 			{
 				return null;
 			}
-			else if (str.Length == 0)
-			{
-				return string.Empty;
-			}
 
-			return string.Intern(str);
+            if (str.Length == 0)
+            {
+                return string.Empty;
+            }
+
+            return string.Intern(str);
 		}
 
 		public static void Intern(ref string str)
@@ -870,7 +871,7 @@ namespace Server
 			if (Enum.GetValues(typeof(TEnum)) is TEnum[] values && values.Length > 0)
 				return RandomList(values);
 
-			return default(TEnum);
+			return default;
 		}
         
 #if MONO
@@ -914,7 +915,7 @@ namespace Server
 				return RandomList(min, max);
 			}
 
-			return default(TEnum);
+			return default;
 		}
 
 		public static double RandomMinMax(double min, double max)
@@ -1692,15 +1693,15 @@ namespace Server
 				return;
 			}
 
-			if (list is T[])
+			if (list is T[] list1)
 			{
-				IterateReverse((T[])list, action);
+				IterateReverse(list1, action);
 				return;
 			}
 
-			if (list is List<T>)
+			if (list is List<T> list2)
 			{
-				IterateReverse((List<T>)list, action);
+				IterateReverse(list2, action);
 				return;
 			}
 

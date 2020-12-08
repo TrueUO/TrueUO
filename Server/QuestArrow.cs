@@ -35,9 +35,9 @@ namespace Server
 				return;
 			}
 
-			if (m_Target is IEntity)
+			if (m_Target is IEntity entity)
 			{
-				ns.Send(new SetArrow(x, y, ((IEntity)m_Target).Serial));
+				ns.Send(new SetArrow(x, y, entity.Serial));
 			}
 			else
 			{
@@ -63,9 +63,9 @@ namespace Server
 
 			if (ns != null)
 			{
-				if (m_Target is IEntity)
+				if (m_Target is IEntity entity)
 				{
-					ns.Send(new CancelArrow(x, y, ((IEntity)m_Target).Serial));
+					ns.Send(new CancelArrow(x, y, entity.Serial));
 				}
 				else
 				{
