@@ -3018,12 +3018,9 @@ namespace Server.Mobiles
 
             Region r = Region.Find(Location, Map);
 
-            if (r is ArenaRegion region)
+            if (r is ArenaRegion region && !region.AllowItemEquip(this, item))
             {
-                if (!region.AllowItemEquip(this, item))
-                {
-                    return false;
-                }
+                return false;
             }
 
             #region Vice Vs Virtue
@@ -3196,9 +3193,9 @@ namespace Server.Mobiles
             {
                 BounceInfo bounce = item.GetBounce();
 
-                if (bounce != null && bounce.m_Parent is Item parent)
+                if (bounce != null && bounce.m_Parent is Item pItem && pItem == pack)
                 {
-                    if (parent == pack || parent.IsChildOf(pack))
+                    if (pItem.IsChildOf(pack))
                     {
                         return true;
                     }
@@ -3600,12 +3597,9 @@ namespace Server.Mobiles
 
                 if (m_InsuranceAward != null)
                 {
-                    if (Banker.Deposit(m_InsuranceAward, insuredAmount / 2))
+                    if (Banker.Deposit(m_InsuranceAward, insuredAmount / 2) && m_InsuranceAward is PlayerMobile pm)
                     {
-                        if (m_InsuranceAward is PlayerMobile pm)
-                        {
-                            pm.m_InsuranceBonus += insuredAmount / 2;
-                        }
+                        pm.m_InsuranceBonus += insuredAmount / 2;
                     }
                 }
 
@@ -3750,13 +3744,9 @@ namespace Server.Mobiles
                 }
             }
 
-            if (m_InsuranceAward is PlayerMobile pm)
+            if (m_InsuranceAward is PlayerMobile pm && pm.m_InsuranceBonus > 0)
             {
-                if (pm.m_InsuranceBonus > 0)
-                {
-                    pm.SendLocalizedMessage(1060397, pm.m_InsuranceBonus.ToString());
-                    // ~1_AMOUNT~ gold has been deposited into your bank box.
-                }
+                pm.SendLocalizedMessage(1060397, pm.m_InsuranceBonus.ToString()); // ~1_AMOUNT~ gold has been deposited into your bank box.
             }
 
             if (Young)
