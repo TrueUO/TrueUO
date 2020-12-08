@@ -112,16 +112,14 @@ namespace Server
 		public int CalcHeight
 		{
 			get
-			{
-				if ((m_Flags & TileFlag.Bridge) != 0)
+            {
+                if ((m_Flags & TileFlag.Bridge) != 0)
 				{
 					return m_Height / 2;
 				}
-				else
-				{
-					return m_Height;
-				}
-			}
+
+                return m_Height;
+            }
 		}
 	}
 

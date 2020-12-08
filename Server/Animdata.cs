@@ -88,10 +88,8 @@ namespace Server
             {
                 return (Data)AnimData[id];
             }
-            else
-            {
-                return null;
-            }
+
+            return null;
         }
 
         public static void Save(string path)

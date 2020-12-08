@@ -27,9 +27,11 @@ namespace Server
             get
             {
                 if (StringTable.ContainsKey(number))
+                {
                     return StringTable[number];
-                else
-                    return null;
+                }
+
+                return null;
             }
         }
 
@@ -105,9 +107,11 @@ namespace Server
         public static string CombineArguments(string str, string args)
         {
             if (string.IsNullOrEmpty(args))
+            {
                 return str;
-            else
-                return CombineArguments(str, args.Split(new char[] { '\t' }));
+            }
+
+            return CombineArguments(str, args.Split(new char[] { '\t' }));
         }
 
         public static string CombineArguments(string str, params object[] args)

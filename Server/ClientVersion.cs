@@ -227,39 +227,44 @@ namespace Server
 			{
 				return 1;
 			}
-			else if (m_Major < o.m_Major)
-			{
-				return -1;
-			}
-			else if (m_Minor > o.m_Minor)
-			{
-				return 1;
-			}
-			else if (m_Minor < o.m_Minor)
-			{
-				return -1;
-			}
-			else if (m_Revision > o.m_Revision)
-			{
-				return 1;
-			}
-			else if (m_Revision < o.m_Revision)
-			{
-				return -1;
-			}
-			else if (m_Patch > o.m_Patch)
-			{
-				return 1;
-			}
-			else if (m_Patch < o.m_Patch)
-			{
-				return -1;
-			}
-			else
-			{
-				return 0;
-			}
-		}
+
+            if (m_Major < o.m_Major)
+            {
+                return -1;
+            }
+
+            if (m_Minor > o.m_Minor)
+            {
+                return 1;
+            }
+
+            if (m_Minor < o.m_Minor)
+            {
+                return -1;
+            }
+
+            if (m_Revision > o.m_Revision)
+            {
+                return 1;
+            }
+
+            if (m_Revision < o.m_Revision)
+            {
+                return -1;
+            }
+
+            if (m_Patch > o.m_Patch)
+            {
+                return 1;
+            }
+
+            if (m_Patch < o.m_Patch)
+            {
+                return -1;
+            }
+
+            return 0;
+        }
 
 		public static bool IsNull(object x)
 		{

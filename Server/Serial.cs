@@ -68,16 +68,17 @@ namespace Server
 
 		public int CompareTo(object other)
 		{
-			if (other is Serial)
+			if (other is Serial serial)
 			{
-				return CompareTo((Serial)other);
-			}
-			else if (other == null)
-			{
-				return -1;
+				return CompareTo(serial);
 			}
 
-			throw new ArgumentException();
+            if (other == null)
+            {
+                return -1;
+            }
+
+            throw new ArgumentException();
 		}
 
 		public override bool Equals(object o)

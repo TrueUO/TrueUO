@@ -259,9 +259,9 @@ namespace Server
 
 		public static void SendTargetEffect(IEntity target, int itemID, int speed, int duration, int hue, int renderMode)
 		{
-			if (target is Mobile)
+			if (target is Mobile mobile)
 			{
-				((Mobile)target).ProcessDelta();
+				mobile.ProcessDelta();
 			}
 
 			SendPacket(target.Location, target.Map, new TargetEffect(target, itemID, speed, duration, hue, renderMode));
@@ -290,9 +290,9 @@ namespace Server
 			EffectLayer layer,
 			int unknown)
 		{
-			if (target is Mobile)
+			if (target is Mobile mobile)
 			{
-				((Mobile)target).ProcessDelta();
+				mobile.ProcessDelta();
 			}
 
 			Map map = target.Map;
@@ -334,9 +334,7 @@ namespace Server
 
 				eable.Free();
 			}
-
-			//SendPacket( target.Location, target.Map, new TargetParticleEffect( target, itemID, speed, duration, hue, renderMode, effect, (int)layer, unknown ) );
-		}
+        }
 
 		public static void SendMovingEffect(
 			IEntity from, IEntity to, int itemID, int speed, int duration, bool fixedDirection, bool explodes)
@@ -355,14 +353,14 @@ namespace Server
 			int hue,
 			int renderMode)
 		{
-			if (from is Mobile)
+			if (from is Mobile mobile)
 			{
-				((Mobile)from).ProcessDelta();
+				mobile.ProcessDelta();
 			}
 
-			if (to is Mobile)
+			if (to is Mobile mob)
 			{
-				((Mobile)to).ProcessDelta();
+				mob.ProcessDelta();
 			}
 
 			SendPacket(
@@ -452,14 +450,14 @@ namespace Server
 			EffectLayer layer,
 			int unknown)
 		{
-			if (from is Mobile)
+			if (from is Mobile mobile)
 			{
-				((Mobile)from).ProcessDelta();
+				mobile.ProcessDelta();
 			}
 
-			if (to is Mobile)
+			if (to is Mobile mob)
 			{
-				((Mobile)to).ProcessDelta();
+				mob.ProcessDelta();
 			}
 
 			Map map = from.Map;
