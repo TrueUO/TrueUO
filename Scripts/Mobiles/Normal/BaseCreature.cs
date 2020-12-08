@@ -1851,16 +1851,13 @@ namespace Server.Mobiles
 
         public virtual void AlterMeleeDamageFrom(Mobile from, ref int damage)
         {
-            if (from != null && from.Talisman is BaseTalisman talisman)
+            if (from != null && from.Talisman is BaseTalisman talisman && talisman.Killer != null && talisman.Killer.Type != null)
             {
-                if (talisman.Killer != null && talisman.Killer.Type != null)
-                {
-                    Type type = talisman.Killer.Type;
+                Type type = talisman.Killer.Type;
 
-                    if (type.IsAssignableFrom(GetType()))
-                    {
-                        damage = (int)(damage * (1 + (double)talisman.Killer.Amount / 100));
-                    }
+                if (type.IsAssignableFrom(GetType()))
+                {
+                    damage = (int)(damage * (1 + (double)talisman.Killer.Amount / 100));
                 }
             }
 
@@ -3340,11 +3337,11 @@ namespace Server.Mobiles
             {
                 m_ControlMaster.Followers += ControlSlots;
 
-                if (m_ControlMaster is PlayerMobile pm && !(this is PersonalAttendant))
+                if (m_ControlMaster is PlayerMobile && !(this is PersonalAttendant))
                 {
-                    pm.AllFollowers.Add(this);
+                    ((PlayerMobile)m_ControlMaster).AllFollowers.Add(this);
 
-                    NetState ns = pm.NetState;
+                    NetState ns = m_ControlMaster.NetState;
 
                     if (ns != null && ns.IsEnhancedClient && Commandable)
                     {
@@ -3772,17 +3769,11 @@ namespace Server.Mobiles
             {
                 if (m is BaseCreature bc)
                 {
-                    if (bc.Team == Team)
+                    if (bc.Team == Team && !bc.Deleted)
                     {
-                        if (!bc.Deleted)
+                        if (m != this && CanSee(bc))
                         {
-                            if (m != this)
-                            {
-                                if (CanSee(bc))
-                                {
-                                    iCount++;
-                                }
-                            }
+                            iCount++;
                         }
                     }
                 }
@@ -7190,17 +7181,13 @@ namespace Server.Mobiles
 
             foreach (Mobile m in eable)
             {
-                if (m is BaseCreature pet)
+                if (m is BaseCreature pet && pet.Controlled && pet.ControlMaster == master)
                 {
-                    if (pet.Controlled && pet.ControlMaster == master)
+                    if (!onlyBonded || pet.IsBonded)
                     {
-                        if (!onlyBonded || pet.IsBonded)
+                        if (pet.ControlOrder == OrderType.Guard || pet.ControlOrder == OrderType.Follow || pet.ControlOrder == OrderType.Come)
                         {
-                            if (pet.ControlOrder == OrderType.Guard || pet.ControlOrder == OrderType.Follow ||
-                                pet.ControlOrder == OrderType.Come)
-                            {
-                                move.Add(pet);
-                            }
+                            move.Add(pet);
                         }
                     }
                 }
