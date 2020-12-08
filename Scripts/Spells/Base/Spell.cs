@@ -709,10 +709,8 @@ namespace Server.Spells
                             m_Caster.SendLocalizedMessage(1113750); // You may not cast spells while flying over such precarious terrain.
                             return false;
                         }
-                        else
-                        {
-                            m_Caster.SendMessage("Your staff level allows you to cast while flying over precarious terrain.");
-                        }
+
+                        m_Caster.SendMessage("Your staff level allows you to cast while flying over precarious terrain.");
                     }
                 }
                 #endregion
@@ -768,10 +766,8 @@ namespace Server.Spells
 
                     return true;
                 }
-                else
-                {
-                    return false;
-                }
+
+                return false;
             }
             else
             {
@@ -1159,10 +1155,8 @@ namespace Server.Spells
 
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
 
         public bool CheckHSequence(IDamageable target)

@@ -35,7 +35,8 @@ namespace Server.Spells.Mysticism
             {
                 return;
             }
-            else if (target.Paralyzed)
+
+            if (target.Paralyzed)
             {
                 Caster.SendLocalizedMessage(1080134); //Your target is already immobilized and cannot be slept.
             }

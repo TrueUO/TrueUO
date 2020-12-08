@@ -75,7 +75,7 @@ namespace Server.Spells.Necromancy
             return null;
         }
 
-        private static readonly CreatureGroup[] m_Groups = new CreatureGroup[]
+        private static readonly CreatureGroup[] m_Groups =
         {
             // Undead group--empty
             new CreatureGroup(SlayerGroup.GetEntryByName(SlayerName.Silver).Types, new SummonEntry[0]),

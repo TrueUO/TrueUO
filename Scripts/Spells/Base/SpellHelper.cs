@@ -305,7 +305,7 @@ namespace Server.Spells
         {
             if (offset > 0)
                 return AddStatBonus(m, m, type, offset, duration);
-            else if (offset < 0)
+            if (offset < 0)
                 return AddStatCurse(m, m, type, -offset, duration);
 
             return true;
@@ -711,15 +711,13 @@ namespace Server.Spells
                     p = new Point3D(x, y, p.Z);
                     return true;
                 }
-                else
-                {
-                    int z = map.GetAverageZ(x, y);
 
-                    if (map.CanSpawnMobile(x, y, z))
-                    {
-                        p = new Point3D(x, y, z);
-                        return true;
-                    }
+                int z = map.GetAverageZ(x, y);
+
+                if (map.CanSpawnMobile(x, y, z))
+                {
+                    p = new Point3D(x, y, z);
+                    return true;
                 }
             }
 

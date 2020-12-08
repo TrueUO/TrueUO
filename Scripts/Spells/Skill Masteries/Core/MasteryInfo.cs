@@ -162,23 +162,25 @@ namespace Server.Spells.SkillMasteries
         {
             if (IsPassiveMastery(spellID) || spellID == 733)
                 return 1;
-            else if (spellID <= 715)
+            if (spellID <= 715)
             {
                 if (spellID % 2 == 0)
                     return 3;
 
                 return 2;
             }
-            else if (spellID <= 731 || (spellID >= 736 && spellID <= 743))
+
+            if (spellID <= 731 || (spellID >= 736 && spellID <= 743))
             {
                 if (spellID % 2 == 0)
                     return 2;
 
                 return 3;
             }
-            else if (spellID == 734)
+
+            if (spellID == 734)
                 return 2;
-            else if (spellID == 735)
+            if (spellID == 735)
                 return 3;
 
             return 1;

@@ -34,7 +34,8 @@ namespace Server.Spells.Mysticism
             {
                 return;
             }
-            else if (CheckHSequence(d))
+
+            if (CheckHSequence(d))
             {
                 IDamageable target = d;
                 IDamageable source = Caster;

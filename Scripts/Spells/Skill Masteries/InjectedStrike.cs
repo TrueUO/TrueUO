@@ -53,7 +53,8 @@ namespace Server.Spells.SkillMasteries
 
                     return;
                 }
-                else if (!HasSpell(Caster, GetType()))
+
+                if (!HasSpell(Caster, GetType()))
                 {
                     if (CheckSequence())
                     {
@@ -98,10 +99,8 @@ namespace Server.Spells.SkillMasteries
                         ApplyPoison(weapon, potion);
                         return;
                     }
-                    else
-                    {
-                        Caster.SendLocalizedMessage(1010518); // You fail to apply a sufficient dose of poison
-                    }
+
+                    Caster.SendLocalizedMessage(1010518); // You fail to apply a sufficient dose of poison
                 }
             }
             else if (o is BaseWeapon baseWeapon && weapon != null && baseWeapon == weapon && potion != null)
@@ -115,10 +114,8 @@ namespace Server.Spells.SkillMasteries
                             ApplyPoison(weapon, potion);
                             return;
                         }
-                        else
-                        {
-                            Caster.SendLocalizedMessage(1010518); // You fail to apply a sufficient dose of poison
-                        }
+
+                        Caster.SendLocalizedMessage(1010518); // You fail to apply a sufficient dose of poison
                     }
                 }
             }
