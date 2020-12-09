@@ -227,7 +227,7 @@ namespace Server
 
                     if (toCreature != null)
                     {
-                        from.Damage((int)(originalDamage * (1 - (((from.Skills.MagicResist.Value * .5) + 10) / 100))), m);
+                        from.Damage((int)(originalDamage * (1 - ((from.Skills.MagicResist.Value * .5) + 10) / 100)), m);
                     }
                     else
                     {
@@ -240,7 +240,7 @@ namespace Server
 
                     if (reflectPhys != 0)
                     {
-                        if (from is ExodusMinion && ((ExodusMinion)from).FieldActive || from is ExodusOverseer && ((ExodusOverseer)from).FieldActive)
+                        if (from is ExodusMinion minion && minion.FieldActive || from is ExodusOverseer overseer && overseer.FieldActive)
                         {
                             from.FixedParticles(0x376A, 20, 10, 0x2530, EffectLayer.Waist);
                             from.PlaySound(0x2F4);
@@ -355,8 +355,7 @@ namespace Server
 
             ExplodingTarPotion.RemoveEffects(m);
 
-            if (type == DamageType.Melee && fromCreature != null &&
-                (m is PlayerMobile || (toCreature != null && !toCreature.IsMonster)))
+            if (type == DamageType.Melee && fromCreature != null && (m is PlayerMobile || toCreature != null && !toCreature.IsMonster))
             {
                 from.RegisterDamage(totalDamage / 4, m);
             }
@@ -551,23 +550,21 @@ namespace Server
 
                 if (attribute == AosAttribute.Luck)
                 {
-                    if (obj is BaseWeapon)
-                        value += ((BaseWeapon)obj).GetLuckBonus();
+                    if (obj is BaseWeapon weapon)
+                        value += weapon.GetLuckBonus();
 
-                    if (obj is BaseArmor)
-                        value += ((BaseArmor)obj).GetLuckBonus();
+                    if (obj is BaseArmor armor)
+                        value += armor.GetLuckBonus();
 
-                    if (obj is FishingPole)
-                        value += ((FishingPole)obj).GetLuckBonus();
+                    if (obj is FishingPole pole)
+                        value += pole.GetLuckBonus();
                 }
 
-                if (obj is ISetItem)
+                if (obj is ISetItem setItem)
                 {
-                    ISetItem item = (ISetItem)obj;
+                    attrs = setItem.SetAttributes;
 
-                    attrs = item.SetAttributes;
-
-                    if (attrs != null && item.LastEquipped)
+                    if (attrs != null && setItem.LastEquipped)
                         value += attrs[attribute];
                 }
             }
@@ -602,9 +599,9 @@ namespace Server
                 if (Block.IsBlocking(m))
                     value -= 30;
 
-                if (m is PlayerMobile && m.Race == Race.Gargoyle)
+                if (m is PlayerMobile pm && pm.Race == Race.Gargoyle)
                 {
-                    value += ((PlayerMobile)m).GetRacialBerserkBuff(false);
+                    value += pm.GetRacialBerserkBuff(false);
                 }
 
                 if (BaseFishPie.IsUnderEffects(m, FishPieEffect.WeaponDam))
@@ -620,14 +617,14 @@ namespace Server
 
                 TransformContext context = TransformationSpellHelper.GetContext(m);
 
-                if (context != null && context.Spell is ReaperFormSpell)
-                    value += ((ReaperFormSpell)context.Spell).SpellDamageBonus;
+                if (context != null && context.Spell is ReaperFormSpell spell)
+                    value += spell.SpellDamageBonus;
 
                 value += ArcaneEmpowermentSpell.GetSpellBonus(m, true);
 
-                if (m is PlayerMobile && m.Race == Race.Gargoyle)
+                if (m is PlayerMobile mobile && mobile.Race == Race.Gargoyle)
                 {
-                    value += ((PlayerMobile)m).GetRacialBerserkBuff(true);
+                    value += mobile.GetRacialBerserkBuff(true);
                 }
 
                 if (CityLoyaltySystem.HasTradeDeal(m, TradeDeal.GuildOfArcaneArts))
@@ -675,8 +672,8 @@ namespace Server
 
                 TransformContext context = TransformationSpellHelper.GetContext(m);
 
-                if (context != null && context.Spell is ReaperFormSpell)
-                    value += ((ReaperFormSpell)context.Spell).SwingSpeedBonus;
+                if (context != null && context.Spell is ReaperFormSpell spell)
+                    value += spell.SwingSpeedBonus;
 
                 int discordanceEffect = 0;
 
@@ -1270,7 +1267,7 @@ namespace Server
         HitFatigue = 0x10000000,
         HitManaDrain = 0x20000000,
         SplinteringWeapon = 0x40000000,
-        ReactiveParalyze = 0x80000000,
+        ReactiveParalyze = 0x80000000
     }
 
     public sealed class AosWeaponAttributes : BaseAttributes
@@ -1859,9 +1856,9 @@ namespace Server
             {
                 Item obj = m.Items[i];
 
-                if (obj is BaseWeapon)
+                if (obj is BaseWeapon weapon)
                 {
-                    ExtendedWeaponAttributes attrs = ((BaseWeapon)obj).ExtendedWeaponAttributes;
+                    ExtendedWeaponAttributes attrs = weapon.ExtendedWeaponAttributes;
 
                     if (attrs != null)
                         value += attrs[attribute];
@@ -2421,8 +2418,8 @@ namespace Server
             }
             if (!m.CanBeginAction(typeof(IncognitoSpell)) && m.Skills[SkillName.Magery].Value < 38.1)
             {
-                if (m is PlayerMobile)
-                    ((PlayerMobile)m).SetHairMods(-1, -1);
+                if (m is PlayerMobile mobile)
+                    mobile.SetHairMods(-1, -1);
                 m.BodyMod = 0;
                 m.HueMod = -1;
                 m.NameMod = null;
@@ -2431,7 +2428,6 @@ namespace Server
                 BaseClothing.ValidateMobile(m);
                 BuffInfo.RemoveBuff(m, BuffIcon.Incognito);
             }
-            return;
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
@@ -3062,11 +3058,8 @@ namespace Server
             if (NoRepair > 0)
                 list.Add(1151782);
 
-            if (Brittle > 0 ||
-                item is BaseWeapon && ((BaseWeapon)item).Attributes.Brittle > 0 ||
-                item is BaseArmor && ((BaseArmor)item).Attributes.Brittle > 0 ||
-                item is BaseJewel && ((BaseJewel)item).Attributes.Brittle > 0 ||
-                item is BaseClothing && ((BaseClothing)item).Attributes.Brittle > 0)
+            if (Brittle > 0 || item is BaseWeapon weapon && weapon.Attributes.Brittle > 0 || item is BaseArmor armor && armor.Attributes.Brittle > 0 ||
+                item is BaseJewel jewel && jewel.Attributes.Brittle > 0 || item is BaseClothing clothing && clothing.Attributes.Brittle > 0)
                 list.Add(1116209);
 
             if (Prized > 0)
@@ -3119,8 +3112,8 @@ namespace Server
                     {
                         dur.MaxHitPoints--;
 
-                        if (item.Parent is Mobile)
-                            ((Mobile)item.Parent).LocalOverheadMessage(Network.MessageType.Regular, 0x3B2, 1061121); // Your equipment is severely damaged.
+                        if (item.Parent is Mobile mobile)
+                            mobile.LocalOverheadMessage(Network.MessageType.Regular, 0x3B2, 1061121); // Your equipment is severely damaged.
                     }
                     else
                     {
@@ -3305,10 +3298,8 @@ namespace Server
                 }
             }
 
-            if (m_Owner != null && m_Owner.Parent is Mobile)
+            if (m_Owner != null && m_Owner.Parent is Mobile m)
             {
-                Mobile m = (Mobile)m_Owner.Parent;
-
                 m.CheckStatTimers();
                 m.UpdateResistances();
                 m.Delta(MobileDelta.Stat | MobileDelta.WeaponDamage | MobileDelta.Hits | MobileDelta.Stam | MobileDelta.Mana);
