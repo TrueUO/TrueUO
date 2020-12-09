@@ -65,10 +65,8 @@ namespace Server.Spells.SkillMasteries
 
         protected override void OnTarget(object o)
         {
-            if (o is IPoint3D)
+            if (o is IPoint3D p)
             {
-                IPoint3D p = o as IPoint3D;
-
                 SpellHelper.Turn(Caster, p);
 
                 if (SpellHelper.CheckTown(Caster, Caster) && CheckSequence())

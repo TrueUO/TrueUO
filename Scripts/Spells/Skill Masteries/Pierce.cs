@@ -36,9 +36,9 @@ namespace Server.Spells.SkillMasteries
             {
                 from.PlaySound(from.Female ? 0x338 : 0x44A);
             }
-            else if (from is BaseCreature)
+            else if (from is BaseCreature bc)
             {
-                from.PlaySound(((BaseCreature)from).GetAngerSound());
+                bc.PlaySound(bc.GetAngerSound());
             }
 
             from.FixedParticles(0x376A, 1, 31, 9961, 1160, 0, EffectLayer.Waist);
