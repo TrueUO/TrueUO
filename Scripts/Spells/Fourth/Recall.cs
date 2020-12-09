@@ -1,3 +1,4 @@
+using Server.Engines.NewMagincia;
 using Server.Items;
 using Server.Mobiles;
 using Server.Multis;
@@ -103,22 +104,26 @@ namespace Server.Spells.Fourth
                 Caster.SendLocalizedMessage(1061632); // You can't do that while carrying the sigil.
                 return false;
             }
-            else if (Engines.CityLoyalty.CityTradeSystem.HasTrade(Caster))
+
+            if (Engines.CityLoyalty.CityTradeSystem.HasTrade(Caster))
             {
                 Caster.SendLocalizedMessage(1151733); // You cannot do that while carrying a Trade Order.
                 return false;
             }
-            else if (Caster.Criminal)
+
+            if (Caster.Criminal)
             {
                 Caster.SendLocalizedMessage(1005561, "", 0x22); // Thou'rt a criminal and cannot escape so easily.
                 return false;
             }
-            else if (SpellHelper.CheckCombat(Caster))
+
+            if (SpellHelper.CheckCombat(Caster))
             {
                 Caster.SendLocalizedMessage(1005564, "", 0x22); // Wouldst thou flee during the heat of battle??
                 return false;
             }
-            else if (Misc.WeightOverloading.IsOverloaded(Caster))
+
+            if (Misc.WeightOverloading.IsOverloaded(Caster))
             {
                 Caster.SendLocalizedMessage(502359, "", 0x22); // Thou art too encumbered to move.
                 return false;
@@ -163,7 +168,7 @@ namespace Server.Spells.Fourth
             else if (!SpellHelper.CheckTravel(Caster, map, loc, TravelCheckType.RecallTo))
             {
             }
-            else if (map == Map.Felucca && Caster is PlayerMobile && ((PlayerMobile)Caster).Young)
+            else if (map == Map.Felucca && Caster is PlayerMobile pm && pm.Young)
             {
                 Caster.SendLocalizedMessage(1049543); // You decide against traveling to Felucca while you are still young.
             }
@@ -238,10 +243,8 @@ namespace Server.Spells.Fourth
 
             protected override void OnTarget(Mobile from, object o)
             {
-                if (o is RecallRune)
+                if (o is RecallRune rune)
                 {
-                    RecallRune rune = (RecallRune)o;
-
                     if (rune.Marked)
                     {
                         if (rune.Type == RecallRuneType.Ship)
@@ -258,9 +261,9 @@ namespace Server.Spells.Fourth
                         from.SendLocalizedMessage(501805); // That rune is not yet marked.
                     }
                 }
-                else if (o is Runebook)
+                else if (o is Runebook book)
                 {
-                    RunebookEntry e = ((Runebook)o).Default;
+                    RunebookEntry e = book.Default;
 
                     if (e != null)
                     {
@@ -278,19 +281,15 @@ namespace Server.Spells.Fourth
                         from.SendLocalizedMessage(502354); // Target is not marked.
                     }
                 }
-                else if (o is Key && ((Key)o).KeyValue != 0 && ((Key)o).Link is BaseBoat)
+                else if (o is Key key && key.KeyValue != 0 && key.Link is BaseBoat boat)
                 {
-                    BaseBoat boat = ((Key)o).Link as BaseBoat;
-
-                    if (!boat.Deleted && boat.CheckKey(((Key)o).KeyValue))
+                    if (!boat.Deleted && boat.CheckKey(key.KeyValue))
                         m_Owner.Effect(boat.GetMarkedLocation(), boat.Map, false, true);
                     else
                         from.Send(new MessageLocalized(from.Serial, from.Body, MessageType.Regular, 0x3B2, 3, 502357, from.Name, "")); // I can not recall from that object.
                 }
-                else if (o is Engines.NewMagincia.WritOfLease)
+                else if (o is WritOfLease lease)
                 {
-                    Engines.NewMagincia.WritOfLease lease = (Engines.NewMagincia.WritOfLease)o;
-
                     if (lease.RecallLoc != Point3D.Zero && lease.Facet != null && lease.Facet != Map.Internal)
                         m_Owner.Effect(lease.RecallLoc, lease.Facet, false);
                     else

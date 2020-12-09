@@ -872,9 +872,9 @@ namespace Server.Network
 			{
 				p = target.Location;
 			}
-			else if (target is Item)
+			else if (target is Item item)
 			{
-				p = ((Item)target).GetWorldLocation();
+				p = item.GetWorldLocation();
 			}
 			else
 			{
@@ -953,9 +953,9 @@ namespace Server.Network
 		{
 			Serial parentSerial;
 
-			if (item.Parent is Mobile)
+			if (item.Parent is Mobile mobile)
 			{
-				parentSerial = ((Mobile)item.Parent).Serial;
+				parentSerial = mobile.Serial;
 			}
 			else
 			{
@@ -965,14 +965,9 @@ namespace Server.Network
 
 			int hue = item.Hue;
 
-			if (item.Parent is Mobile)
+			if (item.Parent is Mobile mob && mob.SolidHueOverride >= 0)
 			{
-				Mobile mob = (Mobile)item.Parent;
-
-				if (mob.SolidHueOverride >= 0)
-				{
-					hue = mob.SolidHueOverride;
-				}
+                hue = mob.SolidHueOverride;
 			}
 
 			m_Stream.Write(item.Serial);
@@ -1753,9 +1748,9 @@ namespace Server.Network
 		{
 			Serial parentSerial;
 
-			if (item.Parent is Item)
+			if (item.Parent is Item parentItem)
 			{
-				parentSerial = ((Item)item.Parent).Serial;
+				parentSerial = parentItem.Serial;
 			}
 			else
 			{
@@ -2599,8 +2594,10 @@ namespace Server.Network
 
 	public sealed class SeasonChange : Packet
 	{
-		private static readonly SeasonChange[][] m_Cache = new SeasonChange[5][]
-		{new SeasonChange[2], new SeasonChange[2], new SeasonChange[2], new SeasonChange[2], new SeasonChange[2]};
+		private static readonly SeasonChange[][] m_Cache =
+        {
+            new SeasonChange[2], new SeasonChange[2], new SeasonChange[2], new SeasonChange[2], new SeasonChange[2]
+        };
 
 		public static SeasonChange Instantiate(int season)
 		{
@@ -2608,8 +2605,8 @@ namespace Server.Network
 		}
 
 		public static SeasonChange Instantiate(int season, bool playSound)
-		{
-			if (season >= 0 && season < m_Cache.Length)
+        {
+            if (season >= 0 && season < m_Cache.Length)
 			{
 				int idx = playSound ? 1 : 0;
 
@@ -2623,11 +2620,9 @@ namespace Server.Network
 
 				return p;
 			}
-			else
-			{
-				return new SeasonChange(season, playSound);
-			}
-		}
+
+            return new SeasonChange(season, playSound);
+        }
 
 		public SeasonChange(int season)
 			: this(season, true)
@@ -3384,8 +3379,8 @@ namespace Server.Network
 
 	public sealed class MovementAck : Packet
 	{
-		private static readonly MovementAck[][] m_Cache = new MovementAck[8][]
-		{
+		private static readonly MovementAck[][] m_Cache =
+        {
 			new MovementAck[256], new MovementAck[256], new MovementAck[256], new MovementAck[256], new MovementAck[256],
 			new MovementAck[256], new MovementAck[256], new MovementAck[256]
 		};

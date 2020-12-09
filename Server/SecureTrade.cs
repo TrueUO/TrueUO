@@ -19,8 +19,8 @@ namespace Server
 		{
 			m_Valid = true;
 
-			m_From = new SecureTradeInfo(this, from, new SecureTradeContainer(this));
-			m_To = new SecureTradeInfo(this, to, new SecureTradeContainer(this));
+			m_From = new SecureTradeInfo(from, new SecureTradeContainer(this));
+			m_To = new SecureTradeInfo(to, new SecureTradeContainer(this));
 
 			from.Send(new MobileStatus(from, to));
 			from.Send(new UpdateSecureTrade(m_From.Container, false, false));
@@ -130,19 +130,13 @@ namespace Server
 
 			NetState ns = m_From.Mobile.NetState;
 
-			if (ns != null)
-			{
-				ns.RemoveTrade(this);
-			}
+            ns?.RemoveTrade(this);
 
-			ns = m_To.Mobile.NetState;
+            ns = m_To.Mobile.NetState;
 
-			if (ns != null)
-			{
-				ns.RemoveTrade(this);
-			}
+            ns?.RemoveTrade(this);
 
-			Timer.DelayCall(m_From.Dispose);
+            Timer.DelayCall(m_From.Dispose);
 			Timer.DelayCall(m_To.Dispose);
 		}
 
@@ -169,11 +163,8 @@ namespace Server
 				ls.Send(new UpdateSecureTrade(left.Container, TradeFlag.UpdateLedger, gold, plat));
 			}
 
-			if (rs != null)
-			{
-				rs.Send(new UpdateSecureTrade(right.Container, TradeFlag.UpdateGold, left.Gold, left.Plat));
-			}
-		}
+            rs?.Send(new UpdateSecureTrade(right.Container, TradeFlag.UpdateGold, left.Gold, left.Plat));
+        }
 
 		public void Update()
 		{
@@ -415,8 +406,7 @@ namespace Server
 
 	public class SecureTradeInfo : IDisposable
 	{
-		public SecureTrade Owner { get; private set; }
-		public Mobile Mobile { get; private set; }
+        public Mobile Mobile { get; private set; }
 		public SecureTradeContainer Container { get; private set; }
 		public VirtualCheck VirtualCheck { get; private set; }
 
@@ -427,10 +417,9 @@ namespace Server
 
 		public bool IsDisposed { get; private set; }
 
-		public SecureTradeInfo(SecureTrade owner, Mobile m, SecureTradeContainer c)
+		public SecureTradeInfo(Mobile m, SecureTradeContainer c)
 		{
-			Owner = owner;
-			Mobile = m;
+            Mobile = m;
 			Container = c;
 
 			Mobile.AddItem(Container);
@@ -448,9 +437,8 @@ namespace Server
 			Container = null;
 
 			Mobile = null;
-			Owner = null;
 
-			IsDisposed = true;
+            IsDisposed = true;
 		}
 	}
 }

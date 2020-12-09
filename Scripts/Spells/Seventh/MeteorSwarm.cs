@@ -57,14 +57,14 @@ namespace Server.Spells.Seventh
             {
                 if (item != null)
                 {
-                    if (item is MaskOfKhalAnkur)
+                    if (item is MaskOfKhalAnkur mask)
                     {
-                        ((MaskOfKhalAnkur)item).Charges--;
+                        mask.Charges--;
                     }
 
-                    if (item is PendantOfKhalAnkur)
+                    if (item is PendantOfKhalAnkur pendant)
                     {
-                        ((PendantOfKhalAnkur)item).Charges--;
+                        pendant.Charges--;
                     }
                 }
 

@@ -70,16 +70,14 @@ namespace Server
 		public BodyType Type
 		{
 			get
-			{
-				if (m_BodyID >= 0 && m_BodyID < m_Types.Length)
+            {
+                if (m_BodyID >= 0 && m_BodyID < m_Types.Length)
 				{
 					return m_Types[m_BodyID];
 				}
-				else
-				{
-					return BodyType.Empty;
-				}
-			}
+
+                return BodyType.Empty;
+            }
 		}
 
 		public bool IsHuman => (m_BodyID >= 0 && m_BodyID < m_Types.Length && m_Types[m_BodyID] == BodyType.Human && m_BodyID != 402 &&

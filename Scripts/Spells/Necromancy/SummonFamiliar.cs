@@ -54,7 +54,7 @@ namespace Server.Spells.Necromancy
             FinishSequence();
         }
 
-        private static readonly SummonFamiliarEntry[] m_Entries = new SummonFamiliarEntry[]
+        private static readonly SummonFamiliarEntry[] m_Entries =
         {
             new SummonFamiliarEntry(typeof(HordeMinionFamiliar), 1060146, 30.0, 30.0), // Horde Minion
             new SummonFamiliarEntry(typeof(ShadowWispFamiliar), 1060142, 50.0, 50.0), // Shadow Wisp

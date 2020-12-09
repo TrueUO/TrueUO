@@ -42,7 +42,7 @@ namespace Server.Spells.SkillMasteries
                 return false;
             }
 
-            if (Caster is PlayerMobile && ((PlayerMobile)Caster).AllFollowers == null || ((PlayerMobile)Caster).AllFollowers.Where(m => !(m is Engines.Despise.DespiseCreature)).Count() == 0)
+            if (Caster is PlayerMobile pm && pm.AllFollowers == null || ((PlayerMobile)Caster).AllFollowers.Where(m => !(m is Engines.Despise.DespiseCreature)).Count() == 0)
             {
                 Caster.SendLocalizedMessage(1156112); // This ability requires you to have pets.
                 return false;

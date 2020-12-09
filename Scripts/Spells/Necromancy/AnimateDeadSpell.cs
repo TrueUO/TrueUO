@@ -75,7 +75,7 @@ namespace Server.Spells.Necromancy
             return null;
         }
 
-        private static readonly CreatureGroup[] m_Groups = new CreatureGroup[]
+        private static readonly CreatureGroup[] m_Groups =
         {
             // Undead group--empty
             new CreatureGroup(SlayerGroup.GetEntryByName(SlayerName.Silver).Types, new SummonEntry[0]),
@@ -166,7 +166,7 @@ namespace Server.Spells.Necromancy
                     type = c.Owner.GetType();
                 }
 
-                if (c.ItemID != 0x2006 || c.Animated || c.Channeled || type == typeof(PlayerMobile) || type == null || (c.Owner != null && c.Owner.Fame < 100) || ((c.Owner != null) && (c.Owner is BaseCreature) && (((BaseCreature)c.Owner).Summoned || ((BaseCreature)c.Owner).IsBonded)))
+                if (c.ItemID != 0x2006 || c.Animated || c.Channeled || type == typeof(PlayerMobile) || type == null || (c.Owner != null && c.Owner.Fame < 100) || c.Owner != null && (c.Owner is BaseCreature bc) && (bc.Summoned || bc.IsBonded))
                 {
                     Caster.SendLocalizedMessage(1061085); // There's not enough life force there to animate.
                 }
@@ -332,8 +332,8 @@ namespace Server.Spells.Necromancy
 
             BaseCreature.Summon((BaseCreature)summoned, false, caster, loc, 0x28, TimeSpan.FromDays(1.0));
 
-            if (summoned is SkeletalDragon)
-                Scale((SkeletalDragon)summoned, 50); // lose 50% hp and strength
+            if (summoned is SkeletalDragon dragon)
+                Scale(dragon, 50); // lose 50% hp and strength
 
             summoned.Fame = 0;
             summoned.Karma = -1500;

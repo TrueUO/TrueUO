@@ -1,9 +1,7 @@
-#region References
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Runtime;
 using System.Runtime.InteropServices;
@@ -12,7 +10,6 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Server.Network;
-#endregion
 
 namespace Server
 {
@@ -107,7 +104,7 @@ namespace Server
 		 * GetTickCount and GetTickCount64 have poor resolution.
 		 * GetTickCount64 is unavailable on Windows XP and Windows Server 2003.
 		 * Stopwatch.GetTimestamp() (QueryPerformanceCounter) is high resolution, but
-		 * somewhat expensive to call because of its defference to DateTime.Now,
+		 * somewhat expensive to call because of its deference to DateTime.Now,
 		 * which is why Stopwatch has been used to verify HRT before calling GetTimestamp(),
 		 * enabling the usage of DateTime.UtcNow instead.
 		 */
@@ -297,7 +294,7 @@ namespace Server
 
 		private static bool OnConsoleEvent(ConsoleEventType type)
 		{
-			if (World.Saving || (Service && type == ConsoleEventType.CTRL_LOGOFF_EVENT))
+			if (World.Saving || Service && type == ConsoleEventType.CTRL_LOGOFF_EVENT)
 			{
 				return true;
 			}
@@ -319,7 +316,22 @@ namespace Server
 
 		public static float CyclesPerSecond => _CyclesPerSecond[(_CycleIndex - 1) % _CyclesPerSecond.Length];
 
-		public static float AverageCPS => _CyclesPerSecond.Take(_CycleIndex).Average();
+        public static float AverageCPS
+        {
+            get
+            {
+                float t = 0.0f;
+                int c = 0;
+
+                for( int i = 0; i < _CycleIndex && i < _CyclesPerSecond.Length; ++i )
+                {
+                    t += _CyclesPerSecond[i];
+                    ++c;
+                }
+
+                return t / Math.Max( c, 1 );
+            }
+        }
 
 		public static void Kill()
 		{
