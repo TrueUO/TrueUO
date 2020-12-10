@@ -1239,9 +1239,11 @@ namespace Server.Mobiles
 
                     }
 
-                    if (e.Selected) texthue = 33;
+                    if (e.Selected)
+                        texthue = 33;
 
-                    if (i == Selected) texthue = 68;
+                    if (i == Selected)
+                        texthue = 68;
 
                     // display the name
                     AddLabelCropped(248, 22 * (i % MaxEntriesPerPage) + 31, 110, 21, texthue, namestr ?? string.Empty);
@@ -1260,7 +1262,6 @@ namespace Server.Mobiles
                     AddLabelCropped(640, 22 * (i % MaxEntriesPerPage) + 31, 90, 21, texthue, ownstr);
 
                     // display the selection button
-
                     AddButton(730, 22 * (i % MaxEntriesPerPage) + 32, (e.Selected ? 0xD3 : 0xD2), (e.Selected ? 0xD2 : 0xD3), 4000 + i, GumpButtonType.Reply, 0);
                 }
             }
@@ -1473,8 +1474,8 @@ namespace Server.Mobiles
                 if (From == null || From.Deleted)
                     return 0;
 
-                IEntity entity1 = ((e1 as SearchEntry)?.Object as IEntity);
-                IEntity entity2 = ((e2 as SearchEntry)?.Object as IEntity);
+                IEntity entity1 = (e1 as SearchEntry)?.Object as IEntity;
+                IEntity entity2 = (e2 as SearchEntry)?.Object as IEntity;
 
                 if (entity1 == null && entity2 == null)
                     return 0;

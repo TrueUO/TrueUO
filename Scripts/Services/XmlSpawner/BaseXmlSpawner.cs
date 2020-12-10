@@ -1498,7 +1498,7 @@ namespace Server.Mobiles
             char startc = str[0];
 
             // first see whether it is a standard numeric value
-            if ((startc == '.') || (startc == '-') || startc == '+' || startc >= '0' && startc <= '9')
+            if (startc == '.' || startc == '-' || startc == '+' || startc >= '0' && startc <= '9')
             {
                 // determine the type
                 ptype = str.IndexOf(".") >= 0 ? typeof(double) : typeof(int);
@@ -1665,7 +1665,7 @@ namespace Server.Mobiles
 
             if (orposition > 0 && andposition <= 0 || orposition > 0 && orposition < andposition)
             {
-                return (first || second); // or operator
+                return first || second; // or operator
             }
 
             // should never get here
@@ -2177,7 +2177,7 @@ namespace Server.Mobiles
             foreach (Mobile mobile in World.Mobiles.Values) // search through all mobiles in the world and find one with a matching name
             {
                 Type mobtype = mobile.GetType();
-                if (!mobile.Deleted && ((name.Length == 0 || string.Compare(mobile.Name, name, true) == 0)) && (typestr == null ||
+                if (!mobile.Deleted && (name.Length == 0 || string.Compare(mobile.Name, name, true) == 0) && (typestr == null ||
                     targettype != null && (mobtype.Equals(targettype) || mobtype.IsSubclassOf(targettype))))
                 {
                     foundmobile = mobile;
@@ -2190,7 +2190,7 @@ namespace Server.Mobiles
             {
                 AddToRecentMobileSearchList(fromspawner, foundmobile); // add this to the recent search list
 
-                return (foundmobile);
+                return foundmobile;
             }
 
             return null;
@@ -2271,8 +2271,7 @@ namespace Server.Mobiles
                         deletelist = new List<XmlSpawner>();
                     deletelist.Add(s);
                 }
-                else
-                    if (string.Compare(s.Name, name, true) == 0)
+                else if (string.Compare(s.Name, name, true) == 0)
                 {
                     foundspawner = s;
                     break;
@@ -2285,7 +2284,7 @@ namespace Server.Mobiles
                     spawner.RecentSpawnerSearchList.Remove(i);
             }
 
-            return (foundspawner);
+            return foundspawner;
         }
 
         public static void AddToRecentItemSearchList(XmlSpawner spawner, Item target)
@@ -2463,7 +2462,8 @@ namespace Server.Mobiles
                 sb.Append(value);
 
                 // continue processing the rest of the string
-                if (endindex + startindex + 2 >= remaining.Length) break;
+                if (endindex + startindex + 2 >= remaining.Length)
+                    break;
 
                 remaining = remaining.Substring(endindex + startindex + 2, remaining.Length - endindex - startindex - 2);
             }
@@ -2479,7 +2479,7 @@ namespace Server.Mobiles
                 string[] typeargs = ParseCommaArgs(arglist[0], 2);
                 if (typeargs.Length > 1)
                 {
-                    return (typeargs[0]);
+                    return typeargs[0];
                 }
                 return arglist[0];
             }
@@ -2504,8 +2504,8 @@ namespace Server.Mobiles
                 {
                     typeargs = ParseCommaArgs(itemtypestring.Substring(argstart), 15);
                 }
-                return (typeargs);
 
+                return typeargs;
             }
 
             return null;

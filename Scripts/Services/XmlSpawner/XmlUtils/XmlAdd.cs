@@ -1284,7 +1284,7 @@ namespace Server.Mobiles
             defaults.Group = info.IsSwitched(304);
             defaults.HomeRangeIsRelative = info.IsSwitched(305);
             defaults.AutoNumber = info.IsSwitched(306);
-            defaults.SequentialSpawn = (info.IsSwitched(307) ? 0 : -1);
+            defaults.SequentialSpawn = info.IsSwitched(307) ? 0 : -1;
             defaults.ExternalTriggering = info.IsSwitched(308);
             defaults.AllowGhostTrig = info.IsSwitched(309);
             defaults.SpawnOnTrigger = info.IsSwitched(311);
