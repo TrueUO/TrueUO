@@ -1044,7 +1044,7 @@ namespace Server.Mobiles
             get { return m_ShowBoundsItems != null && m_ShowBoundsItems.Count > 0; }
             set
             {
-                if (value && ShowBounds == false)
+                if (value && !ShowBounds)
                 {
                     if (m_ShowBoundsItems == null) m_ShowBoundsItems = new List<Static>();
 
@@ -6970,7 +6970,7 @@ namespace Server.Mobiles
                 {
                     try
                     {
-                        if (i is XmlSpawner && (RespawnAll || i.Map == e.Mobile.Map) && (i.Deleted == false))
+                        if (i is XmlSpawner && (RespawnAll || i.Map == e.Mobile.Map) && !i.Deleted)
                         {
                             // Check if there is a respawn condition
                             if (SpawnerPrefix == null || SpawnerPrefix.Length == 0 || i.Name != null && i.Name.StartsWith(SpawnerPrefix))
@@ -7364,8 +7364,6 @@ namespace Server.Mobiles
                         }
                         else if (m is BaseCreature bc)
                         {
-                            // Check if the creature has been tamed or previously tamed and released
-                            // and if it is, remove it from the list of spawns
                             if (bc.Controlled || bc.IsStabled || (bc.Owners != null && bc.Owners.Count > 0))
                             {
                                 so.SpawnedObjects.Remove(m);
@@ -7413,12 +7411,11 @@ namespace Server.Mobiles
                 InvalidateProperties();
 
             // increment the killcount based upon the number of items that were removed from the spawnlist (i.e. were spawned but now are gone, presumed killed)
-            if (killtest) m_killcount += total_removed;
-
+            if (killtest)
+                m_killcount += total_removed;
         }
 
-        // special defrag pass to remove GOTO keyword tags
-        public void ClearGOTOTags()
+        public void ClearGOTOTags() // special defrag pass to remove GOTO keyword tags
         {
             if (m_SpawnObjects == null) return;
 
@@ -7429,21 +7426,16 @@ namespace Server.Mobiles
                 {
                     object o = so.SpawnedObjects[x];
 
-                    if (o is BaseXmlSpawner.KeywordTag sot)
+                    if (o is BaseXmlSpawner.KeywordTag sot && sot.Type == 2) // clear the tags except for gump and delay tags
                     {
-                        // clear the tags except for gump and delay tags
-                        if (sot.Type == 2)
-                        {
-                            ToDelete.Add(sot);
-                            so.SpawnedObjects.Remove(o);
-                            x--;
-                        }
-
+                        ToDelete.Add(sot);
+                        so.SpawnedObjects.Remove(o);
+                        x--;
                     }
                 }
             }
 
-            for (int x = ToDelete.Count - 1; x >= 0; --x)//BaseXmlSpawner.KeywordTag i in ToDelete)
+            for (int x = ToDelete.Count - 1; x >= 0; --x) // BaseXmlSpawner.KeywordTag i in ToDelete)
             {
                 BaseXmlSpawner.KeywordTag i = ToDelete[x];
                 if (i != null && !i.Deleted)
@@ -7465,22 +7457,17 @@ namespace Server.Mobiles
                 {
                     object o = so.SpawnedObjects[x];
 
-                    if (o is BaseXmlSpawner.KeywordTag sot)
+                    if (o is BaseXmlSpawner.KeywordTag sot && (all || ((sot.Flags & BaseXmlSpawner.KeywordFlags.Defrag) != 0))) // clear the tags except for gump and delay tags
                     {
-                        // clear the tags except for gump and delay tags
-                        if ((all || ((sot.Flags & BaseXmlSpawner.KeywordFlags.Defrag) != 0)))
-                        {
-                            ToDelete.Add(sot);
-                            so.SpawnedObjects.Remove(o);
-                            x--;
-                            removed = true;
-                        }
-
+                        ToDelete.Add(sot);
+                        so.SpawnedObjects.Remove(o);
+                        x--;
+                        removed = true;
                     }
                 }
             }
 
-            for (int x = ToDelete.Count - 1; x >= 0; --x)//each (BaseXmlSpawner.KeywordTag i in ToDelete)
+            for (int x = ToDelete.Count - 1; x >= 0; --x) // each (BaseXmlSpawner.KeywordTag i in ToDelete)
             {
                 BaseXmlSpawner.KeywordTag i = ToDelete[x];
                 if (i != null && !i.Deleted)
@@ -7509,16 +7496,12 @@ namespace Server.Mobiles
                 {
                     object o = so.SpawnedObjects[x];
 
-                    if (o is BaseXmlSpawner.KeywordTag sot)
+                    if (o is BaseXmlSpawner.KeywordTag sot && sot.Type == 1) // clear the gump tags
                     {
-                        // clear the gump tags
-                        if (sot.Type == 1)
-                        {
-                            ToDelete.Add(sot);
-                            so.SpawnedObjects.Remove(o);
-                            x--;
-                            removed = true;
-                        }
+                        ToDelete.Add(sot);
+                        so.SpawnedObjects.Remove(o);
+                        x--;
+                        removed = true;
                     }
                 }
             }
@@ -7548,21 +7531,17 @@ namespace Server.Mobiles
                 {
                     object o = so.SpawnedObjects[x];
 
-                    if (o is BaseXmlSpawner.KeywordTag sot)
+                    if (o is BaseXmlSpawner.KeywordTag sot && sot == tag) // clear the matching tags
                     {
-                        // clear the matching tags
-                        if (sot == tag)
-                        {
-                            ToDelete.Add(sot);
-                            so.SpawnedObjects.Remove(o);
-                            x--;
-                            removed = true;
-                        }
+                        ToDelete.Add(sot);
+                        so.SpawnedObjects.Remove(o);
+                        x--;
+                        removed = true;
                     }
                 }
             }
 
-            for (int x = ToDelete.Count - 1; x >= 0; --x)//BaseXmlSpawner.KeywordTag i in ToDelete)
+            for (int x = ToDelete.Count - 1; x >= 0; --x) // BaseXmlSpawner.KeywordTag i in ToDelete)
             {
                 BaseXmlSpawner.KeywordTag i = ToDelete[x];
                 if (i != null && !i.Deleted)
