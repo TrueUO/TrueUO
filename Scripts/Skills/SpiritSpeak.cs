@@ -117,15 +117,12 @@ namespace Server.SkillHandlers
                         break;
                     }
 
-                    if (objs is SageHumbolt humbolt)
+                    if (objs is SageHumbolt humbolt && humbolt.OnSpiritSpeak(Caster))
                     {
-                        if (humbolt.OnSpiritSpeak(Caster))
-                        {
-                            eable.Free();
-                            Remove(Caster);
-                            Stop();
-                            return;
-                        }
+                        eable.Free();
+                        Remove(Caster);
+                        Stop();
+                        return;
                     }
                 }
 
