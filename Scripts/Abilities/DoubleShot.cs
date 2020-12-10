@@ -79,8 +79,8 @@ namespace Server.Items
 
             attacker.Weapon.OnSwing(attacker, defender);
 
-            if (attacker.Weapon is BaseWeapon)
-                ((BaseWeapon)attacker.Weapon).ProcessingMultipleHits = false;
+            if (attacker.Weapon is BaseWeapon weapon)
+                weapon.ProcessingMultipleHits = false;
         }
     }
 }

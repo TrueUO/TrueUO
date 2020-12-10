@@ -50,14 +50,8 @@ namespace Server.Items
 
         public SlayerGroup Group
         {
-            get
-            {
-                return m_Group;
-            }
-            set
-            {
-                m_Group = value;
-            }
+            get => m_Group;
+            set => m_Group = value;
         }
 
         public SlayerName Name => m_Name;

@@ -92,7 +92,7 @@ namespace Server.Items
             {
                 Effect = effect;
 
-                if (effect != null && effect.Duration > TimeSpan.MinValue)
+                if (effect.Duration > TimeSpan.MinValue)
                     m_Expires = DateTime.UtcNow + effect.Duration;
                 else
                     m_Expires = DateTime.MinValue;
@@ -100,7 +100,7 @@ namespace Server.Items
 
             protected override void OnTick()
             {
-                if (Effect.Attacker == null || (Effect.Attacker.Deleted || !Effect.Attacker.Alive || Effect.Attacker.IsDeadBondedPet))
+                if (Effect.Attacker == null || Effect.Attacker.Deleted || !Effect.Attacker.Alive || Effect.Attacker.IsDeadBondedPet)
                 {
                     Effect.RemoveEffects();
                 }

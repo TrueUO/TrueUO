@@ -40,7 +40,7 @@ namespace Server.Items
 
             int ran = -1;
 
-            if (attacker is BaseCreature && PetTrainingHelper.CheckSecondarySkill((BaseCreature)attacker, SkillName.Bushido))
+            if (attacker is BaseCreature bc && PetTrainingHelper.CheckSecondarySkill(bc, SkillName.Bushido))
             {
                 ran = Utility.Random(9);
             }
