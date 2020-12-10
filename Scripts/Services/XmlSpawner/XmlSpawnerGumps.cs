@@ -709,7 +709,7 @@ namespace Server.Mobiles
             }
             else if (o is Mobile m)
             {
-                if (!m.Deleted && (m.Map != null) && (m.Map != Map.Internal))
+                if (!m.Deleted && (m.Map != null) && m.Map != Map.Internal)
                     return true;
 
                 if (from != null && !from.Deleted)
