@@ -1706,18 +1706,15 @@ namespace Server.Mobiles
             {
                 hasequal = true;
             }
-            else
-                if (testString.IndexOf("!") > 0)
+            else if (testString.IndexOf("!") > 0)
             {
                 hasnotequals = true;
             }
-            else
-                    if (testString.IndexOf(">") > 0)
+            else if (testString.IndexOf(">") > 0)
             {
                 hasgreaterthan = true;
             }
-            else
-                        if (testString.IndexOf("<") > 0)
+            else if (testString.IndexOf("<") > 0)
             {
                 haslessthan = true;
             }
@@ -2223,19 +2220,15 @@ namespace Server.Mobiles
 
             foreach (Item item in World.Items.Values) // search through all xmlspawners in the world and find one with a matching name
             {
-                if (item is XmlSpawner spawner)
+                if (item is XmlSpawner spawner && !spawner.Deleted && string.Compare(spawner.Name, name, true) == 0)
                 {
-                    if (!spawner.Deleted && (string.Compare(spawner.Name, name, true) == 0))
-                    {
-                        foundspawner = spawner;
-                        count++;
-                        break; // added the break in to return the first match instead of forcing uniqueness (overrides the count test)
-                    }
+                    foundspawner = spawner;
+                    count++;
+                    break; // added the break in to return the first match instead of forcing uniqueness (overrides the count test)
                 }
             }
 
-            // if a unique item is found then success
-            if (count == 1)
+            if (count == 1) // if a unique item is found then success
             {
                 AddToRecentSpawnerSearchList(fromspawner, foundspawner); // add this to the recent search list
 

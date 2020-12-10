@@ -440,10 +440,13 @@ namespace Server.Mobiles
                     if (Parent != null)
                     {
                         if (RootParent is Mobile mobile)
+                        {
                             loc = mobile.Location;
-                        else
-                            if (RootParent is Item item)
+                        }
+                        else if (RootParent is Item item)
+                        {
                             loc = item.Location;
+                        }
                     }
 
                     // find the max detection range by examining both spawnrange 
@@ -548,7 +551,6 @@ namespace Server.Mobiles
                 {
                     if (s != null && s.Active && s.Players != null && s.Players.Count > 0)
                     {
-
                         // confirm that players with the proper access level are present
                         foreach (Mobile m in s.Players)
                         {
@@ -4248,25 +4250,23 @@ namespace Server.Mobiles
                                 OtherCount++;
                             }
 
-                            // Check if this spawner already exists
-                            XmlSpawner OldSpawner = null;
+                            XmlSpawner OldSpawner = null; // Check if this spawner already exists
+
                             foreach (Item i in World.Items.Values)
                             {
-                                if (i is XmlSpawner checkSpawner)
+                                // Check if the spawners GUID is the same as the one being unloaded
+                                // and that the spawners map is the same as the one being unloaded
+                                if (i is XmlSpawner checkSpawner && checkSpawner.UniqueId == SpawnId.ToString())
                                 {
-                                    // Check if the spawners GUID is the same as the one being unloaded
-                                    // and that the spawners map is the same as the one being unloaded
-                                    if (checkSpawner.UniqueId == SpawnId.ToString())
-                                    {
-                                        OldSpawner = checkSpawner;
-                                        if (OldSpawner != null)
-                                        {
-                                            spawners_deleted++;
-                                            OldSpawner.Delete();
-                                        }
+                                    OldSpawner = checkSpawner;
 
-                                        break;
+                                    if (OldSpawner != null)
+                                    {
+                                        spawners_deleted++;
+                                        OldSpawner.Delete();
                                     }
+
+                                    break;
                                 }
                             }
                         }
