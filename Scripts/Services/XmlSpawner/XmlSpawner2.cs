@@ -11394,8 +11394,6 @@ namespace Server.Mobiles
         #region Spawn classes
         public class SpawnObject
         {
-            private int m_MaxCount;
-
             public bool Available; // temporary variable used to calculate weighted spawn probabilities
 
             public List<object> SpawnedObjects;
@@ -11418,13 +11416,13 @@ namespace Server.Mobiles
                         return 0;
                     }
 
-                    return m_MaxCount;
+                    return ActualMaxCount;
                 }
 
-                set => m_MaxCount = value;
+                set => ActualMaxCount = value;
             }
 
-            public int ActualMaxCount { get => m_MaxCount; set => m_MaxCount = value; }
+            public int ActualMaxCount { get; set; }
             public int SubGroup { get; set; }
             public int SpawnsPerTick { get; set; } = 1;
             public int SequentialResetTo { get; set; }
