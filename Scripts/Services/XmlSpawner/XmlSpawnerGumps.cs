@@ -269,10 +269,10 @@ namespace Server.Mobiles
             AddButton(168, 406, 0xFBD, 0xFBE, 9998, GumpButtonType.Reply, 0);
             AddLabel(201, 406, 0x384, "Refresh");
 
-            AddButton(280, 395, m_Spawner.DisableGlobalAutoReset ? 0xD3 : 0xD2,
-                                m_Spawner.DisableGlobalAutoReset ? 0xD2 : 0xD3, 9997, GumpButtonType.Reply, 0);
-            AddLabel(263, 410, m_Spawner.DisableGlobalAutoReset ? 68 : 33, "Disable");
-            AddLabel(247, 424, m_Spawner.DisableGlobalAutoReset ? 68 : 33, "TickReset");
+            AddButton(280, 395, m_Spawner.m_DisableGlobalAutoReset ? 0xD3 : 0xD2,
+                                m_Spawner.m_DisableGlobalAutoReset ? 0xD2 : 0xD3, 9997, GumpButtonType.Reply, 0);
+            AddLabel(263, 410, m_Spawner.m_DisableGlobalAutoReset ? 68 : 33, "Disable");
+            AddLabel(247, 424, m_Spawner.m_DisableGlobalAutoReset ? 68 : 33, "TickReset");
 
             // add run status display
             if (m_Spawner.Running)
@@ -1009,7 +1009,7 @@ namespace Server.Mobiles
                     }
                 case 9997:
                     {
-                        m_Spawner.DisableGlobalAutoReset = !m_Spawner.DisableGlobalAutoReset;
+                        m_Spawner.m_DisableGlobalAutoReset = !m_Spawner.m_DisableGlobalAutoReset;
                         break;
                     }
                 case 9998:  // refresh the gump

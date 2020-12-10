@@ -7692,7 +7692,7 @@ namespace Server.Mobiles
                 return (NextSequentialIndex(-1));
             }
 
-            return (largergroup);
+            return largergroup;
         }
 
         public int GetCurrentAvailableSequentialSpawnIndex(int sgroup) // returns the spawn index of a spawn entry in the current sequential subgroup
@@ -8210,7 +8210,7 @@ namespace Server.Mobiles
             Map map = Map;
 
             // Make sure everything is ok to spawn an object
-            if ((map == null) || (map == Map.Internal) || (m_SpawnObjects == null) || (m_SpawnObjects.Count == 0) || (index < 0) || (index >= m_SpawnObjects.Count))
+            if (map == null || map == Map.Internal || m_SpawnObjects == null || m_SpawnObjects.Count == 0 || index < 0 || index >= m_SpawnObjects.Count)
                 return false;
 
             // Remove any spawns that don't belong to the spawner any more.
@@ -8236,8 +8236,7 @@ namespace Server.Mobiles
 
                 // Check that the current object to be spawned has not reached its maximum allowed
                 // and make sure that the maximum spawner count has not been exceeded as well
-                if ((CurrentCreatureCount >= CurrentCreatureMax) ||
-                    (TotalSpawnedObjects >= m_Count))
+                if (CurrentCreatureCount >= CurrentCreatureMax || TotalSpawnedObjects >= m_Count)
                 {
                     return false;
                 }
@@ -8810,7 +8809,9 @@ namespace Server.Mobiles
 
         public static object GetSpawned(XmlSpawner spawner, int sgroup)
         {
-            if (spawner == null || spawner.m_SpawnObjects == null) return (null);
+            if (spawner == null || spawner.m_SpawnObjects == null)
+                return null;
+
             for (int i = 0; i < spawner.m_SpawnObjects.Count; i++)
             {
                 // find the first entry with matching subgroup id
@@ -8831,7 +8832,9 @@ namespace Server.Mobiles
         {
             List<object> newlist = new List<object>();
 
-            if (spawner == null || spawner.m_SpawnObjects == null) return (null);
+            if (spawner == null || spawner.m_SpawnObjects == null)
+                return null;
+
             for (int i = 0; i < spawner.m_SpawnObjects.Count; i++)
             {
                 // find the first entry with matching subgroup id
@@ -8852,7 +8855,8 @@ namespace Server.Mobiles
 
         public bool HasSubGroups()
         {
-            if (m_SpawnObjects == null) return (false);
+            if (m_SpawnObjects == null)
+                return false;
 
             for (int j = 0; j < m_SpawnObjects.Count; j++)
             {
@@ -9058,7 +9062,7 @@ namespace Server.Mobiles
             {
                 try
                 {
-                    return (bool)(prop.GetValue(o, null));
+                    return (bool)prop.GetValue(o, null);
                 }
                 catch { }
             }
@@ -9306,7 +9310,7 @@ namespace Server.Mobiles
                     if (excludetilelist != null && excludetilelist.Count > 0)
                     {
                         // also require the tile to be passable
-                        excludetile = ((lflags & TileFlag.Impassable) != 0) || excludetilelist.Contains(ltile.ID & TileData.MaxLandValue);
+                        excludetile = (lflags & TileFlag.Impassable) != 0 || excludetilelist.Contains(ltile.ID & TileData.MaxLandValue);
                     }
                     else
                     {
@@ -9339,14 +9343,14 @@ namespace Server.Mobiles
                         // non-excluded tiles must also be passable
                         if (excludetilelist != null && excludetilelist.Count > 0)
                         {
-                            excludetile = ((sflags & TileFlag.Impassable) != 0) || excludetilelist.Contains(stile.ID & TileData.MaxItemValue);
+                            excludetile = (sflags & TileFlag.Impassable) != 0 || excludetilelist.Contains(stile.ID & TileData.MaxItemValue);
                         }
                         else
                         {
                             excludetile = false;
                         }
 
-                        if (includetile && !excludetile && ((sflags & tileflag) == tileflag))
+                        if (includetile && !excludetile && (sflags & tileflag) == tileflag)
                         {
                             //Console.WriteLine("found statictile {0}/{1} at {2},{3},{4}", stile.ID, stile.ID & 0x3fff, x, y, stile.Z + stile.Height);
                             if (p == Point3D.Zero)
@@ -9388,7 +9392,7 @@ namespace Server.Mobiles
                                 excludetile = false;
                             }
 
-                            if (includetile && !excludetile && ((iflags & tileflag) == tileflag))
+                            if (includetile && !excludetile && (iflags & tileflag) == tileflag)
                             {
                                 p = new Point3D(x, y, i.Z + i.ItemData.Height);
                                 allok = true;
@@ -11280,7 +11284,7 @@ namespace Server.Mobiles
 
                             string typeName = BaseXmlSpawner.ParseObjectType(TypeName);
 
-                            if (typeName == null || (SpawnerType.GetType(typeName) == null && !BaseXmlSpawner.IsTypeOrItemKeyword(typeName) && typeName.IndexOf('{') == -1 && !typeName.StartsWith("*") && !typeName.StartsWith("#")))
+                            if (typeName == null || SpawnerType.GetType(typeName) == null && !BaseXmlSpawner.IsTypeOrItemKeyword(typeName) && typeName.IndexOf('{') == -1 && !typeName.StartsWith("*") && !typeName.StartsWith("#"))
                             {
                                 if (m_WarnTimer == null)
                                     m_WarnTimer = new WarnTimer2();
