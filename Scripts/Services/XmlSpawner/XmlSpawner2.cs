@@ -6734,9 +6734,9 @@ namespace Server.Mobiles
                 // check to see if this is in a container
                 if (sp.RootParent is Container container)
                 {
-                    dr["CentreX"] = ((Container)container).Location.X;
-                    dr["CentreY"] = ((Container)container).Location.Y;
-                    dr["CentreZ"] = ((Container)container).Location.Z;
+                    dr["CentreX"] = container.Location.X;
+                    dr["CentreY"] = container.Location.Y;
+                    dr["CentreZ"] = container.Location.Z;
                     dr["ContainerX"] = sp.Location.X;
                     dr["ContainerY"] = sp.Location.Y;
                     dr["ContainerZ"] = sp.Location.Z;
@@ -6747,9 +6747,6 @@ namespace Server.Mobiles
                     dr["CentreX"] = sp.Location.X;
                     dr["CentreY"] = sp.Location.Y;
                     dr["CentreZ"] = sp.Location.Z;
-                    //dr["ContainerX"] = 0;
-                    //dr["ContainerY"] = 0;
-                    //dr["ContainerZ"] = 0;
                     dr["InContainer"] = false;
                 }
                 dr["Range"] = sp.m_HomeRange;
@@ -6878,8 +6875,8 @@ namespace Server.Mobiles
                 from.SendMessage("{0} spawner(s) were saved to file {1} [Trammel={2}, Felucca={3}, Ilshenar={4}, Malas={5}, Tokuno={6}, Other={7}].",
                     TotalCount, dirname, TrammelCount, FeluccaCount, IlshenarCount, MalasCount, TokunoCount, OtherCount);
             }
-            return true;
 
+            return true;
         }
 
         private static void WipeSpawners(CommandEventArgs e, bool WipeAll)
@@ -6906,19 +6903,14 @@ namespace Server.Mobiles
                 List<Item> ToDelete = new List<Item>();
                 foreach (Item i in World.Items.Values)
                 {
-                    if (i is XmlSpawner && (WipeAll || i.Map == e.Mobile.Map) && (i.Deleted == false))
+                    if (i is XmlSpawner && (WipeAll || i.Map == e.Mobile.Map) && !i.Deleted && (SpawnerPrefix == null || SpawnerPrefix.Length == 0 || i.Name.StartsWith(SpawnerPrefix)))
                     {
-                        // Check if there is a delete condition
-                        if (SpawnerPrefix == null || SpawnerPrefix.Length == 0 || i.Name.StartsWith(SpawnerPrefix))
-                        {
-                            ToDelete.Add(i);
-                            Count++;
-                        }
+                        ToDelete.Add(i);
+                        Count++;
                     }
                 }
 
-                // Delete the items in the array list
-                foreach (Item i in ToDelete)
+                foreach (Item i in ToDelete) // Delete the items in the array list
                     i.Delete();
 
                 if (WipeAll)
@@ -6926,10 +6918,10 @@ namespace Server.Mobiles
                 else
                     e.Mobile.SendMessage("Removed {0} XmlSpawner objects from {1}.", Count, e.Mobile.Map);
             }
+
             else
                 e.Mobile.SendMessage("You do not have rights to perform this command.");
         }
-
 
         [Usage("XmlSpawnerRespawn [SpawnerPrefixFilter]")]
         [Description("Respawns all XmlSpawner objects from the current map.")]
@@ -6947,7 +6939,8 @@ namespace Server.Mobiles
 
         private static void RespawnSpawners(CommandEventArgs e, bool RespawnAll)
         {
-            if (e == null || e.Mobile == null) return;
+            if (e == null || e.Mobile == null)
+                return;
 
             if (e.Mobile.AccessLevel >= AccessLevel.Administrator)
             {
@@ -6970,14 +6963,11 @@ namespace Server.Mobiles
                 {
                     try
                     {
-                        if (i is XmlSpawner && (RespawnAll || i.Map == e.Mobile.Map) && !i.Deleted)
+                        if (i is XmlSpawner && (RespawnAll || i.Map == e.Mobile.Map) && !i.Deleted && (SpawnerPrefix == null || SpawnerPrefix.Length == 0 || i.Name != null && i.Name.StartsWith(SpawnerPrefix)))
                         {
                             // Check if there is a respawn condition
-                            if (SpawnerPrefix == null || SpawnerPrefix.Length == 0 || i.Name != null && i.Name.StartsWith(SpawnerPrefix))
-                            {
-                                ToRespawn.Add(i);
-                                Count++;
-                            }
+                            ToRespawn.Add(i);
+                            Count++;
                         }
                     }
                     catch (Exception ex) { Console.WriteLine("Error attempting to add {0}, {1}", i, ex.Message); }
@@ -6985,7 +6975,6 @@ namespace Server.Mobiles
                 // Respawn the items in the array list
                 foreach (Item i in ToRespawn)
                 {
-
                     // Send a message to the client that the spawner is being respawned
                     e.Mobile.SendMessage(33, "Respawning '{0}' in {1} at {2}", i.Name, i.Map.Name, i.Location.ToString());
                     XmlSpawner CheckXmlSpawner = (XmlSpawner)i;
@@ -6997,6 +6986,7 @@ namespace Server.Mobiles
                 else
                     e.Mobile.SendMessage("Respawned {0} XmlSpawner objects from {1}.", Count, e.Mobile.Map);
             }
+
             else
                 e.Mobile.SendMessage("You do not have rights to perform this command.");
         }
@@ -7358,29 +7348,24 @@ namespace Server.Mobiles
                             }
                             else
                             {
-                                // just add it
-                                total_removed++;
+                                total_removed++; // just add it
                             }
                         }
-                        else if (m is BaseCreature bc)
+                        else if (m is BaseCreature bc && (bc.Controlled || bc.IsStabled || (bc.Owners != null && bc.Owners.Count > 0)))
                         {
-                            if (bc.Controlled || bc.IsStabled || (bc.Owners != null && bc.Owners.Count > 0))
+                            so.SpawnedObjects.Remove(m);
+                            x--;
+                            removed = true;
+                            // if sequential spawning is active and the RestrictKillsToSubgroup flag is set, then check to see if
+                            // the object is in the current subgroup before adding to the total
+                            if (SequentialSpawn >= 0 && so.RestrictKillsToSubgroup)
                             {
-                                so.SpawnedObjects.Remove(m);
-                                x--;
-                                removed = true;
-                                // if sequential spawning is active and the RestrictKillsToSubgroup flag is set, then check to see if
-                                // the object is in the current subgroup before adding to the total
-                                if (SequentialSpawn >= 0 && so.RestrictKillsToSubgroup)
-                                {
-                                    if (so.SubGroup == SequentialSpawn)
-                                        total_removed++;
-                                }
-                                else
-                                {
-                                    // just add it
+                                if (so.SubGroup == SequentialSpawn)
                                     total_removed++;
-                                }
+                            }
+                            else
+                            {
+                                total_removed++; // just add it
                             }
                         }
                     }
