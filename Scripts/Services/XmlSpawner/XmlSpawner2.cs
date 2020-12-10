@@ -6073,18 +6073,15 @@ namespace Server.Mobiles
 
                         bool found_spawner = false;
                         XmlSpawner OldSpawner = null;
+
                         foreach (Item i in World.Items.Values)
                         {
-                            if (i is XmlSpawner spawner)
+                            // Check if the spawners GUID is the same as the one being loaded
+                            // and that the spawners map is the same as the one being loaded
+                            if (i is XmlSpawner spawner && (spawner.UniqueId == SpawnId.ToString()))
                             {
-                                // Check if the spawners GUID is the same as the one being loaded
-                                // and that the spawners map is the same as the one being loaded
-                                if ((spawner.UniqueId == SpawnId.ToString())
-                                    /* && ( CheckXmlSpawner.Map == SpawnMap || loadrelative) */)
-                                {
-                                    OldSpawner = spawner;
-                                    found_spawner = true;
-                                }
+                                OldSpawner = spawner;
+                                found_spawner = true;
                             }
 
                             if (found_spawner)
@@ -6139,6 +6136,7 @@ namespace Server.Mobiles
                                             op.WriteLine();
                                         }
                                     }
+
                                     catch { }
                                 }
                             }
@@ -6225,9 +6223,9 @@ namespace Server.Mobiles
                 if (from != null)
                     from.SendMessage(33, "{0} questionable spawners detected. Saved to 'badxml.log'", questionablecount);
             }
+
             processedmaps = 1;
             processedspawners = TotalCount;
-
         }
 
         public static string LocateFile(string filename)
@@ -7335,37 +7333,23 @@ namespace Server.Mobiles
 
                         if (m.Deleted || despawned)
                         {
-                            // Remove the delete mobile from the list
-                            so.SpawnedObjects.Remove(m);
-                            x--;
-                            removed = true;
-                            // if sequential spawning is active and the RestrictKillsToSubgroup flag is set, then check to see if
-                            // the object is in the current subgroup before adding to the total
-                            if (SequentialSpawn >= 0 && so.RestrictKillsToSubgroup)
+                            if (m is BaseCreature bc && (bc.Controlled || bc.IsStabled || (bc.Owners != null && bc.Owners.Count > 0)))
                             {
-                                if (so.SubGroup == SequentialSpawn)
-                                    total_removed++;
-                            }
-                            else
-                            {
-                                total_removed++; // just add it
-                            }
-                        }
-                        else if (m is BaseCreature bc && (bc.Controlled || bc.IsStabled || (bc.Owners != null && bc.Owners.Count > 0)))
-                        {
-                            so.SpawnedObjects.Remove(m);
-                            x--;
-                            removed = true;
-                            // if sequential spawning is active and the RestrictKillsToSubgroup flag is set, then check to see if
-                            // the object is in the current subgroup before adding to the total
-                            if (SequentialSpawn >= 0 && so.RestrictKillsToSubgroup)
-                            {
-                                if (so.SubGroup == SequentialSpawn)
-                                    total_removed++;
-                            }
-                            else
-                            {
-                                total_removed++; // just add it
+                                // Remove the delete mobile from the list
+                                so.SpawnedObjects.Remove(m);
+                                x--;
+                                removed = true;
+                                // if sequential spawning is active and the RestrictKillsToSubgroup flag is set, then check to see if
+                                // the object is in the current subgroup before adding to the total
+                                if (SequentialSpawn >= 0 && so.RestrictKillsToSubgroup)
+                                {
+                                    if (so.SubGroup == SequentialSpawn)
+                                        total_removed++;
+                                }
+                                else
+                                {
+                                    total_removed++; // just add it
+                                }
                             }
                         }
                     }
