@@ -226,8 +226,6 @@ namespace Server.Mobiles
 
         private List<Sector> sectorList = null;
 
-        private bool m_DisableGlobalAutoReset;
-
         private Point3D mostRecentSpawnPosition = Point3D.Zero;
 
         #endregion
@@ -305,7 +303,7 @@ namespace Server.Mobiles
             set => m_SpawnerGump = value;
         }
 
-        public bool DisableGlobalAutoReset { get => m_DisableGlobalAutoReset; set => m_DisableGlobalAutoReset = value; }
+        public bool m_DisableGlobalAutoReset { get; set; }
 
         public bool DoDefrag
         {
