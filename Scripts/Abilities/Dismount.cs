@@ -104,12 +104,9 @@ namespace Server.Items
             {
                 aMobile.SetMountBlock(BlockMountType.DismountRecovery, TimeSpan.FromSeconds(aMobile.Weapon is BaseRanged ? 8 : 10), false);
             }
-            else if (attacker is BaseCreature bc)
+            else if (attacker is BaseCreature bc && bc.ControlMaster is PlayerMobile pm)
             {
-                if (bc.ControlMaster is PlayerMobile pm)
-                {
-                    pm.SetMountBlock(BlockMountType.DismountRecovery, TimeSpan.FromSeconds(delay), false);
-                }
+                pm.SetMountBlock(BlockMountType.DismountRecovery, TimeSpan.FromSeconds(delay), false);
             }
         }
 

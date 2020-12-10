@@ -100,7 +100,7 @@ namespace Server.Items
 
         public class DualWieldTimer : Timer
         {
-            public Mobile Owner { get; set; }
+            public Mobile Owner { get; }
             public double DualHitChance { get; set; }
             public DateTime Expires { get; set; }
             public bool SecondHit { get; set; }

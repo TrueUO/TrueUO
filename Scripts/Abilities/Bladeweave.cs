@@ -97,17 +97,19 @@ namespace Server.Items
                     return false;
             }
 
-
             return m_NewAttack[attacker].NewAbility.OnBeforeSwing(attacker, defender);
         }
 
         public override bool OnBeforeDamage(Mobile attacker, Mobile defender)
         {
             BladeWeaveRedirect bwr;
+
             if (m_NewAttack.TryGetValue(attacker, out bwr))
+            {
                 return bwr.NewAbility.OnBeforeDamage(attacker, defender);
-            else
-                return base.OnBeforeDamage(attacker, defender);
+            }
+
+            return base.OnBeforeDamage(attacker, defender);
         }
 
         public override void OnHit(Mobile attacker, Mobile defender, int damage)
@@ -117,7 +119,7 @@ namespace Server.Items
                 BladeWeaveRedirect bwr;
                 if (m_NewAttack.TryGetValue(attacker, out bwr))
                 {
-                    attacker.SendLocalizedMessage(1072841, "#" + bwr.ClilocEntry.ToString());
+                    attacker.SendLocalizedMessage(1072841, "#" + bwr.ClilocEntry);
                     bwr.NewAbility.OnHit(attacker, defender, damage);
                 }
                 else
