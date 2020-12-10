@@ -56,7 +56,7 @@ namespace Server.SkillHandlers
             {
                 return false;
             } //Checks to see if the animal has been tamed before
-            return bc.SubdueBeforeTame && (bc.Hits > ((double)bc.HitsMax / 10));
+            return bc.SubdueBeforeTame && bc.Hits > (double)bc.HitsMax / 10;
         }
 
         public static void ScaleStats(BaseCreature bc, double scalar)
@@ -134,12 +134,10 @@ namespace Server.SkillHandlers
             {
                 from.RevealingAction();
 
-                if (targeted is Mobile)
+                if (targeted is Mobile mobile)
                 {
-                    if (targeted is BaseCreature)
+                    if (mobile is BaseCreature creature)
                     {
-                        BaseCreature creature = (BaseCreature)targeted;
-
                         if (!creature.Tamable)
                         {
                             creature.PrivateOverheadMessage(MessageType.Regular, 0x3B2, 1049655, from.NetState);
@@ -184,7 +182,7 @@ namespace Server.SkillHandlers
                         }
                         else if (DarkWolfFamiliar.CheckMastery(from, creature) || from.Skills[SkillName.AnimalTaming].Value >= creature.CurrentTameSkill)
                         {
-                            if (m_BeingTamed.Contains(targeted))
+                            if (m_BeingTamed.Contains(mobile))
                             {
                                 creature.PrivateOverheadMessage(MessageType.Regular, 0x3B2, 502802, from.NetState);
                                 // Someone else is already taming this.
@@ -201,9 +199,7 @@ namespace Server.SkillHandlers
                                     creature.AIObject.DoMove(creature.Direction);
                                 }
 
-                                if (from is PlayerMobile &&
-                                    !(((PlayerMobile)from).HonorActive ||
-                                      TransformationSpellHelper.UnderTransformation(from, typeof(EtherealVoyageSpell))))
+                                if (from is PlayerMobile pm && !(pm.HonorActive || TransformationSpellHelper.UnderTransformation(pm, typeof(EtherealVoyageSpell))))
                                 {
                                     creature.Combatant = from;
                                 }
@@ -212,7 +208,7 @@ namespace Server.SkillHandlers
                             {
                                 m_SetSkillTime = false;
 
-                                m_BeingTamed[targeted] = from;
+                                m_BeingTamed[mobile] = from;
 
                                 from.LocalOverheadMessage(MessageType.Emote, 0x59, 1010597); // You start to tame the creature.
                                 from.NonlocalOverheadMessage(MessageType.Emote, 0x59, 1010598); // *begins taming a creature.*
@@ -228,7 +224,7 @@ namespace Server.SkillHandlers
                     }
                     else
                     {
-                        ((Mobile)targeted).PrivateOverheadMessage(MessageType.Regular, 0x3B2, 502469, from.NetState);
+                        mobile.PrivateOverheadMessage(MessageType.Regular, 0x3B2, 502469, from.NetState);
                         // That being cannot be tamed.
                     }
                 }
@@ -372,7 +368,7 @@ namespace Server.SkillHandlers
                             m_Tamer.CheckTargetSkill(SkillName.AnimalLore, m_Creature, 0.0, 120.0);
                         }
 
-                        double minSkill = m_Creature.CurrentTameSkill + (m_Creature.Owners.Count * 6.0);
+                        double minSkill = m_Creature.CurrentTameSkill + m_Creature.Owners.Count * 6.0;
                         bool necroMastery = DarkWolfFamiliar.CheckMastery(m_Tamer, m_Creature);
 
                         if (minSkill > -24.9 && necroMastery)
