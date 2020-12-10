@@ -112,22 +112,17 @@ namespace Server.Mobiles
         #endregion
 
         #region Variable declarations
-
         private string m_Name = string.Empty;
         private string m_UniqueId = string.Empty;
         private bool m_PlayerCreated = false;
         private bool m_HomeRangeIsRelative = false;
         private int m_Team;
         private int m_HomeRange;
-        // added a amount parameter for stacked item spawns
         private int m_StackAmount;
-        // this is actually redundant with the width height spec for spawning area
-        // just an easier way of specifying it
         private int m_SpawnRange;
         private int m_Count;
         private TimeSpan m_MinDelay;
         private TimeSpan m_MaxDelay;
-        // added a duration parameter for time-limited spawns
         private TimeSpan m_Duration;
         public List<SpawnObject> m_SpawnObjects = new List<SpawnObject>(); // List of objects to spawn
         private DateTime m_End;
@@ -148,9 +143,7 @@ namespace Server.Mobiles
         private bool m_proximityActivated;
         private bool m_refractActivated;
         private bool m_durActivated;
-        private TimeSpan m_TODStart;
         private TimeSpan m_TODEnd;
-        // time after proximity activation when the spawn cannot be reactivated
         private TimeSpan m_MinRefractory;
         private TimeSpan m_MaxRefractory;
         private string m_ItemTriggerName;
@@ -159,11 +152,7 @@ namespace Server.Mobiles
         private string m_ObjectPropertyName;
         public string status_str;
         public int m_killcount;
-        // added proximity range sensor
         private int m_ProximityRange;
-        // sound played when a proximity triggered spawner is tripped by a player
-        // set this to zero if you dont want to hear anything
-        private int m_ProximityTriggerSound;
         private string m_ProximityTriggerMessage;
         private string m_SpeechTrigger;
         private bool m_speechTriggerActivated;
@@ -1293,11 +1282,7 @@ namespace Server.Mobiles
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public TimeSpan TODStart // time of day activation
-        {
-            get => m_TODStart;
-            set => m_TODStart = value;
-        }
+        public TimeSpan m_TODStart { get; set; } // time of day activation
 
         [CommandProperty(AccessLevel.GameMaster)]
         public TimeSpan TODEnd
@@ -1437,14 +1422,10 @@ namespace Server.Mobiles
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int ProximitySound // proximity trigger sound parameter
-        {
-            get => m_ProximityTriggerSound;
-            set => m_ProximityTriggerSound = value;
-        }
+        public int m_ProximityTriggerSound { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public string ProximityMsg // proximity trigger message parameter
+        public string ProximityMsg 
         {
             get => m_ProximityTriggerMessage;
             set => m_ProximityTriggerMessage = value;
