@@ -604,18 +604,15 @@ namespace Server.Engines.CannedEvil
 
                         RegisterDamageTo(m);
 
-                        if (killer is BaseCreature)
-                            killer = ((BaseCreature)killer).GetMaster();
+                        if (killer is BaseCreature bc)
+                            killer = bc.GetMaster();
 
-                        if (killer is PlayerMobile)
+                        if (killer is PlayerMobile pm)
                         {
-                            #region Scroll of Transcendence
                             if (Map == Map.Felucca)
                             {
                                 if (Utility.RandomDouble() < ChampionSystem.ScrollChance)
                                 {
-                                    PlayerMobile pm = (PlayerMobile)killer;
-
                                     if (Utility.RandomDouble() < ChampionSystem.TranscendenceChance)
                                     {
                                         ScrollOfTranscendence SoTF = CreateRandomSoT(true);
@@ -633,12 +630,11 @@ namespace Server.Engines.CannedEvil
                             {
                                 if (Utility.RandomDouble() < 0.0015)
                                 {
-                                    killer.SendLocalizedMessage(1094936); // You have received a Scroll of Transcendence!
+                                    pm.SendLocalizedMessage(1094936); // You have received a Scroll of Transcendence!
                                     ScrollOfTranscendence SoTT = CreateRandomSoT(false);
-                                    killer.AddToBackpack(SoTT);
+                                    pm.AddToBackpack(SoTT);
                                 }
                             }
-                            #endregion
 
                             int mobSubLevel = rankOfMob + 1;
                             if (mobSubLevel >= 0)
@@ -647,16 +643,16 @@ namespace Server.Engines.CannedEvil
 
                                 int pointsToGain = mobSubLevel * 40;
 
-                                if (VirtueHelper.Award(killer, VirtueName.Valor, pointsToGain, ref gainedPath))
+                                if (VirtueHelper.Award(pm, VirtueName.Valor, pointsToGain, ref gainedPath))
                                 {
                                     if (gainedPath)
-                                        killer.SendLocalizedMessage(1054032); // You have gained a path in Valor!
+                                        pm.SendLocalizedMessage(1054032); // You have gained a path in Valor!
                                     else
-                                        killer.SendLocalizedMessage(1054030); // You have gained in Valor!
+                                        pm.SendLocalizedMessage(1054030); // You have gained in Valor!
                                     //No delay on Valor gains
                                 }
 
-                                PlayerMobile.ChampionTitleInfo info = ((PlayerMobile)killer).ChampionTitles;
+                                PlayerMobile.ChampionTitleInfo info = pm.ChampionTitles;
 
                                 info.Award(m_Type, mobSubLevel);
 
@@ -752,9 +748,9 @@ namespace Server.Engines.CannedEvil
                 m_Champion.MoveToWorld(p, Map);
                 ((BaseCreature)m_Champion).Home = p;
 
-                if (m_Champion is BaseChampion)
+                if (m_Champion is BaseChampion champion)
                 {
-                    ((BaseChampion)m_Champion).OnChampPopped(this);
+                    champion.OnChampPopped(this);
                 }
             }
         }
@@ -799,9 +795,8 @@ namespace Server.Engines.CannedEvil
                 m.MoveToWorld(loc, Map);
                 ++mobCount;
 
-                if (m is BaseCreature)
+                if (m is BaseCreature bc)
                 {
-                    BaseCreature bc = m as BaseCreature;
                     bc.Tamable = false;
                     bc.IsChampionSpawn = true;
 
