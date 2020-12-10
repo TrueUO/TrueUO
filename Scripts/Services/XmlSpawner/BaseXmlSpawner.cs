@@ -1702,19 +1702,19 @@ namespace Server.Mobiles
             bool hasgreaterthan = false;
             bool haslessthan = false;
 
-            if (testString.IndexOf("=") > 0)
+            if (testString.Contains("="))
             {
                 hasequal = true;
             }
-            else if (testString.IndexOf("!") > 0)
+            else if (testString.Contains("!"))
             {
                 hasnotequals = true;
             }
-            else if (testString.IndexOf(">") > 0)
+            else if (testString.Contains(">"))
             {
                 hasgreaterthan = true;
             }
-            else if (testString.IndexOf("<") > 0)
+            else if (testString.Contains("<"))
             {
                 haslessthan = true;
             }

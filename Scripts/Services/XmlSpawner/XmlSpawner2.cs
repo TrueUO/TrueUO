@@ -5881,25 +5881,23 @@ namespace Server.Mobiles
                                 bad_spawner = true;
                             }
 
-                            // Check if this spawner already exists
-                            XmlSpawner OldSpawner = null;
+                            XmlSpawner OldSpawner = null; // Check if this spawner already exists
+
                             bool found_container = false;
                             bool found_spawner = false;
+
                             Container spawn_container = null;
+
                             if (!bad_spawner)
                             {
                                 foreach (Item i in World.Items.Values)
                                 {
-                                    if (i is XmlSpawner checkSpawner)
+                                    // Check if the spawners GUID is the same as the one being loaded
+                                    // and that the spawners map is the same as the one being loaded
+                                    if (i is XmlSpawner checkSpawner && (checkSpawner.UniqueId == SpawnId.ToString()))
                                     {
-                                        // Check if the spawners GUID is the same as the one being loaded
-                                        // and that the spawners map is the same as the one being loaded
-                                        if ((checkSpawner.UniqueId == SpawnId.ToString())
-                                            /* && ( CheckXmlSpawner.Map == SpawnMap || loadrelative)*/ )
-                                        {
-                                            OldSpawner = checkSpawner;
-                                            found_spawner = true;
-                                        }
+                                        OldSpawner = checkSpawner;
+                                        found_spawner = true;
                                     }
 
                                     //look for containers with the spawn coordinates if the incontainer flag is set
