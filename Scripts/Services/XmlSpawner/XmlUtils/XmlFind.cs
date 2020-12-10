@@ -691,7 +691,7 @@ namespace Server.Mobiles
                         if (criteria.Dosearchname && !hasname) continue;
 
                         // check for condition
-                        if (criteria.Dosearchcondition && (criteria.Searchcondition != null))
+                        if (criteria.Dosearchcondition && criteria.Searchcondition != null)
                         {
                             // check the property test
                             hascondition = BaseXmlSpawner.CheckPropertyString(null, i, criteria.Searchcondition, out status_str);

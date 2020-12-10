@@ -599,7 +599,7 @@ namespace Server.Mobiles
                     return "That is not properly formatted. not convertible.";
                 }
             }
-            else if ((type.GetInterface("IList") != null))
+            else if (type.GetInterface("IList") != null)
             {
                 try
                 {
@@ -943,7 +943,7 @@ namespace Server.Mobiles
                     {
                         po = plookup.GetValue(o, null);
                     }
-                    else if ((ptype.GetInterface("IList") != null) && index >= 0)
+                    else if (ptype.GetInterface("IList") != null && index >= 0)
                     {
                         try
                         {
@@ -972,7 +972,7 @@ namespace Server.Mobiles
                         {
                             po = p.GetValue(o, null);
                         }
-                        else if ((ptype.GetInterface("IList") != null) && index >= 0)
+                        else if (ptype.GetInterface("IList") != null && index >= 0)
                         {
                             try
                             {
@@ -1360,7 +1360,8 @@ namespace Server.Mobiles
                     }
                 }
             }
-            return (no_error);
+
+            return no_error;
         }
         #endregion
 
@@ -2560,7 +2561,6 @@ namespace Server.Mobiles
             if (str == null) return null;
             str = str.Trim();
 
-
             string[] args;
             // this supports strings that may have special html formatting in them that use the /
             if (str.IndexOf("</") >= 0 || str.IndexOf("/>") >= 0)
@@ -2579,7 +2579,7 @@ namespace Server.Mobiles
                     if (index >= 0)
                     {
                         // check the char before it and after it to ignore </ and />
-                        if ((index > 0 && str[index - 1] == '<') || (index < length - 1 && str[index + 1] == '>'))
+                        if (index > 0 && str[index - 1] == '<' || index < length - 1 && str[index + 1] == '>')
                         {
                             // skip it
                             searchindex = index + 1;
@@ -2604,7 +2604,6 @@ namespace Server.Mobiles
                 }
 
                 // turn tmparray into a string[]
-
                 args = new string[tmparray.Count];
                 tmparray.CopyTo(args);
             }
@@ -2612,7 +2611,6 @@ namespace Server.Mobiles
             {
                 // just use split to do it with no context control
                 args = str.Split(slashdelim, nitems);
-
             }
 
             return args;
@@ -2647,7 +2645,8 @@ namespace Server.Mobiles
 
         public static string[] SplitString(string str, string separator)
         {
-            if (str == null || separator == null) return null;
+            if (str == null || separator == null)
+                return null;
 
             int lastindex = 0;
             List<string> strargs = new List<string>();

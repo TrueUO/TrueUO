@@ -491,7 +491,7 @@ namespace Server.Mobiles
                         {
                             // if the next spawn tick of the spawner will occur after the subgroup is available for spawning
                             // then report the next spawn tick since that is the earliest that the subgroup can actually be spawned
-                            if ((DateTime.UtcNow + m_Spawner.NextSpawn) > m_Spawner.SpawnObjects[i].NextSpawn)
+                            if (DateTime.UtcNow + m_Spawner.NextSpawn > m_Spawner.SpawnObjects[i].NextSpawn)
                             {
                                 strnext = m_Spawner.NextSpawn.ToString();
                             }
@@ -699,7 +699,7 @@ namespace Server.Mobiles
         {
             if (o is Item i)
             {
-                if (!i.Deleted && (i.Map != null) && (i.Map != Map.Internal))
+                if (!i.Deleted && i.Map != null && i.Map != Map.Internal)
                     return true;
 
                 if (from != null && !from.Deleted)
@@ -709,7 +709,7 @@ namespace Server.Mobiles
             }
             else if (o is Mobile m)
             {
-                if (!m.Deleted && (m.Map != null) && m.Map != Map.Internal)
+                if (!m.Deleted && m.Map != null && m.Map != Map.Internal)
                     return true;
 
                 if (from != null && !from.Deleted)
