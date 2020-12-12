@@ -1479,7 +1479,7 @@ namespace Server
 				{
 					Mobile rpm = ip.RootParent as Mobile;
 
-					if (!ip.Deleted && ip.IsAccessibleTo(from) && (rpm == null || rpm.CheckNonlocalDrop(from, this, ip)))
+					if (!ip.Deleted && ip.IsAccessibleTo(from))
 					{
 						if (!ip.Movable || rpm == from || ip.Map == bounce.m_Map && ip.GetWorldLocation() == bounce.m_WorldLoc)
 						{
