@@ -1479,18 +1479,11 @@ namespace Server
 				{
 					Mobile rpm = ip.RootParent as Mobile;
 
-					if (!ip.Deleted && ip.IsAccessibleTo(from))
+					if (!ip.Deleted && ip.IsAccessibleTo(from) && !ip.Movable || rpm == from || ip.Map == bounce.m_Map && ip.GetWorldLocation() == bounce.m_WorldLoc)
 					{
-						if (!ip.Movable || rpm == from || ip.Map == bounce.m_Map && ip.GetWorldLocation() == bounce.m_WorldLoc)
-						{
-							Location = bounce.m_Location;
+                        Location = bounce.m_Location;
 
-							ip.AddItem(this);
-						}
-					    else
-					    {
-						    MoveToWorld(from.Location, from.Map);
-					    }
+                        ip.AddItem(this);
 					}
 					else
 					{
