@@ -4448,10 +4448,14 @@ namespace Server
 
 			item.SetLastMoved();
 
-			if (to == null || !item.DropToItem(from, to, loc))
+            if (to == null)
 			{
 				item.Bounce(from);
 			}
+            else if (!item.DropToItem(from, to, loc))
+            {
+                item.Bounce(from, to);
+            }
 			else
 			{
 				bounced = false;

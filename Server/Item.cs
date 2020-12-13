@@ -1452,7 +1452,12 @@ namespace Server
 			return true;
 		}
 
-		public void Bounce(Mobile from)
+        public void Bounce(Mobile from)
+        {
+            Bounce(from, null);
+        }
+
+        public void Bounce(Mobile from, Item to)
 		{
 			if (m_Parent is Item oip)
 			{
@@ -1483,9 +1488,16 @@ namespace Server
 					{
 						if (!ip.Movable || rpm == from || ip.Map == bounce.m_Map && ip.GetWorldLocation() == bounce.m_WorldLoc)
 						{
-							Location = bounce.m_Location;
+                            if (to != null && to == ip)
+                            {
+                                MoveToWorld(from.Location, from.Map);
+                            }
+                            else
+                            {
+                                Location = bounce.m_Location;
 
-							ip.AddItem(this);
+                                ip.AddItem(this);
+                            }
 						}
 					    else
 					    {
