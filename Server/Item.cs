@@ -1483,7 +1483,7 @@ namespace Server
 					{
 						if (!ip.Movable || rpm == from || ip.Map == bounce.m_Map && ip.GetWorldLocation() == bounce.m_WorldLoc)
 						{
-                            if (ip is Container c && !c.CheckHold(from, ip, false))
+                            if (from != null && ip is Container c && !c.CheckHold(from, ip, false))
                             {
                                 MoveToWorld(from.Location, from.Map);
                             }
