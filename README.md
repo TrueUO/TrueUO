@@ -34,9 +34,3 @@ Run `Compile.WIN - Release.bat` for production environments.
 `apt-get install zlib1g-dev`  
 `apt-get install mono-complete`  
 `make`
-
-
-#### Summary
-
-   [TrueUO]: <https://www.TrueUO.com>
-   [.NET Framework 4.8]: <https://dotnet.microsoft.com/download/dotnet-framework/net48>
