@@ -3176,9 +3176,9 @@ namespace Server.Mobiles
             return 0;
         }
 
-        public override bool CheckNonlocalDrop(Mobile from, Item item, Item target)
+        public override bool CheckHasTradeDrop(Mobile from, Item item, Item target)
         {
-            if (!base.CheckNonlocalDrop(from, item, target))
+            if (!base.CheckHasTradeDrop(from, item, target))
             {
                 return false;
             }
