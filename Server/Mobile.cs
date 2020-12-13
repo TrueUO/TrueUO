@@ -10437,7 +10437,17 @@ namespace Server
 			EventSink.InvokeOnItemUse(new OnItemUseEventArgs(from, item));
 		}
 
-		public virtual bool CheckNonlocalDrop(Mobile from, Item item, Item target)
+        public virtual bool CheckHasTradeDrop(Mobile from, Item item, Item target)
+        {
+            if (from == this || (from.AccessLevel > AccessLevel && from.AccessLevel >= AccessLevel.GameMaster))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public virtual bool CheckNonlocalDrop(Mobile from, Item item, Item target)
 		{
 			if (from == this || (from.AccessLevel > AccessLevel && from.AccessLevel >= AccessLevel.GameMaster))
 			{
