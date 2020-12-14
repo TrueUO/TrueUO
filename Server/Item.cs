@@ -4931,7 +4931,7 @@ namespace Server
                 return false;
             }
 
-            if (root is Mobile mobile && (!mobile.CheckNonlocalDrop(from, this, target) || !mobile.CheckHasTradeDrop(from, this, target)))
+            if (root is Mobile mobile && (!mobile.CheckNonlocalDrop(from, this, target) || mobile.Player && !mobile.CheckHasTradeDrop(from, this, target)))
             {
                 return false;
             }
