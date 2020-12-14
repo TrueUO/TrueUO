@@ -10439,12 +10439,7 @@ namespace Server
 
         public virtual bool CheckHasTradeDrop(Mobile from, Item item, Item target)
         {
-            if (from == this || (from.AccessLevel > AccessLevel && from.AccessLevel >= AccessLevel.GameMaster))
-            {
-                return true;
-            }
-
-            return false;
+            return true;
         }
 
         public virtual bool CheckNonlocalDrop(Mobile from, Item item, Item target)

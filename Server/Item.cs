@@ -1483,7 +1483,7 @@ namespace Server
 					{
 						if (!ip.Movable || rpm == from || ip.Map == bounce.m_Map && ip.GetWorldLocation() == bounce.m_WorldLoc)
 						{
-                            if (ip is Container c && !c.CheckHold(from, ip, false))
+                            if (ip is Container c && !c.CheckHold(from, ip, false, false))
                             {
                                 MoveToWorld(from.Location, from.Map);
                             }
@@ -4931,7 +4931,7 @@ namespace Server
                 return false;
             }
 
-            if (root is Mobile mobile && (!mobile.CheckNonlocalDrop(from, this, target) || mobile.Player && !mobile.CheckHasTradeDrop(from, this, target)))
+            if (root is Mobile mobile && (!mobile.CheckNonlocalDrop(from, this, target) || !mobile.CheckHasTradeDrop(from, this, target)))
             {
                 return false;
             }
