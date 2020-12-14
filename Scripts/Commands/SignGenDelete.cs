@@ -47,12 +47,12 @@ namespace Server.Commands
                     }
                 }
 
-                Map[] brit = new Map[] { Map.Felucca, Map.Trammel };
-                Map[] fel = new Map[] { Map.Felucca };
-                Map[] tram = new Map[] { Map.Trammel };
-                Map[] ilsh = new Map[] { Map.Ilshenar };
-                Map[] malas = new Map[] { Map.Malas };
-                Map[] tokuno = new Map[] { Map.Tokuno };
+                Map[] brit = { Map.Felucca, Map.Trammel };
+                Map[] fel = { Map.Felucca };
+                Map[] tram = { Map.Trammel };
+                Map[] ilsh = { Map.Ilshenar };
+                Map[] malas = { Map.Malas };
+                Map[] tokuno = { Map.Tokuno };
 
                 for (int i = 0; i < list.Count; ++i)
                 {
@@ -82,7 +82,7 @@ namespace Server.Commands
                     }
 
                     for (int j = 0; maps != null && j < maps.Length; ++j)
-                        Delete_Static(e.m_ItemID, e.m_Location, maps[j], e.m_Text);
+                        Delete_Static(e.m_ItemID, e.m_Location, maps[j]);
                 }
 
                 from.SendMessage("Sign deleting complete.");
@@ -93,7 +93,7 @@ namespace Server.Commands
             }
         }
 
-        public static void Delete_Static(int itemID, Point3D location, Map map, string name)
+        public static void Delete_Static(int itemID, Point3D location, Map map)
         {
             IPooledEnumerable eable = map.GetItemsInRange(location, 0);
 
