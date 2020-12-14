@@ -38,9 +38,7 @@ namespace Server.Commands
                     {
                         string[] split = line.Split(' ');
 
-                        SignEntry e = new SignEntry(
-                            line.Substring(split[0].Length + 1 + split[1].Length + 1 + split[2].Length + 1 + split[3].Length + 1 + split[4].Length + 1),
-                            new Point3D(Utility.ToInt32(split[2]), Utility.ToInt32(split[3]), Utility.ToInt32(split[4])),
+                        SignEntry e = new SignEntry(new Point3D(Utility.ToInt32(split[2]), Utility.ToInt32(split[3]), Utility.ToInt32(split[4])),
                             Utility.ToInt32(split[1]), Utility.ToInt32(split[0]));
 
                         list.Add(e);
@@ -111,13 +109,11 @@ namespace Server.Commands
 
         private class SignEntry
         {
-            public readonly string m_Text;
             public readonly Point3D m_Location;
             public readonly int m_ItemID;
             public readonly int m_Map;
-            public SignEntry(string text, Point3D pt, int itemID, int mapLoc)
+            public SignEntry(Point3D pt, int itemID, int mapLoc)
             {
-                m_Text = text;
                 m_Location = pt;
                 m_ItemID = itemID;
                 m_Map = mapLoc;
