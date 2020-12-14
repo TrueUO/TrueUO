@@ -1,17 +1,17 @@
 namespace Server.Items
 {
     [Flipable(0xA5F6, 0xA5F7)]
-    public class StainedGlassWindow1 : Item
+    public class PrideStainedGlassWindow : Item
     {
         public override int LabelNumber => 1126510; // stained glass window
 
         [Constructable]
-        public StainedGlassWindow1()
+        public PrideStainedGlassWindow()
             : base(0xA5F6)
         {
         }
 
-        public StainedGlassWindow1(Serial serial)
+        public PrideStainedGlassWindow(Serial serial)
             : base(serial)
         {
         }
@@ -30,17 +30,17 @@ namespace Server.Items
     }
 	
 	[Flipable(0xA5F8, 0xA5F9)]
-    public class StainedGlassWindow2 : Item
+    public class CovetousStainedGlassWindow : Item
     {
         public override int LabelNumber => 1126510; // stained glass window
 
         [Constructable]
-        public StainedGlassWindow2()
+        public CovetousStainedGlassWindow()
             : base(0xA5F8)
         {
         }
 
-        public StainedGlassWindow2(Serial serial)
+        public CovetousStainedGlassWindow(Serial serial)
             : base(serial)
         {
         }
@@ -59,17 +59,17 @@ namespace Server.Items
     }
 	
 	[Flipable(0xA5FA, 0xA5FB)]
-    public class StainedGlassWindow3 : Item
+    public class JusticeStainedGlassWindow : Item
     {
         public override int LabelNumber => 1126510; // stained glass window
 
         [Constructable]
-        public StainedGlassWindow3()
+        public JusticeStainedGlassWindow()
             : base(0xA5FA)
         {
         }
 
-        public StainedGlassWindow3(Serial serial)
+        public JusticeStainedGlassWindow(Serial serial)
             : base(serial)
         {
         }
@@ -88,17 +88,17 @@ namespace Server.Items
     }
 	
 	[Flipable(0xA5FC, 0xA5FD)]
-    public class StainedGlassWindow4 : Item
+    public class HumilityStainedGlassWindow : Item
     {
         public override int LabelNumber => 1126510; // stained glass window
 
         [Constructable]
-        public StainedGlassWindow4()
+        public HumilityStainedGlassWindow()
             : base(0xA5FC)
         {
         }
 
-        public StainedGlassWindow4(Serial serial)
+        public HumilityStainedGlassWindow(Serial serial)
             : base(serial)
         {
         }
