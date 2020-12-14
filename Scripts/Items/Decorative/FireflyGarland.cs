@@ -1,6 +1,5 @@
 namespace Server.Items
 {
-    [Flipable(0x9FFB, 0xA000)]
     public class FireflyGarland : BaseLight, IFlipable
     {
         private string _DisplayName;
