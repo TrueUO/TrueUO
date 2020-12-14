@@ -264,12 +264,9 @@ namespace Server.Commands
 
                 foreach (Mobile m in World.Mobiles.Values)
                 {
-                    if (m is BaseCreature bc && bc.Controlled && bc.ControlMaster == master)
+                    if (m is BaseCreature bc && bc.Controlled && bc.ControlMaster == master && bc.Summoned && bc.SummonMaster == master)
                     {
-                        if (bc.Summoned && bc.SummonMaster == master)
-                        {
-                            pets.Add(bc);
-                        }
+                        pets.Add(bc);
                     }
                 }
 

@@ -135,9 +135,10 @@ namespace Server.Commands.Generic
                     if (!(isDeleted = item.Deleted))
                         AddEntryHtml(40 + 130, item.GetType().Name);
                 }
-                else if (obj is Mobile mob && !(isDeleted = mob.Deleted))
+                else if (obj is Mobile mob)
                 {
-                    AddEntryHtml(40 + 130, mob.Name);
+                    if (!(isDeleted = mob.Deleted))
+                        AddEntryHtml(40 + 130, mob.Name);
                 }
 
                 if (isDeleted)
