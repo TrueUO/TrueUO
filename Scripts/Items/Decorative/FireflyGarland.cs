@@ -5,7 +5,7 @@ namespace Server.Items
         private string _DisplayName;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public string DisplayName { get { return _DisplayName; } set { _DisplayName = value; InvalidateProperties(); } }
+        public string DisplayName { get => _DisplayName; set { _DisplayName = value; InvalidateProperties(); } }
 
         public override int LabelNumber => 1124978; // Firefly Garland
 
@@ -24,17 +24,17 @@ namespace Server.Items
             Burning = false;
         }
 
-        public void OnFlip(Mobile from)
+        public FireflyGarland(Serial serial)
+            : base(serial)
+        {
+        }
+
+        public void OnFlip(Mobile m)
         {
             if (ItemID == NorthID)
                 ItemID = WestID;
             else if (ItemID == WestID)
                 ItemID = NorthID;
-        }
-
-        public FireflyGarland(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void GetProperties(ObjectPropertyList list)
