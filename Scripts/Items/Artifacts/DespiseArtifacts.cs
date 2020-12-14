@@ -224,7 +224,7 @@ namespace Server.Items
         {
             Hue = 2714;
 
-            Slayer = SlayerGroup.RandomSuperSlayerAOS();
+            Slayer = (SlayerName)Utility.Random(2, 25);
             WeaponAttributes.HitLightning = 15;
             WeaponAttributes.HitColdArea = 100;
             WeaponAttributes.HitLeechMana = 30;
@@ -261,6 +261,7 @@ namespace Server.Items
         {
             Hue = 2714;
 
+            Slayer = (SlayerName)Utility.Random(2, 25);
             WeaponAttributes.HitLightning = 15;
             WeaponAttributes.HitColdArea = 100;
             WeaponAttributes.HitLeechMana = 30;
