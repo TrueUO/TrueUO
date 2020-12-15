@@ -144,10 +144,9 @@ namespace Server.Regions
                 m.Location = House.BanLocation;
                 m.SendLocalizedMessage(1061637); // You are not allowed to access 
             }
-            else if (House is HouseFoundation foundation)
+            else if (House is HouseFoundation foundation && foundation.Customizer != null && foundation.Customizer != m && foundation.IsInside(m))
             {
-                if (foundation.Customizer != null && foundation.Customizer != m && foundation.IsInside(m))
-                    m.Location = foundation.BanLocation;
+                m.Location = foundation.BanLocation;
             }
 
             if (House.InternalizedVendors.Count > 0 && House.IsInside(m) && !House.IsInside(oldLocation, 16) && House.IsOwner(m) && m.Alive && !m.HasGump(typeof(NoticeGump)))
@@ -198,10 +197,9 @@ namespace Server.Regions
                 from.SendLocalizedMessage(1061637); // You are not allowed to access 
                 return false;
             }
-            else if (House is HouseFoundation foundation)
+            else if (House is HouseFoundation foundation && foundation.Customizer != null && foundation.Customizer != from && foundation.IsInside(newLocation, 16))
             {
-                if (foundation.Customizer != null && foundation.Customizer != from && foundation.IsInside(newLocation, 16))
-                    return false;
+                return false;
             }
 
             if (House.InternalizedVendors.Count > 0 && House.IsInside(from) && !House.IsInside(oldLocation, 16) && House.IsOwner(from) && from.Alive && !from.HasGump(typeof(NoticeGump)))

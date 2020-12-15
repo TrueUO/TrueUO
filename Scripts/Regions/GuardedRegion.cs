@@ -125,13 +125,10 @@ namespace Server.Regions
 
             foreach (Mobile m in eable)
             {
-                if (m is BaseGuard g)
+                if (m is BaseGuard g && g.Focus == null) // idling
                 {
-                    if (g.Focus == null) // idling
-                    {
-                        useGuard = g;
-                        break;
-                    }
+                    useGuard = g;
+                    break;
                 }
             }
 
