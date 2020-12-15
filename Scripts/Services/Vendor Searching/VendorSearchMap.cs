@@ -109,7 +109,7 @@ namespace Server.Items
                             Name = house.Sign.GetName();
                     }
 
-                    Shop = (SearchItem.LabelNumber != 0) ? string.Format("#{0}", SearchItem.LabelNumber) : SearchItem.Name;
+                    Shop = SearchItem.LabelNumber != 0 ? string.Format("#{0}", SearchItem.LabelNumber) : SearchItem.Name;
                 }
             }
             else
@@ -336,9 +336,9 @@ namespace Server.Items
 
             public override void OnClick()
             {
-                if (Clicker is PlayerMobile)
+                if (Clicker is PlayerMobile mobile)
                 {
-                    BaseGump.SendGump(new ConfirmTeleportGump(VendorMap, (PlayerMobile)Clicker));
+                    BaseGump.SendGump(new ConfirmTeleportGump(VendorMap, mobile));
                 }
             }
         }
@@ -406,7 +406,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             Delete();
         }
