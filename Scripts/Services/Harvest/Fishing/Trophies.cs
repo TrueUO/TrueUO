@@ -355,6 +355,7 @@ namespace Server.Items
         {
             base.Serialize(writer);
             writer.Write(0);
+
             writer.Write(m_TypeName.Name);
             writer.Write(m_FishWeight);
             writer.Write(m_Fisher);
@@ -364,7 +365,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             string name = reader.ReadString();
             m_TypeName = ScriptCompiler.FindTypeByName(name);

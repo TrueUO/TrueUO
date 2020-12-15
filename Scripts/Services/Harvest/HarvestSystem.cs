@@ -409,20 +409,20 @@ namespace Server.Engines.Harvest
                 return false;
             }
 
-            DoHarvestingEffect(from, tool, def, map, loc);
+            DoHarvestingEffect(from, def, loc);
 
             new HarvestSoundTimer(from, tool, this, def, toHarvest, locked, last).Start();
 
             return !last;
         }
 
-        public virtual void DoHarvestingSound(Mobile from, Item tool, HarvestDefinition def, object toHarvest)
+        public virtual void DoHarvestingSound(Mobile from, HarvestDefinition def, object toHarvest)
         {
             if (def.EffectSounds.Length > 0)
                 from.PlaySound(Utility.RandomList(def.EffectSounds));
         }
 
-        public virtual void DoHarvestingEffect(Mobile from, Item tool, HarvestDefinition def, Map map, Point3D loc)
+        public virtual void DoHarvestingEffect(Mobile from, HarvestDefinition def, Point3D loc)
         {
             from.Direction = from.GetDirectionTo(loc);
 
@@ -452,7 +452,6 @@ namespace Server.Engines.Harvest
             return def;
         }
 
-        #region High Seas
         public virtual HarvestDefinition GetDefinitionFromSpecialTile(int tileID)
         {
             HarvestDefinition def = null;
@@ -467,7 +466,6 @@ namespace Server.Engines.Harvest
 
             return def;
         }
-        #endregion
 
         public virtual void StartHarvesting(Mobile from, Item tool, object toHarvest)
         {

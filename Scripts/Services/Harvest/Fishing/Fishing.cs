@@ -555,16 +555,13 @@ namespace Server.Engines.Harvest
                 placeAtFeet = true;
             }
 
-            if (item is RareFish rareFish)
+            if (item is RareFish rareFish && FishInfo.IsRareFish(rareFish.GetType()))
             {
-                if (FishInfo.IsRareFish(rareFish.GetType()))
-                {
-                    rareFish.Fisher = m;
-                    rareFish.DateCaught = DateTime.Now;
-                    rareFish.Stackable = false;
+                rareFish.Fisher = m;
+                rareFish.DateCaught = DateTime.Now;
+                rareFish.Stackable = false;
 
-                    rareFish.Weight = Math.Max(1, 200 - (int)Math.Sqrt(Utility.RandomMinMax(0, 40000)));
-                }
+                rareFish.Weight = Math.Max(1, 200 - (int)Math.Sqrt(Utility.RandomMinMax(0, 40000)));
             }
 
             return base.Give(m, item, placeAtFeet);
@@ -967,7 +964,7 @@ namespace Server.Engines.Harvest
                 if (from.CheckSkill(def.Skill, resource.MinSkill, resource.MaxSkill))
                 {
                     //Special eye candy item
-                    type = GetSpecialLavaItem(from, map, loc, toHarvest);
+                    type = GetSpecialLavaItem(from, map);
 
                     //Special fish
                     if (type == null)
@@ -1031,7 +1028,7 @@ namespace Server.Engines.Harvest
             return base.CheckHarvestSkill(map, loc, from, res, def);
         }
 
-        public Type GetSpecialLavaItem(Mobile from, Map map, Point3D pnt, object toHarvest)
+        public Type GetSpecialLavaItem(Mobile from, Map map)
         {
             Type newType = null;
 
