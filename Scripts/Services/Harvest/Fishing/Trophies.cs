@@ -388,7 +388,7 @@ namespace Server.Items
         {
             base.GetProperties(list);
 
-            if (Addon != null && Addon is FishTrophy trophy)
+            if (Addon is FishTrophy trophy)
             {
                 list.Add(1070858, trophy.FishWeight.ToString());
                 list.Add(1070857, trophy.Fisher != null ? trophy.Fisher.Name : "Unknown");
