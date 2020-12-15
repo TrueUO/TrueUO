@@ -389,9 +389,9 @@ namespace Server.Multis
 
             BaseAddon addon;
 
-            if (item is AddonComponent)
+            if (item is AddonComponent component)
             {
-                addon = ((AddonComponent)item).Addon;
+                addon = component.Addon;
             }
             else
             {
@@ -403,7 +403,7 @@ namespace Server.Multis
 
         public override bool CanMoveOver(IEntity entity)
         {
-            if (entity.Z <= Z && entity is Item && !((Item)entity).ItemData.Impassable && ((Item)entity).ItemData.Height < ZSurface / 2)
+            if (entity.Z <= Z && entity is Item item && !item.ItemData.Impassable && item.ItemData.Height < ZSurface / 2)
                 return true;
 
             return base.CanMoveOver(entity);
@@ -427,11 +427,10 @@ namespace Server.Multis
 
         public void MarkRunes()
         {
-            Direction d = Facing;
-            string name = Name;
-
             if (Owner == null || !(Owner is PlayerMobile))
+            {
                 return;
+            }
 
             RecallRune rune = new RecallRune();
             rune.SetGalleon(this);
@@ -799,7 +798,8 @@ namespace Server.Multis
                 {
                     return true;
                 }
-                else if (item is AddonComponent && ((AddonComponent)item).Addon != null && Addons.ContainsKey(((AddonComponent)item).Addon))
+
+                if (item is AddonComponent component && component.Addon != null && Addons.ContainsKey(component.Addon))
                 {
                     return true;
                 }
@@ -874,11 +874,10 @@ namespace Server.Multis
             {
                 foreach (IShipCannon cannon in Cannons.OfType<IShipCannon>())
                 {
-                    if (cannon == null)
-                        continue;
-
                     if (cannon.AmmoType != AmmunitionType.Empty)
+                    {
                         return DryDockResult.Cannon;
+                    }
                 }
             }
 
@@ -952,7 +951,7 @@ namespace Server.Multis
                 default:
                 case Direction.South: return 0;
                 case Direction.West: return 1;
-                case Direction.North: return 2; ;
+                case Direction.North: return 2;
                 case Direction.East: return 3;
             }
         }
@@ -1004,13 +1003,13 @@ namespace Server.Multis
         }
 
         public static int[][] CannonIDs => m_CannonIDs;
-        private static readonly int[][] m_CannonIDs = new int[][]
+        private static readonly int[][] m_CannonIDs =
         { 
                       //Light  Heavy, Blunder, Pumpkin
-            new int[] { 16918, 16922, 41664, 41979 }, //South
-            new int[] { 16919, 16923, 41665, 41980 }, //West
-            new int[] { 16920, 16924, 41666, 41981 }, //North
-            new int[] { 16921, 16925, 41667, 41982 }, //East
+            new[] { 16918, 16922, 41664, 41979 }, //South
+            new[] { 16919, 16923, 41665, 41980 }, //West
+            new[] { 16920, 16924, 41666, 41981 }, //North
+            new[] { 16921, 16925, 41667, 41982 } //East
         };
 
         public virtual ShipPosition GetCannonPosition(Point3D pnt)
@@ -1027,7 +1026,7 @@ namespace Server.Multis
         [CommandProperty(AccessLevel.GameMaster)]
         public int BaseBoatHue
         {
-            get { return m_BaseBoatHue; }
+            get => m_BaseBoatHue;
             set
             {
                 m_BaseBoatHue = value;
@@ -1085,8 +1084,8 @@ namespace Server.Multis
                     from.SendLocalizedMessage(1116771); //You apply a fresh coat of paint to your ship.
                     return true;
                 }
-                else
-                    from.SendLocalizedMessage(1116774); //You have reached this paint color's maximum intensity.
+
+                from.SendLocalizedMessage(1116774); //You have reached this paint color's maximum intensity.
             }
             return false;
         }
@@ -1144,8 +1143,8 @@ namespace Server.Multis
         {
             BaseBoat boat = FindBoatAt(pnt, map);
 
-            if (boat is BaseGalleon)
-                return boat as BaseGalleon;
+            if (boat is BaseGalleon galleon)
+                return galleon;
 
             return null;
         }
@@ -1163,19 +1162,6 @@ namespace Server.Multis
 
             return true;
         }
-
-        /*public static void CloseHold(Mobile from)
-        {
-            BaseBoat boat = BaseBoat.FindBoatAt(from, from.Map);
-
-            if (boat != null && boat is BaseGalleon)
-            {
-                GalleonHold hold = ((BaseGalleon)boat).GalleonHold;
-
-                if (hold != null && hold.Viewers != null && hold.Viewers.Count > 0 && hold.Viewers.Contains(from))
-                    hold.Close(from);
-            }
-        }*/
 
         public static bool IsNearLandOrDocks(BaseBoat boat)
         {
@@ -1790,7 +1776,7 @@ namespace Server.Multis
             m_Manifest = new Dictionary<Mobile, SecurityLevel>();
             Galleon = galleon;
 
-            int version = reader.ReadInt();
+            reader.ReadInt(); // Version
 
             PartyAccess = (PartyAccess)reader.ReadInt();
             DefaultPublicAccess = (SecurityLevel)reader.ReadInt();
