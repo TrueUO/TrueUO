@@ -66,14 +66,13 @@ namespace Server.Engines.Craft
             if (!CanEnhance(item) || ires == null)
                 return EnhanceResult.BadItem;
 
-            if (item is IArcaneEquip)
+            if (item is IArcaneEquip eq)
             {
-                IArcaneEquip eq = (IArcaneEquip)item;
                 if (eq.IsArcane)
                     return EnhanceResult.BadItem;
             }
 
-            if (item is BaseWeapon && Spells.Mysticism.EnchantSpell.IsUnderSpellEffects(from, (BaseWeapon)item))
+            if (item is BaseWeapon bw && Spells.Mysticism.EnchantSpell.IsUnderSpellEffects(from, bw))
                 return EnhanceResult.Enchanted;
 
             if (CraftResources.IsStandard(resource))
@@ -149,10 +148,8 @@ namespace Server.Engines.Craft
             bool lreqBonus = false;
             bool dincBonus = false;
 
-            if (item is BaseWeapon)
+            if (item is BaseWeapon weapon)
             {
-                BaseWeapon weapon = (BaseWeapon)item;
-
                 if (weapon.ExtendedWeaponAttributes.AssassinHoned > 0)
                     return EnhanceResult.BadItem;
 
@@ -163,20 +160,18 @@ namespace Server.Engines.Craft
                 lreq = weapon.WeaponAttributes.LowerStatReq;
                 dinc = weapon.Attributes.WeaponDamage;
 
-                fireBonus = (attributes.WeaponFireDamage > 0);
-                coldBonus = (attributes.WeaponColdDamage > 0);
-                nrgyBonus = (attributes.WeaponEnergyDamage > 0);
-                poisBonus = (attributes.WeaponPoisonDamage > 0);
+                fireBonus = attributes.WeaponFireDamage > 0;
+                coldBonus = attributes.WeaponColdDamage > 0;
+                nrgyBonus = attributes.WeaponEnergyDamage > 0;
+                poisBonus = attributes.WeaponPoisonDamage > 0;
 
-                duraBonus = (attributes.WeaponDurability > 0);
-                luckBonus = (attributes.WeaponLuck > 0);
-                lreqBonus = (attributes.WeaponLowerRequirements > 0);
-                dincBonus = (dinc > 0);
+                duraBonus = attributes.WeaponDurability > 0;
+                luckBonus = attributes.WeaponLuck > 0;
+                lreqBonus = attributes.WeaponLowerRequirements > 0;
+                dincBonus = dinc > 0;
             }
-            else if (item is BaseArmor)
+            else if (item is BaseArmor armor)
             {
-                BaseArmor armor = (BaseArmor)item;
-
                 baseChance = 20;
 
                 phys = armor.PhysicalResistance;
@@ -189,27 +184,25 @@ namespace Server.Engines.Craft
                 luck = armor.Attributes.Luck;
                 lreq = armor.ArmorAttributes.LowerStatReq;
 
-                physBonus = (attributes.ArmorPhysicalResist > 0);
-                fireBonus = (attributes.ArmorFireResist > 0);
-                coldBonus = (attributes.ArmorColdResist > 0);
-                nrgyBonus = (attributes.ArmorEnergyResist > 0);
-                poisBonus = (attributes.ArmorPoisonResist > 0);
+                physBonus = attributes.ArmorPhysicalResist > 0;
+                fireBonus = attributes.ArmorFireResist > 0;
+                coldBonus = attributes.ArmorColdResist > 0;
+                nrgyBonus = attributes.ArmorEnergyResist > 0;
+                poisBonus = attributes.ArmorPoisonResist > 0;
 
-                duraBonus = (attributes.ArmorDurability > 0);
-                luckBonus = (attributes.ArmorLuck > 0);
-                lreqBonus = (attributes.ArmorLowerRequirements > 0);
+                duraBonus = attributes.ArmorDurability > 0;
+                luckBonus = attributes.ArmorLuck > 0;
+                lreqBonus = attributes.ArmorLowerRequirements > 0;
                 dincBonus = false;
             }
-            else if (item is FishingPole)
+            else if (item is FishingPole pole)
             {
-                FishingPole pole = (FishingPole)item;
-
                 baseChance = 20;
 
                 luck = pole.Attributes.Luck;
 
-                luckBonus = (attributes.ArmorLuck > 0);
-                lreqBonus = (attributes.ArmorLowerRequirements > 0);
+                luckBonus = attributes.ArmorLuck > 0;
+                lreqBonus = attributes.ArmorLowerRequirements > 0;
                 dincBonus = false;
             }
 
@@ -276,12 +269,11 @@ namespace Server.Engines.Craft
                             Caddellite.TryInfuse(from, item, craftSystem);
                         }
 
-                        if (item is IResource)
-                            ((IResource)item).Resource = resource;
+                        if (item is IResource resour)
+                            resour.Resource = resource;
 
-                        if (item is BaseWeapon)
+                        if (item is BaseWeapon w)
                         {
-                            BaseWeapon w = (BaseWeapon)item;
                             w.DistributeMaterialBonus(attributes);
 
                             int hue = w.GetElementalDamageHue();
@@ -289,13 +281,13 @@ namespace Server.Engines.Craft
                             if (hue > 0)
                                 w.Hue = hue;
                         }
-                        else if (item is BaseArmor)
+                        else if (item is BaseArmor armor)
                         {
-                            ((BaseArmor)item).DistributeMaterialBonus(attributes);
+                            armor.DistributeMaterialBonus(attributes);
                         }
-                        else if (item is FishingPole)
+                        else if (item is FishingPole pole)
                         {
-                            ((FishingPole)item).DistributeMaterialBonus(attributes);
+                            pole.DistributeMaterialBonus(attributes);
                         }
                         break;
                     }
@@ -390,10 +382,10 @@ namespace Server.Engines.Craft
 
             protected override void OnTarget(Mobile from, object targeted)
             {
-                if (targeted is Item)
+                if (targeted is Item item)
                 {
                     object message = null;
-                    EnhanceResult res = Enhance.Invoke(from, m_CraftSystem, m_Tool, (Item)targeted, m_Resource, m_ResourceType, ref message);
+                    EnhanceResult res = Enhance.Invoke(from, m_CraftSystem, m_Tool, item, m_Resource, m_ResourceType, ref message);
 
                     switch (res)
                     {
