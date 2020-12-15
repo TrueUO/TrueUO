@@ -164,13 +164,11 @@ namespace Server.Engines.Craft
 
             Item item = from.FindItemOnLayer(Layer.Talisman);
 
-            if (item is MasterCraftsmanTalisman mct)
+            if (item is MasterCraftsmanTalisman mct && mct.Charges > 0)
             {
-                if (mct.Charges > 0)
-                {
-                    talisman = mct;
-                    return false;
-                }
+                talisman = mct;
+
+                return false;
             }
 
             return true;

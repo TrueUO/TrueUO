@@ -64,19 +64,24 @@ namespace Server.Engines.Craft
             IResource ires = item as IResource;
 
             if (!CanEnhance(item) || ires == null)
-                return EnhanceResult.BadItem;
-
-            if (item is IArcaneEquip eq)
             {
-                if (eq.IsArcane)
-                    return EnhanceResult.BadItem;
+                return EnhanceResult.BadItem;
+            }
+
+            if (item is IArcaneEquip eq && eq.IsArcane)
+            {
+                return EnhanceResult.BadItem;
             }
 
             if (item is BaseWeapon bw && Spells.Mysticism.EnchantSpell.IsUnderSpellEffects(from, bw))
+            {
                 return EnhanceResult.Enchanted;
+            }
 
             if (CraftResources.IsStandard(resource))
+            {
                 return EnhanceResult.BadResource;
+            }
 
             int num = craftSystem.CanCraft(from, tool, item.GetType());
 

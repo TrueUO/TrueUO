@@ -266,7 +266,7 @@ namespace Server.Engines.Craft
                 {
                     Item item = from.Backpack.FindItemByType(typeof(ChronicleOfTheGargoyleQueen1));
 
-                    if (item != null && item is ChronicleOfTheGargoyleQueen1 queen1 && queen1.Charges > 0)
+                    if (item is ChronicleOfTheGargoyleQueen1 queen1 && queen1.Charges > 0)
                     {
                         if (consume)
                             queen1.Charges--;
@@ -454,8 +454,6 @@ namespace Server.Engines.Craft
             { typeof(HornedLeather), typeof(HornedHides) },
             { typeof(BarbedLeather), typeof(BarbedHides) }
         };
-
-        private static readonly Type[] m_NeverColorTable = { typeof(OrcHelm) };
         #endregion
 
         public bool IsMarkable(Type type)
@@ -1286,12 +1284,9 @@ namespace Server.Engines.Craft
 
             double bonus = 0.0;
 
-            if (from.Talisman is BaseTalisman talisman)
+            if (from.Talisman is BaseTalisman talisman && talisman.CheckSkill(system))
             {
-                if (talisman.CheckSkill(system))
-                {
-                    bonus = talisman.ExceptionalBonus / 100.0;
-                }
+                bonus = talisman.ExceptionalBonus / 100.0;
             }
 
             MasterChefsApron apron = from.FindItemOnLayer(Layer.MiddleTorso) as MasterChefsApron;
@@ -1398,7 +1393,7 @@ namespace Server.Engines.Craft
                     valMainSkill = valSkill;
                 }
 
-                if (gainSkills && !UseAllRes) // This is a passive check. Success chance is entirely dependant on the main skill
+                if (gainSkills && !UseAllRes) // This is a passive check. Success chance is entirely dependent on the main skill
                 {
                     from.CheckSkill(craftSkill.SkillToMake, minSkill, maxSkill);
                 }
@@ -1416,12 +1411,9 @@ namespace Server.Engines.Craft
                 chance = 0.0;
             }
 
-            if (allRequiredSkills && from.Talisman is BaseTalisman talisman)
+            if (allRequiredSkills && from.Talisman is BaseTalisman talisman && talisman.CheckSkill(craftSystem))
             {
-                if (talisman.CheckSkill(craftSystem))
-                {
-                    chance += talisman.SuccessBonus / 100.0;
-                }
+                chance += talisman.SuccessBonus / 100.0;
             }
 
             if (WoodworkersBench.HasBonus(from, craftSystem.MainSkill))
