@@ -1,4 +1,4 @@
-﻿using Server.Multis;
+using Server.Multis;
 using System;
 using System.Linq;
 
@@ -333,7 +333,7 @@ namespace Server.Items
             {
                 BaseHouse house = BaseHouse.FindHouseAt(c);
 
-                if (house != null && (house.IsCoOwner(from) || (house.Addons.ContainsKey(this) && house.Addons[this] == from)))
+                if (house != null && (house.IsCoOwner(from) || house.Addons.ContainsKey(this) && house.Addons[this] == from))
                 {
                     from.AddToBackpack(new FishTrophyDeed(m_FishWeight, m_Fisher, m_DateCaught, info.DeedNumber, info.AddonNumber, info.NorthID));
 
@@ -387,10 +387,8 @@ namespace Server.Items
         {
             base.GetProperties(list);
 
-            if (Addon != null && Addon is FishTrophy)
+            if (Addon != null && Addon is FishTrophy trophy)
             {
-                FishTrophy trophy = Addon as FishTrophy;
-
                 list.Add(1070858, trophy.FishWeight.ToString());
                 list.Add(1070857, trophy.Fisher != null ? trophy.Fisher.Name : "Unknown");
                 list.Add(string.Format("[{0}]", trophy.DateCaught.ToShortDateString()));

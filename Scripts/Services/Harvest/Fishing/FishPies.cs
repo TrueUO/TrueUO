@@ -23,7 +23,7 @@ namespace Server.Items
         HitsRegen,
         StamRegen,
         SoulCharge,
-        CastFocus,
+        CastFocus
     }
 
     public class BaseFishPie : Item, IQuality
@@ -31,7 +31,7 @@ namespace Server.Items
         private ItemQuality _Quality;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public ItemQuality Quality { get { return _Quality; } set { _Quality = value; InvalidateProperties(); } }
+        public ItemQuality Quality { get => _Quality; set { _Quality = value; InvalidateProperties(); } }
 
         public bool PlayerConstructed => true;
 
@@ -159,8 +159,8 @@ namespace Server.Items
 
                 return true;
             }
-            else
-                from.SendLocalizedMessage(502173); // You are already under a similar effect.
+
+            from.SendLocalizedMessage(502173); // You are already under a similar effect.
             return false;
         }
 

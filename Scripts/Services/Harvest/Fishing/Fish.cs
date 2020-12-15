@@ -29,13 +29,12 @@ namespace Server.Items
                 newItem = new RawFishSteak();
             }
 
-            if (newItem != null && HasSocket<Caddellite>())
+            if (HasSocket<Caddellite>())
             {
                 newItem.AttachSocket(new Caddellite());
             }
 
-            if (newItem != null)
-                base.ScissorHelper(from, newItem, GetCarvedAmount);
+            base.ScissorHelper(from, newItem, GetCarvedAmount);
 
             return true;
         }
@@ -51,56 +50,56 @@ namespace Server.Items
         }
 
         public static Type[] DeepWaterFish => m_DeepWaterFish;
-        private static readonly Type[] m_DeepWaterFish = new Type[]
+        private static readonly Type[] m_DeepWaterFish =
         {
             typeof(Haddock),            typeof(CapeCod),            typeof(BlackSeabass),
             typeof(Tarpon),             typeof(RedSnook),           typeof(GraySnapper),
             typeof(Cobia),              typeof(MahiMahi),           typeof(Amberjack),
             typeof(Shad),               typeof(YellowfinTuna),      typeof(Bonito),
             typeof(BlueFish),           typeof(RedGrouper),         typeof(CaptainSnook),
-            typeof(Bonefish),           typeof(RedDrum),            typeof(BlueGrouper),
+            typeof(Bonefish),           typeof(RedDrum),            typeof(BlueGrouper)
         };
 
 
         public static Type[] ShoreFish => m_ShoreFish;
-        private static readonly Type[] m_ShoreFish = new Type[]
+        private static readonly Type[] m_ShoreFish =
         {
             typeof(PumpkinSeedSunfish),     typeof(YellowPerch),        typeof(PikeFish),
             typeof(BrookTrout),             typeof(RainbowTrout),       typeof(BluegillSunfish),
             typeof(RedbellyBream),          typeof(SmallmouthBass),     typeof(UncommonShiner),
-            typeof(GreenCatfish),           typeof(Walleye),            typeof(KokaneeSalmon),
+            typeof(GreenCatfish),           typeof(Walleye),            typeof(KokaneeSalmon)
         };
 
         public static Type[] DungeonFish => m_DungeonFish;
-        private static readonly Type[] m_DungeonFish = new Type[]
+        private static readonly Type[] m_DungeonFish =
         {
             typeof(DungeonChub),        typeof(DemonTrout),         typeof(SnaggletoothBass),
             typeof(CutThroatTrout),     typeof(GrimCisco),          typeof(DrakeFish),
             typeof(OrcBass),            typeof(DarkFish),           typeof(CragSnapper),
-            typeof(InfernalTuna),       typeof(TormentedPike),      typeof(LurkerFish),
+            typeof(InfernalTuna),       typeof(TormentedPike),      typeof(LurkerFish)
         };
 
         public static Type[] LobstersAndCrabs => m_LobstersAndCrabs;
-        private static readonly Type[] m_LobstersAndCrabs = new Type[]
+        private static readonly Type[] m_LobstersAndCrabs =
         {
             typeof(DungeonessCrab),     typeof(BlueCrab),           typeof(KingCrab),
             typeof(RockCrab),           typeof(SnowCrab),           typeof(AppleCrab),
             typeof(SpineyLobster),      typeof(RockLobster),        typeof(HummerLobster),
-            typeof(FredLobster),        typeof(CrustyLobster),      typeof(ShovelNoseLobster),
+            typeof(FredLobster),        typeof(CrustyLobster),      typeof(ShovelNoseLobster)
         };
 
         public static Type[] Lobsters => m_Lobsters;
-        private static readonly Type[] m_Lobsters = new Type[]
+        private static readonly Type[] m_Lobsters =
         {
             typeof(Lobster),
             typeof(SpineyLobster),      typeof(RockLobster),        typeof(HummerLobster),
             typeof(FredLobster),        typeof(CrustyLobster),      typeof(ShovelNoseLobster),
             typeof(BlueLobster),        typeof(BloodLobster),       typeof(DreadLobster),
-            typeof(VoidLobster),
+            typeof(VoidLobster)
         };
 
         public static Type[] Crabs => m_Crabs;
-        private static readonly Type[] m_Crabs = new Type[]
+        private static readonly Type[] m_Crabs =
         {
             typeof(Crab),
             typeof(DungeonessCrab),     typeof(BlueCrab),           typeof(KingCrab),
@@ -120,7 +119,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -144,7 +143,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -169,7 +168,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -194,7 +193,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
