@@ -384,10 +384,9 @@ namespace Server.Engines.Craft
                     return false;
             }
 
-            if (item is BaseQuiver quiver)
+            if (item is BaseQuiver quiver && !quiver.CanAlter && quiver.SetID != SetItem.None)
             {
-                if (quiver.SetID != SetItem.None || !quiver.CanAlter)
-                    return false;
+                return false;
             }
 
             if (item is IVvVItem vItem && vItem.IsVvVItem)
