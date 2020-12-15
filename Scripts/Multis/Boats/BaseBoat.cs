@@ -383,11 +383,11 @@ namespace Server.Multis
             {
                 m_DecayTime = value;
 
-                if (TillerMan != null && TillerMan is Mobile mobile)
+                if (TillerMan is Mobile mobile)
                 {
                     mobile.InvalidateProperties();
                 }
-                else if (TillerMan != null && TillerMan is Item item)
+                else if (TillerMan is Item item)
                 {
                     item.InvalidateProperties();
                 }
@@ -584,10 +584,9 @@ namespace Server.Multis
                     if (x == mobile.X && y == mobile.Y)
                         return true;
                 }
-                else if (TillerMan is Item item)
+                else if (TillerMan is Item item && x == item.X && y == item.Y)
                 {
-                    if (x == item.X && y == item.Y)
-                        return true;
+                    return true;
                 }
             }
 
@@ -2325,9 +2324,9 @@ namespace Server.Multis
                     if (CheckItem(itemID, item, p) || CanMoveOver(item) || item.Z < p.Z || ExemptOverheadComponent(p, itemID, item.X, item.Y, item.Z + item.ItemData.Height))
                         continue;
                 }
-                else if (e is Mobile mobile)
+                else if (e is Mobile mobile && Contains(mobile))
                 {
-                    if (Contains(mobile) || ExemptOverheadComponent(p, itemID, mobile.X, mobile.Y, mobile.Z + 10))
+                    if (ExemptOverheadComponent(p, itemID, mobile.X, mobile.Y, mobile.Z + 10))
                         continue;
                 }
 
@@ -3328,18 +3327,15 @@ namespace Server.Multis
 
         public override bool Equals(object obj)
         {
-            if (obj is BoatCourse course)
+            if (obj is BoatCourse course && Map == course.Map && Boat == course.Boat && course.Waypoints.Count == m_Waypoints.Count)
             {
-                if (Map == course.Map && Boat == course.Boat && course.Waypoints.Count == m_Waypoints.Count)
+                for (int i = 0; i < m_Waypoints.Count; i++)
                 {
-                    for (int i = 0; i < m_Waypoints.Count; i++)
-                    {
-                        if (m_Waypoints[i] != course.Waypoints[i])
-                            return false;
-                    }
-
-                    return true;
+                    if (m_Waypoints[i] != course.Waypoints[i])
+                        return false;
                 }
+
+                return true;
             }
 
             return base.Equals(obj);

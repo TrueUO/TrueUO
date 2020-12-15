@@ -221,7 +221,7 @@ namespace Server.Items
 
             Item i = from.FindItemOnLayer(Layer.TwoHanded);
 
-            if (i != null && i is Matches match && match.IsLight)
+            if (i is Matches match && match.IsLight)
             {
                 LightFuse(from);
                 return;
@@ -544,7 +544,7 @@ namespace Server.Items
 
                 int z = target.ZSurface;
 
-                if (target.TillerMan != null && target.TillerMan is IEntity entity)
+                if (target.TillerMan is IEntity entity)
                 {
                     z = entity.Z;
                 }
