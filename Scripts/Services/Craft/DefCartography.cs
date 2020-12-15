@@ -40,7 +40,8 @@ namespace Server.Engines.Craft
 
             if (tool == null || tool.Deleted || tool.UsesRemaining <= 0)
                 return 1044038; // You have worn out your tool!
-            else if (!tool.CheckAccessible(from, ref num))
+
+            if (!tool.CheckAccessible(from, ref num))
                 return num; // The tool must be on your person to use.
 
             return 0;
@@ -59,23 +60,28 @@ namespace Server.Engines.Craft
             if (failed)
             {
                 if (lostMaterial)
+                {
                     return 1044043; // You failed to create the item, and some of your materials are lost.
-                else
-                    return 1044157; // You failed to create the item, but no materials were lost.
+                }
+
+                return 1044157; // You failed to create the item, but no materials were lost.
             }
-            else
+
+            if (quality == 0)
+                return 502785; // You were barely able to make this item.  It's quality is below average.
+
+            if (makersMark && quality == 2)
+                return 1044156; // You create an exceptional quality item and affix your maker's mark.
+
+            if (quality == 2)
+                return 1044155; // You create an exceptional quality item.
+
+            if (item.ItemType == typeof(StarChart))
             {
-                if (quality == 0)
-                    return 502785; // You were barely able to make this item.  It's quality is below average.
-                else if (makersMark && quality == 2)
-                    return 1044156; // You create an exceptional quality item and affix your maker's mark.
-                else if (quality == 2)
-                    return 1044155; // You create an exceptional quality item.
-                else if (item.ItemType == typeof(StarChart))
-                    return 1158494; // Which telescope do you wish to create the star chart from?
-                else
-                    return 1044154; // You create the item.
+                return 1158494; // Which telescope do you wish to create the star chart from?
             }
+
+            return 1044154; // You create the item.
         }
 
         public override void InitCraftList()
