@@ -43,7 +43,7 @@ namespace Server.Engines.Harvest
             return CheckTool(from, tool);
         }
 
-        public virtual bool CheckRange(Mobile from, Item tool, HarvestDefinition def, Map map, Point3D loc, bool timed)
+        public virtual bool CheckRange(Mobile from, HarvestDefinition def, Map map, Point3D loc, bool timed)
         {
             bool inRange = from.Map == map && from.InRange(loc, def.MaxRange);
 
@@ -117,7 +117,7 @@ namespace Server.Engines.Harvest
                 return;
             }
 
-            if (!CheckRange(from, tool, def, map, loc, true))
+            if (!CheckRange(from, def, map, loc, true))
                 return;
             if (!CheckResources(from, tool, def, map, loc, true))
                 return;
@@ -391,7 +391,7 @@ namespace Server.Engines.Harvest
                 return false;
             }
 
-            if (!CheckRange(from, tool, def, map, loc, true))
+            if (!CheckRange(from, def, map, loc, true))
             {
                 from.EndAction(locked);
                 return false;
@@ -488,7 +488,7 @@ namespace Server.Engines.Harvest
                 return;
             }
 
-            if (!CheckRange(from, tool, def, map, loc, false))
+            if (!CheckRange(from, def, map, loc, false))
                 return;
             if (!CheckResources(from, tool, def, map, loc, false))
                 return;

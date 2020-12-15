@@ -794,10 +794,8 @@ namespace Server.Engines.Harvest
         {
             bool lava = HasTypeHook(tool, HookType.Lava);
 
-            if (toHarvest is Static && !((Static)toHarvest).Movable)
+            if (toHarvest is Static obj && !obj.Movable)
             {
-                Static obj = (Static)toHarvest;
-
                 if (lava)
                     tileID = obj.ItemID;
                 else
@@ -806,25 +804,21 @@ namespace Server.Engines.Harvest
                 map = obj.Map;
                 loc = obj.GetWorldLocation();
             }
-            else if (toHarvest is StaticTarget)
+            else if (toHarvest is StaticTarget staticTarget)
             {
-                StaticTarget obj = (StaticTarget)toHarvest;
-
                 if (lava)
-                    tileID = obj.ItemID;
+                    tileID = staticTarget.ItemID;
                 else
-                    tileID = (obj.ItemID & 0x3FFF) | 0x4000;
+                    tileID = (staticTarget.ItemID & 0x3FFF) | 0x4000;
 
                 map = from.Map;
-                loc = obj.Location;
+                loc = staticTarget.Location;
             }
-            else if (toHarvest is LandTarget)
+            else if (toHarvest is LandTarget landTarget)
             {
-                LandTarget obj = (LandTarget)toHarvest;
-
-                tileID = obj.TileID;
+                tileID = landTarget.TileID;
                 map = from.Map;
-                loc = obj.Location;
+                loc = landTarget.Location;
             }
             else
             {
@@ -843,13 +837,14 @@ namespace Server.Engines.Harvest
 
         public override HarvestDefinition GetDefinition(int tileID, Item tool)
         {
-            if (tool is FishingPole)
+            if (tool is FishingPole pole)
             {
-                FishingPole pole = (FishingPole)tool;
                 bool usingLavaHook = HasTypeHook(pole, HookType.Lava);
 
                 if (usingLavaHook && ValidateSpecialTile(tileID))
+                {
                     return GetDefinitionFromSpecialTile(tileID);
+                }
             }
 
             return base.GetDefinition(tileID, tool);
@@ -872,12 +867,12 @@ namespace Server.Engines.Harvest
             if (!HasTypeHook(tool, HookType.Lava))
                 return false;
 
-            if (toHarvest is StaticTarget)
-                id = ((StaticTarget)toHarvest).ItemID;
-            else if (toHarvest is LandTarget)
-                id = ((LandTarget)toHarvest).TileID;
-            else if (toHarvest is Static && !((Static)toHarvest).Movable)
-                id = ((Static)toHarvest).ItemID;
+            if (toHarvest is StaticTarget staticTarget)
+                id = staticTarget.ItemID;
+            else if (toHarvest is LandTarget landTarget)
+                id = landTarget.TileID;
+            else if (toHarvest is Static staticItem && !staticItem.Movable)
+                id = staticItem.ItemID;
 
             return ValidateSpecialTile(id);
         }
@@ -885,21 +880,28 @@ namespace Server.Engines.Harvest
         public bool IsLavaHarvest(Item tool, int id)
         {
             if (!HasTypeHook(tool, HookType.Lava))
+            {
                 return false;
+            }
 
             return ValidateSpecialTile(id);
         }
 
-        public override void OnToolUsed(Mobile from, Item tool, bool caughtsomething)
+        public override void OnToolUsed(Mobile from, Item tool, bool caughtSomething)
         {
-            if (tool is FishingPole)
-                ((FishingPole)tool).OnFishedHarvest(from, caughtsomething);
+            if (tool is FishingPole pole)
+            {
+                pole.OnFishedHarvest(from, caughtSomething);
+            }
         }
 
         public static bool HasTypeHook(Item tool, HookType type)
         {
-            if (tool is FishingPole)
-                return ((FishingPole)tool).HookType == type;
+            if (tool is FishingPole pole)
+            {
+                return pole.HookType == type;
+            }
+
             return false;
         }
 
@@ -939,7 +941,7 @@ namespace Server.Engines.Harvest
                     return;
                 }
 
-                if (!CheckRange(from, tool, def, map, loc, true))
+                if (!CheckRange(from, def, map, loc, true))
                     return;
 
                 if (!CheckResources(from, tool, def, map, loc, true))

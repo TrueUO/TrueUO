@@ -182,7 +182,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             m_Weight = reader.ReadInt();
             m_Fisher = reader.ReadMobile();

@@ -186,7 +186,7 @@ namespace Server.Items
             {
                 from.SendLocalizedMessage(1116388); // The trap is too cumbersome to deploy that far away.
             }
-            else if (!IsValidTile(targeted, map))
+            else if (!IsValidTile(targeted))
                 from.SendMessage("You cannot deploy a trap there!"); //TODO: Get Cliloc
             else if (!IsValidLocation(x, y, z, map))
                 from.SendLocalizedMessage(1116393); //The location is too close to another trap.
@@ -370,7 +370,7 @@ namespace Server.Items
             return false;
         }
 
-        public virtual bool IsValidTile(object targeted, Map map)
+        public virtual bool IsValidTile(object targeted)
         {
             int tileID = 0;
 
@@ -446,7 +446,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             int index = reader.ReadInt();
             m_BaitType = FishInfo.GetTypeFromIndex(index);

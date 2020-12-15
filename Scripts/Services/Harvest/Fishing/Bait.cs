@@ -250,7 +250,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             m_UsesRemaining = reader.ReadInt();
             m_Index = reader.ReadInt();
