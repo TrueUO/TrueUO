@@ -229,7 +229,7 @@ namespace Server.Items
                 return;
             }
 
-            if (i != null && i is Torch t && t.Burning)
+            if (i is Torch t && t.Burning)
             {
                 LightFuse(from);
                 return;
