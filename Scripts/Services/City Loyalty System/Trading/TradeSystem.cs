@@ -352,8 +352,8 @@ namespace Server.Engines.CityLoyalty
 
                     return info.Type;
                 }
-                else
-                    list.Remove(vendor);
+
+                list.Remove(vendor);
             }
             while (list.Count > 0);
 
@@ -408,10 +408,8 @@ namespace Server.Engines.CityLoyalty
             if (crate == null || crate.Deleted || crate.Entry == null || crate.Expired || crate.Entry.LastAmbush + TimeSpan.FromMinutes(AmbushWaitDuration) > DateTime.UtcNow)
                 return;
 
-            if (crate.RootParentEntity is Mobile && !((Mobile)crate.RootParentEntity).Region.IsPartOf<GuardedRegion>())
+            if (crate.RootParentEntity is Mobile m && !m.Region.IsPartOf<GuardedRegion>())
             {
-                Mobile m = crate.RootParentEntity as Mobile;
-
                 if (m.NetState != null && m.Map != null && m.Map != Map.Internal)
                 {
                     double chance = crate.Entry.LastAmbush == DateTime.MinValue ? 0.25 : .05;
@@ -561,7 +559,7 @@ namespace Server.Engines.CityLoyalty
 
         public override void ProcessKill(Mobile victim, Mobile damager)
         {
-            if (victim is BaseCreature && Ambushers != null && Ambushers.ContainsKey((BaseCreature)victim))
+            if (victim is BaseCreature creature && Ambushers != null && Ambushers.ContainsKey(creature))
             {
                 if (ActiveTrades.ContainsKey(damager))
                 {
@@ -571,7 +569,7 @@ namespace Server.Engines.CityLoyalty
                         crate.Entry.Kills++;
                 }
 
-                Ambushers.Remove((BaseCreature)victim);
+                Ambushers.Remove(creature);
             }
         }
 
@@ -600,12 +598,12 @@ namespace Server.Engines.CityLoyalty
             LandTile lt = map.Tiles.GetLandTile(x, y);
             int lowZ = 0, avgZ = 0, topZ = 0;
 
-            bool surface, impassable;
+            bool surface;
 
             map.GetAverageZ(x, y, ref lowZ, ref avgZ, ref topZ);
             TileFlag landFlags = TileData.LandTable[lt.ID & TileData.MaxLandValue].Flags;
 
-            impassable = (landFlags & TileFlag.Impassable) != 0;
+            var impassable = (landFlags & TileFlag.Impassable) != 0;
 
             bool wet = (landFlags & TileFlag.Wet) != 0;
 
@@ -621,7 +619,8 @@ namespace Server.Engines.CityLoyalty
 
             if (impassable && avgZ > z && (z + height) > lowZ)
                 return false;
-            else if (!impassable && z == avgZ && !lt.Ignored)
+
+            if (!impassable && z == avgZ && !lt.Ignored)
                 hasSurface = true;
 
             StaticTile[] staticTiles = map.Tiles.GetStaticTiles(x, y, true);
@@ -646,7 +645,8 @@ namespace Server.Engines.CityLoyalty
 
                 if ((surface || impassable) && (staticTiles[i].Z + id.CalcHeight) > z && (z + height) > staticTiles[i].Z)
                     return false;
-                else if (surface && !impassable && z == (staticTiles[i].Z + id.CalcHeight))
+
+                if (surface && !impassable && z == (staticTiles[i].Z + id.CalcHeight))
                     hasSurface = true;
             }
 
@@ -676,7 +676,8 @@ namespace Server.Engines.CityLoyalty
                         eable.Free();
                         return false;
                     }
-                    else if (surface && !impassable && !item.Movable && z == (item.Z + id.CalcHeight))
+
+                    if (surface && !impassable && !item.Movable && z == (item.Z + id.CalcHeight))
                     {
                         hasSurface = true;
                     }
@@ -816,7 +817,7 @@ namespace Server.Engines.CityLoyalty
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             int count = reader.ReadInt();
             for (int i = 0; i < count; i++)
