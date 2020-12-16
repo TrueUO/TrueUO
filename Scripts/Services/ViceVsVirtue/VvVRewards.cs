@@ -6,7 +6,7 @@ namespace Server.Engines.VvV
     public enum TileType
     {
         North = 0,
-        West = 1,
+        West = 1
     }
 
     public static class VvVRewards
@@ -112,11 +112,11 @@ namespace Server.Engines.VvV
 
         public static void OnRewardItemCreated(Mobile from, Item item)
         {
-            if (item is IOwnerRestricted)
-                ((IOwnerRestricted)item).Owner = from;
+            if (item is IOwnerRestricted restricted)
+                restricted.Owner = from;
 
-            if (item is IAccountRestricted && from.Account != null)
-                ((IAccountRestricted)item).Account = from.Account.Username;
+            if (item is IAccountRestricted accountRestricted && from.Account != null)
+                accountRestricted.Account = from.Account.Username;
 
             NegativeAttributes neg = RunicReforging.GetNegativeAttributes(item);
 
@@ -124,10 +124,10 @@ namespace Server.Engines.VvV
             {
                 neg.Antique = 1;
 
-                if (item is IDurability && ((IDurability)item).MaxHitPoints == 0)
+                if (item is IDurability durability && durability.MaxHitPoints == 0)
                 {
-                    ((IDurability)item).MaxHitPoints = 255;
-                    ((IDurability)item).HitPoints = 255;
+                    durability.MaxHitPoints = 255;
+                    durability.HitPoints = 255;
                 }
             }
 
