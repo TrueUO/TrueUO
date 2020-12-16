@@ -516,12 +516,9 @@ namespace Server.Engines.VvV
             if (!Enabled)
                 return false;
 
-            if (m is BaseCreature creature && checkpet)
+            if (m is BaseCreature creature && checkpet && creature.GetMaster() is PlayerMobile)
             {
-                if (creature.GetMaster() is PlayerMobile)
-                {
-                    m = creature.GetMaster();
-                }
+                m = creature.GetMaster();
             }
 
             VvVPlayerEntry entry = Instance.GetPlayerEntry<VvVPlayerEntry>(m as PlayerMobile);
@@ -540,12 +537,9 @@ namespace Server.Engines.VvV
                 return false;
             }
 
-            if (m is BaseCreature creature && checkpet)
+            if (m is BaseCreature creature && checkpet && creature.GetMaster() is PlayerMobile)
             {
-                if (creature.GetMaster() is PlayerMobile)
-                {
-                    m = creature.GetMaster();
-                }
+                m = creature.GetMaster();
             }
 
             entry = Instance.GetPlayerEntry<VvVPlayerEntry>(m as PlayerMobile);
