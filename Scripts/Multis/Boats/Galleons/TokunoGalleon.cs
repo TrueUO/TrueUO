@@ -4,10 +4,10 @@ namespace Server.Multis
 {
     public class TokunoGalleon : BaseGalleon
     {
-        public override int NorthID => 0x30 + (DamageValue * 4);
-        public override int EastID => 0x31 + (DamageValue * 4);
-        public override int SouthID => 0x32 + (DamageValue * 4);
-        public override int WestID => 0x33 + (DamageValue * 4);
+        public override int NorthID => 0x30 + DamageValue * 4;
+        public override int EastID => 0x31 + DamageValue * 4;
+        public override int SouthID => 0x32 + DamageValue * 4;
+        public override int WestID => 0x33 + DamageValue * 4;
 
         public override int HoldDistance => -5;
         public override int CaptiveOffset => 2;

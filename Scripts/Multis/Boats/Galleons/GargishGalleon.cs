@@ -4,10 +4,10 @@ namespace Server.Multis
 {
     public class GargishGalleon : BaseGalleon
     {
-        public override int NorthID => 0x24 + (DamageValue * 4);
-        public override int EastID => 0x25 + (DamageValue * 4);
-        public override int SouthID => 0x26 + (DamageValue * 4);
-        public override int WestID => 0x27 + (DamageValue * 4);
+        public override int NorthID => 0x24 + DamageValue * 4;
+        public override int EastID => 0x25 + DamageValue * 4;
+        public override int SouthID => 0x26 + DamageValue * 4;
+        public override int WestID => 0x27 + DamageValue * 4;
 
         public override int HoldDistance => 6;
         public override int TillerManDistance => 1;

@@ -366,7 +366,7 @@ namespace Server.Multis
             if (id >= 23720 && id <= 23740 || id >= 23742 && id <= 23892)
                 return true;
 
-            if (id >= 23894 && id <= 23902 || (id >= 23904 && id <= 23935))
+            if (id >= 23894 && id <= 23902 || id >= 23904 && id <= 23935)
                 return true;
 
             if (id >= 25256 && id <= 25471)
@@ -531,7 +531,7 @@ namespace Server.Multis
 
         public override bool HasAccess(Mobile from)
         {
-            if (Owner == null || (Scuttled && IsEnemy(from))/* || (Owner is BaseCreature && !Owner.Alive)*/)
+            if (Owner == null || Scuttled && IsEnemy(from))
                 return true;
 
             return GetSecurityLevel(from) > SecurityLevel.Denied;

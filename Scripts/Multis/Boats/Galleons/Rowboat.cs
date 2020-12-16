@@ -153,7 +153,7 @@ namespace Server.Multis
 
         public override bool IsComponentItem(IEntity item)
         {
-            return item == this || item == Line || item == Rudder || (Rudder != null && item == Rudder.Handle);
+            return item == this || item == Line || item == Rudder || Rudder != null && item == Rudder.Handle;
         }
 
         public override bool HasAccess(Mobile from)

@@ -704,7 +704,7 @@ namespace Server.Items
                 foreach (StaticTile tile in tiles)
                 {
                     ItemData id = TileData.ItemTable[tile.ID & TileData.MaxItemValue];
-                    bool isWater = (tile.ID >= 0x1796 && tile.ID <= 0x17B2);
+                    bool isWater = tile.ID >= 0x1796 && tile.ID <= 0x17B2;
 
                     if (!isWater && id.Surface && !id.Impassable)
                     {
