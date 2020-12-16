@@ -834,7 +834,7 @@ namespace Server.Items
                 {
                     for (int count = 15; count > 0; count--)
                     {
-                        damage = (int)(ammoInfo.GetDamage(this) * Galleon.CannonDamageMod);
+                        damage = (int)(ammoInfo.GetDamage() * Galleon.CannonDamageMod);
                         Point3D loc = new Point3D(hit.X + Utility.RandomMinMax(0, 4), hit.Y + Utility.RandomMinMax(0, 4), hit.Z);
                         Effects.SendPacket(loc, target.Map, new GraphicalEffect(EffectType.FixedXYZ, Serial.Zero, Serial.Zero, 0x36CB, loc, loc, 15, 15, true, true));
                         target.OnTakenDamage(shooter, damage);
@@ -843,7 +843,7 @@ namespace Server.Items
                 }
                 else
                 {
-                    damage = (int)(ammoInfo.GetDamage(this) * Galleon.CannonDamageMod);
+                    damage = (int)(ammoInfo.GetDamage() * Galleon.CannonDamageMod);
                     Effects.SendPacket(hit, target.Map, new GraphicalEffect(EffectType.FixedXYZ, Serial.Zero, Serial.Zero, 0x36CB, hit, hit, 15, 15, true, true));
                     target.OnTakenDamage(shooter, damage);
                 }

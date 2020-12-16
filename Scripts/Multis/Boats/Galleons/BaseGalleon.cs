@@ -342,31 +342,31 @@ namespace Server.Multis
         {
             int id = tile.ID;
 
-            if ((id >= 30150 && id <= 30193) || (id >= 30650 && id <= 30693))
+            if (id >= 30150 && id <= 30193 || id >= 30650 && id <= 30693)
                 return true;
 
-            if ((id >= 30650 && id <= 30693) || (id >= 31150 && id <= 31193))
+            if (id >= 30650 && id <= 30693 || id >= 31150 && id <= 31193)
                 return true;
 
-            if ((id >= 31150 && id <= 31193) || (id >= 31650 && id <= 31693))
+            if (id >= 31150 && id <= 31193 || id >= 31650 && id <= 31693)
                 return true;
 
-            if ((id >= 31840 && id <= 31883) || (id >= 32040 && id <= 32083))
+            if (id >= 31840 && id <= 31883 || id >= 32040 && id <= 32083)
                 return true;
 
-            if ((id >= 32240 && id <= 32283) || (id >= 32440 && id <= 32483))
+            if (id >= 32240 && id <= 32283 || id >= 32440 && id <= 32483)
                 return true;
 
-            if ((id >= 32640 && id <= 32683) || (id >= 32840 && id <= 32883))
+            if (id >= 32640 && id <= 32683 || id >= 32840 && id <= 32883)
                 return true;
 
-            if ((id >= 33040 && id <= 33083) || (id >= 33240 && id <= 33283))
+            if (id >= 33040 && id <= 33083 || id >= 33240 && id <= 33283)
                 return true;
 
-            if ((id >= 23720 && id <= 23740) || (id >= 23742 && id <= 23892))
+            if (id >= 23720 && id <= 23740 || id >= 23742 && id <= 23892)
                 return true;
 
-            if ((id >= 23894 && id <= 23902) || (id >= 23904 && id <= 23935))
+            if (id >= 23894 && id <= 23902 || (id >= 23904 && id <= 23935))
                 return true;
 
             if (id >= 25256 && id <= 25471)
@@ -1245,7 +1245,7 @@ namespace Server.Multis
 
         public bool CanAddAddon(Point3D p)
         {
-            if ((Addons != null && Addons.Count >= MaxAddons) || Map == null || Map == Map.Internal)
+            if (Addons != null && Addons.Count >= MaxAddons || Map == null || Map == Map.Internal)
                 return false;
 
             IPooledEnumerable eable = Map.GetItemsInRange(p, 0);

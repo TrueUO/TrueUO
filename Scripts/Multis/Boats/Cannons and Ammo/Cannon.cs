@@ -119,8 +119,10 @@ namespace Server.Items
         {
             Gump g = m.FindGump(typeof(CannonGump));
 
-            if (g != null && g is CannonGump gump && gump.Cannon == this && !m.InRange(Location, 3))
+            if (g is CannonGump gump && gump.Cannon == this && !m.InRange(Location, 3))
+            {
                 m.CloseGump(typeof(CannonGump));
+            }
         }
 
         public override void OnDoubleClick(Mobile from)

@@ -441,7 +441,7 @@ namespace Server.Multis
         public int NormalInterval { get; } = 500;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int SlowInterval { get; set; } = 1000;
+        public int SlowInterval { get; } = 1000;
 
         public TimeSpan FastInt => TimeSpan.FromMilliseconds(FastInterval);
         public TimeSpan NormalInt => TimeSpan.FromMilliseconds(NormalInterval);
@@ -928,7 +928,7 @@ namespace Server.Multis
             return false;
         }
 
-        public virtual bool CheckItem(int itemID, Item item, Point3D p)
+        public virtual bool CheckItem(Item item, Point3D p)
         {
             return Contains(item) ||
                 item is BaseMulti ||
@@ -2321,13 +2321,12 @@ namespace Server.Multis
                         continue;
 
                     // Special item, we're good
-                    if (CheckItem(itemID, item, p) || CanMoveOver(item) || item.Z < p.Z || ExemptOverheadComponent(p, itemID, item.X, item.Y, item.Z + item.ItemData.Height))
+                    if (CheckItem(item, p) || CanMoveOver(item) || item.Z < p.Z || ExemptOverheadComponent(p, itemID, item.X, item.Y, item.Z + item.ItemData.Height))
                         continue;
                 }
-                else if (e is Mobile mobile && Contains(mobile))
+                else if (e is Mobile mobile && Contains(mobile) && ExemptOverheadComponent(p, itemID, mobile.X, mobile.Y, mobile.Z + 10))
                 {
-                    if (ExemptOverheadComponent(p, itemID, mobile.X, mobile.Y, mobile.Z + 10))
-                        continue;
+                    continue;
                 }
 
                 if (Owner is BaseShipCaptain captain && !captain.Deleted && Order == BoatOrder.CourseFull)
@@ -2363,7 +2362,7 @@ namespace Server.Multis
             return (Direction)iDir;
         }
 
-        public bool DoMovement(bool message, bool single)
+        public bool DoMovement(bool message)
         {
             Direction dir;
             int speed, clientSpeed;
@@ -2836,7 +2835,7 @@ namespace Server.Multis
 
             protected override void OnTick()
             {
-                if (!m_Boat.DoMovement(true, m_SingleMove))
+                if (!m_Boat.DoMovement(true))
                     m_Boat.StopMove(false);
 
                 if (m_SingleMove)
@@ -3378,7 +3377,7 @@ namespace Server.Multis
     public class DryDockEntry : ContextMenuEntry
     {
         private BaseBoat Boat { get; }
-        private Mobile From { get; set; }
+        private Mobile From { get; }
 
         public DryDockEntry(BaseBoat boat, Mobile from)
             : base(1116520, 12)
@@ -3399,7 +3398,7 @@ namespace Server.Multis
     public class RenameShipEntry : ContextMenuEntry
     {
         private BaseBoat Boat { get; }
-        private Mobile From { get; set; }
+        private Mobile From { get; }
 
         public RenameShipEntry(BaseBoat boat, Mobile from)
             : base(1111680, 3)

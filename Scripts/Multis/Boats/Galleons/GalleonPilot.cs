@@ -379,7 +379,7 @@ namespace Server.Mobiles
                         eable.Free();
 
                         StaticTarget st = (StaticTarget)pnt;
-                        int z = m_Galleon.ZSurface;
+                        int z;
 
                         z = st.Z;
 
@@ -395,11 +395,11 @@ namespace Server.Mobiles
 
             public bool IsSurface(IPoint3D pnt)
             {
-                if (pnt is StaticTarget st)
+                if (pnt is StaticTarget st && (st.Flags & TileFlag.Surface) > 0)
                 {
-                    if ((st.Flags & TileFlag.Surface) > 0)
-                        return true;
+                    return true;
                 }
+
                 return false;
             }
         }

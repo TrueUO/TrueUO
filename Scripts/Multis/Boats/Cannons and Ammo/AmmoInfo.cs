@@ -74,31 +74,12 @@ namespace Server.Items
 
 
         /// <summary>
-        /// Gets damage for Rising Tides Cannons. This differentiates between the cannon sizes.
+        /// Gets damage for Cannons.
         /// </summary>
-        /// <param name="cannon"></param>
         /// <returns></returns>
-        public int GetDamage(BaseShipCannon cannon)
+        public int GetDamage()
         {
             return Utility.RandomMinMax(MinDamage, MaxDamage);
-
-            // Fucking EA, after rising tide, made all cannons deal the same amount of damage. I don't get it. If they ever pull their head out of their asses, or you
-            // want, use the code below...
-
-            /*if (AmmoType == AmmunitionType.Grapeshot)
-            {
-                return Utility.RandomMinMax(MinDamage, MaxDamage);
-            }
-
-            int baseDamage = Utility.RandomMinMax(info.MinDamage, info.MaxDamage);
-
-            switch (cannon.Power)
-            {
-                default:
-                case CannonPower.Light: return baseDamage;
-                case CannonPower.Heavy: return baseDamage + 1500;
-                case CannonPower.Massive: return baseDamage + 3000;
-            }*/
         }
 
         public static AmmoInfo GetAmmoInfo(Type ammoType)
