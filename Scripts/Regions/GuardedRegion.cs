@@ -92,7 +92,7 @@ namespace Server.Regions
             return m_Disabled;
         }
 
-        public virtual bool CheckVendorAccess(Mobile from)
+        public virtual bool CheckVendorAccess(BaseVendor vendor, Mobile from)
         {
             if (from.AccessLevel >= AccessLevel.GameMaster || IsDisabled())
             {

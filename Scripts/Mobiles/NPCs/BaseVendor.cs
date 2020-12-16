@@ -2021,7 +2021,7 @@ namespace Server.Mobiles
         {
             GuardedRegion reg = (GuardedRegion)Region.GetRegion(typeof(GuardedRegion));
 
-            if (reg != null && !reg.CheckVendorAccess(from))
+            if (reg != null && !reg.CheckVendorAccess(this, from))
             {
                 return false;
             }
@@ -2030,7 +2030,7 @@ namespace Server.Mobiles
             {
                 reg = (GuardedRegion)from.Region.GetRegion(typeof(GuardedRegion));
 
-                if (reg != null && !reg.CheckVendorAccess(from))
+                if (reg != null && !reg.CheckVendorAccess(this, from))
                 {
                     return false;
                 }
