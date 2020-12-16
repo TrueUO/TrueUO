@@ -10249,7 +10249,7 @@ namespace Server
 
 		public virtual bool OpenTrade(Mobile from, Item offer)
 		{
-			if (!from.Player || !Player || !from.Alive || !Alive)
+			if (!from.Player || !Player || !from.Alive || !Alive || from.Hidden)
 			{
 				return false;
 			}
