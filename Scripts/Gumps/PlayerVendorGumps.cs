@@ -23,8 +23,10 @@ namespace Server.Gumps
 
             AddHtmlLocalized(125, 20, 250, 24, 1019070, false, false); // You have agreed to purchase:
 
-            if (!string.IsNullOrEmpty(vi.Description))
-                AddLabel(125, 45, 0, vi.Description);
+            var desc = vi.Description;
+
+            if (!string.IsNullOrEmpty(desc))
+                AddLabel(125, 45, 0, desc.Length > 27 ? string.Format("{0}...", desc.Substring(0, 24)) : desc);
             else
                 AddHtmlLocalized(125, 45, 250, 24, 1019072, false, false); // an item without a description
 
