@@ -4,10 +4,10 @@ namespace Server.Multis
 {
     public class OrcishGalleon : BaseGalleon
     {
-        public override int NorthID => 0x18 + (DamageValue * 4);
-        public override int EastID => 0x19 + (DamageValue * 4);
-        public override int SouthID => 0x1A + (DamageValue * 4);
-        public override int WestID => 0x1B + (DamageValue * 4);
+        public override int NorthID => 0x18 + DamageValue * 4;
+        public override int EastID => 0x19 + DamageValue * 4;
+        public override int SouthID => 0x1A + DamageValue * 4;
+        public override int WestID => 0x1B + DamageValue * 4;
 
         public override int HoldDistance => 9;
         public override int TillerManDistance => 6;

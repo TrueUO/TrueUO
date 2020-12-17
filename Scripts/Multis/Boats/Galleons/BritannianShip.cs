@@ -6,10 +6,10 @@ namespace Server.Multis
 {
     public class BritannianShip : BaseGalleon
     {
-        public override int NorthID => 0x40 + (DamageValue * 4);
-        public override int EastID => 0x41 + (DamageValue * 4);
-        public override int SouthID => 0x42 + (DamageValue * 4);
-        public override int WestID => 0x43 + (DamageValue * 4);
+        public override int NorthID => 0x40 + DamageValue * 4;
+        public override int EastID => 0x41 + DamageValue * 4;
+        public override int SouthID => 0x42 + DamageValue * 4;
+        public override int WestID => 0x43 + DamageValue * 4;
 
         public override int HoldDistance => 9;
         public override int TillerManDistance => 7;

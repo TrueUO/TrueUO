@@ -294,9 +294,7 @@ namespace Server.Multis
                                 item.InvalidateProperties();
 
                             if (m_DamageTaken == DamageLevel.Severely)
-                            {
                                 TillerManSay(1116687); // Arr, we be scuttled!
-                            }
                         }
                     }
                 }
@@ -383,11 +381,11 @@ namespace Server.Multis
             {
                 m_DecayTime = value;
 
-                if (TillerMan is Mobile mobile)
+                if (TillerMan != null && TillerMan is Mobile mobile)
                 {
                     mobile.InvalidateProperties();
                 }
-                else if (TillerMan is Item item)
+                else if (TillerMan != null && TillerMan is Item item)
                 {
                     item.InvalidateProperties();
                 }
@@ -399,6 +397,7 @@ namespace Server.Multis
 
         [CommandProperty(AccessLevel.GameMaster)]
         public BoatMountItem VirtualMount { get; private set; }
+
 
         #region Movement Offset
         private Direction Forward => Facing;
@@ -412,6 +411,7 @@ namespace Server.Multis
         #endregion
 
         #region Speed
+
         /*
         * Intervals:
         *       drift forward
@@ -584,9 +584,10 @@ namespace Server.Multis
                     if (x == mobile.X && y == mobile.Y)
                         return true;
                 }
-                else if (TillerMan is Item item && x == item.X && y == item.Y)
+                else if (TillerMan is Item item)
                 {
-                    return true;
+                    if (x == item.X && y == item.Y)
+                        return true;
                 }
             }
 
@@ -618,7 +619,7 @@ namespace Server.Multis
 
                     int keyword = e.Keywords[i];
 
-                    if ((keyword >= 0x42 && keyword <= 0x6B) || keyword == 0xF)
+                    if (keyword >= 0x42 && keyword <= 0x6B || keyword == 0xF)
                     {
                         switch (keyword)
                         {
@@ -797,6 +798,7 @@ namespace Server.Multis
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
+
             writer.Write(5);
 
             writer.Write(m_Hits);
@@ -889,6 +891,21 @@ namespace Server.Multis
                     }
                 case 0:
                     {
+                        if (version < 3)
+                            NextNavPoint = -1;
+
+                        if (version < 2)
+                        {
+                            if (ItemID == NorthID)
+                                m_Facing = Direction.North;
+                            else if (ItemID == SouthID)
+                                m_Facing = Direction.South;
+                            else if (ItemID == EastID)
+                                m_Facing = Direction.East;
+                            else if (ItemID == WestID)
+                                m_Facing = Direction.West;
+                        }
+
                         Owner = reader.ReadMobile();
                         PPlank = reader.ReadItem() as Plank;
                         SPlank = reader.ReadItem() as Plank;
@@ -928,7 +945,7 @@ namespace Server.Multis
             return false;
         }
 
-        public virtual bool CheckItem(Item item, Point3D p)
+        public virtual bool CheckItem(int itemID, Item item, Point3D p)
         {
             return Contains(item) ||
                 item is BaseMulti ||
@@ -962,9 +979,7 @@ namespace Server.Multis
         protected virtual bool CheckOnBoard(IEntity e)
         {
             if (e is Item item && item.IsVirtualItem)
-            {
                 return false;
-            }
 
             return true;
         }
@@ -1044,15 +1059,10 @@ namespace Server.Multis
         public virtual bool IsComponentItem(IEntity item)
         {
             if (item == null)
-            {
                 return false;
-            }
 
             if (item == this || TillerMan is Item man && item == man || item == SPlank || item == PPlank || item == Hold)
-            {
                 return true;
-            }
-
             return false;
         }
 
@@ -1133,7 +1143,7 @@ namespace Server.Multis
             if (amount == 0)
                 return;
 
-            NetState theirState = (from == null ? null : from.NetState);
+            NetState theirState = from == null ? null : from.NetState;
 
             if (theirState == null && from != null)
             {
@@ -2269,7 +2279,7 @@ namespace Server.Multis
                     bool hasWater = false;
                     int dif = Math.Abs(landTile.Z - p.Z);
 
-                    if (dif <= 1 && ((landTile.ID >= 168 && landTile.ID <= 171) || landTile.ID >= 310 && landTile.ID <= 311))
+                    if (dif <= 1 && (landTile.ID >= 168 && landTile.ID <= 171 || landTile.ID >= 310 && landTile.ID <= 311))
                         hasWater = true;
 
                     for (int i = 0; i < tiles.Length; ++i)
@@ -2321,12 +2331,13 @@ namespace Server.Multis
                         continue;
 
                     // Special item, we're good
-                    if (CheckItem(item, p) || CanMoveOver(item) || item.Z < p.Z || ExemptOverheadComponent(p, itemID, item.X, item.Y, item.Z + item.ItemData.Height))
+                    if (CheckItem(itemID, item, p) || CanMoveOver(item) || item.Z < p.Z || ExemptOverheadComponent(p, itemID, item.X, item.Y, item.Z + item.ItemData.Height))
                         continue;
                 }
-                else if (e is Mobile mobile && Contains(mobile) && ExemptOverheadComponent(p, itemID, mobile.X, mobile.Y, mobile.Z + 10))
+                else if (e is Mobile mobile)
                 {
-                    continue;
+                    if (Contains(mobile) || ExemptOverheadComponent(p, itemID, mobile.X, mobile.Y, mobile.Z + 10))
+                        continue;
                 }
 
                 if (Owner is BaseShipCaptain captain && !captain.Deleted && Order == BoatOrder.CourseFull)
@@ -2362,7 +2373,7 @@ namespace Server.Multis
             return (Direction)iDir;
         }
 
-        public bool DoMovement(bool message)
+        public bool DoMovement(bool message, bool single)
         {
             Direction dir;
             int speed, clientSpeed;
@@ -2452,6 +2463,8 @@ namespace Server.Multis
                     case 4:
                     case -4:
                         return Turn(4, true, true, (Facing + 4) & Direction.Mask, true);
+                    default:
+                        break;
                 }
 
                 speed = Math.Min(Speed, maxSpeed);
@@ -2752,7 +2765,7 @@ namespace Server.Multis
                 if (Order == BoatOrder.PlayerControlled)
                 {
                     resume = true;
-                    resumeDir = (Direction)(((int)Moving) + offset) & Direction.Mask;
+                    resumeDir = (Direction)((int)Moving + offset) & Direction.Mask;
                     fast = m_ClientSpeed == 0x4;
                 }
 
@@ -2835,7 +2848,7 @@ namespace Server.Multis
 
             protected override void OnTick()
             {
-                if (!m_Boat.DoMovement(true))
+                if (!m_Boat.DoMovement(true, m_SingleMove))
                     m_Boat.StopMove(false);
 
                 if (m_SingleMove)
@@ -3044,16 +3057,14 @@ namespace Server.Multis
          
         public void CheckExit(object o)
         {
-            if (o is CorgulRegion corgulRegion)
-                corgulRegion.CheckExit(this);
+            if (o is CorgulRegion region)
+                region.CheckExit(this);
         }
 
         public void CheckEnter(object o)
         {
-            if (o is CorgulWarpRegion corgulRegion)
-            {
-                corgulRegion.CheckEnter(this);
-            }
+            if (o is CorgulWarpRegion region)
+                region.CheckEnter(this);
         }
 
         private void ComputeDamage()
@@ -3153,7 +3164,7 @@ namespace Server.Multis
 
         public void SendMessageToAllOnBoard(object message)
         {
-            foreach (PlayerMobile m in MobilesOnBoard.OfType<PlayerMobile>().Where(pm => pm.NetState != null))
+            foreach (Mobile m in MobilesOnBoard.OfType<PlayerMobile>().Where(pm => pm.NetState != null))
             {
                 if (message is int i)
                     m.SendLocalizedMessage(i);
@@ -3326,15 +3337,18 @@ namespace Server.Multis
 
         public override bool Equals(object obj)
         {
-            if (obj is BoatCourse course && Map == course.Map && Boat == course.Boat && course.Waypoints.Count == m_Waypoints.Count)
+            if (obj is BoatCourse course)
             {
-                for (int i = 0; i < m_Waypoints.Count; i++)
+                if (Map == course.Map && Boat == course.Boat && course.Waypoints.Count == m_Waypoints.Count)
                 {
-                    if (m_Waypoints[i] != course.Waypoints[i])
-                        return false;
-                }
+                    for (int i = 0; i < m_Waypoints.Count; i++)
+                    {
+                        if (m_Waypoints[i] != course.Waypoints[i])
+                            return false;
+                    }
 
-                return true;
+                    return true;
+                }
             }
 
             return base.Equals(obj);
@@ -3348,7 +3362,6 @@ namespace Server.Multis
         public BoatCourse(GenericReader reader)
         {
             reader.ReadInt();
-
             GivenMap = reader.ReadBool();
 
             int c = reader.ReadInt();
@@ -3362,7 +3375,6 @@ namespace Server.Multis
         public void Serialize(GenericWriter writer)
         {
             writer.Write(0);
-
             writer.Write(GivenMap);
 
             writer.Write(m_Waypoints.Count);
