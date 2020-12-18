@@ -66,20 +66,18 @@ namespace Server.Mobiles
 
             foreach (Mobile m in rights.Select(x => x.m_Mobile).Distinct())
             {
-                if (m is PlayerMobile)
+                if (m is PlayerMobile pm)
                 {
-                    PlayerMobile pm = m as PlayerMobile;
-
                     if (pm.ExploringTheDeepQuest == ExploringTheDeepQuestChain.CollectTheComponent)
                     {
                         Item item = new AquaGem();
 
-                        if (m.Backpack == null || !m.Backpack.TryDropItem(m, item, false))
+                        if (pm.Backpack == null || !pm.Backpack.TryDropItem(pm, item, false))
                         {
-                            m.BankBox.DropItem(item);
+                            pm.BankBox.DropItem(item);
                         }
 
-                        m.SendLocalizedMessage(1154489); // You received a Quest Item!
+                        pm.SendLocalizedMessage(1154489); // You received a Quest Item!
                     }
                 }
             }
@@ -112,7 +110,7 @@ namespace Server.Mobiles
             public InternalSelfDeleteTimer(Mobile p) : base(TimeSpan.FromMinutes(60))
             {
                 Priority = TimerPriority.FiveSeconds;
-                Mare = ((Djinn)p);
+                Mare = (Djinn)p;
             }
             protected override void OnTick()
             {
@@ -193,7 +191,7 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             Instances = new List<Djinn>();
             Instances.Add(this);

@@ -12,7 +12,7 @@ namespace Server.Items
         Tunic,
         Pant,
         Book
-    };
+    }
 
     public class MasterThinkerContoller : Item
     {
@@ -99,7 +99,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             m_Array = new List<MasterThinkerArray>();
         }
@@ -113,10 +113,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public DecorType Type
         {
-            get
-            {
-                return m_Type;
-            }
+            get => m_Type;
             set
             {
                 m_Type = value;
@@ -126,7 +123,6 @@ namespace Server.Items
 
         [Constructable]
         public MasterThinkerDecor(int id, int hue, DecorType type, MasterThinkerContoller controller)
-            : base()
         {
             ItemID = id;
             m_Controller = controller;
@@ -180,7 +176,7 @@ namespace Server.Items
 
         public int ClickCheck(Mobile from)
         {
-            return m_Controller.Array.Where(s => s.Mobile == from && s.Pant == true && s.Book == true && s.Tunic == true).Count();
+            return m_Controller.Array.Where(s => s.Mobile == from && s.Pant && s.Book && s.Tunic).Count();
         }
 
         public override void Serialize(GenericWriter writer)
@@ -195,7 +191,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             m_Controller = reader.ReadItem() as MasterThinkerContoller;
             m_Type = (DecorType)reader.ReadInt();
