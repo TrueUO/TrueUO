@@ -671,21 +671,18 @@ namespace Server.Engines.Quests
                 {
                     BaseObjective objective = quest.Objectives[j];
 
-                    if (objective is ObtainObjective obtain)
+                    if (objective is ObtainObjective obtain && obtain.Update(item))
                     {
-                        if (obtain.Update(item))
+                        if (quest.Completed)
                         {
-                            if (quest.Completed)
-                            {
-                                quest.OnCompleted();
-                            }
-                            else if (obtain.Completed)
-                            {
-                                player.PlaySound(quest.UpdateSound);
-                            }
-
-                            return true;
+                            quest.OnCompleted();
                         }
+                        else if (obtain.Completed)
+                        {
+                            player.PlaySound(quest.UpdateSound);
+                        }
+
+                        return true;
                     }
                 }
             }
@@ -722,18 +719,15 @@ namespace Server.Engines.Quests
                 {
                     BaseObjective objective = quest.Objectives[j];
 
-                    if (objective is ApprenticeObjective apprentice)
+                    if (objective is ApprenticeObjective apprentice && apprentice.Update(skill))
                     {
-                        if (apprentice.Update(skill))
+                        if (quest.Completed)
                         {
-                            if (quest.Completed)
-                            {
-                                quest.OnCompleted();
-                            }
-                            else if (apprentice.Completed)
-                            {
-                                player.PlaySound(quest.UpdateSound);
-                            }
+                            quest.OnCompleted();
+                        }
+                        else if (apprentice.Completed)
+                        {
+                            player.PlaySound(quest.UpdateSound);
                         }
                     }
                 }
@@ -755,14 +749,11 @@ namespace Server.Engines.Quests
                 {
                     BaseObjective objective = quest.Objectives[j];
 
-                    if (objective is ApprenticeObjective apprentice && !apprentice.Completed)
+                    if (objective is ApprenticeObjective apprentice && !apprentice.Completed && apprentice.Region != null)
                     {
-                        if (apprentice.Region != null)
+                        if (player.Region.IsPartOf(apprentice.Region) && skill.SkillName == apprentice.Skill)
                         {
-                            if (player.Region.IsPartOf(apprentice.Region) && skill.SkillName == apprentice.Skill)
-                            {
-                                return true;
-                            }
+                            return true;
                         }
                     }
                 }

@@ -207,9 +207,9 @@ namespace Server.Engines.Quests
                 return false;
             }
 
-            if (m is PlayerMobile mobile && (mobile.LastEscortTime + m_EscortDelay) >= DateTime.UtcNow)
+            if (m is PlayerMobile mobile && mobile.LastEscortTime + m_EscortDelay >= DateTime.UtcNow)
             {
-                int minutes = (int)Math.Ceiling(((mobile.LastEscortTime + m_EscortDelay) - DateTime.UtcNow).TotalMinutes);
+                int minutes = (int)Math.Ceiling((mobile.LastEscortTime + m_EscortDelay - DateTime.UtcNow).TotalMinutes);
 
                 Say("You must rest {0} minute{1} before we set out on this journey.", minutes, minutes == 1 ? "" : "s");
                 return false;
