@@ -133,7 +133,7 @@ namespace Server.Engines.Quests
 
         public virtual void Deserialize(GenericReader reader)
         {
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
 
             m_CurProgress = reader.ReadInt();
             m_Seconds = reader.ReadInt();
@@ -227,16 +227,15 @@ namespace Server.Engines.Quests
 
         public override bool Update(object obj)
         {
-            if (obj is Mobile mob)
+            if (obj is Mobile mob && IsObjective(mob))
             {
-                if (IsObjective(mob))
+                if (!Completed)
                 {
-                    if (!Completed)
-                        CurProgress += 1;
-
-                    OnKill(mob);
-                    return true;
+                    CurProgress += 1;
                 }
+
+                OnKill(mob);
+                return true;
             }
 
             return false;
@@ -299,29 +298,26 @@ namespace Server.Engines.Quests
 
         public override bool Update(object obj)
         {
-            if (obj is Item obtained)
+            if (obj is Item obtained && IsObjective(obtained))
             {
-                if (IsObjective(obtained))
+                if (!obtained.QuestItem)
                 {
-                    if (!obtained.QuestItem)
-                    {
-                        CurProgress += obtained.Amount;
+                    CurProgress += obtained.Amount;
 
-                        obtained.QuestItem = true;
-                        Quest.Owner.SendLocalizedMessage(1072353); // You set the item to Quest Item status
+                    obtained.QuestItem = true;
+                    Quest.Owner.SendLocalizedMessage(1072353); // You set the item to Quest Item status
 
-                        Quest.OnObjectiveUpdate(obtained);
-                    }
-                    else
-                    {
-                        CurProgress -= obtained.Amount;
-
-                        obtained.QuestItem = false;
-                        Quest.Owner.SendLocalizedMessage(1072354); // You remove Quest Item status from the item
-                    }
-
-                    return true;
+                    Quest.OnObjectiveUpdate(obtained);
                 }
+                else
+                {
+                    CurProgress -= obtained.Amount;
+
+                    obtained.QuestItem = false;
+                    Quest.Owner.SendLocalizedMessage(1072354); // You remove Quest Item status from the item
+                }
+
+                return true;
             }
 
             return false;
@@ -346,15 +342,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
         }
     }
 
@@ -453,7 +447,7 @@ namespace Server.Engines.Quests
                     return true;
                 }
 
-                if (m_Destination.IsAssignableFrom(obj.GetType()))
+                if (m_Destination.IsInstanceOfType(obj))
                 {
                     if (MaxProgress < QuestHelper.CountQuestItems(Quest.Owner, Delivery))
                     {
@@ -478,15 +472,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
         }
     }
 
@@ -546,15 +538,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
         }
     }
 
@@ -633,15 +623,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(1); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
         }
     }
 

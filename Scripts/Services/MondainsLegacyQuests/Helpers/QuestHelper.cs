@@ -72,7 +72,7 @@ namespace Server.Engines.Quests
                     {
                         mondainQuester.OnOfferFailed();
                     }
-                    else if (mobile is Mobile)
+                    else
                     {
                         mobile.Say(1080107); // I'm sorry, I have nothing for you at this time.
                     }
@@ -288,29 +288,6 @@ namespace Server.Engines.Quests
 
                 return true;
             }
-
-            /*for (int i = 0; i < quests.Length; i ++)
-            {
-                for (int j = 0; j < player.Quests.Count; j ++)
-                {
-                    BaseQuest quest = player.Quests[j];
-
-                    if (quests[i].IsAssignableFrom(quest.GetType()))
-                    {
-                        if (quest.Completed)
-                        {
-                            player.SendGump(new MondainQuestGump(quest, MondainQuestGump.Section.Complete, false, true));
-                        }
-                        else
-                        {
-                            player.SendGump(new MondainQuestGump(quest, MondainQuestGump.Section.InProgress, false));
-                            quest.InProgress();
-                        }
-
-                        return true;
-                    }
-                }
-            }*/
 
             return false;
         }
