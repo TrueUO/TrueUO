@@ -37,13 +37,10 @@ namespace Server.Targets
 
             if (targeted is ICarvable carvable)
             {
-                if (carvable is Item item)
+                if (carvable is Item item && (item.IsLockedDown || item.RootParent is Container container && (!item.Movable || !container.LiftOverride)))
                 {
-                    if (item.IsLockedDown || item.RootParent is Container container && (!item.Movable || !container.LiftOverride))
-                    {
-                        from.SendLocalizedMessage(500494); // You can't use a bladed item on that!
-                        return;
-                    }
+                    from.SendLocalizedMessage(500494); // You can't use a bladed item on that!
+                    return;
                 }
 
                 if (carvable.Carve(from, m_Item) && Siege.SiegeShard)
