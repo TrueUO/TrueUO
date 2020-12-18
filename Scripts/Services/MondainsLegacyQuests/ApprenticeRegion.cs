@@ -28,23 +28,21 @@ namespace Server.Regions
                     {
                         BaseObjective objective = quest.Objectives[j];
 
-                        if (objective is ApprenticeObjective apprentice && !apprentice.Completed)
+                        if (objective is ApprenticeObjective apprentice && !apprentice.Completed && IsPartOf(apprentice.Region))
                         {
-                            if (IsPartOf(apprentice.Region))
+                            if (apprentice.Enter is int iEnter)
                             {
-                                if (apprentice.Enter is int iEnter)
-                                {
-                                    player.SendLocalizedMessage(iEnter);
-                                }
-                                else if (apprentice.Enter is string sEnter)
-                                {
-                                    player.SendMessage(sEnter);
-                                }
-
-                                BuffInfo info = new BuffInfo(BuffIcon.ArcaneEmpowerment, 1078511, 1078512, apprentice.Skill.ToString()); // Accelerated Skillgain Skill: ~1_val~
-                                BuffInfo.AddBuff(player, info);
-                                m_Table[m] = info;
+                                player.SendLocalizedMessage(iEnter);
                             }
+                            else if (apprentice.Enter is string sEnter)
+                            {
+                                player.SendMessage(sEnter);
+                            }
+
+                            BuffInfo info = new BuffInfo(BuffIcon.ArcaneEmpowerment, 1078511, 1078512,
+                                apprentice.Skill.ToString()); // Accelerated Skillgain Skill: ~1_val~
+                            BuffInfo.AddBuff(player, info);
+                            m_Table[m] = info;
                         }
                     }
                 }
@@ -65,17 +63,20 @@ namespace Server.Regions
                     {
                         BaseObjective objective = quest.Objectives[j];
 
-                        if (objective is ApprenticeObjective apprentice && !apprentice.Completed)
+                        if (objective is ApprenticeObjective apprentice && !apprentice.Completed && IsPartOf(apprentice.Region))
                         {
-                            if (IsPartOf(apprentice.Region))
+                            if (apprentice.Leave is int iLeave)
                             {
-                                if (apprentice.Leave is int iLeave)
-                                    player.SendLocalizedMessage(iLeave);
-                                else if (apprentice.Leave is string sLeave)
-                                    player.SendMessage(sLeave);
+                                player.SendLocalizedMessage(iLeave);
+                            }
+                            else if (apprentice.Leave is string sLeave)
+                            {
+                                player.SendMessage(sLeave);
+                            }
 
-                                if (m_Table[m] is BuffInfo)
-                                    BuffInfo.RemoveBuff(player, (BuffInfo)m_Table[m]);
+                            if (m_Table[m] is BuffInfo)
+                            {
+                                BuffInfo.RemoveBuff(player, (BuffInfo) m_Table[m]);
                             }
                         }
                     }

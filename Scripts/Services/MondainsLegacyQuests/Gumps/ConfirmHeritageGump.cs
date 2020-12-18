@@ -57,14 +57,11 @@ namespace Server.Engines.Quests
 
         private void CloseHeritageGump(object args)
         {
-            if (args is Mobile m)
+            if (args is Mobile m && HeritageQuester.IsPending(m))
             {
-                if (HeritageQuester.IsPending(m))
-                {
-                    m.Send(HeritagePacket.Close);
+                m.Send(HeritagePacket.Close);
 
-                    HeritageQuester.RemovePending(m);
-                }
+                HeritageQuester.RemovePending(m);
             }
         }
     }

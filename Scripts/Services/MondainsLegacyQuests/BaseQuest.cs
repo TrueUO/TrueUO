@@ -171,24 +171,25 @@ namespace Server.Engines.Quests
                 objective.OnAccept();
             }
 
-            if (m_Quester is BaseEscort escort)
+            if (m_Quester is BaseEscort escort && escort.SetControlMaster(m_Owner))
             {
-                if (escort.SetControlMaster(m_Owner))
+                escort.Quest = this;
+                escort.LastSeenEscorter = DateTime.UtcNow;
+                escort.StartFollow();
+                escort.AddHash(Owner);
+
+                string region = escort.GetDestination();
+
+                if (!string.IsNullOrEmpty(region))
                 {
-                    escort.Quest = this;
-                    escort.LastSeenEscorter = DateTime.UtcNow;
-                    escort.StartFollow();
-                    escort.AddHash(Owner);
-
-                    string region = escort.GetDestination();
-
-                    if (!string.IsNullOrEmpty(region))
-                        escort.Say(1042806, region); // Lead on! Payment will be made when we arrive at ~1_DESTINATION~!
-                    else
-                        escort.Say(1042806, "destination"); // Lead on! Payment will be made when we arrive at ~1_DESTINATION~!
-
-                    m_Owner.LastEscortTime = DateTime.UtcNow;
+                    escort.Say(1042806, region); // Lead on! Payment will be made when we arrive at ~1_DESTINATION~!
                 }
+                else
+                {
+                    escort.Say(1042806, "destination"); // Lead on! Payment will be made when we arrive at ~1_DESTINATION~!
+                }
+
+                m_Owner.LastEscortTime = DateTime.UtcNow;
             }
 
             // tick tack

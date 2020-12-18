@@ -346,32 +346,6 @@ namespace Server.Engines.Quests
                 return true;
             }
 
-            /*for (int i = 0; i < player.Quests.Count; i ++)
-            {
-                BaseQuest quest = player.Quests[i];
-
-                if (quest.Quester == null && quest.QuesterType == null)
-                    continue;
-
-                if (quest.QuesterType == quester.GetType())
-                {
-                    if (quest.Completed)
-                    {
-                        if (quest.Complete == null && !AnyRewards(quest))
-                            quest.GiveRewards();
-                        else
-                            player.SendGump(new MondainQuestGump(quest, MondainQuestGump.Section.Complete, false, true));
-                    }
-                    else
-                    {
-                        player.SendGump(new MondainQuestGump(quest, MondainQuestGump.Section.InProgress, false));
-                        quest.InProgress();
-                    }
-
-                    return true;
-                }
-            }*/
-
             return false;
         }
 
@@ -398,25 +372,26 @@ namespace Server.Engines.Quests
                 {
                     BaseObjective objective = quest.Objectives[j];
 
-                    if (objective is DeliverObjective deliver)
+                    if (objective is DeliverObjective deliver && deliver.Update(vendor))
                     {
-                        if (deliver.Update(vendor))
+                        if (quest.Completed)
                         {
-                            if (quest.Completed)
+                            player.SendLocalizedMessage(1046258, null, 0x23); // Your quest is complete.
+                            player.PlaySound(quest.CompleteSound);
+
+                            quest.OnCompleted();
+
+                            if (vendor is MondainQuester quester)
                             {
-                                player.SendLocalizedMessage(1046258, null, 0x23); // Your quest is complete.
-                                player.PlaySound(quest.CompleteSound);
-
-                                quest.OnCompleted();
-
-                                if (vendor is MondainQuester quester)
-                                    player.SendGump(new MondainQuestGump(player, quest, MondainQuestGump.Section.Complete, false, true, quester));
-                                else
-                                    player.SendGump(new MondainQuestGump(quest, MondainQuestGump.Section.Complete, false, true));
+                                player.SendGump(new MondainQuestGump(player, quest, MondainQuestGump.Section.Complete, false, true, quester));
                             }
-
-                            return true;
+                            else
+                            {
+                                player.SendGump(new MondainQuestGump(quest, MondainQuestGump.Section.Complete, false, true));
+                            }
                         }
+
+                        return true;
                     }
                 }
             }
