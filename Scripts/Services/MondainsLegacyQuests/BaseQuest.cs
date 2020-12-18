@@ -47,24 +47,11 @@ namespace Server.Engines.Quests
 
         public List<BaseReward> Rewards => m_Rewards;
 
-        public PlayerMobile Owner
-        {
-            get
-            {
-                return m_Owner;
-            }
-            set
-            {
-                m_Owner = value;
-            }
-        }
+        public PlayerMobile Owner { get => m_Owner; set => m_Owner = value; }
 
         public object Quester
         {
-            get
-            {
-                return m_Quester;
-            }
+            get => m_Quester;
             set
             {
                 m_Quester = value;
@@ -74,17 +61,7 @@ namespace Server.Engines.Quests
             }
         }
 
-        public Type QuesterType
-        {
-            get
-            {
-                return m_QuesterType;
-            }
-            set
-            {
-                m_QuesterType = value;
-            }
-        }
+        public Type QuesterType { get => m_QuesterType; set => m_QuesterType = value; }
 
         public BaseQuestItem StartingItem => m_Quester as BaseQuestItem;
 
@@ -98,10 +75,8 @@ namespace Server.Engines.Quests
                 {
                     return m_Objectives.All(obj => obj.Completed);
                 }
-                else
-                {
-                    return m_Objectives.Any(obj => obj.Completed);
-                }
+
+                return m_Objectives.Any(obj => obj.Completed);
             }
         }
 
@@ -113,10 +88,8 @@ namespace Server.Engines.Quests
                 {
                     return m_Objectives.All(obj => obj.Failed);
                 }
-                else
-                {
-                    return m_Objectives.Any(obj => obj.Failed);
-                }
+
+                return m_Objectives.Any(obj => obj.Failed);
             }
         }
 
@@ -198,10 +171,8 @@ namespace Server.Engines.Quests
                 objective.OnAccept();
             }
 
-            if (m_Quester is BaseEscort)
+            if (m_Quester is BaseEscort escort)
             {
-                BaseEscort escort = (BaseEscort)m_Quester;
-
                 if (escort.SetControlMaster(m_Owner))
                 {
                     escort.Quest = this;
@@ -256,10 +227,8 @@ namespace Server.Engines.Quests
             }
 
             // delete escorter
-            if (m_Quester is BaseEscort)
+            if (m_Quester is BaseEscort escort)
             {
-                BaseEscort escort = (BaseEscort)m_Quester;
-
                 escort.Say(1005653); // Hmmm.  I seem to have lost my master.
                 escort.PlaySound(0x5B3);
                 escort.BeginDelete(m_Owner);
@@ -340,7 +309,7 @@ namespace Server.Engines.Quests
             // offer next quest if present
             if (NextQuest != null)
             {
-                BaseQuest quest = QuestHelper.RandomQuest(m_Owner, new Type[] { NextQuest }, StartingMobile);
+                BaseQuest quest = QuestHelper.RandomQuest(m_Owner, new[] { NextQuest }, StartingMobile);
 
                 if (quest != null && quest.ChainID == ChainID)
                     m_Owner.SendGump(new MondainQuestGump(quest));
@@ -365,7 +334,7 @@ namespace Server.Engines.Quests
             // offer next quest if present
             if (NextQuest != null)
             {
-                BaseQuest quest = QuestHelper.RandomQuest(m_Owner, new Type[] { NextQuest }, StartingMobile);
+                BaseQuest quest = QuestHelper.RandomQuest(m_Owner, new[] { NextQuest }, StartingMobile);
 
                 if (quest != null && quest.ChainID == ChainID)
                     m_Owner.SendGump(new MondainQuestGump(quest));
@@ -443,16 +412,18 @@ namespace Server.Engines.Quests
             writer.Write(m_QuesterType == null ? null : m_QuesterType.Name);
 
             if (m_Quester == null)
+            {
                 writer.Write(0x0);
-            else if (m_Quester is Mobile)
+            }
+            else if (m_Quester is Mobile mobile)
             {
                 writer.Write(0x1);
-                writer.Write((Mobile)m_Quester);
+                writer.Write(mobile);
             }
-            else if (m_Quester is Item)
+            else if (m_Quester is Item item)
             {
                 writer.Write(0x2);
-                writer.Write((Item)m_Quester);
+                writer.Write(item);
             }
 
             for (int i = 0; i < m_Objectives.Count; i++)
@@ -488,16 +459,12 @@ namespace Server.Engines.Quests
                     break;
             }
 
-            if (m_Quester is BaseEscort)
+            if (m_Quester is BaseEscort escort)
             {
-                BaseEscort escort = (BaseEscort)m_Quester;
-
                 escort.Quest = this;
             }
-            else if (m_Quester is BaseQuestItem)
+            else if (m_Quester is BaseQuestItem item)
             {
-                BaseQuestItem item = (BaseQuestItem)m_Quester;
-
                 item.Quest = this;
             }
 

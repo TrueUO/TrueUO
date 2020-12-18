@@ -18,10 +18,8 @@ namespace Server.Regions
         {
             base.OnEnter(m);
 
-            if (m is PlayerMobile)
+            if (m is PlayerMobile player)
             {
-                PlayerMobile player = (PlayerMobile)m;
-
                 for (int i = 0; i < player.Quests.Count; i++)
                 {
                     BaseQuest quest = player.Quests[i];
@@ -30,19 +28,21 @@ namespace Server.Regions
                     {
                         BaseObjective objective = quest.Objectives[j];
 
-                        if (objective is ApprenticeObjective && !objective.Completed)
+                        if (objective is ApprenticeObjective apprentice && !apprentice.Completed)
                         {
-                            ApprenticeObjective apprentice = (ApprenticeObjective)objective;
-
                             if (IsPartOf(apprentice.Region))
                             {
-                                if (apprentice.Enter is int)
-                                    player.SendLocalizedMessage((int)apprentice.Enter);
-                                else if (apprentice.Enter is string)
-                                    player.SendMessage((string)apprentice.Enter);
+                                if (apprentice.Enter is int iEnter)
+                                {
+                                    player.SendLocalizedMessage(iEnter);
+                                }
+                                else if (apprentice.Enter is string sEnter)
+                                {
+                                    player.SendMessage(sEnter);
+                                }
 
                                 BuffInfo info = new BuffInfo(BuffIcon.ArcaneEmpowerment, 1078511, 1078512, apprentice.Skill.ToString()); // Accelerated Skillgain Skill: ~1_val~
-                                BuffInfo.AddBuff(m, info);
+                                BuffInfo.AddBuff(player, info);
                                 m_Table[m] = info;
                             }
                         }
@@ -55,10 +55,8 @@ namespace Server.Regions
         {
             base.OnExit(m);
 
-            if (m is PlayerMobile)
+            if (m is PlayerMobile player)
             {
-                PlayerMobile player = (PlayerMobile)m;
-
                 for (int i = 0; i < player.Quests.Count; i++)
                 {
                     BaseQuest quest = player.Quests[i];
@@ -67,19 +65,17 @@ namespace Server.Regions
                     {
                         BaseObjective objective = quest.Objectives[j];
 
-                        if (objective is ApprenticeObjective && !objective.Completed)
+                        if (objective is ApprenticeObjective apprentice && !apprentice.Completed)
                         {
-                            ApprenticeObjective apprentice = (ApprenticeObjective)objective;
-
                             if (IsPartOf(apprentice.Region))
                             {
-                                if (apprentice.Leave is int)
-                                    player.SendLocalizedMessage((int)apprentice.Leave);
-                                else if (apprentice.Leave is string)
-                                    player.SendMessage((string)apprentice.Leave);
+                                if (apprentice.Leave is int iLeave)
+                                    player.SendLocalizedMessage(iLeave);
+                                else if (apprentice.Leave is string sLeave)
+                                    player.SendMessage(sLeave);
 
                                 if (m_Table[m] is BuffInfo)
-                                    BuffInfo.RemoveBuff(m, (BuffInfo)m_Table[m]);
+                                    BuffInfo.RemoveBuff(player, (BuffInfo)m_Table[m]);
                             }
                         }
                     }
