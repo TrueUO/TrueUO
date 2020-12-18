@@ -613,8 +613,14 @@ namespace Server.Items
             {
                 Mobile m = e.Mobile;
 
-                if (!m.InRange(GetWorldLocation(), m_Range) || CityTradeSystem.HasTrade(m))
+                if (!m.InRange(GetWorldLocation(), m_Range))
                 {
+                    return;
+                }
+
+                if (CityTradeSystem.HasTrade(m))
+                {
+                    m.SendLocalizedMessage(1151733); // You cannot do that while carrying a Trade Order.
                     return;
                 }
 
