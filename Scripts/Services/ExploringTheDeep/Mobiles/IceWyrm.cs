@@ -71,24 +71,23 @@ namespace Server.Mobiles
 
             foreach (Mobile m in rights.Select(x => x.m_Mobile).Distinct())
             {
-                if (m is PlayerMobile pm)
+                if (m is PlayerMobile pm && pm.ExploringTheDeepQuest == ExploringTheDeepQuestChain.CusteauPerron)
                 {
-                    if (pm.ExploringTheDeepQuest == ExploringTheDeepQuestChain.CusteauPerron)
+                    Item item = new IceWyrmScale();
+
+                    if (pm.Backpack == null || !pm.Backpack.TryDropItem(pm, item, false))
                     {
-                        Item item = new IceWyrmScale();
-
-                        if (pm.Backpack == null || !pm.Backpack.TryDropItem(pm, item, false))
-                        {
-                            pm.BankBox.DropItem(item);
-                        }
-
-                        pm.SendLocalizedMessage(1154489); // You received a Quest Item!
+                        pm.BankBox.DropItem(item);
                     }
+
+                    pm.SendLocalizedMessage(1154489); // You received a Quest Item!
                 }
             }
 
             if (Instances != null && Instances.Contains(this))
+            {
                 Instances.Remove(this);
+            }
 
             base.OnDeath(c);
         }

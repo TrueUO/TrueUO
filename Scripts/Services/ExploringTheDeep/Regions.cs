@@ -97,7 +97,7 @@ namespace Server.Regions
 
             if (m is PlayerMobile pm)
             {
-                int equipment = pm.Items.Where(i => (i is CanvassRobe || i is BootsOfBallast || i is NictitatingLens || i is AquaPendant || i is GargishNictitatingLens) && i.Parent is Mobile mobile && mobile.FindItemOnLayer(i.Layer) == i).Count();
+                int equipment = pm.Items.Count(i => (i is CanvassRobe || i is BootsOfBallast || i is NictitatingLens || i is AquaPendant || i is GargishNictitatingLens) && i.Parent is Mobile mobile && mobile.FindItemOnLayer(i.Layer) == i);
 
                 if (pm.AccessLevel == AccessLevel.Player)
                 {

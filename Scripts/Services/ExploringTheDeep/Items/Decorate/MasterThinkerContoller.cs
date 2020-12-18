@@ -176,7 +176,7 @@ namespace Server.Items
 
         public int ClickCheck(Mobile from)
         {
-            return m_Controller.Array.Where(s => s.Mobile == from && s.Pant && s.Book && s.Tunic).Count();
+            return m_Controller.Array.Count(s => s.Mobile == from && s.Pant && s.Book && s.Tunic);
         }
 
         public override void Serialize(GenericWriter writer)
