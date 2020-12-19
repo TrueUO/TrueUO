@@ -20,10 +20,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public bool SetActive
         {
-            get
-            {
-                return Activated;
-            }
+            get => Activated;
             set
             {
                 if (value)
@@ -146,10 +143,8 @@ namespace Server.Items
 
         public override void OnComponentUsed(AddonComponent component, Mobile from)
         {
-            if (!Activated && component != null && component is InternalComponent && from.InRange(component.Location, 2))
+            if (!Activated && component != null && component is InternalComponent comp && from.InRange(comp.Location, 2))
             {
-                InternalComponent comp = component as InternalComponent;
-
                 if (!comp.Active)
                 {
                     comp.Active = true;
@@ -190,7 +185,7 @@ namespace Server.Items
             [CommandProperty(AccessLevel.GameMaster)]
             public bool Active
             {
-                get { return _Active; }
+                get => _Active;
                 set
                 {
                     if (!_Active && value)
@@ -244,7 +239,7 @@ namespace Server.Items
             public override void Deserialize(GenericReader reader)
             {
                 base.Deserialize(reader);
-                int v = reader.ReadInt();
+                reader.ReadInt();
 
                 ActiveID = reader.ReadInt();
                 InactiveID = reader.ReadInt();
@@ -420,7 +415,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int v = reader.ReadInt();
+            reader.ReadInt();
 
             Activated = reader.ReadBool();
 
@@ -449,7 +444,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public bool CanSpawn
         {
-            get { return _CanSpawn; }
+            get => _CanSpawn;
             set
             {
                 _CanSpawn = value;
@@ -504,7 +499,7 @@ namespace Server.Items
 
             foreach (Mobile m in eable)
             {
-                if (m is PlayerMobile || (m is BaseCreature && ((BaseCreature)m).GetMaster() is PlayerMobile))
+                if (m is PlayerMobile || m is BaseCreature creature && creature.GetMaster() is PlayerMobile)
                 {
                     DoSpawn();
                     break;
@@ -596,7 +591,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int v = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }
