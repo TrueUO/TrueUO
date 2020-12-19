@@ -37,7 +37,6 @@ namespace Server.Items
         {
             public ExoticToolkit m_Toolkit;
 
-
             public InternalTarget(ExoticToolkit toolkit) : base(-1, true, TargetFlags.None)
             {
                 m_Toolkit = toolkit;
@@ -45,14 +44,11 @@ namespace Server.Items
 
             protected override void OnTarget(Mobile from, object targeted)
             {
-                if (targeted is NexusComponent addon)
+                if (targeted is NexusComponent addon && addon.Addon is ExodusNexus nexus)
                 {
-                    if (addon.Addon is ExodusNexus nexus)
+                    if (!nexus.Active)
                     {
-                        if (!nexus.Active)
-                        {
-                            nexus.OpenGump(from);
-                        }
+                        nexus.OpenGump(from);
                     }
                 }
             }

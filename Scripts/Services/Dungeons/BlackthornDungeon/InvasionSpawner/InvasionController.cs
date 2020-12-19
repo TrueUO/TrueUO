@@ -104,6 +104,10 @@ namespace Server.Engines.Blackthorn
                 Timer.DelayCall(TimeSpan.FromSeconds(10), BeginInvasion);
         }
 
+        public InvasionController(Serial serial) : base(serial)
+        {
+        }
+
         public override void OnDoubleClick(Mobile from)
         {
             if (from.AccessLevel > AccessLevel.GameMaster)
@@ -442,10 +446,6 @@ namespace Server.Engines.Blackthorn
             }
 
             copy.Clear();
-        }
-
-        public InvasionController(Serial serial) : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)

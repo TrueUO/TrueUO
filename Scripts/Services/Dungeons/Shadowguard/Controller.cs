@@ -877,12 +877,9 @@ namespace Server.Engines.Shadowguard
             if (o is StaticTarget target && target.Z > m.Z + 3)
                 return false;
 
-            if (t.Flags == TargetFlags.Harmful)
+            if (t.Flags == TargetFlags.Harmful && (o is LadyMinax || o is ShadowguardGreaterDragon dragon && dragon.Z > m.Z))
             {
-                if (o is LadyMinax || o is ShadowguardGreaterDragon dragon && dragon.Z > m.Z)
-                {
-                    return false;
-                }
+                return false;
             }
 
             return base.OnTarget(m, t, o);

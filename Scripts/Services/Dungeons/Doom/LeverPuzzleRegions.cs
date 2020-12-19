@@ -46,12 +46,9 @@ namespace Server.Engines.Doom
                         return;
                     }
                 }
-                else if (m is BaseCreature bc)
+                else if (m is BaseCreature bc && (bc.Controlled && bc.ControlMaster == Controller.Successful || bc.Summoned))
                 {
-                    if (bc.Controlled && bc.ControlMaster == Controller.Successful || bc.Summoned)
-                    {
-                        return;
-                    }
+                    return;
                 }
             }
             Timer kick = new LeverPuzzleController.LampRoomKickTimer(m);

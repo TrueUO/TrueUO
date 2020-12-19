@@ -93,13 +93,10 @@ namespace Server.Engines.VoidPool
 
         public override bool OnDoubleClick(Mobile m, object o)
         {
-            if (o is Corpse c && m.AccessLevel == AccessLevel.Player)
+            if (o is Corpse c && m.AccessLevel == AccessLevel.Player && (c.Owner == null || c.Owner is CovetousCreature creature && creature.VoidSpawn))
             {
-                if (c.Owner == null || c.Owner is CovetousCreature creature && creature.VoidSpawn)
-                {
-                    c.LabelTo(m, 1152684); // There is no loot on the corpse.
-                    return false;
-                }
+                c.LabelTo(m, 1152684); // There is no loot on the corpse.
+                return false;
             }
 
             return base.OnDoubleClick(m, o);

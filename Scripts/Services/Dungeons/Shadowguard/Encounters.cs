@@ -995,18 +995,14 @@ namespace Server.Engines.Shadowguard
 
                 Item item = FindItem(p);
 
-                if (item is ShadowguardCanal canal)
+                if (item is ShadowguardCanal canal && (southFacing && (canal.Flow == Flow.NorthSouth || canal.Flow == Flow.SouthEastCorner || canal.Flow == Flow.SouthWestCorner) || !southFacing && (canal.Flow == Flow.EastWest || canal.Flow == Flow.SouthEastCorner || canal.Flow == Flow.NorthEastCorner)))
                 {
-                    if (southFacing && (canal.Flow == Flow.NorthSouth || canal.Flow == Flow.SouthEastCorner || canal.Flow == Flow.SouthWestCorner) ||
-                        !southFacing && (canal.Flow == Flow.EastWest || canal.Flow == Flow.SouthEastCorner || canal.Flow == Flow.NorthEastCorner))
-                    {
-                        if (_Checked == null)
-                            _Checked = new List<ShadowguardCanal>();
+                    if (_Checked == null)
+                        _Checked = new List<ShadowguardCanal>();
 
-                        _Checked.Add(canal);
+                    _Checked.Add(canal);
 
-                        RecursiveCheck(canal, null);
-                    }
+                    RecursiveCheck(canal, null);
                 }
 
                 if (Complete)

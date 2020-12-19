@@ -535,12 +535,9 @@ namespace Server.Engines.Doom
                     return true;
                 }
 
-                if (m is BaseCreature bc)
+                if (m is BaseCreature bc && (bc.Controlled || bc.Summoned) && !bc.IsDeadBondedPet)
                 {
-                    if ((bc.Controlled || bc.Summoned) && !bc.IsDeadBondedPet)
-                    {
-                        return true;
-                    }
+                    return true;
                 }
             }
             return false;
