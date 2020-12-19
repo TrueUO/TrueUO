@@ -24,12 +24,12 @@ namespace Server.Items
                 return true;
             }
 
-            if (m is PlayerMobile)
+            if (m is PlayerMobile player)
             {
-                PlayerMobile player = (PlayerMobile)m;
-
                 if (QuestHelper.GetQuest(player, typeof(DreadhornQuest)) != null)
-                    return base.OnMoveOver(m);
+                {
+                    return base.OnMoveOver(player);
+                }
 
                 player.SendLocalizedMessage(1074274); // You dance in the fairy ring, but nothing happens.
             }
@@ -40,15 +40,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

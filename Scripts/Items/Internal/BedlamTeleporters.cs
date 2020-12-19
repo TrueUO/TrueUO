@@ -31,10 +31,8 @@ namespace Server.Items
                 return;
             }
 
-            if (from is PlayerMobile)
+            if (from is PlayerMobile player)
             {
-                PlayerMobile player = (PlayerMobile)from;
-
                 if (player.Bedlam)
                 {
                     BaseCreature.TeleportPets(player, new Point3D(121, 1682, 0), Map);
@@ -50,15 +48,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }
