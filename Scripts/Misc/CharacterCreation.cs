@@ -134,7 +134,9 @@ namespace Server.Misc
             for (int i = 0; i < a.Length; ++i)
             {
                 if (a[i] == null)
-                    return (a[i] = new PlayerMobile());
+                {
+                    return a[i] = new PlayerMobile();
+                }
             }
 
             return null;
@@ -175,10 +177,8 @@ namespace Server.Misc
 
             bool young = false;
 
-            if (newChar is PlayerMobile)
+            if (newChar is PlayerMobile pm)
             {
-                PlayerMobile pm = (PlayerMobile)newChar;
-
                 pm.AutoRenewInsurance = true;
 
                 double skillcap = Config.Get("PlayerCaps.SkillCap", 1000.0d) / 10;
@@ -316,7 +316,7 @@ namespace Server.Misc
 
             FixStats(ref str, ref dex, ref intel, max);
 
-            if (str < 10 || str > 60 || dex < 10 || dex > 60 || intel < 10 || intel > 60 || (str + dex + intel) != max)
+            if (str < 10 || str > 60 || dex < 10 || dex > 60 || intel < 10 || intel > 60 || str + dex + intel != max)
             {
                 str = 10;
                 dex = 10;
@@ -650,8 +650,7 @@ namespace Server.Misc
                     }
                 case 7: // Ninja
                     {
-                        int[] hues = new[] { 0x1A8, 0xEC, 0x99, 0x90, 0xB5, 0x336, 0x89 };
-                        //TODO: Verify that's ALL the hues for that above.
+                        int[] hues = { 0x1A8, 0xEC, 0x99, 0x90, 0xB5, 0x336, 0x89 };
 
                         if (elf || human)
                         {
@@ -848,9 +847,9 @@ namespace Server.Misc
 
         private static void AddSkillItems(SkillName skill, Mobile m)
         {
-            bool elf = (m.Race == Race.Elf);
-            bool human = (m.Race == Race.Human);
-            bool gargoyle = (m.Race == Race.Gargoyle);
+            bool elf = m.Race == Race.Elf;
+            bool human = m.Race == Race.Human;
+            bool gargoyle = m.Race == Race.Gargoyle;
 
             switch (skill)
             {

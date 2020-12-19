@@ -136,14 +136,14 @@ namespace Server.Misc
             }
 
             // Summons should follow the same rules as their masters
-            if (from is BaseCreature && ((BaseCreature)from).Summoned && ((BaseCreature)from).SummonMaster != null)
+            if (from is BaseCreature summon && summon.Summoned && summon.SummonMaster != null)
             {
-                from = ((BaseCreature)from).SummonMaster;
+                from = summon.SummonMaster;
             }
 
-            if (target is BaseCreature && ((BaseCreature)target).Summoned && ((BaseCreature)target).SummonMaster != null)
+            if (target is BaseCreature mobSummon && mobSummon.Summoned && mobSummon.SummonMaster != null)
             {
-                target = ((BaseCreature)target).SummonMaster;
+                target = mobSummon.SummonMaster;
             }
 
             Guild fromGuild = GetGuildFor(from.Guild as Guild, from);
