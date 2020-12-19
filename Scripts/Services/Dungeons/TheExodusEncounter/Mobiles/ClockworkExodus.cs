@@ -7,7 +7,7 @@ namespace Server.Mobiles
     [CorpseName("a vile corpse")]
     public class ClockworkExodus : BaseCreature
     {
-        public static int m_MinHits;
+        public int m_MinHits;
 
         [CommandProperty(AccessLevel.GameMaster)]
         public int MinHits { get => m_MinHits; set => m_MinHits = value; }
