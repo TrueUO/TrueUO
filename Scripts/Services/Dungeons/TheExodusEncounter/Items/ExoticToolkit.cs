@@ -44,12 +44,9 @@ namespace Server.Items
 
             protected override void OnTarget(Mobile from, object targeted)
             {
-                if (targeted is NexusComponent addon && addon.Addon is ExodusNexus nexus)
+                if (targeted is NexusComponent addon && addon.Addon is ExodusNexus nexus && !nexus.Active)
                 {
-                    if (!nexus.Active)
-                    {
-                        nexus.OpenGump(from);
-                    }
+                    nexus.OpenGump(from);
                 }
             }
         }
