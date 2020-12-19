@@ -55,15 +55,11 @@ namespace Server.Items
 
             foreach (Mobile m in eable)
             {
-                if (m is BaseCreature pet && !(pet is DespiseCreature))
+                if (m is BaseCreature pet && !(pet is DespiseCreature) && pet.Controlled && pet.ControlMaster == master)
                 {
-                    if (pet.Controlled && pet.ControlMaster == master)
+                    if (pet.ControlOrder == OrderType.Guard || pet.ControlOrder == OrderType.Follow || pet.ControlOrder == OrderType.Come)
                     {
-                        if (pet.ControlOrder == OrderType.Guard || pet.ControlOrder == OrderType.Follow ||
-                            pet.ControlOrder == OrderType.Come)
-                        {
-                            move.Add(pet);
-                        }
+                        move.Add(pet);
                     }
                 }
             }
