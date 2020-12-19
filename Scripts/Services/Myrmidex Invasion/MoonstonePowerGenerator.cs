@@ -143,26 +143,25 @@ namespace Server.Items
 
         public override void OnComponentUsed(AddonComponent component, Mobile from)
         {
-            if (!Activated && component != null && component is InternalComponent comp && from.InRange(comp.Location, 2))
+            if (!Activated && component != null && component is InternalComponent comp && from.InRange(comp.Location, 2) && !comp.Active)
             {
-                if (!comp.Active)
+                comp.Active = true;
+                comp.WhoActivated = from;
+
+                if (Activator1.Active && Activator2.Active && Activator1.WhoActivated != Activator2.WhoActivated)
                 {
-                    comp.Active = true;
-                    comp.WhoActivated = from;
-
-                    if (Activator1.Active && Activator2.Active && Activator1.WhoActivated != Activator2.WhoActivated)
+                    if (ActiveTimer != null)
                     {
-                        if (ActiveTimer != null)
-                        {
-                            ActiveTimer.Stop();
-                            ActiveTimer = null;
-                        }
-
-                        Activated = true;
-                        CheckNetwork();
+                        ActiveTimer.Stop();
+                        ActiveTimer = null;
                     }
-                    else if (ActiveTimer == null)
-                        ActiveTimer = Timer.DelayCall(TimeSpan.FromSeconds(1), Reset);
+
+                    Activated = true;
+                    CheckNetwork();
+                }
+                else if (ActiveTimer == null)
+                {
+                    ActiveTimer = Timer.DelayCall(TimeSpan.FromSeconds(1), Reset);
                 }
             }
         }

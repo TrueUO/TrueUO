@@ -104,12 +104,9 @@ namespace Server.Engines.MyrmidexInvasion
                         Spawn(false, typeof(MyrmidexDrone), typeof(MyrmidexWarrior), typeof(TribeWarrior));
                     }
                 }
-                else if (Allegiance == Allegiance.Tribes && bc.InRange(check, 8))
+                else if (Allegiance == Allegiance.Tribes && bc.InRange(check, 8) && (bc is MyrmidexDrone || bc is MyrmidexWarrior || bc is BaseEodonTribesman tribesman && tribesman.TribeType == EodonTribe.Barrab))
                 {
-                    if (bc is MyrmidexDrone || bc is MyrmidexWarrior || bc is BaseEodonTribesman tribesman && tribesman.TribeType == EodonTribe.Barrab)
-                    {
-                        Spawn(true, typeof(BritannianInfantry));
-                    }
+                    Spawn(true, typeof(BritannianInfantry));
                 }
             }
         }
