@@ -254,7 +254,7 @@ namespace Server.Misc
                 gc = 0.01;
 
             // Pets get a 100% bonus
-            if (from is BaseCreature && ((BaseCreature)from).Controlled)
+            if (from is BaseCreature bc && bc.Controlled)
                 gc += gc * 1.00;
 
             if (gc > 1.00)
@@ -313,16 +313,16 @@ namespace Server.Misc
             if (Engines.VvV.ViceVsVirtueSystem.InSkillLoss(from)) //Changed some time between the introduction of AoS and SE.
                 return false;
 
-            if (from is PlayerMobile)
+            if (from is PlayerMobile mobile)
             {
-                if (skill.Info.SkillID == (int)SkillName.Archery && from.Race == Race.Gargoyle)
+                if (skill.Info.SkillID == (int)SkillName.Archery && mobile.Race == Race.Gargoyle)
                     return false;
 
-                if (skill.Info.SkillID == (int)SkillName.Throwing && from.Race != Race.Gargoyle)
+                if (skill.Info.SkillID == (int)SkillName.Throwing && mobile.Race != Race.Gargoyle)
                     return false;
 
                 if (_AntiMacroCode && UseAntiMacro[skill.Info.SkillID])
-                    return ((PlayerMobile)from).AntiMacroCheck(skill, obj);
+                    return mobile.AntiMacroCheck(skill, obj);
             }
             return true;
         }
@@ -344,23 +344,23 @@ namespace Server.Misc
             if (from.Region.IsPartOf<Jail>())
                 return;
 
-            if (from is BaseCreature && ((BaseCreature)from).IsDeadPet)
+            if (from is BaseCreature creature && creature.IsDeadPet)
                 return;
 
-            if (skill.SkillName == SkillName.Focus && from is BaseCreature && !((BaseCreature)from).Controlled)
+            if (skill.SkillName == SkillName.Focus && from is BaseCreature baseCreature && !baseCreature.Controlled)
                 return;
 
             if (skill.Base < skill.Cap && skill.Lock == SkillLock.Up)
             {
                 Skills skills = from.Skills;
 
-                if (from is PlayerMobile && Siege.SiegeShard)
+                if (from is PlayerMobile mobile && Siege.SiegeShard)
                 {
-                    int minsPerGain = Siege.MinutesPerGain(from, skill);
+                    int minsPerGain = Siege.MinutesPerGain(mobile, skill);
 
                     if (minsPerGain > 0)
                     {
-                        if (Siege.CheckSkillGain((PlayerMobile)from, minsPerGain, skill))
+                        if (Siege.CheckSkillGain(mobile, minsPerGain, skill))
                         {
                             CheckReduceSkill(skills, toGain, skill);
 
@@ -375,37 +375,34 @@ namespace Server.Misc
                 }
 
                 if (toGain == 1 && skill.Base <= 10.0)
+                {
                     toGain = Utility.Random(4) + 1;
+                }
 
-                #region Mondain's Legacy
-                if (from is PlayerMobile && QuestHelper.EnhancedSkill((PlayerMobile)from, skill))
+                if (from is PlayerMobile playerMobile && QuestHelper.EnhancedSkill(playerMobile, skill))
                 {
                     toGain *= Utility.RandomMinMax(2, 4);
                 }
-                #endregion
 
                 #region Scroll of Alacrity
-                if (from is PlayerMobile && skill.SkillName == ((PlayerMobile)from).AcceleratedSkill &&
-                    ((PlayerMobile)from).AcceleratedStart > DateTime.UtcNow)
+                if (from is PlayerMobile pm && skill.SkillName == pm.AcceleratedSkill && pm.AcceleratedStart > DateTime.UtcNow)
                 {
-                    // You are infused with intense energy. You are under the effects of an accelerated skillgain scroll.
-                    ((PlayerMobile)from).SendLocalizedMessage(1077956);
+                    pm.SendLocalizedMessage(1077956); // You are infused with intense energy. You are under the effects of an accelerated skill gain scroll.
 
                     toGain = Utility.RandomMinMax(2, 5);
                 }
                 #endregion
 
                 #region Skill Masteries
-                else if (from is BaseCreature && !(from is Engines.Despise.DespiseCreature) && (((BaseCreature)from).Controlled || ((BaseCreature)from).Summoned))
+                else if (from is BaseCreature bc && !(bc is Engines.Despise.DespiseCreature) && (bc.Controlled || bc.Summoned))
                 {
-                    Mobile master = ((BaseCreature)from).GetMaster();
+                    Mobile master = bc.GetMaster();
 
                     if (master != null)
                     {
                         WhisperingSpell spell = SkillMasterySpell.GetSpell(master, typeof(WhisperingSpell)) as WhisperingSpell;
 
-                        if (spell != null && master.InRange(from.Location, spell.PartyRange) && master.Map == from.Map &&
-                            spell.EnhancedGainChance >= Utility.Random(100))
+                        if (spell != null && master.InRange(bc.Location, spell.PartyRange) && master.Map == bc.Map && spell.EnhancedGainChance >= Utility.Random(100))
                         {
                             toGain = Utility.RandomMinMax(2, 5);
                         }
@@ -431,9 +428,9 @@ namespace Server.Misc
                 }
             }
 
-            if (from is PlayerMobile)
+            if (from is PlayerMobile mobileFrom)
             {
-                QuestHelper.CheckSkill((PlayerMobile)from, skill);
+                QuestHelper.CheckSkill(mobileFrom, skill);
             }
 
             if (skill.Lock == SkillLock.Up && (!Siege.SiegeShard || !(from is PlayerMobile) || Siege.CanGainStat((PlayerMobile)from)))
@@ -462,7 +459,7 @@ namespace Server.Misc
             // Chance roll
             double chance;
 
-            if (from is BaseCreature && ((BaseCreature)from).Controlled)
+            if (from is BaseCreature creature && creature.Controlled)
             {
                 chance = _PetChanceToGainStats / 100.0;
             }
@@ -608,14 +605,14 @@ namespace Server.Misc
 
                             ++from.RawStr;
 
-                            if (from is BaseCreature && ((BaseCreature)from).HitsMaxSeed > -1 && ((BaseCreature)from).HitsMaxSeed < from.StrCap)
+                            if (from is BaseCreature creature && creature.HitsMaxSeed > -1 && creature.HitsMaxSeed < creature.StrCap)
                             {
-                                ((BaseCreature)from).HitsMaxSeed++;
+                                creature.HitsMaxSeed++;
                             }
 
-                            if (Siege.SiegeShard && from is PlayerMobile)
+                            if (Siege.SiegeShard && from is PlayerMobile mobile)
                             {
-                                Siege.IncreaseStat((PlayerMobile)from);
+                                Siege.IncreaseStat(mobile);
                             }
                         }
 
@@ -635,14 +632,14 @@ namespace Server.Misc
 
                             ++from.RawDex;
 
-                            if (from is BaseCreature && ((BaseCreature)from).StamMaxSeed > -1 && ((BaseCreature)from).StamMaxSeed < from.DexCap)
+                            if (from is BaseCreature creature && creature.StamMaxSeed > -1 && creature.StamMaxSeed < creature.DexCap)
                             {
-                                ((BaseCreature)from).StamMaxSeed++;
+                                creature.StamMaxSeed++;
                             }
 
-                            if (Siege.SiegeShard && from is PlayerMobile)
+                            if (Siege.SiegeShard && from is PlayerMobile mobile)
                             {
-                                Siege.IncreaseStat((PlayerMobile)from);
+                                Siege.IncreaseStat(mobile);
                             }
                         }
 
@@ -662,14 +659,14 @@ namespace Server.Misc
 
                             ++from.RawInt;
 
-                            if (from is BaseCreature && ((BaseCreature)from).ManaMaxSeed > -1 && ((BaseCreature)from).ManaMaxSeed < from.IntCap)
+                            if (from is BaseCreature creature && creature.ManaMaxSeed > -1 && creature.ManaMaxSeed < creature.IntCap)
                             {
-                                ((BaseCreature)from).ManaMaxSeed++;
+                                creature.ManaMaxSeed++;
                             }
 
-                            if (Siege.SiegeShard && from is PlayerMobile)
+                            if (Siege.SiegeShard && from is PlayerMobile mobile)
                             {
-                                Siege.IncreaseStat((PlayerMobile)from);
+                                Siege.IncreaseStat(mobile);
                             }
                         }
 
@@ -692,9 +689,9 @@ namespace Server.Misc
             {
                 case Stat.Str:
                     {
-                        if (from is BaseCreature && ((BaseCreature)from).Controlled)
+                        if (from is BaseCreature creature && creature.Controlled)
                         {
-                            if (from.LastStrGain + _PetStatGainDelay >= DateTime.UtcNow)
+                            if (creature.LastStrGain + _PetStatGainDelay >= DateTime.UtcNow)
                                 return false;
                         }
                         else if (from.LastStrGain + _StatGainDelay >= DateTime.UtcNow)
@@ -705,9 +702,9 @@ namespace Server.Misc
                     }
                 case Stat.Dex:
                     {
-                        if (from is BaseCreature && ((BaseCreature)from).Controlled)
+                        if (from is BaseCreature creature && creature.Controlled)
                         {
-                            if (from.LastDexGain + _PetStatGainDelay >= DateTime.UtcNow)
+                            if (creature.LastDexGain + _PetStatGainDelay >= DateTime.UtcNow)
                                 return false;
                         }
                         else if (from.LastDexGain + _StatGainDelay >= DateTime.UtcNow)
@@ -718,9 +715,9 @@ namespace Server.Misc
                     }
                 case Stat.Int:
                     {
-                        if (from is BaseCreature && ((BaseCreature)from).Controlled)
+                        if (from is BaseCreature creature && creature.Controlled)
                         {
-                            if (from.LastIntGain + _PetStatGainDelay >= DateTime.UtcNow)
+                            if (creature.LastIntGain + _PetStatGainDelay >= DateTime.UtcNow)
                                 return false;
                         }
                         else if (from.LastIntGain + _StatGainDelay >= DateTime.UtcNow)
