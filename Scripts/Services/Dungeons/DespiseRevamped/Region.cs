@@ -59,13 +59,13 @@ namespace Server.Engines.Despise
         {
             base.OnDeath(m);
 
-            if (m is DespiseBoss)
+            if (m is DespiseBoss boss)
             {
                 DespiseController controller = DespiseController.Instance;
 
                 if (controller != null && controller.Boss == m)
                 {
-                    Quests.WhisperingWithWispsQuest.OnBossSlain((DespiseBoss)m);
+                    Quests.WhisperingWithWispsQuest.OnBossSlain(boss);
 
                     controller.OnBossSlain();
                 }
@@ -78,20 +78,16 @@ namespace Server.Engines.Despise
 
         public override bool OnBeforeDeath(Mobile m)
         {
-            if (m is DespiseCreature && m.Region != null && m.Region.IsPartOf(GetType()))
+            if (m is DespiseCreature despiseCreature && despiseCreature.Region != null && despiseCreature.Region.IsPartOf(GetType()))
             {
-                DespiseCreature dc = (DespiseCreature)m;
-
-                if (!dc.Controlled && dc.Orb == null)
+                if (!despiseCreature.Controlled && despiseCreature.Orb == null)
                 {
                     Dictionary<DespiseCreature, int> creatures = new Dictionary<DespiseCreature, int>();
 
-                    foreach (DamageEntry de in m.DamageEntries)
+                    foreach (DamageEntry de in despiseCreature.DamageEntries)
                     {
-                        if (de.Damager is DespiseCreature)
+                        if (de.Damager is DespiseCreature creat)
                         {
-                            DespiseCreature creat = de.Damager as DespiseCreature;
-
                             if (!creat.Controlled || creat.Orb == null)
                                 continue;
 
@@ -118,13 +114,13 @@ namespace Server.Engines.Despise
 
                         if (topdam != null && highest > 0)
                         {
-                            int mobKarma = Math.Abs(dc.Karma);
-                            int karma = (int)(((double)mobKarma / 10) * highest / dc.HitsMax);
+                            int mobKarma = Math.Abs(despiseCreature.Karma);
+                            int karma = (int)(((double)mobKarma / 10) * highest / despiseCreature.HitsMax);
 
                             if (karma < 1)
                                 karma = 1;
 
-                            if (dc.Karma > 0)
+                            if (despiseCreature.Karma > 0)
                                 karma *= -1;
 
                             Mobile master = topdam.GetMaster();
@@ -140,7 +136,7 @@ namespace Server.Engines.Despise
 
                             if (power < topdam.MaxPower)
                             {
-                                topdam.Progress += dc.Power;
+                                topdam.Progress += despiseCreature.Power;
 
                                 if (topdam.Power > power && master != null)
                                     master.SendLocalizedMessage(1153294, topdam.Name); // ~1_NAME~ has achieved a new threshold in power!
@@ -163,7 +159,7 @@ namespace Server.Engines.Despise
 
                             if (master != null && master.Map != null && master.Map != Map.Internal && master.Backpack != null)
                             {
-                                PutridHeart heart = new PutridHeart(Utility.RandomMinMax(dc.Power * 8, dc.Power * 10));
+                                PutridHeart heart = new PutridHeart(Utility.RandomMinMax(despiseCreature.Power * 8, despiseCreature.Power * 10));
 
                                 if (!master.Backpack.TryDropItem(master, heart, false))
                                 {
@@ -183,10 +179,8 @@ namespace Server.Engines.Despise
             if (o is BallOfSummoning || o is BraceletOfBinding)
                 return false;
 
-            if (o is Corpse && m.AccessLevel == AccessLevel.Player)
+            if (o is Corpse c && m.AccessLevel == AccessLevel.Player)
             {
-                Corpse c = o as Corpse;
-
                 if (c.Owner == null || c.Owner is DespiseCreature)
                 {
                     m.SendLocalizedMessage(1152684); // There is no loot on the corpse.
@@ -236,9 +230,9 @@ namespace Server.Engines.Despise
             if (m.AccessLevel > AccessLevel.Player)
                 return;
 
-            if (!IsInStartRegion(m.Location) && m is BaseCreature && !(m is DespiseCreature) && !(m is CorruptedWisp) && !(m is EnsorcledWisp) && (((BaseCreature)m).Controlled || ((BaseCreature)m).Summoned))
+            if (!IsInStartRegion(m.Location) && m is BaseCreature bc && !(bc is DespiseCreature) && !(bc is CorruptedWisp) && !(bc is EnsorcledWisp) && (bc.Controlled || bc.Summoned))
             {
-                KickPet(m);
+                KickPet(bc);
             }
 
             if (m is PlayerMobile && IsInLowerRegion(m.Location))
@@ -254,12 +248,12 @@ namespace Server.Engines.Despise
         {
             Timer.DelayCall(TimeSpan.FromSeconds(1.5), () =>
             {
-                if (!IsInStartRegion(m.Location) && m is BaseCreature && !(m is DespiseCreature) && !(m is CorruptedWisp) && !(m is EnsorcledWisp) && (((BaseCreature)m).Controlled || ((BaseCreature)m).Summoned))
+                if (!IsInStartRegion(m.Location) && m is BaseCreature bc && !(bc is DespiseCreature) && !(bc is CorruptedWisp) && !(bc is EnsorcledWisp) && (bc.Controlled || bc.Summoned))
                 {
-                    if (((BaseCreature)m).Summoned)
-                        m.Delete();
+                    if (bc.Summoned)
+                        bc.Delete();
                     else
-                        KickFromRegion(m, false);
+                        KickFromRegion(bc, false);
                 }
             });
 

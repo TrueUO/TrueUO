@@ -9,7 +9,6 @@ namespace Server.Items
 
         [Constructable]
         public KeypunchReader()
-            : base()
         {
             Weight = 0.0;
             Hue = 2500;
@@ -63,7 +62,7 @@ namespace Server.Items
             IEnumerable<Item> punch = items.Where(x => x is PunchCard);
             IEnumerable<Item> kit = items.Where(x => x is ExoticToolkit);
 
-            if (punch.Count() >= 50 && kit.Count() >= 1)
+            if (punch.Count() >= 50 && kit.Any())
             {
                 punch.ToList().ForEach(f => f.Delete());
 
@@ -81,7 +80,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }
