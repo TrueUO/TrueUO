@@ -20,18 +20,18 @@ namespace Server.Items
         private bool m_ShowUsesRemaining;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int UsesRemaining { get { return m_UsesRemaining; } set { m_UsesRemaining = value; InvalidateProperties(); } }
+        public int UsesRemaining { get => m_UsesRemaining; set { m_UsesRemaining = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public Mobile Crafter { get { return m_Crafter; } set { m_Crafter = value; InvalidateProperties(); } }
+        public Mobile Crafter { get => m_Crafter; set { m_Crafter = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool ShowUsesRemaining { get { return m_ShowUsesRemaining; } set { m_ShowUsesRemaining = value; InvalidateProperties(); } }
+        public bool ShowUsesRemaining { get => m_ShowUsesRemaining; set { m_ShowUsesRemaining = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public ItemQuality Quality
         {
-            get { return m_Quality; }
+            get => m_Quality;
             set
             {
                 UnscaleUses();
@@ -112,13 +112,13 @@ namespace Server.Items
 
         public void ScaleUses()
         {
-            m_UsesRemaining = (m_UsesRemaining * GetUsesScalar()) / 100;
+            m_UsesRemaining = m_UsesRemaining * GetUsesScalar() / 100;
             InvalidateProperties();
         }
 
         public void UnscaleUses()
         {
-            m_UsesRemaining = (m_UsesRemaining * 100) / GetUsesScalar();
+            m_UsesRemaining = m_UsesRemaining * 100 / GetUsesScalar();
         }
 
         public int GetUsesScalar()
@@ -175,12 +175,10 @@ namespace Server.Items
                 {
                     from.SendLocalizedMessage(1063305); // Didn't your parents ever tell you not to run with scissors in your hand?!
                 }
-                else if (targeted is Item && !((Item)targeted).Movable)
+                else if (targeted is Item item && !item.Movable)
                 {
-                    if (targeted is IScissorable && (targeted is PlagueBeastInnard || targeted is PlagueBeastMutationCore))
+                    if (item is IScissorable obj && (obj is PlagueBeastInnard || obj is PlagueBeastMutationCore))
                     {
-                        IScissorable obj = (IScissorable)targeted;
-
                         if (obj.Scissor(from, m_Item))
                         {
                             from.PlaySound(0x248);
@@ -192,10 +190,8 @@ namespace Server.Items
                         }
                     }
                 }
-                else if (targeted is IScissorable)
+                else if (targeted is IScissorable obj)
                 {
-                    IScissorable obj = (IScissorable)targeted;
-
                     if (obj.Scissor(from, m_Item))
                     {
                         from.PlaySound(0x248);
@@ -214,10 +210,8 @@ namespace Server.Items
 
             protected override void OnNonlocalTarget(Mobile from, object targeted)
             {
-                if (targeted is IScissorable && (targeted is PlagueBeastInnard || targeted is PlagueBeastMutationCore))
+                if (targeted is IScissorable obj && (obj is PlagueBeastInnard || obj is PlagueBeastMutationCore))
                 {
-                    IScissorable obj = (IScissorable)targeted;
-
                     if (obj.Scissor(from, m_Item))
                     {
                         from.PlaySound(0x248);
