@@ -7,7 +7,6 @@ namespace Server.Engines.Quests
     public class FiendishFriendsQuest : BaseQuest
     {
         public FiendishFriendsQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(Imp), "imps", 50));
 
@@ -34,22 +33,19 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class CrackingTheWhipQuest : BaseQuest
     {
         public CrackingTheWhipQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(StoutWhip), "stout whip", 1, 0x166F));
 
@@ -77,22 +73,19 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class IronWillQuest : BaseQuest
     {
         public IronWillQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(ArcaneDaemon), "arcane daemon", 1));
 
@@ -127,15 +120,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

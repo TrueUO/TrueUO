@@ -7,7 +7,6 @@ namespace Server.Engines.Quests
     public class MougGuurMustDieQuest : BaseQuest
     {
         public MougGuurMustDieQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(MougGuur), "moug-guur", 1, "Sanctuary"));
 
@@ -35,22 +34,19 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class LeaderOfThePackQuest : BaseQuest
     {
         public LeaderOfThePackQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(Chiikkaha), "chiikkaha", 1, "Sanctuary"));
 
@@ -81,22 +77,19 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class SayonaraSzavetraQuest : BaseQuest
     {
         public SayonaraSzavetraQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(Szavetra), "szavetra", 1, "Sanctuary"));
 
@@ -124,15 +117,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }
