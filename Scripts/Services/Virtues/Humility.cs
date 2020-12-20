@@ -1,4 +1,4 @@
-﻿#region References
+#region References
 using Server.Mobiles;
 using Server.Network;
 using Server.Targeting;
@@ -46,10 +46,8 @@ namespace Server.Services.Virtues
                     TargetFlags.None,
                     (m, targeted) =>
                     {
-                        if (targeted is BaseCreature)
+                        if (targeted is BaseCreature bc)
                         {
-                            BaseCreature bc = (BaseCreature)targeted;
-
                             if (!bc.Alive)
                             {
                                 from.SendLocalizedMessage(1155815); // You cannot embrace Humility on the dead!
@@ -250,9 +248,9 @@ namespace Server.Services.Virtues
         {
             if (HuntTable.ContainsKey(owner))
             {
-                if (pet is BaseCreature && ((BaseCreature)pet).GetMaster() == owner)
+                if (pet is BaseCreature creature && creature.GetMaster() == owner)
                 {
-                    HuntTable[owner].AddPet(pet);
+                    HuntTable[owner].AddPet(creature);
                 }
             }
         }
@@ -270,7 +268,7 @@ namespace Server.Services.Virtues
 
         public class HumilityHuntContext
         {
-            public Mobile Owner { get; set; }
+            public Mobile Owner { get; }
 
             public Dictionary<Mobile, ResistanceMod[]> Table;
 
@@ -285,7 +283,7 @@ namespace Server.Services.Virtues
 
             public bool Expiring
             {
-                get { return _Expiring; }
+                get => _Expiring;
                 set
                 {
                     if (!_Expiring && value)
