@@ -4,7 +4,6 @@ namespace Server.Items
     {
         [Constructable]
         public BlightedGroveTele()
-            : base()
         {
         }
 
@@ -51,8 +50,8 @@ namespace Server.Items
 
                 return base.OnMoveOver(m);
             }
-            else
-                m.SendLocalizedMessage(1074275); // You are unable to push your way through the tangling roots of the mighty tree.
+
+            m.SendLocalizedMessage(1074275); // You are unable to push your way through the tangling roots of the mighty tree.
 
             return true;
         }
@@ -60,15 +59,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -76,7 +73,6 @@ namespace Server.Items
     {
         [Constructable]
         public BlightedGroveTreeInTele()
-            : base()
         {
         }
 
@@ -94,15 +90,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -110,7 +104,6 @@ namespace Server.Items
     {
         [Constructable]
         public BlightedGroveTreeOutTele()
-            : base()
         {
         }
 
@@ -128,15 +121,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }
