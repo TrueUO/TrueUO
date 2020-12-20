@@ -101,7 +101,7 @@ namespace Server.Spells.SkillMasteries
 
         public void OnSelected(TrainingType type, Mobile target)
         {
-            if (!CheckSequence() || type == TrainingType.AsOne && Caster is PlayerMobile pm && pm.AllFollowers.Where(mob => mob != target).Count() == 0)
+            if (!CheckSequence() || type == TrainingType.AsOne && Caster is PlayerMobile pm && pm.AllFollowers.Count(mob => mob != target) == 0)
             {
                 FinishSequence();
                 return;

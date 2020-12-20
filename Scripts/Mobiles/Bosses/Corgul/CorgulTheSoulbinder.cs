@@ -231,7 +231,7 @@ namespace Server.Mobiles
 
             if (!m_HasDone2ndSpawn && m_Helpers.Count > 0)
             {
-                if (m_Helpers.Where(bc => bc.Alive && !bc.Deleted).Count() == 0)
+                if (m_Helpers.Count(bc => bc.Alive && !bc.Deleted) == 0)
                 {
                     Timer.DelayCall(TimeSpan.FromSeconds(5), SpawnHelpers);
                     m_HasDone2ndSpawn = true;

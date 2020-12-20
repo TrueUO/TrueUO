@@ -109,7 +109,7 @@ namespace Server.Regions
 
                     if (pm.AllFollowers.Count != 0)
                     {
-                        if (pm.AllFollowers.Where(x => x is Paralithode).Count() == 0)
+                        if (pm.AllFollowers.Count(x => x is Paralithode) == 0)
                         {
                             pm.SendLocalizedMessage(1154412); // You cannot proceed while pets are under your control!
                             return false;

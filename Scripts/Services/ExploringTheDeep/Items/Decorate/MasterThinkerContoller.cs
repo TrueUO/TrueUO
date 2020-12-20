@@ -140,7 +140,7 @@ namespace Server.Items
         {
             if (m_Controller != null)
             {
-                if (m_Controller.Array.Where(s => s.Mobile == from).Count() == 0)
+                if (m_Controller.Array.Count(s => s.Mobile == from) == 0)
                 {
                     m_Controller.Array.Add(new MasterThinkerContoller.MasterThinkerArray { Mobile = from, Book = false, Pant = false, Tunic = false });
                 }

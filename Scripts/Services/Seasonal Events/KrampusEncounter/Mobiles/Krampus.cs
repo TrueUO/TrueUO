@@ -78,7 +78,7 @@ namespace Server.Mobiles
                 return 0;
             }
 
-            return SummonedHelpers.Where(bc => bc != null && bc.Alive).Count();
+            return SummonedHelpers.Count(bc => bc != null && bc.Alive);
         }
 
         public void Summon(Mobile target, bool initial = false)

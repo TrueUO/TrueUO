@@ -300,7 +300,7 @@ namespace Server.Items
 
         private int SpawnCount()
         {
-            return Spawn.Keys.Where(s => s != null && !s.Deleted).Count();
+            return Spawn.Keys.Count(s => s != null && !s.Deleted);
         }
 
         private readonly Type[] _SpawnTypes =

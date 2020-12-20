@@ -93,7 +93,7 @@ namespace Server
 
         public static int TotalPieces(Mobile m)
         {
-            return m.Items.Where(i => i is ISetItem && ((ISetItem)i).SetID == SetItem.Bestial).Count();
+            return m.Items.Count(i => i is ISetItem && ((ISetItem)i).SetID == SetItem.Bestial);
         }
 
         public static void AddBerserk(Mobile m)
