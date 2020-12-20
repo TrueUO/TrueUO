@@ -504,7 +504,7 @@ namespace Server.Gumps
                 case 115:
                     return WeakEntityCollection.HasCollection("sa");
                 case 116:
-                    return World.Items.Values.Where(i => i != null && (i is XmlSpawner || i is Spawner)).Count() > 1000;
+                    return World.Items.Values.Count(i => i != null && (i is XmlSpawner || i is Spawner)) > 1000;
                 case 117:
                     return WeakEntityCollection.HasCollection("despise");
                 case 118:

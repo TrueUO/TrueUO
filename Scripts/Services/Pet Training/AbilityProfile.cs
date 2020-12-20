@@ -324,7 +324,7 @@ namespace Server.Mobiles
                 count++;
 
             if (SpecialAbilities != null)
-                count += SpecialAbilities.Where(a => !a.NaturalAbility).Count();
+                count += SpecialAbilities.Count(a => !a.NaturalAbility);
 
             if (AreaEffects != null)
                 count += AreaEffects.Length;
@@ -363,7 +363,7 @@ namespace Server.Mobiles
                 (SpecialAbilities == null || SpecialAbilities.Length == 0 || SpecialAbilities.All(a => a.NaturalAbility)))
                 return true;
 
-            return !HasSpecialMagicalAbility() && (SpecialAbilities == null || SpecialAbilities.Where(a => !a.NaturalAbility).Count() == 0) && AbilityCount() < 3;
+            return !HasSpecialMagicalAbility() && (SpecialAbilities == null || SpecialAbilities.Count(a => !a.NaturalAbility) == 0) && AbilityCount() < 3;
         }
 
         public bool IsRuleBreaker(SpecialAbility ability)

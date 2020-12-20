@@ -13,7 +13,7 @@ namespace Server.Gumps
         public MannequinCompareGump(Mannequin mann, Item item)
             : base(100, 100)
         {
-            _SameItem = mann.Items.Where(x => mann.LayerValidation(x, item)).FirstOrDefault();
+            _SameItem = mann.Items.FirstOrDefault(x => mann.LayerValidation(x, item));
 
             if (_SameItem == null)
                 return;
@@ -302,10 +302,10 @@ namespace Server.Gumps
             double v2 = 0;
 
             if (l.EquipmentItem.Any(r => r.LabelNumber == label))
-                v1 = l.EquipmentItem.Where(r => r.LabelNumber == label).FirstOrDefault().Value;
+                v1 = l.EquipmentItem.FirstOrDefault(r => r.LabelNumber == label).Value;
 
             if (l.SelectItem.Any(r => r.LabelNumber == label))
-                v2 = l.SelectItem.Where(r => r.LabelNumber == label).FirstOrDefault().Value;
+                v2 = l.SelectItem.FirstOrDefault(r => r.LabelNumber == label).Value;
 
             return v2 - v1;
         }

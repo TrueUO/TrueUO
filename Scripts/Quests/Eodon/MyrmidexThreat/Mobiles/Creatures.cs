@@ -482,7 +482,7 @@ namespace Server.Mobiles
 
             foreach (Mobile m in eable)
             {
-                if (m != this && m is PlayerMobile && CanBeHarmful(m) && CanSee(m) && ((PlayerMobile)m).AllFollowers.Where(pet => !(pet is IMount) || ((IMount)pet).Rider == null).Count() > 0)
+                if (m != this && m is PlayerMobile && CanBeHarmful(m) && CanSee(m) && ((PlayerMobile)m).AllFollowers.Count(pet => !(pet is IMount) || ((IMount)pet).Rider == null) > 0)
                 {
                     list.Add(m);
                 }

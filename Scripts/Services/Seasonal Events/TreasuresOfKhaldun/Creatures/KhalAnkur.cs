@@ -173,7 +173,7 @@ namespace Server.Mobiles
 
                     m_NextSpawn = DateTime.UtcNow + TimeSpan.FromSeconds(Utility.RandomMinMax(120, 180));
                 }
-                else if (Spawn.Creatures.OfType<KhalAnkurWarriors>().Where(x => x._Type == KhalAnkurWarriors.WarriorType.General && !x.Deleted).Count() <= 0)
+                else if (Spawn.Creatures.OfType<KhalAnkurWarriors>().Count(x => x._Type == KhalAnkurWarriors.WarriorType.General && !x.Deleted) <= 0)
                 {
                     Blessed = false;
                 }

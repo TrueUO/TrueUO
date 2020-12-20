@@ -123,7 +123,7 @@ namespace Server.Engines.TreasuresOfKotlCity
 
         public void Activate()
         {
-            if (Link && Stations != null && Stations.Where(s => s.Active).Count() == Stations.Count)
+            if (Link && Stations != null && Stations.Count(s => s.Active) == Stations.Count)
             {
                 if (!KotlBattleSimulator.Instance.Active)
                 {
