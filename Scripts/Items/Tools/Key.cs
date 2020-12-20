@@ -323,10 +323,9 @@ namespace Server.Items
 
                 o.Locked = !o.Locked;
 
-                if (o is LockableContainer lContainer)
+                if (o is LockableContainer lContainer && lContainer.LockLevel == -255)
                 {
-                    if (lContainer.LockLevel == -255)
-                        lContainer.LockLevel = lContainer.RequiredSkill - 10;
+                    lContainer.LockLevel = lContainer.RequiredSkill - 10;
                 }
 
                 if (o is Item item)
@@ -336,14 +335,15 @@ namespace Server.Items
                     else
                         item.SendLocalizedMessageTo(from, 1048001); // You unlock it.
 
-                    if (item is LockableContainer cont)
+                    if (item is LockableContainer cont && cont.TrapType != TrapType.None && cont.TrapOnLockpick)
                     {
-                        if (cont.TrapType != TrapType.None && cont.TrapOnLockpick)
+                        if (o.Locked)
                         {
-                            if (o.Locked)
-                                cont.SendLocalizedMessageTo(from, 501673); // You re-enable the trap.
-                            else
-                                cont.SendLocalizedMessageTo(from, 501672); // You disable the trap temporarily.  Lock it again to re-enable it.
+                            cont.SendLocalizedMessageTo(from, 501673); // You re-enable the trap.
+                        }
+                        else
+                        {
+                            cont.SendLocalizedMessageTo(from, 501672); // You disable the trap temporarily.  Lock it again to re-enable it.
                         }
                     }
                 }

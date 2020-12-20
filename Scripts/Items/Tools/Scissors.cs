@@ -78,11 +78,9 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(2); // version
 
             writer.Write(m_ShowUsesRemaining);
-
             writer.Write(m_UsesRemaining);
             writer.Write(m_Crafter);
             writer.Write((int)m_Quality);
@@ -91,23 +89,12 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 2:
-                    m_ShowUsesRemaining = reader.ReadBool();
-                    goto case 1;
-                case 1:
-                    m_UsesRemaining = reader.ReadInt();
-                    m_Crafter = reader.ReadMobile();
-                    m_Quality = (ItemQuality)reader.ReadInt();
-                    break;
-                case 0:
-                    break;
-            }
-
+            m_ShowUsesRemaining = reader.ReadBool();
+            m_UsesRemaining = reader.ReadInt();
+            m_Crafter = reader.ReadMobile();
+            m_Quality = (ItemQuality)reader.ReadInt();
         }
 
         public void ScaleUses()
@@ -177,16 +164,13 @@ namespace Server.Items
                 }
                 else if (targeted is Item item && !item.Movable)
                 {
-                    if (item is IScissorable obj && (obj is PlagueBeastInnard || obj is PlagueBeastMutationCore))
+                    if (item is IScissorable obj && (obj is PlagueBeastInnard || obj is PlagueBeastMutationCore) && obj.Scissor(from, m_Item))
                     {
-                        if (obj.Scissor(from, m_Item))
-                        {
-                            from.PlaySound(0x248);
+                        from.PlaySound(0x248);
 
-                            if (Siege.SiegeShard)
-                            {
-                                Siege.CheckUsesRemaining(from, m_Item);
-                            }
+                        if (Siege.SiegeShard)
+                        {
+                            Siege.CheckUsesRemaining(from, m_Item);
                         }
                     }
                 }
