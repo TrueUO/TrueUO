@@ -167,7 +167,7 @@ namespace Server.Engines.Quests
                 {
                     captured = true;
 
-                    if (o.CapturedCaptain != null && o.CapturedCaptain is PirateCaptain p)
+                    if (o.CapturedCaptain is PirateCaptain p)
                     {
                         p.Quest = null;
                     }

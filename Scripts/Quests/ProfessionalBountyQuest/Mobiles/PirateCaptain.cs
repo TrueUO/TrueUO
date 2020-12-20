@@ -273,7 +273,7 @@ namespace Server.Mobiles
                 PlayerMobile questee = hasQuest[Utility.Random(hasQuest.Count)];
                 BaseQuest q = QuestHelper.GetQuest(questee, typeof(ProfessionalBountyQuest));
 
-                if (q != null && q is ProfessionalBountyQuest quest)
+                if (q is ProfessionalBountyQuest quest)
                 {
                     quest.OnPirateDeath(this);
                     questee.AddToBackpack(new DeathCertificate(this));

@@ -590,7 +590,7 @@ namespace Server.Mobiles
         {
             base.OnThink();
 
-            if (Protector != null && Protector is PlayerMobile mobile && InRange(Home, 2))
+            if (Protector is PlayerMobile mobile && InRange(Home, 2))
             {
                 PrideOfTheAmbushQuest quest = QuestHelper.GetQuest(mobile, typeof(PrideOfTheAmbushQuest)) as PrideOfTheAmbushQuest;
 

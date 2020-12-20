@@ -191,7 +191,7 @@ namespace Server.Items
                 Timer.DelayCall(TimeSpan.FromSeconds(1), hatchling.Delete);
             }
 
-            if (focus != null && focus is PlayerMobile mobile)
+            if (focus is PlayerMobile mobile)
             {
                 EmptyNestQuest quest = QuestHelper.GetQuest(mobile, typeof(EmptyNestQuest)) as EmptyNestQuest;
 
