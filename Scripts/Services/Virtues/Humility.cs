@@ -246,12 +246,9 @@ namespace Server.Services.Virtues
 
         public static void TryAddPetToHunt(Mobile owner, Mobile pet)
         {
-            if (HuntTable.ContainsKey(owner))
+            if (HuntTable.ContainsKey(owner) && pet is BaseCreature creature && creature.GetMaster() == owner)
             {
-                if (pet is BaseCreature creature && creature.GetMaster() == owner)
-                {
-                    HuntTable[owner].AddPet(creature);
-                }
+                HuntTable[owner].AddPet(creature);
             }
         }
 
