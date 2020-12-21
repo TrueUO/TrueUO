@@ -52,7 +52,7 @@ namespace Server.Spells.SkillMasteries
         {
             BaseWeapon weapon = GetWeapon();
 
-            if (weapon is BaseRanged ranged && !(ranged is BaseThrown))
+            if (weapon is BaseRanged ranged)
             {
                 IPoint3D p = o as IPoint3D;
 

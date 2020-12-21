@@ -56,7 +56,6 @@ namespace Server.Engines.VvV
             Rewards.Add(new CollectionItem(typeof(ShameTileDeed), 5360, 1155522, 0, 10000)); // Shame Tile
             Rewards.Add(new CollectionItem(typeof(WrongTileDeed), 5360, 1155523, 0, 10000)); // Wrong Tile
 
-            Rewards.Add(new CollectionItem(typeof(MorphEarrings), 4231, 0, 0, 500));
             Rewards.Add(new CollectionItem(typeof(MaceAndShieldGlasses), 12216, 0, 477, 500));
             Rewards.Add(new CollectionItem(typeof(InquisitorsResolution), 5140, 0, 1266, 500));
             Rewards.Add(new CollectionItem(typeof(OrnamentOfTheMagician), 4230, 0, 1364, 500));
@@ -81,15 +80,11 @@ namespace Server.Engines.VvV
             Rewards.Add(new CollectionItem(typeof(VvVWand2), 3571, 0, 0, 500));
             Rewards.Add(new CollectionItem(typeof(VvVWizardsHat), 5912, 0, 0, 500));
             Rewards.Add(new CollectionItem(typeof(VvVWand1), 3571, 0, 0, 500));
-            Rewards.Add(new CollectionItem(typeof(VvVWoodlandArms), 11116, 0, 0, 500));
             Rewards.Add(new CollectionItem(typeof(VvVDragonArms), 9815, 0, 0, 500));
-            Rewards.Add(new CollectionItem(typeof(VvVGargishPlateArms), 776, 0, 0, 500));
             Rewards.Add(new CollectionItem(typeof(VvVPlateArms), 5136, 0, 0, 500));
             Rewards.Add(new CollectionItem(typeof(VvVEpaulette), 0x9985, 0, 0, 500));
             Rewards.Add(new CollectionItem(typeof(VvVGargishEpaulette), 0x9986, 0, 0, 500));
-            Rewards.Add(new CollectionItem(typeof(VvVGargishStoneChest), 0x286, 0, 0, 500));
             Rewards.Add(new CollectionItem(typeof(VvVStuddedChest), 5083, 0, 0, 500));
-            Rewards.Add(new CollectionItem(typeof(VvVGargishEarrings), 16915, 0, 0, 500));
 
             Rewards.Add(new CollectionItem(typeof(CompassionBanner), 39351, 1123375, 0, 10000)); // Compassion Banner
             Rewards.Add(new CollectionItem(typeof(HonestyBanner), 39353, 1123377, 0, 10000)); // Honesty Banner

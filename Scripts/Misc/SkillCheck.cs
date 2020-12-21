@@ -315,10 +315,7 @@ namespace Server.Misc
 
             if (from is PlayerMobile mobile)
             {
-                if (skill.Info.SkillID == (int)SkillName.Archery && mobile.Race == Race.Gargoyle)
-                    return false;
-
-                if (skill.Info.SkillID == (int)SkillName.Throwing && mobile.Race != Race.Gargoyle)
+                if (skill.Info.SkillID == (int)SkillName.Throwing) // For now 12/20/2020
                     return false;
 
                 if (_AntiMacroCode && UseAntiMacro[skill.Info.SkillID])
@@ -394,7 +391,7 @@ namespace Server.Misc
                 #endregion
 
                 #region Skill Masteries
-                else if (from is BaseCreature bc && !(bc is Engines.Despise.DespiseCreature) && (bc.Controlled || bc.Summoned))
+                else if (from is BaseCreature bc && (bc.Controlled || bc.Summoned))
                 {
                     Mobile master = bc.GetMaster();
 

@@ -27,7 +27,7 @@ namespace Server.Items
 
             if (from is PlayerMobile player)
             {
-                if (QuestHelper.GetQuest(player, typeof(BlackOrderBadgesQuest)) != null || QuestHelper.GetQuest(player, typeof(EvidenceQuest)) != null)
+                if (QuestHelper.GetQuest(player, typeof(EvidenceQuest)) != null)
                 {
                     BaseCreature.TeleportPets(player, new Point3D(107, 1883, 0), Map.Malas);
                     player.MoveToWorld(new Point3D(107, 1883, 0), Map.Malas);

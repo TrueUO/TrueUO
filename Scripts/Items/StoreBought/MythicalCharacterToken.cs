@@ -1,4 +1,4 @@
-﻿using Server.Gumps;
+using Server.Gumps;
 using Server.Mobiles;
 using System;
 using System.Collections.Generic;
@@ -308,13 +308,9 @@ namespace Server.Items
                 }
 
                 if (skill == SkillName.Spellweaving && !User.Spellweaving)
+                {
                     return false;
-
-                if (skill == SkillName.Throwing && User.Race != Race.Gargoyle)
-                    return false;
-
-                if (skill == SkillName.Archery && User.Race == Race.Gargoyle)
-                    return false;
+                }
 
                 return true;
             }

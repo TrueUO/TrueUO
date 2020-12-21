@@ -1,4 +1,3 @@
-using Server.Engines.Despise;
 using Server.Gumps;
 using Server.Mobiles;
 using Server.Network;
@@ -235,11 +234,6 @@ namespace Server.Items
 
         public static SkillName GetPrimarySkill(Mobile healer, Mobile m)
         {
-            if (m is DespiseCreature)
-            {
-                return healer.Skills[SkillName.Healing].Value > healer.Skills[SkillName.Veterinary].Value ? SkillName.Healing : SkillName.Veterinary;
-            }
-
             if (!m.Player && (m.Body.IsMonster || m.Body.IsAnimal))
             {
                 return SkillName.Veterinary;
@@ -252,11 +246,6 @@ namespace Server.Items
 
         public static SkillName GetSecondarySkill(Mobile healer, Mobile m)
         {
-            if (m is DespiseCreature)
-            {
-                return healer.Skills[SkillName.Healing].Value > healer.Skills[SkillName.Veterinary].Value ? SkillName.Anatomy : SkillName.AnimalLore;
-            }
-
             if (!m.Player && (m.Body.IsMonster || m.Body.IsAnimal))
             {
                 return SkillName.AnimalLore;
@@ -486,7 +475,7 @@ namespace Server.Items
 
                 Item item = m_Healer.FindItemOnLayer(Layer.TwoHanded);
 
-                if (item is Asclepius || item is GargishAsclepius)
+                if (item is Asclepius)
                     m_HealingBonus += 15;
 
                 if (m_HealingBonus > 0)

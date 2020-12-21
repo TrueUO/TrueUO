@@ -1,9 +1,7 @@
-using Server.Engines.Craft;
 using Server.Engines.VeteranRewards;
 
 namespace Server.Items
 {
-    [Alterable(typeof(DefTailoring), typeof(GargishLeatherWingArmor))]
     public abstract class BaseCloak : BaseClothing
     {
         public BaseCloak(int itemID)

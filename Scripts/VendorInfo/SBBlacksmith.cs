@@ -100,8 +100,6 @@ namespace Server.Mobiles
                 Add(new GenericBuyInfo(typeof(WarMace), 31, 20, 0x1407, 0));
                 Add(new GenericBuyInfo(typeof(Scepter), 39, 20, 0x26BC, 0));
                 Add(new GenericBuyInfo(typeof(BladedStaff), 40, 20, 0x26BD, 0));
-
-                Add(new GenericBuyInfo("1154005", typeof(MalleableAlloy), 50, 500, 7139, 2949, true));
             }
         }
 

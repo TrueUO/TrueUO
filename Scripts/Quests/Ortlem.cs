@@ -98,19 +98,6 @@ namespace Server.Engines.Quests
         {
             Female = false;
             CantWalk = true;
-            Race = Race.Gargoyle;
-
-            Hue = 0x86ED;
-            HairItemID = 0x4258;
-            HairHue = 0x38A;
-        }
-
-        public override void InitOutfit()
-        {
-            AddItem(new GlassStaff());
-            AddItem(new GargishClothChest(0x64F));
-            AddItem(new GargishClothArms(0x64F));
-            AddItem(new GargishClothKilt(0x643));
         }
 
         public override void Serialize(GenericWriter writer)

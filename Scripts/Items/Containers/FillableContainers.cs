@@ -306,16 +306,8 @@ namespace Server.Items
 
             int toSpawn = GetSpawnCount(all);
 
-            bool canspawnRefinement = GetAmount(typeof(RefinementComponent)) == 0 && CanSpawnRefinement();
-
             for (int i = 0; i < toSpawn; ++i)
             {
-                if (canspawnRefinement && RefinementComponent.Roll(this, 1, 0.08))
-                {
-                    canspawnRefinement = false;
-                    continue;
-                }
-
                 Item item = m_Content.Construct();
 
                 if (item != null)

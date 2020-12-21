@@ -49,8 +49,8 @@ namespace Server.Mobiles
         {
         }
 
-        public override Type[] UniqueSAList => new Type[] { typeof(DemonHuntersStandard), typeof(DragonJadeEarrings) };
-        public override Type[] SharedSAList => new Type[] { typeof(PillarOfStrength), typeof(SwordOfShatteredHopes) };
+        public override Type[] UniqueSAList => new Type[] { };
+        public override Type[] SharedSAList => new Type[] { };
         public override bool InitialInnocent => true;
         public override HideType HideType => HideType.Spined;
         public override int Hides => 5;

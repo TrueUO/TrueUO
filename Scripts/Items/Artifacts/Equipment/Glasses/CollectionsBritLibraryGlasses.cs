@@ -2,7 +2,6 @@ using Server.Engines.Craft;
 
 namespace Server.Items
 {
-    [Alterable(typeof(DefTinkering), typeof(GargishMaceAndShieldGlasses))]
     public class MaceAndShieldGlasses : Glasses
     {
         public override bool IsArtifact => true;
@@ -84,7 +83,6 @@ namespace Server.Items
         }
     }
 
-    [Alterable(typeof(DefTinkering), typeof(GargishGlassesOfTheArts))]
     public class GlassesOfTheArts : Glasses
     {
         [Constructable]
@@ -164,7 +162,6 @@ namespace Server.Items
         }
     }
 
-    [Alterable(typeof(DefTinkering), typeof(GargishTradesGlasses))]
     public class TradesGlasses : Glasses
     {
         [Constructable]
@@ -238,7 +235,6 @@ namespace Server.Items
         }
     }
 
-    [Alterable(typeof(DefTinkering), typeof(GargishWizardsCrystalGlasses))]
     public class WizardsCrystalGlasses : Glasses
     {
         [Constructable]
@@ -305,19 +301,16 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
-    [Alterable(typeof(DefTinkering), typeof(GargishTreasuresAndTrinketsGlasses))]
     public class TreasuresAndTrinketsGlasses : Glasses
     {
         [Constructable]

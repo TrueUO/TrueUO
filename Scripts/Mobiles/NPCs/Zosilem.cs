@@ -60,19 +60,6 @@ namespace Server.Engines.Quests
             InitStats(100, 100, 25);
 
             Female = true;
-            Race = Race.Gargoyle;
-
-            Hue = 0x86EA;
-            HairItemID = 0x4273;
-            HairHue = 0x323;
-        }
-
-        public override void InitOutfit()
-        {
-            AddItem(new FemaleGargishClothLegs(0x736));
-            AddItem(new FemaleGargishClothKilt(0x73D));
-            AddItem(new FemaleGargishClothChest(0x38B));
-            AddItem(new FemaleGargishClothArms(0x711));
         }
 
         private static readonly Type[][] m_PileTypes = new Type[][]

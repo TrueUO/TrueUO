@@ -1,6 +1,6 @@
 namespace Server.Items
 {
-    public class AegisOfGrace : DragonHelm, ICanBeElfOrHuman
+    public class AegisOfGrace : DragonHelm
     {
         public override int LabelNumber => 1075047;  // Aegis of Grace
         public override bool IsArtifact => true;

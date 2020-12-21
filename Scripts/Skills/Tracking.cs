@@ -237,9 +237,6 @@ namespace Server.SkillHandlers
             int tracking = from.Skills[SkillName.Tracking].Fixed;
             int detectHidden = from.Skills[SkillName.DetectHidden].Fixed;
 
-            if (m.Race == Race.Elf)
-                tracking /= 2; //The 'Guide' says that it requires twice as Much tracking SKILL to track an elf.  Not the total difficulty to track.
-
             int hiding = m.Skills[SkillName.Hiding].Fixed;
             int stealth = m.Skills[SkillName.Stealth].Fixed;
             int divisor = hiding + stealth;

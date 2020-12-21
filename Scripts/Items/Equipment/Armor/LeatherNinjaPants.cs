@@ -1,8 +1,5 @@
-using Server.Engines.Craft;
-
 namespace Server.Items
 {
-    [Alterable(typeof(DefTailoring), typeof(GargishLeatherLegs))]
     public class LeatherNinjaPants : BaseArmor
     {
         [Constructable]

@@ -55,7 +55,7 @@ namespace Server.Engines.Points
 
                 if (ran >= m_RewardTable.Length)
                 {
-                    i = Loot.RandomArmorOrShieldOrWeaponOrJewelry(LootPackEntry.IsInTokuno(killer), LootPackEntry.IsMondain(killer), LootPackEntry.IsStygian(killer));
+                    i = Loot.RandomArmorOrShieldOrWeaponOrJewelry(LootPackEntry.IsInTokuno(killer), LootPackEntry.IsMondain(killer));
                     RunicReforging.GenerateRandomArtifactItem(i, luck, Utility.RandomMinMax(800, 1200));
                     NegativeAttributes attrs = RunicReforging.GetNegativeAttributes(i);
 

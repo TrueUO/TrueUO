@@ -64,14 +64,6 @@ namespace Server.Engines.Points
                 AwardPoints(from, Entries[type].Item1, true);
         }
 
-        public override void OnPlayerAdded(PlayerMobile pm)
-        {
-            if (pm.Race == Race.Gargoyle)
-            {
-                AwardPoints(pm, 2000, false, false);
-            }
-        }
-
         public bool IsNoble(Mobile from)
         {
             return GetLoyalty(from as PlayerMobile) >= QueensLoyaltyRating.Noble;
@@ -153,8 +145,6 @@ namespace Server.Engines.Points
             Entries[typeof(VitaviRenowned)] = new Tuple<double, double>(50, 5);
             Entries[typeof(WyvernRenowned)] = new Tuple<double, double>(50, 5);
             Entries[typeof(MinionOfScelestus)] = new Tuple<double, double>(35, 3.5);
-            Entries[typeof(GargishRouser)] = new Tuple<double, double>(50, 5.0);
-            Entries[typeof(GargishOutcast)] = new Tuple<double, double>(25, 2.5);
             Entries[typeof(VoidManifestation)] = new Tuple<double, double>(50, 5);
             Entries[typeof(Navrey)] = new Tuple<double, double>(75, 7.5);
             Entries[typeof(Niporailem)] = new Tuple<double, double>(75, 7.5);

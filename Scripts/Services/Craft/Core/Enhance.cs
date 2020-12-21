@@ -30,7 +30,6 @@ namespace Server.Engines.Craft
             _SpecialTable = new Dictionary<Type, CraftSystem>();
 
             _SpecialTable[typeof(ClockworkLeggings)] = DefBlacksmithy.CraftSystem;
-            _SpecialTable[typeof(GargishClockworkLeggings)] = DefBlacksmithy.CraftSystem;
             _SpecialTable[typeof(JukaBow)] = DefBowFletching.CraftSystem;
         }
 
@@ -53,9 +52,6 @@ namespace Server.Engines.Craft
         public static EnhanceResult Invoke(Mobile from, CraftSystem craftSystem, ITool tool, Item item, CraftResource resource, Type resType, ref object resMessage)
         {
             if (item == null)
-                return EnhanceResult.BadItem;
-
-            if (item is GargishNecklace || item is GargishEarrings)
                 return EnhanceResult.BadItem;
 
             if (!item.IsChildOf(from.Backpack))

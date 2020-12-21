@@ -113,8 +113,6 @@ namespace Server.Items
 
         public override void OnDoubleClick(Mobile from)
         {
-            if ((from.Weapon is Boomerang || from.Weapon is Cyclone || from.Weapon is BaseThrown) && from.InRange(GetWorldLocation(), 1))
-                Fire(from);
             if ((m_Arrows > 0 || m_Bolts > 0) && from.InRange(GetWorldLocation(), 1))
                 Gather(from);
             else
@@ -181,9 +179,7 @@ namespace Server.Items
             bool isArrow = (ammoType == typeof(Arrow));
             bool isBolt = (ammoType == typeof(Bolt));
 
-            BaseThrown thrown = ranged as BaseThrown;
-
-            if (ammoType == null && thrown == null)
+            if (ammoType == null)
             {
                 isArrow = ranged.Animation == WeaponAnimation.ShootBow;
                 isBolt = ranged.Animation == WeaponAnimation.ShootXBow;
@@ -191,21 +187,20 @@ namespace Server.Items
 
             bool isKnown = (isArrow || isBolt);
 
-            if (thrown == null)
+            Container pack = from.Backpack;
+
+            if (pack == null || ammoType == null || !pack.ConsumeTotal(ammoType, 1))
             {
-                Container pack = from.Backpack;
+                if (isArrow)
+                    from.LocalOverheadMessage(MessageType.Regular, 0x3B2,
+                        500594); // You do not have any arrows with which to practice.
+                else if (isBolt)
+                    from.LocalOverheadMessage(MessageType.Regular, 0x3B2,
+                        500595); // You do not have any crossbow bolts with which to practice.
+                else
+                    SendLocalizedMessageTo(from, 500593); // You must practice with ranged weapons on 
 
-                if (pack == null || ammoType == null || !pack.ConsumeTotal(ammoType, 1))
-                {
-                    if (isArrow)
-                        from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 500594); // You do not have any arrows with which to practice.
-                    else if (isBolt)
-                        from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 500595); // You do not have any crossbow bolts with which to practice.
-                    else
-                        SendLocalizedMessageTo(from, 500593); // You must practice with ranged weapons on 
-
-                    return;
-                }
+                return;
             }
 
             m_LastUse = DateTime.UtcNow;

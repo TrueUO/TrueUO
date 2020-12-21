@@ -129,20 +129,11 @@ namespace Server.Items
 
             AddPage(1);
 
-            AddButton(10, 40, 4005, 4007, 1, GumpButtonType.Reply, 0);
-            AddHtmlLocalized(45, 40, 200, 20, 1060390, LabelColor, false, false); // Classic Houses
-
-            AddButton(10, 60, 4005, 4007, 2, GumpButtonType.Reply, 0);
+            AddButton(10, 60, 4005, 4007, 1, GumpButtonType.Reply, 0);
             AddHtmlLocalized(45, 60, 200, 20, 1060391, LabelColor, false, false); // 2-Story Customizable Houses
 
-            AddButton(10, 80, 4005, 4007, 3, GumpButtonType.Reply, 0);
+            AddButton(10, 80, 4005, 4007, 2, GumpButtonType.Reply, 0);
             AddHtmlLocalized(45, 80, 200, 20, 1060392, LabelColor, false, false); // 3-Story Customizable Houses
-
-            if (m_Tool.UseCustomHousePlots || from.AccessLevel > AccessLevel.Counselor)
-            {
-                AddButton(10, 100, 4005, 4007, 4, GumpButtonType.Reply, 0);
-                AddHtmlLocalized(45, 100, 200, 20, 1158540, LabelColor, false, false); // Custom House Contest
-            }
         }
 
         public override void OnResponse(NetState sender, RelayInfo info)
@@ -152,27 +143,14 @@ namespace Server.Items
 
             switch (info.ButtonID)
             {
-                case 1: // Classic Houses
-                    {
-                        m_From.SendGump(new HousePlacementListGump(m_Tool, m_From, HousePlacementEntry.PreBuiltHouses, true));
-                        break;
-                    }
-                case 2: // 2-Story Customizable Houses
+                case 1: // 2-Story Customizable Houses
                     {
                         m_From.SendGump(new HousePlacementListGump(m_Tool, m_From, HousePlacementEntry.TwoStoryFoundations));
                         break;
                     }
-                case 3: // 3-Story Customizable Houses
+                case 2: // 3-Story Customizable Houses
                     {
                         m_From.SendGump(new HousePlacementListGump(m_Tool, m_From, HousePlacementEntry.ThreeStoryFoundations));
-                        break;
-                    }
-                case 4: // Custom House Contest
-                    {
-                        if (m_Tool.UseCustomHousePlots || m_From.AccessLevel > AccessLevel.Player)
-                        {
-                            m_From.SendGump(new HousePlacementListGump(m_Tool, m_From, HousePlacementEntry.CustomHouseContest));
-                        }
                         break;
                     }
             }
@@ -387,73 +365,6 @@ namespace Server.Items
 
     public class HousePlacementEntry
     {
-        private static readonly HousePlacementEntry[] m_PreBuiltHouses =
-        {
-            new HousePlacementEntry(typeof(SmallOldHouse),      1011303,    425,    212,    489,    244,    10, 36750, 0,   4,  0,  0x0064),
-            new HousePlacementEntry(typeof(SmallOldHouse),      1011304,    425,    212,    489,    244,    10, 36750, 0,   4,  0,  0x0066),
-            new HousePlacementEntry(typeof(SmallOldHouse),      1011305,    425,    212,    489,    244,    10, 36500, 0,   4,  0,  0x0068),
-            new HousePlacementEntry(typeof(SmallOldHouse),      1011306,    425,    212,    489,    244,    10, 35000, 0,   4,  0,  0x006A),
-            new HousePlacementEntry(typeof(SmallOldHouse),      1011307,    425,    212,    489,    244,    10, 36500, 0,   4,  0,  0x006C),
-            new HousePlacementEntry(typeof(SmallOldHouse),      1011308,    425,    212,    489,    244,    10, 36500, 0,   4,  0,  0x006E),
-            new HousePlacementEntry(typeof(SmallShop),          1011321,    425,    212,    489,    244,    10, 50250, -1,  4,  0,  0x00A0),
-            new HousePlacementEntry(typeof(SmallShop),          1011322,    425,    212,    489,    244,    10, 52250, 0,   4,  0,  0x00A2),
-            new HousePlacementEntry(typeof(SmallTower),         1011317,    580,    290,    667,    333,    14, 73250, 3,   4,  0,  0x0098),
-            new HousePlacementEntry(typeof(TwoStoryVilla),      1011319,    1100,   550,    1265,   632,    24, 113500, 3,  6,  0,  0x009E),
-            new HousePlacementEntry(typeof(SandStonePatio),     1011320,    850,    425,    1265,   632,    24, 76250, -1,  4,  0,  0x009C),
-            new HousePlacementEntry(typeof(LogCabin),           1011318,    1100,   550,    1265,   632,    24, 81250, 1,   6,  0,  0x009A),
-            new HousePlacementEntry(typeof(GuildHouse),         1011309,    1370,   685,    1576,   788,    28, 131250, -1, 7,  0,  0x0074),
-            new HousePlacementEntry(typeof(TwoStoryHouse),      1011310,    1370,   685,    1576,   788,    28, 162500, -3, 7,  0,  0x0076),
-            new HousePlacementEntry(typeof(TwoStoryHouse),      1011311,    1370,   685,    1576,   788,    28, 162750, -3, 7,  0,  0x0078),
-            new HousePlacementEntry(typeof(LargePatioHouse),    1011315,    1370,   685,    1576,   788,    28, 129000, -4, 7,  0,  0x008C),
-            new HousePlacementEntry(typeof(LargeMarbleHouse),   1011316,    1370,   685,    1576,   788,    28, 160250, -4, 7,  0,  0x0096),
-            new HousePlacementEntry(typeof(Tower),              1011312,    2119,   1059,   2437,   1218,   42, 366250, 0,  7,  0,  0x007A),
-            new HousePlacementEntry(typeof(Keep),               1011313,    2625,   1312,   3019,   1509,   52, 562500, 0, 11,  0,  0x007C),
-            new HousePlacementEntry(typeof(Castle),             1011314,    4076,   2038,   4688,   2344,   78, 865000, 0, 16,  0,  0x007E),
-
-            new HousePlacementEntry(typeof(TrinsicKeep),        1158748,    2625,   1312,   3019,   1509,   52, 29643750, 0, 11,    0,  0x147E),
-            new HousePlacementEntry(typeof(GothicRoseCastle),   1158749,    4076,   2038,   4688,   2344,   78, 44808750, 0, 16,    0,  0x147F),
-            new HousePlacementEntry(typeof(ElsaCastle),         1158750,    4076,   2038,   4688,   2344,   78, 45450000, 0, 16,    0,  0x1480),
-            new HousePlacementEntry(typeof(Spires),             1158761,    4076,   2038,   4688,   2344,   78, 47025000, 0, 16,    0,  0x1481),
-            new HousePlacementEntry(typeof(CastleOfOceania),    1158760,    4076,   2038,   4688,   2344,   78, 48971250, 0, 16,    0,  0x1482),
-            new HousePlacementEntry(typeof(FeudalCastle),       1158762,    4076,   2038,   4688,   2344,   78, 27337500, 0, 16,    0,  0x1483),
-            new HousePlacementEntry(typeof(RobinsNest),         1158850,    2625,   1312,   3019,   1509,   52, 25301250, 0, 11,    0,  0x1484),
-            new HousePlacementEntry(typeof(TraditionalKeep),    1158851,    2625,   1312,   3019,   1509,   52, 26685000, 0, 11,    0,  0x1485),
-            new HousePlacementEntry(typeof(VillaCrowley),       1158852,    2625,   1312,   3019,   1509,   52, 21813750, 0, 11,    0,  0x1486),
-            new HousePlacementEntry(typeof(DarkthornKeep),      1158853,    2625,   1312,   3019,   1509,   52, 27990000, 0, 11,    0,  0x1487),
-            new HousePlacementEntry(typeof(SandalwoodKeep),     1158854,    2625,   1312,   3019,   1509,   52, 23456250, 0, 11,    0,  0x1488),
-            new HousePlacementEntry(typeof(CasaMoga),           1158855,    2625,   1312,   3019,   1509,   52, 26313750, 0, 11,    0,  0x1489),
-
-            new HousePlacementEntry(typeof(RobinsRoost),                1158960,    4076,   2038,   4688,   2344,   78, 43863750, 0, 16,    0,  0x148A),
-            new HousePlacementEntry(typeof(Camelot),                    1158961,    4076,   2038,   4688,   2344,   78, 47092500, 0, 16,    0,  0x148B),
-            new HousePlacementEntry(typeof(LacrimaeInCaelo),            1158962,    4076,   2038,   4688,   2344,   78, 45315000, 0, 16,    0,  0x148C),
-            new HousePlacementEntry(typeof(OkinawaSweetDreamCastle),    1158963,    4076,   2038,   4688,   2344,   78, 40128750, 0, 16,    0,  0x148D),
-            new HousePlacementEntry(typeof(TheSandstoneCastle),         1158964,    4076,   2038,   4688,   2344,   78, 48690000, 0, 16,    0,  0x148E),
-            new HousePlacementEntry(typeof(GrimswindSisters),           1158965,    4076,   2038,   4688,   2344,   78, 42142500, 0, 16,    0,  0x148F),
-
-            new HousePlacementEntry(typeof(FortressOfLestat),           1159050,    2625,   1312,   3019,   1509,   52, 27405000, 0, 11,    0,  0x1490),
-            new HousePlacementEntry(typeof(CitadelOfTheFarEast),        1159051,    2625,   1312,   3019,   1509,   52, 29036250, 0, 11,    0,  0x1491),
-            new HousePlacementEntry(typeof(KeepIncarcerated),           1159052,    2625,   1312,   3019,   1509,   52, 26291250, 0, 11,    0,  0x1492),
-            new HousePlacementEntry(typeof(DesertRose),                 1159054,    2625,   1312,   3019,   1509,   52, 21206250, 0, 11,    0,  0x1494),
-            new HousePlacementEntry(typeof(SallyTreesRefurbishedKeep),  1159053,    2625,   1312,   3019,   1509,   52, 29688750, 0, 11,    0,  0x1493),
-            new HousePlacementEntry(typeof(TheCloversKeep),             1159055,    2625,   1312,   3019,   1509,   52, 27360000, 0, 11,    0,  0x1495),
-
-            new HousePlacementEntry(typeof(TheSorceresCastle),          1159264,    4076,   2038,   4688,   2344,   78, 40924500, 0, 16,    0,  0x1496),
-            new HousePlacementEntry(typeof(TheCastleCascade),           1159265,    4076,   2038,   4688,   2344,   78, 48217500, 0, 16,    0,  0x1497),
-            new HousePlacementEntry(typeof(TheHouseBuiltOnTheRuins),    1159266,    4076,   2038,   4688,   2344,   78, 42255000, 0, 16,    0,  0x1498),
-            new HousePlacementEntry(typeof(TheSandstoneFortressOfGrand),1159267,    4076,   2038,   4688,   2344,   78, 48498750, 0, 16,    0,  0x1499),
-            new HousePlacementEntry(typeof(TheDragonstoneCastle),       1159268,    4076,   2038,   4688,   2344,   78, 39588750, 0, 16,    0,  0x149A),
-            new HousePlacementEntry(typeof(TheTerraceGardens),          1159269,    4076,   2038,   4688,   2344,   78, 46136250, 0, 16,    0,  0x149B),
-            new HousePlacementEntry(typeof(TheKeepCalmAndCarryOnKeep),  1159414,    2625,   1312,   3019,   1509,   52, 23006250, 0, 11,    0,  0x149C),
-            new HousePlacementEntry(typeof(TheRavenloftKeep),           1159415,    2625,   1312,   3019,   1509,   52, 24457500, 0, 11,    0,  0x149D),
-            new HousePlacementEntry(typeof(TheQueensRetreatKeep),       1159416,    2625,   1312,   3019,   1509,   52, 27641250, 0, 11,    0,  0x149E),
-        };
-
-        private static readonly HousePlacementEntry[] m_CustomHouseContest = new HousePlacementEntry[]
-        {
-            new HousePlacementEntry(typeof(HouseFoundation), 1158538,   2625,   1312,   3019,   1509,   78, 525000, 0,  10, 0,  0x147C), // 23x23 3-Story Customizable Keep
-            new HousePlacementEntry(typeof(HouseFoundation), 1158539,   4076,   2038,   4688,   2344,   78, 525000, 0,  10, 0,  0x147D),  // 32x32 3-Story Customizable Castle
-        };
-
         private static readonly HousePlacementEntry[] m_TwoStoryFoundations = new HousePlacementEntry[]
         {
             new HousePlacementEntry(typeof(HouseFoundation), 1060241,   425,    212,    489,    244,    10, 33000, 0,   4,  0,  0x13EC), // 7x7 2-Story Customizable House
@@ -561,7 +472,8 @@ namespace Server.Items
             new HousePlacementEntry(typeof(HouseFoundation), 1060381,   2119,   1059,   2437,   1218,   42, 158500, 0,  8,  0,  0x1478), // 18x15 3-Story Customizable House
             new HousePlacementEntry(typeof(HouseFoundation), 1060382,   2119,   1059,   2437,   1218,   42, 168000, 0,  9,  0,  0x1479), // 18x16 3-Story Customizable House
             new HousePlacementEntry(typeof(HouseFoundation), 1060383,   2119,   1059,   2437,   1218,   42, 177500, 0,  9,  0,  0x147A), // 18x17 3-Story Customizable House
-            new HousePlacementEntry(typeof(HouseFoundation), 1060384,   2119,   1059,   2437,   1218,   42, 187000, 0,  10, 0,  0x147B)// 18x18 3-Story Customizable House
+            new HousePlacementEntry(typeof(HouseFoundation), 1060384,   2119,   1059,   2437,   1218,   42, 187000, 0,  10, 0,  0x147B), // 18x18 3-Story Customizable House
+            new HousePlacementEntry(typeof(HouseFoundation), 1158538,   2625,   1312,   3019,   1509,   78, 525000, 0,  10, 0,  0x147C) // 23x23 3-Story
         };
 
         private static readonly Hashtable m_Table;
@@ -597,17 +509,12 @@ namespace Server.Items
         {
             m_Table = new Hashtable();
 
-            FillTable(m_PreBuiltHouses);
-
             FillTable(m_TwoStoryFoundations);
             FillTable(m_ThreeStoryFoundations);
-            FillTable(m_CustomHouseContest);
         }
 
-        public static HousePlacementEntry[] PreBuiltHouses => m_PreBuiltHouses;
         public static HousePlacementEntry[] TwoStoryFoundations => m_TwoStoryFoundations;
         public static HousePlacementEntry[] ThreeStoryFoundations => m_ThreeStoryFoundations;
-        public static HousePlacementEntry[] CustomHouseContest => m_CustomHouseContest;
 
         public Type Type => m_Type;
         public int Description => m_Description;

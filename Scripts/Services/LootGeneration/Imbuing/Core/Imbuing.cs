@@ -210,10 +210,10 @@ namespace Server.SkillHandlers
 
         private static readonly Type[] _SpecialImbuable =
        {
-            typeof(ClockworkLeggings), typeof(GargishClockworkLeggings), typeof(OrcishKinMask), typeof(SavageMask), typeof(VirtuososArmbands),
-            typeof(VirtuososCap), typeof(VirtuososCollar), typeof(VirtuososEarpieces), typeof(VirtuososKidGloves), typeof(VirtuososKilt),
-            typeof(VirtuososNecklace), typeof(VirtuososTunic), typeof(BestialArms), typeof(BestialEarrings), typeof(BestialGloves), typeof(BestialGorget),
-            typeof(BestialHelm), typeof(BestialKilt), typeof(BestialLegs), typeof(BestialNecklace), typeof(BarbedWhip), typeof(BladedWhip),
+            typeof(ClockworkLeggings), typeof(OrcishKinMask), typeof(SavageMask), 
+            typeof(VirtuososCap), typeof(VirtuososCollar), typeof(VirtuososKidGloves), typeof(VirtuososKilt),
+            typeof(VirtuososTunic), typeof(BestialGloves), typeof(BestialGorget),
+            typeof(BestialHelm), typeof(BestialKilt), typeof(BestialLegs), typeof(BarbedWhip), typeof(BladedWhip),
             typeof(SpikedWhip), typeof(SkullGnarledStaff), typeof(GargishSkullGnarledStaff), typeof(SkullLongsword), typeof(GargishSkullLongsword), typeof(JukaBow),
             typeof(SlayerLongbow), typeof(JackOLanternHelm)
         };
@@ -248,30 +248,10 @@ namespace Server.SkillHandlers
             double a, b, c, w;
             double i = item is BaseJewel ? 0.9162 : 1.0;
 
-            // - Racial Bonus - SA ONLY -
-            if (from.Race == Race.Gargoyle)
-            {
-                a = 1362.281555;
-                b = 66.32801518;
-                c = 235.2223147;
-                w = -1481.037561;
-            }
-            else
-            {
-                a = 1554.96118;
-                b = 53.81743328;
-                c = 230.0038452;
-                w = -1664.857794;
-            }
-
-            // Royal City Bonus, Fluctuation - Removed as EA doesn't seem to fluctuate despite stratics posts
-            /*if (bonus == 0.02)
-            {
-                if (totalItemIntensity < 295)
-                {
-                    bonus = (double)Utility.RandomMinMax(190, 210) / 100.0;
-                }
-            }*/
+            a = 1554.96118;
+            b = 53.81743328;
+            c = 230.0038452;
+            w = -1664.857794;
 
             return Math.Max(0, Math.Round(Math.Floor(20 * skill + 10 * a * Math.Pow(e, (b / (resultWeight + c))) + 10 * w - 2400) / 1000 * (i) + bonus, 3) * 100);
         }
@@ -868,9 +848,7 @@ namespace Server.SkillHandlers
             {
                 BaseWeapon itemToImbue = item as BaseWeapon;
 
-                if (itemToImbue is BaseThrown)
-                    maxWeight += 0;
-                else if (itemToImbue is BaseRanged)
+                if (itemToImbue is BaseRanged)
                     maxWeight += 50;
                 else if (itemToImbue.Layer == Layer.TwoHanded)
                     maxWeight += 100;
@@ -1787,7 +1765,7 @@ namespace Server.SkillHandlers
 
         private static readonly Type[] m_CannotImbue = new Type[]
         {
-            typeof(GargishLeatherWingArmor), typeof(GargishClothWingArmor)
+            //typeof(GargishClothWingArmor)
         };
 
         public static int GetValueForID(Item item, int id)

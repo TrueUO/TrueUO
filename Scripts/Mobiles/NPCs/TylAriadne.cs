@@ -121,53 +121,8 @@ namespace Server.Engines.Quests
         {
             Female = false;
             CantWalk = true;
-            Race = Race.Elf;
 
             base.InitBody();
-        }
-
-        public override void InitOutfit()
-        {
-            AddItem(new Backpack());
-            AddItem(new ElvenBoots(0x96D));
-
-            Item item;
-
-            item = new StuddedLegs
-            {
-                Hue = 0x96D
-            };
-            AddItem(item);
-
-            item = new StuddedGloves
-            {
-                Hue = 0x96D
-            };
-            AddItem(item);
-
-            item = new StuddedGorget
-            {
-                Hue = 0x96D
-            };
-            AddItem(item);
-
-            item = new StuddedChest
-            {
-                Hue = 0x96D
-            };
-            AddItem(item);
-
-            item = new StuddedArms
-            {
-                Hue = 0x96D
-            };
-            AddItem(item);
-
-            item = new DiamondMace
-            {
-                Hue = 0x96D
-            };
-            AddItem(item);
         }
 
         public override void Serialize(GenericWriter writer)

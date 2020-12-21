@@ -353,11 +353,6 @@ namespace Server.Spells.SkillMasteries
 
             protected override void OnTarget(Mobile from, object targeted)
             {
-                if (targeted is Engines.Despise.DespiseCreature)
-                {
-                    return;
-                }
-
                 if (targeted is BaseCreature bc && bc.GetMaster() == from && from.Spell == Spell)
                 {
                     Spell.Caster.FixedEffect(0x3779, 10, 20, 1270, 0);

@@ -150,34 +150,6 @@ namespace Server.Mobiles.MannequinProperty
         }
     }
 
-    public class GargoyleProperty : ValuedProperty
-    {
-        public override Catalog Catalog => Catalog.None;
-        public override int LabelNumber => 1111709;  // Gargoyles Only
-        public override bool IsSpriteGraph => true;
-        public override int SpriteW => 30;
-        public override int SpriteH => 270;
-
-        public override bool Matches(Item item)
-        {
-            return RaceDefinitions.GetRequiredRace(item) == Race.Gargoyle;
-        }
-    }
-
-    public class ElfProperty : ValuedProperty
-    {
-        public override Catalog Catalog => Catalog.None;
-        public override int LabelNumber => 1075086;  // Elves Only
-        public override bool IsSpriteGraph => true;
-        public override int SpriteW => 210;
-        public override int SpriteH => 240;
-
-        public override bool Matches(Item item)
-        {
-            return RaceDefinitions.GetRequiredRace(item) == Race.Elf;
-        }
-    }
-
     public class DamageModifierProperty : ValuedProperty
     {
         public override Catalog Catalog => Catalog.Misc;

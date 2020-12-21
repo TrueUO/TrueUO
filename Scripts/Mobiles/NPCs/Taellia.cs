@@ -34,19 +34,6 @@ namespace Server.Mobiles
             InitStats(100, 100, 25);
 
             Female = true;
-            Race = Race.Elf;
-
-            Hue = 0x8385;
-            HairItemID = 0x2FCD;
-            HairHue = 0x368;
-        }
-
-        public override void InitOutfit()
-        {
-            AddItem(new Boots(0x74B));
-            AddItem(new FemaleElvenRobe(0x44));
-            AddItem(new Circlet());
-            AddItem(new Item(0xDF2));
         }
 
         public override void OnMovement(Mobile m, Point3D oldLocation)

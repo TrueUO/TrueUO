@@ -25,7 +25,7 @@ namespace Server.Items
 
             for (int i = 0; i < itemDrop; i++)
             {
-                Item item = Loot.RandomArmorOrShieldOrWeaponOrJewelry(false, false, true);
+                Item item = Loot.RandomArmorOrShieldOrWeaponOrJewelry(false, true);
 
                 if (item != null)
                 {

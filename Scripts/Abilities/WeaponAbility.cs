@@ -282,7 +282,6 @@ namespace Server.Items
             new SerpentArrow(),
             new ForceOfNature(),
             new InfusedThrow(),
-            new MysticArc(),
             null,
             new ColdWind()
         };
@@ -326,10 +325,9 @@ namespace Server.Items
         public static readonly WeaponAbility ForceOfNature = m_Abilities[29];
 
         public static readonly WeaponAbility InfusedThrow = m_Abilities[30];
-        public static readonly WeaponAbility MysticArc = m_Abilities[31];
 
-        public static readonly WeaponAbility Empty = m_Abilities[32];
-        public static readonly WeaponAbility ColdWind = m_Abilities[33];
+        public static readonly WeaponAbility Empty = m_Abilities[31];
+        public static readonly WeaponAbility ColdWind = m_Abilities[32];
 
         public static bool IsWeaponAbility(Mobile m, WeaponAbility a)
         {

@@ -120,7 +120,7 @@ namespace Server.Engines.Harvest
         {
             Type newType = type;
 
-            if (tool is HarvestersAxe axe && axe.Charges > 0 || tool is GargishHarvestersAxe gaxe && gaxe.Charges > 0)
+            if (tool is HarvestersAxe axe && axe.Charges > 0)
             {
                 if (type == typeof(Log))
                     newType = typeof(Board);
@@ -142,10 +142,6 @@ namespace Server.Engines.Harvest
                     if (tool is HarvestersAxe harvestersAxe)
                     {
                         harvestersAxe.Charges--;
-                    }
-                    else
-                    {
-                        ((GargishHarvestersAxe)tool).Charges--;
                     }
                 }
             }

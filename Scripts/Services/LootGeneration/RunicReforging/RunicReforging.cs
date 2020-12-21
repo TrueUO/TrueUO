@@ -1126,10 +1126,6 @@ namespace Server.Items
             m_AllowableTable[typeof(Cleaver)] = DefBlacksmithy.CraftSystem;
             m_AllowableTable[typeof(SkinningKnife)] = DefBlacksmithy.CraftSystem;
             m_AllowableTable[typeof(ButcherKnife)] = DefBlacksmithy.CraftSystem;
-            m_AllowableTable[typeof(GargishNecklace)] = DefBlacksmithy.CraftSystem;
-            m_AllowableTable[typeof(GargishEarrings)] = DefBlacksmithy.CraftSystem;
-            m_AllowableTable[typeof(GargishAmulet)] = DefBlacksmithy.CraftSystem;
-            m_AllowableTable[typeof(GargishStoneAmulet)] = DefMasonry.CraftSystem;
             m_AllowableTable[typeof(BarbedWhip)] = DefTailoring.CraftSystem;
             m_AllowableTable[typeof(SpikedWhip)] = DefTailoring.CraftSystem;
             m_AllowableTable[typeof(BladedWhip)] = DefTailoring.CraftSystem;
@@ -1631,9 +1627,6 @@ namespace Server.Items
                 found = false;
                 sk = possibleSkills[Utility.Random(possibleSkills.Length)];
 
-                if ((item is GargishRing || item is GargishBracelet) && sk == SkillName.Archery)
-                    sk = SkillName.Throwing;
-
                 for (int i = 0; !found && i < 5; ++i)
                     found = (skillbonuses.GetValues(i, out check, out bonus) && check == sk);
             } while (found);
@@ -1777,7 +1770,7 @@ namespace Server.Items
         #region Random Item Generation
         public static Item GenerateRandomItem(IEntity e)
         {
-            Item item = Loot.RandomArmorOrShieldOrWeaponOrJewelry(LootPackEntry.IsInTokuno(e), LootPackEntry.IsMondain(e), LootPackEntry.IsStygian(e));
+            Item item = Loot.RandomArmorOrShieldOrWeaponOrJewelry(LootPackEntry.IsInTokuno(e), LootPackEntry.IsMondain(e));
 
             if (item != null)
                 GenerateRandomItem(item, null, Utility.RandomMinMax(100, 700), 0, ReforgedPrefix.None, ReforgedSuffix.None);
@@ -1831,7 +1824,7 @@ namespace Server.Items
 
         public static Item GenerateRandomItem(Mobile killer, BaseCreature creature)
         {
-            Item item = Loot.RandomArmorOrShieldOrWeaponOrJewelry(LootPackEntry.IsInTokuno(killer), LootPackEntry.IsMondain(killer), LootPackEntry.IsStygian(killer));
+            Item item = Loot.RandomArmorOrShieldOrWeaponOrJewelry(LootPackEntry.IsInTokuno(killer), LootPackEntry.IsMondain(killer));
 
             if (item != null)
                 GenerateRandomItem(item, killer, Math.Max(100, GetDifficultyFor(creature)), LootPack.GetLuckChance(GetLuckForKiller(creature)), ReforgedPrefix.None, ReforgedSuffix.None);

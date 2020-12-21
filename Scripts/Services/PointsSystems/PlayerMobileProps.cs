@@ -62,19 +62,6 @@ namespace Server.Mobiles
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public double Casino
-        {
-            get
-            {
-                return (int)PointsSystem.CasinoData.GetPoints(Player);
-            }
-            set
-            {
-                PointsSystem.CasinoData.SetPoints(Player, value);
-            }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
         public double QueensLoyalty
         {
             get
@@ -140,19 +127,6 @@ namespace Server.Mobiles
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public double Doom
-        {
-            get
-            {
-                return (int)PointsSystem.TreasuresOfDoom.GetPoints(Player);
-            }
-            set
-            {
-                PointsSystem.TreasuresOfDoom.SetPoints(Player, value);
-            }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
         public double Doubloons
         {
             get
@@ -214,19 +188,6 @@ namespace Server.Mobiles
             set
             {
                 PointsSystem.TreasuresOfTokuno.GetPlayerEntry<TreasuresOfTokuno.TOTEntry>(Player).TurnIns = value;
-            }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public double VASPoints
-        {
-            get
-            {
-                return (int)PointsSystem.VirtueArtifacts.GetPoints(Player);
-            }
-            set
-            {
-                PointsSystem.VirtueArtifacts.SetPoints(Player, value);
             }
         }
 

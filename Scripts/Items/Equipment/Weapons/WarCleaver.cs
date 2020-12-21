@@ -1,8 +1,5 @@
-using Server.Engines.Craft;
-
 namespace Server.Items
 {
-    [Alterable(typeof(DefBlacksmithy), typeof(Shortblade))]
     [Flipable(0x2D2F, 0x2D23)]
     public class WarCleaver : BaseKnife
     {

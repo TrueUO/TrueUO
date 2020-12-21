@@ -450,13 +450,6 @@ namespace Server.Mobiles
                 return;
             }
 
-            if (from.Race == Race.Gargoyle && from.IsPlayer())
-            {
-                from.SendLocalizedMessage(1112281);
-                OnDisallowedRider(from);
-                return;
-            }
-
             if (from.Female ? !AllowFemaleRider : !AllowMaleRider)
             {
                 OnDisallowedRider(from);

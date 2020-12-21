@@ -1,5 +1,6 @@
 using Server.Items;
 using System;
+using Server.Mobiles;
 
 namespace Server.Engines.Quests
 {
@@ -60,7 +61,7 @@ namespace Server.Engines.Quests
     {
         public TheGoldenHornQuest()
         {
-            AddObjective(new DeliverObjective(typeof(MapFragment), "fragment of a map", 1, typeof(Braen), "Braen (The Heartwood)"));
+            AddObjective(new DeliverObjective(typeof(MapFragment), "fragment of a map", 1, typeof(Banker), "Braen (The Heartwood)"));
 
             AddReward(new BaseReward(1074876)); // Knowledge of the legendary minotaur.
         }

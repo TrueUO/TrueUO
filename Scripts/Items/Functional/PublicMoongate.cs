@@ -35,16 +35,7 @@ namespace Server.Items
 
             int count = 0;
 
-            if (!Siege.SiegeShard)
-            {
-                count += MoonGen(PMList.Trammel);
-            }
-
-            count += MoonGen(PMList.Felucca);
-            count += MoonGen(PMList.Ilshenar);
-            count += MoonGen(PMList.Malas);
-            count += MoonGen(PMList.Tokuno);
-            count += MoonGen(PMList.TerMur);
+            count += MoonGen(PMList.Trammel);
 
             World.Broadcast(0x35, true, "{0} moongates generated.", count);
         }
@@ -319,78 +310,12 @@ namespace Server.Items
 				new PMEntry(new Point3D(3450, 2677, 25), 1078098) // New Haven
 			});
 
-        public static readonly PMList Felucca = new PMList(
-            1012001,
-            1012013,
-            Map.Felucca,
-            new[]
-            {
-                new PMEntry(new Point3D(4467, 1283, 5), 1012003), // Moonglow
-				new PMEntry(new Point3D(1336, 1997, 5), 1012004), // Britain
-				new PMEntry(new Point3D(1499, 3771, 5), 1012005), // Jhelom
-				new PMEntry(new Point3D(771, 752, 5), 1012006), // Yew
-				new PMEntry(new Point3D(2701, 692, 5), 1012007), // Minoc
-				new PMEntry(new Point3D(1828, 2948, -20), 1012008), // Trinsic
-				new PMEntry(new Point3D(643, 2067, 5), 1012009), // Skara Brae
-				/* Dynamic Z for Magincia to support both old and new maps. */
-				new PMEntry(new Point3D(3563, 2139, Map.Felucca.GetAverageZ(3563, 2139)), 1012010), // (New) Magincia
-				new PMEntry(new Point3D(2711, 2234, 0), 1019001) // Buccaneer's Den
-			});
+        public static readonly PMList[] Lists = { Trammel};
+        public static readonly PMList[] ListsYoung = { Trammel };
+        public static readonly PMList[] RedLists = { Trammel };
+        public static readonly PMList[] SigilLists = { Trammel };
 
-        public static readonly PMList Ilshenar = new PMList(
-            1012002,
-            1012014,
-            Map.Ilshenar,
-            new[]
-            {
-                new PMEntry(new Point3D(1215, 467, -13), 1012015), // Compassion
-				new PMEntry(new Point3D(722, 1366, -60), 1012016), // Honesty
-				new PMEntry(new Point3D(744, 724, -28), 1012017), // Honor
-				new PMEntry(new Point3D(281, 1016, 0), 1012018), // Humility
-				new PMEntry(new Point3D(987, 1011, -32), 1012019), // Justice
-				new PMEntry(new Point3D(1174, 1286, -30), 1012020), // Sacrifice
-				new PMEntry(new Point3D(1532, 1340, -3), 1012021), // Spirituality
-				new PMEntry(new Point3D(528, 216, -45), 1012022), // Valor
-				new PMEntry(new Point3D(1721, 218, 96), 1019000) // Chaos
-			});
-
-        public static readonly PMList Malas = new PMList(
-            1060643,
-            1062039,
-            Map.Malas,
-            new[]
-            {
-                new PMEntry(new Point3D(1015, 527, -65), 1060641), // Luna
-				new PMEntry(new Point3D(1997, 1386, -85), 1060642) // Umbra
-			});
-
-        public static readonly PMList Tokuno = new PMList(
-            1063258,
-            1063415,
-            Map.Tokuno,
-            new[]
-            {
-                new PMEntry(new Point3D(1169, 998, 41), 1063412), // Isamu-Jima
-				new PMEntry(new Point3D(802, 1204, 25), 1063413), // Makoto-Jima
-				new PMEntry(new Point3D(270, 628, 15), 1063414) // Homare-Jima
-			});
-
-        public static readonly PMList TerMur = new PMList(
-            1113602,
-            1113604,
-            Map.TerMur,
-            new[]
-            {
-                new PMEntry(new Point3D(850, 3525, -38), 1113603), // Royal City
-				new PMEntry(new Point3D(719, 1863, 40), 1156262) // Valley of Eodon
-            });
-
-        public static readonly PMList[] Lists = { Trammel, Felucca, Ilshenar, Malas, Tokuno, TerMur };
-        public static readonly PMList[] ListsYoung = { Trammel, Ilshenar, Malas, Tokuno, TerMur };
-        public static readonly PMList[] RedLists = { Felucca };
-        public static readonly PMList[] SigilLists = { Felucca };
-
-        public static readonly PMList[] AllLists = { Trammel, Felucca, Ilshenar, Malas, Tokuno, TerMur };
+        public static readonly PMList[] AllLists = { Trammel };
 
         public static PMList GetList(Map map)
         {
@@ -402,31 +327,6 @@ namespace Server.Items
             if (map == Map.Trammel)
             {
                 return Trammel;
-            }
-
-            if (map == Map.Felucca)
-            {
-                return Felucca;
-            }
-
-            if (map == Map.Ilshenar)
-            {
-                return Ilshenar;
-            }
-
-            if (map == Map.Malas)
-            {
-                return Malas;
-            }
-
-            if (map == Map.Tokuno)
-            {
-                return Tokuno;
-            }
-
-            if (map == Map.TerMur)
-            {
-                return TerMur;
             }
 
             return null;

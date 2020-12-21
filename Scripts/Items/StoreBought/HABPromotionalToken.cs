@@ -211,28 +211,6 @@ namespace Server.Items
                             entry = HumanMaleEntries;
                         }
                     }
-                    else if (from.Race == Race.Elf)
-                    {
-                        if (from.Female)
-                        {
-                            entry = ElfFemaleEntries;
-                        }
-                        else
-                        {
-                            entry = ElfMaleEntries;
-                        }
-                    }
-                    else if (from.Race == Race.Gargoyle)
-                    {
-                        if (from.Female)
-                        {
-                            entry = GargoyleFemaleEntries;
-                        }
-                        else
-                        {
-                            entry = GargoyleMaleEntries;
-                        }
-                    }
 
                     from.SendGump(new InternalGump(from, Token, entry));
                 }

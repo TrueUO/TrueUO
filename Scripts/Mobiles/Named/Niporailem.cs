@@ -10,38 +10,12 @@ namespace Server.Mobiles
     {
         public override Type[] UniqueSAList => new Type[]
         {
-          typeof(HelmOfVillainousEpiphany),
-          typeof(GorgetOfVillainousEpiphany),
-          typeof(BreastplateOfVillainousEpiphany),
-          typeof(ArmsOfVillainousEpiphany),
-          typeof(GauntletsOfVillainousEpiphany),
-          typeof(LegsOfVillainousEpiphany),
-          typeof(KiltOfVillainousEpiphany),
-          typeof(EarringsOfVillainousEpiphany),
-          typeof(GargishBreastplateOfVillainousEpiphany),
-          typeof(GargishArmsOfVillainousEpiphany),
-          typeof(NecklaceOfVillainousEpiphany),
-          typeof(GargishLegsOfVillainousEpiphany),
-          typeof(HelmOfVirtuousEpiphany),
-          typeof(GorgetOfVirtuousEpiphany),
-          typeof(BreastplateOfVirtuousEpiphany),
-          typeof(ArmsOfVirtuousEpiphany),
-          typeof(GauntletsOfVirtuousEpiphany),
-          typeof(LegsOfVirtuousEpiphany),
-          typeof(KiltOfVirtuousEpiphany),
-          typeof(EarringsOfVirtuousEpiphany),
-          typeof(GargishBreastplateOfVirtuousEpiphany),
-          typeof(GargishArmsOfVirtuousEpiphany),
-          typeof(NecklaceOfVirtuousEpiphany),
-          typeof(GargishLegsOfVirtuousEpiphany)
+          
         };
 
         public override Type[] SharedSAList => new Type[]
         {
-            typeof(BladeOfBattle),
-            typeof(DemonBridleRing),
-            typeof(GiantSteps),
-            typeof(SwordOfShatteredHopes)
+            
         };
 
         private DateTime m_NextAbilityTime;

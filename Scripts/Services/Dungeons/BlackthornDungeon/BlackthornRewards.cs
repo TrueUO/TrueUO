@@ -18,8 +18,6 @@ namespace Server.Engines.Blackthorn
             Rewards.Add(new CollectionItem(typeof(BlackthornPainting2), 0x4C65, 1023744, 0, 10));
 
             // RuneBeetleCarapaceBase
-            Rewards.Add(new CollectionItem(typeof(GargishStoneChestBearingTheCrestOfBlackthorn), 0x286, 0, 0, 25));
-            Rewards.Add(new CollectionItem(typeof(GargishPlatemailChestBearingTheCrestOfBlackthorn), 0x030A, 0, 0, 25));
             Rewards.Add(new CollectionItem(typeof(DragonBreastplateBearingTheCrestOfBlackthorn), 0x2641, 0, 0, 25));
             Rewards.Add(new CollectionItem(typeof(ChainmailTunicBearingTheCrestOfBlackthorn), 0x13BF, 0, 0, 25));
             Rewards.Add(new CollectionItem(typeof(RingmailTunicBearingTheCrestOfBlackthorn), 0x13EC, 0, 0, 25));
@@ -58,8 +56,6 @@ namespace Server.Engines.Blackthorn
             Rewards.Add(new CollectionItem(typeof(BascinetBearingTheCrestOfBlackthorn1), 0x140C, 0, 0, 50));
             Rewards.Add(new CollectionItem(typeof(CircletBearingTheCrestOfBlackthorn1), 0x2B6E, 0, 0, 50));
             Rewards.Add(new CollectionItem(typeof(FeatheredHatBearingTheCrestOfBlackthorn1), 0x171A, 0, 0, 50));
-            Rewards.Add(new CollectionItem(typeof(GargishEarringsBearingTheCrestOfBlackthorn1), 0x4213, 0, 0, 50));
-            Rewards.Add(new CollectionItem(typeof(GargishGlassesBearingTheCrestOfBlackthorn1), 0x4644, 0, 0, 50));
             Rewards.Add(new CollectionItem(typeof(JesterHatBearingTheCrestOfBlackthorn1), 0x171C, 0, 0, 50));
             Rewards.Add(new CollectionItem(typeof(NorseHelmBearingTheCrestOfBlackthorn1), 0x140E, 0, 0, 50));
             Rewards.Add(new CollectionItem(typeof(PlateHelmBearingTheCrestOfBlackthorn1), 0x1412, 0, 0, 50));
@@ -73,8 +69,6 @@ namespace Server.Engines.Blackthorn
             Rewards.Add(new CollectionItem(typeof(BascinetBearingTheCrestOfBlackthorn2), 0x140C, 0, 0, 50));
             Rewards.Add(new CollectionItem(typeof(CircletBearingTheCrestOfBlackthorn2), 0x2B6E, 0, 0, 50));
             Rewards.Add(new CollectionItem(typeof(FeatheredHatBearingTheCrestOfBlackthorn2), 0x171A, 0, 0, 50));
-            Rewards.Add(new CollectionItem(typeof(GargishEarringsBearingTheCrestOfBlackthorn2), 0x4213, 0, 0, 50));
-            Rewards.Add(new CollectionItem(typeof(GargishGlassesBearingTheCrestOfBlackthorn2), 0x4644, 0, 0, 50));
             Rewards.Add(new CollectionItem(typeof(JesterHatBearingTheCrestOfBlackthorn2), 0x171C, 0, 0, 50));
             Rewards.Add(new CollectionItem(typeof(NorseHelmBearingTheCrestOfBlackthorn2), 0x140E, 0, 0, 50));
             Rewards.Add(new CollectionItem(typeof(PlateHelmBearingTheCrestOfBlackthorn2), 0x1412, 0, 0, 50));
@@ -88,8 +82,6 @@ namespace Server.Engines.Blackthorn
             Rewards.Add(new CollectionItem(typeof(BascinetBearingTheCrestOfBlackthorn3), 0x140C, 0, 0, 50));
             Rewards.Add(new CollectionItem(typeof(CircletBearingTheCrestOfBlackthorn3), 0x2B6E, 0, 0, 50));
             Rewards.Add(new CollectionItem(typeof(FeatheredHatBearingTheCrestOfBlackthorn3), 0x171A, 0, 0, 50));
-            Rewards.Add(new CollectionItem(typeof(GargishEarringsBearingTheCrestOfBlackthorn3), 0x4213, 0, 0, 50));
-            Rewards.Add(new CollectionItem(typeof(GargishGlassesBearingTheCrestOfBlackthorn3), 0x4644, 0, 0, 50));
             Rewards.Add(new CollectionItem(typeof(JesterHatBearingTheCrestOfBlackthorn3), 0x171C, 0, 0, 50));
             Rewards.Add(new CollectionItem(typeof(NorseHelmBearingTheCrestOfBlackthorn3), 0x140E, 0, 0, 50));
             Rewards.Add(new CollectionItem(typeof(PlateHelmBearingTheCrestOfBlackthorn3), 0x1412, 0, 0, 50));
@@ -149,10 +141,7 @@ namespace Server.Engines.Blackthorn
 
             // Conjurer's Garb Base
             Rewards.Add(new CollectionItem(typeof(HoodedRobeBearingTheCrestOfBlackthorn7), 0x2683, 0, 0, 100));
-            Rewards.Add(new CollectionItem(typeof(GargishFancyBearingTheCrestOfBlackthorn7), 0x4002, 0, 0, 100));
-            Rewards.Add(new CollectionItem(typeof(GargishEpauletteBearingTheCrestOfBlackthorn7), 0x9986, 0, 0, 100));
             Rewards.Add(new CollectionItem(typeof(EpauletteBearingTheCrestOfBlackthorn7), 0x9985, 0, 0, 100));
-            Rewards.Add(new CollectionItem(typeof(GargishRobeBearingTheCrestOfBlackthorn7), 0x4000, 0, 0, 100));
             Rewards.Add(new CollectionItem(typeof(PlainDressBearingTheCrestOfBlackthorn7), 0x1F01, 0, 0, 100));
             Rewards.Add(new CollectionItem(typeof(GildedDressBearingTheCrestOfBlackthorn7), 0x230E, 0, 0, 100));
             Rewards.Add(new CollectionItem(typeof(FancyDressBearingTheCrestOfBlackthorn7), 0x1F00, 0, 0, 100));
@@ -161,7 +150,6 @@ namespace Server.Engines.Blackthorn
 
             // RoyalBritannianBase
             Rewards.Add(new CollectionItem(typeof(DoubletBearingTheCrestOfBlackthorn), 0x1F7B, 0, 0, 100));
-            Rewards.Add(new CollectionItem(typeof(GargishSashBearingTheCrestOfBlackthorn), 0x46B4, 0, 0, 100));
             Rewards.Add(new CollectionItem(typeof(SurcoatBearingTheCrestOfBlackthorn), 0x1FFD, 0, 0, 100));
             Rewards.Add(new CollectionItem(typeof(TunicBearingTheCrestOfBlackthorn), 0x1FA1, 0, 0, 100));
 

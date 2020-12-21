@@ -51,19 +51,6 @@ namespace Server.Engines.VvV
             list.Add(1155513); // Vice vs Virtue Reward Vendor
         }
 
-        private DateTime _NextSpeak;
-
-        public override void OnMovement(Mobile m, Point3D oldLocation)
-        {
-            base.OnMovement(m, oldLocation);
-
-            if (_NextSpeak < DateTime.UtcNow && ViceVsVirtueSystem.IsVvV(m) && InRange(m.Location, 6) && m.Race == Race.Gargoyle)
-            {
-                SayTo(m, 1155534); // I will convert your human artifacts to gargoyle versions if you hand them to me.
-                _NextSpeak = DateTime.UtcNow + TimeSpan.FromSeconds(25);
-            }
-        }
-
         public override void OnDoubleClick(Mobile m)
         {
             if (ViceVsVirtueSystem.Enabled && m is PlayerMobile pm && InRange(pm.Location, 3))
@@ -129,85 +116,6 @@ namespace Server.Engines.VvV
             }
         }
 
-        private readonly Type[][] _Table =
-        {
-            new[] { typeof(CrimsonCincture), typeof(GargishCrimsonCincture) },
-            new[] { typeof(MaceAndShieldGlasses), typeof(GargishMaceAndShieldGlasses) },
-            new[] { typeof(WizardsCrystalGlasses), typeof(GargishWizardsCrystalGlasses) },
-            new[] { typeof(FoldedSteelGlasses), typeof(GargishFoldedSteelGlasses) }
-        };
-
-        public override bool OnDragDrop(Mobile from, Item dropped)
-        {
-            if (dropped.GetSocket<HonestyItemSocket>() != null)
-            {
-                return base.OnDragDrop(from, dropped);
-            }
-
-            if (ViceVsVirtueSystem.IsVvV(from))
-            {
-                if (!(dropped is IOwnerRestricted) || ((IOwnerRestricted)dropped).Owner == from)
-                {
-                    if (dropped is IVvVItem && from.Race == Race.Gargoyle)
-                    {
-                        foreach (Type[] t in _Table)
-                        {
-                            if (dropped.GetType() == t[0])
-                            {
-                                IDurability dur = dropped as IDurability;
-
-                                if (dur != null && dur.MaxHitPoints == 255 && dur.HitPoints == 255)
-                                {
-                                    Item item = Loot.Construct(t[1]);
-
-                                    if (item != null)
-                                    {
-                                        VvVRewards.OnRewardItemCreated(from, item);
-
-                                        if (item is GargishCrimsonCincture cincture)
-                                        {
-                                            cincture.Attributes.BonusDex = 10;
-                                        }
-
-                                        if (item is GargishMaceAndShieldGlasses glasses)
-                                        {
-                                            glasses.Attributes.WeaponDamage = 10;
-                                        }
-
-                                        if (item is GargishFoldedSteelGlasses steelGlasses)
-                                        {
-                                            steelGlasses.Attributes.DefendChance = 25;
-                                        }
-
-                                        if (item is GargishWizardsCrystalGlasses crystalGlasses)
-                                        {
-                                            crystalGlasses.PhysicalBonus = 5;
-                                            crystalGlasses.FireBonus = 5;
-                                            crystalGlasses.ColdBonus = 5;
-                                            crystalGlasses.PoisonBonus = 5;
-                                            crystalGlasses.EnergyBonus = 5;
-                                        }
-
-                                        from.AddToBackpack(item);
-                                        dropped.Delete();
-
-                                        return true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            SayTo(from, 1157365); // I'm sorry, I cannot accept this item.
-            return false;
-        }
-
         public SilverTrader(Serial serial) : base(serial)
         {
         }
@@ -215,21 +123,13 @@ namespace Server.Engines.VvV
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(1);
+            writer.Write(0);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
-
-            if (version == 0)
-            {
-                Timer.DelayCall(() =>
-                    {
-                        ColUtility.SafeDelete(Backpack.Items, null);
-                    });
-            }
+            reader.ReadInt();
 
             Timer.DelayCall(TimeSpan.FromSeconds(5), StockInventory);
         }

@@ -504,11 +504,6 @@ namespace Server.Items
                 }
             }
 
-            if (from.AccessLevel < AccessLevel.GameMaster && !RaceDefinitions.ValidateEquipment(from, this))
-            {
-                return false;
-            }
-
             return base.CanEquip(from);
         }
 
@@ -735,15 +730,6 @@ namespace Server.Items
             m_AosSkillBonuses.GetProperties(list);
 
             int prop;
-
-            if (RaceDefinitions.GetRequiredRace(this) == Race.Elf)
-            {
-                list.Add(1075086); // Elves Only
-            }
-            else if (RaceDefinitions.GetRequiredRace(this) == Race.Gargoyle)
-            {
-                list.Add(1111709); // Gargoyles Only
-            }
 
             if ((prop = ArtifactRarity) > 0)
                 list.Add(1061078, prop.ToString()); // artifact rarity ~1_val~

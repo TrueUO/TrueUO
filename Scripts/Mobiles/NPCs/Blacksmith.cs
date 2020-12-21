@@ -26,20 +26,12 @@ namespace Server.Mobiles
 
         public override void InitSBInfo()
         {
-            if (!IsStygianVendor)
+            m_SBInfos.Add(new SBBlacksmith());
+
+            if (IsTokunoVendor)
             {
-                m_SBInfos.Add(new SBBlacksmith());
-                if (IsTokunoVendor)
-                {
-                    m_SBInfos.Add(new SBSEArmor());
-                    m_SBInfos.Add(new SBSEWeapons());
-                }
-            }
-            else
-            {
-                m_SBInfos.Add(new SBSABlacksmith());
-                m_SBInfos.Add(new SBSAArmor());
-                m_SBInfos.Add(new SBSAWeapons());
+                m_SBInfos.Add(new SBSEArmor());
+                m_SBInfos.Add(new SBSEWeapons());
             }
         }
 

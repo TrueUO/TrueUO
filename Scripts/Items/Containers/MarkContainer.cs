@@ -158,8 +158,6 @@ namespace Server.Items
             CreateMalasPassage(1313, 1115, -85, 1183, 462, -45, false, false);
 
             e.Mobile.SendMessage("Secret mark containers have been created.");
-
-            Engines.GenerateForgottenPyramid.Generate(e.Mobile);
         }
 
         public void StopTimer()

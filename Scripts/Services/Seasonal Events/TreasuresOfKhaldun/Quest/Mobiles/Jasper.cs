@@ -33,23 +33,6 @@ namespace Server.Engines.Khaldun
 
             Female = false;
             CantWalk = true;
-
-            Race = Race.Elf;
-            Hue = 33770;
-            HairItemID = 0x2FCF;
-            HairHue = Race.RandomHairHue();
-        }
-
-        public override void InitOutfit()
-        {
-            AddItem(new Backpack());
-
-            SetWearable(new LongPants(), 1156);
-            SetWearable(new FancyShirt());
-            SetWearable(new Epaulette(), 1156);
-            SetWearable(new BodySash(), 1175);
-            SetWearable(new Obi(), 1156);
-            SetWearable(new Shoes(), 1910);
         }
 
         public override void OnDoubleClick(Mobile m)

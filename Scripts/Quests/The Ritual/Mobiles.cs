@@ -28,13 +28,8 @@ namespace Server.Engines.Quests.RitualQuest
         public override void InitBody()
         {
             InitStats(100, 100, 25);
-            Race = Race.Gargoyle;
 
             CantWalk = true;
-
-            Hue = 34547;
-            HairItemID = Race.RandomHair(false);
-            HairHue = Race.RandomHairHue();
         }
 
         public override void InitOutfit()

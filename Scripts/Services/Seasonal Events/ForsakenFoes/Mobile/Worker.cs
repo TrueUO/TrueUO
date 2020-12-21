@@ -126,14 +126,7 @@ namespace Server.Engines.Fellowship
                     {
                         Item medallion;
 
-                        if (from.Race == Race.Gargoyle)
-                        {
-                            medallion = new GargishFellowshipMedallion();
-                        }
-                        else
-                        {
-                            medallion = new FellowshipMedallion();
-                        }
+                        medallion = new FellowshipMedallion();
 
                         from.AddToBackpack(medallion);
                     }

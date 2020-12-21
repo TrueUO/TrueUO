@@ -147,12 +147,12 @@ namespace Server.Items
 
         private static readonly Type[][] m_EodonSpawnTypes = new Type[][]
         {
-            new Type[] { typeof(MyrmidexLarvae), typeof(SilverbackGorilla), typeof(Panther), typeof(WildTiger) },
+            new Type[] {typeof(SilverbackGorilla), typeof(Panther), typeof(WildTiger) },
             new Type[] { typeof(AcidElemental), typeof(SandVortex), typeof(Lion), typeof(SabreToothedTiger) },
             new Type[] { typeof(AcidElemental), typeof(SandVortex), typeof(Lion), typeof(SabreToothedTiger) },
             new Type[] { typeof(Infernus), typeof(FireElemental), typeof(Dimetrosaur), typeof(Saurosaurus) },
             new Type[] { typeof(Infernus), typeof(FireElemental), typeof(Dimetrosaur), typeof(Saurosaurus) },
-            new Type[] { typeof(KotlAutomaton), typeof(MyrmidexDrone), typeof(Allosaurus), typeof(Triceratops) },
+            new Type[] { typeof(KotlAutomaton), typeof(Allosaurus), typeof(Triceratops) },
             new Type[] { typeof(Anchisaur), typeof(Allosaurus), typeof(SandVortex) }
         };
         #endregion

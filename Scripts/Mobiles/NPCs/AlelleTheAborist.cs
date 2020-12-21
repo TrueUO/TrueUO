@@ -25,55 +25,16 @@ namespace Server.Mobiles
         {
         }
 
-        public override void InitBody()
-        {
-            InitStats(100, 100, 25);
-
-            Female = true;
-            Race = Race.Elf;
-
-            Hue = 0x8374;
-            HairItemID = 0x2FCC;
-            HairHue = 0x238;
-        }
-
-        public override void InitOutfit()
-        {
-            AddItem(new ElvenBoots(0x1BB));
-
-            Item item;
-
-            item = new LeafGloves
-            {
-                Hue = 0x1BB
-            };
-            AddItem(item);
-
-            item = new LeafChest
-            {
-                Hue = 0x37
-            };
-            AddItem(item);
-
-            item = new LeafLegs
-            {
-                Hue = 0x746
-            };
-            AddItem(item);
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

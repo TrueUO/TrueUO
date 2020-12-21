@@ -166,11 +166,6 @@ namespace Server.Mobiles
             {
                 c.DropItem(new AncientPotteryFragments());
             }
-
-            if (!Controlled && Utility.RandomDouble() <= 0.005)
-            {
-                c.DropItem(new RaptorClaw());
-            }
         }
 
         public Raptor(Serial serial)

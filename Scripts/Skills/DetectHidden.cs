@@ -156,9 +156,6 @@ namespace Server.SkillHandlers
 
                 double ts = (m.Skills[SkillName.Hiding].Value + m.Skills[SkillName.Stealth].Value) / 2;
 
-                if (src.Race == Race.Elf)
-                    ss += 20;
-
                 if (src.AccessLevel >= m.AccessLevel && Utility.Random(1000) < ss - ts + 1)
                 {
                     m.RevealingAction();

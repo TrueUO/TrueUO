@@ -588,7 +588,7 @@ namespace Server.Engines.Craft
                 {
                     BaseAddon addon = component.Addon;
 
-                    if (addon is KoiPondAddon || addon is DragonTurtleFountainAddon || addon is WaterWheelAddon)
+                    if (addon is KoiPondAddon || addon is WaterWheelAddon)
                     {
                         eable.Free();
                         return true;

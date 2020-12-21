@@ -15,10 +15,10 @@ namespace Server.Mobiles
         {
             public InternalBuyInfo()
             {
-                Add(new GenericBuyInfo("1041243", typeof(ContractOfEmployment), 1252, 20, 0x14F0, 0));
-                Add(new GenericBuyInfo("1062332", typeof(VendorRentalContract), 1252, 20, 0x14F0, 0x672));
-                Add(new GenericBuyInfo("1159156", typeof(CommissionContractOfEmployment), 28127, 20, 0x14F0, 0));
-                Add(new GenericBuyInfo("1047016", typeof(CommodityDeed), 5, 20, 0x14F0, 0x47));
+                //Add(new GenericBuyInfo("1041243", typeof(ContractOfEmployment), 1252, 20, 0x14F0, 0));
+                //Add(new GenericBuyInfo("1062332", typeof(VendorRentalContract), 1252, 20, 0x14F0, 0x672));
+                //Add(new GenericBuyInfo("1159156", typeof(CommissionContractOfEmployment), 28127, 20, 0x14F0, 0));
+                Add(new GenericBuyInfo("1047016", typeof(CommodityDeed), 25, 20, 0x14F0, 0x47));
             }
         }
 

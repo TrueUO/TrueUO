@@ -202,34 +202,18 @@ namespace Server.Engines.Quests
 
             Female = true;
             CantWalk = true;
-
-            Race = Race.Gargoyle;
-            HairItemID = Race.RandomHair(true);
-            Hue = Race.RandomSkinHue();
-            HairHue = Race.RandomHairHue();
-        }
-
-        public override void InitOutfit()
-        {
-            AddItem(new Backpack());
-
-            AddItem(new GargishClothChest(Utility.RandomNeutralHue()));
-            AddItem(new GargishClothKilt(Utility.RandomNeutralHue()));
-            AddItem(new GargishClothLegs(Utility.RandomNeutralHue()));
         }
 
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 

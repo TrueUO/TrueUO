@@ -75,46 +75,6 @@ namespace Server.Items
         }
     }
 
-    public class UnicornManeWovenTalons : LeatherTalons
-    {
-        public override bool IsArtifact => true;
-        public override int LabelNumber => 1153314;  // Unicorn Mane Woven Talons
-
-        [Constructable]
-        public UnicornManeWovenTalons()
-        {
-            Hue = 1154;
-
-            switch (Utility.Random(6))
-            {
-                case 0: SAAbsorptionAttributes.EaterKinetic = 2; break;
-                case 1: SAAbsorptionAttributes.EaterFire = 2; break;
-                case 2: SAAbsorptionAttributes.EaterCold = 2; break;
-                case 3: SAAbsorptionAttributes.EaterPoison = 2; break;
-                case 4: SAAbsorptionAttributes.EaterEnergy = 2; break;
-                case 5: SAAbsorptionAttributes.EaterDamage = 2; break;
-            }
-
-            Attributes.NightSight = 1;
-        }
-
-        public UnicornManeWovenTalons(Serial serial) : base(serial)
-        {
-        }
-
-        public override void Serialize(GenericWriter writer)
-        {
-            base.Serialize(writer);
-            writer.Write(0);
-        }
-
-        public override void Deserialize(GenericReader reader)
-        {
-            base.Deserialize(reader);
-            int v = reader.ReadInt();
-        }
-    }
-
     public class DespicableQuiver : BaseQuiver
     {
         public override bool IsArtifact => true;
@@ -160,57 +120,6 @@ namespace Server.Items
         }
     }
 
-    public class UnforgivenVeil : GargishLeatherWingArmor
-    {
-        public override bool IsArtifact => true;
-        public override int LabelNumber => 1153291;  // Unforgiven Veil 
-
-        public override int InitMinHits => 255;
-        public override int InitMaxHits => 255;
-
-        public override int PhysicalResistance => PhysicalBonus;
-        public override int FireResistance => FireBonus;
-        public override int ColdResistance => ColdBonus;
-        public override int PoisonResistance => PoisonBonus;
-        public override int EnergyResistance => EnergyBonus;
-
-        [Constructable]
-        public UnforgivenVeil()
-        {
-            Hue = 2671;
-
-            Attributes.BonusDex = 5;
-            SkillBonuses.SetValues(0, SkillName.Throwing, 5.0);
-            Attributes.ReflectPhysical = 5;
-            Attributes.AttackChance = 5;
-
-            switch (Utility.Random(5))
-            {
-                case 0: PhysicalBonus = 10; break;
-                case 1: FireBonus = 10; break;
-                case 2: ColdBonus = 10; break;
-                case 3: PoisonBonus = 10; break;
-                case 4: EnergyBonus = 10; break;
-            }
-        }
-
-        public UnforgivenVeil(Serial serial) : base(serial)
-        {
-        }
-
-        public override void Serialize(GenericWriter writer)
-        {
-            base.Serialize(writer);
-            writer.Write(0);
-        }
-
-        public override void Deserialize(GenericReader reader)
-        {
-            base.Deserialize(reader);
-            int v = reader.ReadInt();
-        }
-    }
-
     public class HailstormHuman : WarFork
     {
         public override bool IsArtifact => true;
@@ -235,43 +144,6 @@ namespace Server.Items
         }
 
         public HailstormHuman(Serial serial) : base(serial)
-        {
-        }
-
-        public override void Serialize(GenericWriter writer)
-        {
-            base.Serialize(writer);
-            writer.Write(0);
-        }
-
-        public override void Deserialize(GenericReader reader)
-        {
-            base.Deserialize(reader);
-            int v = reader.ReadInt();
-        }
-    }
-
-    public class HailstormGargoyle : GargishWarFork
-    {
-        public override bool IsArtifact => true;
-        public override int LabelNumber => 1153292;  // Hailstorm
-
-        [Constructable]
-        public HailstormGargoyle()
-        {
-            Hue = 2714;
-
-            Slayer = (SlayerName)Utility.Random(2, 25);
-            WeaponAttributes.HitLightning = 15;
-            WeaponAttributes.HitColdArea = 100;
-            WeaponAttributes.HitLeechMana = 30;
-            Attributes.AttackChance = 20;
-            Attributes.WeaponSpeed = 25;
-            Attributes.WeaponDamage = 50;
-            AosElementDamages.Cold = 100;
-        }
-
-        public HailstormGargoyle(Serial serial) : base(serial)
         {
         }
 

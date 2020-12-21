@@ -82,7 +82,6 @@ namespace Server.Items
         }
     }
 
-    [Alterable(typeof(DefBlacksmithy), typeof(GargishKiltOfMining))]
     [Flipable(0x13eb, 0x13f2)]
     public class RingmailGlovesOfMining : BaseGlovesOfMining
     {

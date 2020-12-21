@@ -222,12 +222,6 @@ namespace Server
                         VersionFlag |= SpawnerVersion.TramKhaldun;
                     }
 
-                    if ((VersionFlag & SpawnerVersion.HonestyItems) == 0)
-                    {
-                        ConvertHonestyItems();
-                        VersionFlag |= SpawnerVersion.HonestyItems;
-                    }
-
                     if ((VersionFlag & SpawnerVersion.TrinsicPaladins) == 0)
                     {
                         SpawnTrinsicPaladins();
@@ -244,12 +238,6 @@ namespace Server
                     {
                         RemoveIceHounds();
                         VersionFlag |= SpawnerVersion.IceHoundRemoval;
-                    }
-
-                    if ((VersionFlag & SpawnerVersion.Sphinx) == 0)
-                    {
-                        AddSphinx();
-                        VersionFlag |= SpawnerVersion.Sphinx;
                     }
                     goto case 10;
                 case 10:
@@ -460,24 +448,6 @@ namespace Server
         }
         #endregion
 
-        #region Honesty Item Conversion
-        public static void ConvertHonestyItems()
-        {
-            int convert = 0;
-
-            foreach (Item item in World.Items.Values.Where(i => i.HonestyItem))
-            {
-                if (!item.HasSocket<HonestyItemSocket>())
-                {
-                    item.AttachSocket(new HonestyItemSocket());
-                    convert++;
-                }
-            }
-
-            ToConsole(string.Format("Converted {0} honesty items and attached Honesty Item Socket!", convert));
-        }
-        #endregion
-
         #region Trinny Paladins
         public static void SpawnTrinsicPaladins()
         {
@@ -500,14 +470,6 @@ namespace Server
         {
             Remove("icehound");
             ToConsole("Ice Hounds removed from spawners.");
-        }
-        #endregion
-
-        #region Version 11
-        public static void AddSphinx()
-        {
-            Engines.GenerateForgottenPyramid.Generate(null);
-            ToConsole("Generated Fortune Sphinx.");
         }
         #endregion
 

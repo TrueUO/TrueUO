@@ -1,8 +1,5 @@
-using Server.Engines.Craft;
-
 namespace Server.Items
 {
-    [Alterable(typeof(DefBlacksmithy), typeof(GargishDaisho))]
     [Flipable(0x27A9, 0x27F4)]
     public class Daisho : BaseSword
     {

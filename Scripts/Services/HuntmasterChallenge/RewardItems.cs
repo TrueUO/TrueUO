@@ -304,50 +304,6 @@ namespace Server.Items
         }
     }
 
-    public class GargishHarvestersAxe : GargishAxe
-    {
-        public override int LabelNumber => 1158774;  // Harvester's Axe
-
-        private int _Charges;
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public int Charges { get { return _Charges; } set { _Charges = value; InvalidateProperties(); } }
-
-        [Constructable]
-        public GargishHarvestersAxe()
-        {
-            Charges = 1000;
-        }
-
-        public override void AddWeightProperty(ObjectPropertyList list)
-        {
-            base.AddWeightProperty(list);
-            list.Add(1158775);  // * Magically Chops Logs into Boards *
-            list.Add(1060741, _Charges.ToString()); // charges: 
-        }
-
-        public GargishHarvestersAxe(Serial serial)
-            : base(serial)
-        {
-        }
-
-        public override void Serialize(GenericWriter writer)
-        {
-            base.Serialize(writer);
-            writer.Write(0);
-
-            writer.Write(_Charges);
-        }
-
-        public override void Deserialize(GenericReader reader)
-        {
-            base.Deserialize(reader);
-            reader.ReadInt();
-
-            _Charges = reader.ReadInt();
-        }
-    }
-
     public class BakeKitsuneHat : BaseHat
     {
         public override int LabelNumber => 1126051;  // bake-kitsune hat

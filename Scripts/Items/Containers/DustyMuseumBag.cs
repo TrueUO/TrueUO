@@ -1,6 +1,6 @@
 namespace Server.Items
 {
-    public class DustyMuseumBag : BaseRewardBag
+    public class DustyMuseumBag : Bag
     {
         [Constructable]
         public DustyMuseumBag()

@@ -152,12 +152,9 @@ namespace Server.Engines.Blackthorn
             switch (_Specialty)
             {
                 default:
-                    if (0.75 > Utility.RandomDouble())
-                        Race = Race.Human;
-                    else
-                        Race = Race.Elf; break;
+                    Race = Race.Human; break;
                 case SkillName.Archery:
-                case SkillName.Spellweaving: Race = Race.Elf; break;
+                case SkillName.Spellweaving:break;
             }
 
             HairItemID = Race.RandomHair(Female);
@@ -367,21 +364,11 @@ namespace Server.Engines.Blackthorn
 
         public Item RandomSwordWeapon()
         {
-            if (Race == Race.Elf)
-            {
-                return Loot.Construct(new[] {typeof(ElvenMachete), typeof(RadiantScimitar)});
-            }
-
             return Loot.Construct(new[] { typeof(Broadsword), typeof(Longsword), typeof(Katana), typeof(Halberd), typeof(Bardiche), typeof(VikingSword) });
         }
 
         public Item RandomFencingWeapon()
         {
-            if (Race == Race.Elf)
-            {
-                return Loot.Construct(new[] {typeof(Leafblade), typeof(WarCleaver), typeof(AssassinSpike)});
-            }
-
             return Loot.Construct(new[] { typeof(Kryss), typeof(Spear), typeof(ShortSpear), typeof(Lance), typeof(Pike) });
         }
 
@@ -392,11 +379,6 @@ namespace Server.Engines.Blackthorn
 
         public Item RandomArhceryWeapon()
         {
-            if (Race == Race.Elf)
-            {
-                return Loot.Construct(new[] {typeof(MagicalShortbow), typeof(ElvenCompositeLongbow)});
-            }
-
             return Loot.Construct(new[] { typeof(Bow), typeof(Crossbow), typeof(HeavyCrossbow), typeof(CompositeBow), typeof(RepeatingCrossbow) });
         }
 

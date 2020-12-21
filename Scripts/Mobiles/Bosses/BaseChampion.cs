@@ -318,8 +318,6 @@ namespace Server.Mobiles
                     else
                         c.DropItem(new ChampionSkull(SkullType));
                 }
-
-                RefinementComponent.Roll(c, 3, 0.10);
             }
 
             base.OnDeath(c);

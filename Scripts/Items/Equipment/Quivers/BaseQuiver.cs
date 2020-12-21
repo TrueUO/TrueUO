@@ -13,13 +13,11 @@ namespace Server.Items
         void AlterRangedDamage(ref int phys, ref int fire, ref int cold, ref int pois, ref int nrgy, ref int chaos, ref int direct);
     }
 
-    [Alterable(typeof(DefTailoring), typeof(GargishLeatherWingArmor), true)]
-    public class BaseQuiver : Container, ICraftable, ISetItem, IVvVItem, IOwnerRestricted, IRangeDamage, IArtifact, ICanBeElfOrHuman
+    public class BaseQuiver : Container, ICraftable, ISetItem, IVvVItem, IOwnerRestricted, IRangeDamage, IArtifact
     {
         private bool _VvVItem;
         private Mobile _Owner;
         private string _OwnerName;
-        private bool _ElvesOnly;
 
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsVvVItem
@@ -39,13 +37,6 @@ namespace Server.Items
         {
             get { return _OwnerName; }
             set { _OwnerName = value; InvalidateProperties(); }
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool ElfOnly
-        {
-            get { return _ElvesOnly; }
-            set { _ElvesOnly = value; }
         }
 
         public override int DefaultGumpID => 0x108;
@@ -261,24 +252,6 @@ namespace Server.Items
                 quiver.m_SetSkillBonuses = new AosSkillBonuses(newItem, m_SetSkillBonuses);
             }
 
-            GargishLeatherWingArmor wing = newItem as GargishLeatherWingArmor;
-
-            if (wing != null)
-            {
-                int phys, fire, cold, pois, nrgy, chaos, direct;
-                phys = fire = cold = pois = nrgy = chaos = direct = 0;
-
-                AlterRangedDamage(ref phys, ref fire, ref cold, ref pois, ref nrgy, ref chaos, ref direct);
-
-                wing.AosElementDamages.Physical = phys;
-                wing.AosElementDamages.Fire = fire;
-                wing.AosElementDamages.Cold = cold;
-                wing.AosElementDamages.Poison = pois;
-                wing.AosElementDamages.Energy = nrgy;
-                wing.AosElementDamages.Chaos = chaos;
-                wing.AosElementDamages.Direct = direct;
-            }
-
             base.OnAfterDuped(newItem);
         }
 
@@ -452,11 +425,6 @@ namespace Server.Items
 
         public override bool CanEquip(Mobile m)
         {
-            if (!RaceDefinitions.ValidateEquipment(m, this))
-            { 
-                return false;
-            }
-
             if (m.IsPlayer())
             {
                 if (_Owner != null && m != _Owner)
@@ -709,7 +677,6 @@ namespace Server.Items
         {
             None = 0x00000000,
             Attributes = 0x00000001,
-            DamageModifier = 0x00000002,
             LowerAmmoCost = 0x00000004,
             WeightReduction = 0x00000008,
             Crafter = 0x00000010,
@@ -725,8 +692,7 @@ namespace Server.Items
             SetFire = 0x00008000,
             SetCold = 0x00010000,
             SetPoison = 0x00020000,
-            SetEnergy = 0x00040000,
-            ElvesOnly = 0x00080000,
+            SetEnergy = 0x00040000
         }
 
         public override void GetContextMenuEntries(Mobile from, List<ContextMenuEntry> list)
@@ -757,7 +723,6 @@ namespace Server.Items
             m_Resistances.Serialize(writer);
 
             SetSaveFlag(ref flags, SaveFlag.Attributes, !m_Attributes.IsEmpty);
-            //SetSaveFlag(ref flags, SaveFlag.LowerAmmoCost, m_LowerAmmoCost != 0);
             SetSaveFlag(ref flags, SaveFlag.WeightReduction, m_WeightReduction != 0);
             SetSaveFlag(ref flags, SaveFlag.DamageIncrease, m_DamageIncrease != 0);
             SetSaveFlag(ref flags, SaveFlag.Crafter, m_Crafter != null);
@@ -775,16 +740,12 @@ namespace Server.Items
             SetSaveFlag(ref flags, SaveFlag.SetCold, m_SetColdBonus != 0);
             SetSaveFlag(ref flags, SaveFlag.SetPoison, m_SetPoisonBonus != 0);
             SetSaveFlag(ref flags, SaveFlag.SetEnergy, m_SetEnergyBonus != 0);
-            SetSaveFlag(ref flags, SaveFlag.ElvesOnly, _ElvesOnly);
             #endregion
 
             writer.WriteEncodedInt((int)flags);
 
             if (GetSaveFlag(flags, SaveFlag.Attributes))
                 m_Attributes.Serialize(writer);
-
-            //if (GetSaveFlag(flags, SaveFlag.LowerAmmoCost))
-            //    writer.Write((int)m_LowerAmmoCost);
 
             if (GetSaveFlag(flags, SaveFlag.WeightReduction))
                 writer.Write(m_WeightReduction);
@@ -831,9 +792,6 @@ namespace Server.Items
 
             if (GetSaveFlag(flags, SaveFlag.SetEquipped))
                 writer.Write(m_SetEquipped);
-
-            if (GetSaveFlag(flags, SaveFlag.ElvesOnly))
-                writer.Write(_ElvesOnly);
             #endregion
         }
 
@@ -932,9 +890,6 @@ namespace Server.Items
 
                         if (GetSaveFlag(flags, SaveFlag.SetEquipped))
                             m_SetEquipped = reader.ReadBool();
-
-                        if (GetSaveFlag(flags, SaveFlag.ElvesOnly))
-                            _ElvesOnly = reader.ReadBool();
                         #endregion
 
                         break;

@@ -115,7 +115,6 @@ namespace Server.Services.TownCryer
 
                 NewsEntries.Add(new TownCryerNewsEntry(1158119, 1158121, 0x64D, typeof(APleaFromMinocQuest), "https://uo.com/wiki/ultima-online-wiki/world/dungeons/dungeon-covetous/")); // New Covetous
                 NewsEntries.Add(new TownCryerNewsEntry(1158110, 1158112, 0x64E, typeof(AVisitToCastleBlackthornQuest), "https://uo.com/wiki/ultima-online-wiki/items/artifacts-castle-blackthorn/")); // Castle Blackthorn
-                NewsEntries.Add(new TownCryerNewsEntry(1158122, 1158124, 0x650, typeof(WishesOfTheWispQuest), "https://uo.com/wiki/ultima-online-wiki/world/dungeons/dungeon-despise-trammel/")); // New Despise
 
                 // New greeting, resets all TC hiding
                 if (NewGreeting)

@@ -1,6 +1,6 @@
 namespace Server.Items
 {
-    public class AverageImbuingBag : BaseRewardBag
+    public class AverageImbuingBag : Bag
     {
         [Constructable]
         public AverageImbuingBag()

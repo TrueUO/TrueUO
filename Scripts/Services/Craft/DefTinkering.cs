@@ -194,14 +194,6 @@ namespace Server.Engines.Craft
             AddCraft(typeof(GoldRing), 1044049, 1024234, 65.0, 115.0, typeof(IronIngot), 1044036, 3, 1044037);
             AddCraft(typeof(GoldBracelet), 1044049, 1024230, 55.0, 105.0, typeof(IronIngot), 1044036, 3, 1044037);
 
-            index = AddCraft(typeof(GargishNecklace), 1044049, 1095784, 60.0, 110.0, typeof(IronIngot), 1044036, 3, 1044037);
-
-            index = AddCraft(typeof(GargishBracelet), 1044049, 1095785, 55.0, 105.0, typeof(IronIngot), 1044036, 3, 1044037);
-
-            index = AddCraft(typeof(GargishRing), 1044049, 1095786, 65.0, 115.0, typeof(IronIngot), 1044036, 3, 1044037);
-
-            index = AddCraft(typeof(GargishEarrings), 1044049, 1095787, 55.0, 105.0, typeof(IronIngot), 1044036, 3, 1044037);
-
             AddJewelrySet(GemType.StarSapphire, typeof(StarSapphire));
             AddJewelrySet(GemType.Emerald, typeof(Emerald));
             AddJewelrySet(GemType.Sapphire, typeof(Sapphire));
@@ -362,10 +354,6 @@ namespace Server.Engines.Craft
             AddCraft(typeof(Goblet), 1044048, 1022458, 10.0, 60.0, typeof(IronIngot), 1044036, 2, 1044037);
             AddCraft(typeof(PewterMug), 1044048, 1024097, 10.0, 60.0, typeof(IronIngot), 1044036, 2, 1044037);
             AddCraft(typeof(SkinningKnife), 1044048, 1023781, 25.0, 75.0, typeof(IronIngot), 1044036, 2, 1044037);
-
-            AddCraft(typeof(GargishCleaver), 1044048, 1097478, 20.0, 70.0, typeof(IronIngot), 1044036, 3, 1044037);
-
-            AddCraft(typeof(GargishButcherKnife), 1044048, 1097486, 25.0, 75.0, typeof(IronIngot), 1044036, 2, 1044037);
             #endregion
 
             #region Misc
@@ -477,12 +465,6 @@ namespace Server.Engines.Craft
             SetDisplayID(index, 1659);
             AddCreateItem(index, CraftableMetalHouseDoor.Create);
 
-            index = AddCraft(typeof(KotlPowerCore), 1044050, 1124179, 85.0, 135.0, typeof(WorkableGlass), 1154170, 5, 1154171);
-            AddRes(index, typeof(CopperWire), 1026265, 5, 1150700);
-            AddRes(index, typeof(IronIngot), 1044036, 100, 1044253);
-            AddRes(index, typeof(MoonstoneCrystalShard), 1124142, 5, 1156701);
-            AddRecipe(index, (int)TinkerRecipes.KotlPowerCore);
-
             index = AddCraft(typeof(WeatheredBronzeGlobeSculptureDeed), 1044050, 1156881, 85.0, 135.0, typeof(BronzeIngot), 1038039, 200, 1044253);
             AddRecipe(index, (int)TinkerRecipes.WeatheredBronzeGlobeSculpture);
 
@@ -590,13 +572,6 @@ namespace Server.Engines.Craft
             AddRes(index, typeof(HeatingStand), 1011224, 4, 1044253);
             AddRes(index, typeof(CopperWire), 1026265, 1, 1044253);
             ForceNonExceptional(index);
-
-            index = AddCraft(typeof(KotlAutomatonHead), 1044051, 1156998, 100.0, 580.0, typeof(IronIngot), 1044036, 300, 1044037);
-            SetMinSkillOffset(index, 25.0);
-            AddRes(index, typeof(AutomatonActuator), 1156997, 1, 1156999);
-            AddRes(index, typeof(StasisChamberPowerCore), 1156623, 1, 1157000);
-            AddRes(index, typeof(InoperativeAutomatonHead), 1157002, 1, 1157001);
-            AddRecipe(index, (int)TinkerRecipes.KotlAutomatonHead);
 
             index = AddCraft(typeof(PersonalTelescope), 1044051, 1125284, 95.0, 196.0, typeof(IronIngot), 1044036, 25, 1044037);
             AddRes(index, typeof(WorkableGlass), 1154170, 1, 1154171);

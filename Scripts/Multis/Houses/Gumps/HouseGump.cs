@@ -795,15 +795,6 @@ namespace Server.Gumps
 
                 HousePlacementEntry[] entries = null;
 
-                if ((house is BaseContestHouse && ((BaseContestHouse)house).HouseType == ContestHouseType.Keep) || house is Keep)
-                {
-                    entries = HousePlacementEntry.PreBuiltHouses.Where(e => e.MultiID != house.ItemID && (e.MultiID == 0x007C || e.MultiID == 0x147E || e.MultiID >= 0x1484)).ToArray();
-                }
-                else if ((house is BaseContestHouse && ((BaseContestHouse)house).HouseType == ContestHouseType.Castle) || house is Castle)
-                {
-                    entries = HousePlacementEntry.PreBuiltHouses.Where(e => e.MultiID != house.ItemID && (e.MultiID == 0x007E || (e.MultiID >= 0x147F && e.MultiID <= 0x1483))).ToArray();
-                }
-
                 if (entries != null)
                 {
                     BaseGump.SendGump(new HouseSwapGump(from, house, entries));

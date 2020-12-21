@@ -2,7 +2,6 @@ using Server.Engines.Craft;
 
 namespace Server.Items
 {
-    [Alterable(typeof(DefTailoring), typeof(GargishLeatherLegs))]
     [Flipable(0x13cb, 0x13d2)]
     public class LeatherLegs : BaseArmor
     {

@@ -70,7 +70,7 @@ namespace Server.Items
 
                     var neck = from.FindItemOnLayer(Layer.Neck);
 
-                    if (neck != null && (neck is FellowshipMedallion || neck is GargishFellowshipMedallion))
+                    if (neck != null && (neck is FellowshipMedallion))
                     {
                         neck.Hue = 1151;
                     }

@@ -83,7 +83,7 @@ namespace Server.Mobiles
 
                 if (0.05 > Utility.RandomDouble())
                 {
-                    switch (Utility.Random(32))
+                    switch (Utility.Random(28))
                     {
                         case 0: c.DropItem(new AssassinChest()); break;
                         case 1: c.DropItem(new AssassinArms()); break;
@@ -107,16 +107,12 @@ namespace Server.Mobiles
                         case 19: c.DropItem(new PaladinLegs()); break;
                         case 20: c.DropItem(new PaladinHelm()); break;
                         case 21: c.DropItem(new PaladinChest()); break;
-                        case 22: c.DropItem(new HunterArms()); break;
-                        case 23: c.DropItem(new HunterGloves()); break;
-                        case 24: c.DropItem(new HunterLegs()); break;
-                        case 25: c.DropItem(new HunterChest()); break;
-                        case 26: c.DropItem(new GreymistArms()); break;
-                        case 27: c.DropItem(new GreymistGloves()); break;
-                        case 28: c.DropItem(new GreymistLegs()); break;
-                        case 29: c.DropItem(new MalekisHonor()); break;
-                        case 30: c.DropItem(new Feathernock()); break;
-                        case 31: c.DropItem(new Swiftflight()); break;
+                        case 22: c.DropItem(new GreymistArms()); break;
+                        case 23: c.DropItem(new GreymistGloves()); break;
+                        case 24: c.DropItem(new GreymistLegs()); break;
+                        case 25: c.DropItem(new MalekisHonor()); break;
+                        case 26: c.DropItem(new Feathernock()); break;
+                        case 27: c.DropItem(new Swiftflight()); break;
                     }
                 }
             }

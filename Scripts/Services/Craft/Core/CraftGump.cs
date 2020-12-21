@@ -725,23 +725,8 @@ namespace Server.Engines.Craft
 
                                     break;
                                 }
-                            case 9: // Alter Item (Gargoyle)
-                                {
-                                    if (system.CanAlter)
-                                    {
-                                        if (SkillHandlers.Imbuing.CheckSoulForge(m_From, 1, false))
-                                        {
-                                            AlterItem.BeginTarget(m_From, system, m_Tool);
-                                        }
-                                        else
-                                            m_From.SendLocalizedMessage(1111867); // You must be near a soulforge to alter an item.
-                                    }
-                                    break;
-                                }
                             case 10: // Quest Item/Non Quest Item toggle
                                 {
-                                    //if (context == null || !system.QuestOption)
-                                    //break;
                                     switch (context.QuestOption)
                                     {
                                         case CraftQuestOption.QuestItem:

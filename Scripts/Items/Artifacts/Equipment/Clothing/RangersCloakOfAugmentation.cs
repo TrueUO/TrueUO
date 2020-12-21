@@ -1,8 +1,5 @@
-﻿using Server.Engines.Craft;
-
 namespace Server.Items
 {
-    [Alterable(typeof(DefTailoring), typeof(WardensArmorOfAugmentation))]
     public class RangersCloakOfAugmentation : Cloak
     {
         public override bool IsArtifact => true;

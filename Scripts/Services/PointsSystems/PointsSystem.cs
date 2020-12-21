@@ -1,6 +1,5 @@
 using Server.Engines.ArenaSystem;
 using Server.Engines.CityLoyalty;
-using Server.Engines.SorcerersDungeon;
 using Server.Engines.Fellowship;
 using Server.Engines.JollyRoger;
 using Server.Engines.VvV;
@@ -47,12 +46,10 @@ namespace Server.Engines.Points
 
         Khaldun,
         Doom,
-        SorcerersDungeon,
         RisingTide,
 
         GauntletPoints,
         TOT,
-        VAS,
         FellowshipData,
         JollyRogerData,
     }
@@ -347,19 +344,14 @@ namespace Server.Engines.Points
         public static VoidPool VoidPool { get; set; }
         public static DespiseCrystals DespiseCrystals { get; set; }
         public static ShameCrystals ShameCrystals { get; set; }
-        public static CasinoData CasinoData { get; set; }
         public static BlackthornData Blackthorn { get; set; }
         public static CleanUpBritanniaData CleanUpBritannia { get; set; }
         public static ViceVsVirtueSystem ViceVsVirtue { get; set; }
-        public static KotlCityData TreasuresOfKotlCity { get; set; }
         public static PVPArenaSystem ArenaSystem { get; set; }
         public static KhaldunData Khaldun { get; set; }
-        public static DoomData TreasuresOfDoom { get; set; }
-        public static SorcerersDungeonData SorcerersDungeon { get; set; }
         public static RisingTide RisingTide { get; set; }
         public static DoomGauntlet DoomGauntlet { get; set; }
         public static TreasuresOfTokuno TreasuresOfTokuno { get; set; }
-        public static VirtueArtifactsSystem VirtueArtifacts { get; set; }
         public static FellowshipData FellowshipData { get; set; }
         public static JollyRogerData JollyRogerData { get; set; }
 
@@ -376,21 +368,16 @@ namespace Server.Engines.Points
             VoidPool = new VoidPool();
             DespiseCrystals = new DespiseCrystals();
             ShameCrystals = new ShameCrystals();
-            CasinoData = new CasinoData();
             Blackthorn = new BlackthornData();
             CleanUpBritannia = new CleanUpBritanniaData();
             ViceVsVirtue = new ViceVsVirtueSystem();
-            TreasuresOfKotlCity = new KotlCityData();
 
             CityLoyaltySystem.ConstructSystems();
             ArenaSystem = new PVPArenaSystem();
             Khaldun = new KhaldunData();
-            TreasuresOfDoom = new DoomData();
-            SorcerersDungeon = new SorcerersDungeonData();
             RisingTide = new RisingTide();
             DoomGauntlet = new DoomGauntlet();
             TreasuresOfTokuno = new TreasuresOfTokuno();
-            VirtueArtifacts = new VirtueArtifactsSystem();
             FellowshipData = new FellowshipData();
             JollyRogerData = new JollyRogerData();
         }

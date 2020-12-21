@@ -70,18 +70,6 @@ namespace Server.Engines.Khaldun
                 Movable = false
             };
             PackItem(item);
-
-            item = new TalonsOfEscaping
-            {
-                Movable = false
-            };
-            PackItem(item);
-
-            item = new BootsOfEscaping
-            {
-                Movable = false
-            };
-            PackItem(item);
         }
 
         public override void GetProperties(ObjectPropertyList list)

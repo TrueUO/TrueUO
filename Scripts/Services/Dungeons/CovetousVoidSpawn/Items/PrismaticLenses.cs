@@ -1,8 +1,5 @@
-using Server.Engines.Craft;
-
 namespace Server.Items
 {
-    [Alterable(typeof(DefTinkering), typeof(GargishPrismaticLenses))]
     public class PrismaticLenses : Glasses
     {
         public override int LabelNumber => 1152716;  // Prismatic Lenses

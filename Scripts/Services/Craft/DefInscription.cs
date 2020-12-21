@@ -386,11 +386,6 @@ namespace Server.Engines.Craft
             AddRes(index, typeof(DaemonBone), 1017412, 5, 1044253);
             AddRes(index, typeof(SummonDaemonScroll), 1016017, 1, 1044253);
 
-            index = AddCraft(typeof(PropheticManuscript), 1044294, 1155631, 90.0, 115.0, typeof(AncientParchment), 1155627, 10, 1044253);
-            AddRes(index, typeof(AntiqueDocumentsKit), 1155630, 1, 1044253);
-            AddRes(index, typeof(WoodPulp), 1113136, 10, 1113289);
-            AddRes(index, typeof(Beeswax), 1025154, 5, 1044253);
-
             AddCraft(typeof(BlankScroll), 1044294, 1023636, 50.0, 100.0, typeof(WoodPulp), 1113136, 1, 1044378);
 
             index = AddCraft(typeof(ScrollBinderDeed), 1044294, 1113135, 75.0, 125.0, typeof(WoodPulp), 1113136, 1, 1044253);

@@ -72,9 +72,8 @@ namespace Server.Items
 
                 int[] list = GetHueList();
 
-                int rows = User.Race == Race.Human ? 8 : 6;
-                int start = User.Race == Race.Human ? 40 : 80;
-                bool elf = User.Race == Race.Elf;
+                int rows = 8;
+                int start = 40;
 
                 int x = start;
                 int y = start;
@@ -88,7 +87,7 @@ namespace Server.Items
                         y += 22;
                     }
 
-                    displayHue = elf ? list[i] - 1 : list[i];
+                    displayHue = list[i];
 
                     AddImage(x, y, 210, displayHue);
                     AddButton(x, y, 212, 212, i + 100, GumpButtonType.Reply, 0);
@@ -97,9 +96,6 @@ namespace Server.Items
                 }
 
                 displayHue = SelectedHue != 0 ? SelectedHue : User.Hue ^ 0x8000;
-
-                if (elf)
-                    displayHue--;
 
                 AddImage(240, 0, GetPaperdollImage(), displayHue);
 
@@ -140,16 +136,6 @@ namespace Server.Items
                     return User.Female ? 13 : 12;
                 }
 
-                if (User.Race == Race.Elf)
-                {
-                    return User.Female ? 15 : 14;
-                }
-
-                if (User.Race == Race.Gargoyle)
-                {
-                    return User.Female ? 665 : 666;
-                }
-
                 return 0;
             }
 
@@ -160,22 +146,10 @@ namespace Server.Items
                     return HumanSkinHues;
                 }
 
-                if (User.Race == Race.Elf)
-                {
-                    return ElfSkinHues;
-                }
-
-                if (User.Race == Race.Gargoyle)
-                {
-                    return GargoyleSkinHues;
-                }
-
                 return new int[0];
             }
 
             private static int[] _HumanSkinHues;
-            private static int[] _ElfSkinHues;
-            private static int[] _GargoyleSkinHues;
 
             public static int[] HumanSkinHues
             {
@@ -192,43 +166,6 @@ namespace Server.Items
                     }
 
                     return _HumanSkinHues;
-                }
-            }
-
-            public static int[] ElfSkinHues
-            {
-                get
-                {
-                    if (_ElfSkinHues == null)
-                    {
-                        _ElfSkinHues = new int[]
-                        {
-                            0x4DE, 0x76C, 0x835, 0x430, 0x24D, 0x24E, 0x24F, 0x0BF,
-                            0x4A7, 0x361, 0x375, 0x367, 0x3E8, 0x3DE, 0x353, 0x903,
-                            0x76D, 0x384, 0x579, 0x3E9, 0x374, 0x389, 0x385, 0x376,
-                            0x53F, 0x381, 0x382, 0x383, 0x76B, 0x3E5, 0x51D, 0x3E6
-                        };
-                    }
-
-                    return _ElfSkinHues;
-                }
-            }
-
-            public static int[] GargoyleSkinHues
-            {
-                get
-                {
-                    if (_GargoyleSkinHues == null)
-                    {
-                        _GargoyleSkinHues = new int[25];
-
-                        for (int i = 0; i < _GargoyleSkinHues.Length; i++)
-                        {
-                            _GargoyleSkinHues[i] = i + 1754;
-                        }
-                    }
-
-                    return _GargoyleSkinHues;
                 }
             }
         }

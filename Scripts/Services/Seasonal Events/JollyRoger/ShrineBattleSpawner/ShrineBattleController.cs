@@ -297,7 +297,7 @@ namespace Server.Engines.JollyRoger
 
         public static Item CreateItem(Mobile damager)
         {
-            Item i = Loot.RandomArmorOrShieldOrWeaponOrJewelry(LootPackEntry.IsInTokuno(damager), LootPackEntry.IsMondain(damager), LootPackEntry.IsStygian(damager));
+            Item i = Loot.RandomArmorOrShieldOrWeaponOrJewelry(LootPackEntry.IsInTokuno(damager), LootPackEntry.IsMondain(damager));
 
             if (i != null)
             {

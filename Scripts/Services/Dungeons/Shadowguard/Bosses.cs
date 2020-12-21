@@ -26,7 +26,7 @@ namespace Server.Engines.Shadowguard
         private readonly Type[] _ArtifactTypes =
         {
             typeof(AnonsBoots),                 typeof(AnonsSpellbook),         typeof(BalakaisShamanStaff),
-            typeof(EnchantressCameo),           typeof(GrugorsShield),          typeof(WamapsBoneEarrings),
+            typeof(EnchantressCameo),           typeof(GrugorsShield),          
             typeof(HalawasHuntingBow),          typeof(HawkwindsRobe),          typeof(JumusSacredHide),
             typeof(JuonarsGrimoire),            typeof(LereisHuntingSpear),     typeof(UnstableTimeRift),
             typeof(MinaxsSandles),              typeof(MocapotlsObsidianSword), typeof(OzymandiasObi),

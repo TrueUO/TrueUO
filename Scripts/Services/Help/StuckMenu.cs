@@ -26,65 +26,15 @@ namespace Server.Menus.Questions
     {
         private static readonly StuckMenuEntry[] m_Entries = new StuckMenuEntry[]
         {
-            // Britain
-            new StuckMenuEntry(1011028, new Point3D[]
+            // Moonglow
+            new StuckMenuEntry(1011344, new Point3D[]
             {
-                new Point3D(1522, 1757, 28),
-                new Point3D(1519, 1619, 10),
-                new Point3D(1457, 1538, 30),
-                new Point3D(1607, 1568, 20),
-                new Point3D(1643, 1680, 18)
+                new Point3D(4453, 1170, 0)
+                //new Point3D(1519, 1619, 10),
+                //new Point3D(1457, 1538, 30),
+                //new Point3D(1607, 1568, 20),
+                //new Point3D(1643, 1680, 18)
             }),
-
-            // Trinsic
-            new StuckMenuEntry(1011029, new Point3D[]
-            {
-                new Point3D(2005, 2754, 30),
-                new Point3D(1993, 2827, 0),
-                new Point3D(2044, 2883, 0),
-                new Point3D(1876, 2859, 20),
-                new Point3D(1865, 2687, 0)
-            }),
-
-            // Vesper
-            new StuckMenuEntry(1011030, new Point3D[]
-            {
-                new Point3D(2973, 891, 0),
-                new Point3D(3003, 776, 0),
-                new Point3D(2910, 727, 0),
-                new Point3D(2865, 804, 0),
-                new Point3D(2832, 927, 0)
-            }),
-
-            // Minoc
-            new StuckMenuEntry(1011031, new Point3D[]
-            {
-                new Point3D(2498, 392, 0),
-                new Point3D(2433, 541, 0),
-                new Point3D(2445, 501, 15),
-                new Point3D(2501, 469, 15),
-                new Point3D(2444, 420, 15)
-            }),
-
-            // Yew
-            new StuckMenuEntry(1011032, new Point3D[]
-            {
-                new Point3D(490, 1166, 0),
-                new Point3D(652, 1098, 0),
-                new Point3D(650, 1013, 0),
-                new Point3D(536, 979, 0),
-                new Point3D(464, 970, 0)
-            }),
-
-            // Cove
-            new StuckMenuEntry(1011033, new Point3D[]
-            {
-                new Point3D(2230, 1159, 0),
-                new Point3D(2218, 1203, 0),
-                new Point3D(2247, 1194, 0),
-                new Point3D(2236, 1224, 0),
-                new Point3D(2273, 1231, 0)
-            })
         };
 
         private static readonly StuckMenuEntry[] m_T2AEntries = new StuckMenuEntry[]
@@ -110,27 +60,6 @@ namespace Server.Menus.Questions
             })
         };
 
-        private static readonly StuckMenuEntry[] m_TerMurEntries = new StuckMenuEntry[]
-        {
-            // Royal City
-            new StuckMenuEntry(1112571, new Point3D[]
-            {
-                new Point3D(750, 3440, -20),
-                new Point3D(709, 3444, -20),
-                new Point3D(802, 3431, -10),
-                new Point3D(848, 3450, -19),
-                new Point3D(738, 3486, -19)
-            }),
-
-            // Holy City
-            new StuckMenuEntry(1112572, new Point3D[]
-            {
-                new Point3D(997, 3869, -42),
-                new Point3D(961, 3921, -42),
-                new Point3D(996, 3962, -42)
-            })
-        };
-
         private readonly Mobile m_Mobile;
         private readonly Mobile m_Sender;
         private readonly bool m_MarkUse;
@@ -151,7 +80,7 @@ namespace Server.Menus.Questions
 
             AddHtmlLocalized(50, 20, 250, 35, 1011027, false, false); // Chose a town:
 
-            StuckMenuEntry[] entries = IsTerMur(beheld) ? m_TerMurEntries : IsInSecondAgeArea(beheld) ? m_T2AEntries : m_Entries;
+            StuckMenuEntry[] entries = IsInSecondAgeArea(beheld) ? m_T2AEntries : m_Entries;
 
             for (int i = 0; i < entries.Length; i++)
             {
@@ -199,7 +128,7 @@ namespace Server.Menus.Questions
             else
             {
                 int index = info.ButtonID - 1;
-                StuckMenuEntry[] entries = IsTerMur(m_Mobile) ? m_TerMurEntries : IsInSecondAgeArea(m_Mobile) ? m_T2AEntries : m_Entries;
+                StuckMenuEntry[] entries = IsInSecondAgeArea(m_Mobile) ? m_T2AEntries : m_Entries;
 
                 if (index >= 0 && index < entries.Length)
                     Teleport(entries[index]);
@@ -218,11 +147,6 @@ namespace Server.Menus.Questions
                 return true;
 
             return false;
-        }
-
-        private static bool IsTerMur(Mobile m)
-        {
-            return m.Map == Map.TerMur && !SpellHelper.IsEodon(m.Map, m.Location);
         }
 
         private void Teleport(StuckMenuEntry entry)

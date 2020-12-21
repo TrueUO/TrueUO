@@ -112,14 +112,7 @@ namespace Server.Mobiles
 
         public override void VendorBuy(Mobile from)
         {
-            if (from.Race == Race.Human)
-            {
-                from.SendGump(new HairstylistBuyGump(from, this, m_SellList));
-            }
-            else if (from.Race == Race.Elf)
-            {
-                from.SendGump(new HairstylistBuyGump(from, this, m_SellListElf));
-            }
+            from.SendGump(new HairstylistBuyGump(from, this, m_SellList));
         }
 
         public override int GetHairHue()
@@ -132,14 +125,6 @@ namespace Server.Mobiles
             base.InitOutfit();
 
             AddItem(new Robe(Utility.RandomPinkHue()));
-        }
-
-        public override bool CheckVendorAccess(Mobile from)
-        {
-            if (from.Race == Race.Gargoyle)
-                return false;
-
-            return base.CheckVendorAccess(from);
         }
 
         public override void InitSBInfo()

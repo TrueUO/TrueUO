@@ -30,62 +30,18 @@ namespace Server.Mobiles
             InitStats(100, 100, 25);
 
             Female = false;
-            Race = Race.Elf;
-
-            Hue = 0x8367;
-            HairItemID = 0x2FC1;
-            HairHue = 0x38;
-        }
-
-        public override void InitOutfit()
-        {
-            AddItem(new ElvenBoots(0x1BB));
-
-            Item item;
-
-            item = new WoodlandLegs
-            {
-                Hue = 0x236
-            };
-            AddItem(item);
-
-            item = new WoodlandChest
-            {
-                Hue = 0x236
-            };
-            AddItem(item);
-
-            item = new WoodlandArms
-            {
-                Hue = 0x236
-            };
-            AddItem(item);
-
-            item = new WoodlandBelt
-            {
-                Hue = 0x237
-            };
-            AddItem(item);
-
-            item = new VultureHelm
-            {
-                Hue = 0x236
-            };
-            AddItem(item);
         }
 
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

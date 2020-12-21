@@ -12,7 +12,6 @@ namespace Server.Engines.Fellowship
         {
             Rewards = new List<CollectionItem>
             {
-                new CollectionItem(typeof(TinctureOfSilver), 0x183B, 1155619, 1900, 10000),
                 new CollectionItem(typeof(PumpkinCannonDeed), 0x14F2, 1159232, 1922, 50000),
                 new CollectionItem(typeof(PumpkinRowBoatDeed), 0x14F2, 1159233, 0, 250000),
                 new CollectionItem(typeof(JackOLanternHelm), 0xA3EA, 1125986, 0, 150000),

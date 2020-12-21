@@ -524,8 +524,6 @@ namespace Server.Gumps
                     return WeakEntityCollection.HasCollection("tol");
                 case 125:
                     return BedrollSpawner.Instances != null && BedrollSpawner.Instances.Count > 0;
-                case 126:
-                    return Engines.TreasuresOfKotlCity.KotlBattleSimulator.Instance != null;
                 case 128:
                     return Engines.CannedEvil.ChampionSystem.AllSpawns.Count > 0;
             }

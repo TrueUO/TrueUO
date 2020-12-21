@@ -1,5 +1,4 @@
 using Server.Engines.CityLoyalty;
-using Server.Engines.SphynxFortune;
 using Server.Items;
 using Server.Misc;
 using Server.Mobiles;
@@ -147,7 +146,7 @@ namespace Server
             bool ranged = type == DamageType.Ranged;
             BaseQuiver quiver = null;
 
-            if (ranged && from.Race != Race.Gargoyle)
+            if (ranged)
                 quiver = from.FindItemOnLayer(Layer.Cloak) as BaseQuiver;
 
             int totalDamage;
@@ -267,8 +266,6 @@ namespace Server
             SpiritualityVirtue.GetDamageReduction(m, ref totalDamage);
 
             BestialSetHelper.OnDamage(m, from, ref totalDamage);
-
-            EpiphanyHelper.OnHit(m, totalDamage);
 
             if (type == DamageType.Spell && m != null && Feint.Registry.ContainsKey(m) && Feint.Registry[m].Enemy == from)
                 totalDamage -= (int)(damage * ((double)Feint.Registry[m].DamageReduction / 100));
@@ -439,7 +436,7 @@ namespace Server
                 case 4: return from.GetMaxResistance(ResistanceType.Energy);
                 case 5: return Math.Min(45 + BaseArmor.GetRefinedDefenseChance(from), AosAttributes.GetValue(from, AosAttribute.DefendChance));
                 case 6: return 45 + BaseArmor.GetRefinedDefenseChance(from) + WhiteTigerFormSpell.GetDefenseCap(from);
-                case 7: return Math.Min(from.Race == Race.Gargoyle ? 50 : 45, AosAttributes.GetValue(from, AosAttribute.AttackChance));
+                case 7: return Math.Min(45, AosAttributes.GetValue(from, AosAttribute.AttackChance));
                 case 8: return Math.Min(60, AosAttributes.GetValue(from, AosAttribute.WeaponSpeed));
                 case 9: return Math.Min(100, AosAttributes.GetValue(from, AosAttribute.WeaponDamage));
                 case 10: return Math.Min(100, AosAttributes.GetValue(from, AosAttribute.LowerRegCost));
@@ -534,9 +531,6 @@ namespace Server
 
             int value = 0;
 
-            if (attribute == AosAttribute.Luck || attribute == AosAttribute.RegenMana || attribute == AosAttribute.DefendChance || attribute == AosAttribute.EnhancePotions)
-                value += SphynxFortune.GetAosAttributeBonus(m, attribute);
-
             value += Enhancement.GetValue(m, attribute);
 
             for (int i = 0; i < m.Items.Count; ++i)
@@ -599,11 +593,6 @@ namespace Server
                 if (Block.IsBlocking(m))
                     value -= 30;
 
-                if (m is PlayerMobile pm && pm.Race == Race.Gargoyle)
-                {
-                    value += pm.GetRacialBerserkBuff(false);
-                }
-
                 if (BaseFishPie.IsUnderEffects(m, FishPieEffect.WeaponDam))
                     value += 5;
             }
@@ -621,11 +610,6 @@ namespace Server
                     value += spell.SpellDamageBonus;
 
                 value += ArcaneEmpowermentSpell.GetSpellBonus(m, true);
-
-                if (m is PlayerMobile mobile && mobile.Race == Race.Gargoyle)
-                {
-                    value += mobile.GetRacialBerserkBuff(true);
-                }
 
                 if (CityLoyaltySystem.HasTradeDeal(m, TradeDeal.GuildOfArcaneArts))
                     value += 5;
@@ -725,9 +709,6 @@ namespace Server
 
                 if (Spells.Mysticism.SleepSpell.IsUnderSleepEffects(m))
                     value -= 45;
-
-                if (m.Race == Race.Gargoyle)
-                    value += 5;  //Gargoyles get a +5 HCI
 
                 if (BaseFishPie.IsUnderEffects(m, FishPieEffect.HitChance))
                     value += 8;

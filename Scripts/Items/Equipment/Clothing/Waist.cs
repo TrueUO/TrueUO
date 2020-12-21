@@ -34,7 +34,6 @@ namespace Server.Items
         }
     }
 
-    [Alterable(typeof(DefTailoring), typeof(GargoyleHalfApron))]
     [Flipable(0x153b, 0x153c)]
     public class HalfApron : BaseWaist
     {

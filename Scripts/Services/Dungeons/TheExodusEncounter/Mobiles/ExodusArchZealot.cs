@@ -1,6 +1,3 @@
-#region Header
-//Exodus Encounter by Redmoon
-#endregion Header
 using Server.Commands;
 using Server.ContextMenus;
 using Server.Gumps;
@@ -39,19 +36,6 @@ namespace Server.Mobiles
 
         public ExodusArchZealot(Serial serial) : base(serial)
         {
-        }
-
-        public override bool OnDragDrop(Mobile from, Item dropped)
-        {
-            if (from.InRange(Location, 2) && from.Race == Race.Gargoyle && dropped.GetType() == typeof(ExodusSacrificalDagger))
-            {
-                dropped.Delete();
-                from.AddToBackpack(new ExodusSacrificalGargishDagger());
-
-                return true;
-            }
-
-            return base.OnDragDrop(from, dropped);
         }
 
         public override void GetContextMenuEntries(Mobile from, List<ContextMenuEntry> list)

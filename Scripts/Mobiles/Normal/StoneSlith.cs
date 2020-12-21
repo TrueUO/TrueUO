@@ -65,11 +65,6 @@ namespace Server.Mobiles
         {
             base.OnDeath(c);
 
-            if (!Controlled && Utility.RandomDouble() <= 0.005)
-            {
-                c.DropItem(new StoneSlithClaw());
-            }
-
             if (!Controlled && Utility.RandomDouble() < 0.05)
             {
                 c.DropItem(new SlithEye());

@@ -30,18 +30,6 @@ namespace Server.Mobiles
             InitStats(100, 100, 25);
 
             Female = true;
-            Race = Race.Elf;
-
-            Hue = 0x83E7;
-            HairItemID = 0x2FD0;
-            HairHue = 0x26B;
-        }
-
-        public override void InitOutfit()
-        {
-            AddItem(new Sandals(0x719));
-            AddItem(new FemaleElvenRobe(0x757));
-            AddItem(new RoyalCirclet());
         }
 
         public override void Serialize(GenericWriter writer)

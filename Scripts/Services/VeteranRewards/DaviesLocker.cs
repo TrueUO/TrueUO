@@ -401,9 +401,6 @@ namespace Server.Engines.VeteranRewards
             Opened = false;
             IsAncient = false;
             MessageIndex = -1;
-
-            if (mib is SaltySeaMIB)
-                QuestItem = true;
         }
 
         public SOSEntry(SOS sos)
@@ -412,9 +409,6 @@ namespace Server.Engines.VeteranRewards
             Opened = true;
             IsAncient = sos.IsAncient;
             MessageIndex = sos.MessageIndex;
-
-            if (sos is SaltySeaSOS)
-                QuestItem = true;
         }
 
         public SOSEntry(GenericReader reader)
@@ -454,9 +448,6 @@ namespace Server.Engines.VeteranRewards
             Decoder = map.Decoder;
             NextReset = map.NextReset;
             Package = map.Package;
-
-            if (map is HiddenTreasuresTreasureMap)
-                QuestItem = true;
         }
 
         public TreasureMapEntry(GenericReader reader) : base(reader)
@@ -735,10 +726,7 @@ namespace Server.Engines.VeteranRewards
             {
                 SOS sos;
 
-                if (entry.QuestItem)
-                    sos = new SaltySeaSOS(entry.Map, entry.Level);
-                else
-                    sos = new SOS(entry.Map, entry.Level);
+                sos = new SOS(entry.Map, entry.Level);
 
                 sos.MessageIndex = entry.MessageIndex;
                 sos.TargetLocation = entry.Location;
@@ -748,10 +736,7 @@ namespace Server.Engines.VeteranRewards
             {
                 MessageInABottle mib;
 
-                if (entry.QuestItem)
-                    mib = new SaltySeaMIB(entry.Map, entry.Level);
-                else
-                    mib = new MessageInABottle(entry.Map, entry.Level);
+                mib = new MessageInABottle(entry.Map, entry.Level);
 
                 return mib;
             }
@@ -764,18 +749,13 @@ namespace Server.Engines.VeteranRewards
 
             TreasureMap map;
 
-            if (entry.QuestItem)
-                map = new HiddenTreasuresTreasureMap(entry.Level, entry.Map, new Point2D(entry.Location.X, entry.Location.Y));
-            else
+            map = new TreasureMap
             {
-                map = new TreasureMap
-                {
-                    Facet = entry.Map,
-                    Level = entry.Level,
-                    Package = entry.Package,
-                    ChestLocation = new Point2D(entry.Location.X, entry.Location.Y)
-                };
-            }
+                Facet = entry.Map,
+                Level = entry.Level,
+                Package = entry.Package,
+                ChestLocation = new Point2D(entry.Location.X, entry.Location.Y)
+            };
 
             bool eodon = map.TreasureFacet == TreasureFacet.Eodon;
 

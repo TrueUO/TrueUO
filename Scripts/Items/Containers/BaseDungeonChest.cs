@@ -20,8 +20,6 @@ namespace Server.Items
 
             if (key != null)
                 key.Delete();
-
-            RefinementComponent.Roll(this, 1, 0.08);
         }
 
         public BaseDungeonChest(Serial serial) : base(serial)

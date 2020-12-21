@@ -16,7 +16,6 @@ namespace Server.Engines.CannedEvil
         Corrupt,
         Terror,
         Infuse,
-        DragonTurtle,
         Khaldun
     }
 
@@ -117,14 +116,6 @@ namespace Server.Engines.CannedEvil
                 new[] { typeof(UndeadGargoyle), typeof(Wight) },
                 new[] { typeof(SkeletalDrake), typeof(DreamWraith) }
             }),
-
-            new ChampionSpawnInfo( "Valley", typeof( DragonTurtle ), new[]{ "Explorer", "Huntsman", "Msafiri" } , new[] // Dragon Turtle
-            {																											
-				new[]{ typeof( MyrmidexDrone ), typeof( MyrmidexLarvae ) }, 
-				new[]{ typeof( SilverbackGorilla ), typeof( WildTiger ) }, 
-				new[]{ typeof( GreaterPhoenix  ), typeof( Infernus ) }, 
-				new[]{ typeof( Dimetrosaur ), typeof( Allosaurus ) }											   
-			} ),
 
             new ChampionSpawnInfo( "Khaldun", typeof( KhalAnkur ), new[]{ "Banisher", "Enforcer", "Eradicator" } , new[] // Khal Ankur
             {																					                        

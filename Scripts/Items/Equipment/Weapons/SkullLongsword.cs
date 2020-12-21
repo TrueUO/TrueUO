@@ -1,8 +1,5 @@
-using Server.Engines.Craft;
-
 namespace Server.Items
 {
-    [Alterable(typeof(DefBlacksmithy), typeof(GargishSkullLongsword))]
     [Flipable(41793, 41794)]
     public class SkullLongsword : Longsword
     {

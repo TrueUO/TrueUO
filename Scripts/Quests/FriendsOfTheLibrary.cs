@@ -1,5 +1,6 @@
 using Server.Items;
 using System;
+using Server.Mobiles;
 
 namespace Server.Engines.Quests
 {
@@ -49,7 +50,7 @@ namespace Server.Engines.Quests
     {
         public BureaucraticDelayQuest()
         {
-            AddObjective(new DeliverObjective(typeof(SealingWaxOrder), "sealing wax order", 1, typeof(Petrus), "Petrus (Ilshenar)"));
+            AddObjective(new DeliverObjective(typeof(SealingWaxOrder), "sealing wax order", 1, typeof(Banker), "Petrus (Ilshenar)"));
 
             AddReward(new BaseReward(1074871)); // A step closer to having sealing wax.
         }

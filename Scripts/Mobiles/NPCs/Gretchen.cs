@@ -60,65 +60,21 @@ namespace Server.Engines.Quests
             InitStats(100, 100, 25);
 
             Female = true;
-            Race = Race.Elf;
-
-            Hue = 33767;
-            HairItemID = 0x2047;
-            HairHue = 0x465;
 
             CantWalk = true;
             Direction = Direction.East;
         }
 
-        public override void InitOutfit()
-        {
-            SetWearable(new Backpack());
-            SetWearable(new Shoes(1886));
-            SetWearable(new FemaleElvenRobe(443));
-
-            SetWearable(new QuarterStaff());
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             int version = reader.ReadInt();
-
-            if (version == 0)
-            {
-                Female = true;
-                Race = Race.Elf;
-
-                Hue = 33767;
-                HairItemID = 0x2047;
-                HairHue = 0x465;
-
-                CantWalk = true;
-                Direction = Direction.East;
-
-                Item item = FindItemOnLayer(Layer.Cloak);
-                if (item != null)
-                    item.Delete();
-
-                item = FindItemOnLayer(Layer.MiddleTorso);
-                if (item != null)
-                    item.Delete();
-
-                item = FindItemOnLayer(Layer.MiddleTorso);
-                if (item != null)
-                    item.Hue = 1886;
-
-                SetWearable(new FemaleElvenRobe(443));
-                SetWearable(new QuarterStaff());
-            }
         }
     }
 }

@@ -209,10 +209,7 @@ namespace Server.Mobiles
                     list.Add(new SetKeywordEntry(from, this));
                     list.Add(new OpenBackpackEntry(from, this));
 
-                    if (from.Race == Race || (from.Race == Race.Elf && Race == Race.Human || from.Race == Race.Human && Race == Race.Elf))
-                    {
-                        list.Add(new SwitchClothesEntry(from, this));
-                    }
+                    list.Add(new SwitchClothesEntry(from, this));
 
                     list.Add(new RotateEntry(from, this));
                     list.Add(new RedeedEntry(from, this));
@@ -623,12 +620,6 @@ namespace Server.Mobiles
             AddHtmlLocalized(45, 52, 180, 18, 1072255, _Mannequin.Race == Race.Human ? 0x1CFF : 0x7FFF, false, false); // Human
             AddButton(10, 50, 0xFA5, 0xFA7, 1, GumpButtonType.Reply, 0);
 
-            AddHtmlLocalized(45, 72, 180, 18, 1072256, _Mannequin.Race == Race.Elf ? 0x1CFF : 0x7FFF, false, false); // Elf
-            AddButton(10, 70, 0xFA5, 0xFA7, 2, GumpButtonType.Reply, 0);
-
-            AddHtmlLocalized(45, 92, 180, 18, 1029613, _Mannequin.Race == Race.Gargoyle ? 0x1CFF : 0x7FFF, false, false); // Gargoyle 
-            AddButton(10, 90, 0xFA5, 0xFA7, 3, GumpButtonType.Reply, 0);
-
             AddHtmlLocalized(205, 52, 180, 18, 1015327, _Mannequin.Female ? 0x7FFF : 0x1CFF, false, false); // Male
             AddButton(170, 50, 0xFA6, 0xFA6, 4, GumpButtonType.Reply, 0);
 
@@ -688,55 +679,13 @@ namespace Server.Mobiles
 
                         break;
                     }
-                case 2: // Elf
-                    {
-                        if (_Mannequin.Female)
-                        {
-                            _Mannequin.Body = 0x25d;
-                        }
-                        else
-                        {
-                            _Mannequin.Body = 0x25e;
-                        }
-
-                        _Mannequin.Race = Race.Elf;
-
-                        ValidateItems(from, _Mannequin);
-
-                        break;
-                    }
-                case 3: // Gargoyle
-                    {
-                        if (_Mannequin.Female)
-                        {
-                            _Mannequin.Body = 0x29a;
-                        }
-                        else
-                        {
-                            _Mannequin.Body = 0x29b;
-                        }
-
-                        _Mannequin.Race = Race.Gargoyle;
-
-                        ValidateItems(from, _Mannequin);
-
-                        break;
-                    }
                 case 4: // Male
                     {
                         if (_Mannequin.Race == Race.Human)
                         {
                             _Mannequin.Body = 0x190;
                         }
-                        else if (_Mannequin.Race == Race.Elf)
-                        {
-                            _Mannequin.Body = 0x25d;
-                        }
-                        else if (_Mannequin.Race == Race.Gargoyle)
-                        {
-                            _Mannequin.Body = 0x29a;
-                        }
-
+                        
                         _Mannequin.Female = false;
 
                         ValidateItems(from, _Mannequin);
@@ -748,14 +697,6 @@ namespace Server.Mobiles
                         if (_Mannequin.Race == Race.Human)
                         {
                             _Mannequin.Body = 0x191;
-                        }
-                        else if (_Mannequin.Race == Race.Elf)
-                        {
-                            _Mannequin.Body = 0x25e;
-                        }
-                        else if (_Mannequin.Race == Race.Gargoyle)
-                        {
-                            _Mannequin.Body = 0x29b;
                         }
 
                         _Mannequin.Female = true;

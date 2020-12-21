@@ -860,7 +860,7 @@ namespace Server
                     }
                     else
                     {
-                        loot = item.Construct(IsInTokuno(from), IsMondain(from), IsStygian(from));
+                        loot = item.Construct(IsInTokuno(from), IsMondain(from));
                     }
 
                     if (loot != null)
@@ -1120,7 +1120,7 @@ namespace Server
 
         public Func<IEntity, Item> ConstructCallback { get; }
 
-        public Item Construct(bool inTokuno, bool isMondain, bool isStygian)
+        public Item Construct(bool inTokuno, bool isMondain)
         {
             try
             {
@@ -1128,23 +1128,23 @@ namespace Server
 
                 if (Type == typeof(BaseRanged))
                 {
-                    item = Loot.RandomRangedWeapon(inTokuno, isMondain, isStygian);
+                    item = Loot.RandomRangedWeapon(inTokuno, isMondain);
                 }
                 else if (Type == typeof(BaseWeapon))
                 {
-                    item = Loot.RandomWeapon(inTokuno, isMondain, isStygian);
+                    item = Loot.RandomWeapon(inTokuno, isMondain);
                 }
                 else if (Type == typeof(BaseArmor))
                 {
-                    item = Loot.RandomArmorOrHat(inTokuno, isMondain, isStygian);
+                    item = Loot.RandomArmorOrHat(inTokuno, isMondain);
                 }
                 else if (Type == typeof(BaseShield))
                 {
-                    item = Loot.RandomShield(isStygian);
+                    item = Loot.RandomShield();
                 }
                 else if (Type == typeof(BaseJewel))
                 {
-                    item = Loot.RandomJewelry(isStygian);
+                    item = Loot.RandomJewelry();
                 }
                 else if (Type == typeof(BaseInstrument))
                 {

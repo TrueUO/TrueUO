@@ -62,27 +62,6 @@ namespace Server.Mobiles
             AddLoot(LootPack.LootItem<SpidersSilk>(8, true));
         }
 
-        public override void OnDeath(Container c)
-        {
-            base.OnDeath(c);
-
-            if (Utility.RandomDouble() < 0.025)
-            {
-                switch (Utility.Random(2))
-                {
-                    case 0:
-                        c.DropItem(new HunterLegs());
-                        break;
-                    case 1:
-                        c.DropItem(new MalekisHonor());
-                        break;
-                }
-            }
-
-            if (Utility.RandomDouble() < 0.1)
-                c.DropItem(new ParrotItem());
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);

@@ -1,5 +1,4 @@
 using Server.Engines.Quests;
-using Server.Engines.Quests.Hag;
 using Server.Items;
 using Server.Mobiles;
 using Server.Targeting;
@@ -356,9 +355,7 @@ namespace Server.Engines.Harvest
 
         public virtual HarvestResource MutateResource(Mobile from, Item tool, HarvestDefinition def, Map map, Point3D loc, HarvestVein vein, HarvestResource primary, HarvestResource fallback)
         {
-            bool racialBonus = def.RaceBonus && from.Race == Race.Elf;
-
-            if (vein.ChanceToFallback > Utility.RandomDouble() + (racialBonus ? .20 : 0))
+            if (vein.ChanceToFallback > Utility.RandomDouble())
                 return fallback;
 
             double skillValue = from.Skills[def.Skill].Value;
@@ -566,14 +563,6 @@ namespace Server.Engines.Harvest
                         if (system is Lumberjacking lumberjacking)
                             def = lumberjacking.Definition;
                         break;
-                    case 3: // grave
-                        if (TryHarvestGrave(m))
-                            return;
-                        break;
-                    case 4: // red shrooms
-                        if (TryHarvestShrooms(m))
-                            return;
-                        break;
                 }
 
                 if (def != null && FindValidTile(m, def, out object toHarvest))
@@ -626,91 +615,6 @@ namespace Server.Engines.Harvest
 
             return false;
         }
-
-        public static bool TryHarvestGrave(Mobile m)
-        {
-            Map map = m.Map;
-
-            if (map == null)
-                return false;
-
-            for (int x = m.X - 1; x <= m.X + 1; x++)
-            {
-                for (int y = m.Y - 1; y <= m.Y + 1; y++)
-                {
-                    StaticTile[] tiles = map.Tiles.GetStaticTiles(x, y, false);
-
-                    foreach (StaticTile tile in tiles)
-                    {
-                        int itemID = tile.ID;
-
-                        if (itemID == 0xED3 || itemID == 0xEDF || itemID == 0xEE0 || itemID == 0xEE1 || itemID == 0xEE2 || itemID == 0xEE8)
-                        {
-                            if (m is PlayerMobile player)
-                            {
-                                QuestSystem qs = player.Quest;
-
-                                if (qs is WitchApprenticeQuest)
-                                {
-                                    if (qs.FindObjective(typeof(FindIngredientObjective)) is FindIngredientObjective obj && !obj.Completed && obj.Ingredient == Ingredient.Bones)
-                                    {
-                                        player.SendLocalizedMessage(1055037); // You finish your grim work, finding some of the specific bones listed in the Hag's recipe.
-                                        obj.Complete();
-
-                                        return true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        public static bool TryHarvestShrooms(Mobile m)
-        {
-            Map map = m.Map;
-
-            if (map == null)
-                return false;
-
-            for (int x = m.X - 1; x <= m.X + 1; x++)
-            {
-                for (int y = m.Y - 1; y <= m.Y + 1; y++)
-                {
-                    StaticTile[] tiles = map.Tiles.GetStaticTiles(x, y, false);
-
-                    foreach (StaticTile tile in tiles)
-                    {
-                        int itemID = tile.ID;
-
-                        if (itemID == 0xD15 || itemID == 0xD16)
-                        {
-                            if (m is PlayerMobile player)
-                            {
-                                QuestSystem qs = player.Quest;
-
-                                if (qs is WitchApprenticeQuest)
-                                {
-                                    if (qs.FindObjective(typeof(FindIngredientObjective)) is FindIngredientObjective obj && !obj.Completed && obj.Ingredient == Ingredient.RedMushrooms)
-                                    {
-                                        player.SendLocalizedMessage(1055036); // You slice a red cap mushroom from its stem.
-                                        obj.Complete();
-
-                                        return true;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
-            return false;
-        }
-
         #endregion
     }
 }

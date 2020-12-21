@@ -74,19 +74,6 @@ namespace Server.Engines.Quests
             InitStats(100, 100, 25);
 
             Female = true;
-            Race = Race.Elf;
-
-            Hue = 0x847E;
-            HairItemID = 0x2FD0;
-            HairHue = 0x1F2;
-        }
-
-        public override void InitOutfit()
-        {
-            AddItem(new ElvenBoots(0x65A));
-            AddItem(new ElvenShirt(0x728));
-            AddItem(new Kilt(0x1BB));
-            AddItem(new RoyalCirclet());
         }
 
         public override void Serialize(GenericWriter writer)

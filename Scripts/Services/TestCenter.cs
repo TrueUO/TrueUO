@@ -466,7 +466,6 @@ namespace Server.Misc
             bag.DropItem(new DemonHuntersStandard());
             bag.DropItem(new WallOfHungryMouths());
             bag.DropItem(new HumanSignOfChaos());
-            bag.DropItem(new GargishSignOfChaos());
             bag.DropItem(new IronwoodCompositeBow());
             bag.DropItem(new ClawsOfTheBerserker());
             bag.DropItem(new StandardOfChaos());
@@ -488,30 +487,19 @@ namespace Server.Misc
             };
 
             bag.DropItem(new AnonsBoots());
-            bag.DropItem(new AnonsBootsGargoyle());
             bag.DropItem(new AnonsSpellbook());
             bag.DropItem(new BalakaisShamanStaff());
-            bag.DropItem(new BalakaisShamanStaffGargoyle());
             bag.DropItem(new EnchantressCameo());
             bag.DropItem(new GrugorsShield());
-            bag.DropItem(new GrugorsShieldGargoyle());
             bag.DropItem(new HalawasHuntingBow());
-            bag.DropItem(new HalawasHuntingBowGargoyle());
             bag.DropItem(new HawkwindsRobe());
             bag.DropItem(new JumusSacredHide());
-            bag.DropItem(new JumusSacredHideGargoyle());
             bag.DropItem(new JuonarsGrimoire());
             bag.DropItem(new LereisHuntingSpear());
-            bag.DropItem(new LereisHuntingSpearGargoyle());
             bag.DropItem(new MinaxsSandles());
-            bag.DropItem(new MinaxsSandlesGargoyle());
             bag.DropItem(new OzymandiasObi());
-            bag.DropItem(new OzymandiasObiGargoyle());
             bag.DropItem(new ShantysWaders());
-            bag.DropItem(new ShantysWadersGargoyle());
             bag.DropItem(new TotemOfTheTribe());
-            bag.DropItem(new WamapsBoneEarrings());
-            bag.DropItem(new WamapsBoneEarringsGargoyle());
             bag.DropItem(new UnstableTimeRift());
             bag.DropItem(new MocapotlsObsidianSword());
 

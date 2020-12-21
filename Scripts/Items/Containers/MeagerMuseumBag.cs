@@ -1,6 +1,6 @@
 namespace Server.Items
 {
-    public class MeagerMuseumBag : BaseRewardBag
+    public class MeagerMuseumBag : Bag
     {
         [Constructable]
         public MeagerMuseumBag()

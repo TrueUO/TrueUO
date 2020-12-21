@@ -66,47 +66,16 @@ namespace Server.Mobiles
             AddLoot(LootPack.ArcanistScrolls);
         }
 
-        public override void OnDeath(Container c)
-        {
-            base.OnDeath(c);
-
-            c.DropItem(new CoilsFang());
-
-            if (Utility.RandomDouble() < 0.025)
-            {
-                switch (Utility.Random(5))
-                {
-                    case 0:
-                        c.DropItem(new AssassinChest());
-                        break;
-                    case 1:
-                        c.DropItem(new DeathGloves());
-                        break;
-                    case 2:
-                        c.DropItem(new LeafweaveLegs());
-                        break;
-                    case 3:
-                        c.DropItem(new HunterLegs());
-                        break;
-                    case 4:
-                        c.DropItem(new MyrmidonLegs());
-                        break;
-                }
-            }
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

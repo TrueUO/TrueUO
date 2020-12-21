@@ -1,9 +1,8 @@
 namespace Server.Items
 {
     [Flipable(0x2FB9, 0x3173)]
-    public class CloakOfSilence : BaseOuterTorso, ICanBeElfOrHuman
+    public class CloakOfSilence : BaseOuterTorso
     {
-        public bool ElfOnly { get { return false; } set { } }
         public override bool IsArtifact => true;
 
         [Constructable]
@@ -25,14 +24,12 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             int version = reader.ReadInt();
         }
     }

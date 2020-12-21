@@ -128,7 +128,7 @@ namespace Server.Engines.CityLoyalty
                 case 0:
                     return new Skeletonkey();
                 case 1:
-                    Item item = Loot.RandomArmorOrShieldOrWeaponOrJewelry(false, false, true);
+                    Item item = Loot.RandomArmorOrShieldOrWeaponOrJewelry(false, true);
 
                     int min, max;
                     TreasureMapChest.GetRandomItemStat(out min, out max);

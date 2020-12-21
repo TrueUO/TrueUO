@@ -525,16 +525,6 @@ namespace Server.Engines.Quests
             Label = label;
         }
 
-        public override void OnCompleted()
-        {
-            if (Quest != null && Quest.Owner != null && Quest.Owner.Murderer && Quest.Owner.DoneQuests.FirstOrDefault(info => info.QuestType == typeof(ResponsibilityQuest)) == null)
-            {
-                QuestHelper.Delay(Quest.Owner, typeof(ResponsibilityQuest), Quest.RestartDelay);
-            }
-
-            base.OnCompleted();
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);

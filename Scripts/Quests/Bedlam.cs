@@ -8,7 +8,7 @@ namespace Server.Engines.Quests
     {
         public MistakenIdentityQuest()
         {
-            AddObjective(new DeliverObjective(typeof(TuitionReimbursementForm), "tuition reimbursement form", 1, typeof(Gorrow), "Gorrow (Luna)"));
+            AddObjective(new DeliverObjective(typeof(TuitionReimbursementForm), "tuition reimbursement form", 1, typeof(Banker), "Gorrow (Luna)"));
 
             AddReward(new BaseReward(1074634)); // Tuition Reimbursement
         }
@@ -137,7 +137,7 @@ namespace Server.Engines.Quests
     {
         public NotQuiteThatEasyQuest()
         {
-            AddObjective(new DeliverObjective(typeof(SignedTuitionReimbursementForm), "signed tuition reimbursement form", 1, typeof(Gnosos), "Master Gnosos (Bedlam)"));
+            AddObjective(new DeliverObjective(typeof(SignedTuitionReimbursementForm), "signed tuition reimbursement form", 1, typeof(Banker), "Master Gnosos (Bedlam)"));
 
             AddReward(new BaseReward(1074634)); // Tuition Reimbursement
         }

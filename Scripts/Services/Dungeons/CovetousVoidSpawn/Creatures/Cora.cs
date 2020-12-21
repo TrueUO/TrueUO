@@ -319,39 +319,6 @@ namespace Server.Mobiles
             }
         }
 
-        public override void OnKilledBy(Mobile mob)
-        {
-            base.OnKilledBy(mob);
-
-            if (Siege.SiegeShard && mob is PlayerMobile mobile)
-            {
-                int chance = Engines.Despise.DespiseBoss.ArtifactChance + Math.Min(10, mobile.Luck / 180);
-
-                if (chance >= Utility.Random(100))
-                {
-                    Type t = Engines.Despise.DespiseBoss.Artifacts[Utility.Random(Engines.Despise.DespiseBoss.Artifacts.Length)];
-
-                    if (t != null)
-                    {
-                        Item arty = Loot.Construct(t);
-
-                        if (arty != null)
-                        {
-                            Container pack = mobile.Backpack;
-
-                            if (pack == null || !pack.TryDropItem(mobile, arty, false))
-                            {
-                                mobile.BankBox.DropItem(arty);
-                                mobile.SendMessage("An artifact has been placed in your bankbox!");
-                            }
-                            else
-                                mobile.SendLocalizedMessage(1153440); // An artifact has been placed in your backpack!
-                        }
-                    }
-                }
-            }
-        }
-
         public CoraTheSorceress(Serial serial)
             : base(serial)
         {

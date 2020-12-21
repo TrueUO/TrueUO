@@ -1049,7 +1049,7 @@ namespace Server.Items
         {
             int bonus = 0;
 
-            if (m_Quality == ItemQuality.Exceptional && !(this is GargishLeatherWingArmor))
+            if (m_Quality == ItemQuality.Exceptional)
                 bonus += 20;
 
             bonus += m_AosArmorAttributes.DurabilityBonus;
@@ -1129,11 +1129,7 @@ namespace Server.Items
                 {
                     BaseArmor armor = (BaseArmor)item;
 
-                    if (!RaceDefinitions.ValidateEquipment(m, item))
-                    {
-                        m.AddToBackpack(armor);
-                    }
-                    else if (!armor.AllowMaleWearer && !m.Female && m.AccessLevel < AccessLevel.GameMaster)
+                    if (!armor.AllowMaleWearer && !m.Female && m.AccessLevel < AccessLevel.GameMaster)
                     {
                         if (armor.AllowFemaleWearer)
                             m.SendLocalizedMessage(1010388); // Only females can wear this.
@@ -1878,11 +1874,7 @@ namespace Server.Items
                     return false;
                 }
 
-                if (!RaceDefinitions.ValidateEquipment(from, this))
-                {
-                    return false;
-                }
-                else if (!AllowMaleWearer && !from.Female)
+                if (!AllowMaleWearer && !from.Female)
                 {
                     if (AllowFemaleWearer)
                         from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1010388); // Only females can wear this.
@@ -2233,15 +2225,6 @@ namespace Server.Items
             }
 
             AddDamageTypeProperty(list);
-
-            if (RaceDefinitions.GetRequiredRace(this) == Race.Elf)
-            {
-                list.Add(1075086); // Elves Only
-            }
-            else if (RaceDefinitions.GetRequiredRace(this) == Race.Gargoyle)
-            {
-                list.Add(1111709); // Gargoyles Only
-            }
 
             if (this is SurgeShield && ((SurgeShield)this).Surge > SurgeType.None)
                 list.Add(1116176 + ((int)((SurgeShield)this).Surge));

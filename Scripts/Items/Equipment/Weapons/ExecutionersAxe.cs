@@ -1,8 +1,5 @@
-using Server.Engines.Craft;
-
 namespace Server.Items
 {
-    [Alterable(typeof(DefBlacksmithy), typeof(DualShortAxes))]
     [Flipable(0xf45, 0xf46)]
     public class ExecutionersAxe : BaseAxe
     {

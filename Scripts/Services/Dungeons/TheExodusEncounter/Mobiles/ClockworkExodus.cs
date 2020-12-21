@@ -21,11 +21,7 @@ namespace Server.Mobiles
             typeof(HygieiasAmulet),
             typeof(Asclepius),
             typeof(ClockworkLeggings),
-            typeof(DupresSword),
-            typeof(GargishDupresSword),
-            typeof(GargishClockworkLeggings),
-            typeof(GargishBracersofAlchemicalDevastation),
-            typeof(GargishAsclepius)
+            typeof(DupresSword)
         };
 
         private Point3D m_LastTarget;

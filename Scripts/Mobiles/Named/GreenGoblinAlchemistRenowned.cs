@@ -44,7 +44,7 @@ namespace Server.Mobiles
         {
         }
 
-        public override Type[] UniqueSAList => new Type[] { typeof(ObsidianEarrings), typeof(TheImpalersPick) };
+        public override Type[] UniqueSAList => new Type[] { };
         public override Type[] SharedSAList => new Type[] { };
 
         public override bool AllureImmune => true;

@@ -1,9 +1,8 @@
 namespace Server.Items
 {
     [Flipable(0x2FB9, 0x3173)]
-    public class CloakOfLife : BaseOuterTorso, ICanBeElfOrHuman
+    public class CloakOfLife : BaseOuterTorso
     {
-        public bool ElfOnly { get { return false; } set { } }
         public override bool IsArtifact => true;
 
         [Constructable]
@@ -32,7 +31,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

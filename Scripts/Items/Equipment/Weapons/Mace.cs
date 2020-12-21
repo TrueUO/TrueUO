@@ -1,8 +1,5 @@
-using Server.Engines.Craft;
-
 namespace Server.Items
 {
-    [Alterable(typeof(DefBlacksmithy), typeof(DiscMace))]
     [Flipable(0xF5C, 0xF5D)]
     public class Mace : BaseBashing
     {

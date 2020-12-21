@@ -58,12 +58,6 @@ namespace Server.Engines.Blackthorn
             };
             PackItem(item);
 
-            item = new GargishSashBearingTheCrestOfBlackthorn
-            {
-                Movable = false
-            };
-            PackItem(item);
-
             item = new SurcoatBearingTheCrestOfBlackthorn
             {
                 Movable = false
@@ -85,18 +79,6 @@ namespace Server.Engines.Blackthorn
             PackItem(item);
 
             item = new DragonBreastplateBearingTheCrestOfBlackthorn
-            {
-                Movable = false
-            };
-            PackItem(item);
-
-            item = new GargishPlatemailChestBearingTheCrestOfBlackthorn
-            {
-                Movable = false
-            };
-            PackItem(item);
-
-            item = new GargishStoneChestBearingTheCrestOfBlackthorn
             {
                 Movable = false
             };
@@ -338,22 +320,6 @@ namespace Server.Engines.Blackthorn
             };
             PackItem(item);
 
-            item = new GargishEpauletteBearingTheCrestOfBlackthorn4
-            {
-                Movable = false
-            };
-            PackItem(item);
-
-            item = new GargishFancyBearingTheCrestOfBlackthorn4
-            {
-                Movable = false
-            };
-            PackItem(item);
-
-            item = new GargishRobeBearingTheCrestOfBlackthorn4
-            {
-                Movable = false
-            };
             PackItem(item);
 
             item = new GildedDressBearingTheCrestOfBlackthorn4
@@ -616,18 +582,6 @@ namespace Server.Engines.Blackthorn
             };
             PackItem(item);
 
-            item = new GargishEarringsBearingTheCrestOfBlackthorn1
-            {
-                Movable = false
-            };
-            PackItem(item);
-
-            item = new GargishGlassesBearingTheCrestOfBlackthorn1
-            {
-                Movable = false
-            };
-            PackItem(item);
-
             item = new JesterHatBearingTheCrestOfBlackthorn1
             {
                 Movable = false
@@ -696,18 +650,6 @@ namespace Server.Engines.Blackthorn
             };
             PackItem(item);
 
-            item = new GargishEarringsBearingTheCrestOfBlackthorn2
-            {
-                Movable = false
-            };
-            PackItem(item);
-
-            item = new GargishGlassesBearingTheCrestOfBlackthorn2
-            {
-                Movable = false
-            };
-            PackItem(item);
-
             item = new JesterHatBearingTheCrestOfBlackthorn2
             {
                 Movable = false
@@ -771,18 +713,6 @@ namespace Server.Engines.Blackthorn
             PackItem(item);
 
             item = new FeatheredHatBearingTheCrestOfBlackthorn3
-            {
-                Movable = false
-            };
-            PackItem(item);
-
-            item = new GargishEarringsBearingTheCrestOfBlackthorn3
-            {
-                Movable = false
-            };
-            PackItem(item);
-
-            item = new GargishGlassesBearingTheCrestOfBlackthorn3
             {
                 Movable = false
             };

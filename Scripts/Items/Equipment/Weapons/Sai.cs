@@ -1,8 +1,5 @@
-using Server.Engines.Craft;
-
 namespace Server.Items
 {
-    [Alterable(typeof(DefBlacksmithy), typeof(DualPointedSpear))]
     [Flipable(0x27AF, 0x27FA)]
     public class Sai : BaseKnife
     {

@@ -799,11 +799,7 @@ namespace Server.Items
                 }
             }
 
-            if (!RaceDefinitions.ValidateEquipment(from, this))
-            {
-                return false;
-            }
-            else if (from.Dex < DexRequirement)
+            if (from.Dex < DexRequirement)
             {
                 from.SendLocalizedMessage(1071936); // You cannot equip that.
                 return false;
@@ -1121,8 +1117,8 @@ namespace Server.Items
                 bonus = Math.Max(bonus, 45);
             }
 
-            //SA Gargoyle cap is 50, else 45
-            bonus = Math.Min(attacker.Race == Race.Gargoyle ? 50 : 45, bonus);
+            //SA cap is 45
+            bonus = Math.Min(45, bonus);
 
             ourValue = (atkValue + 20.0) * (100 + bonus);
 
@@ -1146,41 +1142,6 @@ namespace Server.Items
             double chance = ourValue / (theirValue * 2.0);
 
             chance *= 1.0 + ((double)bonus / 100);
-
-            if (atkWeapon is BaseThrown)
-            {
-                //Distance malas
-                if (attacker.InRange(defender, 1))  //Close Quarters
-                {
-                    chance -= (.12 - Math.Min(12, (attacker.Skills[SkillName.Throwing].Value + attacker.RawDex) / 20) / 10);
-                }
-                else if (attacker.GetDistanceToSqrt(defender) < ((BaseThrown)atkWeapon).MinThrowRange)  //too close
-                {
-                    chance -= .12;
-                }
-
-                //shield penalty
-                BaseShield shield = attacker.FindItemOnLayer(Layer.TwoHanded) as BaseShield;
-
-                if (shield != null)
-                {
-                    double malus = Math.Min(90, 1200 / Math.Max(1.0, attacker.Skills[SkillName.Parry].Value));
-
-                    chance = chance - (chance * (malus / 100));
-                }
-            }
-
-            if (defWeapon is BaseThrown)
-            {
-                BaseShield shield = defender.FindItemOnLayer(Layer.TwoHanded) as BaseShield;
-
-                if (shield != null)
-                {
-                    double malus = Math.Min(90, 1200 / Math.Max(1.0, defender.Skills[SkillName.Parry].Value));
-
-                    chance = chance + (chance * (malus / 100));
-                }
-            }
 
             if (chance < 0.02)
             {
@@ -2014,15 +1975,6 @@ namespace Server.Items
             percentageBonus -= Block.GetMeleeReduction(defender);
 
             percentageBonus += BattleLust.GetBonus(attacker, defender);
-
-            if (this is BaseThrown)
-            {
-                double dist = attacker.GetDistanceToSqrt(defender);
-                int max = ((BaseThrown)this).MaxThrowRange;
-
-                if (dist > max)
-                    percentageBonus -= 47;
-            }
 
             if (RunedSashOfWarding.IsUnderEffects(defender, WardingEffect.WeaponDamage))
                 percentageBonus -= 10;
@@ -4503,15 +4455,6 @@ namespace Server.Items
             if (m_AosSkillBonuses != null)
             {
                 m_AosSkillBonuses.GetProperties(list);
-            }
-
-            if (RaceDefinitions.GetRequiredRace(this) == Race.Elf)
-            {
-                list.Add(1075086); // Elves Only
-            }
-            else if (RaceDefinitions.GetRequiredRace(this) == Race.Gargoyle)
-            {
-                list.Add(1111709); // Gargoyles Only
             }
 
             if (ArtifactRarity > 0)

@@ -72,9 +72,7 @@ namespace Server.Engines.Harvest
 
                 m_Current = m_Maximum - amount;
 
-                double minutes = min + (rnd * (max - min));
-                if (m_Definition.RaceBonus && from.Race == Race.Elf)
-                    minutes *= .75;	//25% off the time.  
+                double minutes = min + rnd * (max - min);
 
                 m_NextRespawn = DateTime.UtcNow + TimeSpan.FromMinutes(minutes);
             }

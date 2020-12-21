@@ -28,19 +28,6 @@ namespace Server.Engines.Quests
             InitStats(100, 100, 25);
 
             CantWalk = true;
-            Race = Race.Gargoyle;
-
-            Hue = 0x86DF;
-            HairItemID = 0x425D;
-            HairHue = 0x321;
-        }
-
-        public override void InitOutfit()
-        {
-            AddItem(new SerpentStoneStaff());
-            AddItem(new GargishClothChest(1428));
-            AddItem(new GargishClothArms(1445));
-            AddItem(new GargishClothKilt(1443));
         }
 
         public override void Advertise()

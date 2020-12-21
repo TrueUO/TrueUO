@@ -35,20 +35,6 @@ namespace Server.Mobiles
 
             Female = true;
             CantWalk = true;
-            Race = Race.Elf;
-
-            Hue = 0x851D;
-            HairItemID = 0x2FCE;
-            HairHue = 0x35;
-        }
-
-        public override void InitOutfit()
-        {
-            AddItem(new ElvenBoots());
-            AddItem(new Cloak(0x3B2));
-            AddItem(new FemaleLeafChest());
-            AddItem(new LeafArms());
-            AddItem(new LeafTonlet());
         }
 
         public override void OnMovement(Mobile m, Point3D oldLocation)

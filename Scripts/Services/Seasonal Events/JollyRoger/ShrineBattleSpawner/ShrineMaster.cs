@@ -242,11 +242,8 @@ namespace Server.Engines.JollyRoger
             switch (_Specialty)
             {
                 default:
-                    if (0.75 > Utility.RandomDouble())
-                        Race = Race.Human;
-                    else
-                        Race = Race.Elf; break;
-                case MasterTitle.Mystic: Race = Race.Gargoyle;
+                    Race = Race.Human; break;
+                case MasterTitle.Mystic: Race = Race.Human;
                     break;
             }
 
@@ -289,7 +286,6 @@ namespace Server.Engines.JollyRoger
 
                     SetWearable(new HidePauldrons());
                     SetWearable(new HideGorget());
-                    SetWearable(new LeafGloves());
                     SetWearable(new LeatherSkirt());
                     SetWearable(new ThighBoots());
                     SetWearable(new BodySash(1308));
@@ -340,13 +336,6 @@ namespace Server.Engines.JollyRoger
                     SetWearable(new WizardsHat(1156));
                     SetWearable(new Sandals(2498));
                     SetWearable(new Spellbook());
-                    break;
-                case MasterTitle.Mystic:
-                    SetWearable(new MysticBook((uint)0xFFF));
-                    SetWearable(new GargishFancyRobe());
-                    SetWearable(new GargishEarrings());
-                    SetWearable(new GargishClothWingArmor());
-                    SetWearable(new LeatherTalons());
                     break;
                 case MasterTitle.Sampire:
                     SetWearable(new DoubleAxe(), 1858);

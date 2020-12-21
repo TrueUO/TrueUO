@@ -83,7 +83,7 @@ namespace Server.Items
 
         private readonly Type[] _AutoRearms =
         {
-            typeof(BritannianInfantry)
+            //typeof(BritannianInfantry)
         };
 
         public static List<Mobile> _Immunity;

@@ -103,7 +103,7 @@ namespace Server.Mobiles
 
         public override void OnDoubleClick(Mobile from)
         {
-            if (from.Race != Race.Elf && from == ControlMaster && from.IsPlayer())
+            if (from == ControlMaster && from.IsPlayer())
             {
                 Item pads = from.FindItemOnLayer(Layer.Shoes);
 

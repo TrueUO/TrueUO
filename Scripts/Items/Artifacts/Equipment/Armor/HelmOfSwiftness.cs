@@ -1,13 +1,8 @@
 namespace Server.Items
 {
-    public class HelmOfSwiftness : WingedHelm, ICanBeElfOrHuman
+    public class HelmOfSwiftness : WingedHelm
     {
         public override bool IsArtifact => true;
-
-        private bool _ElfOnly;
-
-        [CommandProperty(AccessLevel.GameMaster)]
-        public bool ElfOnly { get { return _ElfOnly; } set { _ElfOnly = value; InvalidateProperties(); } }
 
         [Constructable]
         public HelmOfSwiftness()
@@ -15,8 +10,6 @@ namespace Server.Items
         {
             Hue = 0x592;
             ItemID = 0x2689;
-
-            _ElfOnly = true;
 
             Attributes.BonusInt = 5;
             Attributes.CastSpeed = 1;
@@ -40,27 +33,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
-            writer.WriteEncodedInt(1); // version
-
-            writer.Write(_ElfOnly);
+            writer.WriteEncodedInt(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
-
-            switch (version)
-            {
-                case 1:
-                    _ElfOnly = reader.ReadBool();
-                    break;
-                case 0:
-                    _ElfOnly = true;
-                    break;
-            }
+            reader.ReadEncodedInt();
         }
     }
 }

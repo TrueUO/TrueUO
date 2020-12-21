@@ -162,29 +162,6 @@ namespace Server.Engines.Harvest
 
             if (player != null)
             {
-                QuestSystem qs = player.Quest;
-
-                if (qs is CollectorQuest)
-                {
-                    QuestObjective obj = qs.FindObjective(typeof(FishPearlsObjective));
-
-                    if (obj != null && !obj.Completed)
-                    {
-                        if (Utility.RandomDouble() < 0.5)
-                        {
-                            player.SendLocalizedMessage(1055086, "", 0x59); // You pull a shellfish out of the water, and find a rainbow pearl inside of it.
-
-                            obj.CurProgress++;
-                        }
-                        else
-                        {
-                            player.SendLocalizedMessage(1055087, "", 0x2C); // You pull a shellfish out of the water, but it doesn't have a rainbow pearl.
-                        }
-
-                        return true;
-                    }
-                }
-
                 if (from.Region.IsPartOf("Underworld"))
                 {
                     foreach (BaseQuest quest in player.Quests)

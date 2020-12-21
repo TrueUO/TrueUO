@@ -1,5 +1,6 @@
 using Server.Items;
 using System;
+using Server.Mobiles;
 
 namespace Server.Engines.Quests
 {
@@ -56,7 +57,7 @@ namespace Server.Engines.Quests
     {
         public CloseEnoughQuest()
         {
-            AddObjective(new DeliverObjective(typeof(MapFragment), "fragment of a map", 1, typeof(Canir), "Canir (Sanctuary)"));
+            AddObjective(new DeliverObjective(typeof(MapFragment), "fragment of a map", 1, typeof(Banker), "Canir (Sanctuary)"));
 
             AddReward(new BaseReward(1074876)); // Knowledge of the legendary minotaur.
         }

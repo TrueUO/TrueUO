@@ -86,7 +86,7 @@ namespace Server.Spells.SkillMasteries
                 {
                     if (HitLower.ApplyDefense(mob))
                     {
-                        if (wep is BaseRanged && !(wep is BaseThrown))
+                        if (wep is BaseRanged)
                             Caster.MovingEffect(mob, ((BaseRanged)wep).EffectID, 18, 1, false, false);
 
                         mob.PlaySound(0x28E);
@@ -162,7 +162,7 @@ namespace Server.Spells.SkillMasteries
 
         public static int RangeModifier(BaseWeapon weapon)
         {
-            if (weapon is BaseRanged && !(weapon is BaseThrown))
+            if (weapon is BaseRanged)
             {
                 Mobile m = weapon.RootParent as Mobile;
 

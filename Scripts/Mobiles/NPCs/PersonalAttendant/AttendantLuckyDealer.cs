@@ -233,7 +233,7 @@ namespace Server.Mobiles
 
             Name = NameList.RandomName("female");
             Female = true;
-            Race = Race.Elf;
+            Race = Race.Human;
             Hue = Race.RandomSkinHue();
 
             HairItemID = Race.RandomHair(Female);

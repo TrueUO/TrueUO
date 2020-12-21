@@ -1,8 +1,5 @@
-using Server.Engines.Craft;
-
 namespace Server.Items
 {
-    [Alterable(typeof(DefBlacksmithy), typeof(DualPointedSpear))]
     [Flipable(0x26BF, 0x26C9)]
     public class DoubleBladedStaff : BaseSpear
     {

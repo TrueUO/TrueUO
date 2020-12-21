@@ -13,8 +13,7 @@ namespace Server.Engines.Quests
             AddObjective(new ObtainObjective(typeof(VoidCrystalOfCorruptedSpiritualEssence), "Void Crystal of Corrupted Spiritual Essence", 1));
             AddObjective(new ObtainObjective(typeof(VoidCrystalOfCorruptedMysticalEssence), "Void Crystal of Corrupted Mystical Essence", 1));
 
-            AddReward(new BaseReward(typeof(ResonantShieldOfVengeance), "Resonant Shield of Vengeance"));
-            AddReward(new BaseReward(typeof(WindOfCorruption), "Wind of Corruption"));
+            AddReward(new BaseReward(typeof(Katana), "Wind of Corruption"));
         }
 
         public override object Title => 1150316; // Gathering of Evidence (Gargoyle Rewards)
@@ -120,21 +119,6 @@ namespace Server.Engines.Quests
 
             Female = false;
             CantWalk = true;
-            Race = Race.Gargoyle;
-
-            Body = 666;
-            Utility.AssignRandomHair(this);
-            Utility.AssignRandomFacialHair(this);
-        }
-
-        public override void InitOutfit()
-        {
-            AddItem(new Backpack());
-
-            AddItem(new GargishClothChest(Utility.RandomNeutralHue()));
-            AddItem(new GargishClothKilt(Utility.RandomNeutralHue()));
-            AddItem(new GargishClothLegs(Utility.RandomNeutralHue()));
-            AddItem(new SerpentStoneStaff());
         }
 
         public override void Serialize(GenericWriter writer)
@@ -185,11 +169,6 @@ namespace Server.Engines.Quests
             AddItem(new ShortPants(Utility.RandomNeutralHue()));
             AddItem(new Boots());
             AddItem(new Halberd());
-        }
-
-        public override bool CheckTerMur()
-        {
-            return false;
         }
 
         public override void Serialize(GenericWriter writer)

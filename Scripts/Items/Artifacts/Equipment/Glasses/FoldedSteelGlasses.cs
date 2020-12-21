@@ -1,8 +1,5 @@
-using Server.Engines.Craft;
-
 namespace Server.Items
 {
-    [Alterable(typeof(DefTinkering), typeof(GargishFoldedSteelGlasses))]
     public class FoldedSteelGlasses : ElvenGlasses
     {
         public override bool IsArtifact => true;

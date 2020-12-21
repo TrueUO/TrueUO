@@ -1,4 +1,4 @@
-﻿using Server.Gumps;
+using Server.Gumps;
 using Server.Mobiles;
 using System;
 
@@ -61,13 +61,13 @@ namespace Server.Items
                     _HairID = itemID;
                 }
 
-                if (!from.Female || from.Race == Race.Elf || facialHair)
+                if (!from.Female || facialHair)
                 {
                     EndGenderChange(from);
                 }
                 else
                 {
-                    from.SendGump(new ChangeHairstyleGump(!from.Female, from, null, 0, true, from.Race == Race.Gargoyle ? ChangeHairstyleEntry.BeardEntriesGargoyle : ChangeHairstyleEntry.BeardEntries, this));
+                    from.SendGump(new ChangeHairstyleGump(!from.Female, from, null, 0, true, ChangeHairstyleEntry.BeardEntries, this));
                 }
             }
         }
@@ -83,9 +83,9 @@ namespace Server.Items
             }
             else
             {
-                if (from.Female && from.Race != Race.Elf)
+                if (from.Female)
                 {
-                    from.SendGump(new ChangeHairstyleGump(!from.Female, from, null, 0, true, from.Race == Race.Gargoyle ? ChangeHairstyleEntry.BeardEntriesGargoyle : ChangeHairstyleEntry.BeardEntries, this));
+                    from.SendGump(new ChangeHairstyleGump(!from.Female, from, null, 0, true, ChangeHairstyleEntry.BeardEntries, this));
                 }
                 else
                 {
@@ -107,7 +107,7 @@ namespace Server.Items
                 from.Female = true;
             }
 
-            if ((from.Female || from.Race == Race.Elf) && _BeardID != 0)
+            if (from.Female && _BeardID != 0)
                 _BeardID = 0;
 
             from.FacialHairItemID = _BeardID;
@@ -187,11 +187,6 @@ namespace Server.Items
         public static ChangeHairstyleEntry[] GetHairstyleEntries(Mobile m)
         {
             ChangeHairstyleEntry[] entries = ChangeHairstyleEntry.HairEntries;
-
-            if (m.Race == Race.Elf)
-                entries = ChangeHairstyleEntry.HairEntriesElf;
-            else if (m.Race == Race.Gargoyle)
-                entries = ChangeHairstyleEntry.HairEntriesGargoyle;
 
             return entries;
         }

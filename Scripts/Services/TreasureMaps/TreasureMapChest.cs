@@ -441,13 +441,6 @@ namespace Server.Items
 
             if (newSpecial != null)
                 cont.DropItem(newSpecial);
-
-            int rolls = 2;
-
-            if (level >= 5)
-                rolls += level - 2;
-
-            RefinementComponent.Roll(cont, rolls, 0.10);
         }
 
         private static Item GetRandomSpecial(int level, Map map)

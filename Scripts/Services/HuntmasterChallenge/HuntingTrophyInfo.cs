@@ -59,14 +59,12 @@ namespace Server.Engines.HuntsmasterChallenge
             m_Infos.Add(new HuntingTrophyInfo(HuntType.Eagle, typeof(Eagle), 0x9A36, 1072461, 1123502, 10, 20, MeasuredBy.Wingspan, false));
 
             // Pub 91 Additions
-            m_Infos.Add(new HuntingTrophyInfo(HuntType.MyrmidexLarvae, typeof(MyrmidexLarvae), 0x9C00, 0x9C04, 1156276, 1123960, 20, 40, MeasuredBy.Weight, true));
             m_Infos.Add(new HuntingTrophyInfo(HuntType.Najasaurus, typeof(Najasaurus), 0x9C02, 0x9C06, 1156283, 1123962, 200, 400, MeasuredBy.Weight, true));
             m_Infos.Add(new HuntingTrophyInfo(HuntType.Anchisaur, typeof(Anchisaur), 0x9C08, 1156284, 1123968, 200, 400, MeasuredBy.Weight, false));
             m_Infos.Add(new HuntingTrophyInfo(HuntType.Allosaurus, typeof(Allosaurus), 0x9C0A, 1156280, 1123970, 5000, 12000, MeasuredBy.Weight, false));
             m_Infos.Add(new HuntingTrophyInfo(HuntType.Dimetrosaur, typeof(Dimetrosaur), 0x9C0C, 1156279, 1123972, 200, 400, MeasuredBy.Weight, false));
             m_Infos.Add(new HuntingTrophyInfo(HuntType.Saurosaurus, typeof(Saurosaurus), 0x9C0E, 1156289, 1123974, 1500, 2000, MeasuredBy.Weight, false));
 
-            m_Infos.Add(new HuntingTrophyInfo(HuntType.MyrmidexDrone, typeof(MyrmidexDrone), 0x9DA6, 1156134, 1124382, 100, 200, MeasuredBy.Weight, false));
             m_Infos.Add(new HuntingTrophyInfo(HuntType.Tiger, typeof(WildTiger), 0x9DA4, 1156286, 1124380, 350, 700, MeasuredBy.Weight, false));
 
             m_Infos.Add(new HuntingTrophyInfo(HuntType.Triceratops, typeof(Triceratops), 0x9F2C, 0x9F2B, 1124731, 1124771, 10000, 15000, MeasuredBy.Weight, false));

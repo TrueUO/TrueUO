@@ -1,8 +1,5 @@
-using Server.Engines.Craft;
-
 namespace Server.Items
 {
-    [Alterable(typeof(DefTinkering), typeof(GargishCleaver))]
     [Flipable(0xEC3, 0xEC2)]
     public class Cleaver : BaseKnife
     {
