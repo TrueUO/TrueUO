@@ -7,7 +7,7 @@ namespace Server.Mobiles
 {
     public class SeaMarketOfficer : MondainQuester
     {
-        public override Type[] Quests => new Type[] { typeof(ProfessionalBountyQuest) };
+        public override Type[] Quests => new[] { typeof(ProfessionalBountyQuest) };
 
         public SeaMarketOfficer()
         {
@@ -41,15 +41,15 @@ namespace Server.Mobiles
             {
                 BaseBoat boat = FishQuestHelper.GetBoat(pm);
 
-                if (boat != null && boat is BaseGalleon)
+                if (boat != null && boat is BaseGalleon galleon)
                 {
-                    if (((BaseGalleon)boat).Scuttled)
+                    if (galleon.Scuttled)
                     {
                         pm.SendLocalizedMessage(1116752); //Your ship is a mess!  Fix it first and then we can talk about catching pirates.
                     }
                     else
                     {
-                        ProfessionalBountyQuest q = new ProfessionalBountyQuest((BaseGalleon)boat)
+                        ProfessionalBountyQuest q = new ProfessionalBountyQuest(galleon)
                         {
                             Owner = pm,
                             Quester = this
@@ -119,7 +119,7 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             if (Map == Map.Trammel)
             {
