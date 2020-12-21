@@ -6,7 +6,6 @@ namespace Server.Engines.Quests
     public class TheAncientWorldQuest : BaseQuest
     {
         public TheAncientWorldQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(MapFragment), "fragment of a map", 1));
 
@@ -47,22 +46,19 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class TheGoldenHornQuest : BaseQuest
     {
         public TheGoldenHornQuest()
-            : base()
         {
             AddObjective(new DeliverObjective(typeof(MapFragment), "fragment of a map", 1, typeof(Braen), "Braen (The Heartwood)"));
 
@@ -94,22 +90,19 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class BullishQuest : BaseQuest
     {
         public BullishQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(GamanHorns), "gaman horns", 20, 0x1084));
 
@@ -142,22 +135,19 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class LostCivilizationQuest : BaseQuest
     {
         public LostCivilizationQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(MinotaurArtifact), "minotaur artifacts", 3));
 
@@ -193,15 +183,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

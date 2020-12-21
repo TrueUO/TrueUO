@@ -7,7 +7,6 @@ namespace Server.Engines.Quests
     public class PatienceQuest : BaseQuest
     {
         public PatienceQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(MiniatureMushroom), "miniature mushrooms", 20, 0xD16, 3600));
 
@@ -41,22 +40,19 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class NeedsOfManyHeartwoodQuest : BaseQuest
     {
         public NeedsOfManyHeartwoodQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(Cotton), "bale of cotton", 10, 0xDF9));
 
@@ -86,22 +82,19 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class NeedsOfManyPartHeartwoodQuest : BaseQuest
     {
         public NeedsOfManyPartHeartwoodQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(Board), "boards", 250, 0x1BD7));
 
@@ -129,22 +122,19 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class MakingContributionHeartwoodQuest : BaseQuest
     {
         public MakingContributionHeartwoodQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(SackFlour), "sack of flour", 1, 0x1039));
             AddObjective(new ObtainObjective(typeof(JarHoney), "jar of honey", 10, 0x9EC));
@@ -177,22 +167,19 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class UnnaturalCreationsQuest : BaseQuest
     {
         public UnnaturalCreationsQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(ExodusOverseer), "exodus overseers", 5));
             AddObjective(new SlayObjective(typeof(ExodusMinion), "exodus minions", 2));
@@ -233,15 +220,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }
