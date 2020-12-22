@@ -12,110 +12,16 @@ namespace Server.Misc
 {
     public class SkillCheck
     {
-        private static readonly TimeSpan _StatGainDelay;
-        private static readonly TimeSpan _PetStatGainDelay;
-
         private static readonly int _PlayerChanceToGainStats;
         private static readonly int _PetChanceToGainStats;
-
-        private static readonly bool _AntiMacroCode;
-
-        /// <summary>
-        ///     How long do we remember targets/locations?
-        /// </summary>
-        public static TimeSpan AntiMacroExpire = TimeSpan.FromMinutes(5.0);
-
-        /// <summary>
-        ///     How many times may we use the same location/target for gain
-        /// </summary>
-        public const int Allowance = 3;
-
-        /// <summary>
-        ///     The size of each location, make this smaller so players dont have to move as far
-        /// </summary>
-        private const int LocationSize = 4;
 
         public static bool GGSActive => !Siege.SiegeShard;
 
         static SkillCheck()
         {
-            _AntiMacroCode = Config.Get("PlayerCaps.EnableAntiMacro", false);
-
-            _StatGainDelay = Config.Get("PlayerCaps.PlayerStatTimeDelay", TimeSpan.FromMinutes(15.0));
-            _PetStatGainDelay = Config.Get("PlayerCaps.PetStatTimeDelay", TimeSpan.FromMinutes(5.0));
-
             _PlayerChanceToGainStats = Config.Get("PlayerCaps.PlayerChanceToGainStats", 5);
             _PetChanceToGainStats = Config.Get("PlayerCaps.PetChanceToGainStats", 5);
-
-            if (!Config.Get("PlayerCaps.EnablePlayerStatTimeDelay", false))
-                _StatGainDelay = TimeSpan.FromSeconds(0.5);
-
-            if (!Config.Get("PlayerCaps.EnablePetStatTimeDelay", false))
-                _PetStatGainDelay = TimeSpan.FromSeconds(0.5);
         }
-
-        private static readonly bool[] UseAntiMacro =
-        {
-			// true if this skill uses the anti-macro code, false if it does not
-			false, 	// Alchemy = 0,
-			true, 	// Anatomy = 1,
-			true, 	// AnimalLore = 2,
-			true, 	// ItemID = 3,
-			true, 	// ArmsLore = 4,
-			false, 	// Parry = 5,
-			true, 	// Begging = 6,
-			false, 	// Blacksmith = 7,
-			false, 	// Fletching = 8,
-			true, 	// Peacemaking = 9,
-			true, 	// Camping = 10,
-			false, 	// Carpentry = 11,
-			false, 	// Cartography = 12,
-			false, 	// Cooking = 13,
-			true, 	// DetectHidden = 14,
-			true, 	// Discordance = 15,
-			true, 	// EvalInt = 16,
-			true, 	// Healing = 17,
-			true, 	// Fishing = 18,
-			true, 	// Forensics = 19,
-			true, 	// Herding = 20,
-			true, 	// Hiding = 21,
-			true, 	// Provocation = 22,
-			false, 	// Inscribe = 23,
-			true, 	// Lockpicking = 24,
-			true, 	// Magery = 25,
-			true, 	// MagicResist = 26,
-			false, 	// Tactics = 27,
-			true, 	// Snooping = 28,
-			true, 	// Musicianship = 29,
-			true, 	// Poisoning = 30,
-			false, 	// Archery = 31,
-			true, 	// SpiritSpeak = 32,
-			true, 	// Stealing = 33,
-			false, 	// Tailoring = 34,
-			true, 	// AnimalTaming = 35,
-			true, 	// TasteID = 36,
-			false, 	// Tinkering = 37,
-			true, 	// Tracking = 38,
-			true, 	// Veterinary = 39,
-			false, 	// Swords = 40,
-			false, 	// Macing = 41,
-			false, 	// Fencing = 42,
-			false, 	// Wrestling = 43,
-			true, 	// Lumberjacking = 44,
-			true, 	// Mining = 45,
-			true, 	// Meditation = 46,
-			true, 	// Stealth = 47,
-			true, 	// RemoveTrap = 48,
-			true, 	// Necromancy = 49,
-			false, 	// Focus = 50,
-			true, 	// Chivalry = 51
-			true, 	// Bushido = 52
-			true, 	// Ninjitsu = 53
-			true, 	// Spellweaving = 54
-            true, 	// Mysticism = 55
-			true, 	// Imbuing = 56
-			false  // Throwing = 57
-        };
 
         public static void Initialize()
         {
@@ -149,7 +55,7 @@ namespace Server.Misc
 
             CrystalBallOfKnowledge.TellSkillDifficulty(from, skillName, chance);
 
-            return CheckSkill(from, skill, new Point2D(from.Location.X / LocationSize, from.Location.Y / LocationSize), chance);
+            return CheckSkill(from, skill, chance);
         }
 
         public static bool Mobile_SkillCheckDirectLocation(Mobile from, SkillName skillName, double chance)
@@ -167,7 +73,7 @@ namespace Server.Misc
             if (chance >= 1.0)
                 return true; // No challenge
 
-            return CheckSkill(from, skill, new Point2D(from.Location.X / LocationSize, from.Location.Y / LocationSize), chance);
+            return CheckSkill(from, skill, chance);
         }
 
         /// <summary>
@@ -194,7 +100,7 @@ namespace Server.Misc
                 double chance = (value - minSkill) / (maxSkill - minSkill);
                 double gc = GetGainChance(from, skill, chance, Utility.Random(100) <= (int)(chance * 100)) / (value / 4);
 
-                if (AllowGain(from, skill, new Point2D(from.Location.X / LocationSize, from.Location.Y / LocationSize)))
+                if (AllowGain(from, skill))
                 {
                     if (from.Alive && (skill.Base + (value - skill.Value) < 10.0 || Utility.RandomDouble() <= gc || CheckGGS(from, skill)))
                     {
@@ -204,7 +110,6 @@ namespace Server.Misc
                         UpdateGGS(from, skill);
                     }
                 }
-
             }
 
             if (gains > 0)
@@ -217,7 +122,7 @@ namespace Server.Misc
             return false;
         }
 
-        public static bool CheckSkill(Mobile from, Skill skill, object obj, double chance)
+        public static bool CheckSkill(Mobile from, Skill skill, double chance)
         {
             if (from.Skills.Cap == 0)
                 return false;
@@ -225,7 +130,7 @@ namespace Server.Misc
             bool success = Utility.Random(100) <= (int)(chance * 100);
             double gc = GetGainChance(from, skill, chance, success);
 
-            if (AllowGain(from, skill, obj))
+            if (AllowGain(from, skill))
             {
                 if (from.Alive && (skill.Base < 10.0 || Utility.RandomDouble() <= gc || CheckGGS(from, skill)))
                 {
@@ -287,7 +192,7 @@ namespace Server.Misc
 
             CrystalBallOfKnowledge.TellSkillDifficulty(from, skillName, chance);
 
-            return CheckSkill(from, skill, target, chance);
+            return CheckSkill(from, skill, chance);
         }
 
         public static bool Mobile_SkillCheckDirectTarget(Mobile from, SkillName skillName, object target, double chance)
@@ -305,10 +210,10 @@ namespace Server.Misc
             if (chance >= 1.0)
                 return true; // No challenge
 
-            return CheckSkill(from, skill, target, chance);
+            return CheckSkill(from, skill, chance);
         }
 
-        private static bool AllowGain(Mobile from, Skill skill, object obj)
+        private static bool AllowGain(Mobile from, Skill skill)
         {
             if (Engines.VvV.ViceVsVirtueSystem.InSkillLoss(from)) //Changed some time between the introduction of AoS and SE.
                 return false;
@@ -320,9 +225,6 @@ namespace Server.Misc
 
                 if (skill.Info.SkillID == (int)SkillName.Throwing && mobile.Race != Race.Gargoyle)
                     return false;
-
-                if (_AntiMacroCode && UseAntiMacro[skill.Info.SkillID])
-                    return mobile.AntiMacroCheck(skill, obj);
             }
             return true;
         }
@@ -415,7 +317,7 @@ namespace Server.Misc
                     CheckReduceSkill(skills, toGain, skill);
                 }
 
-                if (!from.Player || (skills.Total + toGain <= skills.Cap))
+                if (!from.Player || skills.Total + toGain <= skills.Cap)
                 {
                     skill.BaseFixedPoint = Math.Min(skill.CapFixedPoint, skill.BaseFixedPoint + toGain);
 
@@ -677,57 +579,7 @@ namespace Server.Misc
 
         public static void GainStat(Mobile from, Stat stat)
         {
-            if (!CheckStatTimer(from, stat))
-                return;
-
             IncreaseStat(from, stat);
-        }
-
-        public static bool CheckStatTimer(Mobile from, Stat stat)
-        {
-            switch (stat)
-            {
-                case Stat.Str:
-                    {
-                        if (from is BaseCreature creature && creature.Controlled)
-                        {
-                            if (creature.LastStrGain + _PetStatGainDelay >= DateTime.UtcNow)
-                                return false;
-                        }
-                        else if (from.LastStrGain + _StatGainDelay >= DateTime.UtcNow)
-                            return false;
-
-                        from.LastStrGain = DateTime.UtcNow;
-                        break;
-                    }
-                case Stat.Dex:
-                    {
-                        if (from is BaseCreature creature && creature.Controlled)
-                        {
-                            if (creature.LastDexGain + _PetStatGainDelay >= DateTime.UtcNow)
-                                return false;
-                        }
-                        else if (from.LastDexGain + _StatGainDelay >= DateTime.UtcNow)
-                            return false;
-
-                        from.LastDexGain = DateTime.UtcNow;
-                        break;
-                    }
-                case Stat.Int:
-                    {
-                        if (from is BaseCreature creature && creature.Controlled)
-                        {
-                            if (creature.LastIntGain + _PetStatGainDelay >= DateTime.UtcNow)
-                                return false;
-                        }
-                        else if (from.LastIntGain + _StatGainDelay >= DateTime.UtcNow)
-                            return false;
-
-                        from.LastIntGain = DateTime.UtcNow;
-                        break;
-                    }
-            }
-            return true;
         }
 
         private static bool CheckGGS(Mobile from, Skill skill)
