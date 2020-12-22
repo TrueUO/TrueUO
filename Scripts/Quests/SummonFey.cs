@@ -29,10 +29,6 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1074290;
         /* What have we here? Oh yes, gifts for a pixie. */
         public override object Complete => 1074292;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.Spellweaving;
-        }
 
         public override void Serialize(GenericWriter writer)
         {
@@ -70,10 +66,6 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1074315;
         /* *giggle*  Oooh!  For me? */
         public override object Complete => 1074319;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.Spellweaving;
-        }
 
         public override void Serialize(GenericWriter writer)
         {
@@ -110,10 +102,6 @@ namespace Server.Engines.Quests
         /* *giggle* Mean reapers got fixed!  Pixie friend now! *giggle* When mean 
         thingies bother you, a brave pixie will help. */
         public override object Complete => 1074320;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.Spellweaving;
-        }
 
         public override void GiveRewards()
         {
