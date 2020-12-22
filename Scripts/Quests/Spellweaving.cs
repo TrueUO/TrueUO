@@ -32,10 +32,6 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1072774;
         /* Have you gathered the mushrooms? */
         public override object Complete => 1074166;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.Spellweaving;
-        }
 
         public override void Serialize(GenericWriter writer)
         {
@@ -74,10 +70,6 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1072775;
         /* Well, where are the cotton bales? */
         public override object Complete => 1074110;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.Spellweaving;
-        }
 
         public override void Serialize(GenericWriter writer)
         {
@@ -114,10 +106,6 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1072776;
         /* Well, where are the boards? */
         public override object Complete => 1074152;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.Spellweaving;
-        }
 
         public override void Serialize(GenericWriter writer)
         {
@@ -159,10 +147,6 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1072777;
         /* Ah good, you're back.  We're eager for the feast. */
         public override object Complete => 1074158;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.Spellweaving;
-        }
 
         public override void Serialize(GenericWriter writer)
         {
@@ -205,10 +189,6 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1072779;
         /* Well done!  Well done, indeed.  You are worthy to become an arcanist! */
         public override object Complete => 1074167;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.Spellweaving;
-        }
 
         public override void GiveRewards()
         {
