@@ -25,10 +25,6 @@ namespace Server.Engines.Quests
         public override object Refuse => 1074287;
         /* Surely you're not having difficulties swatting down those annoying pests? */
         public override object Uncomplete => 1074289;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.Spellweaving;
-        }
 
         public override void Serialize(GenericWriter writer)
         {
@@ -65,10 +61,6 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1074317;
         /* That's a well-made whip.  No imp will ignore the sting of that lash. */
         public override object Complete => 1074321;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.Spellweaving;
-        }
 
         public override void Serialize(GenericWriter writer)
         {
@@ -103,10 +95,6 @@ namespace Server.Engines.Quests
         public override object Refuse => 1074314;
         /* You need to vanquish an arcane daemon before the imps will fear you properly. */
         public override object Uncomplete => 1074318;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.Spellweaving;
-        }
 
         public override void GiveRewards()
         {
