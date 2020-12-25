@@ -1,6 +1,7 @@
 #region References
 using Server.Accounting;
 using Server.ContextMenus;
+using Server.Engines.ArenaSystem;
 using Server.Engines.BulkOrders;
 using Server.Engines.CannedEvil;
 using Server.Engines.CityLoyalty;
@@ -36,10 +37,9 @@ using Server.Spells.SkillMasteries;
 using Server.Targeting;
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using Server.Engines.ArenaSystem;
+
 using RankDefinition = Server.Guilds.RankDefinition;
 #endregion
 
@@ -3772,7 +3772,6 @@ namespace Server.Mobiles
 
         private List<Mobile> m_PermaFlags;
         private readonly List<Mobile> m_VisList;
-        private readonly Hashtable m_AntiMacroTable;
         private TimeSpan m_GameTime;
         private TimeSpan m_ShortTermElapse;
         private TimeSpan m_LongTermElapse;
@@ -3921,7 +3920,6 @@ namespace Server.Mobiles
 
             m_VisList = new List<Mobile>();
             m_PermaFlags = new List<Mobile>();
-            m_AntiMacroTable = new Hashtable();
             m_RecentlyReported = new List<Mobile>();
 
             m_GameTime = TimeSpan.Zero;
@@ -4103,7 +4101,6 @@ namespace Server.Mobiles
             Instances.Add(this);
 
             m_VisList = new List<Mobile>();
-            m_AntiMacroTable = new Hashtable();
         }
 
         public List<Mobile> VisibilityList => m_VisList;
