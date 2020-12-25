@@ -197,24 +197,6 @@ namespace Server.Mobiles
         }
         #endregion
 
-        private class CountAndTimeStamp
-        {
-            private int m_Count;
-            private DateTime m_Stamp;
-
-            public DateTime TimeStamp => m_Stamp;
-
-            public int Count
-            {
-                get { return m_Count; }
-                set
-                {
-                    m_Count = value;
-                    m_Stamp = DateTime.UtcNow;
-                }
-            }
-        }
-
         private DesignContext m_DesignContext;
 
         private NpcGuild m_NpcGuild;
