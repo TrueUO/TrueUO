@@ -4174,49 +4174,6 @@ namespace Server.Mobiles
             return base.IsHarmfulCriminal(damageable);
         }
 
-        public bool AntiMacroCheck(Skill skill, object obj)
-        {
-            if (obj == null || m_AntiMacroTable == null || IsStaff())
-            {
-                return true;
-            }
-
-            Hashtable tbl = (Hashtable)m_AntiMacroTable[skill];
-            if (tbl == null)
-            {
-                m_AntiMacroTable[skill] = tbl = new Hashtable();
-            }
-
-            CountAndTimeStamp count = (CountAndTimeStamp)tbl[obj];
-            if (count != null)
-            {
-                if (count.TimeStamp + SkillCheck.AntiMacroExpire <= DateTime.UtcNow)
-                {
-                    count.Count = 1;
-                    return true;
-                }
-                else
-                {
-                    ++count.Count;
-                    if (count.Count <= SkillCheck.Allowance)
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
-            }
-            else
-            {
-                tbl[obj] = count = new CountAndTimeStamp();
-                count.Count = 1;
-
-                return true;
-            }
-        }
-
         public BOBFilter BOBFilter => BulkOrderSystem.GetBOBFilter(this);
 
         public override void Deserialize(GenericReader reader)
@@ -4275,19 +4232,6 @@ namespace Server.Mobiles
                         m_SSSeedExpire = reader.ReadDateTime();
                         m_SSSeedLocation = reader.ReadPoint3D();
                         m_SSSeedMap = reader.ReadMap();
-
-                        if (version < 30)
-                        {
-                            reader.ReadLong(); // Old m_LevelExp
-                            int points = (int)reader.ReadLong();
-                            if (points > 0)
-                            {
-                                PointsSystem.QueensLoyalty.ConvertFromOldSystem(this, points);
-                            }
-
-                            reader.ReadInt(); // Old m_Level
-                            reader.ReadString(); // Old m_ExpTitle
-                        }
 
                         if (version < 40)
                         {
@@ -4412,7 +4356,7 @@ namespace Server.Mobiles
 
                         goto case 17;
                     }
-                case 17: // changed how DoneQuests is serialized
+                case 17: 
                 case 16:
                     {
                         m_Quest = QuestSerializer.DeserializeQuest(reader);
@@ -4439,14 +4383,7 @@ namespace Server.Mobiles
 
                                 DateTime restartTime;
 
-                                if (version < 17)
-                                {
-                                    restartTime = DateTime.MaxValue;
-                                }
-                                else
-                                {
-                                    restartTime = reader.ReadDateTime();
-                                }
+                                restartTime = reader.ReadDateTime();
 
                                 m_DoneQuests.Add(new QuestRestartInfo(questType, restartTime));
                             }
@@ -4471,7 +4408,7 @@ namespace Server.Mobiles
 
                         goto case 13;
                     }
-                case 13: // just removed m_PayedInsurance list
+                case 13: 
                 case 12:
                     {
                         if (version < 34)
@@ -4479,19 +4416,6 @@ namespace Server.Mobiles
                         goto case 11;
                     }
                 case 11:
-                    {
-                        if (version < 13)
-                        {
-                            List<Item> payed = reader.ReadStrongItemList();
-
-                            for (int i = 0; i < payed.Count; ++i)
-                            {
-                                payed[i].PayedInsurance = true;
-                            }
-                        }
-
-                        goto case 10;
-                    }
                 case 10:
                     {
                         if (reader.ReadBool())
@@ -4528,18 +4452,8 @@ namespace Server.Mobiles
                         m_PermaFlags = reader.ReadStrongMobileList();
                         goto case 6;
                     }
-                case 6:
-                    {
-                        if (version < 34)
-                            reader.ReadTimeSpan();
-                        goto case 5;
-                    }
-                case 5:
-                    {
-                        if (version < 34)
-                            reader.ReadTimeSpan();
-                        goto case 4;
-                    }
+                case 6:                   
+                case 5:                   
                 case 4:
                     {
                         m_LastJusticeLoss = reader.ReadDeltaTime();
@@ -4566,19 +4480,9 @@ namespace Server.Mobiles
                         goto case 0;
                     }
                 case 0:
-                    {
-                        if (version < 26)
-                        {
-                            m_AutoStabled = new List<Mobile>();
-                        }
+                    {                      
                         break;
                     }
-            }
-
-            if (version < 29)
-            {
-                m_SSNextSeed = m_SSSeedExpire = DateTime.UtcNow;
-                m_SSSeedLocation = Point3D.Zero;
             }
 
             if (m_RecentlyReported == null)
@@ -4672,29 +4576,10 @@ namespace Server.Mobiles
 
         public override void Serialize(GenericWriter writer)
         {
-            //cleanup our anti-macro table
-            foreach (Hashtable t in m_AntiMacroTable.Values)
-            {
-                ArrayList remove = new ArrayList();
-                foreach (CountAndTimeStamp time in t.Values)
-                {
-                    if (time.TimeStamp + SkillCheck.AntiMacroExpire <= DateTime.UtcNow)
-                    {
-                        remove.Add(time);
-                    }
-                }
-
-                for (int i = 0; i < remove.Count; ++i)
-                {
-                    t.Remove(remove[i]);
-                }
-            }
-
             CheckKillDecay();
             CheckAtrophies(this);
 
             base.Serialize(writer);
-
             writer.Write(42); // version
 
             writer.Write(NextGemOfSalvationUse);

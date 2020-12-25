@@ -1,4 +1,3 @@
-#region References
 using Server.Engines.Quests;
 using Server.Items;
 using Server.Mobiles;
@@ -6,7 +5,6 @@ using Server.Multis;
 using Server.Regions;
 using Server.Spells.SkillMasteries;
 using System;
-#endregion
 
 namespace Server.Misc
 {
@@ -18,40 +16,15 @@ namespace Server.Misc
         private static readonly int _PlayerChanceToGainStats;
         private static readonly int _PetChanceToGainStats;
 
-        private static readonly bool _AntiMacroCode;
-
-        /// <summary>
-        ///     How long do we remember targets/locations?
-        /// </summary>
-        public static TimeSpan AntiMacroExpire = TimeSpan.FromMinutes(5.0);
-
-        /// <summary>
-        ///     How many times may we use the same location/target for gain
-        /// </summary>
-        public const int Allowance = 3;
-
-        /// <summary>
-        ///     The size of each location, make this smaller so players dont have to move as far
-        /// </summary>
-        private const int LocationSize = 4;
-
         public static bool GGSActive => !Siege.SiegeShard;
 
         static SkillCheck()
         {
-            _AntiMacroCode = Config.Get("PlayerCaps.EnableAntiMacro", false);
-
-            _StatGainDelay = Config.Get("PlayerCaps.PlayerStatTimeDelay", TimeSpan.FromMinutes(15.0));
-            _PetStatGainDelay = Config.Get("PlayerCaps.PetStatTimeDelay", TimeSpan.FromMinutes(5.0));
-
             _PlayerChanceToGainStats = Config.Get("PlayerCaps.PlayerChanceToGainStats", 5);
             _PetChanceToGainStats = Config.Get("PlayerCaps.PetChanceToGainStats", 5);
 
-            if (!Config.Get("PlayerCaps.EnablePlayerStatTimeDelay", false))
-                _StatGainDelay = TimeSpan.FromSeconds(0.5);
-
-            if (!Config.Get("PlayerCaps.EnablePetStatTimeDelay", false))
-                _PetStatGainDelay = TimeSpan.FromSeconds(0.5);
+            _StatGainDelay = TimeSpan.FromSeconds(0.5);
+            _PetStatGainDelay = TimeSpan.FromSeconds(0.5);
         }
 
         private static readonly bool[] UseAntiMacro =
@@ -149,7 +122,7 @@ namespace Server.Misc
 
             CrystalBallOfKnowledge.TellSkillDifficulty(from, skillName, chance);
 
-            return CheckSkill(from, skill, new Point2D(from.Location.X / LocationSize, from.Location.Y / LocationSize), chance);
+            return CheckSkill(from, skill, chance);
         }
 
         public static bool Mobile_SkillCheckDirectLocation(Mobile from, SkillName skillName, double chance)
@@ -167,7 +140,7 @@ namespace Server.Misc
             if (chance >= 1.0)
                 return true; // No challenge
 
-            return CheckSkill(from, skill, new Point2D(from.Location.X / LocationSize, from.Location.Y / LocationSize), chance);
+            return CheckSkill(from, skill, chance);
         }
 
         /// <summary>
@@ -194,7 +167,7 @@ namespace Server.Misc
                 double chance = (value - minSkill) / (maxSkill - minSkill);
                 double gc = GetGainChance(from, skill, chance, Utility.Random(100) <= (int)(chance * 100)) / (value / 4);
 
-                if (AllowGain(from, skill, new Point2D(from.Location.X / LocationSize, from.Location.Y / LocationSize)))
+                if (AllowGain(from, skill))
                 {
                     if (from.Alive && (skill.Base + (value - skill.Value) < 10.0 || Utility.RandomDouble() <= gc || CheckGGS(from, skill)))
                     {
@@ -217,7 +190,7 @@ namespace Server.Misc
             return false;
         }
 
-        public static bool CheckSkill(Mobile from, Skill skill, object obj, double chance)
+        public static bool CheckSkill(Mobile from, Skill skill, double chance)
         {
             if (from.Skills.Cap == 0)
                 return false;
@@ -225,7 +198,7 @@ namespace Server.Misc
             bool success = Utility.Random(100) <= (int)(chance * 100);
             double gc = GetGainChance(from, skill, chance, success);
 
-            if (AllowGain(from, skill, obj))
+            if (AllowGain(from, skill))
             {
                 if (from.Alive && (skill.Base < 10.0 || Utility.RandomDouble() <= gc || CheckGGS(from, skill)))
                 {
@@ -287,7 +260,7 @@ namespace Server.Misc
 
             CrystalBallOfKnowledge.TellSkillDifficulty(from, skillName, chance);
 
-            return CheckSkill(from, skill, target, chance);
+            return CheckSkill(from, skill, chance);
         }
 
         public static bool Mobile_SkillCheckDirectTarget(Mobile from, SkillName skillName, object target, double chance)
@@ -305,25 +278,27 @@ namespace Server.Misc
             if (chance >= 1.0)
                 return true; // No challenge
 
-            return CheckSkill(from, skill, target, chance);
+            return CheckSkill(from, skill, chance);
         }
 
-        private static bool AllowGain(Mobile from, Skill skill, object obj)
+        private static bool AllowGain(Mobile from, Skill skill)
         {
-            if (Engines.VvV.ViceVsVirtueSystem.InSkillLoss(from)) //Changed some time between the introduction of AoS and SE.
+            if (Engines.VvV.ViceVsVirtueSystem.InSkillLoss(from))
                 return false;
 
             if (from is PlayerMobile mobile)
             {
                 if (skill.Info.SkillID == (int)SkillName.Archery && mobile.Race == Race.Gargoyle)
+                {
                     return false;
+                }
 
                 if (skill.Info.SkillID == (int)SkillName.Throwing && mobile.Race != Race.Gargoyle)
+                {
                     return false;
-
-                if (_AntiMacroCode && UseAntiMacro[skill.Info.SkillID])
-                    return mobile.AntiMacroCheck(skill, obj);
+                }
             }
+
             return true;
         }
 
