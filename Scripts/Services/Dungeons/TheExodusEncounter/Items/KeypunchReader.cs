@@ -40,6 +40,7 @@ namespace Server.Items
                 return true;
             }
 
+            from.SendLocalizedMessage(1074836); // The container cannot hold that type of object.
             return false;
         }
 
@@ -62,6 +63,7 @@ namespace Server.Items
                 return true;
             }
 
+            from.SendLocalizedMessage(1074836); // The container cannot hold that type of object.
             return false;
         }
 
