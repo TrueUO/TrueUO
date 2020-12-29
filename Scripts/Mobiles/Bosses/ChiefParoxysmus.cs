@@ -59,7 +59,7 @@ namespace Server.Mobiles
             AddLoot(LootPack.Talisman, 5);
             AddLoot(LootPack.LootItem<LardOfParoxysmus>());
             AddLoot(LootPack.RandomLootItem(new[] { typeof(ParoxysmusDinner), typeof(ParoxysmusCorrodedStein), typeof(StringOfPartsOfParoxysmusVictims) }));
-            AddLoot(LootPack.LootItem<ParrotItem>(60.0));
+            AddLoot(LootPack.LootItem<ParrotItem>(25.0));
             AddLoot(LootPack.LootItem<SweatOfParoxysmus>(50.0));
             AddLoot(LootPack.LootItem<ParoxysmusSwampDragonStatuette>(5.0));
             AddLoot(LootPack.LootItem<ScepterOfTheChief>(5.0));

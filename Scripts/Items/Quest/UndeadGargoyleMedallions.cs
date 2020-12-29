@@ -2,14 +2,15 @@ namespace Server.Items
 {
     public class UndeadGargoyleMedallions : Item
     {
+        public override int LabelNumber => 1112907; // Undead Gargoyle Medallion
+
         [Constructable]
         public UndeadGargoyleMedallions()
             : base(0x1088)
         {
-            Name = "Undead Gargoyle Medallions";
             LootType = LootType.Blessed;
             Weight = 1.0;
-            Hue = 0x47F; // TODO check
+            Hue = 0x47F;
         }
 
         public UndeadGargoyleMedallions(Serial serial)
