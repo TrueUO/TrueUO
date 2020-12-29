@@ -64,7 +64,7 @@ namespace Server.Mobiles
             AddLoot(LootPack.Talisman, 5);
             AddLoot(LootPack.LootItem<DreadHornMane>());
             AddLoot(LootPack.LootItem<TaintedMushroom>(60.0));
-            AddLoot(LootPack.LootItem<ParrotItem>(60.0));
+            AddLoot(LootPack.LootItem<ParrotItem>(25.0));
             AddLoot(LootPack.LootItem<MangledHeadOfDreadhorn>(50.0));
             AddLoot(LootPack.LootItem<HornOfTheDreadhorn>(50.0));
             AddLoot(LootPack.LootItem<PristineDreadHorn>(5.0));

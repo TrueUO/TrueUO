@@ -52,7 +52,7 @@ namespace Server.Mobiles
             AddLoot(LootPack.ArcanistScrolls, Utility.RandomMinMax(1, 6));
             AddLoot(LootPack.PeerlessResource, 8);
             AddLoot(LootPack.Talisman, 5);
-            AddLoot(LootPack.LootItem<ParrotItem>(10.0));
+            AddLoot(LootPack.LootItem<ParrotItem>(25.0));
             AddLoot(LootPack.LootItem<CapturedEssence>());
             AddLoot(LootPack.LootItem<ShimmeringCrystals>());
             AddLoot(LootPack.RandomLootItem(new[] { typeof(ShimmeringEffusionStatuette), typeof(CorporealBrumeStatuette), typeof(MantraEffervescenceStatuette), typeof(FetidEssenceStatuette) }, 5.0, 1));
