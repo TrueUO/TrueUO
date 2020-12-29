@@ -1,6 +1,6 @@
 # [TrueUO]
 
-[![Build Status](https://travis-ci.com/ServUO/ServUO.svg?branch=master)](https://travis-ci.com/ServUO/ServUO)
+[![Build Status](https://travis-ci.com/TrueUO/TrueUO.svg?branch=master)](https://travis-ci.com/TrueUO/TrueUO)
 [![GitHub issues](https://img.shields.io/github/issues/trueuo/trueuo.svg)](https://github.com/TrueUO/TrueUO/issues)
 [![GitHub release](https://img.shields.io/github/release/servuo/servuo.svg)](https://github.com/ServUO/ServUO/releases)
 [![GitHub repo size](https://img.shields.io/github/repo-size/servuo/servuo.svg)](https://github.com/ServUO/ServUO/)
