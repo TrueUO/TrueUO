@@ -318,12 +318,12 @@ namespace Server.Engines.CannedEvil
         {
             foreach (Item item in Map.Felucca.GetItemsInRange(altarLoc, 10))
             {
-                if (item is ChampionSpawn champ)
+                if (item is ChampionSpawn champ && ChampionSpawnType.Infuse == champ.Type)
                 {
-                    if (ChampionSpawnType.Infuse == champ.Type)
-                        return champ;
+                    return champ;
                 }
             }
+
             return null;
         }
 

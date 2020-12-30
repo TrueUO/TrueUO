@@ -493,7 +493,7 @@ namespace Server.Items
                 {
                     Mobile chicken = reader.ReadMobile();
 
-                    if (chicken != null && chicken is BaseCreature bc)
+                    if (chicken is BaseCreature bc)
                     {
                         bc.IsStabled = true;
                         list.Add(bc);
