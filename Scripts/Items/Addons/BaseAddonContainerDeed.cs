@@ -94,6 +94,12 @@ namespace Server.Items
 
             CraftContext context = craftSystem.GetContext(from);
 
+            if (this is LargeElegantAquariumDeed || this is SmallElegantAquariumDeed || this is WallMountedAquariumDeed)
+            {
+                m_Resource = CraftResource.None;
+                Hue = 0;
+            }
+
             if (context != null && context.DoNotColor)
                 Hue = 0;
 
