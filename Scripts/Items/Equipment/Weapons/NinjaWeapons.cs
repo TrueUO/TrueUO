@@ -120,14 +120,12 @@ namespace Server.Items
                     }
                     else
                     {
-                        if (weapon.UsesRemaining > 0)
+                        if (weapon.UsesRemaining > 0 && (weapon.Poison == null && ammo.Poison != null || weapon.Poison != null && ammo.Poison != null && weapon.Poison.Level != ammo.Poison.Level))
                         {
-                            if (weapon.Poison == null && ammo.Poison != null || weapon.Poison != null && ammo.Poison != null && weapon.Poison.Level != ammo.Poison.Level)
-                            {
-                                Unload(from, weapon);
-                                need = Math.Min(MaxUses, ammo.UsesRemaining);
-                            }
+                            Unload(from, weapon);
+                            need = Math.Min(MaxUses, ammo.UsesRemaining);
                         }
+
                         int poisonneeded = Math.Min(MaxUses - weapon.PoisonCharges, ammo.PoisonCharges);
 
                         weapon.UsesRemaining += need;

@@ -5185,12 +5185,9 @@ namespace Server.Items
                 Attributes.WeaponDamage += 35;
             }
 
-            if (!craftItem.ForceNonExceptional)
+            if (!craftItem.ForceNonExceptional && tool is BaseRunicTool runicTool)
             {
-                if (tool is BaseRunicTool runicTool)
-                {
-                    runicTool.ApplyAttributesTo(this);
-                }
+                runicTool.ApplyAttributesTo(this);
             }
 
             if (Quality == ItemQuality.Exceptional)
