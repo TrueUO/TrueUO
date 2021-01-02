@@ -13,7 +13,7 @@ namespace Server.Items
     {
         Point3D GetLocation(Mobile m);
         Map GetMap();
-        void OnBeforeTravel(Mobile m);
+        void OnBeforeTravel(Mobile from);
     }
 
     public class VendorSearchMap : MapItem, ISearchMap
