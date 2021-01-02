@@ -25,9 +25,7 @@ namespace Server.Items
             if (m == null)
                 return 1;
 
-            return Math.Max(1, Math.Min(5, m.Items.Where(i => i is IEpiphanyArmor &&
-                                      ((IEpiphanyArmor)i).Alignment == armor.Alignment &&
-                                      ((IEpiphanyArmor)i).Type == armor.Type).Count()));
+            return Math.Max(1, Math.Min(5, m.Items.Count(i => i is IEpiphanyArmor && ((IEpiphanyArmor)i).Alignment == armor.Alignment && ((IEpiphanyArmor)i).Type == armor.Type)));
         }
 
         public static int GetBonus(Mobile m, IEpiphanyArmor armor)

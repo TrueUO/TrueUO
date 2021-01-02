@@ -377,7 +377,7 @@ namespace Server.Multis
                     }
                 }
 
-                fromLockdowns += list.Where(x => !LockDowns.ContainsKey(x.Item)).Count();
+                fromLockdowns += list.Count(x => !LockDowns.ContainsKey(x.Item));
             }
 
             fromLockdowns += GetLockdowns();
@@ -976,7 +976,7 @@ namespace Server.Multis
             v += GetCommissionVendorLockdowns();
 
             if (Secures != null)
-                v += Secures.Where(x => !LockDowns.ContainsKey(x.Item)).Count();
+                v += Secures.Count(x => !LockDowns.ContainsKey(x.Item));
 
             return v;
         }

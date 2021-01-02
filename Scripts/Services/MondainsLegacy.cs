@@ -40,7 +40,6 @@ namespace Server
         private static bool m_Sanctuary;
         private static bool m_StygianDragonLair;
         private static bool m_MedusasLair;
-        private static bool m_Spellweaving;
         private static bool m_PublicDonations;
         public static bool PalaceOfParoxysmus
         {
@@ -163,17 +162,6 @@ namespace Server
                 m_MedusasLair = value;
             }
         }
-        public static bool Spellweaving
-        {
-            get
-            {
-                return m_Spellweaving;
-            }
-            set
-            {
-                m_Spellweaving = value;
-            }
-        }
         public static bool PublicDonations
         {
             get
@@ -254,7 +242,6 @@ namespace Server
                 ReadNode(root, "Sanctuary", ref m_Sanctuary);
                 ReadNode(root, "StygianDragonLair", ref m_StygianDragonLair);
                 ReadNode(root, "MedusasLair", ref m_MedusasLair);
-                ReadNode(root, "Spellweaving", ref m_Spellweaving);
                 ReadNode(root, "PublicDonations", ref m_PublicDonations);
             }
             catch (Exception e)
@@ -304,7 +291,6 @@ namespace Server
                 UpdateNode(root, "Sanctuary", m_Sanctuary);
                 UpdateNode(root, "StygianDragonLair", m_StygianDragonLair);
                 UpdateNode(root, "MedusasLair", m_MedusasLair);
-                UpdateNode(root, "Spellweaving", m_Spellweaving);
                 UpdateNode(root, "PublicDonations", m_PublicDonations);
 
                 doc.Save("Data/Mondain's Legacy/Settings.xml");
@@ -682,8 +668,7 @@ namespace Server
             AddButton(20, 260, MondainsLegacy.Sanctuary ? 0x939 : 0x938, MondainsLegacy.Sanctuary ? 0x939 : 0x938, 9, GumpButtonType.Reply, 0);
             AddButton(20, 285, MondainsLegacy.StygianDragonLair ? 0x939 : 0x938, MondainsLegacy.StygianDragonLair ? 0x939 : 0x938, 10, GumpButtonType.Reply, 0);
             AddButton(20, 310, MondainsLegacy.MedusasLair ? 0x939 : 0x938, MondainsLegacy.MedusasLair ? 0x939 : 0x938, 11, GumpButtonType.Reply, 0);
-            AddButton(20, 335, MondainsLegacy.Spellweaving ? 0x939 : 0x938, MondainsLegacy.Spellweaving ? 0x939 : 0x938, 12, GumpButtonType.Reply, 0);
-            AddButton(20, 360, MondainsLegacy.PublicDonations ? 0x939 : 0x938, MondainsLegacy.PublicDonations ? 0x939 : 0x938, 13, GumpButtonType.Reply, 0);
+            AddButton(20, 360, MondainsLegacy.PublicDonations ? 0x939 : 0x938, MondainsLegacy.PublicDonations ? 0x939 : 0x938, 12, GumpButtonType.Reply, 0);
 
             AddLabel(45, 56, 0x226, "Palace of Paroxysmus");
             AddLabel(45, 81, 0x226, "Twisted Weald");
@@ -696,7 +681,6 @@ namespace Server
             AddLabel(45, 256, 0x226, "Sanctuary");
             AddLabel(45, 281, 0x226, "StygianDragonLair");
             AddLabel(45, 306, 0x226, "MedusasLair");
-            AddLabel(45, 331, 0x226, "Spellweaving");
             AddLabel(45, 356, 0x226, "PublicDonations");
 
             // legend
@@ -749,9 +733,6 @@ namespace Server
                     MondainsLegacy.MedusasLair = !MondainsLegacy.MedusasLair;
                     break;
                 case 12:
-                    MondainsLegacy.Spellweaving = !MondainsLegacy.Spellweaving;
-                    break;
-                case 13:
                     MondainsLegacy.PublicDonations = !MondainsLegacy.PublicDonations;
                     break;
             }

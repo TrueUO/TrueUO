@@ -101,7 +101,7 @@ namespace Server.Mobiles
 
             AddLoot(LootPack.RandomLootItem(new[] { typeof(TravestysSushiPreparations), typeof(TravestysFineTeakwoodTray), typeof(TravestysCollectionOfShells) }));
 
-            AddLoot(LootPack.LootItem<ParrotItem>(60.0));
+            AddLoot(LootPack.LootItem<ParrotItem>(25.0));
             AddLoot(LootPack.LootItem<TragicRemainsOfTravesty>(10.0));
             AddLoot(LootPack.LootItem<ImprisonedDog>(5.0));
             AddLoot(LootPack.LootItem<MarkOfTravesty>(5.0));

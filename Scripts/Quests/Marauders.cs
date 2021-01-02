@@ -7,7 +7,6 @@ namespace Server.Engines.Quests
     public class MaraudersQuest : BaseQuest
     {
         public MaraudersQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(Ogre), "ogres", 10, "Sanctuary"));
 
@@ -36,22 +35,19 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class TheBrainsOfTheOperationQuest : BaseQuest
     {
         public TheBrainsOfTheOperationQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(OgreLord), "ogre lords", 10, "Sanctuary"));
 
@@ -79,22 +75,19 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class TheBrawnQuest : BaseQuest
     {
         public TheBrawnQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(Cyclops), "cyclops", 6, "Sanctuary"));
 
@@ -121,22 +114,19 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class TheBiggerTheyAreQuest : BaseQuest
     {
         public TheBiggerTheyAreQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(Titan), "titans", 3, "Sanctuary"));
 
@@ -163,15 +153,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

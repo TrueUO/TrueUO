@@ -334,7 +334,6 @@ namespace Server
             new LootPackItem(typeof(RisingColossusScroll), 1)
         };
 
-
         public static readonly LootPackItem[] GemItems = { new LootPackItem(typeof(Amber), 1) };
         public static readonly LootPackItem[] RareGemItems = { new LootPackItem(typeof(BlueDiamond), 1) };
 
@@ -605,7 +604,6 @@ namespace Server
         public static readonly LootPack BodyPartsAndBones = new LootPack(new[] { new LootPackEntry(false, true, LootBodyPartsAndBones, 100.00, 1) });
         public static readonly LootPack Statue = new LootPack(new[] { new LootPackEntry(false, true, StatueItems, 100.00, 1) });
 
-        public static readonly LootPack Parrot = new LootPack(new[] { new LootPackEntry(false, false, new[] { new LootPackItem(typeof(ParrotItem), 1) }, 10.00, 1) });
         public static readonly LootPack Talisman = new LootPack(new[] { new LootPackEntry(false, false, new[] { new LootPackItem(typeof(RandomTalisman), 1) }, 100.00, 1) });
 
         public static readonly LootPack PeculiarSeed1 = new LootPack(new[] { new LootPackEntry(false, true, new[] { new LootPackItem(e => Engines.Plants.Seed.RandomPeculiarSeed(1), 1) }, 33.3, 1) });

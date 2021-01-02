@@ -1,4 +1,5 @@
 using Server.ContextMenus;
+using Server.Engines.Craft;
 using Server.Gumps;
 using Server.Multis;
 using Server.Network;
@@ -1316,6 +1317,14 @@ namespace Server.Items
         {
         }
 
+        public override int OnCraft(int quality, bool makersMark, Mobile from, CraftSystem craftSystem, Type typeRes, ITool tool, CraftItem craftItem, int resHue)
+        {
+            Resource = CraftResource.None;
+            Hue = 0;
+
+            return quality;
+        }
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -1372,6 +1381,14 @@ namespace Server.Items
         public WallMountedAquariumDeed(Serial serial)
             : base(serial)
         {
+        }
+
+        public override int OnCraft(int quality, bool makersMark, Mobile from, CraftSystem craftSystem, Type typeRes, ITool tool, CraftItem craftItem, int resHue)
+        {
+            Resource = CraftResource.None;
+            Hue = 0;
+
+            return quality;
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -1486,6 +1503,14 @@ namespace Server.Items
         public LargeElegantAquariumDeed(Serial serial)
             : base(serial)
         {
+        }
+
+        public override int OnCraft(int quality, bool makersMark, Mobile from, CraftSystem craftSystem, Type typeRes, ITool tool, CraftItem craftItem, int resHue)
+        {
+            Resource = CraftResource.None;
+            Hue = 0;
+
+            return quality;
         }
 
         public override void OnDoubleClick(Mobile from)

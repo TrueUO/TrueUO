@@ -741,18 +741,21 @@ namespace Server.Engines.Craft
             AddRes(index, typeof(WorkableGlass), 1154170, 2, 1154171);
             AddRes(index, typeof(Sand), 1044625, 5, 1044627);
             AddRes(index, typeof(LiveRock), 1159133, 1, 1159132);
+            ForceNonExceptional(index);
             AddRecipe(index, (int)CarpRecipes.SmallElegantAquarium);
 
             index = AddCraft(typeof(WallMountedAquariumDeed), 1044290, 1159135, 100.0, 160.0, typeof(Board), 1044041, 50, 1044351);
             AddRes(index, typeof(WorkableGlass), 1154170, 4, 1154171);
             AddRes(index, typeof(Sand), 1044625, 10, 1044627);
             AddRes(index, typeof(LiveRock), 1159133, 3, 1159132);
+            ForceNonExceptional(index);
             AddRecipe(index, (int)CarpRecipes.WallMountedAquarium);
 
             index = AddCraft(typeof(LargeElegantAquariumDeed), 1044290, 1159136, 100.0, 160.0, typeof(Board), 1044041, 100, 1044351);
             AddRes(index, typeof(WorkableGlass), 1154170, 8, 1154171);
             AddRes(index, typeof(Sand), 1044625, 20, 1044627);
             AddRes(index, typeof(LiveRock), 1159133, 5, 1159132);
+            ForceNonExceptional(index);
             AddRecipe(index, (int)CarpRecipes.LargeElegantAquarium);
 
             // Tailoring and Cooking
