@@ -32,7 +32,7 @@ namespace Server.Engines.Points
         {
             BaseCreature bc = victim as BaseCreature;
 
-            if (!TreasuresOfKhaldunEvent.Instance.Running || bc == null || bc.Controlled || bc.Summoned || !damager.Alive || damager.Deleted || bc.IsChampionSpawn)
+            if (!TreasuresOfKhaldunEvent.Instance.Running || bc == null || bc.Controlled || bc.Summoned || !damager.Alive || damager.Deleted)
                 return;
 
             Region r = bc.Region;
