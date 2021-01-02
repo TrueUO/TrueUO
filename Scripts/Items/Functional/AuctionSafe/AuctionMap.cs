@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace Server.Items
 {
-    public class AuctionMap : MapItem
+    public class AuctionMap : MapItem, ISearchMap
     {
         public readonly int TeleportCost = 1000;
         public readonly int DeleteDelayMinutes = 30;

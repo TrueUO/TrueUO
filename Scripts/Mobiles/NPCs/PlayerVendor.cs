@@ -232,7 +232,7 @@ namespace Server.Mobiles
         private BaseHouse m_House;
         private string m_ShopName;
 
-        public double CommissionPerc => 5.25;
+        public virtual double CommissionPerc => 0.0;
         public virtual bool IsCommission => false;
 
         public PlayerVendor(Mobile owner, BaseHouse house)
