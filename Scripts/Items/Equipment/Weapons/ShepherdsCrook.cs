@@ -40,7 +40,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -51,7 +51,7 @@ namespace Server.Items
 
         private class HerdingTarget : Target
         {
-            private static readonly Type[] m_ChampTamables = new Type[]
+            private static readonly Type[] m_ChampTamables =
             {
                 typeof(StrongMongbat), typeof(Imp), typeof(Scorpion), typeof(GiantSpider),
                 typeof(Snake), typeof(LavaLizard), typeof(Drake), typeof(Dragon),
@@ -70,10 +70,8 @@ namespace Server.Items
 
             protected override void OnTarget(Mobile from, object targ)
             {
-                if (targ is BaseCreature)
+                if (targ is BaseCreature bc)
                 {
-                    BaseCreature bc = (BaseCreature)targ;
-
                     if (IsHerdable(bc))
                     {
                         if (bc.Controlled)
