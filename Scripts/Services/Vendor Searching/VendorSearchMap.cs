@@ -9,7 +9,14 @@ using System.Collections.Generic;
 
 namespace Server.Items
 {
-    public class VendorSearchMap : MapItem
+    public interface ISearchMap
+    {
+        Point3D GetLocation(Mobile m);
+        Map GetMap();
+        void OnBeforeTravel(Mobile from);
+    }
+
+    public class VendorSearchMap : MapItem, ISearchMap
     {
         public readonly int TeleportCost = 1000;
         public readonly int DeleteDelayMinutes = 30;
@@ -221,7 +228,7 @@ namespace Server.Items
             list.Add(new OpenContainerEntry(from, this));
         }
 
-        public Point3D GetLocation(Mobile m)
+        public virtual Point3D GetLocation(Mobile m)
         {
             BaseHouse h = null;
 
