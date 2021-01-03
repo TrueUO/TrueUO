@@ -20,10 +20,9 @@ namespace Server.Spells.Fourth
 
         private readonly RunebookEntry m_Entry;
         private readonly Runebook m_Book;
-        private readonly VendorSearchMap m_SearchMap;
-        private readonly AuctionMap m_AuctionMap;
+        private readonly ISearchMap m_SearchMap;
 
-        public bool NoSkillRequirement => (m_Book != null || m_AuctionMap != null || m_SearchMap != null) || TransformationSpellHelper.UnderTransformation(Caster, typeof(WraithFormSpell));
+        public bool NoSkillRequirement => (m_Book != null || m_SearchMap != null) || TransformationSpellHelper.UnderTransformation(Caster, typeof(WraithFormSpell));
 
         public RecallSpell(Mobile caster, Item scroll)
             : this(caster, scroll, null, null)
@@ -37,16 +36,10 @@ namespace Server.Spells.Fourth
             m_Book = book;
         }
 
-        public RecallSpell(Mobile caster, Item scroll, VendorSearchMap map)
+        public RecallSpell(Mobile caster, Item scroll, ISearchMap map)
             : base(caster, scroll, m_Info)
         {
             m_SearchMap = map;
-        }
-
-        public RecallSpell(Mobile caster, Item scroll, AuctionMap map)
-            : base(caster, scroll, m_Info)
-        {
-            m_AuctionMap = map;
         }
 
         public override SpellCircle Circle => SpellCircle.Fourth;
@@ -60,7 +53,7 @@ namespace Server.Spells.Fourth
 
         public override void OnCast()
         {
-            if (m_Entry == null && m_SearchMap == null && m_AuctionMap == null)
+            if (m_Entry == null && m_SearchMap == null)
             {
                 Caster.Target = new InternalTarget(this);
             }
@@ -82,15 +75,10 @@ namespace Server.Spells.Fourth
                         return;
                     }
                 }
-                else if (m_SearchMap != null)
+                else
                 {
                     loc = m_SearchMap.GetLocation(Caster);
                     map = m_SearchMap.GetMap();
-                }
-                else
-                {
-                    loc = m_AuctionMap.GetLocation(Caster);
-                    map = m_AuctionMap.GetMap();
                 }
 
                 Effect(loc, map, true, false);
@@ -217,9 +205,6 @@ namespace Server.Spells.Fourth
 
                 if (m_SearchMap != null)
                     m_SearchMap.OnBeforeTravel(Caster);
-
-                if (m_AuctionMap != null)
-                    m_AuctionMap.OnBeforeTravel(Caster);
 
                 Caster.PlaySound(0x1FC);
                 Caster.MoveToWorld(loc, map);
