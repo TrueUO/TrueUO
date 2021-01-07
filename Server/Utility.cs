@@ -720,14 +720,14 @@ namespace Server
 				range = m.NetState.UpdateRange;
 			}
 
-			if (p1 is Item)
+			if (p1 is Item p1Item)
 			{
-				p1 = ((Item)p1).GetWorldLocation();
+				p1 = p1Item.GetWorldLocation();
 			}
 
-			if (p2 is Item)
+			if (p2 is Item p2Item)
 			{
-				p2 = ((Item)p2).GetWorldLocation();
+				p2 = p2Item.GetWorldLocation();
 			}
 
 			return (p1.X >= (p2.X - range)) && (p1.X <= (p2.X + range)) && (p1.Y >= (p2.Y - range)) && (p1.Y <= (p2.Y + range));

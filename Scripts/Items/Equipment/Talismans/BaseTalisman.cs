@@ -44,20 +44,20 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsVvVItem
         {
-            get { return _VvVItem; }
+            get => _VvVItem;
             set { _VvVItem = value; InvalidateProperties(); }
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public Mobile Owner
         {
-            get { return _Owner; }
+            get => _Owner;
             set { _Owner = value; if (_Owner != null) _OwnerName = _Owner.Name; InvalidateProperties(); }
         }
 
         public virtual string OwnerName
         {
-            get { return _OwnerName; }
+            get => _OwnerName;
             set { _OwnerName = value; InvalidateProperties(); }
         }
 
@@ -108,10 +108,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int KarmaLoss
         {
-            get
-            {
-                return m_AosAttributes.IncreasedKarmaLoss;
-            }
+            get => m_AosAttributes.IncreasedKarmaLoss;
             set
             {
                 m_AosAttributes.IncreasedKarmaLoss = value;
@@ -122,10 +119,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int MaxCharges
         {
-            get
-            {
-                return m_MaxCharges;
-            }
+            get => m_MaxCharges;
             set
             {
                 m_MaxCharges = value;
@@ -136,10 +130,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int Charges
         {
-            get
-            {
-                return m_Charges;
-            }
+            get => m_Charges;
             set
             {
                 m_Charges = value;
@@ -154,10 +145,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int MaxChargeTime
         {
-            get
-            {
-                return m_MaxChargeTime;
-            }
+            get => m_MaxChargeTime;
             set
             {
                 m_MaxChargeTime = value;
@@ -168,10 +156,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int ChargeTime
         {
-            get
-            {
-                return m_ChargeTime;
-            }
+            get => m_ChargeTime;
             set
             {
                 m_ChargeTime = value;
@@ -182,10 +167,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public bool Blessed
         {
-            get
-            {
-                return m_Blessed;
-            }
+            get => m_Blessed;
             set
             {
                 m_Blessed = value;
@@ -196,10 +178,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int MaxHitPoints
         {
-            get
-            {
-                return m_MaxHitPoints;
-            }
+            get => m_MaxHitPoints;
             set
             {
                 m_MaxHitPoints = value;
@@ -214,10 +193,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int HitPoints
         {
-            get
-            {
-                return m_HitPoints;
-            }
+            get => m_HitPoints;
             set
             {
                 if (value != m_HitPoints && MaxHitPoints > 0)
@@ -246,25 +222,19 @@ namespace Server.Items
         public virtual bool CanRepair => true;
         public virtual bool CanFortify => NegativeAttributes.Antique < 4;
 
-        #region Slayer
         private TalismanSlayerName m_Slayer;
 
         [CommandProperty(AccessLevel.GameMaster)]
         public TalismanSlayerName Slayer
         {
-            get
-            {
-                return m_Slayer;
-            }
+            get => m_Slayer;
             set
             {
                 m_Slayer = value;
                 InvalidateProperties();
             }
         }
-        #endregion
 
-        #region Summoner/Removal
         private TalismanAttribute m_Summoner;
         private TalismanRemoval m_Removal;
         private Mobile m_Creature;
@@ -272,10 +242,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public TalismanAttribute Summoner
         {
-            get
-            {
-                return m_Summoner;
-            }
+            get => m_Summoner;
             set
             {
                 m_Summoner = value;
@@ -286,29 +253,21 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public TalismanRemoval Removal
         {
-            get
-            {
-                return m_Removal;
-            }
+            get => m_Removal;
             set
             {
                 m_Removal = value;
                 InvalidateProperties();
             }
         }
-        #endregion
 
-        #region Protection/Killer
         private TalismanAttribute m_Protection;
         private TalismanAttribute m_Killer;
 
         [CommandProperty(AccessLevel.GameMaster)]
         public TalismanAttribute Protection
         {
-            get
-            {
-                return m_Protection;
-            }
+            get => m_Protection;
             set
             {
                 m_Protection = value;
@@ -319,17 +278,13 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public TalismanAttribute Killer
         {
-            get
-            {
-                return m_Killer;
-            }
+            get => m_Killer;
             set
             {
                 m_Killer = value;
                 InvalidateProperties();
             }
         }
-        #endregion
 
         #region Craft bonuses
         private TalismanSkill m_Skill;
@@ -339,10 +294,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public TalismanSkill Skill
         {
-            get
-            {
-                return m_Skill;
-            }
+            get => m_Skill;
             set
             {
                 m_Skill = value;
@@ -356,10 +308,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int SuccessBonus
         {
-            get
-            {
-                return m_SuccessBonus;
-            }
+            get => m_SuccessBonus;
             set
             {
                 m_SuccessBonus = value;
@@ -370,10 +319,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int ExceptionalBonus
         {
-            get
-            {
-                return m_ExceptionalBonus;
-            }
+            get => m_ExceptionalBonus;
             set
             {
                 m_ExceptionalBonus = value;
@@ -391,10 +337,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public AosAttributes Attributes
         {
-            get
-            {
-                return m_AosAttributes;
-            }
+            get => m_AosAttributes;
             set
             {
             }
@@ -415,10 +358,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public AosSkillBonuses SkillBonuses
         {
-            get
-            {
-                return m_AosSkillBonuses;
-            }
+            get => m_AosSkillBonuses;
             set
             {
             }
@@ -427,10 +367,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public NegativeAttributes NegativeAttributes
         {
-            get
-            {
-                return m_NegativeAttributes;
-            }
+            get => m_NegativeAttributes;
             set
             {
             }
@@ -442,10 +379,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public SAAbsorptionAttributes SAAbsorptionAttributes
         {
-            get
-            {
-                return m_SAAbsorptionAttributes;
-            }
+            get => m_SAAbsorptionAttributes;
             set
             {
             }
@@ -495,8 +429,10 @@ namespace Server.Items
                 {
                     MaxHitPoints--;
 
-                    if (Parent is Mobile)
-                        ((Mobile)Parent).LocalOverheadMessage(Network.MessageType.Regular, 0x3B2, 1061121); // Your equipment is severely damaged.
+                    if (Parent is Mobile mobile)
+                    {
+                        mobile.LocalOverheadMessage(Network.MessageType.Regular, 0x3B2, 1061121); // Your equipment is severely damaged.
+                    }
 
                     if (m_MaxHitPoints == 0)
                     {
@@ -574,10 +510,8 @@ namespace Server.Items
 
         public override void OnAdded(object parent)
         {
-            if (parent is Mobile)
+            if (parent is Mobile from)
             {
-                Mobile from = (Mobile)parent;
-
                 m_AosSkillBonuses.AddTo(from);
                 m_AosAttributes.AddStatBonuses(from);
 
@@ -599,10 +533,8 @@ namespace Server.Items
 
         public override void OnRemoved(object parent)
         {
-            if (parent is Mobile)
+            if (parent is Mobile from)
             {
-                Mobile from = (Mobile)parent;
-
                 m_AosSkillBonuses.Remove();
                 m_AosAttributes.RemoveStatBonuses(from);
 
@@ -649,9 +581,8 @@ namespace Server.Items
                         Diagnostics.ExceptionLogging.LogException(e);
                     }
 
-                    if (obj is Item)
+                    if (obj is Item item)
                     {
-                        Item item = (Item)obj;
                         int count = 1;
 
                         if (m_Summoner != null && m_Summoner.Amount > 1)
@@ -662,8 +593,7 @@ namespace Server.Items
                                 count = m_Summoner.Amount;
                         }
 
-                        if (from.Backpack == null || count * item.Weight > from.Backpack.MaxWeight ||
-                            from.Backpack.Items.Count + count > from.Backpack.MaxItems)
+                        if (from.Backpack == null || count * item.Weight > from.Backpack.MaxWeight || from.Backpack.Items.Count + count > from.Backpack.MaxItems)
                         {
                             from.SendLocalizedMessage(500720); // You don't have enough room in your backpack!
                             item.Delete();
@@ -687,11 +617,9 @@ namespace Server.Items
                         else if (m_Summoner != null && m_Summoner.Name != null)
                             from.SendLocalizedMessage(1074853, m_Summoner.Name.ToString()); // You have been given ~1_name~
                     }
-                    else if (obj is BaseCreature)
+                    else if (obj is BaseCreature mob)
                     {
-                        BaseCreature mob = (BaseCreature)obj;
-
-                        if ((m_Creature != null && !m_Creature.Deleted) || from.Followers + mob.ControlSlots > from.FollowersMax)
+                        if (m_Creature != null && !m_Creature.Deleted || from.Followers + mob.ControlSlots > from.FollowersMax)
                         {
                             from.SendLocalizedMessage(1074270); // You have too many followers to summon another one.
                             mob.Delete();
@@ -933,7 +861,7 @@ namespace Server.Items
 
         private static bool GetSaveFlag(SaveFlag flags, SaveFlag toGet)
         {
-            return ((flags & toGet) != 0);
+            return (flags & toGet) != 0;
         }
 
         [Flags]
@@ -1171,9 +1099,9 @@ namespace Server.Items
                     }
             }
 
-            if (Parent is Mobile)
+            if (Parent is Mobile mobile)
             {
-                Mobile m = (Mobile)Parent;
+                Mobile m = mobile;
 
                 m_AosAttributes.AddStatBonuses(m);
                 m_AosSkillBonuses.AddTo(m);
@@ -1258,7 +1186,7 @@ namespace Server.Items
         #endregion
 
         #region Randomize
-        private static readonly int[] m_ItemIDs = new int[]
+        private static readonly int[] m_ItemIDs =
         {
             0x2F58, 0x2F59, 0x2F5A, 0x2F5B
         };
@@ -1269,7 +1197,7 @@ namespace Server.Items
         }
 
         public static Type[] Summons => m_Summons;
-        private static readonly Type[] m_Summons = new Type[]
+        private static readonly Type[] m_Summons =
         {
             typeof(SummonedAntLion),
             typeof(SummonedCow),
@@ -1290,11 +1218,11 @@ namespace Server.Items
             typeof(SummonedVorpalBunny),
             typeof(Board),
             typeof(IronIngot),
-            typeof(Bandage),
+            typeof(Bandage)
         };
 
         public static int[] SummonLabels => m_SummonLabels;
-        private static readonly int[] m_SummonLabels = new int[]
+        private static readonly int[] m_SummonLabels =
         {
             1075211, // Ant Lion
             1072494, // Cow
@@ -1316,7 +1244,7 @@ namespace Server.Items
 
             1015101, // Boards
             1044036, // Ingots
-            1023817, // clean bandage
+            1023817  // clean bandage
         };
 
         public static Type GetRandomSummonType()
@@ -1331,9 +1259,11 @@ namespace Server.Items
                 int num = Utility.Random(m_Summons.Length);
 
                 if (num > 14)
+                {
                     return new TalismanAttribute(m_Summons[num], m_SummonLabels[num], 10);
-                else
-                    return new TalismanAttribute(m_Summons[num], m_SummonLabels[num]);
+                }
+
+                return new TalismanAttribute(m_Summons[num], m_SummonLabels[num]);
             }
 
             return new TalismanAttribute();
@@ -1348,7 +1278,7 @@ namespace Server.Items
         }
 
         public static Type[] Killers => m_Killers;
-        private static readonly Type[] m_Killers = new Type[]
+        private static readonly Type[] m_Killers =
         {
             typeof(OrcBomber), typeof(OrcBrute), typeof(Sewerrat), typeof(Rat), typeof(GiantRat),
             typeof(Ratman), typeof(RatmanArcher), typeof(GiantSpider), typeof(FrostSpider), typeof(GiantBlackWidow),
@@ -1362,12 +1292,11 @@ namespace Server.Items
             typeof(Crane), typeof(SnowLeopard), typeof(IceFiend), typeof(FrostOoze), typeof(FrostTroll),
             typeof(IceElemental), typeof(SnowElemental), typeof(GiantIceWorm), typeof(LadyOfTheSnow), typeof(FireElemental),
             typeof(FireSteed), typeof(HellHound), typeof(HellCat), typeof(PredatorHellCat), typeof(LavaLizard),
-            typeof(FireBeetle), typeof(Cow), typeof(Bull), typeof(Gaman)//,			typeof( Minotaur)
-            // TODO Meraktus, Tormented Minotaur, Minotaur
+            typeof(FireBeetle), typeof(Cow), typeof(Bull), typeof(Gaman)
         };
 
         public static int[] KillerLabels => m_KillerLabels;
-        private static readonly int[] m_KillerLabels = new int[]
+        private static readonly int[] m_KillerLabels =
         {
             1072413, 1072414, 1072418, 1072419, 1072420,
             1072421, 1072423, 1072424, 1072425, 1072426,
@@ -1381,7 +1310,7 @@ namespace Server.Items
             1072473, 1072474, 1072477, 1072478, 1072479,
             1072480, 1072481, 1072483, 1072485, 1072486,
             1072487, 1072489, 1072490, 1072491, 1072492,
-            1072493, 1072494, 1072495, 1072498,
+            1072493, 1072494, 1072495, 1072498
         };
 
         public static TalismanAttribute GetRandomKiller()
@@ -1415,7 +1344,7 @@ namespace Server.Items
         }
 
         public static SkillName[] SkillsOld => m_SkillsOld;
-        private static readonly SkillName[] m_SkillsOld = new SkillName[]
+        private static readonly SkillName[] m_SkillsOld =
         {
             SkillName.Alchemy,
             SkillName.Blacksmith,
@@ -1425,11 +1354,11 @@ namespace Server.Items
             SkillName.Fletching,
             SkillName.Inscribe,
             SkillName.Tailoring,
-            SkillName.Tinkering,
+            SkillName.Tinkering
         };
 
         public static TalismanSkill[] Skills => m_Skills;
-        private static readonly TalismanSkill[] m_Skills = new TalismanSkill[]
+        private static readonly TalismanSkill[] m_Skills =
         {
             TalismanSkill.Alchemy,
             TalismanSkill.Blacksmithy,
@@ -1441,7 +1370,7 @@ namespace Server.Items
             TalismanSkill.Inscription,
             TalismanSkill.Masonry,
             TalismanSkill.Tailoring,
-            TalismanSkill.Tinkering,
+            TalismanSkill.Tinkering
         };
 
         public static TalismanSkill GetRandomSkill()
