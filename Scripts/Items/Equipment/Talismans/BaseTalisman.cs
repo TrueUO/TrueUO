@@ -210,8 +210,13 @@ namespace Server.Items
             }
         }
 
-        public virtual int InitMinHits => 0;
+        public override int PhysicalResistance => m_AosResistances.Physical;
+        public override int FireResistance => m_AosResistances.Fire;
+        public override int ColdResistance => m_AosResistances.Cold;
+        public override int PoisonResistance => m_AosResistances.Poison;
+        public override int EnergyResistance => m_AosResistances.Energy;
 
+        public virtual int InitMinHits => 0;
         public virtual int InitMaxHits => 0;
 
         public virtual bool CanRepair => true;
@@ -325,6 +330,7 @@ namespace Server.Items
 
         #region AOS bonuses
         private AosAttributes m_AosAttributes;
+        private AosElementAttributes m_AosResistances;
         private AosSkillBonuses m_AosSkillBonuses;
         private NegativeAttributes m_NegativeAttributes;
 
@@ -332,6 +338,18 @@ namespace Server.Items
         public AosAttributes Attributes
         {
             get => m_AosAttributes;
+            set
+            {
+            }
+        }
+
+        [CommandProperty(AccessLevel.GameMaster)]
+        public AosElementAttributes Resistances
+        {
+            get
+            {
+                return m_AosResistances;
+            }
             set
             {
             }
@@ -384,6 +402,7 @@ namespace Server.Items
             m_Killer = new TalismanAttribute();
             m_Summoner = new TalismanAttribute();
             m_AosAttributes = new AosAttributes(this);
+            m_AosResistances = new AosElementAttributes(this);
             m_AosSkillBonuses = new AosSkillBonuses(this);
             m_SAAbsorptionAttributes = new SAAbsorptionAttributes(this);
             m_NegativeAttributes = new NegativeAttributes(this);
@@ -444,6 +463,7 @@ namespace Server.Items
             talisman.m_Protection = new TalismanAttribute(m_Protection);
             talisman.m_Killer = new TalismanAttribute(m_Killer);
             talisman.m_AosAttributes = new AosAttributes(newItem, m_AosAttributes);
+            talisman.m_AosResistances = new AosElementAttributes(newItem, m_AosResistances);
             talisman.m_AosSkillBonuses = new AosSkillBonuses(newItem, m_AosSkillBonuses);
             talisman.m_SAAbsorptionAttributes = new SAAbsorptionAttributes(newItem, m_SAAbsorptionAttributes);
             talisman.m_NegativeAttributes = new NegativeAttributes(newItem, m_NegativeAttributes);
@@ -866,7 +886,8 @@ namespace Server.Items
             Blessed = 0x00008000,
             Slayer = 0x00010000,
             SAAbsorptionAttributes = 0x00020000,
-            NegativeAttributes = 0x00040000
+            NegativeAttributes = 0x00040000,
+            Resistances = 0x00080000,
         }
 
         public override void Serialize(GenericWriter writer)
@@ -886,6 +907,7 @@ namespace Server.Items
 
             SaveFlag flags = SaveFlag.None;
 
+            SetSaveFlag(ref flags, SaveFlag.Resistances, !m_AosResistances.IsEmpty);
             SetSaveFlag(ref flags, SaveFlag.Attributes, !m_AosAttributes.IsEmpty);
             SetSaveFlag(ref flags, SaveFlag.SkillBonuses, !m_AosSkillBonuses.IsEmpty);
             SetSaveFlag(ref flags, SaveFlag.Protection, m_Protection != null && !m_Protection.IsEmpty);
@@ -905,6 +927,9 @@ namespace Server.Items
             SetSaveFlag(ref flags, SaveFlag.NegativeAttributes, !m_NegativeAttributes.IsEmpty);
 
             writer.WriteEncodedInt((int)flags);
+
+            if (GetSaveFlag(flags, SaveFlag.Resistances))
+                m_AosResistances.Serialize(writer);
 
             if (GetSaveFlag(flags, SaveFlag.Attributes))
                 m_AosAttributes.Serialize(writer);
@@ -985,6 +1010,11 @@ namespace Server.Items
                 case 0:
                     {
                         SaveFlag flags = (SaveFlag)reader.ReadEncodedInt();
+
+                        if (GetSaveFlag(flags, SaveFlag.Resistances))
+                            m_AosResistances = new AosElementAttributes(this, reader);
+                        else
+                            m_AosResistances = new AosElementAttributes(this);
 
                         if (GetSaveFlag(flags, SaveFlag.Attributes))
                             m_AosAttributes = new AosAttributes(this, reader);
