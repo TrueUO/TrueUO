@@ -559,7 +559,11 @@ namespace Server.Engines.Plants
             }
             else
             {
-                if (Pollinated && LeftSeeds > 0 && Plant.Reproduces)
+                if (Pollinated && LeftSeeds > 0 && Plant.Reproduces
+                    || LeftSeeds > 0 && Plant.Reproduces && Plant.PlantType == PlantType.FlaxFlowers
+                    || LeftSeeds > 0 && Plant.Reproduces && Plant.PlantType == PlantType.SugarCanes
+                    || LeftSeeds > 0 && Plant.Reproduces && Plant.PlantType == PlantType.CocoaTree
+                    || LeftSeeds > 0 && Plant.Reproduces && Plant.PlantType == PlantType.Vanilla)
                 {
                     LeftSeeds--;
                     AvailableSeeds++;
