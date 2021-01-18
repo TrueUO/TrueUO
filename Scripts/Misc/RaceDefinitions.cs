@@ -584,7 +584,8 @@ namespace Server.Misc
             0xE85, 0xE86,                                   // Tools
             0x1F03, 0x1F04, 0x26AE,                         // Robe & Arcane Robe
             0xE81,                                          // Crook
-            0x1086, 0x108A, 0x1F06, 0x1F09                  // Rings/Bracelet
+            0x1086, 0x108A, 0x1F06, 0x1F09,                 // Rings/Bracelet
+            0xA412                                          // Tabard
         };
 
         public static int[] GargoyleOnlyIDs => _GargoyleOnlyIDs;
