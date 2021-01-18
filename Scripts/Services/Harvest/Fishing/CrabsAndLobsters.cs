@@ -630,6 +630,7 @@ namespace Server.Items
         [Constructable]
         public StoneCrabMeat() : base(4159)
         {
+            Stackable = true;
             Hue = FishInfo.GetFishHue(typeof(StoneCrab));
         }
 
@@ -656,6 +657,7 @@ namespace Server.Items
         public SpiderCrabMeat()
             : base(4159)
         {
+            Stackable = true;
             Hue = FishInfo.GetFishHue(typeof(SpiderCrab));
         }
 
@@ -682,6 +684,7 @@ namespace Server.Items
         public BlueLobsterMeat()
             : base(4159)
         {
+            Stackable = true;
             Hue = FishInfo.GetFishHue(typeof(BlueLobster));
         }
 
