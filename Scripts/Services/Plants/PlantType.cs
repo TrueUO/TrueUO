@@ -62,7 +62,7 @@ namespace Server.Engines.Plants
 
     public class PlantTypeInfo
     {
-        private static readonly PlantTypeInfo[] m_Table = new PlantTypeInfo[]
+        private static readonly PlantTypeInfo[] m_Table =
         {
             new PlantTypeInfo( 0xC83, 0, 0,         PlantType.CampionFlowers,       false, true, true, true,        PlantCategory.Default ),
             new PlantTypeInfo( 0xC86, 0, 0,         PlantType.Poppies,              false, true, true, true,        PlantCategory.Default ),
@@ -90,7 +90,7 @@ namespace Server.Engines.Plants
             new PlantTypeInfo( 0x28E2, -5, 5,       PlantType.ExceptionalBonsai,    true, false, false, false,      PlantCategory.Exceptional ),
             new PlantTypeInfo( 0x28E3, -5, 5,       PlantType.ExoticBonsai,         true, false, false, false,      PlantCategory.Exotic ),
             new PlantTypeInfo( 0x0D25, 0, 0,        PlantType.Cactus,               false, false, false, false,     PlantCategory.Peculiar ),
-            new PlantTypeInfo( 0x1A9A, 5, 10,       PlantType.FlaxFlowers,          false, true, false, false,      PlantCategory.Peculiar ),
+            new PlantTypeInfo( 0x1A9A, 5, 10,       PlantType.FlaxFlowers,          false, true, false, true,      PlantCategory.Peculiar ),
             new PlantTypeInfo( 0x0C84, 0, 0,        PlantType.FoxgloveFlowers,      false, true, false, false,      PlantCategory.Peculiar ),
             new PlantTypeInfo( 0x1A9F, 5, -25,      PlantType.HopsEast,             false, false, false, false,     PlantCategory.Peculiar ),
             new PlantTypeInfo( 0x0CC1, 0, 0,        PlantType.OrfluerFlowers,       false, true, false, false,      PlantCategory.Peculiar ),
@@ -115,9 +115,11 @@ namespace Server.Engines.Plants
             int index = (int)plantType;
 
             if (index >= 0 && index < m_Table.Length)
+            {
                 return m_Table[index];
-            else
-                return m_Table[0];
+            }
+
+            return m_Table[0];
         }
 
         public static PlantType RandomFirstGeneration()
@@ -210,20 +212,20 @@ namespace Server.Engines.Plants
 
             if (rand < 0.5 / exp4)
                 return PlantType.CommonGreenBonsai;
-            else if (rand < 1.0 / exp4)
+            if (rand < 1.0 / exp4)
                 return PlantType.CommonPinkBonsai;
-            else if (rand < (k1 * 0.5 + 1.0) / exp4)
+            if (rand < (k1 * 0.5 + 1.0) / exp4)
                 return PlantType.UncommonGreenBonsai;
-            else if (rand < exp1 / exp4)
+            if (rand < exp1 / exp4)
                 return PlantType.UncommonPinkBonsai;
-            else if (rand < (k2 * 0.5 + exp1) / exp4)
+            if (rand < (k2 * 0.5 + exp1) / exp4)
                 return PlantType.RareGreenBonsai;
-            else if (rand < exp2 / exp4)
+            if (rand < exp2 / exp4)
                 return PlantType.RarePinkBonsai;
-            else if (rand < exp3 / exp4)
+            if (rand < exp3 / exp4)
                 return PlantType.ExceptionalBonsai;
-            else
-                return PlantType.ExoticBonsai;
+
+            return PlantType.ExoticBonsai;
         }
 
         public static bool IsCrossable(PlantType plantType)
@@ -234,15 +236,19 @@ namespace Server.Engines.Plants
         public static PlantType Cross(PlantType first, PlantType second)
         {
             if (!IsCrossable(first) || !IsCrossable(second))
+            {
                 return PlantType.CampionFlowers;
+            }
 
             int firstIndex = (int)first;
             int secondIndex = (int)second;
 
             if (firstIndex + 1 == secondIndex || firstIndex == secondIndex + 1)
+            {
                 return Utility.RandomBool() ? first : second;
-            else
-                return (PlantType)((firstIndex + secondIndex) / 2);
+            }
+
+            return (PlantType)((firstIndex + secondIndex) / 2);
         }
 
         public static bool CanReproduce(PlantType plantType)
@@ -261,23 +267,31 @@ namespace Server.Engines.Plants
         public int GetPlantLabelPlant(PlantHueInfo hueInfo)
         {
             if (m_PlantLabelPlant != -1)
+            {
                 return m_PlantLabelPlant;
+            }
 
             if (m_ContainsPlant)
+            {
                 return hueInfo.IsBright() ? 1060832 : 1060831; // a ~1_val~ of ~2_val~ dirt with a ~3_val~ [bright] ~4_val~ ~5_val~
-            else
-                return hueInfo.IsBright() ? 1061887 : 1061888; // a ~1_val~ of ~2_val~ dirt with a ~3_val~ [bright] ~4_val~ ~5_val~ ~6_val~
+            }
+
+            return hueInfo.IsBright() ? 1061887 : 1061888; // a ~1_val~ of ~2_val~ dirt with a ~3_val~ [bright] ~4_val~ ~5_val~ ~6_val~
         }
 
         public int GetPlantLabelFullGrown(PlantHueInfo hueInfo)
         {
             if (m_PlantLabelFullGrown != -1)
+            {
                 return m_PlantLabelFullGrown;
+            }
 
             if (m_ContainsPlant)
+            {
                 return hueInfo.IsBright() ? 1061891 : 1061889; // a ~1_HEALTH~ [bright] ~2_COLOR~ ~3_NAME~
-            else
-                return hueInfo.IsBright() ? 1061892 : 1061890; // a ~1_HEALTH~ [bright] ~2_COLOR~ ~3_NAME~ plant
+            }
+
+            return hueInfo.IsBright() ? 1061892 : 1061890; // a ~1_HEALTH~ [bright] ~2_COLOR~ ~3_NAME~ plant
         }
 
         public int GetPlantLabelDecorative(PlantHueInfo hueInfo)
