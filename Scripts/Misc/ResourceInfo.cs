@@ -56,7 +56,6 @@ namespace Server.Items
         private int m_WeaponDirectDamage;
         private int m_WeaponDurability;
         private int m_WeaponLuck;
-        private int m_WeaponGoldIncrease;
         private int m_WeaponLowerRequirements;
         private int m_WeaponDamage;
         private int m_WeaponHitChance;
@@ -71,7 +70,6 @@ namespace Server.Items
         private int m_ArmorEnergyResist;
         private int m_ArmorDurability;
         private int m_ArmorLuck;
-        private int m_ArmorGoldIncrease;
         private int m_ArmorLowerRequirements;
         private int m_ArmorDamage;
         private int m_ArmorHitChance;
@@ -112,7 +110,6 @@ namespace Server.Items
         public int WeaponDirectDamage { get => m_WeaponDirectDamage; set => m_WeaponDirectDamage = value; }
         public int WeaponDurability { get => m_WeaponDurability; set => m_WeaponDurability = value; }
         public int WeaponLuck { get => m_WeaponLuck; set => m_WeaponLuck = value; }
-        public int WeaponGoldIncrease { get => m_WeaponGoldIncrease; set => m_WeaponGoldIncrease = value; }
         public int WeaponLowerRequirements { get => m_WeaponLowerRequirements; set => m_WeaponLowerRequirements = value; }
         public int WeaponDamage { get => m_WeaponDamage; set => m_WeaponDamage = value; }
         public int WeaponHitChance { get => m_WeaponHitChance; set => m_WeaponHitChance = value; }
@@ -127,7 +124,6 @@ namespace Server.Items
         public int ArmorEnergyResist { get => m_ArmorEnergyResist; set => m_ArmorEnergyResist = value; }
         public int ArmorDurability { get => m_ArmorDurability; set => m_ArmorDurability = value; }
         public int ArmorLuck { get => m_ArmorLuck; set => m_ArmorLuck = value; }
-        public int ArmorGoldIncrease { get => m_ArmorGoldIncrease; set => m_ArmorGoldIncrease = value; }
         public int ArmorLowerRequirements { get => m_ArmorLowerRequirements; set => m_ArmorLowerRequirements = value; }
         public int ArmorDamage { get => m_ArmorDamage; set => m_ArmorDamage = value; }
         public int ArmorHitChance { get => m_ArmorHitChance; set => m_ArmorHitChance = value; }
