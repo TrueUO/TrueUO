@@ -80,7 +80,6 @@ namespace Server.Engines.VvV
             Rewards.Add(new CollectionItem(typeof(VvVWand1), 3571, 0, 0, 500));
             Rewards.Add(new CollectionItem(typeof(VvVWand2), 3571, 0, 0, 500));
             Rewards.Add(new CollectionItem(typeof(VvVWizardsHat), 5912, 0, 0, 500));
-            Rewards.Add(new CollectionItem(typeof(VvVWand1), 3571, 0, 0, 500));
             Rewards.Add(new CollectionItem(typeof(VvVWoodlandArms), 11116, 0, 0, 500));
             Rewards.Add(new CollectionItem(typeof(VvVDragonArms), 9815, 0, 0, 500));
             Rewards.Add(new CollectionItem(typeof(VvVGargishPlateArms), 776, 0, 0, 500));
