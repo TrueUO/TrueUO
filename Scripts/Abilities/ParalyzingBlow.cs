@@ -16,10 +16,7 @@ namespace Server.Items
 
         public override int BaseMana => 30;
 
-        public static bool IsImmune(Mobile m)
-        {
-            return m_Table.Contains(m);
-        }
+        public static bool IsImmune(Mobile m) => m_Table.Contains(m); 
 
         public static void BeginImmunity(Mobile m, TimeSpan duration)
         {
@@ -28,7 +25,7 @@ namespace Server.Items
             if (t != null)
                 t.Stop();
 
-            t = new InternalTimer(m, duration);
+            t = Timer.DelayCall(duration, EndImmunity, m);
             m_Table[m] = t;
 
             t.Start();
@@ -98,22 +95,6 @@ namespace Server.Items
             defender.Paralyze(duration);
 
             BeginImmunity(defender, duration + FreezeDelayDuration);
-        }
-
-        private class InternalTimer : Timer
-        {
-            private readonly Mobile m_Mobile;
-            public InternalTimer(Mobile m, TimeSpan duration)
-                : base(duration)
-            {
-                m_Mobile = m;
-                Priority = TimerPriority.TwoFiftyMS;
-            }
-
-            protected override void OnTick()
-            {
-                EndImmunity(m_Mobile);
-            }
         }
     }
 }

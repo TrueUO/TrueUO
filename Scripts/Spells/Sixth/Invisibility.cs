@@ -47,7 +47,7 @@ namespace Server.Spells.Sixth
             {
                 Caster.SendLocalizedMessage(500237); // Target can not be seen.
             }
-            else if (m is Mobiles.BaseVendor || m is Mobiles.PlayerVendor || m is Mobiles.PlayerBarkeeper || m.AccessLevel > Caster.AccessLevel)
+            else if (m is Mobiles.BaseVendor || m is Mobiles.PlayerVendor || m.AccessLevel > Caster.AccessLevel)
             {
                 Caster.SendLocalizedMessage(501857); // This spell won't work on that!
             }
@@ -64,19 +64,21 @@ namespace Server.Spells.Sixth
 
                 RemoveTimer(m);
 
-                TimeSpan duration = TimeSpan.FromSeconds(((1.2 * Caster.Skills.Magery.Fixed) / 10));
-
-                Timer t = new InternalTimer(m, duration);
+                TimeSpan duration = TimeSpan.FromSeconds(1.2 * Caster.Skills.Magery.Fixed / 10);
 
                 BuffInfo.RemoveBuff(m, BuffIcon.HidingAndOrStealth);
                 BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.Invisibility, 1075825, duration, m));	//Invisibility/Invisible
 
-                m_Table[m] = t;
-
-                t.Start();
+                m_Table[m] = Timer.DelayCall(duration, EndInvisiblity, m);
             }
 
             FinishSequence();
+        }
+
+        private static void EndInvisiblity(Mobile m)
+        {
+            m.RevealingAction();
+            RemoveTimer(m);
         }
 
         public class InternalTarget : Target
@@ -99,23 +101,6 @@ namespace Server.Spells.Sixth
             protected override void OnTargetFinish(Mobile from)
             {
                 m_Owner.FinishSequence();
-            }
-        }
-
-        private class InternalTimer : Timer
-        {
-            private readonly Mobile m_Mobile;
-            public InternalTimer(Mobile m, TimeSpan duration)
-                : base(duration)
-            {
-                Priority = TimerPriority.OneSecond;
-                m_Mobile = m;
-            }
-
-            protected override void OnTick()
-            {
-                m_Mobile.RevealingAction();
-                RemoveTimer(m_Mobile);
             }
         }
     }
