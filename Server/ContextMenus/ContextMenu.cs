@@ -1,8 +1,6 @@
-#region References
 using System;
 using System.Collections.Generic;
 using System.Linq;
-#endregion
 
 namespace Server.ContextMenus
 {
@@ -82,7 +80,22 @@ namespace Server.ContextMenus
 		/// <summary>
 		///     Returns true if this ContextMenu requires packet version 2.
 		/// </summary>
-		public bool RequiresNewPacket => Entries.Any(t => t.Number < 3000000 || t.Number > 3032767);
+        public bool RequiresNewPacket
+        {
+            get
+            {
+                for (var i = 0; i < Entries.Length; ++i)
+                {
+                    var number = Entries[i].Number;
+                    if (number < 3000000 || number > 3032767)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
+            }
+        }
 
 		public void Dispose()
 		{
