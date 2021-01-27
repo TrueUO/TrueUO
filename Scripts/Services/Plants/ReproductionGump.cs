@@ -174,7 +174,7 @@ namespace Server.Engines.Plants
                     {
                         PlantSystem system = m_Plant.PlantSystem;
 
-                        if (!m_Plant.IsCrossable && (m_Plant.PlantType != PlantType.FlaxFlowers || m_Plant.PlantType != PlantType.SugarCanes || m_Plant.PlantType != PlantType.CocoaTree || m_Plant.PlantType != PlantType.Vanilla))
+                        if (!m_Plant.IsCrossable)
                         {
                             m_Plant.LabelTo(from, 1053060); // Mutated plants do not produce seeds!
                         }
