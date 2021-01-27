@@ -51,11 +51,11 @@ namespace Server.Engines.Plants
     public enum PlantCategory
     {
         Default,
-        Common = 1063335, //
-        Uncommon = 1063336, //
+        Common = 1063335, 
+        Uncommon = 1063336, 
         Rare = 1063337, // Bonsai
-        Exceptional = 1063341, //
-        Exotic = 1063342, //
+        Exceptional = 1063341, 
+        Exotic = 1063342, 
         Peculiar = 1080528,
         Fragrant = 1080529
     }
@@ -90,7 +90,7 @@ namespace Server.Engines.Plants
             new PlantTypeInfo( 0x28E2, -5, 5,       PlantType.ExceptionalBonsai,    true, false, false, false,      PlantCategory.Exceptional ),
             new PlantTypeInfo( 0x28E3, -5, 5,       PlantType.ExoticBonsai,         true, false, false, false,      PlantCategory.Exotic ),
             new PlantTypeInfo( 0x0D25, 0, 0,        PlantType.Cactus,               false, false, false, false,     PlantCategory.Peculiar ),
-            new PlantTypeInfo( 0x1A9A, 5, 10,       PlantType.FlaxFlowers,          false, true, false, true,      PlantCategory.Peculiar ),
+            new PlantTypeInfo( 0x1A9A, 5, 10,       PlantType.FlaxFlowers,          false, true, false, false,      PlantCategory.Peculiar ),
             new PlantTypeInfo( 0x0C84, 0, 0,        PlantType.FoxgloveFlowers,      false, true, false, false,      PlantCategory.Peculiar ),
             new PlantTypeInfo( 0x1A9F, 5, -25,      PlantType.HopsEast,             false, false, false, false,     PlantCategory.Peculiar ),
             new PlantTypeInfo( 0x0CC1, 0, 0,        PlantType.OrfluerFlowers,       false, true, false, false,      PlantCategory.Peculiar ),
@@ -236,9 +236,7 @@ namespace Server.Engines.Plants
         public static PlantType Cross(PlantType first, PlantType second)
         {
             if (!IsCrossable(first) || !IsCrossable(second))
-            {
                 return PlantType.CampionFlowers;
-            }
 
             int firstIndex = (int)first;
             int secondIndex = (int)second;
@@ -267,9 +265,7 @@ namespace Server.Engines.Plants
         public int GetPlantLabelPlant(PlantHueInfo hueInfo)
         {
             if (m_PlantLabelPlant != -1)
-            {
                 return m_PlantLabelPlant;
-            }
 
             if (m_ContainsPlant)
             {
@@ -282,9 +278,7 @@ namespace Server.Engines.Plants
         public int GetPlantLabelFullGrown(PlantHueInfo hueInfo)
         {
             if (m_PlantLabelFullGrown != -1)
-            {
                 return m_PlantLabelFullGrown;
-            }
 
             if (m_ContainsPlant)
             {
@@ -341,7 +335,7 @@ namespace Server.Engines.Plants
         public int OffsetY => m_OffsetY;
         public PlantType PlantType => m_PlantType;
         public PlantCategory PlantCategory => m_PlantCategory;
-        public int Name => (m_ItemID < 0x4000) ? 1020000 + m_ItemID : 1078872 + m_ItemID;
+        public int Name => m_ItemID < 0x4000 ? 1020000 + m_ItemID : 1078872 + m_ItemID;
 
         public bool ContainsPlant => m_ContainsPlant;
         public bool Flowery => m_Flowery;

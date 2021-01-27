@@ -48,11 +48,7 @@ namespace Server.Engines.Plants
         private SecureLevel m_Level;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public SecureLevel Level
-        {
-            get => m_Level;
-            set => m_Level = value;
-        }
+        public SecureLevel Level { get => m_Level; set => m_Level = value; }
 
         public PlantSystem PlantSystem => m_PlantSystem;
 
@@ -311,7 +307,7 @@ namespace Server.Engines.Plants
                     }
                     else
                     {
-                        args += string.Format("\t#{0}\t#{1}", (typeInfo.PlantCategory == PlantCategory.Default) ? hueInfo.Name : (int)typeInfo.PlantCategory, GetLocalizedPlantStatus());
+                        args += string.Format("\t#{0}\t#{1}", typeInfo.PlantCategory == PlantCategory.Default ? hueInfo.Name : (int)typeInfo.PlantCategory, GetLocalizedPlantStatus());
 
                         list.Add(hueInfo.IsBright() ? 1060832 : 1060831, args); // a ~1_val~ of ~2_val~ dirt with a ~3_val~ [bright] ~4_val~ ~5_val~
                     }
@@ -445,7 +441,6 @@ namespace Server.Engines.Plants
             else if (item is BasePotion potion)
             {
                 int message;
-
                 if (ApplyPotion(potion.PotionEffect, false, out message))
                 {
                     potion.Consume();
@@ -454,7 +449,6 @@ namespace Server.Engines.Plants
 
                     m_PlantSystem.NextGrowth = DateTime.UtcNow + PlantSystem.CheckDelay;
                 }
-
                 LabelTo(from, message);
             }
             else if (item is PotionKeg keg)
@@ -466,7 +460,6 @@ namespace Server.Engines.Plants
                 }
 
                 int message;
-
                 if (ApplyPotion(keg.Type, false, out message))
                 {
                     keg.Held--;

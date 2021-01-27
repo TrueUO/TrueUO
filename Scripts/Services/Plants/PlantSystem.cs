@@ -327,9 +327,7 @@ namespace Server.Engines.Plants
         public int GetLocalizedDirtStatus()
         {
             if (!Plant.RequiresUpkeep)
-            {
                 return 1060827; // soft
-            }
 
             if (Water <= 1)
                 return 1060826; // hard
@@ -565,11 +563,7 @@ namespace Server.Engines.Plants
             }
             else
             {
-                if (Pollinated && LeftSeeds > 0 && Plant.Reproduces
-                    || LeftSeeds > 0 && Plant.Reproduces && Plant.PlantType == PlantType.FlaxFlowers
-                    || LeftSeeds > 0 && Plant.Reproduces && Plant.PlantType == PlantType.SugarCanes
-                    || LeftSeeds > 0 && Plant.Reproduces && Plant.PlantType == PlantType.CocoaTree
-                    || LeftSeeds > 0 && Plant.Reproduces && Plant.PlantType == PlantType.Vanilla)
+                if (Pollinated && LeftSeeds > 0 && Plant.Reproduces)
                 {
                     LeftSeeds--;
                     AvailableSeeds++;
