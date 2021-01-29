@@ -134,10 +134,10 @@ namespace Server.Engines.Craft
 
             // Misc Addons
             index = AddCraft(typeof(StoneAnvilSouthDeed), 1044290, 1072876, 78.0, 128.0, typeof(Granite), 1044514, 20, 1044513);
-            AddRecipe(index, (int)CarpRecipes.StoneAnvilSouth);
+            AddRecipe(index, (int)CraftRecipes.StoneAnvilSouth);
 
             index = AddCraft(typeof(StoneAnvilEastDeed), 1044290, 1073392, 78.0, 128.0, typeof(Granite), 1044514, 20, 1044513);
-            AddRecipe(index, (int)CarpRecipes.StoneAnvilEast);
+            AddRecipe(index, (int)CraftRecipes.StoneAnvilEast);
 
             index = AddCraft(typeof(LargeGargoyleBedSouthDeed), 1044290, 1111761, 76.0, 126.0, typeof(Granite), 1044514, 3, 1044513);
             AddSkill(index, SkillName.Tailoring, 70.0, 75.0);
