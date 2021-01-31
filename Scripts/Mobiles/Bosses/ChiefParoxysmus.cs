@@ -95,10 +95,8 @@ namespace Server.Mobiles
             base.OnDamage(amount, from, willKill);
 
             // eats pet or summons
-            if (from is BaseCreature)
+            if (from is BaseCreature creature)
             {
-                BaseCreature creature = (BaseCreature)from;
-
                 if (creature.Controlled || creature.Summoned)
                 {
                     if (Hits < HitsMax)
