@@ -220,32 +220,31 @@ namespace Server.Engines.Quests.Collector
             protected override void OnTarget(Mobile from, object targeted)
             {
                 Item targ = targeted as Item;
+
                 if (m_Obsidian.Deleted || m_Obsidian.Quantity >= m_Completed || targ == null)
                     return;
 
-                if (m_Obsidian.IsChildOf(from.Backpack) && targ.IsChildOf(from.Backpack) && targ is Obsidian targObsidian && targ != m_Obsidian)
+                if (m_Obsidian.IsChildOf(from.Backpack) && targ.IsChildOf(from.Backpack) && targ is Obsidian obsidian && targ != m_Obsidian && obsidian.Quantity < m_Completed)
                 {
-                    if (targObsidian.Quantity < m_Completed)
+                    if (obsidian.Quantity + m_Obsidian.Quantity <= m_Completed)
                     {
-                        if (targObsidian.Quantity + m_Obsidian.Quantity <= m_Completed)
-                        {
-                            targObsidian.Quantity += m_Obsidian.Quantity;
-                            m_Obsidian.Delete();
-                        }
-                        else
-                        {
-                            int delta = m_Completed - targObsidian.Quantity;
-                            targObsidian.Quantity += delta;
-                            m_Obsidian.Quantity -= delta;
-                        }
-
-                        if (targObsidian.Quantity >= m_Completed)
-                            targObsidian.StatueName = RandomName(from);
-
-                        from.Send(new AsciiMessage(targObsidian.Serial, targObsidian.ItemID, MessageType.Regular, 0x59, 3, m_Obsidian.Name, "Something Happened."));
-
-                        return;
+                        obsidian.Quantity += m_Obsidian.Quantity;
+                        m_Obsidian.Delete();
                     }
+                    else
+                    {
+                        int delta = m_Completed - obsidian.Quantity;
+
+                        obsidian.Quantity += delta;
+                        m_Obsidian.Quantity -= delta;
+                    }
+
+                    if (obsidian.Quantity >= m_Completed)
+                        obsidian.StatueName = RandomName(from);
+
+                    from.Send(new AsciiMessage(obsidian.Serial, obsidian.ItemID, MessageType.Regular, 0x59, 3, m_Obsidian.Name, "Something Happened."));
+
+                    return;
                 }
 
                 from.Send(new MessageLocalized(m_Obsidian.Serial, m_Obsidian.ItemID, MessageType.Regular, 0x2C, 3, 500309, m_Obsidian.Name, "")); // Nothing Happens.

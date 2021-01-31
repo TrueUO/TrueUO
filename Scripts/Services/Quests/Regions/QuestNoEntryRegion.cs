@@ -34,10 +34,9 @@ namespace Server.Engines.Quests
             if (m.IsStaff())
                 return true;
 
-            if (m is BaseCreature bc)
+            if (m is BaseCreature bc && !bc.Controlled && !bc.Summoned)
             {
-                if (!bc.Controlled && !bc.Summoned)
-                    return true;
+                return true;
             }
 
             if (m_Quest == null)

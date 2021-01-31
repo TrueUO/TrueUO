@@ -126,12 +126,9 @@ namespace Server.Items
 
         public override bool OnDragDrop(Mobile from, Item dropped)
         {
-            if (m_Organ != null && m_Organ.OnDropped(from, dropped, this))
+            if (m_Organ != null && m_Organ.OnDropped(from, dropped, this) && dropped is PlagueBeastComponent component)
             {
-                if (dropped is PlagueBeastComponent component)
-                {
-                    m_Organ.Components.Add(component);
-                }
+                m_Organ.Components.Add(component);
             }
 
             return true;

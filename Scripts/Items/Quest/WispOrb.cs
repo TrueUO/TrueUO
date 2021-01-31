@@ -521,7 +521,7 @@ namespace Server.Engines.Despise
 
             Item item = owner.Backpack.FindItemByType(typeof(WispOrb));
 
-            if (item != null && item is WispOrb orb)
+            if (item is WispOrb orb)
             {
                 Mobile pet = orb.Pet;
 
