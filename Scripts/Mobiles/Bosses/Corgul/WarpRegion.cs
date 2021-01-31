@@ -83,7 +83,7 @@ namespace Server.Regions
 
                 Item item = pm.Backpack.FindItemByType(typeof(CorgulIslandMap));
 
-                if (item != null && item is CorgulIslandMap islandMap && Contains(islandMap.DestinationPoint))
+                if (item is CorgulIslandMap islandMap && Contains(islandMap.DestinationPoint))
                 {
                     hasMap = true;
                     break;

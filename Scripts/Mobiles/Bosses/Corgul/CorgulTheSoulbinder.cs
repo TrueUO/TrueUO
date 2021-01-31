@@ -261,12 +261,9 @@ namespace Server.Mobiles
             {
                 Mobile m = targets[i];
 
-                if (m != null && !m.Deleted && m is PlayerMobile pm)
+                if (m != null && !m.Deleted && m is PlayerMobile pm && (pm.Mounted || pm.Flying))
                 {
-                    if (pm.Mounted || pm.Flying)
-                    {
-                        pm.SetMountBlock(BlockMountType.DismountRecovery, TimeSpan.FromSeconds(10), true);
-                    }
+                    pm.SetMountBlock(BlockMountType.DismountRecovery, TimeSpan.FromSeconds(10), true);
                 }
 
                 double damage = m.Hits * 0.6;
@@ -400,12 +397,9 @@ namespace Server.Mobiles
                 killer = creature.GetMaster();
             }
 
-            if (killer is PlayerMobile pm && Utility.RandomDouble() < ChampionSystem.ScrollChance * 10)
+            if (killer is PlayerMobile pm && Utility.RandomDouble() < ChampionSystem.ScrollChance * 10 && Utility.RandomDouble() < ChampionSystem.TranscendenceChance)
             {
-                if (Utility.RandomDouble() < ChampionSystem.TranscendenceChance)
-                {
-                    ChampionSpawn.GiveScrollTo(pm, ChampionSpawn.CreateRandomSoT(bc.Map != null && bc.Map.Rules == MapRules.FeluccaRules));
-                }
+                ChampionSpawn.GiveScrollTo(pm, ChampionSpawn.CreateRandomSoT(bc.Map != null && bc.Map.Rules == MapRules.FeluccaRules));
             }
         }
 
