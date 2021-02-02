@@ -95,19 +95,16 @@ namespace Server.Mobiles
             base.OnDamage(amount, from, willKill);
 
             // eats pet or summons
-            if (from is BaseCreature)
+            if (from is BaseCreature creature && (creature.Controlled || creature.Summoned))
             {
-                BaseCreature creature = (BaseCreature)from;
-
-                if (creature.Controlled || creature.Summoned)
+                if (Hits < HitsMax)
                 {
-                    if (Hits < HitsMax)
-                        Hits = HitsMax;
-
-                    creature.Kill();
-
-                    Effects.PlaySound(Location, Map, 0x574);
+                    Hits = HitsMax;
                 }
+
+                creature.Kill();
+
+                Effects.PlaySound(Location, Map, 0x574);
             }
 
             // teleports player near
