@@ -7,7 +7,7 @@ namespace Server.Items
 
         [Constructable]
         public ZombiePainting()
-            : base(0x4C62)
+            : base(0xA1DE)
         {
             Weight = 10.0;
         }
