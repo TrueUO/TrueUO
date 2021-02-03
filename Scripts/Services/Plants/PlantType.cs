@@ -90,6 +90,7 @@ namespace Server.Engines.Plants
             new PlantTypeInfo( 0x28E2, -5, 5,       PlantType.ExceptionalBonsai,    true, false, false, false,      PlantCategory.Exceptional ),
             new PlantTypeInfo( 0x28E3, -5, 5,       PlantType.ExoticBonsai,         true, false, false, false,      PlantCategory.Exotic ),
             new PlantTypeInfo( 0x0D25, 0, 0,        PlantType.Cactus,               false, false, false, false,     PlantCategory.Peculiar ),
+            new PlantTypeInfo( 0x1A9A, 5, 10,       PlantType.FlaxFlowers,          false, true, false, false,      PlantCategory.Peculiar ),
             new PlantTypeInfo( 0x0C84, 0, 0,        PlantType.FoxgloveFlowers,      false, true, false, false,      PlantCategory.Peculiar ),
             new PlantTypeInfo( 0x1A9F, 5, -25,      PlantType.HopsEast,             false, false, false, false,     PlantCategory.Peculiar ),
             new PlantTypeInfo( 0x0CC1, 0, 0,        PlantType.OrfluerFlowers,       false, true, false, false,      PlantCategory.Peculiar ),
@@ -104,8 +105,6 @@ namespace Server.Engines.Plants
             new PlantTypeInfo( 0x0CFB, -45, -30,    PlantType.CypressStraight,      false, false, false, false,     PlantCategory.Peculiar ),
             new PlantTypeInfo( 0x0DB8, 0, -20,      PlantType.HedgeTall,            false, false, false, false,     PlantCategory.Peculiar ),
             new PlantTypeInfo( 0x1AA1, 10, -25,     PlantType.HopsSouth,            false, false, false, false,     PlantCategory.Peculiar ),
-            // Plants below follow new rules. Are the only ones that are not crossable but reproduce
-            new PlantTypeInfo( 0x1A9A, 5, 10,       PlantType.FlaxFlowers,          false, true, false, true,      PlantCategory.Peculiar ),
             new PlantTypeInfo( 0x246C, -25, -20,    PlantType.SugarCanes,           false, false, false, true,      PlantCategory.Peculiar,     1114898, 1114898, 1094702, 1094703, 1095221, 1113715 ),
             new PlantTypeInfo( 0xC9E, -40, -30,     PlantType.CocoaTree,            false, false, false, true,      PlantCategory.Fragrant,     1080536, 1080536, 1080534, 1080531, 1080533, 1113716 ),
             new PlantTypeInfo( 0x4B8C, 5, 10,       PlantType.Vanilla,              false, true, false, true,       PlantCategory.Peculiar )
