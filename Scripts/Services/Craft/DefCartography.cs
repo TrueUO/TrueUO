@@ -4,11 +4,6 @@ using System.Collections.Generic;
 
 namespace Server.Engines.Craft
 {
-    public enum CartographyRecipes
-    {
-        EodonianWallMap = 1000
-    }
-
     public class DefCartography : CraftSystem
     {
         private static CraftSystem m_CraftSystem;
@@ -105,7 +100,7 @@ namespace Server.Engines.Craft
 
             index = AddCraft(typeof(EodonianWallMap), 1044448, 1156690, 65.0, 125.0, typeof(BlankMap), 1044449, 50, 1044450);
             AddRes(index, typeof(UnabridgedAtlasOfEodon), 1156721, 1, 1156722);
-            AddRecipe(index, (int)CartographyRecipes.EodonianWallMap);
+            AddRecipe(index, (int)CraftRecipes.EodonianWallMap);
 
             index = AddCraft(typeof(StarChart), 1044448, 1158493, 0.0, 60.0, typeof(BlankMap), 1044449, 1, 1044450);
             SetForceSuccess(index, 75);
