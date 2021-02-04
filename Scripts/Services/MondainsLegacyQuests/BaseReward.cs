@@ -81,7 +81,7 @@ namespace Server.Engines.Quests
 
         public static Item FletcherRecipe()
         {
-            return GetRecipe(Enum.GetValues(typeof(BowRecipes)));
+            return GetRecipe(new[] { 200, 201, 202, 203, 204, 205, 206, 207, 250, 251, 252, 253, 254 });
         }
 
         public static Item FletcherRunic()
@@ -232,7 +232,7 @@ namespace Server.Engines.Quests
 
         public static Item CookRecipe()
         {
-            return GetRecipe(Enum.GetValues(typeof(CookRecipes)));
+            return GetRecipe(new[] { 500, 599, 600 });
         }
 
         public static RecipeScroll GetRecipe(Array list)
