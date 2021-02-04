@@ -3,11 +3,6 @@ using System;
 
 namespace Server.Engines.Craft
 {
-    public enum InscriptionRecipes
-    {
-        RunicAtlas = 800
-    }
-
     public class DefInscription : CraftSystem
     {
         public override SkillName MainSkill => SkillName.Inscribe;
@@ -371,7 +366,7 @@ namespace Server.Engines.Craft
             AddRes(index, typeof(DreadHornMane), 1032682, 1, 1044253);
             AddRes(index, typeof(Taint), 1032679, 10, 1044253);
             AddRes(index, typeof(Corruption), 1032676, 10, 1044253);
-            AddRecipe(index, (int)TinkerRecipes.ScrappersCompendium);
+            AddRecipe(index, (int)CraftRecipes.ScrappersCompendium);
             ForceNonExceptional(index);
 
             index = AddCraft(typeof(SpellbookEngraver), 1044294, 1072151, 75.0, 100.0, typeof(Feather), 1044562, 1, 1044563);
@@ -406,7 +401,7 @@ namespace Server.Engines.Craft
             AddRes(index, typeof(RecallRune), 1044447, 3, 1044253);
             AddRes(index, typeof(RecallScroll), 1044445, 3, 1044253);
             AddRes(index, typeof(GateTravelScroll), 1044446, 3, 1044253);
-            AddRecipe(index, (int)InscriptionRecipes.RunicAtlas);
+            AddRecipe(index, (int)CraftRecipes.RunicAtlas);
 
             AddMysticSpell(1031678, 4, 0.0, typeof(NetherBoltScroll), Reg.SulfurousAsh, Reg.BlackPearl);
             AddMysticSpell(1031679, 4, 0.0, typeof(HealingStoneScroll), Reg.Bone, Reg.Garlic, Reg.Ginseng, Reg.SpidersSilk);

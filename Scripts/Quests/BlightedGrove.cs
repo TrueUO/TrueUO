@@ -204,7 +204,7 @@ namespace Server.Engines.Quests
         {
             if (Owner.Skills.Blacksmith.Value >= 45.0)
             {
-                Owner.AcquireRecipe((int)Craft.SmithRecipes.BoneMachete);
+                Owner.AcquireRecipe((int)Craft.CraftRecipes.BoneMachete);
                 Owner.SendLocalizedMessage(1075006); // You have learned how to smith a bone handled machete!
             }
             else

@@ -3,28 +3,6 @@ using System;
 
 namespace Server.Engines.Craft
 {
-    #region Mondain's Legacy
-    public enum BowRecipes
-    {
-        //magical
-        BarbedLongbow = 200,
-        SlayerLongbow = 201,
-        FrozenLongbow = 202,
-        LongbowOfMight = 203,
-        RangersShortbow = 204,
-        LightweightShortbow = 205,
-        MysticalShortbow = 206,
-        AssassinsShortbow = 207,
-
-        // arties
-        BlightGrippedLongbow = 250,
-        FaerieFire = 251,
-        SilvanisFeywoodBow = 252,
-        MischiefMaker = 253,
-        TheNightReaper = 254
-    }
-    #endregion
-
     public class DefBowFletching : CraftSystem
     {
         public override SkillName MainSkill => SkillName.Fletching;
@@ -149,68 +127,68 @@ namespace Server.Engines.Craft
             AddRes(index, typeof(LardOfParoxysmus), 1032681, 1, 1053098);
             AddRes(index, typeof(Blight), 1032675, 10, 1053098);
             AddRes(index, typeof(Corruption), 1032676, 10, 1053098);
-            AddRecipe(index, (int)BowRecipes.BlightGrippedLongbow);
+            AddRecipe(index, (int)CraftRecipes.BlightGrippedLongbow);
             ForceNonExceptional(index);
 
             index = AddCraft(typeof(FaerieFire), 1044566, 1072908, 75.0, 125.0, typeof(Board), 1044041, 20, 1044351);
             AddRes(index, typeof(LardOfParoxysmus), 1032681, 1, 1053098);
             AddRes(index, typeof(Putrefaction), 1032678, 10, 1053098);
             AddRes(index, typeof(Taint), 1032679, 10, 1053098);
-            AddRecipe(index, (int)BowRecipes.FaerieFire);
+            AddRecipe(index, (int)CraftRecipes.FaerieFire);
             ForceNonExceptional(index);
 
             index = AddCraft(typeof(SilvanisFeywoodBow), 1044566, 1072955, 75.0, 125.0, typeof(Board), 1044041, 20, 1044351);
             AddRes(index, typeof(LardOfParoxysmus), 1032681, 1, 1053098);
             AddRes(index, typeof(Scourge), 1032677, 10, 1053098);
             AddRes(index, typeof(Muculent), 1032680, 10, 1053098);
-            AddRecipe(index, (int)BowRecipes.SilvanisFeywoodBow);
+            AddRecipe(index, (int)CraftRecipes.SilvanisFeywoodBow);
             ForceNonExceptional(index);
 
             index = AddCraft(typeof(MischiefMaker), 1044566, 1072910, 75.0, 125.0, typeof(Board), 1044041, 15, 1044351);
             AddRes(index, typeof(DreadHornMane), 1032682, 1, 1053098);
             AddRes(index, typeof(Corruption), 1032676, 10, 1053098);
             AddRes(index, typeof(Putrefaction), 1032678, 10, 1053098);
-            AddRecipe(index, (int)BowRecipes.MischiefMaker);
+            AddRecipe(index, (int)CraftRecipes.MischiefMaker);
             ForceNonExceptional(index);
 
             index = AddCraft(typeof(TheNightReaper), 1044566, 1072912, 75.0, 125.0, typeof(Board), 1044041, 10, 1044351);
             AddRes(index, typeof(DreadHornMane), 1032682, 1, 1053098);
             AddRes(index, typeof(Blight), 1032675, 10, 1053098);
             AddRes(index, typeof(Scourge), 1032677, 10, 1053098);
-            AddRecipe(index, (int)BowRecipes.TheNightReaper);
+            AddRecipe(index, (int)CraftRecipes.TheNightReaper);
             ForceNonExceptional(index);
 
             index = AddCraft(typeof(BarbedLongbow), 1044566, 1073505, 75.0, 125.0, typeof(Board), 1044041, 20, 1044351);
             AddRes(index, typeof(FireRuby), 1026254, 1, 1053098);
-            AddRecipe(index, (int)BowRecipes.BarbedLongbow);
+            AddRecipe(index, (int)CraftRecipes.BarbedLongbow);
 
             index = AddCraft(typeof(SlayerLongbow), 1044566, 1073506, 75.0, 125.0, typeof(Board), 1044041, 20, 1044351);
             AddRes(index, typeof(BrilliantAmber), 1026256, 1, 1053098);
-            AddRecipe(index, (int)BowRecipes.SlayerLongbow);
+            AddRecipe(index, (int)CraftRecipes.SlayerLongbow);
 
             index = AddCraft(typeof(FrozenLongbow), 1044566, 1073507, 75.0, 125.0, typeof(Board), 1044041, 20, 1044351);
             AddRes(index, typeof(Turquoise), 1026250, 1, 1053098);
-            AddRecipe(index, (int)BowRecipes.FrozenLongbow);
+            AddRecipe(index, (int)CraftRecipes.FrozenLongbow);
 
             index = AddCraft(typeof(LongbowOfMight), 1044566, 1073508, 75.0, 125.0, typeof(Board), 1044041, 10, 1044351);
             AddRes(index, typeof(BlueDiamond), 1026255, 1, 1053098);
-            AddRecipe(index, (int)BowRecipes.LongbowOfMight);
+            AddRecipe(index, (int)CraftRecipes.LongbowOfMight);
 
             index = AddCraft(typeof(RangersShortbow), 1044566, 1073509, 75.0, 125.0, typeof(Board), 1044041, 15, 1044351);
             AddRes(index, typeof(PerfectEmerald), 1026251, 1, 1053098);
-            AddRecipe(index, (int)BowRecipes.RangersShortbow);
+            AddRecipe(index, (int)CraftRecipes.RangersShortbow);
 
             index = AddCraft(typeof(LightweightShortbow), 1044566, 1073510, 75.0, 125.0, typeof(Board), 1044041, 15, 1044351);
             AddRes(index, typeof(WhitePearl), 1026253, 1, 1053098);
-            AddRecipe(index, (int)BowRecipes.LightweightShortbow);
+            AddRecipe(index, (int)CraftRecipes.LightweightShortbow);
 
             index = AddCraft(typeof(MysticalShortbow), 1044566, 1073511, 75.0, 125.0, typeof(Board), 1044041, 15, 1044351);
             AddRes(index, typeof(EcruCitrine), 1026252, 1, 1053098);
-            AddRecipe(index, (int)BowRecipes.MysticalShortbow);
+            AddRecipe(index, (int)CraftRecipes.MysticalShortbow);
 
             index = AddCraft(typeof(AssassinsShortbow), 1044566, 1073512, 75.0, 125.0, typeof(Board), 1044041, 15, 1044351);
             AddRes(index, typeof(DarkSapphire), 1026249, 1, 1053098);
-            AddRecipe(index, (int)BowRecipes.AssassinsShortbow);
+            AddRecipe(index, (int)CraftRecipes.AssassinsShortbow);
 
             SetSubRes(typeof(Board), 1072643);
 
