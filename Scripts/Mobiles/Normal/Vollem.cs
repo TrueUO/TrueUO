@@ -95,7 +95,7 @@ namespace Server.Mobiles
         {
             if (IsMechanical && (Controlled || Summoned))
             {
-                Mobile master = (ControlMaster);
+                Mobile master = ControlMaster;
 
                 if (master == null)
                     master = SummonMaster;
@@ -132,7 +132,7 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }
