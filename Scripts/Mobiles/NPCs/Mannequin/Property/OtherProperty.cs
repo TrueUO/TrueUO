@@ -16,24 +16,18 @@ namespace Server.Mobiles.MannequinProperty
         {
             int prop, prop2;
 
-            if (item is BaseArmor armor)
+            if (item is BaseArmor armor && (prop = armor.HitPoints) >= 0 && (prop2 = armor.MaxHitPoints) > 0)
             {
-                if ((prop = armor.HitPoints) >= 0 && (prop2 = armor.MaxHitPoints) > 0)
-                {
-                    Value = prop;
-                    Cap = prop2;
-                    return true;
-                }
+                Value = prop;
+                Cap = prop2;
+                return true;
             }
 
-            if (item is BaseJewel jewel)
+            if (item is BaseJewel jewel && (prop = jewel.HitPoints) >= 0 && (prop2 = jewel.MaxHitPoints) > 0)
             {
-                if ((prop = jewel.HitPoints) >= 0 && (prop2 = jewel.MaxHitPoints) > 0)
-                {
-                    Value = prop;
-                    Cap = prop2;
-                    return true;
-                }
+                Value = prop;
+                Cap = prop2;
+                return true;
             }
 
             if (item is BaseWeapon weapon && (prop = weapon.HitPoints) >= 0 && (prop2 = weapon.MaxHitPoints) > 0)
@@ -43,34 +37,25 @@ namespace Server.Mobiles.MannequinProperty
                 return true;
             }
 
-            if (item is BaseClothing clothing)
+            if (item is BaseClothing clothing && ((prop = clothing.HitPoints) >= 0 && (prop2 = clothing.MaxHitPoints) > 0))
             {
-                if ((prop = clothing.HitPoints) >= 0 && (prop2 = clothing.MaxHitPoints) > 0)
-                {
-                    Value = prop;
-                    Cap = prop2;
-                    return true;
-                }
+                Value = prop;
+                Cap = prop2;
+                return true;
             }
 
-            if (item is BaseTalisman talisman)
+            if (item is BaseTalisman talisman && (prop = talisman.HitPoints) >= 0 && (prop2 = talisman.MaxHitPoints) > 0)
             {
-                if ((prop = talisman.HitPoints) >= 0 && (prop2 = talisman.MaxHitPoints) > 0)
-                {
-                    Value = prop;
-                    Cap = prop2;
-                    return true;
-                }
+                Value = prop;
+                Cap = prop2;
+                return true;
             }
 
-            if (item is Spellbook spellbook)
+            if (item is Spellbook spellbook && (prop = spellbook.HitPoints) >= 0 && (prop2 = spellbook.MaxHitPoints) > 0)
             {
-                if ((prop = spellbook.HitPoints) >= 0 && (prop2 = spellbook.MaxHitPoints) > 0)
-                {
-                    Value = prop;
-                    Cap = prop2;
-                    return true;
-                }
+                Value = prop;
+                Cap = prop2;
+                return true;
             }
 
             return false;
