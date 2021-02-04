@@ -47,7 +47,6 @@ namespace Server.Mobiles
             AddItem(new Shoes(Utility.RandomNeutralHue()));
             AddItem(new Shirt());
 
-            // Pick a random sword
             switch (Utility.Random(3))
             {
                 case 0:
@@ -80,18 +79,17 @@ namespace Server.Mobiles
         }
 
         public override bool ClickTitle => false;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0);// version 
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

@@ -55,7 +55,6 @@ namespace Server.Mobiles
 
             AddItem(new Shirt());
 
-            // Pick a random sword
             switch (Utility.Random(5))
             {
                 case 0:
@@ -75,7 +74,6 @@ namespace Server.Mobiles
                     break;
             }
 
-            // Pick a random shield
             if (FindItemOnLayer(Layer.TwoHanded) == null)
             {
                 switch (Utility.Random(8))
@@ -149,7 +147,6 @@ namespace Server.Mobiles
                     break;
                 case 3: // Chain
                     AddItem(new ChainChest());
-                    //AddItem(new ChainCoif());
                     AddItem(new ChainLegs());
                     break;
             }
@@ -166,15 +163,13 @@ namespace Server.Mobiles
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0);// version 
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

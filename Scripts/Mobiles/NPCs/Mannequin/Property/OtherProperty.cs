@@ -16,9 +16,9 @@ namespace Server.Mobiles.MannequinProperty
         {
             int prop, prop2;
 
-            if (item is BaseArmor)
+            if (item is BaseArmor armor)
             {
-                if ((prop = ((BaseArmor)item).HitPoints) >= 0 && (prop2 = ((BaseArmor)item).MaxHitPoints) > 0)
+                if ((prop = armor.HitPoints) >= 0 && (prop2 = armor.MaxHitPoints) > 0)
                 {
                     Value = prop;
                     Cap = prop2;
@@ -26,9 +26,9 @@ namespace Server.Mobiles.MannequinProperty
                 }
             }
 
-            if (item is BaseJewel)
+            if (item is BaseJewel jewel)
             {
-                if ((prop = ((BaseJewel)item).HitPoints) >= 0 && (prop2 = ((BaseJewel)item).MaxHitPoints) > 0)
+                if ((prop = jewel.HitPoints) >= 0 && (prop2 = jewel.MaxHitPoints) > 0)
                 {
                     Value = prop;
                     Cap = prop2;
@@ -36,10 +36,9 @@ namespace Server.Mobiles.MannequinProperty
                 }
             }
 
-
-            if (item is BaseWeapon)
+            if (item is BaseWeapon weapon)
             {
-                if ((prop = ((BaseWeapon)item).HitPoints) >= 0 && (prop2 = ((BaseWeapon)item).MaxHitPoints) > 0)
+                if ((prop = weapon.HitPoints) >= 0 && (prop2 = weapon.MaxHitPoints) > 0)
                 {
                     Value = prop;
                     Cap = prop2;
@@ -47,9 +46,9 @@ namespace Server.Mobiles.MannequinProperty
                 }
             }
 
-            if (item is BaseClothing)
+            if (item is BaseClothing clothing)
             {
-                if ((prop = ((BaseClothing)item).HitPoints) >= 0 && (prop2 = ((BaseClothing)item).MaxHitPoints) > 0)
+                if ((prop = clothing.HitPoints) >= 0 && (prop2 = clothing.MaxHitPoints) > 0)
                 {
                     Value = prop;
                     Cap = prop2;
@@ -57,9 +56,9 @@ namespace Server.Mobiles.MannequinProperty
                 }
             }
 
-            if (item is BaseTalisman)
+            if (item is BaseTalisman talisman)
             {
-                if ((prop = ((BaseTalisman)item).HitPoints) >= 0 && (prop2 = ((BaseTalisman)item).MaxHitPoints) > 0)
+                if ((prop = talisman.HitPoints) >= 0 && (prop2 = talisman.MaxHitPoints) > 0)
                 {
                     Value = prop;
                     Cap = prop2;
@@ -67,9 +66,9 @@ namespace Server.Mobiles.MannequinProperty
                 }
             }
 
-            if (item is Spellbook)
+            if (item is Spellbook spellbook)
             {
-                if ((prop = ((Spellbook)item).HitPoints) >= 0 && (prop2 = ((Spellbook)item).MaxHitPoints) > 0)
+                if ((prop = spellbook.HitPoints) >= 0 && (prop2 = spellbook.MaxHitPoints) > 0)
                 {
                     Value = prop;
                     Cap = prop2;
@@ -122,7 +121,7 @@ namespace Server.Mobiles.MannequinProperty
 
         public double GetPropertyValue(Item item)
         {
-            return item is BaseArmor ? RegenRates.GetArmorMeditationValue((BaseArmor)item) : 0;
+            return item is BaseArmor armor ? RegenRates.GetArmorMeditationValue(armor) : 0;
         }
 
         public override bool Matches(Item item)
@@ -189,7 +188,7 @@ namespace Server.Mobiles.MannequinProperty
 
         public double GetPropertyValue(Item item)
         {
-            return item is BaseQuiver ? ((BaseQuiver)item).DamageIncrease : 0;
+            return item is BaseQuiver quiver ? quiver.DamageIncrease : 0;
         }
 
         public override bool Matches(Item item)
@@ -264,7 +263,7 @@ namespace Server.Mobiles.MannequinProperty
 
         public bool GetPropertyValue(Item item)
         {
-            return item is BaseWeapon && ((BaseWeapon)item).SearingWeapon;
+            return item is BaseWeapon weapon && weapon.SearingWeapon;
         }
 
         public override bool Matches(Item item)
