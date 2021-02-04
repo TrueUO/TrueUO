@@ -170,10 +170,9 @@ namespace Server.Mobiles
             {
                 object CI = Activator.CreateInstance(Type.GetType(x.FullName));
 
-                if (CI is ValuedProperty p)
+                if (CI is ValuedProperty p && (p.Matches(item) || p.AlwaysVisible))
                 {
-                    if (p.Matches(item) || p.AlwaysVisible)
-                        cat.Add(p);
+                    cat.Add(p);
                 }
             });
 
@@ -191,10 +190,9 @@ namespace Server.Mobiles
             {
                 object CI = Activator.CreateInstance(Type.GetType(x.FullName));
 
-                if (CI is ValuedProperty p)
+                if (CI is ValuedProperty p && (p.Matches(item) || visible && p.AlwaysVisible))
                 {
-                    if (p.Matches(item) || visible && p.AlwaysVisible)
-                        cat.Add(p);
+                    cat.Add(p);
                 }
             });
 

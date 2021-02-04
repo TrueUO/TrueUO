@@ -36,14 +36,11 @@ namespace Server.Mobiles.MannequinProperty
                 }
             }
 
-            if (item is BaseWeapon weapon)
+            if (item is BaseWeapon weapon && (prop = weapon.HitPoints) >= 0 && (prop2 = weapon.MaxHitPoints) > 0)
             {
-                if ((prop = weapon.HitPoints) >= 0 && (prop2 = weapon.MaxHitPoints) > 0)
-                {
-                    Value = prop;
-                    Cap = prop2;
-                    return true;
-                }
+                Value = prop;
+                Cap = prop2;
+                return true;
             }
 
             if (item is BaseClothing clothing)
