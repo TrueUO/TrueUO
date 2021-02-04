@@ -6919,7 +6919,7 @@ namespace Server.Mobiles
 
             if (ReturnsToHome && IsSpawnerBound() && !InRange(Home, RangeHome))
             {
-                if (Combatant == null && Warmode == false && Utility.RandomDouble() < .10) /* some throttling */
+                if (Combatant == null && !Warmode && Utility.RandomDouble() < .10) /* some throttling */
                 {
                     m_FailedReturnHome = !Move(GetDirectionTo(Home.X, Home.Y)) ? m_FailedReturnHome + 1 : 0;
 
@@ -7251,12 +7251,9 @@ namespace Server.Mobiles
         {
             if (Map != null && Map != Map.Internal && FightMode != FightMode.None && RangeHome >= 0)
             {
-                if (!Controlled && !Summoned)
+                if (!Controlled && !Summoned && Spawner is Spawner && (Spawner as Spawner).Map == Map)
                 {
-                    if (Spawner is Spawner && (Spawner as Spawner).Map == Map)
-                    {
-                        return true;
-                    }
+                    return true;
                 }
             }
 
