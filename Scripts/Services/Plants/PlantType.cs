@@ -90,7 +90,7 @@ namespace Server.Engines.Plants
             new PlantTypeInfo( 0x28E2, -5, 5,       PlantType.ExceptionalBonsai,    true, false, false, false,      PlantCategory.Exceptional ),
             new PlantTypeInfo( 0x28E3, -5, 5,       PlantType.ExoticBonsai,         true, false, false, false,      PlantCategory.Exotic ),
             new PlantTypeInfo( 0x0D25, 0, 0,        PlantType.Cactus,               false, false, false, false,     PlantCategory.Peculiar ),
-            new PlantTypeInfo( 0x1A9A, 5, 10,       PlantType.FlaxFlowers,          false, true, false, false,      PlantCategory.Peculiar ),
+            new PlantTypeInfo( 0x1A9A, 5, 10,       PlantType.FlaxFlowers,          false, true, false, true,      PlantCategory.Peculiar ),
             new PlantTypeInfo( 0x0C84, 0, 0,        PlantType.FoxgloveFlowers,      false, true, false, false,      PlantCategory.Peculiar ),
             new PlantTypeInfo( 0x1A9F, 5, -25,      PlantType.HopsEast,             false, false, false, false,     PlantCategory.Peculiar ),
             new PlantTypeInfo( 0x0CC1, 0, 0,        PlantType.OrfluerFlowers,       false, true, false, false,      PlantCategory.Peculiar ),
