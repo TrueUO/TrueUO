@@ -201,7 +201,7 @@ namespace Server.Mobiles
                             int amount = def.ConsumedPerHarvest;
                             int feluccaAmount = def.ConsumedPerFeluccaHarvest;
 
-                            bool inFelucca = (map == Map.Felucca);
+                            bool inFelucca = map == Map.Felucca;
 
                             if (inFelucca)
                                 item.Amount = feluccaAmount;
