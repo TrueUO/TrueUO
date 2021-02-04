@@ -139,20 +139,20 @@ namespace Server.Gumps
         private readonly Item _SameItem;
         private readonly Item _Item;
 
-        public LabelDefinition[] Page1 = new LabelDefinition[]
+        public LabelDefinition[] Page1 =
         {
             new LabelDefinition(1049593, Catalog.Attributes, 5),    // Attributes
             new LabelDefinition(1061645, Catalog.Resistances, 5),   // Resistances
-            new LabelDefinition(1077417, Catalog.Combat1, 8),       // Combat
+            new LabelDefinition(1077417, Catalog.Combat1, 8)        // Combat
         };
 
-        public LabelDefinition[] Page2 = new LabelDefinition[]
+        public LabelDefinition[] Page2 =
         {
-            new LabelDefinition(1077417, Catalog.Combat2, 3),       // Combat
+            new LabelDefinition(1077417, Catalog.Combat2, 3),    // Combat
             new LabelDefinition(1076209, Catalog.Casting),          // Casting
             new LabelDefinition(1044050, Catalog.Misc),             // Miscellaneous
             new LabelDefinition(1114251, Catalog.HitEffects),       // Hit Effects
-            new LabelDefinition(1155065, Catalog.SkillBonusGear),   // Skill Bonus Gear
+            new LabelDefinition(1155065, Catalog.SkillBonusGear)    // Skill Bonus Gear
         };
 
         public class ItemPropDefinition

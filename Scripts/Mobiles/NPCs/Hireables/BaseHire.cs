@@ -30,7 +30,7 @@ namespace Server.Mobiles
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsHired
         {
-            get { return _IsHired; }
+            get => _IsHired;
             set
             {
                 _IsHired = value;
@@ -61,7 +61,6 @@ namespace Server.Mobiles
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1);// version
 
             writer.Write(NextPay);
@@ -72,19 +71,11 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 1:
-                    NextPay = reader.ReadDateTime();
-                    goto case 0;
-                case 0:
-                    IsHired = reader.ReadBool();
-                    HoldGold = reader.ReadInt();
-                    break;
-            }
+            NextPay = reader.ReadDateTime();
+            IsHired = reader.ReadBool();
+            HoldGold = reader.ReadInt();
 
             if (IsHired)
             {
@@ -225,15 +216,11 @@ namespace Server.Mobiles
                                 PayTimer.RegisterTimer(this);
                                 return true;
                             }
-                            else
-                            {
-                                return false;
-                            }
+
+                            return false;
                         }
-                        else
-                        {
-                            SayHireCost();
-                        }
+
+                        SayHireCost();
                     }
                     else
                     {
@@ -266,6 +253,7 @@ namespace Server.Mobiles
             if (!e.Handled && e.Mobile.InRange(this, 6))
             {
                 int[] keywords = e.Keywords;
+
                 string speech = e.Speech;
 
                 // Check for a greeting, a 'hire', or a 'servant'
