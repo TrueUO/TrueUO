@@ -148,18 +148,11 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
-            switch (version)
-            {
-                case 1:
-                    {
-                        m_HasMetalChest = reader.ReadBool();
-                        m_DevourTotal = reader.ReadInt();
-                        m_DevourGoal = reader.ReadInt();
-                        break;
-                    }
-            }
+            m_HasMetalChest = reader.ReadBool();
+            m_DevourTotal = reader.ReadInt();
+            m_DevourGoal = reader.ReadInt();
         }
 
         public override void OnThink()
@@ -171,13 +164,11 @@ namespace Server.Mobiles
 
             foreach (Item item in eable)
             {
-                if (item is Corpse corpse) // For each Corpse
+                if (item is Corpse corpse && corpse.Killer == this && corpse.Owner != null) // Ensure that the corpse was killed by us
                 {
-                    // Ensure that the corpse was killed by us
-                    if (corpse.Killer == this && corpse.Owner != null)
+                    if (!corpse.DevourCorpse() && !corpse.Devoured)
                     {
-                        if (!corpse.DevourCorpse() && !corpse.Devoured)
-                            PublicOverheadMessage(MessageType.Emote, 0x3B2, 1053032); // * The plague beast attempts to absorb the remains, but cannot! *
+                        PublicOverheadMessage(MessageType.Emote, 0x3B2, 1053032); // * The plague beast attempts to absorb the remains, but cannot! *
                     }
                 }
             }

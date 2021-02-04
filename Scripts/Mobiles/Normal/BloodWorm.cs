@@ -90,13 +90,10 @@ namespace Server.Mobiles
 
                 foreach (Item item in Map.GetItemsInRange(Location, 1))
                 {
-                    if (item is Corpse c)
+                    if (item is Corpse c && c.ItemID == 0x2006)
                     {
-                        if (c.ItemID == 0x2006)
-                        {
-                            toAbsorb = c;
-                            break;
-                        }
+                        toAbsorb = c;
+                        break;
                     }
                 }
 
