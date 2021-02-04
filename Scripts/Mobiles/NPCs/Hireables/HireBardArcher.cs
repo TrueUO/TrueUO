@@ -69,7 +69,7 @@ namespace Server.Mobiles
 
         public override void GenerateLoot()
         {
-            AddLoot(LootPack.RandomLootItem(new System.Type[] { typeof(Harp), typeof(Lute), typeof(Drums), typeof(Tambourine) }));
+            AddLoot(LootPack.RandomLootItem(new[] { typeof(Harp), typeof(Lute), typeof(Drums), typeof(Tambourine) }));
             AddLoot(LootPack.LootItem<Longsword>(true));
             AddLoot(LootPack.LootItem<Bow>(true));
             AddLoot(LootPack.LootItem<Arrow>(100, true));
@@ -82,18 +82,17 @@ namespace Server.Mobiles
         }
 
         public override bool ClickTitle => false;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0);// version 
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }
