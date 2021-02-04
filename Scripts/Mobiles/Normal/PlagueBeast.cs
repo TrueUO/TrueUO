@@ -14,27 +14,15 @@ namespace Server.Mobiles
         [CommandProperty(AccessLevel.GameMaster)]
         public int TotalDevoured
         {
-            get
-            {
-                return m_DevourTotal;
-            }
-            set
-            {
-                m_DevourTotal = value;
-            }
+            get => m_DevourTotal;
+            set => m_DevourTotal = value;
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public int DevourGoal
         {
-            get
-            {
-                return (IsParagon ? m_DevourGoal + 25 : m_DevourGoal);
-            }
-            set
-            {
-                m_DevourGoal = value;
-            }
+            get => IsParagon ? m_DevourGoal + 25 : m_DevourGoal;
+            set => m_DevourGoal = value;
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
@@ -183,12 +171,10 @@ namespace Server.Mobiles
 
             foreach (Item item in eable)
             {
-                if (item is Corpse) // For each Corpse
+                if (item is Corpse corpse) // For each Corpse
                 {
-                    Corpse corpse = item as Corpse;
-
                     // Ensure that the corpse was killed by us
-                    if (corpse != null && corpse.Killer == this && corpse.Owner != null)
+                    if (corpse.Killer == this && corpse.Owner != null)
                     {
                         if (!corpse.DevourCorpse() && !corpse.Devoured)
                             PublicOverheadMessage(MessageType.Emote, 0x3B2, 1053032); // * The plague beast attempts to absorb the remains, but cannot! *
@@ -242,7 +228,7 @@ namespace Server.Mobiles
             }
             else
             {
-                int min = (hp / 2) + 10;
+                int min = hp / 2 + 10;
                 int max = hp + 20;
                 int hpToIncrease = Utility.RandomMinMax(min, max);
 

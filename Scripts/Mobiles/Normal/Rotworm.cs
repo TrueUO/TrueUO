@@ -67,10 +67,8 @@ namespace Server.Mobiles
         {
             base.OnKilledBy(mob);
 
-            if (mob is PlayerMobile && 0.2 > Utility.RandomDouble())
+            if (mob is PlayerMobile pm && 0.2 > Utility.RandomDouble())
             {
-                PlayerMobile pm = mob as PlayerMobile;
-
                 if (QuestHelper.HasQuest<Missing>(pm))
                 {
                     // As the rotworm dies, you find and pickup a scroll case. Inside the scroll case is parchment. The scroll case crumbles to dust.
@@ -100,7 +98,7 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }
