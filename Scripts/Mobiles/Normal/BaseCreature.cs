@@ -1534,12 +1534,9 @@ namespace Server.Mobiles
 
             amount = base.Damage(amount, from, informMount, checkDisrupt);
 
-            if (SubdueBeforeTame && !Controlled)
+            if (SubdueBeforeTame && !Controlled && oldHits > (double)HitsMax / 10 && Hits <= (double)HitsMax / 10)
             {
-                if (oldHits > (double)HitsMax / 10 && Hits <= (double)HitsMax / 10)
-                {
-                    PublicOverheadMessage(MessageType.Regular, 0x3B2, false, "* The creature has been beaten into subjugation! *");
-                }
+                PublicOverheadMessage(MessageType.Regular, 0x3B2, false, "* The creature has been beaten into subjugation! *");
             }
 
             return amount;
@@ -7252,16 +7249,13 @@ namespace Server.Mobiles
 
         private bool IsSpawnerBound()
         {
-            if (Map != null && Map != Map.Internal)
+            if (Map != null && Map != Map.Internal && FightMode != FightMode.None && RangeHome >= 0)
             {
-                if (FightMode != FightMode.None && RangeHome >= 0)
+                if (!Controlled && !Summoned)
                 {
-                    if (!Controlled && !Summoned)
+                    if (Spawner is Spawner && (Spawner as Spawner).Map == Map)
                     {
-                        if (Spawner != null && Spawner is Spawner && (Spawner as Spawner).Map == Map)
-                        {
-                            return true;
-                        }
+                        return true;
                     }
                 }
             }
@@ -7289,16 +7283,13 @@ namespace Server.Mobiles
 
         public void GoHome_Callback()
         {
-            if (m_ReturnQueued && IsSpawnerBound())
+            if (m_ReturnQueued && IsSpawnerBound() && !Map.GetSector(X, Y).Active)
             {
-                if (!Map.GetSector(X, Y).Active)
-                {
-                    SetLocation(Home, true);
+                SetLocation(Home, true);
 
-                    if (!Map.GetSector(X, Y).Active && m_AI != null)
-                    {
-                        m_AI.Deactivate();
-                    }
+                if (!Map.GetSector(X, Y).Active && m_AI != null)
+                {
+                    m_AI.Deactivate();
                 }
             }
 
