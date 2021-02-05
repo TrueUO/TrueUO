@@ -162,7 +162,7 @@ namespace Server.Mobiles
         public static List<ValuedProperty> FindItemsProperty(List<Item> item)
         {
             List<Type> ll = System.Reflection.Assembly.GetExecutingAssembly().GetTypes()
-              .ToList().Where(r => r.FullName.Contains("MannequinProperty") && r.IsClass && r.IsAbstract == false).ToList();
+              .ToList().Where(r => r.FullName.Contains("MannequinProperty") && r.IsClass && !r.IsAbstract).ToList();
 
             List<ValuedProperty> cat = new List<ValuedProperty>();
 
@@ -182,7 +182,7 @@ namespace Server.Mobiles
         public static List<ValuedProperty> FindItemProperty(Item item, bool visible = false)
         {
             List<Type> ll = System.Reflection.Assembly.GetExecutingAssembly().GetTypes()
-              .ToList().Where(r => r.FullName.Contains("MannequinProperty") && r.IsClass && r.IsAbstract == false).ToList();
+              .ToList().Where(r => r.FullName.Contains("MannequinProperty") && r.IsClass && !r.IsAbstract).ToList();
 
             List<ValuedProperty> cat = new List<ValuedProperty>();
 
