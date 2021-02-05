@@ -216,7 +216,7 @@ namespace Server.Engines.HuntsmasterChallenge
                     {
                         BaseQuest quest = QuestHelper.GetQuest(mobile, typeof(HuntmastersChallengeQuest));
 
-                        if (quest != null && quest is HuntmastersChallengeQuest challengeQuest)
+                        if (quest is HuntmastersChallengeQuest challengeQuest)
                         {
                             challengeQuest.CompleteChallenge();
                         }

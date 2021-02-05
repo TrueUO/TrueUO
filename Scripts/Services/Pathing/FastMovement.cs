@@ -132,7 +132,6 @@ namespace Server.Movement
                 itemData = TileData.ItemTable[tile.ID & TileData.MaxItemValue];
                 flags = itemData.Flags;
 
-                #region SA
                 if (m != null && m.Flying && (Insensitive.Equals(itemData.Name, "hover over") || (flags & TileFlag.HoverOver) != 0))
                 {
                     newZ = tile.Z;
@@ -151,20 +150,16 @@ namespace Server.Movement
 
                         moveIsOk = true;
                     }
-                    else if (x >= 42 && x <= 89)
+                    else if (x >= 42 && x <= 89 && (y >= 333 && y <= 399 || y >= 531 && y <= 597 || y >= 739 && y <= 805))
                     {
-                        if (y >= 333 && y <= 399 || y >= 531 && y <= 597 || y >= 739 && y <= 805)
+                        if (tile.Z > newZ)
                         {
-                            if (tile.Z > newZ)
-                            {
-                                newZ = tile.Z;
-                            }
-
-                            moveIsOk = true;
+                            newZ = tile.Z;
                         }
+
+                        moveIsOk = true;
                     }
                 }
-                #endregion
 
                 if ((flags & ImpassableSurface) != TileFlag.Surface && (!canSwim || (flags & TileFlag.Wet) == 0))
                 {
