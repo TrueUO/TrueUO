@@ -4,11 +4,10 @@ namespace Server.Engines.Quests
 {
     public class Bravehorn : BaseEscort
     {
-        public override Type[] Quests => new Type[] { typeof(DefendingTheHerdQuest) };
+        public override Type[] Quests => new[] { typeof(DefendingTheHerdQuest) };
 
         [Constructable]
         public Bravehorn()
-            : base()
         {
             Name = "Bravehorn";
         }
@@ -36,7 +35,7 @@ namespace Server.Engines.Quests
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }
@@ -47,7 +46,6 @@ namespace Server.Mobiles
     {
         [Constructable]
         public BravehornsMate()
-            : base()
         {
             Name = "bravehorn's mate";
             Tamable = false;
@@ -67,7 +65,7 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

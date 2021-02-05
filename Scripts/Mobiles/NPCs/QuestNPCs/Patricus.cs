@@ -6,7 +6,6 @@ namespace Server.Engines.Quests
     public class OddsAndEndsQuest : BaseQuest
     {
         public OddsAndEndsQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(PrimitiveFetish), "primitive fetishes", 12));
 
@@ -27,18 +26,17 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1074678;
         /* Bravo!  These fetishes are just what I needed.  You've earned this reward. */
         public override object Complete => 1074679;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -55,11 +53,12 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override Type[] Quests => new Type[]
-                {
-                    typeof(HeaveHoQuest),
-                    typeof(OddsAndEndsQuest)
-                };
+        public override Type[] Quests => new[]
+        {
+            typeof(HeaveHoQuest),
+            typeof(OddsAndEndsQuest)
+        };
+
         public override void InitBody()
         {
             Female = false;
@@ -80,15 +79,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

@@ -7,7 +7,6 @@ namespace Server.Engines.Quests
     public class ItsElementalQuest : BaseQuest
     {
         public ItsElementalQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(FireElemental), "fire elementals", 4));
             AddObjective(new SlayObjective(typeof(WaterElemental), "water elementals", 4));
@@ -26,18 +25,17 @@ namespace Server.Engines.Quests
         public override object Refuse => 1073580;
         /* Four of each, that's all I ask. Water, earth and fire. */
         public override object Uncomplete => 1073599;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -56,10 +54,8 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override Type[] Quests => new Type[]
-                {
-                    typeof(ItsElementalQuest)
-                };
+        public override Type[] Quests => new[] { typeof(ItsElementalQuest) };
+
         public override void InitBody()
         {
             InitStats(100, 100, 25);
@@ -83,15 +79,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

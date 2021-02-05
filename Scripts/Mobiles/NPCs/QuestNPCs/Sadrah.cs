@@ -6,7 +6,6 @@ namespace Server.Engines.Quests
     public class FleeAndFatigueQuest : BaseQuest
     {
         public FleeAndFatigueQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(RefreshPotion), "refresh potion", 10, 0xF0B));
 
@@ -30,18 +29,17 @@ namespace Server.Engines.Quests
         /* *glug* *glug* Ahh... Yes! Yes! That feels great! Those lizardmen will never know what hit 'em! Here, take 
         this, I can get more from the lizards. */
         public override object Complete => 1075491;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -58,10 +56,8 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override Type[] Quests => new Type[]
-                {
-                    typeof(FleeAndFatigueQuest)
-                };
+        public override Type[] Quests => new[] { typeof(FleeAndFatigueQuest) };
+
         public override void InitBody()
         {
             InitStats(100, 100, 25);
@@ -88,15 +84,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -104,7 +98,6 @@ namespace Server.Engines.Quests
     {
         [Constructable]
         public AlchemistsSatchel()
-            : base()
         {
             Hue = BaseReward.SatchelHue();
 
@@ -120,15 +113,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

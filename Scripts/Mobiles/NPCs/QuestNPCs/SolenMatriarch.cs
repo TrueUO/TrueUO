@@ -148,11 +148,12 @@ namespace Server.Engines.Quests.Matriarch
                     dropped.Delete();
                     return true;
                 }
-                else if (dropped is ZoogiFungus)
-                {
-                    OnGivenFungi(player, (ZoogiFungus)dropped);
 
-                    return dropped.Deleted;
+                if (dropped is ZoogiFungus fungus)
+                {
+                    OnGivenFungi(player, fungus);
+
+                    return fungus.Deleted;
                 }
             }
 
@@ -220,15 +221,13 @@ namespace Server.Engines.Quests.Matriarch
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
         }
 
         private class ProcessZoogiFungusEntry : ContextMenuEntry
@@ -267,12 +266,10 @@ namespace Server.Engines.Quests.Matriarch
 
             protected override void OnTarget(Mobile from, object targeted)
             {
-                if (targeted is ZoogiFungus)
+                if (targeted is ZoogiFungus fungus)
                 {
-                    ZoogiFungus fungus = (ZoogiFungus)targeted;
-
                     if (fungus.IsChildOf(m_From.Backpack))
-                        m_Matriarch.OnGivenFungi(m_From, (ZoogiFungus)targeted);
+                        m_Matriarch.OnGivenFungi(m_From, fungus);
                     else
                         m_From.SendLocalizedMessage(1042001); // That must be in your pack for you to use it.
                 }
@@ -293,18 +290,17 @@ namespace Server.Engines.Quests.Matriarch
         }
 
         public override bool RedSolen => true;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
         }
     }
 
@@ -321,18 +317,17 @@ namespace Server.Engines.Quests.Matriarch
         }
 
         public override bool RedSolen => false;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
         }
     }
 }

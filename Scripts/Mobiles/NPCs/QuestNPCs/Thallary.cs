@@ -6,7 +6,6 @@ namespace Server.Engines.Quests
     public class ScaleArmorQuest : BaseQuest
     {
         public ScaleArmorQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(ThrashersTail), "thrasher's tail", 1));
             AddObjective(new ObtainObjective(typeof(HydraScale), "hydra scales", 10));
@@ -36,15 +35,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -63,13 +60,14 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override Type[] Quests => new Type[]
-                {
-                    typeof(ScaleArmorQuest),
-                    typeof(ThePuffyShirtQuest),
-                    typeof(FromTheGaultierCollectionQuest),
-                    typeof(HuteCoutureQuest)
-                };
+        public override Type[] Quests => new[]
+        {
+            typeof(ScaleArmorQuest),
+            typeof(ThePuffyShirtQuest),
+            typeof(FromTheGaultierCollectionQuest),
+            typeof(HuteCoutureQuest)
+        };
+
         public override void InitBody()
         {
             InitStats(100, 100, 25);
@@ -93,15 +91,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

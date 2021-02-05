@@ -7,7 +7,6 @@ namespace Server.Engines.Quests
     public class BoundToTheLandQuest : BaseQuest
     {
         public BoundToTheLandQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(InsaneDryad), "insane dryads", 12));
             AddObjective(new SlayObjective(typeof(Saliva), "saliva", 1));
@@ -39,15 +38,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -64,10 +61,7 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override Type[] Quests => new Type[]
-                {
-                    typeof(BoundToTheLandQuest)
-                };
+        public override Type[] Quests => new[] { typeof(BoundToTheLandQuest) };
 
         public override void InitBody()
         {
@@ -79,15 +73,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

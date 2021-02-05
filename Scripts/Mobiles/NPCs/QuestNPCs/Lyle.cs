@@ -6,7 +6,6 @@ namespace Server.Engines.Quests
     public class ThePenIsMightierQuest : BaseQuest
     {
         public ThePenIsMightierQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(RecallScroll), "recall scroll", 5, 0x1F4C));
 
@@ -31,18 +30,17 @@ namespace Server.Engines.Quests
         longest time, and now I can visit at last. Here's that book I promised you... glad to be rid of it, to be 
         honest. */
         public override object Complete => 1075548;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -59,10 +57,8 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override Type[] Quests => new Type[]
-                {
-                    typeof(ThePenIsMightierQuest)
-                };
+        public override Type[] Quests => new[] { typeof(ThePenIsMightierQuest) };
+
         public override void InitBody()
         {
             InitStats(100, 100, 25);
@@ -86,15 +82,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -115,15 +109,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

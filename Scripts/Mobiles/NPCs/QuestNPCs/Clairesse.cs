@@ -6,7 +6,6 @@ namespace Server.Engines.Quests
     public class StitchInTimeQuest : BaseQuest
     {
         public StitchInTimeQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(FancyDress), "fancy dress", 1, 0x1EFF));
 
@@ -30,18 +29,17 @@ namespace Server.Engines.Quests
         /* It's gorgeous! I only have a few things to give you in return, but I can't thank you enough! Maybe I'll 
         even catch Uzeraan's eye at the, er, *blushes* I mean, I can't wait to wear it to the next town dance! */
         public override object Complete => 1075528;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -58,10 +56,8 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override Type[] Quests => new Type[]
-                {
-                    typeof(StitchInTimeQuest)
-                };
+        public override Type[] Quests => new[] { typeof(StitchInTimeQuest) };
+
         public override void InitBody()
         {
             InitStats(100, 100, 25);
@@ -85,15 +81,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -101,7 +95,6 @@ namespace Server.Engines.Quests
     {
         [Constructable]
         public OldRing()
-            : base()
         {
             Hue = 0x222;
         }
@@ -112,18 +105,17 @@ namespace Server.Engines.Quests
         }
 
         public override int LabelNumber => 1075524;// an old ring
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -131,7 +123,6 @@ namespace Server.Engines.Quests
     {
         [Constructable]
         public OldNecklace()
-            : base()
         {
             Hue = 0x222;
         }
@@ -142,18 +133,17 @@ namespace Server.Engines.Quests
         }
 
         public override int LabelNumber => 1075525;// an old necklace
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

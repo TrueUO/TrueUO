@@ -7,7 +7,6 @@ namespace Server.Engines.Quests
     public class CircleOfLifeQuest : BaseQuest
     {
         public CircleOfLifeQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(BogThing), "bog things", 8));
 
@@ -24,25 +23,23 @@ namespace Server.Engines.Quests
         public override object Refuse => 1073733;
         /* Continue to seek and kill the Bog Things. */
         public override object Uncomplete => 1073736;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class DustToDustQuest : BaseQuest
     {
         public DustToDustQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(EarthElemental), "earth elementals", 12));
 
@@ -60,25 +57,23 @@ namespace Server.Engines.Quests
         public override object Refuse => 1073580;
         /* You got rocks in your head? I said to kill 12 earth elementals, okay? */
         public override object Uncomplete => 1073584;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class ArchSupportQuest : BaseQuest
     {
         public ArchSupportQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(FootStool), "foot stools", 10, 0xB5E));
 
@@ -97,18 +92,17 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1073928;
         /* My thanks for your service. Now, I will show you something of elven carpentry. */
         public override object Complete => 1073969;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -127,13 +121,14 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override Type[] Quests => new Type[]
-                {
-                    typeof(GlassyFoeQuest),
-                    typeof(CircleOfLifeQuest),
-                    typeof(DustToDustQuest),
-                    typeof(ArchSupportQuest)
-                };
+        public override Type[] Quests => new[]
+        {
+            typeof(GlassyFoeQuest),
+            typeof(CircleOfLifeQuest),
+            typeof(DustToDustQuest),
+            typeof(ArchSupportQuest)
+        };
+
         public override void InitBody()
         {
             InitStats(100, 100, 25);
@@ -157,15 +152,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

@@ -15,10 +15,7 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override Type[] Quests => new Type[]
-                {
-                    typeof(BadCompany)
-                };
+        public override Type[] Quests => new[] { typeof(BadCompany) };
 
         public override void InitBody()
         {

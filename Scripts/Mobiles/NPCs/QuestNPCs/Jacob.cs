@@ -8,7 +8,7 @@ namespace Server.Engines.Quests
     {
         public override bool DoneOnce => true;
 
-        /* The Delucian’s Lost Mine */
+        /* The Delucianâ€™s Lost Mine */
         public override object Title => 1077750;
 
         /* Find Jacob's Lost Mine and mine iron ore there, using a pickaxe or shovel. Bring it back to Jacob's forge and 
@@ -26,45 +26,43 @@ namespace Server.Engines.Quests
         little somethin' I've got layin' around here... somewhere. */
         public override object Description => 1077753;
 
-        /* Couldn’t find my iron mine, could ya? Well, neither can I!<br><br>*Jacob laughs*<br><br>Oh, ya don’t wanna find it? 
+        /* Couldnâ€™t find my iron mine, could ya? Well, neither can I!<br><br>*Jacob laughs*<br><br>Oh, ya donâ€™t wanna find it? 
         Well, allrighty then, ya might as well head on back down to town then and stop cluttering up my camp. Come back and 
-        talk to me if you’re interested in learnin’ ‘bout minin’. */
+        talk to me if youâ€™re interested in learninâ€™ â€˜bout mininâ€™. */
         public override object Refuse => 1077754;
 
-        /* Where ya been off a gallivantin’ all day, pilgrim? You ain’t seen no hard work yet! Get yer arse back out there to 
-        my mine and dig up some more iron. Don’t forget to take a pickaxe or shovel, and if you’re so inclined, a packhorse too. */
+        /* Where ya been off a gallivantinâ€™ all day, pilgrim? You ainâ€™t seen no hard work yet! Get yer arse back out there to 
+        my mine and dig up some more iron. Donâ€™t forget to take a pickaxe or shovel, and if youâ€™re so inclined, a packhorse too. */
         public override object Uncomplete => 1077755;
 
-        /* Dang gun it! If that don't beat all! Ya went and did it, didn’t ya? What we got ourselves here is a mighty fine brand 
-        spankin’ new Apprentice Miner!<br><br>I can see ya put some meat on them bones too while you were at it!<br><br>Here’s 
-        that little somethin’ I told ya I had for ya. It’s a pickaxe with some high falutin’ magic inside that’ll help you find 
-        the good stuff when you’re off minin’. It wears out fast, though, so you can only use it a few times a day.<br><br>Welp, 
-        I’ve got some smeltin’ to do, so off with ya. Good luck, pilgrim! */
+        /* Dang gun it! If that don't beat all! Ya went and did it, didnâ€™t ya? What we got ourselves here is a mighty fine brand 
+        spankinâ€™ new Apprentice Miner!<br><br>I can see ya put some meat on them bones too while you were at it!<br><br>Hereâ€™s 
+        that little somethinâ€™ I told ya I had for ya. Itâ€™s a pickaxe with some high falutinâ€™ magic inside thatâ€™ll help you find 
+        the good stuff when youâ€™re off mininâ€™. It wears out fast, though, so you can only use it a few times a day.<br><br>Welp, 
+        Iâ€™ve got some smeltinâ€™ to do, so off with ya. Good luck, pilgrim! */
         public override object Complete => 1077757;
 
         public TheDeluciansLostMineQuest()
-            : base()
         {
             AddObjective(new ApprenticeObjective(SkillName.Mining, 50, "Haven Mountains", 1077751, 1077752));
 
             // 1077751 You can almost smell the ore in the rocks here! Your ability to improve your Mining skill is enhanced in this area.
-            // 1077752 So many rocks, so little ore… Your potential to increase your Mining skill is no longer enhanced.
+            // 1077752 So many rocks, so little oreâ€¦ Your potential to increase your Mining skill is no longer enhanced.
 
             AddReward(new BaseReward(typeof(JacobsPickaxe), 1077758));
         }
 
         public override bool CanOffer()
         {
-            #region Scroll of Alacrity
-            PlayerMobile pm = Owner as PlayerMobile;
+            PlayerMobile pm = Owner;
+
             if (pm.AcceleratedStart > DateTime.UtcNow)
             {
                 Owner.SendLocalizedMessage(1077951); // You are already under the effect of an accelerated skillgain scroll.
                 return false;
             }
-            #endregion
-            else
-                return Owner.Skills.Mining.Base < 50;
+
+            return Owner.Skills.Mining.Base < 50;
         }
 
         public override void OnCompleted()
@@ -76,24 +74,19 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class Jacob : MondainQuester
     {
-        public override Type[] Quests => new Type[]
-                {
-                    typeof(TheDeluciansLostMineQuest)
-                };
+        public override Type[] Quests => new[] { typeof(TheDeluciansLostMineQuest) };
 
         [Constructable]
         public Jacob()
@@ -146,15 +139,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

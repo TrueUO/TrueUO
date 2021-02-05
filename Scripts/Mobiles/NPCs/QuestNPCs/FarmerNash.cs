@@ -7,7 +7,6 @@ namespace Server.Engines.Quests
     public class InTheWeeds : BaseQuest
     {
         public InTheWeeds()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(FNPitchfork), "Farmer Nash's Pitchfork", 1, 0xE87));
 
@@ -83,15 +82,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -108,10 +105,8 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override Type[] Quests => new Type[]
-                {
-                    typeof(InTheWeeds)
-                };
+        public override Type[] Quests => new[] { typeof(InTheWeeds) };
+
         public override void InitBody()
         {
             InitStats(100, 100, 25);
@@ -134,15 +129,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

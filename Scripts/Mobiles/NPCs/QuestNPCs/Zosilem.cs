@@ -30,7 +30,7 @@ namespace Server.Engines.Quests
 
         public override bool IsValidBulkOrder(Item item)
         {
-            return (item is SmallAlchemyBOD || item is LargeAlchemyBOD);
+            return item is SmallAlchemyBOD || item is LargeAlchemyBOD;
         }
 
         public override bool SupportsBulkOrders(Mobile from)
@@ -40,8 +40,8 @@ namespace Server.Engines.Quests
 
         public override void OnSuccessfulBulkOrderReceive(Mobile from)
         {
-            if (from is PlayerMobile)
-                ((PlayerMobile)from).NextAlchemyBulkOrder = TimeSpan.Zero;
+            if (from is PlayerMobile mobile)
+                mobile.NextAlchemyBulkOrder = TimeSpan.Zero;
         }
 
         #endregion
@@ -75,22 +75,22 @@ namespace Server.Engines.Quests
             AddItem(new FemaleGargishClothArms(0x711));
         }
 
-        private static readonly Type[][] m_PileTypes = new Type[][]
-            {
-                new Type[] {typeof(DullCopperIngot),  typeof(PileofInspectedDullCopperIngots) },
-                new Type[] {typeof(ShadowIronIngot),  typeof(PileofInspectedShadowIronIngots) },
-                new Type[] {typeof(BronzeIngot),      typeof(PileofInspectedBronzeIngots) },
-                new Type[] {typeof(GoldIngot),        typeof(PileofInspectedGoldIngots) },
-                new Type[] {typeof(AgapiteIngot),     typeof(PileofInspectedAgapiteIngots) },
-                new Type[] {typeof(VeriteIngot),      typeof(PileofInspectedVeriteIngots) },
-                new Type[] {typeof(ValoriteIngot),    typeof(PileofInspectedValoriteIngots) }
-            };
+        private static readonly Type[][] m_PileTypes =
+        {
+            new[] {typeof(DullCopperIngot),  typeof(PileofInspectedDullCopperIngots) },
+            new[] {typeof(ShadowIronIngot),  typeof(PileofInspectedShadowIronIngots) },
+            new[] {typeof(BronzeIngot),      typeof(PileofInspectedBronzeIngots) },
+            new[] {typeof(GoldIngot),        typeof(PileofInspectedGoldIngots) },
+            new[] {typeof(AgapiteIngot),     typeof(PileofInspectedAgapiteIngots) },
+            new[] {typeof(VeriteIngot),      typeof(PileofInspectedVeriteIngots) },
+            new[] {typeof(ValoriteIngot),    typeof(PileofInspectedValoriteIngots) }
+        };
 
-        private static readonly object[][] m_KegTypes = new object[][]
-            {
-                new object[] {PotionEffect.RefreshTotal,  typeof(InspectedKegofTotalRefreshment) },
-                new object[] {PotionEffect.PoisonGreater, typeof(InspectedKegofGreaterPoison) }
-            };
+        private static readonly object[][] m_KegTypes =
+        {
+            new object[] {PotionEffect.RefreshTotal,  typeof(InspectedKegofTotalRefreshment) },
+            new object[] {PotionEffect.PoisonGreater, typeof(InspectedKegofGreaterPoison) }
+        };
 
         private const int NeededIngots = 20;
 
@@ -144,10 +144,8 @@ namespace Server.Engines.Quests
                     success = true;
                 }
             }
-            else if (item is PotionKeg)
+            else if (item is PotionKeg keg)
             {
-                PotionKeg keg = (PotionKeg)item;
-
                 inspectedType = GetKegType(keg.Type);
 
                 if (inspectedType == null)
@@ -195,7 +193,7 @@ namespace Server.Engines.Quests
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

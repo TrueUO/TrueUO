@@ -10,7 +10,6 @@ namespace Server.Engines.Quests
         public override bool DoneOnce => true;
 
         public KodarsRescueQuest()
-            : base()
         {
             AddObjective(new EscortObjective(1074780, "Paroxysmus Exit")); // Palace Entrance
 
@@ -46,7 +45,7 @@ namespace Server.Engines.Quests
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -60,14 +59,13 @@ namespace Server.Engines.Quests
         public static Point3D HomeLocation => new Point3D(6311, 449, -50);
         public static int HomeRange => 5;
 
-        public override Type[] Quests => new Type[] { typeof(KodarsRescueQuest) };
+        public override Type[] Quests => new[] { typeof(KodarsRescueQuest) };
 
         public static List<Kodar> FelInstances { get; set; }
         public static List<Kodar> TramInstances { get; set; }
 
         [Constructable]
         public Kodar()
-            : base()
         {
             Name = "Kodar";
             Title = "the lost villager";
@@ -164,7 +162,7 @@ namespace Server.Engines.Quests
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             if (Map == Map.Felucca && FelInstances == null)
             {

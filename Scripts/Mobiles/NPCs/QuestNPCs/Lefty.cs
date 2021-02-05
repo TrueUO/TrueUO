@@ -6,7 +6,6 @@ namespace Server.Engines.Quests
     public class WondersOfTheNaturalWorldQuest : BaseQuest
     {
         public WondersOfTheNaturalWorldQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(Gold), "gold coins", 10000, 0xEED));
 
@@ -28,18 +27,17 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1074447;
         /* Step right up!  Thank you, enjoy the amazing caverns. */
         public override object Complete => 1074448;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -56,10 +54,8 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override Type[] Quests => new Type[]
-                {
-                    typeof(WondersOfTheNaturalWorldQuest)
-                };
+        public override Type[] Quests => new[] { typeof(WondersOfTheNaturalWorldQuest) };
+
         public override void InitBody()
         {
             InitStats(100, 100, 25);
@@ -84,15 +80,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

@@ -6,7 +6,6 @@ namespace Server.Engines.Quests
     public class NecessitysMotherQuest : BaseQuest
     {
         public NecessitysMotherQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(TinkerTools), "tinker's tools", 10, 0x1EB8));
 
@@ -25,25 +24,23 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1073952;
         /* Now, I shall see what an elf can invent! */
         public override object Complete => 1073977;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class TickTockQuest : BaseQuest
     {
         public TickTockQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(Clock), "clock", 10, 0x104B));
 
@@ -62,25 +59,23 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1073953;
         /* Enjoy my thanks for your service. */
         public override object Complete => 1073978;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class ReptilianDentistQuest : BaseQuest
     {
         public ReptilianDentistQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(CoilsFang), "coil's fang", 1));
 
@@ -97,7 +92,7 @@ namespace Server.Engines.Quests
         public override object Refuse => 1074723;
         /* Those really big snakes like swamps, I've heard.  You might try the blighted grove. */
         public override object Uncomplete => 1074722;
-        /* Do you have it?  *gasp* What a tooth!  Here … I must get right to work. */
+        /* Do you have it?  *gasp* What a tooth!  Here â€¦ I must get right to work. */
         public override object Complete => 1074721;
         public override bool CanOffer()
         {
@@ -107,15 +102,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -134,16 +127,17 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override Type[] Quests => new Type[]
-                {
-                    typeof(ArchSupportQuest),
-                    typeof(StopHarpingOnMeQuest),
-                    typeof(TheFarEyeQuest),
-                    typeof(NecessitysMotherQuest),
-                    typeof(TickTockQuest),
-                    typeof(FromTheGaultierCollectionQuest),
-                    typeof(ReptilianDentistQuest)
-                };
+        public override Type[] Quests => new[]
+        {
+            typeof(ArchSupportQuest),
+            typeof(StopHarpingOnMeQuest),
+            typeof(TheFarEyeQuest),
+            typeof(NecessitysMotherQuest),
+            typeof(TickTockQuest),
+            typeof(FromTheGaultierCollectionQuest),
+            typeof(ReptilianDentistQuest)
+        };
+
         public override void InitBody()
         {
             InitStats(100, 100, 25);
@@ -169,15 +163,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Server.Engines.Quests.Doom
 {
     public class Chyloth : BaseQuester
     {
-        private static readonly int[] m_Offsets = new int[]
+        private static readonly int[] m_Offsets =
         {
             -1, -1,
             -1, 0,
@@ -37,25 +37,13 @@ namespace Server.Engines.Quests.Doom
 
         public BellOfTheDead Bell
         {
-            get
-            {
-                return m_Bell;
-            }
-            set
-            {
-                m_Bell = value;
-            }
+            get => m_Bell;
+            set => m_Bell = value;
         }
         public Mobile AngryAt
         {
-            get
-            {
-                return m_AngryAt;
-            }
-            set
-            {
-                m_AngryAt = value;
-            }
+            get => m_AngryAt;
+            set => m_AngryAt = value;
         }
         public static void TeleportToFerry(Mobile from)
         {
@@ -165,16 +153,14 @@ namespace Server.Engines.Quests.Doom
                     foundLoc = true;
                     break;
                 }
-                else
-                {
-                    int z = map.GetAverageZ(x, y);
 
-                    if (map.CanSpawnMobile(x, y, z))
-                    {
-                        dragon.MoveToWorld(new Point3D(x, y, z), map);
-                        foundLoc = true;
-                        break;
-                    }
+                int z = map.GetAverageZ(x, y);
+
+                if (map.CanSpawnMobile(x, y, z))
+                {
+                    dragon.MoveToWorld(new Point3D(x, y, z), map);
+                    foundLoc = true;
+                    break;
                 }
             }
 
@@ -239,15 +225,13 @@ namespace Server.Engines.Quests.Doom
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 

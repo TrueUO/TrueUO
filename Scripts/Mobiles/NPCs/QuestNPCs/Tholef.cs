@@ -6,7 +6,6 @@ namespace Server.Engines.Quests
     public class TheSongOfTheWindQuest : BaseQuest
     {
         public TheSongOfTheWindQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(FancyWindChimes), "fancy wind chimes", 10, 0x2833));
 
@@ -25,25 +24,23 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1073956;
         /* Such a delightful sound, I think I shall never tire of it. */
         public override object Complete => 1073980;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class BeerGogglesQuest : BaseQuest
     {
         public BeerGogglesQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(BarrelTap), "barrel tap", 25, 0x1004));
 
@@ -62,25 +59,23 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1073941;
         /* My thanks for your service.  Here is something for you to enjoy. */
         public override object Complete => 1073971;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class MessageInBottleQuest : BaseQuest
     {
         public MessageInBottleQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(Bottle), "empty bottles", 50, 0xF0E));
 
@@ -98,18 +93,17 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1073940;
         /* My thanks for your service.  Here is something for you to enjoy. */
         public override object Complete => 1073971;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -128,12 +122,13 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override Type[] Quests => new Type[]
-                {
-                    typeof(TheSongOfTheWindQuest),
-                    typeof(BeerGogglesQuest),
-                    typeof(MessageInBottleQuest)
-                };
+        public override Type[] Quests => new[]
+        {
+            typeof(TheSongOfTheWindQuest),
+            typeof(BeerGogglesQuest),
+            typeof(MessageInBottleQuest)
+        };
+
         public override void InitBody()
         {
             InitStats(100, 100, 25);
@@ -165,15 +160,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

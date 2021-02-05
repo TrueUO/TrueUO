@@ -6,7 +6,6 @@ namespace Server.Engines.Quests
     public class BatteredBucklersQuest : BaseQuest
     {
         public BatteredBucklersQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(Buckler), "buckler", 10, 0x1B73));
 
@@ -27,18 +26,17 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1075515;
         /* Thanks for the help. Here's something for ya to remember me by. */
         public override object Complete => 1075516;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -56,10 +54,8 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override Type[] Quests => new Type[]
-                {
-                    typeof(BatteredBucklersQuest)
-                };
+        public override Type[] Quests => new[] { typeof(BatteredBucklersQuest) };
+
         public override void InitBody()
         {
             InitStats(100, 100, 25);
@@ -94,15 +90,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -110,7 +104,6 @@ namespace Server.Engines.Quests
     {
         [Constructable]
         public SmithsSatchel()
-            : base()
         {
             Hue = BaseReward.SatchelHue();
 
@@ -126,15 +119,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

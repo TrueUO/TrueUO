@@ -7,7 +7,6 @@ namespace Server.Engines.Quests
     public class ChillInTheAirQuest : BaseQuest
     {
         public ChillInTheAirQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(IceElemental), "ice elementals", 15));
 
@@ -24,25 +23,23 @@ namespace Server.Engines.Quests
         public override object Refuse => 1073733;
         /* The chill won't lift until you eradicate a few Ice Elemenals. */
         public override object Uncomplete => 1073743;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class IndustriousAsAnAntLionQuest : BaseQuest
     {
         public IndustriousAsAnAntLionQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(AntLion), "ant lions", 12));
 
@@ -59,25 +56,23 @@ namespace Server.Engines.Quests
         public override object Refuse => 1073733;
         /* Please, rid us of the Ant Lion infestation. */
         public override object Uncomplete => 1073745;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class ThePerilsOfFarmingQuest : BaseQuest
     {
         public ThePerilsOfFarmingQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(WhippingVine), "whipping vines", 15));
 
@@ -94,25 +89,23 @@ namespace Server.Engines.Quests
         public override object Refuse => 1073733;
         /* How are farmers supposed to work with these Whipping Vines around? */
         public override object Uncomplete => 1073744;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class CommonBrigandsQuest : BaseQuest
     {
         public CommonBrigandsQuest()
-            : base()
         {
             AddObjective(new SlayObjective("common brigands", 20, typeof(Brigand)));
 
@@ -129,25 +122,23 @@ namespace Server.Engines.Quests
         public override object Refuse => 1073580;
         /* The Brigands still plague us. Have you killed 20 of their number? */
         public override object Uncomplete => 1073592;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class ArchEnemiesQuest : BaseQuest
     {
         public ArchEnemiesQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(RatmanArcher), "ratman archers", 10));
 
@@ -164,25 +155,23 @@ namespace Server.Engines.Quests
         public override object Refuse => 1073580;
         /* I don't see 10 tails from Ratman Archers on your belt -- and until I do, no reward for you. */
         public override object Uncomplete => 1073595;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class VerminQuest : BaseQuest
     {
         public VerminQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(Ratman), "ratmen", 12));
 
@@ -198,18 +187,17 @@ namespace Server.Engines.Quests
         public override object Refuse => 1072270;
         /* You're not quite done yet.  Get back to work! */
         public override object Uncomplete => 1072271;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -226,20 +214,21 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override Type[] Quests => new Type[]
-                {
-                    typeof(MaraudersQuest),
-                    typeof(ChillInTheAirQuest),
-                    typeof(IndustriousAsAnAntLionQuest),
-                    typeof(ThePerilsOfFarmingQuest),
-                    typeof(UnholyConstructQuest),
-                    typeof(CommonBrigandsQuest),
-                    typeof(ArchEnemiesQuest),
-                    typeof(TrollingForTrollsQuest),
-                    typeof(DeadManWalkingQuest),
-                    typeof(ForkedTonguesQuest),
-                    typeof(VerminQuest)
-                };
+        public override Type[] Quests => new[]
+        {
+            typeof(MaraudersQuest),
+            typeof(ChillInTheAirQuest),
+            typeof(IndustriousAsAnAntLionQuest),
+            typeof(ThePerilsOfFarmingQuest),
+            typeof(UnholyConstructQuest),
+            typeof(CommonBrigandsQuest),
+            typeof(ArchEnemiesQuest),
+            typeof(TrollingForTrollsQuest),
+            typeof(DeadManWalkingQuest),
+            typeof(ForkedTonguesQuest),
+            typeof(VerminQuest)
+        };
+
         public override void InitBody()
         {
             InitStats(100, 100, 25);
@@ -273,15 +262,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

@@ -7,7 +7,6 @@ namespace Server.Engines.Quests
     public class KingOfBearsQuest : BaseQuest
     {
         public KingOfBearsQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(GrizzlyBear), "grizzly bears", 10));
 
@@ -25,25 +24,23 @@ namespace Server.Engines.Quests
         public override object Refuse => 1072270;
         /* You're not quite done yet.  Get back to work! */
         public override object Uncomplete => 1072271;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class SpecimensQuest : BaseQuest
     {
         public SpecimensQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(RedSolenWorker), "red solen workers", 12));
             AddObjective(new SlayObjective(typeof(BlackSolenWorker), "black solen workers", 12));
@@ -63,25 +60,23 @@ namespace Server.Engines.Quests
         public override object Refuse => 1072270;
         /* You're not quite done yet.  Get back to work! */
         public override object Uncomplete => 1072271;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class DeadManWalkingQuest : BaseQuest
     {
         public DeadManWalkingQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(Zombie), "zombies", 5));
             AddObjective(new SlayObjective(typeof(Skeleton), "skeletons", 5));
@@ -99,25 +94,23 @@ namespace Server.Engines.Quests
         public override object Refuse => 1072270;
         /* You're not quite done yet.  Get back to work! */
         public override object Uncomplete => 1072271;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class SpiritsQuest : BaseQuest
     {
         public SpiritsQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(Spectre), "spectres", 15));
             AddObjective(new SlayObjective(typeof(Shade), "shades", 15));
@@ -137,25 +130,23 @@ namespace Server.Engines.Quests
         public override object Refuse => 1073580;
         /* The restless spirts still walk -- you must kill 15 of them. */
         public override object Uncomplete => 1073586;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class RollTheBonesQuest : BaseQuest
     {
         public RollTheBonesQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(PatchworkSkeleton), "patchwork skeletons", 8));
 
@@ -172,25 +163,23 @@ namespace Server.Engines.Quests
         public override object Refuse => 1072270;
         /* You're not quite done yet.  Get back to work! */
         public override object Uncomplete => 1072271;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class ItsGhastlyJobQuest : BaseQuest
     {
         public ItsGhastlyJobQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(Ghoul), "ghouls", 12));
 
@@ -206,25 +195,23 @@ namespace Server.Engines.Quests
         public override object Refuse => 1072270;
         /* You're not quite done yet.  Get back to work! */
         public override object Uncomplete => 1072271;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class TroglodytesQuest : BaseQuest
     {
         public TroglodytesQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(Troglodyte), "troglodytes", 12));
 
@@ -249,22 +236,19 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class UnholyKnightsQuest : BaseQuest
     {
         public UnholyKnightsQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(BoneKnight), "bone knights", 16));
             AddObjective(new SlayObjective(typeof(SkeletalKnight), "skeletal knights", 16));
@@ -283,25 +267,23 @@ namespace Server.Engines.Quests
         public override object Refuse => 1073580;
         /* Your task is not done. Continue putting the Skeleton and Bone Knights to rest. */
         public override object Uncomplete => 1073585;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class FeatherInYerCapQuest : BaseQuest
     {
         public FeatherInYerCapQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(SalivasFeather), "saliva's feather", 1));
 
@@ -331,22 +313,19 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class TaleOfTailQuest : BaseQuest
     {
         public TaleOfTailQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(AbscessTail), "abscess' tail", 1));
 
@@ -375,22 +354,19 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class TrogAndHisDogQuest : BaseQuest
     {
         public TrogAndHisDogQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(Lurg), "lurg", 1));
             AddObjective(new SlayObjective(typeof(Grobu), "grobu", 1));
@@ -417,15 +393,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -444,21 +418,22 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override Type[] Quests => new Type[]
-                {
-                    typeof(KingOfBearsQuest),
-                    typeof(SpecimensQuest),
-                    typeof(DeadManWalkingQuest),
-                    typeof(SpiritsQuest),
-                    typeof(RollTheBonesQuest),
-                    typeof(ItsGhastlyJobQuest),
-                    typeof(TroglodytesQuest),
-                    typeof(UnholyKnightsQuest),
-                    typeof(FriendlyNeighborhoodSpiderkillerQuest),
-                    typeof(FeatherInYerCapQuest),
-                    typeof(TaleOfTailQuest),
-                    typeof(TrogAndHisDogQuest)
-                };
+        public override Type[] Quests => new[]
+        {
+            typeof(KingOfBearsQuest),
+            typeof(SpecimensQuest),
+            typeof(DeadManWalkingQuest),
+            typeof(SpiritsQuest),
+            typeof(RollTheBonesQuest),
+            typeof(ItsGhastlyJobQuest),
+            typeof(TroglodytesQuest),
+            typeof(UnholyKnightsQuest),
+            typeof(FriendlyNeighborhoodSpiderkillerQuest),
+            typeof(FeatherInYerCapQuest),
+            typeof(TaleOfTailQuest),
+            typeof(TrogAndHisDogQuest)
+        };
+
         public override void InitBody()
         {
             InitStats(100, 100, 25);
@@ -493,15 +468,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

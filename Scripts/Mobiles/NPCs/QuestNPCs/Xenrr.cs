@@ -16,7 +16,7 @@ namespace Server.Engines.Quests
 
         public override object Complete => 1095065;
 
-        public ScrapingtheBottom() : base()
+        public ScrapingtheBottom()
         {
             AddObjective(new ObtainObjective(typeof(MudPuppy), "Mud Puppy", 1, 0x9cc));
 
@@ -26,28 +26,22 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class Xenrr : MondainQuester
     {
-        public override Type[] Quests => new Type[]
-            {
-                typeof( ScrapingtheBottom )
-            };
+        public override Type[] Quests => new[] { typeof( ScrapingtheBottom ) };
 
         [Constructable]
         public Xenrr()
-            : base()
         {
             Name = "Xenrr";
         }
@@ -79,15 +73,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

@@ -17,10 +17,7 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override Type[] Quests => new Type[]
-        {
-            typeof(Missing)
-        };
+        public override Type[] Quests => new[] { typeof(Missing) };
 
         public override void InitBody()
         {
@@ -49,7 +46,7 @@ namespace Server.Engines.Quests
 
                         if (q == null)
                         {
-                            var quest = QuestHelper.RandomQuest(pm, new Type[] { typeof(EndingtheThreat) }, this);
+                            var quest = QuestHelper.RandomQuest(pm, new[] { typeof(EndingtheThreat) }, this);
 
                             if (quest != null)
                             {

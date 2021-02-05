@@ -7,7 +7,6 @@ namespace Server.Engines.Quests
     public class WarriorCasteQuest : BaseQuest
     {
         public WarriorCasteQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(TerathanWarrior), "terathan warriors", 10));
 
@@ -24,25 +23,23 @@ namespace Server.Engines.Quests
         public override object Refuse => 1073580;
         /* Unless you kill at least 10 Terathan Warriors, you won't have any impact on their hive. */
         public override object Uncomplete => 1073588;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class BigWormsQuest : BaseQuest
     {
         public BigWormsQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(IceSerpent), "giant ice serpents", 10));
 
@@ -59,25 +56,23 @@ namespace Server.Engines.Quests
         public override object Refuse => 1073580;
         /* You wouldn't try and just pretend you murdered 10 Giant Ice Worms, would you? */
         public override object Uncomplete => 1073598;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class OrcishEliteQuest : BaseQuest
     {
         public OrcishEliteQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(OrcBomber), "orc bombers", 6));
             AddObjective(new SlayObjective(typeof(OrcCaptain), "orc captain", 4));
@@ -95,18 +90,17 @@ namespace Server.Engines.Quests
         public override object Refuse => 1073580;
         /* The only good orc is a dead orc - and 4 dead Captains and 6 dead Bombers is even better! */
         public override object Uncomplete => 1073591;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -125,13 +119,14 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override Type[] Quests => new Type[]
-                {
-                    typeof(WarriorCasteQuest),
-                    typeof(BigWormsQuest),
-                    typeof(ItsElementalQuest),
-                    typeof(OrcishEliteQuest)
-                };
+        public override Type[] Quests => new[]
+        {
+            typeof(WarriorCasteQuest),
+            typeof(BigWormsQuest),
+            typeof(ItsElementalQuest),
+            typeof(OrcishEliteQuest)
+        };
+
         public override void InitBody()
         {
             InitStats(100, 100, 25);
@@ -154,15 +149,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

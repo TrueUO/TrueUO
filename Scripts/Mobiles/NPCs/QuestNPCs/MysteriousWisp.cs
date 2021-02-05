@@ -16,7 +16,7 @@ namespace Server.Mobiles
         public static readonly int ItemCount = 10;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool ForceRestock { get { return false; } set { if (value) DoRestock(true); } }
+        public bool ForceRestock { get => false; set { if (value) DoRestock(true); } }
 
         private readonly Dictionary<Mobile, int> m_Conversation = new Dictionary<Mobile, int>();
 
@@ -88,7 +88,7 @@ namespace Server.Mobiles
 
                 if (q == null)
                 {
-                    BaseQuest quest = QuestHelper.RandomQuest(pm, new Type[] { typeof(WhisperingWithWispsQuest) }, this);
+                    BaseQuest quest = QuestHelper.RandomQuest(pm, new[] { typeof(WhisperingWithWispsQuest) }, this);
 
                     if (quest != null)
                     {
@@ -105,9 +105,9 @@ namespace Server.Mobiles
 
         public override void OnMovement(Mobile m, Point3D oldLocation)
         {
-            if (m is PlayerMobile && InRange(m.Location, 5) && !InRange(oldLocation, 5))
+            if (m is PlayerMobile mobile && InRange(mobile.Location, 5) && !InRange(oldLocation, 5))
             {
-                WishesOfTheWispQuest quest = QuestHelper.GetQuest<WishesOfTheWispQuest>((PlayerMobile)m);
+                WishesOfTheWispQuest quest = QuestHelper.GetQuest<WishesOfTheWispQuest>(mobile);
 
                 if (quest != null)
                 {
@@ -146,24 +146,24 @@ namespace Server.Mobiles
             }
         }
 
-        private readonly string[][] m_Keywords = new string[][]
+        private readonly string[][] m_Keywords =
         {
             new string[] { },
-            new string[] { "corporeal" },
-            new string[] { "sentient" },
-            new string[] { "deal" },
-            new string[] { "learn", "teach" },
-            new string[] { "good and evil", "good", "evil" },
-            new string[] { "guide" },
-            new string[] { "follow" },
-            new string[] { "fight" },
-            new string[] { "resonate" },
-            new string[] { "join" },
-            new string[] { "command" },
-            new string[] { "trade" },
+            new[] { "corporeal" },
+            new[] { "sentient" },
+            new[] { "deal" },
+            new[] { "learn", "teach" },
+            new[] { "good and evil", "good", "evil" },
+            new[] { "guide" },
+            new[] { "follow" },
+            new[] { "fight" },
+            new[] { "resonate" },
+            new[] { "join" },
+            new[] { "command" },
+            new[] { "trade" }
         };
 
-        private readonly int[] m_Responses = new int[]
+        private readonly int[] m_Responses =
         {
             1153441,
             1153443,
@@ -248,7 +248,7 @@ namespace Server.Mobiles
 
         public int GetCostFor(Item item)
         {
-            return (int)((double)Imbuing.GetTotalWeight(item, -1, false, true) * 2.18);
+            return (int)(Imbuing.GetTotalWeight(item, -1, false, true) * 2.18);
         }
 
         public void TryBuyItem(Mobile from, Item item)
@@ -376,15 +376,13 @@ namespace Server.Mobiles
             public override void Serialize(GenericWriter writer)
             {
                 base.Serialize(writer);
-
                 writer.Write(0); // version
             }
 
             public override void Deserialize(GenericReader reader)
             {
                 base.Deserialize(reader);
-
-                int version = reader.ReadInt();
+                reader.ReadInt();
             }
         }
     }

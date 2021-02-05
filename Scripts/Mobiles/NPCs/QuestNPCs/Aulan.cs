@@ -7,7 +7,6 @@ namespace Server.Engines.Quests
     public class CreepyCrawliesQuest : BaseQuest
     {
         public CreepyCrawliesQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(GiantSpider), "giant spiders", 12));
 
@@ -23,25 +22,23 @@ namespace Server.Engines.Quests
         public override object Refuse => 1072270;
         /* You're not quite done yet.  Get back to work! */
         public override object Uncomplete => 1072271;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class VoraciousPlantsQuest : BaseQuest
     {
         public VoraciousPlantsQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(Corpser), "corpsers", 8));
             AddObjective(new SlayObjective(typeof(SwampTentacle), "swamp tentacles", 2));
@@ -58,25 +55,23 @@ namespace Server.Engines.Quests
         public override object Refuse => 1073019;
         /* You're not quite done yet.  Get back to work! */
         public override object Uncomplete => 1072271;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class GibberJabberQuest : BaseQuest
     {
         public GibberJabberQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(Gibberling), "gibberlings", 10));
 
@@ -92,25 +87,23 @@ namespace Server.Engines.Quests
         public override object Refuse => 1073019;
         /* You're not quite done yet.  Get back to work! */
         public override object Uncomplete => 1072271;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class AnimatedMonstrosityQuest : BaseQuest
     {
         public AnimatedMonstrosityQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(FleshGolem), "flesh golems", 12));
 
@@ -126,25 +119,23 @@ namespace Server.Engines.Quests
         public override object Refuse => 1073019;
         /* You're not quite done yet.  Get back to work! */
         public override object Uncomplete => 1072271;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class BirdsOfAFeatherQuest : BaseQuest
     {
         public BirdsOfAFeatherQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(Harpy), "harpies", 10));
 
@@ -160,25 +151,23 @@ namespace Server.Engines.Quests
         public override object Refuse => 1073019;
         /* You're not quite done yet.  Get back to work! */
         public override object Uncomplete => 1072271;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class FrightmaresQuest : BaseQuest
     {
         public FrightmaresQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(PlagueSpawn), "plague spawns", 10));
 
@@ -194,25 +183,23 @@ namespace Server.Engines.Quests
         public override object Refuse => 1073019;
         /* You're not quite done yet.  Get back to work! */
         public override object Uncomplete => 1072271;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class MoltenReptilesQuest : BaseQuest
     {
         public MoltenReptilesQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(LavaLizard), "lava lizards", 10));
 
@@ -228,25 +215,23 @@ namespace Server.Engines.Quests
         public override object Refuse => 1073019;
         /* You're not quite done yet.  Get back to work! */
         public override object Uncomplete => 1072271;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class BloodyNuisanceQuest : BaseQuest
     {
         public BloodyNuisanceQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(GoreFiend), "gore fiends", 10));
 
@@ -262,25 +247,23 @@ namespace Server.Engines.Quests
         public override object Refuse => 1073019;
         /* You're not quite done yet.  Get back to work! */
         public override object Uncomplete => 1072271;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class BloodSuckersQuest : BaseQuest
     {
         public BloodSuckersQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(VampireBat), "vampire bats", 10));
 
@@ -296,18 +279,17 @@ namespace Server.Engines.Quests
         public override object Refuse => 1073019;
         /* You're not quite done yet.  Get back to work! */
         public override object Uncomplete => 1072271;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -326,18 +308,19 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override Type[] Quests => new Type[]
-                {
-                    typeof(CreepyCrawliesQuest),
-                    typeof(VoraciousPlantsQuest),
-                    typeof(GibberJabberQuest),
-                    typeof(AnimatedMonstrosityQuest),
-                    typeof(BirdsOfAFeatherQuest),
-                    typeof(FrightmaresQuest),
-                    typeof(MoltenReptilesQuest),
-                    typeof(BloodyNuisanceQuest),
-                    typeof(BloodSuckersQuest)
-                };
+        public override Type[] Quests => new[]
+        {
+            typeof(CreepyCrawliesQuest),
+            typeof(VoraciousPlantsQuest),
+            typeof(GibberJabberQuest),
+            typeof(AnimatedMonstrosityQuest),
+            typeof(BirdsOfAFeatherQuest),
+            typeof(FrightmaresQuest),
+            typeof(MoltenReptilesQuest),
+            typeof(BloodyNuisanceQuest),
+            typeof(BloodSuckersQuest)
+        };
+
         public override void InitBody()
         {
             InitStats(100, 100, 25);
@@ -381,15 +364,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

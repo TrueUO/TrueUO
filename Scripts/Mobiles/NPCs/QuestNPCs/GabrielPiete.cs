@@ -47,10 +47,8 @@ namespace Server.Engines.Quests.Collector
             if (qs == null)
                 return false;
 
-            return (qs.IsObjectiveInProgress(typeof(FindGabrielObjective)) ||
-                    qs.IsObjectiveInProgress(typeof(FindSheetMusicObjective)) ||
-                    qs.IsObjectiveInProgress(typeof(ReturnSheetMusicObjective)) ||
-                    qs.IsObjectiveInProgress(typeof(ReturnAutographObjective)));
+            return qs.IsObjectiveInProgress(typeof(FindGabrielObjective)) || qs.IsObjectiveInProgress(typeof(FindSheetMusicObjective)) ||
+                   qs.IsObjectiveInProgress(typeof(ReturnSheetMusicObjective)) || qs.IsObjectiveInProgress(typeof(ReturnAutographObjective));
         }
 
         public override void OnTalk(PlayerMobile player, bool contextMenu)
@@ -90,15 +88,13 @@ namespace Server.Engines.Quests.Collector
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

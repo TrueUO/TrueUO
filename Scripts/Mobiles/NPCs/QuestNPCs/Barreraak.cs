@@ -16,7 +16,7 @@ namespace Server.Engines.Quests
 
         public override object Complete => 1095048;
 
-        public SomethingFishy() : base()
+        public SomethingFishy()
         {
             AddObjective(new ObtainObjective(typeof(RedHerring), "Red Herring", 1, 0x9cc));
 
@@ -26,28 +26,22 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class Barreraak : MondainQuester
     {
-        public override Type[] Quests => new Type[]
-            {
-                typeof( SomethingFishy )
-            };
+        public override Type[] Quests => new[] { typeof( SomethingFishy ) };
 
         [Constructable]
         public Barreraak()
-            : base()
         {
             Name = "Barreraak";
         }
@@ -79,15 +73,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }
