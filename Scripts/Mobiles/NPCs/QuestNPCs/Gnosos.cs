@@ -29,11 +29,7 @@ namespace Server.Engines.Quests
         /* You look a bit worse for wear!  He put up a good fight did he?  Hah!  That's the spirit … a Master 
         of Bedlam is a match for most. */
         public override object Complete => 1074859;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.Bedlam;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);

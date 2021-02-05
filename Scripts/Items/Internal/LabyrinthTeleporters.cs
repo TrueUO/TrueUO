@@ -18,7 +18,7 @@ namespace Server.Items
 
         public override void OnDoubleClick(Mobile from)
         {
-            if (MondainsLegacy.Labyrinth && from.InRange(Location, 2))
+            if (from.InRange(Location, 2))
                 from.MoveToWorld(new Point3D(1731, 978, -80), Map);
         }
 
@@ -51,12 +51,6 @@ namespace Server.Items
 
         public override void OnDoubleClick(Mobile from)
         {
-            if (!MondainsLegacy.Labyrinth && (int)from.AccessLevel < (int)AccessLevel.GameMaster)
-            {
-                from.SendLocalizedMessage(1042753, "Labyrinth"); // ~1_SOMETHING~ has been temporarily disabled.
-                return;
-            }
-
             if (from.InRange(Location, 2))
             {
                 Point3D p = new Point3D(330, 1973, 0);

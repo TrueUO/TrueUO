@@ -26,10 +26,6 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1072572;
         /* You're better than I thought you'd be.  Not particularly bad, but not entirely inept. */
         public override object Complete => 1072573;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.Sanctuary;
-        }
 
         public override void Serialize(GenericWriter writer)
         {
@@ -69,11 +65,7 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1072576;
         /* It's about time!  Could you have taken longer?	 */
         public override object Complete => 1072577;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.Sanctuary;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -109,11 +101,7 @@ namespace Server.Engines.Quests
         /* Amazing!  Simply astonishing ... you survived.  Well, I supposed I should indulge your avarice 
         with a reward.*/
         public override object Complete => 1072582;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.Sanctuary;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);

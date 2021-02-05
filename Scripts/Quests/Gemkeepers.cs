@@ -28,11 +28,7 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1074540;
         /* What have you found? */
         public override object Complete => 1074542;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.Labyrinth;
-        }
-
+        
         public override void OnCompleted()
         {
             Owner.SendLocalizedMessage(1074541, null, 0x23); // You have discovered an important clue!						
@@ -76,11 +72,7 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1074548;
         /* Yes?  What do you want?  I'm very busy. */
         public override object Complete => 1074549;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.Labyrinth;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -119,11 +111,7 @@ namespace Server.Engines.Quests
         /* You've returned at last!  Give me just a moment to examine what you've brought and I can perform the 
         magic that will allow you enter the Labyrinth. */
         public override object Complete => 1074556;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.Labyrinth;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -162,11 +150,7 @@ namespace Server.Engines.Quests
         /* Oh! You've returned at last!  I can't wait to hear the tales ... but first, let me see those artifacts.  
         You've certainly earned this reward. */
         public override object Complete => 1074829;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.Labyrinth;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);

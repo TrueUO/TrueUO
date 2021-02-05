@@ -160,10 +160,6 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1074686;
         /* Ah! So soft, so supple.  What a wonderful texture.  Here you are ... my thanks. */
         public override object Complete => 1074687;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.PaintedCaves;
-        }
 
         public override void Serialize(GenericWriter writer)
         {

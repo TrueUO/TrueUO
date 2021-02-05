@@ -97,11 +97,7 @@ namespace Server.Engines.Quests
         /* Once you gain entrance into The Citadel, you will need to move cautiously to find 
         the sect leaders. */
         public override object Uncomplete => 1072974;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.Citadel;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -135,11 +131,7 @@ namespace Server.Engines.Quests
         /* The Black Order's fortress home is well hidden.  Legend has it that a humble fishing village 
         disguises the magical portal. */
         public override object Uncomplete => 1072980;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.Citadel;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -190,11 +182,7 @@ namespace Server.Engines.Quests
         /* The Black Order's fortress home is well hidden.  Legend has it that a humble fishing village 
         disguises the magical portal. */
         public override object Uncomplete => 1072980;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.Citadel;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -244,11 +232,7 @@ namespace Server.Engines.Quests
         /* The Black Order's fortress home is well hidden.  Legend has it that a humble fishing village 
         disguises the magical portal. */
         public override object Uncomplete => 1072980;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.Citadel;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -282,11 +266,7 @@ namespace Server.Engines.Quests
         /* The Black Order's fortress home is well hidden.  Legend has it that a humble fishing village 
         disguises the magical portal. */
         public override object Uncomplete => 1072980;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.Citadel;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);

@@ -15,12 +15,6 @@ namespace Server.Items
 
         public override bool OnMoveOver(Mobile m)
         {
-            if (!MondainsLegacy.PalaceOfParoxysmus && (int)m.AccessLevel < (int)AccessLevel.GameMaster)
-            {
-                m.SendLocalizedMessage(1042753, "Palace of Paroxysmus"); // ~1_SOMETHING~ has been temporarily disabled.
-                return true;
-            }
-
             if (m.Backpack != null)
             {
                 Item rope = m.Backpack.FindItemByType(typeof(MagicalRope), true);
@@ -75,12 +69,6 @@ namespace Server.Items
 
         public override bool OnMoveOver(Mobile m)
         {
-            if (!MondainsLegacy.PalaceOfParoxysmus && (int)m.AccessLevel < (int)AccessLevel.GameMaster)
-            {
-                m.SendLocalizedMessage(1042753, "Palace of Paroxysmus"); // ~1_SOMETHING~ has been temporarily disabled.
-                return true;
-            }
-
             if (m.Backpack != null)
             {
                 Item rope = m.Backpack.FindItemByType(typeof(MagicalRope), true);

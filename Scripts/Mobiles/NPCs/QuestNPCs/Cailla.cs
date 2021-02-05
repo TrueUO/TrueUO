@@ -228,10 +228,6 @@ namespace Server.Engines.Quests
         public override object Refuse => 1074690;
         /* You still need to kill those troglodytes, remember? */
         public override object Uncomplete => 1074691;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.PaintedCaves;
-        }
 
         public override void Serialize(GenericWriter writer)
         {
@@ -305,11 +301,7 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1074735;
         /* The hero returns from the glorious battle and - oh, such a small feather? */
         public override object Complete => 1074734;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.BlightedGrove;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -346,11 +338,7 @@ namespace Server.Engines.Quests
         /* Ah, the tail.  You did it!  You know the rumours about dried ground hydra tail powder are all true?  
         Thank you so much! */
         public override object Complete => 1074730;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.BlightedGrove;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -385,10 +373,6 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1074682;
         /* Not half bad.  Here's your prize. */
         public override object Complete => 1074683;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.PaintedCaves;
-        }
 
         public override void Serialize(GenericWriter writer)
         {

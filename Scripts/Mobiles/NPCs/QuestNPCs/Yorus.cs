@@ -27,11 +27,7 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1074746;
         /* Are you one of THEM?  Ahhhh!  Oh, wait, if you were them, then you'd be me.  So you're -- you.  Good job! */
         public override object Complete => 1074747;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.TwistedWeald;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);

@@ -27,11 +27,7 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1074724;
         /* I can't wait to get to work now that you've returned with my scales. */
         public override object Complete => 1074725;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.BlightedGrove;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
