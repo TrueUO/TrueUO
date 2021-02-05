@@ -26,11 +26,7 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1074672;
         /* You have done well.  Enjoy this reward. */
         public override object Complete => 1074673;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.PrismOfLight;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -66,11 +62,7 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1074672;
         /* You have done well.  Enjoy this reward. */
         public override object Complete => 1074673;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.PrismOfLight;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -106,11 +98,7 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1074672;
         /* You have done well.  Enjoy this reward. */
         public override object Complete => 1074673;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.PrismOfLight;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -146,11 +134,7 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1074672;
         /* You have done well.  Enjoy this reward. */
         public override object Complete => 1074673;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.PrismOfLight;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);

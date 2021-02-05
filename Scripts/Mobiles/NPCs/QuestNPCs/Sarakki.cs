@@ -24,11 +24,7 @@ namespace Server.Engines.Quests
         /* *whisper* The Citadel entrance is disguised as a fishing village.  The magical portal into the stronghold itself is 
         moved frequently.  You'll need to search for it. */
         public override object Uncomplete => 1072972;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.Citadel;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -61,11 +57,7 @@ namespace Server.Engines.Quests
         /* I don't know where inside The Citadel such evidence could be found.  Perhaps the most guarded sanctum is 
         the place to look. */
         public override object Uncomplete => 1072976;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.Citadel;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);

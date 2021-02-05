@@ -19,12 +19,6 @@ namespace Server.Items
 
         public override void OnDoubleClick(Mobile from)
         {
-            if (!MondainsLegacy.Citadel && (int)from.AccessLevel < (int)AccessLevel.GameMaster)
-            {
-                from.SendLocalizedMessage(1042753, "The Citadel"); // ~1_SOMETHING~ has been temporarily disabled.
-                return;
-            }
-
             if (from is PlayerMobile player)
             {
                 if (QuestHelper.GetQuest(player, typeof(BlackOrderBadgesQuest)) != null || QuestHelper.GetQuest(player, typeof(EvidenceQuest)) != null)

@@ -18,12 +18,6 @@ namespace Server.Items
 
         public override bool OnMoveOver(Mobile m)
         {
-            if (!MondainsLegacy.TwistedWeald && (int)m.AccessLevel < (int)AccessLevel.GameMaster)
-            {
-                m.SendLocalizedMessage(1042753, "Twisted Weald"); // ~1_SOMETHING~ has been temporarily disabled.
-                return true;
-            }
-
             if (m is PlayerMobile player)
             {
                 if (QuestHelper.GetQuest(player, typeof(DreadhornQuest)) != null)

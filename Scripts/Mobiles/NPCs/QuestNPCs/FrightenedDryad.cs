@@ -30,11 +30,7 @@ namespace Server.Engines.Quests
         more.  Bless you, fair adventurer. Bless you.  If you wish to face Melisande in battle, place the token of my blessing in 
         the basket.  May you be triumphant and redeem us all through your efforts. */
         public override object Complete => 1074437;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.BlightedGrove;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);

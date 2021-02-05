@@ -29,11 +29,7 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1074605;
         /* Oh blast!  Not another of those forms.  I'm so sick of this endless paperwork. */
         public override object Complete => 1074607;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.Bedlam;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -75,11 +71,7 @@ namespace Server.Engines.Quests
         /* Oh excellent, you're back.  I'll get the oven going.  That thing about pixie legs, you see, is that they burn 
         and dry out if you're not really careful.  Taste just like chicken too! */
         public override object Complete => 1074617;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.Bedlam;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -115,11 +107,7 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1074621;
         /* What?  Hrmph.  Gorrow signed your form did he?  Let me see that.  *squint* */
         public override object Complete => 1074622;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.Bedlam;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -157,11 +145,7 @@ namespace Server.Engines.Quests
         /* Made it through did you?  Did you happen to see Red Death out there?  Big horse, skeletal ... burning eyes?  No?  
         What's this?  Forms?  FORMS?  I'm up to my eyebrows in ravenous out-of-control undead and you want a signature? */
         public override object Complete => 1074628;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.Bedlam;
-        }
-
+        
         public override void OnAccept()
         {
             base.OnAccept();
@@ -206,11 +190,7 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1074632;
         /* Pulled it off huh?  Well then you've earned this signature! */
         public override object Complete => 1074633;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.Bedlam;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -249,11 +229,7 @@ namespace Server.Engines.Quests
         such, you're not eligible for a refund -- you've never paid tuition.  For your services, Master Gnosos has 
         recommended you receive pay.  So here.  Now go away. */
         public override object Complete => 1074638;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.Bedlam;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);

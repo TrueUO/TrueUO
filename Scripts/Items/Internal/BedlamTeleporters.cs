@@ -25,12 +25,6 @@ namespace Server.Items
         public virtual Type Quest => typeof(MistakenIdentityQuest);
         public override void OnDoubleClick(Mobile from)
         {
-            if (!MondainsLegacy.Bedlam && (int)from.AccessLevel < (int)AccessLevel.GameMaster)
-            {
-                from.SendLocalizedMessage(1042753, "Bedlam"); // ~1_SOMETHING~ has been temporarily disabled.
-                return;
-            }
-
             if (from is PlayerMobile player)
             {
                 if (player.Bedlam)
