@@ -4,12 +4,6 @@ using System;
 
 namespace Server.Engines.Craft
 {
-    public enum MasonryRecipes
-    {
-        AnniversaryVaseShort = 701,
-        AnniversaryVaseTall = 702
-    }
-
     public class DefMasonry : CraftSystem
     {
         public override SkillName MainSkill => SkillName.Carpentry;
@@ -111,10 +105,10 @@ namespace Server.Engines.Craft
             AddCraft(typeof(GargoyleVase), 1044501, 1095322, 80.0, 126.0, typeof(Granite), 1044514, 3, 1044513);
 
             index = AddCraft(typeof(AnniversaryVaseTall), 1044501, 1156147, 60.0, 110.0, typeof(Granite), 1044514, 6, 1044513);
-            AddRecipe(index, (int)MasonryRecipes.AnniversaryVaseTall);
+            AddRecipe(index, (int)CraftRecipes.AnniversaryVaseTall);
 
             index = AddCraft(typeof(AnniversaryVaseShort), 1044501, 1156148, 60.0, 110.0, typeof(Granite), 1044514, 6, 1044513);
-            AddRecipe(index, (int)MasonryRecipes.AnniversaryVaseShort);
+            AddRecipe(index, (int)CraftRecipes.AnniversaryVaseShort);
 
             // Furniture
             AddCraft(typeof(StoneChair), 1044502, 1024635, 55.0, 105.0, typeof(Granite), 1044514, 4, 1044513);
