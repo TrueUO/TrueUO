@@ -184,10 +184,10 @@ namespace Server.Engines.Quests.Collector
 
                 item = Loot.RandomArmorOrShieldOrJewelry();
 
-                if (item is BaseArmor)
-                    BaseRunicTool.ApplyAttributesTo((BaseArmor)item, 2, 20, 30);
-                else if (item is BaseJewel)
-                    BaseRunicTool.ApplyAttributesTo((BaseJewel)item, 2, 20, 30);
+                if (item is BaseArmor armor)
+                    BaseRunicTool.ApplyAttributesTo(armor, 2, 20, 30);
+                else if (item is BaseJewel jewel)
+                    BaseRunicTool.ApplyAttributesTo(jewel, 2, 20, 30);
 
                 bag.DropItem(item);
             }
@@ -198,25 +198,21 @@ namespace Server.Engines.Quests.Collector
             {
                 return true;
             }
-            else
-            {
-                bag.Delete();
-                return false;
-            }
+
+            bag.Delete();
+            return false;
         }
 
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

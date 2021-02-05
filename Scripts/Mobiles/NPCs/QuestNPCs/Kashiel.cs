@@ -7,7 +7,6 @@ namespace Server.Engines.Quests
     public class ShotAnArrowIntoTheAirQuest : BaseQuest
     {
         public ShotAnArrowIntoTheAirQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(Sheep), "sheep", 10));
 
@@ -25,18 +24,17 @@ namespace Server.Engines.Quests
         public override object Refuse => 1075483;
         /* Return once ye have killed ten sheep with a bow and not a moment before. */
         public override object Uncomplete => 1075484;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -53,10 +51,8 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override Type[] Quests => new Type[]
-                {
-                    typeof(ShotAnArrowIntoTheAirQuest)
-                };
+        public override Type[] Quests => new[] { typeof(ShotAnArrowIntoTheAirQuest) };
+
         public override void InitBody()
         {
             InitStats(100, 100, 25);
@@ -111,15 +107,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

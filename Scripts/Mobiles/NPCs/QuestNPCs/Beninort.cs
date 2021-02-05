@@ -18,10 +18,8 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override Type[] Quests => new Type[]
-                {
-                    typeof(SecretsoftheSoulforge)
-                };
+        public override Type[] Quests => new[] { typeof(SecretsoftheSoulforge) };
+
         public override void InitBody()
         {
             InitStats(100, 100, 25);
@@ -56,7 +54,7 @@ namespace Server.Engines.Quests
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

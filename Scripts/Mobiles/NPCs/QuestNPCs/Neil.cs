@@ -8,7 +8,6 @@ namespace Server.Engines.Quests
     public class CrystallineFragmentsQuest : BaseQuest
     {
         public CrystallineFragmentsQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(CrystallineFragments), "crystalline fragments", 10));
 
@@ -27,25 +26,23 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1074665;
         /* My friend, you've returned -- with items for me, I hope?  I have a generous reward for you. */
         public override object Complete => 1074667;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class ProtectorsEssenceQuest : BaseQuest
     {
         public ProtectorsEssenceQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(ProtectorsEssence), "protector's essences", 5, 0x1ED1));
 
@@ -64,25 +61,23 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1074664;
         /* My friend, you've returned -- with items for me, I hope?  I have a generous reward for you. */
         public override object Complete => 1074667;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class HeartOfIceQuest : BaseQuest
     {
         public HeartOfIceQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(IcyHeart), "icy hearts", 6, 0x1CED));
 
@@ -101,18 +96,17 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1074666;
         /* My friend, you've returned -- with items for me, I hope?  I have a generous reward for you. */
         public override object Complete => 1074667;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -135,12 +129,13 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override Type[] Quests => new Type[]
-                {
-                    typeof(CrystallineFragmentsQuest),
-                    typeof(ProtectorsEssenceQuest),
-                    typeof(HeartOfIceQuest)
-                };
+        public override Type[] Quests => new[]
+        {
+            typeof(CrystallineFragmentsQuest),
+            typeof(ProtectorsEssenceQuest),
+            typeof(HeartOfIceQuest)
+        };
+
         protected override List<SBInfo> SBInfos => m_SBInfos;
         public override void InitSBInfo()
         {
@@ -174,15 +169,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

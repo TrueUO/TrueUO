@@ -30,9 +30,9 @@ namespace Server.Engines.Quests.Doom
                 {
                     foreach (Item item in GetItemsInRange(AltarRange))
                     {
-                        if (item is SummoningAltar)
+                        if (item is SummoningAltar altar)
                         {
-                            m_Altar = (SummoningAltar)item;
+                            m_Altar = altar;
                             break;
                         }
                     }
@@ -79,10 +79,8 @@ namespace Server.Engines.Quests.Doom
 
                 if (qs is TheSummoningQuest)
                 {
-                    if (dropped is DaemonBone)
+                    if (dropped is DaemonBone bones)
                     {
-                        DaemonBone bones = (DaemonBone)dropped;
-
                         QuestObjective obj = qs.FindObjective(typeof(CollectBonesObjective));
 
                         if (obj != null && !obj.Completed)
@@ -124,7 +122,7 @@ namespace Server.Engines.Quests.Doom
 
         public override bool CanTalkTo(PlayerMobile to)
         {
-            return (to.Quest == null && QuestSystem.CanOfferQuest(to, typeof(TheSummoningQuest)));
+            return to.Quest == null && QuestSystem.CanOfferQuest(to, typeof(TheSummoningQuest));
         }
 
         public override void OnTalk(PlayerMobile player, bool contextMenu)
@@ -141,15 +139,13 @@ namespace Server.Engines.Quests.Doom
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

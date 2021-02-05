@@ -35,7 +35,7 @@ namespace Server.Engines.Quests
          * she's staring down at her first attempt to weave a Britannian carpet</I> */
         public override object Complete => 1113253;
 
-        public ShearingKnowledgeQuest() : base()
+        public ShearingKnowledgeQuest()
         {
             AddObjective(new ObtainObjective(typeof(BritannianWool), "Britannian Wool", 10, 0xDF8));
 
@@ -45,15 +45,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -80,7 +78,7 @@ namespace Server.Engines.Quests
         /* A letter? From a Gargoyle you say? */
         public override object Complete => 1113259;
 
-        public WeavingFriendshipsQuest() : base()
+        public WeavingFriendshipsQuest()
         {
             AddObjective(new DeliverObjective(typeof(LetterOfIntroduction), "Letter of Introduction", 1, typeof(Dermott), "Dermott (Vesper)"));
 
@@ -90,15 +88,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -130,7 +126,6 @@ namespace Server.Engines.Quests
         public override object Complete => 1113264;
 
         public NewSpinQuest()
-            : base()
         {
             AddObjective(new DeliverObjective(typeof(MasteringWeaving), "Mastering the Art of Weaving", 1, typeof(Laifem), "Laifem (Royal City)"));
 
@@ -148,15 +143,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -193,7 +186,7 @@ namespace Server.Engines.Quests
         {
         }
 
-        private static readonly Type[] m_Quests = new Type[] { typeof(ShearingKnowledgeQuest) };
+        private static readonly Type[] m_Quests = { typeof(ShearingKnowledgeQuest) };
         public override Type[] Quests => m_Quests;
 
         public override void InitBody()
@@ -221,15 +214,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -277,15 +268,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

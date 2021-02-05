@@ -6,7 +6,6 @@ namespace Server.Engines.Quests
     public class TheKingOfClothingQuest : BaseQuest
     {
         public TheKingOfClothingQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(Kilt), "kilts", 10, 0x1537));
 
@@ -25,25 +24,23 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1073948;
         /* I say truly - that is a magnificent garment! You have more than earned a reward. */
         public override object Complete => 1073974;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class ThePuffyShirtQuest : BaseQuest
     {
         public ThePuffyShirtQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(FancyShirt), "fancy shirts", 10, 0x1EFD));
 
@@ -63,25 +60,23 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1073949;
         /* I appreciate your service. Now, see what elven hands can create. */
         public override object Complete => 1073973;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class FromTheGaultierCollectionQuest : BaseQuest
     {
         public FromTheGaultierCollectionQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(StuddedBustierArms), "studded bustiers", 10, 0x1C0C));
 
@@ -101,25 +96,23 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1073951;
         /* Truly, it is worse than I feared. Still, I appreciate your efforts on my behalf. */
         public override object Complete => 1073976;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class HuteCoutureQuest : BaseQuest
     {
         public HuteCoutureQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(FlowerGarland), "flower garlands", 10, 0x2306));
 
@@ -138,18 +131,17 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1073947;
         /* I appreciate your service. Now, see what elven hands can create. */
         public override object Complete => 1073973;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -168,13 +160,14 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override Type[] Quests => new Type[]
-                {
-                    typeof(TheKingOfClothingQuest),
-                    typeof(ThePuffyShirtQuest),
-                    typeof(FromTheGaultierCollectionQuest),
-                    typeof(HuteCoutureQuest)
-                };
+        public override Type[] Quests => new[]
+        {
+            typeof(TheKingOfClothingQuest),
+            typeof(ThePuffyShirtQuest),
+            typeof(FromTheGaultierCollectionQuest),
+            typeof(HuteCoutureQuest)
+        };
+
         public override void InitBody()
         {
             InitStats(100, 100, 25);
@@ -199,15 +192,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

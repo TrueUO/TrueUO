@@ -116,10 +116,8 @@ namespace Server.Engines.Quests.Ambitious
 
                     if (obj != null && !obj.Completed)
                     {
-                        if (dropped is ZoogiFungus)
+                        if (dropped is ZoogiFungus fungi)
                         {
-                            ZoogiFungus fungi = (ZoogiFungus)dropped;
-
                             if (fungi.Amount >= 50)
                             {
                                 obj.Complete();
@@ -131,16 +129,12 @@ namespace Server.Engines.Quests.Ambitious
                                     fungi.Delete();
                                     return true;
                                 }
-                                else
-                                {
-                                    return false;
-                                }
-                            }
-                            else
-                            {
-                                SayTo(player, 1054072); // Our arrangement was for 50 of the zoogi fungus. Please return to me when you have that amount.
+
                                 return false;
                             }
+
+                            SayTo(player, 1054072); // Our arrangement was for 50 of the zoogi fungus. Please return to me when you have that amount.
+                            return false;
                         }
                     }
                 }
@@ -152,15 +146,13 @@ namespace Server.Engines.Quests.Ambitious
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
         }
     }
 
@@ -177,18 +169,17 @@ namespace Server.Engines.Quests.Ambitious
         }
 
         public override bool RedSolen => true;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
         }
     }
 
@@ -205,18 +196,17 @@ namespace Server.Engines.Quests.Ambitious
         }
 
         public override bool RedSolen => false;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
         }
     }
 }

@@ -36,7 +36,6 @@ namespace Server.Engines.Quests
         public override object Complete => 1078194;
 
         public EnGuardeQuest()
-            : base()
         {
             AddObjective(new ApprenticeObjective(SkillName.Fencing, 50, "Old Haven Training", 1078188, 1078189));
 
@@ -48,16 +47,15 @@ namespace Server.Engines.Quests
 
         public override bool CanOffer()
         {
-            #region Scroll of Alacrity
-            PlayerMobile pm = Owner as PlayerMobile;
+            PlayerMobile pm = Owner;
+
             if (pm.AcceleratedStart > DateTime.UtcNow)
             {
                 Owner.SendLocalizedMessage(1077951); // You are already under the effect of an accelerated skillgain scroll.
                 return false;
             }
-            #endregion
-            else
-                return Owner.Skills.Fencing.Base < 50;
+
+            return Owner.Skills.Fencing.Base < 50;
         }
 
         public override void OnCompleted()
@@ -69,24 +67,19 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class Recaro : MondainQuester
     {
-        public override Type[] Quests => new Type[]
-                {
-                    typeof(EnGuardeQuest)
-                };
+        public override Type[] Quests => new[] { typeof(EnGuardeQuest) };
 
         [Constructable]
         public Recaro()
@@ -166,15 +159,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

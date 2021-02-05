@@ -7,7 +7,6 @@ namespace Server.Engines.Quests
     public class TheArisenQuest : BaseQuest
     {
         public TheArisenQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(GargoyleShade), "Gargoyle Shade", 10));
             AddObjective(new SlayObjective(typeof(EffetePutridGargoyle), "Effete Putrid Gargoyle", 10));
@@ -44,19 +43,16 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
-    [TypeAlias("Server.Engines.Quests.Naxatillor")]
     public class Naxatilor : MondainQuester
     {
         [Constructable]
@@ -70,10 +66,7 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override Type[] Quests => new Type[]
-        {
-            typeof(TheArisenQuest)
-        };
+        public override Type[] Quests => new[] { typeof(TheArisenQuest) };
 
         public override void InitBody()
         {
@@ -98,25 +91,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
-
-            if (version == 0)
-            {
-                Timer.DelayCall(FixSpawner);
-            }
-        }
-
-        private void FixSpawner()
-        {
-            SpawnerPersistence.Replace("Naxatillor", "Naxatilor", null);
+            reader.ReadInt();
         }
     }
 }

@@ -6,7 +6,6 @@ namespace Server.Engines.Quests
     public class LethalDartsQuest : BaseQuest
     {
         public LethalDartsQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(Bolt), "crossbow bolts", 10, 0x1BFB));
 
@@ -27,25 +26,23 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1073922;
         /* My thanks for your service. Now, I shall teach you of elven archery. */
         public override object Complete => 1073968;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class SimpleBowQuest : BaseQuest
     {
         public SimpleBowQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(Bow), "bows", 10, 0x13B2));
 
@@ -63,25 +60,23 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1073923;
         /* My thanks for your service. Now, I shall teach you of elven archery. */
         public override object Complete => 1073968;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class IngeniousArcheryPartOneQuest : BaseQuest
     {
         public IngeniousArcheryPartOneQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(Crossbow), "crossbows", 10, 0xF50));
 
@@ -99,25 +94,23 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1073924;
         /* My thanks for your service. Now, I shall teach you of elven archery. */
         public override object Complete => 1073968;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class IngeniousArcheryPartTwoQuest : BaseQuest
     {
         public IngeniousArcheryPartTwoQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(HeavyCrossbow), "heavy crossbows", 8, 0x13FD));
 
@@ -136,25 +129,23 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1073925;
         /* My thanks for your service. Now, I shall teach you of elven archery. */
         public override object Complete => 1073968;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class IngeniousArcheryPartThreeQuest : BaseQuest
     {
         public IngeniousArcheryPartThreeQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(RepeatingCrossbow), "repeating crossbows", 10, 0x26C3));
 
@@ -173,18 +164,17 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1073926;
         /* My thanks for your service. Now, I shall teach you of elven archery. */
         public override object Complete => 1073968;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -203,15 +193,16 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override Type[] Quests => new Type[]
-                {
-                    typeof(LethalDartsQuest),
-                    typeof(SimpleBowQuest),
-                    typeof(IngeniousArcheryPartOneQuest),
-                    typeof(IngeniousArcheryPartTwoQuest),
-                    typeof(IngeniousArcheryPartThreeQuest),
-                    typeof(StopHarpingOnMeQuest)
-                };
+        public override Type[] Quests => new[]
+        {
+            typeof(LethalDartsQuest),
+            typeof(SimpleBowQuest),
+            typeof(IngeniousArcheryPartOneQuest),
+            typeof(IngeniousArcheryPartTwoQuest),
+            typeof(IngeniousArcheryPartThreeQuest),
+            typeof(StopHarpingOnMeQuest)
+        };
+
         public override void InitBody()
         {
             InitStats(100, 100, 25);
@@ -234,15 +225,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

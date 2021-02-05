@@ -6,7 +6,6 @@ namespace Server.Engines.Quests
     public class BrokenShaftQuest : BaseQuest
     {
         public BrokenShaftQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(Arrow), "arrows", 10, 0xF3F));
 
@@ -26,25 +25,23 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1074064;
         /* These human made goods are laughable! It offends so -- I must show you what elven skill is capable of! */
         public override object Complete => 1074065;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class BendingTheBowQuest : BaseQuest
     {
         public BendingTheBowQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(Bow), "bows", 10, 0x13B2));
 
@@ -63,25 +60,23 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1074064;
         /* These human made goods are laughable! It offends so -- I must show you what elven skill is capable of! */
         public override object Complete => 1074065;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class ArmsRaceQuest : BaseQuest
     {
         public ArmsRaceQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(Crossbow), "crossbows", 10, 0xF50));
 
@@ -100,25 +95,23 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1074064;
         /* These human made goods are laughable! It offends so -- I must show you what elven skill is capable of! */
         public override object Complete => 1074065;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class ImprovedCrossbowsQuest : BaseQuest
     {
         public ImprovedCrossbowsQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(HeavyCrossbow), "heavy crossbows", 10, 0x13FD));
 
@@ -137,25 +130,23 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1074064;
         /* These human made goods are laughable! It offends so -- I must show you what elven skill is capable of! */
         public override object Complete => 1074065;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class BuildingTheBetterCrossbowQuest : BaseQuest
     {
         public BuildingTheBetterCrossbowQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(RepeatingCrossbow), "repeating crossbow", 10, 0x26C3));
 
@@ -173,18 +164,17 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1074064;
         /* These human made goods are laughable! It offends so -- I must show you what elven skill is capable of! */
         public override object Complete => 1074065;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -201,14 +191,15 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override Type[] Quests => new Type[]
-                {
-                    typeof(BrokenShaftQuest),
-                    typeof(BendingTheBowQuest),
-                    typeof(ArmsRaceQuest),
-                    typeof(ImprovedCrossbowsQuest),
-                    typeof(BuildingTheBetterCrossbowQuest)
-                };
+        public override Type[] Quests => new[]
+        {
+            typeof(BrokenShaftQuest),
+            typeof(BendingTheBowQuest),
+            typeof(ArmsRaceQuest),
+            typeof(ImprovedCrossbowsQuest),
+            typeof(BuildingTheBetterCrossbowQuest)
+        };
+
         public override void InitBody()
         {
             InitStats(100, 100, 25);
@@ -240,15 +231,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

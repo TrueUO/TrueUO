@@ -6,7 +6,6 @@ namespace Server.Engines.Quests
     public class CutsBothWaysQuest : BaseQuest
     {
         public CutsBothWaysQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(Broadsword), "broadswords", 12, 0xF5E));
 
@@ -24,25 +23,23 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1073959;
         /* Enjoy my thanks for your service. */
         public override object Complete => 1073978;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class DragonProtectionQuest : BaseQuest
     {
         public DragonProtectionQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(DragonHelm), "dragon helms", 10, 0x2645));
 
@@ -61,25 +58,23 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1073961;
         /* Enjoy my thanks for your service. */
         public override object Complete => 1073978;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class NothingFancyQuest : BaseQuest
     {
         public NothingFancyQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(Bascinet), "bascinets", 15, 0x140C));
 
@@ -98,25 +93,23 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1073957;
         /* Enjoy my thanks for your service. */
         public override object Complete => 1073978;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class TheBulwarkQuest : BaseQuest
     {
         public TheBulwarkQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(HeaterShield), "heater shields", 10, 0x1B76));
 
@@ -135,18 +128,17 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1073958;
         /* Enjoy my thanks for your service. */
         public override object Complete => 1073978;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -165,13 +157,14 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override Type[] Quests => new Type[]
-                {
-                    typeof(CutsBothWaysQuest),
-                    typeof(DragonProtectionQuest),
-                    typeof(NothingFancyQuest),
-                    typeof(TheBulwarkQuest)
-                };
+        public override Type[] Quests => new[]
+        {
+            typeof(CutsBothWaysQuest),
+            typeof(DragonProtectionQuest),
+            typeof(NothingFancyQuest),
+            typeof(TheBulwarkQuest)
+        };
+
         public override void InitBody()
         {
             InitStats(100, 100, 25);
@@ -197,15 +190,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

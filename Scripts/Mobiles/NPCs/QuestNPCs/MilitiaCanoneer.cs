@@ -21,14 +21,8 @@ namespace Server.Engines.Quests.Haven
         [CommandProperty(AccessLevel.GameMaster)]
         public bool Active
         {
-            get
-            {
-                return m_Active;
-            }
-            set
-            {
-                m_Active = value;
-            }
+            get => m_Active;
+            set => m_Active = value;
         }
         public override void InitBody()
         {
@@ -73,10 +67,8 @@ namespace Server.Engines.Quests.Haven
             if (m.Player || m is BaseVendor)
                 return false;
 
-            if (m is BaseCreature)
+            if (m is BaseCreature bc)
             {
-                BaseCreature bc = (BaseCreature)m;
-
                 Mobile master = bc.GetMaster();
                 if (master != null)
                     return IsEnemy(master);
@@ -100,7 +92,6 @@ namespace Server.Engines.Quests.Haven
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
 
             writer.Write(m_Active);
@@ -109,8 +100,7 @@ namespace Server.Engines.Quests.Haven
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             m_Active = reader.ReadBool();
         }

@@ -39,7 +39,6 @@ namespace Server.Engines.Quests
         public override object Complete => 1077703;
 
         public TheInnerWarriorQuest()
-            : base()
         {
             AddObjective(new ApprenticeObjective(SkillName.Focus, 50, "Old Haven Training", 1077697, 1077698));
 
@@ -51,16 +50,15 @@ namespace Server.Engines.Quests
 
         public override bool CanOffer()
         {
-            #region Scroll of Alacrity
-            PlayerMobile pm = Owner as PlayerMobile;
+            PlayerMobile pm = Owner;
+
             if (pm.AcceleratedStart > DateTime.UtcNow)
             {
                 Owner.SendLocalizedMessage(1077951); // You are already under the effect of an accelerated skillgain scroll.
                 return false;
             }
-            #endregion
-            else
-                return Owner.Skills.Focus.Base < 50;
+
+            return Owner.Skills.Focus.Base < 50;
         }
 
         public override void OnCompleted()
@@ -72,24 +70,19 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class SarsmeaSmythe : MondainQuester
     {
-        public override Type[] Quests => new Type[]
-                {
-                    typeof(TheInnerWarriorQuest)
-                };
+        public override Type[] Quests => new[] { typeof(TheInnerWarriorQuest) };
 
         [Constructable]
         public SarsmeaSmythe()
@@ -142,15 +135,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

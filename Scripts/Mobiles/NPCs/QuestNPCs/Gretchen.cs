@@ -16,7 +16,7 @@ namespace Server.Engines.Quests
 
         public override object Complete => 1094981;
 
-        public Curiosities() : base()
+        public Curiosities()
         {
             AddObjective(new ObtainObjective(typeof(FertileDirt), "Fertil Dirt", 3, 0xF81));
             AddObjective(new ObtainObjective(typeof(Bone), "Bone", 3, 0xF7e));
@@ -27,24 +27,19 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class Gretchen : MondainQuester
     {
-        public override Type[] Quests => new Type[]
-{
-            typeof( Curiosities )
-};
+        public override Type[] Quests => new[] { typeof( Curiosities ) };
 
         [Constructable]
         public Gretchen() : base("Gretchen", "the Alchemist")

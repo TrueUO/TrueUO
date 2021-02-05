@@ -32,7 +32,6 @@ namespace Server.Engines.Quests
         public override object Complete => 1077726;
 
         public CleansingOldHavenQuest()
-            : base()
         {
             AddObjective(new ApprenticeObjective(SkillName.Chivalry, 50, "Old Haven Training", 1077720, 1077721));
 
@@ -44,16 +43,15 @@ namespace Server.Engines.Quests
 
         public override bool CanOffer()
         {
-            #region Scroll of Alacrity
-            PlayerMobile pm = Owner as PlayerMobile;
+            PlayerMobile pm = Owner;
+
             if (pm.AcceleratedStart > DateTime.UtcNow)
             {
                 Owner.SendLocalizedMessage(1077951); // You are already under the effect of an accelerated skillgain scroll.
                 return false;
             }
-            #endregion
-            else
-                return Owner.Skills.Chivalry.Base < 50;
+
+            return Owner.Skills.Chivalry.Base < 50;
         }
 
         public override void OnCompleted()
@@ -65,24 +63,19 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class Aelorn : MondainQuester
     {
-        public override Type[] Quests => new Type[]
-                {
-                    typeof(CleansingOldHavenQuest)
-                };
+        public override Type[] Quests => new[] { typeof(CleansingOldHavenQuest) };
 
         public override bool IsActiveVendor => true;
         public override void InitSBInfo()
@@ -142,15 +135,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

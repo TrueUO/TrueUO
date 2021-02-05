@@ -14,13 +14,13 @@ namespace Server.Engines.Quests
         public static Point3D HomeLocation => new Point3D(1150, 964, -42);
         public static int HomeRange => 5;
 
-        public override Type[] Quests => new Type[] { typeof(EscortToDugan) };
+        public override Type[] Quests => new[] { typeof(EscortToDugan) };
 
         private DateTime m_TalkTime;
 
         public static List<Neville> Instances { get; set; }
 
-        readonly string[] NevilleSay = new string[]
+        readonly string[] NevilleSay =
         {
             "Save Us",
             "Murder is being done!",
@@ -33,7 +33,6 @@ namespace Server.Engines.Quests
 
         [Constructable]
         public Neville()
-            : base()
         {
             Name = "Neville Brightwhistle";
 
@@ -145,7 +144,7 @@ namespace Server.Engines.Quests
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             if (Instances == null)
                 Instances = new List<Neville>();

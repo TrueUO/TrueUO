@@ -7,7 +7,6 @@ namespace Server.Engines.Quests
     public class PixieDustToDustQuest : BaseQuest
     {
         public PixieDustToDustQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(Pixie), "pixies", 10));
 
@@ -24,18 +23,17 @@ namespace Server.Engines.Quests
         public override object Refuse => 1073733;
         /* There's too much cuteness in the world -- kill those pixies! */
         public override object Uncomplete => 1073741;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -52,18 +50,19 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override Type[] Quests => new Type[]
-                {
-                    typeof(ParoxysmusSuccubiQuest),
-                    typeof(ParoxysmusMolochQuest),
-                    typeof(ParoxysmusDaemonsQuest),
-                    typeof(ParoxysmusArcaneDaemonsQuest),
-                    typeof(CausticComboQuest),
-                    typeof(PlagueLordQuest),
-                    typeof(OrcSlayingQuest),
-                    typeof(DreadhornQuest),
-                    typeof(PixieDustToDustQuest)
-                };
+        public override Type[] Quests => new[]
+        {
+            typeof(ParoxysmusSuccubiQuest),
+            typeof(ParoxysmusMolochQuest),
+            typeof(ParoxysmusDaemonsQuest),
+            typeof(ParoxysmusArcaneDaemonsQuest),
+            typeof(CausticComboQuest),
+            typeof(PlagueLordQuest),
+            typeof(OrcSlayingQuest),
+            typeof(DreadhornQuest),
+            typeof(PixieDustToDustQuest)
+        };
+
         public override void InitBody()
         {
             InitStats(100, 100, 25);
@@ -90,15 +89,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

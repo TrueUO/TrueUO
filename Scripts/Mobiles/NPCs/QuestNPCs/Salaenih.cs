@@ -7,7 +7,6 @@ namespace Server.Engines.Quests
     public class ShakingThingsUpQuest : BaseQuest
     {
         public ShakingThingsUpQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(RedSolenWarrior), "red solen warriors", 10));
             AddObjective(new SlayObjective(typeof(BlackSolenWarrior), "black solen warriors", 10));
@@ -26,25 +25,23 @@ namespace Server.Engines.Quests
         public override object Refuse => 1073580;
         /* I don't think you've gotten their attention yet -- you need to kill at least 10 Solen Warriors. */
         public override object Uncomplete => 1073593;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class ArachnophobiaQuest : BaseQuest
     {
         public ArachnophobiaQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(GiantBlackWidow), "giant black widows", 12));
 
@@ -61,25 +58,23 @@ namespace Server.Engines.Quests
         public override object Refuse => 1073580;
         /* You've got a good start, but to stop the black-eyed fiends, you need to kill a dozen. */
         public override object Uncomplete => 1073589;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class MiniSwampThingQuest : BaseQuest
     {
         public MiniSwampThingQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(Bogling), "boglings", 20));
 
@@ -95,18 +90,17 @@ namespace Server.Engines.Quests
         public override object Refuse => 1073580;
         /* Go back and kill all 20 bogglings! */
         public override object Uncomplete => 1073582;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -125,19 +119,20 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override Type[] Quests => new Type[]
-                {
-                    typeof(WarriorCasteQuest),
-                    typeof(ShakingThingsUpQuest),
-                    typeof(ArachnophobiaQuest),
-                    typeof(SquishyQuest),
-                    typeof(BigJobQuest),
-                    typeof(VoraciousPlantsQuest),
-                    typeof(SpecimensQuest),
-                    typeof(ColdHeartedQuest),
-                    typeof(MiniSwampThingQuest),
-                    typeof(AnimatedMonstrosityQuest)
-                };
+        public override Type[] Quests => new[]
+        {
+            typeof(WarriorCasteQuest),
+            typeof(ShakingThingsUpQuest),
+            typeof(ArachnophobiaQuest),
+            typeof(SquishyQuest),
+            typeof(BigJobQuest),
+            typeof(VoraciousPlantsQuest),
+            typeof(SpecimensQuest),
+            typeof(ColdHeartedQuest),
+            typeof(MiniSwampThingQuest),
+            typeof(AnimatedMonstrosityQuest)
+        };
+
         public override void InitBody()
         {
             InitStats(100, 100, 25);
@@ -191,15 +186,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

@@ -8,7 +8,6 @@ namespace Server.Engines.Quests
     public class InTheBellyOfTheBeastQuest : BaseQuest
     {
         public InTheBellyOfTheBeastQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(LuckyDagger), "lucky dagger", 1));
 
@@ -28,18 +27,17 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1074660;
         /* You've found it?  My lucky dagger! */
         public override object Complete => 1074661;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -57,10 +55,8 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override Type[] Quests => new Type[]
-                {
-                    typeof(InTheBellyOfTheBeastQuest),
-                };
+        public override Type[] Quests => new[] { typeof(InTheBellyOfTheBeastQuest) };
+
         protected override List<SBInfo> SBInfos => m_SBInfos;
         public override void InitSBInfo()
         {
@@ -93,15 +89,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

@@ -406,9 +406,9 @@ namespace Server.Mobiles
                             }
                         }
 
-                        AddHtml(8, 35 + (i * 85), 254, 80, sb.ToString(), true, true);
+                        AddHtml(8, 35 + i * 85, 254, 80, sb.ToString(), true, true);
 
-                        AddButton(300 - 8 - 26, 35 + (i * 85), 0x15E1, 0x15E5, 2 + i, GumpButtonType.Reply, 0);
+                        AddButton(300 - 8 - 26, 35 + i * 85, 0x15E1, 0x15E5, 2 + i, GumpButtonType.Reply, 0);
                         AddTooltip(3005101); // Edit
                     }
                 }

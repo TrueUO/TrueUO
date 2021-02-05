@@ -7,7 +7,6 @@ namespace Server.Engines.Quests
     public class GoneNativeQuest : BaseQuest
     {
         public GoneNativeQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(MasterTheophilus), "master theophilus", 1));
 
@@ -27,7 +26,7 @@ namespace Server.Engines.Quests
         public override object Refuse => 1074857;
         /* You had better get going.  Master Theophilus isn't likely to kill himself just to save me this embarrassment. */
         public override object Uncomplete => 1074858;
-        /* You look a bit worse for wear!  He put up a good fight did he?  Hah!  That's the spirit … a Master 
+        /* You look a bit worse for wear!  He put up a good fight did he?  Hah!  That's the spirit â€¦ a Master 
         of Bedlam is a match for most. */
         public override object Complete => 1074859;
         public override bool CanOffer()
@@ -38,15 +37,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -72,12 +69,13 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override Type[] Quests => new Type[]
-                {
-                    typeof(CommonBrigandsQuest),
-                    typeof(GoneNativeQuest),
-                    typeof(PointyEarsQuest),
-                };
+        public override Type[] Quests => new[]
+        {
+            typeof(CommonBrigandsQuest),
+            typeof(GoneNativeQuest),
+            typeof(PointyEarsQuest)
+        };
+
         public override void InitBody()
         {
             InitStats(100, 100, 25);
@@ -100,15 +98,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

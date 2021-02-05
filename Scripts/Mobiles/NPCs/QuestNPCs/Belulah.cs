@@ -16,10 +16,8 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override Type[] Quests => new Type[]
-                {
-                    typeof(AllSeasonAdventurerQuest)
-                };
+        public override Type[] Quests => new[] { typeof(AllSeasonAdventurerQuest) };
+
         public override void InitBody()
         {
             Female = true;
@@ -42,15 +40,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

@@ -505,8 +505,8 @@ namespace Server.Mobiles
                         }
                     }
 
-                    AddButton(19, 49 + (i % 5) * 48, 0x845, 0x846, 100 + i, GumpButtonType.Reply, 0);
-                    Add(entries[i].Construct(herald, 44, 47 + (i % 5) * 48, 460, 40, 0x7FFF));
+                    AddButton(19, 49 + i % 5 * 48, 0x845, 0x846, 100 + i, GumpButtonType.Reply, 0);
+                    Add(entries[i].Construct(herald, 44, 47 + i % 5 * 48, 460, 40, 0x7FFF));
                 }
             }
 

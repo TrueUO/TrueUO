@@ -6,7 +6,6 @@ namespace Server.Engines.Quests
     public class BrotherlyLoveQuest : BaseQuest
     {
         public BrotherlyLoveQuest()
-            : base()
         {
             AddObjective(new DeliverObjective(typeof(PersonalLetterAhie), "letter", 1, typeof(Ahie), "Ahie (The Heartwood)", 1800));
 
@@ -25,18 +24,17 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1072588;
         /* Yes, can I help you? */
         public override object Complete => 1074579;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -53,15 +51,16 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override Type[] Quests => new Type[]
-                {
-                    typeof(DaemonicPrismQuest),
-                    typeof(HowManyHeadsQuest),
-                    typeof(GlassyFoeQuest),
-                    typeof(HailstormQuest),
-                    typeof(WarriorsOfTheGemkeeperQuest),
-                    typeof(BrotherlyLoveQuest)
-                };
+        public override Type[] Quests => new[]
+        {
+            typeof(DaemonicPrismQuest),
+            typeof(HowManyHeadsQuest),
+            typeof(GlassyFoeQuest),
+            typeof(HailstormQuest),
+            typeof(WarriorsOfTheGemkeeperQuest),
+            typeof(BrotherlyLoveQuest)
+        };
+
         public override void InitBody()
         {
             InitStats(100, 100, 25);
@@ -95,15 +94,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -122,18 +119,17 @@ namespace Server.Engines.Quests
 
         public override int LabelNumber => 1073128;// A personal letter addressed to: Ahie
         public override int Lifespan => 1800;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

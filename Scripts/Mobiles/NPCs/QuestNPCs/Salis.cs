@@ -6,7 +6,6 @@ namespace Server.Engines.Quests
     public class DishBestServedColdQuest : BaseQuest
     {
         public DishBestServedColdQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(TerathanAvengerArms), "Terathan Avenger Arms", 1));
             AddObjective(new ObtainObjective(typeof(BowlOfRotwormStew), "Bowl of Rotworm Stew", 1));
@@ -103,10 +102,7 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override Type[] Quests => new Type[]
-        {
-            typeof(DishBestServedColdQuest)
-        };
+        public override Type[] Quests => new[] { typeof(DishBestServedColdQuest) };
 
         public override void InitBody()
         {

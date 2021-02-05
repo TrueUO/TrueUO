@@ -6,7 +6,6 @@ namespace Server.Engines.Quests
     public class ProofOfTheDeedQuest : BaseQuest
     {
         public ProofOfTheDeedQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(SeveredHumanEars), "severed human ears", 20, 0x312F));
 
@@ -25,18 +24,17 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1072343;
         /* Ah, well done.  You have chosen the path of duty and fulfilled your task with honor. */
         public override object Complete => 1072344;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -53,11 +51,12 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override Type[] Quests => new Type[]
-                {
-                    typeof(MaraudersQuest),
-                    typeof(ProofOfTheDeedQuest)
-                };
+        public override Type[] Quests => new[]
+        {
+            typeof(MaraudersQuest),
+            typeof(ProofOfTheDeedQuest)
+        };
+
         public override void InitBody()
         {
             InitStats(100, 100, 25);
@@ -81,15 +80,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

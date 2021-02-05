@@ -30,7 +30,7 @@ namespace Server.Engines.Quests
 
         public override bool IsValidBulkOrder(Item item)
         {
-            return (item is SmallAlchemyBOD || item is LargeAlchemyBOD);
+            return item is SmallAlchemyBOD || item is LargeAlchemyBOD;
         }
 
         public override bool SupportsBulkOrders(Mobile from)
@@ -40,8 +40,8 @@ namespace Server.Engines.Quests
 
         public override void OnSuccessfulBulkOrderReceive(Mobile from)
         {
-            if (from is PlayerMobile)
-                ((PlayerMobile)from).NextAlchemyBulkOrder = TimeSpan.Zero;
+            if (from is PlayerMobile mobile)
+                mobile.NextAlchemyBulkOrder = TimeSpan.Zero;
         }
 
         #endregion
@@ -75,16 +75,16 @@ namespace Server.Engines.Quests
             AddItem(new FemaleGargishClothArms(0x738));
         }
 
-        private static readonly Type[][] m_PileTypes = new Type[][]
-            {
-                new Type[] {typeof(DullCopperIngot),  typeof(PileofInspectedDullCopperIngots) },
-                new Type[] {typeof(ShadowIronIngot),  typeof(PileofInspectedShadowIronIngots) },
-                new Type[] {typeof(CopperIngot),      typeof(PileofInspectedCopperIngots) },
-                new Type[] {typeof(BronzeIngot),      typeof(PileofInspectedBronzeIngots) },
-                new Type[] {typeof(GoldIngot),        typeof(PileofInspectedGoldIngots) },
-                new Type[] {typeof(AgapiteIngot),     typeof(PileofInspectedAgapiteIngots) },
-                new Type[] {typeof(VeriteIngot),      typeof(PileofInspectedVeriteIngots) },
-                new Type[] {typeof(ValoriteIngot),    typeof(PileofInspectedValoriteIngots) }
+        private static readonly Type[][] m_PileTypes =
+        {
+                new[] {typeof(DullCopperIngot),  typeof(PileofInspectedDullCopperIngots) },
+                new[] {typeof(ShadowIronIngot),  typeof(PileofInspectedShadowIronIngots) },
+                new[] {typeof(CopperIngot),      typeof(PileofInspectedCopperIngots) },
+                new[] {typeof(BronzeIngot),      typeof(PileofInspectedBronzeIngots) },
+                new[] {typeof(GoldIngot),        typeof(PileofInspectedGoldIngots) },
+                new[] {typeof(AgapiteIngot),     typeof(PileofInspectedAgapiteIngots) },
+                new[] {typeof(VeriteIngot),      typeof(PileofInspectedVeriteIngots) },
+                new[] {typeof(ValoriteIngot),    typeof(PileofInspectedValoriteIngots) }
             };
 
         private const int NeededIngots = 20;
@@ -115,33 +115,28 @@ namespace Server.Engines.Quests
                     SayTo(from, 1113037); // That's too many.
                     return false;
                 }
-                else if (item.Amount < NeededIngots)
+
+                if (item.Amount < NeededIngots)
                 {
                     SayTo(from, 1113036); // That's not enough.
                     return false;
                 }
-                else
-                {
-                    SayTo(from, 1113040); // Good. I can use this.
 
-                    from.AddToBackpack(Activator.CreateInstance(pileType) as Item);
-                    from.SendLocalizedMessage(1113041); // Now mark the inspected item as a quest item to turn it in.					
+                SayTo(from, 1113040); // Good. I can use this.
 
-                    return true;
-                }
+                from.AddToBackpack(Activator.CreateInstance(pileType) as Item);
+                from.SendLocalizedMessage(1113041); // Now mark the inspected item as a quest item to turn it in.					
+
+                return true;
             }
-            else
+
+            if (item is Gold)
             {
-                if (item is Gold)
-                {
-                    return base.CheckGold(from, item);
-                }
-                else
-                {
-                    SayTo(from, 1113035); // Oooh, shiney. I have no use for this, though.
-                    return false;
-                }
+                return base.CheckGold(from, item);
             }
+
+            SayTo(from, 1113035); // Oooh, shiney. I have no use for this, though.
+            return false;
         }
 
         public override void Serialize(GenericWriter writer)
@@ -153,7 +148,7 @@ namespace Server.Engines.Quests
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

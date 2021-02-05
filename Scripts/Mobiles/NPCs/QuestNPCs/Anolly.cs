@@ -6,7 +6,6 @@ namespace Server.Engines.Quests
     public class StopHarpingOnMeQuest : BaseQuest
     {
         public StopHarpingOnMeQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(LapHarp), "lap harp", 20, 0xEB2));
 
@@ -25,25 +24,23 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1073927;
         /* My thanks for your service. Now, I will show you something of elven carpentry. */
         public override object Complete => 1073969;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class TheFarEyeQuest : BaseQuest
     {
         public TheFarEyeQuest()
-            : base()
         {
             AddObjective(new ObtainObjective(typeof(Spyglass), "spyglasses", 20, 0x14F5));
 
@@ -61,18 +58,17 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1073954;
         /* Enjoy my thanks for your service. */
         public override object Complete => 1073978;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -91,12 +87,13 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override Type[] Quests => new Type[]
-                {
-                    typeof(StopHarpingOnMeQuest),
-                    typeof(TheFarEyeQuest),
-                    typeof(NothingFancyQuest)
-                };
+        public override Type[] Quests => new[]
+        {
+            typeof(StopHarpingOnMeQuest),
+            typeof(TheFarEyeQuest),
+            typeof(NothingFancyQuest)
+        };
+
         public override void InitBody()
         {
             InitStats(100, 100, 25);
@@ -120,15 +117,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

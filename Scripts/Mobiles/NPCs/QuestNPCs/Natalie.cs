@@ -7,7 +7,6 @@ namespace Server.Engines.Quests
     public class GuiltyQuest : BaseQuest
     {
         public GuiltyQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(Gregorio), "gregorio", 1));
 
@@ -17,10 +16,10 @@ namespace Server.Engines.Quests
         public override bool DoneOnce => true;
         /* Guilty */
         public override object Title => 1075311;
-        /* I was born and raised in Buc’s Den. Have you been there? Then you know what a lawless place it is. Five years 
+        /* I was born and raised in Bucâ€™s Den. Have you been there? Then you know what a lawless place it is. Five years 
         ago, my mother and father were killed by brigands there. I was only a child, and so I was sent here to live with 
-        my uncle.<br>Recently, a man moved into town, and I’m sure this man is the one who killed my parents. The sheriff 
-        will do nothing, he doesn’t believe me. What can I do? I’m no warrior. I can’t use magic. I don’t have the courage 
+        my uncle.<br>Recently, a man moved into town, and Iâ€™m sure this man is the one who killed my parents. The sheriff 
+        will do nothing, he doesnâ€™t believe me. What can I do? Iâ€™m no warrior. I canâ€™t use magic. I donâ€™t have the courage 
         to avenge my family. Please, if you have any love at all for justice, I beg of you, seek out and slay this criminal! */
         public override object Description => 1075312;
         /* Why? This man has killed many innocent people. Would you let him walk around, free? */
@@ -32,18 +31,17 @@ namespace Server.Engines.Quests
         has been lifted from me. Here, I would like you to take this necklace. It belonged to my mother. She said it has some 
         magic, but I have never been able to discover how it works. Perhaps you can. */
         public override object Complete => 1075316;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -60,10 +58,8 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override Type[] Quests => new Type[]
-                {
-                    typeof(GuiltyQuest)
-                };
+        public override Type[] Quests => new[] { typeof(GuiltyQuest) };
+
         public override void InitBody()
         {
             InitStats(100, 100, 25);
@@ -88,15 +84,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

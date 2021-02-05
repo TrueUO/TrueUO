@@ -7,7 +7,6 @@ namespace Server.Engines.Quests
     public class OverpopulationQuest : BaseQuest
     {
         public OverpopulationQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(Hind), "hinds", 10));
 
@@ -26,25 +25,23 @@ namespace Server.Engines.Quests
         public override object Refuse => 1072270;
         /* You're not quite done yet.  Get back to work! */
         public override object Uncomplete => 1072271;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class WildBoarCullQuest : BaseQuest
     {
         public WildBoarCullQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(Boar), "boars", 10));
 
@@ -62,25 +59,23 @@ namespace Server.Engines.Quests
         public override object Refuse => 1072270;
         /* You're not quite done yet.  Get back to work! */
         public override object Uncomplete => 1072271;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class NewLeadershipQuest : BaseQuest
     {
         public NewLeadershipQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(SerpentsFangHighExecutioner), "serpent's fang high executioner", 1, "TheCitadel"));
             AddObjective(new SlayObjective(typeof(TigersClawThief), "tiger's claw thief", 1, "TheCitadel"));
@@ -110,22 +105,19 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class ExAssassinsQuest : BaseQuest
     {
         public ExAssassinsQuest()
-            : base()
         {
             AddObjective(new InternalObjective());
 
@@ -151,15 +143,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         private class InternalObjective : SlayObjective
@@ -182,7 +172,6 @@ namespace Server.Engines.Quests
     public class ExtinguishingTheFlameQuest : BaseQuest
     {
         public ExtinguishingTheFlameQuest()
-            : base()
         {
             AddObjective(new InternalObjective());
 
@@ -209,15 +198,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         private class InternalObjective : SlayObjective
@@ -240,7 +227,6 @@ namespace Server.Engines.Quests
     public class DeathToTheNinjaQuest : BaseQuest
     {
         public DeathToTheNinjaQuest()
-            : base()
         {
             AddObjective(new SlayObjective(typeof(EliteNinja), "elite ninjas", 10, "TheCitadel"));
 
@@ -266,22 +252,19 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class CrimeAndPunishmentQuest : BaseQuest
     {
         public CrimeAndPunishmentQuest()
-            : base()
         {
             AddObjective(new InternalObjective());
 
@@ -307,15 +290,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         private class InternalObjective : SlayObjective
@@ -350,16 +331,17 @@ namespace Server.Engines.Quests
         {
         }
 
-        public override Type[] Quests => new Type[]
-                {
-                    typeof(OverpopulationQuest),
-                    typeof(WildBoarCullQuest),
-                    typeof(NewLeadershipQuest),
-                    typeof(ExAssassinsQuest),
-                    typeof(ExtinguishingTheFlameQuest),
-                    typeof(DeathToTheNinjaQuest),
-                    typeof(CrimeAndPunishmentQuest)
-                };
+        public override Type[] Quests => new[]
+        {
+            typeof(OverpopulationQuest),
+            typeof(WildBoarCullQuest),
+            typeof(NewLeadershipQuest),
+            typeof(ExAssassinsQuest),
+            typeof(ExtinguishingTheFlameQuest),
+            typeof(DeathToTheNinjaQuest),
+            typeof(CrimeAndPunishmentQuest)
+        };
+
         public override void InitBody()
         {
             InitStats(100, 100, 25);
@@ -383,15 +365,13 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }
