@@ -1,17 +1,12 @@
 using Server.Commands;
 using Server.Engines.InstancedPeerless;
-using Server.Engines.Quests;
 using Server.Items;
 using Server.Mobiles;
 using System;
+using Server.Misc;
 
 namespace Server
 {
-    public interface ICanBeElfOrHuman
-    {
-        bool ElfOnly { get; set; }
-    }
-
     public static class MondainsLegacy
     {
         public static Type[] Artifacts => m_Artifacts;
@@ -31,7 +26,6 @@ namespace Server
 
             CommandSystem.Register("DecorateML", AccessLevel.Administrator, DecorateML_OnCommand);
             CommandSystem.Register("DecorateMLDelete", AccessLevel.Administrator, DecorateMLDelete_OnCommand);
-            CommandSystem.Register("Quests", AccessLevel.GameMaster, Quests_OnCommand);
 
             LoadSettings();
         }
@@ -362,22 +356,6 @@ namespace Server
             }
 
             e.Mobile.SendMessage("Mondain's Legacy world generating complete.");
-        }
-
-        [Usage("Quests")]
-        [Description("Pops up a quest list from targeted player.")]
-        private static void Quests_OnCommand(CommandEventArgs e)
-        {
-            Mobile m = e.Mobile;
-            m.SendMessage("Target a player to view their quests.");
-
-            m.BeginTarget(-1, false, Targeting.TargetFlags.None, delegate (Mobile from, object targeted)
-            {
-                if (targeted is PlayerMobile)
-                    m.SendGump(new MondainQuestGump((PlayerMobile)targeted));
-                else
-                    m.SendMessage("That is not a player!");
-            });
         }
     }
 }
