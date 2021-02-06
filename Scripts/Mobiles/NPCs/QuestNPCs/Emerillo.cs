@@ -27,11 +27,7 @@ namespace Server.Engines.Quests
         /* Those dates look bruised!  Oh no, and you fetched a soft cheese.  *deep pained sigh*  Well, even I can only 
         do so much with inferior ingredients.  BAM! */
         public override object Complete => 1074759;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.Bedlam;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);

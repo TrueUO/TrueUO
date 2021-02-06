@@ -29,11 +29,7 @@ namespace Server.Engines.Quests
         /* Greetings.  What have you there?  Ah, a sample from a poisonous tree, you say?  My friend Jamal 
         sent you?  Well, let me see that then, and we'll get to work. */
         public override object Complete => 1074991;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.BlightedGrove;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -72,11 +68,7 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1074969;
         /* Have you got the granite and diamonds?  Great, let me see them and we'll see what effect this venom has upon them. */
         public override object Complete => 1074992;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.BlightedGrove;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -113,11 +105,7 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1074970;
         /* You're back with the bark already?  Terrific!  I bet this will do the trick. */
         public override object Complete => 1074993;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.BlightedGrove;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -154,11 +142,7 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1074971;
         /* Great thought!  Bone might just do the trick. */
         public override object Complete => 1074994;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.BlightedGrove;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -195,11 +179,7 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1074972;
         /* Heya!  You're back.  Was Iosep able to help?  Let me see what he's sent. */
         public override object Complete => 1074995;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.BlightedGrove;
-        }
-
+        
         public override void OnCompleted()
         {
             if (Owner.Skills.Blacksmith.Value >= 45.0)
@@ -248,11 +228,7 @@ namespace Server.Engines.Quests
         /* I hear sloshing ... that must mean you've got my water samples.  Whew, I'm so glad you braved the 
         dangers in there ... I mean, I would have but I'm so busy out here.  Here's your reward! */
         public override object Complete => 1074996;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.BlightedGrove;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);

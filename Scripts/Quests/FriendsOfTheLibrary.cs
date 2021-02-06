@@ -27,11 +27,7 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1072722;
         /* Greetings! */
         public override object Complete => 1073985;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.PublicDonations;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -68,11 +64,7 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1072726;
         /* Hello, hello. */
         public override object Complete => 1073986;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.PublicDonations;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -110,11 +102,7 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1072729;
         /* Fine, fine.  Do you have them? */
         public override object Complete => 1073987;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.PublicDonations;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -149,11 +137,7 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1072747;
         /* Oh welcome back!  Do you have my wax? */
         public override object Complete => 1073988;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.PublicDonations;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -190,11 +174,7 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1072751;
         /* As an official friend of the library you can make contributions at a donation area. */
         public override object Complete => 1074811;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.PublicDonations;
-        }
-
+        
         public override void GiveRewards()
         {
             base.GiveRewards();

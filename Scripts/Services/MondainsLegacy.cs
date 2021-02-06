@@ -1,13 +1,9 @@
 using Server.Commands;
 using Server.Engines.InstancedPeerless;
 using Server.Engines.Quests;
-using Server.Gumps;
 using Server.Items;
 using Server.Mobiles;
-using Server.Network;
 using System;
-using System.IO;
-using System.Xml;
 
 namespace Server
 {
@@ -28,151 +24,6 @@ namespace Server
             typeof(SoulSeeker), typeof(TalonBite), typeof(TotemOfVoid), typeof(WildfireBow),
             typeof(Windsong)
         };
-        // true - dungeon is enabled, false - dungeon is disabled
-        private static bool m_PalaceOfParoxysmus;
-        private static bool m_TwistedWeald;
-        private static bool m_BlightedGrove;
-        private static bool m_Bedlam;
-        private static bool m_PrismOfLight;
-        private static bool m_Citadel;
-        private static bool m_PaintedCaves;
-        private static bool m_Labyrinth;
-        private static bool m_Sanctuary;
-        private static bool m_StygianDragonLair;
-        private static bool m_MedusasLair;
-        private static bool m_PublicDonations;
-        public static bool PalaceOfParoxysmus
-        {
-            get
-            {
-                return m_PalaceOfParoxysmus;
-            }
-            set
-            {
-                m_PalaceOfParoxysmus = value;
-            }
-        }
-        public static bool TwistedWeald
-        {
-            get
-            {
-                return m_TwistedWeald;
-            }
-            set
-            {
-                m_TwistedWeald = value;
-            }
-        }
-        public static bool BlightedGrove
-        {
-            get
-            {
-                return m_BlightedGrove;
-            }
-            set
-            {
-                m_BlightedGrove = value;
-            }
-        }
-        public static bool Bedlam
-        {
-            get
-            {
-                return m_Bedlam;
-            }
-            set
-            {
-                m_Bedlam = value;
-            }
-        }
-        public static bool PrismOfLight
-        {
-            get
-            {
-                return m_PrismOfLight;
-            }
-            set
-            {
-                m_PrismOfLight = value;
-            }
-        }
-        public static bool Citadel
-        {
-            get
-            {
-                return m_Citadel;
-            }
-            set
-            {
-                m_Citadel = value;
-            }
-        }
-        public static bool PaintedCaves
-        {
-            get
-            {
-                return m_PaintedCaves;
-            }
-            set
-            {
-                m_PaintedCaves = value;
-            }
-        }
-        public static bool Labyrinth
-        {
-            get
-            {
-                return m_Labyrinth;
-            }
-            set
-            {
-                m_Labyrinth = value;
-            }
-        }
-        public static bool Sanctuary
-        {
-            get
-            {
-                return m_Sanctuary;
-            }
-            set
-            {
-                m_Sanctuary = value;
-            }
-        }
-        public static bool StygianDragonLair
-        {
-            get
-            {
-                return m_StygianDragonLair;
-            }
-            set
-            {
-                m_StygianDragonLair = value;
-            }
-        }
-        public static bool MedusasLair
-        {
-            get
-            {
-                return m_MedusasLair;
-            }
-            set
-            {
-                m_MedusasLair = value;
-            }
-        }
-        public static bool PublicDonations
-        {
-            get
-            {
-                return m_PublicDonations;
-            }
-            set
-            {
-                m_PublicDonations = value;
-            }
-        }
 
         public static void Initialize()
         {
@@ -180,7 +31,6 @@ namespace Server
 
             CommandSystem.Register("DecorateML", AccessLevel.Administrator, DecorateML_OnCommand);
             CommandSystem.Register("DecorateMLDelete", AccessLevel.Administrator, DecorateMLDelete_OnCommand);
-            CommandSystem.Register("SettingsML", AccessLevel.Administrator, SettingsML_OnCommand);
             CommandSystem.Register("Quests", AccessLevel.GameMaster, Quests_OnCommand);
 
             LoadSettings();
@@ -215,40 +65,6 @@ namespace Server
 
         public static void LoadSettings()
         {
-            if (!Directory.Exists("Data/Mondain's Legacy"))
-                Directory.CreateDirectory("Data/Mondain's Legacy");
-
-            if (!File.Exists("Data/Mondain's Legacy/Settings.xml"))
-                File.Create("Data/Mondain's Legacy/Settings.xml");
-
-            try
-            {
-                XmlDocument doc = new XmlDocument();
-                doc.Load(Path.Combine(Core.BaseDirectory, "Data/Mondain's Legacy/Settings.xml"));
-
-                XmlElement root = doc["Settings"];
-
-                if (root == null)
-                    return;
-
-                ReadNode(root, "PalaceOfParoxysmus", ref m_PalaceOfParoxysmus);
-                ReadNode(root, "TwistedWeald", ref m_TwistedWeald);
-                ReadNode(root, "BlightedGrove", ref m_BlightedGrove);
-                ReadNode(root, "Bedlam", ref m_Bedlam);
-                ReadNode(root, "PrismOfLight", ref m_PrismOfLight);
-                ReadNode(root, "Citadel", ref m_Citadel);
-                ReadNode(root, "PaintedCaves", ref m_PaintedCaves);
-                ReadNode(root, "Labyrinth", ref m_Labyrinth);
-                ReadNode(root, "Sanctuary", ref m_Sanctuary);
-                ReadNode(root, "StygianDragonLair", ref m_StygianDragonLair);
-                ReadNode(root, "MedusasLair", ref m_MedusasLair);
-                ReadNode(root, "PublicDonations", ref m_PublicDonations);
-            }
-            catch (Exception e)
-            {
-                Diagnostics.ExceptionLogging.LogException(e);
-            }
-
             if (!FindItem(new Point3D(1431, 1696, 0), Map.Trammel, 0x307F))
             {
                 ArcaneCircleAddon addon = new ArcaneCircleAddon();
@@ -259,69 +75,6 @@ namespace Server
             {
                 ArcaneCircleAddon addon = new ArcaneCircleAddon();
                 addon.MoveToWorld(new Point3D(1431, 1696, 0), Map.Felucca);
-            }
-        }
-
-        public static void SaveSetings()
-        {
-            if (!Directory.Exists("Data/Mondain's Legacy"))
-                Directory.CreateDirectory("Data/Mondain's Legacy");
-
-            if (!File.Exists("Data/Mondain's Legacy/Settings.xml"))
-                File.Create("Data/Mondain's Legacy/Settings.xml");
-
-            try
-            {
-                XmlDocument doc = new XmlDocument();
-                doc.Load(Path.Combine(Core.BaseDirectory, "Data/Mondain's Legacy/Settings.xml"));
-
-                XmlElement root = doc["Settings"];
-
-                if (root == null)
-                    return;
-
-                UpdateNode(root, "PalaceOfParoxysmus", m_PalaceOfParoxysmus);
-                UpdateNode(root, "TwistedWeald", m_TwistedWeald);
-                UpdateNode(root, "BlightedGrove", m_BlightedGrove);
-                UpdateNode(root, "Bedlam", m_Bedlam);
-                UpdateNode(root, "PrismOfLight", m_PrismOfLight);
-                UpdateNode(root, "Citadel", m_Citadel);
-                UpdateNode(root, "PaintedCaves", m_PaintedCaves);
-                UpdateNode(root, "Labyrinth", m_Labyrinth);
-                UpdateNode(root, "Sanctuary", m_Sanctuary);
-                UpdateNode(root, "StygianDragonLair", m_StygianDragonLair);
-                UpdateNode(root, "MedusasLair", m_MedusasLair);
-                UpdateNode(root, "PublicDonations", m_PublicDonations);
-
-                doc.Save("Data/Mondain's Legacy/Settings.xml");
-            }
-            catch (Exception e)
-            {
-                Diagnostics.ExceptionLogging.LogException(e);
-            }
-        }
-
-        public static void ReadNode(XmlElement root, string dungeon, ref bool val)
-        {
-            if (root == null)
-                return;
-
-            foreach (XmlElement element in root.SelectNodes(dungeon))
-            {
-                if (element.HasAttribute("active"))
-                    val = XmlConvert.ToBoolean(element.GetAttribute("active"));
-            }
-        }
-
-        public static void UpdateNode(XmlElement root, string dungeon, bool val)
-        {
-            if (root == null)
-                return;
-
-            foreach (XmlElement element in root.SelectNodes(dungeon))
-            {
-                if (element.HasAttribute("active"))
-                    element.SetAttribute("active", XmlConvert.ToString(val));
             }
         }
 
@@ -382,14 +135,10 @@ namespace Server
 
         public static bool IsMLRegion(Region region)
         {
-            return region.IsPartOf("Twisted Weald") ||
-                   region.IsPartOf("Sanctuary") ||
-                   region.IsPartOf("Prism of Light") ||
-                   region.IsPartOf("TheCitadel") ||
-                   region.IsPartOf("Bedlam") ||
-                   region.IsPartOf("Blighted Grove") ||
-                   region.IsPartOf("Painted Caves") ||
-                   region.IsPartOf("Palace of Paroxysmus") ||
+            return region.IsPartOf("Twisted Weald") || region.IsPartOf("Sanctuary") ||
+                   region.IsPartOf("Prism of Light") || region.IsPartOf("TheCitadel") ||
+                   region.IsPartOf("Bedlam") || region.IsPartOf("Blighted Grove") ||
+                   region.IsPartOf("Painted Caves") || region.IsPartOf("Palace of Paroxysmus") ||
                    region.IsPartOf("Labyrinth");
         }
 
@@ -615,13 +364,6 @@ namespace Server
             e.Mobile.SendMessage("Mondain's Legacy world generating complete.");
         }
 
-        [Usage("SettingsML")]
-        [Description("Mondain's Legacy Settings.")]
-        private static void SettingsML_OnCommand(CommandEventArgs e)
-        {
-            e.Mobile.SendGump(new MondainsLegacyGump());
-        }
-
         [Usage("Quests")]
         [Description("Pops up a quest list from targeted player.")]
         private static void Quests_OnCommand(CommandEventArgs e)
@@ -636,109 +378,6 @@ namespace Server
                 else
                     m.SendMessage("That is not a player!");
             });
-        }
-    }
-
-    public class MondainsLegacyGump : Gump
-    {
-        public MondainsLegacyGump()
-            : base(50, 50)
-        {
-            Closable = true;
-            Disposable = true;
-            Dragable = true;
-            Resizable = false;
-
-            AddPage(0);
-            AddBackground(0, 0, 308, 390, 0x2454);
-
-            // title
-            AddLabel(125, 10, 150, "Settings");
-            AddImage(256, 5, 0x9E1);
-
-            // dungeons			
-            AddButton(20, 60, MondainsLegacy.PalaceOfParoxysmus ? 0x939 : 0x938, MondainsLegacy.PalaceOfParoxysmus ? 0x939 : 0x938, 1, GumpButtonType.Reply, 0);
-            AddButton(20, 85, MondainsLegacy.TwistedWeald ? 0x939 : 0x938, MondainsLegacy.TwistedWeald ? 0x939 : 0x938, 2, GumpButtonType.Reply, 0);
-            AddButton(20, 110, MondainsLegacy.BlightedGrove ? 0x939 : 0x938, MondainsLegacy.BlightedGrove ? 0x939 : 0x938, 3, GumpButtonType.Reply, 0);
-            AddButton(20, 135, MondainsLegacy.Bedlam ? 0x939 : 0x938, MondainsLegacy.Bedlam ? 0x939 : 0x938, 4, GumpButtonType.Reply, 0);
-            AddButton(20, 160, MondainsLegacy.PrismOfLight ? 0x939 : 0x938, MondainsLegacy.PrismOfLight ? 0x939 : 0x938, 5, GumpButtonType.Reply, 0);
-            AddButton(20, 185, MondainsLegacy.Citadel ? 0x939 : 0x938, MondainsLegacy.Citadel ? 0x939 : 0x938, 6, GumpButtonType.Reply, 0);
-            AddButton(20, 210, MondainsLegacy.PaintedCaves ? 0x939 : 0x938, MondainsLegacy.PaintedCaves ? 0x939 : 0x938, 7, GumpButtonType.Reply, 0);
-            AddButton(20, 235, MondainsLegacy.Labyrinth ? 0x939 : 0x938, MondainsLegacy.Labyrinth ? 0x939 : 0x938, 8, GumpButtonType.Reply, 0);
-            AddButton(20, 260, MondainsLegacy.Sanctuary ? 0x939 : 0x938, MondainsLegacy.Sanctuary ? 0x939 : 0x938, 9, GumpButtonType.Reply, 0);
-            AddButton(20, 285, MondainsLegacy.StygianDragonLair ? 0x939 : 0x938, MondainsLegacy.StygianDragonLair ? 0x939 : 0x938, 10, GumpButtonType.Reply, 0);
-            AddButton(20, 310, MondainsLegacy.MedusasLair ? 0x939 : 0x938, MondainsLegacy.MedusasLair ? 0x939 : 0x938, 11, GumpButtonType.Reply, 0);
-            AddButton(20, 360, MondainsLegacy.PublicDonations ? 0x939 : 0x938, MondainsLegacy.PublicDonations ? 0x939 : 0x938, 12, GumpButtonType.Reply, 0);
-
-            AddLabel(45, 56, 0x226, "Palace of Paroxysmus");
-            AddLabel(45, 81, 0x226, "Twisted Weald");
-            AddLabel(45, 106, 0x226, "Blighted Grove");
-            AddLabel(45, 131, 0x226, "Bedlam");
-            AddLabel(45, 156, 0x226, "Prism of Light");
-            AddLabel(45, 181, 0x226, "The Citadel");
-            AddLabel(45, 206, 0x226, "Painted Caves");
-            AddLabel(45, 231, 0x226, "Labyrinth");
-            AddLabel(45, 256, 0x226, "Sanctuary");
-            AddLabel(45, 281, 0x226, "StygianDragonLair");
-            AddLabel(45, 306, 0x226, "MedusasLair");
-            AddLabel(45, 356, 0x226, "PublicDonations");
-
-            // legend
-            AddLabel(243, 205, 0x226, "Legend:");
-
-            AddImage(218, 235, 0x938);
-            AddLabel(243, 231, 0x226, "disabled");
-            AddImage(218, 260, 0x939);
-            AddLabel(243, 256, 0x226, "enabled");
-        }
-
-        public override void OnResponse(NetState sender, RelayInfo info)
-        {
-            switch (info.ButtonID)
-            {
-                case 0:
-                    MondainsLegacy.SaveSetings();
-                    break;
-                case 1:
-                    MondainsLegacy.PalaceOfParoxysmus = !MondainsLegacy.PalaceOfParoxysmus;
-                    break;
-                case 2:
-                    MondainsLegacy.TwistedWeald = !MondainsLegacy.TwistedWeald;
-                    break;
-                case 3:
-                    MondainsLegacy.BlightedGrove = !MondainsLegacy.BlightedGrove;
-                    break;
-                case 4:
-                    MondainsLegacy.Bedlam = !MondainsLegacy.Bedlam;
-                    break;
-                case 5:
-                    MondainsLegacy.PrismOfLight = !MondainsLegacy.PrismOfLight;
-                    break;
-                case 6:
-                    MondainsLegacy.Citadel = !MondainsLegacy.Citadel;
-                    break;
-                case 7:
-                    MondainsLegacy.PaintedCaves = !MondainsLegacy.PaintedCaves;
-                    break;
-                case 8:
-                    MondainsLegacy.Labyrinth = !MondainsLegacy.Labyrinth;
-                    break;
-                case 9:
-                    MondainsLegacy.Sanctuary = !MondainsLegacy.Sanctuary;
-                    break;
-                case 10:
-                    MondainsLegacy.StygianDragonLair = !MondainsLegacy.StygianDragonLair;
-                    break;
-                case 11:
-                    MondainsLegacy.MedusasLair = !MondainsLegacy.MedusasLair;
-                    break;
-                case 12:
-                    MondainsLegacy.PublicDonations = !MondainsLegacy.PublicDonations;
-                    break;
-            }
-
-            if (info.ButtonID > 0)
-                sender.Mobile.SendGump(new MondainsLegacyGump());
         }
     }
 }

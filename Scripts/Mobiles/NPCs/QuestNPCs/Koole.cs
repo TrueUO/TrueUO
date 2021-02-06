@@ -22,11 +22,7 @@ namespace Server.Engines.Quests
         public override object Refuse => 1072594;
         /* Those blasted gargoyles hang around the old tower.  That's the best place to hunt them down. */
         public override object Uncomplete => 1072595;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.Sanctuary;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);

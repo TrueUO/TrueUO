@@ -13,17 +13,6 @@ namespace Server.Items
         {
         }
 
-        public override bool OnMoveOver(Mobile m)
-        {
-            if (!MondainsLegacy.Sanctuary && (int)m.AccessLevel < (int)AccessLevel.GameMaster)
-            {
-                m.SendLocalizedMessage(1042753, "Sanctuary"); // ~1_SOMETHING~ has been temporarily disabled.
-                return true;
-            }
-
-            return base.OnMoveOver(m);
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);

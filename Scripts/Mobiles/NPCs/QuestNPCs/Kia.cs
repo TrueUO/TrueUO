@@ -25,11 +25,7 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1074753;
         /* I'd know that jingling sound anywhere!  You have recovered my bridle.  Thank you. */
         public override object Complete => 1074754;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.Bedlam;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);

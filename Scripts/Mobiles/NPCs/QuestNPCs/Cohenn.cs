@@ -26,11 +26,7 @@ namespace Server.Engines.Quests
         /* Ah!  You've got my pages?  Oh no ... they've been damaged.  Here, take this key.  Perhaps you can find the podium 
         and gain access to the library.  My poor books are being ravaged by that horror and you'd do well to put things right. */
         public override object Complete => 1074443;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.Bedlam;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);

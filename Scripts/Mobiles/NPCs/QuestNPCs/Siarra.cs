@@ -28,11 +28,7 @@ namespace Server.Engines.Quests
         public override object Uncomplete => 1074656;
         /* I am overjoyed with your efforts!  Your devotion to Sosaria is noted and appreciated. */
         public override object Complete => 1074657;
-        public override bool CanOffer()
-        {
-            return MondainsLegacy.PrismOfLight;
-        }
-
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
