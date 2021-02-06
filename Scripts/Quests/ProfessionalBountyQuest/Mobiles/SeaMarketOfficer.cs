@@ -9,6 +9,7 @@ namespace Server.Mobiles
     {
         public override Type[] Quests => new[] { typeof(ProfessionalBountyQuest) };
 
+        [Constructable]
         public SeaMarketOfficer()
         {
             Title = "the officer";
