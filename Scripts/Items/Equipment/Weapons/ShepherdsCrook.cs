@@ -138,7 +138,7 @@ namespace Server.Items
 
                 protected override void OnTarget(Mobile from, object targ)
                 {
-                    if (targ is IPoint2D)
+                    if (targ is IPoint2D p)
                     {
                         double min = m_Creature.CurrentTameSkill - 30;
                         double max = m_Creature.CurrentTameSkill + 30 + Utility.Random(10);
@@ -148,9 +148,7 @@ namespace Server.Items
 
                         if (from.CheckTargetSkill(SkillName.Herding, m_Creature, min, max))
                         {
-                            IPoint2D p = (IPoint2D)targ;
-
-                            if (targ != from)
+                            if (p != from)
                                 p = new Point2D(p.X, p.Y);
 
                             m_Creature.TargetLocation = p;
