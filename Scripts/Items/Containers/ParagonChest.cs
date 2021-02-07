@@ -148,59 +148,13 @@ namespace Server.Items
             {
                 Item item = Loot.RandomArmorOrShieldOrWeaponOrJewelry();
 
-                if (item != null && RandomItemGenerator.Enabled)
+                if (item != null)
                 {
                     TreasureMapChest.GetRandomItemStat(out int min, out int max);
 
                     RunicReforging.GenerateRandomItem(item, 0, min, max);
 
                     DropItem(item);
-                    continue;
-                }
-
-                if (item is BaseWeapon weapon)
-                {
-                    int attributeCount;
-                    int min, max;
-
-                    GetRandomAOSStats(out attributeCount, out min, out max);
-
-                    BaseRunicTool.ApplyAttributesTo(weapon, attributeCount, min, max);
-
-                    DropItem(weapon);
-                }
-                else if (item is BaseArmor armor)
-                {
-                    int attributeCount;
-                    int min, max;
-
-                    GetRandomAOSStats(out attributeCount, out min, out max);
-
-                    BaseRunicTool.ApplyAttributesTo(armor, attributeCount, min, max);
-
-                    DropItem(armor);
-                }
-                else if (item is BaseHat hat)
-                {
-                    int attributeCount;
-                    int min, max;
-
-                    GetRandomAOSStats(out attributeCount, out min, out max);
-
-                    BaseRunicTool.ApplyAttributesTo(hat, attributeCount, min, max);
-
-                    DropItem(hat);
-                }
-                else if (item is BaseJewel jewel)
-                {
-                    int attributeCount;
-                    int min, max;
-
-                    GetRandomAOSStats(out attributeCount, out min, out max);
-
-                    BaseRunicTool.ApplyAttributesTo(jewel, attributeCount, min, max);
-
-                    DropItem(jewel);
                 }
             }
 

@@ -9,7 +9,6 @@ namespace Server.Items
 {
     public class RandomItemGenerator
     {
-        public static bool Enabled => true;
         public static int FeluccaLuckBonus { get; private set; }
         public static int FeluccaBudgetBonus { get; private set; }
 
@@ -46,9 +45,7 @@ namespace Server.Items
         /// <param name="victim">the victim</param>
         public static bool GenerateRandomItem(Item item, Mobile killer, BaseCreature victim)
         {
-            if (Enabled)
-                return RunicReforging.GenerateRandomItem(item, killer, victim);
-            return false;
+            return RunicReforging.GenerateRandomItem(item, killer, victim);
         }
 
         /// <summary>

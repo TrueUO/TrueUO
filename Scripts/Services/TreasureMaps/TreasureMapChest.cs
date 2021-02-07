@@ -259,62 +259,12 @@ namespace Server.Items
 
                     item = Loot.RandomArmorOrShieldOrWeaponOrJewelry();
 
-                    if (item != null && RandomItemGenerator.Enabled)
+                    if (item != null)
                     {
                         int min, max;
                         GetRandomItemStat(out min, out max, propsScale);
 
                         RunicReforging.GenerateRandomItem(item, luck, min, max, map);
-
-                        cont.DropItem(item);
-                    }
-                    else if (item is BaseWeapon)
-                    {
-                        BaseWeapon weapon = (BaseWeapon)item;
-
-                        int attributeCount;
-                        int min, max;
-
-                        GetRandomAOSStats(out attributeCount, out min, out max);
-
-                        BaseRunicTool.ApplyAttributesTo(weapon, attributeCount, min, max);
-
-                        cont.DropItem(item);
-                    }
-                    else if (item is BaseArmor)
-                    {
-                        BaseArmor armor = (BaseArmor)item;
-
-                        int attributeCount;
-                        int min, max;
-
-                        GetRandomAOSStats(out attributeCount, out min, out max);
-
-                        BaseRunicTool.ApplyAttributesTo(armor, attributeCount, min, max);
-
-                        cont.DropItem(item);
-                    }
-                    else if (item is BaseHat)
-                    {
-                        BaseHat hat = (BaseHat)item;
-
-                        int attributeCount;
-                        int min, max;
-
-                        GetRandomAOSStats(out attributeCount, out min, out max);
-
-                        BaseRunicTool.ApplyAttributesTo(hat, attributeCount, min, max);
-
-                        cont.DropItem(item);
-                    }
-                    else if (item is BaseJewel)
-                    {
-                        int attributeCount;
-                        int min, max;
-
-                        GetRandomAOSStats(out attributeCount, out min, out max);
-
-                        BaseRunicTool.ApplyAttributesTo((BaseJewel)item, attributeCount, min, max);
 
                         cont.DropItem(item);
                     }

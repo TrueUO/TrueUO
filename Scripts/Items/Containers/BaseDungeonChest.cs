@@ -78,13 +78,10 @@ namespace Server.Items
             if (item == null)
                 return;
 
-            if (RandomItemGenerator.Enabled)
-            {
-                int min, max;
-                TreasureMapChest.GetRandomItemStat(out min, out max);
+            int min, max;
+            TreasureMapChest.GetRandomItemStat(out min, out max);
 
-                RunicReforging.GenerateRandomItem(item, 0, min, max);
-            }
+            RunicReforging.GenerateRandomItem(item, 0, min, max);
 
             DropItem(item);
         }

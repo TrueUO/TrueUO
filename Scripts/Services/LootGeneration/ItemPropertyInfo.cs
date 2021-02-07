@@ -78,8 +78,6 @@ namespace Server.Items
 
     public class ItemPropertyInfo
     {
-        public static readonly bool NewLootSystem = RandomItemGenerator.Enabled;
-
         public int ID { get; set; }
 
         public bool Imbuable { get; set; }
@@ -762,7 +760,7 @@ namespace Server.Items
                         return GetSpecialMaxIntensity((BaseWeapon)item);
                     }
 
-                    return NewLootSystem ? info.LootMax : info.StandardMax;
+                    return info.LootMax;
                 }
             }
 
@@ -1152,11 +1150,7 @@ namespace Server.Items
 
                     if (info != null)
                     {
-                        if (NewLootSystem && info.LootMax > 0)
-                        {
-                            list.Add(prop.ID);
-                        }
-                        else if (!NewLootSystem && info.StandardMax > 0)
+                        if (info.LootMax > 0)
                         {
                             list.Add(prop.ID);
                         }
@@ -1223,11 +1217,7 @@ namespace Server.Items
                     // reforged follows its own set of guidelines
                     if (!reforged)
                     {
-                        if (NewLootSystem && typeInfo.LootMax <= 0)
-                        {
-                            return false;
-                        }
-                        else if (!NewLootSystem && typeInfo.StandardMax <= 0)
+                        if (typeInfo.LootMax <= 0)
                         {
                             return false;
                         }

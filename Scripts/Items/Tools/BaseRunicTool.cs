@@ -268,7 +268,7 @@ namespace Server.Items
                 max = delta;
             }
 
-            if (!playerMade && RandomItemGenerator.Enabled)
+            if (!playerMade)
             {
                 RandomItemGenerator.GenerateRandomItem(weapon, luckChance, attributeCount, min, max);
                 return;
@@ -477,7 +477,7 @@ namespace Server.Items
                 max = delta;
             }
 
-            if (!playerMade && RandomItemGenerator.Enabled)
+            if (!playerMade)
             {
                 RandomItemGenerator.GenerateRandomItem(armor, luckChance, attributeCount, min, max);
                 return;
@@ -612,7 +612,7 @@ namespace Server.Items
                 max = delta;
             }
 
-            if (!playerMade && RandomItemGenerator.Enabled)
+            if (!playerMade)
             {
                 RandomItemGenerator.GenerateRandomItem(hat, luckChance, attributeCount, min, max);
                 return;
@@ -713,7 +713,7 @@ namespace Server.Items
                 max = delta;
             }
 
-            if (!playerMade && RandomItemGenerator.Enabled)
+            if (!playerMade)
             {
                 RandomItemGenerator.GenerateRandomItem(jewelry, luckChance, attributeCount, min, max);
                 return;
