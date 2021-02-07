@@ -859,7 +859,7 @@ namespace Server
 
                     if (loot != null)
                     {
-                        return Mutate(from, loot);
+                        return Mutate(from, luckChance, loot);
                     }
                 }
 
@@ -869,7 +869,7 @@ namespace Server
             return null;
         }
 
-        public Item Mutate(IEntity from, Item item)
+        public Item Mutate(IEntity from, int luckChance, Item item)
         {
             if (item != null)
             {
