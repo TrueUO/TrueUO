@@ -492,7 +492,7 @@ namespace Server
                 new[]
                 {
                     new LootPackEntry(false, true, Gold, 100.00, "2d10+20"),
-                    new LootPackEntry(false, false, MagicItemsPoor, 1.00, 1, 5, 0, 100, true),
+                    new LootPackEntry(false, false, MagicItemsPoor, 1.00, 1, 0, 100, true),
                     new LootPackEntry(false, false, Instruments, 0.02, 1, true)
                 });
 
@@ -501,8 +501,8 @@ namespace Server
                 new[]
                 {
                     new LootPackEntry(false, true, Gold, 100.00, "4d10+40"),
-                    new LootPackEntry(false, false, MagicItemsMeagerType1, 20.40, 1, 2, 0, 50, true),
-                    new LootPackEntry(false, false, MagicItemsMeagerType2, 10.20, 1, 5, 0, 100, true),
+                    new LootPackEntry(false, false, MagicItemsMeagerType1, 20.40, 1, 0, 50, true),
+                    new LootPackEntry(false, false, MagicItemsMeagerType2, 10.20, 1, 0, 100, true),
                     new LootPackEntry(false, false, Instruments, 0.10, 1)
                 });
 
@@ -511,9 +511,9 @@ namespace Server
                 new[]
                 {
                     new LootPackEntry(false, true, Gold, 100.00, "8d10+100"),
-                    new LootPackEntry(false, false, MagicItemsAverageType1, 32.80, 1, 3, 0, 50, true),
-                    new LootPackEntry(false, false, MagicItemsAverageType1, 32.80, 1, 4, 0, 75, true),
-                    new LootPackEntry(false, false, MagicItemsAverageType2, 19.50, 1, 5, 0, 100, true),
+                    new LootPackEntry(false, false, MagicItemsAverageType1, 32.80, 1, 0, 50, true),
+                    new LootPackEntry(false, false, MagicItemsAverageType1, 32.80, 1, 0, 75, true),
+                    new LootPackEntry(false, false, MagicItemsAverageType2, 19.50, 1, 0, 100, true),
                     new LootPackEntry(false, false, Instruments, 0.40, 1)
                 });
 
@@ -522,9 +522,9 @@ namespace Server
                 new[]
                 {
                     new LootPackEntry(false, true, Gold, 100.00, "15d10+225"),
-                    new LootPackEntry(false, false, MagicItemsRichType1, 76.30, 1, 4, 0, 75, true),
-                    new LootPackEntry(false, false, MagicItemsRichType1, 76.30, 1, 4, 0, 75, true),
-                    new LootPackEntry(false, false, MagicItemsRichType2, 61.70, 1, 5, 0, 100, true),
+                    new LootPackEntry(false, false, MagicItemsRichType1, 76.30, 1, 0, 75, true),
+                    new LootPackEntry(false, false, MagicItemsRichType1, 76.30, 1, 0, 75, true),
+                    new LootPackEntry(false, false, MagicItemsRichType2, 61.70, 1, 0, 100, true),
                     new LootPackEntry(false, false, Instruments, 1.00, 1)
                 });
 
@@ -533,9 +533,9 @@ namespace Server
                 new[]
                 {
                     new LootPackEntry(false, true, Gold, 100.00, "3d100+400"),
-                    new LootPackEntry(false, false, MagicItemsFilthyRichType1, 79.50, 1, 5, 0, 100, true),
-                    new LootPackEntry(false, false, MagicItemsFilthyRichType1, 79.50, 1, 5, 0, 100, true),
-                    new LootPackEntry(false, false, MagicItemsFilthyRichType2, 77.60, 1, 5, 25, 100, true),
+                    new LootPackEntry(false, false, MagicItemsFilthyRichType1, 79.50, 1, 0, 100, true),
+                    new LootPackEntry(false, false, MagicItemsFilthyRichType1, 79.50, 1, 0, 100, true),
+                    new LootPackEntry(false, false, MagicItemsFilthyRichType2, 77.60, 1, 25, 100, true),
                     new LootPackEntry(false, false, Instruments, 2.00, 1)
                 });
 
@@ -544,12 +544,12 @@ namespace Server
                 new[]
                 {
                     new LootPackEntry(false, true, Gold, 100.00, "6d100+600"),
-                    new LootPackEntry(false, false, MagicItemsUltraRich, 100.00, 1, 5, 25, 100, true),
-                    new LootPackEntry(false, false, MagicItemsUltraRich, 100.00, 1, 5, 25, 100, true),
-                    new LootPackEntry(false, false, MagicItemsUltraRich, 100.00, 1, 5, 25, 100, true),
-                    new LootPackEntry(false, false, MagicItemsUltraRich, 100.00, 1, 5, 25, 100, true),
-                    new LootPackEntry(false, false, MagicItemsUltraRich, 100.00, 1, 5, 25, 100, true),
-                    new LootPackEntry(false, false, MagicItemsUltraRich, 100.00, 1, 5, 33, 100, true),
+                    new LootPackEntry(false, false, MagicItemsUltraRich, 100.00, 1, 25, 100, true),
+                    new LootPackEntry(false, false, MagicItemsUltraRich, 100.00, 1, 25, 100, true),
+                    new LootPackEntry(false, false, MagicItemsUltraRich, 100.00, 1, 25, 100, true),
+                    new LootPackEntry(false, false, MagicItemsUltraRich, 100.00, 1, 25, 100, true),
+                    new LootPackEntry(false, false, MagicItemsUltraRich, 100.00, 1, 25, 100, true),
+                    new LootPackEntry(false, false, MagicItemsUltraRich, 100.00, 1, 33, 100, true),
                     new LootPackEntry(false, false, Instruments, 2.00, 1)
                 });
 
@@ -558,16 +558,16 @@ namespace Server
                 new[]
                 {
                     new LootPackEntry(false, true, Gold, 100.00, "10d100+800"),
-                    new LootPackEntry(false, false, MagicItemsUltraRich, 100.00, 1, 5, 25, 100, true),
-                    new LootPackEntry(false, false, MagicItemsUltraRich, 100.00, 1, 5, 25, 100, true),
-                    new LootPackEntry(false, false, MagicItemsUltraRich, 100.00, 1, 5, 25, 100, true),
-                    new LootPackEntry(false, false, MagicItemsUltraRich, 100.00, 1, 5, 25, 100, true),
-                    new LootPackEntry(false, false, MagicItemsUltraRich, 100.00, 1, 5, 33, 100, true),
-                    new LootPackEntry(false, false, MagicItemsUltraRich, 100.00, 1, 5, 33, 100, true),
-                    new LootPackEntry(false, false, MagicItemsUltraRich, 100.00, 1, 5, 33, 100, true),
-                    new LootPackEntry(false, false, MagicItemsUltraRich, 100.00, 1, 5, 33, 100, true),
-                    new LootPackEntry(false, false, MagicItemsUltraRich, 100.00, 1, 5, 50, 100, true),
-                    new LootPackEntry(false, false, MagicItemsUltraRich, 100.00, 1, 5, 50, 100, true),
+                    new LootPackEntry(false, false, MagicItemsUltraRich, 100.00, 1, 25, 100, true),
+                    new LootPackEntry(false, false, MagicItemsUltraRich, 100.00, 1, 25, 100, true),
+                    new LootPackEntry(false, false, MagicItemsUltraRich, 100.00, 1, 25, 100, true),
+                    new LootPackEntry(false, false, MagicItemsUltraRich, 100.00, 1, 25, 100, true),
+                    new LootPackEntry(false, false, MagicItemsUltraRich, 100.00, 1, 33, 100, true),
+                    new LootPackEntry(false, false, MagicItemsUltraRich, 100.00, 1, 33, 100, true),
+                    new LootPackEntry(false, false, MagicItemsUltraRich, 100.00, 1, 33, 100, true),
+                    new LootPackEntry(false, false, MagicItemsUltraRich, 100.00, 1, 33, 100, true),
+                    new LootPackEntry(false, false, MagicItemsUltraRich, 100.00, 1, 50, 100, true),
+                    new LootPackEntry(false, false, MagicItemsUltraRich, 100.00, 1, 50, 100, true),
                     new LootPackEntry(false, false, Instruments, 2.00, 1)
                 });
         #endregion
@@ -766,7 +766,6 @@ namespace Server
 
         public bool AtSpawnTime { get; }
         public bool OnStolen { get; }
-        public int MaxProps { get; }
         public int MinIntensity { get; }
         public int MaxIntensity { get; }
 
@@ -809,7 +808,7 @@ namespace Server
             if (e == null)
                 return false;
 
-            return e.Map == Map.TerMur || (!IsInTokuno(e) && !IsMondain(e) && Utility.RandomBool());
+            return e.Map == Map.TerMur || !IsInTokuno(e) && !IsMondain(e) && Utility.RandomBool();
         }
 
         public bool CanGenerate(LootStage stage, bool hasBeenStolenFrom)
@@ -894,39 +893,6 @@ namespace Server
                             return item;
                         }
                     }
-
-                    int bonusProps = GetBonusProperties();
-
-                    if (bonusProps < MaxProps && LootPack.CheckLuck(luckChance))
-                    {
-                        ++bonusProps;
-                    }
-
-                    int props = 1 + bonusProps;
-
-                    // Make sure we're not spawning items with 6 properties.
-                    if (props > MaxProps)
-                    {
-                        props = MaxProps;
-                    }
-
-                    // Use the older style random generation
-                    if (item is BaseWeapon baseWeapon)
-                    {
-                        BaseRunicTool.ApplyAttributesTo(baseWeapon, false, luckChance, props, MinIntensity, MaxIntensity);
-                    }
-                    else if (item is BaseArmor armor)
-                    {
-                        BaseRunicTool.ApplyAttributesTo(armor, false, luckChance, props, MinIntensity, MaxIntensity);
-                    }
-                    else if (item is BaseJewel jewel)
-                    {
-                        BaseRunicTool.ApplyAttributesTo(jewel, false, luckChance, props, MinIntensity, MaxIntensity);
-                    }
-                    else if (item is BaseHat hat)
-                    {
-                        BaseRunicTool.ApplyAttributesTo(hat, false, luckChance, props, MinIntensity, MaxIntensity);
-                    }
                 }
                 else if (item is BaseInstrument instr)
                 {
@@ -954,19 +920,19 @@ namespace Server
         }
 
         public LootPackEntry(bool atSpawnTime, bool onStolen, LootPackItem[] items, double chance, string quantity)
-            : this(atSpawnTime, onStolen, items, chance, new LootPackDice(quantity), 0, 0, 0, false)
+            : this(atSpawnTime, onStolen, items, chance, new LootPackDice(quantity), 0, 0, false)
         { }
 
         public LootPackEntry(bool atSpawnTime, bool onStolen, LootPackItem[] items, double chance, string quantity, bool standardLoot)
-            : this(atSpawnTime, onStolen, items, chance, new LootPackDice(quantity), 0, 0, 0, standardLoot)
+            : this(atSpawnTime, onStolen, items, chance, new LootPackDice(quantity), 0, 0, standardLoot)
         { }
 
         public LootPackEntry(bool atSpawnTime, bool onStolen, LootPackItem[] items, double chance, int quantity)
-            : this(atSpawnTime, onStolen, items, chance, new LootPackDice(0, 0, quantity), 0, 0, 0, false)
+            : this(atSpawnTime, onStolen, items, chance, new LootPackDice(0, 0, quantity), 0, 0, false)
         { }
 
         public LootPackEntry(bool atSpawnTime, bool onStolen, LootPackItem[] items, double chance, int quantity, bool standardLoot)
-            : this(atSpawnTime, onStolen, items, chance, new LootPackDice(0, 0, quantity), 0, 0, 0, standardLoot)
+            : this(atSpawnTime, onStolen, items, chance, new LootPackDice(0, 0, quantity), 0, 0, standardLoot)
         { }
 
         public LootPackEntry(
@@ -975,10 +941,9 @@ namespace Server
             LootPackItem[] items,
             double chance,
             string quantity,
-            int maxProps,
             int minIntensity,
             int maxIntensity)
-            : this(atSpawnTime, onStolen, items, chance, new LootPackDice(quantity), maxProps, minIntensity, maxIntensity, false)
+            : this(atSpawnTime, onStolen, items, chance, new LootPackDice(quantity), minIntensity, maxIntensity, false)
         { }
 
         public LootPackEntry(
@@ -987,19 +952,18 @@ namespace Server
             LootPackItem[] items,
             double chance,
             string quantity,
-            int maxProps,
             int minIntensity,
             int maxIntensity,
             bool standardLoot)
-            : this(atSpawnTime, onStolen, items, chance, new LootPackDice(quantity), maxProps, minIntensity, maxIntensity, standardLoot)
+            : this(atSpawnTime, onStolen, items, chance, new LootPackDice(quantity), minIntensity, maxIntensity, standardLoot)
                 { }
 
-        public LootPackEntry( bool atSpawnTime, bool onStolen, LootPackItem[] items, double chance, int quantity, int maxProps, int minIntensity, int maxIntensity)
-            : this(atSpawnTime, onStolen, items, chance, new LootPackDice(0, 0, quantity), maxProps, minIntensity, maxIntensity, false)
+        public LootPackEntry( bool atSpawnTime, bool onStolen, LootPackItem[] items, double chance, int quantity, int minIntensity, int maxIntensity)
+            : this(atSpawnTime, onStolen, items, chance, new LootPackDice(0, 0, quantity), minIntensity, maxIntensity, false)
         { }
 
-        public LootPackEntry(bool atSpawnTime, bool onStolen, LootPackItem[] items, double chance, int quantity, int maxProps, int minIntensity, int maxIntensity, bool standardLoot)
-            : this(atSpawnTime, onStolen, items, chance, new LootPackDice(0, 0, quantity), maxProps, minIntensity, maxIntensity, standardLoot)
+        public LootPackEntry(bool atSpawnTime, bool onStolen, LootPackItem[] items, double chance, int quantity, int minIntensity, int maxIntensity, bool standardLoot)
+            : this(atSpawnTime, onStolen, items, chance, new LootPackDice(0, 0, quantity), minIntensity, maxIntensity, standardLoot)
                 { }
 
         public LootPackEntry(
@@ -1008,7 +972,6 @@ namespace Server
             LootPackItem[] items,
             double chance,
             LootPackDice quantity,
-            int maxProps,
             int minIntensity,
             int maxIntensity,
             bool standardLootItem)
@@ -1018,96 +981,9 @@ namespace Server
             Items = items;
             Chance = (int)(100 * chance);
             Quantity = quantity;
-            MaxProps = maxProps;
             MinIntensity = minIntensity;
             MaxIntensity = maxIntensity;
             StandardLootItem = standardLootItem;
-        }
-
-        public int GetBonusProperties()
-        {
-            int p0 = 0, p1 = 0, p2 = 0, p3 = 0, p4 = 0, p5 = 0;
-
-            switch (MaxProps)
-            {
-                case 1:
-                    p0 = 3;
-                    p1 = 1;
-                    break;
-                case 2:
-                    p0 = 6;
-                    p1 = 3;
-                    p2 = 1;
-                    break;
-                case 3:
-                    p0 = 10;
-                    p1 = 6;
-                    p2 = 3;
-                    p3 = 1;
-                    break;
-                case 4:
-                    p0 = 16;
-                    p1 = 12;
-                    p2 = 6;
-                    p3 = 5;
-                    p4 = 1;
-                    break;
-                case 5:
-                    p0 = 30;
-                    p1 = 25;
-                    p2 = 20;
-                    p3 = 15;
-                    p4 = 9;
-                    p5 = 1;
-                    break;
-            }
-
-            int pc = p0 + p1 + p2 + p3 + p4 + p5;
-
-            int rnd = Utility.Random(pc);
-
-            if (rnd < p5)
-            {
-                return 5;
-            }
-            else
-            {
-                rnd -= p5;
-            }
-
-            if (rnd < p4)
-            {
-                return 4;
-            }
-            else
-            {
-                rnd -= p4;
-            }
-
-            if (rnd < p3)
-            {
-                return 3;
-            }
-            else
-            {
-                rnd -= p3;
-            }
-
-            if (rnd < p2)
-            {
-                return 2;
-            }
-            else
-            {
-                rnd -= p2;
-            }
-
-            if (rnd < p1)
-            {
-                return 1;
-            }
-
-            return 0;
         }
     }
 
