@@ -1,4 +1,3 @@
-
 using Server.Gumps;
 using Server.Commands;
 using Server.Targeting;
@@ -16,7 +15,24 @@ namespace Server.Engines.Quests
     {
         public static void Initialize()
         {
+            CommandSystem.Register("QuestMenu", AccessLevel.GameMaster, Quests_OnCommand);
             CommandSystem.Register("Quests", AccessLevel.GameMaster, CheckQuests);
+        }
+
+        [Usage("QuestMenu")]
+        [Description("Pops up the quest menu from targeted player.")]
+        private static void Quests_OnCommand(CommandEventArgs e)
+        {
+            Mobile m = e.Mobile;
+            m.SendMessage("Target a player to view their quests.");
+
+            m.BeginTarget(-1, false, TargetFlags.None, delegate (Mobile from, object targeted)
+            {
+                if (targeted is PlayerMobile mobile)
+                {
+                    m.SendGump(new MondainQuestGump(mobile));
+                }
+            });
         }
 
         [Usage("Quests")]
