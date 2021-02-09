@@ -1,4 +1,3 @@
-using Server.Engines.VoidPool;
 using Server.Items;
 using System;
 
@@ -65,16 +64,9 @@ namespace Server.Mobiles
 
         public void AuraEffect(Mobile m)
         {
-            if (m is PlayerMobile mobile && Services.TownCryer.TownCryerSystem.UnderMysteriousPotionEffects(mobile, true))
-            {
-                mobile.SayTo(mobile, 1158288, 1154); // *You resist Cora's attack!*
-            }
-            else
-            {
-                int mana = Utility.Random(1, m.Mana);
-                m.Mana -= mana;
-                m.SendLocalizedMessage(1153114, mana.ToString()); // Cora drains ~1_VAL~ points of your mana!
-            }
+            int mana = Utility.Random(1, m.Mana);
+            m.Mana -= mana;
+            m.SendLocalizedMessage(1153114, mana.ToString()); // Cora drains ~1_VAL~ points of your mana!
         }
 
         public override bool TeleportsTo => true;
@@ -253,15 +245,8 @@ namespace Server.Mobiles
             {
                 if ((m is PlayerMobile || m is BaseCreature bc && !bc.IsMonster) && m.CanBeHarmful(Owner, false))
                 {
-                    if (m is PlayerMobile mobile && Services.TownCryer.TownCryerSystem.UnderMysteriousPotionEffects(mobile, true))
-                    {
-                        mobile.SayTo(mobile, 1158288, 1154); // *You resist Cora's attack!*
-                    }
-                    else
-                    {
-                        m.FixedParticles(0x3779, 10, 25, 5002, EffectLayer.Head);
-                        m.Mana = 0;
-                    }
+                    m.FixedParticles(0x3779, 10, 25, 5002, EffectLayer.Head);
+                    m.Mana = 0;
                 }
 
                 return true;
@@ -291,64 +276,6 @@ namespace Server.Mobiles
                     Static.Delete();
 
                 Delete();
-            }
-        }
-
-        public override void OnDeath(Container c)
-        {
-            base.OnDeath(c);
-
-            if (0.30 > Utility.RandomDouble())
-            {
-                Mobile m = RandomPlayerWithLootingRights();
-
-                if (m != null)
-                {
-                    Item artifact = VoidPoolRewards.DropRandomArtifact();
-
-                    if (artifact != null)
-                    {
-                        Container pack = m.Backpack;
-
-                        if (pack == null || !pack.TryDropItem(m, artifact, false))
-                            m.BankBox.DropItem(artifact);
-
-                        m.SendLocalizedMessage(1062317); // For your valor in combating the fallen beast, a special artifact has been bestowed on you.
-                    }
-                }
-            }
-        }
-
-        public override void OnKilledBy(Mobile mob)
-        {
-            base.OnKilledBy(mob);
-
-            if (Siege.SiegeShard && mob is PlayerMobile mobile)
-            {
-                int chance = Engines.Despise.DespiseBoss.ArtifactChance + Math.Min(10, mobile.Luck / 180);
-
-                if (chance >= Utility.Random(100))
-                {
-                    Type t = Engines.Despise.DespiseBoss.Artifacts[Utility.Random(Engines.Despise.DespiseBoss.Artifacts.Length)];
-
-                    if (t != null)
-                    {
-                        Item arty = Loot.Construct(t);
-
-                        if (arty != null)
-                        {
-                            Container pack = mobile.Backpack;
-
-                            if (pack == null || !pack.TryDropItem(mobile, arty, false))
-                            {
-                                mobile.BankBox.DropItem(arty);
-                                mobile.SendMessage("An artifact has been placed in your bankbox!");
-                            }
-                            else
-                                mobile.SendLocalizedMessage(1153440); // An artifact has been placed in your backpack!
-                        }
-                    }
-                }
             }
         }
 

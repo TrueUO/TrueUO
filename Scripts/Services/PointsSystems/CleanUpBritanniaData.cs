@@ -707,11 +707,6 @@ namespace Server.Engines.Points
 
         public static int GetPointsForEquipment(Item item)
         {
-            if (item is IEpiphanyArmor)
-            {
-                return 1000;
-            }
-
             foreach (CraftSystem system in CraftSystem.Systems)
             {
                 CraftItem crItem = null;

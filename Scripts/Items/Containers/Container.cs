@@ -250,8 +250,6 @@ namespace Server.Items
 
         public override bool DropToWorld(Mobile m, Point3D p)
         {
-            Engines.Despise.WispOrb.CheckDrop(this, m);
-
             return base.DropToWorld(m, p);
         }
 

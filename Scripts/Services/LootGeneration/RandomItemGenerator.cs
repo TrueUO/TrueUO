@@ -1,4 +1,3 @@
-using Server.Engines.Despise;
 using Server.Engines.Shadowguard;
 using Server.Mobiles;
 using System;
@@ -138,7 +137,7 @@ namespace Server.Items
 
             Entries.Add(
                 new BossEntry(150, typeof(BaseChampion), typeof(Impaler), typeof(DarknightCreeper), typeof(FleshRenderer),
-                                   typeof(ShadowKnight), typeof(AbysmalHorror), typeof(AdrianTheGloriousLord), typeof(AndrosTheDreadLord)));
+                                   typeof(ShadowKnight), typeof(AbysmalHorror)));
 
             Entries.Add(
                 new BossEntry(250, typeof(BasePeerless), typeof(Harrower), typeof(DemonKnight), typeof(ShadowguardBoss), typeof(Osiredon)));

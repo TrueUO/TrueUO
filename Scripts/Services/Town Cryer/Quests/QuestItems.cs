@@ -410,65 +410,6 @@ namespace Server.Engines.Quests
         }
     }
 
-    public class MysteriousPotion : Item
-    {
-        public override int LabelNumber => 1158286;  // A Mysterious Potion
-
-        public MysteriousPotion()
-            : base(0xF06)
-        {
-        }
-
-        public override void OnDoubleClick(Mobile m)
-        {
-            if (m is PlayerMobile pm)
-            {
-                if (QuestHelper.HasQuest<AForcedSacraficeQuest2>(pm))
-                {
-                    if (!TownCryerSystem.UnderMysteriousPotionEffects(pm))
-                    {
-                        pm.SendGump(new ConfirmCallbackGump(pm, 1158286, 1158287, null, null, (mob, o) =>
-                            {
-                                TownCryerSystem.AddMysteriousPotionEffects(mob);
-
-                                mob.FixedParticles(0x376A, 9, 32, 5007, EffectLayer.Waist);
-                                mob.PlaySound(0x1E3);
-
-                                BasePotion.PlayDrinkEffect(mob);
-
-                                Delete();
-                            }));
-                    }
-                    else
-                    {
-                        pm.SendLocalizedMessage(1158289); // You have already used this.
-                    }
-                }
-                else
-                {
-                    pm.SendLocalizedMessage(1158285); // You must be on the "A Forced Sacrifice" quest to use this item.
-                }
-            }
-        }
-
-        public MysteriousPotion(Serial serial)
-            : base(serial)
-        {
-        }
-
-        public override void Serialize(GenericWriter writer)
-        {
-            base.Serialize(writer);
-            writer.Write(0);
-        }
-
-        public override void Deserialize(GenericReader reader)
-        {
-            base.Deserialize(reader);
-            reader.ReadInt();
-        }
-    }
-
     public class PaladinCorpse : Container
     {
         public static PaladinCorpse TramInstance { get; set; }

@@ -11,9 +11,7 @@ using Server.Engines.PartySystem;
 using Server.Engines.Points;
 using Server.Engines.Quests;
 using Server.Engines.Shadowguard;
-using Server.Engines.SphynxFortune;
 using Server.Engines.VendorSearching;
-using Server.Engines.VoidPool;
 using Server.Engines.VvV;
 using Server.Guilds;
 using Server.Gumps;
@@ -1176,7 +1174,7 @@ namespace Server.Mobiles
         #region City Loyalty
         public override int GetResistance(ResistanceType type)
         {
-            int resistance = base.GetResistance(type) + SphynxFortune.GetResistanceBonus(this, type);
+            int resistance = base.GetResistance(type);
 
             if (CityLoyaltySystem.HasTradeDeal(this, TradeDeal.SocietyOfClothiers))
             {
@@ -2275,23 +2273,6 @@ namespace Server.Mobiles
                 {
                     list.Add(new CallbackEntry(6157, CancelProtection));
                 }
-
-                #region Void Pool
-                if (VoidPool || Region.IsPartOf<VoidPoolRegion>())
-                {
-                    VoidPoolController controller = Map == Map.Felucca ? VoidPoolController.InstanceFel : VoidPoolController.InstanceTram;
-
-                    if (controller != null)
-                    {
-                        if (!VoidPool)
-                        {
-                            VoidPool = true;
-                        }
-
-                        list.Add(new VoidPoolInfo(this, controller));
-                    }
-                }
-                #endregion
 
                 if (DisabledPvpWarning)
                 {
@@ -5294,11 +5275,6 @@ namespace Server.Mobiles
                     acc.RemoveYoungStatus(0);
                 }
             }
-        }
-
-        public override void OnKarmaChange(int oldValue)
-        {
-            EpiphanyHelper.OnKarmaChange(this);
         }
 
         public override void OnSkillChange(SkillName skill, double oldBase)

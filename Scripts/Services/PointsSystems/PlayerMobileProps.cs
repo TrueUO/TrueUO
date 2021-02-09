@@ -37,13 +37,6 @@ namespace Server.Mobiles
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public double VoidPool
-        {
-            get => (int)PointsSystem.VoidPool.GetPoints(Player);
-            set => PointsSystem.VoidPool.SetPoints(Player, value);
-        }
-
-        [CommandProperty(AccessLevel.GameMaster)]
         public double Casino
         {
             get => (int)PointsSystem.CasinoData.GetPoints(Player);

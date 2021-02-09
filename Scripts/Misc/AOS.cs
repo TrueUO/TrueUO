@@ -268,8 +268,6 @@ namespace Server
 
             BestialSetHelper.OnDamage(m, from, ref totalDamage);
 
-            EpiphanyHelper.OnHit(m, totalDamage);
-
             if (type == DamageType.Spell && m != null && Feint.Registry.ContainsKey(m) && Feint.Registry[m].Enemy == from)
                 totalDamage -= (int)(damage * ((double)Feint.Registry[m].DamageReduction / 100));
 

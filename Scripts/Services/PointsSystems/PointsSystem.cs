@@ -339,7 +339,6 @@ namespace Server.Engines.Points
         public static List<PointsSystem> Systems { get; set; }
 
         public static QueensLoyalty QueensLoyalty { get; set; }
-        public static VoidPool VoidPool { get; set; }
         public static DespiseCrystals DespiseCrystals { get; set; }
         public static ShameCrystals ShameCrystals { get; set; }
         public static CasinoData CasinoData { get; set; }
@@ -368,7 +367,6 @@ namespace Server.Engines.Points
             Systems = new List<PointsSystem>();
 
             QueensLoyalty = new QueensLoyalty();
-            VoidPool = new VoidPool();
             DespiseCrystals = new DespiseCrystals();
             ShameCrystals = new ShameCrystals();
             CasinoData = new CasinoData();
