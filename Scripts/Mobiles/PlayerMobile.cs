@@ -5269,7 +5269,7 @@ namespace Server.Mobiles
 
                 if (title.Length > 0)
                 {
-                    list.Add("{0}, {1}", Utility.FixHtml(title), Utility.FixHtml(guild.Name));
+                    list.Add(1060776, "{0}\t{1}", Utility.FixHtml(title), Utility.FixHtml(guild.Name)); // ~1_val~, ~2_val~
                 }
             }
         }
