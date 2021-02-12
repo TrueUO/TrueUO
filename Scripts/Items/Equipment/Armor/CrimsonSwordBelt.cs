@@ -3,6 +3,7 @@ namespace Server.Items
     public class CrimsonSwordBelt : SwordBelt
     {
         public override int LabelNumber => 1159212;  // crimson sword belt
+        public override bool IsArtifact => true;
 
         [Constructable]
         public CrimsonSwordBelt()
