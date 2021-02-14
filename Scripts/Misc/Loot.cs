@@ -424,26 +424,6 @@ namespace Server
             return Construct(m_WeaponTypes) as BaseWeapon;
         }
 
-        public static Item RandomWeaponOrJewelry(bool inTokuno = false, bool isMondain = false, bool isStygian = false)
-        {
-            if (isStygian)
-            {
-                return Construct(m_SAWeaponTypes, m_WeaponTypes, m_JewelryTypes, m_SAJewelryTypes);
-            }
-
-            if (isMondain)
-            {
-                return Construct(m_MLWeaponTypes, m_WeaponTypes, m_JewelryTypes);
-            }
-
-            if (inTokuno)
-            {
-                return Construct(m_SEWeaponTypes, m_WeaponTypes, m_JewelryTypes);
-            }
-
-            return Construct(m_WeaponTypes, m_JewelryTypes);
-        }
-
         public static BaseJewel RandomJewelry(bool isStygian = false)
         {
             if (isStygian)
@@ -482,26 +462,6 @@ namespace Server
             }
 
             return Construct(m_HatTypes) as BaseHat;
-        }
-
-        public static Item RandomArmorOrHat(bool inTokuno = false, bool isMondain = false, bool isStygian = false)
-        {
-            if (isStygian)
-            {
-                return Construct(m_SAArmorTypes, m_ArmorTypes, m_HatTypes);
-            }
-
-            if (isMondain)
-            {
-                return Construct(m_MLArmorTypes, m_ArmorTypes, m_HatTypes);
-            }
-
-            if (inTokuno)
-            {
-                return Construct(m_SEArmorTypes, m_ArmorTypes, m_SEHatTypes, m_HatTypes);
-            }
-
-            return Construct(m_ArmorTypes, m_HatTypes);
         }
 
         public static BaseShield RandomShield(bool isStygian = false)
