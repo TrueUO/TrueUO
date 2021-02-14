@@ -213,10 +213,7 @@ namespace Server.Items
             {
                 InactiveID = itemid;
 
-                if (itemid == 40203)
-                    ActiveID = 40158;
-                else
-                    ActiveID = 40203;
+                ActiveID = itemid == 40203 ? 40158 : 40203;
             }
 
             public InternalComponent(Serial serial)
@@ -527,7 +524,7 @@ namespace Server.Items
 
             int oldhits = Hits;
 
-            if (ItemID == IDHalfHits && Hits <= (HitsMax * .10))
+            if (ItemID == IDHalfHits && Hits <= HitsMax * .10)
             {
                 ItemID = 40154;
             }
@@ -564,12 +561,11 @@ namespace Server.Items
                 Timer = null;
             }
 
-            if (Addon != null)
-            {
-                AddonComponent comp = Addon.Components.FirstOrDefault(c => c.ItemID == 40157);
+            AddonComponent comp = Addon?.Components.FirstOrDefault(c => c.ItemID == 40157);
 
-                if (comp != null)
-                    comp.Visible = false;
+            if (comp != null)
+            {
+                comp.Visible = false;
             }
 
             base.OnAfterDestroyed();

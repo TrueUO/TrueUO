@@ -43,9 +43,9 @@ namespace Server.Engines.MyrmidexInvasion
 
         public override void OnExit(Mobile m)
         {
-            if (m is PlayerMobile mobile && Spawner != null)
+            if (m is PlayerMobile mobile)
             {
-                Spawner.OnLeaveRegion(mobile);
+                Spawner?.OnLeaveRegion(mobile);
             }
 
             base.OnExit(m);

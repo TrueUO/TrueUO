@@ -64,7 +64,7 @@ namespace Server.Engines.MyrmidexInvasion
 
                     Timer.DelayCall(TimeSpan.FromSeconds(delay), () =>
                     {
-                        m.SendLocalizedMessage(1156606, string.Format("{0}\t{1}\t{2}", (BattleSpawner.WaveCount - count).ToString(), BattleSpawner.WaveCount.ToString(), wave.ToString())); // Myrmidex have lost ~1_VAL~ of ~2_VAL~ from wave ~3_VAL~ of their front line.	
+                        m.SendLocalizedMessage(1156606, $"{(BattleSpawner.WaveCount - count).ToString()}\t{BattleSpawner.WaveCount.ToString()}\t{wave.ToString()}"); // Myrmidex have lost ~1_VAL~ of ~2_VAL~ from wave ~3_VAL~ of their front line.	
                     });
                 }
 
@@ -81,7 +81,7 @@ namespace Server.Engines.MyrmidexInvasion
 
                     Timer.DelayCall(TimeSpan.FromSeconds(delay), () =>
                     {
-                        m.SendLocalizedMessage(1156607, string.Format("{0}\t{1}\t{2}", (BattleSpawner.WaveCount - count).ToString(), BattleSpawner.WaveCount.ToString(), wave.ToString())); // Myrmidex have lost ~1_VAL~ of ~2_VAL~ from wave ~3_VAL~ of their front line.	
+                        m.SendLocalizedMessage(1156607, $"{(BattleSpawner.WaveCount - count).ToString()}\t{BattleSpawner.WaveCount.ToString()}\t{wave.ToString()}"); // Myrmidex have lost ~1_VAL~ of ~2_VAL~ from wave ~3_VAL~ of their front line.	
                     });
                 }
 
@@ -123,7 +123,8 @@ namespace Server.Engines.MyrmidexInvasion
             for (var i = 0; i < 5; i++)
             {
                 var t = types[Utility.Random(types.Length)];
-                BaseCreature bc = null;
+
+                BaseCreature bc;
 
                 if (t.IsSubclassOf(typeof(BaseEodonTribesman)))
                 {
@@ -159,14 +160,7 @@ namespace Server.Engines.MyrmidexInvasion
                     {
                         bc.MoveToWorld(p, Map);
 
-                        if (tribe)
-                        {
-                            bc.Home = new Point3D(914, 1872, 0);
-                        }
-                        else
-                        {
-                            bc.Home = new Point3D(913, 1792, 0);
-                        }
+                        bc.Home = tribe ? new Point3D(914, 1872, 0) : new Point3D(913, 1792, 0);
 
                         bc.RangeHome = 15;
                     }

@@ -49,7 +49,7 @@ namespace Server.Engines.MyrmidexInvasion
                 {
                     if (entry.Allegiance == _AllegianceType)
                     {
-                        pm.SendLocalizedMessage(1156637, string.Format("#{0}", ((int)entry.Allegiance).ToString())); // You have already declared allegiance to the ~1_SIDE~!  You may only change your allegiance once every 2 hours.
+                        pm.SendLocalizedMessage(1156637, $"#{((int) entry.Allegiance).ToString()}"); // You have already declared allegiance to the ~1_SIDE~!  You may only change your allegiance once every 2 hours.
                     }
                     else if (entry.JoinTime + TimeSpan.FromHours(2) > DateTime.UtcNow)
                     {
@@ -60,7 +60,7 @@ namespace Server.Engines.MyrmidexInvasion
                         pm.SendGump(
                             new ConfirmCallbackGump(pm,
                             (int)_AllegianceType,
-                            string.Format("Your current allegiance is with the {0}.  Select yes to pledge your allegiance to the {1}.", entry.Allegiance == Allegiance.Tribes ? "Eodonians" : "Myrmidex", _AllegianceType == Allegiance.Tribes ? "Eodonians" : "Myrmidex"),
+                            $"Your current allegiance is with the {(entry.Allegiance == Allegiance.Tribes ? "Eodonians" : "Myrmidex")}.  Select yes to pledge your allegiance to the {(_AllegianceType == Allegiance.Tribes ?"Eodonians" :"Myrmidex")}.",
                             entry,
                             confirm: (m, state) =>
                                 {

@@ -257,14 +257,7 @@ namespace Server.Engines.MyrmidexInvasion
 
             Dictionary<int, List<BaseCreature>> list;
 
-            if (allegiance == Allegiance.Myrmidex)
-            {
-                list = MyrmidexTeam;
-            }
-            else
-            {
-                list = TribeTeam;
-            }
+            list = allegiance == Allegiance.Myrmidex ? MyrmidexTeam : TribeTeam;
 
             if (list.ContainsKey(wave))
             {
@@ -464,10 +457,7 @@ namespace Server.Engines.MyrmidexInvasion
 
         public IEnumerable<PlayerMobile> GetPlayers(Allegiance allegiance)
         {
-            if (BattleRegion == null)
-                return null;
-
-            return BattleRegion.GetEnumeratedMobiles().OfType<PlayerMobile>().Where(p => MyrmidexInvasionSystem.IsAlliedWith(p, allegiance));
+            return BattleRegion?.GetEnumeratedMobiles().OfType<PlayerMobile>().Where(p => MyrmidexInvasionSystem.IsAlliedWith(p, allegiance));
         }
 
         public bool HasPlayers(bool ignorestaff = true)
@@ -518,10 +508,7 @@ namespace Server.Engines.MyrmidexInvasion
         {
             Dictionary<int, List<BaseCreature>> list;
 
-            if (allegiance == Allegiance.Myrmidex)
-                list = MyrmidexTeam;
-            else
-                list = TribeTeam;
+            list = allegiance == Allegiance.Myrmidex ? MyrmidexTeam : TribeTeam;
 
             List<BaseCreature> bclist = new List<BaseCreature>();
 
@@ -622,7 +609,8 @@ namespace Server.Engines.MyrmidexInvasion
 
         public bool AssignNavpoints(BaseCreature bc, Allegiance allegiance)
         {
-            int lane = 0;
+            int lane;
+
             int leg = GetLeg(new Point2D(bc.X, bc.Y), out lane, allegiance);
 
             if (leg == -1)
@@ -706,9 +694,9 @@ namespace Server.Engines.MyrmidexInvasion
 
             if (p.X <= rec.X + div)
                 lane = 0;
-            else if (p.X <= rec.X + (div * 2))
+            else if (p.X <= rec.X + div * 2)
                 lane = 1;
-            else if (p.X <= rec.X + (div * 3))
+            else if (p.X <= rec.X + div * 3)
                 lane = 2;
             else
                 lane = 3;
