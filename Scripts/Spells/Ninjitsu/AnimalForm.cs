@@ -207,7 +207,7 @@ namespace Server.Spells.Ninjitsu
 
             if (m.Skills.Ninjitsu.Value < entry.ReqSkill)
             {
-                string args = string.Format("{0}\t{1}\t ", entry.ReqSkill.ToString("F1"), SkillName.Ninjitsu);
+                string args = string.Format("{0:F1}\t{1}\t ", entry.ReqSkill, SkillName.Ninjitsu);
                 m.SendLocalizedMessage(1063013, args);
                 // You need at least ~1_SKILL_REQUIREMENT~ ~2_SKILL_NAME~ skill to use that ability.
                 return MorphResult.NoSkill;
@@ -452,7 +452,7 @@ namespace Server.Spells.Ninjitsu
             new AnimalFormEntry(typeof(Ferret), "ferret", 11672, 0, 1075220, 40.0, 0x117, 0, 0, false, false, true),
             new AnimalFormEntry(typeof(CuSidhe), "cu sidhe", 11670, 0, 1075221, 60.0, 0x115, 0, 0, false, false, false),
             new AnimalFormEntry(typeof(Reptalon), "reptalon", 11669, 0, 1075222, 90.0, 0x114, 0, 0, false, false, false),
-            new AnimalFormEntry(typeof(WildWhiteTiger), "white tiger", 38980, 2500, 0, 0, 0x4E7, 0, 0, false, false, false),
+            new AnimalFormEntry(typeof(WildWhiteTiger), "white tiger", 38980, 2500, 0, 0, 0x4E7, 0, 0, false, false, false)
         };
 
         public static AnimalFormEntry[] Entries => m_Entries;

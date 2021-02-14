@@ -125,7 +125,7 @@ namespace Server.Spells.Third
 
         private class InternalTimer : Timer
         {
-            public Mobile Mobile { get; set; }
+            public Mobile Mobile { get; }
 
             public InternalTimer(Mobile m, TimeSpan duration)
                 : base(duration)

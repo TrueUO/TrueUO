@@ -116,7 +116,7 @@ namespace Server.Spells.Mysticism
 
         public class InternalTarget : Target
         {
-            public NetherCycloneSpell Owner { get; set; }
+            public NetherCycloneSpell Owner { get; }
 
             public InternalTarget(NetherCycloneSpell owner)
                 : this(owner, false)

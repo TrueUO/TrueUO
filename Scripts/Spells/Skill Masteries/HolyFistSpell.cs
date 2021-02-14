@@ -96,7 +96,7 @@ namespace Server.Spells.SkillMasteries
                         damage *= GetDamageScalar(mobile);
                     }
 
-                    int sdiBonus = SpellHelper.GetSpellDamageBonus(Caster, m, CastSkill, m is Mobile ? Caster.Player && ((Mobile)m).Player : false);
+                    int sdiBonus = SpellHelper.GetSpellDamageBonus(Caster, m, CastSkill, m is Mobile pm && Caster.Player && pm.Player);
 
                     damage *= (100 + sdiBonus);
                     damage /= 100;

@@ -91,7 +91,7 @@ namespace Server.Spells.Necromancy
                 typeof(TerathanWarrior)
                 // TODO: Giant beetle? Ant lion? Ophidians?
             },
-                new SummonEntry[]
+                new[]
                 {
                     new SummonEntry(0, typeof(MoundOfMaggots))
                 }),
@@ -137,7 +137,7 @@ namespace Server.Spells.Necromancy
                    new SummonEntry(0, typeof(PatchworkSkeleton))
                }),
             // Default group
-            new CreatureGroup(new Type[0], new SummonEntry[]
+            new CreatureGroup(new Type[0], new[]
             {
                 new SummonEntry(18000, typeof(LichLord)),
                 new SummonEntry(10000, typeof(FleshGolem)),
@@ -146,7 +146,7 @@ namespace Server.Spells.Necromancy
                 new SummonEntry(2000, typeof(Mummy)),
                 new SummonEntry(1000, typeof(SkeletalMage), typeof(BoneMagi)),
                 new SummonEntry(0, typeof(PatchworkSkeleton))
-            }),
+            })
         };
 
         public void Target(object obj)
@@ -318,7 +318,7 @@ namespace Server.Spells.Necromancy
             if (summoned == null)
                 return;
 
-            BaseCreature bc = (BaseCreature)summoned;
+            BaseCreature bc = summoned;
 
             // to be sure
             bc.Tamable = false;
@@ -330,7 +330,7 @@ namespace Server.Spells.Necromancy
 
             Effects.PlaySound(loc, map, bc.GetAngerSound());
 
-            BaseCreature.Summon((BaseCreature)summoned, false, caster, loc, 0x28, TimeSpan.FromDays(1.0));
+            BaseCreature.Summon(summoned, false, caster, loc, 0x28, TimeSpan.FromDays(1.0));
 
             if (summoned is SkeletalDragon dragon)
                 Scale(dragon, 50); // lose 50% hp and strength

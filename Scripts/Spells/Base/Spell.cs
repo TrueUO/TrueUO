@@ -31,7 +31,7 @@ namespace Server.Spells
 
         public int ID => SpellRegistry.GetRegistryNumber(this);
 
-        public SpellState State { get { return m_State; } set { m_State = value; } }
+        public SpellState State { get => m_State; set => m_State = value; }
 
         public Mobile Caster => m_Caster;
         public SpellInfo Info => m_Info;
@@ -41,7 +41,7 @@ namespace Server.Spells
         public Item Scroll => m_Scroll;
         public long CastTime => m_CastTime;
 
-        public IDamageable InstantTarget { get { return m_InstantTarget; } set { m_InstantTarget = value; } }
+        public IDamageable InstantTarget { get => m_InstantTarget; set => m_InstantTarget = value; }
 
         public bool Disturbed { get; set; }
 
@@ -816,28 +816,25 @@ namespace Server.Spells
 
             Type[] types = spellType.GetNestedTypes(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
-            if (types != null)
+            Type targetType = types.FirstOrDefault(t => t.IsSubclassOf(typeof(Target)));
+
+            if (targetType != null)
             {
-                Type targetType = types.FirstOrDefault(t => t.IsSubclassOf(typeof(Target)));
+                Target t = null;
 
-                if (targetType != null)
+                try
                 {
-                    Target t = null;
+                    t = Activator.CreateInstance(targetType, this) as Target;
+                }
+                catch
+                {
+                    LogBadConstructorForInstantTarget();
+                }
 
-                    try
-                    {
-                        t = Activator.CreateInstance(targetType, this) as Target;
-                    }
-                    catch
-                    {
-                        LogBadConstructorForInstantTarget();
-                    }
-
-                    if (t != null)
-                    {
-                        t.Invoke(Caster, InstantTarget);
-                        return true;
-                    }
+                if (t != null)
+                {
+                    t.Invoke(Caster, InstantTarget);
+                    return true;
                 }
             }
 
