@@ -55,7 +55,7 @@ namespace Server.Spells.First
                     targ.PlaySound(0x1E9);
                     targ.FixedParticles(0x376A, 9, 32, 5008, EffectLayer.Waist);
 
-                    mods = new ResistanceMod[5]
+                    mods = new[]
                     {
                         new ResistanceMod(ResistanceType.Physical, 15 + (int)(targ.Skills[SkillName.Inscribe].Value / 20)),
                         new ResistanceMod(ResistanceType.Fire, -5),

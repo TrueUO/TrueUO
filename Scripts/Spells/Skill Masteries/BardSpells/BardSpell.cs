@@ -99,8 +99,7 @@ namespace Server.Spells.SkillMasteries
             {
                 Caster.SendLocalizedMessage(500612); // You play poorly, and there is no effect.
 
-                if (m_Instrument != null)
-                    m_Instrument.PlayInstrumentBadly(Caster);
+                m_Instrument?.PlayInstrumentBadly(Caster);
             }
 
             return check;
@@ -135,14 +134,14 @@ namespace Server.Spells.SkillMasteries
             if (Target == null)
                 return 1.0;
 
-            ISlayer slayer = Instrument as ISlayer;
+            ISlayer slayer = Instrument;
 
             if (slayer != null)
             {
                 SlayerEntry se1 = SlayerGroup.GetEntryByName(slayer.Slayer);
                 SlayerEntry se2 = SlayerGroup.GetEntryByName(slayer.Slayer2);
 
-                if ((se1 != null && se1.Slays(Target)) || (se2 != null && se2.Slays(Target)))
+                if (se1 != null && se1.Slays(Target) || se2 != null && se2.Slays(Target))
                 {
                     return SlayerBonus;
                 }

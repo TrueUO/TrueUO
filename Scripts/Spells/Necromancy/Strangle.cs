@@ -80,8 +80,7 @@ namespace Server.Spells.Necromancy
              * for a target at 20% Stamina the damage multiplier is 2.6
              */
 
-            if (m.Spell != null)
-                m.Spell.OnCasterHurt();
+            m.Spell?.OnCasterHurt();
 
             m.PlaySound(0x22F);
             m.FixedParticles(0x36CB, 1, 9, 9911, 67, 5, EffectLayer.Head);
@@ -104,7 +103,7 @@ namespace Server.Spells.Necromancy
                     spiritlevel = 4;
                 int d_MinDamage = (int)(4.0 * strength);
                 int d_MaxDamage = (int)(((spiritlevel + 1) * 3) * strength);
-                string args = string.Format("{0}\t{1}", d_MinDamage, d_MaxDamage);
+                string args = $"{d_MinDamage}\t{d_MaxDamage}";
 
                 int i_Count = (int)spiritlevel;
                 int i_MaxCount = i_Count;
@@ -124,10 +123,7 @@ namespace Server.Spells.Necromancy
                         {
                             int delay = (int)(Math.Ceiling((1.0 + (5 * i_Count)) / i_MaxCount));
 
-                            if (delay <= 5)
-                                i_HitDelay = delay;
-                            else
-                                i_HitDelay = 5;
+                            i_HitDelay = delay <= 5 ? delay : 5;
                         }
                     }
                     i_Length += i_HitDelay;
@@ -197,10 +193,7 @@ namespace Server.Spells.Necromancy
                     {
                         int delay = (int)(Math.Ceiling((1.0 + (5 * m_Count)) / m_MaxCount));
 
-                        if (delay <= 5)
-                            m_HitDelay = delay;
-                        else
-                            m_HitDelay = 5;
+                        m_HitDelay = delay <= 5 ? delay : 5;
                     }
                 }
 

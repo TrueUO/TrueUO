@@ -38,7 +38,7 @@ namespace Server.Spells.Second
                 target.PlaySound(0x1E9);
                 target.FixedParticles(0x375A, 9, 20, 5016, EffectLayer.Waist);
 
-                mods = new object[2]
+                mods = new object[]
                 {
                     new ResistanceMod(ResistanceType.Physical, -15 + Math.Min((int)(caster.Skills[SkillName.Inscribe].Value / 20), 15)),
                     new DefaultSkillMod(SkillName.MagicResist, true, -35 + Math.Min((int)(caster.Skills[SkillName.Inscribe].Value / 20), 35))
@@ -52,8 +52,8 @@ namespace Server.Spells.Second
 
                 int physloss = -15 + (int)(caster.Skills[SkillName.Inscribe].Value / 20);
                 int resistloss = -35 + (int)(caster.Skills[SkillName.Inscribe].Value / 20);
-                string args = string.Format("{0}\t{1}", physloss, resistloss);
-                BuffInfo.AddBuff(target, new BuffInfo(archprotection ? BuffIcon.ArchProtection : BuffIcon.Protection, archprotection ? 1075816 : 1075814, 1075815, args.ToString()));
+                string args = $"{physloss}\t{resistloss}";
+                BuffInfo.AddBuff(target, new BuffInfo(archprotection ? BuffIcon.ArchProtection : BuffIcon.Protection, archprotection ? 1075816 : 1075814, 1075815, args));
             }
             else
             {

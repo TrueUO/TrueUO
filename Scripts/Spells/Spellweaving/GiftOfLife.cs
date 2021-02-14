@@ -199,7 +199,7 @@ namespace Server.Spells.Spellweaving
             private readonly Mobile m_Mobile;
             private readonly GiftOfLifeSpell m_Spell;
 
-            public DateTime EndTime { get; private set; }
+            public DateTime EndTime { get; }
 
             public ExpireTimer(Mobile m, TimeSpan delay, GiftOfLifeSpell spell)
                 : base(delay)

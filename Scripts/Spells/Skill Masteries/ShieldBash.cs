@@ -177,8 +177,7 @@ namespace Server.Spells.SkillMasteries
         {
             BaseWeapon wep = Caster.Weapon as BaseWeapon;
 
-            if (wep != null)
-                wep.OnHit(Caster, attacker, 1.0);
+            wep?.OnHit(Caster, attacker, 1.0);
         }
     }
 }

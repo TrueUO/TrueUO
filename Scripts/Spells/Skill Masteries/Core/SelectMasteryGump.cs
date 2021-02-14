@@ -9,7 +9,7 @@ namespace Server.Gumps
         public const int Red = 0x8e2525;
         public const int Blue = 0x000066;
 
-        public BookOfMasteries Book { get; private set; }
+        public BookOfMasteries Book { get; }
 
         public MasterySelectionGump(PlayerMobile user, BookOfMasteries book)
             : base(user, 75, 25)
@@ -65,7 +65,7 @@ namespace Server.Gumps
                 BookOfMasteries.AddToCooldown(User);
             }
             else
-                User.SendLocalizedMessage(1156236, string.Format("{0}\t{1}", MasteryInfo.MinSkillRequirement.ToString(), User.Skills[n].Info.Name)); // You need at least ~1_SKILL_REQUIREMENT~ ~2_SKILL_NAME~ skill to use that mastery.
+                User.SendLocalizedMessage(1156236, $"{MasteryInfo.MinSkillRequirement.ToString()}\t{User.Skills[n].Info.Name}"); // You need at least ~1_SKILL_REQUIREMENT~ ~2_SKILL_NAME~ skill to use that mastery.
         }
     }
 }

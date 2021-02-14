@@ -227,7 +227,7 @@ namespace Server.Spells.Mysticism
 
         public class InternalTarget : Target
         {
-            public CleansingWindsSpell Owner { get; set; }
+            public CleansingWindsSpell Owner { get; }
 
             public InternalTarget(CleansingWindsSpell owner)
                 : this(owner, false)

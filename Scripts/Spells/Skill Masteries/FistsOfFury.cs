@@ -111,7 +111,6 @@ namespace Server.Spells.SkillMasteries
                     int newDam = damage + Utility.RandomMinMax(level, level * 2);
 
                     AOS.Damage(defender, attacker, Utility.RandomMinMax(level + 1, (level * 7) - 1), 0, 0, 0, 0, 0, 0, 100);
-                    damage = 0;
                 }
             }
         }
@@ -133,7 +132,7 @@ namespace Server.Spells.SkillMasteries
 
         public class FistsOfFuryContext
         {
-            public Mobile Target { get; set; }
+            public Mobile Target { get; }
             public int Hit { get; set; }
 
             public FistsOfFuryContext(Mobile target)

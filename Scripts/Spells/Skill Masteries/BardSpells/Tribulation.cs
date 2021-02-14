@@ -79,16 +79,16 @@ namespace Server.Spells.SkillMasteries
                 double cast = Caster.Skills[CastSkill].Value;
                 double dam = Caster.Skills[DamageSkill].Value;
 
-                m_PropertyBonus = (int)((BaseSkillBonus * 2.75) + (CollectiveBonus * 1.667));               // 5 - 22 (32)
-                m_DamageChance = (int)((BaseSkillBonus * 7.5) + (CollectiveBonus * 3));                     // 15 - 60 (84)
-                m_DamageFactor = (int)((BaseSkillBonus * 4) + (CollectiveBonus * 3));                       // 8 - 32 (50)
-                m_Rounds = 5 + (int)((BaseSkillBonus * .75) + (CollectiveBonus / 2));                       // 5 - 11 (14)
+                m_PropertyBonus = (int)(BaseSkillBonus * 2.75 + CollectiveBonus * 1.667);               // 5 - 22 (32)
+                m_DamageChance = (int)(BaseSkillBonus * 7.5 + CollectiveBonus * 3);                     // 15 - 60 (84)
+                m_DamageFactor = (int)(BaseSkillBonus * 4 + CollectiveBonus * 3);                       // 8 - 32 (50)
+                m_Rounds = 5 + (int)(BaseSkillBonus * .75 + CollectiveBonus / 2);                       // 5 - 11 (14)
 
                 // ~1_HCI~% Hit Chance.<br>~2_SDI~% Spell Damage.<br>Damage taken has a ~3_EXP~% chance to cause additional burst of physical damage.<br>
-                BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.TribulationTarget, 1115740, 1115742, string.Format("{0}\t{1}\t{2}", m_PropertyBonus, m_PropertyBonus, (int)m_DamageChance)));
+                BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.TribulationTarget, 1115740, 1115742, $"{m_PropertyBonus}\t{m_PropertyBonus}\t{(int) m_DamageChance}"));
 
                 // Target: ~1_val~ <br> Damage Factor: ~2_val~% <br> Damage Chance: ~3_val~%
-                BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.TribulationCaster, 1115740, 1151388, string.Format("{0}\t{1}\t{2}", m.Name, m_DamageFactor, (int)m_DamageChance)));
+                BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.TribulationCaster, 1115740, 1151388, $"{m.Name}\t{m_DamageFactor}\t{(int) m_DamageChance}"));
 
                 BeginTimer();
             }
