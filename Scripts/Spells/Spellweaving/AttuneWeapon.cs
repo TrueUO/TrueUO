@@ -111,7 +111,7 @@ namespace Server.Spells.Spellweaving
         {
             private readonly Mobile m_Mobile;
 
-            public DateTime Expires { get; set; }
+            public DateTime Expires { get; }
 
             public ExpireTimer(Mobile m, TimeSpan delay)
                 : base(delay)

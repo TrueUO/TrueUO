@@ -262,6 +262,7 @@ namespace Server.Spells.Seventh
             }
 
             public override bool ShowFeluccaWarning => true;
+
             public override void Serialize(GenericWriter writer)
             {
                 base.Serialize(writer);
