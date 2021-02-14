@@ -239,10 +239,6 @@ namespace Server.Items
 
                 return true;
             }
-            else
-            {
-                item.Delete();
-            }
 
             return false;
         }
