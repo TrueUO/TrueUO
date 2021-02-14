@@ -70,11 +70,16 @@ namespace Server.Items
             Movable = false;
         }
 
+        public ClothingAdjustments(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void OnDoubleClick(Mobile from)
         {
             if (!from.InRange(GetWorldLocation(), 2))
             {
-                from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1113959); // I can't reach that.
+                from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1019045); // I can't reach that.
             }
             else
             {
@@ -82,7 +87,7 @@ namespace Server.Items
             }
         }
 
-        public static ClothingRewardDefinition[] Definitions = new ClothingRewardDefinition[]
+        public static ClothingRewardDefinition[] Definitions =
         {
             new ClothingRewardDefinition(typeof(RewardCloak), ClothRewardHue.Bronze, 1041286),
             new ClothingRewardDefinition(typeof(RewardRobe), ClothRewardHue.Bronze, 1041287),
@@ -240,11 +245,6 @@ namespace Server.Items
             }
 
             return false;
-        }
-
-        public ClothingAdjustments(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
