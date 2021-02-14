@@ -91,10 +91,10 @@ namespace Server.Spells.SkillMasteries
 
         private class InternalTimer : Timer
         {
-            public Mobile Attacker { get; private set; }
-            public Mobile Defender { get; private set; }
-            public PierceSpell Spell { get; private set; }
-            public int ToDrain { get; private set; }
+            public Mobile Attacker { get; }
+            public Mobile Defender { get; }
+            public PierceSpell Spell { get; }
+            public int ToDrain { get; }
             public int Ticks { get; private set; }
 
             public InternalTimer(PierceSpell spell, Mobile attacker, Mobile defender, int toDrain)

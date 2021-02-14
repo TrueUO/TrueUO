@@ -278,9 +278,9 @@ namespace Server.Spells
 
         public static void GetSurfaceTop(ref IPoint3D p)
         {
-            if (p is Item)
+            if (p is Item item)
             {
-                p = ((Item)p).GetSurfaceTop();
+                p = item.GetSurfaceTop();
             }
             else if (p is StaticTarget t)
             {
@@ -980,12 +980,12 @@ namespace Server.Spells
             if (map != Map.Malas)
                 return false;
 
-            int x = loc.X, y = loc.Y, z = loc.Z;
+            int x = loc.X, y = loc.Y;
 
-            bool r1 = (x >= 0 && y >= 0 && x <= 128 && y <= 128);
-            bool r2 = (x >= 45 && y >= 320 && x < 195 && y < 710);
+            bool r1 = x >= 0 && y >= 0 && x <= 128 && y <= 128;
+            bool r2 = x >= 45 && y >= 320 && x < 195 && y < 710;
 
-            return (r1 || r2);
+            return r1 || r2;
         }
 
         public static bool IsDoomGauntlet(Map map, Point3D loc)
@@ -1089,8 +1089,8 @@ namespace Server.Spells
         //towns
         public static bool IsTown(IPoint3D loc, Mobile caster)
         {
-            if (loc is Item)
-                loc = ((Item)loc).GetWorldLocation();
+            if (loc is Item item)
+                loc = item.GetWorldLocation();
 
             return IsTown(new Point3D(loc), caster);
         }
@@ -1109,8 +1109,8 @@ namespace Server.Spells
 
         public static bool CheckTown(IPoint3D loc, Mobile caster)
         {
-            if (loc is Item)
-                loc = ((Item)loc).GetWorldLocation();
+            if (loc is Item item)
+                loc = item.GetWorldLocation();
 
             return CheckTown(new Point3D(loc), caster);
         }
@@ -1190,10 +1190,10 @@ namespace Server.Spells
 
             if (spell.SpellDamageType == DamageType.Spell)
             {
-                if (defender is DamageableItem && ((DamageableItem)defender).CheckReflect(spell, source))
+                if (defender is DamageableItem item && item.CheckReflect(spell, source))
                 {
                     IDamageable temp = source;
-                    source = defender;
+                    source = item;
                     defender = temp;
                     return true;
                 }

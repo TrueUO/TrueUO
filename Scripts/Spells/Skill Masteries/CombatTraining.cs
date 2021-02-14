@@ -55,8 +55,8 @@ namespace Server.Spells.SkillMasteries
         private int _DamageTaken;
         private bool _Expired;
 
-        public int Phase { get { return _Phase; } set { _Phase = value; } }
-        public int DamageTaken { get { return _DamageTaken; } set { _DamageTaken = value; } }
+        public int Phase { get => _Phase; set => _Phase = value; }
+        public int DamageTaken { get => _DamageTaken; set => _DamageTaken = value; }
 
         public CombatTrainingSpell(Mobile caster, Item scroll)
             : base(caster, scroll, m_Info)

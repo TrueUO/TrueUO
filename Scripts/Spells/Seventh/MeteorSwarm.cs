@@ -70,8 +70,8 @@ namespace Server.Spells.Seventh
 
                 SpellHelper.Turn(Caster, p);
 
-                if (p is Item)
-                    p = ((Item)p).GetWorldLocation();
+                if (p is Item pItem)
+                    p = pItem.GetWorldLocation();
 
                 System.Collections.Generic.List<IDamageable> targets = AcquireIndirectTargets(p, 2).ToList();
                 int count = Math.Max(1, targets.Count);
