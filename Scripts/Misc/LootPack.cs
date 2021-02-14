@@ -972,7 +972,14 @@ namespace Server
                 }
                 else if (Type == typeof(BaseArmor))
                 {
-                    item = Loot.RandomArmorOrHat(inTokuno, isMondain, isStygian);
+                    if (0.80 > Utility.RandomDouble())
+                    {
+                        item = Loot.RandomArmor(inTokuno, isMondain, isStygian);
+                    }
+                    else
+                    {
+                        item = Loot.RandomHat(inTokuno);
+                    }
                 }
                 else if (Type == typeof(BaseShield))
                 {
