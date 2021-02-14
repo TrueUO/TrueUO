@@ -8,172 +8,225 @@ namespace Server
 {
 	public struct LandData
 	{
-		private string m_Name;
-		private TileFlag m_Flags;
+		public string Name { get; set; }
+		public TileFlag Flags { get; set; }
 
 		public LandData(string name, TileFlag flags)
 		{
-			m_Name = name;
-			m_Flags = flags;
+			Name = name;
+			Flags = flags;
 		}
-
-		public string Name { get => m_Name; set => m_Name = value; }
-
-		public TileFlag Flags { get => m_Flags; set => m_Flags = value; }
 	}
 
+	[PropertyObject]
 	public struct ItemData
 	{
-		private string m_Name;
-		private TileFlag m_Flags;
 		private byte m_Weight;
 		private byte m_Quality;
+		private ushort m_Animation;
 		private byte m_Quantity;
 		private byte m_Value;
 		private byte m_Height;
 
+		[CommandProperty(AccessLevel.Counselor, AccessLevel.Administrator)]
+		public string Name { get; set; }
+
+		[CommandProperty(AccessLevel.Counselor, AccessLevel.Developer)]
+		public TileFlag Flags { get; set; }
+
+		[CommandProperty(AccessLevel.Counselor, AccessLevel.Administrator)]
+		public int Weight { get => m_Weight; set => m_Weight = (byte)value; }
+
+		[CommandProperty(AccessLevel.Counselor, AccessLevel.Administrator)]
+		public int Quality { get => m_Quality; set => m_Quality = (byte)value; }
+
+		[CommandProperty(AccessLevel.Counselor, AccessLevel.Administrator)]
+		public int Animation { get => m_Animation; set => m_Animation = (ushort)value; }
+
+		[CommandProperty(AccessLevel.Counselor, AccessLevel.Administrator)]
+		public int Quantity { get => m_Quantity; set => m_Quantity = (byte)value; }
+
+		[CommandProperty(AccessLevel.Counselor, AccessLevel.Administrator)]
+		public int Value { get => m_Value; set => m_Value = (byte)value; }
+
+		[CommandProperty(AccessLevel.Counselor, AccessLevel.Administrator)]
+		public int Height { get => m_Height; set => m_Height = (byte)value; }
+
+		// computed properties
+
+		[CommandProperty(AccessLevel.Counselor, AccessLevel.Administrator)]
+		public int CalcHeight => Bridge ? m_Height / 2 : m_Height;
+
+		[CommandProperty(AccessLevel.Counselor, AccessLevel.Administrator)]
+		public bool Bridge { get => this[TileFlag.Bridge]; set => this[TileFlag.Bridge] = value; }
+
+		[CommandProperty(AccessLevel.Counselor, AccessLevel.Administrator)]
+		public bool Wall { get => this[TileFlag.Wall]; set => this[TileFlag.Wall] = value; }
+
+		[CommandProperty(AccessLevel.Counselor, AccessLevel.Administrator)]
+		public bool Window { get => this[TileFlag.Window]; set => this[TileFlag.Window] = value; }
+
+		[CommandProperty(AccessLevel.Counselor, AccessLevel.Administrator)]
+		public bool Impassable { get => this[TileFlag.Impassable]; set => this[TileFlag.Impassable] = value; }
+
+		[CommandProperty(AccessLevel.Counselor, AccessLevel.Administrator)]
+		public bool Surface { get => this[TileFlag.Surface]; set => this[TileFlag.Surface] = value; }
+
+		[CommandProperty(AccessLevel.Counselor, AccessLevel.Administrator)]
+		public bool Roof { get => this[TileFlag.Roof]; set => this[TileFlag.Roof] = value; }
+
+		[CommandProperty(AccessLevel.Counselor, AccessLevel.Administrator)]
+		public bool LightSource { get => this[TileFlag.LightSource]; set => this[TileFlag.LightSource] = value; }
+
+		public bool this[TileFlag flag]
+		{
+			get => (Flags & flag) != 0;
+			set
+			{
+				if (value)
+					Flags |= flag;
+				else
+					Flags &= ~flag;
+			}
+		}
+
 		public ItemData(ItemData d)
-			: this(d.Name, d.Flags, d.Weight, d.Quality, d.Quantity, d.Value, d.Height)
+			: this(d.Name, d.Flags, d.Weight, d.Quality, d.Animation, d.Quantity, d.Value, d.Height)
 		{ }
 
-		public ItemData(string name, TileFlag flags, int weight, int quality, int quantity, int value, int height)
+		public ItemData(string name, TileFlag flags, int weight, int quality, int animation, int quantity, int value, int height)
 		{
-			m_Name = name;
-			m_Flags = flags;
+			Name = name;
+			Flags = flags;
+
 			m_Weight = (byte)weight;
 			m_Quality = (byte)quality;
+			m_Animation = (ushort)animation;
 			m_Quantity = (byte)quantity;
 			m_Value = (byte)value;
 			m_Height = (byte)height;
 		}
 
-		public string Name { get => m_Name; set => m_Name = value; }
-
-		public TileFlag Flags { get => m_Flags; set => m_Flags = value; }
-
-		public bool Bridge
+		public ItemData(GenericReader reader)
+			: this()
 		{
-			get => (m_Flags & TileFlag.Bridge) != 0;
-			set
-			{
-				if (value)
-				{
-					m_Flags |= TileFlag.Bridge;
-				}
-				else
-				{
-					m_Flags &= ~TileFlag.Bridge;
-				}
-			}
+			Deserialize(reader);
 		}
 
-		public bool Impassable
+		public void Serialize(GenericWriter writer)
 		{
-			get => (m_Flags & TileFlag.Impassable) != 0;
-			set
-			{
-				if (value)
-				{
-					m_Flags |= TileFlag.Impassable;
-				}
-				else
-				{
-					m_Flags &= ~TileFlag.Impassable;
-				}
-			}
+			writer.WriteEncodedInt(0);
+
+			writer.Write(Name);
+
+			writer.Write((ulong)Flags);
+
+			writer.Write(m_Weight);
+			writer.Write(m_Quality);
+			writer.Write(m_Animation);
+			writer.Write(m_Quantity);
+			writer.Write(m_Value);
+			writer.Write(m_Height);
 		}
 
-		public bool Surface
+		public void Deserialize(GenericReader reader)
 		{
-			get => (m_Flags & TileFlag.Surface) != 0;
-			set
-			{
-				if (value)
-				{
-					m_Flags |= TileFlag.Surface;
-				}
-				else
-				{
-					m_Flags &= ~TileFlag.Surface;
-				}
-			}
-		}
+			reader.ReadEncodedInt();
 
-		public int Weight { get => m_Weight; set => m_Weight = (byte)value; }
+			Name = reader.ReadString();
 
-		public int Quality { get => m_Quality; set => m_Quality = (byte)value; }
+			Flags = (TileFlag)reader.ReadULong();
 
-		public int Quantity { get => m_Quantity; set => m_Quantity = (byte)value; }
-
-		public int Value { get => m_Value; set => m_Value = (byte)value; }
-
-		public int Height { get => m_Height; set => m_Height = (byte)value; }
-
-		public int CalcHeight
-		{
-			get
-            {
-                if ((m_Flags & TileFlag.Bridge) != 0)
-				{
-					return m_Height / 2;
-				}
-
-                return m_Height;
-            }
+			m_Weight = reader.ReadByte();
+			m_Quality = reader.ReadByte();
+			m_Animation = reader.ReadUShort();
+			m_Quantity = reader.ReadByte();
+			m_Value = reader.ReadByte();
+			m_Height = reader.ReadByte();
 		}
 	}
 
 	[Flags]
 	public enum TileFlag : ulong
 	{
-		None = 0x00000000,
-		Background = 0x00000001,
-		Weapon = 0x00000002,
-		Transparent = 0x00000004,
-		Translucent = 0x00000008,
-		Wall = 0x00000010,
-		Damaging = 0x00000020,
-		Impassable = 0x00000040,
-		Wet = 0x00000080,
-		Unknown1 = 0x00000100,
-		Surface = 0x00000200,
-		Bridge = 0x00000400,
-		Generic = 0x00000800,
-		Window = 0x00001000,
-		NoShoot = 0x00002000,
-		ArticleA = 0x00004000,
-		ArticleAn = 0x00008000,
-		Internal = 0x00010000,
-		Foliage = 0x00020000,
-		PartialHue = 0x00040000,
-		Unknown2 = 0x00080000,
-		Map = 0x00100000,
-		Container = 0x00200000,
-		Wearable = 0x00400000,
-		LightSource = 0x00800000,
-		Animation = 0x01000000,
-		HoverOver = 0x02000000,
-		Unknown3 = 0x04000000,
-		Armor = 0x08000000,
-		Roof = 0x10000000,
-		Door = 0x20000000,
-		StairBack = 0x40000000,
-		StairRight = 0x80000000
+		None = 0x0000000000000000,
+
+		Background = 0x0000000000000001,
+		Weapon = 0x0000000000000002,
+		Transparent = 0x0000000000000004,
+		Translucent = 0x0000000000000008,
+		Wall = 0x0000000000000010,
+		Damaging = 0x0000000000000020,
+		Impassable = 0x0000000000000040,
+		Wet = 0x0000000000000080,
+		Unknown1 = 0x0000000000000100,
+		Surface = 0x0000000000000200,
+		Bridge = 0x0000000000000400,
+		Generic = 0x0000000000000800,
+		Window = 0x0000000000001000,
+		NoShoot = 0x0000000000002000,
+		ArticleA = 0x0000000000004000,
+		ArticleAn = 0x0000000000008000,
+		Internal = 0x0000000000010000,
+		Foliage = 0x0000000000020000,
+		PartialHue = 0x0000000000040000,
+		Unknown2 = 0x0000000000080000,
+		Map = 0x0000000000100000,
+		Container = 0x0000000000200000,
+		Wearable = 0x0000000000400000,
+		LightSource = 0x0000000000800000,
+		Animation = 0x0000000001000000,
+		HoverOver = 0x0000000002000000,
+		Unknown3 = 0x0000000004000000,
+		Armor = 0x0000000008000000,
+		Roof = 0x0000000010000000,
+		Door = 0x0000000020000000,
+		StairBack = 0x0000000040000000,
+		StairRight = 0x0000000080000000,
+
+		HS33 = 0x0000000100000000,
+		HS34 = 0x0000000200000000,
+		HS35 = 0x0000000400000000,
+		HS36 = 0x0000000800000000,
+		HS37 = 0x0000001000000000,
+		HS38 = 0x0000002000000000,
+		HS39 = 0x0000004000000000,
+		HS40 = 0x0000008000000000,
+		HS41 = 0x0000010000000000,
+		HS42 = 0x0000020000000000,
+		HS43 = 0x0000040000000000,
+		HS44 = 0x0000080000000000,
+		HS45 = 0x0000100000000000,
+		HS46 = 0x0000200000000000,
+		HS47 = 0x0000400000000000,
+		HS48 = 0x0000800000000000,
+		HS49 = 0x0001000000000000,
+		HS50 = 0x0002000000000000,
+		HS51 = 0x0004000000000000,
+		HS52 = 0x0008000000000000,
+		HS53 = 0x0010000000000000,
+		HS54 = 0x0020000000000000,
+		HS55 = 0x0040000000000000,
+		HS56 = 0x0080000000000000,
+		HS57 = 0x0100000000000000,
+		HS58 = 0x0200000000000000,
+		HS59 = 0x0400000000000000,
+		HS60 = 0x0800000000000000,
+		HS61 = 0x1000000000000000,
+		HS62 = 0x2000000000000000,
+		HS63 = 0x4000000000000000,
+		HS64 = 0x8000000000000000
 	}
 
 	public static class TileData
 	{
-		private static readonly LandData[] m_LandData;
-		private static readonly ItemData[] m_ItemData;
+		public static LandData[] LandTable { get; } = new LandData[0x4000];
+		public static ItemData[] ItemTable { get; } = new ItemData[0x10000];
 
-		public static LandData[] LandTable => m_LandData;
-		public static ItemData[] ItemTable => m_ItemData;
+		public static int MaxLandValue { get; private set; }
+		public static int MaxItemValue { get; private set; }
 
-		private static readonly int m_MaxLandValue;
-		private static readonly int m_MaxItemValue;
-
-		public static int MaxLandValue => m_MaxLandValue;
-		public static int MaxItemValue => m_MaxItemValue;
+		public static bool Is64BitFlags { get; private set; }
 
 		private static readonly byte[] m_StringBuffer = new byte[20];
 
@@ -181,9 +234,9 @@ namespace Server
 		{
 			bin.Read(m_StringBuffer, 0, 20);
 
-			int count = 0;
+			var count = 0;
 
-			while (count < 20 && m_StringBuffer[count] != 0)
+			while (count < m_StringBuffer.Length && m_StringBuffer[count] != 0)
 			{
 				++count;
 			}
@@ -193,136 +246,102 @@ namespace Server
 
 		static TileData()
 		{
-			string filePath = Core.FindDataFile("tiledata.mul");
+			Load();
+		}
+
+		public static void Load()
+		{
+			Is64BitFlags = false;
+
+			if (MaxLandValue > 0)
+			{
+				Array.Clear(LandTable, 0, MaxLandValue);
+
+				MaxLandValue = 0;
+			}
+
+			if (MaxItemValue > 0)
+			{
+				Array.Clear(ItemTable, 0, MaxItemValue);
+
+				MaxItemValue = 0;
+			}
+
+			var flags64bit = false;
+			var landLength = 0;
+			var itemLength = 0;
+
+			var filePath = Core.FindDataFile("tiledata.mul");
 
 			if (File.Exists(filePath))
 			{
-				using (FileStream fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
+				using (var fs = new FileStream(filePath, FileMode.Open, FileAccess.Read, FileShare.Read))
 				{
-					BinaryReader bin = new BinaryReader(fs);
+					var bin = new BinaryReader(fs);
 
-					if (fs.Length >= 3188736)
+					if (fs.Length >= 3188736) // 7.0.9.0
 					{
-						// 7.0.9.0
-						m_LandData = new LandData[0x4000];
-
-						for (int i = 0; i < 0x4000; ++i)
-						{
-							if (i == 1 || (i > 0 && (i & 0x1F) == 0))
-							{
-								bin.ReadInt32(); // header
-							}
-
-							TileFlag flags = (TileFlag)bin.ReadInt64();
-							bin.ReadInt16(); // skip 2 bytes -- textureID
-
-							m_LandData[i] = new LandData(ReadNameString(bin), flags);
-						}
-
-						m_ItemData = new ItemData[0x10000];
-
-						for (int i = 0; i < 0x10000; ++i)
-						{
-							if ((i & 0x1F) == 0)
-							{
-								bin.ReadInt32(); // header
-							}
-
-							TileFlag flags = (TileFlag)bin.ReadInt64();
-							int weight = bin.ReadByte();
-							int quality = bin.ReadByte();
-							bin.ReadInt16();
-							bin.ReadByte();
-							int quantity = bin.ReadByte();
-							bin.ReadInt32();
-							bin.ReadByte();
-							int value = bin.ReadByte();
-							int height = bin.ReadByte();
-
-							m_ItemData[i] = new ItemData(ReadNameString(bin), flags, weight, quality, quantity, value, height);
-						}
+						flags64bit = true;
+						landLength = 0x4000;
+						itemLength = 0x10000;
+					}
+					else if (fs.Length >= 1644544) // 7.0.0.0
+					{
+						flags64bit = false;
+						landLength = 0x4000;
+						itemLength = 0x8000;
 					}
 					else
 					{
-						m_LandData = new LandData[0x4000];
+						flags64bit = false;
+						landLength = 0x4000;
+						itemLength = 0x4000;
+					}
 
-						for (int i = 0; i < 0x4000; ++i)
+					for (var i = 0; i < landLength; ++i)
+					{
+						if (flags64bit ? (i == 1 || (i > 0 && (i & 0x1F) == 0)) : ((i & 0x1F) == 0))
 						{
-							if ((i & 0x1F) == 0)
-							{
-								bin.ReadInt32(); // header
-							}
-
-							TileFlag flags = (TileFlag)bin.ReadInt32();
-							bin.ReadInt16(); // skip 2 bytes -- textureID
-
-							m_LandData[i] = new LandData(ReadNameString(bin), flags);
+							bin.ReadInt32(); // header
 						}
 
-						if (fs.Length == 1644544)
+						var flags = (TileFlag)(flags64bit ? bin.ReadUInt64() : bin.ReadUInt32());
+
+						bin.ReadInt16(); // skip 2 bytes -- textureID
+
+						LandTable[i] = new LandData(ReadNameString(bin), flags);
+					}
+
+					for (var i = 0; i < itemLength; ++i)
+					{
+						if ((i & 0x1F) == 0)
 						{
-							// 7.0.0.0
-							m_ItemData = new ItemData[0x8000];
-
-							for (int i = 0; i < 0x8000; ++i)
-							{
-								if ((i & 0x1F) == 0)
-								{
-									bin.ReadInt32(); // header
-								}
-
-								TileFlag flags = (TileFlag)bin.ReadInt32();
-								int weight = bin.ReadByte();
-								int quality = bin.ReadByte();
-								bin.ReadInt16();
-								bin.ReadByte();
-								int quantity = bin.ReadByte();
-								bin.ReadInt32();
-								bin.ReadByte();
-								int value = bin.ReadByte();
-								int height = bin.ReadByte();
-
-								m_ItemData[i] = new ItemData(ReadNameString(bin), flags, weight, quality, quantity, value, height);
-							}
+							bin.ReadInt32(); // header
 						}
-						else
-						{
-							m_ItemData = new ItemData[0x4000];
 
-							for (int i = 0; i < 0x4000; ++i)
-							{
-								if ((i & 0x1F) == 0)
-								{
-									bin.ReadInt32(); // header
-								}
+						var flags = (TileFlag)(flags64bit ? bin.ReadUInt64() : bin.ReadUInt32());
+						var weight = bin.ReadByte();
+						var quality = bin.ReadByte();
+						var anim = bin.ReadUInt16();
+						bin.ReadByte();
+						var quantity = bin.ReadByte();
+						bin.ReadInt32();
+						bin.ReadByte();
+						var value = bin.ReadByte();
+						var height = bin.ReadByte();
 
-								TileFlag flags = (TileFlag)bin.ReadInt32();
-								int weight = bin.ReadByte();
-								int quality = bin.ReadByte();
-								bin.ReadInt16();
-								bin.ReadByte();
-								int quantity = bin.ReadByte();
-								bin.ReadInt32();
-								bin.ReadByte();
-								int value = bin.ReadByte();
-								int height = bin.ReadByte();
-
-								m_ItemData[i] = new ItemData(ReadNameString(bin), flags, weight, quality, quantity, value, height);
-							}
-						}
+						ItemTable[i] = new ItemData(ReadNameString(bin), flags, weight, quality, anim, quantity, value, height);
 					}
 				}
 
-				m_MaxLandValue = m_LandData.Length - 1;
-				m_MaxItemValue = m_ItemData.Length - 1;
+				Is64BitFlags = flags64bit;
+
+				MaxLandValue = landLength - 1;
+				MaxItemValue = itemLength - 1;
 			}
 			else
 			{
-				Console.WriteLine("tiledata.mul was not found");
-				Console.WriteLine("Make sure your Scripts/Misc/DataPath.cs is properly configured");
-				Console.WriteLine("After pressing return an exception will be thrown and the server will terminate");
-
-				throw new Exception(string.Format("TileData: {0} not found", filePath));
+				throw new Exception($"TileData: {filePath} not found");
 			}
 		}
 	}
