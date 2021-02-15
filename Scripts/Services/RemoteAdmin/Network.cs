@@ -113,9 +113,15 @@ namespace Server.RemoteAdmin
         public static void OnReceive(NetState state, PacketReader pvSrc)
         {
             byte cmd = pvSrc.ReadByte();
+
             if (cmd == 0x02)
             {
                 Authenticate(state, pvSrc);
+            }
+            else if (cmd == 0xFD)
+            {
+                state.Send(new UOGInfo(Statistics.GetReceiveData()));
+                state.Dispose();
             }
             else if (cmd == 0xFE)
             {
