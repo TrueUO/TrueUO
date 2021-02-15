@@ -8,7 +8,7 @@ using Server.Network;
 
 namespace Server.RemoteAdmin
 {
-    public class Statistics
+    public static class Statistics
     {
 		public static string GetReceiveData()
 		{ 
@@ -27,8 +27,10 @@ namespace Server.RemoteAdmin
 		{
 			var shardCreation = DateTime.UtcNow;
 
-			foreach (Account a in Accounts.GetAccounts())
-			{
+			foreach (var account in Accounts.GetAccounts())
+            {
+                var a = (Account) account;
+
                 if (a.Created < shardCreation)
                 {
                     shardCreation = a.Created;
@@ -59,8 +61,9 @@ namespace Server.RemoteAdmin
         {
             double gold = 0;
 
-            foreach (Account a in Accounts.GetAccounts())
+            foreach (var account in Accounts.GetAccounts())
             {
+                var a = (Account) account;
                 if (a.AccessLevel > AccessLevel.Player)
                     continue;
 
