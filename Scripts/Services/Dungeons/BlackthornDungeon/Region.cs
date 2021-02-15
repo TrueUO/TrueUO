@@ -5,7 +5,6 @@ using Server.Spells.Bushido;
 using Server.Spells.Chivalry;
 using Server.Spells.Ninjitsu;
 using System;
-using System.Linq;
 using System.Xml;
 
 namespace Server.Engines.Blackthorn
@@ -34,13 +33,20 @@ namespace Server.Engines.Blackthorn
         {
             if (!Fellowship.ForsakenFoesEvent.Instance.Running)
             {
-                foreach (Mobile m in GetEnumeratedMobiles().Where(m => m is PlayerMobile && m.AccessLevel == AccessLevel.Player))
+                foreach (Mobile m in GetEnumeratedMobiles())
                 {
-                    if (m.Hidden)
-                        m.RevealingAction();
+                    if (m is PlayerMobile && m.AccessLevel == AccessLevel.Player)
+                    {
+                        if (m.Hidden)
+                        {
+                            m.RevealingAction();
+                        }
 
-                    if (m.Y > 2575 && m.LastMoveTime + 120000 < Core.TickCount)
-                        MoveLocation(m);
+                        if (m.Y > 2575 && m.LastMoveTime + 120000 < Core.TickCount)
+                        {
+                            MoveLocation(m);
+                        }
+                    }
                 }
             }
         }
