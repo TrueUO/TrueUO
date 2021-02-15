@@ -13,8 +13,8 @@ namespace Server.Spells.Mysticism
         public override SpellCircle Circle => SpellCircle.Second;
         public override bool ClearHandsOnCast => false;
 
-        public BaseWeapon Weapon { get; set; }
-        public AosWeaponAttribute Attribute { get; set; }
+        public BaseWeapon Weapon { get; }
+        public AosWeaponAttribute Attribute { get; }
 
         private static readonly SpellInfo m_Info = new SpellInfo(
                 "Enchant", "In Ort Ylem",
@@ -219,10 +219,7 @@ namespace Server.Spells.Mysticism
 
                 Enhancement.RemoveMobile(caster);
 
-                if (weapon != null)
-                {
-                    weapon.InvalidateProperties();
-                }
+                weapon?.InvalidateProperties();
 
                 BuffInfo.RemoveBuff(caster, BuffIcon.Enchant);
             }
@@ -240,11 +237,11 @@ namespace Server.Spells.Mysticism
 
     public class EnchantmentTimer : Timer
     {
-        public Mobile Owner { get; set; }
-        public BaseWeapon Weapon { get; set; }
-        public AosWeaponAttribute WeaponAttribute { get; set; }
-        public int AttributeValue { get; set; }
-        public int CastingMalus { get; set; }
+        public Mobile Owner { get; }
+        public BaseWeapon Weapon { get; }
+        public AosWeaponAttribute WeaponAttribute { get; }
+        public int AttributeValue { get; }
+        public int CastingMalus { get; }
 
         public EnchantmentTimer(Mobile owner, BaseWeapon wep, AosWeaponAttribute attribute, int value, int malus, double duration) : base(TimeSpan.FromSeconds(duration))
         {

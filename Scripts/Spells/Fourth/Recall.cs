@@ -203,8 +203,7 @@ namespace Server.Spells.Fourth
                 if (m_Book != null)
                     --m_Book.CurCharges;
 
-                if (m_SearchMap != null)
-                    m_SearchMap.OnBeforeTravel(Caster);
+                m_SearchMap?.OnBeforeTravel(Caster);
 
                 Caster.PlaySound(0x1FC);
                 Caster.MoveToWorld(loc, map);

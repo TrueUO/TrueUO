@@ -133,7 +133,7 @@ namespace Server.Spells.Ninjitsu
                 }
                 else if (Caster is PlayerMobile)
                 {
-                    bool skipGump = (m_WasMoving || CasterIsMoving());
+                    bool skipGump = m_WasMoving || CasterIsMoving();
 
                     if (GetLastAnimalForm(Caster) == -1 || GetLastAnimalForm(Caster) == 16 || !skipGump)
                     {
@@ -207,7 +207,7 @@ namespace Server.Spells.Ninjitsu
 
             if (m.Skills.Ninjitsu.Value < entry.ReqSkill)
             {
-                string args = string.Format("{0:F1}\t{1}\t ", entry.ReqSkill, SkillName.Ninjitsu);
+                string args = $"{entry.ReqSkill:F1}\t{SkillName.Ninjitsu}\t ";
                 m.SendLocalizedMessage(1063013, args);
                 // You need at least ~1_SKILL_REQUIREMENT~ ~2_SKILL_NAME~ skill to use that ability.
                 return MorphResult.NoSkill;
@@ -541,7 +541,7 @@ namespace Server.Spells.Ninjitsu
 
             private string Color(string str, int color)
             {
-                return string.Format("<BASEFONT COLOR=#{0:X6}>{1}</BASEFONT>", color, str);
+                return $"<BASEFONT COLOR=#{color:X6}>{str}</BASEFONT>";
             }
 
             public override void OnResponse(NetState sender, RelayInfo info)
@@ -576,7 +576,7 @@ namespace Server.Spells.Ninjitsu
 
                         string typename = entry.Name;
 
-                        BuffInfo.AddBuff(m_Caster, new BuffInfo(BuffIcon.AnimalForm, 1060612, 1075823, string.Format("{0}\t{1}", "aeiouy".IndexOf(typename.ToLower()[0]) >= 0 ? "an" : "a", typename)));
+                        BuffInfo.AddBuff(m_Caster, new BuffInfo(BuffIcon.AnimalForm, 1060612, 1075823, $"{("aeiouy".IndexOf(typename.ToLower()[0]) >= 0 ? "an" : "a")}\t{typename}"));
                     }
                 }
             }

@@ -24,7 +24,7 @@ namespace Server.Spells.Spellweaving
             if (!base.CheckCast())
                 return false;
 
-            if ((Caster.Followers + 1) > Caster.FollowersMax)
+            if (Caster.Followers + 1 > Caster.FollowersMax)
             {
                 Caster.SendLocalizedMessage(1049645); // You have too many followers to summon that creature.
                 return false;
@@ -85,8 +85,7 @@ namespace Server.Spells.Spellweaving
 
             protected override void OnTargetFinish(Mobile from)
             {
-                if (m_Owner != null)
-                    m_Owner.FinishSequence();
+                m_Owner?.FinishSequence();
             }
         }
 

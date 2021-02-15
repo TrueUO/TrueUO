@@ -80,7 +80,7 @@ namespace Server.Spells.Necromancy
             // Undead group--empty
             new CreatureGroup(SlayerGroup.GetEntryByName(SlayerName.Silver).Types, new SummonEntry[0]),
             // Insects
-            new CreatureGroup(new Type[]
+            new CreatureGroup(new[]
             {
                 typeof(DreadSpider), typeof(FrostSpider), typeof(GiantSpider), typeof(GiantBlackWidow),
                 typeof(BlackSolenInfiltratorQueen), typeof(BlackSolenInfiltratorWarrior),
@@ -96,17 +96,17 @@ namespace Server.Spells.Necromancy
                     new SummonEntry(0, typeof(MoundOfMaggots))
                 }),
             // Mounts
-            new CreatureGroup(new Type[]
+            new CreatureGroup(new[]
             {
                 typeof(Horse), typeof(Nightmare), typeof(FireSteed),
                 typeof(Kirin), typeof(Unicorn)
-            }, new SummonEntry[]
+            }, new[]
                {
                    new SummonEntry(10000, typeof(HellSteed)),
                    new SummonEntry(0, typeof(SkeletalMount))
                }),
             // Elementals
-            new CreatureGroup(new Type[]
+            new CreatureGroup(new[]
             {
                 typeof(BloodElemental), typeof(EarthElemental), typeof(SummonedEarthElemental),
                 typeof(AgapiteElemental), typeof(BronzeElemental), typeof(CopperElemental),
@@ -115,18 +115,18 @@ namespace Server.Spells.Necromancy
                 typeof(FireElemental), typeof(SummonedFireElemental), typeof(SnowElemental),
                 typeof(AirElemental), typeof(SummonedAirElemental), typeof(WaterElemental),
                 typeof(SummonedAirElemental), typeof (ToxicElemental)
-            }, new SummonEntry[]
+            }, new[]
                {
                    new SummonEntry(5000, typeof(WailingBanshee)),
                    new SummonEntry(0, typeof(Wraith))
                }),
             // Dragons
-            new CreatureGroup(new Type[]
+            new CreatureGroup(new[]
             {
                 typeof(AncientWyrm), typeof(Dragon), typeof(GreaterDragon), typeof(SerpentineDragon),
                 typeof(ShadowWyrm), typeof(SkeletalDragon), typeof(WhiteWyrm),
                 typeof(Drake), typeof(Wyvern), typeof(LesserHiryu), typeof(Hiryu)
-            }, new SummonEntry[]
+            }, new[]
                {
                    new SummonEntry(18000, typeof(SkeletalDragon)),
                    new SummonEntry(10000, typeof(FleshGolem)),
@@ -282,10 +282,9 @@ namespace Server.Spells.Necromancy
 
             BaseCreature creature = caster as BaseCreature;
 
-            if (creature != null)
+            if (creature?.AIObject is NecroMageAI)
             {
-                if (creature.AIObject is NecroMageAI)
-                    toSummon = typeof(FleshGolem);
+                toSummon = typeof(FleshGolem);
             }
 
             for (int i = 0; toSummon == null && i < entries.Length; ++i)
@@ -297,8 +296,7 @@ namespace Server.Spells.Necromancy
 
                 Type[] animates = entry.m_ToSummon;
 
-                if (animates.Length >= 0)
-                    toSummon = animates[Utility.Random(animates.Length)];
+                toSummon = animates[Utility.Random(animates.Length)];
             }
 
             if (toSummon == null)
@@ -323,10 +321,7 @@ namespace Server.Spells.Necromancy
             // to be sure
             bc.Tamable = false;
 
-            if (bc is BaseMount)
-                bc.ControlSlots = 1;
-            else
-                bc.ControlSlots = 0;
+            bc.ControlSlots = bc is BaseMount ? 1 : 0;
 
             Effects.PlaySound(loc, map, bc.GetAngerSound());
 
@@ -384,8 +379,8 @@ namespace Server.Spells.Necromancy
 
         public class DamageTimer : Timer
         {
-            public Mobile Master { get; private set; }
-            public BaseCreature Summon { get; private set; }
+            public Mobile Master { get; }
+            public BaseCreature Summon { get; }
 
             public DamageTimer(Mobile master, BaseCreature summon)
                 : base(TimeSpan.FromMilliseconds(1650), TimeSpan.FromMilliseconds(1650))

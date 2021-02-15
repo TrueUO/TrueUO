@@ -72,8 +72,7 @@ namespace Server.Spells.Fourth
             {
                 Timer t = m_UnderEffect[m];
 
-                if (t != null)
-                    t.Stop();
+                t?.Stop();
 
                 m_UnderEffect.Remove(m);
             }
@@ -128,14 +127,13 @@ namespace Server.Spells.Fourth
             }
             else
             {
-                args = string.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}", percentage, percentage, percentage, 10, 10, 10, 10);
-                BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.Curse, 1075835, 1075836, length, m, args.ToString()));
+                args = $"{percentage}\t{percentage}\t{percentage}\t{10}\t{10}\t{10}\t{10}";
+                BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.Curse, 1075835, 1075836, length, m, args));
             }
 
             AddEffect(m, SpellHelper.GetDuration(caster, m), oldStr, oldDex, oldInt);
 
-            if (m.Spell != null)
-                m.Spell.OnCasterHurt();
+            m.Spell?.OnCasterHurt();
 
             m.Paralyzed = false;
 

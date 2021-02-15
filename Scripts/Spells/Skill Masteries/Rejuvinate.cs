@@ -175,10 +175,7 @@ namespace Server.Spells.SkillMasteries
 
                     TimeSpan d;
 
-                    if (Caster.AccessLevel == AccessLevel.Player)
-                        d = TimeSpan.FromMinutes(duration);
-                    else
-                        d = TimeSpan.FromSeconds(10);
+                    d = Caster.AccessLevel == AccessLevel.Player ? TimeSpan.FromMinutes(duration) : TimeSpan.FromSeconds(10);
 
                     AddToCooldown(d);
                 }

@@ -49,8 +49,7 @@ namespace Server.Spells.Spellweaving
         {
             EmpowermentInfo info = m_Table[m] as EmpowermentInfo;
 
-            if (info != null && info.Timer != null)
-                info.Timer.Stop();
+            info?.Timer?.Stop();
 
             m_Table.Remove(m);
         }
@@ -78,7 +77,7 @@ namespace Server.Spells.Spellweaving
 
                 m_Table[Caster] = new EmpowermentInfo(Caster, duration, bonus, level);
 
-                BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.ArcaneEmpowerment, 1031616, 1075808, duration, Caster, new TextDefinition(string.Format("{0}\t10", bonus.ToString()))));
+                BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.ArcaneEmpowerment, 1031616, 1075808, duration, Caster, new TextDefinition($"{bonus.ToString()}\t10")));
 
                 Caster.Delta(MobileDelta.WeaponDamage);
             }
