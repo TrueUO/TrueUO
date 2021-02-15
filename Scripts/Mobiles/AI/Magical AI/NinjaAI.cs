@@ -166,14 +166,7 @@ namespace Server.Mobiles
                         }
                         else
                         {
-                            if (m_Mobile.Hidden)
-                            {
-                                special = GetHiddenSpecialMove();
-                            }
-                            else
-                            {
-                                special = GetSpecialMove();
-                            }
+                            special = m_Mobile.Hidden ? GetHiddenSpecialMove() : GetSpecialMove();
 
                             if (special != null)
                             {

@@ -135,8 +135,7 @@ namespace Server.Mobiles
         {
             if (!m_Mobile.DisallowAllMoves && ScaleByMagery(TeleportChance) > Utility.RandomDouble())
             {
-                if (m_Mobile.Target != null)
-                    m_Mobile.Target.Cancel(m_Mobile, TargetCancelType.Canceled);
+                m_Mobile.Target?.Cancel(m_Mobile, TargetCancelType.Canceled);
 
                 new TeleportSpell(m_Mobile, null).Cast();
 
@@ -413,15 +412,11 @@ namespace Server.Mobiles
                     RunTo(m);
                 }
 
-                if (spell != null)
-                    spell.Cast();
+                spell?.Cast();
 
                 TimeSpan delay;
 
-                if (spell is DispelSpell)
-                    delay = TimeSpan.FromSeconds(m_Mobile.ActiveSpeed);
-                else
-                    delay = GetDelay();
+                delay = spell is DispelSpell ? TimeSpan.FromSeconds(m_Mobile.ActiveSpeed) : GetDelay();
 
                 m_NextCastTime = DateTime.UtcNow + delay;
             }
