@@ -64,8 +64,11 @@ namespace Server.RemoteAdmin
             foreach (var account in Accounts.GetAccounts())
             {
                 var a = (Account) account;
+
                 if (a.AccessLevel > AccessLevel.Player)
+                {
                     continue;
+                }
 
                 a.GetGoldBalance(out int g, out double t);
 
