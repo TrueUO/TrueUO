@@ -154,7 +154,7 @@ namespace Server.Spells.Mysticism
 
         public class InternalTarget : Target
         {
-            public SleepSpell Owner { get; set; }
+            public SleepSpell Owner { get; }
 
             public InternalTarget(SleepSpell owner)
                 : this(owner, false)

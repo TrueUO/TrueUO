@@ -134,7 +134,7 @@ namespace Server.Spells.Necromancy
                 }
 
                 TimeSpan t_Duration = TimeSpan.FromSeconds(i_Length * strength);
-                BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.Strangle, 1075794, 1075795, t_Duration, m, args.ToString()));
+                BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.Strangle, 1075794, 1075795, t_Duration, m, args));
             }
 
             HarmfulSpell(m);

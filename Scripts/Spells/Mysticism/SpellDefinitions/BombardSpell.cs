@@ -84,7 +84,7 @@ namespace Server.Spells.Mysticism
 
         public class InternalTarget : Target
         {
-            public BombardSpell Owner { get; set; }
+            public BombardSpell Owner { get; }
 
             public InternalTarget(BombardSpell owner)
                 : this(owner, false)
