@@ -588,12 +588,9 @@ namespace Server.Spells.SkillMasteries
         {
             foreach (SkillMasterySpell spell in EnumerateAllSpells())
             {
-                if (spell.GetType() == typeof(TSpell))
+                if (spell.GetType() == typeof(TSpell) && predicate != null && predicate(spell))
                 {
-                    if (predicate != null && predicate(spell))
-                    {
-                        return spell as TSpell;
-                    }
+                    return spell as TSpell;
                 }
             }
 

@@ -209,18 +209,15 @@ namespace Server.Items
 
             foreach (Item item in items)
             {
-                if (!m_InstancedItems.ContainsKey(item))
+                if (!m_InstancedItems.ContainsKey(item) && item.LootType != LootType.Cursed) // Don't have cursed items take up someone's item spot..(?)
                 {
-                    if (item.LootType != LootType.Cursed) // Don't have cursed items take up someone's item spot..(?)
+                    if (item.Stackable)
                     {
-                        if (item.Stackable)
-                        {
-                            stackables.Add(item);
-                        }
-                        else
-                        {
-                            unstackables.Add(item);
-                        }
+                        stackables.Add(item);
+                    }
+                    else
+                    {
+                        unstackables.Add(item);
                     }
                 }
             }
