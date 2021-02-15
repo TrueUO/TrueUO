@@ -423,21 +423,29 @@ namespace Server.Engines.VoidPool
 
             List<Mobile> list = Region.GetPlayers();
 
-            foreach (Mobile m in list.Where(m => GetCurrentPoints(m) > 0))
-                PointsSystem.VoidPool.AwardPoints(m, GetCurrentPoints(m));
-
-            foreach (Mobile m in list.Where(m => CurrentScore.ContainsKey(m)))
+            foreach (Mobile m in list)
             {
-                m.SendLocalizedMessage(1152650, string.Format("{0}\t{1}\t{2}\t{3}", GetTotalWaves(m), Wave.ToString(), Wave.ToString(), CurrentScore[m]));
-                // During the battle, you helped fight back ~1_COUNT~ out of ~2_TOTAL~ waves of enemy forces. Your final wave was ~3_MAX~. Your total score for the battle was ~4_SCORE~ points.
-
-                if (m is PlayerMobile mobile)
+                if (GetCurrentPoints(m) > 0)
                 {
-                    AForcedSacraficeQuest quest = QuestHelper.GetQuest<AForcedSacraficeQuest>(mobile);
+                    PointsSystem.VoidPool.AwardPoints(m, GetCurrentPoints(m));
+                }
+            }
 
-                    if (quest != null)
+            foreach (Mobile m in list)
+            {
+                if (CurrentScore.ContainsKey(m))
+                {
+                    m.SendLocalizedMessage(1152650, string.Format("{0}\t{1}\t{2}\t{3}", GetTotalWaves(m), Wave.ToString(), Wave.ToString(), CurrentScore[m]));
+                    // During the battle, you helped fight back ~1_COUNT~ out of ~2_TOTAL~ waves of enemy forces. Your final wave was ~3_MAX~. Your total score for the battle was ~4_SCORE~ points.
+
+                    if (m is PlayerMobile mobile)
                     {
-                        quest.CompleteQuest();
+                        AForcedSacraficeQuest quest = QuestHelper.GetQuest<AForcedSacraficeQuest>(mobile);
+
+                        if (quest != null)
+                        {
+                            quest.CompleteQuest();
+                        }
                     }
                 }
             }
@@ -490,17 +498,20 @@ namespace Server.Engines.VoidPool
 
                     if (info.Creatures.Count == 0)
                     {
-                        foreach (Mobile m in info.Credit.Where(m => m.Region == Region && m is PlayerMobile))
+                        foreach (Mobile m in info.Credit)
                         {
-                            double award = Math.Max(0, Map == Map.Felucca ? Stage * 2 : Stage);
-
-                            if (award > 0)
+                            if (m.Region == Region && m is PlayerMobile)
                             {
-                                //Score Bonus
-                                if (!CurrentScore.ContainsKey(m))
-                                    CurrentScore[m] = Stage * 125;
-                                else
-                                    CurrentScore[m] += Stage * 125;
+                                double award = Math.Max(0, Map == Map.Felucca ? Stage * 2 : Stage);
+
+                                if (award > 0)
+                                {
+                                    //Score Bonus
+                                    if (!CurrentScore.ContainsKey(m))
+                                        CurrentScore[m] = Stage * 125;
+                                    else
+                                        CurrentScore[m] += Stage * 125;
+                                }
                             }
                         }
                     }
@@ -516,16 +527,19 @@ namespace Server.Engines.VoidPool
             if (Region == null)
                 return;
 
-            foreach (Item item in Region.GetEnumeratedItems().Where(i => i is ISpawner))
+            foreach (Item item in Region.GetEnumeratedItems())
             {
-                if (item is XmlSpawner xmlSpawner)
+                if (item is ISpawner)
                 {
-                    xmlSpawner.DoReset = true;
-                }
-                else if (item is Spawner spawner)
-                {
-                    spawner.RemoveSpawned();
-                    spawner.Running = false;
+                    if (item is XmlSpawner xmlSpawner)
+                    {
+                        xmlSpawner.DoReset = true;
+                    }
+                    else if (item is Spawner spawner)
+                    {
+                        spawner.RemoveSpawned();
+                        spawner.Running = false;
+                    }
                 }
             }
         }
@@ -540,17 +554,19 @@ namespace Server.Engines.VoidPool
         {
             Region r = Server.Region.Find(new Point3D(5574, 1859, 0), map);
 
-            foreach (Item item in r.GetEnumeratedItems().Where(i => i is ISpawner
-                && i.X >= 5501 && i.X <= 5627 && i.Y >= 1799 && i.Y <= 1927))
+            foreach (Item item in r.GetEnumeratedItems())
             {
-                if (item is XmlSpawner xmlSpawner)
+                if (item is ISpawner && item.X >= 5501 && item.X <= 5627 && item.Y >= 1799 && item.Y <= 1927)
                 {
-                    xmlSpawner.DoReset = true;
-                }
-                else if (item is Spawner spawner)
-                {
-                    spawner.RemoveSpawned();
-                    spawner.Running = false;
+                    if (item is XmlSpawner xmlSpawner)
+                    {
+                        xmlSpawner.DoReset = true;
+                    }
+                    else if (item is Spawner spawner)
+                    {
+                        spawner.RemoveSpawned();
+                        spawner.Running = false;
+                    }
                 }
             }
         }
@@ -565,12 +581,17 @@ namespace Server.Engines.VoidPool
             if (Region == null)
                 return;
 
-            foreach (Mobile m in Region.GetEnumeratedMobiles().Where(m => m is CovetousCreature))
+            foreach (Mobile m in Region.GetEnumeratedMobiles())
             {
-                if (effects)
-                    Effects.SendLocationEffect(m.Location, m.Map, 0xDDA, 30, 10, 0, 0);
+                if (m is CovetousCreature)
+                {
+                    if (effects)
+                    {
+                        Effects.SendLocationEffect(m.Location, m.Map, 0xDDA, 30, 10, 0, 0);
+                    }
 
-                m.Delete();
+                    m.Delete();
+                }
             }
         }
 
@@ -581,9 +602,12 @@ namespace Server.Engines.VoidPool
 
             int points = 0;
 
-            foreach (WaveInfo info in Waves.Where(i => i.Credit.Contains(from)))
+            foreach (WaveInfo info in Waves)
             {
-                points += Map == Map.Felucca ? Stage * 2 : Stage;
+                if (info.Credit.Contains(from))
+                {
+                    points += Map == Map.Felucca ? Stage * 2 : Stage;
+                }
             }
 
             return points;
@@ -628,11 +652,21 @@ namespace Server.Engines.VoidPool
                 Timer = null;
             }
 
-            foreach (WayPoint wp in WaypointsA.Where(w => w != null && !w.Deleted))
-                wp.Delete();
+            foreach (WayPoint wp in WaypointsA)
+            {
+                if (wp != null && !wp.Deleted)
+                {
+                    wp.Delete();
+                }
+            }
 
-            foreach (WayPoint wp in WaypointsB.Where(w => w != null && !w.Deleted))
-                wp.Delete();
+            foreach (WayPoint wp in WaypointsB)
+            {
+                if (wp != null && !wp.Deleted)
+                {
+                    wp.Delete();
+                }
+            }
 
             if (Level3Spawner != null)
             {

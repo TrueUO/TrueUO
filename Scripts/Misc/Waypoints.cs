@@ -92,9 +92,12 @@ namespace Server
             if (m == null || oldMap == null)
                 return;
 
-            foreach (BaseVendor vendor in BaseVendor.AllVendors.Where(q => q is MondainQuester && !q.Deleted && q.Map == oldMap))
+            foreach (BaseVendor vendor in BaseVendor.AllVendors)
             {
-                ns.Send(new RemoveWaypoint(vendor.Serial));
+                if (vendor is MondainQuester && !vendor.Deleted && vendor.Map == oldMap)
+                {
+                    ns.Send(new RemoveWaypoint(vendor.Serial));
+                }
             }
         }
 
@@ -103,9 +106,12 @@ namespace Server
             if (m == null || m.Map == null || m.Deleted)
                 return;
 
-            foreach (BaseVendor vendor in BaseVendor.AllVendors.Where(q => q is MondainQuester && !q.Deleted && q.Map == m.Map))
+            foreach (BaseVendor vendor in BaseVendor.AllVendors)
             {
-                Create(m, vendor, WaypointType.QuestGiver);
+                if (vendor is MondainQuester && !vendor.Deleted && vendor.Map == m.Map)
+                {
+                    Create(m, vendor, WaypointType.QuestGiver);
+                }
             }
         }
 

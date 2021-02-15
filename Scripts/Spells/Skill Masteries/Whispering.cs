@@ -65,16 +65,27 @@ namespace Server.Spells.SkillMasteries
             {
                 if (Caster is PlayerMobile)
                 {
-                    foreach (Mobile m in ((PlayerMobile)Caster).AllFollowers.Where(m => m.Map == Caster.Map && Caster.InRange(m.Location, PartyRange) && !(m is DespiseCreature)))
+                    foreach (Mobile m in ((PlayerMobile)Caster).AllFollowers)
                     {
-                        Effects.SendLocationParticles(EffectItem.Create(m.Location, m.Map, EffectItem.DefaultDuration), 0, 0, 0, 0, 0, 5060, 0);
-                        Effects.PlaySound(m.Location, m.Map, 0x243);
+                        if (m.Map == Caster.Map && Caster.InRange(m.Location, PartyRange) && !(m is DespiseCreature))
+                        {
+                            Effects.SendLocationParticles(
+                                EffectItem.Create(m.Location, m.Map, EffectItem.DefaultDuration), 0, 0, 0, 0, 0, 5060,
+                                0);
+                            Effects.PlaySound(m.Location, m.Map, 0x243);
 
-                        Effects.SendMovingParticles(new Entity(Serial.Zero, new Point3D(m.X - 6, m.Y - 6, m.Z + 15), m.Map), m, 0x36D4, 7, 0, false, true, 1494, 0, 9502, 1, 0, (EffectLayer)255, 0x100);
-                        Effects.SendMovingParticles(new Entity(Serial.Zero, new Point3D(m.X - 4, m.Y - 6, m.Z + 15), m.Map), m, 0x36D4, 7, 0, false, true, 1494, 0, 9502, 1, 0, (EffectLayer)255, 0x100);
-                        Effects.SendMovingParticles(new Entity(Serial.Zero, new Point3D(m.X - 6, m.Y - 4, m.Z + 15), m.Map), m, 0x36D4, 7, 0, false, true, 1494, 0, 9502, 1, 0, (EffectLayer)255, 0x100);
+                            Effects.SendMovingParticles(
+                                new Entity(Serial.Zero, new Point3D(m.X - 6, m.Y - 6, m.Z + 15), m.Map), m, 0x36D4, 7,
+                                0, false, true, 1494, 0, 9502, 1, 0, (EffectLayer) 255, 0x100);
+                            Effects.SendMovingParticles(
+                                new Entity(Serial.Zero, new Point3D(m.X - 4, m.Y - 6, m.Z + 15), m.Map), m, 0x36D4, 7,
+                                0, false, true, 1494, 0, 9502, 1, 0, (EffectLayer) 255, 0x100);
+                            Effects.SendMovingParticles(
+                                new Entity(Serial.Zero, new Point3D(m.X - 6, m.Y - 4, m.Z + 15), m.Map), m, 0x36D4, 7,
+                                0, false, true, 1494, 0, 9502, 1, 0, (EffectLayer) 255, 0x100);
 
-                        Effects.SendTargetParticles(m, 0x375A, 35, 90, 0x00, 0x00, 9502, (EffectLayer)255, 0x100);
+                            Effects.SendTargetParticles(m, 0x375A, 35, 90, 0x00, 0x00, 9502, (EffectLayer) 255, 0x100);
+                        }
                     }
                 }
 
