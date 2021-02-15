@@ -9,7 +9,6 @@ using Server.Mobiles;
 using Server.Network;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 #endregion
 
 namespace Server.Items
@@ -208,17 +207,20 @@ namespace Server.Items
             List<Item> stackables = new List<Item>();
             List<Item> unstackables = new List<Item>();
 
-            foreach (Item item in items.Where(i => !m_InstancedItems.ContainsKey(i)))
+            foreach (Item item in items)
             {
-                if (item.LootType != LootType.Cursed) //Don't have curesd items take up someone's item spot.. (?)
+                if (!m_InstancedItems.ContainsKey(item))
                 {
-                    if (item.Stackable)
+                    if (item.LootType != LootType.Cursed) // Don't have cursed items take up someone's item spot..(?)
                     {
-                        stackables.Add(item);
-                    }
-                    else
-                    {
-                        unstackables.Add(item);
+                        if (item.Stackable)
+                        {
+                            stackables.Add(item);
+                        }
+                        else
+                        {
+                            unstackables.Add(item);
+                        }
                     }
                 }
             }
