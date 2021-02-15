@@ -106,42 +106,45 @@ namespace Server.Multis
         {
             MultiComponentList mcl = MultiData.GetComponents(ItemID);
 
-            foreach (MultiTileEntry mte in mcl.List.Where(e => e.m_Flags == TileFlag.None || e.m_Flags == TileFlag.Generic))
+            foreach (MultiTileEntry mte in mcl.List)
             {
-                ushort itemID = mte.m_ItemID;
-                short x = mte.m_OffsetX;
-                short y = mte.m_OffsetY;
-                short z = mte.m_OffsetZ;
+                if (mte.m_Flags == TileFlag.None || mte.m_Flags == TileFlag.Generic)
+                {
+                    ushort itemID = mte.m_ItemID;
+                    short x = mte.m_OffsetX;
+                    short y = mte.m_OffsetY;
+                    short z = mte.m_OffsetZ;
 
-                if (itemID == 0x14F8 || itemID == 0x14FA)
-                {
-                    AddMooringLine(itemID, x, y, z);
-                }
-                else if (IsMainHold(itemID))
-                {
-                    if (!fromConstruct)
-                        continue;
+                    if (itemID == 0x14F8 || itemID == 0x14FA)
+                    {
+                        AddMooringLine(itemID, x, y, z);
+                    }
+                    else if (IsMainHold(itemID))
+                    {
+                        if (!fromConstruct)
+                            continue;
 
-                    AddMainHold(itemID, x, y, z);
-                }
-                else if (IsHold(itemID))
-                {
-                    AddHoldItem(itemID, x, y, z);
-                }
-                else if (IsWheel(itemID))
-                {
-                    if (!fromConstruct)
-                        continue;
+                        AddMainHold(itemID, x, y, z);
+                    }
+                    else if (IsHold(itemID))
+                    {
+                        AddHoldItem(itemID, x, y, z);
+                    }
+                    else if (IsWheel(itemID))
+                    {
+                        if (!fromConstruct)
+                            continue;
 
-                    AddWheel(itemID, x, y, z);
-                }
-                else if (IsWeaponPad(itemID))
-                {
-                    AddWeaponPad(itemID, x, y, z);
-                }
-                else
-                {
-                    AddFillerItem(itemID, x, y, z);
+                        AddWheel(itemID, x, y, z);
+                    }
+                    else if (IsWeaponPad(itemID))
+                    {
+                        AddWeaponPad(itemID, x, y, z);
+                    }
+                    else
+                    {
+                        AddFillerItem(itemID, x, y, z);
+                    }
                 }
             }
 
@@ -910,11 +913,17 @@ namespace Server.Multis
 
             MultiComponentList mcl = MultiData.GetComponents(ItemID);
 
-            foreach (MultiTileEntry mte in mcl.List.Where(e => e.m_Flags == TileFlag.None))
+            foreach (MultiTileEntry mte in mcl.List)
             {
-                foreach (Item fixture in Fixtures.Where(f => f.X - X == mte.m_OffsetX && f.Y - Y == mte.m_OffsetY && f.Z - Z == mte.m_OffsetZ))
+                if (mte.m_Flags == TileFlag.None)
                 {
-                    fixture.ItemID = mte.m_ItemID;
+                    foreach (Item f in Fixtures)
+                    {
+                        if (f.X - X == mte.m_OffsetX && f.Y - Y == mte.m_OffsetY && f.Z - Z == mte.m_OffsetZ)
+                        {
+                            f.ItemID = mte.m_ItemID;
+                        }
+                    }
                 }
             }
 
@@ -1092,15 +1101,18 @@ namespace Server.Multis
 
         public void PaintComponents()
         {
-            foreach (Item fixture in Fixtures.Where(f =>
-                f.GetType() != typeof(MooringLine) &&
-                f.GetType() != typeof(ShipWheel)))
+            foreach (Item f in Fixtures)
             {
-                fixture.Hue = Hue;
+                if (f.GetType() != typeof(MooringLine) && f.GetType() != typeof(ShipWheel))
+                {
+                    f.Hue = Hue;
+                }
             }
 
             if (SecureContainer != null)
+            {
                 SecureContainer.Hue = Hue;
+            }
         }
 
         public void CheckPaintDecay()
