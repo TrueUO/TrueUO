@@ -65,7 +65,7 @@ namespace Server.Spells.SkillMasteries
             {
                 if (Caster is PlayerMobile)
                 {
-                    foreach (Mobile m in ((PlayerMobile)Caster).AllFollowers.Where(m => m.Map == Caster.Map && Caster.InRange(m.Location, PartyRange) && !(m is Engines.Despise.DespiseCreature)))
+                    foreach (Mobile m in ((PlayerMobile)Caster).AllFollowers.Where(m => m.Map == Caster.Map && Caster.InRange(m.Location, PartyRange) && !(m is DespiseCreature)))
                     {
                         Effects.SendLocationParticles(EffectItem.Create(m.Location, m.Map, EffectItem.DefaultDuration), 0, 0, 0, 0, 0, 5060, 0);
                         Effects.PlaySound(m.Location, m.Map, 0x243);

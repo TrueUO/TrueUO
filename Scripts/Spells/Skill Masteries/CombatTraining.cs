@@ -116,7 +116,7 @@ namespace Server.Spells.SkillMasteries
 
             Target.FixedParticles(0x373A, 10, 80, 5018, 0, 0, EffectLayer.Waist);
 
-            BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.CombatTraining, 1155933, 1156107, string.Format("{0}\t{1}\t{2}", SpellType.ToString(), Target.Name, ScaleUpkeep().ToString())));
+            BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.CombatTraining, 1155933, 1156107, $"{SpellType.ToString()}\t{Target.Name}\t{ScaleUpkeep().ToString()}"));
             //You train ~2_NAME~ to use ~1_SKILLNAME~.<br>Mana Upkeep: ~3_COST~
 
             FinishSequence();
@@ -343,7 +343,7 @@ namespace Server.Spells.SkillMasteries
 
         public class InternalTarget : Target
         {
-            public CombatTrainingSpell Spell { get; set; }
+            public CombatTrainingSpell Spell { get; }
 
             public InternalTarget(CombatTrainingSpell spell)
                 : base(8, false, TargetFlags.None)
@@ -407,9 +407,9 @@ namespace Server.Spells.SkillMasteries
 
     public class ChooseTrainingGump : Gump
     {
-        public CombatTrainingSpell Spell { get; private set; }
-        public Mobile Caster { get; private set; }
-        public BaseCreature Target { get; private set; }
+        public CombatTrainingSpell Spell { get; }
+        public Mobile Caster { get; }
+        public BaseCreature Target { get; }
 
         public const int Hue = 0x07FF;
 

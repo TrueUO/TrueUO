@@ -81,9 +81,9 @@ namespace Server.Spells.SkillMasteries
                 m_Damage = (int)((BaseSkillBonus * 4.5) + (CollectiveBonus * 2));
                 m_Rounds = 5 + (int)((BaseSkillBonus * .75) + (CollectiveBonus / 2));
 
-                string args = string.Format("{0}\t{1}", m_StatMod, m_Damage);
+                string args = $"{m_StatMod}\t{m_Damage}";
                 BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.DespairTarget, 1115741, 1115743, args));
-                BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.DespairCaster, 1115741, 1115743, args.ToString()));
+                BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.DespairCaster, 1115741, 1115743, args));
 
                 BeginTimer();
             }
@@ -101,14 +101,12 @@ namespace Server.Spells.SkillMasteries
         {
             int offset = m_StatMod;
 
-            if (Target != null)
-                Target.AddStatMod(new StatMod(StatType.Str, ModName, offset, TimeSpan.Zero));
+            Target?.AddStatMod(new StatMod(StatType.Str, ModName, offset, TimeSpan.Zero));
         }
 
         public override void RemoveStatMods()
         {
-            if (Target != null)
-                Target.RemoveStatMod(ModName);
+            Target?.RemoveStatMod(ModName);
         }
 
         public override bool OnTick()

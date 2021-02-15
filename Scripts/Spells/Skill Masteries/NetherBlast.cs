@@ -35,7 +35,7 @@ namespace Server.Spells.SkillMasteries
             }
         }
 
-        public List<InternalItem> Items { get; set; } = new List<InternalItem>();
+        public List<InternalItem> Items { get; } = new List<InternalItem>();
 
         public NetherBlastSpell(Mobile caster, Item scroll)
             : base(caster, scroll, m_Info)

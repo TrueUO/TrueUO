@@ -68,25 +68,13 @@ namespace Server.Spells.First
 
         public Type Type
         {
-            get
-            {
-                return m_Type;
-            }
-            set
-            {
-                m_Type = value;
-            }
+            get => m_Type;
+            set => m_Type = value;
         }
         public string Name
         {
-            get
-            {
-                return m_Name;
-            }
-            set
-            {
-                m_Name = value;
-            }
+            get => m_Name;
+            set => m_Name = value;
         }
         public Item Create()
         {

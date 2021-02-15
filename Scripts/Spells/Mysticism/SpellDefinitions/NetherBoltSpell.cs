@@ -70,7 +70,7 @@ namespace Server.Spells.Mysticism
 
         public class InternalTarget : Target
         {
-            public NetherBoltSpell Owner { get; set; }
+            public NetherBoltSpell Owner { get; }
 
             public InternalTarget(NetherBoltSpell owner)
                 : this(owner, false)

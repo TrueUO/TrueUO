@@ -55,8 +55,7 @@ namespace Server.Spells.Necromancy
                     t = m_Table[Caster];
                 }
 
-                if (t != null)
-                    t.Stop();
+                t?.Stop();
 
                 m_Table[Caster] = t = new ExpireTimer(weapon, Caster, duration);
 
