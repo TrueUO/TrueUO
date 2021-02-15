@@ -126,8 +126,7 @@ namespace Server.Mobiles
                 {
                     Spell spell = CheckCastHealingSpell();
 
-                    if (spell != null)
-                        spell.Cast();
+                    spell?.Cast();
                 }
             }
 
@@ -230,8 +229,7 @@ namespace Server.Mobiles
                 m_Mobile.DebugSay(spell != null ? "Choosen Spell" : "No spell chosen");
                 RunTo(c);
 
-                if (spell != null)
-                    spell.Cast();
+                spell?.Cast();
 
                 NextCastTime = GetCastDelay(spell);
             }
@@ -277,8 +275,7 @@ namespace Server.Mobiles
 
                 Spell spell = CheckCastHealingSpell();
 
-                if (spell != null)
-                    spell.Cast();
+                spell?.Cast();
 
                 base.DoActionGuard();
             }
@@ -353,8 +350,7 @@ namespace Server.Mobiles
             if (UsesMagery && !m_Mobile.DisallowAllMoves &&
                 (SmartAI ? Utility.Random(10) == 0 : ScaleByCastSkill(TeleportChance) > Utility.RandomDouble()))
             {
-                if (m_Mobile.Target != null)
-                    m_Mobile.Target.Cancel(m_Mobile, TargetCancelType.Canceled);
+                m_Mobile.Target?.Cancel(m_Mobile, TargetCancelType.Canceled);
 
                 new TeleportSpell(m_Mobile, null).Cast();
 
@@ -782,13 +778,12 @@ namespace Server.Mobiles
                         {
                             m_Mobile.DebugSay("Attempting to paralyze");
 
-                            if (CheckCanCastMagery(5))
-                                spell = new ParalyzeSpell(m_Mobile, null);
-                            else
-                                spell = GetRandomCurseSpell();
+                            spell = CheckCanCastMagery(5) ? new ParalyzeSpell(m_Mobile, null) : GetRandomCurseSpell();
 
                             if (spell == null)
+                            {
                                 goto default;
+                            }
                             break;
                         }
                     case 6: // Drain mana
