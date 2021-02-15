@@ -229,9 +229,12 @@ namespace Server.Spells.SkillMasteries
                                 {
                                     damage = damage / list.Count;
 
-                                    foreach (Mobile m in list.Where(mob => mob != defender))
+                                    foreach (Mobile m in list)
                                     {
-                                        m.Damage(damage, attacker, true, false);
+                                        if (m != defender)
+                                        {
+                                            m.Damage(damage, attacker, true, false);
+                                        }
                                     }
                                 }
 

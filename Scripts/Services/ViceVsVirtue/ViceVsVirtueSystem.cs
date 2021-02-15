@@ -362,26 +362,32 @@ namespace Server.Engines.VvV
 
         public void SendVvVMessage(string message)
         {
-            foreach (NetState state in NetState.Instances.Where(st => st.Mobile != null && IsVvV(st.Mobile)))
+            foreach (NetState state in NetState.Instances)
             {
-                Mobile m = state.Mobile;
-
-                if (m != null)
+                if (state.Mobile != null && IsVvV(state.Mobile))
                 {
-                    m.SendMessage("[Guild][VvV] {0}", message);
+                    Mobile m = state.Mobile;
+
+                    if (m != null)
+                    {
+                        m.SendMessage("[Guild][VvV] {0}", message);
+                    }
                 }
             }
         }
 
         public void SendVvVMessage(int cliloc, string args = "")
         {
-            foreach (NetState state in NetState.Instances.Where(st => st.Mobile != null && IsVvV(st.Mobile)))
+            foreach (NetState state in NetState.Instances)
             {
-                Mobile m = state.Mobile;
-
-                if (m != null)
+                if (state.Mobile != null && IsVvV(state.Mobile))
                 {
-                    SendVvVMessageTo(m, cliloc, args);
+                    Mobile m = state.Mobile;
+
+                    if (m != null)
+                    {
+                        SendVvVMessageTo(m, cliloc, args);
+                    }
                 }
             }
         }
