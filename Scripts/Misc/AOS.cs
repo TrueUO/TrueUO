@@ -1974,13 +1974,16 @@ namespace Server
 
             List<Item> list = new List<Item>();
 
-            foreach (Item item in m.Items.Where(i => i is IDurability))
+            foreach (Item item in m.Items)
             {
-                NegativeAttributes attrs = RunicReforging.GetNegativeAttributes(item);
-
-                if (attrs != null && attrs.Antique > 0 && CombatDecayChance > Utility.RandomDouble())
+                if (item is IDurability)
                 {
-                    list.Add(item);
+                    NegativeAttributes attrs = RunicReforging.GetNegativeAttributes(item);
+
+                    if (attrs != null && attrs.Antique > 0 && CombatDecayChance > Utility.RandomDouble())
+                    {
+                        list.Add(item);
+                    }
                 }
             }
 

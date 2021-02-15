@@ -160,20 +160,23 @@ namespace Server.Regions
             if (r == null)
                 return;
 
-            foreach (Mobile player in r.GetEnumeratedMobiles().Where(p => p is PlayerMobile &&
-                                                                       p.Alive))
+            foreach (Mobile player in r.GetEnumeratedMobiles())
             {
-                IPooledEnumerable eable = player.GetMobilesInRange(4);
-
-                foreach (Mobile mob in eable)
+                if (player is PlayerMobile && player.Alive)
                 {
-                    if (mob is BaseVendor || mob is GalleonPilot)
+                    IPooledEnumerable eable = player.GetMobilesInRange(4);
+
+                    foreach (Mobile mob in eable)
                     {
-                        TryPirateBlab(player, mob);
-                        break;
+                        if (mob is BaseVendor || mob is GalleonPilot)
+                        {
+                            TryPirateBlab(player, mob);
+                            break;
+                        }
                     }
+
+                    eable.Free();
                 }
-                eable.Free();
             }
         }
         #endregion

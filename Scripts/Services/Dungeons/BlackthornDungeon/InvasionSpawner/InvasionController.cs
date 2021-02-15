@@ -318,8 +318,11 @@ namespace Server.Engines.Blackthorn
                 {
                     list = new List<BaseCreature>(kvp.Value);
 
-                    foreach (BaseCreature b in list.Where(bc => bc == null || !bc.Alive || bc.Deleted))
-                        kvp.Value.Remove(b);
+                    foreach (BaseCreature b in list)
+                        if (b == null || !b.Alive || b.Deleted)
+                        {
+                            kvp.Value.Remove(b);
+                        }
                 }
 
                 if (list != null && list.Count > 0)
@@ -377,26 +380,32 @@ namespace Server.Engines.Blackthorn
 
                 if (rights != null)
                 {
-                    foreach (Mobile damager in rights.Where(mob => mob.InRange(Beacon.Location, 12)))
+                    foreach (Mobile damager in rights)
                     {
-                        if (0.15 < Utility.RandomDouble())
-                            continue;
-
-                        Item i = CreateItem(damager);
-
-                        if (i != null)
+                        if (damager.InRange(Beacon.Location, 12))
                         {
-                            damager.PlaySound(0x5B4);
-                            damager.SendLocalizedMessage(1154554); // You recover an artifact bearing the crest of Minax from the rubble.
+                            if (0.15 < Utility.RandomDouble())
+                                continue;
 
-                            if (!damager.PlaceInBackpack(i))
+                            Item i = CreateItem(damager);
+
+                            if (i != null)
                             {
-                                if (damager.BankBox != null && damager.BankBox.TryDropItem(damager, i, false))
-                                    damager.SendLocalizedMessage(1079730); // The item has been placed into your bank box.
-                                else
+                                damager.PlaySound(0x5B4);
+                                damager.SendLocalizedMessage(
+                                    1154554); // You recover an artifact bearing the crest of Minax from the rubble.
+
+                                if (!damager.PlaceInBackpack(i))
                                 {
-                                    damager.SendLocalizedMessage(1072523); // You find an artifact, but your backpack and bank are too full to hold it.
-                                    i.MoveToWorld(damager.Location, damager.Map);
+                                    if (damager.BankBox != null && damager.BankBox.TryDropItem(damager, i, false))
+                                        damager.SendLocalizedMessage(
+                                            1079730); // The item has been placed into your bank box.
+                                    else
+                                    {
+                                        damager.SendLocalizedMessage(
+                                            1072523); // You find an artifact, but your backpack and bank are too full to hold it.
+                                        i.MoveToWorld(damager.Location, damager.Map);
+                                    }
                                 }
                             }
                         }
@@ -435,8 +444,11 @@ namespace Server.Engines.Blackthorn
 
             foreach (KeyValuePair<BaseCreature, List<BaseCreature>> kvp in copy)
             {
-                foreach (BaseCreature bc in kvp.Value.Where(b => b.Alive))
-                    bc.Kill();
+                foreach (BaseCreature bc in kvp.Value)
+                    if (bc.Alive)
+                    {
+                        bc.Kill();
+                    }
 
                 if (kvp.Key.Alive)
                 {

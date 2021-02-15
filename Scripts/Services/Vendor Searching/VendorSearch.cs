@@ -29,13 +29,14 @@ namespace Server.Engines.VendorSearching
             List<SearchItem> list = new List<SearchItem>();
             bool excludefel = criteria.Details.FirstOrDefault(d => d.Attribute is Misc misc && misc == Misc.ExcludeFel) != null;
 
-            foreach (Auction.Auction pv in Auction.Auction.Auctions.Where(pv => pv.AuctionItem != null &&
-                                                                                pv.AuctionItem.Map != Map.Internal &&
-                                                                               pv.AuctionItem.Map != null &&
-                                                                               pv.OnGoing &&
-                                                                               (!excludefel || pv.AuctionItem.Map != Map.Felucca)))
+            foreach (Auction.Auction pv in Auction.Auction.Auctions)
             {
-                list.Add(new SearchItem(pv.Safe, pv.AuctionItem, (int)pv.Buyout, false));
+                if (pv.AuctionItem != null && pv.AuctionItem.Map != Map.Internal && pv.AuctionItem.Map != null && pv.OnGoing && (!excludefel || pv.AuctionItem.Map != Map.Felucca))
+                {
+                    {
+                        list.Add(new SearchItem(pv.Safe, pv.AuctionItem, (int) pv.Buyout, false));
+                    }
+                }
             }
 
             switch (criteria.SortBy)
