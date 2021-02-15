@@ -130,14 +130,14 @@ namespace Server.Spells.Necromancy
             {
                 object name = entries[i].Name;
 
-                bool enabled = (necro >= entries[i].ReqNecromancy && spirit >= entries[i].ReqSpiritSpeak);
+                bool enabled = necro >= entries[i].ReqNecromancy && spirit >= entries[i].ReqSpiritSpeak;
 
                 AddButton(27, 53 + (i * 21), 9702, 9703, i + 1, GumpButtonType.Reply, 0);
 
                 if (name is int iName)
                     AddHtmlLocalized(50, 51 + (i * 21), 150, 20, iName, enabled ? EnabledColor16 : DisabledColor16, false, false);
                 else if (name is string)
-                    AddHtml(50, 51 + (i * 21), 150, 20, string.Format("<BASEFONT COLOR=#{0:X6}>{1}</BASEFONT>", enabled ? EnabledColor32 : DisabledColor32, name), false, false);
+                    AddHtml(50, 51 + (i * 21), 150, 20, $"<BASEFONT COLOR=#{(enabled ? EnabledColor32 : DisabledColor32):X6}>{name}</BASEFONT>", false, false);
             }
         }
 
@@ -163,7 +163,7 @@ namespace Server.Spells.Necromancy
                 else if (necro < entry.ReqNecromancy || spirit < entry.ReqSpiritSpeak)
                 {
                     // That familiar requires ~1_NECROMANCY~ Necromancy and ~2_SPIRIT~ Spirit Speak.
-                    m_From.SendLocalizedMessage(1061606, string.Format("{0:F1}\t{1:F1}", entry.ReqNecromancy, entry.ReqSpiritSpeak));
+                    m_From.SendLocalizedMessage(1061606, $"{entry.ReqNecromancy:F1}\t{entry.ReqSpiritSpeak:F1}");
 
                     m_From.CloseGump(typeof(SummonFamiliarGump));
                     m_From.SendGump(new SummonFamiliarGump(m_From, SummonFamiliarSpell.Entries, m_Spell));

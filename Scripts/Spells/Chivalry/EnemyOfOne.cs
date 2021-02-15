@@ -158,7 +158,6 @@ namespace Server.Spells.Chivalry
                     name = name + "s";
                 }
 
-
                 NameCache[t] = name.ToLower();
             }
 
@@ -234,11 +233,11 @@ namespace Server.Spells.Chivalry
         {
             if (m_TypeName == null)
             {
-                BuffInfo.AddBuff(m_Owner, new BuffInfo(BuffIcon.EnemyOfOne, 1075653, 1075902, m_Expire - DateTime.UtcNow, m_Owner, string.Format("{0}\t{1}", m_DamageScalar, "100"), true));
+                BuffInfo.AddBuff(m_Owner, new BuffInfo(BuffIcon.EnemyOfOne, 1075653, 1075902, m_Expire - DateTime.UtcNow, m_Owner, $"{m_DamageScalar}\t100", true));
             }
             else
             {
-                BuffInfo.AddBuff(m_Owner, new BuffInfo(BuffIcon.EnemyOfOne, 1075653, 1075654, m_Expire - DateTime.UtcNow, m_Owner, string.Format("{0}\t{1}\t{2}\t{3}", m_DamageScalar, TypeName, ".", "100"), true));
+                BuffInfo.AddBuff(m_Owner, new BuffInfo(BuffIcon.EnemyOfOne, 1075653, 1075654, m_Expire - DateTime.UtcNow, m_Owner, $"{m_DamageScalar}\t{TypeName}\t.\t100", true));
             }
         }
 
@@ -284,8 +283,7 @@ namespace Server.Spells.Chivalry
 
         public void OnRemoved()
         {
-            if (m_Timer != null)
-                m_Timer.Stop();
+            m_Timer?.Stop();
 
             DeltaEnemies();
 

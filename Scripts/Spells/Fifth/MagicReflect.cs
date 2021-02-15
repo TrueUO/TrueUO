@@ -50,7 +50,7 @@ namespace Server.Spells.Fifth
                     int physiMod = 20 - (int)(targ.Skills[SkillName.Inscribe].Value / 20);
                     int otherMod = 10;
 
-                    var mods = new ResistanceMod[5]
+                    var mods = new[]
                     {
                         new ResistanceMod(ResistanceType.Physical,  -physiMod),
                         new ResistanceMod(ResistanceType.Fire,      otherMod),
@@ -195,11 +195,11 @@ namespace Server.Spells.Fifth
             private int _Pool;
 
             public bool Active { get; set; }
-            public Mobile Caster { get; set; }
-            public ResistanceMod[] Mods { get; set; }
+            public Mobile Caster { get; }
+            public ResistanceMod[] Mods { get; }
             public int ReflectPool
             {
-                get { return _Pool; }
+                get => _Pool;
                 set
                 {
                     var old = _Pool;
@@ -257,7 +257,7 @@ namespace Server.Spells.Fifth
 
         private class CooldownTimer : Timer
         {
-            public Dictionary<Mobile, DateTime> ExpireTable { get; set; } = new Dictionary<Mobile, DateTime>();
+            public Dictionary<Mobile, DateTime> ExpireTable { get; } = new Dictionary<Mobile, DateTime>();
 
             public static CooldownTimer Instance { get; set; }
 

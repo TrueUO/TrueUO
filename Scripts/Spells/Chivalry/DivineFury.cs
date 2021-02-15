@@ -44,8 +44,7 @@ namespace Server.Spells.Chivalry
                 {
                     t = m_Table[Caster];
 
-                    if (t != null)
-                        t.Stop();
+                    t?.Stop();
                 }
 
                 int delay = ComputePowerValue(10);
@@ -59,7 +58,7 @@ namespace Server.Spells.Chivalry
                 m_Table[Caster] = t = Timer.DelayCall(TimeSpan.FromSeconds(delay), new TimerStateCallback(Expire_Callback), Caster);
                 Caster.Delta(MobileDelta.WeaponDamage);
 
-                string args = string.Format("{0}\t{1}\t{2}\t{3}", GetAttackBonus(Caster).ToString(), GetDamageBonus(Caster).ToString(), GetWeaponSpeedBonus(Caster).ToString(), GetDefendMalus(Caster).ToString());
+                string args = $"{GetAttackBonus(Caster).ToString()}\t{GetDamageBonus(Caster).ToString()}\t{GetWeaponSpeedBonus(Caster).ToString()}\t{GetDefendMalus(Caster).ToString()}";
 
                 BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.DivineFury, 1060589, 1150218, TimeSpan.FromSeconds(delay), Caster, args));
                 // ~1_HCI~% hit chance<br> ~2_DI~% damage<br>~3_SSI~% swing speed increase<br>-~4_DCI~% defense chance

@@ -108,8 +108,11 @@ namespace Server.Spells.Spellweaving
             {
                 ItemData id = item.ItemData;
 
-                if (item == null || item.Z + id.CalcHeight != location.Z)
+                if (item.Z + id.CalcHeight != location.Z)
+                {
                     continue;
+                }
+
                 if (IsValidTile(item.ItemID))
                 {
                     eable.Free();

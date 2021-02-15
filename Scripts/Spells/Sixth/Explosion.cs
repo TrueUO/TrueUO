@@ -63,8 +63,7 @@ namespace Server.Spells.Sixth
                 m_Attacker = attacker;
                 m_Target = target;
 
-                if (m_Spell != null)
-                    m_Spell.StartDelayedDamageContext(attacker, this);
+                m_Spell?.StartDelayedDamageContext(attacker, this);
 
                 Priority = TimerPriority.FiftyMS;
             }

@@ -41,12 +41,12 @@ namespace Server.Spells.Bushido
             t.Start();
 
             double bushido = m.Skills[SkillName.Bushido].Value;
-            BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.Confidence, 1060596, 1153809, TimeSpan.FromSeconds(4), m, string.Format("{0}\t{1}\t{2}", ((int)(bushido / 12)).ToString(), ((int)(bushido / 5)).ToString(), "100"))); // Successful parry will heal for 1-~1_HEAL~ hit points and refresh for 1-~2_STAM~ stamina points.<br>+~3_HP~ hit point regeneration (4 second duration).
+            BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.Confidence, 1060596, 1153809, TimeSpan.FromSeconds(4), m, $"{((int) (bushido / 12)).ToString()}\t{((int) (bushido / 5)).ToString()}\t100")); // Successful parry will heal for 1-~1_HEAL~ hit points and refresh for 1-~2_STAM~ stamina points.<br>+~3_HP~ hit point regeneration (4 second duration).
 
             int anticipateHitBonus = SkillMasteries.MasteryInfo.AnticipateHitBonus(m);
 
             if (anticipateHitBonus > 0)
-                BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.AnticipateHit, 1155905, 1156057, TimeSpan.FromSeconds(4), m, string.Format("{0}\t{1}", anticipateHitBonus.ToString(), "75"))); // ~1_CHANCE~% chance to reduce Confidence heal by ~2_REDUCE~% when hit. 
+                BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.AnticipateHit, 1155905, 1156057, TimeSpan.FromSeconds(4), m, $"{anticipateHitBonus.ToString()}\t75")); // ~1_CHANCE~% chance to reduce Confidence heal by ~2_REDUCE~% when hit. 
         }
 
         public static void EndConfidence(Mobile m)
@@ -154,7 +154,7 @@ namespace Server.Spells.Bushido
             private int m_Ticks;
             private int m_Hits;
 
-            public int Hits { get { return m_Hits; } set { m_Hits = value; } }
+            public int Hits { get => m_Hits; set => m_Hits = value; }
 
             public RegenTimer(Mobile m)
                 : base(TimeSpan.FromSeconds(1.0), TimeSpan.FromSeconds(1.0))

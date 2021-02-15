@@ -91,8 +91,7 @@ namespace Server.Spells.Necromancy
 
             m.SendLocalizedMessage(1061689); // Your skin turns dry and corpselike.
 
-            if (m.Spell != null)
-                m.Spell.OnCasterHurt();
+            m.Spell?.OnCasterHurt();
 
             m.FixedParticles(0x373A, 1, 15, 9913, 67, 7, EffectLayer.Head);
             m.PlaySound(0x1BB);
@@ -105,13 +104,13 @@ namespace Server.Spells.Necromancy
 
             int malus = (int)Math.Min(15, (Caster.Skills[CastSkill].Value + Caster.Skills[DamageSkill].Value) * 0.075);
 
-            ResistanceMod[] mods = new ResistanceMod[4]
-                    {
-                        new ResistanceMod( ResistanceType.Fire, (int)(-malus * strength) ),
-                        new ResistanceMod( ResistanceType.Poison, (int)(-malus * strength) ),
-                        new ResistanceMod( ResistanceType.Cold, (int)(+10.0 * strength) ),
-                        new ResistanceMod( ResistanceType.Physical, (int)(+10.0 * strength) )
-                    };
+            ResistanceMod[] mods =
+            {
+                new ResistanceMod( ResistanceType.Fire, (int)(-malus * strength) ),
+                new ResistanceMod( ResistanceType.Poison, (int)(-malus * strength) ),
+                new ResistanceMod( ResistanceType.Cold, (int)(+10.0 * strength) ),
+                new ResistanceMod( ResistanceType.Physical, (int)(+10.0 * strength) )
+            };
 
             ExpireTimer timer = new ExpireTimer(m, mods, malus, duration);
             timer.Start();

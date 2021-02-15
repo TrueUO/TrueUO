@@ -59,10 +59,7 @@ namespace Server.Spells.Ninjitsu
 
                 info = m_Table[defender];
 
-                if (info._Timer != null)
-                {
-                    info._Timer.Stop();
-                }
+                info._Timer?.Stop();
 
                 m_Table.Remove(defender);
             }
@@ -96,7 +93,7 @@ namespace Server.Spells.Ninjitsu
 
             m_Table[defender] = info;
 
-            BuffInfo.AddBuff(defender, new BuffInfo(BuffIcon.DeathStrike, 1075645, DamageDelay, defender, string.Format("{0}", _totaldamage)));
+            BuffInfo.AddBuff(defender, new BuffInfo(BuffIcon.DeathStrike, 1075645, DamageDelay, defender, $"{_totaldamage}"));
         }
 
         private static void ProcessDeathStrike(DeathStrikeInfo info)
@@ -111,10 +108,7 @@ namespace Server.Spells.Ninjitsu
 
             AOS.Damage(info._Target, info._Attacker, damage, 0, 0, 0, 0, 0, 0, 100); // Damage is direct.
 
-            if (info._Timer != null)
-            {
-                info._Timer.Stop();
-            }
+            info._Timer?.Stop();
 
             m_Table.Remove(info._Target);
         }

@@ -818,8 +818,7 @@ namespace Server.Spells.SkillMasteries
 
             Caster.Delta(MobileDelta.WeaponDamage);
 
-            if (Target != null)
-                Target.Delta(MobileDelta.WeaponDamage);
+            Target?.Delta(MobileDelta.WeaponDamage);
 
             if (PartyList != null)
             {
@@ -835,6 +834,7 @@ namespace Server.Spells.SkillMasteries
         /// </summary>
         /// <param name="victim"></param>
         /// <param name="damager"></param>
+        /// <param name="type"></param>
         /// <param name="damage"></param>
         public static void OnDamage(Mobile victim, Mobile damager, DamageType type, ref int damage)
         {
@@ -858,18 +858,15 @@ namespace Server.Spells.SkillMasteries
 
             SkillMasteryMove move = SpecialMove.GetCurrentMove(victim) as SkillMasteryMove;
 
-            if (move != null)
-                move.OnDamaged(damager, victim, type, ref damage);
+            move?.OnDamaged(damager, victim, type, ref damage);
 
             PerseveranceSpell preserve = GetSpellForParty(victim, typeof(PerseveranceSpell)) as PerseveranceSpell;
 
-            if (preserve != null)
-                preserve.AbsorbDamage(ref damage);
+            preserve?.AbsorbDamage(ref damage);
 
             InspireSpell inspire = GetSpellForParty(damager, typeof(InspireSpell)) as InspireSpell;
 
-            if (inspire != null)
-                inspire.DoDamage(ref damage);
+            inspire?.DoDamage(ref damage);
 
             CombatTrainingSpell.CheckDamage(damager, victim, type, ref damage);
         }
@@ -883,7 +880,9 @@ namespace Server.Spells.SkillMasteries
         public static void OnHit(Mobile attacker, Mobile defender, ref int damage)
         {
             if (attacker == null || defender == null)
+            {
                 return;
+            }
 
             foreach (SkillMasterySpell spell in EnumerateSpells(attacker))
             {
@@ -897,11 +896,12 @@ namespace Server.Spells.SkillMasteries
 
             SkillMasteryMove move = SpecialMove.GetCurrentMove(defender) as SkillMasteryMove;
 
-            if (move != null)
-                move.OnGotHit(attacker, defender, ref damage);
+            move?.OnGotHit(attacker, defender, ref damage);
 
             if (attacker is BaseCreature || defender is BaseCreature)
+            {
                 CombatTrainingSpell.OnCreatureHit(attacker, defender, ref damage);
+            }
         }
 
         /// <summary>
@@ -982,8 +982,7 @@ namespace Server.Spells.SkillMasteries
 
             Caster.Delta(MobileDelta.WeaponDamage);
 
-            if (Target != null)
-                Target.Delta(MobileDelta.WeaponDamage);
+            Target?.Delta(MobileDelta.WeaponDamage);
 
             if (PartyList != null)
             {
@@ -1237,8 +1236,8 @@ namespace Server.Spells.SkillMasteries
 
         public class MasteryTarget : Target
         {
-            public SkillMasterySpell Owner { get; set; }
-            public bool AutoFinishSequence { get; set; }
+            public SkillMasterySpell Owner { get; }
+            public bool AutoFinishSequence { get; }
 
             public MasteryTarget(SkillMasterySpell spell, int range = 10, bool allowGround = false, TargetFlags flags = TargetFlags.None, bool autoEnd = true)
                 : base(range, allowGround, flags)
@@ -1281,8 +1280,7 @@ namespace Server.Spells.SkillMasteries
 
             protected override void OnTick()
             {
-                if (m_Spell != null)
-                    m_Spell.OnTick();
+                m_Spell?.OnTick();
             }
         }
 

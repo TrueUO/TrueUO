@@ -253,12 +253,8 @@ namespace Server.Spells
             if (IsCasting)
             {
                 object o = ProtectionSpell.Registry[m_Caster];
-                bool disturb = true;
 
-                if (o is double d && d > Utility.RandomDouble() * 100.0)
-                {
-                    disturb = false;
-                }
+                bool disturb = !(o is double d && d > Utility.RandomDouble() * 100.0);
 
                 #region Stygian Abyss
                 int focus = SAAbsorptionAttributes.GetValue(Caster, SAAbsorptionAttribute.CastingFocus);
@@ -569,10 +565,7 @@ namespace Server.Spells
                 Disturbed = true;
                 OnDisturb(type, true);
 
-                if (m_AnimTimer != null)
-                {
-                    m_AnimTimer.Stop();
-                }
+                m_AnimTimer?.Stop();
 
                 if (m_Caster.Player && type == DisturbType.Hurt)
                 {
@@ -786,10 +779,7 @@ namespace Server.Spells
 
             Caster.Delta(MobileDelta.Flags);
 
-            if (m_Caster.Region != null)
-            {
-                m_Caster.Region.OnSpellCast(m_Caster, this);
-            }
+            m_Caster.Region?.OnSpellCast(m_Caster, this);
 
             m_Caster.NextSpellTime = Core.TickCount + (int)GetCastRecovery().TotalMilliseconds;
 
@@ -1245,7 +1235,7 @@ namespace Server.Spells
                 }
             }
 
-            public List<Spell> Registry { get; set; } = new List<Spell>();
+            public List<Spell> Registry { get; } = new List<Spell>();
 
             public CastTimer()
                 : base(TimeSpan.FromMilliseconds(100), TimeSpan.FromMilliseconds(100))
@@ -1294,7 +1284,7 @@ namespace Server.Spells
                         }
                         catch (Exception e)
                         {
-                            Diagnostics.ExceptionLogging.LogException(e, string.Format("Count: {0}; Index: {1}", registry.Count, i));
+                            Diagnostics.ExceptionLogging.LogException(e, $"Count: {registry.Count}; Index: {i}");
                         }
                     }
 

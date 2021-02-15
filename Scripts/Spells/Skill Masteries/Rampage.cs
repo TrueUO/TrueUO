@@ -192,7 +192,7 @@ namespace Server.Spells.SkillMasteries
 
         private class RampageContext
         {
-            public RampageSpell Spell { get; set; }
+            public RampageSpell Spell { get; }
 
             public int HitsRegen { get; set; }
             public int StamRegen { get; set; }

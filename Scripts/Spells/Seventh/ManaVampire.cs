@@ -35,8 +35,7 @@ namespace Server.Spells.Seventh
 
                 SpellHelper.CheckReflect(this, Caster, ref m);
 
-                if (m.Spell != null)
-                    m.Spell.OnCasterHurt();
+                m.Spell?.OnCasterHurt();
 
                 m.Paralyzed = false;
 
