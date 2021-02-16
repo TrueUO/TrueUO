@@ -73,14 +73,17 @@ namespace Server.RemoteAdmin
             LazyInitialize();
 
             if (!m_Enabled)
+            {
                 return;
+            }
 
             try
             {
                 Account acct = state.Account as Account;
+
                 string name = acct == null ? "(UNKNOWN)" : acct.Username;
                 string accesslevel = acct == null ? "NoAccount" : acct.AccessLevel.ToString();
-                string statestr = state == null ? "NULLSTATE" : state.ToString();
+                string statestr = state.ToString();
 
                 m_Output.WriteLine("{0}: {1}: {2}: {3}", DateTime.UtcNow, statestr, name, text);
 
@@ -89,10 +92,13 @@ namespace Server.RemoteAdmin
                 Commands.CommandLogging.AppendPath(ref path, LogBaseDirectory);
                 Commands.CommandLogging.AppendPath(ref path, LogSubDirectory);
                 Commands.CommandLogging.AppendPath(ref path, accesslevel);
-                path = Path.Combine(path, string.Format("{0}.log", name));
+
+                path = Path.Combine(path, $"{name}.log");
 
                 using (StreamWriter sw = new StreamWriter(path, true))
+                {
                     sw.WriteLine("{0}: {1}: {2}", DateTime.UtcNow, statestr, text);
+                }
             }
             catch (Exception e)
             {
