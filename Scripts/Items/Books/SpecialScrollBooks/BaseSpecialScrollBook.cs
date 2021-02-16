@@ -185,8 +185,13 @@ namespace Server.Items
             Timer.DelayCall(
                 () =>
                 {
-                    foreach (Item item in Items.Where(i => i.Movable))
-                        item.Movable = false;
+                    foreach (Item item in Items)
+                    {
+                        if (item.Movable)
+                        {
+                            item.Movable = false;
+                        }
+                    }
                 });
         }
 

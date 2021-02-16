@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -15,14 +14,19 @@ namespace Server.Items
 
         private static void Tick_Callback()
         {
-            foreach (JacobsPickaxe pickaxe in _Instances.Where(p => p != null && !p.Deleted))
+            foreach (JacobsPickaxe pickaxe in _Instances)
             {
-                int charge = pickaxe.UsesRemaining + 10 > 20 ? 20 - pickaxe.UsesRemaining : 10;
+                if (!pickaxe.Deleted)
+                {
+                    int charge = pickaxe.UsesRemaining + 10 > 20 ? 20 - pickaxe.UsesRemaining : 10;
 
-                if (charge > 0)
-                    pickaxe.UsesRemaining += charge;
+                    if (charge > 0)
+                    {
+                        pickaxe.UsesRemaining += charge;
+                    }
 
-                pickaxe.InvalidateProperties();
+                    pickaxe.InvalidateProperties();
+                }
             }
         }
 
@@ -76,7 +80,8 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
+
             _Instances.Add(this);
         }
     }

@@ -38,12 +38,15 @@ namespace Server.Mobiles
                 {
                     if (trainingPoint.Requirements != null && trainingPoint.Requirements.Length > 0)
                     {
-                        foreach (TrainingPointRequirement req in trainingPoint.Requirements.Where(r => r != null))
+                        foreach (TrainingPointRequirement req in trainingPoint.Requirements)
                         {
-                            if (req.Requirement is WeaponAbility && en.TrainPoint is WeaponAbility || req.Requirement is SpecialAbility && en.TrainPoint is SpecialAbility || req.Requirement is AreaEffect && en.TrainPoint is AreaEffect)
+                            if (req != null)
                             {
-                                en.Value = 0;
-                                en.Cost = 0;
+                                if (req.Requirement is WeaponAbility && en.TrainPoint is WeaponAbility || req.Requirement is SpecialAbility && en.TrainPoint is SpecialAbility || req.Requirement is AreaEffect && en.TrainPoint is AreaEffect)
+                                {
+                                    en.Value = 0;
+                                    en.Cost = 0;
+                                }
                             }
                         }
                     }
