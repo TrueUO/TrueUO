@@ -64,7 +64,8 @@ namespace Server.RemoteAdmin
             string netVer = Environment.Version.ToString();
             string os = Environment.OSVersion.ToString();
 
-            EnsureCapacity(1 + 2 + (10 * 4) + netVer.Length + 1 + os.Length + 1);
+            EnsureCapacity(1 + 2 + 10 * 4 + netVer.Length + 1 + os.Length + 1);
+
             int banned = 0;
             int active = 0;
 
@@ -87,7 +88,7 @@ namespace Server.RemoteAdmin
             m_Stream.Write(Core.ScriptItems);
 
             m_Stream.Write((uint)(DateTime.UtcNow - Clock.ServerStart).TotalSeconds);
-            m_Stream.Write((uint)GC.GetTotalMemory(false));                        // TODO: uint not sufficient for TotalMemory (long). Fix protocol.
+            m_Stream.Write((uint)GC.GetTotalMemory(false));  // TODO: uint not sufficient for TotalMemory (long). Fix protocol.
             m_Stream.WriteAsciiNull(netVer);
             m_Stream.WriteAsciiNull(os);
         }
@@ -135,7 +136,7 @@ namespace Server.RemoteAdmin
         public CompactServerInfo()
             : base(0x51)
         {
-            EnsureCapacity(1 + 2 + (4 * 4) + 8);
+            EnsureCapacity(1 + 2 + 4 * 4 + 8);
 
             m_Stream.Write(NetState.Instances.Count - 1);                      // Clients
             m_Stream.Write(World.Items.Count);                                 // Items
