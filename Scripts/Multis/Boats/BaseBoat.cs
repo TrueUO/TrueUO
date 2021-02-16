@@ -2191,9 +2191,12 @@ namespace Server.Multis
                 }
             }
 
-            foreach (IEntity comp in GetComponents().Where(comp => !toMove.Contains(comp)))
+            foreach (IEntity comp in GetComponents())
             {
-                toMove.Add(comp);
+                if (!toMove.Contains(comp))
+                {
+                    toMove.Add(comp);
+                }
             }
 
             eable.Free();
@@ -2211,9 +2214,12 @@ namespace Server.Multis
             int count = m_Facing - old & 0x7;
             count /= 2;
 
-            foreach (IEntity e in toMove.Where(e => e != null))
+            foreach (IEntity e in toMove)
             {
-                e.Location = Rotate(e.Location, count);
+                if (e != null)
+                {
+                    e.Location = Rotate(e.Location, count);
+                }
             }
 
             switch (facing)
@@ -2588,9 +2594,12 @@ namespace Server.Multis
                 }
 
                 // entities move/restores packet
-                foreach (IEntity ent in toMove.Where(e => !IsComponentItem(e) && !CanMoveOver(e)))
+                foreach (IEntity ent in toMove)
                 {
-                    ent.Location = new Point3D(ent.X + xOffset, ent.Y + yOffset, ent.Z);
+                    if (!IsComponentItem(ent) && !CanMoveOver(ent))
+                    {
+                        ent.Location = new Point3D(ent.X + xOffset, ent.Y + yOffset, ent.Z);
+                    }
                 }
 
                 Location = new Point3D(X + xOffset, Y + yOffset, Z);
@@ -2825,9 +2834,12 @@ namespace Server.Multis
 
         public void Teleport(int xOffset, int yOffset, int zOffset)
         {
-            foreach (IEntity ent in GetEntitiesOnBoard().Where(e => !IsComponentItem(e) && !CanMoveOver(e) && e != TillerMan))
+            foreach (IEntity ent in GetEntitiesOnBoard())
             {
-                ent.Location = new Point3D(ent.X + xOffset, ent.Y + yOffset, ent.Z + zOffset);
+                if (!IsComponentItem(ent) && !CanMoveOver(ent) && ent != TillerMan)
+                {
+                    ent.Location = new Point3D(ent.X + xOffset, ent.Y + yOffset, ent.Z + zOffset);
+                }
             }
 
             Location = new Point3D(X + xOffset, Y + yOffset, Z + zOffset);
@@ -2963,14 +2975,17 @@ namespace Server.Multis
 
                 m_Stream.Write(length);
 
-                foreach (IEntity ent in boat.GetEntitiesOnBoard().Where(e => e != boat))
+                foreach (IEntity ent in boat.GetEntitiesOnBoard())
                 {
-                    m_Stream.Write(ent.Serial);
-                    m_Stream.Write((short)(ent.X + xOffset));
-                    m_Stream.Write((short)(ent.Y + yOffset));
-                    m_Stream.Write((short)ent.Z);
+                    if (ent != boat)
+                    {
+                        m_Stream.Write(ent.Serial);
+                        m_Stream.Write((short) (ent.X + xOffset));
+                        m_Stream.Write((short) (ent.Y + yOffset));
+                        m_Stream.Write((short) ent.Z);
 
-                    ++length;
+                        ++length;
+                    }
                 }
 
                 m_Stream.Seek(cp, SeekOrigin.Begin);
