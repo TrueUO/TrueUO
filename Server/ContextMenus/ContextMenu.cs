@@ -1,7 +1,6 @@
 #region References
 using System;
 using System.Collections.Generic;
-using System.Linq;
 #endregion
 
 namespace Server.ContextMenus
@@ -79,12 +78,7 @@ namespace Server.ContextMenus
 			Dispose();
 		}
 
-		/// <summary>
-		///     Returns true if this ContextMenu requires packet version 2.
-		/// </summary>
-		public bool RequiresNewPacket => Entries.Any(t => t.Number < 3000000 || t.Number > 3032767);
-
-		public void Dispose()
+        public void Dispose()
 		{
 			if (IsDisposed)
 			{
@@ -95,10 +89,13 @@ namespace Server.ContextMenus
 
 			if (Entries != null)
 			{
-				foreach (ContextMenuEntry e in Entries.Where(e => e != null))
+				foreach (ContextMenuEntry e in Entries)
 				{
-					e.Dispose();
-				}
+                    if (e != null)
+                    {
+                        e.Dispose();
+                    }
+                }
 
 				Entries = null;
 			}
@@ -151,10 +148,13 @@ namespace Server.ContextMenus
 
 				if (root is Mobile mobile && mobile != m && mobile.AccessLevel >= m.AccessLevel)
 				{
-					foreach (ContextMenuEntry e in c.Entries.Where(e => !e.NonLocalUse))
+					foreach (ContextMenuEntry e in c.Entries)
 					{
-						e.Enabled = false;
-					}
+                        if (!e.NonLocalUse)
+                        {
+                            e.Enabled = false;
+                        }
+                    }
 				}
 			}
 

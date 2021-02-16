@@ -6201,10 +6201,13 @@ namespace Server
 			{
 				List<ItemSocket> list = new List<ItemSocket>();
 
-				foreach (ItemSocket socket in TimerRegistry.Keys.Where(s => TimerRegistry[s] < DateTime.UtcNow))
+				foreach (ItemSocket socket in TimerRegistry.Keys)
 				{
-					list.Add(socket);
-				}
+                    if (TimerRegistry[socket] < DateTime.UtcNow)
+                    {
+                        list.Add(socket);
+                    }
+                }
 
 				for (int i = 0; i < list.Count; i++)
 				{
