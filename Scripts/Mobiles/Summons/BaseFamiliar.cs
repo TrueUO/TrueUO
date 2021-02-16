@@ -4,7 +4,6 @@ using Server.Items;
 using Server.Spells.Necromancy;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 #endregion
 
 namespace Server.Mobiles
@@ -241,9 +240,12 @@ namespace Server.Mobiles
 
             if (attacker is PlayerMobile)
             {
-                foreach (Mobile ts in ((PlayerMobile)attacker).AllFollowers.Where(m => m is BaseTalismanSummon && m.InRange(defender.Location, m.Weapon.MaxRange)))
+                foreach (Mobile ts in ((PlayerMobile)attacker).AllFollowers)
                 {
-                    ts.Weapon.OnSwing(ts, defender);
+                    if (ts is BaseTalismanSummon && ts.InRange(defender.Location, ts.Weapon.MaxRange))
+                    {
+                        ts.Weapon.OnSwing(ts, defender);
+                    }
                 }
             }
         }
@@ -262,14 +264,12 @@ namespace Server.Mobiles
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             reader.ReadInt();
 
             ValidationQueue<BaseFamiliar>.Add(this);

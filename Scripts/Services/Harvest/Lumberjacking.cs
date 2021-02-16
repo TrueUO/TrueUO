@@ -1,7 +1,6 @@
 using Server.Items;
 using Server.Network;
 using System;
-using System.Linq;
 
 namespace Server.Engines.Harvest
 {
@@ -163,14 +162,17 @@ namespace Server.Engines.Harvest
                     return;
                 }
 
-                foreach (HarvestResource res in m_Definition.Resources.Where(r => r.Types != null))
+                foreach (HarvestResource res in m_Definition.Resources)
                 {
-                    foreach (Type type in res.Types)
+                    if (res.Types != null)
                     {
-                        if (item.GetType() == type)
+                        foreach (Type type in res.Types)
                         {
-                            res.SendSuccessTo(from);
-                            return;
+                            if (item.GetType() == type)
+                            {
+                                res.SendSuccessTo(from);
+                                return;
+                            }
                         }
                     }
                 }

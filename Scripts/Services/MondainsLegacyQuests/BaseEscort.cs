@@ -3,7 +3,6 @@ using Server.Mobiles;
 using Server.Services.Virtues;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.Quests
 {
@@ -405,17 +404,20 @@ namespace Server.Engines.Quests
         {
             PlayerMobile pm = owner as PlayerMobile;
 
-            foreach (BaseQuest escortquest in pm.Quests.Where(x => x.Quester is BaseEscort))
+            foreach (BaseQuest escortquest in pm.Quests)
             {
-                BaseEscort escort = (BaseEscort)escortquest.Quester;
-
-                Timer.DelayCall(TimeSpan.FromSeconds(3), delegate
+                if (escortquest.Quester is BaseEscort)
                 {
-                    escort.Say(500901); // Ack!  My escort has come to haunt me!
-                    owner.SendLocalizedMessage(1071194); // You have failed your escort quest…
-                    owner.PlaySound(0x5B3);
-                    escort.Delete();
-                });
+                    BaseEscort escort = (BaseEscort) escortquest.Quester;
+
+                    Timer.DelayCall(TimeSpan.FromSeconds(3), delegate
+                    {
+                        escort.Say(500901); // Ack!  My escort has come to haunt me!
+                        owner.SendLocalizedMessage(1071194); // You have failed your escort quest…
+                        owner.PlaySound(0x5B3);
+                        escort.Delete();
+                    });
+                }
             }
         }
     }
