@@ -27,7 +27,7 @@ namespace Server.Engines.ArenaSystem
         public ArenaExitBanner Banner2 { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public ArenaDefinition Definition { get; set; }
+        public ArenaDefinition Definition { get; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public bool InUse => CurrentDuel != null;
@@ -38,12 +38,12 @@ namespace Server.Engines.ArenaSystem
         public ArenaRegion Region { get; set; }
         public GuardedRegion GuardRegion { get; set; }
 
-        public Dictionary<ArenaDuel, DateTime> PendingDuels { get; set; }
-        public List<ArenaDuel> BookedDuels { get; set; }
-        public List<Item> Blockers { get; set; }
+        public Dictionary<ArenaDuel, DateTime> PendingDuels { get; }
+        public List<ArenaDuel> BookedDuels { get; }
+        public List<Item> Blockers { get; }
 
-        public List<ArenaStats> TeamRankings { get; set; }
-        public List<ArenaStats> SurvivalRankings { get; set; }
+        public List<ArenaStats> TeamRankings { get; }
+        public List<ArenaStats> SurvivalRankings { get; }
 
         public PVPArena(ArenaDefinition definition)
         {
@@ -188,7 +188,7 @@ namespace Server.Engines.ArenaSystem
 
         public ArenaDuel GetPendingDuel(Mobile m)
         {
-            return PendingDuels.Keys.FirstOrDefault(d => m is PlayerMobile && d.IsParticipant((PlayerMobile)m));
+            return PendingDuels.Keys.FirstOrDefault(d => m is PlayerMobile mobile && d.IsParticipant(mobile));
         }
 
         public List<ArenaDuel> GetPendingPublic()
@@ -256,12 +256,15 @@ namespace Server.Engines.ArenaSystem
             m.Delta(MobileDelta.Noto);
 
             // lets remove pets, too
-            if (m is PlayerMobile && ((PlayerMobile)m).AllFollowers.Count > 0)
+            if (m is PlayerMobile mobile && mobile.AllFollowers.Count > 0)
             {
-                foreach (Mobile mob in ((PlayerMobile)m).AllFollowers.Where(pet => pet.Region.IsPartOf<ArenaRegion>()))
+                foreach (Mobile mob in mobile.AllFollowers)
                 {
-                    mob.MoveToWorld(p, map);
-                    mob.Delta(MobileDelta.Noto);
+                    if (mob.Region.IsPartOf<ArenaRegion>())
+                    {
+                        mob.MoveToWorld(p, map);
+                        mob.Delta(MobileDelta.Noto);
+                    }
                 }
             }
 
@@ -282,9 +285,9 @@ namespace Server.Engines.ArenaSystem
 
                 foreach (Mobile mob in eable)
                 {
-                    if (mob is ArenaManager)
+                    if (mob is ArenaManager manager)
                     {
-                        ((ArenaManager)mob).OfferResurrection(m);
+                        manager.OfferResurrection(m);
                         break;
                     }
                 }
@@ -295,8 +298,8 @@ namespace Server.Engines.ArenaSystem
 
         private Point3D GetRandomRemovalLocation(Mobile m = null)
         {
-            Rectangle2D rec = (m == null || m.Alive) ? Definition.EjectLocation : Definition.DeadEjectLocation;
-            Point3D loc = (m == null || m.Alive) ? Definition.StoneLocation : Definition.ManagerLocation;
+            Rectangle2D rec = m == null || m.Alive ? Definition.EjectLocation : Definition.DeadEjectLocation;
+            Point3D loc = m == null || m.Alive ? Definition.StoneLocation : Definition.ManagerLocation;
             Point3D p = loc;
 
             Map map = Definition.Map;
@@ -485,7 +488,7 @@ namespace Server.Engines.ArenaSystem
 
     public class ArenaStats : IComparable<ArenaStats>
     {
-        public PlayerMobile Owner { get; set; }
+        public PlayerMobile Owner { get; }
         public int Ranking { get; set; }
 
         public ArenaStats(PlayerMobile pm)
