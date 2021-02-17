@@ -1,7 +1,6 @@
 using Server.Engines.Despise;
 using Server.Mobiles;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -151,9 +150,12 @@ namespace Server.Items
         {
             if (Teleporters != null)
             {
-                foreach (InternalTeleporter tele in Teleporters.Where(t => t != null && !t.Deleted))
+                foreach (InternalTeleporter tele in Teleporters)
                 {
-                    tele.Delete();
+                    if (tele != null && !tele.Deleted)
+                    {
+                        tele.Delete();
+                    }
                 }
 
                 ColUtility.Free(Teleporters);

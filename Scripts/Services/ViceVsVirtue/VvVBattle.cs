@@ -934,8 +934,13 @@ namespace Server.Engines.VvV
 
                 if (team.Guild.Alliance != null)
                 {
-                    foreach (Guild guil in team.Guild.Alliance.Members.Where(guil => !exempt.Contains(guil)))
-                        exempt.Add(guil);
+                    foreach (Guild guil in team.Guild.Alliance.Members)
+                    {
+                        if (!exempt.Contains(guil))
+                        {
+                            exempt.Add(guil);
+                        }
+                    }
                 }
             }
 

@@ -528,9 +528,12 @@ namespace Server.Engines.NewMagincia
                         list = new List<NewMaginciaMessage>();
                     }
 
-                    foreach (var message in kvp.Value.Where(message => message.AccountBound))
+                    foreach (var message in kvp.Value)
                     {
-                        list.Add(message);
+                        if (message.AccountBound)
+                        {
+                            list.Add(message);
+                        }
                     }
                 }
             }

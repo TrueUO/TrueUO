@@ -83,9 +83,12 @@ namespace Server
 
         public static void DoHue(Mobile m, int hue)
         {
-            foreach (Item i in m.Items.Where(item => item is ISetItem setItem && setItem.SetID == SetItem.Bestial && item.Hue != hue))
+            foreach (Item i in m.Items)
             {
-                i.Hue = hue;
+                if (i is ISetItem setItem && setItem.SetID == SetItem.Bestial && i.Hue != hue)
+                {
+                    i.Hue = hue;
+                }
             }
 
             m.HueMod = hue;
@@ -201,9 +204,12 @@ namespace Server
                 Mobile.HueMod = StartHue;
                 Mobile.SendLocalizedMessage(1151535); //Your berserk rage has subsided. 
 
-                foreach (Item item in Mobile.Items.Where(i => i is ISetItem item && item.SetID == SetItem.Bestial))
+                foreach (Item item in Mobile.Items)
                 {
-                    item.Hue = 2010;
+                    if (item is ISetItem setItem && setItem.SetID == SetItem.Bestial)
+                    {
+                        item.Hue = 2010;
+                    }
                 }
 
                 Stop();

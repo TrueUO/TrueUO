@@ -1614,25 +1614,31 @@ namespace Server.Mobiles
             Mobile closestMob = combatant;
             double closestDist = combatant == null ? m_Mobile.RangePerception : combatant.GetDistanceToSqrt(controlMaster);
 
-            foreach (Mobile aggressor in controlMaster.Aggressors.Select(x => x.Attacker).Where(m => ValidGuardTarget(m)))
+            foreach (Mobile aggressor in controlMaster.Aggressors.Select(x => x.Attacker))
             {
-                double dist = aggressor.GetDistanceToSqrt(controlMaster);
-
-                if (closestMob == null || dist < closestDist)
+                if (ValidGuardTarget(aggressor))
                 {
-                    closestMob = aggressor;
-                    closestDist = dist;
+                    double dist = aggressor.GetDistanceToSqrt(controlMaster);
+
+                    if (closestMob == null || dist < closestDist)
+                    {
+                        closestMob = aggressor;
+                        closestDist = dist;
+                    }
                 }
             }
 
-            foreach (Mobile aggressed in controlMaster.Aggressed.Select(x => x.Defender).Where(m => ValidGuardTarget(m)))
+            foreach (Mobile aggressed in controlMaster.Aggressed.Select(x => x.Defender))
             {
-                double dist = aggressed.GetDistanceToSqrt(controlMaster);
-
-                if (closestMob == null || dist < closestDist)
+                if (ValidGuardTarget(aggressed))
                 {
-                    closestMob = aggressed;
-                    closestDist = dist;
+                    double dist = aggressed.GetDistanceToSqrt(controlMaster);
+
+                    if (closestMob == null || dist < closestDist)
+                    {
+                        closestMob = aggressed;
+                        closestDist = dist;
+                    }
                 }
             }
 
