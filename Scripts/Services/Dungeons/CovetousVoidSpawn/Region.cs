@@ -3,7 +3,6 @@ using Server.Mobiles;
 using Server.Regions;
 using Server.Spells;
 using System;
-using System.Linq;
 
 namespace Server.Engines.VoidPool
 {
@@ -24,33 +23,45 @@ namespace Server.Engines.VoidPool
 
         public void SendRegionMessage(int localization)
         {
-            foreach (Mobile m in GetEnumeratedMobiles().Where(m => m.Player))
+            foreach (Mobile m in GetEnumeratedMobiles())
             {
-                m.SendLocalizedMessage(localization);
+                if (m.Player)
+                {
+                    m.SendLocalizedMessage(localization);
+                }
             }
         }
 
         public void SendRegionMessage(int localization, int hue)
         {
-            foreach (Mobile m in GetEnumeratedMobiles().Where(m => m.Player))
+            foreach (Mobile m in GetEnumeratedMobiles())
             {
-                m.SendLocalizedMessage(localization, "", hue);
+                if (m.Player)
+                {
+                    m.SendLocalizedMessage(localization, "", hue);
+                }
             }
         }
 
         public void SendRegionMessage(int localization, string args)
         {
-            foreach (Mobile m in GetEnumeratedMobiles().Where(m => m.Player))
+            foreach (Mobile m in GetEnumeratedMobiles())
             {
-                m.SendLocalizedMessage(localization, args);
+                if (m.Player)
+                {
+                    m.SendLocalizedMessage(localization, args);
+                }
             }
         }
 
         public void SendRegionMessage(string message)
         {
-            foreach (Mobile m in GetEnumeratedMobiles().Where(m => m.Player))
+            foreach (Mobile m in GetEnumeratedMobiles())
             {
-                m.SendMessage(0x25, message);
+                if (m.Player)
+                {
+                    m.SendMessage(0x25, message);
+                }
             }
         }
 

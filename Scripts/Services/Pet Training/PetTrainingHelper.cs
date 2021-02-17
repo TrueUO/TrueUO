@@ -1192,14 +1192,17 @@ namespace Server.Mobiles
 
             if (tp.Requirements != null && tp.Requirements.Length > 0)
             {
-                foreach (TrainingPointRequirement req in tp.Requirements.Where(r => r != null))
+                foreach (TrainingPointRequirement req in tp.Requirements)
                 {
-                    if (req.Requirement is SkillName name && bc.Skills[name].Base > 0)
+                    if (req != null)
                     {
-                        continue;
-                    }
+                        if (req.Requirement is SkillName name && bc.Skills[name].Base > 0)
+                        {
+                            continue;
+                        }
 
-                    cost += req.Cost;
+                        cost += req.Cost;
+                    }
                 }
             }
 

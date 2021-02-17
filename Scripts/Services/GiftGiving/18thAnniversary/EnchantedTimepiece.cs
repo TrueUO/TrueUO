@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -105,9 +104,12 @@ namespace Server.Items
         {
             Timer.DelayCall(TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1), () =>
                 {
-                    foreach (EnchantedTimepiece tp in _TimePieces.Where(t => t != null && !t.Movable && t.Map != Map.Internal))
+                    foreach (EnchantedTimepiece tp in _TimePieces)
                     {
-                        tp.InvalidateID();
+                        if (tp != null && !tp.Movable && tp.Map != Map.Internal)
+                        {
+                            tp.InvalidateID();
+                        }
                     }
                 });
         }
@@ -125,7 +127,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             _TimePieces.Add(this);
         }

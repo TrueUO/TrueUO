@@ -39,9 +39,12 @@ namespace Server.Engines.Exodus
             }
             protected override void OnTick()
             {
-                foreach (Mobile m in m_region.GetEnumeratedMobiles().Where(m => m is PlayerMobile && m.AccessLevel == AccessLevel.Player))
+                foreach (Mobile m in m_region.GetEnumeratedMobiles())
                 {
-                    m.SendLocalizedMessage(1010589);
+                    if (m is PlayerMobile && m.AccessLevel == AccessLevel.Player)
+                    {
+                        m.SendLocalizedMessage(1010589);
+                    }
                 }
 
                 DelayCall(m_Delay, m_region.MoveLocation);
@@ -50,12 +53,15 @@ namespace Server.Engines.Exodus
 
         public void MoveLocation()
         {
-            foreach (Mobile m in GetEnumeratedMobiles().Where(m => m is PlayerMobile && m.AccessLevel == AccessLevel.Player))
+            foreach (Mobile m in GetEnumeratedMobiles())
             {
-                Point3D p = Random_Locations[Utility.Random(Random_Locations.Length)];
+                if (m is PlayerMobile && m.AccessLevel == AccessLevel.Player)
+                {
+                    Point3D p = Random_Locations[Utility.Random(Random_Locations.Length)];
 
-                m.MoveToWorld(p, m.Map);
-                BaseCreature.TeleportPets(m, p, m.Map);
+                    m.MoveToWorld(p, m.Map);
+                    BaseCreature.TeleportPets(m, p, m.Map);
+                }
             }
 
             VerLorRegController.Start();

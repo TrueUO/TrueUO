@@ -98,26 +98,29 @@ namespace Server.Engines.Shadowguard
             {
                 List<DamageStore> rights = GetLootingRights();
 
-                foreach (DamageStore ds in rights.Where(s => s.m_HasRight))
+                foreach (DamageStore ds in rights)
                 {
-                    int luck = ds.m_Mobile is PlayerMobile mobile ? mobile.RealLuck : ds.m_Mobile.Luck;
-
-                    int chance = 1000 + (luck / 15);
-
-                    if (chance > Utility.Random(5000))
+                    if (ds.m_HasRight)
                     {
-                        Mobile m = ds.m_Mobile;
-                        Item artifact = Loot.Construct(ArtifactDrops[Utility.Random(ArtifactDrops.Length)]);
+                        int luck = ds.m_Mobile is PlayerMobile mobile ? mobile.RealLuck : ds.m_Mobile.Luck;
 
-                        if (artifact != null)
+                        int chance = 1000 + (luck / 15);
+
+                        if (chance > Utility.Random(5000))
                         {
-                            if (m.Backpack == null || !m.Backpack.TryDropItem(m, artifact, false))
+                            Mobile m = ds.m_Mobile;
+                            Item artifact = Loot.Construct(ArtifactDrops[Utility.Random(ArtifactDrops.Length)]);
+
+                            if (artifact != null)
                             {
-                                m.BankBox.DropItem(artifact);
-                                m.SendMessage("For your valor in combating the fallen beast, a special reward has been placed in your bank box.");
+                                if (m.Backpack == null || !m.Backpack.TryDropItem(m, artifact, false))
+                                {
+                                    m.BankBox.DropItem(artifact);
+                                    m.SendMessage("For your valor in combating the fallen beast, a special reward has been placed in your bank box.");
+                                }
+                                else
+                                    m.SendLocalizedMessage(1062317); // For your valor in combating the fallen beast, a special reward has been bestowed on you.
                             }
-                            else
-                                m.SendLocalizedMessage(1062317); // For your valor in combating the fallen beast, a special reward has been bestowed on you.
                         }
                     }
                 }
