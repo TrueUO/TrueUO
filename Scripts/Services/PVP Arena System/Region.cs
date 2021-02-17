@@ -13,7 +13,7 @@ namespace Server.Engines.ArenaSystem
 {
     public class ArenaRegion : BaseRegion
     {
-        public PVPArena Arena { get; set; }
+        public PVPArena Arena { get; }
 
         public ArenaRegion(PVPArena arena)
             : base(string.Format("Duel Arena {0}", arena.Definition.Name),
@@ -39,15 +39,15 @@ namespace Server.Engines.ArenaSystem
                 }
             }
 
-            if (o is Corpse && ((Corpse)o).Owner != m)
+            if (o is Corpse corpse && corpse.Owner != m)
             {
                 m.SendLocalizedMessage(1010054); // You cannot loot that corpse!!
                 return false;
             }
 
-            if (o is BallOfSummoning)
+            if (o is BallOfSummoning summoning)
             {
-                MessageHelper.SendLocalizedMessageTo((BallOfSummoning)o, m, 1054125, 0x5); // The Crystal Ball fills with a blue mist. Your pet is not responding to the summons.
+                MessageHelper.SendLocalizedMessageTo(summoning, m, 1054125, 0x5); // The Crystal Ball fills with a blue mist. Your pet is not responding to the summons.
                 return false;
             }
 
