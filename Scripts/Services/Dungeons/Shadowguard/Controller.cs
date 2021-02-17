@@ -265,16 +265,20 @@ namespace Server.Engines.Shadowguard
                             }
                         }
 
-                        foreach (Mobile mob in Queue.Keys.Where(l => l != null))
+                        foreach (Mobile mob in Queue.Keys)
                         {
-                            Party party = Party.Get(mob);
-
-                            if (mob == info.Mobile || party != null && party.Contains(info.Mobile))
+                            if (mob != null)
                             {
-                                m.SendLocalizedMessage(1156189, info.Mobile.Name); // ~1_NAME~ in your party is already attempting to join a Shadowguard encounter.  Start a new party without them or wait until they are finished and try again.
-                                return false;
-                            }
+                                Party party = Party.Get(mob);
 
+                                if (mob == info.Mobile || party != null && party.Contains(info.Mobile))
+                                {
+                                    m.SendLocalizedMessage(1156189,
+                                        info.Mobile
+                                            .Name); // ~1_NAME~ in your party is already attempting to join a Shadowguard encounter.  Start a new party without them or wait until they are finished and try again.
+                                    return false;
+                                }
+                            }
                         }
                     }
                 }
@@ -416,12 +420,15 @@ namespace Server.Engines.Shadowguard
                     continue;
                 }
 
-                foreach (ShadowguardEncounter inst in Encounters.Where(inst => inst.PartyLeader == m))
+                foreach (ShadowguardEncounter inst in Encounters)
                 {
-                    if (i == 0)
-                        message = true;
+                    if (inst.PartyLeader == m)
+                    {
+                        if (i == 0)
+                            message = true;
 
-                    RemoveFromQueue(m);
+                        RemoveFromQueue(m);
+                    }
                 }
 
                 if (Queue.Count > 0)

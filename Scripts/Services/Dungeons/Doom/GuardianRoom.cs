@@ -123,16 +123,27 @@ namespace Server.Engines.Doom
             Effects.PlaySound(DoorTwo.Location, DoorTwo.Map, 0x241);
 
             if (Guardians == null)
+            {
                 Guardians = new List<DarkGuardian>();
+            }
 
             int count = 0;
-            foreach (Mobile mob in GetEnumeratedMobiles().Where(mob => mob is PlayerMobile || mob is BaseCreature bc && bc.GetMaster() != null && !bc.IsDeadBondedPet))
-            {
-                if (mob.NetState != null)
-                    mob.SendLocalizedMessage(1050000, "", 365); // The locks on the door click loudly and you begin to hear a faint hissing near the walls.
 
-                if (mob.Alive)
-                    count++;
+            foreach (Mobile mob in GetEnumeratedMobiles())
+            {
+                if (mob is PlayerMobile || mob is BaseCreature bc && bc.GetMaster() != null && !bc.IsDeadBondedPet)
+                {
+                    if (mob.NetState != null)
+                    {
+                        mob.SendLocalizedMessage(1050000, "",
+                            365); // The locks on the door click loudly and you begin to hear a faint hissing near the walls.
+                    }
+
+                    if (mob.Alive)
+                    {
+                        count++;
+                    }
+                }
             }
 
             count = Math.Max(1, count * 2);
@@ -278,10 +289,13 @@ namespace Server.Engines.Doom
                         Effects.SendLocationEffect(p, Map.Malas, Utility.RandomList(0x113C, 0x1147, 0x11A8) - 2, 16, 3, 0, 0);
                     }
 
-                    foreach (Mobile m in Region.GetEnumeratedMobiles().Where(m => m is PlayerMobile && m.Alive && m.AccessLevel == AccessLevel.Player && m.Poison == null))
+                    foreach (Mobile m in Region.GetEnumeratedMobiles())
                     {
-                        m.ApplyPoison(m, Poison.Deadly);
-                        m.SendSound(0x231);
+                        if (m is PlayerMobile && m.Alive && m.AccessLevel == AccessLevel.Player && m.Poison == null)
+                        {
+                            m.ApplyPoison(m, Poison.Deadly);
+                            m.SendSound(0x231);
+                        }
                     }
 
                     NextGas = DateTime.UtcNow + TimeSpan.FromSeconds(3);

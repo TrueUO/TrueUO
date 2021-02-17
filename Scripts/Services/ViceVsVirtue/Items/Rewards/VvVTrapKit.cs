@@ -2,7 +2,6 @@ using Server.ContextMenus;
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.VvV
 {
@@ -158,9 +157,12 @@ namespace Server.Engines.VvV
 
             List<Mobile> mobs = new List<Mobile>(_Cooldown.Keys);
 
-            foreach (Mobile m in mobs.Where(mob => _Cooldown[mob] < DateTime.UtcNow))
+            foreach (Mobile m in mobs)
             {
-                _Cooldown.Remove(m);
+                if (_Cooldown[m] < DateTime.UtcNow)
+                {
+                    _Cooldown.Remove(m);
+                }
             }
 
             mobs.Clear();

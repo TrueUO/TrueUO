@@ -392,8 +392,13 @@ namespace Server.Engines.Despise
         {
             if (region != null)
             {
-                foreach (Mobile m in region.GetEnumeratedMobiles().Where(m => m is PlayerMobile))
-                    m.SendLocalizedMessage(cliloc);
+                foreach (Mobile m in region.GetEnumeratedMobiles())
+                {
+                    if (m is PlayerMobile)
+                    {
+                        m.SendLocalizedMessage(cliloc);
+                    }
+                }
             }
         }
 
@@ -762,10 +767,13 @@ namespace Server.Engines.Despise
 
             foreach (Region r in new Region[] { m_GoodRegion, m_EvilRegion, m_LowerRegion, m_StartRegion })
             {
-                foreach (Item item in r.GetEnumeratedItems().Where(i => i is Moongate || i is GateTeleporter))
+                foreach (Item item in r.GetEnumeratedItems())
                 {
-                    item.Delete();
-                    WeakEntityCollection.Remove("despise", item);
+                    if (item is Moongate || item is GateTeleporter)
+                    {
+                        item.Delete();
+                        WeakEntityCollection.Remove("despise", item);
+                    }
                 }
             }
 

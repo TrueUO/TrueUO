@@ -114,15 +114,16 @@ namespace Server.Spells.SkillMasteries
         {
             Dictionary<Mobile, InternalItem> list = new Dictionary<Mobile, InternalItem>();
 
-            foreach (InternalItem item in Items.Where(i => !i.Deleted))
+            foreach (InternalItem item in Items)
             {
-                foreach (Mobile m in AcquireIndirectTargets(item.Location, 1).OfType<Mobile>().Where(m =>
-                     (m.Z + 16) > item.Z &&
-                     (item.Z + 12) > m.Z))
+                if (!item.Deleted)
                 {
-                    if (!list.ContainsKey(m))
+                    foreach (Mobile m in AcquireIndirectTargets(item.Location, 1).OfType<Mobile>().Where(m => m.Z + 16 > item.Z && item.Z + 12 > m.Z))
                     {
-                        list.Add(m, item);
+                        if (!list.ContainsKey(m))
+                        {
+                            list.Add(m, item);
+                        }
                     }
                 }
             }

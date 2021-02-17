@@ -221,8 +221,13 @@ namespace Server.Gumps
         {
             int count = 0;
 
-            foreach (SpecialScroll scroll in Book.Items.OfType<SpecialScroll>().Where(s => s.Skill == skill && value == s.Value))
-                count++;
+            foreach (SpecialScroll scroll in Book.Items.OfType<SpecialScroll>())
+            {
+                if (scroll.Skill == skill && value == scroll.Value)
+                {
+                    count++;
+                }
+            }
 
             return count;
         }

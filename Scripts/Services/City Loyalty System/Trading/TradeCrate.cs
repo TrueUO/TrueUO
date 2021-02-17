@@ -243,9 +243,12 @@ namespace Server.Engines.CityLoyalty
                     {
                         var list = new List<Item>(Player.Backpack.Items);
 
-                        foreach (var item in list.Where(i => i.Amount == 1 && Crate.TryAddItem(Player, i, false)))
+                        foreach (var item in list)
                         {
-                            Crate.DropItem(item);
+                            if (item.Amount == 1 && Crate.TryAddItem(Player, item, false))
+                            {
+                                Crate.DropItem(item);
+                            }
                         }
                     }
                 }

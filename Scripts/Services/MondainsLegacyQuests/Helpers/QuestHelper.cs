@@ -692,16 +692,19 @@ namespace Server.Engines.Quests
 
         public static bool CheckRewardItem(PlayerMobile player, Item item)
         {
-            foreach (BaseQuest quest in player.Quests.Where(q => q.Objectives.Any(obj => obj is ObtainObjective)))
+            foreach (BaseQuest quest in player.Quests)
             {
-                foreach (ObtainObjective obtain in quest.Objectives.OfType<ObtainObjective>())
+                if (quest.Objectives.Any(obj => obj is ObtainObjective))
                 {
-                    if (obtain.IsObjective(item))
+                    foreach (ObtainObjective obtain in quest.Objectives.OfType<ObtainObjective>())
                     {
-                        obtain.CurProgress += item.Amount;
-                        quest.OnObjectiveUpdate(item);
+                        if (obtain.IsObjective(item))
+                        {
+                            obtain.CurProgress += item.Amount;
+                            quest.OnObjectiveUpdate(item);
 
-                        return true;
+                            return true;
+                        }
                     }
                 }
             }

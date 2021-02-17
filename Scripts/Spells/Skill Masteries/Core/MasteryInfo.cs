@@ -332,11 +332,14 @@ namespace Server.Spells.SkillMasteries
                 }
             }
 
-            foreach (Item item in m.Items.Where(i => i is BookOfMasteries))
+            foreach (Item item in m.Items)
             {
-                BookOfMasteries book = item as BookOfMasteries;
+                if (item is BookOfMasteries)
+                {
+                    BookOfMasteries book = item as BookOfMasteries;
 
-                book?.InvalidateProperties();
+                    book?.InvalidateProperties();
+                }
             }
         }
 

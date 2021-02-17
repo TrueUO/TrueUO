@@ -2,7 +2,6 @@ using Server.Items;
 using Server.Mobiles;
 using Server.Targeting;
 using System;
-using System.Linq;
 
 namespace Server.Engines.Harvest
 {
@@ -237,14 +236,17 @@ namespace Server.Engines.Harvest
                 from.SendLocalizedMessage(1112233); // You carefully extract a glistening gem from the vein!
             else if (item != null)
             {
-                foreach (HarvestResource res in OreAndStone.Resources.Where(r => r.Types != null))
+                foreach (HarvestResource res in OreAndStone.Resources)
                 {
-                    foreach (Type type in res.Types)
+                    if (res.Types != null)
                     {
-                        if (item.GetType() == type)
+                        foreach (Type type in res.Types)
                         {
-                            res.SendSuccessTo(from);
-                            return;
+                            if (item.GetType() == type)
+                            {
+                                res.SendSuccessTo(from);
+                                return;
+                            }
                         }
                     }
                 }

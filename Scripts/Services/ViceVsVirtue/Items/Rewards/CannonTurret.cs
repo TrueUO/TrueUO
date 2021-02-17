@@ -2,7 +2,6 @@ using Server.Items;
 using Server.Mobiles;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.VvV
 {
@@ -108,10 +107,13 @@ namespace Server.Engines.VvV
 
             if (list.Count > 0)
             {
-                foreach (Mobile m in list.Where(mob => target == null || mob.GetDistanceToSqrt(target) < closest))
+                foreach (Mobile m in list)
                 {
-                    target = m;
-                    closest = m.GetDistanceToSqrt(target);
+                    if (target == null || m.GetDistanceToSqrt(target) < closest)
+                    {
+                        target = m;
+                        closest = m.GetDistanceToSqrt(target);
+                    }
                 }
             }
 

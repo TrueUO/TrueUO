@@ -234,15 +234,18 @@ namespace Server.Engines.MyrmidexInvasion
 
             if (winners != null)
             {
-                foreach (PlayerMobile pm in winners.Where(pm => Players.ContainsKey(pm) && Players[pm] > MinCredit))
+                foreach (PlayerMobile pm in winners)
                 {
-                    AllianceEntry entry = MyrmidexInvasionSystem.GetEntry(pm);
+                    if (Players.ContainsKey(pm) && Players[pm] > MinCredit)
+                    {
+                        AllianceEntry entry = MyrmidexInvasionSystem.GetEntry(pm);
 
-                    if (entry != null && !entry.CanRecieveQuest)
-                        entry.CanRecieveQuest = true;
+                        if (entry != null && !entry.CanRecieveQuest)
+                            entry.CanRecieveQuest = true;
 
-                    if (Players.ContainsKey(pm))
-                        Players.Remove(pm);
+                        if (Players.ContainsKey(pm))
+                            Players.Remove(pm);
+                    }
                 }
             }
 
@@ -268,9 +271,12 @@ namespace Server.Engines.MyrmidexInvasion
 
             if (list.ContainsKey(wave))
             {
-                foreach (BaseCreature bc in list[wave].Where(bc => bc.Alive))
+                foreach (BaseCreature bc in list[wave])
                 {
-                    bc.Delete();
+                    if (bc.Alive)
+                    {
+                        bc.Delete();
+                    }
                 }
 
                 ColUtility.Free(list[wave]);
@@ -285,9 +291,12 @@ namespace Server.Engines.MyrmidexInvasion
 
             IEnumerable<BaseCreature> list = BattleRegion.GetEnumeratedMobiles().OfType<BaseCreature>();
 
-            foreach (BaseCreature bc in list.Where(b => b.Alive && !b.Controlled && !b.Summoned && b.GetMaster() == null))
+            foreach (BaseCreature bc in list)
             {
-                bc.Kill();
+                if (bc.Alive && !bc.Controlled && !bc.Summoned && bc.GetMaster() == null)
+                {
+                    bc.Kill();
+                }
             }
 
             foreach (KeyValuePair<int, List<BaseCreature>> kvp in MyrmidexTeam)
@@ -537,39 +546,46 @@ namespace Server.Engines.MyrmidexInvasion
         {
             List<DamageStore> rights = bc.GetLootingRights();
 
-            foreach (DamageStore ds in rights.Where(ds => ds.m_Mobile is PlayerMobile && ds.m_HasRight && MyrmidexInvasionSystem.AreEnemies(ds.m_Mobile, bc)))
+            foreach (DamageStore ds in rights)
             {
-                if (MyrmidexInvasionSystem.IsAlliedWith(bc, Allegiance.Myrmidex))
+                if (ds.m_Mobile is PlayerMobile && ds.m_HasRight && MyrmidexInvasionSystem.AreEnemies(ds.m_Mobile, bc))
                 {
-                    int points = 1;
-                    if (IsFrontLine(ds.m_Mobile, bc))
+                    if (MyrmidexInvasionSystem.IsAlliedWith(bc, Allegiance.Myrmidex))
                     {
-                        ds.m_Mobile.SendLocalizedMessage(1156599); // You assist the Eodonians in pushing back the Myrmidex!
-                        points *= 4;
+                        int points = 1;
+                        if (IsFrontLine(ds.m_Mobile, bc))
+                        {
+                            ds.m_Mobile.SendLocalizedMessage(
+                                1156599); // You assist the Eodonians in pushing back the Myrmidex!
+                            points *= 4;
+                        }
+                        else
+                            ds.m_Mobile.SendLocalizedMessage(
+                                1156600); // You kill one of the Myrmidex away from the front ranks and gain little recognition.
+
+                        if (!Players.ContainsKey((PlayerMobile) ds.m_Mobile))
+                            Players[(PlayerMobile) ds.m_Mobile] = points;
+                        else
+                            Players[(PlayerMobile) ds.m_Mobile] += points;
                     }
                     else
-                        ds.m_Mobile.SendLocalizedMessage(1156600); // You kill one of the Myrmidex away from the front ranks and gain little recognition.
-
-                    if (!Players.ContainsKey((PlayerMobile)ds.m_Mobile))
-                        Players[(PlayerMobile)ds.m_Mobile] = points;
-                    else
-                        Players[(PlayerMobile)ds.m_Mobile] += points;
-                }
-                else
-                {
-                    int points = 1;
-                    if (IsFrontLine(ds.m_Mobile, bc))
                     {
-                        ds.m_Mobile.SendLocalizedMessage(1156598); // You assist the Myrmidex in pushing back the Eodonians!
-                        points *= 4;
-                    }
-                    else
-                        ds.m_Mobile.SendLocalizedMessage(1156601); // You kill one of the Eodonians away from the front ranks and gain little recognition.
+                        int points = 1;
+                        if (IsFrontLine(ds.m_Mobile, bc))
+                        {
+                            ds.m_Mobile.SendLocalizedMessage(
+                                1156598); // You assist the Myrmidex in pushing back the Eodonians!
+                            points *= 4;
+                        }
+                        else
+                            ds.m_Mobile.SendLocalizedMessage(
+                                1156601); // You kill one of the Eodonians away from the front ranks and gain little recognition.
 
-                    if (!Players.ContainsKey((PlayerMobile)ds.m_Mobile))
-                        Players[(PlayerMobile)ds.m_Mobile] = points;
-                    else
-                        Players[(PlayerMobile)ds.m_Mobile] += points;
+                        if (!Players.ContainsKey((PlayerMobile) ds.m_Mobile))
+                            Players[(PlayerMobile) ds.m_Mobile] = points;
+                        else
+                            Players[(PlayerMobile) ds.m_Mobile] += points;
+                    }
                 }
             }
         }
