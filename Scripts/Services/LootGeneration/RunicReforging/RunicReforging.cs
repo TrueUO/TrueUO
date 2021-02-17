@@ -3278,51 +3278,54 @@ namespace Server.Items
             int focus = 0;
             int brittle = 0;
 
-            foreach (BaseJewel jewel in World.Items.Values.OfType<BaseJewel>().Where(j => j.ItemPower > ItemPower.None))
+            foreach (BaseJewel jewel in World.Items.Values.OfType<BaseJewel>())
             {
-                if (jewel.Attributes.CastSpeed > 1)
+                if (jewel.ItemPower > ItemPower.None)
                 {
-                    jewel.Attributes.CastSpeed = 1;
-                    fc2++;
-                }
+                    if (jewel.Attributes.CastSpeed > 1)
+                    {
+                        jewel.Attributes.CastSpeed = 1;
+                        fc2++;
+                    }
 
-                SAAbsorptionAttributes attr = GetSAAbsorptionAttributes(jewel);
-                NegativeAttributes neg = GetNegativeAttributes(jewel);
+                    SAAbsorptionAttributes attr = GetSAAbsorptionAttributes(jewel);
+                    NegativeAttributes neg = GetNegativeAttributes(jewel);
 
-                if (ItemPropertyInfo.HasEater(jewel) && attr != null)
-                {
-                    if (attr.EaterKinetic > 0)
-                        attr.EaterKinetic = 0;
+                    if (ItemPropertyInfo.HasEater(jewel) && attr != null)
+                    {
+                        if (attr.EaterKinetic > 0)
+                            attr.EaterKinetic = 0;
 
-                    if (attr.EaterFire > 0)
-                        attr.EaterFire = 0;
+                        if (attr.EaterFire > 0)
+                            attr.EaterFire = 0;
 
-                    if (attr.EaterCold > 0)
-                        attr.EaterCold = 0;
+                        if (attr.EaterCold > 0)
+                            attr.EaterCold = 0;
 
-                    if (attr.EaterPoison > 0)
-                        attr.EaterPoison = 0;
+                        if (attr.EaterPoison > 0)
+                            attr.EaterPoison = 0;
 
-                    if (attr.EaterEnergy > 0)
-                        attr.EaterEnergy = 0;
+                        if (attr.EaterEnergy > 0)
+                            attr.EaterEnergy = 0;
 
-                    if (attr.EaterDamage > 0)
-                        attr.EaterDamage = 0;
+                        if (attr.EaterDamage > 0)
+                            attr.EaterDamage = 0;
 
-                    eater++;
-                }
+                        eater++;
+                    }
 
-                if (attr != null && attr.CastingFocus > 0)
-                {
-                    attr.CastingFocus = 0;
-                    focus++;
-                }
+                    if (attr != null && attr.CastingFocus > 0)
+                    {
+                        attr.CastingFocus = 0;
+                        focus++;
+                    }
 
-                if (neg != null && neg.Brittle > 0)
-                {
-                    neg.Brittle = 0;
-                    neg.Antique = 1;
-                    brittle++;
+                    if (neg != null && neg.Brittle > 0)
+                    {
+                        neg.Brittle = 0;
+                        neg.Antique = 1;
+                        brittle++;
+                    }
                 }
             }
 

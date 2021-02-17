@@ -5897,11 +5897,14 @@ namespace Server.Mobiles
                             {
                                 if (ds.m_Mobile is PlayerMobile pm)
                                 {
-                                    foreach (Mobile pet in pm.AllFollowers.Where(p => DamageEntries.Any(de => de.Damager == p)))
+                                    foreach (Mobile pet in pm.AllFollowers)
                                     {
-                                        titles.Add(pet);
-                                        fame.Add(totalFame);
-                                        karma.Add(totalKarma);
+                                        if (DamageEntries.Any(de => de.Damager == pet))
+                                        {
+                                            titles.Add(pet);
+                                            fame.Add(totalFame);
+                                            karma.Add(totalKarma);
+                                        }
                                     }
                                 }
 

@@ -1,8 +1,7 @@
-﻿using Server.Engines.CityLoyalty;
+using Server.Engines.CityLoyalty;
 using Server.Gumps;
 using Server.Mobiles;
 using Server.Network;
-using System.Linq;
 
 namespace Server.Engines.Points
 {
@@ -23,26 +22,29 @@ namespace Server.Engines.Points
 
             int y = 40;
 
-            foreach (PointsSystem sys in PointsSystem.Systems.Where(sys => sys.ShowOnLoyaltyGump))
+            foreach (PointsSystem sys in PointsSystem.Systems)
             {
-                if (sys.Name.Number > 0)
-                    AddHtmlLocalized(50, y, 150, 20, sys.Name.Number, false, false);
-                else if (sys.Name.String != null)
-                    AddHtml(50, y, 150, 20, sys.Name.String, false, false);
-
-                TextDefinition title = sys.GetTitle(pm);
-
-                if (title != null)
+                if (sys.ShowOnLoyaltyGump)
                 {
-                    if (title.Number > 0)
-                        AddHtmlLocalized(68, y + 20, 100, 20, title.Number, false, false);
-                    else if (title.String != null)
-                        AddHtml(68, y + 20, 100, 20, title.String, false, false);
+                    if (sys.Name.Number > 0)
+                        AddHtmlLocalized(50, y, 150, 20, sys.Name.Number, false, false);
+                    else if (sys.Name.String != null)
+                        AddHtml(50, y, 150, 20, sys.Name.String, false, false);
+
+                    TextDefinition title = sys.GetTitle(pm);
+
+                    if (title != null)
+                    {
+                        if (title.Number > 0)
+                            AddHtmlLocalized(68, y + 20, 100, 20, title.Number, false, false);
+                        else if (title.String != null)
+                            AddHtml(68, y + 20, 100, 20, title.String, false, false);
+                    }
+
+                    AddHtmlLocalized(175, y + 20, 100, 20, 1095171, ((int) sys.GetPoints(pm)).ToString(), 0, false, false); // (~1_AMT~ points)
+
+                    y += 45;
                 }
-
-                AddHtmlLocalized(175, y + 20, 100, 20, 1095171, ((int)sys.GetPoints(pm)).ToString(), 0, false, false); // (~1_AMT~ points)
-
-                y += 45;
             }
 
             AddHtmlLocalized(50, 285, 150, 20, 1115129, pm.Fame.ToString(), 0, false, false); // Fame: ~1_AMT~

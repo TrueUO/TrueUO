@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.AccountVault
 {
@@ -15,9 +14,12 @@ namespace Server.AccountVault
 
         public static void OnTick()
         {
-            foreach (var vault in AccountVault.Vaults.Where(v => v.Account != null))
+            foreach (var vault in AccountVault.Vaults)
             {
-                vault.OnTick();
+                if (vault.Account != null)
+                {
+                    vault.OnTick();
+                }
             }
         }
 

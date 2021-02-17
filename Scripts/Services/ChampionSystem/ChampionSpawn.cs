@@ -599,22 +599,25 @@ namespace Server.Engines.CannedEvil
 
             if (TimerRunning && _NextGhostCheck < DateTime.UtcNow)
             {
-                foreach (PlayerMobile ghost in m_Region.GetEnumeratedMobiles().OfType<PlayerMobile>().Where(pm => !pm.Alive && (pm.Corpse == null || pm.Corpse.Deleted)))
+                foreach (PlayerMobile ghost in m_Region.GetEnumeratedMobiles().OfType<PlayerMobile>())
                 {
-                    Map map = ghost.Map;
-                    Point3D loc = ExorcismSpell.GetNearestShrine(ghost, ref map);
+                    if (!ghost.Alive && (ghost.Corpse == null || ghost.Corpse.Deleted))
+                    {
+                        Map map = ghost.Map;
+                        Point3D loc = ExorcismSpell.GetNearestShrine(ghost, ref map);
 
-                    if (loc != Point3D.Zero)
-                    {
-                        ghost.MoveToWorld(loc, map);
+                        if (loc != Point3D.Zero)
+                        {
+                            ghost.MoveToWorld(loc, map);
+                        }
+                        else
+                        {
+                            ghost.MoveToWorld(new Point3D(989, 520, -50), Map.Malas);
+                        }
                     }
-                    else
-                    {
-                        ghost.MoveToWorld(new Point3D(989, 520, -50), Map.Malas);
-                    }
+
+                    _NextGhostCheck = DateTime.UtcNow + TimeSpan.FromMinutes(Utility.RandomMinMax(5, 8));
                 }
-
-                _NextGhostCheck = DateTime.UtcNow + TimeSpan.FromMinutes(Utility.RandomMinMax(5, 8));
             }
         }
 

@@ -1,5 +1,4 @@
 using Server.Mobiles;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -34,9 +33,12 @@ namespace Server.Items
 
             if (canEquip)
             {
-                foreach (Item armor in from.Items.Where(i => i is IEpiphanyArmor))
+                foreach (Item armor in from.Items)
                 {
-                    armor.InvalidateProperties();
+                    if (armor is IEpiphanyArmor)
+                    {
+                        armor.InvalidateProperties();
+                    }
                 }
             }
 
@@ -49,9 +51,12 @@ namespace Server.Items
 
             if (parent is Mobile m)
             {
-                foreach (Item armor in m.Items.Where(i => i is IEpiphanyArmor))
+                foreach (Item armor in m.Items)
                 {
-                    armor.InvalidateProperties();
+                    if (armor is IEpiphanyArmor)
+                    {
+                        armor.InvalidateProperties();
+                    }
                 }
             }
         }
@@ -69,7 +74,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -102,9 +107,12 @@ namespace Server.Items
 
             if (canEquip)
             {
-                foreach (Item armor in from.Items.Where(i => i is IEpiphanyArmor))
+                foreach (Item armor in from.Items)
                 {
-                    armor.InvalidateProperties();
+                    if (armor is IEpiphanyArmor)
+                    {
+                        armor.InvalidateProperties();
+                    }
                 }
             }
 
@@ -117,9 +125,12 @@ namespace Server.Items
 
             if (parent is Mobile m)
             {
-                foreach (Item armor in m.Items.Where(i => i is IEpiphanyArmor))
+                foreach (Item armor in m.Items)
                 {
-                    armor.InvalidateProperties();
+                    if (armor is IEpiphanyArmor)
+                    {
+                        armor.InvalidateProperties();
+                    }
                 }
             }
         }
@@ -137,7 +148,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -172,9 +183,12 @@ namespace Server.Items
 
             if (canEquip)
             {
-                foreach (Item armor in from.Items.Where(i => i is IEpiphanyArmor))
+                foreach (Item armor in from.Items)
                 {
-                    armor.InvalidateProperties();
+                    if (armor is IEpiphanyArmor)
+                    {
+                        armor.InvalidateProperties();
+                    }
                 }
             }
 
@@ -187,9 +201,12 @@ namespace Server.Items
 
             if (parent is Mobile m)
             {
-                foreach (Item armor in m.Items.Where(i => i is IEpiphanyArmor))
+                foreach (Item armor in m.Items)
                 {
-                    armor.InvalidateProperties();
+                    if (armor is IEpiphanyArmor)
+                    {
+                        armor.InvalidateProperties();
+                    }
                 }
             }
         }
@@ -207,7 +224,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -242,9 +259,12 @@ namespace Server.Items
 
             if (canEquip)
             {
-                foreach (Item armor in from.Items.Where(i => i is IEpiphanyArmor))
+                foreach (Item armor in from.Items)
                 {
-                    armor.InvalidateProperties();
+                    if (armor is IEpiphanyArmor)
+                    {
+                        armor.InvalidateProperties();
+                    }
                 }
             }
 
@@ -257,9 +277,12 @@ namespace Server.Items
 
             if (parent is Mobile m)
             {
-                foreach (Item armor in m.Items.Where(i => i is IEpiphanyArmor))
+                foreach (Item armor in m.Items)
                 {
-                    armor.InvalidateProperties();
+                    if (armor is IEpiphanyArmor)
+                    {
+                        armor.InvalidateProperties();
+                    }
                 }
             }
         }
@@ -277,7 +300,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -312,9 +335,12 @@ namespace Server.Items
 
             if (canEquip)
             {
-                foreach (Item armor in from.Items.Where(i => i is IEpiphanyArmor))
+                foreach (Item armor in from.Items)
                 {
-                    armor.InvalidateProperties();
+                    if (armor is IEpiphanyArmor)
+                    {
+                        armor.InvalidateProperties();
+                    }
                 }
             }
 
@@ -327,9 +353,12 @@ namespace Server.Items
 
             if (parent is Mobile m)
             {
-                foreach (Item armor in m.Items.Where(i => i is IEpiphanyArmor))
+                foreach (Item armor in m.Items)
                 {
-                    armor.InvalidateProperties();
+                    if (armor is IEpiphanyArmor)
+                    {
+                        armor.InvalidateProperties();
+                    }
                 }
             }
         }
@@ -347,7 +376,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -382,9 +411,12 @@ namespace Server.Items
 
             if (canEquip)
             {
-                foreach (Item armor in from.Items.Where(i => i is IEpiphanyArmor))
+                foreach (Item armor in from.Items)
                 {
-                    armor.InvalidateProperties();
+                    if (armor is IEpiphanyArmor)
+                    {
+                        armor.InvalidateProperties();
+                    }
                 }
             }
 
@@ -397,9 +429,12 @@ namespace Server.Items
 
             if (parent is Mobile m)
             {
-                foreach (Item armor in m.Items.Where(i => i is IEpiphanyArmor))
+                foreach (Item armor in m.Items)
                 {
-                    armor.InvalidateProperties();
+                    if (armor is IEpiphanyArmor)
+                    {
+                        armor.InvalidateProperties();
+                    }
                 }
             }
         }
@@ -417,7 +452,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -450,9 +485,12 @@ namespace Server.Items
 
             if (canEquip)
             {
-                foreach (Item armor in from.Items.Where(i => i is IEpiphanyArmor))
+                foreach (Item armor in from.Items)
                 {
-                    armor.InvalidateProperties();
+                    if (armor is IEpiphanyArmor)
+                    {
+                        armor.InvalidateProperties();
+                    }
                 }
             }
 
@@ -465,9 +503,12 @@ namespace Server.Items
 
             if (parent is Mobile m)
             {
-                foreach (Item armor in m.Items.Where(i => i is IEpiphanyArmor))
+                foreach (Item armor in m.Items)
                 {
-                    armor.InvalidateProperties();
+                    if (armor is IEpiphanyArmor)
+                    {
+                        armor.InvalidateProperties();
+                    }
                 }
             }
         }
@@ -485,7 +526,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -518,9 +559,12 @@ namespace Server.Items
 
             if (canEquip)
             {
-                foreach (Item armor in from.Items.Where(i => i is IEpiphanyArmor))
+                foreach (Item armor in from.Items)
                 {
-                    armor.InvalidateProperties();
+                    if (armor is IEpiphanyArmor)
+                    {
+                        armor.InvalidateProperties();
+                    }
                 }
             }
 
@@ -533,9 +577,12 @@ namespace Server.Items
 
             if (parent is Mobile m)
             {
-                foreach (Item armor in m.Items.Where(i => i is IEpiphanyArmor))
+                foreach (Item armor in m.Items)
                 {
-                    armor.InvalidateProperties();
+                    if (armor is IEpiphanyArmor)
+                    {
+                        armor.InvalidateProperties();
+                    }
                 }
             }
         }
@@ -553,7 +600,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -586,9 +633,12 @@ namespace Server.Items
 
             if (canEquip)
             {
-                foreach (Item armor in from.Items.Where(i => i is IEpiphanyArmor))
+                foreach (Item armor in from.Items)
                 {
-                    armor.InvalidateProperties();
+                    if (armor is IEpiphanyArmor)
+                    {
+                        armor.InvalidateProperties();
+                    }
                 }
             }
 
@@ -601,9 +651,12 @@ namespace Server.Items
 
             if (parent is Mobile m)
             {
-                foreach (Item armor in m.Items.Where(i => i is IEpiphanyArmor))
+                foreach (Item armor in m.Items)
                 {
-                    armor.InvalidateProperties();
+                    if (armor is IEpiphanyArmor)
+                    {
+                        armor.InvalidateProperties();
+                    }
                 }
             }
         }
@@ -621,7 +674,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -654,9 +707,12 @@ namespace Server.Items
 
             if (canEquip)
             {
-                foreach (Item armor in from.Items.Where(i => i is IEpiphanyArmor))
+                foreach (Item armor in from.Items)
                 {
-                    armor.InvalidateProperties();
+                    if (armor is IEpiphanyArmor)
+                    {
+                        armor.InvalidateProperties();
+                    }
                 }
             }
 
@@ -669,9 +725,12 @@ namespace Server.Items
 
             if (parent is Mobile m)
             {
-                foreach (Item armor in m.Items.Where(i => i is IEpiphanyArmor))
+                foreach (Item armor in m.Items)
                 {
-                    armor.InvalidateProperties();
+                    if (armor is IEpiphanyArmor)
+                    {
+                        armor.InvalidateProperties();
+                    }
                 }
             }
         }
@@ -689,7 +748,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -722,9 +781,12 @@ namespace Server.Items
 
             if (canEquip)
             {
-                foreach (Item armor in from.Items.Where(i => i is IEpiphanyArmor))
+                foreach (Item armor in from.Items)
                 {
-                    armor.InvalidateProperties();
+                    if (armor is IEpiphanyArmor)
+                    {
+                        armor.InvalidateProperties();
+                    }
                 }
             }
 
@@ -737,9 +799,12 @@ namespace Server.Items
 
             if (parent is Mobile m)
             {
-                foreach (Item armor in m.Items.Where(i => i is IEpiphanyArmor))
+                foreach (Item armor in m.Items)
                 {
-                    armor.InvalidateProperties();
+                    if (armor is IEpiphanyArmor)
+                    {
+                        armor.InvalidateProperties();
+                    }
                 }
             }
         }
@@ -757,7 +822,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -790,9 +855,12 @@ namespace Server.Items
 
             if (canEquip)
             {
-                foreach (Item armor in from.Items.Where(i => i is IEpiphanyArmor))
+                foreach (Item armor in from.Items)
                 {
-                    armor.InvalidateProperties();
+                    if (armor is IEpiphanyArmor)
+                    {
+                        armor.InvalidateProperties();
+                    }
                 }
             }
 
@@ -805,9 +873,12 @@ namespace Server.Items
 
             if (parent is Mobile m)
             {
-                foreach (Item armor in m.Items.Where(i => i is IEpiphanyArmor))
+                foreach (Item armor in m.Items)
                 {
-                    armor.InvalidateProperties();
+                    if (armor is IEpiphanyArmor)
+                    {
+                        armor.InvalidateProperties();
+                    }
                 }
             }
         }
@@ -826,7 +897,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

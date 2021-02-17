@@ -118,11 +118,37 @@ namespace Server.Engines.VoidPool
             if (one == null || two == null)
                 return;
 
-            foreach (WayPoint w in one.WaypointsA.Where(w => w != null && !w.Deleted)) w.Delete();
-            foreach (WayPoint w in one.WaypointsB.Where(w => w != null && !w.Deleted)) w.Delete();
+            foreach (WayPoint w in one.WaypointsA)
+            {
+                if (w != null && !w.Deleted)
+                {
+                    w.Delete();
+                }
+            }
 
-            foreach (WayPoint w in two.WaypointsA.Where(w => w != null && !w.Deleted)) w.Delete();
-            foreach (WayPoint w in two.WaypointsB.Where(w => w != null && !w.Deleted)) w.Delete();
+            foreach (WayPoint w in one.WaypointsB)
+            {
+                if (w != null && !w.Deleted)
+                {
+                    w.Delete();
+                }
+            }
+
+            foreach (WayPoint w in two.WaypointsA)
+            {
+                if (w != null && !w.Deleted)
+                {
+                    w.Delete();
+                }
+            }
+
+            foreach (WayPoint w in two.WaypointsB)
+            {
+                if (w != null && !w.Deleted)
+                {
+                    w.Delete();
+                }
+            }
 
             // patha
             WayPoint wp = new WayPoint();
@@ -373,28 +399,31 @@ namespace Server.Engines.VoidPool
 
             foreach (Sector s in r.Sectors)
             {
-                foreach (Item i in s.Items.Where(i => i is XmlSpawner && _SpawnerBounds.Contains(i)))
+                foreach (Item i in s.Items)
                 {
-                    XmlSpawner spawner = i as XmlSpawner;
-
-                    foreach (XmlSpawner.SpawnObject obj in spawner.SpawnObjects)
+                    if (i is XmlSpawner && _SpawnerBounds.Contains(i))
                     {
-                        if (obj.TypeName != null)
+                        XmlSpawner spawner = i as XmlSpawner;
+
+                        foreach (XmlSpawner.SpawnObject obj in spawner.SpawnObjects)
                         {
-                            string name = obj.TypeName.ToLower();
+                            if (obj.TypeName != null)
+                            {
+                                string name = obj.TypeName.ToLower();
 
-                            if (name == "gazer" || name == "gazerlarva")
-                                obj.TypeName = "StrangeGazer";
-                            else if (name == "headlessone")
-                                obj.TypeName = "HeadlessMiner";
-                            else if (name == "harpy")
-                                obj.TypeName = "DazzledHarpy";
-                            else if (name == "stoneharpy")
-                                obj.TypeName = "VampireMongbat";
+                                if (name == "gazer" || name == "gazerlarva")
+                                    obj.TypeName = "StrangeGazer";
+                                else if (name == "headlessone")
+                                    obj.TypeName = "HeadlessMiner";
+                                else if (name == "harpy")
+                                    obj.TypeName = "DazzledHarpy";
+                                else if (name == "stoneharpy")
+                                    obj.TypeName = "VampireMongbat";
+                            }
                         }
-                    }
 
-                    list.Add(spawner);
+                        list.Add(spawner);
+                    }
                 }
             }
 
