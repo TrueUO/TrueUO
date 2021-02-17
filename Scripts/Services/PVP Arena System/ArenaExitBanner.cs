@@ -29,8 +29,7 @@ namespace Server.Engines.ArenaSystem
                     {
                         Arena.RemovePlayer((PlayerMobile)mob);
 
-                        if (mob.Corpse != null)
-                            mob.Corpse.MoveToWorld(mob.Location, mob.Map);
+                        mob.Corpse?.MoveToWorld(mob.Location, mob.Map);
                     }));
             }
         }
@@ -77,7 +76,7 @@ namespace Server.Engines.ArenaSystem
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

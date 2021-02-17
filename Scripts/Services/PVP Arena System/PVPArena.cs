@@ -96,7 +96,7 @@ namespace Server.Engines.ArenaSystem
 
             if (GuardRegion == null)
             {
-                GuardRegion = new GuardedArenaRegion(string.Format("{0}_Guarded", Definition.Name), Definition.Map, Definition.GuardBounds);
+                GuardRegion = new GuardedArenaRegion($"{Definition.Name}_Guarded", Definition.Map, Definition.GuardBounds);
                 GuardRegion.Register();
             }
         }
@@ -115,35 +115,23 @@ namespace Server.Engines.ArenaSystem
                 GuardRegion = null;
             }
 
-            if (Manager != null)
-            {
-                Manager.Delete();
-            }
+            Manager?.Delete();
 
             if (Stone != null && !Stone.Deleted)
             {
                 Stone.Delete();
             }
 
-            if (Banner1 != null)
-            {
-                Banner1.Delete();
-            }
+            Banner1?.Delete();
 
-            if (Banner2 != null)
-            {
-                Banner2.Delete();
-            }
+            Banner2?.Delete();
         }
 
         private readonly List<ArenaDuel> _Remove = new List<ArenaDuel>();
 
         public void OnTick()
         {
-            if (CurrentDuel != null)
-            {
-                CurrentDuel.OnTick();
-            }
+            CurrentDuel?.OnTick();
 
             foreach (KeyValuePair<ArenaDuel, DateTime> kvp in PendingDuels)
             {
@@ -321,10 +309,7 @@ namespace Server.Engines.ArenaSystem
         {
             List<ArenaStats> rankings;
 
-            if (duel.BattleMode == BattleMode.Team)
-                rankings = TeamRankings;
-            else
-                rankings = SurvivalRankings;
+            rankings = duel.BattleMode == BattleMode.Team ? TeamRankings : SurvivalRankings;
 
             foreach (KeyValuePair<PlayerMobile, PlayerStatsEntry> part in duel.GetParticipants())
             {
@@ -475,10 +460,7 @@ namespace Server.Engines.ArenaSystem
             {
                 foreach (var blocker in Blockers)
                 {
-                    if (blocker != null)
-                    {
-                        blocker.Delete();
-                    }
+                    blocker?.Delete();
                 }
 
                 ColUtility.Free(Blockers);

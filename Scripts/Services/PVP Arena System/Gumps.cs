@@ -36,7 +36,7 @@ namespace Server.Engines.ArenaSystem
                 ArenaDefinition def = ArenaDefinition.Definitions[i];
                 bool exists = PVPArenaSystem.Arenas != null && PVPArenaSystem.Arenas.Any(arena => arena.Definition == def);
 
-                AddHtml(45, 105 + (i * 25), 200, 20, Color("#FFFFFF", string.Format("{0} [{1}]", def.Name, exists ? "Enabled" : PVPArenaSystem.Instance != null && PVPArenaSystem.Instance.IsBlocked(def) ? "Blocked" : "Disabled")), false, false);
+                AddHtml(45, 105 + (i * 25), 200, 20, Color("#FFFFFF", $"{def.Name} [{(exists ? "Enabled" : PVPArenaSystem.Instance != null && PVPArenaSystem.Instance.IsBlocked(def) ? "Blocked" : "Disabled")}]"), false, false);
                 AddButton(10, 105 + (i * 25), !exists ? 4023 : 4017, !exists ? 4024 : 4018, i + 500, GumpButtonType.Reply, 0);
             }
 
@@ -58,7 +58,7 @@ namespace Server.Engines.ArenaSystem
 
                 SendGump(new GenericConfirmCallbackGump<ArenaDefinition>(
                     User,
-                    string.Format("{0} {1}", exists ? "Disable" : "Enable", def.Name),
+                    $"{(exists ? "Disable" : "Enable")} {def.Name}",
                     exists ? _DisableBody : _EnableBody,
                     def,
                     null,
@@ -188,7 +188,7 @@ namespace Server.Engines.ArenaSystem
 
         protected string GetSlots()
         {
-            return string.Format("{0} slot(s)", Duel.PetSlots);
+            return $"{Duel.PetSlots} slot(s)";
         }
 
         protected string GetPotion()
@@ -743,7 +743,7 @@ namespace Server.Engines.ArenaSystem
                                 }
                                 else
                                 {
-                                    Duel.RemovePlayer((PlayerMobile)from, false);
+                                    Duel.RemovePlayer((PlayerMobile)from);
                                 }
                             }
                         }, confirmLoc: 1115821, closeLoc: 1115822));
@@ -914,7 +914,7 @@ namespace Server.Engines.ArenaSystem
                     AddButton(10, y, 4005, 4007, 1 + i, GumpButtonType.Reply, 0);
                 }
 
-                AddLabel(54, y, LabelHue, string.Format("{0}/{1}", duel.ParticipantCount.ToString(), duel.Entries.ToString()));
+                AddLabel(54, y, LabelHue, $"{duel.ParticipantCount.ToString()}/{duel.Entries.ToString()}");
                 AddLabel(103, y, LabelHue, duel.Host.Name);
 
                 if (i != 0 && i % perPage == 0)
@@ -1246,12 +1246,12 @@ namespace Server.Engines.ArenaSystem
             string rewardTitle = "None";
 
             if (title is int iTitle)
-                rewardTitle = string.Format("#{0}", iTitle);
+                rewardTitle = $"#{iTitle}";
             else if (title is string sTitle)
                 rewardTitle = sTitle;
 
             AddHtmlLocalized(0, 12, 580, 20, CenterLoc, "#1115976", 0xFFFF, false, false); // <CENTER>Arena Menu - Stats</CENTER>
-            AddHtmlLocalized(0, 32, 580, 20, 1149602, string.Format("{0}\t{1}", WhosStats.Name, rewardTitle), 0xFFFF, false, false); // <CENTER>Arena Menu - Stats</CENTER>
+            AddHtmlLocalized(0, 32, 580, 20, 1149602, $"{WhosStats.Name}\t{rewardTitle}", 0xFFFF, false, false); // <CENTER>Arena Menu - Stats</CENTER>
 
             AddHtmlLocalized(8, 66, 222, 20, CenterLoc, "#1115983", 0xFFFF, false, false); // Stats - Survival
             AddHtmlLocalized(15, 100, 100, 20, 1115977, 0xFFFF, false, false); // Wins
@@ -1293,7 +1293,7 @@ namespace Server.Engines.ArenaSystem
 
                 if (i > entry.Record.Count - 6)
                 {
-                    latest += string.Format("{0}-", record.KilledBy ? "L" : "W");
+                    latest += $"{(record.KilledBy ? "L" : "W")}-";
                 }
 
                 AddLabel(237, y, LabelHue, record.DuelDate.ToShortDateString());

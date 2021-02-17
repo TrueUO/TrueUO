@@ -206,9 +206,12 @@ namespace Server.Engines.ArenaSystem
 
             foreach (ArenaTeam team in Teams)
             {
-                foreach (KeyValuePair<PlayerMobile, PlayerStatsEntry> player in team.Players.Where(p => !inArena || InArena(p.Key)))
+                foreach (KeyValuePair<PlayerMobile, PlayerStatsEntry> player in team.Players)
                 {
-                    yield return player;
+                    if (!inArena || InArena(player.Key))
+                    {
+                        yield return player;
+                    }
                 }
             }
         }
@@ -505,9 +508,12 @@ namespace Server.Engines.ArenaSystem
 
             List<PlayerMobile> partList = ParticipantList();
 
-            foreach (PlayerMobile pm in partList.Where(p => p != pm1 && p != pm2))
+            foreach (PlayerMobile pm in partList)
             {
-                _StartPoints[pm] = Arena.Definition.StartLocations[_StartPoints.Count];
+                if (pm != pm1 && pm != pm2)
+                {
+                    _StartPoints[pm] = Arena.Definition.StartLocations[_StartPoints.Count];
+                }
             }
         }
 
@@ -661,11 +667,17 @@ namespace Server.Engines.ArenaSystem
                 }
             }
 
-            foreach (ArenaTeam team in Teams.Where(t => t != winner))
+            foreach (ArenaTeam team in Teams)
             {
-                foreach (PlayerMobile pm in team.Players.Keys)
+                if (team != winner)
                 {
-                    PVPArenaSystem.SendMessage(pm, team.Count == 1 ? 1116489 : 1116488); // You have lost the duel... : Your team has lost the duel...
+                    foreach (PlayerMobile pm in team.Players.Keys)
+                    {
+                        PVPArenaSystem.SendMessage(pm,
+                            team.Count == 1
+                                ? 1116489
+                                : 1116488); // You have lost the duel... : Your team has lost the duel...
+                    }
                 }
             }
 
@@ -849,10 +861,7 @@ namespace Server.Engines.ArenaSystem
                             {
                                 Mobile master = creature.GetMaster();
 
-                                if (master != null)
-                                {
-                                    master.SendLocalizedMessage(1149603); // The rules prohibit the use of summoning spells!
-                                }
+                                master?.SendLocalizedMessage(1149603); // The rules prohibit the use of summoning spells!
 
                                 creature.Delete();
                             }
