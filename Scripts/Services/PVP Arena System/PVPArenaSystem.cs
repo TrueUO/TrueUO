@@ -48,9 +48,12 @@ namespace Server.Engines.ArenaSystem
         {
             List<ArenaDuel> booked = new List<ArenaDuel>();
 
-            foreach (PVPArena arena in Arenas.Where(a => a.BookedDuels.Count > 0))
+            foreach (PVPArena arena in Arenas)
             {
-                booked.AddRange(arena.BookedDuels);
+                if (arena.BookedDuels.Count > 0)
+                {
+                    booked.AddRange(arena.BookedDuels);
+                }
             }
 
             return booked;
@@ -58,11 +61,17 @@ namespace Server.Engines.ArenaSystem
 
         public ArenaDuel GetBookedDuel(PlayerMobile pm)
         {
-            foreach (PVPArena arena in Arenas.Where(a => a.BookedDuels.Count > 0))
+            foreach (PVPArena arena in Arenas)
             {
-                foreach (ArenaDuel duel in arena.BookedDuels.Where(d => d.IsParticipant(pm)))
+                if (arena.BookedDuels.Count > 0)
                 {
-                    return duel;
+                    foreach (ArenaDuel duel in arena.BookedDuels)
+                    {
+                        if (duel.IsParticipant(pm))
+                        {
+                            return duel;
+                        }
+                    }
                 }
             }
 
@@ -94,10 +103,7 @@ namespace Server.Engines.ArenaSystem
 
         public void Unregister(PVPArena arena)
         {
-            if (Arenas != null)
-            {
-                Arenas.Remove(arena);
-            }
+            Arenas?.Remove(arena);
 
             arena.Unregister();
         }
@@ -292,7 +298,7 @@ namespace Server.Engines.ArenaSystem
             if (title > 0)
             {
                 pm.AddRewardTitle(title);
-                pm.SendLocalizedMessage(1152067, string.Format("#{0}", title.ToString())); // You have gotten a new subtitle, ~1_VAL~, in reward for your duel!
+                pm.SendLocalizedMessage(1152067, $"#{title.ToString()}"); // You have gotten a new subtitle, ~1_VAL~, in reward for your duel!
             }
         }
 
@@ -370,7 +376,7 @@ namespace Server.Engines.ArenaSystem
 
         private static bool CanInitialize(ArenaDefinition def)
         {
-            return !Instance.IsBlocked(def) && (Arenas == null || !Arenas.Any(arena => arena.Definition == def));
+            return !Instance.IsBlocked(def) && (Arenas == null || Arenas.All(arena => arena.Definition != def));
         }
 
         [Usage("ArenaSetup")]
@@ -398,7 +404,7 @@ namespace Server.Engines.ArenaSystem
                         PVPArena arena = stone.Arena;
 
                         BaseGump.SendGump(new GenericConfirmCallbackGump<PVPArena>(mobile,
-                            string.Format("Reset {0} Statistics?", arena.Definition.Name),
+                            $"Reset {arena.Definition.Name} Statistics?",
                             "By selecting yes, you will permanently wipe the stats associated to this arena.",
                             arena,
                             null,
@@ -494,7 +500,7 @@ namespace Server.Engines.ArenaSystem
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             Record = new List<DuelRecord>();
 

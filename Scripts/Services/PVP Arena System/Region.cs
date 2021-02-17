@@ -16,7 +16,7 @@ namespace Server.Engines.ArenaSystem
         public PVPArena Arena { get; }
 
         public ArenaRegion(PVPArena arena)
-            : base(string.Format("Duel Arena {0}", arena.Definition.Name),
+            : base($"Duel Arena {arena.Definition.Name}",
                     arena.Definition.Map,
                     DefaultPriority,
                     arena.Definition.RegionBounds)
