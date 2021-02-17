@@ -393,24 +393,21 @@ namespace Server.Engines.ArenaSystem
 
             m.BeginTarget(-1, false, Targeting.TargetFlags.None, (fro, targeted) =>
                 {
-                    if (m is PlayerMobile mobile && targeted is ArenaStone stone)
+                    if (m is PlayerMobile mobile && targeted is ArenaStone stone && stone.Arena != null)
                     {
-                        if (stone.Arena != null)
-                        {
-                            PVPArena arena = stone.Arena;
+                        PVPArena arena = stone.Arena;
 
-                            BaseGump.SendGump(new GenericConfirmCallbackGump<PVPArena>(mobile,
-                                string.Format("Reset {0} Statistics?", arena.Definition.Name),
-                                "By selecting yes, you will permanently wipe the stats associated to this arena.",
-                                arena,
-                                null,
-                                (from, a) =>
-                                {
-                                    ColUtility.Free(a.TeamRankings);
-                                    ColUtility.Free(a.SurvivalRankings);
-                                    from.SendMessage("Arena stats cleared.");
-                                }));
-                        }
+                        BaseGump.SendGump(new GenericConfirmCallbackGump<PVPArena>(mobile,
+                            string.Format("Reset {0} Statistics?", arena.Definition.Name),
+                            "By selecting yes, you will permanently wipe the stats associated to this arena.",
+                            arena,
+                            null,
+                            (from, a) =>
+                            {
+                                ColUtility.Free(a.TeamRankings);
+                                ColUtility.Free(a.SurvivalRankings);
+                                from.SendMessage("Arena stats cleared.");
+                            }));
                     }
                 });
         }
