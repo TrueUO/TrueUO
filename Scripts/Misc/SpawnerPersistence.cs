@@ -465,12 +465,15 @@ namespace Server
         {
             int convert = 0;
 
-            foreach (Item item in World.Items.Values.Where(i => i.HonestyItem))
+            foreach (Item item in World.Items.Values)
             {
-                if (!item.HasSocket<HonestyItemSocket>())
+                if (item.HonestyItem)
                 {
-                    item.AttachSocket(new HonestyItemSocket());
-                    convert++;
+                    if (!item.HasSocket<HonestyItemSocket>())
+                    {
+                        item.AttachSocket(new HonestyItemSocket());
+                        convert++;
+                    }
                 }
             }
 
@@ -567,10 +570,14 @@ namespace Server
             Timer.DelayCall(TimeSpan.FromSeconds(10), () =>
                 {
                     int count = 0;
-                    foreach (Item item in World.Items.Values.Where(i => i.HonestyItem && !ItemFlags.GetTaken(i)))
+
+                    foreach (Item item in World.Items.Values)
                     {
-                        RunicReforging.GenerateRandomItem(item, 0, 100, 1000);
-                        count++;
+                        if (item.HonestyItem && !ItemFlags.GetTaken(item))
+                        {
+                            RunicReforging.GenerateRandomItem(item, 0, 100, 1000);
+                            count++;
+                        }
                     }
 
                     ToConsole(string.Format("Honesty items given magical properties: {0}", count.ToString()));

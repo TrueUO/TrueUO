@@ -888,17 +888,20 @@ namespace Server.Accounting
 
                 count = 0;
 
-                foreach (XmlElement ip in addressList.GetElementsByTagName("ip").Cast<XmlElement>().Where(ip => count < list.Length))
+                foreach (XmlElement ip in addressList.GetElementsByTagName("ip").Cast<XmlElement>())
                 {
-                    IPAddress address;
-
-                    if (!IPAddress.TryParse(Utility.GetText(ip, null), out address))
+                    if (count < list.Length)
                     {
-                        continue;
-                    }
+                        IPAddress address;
 
-                    list[count] = Utility.Intern(address);
-                    count++;
+                        if (!IPAddress.TryParse(Utility.GetText(ip, null), out address))
+                        {
+                            continue;
+                        }
+
+                        list[count] = Utility.Intern(address);
+                        count++;
+                    }
                 }
 
                 if (count == list.Length)
