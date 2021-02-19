@@ -24,8 +24,13 @@ namespace Server.Engines.TreasuresOfKotlCity
             get => _Complete;
             set
             {
-                foreach (KotlCityPuzzleComponent comp in Components.OfType<KotlCityPuzzleComponent>().Where(c => value && c.Active || !value && !c.Active))
-                    comp.Active = !value;
+                foreach (KotlCityPuzzleComponent comp in Components.OfType<KotlCityPuzzleComponent>())
+                {
+                    if (value && comp.Active || !value && !comp.Active)
+                    {
+                        comp.Active = !value;
+                    }
+                }
 
                 if (_Complete && !value)
                 {

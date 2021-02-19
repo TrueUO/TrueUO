@@ -536,7 +536,7 @@ namespace Server.Engines.MyrmidexInvasion
 
             foreach (KeyValuePair<int, List<BaseCreature>> kvp in list)
             {
-                bclist.AddRange(kvp.Value.Where(bc => bc != null && !bc.Deleted && bc.Alive));
+                bclist.AddRange(kvp.Value.Where(bc => bc != null && !bc.Deleted && bc.Alive)); // Should be converted to not use LINQ here.
             }
 
             return bclist;
