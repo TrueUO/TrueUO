@@ -330,9 +330,12 @@ namespace Server.Items
                 Boss = new Zipactriotl(true);
                 Boss.MoveToWorld(new Point3D(899, 2303, -20), Map.TerMur);
 
-                foreach (MoonstonePowerGeneratorAddon c in Generators.Where(c => c.Generator != null))
+                foreach (MoonstonePowerGeneratorAddon c in Generators)
                 {
-                    c.Generator.CanSpawn = true;
+                    if (c.Generator != null)
+                    {
+                        c.Generator.CanSpawn = true;
+                    }
                 }
 
                 MorphItems();

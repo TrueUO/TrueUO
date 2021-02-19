@@ -309,44 +309,74 @@ namespace Server.Mobiles
             {
                 List<DamageStore> rights = GetLootingRights();
 
-                foreach (DamageStore ds in rights.Where(s => s.m_Mobile is PlayerMobile && s.m_HasRight))
+                foreach (DamageStore ds in rights)
                 {
-                    PlayerMobile m = ds.m_Mobile as PlayerMobile;
-                    int ordersComplete = 0;
-
-                    if (KrampusEvent.Instance.CompleteTable.ContainsKey(m))
+                    if (ds.m_Mobile is PlayerMobile && ds.m_HasRight)
                     {
-                        ordersComplete = KrampusEvent.Instance.CompleteTable[m];
-                    }
+                        PlayerMobile m = ds.m_Mobile as PlayerMobile;
+                        int ordersComplete = 0;
 
-                    if (ordersComplete >= 3 || Utility.RandomMinMax(0, 8) <= ordersComplete)
-                    {
-                        Item item = null;
-
-                        switch (Utility.Random(13))
+                        if (KrampusEvent.Instance.CompleteTable.ContainsKey(m))
                         {
-                            case 0: item = new KrampusCoinPurse(m.Karma); break;
-                            case 1: item = new CardOfSemidar(Utility.RandomMinMax(0, 6)); break;
-                            case 2: item = new NiceTitleDeed(); break;
-                            case 3: item = new NaughtyTitleDeed(); break;
-                            case 4: item = new PunisherTitleDeed(); break;
-                            case 5: item = new RecipeScroll(586); break; // minion hat
-                            case 6: item = new RecipeScroll(587); break; // minion boots
-                            case 7: item = new KrampusCoinPurse(463); break; // minion talons
-                            case 8: item = new KrampusCoinPurse(588); break; // minion earrings
-                            case 9: item = new KrampusPunishinList(m.Name); break;
-                            case 10: item = new RecipeScroll(466); break; // barbed whip
-                            case 11: item = new RecipeScroll(467); break; // spiked whip
-                            case 12: item = new RecipeScroll(468); break; // bladed whip
+                            ordersComplete = KrampusEvent.Instance.CompleteTable[m];
                         }
 
-                        if (item != null)
+                        if (ordersComplete >= 3 || Utility.RandomMinMax(0, 8) <= ordersComplete)
                         {
-                            m.SendLocalizedMessage(1156269); // For your valor in defeating your foe a specialty item has been awarded to you!
+                            Item item = null;
 
-                            if (m.Backpack == null || !m.Backpack.TryDropItem(m, item, false))
+                            switch (Utility.Random(13))
                             {
-                                m.BankBox.DropItem(item);
+                                case 0:
+                                    item = new KrampusCoinPurse(m.Karma);
+                                    break;
+                                case 1:
+                                    item = new CardOfSemidar(Utility.RandomMinMax(0, 6));
+                                    break;
+                                case 2:
+                                    item = new NiceTitleDeed();
+                                    break;
+                                case 3:
+                                    item = new NaughtyTitleDeed();
+                                    break;
+                                case 4:
+                                    item = new PunisherTitleDeed();
+                                    break;
+                                case 5:
+                                    item = new RecipeScroll(586);
+                                    break; // minion hat
+                                case 6:
+                                    item = new RecipeScroll(587);
+                                    break; // minion boots
+                                case 7:
+                                    item = new KrampusCoinPurse(463);
+                                    break; // minion talons
+                                case 8:
+                                    item = new KrampusCoinPurse(588);
+                                    break; // minion earrings
+                                case 9:
+                                    item = new KrampusPunishinList(m.Name);
+                                    break;
+                                case 10:
+                                    item = new RecipeScroll(466);
+                                    break; // barbed whip
+                                case 11:
+                                    item = new RecipeScroll(467);
+                                    break; // spiked whip
+                                case 12:
+                                    item = new RecipeScroll(468);
+                                    break; // bladed whip
+                            }
+
+                            if (item != null)
+                            {
+                                m.SendLocalizedMessage(
+                                    1156269); // For your valor in defeating your foe a specialty item has been awarded to you!
+
+                                if (m.Backpack == null || !m.Backpack.TryDropItem(m, item, false))
+                                {
+                                    m.BankBox.DropItem(item);
+                                }
                             }
                         }
                     }

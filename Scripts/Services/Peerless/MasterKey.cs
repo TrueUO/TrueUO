@@ -44,10 +44,13 @@ namespace Server.Items
 
                     if (p != null)
                     {
-                        foreach (Mobile m in p.Members.Select(x => x.Mobile).Where(m => m.InRange(from.Location, 25)))
+                        foreach (Mobile m in p.Members.Select(x => x.Mobile))
                         {
-                            m.CloseGump(typeof(ConfirmEntranceGump));
-                            m.SendGump(new ConfirmEntranceGump(Altar, m));
+                            if (m.InRange(from.Location, 25))
+                            {
+                                m.CloseGump(typeof(ConfirmEntranceGump));
+                                m.SendGump(new ConfirmEntranceGump(Altar, m));
+                            }
                         }
                     }
                     else
