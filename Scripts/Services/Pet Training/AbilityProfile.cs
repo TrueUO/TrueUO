@@ -248,22 +248,29 @@ namespace Server.Mobiles
 
             if (trainPoint != null && trainPoint.Requirements != null)
             {
-                foreach (TrainingPointRequirement req in trainPoint.Requirements.Where(r => r != null))
+                foreach (TrainingPointRequirement req in trainPoint.Requirements)
                 {
-                    if (req.Requirement is SkillName name)
+                    if (req != null)
                     {
-                        double skill = Creature.Skills[name].Base;
-                        double toAdd = req.Cost == 100 ? 20 : 40;
+                        if (req.Requirement is SkillName name)
+                        {
+                            double skill = Creature.Skills[name].Base;
+                            double toAdd = req.Cost == 100 ? 20 : 40;
 
-                        if (name == SkillName.Hiding)
-                            toAdd = 100;
+                            if (name == SkillName.Hiding)
+                            {
+                                toAdd = 100;
+                            }
 
-                        if (skill < toAdd)
-                            Creature.Skills[name].Base = toAdd;
-                    }
-                    else if (req.Requirement is WeaponAbility requirement)
-                    {
-                        AddAbility(requirement);
+                            if (skill < toAdd)
+                            {
+                                Creature.Skills[name].Base = toAdd;
+                            }
+                        }
+                        else if (req.Requirement is WeaponAbility requirement)
+                        {
+                            AddAbility(requirement);
+                        }
                     }
                 }
             }
