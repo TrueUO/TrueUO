@@ -52,103 +52,109 @@ namespace Server.Accounting
                 long share = 0, shared;
                 int diff;
 
-                foreach (Account a in Accounts.GetAccounts().OfType<Account>().Where(a => a.Count > 0))
+                foreach (Account a in Accounts.GetAccounts().OfType<Account>())
                 {
-                    try
+                    if (a.Count > 0)
                     {
-                        if (!AccountGold.Enabled)
+                        try
                         {
-                            share = (int)Math.Truncate((a.TotalCurrency / a.Count) * CurrencyThreshold);
-                            found += a.TotalCurrency * CurrencyThreshold;
-                        }
-
-                        foreach (Mobile m in a.m_Mobiles.Where(m => m != null))
-                        {
-                            box = m.FindBankNoCreate();
-
-                            if (box == null)
+                            if (!AccountGold.Enabled)
                             {
-                                continue;
+                                share = (int) Math.Truncate((a.TotalCurrency / a.Count) * CurrencyThreshold);
+                                found += a.TotalCurrency * CurrencyThreshold;
                             }
 
-                            if (AccountGold.Enabled)
+                            foreach (Mobile m in a.m_Mobiles)
                             {
-                                foreach (BankCheck o in checks = box.FindItemsByType<BankCheck>())
+                                if (m != null)
                                 {
-                                    found += o.Worth;
+                                    box = m.FindBankNoCreate();
 
-                                    if (!a.DepositGold(o.Worth))
+                                    if (box == null)
                                     {
-                                        break;
+                                        continue;
                                     }
 
-                                    converted += o.Worth;
-                                    o.Delete();
-                                }
-
-                                checks.Clear();
-                                checks.TrimExcess();
-
-                                foreach (Gold o in gold = box.FindItemsByType<Gold>())
-                                {
-                                    found += o.Amount;
-
-                                    if (!a.DepositGold(o.Amount))
+                                    if (AccountGold.Enabled)
                                     {
-                                        break;
-                                    }
-
-                                    converted += o.Amount;
-                                    o.Delete();
-                                }
-
-                                gold.Clear();
-                                gold.TrimExcess();
-                            }
-                            else
-                            {
-                                shared = share;
-
-                                while (shared > 0)
-                                {
-                                    if (shared > 60000)
-                                    {
-                                        diff = (int)Math.Min(10000000, shared);
-
-                                        if (a.WithdrawGold(diff))
+                                        foreach (BankCheck o in checks = box.FindItemsByType<BankCheck>())
                                         {
-                                            box.DropItem(new BankCheck(diff));
+                                            found += o.Worth;
+
+                                            if (!a.DepositGold(o.Worth))
+                                            {
+                                                break;
+                                            }
+
+                                            converted += o.Worth;
+                                            o.Delete();
                                         }
-                                        else
+
+                                        checks.Clear();
+                                        checks.TrimExcess();
+
+                                        foreach (Gold o in gold = box.FindItemsByType<Gold>())
                                         {
-                                            break;
+                                            found += o.Amount;
+
+                                            if (!a.DepositGold(o.Amount))
+                                            {
+                                                break;
+                                            }
+
+                                            converted += o.Amount;
+                                            o.Delete();
                                         }
+
+                                        gold.Clear();
+                                        gold.TrimExcess();
                                     }
                                     else
                                     {
-                                        diff = (int)Math.Min(60000, shared);
+                                        shared = share;
 
-                                        if (a.WithdrawGold(diff))
+                                        while (shared > 0)
                                         {
-                                            box.DropItem(new Gold(diff));
-                                        }
-                                        else
-                                        {
-                                            break;
+                                            if (shared > 60000)
+                                            {
+                                                diff = (int) Math.Min(10000000, shared);
+
+                                                if (a.WithdrawGold(diff))
+                                                {
+                                                    box.DropItem(new BankCheck(diff));
+                                                }
+                                                else
+                                                {
+                                                    break;
+                                                }
+                                            }
+                                            else
+                                            {
+                                                diff = (int) Math.Min(60000, shared);
+
+                                                if (a.WithdrawGold(diff))
+                                                {
+                                                    box.DropItem(new Gold(diff));
+                                                }
+                                                else
+                                                {
+                                                    break;
+                                                }
+                                            }
+
+                                            converted += diff;
+                                            shared -= diff;
                                         }
                                     }
 
-                                    converted += diff;
-                                    shared -= diff;
+                                    box.UpdateTotals();
                                 }
                             }
-
-                            box.UpdateTotals();
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        Diagnostics.ExceptionLogging.LogException(ex);
+                        catch (Exception ex)
+                        {
+                            Diagnostics.ExceptionLogging.LogException(ex);
+                        }
                     }
                 }
             }
@@ -317,9 +323,12 @@ namespace Server.Accounting
             LoginIPs = LoadAddressList(node);
             IPRestrictions = LoadAccessCheck(node);
 
-            foreach (Mobile m in m_Mobiles.Where(m => m != null))
+            foreach (Mobile m in m_Mobiles)
             {
-                m.Account = this;
+                if (m != null)
+                {
+                    m.Account = this;
+                }
             }
 
             TimeSpan totalGameTime = Utility.GetXMLTimeSpan(Utility.GetText(node["totalGameTime"], null), TimeSpan.Zero);
@@ -879,17 +888,20 @@ namespace Server.Accounting
 
                 count = 0;
 
-                foreach (XmlElement ip in addressList.GetElementsByTagName("ip").Cast<XmlElement>().Where(ip => count < list.Length))
+                foreach (XmlElement ip in addressList.GetElementsByTagName("ip").Cast<XmlElement>())
                 {
-                    IPAddress address;
-
-                    if (!IPAddress.TryParse(Utility.GetText(ip, null), out address))
+                    if (count < list.Length)
                     {
-                        continue;
-                    }
+                        IPAddress address;
 
-                    list[count] = Utility.Intern(address);
-                    count++;
+                        if (!IPAddress.TryParse(Utility.GetText(ip, null), out address))
+                        {
+                            continue;
+                        }
+
+                        list[count] = Utility.Intern(address);
+                        count++;
+                    }
                 }
 
                 if (count == list.Length)

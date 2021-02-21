@@ -48,9 +48,12 @@ namespace Server.Engines.ArenaSystem
         {
             List<ArenaDuel> booked = new List<ArenaDuel>();
 
-            foreach (PVPArena arena in Arenas.Where(a => a.BookedDuels.Count > 0))
+            foreach (PVPArena arena in Arenas)
             {
-                booked.AddRange(arena.BookedDuels);
+                if (arena.BookedDuels.Count > 0)
+                {
+                    booked.AddRange(arena.BookedDuels);
+                }
             }
 
             return booked;
@@ -58,11 +61,17 @@ namespace Server.Engines.ArenaSystem
 
         public ArenaDuel GetBookedDuel(PlayerMobile pm)
         {
-            foreach (PVPArena arena in Arenas.Where(a => a.BookedDuels.Count > 0))
+            foreach (PVPArena arena in Arenas)
             {
-                foreach (ArenaDuel duel in arena.BookedDuels.Where(d => d.IsParticipant(pm)))
+                if (arena.BookedDuels.Count > 0)
                 {
-                    return duel;
+                    foreach (ArenaDuel duel in arena.BookedDuels)
+                    {
+                        if (duel.IsParticipant(pm))
+                        {
+                            return duel;
+                        }
+                    }
                 }
             }
 
@@ -94,10 +103,7 @@ namespace Server.Engines.ArenaSystem
 
         public void Unregister(PVPArena arena)
         {
-            if (Arenas != null)
-            {
-                Arenas.Remove(arena);
-            }
+            Arenas?.Remove(arena);
 
             arena.Unregister();
         }
@@ -292,7 +298,7 @@ namespace Server.Engines.ArenaSystem
             if (title > 0)
             {
                 pm.AddRewardTitle(title);
-                pm.SendLocalizedMessage(1152067, string.Format("#{0}", title.ToString())); // You have gotten a new subtitle, ~1_VAL~, in reward for your duel!
+                pm.SendLocalizedMessage(1152067, $"#{title.ToString()}"); // You have gotten a new subtitle, ~1_VAL~, in reward for your duel!
             }
         }
 
@@ -370,7 +376,7 @@ namespace Server.Engines.ArenaSystem
 
         private static bool CanInitialize(ArenaDefinition def)
         {
-            return !Instance.IsBlocked(def) && (Arenas == null || !Arenas.Any(arena => arena.Definition == def));
+            return !Instance.IsBlocked(def) && (Arenas == null || Arenas.All(arena => arena.Definition != def));
         }
 
         [Usage("ArenaSetup")]
@@ -393,26 +399,21 @@ namespace Server.Engines.ArenaSystem
 
             m.BeginTarget(-1, false, Targeting.TargetFlags.None, (fro, targeted) =>
                 {
-                    if (m is PlayerMobile && targeted is ArenaStone)
+                    if (m is PlayerMobile mobile && targeted is ArenaStone stone && stone.Arena != null)
                     {
-                        ArenaStone stone = (ArenaStone)targeted;
+                        PVPArena arena = stone.Arena;
 
-                        if (stone.Arena != null)
-                        {
-                            PVPArena arena = stone.Arena;
-
-                            BaseGump.SendGump(new GenericConfirmCallbackGump<PVPArena>((PlayerMobile)m,
-                                string.Format("Reset {0} Statistics?", arena.Definition.Name),
-                                "By selecting yes, you will permanently wipe the stats associated to this arena.",
-                                arena,
-                                null,
-                                (from, a) =>
-                                {
-                                    ColUtility.Free(a.TeamRankings);
-                                    ColUtility.Free(a.SurvivalRankings);
-                                    from.SendMessage("Arena stats cleared.");
-                                }));
-                        }
+                        BaseGump.SendGump(new GenericConfirmCallbackGump<PVPArena>(mobile,
+                            $"Reset {arena.Definition.Name} Statistics?",
+                            "By selecting yes, you will permanently wipe the stats associated to this arena.",
+                            arena,
+                            null,
+                            (from, a) =>
+                            {
+                                ColUtility.Free(a.TeamRankings);
+                                ColUtility.Free(a.SurvivalRankings);
+                                from.SendMessage("Arena stats cleared.");
+                            }));
                     }
                 });
         }
@@ -499,7 +500,7 @@ namespace Server.Engines.ArenaSystem
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             Record = new List<DuelRecord>();
 
@@ -531,9 +532,9 @@ namespace Server.Engines.ArenaSystem
 
         public class DuelRecord
         {
-            public Mobile Opponent { get; set; }
-            public bool KilledBy { get; set; }
-            public DateTime DuelDate { get; set; }
+            public Mobile Opponent { get; }
+            public bool KilledBy { get; }
+            public DateTime DuelDate { get; }
 
             public DuelRecord(Mobile opponent, bool killedBy)
             {
@@ -563,18 +564,18 @@ namespace Server.Engines.ArenaSystem
 
         public class DuelProfile
         {
-            public int Entries { get; set; }
-            public RoomType RoomType { get; set; }
-            public BattleMode BattleMode { get; set; }
-            public bool Ranked { get; set; }
-            public TimeLimit TimeLimit { get; set; }
-            public EntryFee EntryFee { get; set; }
-            public int PetSlots { get; set; }
-            public bool RidingFlyingAllowed { get; set; }
-            public bool RangedWeaponsAllowed { get; set; }
-            public bool SummonSpellsAllowed { get; set; }
-            public bool FieldSpellsAllowed { get; set; }
-            public PotionRules PotionRules { get; set; }
+            public int Entries { get; }
+            public RoomType RoomType { get; }
+            public BattleMode BattleMode { get; }
+            public bool Ranked { get; }
+            public TimeLimit TimeLimit { get; }
+            public EntryFee EntryFee { get; }
+            public int PetSlots { get; }
+            public bool RidingFlyingAllowed { get; }
+            public bool RangedWeaponsAllowed { get; }
+            public bool SummonSpellsAllowed { get; }
+            public bool FieldSpellsAllowed { get; }
+            public PotionRules PotionRules { get; }
 
             public DuelProfile(ArenaDuel duel)
             {

@@ -319,13 +319,23 @@ namespace Server.Engines.Plants
         {
             List<Item> toDelete = new List<Item>(Items);
 
-            foreach (Item item in toDelete.Where(i => i != null && i.Amount == 0))
-                item.Delete();
+            foreach (Item item in toDelete)
+            {
+                if (item != null && item.Amount == 0)
+                {
+                    item.Delete();
+                }
+            }
 
             List<SeedEntry> entries = new List<SeedEntry>(Entries);
 
-            foreach (SeedEntry entry in entries.Where(e => e != null && (e.Seed == null || e.Seed.Amount == 0 || e.Seed.Deleted)))
-                Entries.Remove(entry);
+            foreach (SeedEntry entry in entries)
+            {
+                if (entry != null && (entry.Seed == null || entry.Seed.Amount == 0 || entry.Seed.Deleted))
+                {
+                    Entries.Remove(entry);
+                }
+            }
 
             ColUtility.Free(entries);
             ColUtility.Free(toDelete);
@@ -404,8 +414,13 @@ namespace Server.Engines.Plants
             Timer.DelayCall(
                 () =>
                 {
-                    foreach (Item item in Items.Where(i => i.Movable))
-                        item.Movable = false;
+                    foreach (Item item in Items)
+                    {
+                        if (item.Movable)
+                        {
+                            item.Movable = false;
+                        }
+                    }
                 });
 
             Timer.DelayCall(TimeSpan.FromSeconds(10), CheckEntries);

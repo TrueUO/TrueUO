@@ -702,12 +702,15 @@ namespace Server.Multis
                     list[item] = Owner;
             }
 
-            foreach (SecureInfo info in Secures.Where(i => !LockDowns.ContainsKey(i.Item)))
+            foreach (SecureInfo info in Secures)
             {
-                Item item = info.Item;
+                if (!LockDowns.ContainsKey(info.Item))
+                {
+                    Item item = info.Item;
 
-                if (item.Parent == null && item.Map != Map.Internal)
-                    list[item] = Owner;
+                    if (item.Parent == null && item.Map != Map.Internal)
+                        list[item] = Owner;
+                }
             }
 
             foreach (Item item in Addons.Keys)

@@ -16,9 +16,12 @@ namespace Server.Mobiles
         {
             List<Mobile> list = new List<Mobile>();
 
-            foreach (BaseCreature b in World.Mobiles.Values.OfType<BaseCreature>().Where(bc => bc.RemoveOnSave && !bc.Controlled && bc.ControlMaster == null))
+            foreach (BaseCreature b in World.Mobiles.Values.OfType<BaseCreature>())
             {
-                list.Add(b);
+                if (b.RemoveOnSave && !b.Controlled && b.ControlMaster == null)
+                {
+                    list.Add(b);
+                }
             }
 
             for (int i = 0; i < list.Count; i++)

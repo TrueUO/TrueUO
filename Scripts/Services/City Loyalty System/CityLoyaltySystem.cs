@@ -375,18 +375,21 @@ namespace Server.Engines.CityLoyalty
 
             if (AwakeingEventActive)
             {
-                foreach (CityLoyaltySystem sys in Cities.Where(s => s.City != City))
+                foreach (CityLoyaltySystem sys in Cities)
                 {
-                    CityLoyaltyEntry e = sys.GetPlayerEntry<CityLoyaltyEntry>(from, true);
-
-                    if (e.Love > 10)
+                    if (sys.City != City)
                     {
-                        double convert = e.Love / 75.0;
+                        CityLoyaltyEntry e = sys.GetPlayerEntry<CityLoyaltyEntry>(from, true);
 
-                        if (convert > 0.0)
+                        if (e.Love > 10)
                         {
-                            e.Love -= (int)convert;
-                            e.Neutrality += (int)convert;
+                            double convert = e.Love / 75.0;
+
+                            if (convert > 0.0)
+                            {
+                                e.Love -= (int) convert;
+                                e.Neutrality += (int) convert;
+                            }
                         }
                     }
                 }

@@ -283,8 +283,13 @@ namespace Server.Engines.JollyRoger
                 {
                     list = new List<BaseCreature>(kvp.Value);
 
-                    foreach (BaseCreature b in list.Where(bc => bc == null || !bc.Alive || bc.Deleted))
-                        kvp.Value.Remove(b);
+                    foreach (BaseCreature b in list)
+                    {
+                        if (b == null || !b.Alive || b.Deleted)
+                        {
+                            kvp.Value.Remove(b);
+                        }
+                    }
                 }
 
                 if (list != null && list.Count > 0)
@@ -319,8 +324,13 @@ namespace Server.Engines.JollyRoger
 
             foreach (KeyValuePair<BaseCreature, List<BaseCreature>> kvp in copy)
             {
-                foreach (BaseCreature bc in kvp.Value.Where(b => b.Alive))
-                    bc.Kill();
+                foreach (BaseCreature bc in kvp.Value)
+                {
+                    if (bc.Alive)
+                    {
+                        bc.Kill();
+                    }
+                }
 
                 if (kvp.Key.Alive)
                 {

@@ -143,36 +143,39 @@ namespace Server.Multis
 
             Dictionary<int, List<MultiTileEntry>> teleporters = new Dictionary<int, List<MultiTileEntry>>();
 
-            foreach (MultiTileEntry entry in components.List.Where(e => e.m_Flags == 0))
+            foreach (MultiTileEntry entry in components.List)
             {
-                // Telepoters
-                if (entry.m_ItemID >= 0x181D && entry.m_ItemID <= 0x1828)
+                if (entry.m_Flags == 0)
                 {
-                    if (teleporters.ContainsKey(entry.m_ItemID))
+                    // Telepoters
+                    if (entry.m_ItemID >= 0x181D && entry.m_ItemID <= 0x1828)
                     {
-                        teleporters[entry.m_ItemID].Add(entry);
+                        if (teleporters.ContainsKey(entry.m_ItemID))
+                        {
+                            teleporters[entry.m_ItemID].Add(entry);
+                        }
+                        else
+                        {
+                            teleporters[entry.m_ItemID] = new List<MultiTileEntry>();
+                            teleporters[entry.m_ItemID].Add(entry);
+                        }
                     }
                     else
                     {
-                        teleporters[entry.m_ItemID] = new List<MultiTileEntry>();
-                        teleporters[entry.m_ItemID].Add(entry);
-                    }
-                }
-                else
-                {
-                    ItemData data = TileData.ItemTable[entry.m_ItemID & TileData.MaxItemValue];
+                        ItemData data = TileData.ItemTable[entry.m_ItemID & TileData.MaxItemValue];
 
-                    // door
-                    if ((data.Flags & TileFlag.Door) != 0)
-                    {
-                        AddDoor(entry.m_ItemID, entry.m_OffsetX, entry.m_OffsetY, entry.m_OffsetZ);
-                    }
-                    else
-                    {
-                        Item st = new Static((int)entry.m_ItemID);
+                        // door
+                        if ((data.Flags & TileFlag.Door) != 0)
+                        {
+                            AddDoor(entry.m_ItemID, entry.m_OffsetX, entry.m_OffsetY, entry.m_OffsetZ);
+                        }
+                        else
+                        {
+                            Item st = new Static((int) entry.m_ItemID);
 
-                        st.MoveToWorld(new Point3D(X + entry.m_OffsetX, Y + entry.m_OffsetY, entry.m_OffsetZ), Map);
-                        AddFixture(st);
+                            st.MoveToWorld(new Point3D(X + entry.m_OffsetX, Y + entry.m_OffsetY, entry.m_OffsetZ), Map);
+                            AddFixture(st);
+                        }
                     }
                 }
             }

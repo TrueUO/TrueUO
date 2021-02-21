@@ -10,7 +10,7 @@ namespace Server.Engines.ArenaSystem
         public override int LabelNumber => 1115879;  // Arena Gate
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public ArenaDuel Duel { get; set; }
+        public ArenaDuel Duel { get; }
 
         [Constructable]
         public ArenaGate(ArenaDuel duel)
@@ -37,7 +37,7 @@ namespace Server.Engines.ArenaSystem
 
         public void TryUse(Mobile m)
         {
-            if (m is PlayerMobile && CheckValidation((PlayerMobile)m))
+            if (m is PlayerMobile mobile && CheckValidation(mobile))
             {
                 Timer.DelayCall(TimeSpan.FromSeconds(.5), () =>
                 {
@@ -61,12 +61,14 @@ namespace Server.Engines.ArenaSystem
                 PVPArenaSystem.SendMessage(pm, 1149696); // As a young player, you may not enter this area.
                 return false;
             }
-            else if (pm.Followers > Duel.PetSlots)
+
+            if (pm.Followers > Duel.PetSlots)
             {
                 PVPArenaSystem.SendMessage(pm, 1115974); // You currently exceed the maximum number of pet slots for this duel. Please stable your pet(s) with the arena manager before proceeding.
                 return false;
             }
-            else if (Duel.EntryFee > EntryFee.Zero)
+
+            if (Duel.EntryFee > EntryFee.Zero)
             {
                 int fee = (int)Duel.EntryFee;
 
@@ -104,7 +106,7 @@ namespace Server.Engines.ArenaSystem
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

@@ -2905,8 +2905,6 @@ namespace Server.Mobiles
 
                     if (amount > 0)
                     {
-                        bool happier = false;
-
                         int stamGain;
 
                         if (f is Gold)
@@ -2926,15 +2924,10 @@ namespace Server.Mobiles
                         if (m_Loyalty < MaxLoyalty)
                         {
                             m_Loyalty = MaxLoyalty;
-                            happier = true;
-                        }
-
-                        if (happier)
-                        {
-                            SayTo(from, 502060); // Your pet looks happier.
                         }
 
                         Animate(AnimationType.Eat, 0);
+                        SayTo(from, 502060); // Your pet looks happier.
 
                         if (IsBondable && !IsBonded)
                         {
@@ -5897,11 +5890,14 @@ namespace Server.Mobiles
                             {
                                 if (ds.m_Mobile is PlayerMobile pm)
                                 {
-                                    foreach (Mobile pet in pm.AllFollowers.Where(p => DamageEntries.Any(de => de.Damager == p)))
+                                    foreach (Mobile pet in pm.AllFollowers)
                                     {
-                                        titles.Add(pet);
-                                        fame.Add(totalFame);
-                                        karma.Add(totalKarma);
+                                        if (DamageEntries.Any(de => de.Damager == pet))
+                                        {
+                                            titles.Add(pet);
+                                            fame.Add(totalFame);
+                                            karma.Add(totalKarma);
+                                        }
                                     }
                                 }
 

@@ -111,9 +111,12 @@ namespace Server.Items
 
         public static void OnKarmaChange(Mobile m)
         {
-            foreach (Item item in m.Items.Where(i => i is IEpiphanyArmor))
+            foreach (Item item in m.Items)
             {
-                item.InvalidateProperties();
+                if (item is IEpiphanyArmor)
+                {
+                    item.InvalidateProperties();
+                }
             }
         }
 

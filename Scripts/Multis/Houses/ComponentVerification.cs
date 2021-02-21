@@ -212,9 +212,12 @@ namespace Server.Multis
             {
                 int fid = record.GetInt32(featureCID);
 
-                foreach (int itemID in tileCIDs.Select(v => record.GetInt32(v)).Where(id => id > 0 && id < table.Length))
+                foreach (int itemID in tileCIDs.Select(v => record.GetInt32(v)))
                 {
-                    table[itemID] = fid;
+                    if (itemID > 0 && itemID < table.Length)
+                    {
+                        table[itemID] = fid;
+                    }
                 }
             }
         }

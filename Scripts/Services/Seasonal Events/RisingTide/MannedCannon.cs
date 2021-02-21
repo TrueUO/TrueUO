@@ -360,15 +360,18 @@ namespace Server.Items
                         List<Mobile> candidates = new List<Mobile>();
                         SecurityLevel highest = SecurityLevel.Passenger;
 
-                        foreach (PlayerMobile mob in target.MobilesOnBoard.OfType<PlayerMobile>().Where(pm => Operator.CanBeHarmful(pm, false)))
+                        foreach (PlayerMobile mob in target.MobilesOnBoard.OfType<PlayerMobile>())
                         {
-                            if (target is BaseGalleon galleon && galleon.GetSecurityLevel(mob) > highest)
+                            if (Operator.CanBeHarmful(mob, false))
                             {
-                                candidates.Insert(0, mob);
-                            }
-                            else
-                            {
-                                candidates.Add(mob);
+                                if (target is BaseGalleon galleon && galleon.GetSecurityLevel(mob) > highest)
+                                {
+                                    candidates.Insert(0, mob);
+                                }
+                                else
+                                {
+                                    candidates.Add(mob);
+                                }
                             }
                         }
 
