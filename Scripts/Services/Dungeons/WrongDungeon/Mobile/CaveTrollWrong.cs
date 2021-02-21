@@ -1,36 +1,36 @@
 namespace Server.Mobiles
 {
-    [CorpseName("a Cave Troll corpse")]
+    [CorpseName("a cave troll corpse")]
     public class CaveTrollWrong : BaseCreature
     {
         [Constructable]
         public CaveTrollWrong()
             : base(AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4)
         {
-            Name = "a Cave Troll";
+            Name = "Cave Troll";
             Body = Utility.RandomList(53, 54);
             BaseSoundID = 461;
             Hue = 674;
 
-            SetStr(118, 118);
-            SetDex(58, 58);
-            SetInt(65, 65);
+            SetStr(116, 130);
+            SetDex(47, 63);
+            SetInt(46, 70);
 
-            SetHits(2136, 2136);
+            SetHits(2143, 2204);
 
             SetDamage(8, 14);
 
             SetDamageType(ResistanceType.Physical, 100);
 
-            SetResistance(ResistanceType.Physical, 76, 76);
-            SetResistance(ResistanceType.Fire, 55, 55);
-            SetResistance(ResistanceType.Cold, 72, 72);
-            SetResistance(ResistanceType.Poison, 75, 75);
-            SetResistance(ResistanceType.Energy, 50, 50);
+            SetResistance(ResistanceType.Physical, 70, 80);
+            SetResistance(ResistanceType.Fire, 50, 60);
+            SetResistance(ResistanceType.Cold, 70, 80);
+            SetResistance(ResistanceType.Poison, 70, 80);
+            SetResistance(ResistanceType.Energy, 50, 60);
 
-            SetSkill(SkillName.MagicResist, 87.4, 87.4);
-            SetSkill(SkillName.Tactics, 125.8, 125.8);
-            SetSkill(SkillName.Wrestling, 137.5, 137.5);
+            SetSkill(SkillName.MagicResist, 86.2, 92.4);
+            SetSkill(SkillName.Tactics, 124.7, 138.6);
+            SetSkill(SkillName.Wrestling, 125.5, 135.6);
 
             Fame = 3500;
             Karma = -3500;
@@ -43,13 +43,13 @@ namespace Server.Mobiles
 
         public override bool CanRummageCorpses => true;
 
-        public override int TreasureMapLevel => 2;
+        public override int TreasureMapLevel => 3;
 
         public override int Meat => 2;
 
         public override void GenerateLoot()
         {
-            AddLoot(LootPack.Average);
+            AddLoot(LootPack.FilthyRich);
         }
 
         public override void Serialize(GenericWriter writer)
