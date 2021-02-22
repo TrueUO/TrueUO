@@ -46,6 +46,8 @@ namespace Server.Mobiles
         public override double DispelDifficulty => 70.0;
         public override double DispelFocus => 20.0;
         public override bool InitialInnocent => true;
+        public override bool DeleteOnRelease => true;
+        public override bool DeleteCorpseOnDeath => true;
 
         public override void Serialize(GenericWriter writer)
         {
