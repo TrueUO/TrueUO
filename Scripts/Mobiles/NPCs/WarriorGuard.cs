@@ -1,7 +1,5 @@
-#region References
 using Server.Items;
 using System;
-#endregion
 
 namespace Server.Mobiles
 {
@@ -88,14 +86,7 @@ namespace Server.Mobiles
                 Utility.AssignRandomFacialHair(this, HairHue);
             }
 
-            Halberd weapon = new Halberd
-            {
-                Movable = false,
-                Crafter = this,
-                Quality = ItemQuality.Exceptional
-            };
-
-            AddItem(weapon);
+            AddItem(new Halberd());
 
             Container pack = new Backpack
             {
@@ -205,27 +196,19 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
-            switch (version)
+            m_Focus = reader.ReadMobile();
+
+            if (m_Focus != null)
             {
-                case 0:
-                    {
-                        m_Focus = reader.ReadMobile();
-
-                        if (m_Focus != null)
-                        {
-                            m_AttackTimer = new AttackTimer(this);
-                            m_AttackTimer.Start();
-                        }
-                        else
-                        {
-                            m_IdleTimer = new IdleTimer(this);
-                            m_IdleTimer.Start();
-                        }
-
-                        break;
-                    }
+                m_AttackTimer = new AttackTimer(this);
+                m_AttackTimer.Start();
+            }
+            else
+            {
+                m_IdleTimer = new IdleTimer(this);
+                m_IdleTimer.Start();
             }
         }
 
@@ -316,7 +299,6 @@ namespace Server.Mobiles
                 }
                 else
                 {
-                    // <instakill>
                     TeleportTo(target);
                     target.BoltEffect(0);
 
@@ -326,7 +308,7 @@ namespace Server.Mobiles
                     }
 
                     target.Damage(target.HitsMax, m_Owner);
-                    target.Kill(); // just in case, maybe Damage is overriden on some shard
+                    target.Kill(); 
 
                     if (target.Corpse != null && !target.Player)
                     {
@@ -335,7 +317,7 @@ namespace Server.Mobiles
 
                     m_Owner.Focus = null;
                     Stop();
-                } // </instakill>
+                } 
             }
 
             private void TeleportTo(Mobile target)
@@ -345,8 +327,7 @@ namespace Server.Mobiles
 
                 m_Owner.Location = to;
 
-                Effects.SendLocationParticles(
-                    EffectItem.Create(from, m_Owner.Map, EffectItem.DefaultDuration), 0x3728, 10, 10, 2023);
+                Effects.SendLocationParticles(EffectItem.Create(from, m_Owner.Map, EffectItem.DefaultDuration), 0x3728, 10, 10, 2023);
                 Effects.SendLocationParticles(EffectItem.Create(to, m_Owner.Map, EffectItem.DefaultDuration), 0x3728, 10, 10, 5023);
 
                 m_Owner.PlaySound(0x1FE);
@@ -379,8 +360,7 @@ namespace Server.Mobiles
 
                 if (m_Stage > 16)
                 {
-                    Effects.SendLocationParticles(
-                        EffectItem.Create(m_Owner.Location, m_Owner.Map, EffectItem.DefaultDuration), 0x3728, 10, 10, 2023);
+                    Effects.SendLocationParticles(EffectItem.Create(m_Owner.Location, m_Owner.Map, EffectItem.DefaultDuration), 0x3728, 10, 10, 2023);
                     m_Owner.PlaySound(0x1FE);
 
                     m_Owner.Delete();
