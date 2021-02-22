@@ -1,6 +1,6 @@
 namespace Server.Items
 {
-    public class StarSapphire : Item, IGem
+    public class StarSapphire : Item, IGem, ICommodity
     {
         [Constructable]
         public StarSapphire()
@@ -21,22 +21,21 @@ namespace Server.Items
         {
         }
 
+        TextDefinition ICommodity.Description => LabelNumber;
+        bool ICommodity.IsDeedable => true;
+
         public override double DefaultWeight => 0.1;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
-
-            if (version == 0)
-                ItemID = 0x0F0F;
+            reader.ReadInt();
         }
     }
 }
