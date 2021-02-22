@@ -1773,6 +1773,8 @@ namespace Server.Mobiles
 
             if (m_Mobile.DeleteOnRelease)
             {
+                m_Mobile.GuardImmune = true;
+
                 m_Mobile.PrivateOverheadMessage(
                     MessageType.Regular,
                     0x3B2,
