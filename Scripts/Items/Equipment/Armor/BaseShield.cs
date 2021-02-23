@@ -182,6 +182,11 @@ namespace Server.Items
                     }
                 }
             }
+
+            if (Attributes.SpellChanneling > 0 && Attributes.CastSpeed != -1)
+            {
+                Attributes.CastSpeed -= 1;
+            }
         }
 
         protected override void ApplyResourceResistances(CraftResource oldResource)
