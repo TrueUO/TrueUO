@@ -92,21 +92,21 @@ namespace Server.Items
 
                 if (!InHouse(from))
                 {
-                    AddButton(40, 36, (decorator.Command == DecorateCommand.GetHue ? 2154 : 2152), 2154, 4, GumpButtonType.Reply, 0);
+                    AddButton(40, 36, decorator.Command == DecorateCommand.GetHue ? 2154 : 2152, 2154, 4, GumpButtonType.Reply, 0);
                     AddHtmlLocalized(80, 41, 100, 20, 1158863, false, false); // Get Hue   
                 }
                 else
                 {
-                    AddButton(40, 36, (decorator.Command == DecorateCommand.Turn ? 2154 : 2152), 2154, 1, GumpButtonType.Reply, 0);
+                    AddButton(40, 36, decorator.Command == DecorateCommand.Turn ? 2154 : 2152, 2154, 1, GumpButtonType.Reply, 0);
                     AddHtmlLocalized(80, 41, 100, 20, 1018323, false, false); // Turn
 
-                    AddButton(40, 86, (decorator.Command == DecorateCommand.Up ? 2154 : 2152), 2154, 2, GumpButtonType.Reply, 0);
+                    AddButton(40, 86, decorator.Command == DecorateCommand.Up ? 2154 : 2152, 2154, 2, GumpButtonType.Reply, 0);
                     AddHtmlLocalized(80, 91, 100, 20, 1018324, false, false); // Up
 
-                    AddButton(40, 136, (decorator.Command == DecorateCommand.Down ? 2154 : 2152), 2154, 3, GumpButtonType.Reply, 0);
+                    AddButton(40, 136, decorator.Command == DecorateCommand.Down ? 2154 : 2152, 2154, 3, GumpButtonType.Reply, 0);
                     AddHtmlLocalized(80, 141, 100, 20, 1018325, false, false); // Down
 
-                    AddButton(40, 186, (decorator.Command == DecorateCommand.GetHue ? 2154 : 2152), 2154, 4, GumpButtonType.Reply, 0);
+                    AddButton(40, 186, decorator.Command == DecorateCommand.GetHue ? 2154 : 2152, 2154, 4, GumpButtonType.Reply, 0);
                     AddHtmlLocalized(80, 191, 100, 20, 1158863, false, false); // Get Hue                    
                 }
 
@@ -189,7 +189,7 @@ namespace Server.Items
             {
                 if (m_Decorator.Command == DecorateCommand.GetHue)
                 {
-                    int hue = 0;
+                    int hue;
 
                     if (targeted is Item item)
                         hue = item.Hue;
@@ -201,7 +201,7 @@ namespace Server.Items
                         return;
                     }
 
-                    from.SendLocalizedMessage(1158862, string.Format("{0}", hue)); // That object is hue ~1_HUE~
+                    from.SendLocalizedMessage(1158862, $"{hue}"); // That object is hue ~1_HUE~
                 }
                 else if (targeted is Item item && CheckUse(from))
                 {
@@ -254,7 +254,7 @@ namespace Server.Items
                             }
                         }
                     }
-                    else if (item is Banner && m_Decorator.Command != DecorateCommand.Turn)
+                    else if ((item is Banner || item is DecorativeShardShield) && m_Decorator.Command != DecorateCommand.Turn)
                     {
                         isDecorableComponent = true;
                     }
@@ -359,7 +359,7 @@ namespace Server.Items
             {
                 int floorZ = GetFloorZ(item);
 
-                if (floorZ > int.MinValue && item.Z < (floorZ + 15)) // Confirmed : no height checks here
+                if (floorZ > int.MinValue && item.Z < floorZ + 15) // Confirmed : no height checks here
                     item.Location = new Point3D(item.Location, item.Z + 1);
                 else
                     from.SendLocalizedMessage(1042274); // You cannot raise it up any higher.
