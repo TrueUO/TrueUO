@@ -1259,6 +1259,8 @@ namespace Server.Gumps
                                              * in the house will be transported to a Moving Crate. Deed-based house add-ons will be converted back into deeds. Vendors and barkeeps will
                                              * also be stored in the Moving Crate. Are you sure you wish to continue?
                                             */
+                                            from.CloseGump(typeof(HouseSwapGump));
+                                            from.CloseGump(typeof(WarningGump));
                                             from.SendGump(new WarningGump(1060635, 30720, 1158658, 32512, 420, 280, SwapHouse_Callback, m_House));
                                         }
                                     }
