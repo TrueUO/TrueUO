@@ -31,9 +31,6 @@ namespace Server.Items
         {
         }
 
-
-        public override string TranslocationItemName => "greater bracelet of binding";
-
         public override void AddNameProperty(ObjectPropertyList list)
         {
             list.Add(1151769); // Greater Bracelet of Binding
