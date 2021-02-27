@@ -38,28 +38,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1);//version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
-
-            if (version < 1)
-            {
-                if (this is Aegis)
-                    return;
-
-                // The 15 bonus points to resistances are not applied to shields on OSI.
-                PhysicalBonus = 0;
-                FireBonus = 0;
-                ColdBonus = 0;
-                PoisonBonus = 0;
-                EnergyBonus = 0;
-            }
+            reader.ReadInt();
         }
 
         public override void AddNameProperties(ObjectPropertyList list)
@@ -181,6 +166,11 @@ namespace Server.Items
                         case 6: Attributes.SpellChanneling += attrInfo.ShieldSpellChanneling; break;
                     }
                 }
+            }
+
+            if (Attributes.SpellChanneling > 0 && Attributes.CastSpeed != -1)
+            {
+                Attributes.CastSpeed -= 1;
             }
         }
 
