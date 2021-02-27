@@ -66,11 +66,12 @@ namespace Server.Items
                 InvalidateProperties();
             }
         }
+
         [CommandProperty(AccessLevel.GameMaster)]
         public int MaxCharges => 20;
         [CommandProperty(AccessLevel.GameMaster)]
         public int MaxRecharges => 255;
-        public string TranslocationItemName => "crystal ball of pet summoning";
+
         [CommandProperty(AccessLevel.GameMaster)]
         public BaseCreature Pet
         {

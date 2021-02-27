@@ -9,7 +9,6 @@ namespace Server.Items
         int Recharges { get; set; }
         int MaxCharges { get; }
         int MaxRecharges { get; }
-        string TranslocationItemName { get; }
     }
 
     public class PowderOfTranslocation : Item, ICommodity
@@ -52,15 +51,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
         }
 
         private class InternalTarget : Target
@@ -110,8 +107,7 @@ namespace Server.Items
 
                         if (transItem is Item item)
                         {
-                            // The ~1_translocationItem~ glows with green energy and absorbs magical power from the powder.
-                            MessageHelper.SendLocalizedMessageTo(item, from, 1054139, transItem.TranslocationItemName, 0x43);
+                            MessageHelper.SendLocalizedMessageTo(item, from, 1054139, "item", 0x43); // The ~1_translocationItem~ glows with green energy and absorbs magical power from the powder.
                         }
                     }
                 }

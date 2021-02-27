@@ -34,6 +34,7 @@ namespace Server.Items
         }
 
         private delegate void BraceletCallback(Mobile from);
+
         [CommandProperty(AccessLevel.GameMaster)]
         public int Charges
         {
@@ -50,6 +51,7 @@ namespace Server.Items
                 InvalidateProperties();
             }
         }
+
         [CommandProperty(AccessLevel.GameMaster)]
         public int Recharges
         {
@@ -73,8 +75,6 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public virtual int MaxRecharges => -1;
 
-        public virtual string TranslocationItemName => "bracelet of binding";
-
         [CommandProperty(AccessLevel.GameMaster)]
         public string Inscription
         {
@@ -85,6 +85,7 @@ namespace Server.Items
                 InvalidateProperties();
             }
         }
+
         [CommandProperty(AccessLevel.GameMaster)]
         public BraceletOfBinding Bound
         {
