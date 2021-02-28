@@ -35,18 +35,13 @@ namespace Server
 
         private static readonly Type[] m_SAArmorTypes =
         {
+            typeof(GargishClothChestArmor), typeof(GargishClothArmsArmor), typeof(GargishClothKiltArmor), typeof(GargishClothLegsArmor),
             typeof(GargishLeatherChest), typeof(GargishLeatherLegs), typeof(GargishLeatherArms), typeof(GargishLeatherKilt),
             typeof(GargishStoneChest), typeof(GargishStoneLegs), typeof(GargishStoneArms),
             typeof(GargishStoneKilt), typeof(GargishPlateChest), typeof(GargishPlateLegs), typeof(GargishPlateArms),
             typeof(GargishPlateKilt), typeof(GargishNecklace), typeof( GargishEarrings )
         };
         public static Type[] SAArmorTypes => m_SAArmorTypes;
-
-        private static readonly Type[] m_SAClothingTypes =
-        {
-            typeof(GargishClothChestArmor), typeof(GargishClothArmsArmor), typeof(GargishClothKiltArmor), typeof(GargishClothLegsArmor)
-        };
-        public static Type[] SAClothingTypes => m_SAClothingTypes;
         #endregion
 
         #region ML equipment
@@ -330,14 +325,11 @@ namespace Server
         public static Type[] TavarasJournalTypes => m_TavarasJournalTypes;
 		#endregion
 		
-        private static readonly Type[] m_NewWandTypes =
+        private static readonly Type[] m_WandTypes =
         {
             typeof(FireballWand), typeof(LightningWand), typeof(MagicArrowWand), typeof(GreaterHealWand), typeof(HarmWand),
             typeof(HealWand)
         };
-        public static Type[] NewWandTypes => m_NewWandTypes;
-
-        private static readonly Type[] m_WandTypes = { typeof(ClumsyWand), typeof(FeebleWand), typeof(ManaDrainWand), typeof(WeaknessWand) };
         public static Type[] WandTypes => m_WandTypes;
 
         private static readonly Type[] m_LibraryBookTypes =
@@ -361,16 +353,11 @@ namespace Server
         #region Accessors
         public static BaseWand RandomWand()
         {
-            return Construct(m_NewWandTypes) as BaseWand;
+            return Construct(m_WandTypes) as BaseWand;
         }
 
-        public static BaseClothing RandomClothing(bool inTokuno = false, bool isMondain = false, bool isStygian = false)
+        public static BaseClothing RandomClothing(bool inTokuno = false, bool isMondain = false)
         {
-            if (isStygian)
-            {
-                return Construct(m_SAClothingTypes, m_ClothingTypes) as BaseClothing;
-            }
-
             if (isMondain)
             {
                 return Construct(m_MLClothingTypes, m_ClothingTypes) as BaseClothing;
@@ -703,11 +690,6 @@ namespace Server
             return Construct(types, Utility.RandomMinMax(minIndex, maxIndex)) as SpellScroll;
         }
 
-        public static BaseBook RandomGrimmochJournal()
-        {
-            return Construct(m_GrimmochJournalTypes) as BaseBook;
-        }
-
         public static BaseBook RandomLysanderNotebook()
         {
             return Construct(m_LysanderNotebookTypes) as BaseBook;
@@ -716,11 +698,6 @@ namespace Server
         public static BaseBook RandomTavarasJournal()
         {
             return Construct(m_TavarasJournalTypes) as BaseBook;
-        }
-
-        public static BaseBook RandomLibraryBook()
-        {
-            return Construct(m_LibraryBookTypes) as BaseBook;
         }
 
         public static BaseTalisman RandomTalisman()
