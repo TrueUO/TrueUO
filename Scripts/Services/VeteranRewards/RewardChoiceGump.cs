@@ -2,18 +2,30 @@ using Server.Gumps;
 using Server.Network;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Server.Engines.VeteranRewards
 {
     public class RewardChoiceGump : Gump
     {
         private readonly Mobile m_From;
+        private readonly int m_CategoryIndex;
+        private readonly int m_Page;
+
         public RewardChoiceGump(Mobile from)
-            : base(0, 0)
+            : this(from, 0, 0)
+        {
+        }
+
+        public RewardChoiceGump(Mobile from, int cat, int page)
+            : base(100, 100)
         {
             m_From = from;
 
             from.CloseGump(typeof(RewardChoiceGump));
+
+            m_CategoryIndex = cat;
+            m_Page = page;
 
             RenderBackground();
             RenderCategories();
@@ -25,12 +37,22 @@ namespace Server.Engines.VeteranRewards
 
             if (buttonID == 0)
             {
-                int cur, max;
-
-                RewardSystem.ComputeRewardInfo(m_From, out cur, out max);
+                RewardSystem.ComputeRewardInfo(m_From, out int cur, out int max);
 
                 if (cur < max)
                     m_From.SendGump(new RewardNoticeGump(m_From));
+            }
+            else if (info.ButtonID == 1000)
+            {
+                m_From.SendGump(new RewardChoiceGump(m_From, m_CategoryIndex, m_Page+1));
+            }
+            else if (info.ButtonID == 1001)
+            {
+                m_From.SendGump(new RewardChoiceGump(m_From, m_CategoryIndex, m_Page - 1));
+            }
+            else if (buttonID >= 19999)
+            {
+                m_From.SendGump(new RewardChoiceGump(m_From, buttonID - 19999, 0));
             }
             else
             {
@@ -62,91 +84,36 @@ namespace Server.Engines.VeteranRewards
         {
             AddPage(0);
 
-            AddBackground(10, 10, 600, 450, 2600);
+            AddBackground(0, 0, 820, 620, 0x6DB);
+            AddHtmlLocalized(10, 10, 800, 18, 1114513, "#1159424", 0x43FF, false, false); // Ultima Online Veteran Rewards Program
+            AddHtmlLocalized(10, 37, 800, 72, 1114513, "#1159425", 0x43FF, false, false); // Thank you for being part of the Ultima Online community! As a token of our appreciation, you may select from the following in-game reward items listed below. The gift items will be attributed to the character you have logged-in with on the shard you are on when you choose the item(s). The number of rewards you are entitled to are listed below and are for your entire account. To read more about these rewards before making a selection, feel free to visit the <A HREF="https://uo.com/wiki/ultima-online-wiki/items/veteran-rewards/">uo.com website</A>.
 
-            AddButton(530, 415, 4017, 4019, 0, GumpButtonType.Reply, 0);
+            RewardSystem.ComputeRewardInfo(m_From, out int cur, out int max);
 
-            AddButton(60, 415, 4014, 4016, 0, GumpButtonType.Page, 1);
-            AddHtmlLocalized(95, 415, 200, 20, 1049755, false, false); // Main Menu
+            AddHtmlLocalized(160, 118, 650, 18, 1159426, string.Format("{0}@{1}", cur.ToString(), (max - cur).ToString()), 0x7FF0, false, false); // You have already chosen ~1_COUNT~ rewards.  You have ~2_COUNT~ remaining rewards to choose.
+            AddECHandleInput();
         }
 
         private void RenderCategories()
         {
-            TimeSpan rewardInterval = RewardSystem.RewardInterval;
-
-            string intervalAsString;
-
-            if (rewardInterval == TimeSpan.FromDays(30.0))
-                intervalAsString = "month";
-            else if (rewardInterval == TimeSpan.FromDays(60.0))
-                intervalAsString = "two months";
-            else if (rewardInterval == TimeSpan.FromDays(90.0))
-                intervalAsString = "three months";
-            else if (rewardInterval == TimeSpan.FromDays(365.0))
-                intervalAsString = "year";
-            else
-                intervalAsString = string.Format("{0} day{1}", rewardInterval.TotalDays, rewardInterval.TotalDays == 1 ? "" : "s");
-
-            AddPage(1);
-
-            AddHtml(60, 35, 500, 70, "<B>Ultima Online Rewards Program</B><BR>" +
-                                          "Thank you for being a part of the Ultima Online community for a full " + intervalAsString + ".  " +
-                                          "As a token of our appreciation,  you may select from the following in-game reward items listed below.  " +
-                                          "The gift items will be attributed to the character you have logged-in with on the shard you are on when you chose the item(s).  " +
-                                          "The number of rewards you are entitled to are listed below and are for your entire account.  " +
-                                          "To read more about these rewards before making a selection, feel free to visit the uo.com site at " +
-                                          "<A HREF=\"http://www.uo.com/rewards\">http://www.uo.com/rewards</A>.", true, true);
-
-            int cur, max;
-
-            RewardSystem.ComputeRewardInfo(m_From, out cur, out max);
-
-            AddHtmlLocalized(60, 105, 300, 35, 1006006, false, false); // Your current total of rewards to choose:
-            AddLabel(370, 107, 50, (max - cur).ToString());
-
-            AddHtmlLocalized(60, 140, 300, 35, 1006007, false, false); // You have already chosen:
-            AddLabel(370, 142, 50, cur.ToString());
-
             RewardCategory[] categories = RewardSystem.Categories;
-
-            int page = 2;
 
             for (int i = 0; i < categories.Length; ++i)
             {
                 if (!RewardSystem.HasAccess(m_From, categories[i]))
                 {
-                    page += 1;
                     continue;
                 }
 
-                AddButton(100, 180 + (i * 40), 4005, 4005, 0, GumpButtonType.Page, page);
-
-                page += PagesPerCategory(categories[i]);
+                AddButton(18 + (i * 130), 160, m_CategoryIndex == i ? 0x635 : 0x634, 0x637, 20000 + i, GumpButtonType.Reply, 0);
 
                 if (categories[i].NameString != null)
-                    AddHtml(135, 180 + (i * 40), 300, 20, categories[i].NameString, false, false);
+                    AddHtml(18 + (i * 130), 162, 125, 18, string.Format("<div align=CENTER>{0}</div>", categories[i].NameString), false, false);
                 else
-                    AddHtmlLocalized(135, 180 + (i * 40), 300, 20, categories[i].Name, false, false);
+                    AddHtmlLocalized(18 + (i * 130), 162, 125, 18, 1114513, string.Format("#{0}", categories[i].Name), 0xC63, false, false);
             }
 
-            page = 2;
-
-            for (int i = 0; i < categories.Length; ++i)
-                RenderCategory(categories[i], i, ref page);
-        }
-
-        private int PagesPerCategory(RewardCategory category)
-        {
-            List<RewardEntry> entries = category.Entries;
-            int j = 0, i = 0;
-
-            for (j = 0; j < entries.Count; j++)
-            {
-                if (RewardSystem.HasAccess(m_From, entries[j]))
-                    i++;
-            }
-
-            return (int)Math.Ceiling(i / 24.0);
+            RenderCategory(categories[m_CategoryIndex]);
         }
 
         private int GetButtonID(int type, int index)
@@ -154,13 +121,11 @@ namespace Server.Engines.VeteranRewards
             return 2 + (index * 20) + type;
         }
 
-        private void RenderCategory(RewardCategory category, int index, ref int page)
+        private void RenderCategory(RewardCategory category)
         {
-            AddPage(page);
+            List<RewardEntry> entries = category.Entries;            
 
-            List<RewardEntry> entries = category.Entries;
-
-            int i = 0;
+            Dictionary<int, RewardEntry> l = new Dictionary<int, RewardEntry>();
 
             for (int j = 0; j < entries.Count; ++j)
             {
@@ -169,29 +134,29 @@ namespace Server.Engines.VeteranRewards
                 if (!RewardSystem.HasAccess(m_From, entry))
                     continue;
 
-                if (i == 24)
-                {
-                    AddButton(305, 415, 0xFA5, 0xFA7, 0, GumpButtonType.Page, ++page);
-                    AddHtmlLocalized(340, 415, 200, 20, 1011066, false, false); // Next page
-
-                    AddPage(page);
-
-                    AddButton(270, 415, 0xFAE, 0xFB0, 0, GumpButtonType.Page, page - 1);
-                    AddHtmlLocalized(185, 415, 200, 20, 1011067, false, false); // Previous page
-
-                    i = 0;
-                }
-
-                AddButton(55 + ((i / 12) * 250), 80 + ((i % 12) * 25), 5540, 5541, GetButtonID(index, j), GumpButtonType.Reply, 0);
-
-                if (entry.NameString != null)
-                    AddHtml(80 + ((i / 12) * 250), 80 + ((i % 12) * 25), 250, 20, entry.NameString, false, false);
-                else
-                    AddHtmlLocalized(80 + ((i / 12) * 250), 80 + ((i % 12) * 25), 250, 20, entry.Name, false, false);
-                ++i;
+                l[j] = entry;
             }
 
-            page += 1;
+            int rewardcount = l.Count;
+
+            if ((m_Page + 1) * 60 < rewardcount)
+                AddButton(554, 10, 0x15E1, 0x15E5, 1000, GumpButtonType.Reply, 0); // Next Page Button
+
+            if (m_Page > 0)
+                AddButton(554, 10, 0x15E3, 0x15E7, 1001, GumpButtonType.Reply, 0); // Previous Page Button
+
+            for (int i = 0, index = m_Page * 60; i < 60 && index < rewardcount; ++i, ++index)
+            {
+                var item = l.ElementAt(index);
+                RewardEntry entry = item.Value;
+
+                if (entry.NameString != null)
+                    AddHtml(50 + ((i / 20) * 250), 200 + ((i % 20) * 18), 200, 18, entry.NameString, false, false);
+                else
+                    AddHtmlLocalized(50 + ((i / 20) * 250), 200 + ((i % 20) * 18), 200, 18, entry.Name, 0x7FFF, false, false);
+
+                AddButton(30 + ((i / 20) * 250), 200 + ((i % 20) * 18), 0x845, 0x846, GetButtonID(m_CategoryIndex, item.Key), GumpButtonType.Reply, 0);
+            }
         }
     }
 }

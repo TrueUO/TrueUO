@@ -312,6 +312,7 @@ namespace Server.Items
                     */
 
                     m.SendGump(g);
+                    m.SendSound(m.Female ? 0x30B : 0x41A);
 
                     m.PrivateOverheadMessage(MessageType.Regular, 0x47E, 1157722, "Carpentry", m.NetState); // *Your proficiency in ~1_SKILL~ reveals more about the item*
                 }

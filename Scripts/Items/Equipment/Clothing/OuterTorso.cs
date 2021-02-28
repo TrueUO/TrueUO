@@ -861,7 +861,7 @@ namespace Server.Items
             base.GetProperties(list);
 
             if (m_IsRewardItem)
-                list.Add(RewardSystem.GetRewardYearLabel(this, new object[] { Hue, m_LabelNumber })); // X Year Veteran Reward
+                list.Add(RewardSystem.GetRewardYearHue(Hue)); // X Year Veteran Reward
         }
 
         public override bool CanEquip(Mobile m)
@@ -961,7 +961,7 @@ namespace Server.Items
             base.GetProperties(list);
 
             if (m_IsRewardItem)
-                list.Add(RewardSystem.GetRewardYearLabel(this, new object[] { Hue, m_LabelNumber })); // X Year Veteran Reward
+                list.Add(RewardSystem.GetRewardYearHue(Hue)); // X Year Veteran Reward
         }
 
         public override bool CanEquip(Mobile m)
