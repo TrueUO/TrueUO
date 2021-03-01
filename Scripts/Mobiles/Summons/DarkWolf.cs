@@ -43,11 +43,6 @@ namespace Server.Mobiles
         {
         }
 
-        public static readonly Type[] ControlTypes =
-        {
-            typeof(DireWolf), typeof(GreyWolf), typeof(TimberWolf), typeof(WhiteWolf)
-        };
-
         public static bool CheckMastery(Mobile tamer, BaseCreature creature)
         {
             BaseCreature familiar = (BaseCreature)SummonFamiliarSpell.Table[tamer];
