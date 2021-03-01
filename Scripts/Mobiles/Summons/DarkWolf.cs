@@ -1,6 +1,5 @@
 using Server.Spells.Necromancy;
 using System;
-using System.Linq;
 
 namespace Server.Mobiles
 {
@@ -46,14 +45,14 @@ namespace Server.Mobiles
 
         public static readonly Type[] ControlTypes =
         {
-            typeof(DireWolf), typeof(GreyWolf), typeof(TimberWolf), typeof(WhiteWolf), typeof(BakeKitsune)
+            typeof(DireWolf), typeof(GreyWolf), typeof(TimberWolf), typeof(WhiteWolf)
         };
 
         public static bool CheckMastery(Mobile tamer, BaseCreature creature)
         {
             BaseCreature familiar = (BaseCreature)SummonFamiliarSpell.Table[tamer];
 
-            if (familiar != null && !familiar.Deleted && familiar is DarkWolfFamiliar && ControlTypes.Any(t => t == creature.GetType()))
+            if (familiar != null && !familiar.Deleted && familiar is DarkWolfFamiliar && (creature is DireWolf || creature is GreyWolf || creature is TimberWolf || creature is WhiteWolf))
             {
                 return true;
             }
@@ -66,17 +65,23 @@ namespace Server.Mobiles
             base.OnThink();
 
             if (DateTime.UtcNow < m_NextRestore)
+            {
                 return;
+            }
 
             m_NextRestore = DateTime.UtcNow + TimeSpan.FromSeconds(2.0);
 
             Mobile caster = ControlMaster;
 
             if (caster == null)
+            {
                 caster = SummonMaster;
+            }
 
             if (caster != null)
+            {
                 ++caster.Stam;
+            }
         }
 
         public override void Serialize(GenericWriter writer)
