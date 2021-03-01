@@ -67,12 +67,14 @@ namespace Server.Items
 
                 BaseWeapon.BlockEquip(defender, BlockEquipDuration);
 
-                if (defender is BaseCreature creature && creature is BritannianInfantry)
+                if (defender is BaseCreature && defender is BritannianInfantry)
                 {
                     Timer.DelayCall(BlockEquipDuration + TimeSpan.FromSeconds(Utility.RandomMinMax(3, 10)), () =>
                     {
                         if (toDisarm != null && !toDisarm.Deleted && toDisarm.IsChildOf(defender.Backpack))
+                        {
                             defender.EquipItem(toDisarm);
+                        }
                     });
                 }
 
