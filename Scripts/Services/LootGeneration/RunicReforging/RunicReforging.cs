@@ -2376,14 +2376,14 @@ namespace Server.Items
                         if (.95 >= chance)
                             return 0;
 
-                        switch (Utility.Random(item is BaseJewel ? 6 : 8))
+                        switch (Utility.Random(item is BaseJewel ? 5 : 8))
                         {
                             case 0: neg.Prized = 1; break;
                             case 1: neg.Antique = 1; break;
                             case 2:
-                            case 3: neg.Unwieldly = 1; break;
+                            case 3: item.LootType = LootType.Cursed; break;
                             case 4:
-                            case 5: item.LootType = LootType.Cursed; break;
+                            case 5: neg.Unwieldly = 1; break;
                             case 6:
                             case 7: neg.Massive = 1; break;
                         }
@@ -2399,7 +2399,7 @@ namespace Server.Items
 
                         if (.75 > chance)
                         {
-                            switch (Utility.Random(item is BaseJewel ? 4 : 6))
+                            switch (Utility.Random(item is BaseJewel ? 3 : 6))
                             {
                                 case 0: neg.Prized = 1; break;
                                 case 1: neg.Antique = 1; break;
@@ -2448,14 +2448,14 @@ namespace Server.Items
 
                         if (.6 > chance)
                         {
-                            switch (Utility.Random(item is BaseJewel ? 6 : 8))
+                            switch (Utility.Random(item is BaseJewel ? 5 : 8))
                             {
                                 case 0: neg.Prized = 1; break;
                                 case 1: neg.Antique = 1; break;
                                 case 2:
-                                case 3: neg.Unwieldly = 1; break;
+                                case 3: item.LootType = LootType.Cursed; break;
                                 case 4:
-                                case 5: item.LootType = LootType.Cursed; break;
+                                case 5: neg.Unwieldly = 1; break;
                                 case 6:
                                 case 7: neg.Massive = 1; break;
                             }
