@@ -67,7 +67,7 @@ namespace Server.Items
 
                 BaseWeapon.BlockEquip(defender, BlockEquipDuration);
 
-                if (defender is BaseCreature && defender is BritannianInfantry)
+                if (defender is BritannianInfantry)
                 {
                     Timer.DelayCall(BlockEquipDuration + TimeSpan.FromSeconds(Utility.RandomMinMax(3, 10)), () =>
                     {
