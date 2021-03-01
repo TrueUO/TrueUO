@@ -24,10 +24,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public CraftResource Resource
         {
-            get
-            {
-                return m_Resource;
-            }
+            get => m_Resource;
             set
             {
                 m_Resource = value;
@@ -36,6 +33,7 @@ namespace Server.Items
         }
 
         public override double DefaultWeight => 1.0;
+
         public override int LabelNumber
         {
             get
@@ -99,10 +97,7 @@ namespace Server.Items
         public Granite(int amount)
             : base(CraftResource.Iron)
         {
-            if (Stackable)
-                Amount = amount;
-            else
-                Amount = 1;
+            Amount = Stackable ? amount : 1;
         }
 
         public Granite(Serial serial)
@@ -135,10 +130,7 @@ namespace Server.Items
         public DullCopperGranite(int amount)
             : base(CraftResource.DullCopper)
         {
-            if (Stackable)
-                Amount = amount;
-            else
-                Amount = 1;
+            Amount = Stackable ? amount : 1;
         }
 
         public DullCopperGranite(Serial serial)
@@ -171,10 +163,7 @@ namespace Server.Items
         public ShadowIronGranite(int amount)
             : base(CraftResource.ShadowIron)
         {
-            if (Stackable)
-                Amount = amount;
-            else
-                Amount = 1;
+            Amount = Stackable ? amount : 1;
         }
 
         public ShadowIronGranite(Serial serial)
@@ -207,10 +196,7 @@ namespace Server.Items
         public CopperGranite(int amount)
             : base(CraftResource.Copper)
         {
-            if (Stackable)
-                Amount = amount;
-            else
-                Amount = 1;
+            Amount = Stackable ? amount : 1;
         }
 
         public CopperGranite(Serial serial)
@@ -243,10 +229,7 @@ namespace Server.Items
         public BronzeGranite(int amount)
             : base(CraftResource.Bronze)
         {
-            if (Stackable)
-                Amount = amount;
-            else
-                Amount = 1;
+            Amount = Stackable ? amount : 1;
         }
 
         public BronzeGranite(Serial serial)
@@ -279,10 +262,7 @@ namespace Server.Items
         public GoldGranite(int amount)
             : base(CraftResource.Gold)
         {
-            if (Stackable)
-                Amount = amount;
-            else
-                Amount = 1;
+            Amount = Stackable ? amount : 1;
         }
 
         public GoldGranite(Serial serial)
@@ -315,10 +295,7 @@ namespace Server.Items
         public AgapiteGranite(int amount)
             : base(CraftResource.Agapite)
         {
-            if (Stackable)
-                Amount = amount;
-            else
-                Amount = 1;
+            Amount = Stackable ? amount : 1;
         }
 
         public AgapiteGranite(Serial serial)
@@ -351,10 +328,7 @@ namespace Server.Items
         public VeriteGranite(int amount)
             : base(CraftResource.Verite)
         {
-            if (Stackable)
-                Amount = amount;
-            else
-                Amount = 1;
+            Amount = Stackable ? amount : 1;
         }
 
         public VeriteGranite(Serial serial)
@@ -387,10 +361,7 @@ namespace Server.Items
         public ValoriteGranite(int amount)
             : base(CraftResource.Valorite)
         {
-            if (Stackable)
-                Amount = amount;
-            else
-                Amount = 1;
+            Amount = Stackable ? amount : 1;
         }
 
         public ValoriteGranite(Serial serial)
