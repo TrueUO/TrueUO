@@ -369,7 +369,6 @@ namespace Server.Items
             blue.ArmorPoisonResist = -3;
             blue.ArmorEnergyResist = 11;
 
-            #region Mondain's Legacy
             CraftAttributeInfo oak = OakWood = new CraftAttributeInfo();
 
             oak.ArmorPhysicalResist = 3;
@@ -504,7 +503,6 @@ namespace Server.Items
             frostwood.WeaponDamage = 12;
 
             frostwood.OtherSpellChanneling = 1;
-            #endregion
         }
     }
 
@@ -735,96 +733,5 @@ namespace Server.Items
 
             return info == null ? string.Empty : info.Name;
         }
-
-        /// <summary>
-        /// Returns the <see cref="CraftResource"/> value which represents '<paramref name="info"/>' -or- CraftResource.None if unable to convert.
-        /// </summary>
-        public static CraftResource GetFromOreInfo(OreInfo info)
-        {
-            if (info.Name.IndexOf("Spined") >= 0)
-                return CraftResource.SpinedLeather;
-            if (info.Name.IndexOf("Horned") >= 0)
-                return CraftResource.HornedLeather;
-            if (info.Name.IndexOf("Barbed") >= 0)
-                return CraftResource.BarbedLeather;
-            if (info.Name.IndexOf("Leather") >= 0)
-                return CraftResource.RegularLeather;
-
-            if (info.Level == 0)
-                return CraftResource.Iron;
-            if (info.Level == 1)
-                return CraftResource.DullCopper;
-            if (info.Level == 2)
-                return CraftResource.ShadowIron;
-            if (info.Level == 3)
-                return CraftResource.Copper;
-            if (info.Level == 4)
-                return CraftResource.Bronze;
-            if (info.Level == 5)
-                return CraftResource.Gold;
-            if (info.Level == 6)
-                return CraftResource.Agapite;
-            if (info.Level == 7)
-                return CraftResource.Verite;
-            if (info.Level == 8)
-                return CraftResource.Valorite;
-
-            return CraftResource.None;
-        }
-
-        /// <summary>
-        /// Returns the <see cref="CraftResource"/> value which represents '<paramref name="info"/>', using '<paramref name="material"/>' to help resolve leather OreInfo instances.
-        /// </summary>
-        public static CraftResource GetFromOreInfo(OreInfo info, ArmorMaterialType material)
-        {
-            if (material == ArmorMaterialType.Studded || material == ArmorMaterialType.Leather || material == ArmorMaterialType.Spined ||
-                material == ArmorMaterialType.Horned || material == ArmorMaterialType.Barbed)
-            {
-                if (info.Level == 0)
-                    return CraftResource.RegularLeather;
-                if (info.Level == 1)
-                    return CraftResource.SpinedLeather;
-                if (info.Level == 2)
-                    return CraftResource.HornedLeather;
-                if (info.Level == 3)
-                    return CraftResource.BarbedLeather;
-
-                return CraftResource.None;
-            }
-
-            return GetFromOreInfo(info);
-        }
-    }
-
-    // NOTE: This class is only for compatability with very old RunUO versions.
-    // No changes to it should be required for custom resources.
-    public class OreInfo
-    {
-        public static readonly OreInfo Iron = new OreInfo(0, 0x000, "Iron");
-        public static readonly OreInfo DullCopper = new OreInfo(1, 0x973, "Dull Copper");
-        public static readonly OreInfo ShadowIron = new OreInfo(2, 0x966, "Shadow Iron");
-        public static readonly OreInfo Copper = new OreInfo(3, 0x96D, "Copper");
-        public static readonly OreInfo Bronze = new OreInfo(4, 0x972, "Bronze");
-        public static readonly OreInfo Gold = new OreInfo(5, 0x8A5, "Gold");
-        public static readonly OreInfo Agapite = new OreInfo(6, 0x979, "Agapite");
-        public static readonly OreInfo Verite = new OreInfo(7, 0x89F, "Verite");
-        public static readonly OreInfo Valorite = new OreInfo(8, 0x8AB, "Valorite");
-
-        private readonly int m_Level;
-        private readonly int m_Hue;
-        private readonly string m_Name;
-
-        public OreInfo(int level, int hue, string name)
-        {
-            m_Level = level;
-            m_Hue = hue;
-            m_Name = name;
-        }
-
-        public int Level => m_Level;
-
-        public int Hue => m_Hue;
-
-        public string Name => m_Name;
     }
 }
