@@ -741,7 +741,8 @@ namespace Server
             typeof(WoodenBookcase), typeof(Countertop), typeof(Mailbox), typeof(DecorativeMagesCrystalBall), typeof(DecorativeMageThrone),
             typeof(DecorativeMagicBookStand), typeof(DecorativeSpecimenShelve), typeof(Feedbag), typeof(ChestOfDrawers), typeof(BarrelMailbox),
             typeof(DolphinMailbox), typeof(ScarecrowMailbox), typeof(SquirrelMailbox), typeof(FootedChestOfDrawers), typeof(CustomizableRoundedDoorMat),
-            typeof(CowStatue), typeof(DecorativeStableFencing), typeof(OrnateBedDeed), typeof(FourPostBedDeed), typeof(FormalDiningTableDeed)
+            typeof(CowStatue), typeof(DecorativeStableFencing), typeof(OrnateBedDeed), typeof(FourPostBedDeed), typeof(FormalDiningTableDeed),
+            typeof(FluffySpongeDeed), typeof(ShelfSpongeDeed), typeof(CactusSpongeDeed), typeof(BarrelSpongeDeed)
         };
 
         public static bool Check(Item item)
