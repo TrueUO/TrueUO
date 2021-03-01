@@ -1,20 +1,11 @@
 namespace Server.Items
 {
-    public class ShelfSpongeAddon : BaseAddon, IDyable
+    public class ShelfSpongeAddon : BaseAddon
     {
         [Constructable]
         public ShelfSpongeAddon()
         {
             AddComponent(new AddonComponent(0x4C2F), 0, 0, 0);
-        }
-
-        public virtual bool Dye(Mobile from, DyeTub sender)
-        {
-            if (Deleted)
-                return false;
-
-            Hue = sender.DyedHue;
-            return true;
         }
 
         public ShelfSpongeAddon(Serial serial)
@@ -33,10 +24,11 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
+    [Furniture]
     public class ShelfSpongeDeed : BaseAddonDeed
     {
         public override int LabelNumber => 1098375;  // Shelf Sponge
@@ -63,7 +55,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

@@ -1,20 +1,11 @@
 namespace Server.Items
 {
-    public class CactusSpongeAddon : BaseAddon, IDyable
+    public class CactusSpongeAddon : BaseAddon
     {
         [Constructable]
         public CactusSpongeAddon()
         {
             AddComponent(new AddonComponent(0x4C2E), 0, 0, 0);
-        }
-
-        public virtual bool Dye(Mobile from, DyeTub sender)
-        {
-            if (Deleted)
-                return false;
-
-            Hue = sender.DyedHue;
-            return true;
         }
 
         public CactusSpongeAddon(Serial serial)
@@ -33,10 +24,11 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
+    [Furniture]
     public class CactusSpongeDeed : BaseAddonDeed
     {
         public override int LabelNumber => 1098374;  // Cactus Sponge
@@ -63,7 +55,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }
