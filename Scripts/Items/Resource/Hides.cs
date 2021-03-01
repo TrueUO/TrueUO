@@ -49,12 +49,13 @@ namespace Server.Items
                 return 1047023;
             }
         }
+
         TextDefinition ICommodity.Description => LabelNumber;
         bool ICommodity.IsDeedable => true;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1); // version
 
             writer.Write((int)m_Resource);
@@ -63,28 +64,9 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 2: // Reset from Resource System
-                    m_Resource = DefaultResource;
-                    reader.ReadString();
-                    break;
-                case 1:
-                    {
-                        m_Resource = (CraftResource)reader.ReadInt();
-                        break;
-                    }
-                case 0:
-                    {
-                        OreInfo info = new OreInfo(reader.ReadInt(), reader.ReadInt(), reader.ReadString());
-
-                        m_Resource = CraftResources.GetFromOreInfo(info);
-                        break;
-                    }
-            }
+            m_Resource = (CraftResource)reader.ReadInt();
         }
 
         public override void AddNameProperty(ObjectPropertyList list)

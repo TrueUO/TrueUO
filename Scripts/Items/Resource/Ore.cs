@@ -29,7 +29,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1); // version
 
             writer.Write((int)m_Resource);
@@ -38,62 +37,9 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 2: // Reset from Resource System
-                    m_Resource = DefaultResource;
-                    reader.ReadString();
-                    break;
-                case 1:
-                    {
-                        m_Resource = (CraftResource)reader.ReadInt();
-                        break;
-                    }
-                case 0:
-                    {
-                        OreInfo info;
-
-                        switch (reader.ReadInt())
-                        {
-                            case 0:
-                                info = OreInfo.Iron;
-                                break;
-                            case 1:
-                                info = OreInfo.DullCopper;
-                                break;
-                            case 2:
-                                info = OreInfo.ShadowIron;
-                                break;
-                            case 3:
-                                info = OreInfo.Copper;
-                                break;
-                            case 4:
-                                info = OreInfo.Bronze;
-                                break;
-                            case 5:
-                                info = OreInfo.Gold;
-                                break;
-                            case 6:
-                                info = OreInfo.Agapite;
-                                break;
-                            case 7:
-                                info = OreInfo.Verite;
-                                break;
-                            case 8:
-                                info = OreInfo.Valorite;
-                                break;
-                            default:
-                                info = null;
-                                break;
-                        }
-
-                        m_Resource = CraftResources.GetFromOreInfo(info);
-                        break;
-                    }
-            }
+            m_Resource = (CraftResource)reader.ReadInt();
         }
 
         private static int RandomSize()
