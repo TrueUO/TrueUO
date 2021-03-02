@@ -1,7 +1,6 @@
 using Server.Mobiles;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -68,23 +67,20 @@ namespace Server.Items
 
                 BaseWeapon.BlockEquip(defender, BlockEquipDuration);
 
-                if (defender is BaseCreature && _AutoRearms.Any(t => t == defender.GetType()))
+                if (defender is BritannianInfantry)
                 {
                     Timer.DelayCall(BlockEquipDuration + TimeSpan.FromSeconds(Utility.RandomMinMax(3, 10)), () =>
                     {
                         if (toDisarm != null && !toDisarm.Deleted && toDisarm.IsChildOf(defender.Backpack))
+                        {
                             defender.EquipItem(toDisarm);
+                        }
                     });
                 }
 
                 AddImmunity(defender, attacker.Weapon is Fists ? TimeSpan.FromSeconds(10) : TimeSpan.FromSeconds(15));
             }
         }
-
-        private readonly Type[] _AutoRearms =
-        {
-            typeof(BritannianInfantry)
-        };
 
         public static List<Mobile> _Immunity;
 
