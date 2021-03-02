@@ -2295,8 +2295,8 @@ namespace Server.Items
 
         public static ReforgedSuffix ChooseRandomSuffix(Item item, int budget, ReforgedPrefix prefix)
         {
-            //int random = item is BaseWeapon ? m_Weapon[Utility.Random(m_Weapon.Length)] : m_Standard[Utility.Random(m_Standard.Length)];
             Dictionary<int, int> table;
+
             bool powerful = budget > 600;
 
             if (item is BaseWeapon)
@@ -2376,7 +2376,7 @@ namespace Server.Items
                         if (.95 >= chance)
                             return 0;
 
-                        switch (Utility.Random(item is BaseJewel ? 5 : 8))
+                        switch (Utility.Random(item is BaseJewel ? 4 : 8))
                         {
                             case 0: neg.Prized = 1; break;
                             case 1: neg.Antique = 1; break;
@@ -2448,7 +2448,7 @@ namespace Server.Items
 
                         if (.6 > chance)
                         {
-                            switch (Utility.Random(item is BaseJewel ? 5 : 8))
+                            switch (Utility.Random(item is BaseJewel ? 4 : 8))
                             {
                                 case 0: neg.Prized = 1; break;
                                 case 1: neg.Antique = 1; break;
