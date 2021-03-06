@@ -112,7 +112,8 @@ namespace Server.Mobiles
         Triton = Chivalry | Discordance | MageryMastery | Mysticism | Poisoning | Spellweaving | Bushido | Ninjitsu | BattleDefense | Bashing | Piercing | Slashing | WrestlingMastery,
         CoconutCrab = GreaterDragon | BattleDefense | Bashing | Piercing | Slashing | WrestlingMastery,
         Vollem = Variety1 | Chivalry | Discordance | MageryMastery | Mysticism | Poisoning | Spellweaving | BattleDefense | Tokuno,
-        Capybara = Poisoning | Piercing | Bashing | Slashing | WrestlingMastery
+        Capybara = Poisoning | Piercing | Bashing | Slashing | WrestlingMastery,
+        WildfireOstard = Chivalry | Discordance | Poisoning | Mysticism | Spellweaving | MageryMastery | Piercing | Bashing | Slashing | WrestlingMastery
     }
 
     public static class PetTrainingHelper
@@ -817,7 +818,8 @@ namespace Server.Mobiles
                 new TrainingDefinition(typeof(HungryCoconutCrab), Class.None, MagicalAbility.StandardClawedOrTailed, SpecialAbilityAnimalStandard, WepAbility1, AreaEffectNone, 1, 2),
                 new TrainingDefinition(typeof(SkeletalCat), Class.ClawedTailedAndNecromantic, MagicalAbility.Hellcat, SpecialAbilitySkeletalCat, WepAbility4, AreaEffectArea3, 2, 4),
                 new TrainingDefinition(typeof(CoconutCrab), Class.None, MagicalAbility.CoconutCrab, SpecialAbilityCoconutCrab, WepAbility2, AreaEffectArea2, 1, 3),
-                new TrainingDefinition(typeof(Capybara), Class.Clawed, MagicalAbility.Capybara, SpecialAbilityClawed, WepAbility1, AreaEffectNone, 1, 3)
+                new TrainingDefinition(typeof(Capybara), Class.Clawed, MagicalAbility.Capybara, SpecialAbilityClawed, WepAbility1, AreaEffectNone, 1, 3),
+                new TrainingDefinition(typeof(WildfireOstard), Class.MagicalAndClawed, MagicalAbility.WildfireOstard, SpecialAbilityPhoenix, WepAbility2, AreaEffectArea2, 4, 5)
             };
             #endregion
         }

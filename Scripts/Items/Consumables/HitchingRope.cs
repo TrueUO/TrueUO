@@ -5,21 +5,21 @@ namespace Server.Items
 {
     public class HitchingRope : Item
     {
+        public override int LabelNumber => 1071124; //  hitching rope
+
         [Constructable]
         public HitchingRope()
             : base(0x14F8)
         {
-            Hue = 0x41F; // guessed
-
-            Weight = 5;
+            Hue = 2418;
+            Weight = 10;
         }
 
         public HitchingRope(Serial serial)
             : base(serial)
         {
         }
-
-        public override int LabelNumber => 1071124;//  hitching rope
+        
         public override void OnDoubleClick(Mobile from)
         {
             if (IsChildOf(from.Backpack) || (from.InRange(GetWorldLocation(), 2) && Movable))
@@ -36,20 +36,19 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
-            writer.Write(0); // version
+            writer.Write(0);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         private class InternalTarget : Target
         {
             private readonly HitchingRope m_Rope;
+
             public InternalTarget(HitchingRope rope)
                 : base(-1, false, TargetFlags.None)
             {
@@ -61,15 +60,13 @@ namespace Server.Items
                 if (m_Rope.Deleted)
                     return;
 
-                if (!from.InRange(m_Rope.GetWorldLocation(), 2))
+                if (targeted is HitchingPost postItem)
                 {
-                    from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1019045); // I can't reach that.
-                }
-                else if (targeted is HitchingPost postItem)
-                {
-                    if (postItem.UsesRemaining >= 1)
+                    var maxuse = postItem.Replica ? 15 : 30;
+
+                    if (postItem.UsesRemaining >= maxuse)
                     {
-                        from.SendMessage("Hitching Rope cannot be applied at this time.", 0x59);
+                        from.SendLocalizedMessage(1038293); // It looks almost new.
                     }
                     else if (postItem.Replica && postItem.Charges <= 0 && postItem.UsesRemaining == 0)
                     {
@@ -78,19 +75,31 @@ namespace Server.Items
                     else
                     {
                         postItem.Charges -= 1;
-                        postItem.UsesRemaining += postItem.Replica ? 15 : 30;
+                        postItem.UsesRemaining = maxuse;
 
                         m_Rope.Delete();
 
-                        if (postItem is Item)
-                        {
-                            from.SendLocalizedMessage(1071158); // Supplied hitching rope.
-                        }
+                        from.SendLocalizedMessage(1071158, postItem.Name); // You have successfully resupplied the ~1_POST~ with the hitching rope.
+                    }
+                }
+                else if (targeted is PetCastleAddon pc)
+                {
+                    if (pc.UsesRemaining >= 30)
+                    {
+                        from.SendLocalizedMessage(1038293); // It looks almost new.
+                    }
+                    else
+                    {
+                        pc.UsesRemaining = 30;
+
+                        m_Rope.Delete();
+
+                        from.SendLocalizedMessage(1071158, pc.Name); // You have successfully resupplied the ~1_POST~ with the hitching rope.
                     }
                 }
                 else
                 {
-                    from.SendLocalizedMessage(1062020); // That has no effect.
+                    from.SendLocalizedMessage(1071117); // You cannot use this item for it.
                 }
             }
         }
