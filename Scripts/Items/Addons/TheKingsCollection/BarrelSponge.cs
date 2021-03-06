@@ -139,6 +139,7 @@ namespace Server.Items
     public class BarrelSpongeDeed : BaseAddonDeed
     {
         public override int LabelNumber => 1098376;  // Barrel Sponge
+        public override bool IsArtifact => true; // allows dying of the deed.
 
         [Constructable]
         public BarrelSpongeDeed()

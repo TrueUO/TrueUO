@@ -256,6 +256,9 @@ namespace Server.Items
         public override bool IsArtifact => true;
         public override int LabelNumber => 1153292;  // Hailstorm
 
+        public override int InitMinHits => 255;
+        public override int InitMaxHits => 255;
+
         [Constructable]
         public HailstormGargoyle()
         {
