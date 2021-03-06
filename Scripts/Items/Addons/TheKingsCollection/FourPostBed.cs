@@ -52,6 +52,7 @@ namespace Server.Items
     public class FourPostBedDeed : BaseAddonDeed, IRewardOption
     {
         public override int LabelNumber => 1154131;  // Four Post Bed
+        public override bool IsArtifact => true; // allows dying of the deed.
 
         private DirectionType _Direction;
 
