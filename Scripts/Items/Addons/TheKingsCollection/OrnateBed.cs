@@ -52,6 +52,7 @@ namespace Server.Items
     public class OrnateBedDeed : BaseAddonDeed, IRewardOption
     {
         public override int LabelNumber => 1154133;  // Ornate Bed
+        public override bool IsArtifact => true; // allows dying of the deed.
 
         private DirectionType _Direction;
 
