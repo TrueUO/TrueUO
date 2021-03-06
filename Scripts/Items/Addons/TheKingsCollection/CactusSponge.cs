@@ -32,6 +32,7 @@ namespace Server.Items
     public class CactusSpongeDeed : BaseAddonDeed
     {
         public override int LabelNumber => 1098374;  // Cactus Sponge
+        public override bool IsArtifact => true; // allows dying of the deed.
 
         [Constructable]
         public CactusSpongeDeed()
