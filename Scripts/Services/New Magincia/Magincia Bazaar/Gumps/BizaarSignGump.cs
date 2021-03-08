@@ -234,19 +234,13 @@ namespace Server.Engines.NewMagincia
             m_Plot = plot;
             m_HasInventory = false;
 
-            if (plot.Merchant is PetBroker petBroker)
+            if (plot.Merchant is PetBroker petBroker && (petBroker.BrokerEntries.Count > 0 || petBroker.BankBalance > 0))
             {
-                if (petBroker.BrokerEntries.Count > 0 || petBroker.BankBalance > 0)
-                {
-                    m_HasInventory = true;
-                }
+                m_HasInventory = true;
             }
-            else if (plot.Merchant is CommodityBroker commodityBroker)
+            else if (plot.Merchant is CommodityBroker commodityBroker && (commodityBroker.CommodityEntries.Count > 0 || commodityBroker.BankBalance > 0))
             {
-                if (commodityBroker.CommodityEntries.Count > 0 || commodityBroker.BankBalance > 0)
-                {
-                    m_HasInventory = true;
-                }
+                m_HasInventory = true;
             }
 
             AddHtmlLocalized(195, 5, 150, 18, 1150385, RedColor16, false, false);     // New Magincia Bazaar

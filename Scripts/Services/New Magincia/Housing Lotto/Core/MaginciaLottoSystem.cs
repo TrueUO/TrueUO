@@ -90,10 +90,9 @@ namespace Server.Engines.NewMagincia
             m_Enabled = true;
             m_LottoDuration = DefaultLottoDuration;
 
-            m_FreeHousingZones = new Dictionary<Map, List<Rectangle2D>>
-            {
-                [Map.Trammel] = new List<Rectangle2D>(), [Map.Felucca] = new List<Rectangle2D>()
-            };
+            m_FreeHousingZones = new Dictionary<Map, List<Rectangle2D>>();
+            m_FreeHousingZones[Map.Trammel] = new List<Rectangle2D>();
+            m_FreeHousingZones[Map.Felucca] = new List<Rectangle2D>();
 
             if (m_Enabled)
             {
@@ -638,10 +637,9 @@ namespace Server.Engines.NewMagincia
             base.Deserialize(reader);
             reader.ReadInt();
 
-            m_FreeHousingZones = new Dictionary<Map, List<Rectangle2D>>
-            {
-                [Map.Trammel] = new List<Rectangle2D>(), [Map.Felucca] = new List<Rectangle2D>()
-            };
+            m_FreeHousingZones = new Dictionary<Map, List<Rectangle2D>>();
+            m_FreeHousingZones[Map.Trammel] = new List<Rectangle2D>();
+            m_FreeHousingZones[Map.Felucca] = new List<Rectangle2D>();
 
             m_GoldSink = reader.ReadInt();
             m_Enabled = reader.ReadBool();

@@ -33,12 +33,11 @@ namespace Server.Engines.Distillation
             m_Def = DistillationSystem.GetDefinition(liquor, group);
 
             if (m_Def == null)
-                return;
-
-            if (m_Def.Liquor != liquor)
             {
-                liquor = m_Def.Liquor;
+                return;
             }
+
+            liquor = m_Def.Liquor;
 
             AddBackground(0, 0, 500, 500, 5054);
             AddImageTiled(10, 10, 480, 30, 2624);

@@ -168,14 +168,11 @@ namespace Server.Engines.Plants
 
             foreach (Item item in eable)
             {
-                if (item != this && item is MaginciaPlantItem plantItem)
+                if (item != this && item is MaginciaPlantItem plantItem && plantItem.BlocksMovement())
                 {
-                    if (plantItem.BlocksMovement())
-                    {
-                        eable.Free();
-                        from.SendLocalizedMessage(1150434); // Plants that block movement cannot be planted next to other plants that block movement.
-                        return false;
-                    }
+                    eable.Free();
+                    from.SendLocalizedMessage(1150434); // Plants that block movement cannot be planted next to other plants that block movement.
+                    return false;
                 }
             }
 
