@@ -16,7 +16,7 @@ namespace Server.Engines.NewMagincia
 
             AddHtmlLocalized(215, 10, 200, 18, 1150311, RedColor16, false, false); // Animal Broker
 
-            if (m_Broker.Plot.ShopName != null && m_Broker.Plot.ShopName.Length > 0)
+            if (!string.IsNullOrEmpty(m_Broker.Plot.ShopName))
                 AddHtml(173, 40, 173, 18, Color(FormatStallName(m_Broker.Plot.ShopName), BlueColor), false, false);
             else
                 AddHtmlLocalized(180, 40, 200, 18, 1150314, BlueColor16, false, false); // This Shop Has No Name
@@ -125,12 +125,18 @@ namespace Server.Engines.NewMagincia
                     break;
                 case 5: // TRANSFER STABLED PET TO MERCHANT
                     if (from.Stabled.Count > 0)
+                    {
                         from.SendGump(new SelectPetsGump(m_Broker, from));
+                    }
                     else
+                    {
                         from.SendLocalizedMessage(1150335); // You currently have no pets in your stables that can be traded via an animal broker.
+                    }
+
                     return;
                 case 6: // TRANSFER MERCHANT INVENTORY TO STABLE
                     m_Broker.CheckInventory();
+
                     if (m_Broker.BrokerEntries.Count > 0)
                     {
                         if (m_Broker.BankBalance < 0)
@@ -141,10 +147,14 @@ namespace Server.Engines.NewMagincia
                         from.SendGump(new RemovePetsGump(m_Broker, from));
                     }
                     else
+                    {
                         from.SendLocalizedMessage(1150336); // The animal broker has no pets in its inventory.
+                    }
+
                     return;
                 case 7: // VIEW INVENTORY / EDIT PRICES
                     m_Broker.CheckInventory();
+
                     if (m_Broker.BrokerEntries.Count > 0)
                     {
                         if (m_Broker.BankBalance < 0)
@@ -152,11 +162,14 @@ namespace Server.Engines.NewMagincia
                             from.SendGump(new BazaarInformationGump(1150623, 1150615));
                             return;
                         }
-                        else
-                            from.SendGump(new SetPetPricesGump(m_Broker));
+
+                        from.SendGump(new SetPetPricesGump(m_Broker));
                     }
                     else
+                    {
                         from.SendLocalizedMessage(1150336); // The animal broker has no pets in its inventory.
+                    }
+
                     return;
             }
 
@@ -220,7 +233,8 @@ namespace Server.Engines.NewMagincia
                 from.SendGump(new PetBrokerGump(m_Broker, from));
                 return;
             }
-            else if (info.ButtonID == 501) // ADD PET
+
+            if (info.ButtonID == 501) // ADD PET
             {
                 if (m_Index >= 0 && m_Index < m_List.Count)
                 {
@@ -251,14 +265,20 @@ namespace Server.Engines.NewMagincia
                         }
                     }
                     else
+                    {
                         from.SendLocalizedMessage(1150343); // You have entered an invalid price.
+                    }
 
                 }
                 else
-                    from.SendLocalizedMessage(1150341); // You did not select a pet.	
+                {
+                    from.SendLocalizedMessage(1150341); // You did not select a pet.
+                }
             }
             else
+            {
                 from.SendGump(new SelectPetsGump(m_Broker, from, info.ButtonID - 1));
+            }
         }
 
         public List<BaseCreature> GetList(Mobile from)
@@ -336,7 +356,8 @@ namespace Server.Engines.NewMagincia
                 from.SendGump(new PetBrokerGump(m_Broker, from));
                 return;
             }
-            else if (info.ButtonID == 501) // REMOVE PET
+
+            if (info.ButtonID == 501) // REMOVE PET
             {
                 if (m_Index >= 0 && m_Index < m_Broker.BrokerEntries.Count)
                 {
@@ -470,8 +491,10 @@ namespace Server.Engines.NewMagincia
 
             AddHtmlLocalized(10, 10, 500, 18, 1114513, "#1150311", RedColor16, false, false);  // Animal Broker
 
-            if (m_Broker.Plot.ShopName != null && m_Broker.Plot.ShopName.Length > 0)
+            if (!string.IsNullOrEmpty(m_Broker.Plot.ShopName))
+            {
                 AddHtml(10, 37, 500, 18, Color(FormatStallName(m_Broker.Plot.ShopName), BlueColor), false, false);
+            }
             else
             {
                 AddHtmlLocalized(10, 37, 500, 18, 1114513, "#1150314", BlueColor16, false, false); // This Shop Has No Name
@@ -502,14 +525,14 @@ namespace Server.Engines.NewMagincia
                         continue;
                     }
 
-                    AddButton(10, y + (i * 20), 4011, 4013, 100 + i, GumpButtonType.Reply, 0);
-                    AddButton(68, y + (i * 20), 4008, 4010, 200 + i, GumpButtonType.Reply, 0);
+                    AddButton(10, y + i * 20, 4011, 4013, 100 + i, GumpButtonType.Reply, 0);
+                    AddButton(68, y + i * 20, 4008, 4010, 200 + i, GumpButtonType.Reply, 0);
 
-                    AddHtml(126, y + (i * 20), 104, 14, Color(entry.Pet.Name, BlueColor), false, false);
-                    AddHtml(236, y + (i * 20), 104, 20, Color(entry.TypeName, BlueColor), false, false);
-                    AddHtml(346, y + (i * 20), 104, 20, Color(AlignRight(FormatAmt(entry.SalePrice)), GreenColor), false, false);
+                    AddHtml(126, y + i * 20, 104, 14, Color(entry.Pet.Name, BlueColor), false, false);
+                    AddHtml(236, y + i * 20, 104, 20, Color(entry.TypeName, BlueColor), false, false);
+                    AddHtml(346, y + i * 20, 104, 20, Color(AlignRight(FormatAmt(entry.SalePrice)), GreenColor), false, false);
 
-                    AddButton(456, y + (i * 20), 4014, 4016, 300 + i, GumpButtonType.Reply, 0);
+                    AddButton(456, y + i * 20, 4014, 4016, 300 + i, GumpButtonType.Reply, 0);
                 }
             }
             else
@@ -613,8 +636,10 @@ namespace Server.Engines.NewMagincia
 
             AddHtmlLocalized(10, 10, 500, 18, 1114513, "#1150311", RedColor16, false, false);  // Animal Broker
 
-            if (m_Broker.Plot.ShopName != null && m_Broker.Plot.ShopName.Length > 0)
+            if (!string.IsNullOrEmpty(m_Broker.Plot.ShopName))
+            {
                 AddHtml(10, 37, 500, 18, Color(FormatStallName(m_Broker.Plot.ShopName), BlueColor), false, false);
+            }
             else
             {
                 AddHtmlLocalized(10, 37, 500, 18, 1114513, "#1150314", BlueColor16, false, false); // This Shop Has No Name
@@ -633,12 +658,6 @@ namespace Server.Engines.NewMagincia
             AddHtml(265, 235, 245, 18, Color(entry.Pet.Name, BlueColor), false, false);
             AddHtml(265, 255, 245, 18, Color(entry.TypeName, BlueColor), false, false);
             AddHtml(265, 275, 245, 18, Color(FormatAmt(entry.SalePrice), BlueColor), false, false);
-
-            /*int itemID = ShrinkTable.Lookup(entry.Pet);
-            //if (entry.Pet is WildTiger)
-            //    itemID = 0x9844;
-
-			AddItem(240, 250, itemID);*/
 
             AddHtmlLocalized(265, 295, 245, 22, 1150374, OrangeColor16, false, false); // ACCEPT
             AddButton(225, 295, 4005, 4007, 1, GumpButtonType.Reply, 0);
@@ -683,7 +702,7 @@ namespace Server.Engines.NewMagincia
 
             AddHtmlLocalized(10, 10, 500, 18, 1114513, "#1150311", RedColor16, false, false);  // Animal Broker
 
-            if (m_Broker.Plot.ShopName != null && m_Broker.Plot.ShopName.Length > 0)
+            if (!string.IsNullOrEmpty(m_Broker.Plot.ShopName))
             {
                 AddHtml(10, 37, 500, 18, Color(FormatStallName(m_Broker.Plot.ShopName), BlueColor), false, false);
             }

@@ -11,11 +11,7 @@ namespace Server.Engines.NewMagincia
         private MaginciaBazaarPlot m_Plot;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public MaginciaBazaarPlot Plot
-        {
-            get { return m_Plot; }
-            set { m_Plot = value; InvalidateProperties(); }
-        }
+        public MaginciaBazaarPlot Plot { get => m_Plot; set { m_Plot = value; InvalidateProperties(); } }
 
         public override bool DisplayWeight => false;
 
@@ -118,7 +114,7 @@ namespace Server.Engines.NewMagincia
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

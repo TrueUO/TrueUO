@@ -39,20 +39,20 @@ namespace Server.Engines.Distillation
         public static void Initialize()
         {
             // Wheat Based
-            m_CraftDefs.Add(new CraftDefinition(Group.WheatBased, Liquor.Whiskey, new Type[] { typeof(Yeast), typeof(WheatWort) }, new int[] { 3, 1 }, MaturationPeriod));
-            m_CraftDefs.Add(new CraftDefinition(Group.WheatBased, Liquor.Bourbon, new Type[] { typeof(Yeast), typeof(WheatWort), typeof(PewterBowlOfCorn) }, new int[] { 3, 3, 1 }, MaturationPeriod));
-            m_CraftDefs.Add(new CraftDefinition(Group.WheatBased, Liquor.Spirytus, new Type[] { typeof(Yeast), typeof(WheatWort), typeof(PewterBowlOfPotatos) }, new int[] { 3, 1, 1 }, TimeSpan.MinValue));
-            m_CraftDefs.Add(new CraftDefinition(Group.WheatBased, Liquor.Cassis, new Type[] { typeof(Yeast), typeof(WheatWort), typeof(PewterBowlOfPotatos), typeof(TribalBerry) }, new int[] { 3, 3, 3, 1 }, MaturationPeriod));
-            m_CraftDefs.Add(new CraftDefinition(Group.WheatBased, Liquor.MelonLiquor, new Type[] { typeof(Yeast), typeof(WheatWort), typeof(PewterBowlOfPotatos), typeof(HoneydewMelon) }, new int[] { 3, 3, 3, 1 }, MaturationPeriod));
-            m_CraftDefs.Add(new CraftDefinition(Group.WheatBased, Liquor.Mist, new Type[] { typeof(Yeast), typeof(WheatWort), typeof(JarHoney) }, new int[] { 3, 3, 1 }, MaturationPeriod));
+            m_CraftDefs.Add(new CraftDefinition(Group.WheatBased, Liquor.Whiskey, new[] { typeof(Yeast), typeof(WheatWort) }, new[] { 3, 1 }, MaturationPeriod));
+            m_CraftDefs.Add(new CraftDefinition(Group.WheatBased, Liquor.Bourbon, new[] { typeof(Yeast), typeof(WheatWort), typeof(PewterBowlOfCorn) }, new[] { 3, 3, 1 }, MaturationPeriod));
+            m_CraftDefs.Add(new CraftDefinition(Group.WheatBased, Liquor.Spirytus, new[] { typeof(Yeast), typeof(WheatWort), typeof(PewterBowlOfPotatos) }, new[] { 3, 1, 1 }, TimeSpan.MinValue));
+            m_CraftDefs.Add(new CraftDefinition(Group.WheatBased, Liquor.Cassis, new[] { typeof(Yeast), typeof(WheatWort), typeof(PewterBowlOfPotatos), typeof(TribalBerry) }, new[] { 3, 3, 3, 1 }, MaturationPeriod));
+            m_CraftDefs.Add(new CraftDefinition(Group.WheatBased, Liquor.MelonLiquor, new[] { typeof(Yeast), typeof(WheatWort), typeof(PewterBowlOfPotatos), typeof(HoneydewMelon) }, new[] { 3, 3, 3, 1 }, MaturationPeriod));
+            m_CraftDefs.Add(new CraftDefinition(Group.WheatBased, Liquor.Mist, new[] { typeof(Yeast), typeof(WheatWort), typeof(JarHoney) }, new[] { 3, 3, 1 }, MaturationPeriod));
 
             // Water Based
-            m_CraftDefs.Add(new CraftDefinition(Group.WaterBased, Liquor.Akvavit, new Type[] { typeof(Yeast), typeof(Pitcher), typeof(PewterBowlOfPotatos) }, new int[] { 1, 3, 1 }, TimeSpan.MinValue));
-            m_CraftDefs.Add(new CraftDefinition(Group.WaterBased, Liquor.Arak, new Type[] { typeof(Yeast), typeof(Pitcher), typeof(Dates) }, new int[] { 1, 3, 1 }, MaturationPeriod));
-            m_CraftDefs.Add(new CraftDefinition(Group.WaterBased, Liquor.CornWhiskey, new Type[] { typeof(Yeast), typeof(Pitcher), typeof(PewterBowlOfCorn) }, new int[] { 1, 3, 1 }, MaturationPeriod));
+            m_CraftDefs.Add(new CraftDefinition(Group.WaterBased, Liquor.Akvavit, new[] { typeof(Yeast), typeof(Pitcher), typeof(PewterBowlOfPotatos) }, new[] { 1, 3, 1 }, TimeSpan.MinValue));
+            m_CraftDefs.Add(new CraftDefinition(Group.WaterBased, Liquor.Arak, new[] { typeof(Yeast), typeof(Pitcher), typeof(Dates) }, new[] { 1, 3, 1 }, MaturationPeriod));
+            m_CraftDefs.Add(new CraftDefinition(Group.WaterBased, Liquor.CornWhiskey, new[] { typeof(Yeast), typeof(Pitcher), typeof(PewterBowlOfCorn) }, new[] { 1, 3, 1 }, MaturationPeriod));
 
             // Other
-            m_CraftDefs.Add(new CraftDefinition(Group.Other, Liquor.Brandy, new Type[] { typeof(Pitcher) }, new int[] { 4 }, MaturationPeriod));
+            m_CraftDefs.Add(new CraftDefinition(Group.Other, Liquor.Brandy, new[] { typeof(Pitcher) }, new[] { 4 }, MaturationPeriod));
         }
 
         public static void AddContext(Mobile from, DistillationContext context)

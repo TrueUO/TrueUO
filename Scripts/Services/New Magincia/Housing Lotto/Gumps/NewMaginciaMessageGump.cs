@@ -73,8 +73,8 @@ namespace Server.Engines.NewMagincia
 
             AddPage(0);
 
-            int width = (Widescreen ? 200 : 0);
-            int buttonid = (Widescreen ? 0x1519 : 0x151A);
+            int width = Widescreen ? 200 : 0;
+            int buttonid = Widescreen ? 0x1519 : 0x151A;
 
             AddBackground(0, 0, 314 + width, 241 + width, 0x24B8);
             AddButton(7, 7, 0x1523, 0x1523, 0, GumpButtonType.Reply, 0);
@@ -100,30 +100,30 @@ namespace Server.Engines.NewMagincia
                 {
                     if (message.Title.Number > 0)
                     {
-                        AddHtmlLocalized(47, 34 + (y * 32), 260 + width, 16, message.Title.Number, LightBlueColor, false, false);
+                        AddHtmlLocalized(47, 34 + y * 32, 260 + width, 16, message.Title.Number, LightBlueColor, false, false);
                     }
                     else
                     {
-                        AddHtml(40, 34 + (y * 32), 260 + width, 16, Color("#94BDEF", message.Title.String), false, false);
+                        AddHtml(40, 34 + y * 32, 260 + width, 16, Color("#94BDEF", message.Title.String), false, false);
                     }
                 }
                 else if (message.Body.Number > 0)
                 {
                     if (message.Args == null)
                     {
-                        AddHtmlLocalized(47, 34 + (y * 32), 260 + width, 16, message.Body, LightBlueColor, false, false);
+                        AddHtmlLocalized(47, 34 + y * 32, 260 + width, 16, message.Body, LightBlueColor, false, false);
                     }
                     else
                     {
-                        AddHtmlLocalized(47, 34 + (y * 32), 260 + width, 16, message.Body, message.Args, LightBlueColor, false, false);
+                        AddHtmlLocalized(47, 34 + y * 32, 260 + width, 16, message.Body, message.Args, LightBlueColor, false, false);
                     }
                 }
                 else
                 {
-                    AddHtml(40, 34 + (y * 32), 260 + width, 16, Color("#94BDEF", message.Body.String), false, false);
+                    AddHtml(40, 34 + y * 32, 260 + width, 16, Color("#94BDEF", message.Body.String), false, false);
                 }
 
-                AddButton(7, 34 + (y * 32), 4029, 4031, i + 1000, GumpButtonType.Reply, 0);
+                AddButton(7, 34 + y * 32, 4029, 4031, i + 1000, GumpButtonType.Reply, 0);
 
                 y++;
 
@@ -151,7 +151,7 @@ namespace Server.Engines.NewMagincia
                     }
                 case 1:
                     {
-                        SendGump(new NewMaginciaMessageListGump(User, Messages, Widescreen ? false : true));
+                        SendGump(new NewMaginciaMessageListGump(User, Messages, !Widescreen));
                         break;
                     }
                 default:

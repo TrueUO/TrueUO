@@ -7,7 +7,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int BacterialResistance
         {
-            get { return m_BacterialResistance; }
+            get => m_BacterialResistance;
             set
             {
                 m_BacterialResistance = value;

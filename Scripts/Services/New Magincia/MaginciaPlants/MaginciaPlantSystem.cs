@@ -188,13 +188,13 @@ namespace Server.Engines.Plants
 
         public static Rectangle2D[] MagGrowBounds => m_MagGrowBounds;
 
-        private static readonly Rectangle2D[] m_MagGrowBounds = new Rectangle2D[]
+        private static readonly Rectangle2D[] m_MagGrowBounds =
         {
             new Rectangle2D(3663, 2103, 19, 19),
-            new Rectangle2D(3731, 2199, 7, 7),
+            new Rectangle2D(3731, 2199, 7, 7)
         };
 
-        private static readonly Rectangle2D[] m_NoGrowZones = new Rectangle2D[]
+        private static readonly Rectangle2D[] m_NoGrowZones =
         {
             new Rectangle2D(3683, 2144, 21, 40),
             new Rectangle2D(3682, 2189, 39, 44),
@@ -240,7 +240,7 @@ namespace Server.Engines.Plants
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             int c = reader.ReadInt();
 
