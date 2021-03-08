@@ -11,20 +11,13 @@ namespace Server.Engines.NewMagincia
         private DateTime m_NextFee;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public MaginciaBazaarPlot Plot { get { return m_Plot; } set { m_Plot = value; } }
+        public MaginciaBazaarPlot Plot { get => m_Plot; set => m_Plot = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int BankBalance { get { return m_BankBalance; } set { m_BankBalance = value; } }
+        public int BankBalance { get => m_BankBalance; set => m_BankBalance = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool SendToWarehouse
-        {
-            get { return false; }
-            set
-            {
-                Delete();
-            }
-        }
+        public bool SendToWarehouse { get => false; set => Delete(); }
 
         public virtual int ComissionFee => MaginciaBazaar.DefaultComissionFee;
 
@@ -106,10 +99,8 @@ namespace Server.Engines.NewMagincia
             HairHue = Race.RandomHairHue();
 
             FacialHairItemID = Race.RandomFacialHair(Female);
-            if (FacialHairItemID != 0)
-                FacialHairHue = Race.RandomHairHue();
-            else
-                FacialHairHue = 0;
+
+            FacialHairHue = FacialHairItemID != 0 ? Race.RandomHairHue() : 0;
         }
 
         public virtual int GetRandomHue()
@@ -199,7 +190,7 @@ namespace Server.Engines.NewMagincia
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             m_BankBalance = reader.ReadInt();
             m_NextFee = reader.ReadDateTime();

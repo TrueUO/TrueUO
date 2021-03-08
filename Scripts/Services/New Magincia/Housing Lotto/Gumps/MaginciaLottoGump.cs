@@ -34,7 +34,7 @@ namespace Server.Engines.NewMagincia
             AddHtmlLocalized(10, 10, 200, 20, 1150460, BlueColor, false, false); // New Magincia Housing Lottery
 
             AddHtmlLocalized(10, 50, 75, 20, 1150461, BlueColor, false, false); // This Facet:
-            AddHtml(170, 50, 100, 16, string.Format("<BASEFONT COLOR=#{0:X6}>{1}</BASEFONT>", LabelColor, plot.Map.ToString()), false, false);
+            AddHtml(170, 50, 100, 16, string.Format("<BASEFONT COLOR=#{0:X6}>{1}</BASEFONT>", LabelColor, plot.Map), false, false);
 
             AddHtmlLocalized(10, 70, 75, 20, 1150462, BlueColor, false, false); // This Plot:
             AddHtml(170, 70, 100, 16, string.Format("<BASEFONT COLOR=#{0:X6}>{1}</BASEFONT>", EntryColor, plot.Identifier), false, false);
@@ -97,10 +97,14 @@ namespace Server.Engines.NewMagincia
             bool prime = m_Plot.IsPrimeSpot;
 
             if (info.ButtonID == 0)
+            {
                 return;
+            }
 
-            if ((prime && !m_Plot.CanPurchaseLottoTicket(m_From)) || !m_Plot.LottoOngoing)
+            if (prime && !m_Plot.CanPurchaseLottoTicket(m_From) || !m_Plot.LottoOngoing)
+            {
                 return;
+            }
 
             int pricePer = m_Plot.LottoPrice;
             int total = pricePer;
@@ -126,7 +130,9 @@ namespace Server.Engines.NewMagincia
             }
 
             if (toBuy > 1)
+            {
                 total = toBuy * pricePer;
+            }
 
             if (Banker.Withdraw(m_From, total))
             {

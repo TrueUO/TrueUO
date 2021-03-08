@@ -45,10 +45,8 @@ namespace Server.Items
 
             protected override void OnTarget(Mobile from, object targeted)
             {
-                if (targeted is MaginciaPlantItem)
+                if (targeted is MaginciaPlantItem plant)
                 {
-                    MaginciaPlantItem plant = (MaginciaPlantItem)targeted;
-
                     if (!plant.IsContract)
                     {
                         if (plant.ContractTime.Month == DateTime.UtcNow.Month && plant.ContractTime.Year == DateTime.UtcNow.Year)
@@ -82,7 +80,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

@@ -7,11 +7,7 @@ namespace Server.Engines.NewMagincia
         private MaginciaHousingPlot m_Plot;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public MaginciaHousingPlot Plot
-        {
-            get { return m_Plot; }
-            set { m_Plot = value; }
-        }
+        public MaginciaHousingPlot Plot { get => m_Plot; set => m_Plot = value; }
 
         [Constructable]
         public MaginciaPlotStone() : base(3805)
@@ -61,15 +57,13 @@ namespace Server.Engines.NewMagincia
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

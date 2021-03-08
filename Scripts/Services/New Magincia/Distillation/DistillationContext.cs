@@ -13,12 +13,12 @@ namespace Server.Engines.Distillation
         private bool m_Mark;
         private string m_Label;
 
-        public Group LastGroup { get { return m_LastGroup; } set { m_LastGroup = value; } }
-        public Liquor LastLiquor { get { return m_LastLiquor; } set { m_LastLiquor = value; } }
+        public Group LastGroup { get => m_LastGroup; set => m_LastGroup = value; }
+        public Liquor LastLiquor { get => m_LastLiquor; set => m_LastLiquor = value; }
         public Yeast[] SelectedYeast => m_SelectedYeast;
-        public bool MakeStrong { get { return m_MakeStrong; } set { m_MakeStrong = value; } }
-        public bool Mark { get { return m_Mark; } set { m_Mark = value; } }
-        public string Label { get { return m_Label; } set { m_Label = value; } }
+        public bool MakeStrong { get => m_MakeStrong; set => m_MakeStrong = value; }
+        public bool Mark { get => m_Mark; set => m_Mark = value; }
+        public string Label { get => m_Label; set => m_Label = value; }
 
         public DistillationContext()
         {

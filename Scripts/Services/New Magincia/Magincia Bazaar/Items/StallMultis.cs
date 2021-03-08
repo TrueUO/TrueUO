@@ -34,7 +34,9 @@ namespace Server.Engines.NewMagincia
             foreach (Item item in m_Fillers)
             {
                 if (item != null && !item.Deleted)
-                    item.Map = Map; ;
+                {
+                    item.Map = Map;
+                }
             }
         }
 
@@ -43,21 +45,13 @@ namespace Server.Engines.NewMagincia
             foreach (Item item in m_Fillers)
             {
                 if (item != null && !item.Deleted)
+                {
                     item.Delete();
+                }
             }
 
             base.OnAfterDelete();
         }
-
-        /*public override int GetMaxUpdateRange()
-        {
-            return 18;
-        }
-
-        public override int GetUpdateRange(Mobile m)
-        {
-            return 18;
-        }*/
 
         public BaseBazaarMulti(Serial serial) : base(serial)
         {
@@ -76,7 +70,7 @@ namespace Server.Engines.NewMagincia
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             m_Fillers = new List<Item>();
 
@@ -114,7 +108,7 @@ namespace Server.Engines.NewMagincia
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -141,7 +135,7 @@ namespace Server.Engines.NewMagincia
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -168,7 +162,7 @@ namespace Server.Engines.NewMagincia
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -195,7 +189,7 @@ namespace Server.Engines.NewMagincia
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -226,7 +220,7 @@ namespace Server.Engines.NewMagincia
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -253,7 +247,7 @@ namespace Server.Engines.NewMagincia
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

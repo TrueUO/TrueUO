@@ -17,31 +17,31 @@ namespace Server.Items
         private Mobile m_Distiller;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public Liquor Liquor { get { return m_Liquor; } set { BeginDistillation(value); InvalidateProperties(); } }
+        public Liquor Liquor { get => m_Liquor; set { BeginDistillation(value); InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public DateTime MaturationBegin { get { return m_MaturationBegin; } set { m_MaturationBegin = value; InvalidateProperties(); } }
+        public DateTime MaturationBegin { get => m_MaturationBegin; set { m_MaturationBegin = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public TimeSpan MutrationDuration => m_MaturationDuration;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public string Label { get { return m_Label; } set { m_Label = value; InvalidateProperties(); } }
+        public string Label { get => m_Label; set { m_Label = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsStrong { get { return m_IsStrong; } set { m_IsStrong = value; InvalidateProperties(); } }
+        public bool IsStrong { get => m_IsStrong; set { m_IsStrong = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int UsesRemaining { get { return m_UsesRemaining; } set { m_UsesRemaining = value; InvalidateProperties(); } }
+        public int UsesRemaining { get => m_UsesRemaining; set { m_UsesRemaining = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool Exceptional { get { return m_Exceptional; } set { m_Exceptional = value; InvalidateProperties(); } }
+        public bool Exceptional { get => m_Exceptional; set { m_Exceptional = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public Mobile Crafter { get { return m_Crafter; } set { m_Crafter = value; InvalidateProperties(); } }
+        public Mobile Crafter { get => m_Crafter; set { m_Crafter = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public Mobile Distiller { get { return m_Distiller; } set { m_Distiller = value; InvalidateProperties(); } }
+        public Mobile Distiller { get => m_Distiller; set { m_Distiller = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public virtual bool IsMature => m_Liquor != Liquor.None && (m_MaturationDuration == TimeSpan.MinValue || m_MaturationBegin + m_MaturationDuration < DateTime.UtcNow);
@@ -87,11 +87,16 @@ namespace Server.Items
 
                     if (DateTime.UtcNow < m_MaturationBegin + m_MaturationDuration)
                     {
-                        TimeSpan remaining = (m_MaturationBegin + m_MaturationDuration) - DateTime.UtcNow;
+                        TimeSpan remaining = m_MaturationBegin + m_MaturationDuration - DateTime.UtcNow;
+
                         if (remaining.TotalDays > 0)
+                        {
                             from.SendLocalizedMessage(1150814, string.Format("{0}\t{1}", remaining.Days.ToString(), remaining.Hours.ToString()));
+                        }
                         else
+                        {
                             from.SendLocalizedMessage(1150813, remaining.TotalHours.ToString());
+                        }
                     }
                 }
             }
@@ -196,7 +201,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             m_Liquor = (Liquor)reader.ReadInt();
             m_MaturationBegin = reader.ReadDateTime();

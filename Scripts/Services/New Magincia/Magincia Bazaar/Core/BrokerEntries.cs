@@ -21,18 +21,20 @@ namespace Server.Engines.NewMagincia
         public CommodityBroker Broker => m_Broker;
         public int ItemID => m_ItemID;
         public int Label => m_Label;
-        public int SellPricePer { get { return m_SellPricePer; } set { m_SellPricePer = value; } }
-        public int BuyPricePer { get { return m_BuyPricePer; } set { m_BuyPricePer = value; } }
-        public int BuyLimit { get { return m_BuyLimit; } set { m_BuyLimit = value; } }
-        public int SellLimit { get { return m_SellLimit; } set { m_SellLimit = value; } }
-        public int Stock { get { return m_Stock; } set { m_Stock = value; } }
+        public int SellPricePer { get => m_SellPricePer; set => m_SellPricePer = value; }
+        public int BuyPricePer { get => m_BuyPricePer; set => m_BuyPricePer = value; }
+        public int BuyLimit { get => m_BuyLimit; set => m_BuyLimit = value; }
+        public int SellLimit { get => m_SellLimit; set => m_SellLimit = value; }
+        public int Stock { get => m_Stock; set => m_Stock = value; }
 
         public int ActualSellLimit
         {
             get
             {
                 if (m_Stock < m_SellLimit)
+                {
                     return m_Stock;
+                }
 
                 return m_SellLimit;
             }
@@ -69,10 +71,14 @@ namespace Server.Engines.NewMagincia
             m_Broker = broker;
             m_Stock = amount;
 
-            if (item is ICommodity)
-                m_Label = ((ICommodity)item).Description;
+            if (item is ICommodity commodity)
+            {
+                m_Label = commodity.Description;
+            }
             else
+            {
                 m_Label = item.LabelNumber;
+            }
         }
 
         /// <summary>
@@ -133,8 +139,8 @@ namespace Server.Engines.NewMagincia
         private string m_TypeName;
 
         public BaseCreature Pet => m_Pet;
-        public int SalePrice { get { return m_SalePrice; } set { m_SalePrice = value; } }
-        public string TypeName { get { return m_TypeName; } set { m_TypeName = value; } }
+        public int SalePrice { get => m_SalePrice; set => m_SalePrice = value; }
+        public string TypeName { get => m_TypeName; set => m_TypeName = value; }
 
         private static readonly Dictionary<Type, string> m_NameBuffer = new Dictionary<Type, string>();
         public static Dictionary<Type, string> NameBuffer => m_NameBuffer;
@@ -160,7 +166,9 @@ namespace Server.Engines.NewMagincia
             Type t = bc.GetType();
 
             if (m_NameBuffer.ContainsKey(t))
+            {
                 return m_NameBuffer[t];
+            }
 
             BaseCreature c = Activator.CreateInstance(t) as BaseCreature;
 
@@ -176,8 +184,10 @@ namespace Server.Engines.NewMagincia
 
         public static void AddToBuffer(Type type, string s)
         {
-            if (s != null && s.Length > 0 && !m_NameBuffer.ContainsKey(type))
+            if (!string.IsNullOrEmpty(s) && !m_NameBuffer.ContainsKey(type))
+            {
                 m_NameBuffer[type] = s;
+            }
         }
 
         public void Internalize()

@@ -133,29 +133,30 @@ namespace Server.Engines.NewMagincia
             {
                 return 1150377; // Unable to complete the desired transaction at this time.
             }
-            else if (pet.GetControlChance(from) <= 0.0)
+
+            if (pet.GetControlChance(from) <= 0.0)
             {
                 return 1150379; // Unable to transfer that pet to you because you have no chance at all of controlling it.
             }
-            else if (from.Stabled.Count >= AnimalTrainer.GetMaxStabled(from))
+
+            if (from.Stabled.Count >= AnimalTrainer.GetMaxStabled(from))
             {
                 return 1150376; // You do not have any available stable slots. The Animal Broker can only transfer pets to your stables. Please make a stables slot available and try again.
             }
-            else if (!Banker.Withdraw(from, cost, true))
+
+            if (!Banker.Withdraw(from, cost, true))
             {
                 return 1150252; // You do not have the funds needed to make this trade available in your bank box. Brokers are only able to transfer funds from your bank box. Please deposit the necessary funds into your bank box and try again.
             }
-            else
-            {
-                BankBalance += toAdd;
-                pet.IsBonded = false;
 
-                SendToStables(from, pet);
+            BankBalance += toAdd;
+            pet.IsBonded = false;
 
-                from.SendLocalizedMessage(1150380, string.Format("{0}\t{1}", entry.TypeName, pet.Name)); // You have purchased ~1_TYPE~ named "~2_NAME~". The animal is now in the stables and you may retrieve it there.
-                m_BrokerEntries.Remove(entry);
-                return 0;
-            }
+            SendToStables(from, pet);
+
+            from.SendLocalizedMessage(1150380, string.Format("{0}\t{1}", entry.TypeName, pet.Name)); // You have purchased ~1_TYPE~ named "~2_NAME~". The animal is now in the stables and you may retrieve it there.
+            m_BrokerEntries.Remove(entry);
+            return 0;
         }
 
         public static void SendToStables(Mobile to, BaseCreature pet)
@@ -175,8 +176,10 @@ namespace Server.Engines.NewMagincia
 
         public static void SendToBrokerStables(BaseCreature pet)
         {
-            if (pet is BaseMount)
-                ((BaseMount)pet).Rider = null;
+            if (pet is BaseMount mount)
+            {
+                mount.Rider = null;
+            }
 
             pet.ControlTarget = null;
             pet.ControlOrder = OrderType.Stay;
@@ -246,17 +249,21 @@ namespace Server.Engines.NewMagincia
 
             writer.Write(m_BrokerEntries.Count);
             foreach (PetBrokerEntry entry in m_BrokerEntries)
+            {
                 entry.Serialize(writer);
+            }
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             int count = reader.ReadInt();
             for (int i = 0; i < count; i++)
+            {
                 m_BrokerEntries.Add(new PetBrokerEntry(reader));
+            }
 
             Timer.DelayCall(TimeSpan.FromSeconds(10), () =>
                 {
