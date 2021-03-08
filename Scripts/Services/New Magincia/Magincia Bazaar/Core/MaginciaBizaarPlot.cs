@@ -15,18 +15,18 @@ namespace Server.Engines.NewMagincia
         private MaginciaPlotAuction m_Auction;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public PlotDef PlotDef { get { return m_Definition; } set { } }
+        public PlotDef PlotDef { get => m_Definition; set { } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public Mobile Owner { get { return m_Owner; } set { m_Owner = value; } }
+        public Mobile Owner { get => m_Owner; set => m_Owner = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public string ShopName { get { return m_ShopName; } set { m_ShopName = value; } }
+        public string ShopName { get => m_ShopName; set => m_ShopName = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public BaseBazaarMulti PlotMulti
         {
-            get { return m_PlotMulti; }
+            get => m_PlotMulti;
             set
             {
                 if (m_PlotMulti != null && m_PlotMulti != value && value != null)
@@ -38,14 +38,16 @@ namespace Server.Engines.NewMagincia
                 m_PlotMulti = value;
 
                 if (m_PlotMulti != null)
+                {
                     m_PlotMulti.MoveToWorld(m_Definition.MultiLocation, m_Definition.Map);
+                }
             }
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public BaseBazaarBroker Merchant
         {
-            get { return m_Merchant; }
+            get => m_Merchant;
             set
             {
                 m_Merchant = value;
@@ -71,17 +73,10 @@ namespace Server.Engines.NewMagincia
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public PlotSign Sign { get { return m_Sign; } set { m_Sign = value; } }
+        public PlotSign Sign { get => m_Sign; set => m_Sign = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public MaginciaPlotAuction Auction
-        {
-            get
-            {
-                return m_Auction;
-            }
-            set { m_Auction = value; }
-        }
+        public MaginciaPlotAuction Auction { get => m_Auction; set => m_Auction = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public bool Active => MaginciaBazaar.IsActivePlot(this);
@@ -380,10 +375,10 @@ namespace Server.Engines.NewMagincia
         private readonly Map m_Map;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public string ID { get { return m_ID; } set { m_ID = value; } }
+        public string ID { get => m_ID; set => m_ID = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public Point3D Location { get { return m_Location; } set { m_Location = value; } }
+        public Point3D Location { get => m_Location; set => m_Location = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public Map Map => m_Map;

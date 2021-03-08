@@ -13,7 +13,7 @@ namespace Server.Engines.NewMagincia
         public static TimeSpan GetLongAuctionTime => TimeSpan.FromHours(Utility.RandomMinMax(168, 180));
 
         private static MaginciaBazaar m_Instance;
-        public static MaginciaBazaar Instance { get { return m_Instance; } set { m_Instance = value; } }
+        public static MaginciaBazaar Instance { get => m_Instance; set => m_Instance = value; }
 
         private Timer m_Timer;
 
@@ -31,7 +31,7 @@ namespace Server.Engines.NewMagincia
         [CommandProperty(AccessLevel.GameMaster)]
         public bool Enabled
         {
-            get { return m_Enabled; }
+            get => m_Enabled;
             set
             {
                 if (m_Enabled != value)
@@ -63,7 +63,7 @@ namespace Server.Engines.NewMagincia
         [CommandProperty(AccessLevel.GameMaster)]
         public Phase PlotPhase
         {
-            get { return m_Phase; }
+            get => m_Phase;
             set
             {
 
@@ -417,7 +417,7 @@ namespace Server.Engines.NewMagincia
                     /*You won a lease on Stall ~1_STALLNAME~ at the ~2_FACET~ New Magincia Bazaar. 
                      *Your bid amount of ~3_BIDAMT~gp won the auction and has been remitted. Your 
                      *lease begins immediately and will continue for 7 days.*/
-                    MaginciaLottoSystem.SendMessageTo(winner, new NewMaginciaMessage(null, new TextDefinition(1150426), string.Format("{0}\t{1}\t{2}", plot.PlotDef.ID, plot.PlotDef.Map.ToString(), highest.ToString("###,###,###"))));
+                    MaginciaLottoSystem.SendMessageTo(winner, new NewMaginciaMessage(null, new TextDefinition(1150426), string.Format("{0}\t{1}\t{2}", plot.PlotDef.ID, plot.PlotDef.Map, highest.ToString("###,###,###"))));
                 }
 
                 plot.Reset();
@@ -619,7 +619,7 @@ namespace Server.Engines.NewMagincia
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             m_Enabled = reader.ReadBool();
             m_Phase = (Phase)reader.ReadInt();
@@ -821,7 +821,7 @@ namespace Server.Engines.NewMagincia
             RegisterPlot(new PlotDef("J-4", m_StallLocs[idx], 0));
         }
 
-        private static readonly Point3D[] m_StallLocs = new Point3D[]
+        private static readonly Point3D[] m_StallLocs =
         {
             //A
             new Point3D(3716, 2198, 20),
@@ -891,7 +891,7 @@ namespace Server.Engines.NewMagincia
             new Point3D(3730, 2220, 20),
             new Point3D(3737, 2220, 20),
             new Point3D(3730, 2228, 20),
-            new Point3D(3737, 2228, 20),
+            new Point3D(3737, 2228, 20)
         };
     }
 }

@@ -42,7 +42,7 @@ namespace Server.Engines.NewMagincia
 
             AddHtmlLocalized(10, 179, 245, 20, 1114514, "#1062509", RedColor16, false, false); // Shop Name:
 
-            if (m_Plot.ShopName != null && m_Plot.ShopName.Length > 0)
+            if (!string.IsNullOrEmpty(m_Plot.ShopName))
             {
                 AddHtmlLocalized(265, 179, 245, 20, 1150312, m_Plot.ShopName, BlueColor16, false, false); // "~1_NAME~"
             }
@@ -234,19 +234,19 @@ namespace Server.Engines.NewMagincia
             m_Plot = plot;
             m_HasInventory = false;
 
-            if (plot.Merchant is PetBroker)
+            if (plot.Merchant is PetBroker petBroker)
             {
-                PetBroker broker = (PetBroker)plot.Merchant;
-
-                if (broker.BrokerEntries.Count > 0 || broker.BankBalance > 0)
+                if (petBroker.BrokerEntries.Count > 0 || petBroker.BankBalance > 0)
+                {
                     m_HasInventory = true;
+                }
             }
-            else if (plot.Merchant is CommodityBroker)
+            else if (plot.Merchant is CommodityBroker commodityBroker)
             {
-                CommodityBroker broker = (CommodityBroker)plot.Merchant;
-
-                if (broker.CommodityEntries.Count > 0 || broker.BankBalance > 0)
+                if (commodityBroker.CommodityEntries.Count > 0 || commodityBroker.BankBalance > 0)
+                {
                     m_HasInventory = true;
+                }
             }
 
             AddHtmlLocalized(195, 5, 150, 18, 1150385, RedColor16, false, false);     // New Magincia Bazaar
@@ -553,11 +553,13 @@ namespace Server.Engines.NewMagincia
 
                 for (int i = 0; i < list.Count; i++)
                 {
-                    AddHtml(10, y + (i * 18), 200, 18, Color(FormatAmt(list[i].Amount), BlueColor16), false, false);
-                    AddHtmlLocalized(265, y + (i * 18), 245, 18, 1150558 + (int)list[i].BidType, BlueColor16, false, false);
+                    AddHtml(10, y + i * 18, 200, 18, Color(FormatAmt(list[i].Amount), BlueColor16), false, false);
+                    AddHtmlLocalized(265, y + i * 18, 245, 18, 1150558 + (int)list[i].BidType, BlueColor16, false, false);
 
                     if (i >= 10)
+                    {
                         break;
+                    }
                 }
             }
 

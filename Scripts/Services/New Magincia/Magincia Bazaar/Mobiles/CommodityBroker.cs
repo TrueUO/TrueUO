@@ -53,8 +53,10 @@ namespace Server.Engines.NewMagincia
         {
             Item realItem = item;
 
-            if (item is CommodityDeed)
-                realItem = ((CommodityDeed)item).Commodity;
+            if (item is CommodityDeed deed)
+            {
+                realItem = deed.Commodity;
+            }
 
             Type type = realItem.GetType();
             int amount = realItem.Amount;
@@ -99,10 +101,10 @@ namespace Server.Engines.NewMagincia
             Type type = item.GetType();
             int amountToAdd = item.Amount;
 
-            if (item is CommodityDeed)
+            if (item is CommodityDeed deed)
             {
-                type = ((CommodityDeed)item).Commodity.GetType();
-                amountToAdd = ((CommodityDeed)item).Commodity.Amount;
+                type = deed.Commodity.GetType();
+                amountToAdd = deed.Commodity.Amount;
             }
 
             foreach (CommodityBrokerEntry entry in m_CommodityEntries)
@@ -330,8 +332,10 @@ namespace Server.Engines.NewMagincia
 
             foreach (Item item in items)
             {
-                if (item is CommodityDeed && ((CommodityDeed)item).Commodity != null && ((CommodityDeed)item).Commodity.GetType() == type)
-                    amt += ((CommodityDeed)item).Commodity.Amount;
+                if (item is CommodityDeed deed && deed.Commodity != null && deed.Commodity.GetType() == type)
+                {
+                    amt += deed.Commodity.Amount;
+                }
             }
 
             return amt;
@@ -339,28 +343,6 @@ namespace Server.Engines.NewMagincia
 
         public int GetLabelID(CommodityBrokerEntry entry)
         {
-            /*Item[] items = BuyPack.FindItemsByType(typeof(CommodityDeed));
-			
-			foreach(Item item in items)
-			{
-				if(item is CommodityDeed)
-				{
-					CommodityDeed deed = (CommodityDeed)item;
-					
-					if(deed.Commodity != null && deed.Commodity.GetType() == entry.CommodityType)
-						return deed.Commodity.ItemID;
-				}
-			}
-			
-			Item item = Loot.Construct(entry.CommodityType);
-			int id = 0;
-			
-			if(item != null)
-			{
-				id = item.ItemID;
-				item.Delete();
-			}*/
-
             return entry != null ? entry.Label : 1;
         }
 
@@ -375,17 +357,21 @@ namespace Server.Engines.NewMagincia
 
             writer.Write(m_CommodityEntries.Count);
             foreach (CommodityBrokerEntry entry in m_CommodityEntries)
+            {
                 entry.Serialize(writer);
+            }
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             int count = reader.ReadInt();
             for (int i = 0; i < count; i++)
+            {
                 m_CommodityEntries.Add(new CommodityBrokerEntry(reader));
+            }
         }
     }
 }

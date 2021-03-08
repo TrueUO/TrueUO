@@ -12,9 +12,11 @@ namespace Server.Engines.Plants
             get
             {
                 if (PlantStatus <= PlantStatus.Stage3)
+                {
                     return 0xC7E;
-                else
-                    return 0xC62;
+                }
+
+                return 0xC62;
             }
         }
 
@@ -43,10 +45,10 @@ namespace Server.Engines.Plants
         public Mobile Owner { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public DateTime Planted { get { return m_Planted; } set { m_Planted = value; InvalidateProperties(); } }
+        public DateTime Planted { get => m_Planted; set { m_Planted = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public DateTime ContractTime { get { return m_Contract; } set { m_Contract = value; InvalidateProperties(); } }
+        public DateTime ContractTime { get => m_Contract; set { m_Contract = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public DateTime ContractEndTime => ContractTime + TimeSpan.FromDays(14);
@@ -166,9 +168,9 @@ namespace Server.Engines.Plants
 
             foreach (Item item in eable)
             {
-                if (item != this && item is MaginciaPlantItem)
+                if (item != this && item is MaginciaPlantItem plantItem)
                 {
-                    if (((MaginciaPlantItem)item).BlocksMovement())
+                    if (plantItem.BlocksMovement())
                     {
                         eable.Free();
                         from.SendLocalizedMessage(1150434); // Plants that block movement cannot be planted next to other plants that block movement.
