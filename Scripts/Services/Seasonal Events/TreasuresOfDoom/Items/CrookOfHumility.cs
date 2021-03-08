@@ -11,10 +11,11 @@ namespace Server.Items
         [Constructable]
         public CrookOfHumility()
         {
+            SkillBonuses.SetValues(0, SkillName.Veterinary, 10.0);
             Slayer3 = TalismanSlayerName.Wolf;
             Attributes.SpellChanneling = 1;
             Attributes.BonusInt = 10;
-            Attributes.WeaponDamage = 20;
+            Attributes.WeaponDamage = -20;
         }
 
         public CrookOfHumility(Serial serial)
