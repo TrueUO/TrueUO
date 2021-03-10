@@ -29,9 +29,9 @@ namespace Server.Engines.ResortAndCasino
 
         public override void OnDoubleClick(Mobile m)
         {
-            if (m is PlayerMobile && m.InRange(Location, 3))
+            if (m is PlayerMobile pm && pm.InRange(Location, 3))
             {
-                m.SendGump(new PurchaseCasinoChipGump(m as PlayerMobile));
+                pm.SendGump(new PurchaseCasinoChipGump(pm));
             }
         }
 

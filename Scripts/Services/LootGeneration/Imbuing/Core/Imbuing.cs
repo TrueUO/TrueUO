@@ -36,11 +36,11 @@ namespace Server.SkillHandlers
             {
                 from.SendLocalizedMessage(500949); //You can't do that when you're dead.
             }
-            else if (from is PlayerMobile)
+            else if (from is PlayerMobile pm)
             {
-                from.CloseGump(typeof(ImbuingGump));
-                BaseGump.SendGump(new ImbuingGump((PlayerMobile)from));
-                from.BeginAction(typeof(Imbuing));
+                pm.CloseGump(typeof(ImbuingGump));
+                BaseGump.SendGump(new ImbuingGump(pm));
+                pm.BeginAction(typeof(Imbuing));
             }
 
             return TimeSpan.FromSeconds(1.0);
