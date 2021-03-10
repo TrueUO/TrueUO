@@ -23,19 +23,23 @@ namespace Server.Gumps
             m_Hue = hue;
 
             if (m_Item != null)
+            {
                 AddItem(150, 100, m_Item.ItemID, m_Item.Hue);
+            }
         }
 
         public override int TitleNumber => 1074974;// Confirm Selection
         public override int LabelNumber => 1074975;// Are you sure you wish to select this?
+
         public override void Confirm(Mobile from)
         {
             if (m_Collection == null || !from.InRange(m_Location, 2))
-                return;
-
-            if (from is PlayerMobile)
             {
-                PlayerMobile player = (PlayerMobile)from;
+                return;
+            }
+
+            if (from is PlayerMobile player)
+            {
                 if (player.GetCollectionPoints(m_Collection.CollectionID) < m_Item.Points)
                 {
                     player.SendLocalizedMessage(1073122); // You don't have enough points for that!
