@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace Server.Items
 {
-    public class BookStrap : Container, ISecurable, IRewardItem
+    public class BookStrap : Container, ISecurable, IRewardItem, IDyable
     {
         public override int LabelNumber => 1126807; // book strap
 
@@ -35,6 +35,15 @@ namespace Server.Items
             LootType = LootType.Blessed;
             Weight = 3.0;
             Level = SecureLevel.CoOwners;
+        }
+
+        public virtual bool Dye(Mobile from, DyeTub sender)
+        {
+            if (Deleted)
+                return false;
+
+            Hue = sender.DyedHue;
+            return true;
         }
 
         public override bool DisplaysContent => false;

@@ -646,4 +646,49 @@ namespace Server.Items
             reader.ReadInt();
         }
     }
+
+    public class PeculiarCoconut : Item
+    {
+        public override int LabelNumber => IsPalmTree ? 1159580 : 1025923;  // palm tree - coconut
+
+        public bool IsPalmTree => ItemID != 0xA73E;
+
+        [Constructable]
+        public PeculiarCoconut()
+            : base(0xA73E)
+        {
+        }
+
+        public override void OnDoubleClick(Mobile m)
+        {
+            if (!IsPalmTree)
+            {
+                if (IsSecure || IsLockedDown)
+                {
+                    ItemID = Utility.RandomList(0xA63F, 0xA640, 0xA641, 0xA642, 0xA643, 0xA644);
+                    Weight = 5;
+                }
+                else
+                {
+                    m.SendLocalizedMessage(1112573); // This must be locked down or secured in order to use it.
+                }
+            }
+        }
+
+        public PeculiarCoconut(Serial serial) : base(serial)
+        {
+        }
+
+        public override void Serialize(GenericWriter writer)
+        {
+            base.Serialize(writer);
+            writer.Write(0);
+        }
+
+        public override void Deserialize(GenericReader reader)
+        {
+            base.Deserialize(reader);
+            reader.ReadInt();
+        }
+    }
 }

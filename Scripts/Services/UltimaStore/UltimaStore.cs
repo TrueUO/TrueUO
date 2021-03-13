@@ -81,7 +81,7 @@ namespace Server.Engines.UOStore
             StoreCategory cat = StoreCategory.Featured;
             Register<PotionOfGloriousFortune>(1158688, 1158739, 0xA1E6, 0, 1195, 200, cat);
             Register<KnightChessPieceGuildstone>(1159490, 1159491, 0xA581, 0, 0, 500, cat);
-            Register<TransmogrificationPotion>(1159501, 1159496, 0xA1E9, 0, 2741, 1500, cat);
+            Register<RobeTransmogrificationPotion>(1159501, 1159496, 0xA1E9, 0, 2741, 1500, cat);
             Register<AnvilofArtifactsDeed>(1159437, 1159466, 0xA108, 0, 0, 1000, cat);
             Register<VirtueShield>(1109616, 1158384, 0x7818, 0, 0, 1500, cat);
             Register<PetBondingPotion>(1156613, 1156678, 0, 0x9CBC, 0, 500, cat);
@@ -119,7 +119,7 @@ namespace Server.Engines.UOStore
 
             // Equipment
             cat = StoreCategory.Equipment;
-            Register<TransmogrificationPotion>(1159501, 1159496, 0xA1E9, 0, 2741, 1500, cat);
+            Register<RobeTransmogrificationPotion>(1159501, 1159496, 0xA1E9, 0, 2741, 1500, cat);
             Register<VirtueShield>(1109616, 1158384, 0x7818, 0, 0, 1500, cat);
             Register<HoodedBritanniaRobe>(1125155, 1158016, 0xA0AB, 0, 0, 1500, cat, ConstructRobe);
             Register<HoodedBritanniaRobe>(1125155, 1158016, 0xA0AC, 0, 0, 1500, cat, ConstructRobe);

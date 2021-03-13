@@ -2,6 +2,7 @@ using Server.Items;
 using Server.Misc;
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Server.Mobiles.MannequinProperty
 {
@@ -96,38 +97,31 @@ namespace Server.Mobiles.MannequinProperty
         public override int Order => 6;
         public override bool AlwaysVisible => true;
         public override bool IsBoolen => true;
-        public override bool BoolenValue => true;
         public override int LabelNumber => 1159280;  // Medable Armor
         public override int SpriteW => 0;
         public override int SpriteH => 150;
 
-        public double GetPropertyValue(Item item)
+        public bool CheckMedable(Item item)
         {
-            return item is BaseArmor armor ? RegenRates.GetArmorMeditationValue(armor) : 0;
+            if (item is BaseArmor armor)
+            {
+                if (armor.ArmorAttributes.MageArmor != 0 || armor.Attributes.SpellChanneling != 0)
+                    return true;
+                else if (armor.DefMedAllowance != ArmorMeditationAllowance.None)
+                    return true;
+            }
+
+            return false;
         }
 
         public override bool Matches(Item item)
         {
-            double total = GetPropertyValue(item);
-
-            if (total != 0)
-                return true;
-
-            return false;
+            return CheckMedable(item);
         }
 
         public override bool Matches(List<Item> items)
         {
-            double total = 0;
-
-            items.ForEach(x => total += GetPropertyValue(x));
-
-            if (total != 0)
-            {
-                return true;
-            }
-
-            return false;
+            return !items.Any(x => !CheckMedable(x));
         }
     }
 

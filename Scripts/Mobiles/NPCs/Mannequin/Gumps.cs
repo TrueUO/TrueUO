@@ -210,14 +210,13 @@ namespace Server.Gumps
                     list = _Mannequin.Items.ToList();
                     list.Add(_Item);
                 }
-
-                lm = Mannequin.GetProperty(list);
             }
             else
             {
-                lm = Mannequin.GetProperty(_Mannequin.Items);
+                list = _Mannequin.Items;
             }
 
+            lm = Mannequin.GetProperty(list);
 
             AddHtmlLocalized(479, 10, 75, 18, 1114514, "#1158215", 0x42FF, false, false); // <DIV ALIGN=RIGHT>~1_TOKEN~</DIV>
 
@@ -255,15 +254,12 @@ namespace Server.Gumps
                             AddSpriteImage(10, y - 5, 0x9D3B, cataloglist[i].SpriteW, cataloglist[i].SpriteH, 30, 30);
                             AddTooltip(cataloglist[i].Description);
 
-                            if (cataloglist[i].IsBoolen)
+                            if (cataloglist[i].LabelNumber == 1159280) // Medable Armor
                             {
-                                if (cataloglist[i].BoolenValue)
-                                {
-                                    if (cataloglist[i].Value > 0)
-                                        AddHtmlLocalized(195, y, 100, 18, 1046362, 0x42FF, false, false); // Yes
-                                    else
-                                        AddHtmlLocalized(195, y, 100, 18, 1046363, 0x42FF, false, false); // No
-                                }
+                                if (cataloglist[i].Matches(list))
+                                    AddHtmlLocalized(195, y, 100, 18, 1046362, 0x42FF, false, false); // Yes
+                                else
+                                    AddHtmlLocalized(195, y, 100, 18, 1046363, 0x42FF, false, false); // No
                             }
                             else
                             {

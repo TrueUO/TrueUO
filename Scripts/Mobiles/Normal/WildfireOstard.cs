@@ -103,13 +103,13 @@ namespace Server.Mobiles
             SetSkill(SkillName.Poisoning, 60.0, 70.0);
             SetSkill(SkillName.DetectHidden, 60.0, 65.0);
             SetSkill(SkillName.Magery, 30.0, 40.0);
-            SetSkill(SkillName.EvalInt, 40.0, 50.0);
+            SetSkill(SkillName.EvalInt, 35.0, 50.0);
 
             Fame = 300;
             Karma = 300;
 
             Tamable = true;
-            ControlSlots = 4;
+            ControlSlots = 3;
             MinTameSkill = 96.0;
         }
 

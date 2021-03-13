@@ -8,12 +8,12 @@ using System.Collections.Generic;
 
 namespace Server.Items
 {
-    public class PetCastleComponent : LocalizedAddonComponent
+    public class PetCastleComponent : AddonComponent
     {
         public override bool ForceShowProperties => true;
 
         public PetCastleComponent(int id)
-            : base(id, 1159586) // Pet Castle
+            : base(id)
         {
         }
 
@@ -152,7 +152,8 @@ namespace Server.Items
                 m_Post = post;
                 m_From = from;
 
-                Enabled = m_Post.UsesRemaining > 0;
+                if (m_Post.UsesRemaining <= 0)
+                    Flags |= CMEFlags.Disabled;
             }
 
             public override void OnClick()
@@ -175,7 +176,8 @@ namespace Server.Items
                 m_Post = post;
                 m_From = from;
 
-                Enabled = m_Post.UsesRemaining > 0;
+                if (m_Post.UsesRemaining <= 0)
+                    Flags |= CMEFlags.Disabled;
             }
 
             public override void OnClick()
@@ -534,7 +536,7 @@ namespace Server.Items
         }
     }
 
-    public class PetCastleDeed : BaseAddonDeed, IRewardOption
+    public class PetCastleDeed : BaseAddonDeed, IRewardOption, IDyable
     {
         public override int LabelNumber => 1159586; // Pet Castle
 
@@ -559,6 +561,15 @@ namespace Server.Items
         {
             _UsesRemaining = uses;
             LootType = LootType.Blessed;
+        }
+
+        public virtual bool Dye(Mobile from, DyeTub sender)
+        {
+            if (Deleted)
+                return false;
+
+            Hue = sender.DyedHue;
+            return true;
         }
 
         public override void GetProperties(ObjectPropertyList list)
