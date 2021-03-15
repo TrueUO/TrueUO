@@ -69,7 +69,7 @@ namespace Server.Multis
             {
                 from.SendLocalizedMessage(1116758); // You already have a ship deployed!
             }
-            else if (from.Region.IsPartOf(typeof(HouseRegion)) || boat != null && (boat.GetType() == Boat.GetType() || !boat.IsRowBoat && !(this is RowBoatDeed)))
+            else if (from.Region.IsPartOf(typeof(HouseRegion)) || boat != null && (boat.GetType() == Boat.GetType() || !boat.IsRowBoat && (!(this is RowBoatDeed) || !(this is PumpkinRowBoatDeed))))
             {
                 from.SendLocalizedMessage(1010568, null, 0x25); // You may not place a ship while on another ship or inside a house.
             }
