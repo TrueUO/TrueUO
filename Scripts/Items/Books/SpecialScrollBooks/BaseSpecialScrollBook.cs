@@ -53,9 +53,17 @@ namespace Server.Items
 
         public override void OnDoubleClick(Mobile m)
         {
-            BaseHouse house = BaseHouse.FindHouseAt(this);
+            if (RootParent is PlayerVendor vendor && vendor.Owner != m)
+            {
+                m.SendLocalizedMessage(500447); // That is not accessible.
+                return;
+            }
 
-            if (m is PlayerMobile mobile && mobile.InRange(GetWorldLocation(), 2) /*&& (house == null || house.HasSecureAccess(m, this))*/)
+            if (m is PlayerMobile mob && IsChildOf(mob.Backpack))
+            {
+                BaseGump.SendGump(new SpecialScrollBookGump(mob, this));
+            }
+            else if (m is PlayerMobile mobile && mobile.InRange(GetWorldLocation(), 2) && IsLockedDown)
             {
                 BaseGump.SendGump(new SpecialScrollBookGump(mobile, this));
             }
