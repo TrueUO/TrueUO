@@ -12,7 +12,7 @@ namespace Server.Items
     public class TreasureMapChest : LockableContainer
     {
         public static Type[] Artifacts => m_Artifacts;
-        private static readonly Type[] m_Artifacts = new Type[]
+        private static readonly Type[] m_Artifacts =
         {
             typeof(CandelabraOfSouls), typeof(GoldBricks), typeof(PhillipsWoodenSteed),
             typeof(ArcticDeathDealer), typeof(BlazeOfDeath), typeof(BurglarsBandana),
@@ -26,19 +26,19 @@ namespace Server.Items
         };
 
         public static Type[] ArtifactsLevelFiveToSeven => m_LevelFiveToSeven;
-        private static readonly Type[] m_LevelFiveToSeven = new Type[]
+        private static readonly Type[] m_LevelFiveToSeven =
         {
             typeof(ForgedPardon), typeof(ManaPhasingOrb), typeof(RunedSashOfWarding), typeof(SurgeShield)
         };
 
         public static Type[] ArtifactsLevelSeven => m_LevelSevenOnly;
-        private static readonly Type[] m_LevelSevenOnly = new Type[]
+        private static readonly Type[] m_LevelSevenOnly =
         {
             typeof(CoffinPiece), typeof(MasterSkeletonKey)
         };
 
         public static Type[] SOSArtifacts => m_SOSArtifacts;
-        private static readonly Type[] m_SOSArtifacts = new Type[]
+        private static readonly Type[] m_SOSArtifacts =
         {
             typeof(AntiqueWeddingDress),
             typeof(KelpWovenLeggings),
@@ -46,7 +46,7 @@ namespace Server.Items
             typeof(ValkyrieArmor)
         };
         public static Type[] SOSDecor => m_SOSDecor;
-        private static readonly Type[] m_SOSDecor = new Type[]
+        private static readonly Type[] m_SOSDecor =
         {
             typeof(GrapeVine),
             typeof(LargeFishingNet)
@@ -122,7 +122,7 @@ namespace Server.Items
 
         public ChestQuality ChestQuality
         {
-            get { return _Quality; }
+            get => _Quality;
             set
             {
                 if (_Quality != value)
@@ -146,7 +146,8 @@ namespace Server.Items
         public static void Fill(Mobile from, LockableContainer cont, int level, bool isSos)
         {
             Map map = from.Map;
-            int luck = from is PlayerMobile ? ((PlayerMobile)from).RealLuck : from.Luck;
+
+            int luck = from is PlayerMobile pm ? pm.RealLuck : from.Luck;
 
             cont.Movable = false;
             cont.Locked = true;
@@ -268,10 +269,8 @@ namespace Server.Items
 
                         cont.DropItem(item);
                     }
-                    else if (item is BaseWeapon)
+                    else if (item is BaseWeapon weapon)
                     {
-                        BaseWeapon weapon = (BaseWeapon)item;
-
                         int attributeCount;
                         int min, max;
 
@@ -279,12 +278,10 @@ namespace Server.Items
 
                         BaseRunicTool.ApplyAttributesTo(weapon, attributeCount, min, max);
 
-                        cont.DropItem(item);
+                        cont.DropItem(weapon);
                     }
-                    else if (item is BaseArmor)
+                    else if (item is BaseArmor armor)
                     {
-                        BaseArmor armor = (BaseArmor)item;
-
                         int attributeCount;
                         int min, max;
 
@@ -292,12 +289,10 @@ namespace Server.Items
 
                         BaseRunicTool.ApplyAttributesTo(armor, attributeCount, min, max);
 
-                        cont.DropItem(item);
+                        cont.DropItem(armor);
                     }
-                    else if (item is BaseHat)
+                    else if (item is BaseHat hat)
                     {
-                        BaseHat hat = (BaseHat)item;
-
                         int attributeCount;
                         int min, max;
 
@@ -305,18 +300,18 @@ namespace Server.Items
 
                         BaseRunicTool.ApplyAttributesTo(hat, attributeCount, min, max);
 
-                        cont.DropItem(item);
+                        cont.DropItem(hat);
                     }
-                    else if (item is BaseJewel)
+                    else if (item is BaseJewel jewel)
                     {
                         int attributeCount;
                         int min, max;
 
                         GetRandomAOSStats(out attributeCount, out min, out max);
 
-                        BaseRunicTool.ApplyAttributesTo((BaseJewel)item, attributeCount, min, max);
+                        BaseRunicTool.ApplyAttributesTo(jewel, attributeCount, min, max);
 
-                        cont.DropItem(item);
+                        cont.DropItem(jewel);
                     }
                 }
             }
@@ -346,9 +341,13 @@ namespace Server.Items
 
             #region Gems
             if (level == 0)
+            {
                 count = 2;
+            }
             else
-                count = (level * 3) + 1;
+            {
+                count = level * 3 + 1;
+            }
 
             for (int i = 0; i < count; i++)
             {
@@ -524,7 +523,8 @@ namespace Server.Items
                 LockPick(from);
                 return false;
             }
-            else if (CanOpen(from))
+
+            if (CanOpen(from))
             {
                 return base.CheckLocked(from);
             }
@@ -541,7 +541,8 @@ namespace Server.Items
                     from.SendLocalizedMessage(1159008); // That appears to be trapped, using the remove trap skill would yield better results...
                     return false;
                 }
-                else if (AncientGuardians.Any(ag => ag.Alive))
+
+                if (AncientGuardians.Any(ag => ag.Alive))
                 {
                     from.SendLocalizedMessage(1046448); // You must first kill the guardians before you may open this chest.
                     return false;
@@ -718,8 +719,7 @@ namespace Server.Items
 
         public override void OnAfterDelete()
         {
-            if (Timer != null)
-                Timer.Stop();
+            Timer?.Stop();
 
             Timer = null;
 
@@ -738,7 +738,7 @@ namespace Server.Items
         {
             base.LockPick(from);
 
-            if (Map != null && ((TreasureMapInfo.NewSystem && FailedLockpick) || 0.05 >= Utility.RandomDouble()))
+            if (Map != null && (TreasureMapInfo.NewSystem && FailedLockpick || 0.05 >= Utility.RandomDouble()))
             {
                 Grubber grubber = new Grubber();
                 grubber.MoveToWorld(Map.GetSpawnPosition(Location, 1), Map);
@@ -769,10 +769,7 @@ namespace Server.Items
 
             if (!FirstOpenedByOwner && to == Owner)
             {
-                if (TreasureMap != null)
-                {
-                    TreasureMap.OnChestOpened((PlayerMobile)to, this);
-                }
+                TreasureMap?.OnChestOpened((PlayerMobile)to, this);
 
                 FirstOpenedByOwner = true;
             }
@@ -799,10 +796,8 @@ namespace Server.Items
 
                 return true;
             }
-            else
-            {
-                return base.ExecuteTrap(from);
-            }
+
+            return base.ExecuteTrap(from);
         }
 
         public void BeginRemove(Mobile from)
@@ -932,7 +927,7 @@ namespace Server.Items
                 m_From = from;
                 m_Chest = chest;
 
-                Enabled = (from == chest.Owner);
+                Enabled = from == chest.Owner;
             }
 
             public override void OnClick()

@@ -27,7 +27,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public TreasureLevel TreasureLevel
         {
-            get { return (TreasureLevel)m_Level; }
+            get => (TreasureLevel)m_Level;
             set
             {
                 if ((int)value != Level)
@@ -38,11 +38,7 @@ namespace Server.Items
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public TreasurePackage Package
-        {
-            get { return _Package; }
-            set { _Package = value; InvalidateProperties(); }
-        }
+        public TreasurePackage Package { get => _Package; set { _Package = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public TreasureFacet TreasureFacet => TreasureMapInfo.GetFacet(ChestLocation, Facet);
@@ -84,86 +80,85 @@ namespace Server.Items
         #endregion
 
         #region Spawn Types
-        private static readonly Type[][] m_SpawnTypes = new Type[][]
+        private static readonly Type[][] m_SpawnTypes =
         {
-            new Type[]{ typeof( HeadlessOne ), typeof( Skeleton ) },
-            new Type[]{ typeof( Mongbat ), typeof( Ratman ), typeof( HeadlessOne ), typeof( Skeleton ), typeof( Zombie ) },
-            new Type[]{ typeof( OrcishMage ), typeof( Gargoyle ), typeof( Gazer ), typeof( HellHound ), typeof( EarthElemental ) },
-            new Type[]{ typeof( Lich ), typeof( OgreLord ), typeof( DreadSpider ), typeof( AirElemental ), typeof( FireElemental ) },
-            new Type[]{ typeof( DreadSpider ), typeof( LichLord ), typeof( Daemon ), typeof( ElderGazer ), typeof( OgreLord ) },
-            new Type[]{ typeof( LichLord ), typeof( Daemon ), typeof( ElderGazer ), typeof( PoisonElemental ), typeof( BloodElemental ) },
-            new Type[]{ typeof( AncientWyrm ), typeof( Balron ), typeof( BloodElemental ), typeof( PoisonElemental ), typeof( Titan ) },
-            new Type[]{ typeof( BloodElemental), typeof(ColdDrake), typeof(FrostDragon), typeof(FrostDrake), typeof(GreaterDragon), typeof(PoisonElemental)}
+            new[]{ typeof(HeadlessOne), typeof(Skeleton) },
+            new[]{ typeof(Mongbat), typeof(Ratman), typeof(HeadlessOne), typeof(Skeleton), typeof(Zombie) },
+            new[]{ typeof(OrcishMage), typeof(Gargoyle), typeof(Gazer), typeof(HellHound), typeof(EarthElemental) },
+            new[]{ typeof(Lich), typeof(OgreLord), typeof(DreadSpider), typeof(AirElemental), typeof(FireElemental) },
+            new[]{ typeof(DreadSpider), typeof(LichLord), typeof(Daemon), typeof(ElderGazer), typeof(OgreLord) },
+            new[]{ typeof(LichLord), typeof(Daemon), typeof(ElderGazer), typeof(PoisonElemental), typeof(BloodElemental) },
+            new[]{ typeof(AncientWyrm), typeof(Balron), typeof(BloodElemental), typeof(PoisonElemental), typeof(Titan) },
+            new[]{ typeof(BloodElemental), typeof(ColdDrake), typeof(FrostDragon), typeof(FrostDrake), typeof(GreaterDragon), typeof(PoisonElemental)}
         };
 
-        private static readonly Type[][] m_TokunoSpawnTypes = new Type[][]
+        private static readonly Type[][] m_TokunoSpawnTypes =
         {
-            new Type[]{ typeof( HeadlessOne ), typeof( Skeleton ) },
-            new Type[]{ typeof( HeadlessOne ), typeof( Mongbat ), typeof( Ratman ), typeof( Skeleton), typeof( Zombie ),  },
-            new Type[]{ typeof( EarthElemental ), typeof( Gazer ), typeof( Gargoyle ), typeof( HellHound ), typeof( OrcishMage ), },
-            new Type[]{ typeof( AirElemental ), typeof( DreadSpider ), typeof( FireElemental ), typeof( Lich ), typeof( OgreLord ), },
-            new Type[]{ typeof( ElderGazer ), typeof( Daemon ), typeof( DreadSpider ), typeof( LichLord ), typeof( OgreLord ), },
-            new Type[]{ typeof( FanDancer ), typeof( RevenantLion ), typeof( Ronin ), typeof( RuneBeetle ) },
-            new Type[]{ typeof( Hiryu ), typeof( LadyOfTheSnow ), typeof( Oni ), typeof( RuneBeetle ), typeof( YomotsuWarrior ), typeof( YomotsuPriest ) },
-            new Type[]{ typeof( Yamandon ), typeof( LadyOfTheSnow ), typeof( RuneBeetle ), typeof( YomotsuPriest ) }
+            new[]{ typeof(HeadlessOne), typeof(Skeleton) },
+            new[]{ typeof(HeadlessOne), typeof(Mongbat), typeof(Ratman), typeof(Skeleton), typeof(Zombie)  },
+            new[]{ typeof(EarthElemental), typeof(Gazer), typeof(Gargoyle), typeof(HellHound), typeof(OrcishMage) },
+            new[]{ typeof(AirElemental), typeof(DreadSpider), typeof(FireElemental), typeof(Lich), typeof(OgreLord) },
+            new[]{ typeof(ElderGazer), typeof(Daemon), typeof(DreadSpider), typeof(LichLord), typeof(OgreLord) },
+            new[]{ typeof(FanDancer), typeof(RevenantLion), typeof(Ronin), typeof(RuneBeetle) },
+            new[]{ typeof(Hiryu), typeof(LadyOfTheSnow), typeof(Oni), typeof(RuneBeetle), typeof(YomotsuWarrior), typeof(YomotsuPriest) },
+            new[]{ typeof(Yamandon), typeof(LadyOfTheSnow), typeof(RuneBeetle), typeof(YomotsuPriest) }
         };
 
-        private static readonly Type[][] m_MalasSpawnTypes = new Type[][]
+        private static readonly Type[][] m_MalasSpawnTypes =
         {
-            new Type[]{ typeof( HeadlessOne ), typeof( Skeleton ) },
-            new Type[]{ typeof( Mongbat ), typeof( Ratman ), typeof( HeadlessOne ), typeof( Skeleton ), typeof( Zombie ) },
-            new Type[]{ typeof( OrcishMage ), typeof( Gargoyle ), typeof( Gazer ), typeof( HellHound ), typeof( EarthElemental ) },
-            new Type[]{ typeof( Lich ), typeof( OgreLord ), typeof( DreadSpider ), typeof( AirElemental ), typeof( FireElemental ) },
-            new Type[]{ typeof( DreadSpider ), typeof( LichLord ), typeof( Daemon ), typeof( ElderGazer ), typeof( OgreLord ) },
-            new Type[]{ typeof( LichLord ), typeof( Ravager ), typeof( WandererOfTheVoid ), typeof( Minotaur ) },
-            new Type[]{ typeof( Devourer ), typeof( MinotaurScout ), typeof( MinotaurCaptain ), typeof( RottingCorpse ), typeof( WandererOfTheVoid ) },
-            new Type[]{ typeof( Devourer ), typeof( MinotaurGeneral ), typeof( MinotaurCaptain ), typeof( RottingCorpse ), typeof( WandererOfTheVoid ) }
-
+            new[]{ typeof(HeadlessOne), typeof(Skeleton) },
+            new[]{ typeof(Mongbat), typeof(Ratman), typeof(HeadlessOne), typeof(Skeleton), typeof(Zombie) },
+            new[]{ typeof(OrcishMage), typeof(Gargoyle), typeof(Gazer), typeof(HellHound), typeof(EarthElemental) },
+            new[]{ typeof(Lich), typeof(OgreLord), typeof(DreadSpider), typeof(AirElemental), typeof(FireElemental) },
+            new[]{ typeof(DreadSpider), typeof(LichLord), typeof(Daemon), typeof(ElderGazer), typeof(OgreLord) },
+            new[]{ typeof(LichLord), typeof(Ravager), typeof(WandererOfTheVoid), typeof(Minotaur) },
+            new[]{ typeof(Devourer), typeof(MinotaurScout), typeof(MinotaurCaptain), typeof(RottingCorpse), typeof(WandererOfTheVoid) },
+            new[]{ typeof(Devourer), typeof(MinotaurGeneral), typeof(MinotaurCaptain), typeof(RottingCorpse), typeof(WandererOfTheVoid) }
         };
 
-        private static readonly Type[][] m_IlshenarSpawnTypes = new Type[][]
+        private static readonly Type[][] m_IlshenarSpawnTypes =
         {
-            new Type[]{ typeof( HeadlessOne ), typeof( Skeleton ) },
-            new Type[]{ typeof( Mongbat ), typeof( Ratman ), typeof( HeadlessOne ), typeof( Skeleton ), typeof( Zombie ) },
-            new Type[]{ typeof( OrcishMage ), typeof( Gargoyle ), typeof( Gazer ), typeof( HellHound ), typeof( EarthElemental ) },
-            new Type[]{ typeof( Lich ), typeof( OgreLord ), typeof( DreadSpider ), typeof( AirElemental ), typeof( FireElemental ) },
-            new Type[]{ typeof( DreadSpider ), typeof( LichLord ), typeof( Daemon ), typeof( ElderGazer ), typeof( OgreLord ) },
-            new Type[]{ typeof( DarkGuardian ), typeof( ExodusOverseer ), typeof( GargoyleDestroyer ), typeof( GargoyleEnforcer ), typeof( PoisonElemental ) },
-            new Type[]{ typeof( Changeling ), typeof( ExodusMinion ), typeof( GargoyleEnforcer ), typeof( GargoyleDestroyer ), typeof( Titan ) },
-            new Type[]{ typeof( RenegadeChangeling ), typeof( ExodusMinion ), typeof( GargoyleEnforcer ), typeof( GargoyleDestroyer ), typeof( Titan ) }
+            new[]{ typeof(HeadlessOne), typeof(Skeleton) },
+            new[]{ typeof(Mongbat), typeof(Ratman), typeof(HeadlessOne), typeof(Skeleton), typeof(Zombie) },
+            new[]{ typeof(OrcishMage), typeof(Gargoyle), typeof(Gazer), typeof(HellHound), typeof(EarthElemental) },
+            new[]{ typeof(Lich), typeof(OgreLord), typeof(DreadSpider), typeof(AirElemental), typeof(FireElemental) },
+            new[]{ typeof(DreadSpider), typeof(LichLord), typeof(Daemon), typeof(ElderGazer), typeof(OgreLord) },
+            new[]{ typeof(DarkGuardian), typeof(ExodusOverseer), typeof(GargoyleDestroyer), typeof(GargoyleEnforcer), typeof(PoisonElemental) },
+            new[]{ typeof(Changeling), typeof(ExodusMinion), typeof(GargoyleEnforcer), typeof(GargoyleDestroyer), typeof(Titan) },
+            new[]{ typeof(RenegadeChangeling), typeof(ExodusMinion), typeof(GargoyleEnforcer), typeof(GargoyleDestroyer), typeof(Titan) }
         };
 
-        private static readonly Type[][] m_TerMurSpawnTypes = new Type[][]
+        private static readonly Type[][] m_TerMurSpawnTypes =
         {
-            new Type[]{ typeof( HeadlessOne ), typeof( Skeleton ) },
-            new Type[]{ typeof( ClockworkScorpion ), typeof( CorrosiveSlime ), typeof( GreaterMongbat ) },
-            new Type[]{ typeof( AcidSlug ), typeof( FireElemental ), typeof( WaterElemental ) },
-            new Type[]{ typeof( LeatherWolf ), typeof( StoneSlith ), typeof( ToxicSlith ) },
-            new Type[]{ typeof( BloodWorm ), typeof( Kepetch ), typeof( StoneSlith ), typeof( ToxicSlith ) },
-            new Type[]{ typeof( FireAnt ), typeof( LavaElemental ), typeof( MaddeningHorror ) },
-            new Type[]{ typeof( EnragedEarthElemental ), typeof( FireDaemon ), typeof( GreaterPoisonElemental ), typeof( LavaElemental ), typeof( DragonWolf ) },
-            new Type[]{ typeof( EnragedColossus ), typeof( EnragedEarthElemental ), typeof( FireDaemon ), typeof( GreaterPoisonElemental ), typeof( LavaElemental ) }
+            new[]{ typeof(HeadlessOne), typeof(Skeleton) },
+            new[]{ typeof(ClockworkScorpion), typeof(CorrosiveSlime), typeof(GreaterMongbat) },
+            new[]{ typeof(AcidSlug), typeof(FireElemental), typeof(WaterElemental) },
+            new[]{ typeof(LeatherWolf), typeof(StoneSlith), typeof(ToxicSlith) },
+            new[]{ typeof(BloodWorm), typeof(Kepetch), typeof(StoneSlith), typeof(ToxicSlith) },
+            new[]{ typeof(FireAnt), typeof(LavaElemental), typeof(MaddeningHorror) },
+            new[]{ typeof(EnragedEarthElemental), typeof(FireDaemon), typeof(GreaterPoisonElemental), typeof(LavaElemental), typeof(DragonWolf) },
+            new[]{ typeof(EnragedColossus), typeof(EnragedEarthElemental), typeof(FireDaemon), typeof(GreaterPoisonElemental), typeof(LavaElemental) }
         };
 
-        private static readonly Type[][] m_EodonSpawnTypes = new Type[][]
+        private static readonly Type[][] m_EodonSpawnTypes =
         {
-            new Type[] { typeof(MyrmidexLarvae), typeof(SilverbackGorilla), typeof(Panther), typeof(WildTiger) },
-            new Type[] { typeof(AcidElemental), typeof(SandVortex), typeof(Lion), typeof(SabreToothedTiger) },
-            new Type[] { typeof(AcidElemental), typeof(SandVortex), typeof(Lion), typeof(SabreToothedTiger) },
-            new Type[] { typeof(Infernus), typeof(FireElemental), typeof(Dimetrosaur), typeof(Saurosaurus) },
-            new Type[] { typeof(Infernus), typeof(FireElemental), typeof(Dimetrosaur), typeof(Saurosaurus) },
-            new Type[] { typeof(KotlAutomaton), typeof(MyrmidexDrone), typeof(Allosaurus), typeof(Triceratops) },
-            new Type[] { typeof(Anchisaur), typeof(Allosaurus), typeof(SandVortex) }
+            new[] { typeof(MyrmidexLarvae), typeof(SilverbackGorilla), typeof(Panther), typeof(WildTiger) },
+            new[] { typeof(AcidElemental), typeof(SandVortex), typeof(Lion), typeof(SabreToothedTiger) },
+            new[] { typeof(AcidElemental), typeof(SandVortex), typeof(Lion), typeof(SabreToothedTiger) },
+            new[] { typeof(Infernus), typeof(FireElemental), typeof(Dimetrosaur), typeof(Saurosaurus) },
+            new[] { typeof(Infernus), typeof(FireElemental), typeof(Dimetrosaur), typeof(Saurosaurus) },
+            new[] { typeof(KotlAutomaton), typeof(MyrmidexDrone), typeof(Allosaurus), typeof(Triceratops) },
+            new[] { typeof(Anchisaur), typeof(Allosaurus), typeof(SandVortex) }
         };
         #endregion
 
         #region Spawn Locations
-        private static readonly Rectangle2D[] m_FelTramWrap = new Rectangle2D[]
+        private static readonly Rectangle2D[] m_FelTramWrap =
         {
             new Rectangle2D(0, 0, 5119, 4095)
         };
 
-        private static readonly Rectangle2D[] m_TokunoWrap = new Rectangle2D[]
+        private static readonly Rectangle2D[] m_TokunoWrap =
         {
             new Rectangle2D(155, 207, 30, 40),
             new Rectangle2D(280, 230, 157, 45),
@@ -199,10 +194,10 @@ namespace Server.Items
             new Rectangle2D(845, 397, 179, 75),
             new Rectangle2D(1068, 382, 60, 80),
             new Rectangle2D(787, 687, 60, 72),
-            new Rectangle2D(848, 473, 557, 655),
+            new Rectangle2D(848, 473, 557, 655)
         };
 
-        private static readonly Rectangle2D[] m_MalasWrap = new Rectangle2D[]
+        private static readonly Rectangle2D[] m_MalasWrap =
         {
             new Rectangle2D(611, 67, 1862, 705),
             new Rectangle2D(1540, 852, 286, 182),
@@ -210,7 +205,7 @@ namespace Server.Items
             new Rectangle2D(1160, 1035, 1299, 871)
         };
 
-        private static readonly Rectangle2D[] m_IlshenarWrap = new Rectangle2D[]
+        private static readonly Rectangle2D[] m_IlshenarWrap =
         {
             new Rectangle2D(221, 314, 657, 286),
             new Rectangle2D(530, 600, 212, 205),
@@ -219,10 +214,10 @@ namespace Server.Items
             new Rectangle2D(1031, 904, 730, 450),
             new Rectangle2D(1028, 630, 318, 161),
             new Rectangle2D(1205, 368, 265, 237),
-            new Rectangle2D(1551, 516, 200, 130),
+            new Rectangle2D(1551, 516, 200, 130)
         };
 
-        private static readonly Rectangle2D[] m_TerMurWrap = new Rectangle2D[]
+        private static readonly Rectangle2D[] m_TerMurWrap =
         {
             new Rectangle2D(535, 2895, 85, 117),
             new Rectangle2D(525, 3085, 115, 70),
@@ -231,10 +226,10 @@ namespace Server.Items
             new Rectangle2D(305, 3445, 175, 255),
             new Rectangle2D(480, 3540, 90, 110),
             new Rectangle2D(605, 3880, 200, 170),
-            new Rectangle2D(750, 3830, 80, 80),
+            new Rectangle2D(750, 3830, 80, 80)
         };
 
-        private static readonly Rectangle2D[] m_EodonWrap = new Rectangle2D[]
+        private static readonly Rectangle2D[] m_EodonWrap =
         {
             new Rectangle2D(259, 1400, 354, 510),
             new Rectangle2D(259, 1400, 354, 510),
@@ -246,7 +241,7 @@ namespace Server.Items
             new Rectangle2D(618, 1792, 44, 273),
             new Rectangle2D(662, 1969, 84, 166),
             new Rectangle2D(754, 1963, 100, 65),
-            new Rectangle2D(174, 1540, 85, 420),
+            new Rectangle2D(174, 1540, 85, 420)
         };
         #endregion
 
@@ -258,11 +253,10 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int Level
         {
-            get { return m_Level; }
+            get => m_Level;
             set
             {
                 m_Level = Math.Min(value, TreasureMapInfo.NewSystem ? 4 : 7);
-
                 InvalidateProperties();
             }
         }
@@ -270,7 +264,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public bool Completed
         {
-            get { return m_Completed; }
+            get => m_Completed;
             set
             {
                 m_Completed = value;
@@ -281,7 +275,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public Mobile CompletedBy
         {
-            get { return m_CompletedBy; }
+            get => m_CompletedBy;
             set
             {
                 m_CompletedBy = value;
@@ -292,7 +286,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public Mobile Decoder
         {
-            get { return m_Decoder; }
+            get => m_Decoder;
             set
             {
                 m_Decoder = value;
@@ -316,27 +310,26 @@ namespace Server.Items
                     {
                         return 1063453;
                     }
-                    else if (m_Level == 7)
+
+                    if (m_Level == 7)
                     {
                         return 1116773;
                     }
-                    else
-                    {
-                        return 1041516 + m_Level;
-                    }
+
+                    return 1041516 + m_Level;
                 }
-                else if (m_Level == 6)
+
+                if (m_Level == 6)
                 {
                     return 1063452;
                 }
-                else if (m_Level == 7)
+
+                if (m_Level == 7)
                 {
                     return 1116790;
                 }
-                else
-                {
-                    return 1041510 + m_Level;
-                }
+
+                return 1041510 + m_Level;
             }
         }
 
@@ -361,7 +354,7 @@ namespace Server.Items
                 AssignRandomPackage();
             }
 
-            if ((!newSystem && level == 7) || map == Map.Internal)
+            if (!newSystem && level == 7 || map == Map.Internal)
                 map = GetRandomMap();
 
             Facet = map;
@@ -373,8 +366,8 @@ namespace Server.Items
 
             GetWidthAndHeight(map, out width, out height);
 
-            int x1 = ChestLocation.X - Utility.RandomMinMax(width / 4, (width / 4) * 3);
-            int y1 = ChestLocation.Y - Utility.RandomMinMax(height / 4, (height / 4) * 3);
+            int x1 = ChestLocation.X - Utility.RandomMinMax(width / 4, width / 4 * 3);
+            int y1 = ChestLocation.Y - Utility.RandomMinMax(height / 4, height / 4 * 3);
 
             if (x1 < 0)
                 x1 = 0;
@@ -984,7 +977,7 @@ namespace Server.Items
         {
             if (TreasureMapInfo.NewSystem)
             {
-                list.Add(m_Decoder != null ? 1158980 + (int)TreasureLevel : 1158975 + (int)TreasureLevel, "#" + TreasureMapInfo.PackageLocalization(Package).ToString());
+                list.Add(m_Decoder != null ? 1158980 + (int)TreasureLevel : 1158975 + (int)TreasureLevel, "#" + TreasureMapInfo.PackageLocalization(Package));
             }
             else
             {
@@ -1105,7 +1098,7 @@ namespace Server.Items
                 return true;
             }
 
-            if (from is PlayerMobile && ((PlayerMobile)from).Young)
+            if (from is PlayerMobile pm && pm.Young)
             {
                 return true;
             }
@@ -1141,7 +1134,7 @@ namespace Server.Items
 
         protected virtual bool HasRequiredSkill(Mobile from)
         {
-            return (from.Skills[SkillName.Cartography].Value >= GetMinSkillLevel());
+            return from.Skills[SkillName.Cartography].Value >= GetMinSkillLevel();
         }
 
         protected class DigTarget : Target
@@ -1167,16 +1160,9 @@ namespace Server.Items
                 {
                     from.SendLocalizedMessage(503028); // The treasure for this map has already been found.
                 }
-                /*
-            else if ( from != m_Map.m_Decoder )
-            {
-            from.SendLocalizedMessage( 503016 ); // Only the person who decoded this map may actually dig up the treasure.
-            }
-            */
                 else if (m_Map.m_Decoder != from && !m_Map.HasRequiredSkill(from))
                 {
                     from.SendLocalizedMessage(503031); // You did not decode this map and have no clue where to look for the treasure.
-                    return;
                 }
                 else if (!from.CanBeginAction(typeof(TreasureMap)))
                 {
@@ -1195,9 +1181,9 @@ namespace Server.Items
                     IPoint3D p = targeted as IPoint3D;
 
                     Point3D targ3D;
-                    if (p is Item)
+                    if (p is Item item)
                     {
-                        targ3D = ((Item)p).GetWorldLocation();
+                        targ3D = item.GetWorldLocation();
                     }
                     else
                     {
@@ -1325,7 +1311,7 @@ namespace Server.Items
             private TreasureMapChest m_Chest;
             private int m_Count;
 
-            public Point3D ChestLocation { get; private set; }
+            public Point3D ChestLocation { get; }
 
             public DigTimer(Mobile from, TreasureMap treasureMap, Point3D location, Map map)
                 : base(TimeSpan.Zero, TimeSpan.FromSeconds(1.0))
@@ -1346,7 +1332,7 @@ namespace Server.Items
 
             protected override void OnTick()
             {
-                if (m_NextSkillTime != m_From.NextSkillTime || (!TreasureMapInfo.NewSystem && m_NextSpellTime != m_From.NextSpellTime) ||
+                if (m_NextSkillTime != m_From.NextSkillTime || !TreasureMapInfo.NewSystem && m_NextSpellTime != m_From.NextSpellTime ||
                     m_NextActionTime != m_From.NextActionTime)
                 {
                     Terminate();
@@ -1361,12 +1347,12 @@ namespace Server.Items
                     return;
                 }
 
-                int z = (m_Chest != null) ? m_Chest.Z + m_Chest.ItemData.Height : int.MinValue;
+                int z = m_Chest != null ? m_Chest.Z + m_Chest.ItemData.Height : int.MinValue;
                 int height = 16;
 
                 if (z > ChestLocation.Z)
                 {
-                    height -= (z - ChestLocation.Z);
+                    height -= z - ChestLocation.Z;
                 }
                 else
                 {
@@ -1481,7 +1467,7 @@ namespace Server.Items
                         m_From.Animate(AnimationType.Attack, 3);
                     }
 
-                    new SoundTimer(m_From, 0x125 + (m_Count % 2)).Start();
+                    new SoundTimer(m_From, 0x125 + m_Count % 2).Start();
                 }
             }
 
@@ -1490,10 +1476,7 @@ namespace Server.Items
                 Stop();
                 m_From.EndAction(typeof(TreasureMap));
 
-                if (m_Chest != null)
-                {
-                    m_Chest.Delete();
-                }
+                m_Chest?.Delete();
 
                 if (m_Dirt1 != null)
                 {
@@ -1624,15 +1607,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
 
             Delete();
         }
