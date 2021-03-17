@@ -992,12 +992,9 @@ namespace Server.SkillHandlers
                     if (!ItemPropertyInfo.ValidateProperty(attr))
                         continue;
 
-                    if (wep.AbsorptionAttributes[attr] > 0)
+                    if (wep.AbsorptionAttributes[attr] > 0 && (!(prop is SAAbsorptionAttribute) || (SAAbsorptionAttribute) prop != attr))
                     {
-                        if (!(prop is SAAbsorptionAttribute) || (SAAbsorptionAttribute) prop != attr)
-                        {
-                            total++;
-                        }
+                        total++;
                     }
                 }
 
@@ -1076,12 +1073,9 @@ namespace Server.SkillHandlers
                     if (!ItemPropertyInfo.ValidateProperty(attr))
                         continue;
 
-                    if (jewel.Attributes[attr] > 0)
+                    if (jewel.Attributes[attr] > 0 && (!(prop is AosAttribute) || (AosAttribute) prop != attr))
                     {
-                        if (!(prop is AosAttribute) || (AosAttribute) prop != attr)
-                        {
-                            total++;
-                        }
+                        total++;
                     }
                 }
 
@@ -1092,12 +1086,9 @@ namespace Server.SkillHandlers
                     if (!ItemPropertyInfo.ValidateProperty(attr))
                         continue;
 
-                    if (jewel.AbsorptionAttributes[attr] > 0)
+                    if (jewel.AbsorptionAttributes[attr] > 0 && (!(prop is SAAbsorptionAttribute) || (SAAbsorptionAttribute) prop != attr))
                     {
-                        if (!(prop is SAAbsorptionAttribute) || (SAAbsorptionAttribute) prop != attr)
-                        {
-                            total++;
-                        }
+                        total++;
                     }
                 }
 
@@ -1133,12 +1124,9 @@ namespace Server.SkillHandlers
                     if (!ItemPropertyInfo.ValidateProperty(attr))
                         continue;
 
-                    if (clothing.Attributes[attr] > 0)
+                    if (clothing.Attributes[attr] > 0 && (!(prop is AosAttribute) || (AosAttribute) prop != attr))
                     {
-                        if (!(prop is AosAttribute) || (AosAttribute) prop != attr)
-                        {
-                            total++;
-                        }
+                        total++;
                     }
                 }
 
