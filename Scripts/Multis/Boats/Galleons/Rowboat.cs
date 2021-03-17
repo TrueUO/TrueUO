@@ -345,6 +345,7 @@ namespace Server.Multis
 
     public class RowBoatDeed : BaseBoatDeed
     {
+        public override bool IsRowBoatDeed => true;
         public override int LabelNumber => 1116491;
         public override BaseBoat Boat => new RowBoat(BoatDirection);
 
