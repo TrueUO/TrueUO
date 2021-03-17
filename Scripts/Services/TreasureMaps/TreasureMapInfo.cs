@@ -545,20 +545,20 @@ namespace Server.Items
             }
         };
 
-        private static Type[][] _MaterialTable =
+        private static readonly Type[][] _MaterialTable =
         {
             new[] { typeof(SpinedLeather), typeof(OakBoard), typeof(AshBoard), typeof(DullCopperIngot), typeof(ShadowIronIngot), typeof(CopperIngot) },
             new[] { typeof(HornedLeather), typeof(YewBoard), typeof(HeartwoodBoard), typeof(BronzeIngot), typeof(GoldIngot), typeof(AgapiteIngot) },
             new[] { typeof(BarbedLeather), typeof(BloodwoodBoard), typeof(FrostwoodBoard), typeof(ValoriteIngot), typeof(VeriteIngot) }
         };
 
-        private static Type[][] _JewelTable =
+        private static readonly Type[][] _JewelTable =
         {
             new[] { typeof(GoldRing), typeof(GoldBracelet), typeof(SilverRing), typeof(SilverBracelet) }, // standard
             new[] { typeof(GoldRing), typeof(GoldBracelet), typeof(SilverRing), typeof(SilverBracelet), typeof(GargishBracelet) } // Ranger/TerMur
         };
 
-        private static Type[][] _DecorativeTable =
+        private static readonly Type[][] _DecorativeTable =
         {
             new[] { typeof(SkullTiledFloorAddonDeed) },
             new[] { typeof(AncientWeapon3) },
@@ -567,7 +567,7 @@ namespace Server.Items
             new[] { typeof(AncientWeapon2) }
         };
 
-        private static Type[][] _SpecialMaterialTable =
+        private static readonly Type[][] _SpecialMaterialTable =
         {
             null, // tram
             null, // fel
@@ -578,7 +578,7 @@ namespace Server.Items
             null  // eodon
         };
 
-        private static Type[][] _SpecialSupplyLoot =
+        private static readonly Type[][] _SpecialSupplyLoot =
         {
             new[] { typeof(LegendaryMapmakersGlasses), typeof(ManaPhasingOrb), typeof(RunedSashOfWarding), typeof(ShieldEngravingTool), null },
             new[] { typeof(ForgedPardon), typeof(LegendaryMapmakersGlasses), typeof(ManaPhasingOrb), typeof(RunedSashOfWarding), typeof(Skeletonkey), typeof(MasterSkeletonKey), typeof(SurgeShield) },
@@ -587,22 +587,22 @@ namespace Server.Items
             new[] { typeof(LegendaryMapmakersGlasses), typeof(ManaPhasingOrb), typeof(RunedSashOfWarding) }
         };
 
-        private static Type[] _SpecialCacheHordeAndTrove =
+        private static readonly Type[] _SpecialCacheHordeAndTrove =
         {
             typeof(OctopusNecklace), typeof(SkullGnarledStaff), typeof(SkullLongsword)
         };
 
-        public static Type[] _DecorativeMinorArtifacts =
+        private static readonly Type[] _DecorativeMinorArtifacts =
         {
             typeof(CandelabraOfSouls), typeof(GoldBricks), typeof(PhillipsWoodenSteed), typeof(AncientShipModelOfTheHMSCape), typeof(AdmiralsHeartyRum)
         };
 
-        public static Type[] _DecorativeMalasArtifacts =
+        private static readonly Type[] _DecorativeMalasArtifacts =
         {
             typeof(CoffinPiece)
         };
 
-        public static Type[] _FunctionalMinorArtifacts =
+        private static readonly Type[] _FunctionalMinorArtifacts =
         {
             typeof(ArcticDeathDealer), typeof(BlazeOfDeath), typeof(BurglarsBandana),
             typeof(CavortingClub), typeof(DreadPirateHat),
@@ -613,7 +613,7 @@ namespace Server.Items
             typeof(ShieldOfInvulnerability)
         };
 
-        public static SkillName[][] _TranscendenceTable =
+        private static readonly SkillName[][] _TranscendenceTable =
         {
             new[] { SkillName.ArmsLore, SkillName.Blacksmith, SkillName.Carpentry, SkillName.Cartography, SkillName.Cooking, SkillName.Cooking, SkillName.Fletching, SkillName.Mining, SkillName.Tailoring },
             new[] { SkillName.Anatomy, SkillName.DetectHidden, SkillName.Fencing, SkillName.Poisoning, SkillName.RemoveTrap, SkillName.Snooping, SkillName.Stealth },
@@ -622,7 +622,7 @@ namespace Server.Items
             new[] { SkillName.Chivalry, SkillName.Focus, SkillName.Parry, SkillName.Swords, SkillName.Tactics, SkillName.Wrestling }
         };
 
-        public static SkillName[][] _AlacrityTable =
+        private static readonly SkillName[][] _AlacrityTable =
         {
             new[] { SkillName.ArmsLore, SkillName.Blacksmith, SkillName.Carpentry, SkillName.Cartography, SkillName.Cooking, SkillName.Cooking, SkillName.Fletching, SkillName.Mining, SkillName.Tailoring, SkillName.Lumberjacking },
             new[] { SkillName.DetectHidden, SkillName.Fencing, SkillName.Hiding, SkillName.Lockpicking, SkillName.Poisoning, SkillName.RemoveTrap, SkillName.Snooping, SkillName.Stealing, SkillName.Stealth },
@@ -631,7 +631,7 @@ namespace Server.Items
             new[] { SkillName.Chivalry, SkillName.Focus, SkillName.Macing, SkillName.Parry, SkillName.Swords, SkillName.Wrestling }
         };
 
-        public static SkillName[][] _PowerscrollTable =
+        private static readonly SkillName[][] _PowerscrollTable =
         {
             null,
             new[] { SkillName.Ninjitsu },
