@@ -16,6 +16,8 @@ namespace Server.Multis
         [CommandProperty(AccessLevel.GameMaster)]
         public Direction BoatDirection { get; set; }
 
+        public virtual bool IsRowBoatDeed => false;
+
         public BaseBoatDeed(int id, Point3D offset)
             : base(0x14F2)
         {
@@ -69,7 +71,7 @@ namespace Server.Multis
             {
                 from.SendLocalizedMessage(1116758); // You already have a ship deployed!
             }
-            else if (from.Region.IsPartOf(typeof(HouseRegion)) || boat != null && (boat.GetType() == Boat.GetType() || !boat.IsRowBoat && !(this is RowBoatDeed)))
+            else if (from.Region.IsPartOf(typeof(HouseRegion)) || boat != null && (boat.GetType() == Boat.GetType() || !boat.IsRowBoat && !IsRowBoatDeed))
             {
                 from.SendLocalizedMessage(1010568, null, 0x25); // You may not place a ship while on another ship or inside a house.
             }
@@ -103,7 +105,7 @@ namespace Server.Multis
 
             BaseBoat b = BaseBoat.FindBoatAt(from, from.Map);
 
-            if (from.Region.IsPartOf(typeof(HouseRegion)) || b != null && (b.GetType() == Boat.GetType() || !b.IsRowBoat && !(this is RowBoatDeed)))
+            if (from.Region.IsPartOf(typeof(HouseRegion)) || b != null && (b.GetType() == Boat.GetType() || !b.IsRowBoat && !IsRowBoatDeed))
             {
                 from.SendLocalizedMessage(1010568, null, 0x25); // You may not place a ship while on another ship or inside a house.
                 return;
