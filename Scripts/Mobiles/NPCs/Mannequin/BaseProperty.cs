@@ -24,6 +24,7 @@ namespace Server.Mobiles
         public virtual int Description { get; set; }
 
         public virtual bool IsBoolen => false;
+        public virtual bool IsMagical => false;
         public virtual bool AlwaysVisible => false;
 
         public virtual bool IsSpriteGraph => false;

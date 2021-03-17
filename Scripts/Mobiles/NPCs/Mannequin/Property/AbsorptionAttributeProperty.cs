@@ -5,6 +5,7 @@ namespace Server.Mobiles.MannequinProperty
 {
     public abstract class AbsorptionAttr : ValuedProperty
     {
+        public override bool IsMagical => true;
         public abstract SAAbsorptionAttribute Attribute { get; }
 
         public double GetPropertyValue(Item item)

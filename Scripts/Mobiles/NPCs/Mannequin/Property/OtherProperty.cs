@@ -93,6 +93,7 @@ namespace Server.Mobiles.MannequinProperty
 
     public class MedableArmorProperty : ValuedProperty
     {
+        public override bool IsMagical => true;
         public override Catalog Catalog => Catalog.Combat1;
         public override int Order => 6;
         public override bool AlwaysVisible => true;
@@ -155,6 +156,7 @@ namespace Server.Mobiles.MannequinProperty
 
     public class DamageModifierProperty : ValuedProperty
     {
+        public override bool IsMagical => true;
         public override Catalog Catalog => Catalog.Misc;
         public override int LabelNumber => 1159401;  // Damage Modifier
         public override int Description => 1152402;  // This property provides an increase to the damage you inflict on a successful ranged weapon attack.  The bonus damage is applied to the net damage inflicted (after all damage and resistance calculations are made).  This property can only be found on certain quivers.
@@ -198,6 +200,7 @@ namespace Server.Mobiles.MannequinProperty
 
     public class ManaPhaseProperty : ValuedProperty
     {
+        public override bool IsMagical => true;
         public override Catalog Catalog => Catalog.Combat1;
         public override int Order => 10;
         public override bool IsBoolen => true;
@@ -230,6 +233,7 @@ namespace Server.Mobiles.MannequinProperty
 
     public class SearingWeaponProperty : ValuedProperty
     {
+        public override bool IsMagical => true;
         public override Catalog Catalog => Catalog.HitEffects;
         public override bool IsBoolen => true;
         public override int LabelNumber => 1151183;  // Searing Weapon

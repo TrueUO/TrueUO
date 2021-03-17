@@ -1,8 +1,10 @@
 using Server.Gumps;
 using Server.Misc;
 using Server.Mobiles;
+using Server.Mobiles.MannequinProperty;
 using Server.Network;
 using Server.Targeting;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -25,9 +27,9 @@ namespace Server.Items
             Hue = 2741;
         }
 
-        public override bool CheckMagicalItem(Item item)
+        public override bool CheckMagicalItem(List<ValuedProperty> props)
         {
-            return Mannequin.GetProperty(item).Any(x => x.Value != 0);
+            return props.Any(x => x.Value != 0);
         }
 
         public RobeTransmogrificationPotion(Serial serial)
@@ -65,9 +67,9 @@ namespace Server.Items
             Hue = 2736;
         }
 
-        public override bool CheckMagicalItem(Item item)
+        public override bool CheckMagicalItem(List<ValuedProperty> props)
         {
-            return Mannequin.GetProperty(item).Any(x => !_ExcludeArmorProperties.Contains(x.LabelNumber) && x.Value != 0);
+            return props.Any(x => !_ExcludeArmorProperties.Contains(x.GetType()) && x is MageArmorProperty);
         }
 
         public HeadTransmogrificationPotion(Serial serial)
@@ -116,9 +118,9 @@ namespace Server.Items
         }
         
 
-        public override bool CheckMagicalItem(Item item)
+        public override bool CheckMagicalItem(List<ValuedProperty> props)
         {
-            return Mannequin.GetProperty(item).Any(x => !_ExcludeArmorProperties.Contains(x.LabelNumber) && x.Value != 0);
+            return props.Any(x => !_ExcludeArmorProperties.Contains(x.GetType()));
         }
 
         public ShieldTransmogrificationPotion(Serial serial)
@@ -191,13 +193,13 @@ namespace Server.Items
             }
         }
 
-        public static readonly int[] _ExcludeArmorProperties = new int[]
+        public readonly Type[] _ExcludeArmorProperties = new Type[]
         {
-            1079764,  // Physical Resist
-            1079763,  // Fire Resist
-            1079761,  // Cold Resist
-            1079765,  // Poison Resist
-            1079762,  // Energy Resist
+            typeof(PhysicalResistProperty),  // Physical Resist
+            typeof(FireResistProperty),  // Fire Resist
+            typeof(ColdResistProperty),  // Cold Resist
+            typeof(PoisonResistProperty),  // Poison Resist
+            typeof(EnergyResistProperty),  // Energy Resist
         };
 
         public virtual bool CheckRules()
@@ -205,7 +207,7 @@ namespace Server.Items
             return true;
         }
 
-        public virtual bool CheckMagicalItem(Item item)
+        public virtual bool CheckMagicalItem(List<ValuedProperty> props)
         {
             return false;
         }
@@ -279,7 +281,7 @@ namespace Server.Items
                         return;
                     }
 
-                    var ip = new ItemProps { Item = targetitem, Props = Mannequin.GetProperty(targetitem) };
+                    var ip = new ItemProps { Item = targetitem, Props = Mannequin.FindMagicalItemProperty(targetitem) };
 
                     if (IsSource)
                     {
@@ -287,10 +289,14 @@ namespace Server.Items
                     }
                     else
                     {
-                        if (Potion.CheckMagicalItem(targetitem))
+                        if (Potion.CheckMagicalItem(ip.Props))
                         {
                             from.SendLocalizedMessage(1159504); // The destination item must be free of any magical properties.
                             return;
+                        }
+                        else if (targetitem.HasSocket<Transmogrified>())
+                        {
+                            from.Send(new AsciiMessage(-1, -1, MessageType.Label, 946, 3, "System", "This item has already been transmogrified."));
                         }
                         else
                         {
@@ -319,7 +325,7 @@ namespace Server.Items
                         {
                             message = Potion.ValidFailMessage;
                         }
-                        else if (Potion.Destination.Props.Except(Potion.Source.Props).Any(x => x.LabelNumber == 1159280))
+                        else if (Potion.Destination.Props.Except(Potion.Source.Props).Any(x => x is MedableArmorProperty))
                         {
                             message = 1159678; // Both source and destination objects must allow the use of the meditation skill (medable) or both block the meditation skill (non-medable).
                         }
@@ -387,12 +393,17 @@ namespace Server.Items
                             return;
                         }
 
-                        Potion.Destination.Props = Mannequin.GetProperty(Potion.Destination.Item);
+                        Potion.Destination.Props = Mannequin.FindMagicalItemProperty(Potion.Destination.Item);
 
-                        if (Potion.CheckMagicalItem(Potion.Destination.Item))
+                        if (Potion.CheckMagicalItem(Potion.Destination.Props))
                         {
                             m.SendLocalizedMessage(1159504); // The destination item must be free of any magical properties.
                             return;
+                        }
+
+                        if (Potion.Destination.Props.Except(Potion.Source.Props).Any(x => x is MedableArmorProperty))
+                        {
+                            m.SendLocalizedMessage(1159678); // Both source and destination objects must allow the use of the meditation skill (medable) or both block the meditation skill (non-medable).
                         }
 
                         m.CloseGump(typeof(BaseTransmogrificationPotionGump));
@@ -457,24 +468,36 @@ namespace Server.Items
                             return;
                         }
 
-                        Potion.Destination.Props = Mannequin.GetProperty(Potion.Destination.Item);
+                        Potion.Destination.Props = Mannequin.FindMagicalItemProperty(Potion.Destination.Item);
 
-                        if (Potion.CheckMagicalItem(Potion.Destination.Item))
+                        if (Potion.CheckMagicalItem(Potion.Destination.Props))
                         {
                             m.SendLocalizedMessage(1159504); // The destination item must be free of any magical properties.
                             return;
+                        }
+
+                        if (Potion.Destination.Props.Except(Potion.Source.Props).Any(x => x is MedableArmorProperty))
+                        {
+                            m.SendLocalizedMessage(1159678); // Both source and destination objects must allow the use of the meditation skill (medable) or both block the meditation skill (non-medable).
                         }
 
                         m.CloseGump(typeof(BaseTransmogrificationPotionGump));
 
                         m.PlaySound(491);
 
+                        Potion.Source.Item.AttachSocket(new Transmogrified());
+
+                        var socket = Potion.Source.Item.GetSocket<Transmogrified>();
+
+                        if (socket != null)
+                        {
+                            socket.SourceName = Potion.Source.Item.Name;
+                        }
+
                         Potion.Source.Item.ItemID = Potion.Destination.Item.ItemID;
                         Potion.Source.Item.Hue = Potion.Destination.Item.Hue;
                         Potion.Source.Item.LootType = Potion.Destination.Item.LootType;
-                        Potion.Source.Item.Insured = Potion.Destination.Item.Insured;
-
-                        Potion.Source.Item.AttachSocket(new Transmogrified());
+                        Potion.Source.Item.Insured = Potion.Destination.Item.Insured;                        
 
                         Potion.Destination.Item.Delete();
                         Potion.Delete();

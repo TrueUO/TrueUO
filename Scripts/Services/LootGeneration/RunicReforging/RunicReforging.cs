@@ -3354,6 +3354,8 @@ namespace Server.Items
                     {
                         if (item == m_Tool)
                             from.SendLocalizedMessage(1010087); // You cannot use that!
+                        else if (item.HasSocket<Transmogrified>())
+                            from.SendLocalizedMessage(1159566); // You cannot reforge that transmogrified item.
                         else if (tool.GetType() != m_Tool.GetType())
                             from.SendLocalizedMessage(1152274); // You may only combine runic tools of the same type.
                         else if (tool.Resource != m_Tool.Resource)

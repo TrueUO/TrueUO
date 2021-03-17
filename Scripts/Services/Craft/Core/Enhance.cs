@@ -18,7 +18,8 @@ namespace Server.Engines.Craft
         Broken,
         NoResources,
         NoSkill,
-        Enchanted
+        Enchanted,
+        Transmogrified
     }
 
     public class Enhance
@@ -60,6 +61,9 @@ namespace Server.Engines.Craft
 
             if (!item.IsChildOf(from.Backpack))
                 return EnhanceResult.NotInBackpack;
+
+            if (item.HasSocket<Transmogrified>())
+                return EnhanceResult.Transmogrified;
 
             IResource ires = item as IResource;
 
@@ -397,6 +401,9 @@ namespace Server.Engines.Craft
                         case EnhanceResult.NotInBackpack:
                             message = 1061005;
                             break; // The item must be in your backpack to enhance it.
+                        case EnhanceResult.Transmogrified
+                            message = 1159564;
+                            break; // You cannot enhance a transmogrified item.
                         case EnhanceResult.AlreadyEnhanced:
                             message = 1061012;
                             break; // This item is already enhanced with the properties of a special material.
