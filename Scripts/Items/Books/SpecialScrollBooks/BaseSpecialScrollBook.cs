@@ -53,17 +53,14 @@ namespace Server.Items
 
         public override void OnDoubleClick(Mobile m)
         {
-            if (RootParent is PlayerVendor)
-            {
-                m.SendLocalizedMessage(500447); // That is not accessible.
-                return;
-            }
+            var parent = RootParent;
 
-            if (m is PlayerMobile mob && IsChildOf(mob.Backpack))
+            if (parent != null && parent != m)
             {
-                BaseGump.SendGump(new SpecialScrollBookGump(mob, this));
+                m.SendLocalizedMessage(502405, "", 21); // That is inaccessible.
+                m.SendLocalizedMessage(1061637); // You are not allowed to access this.
             }
-            else if (m is PlayerMobile mobile && mobile.InRange(GetWorldLocation(), 2) && IsLockedDown)
+            else if (m is PlayerMobile mobile && mobile.InRange(GetWorldLocation(), 2))
             {
                 BaseGump.SendGump(new SpecialScrollBookGump(mobile, this));
             }
