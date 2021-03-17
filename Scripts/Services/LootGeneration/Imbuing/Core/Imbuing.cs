@@ -970,10 +970,9 @@ namespace Server.SkillHandlers
                     if (!ItemPropertyInfo.ValidateProperty(attr))
                         continue;
 
-                    if (wep.ExtendedWeaponAttributes[attr] > 0)
+                    if (wep.ExtendedWeaponAttributes[attr] > 0 && (!(prop is ExtendedWeaponAttribute) || (ExtendedWeaponAttribute)prop != attr))
                     {
-                        if (!(prop is ExtendedWeaponAttribute) || (ExtendedWeaponAttribute)prop != attr)
-                            total++;
+                        total++;
                     }
                 }
 
@@ -995,17 +994,16 @@ namespace Server.SkillHandlers
 
                     if (wep.AbsorptionAttributes[attr] > 0)
                     {
-                        if (!(prop is SAAbsorptionAttribute) || (SAAbsorptionAttribute)prop != attr)
+                        if (!(prop is SAAbsorptionAttribute) || (SAAbsorptionAttribute) prop != attr)
+                        {
                             total++;
+                        }
                     }
                 }
 
-                if (wep is BaseRanged ranged && !(prop is string))
+                if (wep is BaseRanged ranged && !(prop is string) && ranged.Velocity > 0 && id != 60)
                 {
-                    if (ranged.Velocity > 0 && id != 60)
-                    {
-                        total++;
-                    }
+                    total++;
                 }
 
                 if (wep.SearingWeapon)
@@ -1049,12 +1047,9 @@ namespace Server.SkillHandlers
                     if (!ItemPropertyInfo.ValidateProperty(attr))
                         continue;
 
-                    if (armor.ArmorAttributes[attr] > 0)
+                    if (armor.ArmorAttributes[attr] > 0 && (!(prop is AosArmorAttribute) || (AosArmorAttribute) prop != attr))
                     {
-                        if (!(prop is AosArmorAttribute) || (AosArmorAttribute) prop != attr)
-                        {
-                            total++;
-                        }
+                        total++;
                     }
                 }
 
@@ -1066,12 +1061,9 @@ namespace Server.SkillHandlers
                     if (!ItemPropertyInfo.ValidateProperty(attr))
                         continue;
 
-                    if (armor.AbsorptionAttributes[attr] > 0)
+                    if (armor.AbsorptionAttributes[attr] > 0 && (!(prop is SAAbsorptionAttribute) || (SAAbsorptionAttribute) prop != attr))
                     {
-                        if (!(prop is SAAbsorptionAttribute) || (SAAbsorptionAttribute) prop != attr)
-                        {
-                            total++;
-                        }
+                        total++;
                     }
                 }
             }
