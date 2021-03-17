@@ -256,7 +256,7 @@ namespace Server.Items
             get => m_Level;
             set
             {
-                m_Level = Math.Min(value, TreasureMapInfo.NewSystem ? 4 : 7);
+                m_Level = Math.Min(value, 4);
                 InvalidateProperties();
             }
         }
@@ -347,15 +347,13 @@ namespace Server.Items
         public TreasureMap(int level, Map map, bool eodon)
         {
             Level = level;
-            bool newSystem = TreasureMapInfo.NewSystem;
 
-            if (newSystem)
+            AssignRandomPackage();
+
+            if (map == Map.Internal)
             {
-                AssignRandomPackage();
-            }
-
-            if (!newSystem && level == 7 || map == Map.Internal)
                 map = GetRandomMap();
+            }
 
             Facet = map;
             ChestLocation = GetRandomLocation(map, eodon);
@@ -686,12 +684,6 @@ namespace Server.Items
                 {
                     bc.Title = "(Guardian)";
 
-                    if (!TreasureMapInfo.NewSystem && level == 0)
-                    {
-                        bc.Name = "a chest guardian";
-                        bc.Hue = 0x835;
-                    }
-
                     if (BaseCreature.IsSoulboundEnemies && !bc.Tamable)
                     {
                         bc.IsSoulBound = true;
@@ -760,32 +752,31 @@ namespace Server.Items
         {
             Type[] array;
 
-            if (TreasureMapInfo.NewSystem)
+            switch (level)
             {
-                switch (level)
-                {
-                    default: array = table[level + 1]; break;
-                    case 2:
-                        List<Type> list1 = new List<Type>();
-                        list1.AddRange(table[2]);
-                        list1.AddRange(table[3]);
+                default:
+                    array = table[level + 1];
+                    break;
+                case 2:
+                    List<Type> list1 = new List<Type>();
+                    list1.AddRange(table[2]);
+                    list1.AddRange(table[3]);
 
-                        array = list1.ToArray();
-                        break;
-                    case 3:
-                        List<Type> list2 = new List<Type>();
-                        list2.AddRange(table[4]);
-                        list2.AddRange(table[5]);
+                    array = list1.ToArray();
+                    break;
+                case 3:
+                    List<Type> list2 = new List<Type>();
+                    list2.AddRange(table[4]);
+                    list2.AddRange(table[5]);
 
-                        array = list2.ToArray();
-                        break;
-                    case 4: array = table[6]; break;
-                    case 5: array = table[7]; break;
-                }
-            }
-            else
-            {
-                array = table[level];
+                    array = list2.ToArray();
+                    break;
+                case 4:
+                    array = table[6];
+                    break;
+                case 5:
+                    array = table[7];
+                    break;
             }
 
             return array;
@@ -821,12 +812,6 @@ namespace Server.Items
             {
                 from.SendLocalizedMessage(1046447); // Only a young player may use this treasure map.
             }
-            /*
-        else if ( from != m_Decoder )
-        {
-        from.SendLocalizedMessage( 503016 ); // Only the person who decoded this map may actually dig up the treasure.
-        }
-        */
             else if (m_Decoder != from && !HasRequiredSkill(from))
             {
                 from.SendLocalizedMessage(503031); // You did not decode this map and have no clue where to look for the treasure.
@@ -917,7 +902,7 @@ namespace Server.Items
                 ClearPins();
                 LootType = LootType.Regular;
                 m_Decoder = null;
-                GetRandomLocation(Facet, TreasureMapInfo.NewSystem ? TreasureFacet == TreasureFacet.Eodon : false);
+                GetRandomLocation(Facet, TreasureFacet == TreasureFacet.Eodon);
                 InvalidateProperties();
                 NextReset = DateTime.UtcNow + ResetTime;
             }
@@ -975,14 +960,7 @@ namespace Server.Items
 
         public override void AddNameProperty(ObjectPropertyList list)
         {
-            if (TreasureMapInfo.NewSystem)
-            {
-                list.Add(m_Decoder != null ? 1158980 + (int)TreasureLevel : 1158975 + (int)TreasureLevel, "#" + TreasureMapInfo.PackageLocalization(Package));
-            }
-            else
-            {
-                base.AddNameProperty(list);
-            }
+            list.Add(m_Decoder != null ? 1158980 + (int)TreasureLevel : 1158975 + (int)TreasureLevel, "#" + TreasureMapInfo.PackageLocalization(Package));
         }
 
         public override void GetProperties(ObjectPropertyList list)
@@ -1011,19 +989,14 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(3);
 
             writer.Write((int)Package);
-
             writer.Write(NextReset);
-
             writer.Write(m_CompletedBy);
-
             writer.Write(m_Level);
             writer.Write(m_Completed);
             writer.Write(m_Decoder);
-
             writer.Write(ChestLocation);
 
             if (!Completed && NextReset != DateTime.MinValue && NextReset < DateTime.UtcNow)
@@ -1033,57 +1006,15 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 3:
-                    {
-                        Package = (TreasurePackage)reader.ReadInt();
-                        goto case 2;
-                    }
-                case 2:
-                    {
-                        NextReset = reader.ReadDateTime();
-                        goto case 1;
-                    }
-                case 1:
-                    {
-                        m_CompletedBy = reader.ReadMobile();
-
-                        goto case 0;
-                    }
-                case 0:
-                    {
-                        m_Level = reader.ReadInt();
-                        m_Completed = reader.ReadBool();
-                        m_Decoder = reader.ReadMobile();
-
-                        if (version == 1)
-                            Facet = reader.ReadMap();
-
-                        ChestLocation = reader.ReadPoint2D();
-
-                        if (version == 0 && m_Completed)
-                        {
-                            m_CompletedBy = m_Decoder;
-                        }
-
-                        break;
-                    }
-            }
-
-            if (version == 2 && TreasureMapInfo.NewSystem)
-            {
-                Level = TreasureMapInfo.ConvertLevel(m_Level);
-                AssignRandomPackage();
-            }
-
-            if (m_Decoder != null && LootType == LootType.Regular)
-            {
-                LootType = LootType.Blessed;
-            }
+            Package = (TreasurePackage)reader.ReadInt();
+            NextReset = reader.ReadDateTime();
+            m_CompletedBy = reader.ReadMobile();
+            m_Level = reader.ReadInt();
+            m_Completed = reader.ReadBool();
+            m_Decoder = reader.ReadMobile();
+            ChestLocation = reader.ReadPoint2D();
 
             if (NextReset == DateTime.MinValue)
             {
@@ -1093,7 +1024,7 @@ namespace Server.Items
 
         private bool CheckYoung(Mobile from)
         {
-            if (from.AccessLevel >= AccessLevel.GameMaster || TreasureMapInfo.NewSystem)
+            if (from.AccessLevel >= AccessLevel.GameMaster)
             {
                 return true;
             }
@@ -1191,7 +1122,7 @@ namespace Server.Items
                     }
 
                     int maxRange;
-                    double skillValue = TreasureMapInfo.NewSystem ? from.Skills[SkillName.Cartography].Value : from.Skills[SkillName.Mining].Value;
+                    double skillValue = from.Skills[SkillName.Cartography].Value;
 
                     if (skillValue >= 100.0)
                     {
@@ -1332,8 +1263,7 @@ namespace Server.Items
 
             protected override void OnTick()
             {
-                if (m_NextSkillTime != m_From.NextSkillTime || !TreasureMapInfo.NewSystem && m_NextSpellTime != m_From.NextSpellTime ||
-                    m_NextActionTime != m_From.NextActionTime)
+                if (m_NextSkillTime != m_From.NextSkillTime || m_NextActionTime != m_From.NextActionTime)
                 {
                     Terminate();
                     return;
@@ -1396,10 +1326,7 @@ namespace Server.Items
                     {
                         m_Chest = new TreasureMapChest(m_From, m_TreasureMap.Level, true);
 
-                        if (TreasureMapInfo.NewSystem)
-                        {
-                            m_TreasureMap.AssignChestQuality(m_From, m_Chest);
-                        }
+                        m_TreasureMap.AssignChestQuality(m_From, m_Chest);
 
                         m_Chest.MoveToWorld(new Point3D(ChestLocation.X, ChestLocation.Y, ChestLocation.Z - 15), m_Map);
                     }
@@ -1422,14 +1349,7 @@ namespace Server.Items
                     m_TreasureMap.Completed = true;
                     m_TreasureMap.CompletedBy = m_From;
 
-                    if (TreasureMapInfo.NewSystem)
-                    {
-                        TreasureMapInfo.Fill(m_From, m_Chest, m_TreasureMap);
-                    }
-                    else
-                    {
-                        TreasureMapChest.Fill(m_From, m_Chest, m_Chest.Level, false);
-                    }
+                    TreasureMapInfo.Fill(m_From, m_Chest, m_TreasureMap);
 
                     m_TreasureMap.OnMapComplete(m_From, m_Chest);
 
@@ -1437,10 +1357,10 @@ namespace Server.Items
                     switch (m_TreasureMap.Level)
                     {
                         case 0:
-                            spawns = TreasureMapInfo.NewSystem ? 4 : 3;
+                            spawns = 4;
                             break;
                         case 1:
-                            spawns = TreasureMapInfo.NewSystem ? 4 : 0;
+                            spawns = 4;
                             break;
                         default:
                             spawns = 4;
@@ -1449,7 +1369,7 @@ namespace Server.Items
 
                     for (int i = 0; i < spawns; ++i)
                     {
-                        bool guardian = TreasureMapInfo.NewSystem ? Utility.RandomDouble() >= 0.3 : true;
+                        bool guardian = Utility.RandomDouble() >= 0.3;
 
                         BaseCreature bc = Spawn(m_TreasureMap.Level, m_Chest.Location, m_Chest.Map, null, guardian);
 

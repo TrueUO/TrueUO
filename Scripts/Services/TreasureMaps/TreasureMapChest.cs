@@ -11,32 +11,6 @@ namespace Server.Items
 {
     public class TreasureMapChest : LockableContainer
     {
-        public static Type[] Artifacts => m_Artifacts;
-        private static readonly Type[] m_Artifacts =
-        {
-            typeof(CandelabraOfSouls), typeof(GoldBricks), typeof(PhillipsWoodenSteed),
-            typeof(ArcticDeathDealer), typeof(BlazeOfDeath), typeof(BurglarsBandana),
-            typeof(CavortingClub), typeof(DreadPirateHat),
-            typeof(EnchantedTitanLegBone), typeof(GwennosHarp), typeof(IolosLute),
-            typeof(LunaLance), typeof(NightsKiss), typeof(NoxRangersHeavyCrossbow),
-            typeof(PolarBearMask), typeof(VioletCourage), typeof(HeartOfTheLion),
-            typeof(ColdBlood), typeof(AlchemistsBauble), typeof(CaptainQuacklebushsCutlass),
-            typeof(ShieldOfInvulnerability), typeof(AncientShipModelOfTheHMSCape),
-            typeof(AdmiralsHeartyRum)
-        };
-
-        public static Type[] ArtifactsLevelFiveToSeven => m_LevelFiveToSeven;
-        private static readonly Type[] m_LevelFiveToSeven =
-        {
-            typeof(ForgedPardon), typeof(ManaPhasingOrb), typeof(RunedSashOfWarding), typeof(SurgeShield)
-        };
-
-        public static Type[] ArtifactsLevelSeven => m_LevelSevenOnly;
-        private static readonly Type[] m_LevelSevenOnly =
-        {
-            typeof(CoffinPiece), typeof(MasterSkeletonKey)
-        };
-
         public static Type[] SOSArtifacts => m_SOSArtifacts;
         private static readonly Type[] m_SOSArtifacts =
         {
@@ -369,58 +343,29 @@ namespace Server.Items
             Item special = null;
             Item newSpecial = null;
 
-            if (isSos)
+            if (0.004 * level > Utility.RandomDouble())
+                arty = Loot.Construct(m_SOSArtifacts);
+            if (0.006 * level > Utility.RandomDouble())
+                special = Loot.Construct(m_SOSDecor);
+            else if (0.009 * level > Utility.RandomDouble())
+                special = new TreasureMap(Utility.RandomMinMax(level, Math.Min(7, level + 1)), cont.Map);
+
+            if (level >= 4)
             {
-                if (0.004 * level > Utility.RandomDouble())
-                    arty = Loot.Construct(m_SOSArtifacts);
-                if (0.006 * level > Utility.RandomDouble())
-                    special = Loot.Construct(m_SOSDecor);
-                else if (0.009 * level > Utility.RandomDouble())
-                    special = new TreasureMap(Utility.RandomMinMax(level, Math.Min(7, level + 1)), cont.Map);
-
-                if (level >= 4)
+                switch (Utility.Random(4))
                 {
-                    switch (Utility.Random(4))
-                    {
-                        case 0: newSpecial = new AncientAquariumFishNet(); break;
-                        case 1: newSpecial = new LiveRock(); break;
-                        case 2: newSpecial = new SaltedSerpentSteaks(); break;
-                        case 3: newSpecial = new OceanSapphire(); break;
-                    }
-                }
-            }
-            else
-            {
-                if (level >= 7)
-                {
-                    if (0.025 > Utility.RandomDouble())
-                        special = Loot.Construct(m_LevelSevenOnly);
-                    else if (0.10 > Utility.RandomDouble())
-                        special = Loot.Construct(m_LevelFiveToSeven);
-                    else if (0.25 > Utility.RandomDouble())
-                        special = GetRandomSpecial(level, cont.Map);
-
-                    arty = Loot.Construct(m_Artifacts);
-                }
-                else if (level >= 6)
-                {
-                    if (0.025 > Utility.RandomDouble())
-                        special = Loot.Construct(m_LevelFiveToSeven);
-                    else if (0.20 > Utility.RandomDouble())
-                        special = GetRandomSpecial(level, cont.Map);
-
-                    arty = Loot.Construct(m_Artifacts);
-                }
-                else if (level >= 5)
-                {
-                    if (0.005 > Utility.RandomDouble())
-                        special = Loot.Construct(m_LevelFiveToSeven);
-                    else if (0.15 > Utility.RandomDouble())
-                        special = GetRandomSpecial(level, cont.Map);
-                }
-                else if (0.10 > Utility.RandomDouble())
-                {
-                    special = GetRandomSpecial(level, cont.Map);
+                    case 0:
+                        newSpecial = new AncientAquariumFishNet();
+                        break;
+                    case 1:
+                        newSpecial = new LiveRock();
+                        break;
+                    case 2:
+                        newSpecial = new SaltedSerpentSteaks();
+                        break;
+                    case 3:
+                        newSpecial = new OceanSapphire();
+                        break;
                 }
             }
 
@@ -447,26 +392,6 @@ namespace Server.Items
                 rolls += level - 2;
 
             RefinementComponent.Roll(cont, rolls, 0.10);
-        }
-
-        private static Item GetRandomSpecial(int level, Map map)
-        {
-            Item special;
-
-            switch (Utility.Random(8))
-            {
-                default:
-                case 0: special = new CreepingVine(); break;
-                case 1: special = new MessageInABottle(); break;
-                case 2: special = new ScrollOfAlacrity(PowerScroll.Skills[Utility.Random(PowerScroll.Skills.Count)]); break;
-                case 3: special = new Skeletonkey(); break;
-                case 4: special = new TastyTreat(5); break;
-                case 5: special = new TreasureMap(Utility.RandomMinMax(level, Math.Min(7, level + 1)), map); break;
-                case 6: special = GetRandomRecipe(); break;
-                case 7: special = ScrollOfTranscendence.CreateRandom(1, 5); break;
-            }
-
-            return special;
         }
 
         public static void GetRandomItemStat(out int min, out int max, double scale = 1.0)
@@ -512,18 +437,6 @@ namespace Server.Items
                 return false;
             }
 
-            if (!TreasureMapInfo.NewSystem && Level == 0)
-            {
-                if (Guardians.Any(g => g.Alive))
-                {
-                    from.SendLocalizedMessage(1046448); // You must first kill the guardians before you may open this chest.
-                    return true;
-                }
-
-                LockPick(from);
-                return false;
-            }
-
             if (CanOpen(from))
             {
                 return base.CheckLocked(from);
@@ -534,19 +447,16 @@ namespace Server.Items
 
         public virtual bool CanOpen(Mobile from)
         {
-            if (TreasureMapInfo.NewSystem)
+            if (!Locked && TrapType != TrapType.None)
             {
-                if (!Locked && TrapType != TrapType.None)
-                {
-                    from.SendLocalizedMessage(1159008); // That appears to be trapped, using the remove trap skill would yield better results...
-                    return false;
-                }
+                from.SendLocalizedMessage(1159008); // That appears to be trapped, using the remove trap skill would yield better results...
+                return false;
+            }
 
-                if (AncientGuardians.Any(ag => ag.Alive))
-                {
-                    from.SendLocalizedMessage(1046448); // You must first kill the guardians before you may open this chest.
-                    return false;
-                }
+            if (AncientGuardians.Any(ag => ag.Alive))
+            {
+                from.SendLocalizedMessage(1046448); // You must first kill the guardians before you may open this chest.
+                return false;
             }
 
             return !Locked;
@@ -642,22 +552,17 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(4); // version
 
             writer.Write(FailedLockpick);
             writer.Write((int)_Quality);
             writer.Write(DigTime);
             writer.Write(AncientGuardians, true);
-
             writer.Write(FirstOpenedByOwner);
             writer.Write(TreasureMap);
-
             writer.Write(Guardians, true);
             writer.Write(Temporary);
-
             writer.Write(Owner);
-
             writer.Write(Level);
             writer.WriteDeltaTime(DeleteTime);
             writer.Write(m_Lifted, true);
@@ -666,46 +571,20 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 4:
-                    FailedLockpick = reader.ReadBool();
-                    _Quality = (ChestQuality)reader.ReadInt();
-                    DigTime = reader.ReadDateTime();
-                    AncientGuardians = reader.ReadStrongMobileList();
-                    goto case 3;
-                case 3:
-                    FirstOpenedByOwner = reader.ReadBool();
-                    TreasureMap = reader.ReadItem() as TreasureMap;
-                    goto case 2;
-                case 2:
-                    {
-                        Guardians = reader.ReadStrongMobileList();
-                        Temporary = reader.ReadBool();
-
-                        goto case 1;
-                    }
-                case 1:
-                    {
-                        Owner = reader.ReadMobile();
-
-                        goto case 0;
-                    }
-                case 0:
-                    {
-                        Level = reader.ReadInt();
-                        DeleteTime = reader.ReadDeltaTime();
-                        m_Lifted = reader.ReadStrongItemList();
-
-                        if (version < 2)
-                            Guardians = new List<Mobile>();
-
-                        break;
-                    }
-            }
+            FailedLockpick = reader.ReadBool();
+            _Quality = (ChestQuality)reader.ReadInt();
+            DigTime = reader.ReadDateTime();
+            AncientGuardians = reader.ReadStrongMobileList();
+            FirstOpenedByOwner = reader.ReadBool();
+            TreasureMap = reader.ReadItem() as TreasureMap;
+            Guardians = reader.ReadStrongMobileList();
+            Temporary = reader.ReadBool();
+            Owner = reader.ReadMobile();
+            Level = reader.ReadInt();
+            DeleteTime = reader.ReadDeltaTime();
+            m_Lifted = reader.ReadStrongItemList();
 
             if (!Temporary && DeleteTime > DateTime.UtcNow)
             {
@@ -738,7 +617,7 @@ namespace Server.Items
         {
             base.LockPick(from);
 
-            if (Map != null && (TreasureMapInfo.NewSystem && FailedLockpick || 0.05 >= Utility.RandomDouble()))
+            if (Map != null && (FailedLockpick || 0.05 >= Utility.RandomDouble()))
             {
                 Grubber grubber = new Grubber();
                 grubber.MoveToWorld(Map.GetSpawnPosition(Location, 1), Map);
@@ -755,11 +634,7 @@ namespace Server.Items
                 }
 
                 grubber.PackItem(item);
-
-                if (TreasureMapInfo.NewSystem)
-                {
-                    grubber.PrivateOverheadMessage(MessageType.Regular, 33, 1159062, from.NetState); // *A grubber appears and ganks a piece of your loot!*
-                }
+                grubber.PrivateOverheadMessage(MessageType.Regular, 33, 1159062, from.NetState); // *A grubber appears and ganks a piece of your loot!*
             }
         }
 
@@ -777,7 +652,7 @@ namespace Server.Items
 
         public override bool ExecuteTrap(Mobile from)
         {
-            if (TreasureMapInfo.NewSystem && TrapType != TrapType.None)
+            if (TrapType != TrapType.None)
             {
                 int damage;
 

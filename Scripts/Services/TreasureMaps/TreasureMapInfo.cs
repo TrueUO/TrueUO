@@ -48,15 +48,13 @@ namespace Server.Items
 
     public static class TreasureMapInfo
     {
-        public static bool NewSystem => true;
-
         /// <summary>
         /// This is called from BaseCreature. Instead of editing EVERY creature that drops a map, we'll simply convert it here.
         /// </summary>
         /// <param name="level"></param>
         public static int ConvertLevel(int level)
         {
-            if (!NewSystem || level == -1)
+            if (level == -1)
                 return level;
 
             switch (level)
@@ -574,7 +572,7 @@ namespace Server.Items
             null, // ilsh
             new[] { typeof(LuminescentFungi), typeof(BarkFragment), typeof(Blight), typeof(Corruption), typeof(Muculent), typeof(Putrefaction), typeof(Scourge), typeof(Taint)  }, // malas
             null, // tokuno
-            TreasureMapChest.ImbuingIngreds, // ter
+            new[] { typeof(AbyssalCloth), typeof(EssencePrecision), typeof(EssenceAchievement), typeof(EssenceBalance), typeof(EssenceControl), typeof(EssenceDiligence), typeof(EssenceDirection), typeof(EssenceFeeling), typeof(EssenceOrder), typeof(EssencePassion), typeof(EssencePersistence), typeof(EssenceSingularity) }, // ter
             null  // eodon
         };
 
