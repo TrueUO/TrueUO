@@ -53,7 +53,7 @@ namespace Server.Items
 
         public override void OnDoubleClick(Mobile m)
         {
-            if (RootParent is PlayerVendor vendor && vendor.Owner != m)
+            if (RootParent is PlayerVendor)
             {
                 m.SendLocalizedMessage(500447); // That is not accessible.
                 return;
