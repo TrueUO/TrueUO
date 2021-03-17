@@ -113,10 +113,8 @@ namespace Server.Gumps
                             User.EndAction(typeof(Imbuing));
                             break;
                         }
-                        else
-                        {
-                            ImbueStep1(User, item);
-                        }
+
+                        ImbueStep1(User, item);
                         break;
                     }
                 case 10008:  // Imbue Last Property
@@ -134,10 +132,8 @@ namespace Server.Gumps
                             User.EndAction(typeof(Imbuing));
                             break;
                         }
-                        else
-                        {
-                            ImbueLastProp(User, mod, modint);
-                        }
+
+                        ImbueLastProp(User, mod, modint);
 
                         break;
                     }
@@ -160,8 +156,6 @@ namespace Server.Gumps
                         break;
                     }
             }
-
-            return;
         }
 
         private class UnravelTarget : Target
@@ -182,10 +176,10 @@ namespace Server.Gumps
                 {
                     m.SendLocalizedMessage(1080425); // You cannot magically unravel this item.
                 }
-                else if (m is PlayerMobile && Imbuing.CanUnravelItem(m, item))
+                else if (m is PlayerMobile pm && Imbuing.CanUnravelItem(pm, item))
                 {
-                    m.BeginAction(typeof(Imbuing));
-                    SendGump(new UnravelGump((PlayerMobile)m, item));
+                    pm.BeginAction(typeof(Imbuing));
+                    SendGump(new UnravelGump(pm, item));
                 }
             }
 
@@ -262,24 +256,24 @@ namespace Server.Gumps
                     m.SendLocalizedMessage(1062334); // This item must be in your backpack to be used.
                     m.EndAction(typeof(Imbuing));
                 }
-                else if (cont == null || (cont is LockableContainer && ((LockableContainer)cont).Locked))
+                else if (cont is LockableContainer container && container.Locked)
                 {
                     m.SendLocalizedMessage(1111814, "0\t0"); // Unraveled: ~1_COUNT~/~2_NUM~ items
                     m.EndAction(typeof(Imbuing));
                 }
-                else if (m is PlayerMobile)
+                else if (m is PlayerMobile pm)
                 {
                     bool unraveled = cont.Items.FirstOrDefault(x => Imbuing.CanUnravelItem(m, x, false)) != null;
 
                     if (unraveled)
                     {
-                        m.BeginAction(typeof(Imbuing));
-                        SendGump(new UnravelContainerGump((PlayerMobile)m, cont));
+                        pm.BeginAction(typeof(Imbuing));
+                        SendGump(new UnravelContainerGump(pm, cont));
                     }
                     else
                     {
-                        TryUnravelContainer(m, cont);
-                        m.EndAction(typeof(Imbuing));
+                        TryUnravelContainer(pm, cont);
+                        pm.EndAction(typeof(Imbuing));
                     }
                 }
             }
@@ -405,16 +399,16 @@ namespace Server.Gumps
 
         public static void ImbueStep1(Mobile m, Item item)
         {
-            if (m is PlayerMobile && Imbuing.CanImbueItem(m, item))
+            if (m is PlayerMobile pm && Imbuing.CanImbueItem(pm, item))
             {
-                ImbuingContext context = Imbuing.GetContext(m);
+                ImbuingContext context = Imbuing.GetContext(pm);
                 context.LastImbued = item;
 
                 if (context.ImbMenu_Cat == 0)
                     context.ImbMenu_Cat = 1;
 
-                m.CloseGump(typeof(ImbuingGump));
-                SendGump(new ImbueSelectGump((PlayerMobile)m, item));
+                pm.CloseGump(typeof(ImbuingGump));
+                SendGump(new ImbueSelectGump(pm, item));
             }
         }
 

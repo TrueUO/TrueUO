@@ -160,9 +160,9 @@ namespace Server.Items
                 CheckDrop(bc, c);
             }
 
-            if (e.Killer is BaseVoidCreature)
+            if (e.Killer is BaseVoidCreature vc)
             {
-                ((BaseVoidCreature)e.Killer).Mutate(VoidEvolution.Killing);
+                vc.Mutate(VoidEvolution.Killing);
             }
         }
 
@@ -183,11 +183,13 @@ namespace Server.Items
                         {
                             continue;
                         }
-                        else if (reg == "Abyss" && (c.Map != Map.TerMur || c.X < 235 || c.X > 1155 || c.Y < 40 || c.Y > 1040))
+
+                        if (reg == "Abyss" && (c.Map != Map.TerMur || c.X < 235 || c.X > 1155 || c.Y < 40 || c.Y > 1040))
                         {
                             continue;
                         }
-                        else if (reg != "TerMur" && reg != "Abyss")
+
+                        if (reg != "TerMur" && reg != "Abyss")
                         {
                             Region r = Server.Region.Find(c.Location, c.Map);
 
@@ -204,9 +206,9 @@ namespace Server.Items
                     double toBeat = entry.Chance;
                     List<Item> drops = new List<Item>();
 
-                    if (bc is BaseVoidCreature)
+                    if (bc is BaseVoidCreature creature)
                     {
-                        toBeat *= ((BaseVoidCreature)bc).Stage + 1;
+                        toBeat *= creature.Stage + 1;
                     }
 
                     if (entry.DropMultiples)

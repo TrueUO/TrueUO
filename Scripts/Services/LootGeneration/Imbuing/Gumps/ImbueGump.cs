@@ -24,7 +24,7 @@ namespace Server.Gumps
         private ItemPropertyInfo m_Info;
 
         public ImbueGump(PlayerMobile pm, Item item, int id, int value)
-            : base(pm, 50, 50)
+            : base(pm)
         {
             pm.CloseGump(typeof(ImbuingGump));
             pm.CloseGump(typeof(ImbueSelectGump));
@@ -65,7 +65,7 @@ namespace Server.Gumps
                 m_Value = maxInt;
             }
 
-            double currentIntensity = Math.Floor(((m_Value - start) / ((double)maxInt - start)) * m_Info.Weight);
+            double currentIntensity = Math.Floor((m_Value - start) / ((double)maxInt - start) * m_Info.Weight);
 
             // Set context
             context.LastImbued = m_Item;
@@ -79,7 +79,7 @@ namespace Server.Gumps
             if (maxInt <= 1)
                 currentIntensity = m_Info.Weight;
 
-            int propWeight = (int)Math.Floor((weight / (double)maxInt) * m_Value);
+            int propWeight = (int)Math.Floor(weight / (double)maxInt * m_Value);
 
             // Maximum allowed Property Weight & Item Mod Count
             m_MaxWeight = Imbuing.GetMaxWeight(m_Item);
@@ -161,7 +161,7 @@ namespace Server.Gumps
             AddLabel(430, 260, GetColor(timesImbued, 20), string.Format("{0}/20", timesImbued));
 
             // ===== CALCULATE DIFFICULTY =====
-            int truePropWeight = (int)((propWeight / (double)weight) * 100);
+            int truePropWeight = (int)(propWeight / (double)weight * 100);
             int trueTotalWeight = Imbuing.GetTotalWeight(m_Item, -1, true, true);
 
             double suc = Imbuing.GetSuccessChance(User, m_Item, trueTotalWeight, truePropWeight, bonus);
@@ -266,15 +266,23 @@ namespace Server.Gumps
         private int GetSuccessChanceHue(double suc)
         {
             if (suc >= 100)
+            {
                 return IceHue;
-            else if (suc >= 80)
+            }
+            if (suc >= 80)
+            {
                 return Green;
-            else if (suc >= 50)
+            }
+            if (suc >= 50)
+            {
                 return Yellow;
-            else if (suc >= 10)
+            }
+            if (suc >= 10)
+            {
                 return DarkYellow;
-            else
-                return Red;
+            }
+
+            return Red;
         }
 
         public override void OnResponse(RelayInfo info)
@@ -365,63 +373,57 @@ namespace Server.Gumps
                 return ItemPropertyInfo.GetAttributeName(id);
             }
 
-            if (item is BaseWeapon)
+            if (item is BaseWeapon weapon)
             {
-                BaseWeapon i = item as BaseWeapon;
-
                 // Slayers replace Slayers
                 if (id >= 101 && id <= 127)
                 {
-                    if (i.Slayer != SlayerName.None)
-                        return GetNameForAttribute(i.Slayer);
+                    if (weapon.Slayer != SlayerName.None)
+                        return GetNameForAttribute(weapon.Slayer);
 
-                    if (i.Slayer2 != SlayerName.None)
-                        return GetNameForAttribute(i.Slayer2);
+                    if (weapon.Slayer2 != SlayerName.None)
+                        return GetNameForAttribute(weapon.Slayer2);
                 }
                 // OnHitEffect replace OnHitEffect
                 if (id >= 35 && id <= 39)
                 {
-                    if (i.WeaponAttributes.HitMagicArrow > 0)
+                    if (weapon.WeaponAttributes.HitMagicArrow > 0)
                         return GetNameForAttribute(AosWeaponAttribute.HitMagicArrow);
-                    else if (i.WeaponAttributes.HitHarm > 0)
+                    if (weapon.WeaponAttributes.HitHarm > 0)
                         return GetNameForAttribute(AosWeaponAttribute.HitHarm);
-                    else if (i.WeaponAttributes.HitFireball > 0)
+                    if (weapon.WeaponAttributes.HitFireball > 0)
                         return GetNameForAttribute(AosWeaponAttribute.HitFireball);
-                    else if (i.WeaponAttributes.HitLightning > 0)
+                    if (weapon.WeaponAttributes.HitLightning > 0)
                         return GetNameForAttribute(AosWeaponAttribute.HitLightning);
-                    else if (i.WeaponAttributes.HitDispel > 0)
+                    if (weapon.WeaponAttributes.HitDispel > 0)
                         return GetNameForAttribute(AosWeaponAttribute.HitDispel);
                 }
                 // OnHitArea replace OnHitArea
                 if (id >= 30 && id <= 34)
                 {
-                    if (i.WeaponAttributes.HitPhysicalArea > 0)
+                    if (weapon.WeaponAttributes.HitPhysicalArea > 0)
                         return GetNameForAttribute(AosWeaponAttribute.HitPhysicalArea);
-                    else if (i.WeaponAttributes.HitColdArea > 0)
+                    if (weapon.WeaponAttributes.HitColdArea > 0)
                         return GetNameForAttribute(AosWeaponAttribute.HitFireArea);
-                    else if (i.WeaponAttributes.HitFireArea > 0)
+                    if (weapon.WeaponAttributes.HitFireArea > 0)
                         return GetNameForAttribute(AosWeaponAttribute.HitColdArea);
-                    else if (i.WeaponAttributes.HitPoisonArea > 0)
+                    if (weapon.WeaponAttributes.HitPoisonArea > 0)
                         return GetNameForAttribute(AosWeaponAttribute.HitPoisonArea);
-                    else if (i.WeaponAttributes.HitEnergyArea > 0)
+                    if (weapon.WeaponAttributes.HitEnergyArea > 0)
                         return GetNameForAttribute(AosWeaponAttribute.HitEnergyArea);
                 }
             }
-            if (item is BaseJewel)
+
+            if (item is BaseJewel jewel && id >= 151 && id <= 183)
             {
-                BaseJewel jewel = item as BaseJewel;
+                AosSkillBonuses bonuses = jewel.SkillBonuses;
+                SkillName[] group = Imbuing.GetSkillGroup((SkillName) ItemPropertyInfo.GetAttribute(id));
 
-                if (id >= 151 && id <= 183)
+                for (int i = 0; i < 5; i++)
                 {
-                    AosSkillBonuses bonuses = jewel.SkillBonuses;
-                    SkillName[] group = Imbuing.GetSkillGroup((SkillName)ItemPropertyInfo.GetAttribute(id));
-
-                    for (int i = 0; i < 5; i++)
+                    if (bonuses.GetBonus(i) > 0 && group.Any(sk => sk == bonuses.GetSkill(i)))
                     {
-                        if (bonuses.GetBonus(i) > 0 && group.Any(sk => sk == bonuses.GetSkill(i)))
-                        {
-                            return GetNameForAttribute(bonuses.GetSkill(i));
-                        }
+                        return GetNameForAttribute(bonuses.GetSkill(i));
                     }
                 }
             }
@@ -431,24 +433,24 @@ namespace Server.Gumps
 
         public static TextDefinition GetNameForAttribute(object attribute)
         {
-            if (attribute is AosArmorAttribute && (AosArmorAttribute)attribute == AosArmorAttribute.LowerStatReq)
+            if (attribute is AosArmorAttribute lsq && lsq == AosArmorAttribute.LowerStatReq)
                 attribute = AosWeaponAttribute.LowerStatReq;
 
-            if (attribute is AosArmorAttribute && (AosArmorAttribute)attribute == AosArmorAttribute.DurabilityBonus)
+            if (attribute is AosArmorAttribute db && db == AosArmorAttribute.DurabilityBonus)
                 attribute = AosWeaponAttribute.DurabilityBonus;
 
             foreach (ItemPropertyInfo info in ItemPropertyInfo.Table.Values)
             {
-                if (attribute is SlayerName && info.Attribute is SlayerName && (SlayerName)attribute == (SlayerName)info.Attribute)
+                if (attribute is SlayerName slayerName && info.Attribute is SlayerName name && slayerName == name)
                     return info.AttributeName;
 
-                if (attribute is AosAttribute && info.Attribute is AosAttribute && (AosAttribute)attribute == (AosAttribute)info.Attribute)
+                if (attribute is AosAttribute aosAttribute && info.Attribute is AosAttribute infoAttribute && aosAttribute == infoAttribute)
                     return info.AttributeName;
 
-                if (attribute is AosWeaponAttribute && info.Attribute is AosWeaponAttribute && (AosWeaponAttribute)attribute == (AosWeaponAttribute)info.Attribute)
+                if (attribute is AosWeaponAttribute weaponAttribute && info.Attribute is AosWeaponAttribute aosWeaponAttribute && weaponAttribute == aosWeaponAttribute)
                     return info.AttributeName;
 
-                if (attribute is SkillName && info.Attribute is SkillName && (SkillName)attribute == (SkillName)info.Attribute)
+                if (attribute is SkillName attSkillName && info.Attribute is SkillName skillName && attSkillName == skillName)
                     return info.AttributeName;
 
                 if (info.Attribute == attribute)

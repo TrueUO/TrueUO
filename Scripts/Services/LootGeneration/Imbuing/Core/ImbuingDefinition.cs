@@ -32,11 +32,11 @@ namespace Server.SkillHandlers
         public int IncAmount => m_IncAmount;
         public int Description => m_Description;
 
-        public bool Melee { get; set; }
-        public bool Ranged { get; set; }
-        public bool Armor { get; set; }
-        public bool Shield { get; set; }
-        public bool Jewels { get; set; }
+        public bool Melee { get; }
+        public bool Ranged { get; }
+        public bool Armor { get; }
+        public bool Shield { get; }
+        public bool Jewels { get; }
 
         public ImbuingDefinition(object attribute, int attributeName, int weight, Type pRes, Type gRes, Type spRes, int mInt, int inc, int desc, bool melee = false, bool ranged = false, bool armor = false, bool shield = false, bool jewels = false)
         {
@@ -105,11 +105,10 @@ namespace Server.SkillHandlers
                 LocBuffer[type] = item.LabelNumber;
                 item.Delete();
 
-                return LocBuffer[type]; ;
+                return LocBuffer[type];
             }
 
-            if (type != null)
-                Console.WriteLine("Warning, missing name cliloc for type {0}.", type.Name);
+            Console.WriteLine("Warning, missing name cliloc for type {0}.", type.Name);
             return -1;
         }
 
