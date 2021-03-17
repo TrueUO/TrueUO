@@ -269,7 +269,7 @@ namespace Server.Items
 
                 if (facet == TreasureFacet.Malas)
                 {
-                    list.Concat(new[] { typeof(CoffinPiece) });
+                    list = _DecorativeMalasArtifacts;
                 }
             }
             else if (level == TreasureLevel.Supply)
@@ -545,20 +545,20 @@ namespace Server.Items
             }
         };
 
-        public static Type[][] _MaterialTable =
+        private static Type[][] _MaterialTable =
         {
             new[] { typeof(SpinedLeather), typeof(OakBoard), typeof(AshBoard), typeof(DullCopperIngot), typeof(ShadowIronIngot), typeof(CopperIngot) },
             new[] { typeof(HornedLeather), typeof(YewBoard), typeof(HeartwoodBoard), typeof(BronzeIngot), typeof(GoldIngot), typeof(AgapiteIngot) },
             new[] { typeof(BarbedLeather), typeof(BloodwoodBoard), typeof(FrostwoodBoard), typeof(ValoriteIngot), typeof(VeriteIngot) }
         };
 
-        public static Type[][] _JewelTable =
+        private static Type[][] _JewelTable =
         {
             new[] { typeof(GoldRing), typeof(GoldBracelet), typeof(SilverRing), typeof(SilverBracelet) }, // standard
             new[] { typeof(GoldRing), typeof(GoldBracelet), typeof(SilverRing), typeof(SilverBracelet), typeof(GargishBracelet) } // Ranger/TerMur
         };
 
-        public static Type[][] _DecorativeTable =
+        private static Type[][] _DecorativeTable =
         {
             new[] { typeof(SkullTiledFloorAddonDeed) },
             new[] { typeof(AncientWeapon3) },
@@ -567,7 +567,7 @@ namespace Server.Items
             new[] { typeof(AncientWeapon2) }
         };
 
-        public static Type[][] _SpecialMaterialTable =
+        private static Type[][] _SpecialMaterialTable =
         {
             null, // tram
             null, // fel
@@ -578,7 +578,7 @@ namespace Server.Items
             null  // eodon
         };
 
-        public static Type[][] _SpecialSupplyLoot =
+        private static Type[][] _SpecialSupplyLoot =
         {
             new[] { typeof(LegendaryMapmakersGlasses), typeof(ManaPhasingOrb), typeof(RunedSashOfWarding), typeof(ShieldEngravingTool), null },
             new[] { typeof(ForgedPardon), typeof(LegendaryMapmakersGlasses), typeof(ManaPhasingOrb), typeof(RunedSashOfWarding), typeof(Skeletonkey), typeof(MasterSkeletonKey), typeof(SurgeShield) },
@@ -587,7 +587,7 @@ namespace Server.Items
             new[] { typeof(LegendaryMapmakersGlasses), typeof(ManaPhasingOrb), typeof(RunedSashOfWarding) }
         };
 
-        public static Type[] _SpecialCacheHordeAndTrove =
+        private static Type[] _SpecialCacheHordeAndTrove =
         {
             typeof(OctopusNecklace), typeof(SkullGnarledStaff), typeof(SkullLongsword)
         };
@@ -595,6 +595,11 @@ namespace Server.Items
         public static Type[] _DecorativeMinorArtifacts =
         {
             typeof(CandelabraOfSouls), typeof(GoldBricks), typeof(PhillipsWoodenSteed), typeof(AncientShipModelOfTheHMSCape), typeof(AdmiralsHeartyRum)
+        };
+
+        public static Type[] _DecorativeMalasArtifacts =
+        {
+            typeof(CoffinPiece)
         };
 
         public static Type[] _FunctionalMinorArtifacts =
