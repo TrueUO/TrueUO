@@ -413,19 +413,17 @@ namespace Server.Gumps
                         return GetNameForAttribute(AosWeaponAttribute.HitEnergyArea);
                 }
             }
-            if (item is BaseJewel jewel)
-            {
-                if (id >= 151 && id <= 183)
-                {
-                    AosSkillBonuses bonuses = jewel.SkillBonuses;
-                    SkillName[] group = Imbuing.GetSkillGroup((SkillName)ItemPropertyInfo.GetAttribute(id));
 
-                    for (int i = 0; i < 5; i++)
+            if (item is BaseJewel jewel && id >= 151 && id <= 183)
+            {
+                AosSkillBonuses bonuses = jewel.SkillBonuses;
+                SkillName[] group = Imbuing.GetSkillGroup((SkillName) ItemPropertyInfo.GetAttribute(id));
+
+                for (int i = 0; i < 5; i++)
+                {
+                    if (bonuses.GetBonus(i) > 0 && group.Any(sk => sk == bonuses.GetSkill(i)))
                     {
-                        if (bonuses.GetBonus(i) > 0 && group.Any(sk => sk == bonuses.GetSkill(i)))
-                        {
-                            return GetNameForAttribute(bonuses.GetSkill(i));
-                        }
+                        return GetNameForAttribute(bonuses.GetSkill(i));
                     }
                 }
             }

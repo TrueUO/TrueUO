@@ -1137,12 +1137,9 @@ namespace Server.SkillHandlers
                     if (!ItemPropertyInfo.ValidateProperty(attr))
                         continue;
 
-                    if (clothing.SAAbsorptionAttributes[attr] > 0)
+                    if (clothing.SAAbsorptionAttributes[attr] > 0 && (!(prop is SAAbsorptionAttribute) || (SAAbsorptionAttribute) prop != attr))
                     {
-                        if (!(prop is SAAbsorptionAttribute) || (SAAbsorptionAttribute) prop != attr)
-                        {
-                            total++;
-                        }
+                        total++;
                     }
                 }
 
@@ -1288,19 +1285,48 @@ namespace Server.SkillHandlers
                 if (weapon.SearingWeapon)
                     weight += GetIntensityForAttribute(weapon, "SearingWeapon", id, 1, trueWeight, imbuing);
 
-                if (weapon is BaseRanged ranged)
+                if (weapon is BaseRanged ranged && ranged.Velocity > 0)
                 {
-                    if (ranged.Velocity > 0)
-                        weight += GetIntensityForAttribute(weapon, "WeaponVelocity", id, ranged.Velocity, trueWeight, imbuing);
+                    weight += GetIntensityForAttribute(weapon, "WeaponVelocity", id, ranged.Velocity, trueWeight, imbuing);
                 }
             }
             else if (item is BaseArmor arm)
             {
-                if (arm.PhysicalBonus > arm.PhysNonImbuing) { if (id != 51) { weight += 100.0 / 15 * (arm.PhysicalBonus - arm.PhysNonImbuing); } }
-                if (arm.FireBonus > arm.FireNonImbuing) { if (id != 52) { weight += 100.0 / 15 * (arm.FireBonus - arm.FireNonImbuing); } }
-                if (arm.ColdBonus > arm.ColdNonImbuing) { if (id != 53) { weight += 100.0 / 15 * (arm.ColdBonus - arm.ColdNonImbuing); } }
-                if (arm.PoisonBonus > arm.PoisonNonImbuing) { if (id != 54) { weight += 100.0 / 15 * (arm.PoisonBonus - arm.PoisonNonImbuing); } }
-                if (arm.EnergyBonus > arm.EnergyNonImbuing) { if (id != 55) { weight += 100.0 / 15 * (arm.EnergyBonus - arm.EnergyNonImbuing); } }
+                if (arm.PhysicalBonus > arm.PhysNonImbuing)
+                {
+                    if (id != 51)
+                    {
+                        weight += 100.0 / 15 * (arm.PhysicalBonus - arm.PhysNonImbuing);
+                    }
+                }
+                if (arm.FireBonus > arm.FireNonImbuing)
+                {
+                    if (id != 52)
+                    {
+                        weight += 100.0 / 15 * (arm.FireBonus - arm.FireNonImbuing);
+                    }
+                }
+                if (arm.ColdBonus > arm.ColdNonImbuing)
+                {
+                    if (id != 53)
+                    {
+                        weight += 100.0 / 15 * (arm.ColdBonus - arm.ColdNonImbuing);
+                    }
+                }
+                if (arm.PoisonBonus > arm.PoisonNonImbuing)
+                {
+                    if (id != 54)
+                    {
+                        weight += 100.0 / 15 * (arm.PoisonBonus - arm.PoisonNonImbuing);
+                    }
+                }
+                if (arm.EnergyBonus > arm.EnergyNonImbuing)
+                {
+                    if (id != 55)
+                    {
+                        weight += 100.0 / 15 * (arm.EnergyBonus - arm.EnergyNonImbuing);
+                    }
+                }
             }
 
             Type type = item.GetType();
