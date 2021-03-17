@@ -1079,7 +1079,7 @@ namespace Server.Items
                 }
                 else if (!HasDiggingTool(from))
                 {
-                    from.SendMessage("You must have a digging tool to dig for treasure.");
+                    from.SendLocalizedMessage(1114416); // You must have a digging tool to dig for treasure.
                 }
                 else if (from.Map != map)
                 {
@@ -1212,7 +1212,6 @@ namespace Server.Items
             private readonly TreasureMap m_TreasureMap;
             private readonly Map m_Map;
             private readonly long m_NextSkillTime;
-            private readonly long m_NextSpellTime;
             private readonly long m_NextActionTime;
             private readonly long m_LastMoveTime;
             private TreasureChestDirt m_Dirt1;
@@ -1232,7 +1231,6 @@ namespace Server.Items
                 m_Map = map;
 
                 m_NextSkillTime = from.NextSkillTime;
-                m_NextSpellTime = from.NextSpellTime;
                 m_NextActionTime = from.NextActionTime;
                 m_LastMoveTime = from.LastMoveTime;
 
@@ -1249,8 +1247,7 @@ namespace Server.Items
 
                 if (m_LastMoveTime != m_From.LastMoveTime)
                 {
-                    m_From.SendLocalizedMessage(503023);
-                    // You cannot move around while digging up treasure. You will need to start digging anew.
+                    m_From.SendLocalizedMessage(503023); // You cannot move around while digging up treasure. You will need to start digging anew.
                     Terminate();
                     return;
                 }
@@ -1269,8 +1266,7 @@ namespace Server.Items
 
                 if (!m_Map.CanFit(ChestLocation.X, ChestLocation.Y, z, height, true, true, false))
                 {
-                    m_From.SendLocalizedMessage(503024);
-                    // You stop digging because something is directly on top of the treasure chest.
+                    m_From.SendLocalizedMessage(503024); // You stop digging because something is directly on top of the treasure chest.
                     Terminate();
                     return;
                 }
@@ -1461,7 +1457,7 @@ namespace Server.Items
                 }
                 else
                 {
-                    from.SendMessage("You must have a digging tool to dig for treasure.");
+                    from.SendLocalizedMessage(1114416); // You must have a digging tool to dig for treasure.
                 }
             }
         }
