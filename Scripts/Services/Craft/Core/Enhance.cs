@@ -401,7 +401,7 @@ namespace Server.Engines.Craft
                         case EnhanceResult.NotInBackpack:
                             message = 1061005;
                             break; // The item must be in your backpack to enhance it.
-                        case EnhanceResult.Transmogrified
+                        case EnhanceResult.Transmogrified:
                             message = 1159564;
                             break; // You cannot enhance a transmogrified item.
                         case EnhanceResult.AlreadyEnhanced:
