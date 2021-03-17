@@ -1292,40 +1292,25 @@ namespace Server.SkillHandlers
             }
             else if (item is BaseArmor arm)
             {
-                if (arm.PhysicalBonus > arm.PhysNonImbuing)
+                if (arm.PhysicalBonus > arm.PhysNonImbuing && id != 51)
                 {
-                    if (id != 51)
-                    {
-                        weight += 100.0 / 15 * (arm.PhysicalBonus - arm.PhysNonImbuing);
-                    }
+                    weight += 100.0 / 15 * (arm.PhysicalBonus - arm.PhysNonImbuing);
                 }
-                if (arm.FireBonus > arm.FireNonImbuing)
+                if (arm.FireBonus > arm.FireNonImbuing && id != 52)
                 {
-                    if (id != 52)
-                    {
-                        weight += 100.0 / 15 * (arm.FireBonus - arm.FireNonImbuing);
-                    }
+                    weight += 100.0 / 15 * (arm.FireBonus - arm.FireNonImbuing);
                 }
-                if (arm.ColdBonus > arm.ColdNonImbuing)
+                if (arm.ColdBonus > arm.ColdNonImbuing && id != 53)
                 {
-                    if (id != 53)
-                    {
-                        weight += 100.0 / 15 * (arm.ColdBonus - arm.ColdNonImbuing);
-                    }
+                    weight += 100.0 / 15 * (arm.ColdBonus - arm.ColdNonImbuing);
                 }
-                if (arm.PoisonBonus > arm.PoisonNonImbuing)
+                if (arm.PoisonBonus > arm.PoisonNonImbuing && id != 54)
                 {
-                    if (id != 54)
-                    {
-                        weight += 100.0 / 15 * (arm.PoisonBonus - arm.PoisonNonImbuing);
-                    }
+                    weight += 100.0 / 15 * (arm.PoisonBonus - arm.PoisonNonImbuing);
                 }
-                if (arm.EnergyBonus > arm.EnergyNonImbuing)
+                if (arm.EnergyBonus > arm.EnergyNonImbuing && id != 55)
                 {
-                    if (id != 55)
-                    {
-                        weight += 100.0 / 15 * (arm.EnergyBonus - arm.EnergyNonImbuing);
-                    }
+                    weight += 100.0 / 15 * (arm.EnergyBonus - arm.EnergyNonImbuing);
                 }
             }
 
