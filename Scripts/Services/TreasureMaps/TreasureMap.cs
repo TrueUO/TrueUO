@@ -16,8 +16,6 @@ namespace Server.Items
 {
     public class TreasureMap : MapItem
     {
-        public static bool NewSystem => false;
-
         public static double LootChance = Config.Get("TreasureMaps.LootChance", .01);
         private static TimeSpan ResetTime = TimeSpan.FromDays(Config.Get("TreasureMaps.ResetTime", 30.0));
 
@@ -306,27 +304,7 @@ namespace Server.Items
             {
                 if (m_Decoder != null)
                 {
-                    if (m_Level == 6)
-                    {
-                        return 1063453;
-                    }
-
-                    if (m_Level == 7)
-                    {
-                        return 1116773;
-                    }
-
                     return 1041516 + m_Level;
-                }
-
-                if (m_Level == 6)
-                {
-                    return 1063452;
-                }
-
-                if (m_Level == 7)
-                {
-                    return 1116790;
                 }
 
                 return 1041510 + m_Level;
@@ -1354,18 +1332,7 @@ namespace Server.Items
                     m_TreasureMap.OnMapComplete(m_From, m_Chest);
 
                     int spawns;
-                    switch (m_TreasureMap.Level)
-                    {
-                        case 0:
-                            spawns = 4;
-                            break;
-                        case 1:
-                            spawns = 4;
-                            break;
-                        default:
-                            spawns = 4;
-                            break;
-                    }
+                    spawns = 4;
 
                     for (int i = 0; i < spawns; ++i)
                     {
