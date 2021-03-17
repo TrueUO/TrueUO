@@ -44,7 +44,7 @@ namespace Server.Gumps
             ReforgingOption.GrandArtifice,
             ReforgingOption.InspiredArtifice,
             ReforgingOption.ExaltedArtifice,
-            ReforgingOption.SublimeArtifice,
+            ReforgingOption.SublimeArtifice
         };
 
         public RunicReforgingGump(Mobile from, Item toReforge, BaseRunicTool tool)
@@ -287,9 +287,6 @@ namespace Server.Gumps
                             int min = 10;
                             int max = 80;
 
-                            if (min < 10) min = 10;
-                            if (max > 100) max = 100;
-
                             int budget = GetBudget();
 
                             ReforgedPrefix prefix = ReforgedPrefix.None;
@@ -472,11 +469,14 @@ namespace Server.Gumps
 
             int durability = 0;
 
-            if (item is BaseWeapon)
-                attr = ((BaseWeapon)item).Attributes;
-
-            else if (item is BaseArmor)
-                attr = ((BaseArmor)item).Attributes;
+            if (item is BaseWeapon weapon)
+            {
+                attr = weapon.Attributes;
+            }
+            else if (item is BaseArmor armor)
+            {
+                attr = armor.Attributes;
+            }
 
             if (attr != null && (m_Options & ReforgingOption.Structural) != 0)
             {
@@ -501,10 +501,10 @@ namespace Server.Gumps
                     item.Hue = 2500;
             }
 
-            if (durability > 0 && item is IDurability)
+            if (durability > 0 && item is IDurability dura)
             {
-                ((IDurability)item).MaxHitPoints = durability;
-                ((IDurability)item).HitPoints = durability;
+                dura.MaxHitPoints = durability;
+                dura.HitPoints = durability;
             }
 
             RunicReforging.ApplyItemPower(item, true);
@@ -546,7 +546,7 @@ namespace Server.Gumps
                     if (i == 0)
                         continue;
 
-                    if ((isprefix && prefix == (ReforgedPrefix)i) || (!isprefix && suffix == (ReforgedSuffix)i))
+                    if (isprefix && prefix == (ReforgedPrefix)i || !isprefix && suffix == (ReforgedSuffix)i)
                     {
                         buttonID = 4006;
                         buttonHue = Green;
