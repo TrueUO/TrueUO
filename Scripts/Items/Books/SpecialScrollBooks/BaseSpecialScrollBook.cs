@@ -18,7 +18,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int Capacity
         {
-            get { return _Capacity <= 0 ? MaxScrolls : _Capacity; }
+            get => _Capacity <= 0 ? MaxScrolls : _Capacity;
             set
             {
                 _Capacity = value;
