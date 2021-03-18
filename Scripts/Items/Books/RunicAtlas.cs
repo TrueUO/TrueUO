@@ -202,10 +202,10 @@ namespace Server.Items
                 }
 
                 // Select Button
-                AddButton(46 + ((index / 8) * 205), 55 + ((index % 8) * 20), 2103, 2104, i + 100, GumpButtonType.Reply, 0);
+                AddButton(46 + index / 8 * 205, 55 + index % 8 * 20, 2103, 2104, i + 100, GumpButtonType.Reply, 0);
 
                 // Description label
-                AddLabelCropped(62 + ((index / 8) * 205), 50 + ((index % 8) * 20), 144, 18, hue, desc);
+                AddLabelCropped(62 + index / 8 * 205, 50 + index % 8 * 20, 144, 18, hue, desc);
 
                 index++;
             }

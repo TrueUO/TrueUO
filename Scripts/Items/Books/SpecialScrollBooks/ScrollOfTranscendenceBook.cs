@@ -28,15 +28,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         public override Dictionary<SkillCat, List<SkillName>> SkillInfo => _SkillInfo;
@@ -49,13 +47,13 @@ namespace Server.Items
         {
             _SkillInfo = new Dictionary<SkillCat, List<SkillName>>();
 
-            _SkillInfo[SkillCat.Miscellaneous] = new List<SkillName>() { SkillName.ArmsLore, SkillName.Begging, SkillName.Camping, SkillName.Cartography, SkillName.Forensics, SkillName.ItemID, SkillName.TasteID };
-            _SkillInfo[SkillCat.Combat] = new List<SkillName>() { SkillName.Anatomy, SkillName.Archery, SkillName.Fencing, SkillName.Focus, SkillName.Healing, SkillName.Macing, SkillName.Parry, SkillName.Swords, SkillName.Tactics, SkillName.Throwing, SkillName.Wrestling };
-            _SkillInfo[SkillCat.TradeSkills] = new List<SkillName>() { SkillName.Alchemy, SkillName.Blacksmith, SkillName.Fletching, SkillName.Carpentry, SkillName.Cooking, SkillName.Inscribe, SkillName.Lumberjacking, SkillName.Mining, SkillName.Tailoring, SkillName.Tinkering };
-            _SkillInfo[SkillCat.Magic] = new List<SkillName>() { SkillName.Bushido, SkillName.Chivalry, SkillName.EvalInt, SkillName.Imbuing, SkillName.Magery, SkillName.Meditation, SkillName.Mysticism, SkillName.Necromancy, SkillName.Ninjitsu, SkillName.MagicResist, SkillName.Spellweaving, SkillName.SpiritSpeak };
-            _SkillInfo[SkillCat.Wilderness] = new List<SkillName>() { SkillName.AnimalLore, SkillName.AnimalTaming, SkillName.Fishing, SkillName.Herding, SkillName.Tracking, SkillName.Veterinary };
-            _SkillInfo[SkillCat.Thievery] = new List<SkillName>() { SkillName.DetectHidden, SkillName.Hiding, SkillName.Lockpicking, SkillName.Poisoning, SkillName.RemoveTrap, SkillName.Snooping, SkillName.Stealing, SkillName.Stealth };
-            _SkillInfo[SkillCat.Bard] = new List<SkillName>() { SkillName.Discordance, SkillName.Musicianship, SkillName.Peacemaking, SkillName.Provocation };
+            _SkillInfo[SkillCat.Miscellaneous] = new List<SkillName> { SkillName.ArmsLore, SkillName.Begging, SkillName.Camping, SkillName.Cartography, SkillName.Forensics, SkillName.ItemID, SkillName.TasteID };
+            _SkillInfo[SkillCat.Combat] = new List<SkillName> { SkillName.Anatomy, SkillName.Archery, SkillName.Fencing, SkillName.Focus, SkillName.Healing, SkillName.Macing, SkillName.Parry, SkillName.Swords, SkillName.Tactics, SkillName.Throwing, SkillName.Wrestling };
+            _SkillInfo[SkillCat.TradeSkills] = new List<SkillName> { SkillName.Alchemy, SkillName.Blacksmith, SkillName.Fletching, SkillName.Carpentry, SkillName.Cooking, SkillName.Inscribe, SkillName.Lumberjacking, SkillName.Mining, SkillName.Tailoring, SkillName.Tinkering };
+            _SkillInfo[SkillCat.Magic] = new List<SkillName> { SkillName.Bushido, SkillName.Chivalry, SkillName.EvalInt, SkillName.Imbuing, SkillName.Magery, SkillName.Meditation, SkillName.Mysticism, SkillName.Necromancy, SkillName.Ninjitsu, SkillName.MagicResist, SkillName.Spellweaving, SkillName.SpiritSpeak };
+            _SkillInfo[SkillCat.Wilderness] = new List<SkillName> { SkillName.AnimalLore, SkillName.AnimalTaming, SkillName.Fishing, SkillName.Herding, SkillName.Tracking, SkillName.Veterinary };
+            _SkillInfo[SkillCat.Thievery] = new List<SkillName> { SkillName.DetectHidden, SkillName.Hiding, SkillName.Lockpicking, SkillName.Poisoning, SkillName.RemoveTrap, SkillName.Snooping, SkillName.Stealing, SkillName.Stealth };
+            _SkillInfo[SkillCat.Bard] = new List<SkillName> { SkillName.Discordance, SkillName.Musicianship, SkillName.Peacemaking, SkillName.Provocation };
 
             _ValueInfo = new Dictionary<int, double>();
 
