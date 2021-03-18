@@ -413,9 +413,6 @@ namespace Server.Items
                     }
                 default:
                     {
-                        bool canDrop = m_Book.IsChildOf(from.Backpack);
-                        bool canPrice = canDrop || m_Book.RootParent is PlayerVendor;
-
                         index -= 4;
 
                         int type = index % 2;

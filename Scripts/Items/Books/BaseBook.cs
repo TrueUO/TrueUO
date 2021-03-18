@@ -402,19 +402,20 @@ namespace Server.Items
                 // send for new page
                 state.Send(new BookPageDetails(this, page, m_Pages[index]));
             }
-            else if (m_Writable && state.Mobile != null && state.Mobile.InRange(GetWorldLocation(), 1))
+            else if (m_Writable && state.Mobile != null && state.Mobile.InRange(GetWorldLocation(), 1) && lineCount <= 19)
             {
                 // updates after page is moved away from
-                if (lineCount <= 19)
+                string[] lines = new string[lineCount];
+
+                for (int j = 0; j < lineCount; ++j)
                 {
-                    string[] lines = new string[lineCount];
-
-                    for (int j = 0; j < lineCount; ++j)
-                        if ((lines[j] = pvSrc.ReadUTF8StringSafe()).Length >= 80)
-                            return;
-
-                    m_Pages[index].Lines = lines;
+                    if ((lines[j] = pvSrc.ReadUTF8StringSafe()).Length >= 80)
+                    {
+                        return;
+                    }
                 }
+
+                m_Pages[index].Lines = lines;
             }
         }
 
