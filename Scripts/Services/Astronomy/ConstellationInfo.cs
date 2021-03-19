@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace Server.Engines.Astronomy
 {
@@ -9,13 +9,13 @@ namespace Server.Engines.Astronomy
         public int Identifier { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public TimeCoordinate TimeCoordinate { get; set; }
+        public TimeCoordinate TimeCoordinate { get; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int CoordRA { get; set; }
+        public int CoordRA { get; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public double CoordDEC { get; set; }
+        public double CoordDEC { get; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public string Name { get; set; }
@@ -29,7 +29,7 @@ namespace Server.Engines.Astronomy
         [CommandProperty(AccessLevel.GameMaster)]
         public bool HasBeenDiscovered => DiscoveredOn != DateTime.MinValue;
 
-        public StarPosition[] StarPositions { get; set; }
+        public StarPosition[] StarPositions { get; }
 
         public ConstellationInfo(TimeCoordinate p, int coordRA, double coordDEC, StarPosition[] starInfo)
         {

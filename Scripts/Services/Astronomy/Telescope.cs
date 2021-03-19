@@ -18,7 +18,7 @@ namespace Server.Items
         //public static TimeCoordinate ForceTimeCoordinate { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public string DisplayName { get { return _DisplayName; } set { _DisplayName = value; InvalidateProperties(); } }
+        public string DisplayName { get => _DisplayName; set { _DisplayName = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public SecureLevel Level { get; set; }
@@ -29,7 +29,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public double DEC
         {
-            get { return _DEC; }
+            get => _DEC;
             set
             {
                 _DEC = value;
@@ -158,7 +158,7 @@ namespace Server.Items
         public Tuple<int, int> InterstellarObject { get; set; }
         public ConstellationInfo Constellation { get; set; }
 
-        public PersonalTelescope Tele { get; set; }
+        public PersonalTelescope Tele { get; }
         public int ImageID { get; set; }
 
         public TelescopeGump(PlayerMobile pm, PersonalTelescope tele)
@@ -395,7 +395,7 @@ namespace Server.Items
 
         private int GetPlace(int value, int place)
         {
-            return ((value % (place * 10)) - (value % place)) / place;
+            return (value % (place * 10) - value % place) / place;
         }
 
         private int GetDecimalPlace(double value)

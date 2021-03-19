@@ -170,7 +170,7 @@ namespace Server.Engines.Astronomy
                 return TimeCoordinate.NineToEleven;
             }
 
-            if ((hours >= 24 && hours < 1) || hours == 0)
+            if (hours >= 24 || hours == 0)
             {
                 return TimeCoordinate.Midnight;
             }
