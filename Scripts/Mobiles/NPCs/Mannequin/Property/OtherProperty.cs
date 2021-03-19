@@ -37,7 +37,7 @@ namespace Server.Mobiles.MannequinProperty
                 return true;
             }
 
-            if (item is BaseClothing clothing && ((prop = clothing.HitPoints) >= 0 && (prop2 = clothing.MaxHitPoints) > 0))
+            if (item is BaseClothing clothing && (prop = clothing.HitPoints) >= 0 && (prop2 = clothing.MaxHitPoints) > 0)
             {
                 Value = prop;
                 Cap = prop2;
