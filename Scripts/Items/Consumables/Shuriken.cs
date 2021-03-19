@@ -32,52 +32,38 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int UsesRemaining
         {
-            get
-            {
-                return m_UsesRemaining;
-            }
+            get => m_UsesRemaining;
             set
             {
                 m_UsesRemaining = value;
                 InvalidateProperties();
             }
         }
+
         [CommandProperty(AccessLevel.GameMaster)]
         public Poison Poison
         {
-            get
-            {
-                return m_Poison;
-            }
+            get => m_Poison;
             set
             {
                 m_Poison = value;
                 InvalidateProperties();
             }
         }
+
         [CommandProperty(AccessLevel.GameMaster)]
         public int PoisonCharges
         {
-            get
-            {
-                return m_PoisonCharges;
-            }
+            get => m_PoisonCharges;
             set
             {
                 m_PoisonCharges = value;
                 InvalidateProperties();
             }
         }
-        public bool ShowUsesRemaining
-        {
-            get
-            {
-                return true;
-            }
-            set
-            {
-            }
-        }
+
+        public bool ShowUsesRemaining { get => true; set { } }
+
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);
@@ -91,11 +77,9 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
 
             writer.Write(m_UsesRemaining);
-
             Poison.Serialize(m_Poison, writer);
             writer.Write(m_PoisonCharges);
         }
@@ -103,21 +87,11 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 0:
-                    {
-                        m_UsesRemaining = reader.ReadInt();
-
-                        m_Poison = Poison.Deserialize(reader);
-                        m_PoisonCharges = reader.ReadInt();
-
-                        break;
-                    }
-            }
+            m_UsesRemaining = reader.ReadInt();
+            m_Poison = Poison.Deserialize(reader);
+            m_PoisonCharges = reader.ReadInt();
         }
 
         public int OnCraft(int quality, bool makersMark, Mobile from, CraftSystem craftSystem, Type typeRes, ITool tool, CraftItem craftItem, int resHue)

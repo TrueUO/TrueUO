@@ -6,9 +6,10 @@ namespace Server.Items
 {
     public class UtilityItem
     {
-        static public int RandomChoice(int itemID1, int itemID2)
+        public static int RandomChoice(int itemID1, int itemID2)
         {
-            int iRet = 0;
+            int iRet;
+
             switch (Utility.Random(2))
             {
                 default:
@@ -23,13 +24,12 @@ namespace Server.Items
         }
     }
 
-    // ********** Dough **********
     public class Dough : Item, IQuality
     {
         private ItemQuality _Quality;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public ItemQuality Quality { get { return _Quality; } set { _Quality = value; InvalidateProperties(); } }
+        public ItemQuality Quality { get => _Quality; set { _Quality = value; InvalidateProperties(); } }
 
         public bool PlayerConstructed => true;
 
@@ -74,7 +74,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1); // version
 
             writer.Write((int)_Quality);
@@ -83,11 +82,9 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            if (version > 0)
-                _Quality = (ItemQuality)reader.ReadInt();
+            _Quality = (ItemQuality)reader.ReadInt();
         }
 
 #if false
@@ -160,13 +157,12 @@ namespace Server.Items
         }
     }
 
-    // ********** SweetDough **********
     public class SweetDough : Item
     {
         private ItemQuality _Quality;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public ItemQuality Quality { get { return _Quality; } set { _Quality = value; InvalidateProperties(); } }
+        public ItemQuality Quality { get => _Quality; set { _Quality = value; InvalidateProperties(); } }
 
         public override int LabelNumber => 1041340;// sweet dough
 
@@ -195,7 +191,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1); // version
 
             writer.Write((int)_Quality);
@@ -204,14 +199,10 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
+            _Quality = (ItemQuality)reader.ReadInt();
 
-            if (version > 0)
-                _Quality = (ItemQuality)reader.ReadInt();
-
-            if (Hue == 51)
-                Hue = 150;
         }
 
 #if false
@@ -289,7 +280,6 @@ namespace Server.Items
         }
     }
 
-    // ********** JarHoney **********
     public class JarHoney : Item
     {
         [Constructable]
@@ -308,25 +298,14 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
-            Stackable = true;
+            reader.ReadInt();
         }
-
-        /*public override void OnDoubleClick( Mobile from )
-        {
-        if ( !Movable )
-        return;
-
-        from.Target = new InternalTarget( this );
-        }*/
 
         private class InternalTarget : Target
         {
@@ -362,7 +341,6 @@ namespace Server.Items
         }
     }
 
-    // ********** BowlFlour **********
     public class BowlFlour : Item
     {
         [Constructable]
@@ -380,19 +358,16 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
-    // ********** WoodenBowl **********
     public class WoodenBowl : Item
     {
         [Constructable]
@@ -410,25 +385,22 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
-    // ********** SackFlour **********
     public class SackFlour : Item, IQuality
     {
         private ItemQuality _Quality;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public ItemQuality Quality { get { return _Quality; } set { _Quality = value; InvalidateProperties(); } }
+        public ItemQuality Quality { get => _Quality; set { _Quality = value; InvalidateProperties(); } }
 
         public bool PlayerConstructed => true;
 
@@ -500,7 +472,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(4); // version
 
             writer.Write((int)_Quality);
@@ -509,24 +480,12 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 4:
-                    _Quality = (ItemQuality)reader.ReadInt();
-                    break;
-                case 3:
-                    _Quality = (ItemQuality)reader.ReadInt();
-                    reader.ReadInt();
-                    Stackable = true;
-                    break;
-            }
+            _Quality = (ItemQuality)reader.ReadInt();
         }
     }
 
-    // ********** SackFlourOpen **********
     public class SackFlourOpen : Item
     {
         public override int LabelNumber => 1024166;  // open sack of flour
@@ -544,19 +503,16 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
-    // ********** Eggshells **********
     public class Eggshells : Item
     {
         [Constructable]
@@ -574,15 +530,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -638,15 +592,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

@@ -21,6 +21,7 @@ namespace Server.Items
 
         public override int LabelNumber => 1049786;// Happy Birthday!  ...
         public override bool DisplayLootType => true;
+
         public override void OnDoubleClick(Mobile from)
         {
             if (!from.InRange(GetWorldLocation(), 1))
@@ -32,16 +33,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            LootType = LootType.Blessed;
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

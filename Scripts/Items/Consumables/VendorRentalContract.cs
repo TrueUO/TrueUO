@@ -36,10 +36,7 @@ namespace Server.Items
 		
         public VendorRentalDuration Duration
         {
-            get
-            {
-                return m_Duration;
-            }
+            get => m_Duration;
             set
             {
                 if (value != null)
@@ -48,37 +45,14 @@ namespace Server.Items
         }
 		
         [CommandProperty(AccessLevel.GameMaster)]
-        public int Price
-        {
-            get
-            {
-                return m_Price;
-            }
-            set
-            {
-                m_Price = value;
-            }
-        }
+        public int Price { get => m_Price; set => m_Price = value; }
 		
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool LandlordRenew
-        {
-            get
-            {
-                return m_LandlordRenew;
-            }
-            set
-            {
-                m_LandlordRenew = value;
-            }
-        }
+        public bool LandlordRenew { get => m_LandlordRenew; set => m_LandlordRenew = value; }
 		
         public Mobile Offeree
         {
-            get
-            {
-                return m_Offeree;
-            }
+            get => m_Offeree;
             set
             {
                 if (m_OfferExpireTimer != null)
@@ -226,7 +200,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
 
             writer.WriteEncodedInt(m_Duration.ID);
@@ -238,8 +211,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
 
             int durationID = reader.ReadEncodedInt();
             if (durationID < VendorRentalDuration.Instances.Length)

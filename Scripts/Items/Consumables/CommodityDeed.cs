@@ -156,7 +156,7 @@ namespace Server.Items
         {
             InvalidateProperties();
 
-            if (Commodity == null && item is ICommodity && ((ICommodity)item).IsDeedable)
+            if (Commodity == null && item is ICommodity iItem && iItem.IsDeedable)
             {
                 Commodity = item;
                 Commodity.Internalize();
@@ -166,10 +166,8 @@ namespace Server.Items
 
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
 
         public override void Serialize(GenericWriter writer)

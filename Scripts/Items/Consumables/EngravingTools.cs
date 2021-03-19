@@ -8,7 +8,7 @@ using System;
 
 namespace Server.Items
 {
-    interface IEngravable
+    internal interface IEngravable
     {
         string EngravedText { get; set; }
     }
@@ -21,7 +21,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int UsesRemaining
         {
-            get { return m_UsesRemaining; }
+            get => m_UsesRemaining;
             set
             {
                 m_UsesRemaining = value;
@@ -29,19 +29,12 @@ namespace Server.Items
             }
         }
 
-        public virtual bool ShowUsesRemaining
-        {
-            get { return true; }
-            set { }
-        }
+        public virtual bool ShowUsesRemaining { get => true; set { } }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsRewardItem
         {
-            get
-            {
-                return m_IsRewardItem;
-            }
+            get => m_IsRewardItem;
             set
             {
                 m_IsRewardItem = value;
@@ -111,9 +104,11 @@ namespace Server.Items
                 BaseEngravingTool tool = from.Backpack.FindItemByType(typeof(BaseEngravingTool)) as BaseEngravingTool;
 
                 if (tool != null && !tool.DeletedItem && tool.UsesRemaining <= 0)
+                {
                     return tool;
-                else
-                    return null;
+                }
+
+                return null;
             }
 
             return null;
@@ -163,7 +158,8 @@ namespace Server.Items
                     {
                         return true;
                     }
-                    else if (house != null && house.IsFriend(m))
+
+                    if (house != null && house.IsFriend(m))
                     {
                         return true;
                     }
@@ -423,12 +419,10 @@ namespace Server.Items
                     if (!m_Tool.IsChildOf(from.Backpack))
                     {
                         from.SendLocalizedMessage(1062334); // This item must be in your backpack to be used.
-                        return;
                     }
                     else if (!m_Tool.IsValid(m_Target, from))
                     {
                         from.SendLocalizedMessage(1072311); // The engraving failed.
-                        return;
                     }
                     else
                     {
@@ -495,10 +489,9 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1072152;// leather container engraving tool
-        public override Type[] Engraves => new Type[]
-                {
-                    typeof(Pouch), typeof(Backpack), typeof(Bag)
-                };
+
+        public override Type[] Engraves => new[] { typeof(Pouch), typeof(Backpack), typeof(Bag) };
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -508,7 +501,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -527,18 +520,19 @@ namespace Server.Items
         {
         }
 
-        public override Type[] Engraves => new Type[]
-                {
-                    typeof(WoodenBox), typeof(LargeCrate), typeof(MediumCrate),
-                    typeof(SmallCrate), typeof(WoodenChest), typeof(EmptyBookcase),
-                    typeof(Armoire), typeof(FancyArmoire), typeof(PlainWoodenChest),
-                    typeof(OrnateWoodenChest), typeof(GildedWoodenChest), typeof(WoodenFootLocker),
-                    typeof(FinishedWoodenChest), typeof(TallCabinet), typeof(ShortCabinet),
-                    typeof(RedArmoire), typeof(CherryArmoire), typeof(MapleArmoire),
-                    typeof(ElegantArmoire), typeof(Keg), typeof(SimpleElvenArmoire),
-                    typeof(DecorativeBox), typeof(FancyElvenArmoire), typeof(RarewoodChest),
-                    typeof(RewardSign), typeof(GargoyleWoodenChest)
-                };
+        public override Type[] Engraves => new[]
+        {
+            typeof(WoodenBox), typeof(LargeCrate), typeof(MediumCrate),
+            typeof(SmallCrate), typeof(WoodenChest), typeof(EmptyBookcase),
+            typeof(Armoire), typeof(FancyArmoire), typeof(PlainWoodenChest),
+            typeof(OrnateWoodenChest), typeof(GildedWoodenChest), typeof(WoodenFootLocker),
+            typeof(FinishedWoodenChest), typeof(TallCabinet), typeof(ShortCabinet),
+            typeof(RedArmoire), typeof(CherryArmoire), typeof(MapleArmoire),
+            typeof(ElegantArmoire), typeof(Keg), typeof(SimpleElvenArmoire),
+            typeof(DecorativeBox), typeof(FancyElvenArmoire), typeof(RarewoodChest),
+            typeof(RewardSign), typeof(GargoyleWoodenChest)
+        };
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -548,7 +542,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -567,10 +561,8 @@ namespace Server.Items
         {
         }
 
-        public override Type[] Engraves => new Type[]
-                {
-                    typeof(ParagonChest), typeof(MetalChest), typeof(MetalGoldenChest), typeof(MetalBox)
-                };
+        public override Type[] Engraves => new[] { typeof(ParagonChest), typeof(MetalChest), typeof(MetalGoldenChest), typeof(MetalBox) };
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -580,7 +572,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -599,11 +591,8 @@ namespace Server.Items
         {
         }
 
-        public override Type[] Engraves => new Type[]
-                {
-                    typeof(Cake), typeof(CheesePizza), typeof(SausagePizza),
-                    typeof(Cookies)
-                };
+        public override Type[] Engraves => new[] { typeof(Cake), typeof(CheesePizza), typeof(SausagePizza), typeof(Cookies) };
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -613,7 +602,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -632,10 +621,8 @@ namespace Server.Items
         {
         }
 
-        public override Type[] Engraves => new Type[]
-                {
-                    typeof(Spellbook)
-                };
+        public override Type[] Engraves => new[] { typeof(Spellbook) };
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -645,7 +632,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -665,10 +652,8 @@ namespace Server.Items
         {
         }
 
-        public override Type[] Engraves => new Type[]
-                {
-                    typeof(MonsterStatuette)
-                };
+        public override Type[] Engraves => new[] { typeof(MonsterStatuette) };
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -678,7 +663,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -700,7 +685,7 @@ namespace Server.Items
 
         public override int GumpTitle => 1071163;  // <center>Armor Engraving Tool</center>
 
-        public override Type[] Engraves => new Type[] { typeof(BaseArmor) };
+        public override Type[] Engraves => new[] { typeof(BaseArmor) };
 
         public override bool CheckType(IEntity entity)
         {
@@ -723,7 +708,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -747,10 +732,7 @@ namespace Server.Items
         {
         }
 
-        public override Type[] Engraves => new Type[]
-                {
-                    typeof(BaseShield)
-                };
+        public override Type[] Engraves => new[] { typeof(BaseShield) };
 
         public override void Serialize(GenericWriter writer)
         {

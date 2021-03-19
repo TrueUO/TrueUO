@@ -19,18 +19,17 @@ namespace Server.Items
         }
 
         public override string DefaultName => "a name change deed";
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -105,13 +104,11 @@ namespace Server.Items
             Mobile m = sender.Mobile;
             TextRelay nameEntry = info.GetTextEntry(0);
 
-            string newName = (nameEntry == null ? null : nameEntry.Text.Trim());
-
+            string newName = nameEntry == null ? null : nameEntry.Text.Trim();
 
             if (!NameVerification.Validate(newName, 2, 16, true, true, true, 1, NameVerification.SpaceDashPeriodQuote))
             {
-                m.SendMessage("That name is unacceptable.");
-                return;
+                m.SendLocalizedMessage(501144); // That name is not permissible.
             }
             else
             {

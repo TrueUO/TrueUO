@@ -27,11 +27,11 @@ namespace Server.Items
                     }
                 }
 
-                if (item.LootType == LootType.Blessed || item.BlessedFor == from || (Mobile.InsuranceEnabled && item.Insured)) // Check if its already newbied (blessed)
+                if (item.LootType == LootType.Blessed || item.BlessedFor == from || Mobile.InsuranceEnabled && item.Insured) // Check if its already newbied (blessed)
                 {
                     from.SendLocalizedMessage(1045113); // That item is already blessed
                 }
-                else if (item.LootType != LootType.Regular || (Siege.SiegeShard && SkillHandlers.Imbuing.GetTotalMods(item) > 0) || item.NegativeAttributes.Prized > 0)
+                else if (item.LootType != LootType.Regular || Siege.SiegeShard && SkillHandlers.Imbuing.GetTotalMods(item) > 0 || item.NegativeAttributes.Prized > 0)
                 {
                     from.SendLocalizedMessage(1045114); // You can not bless that item
                 }
@@ -71,20 +71,16 @@ namespace Server.Items
         {
         }
 
-        public override bool DisplayLootType => true;
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            LootType = LootType.Blessed;
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         public override void OnDoubleClick(Mobile from) // Override double click of the deed to call our target

@@ -31,10 +31,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int UsesRemaining
         {
-            get
-            {
-                return m_UsesRemaining;
-            }
+            get => m_UsesRemaining;
             set
             {
                 m_UsesRemaining = value;
@@ -44,10 +41,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public Poison Poison
         {
-            get
-            {
-                return m_Poison;
-            }
+            get => m_Poison;
             set
             {
                 m_Poison = value;
@@ -57,26 +51,15 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int PoisonCharges
         {
-            get
-            {
-                return m_PoisonCharges;
-            }
+            get => m_PoisonCharges;
             set
             {
                 m_PoisonCharges = value;
                 InvalidateProperties();
             }
         }
-        public bool ShowUsesRemaining
-        {
-            get
-            {
-                return true;
-            }
-            set
-            {
-            }
-        }
+        public bool ShowUsesRemaining { get => true; set { } }
+
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);

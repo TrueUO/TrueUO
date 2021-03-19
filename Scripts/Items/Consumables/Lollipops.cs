@@ -1,6 +1,5 @@
-﻿namespace Server.Items
+namespace Server.Items
 {
-    [TypeAlias("Server.Items.Lollipop")]
     public class Lollipops : CandyCane
     {
         [Constructable]
@@ -24,15 +23,13 @@
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

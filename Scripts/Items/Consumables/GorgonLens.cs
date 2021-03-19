@@ -19,7 +19,7 @@ namespace Server.Items
         private LenseType m_LenseType;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public LenseType LenseType { get { return m_LenseType; } set { m_LenseType = value; InvalidateProperties(); } }
+        public LenseType LenseType { get => m_LenseType; set { m_LenseType = value; InvalidateProperties(); } }
 
         [Constructable]
         public GorgonLense() : this(1) { }
@@ -64,7 +64,7 @@ namespace Server.Items
                 }
                 else if (item is BaseArmor armor)
                 {
-                    if (armor.Layer == Layer.Neck || armor.Layer == Layer.Helm || armor is BaseShield || (Race.Gargoyle.ValidateEquipment(armor) && armor.Layer == Layer.Earrings))
+                    if (armor.Layer == Layer.Neck || armor.Layer == Layer.Helm || armor is BaseShield || Race.Gargoyle.ValidateEquipment(armor) && armor.Layer == Layer.Earrings)
                     {
                         if (armor.GorgonLenseCharges > 0 && armor.GorgonLenseType != LenseType)
                             from.SendGump(new GorgonLenseWarningGump(this, armor));

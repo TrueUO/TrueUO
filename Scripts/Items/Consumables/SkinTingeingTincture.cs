@@ -39,15 +39,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         private class InternalGump : BaseGump
@@ -57,11 +55,11 @@ namespace Server.Items
                 return 0xF3EA1;
             }
 
-            public SkinTingeingTincture Item { get; set; }
+            public SkinTingeingTincture Item { get; }
             public int SelectedHue { get; set; }
 
             public InternalGump(PlayerMobile pm, SkinTingeingTincture item)
-                : base(pm, 50, 50)
+                : base(pm)
             {
                 Item = item;
             }
@@ -117,7 +115,7 @@ namespace Server.Items
 
                     int[] list = GetHueList();
 
-                    if (button >= 0 && button < list.Length)
+                    if (button < list.Length)
                     {
                         SelectedHue = list[button];
                         Refresh(true, false);
@@ -201,7 +199,7 @@ namespace Server.Items
                 {
                     if (_ElfSkinHues == null)
                     {
-                        _ElfSkinHues = new int[]
+                        _ElfSkinHues = new[]
                         {
                             0x4DE, 0x76C, 0x835, 0x430, 0x24D, 0x24E, 0x24F, 0x0BF,
                             0x4A7, 0x361, 0x375, 0x367, 0x3E8, 0x3DE, 0x353, 0x903,
