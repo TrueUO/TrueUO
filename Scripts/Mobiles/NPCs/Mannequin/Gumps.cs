@@ -157,8 +157,8 @@ namespace Server.Gumps
 
         public class ItemPropDefinition
         {
-            public List<ValuedProperty> SelectItem { get; set; }
-            public List<ValuedProperty> EquipmentItem { get; set; }
+            public List<ValuedProperty> SelectItem { get; }
+            public List<ValuedProperty> EquipmentItem { get; }
 
             public ItemPropDefinition(Item tl, Item ctlg)
             {
@@ -187,9 +187,9 @@ namespace Server.Gumps
             AddAlphaRegion(5, 5, 594, 810);
             AddHtmlLocalized(10, 10, 584, 18, 1114513, "#1159279", 0x43F7, false, false); // <DIV ALIGN=CENTER>~1_TOKEN~</DIV>
 
-            List<ValuedProperty> lm = null;
+            List<ValuedProperty> lm;
             List<ItemPropDefinition> CompareItem = null;
-            List<Item> list = null;
+            List<Item> list;
 
             if (_Item != null)
             {

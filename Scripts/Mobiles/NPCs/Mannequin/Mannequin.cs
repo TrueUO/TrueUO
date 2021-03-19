@@ -317,8 +317,7 @@ namespace Server.Mobiles
                     }
                     else
                     {
-                        // TODO : Action
-                        // This was a temporary crash fix
+                        from.SendLocalizedMessage(1149667); // Invalid target.
                     }
 
                 }
