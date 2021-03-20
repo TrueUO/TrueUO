@@ -76,7 +76,7 @@ namespace Server.Mobiles
             return 0x2C3;
         }
 
-        public override int TreasureMapLevel => 6;
+        public override int TreasureMapLevel => 4;
 
         public override void SetToChampionSpawn()
         {

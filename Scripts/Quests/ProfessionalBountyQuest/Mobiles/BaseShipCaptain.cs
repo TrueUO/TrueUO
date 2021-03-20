@@ -52,7 +52,7 @@ namespace Server.Mobiles
         public override bool PlayerRangeSensitive => false;
 
         public override double TreasureMapChance => 0.05;
-        public override int TreasureMapLevel => 7;
+        public override int TreasureMapLevel => 5;
 
         [CommandProperty(AccessLevel.GameMaster)]
         public virtual TimeSpan ShootFrequency => TimeSpan.FromSeconds(Math.Min(20, 20.0 - (m_Crew.Count * 2.5)));

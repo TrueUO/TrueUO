@@ -21,7 +21,7 @@ namespace Server.Mobiles
         public override bool TaintedLifeAura => true;
         public override int Meat => 5;
         public override double TreasureMapChance => .25;
-        public override int TreasureMapLevel => 7;
+        public override int TreasureMapLevel => 5;
         public override Poison PoisonImmune => Poison.Deadly;
 
         public override bool TeleportsTo => true;
