@@ -63,11 +63,9 @@ namespace Server.Items
                             eq.CurArcaneCharges -= amount;
                             break;
                         }
-                        else
-                        {
-                            amount -= eq.CurArcaneCharges;
-                            eq.CurArcaneCharges = 0;
-                        }
+
+                        amount -= eq.CurArcaneCharges;
+                        eq.CurArcaneCharges = 0;
                     }
                 }
             }
@@ -93,7 +91,7 @@ namespace Server.Items
 
             if (v < 16)
                 return 16;
-            else if (v > 24)
+            if (v > 24)
                 return 24;
 
             return v;
@@ -185,9 +183,9 @@ namespace Server.Items
                             armor.PoisonBonus = 0;
                             armor.EnergyBonus = 0;
                         }
-                        else if (item is BaseWeapon) // Sanity, weapons cannot recieve gems...
+                        else
                         {
-                            BaseWeapon weapon = item as BaseWeapon;
+                            BaseWeapon weapon = item as BaseWeapon; // Sanity, weapons cannot recieve gems...
 
                             weapon.Quality = ItemQuality.Normal;
                             weapon.Crafter = from;
@@ -227,7 +225,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }
