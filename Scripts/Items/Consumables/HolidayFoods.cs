@@ -78,20 +78,18 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             reader.ReadInt(); // version
         }
 
         public class ToothAcheTimer : Timer
         {
-            public Mobile ConsumedBy { get; private set; }
+            public Mobile ConsumedBy { get; }
             public int Acidity { get; set; }
 
             public ToothAcheTimer(Mobile consumedBy, int acidity)
@@ -195,9 +193,9 @@ namespace Server.Items
             0, 1077396, // Noooo!
 			1077397, // Please don't eat me... *whimper*
 			1077405, // Not the face!
-			1077406, // Ahhhhhh! My foot’s gone!
+			1077406, // Ahhhhhh! My footâ€™s gone!
 			1077407, // Please. No! I have gingerkids!
-			1077408, // No, no! I’m really made of poison. Really.
+			1077408, // No, no! Iâ€™m really made of poison. Really.
 			1077409 // Run, run as fast as you can! You can't catch me! I'm the gingerbread man!
 		};
 

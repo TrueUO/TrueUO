@@ -12,15 +12,11 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int UsesRemaining
         {
-            get { return m_UsesRemaining; }
+            get => m_UsesRemaining;
             set { m_UsesRemaining = value; InvalidateProperties(); }
         }
 
-        public virtual bool ShowUsesRemaining
-        {
-            get { return true; }
-            set { }
-        }
+        public virtual bool ShowUsesRemaining { get => true; set { } }
 
         [Constructable]
         public PoppiesDust()
@@ -103,7 +99,6 @@ namespace Server.Items
                 if (!m_Dust.IsChildOf(from.Backpack))
                 {
                     from.SendLocalizedMessage(1042664); // You must have the object in your backpack to use it.
-                    return;
                 }
                 else if (targeted is PoppiesDust pd && m_Dust != pd)
                 {

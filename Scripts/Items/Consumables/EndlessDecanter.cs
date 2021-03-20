@@ -12,13 +12,13 @@ namespace Server.Items
         private Map m_LinkMap;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool Linked { get { return m_Linked; } set { m_Linked = value; InvalidateProperties(); } }
+        public bool Linked { get => m_Linked; set { m_Linked = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public Point3D LinkLocation { get { return m_LinkLocation; } set { m_LinkLocation = value; } }
+        public Point3D LinkLocation { get => m_LinkLocation; set => m_LinkLocation = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public Map LinkMap { get { return m_LinkMap; } set { m_LinkMap = value; } }
+        public Map LinkMap { get => m_LinkMap; set => m_LinkMap = value; }
 
         public override int LabelNumber => 1115929; // Endless Decanter of Water
 

@@ -11,7 +11,9 @@ namespace Server.Items
             get
             {
                 if (IsAncient)
+                {
                     return 1063450; // an ancient SOS
+                }
 
                 return 1041081; // a waterstained SOS
             }
@@ -23,15 +25,12 @@ namespace Server.Items
         private int m_MessageIndex;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsAncient => (m_Level >= 4);
+        public bool IsAncient => m_Level >= 4;
 
         [CommandProperty(AccessLevel.GameMaster)]
         public int Level
         {
-            get
-            {
-                return m_Level;
-            }
+            get => m_Level;
             set
             {
                 m_Level = Math.Max(1, Math.Min(value, 4));
@@ -41,43 +40,13 @@ namespace Server.Items
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public Map TargetMap
-        {
-            get
-            {
-                return m_TargetMap;
-            }
-            set
-            {
-                m_TargetMap = value;
-            }
-        }
+        public Map TargetMap { get => m_TargetMap; set => m_TargetMap = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public Point3D TargetLocation
-        {
-            get
-            {
-                return m_TargetLocation;
-            }
-            set
-            {
-                m_TargetLocation = value;
-            }
-        }
+        public Point3D TargetLocation { get => m_TargetLocation; set => m_TargetLocation = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int MessageIndex
-        {
-            get
-            {
-                return m_MessageIndex;
-            }
-            set
-            {
-                m_MessageIndex = value;
-            }
-        }
+        public int MessageIndex { get => m_MessageIndex; set => m_MessageIndex = value; }
 
         public void UpdateHue()
         {
@@ -202,16 +171,15 @@ namespace Server.Items
         {
         }
 
-        private static readonly int[] m_WaterTiles = new int[]
+        private static readonly int[] m_WaterTiles =
         {
-            0x00A8, 0x00AB,
-            0x0136, 0x0137
+            0x00A8, 0x00AB, 0x0136, 0x0137
         };
 
-        private static readonly Rectangle2D[] m_BritRegions = new Rectangle2D[] { new Rectangle2D(0, 0, 5120, 4096) };
-        private static readonly Rectangle2D[] m_IlshRegions = new Rectangle2D[] { new Rectangle2D(1472, 272, 304, 240), new Rectangle2D(1240, 1000, 312, 160) };
-        private static readonly Rectangle2D[] m_MalasRegions = new Rectangle2D[] { new Rectangle2D(1376, 1520, 464, 280) };
-        private static readonly Rectangle2D[] m_TokunoRegions = new Rectangle2D[] { new Rectangle2D(10, 10, 1440, 1440) };
+        private static readonly Rectangle2D[] m_BritRegions = { new Rectangle2D(0, 0, 5120, 4096) };
+        private static readonly Rectangle2D[] m_IlshRegions = { new Rectangle2D(1472, 272, 304, 240), new Rectangle2D(1240, 1000, 312, 160) };
+        private static readonly Rectangle2D[] m_MalasRegions = { new Rectangle2D(1376, 1520, 464, 280) };
+        private static readonly Rectangle2D[] m_TokunoRegions = { new Rectangle2D(10, 10, 1440, 1440) };
 
         public static Point3D FindLocation(Map map)
         {
@@ -229,7 +197,7 @@ namespace Server.Items
             else if (map == Map.Tokuno)
                 regions = m_TokunoRegions;
             else
-                regions = new Rectangle2D[] { new Rectangle2D(0, 0, map.Width, map.Height) };
+                regions = new[] { new Rectangle2D(0, 0, map.Width, map.Height) };
 
             if (regions.Length == 0)
                 return Point3D.Zero;
@@ -270,7 +238,7 @@ namespace Server.Items
             bool water = false;
 
             for (int i = 0; !water && i < m_WaterTiles.Length; i += 2)
-                water = (tileID >= m_WaterTiles[i] && tileID <= m_WaterTiles[i + 1]);
+                water = tileID >= m_WaterTiles[i] && tileID <= m_WaterTiles[i + 1];
 
             return water;
         }
@@ -337,7 +305,7 @@ namespace Server.Items
                 m_Message = message;
             }
 
-            private static readonly MessageEntry[] m_Entries = new MessageEntry[]
+            private static readonly MessageEntry[] m_Entries =
             {
                 new MessageEntry(280, 180, 1153540),
                 new MessageEntry(280, 215, 1153546),
@@ -352,7 +320,7 @@ namespace Server.Items
                 new MessageEntry(280, 160, 1153541),
                 new MessageEntry(280, 250, 1153538),
                 new MessageEntry(280, 250, 1153542),
-                new MessageEntry(280, 250, 1153550),
+                new MessageEntry(280, 250, 1153550)
             };
 
             public static MessageEntry[] Entries => m_Entries;

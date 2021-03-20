@@ -36,29 +36,15 @@ namespace Server.Items
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public SkillName Skill
-        {
-            get
-            {
-                return m_Skill;
-            }
-            set
-            {
-                m_Skill = value;
-            }
-        }
+        public SkillName Skill { get => m_Skill; set => m_Skill = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public double Value
         {
-            get
-            {
-                return m_Value;
-            }
+            get => m_Value;
             set
             {
                 m_Value = value;
-
                 m_Value = Math.Floor(m_Value * 10) / 10.0;
             }
         }
@@ -71,12 +57,15 @@ namespace Server.Items
         public virtual string GetName()
         {
             int index = (int)m_Skill;
+
             SkillInfo[] table = SkillInfo.Table;
 
             if (index >= 0 && index < table.Length)
+            {
                 return table[index].Name.ToLower();
-            else
-                return "???";
+            }
+
+            return "???";
         }
 
         public virtual bool CanUse(Mobile from)

@@ -52,10 +52,7 @@ namespace Server.Items
 
         public PotionEffect PotionEffect
         {
-            get
-            {
-                return m_PotionEffect;
-            }
+            get => m_PotionEffect;
             set
             {
                 m_PotionEffect = value;
@@ -98,7 +95,7 @@ namespace Server.Items
                     return true;
             }
 
-            return (handOne == null || handTwo == null);
+            return handOne == null || handTwo == null;
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -156,7 +153,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             m_PotionEffect = (PotionEffect)reader.ReadInt();
         }
@@ -168,11 +165,6 @@ namespace Server.Items
             m.RevealingAction();
             m.PlaySound(0x2D6);
             m.AddToBackpack(new Bottle());
-
-            if (m.Body.IsHuman && !m.Mounted)
-            {
-                m.Animate(AnimationType.Eat, 0);
-            }
         }
 
         public static int EnhancePotions(Mobile m)
@@ -188,14 +180,14 @@ namespace Server.Items
 
         public static TimeSpan Scale(Mobile m, TimeSpan v)
         {
-            double scalar = 1.0 + (0.01 * EnhancePotions(m));
+            double scalar = 1.0 + 0.01 * EnhancePotions(m);
 
             return TimeSpan.FromSeconds(v.TotalSeconds * scalar);
         }
 
         public static double Scale(Mobile m, double v)
         {
-            double scalar = 1.0 + (0.01 * EnhancePotions(m));
+            double scalar = 1.0 + 0.01 * EnhancePotions(m);
 
             return v * scalar;
         }

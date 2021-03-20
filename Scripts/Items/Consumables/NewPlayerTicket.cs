@@ -7,6 +7,9 @@ namespace Server.Items
     public class NewPlayerTicket : Item
     {
         private Mobile m_Owner;
+
+        public override int LabelNumber => 1062094;// a young player ticket
+
         [Constructable]
         public NewPlayerTicket()
             : base(0x14EF)
@@ -21,19 +24,8 @@ namespace Server.Items
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public Mobile Owner
-        {
-            get
-            {
-                return m_Owner;
-            }
-            set
-            {
-                m_Owner = value;
-            }
-        }
-        public override int LabelNumber => 1062094;// a young player ticket
-        public override bool DisplayLootType => true;
+        public Mobile Owner { get => m_Owner; set => m_Owner = value; }
+
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);
@@ -44,7 +36,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
 
             writer.Write(m_Owner);
@@ -53,20 +44,9 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 0:
-                    {
-                        m_Owner = reader.ReadMobile();
-                        break;
-                    }
-            }
-
-            if (Name == "a young player ticket")
-                Name = null;
+            m_Owner = reader.ReadMobile();
         }
 
         public override void OnDoubleClick(Mobile from)

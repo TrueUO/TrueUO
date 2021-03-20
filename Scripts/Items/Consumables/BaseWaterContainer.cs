@@ -6,7 +6,7 @@ namespace Server.Items
         public BaseWaterContainer(int Item_Id, bool filled)
             : base(Item_Id)
         {
-            Quantity = (filled) ? MaxQuantity : 0;
+            Quantity = filled ? MaxQuantity : 0;
         }
 
         public BaseWaterContainer(Serial serial)
@@ -19,25 +19,22 @@ namespace Server.Items
         public abstract int MaxQuantity { get; }
         public override int DefaultGumpID => 0x3e;
         [CommandProperty(AccessLevel.GameMaster)]
-        public virtual bool IsEmpty => (m_Quantity <= 0);
+        public virtual bool IsEmpty => m_Quantity <= 0;
         [CommandProperty(AccessLevel.GameMaster)]
-        public virtual bool IsFull => (m_Quantity >= MaxQuantity);
+        public virtual bool IsFull => m_Quantity >= MaxQuantity;
         [CommandProperty(AccessLevel.GameMaster)]
         public virtual int Quantity
         {
-            get
-            {
-                return m_Quantity;
-            }
+            get => m_Quantity;
             set
             {
                 if (value != m_Quantity)
                 {
-                    m_Quantity = (value < 1) ? 0 : (value > MaxQuantity) ? MaxQuantity : value;
+                    m_Quantity = value < 1 ? 0 : value > MaxQuantity ? MaxQuantity : value;
 
-                    Movable = (!IsLockedDown) ? IsEmpty : false;
+                    Movable = !IsLockedDown && IsEmpty;
 
-                    ItemID = (IsEmpty) ? voidItem_ID : fullItem_ID;
+                    ItemID = IsEmpty ? voidItem_ID : fullItem_ID;
 
                     if (!IsEmpty)
                     {
@@ -99,16 +96,16 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
+
             writer.Write(m_Quantity);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
             m_Quantity = reader.ReadInt();
         }
     }

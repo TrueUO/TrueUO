@@ -42,7 +42,7 @@ namespace Server.Items
 
         public static bool UnderEffect(Mobile m)
         {
-            return (GetContext(m) != null);
+            return GetContext(m) != null;
         }
 
         public override bool CheckItemUse(Mobile from, Item item)
@@ -85,15 +85,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         private static void AddContext(Mobile m, OrangePetalsContext context)
@@ -110,7 +108,7 @@ namespace Server.Items
 
         private static OrangePetalsContext GetContext(Mobile m)
         {
-            return (m_Table[m] as OrangePetalsContext);
+            return m_Table[m] as OrangePetalsContext;
         }
 
         private class OrangePetalsTimer : Timer

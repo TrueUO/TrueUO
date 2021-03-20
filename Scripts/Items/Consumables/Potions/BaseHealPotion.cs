@@ -18,18 +18,17 @@ namespace Server.Items
         public abstract int MinHeal { get; }
         public abstract int MaxHeal { get; }
         public abstract double Delay { get; }
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         public void DoHeal(Mobile from)

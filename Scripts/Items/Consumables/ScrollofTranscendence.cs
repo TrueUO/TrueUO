@@ -4,7 +4,6 @@ using System;
 
 namespace Server.Items
 {
-    [TypeAlias("Server.Items.ScrollofTranscendence")]
     public class ScrollOfTranscendence : SpecialScroll, IAccountRestricted
     {
         public override int LabelNumber => 1094934;// Scroll of Transcendence
@@ -96,12 +95,12 @@ namespace Server.Items
 
             double newValue = Value;
 
-            if ((tskill + newValue) > tcap)
+            if (tskill + newValue > tcap)
                 newValue = tcap - tskill;
 
             if (tskill < tcap && from.Skills[Skill].Lock == SkillLock.Up)
             {
-                if ((from.SkillsTotal + newValue * 10) > from.SkillsCap)
+                if (from.SkillsTotal + newValue * 10 > from.SkillsCap)
                 {
                     int ns = from.Skills.Length; // number of items in from.Skills[]
 
@@ -141,7 +140,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1); // version
 
             writer.Write(Account);
@@ -150,17 +148,9 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            int version = InheritsItem ? 0 : reader.ReadInt(); //Required for SpecialScroll insertion
 
-            int version = (InheritsItem ? 0 : reader.ReadInt()); //Required for SpecialScroll insertion
-
-            if (version > 0)
-                Account = reader.ReadString();
-
-            LootType = LootType.Cursed;
-            Insured = false;
-
-            if (Hue == 0x7E)
-                Hue = 0x490;
+            Account = reader.ReadString();
         }
     }
 }

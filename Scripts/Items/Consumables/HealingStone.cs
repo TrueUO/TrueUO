@@ -15,7 +15,7 @@ namespace Server.Items
         public Mobile Caster => m_Caster;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int LifeForce { get { return m_LifeForce; } set { m_LifeForce = value; InvalidateProperties(); } }
+        public int LifeForce { get => m_LifeForce; set { m_LifeForce = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public int MaxLifeForce => m_MaxLifeForce;
@@ -46,7 +46,6 @@ namespace Server.Items
             if (!from.InRange(GetWorldLocation(), 1))
             {
                 from.SendLocalizedMessage(502138); // That is too far away for you to use
-                return;
             }
             else if (from != m_Caster)
             {
@@ -102,17 +101,16 @@ namespace Server.Items
 
                     return;
                 }
-                else
-                {
-                    int toHeal = Math.Min(m_MaxHeal, from.HitsMax - from.Hits);
-                    from.Heal(toHeal);
 
-                    from.FixedParticles(0x376A, 9, 32, 5030, EffectLayer.Waist);
-                    from.PlaySound(0x202);
+                int toHeal = Math.Min(m_MaxHeal, from.HitsMax - from.Hits);
 
-                    LifeForce -= toHeal;
-                    m_MaxHeal = 1;
-                }
+                from.Heal(toHeal);
+
+                from.FixedParticles(0x376A, 9, 32, 5030, EffectLayer.Waist);
+                from.PlaySound(0x202);
+
+                LifeForce -= toHeal;
+                m_MaxHeal = 1;
 
                 if (m_LifeForce <= 0)
                 {

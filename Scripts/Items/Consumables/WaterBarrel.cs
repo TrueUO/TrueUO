@@ -1,6 +1,6 @@
-﻿namespace Server.Items
+namespace Server.Items
 {
-    class WaterBarrel : BaseWaterContainer, IChopable
+    public class WaterBarrel : BaseWaterContainer, IChopable
     {
         private static readonly int EmptyID = 0xE77;
         private static readonly int FilledID = 0x154D;
@@ -41,15 +41,13 @@
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

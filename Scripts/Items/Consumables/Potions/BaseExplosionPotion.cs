@@ -28,15 +28,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         public virtual object FindParent(Mobile from)
@@ -65,7 +63,7 @@ namespace Server.Items
 
         public override void Drink(Mobile from)
         {
-            if (from.Paralyzed || from.Frozen || (from.Spell != null && from.Spell.IsCasting))
+            if (from.Paralyzed || from.Frozen || from.Spell != null && from.Spell.IsCasting)
             {
                 from.SendLocalizedMessage(1062725); // You can not use a purple potion while paralyzed.
                 return;

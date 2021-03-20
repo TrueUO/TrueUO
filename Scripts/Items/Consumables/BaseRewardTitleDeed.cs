@@ -22,8 +22,7 @@ namespace Server.Items
 
                     if (pm != null)
                     {
-                        if ((Title.Number > 0 && pm.AddRewardTitle(Title.Number)) ||
-                             Title.String != null && pm.AddRewardTitle(Title.String))
+                        if (Title.Number > 0 && pm.AddRewardTitle(Title.Number) || Title.String != null && pm.AddRewardTitle(Title.String))
                         {
 
                             pm.SendLocalizedMessage(1155605, Title.ToString());  //Thou hath been bestowed the title ~1_TITLE~!
@@ -59,7 +58,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int v = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

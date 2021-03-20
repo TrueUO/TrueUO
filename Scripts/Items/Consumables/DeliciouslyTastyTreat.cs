@@ -25,20 +25,18 @@ namespace Server.Items
         {
         }
 
-        public override int LabelNumber => 1113004;  //Deliciously Tasty Treat
+        public override int LabelNumber => 1113004; // Deliciously Tasty Treat
 
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = (InheritsItem ? 0 : reader.ReadInt()); //Required for TastyTreat Insertion
+            int version = InheritsItem ? 0 : reader.ReadInt(); //Required for TastyTreat Insertion
         }
     }
 }
