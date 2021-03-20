@@ -60,12 +60,10 @@ namespace Server.Items
             switch (level)
             {
                 default: return (int)TreasureLevel.Stash;
-                case 2:
-                case 3: return (int)TreasureLevel.Supply;
-                case 4:
-                case 5: return (int)TreasureLevel.Cache;
-                case 6: return (int)TreasureLevel.Hoard;
-                case 7: return (int)TreasureLevel.Trove;
+                case 2: return (int)TreasureLevel.Supply;
+                case 3: return (int)TreasureLevel.Cache;
+                case 4: return (int)TreasureLevel.Hoard;
+                case 5: return (int)TreasureLevel.Trove;
             }
         }
 
