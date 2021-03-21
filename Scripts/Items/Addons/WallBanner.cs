@@ -51,9 +51,8 @@ namespace Server.Items
         private bool m_East;
         [Constructable]
         public WallBanner(int bannerID)
-            : base()
         {
-            m_East = ((bannerID % 2) == 1);
+            m_East = bannerID % 2 == 1;
 
             switch (bannerID)
             {
@@ -213,32 +212,29 @@ namespace Server.Items
                 return deed;
             }
         }
+
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsRewardItem
         {
-            get
-            {
-                return m_IsRewardItem;
-            }
+            get => m_IsRewardItem;
             set
             {
                 m_IsRewardItem = value;
                 InvalidateProperties();
             }
         }
+
         [CommandProperty(AccessLevel.GameMaster)]
         public bool East
         {
-            get
-            {
-                return m_East;
-            }
+            get => m_East;
             set
             {
                 m_IsRewardItem = value;
                 InvalidateProperties();
             }
         }
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -266,7 +262,6 @@ namespace Server.Items
         private bool m_IsRewardItem;
         [Constructable]
         public WallBannerDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }
@@ -277,6 +272,7 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1080549;// Wall Banner Deed
+
         public override BaseAddon Addon
         {
             get
@@ -289,19 +285,18 @@ namespace Server.Items
                 return addon;
             }
         }
+
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsRewardItem
         {
-            get
-            {
-                return m_IsRewardItem;
-            }
+            get => m_IsRewardItem;
             set
             {
                 m_IsRewardItem = value;
                 InvalidateProperties();
             }
         }
+
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);

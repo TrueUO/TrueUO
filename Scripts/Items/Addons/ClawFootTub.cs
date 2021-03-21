@@ -26,11 +26,11 @@ namespace Server.Items
 
         public override void OnComponentUsed(AddonComponent c, Mobile from)
         {
-            if ((from.InRange(c.Location, 3)))
+            if (from.InRange(c.Location, 3))
             {
                 BaseHouse house = BaseHouse.FindHouseAt(from);
 
-                if (house != null && (house.IsOwner(from) || (house.LockDowns.ContainsKey(this) && house.LockDowns[this] == from)))
+                if (house != null && (house.IsOwner(from) || house.LockDowns.ContainsKey(this) && house.LockDowns[this] == from))
                 {
                     Components.ForEach(x =>
                     {
@@ -100,7 +100,6 @@ namespace Server.Items
 
         [Constructable]
         public ClawFootTubDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

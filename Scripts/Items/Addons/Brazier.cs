@@ -7,12 +7,14 @@ namespace Server.Items
 {
     public class RewardBrazier : Item, IRewardItem
     {
-        private static readonly int[] m_Art = new int[]
+        private static readonly int[] m_Art =
         {
             0x19AA, 0x19BB
         };
+
         private bool m_IsRewardItem;
         private Item m_Fire;
+
         [Constructable]
         public RewardBrazier()
             : this(Utility.RandomList(m_Art))
@@ -37,10 +39,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsRewardItem
         {
-            get
-            {
-                return m_IsRewardItem;
-            }
+            get => m_IsRewardItem;
             set
             {
                 m_IsRewardItem = value;
@@ -114,7 +113,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
 
             writer.Write(m_IsRewardItem);
@@ -124,8 +122,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
 
             m_IsRewardItem = reader.ReadBool();
             m_Fire = reader.ReadItem();
@@ -149,19 +146,18 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1080527;// Brazier Deed
+
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsRewardItem
         {
-            get
-            {
-                return m_IsRewardItem;
-            }
+            get => m_IsRewardItem;
             set
             {
                 m_IsRewardItem = value;
                 InvalidateProperties();
             }
         }
+
         public override void OnDoubleClick(Mobile from)
         {
             if (m_IsRewardItem && !RewardSystem.CheckIsUsableBy(from, this, null))

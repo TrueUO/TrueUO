@@ -35,7 +35,6 @@ namespace Server.Items
     {
         [Constructable]
         public WoodenCoffinAddon(bool east)
-            : base()
         {
             if (east) // east
             {
@@ -77,7 +76,6 @@ namespace Server.Items
         private bool m_East;
         [Constructable]
         public WoodenCoffinDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }
@@ -151,7 +149,7 @@ namespace Server.Items
                 if (m_Deed == null || m_Deed.Deleted || info.ButtonID == 0)
                     return;
 
-                m_Deed.m_East = (info.ButtonID != 1);
+                m_Deed.m_East = info.ButtonID != 1;
                 m_Deed.SendTarget(sender.Mobile);
             }
         }

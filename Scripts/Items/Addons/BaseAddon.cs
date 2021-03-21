@@ -34,7 +34,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.Decorator)]
         public CraftResource Resource
         {
-            get { return m_Resource; }
+            get => m_Resource;
             set
             {
                 if (m_Resource != value)
@@ -97,7 +97,7 @@ namespace Server.Items
             }
             #endregion
 
-            if (house != null && (house.IsOwner(from) || (house.Addons.ContainsKey(this) && house.Addons[this] == from)))
+            if (house != null && (house.IsOwner(from) || house.Addons.ContainsKey(this) && house.Addons[this] == from))
             {
                 Effects.PlaySound(GetWorldLocation(), Map, 0x3B3);
                 from.SendLocalizedMessage(500461); // You destroy the item.
@@ -167,7 +167,8 @@ namespace Server.Items
         public bool CouldFit(IPoint3D p, Map map)
         {
             BaseHouse h = null;
-            return (CouldFit(p, map, null, ref h) == AddonFitResult.Valid);
+
+            return CouldFit(p, map, null, ref h) == AddonFitResult.Valid;
         }
 
         public virtual AddonFitResult CouldFit(IPoint3D p, Map map, Mobile from, ref BaseHouse house)
@@ -181,7 +182,7 @@ namespace Server.Items
             {
                 Point3D p3D = new Point3D(p.X + c.Offset.X, p.Y + c.Offset.Y, p.Z + c.Offset.Z);
 
-                if (!map.CanFit(p3D.X, p3D.Y, p3D.Z, Math.Max(1, c.ItemData.Height), false, true, (c.Z == 0), true))
+                if (!map.CanFit(p3D.X, p3D.Y, p3D.Z, Math.Max(1, c.ItemData.Height), false, true, c.Z == 0, true))
                 {
                     return AddonFitResult.Blocked;
                 }
@@ -221,10 +222,8 @@ namespace Server.Items
                         {
                             return AddonFitResult.FoundationStairs;
                         }
-                        else
-                        {
-                            return AddonFitResult.InternalStairs;
-                        }
+
+                        return AddonFitResult.InternalStairs;
                     }
                 }
             }
@@ -245,8 +244,7 @@ namespace Server.Items
                         Point3D addonLoc = new Point3D(p.X + c.Offset.X, p.Y + c.Offset.Y, p.Z + c.Offset.Z);
                         int addonHeight = c.ItemData.CalcHeight;
 
-                        if (Utility.InRange(doorLoc, addonLoc, 1) && (addonLoc.Z == doorLoc.Z ||
-                                                                      ((addonLoc.Z + addonHeight) > doorLoc.Z && (doorLoc.Z + doorHeight) > addonLoc.Z)))
+                        if (Utility.InRange(doorLoc, addonLoc, 1) && (addonLoc.Z == doorLoc.Z || addonLoc.Z + addonHeight > doorLoc.Z && doorLoc.Z + doorHeight > addonLoc.Z))
                             return AddonFitResult.DoorTooClose;
                     }
                 }
@@ -259,7 +257,7 @@ namespace Server.Items
         {
             house = BaseHouse.FindHouseAt(p, map, height);
 
-            if (house == null || (from != null && !house.IsCoOwner(from)))
+            if (house == null || from != null && !house.IsCoOwner(from))
             {
                 return false;
             }
@@ -279,7 +277,7 @@ namespace Server.Items
                 StaticTile t = tiles[i];
                 ItemData id = TileData.ItemTable[t.ID & TileData.MaxItemValue];
 
-                if ((id.Flags & TileFlag.Wall) != 0 && (z + 16) > t.Z && (t.Z + t.Height) > z)
+                if ((id.Flags & TileFlag.Wall) != 0 && z + 16 > t.Z && t.Z + t.Height > z)
                     return true;
             }
 
@@ -323,7 +321,7 @@ namespace Server.Items
         [Hue, CommandProperty(AccessLevel.Decorator)]
         public override int Hue
         {
-            get { return base.Hue; }
+            get => base.Hue;
             set
             {
                 if (base.Hue != value)

@@ -31,10 +31,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public CraftResource Resource
         {
-            get
-            {
-                return m_Resource;
-            }
+            get => m_Resource;
             set
             {
                 if (UseCraftResource && m_Resource != value)
@@ -50,7 +47,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsReDeed
         {
-            get { return m_ReDeed; }
+            get => m_ReDeed;
             set
             {
                 m_ReDeed = value;
@@ -181,12 +178,9 @@ namespace Server.Items
                     {
                         addon.Resource = m_Deed.Resource;
 
-                        if (!m_Deed.ExcludeDeedHue)
+                        if (!m_Deed.ExcludeDeedHue && (addon.RetainDeedHue || m_Deed.Hue != 0 && CraftResources.GetHue(m_Deed.Resource) != m_Deed.Hue))
                         {
-                            if (addon.RetainDeedHue || (m_Deed.Hue != 0 && CraftResources.GetHue(m_Deed.Resource) != m_Deed.Hue))
-                            {
-                                addon.Hue = m_Deed.Hue;
-                            }
+                            addon.Hue = m_Deed.Hue;
                         }
 
                         addon.MoveToWorld(new Point3D(p), map);

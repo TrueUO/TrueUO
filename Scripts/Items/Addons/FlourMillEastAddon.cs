@@ -19,14 +19,16 @@ namespace Server.Items
 
     public class FlourMillEastAddon : BaseAddon, IFlourMill
     {
-        private static readonly int[][] m_StageTable = new int[][]
+        private static readonly int[][] m_StageTable =
         {
-            new int[] { 0x1920, 0x1921, 0x1925 },
-            new int[] { 0x1922, 0x1923, 0x1926 },
-            new int[] { 0x1924, 0x1924, 0x1928 }
+            new[] { 0x1920, 0x1921, 0x1925 },
+            new[] { 0x1922, 0x1923, 0x1926 },
+            new[] { 0x1924, 0x1924, 0x1928 }
         };
+
         private int m_Flour;
         private Timer m_Timer;
+
         [Constructable]
         public FlourMillEastAddon()
         {
@@ -41,27 +43,30 @@ namespace Server.Items
         }
 
         public override BaseAddonDeed Deed => new FlourMillEastDeed();
+
         [CommandProperty(AccessLevel.GameMaster)]
         public int MaxFlour => 2;
+
         [CommandProperty(AccessLevel.GameMaster)]
         public int CurFlour
         {
-            get
-            {
-                return m_Flour;
-            }
+            get => m_Flour;
             set
             {
                 m_Flour = Math.Max(0, Math.Min(value, MaxFlour));
                 UpdateStage();
             }
         }
+
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool HasFlour => (m_Flour > 0);
+        public bool HasFlour => m_Flour > 0;
+
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsFull => (m_Flour >= MaxFlour);
+        public bool IsFull => m_Flour >= MaxFlour;
+
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsWorking => (m_Timer != null);
+        public bool IsWorking => m_Timer != null;
+
         public void StartWorking(Mobile from)
         {
             if (IsWorking)
@@ -87,7 +92,7 @@ namespace Server.Items
 
             for (int i = 0; i < components.Count; ++i)
             {
-                AddonComponent component = components[i] as AddonComponent;
+                AddonComponent component = components[i];
 
                 if (component == null)
                     continue;
@@ -112,7 +117,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1); // version
 
             writer.Write(m_Flour);
@@ -121,17 +125,9 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 1:
-                    {
-                        m_Flour = reader.ReadInt();
-                        break;
-                    }
-            }
+            m_Flour = reader.ReadInt();
 
             UpdateStage();
         }
@@ -150,7 +146,7 @@ namespace Server.Items
             {
                 SackFlour flour = new SackFlour
                 {
-                    ItemID = (Utility.RandomBool() ? 4153 : 4165)
+                    ItemID = Utility.RandomBool() ? 4153 : 4165
                 };
 
                 if (from.PlaceInBackpack(flour))

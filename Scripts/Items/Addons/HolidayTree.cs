@@ -100,19 +100,11 @@ namespace Server.Items
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public Mobile Placer
-        {
-            get
-            {
-                return m_Placer;
-            }
-            set
-            {
-                m_Placer = value;
-            }
-        }
+        public Mobile Placer { get => m_Placer; set => m_Placer = value; }
+
         public override int LabelNumber => 1041117;// a tree for the holidays
         Item IAddon.Deed => new HolidayTreeDeed();
+
         public override void OnAfterDelete()
         {
             for (int i = 0; i < m_Components.Count; ++i)
@@ -127,7 +119,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1); // version
 
             writer.Write(m_Placer);
@@ -135,39 +126,30 @@ namespace Server.Items
             writer.Write(m_Components.Count);
 
             for (int i = 0; i < m_Components.Count; ++i)
-                writer.Write((Item)m_Components[i]);
+            {
+                writer.Write((Item) m_Components[i]);
+            }
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
+            m_Placer = reader.ReadMobile();
 
-            switch (version)
+            int count = reader.ReadInt();
+
+            m_Components = new ArrayList(count);
+
+            for (int i = 0; i < count; ++i)
             {
-                case 1:
-                    {
-                        m_Placer = reader.ReadMobile();
+                Item item = reader.ReadItem();
 
-                        goto case 0;
-                    }
-                case 0:
-                    {
-                        int count = reader.ReadInt();
-
-                        m_Components = new ArrayList(count);
-
-                        for (int i = 0; i < count; ++i)
-                        {
-                            Item item = reader.ReadItem();
-
-                            if (item != null)
-                                m_Components.Add(item);
-                        }
-
-                        break;
-                    }
+                if (item != null)
+                {
+                    m_Components.Add(item);
+                }
             }
 
             Timer.DelayCall(TimeSpan.Zero, ValidatePlacement);
@@ -279,6 +261,7 @@ namespace Server.Items
             }
 
             public override int LabelNumber => 1041117;// a tree for the holidays
+
             public override void OnDoubleClick(Mobile from)
             {
                 if (m_Tree != null && !m_Tree.Deleted)
@@ -288,7 +271,6 @@ namespace Server.Items
             public override void Serialize(GenericWriter writer)
             {
                 base.Serialize(writer);
-
                 writer.Write(0); // version
 
                 writer.Write(m_Tree);
@@ -297,21 +279,12 @@ namespace Server.Items
             public override void Deserialize(GenericReader reader)
             {
                 base.Deserialize(reader);
+                reader.ReadInt();
 
-                int version = reader.ReadInt();
+                m_Tree = reader.ReadItem() as HolidayTree;
 
-                switch (version)
-                {
-                    case 0:
-                        {
-                            m_Tree = reader.ReadItem() as HolidayTree;
-
-                            if (m_Tree == null)
-                                Delete();
-
-                            break;
-                        }
-                }
+                if (m_Tree == null)
+                    Delete();
             }
         }
     }

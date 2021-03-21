@@ -37,7 +37,6 @@ namespace Server.Items
     {
         [Constructable]
         public ElvenWashBasinEastWithDrawerDeed()
-            : base()
         {
         }
 

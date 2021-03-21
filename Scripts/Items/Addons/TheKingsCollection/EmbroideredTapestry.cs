@@ -57,7 +57,6 @@ namespace Server.Items
 
         [Constructable]
         public EmbroideredTapestryDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

@@ -51,13 +51,15 @@ namespace Server.Items
 
     public class CannonAddon : BaseAddon
     {
-        private static readonly int[] m_Effects = new int[]
+        private static readonly int[] m_Effects =
         {
             0x36B0, 0x3728, 0x3709, 0x36FE
         };
+
         private CannonDirection m_CannonDirection;
         private int m_Charges;
         private bool m_IsRewardItem;
+
         [Constructable]
         public CannonAddon(CannonDirection direction)
         {
@@ -120,13 +122,11 @@ namespace Server.Items
         }
         [CommandProperty(AccessLevel.GameMaster)]
         public CannonDirection CannonDirection => m_CannonDirection;
+
         [CommandProperty(AccessLevel.GameMaster)]
         public int Charges
         {
-            get
-            {
-                return m_Charges;
-            }
+            get => m_Charges;
             set
             {
                 m_Charges = value;
@@ -135,13 +135,11 @@ namespace Server.Items
                     c.InvalidateProperties();
             }
         }
+
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsRewardItem
         {
-            get
-            {
-                return m_IsRewardItem;
-            }
+            get => m_IsRewardItem;
             set
             {
                 m_IsRewardItem = value;
@@ -150,6 +148,7 @@ namespace Server.Items
                     c.InvalidateProperties();
             }
         }
+
         public override void OnComponentUsed(AddonComponent c, Mobile from)
         {
             if (from.InRange(Location, 2))
@@ -181,9 +180,9 @@ namespace Server.Items
             {
                 if (keg.Type == PotionEffect.ExplosionLesser)
                     return 5;
-                else if (keg.Type == PotionEffect.Explosion)
+                if (keg.Type == PotionEffect.Explosion)
                     return 10;
-                else if (keg.Type == PotionEffect.ExplosionGreater)
+                if (keg.Type == PotionEffect.ExplosionGreater)
                     return 15;
             }
 
@@ -367,7 +366,6 @@ namespace Server.Items
         private bool m_IsRewardItem;
         [Constructable]
         public CannonDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }
@@ -378,6 +376,7 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1076195;// A deed for a cannon
+
         public override BaseAddon Addon
         {
             get
@@ -391,32 +390,29 @@ namespace Server.Items
                 return addon;
             }
         }
+
         [CommandProperty(AccessLevel.GameMaster)]
         public int Charges
         {
-            get
-            {
-                return m_Charges;
-            }
+            get => m_Charges;
             set
             {
                 m_Charges = value;
                 InvalidateProperties();
             }
         }
+
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsRewardItem
         {
-            get
-            {
-                return m_IsRewardItem;
-            }
+            get => m_IsRewardItem;
             set
             {
                 m_IsRewardItem = value;
                 InvalidateProperties();
             }
         }
+
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);
@@ -444,7 +440,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
 
             writer.Write(m_Charges);
@@ -454,8 +449,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
 
             m_Charges = reader.ReadInt();
             m_IsRewardItem = reader.ReadBool();

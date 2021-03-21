@@ -19,11 +19,7 @@ namespace Server.Items
             }
         }
 
-        public int Quantity
-        {
-            get { return 500; }
-            set { }
-        }
+        public int Quantity { get => 500; set { } }
 
         public WaterWheelAddon(Serial serial)
             : base(serial)
@@ -87,10 +83,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsRewardItem
         {
-            get
-            {
-                return m_IsRewardItem;
-            }
+            get => m_IsRewardItem;
             set
             {
                 m_IsRewardItem = value;
@@ -100,7 +93,6 @@ namespace Server.Items
 
         [Constructable]
         public WaterWheelDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

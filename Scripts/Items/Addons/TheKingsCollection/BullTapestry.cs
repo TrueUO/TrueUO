@@ -57,7 +57,6 @@ namespace Server.Items
 
         [Constructable]
         public BullTapestryDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

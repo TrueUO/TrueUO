@@ -4,7 +4,6 @@ namespace Server.Items
     {
         [Constructable]
         public CherryBlossomTreeAddon()
-            : base()
         {
             AddComponent(new LocalizedAddonComponent(0x26EE, 1076268), 0, 0, 0);
             AddComponent(new LocalizedAddonComponent(0x3122, 1076268), 0, 0, 0);
@@ -35,7 +34,6 @@ namespace Server.Items
     {
         [Constructable]
         public CherryBlossomTreeDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

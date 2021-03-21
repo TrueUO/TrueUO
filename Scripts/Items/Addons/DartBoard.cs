@@ -36,14 +36,14 @@ namespace Server.Items
 
             from.Direction = dir;
 
-            bool canThrow = true;
+            bool canThrow;
 
             if (!from.InRange(this, 4) || !from.InLOS(this))
                 canThrow = false;
             else if (East)
-                canThrow = (dir == Direction.Left || dir == Direction.West || dir == Direction.Up);
+                canThrow = dir == Direction.Left || dir == Direction.West || dir == Direction.Up;
             else
-                canThrow = (dir == Direction.Up || dir == Direction.North || dir == Direction.Right);
+                canThrow = dir == Direction.Up || dir == Direction.North || dir == Direction.Right;
 
             if (canThrow)
                 Throw(from);

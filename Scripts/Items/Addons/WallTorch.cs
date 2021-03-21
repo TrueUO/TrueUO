@@ -60,7 +60,6 @@ namespace Server.Items
     public class WallTorchAddon : BaseAddon
     {
         public WallTorchAddon()
-            : base()
         {
             AddComponent(new WallTorchComponent(), 0, 0, 0);
         }
@@ -90,7 +89,6 @@ namespace Server.Items
     {
         [Constructable]
         public WallTorchDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

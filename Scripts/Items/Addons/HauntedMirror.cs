@@ -56,7 +56,6 @@ namespace Server.Items
     {
         [Constructable]
         public HaunterMirrorAddon()
-            : base()
         {
             AddComponent(new HaunterMirrorComponent(), 0, 0, 0);
         }
@@ -87,7 +86,6 @@ namespace Server.Items
     {
         [Constructable]
         public HauntedMirrorDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

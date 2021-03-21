@@ -55,7 +55,6 @@ namespace Server.Items
     {
         [Constructable]
         public DisturbingPortraitAddon()
-            : base()
         {
             AddComponent(new DisturbingPortraitComponent(), 0, 0, 0);
         }
@@ -85,7 +84,6 @@ namespace Server.Items
     {
         [Constructable]
         public DisturbingPortraitDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

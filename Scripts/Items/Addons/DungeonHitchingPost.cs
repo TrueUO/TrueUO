@@ -154,8 +154,7 @@ namespace Server.Items
             {
                 from.SendLocalizedMessage(1048053); // You can't stable that!
             }
-            else if ((pet is PackLlama || pet is PackHorse || pet is Beetle) &&
-                     (pet.Backpack != null && pet.Backpack.Items.Count > 0))
+            else if ((pet is PackLlama || pet is PackHorse || pet is Beetle) && pet.Backpack != null && pet.Backpack.Items.Count > 0)
             {
                 from.SendLocalizedMessage(1042563); // You need to unload your pet.
             }
@@ -167,7 +166,7 @@ namespace Server.Items
             {
                 from.SendLocalizedMessage(1042565); // You have too many pets in the stables!
             }
-            else if ((from.Backpack != null && from.Backpack.ConsumeTotal(typeof(Gold), 30)) || Banker.Withdraw(from, 30))
+            else if (from.Backpack != null && from.Backpack.ConsumeTotal(typeof(Gold), 30) || Banker.Withdraw(from, 30))
             {
                 pet.ControlTarget = null;
                 pet.ControlOrder = OrderType.Stay;
@@ -217,7 +216,7 @@ namespace Server.Items
                 {
                     ++stabled;
 
-                    if ((from.Followers + pet.ControlSlots) <= from.FollowersMax)
+                    if (from.Followers + pet.ControlSlots <= from.FollowersMax)
                     {
                         pet.SetControlMaster(from);
 
@@ -291,7 +290,7 @@ namespace Server.Items
             if (pet == null || pet.Deleted || from.Map != Map || !from.InRange(this, 14) || !from.Stabled.Contains(pet) || !from.CheckAlive())
                 return;
 
-            if ((from.Followers + pet.ControlSlots) <= from.FollowersMax)
+            if (from.Followers + pet.ControlSlots <= from.FollowersMax)
             {
                 pet.SetControlMaster(from);
 
@@ -355,8 +354,8 @@ namespace Server.Items
 
                 AddPage(0);
 
-                AddBackground(0, 0, 325, 50 + (list.Count * 20), 9250);
-                AddAlphaRegion(5, 5, 315, 40 + (list.Count * 20));
+                AddBackground(0, 0, 325, 50 + list.Count * 20, 9250);
+                AddAlphaRegion(5, 5, 315, 40 + list.Count * 20);
 
                 AddHtml(15, 15, 275, 20, "<BASEFONT COLOR=#FFFFFF>Select a pet to retrieve from the stables:</BASEFONT>", false, false);
 
@@ -367,8 +366,8 @@ namespace Server.Items
                     if (pet == null || pet.Deleted)
                         continue;
 
-                    AddButton(15, 39 + (i * 20), 10006, 10006, i + 1, GumpButtonType.Reply, 0);
-                    AddHtml(32, 35 + (i * 20), 275, 18, string.Format("<BASEFONT COLOR=#C0C0EE>{0}</BASEFONT>", pet.Name), false, false);
+                    AddButton(15, 39 + i * 20, 10006, 10006, i + 1, GumpButtonType.Reply, 0);
+                    AddHtml(32, 35 + i * 20, 275, 18, string.Format("<BASEFONT COLOR=#C0C0EE>{0}</BASEFONT>", pet.Name), false, false);
                 }
             }
 

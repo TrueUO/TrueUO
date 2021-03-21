@@ -5,14 +5,16 @@ using System.Collections;
 
 namespace Server.Items
 {
-    [Flipable(0x100A/*East*/, 0x100B/*South*/)]
+    [Flipable(0x100A, 0x100B)]
     public class ArcheryButte : AddonComponent
     {
         private static readonly TimeSpan UseDelay = TimeSpan.FromSeconds(2.0);
 
         private double m_MinSkill;
         private double m_MaxSkill;
+
         private int m_Arrows, m_Bolts;
+
         private DateTime m_LastUse;
         private Hashtable m_Entries;
 
@@ -34,82 +36,26 @@ namespace Server.Items
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public double MinSkill
-        {
-            get
-            {
-                return m_MinSkill;
-            }
-            set
-            {
-                m_MinSkill = value;
-            }
-        }
+        public double MinSkill { get => m_MinSkill; set => m_MinSkill = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public double MaxSkill
-        {
-            get
-            {
-                return m_MaxSkill;
-            }
-            set
-            {
-                m_MaxSkill = value;
-            }
-        }
+        public double MaxSkill { get => m_MaxSkill; set => m_MaxSkill = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public DateTime LastUse
-        {
-            get
-            {
-                return m_LastUse;
-            }
-            set
-            {
-                m_LastUse = value;
-            }
-        }
+        public DateTime LastUse { get => m_LastUse; set => m_LastUse = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public bool FacingEast
         {
-            get
-            {
-                return (ItemID == 0x100A);
-            }
-            set
-            {
-                ItemID = value ? 0x100A : 0x100B;
-            }
+            get => ItemID == 0x100A;
+            set => ItemID = value ? 0x100A : 0x100B;
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int Arrows
-        {
-            get
-            {
-                return m_Arrows;
-            }
-            set
-            {
-                m_Arrows = value;
-            }
-        }
+        public int Arrows { get => m_Arrows; set => m_Arrows = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int Bolts
-        {
-            get
-            {
-                return m_Bolts;
-            }
-            set
-            {
-                m_Bolts = value;
-            }
-        }
+        public int Bolts { get => m_Bolts; set => m_Bolts = value; }
 
         public override void OnDoubleClick(Mobile from)
         {
@@ -147,7 +93,7 @@ namespace Server.Items
                 return;
             }
 
-            if (DateTime.UtcNow < (m_LastUse + UseDelay))
+            if (DateTime.UtcNow < m_LastUse + UseDelay)
                 return;
 
             Point3D worldLoc = GetWorldLocation();
@@ -178,8 +124,8 @@ namespace Server.Items
 
             Type ammoType = ranged.AmmoType;
 
-            bool isArrow = (ammoType == typeof(Arrow));
-            bool isBolt = (ammoType == typeof(Bolt));
+            bool isArrow = ammoType == typeof(Arrow);
+            bool isBolt = ammoType == typeof(Bolt);
 
             BaseThrown thrown = ranged as BaseThrown;
 
@@ -189,7 +135,7 @@ namespace Server.Items
                 isBolt = ranged.Animation == WeaponAnimation.ShootXBow;
             }
 
-            bool isKnown = (isArrow || isBolt);
+            bool isKnown = isArrow || isBolt;
 
             if (thrown == null)
             {
@@ -227,7 +173,7 @@ namespace Server.Items
                 if (se.Count == 1)
                     PublicOverheadMessage(MessageType.Regular, 0x3B2, 1062719, se.Total.ToString());
                 else
-                    PublicOverheadMessage(MessageType.Regular, 0x3B2, 1042683, string.Format("{0}\t{1}", se.Total, se.Count));
+                    PublicOverheadMessage(MessageType.Regular, 0x3B2, 1042683, $"{se.Total}\t{se.Count}");
 
                 return;
             }
@@ -263,11 +209,11 @@ namespace Server.Items
                 splitScore = 5;
             }
 
-            bool split = (isKnown && ((m_Arrows + m_Bolts) * 0.02) > Utility.RandomDouble());
+            bool split = isKnown && (m_Arrows + m_Bolts) * 0.02 > Utility.RandomDouble();
 
             if (split)
             {
-                PublicOverheadMessage(MessageType.Regular, 0x3B2, 1010027 + area, string.Format("{0}\t{1}", from.Name, isArrow ? "arrow" : "bolt"));
+                PublicOverheadMessage(MessageType.Regular, 0x3B2, 1010027 + area, $"{from.Name}\t{(isArrow ? "arrow" : "bolt")}");
             }
             else
             {
@@ -287,13 +233,12 @@ namespace Server.Items
             if (se.Count == 1)
                 PublicOverheadMessage(MessageType.Regular, 0x3B2, 1062719, se.Total.ToString());
             else
-                PublicOverheadMessage(MessageType.Regular, 0x3B2, 1042683, string.Format("{0}\t{1}", se.Total, se.Count));
+                PublicOverheadMessage(MessageType.Regular, 0x3B2, 1042683, $"{se.Total}\t{se.Count}");
         }
 
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0);
 
             writer.Write(m_MinSkill);
@@ -305,27 +250,12 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 0:
-                    {
-                        m_MinSkill = reader.ReadDouble();
-                        m_MaxSkill = reader.ReadDouble();
-                        m_Arrows = reader.ReadInt();
-                        m_Bolts = reader.ReadInt();
-
-                        if (m_MinSkill == 0.0 && m_MaxSkill == 30.0)
-                        {
-                            m_MinSkill = -25.0;
-                            m_MaxSkill = +25.0;
-                        }
-
-                        break;
-                    }
-            }
+            m_MinSkill = reader.ReadDouble();
+            m_MaxSkill = reader.ReadDouble();
+            m_Arrows = reader.ReadInt();
+            m_Bolts = reader.ReadInt();
         }
 
         private ScoreEntry GetEntryFor(Mobile from)
@@ -343,37 +273,16 @@ namespace Server.Items
 
         private class ScoreEntry
         {
-            private int m_Total;
-            private int m_Count;
+            int m_Total;
+            int m_Count;
 
-            public int Total
-            {
-                get
-                {
-                    return m_Total;
-                }
-                set
-                {
-                    m_Total = value;
-                }
-            }
-
-            public int Count
-            {
-                get
-                {
-                    return m_Count;
-                }
-                set
-                {
-                    m_Count = value;
-                }
-            }
+            public int Total { get => m_Total; private set => m_Total = value; }
+            public int Count { get => m_Count; private set => m_Count = value; }
 
             public void Record(int score)
             {
-                m_Total += score;
-                m_Count += 1;
+                Total += score;
+                Count += 1;
             }
         }
     }
@@ -404,14 +313,12 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             reader.ReadInt();
         }
     }
@@ -448,14 +355,12 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             reader.ReadInt();
         }
 

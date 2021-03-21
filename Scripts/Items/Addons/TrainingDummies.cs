@@ -28,34 +28,17 @@ namespace Server.Items
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public double MinSkill
-        {
-            get
-            {
-                return m_MinSkill;
-            }
-            set
-            {
-                m_MinSkill = value;
-            }
-        }
+        public double MinSkill { get => m_MinSkill; set => m_MinSkill = value; }
+
         [CommandProperty(AccessLevel.GameMaster)]
-        public double MaxSkill
-        {
-            get
-            {
-                return m_MaxSkill;
-            }
-            set
-            {
-                m_MaxSkill = value;
-            }
-        }
+        public double MaxSkill { get => m_MaxSkill; set => m_MaxSkill = value; }
+
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool Swinging => (m_Timer != null);
+        public bool Swinging => m_Timer != null;
+
         public virtual void UpdateItemID()
         {
-            int baseItemID = (ItemID / 2) * 2;
+            int baseItemID = ItemID / 2 * 2;
 
             ItemID = baseItemID + (Swinging ? 1 : 0);
         }

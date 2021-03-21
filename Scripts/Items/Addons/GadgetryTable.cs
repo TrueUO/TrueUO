@@ -142,7 +142,7 @@ namespace Server.Engines.VeteranRewards
                 {
                     if (CheckAccessible(from, this))
                     {
-                        if ((from.Followers + 4) > from.FollowersMax)
+                        if (from.Followers + 4 > from.FollowersMax)
                         {
                             from.SendLocalizedMessage(1049607); // You have too many followers to control that creature.
                         }
@@ -249,7 +249,7 @@ namespace Server.Engines.VeteranRewards
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsRewardItem
         {
-            get { return m_IsRewardItem; }
+            get => m_IsRewardItem;
             set
             {
                 m_IsRewardItem = value;
@@ -259,7 +259,6 @@ namespace Server.Engines.VeteranRewards
 
         [Constructable]
         public GadgetryTableAddonDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

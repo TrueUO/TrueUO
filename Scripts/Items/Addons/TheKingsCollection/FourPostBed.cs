@@ -58,7 +58,6 @@ namespace Server.Items
 
         [Constructable]
         public FourPostBedDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

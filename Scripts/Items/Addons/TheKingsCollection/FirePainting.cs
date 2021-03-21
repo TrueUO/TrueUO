@@ -14,7 +14,7 @@ namespace Server.Items
         private int m_ResourceCount;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int ResourceCount { get { return m_ResourceCount; } set { m_ResourceCount = value; UpdateProperties(); } }
+        public int ResourceCount { get => m_ResourceCount; set { m_ResourceCount = value; UpdateProperties(); } }
 
         [Constructable]
         public FirePaintingAddon(DirectionType type)
@@ -48,7 +48,7 @@ namespace Server.Items
         {
             BaseHouse house = BaseHouse.FindHouseAt(from);
 
-            if (house != null && (house.IsOwner(from) || (house.LockDowns.ContainsKey(this) && house.LockDowns[this] == from)))
+            if (house != null && (house.IsOwner(from) || house.LockDowns.ContainsKey(this) && house.LockDowns[this] == from))
             {
                 if (ResourceCount > 0)
                 {
@@ -112,7 +112,6 @@ namespace Server.Items
 
         [Constructable]
         public FirePaintingDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

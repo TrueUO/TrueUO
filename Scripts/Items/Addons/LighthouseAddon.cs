@@ -74,7 +74,7 @@ namespace Server.Items
                         bool retainDeedHue = false;
                         int hue = 0;
 
-                        if (addon != null && addon.RetainDeedHue)
+                        if (addon.RetainDeedHue)
                         {
                             retainDeedHue = true;
 
@@ -188,11 +188,7 @@ namespace Server.Items
 
         public Account LinkedAccount => Account == null ? null : Accounts.GetAccount(Account) as Account;
 
-        public bool IsRewardItem
-        {
-            get { return true; }
-            set { }
-        }
+        public bool IsRewardItem { get => true; set { } }
 
         public override BaseAddon Addon => new LighthouseAddon(Account);
         public override int LabelNumber => 1154582;  // Deed for a Lighthouse

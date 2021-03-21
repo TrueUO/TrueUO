@@ -43,10 +43,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public bool TurnedOn
         {
-            get
-            {
-                return _TurnedOn;
-            }
+            get => _TurnedOn;
             set
             {
                 if (_TurnedOn != value)

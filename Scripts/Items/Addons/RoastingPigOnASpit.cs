@@ -33,11 +33,11 @@ namespace Server.Items
             if (c.LabelNumber != 1123329)
                 return;
 
-            if ((from.InRange(c.Location, 3)))
+            if (from.InRange(c.Location, 3))
             {
                 BaseHouse house = BaseHouse.FindHouseAt(from);
 
-                if (house != null && (house.IsOwner(from) || (house.LockDowns.ContainsKey(this) && house.LockDowns[this] == from)))
+                if (house != null && (house.IsOwner(from) || house.LockDowns.ContainsKey(this) && house.LockDowns[this] == from))
                 {
                     if (DateTime.UtcNow > NextEatTime)
                     {
@@ -127,7 +127,6 @@ namespace Server.Items
 
         [Constructable]
         public RoastingPigOnASpitDeed()
-            : base()
         {
         }
 

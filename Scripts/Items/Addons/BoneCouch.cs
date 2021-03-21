@@ -43,7 +43,6 @@ namespace Server.Items
     {
         [Constructable]
         public BoneCouchAddon()
-            : base()
         {
             Direction = Direction.South;
 
@@ -91,7 +90,6 @@ namespace Server.Items
     {
         [Constructable]
         public BoneCouchDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }
