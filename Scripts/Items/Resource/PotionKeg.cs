@@ -25,7 +25,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public bool Unknown
         {
-            get { return m_Unknown; }
+            get => m_Unknown;
             set
             {
                 m_Unknown = value; InvalidateProperties();
@@ -35,7 +35,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int Held
         {
-            get { return m_Held; }
+            get => m_Held;
             set
             {
                 if (m_Held != value)
@@ -49,7 +49,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public PotionEffect Type
         {
-            get { return m_Type; }
+            get => m_Type;
             set
             {
                 m_Type = value;
@@ -57,7 +57,7 @@ namespace Server.Items
             }
         }
 
-        public override int LabelNumber { get { return GetLabelNumber(); } }
+        public override int LabelNumber => GetLabelNumber();
 
         public int GetLabelNumber()
         {
@@ -129,7 +129,7 @@ namespace Server.Items
         {
             int held = Math.Max(0, Math.Min(m_Held, 100));
 
-            Weight = 20 + ((held * 80) / 100);
+            Weight = 20 + held * 80 / 100;
         }
 
         public override void Serialize(GenericWriter writer)
@@ -137,7 +137,7 @@ namespace Server.Items
             base.Serialize(writer);
             writer.Write(2); // version
 
-            writer.Write((bool)m_Unknown);
+            writer.Write(m_Unknown);
             writer.Write((int)m_Type);
             writer.Write(m_Held);
         }
@@ -314,12 +314,14 @@ namespace Server.Items
                     from.SendLocalizedMessage(502232); // The keg is not designed to hold that type of object.
                     return false;
                 }
-                else if (toHold <= 0)
+
+                if (toHold <= 0)
                 {
                     from.SendLocalizedMessage(502233); // The keg will not hold any more!
                     return false;
                 }
-                else if (m_Held == 0)
+
+                if (m_Held == 0)
                 {
                     if (GiveBottle(from, toHold))
                     {
@@ -337,46 +339,39 @@ namespace Server.Items
 
                         return true;
                     }
-                    else
-                    {
-                        from.SendLocalizedMessage(502238); // You don't have room for the empty bottle in your backpack.
-                        return false;
-                    }
+
+                    from.SendLocalizedMessage(502238); // You don't have room for the empty bottle in your backpack.
+                    return false;
                 }
-                else if (pot.PotionEffect != m_Type)
+
+                if (pot.PotionEffect != m_Type)
                 {
                     from.SendLocalizedMessage(502236); // You decide that it would be a bad idea to mix different types of potions.
                     return false;
                 }
-                else
+
+                if (GiveBottle(from, toHold))
                 {
-                    if (GiveBottle(from, toHold))
-                    {
-                        Held += toHold;
+                    Held += toHold;
 
-                        from.PlaySound(0x240);
+                    from.PlaySound(0x240);
 
-                        from.SendLocalizedMessage(502237); // You place the empty bottle in your backpack.
+                    from.SendLocalizedMessage(502237); // You place the empty bottle in your backpack.
 
-                        item.Consume(toHold);
+                    item.Consume(toHold);
 
-                        if (!item.Deleted)
-                            item.Bounce(from);
+                    if (!item.Deleted)
+                        item.Bounce(from);
 
-                        return true;
-                    }
-                    else
-                    {
-                        from.SendLocalizedMessage(502238); // You don't have room for the empty bottle in your backpack.
-                        return false;
-                    }
+                    return true;
                 }
-            }
-            else
-            {
-                from.SendLocalizedMessage(502232); // The keg is not designed to hold that type of object.
+
+                from.SendLocalizedMessage(502238); // You don't have room for the empty bottle in your backpack.
                 return false;
             }
+
+            from.SendLocalizedMessage(502232); // The keg is not designed to hold that type of object.
+            return false;
         }
 
         public bool GiveBottle(Mobile m, int amount)

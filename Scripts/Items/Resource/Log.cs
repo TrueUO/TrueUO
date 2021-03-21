@@ -6,11 +6,7 @@ namespace Server.Items
         private CraftResource m_Resource;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public CraftResource Resource
-        {
-            get { return m_Resource; }
-            set { m_Resource = value; InvalidateProperties(); }
-        }
+        public CraftResource Resource { get => m_Resource; set { m_Resource = value; InvalidateProperties(); } }
 
         TextDefinition ICommodity.Description => CraftResources.IsStandard(m_Resource) ? LabelNumber : 1075062 + ((int)m_Resource - (int)CraftResource.RegularWood);
         bool ICommodity.IsDeedable => true;
@@ -62,25 +58,17 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(2); // version
 
             writer.Write((int)m_Resource);
         }
 
-        public static bool UpdatingBaseLogClass;
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            if (version == 1)
-                UpdatingBaseLogClass = true;
             m_Resource = (CraftResource)reader.ReadInt();
-
-            if (version == 0)
-                m_Resource = CraftResource.RegularWood;
         }
 
         public virtual bool TryCreateBoards(Mobile from, double skill, Item item)
@@ -143,11 +131,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            //don't deserialize anything on update
-            if (UpdatingBaseLogClass)
-                return;
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         public override bool Axe(Mobile from, BaseAxe axe)
@@ -181,15 +165,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         public override bool Axe(Mobile from, BaseAxe axe)
@@ -223,15 +205,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         public override bool Axe(Mobile from, BaseAxe axe)
@@ -265,15 +245,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         public override bool Axe(Mobile from, BaseAxe axe)
@@ -307,15 +285,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         public override bool Axe(Mobile from, BaseAxe axe)
@@ -349,15 +325,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         public override bool Axe(Mobile from, BaseAxe axe)
@@ -391,15 +365,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         public override bool Axe(Mobile from, BaseAxe axe)

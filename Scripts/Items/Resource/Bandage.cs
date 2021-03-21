@@ -216,10 +216,7 @@ namespace Server.Items
         {
             m_Table.Remove(m_Healer);
 
-            if (m_Timer != null)
-            {
-                m_Timer.Stop();
-            }
+            m_Timer?.Stop();
 
             m_Timer = null;
         }
@@ -228,7 +225,7 @@ namespace Server.Items
 
         public static BandageContext GetContext(Mobile healer)
         {
-            BandageContext bc = null;
+            BandageContext bc;
             m_Table.TryGetValue(healer, out bc);
             return bc;
         }
@@ -272,7 +269,7 @@ namespace Server.Items
             {
                 double healing = m_Healer.Skills[SkillName.Healing].Value;
                 double anatomy = m_Healer.Skills[SkillName.Anatomy].Value;
-                double chance = ((healing + anatomy) - 120) * 25;
+                double chance = (healing + anatomy - 120) * 25;
 
                 if (poisoned)
                     chance /= m_Patient.Poison.RealLevel * 20;
@@ -305,7 +302,7 @@ namespace Server.Items
         {
             StopHeal();
 
-            int healerNumber = -1, patientNumber = -1;
+            int healerNumber, patientNumber;
             bool playSound = true;
             bool checkSkills = false;
 
@@ -330,7 +327,7 @@ namespace Server.Items
             {
                 double healing = m_Healer.Skills[primarySkill].Value;
                 double anatomy = m_Healer.Skills[secondarySkill].Value;
-                double chance = ((healing - 68.0) / 50.0) - (m_Slips * 0.02);
+                double chance = (healing - 68.0) / 50.0 - m_Slips * 0.02;
 
                 if ((checkSkills = healing >= 80.0 && anatomy >= 80.0) && chance > Utility.RandomDouble() || Engines.VvV.ViceVsVirtueSystem.Enabled && petPatient is Engines.VvV.VvVMount && petPatient.ControlMaster == m_Healer)
                 {
@@ -427,13 +424,13 @@ namespace Server.Items
 
                 double healing = m_Healer.Skills[primarySkill].Value;
                 double anatomy = m_Healer.Skills[secondarySkill].Value;
-                double chance = ((healing - 30.0) / 50.0) - (m_Patient.Poison.RealLevel * 0.1) - (m_Slips * 0.02);
+                double chance = (healing - 30.0) / 50.0 - m_Patient.Poison.RealLevel * 0.1 - m_Slips * 0.02;
 
-                if ((checkSkills = (healing >= 60.0 && anatomy >= 60.0)) && chance > Utility.RandomDouble())
+                if ((checkSkills = healing >= 60.0 && anatomy >= 60.0) && chance > Utility.RandomDouble())
                 {
                     if (m_Patient.CurePoison(m_Healer))
                     {
-                        healerNumber = (m_Healer == m_Patient) ? -1 : 1010058; // You have cured the target of all poisons.
+                        healerNumber = m_Healer == m_Patient ? -1 : 1010058; // You have cured the target of all poisons.
                         patientNumber = 1010059; // You have been cured of all poisons.
                     }
                     else
@@ -457,7 +454,7 @@ namespace Server.Items
             }
             else if (MortalStrike.IsWounded(m_Patient))
             {
-                healerNumber = (m_Healer == m_Patient ? 1005000 : 1010398);
+                healerNumber = m_Healer == m_Patient ? 1005000 : 1010398;
                 patientNumber = -1;
                 playSound = false;
             }
@@ -487,16 +484,16 @@ namespace Server.Items
                 if (m_HealingBonus > 0)
                     healing += m_HealingBonus;
 
-                double chance = ((healing + 10.0) / 100.0) - (m_Slips * 0.02);
+                double chance = (healing + 10.0) / 100.0 - m_Slips * 0.02;
 
                 if (chance > Utility.RandomDouble())
                 {
                     healerNumber = 500969; // You finish applying the bandages.
 
-                    double min = (anatomy / 8.0) + (healing / 5.0) + 4.0;
-                    double max = (anatomy / 6.0) + (healing / 2.5) + 4.0;
+                    double min = anatomy / 8.0 + healing / 5.0 + 4.0;
+                    double max = anatomy / 6.0 + healing / 2.5 + 4.0;
 
-                    double toHeal = min + (Utility.RandomDouble() * (max - min));
+                    double toHeal = min + Utility.RandomDouble() * (max - min);
 
                     if (m_Patient.Body.IsMonster || m_Patient.Body.IsAnimal)
                     {
@@ -593,7 +590,7 @@ namespace Server.Items
                     m_Context.EndHeal();
                     Stop();
                 }
-                else if (!m_CheckedHealAndBleed && CanCheckAtHalf && m_Begin + ((m_Expires - m_Begin) / 2) < Core.TickCount)
+                else if (!m_CheckedHealAndBleed && CanCheckAtHalf && m_Begin + (m_Expires - m_Begin) / 2 < Core.TickCount)
                 {
                     m_Context.CheckPoisonOrBleed();
                     m_CheckedHealAndBleed = true;
