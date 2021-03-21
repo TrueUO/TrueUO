@@ -45,10 +45,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsRewardItem
         {
-            get
-            {
-                return m_IsRewardItem;
-            }
+            get => m_IsRewardItem;
             set
             {
                 m_IsRewardItem = value;
@@ -121,9 +118,11 @@ namespace Server.Items
                 return false;
 
             if (FacingSouth)
+            {
                 return BaseAddon.IsWall(p.X, p.Y - 1, p.Z, map); // north wall
-            else
-                return BaseAddon.IsWall(p.X - 1, p.Y, p.Z, map); // west wall
+            }
+
+            return BaseAddon.IsWall(p.X - 1, p.Y, p.Z, map); // west wall
         }
     }
 
@@ -144,13 +143,11 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1049772;// deed for a hanging skeleton decoration
+
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsRewardItem
         {
-            get
-            {
-                return m_IsRewardItem;
-            }
+            get => m_IsRewardItem;
             set
             {
                 m_IsRewardItem = value;

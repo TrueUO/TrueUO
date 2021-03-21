@@ -18,10 +18,10 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public bool TurnedOn
         {
-            get { return IsActive; }
+            get => IsActive;
             set
             {
-                if ((!value && IsActive) || (value && !IsActive))
+                if (!value && IsActive || value && !IsActive)
                 {
                     ToggleOnOff();
                 }
@@ -120,13 +120,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
-
-            if (version == 0)
-            {
-                reader.ReadInt();
-                reader.ReadInt();
-            }
+            reader.ReadInt();
 
             TurnedOn = reader.ReadBool();
         }
@@ -141,13 +135,12 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int UsesRemaining
         {
-            get { return m_UsesRemaining; }
+            get => m_UsesRemaining;
             set { m_UsesRemaining = value; UpdateProperties(); }
         }
 
         [Constructable]
         public AnvilofArtifactsAddon(bool east, int uses)
-            : base()
         {
             UsesRemaining = uses;
 
@@ -170,7 +163,7 @@ namespace Server.Items
         {
             BaseHouse house = BaseHouse.FindHouseAt(from);
 
-            if (house != null && (house.IsOwner(from) || (house.Addons.ContainsKey(this) && house.Addons[this] == from)))
+            if (house != null && (house.IsOwner(from) || house.Addons.ContainsKey(this) && house.Addons[this] == from))
             {
                 if (from is PlayerMobile pm && UsesRemaining > 0)
                 {
@@ -211,7 +204,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int UsesRemaining
         {
-            get { return m_UsesRemaining; }
+            get => m_UsesRemaining;
             set { m_UsesRemaining = value; InvalidateProperties(); }
         }
 
@@ -225,7 +218,6 @@ namespace Server.Items
 
         [Constructable]
         public AnvilofArtifactsDeed(int uses)
-            : base()
         {
             LootType = LootType.Blessed;
             UsesRemaining = uses;
@@ -289,11 +281,11 @@ namespace Server.Items
 
     public class AnvilofArtifactsGump : BaseGump
     {
-        private AnvilofArtifactsAddon Addon { get; set; }
-        private AnvilOfArtifactsEntry Entry { get; set; }
+        private AnvilofArtifactsAddon Addon { get; }
+        private AnvilOfArtifactsEntry Entry { get; }
 
         public AnvilofArtifactsGump(PlayerMobile pm, AnvilofArtifactsAddon addon)
-            : base(pm, 50, 50)
+            : base(pm)
         {
             if (addon == null)
                 return;
@@ -326,16 +318,16 @@ namespace Server.Items
 
                 for (int i = 0; i < _ResistOrder.Length; i++)
                 {
-                    AddHtmlLocalized(60, 115 + (18 * i), 125, 18, 1114514, string.Format("#{0}", 1061158 + (int)_ResistOrder[i]), 0x6B45, false, false); // <DIV ALIGN=RIGHT>~1_TOKEN~</DIV>
-                    AddLabel(185, 115 + (18 * i), 0x9C2, string.Format("{0}", Entry.Exceptional[_ResistOrder[i]]));
+                    AddHtmlLocalized(60, 115 + 18 * i, 125, 18, 1114514, string.Format("#{0}", 1061158 + (int)_ResistOrder[i]), 0x6B45, false, false); // <DIV ALIGN=RIGHT>~1_TOKEN~</DIV>
+                    AddLabel(185, 115 + 18 * i, 0x9C2, string.Format("{0}", Entry.Exceptional[_ResistOrder[i]]));
                 }
 
                 AddHtmlLocalized(60, 223, 125, 18, 1114513, "#1159450", 0x6B55, false, false); // <DIV ALIGN=CENTER>~1_TOKEN~</DIV>
 
                 for (int i = 0; i < _ResistOrder.Length; i++)
                 {
-                    AddHtmlLocalized(60, 241 + (18 * i), 125, 18, 1114514, string.Format("#{0}", 1061158 + (int)_ResistOrder[i]), 0x6B45, false, false); // <DIV ALIGN=RIGHT>~1_TOKEN~</DIV>
-                    AddLabel(185, 241 + (18 * i), 0x9C2, string.Format("{0}", Entry.Runic[_ResistOrder[i]]));
+                    AddHtmlLocalized(60, 241 + 18 * i, 125, 18, 1114514, string.Format("#{0}", 1061158 + (int)_ResistOrder[i]), 0x6B45, false, false); // <DIV ALIGN=RIGHT>~1_TOKEN~</DIV>
+                    AddLabel(185, 241 + 18 * i, 0x9C2, string.Format("{0}", Entry.Runic[_ResistOrder[i]]));
                 }
             }
             else
@@ -364,9 +356,9 @@ namespace Server.Items
                 
                 for (int i = 0; i < _ResistOrder.Length; i++)
                 {
-                    AddHtmlLocalized(60, 206 + (18 * i), 125, 18, 1114514, string.Format("#{0}", 1061158 + (int)_ResistOrder[i]), 0x6B45, false, false); // <DIV ALIGN=RIGHT>~1_TOKEN~</DIV>
-                    AddBackground(185, 206 + (18 * i), 30, 18, 0x2486);
-                    AddTextEntry(187, 208 + (18 * i), 26, 14, 0x0, i, string.Format("{0}", Entry.Exceptional[_ResistOrder[i]]), 2);
+                    AddHtmlLocalized(60, 206 + 18 * i, 125, 18, 1114514, string.Format("#{0}", 1061158 + (int)_ResistOrder[i]), 0x6B45, false, false); // <DIV ALIGN=RIGHT>~1_TOKEN~</DIV>
+                    AddBackground(185, 206 + 18 * i, 30, 18, 0x2486);
+                    AddTextEntry(187, 208 + 18 * i, 26, 14, 0x0, i, string.Format("{0}", Entry.Exceptional[_ResistOrder[i]]), 2);
                 }
 
                 AddHtmlLocalized(60, 314, 125, 18, 1114513, "#1159450", 0x6B55, false, false); // <DIV ALIGN=CENTER>~1_TOKEN~</DIV>
@@ -374,14 +366,14 @@ namespace Server.Items
                 
                 for (int i = 0; i < _ResistOrder.Length; i++)
                 {
-                    AddHtmlLocalized(60, 350 + (18 * i), 125, 18, 1114514, string.Format("#{0}", 1061158 + (int)_ResistOrder[i]), 0x6B45, false, false); // <DIV ALIGN=RIGHT>~1_TOKEN~</DIV>
-                    AddBackground(185, 350 + (18 * i), 30, 18, 0x2486);
-                    AddTextEntry(187, 352 + (18 * i), 26, 14, 0x0, i + 5, string.Format("{0}", Entry.Runic[_ResistOrder[i]]), 2);
+                    AddHtmlLocalized(60, 350 + 18 * i, 125, 18, 1114514, string.Format("#{0}", 1061158 + (int)_ResistOrder[i]), 0x6B45, false, false); // <DIV ALIGN=RIGHT>~1_TOKEN~</DIV>
+                    AddBackground(185, 350 + 18 * i, 30, 18, 0x2486);
+                    AddTextEntry(187, 352 + 18 * i, 26, 14, 0x0, i + 5, string.Format("{0}", Entry.Runic[_ResistOrder[i]]), 2);
                 }
             }
         }
 
-        private static readonly ResistanceType[] _ResistOrder = new ResistanceType[] { ResistanceType.Physical, ResistanceType.Fire, ResistanceType.Cold, ResistanceType.Poison, ResistanceType.Energy };
+        private static readonly ResistanceType[] _ResistOrder = { ResistanceType.Physical, ResistanceType.Fire, ResistanceType.Cold, ResistanceType.Poison, ResistanceType.Energy };
 
         public override void OnResponse(RelayInfo info)
         {

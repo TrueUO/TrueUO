@@ -17,7 +17,6 @@ namespace Server.Items
 
         [Constructable]
         public SheepStatue(int itemID)
-            : base()
         {
             AddComponent(new InternalAddonComponent(itemID), 0, 0, 0);
             NextResourceCount = DateTime.UtcNow + TimeSpan.FromDays(1);
@@ -45,10 +44,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsRewardItem
         {
-            get
-            {
-                return m_IsRewardItem;
-            }
+            get => m_IsRewardItem;
             set
             {
                 m_IsRewardItem = value;
@@ -59,10 +55,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int ResourceCount
         {
-            get
-            {
-                return m_ResourceCount;
-            }
+            get => m_ResourceCount;
             set
             {
                 m_ResourceCount = value;
@@ -102,7 +95,7 @@ namespace Server.Items
             *
             */
 
-            if (!from.InRange(GetWorldLocation(), 2) || !from.InLOS(this) || !((from.Z - Z) > -3 && (from.Z - Z) < 3))
+            if (!from.InRange(GetWorldLocation(), 2) || !from.InLOS(this) || !(from.Z - Z > -3 && from.Z - Z < 3))
             {
                 from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1019045); // I can't reach that.
             }
@@ -226,7 +219,6 @@ namespace Server.Items
 
         [Constructable]
         public SheepStatueDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }
@@ -251,32 +243,29 @@ namespace Server.Items
                 return addon;
             }
         }
+
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsRewardItem
         {
-            get
-            {
-                return m_IsRewardItem;
-            }
+            get => m_IsRewardItem;
             set
             {
                 m_IsRewardItem = value;
                 InvalidateProperties();
             }
         }
+
         [CommandProperty(AccessLevel.GameMaster)]
         public int ResourceCount
         {
-            get
-            {
-                return m_ResourceCount;
-            }
+            get => m_ResourceCount;
             set
             {
                 m_ResourceCount = value;
                 InvalidateProperties();
             }
         }
+
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);

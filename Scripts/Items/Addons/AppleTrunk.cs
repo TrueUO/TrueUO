@@ -4,7 +4,6 @@ namespace Server.Items
     {
         [Constructable]
         public AppleTrunkAddon()
-            : base()
         {
             AddComponent(new LocalizedAddonComponent(0xD98, 1076785), 0, 0, 0);
         }
@@ -15,18 +14,17 @@ namespace Server.Items
         }
 
         public override BaseAddonDeed Deed => new AppleTrunkDeed();
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
         }
     }
 
@@ -34,7 +32,6 @@ namespace Server.Items
     {
         [Constructable]
         public AppleTrunkDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }
@@ -46,18 +43,17 @@ namespace Server.Items
 
         public override BaseAddon Addon => new AppleTrunkAddon();
         public override int LabelNumber => 1076785;// Apple Trunk
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
         }
     }
 }

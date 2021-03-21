@@ -57,7 +57,6 @@ namespace Server.Items
 
         [Constructable]
         public MonasteryBellDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

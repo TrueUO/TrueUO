@@ -81,7 +81,6 @@ namespace Server.Items
     {
         [Constructable]
         public CreepyPortraitAddon()
-            : base()
         {
             AddComponent(new CreepyPortraitComponent(), 0, 0, 0);
         }
@@ -111,7 +110,6 @@ namespace Server.Items
     {
         [Constructable]
         public CreepyPortraitDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

@@ -1,10 +1,10 @@
-﻿namespace Server.Items
+namespace Server.Items
 {
     public enum DawnsMusicRarity
     {
         Common,
         Uncommon,
-        Rare,
+        Rare
     }
 
     public class DawnsMusicInfo

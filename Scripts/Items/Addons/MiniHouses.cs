@@ -74,7 +74,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public MiniHouseType Type
         {
-            get { return m_Type; }
+            get => m_Type;
             set
             {
                 m_Type = value;
@@ -178,7 +178,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public MiniHouseType Type
         {
-            get { return m_Type; }
+            get => m_Type;
             set
             {
                 m_Type = value;
@@ -240,7 +240,7 @@ namespace Server.Items
 
     public class MiniHouseInfo
     {
-        public static MiniHouseInfo[] Info { get; } = new MiniHouseInfo[]
+        public static MiniHouseInfo[] Info { get; } =
         {
             /* Stone and plaster house           */ new MiniHouseInfo(0x22C4, 1, 1011303),
             /* Field stone house                 */ new MiniHouseInfo(0x22DE, 1, 1011304),

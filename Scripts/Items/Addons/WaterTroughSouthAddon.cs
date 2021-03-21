@@ -15,28 +15,19 @@ namespace Server.Items
         }
 
         public override BaseAddonDeed Deed => new WaterTroughSouthDeed();
-        public int Quantity
-        {
-            get
-            {
-                return 500;
-            }
-            set
-            {
-            }
-        }
+
+        public int Quantity { get => 500; set { } }
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 

@@ -53,7 +53,6 @@ namespace Server.Items
         private List<Mobile> m_Spawned;
         [Constructable]
         public SolenAntHole()
-            : base()
         {
             m_Spawned = new List<Mobile>();
 

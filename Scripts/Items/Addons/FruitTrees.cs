@@ -8,7 +8,6 @@ namespace Server.Items
         private int m_Fruit;
 
         public BaseFruitTreeAddon()
-            : base()
         {
             Respawn();
         }
@@ -18,7 +17,7 @@ namespace Server.Items
         {
         }
 
-        public override abstract BaseAddonDeed Deed { get; }
+        public abstract override BaseAddonDeed Deed { get; }
         public abstract Item FruitItem { get; }
 
         public virtual int MaxFruit => 10;
@@ -27,14 +26,8 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int Fruit
         {
-            get
-            {
-                return m_Fruit;
-            }
-            set
-            {
-                m_Fruit = Math.Max(0, Math.Min(MaxFruit, value));
-            }
+            get => m_Fruit;
+            set => m_Fruit = Math.Max(0, Math.Min(MaxFruit, value));
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
@@ -117,7 +110,6 @@ namespace Server.Items
     {
         [Constructable]
         public AppleTreeAddon()
-            : base()
         {
             AddComponent(new LocalizedAddonComponent(0xD98, 1076269), 0, 0, 0);
             AddComponent(new LocalizedAddonComponent(0x3124, 1076269), 0, 0, 0);
@@ -149,7 +141,6 @@ namespace Server.Items
     {
         [Constructable]
         public AppleTreeDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }
@@ -180,7 +171,6 @@ namespace Server.Items
     {
         [Constructable]
         public PeachTreeAddon()
-            : base()
         {
             AddComponent(new LocalizedAddonComponent(0xD9C, 1076270), 0, 0, 0);
             AddComponent(new LocalizedAddonComponent(0x3123, 1076270), 0, 0, 0);
@@ -212,7 +202,6 @@ namespace Server.Items
     {
         [Constructable]
         public PeachTreeDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

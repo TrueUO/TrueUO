@@ -13,7 +13,6 @@ namespace Server.Items
         SouthSmall
     }
 
-    [TypeAlias("Server.Items.RoseRugEastAddon", "Server.Items.RoseRugSouthAddon")]
     public class RoseRugAddon : BaseAddon, IRewardItem
     {
         public override bool ForceShowProperties => true;
@@ -24,10 +23,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsRewardItem
         {
-            get
-            {
-                return m_IsRewardItem;
-            }
+            get => m_IsRewardItem;
             set
             {
                 m_IsRewardItem = value;
@@ -38,10 +34,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int ResourceCount
         {
-            get
-            {
-                return m_ResourceCount;
-            }
+            get => m_ResourceCount;
             set
             {
                 m_ResourceCount = value;
@@ -150,7 +143,7 @@ namespace Server.Items
         {
             BaseHouse house = BaseHouse.FindHouseAt(from);
 
-            if (house != null && (house.IsOwner(from) || (house.LockDowns.ContainsKey(this) && house.LockDowns[this] == from)))
+            if (house != null && (house.IsOwner(from) || house.LockDowns.ContainsKey(this) && house.LockDowns[this] == from))
             {
                 if (m_ResourceCount > 0)
                 {
@@ -308,10 +301,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsRewardItem
         {
-            get
-            {
-                return m_IsRewardItem;
-            }
+            get => m_IsRewardItem;
             set
             {
                 m_IsRewardItem = value;
@@ -322,10 +312,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int ResourceCount
         {
-            get
-            {
-                return m_ResourceCount;
-            }
+            get => m_ResourceCount;
             set
             {
                 m_ResourceCount = value;

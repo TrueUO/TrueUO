@@ -50,7 +50,6 @@ namespace Server.Items
 
         [Constructable]
         public CrystalSupplicantStatueDeed()
-            : base()
         {
             LootType = LootType.Blessed;
             Hue = 1173;

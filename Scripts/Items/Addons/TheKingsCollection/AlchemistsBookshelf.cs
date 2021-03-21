@@ -44,7 +44,6 @@ namespace Server.Items
 
         [Constructable]
         public AlchemistsBookshelfDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

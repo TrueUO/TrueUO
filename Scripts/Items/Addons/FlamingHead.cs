@@ -17,7 +17,6 @@ namespace Server.Items
 
         [Constructable]
         public FlamingHead(StoneFaceTrapType type)
-            : base()
         {
             LootType = LootType.Blessed;
             Movable = false;
@@ -48,10 +47,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsRewardItem
         {
-            get
-            {
-                return m_IsRewardItem;
-            }
+            get => m_IsRewardItem;
             set
             {
                 m_IsRewardItem = value;
@@ -114,9 +110,9 @@ namespace Server.Items
 
             if (Type == StoneFaceTrapType.NorthWestWall)
                 return BaseAddon.IsWall(p.X, p.Y - 1, p.Z, map) && BaseAddon.IsWall(p.X - 1, p.Y, p.Z, map); // north and west wall
-            else if (Type == StoneFaceTrapType.NorthWall)
+            if (Type == StoneFaceTrapType.NorthWall)
                 return BaseAddon.IsWall(p.X, p.Y - 1, p.Z, map); // north wall
-            else if (Type == StoneFaceTrapType.WestWall)
+            if (Type == StoneFaceTrapType.WestWall)
                 return BaseAddon.IsWall(p.X - 1, p.Y, p.Z, map); // west wall
 
             return false;
@@ -140,19 +136,18 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1041050;// a flaming head deed
+
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsRewardItem
         {
-            get
-            {
-                return m_IsRewardItem;
-            }
+            get => m_IsRewardItem;
             set
             {
                 m_IsRewardItem = value;
                 InvalidateProperties();
             }
         }
+
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);

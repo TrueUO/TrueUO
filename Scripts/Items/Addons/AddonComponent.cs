@@ -80,7 +80,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int Number
         {
-            get { return m_LabelNumber; }
+            get => m_LabelNumber;
             set
             {
                 m_LabelNumber = value;
@@ -194,7 +194,7 @@ namespace Server.Items
         [Hue, CommandProperty(AccessLevel.GameMaster)]
         public override int Hue
         {
-            get { return base.Hue; }
+            get => base.Hue;
             set
             {
                 base.Hue = value;
@@ -220,7 +220,7 @@ namespace Server.Items
                 bool contains = false;
 
                 for (int j = 0; !contains && j < toMatch.Length; ++j)
-                    contains = (itemID == toMatch[j]);
+                    contains = itemID == toMatch[j];
 
                 if (contains)
                 {

@@ -7,7 +7,7 @@ namespace Server.Items
     {
         Small = 1,
         Medium,
-        Large,
+        Large
     }
 
     public class KoiPondAddon : BaseAddon

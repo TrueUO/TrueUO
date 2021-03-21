@@ -24,18 +24,10 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1062917;// The Tapestry of Sosaria
+
         [CommandProperty(AccessLevel.GameMaster)]
-        public SecureLevel Level
-        {
-            get
-            {
-                return m_Level;
-            }
-            set
-            {
-                m_Level = value;
-            }
-        }
+        public SecureLevel Level { get => m_Level; set => m_Level = value; }
+
         public override void GetContextMenuEntries(Mobile from, List<ContextMenuEntry> list)
         {
             base.GetContextMenuEntries(from, list);

@@ -63,10 +63,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int Charges
         {
-            get
-            {
-                return m_Charges;
-            }
+            get => m_Charges;
             set
             {
                 m_Charges = Math.Min(value, 10);
@@ -118,11 +115,9 @@ namespace Server.Items
 
                 return allow;
             }
-            else
-            {
-                from.SendLocalizedMessage(1075209); // Only bandages may be dropped into the fountain.
-                return false;
-            }
+
+            from.SendLocalizedMessage(1075209); // Only bandages may be dropped into the fountain.
+            return false;
         }
 
         public override bool OnDragDropInto(Mobile from, Item item, Point3D p)
@@ -136,11 +131,9 @@ namespace Server.Items
 
                 return allow;
             }
-            else
-            {
-                from.SendLocalizedMessage(1075209); // Only bandages may be dropped into the fountain.
-                return false;
-            }
+
+            from.SendLocalizedMessage(1075209); // Only bandages may be dropped into the fountain.
+            return false;
         }
 
         public override void AddNameProperties(ObjectPropertyList list)
@@ -252,7 +245,7 @@ namespace Server.Items
             InvalidateProperties();
         }
 
-        public static List<FountainOfLife> ToProcess { get; set; } = new List<FountainOfLife>();
+        public static List<FountainOfLife> ToProcess { get; } = new List<FountainOfLife>();
 
         public static void Initialize()
         {
@@ -281,7 +274,6 @@ namespace Server.Items
 
         [Constructable]
         public FountainOfLifeDeed(int charges)
-            : base()
         {
             LootType = LootType.Blessed;
             m_Charges = charges;
@@ -294,23 +286,21 @@ namespace Server.Items
 
         public override int LabelNumber => 1075197;// Fountain of Life
         public override BaseAddonContainer Addon => new FountainOfLife(m_Charges);
+
         [CommandProperty(AccessLevel.GameMaster)]
         public int Charges
         {
-            get
-            {
-                return m_Charges;
-            }
+            get => m_Charges;
             set
             {
                 m_Charges = Math.Min(value, 10);
                 InvalidateProperties();
             }
         }
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); //version
 
             writer.Write(m_Charges);
@@ -319,8 +309,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
 
             m_Charges = reader.ReadInt();
         }

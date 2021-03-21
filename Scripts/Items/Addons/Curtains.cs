@@ -11,17 +11,7 @@ namespace Server.Items
         private int m_ClosedID;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int ClosedID
-        {
-            get
-            {
-                return m_ClosedID;
-            }
-            set
-            {
-                m_ClosedID = value;
-            }
-        }
+        public int ClosedID { get => m_ClosedID; set => m_ClosedID = value; }
 
         public CurtainsComponent(int itemID, int closedID)
             : base(itemID)
@@ -92,7 +82,6 @@ namespace Server.Items
         public override BaseAddonDeed Deed => new CurtainsDeed();
         [Constructable]
         public CurtainsAddon(bool east)
-            : base()
         {
             if (east) // east
             {
@@ -139,7 +128,6 @@ namespace Server.Items
 
         [Constructable]
         public CurtainsDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }
@@ -212,7 +200,7 @@ namespace Server.Items
                 if (m_Deed == null || m_Deed.Deleted || info.ButtonID == 0)
                     return;
 
-                m_Deed.m_East = (info.ButtonID != 1);
+                m_Deed.m_East = info.ButtonID != 1;
                 m_Deed.SendTarget(sender.Mobile);
             }
         }

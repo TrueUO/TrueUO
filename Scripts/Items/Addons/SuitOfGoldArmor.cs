@@ -33,7 +33,6 @@ namespace Server.Items
     {
         [Constructable]
         public SuitOfGoldArmorAddon()
-            : base()
         {
             AddComponent(new SuitOfGoldArmorComponent(), 0, 0, 0);
         }
@@ -63,7 +62,6 @@ namespace Server.Items
     {
         [Constructable]
         public SuitOfGoldArmorDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

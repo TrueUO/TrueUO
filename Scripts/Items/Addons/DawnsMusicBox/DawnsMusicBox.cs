@@ -20,7 +20,7 @@ namespace Server.Items
     [Flipable(0x2AF9, 0x2AFD)]
     public class DawnsMusicBox : Item, ISecurable
     {
-        public static MusicName[] m_CommonTracks = new MusicName[]
+        public static MusicName[] m_CommonTracks =
         {
             MusicName.Samlethe, MusicName.Sailing, MusicName.Britain2, MusicName.Britain1,
             MusicName.Bucsden, MusicName.Forest_a, MusicName.Cove, MusicName.Death,
@@ -33,23 +33,28 @@ namespace Server.Items
             MusicName.OldUlt01, MusicName.Ocllo, MusicName.Vesper, MusicName.Victory,
             MusicName.Mountn_a, MusicName.Wind, MusicName.Yew, MusicName.Zento
         };
-        public static MusicName[] m_UncommonTracks = new MusicName[]
+
+        public static MusicName[] m_UncommonTracks =
         {
             MusicName.GwennoConversation, MusicName.DreadHornArea, MusicName.ElfCity,
             MusicName.GoodEndGame, MusicName.GoodVsEvil, MusicName.GreatEarthSerpents,
             MusicName.GrizzleDungeon, MusicName.Humanoids_U9, MusicName.MelisandesLair,
             MusicName.MinocNegative, MusicName.ParoxysmusLair, MusicName.Paws
         };
-        public static MusicName[] m_RareTracks = new MusicName[]
+
+        public static MusicName[] m_RareTracks =
         {
             MusicName.SelimsBar, MusicName.SerpentIsleCombat_U7, MusicName.ValoriaShips
         };
+
         private static readonly Dictionary<MusicName, DawnsMusicInfo> m_Info = new Dictionary<MusicName, DawnsMusicInfo>();
         private List<MusicName> m_Tracks;
         private SecureLevel m_Level;
         private Timer m_Timer;
-        private int m_ItemID = 0;
-        private int m_Count = 0;
+
+        private int m_ItemID;
+        private int m_Count;
+
         [Constructable]
         public DawnsMusicBox()
             : base(0x2AF9)
@@ -74,18 +79,10 @@ namespace Server.Items
 
         public override int LabelNumber => 1075198;// Dawn’s Music Box
         public List<MusicName> Tracks => m_Tracks;
+
         [CommandProperty(AccessLevel.GameMaster)]
-        public SecureLevel Level
-        {
-            get
-            {
-                return m_Level;
-            }
-            set
-            {
-                m_Level = value;
-            }
-        }
+        public SecureLevel Level { get => m_Level; set => m_Level = value; }
+
         public static void Initialize()
         {
             m_Info.Add(MusicName.Samlethe, new DawnsMusicInfo(1075152, DawnsMusicRarity.Common));
@@ -157,7 +154,7 @@ namespace Server.Items
 
         public static MusicName RandomTrack(DawnsMusicRarity rarity)
         {
-            MusicName[] list = null;
+            MusicName[] list;
 
             switch (rarity)
             {
@@ -250,7 +247,7 @@ namespace Server.Items
 
             BaseHouse house = BaseHouse.FindHouseAt(this);
 
-            return (house != null && house.HasAccess(m));
+            return house != null && house.HasAccess(m);
         }
 
         public void PlayMusic(Mobile m, MusicName music)

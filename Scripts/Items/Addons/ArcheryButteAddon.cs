@@ -34,82 +34,26 @@ namespace Server.Items
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public double MinSkill
-        {
-            get
-            {
-                return m_MinSkill;
-            }
-            set
-            {
-                m_MinSkill = value;
-            }
-        }
+        public double MinSkill { get => m_MinSkill; set => m_MinSkill = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public double MaxSkill
-        {
-            get
-            {
-                return m_MaxSkill;
-            }
-            set
-            {
-                m_MaxSkill = value;
-            }
-        }
+        public double MaxSkill { get => m_MaxSkill; set => m_MaxSkill = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public DateTime LastUse
-        {
-            get
-            {
-                return m_LastUse;
-            }
-            set
-            {
-                m_LastUse = value;
-            }
-        }
+        public DateTime LastUse { get => m_LastUse; set => m_LastUse = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public bool FacingEast
         {
-            get
-            {
-                return (ItemID == 0x100A);
-            }
-            set
-            {
-                ItemID = value ? 0x100A : 0x100B;
-            }
+            get => ItemID == 0x100A;
+            set => ItemID = value ? 0x100A : 0x100B;
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int Arrows
-        {
-            get
-            {
-                return m_Arrows;
-            }
-            set
-            {
-                m_Arrows = value;
-            }
-        }
+        public int Arrows { get => m_Arrows; set => m_Arrows = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int Bolts
-        {
-            get
-            {
-                return m_Bolts;
-            }
-            set
-            {
-                m_Bolts = value;
-            }
-        }
+        public int Bolts { get => m_Bolts; set => m_Bolts = value; }
 
         public override void OnDoubleClick(Mobile from)
         {
@@ -147,7 +91,7 @@ namespace Server.Items
                 return;
             }
 
-            if (DateTime.UtcNow < (m_LastUse + UseDelay))
+            if (DateTime.UtcNow < m_LastUse + UseDelay)
                 return;
 
             Point3D worldLoc = GetWorldLocation();
@@ -178,8 +122,8 @@ namespace Server.Items
 
             Type ammoType = ranged.AmmoType;
 
-            bool isArrow = (ammoType == typeof(Arrow));
-            bool isBolt = (ammoType == typeof(Bolt));
+            bool isArrow = ammoType == typeof(Arrow);
+            bool isBolt = ammoType == typeof(Bolt);
 
             BaseThrown thrown = ranged as BaseThrown;
 
@@ -189,7 +133,7 @@ namespace Server.Items
                 isBolt = ranged.Animation == WeaponAnimation.ShootXBow;
             }
 
-            bool isKnown = (isArrow || isBolt);
+            bool isKnown = isArrow || isBolt;
 
             if (thrown == null)
             {
@@ -263,7 +207,7 @@ namespace Server.Items
                 splitScore = 5;
             }
 
-            bool split = (isKnown && ((m_Arrows + m_Bolts) * 0.02) > Utility.RandomDouble());
+            bool split = isKnown && (m_Arrows + m_Bolts) * 0.02 > Utility.RandomDouble();
 
             if (split)
             {
@@ -346,29 +290,8 @@ namespace Server.Items
             private int m_Total;
             private int m_Count;
 
-            public int Total
-            {
-                get
-                {
-                    return m_Total;
-                }
-                set
-                {
-                    m_Total = value;
-                }
-            }
-
-            public int Count
-            {
-                get
-                {
-                    return m_Count;
-                }
-                set
-                {
-                    m_Count = value;
-                }
-            }
+            public int Total { get => m_Total; set => m_Total = value; }
+            public int Count { get => m_Count; set => m_Count = value; }
 
             public void Record(int score)
             {

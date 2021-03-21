@@ -50,7 +50,6 @@ namespace Server.Items
 
         [Constructable]
         public FifteenthAnniversaryLithographDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

@@ -45,7 +45,6 @@ namespace Server.Items
 
         [Constructable]
         public ArcaneBookShelfDeedEast()
-            : base()
         {
         }
 

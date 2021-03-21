@@ -39,10 +39,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsRewardItem
         {
-            get
-            {
-                return m_IsRewardItem;
-            }
+            get => m_IsRewardItem;
             set
             {
                 m_IsRewardItem = value;
@@ -115,9 +112,11 @@ namespace Server.Items
                 return false;
 
             if (FacingSouth)
+            {
                 return BaseAddon.IsWall(p.X, p.Y - 1, p.Z, map); // north wall
-            else
-                return BaseAddon.IsWall(p.X - 1, p.Y, p.Z, map); // west wall
+            }
+
+            return BaseAddon.IsWall(p.X - 1, p.Y, p.Z, map); // west wall
         }
     }
 
@@ -138,19 +137,18 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1041007;// a banner deed
+
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsRewardItem
         {
-            get
-            {
-                return m_IsRewardItem;
-            }
+            get => m_IsRewardItem;
             set
             {
                 m_IsRewardItem = value;
                 InvalidateProperties();
             }
         }
+
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);
@@ -183,7 +181,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
 
             writer.Write(m_IsRewardItem);
@@ -192,8 +189,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
 
             m_IsRewardItem = reader.ReadBool();
         }
@@ -202,7 +198,9 @@ namespace Server.Items
         {
             public const int Start = 0x15AE;
             public const int End = 0x15F4;
+
             private readonly BannerDeed m_Banner;
+
             public InternalGump(BannerDeed banner)
                 : base(100, 200)
             {
