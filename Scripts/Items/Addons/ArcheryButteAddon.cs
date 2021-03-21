@@ -273,8 +273,11 @@ namespace Server.Items
 
         private class ScoreEntry
         {
-            public int Total { get => Total; set => Total = value; }
-            public int Count { get => Count; set => Count = value; }
+            int m_Total;
+            int m_Count;
+
+            public int Total { get => m_Total; private set => m_Total = value; }
+            public int Count { get => m_Count; private set => m_Count = value; }
 
             public void Record(int score)
             {
