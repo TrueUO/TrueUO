@@ -91,7 +91,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.Counselor, AccessLevel.GameMaster)]
         public string Description
         {
-            get { return m_Description; }
+            get => m_Description;
             set
             {
                 m_Description = value;
@@ -102,7 +102,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.Counselor, AccessLevel.GameMaster)]
         public bool Marked
         {
-            get { return m_Marked; }
+            get => m_Marked;
             set
             {
                 if (m_Marked != value)
@@ -120,7 +120,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.Counselor, AccessLevel.GameMaster)]
         public Map TargetMap
         {
-            get { return m_TargetMap; }
+            get => m_TargetMap;
             set
             {
                 if (m_TargetMap != value)
@@ -302,17 +302,17 @@ namespace Server.Items
                         desc = "an unknown location";
 
                     if (m_TargetMap == Map.Tokuno)
-                        list.Add((House != null ? 1063260 : 1063259), RuneFormat, desc); // ~1_val~ (Tokuno Islands)[(House)]
+                        list.Add(House != null ? 1063260 : 1063259, RuneFormat, desc); // ~1_val~ (Tokuno Islands)[(House)]
                     else if (m_TargetMap == Map.Malas)
-                        list.Add((House != null ? 1062454 : 1060804), RuneFormat, desc); // ~1_val~ (Malas)[(House)]
+                        list.Add(House != null ? 1062454 : 1060804, RuneFormat, desc); // ~1_val~ (Malas)[(House)]
                     else if (m_TargetMap == Map.Felucca)
-                        list.Add((House != null ? 1062452 : 1060805), RuneFormat, desc); // ~1_val~ (Felucca)[(House)]
+                        list.Add(House != null ? 1062452 : 1060805, RuneFormat, desc); // ~1_val~ (Felucca)[(House)]
                     else if (m_TargetMap == Map.Trammel)
-                        list.Add((House != null ? 1062453 : 1060806), RuneFormat, desc); // ~1_val~ (Trammel)[(House)]
+                        list.Add(House != null ? 1062453 : 1060806, RuneFormat, desc); // ~1_val~ (Trammel)[(House)]
                     else if (m_TargetMap == Map.TerMur)
-                        list.Add((House != null ? 1113206 : 1113205), RuneFormat, desc); // ~1_val~ (Ter Mur)(House)
+                        list.Add(House != null ? 1113206 : 1113205, RuneFormat, desc); // ~1_val~ (Ter Mur)(House)
                     else
-                        list.Add((House != null ? "{0} ({1})(House)" : "{0} ({1})"), string.Format(RuneFormat, desc), m_TargetMap);
+                        list.Add(House != null ? "{0} ({1})(House)" : "{0} ({1})", string.Format(RuneFormat, desc), m_TargetMap);
                 }
             }
         }
@@ -369,7 +369,7 @@ namespace Server.Items
 
         private void CalculateHue()
         {
-            int hue = 0;
+            int hue;
 
             if (Type == RecallRuneType.Ship)
             {
@@ -390,15 +390,15 @@ namespace Server.Items
             if (mark)
             {
                 if (map == Map.Trammel)
-                    hue = (house != null ? 0x47F : 50);
+                    hue = house != null ? 0x47F : 50;
                 else if (map == Map.Felucca)
-                    hue = (house != null ? 0x66D : 0);
+                    hue = house != null ? 0x66D : 0;
                 else if (map == Map.Ilshenar)
-                    hue = (house != null ? 0x55F : 1102);
+                    hue = house != null ? 0x55F : 1102;
                 else if (map == Map.Malas)
-                    hue = (house != null ? 0x55F : 1102);
+                    hue = house != null ? 0x55F : 1102;
                 else if (map == Map.Tokuno)
-                    hue = (house != null ? 0x1F14 : 1154);
+                    hue = house != null ? 0x1F14 : 1154;
                 else if (map == Map.TerMur)
                     hue = 1162;
             }

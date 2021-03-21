@@ -1,5 +1,4 @@
 using Server.Mobiles;
-using System;
 
 namespace Server.Items
 {
@@ -36,7 +35,8 @@ namespace Server.Items
                 from.SendLocalizedMessage(1071943); // You must be a Journeyman or higher Tinker to construct a golem.
                 return;
             }
-            else if ((from.Followers + 4) > from.FollowersMax)
+
+            if (from.Followers + 4 > from.FollowersMax)
             {
                 from.SendLocalizedMessage(1049607); // You have too many followers to control that creature.
                 return;
@@ -47,7 +47,7 @@ namespace Server.Items
             if (pack == null)
                 return;
 
-            int res = pack.ConsumeTotal(new Type[] { typeof(PowerCrystal), typeof(IronIngot), typeof(BronzeIngot), typeof(Gears) }, new int[] { 1, 50, 50, 5 });
+            int res = pack.ConsumeTotal(new[] { typeof(PowerCrystal), typeof(IronIngot), typeof(BronzeIngot), typeof(Gears) }, new[] { 1, 50, 50, 5 });
 
             switch (res)
             {
@@ -117,7 +117,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

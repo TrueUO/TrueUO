@@ -12,7 +12,7 @@ namespace Server.Engines.Plants
         [CommandProperty(AccessLevel.GameMaster)]
         public PlantType PlantType
         {
-            get { return m_PlantType; }
+            get => m_PlantType;
             set
             {
                 m_PlantType = value;
@@ -23,7 +23,7 @@ namespace Server.Engines.Plants
         [CommandProperty(AccessLevel.GameMaster)]
         public PlantHue PlantHue
         {
-            get { return m_PlantHue; }
+            get => m_PlantHue;
             set
             {
                 m_PlantHue = value;
@@ -35,7 +35,7 @@ namespace Server.Engines.Plants
         [CommandProperty(AccessLevel.GameMaster)]
         public bool ShowType
         {
-            get { return m_ShowType; }
+            get => m_ShowType;
             set
             {
                 m_ShowType = value;
@@ -120,25 +120,19 @@ namespace Server.Engines.Plants
                     args = string.Format("#{0}\t#{1}", title, typeInfo.Name);
                     return typeInfo.GetSeedLabel(hueInfo);
                 }
-                else
-                {
-                    args = string.Format("#{0}", title);
-                    return hueInfo.IsBright() ? 1060839 : 1060838; // [bright] ~1_val~ seed
-                }
+
+                args = string.Format("#{0}", title);
+                return hueInfo.IsBright() ? 1060839 : 1060838; // [bright] ~1_val~ seed
             }
-            else
+
+            if (m_ShowType)
             {
-                if (m_ShowType)
-                {
-                    args = string.Format("{0}\t#{1}\t#{2}", Amount, title, typeInfo.Name);
-                    return typeInfo.GetSeedLabelPlural(hueInfo);
-                }
-                else
-                {
-                    args = string.Format("{0}\t#{1}", Amount, title);
-                    return hueInfo.IsBright() ? 1113491 : 1113490; // ~1_amount~ [bright] ~2_val~ seeds
-                }
+                args = string.Format("{0}\t#{1}\t#{2}", Amount, title, typeInfo.Name);
+                return typeInfo.GetSeedLabelPlural(hueInfo);
             }
+
+            args = string.Format("{0}\t#{1}", Amount, title);
+            return hueInfo.IsBright() ? 1113491 : 1113490; // ~1_amount~ [bright] ~2_val~ seeds
         }
 
         public override void AddNameProperty(ObjectPropertyList list)
