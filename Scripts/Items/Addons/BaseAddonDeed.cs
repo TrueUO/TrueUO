@@ -178,12 +178,9 @@ namespace Server.Items
                     {
                         addon.Resource = m_Deed.Resource;
 
-                        if (!m_Deed.ExcludeDeedHue)
+                        if (!m_Deed.ExcludeDeedHue && (addon.RetainDeedHue || m_Deed.Hue != 0 && CraftResources.GetHue(m_Deed.Resource) != m_Deed.Hue))
                         {
-                            if (addon.RetainDeedHue || m_Deed.Hue != 0 && CraftResources.GetHue(m_Deed.Resource) != m_Deed.Hue)
-                            {
-                                addon.Hue = m_Deed.Hue;
-                            }
+                            addon.Hue = m_Deed.Hue;
                         }
 
                         addon.MoveToWorld(new Point3D(p), map);
