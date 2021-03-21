@@ -20,7 +20,7 @@ namespace Server.Items
     [Flipable(0x2AF9, 0x2AFD)]
     public class DawnsMusicBox : Item, ISecurable
     {
-        public static MusicName[] m_CommonTracks =
+        public static readonly MusicName[] m_CommonTracks =
         {
             MusicName.Samlethe, MusicName.Sailing, MusicName.Britain2, MusicName.Britain1,
             MusicName.Bucsden, MusicName.Forest_a, MusicName.Cove, MusicName.Death,
@@ -34,7 +34,7 @@ namespace Server.Items
             MusicName.Mountn_a, MusicName.Wind, MusicName.Yew, MusicName.Zento
         };
 
-        public static MusicName[] m_UncommonTracks =
+        public static readonly MusicName[] m_UncommonTracks =
         {
             MusicName.GwennoConversation, MusicName.DreadHornArea, MusicName.ElfCity,
             MusicName.GoodEndGame, MusicName.GoodVsEvil, MusicName.GreatEarthSerpents,
@@ -42,7 +42,7 @@ namespace Server.Items
             MusicName.MinocNegative, MusicName.ParoxysmusLair, MusicName.Paws
         };
 
-        public static MusicName[] m_RareTracks =
+        public static readonly MusicName[] m_RareTracks =
         {
             MusicName.SelimsBar, MusicName.SerpentIsleCombat_U7, MusicName.ValoriaShips
         };

@@ -39,11 +39,6 @@ namespace Server.Items
         {
         }
 
-        private static void AddComplexComponent(BaseAddon addon, int item, int xoffset, int yoffset, int zoffset, int hue, int lightsource)
-        {
-            AddComplexComponent(addon, item, xoffset, yoffset, zoffset, hue, lightsource, null, 1);
-        }
-
         private static void AddComplexComponent(BaseAddon addon, int item, int xoffset, int yoffset, int zoffset, int hue, int lightsource, string name, int amount)
         {
             AddonComponent ac;
@@ -76,7 +71,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }
