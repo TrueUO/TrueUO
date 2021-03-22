@@ -933,7 +933,7 @@ namespace Server.Items
         {
             Container pack = from.Backpack;
 
-            if (Parent == from || pack != null && Parent == pack)
+            if (Parent == from || pack != null && Parent == pack || Parent is SpellbookStrap strap && strap.Parent == pack)
             {
                 DisplayTo(from);
             }
