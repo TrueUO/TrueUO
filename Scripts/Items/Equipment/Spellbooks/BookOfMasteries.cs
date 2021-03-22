@@ -20,10 +20,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public new ulong Content
         {
-            get
-            {
-                return _Content;
-            }
+            get => _Content;
             set
             {
                 if (_Content != value)
@@ -125,7 +122,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
         }
     }
 }
