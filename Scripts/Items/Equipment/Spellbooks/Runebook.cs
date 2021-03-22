@@ -20,10 +20,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public BookQuality Quality
         {
-            get
-            {
-                return m_Quality;
-            }
+            get => m_Quality;
             set
             {
                 m_Quality = value;
@@ -41,10 +38,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public Mobile Crafter
         {
-            get
-            {
-                return m_Crafter;
-            }
+            get => m_Crafter;
             set
             {
                 m_Crafter = value;
@@ -58,10 +52,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public string Description
         {
-            get
-            {
-                return m_Description;
-            }
+            get => m_Description;
             set
             {
                 m_Description = value;
@@ -75,7 +66,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int MaxCharges { get; set; }
 
-        public List<Mobile> Openers { get; set; } = new List<Mobile>();
+        public List<Mobile> Openers { get; } = new List<Mobile>();
 
         public virtual int MaxEntries => 16;
 
@@ -279,7 +270,7 @@ namespace Server.Items
             if (m_Crafter != null)
                 list.Add(1050043, m_Crafter.TitleName); // crafted by ~1_NAME~
 
-            if (m_Description != null && m_Description.Length > 0)
+            if (!string.IsNullOrEmpty(m_Description))
                 list.Add(m_Description);
         }
 
@@ -394,7 +385,8 @@ namespace Server.Items
 
                                 return true;
                             }
-                            else if (rune.TargetMap != null)
+
+                            if (rune.TargetMap != null)
                             {
                                 m_Entries.Add(new RunebookEntry(rune.Target, rune.TargetMap, rune.Description, rune.House, rune.Type));
 
@@ -431,7 +423,7 @@ namespace Server.Items
 
                     int amount = dropped.Amount;
 
-                    if (amount > (MaxCharges - CurCharges))
+                    if (amount > MaxCharges - CurCharges)
                     {
                         dropped.Consume(MaxCharges - CurCharges);
                         CurCharges = MaxCharges;
