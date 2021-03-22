@@ -1,12 +1,10 @@
 using Server.Engines.VeteranRewards;
-using System;
-using System.Linq;
 
 namespace Server.Items
 {
-    public class BookStrap : BaseContainer, IRewardItem, IDyable
+    public class SpellbookStrap : BaseContainer, IRewardItem, IDyable
     {
-        public override int LabelNumber => 1126807; // book strap
+        public override int LabelNumber => 1159677; // Spellbook Strap
 
         private bool m_IsRewardItem;
 
@@ -22,7 +20,7 @@ namespace Server.Items
         public bool IsFull => DefaultMaxItems <= Items.Count;
 
         [Constructable]
-        public BookStrap()
+        public SpellbookStrap()
             : base(0xA71F)
         {
             LootType = LootType.Blessed;
@@ -57,13 +55,13 @@ namespace Server.Items
 
         public bool IsAccept(Item item)
         {
-            return _AcceptList.Any(t => t == item.GetType());
-        }
+            if (item is Spellbook)
+            {
+                return true;
+            }
 
-        private readonly Type[] _AcceptList =
-        {
-            typeof(Spellbook)
-        };
+            return false;
+        }
 
         public override bool OnDragDrop(Mobile from, Item dropped)
         {
@@ -87,7 +85,7 @@ namespace Server.Items
             return base.OnDragDropInto(from, item, p);
         }
 
-        public BookStrap(Serial serial)
+        public SpellbookStrap(Serial serial)
             : base(serial)
         {
         }

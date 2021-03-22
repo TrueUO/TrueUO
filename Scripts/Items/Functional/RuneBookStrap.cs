@@ -1,28 +1,23 @@
 using Server.Engines.VeteranRewards;
 using System;
-using System.Linq;
 
 namespace Server.Items
 {
-    public class RuneBookStrap : BaseContainer, IRewardItem, IDyable
+    public class RunebookStrap : BaseContainer, IRewardItem, IDyable
     {
-        public override int LabelNumber => 1126807; // book strap
+        public override int LabelNumber => 1159676; // Runebook Strap
 
         private bool m_IsRewardItem;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get { return m_IsRewardItem; }
-            set { m_IsRewardItem = value; InvalidateProperties(); }
-        }
+        public bool IsRewardItem { get => m_IsRewardItem; set { m_IsRewardItem = value; InvalidateProperties(); } }
 
         public override int DefaultMaxItems => 25;
 
         public bool IsFull => DefaultMaxItems <= Items.Count;
 
         [Constructable]
-        public RuneBookStrap()
+        public RunebookStrap()
             : base(0xA721)
         {
             LootType = LootType.Blessed;
@@ -59,13 +54,13 @@ namespace Server.Items
 
         public bool IsAccept(Item item)
         {
-            return _AcceptList.Any(t => t == item.GetType());
-        }
+            if (item is Runebook)
+            {
+                return true;
+            }
 
-        private readonly Type[] _AcceptList =
-        {
-            typeof(Runebook), typeof(RunicAtlas)
-        };
+            return false;
+        }
 
         public override bool OnDragDrop(Mobile from, Item dropped)
         {
@@ -102,7 +97,7 @@ namespace Server.Items
             return base.GetTotal(type);
         }
 
-        public RuneBookStrap(Serial serial)
+        public RunebookStrap(Serial serial)
             : base(serial)
         {
         }
