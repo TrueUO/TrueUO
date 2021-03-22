@@ -8,7 +8,7 @@ namespace Server.Items
         private string _DisplayName;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public string DisplayName { get { return _DisplayName; } set { _DisplayName = value; InvalidateProperties(); } }
+        public string DisplayName { get => _DisplayName; set { _DisplayName = value; InvalidateProperties(); } }
 
         [Constructable]
         public JollyHolidayTreeAddon(string name)
@@ -96,7 +96,7 @@ namespace Server.Items
         private string _DisplayName;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public string DisplayName { get { return _DisplayName; } set { _DisplayName = value; InvalidateProperties(); } }
+        public string DisplayName { get => _DisplayName; set { _DisplayName = value; InvalidateProperties(); } }
 
         [Constructable]
         public JollyHolidayTreeDeed()

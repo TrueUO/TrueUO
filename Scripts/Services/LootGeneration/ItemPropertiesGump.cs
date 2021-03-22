@@ -28,7 +28,7 @@ namespace Server.Gumps
             SkillName,
             SAAbsorption,
             ExtendedWeapon,
-            Other,
+            Other
         }
 
         public PropFilter Filter { get; set; }
@@ -220,7 +220,8 @@ namespace Server.Gumps
             {
                 return;
             }
-            else if (info.ButtonID == 1)
+
+            if (info.ButtonID == 1)
             {
                 if (Filter == PropFilter.Other)
                 {
@@ -278,8 +279,8 @@ namespace Server.Gumps
 
     public class InfoSpecificGump : BaseGump
     {
-        public ItemPropertyInfo Info { get; set; }
-        public ItemType ItemType { get; set; }
+        public ItemPropertyInfo Info { get; }
+        public ItemType ItemType { get; }
 
         public InfoSpecificGump(PlayerMobile pm, ItemPropertyInfo info, ItemType type)
             : base(pm, 100, 100)
@@ -321,7 +322,7 @@ namespace Server.Gumps
             {
                 ItemType type = (ItemType)i;
 
-                if (type == ItemType.Invalid || (ItemType != ItemType.Invalid && type != ItemType))
+                if (type == ItemType.Invalid || ItemType != ItemType.Invalid && type != ItemType)
                 {
                     continue;
                 }

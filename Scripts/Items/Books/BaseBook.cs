@@ -13,17 +13,7 @@ namespace Server.Items
     {
         private string[] m_Lines;
 
-        public string[] Lines
-        {
-            get
-            {
-                return m_Lines;
-            }
-            set
-            {
-                m_Lines = value;
-            }
-        }
+        public string[] Lines { get => m_Lines; set => m_Lines = value; }
 
         public BookPageInfo()
         {
@@ -65,10 +55,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public string Title
         {
-            get
-            {
-                return m_Title;
-            }
+            get => m_Title;
             set
             {
                 m_Title = value;
@@ -79,10 +66,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public string Author
         {
-            get
-            {
-                return m_Author;
-            }
+            get => m_Author;
             set
             {
                 m_Author = value;
@@ -91,26 +75,12 @@ namespace Server.Items
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool Writable
-        {
-            get
-            {
-                return m_Writable;
-            }
-            set
-            {
-                m_Writable = value;
-            }
-        }
+        public bool Writable { get => m_Writable; set => m_Writable = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public int PagesCount => m_Pages.Length;
 
-        public string BookString
-        {
-            get { return ContentAsString; }
-            set { BuildBookFromString(value); }
-        }
+        public string BookString { get => ContentAsString; set => BuildBookFromString(value); }
 
         public BookPageInfo[] Pages => m_Pages;
 
@@ -192,18 +162,16 @@ namespace Server.Items
                         pos = content.Length;
                         break;
                     }
+
+                    if ((nextpos = content.LastIndexOfAny(" /|\\.!@#$%^&*()_+=-".ToCharArray(), pos + cpl, cpl)) > 0)
+                    {
+                        lines.Add(content.Substring(pos, nextpos - pos + 1));
+                        pos = nextpos + 1;
+                    }
                     else
                     {
-                        if ((nextpos = content.LastIndexOfAny(" /|\\.!@#$%^&*()_+=-".ToCharArray(), pos + cpl, cpl)) > 0)
-                        {
-                            lines.Add(content.Substring(pos, (nextpos - pos) + 1));
-                            pos = nextpos + 1;
-                        }
-                        else
-                        {
-                            lines.Add(content.Substring(pos, cpl));
-                            pos += cpl;
-                        }
+                        lines.Add(content.Substring(pos, cpl));
+                        pos += cpl;
                     }
                 }
 
@@ -361,22 +329,23 @@ namespace Server.Items
                         break;
                     }
             }
-
-            if (version < 3 && (Weight == 1 || Weight == 2))
-                Weight = -1;
         }
 
         public override void AddNameProperty(ObjectPropertyList list)
         {
-            if (m_Title != null && m_Title.Length > 0)
+            if (!string.IsNullOrEmpty(m_Title))
+            {
                 list.Add(m_Title);
+            }
             else
+            {
                 base.AddNameProperty(list);
+            }
         }
 
         public override void OnDoubleClick(Mobile from)
         {
-            if (m_Title == null && m_Author == null && m_Writable == true)
+            if (m_Title == null && m_Author == null && m_Writable)
             {
                 Title = "a book";
                 Author = from.Name;
@@ -433,23 +402,20 @@ namespace Server.Items
                 // send for new page
                 state.Send(new BookPageDetails(this, page, m_Pages[index]));
             }
-            else if (m_Writable && state.Mobile != null && state.Mobile.InRange(GetWorldLocation(), 1))
+            else if (m_Writable && state.Mobile != null && state.Mobile.InRange(GetWorldLocation(), 1) && lineCount <= 19)
             {
                 // updates after page is moved away from
-                if (lineCount <= 19)
-                {
-                    string[] lines = new string[lineCount];
+                string[] lines = new string[lineCount];
 
-                    for (int j = 0; j < lineCount; ++j)
-                        if ((lines[j] = pvSrc.ReadUTF8StringSafe()).Length >= 80)
-                            return;
-
-                    m_Pages[index].Lines = lines;
-                }
-                else
+                for (int j = 0; j < lineCount; ++j)
                 {
-                    return;
+                    if ((lines[j] = pvSrc.ReadUTF8StringSafe()).Length >= 80)
+                    {
+                        return;
+                    }
                 }
+
+                m_Pages[index].Lines = lines;
             }
         }
 
@@ -535,37 +501,18 @@ namespace Server.Items
                     for (int j = 0; j < lineCount; ++j)
                     {
                         if ((lines[j] = pvSrc.ReadUTF8StringSafe()).Length >= 80)
+                        {
                             return;
+                        }
                     }
 
                     book.Pages[index].Lines = lines;
                 }
-                else
-                {
-                    return;
-                }
             }
-            else
-            {
-                return;
-            }           
         }
-
-        #region ISecurable Members
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public SecureLevel Level
-        {
-            get
-            {
-                return m_SecureLevel;
-            }
-            set
-            {
-                m_SecureLevel = value;
-            }
-        }
-        #endregion
+        public SecureLevel Level { get => m_SecureLevel; set => m_SecureLevel = value; }
     }
 
     public sealed class BookPageDetails : Packet

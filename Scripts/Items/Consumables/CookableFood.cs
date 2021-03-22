@@ -8,7 +8,7 @@ namespace Server.Items
         private ItemQuality _Quality;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public ItemQuality Quality { get { return _Quality; } set { _Quality = value; InvalidateProperties(); } }
+        public ItemQuality Quality { get => _Quality; set { _Quality = value; InvalidateProperties(); } }
 
         public bool PlayerConstructed => true;
 
@@ -542,7 +542,7 @@ namespace Server.Items
             : base(0x9B5)
         {
             Weight = 0.5;
-            Hue = 3 + (Utility.Random(20) * 5);
+            Hue = 3 + Utility.Random(20) * 5;
         }
 
         public BrightlyColoredEggs(Serial serial)
@@ -572,7 +572,7 @@ namespace Server.Items
             : base(0x9B5)
         {
             Weight = 0.5;
-            Hue = 3 + (Utility.Random(20) * 5);
+            Hue = 3 + Utility.Random(20) * 5;
         }
 
         public EasterEggs(Serial serial)

@@ -10,25 +10,22 @@ namespace Server.Items
         public int MaxQuantity { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public virtual bool IsEmpty => (m_Quantity <= 0);
+        public virtual bool IsEmpty => m_Quantity <= 0;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public virtual bool IsFull => (m_Quantity >= MaxQuantity);
+        public virtual bool IsFull => m_Quantity >= MaxQuantity;
 
         [CommandProperty(AccessLevel.GameMaster)]
         public virtual int Quantity
         {
-            get
-            {
-                return m_Quantity;
-            }
+            get => m_Quantity;
             set
             {
                 if (value != m_Quantity)
                 {
-                    m_Quantity = (value < 1) ? 0 : (value > MaxQuantity) ? MaxQuantity : value;
+                    m_Quantity = value < 1 ? 0 : value > MaxQuantity ? MaxQuantity : value;
 
-                    ItemID = (IsEmpty) ? Item_ID : FullItem_ID;
+                    ItemID = IsEmpty ? Item_ID : FullItem_ID;
                 }
             }
         }
@@ -133,7 +130,6 @@ namespace Server.Items
 
         [Constructable]
         public WashBasinDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

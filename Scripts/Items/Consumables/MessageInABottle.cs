@@ -32,30 +32,17 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1041080;// a message in a bottle
+
         [CommandProperty(AccessLevel.GameMaster)]
-        public Map TargetMap
-        {
-            get
-            {
-                return m_TargetMap;
-            }
-            set
-            {
-                m_TargetMap = value;
-            }
-        }
+        public Map TargetMap { get => m_TargetMap; set => m_TargetMap = value; }
+
         [CommandProperty(AccessLevel.GameMaster)]
         public int Level
         {
-            get
-            {
-                return m_Level;
-            }
-            set
-            {
-                m_Level = Math.Max(1, Math.Min(value, 4));
-            }
+            get => m_Level;
+            set => m_Level = Math.Max(1, Math.Min(value, 4));
         }
+
         public static int GetRandomLevel()
         {
             if (1 > Utility.Random(25))
@@ -76,29 +63,10 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
-            switch (version)
-            {
-                case 3:
-                case 2:
-                    {
-                        m_Level = reader.ReadInt();
-                        goto case 1;
-                    }
-                case 1:
-                    {
-                        m_TargetMap = reader.ReadMap();
-                        break;
-                    }
-                case 0:
-                    {
-                        m_TargetMap = Map.Trammel;
-                        break;
-                    }
-            }
-
-            ItemID = 0xA30C;
+            m_Level = reader.ReadInt();
+            m_TargetMap = reader.ReadMap();
         }
 
         public override void OnDoubleClick(Mobile from)

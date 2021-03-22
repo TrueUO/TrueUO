@@ -573,7 +573,7 @@ namespace Server.Engines.VeteranRewards
 
                 AddHtmlLocalized(78, y, 110, 20, GetFacet(entry), Yellow, false, false);
 
-                if (TreasureMapInfo.NewSystem && entry is TreasureMapEntry)
+                if (entry is TreasureMapEntry)
                 {
                     AddHtmlLocalized(174, y, 110, 20, GetPackage((TreasureMapEntry)entry), Yellow, false, false);
                     AddHtmlLocalized(268, y, 110, 20, GetLevel((TreasureMapEntry)entry), Yellow, false, false);
@@ -583,7 +583,7 @@ namespace Server.Engines.VeteranRewards
                     AddHtmlLocalized(268, y, 110, 20, GetLevel(entry), Yellow, false, false);
                 }
 
-                if ((entry is TreasureMapEntry && ((TreasureMapEntry)entry).Decoder == null) || (entry is SOSEntry && !((SOSEntry)entry).Opened))
+                if (entry is TreasureMapEntry && ((TreasureMapEntry)entry).Decoder == null || entry is SOSEntry && !((SOSEntry)entry).Opened)
                     AddHtmlLocalized(373, y, 90, 20, 1153569, Yellow, false, false); // Unknown
                 else
                     AddHtmlLocalized(373, y, 90, 20, 1060847, GetLocation(entry), Yellow, false, false); // ~1_val~ ~2_val~

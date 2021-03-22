@@ -23,20 +23,17 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1041116;// a deed for a holiday tree
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
-
-            LootType = LootType.Blessed;
+            reader.ReadInt();
         }
 
         public bool ValidatePlacement(Mobile from, Point3D loc)

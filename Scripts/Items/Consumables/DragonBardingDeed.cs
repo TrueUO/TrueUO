@@ -16,10 +16,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public Mobile Crafter
         {
-            get
-            {
-                return m_Crafter;
-            }
+            get => m_Crafter;
             set
             {
                 m_Crafter = value;
@@ -30,10 +27,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public bool Exceptional
         {
-            get
-            {
-                return m_Exceptional;
-            }
+            get => m_Exceptional;
             set
             {
                 m_Exceptional = value;
@@ -44,10 +38,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public CraftResource Resource
         {
-            get
-            {
-                return m_Resource;
-            }
+            get => m_Resource;
             set
             {
                 m_Resource = value;
@@ -161,7 +152,7 @@ namespace Server.Items
 
         public int OnCraft(int quality, bool makersMark, Mobile from, CraftSystem craftSystem, Type typeRes, ITool tool, CraftItem craftItem, int resHue)
         {
-            Exceptional = (quality >= 2);
+            Exceptional = quality >= 2;
 
             if (makersMark)
                 Crafter = from;

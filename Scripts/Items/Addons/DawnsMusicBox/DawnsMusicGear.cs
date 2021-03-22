@@ -1,4 +1,4 @@
-﻿using Server.Targeting;
+using Server.Targeting;
 
 namespace Server.Items
 {
@@ -29,18 +29,10 @@ namespace Server.Items
         public static DawnsMusicGear RandomCommon => new DawnsMusicGear(DawnsMusicBox.RandomTrack(DawnsMusicRarity.Common));
         public static DawnsMusicGear RandomUncommon => new DawnsMusicGear(DawnsMusicBox.RandomTrack(DawnsMusicRarity.Uncommon));
         public static DawnsMusicGear RandomRare => new DawnsMusicGear(DawnsMusicBox.RandomTrack(DawnsMusicRarity.Rare));
+
         [CommandProperty(AccessLevel.GameMaster)]
-        public MusicName Music
-        {
-            get
-            {
-                return m_Music;
-            }
-            set
-            {
-                m_Music = value;
-            }
-        }
+        public MusicName Music { get => m_Music; set => m_Music = value; }
+
         public override void AddNameProperty(ObjectPropertyList list)
         {
             DawnsMusicInfo info = DawnsMusicBox.GetInfo(m_Music);

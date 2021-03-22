@@ -482,12 +482,30 @@ namespace Server.Misc
 
         public static bool CheckAggressor(List<AggressorInfo> list, Mobile target)
         {
-            return list != null && list.Any(info => info.Attacker == target);
+            for (int i = 0; i < list.Count; ++i)
+            {
+                if (list[i].Attacker == target)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
-        public static bool CheckAggressed(List<AggressorInfo> list, Mobile target)
+        public static bool CheckAggressed( List<AggressorInfo> list, Mobile target )
         {
-            return list != null && list.Any(info => info.CriminalAggression && info.Defender == target);
+            for( int i = 0; i < list.Count; ++i )
+            {
+                AggressorInfo info = list[i];
+
+                if (!info.CriminalAggression && info.Defender == target)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public static bool CheckPetAggressor(PlayerMobile source, Mobile target)

@@ -4,7 +4,7 @@ namespace Server.Items
 {
     public class PowerScroll : SpecialScroll
     {
-        private static readonly SkillName[] m_Skills = new SkillName[]
+        private static readonly SkillName[] m_Skills =
         {
             SkillName.Blacksmith,
             SkillName.Tailoring,
@@ -100,7 +100,7 @@ namespace Server.Items
             min /= 5;
             max /= 5;
 
-            return new PowerScroll(Skills[Utility.Random(Skills.Count)], 100 + (Utility.RandomMinMax(min, max) * 5));
+            return new PowerScroll(Skills[Utility.Random(Skills.Count)], 100 + Utility.RandomMinMax(min, max) * 5);
         }
 
         public static PowerScroll CreateRandomNoCraft(int min, int max)
@@ -116,7 +116,7 @@ namespace Server.Items
             }
             while (skillName == SkillName.Blacksmith || skillName == SkillName.Tailoring || skillName == SkillName.Imbuing);
 
-            return new PowerScroll(skillName, 100 + (Utility.RandomMinMax(min, max) * 5));
+            return new PowerScroll(skillName, 100 + Utility.RandomMinMax(min, max) * 5);
         }
 
         public override void AddNameProperty(ObjectPropertyList list)
@@ -175,25 +175,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = (InheritsItem ? 0 : reader.ReadInt()); // Required for SpecialScroll insertion
-
-            if (Value == 105.0 || Skill == SkillName.Blacksmith || Skill == SkillName.Tailoring)
-            {
-                LootType = LootType.Regular;
-            }
-            else
-            {
-                LootType = LootType.Cursed;
-                Insured = false;
-            }
+            int version = InheritsItem ? 0 : reader.ReadInt(); // Required for SpecialScroll insertion
         }
     }
 }

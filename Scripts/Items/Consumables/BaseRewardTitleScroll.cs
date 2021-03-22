@@ -30,8 +30,8 @@ namespace Server.Items
 
         private class InternalGump : Gump
         {
-            public BaseRewardTitleToken Token { get; set; }
-            public PlayerMobile User { get; set; }
+            public BaseRewardTitleToken Token { get; }
+            public PlayerMobile User { get; }
 
             public InternalGump(PlayerMobile pm, BaseRewardTitleToken token) : base(50, 50)
             {
@@ -49,14 +49,14 @@ namespace Server.Items
                 int i = 0;
                 Token.Titles.ForEach(tuple =>
                     {
-                        AddButton(23, 68 + (i * 20), 1209, 1210, i + 1, GumpButtonType.Reply, 0);
+                        AddButton(23, 68 + i * 20, 1209, 1210, i + 1, GumpButtonType.Reply, 0);
 
                         TextDefinition textdef = tuple.Item1;
 
                         if (textdef.Number > 0)
-                            AddHtmlLocalized(50, 65 + (i * 20), 240, 20, textdef.Number, 0xFFFF, false, false);
+                            AddHtmlLocalized(50, 65 + i * 20, 240, 20, textdef.Number, 0xFFFF, false, false);
                         else if (!string.IsNullOrEmpty(textdef.String))
-                            AddHtml(50, 65 + (i * 20), 240, 20, string.Format("<basefond color=#FFFFFF>{0}", textdef.String), false, false);
+                            AddHtml(50, 65 + i * 20, 240, 20, string.Format("<basefond color=#FFFFFF>{0}", textdef.String), false, false);
 
                         i++;
                     });
@@ -99,7 +99,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             Titles = new List<Tuple<TextDefinition, Type>>();
             InitializeTitles();

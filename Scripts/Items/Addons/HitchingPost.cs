@@ -19,25 +19,12 @@ namespace Server.Items
         private bool m_Replica;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public SecureLevel Level
-        {
-            get
-            {
-                return m_Level;
-            }
-            set
-            {
-                m_Level = value;
-            }
-        }
+        public SecureLevel Level { get => m_Level; set => m_Level = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public int Charges
         {
-            get
-            {
-                return m_Charges;
-            }
+            get => m_Charges;
             set
             {
                 m_Charges = value;
@@ -52,10 +39,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int UsesRemaining
         {
-            get
-            {
-                return m_UsesRemaining;
-            }
+            get => m_UsesRemaining;
             set
             {
                 m_UsesRemaining = value;
@@ -66,7 +50,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public bool Replica
         {
-            get { return m_Replica; }
+            get => m_Replica;
             set
             {
                 m_Replica = value;
@@ -148,8 +132,8 @@ namespace Server.Items
 
                 AddPage(0);
 
-                AddBackground(0, 0, 325, 50 + (list.Count * 20), 9250);
-                AddAlphaRegion(5, 5, 315, 40 + (list.Count * 20));
+                AddBackground(0, 0, 325, 50 + list.Count * 20, 9250);
+                AddAlphaRegion(5, 5, 315, 40 + list.Count * 20);
 
                 AddHtml(15, 15, 275, 20, "<BASEFONT COLOR=#FFFFFF>Select a pet to retrieve from the stables:</BASEFONT>", false, false);
 
@@ -160,8 +144,8 @@ namespace Server.Items
                     if (pet == null || pet.Deleted)
                         continue;
 
-                    AddButton(15, 39 + (i * 20), 10006, 10006, i + 1, GumpButtonType.Reply, 0);
-                    AddHtml(32, 35 + (i * 20), 275, 18, string.Format("<BASEFONT COLOR=#C0C0EE>{0}</BASEFONT>", pet.Name), false, false);
+                    AddButton(15, 39 + i * 20, 10006, 10006, i + 1, GumpButtonType.Reply, 0);
+                    AddHtml(32, 35 + i * 20, 275, 18, string.Format("<BASEFONT COLOR=#C0C0EE>{0}</BASEFONT>", pet.Name), false, false);
                 }
             }
 
@@ -246,7 +230,7 @@ namespace Server.Items
             if (pet == null || pet.Deleted || from.Map != Map || !from.InRange(this, 14) || !from.Stabled.Contains(pet) || !from.CheckAlive())
                 return;
 
-            if ((from.Followers + pet.ControlSlots) <= from.FollowersMax)
+            if (from.Followers + pet.ControlSlots <= from.FollowersMax)
             {
                 pet.SetControlMaster(from);
 
@@ -318,17 +302,15 @@ namespace Server.Items
             {
                 from.SendLocalizedMessage(502673); // I can not stable summoned creatures.
             }
-            #region Mondain's Legacy
             else if (pet.Allured)
             {
                 from.SendLocalizedMessage(1048053); // You can't stable that!
             }
-            #endregion
             else if (pet.Body.IsHuman)
             {
                 from.SendLocalizedMessage(502672); // HA HA HA! Sorry, I am not an inn.
             }
-            else if ((pet is PackLlama || pet is PackHorse || pet is Beetle) && (pet.Backpack != null && pet.Backpack.Items.Count > 0))
+            else if ((pet is PackLlama || pet is PackHorse || pet is Beetle) && pet.Backpack != null && pet.Backpack.Items.Count > 0)
             {
                 from.SendLocalizedMessage(1042563); // You need to unload your pet.
             }
@@ -344,7 +326,7 @@ namespace Server.Items
             {
                 Container bank = from.FindBankNoCreate();
 
-                if ((bank != null && bank.ConsumeTotal(typeof(Gold), 30)) || Banker.Withdraw(from, 30, true))
+                if (bank != null && bank.ConsumeTotal(typeof(Gold), 30) || Banker.Withdraw(from, 30, true))
                 {
                     pet.ControlTarget = null;
                     pet.ControlOrder = OrderType.Stay;
@@ -409,7 +391,7 @@ namespace Server.Items
 
                     ++stabled;
 
-                    if ((from.Followers + pet.ControlSlots) <= from.FollowersMax)
+                    if (from.Followers + pet.ControlSlots <= from.FollowersMax)
                     {
                         pet.SetControlMaster(from);
 
@@ -450,7 +432,7 @@ namespace Server.Items
         {
             BaseHouse house = BaseHouse.FindHouseAt(this);
 
-            return (house != null && house.IsOwner(mob));
+            return house != null && house.IsOwner(mob);
         }
 
         public bool CheckAccess(Mobile m)
@@ -463,7 +445,7 @@ namespace Server.Items
             if (house != null && (house.Public ? house.IsBanned(m) : !house.HasAccess(m)))
                 return false;
 
-            return (house != null && house.HasSecureAccess(m, m_Level));
+            return house != null && house.HasSecureAccess(m, m_Level);
         }
 
         public override bool HandlesOnSpeech => true;

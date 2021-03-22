@@ -202,6 +202,7 @@ namespace Server.Multis
 
     public class PumpkinRowBoatDeed : BaseBoatDeed
     {
+        public override bool IsRowBoatDeed => true;
         public override int LabelNumber => 1159233;  // Pumpkin Rowboat
         public override BaseBoat Boat => new PumpkinRowBoat(BoatDirection);
 

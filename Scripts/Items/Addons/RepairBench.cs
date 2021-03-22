@@ -49,7 +49,7 @@ namespace Server.Items
     {
         public List<RepairBenchDefinition> Tools;
 
-        public static RepairBenchDefinition[] Definitions = new RepairBenchDefinition[]
+        public static RepairBenchDefinition[] Definitions =
         {
             new RepairBenchDefinition(DefTinkering.CraftSystem, RepairSkillType.Tinkering, 1044097, 0, 0),
             new RepairBenchDefinition(DefBlacksmithy.CraftSystem, RepairSkillType.Smithing, 1044067, 0, 0),
@@ -182,7 +182,7 @@ namespace Server.Items
 
         public override void OnComponentUsed(AddonComponent c, Mobile from)
         {
-            if ((from.InRange(c.Location, 2)))
+            if (from.InRange(c.Location, 2))
             {
                 BaseHouse house = BaseHouse.FindHouseAt(from);
 
@@ -291,7 +291,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsRewardItem
         {
-            get { return m_IsRewardItem; }
+            get => m_IsRewardItem;
             set
             {
                 m_IsRewardItem = value;
@@ -309,7 +309,6 @@ namespace Server.Items
 
         [Constructable]
         public RepairBenchDeed(List<RepairBenchDefinition> tools)
-            : base()
         {
             Tools = tools;
             LootType = LootType.Blessed;
@@ -408,11 +407,11 @@ namespace Server.Items
 
     public class RepairBenchDefinition
     {
-        public CraftSystem System { get; set; }
-        public RepairSkillType Skill { get; set; }
+        public CraftSystem System { get; }
+        public RepairSkillType Skill { get; }
         public double SkillValue { get; set; }
         public int Charges { get; set; }
-        public int Cliloc { get; set; }
+        public int Cliloc { get; }
 
         public RepairBenchDefinition(CraftSystem system, RepairSkillType skill, int cliloc, double value, int charges)
         {
@@ -599,7 +598,7 @@ namespace Server.Items
 
             protected override void OnTarget(Mobile from, object targeted)
             {
-                if (m_Addon == null || m_Addon.Deleted || (targeted is Item item && !from.InRange(item.GetWorldLocation(), 2)))
+                if (m_Addon == null || m_Addon.Deleted || targeted is Item item && !from.InRange(item.GetWorldLocation(), 2))
                 {
                     return;
                 }

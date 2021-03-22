@@ -58,63 +58,17 @@ namespace Server.Mobiles
             }
         }
 
-        public BaseHouse House
-        {
-            get
-            {
-                return m_House;
-            }
-            set
-            {
-                m_House = value;
-            }
-        }
-        public string VendorName
-        {
-            get
-            {
-                return m_VendorName;
-            }
-            set
-            {
-                m_VendorName = value;
-            }
-        }
-        public string ShopName
-        {
-            get
-            {
-                return m_ShopName;
-            }
-            set
-            {
-                m_ShopName = value;
-            }
-        }
-        public Mobile Owner
-        {
-            get
-            {
-                return m_Owner;
-            }
-            set
-            {
-                m_Owner = value;
-            }
-        }
+        public BaseHouse House { get => m_House; set => m_House = value; }
+        public string VendorName { get => m_VendorName; set => m_VendorName = value; }
+        public string ShopName { get => m_ShopName; set => m_ShopName = value; }
+        public Mobile Owner { get => m_Owner; set => m_Owner = value; }
+
         public List<Item> Items => m_Items;
-        public int Gold
-        {
-            get
-            {
-                return m_Gold;
-            }
-            set
-            {
-                m_Gold = value;
-            }
-        }
+
+        public int Gold { get => m_Gold; set => m_Gold = value; }
+
         public DateTime ExpireTime => m_ExpireTime;
+
         public void AddItem(Item item)
         {
             item.Internalize();
@@ -132,7 +86,9 @@ namespace Server.Mobiles
             Gold = 0;
 
             if (House != null)
+            {
                 House.VendorInventories.Remove(this);
+            }
 
             m_ExpireTimer.Stop();
         }
@@ -177,7 +133,9 @@ namespace Server.Mobiles
                         else
                         {
                             if (house.MovingCrate == null)
+                            {
                                 house.MovingCrate = new MovingCrate(house);
+                            }
 
                             Banker.Deposit(house.MovingCrate, m_Inventory.Gold);
                         }
@@ -186,7 +144,9 @@ namespace Server.Mobiles
                     foreach (Item item in m_Inventory.Items)
                     {
                         if (!item.Deleted)
+                        {
                             house.DropToMovingCrate(item);
+                        }
                     }
 
                     m_Inventory.Gold = 0;

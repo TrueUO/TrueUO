@@ -82,7 +82,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         private static void ReleaseBolaLock(object state)
@@ -186,7 +186,7 @@ namespace Server.Items
                 if (m_Bola.Deleted)
                     return;
 
-                if ((obj is Item item))
+                if (obj is Item item)
                 {
                     item.PrivateOverheadMessage(MessageType.Regular, 0x3B2, 1049628, from.NetState); // You have no reason to throw a bola at that.
                     return;

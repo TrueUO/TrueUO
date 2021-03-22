@@ -32,49 +32,31 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int UsesRemaining
         {
-            get
-            {
-                return m_UsesRemaining;
-            }
+            get => m_UsesRemaining;
             set
             {
                 m_UsesRemaining = value;
                 InvalidateProperties();
             }
         }
-        public bool ShowUsesRemaining
-        {
-            get
-            {
-                return true;
-            }
-            set
-            {
-            }
-        }
+        public bool ShowUsesRemaining { get => true; set { } }
+
         public override int LabelNumber => 1049082;// powder of fortifying
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0);
+
             writer.Write(m_UsesRemaining);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 0:
-                    {
-                        m_UsesRemaining = reader.ReadInt();
-                        break;
-                    }
-            }
+            m_UsesRemaining = reader.ReadInt();
         }
 
         public override void AddUsesRemainingProperties(ObjectPropertyList list)
@@ -84,7 +66,7 @@ namespace Server.Items
 
         public virtual void DisplayDurabilityTo(Mobile m)
         {
-            LabelToAffix(m, 1017323, AffixType.Append, ": " + m_UsesRemaining.ToString()); // Durability
+            LabelToAffix(m, 1017323, AffixType.Append, ": " + m_UsesRemaining); // Durability
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -117,35 +99,38 @@ namespace Server.Items
                     bool noGo = false;
                     int antique = 0;
 
-                    if (!Engines.Craft.Repair.AllowsRepair(item, null) || (item is BaseJewel && !CanPOFJewelry))
+                    if (!Engines.Craft.Repair.AllowsRepair(item, null) || item is BaseJewel && !CanPOFJewelry)
                     {
                         from.SendLocalizedMessage(1049083); // You cannot use the powder on that item.
                         return;
                     }
 
-                    #region SA
                     if (item is BaseWeapon weapon)
                     {
                         if (weapon.Attributes.Brittle > 0 || weapon.NegativeAttributes.Brittle > 0)
                             noGo = true;
+
                         antique = weapon.NegativeAttributes.Antique;
                     }
                     else if (item is BaseArmor armor)
                     {
                         if (armor.Attributes.Brittle > 0 || armor.NegativeAttributes.Brittle > 0)
                             noGo = true;
+
                         antique = armor.NegativeAttributes.Antique;
                     }
                     else if (item is BaseClothing clothing)
                     {
                         if (clothing.Attributes.Brittle > 0 || clothing.NegativeAttributes.Brittle > 0)
                             noGo = true;
+
                         antique = clothing.NegativeAttributes.Antique;
                     }
                     else if (item is BaseJewel jewel)
                     {
                         if (jewel.Attributes.Brittle > 0 || jewel.NegativeAttributes.Brittle > 0)
                             noGo = true;
+
                         antique = jewel.NegativeAttributes.Antique;
                     }
                     else if (item is BaseTalisman talisman && talisman.Attributes.Brittle > 0)
@@ -157,7 +142,6 @@ namespace Server.Items
                         from.SendLocalizedMessage(1149799); //That cannot be used on brittle items.
                         return;
                     }
-                    #endregion
 
                     if (item is IDurability wearable)
                     {

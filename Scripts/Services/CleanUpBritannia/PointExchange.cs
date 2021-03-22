@@ -1,4 +1,4 @@
-﻿using Server.Gumps;
+using Server.Gumps;
 using Server.Mobiles;
 
 namespace Server.Engines.Points
@@ -26,10 +26,10 @@ namespace Server.Engines.Points
 
             if (m.InRange(Location, 3))
             {
-                if (m is PlayerMobile)
+                if (m is PlayerMobile pm)
                 {
-                    m.CloseGump(typeof(InternalGump));
-                    BaseGump.SendGump(new InternalGump((PlayerMobile)m));
+                    pm.CloseGump(typeof(InternalGump));
+                    BaseGump.SendGump(new InternalGump(pm));
                 }
             }
             else

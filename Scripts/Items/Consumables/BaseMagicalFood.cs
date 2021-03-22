@@ -7,7 +7,7 @@ namespace Server.Items
     {
         None = 0x0,
         GrapesOfWrath = 0x1,
-        EnchantedApple = 0x2,
+        EnchantedApple = 0x2
     }
 
     public class BaseMagicalFood : Food
@@ -63,7 +63,7 @@ namespace Server.Items
 
         public static void EndInfluence(object obj)
         {
-            if (obj is object[] args && (args.Length == 3))
+            if (obj is object[] args && args.Length == 3)
             {
                 if (args[0] is Mobile && args[1] is MagicalFood && args[2] is TimeSpan)
                     EndInfluence((Mobile)args[0], (MagicalFood)args[1], (TimeSpan)args[2]);
@@ -72,7 +72,7 @@ namespace Server.Items
 
         public static void EndInfluence(Mobile mob, MagicalFood id, TimeSpan cooldown)
         {
-            m_Table[mob] = (int)m_Table[mob] & ~((int)id);
+            m_Table[mob] = (int)m_Table[mob] & ~(int)id;
 
             if (cooldown != TimeSpan.Zero)
             {
@@ -90,7 +90,7 @@ namespace Server.Items
 
         public static void EndCooldown(object obj)
         {
-            if (obj is object[] args && (args.Length == 2))
+            if (obj is object[] args && args.Length == 2)
             {
                 if (args[0] is Mobile && args[1] is MagicalFood)
                     EndCooldown((Mobile)args[0], (MagicalFood)args[1]);
@@ -99,7 +99,7 @@ namespace Server.Items
 
         public static void EndCooldown(Mobile mob, MagicalFood id)
         {
-            m_Cooldown[mob] = (int)m_Cooldown[mob] & ~((int)id);
+            m_Cooldown[mob] = (int)m_Cooldown[mob] & ~(int)id;
         }
 
         public override bool Eat(Mobile from)
@@ -115,8 +115,8 @@ namespace Server.Items
 
                     return true;
                 }
-                else
-                    from.SendLocalizedMessage(1070772); // You must wait a few seconds before you can use that item.
+
+                from.SendLocalizedMessage(1070772); // You must wait a few seconds before you can use that item.
             }
 
             return false;
@@ -125,15 +125,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

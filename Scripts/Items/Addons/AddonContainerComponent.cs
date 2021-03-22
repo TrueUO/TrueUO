@@ -32,7 +32,7 @@ namespace Server.Items
         [Hue, CommandProperty(AccessLevel.GameMaster)]
         public override int Hue
         {
-            get { return base.Hue; }
+            get => base.Hue;
             set
             {
                 base.Hue = value;

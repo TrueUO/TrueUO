@@ -61,7 +61,6 @@ namespace Server.Items
 
         [Constructable]
         public MarbleTableDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

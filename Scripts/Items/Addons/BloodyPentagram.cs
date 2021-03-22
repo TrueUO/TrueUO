@@ -36,7 +36,6 @@ namespace Server.Items
         private bool m_IsRewardItem;
         [Constructable]
         public BloodyPentagramAddon()
-            : base()
         {
             AddComponent(new BloodyPentagramComponent(0x1CF9), 0, 1, 0);
             AddComponent(new BloodyPentagramComponent(0x1CF8), 0, 2, 0);
@@ -96,23 +95,21 @@ namespace Server.Items
                 return deed;
             }
         }
+
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsRewardItem
         {
-            get
-            {
-                return m_IsRewardItem;
-            }
+            get => m_IsRewardItem;
             set
             {
                 m_IsRewardItem = value;
                 InvalidateProperties();
             }
         }
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
 
             writer.Write(m_IsRewardItem);
@@ -121,8 +118,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
 
             m_IsRewardItem = reader.ReadBool();
         }
@@ -133,7 +129,6 @@ namespace Server.Items
         private bool m_IsRewardItem;
         [Constructable]
         public BloodyPentagramDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }
@@ -144,6 +139,7 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1080384;// Bloody Pentagram
+
         public override BaseAddon Addon
         {
             get
@@ -156,19 +152,18 @@ namespace Server.Items
                 return addon;
             }
         }
+
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsRewardItem
         {
-            get
-            {
-                return m_IsRewardItem;
-            }
+            get => m_IsRewardItem;
             set
             {
                 m_IsRewardItem = value;
                 InvalidateProperties();
             }
         }
+
         public override void OnDoubleClick(Mobile from)
         {
             if (m_IsRewardItem && !RewardSystem.CheckIsUsableBy(from, this, null))
@@ -188,7 +183,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
 
             writer.Write(m_IsRewardItem);
@@ -197,8 +191,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
 
             m_IsRewardItem = reader.ReadBool();
         }

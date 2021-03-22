@@ -11,7 +11,7 @@ namespace Server.Items.MusicBox
 
     public class TrackInfo
     {
-        private static readonly TrackInfo[] m_Table = new TrackInfo[]
+        private static readonly TrackInfo[] m_Table =
         {
             // There are currently 40 Common Music Box Gears
             new TrackInfo(56, 1075152, MusicName.Samlethe, TrackRarity.Common),
@@ -88,54 +88,18 @@ namespace Server.Items.MusicBox
             m_Rarity = rarity;
         }
 
-        public int Duration
-        {
-            get
-            {
-                return m_Duration;
-            }
-            set
-            {
-                m_Duration = value;
-            }
-        }
-        public int Label
-        {
-            get
-            {
-                return m_Label;
-            }
-            set
-            {
-                m_Label = value;
-            }
-        }
-        public MusicName Name
-        {
-            get
-            {
-                return m_Name;
-            }
-            set
-            {
-                m_Name = value;
-            }
-        }
-        public TrackRarity Rarity
-        {
-            get
-            {
-                return m_Rarity;
-            }
-            set
-            {
-                m_Rarity = value;
-            }
-        }
+        public int Duration { get => m_Duration; set => m_Duration = value; }
+
+        public int Label { get => m_Label; set => m_Label = value; }
+
+        public MusicName Name { get => m_Name; set => m_Name = value; }
+
+        public TrackRarity Rarity { get => m_Rarity; set => m_Rarity = value; }
+
         /// <summary>
         /// Static. Method to obtain a TrackInfo from a MusicName.
         /// </summary>
-        /// <param name="name"></param> MusicName to retrieve its TrackInfo</param>
+        /// <param name="name">MusicName to retrieve its TrackInfo</param> 
         /// <returns>a TrackInfo if name is valid; first TrackInfo in the list otherwise.</returns>
         public static TrackInfo GetInfo(MusicName name)
         {
@@ -151,7 +115,6 @@ namespace Server.Items.MusicBox
         /// <summary>
         /// Static. Method to obtain a TrackInfo from a label.
         /// </summary>
-        /// <param name="name"></param> MusicName to retrieve its TrackInfo</param>
         /// <returns>a TrackInfo if label is valid; first TrackInfo in the list otherwise.</returns>
         public static TrackInfo GetInfo(int label)
         {
@@ -167,7 +130,7 @@ namespace Server.Items.MusicBox
         /// <summary>
         /// Static. Method to obtain a MusicName with a choosen TrackRarity.
         /// </summary>
-        /// <param name="rarity"></param>TrackRarity for the MusicName</param>
+        /// <param name="rarity">TrackRarity for the MusicName</param>
         /// <returns>a random MusicName available in the Dawn's music box with appropriate rarity.</returns>
         public static MusicName RandomSong(TrackRarity rarity)
         {

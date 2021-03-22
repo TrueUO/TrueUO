@@ -15,18 +15,17 @@ namespace Server.Items
         }
 
         public override BaseAddonDeed Deed => new SmallBedEastDeed();
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -44,18 +43,17 @@ namespace Server.Items
 
         public override BaseAddon Addon => new SmallBedEastAddon();
         public override int LabelNumber => 1044322;// small bed (east)
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

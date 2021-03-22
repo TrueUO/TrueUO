@@ -23,7 +23,6 @@ namespace Server.Items
         public Firebomb(int itemID)
             : base(itemID)
         {
-            //Name = "a firebomb";
             Weight = 2.0;
             Hue = 1260;
         }
@@ -36,15 +35,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -55,7 +52,7 @@ namespace Server.Items
                 return;
             }
 
-            if (from.Paralyzed || from.Frozen || (from.Spell != null && from.Spell.IsCasting))
+            if (from.Paralyzed || from.Frozen || from.Spell != null && from.Spell.IsCasting)
             {
                 // to prevent exploiting for pvp
                 from.SendLocalizedMessage(1075857); // You cannot use that while paralyzed.
@@ -164,7 +161,7 @@ namespace Server.Items
 
             foreach (Mobile m in eable)
             {
-                if (m_LitBy == null || (SpellHelper.ValidIndirectTarget(m_LitBy, m) && m_LitBy.CanBeHarmful(m, false)))
+                if (m_LitBy == null || SpellHelper.ValidIndirectTarget(m_LitBy, m) && m_LitBy.CanBeHarmful(m, false))
                 {
                     yield return m;
                 }
@@ -262,7 +259,7 @@ namespace Server.Items
 
         public override bool OnMoveOver(Mobile m)
         {
-            if (ItemID == 0x398C && m_LitBy == null || (SpellHelper.ValidIndirectTarget(m_LitBy, m) && m_LitBy.CanBeHarmful(m, false)))
+            if (ItemID == 0x398C && m_LitBy == null || SpellHelper.ValidIndirectTarget(m_LitBy, m) && m_LitBy.CanBeHarmful(m, false))
             {
                 if (m_LitBy != null)
                     m_LitBy.DoHarmful(m);
@@ -296,7 +293,7 @@ namespace Server.Items
             {
                 victim = m_Burning[i];
 
-                if (victim.Location == Location && victim.Map == Map && (m_LitBy == null || (SpellHelper.ValidIndirectTarget(m_LitBy, victim) && m_LitBy.CanBeHarmful(victim, false))))
+                if (victim.Location == Location && victim.Map == Map && (m_LitBy == null || SpellHelper.ValidIndirectTarget(m_LitBy, victim) && m_LitBy.CanBeHarmful(victim, false)))
                 {
                     if (m_LitBy != null)
                         m_LitBy.DoHarmful(victim);

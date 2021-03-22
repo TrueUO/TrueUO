@@ -70,7 +70,9 @@ namespace Server.Items
         public override void OnDoubleClick(Mobile from)
         {
             if (!Multis.DesignContext.Check(from))
+            {
                 return; // They are customizing
+            }
 
             if (!IsChildOf(from.Backpack))
             {
@@ -78,20 +80,22 @@ namespace Server.Items
                 return;
             }
 
-            #region SA
-            else if (from.Flying && from is PlayerMobile && BaseMount.OnFlightPath(from))
+            if (from.Flying && from is PlayerMobile && BaseMount.OnFlightPath(from))
             {
                 from.SendLocalizedMessage(1113749); // You may not use that while flying over such precarious terrain.
                 return;
             }
-            #endregion
 
             Spell spell = SpellRegistry.NewSpell(m_SpellID, from, this);
 
             if (spell != null)
+            {
                 spell.Cast();
+            }
             else
+            {
                 from.SendLocalizedMessage(502345); // This spell has been temporarily disabled.
+            }
         }
     }
 }

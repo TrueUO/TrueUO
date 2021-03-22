@@ -33,7 +33,6 @@ namespace Server.Items
     {
         [Constructable]
         public LargeFishingNetAddon()
-            : base()
         {
             AddComponent(new LargeFishingNetComponent(), 0, 0, 0);
         }
@@ -63,7 +62,6 @@ namespace Server.Items
     {
         [Constructable]
         public LargeFishingNetDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

@@ -58,9 +58,8 @@ namespace Server.Items
 
                 Map map = from.Map;
 
-                if (targeted is LandTarget && map != null)
+                if (targeted is LandTarget lt && map != null)
                 {
-                    LandTarget lt = (LandTarget)targeted;
                     Region r = Region.Find(lt.Location, map);
 
                     if (r != null && r.IsPartOf("Magincia") && (lt.Name == "dirt" || lt.Name == "grass"))
@@ -71,7 +70,8 @@ namespace Server.Items
                             {
                                 return;
                             }
-                            else if (from.Mounted || from.Flying)
+
+                            if (from.Mounted || from.Flying)
                             {
                                 from.SendLocalizedMessage(501864); // You can't mine while riding.
                             }
@@ -135,7 +135,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

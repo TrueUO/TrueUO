@@ -573,7 +573,7 @@ namespace Server.Items
                             return false;
                         else if ((index == 5 || index == 9) && HasOption(options, ReforgingOption.StructuralAndFundamental))
                             return false;
-                        else if ((index == 5 || index == 9 || index == 5) && HasOption(options, ReforgingOption.PowerfulStructuralAndFundamental))
+                        else if ((index == 5 || index == 9) && HasOption(options, ReforgingOption.PowerfulStructuralAndFundamental))
                             return false;
                         break;
                     case CraftResource.Bronze:
@@ -712,12 +712,12 @@ namespace Server.Items
                 }
                 else if (0.5 > Utility.RandomDouble())
                 {
-                    prefixCount = (maxmods / 2) - 1;
+                    prefixCount = maxmods / 2 - 1;
                     suffixCount = maxmods - prefixCount;
                 }
                 else
                 {
-                    suffixCount = (maxmods / 2) - 1;
+                    suffixCount = maxmods / 2 - 1;
                     prefixCount = maxmods - suffixCount;
                 }
             }
@@ -783,9 +783,9 @@ namespace Server.Items
             object attribute = col.Attribute;
 
             // Converts Collection entry into actual attribute
-            if (attribute is string)
+            if (attribute is string s)
             {
-                switch ((string)attribute)
+                switch (s)
                 {
                     case "RandomEater": attribute = GetRandomEater(); break;
                     case "HitSpell": attribute = GetRandomHitSpell(); break;
@@ -958,12 +958,11 @@ namespace Server.Items
 
             int scaledBy = Math.Abs(min - max) + 1;
 
-            if (scaledBy != 0)
-                scaledBy = 10000 / scaledBy;
+            scaledBy = 10000 / scaledBy;
 
-            percent *= (10000 + scaledBy);
+            percent *= 10000 + scaledBy;
 
-            return min + ((max - min) * percent) / 1000001;
+            return min + (max - min) * percent / 1000001;
         }
 
         private static int CalculateValue(Item item, object attribute, int min, int max, int perclow, int perchigh, ref int budget, int luckchance)
@@ -975,7 +974,7 @@ namespace Server.Items
         {
             int scale = Math.Max(1, ItemPropertyInfo.GetScale(item, attribute, true));
 
-            if (scale > 0 && min < scale)
+            if (min < scale)
             {
                 min = scale;
             }
@@ -984,7 +983,7 @@ namespace Server.Items
 
             if (scale > 1 && value > scale)
             {
-                value = (value / scale) * scale;
+                value = value / scale * scale;
             }
 
             int totalweight = ItemPropertyInfo.GetTotalWeight(item, attribute, value);
@@ -1551,7 +1550,7 @@ namespace Server.Items
 
                 if (scale > 1 && value > scale)
                 {
-                    value = (value / scale) * scale;
+                    value = value / scale * scale;
                 }
 
                 return value;
@@ -1635,7 +1634,7 @@ namespace Server.Items
                     sk = SkillName.Throwing;
 
                 for (int i = 0; !found && i < 5; ++i)
-                    found = (skillbonuses.GetValues(i, out check, out bonus) && check == sk);
+                    found = skillbonuses.GetValues(i, out check, out bonus) && check == sk;
             } while (found);
 
             return sk;
@@ -1940,7 +1939,7 @@ namespace Server.Items
                     double perc = 0.0;
                     double highest = 0.0;
 
-                    for (int i = 0; i < 1 + (rawLuck / 600); i++)
+                    for (int i = 0; i < 1 + rawLuck / 600; i++)
                     {
                         perc = (100.0 - Math.Sqrt(Utility.RandomMinMax(0, 10000))) / 100.0;
 
@@ -1953,7 +1952,7 @@ namespace Server.Items
                     if (perc > 1.0) perc = 1.0;
                     int toAdd = Math.Min(500, RandomItemGenerator.MaxAdjustedBudget - basebudget);
 
-                    budget = Utility.RandomMinMax(basebudget - (basebudget / divisor), (int)(basebudget + (toAdd * perc))) + budgetBonus;
+                    budget = Utility.RandomMinMax(basebudget - basebudget / divisor, (int)(basebudget + toAdd * perc)) + budgetBonus;
 
                     // Gives a rare chance for a high end item to drop on a low budgeted monster
                     if (rawLuck > 0 && !IsPowerful(budget) && LootPack.CheckLuck(luckchance / 6))
@@ -2020,7 +2019,7 @@ namespace Server.Items
                     {
                         ApplyRandomProperty(item, props, perclow, perchigh, ref addonbudget, luckchance, false, powerful);
 
-                        if (addonbudget <= 0 || mods + (i + 1) >= RandomItemGenerator.MaxProps)
+                        if (addonbudget <= 0 || mods + i + 1 >= RandomItemGenerator.MaxProps)
                             break;
                     }
                 }
@@ -2114,52 +2113,63 @@ namespace Server.Items
             int rnd = Utility.Random(pc);
 
             if (rnd < p10)
+            {
                 return 10;
-            else
-                rnd -= p10;
+            }
+            rnd -= p10;
 
             if (rnd < p9)
+            {
                 return 9;
-            else
-                rnd -= p9;
+            }
+            rnd -= p9;
 
             if (rnd < p8)
+            {
                 return 8;
-            else
-                rnd -= p8;
+            }
+            rnd -= p8;
 
             if (rnd < p7)
+            {
                 return 7;
-            else
-                rnd -= p7;
+            }
+            rnd -= p7;
 
             if (rnd < p6)
+            {
                 return 6;
-            else
-                rnd -= p6;
+            }
+            rnd -= p6;
 
             if (rnd < p5)
+            {
                 return 5;
-            else
-                rnd -= p5;
+            }
+            rnd -= p5;
 
             if (rnd < p4)
+            {
                 return 4;
-            else
-                rnd -= p4;
+            }
+            rnd -= p4;
 
             if (rnd < p3)
+            {
                 return 3;
-            else
-                rnd -= p3;
+            }
+            rnd -= p3;
 
             if (rnd < p2)
+            {
                 return 2;
-            else
-                rnd -= p2;
+            }
+            rnd -= p2;
 
             if (rnd < p1)
+            {
                 return 1;
+            }
 
             return 0;
         }
@@ -2360,7 +2370,7 @@ namespace Server.Items
 
             if (item is BaseJewel && power >= ItemPower.MajorArtifact)
             {
-                if (chance > .25)
+                if (chance > 0.25)
                     neg.Antique = 1;
                 else
                     item.LootType = LootType.Cursed;
@@ -2373,52 +2383,48 @@ namespace Server.Items
                     return 0;
                 case ItemPower.Lesser: // lesser magic
                     {
-                        if (.95 >= chance)
+                        if (0.95 >= chance)
                             return 0;
 
-                        switch (Utility.Random(item is BaseJewel ? 6 : 8))
+                        switch (Utility.Random(item is BaseJewel ? 3 : 5))
                         {
                             case 0: neg.Prized = 1; break;
                             case 1: neg.Antique = 1; break;
-                            case 2:
+                            case 2: item.LootType = LootType.Cursed; break;
                             case 3: neg.Unwieldly = 1; break;
-                            case 4:
-                            case 5: item.LootType = LootType.Cursed; break;
-                            case 6:
-                            case 7: neg.Massive = 1; break;
+                            case 4: neg.Massive = 1; break;
                         }
 
                         return 100;
                     }
                 case ItemPower.Greater:// greater magic
                     {
-                        if (.75 >= chance)
+                        if (0.75 >= chance)
                             return 0;
 
                         chance = Utility.RandomDouble();
 
-                        if (.75 > chance)
+                        if (0.75 > chance)
                         {
-                            switch (Utility.Random(item is BaseJewel ? 4 : 6))
+                            switch (Utility.Random(item is BaseJewel ? 3 : 5))
                             {
                                 case 0: neg.Prized = 1; break;
                                 case 1: neg.Antique = 1; break;
-                                case 2:
+                                case 2: item.LootType = LootType.Cursed; break;
                                 case 3: neg.Unwieldly = 1; break;
-                                case 4:
-                                case 5: neg.Massive = 1; break;
+                                case 4: neg.Massive = 1; break;
                             }
 
                             return 100;
                         }
 
-                        if (.5 > chance)
+                        if (0.5 > chance)
                         {
                             neg.Prized = 1;
                             return 100;
                         }
 
-                        if (.85 > chance)
+                        if (0.85 > chance)
                         {
                             if (Utility.RandomBool() || item is BaseJewel)
                                 neg.Antique = 1;
@@ -2427,52 +2433,45 @@ namespace Server.Items
 
                             return 150;
                         }
-                        else
-                        {
-                            item.LootType = LootType.Cursed;
-                            return 100;
-                        }
+
+                        item.LootType = LootType.Cursed;
+                        return 100;
                     }
                 case ItemPower.Major: // major magic
                     {
-                        if (.50 >= chance)
+                        if (0.50 >= chance)
                             return 0;
 
                         chance = Utility.RandomDouble();
 
-                        if (.4 > chance)
+                        if (0.4 > chance)
                         {
                             neg.Prized = 1;
                             return 100;
                         }
 
-                        if (.6 > chance)
+                        if (0.6 > chance)
                         {
-                            switch (Utility.Random(item is BaseJewel ? 6 : 8))
+                            switch (Utility.Random(item is BaseJewel ? 3 : 5))
                             {
                                 case 0: neg.Prized = 1; break;
                                 case 1: neg.Antique = 1; break;
-                                case 2:
+                                case 2: item.LootType = LootType.Cursed; break;
                                 case 3: neg.Unwieldly = 1; break;
-                                case 4:
-                                case 5: item.LootType = LootType.Cursed; break;
-                                case 6:
-                                case 7: neg.Massive = 1; break;
+                                case 4: neg.Massive = 1; break;
                             }
 
                             return 100;
                         }
 
-                        if (.9 > chance || item is BaseJewel)
+                        if (0.9 > chance || item is BaseJewel)
                         {
                             neg.Antique = 1;
                             return 150;
                         }
-                        else
-                        {
-                            neg.Brittle = 1;
-                            return 150;
-                        }
+
+                        neg.Brittle = 1;
+                        return 150;
                     }
                 case ItemPower.LesserArtifact: // lesser arty
                 case ItemPower.GreaterArtifact: // greater arty
@@ -2499,11 +2498,9 @@ namespace Server.Items
                             neg.Antique = 1;
                             return 150;
                         }
-                        else
-                        {
-                            neg.Prized = 1;
-                            return 100;
-                        }
+
+                        neg.Prized = 1;
+                        return 100;
                     }
                 case ItemPower.MajorArtifact:
                 case ItemPower.LegendaryArtifact:
@@ -2522,11 +2519,9 @@ namespace Server.Items
                             item.LootType = LootType.Cursed;
                             return 100;
                         }
-                        else
-                        {
-                            neg.Brittle = 1;
-                            return 100;
-                        }
+
+                        neg.Brittle = 1;
+                        return 100;
                     }
             }
         }
@@ -2565,13 +2560,13 @@ namespace Server.Items
             if (weight <= preArty)
                 return reforged ? ItemPower.ReforgedGreater : ItemPower.Major;
 
-            if (weight < preArty + (arty * .2))
+            if (weight < preArty + arty * .2)
                 return reforged ? ItemPower.ReforgedMajor : ItemPower.LesserArtifact;
 
-            if (weight < preArty + (arty * .4))
+            if (weight < preArty + arty * .4)
                 return reforged ? ItemPower.ReforgedMajor : ItemPower.GreaterArtifact;
 
-            if (weight < preArty + (arty * .7) || totalMods <= 5)
+            if (weight < preArty + arty * .7 || totalMods <= 5)
                 return ItemPower.MajorArtifact;
 
             return reforged ? ItemPower.ReforgedLegendary : ItemPower.LegendaryArtifact;
@@ -2594,7 +2589,7 @@ namespace Server.Items
                 {
                     random = ItemPropertyInfo.GetID(BaseRunicTool.GetRandomSlayer());
                 }
-                else if (random >= 1001 && id <= 1005)
+                else if (random >= 1001)
                 {
                     random = ItemPropertyInfo.GetID(GetRandomSkill(item));
                 }

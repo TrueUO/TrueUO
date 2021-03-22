@@ -16,7 +16,6 @@ namespace Server.Items
     {
         [Constructable]
         public SoulstoneFragmentToken()
-            : base()
         {
         }
 
@@ -28,13 +27,15 @@ namespace Server.Items
         public override TextDefinition ItemGumpName => 1070999;// <center>Soulstone Fragment</center>
         public override TextDefinition ItemName => 1071000;//soulstone fragment
         public override TextDefinition ItemReceiveMessage => 1070976;// A soulstone fragment has been created in your bank box.
+
         public override Item CreateItemFor(Mobile from)
         {
             if (from != null && from.Account != null)
-
+            {
                 return new SoulstoneFragment(from.Account.ToString());
-            else
-                return null;
+            }
+
+            return null;
         }
 
         public override void Serialize(GenericWriter writer)
@@ -63,7 +64,6 @@ namespace Server.Items
 
         [Constructable]
         public SoulstoneToken(SoulstoneType type)
-            : base()
         {
             Type = type;
         }

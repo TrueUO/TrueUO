@@ -11,9 +11,9 @@ namespace Server.Items
         private int m_UsesRemaining;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int UsesRemaining { get { return m_UsesRemaining; } set { m_UsesRemaining = value; if (m_UsesRemaining <= 0) Delete(); else InvalidateProperties(); } }
+        public int UsesRemaining { get => m_UsesRemaining; set { m_UsesRemaining = value; if (m_UsesRemaining <= 0) Delete(); else InvalidateProperties(); } }
 
-        public bool ShowUsesRemaining { get { return false; } set { { } } }
+        public bool ShowUsesRemaining { get => false; set { { } } }
 
         [Constructable]
         public ScouringToxin()

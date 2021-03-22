@@ -18,7 +18,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int Capacity
         {
-            get { return _Capacity <= 0 ? MaxScrolls : _Capacity; }
+            get => _Capacity <= 0 ? MaxScrolls : _Capacity;
             set
             {
                 _Capacity = value;
@@ -53,9 +53,14 @@ namespace Server.Items
 
         public override void OnDoubleClick(Mobile m)
         {
-            BaseHouse house = BaseHouse.FindHouseAt(this);
+            var parent = RootParent;
 
-            if (m is PlayerMobile mobile && mobile.InRange(GetWorldLocation(), 2) /*&& (house == null || house.HasSecureAccess(m, this))*/)
+            if (parent != null && parent != m)
+            {
+                m.SendLocalizedMessage(502405, "", 21); // That is inaccessible.
+                m.SendLocalizedMessage(1061637); // You are not allowed to access this.
+            }
+            else if (m is PlayerMobile mobile && mobile.InRange(GetWorldLocation(), 2))
             {
                 BaseGump.SendGump(new SpecialScrollBookGump(mobile, this));
             }

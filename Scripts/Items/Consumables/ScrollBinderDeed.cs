@@ -21,19 +21,19 @@ namespace Server.Items
         private double m_Has;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public BinderType BinderType { get { return m_BinderType; } set { m_BinderType = value; InvalidateProperties(); } }
+        public BinderType BinderType { get => m_BinderType; set { m_BinderType = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public SkillName Skill { get { return m_Skill; } set { m_Skill = value; InvalidateProperties(); } }
+        public SkillName Skill { get => m_Skill; set { m_Skill = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public double Value { get { return m_Value; } set { m_Value = value; InvalidateProperties(); } }
+        public double Value { get => m_Value; set { m_Value = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int Needed { get { return m_Needed; } set { m_Needed = value; InvalidateProperties(); } }
+        public int Needed { get => m_Needed; set { m_Needed = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public double Has { get { return m_Has; } set { m_Has = value; InvalidateProperties(); } }
+        public double Has { get => m_Has; set { m_Has = value; InvalidateProperties(); } }
 
         public override int LabelNumber => 1113135;  // Scroll Binder
 

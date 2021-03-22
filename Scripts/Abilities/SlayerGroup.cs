@@ -427,7 +427,8 @@ namespace Server.Items
                     typeof(JukaLord), typeof(JukaMage),
                     typeof(JukaWarrior), typeof(LavaSerpent),
                     typeof(LavaSnake), typeof(LesserHiryu),
-                    typeof(Lizardman), typeof(OphidianArchmage),
+                    typeof(Lizardman), typeof(LizardmanDefender),
+                    typeof(LizardmanSquatter), typeof(OphidianArchmage),
                     typeof(OphidianKnight), typeof(OphidianMage),
                     typeof(OphidianMatriarch), typeof(OphidianWarrior),
                     typeof(Reptalon), typeof(SeaSerpent),
@@ -455,7 +456,7 @@ namespace Server.Items
                     (
                         SlayerName.DragonSlaying,
 
-                        typeof(Rikktor),            typeof(SkeletalDragonRenowned),
+                        typeof(Rikktor), typeof(SkeletalDragonRenowned),
                         typeof(WyvernRenowned),     typeof(AncientWyrm),
                         typeof(GreaterDragon),      typeof(Dragon),
                         typeof(Drake),              typeof(Hiryu),
@@ -474,7 +475,8 @@ namespace Server.Items
                     (
                         SlayerName.LizardmanSlaughter,
 
-                        typeof(Lizardman)
+                        typeof(Lizardman), typeof(LizardmanDefender),
+                        typeof(LizardmanSquatter) 
                     ),
 
                 new SlayerEntry

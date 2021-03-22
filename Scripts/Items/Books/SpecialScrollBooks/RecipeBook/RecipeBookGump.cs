@@ -22,41 +22,51 @@ namespace Server.Items
             RecipeScrollFilter f = m_Book.Filter;
 
             if (f.IsDefault)
+            {
                 return true;
+            }
 
             if (f.Skill == 1 && recipe.Skill != RecipeSkillName.Blacksmith)
             {
                 return false;
             }
-            else if (f.Skill == 2 && recipe.Skill != RecipeSkillName.Tailoring)
+
+            if (f.Skill == 2 && recipe.Skill != RecipeSkillName.Tailoring)
             {
                 return false;
             }
-            else if (f.Skill == 3 && recipe.Skill != RecipeSkillName.Fletching)
+
+            if (f.Skill == 3 && recipe.Skill != RecipeSkillName.Fletching)
             {
                 return false;
             }
-            else if (f.Skill == 4 && recipe.Skill != RecipeSkillName.Carpentry && recipe.Skill != RecipeSkillName.Masonry)
+
+            if (f.Skill == 4 && recipe.Skill != RecipeSkillName.Carpentry && recipe.Skill != RecipeSkillName.Masonry)
             {
                 return false;
             }
-            else if (f.Skill == 5 && recipe.Skill != RecipeSkillName.Inscription)
+
+            if (f.Skill == 5 && recipe.Skill != RecipeSkillName.Inscription)
             {
                 return false;
             }
-            else if (f.Skill == 6 && recipe.Skill != RecipeSkillName.Cooking)
+
+            if (f.Skill == 6 && recipe.Skill != RecipeSkillName.Cooking)
             {
                 return false;
             }
-            else if (f.Skill == 7 && recipe.Skill != RecipeSkillName.Alchemy)
+
+            if (f.Skill == 7 && recipe.Skill != RecipeSkillName.Alchemy)
             {
                 return false;
             }
-            else if (f.Skill == 8 && recipe.Skill != RecipeSkillName.Tinkering)
+
+            if (f.Skill == 8 && recipe.Skill != RecipeSkillName.Tinkering)
             {
                 return false;
             }
-            else if (f.Skill == 9 && recipe.Skill != RecipeSkillName.Cartography)
+
+            if (f.Skill == 9 && recipe.Skill != RecipeSkillName.Cartography)
             {
                 return false;
             }
@@ -65,11 +75,13 @@ namespace Server.Items
             {
                 return false;
             }
-            else if (f.Expansion == 2 && recipe.Expansion != Expansion.SA)
+
+            if (f.Expansion == 2 && recipe.Expansion != Expansion.SA)
             {
                 return false;
             }
-            else if (f.Expansion == 3 && recipe.Expansion != Expansion.TOL)
+
+            if (f.Expansion == 3 && recipe.Expansion != Expansion.TOL)
             {
                 return false;
             }
@@ -110,8 +122,10 @@ namespace Server.Items
 
                     add = 1;
 
-                    if ((slots + add) > 10)
+                    if (slots + add > 10)
+                    {
                         break;
+                    }
 
                     slots += add;
                 }
@@ -237,14 +251,14 @@ namespace Server.Items
 
             bool canLocked = book.IsLockedDown;
             bool canDrop = book.IsChildOf(from.Backpack);
-            bool canBuy = (pv != null);
-            bool canPrice = (canDrop || canBuy || canLocked);
+            bool canBuy = pv != null;
+            bool canPrice = canDrop || canBuy || canLocked;
 
             if (canBuy)
             {
                 VendorItem vi = pv.GetVendorItem(book);
 
-                canBuy = (vi != null && !vi.IsForSale);
+                canBuy = vi != null && !vi.IsForSale;
             }
 
             int width = 600;
@@ -276,14 +290,14 @@ namespace Server.Items
 
             list = list.OrderBy(x => x.ID).ToList();
 
-            for (int i = index; i < (index + count) && i >= 0 && i < list.Count; ++i)
+            for (int i = index; i < index + count && i >= 0 && i < list.Count; ++i)
             {
                 RecipeScrollDefinition recipe = list[i];
 
                 if (!CheckFilter(recipe))
                     continue;
 
-                AddImageTiled(24, 94 + (tableIndex * 32), canPrice ? 573 : 489, 2, 2624);
+                AddImageTiled(24, 94 + tableIndex * 32, canPrice ? 573 : 489, 2, 2624);
 
                 ++tableIndex;
             }
@@ -343,17 +357,17 @@ namespace Server.Items
                 AddHtmlLocalized(260, 416, 150, 20, 1011066, LabelColor, false, false); // Next page
             }
 
-            for (int i = index; i < (index + count) && i >= 0 && i < list.Count; ++i)
+            for (int i = index; i < index + count && i >= 0 && i < list.Count; ++i)
             {
                 RecipeScrollDefinition recipe = list[i];
 
                 if (!CheckFilter(recipe) || !Recipe.Recipes.ContainsKey(recipe.RecipeID))
                     continue;
 
-                int y = 96 + (tableIndex++ * 32);
+                int y = 96 + tableIndex++ * 32;
 
                 if (recipe.Amount > 0 && (canDrop || canLocked))
-                    AddButton(35, y + 2, 5602, 5606, 4 + (i * 2), GumpButtonType.Reply, 0);
+                    AddButton(35, y + 2, 5602, 5606, 4 + i * 2, GumpButtonType.Reply, 0);
 
                 AddLabel(61, y, 0x480, string.Format("{0}", recipe.ID));
                 AddHtmlLocalized(103, y, 130, 32, Recipe.Recipes[recipe.RecipeID].TextDefinition.Number, "#103221", 0xFFFFFF, false, false); // ~1_val~
@@ -361,9 +375,9 @@ namespace Server.Items
                 AddHtmlLocalized(316, y, 100, 20, GetSkillName(recipe.Skill), "#104409", 0xFFFFFF, false, false); // ~1_val~
                 AddLabel(421, y, 0x480, recipe.Amount.ToString());
 
-                if (canDrop || (canBuy && recipe.Price > 0))
+                if (canDrop || canBuy && recipe.Price > 0)
                 {
-                    AddButton(579, y + 2, 2117, 2118, 5 + (i * 2), GumpButtonType.Reply, 0);
+                    AddButton(579, y + 2, 2117, 2118, 5 + i * 2, GumpButtonType.Reply, 0);
                     AddLabel(495, y, 1152, recipe.Price.ToString("N0"));
                 }
             }
@@ -399,9 +413,6 @@ namespace Server.Items
                     }
                 default:
                     {
-                        bool canDrop = m_Book.IsChildOf(from.Backpack);
-                        bool canPrice = canDrop || (m_Book.RootParent is PlayerVendor);
-
                         index -= 4;
 
                         int type = index % 2;

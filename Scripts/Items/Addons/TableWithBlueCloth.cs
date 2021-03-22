@@ -4,7 +4,6 @@ namespace Server.Items
     {
         [Constructable]
         public TableWithBlueClothAddon()
-            : base()
         {
             AddComponent(new LocalizedAddonComponent(0x118C, 1076276), 0, 0, 0);
         }
@@ -34,7 +33,6 @@ namespace Server.Items
     {
         [Constructable]
         public TableWithBlueClothDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

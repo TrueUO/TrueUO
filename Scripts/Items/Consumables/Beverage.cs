@@ -33,9 +33,6 @@ namespace Server.Items
     {
     }
 
-    // TODO: Flipable attributes
-
-    [TypeAlias("Server.Items.BottleAle", "Server.Items.BottleLiquor", "Server.Items.BottleWine")]
     public class BeverageBottle : BaseBeverage
     {
         public override int BaseLabelNumber => 1042959;// a bottle of Ale
@@ -81,43 +78,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 0:
-                    {
-                        if (CheckType("BottleAle"))
-                        {
-                            Quantity = MaxQuantity;
-                            Content = BeverageType.Ale;
-                        }
-                        else if (CheckType("BottleLiquor"))
-                        {
-                            Quantity = MaxQuantity;
-                            Content = BeverageType.Liquor;
-                        }
-                        else if (CheckType("BottleWine"))
-                        {
-                            Quantity = MaxQuantity;
-                            Content = BeverageType.Wine;
-                        }
-                        else
-                        {
-                            throw new Exception(World.LoadingType);
-                        }
-
-                        break;
-                    }
-            }
+            reader.ReadInt();
         }
     }
 
@@ -185,15 +152,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -244,7 +209,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -295,7 +260,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -346,7 +311,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -359,7 +324,7 @@ namespace Server.Items
         {
             if (ItemID >= 0x995 && ItemID <= 0x999)
                 return ItemID;
-            else if (ItemID == 0x9CA)
+            if (ItemID == 0x9CA)
                 return ItemID;
 
             return 0x995;
@@ -386,15 +351,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -432,15 +395,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -478,20 +439,16 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
-    [TypeAlias("Server.Items.MugAle", "Server.Items.GlassCider", "Server.Items.GlassLiquor",
-        "Server.Items.GlassMilk", "Server.Items.GlassWine", "Server.Items.GlassWater")]
     public class GlassMug : BaseBeverage
     {
         public override int EmptyLabelNumber => 1022456;// mug
@@ -501,22 +458,22 @@ namespace Server.Items
         public override int ComputeItemID()
         {
             if (IsEmpty)
-                return (ItemID >= 0x1F81 && ItemID <= 0x1F84 ? ItemID : 0x1F81);
+                return ItemID >= 0x1F81 && ItemID <= 0x1F84 ? ItemID : 0x1F81;
 
             switch (Content)
             {
                 case BeverageType.Ale:
-                    return (ItemID == 0x9EF ? 0x9EF : 0x9EE);
+                    return ItemID == 0x9EF ? 0x9EF : 0x9EE;
                 case BeverageType.Cider:
-                    return (ItemID >= 0x1F7D && ItemID <= 0x1F80 ? ItemID : 0x1F7D);
+                    return ItemID >= 0x1F7D && ItemID <= 0x1F80 ? ItemID : 0x1F7D;
                 case BeverageType.Liquor:
-                    return (ItemID >= 0x1F85 && ItemID <= 0x1F88 ? ItemID : 0x1F85);
+                    return ItemID >= 0x1F85 && ItemID <= 0x1F88 ? ItemID : 0x1F85;
                 case BeverageType.Milk:
-                    return (ItemID >= 0x1F89 && ItemID <= 0x1F8C ? ItemID : 0x1F89);
+                    return ItemID >= 0x1F89 && ItemID <= 0x1F8C ? ItemID : 0x1F89;
                 case BeverageType.Wine:
-                    return (ItemID >= 0x1F8D && ItemID <= 0x1F90 ? ItemID : 0x1F8D);
+                    return ItemID >= 0x1F8D && ItemID <= 0x1F90 ? ItemID : 0x1F8D;
                 case BeverageType.Water:
-                    return (ItemID >= 0x1F91 && ItemID <= 0x1F94 ? ItemID : 0x1F91);
+                    return ItemID >= 0x1F91 && ItemID <= 0x1F94 ? ItemID : 0x1F91;
             }
 
             return 0;
@@ -543,64 +500,16 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 0:
-                    {
-                        if (CheckType("MugAle"))
-                        {
-                            Quantity = MaxQuantity;
-                            Content = BeverageType.Ale;
-                        }
-                        else if (CheckType("GlassCider"))
-                        {
-                            Quantity = MaxQuantity;
-                            Content = BeverageType.Cider;
-                        }
-                        else if (CheckType("GlassLiquor"))
-                        {
-                            Quantity = MaxQuantity;
-                            Content = BeverageType.Liquor;
-                        }
-                        else if (CheckType("GlassMilk"))
-                        {
-                            Quantity = MaxQuantity;
-                            Content = BeverageType.Milk;
-                        }
-                        else if (CheckType("GlassWine"))
-                        {
-                            Quantity = MaxQuantity;
-                            Content = BeverageType.Wine;
-                        }
-                        else if (CheckType("GlassWater"))
-                        {
-                            Quantity = MaxQuantity;
-                            Content = BeverageType.Water;
-                        }
-                        else
-                        {
-                            throw new Exception(World.LoadingType);
-                        }
-
-                        break;
-                    }
-            }
+            reader.ReadInt();
         }
     }
 
-    [TypeAlias("Server.Items.PitcherAle", "Server.Items.PitcherCider", "Server.Items.PitcherLiquor",
-        "Server.Items.PitcherMilk", "Server.Items.PitcherWine", "Server.Items.PitcherWater",
-        "Server.Items.GlassPitcher")]
     public class Pitcher : BaseBeverage
     {
         public override int BaseLabelNumber => 1048128;// a Pitcher of Ale
@@ -686,66 +595,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
-            if (CheckType("PitcherWater") || CheckType("GlassPitcher"))
-                InternalDeserialize(reader, false);
-            else
-                InternalDeserialize(reader, true);
-
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 0:
-                    {
-                        if (CheckType("PitcherAle"))
-                        {
-                            Quantity = MaxQuantity;
-                            Content = BeverageType.Ale;
-                        }
-                        else if (CheckType("PitcherCider"))
-                        {
-                            Quantity = MaxQuantity;
-                            Content = BeverageType.Cider;
-                        }
-                        else if (CheckType("PitcherLiquor"))
-                        {
-                            Quantity = MaxQuantity;
-                            Content = BeverageType.Liquor;
-                        }
-                        else if (CheckType("PitcherMilk"))
-                        {
-                            Quantity = MaxQuantity;
-                            Content = BeverageType.Milk;
-                        }
-                        else if (CheckType("PitcherWine"))
-                        {
-                            Quantity = MaxQuantity;
-                            Content = BeverageType.Wine;
-                        }
-                        else if (CheckType("PitcherWater"))
-                        {
-                            Quantity = MaxQuantity;
-                            Content = BeverageType.Water;
-                        }
-                        else if (CheckType("GlassPitcher"))
-                        {
-                            Quantity = 0;
-                            Content = BeverageType.Water;
-                        }
-                        else
-                        {
-                            throw new Exception(World.LoadingType);
-                        }
-
-                        break;
-                    }
-            }
+            base.Deserialize(reader);
+            reader.ReadInt();
         }
     }
 
@@ -760,13 +616,13 @@ namespace Server.Items
         private ItemQuality _Quality;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public CraftResource Resource { get { return _Resource; } set { _Resource = value; Hue = CraftResources.GetHue(_Resource); InvalidateProperties(); } }
+        public CraftResource Resource { get => _Resource; set { _Resource = value; Hue = CraftResources.GetHue(_Resource); InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public Mobile Crafter { get { return _Crafter; } set { _Crafter = value; InvalidateProperties(); } }
+        public Mobile Crafter { get => _Crafter; set { _Crafter = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public ItemQuality Quality { get { return _Quality; } set { _Quality = value; InvalidateProperties(); } }
+        public ItemQuality Quality { get => _Quality; set { _Quality = value; InvalidateProperties(); } }
 
         public bool PlayerConstructed => _Crafter != null;
 
@@ -783,7 +639,7 @@ namespace Server.Items
             }
         }
 
-        public virtual bool ShowQuantity => (MaxQuantity > 1);
+        public virtual bool ShowQuantity => MaxQuantity > 1;
         public virtual bool Fillable => true;
         public virtual bool Pourable => true;
 
@@ -795,47 +651,24 @@ namespace Server.Items
         public abstract int ComputeItemID();
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsEmpty => (m_Quantity <= 0);
+        public bool IsEmpty => m_Quantity <= 0;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool ContainsAlchohol => (!IsEmpty && m_Content != BeverageType.Milk && m_Content != BeverageType.Water);
+        public bool ContainsAlchohol => !IsEmpty && m_Content != BeverageType.Milk && m_Content != BeverageType.Water;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsFull => (m_Quantity >= MaxQuantity);
+        public bool IsFull => m_Quantity >= MaxQuantity;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public Poison Poison
-        {
-            get
-            {
-                return m_Poison;
-            }
-            set
-            {
-                m_Poison = value;
-            }
-        }
+        public Poison Poison { get => m_Poison; set => m_Poison = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public Mobile Poisoner
-        {
-            get
-            {
-                return m_Poisoner;
-            }
-            set
-            {
-                m_Poisoner = value;
-            }
-        }
+        public Mobile Poisoner { get => m_Poisoner; set => m_Poisoner = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public BeverageType Content
         {
-            get
-            {
-                return m_Content;
-            }
+            get => m_Content;
             set
             {
                 m_Content = value;
@@ -854,10 +687,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int Quantity
         {
-            get
-            {
-                return m_Quantity;
-            }
+            get => m_Quantity;
             set
             {
                 if (value < 0)
@@ -881,16 +711,22 @@ namespace Server.Items
 
         public virtual int GetQuantityDescription()
         {
-            int perc = (m_Quantity * 100) / MaxQuantity;
+            int perc = m_Quantity * 100 / MaxQuantity;
 
             if (perc <= 0)
+            {
                 return 1042975; // It's empty.
-            else if (perc <= 33)
+            }
+            if (perc <= 33)
+            {
                 return 1042974; // It's nearly empty.
-            else if (perc <= 66)
+            }
+            if (perc <= 66)
+            {
                 return 1042973; // It's half full.
-            else
-                return 1042972; // It's full.
+            }
+
+            return 1042972; // It's full.
         }
 
         public virtual void QuantityChanged()
@@ -1006,11 +842,11 @@ namespace Server.Items
             }
             else if (targ is BaseWaterContainer bwc)
             {
-                if (Quantity == 0 || (Content == BeverageType.Water && !IsFull))
+                if (Quantity == 0 || Content == BeverageType.Water && !IsFull)
                 {
                     Content = BeverageType.Water;
 
-                    int iNeed = Math.Min((MaxQuantity - Quantity), bwc.Quantity);
+                    int iNeed = Math.Min(MaxQuantity - Quantity, bwc.Quantity);
 
                     if (iNeed > 0 && !bwc.IsEmpty && !IsFull)
                     {
@@ -1025,10 +861,10 @@ namespace Server.Items
             {
                 IWaterSource src;
 
-                src = (item as IWaterSource);
+                src = item as IWaterSource;
 
                 if (src == null && item is AddonComponent component)
-                    src = (component.Addon as IWaterSource);
+                    src = component.Addon as IWaterSource;
 
                 if (src == null || src.Quantity <= 0)
                 {
@@ -1099,7 +935,7 @@ namespace Server.Items
                             bool contains = false;
 
                             for (int i = 0; !contains && i < m_SwampTiles.Length; i += 2)
-                                contains = (tileID >= m_SwampTiles[i] && tileID <= m_SwampTiles[i + 1]);
+                                contains = tileID >= m_SwampTiles[i] && tileID <= m_SwampTiles[i + 1];
 
                             if (contains)
                             {
@@ -1114,7 +950,7 @@ namespace Server.Items
             }
         }
 
-        private static readonly int[] m_SwampTiles = new int[]
+        private static readonly int[] m_SwampTiles =
         {
             0x9C4, 0x9EB,
             0x3D65, 0x3D65,
@@ -1122,7 +958,7 @@ namespace Server.Items
             0x3DDB, 0x3DDC,
             0x3DDE, 0x3EF0,
             0x3FF6, 0x3FF6,
-            0x3FFC, 0x3FFE,
+            0x3FFC, 0x3FFE
         };
 
         #region Effects of achohol
@@ -1333,7 +1169,7 @@ namespace Server.Items
                 }
                 else
                 {
-                    int itNeeds = Math.Min((bwc.MaxQuantity - bwc.Quantity), Quantity);
+                    int itNeeds = Math.Min(bwc.MaxQuantity - bwc.Quantity, Quantity);
 
                     if (itNeeds > 0)
                     {
@@ -1370,8 +1206,7 @@ namespace Server.Items
                         {
                             BaseAddon vat = addonComponent.Addon;
 
-                            if (vat.X > 5784 && vat.X < 5814 && vat.Y > 1903 && vat.Y < 1934 &&
-                                ((qs.RedSolen && vat.Map == Map.Trammel) || (!qs.RedSolen && vat.Map == Map.Felucca)))
+                            if (vat.X > 5784 && vat.X < 5814 && vat.Y > 1903 && vat.Y < 1934 && (qs.RedSolen && vat.Map == Map.Trammel || !qs.RedSolen && vat.Map == Map.Felucca))
                             {
                                 if (obj.CurProgress + Quantity > obj.MaxProgress)
                                 {
@@ -1501,50 +1336,24 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1); // version
 
             writer.Write(m_Poisoner);
-
             Poison.Serialize(m_Poison, writer);
             writer.Write((int)m_Content);
             writer.Write(m_Quantity);
         }
 
-        protected bool CheckType(string name)
-        {
-            return (World.LoadingType == string.Format("Server.Items.{0}", name));
-        }
-
         public override void Deserialize(GenericReader reader)
         {
-            InternalDeserialize(reader, true);
-        }
-
-        protected void InternalDeserialize(GenericReader reader, bool read)
-        {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            if (!read)
-                return;
+            m_Poisoner = reader.ReadMobile();
+            m_Poison = Poison.Deserialize(reader);
+            m_Content = (BeverageType)reader.ReadInt();
+            m_Quantity = reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 1:
-                    {
-                        m_Poisoner = reader.ReadMobile();
-                        goto case 0;
-                    }
-                case 0:
-                    {
-                        m_Poison = Poison.Deserialize(reader);
-                        m_Content = (BeverageType)reader.ReadInt();
-                        m_Quantity = reader.ReadInt();
-                        break;
-                    }
-            }
         }
     }
 }

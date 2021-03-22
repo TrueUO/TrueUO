@@ -2,7 +2,7 @@ namespace Server.Items
 {
     public class ValentineChocolate : Food
     {
-        private static readonly int[] m_Labels = new int[]
+        private static readonly int[] m_Labels =
         {
             1114827, // "Someone Likes You"
 			1114834, // "You’re Sexy"
@@ -25,7 +25,7 @@ namespace Server.Items
 			1114821, // "Yours-4-Ever"
 			1114824, // "Let’s Be Friends"
 			1114837, // "Someone Loves You"
-			1114828, // "True Love"
+			1114828  // "True Love"
 		};
 
         public override int LabelNumber => m_Title;
@@ -82,7 +82,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             m_Title = reader.ReadInt();
             m_Label = reader.ReadInt();

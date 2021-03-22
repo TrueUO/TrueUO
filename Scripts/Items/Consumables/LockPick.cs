@@ -70,7 +70,7 @@ namespace Server.Items
         {
             if (item.Locked)
             {
-                if (item is TreasureMapChest chest && TreasureMapInfo.NewSystem && !chest.Guardians.All(g => g.Deleted))
+                if (item is TreasureMapChest chest && !chest.Guardians.All(g => g.Deleted))
                 {
                     from.SendLocalizedMessage(1115991); // You must destroy all the guardians before you can unlock the chest.
                 }
@@ -155,12 +155,9 @@ namespace Server.Items
 
                 if (item is TreasureMapChest chest)
                 {
-                    if (TreasureMapInfo.NewSystem)
+                    if (!chest.FailedLockpick)
                     {
-                        if (!chest.FailedLockpick)
-                        {
-                            chest.FailedLockpick = true;
-                        }
+                        chest.FailedLockpick = true;
                     }
                     else if (chest.Items.Count > 0 && 0.25 > Utility.RandomDouble())
                     {

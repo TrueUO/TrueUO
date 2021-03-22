@@ -22,7 +22,7 @@ namespace Server.Items
         
         public override void OnDoubleClick(Mobile from)
         {
-            if (IsChildOf(from.Backpack) || (from.InRange(GetWorldLocation(), 2) && Movable))
+            if (IsChildOf(from.Backpack) || from.InRange(GetWorldLocation(), 2) && Movable)
             {
                 from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1071159); // Select the hitching post you want to supply hitching rope.
                 from.Target = new InternalTarget(this);

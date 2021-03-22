@@ -75,7 +75,7 @@ namespace Server.Spells.Third
                             int level;
                             int reqSkill;
 
-                            if (cont is TreasureMapChest mapChest && TreasureMapInfo.NewSystem)
+                            if (cont is TreasureMapChest mapChest)
                             {
                                 level = (int)from.Skills[SkillName.Magery].Value;
 

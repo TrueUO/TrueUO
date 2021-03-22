@@ -29,7 +29,7 @@ namespace Server.Engines.NewMagincia
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             m_Owner = reader.ReadMobile();
         }
@@ -56,7 +56,7 @@ namespace Server.Engines.NewMagincia
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

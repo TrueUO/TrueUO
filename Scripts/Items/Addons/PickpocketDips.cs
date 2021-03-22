@@ -45,10 +45,11 @@ namespace Server.Items
             }
         }
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool Swinging => (m_Timer != null);
+        public bool Swinging => m_Timer != null;
+
         public void UpdateItemID()
         {
-            int baseItemID = 0x1EC0 + (((ItemID - 0x1EC0) / 3) * 3);
+            int baseItemID = 0x1EC0 + (ItemID - 0x1EC0) / 3 * 3;
 
             ItemID = baseItemID + (Swinging ? 1 : 0);
         }

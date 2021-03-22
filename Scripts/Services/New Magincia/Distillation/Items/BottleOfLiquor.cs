@@ -10,16 +10,16 @@ namespace Server.Engines.Distillation
         private Mobile m_Distiller;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public Liquor Liquor { get { return m_Liquor; } set { m_Liquor = value; InvalidateProperties(); } }
+        public Liquor Liquor { get => m_Liquor; set { m_Liquor = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public string Label { get { return m_Label; } set { m_Label = value; InvalidateProperties(); } }
+        public string Label { get => m_Label; set { m_Label = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsStrong { get { return m_IsStrong; } set { m_IsStrong = value; InvalidateProperties(); } }
+        public bool IsStrong { get => m_IsStrong; set { m_IsStrong = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public Mobile Distiller { get { return m_Distiller; } set { m_Distiller = value; InvalidateProperties(); } }
+        public Mobile Distiller { get => m_Distiller; set { m_Distiller = value; InvalidateProperties(); } }
 
         public override bool ShowQuantity => false;
 
@@ -40,7 +40,7 @@ namespace Server.Engines.Distillation
 
         public override void AddNameProperty(ObjectPropertyList list)
         {
-            if (m_Label != null && m_Label.Length > 0)
+            if (!string.IsNullOrEmpty(m_Label))
                 list.Add(1049519, m_Label); // a bottle of ~1_DRINK_NAME~
             else
                 list.Add(1049519, string.Format("#{0}", DistillationSystem.GetLabel(m_Liquor, m_IsStrong))); // a bottle of ~1_DRINK_NAME~

@@ -52,18 +52,10 @@ namespace Server.Items
         private Point3D m_Offset;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public BaseAddonContainer SecondContainer
-        {
-            get { return m_SecondContainer; }
-            set { m_SecondContainer = value; }
-        }
+        public BaseAddonContainer SecondContainer { get => m_SecondContainer; set => m_SecondContainer = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public Point3D Offset
-        {
-            get { return m_Offset; }
-            set { m_Offset = value; }
-        }
+        public Point3D Offset { get => m_Offset; set => m_Offset = value; }
 
         [Constructable]
         public GardenShedAddon(bool east) : base(east ? 0x4BEB : 0x4BE7)
@@ -250,7 +242,7 @@ namespace Server.Items
         private bool m_East;
 
         [Constructable]
-        public GardenShedDeed() : base()
+        public GardenShedDeed()
         {
             LootType = LootType.Blessed;
         }
@@ -332,7 +324,7 @@ namespace Server.Items
                 if (m_Deed == null || m_Deed.Deleted || info.ButtonID == 0)
                     return;
 
-                m_Deed.m_East = (info.ButtonID != 1);
+                m_Deed.m_East = info.ButtonID != 1;
                 m_Deed.SendTarget(sender.Mobile);
             }
         }

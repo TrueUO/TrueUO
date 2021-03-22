@@ -130,7 +130,6 @@ namespace Server.Items
     {
         [Constructable]
         public AwesomeDisturbingPortraitAddon()
-            : base()
         {
             AddComponent(new AwesomeDisturbingPortraitComponent(), 0, 0, 0);
         }
@@ -160,7 +159,6 @@ namespace Server.Items
     {
         [Constructable]
         public AwesomeDisturbingPortraitDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

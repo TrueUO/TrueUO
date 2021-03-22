@@ -33,7 +33,6 @@ namespace Server.Items
     {
         [Constructable]
         public BrokenArmoireAddon()
-            : base()
         {
             AddComponent(new BrokenArmoireComponent(), 0, 0, 0);
         }
@@ -63,7 +62,6 @@ namespace Server.Items
     {
         [Constructable]
         public BrokenArmoireDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

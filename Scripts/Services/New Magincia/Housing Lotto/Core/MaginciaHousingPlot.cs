@@ -21,13 +21,13 @@ namespace Server.Engines.NewMagincia
         public string Identifier => m_Identifier;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public WritOfLease Writ { get { return m_Writ; } set { m_Writ = value; } }
+        public WritOfLease Writ { get => m_Writ; set => m_Writ = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public Rectangle2D Bounds => m_Bounds;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public MaginciaPlotStone Stone { get { return m_Stone; } set { m_Stone = value; } }
+        public MaginciaPlotStone Stone { get => m_Stone; set => m_Stone = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsPrimeSpot => m_IsPrimeSpot;
@@ -36,13 +36,13 @@ namespace Server.Engines.NewMagincia
         public bool Complete => m_Complete;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public Mobile Winner { get { return m_Winner; } set { m_Winner = value; } }
+        public Mobile Winner { get => m_Winner; set => m_Winner = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public Map Map => m_Map;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public DateTime Expires { get { return m_Expires; } set { m_Expires = value; } }
+        public DateTime Expires { get => m_Expires; set => m_Expires = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public Point3D RecallLoc => new Point3D(m_Bounds.X, m_Bounds.Y, m_Map.GetAverageZ(m_Bounds.X, m_Bounds.Y));
@@ -55,7 +55,7 @@ namespace Server.Engines.NewMagincia
         private readonly Dictionary<Mobile, int> m_Participants = new Dictionary<Mobile, int>();
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public DateTime LottoEnds { get { return m_LottoEnds; } set { m_LottoEnds = value; } }
+        public DateTime LottoEnds { get => m_LottoEnds; set => m_LottoEnds = value; }
 
         public Dictionary<Mobile, int> Participants => m_Participants;
 

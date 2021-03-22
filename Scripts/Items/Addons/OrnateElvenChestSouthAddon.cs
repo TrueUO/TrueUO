@@ -38,7 +38,6 @@ namespace Server.Items
     {
         [Constructable]
         public OrnateElvenChestSouthDeed()
-            : base()
         {
         }
 

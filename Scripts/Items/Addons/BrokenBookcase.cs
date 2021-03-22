@@ -33,7 +33,6 @@ namespace Server.Items
     {
         [Constructable]
         public BrokenBookcaseAddon()
-            : base()
         {
             AddComponent(new BrokenBookcaseComponent(), 0, 0, 0);
         }
@@ -63,7 +62,6 @@ namespace Server.Items
     {
         [Constructable]
         public BrokenBookcaseDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

@@ -16,7 +16,7 @@ namespace Server.Mobiles.MannequinProperty
 
         public override bool Matches(Item item)
         {
-            return item is ISlayer slayer ? slayer.Slayer == Slayer || slayer.Slayer2 == Slayer : false;
+            return item is ISlayer slayer && (slayer.Slayer == Slayer || slayer.Slayer2 == Slayer);
         }
 
         public override bool Matches(List<Item> items)
@@ -43,7 +43,7 @@ namespace Server.Mobiles.MannequinProperty
 
         public override bool Matches(Item item)
         {
-            return item is BaseTalisman talisman ? talisman.Slayer == Slayer : false;
+            return item is BaseTalisman talisman && talisman.Slayer == Slayer;
         }
 
         public override bool Matches(List<Item> items)

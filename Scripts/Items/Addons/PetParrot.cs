@@ -58,19 +58,12 @@ namespace Server.Mobiles
         }
 
         public override bool NoHouseRestrictions => true;
+
         [CommandProperty(AccessLevel.GameMaster)]
-        public DateTime Birth
-        {
-            get
-            {
-                return m_Birth;
-            }
-            set
-            {
-                m_Birth = value;
-            }
-        }
+        public DateTime Birth { get => m_Birth; set => m_Birth = value; }
+
         public override FoodType FavoriteFood => FoodType.FruitsAndVegies;
+
         public static int GetWeeks(DateTime birth)
         {
             TimeSpan span = DateTime.UtcNow - birth;
@@ -111,9 +104,11 @@ namespace Server.Mobiles
             BaseHouse house = BaseHouse.FindHouseAt(this);
 
             if (house != null && house.IsCoOwner(from))
+            {
                 return true;
-            else
-                return false;
+            }
+
+            return false;
         }
 
         public override void OnSpeech(SpeechEventArgs e)
@@ -160,8 +155,8 @@ namespace Server.Mobiles
 
                 return true;
             }
-            else
-                return false;
+
+            return false;
         }
 
         public override void Serialize(GenericWriter writer)

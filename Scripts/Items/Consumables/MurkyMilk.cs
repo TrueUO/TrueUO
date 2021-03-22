@@ -1,4 +1,4 @@
-﻿namespace Server.Items
+namespace Server.Items
 {
     public class MurkyMilk : Pitcher
     {
@@ -12,7 +12,7 @@
         {
             Hue = 0x3e5;
             Quantity = MaxQuantity;
-            ItemID = (Utility.RandomBool()) ? 0x09F0 : 0x09AD;
+            ItemID = Utility.RandomBool() ? 0x09F0 : 0x09AD;
         }
 
         public MurkyMilk(Serial serial)
@@ -29,7 +29,7 @@
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

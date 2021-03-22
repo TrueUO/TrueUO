@@ -52,7 +52,6 @@ namespace Server.Items
 
         [Constructable]
         public ShadowBannerDeed()
-            : base()
         {
             LootType = LootType.Blessed;
             Hue = 1908;
