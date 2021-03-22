@@ -9,15 +9,10 @@ namespace Server.Items
         private bool m_IsRewardItem;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get { return m_IsRewardItem; }
-            set { m_IsRewardItem = value; InvalidateProperties(); }
-        }
+        public bool IsRewardItem { get => m_IsRewardItem; set { m_IsRewardItem = value; InvalidateProperties(); } }
 
         public override int DefaultMaxItems => 25;
-
-        public bool IsFull => DefaultMaxItems <= Items.Count;
+        public override bool DisplaysContent => false;
 
         [Constructable]
         public SpellbookStrap()
@@ -25,6 +20,11 @@ namespace Server.Items
         {
             LootType = LootType.Blessed;
             Weight = 3.0;
+        }
+
+        public SpellbookStrap(Serial serial)
+            : base(serial)
+        {
         }
 
         public virtual bool Dye(Mobile from, DyeTub sender)
@@ -35,8 +35,6 @@ namespace Server.Items
             Hue = sender.DyedHue;
             return true;
         }
-
-        public override bool DisplaysContent => false;
 
         public override void AddWeightProperty(ObjectPropertyList list)
         {
@@ -83,11 +81,6 @@ namespace Server.Items
             }
 
             return base.OnDragDropInto(from, item, p);
-        }
-
-        public SpellbookStrap(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)

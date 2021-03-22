@@ -13,8 +13,7 @@ namespace Server.Items
         public bool IsRewardItem { get => m_IsRewardItem; set { m_IsRewardItem = value; InvalidateProperties(); } }
 
         public override int DefaultMaxItems => 25;
-
-        public bool IsFull => DefaultMaxItems <= Items.Count;
+        public override bool DisplaysContent => false;
 
         [Constructable]
         public RunebookStrap()
@@ -22,6 +21,11 @@ namespace Server.Items
         {
             LootType = LootType.Blessed;
             Weight = 3.0;
+        }
+
+        public RunebookStrap(Serial serial)
+            : base(serial)
+        {
         }
 
         public virtual bool Dye(Mobile from, DyeTub sender)
@@ -32,8 +36,6 @@ namespace Server.Items
             Hue = sender.DyedHue;
             return true;
         }
-
-        public override bool DisplaysContent => false;
 
         public override void AddWeightProperty(ObjectPropertyList list)
         {
@@ -95,11 +97,6 @@ namespace Server.Items
             }
 
             return base.GetTotal(type);
-        }
-
-        public RunebookStrap(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
