@@ -504,7 +504,7 @@ namespace Server.Items
 
                 Spellbook book = list[i];
 
-                if (!book.Deleted && (book.Parent == from || pack != null && book.Parent == pack) && ValidateSpellbook(book, spellID, type))
+                if (!book.Deleted && (book.Parent == from || pack != null && book.Parent == pack || book.Parent is SpellbookStrap strap && strap.Parent == pack) && ValidateSpellbook(book, spellID, type))
                 {
                     return book;
                 }
@@ -540,6 +540,19 @@ namespace Server.Items
                 if (item is Spellbook spellbook)
                 {
                     list.Add(spellbook);
+                }
+
+                if (item is SpellbookStrap strap)
+                {
+                    for (int s = 0; s < strap.Items.Count; ++s)
+                    {
+                        item = strap.Items[s];
+
+                        if (item is Spellbook strapbook)
+                        {
+                            list.Add(strapbook);
+                        }
+                    }
                 }
             }
 
