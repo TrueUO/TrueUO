@@ -3396,11 +3396,12 @@ namespace Server.Mobiles
         {
             if (!item.Deleted && (item.LootType == LootType.Blessed || item.Insured))
             {
-                if (Backpack != item.Parent)
+                if (Backpack != item.Parent && item.Parent is Container cont && cont.LootType != LootType.Blessed)
                 {
                     return true;
                 }
             }
+
             return false;
         }
 
