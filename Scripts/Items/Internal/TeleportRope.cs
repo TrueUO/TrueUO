@@ -1,4 +1,6 @@
-﻿namespace Server.Items
+using Server.Mobiles;
+
+namespace Server.Items
 {
     public class TeleportRope : Static
     {
@@ -26,10 +28,12 @@
         {
             base.OnDoubleClick(from);
 
-            if (ToLocation == Point3D.Zero ||
-                ToMap == Map.Internal)
+            if (ToLocation == Point3D.Zero || ToMap == Map.Internal)
+            {
                 return;
+            }
 
+            BaseCreature.TeleportPets(from, ToLocation, ToMap);
             from.MoveToWorld(ToLocation, ToMap);
         }
 
@@ -48,8 +52,8 @@
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // Version
+
             writer.Write(ToLocation);
             writer.Write(ToMap);
         }
@@ -57,16 +61,10 @@
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 0:
-                    ToLocation = reader.ReadPoint3D();
-                    ToMap = reader.ReadMap();
-                    break;
-            }
+            ToLocation = reader.ReadPoint3D();
+            ToMap = reader.ReadMap();
         }
     }
 }
