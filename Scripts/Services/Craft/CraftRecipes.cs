@@ -32,6 +32,7 @@ namespace Server.Engines.Craft
         LargeElegantAquarium = 155,
         KotlBlackRod = 170,
         KotlAutomaton = 171,
+        HooksShield = 172,
 
         // DefBowFletching
         BarbedLongbow = 200,
@@ -92,7 +93,7 @@ namespace Server.Engines.Craft
         LuminousRuneBlade = 353,
         ShardTrasher = 354, 
         BritchesOfWarding = 355,
-        GlovesOfFeudalGrip = 356,
+        GlovesOfFeudalGrip = 356,        
 
         // DefTinkering
         InvisibilityPotion = 400,
