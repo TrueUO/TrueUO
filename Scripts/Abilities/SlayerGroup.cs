@@ -92,11 +92,11 @@ namespace Server.Items
                     (
                         SlayerName.OrcSlaying,
 
-                        typeof(Orc),            typeof(OrcBomber),
-                        typeof(OrcBrute),       typeof(OrcCaptain),
-                        typeof(OrcChopper),     typeof(OrcScout),
-                        typeof(OrcishLord),     typeof(OrcishMage),
-                        typeof(OrcFootSoldier)
+                        typeof(Orc), typeof(OrcBomber),
+                        typeof(OrcBrute), typeof(OrcCaptain),
+                        typeof(OrcChopper), typeof(OrcScout),
+                        typeof(OrcishLord), typeof(OrcishMage),
+                        typeof(OrcFootSoldier), typeof(PirateCrew) // PirateCrew are orcs.
                     ),
 
                 new SlayerEntry
