@@ -1061,15 +1061,15 @@ namespace Server.Items
         }
     }
 
-    public class HooksShieldRecipeScroll : RecipeScroll
+    public class PirateShieldRecipeScroll : RecipeScroll
     {
         [Constructable]
-        public HooksShieldRecipeScroll()
+        public PirateShieldRecipeScroll()
             : base(172)
         {
         }
 
-        public HooksShieldRecipeScroll(Serial serial)
+        public PirateShieldRecipeScroll(Serial serial)
             : base(serial)
         {
         }

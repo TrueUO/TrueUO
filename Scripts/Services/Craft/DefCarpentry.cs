@@ -460,7 +460,7 @@ namespace Server.Engines.Craft
 
             AddCraft(typeof(GargishWoodenShield), 1062760, 1095768, 52.6, 77.6, typeof(Board), 1044041, 9, 1044351);
 
-            index = AddCraft(typeof(HooksShield), 1062760, 1159585, 70.0, 90.0, typeof(Board), 1044041, 12, 1044351);
+            index = AddCraft(typeof(PirateShield), 1062760, 1159585, 70.0, 90.0, typeof(Board), 1044041, 12, 1044351);
             AddRes(index, typeof(IronIngot), 1044036, 8, 1044037);
             AddRecipe(index, (int)CraftRecipes.HooksShield);
 
