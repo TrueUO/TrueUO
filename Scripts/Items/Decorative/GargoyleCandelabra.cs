@@ -25,9 +25,10 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(1);
+            writer.Write(2);
 
-            writer.Write(m_IsShipwreckedItem);
+            writer.Write(ShipwreckName);
+            writer.Write(IsShipwreckedItem);
         }
 
         public override void Deserialize(GenericReader reader)
@@ -37,9 +38,14 @@ namespace Server.Items
 
             switch (version)
             {
+                case 2:
+                    {
+                        ShipwreckName = reader.ReadString();
+                        goto case 1;
+                    }
                 case 1:
                     {
-                        m_IsShipwreckedItem = reader.ReadBool();
+                        IsShipwreckedItem = reader.ReadBool();
                         break;
                     }
             }
@@ -49,26 +55,25 @@ namespace Server.Items
         {
             base.AddNameProperties(list);
 
-            if (m_IsShipwreckedItem)
-                list.Add(1041645); // recovered from a shipwreck
+            if (IsShipwreckedItem)
+            {
+                if (string.IsNullOrEmpty(ShipwreckName))
+                {
+                    list.Add(1041645); // recovered from a shipwreck                    
+                }
+                else
+                {
+                    list.Add(1159011, ShipwreckName); // Recovered from the Shipwreck of ~1_NAME~
+                }
+            }
         }
 
         #region IShipwreckedItem Members
-
-        private bool m_IsShipwreckedItem;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public bool IsShipwreckedItem { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsShipwreckedItem
-        {
-            get
-            {
-                return m_IsShipwreckedItem;
-            }
-            set
-            {
-                m_IsShipwreckedItem = value;
-            }
-        }
+        public string ShipwreckName { get; set; }
         #endregion
     }
 }

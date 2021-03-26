@@ -447,7 +447,10 @@ namespace Server.Engines.Harvest
                         if (preLoot != null)
                         {
                             if (preLoot is IShipwreckedItem item)
+                            {
                                 item.IsShipwreckedItem = true;
+                                item.ShipwreckName = sos.ShipwreckName;
+                            }
 
                             return preLoot;
                         }

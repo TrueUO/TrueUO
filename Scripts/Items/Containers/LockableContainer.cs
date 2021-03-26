@@ -160,7 +160,9 @@ namespace Server.Items
         {
             base.Serialize(writer);
 
-            writer.Write(8); // version
+            writer.Write(9); // version
+
+            writer.Write(ShipwreckName);
 
             writer.Write(m_PlayerConstructed);
             writer.Write((int)m_Resource);
@@ -168,7 +170,7 @@ namespace Server.Items
 
             writer.Write(m_Crafter);
 
-            writer.Write(m_IsShipwreckedItem);
+            writer.Write(IsShipwreckedItem);
 
             writer.Write(m_TrapOnLockpick);
 
@@ -189,6 +191,12 @@ namespace Server.Items
 
             switch (version)
             {
+                case 9:
+                    {
+                        ShipwreckName = reader.ReadString();
+
+                        goto case 8;
+                    }
                 case 8:
                     {
                         m_PlayerConstructed = reader.ReadBool();
@@ -205,7 +213,7 @@ namespace Server.Items
                     }
                 case 6:
                     {
-                        m_IsShipwreckedItem = reader.ReadBool();
+                        IsShipwreckedItem = reader.ReadBool();
 
                         goto case 5;
                     }
@@ -434,9 +442,16 @@ namespace Server.Items
                 list.Add(1114057, "#{0}", CraftResources.GetLocalizationNumber(m_Resource)); // ~1_val~
             }
 
-            if (m_IsShipwreckedItem)
+            if (IsShipwreckedItem)
             {
-                list.Add(1041645); // recovered from a shipwreck
+                if (string.IsNullOrEmpty(ShipwreckName))
+                {
+                    list.Add(1041645); // recovered from a shipwreck                    
+                }
+                else
+                {
+                    list.Add(1159011, ShipwreckName); // Recovered from the Shipwreck of ~1_NAME~
+                }
             }
         }
 
@@ -499,21 +514,11 @@ namespace Server.Items
         #endregion
 
         #region IShipwreckedItem Members
-
-        private bool m_IsShipwreckedItem;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public bool IsShipwreckedItem { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsShipwreckedItem
-        {
-            get
-            {
-                return m_IsShipwreckedItem;
-            }
-            set
-            {
-                m_IsShipwreckedItem = value;
-            }
-        }
+        public string ShipwreckName { get; set; }
         #endregion
     }
 }

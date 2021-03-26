@@ -3,6 +3,7 @@ namespace Server.Items
     public interface IShipwreckedItem
     {
         bool IsShipwreckedItem { get; set; }
+        string ShipwreckName { get; set; }
     }
 
     public class ShipwreckedItem : Item, IDyable, IShipwreckedItem, IFlipable
@@ -31,12 +32,27 @@ namespace Server.Items
                 else
                     list.Add(1151075, ItemData.Name); //barnacle covered ~1_token~
 
-                list.Add(1041645); // recovered from a shipwreck
+                if (string.IsNullOrEmpty(ShipwreckName))
+                {
+                    list.Add(1041645); // recovered from a shipwreck                    
+                }
+                else
+                {
+                    list.Add(1159011, ShipwreckName); // Recovered from the Shipwreck of ~1_NAME~
+                }
             }
             else
             {
                 base.AddNameProperties(list);
-                list.Add(1041645); // recovered from a shipwreck
+
+                if (string.IsNullOrEmpty(ShipwreckName))
+                {
+                    list.Add(1041645); // recovered from a shipwreck                    
+                }
+                else
+                {
+                    list.Add(1159011, ShipwreckName); // Recovered from the Shipwreck of ~1_NAME~
+                }
             }
         }
 
@@ -68,18 +84,21 @@ namespace Server.Items
         {
             base.Serialize(writer);
 
-            writer.Write(1); // version
+            writer.Write(2);
+            writer.Write(ShipwreckName);
             writer.Write(m_IsBarnacleItem);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             int version = reader.ReadInt();
 
             switch (version)
             {
+                case 2:
+                    ShipwreckName = reader.ReadString();
+                    goto case 1;
                 case 1:
                     m_IsBarnacleItem = reader.ReadBool();
                     goto case 0;
@@ -115,6 +134,8 @@ namespace Server.Items
             {
             }
         }
+
+        public string ShipwreckName { get; set; }
         #endregion
     }
 }
