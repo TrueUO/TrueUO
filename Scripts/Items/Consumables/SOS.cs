@@ -121,33 +121,33 @@ namespace Server.Items
                 case 5:
                     {
                         ShipwreckName = reader.ReadString();
-                        break;
+                        goto case 2;
                     }
                 case 4:
                 case 3:
                 case 2:
                     {
                         m_Level = reader.ReadInt();
-                        break;
+                        goto case 1;
                     }
                 case 1:
                     {
                         m_TargetMap = reader.ReadMap();
                         m_TargetLocation = reader.ReadPoint3D();
                         m_MessageIndex = reader.ReadInt();
-
-                        break;
+                        goto case 0;
                     }
                 case 0:
                     {
                         m_TargetMap = Map;
 
                         if (m_TargetMap == null || m_TargetMap == Map.Internal)
+                        {
                             m_TargetMap = Map.Trammel;
+                        }
 
                         m_TargetLocation = FindLocation(m_TargetMap);
                         m_MessageIndex = Utility.Random(MessageEntry.Entries.Length);
-
                         break;
                     }
             }

@@ -104,10 +104,10 @@ namespace Server.Items
             {
                 case 2:
                     ShipwreckName = reader.ReadString();
-                    break;
+                    goto case 1;
                 case 1:
                     m_IsBarnacleItem = reader.ReadBool();
-                    break;
+                    goto case 0;
                 case 0:
                     break;
             }
