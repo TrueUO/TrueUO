@@ -125,6 +125,13 @@ namespace Server.Engines.Plants
                     Refresh();
                     break;
                 default:
+
+                    if (Box.RootParent is PlayerVendor pv && !pv.IsOwner(User))
+                    {
+                        User.SendLocalizedMessage(502402); // That is inaccessible.
+                        return;
+                    }
+
                     int id = info.ButtonID - 100;
 
                     if (id >= 0 && id < Box.Entries.Count)
