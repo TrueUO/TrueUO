@@ -32,7 +32,7 @@ namespace Server.Engines.Craft
         LargeElegantAquarium = 155,
         KotlBlackRod = 170,
         KotlAutomaton = 171,
-        HooksShield = 172,
+        PirateShield = 172,
 
         // DefBowFletching
         BarbedLongbow = 200,
