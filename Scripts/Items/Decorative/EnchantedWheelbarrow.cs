@@ -102,10 +102,15 @@ namespace Server.Items
         public void OnFlip(Mobile from)
         {
             if (ItemID == 0xA0E6 || ItemID == 0xA0E8)
-                ItemID = ItemID + 1;
+                ItemID++;
             else
-                ItemID = ItemID - 1;
+                ItemID--;
         }
+
+        private static readonly int[] RareColor =
+        {
+            341, 1168, 1166, 3, 1922, 1153, 2729, 2598, 1259, 1174, 1281, 2741, 1150
+        };
 
         public override void OnDoubleClick(Mobile m)
         {
@@ -127,6 +132,11 @@ namespace Server.Items
 
                         if (i != null)
                         {
+                            if (Utility.RandomDouble() < 0.1)
+                            {
+                                i.Hue = RareColor[Utility.Random(RareColor.Length)];
+                            }
+
                             m.LocalOverheadMessage(Network.MessageType.Regular, 0x3B2, 1158330); // *You collect a plant from the wheelbarrow*
                             m.AddToBackpack(i);
                             Harvest = false;
