@@ -38,7 +38,10 @@ namespace Server.Mobiles
             Karma = -10000;
         }
 
-        public override int TreasureMapLevel => 5;
+        public Infernus(Serial serial)
+            : base(serial)
+        {
+        }
 
         private DateTime _NextDrop;
 
@@ -87,10 +90,10 @@ namespace Server.Mobiles
             public FireItem(Infernus mobile)
                 : base(0x19AB)
             {
+                Movable = false;
+
                 Mobile = mobile;
-
                 _EndTime = DateTime.UtcNow + TimeSpan.FromSeconds(Utility.RandomMinMax(30, 40));
-
                 Timer = Timer.DelayCall(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1), OnTick);
             }
 
@@ -148,11 +151,6 @@ namespace Server.Mobiles
             public override void Deserialize(GenericReader reader)
             {
             }
-        }
-
-        public Infernus(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
