@@ -18,7 +18,9 @@ namespace Server.Items
             int weight = ItemData.Weight;
 
             if (weight >= 255 || weight <= 0)
+            {
                 weight = 1;
+            }
 
             Weight = weight;
         }
@@ -28,9 +30,13 @@ namespace Server.Items
             if (m_IsBarnacleItem)
             {
                 if (LabelNumber > 0)
+                {
                     list.Add(1151075, string.Format("#{0}", LabelNumber)); //barnacle covered ~1_token~
+                }
                 else
+                {
                     list.Add(1151075, ItemData.Name); //barnacle covered ~1_token~
+                }
 
                 if (string.IsNullOrEmpty(ShipwreckName))
                 {
@@ -83,8 +89,8 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(2);
+
             writer.Write(ShipwreckName);
             writer.Write(m_IsBarnacleItem);
         }
@@ -98,10 +104,10 @@ namespace Server.Items
             {
                 case 2:
                     ShipwreckName = reader.ReadString();
-                    goto case 1;
+                    break;
                 case 1:
                     m_IsBarnacleItem = reader.ReadBool();
-                    goto case 0;
+                    break;
                 case 0:
                     break;
             }
@@ -123,13 +129,9 @@ namespace Server.Items
         }
 
         #region IShipwreckedItem Members
-
         public bool IsShipwreckedItem
         {
-            get
-            {
-                return true;	//It's a ShipwreckedItem item.  'Course it's gonna be a Shipwreckeditem
-            }
+            get => true; // It's a Shipwrecked Item item.
             set
             {
             }
