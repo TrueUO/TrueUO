@@ -41,7 +41,7 @@ namespace Server.Items
                 case 2:
                     {
                         ShipwreckName = reader.ReadString();
-                        goto case 1;
+                        break;
                     }
                 case 1:
                     {

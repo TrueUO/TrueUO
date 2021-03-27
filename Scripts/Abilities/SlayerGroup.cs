@@ -75,7 +75,9 @@ namespace Server.Items
                     typeof(GrayGoblinMageRenowned), typeof(CorgulTheSoulBinder),
                     typeof(PirateCrew), typeof(LizardmanWitchdoctor),
                     typeof(OrcFootSoldier), typeof(RatmanAssassin),
-                    typeof(OgreBoneCrusher), typeof(TitanRockHunter)
+                    typeof(OgreBoneCrusher), typeof(TitanRockHunter),
+                    typeof(CaveTrollWrong), typeof(HungryOgre),
+                    typeof(Archmage), typeof(Fezzik)
                 );
 
             humanoid.Entries = new[]
@@ -84,26 +86,27 @@ namespace Server.Items
                     (
                         SlayerName.OgreTrashing,
 
-                        typeof(Ogre),               typeof(OgreLord),
-                        typeof(ArcticOgreLord),     typeof(OgreBoneCrusher)
+                        typeof(Ogre), typeof(OgreLord),
+                        typeof(ArcticOgreLord), typeof(OgreBoneCrusher),
+                        typeof(HungryOgre), typeof(Fezzik)
                     ),
 
                 new SlayerEntry
                     (
                         SlayerName.OrcSlaying,
 
-                        typeof(Orc),            typeof(OrcBomber),
-                        typeof(OrcBrute),       typeof(OrcCaptain),
-                        typeof(OrcChopper),     typeof(OrcScout),
-                        typeof(OrcishLord),     typeof(OrcishMage),
-                        typeof(OrcFootSoldier)
+                        typeof(Orc), typeof(OrcBomber),
+                        typeof(OrcBrute), typeof(OrcCaptain),
+                        typeof(OrcChopper), typeof(OrcScout),
+                        typeof(OrcishLord), typeof(OrcishMage),
+                        typeof(OrcFootSoldier), typeof(PirateCrew) // PirateCrew are orcs.
                     ),
 
                 new SlayerEntry
                     (
                         SlayerName.TrollSlaughter,
 
-                        typeof(Troll),  typeof(FrostTroll)
+                        typeof(Troll), typeof(FrostTroll), typeof(CaveTrollWrong)
                     )
             };
 
