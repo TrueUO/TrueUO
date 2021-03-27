@@ -129,49 +129,49 @@ namespace Server.Items
                 case 9:
                     {
                         ShipwreckName = reader.ReadString();
-                        break;
+                        goto case 8;
                     }
                 case 8:
                     {
                         m_PlayerConstructed = reader.ReadBool();
                         m_Resource = (CraftResource)reader.ReadInt();
                         m_Quality = (ItemQuality)reader.ReadInt();
-                        break;
+                        goto case 7;
                     }
                 case 7:
                     {
                         m_Crafter = reader.ReadMobile();
-                        break;
+                        goto case 6;
                     }
                 case 6:
                     {
                         IsShipwreckedItem = reader.ReadBool();
-                        break;
+                        goto case 5;
                     }
                 case 5:
                     {
                         m_TrapOnLockpick = reader.ReadBool();
-                        break;
+                        goto case 4;
                     }
                 case 4:
                     {
                         m_RequiredSkill = reader.ReadInt();
-                        break;
+                        goto case 3;
                     }
                 case 3:
                     {
                         m_MaxLockLevel = reader.ReadInt();
-                        break;
+                        goto case 2;
                     }
                 case 2:
                     {
                         m_KeyValue = reader.ReadUInt();
-                        break;
+                        goto case 1;
                     }
                 case 1:
                     {
                         m_LockLevel = reader.ReadInt();
-                        break;
+                        goto case 0;
                     }
                 case 0:
                     {
