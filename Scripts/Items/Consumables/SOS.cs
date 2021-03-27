@@ -59,10 +59,7 @@ namespace Server.Items
 
         public void UpdateHue()
         {
-            if (IsAncient)
-                Hue = 0x481;
-            else
-                Hue = 0;
+            Hue = IsAncient ? 0x481 : 0;
         }
 
         [Constructable]
@@ -91,16 +88,16 @@ namespace Server.Items
             UpdateHue();
         }
 
-        public static string[] _Names =
-        {
-            "The Beast", "The Crown Jewel", "The Dragon's Breath", "The Excellencia", "The Golden Ankh", "The HMS Cape", "The Mustang", "The Nymphet", "The Spartan", "The Scaly Eel",
-            "The Silver Hart", "The Vengeance Bay Ghost Ship", "The Poseidon's Fury", "The Lusty Wench", "The Empire", "The Ararat", "The Rogue", "The Arabella"
-        };
-
         public SOS(Serial serial)
             : base(serial)
         {
         }
+
+        private static string[] _Names =
+        {
+            "The Beast", "The Crown Jewel", "The Dragon's Breath", "The Excellencia", "The Golden Ankh", "The HMS Cape", "The Mustang", "The Nymphet", "The Spartan", "The Scaly Eel",
+            "The Silver Hart", "The Vengeance Bay Ghost Ship", "The Poseidon's Fury", "The Lusty Wench", "The Empire", "The Ararat", "The Rogue", "The Arabella"
+        };
 
         public override void Serialize(GenericWriter writer)
         {
@@ -124,14 +121,14 @@ namespace Server.Items
                 case 5:
                     {
                         ShipwreckName = reader.ReadString();
-                        goto case 4;
+                        break;
                     }
                 case 4:
                 case 3:
                 case 2:
                     {
                         m_Level = reader.ReadInt();
-                        goto case 1;
+                        break;
                     }
                 case 1:
                     {
@@ -154,15 +151,6 @@ namespace Server.Items
                         break;
                     }
             }
-
-            if (version < 2)
-                m_Level = MessageInABottle.GetRandomLevel();
-
-            if (version < 3)
-                UpdateHue();
-
-            if (version < 4 && m_TargetMap == Map.Tokuno)
-                m_TargetMap = Map.Trammel;
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -272,9 +260,13 @@ namespace Server.Items
                 string fmt;
 
                 if (Sextant.Format(loc, map, ref xLong, ref yLat, ref xMins, ref yMins, ref xEast, ref ySouth))
-                    fmt = string.Format("{0}o {1}'{2}, {3}o {4}'{5}", yLat, yMins, ySouth ? "S" : "N", xLong, xMins, xEast ? "E" : "W");
+                {
+                    fmt = $"{yLat}o {yMins}'{(ySouth ? "S" : "N")}, {xLong}o {xMins}'{(xEast ? "E" : "W")}";
+                }
                 else
+                {
                     fmt = "?????";
+                }
 
                 AddPage(0);
 
