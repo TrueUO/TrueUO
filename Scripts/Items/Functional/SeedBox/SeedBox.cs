@@ -65,14 +65,11 @@ namespace Server.Engines.Plants
 
         public override void OnDoubleClick(Mobile m)
         {
-            if (IsChildOf(m.Backpack) || CheckAccessible(m) && m.InRange(GetWorldLocation(), 3))
+            if (m.InRange(GetWorldLocation(), 3))
             {
                 if (m is PlayerMobile mobile)
                     BaseGump.SendGump(new SeedBoxGump(mobile, this));
             }
-
-            if (m.AccessLevel > AccessLevel.Player)
-                base.OnDoubleClick(m);
         }
 
         public override void GetContextMenuEntries(Mobile from, List<ContextMenuEntry> list)
@@ -80,29 +77,7 @@ namespace Server.Engines.Plants
             base.GetContextMenuEntries(from, list);
 
             SetSecureLevelEntry.AddTo(from, this, list);
-        }
-
-        public bool CheckAccessible(Mobile from)
-        {
-            if (from.AccessLevel >= AccessLevel.GameMaster)
-                return true;
-
-            BaseHouse house = BaseHouse.FindHouseAt(this);
-
-            if (house == null)
-                return true;
-
-            switch (Level)
-            {
-                case SecureLevel.Owner: return house.IsOwner(from);
-                case SecureLevel.CoOwners: return house.IsCoOwner(from);
-                case SecureLevel.Friends: return house.IsFriend(from);
-                case SecureLevel.Anyone: return true;
-                case SecureLevel.Guild: return house.IsGuildMember(from);
-            }
-
-            return false;
-        }
+        }        
 
         public override bool OnDragDrop(Mobile from, Item dropped)
         {
@@ -135,7 +110,6 @@ namespace Server.Engines.Plants
             if (TotalCount + seed.Amount <= MaxSeeds)
             {
                 SeedEntry entry = GetExisting(seed);
-                int oldcount = UniqueCount;
 
                 if (entry != null)
                 {

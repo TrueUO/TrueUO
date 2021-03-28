@@ -20,7 +20,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public Mobile Crafter
         {
-            get { return m_Crafter; }
+            get => m_Crafter;
             set
             {
                 m_Crafter = value;
@@ -29,64 +29,21 @@ namespace Server.Items
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public Mobile Picker
-        {
-            get
-            {
-                return m_Picker;
-            }
-            set
-            {
-                m_Picker = value;
-            }
-        }
+        public Mobile Picker { get => m_Picker; set => m_Picker = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int MaxLockLevel
-        {
-            get
-            {
-                return m_MaxLockLevel;
-            }
-            set
-            {
-                m_MaxLockLevel = value;
-            }
-        }
+        public int MaxLockLevel { get => m_MaxLockLevel; set => m_MaxLockLevel = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int LockLevel
-        {
-            get
-            {
-                return m_LockLevel;
-            }
-            set
-            {
-                m_LockLevel = value;
-            }
-        }
+        public int LockLevel { get => m_LockLevel; set => m_LockLevel = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int RequiredSkill
-        {
-            get
-            {
-                return m_RequiredSkill;
-            }
-            set
-            {
-                m_RequiredSkill = value;
-            }
-        }
+        public int RequiredSkill { get => m_RequiredSkill; set => m_RequiredSkill = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public virtual bool Locked
         {
-            get
-            {
-                return m_Locked;
-            }
+            get => m_Locked;
             set
             {
                 m_Locked = value;
@@ -99,44 +56,24 @@ namespace Server.Items
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public uint KeyValue
-        {
-            get
-            {
-                return m_KeyValue;
-            }
-            set
-            {
-                m_KeyValue = value;
-            }
-        }
+        public uint KeyValue { get => m_KeyValue; set => m_KeyValue = value; }
 
         public override bool TrapOnOpen => !m_TrapOnLockpick;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool TrapOnLockpick
-        {
-            get
-            {
-                return m_TrapOnLockpick;
-            }
-            set
-            {
-                m_TrapOnLockpick = value;
-            }
-        }
+        public bool TrapOnLockpick { get => m_TrapOnLockpick; set => m_TrapOnLockpick = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public ItemQuality Quality
         {
-            get { return m_Quality; }
+            get => m_Quality;
             set { m_Quality = value; InvalidateProperties(); }
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public CraftResource Resource
         {
-            get { return m_Resource; }
+            get => m_Resource;
             set
             {
                 m_Resource = value;
@@ -148,7 +85,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public bool PlayerConstructed
         {
-            get { return m_PlayerConstructed; }
+            get => m_PlayerConstructed;
             set
             {
                 m_PlayerConstructed = value;
@@ -159,8 +96,9 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
+            writer.Write(9); // version
 
-            writer.Write(8); // version
+            writer.Write(ShipwreckName);
 
             writer.Write(m_PlayerConstructed);
             writer.Write((int)m_Resource);
@@ -168,7 +106,7 @@ namespace Server.Items
 
             writer.Write(m_Crafter);
 
-            writer.Write(m_IsShipwreckedItem);
+            writer.Write(IsShipwreckedItem);
 
             writer.Write(m_TrapOnLockpick);
 
@@ -184,82 +122,60 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             int version = reader.ReadInt();
 
             switch (version)
             {
+                case 9:
+                    {
+                        ShipwreckName = reader.ReadString();
+                        goto case 8;
+                    }
                 case 8:
                     {
                         m_PlayerConstructed = reader.ReadBool();
                         m_Resource = (CraftResource)reader.ReadInt();
                         m_Quality = (ItemQuality)reader.ReadInt();
-
                         goto case 7;
                     }
                 case 7:
                     {
                         m_Crafter = reader.ReadMobile();
-
                         goto case 6;
                     }
                 case 6:
                     {
-                        m_IsShipwreckedItem = reader.ReadBool();
-
+                        IsShipwreckedItem = reader.ReadBool();
                         goto case 5;
                     }
                 case 5:
                     {
                         m_TrapOnLockpick = reader.ReadBool();
-
                         goto case 4;
                     }
                 case 4:
                     {
                         m_RequiredSkill = reader.ReadInt();
-
                         goto case 3;
                     }
                 case 3:
                     {
                         m_MaxLockLevel = reader.ReadInt();
-
                         goto case 2;
                     }
                 case 2:
                     {
                         m_KeyValue = reader.ReadUInt();
-
                         goto case 1;
                     }
                 case 1:
                     {
                         m_LockLevel = reader.ReadInt();
-
                         goto case 0;
                     }
                 case 0:
                     {
-                        if (version < 3)
-                            m_MaxLockLevel = 100;
-
-                        if (version < 4)
-                        {
-                            if ((m_MaxLockLevel - m_LockLevel) == 40)
-                            {
-                                m_RequiredSkill = m_LockLevel + 6;
-                                m_LockLevel = m_RequiredSkill - 10;
-                                m_MaxLockLevel = m_RequiredSkill + 39;
-                            }
-                            else
-                            {
-                                m_RequiredSkill = m_LockLevel;
-                            }
-                        }
-
                         m_Locked = reader.ReadBool();
-
                         break;
                     }
             }
@@ -434,9 +350,16 @@ namespace Server.Items
                 list.Add(1114057, "#{0}", CraftResources.GetLocalizationNumber(m_Resource)); // ~1_val~
             }
 
-            if (m_IsShipwreckedItem)
+            if (IsShipwreckedItem)
             {
-                list.Add(1041645); // recovered from a shipwreck
+                if (string.IsNullOrEmpty(ShipwreckName))
+                {
+                    list.Add(1041645); // recovered from a shipwreck                    
+                }
+                else
+                {
+                    list.Add(1159011, ShipwreckName); // Recovered from the Shipwreck of ~1_NAME~
+                }
             }
         }
 
@@ -499,21 +422,11 @@ namespace Server.Items
         #endregion
 
         #region IShipwreckedItem Members
-
-        private bool m_IsShipwreckedItem;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public bool IsShipwreckedItem { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsShipwreckedItem
-        {
-            get
-            {
-                return m_IsShipwreckedItem;
-            }
-            set
-            {
-                m_IsShipwreckedItem = value;
-            }
-        }
+        public string ShipwreckName { get; set; }
         #endregion
     }
 }

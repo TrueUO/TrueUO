@@ -447,7 +447,12 @@ namespace Server.Engines.Harvest
                         if (preLoot != null)
                         {
                             if (preLoot is IShipwreckedItem item)
+                            {
                                 item.IsShipwreckedItem = true;
+
+                                if (sos.IsAncient)
+                                    item.ShipwreckName = sos.ShipwreckName;
+                            }
 
                             return preLoot;
                         }
@@ -497,6 +502,9 @@ namespace Server.Engines.Harvest
                         chest.TrapLevel = 0;
 
                         chest.IsShipwreckedItem = true;
+
+                        if (sos.IsAncient)
+                            chest.ShipwreckName = sos.ShipwreckName;
 
                         sos.Delete();
 
