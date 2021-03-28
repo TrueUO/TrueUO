@@ -28,12 +28,21 @@ namespace Server.Items
         public bool IsAncient => m_Level >= 4;
 
         [CommandProperty(AccessLevel.GameMaster)]
+        public string ShipwreckName { get; set; }
+
+        [CommandProperty(AccessLevel.GameMaster)]
         public int Level
         {
             get => m_Level;
             set
             {
                 m_Level = Math.Max(1, Math.Min(value, 4));
+
+                if (IsAncient && string.IsNullOrEmpty(ShipwreckName))
+                {
+                    ShipwreckName = _Names[Utility.Random(_Names.Length)];
+                }
+
                 UpdateHue();
                 InvalidateProperties();
             }
@@ -50,10 +59,7 @@ namespace Server.Items
 
         public void UpdateHue()
         {
-            if (IsAncient)
-                Hue = 0x481;
-            else
-                Hue = 0;
+            Hue = IsAncient ? 0x481 : 0;
         }
 
         [Constructable]
@@ -74,7 +80,7 @@ namespace Server.Items
         {
             Weight = 1.0;
 
-            m_Level = level;
+            Level = level;
             m_MessageIndex = Utility.Random(MessageEntry.Entries.Length);
             m_TargetMap = map;
             m_TargetLocation = FindLocation(m_TargetMap);
@@ -87,14 +93,19 @@ namespace Server.Items
         {
         }
 
+        private static string[] _Names =
+        {
+            "The Beast", "The Crown Jewel", "The Dragon's Breath", "The Excellencia", "The Golden Ankh", "The HMS Cape", "The Mustang", "The Nymphet", "The Spartan", "The Scaly Eel",
+            "The Silver Hart", "The Vengeance Bay Ghost Ship", "The Poseidon's Fury", "The Lusty Wench", "The Empire", "The Ararat", "The Rogue", "The Arabella"
+        };
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
+            writer.Write(5);
 
-            writer.Write(4); // version
-
+            writer.Write(ShipwreckName);
             writer.Write(m_Level);
-
             writer.Write(m_TargetMap);
             writer.Write(m_TargetLocation);
             writer.Write(m_MessageIndex);
@@ -103,11 +114,15 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             int version = reader.ReadInt();
 
             switch (version)
             {
+                case 5:
+                    {
+                        ShipwreckName = reader.ReadString();
+                        goto case 2;
+                    }
                 case 4:
                 case 3:
                 case 2:
@@ -120,31 +135,22 @@ namespace Server.Items
                         m_TargetMap = reader.ReadMap();
                         m_TargetLocation = reader.ReadPoint3D();
                         m_MessageIndex = reader.ReadInt();
-
-                        break;
+                        goto case 0;
                     }
                 case 0:
                     {
                         m_TargetMap = Map;
 
                         if (m_TargetMap == null || m_TargetMap == Map.Internal)
+                        {
                             m_TargetMap = Map.Trammel;
+                        }
 
                         m_TargetLocation = FindLocation(m_TargetMap);
                         m_MessageIndex = Utility.Random(MessageEntry.Entries.Length);
-
                         break;
                     }
             }
-
-            if (version < 2)
-                m_Level = MessageInABottle.GetRandomLevel();
-
-            if (version < 3)
-                UpdateHue();
-
-            if (version < 4 && m_TargetMap == Map.Tokuno)
-                m_TargetMap = Map.Trammel;
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -176,7 +182,7 @@ namespace Server.Items
             0x00A8, 0x00AB, 0x0136, 0x0137
         };
 
-        private static readonly Rectangle2D[] m_BritRegions = { new Rectangle2D(0, 0, 5120, 4096) };
+        private static readonly Rectangle2D[] m_BritRegions = { new Rectangle2D(8, 88, 88, 3927), new Rectangle2D(96, 1547, 192, 2463), new Rectangle2D(288, 1729, 262, 260), new Rectangle2D(550, 1873, 136, 159), new Rectangle2D(1584, 3617, 448, 464), new Rectangle2D(2360, 2497, 920, 728), new Rectangle2D(2640, 3705, 1384, 344), new Rectangle2D(3232, 3257, 760, 408), new Rectangle2D(2296, 1353, 1272, 528), new Rectangle2D(2952, 1041, 496, 312), new Rectangle2D(3568, 25, 256, 976), new Rectangle2D(3872, 1585, 584, 1344), new Rectangle2D(4464, 1585, 560, 664), new Rectangle2D(4464, 2433, 568, 496) };
         private static readonly Rectangle2D[] m_IlshRegions = { new Rectangle2D(1472, 272, 304, 240), new Rectangle2D(1240, 1000, 312, 160) };
         private static readonly Rectangle2D[] m_MalasRegions = { new Rectangle2D(1376, 1520, 464, 280) };
         private static readonly Rectangle2D[] m_TokunoRegions = { new Rectangle2D(10, 10, 1440, 1440) };
@@ -243,27 +249,6 @@ namespace Server.Items
             return water;
         }
 
-#if false
-		private class MessageGump : Gump
-		{
-			public MessageGump( MessageEntry entry, Map map, Point3D loc ) : base( (640 - entry.Width) / 2, (480 - entry.Height) / 2 )
-			{
-				int xLong = 0, yLat = 0;
-				int xMins = 0, yMins = 0;
-				bool xEast = false, ySouth = false;
-				string fmt;
-
-				if ( Sextant.Format( loc, map, ref xLong, ref yLat, ref xMins, ref yMins, ref xEast, ref ySouth ) )
-					fmt = String.Format( "{0}°{1}'{2},{3}°{4}'{5}", yLat, yMins, ySouth ? "S" : "N", xLong, xMins, xEast ? "E" : "W" );
-				else
-					fmt = "?????";
-
-				AddPage( 0 );
-				AddBackground( 0, 0, entry.Width, entry.Height, 2520 );
-				AddHtml( 38, 38, entry.Width - 83, entry.Height - 86, String.Format( entry.Message, fmt ), false, false );
-			}
-		}
-#else
         private class MessageGump : Gump
         {
             public MessageGump(MessageEntry entry, Map map, Point3D loc)
@@ -275,18 +260,21 @@ namespace Server.Items
                 string fmt;
 
                 if (Sextant.Format(loc, map, ref xLong, ref yLat, ref xMins, ref yMins, ref xEast, ref ySouth))
-                    fmt = string.Format("{0}o {1}'{2}, {3}o {4}'{5}", yLat, yMins, ySouth ? "S" : "N", xLong, xMins, xEast ? "E" : "W");
+                {
+                    fmt = $"{yLat}o {yMins}'{(ySouth ? "S" : "N")}, {xLong}o {xMins}'{(xEast ? "E" : "W")}";
+                }
                 else
+                {
                     fmt = "?????";
+                }
 
                 AddPage(0);
 
-                AddBackground(0, 0, 250, 350, 9390);
+                AddBackground(0, 0, 254, 400, 9390);
 
-                AddHtmlLocalized(30, 50, 190, 420, entry.Message, fmt, 0, false, false);
+                AddHtmlLocalized(27, 50, 200, 300, entry.Message, fmt, 0, false, false);
             }
         }
-#endif
 
         private class MessageEntry
         {
