@@ -30,8 +30,8 @@ namespace Server.Spells.SkillMasteries
         {
             if (CheckSequence())
             {
-                var level = GetMasteryLevel();
-                int mana = Math.Min(Caster.ManaMax, (int)((Caster.Skills[CastSkill].Value + Caster.Skills[DamageSkill].Value) / 2) * (level / 3));
+                int level = GetMasteryLevel();
+                int mana = Math.Min(Caster.ManaMax, (int)((Caster.Skills[CastSkill].Value * 0.6 + Caster.Skills[DamageSkill].Value * 0.4) * (float)level / 3));
 
                 Caster.Mana += mana;
 
