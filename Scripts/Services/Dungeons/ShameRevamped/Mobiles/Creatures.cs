@@ -826,7 +826,7 @@ namespace Server.Mobiles
     [CorpseName("a crazed corpse")]
     public class CrazedMage : BaseCreature
     {
-        public static Dictionary<Mobile, Timer> TaintTable { get; private set; }
+        public static List<Mobile> TaintTable { get; private set; }
         public static Dictionary<Mobile, Mobile> DivertTable { get; private set; }
 
         [Constructable]
@@ -894,7 +894,7 @@ namespace Server.Mobiles
 
         public static bool IsUnderTaintEffects(Mobile from)
         {
-            return from != null && TaintTable != null && TaintTable.ContainsKey(from);
+            return from != null && TaintTable != null && TaintTable.Contains(from);
         }
 
         public static bool IsUnderDivertEffects(Mobile from)
@@ -927,11 +927,13 @@ namespace Server.Mobiles
         public static void DoTaintEffects(Mobile from)
         {
             if (TaintTable == null)
-                TaintTable = new Dictionary<Mobile, Timer>();
+                TaintTable = new List<Mobile>();
 
-            if (!TaintTable.ContainsKey(from))
+            if (!TaintTable.Contains(from))
             {
                 from.SendLocalizedMessage(1151482); // Your mana has been tainted!
+
+                TaintTable.Add(from);
 
                 Timer.DelayCall(TimeSpan.FromSeconds(5), () =>
                 {
