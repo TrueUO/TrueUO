@@ -19,7 +19,7 @@ namespace Server.Mobiles
                 Add(new GenericBuyInfo(typeof(Wasabi), 2, 20, 0x24E9, 0));
                 Add(new GenericBuyInfo(typeof(SushiRolls), 3, 20, 0x283E, 0));
                 Add(new GenericBuyInfo(typeof(SushiPlatter), 3, 20, 0x2840, 0));
-                Add(new GenericBuyInfo(typeof(GreenTeaBasket), 3, 20, 0x284B, 0));
+                Add(new GenericBuyInfo(typeof(GreenTeaBasket), 3, 20, 0x284B, 0, true));
                 Add(new GenericBuyInfo(typeof(MisoSoup), 3, 20, 0x284D, 0));
                 Add(new GenericBuyInfo(typeof(WhiteMisoSoup), 3, 20, 0x284E, 0));
                 Add(new GenericBuyInfo(typeof(RedMisoSoup), 3, 20, 0x284F, 0));
