@@ -1,5 +1,6 @@
 using Server.Engines.ShameRevamped;
 using Server.Items;
+using Server.Network;
 using System;
 using System.Collections.Generic;
 
@@ -746,8 +747,6 @@ namespace Server.Mobiles
     [CorpseName("a burning mage corpse")]
     public class BurningMage : BaseCreature
     {
-        public static Dictionary<Mobile, Timer> Table { get; private set; }
-
         [Constructable]
         public BurningMage() : base(AIType.AI_Mage, FightMode.Weakest, 10, 1, 0.4, 0.2)
         {
@@ -795,68 +794,7 @@ namespace Server.Mobiles
         {
             base.OnDamagedBySpell(from);
 
-            if (!IsUnderEffects(from) && 0.50 > Utility.RandomDouble())
-            {
-                DoEffects(from);
-            }
-        }
-
-        public static bool IsUnderEffects(Mobile from)
-        {
-            return from != null && Table != null && Table.ContainsKey(from);
-        }
-
-        public void DoEffects(Mobile from)
-        {
-            if (Table == null)
-                Table = new Dictionary<Mobile, Timer>();
-
-            if (!Table.ContainsKey(from))
-            {
-                Table[from] = Timer.DelayCall(TimeSpan.FromSeconds(1.5), TimeSpan.FromSeconds(1.5), new TimerStateCallback(SapMana), new object[] { from, this });
-                Table[from].Start();
-
-                from.SendLocalizedMessage(1151482); // Your mana has been tainted!
-                from.SendLocalizedMessage(1151485); // Your mana is being diverted.
-            }
-        }
-
-        private static void SapMana(object o)
-        {
-            object[] objs = o as object[];
-            Mobile from = objs[0] as Mobile;
-            Mobile mob = objs[1] as Mobile;
-
-            if (IsUnderEffects(from))
-            {
-                if (mob.Alive && from.Alive)
-                {
-                    from.SendLocalizedMessage(1151484); // You feel extra mana being drawn from you.
-                    from.SendLocalizedMessage(1151481); // Channeling the corrupted mana has damaged you!
-
-                    int toSap = Math.Min(from.Mana, Utility.RandomMinMax(30, 40));
-                    from.Mana -= toSap;
-
-                    AOS.Damage(from, mob, Math.Max(1, toSap / 10), false, 0, 0, 0, 0, 0, 0, 100, false, false, false);
-
-                    if (0.5 > Utility.RandomDouble())
-                        EndEffects(from);
-                }
-                else
-                    EndEffects(from);
-            }
-        }
-
-        public static void EndEffects(Mobile from)
-        {
-            if (IsUnderEffects(from))
-            {
-                Table[from].Stop();
-                Table.Remove(from);
-
-                from.SendLocalizedMessage(1151486); // Your mana is no longer being diverted.
-                from.SendLocalizedMessage(1151483); // Your mana is no longer corrupted.
-            }
+            CrazedMage.OnManaCorruptionAbility(this, from);
         }
 
         public override void GenerateLoot()
@@ -888,7 +826,8 @@ namespace Server.Mobiles
     [CorpseName("a crazed corpse")]
     public class CrazedMage : BaseCreature
     {
-        public static Dictionary<Mobile, Timer> Table { get; private set; }
+        public static Dictionary<Mobile, Timer> TaintTable { get; private set; }
+        public static Dictionary<Mobile, Mobile> DivertTable { get; private set; }
 
         [Constructable]
         public CrazedMage() : base(AIType.AI_Mystic, FightMode.Weakest, 10, 1, 0.4, 0.2)
@@ -935,67 +874,92 @@ namespace Server.Mobiles
         {
             base.OnDamagedBySpell(from);
 
-            if (!IsUnderEffects(from) && 0.50 > Utility.RandomDouble())
+            OnManaCorruptionAbility(this, from);
+        }
+
+        public static void OnManaCorruptionAbility(Mobile attacker, Mobile defender)
+        {
+            var m = defender is BaseCreature bc && bc.ControlMaster != null ? bc.ControlMaster : defender;
+
+            if (!IsUnderTaintEffects(m) && 0.60 > Utility.RandomDouble())
             {
-                DoEffects(from);
+                DoTaintEffects(m);
+            }
+
+            if (!IsUnderDivertEffects(m) && 0.40 > Utility.RandomDouble())
+            {
+                DoDivertEffects(attacker, m);
             }
         }
 
-        public static bool IsUnderEffects(Mobile from)
+        public static bool IsUnderTaintEffects(Mobile from)
         {
-            return from != null && Table != null && Table.ContainsKey(from);
+            return from != null && TaintTable != null && TaintTable.ContainsKey(from);
         }
 
-        public void DoEffects(Mobile from)
+        public static bool IsUnderDivertEffects(Mobile from)
         {
-            if (Table == null)
-                Table = new Dictionary<Mobile, Timer>();
-
-            if (!Table.ContainsKey(from))
-            {
-                Table[from] = Timer.DelayCall(TimeSpan.FromSeconds(1.5), TimeSpan.FromSeconds(1.5), new TimerStateCallback(SapMana), new object[] { from, this });
-                Table[from].Start();
-
-                from.SendLocalizedMessage(1151482); // Your mana has been tainted!
-                from.SendLocalizedMessage(1151485); // Your mana is being diverted.
-            }
+            return from != null && DivertTable != null && DivertTable.ContainsKey(from);
         }
 
-        private static void SapMana(object o)
+        public static void DoDivertEffects(Mobile attacker, Mobile defender)
         {
-            object[] objs = o as object[];
-            Mobile from = objs[0] as Mobile;
-            Mobile mob = objs[1] as Mobile;
+            if (DivertTable == null)
+                DivertTable = new Dictionary<Mobile, Mobile>();
 
-            if (IsUnderEffects(from))
+            if (!DivertTable.ContainsKey(defender))
             {
-                if (mob.Alive && from.Alive)
+                DivertTable[defender] = attacker;
+                defender.Send(new MobileStatus(defender));
+                defender.SendLocalizedMessage(1151485); // Your mana is being diverted.
+                BuffInfo.AddBuff(defender, new BuffInfo(BuffIcon.EtherealBurst, 1155898, 1156054, string.Format("\t30")));
+
+                Timer.DelayCall(TimeSpan.FromSeconds(8), () =>
                 {
-                    from.SendLocalizedMessage(1151484); // You feel extra mana being drawn from you.
-                    from.SendLocalizedMessage(1151481); // Channeling the corrupted mana has damaged you!
+                    DivertTable.Remove(defender);
+                    defender.Send(new MobileStatus(defender));
+                    BuffInfo.RemoveBuff(defender, BuffIcon.EtherealBurst);
+                    defender.SendLocalizedMessage(1151486); // Your mana is no longer being diverted.
+                });
+            }
+        }        
 
-                    int toSap = Math.Min(from.Mana, Utility.RandomMinMax(30, 40));
-                    from.Mana -= toSap;
+        public static void DoTaintEffects(Mobile from)
+        {
+            if (TaintTable == null)
+                TaintTable = new Dictionary<Mobile, Timer>();
 
-                    AOS.Damage(from, mob, Math.Max(1, toSap / 10), false, 0, 0, 0, 0, 0, 0, 100, false, false, false);
+            if (!TaintTable.ContainsKey(from))
+            {
+                from.SendLocalizedMessage(1151482); // Your mana has been tainted!
 
-                    if (0.5 > Utility.RandomDouble())
-                        EndEffects(from);
-                }
-                else
-                    EndEffects(from);
+                Timer.DelayCall(TimeSpan.FromSeconds(5), () =>
+                {
+                    TaintTable.Remove(from);
+                    from.SendLocalizedMessage(1151483); // Your mana is no longer corrupted.
+                });
             }
         }
 
-        public static void EndEffects(Mobile from)
+        public static void ManaCorruption(Mobile m, int mana)
         {
-            if (IsUnderEffects(from))
+            if (IsUnderDivertEffects(m))
             {
-                Table[from].Stop();
-                Table.Remove(from);
+                int extramana = Math.Min(m.Mana, (int)(mana * 0.25));
 
-                from.SendLocalizedMessage(1151486); // Your mana is no longer being diverted.
-                from.SendLocalizedMessage(1151483); // Your mana is no longer corrupted.
+                m.Mana -= extramana;
+                m.SendLocalizedMessage(1151484); // You feel extra mana being drawn from you.
+
+                if (DivertTable[m] != null)
+                {
+                    DivertTable[m].Mana += extramana;
+                }
+            }
+
+            if (IsUnderTaintEffects(m))
+            {
+                m.Damage(mana);
+                m.SendLocalizedMessage(1151481); // Channeling the corrupted mana has damaged you!
             }
         }
 
@@ -1026,8 +990,6 @@ namespace Server.Mobiles
     [CorpseName("a corrupted mage corpse")]
     public class CorruptedMage : EvilMage
     {
-        public static Dictionary<Mobile, Timer> Table { get; private set; }
-
         [Constructable]
         public CorruptedMage()
         {
@@ -1064,68 +1026,7 @@ namespace Server.Mobiles
         {
             base.OnDamagedBySpell(from);
 
-            if (!IsUnderEffects(from) && 0.10 > Utility.RandomDouble())
-            {
-                DoEffects(from);
-            }
-        }
-
-        public static bool IsUnderEffects(Mobile from)
-        {
-            return from != null && Table != null && Table.ContainsKey(from);
-        }
-
-        public void DoEffects(Mobile from)
-        {
-            if (Table == null)
-                Table = new Dictionary<Mobile, Timer>();
-
-            if (!Table.ContainsKey(from))
-            {
-                Table[from] = Timer.DelayCall(TimeSpan.FromSeconds(1.5), TimeSpan.FromSeconds(1.5), new TimerStateCallback(SapMana), new object[] { from, this });
-                Table[from].Start();
-
-                from.SendLocalizedMessage(1151482); // Your mana has been tainted!
-                from.SendLocalizedMessage(1151485); // Your mana is being diverted.
-            }
-        }
-
-        private static void SapMana(object o)
-        {
-            object[] objs = o as object[];
-            Mobile from = objs[0] as Mobile;
-            Mobile mob = objs[1] as Mobile;
-
-            if (IsUnderEffects(from))
-            {
-                if (mob.Alive && from.Alive)
-                {
-                    from.SendLocalizedMessage(1151484); // You feel extra mana being drawn from you.
-                    from.SendLocalizedMessage(1151481); // Channeling the corrupted mana has damaged you!
-
-                    int toSap = Math.Min(from.Mana, Utility.RandomMinMax(30, 40));
-                    from.Mana -= toSap;
-
-                    AOS.Damage(from, mob, Math.Max(1, toSap / 10), false, 0, 0, 0, 0, 0, 0, 100, false, false, false);
-
-                    if (0.5 > Utility.RandomDouble())
-                        EndEffects(from);
-                }
-                else
-                    EndEffects(from);
-            }
-        }
-
-        public static void EndEffects(Mobile from)
-        {
-            if (IsUnderEffects(from))
-            {
-                Table[from].Stop();
-                Table.Remove(from);
-
-                from.SendLocalizedMessage(1151486); // Your mana is no longer being diverted.
-                from.SendLocalizedMessage(1151483); // Your mana is no longer corrupted.
-            }
+            CrazedMage.OnManaCorruptionAbility(this, from);
         }
 
         public override int TreasureMapLevel => 2;

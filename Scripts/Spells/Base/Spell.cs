@@ -888,15 +888,7 @@ namespace Server.Spells
                 scalar += .5;
             }
 
-            // Lower Mana Cost = 40%
             int lmc = AosAttributes.GetValue(m_Caster, AosAttribute.LowerManaCost);
-
-            if (lmc > 40)
-            {
-                lmc = 40;
-            }
-
-            lmc += BaseArmor.GetInherentLowerManaCost(m_Caster);
 
             scalar -= (double)lmc / 100;
 
@@ -1049,6 +1041,8 @@ namespace Server.Spells
             else if (CheckFizzle())
             {
                 m_Caster.Mana -= mana;
+
+                CrazedMage.ManaCorruption(m_Caster, GetMana());
 
                 if (m_Scroll is SpellStone stone)
                 {
