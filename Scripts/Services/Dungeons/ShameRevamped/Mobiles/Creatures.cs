@@ -997,11 +997,11 @@ namespace Server.Mobiles
         {
             Title = "the corrupted mage";
 
-            SetStr(150, 170);
-            SetInt(100, 120);
-            SetDex(110, 120);
+            SetStr(150, 190);
+            SetInt(150, 200);
+            SetDex(100, 125);
 
-            SetHits(1200, 1250);
+            SetHits(1100, 1400);
             SetMana(800, 900);
             SetDamage(14, 17);
 
@@ -1013,23 +1013,19 @@ namespace Server.Mobiles
             SetResistance(ResistanceType.Poison, 60, 70);
             SetResistance(ResistanceType.Energy, 65, 75);
 
-            SetSkill(SkillName.MagicResist, 115, 120);
-            SetSkill(SkillName.Tactics, 110, 120);
-            SetSkill(SkillName.Wrestling, 100, 110);
+            SetSkill(SkillName.MagicResist, 115, 125);
+            SetSkill(SkillName.Tactics, 110, 125);
+            SetSkill(SkillName.Wrestling, 100, 130);
             SetSkill(SkillName.Magery, 120, 130);
             SetSkill(SkillName.EvalInt, 120, 130);
-            SetSkill(SkillName.Meditation, 100, 110);
+            SetSkill(SkillName.Meditation, 90, 105);
+
+            Fame = 3500;
+            Karma = -3500;
         }
 
         public override bool CanRummageCorpses => true;
         public override bool AlwaysMurderer => true;
-
-        public override void OnDamagedBySpell(Mobile from)
-        {
-            base.OnDamagedBySpell(from);
-
-            CrazedMage.OnManaCorruptionAbility(this, from);
-        }
 
         public override int TreasureMapLevel => 2;
 
@@ -1067,7 +1063,7 @@ namespace Server.Mobiles
 
             SetStr(150, 170);
             SetInt(150, 170);
-            SetDex(100, 110);
+            SetDex(100, 125);
 
             SetHits(500, 900);
             SetMana(550, 600);
@@ -1083,7 +1079,7 @@ namespace Server.Mobiles
 
             SetSkill(SkillName.MagicResist, 110, 115);
             SetSkill(SkillName.Tactics, 110, 115);
-            SetSkill(SkillName.Wrestling, 100, 110);
+            SetSkill(SkillName.Wrestling, 95, 110);
             SetSkill(SkillName.Magery, 110, 115);
             SetSkill(SkillName.EvalInt, 115, 125);
         }
