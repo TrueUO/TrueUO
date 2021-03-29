@@ -912,7 +912,7 @@ namespace Server.Mobiles
                 DivertTable[defender] = attacker;
                 defender.Send(new MobileStatus(defender));
                 defender.SendLocalizedMessage(1151485); // Your mana is being diverted.
-                BuffInfo.AddBuff(defender, new BuffInfo(BuffIcon.EtherealBurst, 1155898, 1156054, string.Format("\t30")));
+                BuffInfo.AddBuff(defender, new BuffInfo(BuffIcon.EtherealBurst, 1155898, 1156054, "\t30"));
 
                 Timer.DelayCall(TimeSpan.FromSeconds(8), () =>
                 {
@@ -1190,7 +1190,7 @@ namespace Server.Mobiles
         {
             if (!InRange(m.Location, 1))
             {
-                int x, y, z = 0;
+                int x, y, z;
                 Point3D p = Point3D.Zero;
 
                 for (int i = 0; i < 25; i++)
@@ -1323,7 +1323,7 @@ namespace Server.Mobiles
         {
             if (!InRange(m.Location, 1))
             {
-                int x, y, z = 0;
+                int x, y, z;
                 Point3D p = Point3D.Zero;
 
                 for (int i = 0; i < 25; i++)
