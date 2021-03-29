@@ -11,11 +11,12 @@ namespace Server.Items
         public override int InitMinHits => 255;
         public override int InitMaxHits => 255;
 
-        public bool HasSkillBonus => SkillBonuses.Skill_1_Value != 0;
+        public bool HasSkillBonus => SkillBonuses.Skill_2_Value != 0;
 
         [Constructable]
         public SterlingSilverRing()
         {
+            SkillBonuses.SetValues(0, SkillName.Meditation, 20);
             Attributes.RegenHits = 3;
             Attributes.RegenMana = 5;
             Attributes.WeaponDamage = 75;
@@ -25,7 +26,7 @@ namespace Server.Items
         {
             if (IsChildOf(m.Backpack) && m is PlayerMobile mobile && !HasSkillBonus)
             {
-                BaseGump.SendGump(new ApplySkillBonusGump(mobile, SkillBonuses, Skills, 20, 0));
+                BaseGump.SendGump(new ApplySkillBonusGump(mobile, SkillBonuses, Skills, 20, 1));
             }
             else
             {
@@ -61,13 +62,20 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(0);
+            writer.Write(1);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            reader.ReadInt(); // version
+            int version = reader.ReadInt();
+
+            if (version < 1)
+            {
+                SkillBonuses.SetValues(0, SkillName.Meditation, 20);
+                SkillBonuses.Skill_2_Value = 0;
+                SkillBonuses.Skill_3_Value = 0;
+            }
         }
     }
 }
