@@ -1,3 +1,5 @@
+using Server.Items;
+
 namespace Server.Mobiles
 {
     [CorpseName("a lion corpse")]
@@ -43,6 +45,9 @@ namespace Server.Mobiles
             MinTameSkill = 96.0;
 
             SetMagicalAbility(MagicalAbility.Piercing);
+            SetWeaponAbility(WeaponAbility.ArmorIgnore);
+            SetWeaponAbility(WeaponAbility.BleedAttack);
+            SetWeaponAbility(WeaponAbility.ParalyzingBlow);
         }
 
         public override int GetIdleSound() { return 0x673; }
