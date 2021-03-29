@@ -101,7 +101,7 @@ namespace Server.Items
 				new PresetMapEntry( 1041184, 200, 200, 2714, 3329, 3100, 3639 ), // map of Serpent's Hold
 				new PresetMapEntry( 1041200, 200, 200, 2560, 2560, 3840, 3840 ), // map of Serpent's Hold to Ocllo
 				new PresetMapEntry( 1041180, 200, 200, 0524, 2064, 0960, 2452 ), // map of Skara Brae
-				new PresetMapEntry( 1041204, 200, 200, 0000, 0000, 5199, 4095 ), // map of The World
+				new PresetMapEntry( 1041204, 200, 200, 0000, 0000, 5110, 4095 ), // map of The World
 				new PresetMapEntry( 1041177, 200, 200, 1792, 2630, 2118, 2952 ), // map of Trinsic
 				new PresetMapEntry( 1041193, 200, 200, 1792, 1792, 3072, 3072 ), // map of Trinsic to Buccaneer's Den
 				new PresetMapEntry( 1041195, 200, 200, 0256, 1792, 2304, 4095 ), // map of Trinsic to Jhelom
