@@ -45,6 +45,9 @@ namespace Server.Items
                     Effects.SendTargetParticles(from, 0x375A, 35, 90, 0x00, 0x00, 9502, (EffectLayer)255, 0x100);
 
                     Delete();
+
+                    if (from.Skills.CurrentMastery == Skill)
+                        MasteryInfo.OnMasteryChanged(from, from.Skills.CurrentMastery);
                 }
             }
         }
