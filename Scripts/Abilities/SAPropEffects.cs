@@ -524,7 +524,7 @@ namespace Server.Items
             }
             else if (attacker.Skills[SkillName.Tactics].Value >= 60.0)
             {
-                int mana = (int)(30.0 * ((AosAttributes.GetValue(attacker, AosAttribute.LowerManaCost) + BaseArmor.GetInherentLowerManaCost(attacker)) / 100.0));
+                int mana = (int)(30.0 * (AosAttributes.GetValue(attacker, AosAttribute.LowerManaCost) / 100.0));
 
                 if (attacker.Mana >= mana)
                 {

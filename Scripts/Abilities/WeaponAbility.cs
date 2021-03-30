@@ -1,3 +1,4 @@
+using Server.Mobiles;
 using Server.Network;
 using Server.Spells;
 using Server.Spells.SkillMasteries;
@@ -100,10 +101,7 @@ namespace Server.Items
                 scalar += .5;
             }
 
-            // Lower Mana Cost = 40%
-            int lmc = Math.Min(AosAttributes.GetValue(from, AosAttribute.LowerManaCost), 40);
-
-            lmc += BaseArmor.GetInherentLowerManaCost(from);
+            int lmc = AosAttributes.GetValue(from, AosAttribute.LowerManaCost);
 
             scalar -= (double)lmc / 100;
             mana = (int)(mana * scalar);
@@ -219,6 +217,8 @@ namespace Server.Items
                     ManaPhasingOrb.RemoveFromTable(from);
                 else
                     from.Mana -= mana;
+
+                CrazedMage.ManaCorruption(from, BaseMana);
             }
 
             return true;
