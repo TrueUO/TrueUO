@@ -495,8 +495,9 @@ namespace Server.Engines.Craft
 
             index = AddCraft(typeof(YellowtailBarracudaPie), 1116340, 1116098, 55.0, 105.0, typeof(YellowtailBarracudaSteak), 1116301, 1, 1044253);
             AddRes(index, typeof(Dough), 1024157, 1, 1044253);
-            AddRes(index, typeof(BaseBeverage), 1022503, 1, 1044253);
+            AddRes(index, typeof(BaseBeverage), 1022503, 1, 1044253);            
             AddRes(index, typeof(MentoSeasoning), 1116299, 1, 1044253);
+            SetBeverageType(index, BeverageType.Wine);
             SetNeedOven(index, true);
 
             index = AddCraft(typeof(HolyMackerelPie), 1116340, 1116225, 55.0, 105.0, typeof(HolyMackerelSteak), 1116315, 1, 1044253);
