@@ -1515,7 +1515,7 @@ namespace Server.Mobiles
             new TextDefinition[] { 1028838, 1157443 }, // Armor Ignore
             new TextDefinition[] { 1028860, 1157444 }, // Armor Pierce
             new TextDefinition[] { 1028861, 1157445 }, // Bladeweave
-            new TextDefinition[] { 1028839, 1157446 }, // Bleed Attack
+            new TextDefinition[] { 1075829, 1157446 }, // Bleed Attack
             new TextDefinition[] { 1028853, 1157447 }, // Block
             new TextDefinition[] { 1028840, 1157448 }, // Concussion Blow
             new TextDefinition[] { 1028841, 1157449 }, // Crushing Blow
@@ -1527,7 +1527,7 @@ namespace Server.Mobiles
             new TextDefinition[] { 1028866, 1157455 }, // Force of Nature
             new TextDefinition[] { 1028852, 1157456 }, // Frenzied Whirlwind
             new TextDefinition[] { 1028846, 1157457 }, // Mortal Strike
-            new TextDefinition[] { 1028848, 1157458 }, // Paralyzing Blow
+            new TextDefinition[] { 1015199, 1157458 }, // Paralyzing Blow
             new TextDefinition[] { 1157402, 1157403 }  // Cold Wind
         };
 

@@ -30,25 +30,23 @@ namespace Server.Spells.SkillMasteries
         {
             if (CheckSequence())
             {
-                Caster.Mana = Caster.ManaMax;
+                int level = GetMasteryLevel();
+                int mana = Math.Min(Caster.ManaMax, (int)((Caster.Skills[CastSkill].Value * 0.6 + Caster.Skills[DamageSkill].Value * 0.4) * (float)level / 3));
 
-                int duration = 120;
-                double skill = ((Caster.Skills[CastSkill].Value + Caster.Skills[DamageSkill].Value) / 2.1) + GetMasteryLevel() * 2;
+                Caster.Mana += mana;
 
-                if (skill >= 120)
-                    duration = 30;
+                int duration = 360;            
 
-                if (skill >= 100)
-                    duration = 60;
-
-                if (duration >= 60)
-                    duration = 90;
+                if (level == 2)
+                    duration = 240;
+                else if (level == 3)
+                    duration = 120;
 
                 AddToCooldown(TimeSpan.FromMinutes(duration));
 
                 Caster.PlaySound(0x102);
                 Effects.SendTargetParticles(Caster, 0x376A, 35, 90, 0x00, 0x00, 9502, (EffectLayer)255, 0x100);
-                Caster.SendLocalizedMessage(1155789); // You feel completely rejuvinated!
+                Caster.SendLocalizedMessage(1155791); // You feel rejuvenated!
             }
 
             FinishSequence();
