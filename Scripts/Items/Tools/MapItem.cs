@@ -52,13 +52,13 @@ namespace Server.Items
         public virtual void SetDisplayByFacet()
         {
             if (Facet == Map.Tokuno)
-                SetDisplay(0, 0, 1448, 1430, 400, 400);
+                SetDisplay(0, 0, 1446, 1446, 400, 400);
             else if (Facet == Map.Malas)
-                SetDisplay(520, 0, 2580, 2050, 400, 400);
+                SetDisplay(510, 0, 2558, 2045, 400, 400);
             else if (Facet == Map.Ilshenar)
-                SetDisplay(130, 136, 1927, 1468, 400, 400);
+                SetDisplay(201, 143, 1860, 1450, 400, 400);
             else if (Facet == Map.TerMur)
-                SetDisplay(260, 2780, 1280, 4090, 400, 400);
+                SetDisplay(260, 2799, 1259, 4095, 400, 400);
         }
 
         public void SetDisplay(int x1, int y1, int x2, int y2, int w, int h)
