@@ -126,6 +126,12 @@ namespace Server.Engines.Craft
             Resources.Add(craftRes);
         }
 
+        public void AddMapRes(Type type, int maplevel, TextDefinition name, int amount, TextDefinition message)
+        {
+            CraftRes craftRes = new MapRes(type, maplevel, name, amount, message);
+            Resources.Add(craftRes);
+        }
+
         public void AddSkill(SkillName skillToMake, double minSkill, double maxSkill)
         {
             CraftSkill craftSkill = new CraftSkill(skillToMake, minSkill, maxSkill);
@@ -637,6 +643,22 @@ namespace Server.Engines.Craft
             return false;
         }
 
+        public bool IsMapLevelType(Type[][] types)
+        {
+            for (int i = 0; i < types.Length; ++i)
+            {
+                Type[] check = types[i];
+
+                for (int j = 0; j < check.Length; ++j)
+                {
+                    if (typeof(TreasureMap).IsAssignableFrom(check[j]))
+                        return true;
+                }
+            }
+
+            return false;
+        }
+
         public int ConsumeQuantityByPlantHue(Mobile from, CraftSystem craftSystem, Container cont, Type[][] types, int[] amounts)
         {
             if (types.Length != amounts.Length)
@@ -703,6 +725,67 @@ namespace Server.Engines.Craft
 
                         item.Consume(need);
                         break;
+                    }
+                }
+            }
+
+            return -1;
+        }
+
+        public int ConsumeQuantityByMapLevel(Mobile from, Container cont, Type[][] types, int[] amounts)
+        {
+            if (types.Length != amounts.Length)
+                throw new ArgumentException();
+
+            Item[][] items = new Item[types.Length][];
+            int[] totals = new int[types.Length];
+
+            for (int i = 0; i < types.Length; ++i)
+            {
+                MapRes mapRes = Resources.GetAt(i) as MapRes;
+                items[i] = cont.FindItemsByType(types[i], true);
+
+                for (int j = 0; j < items[i].Length; ++j)
+                {                    
+                    var tmap = items[i][j] as TreasureMap;
+
+                    if (tmap != null && tmap.Level == mapRes.MapLevel && tmap.CompletedBy == from)
+                    {
+                        totals[i] += items[i][j].Amount;
+                    }
+                }
+
+                if (totals[i] < amounts[i])
+                    return i;
+            }
+
+            for (int i = 0; i < types.Length; ++i)
+            {
+                int need = amounts[i];
+                MapRes mapRes = Resources.GetAt(i) as MapRes;
+
+                for (int j = 0; j < items[i].Length; ++j)
+                {
+                    var tmap = items[i][j] as TreasureMap;
+
+                    int theirAmount = tmap.Amount;
+
+                    if (tmap != null && tmap.Level == mapRes.MapLevel && tmap.CompletedBy == from)
+                    {
+                        if (theirAmount < need)
+                        {
+                            OnResourceConsumed(tmap, theirAmount);
+
+                            tmap.Delete();
+                            need -= theirAmount;
+                        }
+                        else
+                        {
+                            OnResourceConsumed(tmap, need);
+
+                            tmap.Consume(need);
+                            break;
+                        }
                     }
                 }
             }
@@ -846,6 +929,25 @@ namespace Server.Engines.Craft
                     continue;
 
                 amount += items[i].Amount;
+            }
+
+            return amount;
+        }
+
+        public int GetMapLevelAmount(Mobile from, Container cont, Type[] types, int reslevel)
+        {
+            Item[] items = cont.FindItemsByType(types, true);
+
+            int amount = 0;
+
+            for (int i = 0; i < items.Length; ++i)
+            {
+                TreasureMap tmap = items[i] as TreasureMap;
+
+                if (tmap != null && tmap.Level == reslevel && tmap.CompletedBy == from)
+                {
+                    amount += items[i].Amount;
+                }                
             }
 
             return amount;
@@ -1077,6 +1179,10 @@ namespace Server.Engines.Craft
                 {
                     index = ConsumeQuantityByPlantHue(from, craftSystem, ourPack, types, amounts);
                 }
+                else if (IsMapLevelType(types))
+                {
+                    index = ConsumeQuantityByMapLevel(from, ourPack, types, amounts);
+                }
                 else
                 {
                     index = ourPack.ConsumeTotalGrouped(types, amounts, true, ResourceValidator, OnResourceConsumed, CheckHueGrouping);
@@ -1109,6 +1215,10 @@ namespace Server.Engines.Craft
                 {
                     index = ConsumeQuantityByPlantHue(from, craftSystem, ourPack, types, amounts);
                 }
+                else if (IsMapLevelType(types))
+                {
+                    index = ConsumeQuantityByMapLevel(from, ourPack, types, amounts);
+                }
                 else
                 {
                     index = ourPack.ConsumeTotalGrouped(types, amounts, true, ResourceValidator, OnResourceConsumed, CheckHueGrouping);
@@ -1138,6 +1248,19 @@ namespace Server.Engines.Craft
                     for (int i = 0; i < types.Length; i++)
                     {
                         if (GetPlantHueAmount(from, craftSystem, ourPack, types[i]) < amounts[i])
+                        {
+                            index = i;
+                            break;
+                        }
+                    }
+                }
+                else if (IsMapLevelType(types))
+                {
+                    for (int i = 0; i < types.Length; i++)
+                    {
+                        MapRes mapRes = Resources.GetAt(i) as MapRes;
+
+                        if (GetMapLevelAmount(from, ourPack, types[i], mapRes.MapLevel) < amounts[i])
                         {
                             index = i;
                             break;
