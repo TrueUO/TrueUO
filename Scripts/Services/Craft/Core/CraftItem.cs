@@ -533,7 +533,7 @@ namespace Server.Engines.Craft
 
             foreach (Item item in eable)
             {
-                if ((item.Z + 16) > from.Z && (from.Z + 16) > item.Z && Find(item.ItemID, itemIDs))
+                if (item.Z + 16 > from.Z && from.Z + 16 > item.Z && Find(item.ItemID, itemIDs))
                 {
                     eable.Free();
                     return true;
@@ -643,7 +643,7 @@ namespace Server.Engines.Craft
             return false;
         }
 
-        public bool IsMapLevelType(Type[][] types)
+        private bool IsMapLevelType(Type[][] types)
         {
             for (int i = 0; i < types.Length; ++i)
             {
@@ -732,7 +732,7 @@ namespace Server.Engines.Craft
             return -1;
         }
 
-        public int ConsumeQuantityByMapLevel(Mobile from, Container cont, Type[][] types, int[] amounts)
+        private int ConsumeQuantityByMapLevel(Mobile from, Container cont, Type[][] types, int[] amounts)
         {
             if (types.Length != amounts.Length)
                 throw new ArgumentException();
@@ -770,7 +770,7 @@ namespace Server.Engines.Craft
 
                     int theirAmount = tmap.Amount;
 
-                    if (tmap != null && tmap.Level == mapRes.MapLevel && tmap.CompletedBy == from)
+                    if (tmap.Level == mapRes.MapLevel && tmap.CompletedBy == from)
                     {
                         if (theirAmount < need)
                         {
@@ -1435,7 +1435,7 @@ namespace Server.Engines.Craft
                     break;
                 case CraftECA.ChanceMinusSixtyToFourtyFive:
                     {
-                        double offset = 0.60 - ((from.Skills[system.MainSkill].Value - 95.0) * 0.03);
+                        double offset = 0.60 - (from.Skills[system.MainSkill].Value - 95.0) * 0.03;
 
                         if (offset < 0.45)
                         {
@@ -1608,7 +1608,7 @@ namespace Server.Engines.Craft
                                                 }
 
                                                 int iMin = craftSystem.MinCraftEffect;
-                                                int iMax = (craftSystem.MaxCraftEffect - iMin) + 1;
+                                                int iMax = craftSystem.MaxCraftEffect - iMin + 1;
                                                 int iRandom = Utility.Random(iMax);
                                                 iRandom += iMin + 1;
                                                 new InternalTimer(from, craftSystem, this, typeRes, tool, iRandom).Start();

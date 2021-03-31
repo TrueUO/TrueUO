@@ -264,21 +264,21 @@ namespace Server.Engines.Craft
             return AddCraft(typeItem, group, name, skillToMake, minSkill, maxSkill, typeRes, nameRes, amount, "");
         }
 
-        public int AddMapCraft(Type typeItem, TextDefinition group, TextDefinition name, double minSkill, double maxSkill, Type typeRes, int maplevel, TextDefinition nameRes, int amount, TextDefinition message)
-        {
-            CraftItem craftItem = new CraftItem(typeItem, group, name);
-            craftItem.AddMapRes(typeRes, maplevel, nameRes, amount, message);
-            craftItem.AddSkill(MainSkill, minSkill, maxSkill);
-
-            DoGroup(group, craftItem);
-            return CraftItems.Add(craftItem);
-        }
-
         public int AddCraft(Type typeItem, TextDefinition group, TextDefinition name, SkillName skillToMake, double minSkill, double maxSkill, Type typeRes, TextDefinition nameRes, int amount, TextDefinition message)
         {
             CraftItem craftItem = new CraftItem(typeItem, group, name);
             craftItem.AddRes(typeRes, nameRes, amount, message);
             craftItem.AddSkill(skillToMake, minSkill, maxSkill);
+
+            DoGroup(group, craftItem);
+            return CraftItems.Add(craftItem);
+        }
+
+        public int AddMapCraft(Type typeItem, TextDefinition group, TextDefinition name, double minSkill, double maxSkill, Type typeRes, int maplevel, TextDefinition nameRes, int amount, TextDefinition message)
+        {
+            CraftItem craftItem = new CraftItem(typeItem, group, name);
+            craftItem.AddMapRes(typeRes, maplevel, nameRes, amount, message);
+            craftItem.AddSkill(MainSkill, minSkill, maxSkill);
 
             DoGroup(group, craftItem);
             return CraftItems.Add(craftItem);
