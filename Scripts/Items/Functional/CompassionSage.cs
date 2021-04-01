@@ -9,9 +9,9 @@ namespace Server.Items
     {
         public override int LabelNumber => 1153872; // Compassion Sage
 
-        public static string FilePath = Path.Combine("Saves/Misc", "CompassionSage.bin");
+        public static readonly string FilePath = Path.Combine("Saves/Misc", "CompassionSage.bin");
 
-        public static Dictionary<Mobile, DateTime> Table = new Dictionary<Mobile, DateTime>();
+        public static readonly Dictionary<Mobile, DateTime> Table = new Dictionary<Mobile, DateTime>();
 
         public static void Configure()
         {
@@ -38,10 +38,8 @@ namespace Server.Items
                 from.SendLocalizedMessage(1053004); // You must wait about a day before you can gain in compassion again.
                 return;
             }
-            else
-            {
-                Table.Remove(from);
-            }
+
+            Table.Remove(from);
 
             bool gainedPath = false;
 
