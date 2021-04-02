@@ -2,7 +2,7 @@ namespace Server.Items
 {
     public class PirateShield : BaseShield
     {
-        public override int LabelNumber => 1159585; // pirate shield
+        public override int LabelNumber => 1126593; // shield
 
         [Constructable]
         public PirateShield()
