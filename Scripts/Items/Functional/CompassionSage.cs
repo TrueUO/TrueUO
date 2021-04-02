@@ -47,10 +47,10 @@ namespace Server.Items
 
             if (VirtueHelper.Award(from, VirtueName.Compassion, 7000, ref gainedPath))
             {
+                from.SendLocalizedMessage(1053002); // You have gained in compassion.
+
                 if (gainedPath)
-                    from.SendLocalizedMessage(1053005); // You have achieved a path in compassion!
-                else
-                    from.SendLocalizedMessage(1053002); // You have gained in compassion.
+                    from.SendLocalizedMessage(1053005); // You have achieved a path in compassion!                    
 
                 Table[from] = DateTime.UtcNow + TimeSpan.FromDays(1.0);
                 Consume();
