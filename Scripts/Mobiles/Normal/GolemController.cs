@@ -59,6 +59,11 @@ namespace Server.Mobiles
         {
             AddLoot(LootPack.Rich);
             AddLoot(LootPack.LootItem<ArcaneGem>(70.0));
+
+            if (Map == Map.Ilshenar)
+            {
+                AddLoot(LootPack.LootItem<CompassionSage>(0.02));
+            }
         }
 
         public void AddArcane(Item item)
