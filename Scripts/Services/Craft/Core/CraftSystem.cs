@@ -274,6 +274,16 @@ namespace Server.Engines.Craft
             return CraftItems.Add(craftItem);
         }
 
+        public int AddMapCraft(Type typeItem, TextDefinition group, TextDefinition name, double minSkill, double maxSkill, Type typeRes, int maplevel, TextDefinition nameRes, int amount, TextDefinition message)
+        {
+            CraftItem craftItem = new CraftItem(typeItem, group, name);
+            craftItem.AddMapRes(typeRes, maplevel, nameRes, amount, message);
+            craftItem.AddSkill(MainSkill, minSkill, maxSkill);
+
+            DoGroup(group, craftItem);
+            return CraftItems.Add(craftItem);
+        }
+
         private void DoGroup(TextDefinition groupName, CraftItem craftItem)
         {
             int index = CraftGroups.SearchFor(groupName);
@@ -418,6 +428,12 @@ namespace Server.Engines.Craft
         {
             CraftItem craftItem = CraftItems.GetAt(index);
             craftItem.AddRes(type, name, amount, message);
+        }
+
+        public void AddMapRes(int index, Type type, int maplevel, TextDefinition name, int amount, TextDefinition message)
+        {
+            CraftItem craftItem = CraftItems.GetAt(index);
+            craftItem.AddMapRes(type, maplevel, name, amount, message);
         }
 
         public void AddResCallback(int index, Func<Mobile, ConsumeType, int> func)
