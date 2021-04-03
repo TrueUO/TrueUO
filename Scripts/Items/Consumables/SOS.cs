@@ -118,12 +118,15 @@ namespace Server.Items
 
         protected override void OnParentChanged(object oldParent)
         {
-            base.OnParentChanged(oldParent);
-
-            RetentionDate = DateTime.MinValue;
+            base.OnParentChanged(oldParent);            
 
             if (!IsRead)
             {
+                if (RetentionDate != DateTime.MinValue)
+                {
+                    RetentionDate = DateTime.MinValue;
+                }
+
                 if (oldParent == null && RootParent is Container)
                 {
                     RetentionDate = DateTime.UtcNow + TimeSpan.FromDays(30);
@@ -210,6 +213,7 @@ namespace Server.Items
                     entry = MessageEntry.Entries[m_MessageIndex = Utility.Random(MessageEntry.Entries.Length)];
 
                 IsRead = true;
+                RetentionDate = DateTime.MinValue;
 
                 from.CloseGump(typeof(MessageGump));
                 from.SendGump(new MessageGump(entry, m_TargetMap, m_TargetLocation));
