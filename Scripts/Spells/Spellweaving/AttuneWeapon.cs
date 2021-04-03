@@ -30,7 +30,7 @@ namespace Server.Spells.Spellweaving
             damage -= absorbed;
             defender.MeleeDamageAbsorb -= absorbed;
 
-            defender.SendLocalizedMessage(1075127, string.Format("{0}\t{1}", absorbed, defender.MeleeDamageAbsorb)); // ~1_damage~ point(s) of damage have been absorbed. A total of ~2_remaining~ point(s) of shielding remain.
+            defender.SendLocalizedMessage(1075127, $"{absorbed}\t{defender.MeleeDamageAbsorb}"); // ~1_damage~ point(s) of damage have been absorbed. A total of ~2_remaining~ point(s) of shielding remain.
 
             if (defender.MeleeDamageAbsorb <= 0)
             {
@@ -111,7 +111,7 @@ namespace Server.Spells.Spellweaving
         {
             private readonly Mobile m_Mobile;
 
-            public DateTime Expires { get; set; }
+            public DateTime Expires { get; }
 
             public ExpireTimer(Mobile m, TimeSpan delay)
                 : base(delay)

@@ -16,13 +16,11 @@ namespace Server.Items
             if (m_Deed.Deleted || m_Deed.RootParent != from)
                 return;
 
-            if (target is Item)
+            if (target is Item item)
             {
-                Item item = (Item)target;
-
                 if (item.RootParent != from) // Make sure its in their pack or they are wearing it
                     from.SendLocalizedMessage(500508); // You may only bless objects that you are carrying.
-                else if (item.Stackable == true)
+                else if (item.Stackable)
                 {
                     from.SendLocalizedMessage(500509); // You cannot bless that object
                 }
@@ -30,7 +28,7 @@ namespace Server.Items
                 {
                     from.SendLocalizedMessage(500509); // You cannot bless that object
                 }
-                else if (item.LootType == LootType.Blessed || item.BlessedFor == from || (Mobile.InsuranceEnabled && item.Insured)) // Check if its already newbied (blessed)
+                else if (item.LootType == LootType.Blessed || item.BlessedFor == from || Mobile.InsuranceEnabled && item.Insured) // Check if its already newbied (blessed)
                 {
                     from.SendLocalizedMessage(1045113); // That item is already blessed
                 }
@@ -82,7 +80,7 @@ namespace Server.Items
         }
 
         public override string DefaultName => "a item bless deed";
-        public override bool DisplayLootType => true;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -92,7 +90,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }        
     }
 }

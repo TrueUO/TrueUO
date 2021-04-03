@@ -42,7 +42,7 @@ namespace Server.Engines.Plants
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int UniqueCount => Entries == null ? 0 : Entries.Where(e => e != null && e.Seed != null && e.Seed.Amount > 0).Count();
+        public int UniqueCount => Entries == null ? 0 : Entries.Count(e => e != null && e.Seed != null && e.Seed.Amount > 0);
 
         public override int DefaultMaxWeight => 0;
         public override double DefaultWeight => 10.0;
@@ -65,14 +65,11 @@ namespace Server.Engines.Plants
 
         public override void OnDoubleClick(Mobile m)
         {
-            if (IsChildOf(m.Backpack) || (CheckAccessible(m) && m.InRange(GetWorldLocation(), 3)))
+            if (m.InRange(GetWorldLocation(), 3))
             {
-                if (m is PlayerMobile)
-                    BaseGump.SendGump(new SeedBoxGump((PlayerMobile)m, this));
+                if (m is PlayerMobile mobile)
+                    BaseGump.SendGump(new SeedBoxGump(mobile, this));
             }
-
-            if (m.AccessLevel > AccessLevel.Player)
-                base.OnDoubleClick(m);
         }
 
         public override void GetContextMenuEntries(Mobile from, List<ContextMenuEntry> list)
@@ -80,41 +77,17 @@ namespace Server.Engines.Plants
             base.GetContextMenuEntries(from, list);
 
             SetSecureLevelEntry.AddTo(from, this, list);
-        }
-
-        public bool CheckAccessible(Mobile from)
-        {
-            if (from.AccessLevel >= AccessLevel.GameMaster)
-                return true;
-
-            BaseHouse house = BaseHouse.FindHouseAt(this);
-
-            if (house == null)
-                return true;
-
-            switch (Level)
-            {
-                case SecureLevel.Owner: return house.IsOwner(from);
-                case SecureLevel.CoOwners: return house.IsCoOwner(from);
-                case SecureLevel.Friends: return house.IsFriend(from);
-                case SecureLevel.Anyone: return true;
-                case SecureLevel.Guild: return house.IsGuildMember(from);
-            }
-
-            return false;
-        }
+        }        
 
         public override bool OnDragDrop(Mobile from, Item dropped)
         {
-            if (dropped is Seed)
+            if (dropped is Seed seed)
             {
-                return TryAddSeed(from, (Seed)dropped);
+                return TryAddSeed(from, seed);
             }
-            else
-            {
-                from.SendLocalizedMessage(1151838); // This item cannot be stored in the seed box.
-                return false;
-            }
+
+            from.SendLocalizedMessage(1151838); // This item cannot be stored in the seed box.
+            return false;
         }
 
         public override bool OnDragDropInto(Mobile from, Item item, Point3D p)
@@ -128,14 +101,15 @@ namespace Server.Engines.Plants
             {
                 return false;
             }
-            else if (!from.InRange(GetWorldLocation(), 3) || from.Map != Map)
+
+            if (!from.InRange(GetWorldLocation(), 3) || from.Map != Map)
             {
                 return false;
             }
-            else if (TotalCount + seed.Amount <= MaxSeeds)
+
+            if (TotalCount + seed.Amount <= MaxSeeds)
             {
                 SeedEntry entry = GetExisting(seed);
-                int oldcount = UniqueCount;
 
                 if (entry != null)
                 {
@@ -178,9 +152,9 @@ namespace Server.Engines.Plants
 
                     from.SendLocalizedMessage(1151846); // You put the seed in the seedbox.
 
-                    if (from is PlayerMobile)
+                    if (from is PlayerMobile mobile)
                     {
-                        var gump = from.FindGump<SeedBoxGump>();
+                        var gump = mobile.FindGump<SeedBoxGump>();
 
                         if (gump != null)
                         {
@@ -189,7 +163,7 @@ namespace Server.Engines.Plants
                         }
                         else
                         {
-                            gump = new SeedBoxGump((PlayerMobile)from, this);
+                            gump = new SeedBoxGump(mobile, this);
                             gump.CheckPage(entry);
 
                             BaseGump.SendGump(gump);
@@ -319,13 +293,23 @@ namespace Server.Engines.Plants
         {
             List<Item> toDelete = new List<Item>(Items);
 
-            foreach (Item item in toDelete.Where(i => i != null && i.Amount == 0))
-                item.Delete();
+            foreach (Item item in toDelete)
+            {
+                if (item != null && item.Amount == 0)
+                {
+                    item.Delete();
+                }
+            }
 
             List<SeedEntry> entries = new List<SeedEntry>(Entries);
 
-            foreach (SeedEntry entry in entries.Where(e => e != null && (e.Seed == null || e.Seed.Amount == 0 || e.Seed.Deleted)))
-                Entries.Remove(entry);
+            foreach (SeedEntry entry in entries)
+            {
+                if (entry != null && (entry.Seed == null || entry.Seed.Amount == 0 || entry.Seed.Deleted))
+                {
+                    Entries.Remove(entry);
+                }
+            }
 
             ColUtility.Free(entries);
             ColUtility.Free(toDelete);
@@ -376,7 +360,7 @@ namespace Server.Engines.Plants
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int v = reader.ReadInt();
+            reader.ReadInt();
 
             Entries = new List<SeedEntry>();
 
@@ -404,8 +388,13 @@ namespace Server.Engines.Plants
             Timer.DelayCall(
                 () =>
                 {
-                    foreach (Item item in Items.Where(i => i.Movable))
-                        item.Movable = false;
+                    foreach (Item item in Items)
+                    {
+                        if (item.Movable)
+                        {
+                            item.Movable = false;
+                        }
+                    }
                 });
 
             Timer.DelayCall(TimeSpan.FromSeconds(10), CheckEntries);

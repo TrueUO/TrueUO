@@ -59,13 +59,17 @@ namespace Server.Mobiles
         {
             AddLoot(LootPack.Rich);
             AddLoot(LootPack.LootItem<ArcaneGem>(70.0));
+
+            if (Map == Map.Ilshenar)
+            {
+                AddLoot(LootPack.LootItem<CompassionSage>(0.02));
+            }
         }
 
         public void AddArcane(Item item)
         {
-            if (item is IArcaneEquip)
+            if (item is IArcaneEquip eq)
             {
-                IArcaneEquip eq = (IArcaneEquip)item;
                 eq.CurArcaneCharges = eq.MaxArcaneCharges = 20;
             }
 
@@ -84,7 +88,7 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

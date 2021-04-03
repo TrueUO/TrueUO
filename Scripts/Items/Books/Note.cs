@@ -5,10 +5,10 @@ namespace Server.Items
     public class Note : Item
     {
         private string m_String;
-        public string NoteString { get { return m_String; } set { m_String = value; } }
+        public string NoteString { get => m_String; set => m_String = value; }
 
         private int m_Number;
-        public int Number { get { return m_Number; } set { m_Number = value; } }
+        public int Number { get => m_Number; set => m_Number = value; }
 
         [Constructable]
         public Note() : base(5357)
@@ -29,10 +29,10 @@ namespace Server.Items
 
         public Note(object content) : base(0x1234)
         {
-            if (content is int)
-                m_Number = (int)content;
-            else if (content is string)
-                m_String = (string)content;
+            if (content is int i)
+                m_Number = i;
+            else if (content is string s)
+                m_String = s;
         }
 
         public override void OnDoubleClick(Mobile m)
@@ -78,7 +78,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int v = reader.ReadInt();
+            reader.ReadInt();
 
             m_String = reader.ReadString();
             m_Number = reader.ReadInt();

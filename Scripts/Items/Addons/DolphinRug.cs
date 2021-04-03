@@ -5,7 +5,6 @@ using System;
 
 namespace Server.Items
 {
-    [TypeAlias("Server.Items.DolphinRugEastAddon", "Server.Items.DolphinRugSouthAddon")]
     public class DolphinRugAddon : BaseAddon, IRewardItem
     {
         public override bool ForceShowProperties => true;
@@ -16,10 +15,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsRewardItem
         {
-            get
-            {
-                return m_IsRewardItem;
-            }
+            get => m_IsRewardItem;
             set
             {
                 m_IsRewardItem = value;
@@ -30,14 +26,10 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int ResourceCount
         {
-            get
-            {
-                return m_ResourceCount;
-            }
+            get => m_ResourceCount;
             set
             {
                 m_ResourceCount = value;
-
                 UpdateProperties();
             }
         }
@@ -45,7 +37,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public DateTime NextResourceCount { get; set; }
 
-        private static readonly int[,] _EastLarge = new int[,]
+        private static readonly int[,] _EastLarge =
         {
               {14590, 1, -1, 0}, {14586, 1, -2, 0}, {14589, 0, -1, 0}// 1	2	3	
 			, {14592, -1, -1, 0}, {14593, 0, 0, 0}, {14597, 0, 1, 0}// 4	5	6	
@@ -59,7 +51,7 @@ namespace Server.Items
 			, {14598, 1, 2, 0}// 28	
 		};
 
-        private static readonly int[,] _SouthLarge = new int[,]
+        private static readonly int[,] _SouthLarge =
         {
               {14553, -3, 2, 0}, {14554, -3, 1, 0}, {14555, -3, 0, 0}// 1	2	3	
 			, {14556, -3, -1, 0}, {14557, -2, 1, 0}, {14558, -2, 0, 0}// 4	5	6	
@@ -144,7 +136,7 @@ namespace Server.Items
         {
             BaseHouse house = BaseHouse.FindHouseAt(from);
 
-            if (house != null && (house.IsOwner(from) || (house.LockDowns.ContainsKey(this) && house.LockDowns[this] == from)))
+            if (house != null && (house.IsOwner(from) || house.LockDowns.ContainsKey(this) && house.LockDowns[this] == from))
             {
                 if (m_ResourceCount > 0)
                 {
@@ -183,9 +175,9 @@ namespace Server.Items
             {
                 base.GetProperties(list);
 
-                if (Addon is DolphinRugAddon)
+                if (Addon is DolphinRugAddon addon)
                 {
-                    list.Add(1150103, ((DolphinRugAddon)Addon).ResourceCount.ToString()); // Messages in Bottles: ~1_val~
+                    list.Add(1150103, addon.ResourceCount.ToString()); // Messages in Bottles: ~1_val~
                 }
             }
 
@@ -301,10 +293,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsRewardItem
         {
-            get
-            {
-                return m_IsRewardItem;
-            }
+            get => m_IsRewardItem;
             set
             {
                 m_IsRewardItem = value;
@@ -315,10 +304,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int ResourceCount
         {
-            get
-            {
-                return m_ResourceCount;
-            }
+            get => m_ResourceCount;
             set
             {
                 m_ResourceCount = value;

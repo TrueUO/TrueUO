@@ -3,7 +3,6 @@ using Server.Mobiles;
 using Server.Services.Virtues;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.Quests
 {
@@ -18,10 +17,9 @@ namespace Server.Engines.Quests
         public BaseQuest Quest { get; set; }
         public DateTime LastSeenEscorter { get; set; }
 
-        public bool IsDeleting { get { return TimerRegistry.HasTimer(m_TimerID, this); } }
+        public bool IsDeleting => TimerRegistry.HasTimer(m_TimerID, this);
 
         public BaseEscort()
-            : base()
         {
             AI = AIType.AI_Melee;
             FightMode = FightMode.Aggressor;
@@ -54,7 +52,7 @@ namespace Server.Engines.Quests
 
         public override bool CanBeRenamedBy(Mobile from)
         {
-            return (from.AccessLevel >= AccessLevel.GameMaster);
+            return from.AccessLevel >= AccessLevel.GameMaster;
         }
 
         public override void AddCustomContextEntries(Mobile from, List<ContextMenuEntry> list)
@@ -179,12 +177,14 @@ namespace Server.Engines.Quests
             {
                 return false;
             }
-            else if (IsDeleting)
+
+            if (IsDeleting)
             {
                 Say(500898); // I am sorry, but I do not wish to go anywhere.
                 return false;
             }
-            else if (Controlled)
+
+            if (Controlled)
             {
                 if (m == ControlMaster)
                     m.SendGump(new MondainQuestGump(Quest, MondainQuestGump.Section.InProgress, false));
@@ -193,19 +193,22 @@ namespace Server.Engines.Quests
 
                 return false;
             }
-            else if (!m.InRange(Location, 5))
+
+            if (!m.InRange(Location, 5))
             {
                 Say(500348); // I am too far away to do that.
                 return false;
             }
-            else if (m_EscortTable.ContainsKey(m))
+
+            if (m_EscortTable.ContainsKey(m))
             {
                 Say(500896); // I see you already have an escort.
                 return false;
             }
-            else if (m is PlayerMobile && (((PlayerMobile)m).LastEscortTime + m_EscortDelay) >= DateTime.UtcNow)
+
+            if (m is PlayerMobile mobile && mobile.LastEscortTime + m_EscortDelay >= DateTime.UtcNow)
             {
-                int minutes = (int)Math.Ceiling(((((PlayerMobile)m).LastEscortTime + m_EscortDelay) - DateTime.UtcNow).TotalMinutes);
+                int minutes = (int)Math.Ceiling((mobile.LastEscortTime + m_EscortDelay - DateTime.UtcNow).TotalMinutes);
 
                 Say("You must rest {0} minute{1} before we set out on this journey.", minutes, minutes == 1 ? "" : "s");
                 return false;
@@ -238,7 +241,8 @@ namespace Server.Engines.Quests
             {
                 return master;
             }
-            else if (master.Map != Map || !master.InRange(Location, 30) || !master.Alive)
+
+            if (master.Map != Map || !master.InRange(Location, 30) || !master.Alive)
             {
                 TimeSpan lastSeenDelay = DateTime.UtcNow - LastSeenEscorter;
 
@@ -263,10 +267,8 @@ namespace Server.Engines.Quests
 
                     return null;
                 }
-                else
-                {
-                    ControlOrder = OrderType.Stay;
-                }
+
+                ControlOrder = OrderType.Stay;
             }
             else
             {
@@ -402,17 +404,20 @@ namespace Server.Engines.Quests
         {
             PlayerMobile pm = owner as PlayerMobile;
 
-            foreach (BaseQuest escortquest in pm.Quests.Where(x => x.Quester is BaseEscort))
+            foreach (BaseQuest escortquest in pm.Quests)
             {
-                BaseEscort escort = (BaseEscort)escortquest.Quester;
-
-                Timer.DelayCall(TimeSpan.FromSeconds(3), delegate
+                if (escortquest.Quester is BaseEscort)
                 {
-                    escort.Say(500901); // Ack!  My escort has come to haunt me!
-                    owner.SendLocalizedMessage(1071194); // You have failed your escort quest…
-                    owner.PlaySound(0x5B3);
-                    escort.Delete();
-                });
+                    BaseEscort escort = (BaseEscort) escortquest.Quester;
+
+                    Timer.DelayCall(TimeSpan.FromSeconds(3), delegate
+                    {
+                        escort.Say(500901); // Ack!  My escort has come to haunt me!
+                        owner.SendLocalizedMessage(1071194); // You have failed your escort quest…
+                        owner.PlaySound(0x5B3);
+                        escort.Delete();
+                    });
+                }
             }
         }
     }

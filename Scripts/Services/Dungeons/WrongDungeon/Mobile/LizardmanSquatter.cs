@@ -56,6 +56,7 @@ namespace Server.Mobiles
 
         public override void GenerateLoot()
         {
+            AddLoot(LootPack.Rich);
             AddLoot(LootPack.Meager);
         }
 
@@ -68,7 +69,7 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

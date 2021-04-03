@@ -33,7 +33,6 @@ namespace Server.Items
     {
         [Constructable]
         public ScarecrowAddon()
-            : base()
         {
             AddComponent(new ScarecrowComponent(), 0, 0, 0);
         }
@@ -63,7 +62,6 @@ namespace Server.Items
     {
         [Constructable]
         public ScarecrowDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

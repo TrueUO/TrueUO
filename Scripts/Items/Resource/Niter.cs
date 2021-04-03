@@ -22,10 +22,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int Hits
         {
-            get
-            {
-                return m_Hits;
-            }
+            get => m_Hits;
             set
             {
                 m_Hits = value;
@@ -36,7 +33,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public NiterSize Size
         {
-            get { return m_Size; }
+            get => m_Size;
             set
             {
                 m_Size = value;
@@ -64,7 +61,7 @@ namespace Server.Items
 
         public void OnMine(Mobile from, Item tool)
         {
-            if (tool is IUsesRemaining && ((IUsesRemaining)tool).UsesRemaining < 1)
+            if (tool is IUsesRemaining remaining && remaining.UsesRemaining < 1)
                 return;
 
             from.Direction = from.GetDirectionTo(Location);
@@ -102,19 +99,18 @@ namespace Server.Items
                 {
                     from.SendMessage("You have mined the last of the niter deposit.");
                     Delete();
-                    return;
                 }
             }
-            else
-                from.SendLocalizedMessage(1149923);  //You mine the niter deposit but fail to produce any usable saltpeter.
+            else if (from != null)
+            {
+                from.SendLocalizedMessage(1149923); //You mine the niter deposit but fail to produce any usable saltpeter.
+            }
         }
 
         public void CheckTool(Item tool)
         {
-            if (tool != null && tool is IUsesRemaining)
+            if (tool != null && tool is IUsesRemaining toolWithUses)
             {
-                IUsesRemaining toolWithUses = (IUsesRemaining)tool;
-
                 toolWithUses.ShowUsesRemaining = true;
 
                 if (toolWithUses.UsesRemaining > 0)
@@ -193,6 +189,7 @@ namespace Server.Items
         {
             base.Serialize(writer);
             writer.Write(0);
+
             writer.Write(m_Hits);
             writer.Write((int)m_Size);
 
@@ -202,7 +199,8 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
+
             m_Hits = reader.ReadInt();
             m_Size = (NiterSize)reader.ReadInt();
         }

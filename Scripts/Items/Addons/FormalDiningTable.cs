@@ -71,7 +71,6 @@ namespace Server.Items
 
         [Constructable]
         public FormalDiningTableDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

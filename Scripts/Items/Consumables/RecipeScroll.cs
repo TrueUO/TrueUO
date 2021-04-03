@@ -25,13 +25,11 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1074560;// recipe scroll
+
         [CommandProperty(AccessLevel.GameMaster)]
         public int RecipeID
         {
-            get
-            {
-                return m_RecipeID;
-            }
+            get => m_RecipeID;
             set
             {
                 m_RecipeID = value;
@@ -68,14 +66,12 @@ namespace Server.Items
 
             Recipe r = Recipe;
 
-            if (r != null && from is PlayerMobile)
+            if (r != null && from is PlayerMobile pm)
             {
-                PlayerMobile pm = from as PlayerMobile;
-
                 if (!pm.HasRecipe(r))
                 {
                     bool allRequiredSkills = true;
-                    double chance = r.CraftItem.GetSuccessChance(from, null, r.CraftSystem, false, ref allRequiredSkills);
+                    double chance = r.CraftItem.GetSuccessChance(pm, null, r.CraftSystem, false, ref allRequiredSkills);
 
                     if (allRequiredSkills && chance >= 0.0)
                     {
@@ -138,15 +134,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 

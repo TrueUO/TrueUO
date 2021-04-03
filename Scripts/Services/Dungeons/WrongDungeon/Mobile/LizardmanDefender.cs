@@ -1,3 +1,4 @@
+using Server.Items;
 using Server.Misc;
 
 namespace Server.Mobiles
@@ -57,7 +58,9 @@ namespace Server.Mobiles
 
         public override void GenerateLoot()
         {
-            AddLoot(LootPack.Meager);
+            AddLoot(LootPack.Rich);
+            AddLoot(LootPack.Average);
+            AddLoot(LootPack.LootItem<Arrow>(Utility.RandomMinMax(50, 75)));
         }
 
         public override void Serialize(GenericWriter writer)
@@ -69,7 +72,7 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

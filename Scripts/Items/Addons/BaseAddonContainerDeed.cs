@@ -15,10 +15,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public CraftResource Resource
         {
-            get
-            {
-                return m_Resource;
-            }
+            get => m_Resource;
             set
             {
                 if (m_Resource != value)
@@ -149,9 +146,8 @@ namespace Server.Items
                         m_Deed.Delete();
                         house.Addons[addon] = from;
 
-                        if (addon is GardenShedAddon)
+                        if (addon is GardenShedAddon ad)
                         {
-                            GardenShedAddon ad = addon as GardenShedAddon;
                             house.Addons[ad.SecondContainer] = from;
                         }
 

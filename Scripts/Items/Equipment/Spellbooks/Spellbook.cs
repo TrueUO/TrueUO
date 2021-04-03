@@ -22,7 +22,7 @@ namespace Server.Items
         Samurai,
         Arcanist,
         Mystic,
-        SkillMasteries,
+        SkillMasteries
     }
 
     public enum BookQuality
@@ -35,7 +35,7 @@ namespace Server.Items
     {
         private static readonly Dictionary<Mobile, List<Spellbook>> m_Table = new Dictionary<Mobile, List<Spellbook>>();
 
-        private static readonly int[] m_LegendPropertyCounts = new[]
+        private static readonly int[] m_LegendPropertyCounts =
         {
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 0 properties : 21/52 : 40%
 			1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, // 1 property   : 15/52 : 29%
@@ -43,7 +43,7 @@ namespace Server.Items
 			3, 3, 3, 3, 3, 3 // 3 properties :  6/52 : 12%
 		};
 
-        private static readonly int[] m_ElderPropertyCounts = new[]
+        private static readonly int[] m_ElderPropertyCounts =
         {
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 0 properties : 15/34 : 44%
 			1, 1, 1, 1, 1, 1, 1, 1, 1, 1, // 1 property   : 10/34 : 29%
@@ -51,7 +51,7 @@ namespace Server.Items
 			3, 3, 3 // 3 properties :  3/34 :  9%
 		};
 
-        private static readonly int[] m_GrandPropertyCounts = new[]
+        private static readonly int[] m_GrandPropertyCounts =
         {
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, // 0 properties : 10/20 : 50%
 			1, 1, 1, 1, 1, 1, // 1 property   :  6/20 : 30%
@@ -59,14 +59,14 @@ namespace Server.Items
 			3 // 3 properties :  1/20 :  5%
 		};
 
-        private static readonly int[] m_MasterPropertyCounts = new[]
+        private static readonly int[] m_MasterPropertyCounts =
         {
             0, 0, 0, 0, 0, 0, // 0 properties : 6/10 : 60%
 			1, 1, 1, // 1 property   : 3/10 : 30%
 			2 // 2 properties : 1/10 : 10%
 		};
 
-        private static readonly int[] m_AdeptPropertyCounts = new[]
+        private static readonly int[] m_AdeptPropertyCounts =
         {
             0, 0, 0, // 0 properties : 3/4 : 75%
 			1 // 1 property   : 1/4 : 25%
@@ -114,7 +114,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public string EngravedText
         {
-            get { return m_EngravedText; }
+            get => m_EngravedText;
             set
             {
                 m_EngravedText = value;
@@ -125,7 +125,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public BookQuality Quality
         {
-            get { return m_Quality; }
+            get => m_Quality;
             set
             {
                 m_Quality = value;
@@ -136,13 +136,13 @@ namespace Server.Items
         public override bool DisplayWeight => false;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public AosAttributes Attributes { get { return m_AosAttributes; } set { } }
+        public AosAttributes Attributes { get => m_AosAttributes; set { } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public AosSkillBonuses SkillBonuses { get { return m_AosSkillBonuses; } set { } }
+        public AosSkillBonuses SkillBonuses { get => m_AosSkillBonuses; set { } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public NegativeAttributes NegativeAttributes { get { return m_NegativeAttributes; } set { } }
+        public NegativeAttributes NegativeAttributes { get => m_NegativeAttributes; set { } }
 
         public virtual SpellbookType SpellbookType => SpellbookType.Regular;
         public virtual int BookOffset => 0;
@@ -151,7 +151,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public ulong Content
         {
-            get { return m_Content; }
+            get => m_Content;
             set
             {
                 if (m_Content != value)
@@ -177,7 +177,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public Mobile Crafter
         {
-            get { return m_Crafter; }
+            get => m_Crafter;
             set
             {
                 m_Crafter = value;
@@ -190,7 +190,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public SlayerName Slayer
         {
-            get { return m_Slayer; }
+            get => m_Slayer;
             set
             {
                 m_Slayer = value;
@@ -201,7 +201,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public SlayerName Slayer2
         {
-            get { return m_Slayer2; }
+            get => m_Slayer2;
             set
             {
                 m_Slayer2 = value;
@@ -214,24 +214,12 @@ namespace Server.Items
         private string _OwnerName;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsVvVItem
-        {
-            get { return _VvVItem; }
-            set { _VvVItem = value; InvalidateProperties(); }
-        }
+        public bool IsVvVItem { get => _VvVItem; set { _VvVItem = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public Mobile Owner
-        {
-            get { return _Owner; }
-            set { _Owner = value; if (_Owner != null) _OwnerName = _Owner.Name; InvalidateProperties(); }
-        }
+        public Mobile Owner { get => _Owner; set { _Owner = value; if (_Owner != null) _OwnerName = _Owner.Name; InvalidateProperties(); } }
 
-        public virtual string OwnerName
-        {
-            get { return _OwnerName; }
-            set { _OwnerName = value; InvalidateProperties(); }
-        }
+        public virtual string OwnerName { get => _OwnerName; set { _OwnerName = value; InvalidateProperties(); } }
 
         private int m_MaxHitPoints;
         private int m_HitPoints;
@@ -239,7 +227,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int HitPoints
         {
-            get { return m_HitPoints; }
+            get => m_HitPoints;
             set
             {
                 if (m_HitPoints == value)
@@ -261,7 +249,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int MaxHitPoints
         {
-            get { return m_MaxHitPoints; }
+            get => m_MaxHitPoints;
             set
             {
                 m_MaxHitPoints = value;
@@ -299,8 +287,8 @@ namespace Server.Items
                 {
                     MaxHitPoints--;
 
-                    if (Parent is Mobile)
-                        ((Mobile)Parent).LocalOverheadMessage(MessageType.Regular, 0x3B2, 1061121); // Your equipment is severely damaged.
+                    if (Parent is Mobile mobile)
+                        mobile.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1061121); // Your equipment is severely damaged.
 
                     if (m_MaxHitPoints == 0)
                     {
@@ -384,31 +372,38 @@ namespace Server.Items
             {
                 return SpellbookType.Regular;
             }
-            else if (spellID >= 100 && spellID < 117)
+
+            if (spellID >= 100 && spellID < 117)
             {
                 return SpellbookType.Necromancer;
             }
-            else if (spellID >= 200 && spellID < 210)
+
+            if (spellID >= 200 && spellID < 210)
             {
                 return SpellbookType.Paladin;
             }
-            else if (spellID >= 400 && spellID < 406)
+
+            if (spellID >= 400 && spellID < 406)
             {
                 return SpellbookType.Samurai;
             }
-            else if (spellID >= 500 && spellID < 508)
+
+            if (spellID >= 500 && spellID < 508)
             {
                 return SpellbookType.Ninja;
             }
-            else if (spellID >= 600 && spellID < 617)
+
+            if (spellID >= 600 && spellID < 617)
             {
                 return SpellbookType.Arcanist;
             }
-            else if (spellID >= 677 && spellID < 693)
+
+            if (spellID >= 677 && spellID < 693)
             {
                 return SpellbookType.Mystic;
             }
-            else if (spellID >= 700 && spellID < 746)
+
+            if (spellID >= 700 && spellID < 746)
             {
                 return SpellbookType.SkillMasteries;
             }
@@ -509,8 +504,7 @@ namespace Server.Items
 
                 Spellbook book = list[i];
 
-                if (!book.Deleted && (book.Parent == from || (pack != null && book.Parent == pack)) &&
-                    ValidateSpellbook(book, spellID, type))
+                if (!book.Deleted && (book.Parent == from || pack != null && book.Parent == pack) && ValidateSpellbook(book, spellID, type))
                 {
                     return book;
                 }
@@ -527,9 +521,9 @@ namespace Server.Items
 
             Item item = from.FindItemOnLayer(Layer.OneHanded);
 
-            if (item is Spellbook)
+            if (item is Spellbook book)
             {
-                list.Add((Spellbook)item);
+                list.Add(book);
             }
 
             Container pack = from.Backpack;
@@ -543,9 +537,9 @@ namespace Server.Items
             {
                 item = pack.Items[i];
 
-                if (item is Spellbook)
+                if (item is Spellbook spellbook)
                 {
-                    list.Add((Spellbook)item);
+                    list.Add(spellbook);
                 }
             }
 
@@ -554,12 +548,12 @@ namespace Server.Items
 
         public static Spellbook FindEquippedSpellbook(Mobile from)
         {
-            return (from.FindItemOnLayer(Layer.OneHanded) as Spellbook);
+            return from.FindItemOnLayer(Layer.OneHanded) as Spellbook;
         }
 
         public static bool ValidateSpellbook(Spellbook book, int spellID, SpellbookType type)
         {
-            return (book.SpellbookType == type && (spellID == -1 || book.HasSpell(spellID)));
+            return book.SpellbookType == type && (spellID == -1 || book.HasSpell(spellID));
         }
 
         public override bool CanEquip(Mobile from)
@@ -568,12 +562,14 @@ namespace Server.Items
             {
                 return false;
             }
-            else if (_Owner != null && _Owner != from)
+
+            if (_Owner != null && _Owner != from)
             {
                 from.SendLocalizedMessage(501023); // You must be the owner to use this item.
                 return false;
             }
-            else if (IsVvVItem && !Engines.VvV.ViceVsVirtueSystem.IsVvV(from))
+
+            if (IsVvVItem && !Engines.VvV.ViceVsVirtueSystem.IsVvV(from))
             {
                 from.SendLocalizedMessage(1155496); // This item can only be used by VvV participants!
                 return false;
@@ -589,46 +585,41 @@ namespace Server.Items
 
         public override bool OnDragDrop(Mobile from, Item dropped)
         {
-            if (dropped is SpellScroll && !(dropped is SpellStone))
+            if (dropped is SpellScroll scroll && !(scroll is SpellStone))
             {
-                SpellScroll scroll = (SpellScroll)dropped;
-
                 SpellbookType type = GetTypeForSpell(scroll.SpellID);
 
                 if (type != SpellbookType)
                 {
                     return false;
                 }
-                else if (HasSpell(scroll.SpellID))
+
+                if (HasSpell(scroll.SpellID))
                 {
                     from.SendLocalizedMessage(500179); // That spell is already present in that spellbook.
                     return false;
                 }
-                else
+
+                int val = scroll.SpellID - BookOffset;
+
+                if (val >= 0 && val < BookCount)
                 {
-                    int val = scroll.SpellID - BookOffset;
+                    from.Send(new PlaySound(0x249, GetWorldLocation()));
 
-                    if (val >= 0 && val < BookCount)
+                    m_Content |= (ulong)1 << val;
+                    ++m_Count;
+
+                    if (scroll.Amount > 1)
                     {
-                        from.Send(new PlaySound(0x249, GetWorldLocation()));
-
-                        m_Content |= (ulong)1 << val;
-                        ++m_Count;
-
-                        if (dropped.Amount > 1)
-                        {
-                            dropped.Amount--;
-                            return base.OnDragDrop(from, dropped);
-                        }
-                        else
-                        {
-                            InvalidateProperties();
-                            scroll.Delete();
-                            return true;
-                        }
+                        scroll.Amount--;
+                        return base.OnDragDrop(from, scroll);
                     }
-                    return false;
+
+                    InvalidateProperties();
+                    scroll.Delete();
+                    return true;
                 }
+                return false;
             }
             return false;
         }
@@ -651,10 +642,8 @@ namespace Server.Items
 
         public override void OnAdded(object parent)
         {
-            if (parent is Mobile)
+            if (parent is Mobile from)
             {
-                Mobile from = (Mobile)parent;
-
                 m_AosSkillBonuses.AddTo(from);
 
                 int strBonus = m_AosAttributes.BonusStr;
@@ -692,10 +681,8 @@ namespace Server.Items
 
         public override void OnRemoved(object parent)
         {
-            if (parent is Mobile)
+            if (parent is Mobile from)
             {
-                Mobile from = (Mobile)parent;
-
                 m_AosSkillBonuses.Remove();
 
                 if (HasSocket<Caddellite>())
@@ -717,7 +704,7 @@ namespace Server.Items
         {
             spellID -= BookOffset;
 
-            return (spellID >= 0 && spellID < BookCount && (m_Content & ((ulong)1 << spellID)) != 0);
+            return spellID >= 0 && spellID < BookCount && (m_Content & ((ulong)1 << spellID)) != 0;
         }
 
         public void DisplayTo(Mobile to)
@@ -946,14 +933,13 @@ namespace Server.Items
         {
             Container pack = from.Backpack;
 
-            if (Parent == from || (pack != null && Parent == pack))
+            if (Parent == from || pack != null && Parent == pack)
             {
                 DisplayTo(from);
             }
             else
             {
-                from.SendLocalizedMessage(500207);
-                // The spellbook must be in your backpack (and not in a container within) to open.
+                from.SendLocalizedMessage(500207); // The spellbook must be in your backpack (and not in a container within) to open.
             }
         }
 
@@ -1071,9 +1057,9 @@ namespace Server.Items
             int dexBonus = m_AosAttributes.BonusDex;
             int intBonus = m_AosAttributes.BonusInt;
 
-            if (Parent is Mobile && (strBonus != 0 || dexBonus != 0 || intBonus != 0))
+            if (Parent is Mobile mobile && (strBonus != 0 || dexBonus != 0 || intBonus != 0))
             {
-                Mobile m = (Mobile)Parent;
+                Mobile m = mobile;
 
                 string modName = Serial.ToString();
 
@@ -1093,9 +1079,9 @@ namespace Server.Items
                 }
             }
 
-            if (Parent is Mobile)
+            if (Parent is Mobile mob)
             {
-                ((Mobile)Parent).CheckStatTimers();
+                mob.CheckStatTimers();
             }
         }
 
@@ -1189,10 +1175,8 @@ namespace Server.Items
 
         private static void AllSpells_OnTarget(Mobile from, object obj)
         {
-            if (obj is Spellbook)
+            if (obj is Spellbook book)
             {
-                Spellbook book = (Spellbook)obj;
-
                 if (book.BookCount == 64)
                 {
                     book.Content = ulong.MaxValue;

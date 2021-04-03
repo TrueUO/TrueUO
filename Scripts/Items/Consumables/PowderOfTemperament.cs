@@ -32,49 +32,31 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int UsesRemaining
         {
-            get
-            {
-                return m_UsesRemaining;
-            }
+            get => m_UsesRemaining;
             set
             {
                 m_UsesRemaining = value;
                 InvalidateProperties();
             }
         }
-        public bool ShowUsesRemaining
-        {
-            get
-            {
-                return true;
-            }
-            set
-            {
-            }
-        }
+        public bool ShowUsesRemaining { get => true; set { } }
+
         public override int LabelNumber => 1049082;// powder of fortifying
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0);
+
             writer.Write(m_UsesRemaining);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 0:
-                    {
-                        m_UsesRemaining = reader.ReadInt();
-                        break;
-                    }
-            }
+            m_UsesRemaining = reader.ReadInt();
         }
 
         public override void AddUsesRemainingProperties(ObjectPropertyList list)
@@ -84,7 +66,7 @@ namespace Server.Items
 
         public virtual void DisplayDurabilityTo(Mobile m)
         {
-            LabelToAffix(m, 1017323, AffixType.Append, ": " + m_UsesRemaining.ToString()); // Durability
+            LabelToAffix(m, 1017323, AffixType.Append, ": " + m_UsesRemaining); // Durability
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -112,44 +94,46 @@ namespace Server.Items
                     return;
                 }
 
-                if (targeted is Item)
+                if (targeted is Item item)
                 {
-                    Item item = (Item)targeted;
                     bool noGo = false;
                     int antique = 0;
 
-                    if (!Engines.Craft.Repair.AllowsRepair(item, null) || (item is BaseJewel && !CanPOFJewelry))
+                    if (!Engines.Craft.Repair.AllowsRepair(item, null) || item is BaseJewel && !CanPOFJewelry)
                     {
                         from.SendLocalizedMessage(1049083); // You cannot use the powder on that item.
                         return;
                     }
 
-                    #region SA
-                    if (item is BaseWeapon)
+                    if (item is BaseWeapon weapon)
                     {
-                        if (((BaseWeapon)item).Attributes.Brittle > 0 || ((BaseWeapon)item).NegativeAttributes.Brittle > 0)
+                        if (weapon.Attributes.Brittle > 0 || weapon.NegativeAttributes.Brittle > 0)
                             noGo = true;
-                        antique = ((BaseWeapon)item).NegativeAttributes.Antique;
+
+                        antique = weapon.NegativeAttributes.Antique;
                     }
-                    else if (item is BaseArmor)
+                    else if (item is BaseArmor armor)
                     {
-                        if (((BaseArmor)item).Attributes.Brittle > 0 || ((BaseArmor)item).NegativeAttributes.Brittle > 0)
+                        if (armor.Attributes.Brittle > 0 || armor.NegativeAttributes.Brittle > 0)
                             noGo = true;
-                        antique = ((BaseArmor)item).NegativeAttributes.Antique;
+
+                        antique = armor.NegativeAttributes.Antique;
                     }
-                    else if (item is BaseClothing)
+                    else if (item is BaseClothing clothing)
                     {
-                        if (((BaseClothing)item).Attributes.Brittle > 0 || ((BaseClothing)item).NegativeAttributes.Brittle > 0)
+                        if (clothing.Attributes.Brittle > 0 || clothing.NegativeAttributes.Brittle > 0)
                             noGo = true;
-                        antique = ((BaseClothing)item).NegativeAttributes.Antique;
+
+                        antique = clothing.NegativeAttributes.Antique;
                     }
-                    else if (item is BaseJewel)
+                    else if (item is BaseJewel jewel)
                     {
-                        if (((BaseJewel)item).Attributes.Brittle > 0 || ((BaseJewel)item).NegativeAttributes.Brittle > 0)
+                        if (jewel.Attributes.Brittle > 0 || jewel.NegativeAttributes.Brittle > 0)
                             noGo = true;
-                        antique = ((BaseJewel)item).NegativeAttributes.Antique;
+
+                        antique = jewel.NegativeAttributes.Antique;
                     }
-                    else if (item is BaseTalisman && ((BaseTalisman)item).Attributes.Brittle > 0)
+                    else if (item is BaseTalisman talisman && talisman.Attributes.Brittle > 0)
                     {
                         noGo = true;
                     }
@@ -158,12 +142,9 @@ namespace Server.Items
                         from.SendLocalizedMessage(1149799); //That cannot be used on brittle items.
                         return;
                     }
-                    #endregion
 
-                    if (targeted is IDurability)
+                    if (item is IDurability wearable)
                     {
-                        IDurability wearable = (IDurability)targeted;
-
                         if (!wearable.CanFortify)
                         {
                             from.SendLocalizedMessage(1049083); // You cannot use the powder on that item.
@@ -221,10 +202,10 @@ namespace Server.Items
 
                                         if (antique > 0)
                                         {
-                                            if (item is BaseWeapon) ((BaseWeapon)item).NegativeAttributes.Antique++;
-                                            if (item is BaseArmor) ((BaseArmor)item).NegativeAttributes.Antique++;
-                                            if (item is BaseJewel) ((BaseJewel)item).NegativeAttributes.Antique++;
-                                            if (item is BaseClothing) ((BaseClothing)item).NegativeAttributes.Antique++;
+                                            if (wearable is BaseWeapon bw) bw.NegativeAttributes.Antique++;
+                                            if (wearable is BaseArmor ba) ba.NegativeAttributes.Antique++;
+                                            if (wearable is BaseJewel bj) bj.NegativeAttributes.Antique++;
+                                            if (wearable is BaseClothing bc) bc.NegativeAttributes.Antique++;
                                         }
                                     }
                                     else

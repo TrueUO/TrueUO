@@ -23,7 +23,6 @@ namespace Server.Items
         public Firebomb(int itemID)
             : base(itemID)
         {
-            //Name = "a firebomb";
             Weight = 2.0;
             Hue = 1260;
         }
@@ -36,15 +35,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -55,7 +52,7 @@ namespace Server.Items
                 return;
             }
 
-            if (from.Paralyzed || from.Frozen || (from.Spell != null && from.Spell.IsCasting))
+            if (from.Paralyzed || from.Frozen || from.Spell != null && from.Spell.IsCasting)
             {
                 // to prevent exploiting for pvp
                 from.SendLocalizedMessage(1075857); // You cannot use that while paralyzed.
@@ -103,8 +100,8 @@ namespace Server.Items
                             HeldBy.PublicOverheadMessage(MessageType.Regular, 957, false, m_Ticks.ToString());
                         else if (RootParent == null)
                             PublicOverheadMessage(MessageType.Regular, 957, false, m_Ticks.ToString());
-                        else if (RootParent is Mobile)
-                            ((Mobile)RootParent).PublicOverheadMessage(MessageType.Regular, 957, false, m_Ticks.ToString());
+                        else if (RootParent is Mobile mobile)
+                            mobile.PublicOverheadMessage(MessageType.Regular, 957, false, m_Ticks.ToString());
 
                         break;
                     }
@@ -127,9 +124,9 @@ namespace Server.Items
                             m_Users = null;
                         }
 
-                        if (RootParent is Mobile)
+                        if (RootParent is Mobile mobile)
                         {
-                            Mobile parent = (Mobile)RootParent;
+                            Mobile parent = mobile;
                             parent.SendLocalizedMessage(1060583); // The firebomb explodes in your hand!
                             AOS.Damage(parent, Utility.Random(3) + 4, 0, 100, 0, 0, 0);
                         }
@@ -164,7 +161,7 @@ namespace Server.Items
 
             foreach (Mobile m in eable)
             {
-                if (m_LitBy == null || (SpellHelper.ValidIndirectTarget(m_LitBy, m) && m_LitBy.CanBeHarmful(m, false)))
+                if (m_LitBy == null || SpellHelper.ValidIndirectTarget(m_LitBy, m) && m_LitBy.CanBeHarmful(m, false))
                 {
                     yield return m;
                 }
@@ -189,8 +186,8 @@ namespace Server.Items
 
             IEntity to;
 
-            if (p is Mobile)
-                to = (Mobile)p;
+            if (p is Mobile mobile)
+                to = mobile;
             else
                 to = new Entity(Serial.Zero, new Point3D(p), Map);
 
@@ -262,7 +259,7 @@ namespace Server.Items
 
         public override bool OnMoveOver(Mobile m)
         {
-            if (ItemID == 0x398C && m_LitBy == null || (SpellHelper.ValidIndirectTarget(m_LitBy, m) && m_LitBy.CanBeHarmful(m, false)))
+            if (ItemID == 0x398C && m_LitBy == null || SpellHelper.ValidIndirectTarget(m_LitBy, m) && m_LitBy.CanBeHarmful(m, false))
             {
                 if (m_LitBy != null)
                     m_LitBy.DoHarmful(m);
@@ -296,7 +293,7 @@ namespace Server.Items
             {
                 victim = m_Burning[i];
 
-                if (victim.Location == Location && victim.Map == Map && (m_LitBy == null || (SpellHelper.ValidIndirectTarget(m_LitBy, victim) && m_LitBy.CanBeHarmful(victim, false))))
+                if (victim.Location == Location && victim.Map == Map && (m_LitBy == null || SpellHelper.ValidIndirectTarget(m_LitBy, victim) && m_LitBy.CanBeHarmful(victim, false)))
                 {
                     if (m_LitBy != null)
                         m_LitBy.DoHarmful(victim);

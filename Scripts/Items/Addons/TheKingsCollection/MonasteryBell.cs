@@ -10,12 +10,16 @@ namespace Server.Items
             switch (type)
             {
                 case DirectionType.East:
-                    AddComponent(new InstrumentedAddonComponent(0x4C94, 0x66C), 0, 0, 0);
-                    AddComponent(new InstrumentedAddonComponent(0x4C95, 0x66C), 0, 1, 0);
+                    AddComponent(new InstrumentedAddonComponent(0x4C94, 0x66C), 1, 0, 0);
+                    AddComponent(new InstrumentedAddonComponent(0x4C95, 0x66C), 1, 1, 0);
+                    AddComponent(new InstrumentedAddonComponent(0x4C96, 0x66C), 0, 1, 0);
+                    AddComponent(new InstrumentedAddonComponent(0x4C97, 0x66C), 0, 0, 0);
                     break;
                 case DirectionType.South:
-                    AddComponent(new InstrumentedAddonComponent(0x4C92, 0x66C), 1, 0, 0);
-                    AddComponent(new InstrumentedAddonComponent(0x4C93, 0x66C), 0, 0, 0);
+                    AddComponent(new InstrumentedAddonComponent(0x4C90, 0x66C), 0, 0, 0);
+                    AddComponent(new InstrumentedAddonComponent(0x4C91, 0x66C), 1, 0, 0);
+                    AddComponent(new InstrumentedAddonComponent(0x4C92, 0x66C), 1, 1, 0);
+                    AddComponent(new InstrumentedAddonComponent(0x4C93, 0x66C), 0, 1, 0);
                     break;
             }
         }
@@ -57,7 +61,6 @@ namespace Server.Items
 
         [Constructable]
         public MonasteryBellDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

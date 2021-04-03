@@ -56,7 +56,7 @@ namespace Server.Engines.ArenaSystem
         public static TimeSpan EntryTime = TimeSpan.FromSeconds(90);
         public static TimeSpan StartTimeDuration = TimeSpan.FromSeconds(5);
 
-        public PVPArena Arena { get; private set; }
+        public PVPArena Arena { get; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public int Entries { get; set; }
@@ -95,7 +95,7 @@ namespace Server.Engines.ArenaSystem
         public PotionRules PotionRules { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public PlayerMobile Host { get; set; }
+        public PlayerMobile Host { get; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public int Pot { get; set; }
@@ -206,9 +206,12 @@ namespace Server.Engines.ArenaSystem
 
             foreach (ArenaTeam team in Teams)
             {
-                foreach (KeyValuePair<PlayerMobile, PlayerStatsEntry> player in team.Players.Where(p => !inArena || InArena(p.Key)))
+                foreach (KeyValuePair<PlayerMobile, PlayerStatsEntry> player in team.Players)
                 {
-                    yield return player;
+                    if (!inArena || InArena(player.Key))
+                    {
+                        yield return player;
+                    }
                 }
             }
         }
@@ -254,7 +257,8 @@ namespace Server.Engines.ArenaSystem
                 TeamChaos.AddParticipant(pm);
                 return true;
             }
-            else if (TeamChaos.RemoveParticipant(pm))
+
+            if (TeamChaos.RemoveParticipant(pm))
             {
                 TeamOrder.AddParticipant(pm);
                 return true;
@@ -374,9 +378,9 @@ namespace Server.Engines.ArenaSystem
             BaseCreature.TeleportPets(pm, p, map);
             pm.MoveToWorld(p, Arena.Definition.Map);
 
-            if (pm.Spell is Spell)
+            if (pm.Spell is Spell spell)
             {
-                ((Spell)pm.Spell).Disturb(DisturbType.Hurt);
+                spell.Disturb(DisturbType.Hurt);
             }
 
             Targeting.Target.Cancel(pm);
@@ -504,9 +508,12 @@ namespace Server.Engines.ArenaSystem
 
             List<PlayerMobile> partList = ParticipantList();
 
-            foreach (PlayerMobile pm in partList.Where(p => p != pm1 && p != pm2))
+            foreach (PlayerMobile pm in partList)
             {
-                _StartPoints[pm] = Arena.Definition.StartLocations[_StartPoints.Count];
+                if (pm != pm1 && pm != pm2)
+                {
+                    _StartPoints[pm] = Arena.Definition.StartLocations[_StartPoints.Count];
+                }
             }
         }
 
@@ -598,7 +605,7 @@ namespace Server.Engines.ArenaSystem
             }
         }
 
-        private readonly int[] _EffectZs = new int[] { 10, 20, 30, 40, 50 };
+        private readonly int[] _EffectZs = { 10, 20, 30, 40, 50 };
 
         public void DoGateEffect()
         {
@@ -660,11 +667,17 @@ namespace Server.Engines.ArenaSystem
                 }
             }
 
-            foreach (ArenaTeam team in Teams.Where(t => t != winner))
+            foreach (ArenaTeam team in Teams)
             {
-                foreach (PlayerMobile pm in team.Players.Keys)
+                if (team != winner)
                 {
-                    PVPArenaSystem.SendMessage(pm, team.Count == 1 ? 1116489 : 1116488); // You have lost the duel... : Your team has lost the duel...
+                    foreach (PlayerMobile pm in team.Players.Keys)
+                    {
+                        PVPArenaSystem.SendMessage(pm,
+                            team.Count == 1
+                                ? 1116489
+                                : 1116488); // You have lost the duel... : Your team has lost the duel...
+                    }
                 }
             }
 
@@ -730,31 +743,31 @@ namespace Server.Engines.ArenaSystem
         {
             Mobile killer = victim.LastKiller;
 
-            if (killer is BaseCreature)
-                killer = ((BaseCreature)killer).GetMaster();
+            if (killer is BaseCreature creature)
+                killer = creature.GetMaster();
 
-            if (victim is PlayerMobile)
+            if (victim is PlayerMobile mobile)
             {
                 if (killer != null)
                 {
-                    KillRecord[victim.Name] = killer.Name;
+                    KillRecord[mobile.Name] = killer.Name;
                 }
 
-                if (killer is PlayerMobile && killer != victim) // if not ranked, does it keep track of this?
+                if (killer is PlayerMobile playerMobile && killer != victim) // if not ranked, does it keep track of this?
                 {
-                    PlayerStatsEntry victimEntry = GetStats((PlayerMobile)victim);
-                    PlayerStatsEntry killerEntry = GetStats((PlayerMobile)killer);
+                    PlayerStatsEntry victimEntry = GetStats(mobile);
+                    PlayerStatsEntry killerEntry = GetStats(playerMobile);
 
                     if (victimEntry != null)
                     {
                         victimEntry.Deaths++;
-                        victimEntry.HandleDeath(killer, true);
+                        victimEntry.HandleDeath(playerMobile, true);
                     }
 
                     if (killerEntry != null)
                     {
                         killerEntry.Kills++;
-                        killerEntry.HandleDeath(victim, false);
+                        killerEntry.HandleDeath(mobile, false);
                     }
                 }
 
@@ -762,7 +775,7 @@ namespace Server.Engines.ArenaSystem
 
                 foreach (ArenaTeam team in Teams)
                 {
-                    if (CheckTeamAlive((PlayerMobile)victim, team))
+                    if (CheckTeamAlive(mobile, team))
                         stillAlive.Add(team);
                 }
 
@@ -844,16 +857,13 @@ namespace Server.Engines.ArenaSystem
                     {
                         foreach (Mobile mob in Arena.Region.GetEnumeratedMobiles())
                         {
-                            if (mob is BaseCreature && ((BaseCreature)mob).Summoned)
+                            if (mob is BaseCreature creature && creature.Summoned)
                             {
-                                Mobile master = ((BaseCreature)mob).GetMaster();
+                                Mobile master = creature.GetMaster();
 
-                                if (master != null)
-                                {
-                                    master.SendLocalizedMessage(1149603); // The rules prohibit the use of summoning spells!
-                                }
+                                master?.SendLocalizedMessage(1149603); // The rules prohibit the use of summoning spells!
 
-                                mob.Delete();
+                                creature.Delete();
                             }
                         }
                     }
@@ -878,11 +888,11 @@ namespace Server.Engines.ArenaSystem
             if (InPreFight)
                 return false;
 
-            if (one is BaseCreature)
-                one = ((BaseCreature)one).GetMaster();
+            if (one is BaseCreature creature)
+                one = creature.GetMaster();
 
-            if (two is BaseCreature)
-                two = ((BaseCreature)two).GetMaster();
+            if (two is BaseCreature baseCreature)
+                two = baseCreature.GetMaster();
 
             PlayerMobile pm1 = one as PlayerMobile;
             PlayerMobile pm2 = two as PlayerMobile;
@@ -903,11 +913,11 @@ namespace Server.Engines.ArenaSystem
             if (InPreFight)
                 return false;
 
-            if (one is BaseCreature)
-                one = ((BaseCreature)one).GetMaster();
+            if (one is BaseCreature creature)
+                one = creature.GetMaster();
 
-            if (two is BaseCreature)
-                two = ((BaseCreature)two).GetMaster();
+            if (two is BaseCreature baseCreature)
+                two = baseCreature.GetMaster();
 
             PlayerMobile pm1 = one as PlayerMobile;
             PlayerMobile pm2 = two as PlayerMobile;

@@ -4,7 +4,6 @@ namespace Server.Items
     {
         [Constructable]
         public TableWithOrangeClothAddon()
-            : base()
         {
             AddComponent(new LocalizedAddonComponent(0x118E, 1076278), 0, 0, 0);
         }
@@ -34,7 +33,6 @@ namespace Server.Items
     {
         [Constructable]
         public TableWithOrangeClothDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

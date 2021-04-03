@@ -47,15 +47,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -75,21 +73,17 @@ namespace Server.Items
         public override int Bonus => 5;
         public override StatType Type => StatType.Int;
         public override int LabelNumber => 1041073;// prized fish
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
-
-            if (Hue == 151)
-                Hue = 51;
+            reader.ReadInt();
         }
     }
 
@@ -109,21 +103,17 @@ namespace Server.Items
         public override int Bonus => 5;
         public override StatType Type => StatType.Dex;
         public override int LabelNumber => 1041074;// wondrous fish
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
-
-            if (Hue == 286)
-                Hue = 86;
+            reader.ReadInt();
         }
     }
 
@@ -143,21 +133,17 @@ namespace Server.Items
         public override int Bonus => 5;
         public override StatType Type => StatType.Str;
         public override int LabelNumber => 1041075;// truly rare fish
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
-
-            if (Hue == 376)
-                Hue = 76;
+            reader.ReadInt();
         }
     }
 
@@ -175,6 +161,7 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1041076;// highly peculiar fish
+
         public override bool Apply(Mobile from)
         {
             from.Stam += 10;
@@ -184,18 +171,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
-
-            if (Hue == 266)
-                Hue = 66;
+            reader.ReadInt();
         }
     }
 }

@@ -132,7 +132,7 @@ namespace Server.Items
         private string _MasterName;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public string MasterName { get { return _MasterName; } set { _MasterName = value; InvalidateProperties(); } }
+        public string MasterName { get => _MasterName; set { _MasterName = value; InvalidateProperties(); } }
 
         [Constructable]
         public ShoulderParrot()
@@ -312,6 +312,7 @@ namespace Server.Items
                     */
 
                     m.SendGump(g);
+                    m.SendSound(m.Female ? 0x30B : 0x41A);
 
                     m.PrivateOverheadMessage(MessageType.Regular, 0x47E, 1157722, "Carpentry", m.NetState); // *Your proficiency in ~1_SKILL~ reveals more about the item*
                 }
@@ -346,7 +347,7 @@ namespace Server.Items
         public string _ShipName;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public string ShipName { get { return _ShipName; } set { _ShipName = value; InvalidateProperties(); } }
+        public string ShipName { get => _ShipName; set { _ShipName = value; InvalidateProperties(); } }
 
         [Constructable]
         public DecorativeWoodCarving()
@@ -465,7 +466,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -492,7 +493,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -519,7 +520,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -546,7 +547,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -578,7 +579,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -610,7 +611,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -642,7 +643,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

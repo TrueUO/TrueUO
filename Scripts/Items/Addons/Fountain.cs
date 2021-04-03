@@ -4,7 +4,6 @@ namespace Server.Items
     {
         [Constructable]
         public FountainAddon()
-            : base()
         {
         }
 
@@ -33,7 +32,6 @@ namespace Server.Items
     {
         [Constructable]
         public FountainDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

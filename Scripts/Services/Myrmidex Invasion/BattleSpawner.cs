@@ -42,7 +42,7 @@ namespace Server.Engines.MyrmidexInvasion
         [CommandProperty(AccessLevel.GameMaster)]
         public bool Active
         {
-            get { return _Active; }
+            get => _Active;
             set
             {
                 if (_Active && !value)
@@ -168,16 +168,17 @@ namespace Server.Engines.MyrmidexInvasion
 
             foreach (Mobile m in eable)
             {
-                if (m is BaseCreature && tribes.Contains((BaseCreature)m))
+                if (m is BaseCreature creature && tribes.Contains(creature))
                 {
                     opposedBreach = true;
                     break; // once its opposed, no winner
                 }
-                else if (m is BaseCreature && myrmidex.Contains((BaseCreature)m))
-                {
-                    int wave = GetWave(MyrmidexTeam, ((BaseCreature)m));
 
-                    hasBreached[wave] = (BaseCreature)m;
+                if (m is BaseCreature bc && myrmidex.Contains(bc))
+                {
+                    int wave = GetWave(MyrmidexTeam, bc);
+
+                    hasBreached[wave] = bc;
                 }
             }
 
@@ -202,16 +203,17 @@ namespace Server.Engines.MyrmidexInvasion
 
                 foreach (Mobile m in eable)
                 {
-                    if (m is BaseCreature && myrmidex.Contains((BaseCreature)m))
+                    if (m is BaseCreature creature && myrmidex.Contains(creature))
                     {
                         opposedBreach = true;
                         break; // once its opposed, no winner
                     }
-                    else if (m is BaseCreature && tribes.Contains((BaseCreature)m))
-                    {
-                        int wave = GetWave(TribeTeam, ((BaseCreature)m));
 
-                        hasBreached[wave] = (BaseCreature)m;
+                    if (m is BaseCreature bc && tribes.Contains(bc))
+                    {
+                        int wave = GetWave(TribeTeam, bc);
+
+                        hasBreached[wave] = bc;
                     }
                 }
 
@@ -232,15 +234,18 @@ namespace Server.Engines.MyrmidexInvasion
 
             if (winners != null)
             {
-                foreach (PlayerMobile pm in winners.Where(pm => Players.ContainsKey(pm) && Players[pm] > MinCredit))
+                foreach (PlayerMobile pm in winners)
                 {
-                    AllianceEntry entry = MyrmidexInvasionSystem.GetEntry(pm);
+                    if (Players.ContainsKey(pm) && Players[pm] > MinCredit)
+                    {
+                        AllianceEntry entry = MyrmidexInvasionSystem.GetEntry(pm);
 
-                    if (entry != null && !entry.CanRecieveQuest)
-                        entry.CanRecieveQuest = true;
+                        if (entry != null && !entry.CanRecieveQuest)
+                            entry.CanRecieveQuest = true;
 
-                    if (Players.ContainsKey(pm))
-                        Players.Remove(pm);
+                        if (Players.ContainsKey(pm))
+                            Players.Remove(pm);
+                    }
                 }
             }
 
@@ -266,9 +271,12 @@ namespace Server.Engines.MyrmidexInvasion
 
             if (list.ContainsKey(wave))
             {
-                foreach (BaseCreature bc in list[wave].Where(bc => bc.Alive))
+                foreach (BaseCreature bc in list[wave])
                 {
-                    bc.Delete();
+                    if (bc.Alive)
+                    {
+                        bc.Delete();
+                    }
                 }
 
                 ColUtility.Free(list[wave]);
@@ -283,9 +291,12 @@ namespace Server.Engines.MyrmidexInvasion
 
             IEnumerable<BaseCreature> list = BattleRegion.GetEnumeratedMobiles().OfType<BaseCreature>();
 
-            foreach (BaseCreature bc in list.Where(b => b.Alive && !b.Controlled && !b.Summoned && b.GetMaster() == null))
+            foreach (BaseCreature bc in list)
             {
-                bc.Kill();
+                if (bc.Alive && !bc.Controlled && !bc.Summoned && bc.GetMaster() == null)
+                {
+                    bc.Kill();
+                }
             }
 
             foreach (KeyValuePair<int, List<BaseCreature>> kvp in MyrmidexTeam)
@@ -364,26 +375,23 @@ namespace Server.Engines.MyrmidexInvasion
                     Type type = _MyrmidexTypes[wave][Utility.Random(_MyrmidexTypes[wave].Length)];
 
                     if (type.IsSubclassOf(typeof(BaseEodonTribesman)))
-                        bc = Activator.CreateInstance(type, new object[] { EodonTribe.Barrab }) as BaseCreature;
+                        bc = Activator.CreateInstance(type, EodonTribe.Barrab) as BaseCreature;
                     else
                         bc = Activator.CreateInstance(type) as BaseCreature;
 
                     bc.NoLootOnDeath = true;
 
-                    if (bc != null)
+                    for (int j = 0; j < 20; j++)
                     {
-                        for (int j = 0; j < 20; j++)
+                        Point3D p = Map.TerMur.GetRandomSpawnPoint(_MyrmidexSpawnZone);
+
+                        if (Map.TerMur.CanSpawnMobile(p.X, p.Y, p.Z))
                         {
-                            Point3D p = Map.TerMur.GetRandomSpawnPoint(_MyrmidexSpawnZone);
+                            bc.MoveToWorld(p, Map.TerMur);
+                            list.Add(bc);
 
-                            if (Map.TerMur.CanSpawnMobile(p.X, p.Y, p.Z))
-                            {
-                                bc.MoveToWorld(p, Map.TerMur);
-                                list.Add(bc);
-
-                                AssignNavpoints(bc, Allegiance.Myrmidex);
-                                break;
-                            }
+                            AssignNavpoints(bc, Allegiance.Myrmidex);
+                            break;
                         }
                     }
                 }
@@ -404,27 +412,24 @@ namespace Server.Engines.MyrmidexInvasion
                     if (type.IsSubclassOf(typeof(BaseEodonTribesman)))
                     {
                         EodonTribe tribe = Utility.RandomList(EodonTribe.Jukari, EodonTribe.Kurak, EodonTribe.Barako, EodonTribe.Urali, EodonTribe.Sakkhra);
-                        bc = Activator.CreateInstance(type, new object[] { tribe }) as BaseCreature;
+                        bc = Activator.CreateInstance(type, tribe) as BaseCreature;
                     }
                     else
                         bc = Activator.CreateInstance(type) as BaseCreature;
 
                     bc.NoLootOnDeath = true;
 
-                    if (bc != null)
+                    for (int j = 0; j < 20; j++)
                     {
-                        for (int j = 0; j < 20; j++)
+                        Point3D p = Map.TerMur.GetRandomSpawnPoint(_TribeSpawnZone);
+
+                        if (Map.TerMur.CanSpawnMobile(p.X, p.Y, p.Z))
                         {
-                            Point3D p = Map.TerMur.GetRandomSpawnPoint(_TribeSpawnZone);
+                            bc.MoveToWorld(p, Map.TerMur);
+                            list.Add(bc);
 
-                            if (Map.TerMur.CanSpawnMobile(p.X, p.Y, p.Z))
-                            {
-                                bc.MoveToWorld(p, Map.TerMur);
-                                list.Add(bc);
-
-                                AssignNavpoints(bc, Allegiance.Tribes);
-                                break;
-                            }
+                            AssignNavpoints(bc, Allegiance.Tribes);
+                            break;
                         }
                     }
                 }
@@ -502,9 +507,9 @@ namespace Server.Engines.MyrmidexInvasion
 
         public bool IsSameLeg(IPoint2D p1, IPoint2D p2)
         {
-            return (MyrmidexLeg.Contains(p1) && MyrmidexLeg.Contains(p2)) ||
-                   (MiddleLeg.Contains(p1) && MiddleLeg.Contains(p2)) ||
-                   (TribeLeg.Contains(p1) && TribeLeg.Contains(p2));
+            return MyrmidexLeg.Contains(p1) && MyrmidexLeg.Contains(p2) ||
+                   MiddleLeg.Contains(p1) && MiddleLeg.Contains(p2) ||
+                   TribeLeg.Contains(p1) && TribeLeg.Contains(p2);
         }
 
         public int GetWave(Dictionary<int, List<BaseCreature>> list, BaseCreature bc)
@@ -531,7 +536,7 @@ namespace Server.Engines.MyrmidexInvasion
 
             foreach (KeyValuePair<int, List<BaseCreature>> kvp in list)
             {
-                bclist.AddRange(kvp.Value.Where(bc => bc != null && !bc.Deleted && bc.Alive));
+                bclist.AddRange(kvp.Value.Where(bc => bc != null && !bc.Deleted && bc.Alive)); // Should be converted to not use LINQ here.
             }
 
             return bclist;
@@ -541,55 +546,62 @@ namespace Server.Engines.MyrmidexInvasion
         {
             List<DamageStore> rights = bc.GetLootingRights();
 
-            foreach (DamageStore ds in rights.Where(ds => ds.m_Mobile is PlayerMobile && ds.m_HasRight && MyrmidexInvasionSystem.AreEnemies(ds.m_Mobile, bc)))
+            foreach (DamageStore ds in rights)
             {
-                if (MyrmidexInvasionSystem.IsAlliedWith(bc, Allegiance.Myrmidex))
+                if (ds.m_Mobile is PlayerMobile && ds.m_HasRight && MyrmidexInvasionSystem.AreEnemies(ds.m_Mobile, bc))
                 {
-                    int points = 1;
-                    if (IsFrontLine(ds.m_Mobile, bc))
+                    if (MyrmidexInvasionSystem.IsAlliedWith(bc, Allegiance.Myrmidex))
                     {
-                        ds.m_Mobile.SendLocalizedMessage(1156599); // You assist the Eodonians in pushing back the Myrmidex!
-                        points *= 4;
+                        int points = 1;
+                        if (IsFrontLine(ds.m_Mobile, bc))
+                        {
+                            ds.m_Mobile.SendLocalizedMessage(
+                                1156599); // You assist the Eodonians in pushing back the Myrmidex!
+                            points *= 4;
+                        }
+                        else
+                            ds.m_Mobile.SendLocalizedMessage(
+                                1156600); // You kill one of the Myrmidex away from the front ranks and gain little recognition.
+
+                        if (!Players.ContainsKey((PlayerMobile) ds.m_Mobile))
+                            Players[(PlayerMobile) ds.m_Mobile] = points;
+                        else
+                            Players[(PlayerMobile) ds.m_Mobile] += points;
                     }
                     else
-                        ds.m_Mobile.SendLocalizedMessage(1156600); // You kill one of the Myrmidex away from the front ranks and gain little recognition.
-
-                    if (!Players.ContainsKey((PlayerMobile)ds.m_Mobile))
-                        Players[(PlayerMobile)ds.m_Mobile] = points;
-                    else
-                        Players[(PlayerMobile)ds.m_Mobile] += points;
-                }
-                else
-                {
-                    int points = 1;
-                    if (IsFrontLine(ds.m_Mobile, bc))
                     {
-                        ds.m_Mobile.SendLocalizedMessage(1156598); // You assist the Myrmidex in pushing back the Eodonians!
-                        points *= 4;
-                    }
-                    else
-                        ds.m_Mobile.SendLocalizedMessage(1156601); // You kill one of the Eodonians away from the front ranks and gain little recognition.
+                        int points = 1;
+                        if (IsFrontLine(ds.m_Mobile, bc))
+                        {
+                            ds.m_Mobile.SendLocalizedMessage(
+                                1156598); // You assist the Myrmidex in pushing back the Eodonians!
+                            points *= 4;
+                        }
+                        else
+                            ds.m_Mobile.SendLocalizedMessage(
+                                1156601); // You kill one of the Eodonians away from the front ranks and gain little recognition.
 
-                    if (!Players.ContainsKey((PlayerMobile)ds.m_Mobile))
-                        Players[(PlayerMobile)ds.m_Mobile] = points;
-                    else
-                        Players[(PlayerMobile)ds.m_Mobile] += points;
+                        if (!Players.ContainsKey((PlayerMobile) ds.m_Mobile))
+                            Players[(PlayerMobile) ds.m_Mobile] = points;
+                        else
+                            Players[(PlayerMobile) ds.m_Mobile] += points;
+                    }
                 }
             }
         }
 
         private readonly Type[][] _MyrmidexTypes =
         {
-            new Type[] { typeof(MyrmidexDrone) },
-            new Type[] { typeof(MyrmidexWarrior), typeof(TribeWarrior) },
-            new Type[] { typeof(MyrmidexWarrior), typeof(TribeWarrior), typeof(TribeShaman) }
+            new[] { typeof(MyrmidexDrone) },
+            new[] { typeof(MyrmidexWarrior), typeof(TribeWarrior) },
+            new[] { typeof(MyrmidexWarrior), typeof(TribeWarrior), typeof(TribeShaman) }
         };
 
         private readonly Type[][] _TribeTypes =
         {
-            new Type[] { typeof(BritannianInfantry) },
-            new Type[] { typeof(BritannianInfantry), typeof(TribeWarrior) },
-            new Type[] { typeof(BritannianInfantry), typeof(TribeWarrior), typeof(TribeShaman) }
+            new[] { typeof(BritannianInfantry) },
+            new[] { typeof(BritannianInfantry), typeof(TribeWarrior) },
+            new[] { typeof(BritannianInfantry), typeof(TribeWarrior), typeof(TribeShaman) }
         };
 
         public void AssignNavPoints()
@@ -657,15 +669,15 @@ namespace Server.Engines.MyrmidexInvasion
                 {
                     if (lane == 0)
                     {
-                        point.X = point.X + (Utility.RandomMinMax(0, 2));
+                        point.X = point.X + Utility.RandomMinMax(0, 2);
                     }
                     else if (lane == 3)
                     {
-                        point.X = point.X - (Utility.RandomMinMax(0, 2));
+                        point.X = point.X - Utility.RandomMinMax(0, 2);
                     }
                     else
                     {
-                        point.X = point.X + (Utility.RandomMinMax(-2, 2));
+                        point.X = point.X + Utility.RandomMinMax(-2, 2);
                     }
                 });
 
@@ -677,8 +689,8 @@ namespace Server.Engines.MyrmidexInvasion
 
                 return true;
             }
-            else
-                bc.Delete();
+
+            bc.Delete();
 
             return false;
         }
@@ -787,57 +799,65 @@ namespace Server.Engines.MyrmidexInvasion
         private static readonly Point2D[][][] _NavPoints1 =
         {       
             //Lane 1                                                                                                                                               
-            new Point2D[][] { new Point2D[] { new Point2D(853, 1785), new Point2D(853, 1800), new Point2D(853, 1815), new Point2D(855, 1830), new Point2D(855, 1845), new Point2D(855, 1860), new Point2D(855, 1875), /*shares with next*/ new Point2D(860, 1883), new Point2D(872, 1887), new Point2D(891, 1887) },
-                              new Point2D[] { new Point2D(903, 1875), new Point2D(903, 1860), new Point2D(903, 1845), new Point2D(903, 1830), new Point2D(903, 1815), /*shares with next*/ new Point2D(903, 1807), new Point2D(905, 1797), new Point2D(906, 1787) } },
+            new[]
+            { new[] { new Point2D(853, 1785), new Point2D(853, 1800), new Point2D(853, 1815), new Point2D(855, 1830), new Point2D(855, 1845), new Point2D(855, 1860), new Point2D(855, 1875), /*shares with next*/ new Point2D(860, 1883), new Point2D(872, 1887), new Point2D(891, 1887) },
+                              new[] { new Point2D(903, 1875), new Point2D(903, 1860), new Point2D(903, 1845), new Point2D(903, 1830), new Point2D(903, 1815), /*shares with next*/ new Point2D(903, 1807), new Point2D(905, 1797), new Point2D(906, 1787) } },
 
             //Lane 2
-            new Point2D[][] { new Point2D[] { new Point2D(859, 1785), new Point2D(859, 1800), new Point2D(859, 1815), new Point2D(859, 1830), new Point2D(859, 1845), new Point2D(859, 1860), new Point2D(859, 1875), /*shares with prev*/ new Point2D(860, 1883), new Point2D(872, 1887), new Point2D(891, 1887) },
-                              new Point2D[] { new Point2D(909, 1875), new Point2D(909, 1860), new Point2D(909, 1845), new Point2D(909, 1830), new Point2D(909, 1815), /*shares with prev*/ new Point2D(909, 1807), new Point2D(910, 1797), new Point2D(912, 1787) } },
+            new[]
+            { new[] { new Point2D(859, 1785), new Point2D(859, 1800), new Point2D(859, 1815), new Point2D(859, 1830), new Point2D(859, 1845), new Point2D(859, 1860), new Point2D(859, 1875), /*shares with prev*/ new Point2D(860, 1883), new Point2D(872, 1887), new Point2D(891, 1887) },
+                              new[] { new Point2D(909, 1875), new Point2D(909, 1860), new Point2D(909, 1845), new Point2D(909, 1830), new Point2D(909, 1815), /*shares with prev*/ new Point2D(909, 1807), new Point2D(910, 1797), new Point2D(912, 1787) } },
             
             //Lance 3
-            new Point2D[][] { new Point2D[] { new Point2D(865, 1785), new Point2D(865, 1800), new Point2D(865, 1815), new Point2D(865, 1830), new Point2D(865, 1845), new Point2D(865, 1860), new Point2D(865, 1875), /*shares with next*/ new Point2D(872, 1880), new Point2D(879, 1887), new Point2D(891, 1887), new Point2D(903, 1885) },
-                              new Point2D[] { new Point2D(915, 1875), new Point2D(915, 1860), new Point2D(915, 1845), new Point2D(915, 1830), new Point2D(915, 1815), /*shares with next*/ new Point2D(915, 1807), new Point2D(915, 1797), new Point2D(915, 1787) } },
+            new[]
+            { new[] { new Point2D(865, 1785), new Point2D(865, 1800), new Point2D(865, 1815), new Point2D(865, 1830), new Point2D(865, 1845), new Point2D(865, 1860), new Point2D(865, 1875), /*shares with next*/ new Point2D(872, 1880), new Point2D(879, 1887), new Point2D(891, 1887), new Point2D(903, 1885) },
+                              new[] { new Point2D(915, 1875), new Point2D(915, 1860), new Point2D(915, 1845), new Point2D(915, 1830), new Point2D(915, 1815), /*shares with next*/ new Point2D(915, 1807), new Point2D(915, 1797), new Point2D(915, 1787) } },
 
             // Lane 4
-            new Point2D[][] { new Point2D[] { new Point2D(871, 1785), new Point2D(871, 1800), new Point2D(871, 1815), new Point2D(871, 1830), new Point2D(871, 1845), new Point2D(871, 1860), new Point2D(871, 1875), /*shares with prev*/ new Point2D(872, 1880), new Point2D(879, 1887), new Point2D(891, 1887), new Point2D(903, 1885), new Point2D(912, 1882) },
-                              new Point2D[] { new Point2D(921, 1875), new Point2D(921, 1860), new Point2D(921, 1845), new Point2D(921, 1830), new Point2D(921, 1815), /*shares with prev*/ new Point2D(921, 1807), new Point2D(921, 1797), new Point2D(921, 1787) } }
+            new[]
+            { new[] { new Point2D(871, 1785), new Point2D(871, 1800), new Point2D(871, 1815), new Point2D(871, 1830), new Point2D(871, 1845), new Point2D(871, 1860), new Point2D(871, 1875), /*shares with prev*/ new Point2D(872, 1880), new Point2D(879, 1887), new Point2D(891, 1887), new Point2D(903, 1885), new Point2D(912, 1882) },
+                              new[] { new Point2D(921, 1875), new Point2D(921, 1860), new Point2D(921, 1845), new Point2D(921, 1830), new Point2D(921, 1815), /*shares with prev*/ new Point2D(921, 1807), new Point2D(921, 1797), new Point2D(921, 1787) } }
         };
 
         private static readonly Point2D[][][] _NavPoints2 =
         {       
             //Lane 1                                                                                                                                               
-            new Point2D[][] {
-                              new Point2D[] { new Point2D(906, 1877), new Point2D(904, 1860), new Point2D(903, 1845), new Point2D(903, 1830), new Point2D(903, 1815), /*shares with next*/ new Point2D(909, 1807), new Point2D(921, 1807), new Point2D(935, 1801), new Point2D(950, 1797), new Point2D(959, 1798), new Point2D(973, 1802) },
-                              new Point2D[] { new Point2D(973, 1815), new Point2D(973, 1830), new Point2D(973, 1845), new Point2D(973, 1860), new Point2D(973, 1875) } },
+            new[]
+            {
+                              new[] { new Point2D(906, 1877), new Point2D(904, 1860), new Point2D(903, 1845), new Point2D(903, 1830), new Point2D(903, 1815), /*shares with next*/ new Point2D(909, 1807), new Point2D(921, 1807), new Point2D(935, 1801), new Point2D(950, 1797), new Point2D(959, 1798), new Point2D(973, 1802) },
+                              new[] { new Point2D(973, 1815), new Point2D(973, 1830), new Point2D(973, 1845), new Point2D(973, 1860), new Point2D(973, 1875) } },
 
             //Lane 2
-            new Point2D[][] {
-                              new Point2D[] { new Point2D(909, 1877), new Point2D(909, 1860), new Point2D(909, 1845), new Point2D(909, 1830), new Point2D(909, 1815), /*shares with prev*/ new Point2D(909, 1807), new Point2D(921, 1807), new Point2D(935, 1801), new Point2D(950, 1797), new Point2D(959, 1798), new Point2D(973, 1802), new Point2D(979, 1805) },
-                              new Point2D[] { new Point2D(979, 1820), new Point2D(979, 1820), new Point2D(979, 1835), new Point2D(979, 1850), new Point2D(979, 1865), new Point2D(979, 1880) } },
+            new[]
+            {
+                              new[] { new Point2D(909, 1877), new Point2D(909, 1860), new Point2D(909, 1845), new Point2D(909, 1830), new Point2D(909, 1815), /*shares with prev*/ new Point2D(909, 1807), new Point2D(921, 1807), new Point2D(935, 1801), new Point2D(950, 1797), new Point2D(959, 1798), new Point2D(973, 1802), new Point2D(979, 1805) },
+                              new[] { new Point2D(979, 1820), new Point2D(979, 1820), new Point2D(979, 1835), new Point2D(979, 1850), new Point2D(979, 1865), new Point2D(979, 1880) } },
             
             //Lance 3
-            new Point2D[][] {
-                              new Point2D[] { new Point2D(915, 1877), new Point2D(915, 1860), new Point2D(915, 1845), new Point2D(915, 1830), new Point2D(915, 1815), /*shares with next*/ new Point2D(921, 1807), new Point2D(935, 1801), new Point2D(950, 1797), new Point2D(959, 1798), new Point2D(973, 1802), new Point2D(979, 1805), new Point2D(985, 1809) },
-                              new Point2D[] { new Point2D(985, 1825), new Point2D(985, 1840), new Point2D(985, 1855), new Point2D(985, 1870), new Point2D(985, 1885) } },
+            new[]
+            {
+                              new[] { new Point2D(915, 1877), new Point2D(915, 1860), new Point2D(915, 1845), new Point2D(915, 1830), new Point2D(915, 1815), /*shares with next*/ new Point2D(921, 1807), new Point2D(935, 1801), new Point2D(950, 1797), new Point2D(959, 1798), new Point2D(973, 1802), new Point2D(979, 1805), new Point2D(985, 1809) },
+                              new[] { new Point2D(985, 1825), new Point2D(985, 1840), new Point2D(985, 1855), new Point2D(985, 1870), new Point2D(985, 1885) } },
 
             // Lane 4
-            new Point2D[][] {
-                              new Point2D[] { new Point2D(919, 1877), new Point2D(920, 1860), new Point2D(921, 1845), new Point2D(921, 1830), new Point2D(921, 1815), /*shares with prev*/ new Point2D(921, 1807), new Point2D(935, 1801), new Point2D(950, 1797), new Point2D(959, 1798), new Point2D(973, 1802), new Point2D(979, 1805), new Point2D(985, 1809), new Point2D(991, 1813) },
-                              new Point2D[] { new Point2D(991, 1830), new Point2D(991, 1845), new Point2D(991, 1860), new Point2D(991, 1875), new Point2D(991, 1885) } }
+            new[]
+            {
+                              new[] { new Point2D(919, 1877), new Point2D(920, 1860), new Point2D(921, 1845), new Point2D(921, 1830), new Point2D(921, 1815), /*shares with prev*/ new Point2D(921, 1807), new Point2D(935, 1801), new Point2D(950, 1797), new Point2D(959, 1798), new Point2D(973, 1802), new Point2D(979, 1805), new Point2D(985, 1809), new Point2D(991, 1813) },
+                              new[] { new Point2D(991, 1830), new Point2D(991, 1845), new Point2D(991, 1860), new Point2D(991, 1875), new Point2D(991, 1885) } }
         };
 
         private void AssignFlags()
         {
             if (BattleRegion != null)
             {
-                BattleFlag flag = BattleRegion.GetEnumeratedItems().OfType<BattleFlag>().FirstOrDefault(i => i != null && i.ItemID == 17099);
+                BattleFlag flag = BattleRegion.GetEnumeratedItems().OfType<BattleFlag>().FirstOrDefault(i => i.ItemID == 17099);
                 if (flag != null)
                 {
                     TribalFlag = flag;
                     flag.BattleSpawner = this;
                 }
 
-                flag = BattleRegion.GetEnumeratedItems().OfType<BattleFlag>().FirstOrDefault(i => i != null && i.ItemID == 1068);
+                flag = BattleRegion.GetEnumeratedItems().OfType<BattleFlag>().FirstOrDefault(i => i.ItemID == 1068);
                 if (flag != null)
                 {
                     MyrmidexFlag = flag;
@@ -983,7 +1003,7 @@ namespace Server.Engines.MyrmidexInvasion
             {
                 foreach (Item item in BattleRegion.GetEnumeratedItems())
                 {
-                    if (item is Static && (item.ItemID == 9))
+                    if (item is Static && item.ItemID == 9)
                     {
                         item.Delete();
                     }

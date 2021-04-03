@@ -55,8 +55,8 @@ namespace Server.Spells.SkillMasteries
         private int _DamageTaken;
         private bool _Expired;
 
-        public int Phase { get { return _Phase; } set { _Phase = value; } }
-        public int DamageTaken { get { return _DamageTaken; } set { _DamageTaken = value; } }
+        public int Phase { get => _Phase; set => _Phase = value; }
+        public int DamageTaken { get => _DamageTaken; set => _DamageTaken = value; }
 
         public CombatTrainingSpell(Mobile caster, Item scroll)
             : base(caster, scroll, m_Info)
@@ -101,7 +101,7 @@ namespace Server.Spells.SkillMasteries
 
         public void OnSelected(TrainingType type, Mobile target)
         {
-            if (!CheckSequence() || type == TrainingType.AsOne && Caster is PlayerMobile pm && pm.AllFollowers.Where(mob => mob != target).Count() == 0)
+            if (!CheckSequence() || type == TrainingType.AsOne && Caster is PlayerMobile pm && pm.AllFollowers.Count(mob => mob != target) == 0)
             {
                 FinishSequence();
                 return;
@@ -116,7 +116,7 @@ namespace Server.Spells.SkillMasteries
 
             Target.FixedParticles(0x373A, 10, 80, 5018, 0, 0, EffectLayer.Waist);
 
-            BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.CombatTraining, 1155933, 1156107, string.Format("{0}\t{1}\t{2}", SpellType.ToString(), Target.Name, ScaleUpkeep().ToString())));
+            BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.CombatTraining, 1155933, 1156107, $"{SpellType.ToString()}\t{Target.Name}\t{ScaleUpkeep().ToString()}"));
             //You train ~2_NAME~ to use ~1_SKILLNAME~.<br>Mana Upkeep: ~3_COST~
 
             FinishSequence();
@@ -229,9 +229,12 @@ namespace Server.Spells.SkillMasteries
                                 {
                                     damage = damage / list.Count;
 
-                                    foreach (Mobile m in list.Where(mob => mob != defender))
+                                    foreach (Mobile m in list)
                                     {
-                                        m.Damage(damage, attacker, true, false);
+                                        if (m != defender)
+                                        {
+                                            m.Damage(damage, attacker, true, false);
+                                        }
                                     }
                                 }
 
@@ -343,7 +346,7 @@ namespace Server.Spells.SkillMasteries
 
         public class InternalTarget : Target
         {
-            public CombatTrainingSpell Spell { get; set; }
+            public CombatTrainingSpell Spell { get; }
 
             public InternalTarget(CombatTrainingSpell spell)
                 : base(8, false, TargetFlags.None)
@@ -407,9 +410,9 @@ namespace Server.Spells.SkillMasteries
 
     public class ChooseTrainingGump : Gump
     {
-        public CombatTrainingSpell Spell { get; private set; }
-        public Mobile Caster { get; private set; }
-        public BaseCreature Target { get; private set; }
+        public CombatTrainingSpell Spell { get; }
+        public Mobile Caster { get; }
+        public BaseCreature Target { get; }
 
         public const int Hue = 0x07FF;
 

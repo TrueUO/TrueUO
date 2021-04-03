@@ -152,27 +152,23 @@ namespace Server.Engines.Craft
             return false;
         }
 
-        public virtual bool ConsumeOnFailure(Mobile from, Type resourceType, CraftItem craftItem)
+        public virtual bool ConsumeOnFailure(Type resourceType, CraftItem craftItem)
         {
             return !_GlobalNoConsume.Any(t => t == resourceType);
         }
 
         public virtual bool ConsumeOnFailure(Mobile from, Type resourceType, CraftItem craftItem, ref MasterCraftsmanTalisman talisman)
         {
-            if (!ConsumeOnFailure(from, resourceType, craftItem))
+            if (!ConsumeOnFailure(resourceType, craftItem))
                 return false;
 
             Item item = from.FindItemOnLayer(Layer.Talisman);
 
-            if (item is MasterCraftsmanTalisman)
+            if (item is MasterCraftsmanTalisman mct && mct.Charges > 0)
             {
-                MasterCraftsmanTalisman mct = (MasterCraftsmanTalisman)item;
+                talisman = mct;
 
-                if (mct.Charges > 0)
-                {
-                    talisman = mct;
-                    return false;
-                }
+                return false;
             }
 
             return true;
@@ -220,9 +216,9 @@ namespace Server.Engines.Craft
         {
             Item source;
 
-            if (tool is Item)
+            if (tool is Item item)
             {
-                source = (Item)tool;
+                source = item;
             }
             else
             {
@@ -273,6 +269,16 @@ namespace Server.Engines.Craft
             CraftItem craftItem = new CraftItem(typeItem, group, name);
             craftItem.AddRes(typeRes, nameRes, amount, message);
             craftItem.AddSkill(skillToMake, minSkill, maxSkill);
+
+            DoGroup(group, craftItem);
+            return CraftItems.Add(craftItem);
+        }
+
+        public int AddMapCraft(Type typeItem, TextDefinition group, TextDefinition name, double minSkill, double maxSkill, Type typeRes, int maplevel, TextDefinition nameRes, int amount, TextDefinition message)
+        {
+            CraftItem craftItem = new CraftItem(typeItem, group, name);
+            craftItem.AddMapRes(typeRes, maplevel, nameRes, amount, message);
+            craftItem.AddSkill(MainSkill, minSkill, maxSkill);
 
             DoGroup(group, craftItem);
             return CraftItems.Add(craftItem);
@@ -422,6 +428,12 @@ namespace Server.Engines.Craft
         {
             CraftItem craftItem = CraftItems.GetAt(index);
             craftItem.AddRes(type, name, amount, message);
+        }
+
+        public void AddMapRes(int index, Type type, int maplevel, TextDefinition name, int amount, TextDefinition message)
+        {
+            CraftItem craftItem = CraftItems.GetAt(index);
+            craftItem.AddMapRes(type, maplevel, name, amount, message);
         }
 
         public void AddResCallback(int index, Func<Mobile, ConsumeType, int> func)

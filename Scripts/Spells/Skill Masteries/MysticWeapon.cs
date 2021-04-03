@@ -1,4 +1,5 @@
 using Server.Items;
+using Server.Network;
 using System;
 
 namespace Server.Spells.SkillMasteries
@@ -25,7 +26,9 @@ namespace Server.Spells.SkillMasteries
             get
             {
                 if (Caster.Skills[SkillName.Focus].Value > Caster.Skills[SkillName.Imbuing].Value)
+                {
                     return SkillName.Focus;
+                }
 
                 return SkillName.Imbuing;
             }
@@ -40,7 +43,7 @@ namespace Server.Spells.SkillMasteries
 
         public override void SendCastEffect()
         {
-            Caster.FixedEffect(0x37C4, 87, (int)(GetCastDelay().TotalSeconds * 28), 0x66C, 3);
+            Caster.FixedEffect(0x37C4, 10, (int)(GetCastDelay().TotalSeconds * 28), 5, 3);
         }
 
         public override bool CheckCast()
@@ -55,7 +58,7 @@ namespace Server.Spells.SkillMasteries
 
             if (weapon.ExtendedWeaponAttributes.MysticWeapon > 0 || Enhancement.GetValue(Caster, ExtendedWeaponAttribute.MysticWeapon) > 0)
             {
-                Caster.SendMessage("That weapon is already under these effects.");
+                Caster.SendLocalizedMessage(1072192); // Your weapon is already enchanted!
                 return false;
             }
 
@@ -67,17 +70,20 @@ namespace Server.Spells.SkillMasteries
             BaseWeapon weapon = GetWeapon();
 
             if (weapon == null || weapon is Fists)
+            {
                 Caster.SendLocalizedMessage(1060179); //You must be wielding a weapon to use this ability!
+            }
             else if (CheckSequence())
             {
-                double skill = ((Caster.Skills[CastSkill].Value * 1.5) + Caster.Skills[DamageSkill].Value);
-                double duration = (skill + (GetMasteryLevel() * 50)) * 2;
+                var level = GetMasteryLevel();
+                double skill = Caster.Skills[CastSkill].Value * 1.5 + Caster.Skills[DamageSkill].Value;
+                double duration = (skill + level * 50) * 2;
 
-                Enhancement.SetValue(Caster, ExtendedWeaponAttribute.MysticWeapon, 25, "MysticWeapon");
+                Enhancement.SetValue(Caster, ExtendedWeaponAttribute.MysticWeapon, 10 + (5 * level), "MysticWeapon");
                 BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.MysticWeapon, 1155899, 1156055, TimeSpan.FromSeconds(duration), Caster));
 
-                Effects.SendLocationParticles(EffectItem.Create(Caster.Location, Caster.Map, EffectItem.DefaultDuration), 0x36CB, 1, 14, 0x55C, 7, 9915, 0);
-                Caster.PlaySound(0x64E);
+                Effects.SendPacket(Caster.Location, Caster.Map, new ParticleEffect(EffectType.FixedFrom, Caster.Serial, Serial.Zero, 0x3728, Caster.Location, Caster.Location, 1, 13, false, false, 1161, 0, 7, 5526, 1, Caster.Serial, 10, 0));
+                Effects.SendPacket(Caster.Location, Caster.Map, new ParticleEffect(EffectType.FixedFrom, Caster.Serial, Serial.Zero, 0x3779, Caster.Location, Caster.Location, 1, 15, false, false, 63, 0, 7, 0, 1, Caster.Serial, 10, 0));
 
                 weapon.AddMysticMod(Caster);
                 weapon.InvalidateProperties();

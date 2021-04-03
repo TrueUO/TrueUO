@@ -5,7 +5,6 @@ using System;
 
 namespace Server.Items
 {
-    [TypeAlias("Server.Items.SkullRugEastAddon", "Server.Items.SkullRugSouthAddon")]
     public class SkullRugAddon : BaseAddon, IRewardItem
     {
         public override bool ForceShowProperties => true;
@@ -16,10 +15,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsRewardItem
         {
-            get
-            {
-                return m_IsRewardItem;
-            }
+            get => m_IsRewardItem;
             set
             {
                 m_IsRewardItem = value;
@@ -30,10 +26,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int ResourceCount
         {
-            get
-            {
-                return m_ResourceCount;
-            }
+            get => m_ResourceCount;
             set
             {
                 m_ResourceCount = value;
@@ -44,7 +37,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public DateTime NextResourceCount { get; set; }
 
-        private static readonly int[,] _EastLarge = new int[,]
+        private static readonly int[,] _EastLarge =
         {
               {14495, -1, -3, 0}, {14494, 0, -3, 0}, {14493, 1, -3, 0}// 1	2	3	
 			, {14496, 2, -3, 0}, {14486, 0, -1, 0}, {14487, -1, -1, 0}// 4	5	6	
@@ -143,7 +136,7 @@ namespace Server.Items
         {
             BaseHouse house = BaseHouse.FindHouseAt(from);
 
-            if (house != null && (house.IsOwner(from) || (house.LockDowns.ContainsKey(this) && house.LockDowns[this] == from)))
+            if (house != null && (house.IsOwner(from) || house.LockDowns.ContainsKey(this) && house.LockDowns[this] == from))
             {
                 if (m_ResourceCount > 0)
                 {
@@ -197,9 +190,9 @@ namespace Server.Items
             {
                 base.GetProperties(list);
 
-                if (Addon is SkullRugAddon)
+                if (Addon is SkullRugAddon addon)
                 {
-                    list.Add(1150101, ((SkullRugAddon)Addon).ResourceCount.ToString()); // Treasure Maps: ~1_val~
+                    list.Add(1150101, addon.ResourceCount.ToString()); // Treasure Maps: ~1_val~
                 }
             }
 
@@ -314,10 +307,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsRewardItem
         {
-            get
-            {
-                return m_IsRewardItem;
-            }
+            get => m_IsRewardItem;
             set
             {
                 m_IsRewardItem = value;
@@ -328,10 +318,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int ResourceCount
         {
-            get
-            {
-                return m_ResourceCount;
-            }
+            get => m_ResourceCount;
             set
             {
                 m_ResourceCount = value;

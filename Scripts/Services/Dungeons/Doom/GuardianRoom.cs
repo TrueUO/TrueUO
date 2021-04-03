@@ -27,7 +27,7 @@ namespace Server.Engines.Doom
 
         public bool CanActivate => NextActivate < DateTime.UtcNow;
 
-        private static readonly Rectangle2D[] RegionBounds = new Rectangle2D[] { new Rectangle2D(355, 5, 20, 20) };
+        private static readonly Rectangle2D[] RegionBounds = { new Rectangle2D(355, 5, 20, 20) };
         private static Rectangle2D PentagramBounds = new Rectangle2D(364, 14, 2, 2);
         private static Point3D DoorOneLoc = new Point3D(355, 14, -1);
         private static Point3D DoorTwoLoc = new Point3D(355, 15, -1);
@@ -79,14 +79,14 @@ namespace Server.Engines.Doom
 
         public override void OnDeath(Mobile m)
         {
-            if (Guardians != null && m is DarkGuardian && Guardians.Contains((DarkGuardian)m))
+            if (Guardians != null && m is DarkGuardian guardian && Guardians.Contains(guardian))
             {
-                Guardians.Remove((DarkGuardian)m);
+                Guardians.Remove(guardian);
             }
 
-            if (m is PlayerMobile && Active)
+            if (m is PlayerMobile mobile && Active)
             {
-                Timer.DelayCall(TimeSpan.FromSeconds(3), MoveDeadPlayer, (PlayerMobile)m);
+                Timer.DelayCall(TimeSpan.FromSeconds(3), MoveDeadPlayer, mobile);
             }
         }
 
@@ -123,16 +123,27 @@ namespace Server.Engines.Doom
             Effects.PlaySound(DoorTwo.Location, DoorTwo.Map, 0x241);
 
             if (Guardians == null)
+            {
                 Guardians = new List<DarkGuardian>();
+            }
 
             int count = 0;
-            foreach (Mobile mob in GetEnumeratedMobiles().Where(mob => mob is PlayerMobile || (mob is BaseCreature && ((BaseCreature)mob).GetMaster() != null && !mob.IsDeadBondedPet)))
-            {
-                if (mob.NetState != null)
-                    mob.SendLocalizedMessage(1050000, "", 365); // The locks on the door click loudly and you begin to hear a faint hissing near the walls.
 
-                if (mob.Alive)
-                    count++;
+            foreach (Mobile mob in GetEnumeratedMobiles())
+            {
+                if (mob is PlayerMobile || mob is BaseCreature bc && bc.GetMaster() != null && !bc.IsDeadBondedPet)
+                {
+                    if (mob.NetState != null)
+                    {
+                        mob.SendLocalizedMessage(1050000, "",
+                            365); // The locks on the door click loudly and you begin to hear a faint hissing near the walls.
+                    }
+
+                    if (mob.Alive)
+                    {
+                        count++;
+                    }
+                }
             }
 
             count = Math.Max(1, count * 2);
@@ -216,14 +227,14 @@ namespace Server.Engines.Doom
 
             foreach (Item item in eable)
             {
-                if (item is BaseDoor)
+                if (item is BaseDoor baseDoor)
                 {
                     eable.Free();
 
                     if (door == 1)
-                        DoorOne = item as BaseDoor;
+                        DoorOne = baseDoor;
                     else
-                        DoorTwo = item as BaseDoor;
+                        DoorTwo = baseDoor;
 
                     return true;
                 }
@@ -254,7 +265,7 @@ namespace Server.Engines.Doom
 
         private class InternalTimer : Timer
         {
-            public DoomGuardianRegion Region { get; private set; }
+            public DoomGuardianRegion Region { get; }
             public DateTime NextGas { get; private set; }
 
             public InternalTimer(DoomGuardianRegion reg)
@@ -278,10 +289,13 @@ namespace Server.Engines.Doom
                         Effects.SendLocationEffect(p, Map.Malas, Utility.RandomList(0x113C, 0x1147, 0x11A8) - 2, 16, 3, 0, 0);
                     }
 
-                    foreach (Mobile m in Region.GetEnumeratedMobiles().Where(m => m is PlayerMobile && m.Alive && m.AccessLevel == AccessLevel.Player && m.Poison == null))
+                    foreach (Mobile m in Region.GetEnumeratedMobiles())
                     {
-                        m.ApplyPoison(m, Poison.Deadly);
-                        m.SendSound(0x231);
+                        if (m is PlayerMobile && m.Alive && m.AccessLevel == AccessLevel.Player && m.Poison == null)
+                        {
+                            m.ApplyPoison(m, Poison.Deadly);
+                            m.SendSound(0x231);
+                        }
                     }
 
                     NextGas = DateTime.UtcNow + TimeSpan.FromSeconds(3);

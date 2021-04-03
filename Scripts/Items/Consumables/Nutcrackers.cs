@@ -11,7 +11,7 @@ namespace Server.Items
         {
             Milk = 0x461,
             Dark = 0x465,
-            White = 0x47E,
+            White = 0x47E
         }
 
         public override int LabelNumber
@@ -32,10 +32,10 @@ namespace Server.Items
         private bool _Wrapped;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public ChocolateType Type { get { return _Type; } set { _Type = value; Hue = !_Wrapped ? (int)_Type : 0; InvalidateProperties(); } }
+        public ChocolateType Type { get => _Type; set { _Type = value; Hue = !_Wrapped ? (int)_Type : 0; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool Wrapped { get { return _Wrapped; } set { _Wrapped = value; InvalidateID(); InvalidateProperties(); } }
+        public bool Wrapped { get => _Wrapped; set { _Wrapped = value; InvalidateID(); InvalidateProperties(); } }
 
         [Constructable]
         public ChocolateNutcracker()
@@ -98,9 +98,9 @@ namespace Server.Items
 
         public override int OnCraft(int quality, bool makersMark, Mobile from, CraftSystem craftSystem, Type typeRes, ITool tool, CraftItem craftItem, int resHue)
         {
-            if (craftItem != null && craftItem.Data is ChocolateType)
+            if (craftItem != null && craftItem.Data is ChocolateType type)
             {
-                Type = (ChocolateType)craftItem.Data;
+                Type = type;
             }
 
             return quality;
@@ -114,8 +114,8 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0);
+
             writer.Write((int)_Type);
             writer.Write(_Wrapped);
         }
@@ -123,8 +123,8 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
             _Type = (ChocolateType)reader.ReadInt();
             _Wrapped = reader.ReadBool();
         }

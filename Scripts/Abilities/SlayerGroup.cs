@@ -75,7 +75,9 @@ namespace Server.Items
                     typeof(GrayGoblinMageRenowned), typeof(CorgulTheSoulBinder),
                     typeof(PirateCrew), typeof(LizardmanWitchdoctor),
                     typeof(OrcFootSoldier), typeof(RatmanAssassin),
-                    typeof(OgreBoneCrusher), typeof(TitanRockHunter)
+                    typeof(OgreBoneCrusher), typeof(TitanRockHunter),
+                    typeof(CaveTrollWrong), typeof(HungryOgre),
+                    typeof(Archmage), typeof(Fezzik)
                 );
 
             humanoid.Entries = new[]
@@ -84,26 +86,27 @@ namespace Server.Items
                     (
                         SlayerName.OgreTrashing,
 
-                        typeof(Ogre),               typeof(OgreLord),
-                        typeof(ArcticOgreLord),     typeof(OgreBoneCrusher)
+                        typeof(Ogre), typeof(OgreLord),
+                        typeof(ArcticOgreLord), typeof(OgreBoneCrusher),
+                        typeof(HungryOgre), typeof(Fezzik)
                     ),
 
                 new SlayerEntry
                     (
                         SlayerName.OrcSlaying,
 
-                        typeof(Orc),            typeof(OrcBomber),
-                        typeof(OrcBrute),       typeof(OrcCaptain),
-                        typeof(OrcChopper),     typeof(OrcScout),
-                        typeof(OrcishLord),     typeof(OrcishMage),
-                        typeof(OrcFootSoldier)
+                        typeof(Orc), typeof(OrcBomber),
+                        typeof(OrcBrute), typeof(OrcCaptain),
+                        typeof(OrcChopper), typeof(OrcScout),
+                        typeof(OrcishLord), typeof(OrcishMage),
+                        typeof(OrcFootSoldier), typeof(PirateCrew) // PirateCrew are orcs.
                     ),
 
                 new SlayerEntry
                     (
                         SlayerName.TrollSlaughter,
 
-                        typeof(Troll),  typeof(FrostTroll)
+                        typeof(Troll), typeof(FrostTroll), typeof(CaveTrollWrong)
                     )
             };
 
@@ -427,7 +430,8 @@ namespace Server.Items
                     typeof(JukaLord), typeof(JukaMage),
                     typeof(JukaWarrior), typeof(LavaSerpent),
                     typeof(LavaSnake), typeof(LesserHiryu),
-                    typeof(Lizardman), typeof(OphidianArchmage),
+                    typeof(Lizardman), typeof(LizardmanDefender),
+                    typeof(LizardmanSquatter), typeof(OphidianArchmage),
                     typeof(OphidianKnight), typeof(OphidianMage),
                     typeof(OphidianMatriarch), typeof(OphidianWarrior),
                     typeof(Reptalon), typeof(SeaSerpent),
@@ -455,7 +459,7 @@ namespace Server.Items
                     (
                         SlayerName.DragonSlaying,
 
-                        typeof(Rikktor),            typeof(SkeletalDragonRenowned),
+                        typeof(Rikktor), typeof(SkeletalDragonRenowned),
                         typeof(WyvernRenowned),     typeof(AncientWyrm),
                         typeof(GreaterDragon),      typeof(Dragon),
                         typeof(Drake),              typeof(Hiryu),
@@ -474,7 +478,8 @@ namespace Server.Items
                     (
                         SlayerName.LizardmanSlaughter,
 
-                        typeof(Lizardman)
+                        typeof(Lizardman), typeof(LizardmanDefender),
+                        typeof(LizardmanSquatter) 
                     ),
 
                 new SlayerEntry

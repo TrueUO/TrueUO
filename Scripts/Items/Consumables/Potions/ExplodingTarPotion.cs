@@ -30,7 +30,7 @@ namespace Server.Items
 
         public override void Drink(Mobile from)
         {
-            if (from.Paralyzed || from.Frozen || (from.Spell != null && from.Spell.IsCasting))
+            if (from.Paralyzed || from.Frozen || from.Spell != null && from.Spell.IsCasting)
             {
                 from.SendLocalizedMessage(1062725); // You can not use that potion while paralyzed.
                 return;
@@ -235,8 +235,8 @@ namespace Server.Items
 
                 IEntity to;
 
-                if (p is Mobile)
-                    to = (Mobile)p;
+                if (p is Mobile mobile)
+                    to = mobile;
                 else
                     to = new Entity(Serial.Zero, new Point3D(p), from.Map);
 

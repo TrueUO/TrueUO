@@ -90,11 +90,11 @@ namespace Server.Engines.Astronomy
 
             if (LoadedConstellations > 0)
             {
-                if (Constellations.Where(c => c.TimeCoordinate == TimeCoordinate.FiveToEight).Count() > Constellations.Where(c => c.TimeCoordinate == TimeCoordinate.NineToEleven).Count())
+                if (Constellations.Count(c => c.TimeCoordinate == TimeCoordinate.FiveToEight) > Constellations.Count(c => c.TimeCoordinate == TimeCoordinate.NineToEleven))
                     next = TimeCoordinate.NineToEleven;
-                else if (Constellations.Where(c => c.TimeCoordinate == TimeCoordinate.NineToEleven).Count() > Constellations.Where(c => c.TimeCoordinate == TimeCoordinate.Midnight).Count())
+                else if (Constellations.Count(c => c.TimeCoordinate == TimeCoordinate.NineToEleven) > Constellations.Count(c => c.TimeCoordinate == TimeCoordinate.Midnight))
                     next = TimeCoordinate.Midnight;
-                else if (Constellations.Where(c => c.TimeCoordinate == TimeCoordinate.Midnight).Count() > Constellations.Where(c => c.TimeCoordinate == TimeCoordinate.OneToFour).Count())
+                else if (Constellations.Count(c => c.TimeCoordinate == TimeCoordinate.Midnight) > Constellations.Count(c => c.TimeCoordinate == TimeCoordinate.OneToFour))
                     next = TimeCoordinate.OneToFour;
             }
 
@@ -170,7 +170,7 @@ namespace Server.Engines.Astronomy
                 return TimeCoordinate.NineToEleven;
             }
 
-            if ((hours >= 24 && hours < 1) || hours == 0)
+            if (hours >= 24 || hours == 0)
             {
                 return TimeCoordinate.Midnight;
             }

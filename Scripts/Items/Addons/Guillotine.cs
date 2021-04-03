@@ -49,15 +49,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write((byte)0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadByte();
+            reader.ReadByte();
 
             if (ItemID == 4678 || ItemID == 4679)
                 ItemID = 4656;
@@ -67,12 +65,12 @@ namespace Server.Items
 
         private void Down1()
         {
-            ItemID = (ItemID == 4656 ? 4678 : 4712);
+            ItemID = ItemID == 4656 ? 4678 : 4712;
         }
 
         private void Down2()
         {
-            ItemID = (ItemID == 4678 ? 4679 : 4713);
+            ItemID = ItemID == 4678 ? 4679 : 4713;
 
             Point3D p = GetWorldLocation();
             Map f = Map;

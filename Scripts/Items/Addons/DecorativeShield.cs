@@ -44,10 +44,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsRewardItem
         {
-            get
-            {
-                return m_IsRewardItem;
-            }
+            get => m_IsRewardItem;
             set
             {
                 m_IsRewardItem = value;
@@ -98,7 +95,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
 
             writer.Write(m_IsRewardItem);
@@ -107,8 +103,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
 
             m_IsRewardItem = reader.ReadBool();
         }
@@ -119,9 +114,11 @@ namespace Server.Items
                 return false;
 
             if (FacingSouth)
+            {
                 return BaseAddon.IsWall(p.X, p.Y - 1, p.Z, map); // north wall
-            else
-                return BaseAddon.IsWall(p.X - 1, p.Y, p.Z, map); // west wall
+            }
+
+            return BaseAddon.IsWall(p.X - 1, p.Y, p.Z, map); // west wall
         }
     }
 
@@ -142,13 +139,11 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1049771;// deed for a decorative shield wall hanging
+
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsRewardItem
         {
-            get
-            {
-                return m_IsRewardItem;
-            }
+            get => m_IsRewardItem;
             set
             {
                 m_IsRewardItem = value;

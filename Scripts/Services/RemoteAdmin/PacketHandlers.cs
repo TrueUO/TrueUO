@@ -20,8 +20,9 @@ namespace Server.RemoteAdmin
         public enum AcctSearchType : byte
         {
             Username = 0,
-            IP = 1,
+            IP = 1
         }
+
         public static void Register(byte command, OnPacketReceive handler)
         {
             m_Handlers[command] = handler;
@@ -34,11 +35,9 @@ namespace Server.RemoteAdmin
                 Console.WriteLine("ADMIN: Invalid packet 0x{0:X2} from {1}, disconnecting", command, state);
                 return false;
             }
-            else
-            {
-                m_Handlers[command](state, pvSrc);
-                return true;
-            }
+
+            m_Handlers[command](state, pvSrc);
+            return true;
         }
 
         private static void ServerInfoRequest(NetState state, PacketReader pvSrc)
@@ -56,10 +55,8 @@ namespace Server.RemoteAdmin
                 state.Send(new MessageBoxMessage("Invalid search term.\nThe IP sent was not valid.", "Invalid IP"));
                 return;
             }
-            else
-            {
-                term = term.ToUpper();
-            }
+
+            term = term.ToUpper();
 
             ArrayList list = new ArrayList();
 
@@ -104,7 +101,7 @@ namespace Server.RemoteAdmin
             }
         }
 
-        static bool CanAccessAccount(IAccount beholder, IAccount beheld)
+        private static bool CanAccessAccount(IAccount beholder, IAccount beheld)
         {
             return beholder.AccessLevel == AccessLevel.Owner || beheld.AccessLevel < beholder.AccessLevel;  // Cannot see accounts of equal or greater access level unless Owner
         }
@@ -223,12 +220,22 @@ namespace Server.RemoteAdmin
                 else
                 {
                     string changes = string.Empty;
+
                     if (UpdatedPass)
+                    {
                         changes += " Password Changed.";
+                    }
+
                     if (oldAcessLevel != a.AccessLevel)
-                        changes = string.Format("{0} Access level changed from {1} to {2}.", changes, oldAcessLevel, a.AccessLevel);
+                    {
+                        changes = $"{changes} Access level changed from {oldAcessLevel} to {a.AccessLevel}.";
+                    }
+
                     if (oldbanned != a.Banned)
+                    {
                         changes += a.Banned ? " Banned." : " Unbanned.";
+                    }
+
                     RemoteAdminLogging.WriteLine(state, "Updated account {0}:{1}", a.Username, changes);
                 }
 

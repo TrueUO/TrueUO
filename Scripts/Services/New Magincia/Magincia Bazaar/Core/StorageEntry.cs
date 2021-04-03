@@ -11,7 +11,7 @@ namespace Server.Engines.NewMagincia
         private readonly Dictionary<Type, int> m_CommodityTypes = new Dictionary<Type, int>();
         private readonly List<BaseCreature> m_Creatures = new List<BaseCreature>();
 
-        public int Funds { get { return m_Funds; } set { m_Funds = value; } }
+        public int Funds { get => m_Funds; set => m_Funds = value; }
         public DateTime Expires => m_Expires;
         public Dictionary<Type, int> CommodityTypes => m_CommodityTypes;
         public List<BaseCreature> Creatures => m_Creatures;
@@ -26,9 +26,9 @@ namespace Server.Engines.NewMagincia
             m_Funds += broker.BankBalance;
             m_Expires = DateTime.UtcNow + TimeSpan.FromDays(7);
 
-            if (broker is CommodityBroker)
+            if (broker is CommodityBroker commodityBroker)
             {
-                foreach (CommodityBrokerEntry entry in ((CommodityBroker)broker).CommodityEntries)
+                foreach (CommodityBrokerEntry entry in commodityBroker.CommodityEntries)
                 {
                     if (entry.Stock > 0)
                     {
@@ -36,9 +36,9 @@ namespace Server.Engines.NewMagincia
                     }
                 }
             }
-            else if (broker is PetBroker)
+            else if (broker is PetBroker petBroker)
             {
-                foreach (PetBrokerEntry entry in ((PetBroker)broker).BrokerEntries)
+                foreach (PetBrokerEntry entry in petBroker.BrokerEntries)
                 {
                     if (entry.Pet.Map != Map.Internal || !entry.Pet.IsStabled)
                     {

@@ -38,7 +38,10 @@ namespace Server.Mobiles
             Karma = -10000;
         }
 
-        public override int TreasureMapLevel => 5;
+        public Infernus(Serial serial)
+            : base(serial)
+        {
+        }
 
         private DateTime _NextDrop;
 
@@ -65,10 +68,10 @@ namespace Server.Mobiles
             {
                 for (int y = m.Y - 1; y <= m.Y + 1; y++)
                 {
-                    IPoint3D p = new Point3D(x, y, Map.GetAverageZ(x, y)) as IPoint3D;
+                    IPoint3D p = new Point3D(x, y, Map.GetAverageZ(x, y));
                     Spells.SpellHelper.GetSurfaceTop(ref p);
 
-                    if (((x == 0 && y == 0) || .5 > Utility.RandomDouble()) && Map.CanSpawnMobile(p.X, p.Y, p.Z))
+                    if ((x == 0 && y == 0 || .5 > Utility.RandomDouble()) && Map.CanSpawnMobile(p.X, p.Y, p.Z))
                     {
                         FireItem item = new FireItem(this);
                         item.MoveToWorld(new Point3D(p), Map);
@@ -87,10 +90,10 @@ namespace Server.Mobiles
             public FireItem(Infernus mobile)
                 : base(0x19AB)
             {
+                Movable = false;
+
                 Mobile = mobile;
-
                 _EndTime = DateTime.UtcNow + TimeSpan.FromSeconds(Utility.RandomMinMax(30, 40));
-
                 Timer = Timer.DelayCall(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1), OnTick);
             }
 
@@ -150,11 +153,6 @@ namespace Server.Mobiles
             }
         }
 
-        public Infernus(Serial serial)
-            : base(serial)
-        {
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -164,7 +162,7 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

@@ -6,7 +6,7 @@ namespace Server.Items
 {
     public class SouthEastGump : Gump
     {
-        public Action<bool> Callback { get; set; }
+        public Action<bool> Callback { get; }
 
         public SouthEastGump(Action<bool> callback)
             : base(50, 50)
@@ -25,11 +25,12 @@ namespace Server.Items
 
         public override void OnResponse(NetState sender, RelayInfo info)
         {
-            Mobile from = sender.Mobile;
-
             if (info.ButtonID != 0)
             {
-                Callback?.Invoke(info.ButtonID == 1);
+                if (Callback != null)
+                {
+                    Callback(info.ButtonID == 1);
+                }
             }
         }
     }

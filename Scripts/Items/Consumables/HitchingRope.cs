@@ -9,8 +9,7 @@ namespace Server.Items
         public HitchingRope()
             : base(0x14F8)
         {
-            Hue = 0x41F; // guessed
-
+            Hue = 0x41F; 
             Weight = 5;
         }
 
@@ -22,7 +21,7 @@ namespace Server.Items
         public override int LabelNumber => 1071124;//  hitching rope
         public override void OnDoubleClick(Mobile from)
         {
-            if (IsChildOf(from.Backpack) || (from.InRange(GetWorldLocation(), 2) && Movable))
+            if (IsChildOf(from.Backpack) || from.InRange(GetWorldLocation(), 2) && Movable)
             {
                 from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1071159); // Select the hitching post you want to supply hitching rope.
                 from.Target = new InternalTarget(this);
@@ -36,15 +35,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         private class InternalTarget : Target
@@ -65,10 +62,8 @@ namespace Server.Items
                 {
                     from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1019045); // I can't reach that.
                 }
-                else if (targeted is HitchingPost)
+                else if (targeted is HitchingPost postItem)
                 {
-                    HitchingPost postItem = (HitchingPost)targeted;
-
                     if (postItem.UsesRemaining >= 1)
                     {
                         from.SendMessage("Hitching Rope cannot be applied at this time.", 0x59);

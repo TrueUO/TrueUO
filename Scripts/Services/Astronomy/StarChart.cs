@@ -1,4 +1,4 @@
-﻿using Server.Engines.Astronomy;
+using Server.Engines.Astronomy;
 using Server.Engines.Craft;
 using Server.Gumps;
 using Server.Mobiles;
@@ -18,32 +18,25 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int Constellation
         {
-            get { return _Constellation; }
+            get => _Constellation;
             set
             {
                 _Constellation = value;
 
-                if (_Constellation < 0)
-                {
-                    Hue = 2500;
-                }
-                else
-                {
-                    Hue = 0;
-                }
+                Hue = _Constellation < 0 ? 2500 : 0;
 
                 InvalidateProperties();
             }
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public string ConstellationName { get { return _Name; } set { _Name = value; InvalidateProperties(); } }
+        public string ConstellationName { get => _Name; set { _Name = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public Mobile ChartedBy { get { return _ChartedBy; } set { _ChartedBy = value; InvalidateProperties(); } }
+        public Mobile ChartedBy { get => _ChartedBy; set { _ChartedBy = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public DateTime ChartedOn { get { return _ChartedOn; } set { _ChartedOn = value; } }
+        public DateTime ChartedOn { get => _ChartedOn; set => _ChartedOn = value; }
 
         public override int LabelNumber => _Constellation == -1 ? 1158743 : 1158493;  // An Indecipherable Star Chart : Star Chart
 
@@ -67,10 +60,8 @@ namespace Server.Items
             m.SendLocalizedMessage(1158494); // Which telescope do you wish to create the star chart from?
             m.BeginTarget(10, false, TargetFlags.None, (from, targeted) =>
                 {
-                    if (!Deleted && IsChildOf(from.Backpack) && targeted is PersonalTelescope)
+                    if (!Deleted && IsChildOf(from.Backpack) && targeted is PersonalTelescope tele)
                     {
-                        PersonalTelescope tele = (PersonalTelescope)targeted;
-
                         ConstellationInfo constellation = AstronomySystem.GetConstellation(tele.TimeCoordinate, tele.RA, tele.DEC);
 
                         if (constellation != null)
@@ -92,9 +83,9 @@ namespace Server.Items
 
         public override void OnDoubleClick(Mobile m)
         {
-            if (m is PlayerMobile && IsChildOf(m.Backpack) && _Constellation > -1)
+            if (m is PlayerMobile pm && IsChildOf(pm.Backpack) && _Constellation > -1)
             {
-                BaseGump.SendGump(new InternalGump((PlayerMobile)m, this));
+                BaseGump.SendGump(new InternalGump(pm, this));
             }
         }
 
@@ -115,10 +106,10 @@ namespace Server.Items
 
         public class InternalGump : BaseGump
         {
-            public StarChart Chart { get; set; }
+            public StarChart Chart { get; }
 
             public InternalGump(PlayerMobile pm, StarChart chart)
-                : base(pm, 50, 50)
+                : base(pm)
             {
                 pm.CloseGump(typeof(InternalGump));
 

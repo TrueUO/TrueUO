@@ -55,7 +55,6 @@ namespace Server.Items
 
         [Constructable]
         public HorsePaintingDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

@@ -28,15 +28,18 @@ namespace Server.Items
         }
 
         public Item Deed => new WreathDeed(Hue);
+
         public bool CouldFit(IPoint3D p, Map map)
         {
             if (!map.CanFit(p.X, p.Y, p.Z, ItemData.Height))
                 return false;
 
             if (ItemID == 0x232C)
+            {
                 return BaseAddon.IsWall(p.X, p.Y - 1, p.Z, map); // North wall
-            else
-                return BaseAddon.IsWall(p.X - 1, p.Y, p.Z, map); // West wall
+            }
+
+            return BaseAddon.IsWall(p.X - 1, p.Y, p.Z, map); // West wall
         }
 
         public override void Serialize(GenericWriter writer)
@@ -92,16 +95,12 @@ namespace Server.Items
                     Hue = sender.DyedHue;
                     return true;
                 }
-                else
-                {
-                    from.SendLocalizedMessage(500295); // You are too far away to do that.
-                    return false;
-                }
-            }
-            else
-            {
+
+                from.SendLocalizedMessage(500295); // You are too far away to do that.
                 return false;
             }
+
+            return false;
         }
 
         private void FixMovingCrate()
@@ -113,9 +112,9 @@ namespace Server.Items
             {
                 Item deed = Deed;
 
-                if (Parent is Item)
+                if (Parent is Item item)
                 {
-                    ((Item)Parent).AddItem(deed);
+                    item.AddItem(deed);
                     deed.Location = Location;
                 }
                 else

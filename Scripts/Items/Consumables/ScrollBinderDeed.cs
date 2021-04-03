@@ -21,19 +21,19 @@ namespace Server.Items
         private double m_Has;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public BinderType BinderType { get { return m_BinderType; } set { m_BinderType = value; InvalidateProperties(); } }
+        public BinderType BinderType { get => m_BinderType; set { m_BinderType = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public SkillName Skill { get { return m_Skill; } set { m_Skill = value; InvalidateProperties(); } }
+        public SkillName Skill { get => m_Skill; set { m_Skill = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public double Value { get { return m_Value; } set { m_Value = value; InvalidateProperties(); } }
+        public double Value { get => m_Value; set { m_Value = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int Needed { get { return m_Needed; } set { m_Needed = value; InvalidateProperties(); } }
+        public int Needed { get => m_Needed; set { m_Needed = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public double Has { get { return m_Has; } set { m_Has = value; InvalidateProperties(); } }
+        public double Has { get => m_Has; set { m_Has = value; InvalidateProperties(); } }
 
         public override int LabelNumber => 1113135;  // Scroll Binder
 
@@ -109,7 +109,7 @@ namespace Server.Items
 
         public void OnTarget(Mobile from, object targeted)
         {
-            if (targeted is Item && !((Item)targeted).IsChildOf(from.Backpack))
+            if (targeted is Item item && !item.IsChildOf(from.Backpack))
             {
                 from.SendLocalizedMessage(1060640); // The item must be in your backpack to use it.
                 return;
@@ -119,10 +119,8 @@ namespace Server.Items
             {
                 case BinderType.None:
                     {
-                        if (targeted is PowerScroll)
+                        if (targeted is PowerScroll ps)
                         {
-                            PowerScroll ps = (PowerScroll)targeted;
-
                             if (ps.Value >= 120)
                             {
                                 from.SendLocalizedMessage(1113144); // This scroll is already the highest of its type and cannot be bound.
@@ -148,10 +146,8 @@ namespace Server.Items
                             BinderType = BinderType.PowerScroll;
                             ps.Delete();
                         }
-                        else if (targeted is StatCapScroll)
+                        else if (targeted is StatCapScroll ss)
                         {
-                            StatCapScroll ss = (StatCapScroll)targeted;
-
                             if (ss.Value >= 250)
                             {
                                 from.SendLocalizedMessage(1113144); //This scroll is already the highest of its type and cannot be bound.
@@ -178,10 +174,8 @@ namespace Server.Items
                             BinderType = BinderType.StatScroll;
                             ss.Delete();
                         }
-                        else if (targeted is ScrollOfTranscendence)
+                        else if (targeted is ScrollOfTranscendence sot)
                         {
-                            ScrollOfTranscendence sot = (ScrollOfTranscendence)targeted;
-
                             if (sot.Value >= 5.0)
                             {
                                 from.SendLocalizedMessage(1113144); //This scroll is already the highest of its type and cannot be bound.
@@ -203,10 +197,8 @@ namespace Server.Items
                     }
                 case BinderType.PowerScroll:
                     {
-                        if (targeted is PowerScroll)
+                        if (targeted is PowerScroll ps)
                         {
-                            PowerScroll ps = (PowerScroll)targeted;
-
                             if (ps.Skill != Skill || ps.Value != Value)
                             {
                                 from.SendLocalizedMessage(1113143); // This scroll does not match the type currently being bound.
@@ -227,10 +219,8 @@ namespace Server.Items
                                 ps.Delete();
                             }
                         }
-                        else if (targeted is ScrollBinderDeed)
+                        else if (targeted is ScrollBinderDeed sb)
                         {
-                            ScrollBinderDeed sb = (ScrollBinderDeed)targeted;
-
                             if (sb == this)
                                 return;
 
@@ -260,10 +250,8 @@ namespace Server.Items
                     }
                 case BinderType.StatScroll:
                     {
-                        if (targeted is StatCapScroll)
+                        if (targeted is StatCapScroll ss)
                         {
-                            StatCapScroll ss = (StatCapScroll)targeted;
-
                             if (ss.Value != Value)
                             {
                                 from.SendLocalizedMessage(1113143); // This scroll does not match the type currently being bound.
@@ -284,10 +272,8 @@ namespace Server.Items
                                 ss.Delete();
                             }
                         }
-                        else if (targeted is ScrollBinderDeed)
+                        else if (targeted is ScrollBinderDeed sb)
                         {
-                            ScrollBinderDeed sb = (ScrollBinderDeed)targeted;
-
                             if (sb == this)
                                 return;
 
@@ -317,10 +303,8 @@ namespace Server.Items
                     }
                 case BinderType.SOT:
                     {
-                        if (targeted is ScrollOfTranscendence)
+                        if (targeted is ScrollOfTranscendence sot)
                         {
-                            ScrollOfTranscendence sot = (ScrollOfTranscendence)targeted;
-
                             if (sot.Skill != Skill)
                             {
                                 from.SendLocalizedMessage(1113143); // This scroll does not match the type currently being bound.
@@ -354,10 +338,8 @@ namespace Server.Items
                                 sot.Delete();
                             }
                         }
-                        else if (targeted is ScrollBinderDeed)
+                        else if (targeted is ScrollBinderDeed sb)
                         {
-                            ScrollBinderDeed sb = (ScrollBinderDeed)targeted;
-
                             if (sb == this)
                                 return;
 

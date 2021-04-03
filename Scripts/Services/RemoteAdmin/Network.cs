@@ -28,9 +28,10 @@ namespace Server.RemoteAdmin
         public static void OnConsoleString(string str)
         {
             string outStr;
+
             if (m_NewLine)
             {
-                outStr = string.Format("[{0}]: {1}", DateTime.UtcNow.ToString(DateFormat), str);
+                outStr = $"[{DateTime.UtcNow.ToString(DateFormat)}]: {str}";
                 m_NewLine = false;
             }
             else
@@ -49,7 +50,8 @@ namespace Server.RemoteAdmin
             if (m_NewLine)
             {
                 string outStr;
-                outStr = string.Format("[{0}]: {1}", DateTime.UtcNow.ToString(DateFormat), ch);
+
+                outStr = $"[{DateTime.UtcNow.ToString(DateFormat)}]: {ch}";
 
                 m_ConsoleData.Append(outStr);
                 SendToAll(outStr);
@@ -68,10 +70,11 @@ namespace Server.RemoteAdmin
         public static void OnConsoleLine(string line)
         {
             string outStr;
+
             if (m_NewLine)
-                outStr = string.Format("[{0}]: {1}{2}", DateTime.UtcNow.ToString(DateFormat), line, Console.Out.NewLine);
+                outStr = $"[{DateTime.UtcNow.ToString(DateFormat)}]: {line}{Console.Out.NewLine}";
             else
-                outStr = string.Format("{0}{1}", line, Console.Out.NewLine);
+                outStr = $"{line}{Console.Out.NewLine}";
 
             m_ConsoleData.Append(outStr);
             RoughTrimConsoleData();
@@ -81,42 +84,56 @@ namespace Server.RemoteAdmin
             m_NewLine = true;
         }
 
-        static void SendToAll(string outStr)
+        private static void SendToAll(string outStr)
         {
             SendToAll(new ConsoleData(outStr));
         }
 
-        static void SendToAll(char ch)
+        private static void SendToAll(char ch)
         {
             SendToAll(new ConsoleData(ch));
         }
 
-        static void SendToAll(ConsoleData packet)
+        private static void SendToAll(ConsoleData packet)
         {
             packet.Acquire();
+
             for (int i = 0; i < m_Auth.Count; i++)
-                ((NetState)m_Auth[i]).Send(packet);
+            {
+                ((NetState) m_Auth[i]).Send(packet);
+            }
+
             packet.Release();
         }
 
-        static void RoughTrimConsoleData()
+        private static void RoughTrimConsoleData()
         {
             if (m_ConsoleData.Length >= 4096)
+            {
                 m_ConsoleData.Remove(0, 2048);
+            }
         }
 
-        static void TightTrimConsoleData()
+        private static void TightTrimConsoleData()
         {
             if (m_ConsoleData.Length > 1024)
+            {
                 m_ConsoleData.Remove(0, m_ConsoleData.Length - 1024);
+            }
         }
 
         public static void OnReceive(NetState state, PacketReader pvSrc)
         {
             byte cmd = pvSrc.ReadByte();
+
             if (cmd == 0x02)
             {
                 Authenticate(state, pvSrc);
+            }
+            else if (cmd == 0xFD)
+            {
+                state.Send(new UOGInfo(Statistics.GetReceiveData()));
+                state.Dispose();
             }
             else if (cmd == 0xFE)
             {
@@ -125,7 +142,8 @@ namespace Server.RemoteAdmin
             }
             else if (cmd == 0xFF)
             {
-                string statStr = string.Format(", Name={0}, Age={1}, Clients={2}, Items={3}, Chars={4}, Mem={5}K, Ver={6}", Misc.ServerList.ServerName, (int)(DateTime.UtcNow - Items.Clock.ServerStart).TotalHours, NetState.Instances.Count, World.Items.Count, World.Mobiles.Count, (int)(GC.GetTotalMemory(false) / 1024), ProtocolVersion);
+                string statStr = $", Name={Misc.ServerList.ServerName}, Age={(int) (DateTime.UtcNow - Items.Clock.ServerStart).TotalHours}, Clients={NetState.Instances.Count}, Items={World.Items.Count}, Chars={World.Mobiles.Count}, Mem={(int) (GC.GetTotalMemory(false) / 1024)}K, Ver={ProtocolVersion}";
+
                 state.Send(new UOGInfo(statStr));
                 state.Dispose();
             }
@@ -231,15 +249,11 @@ namespace Server.RemoteAdmin
                     Console.WriteLine("WARNING: Unable to compress admin packet, zlib error: {0}", error);
                     return p;
                 }
-                else
-                {
-                    return new AdminCompressedPacket(dest, destSize, length);
-                }
+
+                return new AdminCompressedPacket(dest, destSize, length);
             }
-            else
-            {
-                return p;
-            }
+
+            return p;
         }
     }
 
@@ -262,20 +276,17 @@ namespace Server.RemoteAdmin
 
         public override void Write(char ch)
         {
-            if (m_OnChar != null)
-                m_OnChar(ch);
+            m_OnChar?.Invoke(ch);
         }
 
         public override void Write(string str)
         {
-            if (m_OnStr != null)
-                m_OnStr(str);
+            m_OnStr?.Invoke(str);
         }
 
         public override void WriteLine(string line)
         {
-            if (m_OnLine != null)
-                m_OnLine(line);
+            m_OnLine?.Invoke(line);
         }
 
         public override Encoding Encoding => Encoding.ASCII;

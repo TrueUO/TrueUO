@@ -28,8 +28,7 @@ namespace Server.Spells.Bushido
         {
             Timer t = (Timer)m_Table[m];
 
-            if (t != null)
-                t.Stop();
+            t?.Stop();
 
             t = new InternalTimer(m);
 
@@ -44,8 +43,7 @@ namespace Server.Spells.Bushido
         {
             Timer t = (Timer)m_Table[m];
 
-            if (t != null)
-                t.Stop();
+            t?.Stop();
 
             m_Table.Remove(m);
 
@@ -59,13 +57,13 @@ namespace Server.Spells.Bushido
             if (!base.CheckCast())
                 return false;
 
-            if (Caster.FindItemOnLayer(Layer.TwoHanded) as BaseShield != null)
+            if (Caster.FindItemOnLayer(Layer.TwoHanded) is BaseShield)
                 return true;
 
-            if (Caster.FindItemOnLayer(Layer.OneHanded) as BaseWeapon != null)
+            if (Caster.FindItemOnLayer(Layer.OneHanded) is BaseWeapon)
                 return true;
 
-            if (Caster.FindItemOnLayer(Layer.TwoHanded) as BaseWeapon != null)
+            if (Caster.FindItemOnLayer(Layer.TwoHanded) is BaseWeapon)
                 return true;
 
             Caster.SendLocalizedMessage(1062944); // You must have a weapon or a shield equipped to use this ability!

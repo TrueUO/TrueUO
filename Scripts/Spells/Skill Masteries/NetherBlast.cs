@@ -35,7 +35,7 @@ namespace Server.Spells.SkillMasteries
             }
         }
 
-        public List<InternalItem> Items { get; set; } = new List<InternalItem>();
+        public List<InternalItem> Items { get; } = new List<InternalItem>();
 
         public NetherBlastSpell(Mobile caster, Item scroll)
             : base(caster, scroll, m_Info)
@@ -114,15 +114,16 @@ namespace Server.Spells.SkillMasteries
         {
             Dictionary<Mobile, InternalItem> list = new Dictionary<Mobile, InternalItem>();
 
-            foreach (InternalItem item in Items.Where(i => !i.Deleted))
+            foreach (InternalItem item in Items)
             {
-                foreach (Mobile m in AcquireIndirectTargets(item.Location, 1).OfType<Mobile>().Where(m =>
-                     (m.Z + 16) > item.Z &&
-                     (item.Z + 12) > m.Z))
+                if (!item.Deleted)
                 {
-                    if (!list.ContainsKey(m))
+                    foreach (Mobile m in AcquireIndirectTargets(item.Location, 1).OfType<Mobile>().Where(m => m.Z + 16 > item.Z && item.Z + 12 > m.Z))
                     {
-                        list.Add(m, item);
+                        if (!list.ContainsKey(m))
+                        {
+                            list.Add(m, item);
+                        }
                     }
                 }
             }
@@ -212,15 +213,13 @@ namespace Server.Spells.SkillMasteries
             public override void Serialize(GenericWriter writer)
             {
                 base.Serialize(writer);
-
                 writer.Write(0); // version
             }
 
             public override void Deserialize(GenericReader reader)
             {
                 base.Deserialize(reader);
-
-                int version = reader.ReadInt();
+                reader.ReadInt();
 
                 Delete();
             }

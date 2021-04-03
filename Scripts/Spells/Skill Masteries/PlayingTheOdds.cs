@@ -69,7 +69,7 @@ namespace Server.Spells.SkillMasteries
                 _HCIBonus = (int)Math.Max(45, skill / 2.667);
                 _SSIBonus = (int)Math.Max(30, skill / 4);
 
-                string args = string.Format("{0}\t{1}\t{2}", Caster.Name, _HCIBonus.ToString(), _SSIBonus.ToString());
+                string args = $"{Caster.Name}\t{_HCIBonus.ToString()}\t{_SSIBonus.ToString()}";
                 BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.PlayingTheOddsDebuff, 1155913, 1156091, duration, Caster));
                 //Your bow range has been reduced as you play the odds.
 
@@ -86,8 +86,10 @@ namespace Server.Spells.SkillMasteries
                 {
                     if (HitLower.ApplyDefense(mob))
                     {
-                        if (wep is BaseRanged && !(wep is BaseThrown))
-                            Caster.MovingEffect(mob, ((BaseRanged)wep).EffectID, 18, 1, false, false);
+                        if (wep is BaseRanged ranged && !(ranged is BaseThrown))
+                        {
+                            Caster.MovingEffect(mob, ranged.EffectID, 18, 1, false, false);
+                        }
 
                         mob.PlaySound(0x28E);
                         Effects.SendTargetEffect(mob, 0x37BE, 1, 4, 0x23, 3);
@@ -110,7 +112,7 @@ namespace Server.Spells.SkillMasteries
 
             if (m != Caster)
             {
-                string args = string.Format("{0}\t{1}\t{2}", Caster.Name, _HCIBonus.ToString(), _SSIBonus.ToString());
+                string args = $"{Caster.Name}\t{_HCIBonus.ToString()}\t{_SSIBonus.ToString()}";
                 BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.PlayingTheOdds, 1155913, 1155998, Expires - DateTime.UtcNow, m, args));
                 //~1_NAME~ grants you the following:<br>+~2_VAl~% Hit Chance Increase.<br>+~3_VAL~% Swing Speed Increase.
             }
@@ -128,8 +130,7 @@ namespace Server.Spells.SkillMasteries
 
             BaseWeapon wep = GetWeapon();
 
-            if (wep != null)
-                wep.InvalidateProperties();
+            wep?.InvalidateProperties();
 
             RemovePartyEffects(Caster);
             Caster.SendLocalizedMessage(1156092); // Your bow range has returned to normal.

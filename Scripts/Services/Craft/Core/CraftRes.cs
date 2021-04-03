@@ -2,6 +2,19 @@ using System;
 
 namespace Server.Engines.Craft
 {
+    public class MapRes : CraftRes
+    {
+        private readonly int m_MapLevel;
+
+        public MapRes(Type type, int maplevel, TextDefinition name, int amount, TextDefinition message)
+            : base(type, name, amount, message)
+        {
+            m_MapLevel = maplevel;
+        }
+
+        public int MapLevel => m_MapLevel;
+    }
+
     public class CraftRes
     {
         private readonly Type m_Type;

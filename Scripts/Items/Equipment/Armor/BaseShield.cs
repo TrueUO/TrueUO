@@ -25,9 +25,11 @@ namespace Server.Items
                 double ar = base.ArmorRating;
 
                 if (m != null)
+                {
                     return ((m.Skills[SkillName.Parry].Value * ar) / 200.0) + 1.0;
-                else
-                    return ar;
+                }
+
+                return ar;
             }
         }
 
@@ -36,28 +38,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1);//version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
-
-            if (version < 1)
-            {
-                if (this is Aegis)
-                    return;
-
-                // The 15 bonus points to resistances are not applied to shields on OSI.
-                PhysicalBonus = 0;
-                FireBonus = 0;
-                ColdBonus = 0;
-                PoisonBonus = 0;
-                EnergyBonus = 0;
-            }
+            reader.ReadInt();
         }
 
         public override void AddNameProperties(ObjectPropertyList list)
@@ -94,7 +81,7 @@ namespace Server.Items
                 int wear;
 
                 if (weapon.Type == WeaponType.Bashing)
-                    wear = (absorbed / 2);
+                    wear = absorbed / 2;
                 else
                     wear = Utility.Random(2);
 
@@ -117,8 +104,10 @@ namespace Server.Items
                         {
                             MaxHitPoints -= wear;
 
-                            if (Parent is Mobile)
-                                ((Mobile)Parent).LocalOverheadMessage(MessageType.Regular, 0x3B2, 1061121); // Your equipment is severely damaged.
+                            if (Parent is Mobile mobile)
+                            {
+                                mobile.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1061121); // Your equipment is severely damaged.
+                            }
                         }
                         else
                         {
@@ -137,15 +126,13 @@ namespace Server.Items
             {
                 return base.GetLuckBonus();
             }
-            else
-            {
-                CraftAttributeInfo attrInfo = GetResourceAttrs(Resource);
 
-                if (attrInfo == null)
-                    return 0;
+            CraftAttributeInfo attrInfo = GetResourceAttrs(Resource);
 
-                return attrInfo.ShieldLuck;
-            }
+            if (attrInfo == null)
+                return 0;
+
+            return attrInfo.ShieldLuck;
         }
 
         public override void DistributeExceptionalBonuses(Mobile from, bool runic)
@@ -179,6 +166,11 @@ namespace Server.Items
                         case 6: Attributes.SpellChanneling += attrInfo.ShieldSpellChanneling; break;
                     }
                 }
+            }
+
+            if (Attributes.SpellChanneling > 0 && Attributes.CastSpeed != -1)
+            {
+                Attributes.CastSpeed -= 1;
             }
         }
 

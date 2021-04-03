@@ -12,15 +12,11 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int UsesRemaining
         {
-            get { return m_UsesRemaining; }
+            get => m_UsesRemaining;
             set { m_UsesRemaining = value; InvalidateProperties(); }
         }
 
-        public virtual bool ShowUsesRemaining
-        {
-            get { return true; }
-            set { }
-        }
+        public virtual bool ShowUsesRemaining { get => true; set { } }
 
         [Constructable]
         public PoppiesDust()
@@ -103,27 +99,23 @@ namespace Server.Items
                 if (!m_Dust.IsChildOf(from.Backpack))
                 {
                     from.SendLocalizedMessage(1042664); // You must have the object in your backpack to use it.
-                    return;
                 }
-                else if (targeted is PoppiesDust && m_Dust != targeted)
+                else if (targeted is PoppiesDust pd && m_Dust != pd)
                 {
-                    PoppiesDust pd = targeted as PoppiesDust;
                     pd.UsesRemaining += m_Dust.UsesRemaining;
                     m_Dust.Delete();
 
                     from.SendLocalizedMessage(1158448); // You combine the charges on the items.
                 }
-                else if (targeted is Seed)
+                else if (targeted is Seed mSeed)
                 {
-                    Seed m_Seed = (Seed)targeted;
-
-                    if (m_Seed.ShowType)
+                    if (mSeed.ShowType)
                     {
                         from.SendLocalizedMessage(1114369, "", 946); // This seed has already been identified.
                         return;
                     }
 
-                    m_Seed.ShowType = true;
+                    mSeed.ShowType = true;
 
                     --m_Dust.UsesRemaining;
                 }

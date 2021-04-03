@@ -22,26 +22,18 @@ namespace Server.Items
         public override int FailMessage => 501021;// That is not a piece of furniture.
         public override int LabelNumber => 1041246;// Furniture Dye Tub
 
-        private static Type[] _Dyables = new[]
+        private static Type[] _Dyables =
         {
             typeof(PotionKeg), typeof(CustomizableSquaredDoorMatDeed), typeof(OrnateBedDeed),
-            typeof(FourPostBedDeed), typeof(FormalDiningTableDeed)
+            typeof(FourPostBedDeed), typeof(FormalDiningTableDeed), typeof(FluffySpongeDeed),
+            typeof(ShelfSpongeDeed), typeof(CactusSpongeDeed), typeof(BarrelSpongeDeed)
         };
 
         public override Type[] ForcedDyables => _Dyables;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get
-            {
-                return m_IsRewardItem;
-            }
-            set
-            {
-                m_IsRewardItem = value;
-            }
-        }
+        public bool IsRewardItem { get => m_IsRewardItem; set => m_IsRewardItem = value; }
+
         public override void OnDoubleClick(Mobile from)
         {
             if (m_IsRewardItem && !Engines.VeteranRewards.RewardSystem.CheckIsUsableBy(from, this, null))
@@ -61,7 +53,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1); // version
 
             writer.Write(m_IsRewardItem);
@@ -70,17 +61,9 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 1:
-                    {
-                        m_IsRewardItem = reader.ReadBool();
-                        break;
-                    }
-            }
+            m_IsRewardItem = reader.ReadBool();
         }
     }
 }

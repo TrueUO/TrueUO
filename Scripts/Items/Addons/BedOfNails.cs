@@ -19,8 +19,8 @@ namespace Server.Items
         {
             bool allow = base.OnMoveOver(m);
 
-            if (allow && Addon is BedOfNailsAddon)
-                ((BedOfNailsAddon)Addon).OnMoveOver(m);
+            if (allow && Addon is BedOfNailsAddon addon)
+                addon.OnMoveOver(m);
 
             return allow;
         }
@@ -46,7 +46,6 @@ namespace Server.Items
         private InternalTimer m_Timer;
         [Constructable]
         public BedOfNailsAddon()
-            : base()
         {
             Direction = Direction.South;
 
@@ -161,7 +160,6 @@ namespace Server.Items
     {
         [Constructable]
         public BedOfNailsDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

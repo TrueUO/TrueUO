@@ -16,8 +16,6 @@ namespace Server.Items
 {
     public class TreasureMap : MapItem
     {
-        public static bool NewSystem => false;
-
         public static double LootChance = Config.Get("TreasureMaps.LootChance", .01);
         private static TimeSpan ResetTime = TimeSpan.FromDays(Config.Get("TreasureMaps.ResetTime", 30.0));
 
@@ -27,7 +25,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public TreasureLevel TreasureLevel
         {
-            get { return (TreasureLevel)m_Level; }
+            get => (TreasureLevel)m_Level;
             set
             {
                 if ((int)value != Level)
@@ -38,11 +36,7 @@ namespace Server.Items
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public TreasurePackage Package
-        {
-            get { return _Package; }
-            set { _Package = value; InvalidateProperties(); }
-        }
+        public TreasurePackage Package { get => _Package; set { _Package = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public TreasureFacet TreasureFacet => TreasureMapInfo.GetFacet(ChestLocation, Facet);
@@ -84,86 +78,85 @@ namespace Server.Items
         #endregion
 
         #region Spawn Types
-        private static readonly Type[][] m_SpawnTypes = new Type[][]
+        private static readonly Type[][] m_SpawnTypes =
         {
-            new Type[]{ typeof( HeadlessOne ), typeof( Skeleton ) },
-            new Type[]{ typeof( Mongbat ), typeof( Ratman ), typeof( HeadlessOne ), typeof( Skeleton ), typeof( Zombie ) },
-            new Type[]{ typeof( OrcishMage ), typeof( Gargoyle ), typeof( Gazer ), typeof( HellHound ), typeof( EarthElemental ) },
-            new Type[]{ typeof( Lich ), typeof( OgreLord ), typeof( DreadSpider ), typeof( AirElemental ), typeof( FireElemental ) },
-            new Type[]{ typeof( DreadSpider ), typeof( LichLord ), typeof( Daemon ), typeof( ElderGazer ), typeof( OgreLord ) },
-            new Type[]{ typeof( LichLord ), typeof( Daemon ), typeof( ElderGazer ), typeof( PoisonElemental ), typeof( BloodElemental ) },
-            new Type[]{ typeof( AncientWyrm ), typeof( Balron ), typeof( BloodElemental ), typeof( PoisonElemental ), typeof( Titan ) },
-            new Type[]{ typeof( BloodElemental), typeof(ColdDrake), typeof(FrostDragon), typeof(FrostDrake), typeof(GreaterDragon), typeof(PoisonElemental)}
+            new[]{ typeof(HeadlessOne), typeof(Skeleton) },
+            new[]{ typeof(Mongbat), typeof(Ratman), typeof(HeadlessOne), typeof(Skeleton), typeof(Zombie) },
+            new[]{ typeof(OrcishMage), typeof(Gargoyle), typeof(Gazer), typeof(HellHound), typeof(EarthElemental) },
+            new[]{ typeof(Lich), typeof(OgreLord), typeof(DreadSpider), typeof(AirElemental), typeof(FireElemental) },
+            new[]{ typeof(DreadSpider), typeof(LichLord), typeof(Daemon), typeof(ElderGazer), typeof(OgreLord) },
+            new[]{ typeof(LichLord), typeof(Daemon), typeof(ElderGazer), typeof(PoisonElemental), typeof(BloodElemental) },
+            new[]{ typeof(AncientWyrm), typeof(Balron), typeof(BloodElemental), typeof(PoisonElemental), typeof(Titan) },
+            new[]{ typeof(BloodElemental), typeof(ColdDrake), typeof(FrostDragon), typeof(FrostDrake), typeof(GreaterDragon), typeof(PoisonElemental)}
         };
 
-        private static readonly Type[][] m_TokunoSpawnTypes = new Type[][]
+        private static readonly Type[][] m_TokunoSpawnTypes =
         {
-            new Type[]{ typeof( HeadlessOne ), typeof( Skeleton ) },
-            new Type[]{ typeof( HeadlessOne ), typeof( Mongbat ), typeof( Ratman ), typeof( Skeleton), typeof( Zombie ),  },
-            new Type[]{ typeof( EarthElemental ), typeof( Gazer ), typeof( Gargoyle ), typeof( HellHound ), typeof( OrcishMage ), },
-            new Type[]{ typeof( AirElemental ), typeof( DreadSpider ), typeof( FireElemental ), typeof( Lich ), typeof( OgreLord ), },
-            new Type[]{ typeof( ElderGazer ), typeof( Daemon ), typeof( DreadSpider ), typeof( LichLord ), typeof( OgreLord ), },
-            new Type[]{ typeof( FanDancer ), typeof( RevenantLion ), typeof( Ronin ), typeof( RuneBeetle ) },
-            new Type[]{ typeof( Hiryu ), typeof( LadyOfTheSnow ), typeof( Oni ), typeof( RuneBeetle ), typeof( YomotsuWarrior ), typeof( YomotsuPriest ) },
-            new Type[]{ typeof( Yamandon ), typeof( LadyOfTheSnow ), typeof( RuneBeetle ), typeof( YomotsuPriest ) }
+            new[]{ typeof(HeadlessOne), typeof(Skeleton) },
+            new[]{ typeof(HeadlessOne), typeof(Mongbat), typeof(Ratman), typeof(Skeleton), typeof(Zombie)  },
+            new[]{ typeof(EarthElemental), typeof(Gazer), typeof(Gargoyle), typeof(HellHound), typeof(OrcishMage) },
+            new[]{ typeof(AirElemental), typeof(DreadSpider), typeof(FireElemental), typeof(Lich), typeof(OgreLord) },
+            new[]{ typeof(ElderGazer), typeof(Daemon), typeof(DreadSpider), typeof(LichLord), typeof(OgreLord) },
+            new[]{ typeof(FanDancer), typeof(RevenantLion), typeof(Ronin), typeof(RuneBeetle) },
+            new[]{ typeof(Hiryu), typeof(LadyOfTheSnow), typeof(Oni), typeof(RuneBeetle), typeof(YomotsuWarrior), typeof(YomotsuPriest) },
+            new[]{ typeof(Yamandon), typeof(LadyOfTheSnow), typeof(RuneBeetle), typeof(YomotsuPriest) }
         };
 
-        private static readonly Type[][] m_MalasSpawnTypes = new Type[][]
+        private static readonly Type[][] m_MalasSpawnTypes =
         {
-            new Type[]{ typeof( HeadlessOne ), typeof( Skeleton ) },
-            new Type[]{ typeof( Mongbat ), typeof( Ratman ), typeof( HeadlessOne ), typeof( Skeleton ), typeof( Zombie ) },
-            new Type[]{ typeof( OrcishMage ), typeof( Gargoyle ), typeof( Gazer ), typeof( HellHound ), typeof( EarthElemental ) },
-            new Type[]{ typeof( Lich ), typeof( OgreLord ), typeof( DreadSpider ), typeof( AirElemental ), typeof( FireElemental ) },
-            new Type[]{ typeof( DreadSpider ), typeof( LichLord ), typeof( Daemon ), typeof( ElderGazer ), typeof( OgreLord ) },
-            new Type[]{ typeof( LichLord ), typeof( Ravager ), typeof( WandererOfTheVoid ), typeof( Minotaur ) },
-            new Type[]{ typeof( Devourer ), typeof( MinotaurScout ), typeof( MinotaurCaptain ), typeof( RottingCorpse ), typeof( WandererOfTheVoid ) },
-            new Type[]{ typeof( Devourer ), typeof( MinotaurGeneral ), typeof( MinotaurCaptain ), typeof( RottingCorpse ), typeof( WandererOfTheVoid ) }
-
+            new[]{ typeof(HeadlessOne), typeof(Skeleton) },
+            new[]{ typeof(Mongbat), typeof(Ratman), typeof(HeadlessOne), typeof(Skeleton), typeof(Zombie) },
+            new[]{ typeof(OrcishMage), typeof(Gargoyle), typeof(Gazer), typeof(HellHound), typeof(EarthElemental) },
+            new[]{ typeof(Lich), typeof(OgreLord), typeof(DreadSpider), typeof(AirElemental), typeof(FireElemental) },
+            new[]{ typeof(DreadSpider), typeof(LichLord), typeof(Daemon), typeof(ElderGazer), typeof(OgreLord) },
+            new[]{ typeof(LichLord), typeof(Ravager), typeof(WandererOfTheVoid), typeof(Minotaur) },
+            new[]{ typeof(Devourer), typeof(MinotaurScout), typeof(MinotaurCaptain), typeof(RottingCorpse), typeof(WandererOfTheVoid) },
+            new[]{ typeof(Devourer), typeof(MinotaurGeneral), typeof(MinotaurCaptain), typeof(RottingCorpse), typeof(WandererOfTheVoid) }
         };
 
-        private static readonly Type[][] m_IlshenarSpawnTypes = new Type[][]
+        private static readonly Type[][] m_IlshenarSpawnTypes =
         {
-            new Type[]{ typeof( HeadlessOne ), typeof( Skeleton ) },
-            new Type[]{ typeof( Mongbat ), typeof( Ratman ), typeof( HeadlessOne ), typeof( Skeleton ), typeof( Zombie ) },
-            new Type[]{ typeof( OrcishMage ), typeof( Gargoyle ), typeof( Gazer ), typeof( HellHound ), typeof( EarthElemental ) },
-            new Type[]{ typeof( Lich ), typeof( OgreLord ), typeof( DreadSpider ), typeof( AirElemental ), typeof( FireElemental ) },
-            new Type[]{ typeof( DreadSpider ), typeof( LichLord ), typeof( Daemon ), typeof( ElderGazer ), typeof( OgreLord ) },
-            new Type[]{ typeof( DarkGuardian ), typeof( ExodusOverseer ), typeof( GargoyleDestroyer ), typeof( GargoyleEnforcer ), typeof( PoisonElemental ) },
-            new Type[]{ typeof( Changeling ), typeof( ExodusMinion ), typeof( GargoyleEnforcer ), typeof( GargoyleDestroyer ), typeof( Titan ) },
-            new Type[]{ typeof( RenegadeChangeling ), typeof( ExodusMinion ), typeof( GargoyleEnforcer ), typeof( GargoyleDestroyer ), typeof( Titan ) }
+            new[]{ typeof(HeadlessOne), typeof(Skeleton) },
+            new[]{ typeof(Mongbat), typeof(Ratman), typeof(HeadlessOne), typeof(Skeleton), typeof(Zombie) },
+            new[]{ typeof(OrcishMage), typeof(Gargoyle), typeof(Gazer), typeof(HellHound), typeof(EarthElemental) },
+            new[]{ typeof(Lich), typeof(OgreLord), typeof(DreadSpider), typeof(AirElemental), typeof(FireElemental) },
+            new[]{ typeof(DreadSpider), typeof(LichLord), typeof(Daemon), typeof(ElderGazer), typeof(OgreLord) },
+            new[]{ typeof(DarkGuardian), typeof(ExodusOverseer), typeof(GargoyleDestroyer), typeof(GargoyleEnforcer), typeof(PoisonElemental) },
+            new[]{ typeof(Changeling), typeof(ExodusMinion), typeof(GargoyleEnforcer), typeof(GargoyleDestroyer), typeof(Titan) },
+            new[]{ typeof(RenegadeChangeling), typeof(ExodusMinion), typeof(GargoyleEnforcer), typeof(GargoyleDestroyer), typeof(Titan) }
         };
 
-        private static readonly Type[][] m_TerMurSpawnTypes = new Type[][]
+        private static readonly Type[][] m_TerMurSpawnTypes =
         {
-            new Type[]{ typeof( HeadlessOne ), typeof( Skeleton ) },
-            new Type[]{ typeof( ClockworkScorpion ), typeof( CorrosiveSlime ), typeof( GreaterMongbat ) },
-            new Type[]{ typeof( AcidSlug ), typeof( FireElemental ), typeof( WaterElemental ) },
-            new Type[]{ typeof( LeatherWolf ), typeof( StoneSlith ), typeof( ToxicSlith ) },
-            new Type[]{ typeof( BloodWorm ), typeof( Kepetch ), typeof( StoneSlith ), typeof( ToxicSlith ) },
-            new Type[]{ typeof( FireAnt ), typeof( LavaElemental ), typeof( MaddeningHorror ) },
-            new Type[]{ typeof( EnragedEarthElemental ), typeof( FireDaemon ), typeof( GreaterPoisonElemental ), typeof( LavaElemental ), typeof( DragonWolf ) },
-            new Type[]{ typeof( EnragedColossus ), typeof( EnragedEarthElemental ), typeof( FireDaemon ), typeof( GreaterPoisonElemental ), typeof( LavaElemental ) }
+            new[]{ typeof(HeadlessOne), typeof(Skeleton) },
+            new[]{ typeof(ClockworkScorpion), typeof(CorrosiveSlime), typeof(GreaterMongbat) },
+            new[]{ typeof(AcidSlug), typeof(FireElemental), typeof(WaterElemental) },
+            new[]{ typeof(LeatherWolf), typeof(StoneSlith), typeof(ToxicSlith) },
+            new[]{ typeof(BloodWorm), typeof(Kepetch), typeof(StoneSlith), typeof(ToxicSlith) },
+            new[]{ typeof(FireAnt), typeof(LavaElemental), typeof(MaddeningHorror) },
+            new[]{ typeof(EnragedEarthElemental), typeof(FireDaemon), typeof(GreaterPoisonElemental), typeof(LavaElemental), typeof(DragonWolf) },
+            new[]{ typeof(EnragedColossus), typeof(EnragedEarthElemental), typeof(FireDaemon), typeof(GreaterPoisonElemental), typeof(LavaElemental) }
         };
 
-        private static readonly Type[][] m_EodonSpawnTypes = new Type[][]
+        private static readonly Type[][] m_EodonSpawnTypes =
         {
-            new Type[] { typeof(MyrmidexLarvae), typeof(SilverbackGorilla), typeof(Panther), typeof(WildTiger) },
-            new Type[] { typeof(AcidElemental), typeof(SandVortex), typeof(Lion), typeof(SabreToothedTiger) },
-            new Type[] { typeof(AcidElemental), typeof(SandVortex), typeof(Lion), typeof(SabreToothedTiger) },
-            new Type[] { typeof(Infernus), typeof(FireElemental), typeof(Dimetrosaur), typeof(Saurosaurus) },
-            new Type[] { typeof(Infernus), typeof(FireElemental), typeof(Dimetrosaur), typeof(Saurosaurus) },
-            new Type[] { typeof(KotlAutomaton), typeof(MyrmidexDrone), typeof(Allosaurus), typeof(Triceratops) },
-            new Type[] { typeof(Anchisaur), typeof(Allosaurus), typeof(SandVortex) }
+            new[] { typeof(MyrmidexLarvae), typeof(SilverbackGorilla), typeof(Panther), typeof(WildTiger) },
+            new[] { typeof(AcidElemental), typeof(SandVortex), typeof(Lion), typeof(SabreToothedTiger) },
+            new[] { typeof(AcidElemental), typeof(SandVortex), typeof(Lion), typeof(SabreToothedTiger) },
+            new[] { typeof(Infernus), typeof(FireElemental), typeof(Dimetrosaur), typeof(Saurosaurus) },
+            new[] { typeof(Infernus), typeof(FireElemental), typeof(Dimetrosaur), typeof(Saurosaurus) },
+            new[] { typeof(KotlAutomaton), typeof(MyrmidexDrone), typeof(Allosaurus), typeof(Triceratops) },
+            new[] { typeof(Anchisaur), typeof(Allosaurus), typeof(SandVortex) }
         };
         #endregion
 
         #region Spawn Locations
-        private static readonly Rectangle2D[] m_FelTramWrap = new Rectangle2D[]
+        private static readonly Rectangle2D[] m_FelTramWrap =
         {
             new Rectangle2D(0, 0, 5119, 4095)
         };
 
-        private static readonly Rectangle2D[] m_TokunoWrap = new Rectangle2D[]
+        private static readonly Rectangle2D[] m_TokunoWrap =
         {
             new Rectangle2D(155, 207, 30, 40),
             new Rectangle2D(280, 230, 157, 45),
@@ -199,10 +192,10 @@ namespace Server.Items
             new Rectangle2D(845, 397, 179, 75),
             new Rectangle2D(1068, 382, 60, 80),
             new Rectangle2D(787, 687, 60, 72),
-            new Rectangle2D(848, 473, 557, 655),
+            new Rectangle2D(848, 473, 557, 655)
         };
 
-        private static readonly Rectangle2D[] m_MalasWrap = new Rectangle2D[]
+        private static readonly Rectangle2D[] m_MalasWrap =
         {
             new Rectangle2D(611, 67, 1862, 705),
             new Rectangle2D(1540, 852, 286, 182),
@@ -210,7 +203,7 @@ namespace Server.Items
             new Rectangle2D(1160, 1035, 1299, 871)
         };
 
-        private static readonly Rectangle2D[] m_IlshenarWrap = new Rectangle2D[]
+        private static readonly Rectangle2D[] m_IlshenarWrap =
         {
             new Rectangle2D(221, 314, 657, 286),
             new Rectangle2D(530, 600, 212, 205),
@@ -219,10 +212,10 @@ namespace Server.Items
             new Rectangle2D(1031, 904, 730, 450),
             new Rectangle2D(1028, 630, 318, 161),
             new Rectangle2D(1205, 368, 265, 237),
-            new Rectangle2D(1551, 516, 200, 130),
+            new Rectangle2D(1551, 516, 200, 130)
         };
 
-        private static readonly Rectangle2D[] m_TerMurWrap = new Rectangle2D[]
+        private static readonly Rectangle2D[] m_TerMurWrap =
         {
             new Rectangle2D(535, 2895, 85, 117),
             new Rectangle2D(525, 3085, 115, 70),
@@ -231,10 +224,10 @@ namespace Server.Items
             new Rectangle2D(305, 3445, 175, 255),
             new Rectangle2D(480, 3540, 90, 110),
             new Rectangle2D(605, 3880, 200, 170),
-            new Rectangle2D(750, 3830, 80, 80),
+            new Rectangle2D(750, 3830, 80, 80)
         };
 
-        private static readonly Rectangle2D[] m_EodonWrap = new Rectangle2D[]
+        private static readonly Rectangle2D[] m_EodonWrap =
         {
             new Rectangle2D(259, 1400, 354, 510),
             new Rectangle2D(259, 1400, 354, 510),
@@ -246,7 +239,7 @@ namespace Server.Items
             new Rectangle2D(618, 1792, 44, 273),
             new Rectangle2D(662, 1969, 84, 166),
             new Rectangle2D(754, 1963, 100, 65),
-            new Rectangle2D(174, 1540, 85, 420),
+            new Rectangle2D(174, 1540, 85, 420)
         };
         #endregion
 
@@ -258,11 +251,10 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int Level
         {
-            get { return m_Level; }
+            get => m_Level;
             set
             {
-                m_Level = Math.Min(value, TreasureMapInfo.NewSystem ? 4 : 7);
-
+                m_Level = Math.Min(value, 4);
                 InvalidateProperties();
             }
         }
@@ -270,7 +262,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public bool Completed
         {
-            get { return m_Completed; }
+            get => m_Completed;
             set
             {
                 m_Completed = value;
@@ -281,7 +273,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public Mobile CompletedBy
         {
-            get { return m_CompletedBy; }
+            get => m_CompletedBy;
             set
             {
                 m_CompletedBy = value;
@@ -292,7 +284,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public Mobile Decoder
         {
-            get { return m_Decoder; }
+            get => m_Decoder;
             set
             {
                 m_Decoder = value;
@@ -312,31 +304,10 @@ namespace Server.Items
             {
                 if (m_Decoder != null)
                 {
-                    if (m_Level == 6)
-                    {
-                        return 1063453;
-                    }
-                    else if (m_Level == 7)
-                    {
-                        return 1116773;
-                    }
-                    else
-                    {
-                        return 1041516 + m_Level;
-                    }
+                    return 1041516 + m_Level;
                 }
-                else if (m_Level == 6)
-                {
-                    return 1063452;
-                }
-                else if (m_Level == 7)
-                {
-                    return 1116790;
-                }
-                else
-                {
-                    return 1041510 + m_Level;
-                }
+
+                return 1041510 + m_Level;
             }
         }
 
@@ -354,15 +325,13 @@ namespace Server.Items
         public TreasureMap(int level, Map map, bool eodon)
         {
             Level = level;
-            bool newSystem = TreasureMapInfo.NewSystem;
 
-            if (newSystem)
+            AssignRandomPackage();
+
+            if (map == Map.Internal)
             {
-                AssignRandomPackage();
-            }
-
-            if ((!newSystem && level == 7) || map == Map.Internal)
                 map = GetRandomMap();
+            }
 
             Facet = map;
             ChestLocation = GetRandomLocation(map, eodon);
@@ -373,8 +342,8 @@ namespace Server.Items
 
             GetWidthAndHeight(map, out width, out height);
 
-            int x1 = ChestLocation.X - Utility.RandomMinMax(width / 4, (width / 4) * 3);
-            int y1 = ChestLocation.Y - Utility.RandomMinMax(height / 4, (height / 4) * 3);
+            int x1 = ChestLocation.X - Utility.RandomMinMax(width / 4, width / 4 * 3);
+            int y1 = ChestLocation.Y - Utility.RandomMinMax(height / 4, height / 4 * 3);
 
             if (x1 < 0)
                 x1 = 0;
@@ -693,12 +662,6 @@ namespace Server.Items
                 {
                     bc.Title = "(Guardian)";
 
-                    if (!TreasureMapInfo.NewSystem && level == 0)
-                    {
-                        bc.Name = "a chest guardian";
-                        bc.Hue = 0x835;
-                    }
-
                     if (BaseCreature.IsSoulboundEnemies && !bc.Tamable)
                     {
                         bc.IsSoulBound = true;
@@ -767,32 +730,31 @@ namespace Server.Items
         {
             Type[] array;
 
-            if (TreasureMapInfo.NewSystem)
+            switch (level)
             {
-                switch (level)
-                {
-                    default: array = table[level + 1]; break;
-                    case 2:
-                        List<Type> list1 = new List<Type>();
-                        list1.AddRange(table[2]);
-                        list1.AddRange(table[3]);
+                default:
+                    array = table[level + 1];
+                    break;
+                case 2:
+                    List<Type> list1 = new List<Type>();
+                    list1.AddRange(table[2]);
+                    list1.AddRange(table[3]);
 
-                        array = list1.ToArray();
-                        break;
-                    case 3:
-                        List<Type> list2 = new List<Type>();
-                        list2.AddRange(table[4]);
-                        list2.AddRange(table[5]);
+                    array = list1.ToArray();
+                    break;
+                case 3:
+                    List<Type> list2 = new List<Type>();
+                    list2.AddRange(table[4]);
+                    list2.AddRange(table[5]);
 
-                        array = list2.ToArray();
-                        break;
-                    case 4: array = table[6]; break;
-                    case 5: array = table[7]; break;
-                }
-            }
-            else
-            {
-                array = table[level];
+                    array = list2.ToArray();
+                    break;
+                case 4:
+                    array = table[6];
+                    break;
+                case 5:
+                    array = table[7];
+                    break;
             }
 
             return array;
@@ -824,16 +786,6 @@ namespace Server.Items
             {
                 from.SendLocalizedMessage(503028); // The treasure for this map has already been found.
             }
-            else if (m_Level == 0 && !CheckYoung(from))
-            {
-                from.SendLocalizedMessage(1046447); // Only a young player may use this treasure map.
-            }
-            /*
-        else if ( from != m_Decoder )
-        {
-        from.SendLocalizedMessage( 503016 ); // Only the person who decoded this map may actually dig up the treasure.
-        }
-        */
             else if (m_Decoder != from && !HasRequiredSkill(from))
             {
                 from.SendLocalizedMessage(503031); // You did not decode this map and have no clue where to look for the treasure.
@@ -878,35 +830,24 @@ namespace Server.Items
                 return;
             }
 
-            if (m_Level == 0)
+            double minSkill = GetMinSkillLevel();
+
+            if (from.Skills[SkillName.Cartography].Value < minSkill)
             {
-                if (!CheckYoung(from))
+                if (m_Level == 1)
                 {
-                    from.SendLocalizedMessage(1046447); // Only a young player may use this treasure map.
-                    return;
+                    from.CheckSkill(SkillName.Cartography, 0, minSkill);
+                }
+                else
+                {
+                    from.SendLocalizedMessage(503013); // The map is too difficult to attempt to decode.
                 }
             }
-            else
+
+            if (!from.CheckSkill(SkillName.Cartography, minSkill - 10, minSkill + 30))
             {
-                double minSkill = GetMinSkillLevel();
-
-                if (from.Skills[SkillName.Cartography].Value < minSkill)
-                {
-                    if (m_Level == 1)
-                    {
-                        from.CheckSkill(SkillName.Cartography, 0, minSkill);
-                    }
-                    else
-                    {
-                        from.SendLocalizedMessage(503013); // The map is too difficult to attempt to decode.
-                    }
-                }
-
-                if (!from.CheckSkill(SkillName.Cartography, minSkill - 10, minSkill + 30))
-                {
-                    from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 503018); // You fail to make anything of the map.
-                    return;
-                }
+                from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 503018); // You fail to make anything of the map.
+                return;
             }
 
             from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 503019); // You successfully decode a treasure map!
@@ -924,7 +865,7 @@ namespace Server.Items
                 ClearPins();
                 LootType = LootType.Regular;
                 m_Decoder = null;
-                GetRandomLocation(Facet, TreasureMapInfo.NewSystem ? TreasureFacet == TreasureFacet.Eodon : false);
+                GetRandomLocation(Facet, TreasureFacet == TreasureFacet.Eodon);
                 InvalidateProperties();
                 NextReset = DateTime.UtcNow + ResetTime;
             }
@@ -935,11 +876,6 @@ namespace Server.Items
             if (m_Completed)
             {
                 SendLocalizedMessageTo(from, 503014); // This treasure hunt has already been completed.
-            }
-            else if (m_Level == 0 && !CheckYoung(from))
-            {
-                from.SendLocalizedMessage(1046447); // Only a young player may use this treasure map.
-                return;
             }
             else if (m_Decoder != from && !HasRequiredSkill(from))
             {
@@ -982,14 +918,7 @@ namespace Server.Items
 
         public override void AddNameProperty(ObjectPropertyList list)
         {
-            if (TreasureMapInfo.NewSystem)
-            {
-                list.Add(m_Decoder != null ? 1158980 + (int)TreasureLevel : 1158975 + (int)TreasureLevel, "#" + TreasureMapInfo.PackageLocalization(Package).ToString());
-            }
-            else
-            {
-                base.AddNameProperty(list);
-            }
+            list.Add(m_Decoder != null ? 1158980 + (int)TreasureLevel : 1158975 + (int)TreasureLevel, "#" + TreasureMapInfo.PackageLocalization(Package));
         }
 
         public override void GetProperties(ObjectPropertyList list)
@@ -1018,19 +947,14 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(3);
 
             writer.Write((int)Package);
-
             writer.Write(NextReset);
-
             writer.Write(m_CompletedBy);
-
             writer.Write(m_Level);
             writer.Write(m_Completed);
             writer.Write(m_Decoder);
-
             writer.Write(ChestLocation);
 
             if (!Completed && NextReset != DateTime.MinValue && NextReset < DateTime.UtcNow)
@@ -1040,84 +964,20 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 3:
-                    {
-                        Package = (TreasurePackage)reader.ReadInt();
-                        goto case 2;
-                    }
-                case 2:
-                    {
-                        NextReset = reader.ReadDateTime();
-                        goto case 1;
-                    }
-                case 1:
-                    {
-                        m_CompletedBy = reader.ReadMobile();
-
-                        goto case 0;
-                    }
-                case 0:
-                    {
-                        m_Level = reader.ReadInt();
-                        m_Completed = reader.ReadBool();
-                        m_Decoder = reader.ReadMobile();
-
-                        if (version == 1)
-                            Facet = reader.ReadMap();
-
-                        ChestLocation = reader.ReadPoint2D();
-
-                        if (version == 0 && m_Completed)
-                        {
-                            m_CompletedBy = m_Decoder;
-                        }
-
-                        break;
-                    }
-            }
-
-            if (version == 2 && TreasureMapInfo.NewSystem)
-            {
-                Level = TreasureMapInfo.ConvertLevel(m_Level);
-                AssignRandomPackage();
-            }
-
-            if (m_Decoder != null && LootType == LootType.Regular)
-            {
-                LootType = LootType.Blessed;
-            }
+            Package = (TreasurePackage)reader.ReadInt();
+            NextReset = reader.ReadDateTime();
+            m_CompletedBy = reader.ReadMobile();
+            m_Level = reader.ReadInt();
+            m_Completed = reader.ReadBool();
+            m_Decoder = reader.ReadMobile();
+            ChestLocation = reader.ReadPoint2D();
 
             if (NextReset == DateTime.MinValue)
             {
                 NextReset = DateTime.UtcNow + ResetTime;
             }
-        }
-
-        private bool CheckYoung(Mobile from)
-        {
-            if (from.AccessLevel >= AccessLevel.GameMaster || TreasureMapInfo.NewSystem)
-            {
-                return true;
-            }
-
-            if (from is PlayerMobile && ((PlayerMobile)from).Young)
-            {
-                return true;
-            }
-
-            if (from == Decoder)
-            {
-                Level = 1;
-                from.SendLocalizedMessage(1046446); // This is now a level one treasure map.
-                return true;
-            }
-
-            return false;
         }
 
         private double GetMinSkillLevel()
@@ -1141,7 +1001,7 @@ namespace Server.Items
 
         protected virtual bool HasRequiredSkill(Mobile from)
         {
-            return (from.Skills[SkillName.Cartography].Value >= GetMinSkillLevel());
+            return from.Skills[SkillName.Cartography].Value >= GetMinSkillLevel();
         }
 
         protected class DigTarget : Target
@@ -1167,16 +1027,9 @@ namespace Server.Items
                 {
                     from.SendLocalizedMessage(503028); // The treasure for this map has already been found.
                 }
-                /*
-            else if ( from != m_Map.m_Decoder )
-            {
-            from.SendLocalizedMessage( 503016 ); // Only the person who decoded this map may actually dig up the treasure.
-            }
-            */
                 else if (m_Map.m_Decoder != from && !m_Map.HasRequiredSkill(from))
                 {
                     from.SendLocalizedMessage(503031); // You did not decode this map and have no clue where to look for the treasure.
-                    return;
                 }
                 else if (!from.CanBeginAction(typeof(TreasureMap)))
                 {
@@ -1184,7 +1037,7 @@ namespace Server.Items
                 }
                 else if (!HasDiggingTool(from))
                 {
-                    from.SendMessage("You must have a digging tool to dig for treasure.");
+                    from.SendLocalizedMessage(1114416); // You must have a digging tool to dig for treasure.
                 }
                 else if (from.Map != map)
                 {
@@ -1195,9 +1048,9 @@ namespace Server.Items
                     IPoint3D p = targeted as IPoint3D;
 
                     Point3D targ3D;
-                    if (p is Item)
+                    if (p is Item item)
                     {
-                        targ3D = ((Item)p).GetWorldLocation();
+                        targ3D = item.GetWorldLocation();
                     }
                     else
                     {
@@ -1205,7 +1058,7 @@ namespace Server.Items
                     }
 
                     int maxRange;
-                    double skillValue = TreasureMapInfo.NewSystem ? from.Skills[SkillName.Cartography].Value : from.Skills[SkillName.Mining].Value;
+                    double skillValue = from.Skills[SkillName.Cartography].Value;
 
                     if (skillValue >= 100.0)
                     {
@@ -1317,7 +1170,6 @@ namespace Server.Items
             private readonly TreasureMap m_TreasureMap;
             private readonly Map m_Map;
             private readonly long m_NextSkillTime;
-            private readonly long m_NextSpellTime;
             private readonly long m_NextActionTime;
             private readonly long m_LastMoveTime;
             private TreasureChestDirt m_Dirt1;
@@ -1325,7 +1177,7 @@ namespace Server.Items
             private TreasureMapChest m_Chest;
             private int m_Count;
 
-            public Point3D ChestLocation { get; private set; }
+            public Point3D ChestLocation { get; }
 
             public DigTimer(Mobile from, TreasureMap treasureMap, Point3D location, Map map)
                 : base(TimeSpan.Zero, TimeSpan.FromSeconds(1.0))
@@ -1337,7 +1189,6 @@ namespace Server.Items
                 m_Map = map;
 
                 m_NextSkillTime = from.NextSkillTime;
-                m_NextSpellTime = from.NextSpellTime;
                 m_NextActionTime = from.NextActionTime;
                 m_LastMoveTime = from.LastMoveTime;
 
@@ -1346,8 +1197,7 @@ namespace Server.Items
 
             protected override void OnTick()
             {
-                if (m_NextSkillTime != m_From.NextSkillTime || (!TreasureMapInfo.NewSystem && m_NextSpellTime != m_From.NextSpellTime) ||
-                    m_NextActionTime != m_From.NextActionTime)
+                if (m_NextSkillTime != m_From.NextSkillTime || m_NextActionTime != m_From.NextActionTime)
                 {
                     Terminate();
                     return;
@@ -1355,18 +1205,17 @@ namespace Server.Items
 
                 if (m_LastMoveTime != m_From.LastMoveTime)
                 {
-                    m_From.SendLocalizedMessage(503023);
-                    // You cannot move around while digging up treasure. You will need to start digging anew.
+                    m_From.SendLocalizedMessage(503023); // You cannot move around while digging up treasure. You will need to start digging anew.
                     Terminate();
                     return;
                 }
 
-                int z = (m_Chest != null) ? m_Chest.Z + m_Chest.ItemData.Height : int.MinValue;
+                int z = m_Chest != null ? m_Chest.Z + m_Chest.ItemData.Height : int.MinValue;
                 int height = 16;
 
                 if (z > ChestLocation.Z)
                 {
-                    height -= (z - ChestLocation.Z);
+                    height -= z - ChestLocation.Z;
                 }
                 else
                 {
@@ -1375,8 +1224,7 @@ namespace Server.Items
 
                 if (!m_Map.CanFit(ChestLocation.X, ChestLocation.Y, z, height, true, true, false))
                 {
-                    m_From.SendLocalizedMessage(503024);
-                    // You stop digging because something is directly on top of the treasure chest.
+                    m_From.SendLocalizedMessage(503024); // You stop digging because something is directly on top of the treasure chest.
                     Terminate();
                     return;
                 }
@@ -1410,10 +1258,7 @@ namespace Server.Items
                     {
                         m_Chest = new TreasureMapChest(m_From, m_TreasureMap.Level, true);
 
-                        if (TreasureMapInfo.NewSystem)
-                        {
-                            m_TreasureMap.AssignChestQuality(m_From, m_Chest);
-                        }
+                        m_TreasureMap.AssignChestQuality(m_From, m_Chest);
 
                         m_Chest.MoveToWorld(new Point3D(ChestLocation.X, ChestLocation.Y, ChestLocation.Z - 15), m_Map);
                     }
@@ -1436,34 +1281,16 @@ namespace Server.Items
                     m_TreasureMap.Completed = true;
                     m_TreasureMap.CompletedBy = m_From;
 
-                    if (TreasureMapInfo.NewSystem)
-                    {
-                        TreasureMapInfo.Fill(m_From, m_Chest, m_TreasureMap);
-                    }
-                    else
-                    {
-                        TreasureMapChest.Fill(m_From, m_Chest, m_Chest.Level, false);
-                    }
+                    TreasureMapInfo.Fill(m_From, m_Chest, m_TreasureMap);
 
                     m_TreasureMap.OnMapComplete(m_From, m_Chest);
 
                     int spawns;
-                    switch (m_TreasureMap.Level)
-                    {
-                        case 0:
-                            spawns = TreasureMapInfo.NewSystem ? 4 : 3;
-                            break;
-                        case 1:
-                            spawns = TreasureMapInfo.NewSystem ? 4 : 0;
-                            break;
-                        default:
-                            spawns = 4;
-                            break;
-                    }
+                    spawns = 4;
 
                     for (int i = 0; i < spawns; ++i)
                     {
-                        bool guardian = TreasureMapInfo.NewSystem ? Utility.RandomDouble() >= 0.3 : true;
+                        bool guardian = Utility.RandomDouble() >= 0.3;
 
                         BaseCreature bc = Spawn(m_TreasureMap.Level, m_Chest.Location, m_Chest.Map, null, guardian);
 
@@ -1481,7 +1308,7 @@ namespace Server.Items
                         m_From.Animate(AnimationType.Attack, 3);
                     }
 
-                    new SoundTimer(m_From, 0x125 + (m_Count % 2)).Start();
+                    new SoundTimer(m_From, 0x125 + m_Count % 2).Start();
                 }
             }
 
@@ -1490,10 +1317,7 @@ namespace Server.Items
                 Stop();
                 m_From.EndAction(typeof(TreasureMap));
 
-                if (m_Chest != null)
-                {
-                    m_Chest.Delete();
-                }
+                m_Chest?.Delete();
 
                 if (m_Dirt1 != null)
                 {
@@ -1591,7 +1415,7 @@ namespace Server.Items
                 }
                 else
                 {
-                    from.SendMessage("You must have a digging tool to dig for treasure.");
+                    from.SendLocalizedMessage(1114416); // You must have a digging tool to dig for treasure.
                 }
             }
         }
@@ -1624,15 +1448,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
 
             Delete();
         }

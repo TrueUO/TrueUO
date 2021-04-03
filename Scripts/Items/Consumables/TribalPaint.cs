@@ -47,11 +47,11 @@ namespace Server.Items
                 }
                 else
                 {
-                    from.BodyMod = (from.Female ? 184 : 183);
+                    from.BodyMod = from.Female ? 184 : 183;
                     from.HueMod = 0;
 
-                    if (from is PlayerMobile)
-                        ((PlayerMobile)from).SavagePaintExpiration = TimeSpan.FromDays(7.0);
+                    if (from is PlayerMobile mobile)
+                        mobile.SavagePaintExpiration = TimeSpan.FromDays(7.0);
 
                     from.SendLocalizedMessage(1042537); // You now bear the markings of the savage tribe.  Your body paint will last about a week or you can remove it with an oil cloth.
 
@@ -67,15 +67,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

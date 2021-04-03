@@ -1,20 +1,11 @@
 namespace Server.Items
 {
-    public class FluffySpongeAddon : BaseAddon, IDyable
+    public class FluffySpongeAddon : BaseAddon
     {
         [Constructable]
         public FluffySpongeAddon()
         {
             AddComponent(new AddonComponent(0x4C31), 0, 0, 0);
-        }
-
-        public virtual bool Dye(Mobile from, DyeTub sender)
-        {
-            if (Deleted)
-                return false;
-
-            Hue = sender.DyedHue;
-            return true;
         }
 
         public FluffySpongeAddon(Serial serial)
@@ -33,13 +24,15 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
+    [Furniture]
     public class FluffySpongeDeed : BaseAddonDeed
     {
         public override int LabelNumber => 1098377;  // Fluffy Sponge
+        public override bool IsArtifact => true; // allows dying of the deed.
 
         [Constructable]
         public FluffySpongeDeed()
@@ -63,7 +56,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

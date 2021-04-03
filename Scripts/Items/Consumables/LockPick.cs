@@ -70,7 +70,7 @@ namespace Server.Items
         {
             if (item.Locked)
             {
-                if (item is TreasureMapChest && TreasureMapInfo.NewSystem && !((TreasureMapChest)item).Guardians.All(g => g.Deleted))
+                if (item is TreasureMapChest chest && !chest.Guardians.All(g => g.Deleted))
                 {
                     from.SendLocalizedMessage(1115991); // You must destroy all the guardians before you can unlock the chest.
                 }
@@ -153,16 +153,11 @@ namespace Server.Items
                 BrokeLockPickTest(from);
                 item.SendLocalizedMessageTo(from, 502075); // You are unable to pick the lock.
 
-                if (item is TreasureMapChest)
+                if (item is TreasureMapChest chest)
                 {
-                    TreasureMapChest chest = (TreasureMapChest)item;
-
-                    if (TreasureMapInfo.NewSystem)
+                    if (!chest.FailedLockpick)
                     {
-                        if (!chest.FailedLockpick)
-                        {
-                            chest.FailedLockpick = true;
-                        }
+                        chest.FailedLockpick = true;
                     }
                     else if (chest.Items.Count > 0 && 0.25 > Utility.RandomDouble())
                     {
@@ -171,7 +166,7 @@ namespace Server.Items
                         if (!(toBreak is Container))
                         {
                             toBreak.Delete();
-                            Effects.PlaySound(item.Location, item.Map, 0x1DE);
+                            Effects.PlaySound(chest.Location, chest.Map, 0x1DE);
                             from.SendMessage(0x20, "The sound of gas escaping is heard from the chest.");
                         }
                     }
@@ -194,9 +189,9 @@ namespace Server.Items
                 if (m_Item.Deleted)
                     return;
 
-                if (targeted is ILockpickable)
+                if (targeted is ILockpickable lockpickable)
                 {
-                    m_Item.BeginLockpick(from, (ILockpickable)targeted);
+                    m_Item.BeginLockpick(from, lockpickable);
                 }
                 else
                 {

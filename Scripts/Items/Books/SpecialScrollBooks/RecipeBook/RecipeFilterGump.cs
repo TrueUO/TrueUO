@@ -19,16 +19,18 @@ namespace Server.Items
                 int number = filters[i, 0];
 
                 if (number == 0)
+                {
                     continue;
+                }
 
-                bool isSelected = (filters[i, 1] == filterValue);
+                bool isSelected = filters[i, 1] == filterValue;
 
-                AddHtmlLocalized(x + 35 + xOffsets[i % xOffsets.Length], y + ((i / xOffsets.Length) * yOffset), 80, xHeights, number, isSelected ? 16927 : LabelColor, false, false);
-                AddButton(x + xOffsets[i % xOffsets.Length], y + ((i / xOffsets.Length) * yOffset), 4005, 4007, 4 + filterIndex + (i * 4), GumpButtonType.Reply, 0);
+                AddHtmlLocalized(x + 35 + xOffsets[i % xOffsets.Length], y + i / xOffsets.Length * yOffset, 80, xHeights, number, isSelected ? 16927 : LabelColor, false, false);
+                AddButton(x + xOffsets[i % xOffsets.Length], y + i / xOffsets.Length * yOffset, 4005, 4007, 4 + filterIndex + i * 4, GumpButtonType.Reply, 0);
             }
         }
 
-        private static readonly int[,] m_SkillFilters = new int[,]
+        private static readonly int[,] m_SkillFilters =
         {
             { 1062229, 0 }, // All
             { 1150187, 1 }, // Blacksmith
@@ -39,34 +41,34 @@ namespace Server.Items
             { 1002063, 6 }, // Cooking
             { 1002000, 7 }, // Alchemy
             { 1002162, 8 }, // Tinkering
-            { 1002057, 9 }, // Cartography
+            { 1002057, 9 }  // Cartography
         };
 
-        private static readonly int[,] m_ExpansionFilters = new int[,]
+        private static readonly int[,] m_ExpansionFilters =
         {
             { 1062229, 0 }, // All
             { 1158817, 1 }, // Mondain's Legacy
             { 1095190, 2 }, // Stygian Abyss
-            { 1158818, 3 }, // Time of Legends
+            { 1158818, 3 }  // Time of Legends
         };
 
-        private static readonly int[,] m_AmountFilters = new int[,]
+        private static readonly int[,] m_AmountFilters =
         {
             { 1062229, 0 }, // All
             { 1158815, 1 }, // Owned
-            { 1074235, 2 }, // Unknown
+            { 1074235, 2 }  // Unknown
         };
 
-        private static readonly int[][,] m_Filters = new int[][,]
+        private static readonly int[][,] m_Filters =
         {
             m_SkillFilters,
             m_ExpansionFilters,
             m_AmountFilters
         };
 
-        private static readonly int[] m_XOffsets_Skill = new int[] { 0, 125, 250, 375 };
-        private static readonly int[] m_XOffsets_Expansion = new int[] { 0, 125, 250, 375 };
-        private static readonly int[] m_XOffsets_Amount = new int[] { 0, 125, 250 };
+        private static readonly int[] m_XOffsets_Skill = { 0, 125, 250, 375 };
+        private static readonly int[] m_XOffsets_Expansion = { 0, 125, 250, 375 };
+        private static readonly int[] m_XOffsets_Amount = { 0, 125, 250 };
 
         public RecipeScrollFilterGump(Mobile from, RecipeBook book)
             : base(12, 24)
@@ -103,10 +105,10 @@ namespace Server.Items
             AddHtmlLocalized(26, 256, 120, 32, 1062217, TitleLabelColor, false, false); // Amount
             AddFilterList(25, 288, m_XOffsets_Amount, 32, m_AmountFilters, 32, f.Amount, 2);
 
-            AddHtmlLocalized(75, 352, 120, 32, 1062477, (((PlayerMobile)from).UseOwnFilter ? LabelColor : 16927), false, false); // Set Book Filter
+            AddHtmlLocalized(75, 352, 120, 32, 1062477, ((PlayerMobile)from).UseOwnFilter ? LabelColor : 16927, false, false); // Set Book Filter
             AddButton(40, 352, 4005, 4007, 1, GumpButtonType.Reply, 0);
 
-            AddHtmlLocalized(235, 352, 120, 32, 1062478, (((PlayerMobile)from).UseOwnFilter ? 16927 : LabelColor), false, false); // Set Your Filter
+            AddHtmlLocalized(235, 352, 120, 32, 1062478, ((PlayerMobile)from).UseOwnFilter ? 16927 : LabelColor, false, false); // Set Your Filter
             AddButton(200, 352, 4005, 4007, 2, GumpButtonType.Reply, 0);
 
             AddHtmlLocalized(405, 352, 120, 32, 1062231, TitleLabelColor, false, false); // Clear Filter

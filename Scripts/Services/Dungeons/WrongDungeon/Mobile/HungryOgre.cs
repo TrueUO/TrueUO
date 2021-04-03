@@ -43,14 +43,14 @@ namespace Server.Mobiles
 
         public override bool CanRummageCorpses => true;
 
-        public override int TreasureMapLevel => 1;
+        public override int TreasureMapLevel => 3;
 
         public override int Meat => 2;
 
         public override void GenerateLoot()
         {
+            AddLoot(LootPack.Rich);
             AddLoot(LootPack.Average);
-            AddLoot(LootPack.Potions);
         }
 
         public override void Serialize(GenericWriter writer)
@@ -62,7 +62,7 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

@@ -43,10 +43,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public bool TurnedOn
         {
-            get
-            {
-                return _TurnedOn;
-            }
+            get => _TurnedOn;
             set
             {
                 if (_TurnedOn != value)
@@ -185,10 +182,8 @@ namespace Server.Items
 
             if (house != null && Addon != null && house.HasSecureAccess(from, Addon.Level))
             {
-                if (dropped is ITool && !(dropped is BaseRunicTool))
+                if (dropped is ITool tool && !(tool is BaseRunicTool))
                 {
-                    ITool tool = dropped as ITool;
-
                     if (tool.CraftSystem == _CraftSystem)
                     {
                         if (UsesRemaining >= MaxUses)

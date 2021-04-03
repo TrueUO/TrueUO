@@ -87,7 +87,7 @@ namespace Server.Spells.Third
 
                     int percentage = (int)(SpellHelper.GetOffsetScalar(Caster, m, false) * 100);
                     TimeSpan length = SpellHelper.GetDuration(Caster, m);
-                    string args = string.Format("{0}\t{1}\t{2}", percentage, percentage, percentage);
+                    string args = $"{percentage}\t{percentage}\t{percentage}";
                     BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.Bless, 1075847, 1075848, length, m, args));
 
                     m.FixedParticles(0x373A, 10, 15, 5018, EffectLayer.Waist);
@@ -125,7 +125,7 @@ namespace Server.Spells.Third
 
         private class InternalTimer : Timer
         {
-            public Mobile Mobile { get; set; }
+            public Mobile Mobile { get; }
 
             public InternalTimer(Mobile m, TimeSpan duration)
                 : base(duration)

@@ -150,16 +150,21 @@ namespace Server.Spells.Third
 
             public override bool OnMoveOver(Mobile m)
             {
-                int noto;
-
                 if (m is PlayerMobile)
                 {
-                    noto = Notoriety.Compute(m_Caster, m);
-                    if (noto == Notoriety.Enemy || noto == Notoriety.Ally)
+                    int notoriety;
+
+                    notoriety = Notoriety.Compute(m_Caster, m);
+
+                    if (notoriety == Notoriety.Enemy || notoriety == Notoriety.Ally)
+                    {
                         return false;
+                    }
 
                     if (m.Map != null && (m.Map.Rules & MapRules.FreeMovement) == 0)
+                    {
                         return false;
+                    }
                 }
                 return base.OnMoveOver(m);
             }
@@ -168,8 +173,7 @@ namespace Server.Spells.Third
             {
                 base.OnAfterDelete();
 
-                if (m_Timer != null)
-                    m_Timer.Stop();
+                m_Timer?.Stop();
             }
 
             private class InternalTimer : Timer

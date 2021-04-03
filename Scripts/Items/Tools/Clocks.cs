@@ -4,7 +4,6 @@ using Server.Gumps;
 using Server.Multis;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 #endregion
 
 namespace Server.Items
@@ -243,26 +242,29 @@ namespace Server.Items
 
         public static void Tick_Callback()
         {
-            foreach (ClockTime clock in _Instances.Where(p => p != null && !p.Deleted && p.IsLockedDown))
+            foreach (ClockTime clock in _Instances)
             {
-                IPooledEnumerable ie = clock.GetMobilesInRange(10);
-
-                foreach (Mobile m in ie)
+                if (clock != null && !clock.Deleted && clock.IsLockedDown)
                 {
-                    if (m.Player)
+                    IPooledEnumerable ie = clock.GetMobilesInRange(10);
+
+                    foreach (Mobile m in ie)
                     {
-                        int hours, minutes;
+                        if (m.Player)
+                        {
+                            int hours, minutes;
 
-                        GetTime(m.Map, m.X, m.Y, out hours, out minutes);
+                            GetTime(m.Map, m.X, m.Y, out hours, out minutes);
 
-                        if (minutes == 00 && (hours == 12 || hours == 00 || hours == 06 || hours == 18))
-                            m.PlaySound(1634);
-                        else if (minutes == 00)
-                            m.PlaySound(1635);
+                            if (minutes == 00 && (hours == 12 || hours == 00 || hours == 06 || hours == 18))
+                                m.PlaySound(1634);
+                            else if (minutes == 00)
+                                m.PlaySound(1635);
+                        }
                     }
-                }
 
-                ie.Free();
+                    ie.Free();
+                }
             }
         }
 
@@ -306,7 +308,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -333,7 +335,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -362,7 +364,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -391,7 +393,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -420,7 +422,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

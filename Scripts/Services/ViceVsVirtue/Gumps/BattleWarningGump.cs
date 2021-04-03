@@ -3,13 +3,12 @@ using Server.Items;
 using Server.Mobiles;
 using Server.Network;
 using System;
-using System.Linq;
 
 namespace Server.Engines.VvV
 {
     public class BattleWarningGump : Gump
     {
-        public PlayerMobile User { get; set; }
+        public PlayerMobile User { get; }
         public Timer Timer { get; set; }
 
         public BattleWarningGump(PlayerMobile pm)
@@ -45,14 +44,17 @@ namespace Server.Engines.VvV
                 PublicMoongate closestGate = null;
                 double closestDist = 0;
 
-                foreach (PublicMoongate gate in PublicMoongate.Moongates.Where(mg => mg.Map == User.Map))
+                foreach (PublicMoongate gate in PublicMoongate.Moongates)
                 {
-                    double dist = User.GetDistanceToSqrt(gate);
-
-                    if (closestGate == null || dist < closestDist)
+                    if (gate.Map == User.Map)
                     {
-                        closestDist = dist;
-                        closestGate = gate;
+                        double dist = User.GetDistanceToSqrt(gate);
+
+                        if (closestGate == null || dist < closestDist)
+                        {
+                            closestDist = dist;
+                            closestGate = gate;
+                        }
                     }
                 }
 

@@ -151,7 +151,7 @@ namespace Server.Items
 		{
 			get
             {
-                if (Parent is Container && ((Container)Parent).MaxWeight == 0)
+                if (Parent is Container container && container.MaxWeight == 0)
 				{
 					return 0;
 				}
@@ -271,9 +271,9 @@ namespace Server.Items
 				{
 					return container.CheckHold(m, item, message, checkItems, plusItems, plusWeight);
 				}
-				else if (parent is Item)
+				else if (parent is Item pItem)
 				{
-					parent = ((Item)parent).Parent;
+					parent = pItem.Parent;
 				}
 				else
 				{

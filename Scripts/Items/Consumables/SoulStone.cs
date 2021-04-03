@@ -19,27 +19,13 @@ namespace Server.Items
         private int m_InactiveItemID;
 
         private SecureLevel m_Level;
-
         [CommandProperty(AccessLevel.GameMaster)]
-        public SecureLevel Level
-        {
-            get
-            {
-                return m_Level;
-            }
-            set
-            {
-                m_Level = value;
-            }
-        }
+        public SecureLevel Level { get => m_Level; set => m_Level = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public virtual int ActiveItemID
         {
-            get
-            {
-                return m_ActiveItemID;
-            }
+            get => m_ActiveItemID;
             set
             {
                 m_ActiveItemID = value;
@@ -52,10 +38,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public virtual int InactiveItemID
         {
-            get
-            {
-                return m_InactiveItemID;
-            }
+            get => m_InactiveItemID;
             set
             {
                 m_InactiveItemID = value;
@@ -72,25 +55,12 @@ namespace Server.Items
         private double m_SkillValue;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public string Account
-        {
-            get
-            {
-                return m_Account;
-            }
-            set
-            {
-                m_Account = value;
-            }
-        }
+        public string Account { get => m_Account; set => m_Account = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public string LastUserName
         {
-            get
-            {
-                return m_LastUserName;
-            }
+            get => m_LastUserName;
             set
             {
                 m_LastUserName = value;
@@ -101,10 +71,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public SkillName Skill
         {
-            get
-            {
-                return m_Skill;
-            }
+            get => m_Skill;
             set
             {
                 m_Skill = value;
@@ -115,10 +82,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public double SkillValue
         {
-            get
-            {
-                return m_SkillValue;
-            }
+            get => m_SkillValue;
             set
             {
                 m_SkillValue = value;
@@ -194,71 +158,64 @@ namespace Server.Items
 
         protected virtual bool CheckUse(Mobile from)
         {
-            DateTime now = DateTime.UtcNow;
-
             PlayerMobile pm = from as PlayerMobile;
 
             if (Deleted || !IsAccessibleTo(from))
             {
                 return false;
             }
-            else if (from.Map != Map || !from.InRange(GetWorldLocation(), 2))
+            if (from.Map != Map || !from.InRange(GetWorldLocation(), 2))
             {
                 from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1019045); // I can't reach that.
                 return false;
             }
-            else if (Account != null && (!(from.Account is Account) || from.Account.Username != Account))
+            if (Account != null && (!(from.Account is Account) || from.Account.Username != Account))
             {
                 from.SendLocalizedMessage(1070714); // This is an Account Bound Soulstone, and your character is not bound to it.  You cannot use this Soulstone.
                 return false;
             }
-            else if (CheckCombat(from, TimeSpan.FromMinutes(2.0)))
+            if (CheckCombat(from, TimeSpan.FromMinutes(2.0)))
             {
                 from.SendLocalizedMessage(1070727); // You must wait two minutes after engaging in combat before you can use a Soulstone.
                 return false;
             }
-            else if (from.Criminal)
+            if (from.Criminal)
             {
                 from.SendLocalizedMessage(1070728); // You must wait two minutes after committing a criminal act before you can use a Soulstone.
                 return false;
             }
-            else if (from.Region.GetLogoutDelay(from) > TimeSpan.Zero)
+            if (from.Region.GetLogoutDelay(from) > TimeSpan.Zero)
             {
                 from.SendLocalizedMessage(1070729); // In order to use your Soulstone, you must be in a safe log-out location.
                 return false;
             }
-            else if (!from.Alive)
+            if (!from.Alive)
             {
                 from.SendLocalizedMessage(1070730); // You may not use a Soulstone while your character is dead.
                 return false;
             }
-            else if (from.Spell != null && from.Spell.IsCasting)
+            if (from.Spell != null && from.Spell.IsCasting)
             {
                 from.SendLocalizedMessage(1070733); // You may not use a Soulstone while your character is casting a spell.
                 return false;
             }
-            else if (from.Poisoned)
+            if (from.Poisoned)
             {
                 from.SendLocalizedMessage(1070734); // You may not use a Soulstone while your character is poisoned.
                 return false;
             }
-            else if (from.Paralyzed)
+            if (from.Paralyzed)
             {
                 from.SendLocalizedMessage(1070735); // You may not use a Soulstone while your character is paralyzed.
                 return false;
             }
-
-            #region Scroll of Alacrity
             if (pm.AcceleratedStart > DateTime.UtcNow)
             {
                 from.SendLocalizedMessage(1078115); // You may not use a soulstone while your character is under the effects of a Scroll of Alacrity.
                 return false;
             }
-            #endregion
-            else
-            {
-                return true;
-            }
+
+            return true;
         }
 
         public virtual void OnSkillTransfered(Mobile from)
@@ -333,8 +290,8 @@ namespace Server.Items
                             }
                         }
 
-                        int x = (p % 2 == 0) ? 10 : 260;
-                        int y = (p / 2) * 20 + 40;
+                        int x = p % 2 == 0 ? 10 : 260;
+                        int y = p / 2 * 20 + 40;
 
                         AddButton(x, y, 0xFA5, 0xFA6, i + 1, GumpButtonType.Reply, 0);
                         AddHtmlLocalized(x + 45, y + 2, 200, 20, AosSkillBonuses.GetLabel(skill.SkillName), 0x7FFF, false, false);
@@ -494,10 +451,10 @@ namespace Server.Items
                                 bc.ControlTarget = null;
                                 bc.ControlOrder = OrderType.None;
 
-                                if (bc is BaseMount && ((BaseMount)bc).Rider == from)
+                                if (bc is BaseMount mount && mount.Rider == from)
                                 {
                                     from.SendLocalizedMessage(1042317); // You may not ride at this time
-                                    ((BaseMount)bc).Rider = null;
+                                    mount.Rider = null;
                                 }
                             }
                         }
@@ -697,10 +654,8 @@ namespace Server.Items
 
                 Effects.SendTargetParticles(from, 0x375A, 35, 90, 0x00, 0x00, 9502, (EffectLayer)255, 0x100);
 
-                if (m_Stone is SoulstoneFragment)
+                if (m_Stone is SoulstoneFragment frag)
                 {
-                    SoulstoneFragment frag = m_Stone as SoulstoneFragment;
-
                     if (--frag.UsesRemaining <= 0)
                         from.SendLocalizedMessage(1070974); // You have used up your soulstone fragment.
                 }
@@ -910,10 +865,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int UsesRemaining
         {
-            get
-            {
-                return m_UsesRemaining;
-            }
+            get => m_UsesRemaining;
             set
             {
                 m_UsesRemaining = value;
@@ -983,16 +935,7 @@ namespace Server.Items
             return canUse;
         }
 
-        public bool ShowUsesRemaining
-        {
-            get
-            {
-                return true;
-            }
-            set
-            {
-            }
-        }
+        public bool ShowUsesRemaining { get => true; set { } }
 
         public int OnCraft(int quality, bool makersMark, Mobile from, CraftSystem craftSystem, Type typeRes, ITool tool, CraftItem craftItem, int resHue)
         {
@@ -1078,7 +1021,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsRewardItem
         {
-            get { return m_IsRewardItem; }
+            get => m_IsRewardItem;
             set
             {
                 m_IsRewardItem = value;

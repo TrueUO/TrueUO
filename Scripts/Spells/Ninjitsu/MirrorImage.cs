@@ -134,10 +134,7 @@ namespace Server.Spells.Ninjitsu
 
                     if (clone != null && clone.Summoned && clone.SummonMaster == defender)
                     {
-                        if (attacker != null)
-                        {
-                            attacker.SendLocalizedMessage(1063141); // Your attack has been diverted to a nearby mirror image of your target!
-                        }
+                        attacker?.SendLocalizedMessage(1063141); // Your attack has been diverted to a nearby mirror image of your target!
 
                         defender.SendLocalizedMessage(1063140); // You manage to divert the attack onto one of your nearby mirror images.
                         break;
@@ -253,7 +250,6 @@ namespace Server.Mobiles
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
 
             writer.Write(m_Caster);
@@ -262,8 +258,7 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
 
             m_Caster = reader.ReadMobile();
 

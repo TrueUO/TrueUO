@@ -1,7 +1,6 @@
 using Server.Engines.Despise;
 using Server.Mobiles;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -34,7 +33,7 @@ namespace Server.Items
 
             TeleportPets(m, p, map);
 
-            bool sendEffect = (!m.Hidden || m.AccessLevel == AccessLevel.Player);
+            bool sendEffect = !m.Hidden || m.AccessLevel == AccessLevel.Player;
 
             if (SourceEffect && sendEffect)
                 Effects.SendLocationEffect(m.Location, m.Map, 0x3728, 10, 10);
@@ -55,17 +54,11 @@ namespace Server.Items
 
             foreach (Mobile m in eable)
             {
-                if (m is BaseCreature && !(m is DespiseCreature))
+                if (m is BaseCreature pet && !(pet is DespiseCreature) && pet.Controlled && pet.ControlMaster == master)
                 {
-                    BaseCreature pet = (BaseCreature)m;
-
-                    if (pet.Controlled && pet.ControlMaster == master)
+                    if (pet.ControlOrder == OrderType.Guard || pet.ControlOrder == OrderType.Follow || pet.ControlOrder == OrderType.Come)
                     {
-                        if (pet.ControlOrder == OrderType.Guard || pet.ControlOrder == OrderType.Follow ||
-                            pet.ControlOrder == OrderType.Come)
-                        {
-                            move.Add(pet);
-                        }
+                        move.Add(pet);
                     }
                 }
             }
@@ -95,7 +88,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int v = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -107,7 +100,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public Point3D Destination
         {
-            get { return _Destination; }
+            get => _Destination;
             set
             {
                 if (_Destination != value)
@@ -121,7 +114,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public Map DestinationMap
         {
-            get { return _DestinationMap; }
+            get => _DestinationMap;
             set
             {
                 if (DestinationMap != value)
@@ -157,9 +150,12 @@ namespace Server.Items
         {
             if (Teleporters != null)
             {
-                foreach (InternalTeleporter tele in Teleporters.Where(t => t != null && !t.Deleted))
+                foreach (InternalTeleporter tele in Teleporters)
                 {
-                    tele.Delete();
+                    if (tele != null && !tele.Deleted)
+                    {
+                        tele.Delete();
+                    }
                 }
 
                 ColUtility.Free(Teleporters);
@@ -263,7 +259,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int v = reader.ReadInt();
+            reader.ReadInt();
 
             _Destination = reader.ReadPoint3D();
             _DestinationMap = reader.ReadMap();
@@ -338,7 +334,7 @@ namespace Server.Items
             public override void Deserialize(GenericReader reader)
             {
                 base.Deserialize(reader);
-                int v = reader.ReadInt();
+                reader.ReadInt();
             }
         }
     }

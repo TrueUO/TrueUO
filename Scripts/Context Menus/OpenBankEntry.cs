@@ -27,10 +27,10 @@ namespace Server.ContextMenus
             {
                 Owner.From.BankBox.Open();
 
-                if (Owner.From is PlayerMobile)
+                if (Owner.From is PlayerMobile pm)
                 {
-                    Owner.From.CloseGump(typeof(BankerGump));
-                    Owner.From.SendGump(new BankerGump((PlayerMobile)Owner.From));
+                    pm.CloseGump(typeof(BankerGump));
+                    pm.SendGump(new BankerGump(pm));
                 }
             }
         }

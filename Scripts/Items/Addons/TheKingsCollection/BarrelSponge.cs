@@ -3,7 +3,7 @@ using System;
 
 namespace Server.Items
 {
-    public class BarrelSpongeAddon : BaseAddon, IDyable
+    public class BarrelSpongeAddon : BaseAddon
     {
         public override bool ForceShowProperties => true;
 
@@ -13,7 +13,7 @@ namespace Server.Items
         private int m_ResourceCount;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int ResourceCount { get { return m_ResourceCount; } set { m_ResourceCount = value; UpdateProperties(); } }
+        public int ResourceCount { get => m_ResourceCount; set { m_ResourceCount = value; UpdateProperties(); } }
 
         [Constructable]
         public BarrelSpongeAddon()
@@ -30,21 +30,12 @@ namespace Server.Items
             AddComponent(new BarrelSpongeComponent(0x4C30), 0, 0, 0);
         }
 
-        public virtual bool Dye(Mobile from, DyeTub sender)
-        {
-            if (Deleted)
-                return false;
-
-            Hue = sender.DyedHue;
-            return true;
-        }
-
         public BarrelSpongeAddon(Serial serial)
             : base(serial)
         {
         }
 
-        private readonly Type[] m_Potions = new Type[]
+        private readonly Type[] m_Potions =
         {
             typeof(ShatterPotion),
             typeof(FearEssence),
@@ -59,7 +50,7 @@ namespace Server.Items
         {
             BaseHouse house = BaseHouse.FindHouseAt(from);
 
-            if (house != null && (house.IsOwner(from) || (house.LockDowns.ContainsKey(this) && house.LockDowns[this] == from)))
+            if (house != null && (house.IsOwner(from) || house.LockDowns.ContainsKey(this) && house.LockDowns[this] == from))
             {
                 if (ResourceCount > 0)
                 {
@@ -108,7 +99,7 @@ namespace Server.Items
             public override void Deserialize(GenericReader reader)
             {
                 base.Deserialize(reader);
-                int version = reader.ReadInt();
+                reader.ReadInt();
             }
         }
 
@@ -137,16 +128,18 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             m_ResourceCount = reader.ReadInt();
             NextResourceCount = reader.ReadDateTime();
         }
     }
 
+    [Furniture]
     public class BarrelSpongeDeed : BaseAddonDeed
     {
         public override int LabelNumber => 1098376;  // Barrel Sponge
+        public override bool IsArtifact => true; // allows dying of the deed.
 
         [Constructable]
         public BarrelSpongeDeed()
@@ -170,7 +163,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

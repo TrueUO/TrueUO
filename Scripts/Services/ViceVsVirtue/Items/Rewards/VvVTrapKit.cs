@@ -2,7 +2,6 @@ using Server.ContextMenus;
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.VvV
 {
@@ -119,10 +118,8 @@ namespace Server.Engines.VvV
                                 m.SendLocalizedMessage(1042261); // You cannot place the trap there.
                                 return;
                             }
-                            else
-                            {
-                                m.PrivateOverheadMessage(Network.MessageType.Regular, 1154, 1155411, m.NetState); // *You successfully lay the tripwire*
-                            }
+
+                            m.PrivateOverheadMessage(Network.MessageType.Regular, 1154, 1155411, m.NetState); // *You successfully lay the tripwire*
                         }
                     }
                     else
@@ -160,9 +157,12 @@ namespace Server.Engines.VvV
 
             List<Mobile> mobs = new List<Mobile>(_Cooldown.Keys);
 
-            foreach (Mobile m in mobs.Where(mob => _Cooldown[mob] < DateTime.UtcNow))
+            foreach (Mobile m in mobs)
             {
-                _Cooldown.Remove(m);
+                if (_Cooldown[m] < DateTime.UtcNow)
+                {
+                    _Cooldown.Remove(m);
+                }
             }
 
             mobs.Clear();
@@ -199,8 +199,8 @@ namespace Server.Engines.VvV
 
         private class InternalEntry : ContextMenuEntry
         {
-            public VvVTrapKit Deed { get; set; }
-            public Mobile Clicker { get; set; }
+            public VvVTrapKit Deed { get; }
+            public Mobile Clicker { get; }
 
             public InternalEntry(VvVTrapKit deed, Mobile m)
                 : base(1155514, -1)
@@ -241,7 +241,7 @@ namespace Server.Engines.VvV
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             DeploymentType = (DeploymentType)reader.ReadInt();
             TrapType = (VvVTrapType)reader.ReadInt();

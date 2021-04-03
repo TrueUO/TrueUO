@@ -16,7 +16,7 @@ namespace Server.Engines.NewMagincia
 
         private static int m_GoldSink;
         private static MaginciaLottoSystem m_Instance;
-        public static MaginciaLottoSystem Instance { get { return m_Instance; } set { m_Instance = value; } }
+        public static MaginciaLottoSystem Instance { get => m_Instance; set => m_Instance = value; }
 
         private static readonly List<MaginciaHousingPlot> m_Plots = new List<MaginciaHousingPlot>();
         public static List<MaginciaHousingPlot> Plots => m_Plots;
@@ -42,15 +42,17 @@ namespace Server.Engines.NewMagincia
         [CommandProperty(AccessLevel.GameMaster)]
         public bool ResetAuctions
         {
-            get { return false; }
+            get => false;
             set
             {
-                if (value == true)
+                if (value)
                 {
                     foreach (MaginciaHousingPlot plot in m_Plots)
                     {
                         if (plot.IsAvailable)
+                        {
                             plot.LottoEnds = DateTime.UtcNow + m_LottoDuration;
+                        }
                     }
                 }
             }
@@ -59,7 +61,7 @@ namespace Server.Engines.NewMagincia
         [CommandProperty(AccessLevel.GameMaster)]
         public bool Enabled
         {
-            get { return m_Enabled; }
+            get => m_Enabled;
             set
             {
                 if (m_Enabled != value)
@@ -77,10 +79,10 @@ namespace Server.Engines.NewMagincia
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public static int GoldSink { get { return m_GoldSink; } set { m_GoldSink = value; } }
+        public static int GoldSink { get => m_GoldSink; set => m_GoldSink = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public TimeSpan LottoDuration { get { return m_LottoDuration; } set { m_LottoDuration = value; } }
+        public TimeSpan LottoDuration { get => m_LottoDuration; set => m_LottoDuration = value; }
 
         public MaginciaLottoSystem() : base(3240)
         {
@@ -93,7 +95,9 @@ namespace Server.Engines.NewMagincia
             m_FreeHousingZones[Map.Felucca] = new List<Rectangle2D>();
 
             if (m_Enabled)
+            {
                 StartTimer();
+            }
 
             LoadPlots();
         }
@@ -233,7 +237,7 @@ namespace Server.Engines.NewMagincia
         {
             for (int i = 0; i < m_MagHousingZones.Length; i++)
             {
-                bool prime = (i > 0 && i < 6) || i > 14;
+                bool prime = i > 0 && i < 6 || i > 14;
 
                 MaginciaHousingPlot tramplot = new MaginciaHousingPlot(m_Identifiers[i], m_MagHousingZones[i], prime, Map.Trammel);
                 MaginciaHousingPlot felplot = new MaginciaHousingPlot(m_Identifiers[i], m_MagHousingZones[i], prime, Map.Felucca);
@@ -250,7 +254,8 @@ namespace Server.Engines.NewMagincia
         }
 
         public static Rectangle2D[] MagHousingZones => m_MagHousingZones;
-        private static readonly Rectangle2D[] m_MagHousingZones = new Rectangle2D[]
+
+        private static readonly Rectangle2D[] m_MagHousingZones =
         {
             new Rectangle2D(3686, 2125, 18, 18), // C1
             new Rectangle2D(3686, 2086, 18, 18), // C2 / Prime
@@ -277,10 +282,10 @@ namespace Server.Engines.NewMagincia
             new Rectangle2D(3784, 2108, 18, 17), // E4 / Prime
             new Rectangle2D(3765, 2086, 18, 18), // E5 / Prime      
             new Rectangle2D(3749, 2065, 18, 18), // E6 / Prime
-            new Rectangle2D(3715, 2090, 18, 18), // E7 / Prime            
+            new Rectangle2D(3715, 2090, 18, 18)  // E7 / Prime            
         };
 
-        private static readonly Point3D[] m_StoneLocs = new Point3D[]
+        private static readonly Point3D[] m_StoneLocs =
         {
             new Point3D(3683, 2134, 20),
             new Point3D(3704, 2092, 5),
@@ -310,7 +315,7 @@ namespace Server.Engines.NewMagincia
             new Point3D(3711, 2087, 5)
         };
 
-        private static readonly string[] m_Identifiers = new string[]
+        private static readonly string[] m_Identifiers =
         {
             "C-1",
             "C-2",
@@ -386,21 +391,23 @@ namespace Server.Engines.NewMagincia
         public static void SendMessageTo(Mobile from, NewMaginciaMessage message)
         {
             if (from == null || message == null)
+            {
                 return;
+            }
 
             AddMessageToQueue(from, message);
 
-            if (from is PlayerMobile && from.NetState != null)
+            if (from is PlayerMobile mobile && mobile.NetState != null)
             {
-                from.CloseGump(typeof(NewMaginciaMessageGump));
-                from.CloseGump(typeof(NewMaginciaMessageListGump));
-                from.CloseGump(typeof(NewMaginciaMessageDetailGump));
+                mobile.CloseGump(typeof(NewMaginciaMessageGump));
+                mobile.CloseGump(typeof(NewMaginciaMessageListGump));
+                mobile.CloseGump(typeof(NewMaginciaMessageDetailGump));
 
-                var messages = GetMessages(from);
+                var messages = GetMessages(mobile);
 
                 if (messages != null)
                 {
-                    BaseGump.SendGump(new NewMaginciaMessageGump((PlayerMobile)from, messages));
+                    BaseGump.SendGump(new NewMaginciaMessageGump(mobile, messages));
                 }
             }
         }
@@ -528,9 +535,12 @@ namespace Server.Engines.NewMagincia
                         list = new List<NewMaginciaMessage>();
                     }
 
-                    foreach (var message in kvp.Value.Where(message => message.AccountBound))
+                    foreach (var message in kvp.Value)
                     {
-                        list.Add(message);
+                        if (message.AccountBound)
+                        {
+                            list.Add(message);
+                        }
                     }
                 }
             }
@@ -591,7 +601,6 @@ namespace Server.Engines.NewMagincia
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
 
             writer.Write(m_GoldSink);
@@ -626,8 +635,7 @@ namespace Server.Engines.NewMagincia
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             m_FreeHousingZones = new Dictionary<Map, List<Rectangle2D>>();
             m_FreeHousingZones[Map.Trammel] = new List<Rectangle2D>();

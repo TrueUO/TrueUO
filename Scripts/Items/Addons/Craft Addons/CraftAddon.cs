@@ -19,10 +19,7 @@ namespace Server.Items
         [Hue, CommandProperty(AccessLevel.GameMaster)]
         public override int Hue
         {
-            get
-            {
-                return base.Hue;
-            }
+            get => base.Hue;
             set
             {
                 if (base.Hue != value)
@@ -69,9 +66,9 @@ namespace Server.Items
                 {
                     Point3D p3D = new Point3D(p.X + c.Offset.X, p.Y + c.Offset.Y, p.Z + c.Offset.Z);
 
-                    if (!map.CanFit(p3D.X, p3D.Y, p3D.Z, c.ItemData.Height, false, true, (c.Z == 0)))
+                    if (!map.CanFit(p3D.X, p3D.Y, p3D.Z, c.ItemData.Height, false, true, c.Z == 0))
                         return AddonFitResult.Blocked;
-                    else if (!CheckHouse(from, p3D, map, c.ItemData.Height, ref house))
+                    if (!CheckHouse(from, p3D, map, c.ItemData.Height, ref house))
                         return AddonFitResult.NotInHouse;
 
                     if (c.NeedsWall)
@@ -190,10 +187,8 @@ namespace Server.Items
 
                 if (house != null && addon != null && house.HasSecureAccess(from, addon.Level))
                 {
-                    if (dropped is ITool && !(dropped is BaseRunicTool))
+                    if (dropped is ITool tool && !(tool is BaseRunicTool))
                     {
-                        ITool tool = dropped as ITool;
-
                         if (tool.CraftSystem == addon.CraftSystem)
                         {
                             AddonToolComponent comp = addon.Tools.FirstOrDefault(t => t != null);
@@ -206,40 +201,32 @@ namespace Server.Items
                                 from.SendLocalizedMessage(1155740); // Adding this to the power tool would put it over the max number of charges the tool can hold.
                                 return false;
                             }
-                            else
-                            {
-                                int toadd = Math.Min(tool.UsesRemaining, comp.MaxUses - comp.UsesRemaining);
 
-                                comp.UsesRemaining += toadd;
-                                tool.UsesRemaining -= toadd;
+                            int toadd = Math.Min(tool.UsesRemaining, comp.MaxUses - comp.UsesRemaining);
 
-                                if (tool.UsesRemaining <= 0 && !tool.Deleted)
-                                    tool.Delete();
+                            comp.UsesRemaining += toadd;
+                            tool.UsesRemaining -= toadd;
 
-                                from.SendLocalizedMessage(1155741); // Charges have been added to the power tool.
+                            if (tool.UsesRemaining <= 0 && !tool.Deleted)
+                                tool.Delete();
 
-                                Effects.PlaySound(Location, Map, 0x42);
+                            from.SendLocalizedMessage(1155741); // Charges have been added to the power tool.
 
-                                return false;
-                            }
-                        }
-                        else
-                        {
-                            from.SendLocalizedMessage(1074836); // The container cannot hold that type of object.
+                            Effects.PlaySound(Location, Map, 0x42);
+
                             return false;
                         }
-                    }
-                    else
-                    {
+
                         from.SendLocalizedMessage(1074836); // The container cannot hold that type of object.
                         return false;
                     }
-                }
-                else
-                {
-                    SendLocalizedMessageTo(from, 1061637); // You are not allowed to access this.
+
+                    from.SendLocalizedMessage(1074836); // The container cannot hold that type of object.
                     return false;
                 }
+
+                SendLocalizedMessageTo(from, 1061637); // You are not allowed to access this.
+                return false;
             }
 
             public ToolDropComponent(Serial serial)

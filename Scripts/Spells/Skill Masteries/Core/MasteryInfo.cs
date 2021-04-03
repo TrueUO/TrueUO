@@ -6,14 +6,6 @@ using System.Linq;
 
 namespace Server.Spells.SkillMasteries
 {
-    public enum Volume
-    {
-        None,
-        One,
-        Two,
-        Three
-    }
-
     public enum PassiveSpell
     {
         None,
@@ -118,13 +110,13 @@ namespace Server.Spells.SkillMasteries
 
         public static List<MasteryInfo> Infos { get; set; }
 
-        public Type SpellType { get; set; }
-        public int SpellID { get; set; }
-        public SkillName MasterySkill { get; set; }
-        public int NameLocalization { get; set; }
+        public Type SpellType { get; }
+        public int SpellID { get; }
+        public SkillName MasterySkill { get; }
+        public int NameLocalization { get; }
 
         public bool Passive => PassiveSpell != PassiveSpell.None;
-        public PassiveSpell PassiveSpell { get; set; }
+        public PassiveSpell PassiveSpell { get; }
 
         public MasteryInfo(Type skillType, int spellID, SkillName masterySkill, PassiveSpell passive = PassiveSpell.None)
         {
@@ -316,7 +308,7 @@ namespace Server.Spells.SkillMasteries
                         BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.Potency, 1155928, 1156195, NonPoisonConsumeChance(m).ToString(), true)); // ~1_VAL~% chance to not consume poison charges when using infecting strike or injected strike.
                         break;
                     case PassiveSpell.Knockout:
-                        BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.Knockout, 1155931, 1156030, string.Format("{0}\t{1}", GetKnockoutModifier(m).ToString(), GetKnockoutModifier(m, true).ToString(), true))); // Wrestling Damage Bonus:<br>+~1_VAL~% PvM<br>+~2_VAL~% PvP
+                        BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.Knockout, 1155931, 1156030, $"{GetKnockoutModifier(m).ToString()}\t{GetKnockoutModifier(m, true).ToString()}")); // Wrestling Damage Bonus:<br>+~1_VAL~% PvM<br>+~2_VAL~% PvP
                         break;
                     case PassiveSpell.Boarding:
                         BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.Boarding, 1155934, 1156194, BoardingSlotIncrease(m).ToString(), true)); // Your number of stable slots has been increased by ~1_VAL~.
@@ -336,17 +328,18 @@ namespace Server.Spells.SkillMasteries
                 {
                     BookOfMasteries book = item as BookOfMasteries;
 
-                    if (book != null)
-                        book.InvalidateProperties();
+                    book?.InvalidateProperties();
                 }
             }
 
-            foreach (Item item in m.Items.Where(i => i is BookOfMasteries))
+            foreach (Item item in m.Items)
             {
-                BookOfMasteries book = item as BookOfMasteries;
+                if (item is BookOfMasteries)
+                {
+                    BookOfMasteries book = item as BookOfMasteries;
 
-                if (book != null)
-                    book.InvalidateProperties();
+                    book?.InvalidateProperties();
+                }
             }
         }
 

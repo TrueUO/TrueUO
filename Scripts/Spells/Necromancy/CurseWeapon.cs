@@ -55,8 +55,7 @@ namespace Server.Spells.Necromancy
                     t = m_Table[Caster];
                 }
 
-                if (t != null)
-                    t.Stop();
+                t?.Stop();
 
                 m_Table[Caster] = t = new ExpireTimer(weapon, Caster, duration);
 
@@ -75,8 +74,8 @@ namespace Server.Spells.Necromancy
 
         public class ExpireTimer : Timer
         {
-            public BaseWeapon Weapon { get; private set; }
-            public Mobile Owner { get; private set; }
+            public BaseWeapon Weapon { get; }
+            public Mobile Owner { get; }
 
             public ExpireTimer(BaseWeapon weapon, Mobile owner, TimeSpan delay)
                 : base(delay)

@@ -28,15 +28,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         public bool Dye(Mobile from, DyeTub sender)
@@ -78,8 +76,8 @@ namespace Server.Items
 
                 ILoom loom = targeted as ILoom;
 
-                if (loom == null && targeted is AddonComponent)
-                    loom = ((AddonComponent)targeted).Addon as ILoom;
+                if (loom == null && targeted is AddonComponent component)
+                    loom = component.Addon as ILoom;
 
                 if (loom != null)
                 {
@@ -91,8 +89,8 @@ namespace Server.Items
                     {
                         m_Material.Consume();
 
-                        if (targeted is Item)
-                            ((Item)targeted).SendLocalizedMessageTo(from, 1010001 + loom.Phase++);
+                        if (targeted is Item item)
+                            item.SendLocalizedMessageTo(from, 1010001 + loom.Phase++);
                     }
                     else
                     {
@@ -137,15 +135,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -171,15 +167,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -205,15 +199,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -239,15 +231,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

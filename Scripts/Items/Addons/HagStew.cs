@@ -69,7 +69,6 @@ namespace Server.Items
                 {
                     Stop();
                     stew.Visible = true;
-                    return;
                 }
             }
         }

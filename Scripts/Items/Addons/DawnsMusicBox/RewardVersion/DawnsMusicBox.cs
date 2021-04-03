@@ -35,47 +35,30 @@ namespace Server.Items.MusicBox
         {
         }
 
-        public override int LabelNumber => 1075198;// Dawn’s Music Box
+        public override int LabelNumber => 1075198;// Dawnâ€™s Music Box
+
         [CommandProperty(AccessLevel.GameMaster, AccessLevel.Developer)]
         public bool IsPlaying => m_PlayingTimer != null;
+
         public List<MusicName> Tracks => m_Tracks;
+
         [CommandProperty(AccessLevel.GameMaster, AccessLevel.Developer)]
         public MusicName ActualSong
         {
-            get
-            {
-                return m_ActualSong;
-            }
+            get => m_ActualSong;
             set
             {
                 m_ActualSong = value;
                 InvalidateProperties();
             }
         }
+
         [CommandProperty(AccessLevel.GameMaster)]
-        public SecureLevel Level
-        {
-            get
-            {
-                return m_Level;
-            }
-            set
-            {
-                m_Level = value;
-            }
-        }
+        public SecureLevel Level { get => m_Level; set => m_Level = value; }
+
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get
-            {
-                return m_IsRewardItem;
-            }
-            set
-            {
-                m_IsRewardItem = value;
-            }
-        }
+        public bool IsRewardItem { get => m_IsRewardItem; set => m_IsRewardItem = value; }
+
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);
@@ -146,11 +129,9 @@ namespace Server.Items.MusicBox
             {
                 return false;
             }
-            else
-            {
-                m_Tracks.Add(song);
-                return true;
-            }
+
+            m_Tracks.Add(song);
+            return true;
         }
 
         public void Animate()
@@ -187,7 +168,7 @@ namespace Server.Items.MusicBox
 
             BaseHouse house = BaseHouse.FindHouseAt(this);
 
-            return (house != null && house.IsOwner(mob));
+            return house != null && house.IsOwner(mob);
         }
 
         public void ToggleMusic(Mobile m, bool play)
@@ -254,9 +235,8 @@ namespace Server.Items.MusicBox
 
                 foreach (Item i in itemsEable)
                 {
-                    if (i is DawnsMusicBox && i != this)
+                    if (i is DawnsMusicBox mb && i != this)
                     {
-                        DawnsMusicBox mb = (DawnsMusicBox)i;
                         if (mb.IsPlaying)
                         {
                             mb.ToggleTimer(false);
@@ -398,16 +378,16 @@ namespace Server.Items.MusicBox
                 if (m_Page < Math.Ceiling(m_Songs.Count / (double)m_Fields))
                     AddButton(245, 297, 5601, 5605, 300, GumpButtonType.Reply, 0); // Next Page
 
-                int IndMax = (m_Page * m_Fields) - 1;
-                int IndMin = (m_Page * m_Fields) - m_Fields;
+                int IndMax = m_Page * m_Fields - 1;
+                int IndMin = m_Page * m_Fields - m_Fields;
                 int IndTemp = 0;
 
                 for (int i = 0; i < m_Songs.Count; i++)
                 {
                     if (i >= IndMin && i <= IndMax)
                     {
-                        AddHtmlLocalized(35, 52 + (IndTemp * m_FieldsDist), 225, 20, m_Songs[i], m_HueEnt, false, false);
-                        AddButton(15, 52 + m_DeltaBut + (IndTemp * m_FieldsDist), 1209, 1210, i + 1, GumpButtonType.Reply, 0);
+                        AddHtmlLocalized(35, 52 + IndTemp * m_FieldsDist, 225, 20, m_Songs[i], m_HueEnt, false, false);
+                        AddButton(15, 52 + m_DeltaBut + IndTemp * m_FieldsDist, 1209, 1210, i + 1, GumpButtonType.Reply, 0);
                         IndTemp++;
                     }
                 }
@@ -419,7 +399,8 @@ namespace Server.Items.MusicBox
 
                 if (info.ButtonID == 0)
                     return;
-                else if (info.ButtonID == 200) // Previous page
+
+                if (info.ButtonID == 200) // Previous page
                 {
                     m_Page--;
                     from.SendGump(new MusicGump(m_Box, m_Songs, m_Page));

@@ -31,7 +31,7 @@ namespace Server.Spells
 
         public int ID => SpellRegistry.GetRegistryNumber(this);
 
-        public SpellState State { get { return m_State; } set { m_State = value; } }
+        public SpellState State { get => m_State; set => m_State = value; }
 
         public Mobile Caster => m_Caster;
         public SpellInfo Info => m_Info;
@@ -41,7 +41,7 @@ namespace Server.Spells
         public Item Scroll => m_Scroll;
         public long CastTime => m_CastTime;
 
-        public IDamageable InstantTarget { get { return m_InstantTarget; } set { m_InstantTarget = value; } }
+        public IDamageable InstantTarget { get => m_InstantTarget; set => m_InstantTarget = value; }
 
         public bool Disturbed { get; set; }
 
@@ -253,12 +253,8 @@ namespace Server.Spells
             if (IsCasting)
             {
                 object o = ProtectionSpell.Registry[m_Caster];
-                bool disturb = true;
 
-                if (o is double d && d > Utility.RandomDouble() * 100.0)
-                {
-                    disturb = false;
-                }
+                bool disturb = !(o is double d && d > Utility.RandomDouble() * 100.0);
 
                 #region Stygian Abyss
                 int focus = SAAbsorptionAttributes.GetValue(Caster, SAAbsorptionAttribute.CastingFocus);
@@ -569,10 +565,7 @@ namespace Server.Spells
                 Disturbed = true;
                 OnDisturb(type, true);
 
-                if (m_AnimTimer != null)
-                {
-                    m_AnimTimer.Stop();
-                }
+                m_AnimTimer?.Stop();
 
                 if (m_Caster.Player && type == DisturbType.Hurt)
                 {
@@ -786,10 +779,7 @@ namespace Server.Spells
 
             Caster.Delta(MobileDelta.Flags);
 
-            if (m_Caster.Region != null)
-            {
-                m_Caster.Region.OnSpellCast(m_Caster, this);
-            }
+            m_Caster.Region?.OnSpellCast(m_Caster, this);
 
             m_Caster.NextSpellTime = Core.TickCount + (int)GetCastRecovery().TotalMilliseconds;
 
@@ -816,28 +806,25 @@ namespace Server.Spells
 
             Type[] types = spellType.GetNestedTypes(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
-            if (types != null)
+            Type targetType = types.FirstOrDefault(t => t.IsSubclassOf(typeof(Target)));
+
+            if (targetType != null)
             {
-                Type targetType = types.FirstOrDefault(t => t.IsSubclassOf(typeof(Target)));
+                Target t = null;
 
-                if (targetType != null)
+                try
                 {
-                    Target t = null;
+                    t = Activator.CreateInstance(targetType, this) as Target;
+                }
+                catch
+                {
+                    LogBadConstructorForInstantTarget();
+                }
 
-                    try
-                    {
-                        t = Activator.CreateInstance(targetType, this) as Target;
-                    }
-                    catch
-                    {
-                        LogBadConstructorForInstantTarget();
-                    }
-
-                    if (t != null)
-                    {
-                        t.Invoke(Caster, InstantTarget);
-                        return true;
-                    }
+                if (t != null)
+                {
+                    t.Invoke(Caster, InstantTarget);
+                    return true;
                 }
             }
 
@@ -901,15 +888,7 @@ namespace Server.Spells
                 scalar += .5;
             }
 
-            // Lower Mana Cost = 40%
             int lmc = AosAttributes.GetValue(m_Caster, AosAttribute.LowerManaCost);
-
-            if (lmc > 40)
-            {
-                lmc = 40;
-            }
-
-            lmc += BaseArmor.GetInherentLowerManaCost(m_Caster);
 
             scalar -= (double)lmc / 100;
 
@@ -1062,6 +1041,8 @@ namespace Server.Spells
             else if (CheckFizzle())
             {
                 m_Caster.Mana -= mana;
+
+                CrazedMage.ManaCorruption(m_Caster, GetMana());
 
                 if (m_Scroll is SpellStone stone)
                 {
@@ -1248,7 +1229,7 @@ namespace Server.Spells
                 }
             }
 
-            public List<Spell> Registry { get; set; } = new List<Spell>();
+            public List<Spell> Registry { get; } = new List<Spell>();
 
             public CastTimer()
                 : base(TimeSpan.FromMilliseconds(100), TimeSpan.FromMilliseconds(100))
@@ -1297,7 +1278,7 @@ namespace Server.Spells
                         }
                         catch (Exception e)
                         {
-                            Diagnostics.ExceptionLogging.LogException(e, string.Format("Count: {0}; Index: {1}", registry.Count, i));
+                            Diagnostics.ExceptionLogging.LogException(e, $"Count: {registry.Count}; Index: {i}");
                         }
                     }
 

@@ -41,15 +41,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         public bool Dye(Mobile from, DyeTub sender)
@@ -91,13 +89,11 @@ namespace Server.Items
 
                 ISpinningWheel wheel = targeted as ISpinningWheel;
 
-                if (wheel == null && targeted is AddonComponent)
-                    wheel = ((AddonComponent)targeted).Addon as ISpinningWheel;
+                if (wheel == null && targeted is AddonComponent component)
+                    wheel = component.Addon as ISpinningWheel;
 
                 if (wheel is Item)
                 {
-                    Item item = (Item)wheel;
-
                     if (!m_Cotton.IsChildOf(from.Backpack))
                     {
                         from.SendLocalizedMessage(1042001); // That must be in your pack for you to use it.

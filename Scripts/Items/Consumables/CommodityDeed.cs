@@ -156,7 +156,7 @@ namespace Server.Items
         {
             InvalidateProperties();
 
-            if (Commodity == null && item is ICommodity && ((ICommodity)item).IsDeedable)
+            if (Commodity == null && item is ICommodity iItem && iItem.IsDeedable)
             {
                 Commodity = item;
                 Commodity.Internalize();
@@ -166,10 +166,8 @@ namespace Server.Items
 
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
 
         public override void Serialize(GenericWriter writer)
@@ -309,18 +307,18 @@ namespace Server.Items
                 {
                     number = 1047028; // The commodity deed has already been filled.
                 }
-                else if (targeted is Item)
+                else if (targeted is Item item)
                 {
                     BankBox box = from.FindBankNoCreate();
                     CommodityDeedBox cox = CommodityDeedBox.Find(m_Deed);
-                    GalleonHold hold = ((Item)targeted).RootParent as GalleonHold;
+                    GalleonHold hold = item.RootParent as GalleonHold;
 
                     // Veteran Rewards mods
-                    if (box != null && m_Deed.IsChildOf(box) && ((Item)targeted).IsChildOf(box) ||
-                        (cox != null && cox.IsSecure && ((Item)targeted).IsChildOf(cox)) ||
+                    if (box != null && m_Deed.IsChildOf(box) && item.IsChildOf(box) ||
+                        (cox != null && cox.IsSecure && item.IsChildOf(cox)) ||
                         hold != null)
                     {
-                        if (m_Deed.SetCommodity((Item)targeted))
+                        if (m_Deed.SetCommodity(item))
                         {
                             number = 1047030; // The commodity deed has been filled.
                         }

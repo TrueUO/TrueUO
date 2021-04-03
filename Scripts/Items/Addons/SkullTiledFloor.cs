@@ -6,7 +6,6 @@ namespace Server.Items
     {
         [Constructable]
         public SkullTiledFloorAddon(bool east)
-            : base()
         {
             if (!east)
             {

@@ -18,7 +18,6 @@ namespace Server.Items
 
         [Constructable]
         public TreeStump(int itemID)
-            : base()
         {
             AddComponent(new InternalAddonComponent(itemID), 0, 0, 0);
             NextResourceCount = DateTime.UtcNow + TimeSpan.FromDays(1);
@@ -45,10 +44,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsRewardItem
         {
-            get
-            {
-                return m_IsRewardItem;
-            }
+            get => m_IsRewardItem;
             set
             {
                 m_IsRewardItem = value;
@@ -58,10 +54,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int Logs
         {
-            get
-            {
-                return m_Logs;
-            }
+            get => m_Logs;
             set
             {
                 m_Logs = value;
@@ -91,7 +84,7 @@ namespace Server.Items
             *
             */
 
-            if (!from.InRange(GetWorldLocation(), 2) || !from.InLOS(this) || !((from.Z - Z) > -3 && (from.Z - Z) < 3))
+            if (!from.InRange(GetWorldLocation(), 2) || !from.InLOS(this) || !(from.Z - Z > -3 && from.Z - Z < 3))
             {
                 from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1019045); // I can't reach that.
             }
@@ -162,9 +155,9 @@ namespace Server.Items
             {
                 base.GetProperties(list);
 
-                if (Addon is TreeStump)
+                if (Addon is TreeStump stump)
                 {
-                    list.Add(1094719, ((TreeStump)Addon).Logs.ToString()); // Logs: ~1_COUNT~
+                    list.Add(1094719, stump.Logs.ToString()); // Logs: ~1_COUNT~
                 }
             }
 
@@ -230,7 +223,6 @@ namespace Server.Items
 
         [Constructable]
         public TreeStumpDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }
@@ -241,6 +233,7 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1080406;// a deed for a tree stump decoration
+
         public override BaseAddon Addon
         {
             get
@@ -254,32 +247,29 @@ namespace Server.Items
                 return addon;
             }
         }
+
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsRewardItem
         {
-            get
-            {
-                return m_IsRewardItem;
-            }
+            get => m_IsRewardItem;
             set
             {
                 m_IsRewardItem = value;
                 InvalidateProperties();
             }
         }
+
         [CommandProperty(AccessLevel.GameMaster)]
         public int Logs
         {
-            get
-            {
-                return m_Logs;
-            }
+            get => m_Logs;
             set
             {
                 m_Logs = value;
                 InvalidateProperties();
             }
         }
+
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);
@@ -305,7 +295,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
 
             writer.Write(m_IsRewardItem);
@@ -315,8 +304,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
 
             m_IsRewardItem = reader.ReadBool();
             m_Logs = reader.ReadInt();

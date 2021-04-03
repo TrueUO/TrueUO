@@ -84,22 +84,21 @@ namespace Server.Spells.Necromancy
         public void ApplyEffects(Mobile m, double strength = 1.0)
         {
             /* Temporarily creates a dark pact between the caster and the target.
-                * Any damage dealt by the target to the caster is increased, but the target receives the same amount of damage.
-                * The effect lasts for ((Spirit Speak skill level - target's Resist Magic skill level) / 80 ) + 8 seconds.
-                * 
-                * NOTE: The above algorithm must be fixed point, it should be:
-                * ((ss-rm)/8)+8
-                */
+             * Any damage dealt by the target to the caster is increased, but the target receives the same amount of damage.
+             * The effect lasts for ((Spirit Speak skill level - target's Resist Magic skill level) / 80 ) + 8 seconds.
+             * 
+             * NOTE: The above algorithm must be fixed point, it should be:
+             * ((ss-rm)/8)+8
+            */
 
             ExpireTimer timer = (ExpireTimer)m_Table[m];
-            if (timer != null)
-                timer.DoExpire();
+
+            timer?.DoExpire();
 
             m_OathTable[Caster] = Caster;
             m_OathTable[m] = Caster;
 
-            if (m.Spell != null)
-                m.Spell.OnCasterHurt();
+            m.Spell?.OnCasterHurt();
 
             Caster.PlaySound(0x175);
 
@@ -115,8 +114,8 @@ namespace Server.Spells.Necromancy
             timer = new ExpireTimer(Caster, m, duration);
             timer.Start();
 
-            BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.BloodOathCaster, 1075659, duration, Caster, m.Name.ToString()));
-            BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.BloodOathCurse, 1075661, duration, m, Caster.Name.ToString()));
+            BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.BloodOathCaster, 1075659, duration, Caster, m.Name));
+            BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.BloodOathCurse, 1075661, duration, m, Caster.Name));
 
             m_Table[m] = timer;
             HarmfulSpell(m);

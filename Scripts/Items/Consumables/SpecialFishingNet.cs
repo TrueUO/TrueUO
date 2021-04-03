@@ -8,7 +8,7 @@ namespace Server.Items
 {
     public class SpecialFishingNet : Item
     {
-        private static readonly int[] m_Hues = new int[]
+        private static readonly int[] m_Hues =
         {
             0x09B,
             0x0CD,
@@ -25,12 +25,11 @@ namespace Server.Items
             0x4B5,
             0x8AA
         };
-        private static readonly int[] m_WaterTiles = new int[]
+        private static readonly int[] m_WaterTiles =
         {
-            0x00A8, 0x00AB,
-            0x0136, 0x0137
+            0x00A8, 0x00AB, 0x0136, 0x0137
         };
-        private static readonly int[] m_UndeepWaterTiles = new int[]
+        private static readonly int[] m_UndeepWaterTiles =
         {
             0x1797, 0x179C
         };
@@ -55,19 +54,12 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1041079;// a special fishing net
+
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool InUse
-        {
-            get
-            {
-                return m_InUse;
-            }
-            set
-            {
-                m_InUse = value;
-            }
-        }
+        public bool InUse { get => m_InUse; set => m_InUse = value; }
+
         public virtual bool RequireDeepWater => true;
+
         public static bool FullValidation(Map map, int x, int y)
         {
             bool valid = ValidateDeepWater(map, x, y);
@@ -97,7 +89,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1); // version
 
             writer.Write(m_InUse);
@@ -106,23 +97,12 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
+            m_InUse = reader.ReadBool();
 
-            switch (version)
-            {
-                case 1:
-                    {
-                        m_InUse = reader.ReadBool();
-
-                        if (m_InUse)
-                            Delete();
-
-                        break;
-                    }
-            }
-
-            Stackable = false;
+            if (m_InUse)
+                Delete();
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -167,7 +147,7 @@ namespace Server.Items
             {
                 from.SendLocalizedMessage(500979); // You cannot see that location.
             }
-            else if (RequireDeepWater ? FullValidation(map, x, y) : (ValidateDeepWater(map, x, y) || ValidateUndeepWater(map, obj, ref z)))
+            else if (RequireDeepWater ? FullValidation(map, x, y) : ValidateDeepWater(map, x, y) || ValidateUndeepWater(map, obj, ref z))
             {
                 Point3D p = new Point3D(x, y, z);
 
@@ -231,7 +211,7 @@ namespace Server.Items
 
                 LandTile t = map.Tiles.GetLandTile(tx, ty);
 
-                if (t.Z == p.Z && ((t.ID >= 0xA8 && t.ID <= 0xAB) || (t.ID >= 0x136 && t.ID <= 0x137)) && !SpellHelper.CheckMulti(new Point3D(tx, ty, p.Z), map))
+                if (t.Z == p.Z && (t.ID >= 0xA8 && t.ID <= 0xAB || t.ID >= 0x136 && t.ID <= 0x137) && !SpellHelper.CheckMulti(new Point3D(tx, ty, p.Z), map))
                 {
                     x = tx;
                     y = ty;
@@ -287,7 +267,7 @@ namespace Server.Items
             bool water = false;
 
             for (int i = 0; !water && i < m_WaterTiles.Length; i += 2)
-                water = (tileID >= m_WaterTiles[i] && tileID <= m_WaterTiles[i + 1]);
+                water = tileID >= m_WaterTiles[i] && tileID <= m_WaterTiles[i + 1];
 
             return water;
         }
@@ -412,21 +392,17 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1063451;// a fabled fishing net
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
-
-            if (Weight != 15.0)
-                Weight = 15.0;
+            reader.ReadInt();
         }
 
         protected override void AddNetProperties(ObjectPropertyList list)

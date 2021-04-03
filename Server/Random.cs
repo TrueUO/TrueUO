@@ -38,9 +38,9 @@ namespace Server
 				_Random = new CSPRandom();
 			}
 
-			if (_Random is IHardwareRNG)
+			if (_Random is IHardwareRNG rng)
 			{
-				if (!((IHardwareRNG)_Random).IsSupported())
+				if (!rng.IsSupported())
 				{
 					_Random = new CSPRandom();
 				}

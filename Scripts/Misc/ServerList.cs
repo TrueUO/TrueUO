@@ -218,41 +218,44 @@ namespace Server.Misc
             string data;
             Match match;
 
-            foreach (string service in services.Where(s => !string.IsNullOrWhiteSpace(s)))
+            foreach (string service in services)
             {
-                try
+                if (!string.IsNullOrWhiteSpace(service))
                 {
-                    uri = new Uri(service);
-
-                    Console.WriteLine("ServerList: >>> {0}", uri.Host);
-
-                    using (WebClient client = new WebClient())
+                    try
                     {
-                        data = client.DownloadString(uri);
+                        uri = new Uri(service);
+
+                        Console.WriteLine("ServerList: >>> {0}", uri.Host);
+
+                        using (WebClient client = new WebClient())
+                        {
+                            data = client.DownloadString(uri);
+                        }
+
+                        Console.WriteLine("ServerList: <<< {0}", data);
+
+                        match = _AddressPattern.Match(data);
+
+                        if (!match.Success || !IPAddress.TryParse(match.Value, out ip))
+                        {
+                            ip = null;
+                        }
                     }
-
-                    Console.WriteLine("ServerList: <<< {0}", data);
-
-                    match = _AddressPattern.Match(data);
-
-                    if (!match.Success || !IPAddress.TryParse(match.Value, out ip))
+                    catch (UriFormatException)
                     {
+                        Console.WriteLine("ServerList: Invalid IP service Uri '{0}'", service);
+
                         ip = null;
                     }
-                }
-                catch (UriFormatException)
-                {
-                    Console.WriteLine("ServerList: Invalid IP service Uri '{0}'", service);
+                    catch
+                    {
+                    }
 
-                    ip = null;
-                }
-                catch
-                {
-                }
-
-                if (ip != null)
-                {
-                    break;
+                    if (ip != null)
+                    {
+                        break;
+                    }
                 }
             }
 

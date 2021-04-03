@@ -36,7 +36,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -70,7 +70,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -104,7 +104,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -142,15 +142,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -188,15 +186,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -233,35 +229,24 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
     #endregion
 
     public abstract class BaseHat : BaseClothing, IShipwreckedItem
     {
-        private bool m_IsShipwreckedItem;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public bool IsShipwreckedItem { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsShipwreckedItem
-        {
-            get
-            {
-                return m_IsShipwreckedItem;
-            }
-            set
-            {
-                m_IsShipwreckedItem = value;
-            }
-        }
+        public string ShipwreckName { get; set; }
 
         public BaseHat(int itemID)
             : this(itemID, 0)
@@ -281,9 +266,10 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(2); // version
+            writer.Write(3); // version
 
-            writer.Write(m_IsShipwreckedItem);
+            writer.Write(ShipwreckName);
+            writer.Write(IsShipwreckedItem);
         }
 
         public override void Deserialize(GenericReader reader)
@@ -293,17 +279,17 @@ namespace Server.Items
 
             switch (version)
             {
-                case 2: goto case 1;
+                case 3:
+                    {
+                        ShipwreckName = reader.ReadString();
+                        goto case 1;
+                    }
+                case 2: 
                 case 1:
                     {
-                        m_IsShipwreckedItem = reader.ReadBool();
+                        IsShipwreckedItem = reader.ReadBool();
                         break;
                     }
-            }
-
-            if (version == 1)
-            {
-                Weight = -1;
             }
         }
 
@@ -311,16 +297,27 @@ namespace Server.Items
         {
             base.AddEquipInfoAttributes(from, attrs);
 
-            if (m_IsShipwreckedItem)
+            if (IsShipwreckedItem)
+            {
                 attrs.Add(new EquipInfoAttribute(1041645));	// recovered from a shipwreck
+            }                
         }
 
         public override void AddNameProperties(ObjectPropertyList list)
         {
             base.AddNameProperties(list);
 
-            if (m_IsShipwreckedItem)
-                list.Add(1041645); // recovered from a shipwreck
+            if (IsShipwreckedItem)
+            {
+                if (string.IsNullOrEmpty(ShipwreckName))
+                {
+                    list.Add(1041645); // recovered from a shipwreck                    
+                }
+                else
+                {
+                    list.Add(1159011, ShipwreckName); // Recovered from the Shipwreck of ~1_NAME~
+                }
+            }
         }
 
         public override int OnCraft(int quality, bool makersMark, Mobile from, CraftSystem craftSystem, Type typeRes, ITool tool, CraftItem craftItem, int resHue)
@@ -1003,8 +1000,8 @@ namespace Server.Items
         {
             base.OnAdded(parent);
 
-            if (parent is Mobile)
-                Misc.Titles.AwardKarma((Mobile)parent, -20, true);
+            if (parent is Mobile mobile)
+                Misc.Titles.AwardKarma(mobile, -20, true);
         }
 
         public OrcishKinMask(Serial serial)

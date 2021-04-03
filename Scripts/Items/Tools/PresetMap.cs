@@ -28,7 +28,7 @@ namespace Server.Items
             Bounds = entry.Bounds;
         }
 
-        public override int LabelNumber => (m_LabelNumber == 0 ? base.LabelNumber : m_LabelNumber);
+        public override int LabelNumber => m_LabelNumber == 0 ? base.LabelNumber : m_LabelNumber;
 
         public PresetMap(Serial serial) : base(serial)
         {
@@ -79,8 +79,8 @@ namespace Server.Items
             m_Bounds = new Rectangle2D(xLeft, yTop, xRight - xLeft, yBottom - yTop);
         }
 
-        private static readonly PresetMapEntry[] m_Table = new PresetMapEntry[]
-            {
+        private static readonly PresetMapEntry[] m_Table =
+        {
                 new PresetMapEntry( 1041189, 200, 200, 1092, 1396, 1736, 1924 ), // map of Britain
 				new PresetMapEntry( 1041203, 200, 200, 0256, 1792, 1736, 2560 ), // map of Britain to Skara Brae
 				new PresetMapEntry( 1041192, 200, 200, 1024, 1280, 2304, 3072 ), // map of Britain to Trinsic
@@ -101,7 +101,7 @@ namespace Server.Items
 				new PresetMapEntry( 1041184, 200, 200, 2714, 3329, 3100, 3639 ), // map of Serpent's Hold
 				new PresetMapEntry( 1041200, 200, 200, 2560, 2560, 3840, 3840 ), // map of Serpent's Hold to Ocllo
 				new PresetMapEntry( 1041180, 200, 200, 0524, 2064, 0960, 2452 ), // map of Skara Brae
-				new PresetMapEntry( 1041204, 200, 200, 0000, 0000, 5199, 4095 ), // map of The World
+				new PresetMapEntry( 1041204, 200, 200, 0000, 0000, 5110, 4095 ), // map of The World
 				new PresetMapEntry( 1041177, 200, 200, 1792, 2630, 2118, 2952 ), // map of Trinsic
 				new PresetMapEntry( 1041193, 200, 200, 1792, 1792, 3072, 3072 ), // map of Trinsic to Buccaneer's Den
 				new PresetMapEntry( 1041195, 200, 200, 0256, 1792, 2304, 4095 ), // map of Trinsic to Jhelom
@@ -114,7 +114,7 @@ namespace Server.Items
                 new PresetMapEntry( 0,       200, 200, 890,  430,  1090, 600  ), // Luna
                 new PresetMapEntry( 0,       200, 200, 1920, 1240, 2130, 1430 ), // Umbra
                 new PresetMapEntry( 0,       200, 200, 5630, 3080, 5860, 3330 ), // Papua
-                new PresetMapEntry( 0,       200, 200, 5140, 3900, 5330, 4094 ), // Deliucia
+                new PresetMapEntry( 0,       200, 200, 5140, 3900, 5330, 4094 ) // Deliucia
 			};
 
         public static PresetMapEntry[] Table => m_Table;

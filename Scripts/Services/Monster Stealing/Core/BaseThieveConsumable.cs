@@ -57,9 +57,9 @@ namespace Server.Items
 
         public override void OnDoubleClick(Mobile m)
         {
-            if (m is PlayerMobile && IsChildOf(m.Backpack))
+            if (m is PlayerMobile pm && IsChildOf(pm.Backpack))
             {
-                OnUse((PlayerMobile)m);
+                OnUse(pm);
             }
         }
 

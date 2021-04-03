@@ -17,7 +17,7 @@ namespace Server.Engines.ArenaSystem
         [CommandProperty(AccessLevel.GameMaster)]
         public bool ShowArenaEffects
         {
-            get { return false; }
+            get => false;
             set { if (value) DoArenaEffects(); if (!value) HideArenaEffects(); }
         }
 
@@ -33,13 +33,11 @@ namespace Server.Engines.ArenaSystem
 
         public override void OnDoubleClick(Mobile from)
         {
-            if (from is PlayerMobile && from.InRange(Location, 10))
+            if (from is PlayerMobile pm && pm.InRange(Location, 10))
             {
-                PlayerMobile pm = from as PlayerMobile;
-
                 if (pm.Young)
                 {
-                    from.SendLocalizedMessage(1116002); // Young players and Trial Account users may not participate in duels.
+                    pm.SendLocalizedMessage(1116002); // Young players and Trial Account users may not participate in duels.
                 }
                 else if (Arena != null && PVPArenaSystem.Enabled)
                 {
@@ -51,12 +49,12 @@ namespace Server.Engines.ArenaSystem
                         }
                         else
                         {
-                            from.SendLocalizedMessage(1116387); // Please wait until the session which you participated is finished completely.
+                            pm.SendLocalizedMessage(1116387); // Please wait until the session which you participated is finished completely.
                         }
                     }
                     else
                     {
-                        ArenaDuel duel = Arena.GetPendingDuel(from);
+                        ArenaDuel duel = Arena.GetPendingDuel(pm);
 
                         if (duel == null)
                         {
@@ -148,7 +146,7 @@ namespace Server.Engines.ArenaSystem
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

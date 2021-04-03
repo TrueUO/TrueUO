@@ -85,7 +85,7 @@ namespace Server.Engines.VeteranRewards
         private int m_RewardCount;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int RewardCount { get { return m_RewardCount; } set { m_RewardCount = value; OnRefreshProperties(); } }
+        public int RewardCount { get => m_RewardCount; set { m_RewardCount = value; OnRefreshProperties(); } }
 
         private Timer Timer { get; set; }
 
@@ -187,7 +187,7 @@ namespace Server.Engines.VeteranRewards
             return false;
         }
 
-        private static readonly Type[] GraniteType = new Type[]
+        private static readonly Type[] GraniteType =
         {
             typeof(Granite),        typeof(DullCopperGranite),  typeof(ShadowIronGranite),
             typeof(CopperGranite),  typeof(BronzeGranite),      typeof(GoldGranite),
@@ -293,7 +293,7 @@ namespace Server.Engines.VeteranRewards
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsRewardItem
         {
-            get { return m_IsRewardItem; }
+            get => m_IsRewardItem;
             set
             {
                 m_IsRewardItem = value;
@@ -303,7 +303,6 @@ namespace Server.Engines.VeteranRewards
 
         [Constructable]
         public EnchantedGraniteCartAddonDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

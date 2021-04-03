@@ -25,18 +25,10 @@ namespace Server.Items
 
         public override BaseAddonDeed Deed => new ParrotPerchAddonDeed(m_Parrot);
         public override bool RetainDeedHue => true;
+
         [CommandProperty(AccessLevel.GameMaster)]
-        public PetParrot Parrot
-        {
-            get
-            {
-                return m_Parrot;
-            }
-            set
-            {
-                m_Parrot = value;
-            }
-        }
+        public PetParrot Parrot { get => m_Parrot; set => m_Parrot = value; }
+
         public override void OnLocationChange(Point3D oldLocation)
         {
             base.OnLocationChange(oldLocation);
@@ -93,7 +85,6 @@ namespace Server.Items
         public ParrotPerchAddonDeed(PetParrot parrot)
         {
             LootType = LootType.Blessed;
-
             m_Parrot = parrot;
         }
 
@@ -104,13 +95,11 @@ namespace Server.Items
 
         public override int LabelNumber => 1072619;// A deed for a Parrot Perch		
         public override BaseAddon Addon => new ParrotPerchAddon(m_Parrot);
+
         [CommandProperty(AccessLevel.GameMaster)]
         public PetParrot Parrot
         {
-            get
-            {
-                return m_Parrot;
-            }
+            get => m_Parrot;
             set
             {
                 m_Parrot = value;

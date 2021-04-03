@@ -245,7 +245,7 @@ namespace Server.Spells.Mysticism
 
         public class InternalTarget : Target
         {
-            public SpellPlagueSpell Owner { get; set; }
+            public SpellPlagueSpell Owner { get; }
 
             public InternalTarget(SpellPlagueSpell owner)
                 : this(owner, false)
@@ -289,7 +289,7 @@ namespace Server.Spells.Mysticism
         public Mobile Caster => m_Caster;
         public int Amount
         {
-            get { return m_Amount; }
+            get => m_Amount;
             set
             {
                 m_Amount = value;
@@ -299,7 +299,7 @@ namespace Server.Spells.Mysticism
             }
         }
 
-        public DateTime NextUse { get { return m_NextUse; } set { m_NextUse = value; } }
+        public DateTime NextUse { get => m_NextUse; set => m_NextUse = value; }
 
         public SpellPlagueTimer(Mobile caster, Mobile owner, TimeSpan duration)
             : base(duration)

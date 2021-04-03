@@ -28,7 +28,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -47,7 +47,7 @@ namespace Server.Items
 
     public class HairDyeGump : Gump
     {
-        private static readonly HairDyeEntry[] m_Entries = new HairDyeEntry[]
+        private static readonly HairDyeEntry[] m_Entries =
         {
             new HairDyeEntry("*****", 1602, 26),
             new HairDyeEntry("*****", 1628, 27),
@@ -80,8 +80,8 @@ namespace Server.Items
 
             for (int i = 0; i < m_Entries.Length; ++i)
             {
-                AddLabel(130, 59 + (i * 22), m_Entries[i].HueStart - 1, m_Entries[i].Name);
-                AddButton(207, 60 + (i * 22), 5224, 5224, 0, GumpButtonType.Page, i + 1);
+                AddLabel(130, 59 + i * 22, m_Entries[i].HueStart - 1, m_Entries[i].Name);
+                AddButton(207, 60 + i * 22, 5224, 5224, 0, GumpButtonType.Page, i + 1);
             }
 
             for (int i = 0; i < m_Entries.Length; ++i)
@@ -92,8 +92,8 @@ namespace Server.Items
 
                 for (int j = 0; j < e.HueCount; ++j)
                 {
-                    AddLabel(278 + ((j / 16) * 80), 52 + ((j % 16) * 17), e.HueStart + j - 1, "*****");
-                    AddRadio(260 + ((j / 16) * 80), 52 + ((j % 16) * 17), 210, 211, false, (i * 100) + j);
+                    AddLabel(278 + j / 16 * 80, 52 + j % 16 * 17, e.HueStart + j - 1, "*****");
+                    AddRadio(260 + j / 16 * 80, 52 + j % 16 * 17, 210, 211, false, i * 100 + j);
                 }
             }
         }

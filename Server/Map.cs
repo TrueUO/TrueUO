@@ -85,50 +85,53 @@ namespace Server
 
 		public static IEnumerable<StaticTile[]> SelectMultiTiles(Sector s, Rectangle2D bounds)
 		{
-			foreach (BaseMulti o in s.Multis.Where(o => o != null && !o.Deleted))
+			foreach (BaseMulti o in s.Multis)
 			{
-				MultiComponentList c = o.Components;
+                if (o != null && !o.Deleted)
+                {
+                    MultiComponentList c = o.Components;
 
-				int x, y, xo, yo;
-				StaticTile[] t, r;
+                    int x, y, xo, yo;
+                    StaticTile[] t, r;
 
-				for (x = bounds.Start.X; x < bounds.End.X; x++)
-				{
-					xo = x - (o.X + c.Min.X);
+                    for (x = bounds.Start.X; x < bounds.End.X; x++)
+                    {
+                        xo = x - (o.X + c.Min.X);
 
-					if (xo < 0 || xo >= c.Width)
-					{
-						continue;
-					}
+                        if (xo < 0 || xo >= c.Width)
+                        {
+                            continue;
+                        }
 
-					for (y = bounds.Start.Y; y < bounds.End.Y; y++)
-					{
-						yo = y - (o.Y + c.Min.Y);
+                        for (y = bounds.Start.Y; y < bounds.End.Y; y++)
+                        {
+                            yo = y - (o.Y + c.Min.Y);
 
-						if (yo < 0 || yo >= c.Height)
-						{
-							continue;
-						}
+                            if (yo < 0 || yo >= c.Height)
+                            {
+                                continue;
+                            }
 
-						t = c.Tiles[xo][yo];
+                            t = c.Tiles[xo][yo];
 
-						if (t.Length <= 0)
-						{
-							continue;
-						}
+                            if (t.Length <= 0)
+                            {
+                                continue;
+                            }
 
-						r = new StaticTile[t.Length];
+                            r = new StaticTile[t.Length];
 
-						for (int i = 0; i < t.Length; i++)
-						{
-							r[i] = t[i];
-							r[i].Z += o.Z;
-						}
+                            for (int i = 0; i < t.Length; i++)
+                            {
+                                r[i] = t[i];
+                                r[i].Z += o.Z;
+                            }
 
-						yield return r;
-					}
-				}
-			}
+                            yield return r;
+                        }
+                    }
+                }
+            }
 		}
 
 		public static Map.PooledEnumerable<NetState> GetClients(Map map, Rectangle2D bounds)

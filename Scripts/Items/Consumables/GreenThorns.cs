@@ -1,7 +1,7 @@
+using System;
 using Server.Mobiles;
 using Server.Network;
 using Server.Targeting;
-using System;
 
 namespace Server.Items
 {
@@ -53,15 +53,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         private class InternalTarget : Target
@@ -150,9 +148,9 @@ namespace Server.Items
 
     public abstract class GreenThornsEffect : Timer
     {
-        private static readonly TilesAndEffect[] m_Table = new TilesAndEffect[]
+        private static readonly TilesAndEffect[] m_Table =
         {
-            new TilesAndEffect(new int[]
+            new TilesAndEffect(new[]
             {
                 0x71, 0x7C,
                 0x82, 0xA7,
@@ -185,16 +183,16 @@ namespace Server.Items
                 0x6F3, 0x6FA,
                 0x777, 0x791,
                 0x79A, 0x7A9,
-                0x7AE, 0x7B1,
+                0x7AE, 0x7B1
             },
                 typeof(DirtGreenThornsEffect)),
-            new TilesAndEffect(new int[]
+            new TilesAndEffect(new[]
             {
                 0x9, 0x15,
                 0x150, 0x15C
             },
                 typeof(FurrowsGreenThornsEffect)),
-            new TilesAndEffect(new int[]
+            new TilesAndEffect(new[]
             {
                 0x9C4, 0x9EB,
                 0x3D65, 0x3D65,
@@ -202,10 +200,10 @@ namespace Server.Items
                 0x3DDB, 0x3DDC,
                 0x3DDE, 0x3EF0,
                 0x3FF6, 0x3FF6,
-                0x3FFC, 0x3FFE,
+                0x3FFC, 0x3FFE
             },
                 typeof(SwampGreenThornsEffect)),
-            new TilesAndEffect(new int[]
+            new TilesAndEffect(new[]
             {
                 0x10C, 0x10F,
                 0x114, 0x117,
@@ -223,7 +221,7 @@ namespace Server.Items
                 0x76D, 0x773
             },
                 typeof(SnowGreenThornsEffect)),
-            new TilesAndEffect(new int[]
+            new TilesAndEffect(new[]
             {
                 0x16, 0x3A,
                 0x44, 0x4B,
@@ -278,11 +276,11 @@ namespace Server.Items
                 bool contains = false;
 
                 for (int i = 0; !contains && i < taep.Tiles.Length; i += 2)
-                    contains = (tileID >= taep.Tiles[i] && tileID <= taep.Tiles[i + 1]);
+                    contains = tileID >= taep.Tiles[i] && tileID <= taep.Tiles[i + 1];
 
                 if (contains)
                 {
-                    GreenThornsEffect effect = (GreenThornsEffect)Activator.CreateInstance(taep.Effect, new object[] { land.Location, from.Map, from });
+                    GreenThornsEffect effect = (GreenThornsEffect)Activator.CreateInstance(taep.Effect, land.Location, from.Map, from);
                     return effect;
                 }
             }
@@ -317,7 +315,8 @@ namespace Server.Items
                     item.MoveToWorld(new Point3D(x, y, Location.Z), Map);
                     return true;
                 }
-                else if (Map.CanFit(x, y, z, 1))
+
+                if (Map.CanFit(x, y, z, 1))
                 {
                     item.MoveToWorld(new Point3D(x, y, z), Map);
                     return true;
@@ -341,7 +340,8 @@ namespace Server.Items
                     creature.Combatant = From;
                     return true;
                 }
-                else if (Map.CanSpawnMobile(x, y, z))
+
+                if (Map.CanSpawnMobile(x, y, z))
                 {
                     creature.MoveToWorld(new Point3D(x, y, z), Map);
                     creature.Combatant = From;
@@ -711,15 +711,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             Delete();
         }

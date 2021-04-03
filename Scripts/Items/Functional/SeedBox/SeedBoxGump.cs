@@ -125,6 +125,13 @@ namespace Server.Engines.Plants
                     Refresh();
                     break;
                 default:
+
+                    if (Box.RootParent is PlayerVendor pv && !pv.IsOwner(User))
+                    {
+                        User.SendLocalizedMessage(502402); // That is inaccessible.
+                        return;
+                    }
+
                     int id = info.ButtonID - 100;
 
                     if (id >= 0 && id < Box.Entries.Count)
@@ -321,8 +328,10 @@ namespace Server.Engines.Plants
                     {
                         Box.Entries.Insert(index, null);
 
-                        if (Parent is SeedBoxGump)
-                            ((SeedBoxGump)Parent).CheckPage(Entry);
+                        if (Parent is SeedBoxGump gump)
+                        {
+                            gump.CheckPage(Entry);
+                        }
 
                         RefreshParent(false);
                     }
@@ -334,8 +343,10 @@ namespace Server.Engines.Plants
 
                         Box.TrimEntries();
 
-                        if (Parent is SeedBoxGump)
-                            ((SeedBoxGump)Parent).CheckPage(Entry);
+                        if (Parent is SeedBoxGump gump)
+                        {
+                            gump.CheckPage(Entry);
+                        }
 
                         RefreshParent(false);
                     }

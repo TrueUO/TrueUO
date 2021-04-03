@@ -15,10 +15,10 @@ namespace Server.Items
         private DateTime m_DateCaught;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public Mobile Fisher { get { return m_Fisher; } set { m_Fisher = value; InvalidateProperties(); } }
+        public Mobile Fisher { get => m_Fisher; set { m_Fisher = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public DateTime DateCaught { get { return m_DateCaught; } set { m_DateCaught = value; InvalidateProperties(); } }
+        public DateTime DateCaught { get => m_DateCaught; set { m_DateCaught = value; InvalidateProperties(); } }
 
         [Constructable]
         public BigFish()

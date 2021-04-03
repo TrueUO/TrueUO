@@ -1,6 +1,5 @@
 namespace Server.Items
 {
-    [TypeAlias("Server.Items.goldcarpetAddon")]
     public class GoldCarpetAddon : BaseAddon
     {
         public override BaseAddonDeed Deed => new goldcarpetAddonDeed();
@@ -59,7 +58,6 @@ namespace Server.Items
             AddComponent(ac, 1, 0, 0);
             ac = new AddonComponent(2778);
             AddComponent(ac, 1, 1, 0);
-
         }
 
         public GoldCarpetAddon(Serial serial) : base(serial)
@@ -75,7 +73,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -102,7 +100,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

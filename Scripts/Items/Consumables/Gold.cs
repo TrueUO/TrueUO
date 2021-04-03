@@ -34,11 +34,15 @@ namespace Server.Items
         public override int GetDropSound()
         {
             if (Amount <= 1)
+            {
                 return 0x2E4;
-            else if (Amount <= 5)
+            }
+            if (Amount <= 5)
+            {
                 return 0x2E5;
-            else
-                return 0x2E6;
+            }
+
+            return 0x2E6;
         }
 
 #if NEWPARENT
@@ -59,17 +63,15 @@ namespace Server.Items
 
             Container root = parent as Container;
 
-            while (root != null && root.Parent is Container)
+            while (root != null && root.Parent is Container container)
             {
-                root = (Container)root.Parent;
+                root = container;
             }
 
             parent = root ?? parent;
 
-            if (parent is SecureTradeContainer && AccountGold.ConvertOnTrade)
+            if (parent is SecureTradeContainer trade && AccountGold.ConvertOnTrade)
             {
-                SecureTradeContainer trade = (SecureTradeContainer)parent;
-
                 if (trade.Trade.From.Container == trade)
                 {
                     tradeInfo = trade.Trade.From;
@@ -81,9 +83,9 @@ namespace Server.Items
                     owner = tradeInfo.Mobile;
                 }
             }
-            else if (parent is BankBox && AccountGold.ConvertOnBank)
+            else if (parent is BankBox box && AccountGold.ConvertOnBank)
             {
-                owner = ((BankBox)parent).Owner;
+                owner = box.Owner;
             }
 
             if (owner == null || owner.Account == null || !owner.Account.DepositGold(Amount))
@@ -125,7 +127,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         protected override void OnAmountChange(int oldValue)

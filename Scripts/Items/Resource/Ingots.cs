@@ -5,6 +5,7 @@ namespace Server.Items
         protected virtual CraftResource DefaultResource => CraftResource.Iron;
 
         private CraftResource m_Resource;
+
         public BaseIngot(CraftResource resource)
             : this(resource, 1)
         {
@@ -28,16 +29,14 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public CraftResource Resource
         {
-            get
-            {
-                return m_Resource;
-            }
+            get => m_Resource;
             set
             {
                 m_Resource = value;
                 InvalidateProperties();
             }
         }
+
         public override double DefaultWeight => 0.1;
         public override int LabelNumber
         {
@@ -49,77 +48,9 @@ namespace Server.Items
                 return 1042692;
             }
         }
+
         TextDefinition ICommodity.Description => LabelNumber;
         bool ICommodity.IsDeedable => true;
-        public override void Serialize(GenericWriter writer)
-        {
-            base.Serialize(writer);
-
-            writer.Write(1); // version
-
-            writer.Write((int)m_Resource);
-        }
-
-        public override void Deserialize(GenericReader reader)
-        {
-            base.Deserialize(reader);
-
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 2: // Reset from Resource System
-                    m_Resource = DefaultResource;
-                    reader.ReadString();
-                    break;
-                case 1:
-                    {
-                        m_Resource = (CraftResource)reader.ReadInt();
-                        break;
-                    }
-                case 0:
-                    {
-                        OreInfo info;
-
-                        switch (reader.ReadInt())
-                        {
-                            case 0:
-                                info = OreInfo.Iron;
-                                break;
-                            case 1:
-                                info = OreInfo.DullCopper;
-                                break;
-                            case 2:
-                                info = OreInfo.ShadowIron;
-                                break;
-                            case 3:
-                                info = OreInfo.Copper;
-                                break;
-                            case 4:
-                                info = OreInfo.Bronze;
-                                break;
-                            case 5:
-                                info = OreInfo.Gold;
-                                break;
-                            case 6:
-                                info = OreInfo.Agapite;
-                                break;
-                            case 7:
-                                info = OreInfo.Verite;
-                                break;
-                            case 8:
-                                info = OreInfo.Valorite;
-                                break;
-                            default:
-                                info = null;
-                                break;
-                        }
-
-                        m_Resource = CraftResources.GetFromOreInfo(info);
-                        break;
-                    }
-            }
-        }
 
         public override void AddNameProperty(ObjectPropertyList list)
         {
@@ -142,6 +73,22 @@ namespace Server.Items
                 else
                     list.Add(CraftResources.GetName(m_Resource));
             }
+        }
+
+        public override void Serialize(GenericWriter writer)
+        {
+            base.Serialize(writer);
+            writer.Write(1); // version
+
+            writer.Write((int)m_Resource);
+        }
+
+        public override void Deserialize(GenericReader reader)
+        {
+            base.Deserialize(reader);
+            reader.ReadInt();
+
+            m_Resource = (CraftResource)reader.ReadInt();
         }
     }
 
@@ -168,15 +115,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -205,15 +150,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -242,15 +185,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -279,15 +220,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -316,15 +255,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -353,15 +290,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -390,15 +325,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -427,15 +360,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -464,15 +395,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

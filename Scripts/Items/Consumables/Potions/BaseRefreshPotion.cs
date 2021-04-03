@@ -13,39 +13,27 @@ namespace Server.Items
         }
 
         public abstract double Refresh { get; }
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         public override void Drink(Mobile from)
         {
-            if (from.Stam < from.StamMax)
+            if (!PropertyEffect.VictimIsUnderEffects<BoneBreakerContext>(from))
             {
-                if (!PropertyEffect.VictimIsUnderEffects<BoneBreakerContext>(from))
-                {
-                    from.Stam += Scale(from, (int)(Refresh * from.StamMax));
+                from.Stam += Scale(from, (int) (Refresh * from.StamMax));
 
-                    PlayDrinkEffect(from);
-                    Consume();
-                }
-                else
-                {
-                    // TODO: Message?
-                }
-            }
-            else
-            {
-                from.SendMessage("You decide against drinking this potion, as you are already at full stamina.");
+                PlayDrinkEffect(from);
+                Consume();
             }
         }
     }

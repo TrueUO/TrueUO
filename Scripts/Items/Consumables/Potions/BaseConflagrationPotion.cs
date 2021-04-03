@@ -26,7 +26,7 @@ namespace Server.Items
 
         public override void Drink(Mobile from)
         {
-            if (from.Paralyzed || from.Frozen || (from.Spell != null && from.Spell.IsCasting))
+            if (from.Paralyzed || from.Frozen || from.Spell != null && from.Spell.IsCasting)
             {
                 from.SendLocalizedMessage(1062725); // You can not use that potion while paralyzed.
                 return;
@@ -56,15 +56,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         private readonly List<Mobile> m_Users = new List<Mobile>();
@@ -133,8 +131,8 @@ namespace Server.Items
 
         private static void EndDelay_Callback(object obj)
         {
-            if (obj is Mobile)
-                EndDelay((Mobile)obj);
+            if (obj is Mobile mobile)
+                EndDelay(mobile);
         }
 
         public static void EndDelay(Mobile m)
@@ -184,8 +182,8 @@ namespace Server.Items
 
                 IEntity to;
 
-                if (p is Mobile)
-                    to = (Mobile)p;
+                if (p is Mobile mobile)
+                    to = mobile;
                 else
                     to = new Entity(Serial.Zero, new Point3D(p), from.Map);
 
@@ -262,7 +260,6 @@ namespace Server.Items
             public override void Serialize(GenericWriter writer)
             {
                 base.Serialize(writer);
-
                 writer.Write(0); // version
 
                 writer.Write(m_From);
@@ -274,8 +271,7 @@ namespace Server.Items
             public override void Deserialize(GenericReader reader)
             {
                 base.Deserialize(reader);
-
-                int version = reader.ReadInt();
+                reader.ReadInt();
 
                 m_From = reader.ReadMobile();
                 m_End = reader.ReadDateTime();
@@ -341,10 +337,9 @@ namespace Server.Items
                     {
                         Mobile m = mobiles[i];
 
-                        if ((m.Z + 16) > m_Item.Z && (m_Item.Z + 12) > m.Z && m != from && SpellHelper.ValidIndirectTarget(from, m) && from.CanBeHarmful(m, false))
+                        if (m.Z + 16 > m_Item.Z && m_Item.Z + 12 > m.Z && m != from && SpellHelper.ValidIndirectTarget(from, m) && from.CanBeHarmful(m, false))
                         {
-                            if (from != null)
-                                from.DoHarmful(m);
+                            from.DoHarmful(m);
 
                             AOS.Damage(m, from, m_Item.GetDamage(), 0, 100, 0, 0, 0);
                             m.PlaySound(0x208);

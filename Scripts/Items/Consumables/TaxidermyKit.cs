@@ -23,15 +23,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -52,7 +50,7 @@ namespace Server.Items
         }
 
         public static TrophyInfo[] TrophyInfos => m_Table;
-        private static readonly TrophyInfo[] m_Table = new TrophyInfo[]
+        private static readonly TrophyInfo[] m_Table =
         {
             new TrophyInfo( typeof( BrownBear ),      0x1E60,       1041093, 1041107 ),
             new TrophyInfo( typeof( GreatHart ),      0x1E61,       1041095, 1041109 ),
@@ -99,7 +97,7 @@ namespace Server.Items
             new TrophyInfo( typeof( DungeonPike ),         31,      1116143, 1116204 ),
             new TrophyInfo( typeof( GoldenTuna ),          32,      1116137, 1116198 ),
             new TrophyInfo( typeof( RainbowFish ),         33,      1116144, 1116205 ),
-            new TrophyInfo( typeof( ZombieFish ),          34,      1116136, 1116197 ),
+            new TrophyInfo( typeof( ZombieFish ),          34,      1116136, 1116197 )
         };
 
         public class TrophyInfo
@@ -141,7 +139,7 @@ namespace Server.Items
                 {
                     from.SendLocalizedMessage(1042600); // That is not a corpse!
                 }
-                else if (targeted is Corpse && ((Corpse)targeted).VisitedByTaxidermist)
+                else if (targeted is Corpse corpse && corpse.VisitedByTaxidermist)
                 {
                     from.SendLocalizedMessage(1042596); // That corpse seems to have been visited by a taxidermist already.
                 }
@@ -154,10 +152,8 @@ namespace Server.Items
                     from.SendLocalizedMessage(1042603); // You would not understand how to use the kit.
                 }
                 #region Huntmasters Challenge
-                else if (targeted is HuntingPermit)
+                else if (targeted is HuntingPermit lic)
                 {
-                    HuntingPermit lic = targeted as HuntingPermit;
-
                     if (from.Backpack == null || !lic.IsChildOf(from.Backpack))
                         from.SendLocalizedMessage(1042001); // That must be in your pack for you to use it.
                     else if (!lic.CanUseTaxidermyOn)
@@ -189,7 +185,6 @@ namespace Server.Items
                     else
                     {
                         from.SendLocalizedMessage(1042598); // You do not have enough boards.
-                        return;
                     }
                 }
                 #endregion
@@ -197,8 +192,8 @@ namespace Server.Items
                 {
                     object obj = targeted;
 
-                    if (obj is Corpse)
-                        obj = ((Corpse)obj).Owner;
+                    if (obj is Corpse oCorpse)
+                        obj = oCorpse.Owner;
 
                     if (obj != null)
                     {
@@ -217,36 +212,30 @@ namespace Server.Items
                                     int weight = 0;
                                     DateTime dateCaught = DateTime.MinValue;
 
-                                    if (targeted is BigFish)
+                                    if (targeted is BigFish bFish)
                                     {
-                                        BigFish fish = targeted as BigFish;
+                                        hunter = bFish.Fisher;
+                                        weight = (int)bFish.Weight;
+                                        dateCaught = bFish.DateCaught;
 
-                                        hunter = fish.Fisher;
-                                        weight = (int)fish.Weight;
-                                        dateCaught = fish.DateCaught;
-
-                                        fish.Consume();
+                                        bFish.Consume();
                                     }
                                     #region High Seas
-                                    else if (targeted is RareFish)
+                                    else if (targeted is RareFish rFish)
                                     {
-                                        RareFish fish = targeted as RareFish;
-
-                                        hunter = fish.Fisher;
-                                        weight = (int)fish.Weight;
-                                        dateCaught = fish.DateCaught;
+                                        hunter = rFish.Fisher;
+                                        weight = (int)rFish.Weight;
+                                        dateCaught = rFish.DateCaught;
 
                                         from.AddToBackpack(new FishTrophyDeed(weight, hunter, dateCaught, m_Table[i].DeedNumber, m_Table[i].AddonNumber, m_Table[i].NorthID));
 
-                                        fish.Delete();
+                                        rFish.Delete();
                                         m_Kit.Delete();
                                         return;
                                     }
 
-                                    else if (targeted is RareCrabAndLobster)
+                                    else if (targeted is RareCrabAndLobster fish)
                                     {
-                                        RareCrabAndLobster fish = targeted as RareCrabAndLobster;
-
                                         hunter = fish.Fisher;
                                         weight = (int)fish.Weight;
                                         dateCaught = fish.DateCaught;
@@ -267,17 +256,15 @@ namespace Server.Items
 
                                     from.AddToBackpack(new TrophyDeed(m_Table[i], hunter, weight));
 
-                                    if (targeted is Corpse)
-                                        ((Corpse)targeted).VisitedByTaxidermist = true;
+                                    if (targeted is Corpse tCorpse)
+                                        tCorpse.VisitedByTaxidermist = true;
 
                                     m_Kit.Delete();
                                     return;
                                 }
-                                else
-                                {
-                                    from.SendLocalizedMessage(1042598); // You do not have enough boards.
-                                    return;
-                                }
+
+                                from.SendLocalizedMessage(1042598); // You do not have enough boards.
+                                return;
                             }
                         }
                     }
@@ -301,22 +288,22 @@ namespace Server.Items
         private int m_AnimalWeight;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int WestID { get { return m_WestID; } set { m_WestID = value; } }
+        public int WestID { get => m_WestID; set => m_WestID = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int NorthID { get { return m_NorthID; } set { m_NorthID = value; } }
+        public int NorthID { get => m_NorthID; set => m_NorthID = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int DeedNumber { get { return m_DeedNumber; } set { m_DeedNumber = value; } }
+        public int DeedNumber { get => m_DeedNumber; set => m_DeedNumber = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int AddonNumber { get { return m_AddonNumber; } set { m_AddonNumber = value; InvalidateProperties(); } }
+        public int AddonNumber { get => m_AddonNumber; set { m_AddonNumber = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public Mobile Hunter { get { return m_Hunter; } set { m_Hunter = value; InvalidateProperties(); } }
+        public Mobile Hunter { get => m_Hunter; set { m_Hunter = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int AnimalWeight { get { return m_AnimalWeight; } set { m_AnimalWeight = value; InvalidateProperties(); } }
+        public int AnimalWeight { get => m_AnimalWeight; set { m_AnimalWeight = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public DateTime DateCaught { get; set; }
@@ -372,9 +359,11 @@ namespace Server.Items
                 return false;
 
             if (ItemID == m_NorthID)
+            {
                 return BaseAddon.IsWall(p.X, p.Y - 1, p.Z, map); // North wall
-            else
-                return BaseAddon.IsWall(p.X - 1, p.Y, p.Z, map); // West wall
+            }
+
+            return BaseAddon.IsWall(p.X - 1, p.Y, p.Z, map); // West wall
         }
 
         public override void Serialize(GenericWriter writer)
@@ -435,9 +424,9 @@ namespace Server.Items
             {
                 Item deed = Deed;
 
-                if (Parent is Item)
+                if (Parent is Item item)
                 {
-                    ((Item)Parent).AddItem(deed);
+                    item.AddItem(deed);
                     deed.Location = Location;
                 }
                 else
@@ -487,22 +476,22 @@ namespace Server.Items
         private int m_AnimalWeight;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int WestID { get { return m_WestID; } set { m_WestID = value; } }
+        public int WestID { get => m_WestID; set => m_WestID = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int NorthID { get { return m_NorthID; } set { m_NorthID = value; } }
+        public int NorthID { get => m_NorthID; set => m_NorthID = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int DeedNumber { get { return m_DeedNumber; } set { m_DeedNumber = value; InvalidateProperties(); } }
+        public int DeedNumber { get => m_DeedNumber; set { m_DeedNumber = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int AddonNumber { get { return m_AddonNumber; } set { m_AddonNumber = value; } }
+        public int AddonNumber { get => m_AddonNumber; set => m_AddonNumber = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public Mobile Hunter { get { return m_Hunter; } set { m_Hunter = value; InvalidateProperties(); } }
+        public Mobile Hunter { get => m_Hunter; set { m_Hunter = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int AnimalWeight { get { return m_AnimalWeight; } set { m_AnimalWeight = value; InvalidateProperties(); } }
+        public int AnimalWeight { get => m_AnimalWeight; set { m_AnimalWeight = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public DateTime DateCaught { get; set; }

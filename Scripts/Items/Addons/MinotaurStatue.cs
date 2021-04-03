@@ -16,7 +16,6 @@ namespace Server.Items
         private bool m_IsRewardItem;
         [Constructable]
         public MinotaurStatue(MinotaurStatueType type)
-            : base()
         {
             switch (type)
             {
@@ -59,23 +58,21 @@ namespace Server.Items
                 return deed;
             }
         }
+
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsRewardItem
         {
-            get
-            {
-                return m_IsRewardItem;
-            }
+            get => m_IsRewardItem;
             set
             {
                 m_IsRewardItem = value;
                 InvalidateProperties();
             }
         }
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
 
             writer.Write(m_IsRewardItem);
@@ -84,8 +81,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
 
             m_IsRewardItem = reader.ReadBool();
         }
@@ -95,9 +91,9 @@ namespace Server.Items
     {
         private MinotaurStatueType m_StatueType;
         private bool m_IsRewardItem;
+
         [Constructable]
         public MinotaurStatueDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }
@@ -108,6 +104,7 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1080409;// Minotaur Statue Deed
+
         public override BaseAddon Addon
         {
             get
@@ -120,19 +117,18 @@ namespace Server.Items
                 return addon;
             }
         }
+
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsRewardItem
         {
-            get
-            {
-                return m_IsRewardItem;
-            }
+            get => m_IsRewardItem;
             set
             {
                 m_IsRewardItem = value;
                 InvalidateProperties();
             }
         }
+
         public override void OnDoubleClick(Mobile from)
         {
             if (m_IsRewardItem && !RewardSystem.CheckIsUsableBy(from, this, null))
@@ -158,7 +154,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
 
             writer.Write(m_IsRewardItem);
@@ -167,8 +162,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
 
             m_IsRewardItem = reader.ReadBool();
         }

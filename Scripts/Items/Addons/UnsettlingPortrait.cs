@@ -59,7 +59,6 @@ namespace Server.Items
     {
         [Constructable]
         public UnsettlingPortraitAddon()
-            : base()
         {
             AddComponent(new UnsettlingPortraitComponent(), 0, 0, 0);
         }
@@ -89,7 +88,6 @@ namespace Server.Items
     {
         [Constructable]
         public UnsettlingPortraitDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

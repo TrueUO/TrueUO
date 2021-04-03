@@ -23,16 +23,17 @@ namespace Server.Items
 
         public static bool CheckDamage(Mobile from, Server.DamageType type)
         {
-            if (from is BaseCreature)
+            if (from is BaseCreature creature)
             {
-                if (KhaldunTastyTreat.UnderInfluence((BaseCreature)from))
+                if (KhaldunTastyTreat.UnderInfluence(creature))
                 {
                     return true;
                 }
 
                 return false;
             }
-            else if (from.Player)
+
+            if (from.Player)
             {
                 Item damager;
 
@@ -75,11 +76,11 @@ namespace Server.Items
             return TreasuresOfKhaldunEvent.Instance.Running && item is ICaddelliteTool && SpellHelper.IsAnyT2A(from.Map, from.Location);
         }
 
-        public static void OnHarvest(Mobile from, Item tool, HarvestSystem system, Item resource)
+        public static void OnHarvest(Mobile from, Item tool, HarvestSystem system, Item resource, bool isCaddelliteRes = true)
         {
             if (IsCaddellite(from, tool))
             {
-                if (resource != null)
+                if (resource != null && isCaddelliteRes)
                 {
                     resource.AttachSocket(new Caddellite());
                 }

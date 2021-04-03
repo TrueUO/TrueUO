@@ -26,15 +26,18 @@ namespace Server.Engines.Distillation
             Liquor liquor = m_Context.LastLiquor;
 
             if (liquor == Liquor.None)
+            {
                 liquor = DistillationSystem.GetFirstLiquor(group);
+            }
 
             m_Def = DistillationSystem.GetDefinition(liquor, group);
 
             if (m_Def == null)
+            {
                 return;
+            }
 
-            if (m_Def.Liquor != liquor)
-                liquor = m_Def.Liquor;
+            liquor = m_Def.Liquor;
 
             AddBackground(0, 0, 500, 500, 5054);
             AddImageTiled(10, 10, 480, 30, 2624);
@@ -96,14 +99,16 @@ namespace Server.Engines.Distillation
 
                     continue;
                 }
-                else
+
+                int total = strong ? amt * 2 : amt;
+                int amount = DistillationTarget.GetAmount(from, type, liquor);
+
+                if (amount > total)
                 {
-                    int total = strong ? amt * 2 : amt;
-                    int amount = DistillationTarget.GetAmount(from, type, liquor);
-                    if (amount > total)
-                        amount = total;
-                    AddHtmlLocalized(295, y, 200, 20, 1150733, string.Format("#{0}\t{1}", m_Def.Labels[i], string.Format("{0}/{1}", amount.ToString(), total.ToString())), LabelColor, false, false); // ~1_NAME~ : ~2_NUMBER~
+                    amount = total;
                 }
+
+                AddHtmlLocalized(295, y, 200, 20, 1150733, string.Format("#{0}\t{1}", m_Def.Labels[i], string.Format("{0}/{1}", amount.ToString(), total.ToString())), LabelColor, false, false); // ~1_NAME~ : ~2_NUMBER~
 
                 y += 26;
             }
@@ -143,16 +148,10 @@ namespace Server.Engines.Distillation
                     m_Context.LastGroup = Group.Other;
                     break;
                 case 4: // Distillation Strength
-                    if (m_Context.MakeStrong)
-                        m_Context.MakeStrong = false;
-                    else
-                        m_Context.MakeStrong = true;
+                    m_Context.MakeStrong = !m_Context.MakeStrong;
                     break;
                 case 5: // Mark Option
-                    if (m_Context.Mark)
-                        m_Context.Mark = false;
-                    else
-                        m_Context.Mark = true;
+                    m_Context.Mark = !m_Context.Mark;
                     break;
                 case 6: // Label
                     from.Prompt = new LabelPrompt(m_Context);
@@ -207,15 +206,22 @@ namespace Server.Engines.Distillation
 
             public override void OnResponse(Mobile from, string text)
             {
-                if (text == null || text.Length == 0)
+                if (string.IsNullOrEmpty(text))
+                {
                     m_Context.Label = null;
-                else if (text != null)
+                }
+                else
                 {
                     text = text.Trim();
+
                     if (text.Length > 15 || !Guilds.BaseGuildGump.CheckProfanity(text))
-                        from.SendMessage("That label is unacceptable. Please try again.");
+                    {
+                        from.SendLocalizedMessage(1150315); // That text is unacceptable.
+                    }
                     else
+                    {
                         m_Context.Label = text;
+                    }
                 }
 
                 from.SendGump(new DistillationGump(from));
@@ -244,21 +250,23 @@ namespace Server.Engines.Distillation
 
             protected override void OnTarget(Mobile from, object targeted)
             {
-                if (targeted is LiquorBarrel)
+                if (targeted is LiquorBarrel barrel)
                 {
-                    LiquorBarrel barrel = targeted as LiquorBarrel;
-
                     if (barrel.IsChildOf(from.Backpack))
                     {
                         if (barrel.IsMature)
+                        {
                             from.SendLocalizedMessage(1150811); // This liquor barrel already contains liquor.
+                        }
                         else if (!barrel.IsEmpty)
+                        {
                             from.SendLocalizedMessage(1150802); // You realize that the liquor is on the process of maturation so you leave it alone.
+                        }
                         else
                         {
                             double perc = m_Context.MakeStrong ? 2 : 1;
 
-                            if (HasTotal(from, perc) && barrel != null)
+                            if (HasTotal(from, perc))
                             {
                                 double cooking = from.Skills[SkillName.Cooking].Value;
                                 double alchemy = from.Skills[SkillName.Alchemy].Value / 2;
@@ -269,10 +277,12 @@ namespace Server.Engines.Distillation
                                     Yeast yeast = m_Context.SelectedYeast[i];
 
                                     if (yeast != null)
+                                    {
                                         resist += yeast.BacterialResistance;
+                                    }
                                 }
 
-                                int chance = (int)((cooking + alchemy + (resist * 12)) / 2.5);
+                                int chance = (int)((cooking + alchemy + resist * 12) / 2.5);
 
                                 if (chance > Utility.Random(100))
                                 {
@@ -337,7 +347,8 @@ namespace Server.Engines.Distillation
 
                     return amount;
                 }
-                else if (type == typeof(PewterBowlOfCorn))
+
+                if (type == typeof(PewterBowlOfCorn))
                 {
                     return pack.GetAmount(type) + pack.GetAmount(typeof(WoodenBowlOfCorn));
                 }
@@ -456,10 +467,8 @@ namespace Server.Engines.Distillation
 
             protected override void OnTarget(Mobile from, object targeted)
             {
-                if (targeted is Yeast)
+                if (targeted is Yeast yeast)
                 {
-                    Yeast yeast = targeted as Yeast;
-
                     if (yeast.IsChildOf(from.Backpack))
                     {
                         if (!m_Context.YeastInUse(yeast))

@@ -1,6 +1,5 @@
 using Server.Items;
 using Server.Spells;
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,18 +11,15 @@ namespace Server.Mobiles
         Astaroth,
         Faulinei,
         Nosfentor
-    };
+    }
 
     [CorpseName("a shadowlord corpse")]
     public class Shadowlord : BasePeerless
     {
-        //private static readonly List<Shadowlord> m_Instances = new List<Shadowlord>();
-        //public static List<Shadowlord> Instances => m_Instances;
-
         private ShadowlordType m_Type;
         public virtual Type[] ArtifactDrops => _ArtifactTypes;
 
-        private readonly Type[] _ArtifactTypes = new Type[]
+        private readonly Type[] _ArtifactTypes =
         {
             typeof(Abhorrence),         typeof(CaptainJohnesBlade),             typeof(Craven),
             typeof(Equivocation),       typeof(GargishCaptainJohnesBlade),      typeof(GargishEquivocation),
@@ -33,10 +29,7 @@ namespace Server.Mobiles
         [CommandProperty(AccessLevel.GameMaster)]
         public ShadowlordType Type
         {
-            get
-            {
-                return m_Type;
-            }
+            get => m_Type;
             set
             {
                 m_Type = value;
@@ -44,7 +37,7 @@ namespace Server.Mobiles
             }
         }
 
-        public List<DarkWisp> Wisps { get; set; } = new List<DarkWisp>();
+        public List<DarkWisp> Wisps { get; } = new List<DarkWisp>();
 
         [Constructable]
         public Shadowlord()
@@ -96,24 +89,16 @@ namespace Server.Mobiles
             SetSpecialAbility(SpecialAbility.LifeDrain);
         }
 
+        public Shadowlord(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);
 
             list.Add("#{0}", 1154453 + (int)m_Type); // Shadowlord of ..
-        }
-
-        public Shadowlord(Serial serial)
-            : base(serial)
-        {
-            //m_Instances.Add(this);
-        }
-
-        public override void OnAfterDelete()
-        {
-            //m_Instances.Remove(this);
-
-            base.OnAfterDelete();
         }
 
         public override bool AlwaysMurderer => true;
@@ -174,25 +159,28 @@ namespace Server.Mobiles
         {
             List<DamageStore> rights = GetLootingRights();
 
-            foreach (DamageStore ds in rights.Where(s => s.m_HasRight))
+            foreach (DamageStore ds in rights)
             {
-                int luck = ds.m_Mobile is PlayerMobile ? ((PlayerMobile)ds.m_Mobile).RealLuck : ds.m_Mobile.Luck;
-                int chance = 75 + (luck / 15);
-
-                if (chance > Utility.Random(5000))
+                if (ds.m_HasRight)
                 {
-                    Mobile m = ds.m_Mobile;
-                    Item artifact = Loot.Construct(ArtifactDrops[Utility.Random(ArtifactDrops.Length)]);
+                    int luck = ds.m_Mobile is PlayerMobile mobile ? mobile.RealLuck : ds.m_Mobile.Luck;
+                    int chance = 75 + (luck / 15);
 
-                    if (artifact != null)
+                    if (chance > Utility.Random(5000))
                     {
-                        if (m.Backpack == null || !m.Backpack.TryDropItem(m, artifact, false))
+                        Mobile m = ds.m_Mobile;
+                        Item artifact = Loot.Construct(ArtifactDrops[Utility.Random(ArtifactDrops.Length)]);
+
+                        if (artifact != null)
                         {
-                            m.BankBox.DropItem(artifact);
-                            m.SendMessage("For your valor in combating the fallen beast, a special reward has been placed in your bankbox.");
+                            if (m.Backpack == null || !m.Backpack.TryDropItem(m, artifact, false))
+                            {
+                                m.BankBox.DropItem(artifact);
+                                m.SendMessage("For your valor in combating the fallen beast, a special reward has been placed in your bankbox.");
+                            }
+                            else
+                                m.SendLocalizedMessage(1062317); // For your valor in combating the fallen beast, a special reward has been bestowed on you.
                         }
-                        else
-                            m.SendLocalizedMessage(1062317); // For your valor in combating the fallen beast, a special reward has been bestowed on you.
                     }
                 }
             }
@@ -212,7 +200,7 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             m_Type = (ShadowlordType)reader.ReadInt();
         }

@@ -1,4 +1,4 @@
-﻿using Server.Gumps;
+using Server.Gumps;
 using Server.Mobiles;
 using Server.Network;
 
@@ -29,18 +29,10 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1076030;// A Contract for a Personal Attendant
+
         [CommandProperty(AccessLevel.GameMaster)]
-        public Mobile Owner
-        {
-            get
-            {
-                return m_Owner;
-            }
-            set
-            {
-                m_Owner = value;
-            }
-        }
+        public Mobile Owner { get => m_Owner; set => m_Owner = value; }
+
         public override void OnDoubleClick(Mobile from)
         {
             if (IsChildOf(from.Backpack))
@@ -73,7 +65,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
 
             writer.Write(m_Owner);
@@ -82,8 +73,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
 
             m_Owner = reader.ReadMobile();
         }
@@ -171,7 +161,7 @@ namespace Server.Items
                 {
                     PersonalAttendant.AddAttendant(m, attendant);
 
-                    attendant.BindedToPlayer = (m_Deed.Owner != null);
+                    attendant.BindedToPlayer = m_Deed.Owner != null;
                     attendant.SetControlMaster(m);
                     attendant.ControlOrder = OrderType.Follow;
                     attendant.ControlTarget = m;

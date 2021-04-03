@@ -19,21 +19,19 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         public bool DoAgility(Mobile from)
         {
-            // TODO: Verify scaled; is it offset, duration, or both?
             int scale = Scale(from, DexOffset);
+
             if (Spells.SpellHelper.AddStatOffset(from, StatType.Dex, scale, Duration))
             {
                 from.FixedEffect(0x375A, 10, 15);

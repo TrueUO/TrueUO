@@ -27,7 +27,7 @@ namespace Server.Items
 
         public override void Drink(Mobile from)
         {
-            if (from.Paralyzed || from.Frozen || (from.Spell != null && from.Spell.IsCasting))
+            if (from.Paralyzed || from.Frozen || from.Spell != null && from.Spell.IsCasting)
             {
                 from.SendLocalizedMessage(1062725); // You can not use that potion while paralyzed.
                 return;
@@ -63,7 +63,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         private readonly List<Mobile> m_Users = new List<Mobile>();
@@ -157,8 +157,8 @@ namespace Server.Items
 
         private static void EndDelay_Callback(object obj)
         {
-            if (obj is Mobile)
-                EndDelay((Mobile)obj);
+            if (obj is Mobile mobile)
+                EndDelay(mobile);
         }
 
         public static void EndDelay(Mobile m)
@@ -187,14 +187,13 @@ namespace Server.Items
                 if (Potion.Deleted || Potion.Map == Map.Internal)
                     return;
 
-                if (targeted is Mobile)
+                if (targeted is Mobile m)
                 {
-                    Mobile m = targeted as Mobile;
-
-                    if (m == null || from.Map == null || !from.CanBeHarmful(m))
+                    if (from.Map == null || !from.CanBeHarmful(m))
+                    {
                         return;
+                    }
 
-                    // Add delay
                     AddDelay(from);
 
                     from.RevealingAction();

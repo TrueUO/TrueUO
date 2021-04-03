@@ -13,10 +13,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public CraftResource Resource
         {
-            get
-            {
-                return m_Resource;
-            }
+            get => m_Resource;
             set
             {
                 m_Resource = value;
@@ -29,7 +26,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1); // version
 
             writer.Write((int)m_Resource);
@@ -38,62 +34,9 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 2: // Reset from Resource System
-                    m_Resource = DefaultResource;
-                    reader.ReadString();
-                    break;
-                case 1:
-                    {
-                        m_Resource = (CraftResource)reader.ReadInt();
-                        break;
-                    }
-                case 0:
-                    {
-                        OreInfo info;
-
-                        switch (reader.ReadInt())
-                        {
-                            case 0:
-                                info = OreInfo.Iron;
-                                break;
-                            case 1:
-                                info = OreInfo.DullCopper;
-                                break;
-                            case 2:
-                                info = OreInfo.ShadowIron;
-                                break;
-                            case 3:
-                                info = OreInfo.Copper;
-                                break;
-                            case 4:
-                                info = OreInfo.Bronze;
-                                break;
-                            case 5:
-                                info = OreInfo.Gold;
-                                break;
-                            case 6:
-                                info = OreInfo.Agapite;
-                                break;
-                            case 7:
-                                info = OreInfo.Verite;
-                                break;
-                            case 8:
-                                info = OreInfo.Valorite;
-                                break;
-                            default:
-                                info = null;
-                                break;
-                        }
-
-                        m_Resource = CraftResources.GetFromOreInfo(info);
-                        break;
-                    }
-            }
+            m_Resource = (CraftResource)reader.ReadInt();
         }
 
         private static int RandomSize()
@@ -101,13 +44,19 @@ namespace Server.Items
             double rand = Utility.RandomDouble();
 
             if (rand < 0.12)
+            {
                 return 0x19B7;
-            else if (rand < 0.18)
+            }
+            if (rand < 0.18)
+            {
                 return 0x19B8;
-            else if (rand < 0.25)
+            }
+            if (rand < 0.25)
+            {
                 return 0x19BA;
-            else
-                return 0x19B9;
+            }
+
+            return 0x19B9;
         }
 
         public BaseOre(CraftResource resource)
@@ -196,7 +145,7 @@ namespace Server.Items
 
             private bool IsForge(object obj)
             {
-                if (obj is Mobile && ((Mobile)obj).IsDeadBondedPet)
+                if (obj is Mobile mobile && mobile.IsDeadBondedPet)
                     return false;
 
                 if (obj.GetType().IsDefined(typeof(ForgeAttribute), false))
@@ -204,12 +153,12 @@ namespace Server.Items
 
                 int itemID = 0;
 
-                if (obj is Item)
-                    itemID = ((Item)obj).ItemID;
-                else if (obj is StaticTarget)
-                    itemID = ((StaticTarget)obj).ItemID;
+                if (obj is Item item)
+                    itemID = item.ItemID;
+                else if (obj is StaticTarget target)
+                    itemID = target.ItemID;
 
-                return (itemID == 4017 || (itemID >= 6522 && itemID <= 6569));
+                return itemID == 4017 || itemID >= 6522 && itemID <= 6569;
             }
 
             protected override void OnTarget(Mobile from, object targeted)
@@ -224,21 +173,21 @@ namespace Server.Items
                 }
 
                 #region Combine Ore
-                if (targeted is BaseOre)
+                if (targeted is BaseOre ore)
                 {
-                    BaseOre ore = (BaseOre)targeted;
-
                     if (!ore.Movable)
                     {
                         return;
                     }
-                    else if (m_Ore == ore)
+
+                    if (m_Ore == ore)
                     {
                         from.SendLocalizedMessage(501972); // Select another pile or ore with which to combine 
                         from.Target = new InternalTarget(ore);
                         return;
                     }
-                    else if (ore.Resource != m_Ore.Resource)
+
+                    if (ore.Resource != m_Ore.Resource)
                     {
                         from.SendLocalizedMessage(501979); // You cannot combine ores of different metals.
                         return;
@@ -284,12 +233,13 @@ namespace Server.Items
                         }
                     }
 
-                    if ((ore.ItemID == 0x19B9 && worth > 120000) || ((ore.ItemID == 0x19B8 || ore.ItemID == 0x19BA) && worth > 60000) || (ore.ItemID == 0x19B7 && worth > 30000))
+                    if (ore.ItemID == 0x19B9 && worth > 120000 || (ore.ItemID == 0x19B8 || ore.ItemID == 0x19BA) && worth > 60000 || ore.ItemID == 0x19B7 && worth > 30000)
                     {
                         from.SendLocalizedMessage(1062844); // There is too much ore to combine.
                         return;
                     }
-                    else if (ore.RootParent is Mobile && (plusWeight + ((Mobile)ore.RootParent).Backpack.TotalWeight) > ((Mobile)ore.RootParent).Backpack.MaxWeight)
+
+                    if (ore.RootParent is Mobile mobile && plusWeight + mobile.Backpack.TotalWeight > mobile.Backpack.MaxWeight)
                     {
                         from.SendLocalizedMessage(501978); // The weight is too great to combine in a container.
                         return;
@@ -313,12 +263,13 @@ namespace Server.Items
                 {
                     double difficulty;
 
-                    #region Void Pool Rewards
                     bool talisman = false;
                     SmeltersTalisman t = from.FindItemOnLayer(Layer.Talisman) as SmeltersTalisman;
+
                     if (t != null && t.Resource == m_Ore.Resource)
+                    {
                         talisman = true;
-                    #endregion
+                    }
 
                     switch (m_Ore.Resource)
                     {
@@ -407,9 +358,8 @@ namespace Server.Items
 
                             m_Ore.Consume(toConsume);
                             from.AddToBackpack(ingot);
-                            //from.PlaySound( 0x57 );
 
-                            if (talisman && t != null)
+                            if (talisman)
                             {
                                 t.UsesRemaining--;
                                 from.SendLocalizedMessage(1152620); // The magic of your talisman guides your hands as you purify the metal. Success is ensured!
@@ -422,10 +372,7 @@ namespace Server.Items
                     {
                         if (m_Ore.Amount < 2)
                         {
-                            if (m_Ore.ItemID == 0x19B9)
-                                m_Ore.ItemID = 0x19B8;
-                            else
-                                m_Ore.ItemID = 0x19B7;
+                            m_Ore.ItemID = m_Ore.ItemID == 0x19B9 ? 0x19B8 : 0x19B7;
                         }
                         else
                         {
@@ -468,15 +415,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         public override BaseIngot GetIngot()
@@ -509,15 +454,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         public override BaseIngot GetIngot()
@@ -550,15 +493,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         public override BaseIngot GetIngot()
@@ -591,15 +532,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         public override BaseIngot GetIngot()
@@ -632,15 +571,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         public override BaseIngot GetIngot()
@@ -673,15 +610,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         public override BaseIngot GetIngot()
@@ -714,15 +649,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         public override BaseIngot GetIngot()
@@ -755,15 +688,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         public override BaseIngot GetIngot()
@@ -796,15 +727,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         public override BaseIngot GetIngot()

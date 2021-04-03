@@ -94,7 +94,6 @@ namespace Server.Items
 
         [Constructable]
         public PicnicBlanketDeed()
-            : base()
         {
         }
 

@@ -29,11 +29,11 @@ namespace Server.Items
             {
                 if (MasteryInfo.HasLearned(from, Skill, Volume))
                 {
-                    from.SendLocalizedMessage(1155884, string.Format("#{0}", MasteryInfo.GetLocalization(Skill))); // You are already proficient in this level of ~1_MasterySkill~
+                    from.SendLocalizedMessage(1155884, $"#{MasteryInfo.GetLocalization(Skill)}"); // You are already proficient in this level of ~1_MasterySkill~
                 }
                 else if (MasteryInfo.LearnMastery(from, Skill, Volume))
                 {
-                    from.SendLocalizedMessage(1155885, string.Format("#{0}", MasteryInfo.GetLocalization(Skill))); // You have increased your proficiency in ~1_SkillMastery~!
+                    from.SendLocalizedMessage(1155885, $"#{MasteryInfo.GetLocalization(Skill)}"); // You have increased your proficiency in ~1_SkillMastery~!
 
                     Effects.SendLocationParticles(EffectItem.Create(from.Location, from.Map, EffectItem.DefaultDuration), 0, 0, 0, 0, 0, 5060, 0);
                     Effects.PlaySound(from.Location, from.Map, 0x243);
@@ -45,20 +45,23 @@ namespace Server.Items
                     Effects.SendTargetParticles(from, 0x375A, 35, 90, 0x00, 0x00, 9502, (EffectLayer)255, 0x100);
 
                     Delete();
+
+                    if (from.Skills.CurrentMastery == Skill)
+                        MasteryInfo.OnMasteryChanged(from, from.Skills.CurrentMastery);
                 }
             }
         }
 
         public override void AddNameProperty(ObjectPropertyList list)
         {
-            list.Add(1155882, string.Format("#{0}", MasteryInfo.GetLocalization(Skill))); // Primer on ~1_Skill~
+            list.Add(1155882, $"#{MasteryInfo.GetLocalization(Skill)}"); // Primer on ~1_Skill~
         }
 
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);
 
-            list.Add(1155883, string.Format("{0}", GetVolume(Volume))); // Volume ~1_Level~
+            list.Add(1155883, $"{GetVolume(Volume)}"); // Volume ~1_Level~
         }
 
         private string GetVolume(int volume)

@@ -36,7 +36,7 @@ namespace Server.Engines.ArenaSystem
                 ArenaDefinition def = ArenaDefinition.Definitions[i];
                 bool exists = PVPArenaSystem.Arenas != null && PVPArenaSystem.Arenas.Any(arena => arena.Definition == def);
 
-                AddHtml(45, 105 + (i * 25), 200, 20, Color("#FFFFFF", string.Format("{0} [{1}]", def.Name, exists ? "Enabled" : PVPArenaSystem.Instance != null && PVPArenaSystem.Instance.IsBlocked(def) ? "Blocked" : "Disabled")), false, false);
+                AddHtml(45, 105 + (i * 25), 200, 20, Color("#FFFFFF", $"{def.Name} [{(exists ? "Enabled" : PVPArenaSystem.Instance != null && PVPArenaSystem.Instance.IsBlocked(def) ? "Blocked" : "Disabled")}]"), false, false);
                 AddButton(10, 105 + (i * 25), !exists ? 4023 : 4017, !exists ? 4024 : 4018, i + 500, GumpButtonType.Reply, 0);
             }
 
@@ -58,7 +58,7 @@ namespace Server.Engines.ArenaSystem
 
                 SendGump(new GenericConfirmCallbackGump<ArenaDefinition>(
                     User,
-                    string.Format("{0} {1}", exists ? "Disable" : "Enable", def.Name),
+                    $"{(exists ? "Disable" : "Enable")} {def.Name}",
                     exists ? _DisableBody : _EnableBody,
                     def,
                     null,
@@ -118,7 +118,7 @@ namespace Server.Engines.ArenaSystem
     {
         public int LabelHue = 0x480;
 
-        public PVPArena Arena { get; private set; }
+        public PVPArena Arena { get; }
 
         public override bool CloseOnMapChange => true;
 
@@ -188,7 +188,7 @@ namespace Server.Engines.ArenaSystem
 
         protected string GetSlots()
         {
-            return string.Format("{0} slot(s)", Duel.PetSlots);
+            return $"{Duel.PetSlots} slot(s)";
         }
 
         protected string GetPotion()
@@ -544,7 +544,7 @@ namespace Server.Engines.ArenaSystem
 
     public class PendingDuelGump : BaseDuelGump
     {
-        public List<PlayerMobile> Participants { get; private set; }
+        public List<PlayerMobile> Participants { get; }
 
         public PendingDuelGump(PlayerMobile pm, ArenaDuel duel, PVPArena arena)
             : base(pm, arena, duel)
@@ -743,7 +743,7 @@ namespace Server.Engines.ArenaSystem
                                 }
                                 else
                                 {
-                                    Duel.RemovePlayer((PlayerMobile)from, false);
+                                    Duel.RemovePlayer((PlayerMobile)from);
                                 }
                             }
                         }, confirmLoc: 1115821, closeLoc: 1115822));
@@ -783,8 +783,8 @@ namespace Server.Engines.ArenaSystem
 
         private class InternalTarget : Targeting.Target
         {
-            public PVPArena Arena { get; private set; }
-            public ArenaDuel Duel { get; private set; }
+            public PVPArena Arena { get; }
+            public ArenaDuel Duel { get; }
 
             public InternalTarget(PVPArena arena, ArenaDuel duel)
                 : base(10, false, Targeting.TargetFlags.None)
@@ -799,9 +799,8 @@ namespace Server.Engines.ArenaSystem
                 {
                     PVPArenaSystem.SendMessage(from, 1115957); // This session has expired. Please create a new session and try again.
                 }
-                else if (targeted is PlayerMobile)
+                else if (targeted is PlayerMobile pm)
                 {
-                    PlayerMobile pm = targeted as PlayerMobile;
                     PlayerStatsEntry entry = PVPArenaSystem.Instance.GetPlayerEntry<PlayerStatsEntry>(pm);
 
                     if (Duel.ParticipantCount >= Duel.Entries)
@@ -852,9 +851,9 @@ namespace Server.Engines.ArenaSystem
 
             protected override void OnTargetFinish(Mobile from)
             {
-                if (from is PlayerMobile)
+                if (from is PlayerMobile mobile)
                 {
-                    SendGump(new PendingDuelGump((PlayerMobile)from, Duel, Arena));
+                    SendGump(new PendingDuelGump(mobile, Duel, Arena));
                 }
             }
         }
@@ -862,7 +861,7 @@ namespace Server.Engines.ArenaSystem
 
     public class JoinDuelGump : BaseArenaGump
     {
-        public List<ArenaDuel> PendingDuels { get; private set; }
+        public List<ArenaDuel> PendingDuels { get; }
 
         public JoinDuelGump(PlayerMobile pm, List<ArenaDuel> list, PVPArena arena)
             : base(pm, arena)
@@ -915,7 +914,7 @@ namespace Server.Engines.ArenaSystem
                     AddButton(10, y, 4005, 4007, 1 + i, GumpButtonType.Reply, 0);
                 }
 
-                AddLabel(54, y, LabelHue, string.Format("{0}/{1}", duel.ParticipantCount.ToString(), duel.Entries.ToString()));
+                AddLabel(54, y, LabelHue, $"{duel.ParticipantCount.ToString()}/{duel.Entries.ToString()}");
                 AddLabel(103, y, LabelHue, duel.Host.Name);
 
                 if (i != 0 && i % perPage == 0)
@@ -970,8 +969,8 @@ namespace Server.Engines.ArenaSystem
 
     public class OfferDuelGump : BaseDuelGump
     {
-        public bool FromPlayer { get; private set; }
-        public bool DetailsOnly { get; private set; }
+        public bool FromPlayer { get; }
+        public bool DetailsOnly { get; }
 
         public OfferDuelGump(PlayerMobile pm, ArenaDuel duel, PVPArena arena, bool fromPlayer, bool detailsOnly = false)
             : base(pm, arena, duel)
@@ -1094,7 +1093,7 @@ namespace Server.Engines.ArenaSystem
 
     public class BookedDuelsGump : BaseArenaGump
     {
-        public List<ArenaDuel> BookedDuels { get; set; }
+        public List<ArenaDuel> BookedDuels { get; }
 
         public BookedDuelsGump(PlayerMobile pm, PVPArena arena)
             : base(pm, arena)
@@ -1182,7 +1181,7 @@ namespace Server.Engines.ArenaSystem
 
     public class IndividualStatsGump : BaseArenaGump
     {
-        public PlayerMobile WhosStats { get; private set; }
+        public PlayerMobile WhosStats { get; }
 
         public IndividualStatsGump(PlayerMobile pm, PVPArena arena, PlayerMobile stats)
             : base(pm, arena)
@@ -1246,13 +1245,13 @@ namespace Server.Engines.ArenaSystem
             object title = titleIndex >= 0 && titleIndex < WhosStats.RewardTitles.Count ? WhosStats.RewardTitles[titleIndex] : null;
             string rewardTitle = "None";
 
-            if (title is int)
-                rewardTitle = string.Format("#{0}", (int)title);
-            else if (title is string)
-                rewardTitle = (string)title;
+            if (title is int iTitle)
+                rewardTitle = $"#{iTitle}";
+            else if (title is string sTitle)
+                rewardTitle = sTitle;
 
             AddHtmlLocalized(0, 12, 580, 20, CenterLoc, "#1115976", 0xFFFF, false, false); // <CENTER>Arena Menu - Stats</CENTER>
-            AddHtmlLocalized(0, 32, 580, 20, 1149602, string.Format("{0}\t{1}", WhosStats.Name, rewardTitle), 0xFFFF, false, false); // <CENTER>Arena Menu - Stats</CENTER>
+            AddHtmlLocalized(0, 32, 580, 20, 1149602, $"{WhosStats.Name}\t{rewardTitle}", 0xFFFF, false, false); // <CENTER>Arena Menu - Stats</CENTER>
 
             AddHtmlLocalized(8, 66, 222, 20, CenterLoc, "#1115983", 0xFFFF, false, false); // Stats - Survival
             AddHtmlLocalized(15, 100, 100, 20, 1115977, 0xFFFF, false, false); // Wins
@@ -1294,7 +1293,7 @@ namespace Server.Engines.ArenaSystem
 
                 if (i > entry.Record.Count - 6)
                 {
-                    latest += string.Format("{0}-", record.KilledBy ? "L" : "W");
+                    latest += $"{(record.KilledBy ? "L" : "W")}-";
                 }
 
                 AddLabel(237, y, LabelHue, record.DuelDate.ToShortDateString());
@@ -1487,7 +1486,7 @@ namespace Server.Engines.ArenaSystem
 
     public class DuelResultsGump : BaseDuelGump
     {
-        public ArenaTeam Winners { get; private set; }
+        public ArenaTeam Winners { get; }
 
         public DuelResultsGump(PlayerMobile pm, ArenaDuel duel, ArenaTeam winners)
             : base(pm, duel.Arena, duel)

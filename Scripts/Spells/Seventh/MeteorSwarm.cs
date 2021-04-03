@@ -9,7 +9,7 @@ namespace Server.Spells.Seventh
     public class MeteorSwarmSpell : MagerySpell
     {
         public override DamageType SpellDamageType => DamageType.SpellAOE;
-        public Item Item { get; set; }
+        public Item Item { get; }
 
         private static readonly SpellInfo m_Info = new SpellInfo(
             "Meteor Swarm", "Flam Kal Des Ylem",
@@ -70,16 +70,16 @@ namespace Server.Spells.Seventh
 
                 SpellHelper.Turn(Caster, p);
 
-                if (p is Item)
-                    p = ((Item)p).GetWorldLocation();
+                if (p is Item pItem)
+                {
+                    p = pItem.GetWorldLocation();
+                }
 
                 System.Collections.Generic.List<IDamageable> targets = AcquireIndirectTargets(p, 2).ToList();
+
                 int count = Math.Max(1, targets.Count);
 
-                if (count > 0)
-                {
-                    Effects.PlaySound(p, Caster.Map, 0x160);
-                }
+                Effects.PlaySound(p, Caster.Map, 0x160);
 
                 foreach (IDamageable id in targets)
                 {

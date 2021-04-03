@@ -4,7 +4,6 @@ namespace Server.Items
     {
         [Constructable]
         public BoneTableAddon()
-            : base()
         {
             AddComponent(new LocalizedAddonComponent(0x2A5C, 1074478), 0, 0, 0);
         }
@@ -34,7 +33,6 @@ namespace Server.Items
     {
         [Constructable]
         public BoneTableDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

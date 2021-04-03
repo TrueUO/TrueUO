@@ -7,7 +7,6 @@ namespace Server.Items
     public class IronMaidenAddon : BaseAddon
     {
         public IronMaidenAddon()
-            : base()
         {
             AddComponent(new LocalizedAddonComponent(0x1249, 1076288), 0, 0, 0);
         }
@@ -99,8 +98,8 @@ namespace Server.Items
 
         private void Deactivate(object obj)
         {
-            if (obj is AddonComponent)
-                ((AddonComponent)obj).ItemID = 0x1249;
+            if (obj is AddonComponent component)
+                component.ItemID = 0x1249;
         }
     }
 
@@ -108,7 +107,6 @@ namespace Server.Items
     {
         [Constructable]
         public IronMaidenDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

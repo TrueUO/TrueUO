@@ -114,6 +114,7 @@ namespace Server.Engines.CannedEvil
                 writer =>
                 {
                     writer.Write(1); // Version
+
                     writer.Write(m_Initialized);
                     writer.Write(m_LastRotate);
                     writer.WriteItemList(m_AllSpawns, true);
@@ -126,16 +127,11 @@ namespace Server.Engines.CannedEvil
                 m_Path,
                 reader =>
                 {
-                    int version = reader.ReadInt();
+                    reader.ReadInt();
 
                     m_Initialized = reader.ReadBool();
                     m_LastRotate = reader.ReadDateTime();
                     m_AllSpawns.AddRange(reader.ReadItemList().Cast<ChampionSpawn>());
-
-                    if (version == 0)
-                    {
-                        //m_ForceGenerate = true;
-                    }
                 });
         }
 
@@ -249,9 +245,12 @@ namespace Server.Engines.CannedEvil
         {
             if (m_AllSpawns != null && m_AllSpawns.Count > 0)
             {
-                foreach (ChampionSpawn s in m_AllSpawns.Where(sp => sp != null && !sp.Deleted))
+                foreach (ChampionSpawn s in m_AllSpawns)
                 {
-                    s.Delete();
+                    if (s != null && !s.Deleted)
+                    {
+                        s.Delete();
+                    }
                 }
 
                 m_AllSpawns.Clear();
@@ -288,22 +287,27 @@ namespace Server.Engines.CannedEvil
             Dictionary<string, List<ChampionSpawn>> groups = new Dictionary<string, List<ChampionSpawn>>();
             m_LastRotate = DateTime.UtcNow;
 
-            foreach (ChampionSpawn spawn in m_AllSpawns.Where(spawn => spawn != null && !spawn.Deleted))
+            foreach (ChampionSpawn spawn in m_AllSpawns)
             {
-                List<ChampionSpawn> group;
-                if (spawn.GroupName == null)
+                if (spawn != null && !spawn.Deleted)
                 {
-                    spawn.AutoRestart = true;
-                    if (!spawn.Active)
-                        spawn.Active = true;
-                    continue;
+                    List<ChampionSpawn> group;
+                    if (spawn.GroupName == null)
+                    {
+                        spawn.AutoRestart = true;
+                        if (!spawn.Active)
+                            spawn.Active = true;
+                        continue;
+                    }
+
+                    if (!groups.TryGetValue(spawn.GroupName, out group))
+                    {
+                        group = new List<ChampionSpawn>();
+                        groups.Add(spawn.GroupName, group);
+                    }
+
+                    group.Add(spawn);
                 }
-                if (!groups.TryGetValue(spawn.GroupName, out group))
-                {
-                    group = new List<ChampionSpawn>();
-                    groups.Add(spawn.GroupName, group);
-                }
-                group.Add(spawn);
             }
 
             foreach (string key in groups.Keys)

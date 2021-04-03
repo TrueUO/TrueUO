@@ -36,7 +36,6 @@ namespace Server.Items
     {
         [Constructable]
         public BrokenFallenChairAddon()
-            : base()
         {
             AddComponent(new BrokenFallenChairComponent(), 0, 0, 0);
         }
@@ -66,7 +65,6 @@ namespace Server.Items
     {
         [Constructable]
         public BrokenFallenChairDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

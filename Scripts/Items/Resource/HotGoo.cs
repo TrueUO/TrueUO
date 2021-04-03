@@ -40,8 +40,7 @@ namespace Server.Items
 
         public override void OnAfterDelete()
         {
-            if (m_Timer != null)
-                m_Timer.Stop();
+            m_Timer?.Stop();
         }
 
         private void OnTick()
@@ -55,7 +54,7 @@ namespace Server.Items
             }
             else
             {
-                if (!m_Drying && age > (m_Duration - age))
+                if (!m_Drying && age > m_Duration - age)
                 {
                     m_Drying = true;
                     ItemID = 0x122B;

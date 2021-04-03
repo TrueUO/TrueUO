@@ -1,7 +1,5 @@
-#region References
 using Server.Items;
 using System;
-#endregion
 
 namespace Server.Mobiles
 {
@@ -46,26 +44,12 @@ namespace Server.Mobiles
             AddItem(new Boots());
             AddItem(new SkullCap());
 
-            Bow bow = new Bow
-            {
-                Movable = false,
-                Crafter = this,
-                Quality = ItemQuality.Exceptional
-            };
-
-            AddItem(bow);
+            AddItem(new Bow());
 
             Container pack = new Backpack
             {
                 Movable = false
             };
-
-            Arrow arrows = new Arrow(250)
-            {
-                LootType = LootType.Newbied
-            };
-
-            pack.DropItem(arrows);
 
             AddItem(pack);
 
@@ -86,7 +70,7 @@ namespace Server.Mobiles
         [CommandProperty(AccessLevel.GameMaster)]
         public override Mobile Focus
         {
-            get { return m_Focus; }
+            get => m_Focus;
             set
             {
                 if (Deleted)
@@ -170,27 +154,19 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
-            switch (version)
+            m_Focus = reader.ReadMobile();
+
+            if (m_Focus != null)
             {
-                case 0:
-                    {
-                        m_Focus = reader.ReadMobile();
-
-                        if (m_Focus != null)
-                        {
-                            m_AttackTimer = new AttackTimer(this);
-                            m_AttackTimer.Start();
-                        }
-                        else
-                        {
-                            m_IdleTimer = new IdleTimer(this);
-                            m_IdleTimer.Start();
-                        }
-
-                        break;
-                    }
+                m_AttackTimer = new AttackTimer(this);
+                m_AttackTimer.Start();
+            }
+            else
+            {
+                m_IdleTimer = new IdleTimer(this);
+                m_IdleTimer.Start();
             }
         }
 
@@ -231,7 +207,7 @@ namespace Server.Mobiles
         private class AttackTimer : Timer
         {
             private readonly ArcherGuard m_Owner;
-            //	private bool m_Shooting;
+        
             public AttackTimer(ArcherGuard owner)
                 : base(TimeSpan.FromSeconds(0.25), TimeSpan.FromSeconds(0.1))
             {
@@ -263,7 +239,8 @@ namespace Server.Mobiles
                     Stop();
                     return;
                 }
-                else if (m_Owner.Weapon is Fists)
+
+                if (m_Owner.Weapon is Fists)
                 {
                     m_Owner.Kill();
                     Stop();
@@ -281,17 +258,16 @@ namespace Server.Mobiles
                 }
                 else
                 {
-                    // <instakill>
                     TeleportTo(target);
                     target.BoltEffect(0);
 
-                    if (target is BaseCreature)
+                    if (target is BaseCreature creature)
                     {
-                        ((BaseCreature)target).NoKillAwards = true;
+                        creature.NoKillAwards = true;
                     }
 
                     target.Damage(target.HitsMax, m_Owner);
-                    target.Kill(); // just in case, maybe Damage is overriden on some shard
+                    target.Kill(); 
 
                     if (target.Corpse != null && !target.Player)
                     {
@@ -300,22 +276,7 @@ namespace Server.Mobiles
 
                     m_Owner.Focus = null;
                     Stop();
-                } // </instakill>
-            }
-
-            private bool TimeToSpare()
-            {
-                return (m_Owner.NextCombatTime - Core.TickCount) > 1000;
-            }
-
-            private bool OutOfMaxDistance(Mobile target)
-            {
-                return !m_Owner.InRange(target, m_Owner.Weapon.MaxRange);
-            }
-
-            private bool InMinDistance(Mobile target)
-            {
-                return m_Owner.InRange(target, 4);
+                }
             }
 
             private void TeleportTo(Mobile target)
@@ -325,8 +286,7 @@ namespace Server.Mobiles
 
                 m_Owner.Location = to;
 
-                Effects.SendLocationParticles(
-                    EffectItem.Create(from, m_Owner.Map, EffectItem.DefaultDuration), 0x3728, 10, 10, 2023);
+                Effects.SendLocationParticles(EffectItem.Create(from, m_Owner.Map, EffectItem.DefaultDuration), 0x3728, 10, 10, 2023);
                 Effects.SendLocationParticles(EffectItem.Create(to, m_Owner.Map, EffectItem.DefaultDuration), 0x3728, 10, 10, 5023);
 
                 m_Owner.PlaySound(0x1FE);
@@ -352,15 +312,14 @@ namespace Server.Mobiles
                     return;
                 }
 
-                if ((m_Stage++ % 4) == 0 || !m_Owner.Move(m_Owner.Direction))
+                if (m_Stage++ % 4 == 0 || !m_Owner.Move(m_Owner.Direction))
                 {
                     m_Owner.Direction = (Direction)Utility.Random(8);
                 }
 
                 if (m_Stage > 16)
                 {
-                    Effects.SendLocationParticles(
-                        EffectItem.Create(m_Owner.Location, m_Owner.Map, EffectItem.DefaultDuration), 0x3728, 10, 10, 2023);
+                    Effects.SendLocationParticles(EffectItem.Create(m_Owner.Location, m_Owner.Map, EffectItem.DefaultDuration), 0x3728, 10, 10, 2023);
                     m_Owner.PlaySound(0x1FE);
 
                     m_Owner.Delete();

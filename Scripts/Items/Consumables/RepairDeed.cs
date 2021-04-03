@@ -68,10 +68,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public RepairSkillType RepairSkill
         {
-            get
-            {
-                return m_Skill;
-            }
+            get => m_Skill;
             set
             {
                 m_Skill = value;
@@ -81,10 +78,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public double SkillLevel
         {
-            get
-            {
-                return m_SkillLevel;
-            }
+            get => m_SkillLevel;
             set
             {
                 m_SkillLevel = Math.Max(Math.Min(value, 120.0), 0);
@@ -94,10 +88,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public Mobile Crafter
         {
-            get
-            {
-                return m_Crafter;
-            }
+            get => m_Crafter;
             set
             {
                 m_Crafter = value;
@@ -117,7 +108,7 @@ namespace Server.Items
 
         public override void AddNameProperty(ObjectPropertyList list)
         {
-            list.Add(1061133, string.Format("{0}\t{1}", GetSkillTitle(m_SkillLevel).ToString(), RepairSkillInfo.GetInfo(m_Skill).Name)); // A repair service contract from ~1_SKILL_TITLE~ ~2_SKILL_NAME~.
+            list.Add(1061133, string.Format("{0}\t{1}", GetSkillTitle(m_SkillLevel), RepairSkillInfo.GetInfo(m_Skill).Name)); // A repair service contract from ~1_SKILL_TITLE~ ~2_SKILL_NAME~.
         }
 
         public override void AddWeightProperty(ObjectPropertyList list)
@@ -255,9 +246,9 @@ namespace Server.Items
             int skill = (int)(skillLevel / 10);
 
             if (skill >= 11)
-                return (1062008 + skill - 11);
-            else if (skill >= 5)
-                return (1061123 + skill - 5);
+                return 1062008 + skill - 11;
+            if (skill >= 5)
+                return 1061123 + skill - 5;
 
             switch (skill)
             {
@@ -273,7 +264,7 @@ namespace Server.Items
 
     public class RepairSkillInfo
     {
-        private static readonly RepairSkillInfo[] m_Table = new RepairSkillInfo[]
+        private static readonly RepairSkillInfo[] m_Table =
         {
                 new RepairSkillInfo(DefBlacksmithy.CraftSystem,     typeof(Blacksmith), 1047013, 1023015),
                 new RepairSkillInfo(DefTailoring.CraftSystem,       typeof(Tailor),     1061132, 1022981),
@@ -281,7 +272,7 @@ namespace Server.Items
                 new RepairSkillInfo(DefCarpentry.CraftSystem,       typeof(Carpenter),  1061135, 1060774),
                 new RepairSkillInfo(DefBowFletching.CraftSystem,    typeof(Bowyer),     1061134, 1023005),
                 new RepairSkillInfo(DefMasonry.CraftSystem,         typeof(Carpenter),  1061135, 1060774, 1044635),
-                new RepairSkillInfo(DefGlassblowing.CraftSystem,    typeof(Alchemist),  1111838, 1115634, 1044636),
+                new RepairSkillInfo(DefGlassblowing.CraftSystem,    typeof(Alchemist),  1111838, 1115634, 1044636)
         };
 
         private readonly CraftSystem m_System;
@@ -300,7 +291,7 @@ namespace Server.Items
         }
 
         public RepairSkillInfo(CraftSystem system, Type nearbyType, TextDefinition notNearbyMessage, TextDefinition name, TextDefinition description = null)
-            : this(system, new Type[] { nearbyType }, notNearbyMessage, name, description)
+            : this(system, new[] { nearbyType }, notNearbyMessage, name, description)
         {
         }
 

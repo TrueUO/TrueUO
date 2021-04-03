@@ -111,7 +111,7 @@ namespace Server.Spells.Chivalry
 
                 m_Table[Caster] = context;
 
-                BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.ConsecrateWeapon, 1151385, 1151386, duration, Caster, string.Format("{0}\t{1}", context.ConsecrateProcChance, context.ConsecrateDamageBonus)));
+                BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.ConsecrateWeapon, 1151385, 1151386, duration, Caster, $"{context.ConsecrateProcChance}\t{context.ConsecrateDamageBonus}"));
             }
 
             FinishSequence();
@@ -137,7 +137,7 @@ namespace Server.Spells.Chivalry
 
     public class ConsecratedWeaponContext
     {
-        public Mobile Owner { get; private set; }
+        public Mobile Owner { get; }
         public BaseWeapon Weapon { get; set; }
 
         public Timer Timer { get; set; }

@@ -61,7 +61,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -128,11 +128,11 @@ namespace Server.Items
                     return;
                 }
 
-                if (targeted is Mobile)
+                if (targeted is Mobile mobile)
                 {
                     if (from.InRange(m_Bandage.GetWorldLocation(), Bandage.Range))
                     {
-                        if (BandageContext.BeginHeal(from, (Mobile)targeted, m_Bandage is EnhancedBandage) != null)
+                        if (BandageContext.BeginHeal(from, mobile, m_Bandage is EnhancedBandage) != null)
                         {
                             NegativeAttributes.OnCombatAction(from);
                             m_Bandage.Consume();
@@ -143,9 +143,9 @@ namespace Server.Items
                         from.SendLocalizedMessage(500295); // You are too far away to do that.
                     }
                 }
-                else if (targeted is PlagueBeastInnard)
+                else if (targeted is PlagueBeastInnard innard)
                 {
-                    if (((PlagueBeastInnard)targeted).OnBandage(from))
+                    if (innard.OnBandage(from))
                     {
                         NegativeAttributes.OnCombatAction(from);
                         m_Bandage.Consume();
@@ -159,9 +159,9 @@ namespace Server.Items
 
             protected override void OnNonlocalTarget(Mobile from, object targeted)
             {
-                if (targeted is PlagueBeastInnard)
+                if (targeted is PlagueBeastInnard innard)
                 {
-                    if (((PlagueBeastInnard)targeted).OnBandage(from))
+                    if (innard.OnBandage(from))
                     {
                         m_Bandage.Consume();
                     }
@@ -185,8 +185,8 @@ namespace Server.Items
 
         public Mobile Healer => m_Healer;
         public Mobile Patient => m_Patient;
-        public int Slips { get { return m_Slips; } set { m_Slips = value; } }
-        public int HealedPoisonOrBleed { get { return m_HealedPoisonOrBleed; } set { m_HealedPoisonOrBleed = value; } }
+        public int Slips { get => m_Slips; set => m_Slips = value; }
+        public int HealedPoisonOrBleed { get => m_HealedPoisonOrBleed; set => m_HealedPoisonOrBleed = value; }
         public Timer Timer => m_Timer;
         public int HealingBonus => m_HealingBonus;
 
@@ -216,10 +216,7 @@ namespace Server.Items
         {
             m_Table.Remove(m_Healer);
 
-            if (m_Timer != null)
-            {
-                m_Timer.Stop();
-            }
+            m_Timer?.Stop();
 
             m_Timer = null;
         }
@@ -228,7 +225,7 @@ namespace Server.Items
 
         public static BandageContext GetContext(Mobile healer)
         {
-            BandageContext bc = null;
+            BandageContext bc;
             m_Table.TryGetValue(healer, out bc);
             return bc;
         }
@@ -244,10 +241,8 @@ namespace Server.Items
             {
                 return SkillName.Veterinary;
             }
-            else
-            {
-                return SkillName.Healing;
-            }
+
+            return SkillName.Healing;
         }
 
         public static SkillName GetSecondarySkill(Mobile healer, Mobile m)
@@ -261,10 +256,8 @@ namespace Server.Items
             {
                 return SkillName.AnimalLore;
             }
-            else
-            {
-                return SkillName.Anatomy;
-            }
+
+            return SkillName.Anatomy;
         }
 
         public void CheckPoisonOrBleed()
@@ -276,7 +269,7 @@ namespace Server.Items
             {
                 double healing = m_Healer.Skills[SkillName.Healing].Value;
                 double anatomy = m_Healer.Skills[SkillName.Anatomy].Value;
-                double chance = ((healing + anatomy) - 120) * 25;
+                double chance = (healing + anatomy - 120) * 25;
 
                 if (poisoned)
                     chance /= m_Patient.Poison.RealLevel * 20;
@@ -309,7 +302,7 @@ namespace Server.Items
         {
             StopHeal();
 
-            int healerNumber = -1, patientNumber = -1;
+            int healerNumber, patientNumber;
             bool playSound = true;
             bool checkSkills = false;
 
@@ -330,14 +323,13 @@ namespace Server.Items
                 patientNumber = -1;
                 playSound = false;
             }
-            else if (!m_Patient.Alive || (petPatient != null && petPatient.IsDeadPet))
+            else if (!m_Patient.Alive || petPatient != null && petPatient.IsDeadPet)
             {
                 double healing = m_Healer.Skills[primarySkill].Value;
                 double anatomy = m_Healer.Skills[secondarySkill].Value;
-                double chance = ((healing - 68.0) / 50.0) - (m_Slips * 0.02);
+                double chance = (healing - 68.0) / 50.0 - m_Slips * 0.02;
 
-                if (((checkSkills = (healing >= 80.0 && anatomy >= 80.0)) && chance > Utility.RandomDouble()) ||
-                    (Engines.VvV.ViceVsVirtueSystem.Enabled && petPatient is Engines.VvV.VvVMount && petPatient.ControlMaster == m_Healer))
+                if ((checkSkills = healing >= 80.0 && anatomy >= 80.0) && chance > Utility.RandomDouble() || Engines.VvV.ViceVsVirtueSystem.Enabled && petPatient is Engines.VvV.VvVMount && petPatient.ControlMaster == m_Healer)
                 {
                     if (m_Patient.Map == null || !m_Patient.Map.CanFit(m_Patient.Location, 16, false, false))
                     {
@@ -432,13 +424,13 @@ namespace Server.Items
 
                 double healing = m_Healer.Skills[primarySkill].Value;
                 double anatomy = m_Healer.Skills[secondarySkill].Value;
-                double chance = ((healing - 30.0) / 50.0) - (m_Patient.Poison.RealLevel * 0.1) - (m_Slips * 0.02);
+                double chance = (healing - 30.0) / 50.0 - m_Patient.Poison.RealLevel * 0.1 - m_Slips * 0.02;
 
-                if ((checkSkills = (healing >= 60.0 && anatomy >= 60.0)) && chance > Utility.RandomDouble())
+                if ((checkSkills = healing >= 60.0 && anatomy >= 60.0) && chance > Utility.RandomDouble())
                 {
                     if (m_Patient.CurePoison(m_Healer))
                     {
-                        healerNumber = (m_Healer == m_Patient) ? -1 : 1010058; // You have cured the target of all poisons.
+                        healerNumber = m_Healer == m_Patient ? -1 : 1010058; // You have cured the target of all poisons.
                         patientNumber = 1010059; // You have been cured of all poisons.
                     }
                     else
@@ -462,7 +454,7 @@ namespace Server.Items
             }
             else if (MortalStrike.IsWounded(m_Patient))
             {
-                healerNumber = (m_Healer == m_Patient ? 1005000 : 1010398);
+                healerNumber = m_Healer == m_Patient ? 1005000 : 1010398;
                 patientNumber = -1;
                 playSound = false;
             }
@@ -492,16 +484,16 @@ namespace Server.Items
                 if (m_HealingBonus > 0)
                     healing += m_HealingBonus;
 
-                double chance = ((healing + 10.0) / 100.0) - (m_Slips * 0.02);
+                double chance = (healing + 10.0) / 100.0 - m_Slips * 0.02;
 
                 if (chance > Utility.RandomDouble())
                 {
                     healerNumber = 500969; // You finish applying the bandages.
 
-                    double min = (anatomy / 8.0) + (healing / 5.0) + 4.0;
-                    double max = (anatomy / 6.0) + (healing / 2.5) + 4.0;
+                    double min = anatomy / 8.0 + healing / 5.0 + 4.0;
+                    double max = anatomy / 6.0 + healing / 2.5 + 4.0;
 
-                    double toHeal = min + (Utility.RandomDouble() * (max - min));
+                    double toHeal = min + Utility.RandomDouble() * (max - min);
 
                     if (m_Patient.Body.IsMonster || m_Patient.Body.IsAnimal)
                     {
@@ -598,7 +590,7 @@ namespace Server.Items
                     m_Context.EndHeal();
                     Stop();
                 }
-                else if (!m_CheckedHealAndBleed && CanCheckAtHalf && m_Begin + ((m_Expires - m_Begin) / 2) < Core.TickCount)
+                else if (!m_CheckedHealAndBleed && CanCheckAtHalf && m_Begin + (m_Expires - m_Begin) / 2 < Core.TickCount)
                 {
                     m_Context.CheckPoisonOrBleed();
                     m_CheckedHealAndBleed = true;
@@ -613,13 +605,13 @@ namespace Server.Items
 
         public static BandageContext BeginHeal(Mobile healer, Mobile patient, bool enhanced)
         {
-            bool isDeadPet = (patient is BaseCreature && ((BaseCreature)patient).IsDeadPet);
+            bool isDeadPet = patient is BaseCreature creature && creature.IsDeadPet;
 
-            if (patient is IRepairableMobile && ((IRepairableMobile)patient).RepairResource != typeof(Bandage))
+            if (patient is IRepairableMobile iRepairable && iRepairable.RepairResource != typeof(Bandage))
             {
                 healer.SendLocalizedMessage(500970); // Bandages cannot be used on that.
             }
-            else if (patient is BaseCreature && ((BaseCreature)patient).IsAnimatedDead)
+            else if (patient is BaseCreature bc && bc.IsAnimatedDead)
             {
                 healer.SendLocalizedMessage(500951); // You cannot heal that.
             }

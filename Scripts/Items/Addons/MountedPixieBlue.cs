@@ -42,7 +42,6 @@ namespace Server.Items
     public class MountedPixieBlueAddon : BaseAddon
     {
         public MountedPixieBlueAddon()
-            : base()
         {
             AddComponent(new MountedPixieBlueComponent(), 0, 0, 0);
         }
@@ -72,7 +71,6 @@ namespace Server.Items
     {
         [Constructable]
         public MountedPixieBlueDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

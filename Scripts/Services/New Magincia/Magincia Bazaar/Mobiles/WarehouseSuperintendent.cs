@@ -148,8 +148,8 @@ namespace Server.Engines.NewMagincia
                     deed.Delete();
                     return false;
                 }
-                else
-                    entry.RemoveCommodity(type, 60000);
+
+                entry.RemoveCommodity(type, 60000);
             }
 
             CommodityDeed deed2 = new CommodityDeed();
@@ -162,8 +162,8 @@ namespace Server.Engines.NewMagincia
                 deed2.Delete();
                 return false;
             }
-            else
-                entry.RemoveCommodity(type, amount);
+
+            entry.RemoveCommodity(type, amount);
 
             return true;
         }
@@ -220,7 +220,7 @@ namespace Server.Engines.NewMagincia
             public BackfeePrompt(WarehouseSuperintendent mobile, StorageEntry entry)
             {
                 m_Mobile = mobile;
-                m_Entry = entry; ;
+                m_Entry = entry;
             }
 
             public override void OnResponse(Mobile from, string text)

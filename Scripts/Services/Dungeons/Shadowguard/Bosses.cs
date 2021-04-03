@@ -23,7 +23,7 @@ namespace Server.Engines.Shadowguard
 
         public virtual bool CanSummon => Hits <= HitsMax - (HitsMax / 4);
 
-        private readonly Type[] _ArtifactTypes = new Type[]
+        private readonly Type[] _ArtifactTypes =
         {
             typeof(AnonsBoots),                 typeof(AnonsSpellbook),         typeof(BalakaisShamanStaff),
             typeof(EnchantressCameo),           typeof(GrugorsShield),          typeof(WamapsBoneEarrings),
@@ -69,21 +69,25 @@ namespace Server.Engines.Shadowguard
             if (SummonedHelpers == null || SummonedHelpers.Count == 0)
                 return 0;
 
-            return SummonedHelpers.Where(bc => bc != null && bc.Alive).Count();
+            return SummonedHelpers.Count(bc => bc != null && bc.Alive);
         }
 
         public override void OnGotMeleeAttack(Mobile m)
         {
-            if (m is PlayerMobile && CanSummon && !(m is GreaterDragon) && _NextSummon < DateTime.UtcNow)
+            if (m is PlayerMobile && CanSummon && _NextSummon < DateTime.UtcNow)
+            {
                 Summon();
+            }
 
             base.OnGotMeleeAttack(m);
         }
 
         public override void OnDamagedBySpell(Mobile m)
         {
-            if (m is PlayerMobile && CanSummon && !(m is GreaterDragon) && _NextSummon < DateTime.UtcNow)
+            if (m is PlayerMobile && CanSummon && _NextSummon < DateTime.UtcNow)
+            {
                 Summon();
+            }
 
             base.OnDamagedBySpell(m);
         }
@@ -94,26 +98,29 @@ namespace Server.Engines.Shadowguard
             {
                 List<DamageStore> rights = GetLootingRights();
 
-                foreach (DamageStore ds in rights.Where(s => s.m_HasRight))
+                foreach (DamageStore ds in rights)
                 {
-                    int luck = ds.m_Mobile is PlayerMobile ? ((PlayerMobile)ds.m_Mobile).RealLuck : ds.m_Mobile.Luck;
-
-                    int chance = 1000 + (luck / 15);
-
-                    if (chance > Utility.Random(5000))
+                    if (ds.m_HasRight)
                     {
-                        Mobile m = ds.m_Mobile;
-                        Item artifact = Loot.Construct(ArtifactDrops[Utility.Random(ArtifactDrops.Length)]);
+                        int luck = ds.m_Mobile is PlayerMobile mobile ? mobile.RealLuck : ds.m_Mobile.Luck;
 
-                        if (artifact != null)
+                        int chance = 1000 + (luck / 15);
+
+                        if (chance > Utility.Random(5000))
                         {
-                            if (m.Backpack == null || !m.Backpack.TryDropItem(m, artifact, false))
+                            Mobile m = ds.m_Mobile;
+                            Item artifact = Loot.Construct(ArtifactDrops[Utility.Random(ArtifactDrops.Length)]);
+
+                            if (artifact != null)
                             {
-                                m.BankBox.DropItem(artifact);
-                                m.SendMessage("For your valor in combating the fallen beast, a special reward has been placed in your bank box.");
+                                if (m.Backpack == null || !m.Backpack.TryDropItem(m, artifact, false))
+                                {
+                                    m.BankBox.DropItem(artifact);
+                                    m.SendMessage("For your valor in combating the fallen beast, a special reward has been placed in your bank box.");
+                                }
+                                else
+                                    m.SendLocalizedMessage(1062317); // For your valor in combating the fallen beast, a special reward has been bestowed on you.
                             }
-                            else
-                                m.SendLocalizedMessage(1062317); // For your valor in combating the fallen beast, a special reward has been bestowed on you.
                         }
                     }
                 }
@@ -252,9 +259,9 @@ namespace Server.Engines.Shadowguard
                     spawn.Team = Team;
                     spawn.SummonMaster = this;
 
-                    Timer.DelayCall(TimeSpan.FromSeconds(1), (o) =>
+                    Timer.DelayCall(TimeSpan.FromSeconds(1), o =>
                     {
-                        BaseCreature s = o as BaseCreature;
+                        BaseCreature s = o;
 
                         if (s != null && s.Combatant != null)
                         {
@@ -306,7 +313,7 @@ namespace Server.Engines.Shadowguard
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             IsLastBoss = reader.ReadBool();
 
@@ -345,7 +352,7 @@ namespace Server.Engines.Shadowguard
     public class Anon : ShadowguardBoss
     {
         public override Type[] SummonTypes => _SummonTypes;
-        private readonly Type[] _SummonTypes = new Type[] { typeof(ElderGazer), typeof(EvilMage), typeof(Wisp) };
+        private readonly Type[] _SummonTypes = { typeof(ElderGazer), typeof(EvilMage), typeof(Wisp) };
 
         private DateTime _LastChange;
         private Form _Form;
@@ -355,7 +362,7 @@ namespace Server.Engines.Shadowguard
         [CommandProperty(AccessLevel.GameMaster)]
         public Form Form
         {
-            get { return _Form; }
+            get => _Form;
             set
             {
                 Form old = _Form;
@@ -631,7 +638,7 @@ namespace Server.Engines.Shadowguard
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             _LastChange = DateTime.UtcNow;
         }
@@ -640,7 +647,7 @@ namespace Server.Engines.Shadowguard
     public class Juonar : ShadowguardBoss
     {
         public override Type[] SummonTypes => _SummonTypes;
-        private readonly Type[] _SummonTypes = new Type[] { typeof(SkeletalDragon), typeof(LichLord), typeof(WailingBanshee), typeof(FleshGolem) };
+        private readonly Type[] _SummonTypes = { typeof(SkeletalDragon), typeof(LichLord), typeof(WailingBanshee), typeof(FleshGolem) };
 
         public override bool CanDiscord => true;
         public override bool PlayInstrumentSound => false;
@@ -729,7 +736,7 @@ namespace Server.Engines.Shadowguard
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             _NextTeleport = DateTime.UtcNow;
         }
@@ -738,7 +745,7 @@ namespace Server.Engines.Shadowguard
     public class Virtuebane : ShadowguardBoss
     {
         public override Type[] SummonTypes => _SummonTypes;
-        private readonly Type[] _SummonTypes = new Type[] { typeof(MinotaurCaptain), typeof(Daemon), typeof(Titan) };
+        private readonly Type[] _SummonTypes = { typeof(MinotaurCaptain), typeof(Daemon), typeof(Titan) };
 
         public override bool BardImmune => true;
 
@@ -801,7 +808,6 @@ namespace Server.Engines.Shadowguard
                     _NextNuke = DateTime.UtcNow + TimeSpan.FromSeconds(Utility.RandomMinMax(60, 90));
 
                     Say(1112362); // You will burn to a pile of ash! yellow hue
-                    Point3D p = Combatant.Location;
 
                     Timer.DelayCall(TimeSpan.FromSeconds(3), () =>
                     {
@@ -863,8 +869,10 @@ namespace Server.Engines.Shadowguard
 
             foreach (Mobile m in eable)
             {
-                if ((m is PlayerMobile || (m is BaseCreature && ((BaseCreature)m).GetMaster() is PlayerMobile)) && CanBeHarmful(m))
+                if ((m is PlayerMobile || m is BaseCreature creature && creature.GetMaster() is PlayerMobile) && CanBeHarmful(m))
+                {
                     Timer.DelayCall(TimeSpan.FromSeconds(1.75), new TimerStateCallback(DoDamage_Callback), m);
+                }
             }
 
             eable.Free();
@@ -924,8 +932,8 @@ namespace Server.Engines.Shadowguard
 
                 if (mount != null)
                 {
-                    if (m is PlayerMobile)
-                        ((PlayerMobile)m).SetMountBlock(BlockMountType.Dazed, TimeSpan.FromSeconds(10), true);
+                    if (m is PlayerMobile mobile)
+                        mobile.SetMountBlock(BlockMountType.Dazed, TimeSpan.FromSeconds(10), true);
                     else
                         mount.Rider = null;
                 }
@@ -951,14 +959,14 @@ namespace Server.Engines.Shadowguard
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
     public class Ozymandias : ShadowguardBoss
     {
         public override Type[] SummonTypes => _SummonTypes;
-        private readonly Type[] _SummonTypes = new Type[] { typeof(LesserHiryu), typeof(EliteNinja), typeof(TsukiWolf) };
+        private readonly Type[] _SummonTypes = { typeof(LesserHiryu), typeof(EliteNinja), typeof(TsukiWolf) };
 
         public override double WeaponAbilityChance => 0.4;
 
@@ -1073,7 +1081,7 @@ namespace Server.Engines.Shadowguard
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

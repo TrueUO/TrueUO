@@ -31,10 +31,8 @@ namespace Server.Items
         {
         }
 
-        public override Type[] Engraves => new Type[]
-                {
-                    typeof(BaseClothing)
-                };
+        public override Type[] Engraves => new[] { typeof(BaseClothing) };
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -44,7 +42,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

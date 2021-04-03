@@ -42,7 +42,7 @@ namespace Server.Items
                 return 0;
             }
         }
-        public override string DefaultTitle => string.Format("<basefont color=#FFFFFF>Power Scroll ({0}{1} Maximum Stats):</basefont>", ((int)Value - m_StatCap) >= 0 ? "+" : "", (int)Value - m_StatCap);
+        public override string DefaultTitle => string.Format("<basefont color=#FFFFFF>Power Scroll ({0}{1} Maximum Stats):</basefont>", (int)Value - m_StatCap >= 0 ? "+" : "", (int)Value - m_StatCap);
         public override void AddNameProperty(ObjectPropertyList list)
         {
             int level = ((int)Value - (m_StatCap + 5)) / 5;
@@ -54,7 +54,7 @@ namespace Server.Items
             * a legendary scroll of ~1_type~ (+20 Maximum Stats) OR
             * an ultimate scroll of ~1_type~ (+25 Maximum Stats) */
             else
-                list.Add("a scroll of power ({0}{1} Maximum Stats)", (Value - m_StatCap) >= 0 ? "+" : "", Value - m_StatCap);
+                list.Add("a scroll of power ({0}{1} Maximum Stats)", Value - m_StatCap >= 0 ? "+" : "", Value - m_StatCap);
         }
 
         public override bool CanUse(Mobile from)
@@ -64,10 +64,10 @@ namespace Server.Items
 
             int newValue = (int)Value;
 
-            if (from is PlayerMobile && ((PlayerMobile)from).HasStatReward)
+            if (from is PlayerMobile mobile && mobile.HasStatReward)
                 newValue += 5;
 
-            if (from is PlayerMobile && ((PlayerMobile)from).HasValiantStatReward)
+            if (from is PlayerMobile playerMobile && playerMobile.HasValiantStatReward)
                 newValue += 5;
 
             if (from.StatCap >= newValue)
@@ -88,12 +88,12 @@ namespace Server.Items
 
             int value = (int)Value;
 
-            if (from is PlayerMobile && ((PlayerMobile)from).HasStatReward)
+            if (from is PlayerMobile mobile && mobile.HasStatReward)
             {
                 value += 5;
             }
 
-            if (from is PlayerMobile && ((PlayerMobile)from).HasValiantStatReward)
+            if (from is PlayerMobile playerMobile && playerMobile.HasValiantStatReward)
             {
                 value += 5;
             }
@@ -115,18 +115,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = (InheritsItem ? 0 : reader.ReadInt()); //Required for SpecialScroll insertion
-
-            LootType = LootType.Cursed;
-            Insured = false;
+            int version = InheritsItem ? 0 : reader.ReadInt(); //Required for SpecialScroll insertion
         }
     }
 }

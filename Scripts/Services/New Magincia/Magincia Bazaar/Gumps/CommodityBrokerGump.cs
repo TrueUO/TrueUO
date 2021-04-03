@@ -19,7 +19,7 @@ namespace Server.Engines.NewMagincia
 
             AddHtmlLocalized(10, 10, 500, 18, 1114513, "#1150636", RedColor16, false, false);  // Commodity Broker
 
-            if (m_Broker.Plot.ShopName != null && m_Broker.Plot.ShopName.Length > 0)
+            if (!string.IsNullOrEmpty(m_Broker.Plot.ShopName))
             {
                 AddHtml(10, 37, 500, 18, Color(FormatStallName(m_Broker.Plot.ShopName), BlueColor), false, false);
             }
@@ -178,20 +178,20 @@ namespace Server.Engines.NewMagincia
                 if (from.HasGump(typeof(CommodityTargetGump)))
                     from.CloseGump(typeof(CommodityTargetGump));
 
-                if (targeted is Item && (targeted is ICommodity || targeted is CommodityDeed))
+                if (targeted is Item item && (item is ICommodity || item is CommodityDeed))
                 {
-                    Item item = (Item)targeted;
-
                     if (item.IsChildOf(from.Backpack))
                     {
-                        if (item is CommodityDeed && ((CommodityDeed)item).Commodity == null)
+                        if (item is CommodityDeed deed && deed.Commodity == null)
                         {
                             from.SendLocalizedMessage(1150222); // That item is not a commodity that a broker can trade.
                         }
                         else if (m_Broker.CommodityEntries.Count < CommodityBroker.MaxEntries)
                         {
-                            if (!m_Broker.TryAddBrokerEntry(item, from))    // Adds new entry									// Already has an entry, adds item to inventory for selling
-                                m_Broker.AddInventory(from, item);          // or adds to the stock
+                            if (!m_Broker.TryAddBrokerEntry(item, from)) // Adds new entry // Already has an entry, adds item to inventory for selling
+                            {
+                                m_Broker.AddInventory(from, item); // or adds to the stock
+                            }
 
                             m_HasPickedCommodity = true;
                         }
@@ -237,7 +237,7 @@ namespace Server.Engines.NewMagincia
 
             AddHtmlLocalized(10, 10, 500, 18, 1114513, "#1150636", RedColor16, false, false);  // Commodity Broker
 
-            if (m_Broker.Plot.ShopName != null && m_Broker.Plot.ShopName.Length > 0)
+            if (!string.IsNullOrEmpty(m_Broker.Plot.ShopName))
             {
                 AddHtml(10, 37, 500, 18, Color(FormatStallName(m_Broker.Plot.ShopName), BlueColor), false, false);
             }
@@ -363,17 +363,20 @@ namespace Server.Engines.NewMagincia
                 from.SendGump(new BazaarInformationGump(0, 1150644, new SetPricesAndLimitsGump(m_Broker, m_Index, m_Page)));
                 return;
             }
-            else if (info.ButtonID == 400) // back page
+
+            if (info.ButtonID == 400) // back page
             {
                 from.SendGump(new SetPricesAndLimitsGump(m_Broker, -1, m_Page - 1));
                 return;
             }
-            else if (info.ButtonID == 401) // forward page
+
+            if (info.ButtonID == 401) // forward page
             {
                 from.SendGump(new SetPricesAndLimitsGump(m_Broker, -1, m_Page + 1));
                 return;
             }
-            else if (info.ButtonID == 500) // SET PRICES
+
+            if (info.ButtonID == 500) // SET PRICES
             {
                 if (m_Index >= 0 && m_Index < m_Broker.CommodityEntries.Count)
                 {
@@ -644,7 +647,7 @@ namespace Server.Engines.NewMagincia
 
             AddHtmlLocalized(10, 10, 640, 18, 1114513, "#1150636", RedColor16, false, false);  // Commodity Broker
 
-            if (m_Broker.Plot.ShopName != null && m_Broker.Plot.ShopName.Length > 0)
+            if (!string.IsNullOrEmpty(m_Broker.Plot.ShopName))
             {
                 AddHtml(10, 37, 640, 18, Color(FormatStallName(m_Broker.Plot.ShopName), BlueColor), false, false);
             }
@@ -745,15 +748,19 @@ namespace Server.Engines.NewMagincia
 
                         if (entry.BuyPricePer > 0 && entry.BuyLimit > 0)
                         {
-                            AddHtml(475, y, 109, 20, (Color(AlignRight(FormatAmt(sellLimit)), OrangeColor)), false, false);
+                            AddHtml(475, y, 109, 20, Color(AlignRight(FormatAmt(sellLimit)), OrangeColor), false, false);
                         }
 
                         //Buttons
                         if (entry.PlayerCanBuy(0))
+                        {
                             AddRadio(10, y, 0xFA5, 0xFA6, false, 2 + i);
+                        }
 
                         if (entry.PlayerCanSell(0))
+                        {
                             AddRadio(590, y, 0xFAE, 0xFAF, false, 102 + i);
+                        }
 
                         y += 20;
                         count++;
@@ -858,7 +865,8 @@ namespace Server.Engines.NewMagincia
                                     from.SendGump(new CommodityInventoryGump(m_Broker, m_Index, m_Buy, m_Page, 1150252));
                                     return;
                                 }
-                                else if (!m_Buy && !m_Broker.SellCommodityControl(from, entry, amount))
+
+                                if (!m_Buy && !m_Broker.SellCommodityControl(from, entry, amount))
                                 {
                                     /* You do not have the requested amount of that commodity (either in item or deed form) in your backpack to trade.
                                      * Note that commodities cannot be traded from your bank box.
@@ -866,33 +874,29 @@ namespace Server.Engines.NewMagincia
                                     from.SendGump(new CommodityInventoryGump(m_Broker, m_Index, m_Buy, m_Page, 1150667));
                                     return;
                                 }
-                                else if (m_Buy && entry.PlayerCanBuy(amount))
+
+                                if (m_Buy && entry.PlayerCanBuy(amount))
                                 {
                                     from.SendGump(new ConfirmBuyCommodityGump(m_Broker, amount, entry, true, new CommodityInventoryGump(m_Broker, m_Index, m_Buy, m_Page, 0)));
                                     return;
                                 }
-                                else if (!m_Buy && entry.PlayerCanSell(amount))
+
+                                if (!m_Buy && entry.PlayerCanSell(amount))
                                 {
                                     from.SendGump(new ConfirmBuyCommodityGump(m_Broker, amount, entry, false, new CommodityInventoryGump(m_Broker, m_Index, m_Buy, m_Page, 0)));
                                     return;
                                 }
-                                else
-                                {
-                                    from.SendGump(new CommodityInventoryGump(m_Broker, m_Index, m_Buy, m_Page, 1150215)); // You have entered an invalid value, or a non-numeric value. Please try again.
-                                    return;
-                                }
-                            }
-                            else
-                            {
+
                                 from.SendGump(new CommodityInventoryGump(m_Broker, m_Index, m_Buy, m_Page, 1150215)); // You have entered an invalid value, or a non-numeric value. Please try again.
                                 return;
                             }
-                        }
-                        else
-                        {
-                            from.SendGump(new CommodityInventoryGump(m_Broker, m_Index, m_Buy, m_Page, 1150642)); // You did not select a commodity.
+
+                            from.SendGump(new CommodityInventoryGump(m_Broker, m_Index, m_Buy, m_Page, 1150215)); // You have entered an invalid value, or a non-numeric value. Please try again.
                             return;
                         }
+
+                        from.SendGump(new CommodityInventoryGump(m_Broker, m_Index, m_Buy, m_Page, 1150642)); // You did not select a commodity.
+                        return;
                     }
             }
         }
@@ -947,7 +951,7 @@ namespace Server.Engines.NewMagincia
 
             AddHtmlLocalized(10, 10, 640, 18, 1114513, "#1150636", RedColor16, false, false);  // Commodity Broker
 
-            if (m_Broker.Plot.ShopName != null && m_Broker.Plot.ShopName.Length > 0)
+            if (!string.IsNullOrEmpty(m_Broker.Plot.ShopName))
             {
                 AddHtml(10, 37, 640, 18, Color(FormatStallName(m_Broker.Plot.ShopName), BlueColor), false, false);
             }

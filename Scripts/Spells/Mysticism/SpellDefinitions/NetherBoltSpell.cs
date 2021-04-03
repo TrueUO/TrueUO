@@ -21,7 +21,7 @@ namespace Server.Spells.Mysticism
 
         public override bool DelayedDamage => true;
         public override bool DelayedDamageStacking => false;
-        public override Type[] DelayDamageFamily => new Type[] { typeof(First.MagicArrowSpell) };
+        public override Type[] DelayDamageFamily => new[] { typeof(First.MagicArrowSpell) };
 
         public override void OnCast()
         {
@@ -70,7 +70,7 @@ namespace Server.Spells.Mysticism
 
         public class InternalTarget : Target
         {
-            public NetherBoltSpell Owner { get; set; }
+            public NetherBoltSpell Owner { get; }
 
             public InternalTarget(NetherBoltSpell owner)
                 : this(owner, false)

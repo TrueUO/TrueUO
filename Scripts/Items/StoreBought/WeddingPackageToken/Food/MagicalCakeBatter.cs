@@ -52,33 +52,33 @@ namespace Server.Items
 
             AddPage(0);
 
-            AddBackground(50, 89, 250, 195, 2600);
+            AddBackground(50, 89, 510, 230, 2600);
 
             AddHtmlLocalized(103, 114, 200, 20, 1157335, false, false); // Please make a selection:
 
-            AddButton(92, 155, 1209, 1210, 1, GumpButtonType.Reply, 0);
-            AddItem(75, 178, 0x9EB0);
+            AddButton(90, 155, 1209, 1210, 1, GumpButtonType.Reply, 0);
+            AddItem(75, 175, 0x9EB0);
 
-            AddButton(133, 155, 1209, 1210, 2, GumpButtonType.Reply, 0);
-            AddItem(119, 178, 0x9EB1);
+            AddButton(150, 155, 1209, 1210, 2, GumpButtonType.Reply, 0);
+            AddItem(135, 175, 0x9EB1);
 
-            AddButton(177, 155, 1209, 1210, 3, GumpButtonType.Reply, 0);
-            AddItem(165, 182, 0x9EB2);
+            AddButton(210, 155, 1209, 1210, 3, GumpButtonType.Reply, 0);
+            AddItem(195, 175, 0x9EB2);
 
-            AddButton(217, 155, 1209, 1210, 4, GumpButtonType.Reply, 0);
-            AddItem(205, 182, 0x9EB3);
+            AddButton(270, 155, 1209, 1210, 4, GumpButtonType.Reply, 0);
+            AddItem(255, 175, 0x9EB3);
 
-            AddButton(267, 155, 1209, 1210, 5, GumpButtonType.Reply, 0);
-            AddItem(220, 133, 0x9EB4);
+            AddButton(330, 155, 1209, 1210, 5, GumpButtonType.Reply, 0);
+            AddItem(315, 175, 0x9EB4);
 
-            AddButton(333, 155, 1209, 1210, 6, GumpButtonType.Reply, 0);
-            AddItem(272, 133, 0x9EB5);
+            AddButton(390, 155, 1209, 1210, 6, GumpButtonType.Reply, 0);
+            AddItem(375, 175, 0x9EB5);
 
-            AddButton(388, 155, 1209, 1210, 7, GumpButtonType.Reply, 0);
-            AddItem(374, 178, 0x9EB6);
+            AddButton(450, 155, 1209, 1210, 7, GumpButtonType.Reply, 0);
+            AddItem(435, 175, 0x9EB6);
 
-            AddButton(426, 155, 1209, 1210, 8, GumpButtonType.Reply, 0);
-            AddItem(413, 175, 0x9ED4);
+            AddButton(510, 155, 1209, 1210, 8, GumpButtonType.Reply, 0);
+            AddItem(495, 175, 0x9ED4);
         }
 
         public override void OnResponse(NetState sender, RelayInfo info)

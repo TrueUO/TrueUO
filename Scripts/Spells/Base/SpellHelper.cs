@@ -278,9 +278,9 @@ namespace Server.Spells
 
         public static void GetSurfaceTop(ref IPoint3D p)
         {
-            if (p is Item)
+            if (p is Item item)
             {
-                p = ((Item)p).GetSurfaceTop();
+                p = item.GetSurfaceTop();
             }
             else if (p is StaticTarget t)
             {
@@ -295,10 +295,7 @@ namespace Server.Spells
 
         protected static void RemoveStatOffsetCallback(object state)
         {
-            if (!(state is Mobile))
-                return;
-            // This call has the side-effect of updating all stats
-            ((Mobile)state).CheckStatTimers();
+            (state as Mobile)?.CheckStatTimers(); // This call has the side-effect of updating all stats
         }
 
         public static bool AddStatOffset(Mobile m, StatType type, int offset, TimeSpan duration)
@@ -319,7 +316,7 @@ namespace Server.Spells
         public static bool AddStatBonus(Mobile caster, Mobile target, StatType type, int bonus, TimeSpan duration)
         {
             int offset = bonus;
-            string name = string.Format("[Magic] {0} Buff", type);
+            string name = $"[Magic] {type} Buff";
 
             StatMod mod = target.GetStatMod(name);
 
@@ -336,7 +333,7 @@ namespace Server.Spells
 
         public static int GetBuffOffset(Mobile m, StatType type)
         {
-            string name = string.Format("[Magic] {0} Buff", type);
+            string name = $"[Magic] {type} Buff";
 
             StatMod mod = m.GetStatMod(name);
 
@@ -361,7 +358,7 @@ namespace Server.Spells
         public static bool AddStatCurse(Mobile caster, Mobile target, StatType type, int curse, TimeSpan duration)
         {
             int offset = curse;
-            string name = string.Format("[Magic] {0} Curse", type);
+            string name = $"[Magic] {type} Curse";
 
             StatMod mod = target.GetStatMod(name);
 
@@ -386,7 +383,7 @@ namespace Server.Spells
 
         public static int GetCurseOffset(Mobile m, StatType type)
         {
-            string name = string.Format("[Magic] {0} Curse", type);
+            string name = $"[Magic] {type} Curse";
 
             StatMod mod = m.GetStatMod(name);
 
@@ -980,12 +977,12 @@ namespace Server.Spells
             if (map != Map.Malas)
                 return false;
 
-            int x = loc.X, y = loc.Y, z = loc.Z;
+            int x = loc.X, y = loc.Y;
 
-            bool r1 = (x >= 0 && y >= 0 && x <= 128 && y <= 128);
-            bool r2 = (x >= 45 && y >= 320 && x < 195 && y < 710);
+            bool r1 = x >= 0 && y >= 0 && x <= 128 && y <= 128;
+            bool r2 = x >= 45 && y >= 320 && x < 195 && y < 710;
 
-            return (r1 || r2);
+            return r1 || r2;
         }
 
         public static bool IsDoomGauntlet(Map map, Point3D loc)
@@ -1089,8 +1086,8 @@ namespace Server.Spells
         //towns
         public static bool IsTown(IPoint3D loc, Mobile caster)
         {
-            if (loc is Item)
-                loc = ((Item)loc).GetWorldLocation();
+            if (loc is Item item)
+                loc = item.GetWorldLocation();
 
             return IsTown(new Point3D(loc), caster);
         }
@@ -1109,8 +1106,8 @@ namespace Server.Spells
 
         public static bool CheckTown(IPoint3D loc, Mobile caster)
         {
-            if (loc is Item)
-                loc = ((Item)loc).GetWorldLocation();
+            if (loc is Item item)
+                loc = item.GetWorldLocation();
 
             return CheckTown(new Point3D(loc), caster);
         }
@@ -1190,10 +1187,10 @@ namespace Server.Spells
 
             if (spell.SpellDamageType == DamageType.Spell)
             {
-                if (defender is DamageableItem && ((DamageableItem)defender).CheckReflect(spell, source))
+                if (defender is DamageableItem item && item.CheckReflect(spell, source))
                 {
                     IDamageable temp = source;
-                    source = defender;
+                    source = item;
                     defender = temp;
                     return true;
                 }
@@ -1432,14 +1429,18 @@ namespace Server.Spells
             protected override void OnTick()
             {
                 if (m_From is BaseCreature fromCreature)
+                {
                     fromCreature.AlterSpellDamageTo(m_Target, ref m_Damage);
+                }
 
                 if (m_Target is BaseCreature targetCreature)
+                {
                     targetCreature.AlterSpellDamageFrom(m_From, ref m_Damage);
+                }
 
                 m_Target.Damage(m_Damage);
-                if (m_Spell != null)
-                    m_Spell.RemoveDelayedDamageContext(m_Target);
+
+                m_Spell?.RemoveDelayedDamageContext(m_Target);
             }
         }
 
@@ -1513,15 +1514,18 @@ namespace Server.Spells
                 }
 
                 if (target != null)
+                {
                     Mysticism.SpellPlagueSpell.OnMobileDamaged(target);
+                }
 
-                if (m_Spell != null)
-                    m_Spell.RemoveDelayedDamageContext(m_Target);
+                m_Spell?.RemoveDelayedDamageContext(m_Target);
 
                 NegativeAttributes.OnCombatAction(m_From);
 
                 if (m_From != target)
+                {
                     NegativeAttributes.OnCombatAction(target);
+                }
             }
         }
     }

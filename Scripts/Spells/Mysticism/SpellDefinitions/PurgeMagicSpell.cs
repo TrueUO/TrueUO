@@ -302,7 +302,7 @@ namespace Server.Spells.Mysticism
 
         public class InternalTarget : Target
         {
-            public PurgeMagicSpell Owner { get; set; }
+            public PurgeMagicSpell Owner { get; }
 
             public InternalTarget(PurgeMagicSpell owner)
                 : this(owner, false)

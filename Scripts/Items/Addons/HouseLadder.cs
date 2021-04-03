@@ -9,7 +9,6 @@ namespace Server.Items
 
         [Constructable]
         public HouseLadderAddon(int type)
-            : base()
         {
             switch (type)
             {
@@ -73,7 +72,6 @@ namespace Server.Items
 
         [Constructable]
         public HouseLadderDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

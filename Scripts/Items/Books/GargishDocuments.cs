@@ -12,11 +12,7 @@ namespace Server.Items
         public override int[] Contents => new int[] { };
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public SecureLevel Level
-        {
-            get { return m_Level; }
-            set { m_Level = value; }
-        }
+        public SecureLevel Level { get => m_Level; set => m_Level = value; }
 
         public GargishDocumentBook()
         {
@@ -30,10 +26,10 @@ namespace Server.Items
 
         public override void AddNameProperty(ObjectPropertyList list)
         {
-            if (Title is int)
-                list.Add(1150928, string.Format("#{0}", (int)Title));  // Gargish Document - ~1_NAME~
-            else if (Title is string)
-                list.Add(1150928, (string)Title);
+            if (Title is int iTitle)
+                list.Add(1150928, string.Format("#{0}", iTitle));  // Gargish Document - ~1_NAME~
+            else if (Title is string sTitle)
+                list.Add(1150928, sTitle);
             else
                 base.AddNameProperty(list);
         }
@@ -46,13 +42,15 @@ namespace Server.Items
         {
             base.Serialize(writer);
             writer.Write(0);
+
             writer.Write((int)m_Level);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int v = reader.ReadInt();
+            reader.ReadInt();
+
             m_Level = (SecureLevel)reader.ReadInt();
         }
     }
@@ -62,7 +60,6 @@ namespace Server.Items
         public virtual int Title => 0;
 
         public GargishDocumentNote()
-            : base()
         {
         }
 
@@ -88,7 +85,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int v = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -96,7 +93,7 @@ namespace Server.Items
     {
         public override object Title => 1150904;  // The Challenge Rite
         public override object Author => "unknown";
-        public override int[] Contents => new int[] { 1150915, 1150916, 1150917, 1150918, 1150919, 1150920, 1150921, 1150922 };
+        public override int[] Contents => new[] { 1150915, 1150916, 1150917, 1150918, 1150919, 1150920, 1150921, 1150922 };
 
         [Constructable]
         public ChallengeRite()
@@ -117,7 +114,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int v = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -125,7 +122,7 @@ namespace Server.Items
     {
         public override object Title => 1150907;  // On the Void
         public override object Author => "Prugyilonus";
-        public override int[] Contents => new int[] { 1150894, 1150895, 1150896 };
+        public override int[] Contents => new[] { 1150894, 1150895, 1150896 };
 
         [Constructable]
         public OnTheVoid()
@@ -146,7 +143,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int v = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -154,7 +151,7 @@ namespace Server.Items
     {
         public override object Title => 1150913;  // In Memory
         public override object Author => "Queen Zhah";
-        public override int[] Contents => new int[] { 1151071, 1151072, 1151073 };
+        public override int[] Contents => new[] { 1151071, 1151072, 1151073 };
 
         [Constructable]
         public InMemory()
@@ -175,7 +172,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int v = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -203,7 +200,7 @@ namespace Server.Items
         private int m_Charges;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int Charges { get { return m_Charges; } set { m_Charges = value; InvalidateProperties(); } }
+        public int Charges { get => m_Charges; set { m_Charges = value; InvalidateProperties(); } }
 
         [Constructable]
         public ChronicleOfTheGargoyleQueen1()
@@ -228,13 +225,15 @@ namespace Server.Items
         {
             base.Serialize(writer);
             writer.Write(0);
+
             writer.Write(m_Charges);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int v = reader.ReadInt();
+            reader.ReadInt();
+
             m_Charges = reader.ReadInt();
         }
     }
@@ -261,7 +260,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int v = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -272,7 +271,7 @@ namespace Server.Items
         private readonly string m_Content = "To Her Honor the High Broodmother, Lady Zhah from his majesty, King Trajalem:<br><br>	High Broodmother, I have received your latest petition regarding your desires and I once again must remind you that I have absolutely no interest in altering tradition or granting you the freedom from the slavery you have deluded yourself into believing makes up your life.<br><br>Please remember that your office may be stripped by me if you are deemed unfit to lead the other Broodmothers. Be happy with your place and do not forget it; this is the last time I will lower myself to respond to these ridiculous accusations and requests.";
 
         [Constructable]
-        public LetterFromTheKing() : base()
+        public LetterFromTheKing()
         {
             NoteString = m_Content;
         }
@@ -290,7 +289,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int v = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -316,7 +315,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int v = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -342,7 +341,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int v = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -368,7 +367,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int v = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -394,7 +393,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int v = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -420,7 +419,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int v = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

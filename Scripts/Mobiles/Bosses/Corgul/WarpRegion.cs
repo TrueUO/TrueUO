@@ -73,19 +73,23 @@ namespace Server.Regions
             List<PlayerMobile> pms = new List<PlayerMobile>();
             bool hasMap = false;
 
-            foreach (PlayerMobile i in boat.GetEntitiesOnBoard().OfType<PlayerMobile>().Where(pm => pm.NetState != null))
+            foreach (PlayerMobile i in boat.GetEntitiesOnBoard().OfType<PlayerMobile>())
             {
-                pms.Add(i);
-                PlayerMobile pm = i;
-
-                if (pm.Backpack == null)
-                    continue;
-
-                Item item = pm.Backpack.FindItemByType(typeof(CorgulIslandMap));
-                if (item != null && item is CorgulIslandMap && Contains(((CorgulIslandMap)item).DestinationPoint))
+                if (i.NetState != null)
                 {
-                    hasMap = true;
-                    break;
+                    pms.Add(i);
+                    PlayerMobile pm = i;
+
+                    if (pm.Backpack == null)
+                        continue;
+
+                    Item item = pm.Backpack.FindItemByType(typeof(CorgulIslandMap));
+
+                    if (item is CorgulIslandMap islandMap && Contains(islandMap.DestinationPoint))
+                    {
+                        hasMap = true;
+                        break;
+                    }
                 }
             }
 
@@ -143,7 +147,7 @@ namespace Server.Regions
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             Delete();
         }

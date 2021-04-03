@@ -17,9 +17,9 @@ namespace Server.Engines.Astronomy
 
         public override void OnDoubleClick(Mobile m)
         {
-            if (m is PlayerMobile && m.InRange(GetWorldLocation(), 3))
+            if (m is PlayerMobile mobile && mobile.InRange(GetWorldLocation(), 3))
             {
-                BaseGump.SendGump(new ConstellationLedgerGump((PlayerMobile)m));
+                BaseGump.SendGump(new ConstellationLedgerGump(mobile));
             }
         }
 

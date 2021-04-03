@@ -78,10 +78,10 @@ namespace Server.Spells.SkillMasteries
 
                             Server.Timer.DelayCall(TimeSpan.FromMilliseconds(800), obj =>
                             {
-                                Mobile mobile = obj as Mobile;
+                                Mobile mobile = obj;
 
-                                if (mobile != null)
-                                    mobile.FixedParticles(0x36BD, 20, 10, 5044, EffectLayer.Head);
+                                mobile?.FixedParticles(0x36BD, 20, 10, 5044, EffectLayer.Head);
+
                             }, mob);
 
                             mob.PlaySound(0x1DD);

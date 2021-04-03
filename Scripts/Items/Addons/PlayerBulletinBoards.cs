@@ -88,43 +88,13 @@ namespace Server.Items
 
         public List<PlayerBBMessage> Messages => m_Messages;
 		
-        public PlayerBBMessage Greeting
-        {
-            get
-            {
-                return m_Greeting;
-            }
-            set
-            {
-                m_Greeting = value;
-            }
-        }
+        public PlayerBBMessage Greeting { get => m_Greeting; set => m_Greeting = value; }
 		
         [CommandProperty(AccessLevel.GameMaster)]
-        public string Title
-        {
-            get
-            {
-                return m_Title;
-            }
-            set
-            {
-                m_Title = value;
-            }
-        }
+        public string Title { get => m_Title; set => m_Title = value; }
 		
         [CommandProperty(AccessLevel.GameMaster)]
-        public SecureLevel Level
-        {
-            get
-            {
-                return m_Level;
-            }
-            set
-            {
-                m_Level = value;
-            }
-        }
+        public SecureLevel Level { get => m_Level; set => m_Level = value; }
 
         public virtual bool Public => false;
 
@@ -266,17 +236,20 @@ namespace Server.Items
                     from.SendLocalizedMessage(1062396); // This bulletin board must be locked down in a house to be usable.
                     return;
                 }
-                else if (!from.InRange(board.GetWorldLocation(), 2) || !from.InLOS(board))
+
+                if (!from.InRange(board.GetWorldLocation(), 2) || !from.InLOS(board))
                 {
                     from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1019045); // I can't reach that.
                     return;
                 }
-                else if (!board.CheckAccess(house, from))
+
+                if (!board.CheckAccess(house, from))
                 {
                     from.SendLocalizedMessage(1062398); // You are not allowed to post to this bulletin board.
                     return;
                 }
-                else if (m_Greeting && !board.CanPostGreeting(house, from))
+
+                if (m_Greeting && !board.CanPostGreeting(house, from))
                 {
                     return;
                 }
@@ -342,12 +315,14 @@ namespace Server.Items
                     from.SendLocalizedMessage(1062396); // This bulletin board must be locked down in a house to be usable.
                     return;
                 }
-                else if (!from.InRange(board.GetWorldLocation(), 2) || !from.InLOS(board))
+
+                if (!from.InRange(board.GetWorldLocation(), 2) || !from.InLOS(board))
                 {
                     from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1019045); // I can't reach that.
                     return;
                 }
-                else if (!board.CheckAccess(house, from))
+
+                if (!board.CheckAccess(house, from))
                 {
                     from.SendLocalizedMessage(1062398); // You are not allowed to post to this bulletin board.
                     return;
@@ -396,41 +371,13 @@ namespace Server.Items
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public DateTime Time
-        {
-            get
-            {
-                return m_Time;
-            }
-            set
-            {
-                m_Time = value;
-            }
-        }
+        public DateTime Time { get => m_Time; set => m_Time = value; }
+
         [CommandProperty(AccessLevel.GameMaster)]
-        public Mobile Poster
-        {
-            get
-            {
-                return m_Poster;
-            }
-            set
-            {
-                m_Poster = value;
-            }
-        }
+        public Mobile Poster { get => m_Poster; set => m_Poster = value; }
+
         [CommandProperty(AccessLevel.GameMaster)]
-        public string Message
-        {
-            get
-            {
-                return m_Message;
-            }
-            set
-            {
-                m_Message = value;
-            }
-        }
+        public string Message { get => m_Message; set => m_Message = value; }
 		
         public void Serialize(GenericWriter writer)
         {
@@ -505,7 +452,7 @@ namespace Server.Items
                 AddHtml(255, 180, 150, 20, message.Time.ToString("yyyy-MM-dd HH:mm:ss"), false, false);
 
                 Mobile poster = message.Poster;
-                string name = (poster == null ? null : poster.Name);
+                string name = poster == null ? null : poster.Name;
 
                 if (name == null || (name = name.Trim()).Length == 0)
                     name = "Someone";
@@ -548,12 +495,14 @@ namespace Server.Items
                 from.SendLocalizedMessage(1062396); // This bulletin board must be locked down in a house to be usable.
                 return;
             }
-            else if (!from.InRange(board.GetWorldLocation(), 2) || !from.InLOS(board))
+
+            if (!from.InRange(board.GetWorldLocation(), 2) || !from.InLOS(board))
             {
                 from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1019045); // I can't reach that.
                 return;
             }
-            else if (!board.CheckAccess(house, from))
+
+            if (!board.CheckAccess(house, from))
             {
                 from.SendLocalizedMessage(1062398); // You are not allowed to post to this bulletin board.
                 return;
@@ -643,7 +592,7 @@ namespace Server.Items
                                 {
                                     from.SendLocalizedMessage(501356); // This person is already banned!
                                 }
-                                else if (poster is BaseCreature && ((BaseCreature)poster).NoHouseRestrictions)
+                                else if (poster is BaseCreature creature && creature.NoHouseRestrictions)
                                 {
                                     from.SendLocalizedMessage(1062040); // You cannot ban that.
                                 }

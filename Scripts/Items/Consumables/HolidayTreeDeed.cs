@@ -23,20 +23,17 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1041116;// a deed for a holiday tree
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
-
-            LootType = LootType.Blessed;
+            reader.ReadInt();
         }
 
         public bool ValidatePlacement(Mobile from, Point3D loc)
@@ -92,8 +89,8 @@ namespace Server.Items
 
             Point3D loc = new Point3D(p);
 
-            if (p is StaticTarget)
-                loc.Z -= TileData.ItemTable[((StaticTarget)p).ItemID].CalcHeight;	/* NOTE: OSI does not properly normalize Z positioning here.
+            if (p is StaticTarget target)
+                loc.Z -= TileData.ItemTable[target.ItemID].CalcHeight;	/* NOTE: OSI does not properly normalize Z positioning here.
             * A side affect is that you can only place on floors (due to the CanFit call).
             * That functionality may be desired. And so, it's included in this script.
             */

@@ -195,6 +195,7 @@ namespace Server.Items
         }
 
         public override BookContent DefaultContent => Content;
+
         public override void AddNameProperty(ObjectPropertyList list)
         {
             list.Add("Khabur's Journal");
@@ -203,15 +204,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
         }
     }
 }

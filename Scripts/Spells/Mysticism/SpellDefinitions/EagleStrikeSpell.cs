@@ -73,7 +73,7 @@ namespace Server.Spells.Mysticism
 
         public class InternalTarget : Target
         {
-            public EagleStrikeSpell Owner { get; set; }
+            public EagleStrikeSpell Owner { get; }
 
             public InternalTarget(EagleStrikeSpell owner)
                 : this(owner, false)

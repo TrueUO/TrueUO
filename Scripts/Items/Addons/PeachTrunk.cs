@@ -4,7 +4,6 @@ namespace Server.Items
     {
         [Constructable]
         public PeachTrunkAddon()
-            : base()
         {
             AddComponent(new LocalizedAddonComponent(0xD9C, 1076786), 0, 0, 0);
         }
@@ -34,7 +33,6 @@ namespace Server.Items
     {
         [Constructable]
         public PeachTrunkDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

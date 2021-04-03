@@ -43,7 +43,8 @@ namespace Server.Mobiles
             MinTameSkill = 72.0;
 
             SetMagicalAbility(MagicalAbility.BattleDefense);
-            SetWeaponAbility(WeaponAbility.MortalStrike);
+            SetWeaponAbility(WeaponAbility.Disarm);
+            SetWeaponAbility(WeaponAbility.ParalyzingBlow);
             SetSpecialAbility(SpecialAbility.LifeLeech);
         }
 
@@ -65,7 +66,7 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

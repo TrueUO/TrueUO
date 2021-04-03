@@ -28,15 +28,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         public virtual object FindParent(Mobile from)
@@ -65,7 +63,7 @@ namespace Server.Items
 
         public override void Drink(Mobile from)
         {
-            if (from.Paralyzed || from.Frozen || (from.Spell != null && from.Spell.IsCasting))
+            if (from.Paralyzed || from.Frozen || from.Spell != null && from.Spell.IsCasting)
             {
                 from.SendLocalizedMessage(1062725); // You can not use a purple potion while paralyzed.
                 return;
@@ -104,7 +102,7 @@ namespace Server.Items
 
             bool damageThrower = false;
 
-            if (from.Target is ThrowTarget && ((ThrowTarget)from.Target).Potion == this)
+            if (from.Target is ThrowTarget target && target.Potion == this)
             {
                 Target.Cancel(from);
             }
@@ -178,17 +176,13 @@ namespace Server.Items
                 Point3D loc;
                 Map map;
 
-                if (parent is Item)
+                if (parent is Item item)
                 {
-                    Item item = (Item)parent;
-
                     loc = item.GetWorldLocation();
                     map = item.Map;
                 }
-                else if (parent is Mobile)
+                else if (parent is Mobile m)
                 {
-                    Mobile m = (Mobile)parent;
-
                     loc = m.Location;
                     map = m.Map;
                 }
@@ -202,13 +196,13 @@ namespace Server.Items
             }
             else
             {
-                if (parent is Item)
+                if (parent is Item item)
                 {
-                    ((Item)parent).PublicOverheadMessage(MessageType.Regular, 0x22, false, timer.ToString());
+                    item.PublicOverheadMessage(MessageType.Regular, 0x22, false, timer.ToString());
                 }
-                else if (parent is Mobile)
+                else if (parent is Mobile mobile)
                 {
-                    ((Mobile)parent).PublicOverheadMessage(MessageType.Regular, 0x22, false, timer.ToString());
+                    mobile.PublicOverheadMessage(MessageType.Regular, 0x22, false, timer.ToString());
                 }
 
                 states[1] = timer - 1;

@@ -441,9 +441,12 @@ namespace Server.Spells.SkillMasteries
 
             if (m is PlayerMobile pm)
             {
-                foreach (Mobile pet in pm.AllFollowers.Where(p => !PartyList.Contains(p) && ValidPartyMember(p)))
+                foreach (Mobile pet in pm.AllFollowers)
                 {
-                    AddPartyMember(pet);
+                    if (!PartyList.Contains(pet) && ValidPartyMember(pet))
+                    {
+                        AddPartyMember(pet);
+                    }
                 }
             }
         }
@@ -455,9 +458,12 @@ namespace Server.Spells.SkillMasteries
 
             if (m is PlayerMobile pm)
             {
-                foreach (Mobile pet in pm.AllFollowers.Where(p => PartyList.Contains(p)))
+                foreach (Mobile pet in pm.AllFollowers)
                 {
-                    RemovePartyMember(pet);
+                    if (PartyList.Contains(pet))
+                    {
+                        RemovePartyMember(pet);
+                    }
                 }
             }
         }
@@ -466,9 +472,12 @@ namespace Server.Spells.SkillMasteries
         {
             if (m is PlayerMobile pm)
             {
-                foreach (Mobile pet in pm.AllFollowers.Where(p => !PartyList.Contains(p) && ValidPartyMember(p)))
+                foreach (Mobile pet in pm.AllFollowers)
                 {
-                    AddPartyMember(pet);
+                    if (!PartyList.Contains(pet) && ValidPartyMember(pet))
+                    {
+                        AddPartyMember(pet);
+                    }
                 }
             }
         }
@@ -577,10 +586,12 @@ namespace Server.Spells.SkillMasteries
 
         public static TSpell GetSpell<TSpell>(Func<SkillMasterySpell, bool> predicate) where TSpell : SkillMasterySpell
         {
-            foreach (SkillMasterySpell spell in EnumerateAllSpells().Where(sp => sp.GetType() == typeof(TSpell)))
+            foreach (SkillMasterySpell spell in EnumerateAllSpells())
             {
-                if (predicate != null && predicate(spell))
+                if (spell.GetType() == typeof(TSpell) && predicate != null && predicate(spell))
+                {
                     return spell as TSpell;
+                }
             }
 
             return null;
@@ -678,9 +689,12 @@ namespace Server.Spells.SkillMasteries
 
         public static IEnumerable<SkillMasterySpell> GetSpellsForParty(Mobile from, SkillName? allowed)
         {
-            foreach (var spell in EnumerateSpells(from).Where(s => s.PartyEffects && (allowed == null || s.CastSkill != allowed)))
+            foreach (var spell in EnumerateSpells(from))
             {
-                yield return spell;
+                if (spell.PartyEffects && (allowed == null || spell.CastSkill != allowed))
+                {
+                    yield return spell;
+                }
             }
 
             Party p = Party.Get(from);
@@ -689,9 +703,12 @@ namespace Server.Spells.SkillMasteries
             {
                 foreach (PartyMemberInfo info in p.Members)
                 {
-                    foreach (var spell in EnumerateSpells(info.Mobile).Where(s => s.PartyEffects && (allowed == null || s.CastSkill != allowed)))
+                    foreach (var spell in EnumerateSpells(info.Mobile))
                     {
-                        yield return spell;
+                        if (spell.PartyEffects && (allowed == null || spell.CastSkill != allowed))
+                        {
+                            yield return spell;
+                        }
                     }
                 }
             }
@@ -818,8 +835,7 @@ namespace Server.Spells.SkillMasteries
 
             Caster.Delta(MobileDelta.WeaponDamage);
 
-            if (Target != null)
-                Target.Delta(MobileDelta.WeaponDamage);
+            Target?.Delta(MobileDelta.WeaponDamage);
 
             if (PartyList != null)
             {
@@ -835,6 +851,7 @@ namespace Server.Spells.SkillMasteries
         /// </summary>
         /// <param name="victim"></param>
         /// <param name="damager"></param>
+        /// <param name="type"></param>
         /// <param name="damage"></param>
         public static void OnDamage(Mobile victim, Mobile damager, DamageType type, ref int damage)
         {
@@ -858,18 +875,15 @@ namespace Server.Spells.SkillMasteries
 
             SkillMasteryMove move = SpecialMove.GetCurrentMove(victim) as SkillMasteryMove;
 
-            if (move != null)
-                move.OnDamaged(damager, victim, type, ref damage);
+            move?.OnDamaged(damager, victim, type, ref damage);
 
             PerseveranceSpell preserve = GetSpellForParty(victim, typeof(PerseveranceSpell)) as PerseveranceSpell;
 
-            if (preserve != null)
-                preserve.AbsorbDamage(ref damage);
+            preserve?.AbsorbDamage(ref damage);
 
             InspireSpell inspire = GetSpellForParty(damager, typeof(InspireSpell)) as InspireSpell;
 
-            if (inspire != null)
-                inspire.DoDamage(ref damage);
+            inspire?.DoDamage(ref damage);
 
             CombatTrainingSpell.CheckDamage(damager, victim, type, ref damage);
         }
@@ -883,7 +897,9 @@ namespace Server.Spells.SkillMasteries
         public static void OnHit(Mobile attacker, Mobile defender, ref int damage)
         {
             if (attacker == null || defender == null)
+            {
                 return;
+            }
 
             foreach (SkillMasterySpell spell in EnumerateSpells(attacker))
             {
@@ -897,11 +913,12 @@ namespace Server.Spells.SkillMasteries
 
             SkillMasteryMove move = SpecialMove.GetCurrentMove(defender) as SkillMasteryMove;
 
-            if (move != null)
-                move.OnGotHit(attacker, defender, ref damage);
+            move?.OnGotHit(attacker, defender, ref damage);
 
             if (attacker is BaseCreature || defender is BaseCreature)
+            {
                 CombatTrainingSpell.OnCreatureHit(attacker, defender, ref damage);
+            }
         }
 
         /// <summary>
@@ -982,8 +999,7 @@ namespace Server.Spells.SkillMasteries
 
             Caster.Delta(MobileDelta.WeaponDamage);
 
-            if (Target != null)
-                Target.Delta(MobileDelta.WeaponDamage);
+            Target?.Delta(MobileDelta.WeaponDamage);
 
             if (PartyList != null)
             {
@@ -1033,17 +1049,23 @@ namespace Server.Spells.SkillMasteries
 
         public static void CancelWeaponAbility(Mobile attacker)
         {
-            foreach (SkillMasterySpell spell in EnumerateSpells(attacker).Where(s => s.CancelsWeaponAbility))
+            foreach (SkillMasterySpell spell in EnumerateSpells(attacker))
             {
-                spell.Expire();
+                if (spell.CancelsWeaponAbility)
+                {
+                    spell.Expire();
+                }
             }
         }
 
         public static void CancelSpecialMove(Mobile attacker)
         {
-            foreach (SkillMasterySpell spell in EnumerateSpells(attacker).Where(s => s.CancelsSpecialMove))
+            foreach (SkillMasterySpell spell in EnumerateSpells(attacker))
             {
-                spell.Expire();
+                if (spell.CancelsSpecialMove)
+                {
+                    spell.Expire();
+                }
             }
         }
 
@@ -1237,8 +1259,8 @@ namespace Server.Spells.SkillMasteries
 
         public class MasteryTarget : Target
         {
-            public SkillMasterySpell Owner { get; set; }
-            public bool AutoFinishSequence { get; set; }
+            public SkillMasterySpell Owner { get; }
+            public bool AutoFinishSequence { get; }
 
             public MasteryTarget(SkillMasterySpell spell, int range = 10, bool allowGround = false, TargetFlags flags = TargetFlags.None, bool autoEnd = true)
                 : base(range, allowGround, flags)
@@ -1281,8 +1303,7 @@ namespace Server.Spells.SkillMasteries
 
             protected override void OnTick()
             {
-                if (m_Spell != null)
-                    m_Spell.OnTick();
+                m_Spell?.OnTick();
             }
         }
 

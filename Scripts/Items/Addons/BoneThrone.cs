@@ -43,7 +43,6 @@ namespace Server.Items
     {
         [Constructable]
         public BoneThroneAddon()
-            : base()
         {
             AddComponent(new BoneThroneComponent(), 0, 0, 0);
         }
@@ -73,7 +72,6 @@ namespace Server.Items
     {
         [Constructable]
         public BoneThroneDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

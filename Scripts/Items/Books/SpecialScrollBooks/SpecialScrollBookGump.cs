@@ -7,7 +7,7 @@ namespace Server.Gumps
 {
     public class SpecialScrollBookGump : BaseGump
     {
-        public BaseSpecialScrollBook Book { get; private set; }
+        public BaseSpecialScrollBook Book { get; }
 
         public SkillCat Category { get; set; }
         public int Skill { get; set; } = -1;
@@ -26,7 +26,7 @@ namespace Server.Gumps
 
             for (int i = 0; i < 2; ++i)
             {
-                int xOffset = 25 + (i * 165);
+                int xOffset = 25 + i * 165;
 
                 AddImage(xOffset, 45, 57);
                 xOffset += 20;
@@ -68,11 +68,11 @@ namespace Server.Gumps
             int index = 0;
             foreach (KeyValuePair<SkillCat, List<SkillName>> kvp in Book.SkillInfo)
             {
-                AddHtmlLocalized(45, 55 + (index * 15), 100, 20, BaseSpecialScrollBook.GetCategoryLocalization(kvp.Key), false, false);
+                AddHtmlLocalized(45, 55 + index * 15, 100, 20, BaseSpecialScrollBook.GetCategoryLocalization(kvp.Key), false, false);
 
                 if (HasScroll(kvp.Value))
                 {
-                    AddButton(30, 59 + (index * 15), 2103, 2104, 10 + (int)kvp.Key, GumpButtonType.Reply, 0);
+                    AddButton(30, 59 + index * 15, 2103, 2104, 10 + (int)kvp.Key, GumpButtonType.Reply, 0);
                 }
 
                 index++;
@@ -189,7 +189,7 @@ namespace Server.Gumps
                     {
                         List<SkillName> list = Book.SkillInfo[Category];
 
-                        if (id >= 0 && id < list.Count)
+                        if (id < list.Count)
                         {
                             Skill = (int)list[id];
                             Refresh();
@@ -221,8 +221,13 @@ namespace Server.Gumps
         {
             int count = 0;
 
-            foreach (SpecialScroll scroll in Book.Items.OfType<SpecialScroll>().Where(s => s.Skill == skill && value == s.Value))
-                count++;
+            foreach (SpecialScroll scroll in Book.Items.OfType<SpecialScroll>())
+            {
+                if (scroll.Skill == skill && value == scroll.Value)
+                {
+                    count++;
+                }
+            }
 
             return count;
         }

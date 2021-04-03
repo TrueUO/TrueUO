@@ -9,8 +9,9 @@ namespace Server.Items
                 LocalizedAddonComponent laoc = new LocalizedAddonComponent(i, 1077395)
                 {
                     Light = LightType.SouthSmall
-                }; // Gingerbread House
-                AddComponent(laoc, (i == 0x2be5) ? -1 : 0, (i == 0x2be7) ? -1 : 0, 0);
+                };
+
+                AddComponent(laoc, i == 0x2be5 ? -1 : 0, i == 0x2be7 ? -1 : 0, 0);
             }
         }
 

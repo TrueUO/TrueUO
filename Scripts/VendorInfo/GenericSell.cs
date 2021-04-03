@@ -36,7 +36,8 @@ namespace Server.Mobiles
 
         public int GetSellPriceFor(Item item, BaseVendor vendor)
         {
-            int price = 0;
+            int price;
+
             m_Table.TryGetValue(item.GetType(), out price);
 
             if (vendor != null && BaseVendor.UseVendorEconomy)
@@ -52,62 +53,72 @@ namespace Server.Mobiles
                 }
             }
 
-            if (item is BaseArmor)
+            if (item is BaseArmor armor)
             {
-                BaseArmor armor = (BaseArmor)item;
-
                 if (armor.Quality == ItemQuality.Low)
-                    price = (int)(price * 0.60);
+                {
+                    price = (int) (price * 0.60);
+                }
                 else if (armor.Quality == ItemQuality.Exceptional)
-                    price = (int)(price * 1.25);
+                {
+                    price = (int) (price * 1.25);
+                }
 
                 price += 5 * armor.ArmorAttributes.DurabilityBonus;
 
                 if (price < 1)
+                {
                     price = 1;
+                }
             }
-            else if (item is BaseWeapon)
+            else if (item is BaseWeapon weapon)
             {
-                BaseWeapon weapon = (BaseWeapon)item;
-
                 if (weapon.Quality == ItemQuality.Low)
-                    price = (int)(price * 0.60);
+                {
+                    price = (int) (price * 0.60);
+                }
                 else if (weapon.Quality == ItemQuality.Exceptional)
-                    price = (int)(price * 1.25);
+                {
+                    price = (int) (price * 1.25);
+                }
 
                 price += 100 * weapon.WeaponAttributes.DurabilityBonus;
 
                 price += 10 * weapon.Attributes.WeaponDamage;
 
                 if (price < 1)
+                {
                     price = 1;
+                }
             }
-            else if (item is BaseBeverage)
+            else if (item is BaseBeverage bev)
             {
                 int price1 = price, price2 = price;
 
-                if (item is Pitcher)
+                if (bev is Pitcher)
                 {
                     price1 = 3;
                     price2 = 5;
                 }
-                else if (item is BeverageBottle)
+                else if (bev is BeverageBottle)
                 {
                     price1 = 3;
                     price2 = 3;
                 }
-                else if (item is Jug)
+                else if (bev is Jug)
                 {
                     price1 = 6;
                     price2 = 6;
                 }
 
-                BaseBeverage bev = (BaseBeverage)item;
-
                 if (bev.IsEmpty || bev.Content == BeverageType.Milk)
+                {
                     price = price1;
+                }
                 else
+                {
                     price = price2;
+                }
             }
 
             return price;
@@ -126,18 +137,17 @@ namespace Server.Mobiles
         public string GetNameFor(Item item)
         {
             if (item.Name != null)
+            {
                 return item.Name;
-            else
-                return item.LabelNumber.ToString();
+            }
+
+            return item.LabelNumber.ToString();
         }
 
         public bool IsSellable(Item item)
         {
             if (item.QuestItem)
                 return false;
-
-            //if ( item.Hue != 0 )
-            //return false;
 
             return IsInList(item.GetType());
         }
@@ -146,9 +156,6 @@ namespace Server.Mobiles
         {
             if (item.QuestItem)
                 return false;
-
-            //if ( item.Hue != 0 )
-            //return false;
 
             return IsInList(item.GetType());
         }

@@ -31,9 +31,6 @@ namespace Server.Items
         {
         }
 
-
-        public override string TranslocationItemName => "greater bracelet of binding";
-
         public override void AddNameProperty(ObjectPropertyList list)
         {
             list.Add(1151769); // Greater Bracelet of Binding
@@ -50,15 +47,15 @@ namespace Server.Items
                 return;
             }
 
-            if (from is PlayerMobile && from.Items.Contains(this))
+            if (from is PlayerMobile mobile && mobile.Items.Contains(this))
             {
                 if (Pending != null)
                 {
-                    BaseGump.SendGump(new GreaterBraceletOfBindingGump((PlayerMobile)from, this, Pending));
+                    BaseGump.SendGump(new GreaterBraceletOfBindingGump(mobile, this, Pending));
                 }
                 else
                 {
-                    BaseGump.SendGump(new GreaterBraceletOfBindingGump((PlayerMobile)from, this));
+                    BaseGump.SendGump(new GreaterBraceletOfBindingGump(mobile, this));
                 }
             }
             else
@@ -107,9 +104,9 @@ namespace Server.Items
 
         public override void OnRemoved(object parent)
         {
-            if (RootParent is Mobile)
+            if (RootParent is Mobile mobile)
             {
-                Mobile m = (Mobile)RootParent;
+                Mobile m = mobile;
 
                 m.CloseGump(typeof(GreaterBraceletOfBindingGump));
                 m.CloseGump(typeof(ConfirmBindGump));
@@ -118,9 +115,9 @@ namespace Server.Items
 
         public class GreaterBraceletOfBindingGump : BaseGump
         {
-            public GreaterBraceletOfBinding Bracelet { get; set; }
+            public GreaterBraceletOfBinding Bracelet { get; }
             public bool Choose { get; set; }
-            public BindEntry Entry { get; set; }
+            public BindEntry Entry { get; }
 
             public GreaterBraceletOfBindingGump(PlayerMobile pm, GreaterBraceletOfBinding bracelet, BindEntry entry)
                 : base(pm, 100, 100)
@@ -200,9 +197,8 @@ namespace Server.Items
                         {
                             User.BeginTarget(10, false, TargetFlags.None, (from, targeted) =>
                                 {
-                                    if (targeted is PlayerMobile)
+                                    if (targeted is PlayerMobile pm)
                                     {
-                                        PlayerMobile pm = targeted as PlayerMobile;
                                         BraceletOfBinding pmBrac = pm.FindItemOnLayer(Layer.Bracelet) as BraceletOfBinding;
 
                                         if (pm == User)
@@ -221,11 +217,11 @@ namespace Server.Items
                                         {
                                             User.SendLocalizedMessage(1151771); // The target player must be wearing a Bracelet of Binding or Greater Bracelet of Binding for the device to work.
                                         }
-                                        else if (pm.HasGump(typeof(ConfirmBindGump)) || (pmBrac is GreaterBraceletOfBinding && ((GreaterBraceletOfBinding)pmBrac).Pending != null))
+                                        else if (pm.HasGump(typeof(ConfirmBindGump)) || pmBrac is GreaterBraceletOfBinding gb && gb.Pending != null)
                                         {
                                             User.SendLocalizedMessage(1151833); // You may not get confirmation from this player at this time.
                                         }
-                                        else if ((pmBrac is GreaterBraceletOfBinding && ((GreaterBraceletOfBinding)pmBrac).IsFull) || (!(pmBrac is GreaterBraceletOfBinding) && pmBrac.Bound != null))
+                                        else if ((pmBrac is GreaterBraceletOfBinding binding && binding.IsFull) || (!(pmBrac is GreaterBraceletOfBinding) && pmBrac.Bound != null))
                                         {
                                             User.SendLocalizedMessage(1151781); // The target player's greater bracelet of binding is full.
                                         }
@@ -264,11 +260,11 @@ namespace Server.Items
 
         public class ConfirmBindGump : BaseGump
         {
-            public GreaterBraceletOfBinding Bracelet { get; set; }
-            public PlayerMobile From { get; set; }
-            public int Index { get; set; }
+            public GreaterBraceletOfBinding Bracelet { get; }
+            public PlayerMobile From { get; }
+            public int Index { get; }
 
-            public bool RemoveFromBracelet { get; set; }
+            public bool RemoveFromBracelet { get; }
 
             public ConfirmBindGump(PlayerMobile user, PlayerMobile from, int index, GreaterBraceletOfBinding bracelet, bool remove)
                 : base(user, 200, 200)
@@ -315,10 +311,9 @@ namespace Server.Items
                             {
                                 BindEntry entry = bracelet.Friends[Index];
 
-                                if (entry.Bracelet is GreaterBraceletOfBinding)
+                                if (entry.Bracelet is GreaterBraceletOfBinding gbr)
                                 {
                                     PlayerMobile pm = entry.Mobile;
-                                    GreaterBraceletOfBinding gbr = entry.Bracelet as GreaterBraceletOfBinding;
 
                                     gbr.Remove(User);
 
@@ -353,12 +348,12 @@ namespace Server.Items
                                     g.Refresh();
                                 }
 
-                                if (brac is GreaterBraceletOfBinding && !((GreaterBraceletOfBinding)brac).IsBound(From))
+                                if (brac is GreaterBraceletOfBinding binding && !binding.IsBound(From))
                                 {
                                     entry = new BindEntry(From, Bracelet);
-                                    ((GreaterBraceletOfBinding)brac).Pending = entry;
+                                    binding.Pending = entry;
 
-                                    SendGump(new GreaterBraceletOfBindingGump(User, (GreaterBraceletOfBinding)brac, entry));
+                                    SendGump(new GreaterBraceletOfBindingGump(User, binding, entry));
                                 }
                                 else
                                 {
@@ -383,7 +378,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
 
             if (Pending != null)
@@ -416,7 +410,6 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             int version = reader.ReadEncodedInt();
 
             if (reader.ReadInt() == 1)
@@ -447,8 +440,8 @@ namespace Server.Items
 
         public class BindEntry
         {
-            public PlayerMobile Mobile { get; set; }
-            public BraceletOfBinding Bracelet { get; set; }
+            public PlayerMobile Mobile { get; }
+            public BraceletOfBinding Bracelet { get; }
 
             public BindEntry(PlayerMobile m, BraceletOfBinding bracelet)
             {

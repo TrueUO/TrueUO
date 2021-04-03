@@ -4,7 +4,6 @@ namespace Server.Items
     {
         [Constructable]
         public CinnamonFancyRugAddon()
-            : base()
         {
             AddComponent(new LocalizedAddonComponent(0xAE3, 1076587), 1, 1, 0);
             AddComponent(new LocalizedAddonComponent(0xAE4, 1076587), -1, -1, 0);
@@ -42,7 +41,6 @@ namespace Server.Items
     {
         [Constructable]
         public CinnamonFancyRugDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

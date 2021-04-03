@@ -132,9 +132,12 @@ namespace Server.Items
                 c.Location = new Point3D(X + (c.X - old.X), Y + (c.Y - old.Y), Z + (c.Z - old.Z));
             }
 
-            foreach (BaseCreature c in Spawn.Keys.Where(c => c != null && !c.Deleted))
+            foreach (BaseCreature c in Spawn.Keys)
             {
-                c.Location = new Point3D(X + (c.X - old.X), Y + (c.Y - old.Y), Z + (c.Z - old.Z));
+                if (c != null && !c.Deleted)
+                {
+                    c.Location = new Point3D(X + (c.X - old.X), Y + (c.Y - old.Y), Z + (c.Z - old.Z));
+                }
             }
 
             if (Beacon != null)
@@ -152,14 +155,20 @@ namespace Server.Items
                 c.Map = Map;
             }
 
-            foreach (BaseCreature c in Crew.Where(c => c != null && !c.Deleted))
+            foreach (BaseCreature c in Crew)
             {
-                c.Map = Map;
+                if (c != null && !c.Deleted)
+                {
+                    c.Map = Map;
+                }
             }
 
-            foreach (BaseCreature c in Spawn.Keys.Where(c => c != null && !c.Deleted))
+            foreach (BaseCreature c in Spawn.Keys)
             {
-                c.Map = Map;
+                if (c != null && !c.Deleted)
+                {
+                    c.Map = Map;
+                }
             }
 
             if (Beacon != null)
@@ -224,7 +233,8 @@ namespace Server.Items
             {
                 return;
             }
-            else if (!InitialSpawn)
+
+            if (!InitialSpawn)
             {
                 for (int i = 0; i < MaxSpawn; i++)
                 {
@@ -234,9 +244,12 @@ namespace Server.Items
             }
             else if (CannonsOperational && NextShoot < DateTime.UtcNow)
             {
-                foreach (MannedCannon cannon in Cannons.Where(c => c != null && !c.Deleted && (c.CanFireUnmanned || (c.Operator != null && !c.Operator.Deleted && c.Operator.Alive))))
+                foreach (MannedCannon c in Cannons)
                 {
-                    cannon.Scan(true);
+                    if (c != null && !c.Deleted && (c.CanFireUnmanned || (c.Operator != null && !c.Operator.Deleted && c.Operator.Alive)))
+                    {
+                        c.Scan(true);
+                    }
                 }
 
                 NextShoot = DateTime.UtcNow + TimeSpan.FromSeconds(2);
@@ -299,7 +312,7 @@ namespace Server.Items
 
         private int SpawnCount()
         {
-            return Spawn.Keys.Where(s => s != null && !s.Deleted).Count();
+            return Spawn.Keys.Count(s => s != null && !s.Deleted);
         }
 
         private readonly Type[] _SpawnTypes =
@@ -318,14 +331,20 @@ namespace Server.Items
                 Beacon.Delete();
             }
 
-            foreach (BaseCreature bc in Crew.Where(c => c != null && !c.Deleted))
+            foreach (BaseCreature bc in Crew)
             {
-                bc.Kill();
+                if (bc != null && !bc.Deleted)
+                {
+                    bc.Kill();
+                }
             }
 
-            foreach (BaseCreature bc in Spawn.Keys.Where(sp => sp != null && !sp.Deleted))
+            foreach (BaseCreature sp in Spawn.Keys)
             {
-                bc.Kill();
+                if (sp != null && !sp.Deleted)
+                {
+                    sp.Kill();
+                }
             }
 
             foreach (MannedCannon cannon in Cannons)
@@ -429,7 +448,7 @@ namespace Server.Items
         {
             AddonComponent ac;
             ac = new AddonComponent(item);
-            if (name != null && name.Length > 0)
+            if (!string.IsNullOrEmpty(name))
                 ac.Name = name;
             if (hue != 0)
                 ac.Hue = hue;
@@ -443,7 +462,8 @@ namespace Server.Items
             addon.AddComponent(ac, xoffset, yoffset, zoffset);
         }
 
-        private static readonly int[,] m_AddOnSimpleComponents = new int[,] {
+        private static readonly int[,] m_AddOnSimpleComponents =
+        {
               {16017, -5, -3, 4}, {16011, -2, 4, 4}// 1	 2	 3	 
 			, {16011, -2, -4, 4}, {16020, -5, -5, 4}, {16008, -2, -5, 4}// 4	 5	 6	 
 			, {16014, -4, -3, 4}, {16011, 3, -4, 4}, {16008, -2, 3, 4}// 7	 8	 9	 

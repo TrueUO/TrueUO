@@ -35,10 +35,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public Mobile Owner
         {
-            get
-            {
-                return m_Owner;
-            }
+            get => m_Owner;
             set
             {
                 m_Owner = value;
@@ -48,7 +45,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
 
             writer.Write(m_Owner);
@@ -57,10 +53,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            LootType = LootType.Blessed;
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             m_Owner = reader.ReadMobile();
         }
@@ -112,7 +105,7 @@ namespace Server.Items
             {
                 Item item = (Item)target;
 
-                if (item.LootType == LootType.Blessed || item.BlessedFor != null || (Mobile.InsuranceEnabled && item.Insured)) // Check if its already newbied (blessed)
+                if (item.LootType == LootType.Blessed || item.BlessedFor != null || Mobile.InsuranceEnabled && item.Insured) // Check if its already newbied (blessed)
                     from.SendLocalizedMessage(1045113); // That item is already blessed
                 else if (item.LootType != LootType.Regular)
                     from.SendLocalizedMessage(500509); // You can't bless this object!
@@ -125,24 +118,20 @@ namespace Server.Items
                     // Now we also know the deed is still in the players backpack,
                     // as is the item the player wants to bless. Let's go and
                     // bless it.
-                    if (item is BaseArmor)
+                    if (item is BaseArmor mitem1)
                     {
-                        BaseArmor mitem = (BaseArmor)item;
-                        mitem.BlessedBy = from;
+                        mitem1.BlessedBy = from;
                     }
-                    else if (item is BaseClothing)
+                    else if (item is BaseClothing mitem2)
                     {
-                        BaseClothing mitem = (BaseClothing)item;
-                        mitem.BlessedBy = from;
+                        mitem2.BlessedBy = from;
                     }
-                    else if (item is BaseWeapon)
+                    else if (item is BaseWeapon mitem3)
                     {
-                        BaseWeapon mitem = (BaseWeapon)item;
-                        mitem.BlessedBy = from;
+                        mitem3.BlessedBy = from;
                     }
-                    else if (item is BaseJewel)
+                    else if (item is BaseJewel mitem)
                     {
-                        BaseJewel mitem = (BaseJewel)item;
                         mitem.BlessedBy = from;
                     }
 

@@ -24,7 +24,7 @@ namespace Server.Items
         {
             base.GetProperties(list);
 
-            if (Addon is StoneAnkh && ((StoneAnkh)Addon).IsRewardItem)
+            if (Addon is StoneAnkh ankh && ankh.IsRewardItem)
                 list.Add(1076221); // 5th Year Veteran Reward
         }
 
@@ -54,7 +54,6 @@ namespace Server.Items
 
         [Constructable]
         public StoneAnkh(bool east)
-            : base()
         {
             if (east)
             {
@@ -85,23 +84,21 @@ namespace Server.Items
                 return deed;
             }
         }
+
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsRewardItem
         {
-            get
-            {
-                return m_IsRewardItem;
-            }
+            get => m_IsRewardItem;
             set
             {
                 m_IsRewardItem = value;
                 InvalidateProperties();
             }
         }
+
         public override void OnChop(Mobile from)
         {
             from.SendLocalizedMessage(500489); // You can't use an axe on that.
-            return;
         }
 
         public override void GetProperties(ObjectPropertyList list)
@@ -119,7 +116,7 @@ namespace Server.Items
                 BaseHouse house = BaseHouse.FindHouseAt(this);
                 BaseAddon addon = c.Addon;
 
-                if (house != null && (house.IsOwner(from) || (addon != null && house.Addons.ContainsKey(addon) && house.Addons[addon] == from)))
+                if (house != null && (house.IsOwner(from) || addon != null && house.Addons.ContainsKey(addon) && house.Addons[addon] == from))
                 {
                     from.CloseGump(typeof(RewardDemolitionGump));
                     from.SendGump(new RewardDemolitionGump(this, 1049783)); // Do you wish to re-deed this decoration?
@@ -156,7 +153,6 @@ namespace Server.Items
         private bool m_IsRewardItem;
         [Constructable]
         public StoneAnkhDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }
@@ -167,13 +163,11 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1049773;// deed for a stone ankh
+
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsRewardItem
         {
-            get
-            {
-                return m_IsRewardItem;
-            }
+            get => m_IsRewardItem;
             set
             {
                 m_IsRewardItem = value;
@@ -269,6 +263,7 @@ namespace Server.Items
                 South,
                 East
             }
+
             public override void OnResponse(NetState sender, RelayInfo info)
             {
                 if (m_Deed == null || m_Deed.Deleted)
@@ -276,7 +271,7 @@ namespace Server.Items
 
                 if (info.ButtonID != (int)Buttons.Cancel)
                 {
-                    m_Deed.m_East = (info.ButtonID == (int)Buttons.East);
+                    m_Deed.m_East = info.ButtonID == (int)Buttons.East;
                     m_Deed.SendTarget(sender.Mobile);
                 }
             }

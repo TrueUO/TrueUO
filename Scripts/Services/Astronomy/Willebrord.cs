@@ -110,10 +110,8 @@ namespace Server.Engines.Astronomy
 
         public override bool OnDragDrop(Mobile m, Item dropped)
         {
-            if (dropped is StarChart)
+            if (dropped is StarChart chart)
             {
-                StarChart chart = (StarChart)dropped;
-
                 if (chart.Constellation >= 0 && chart.Constellation < AstronomySystem.MaxConstellations)
                 {
                     if (string.IsNullOrEmpty(chart.ConstellationName))

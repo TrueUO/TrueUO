@@ -28,7 +28,7 @@ namespace Server.Items
 
         public override void Drink(Mobile from)
         {
-            if (from.Paralyzed || from.Frozen || (from.Spell != null && from.Spell.IsCasting))
+            if (from.Paralyzed || from.Frozen || from.Spell != null && from.Spell.IsCasting)
             {
                 from.SendLocalizedMessage(1062725); // You can not use that potion while paralyzed.
                 return;
@@ -64,7 +64,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         private readonly List<Mobile> m_Users = new List<Mobile>();
@@ -99,7 +99,7 @@ namespace Server.Items
             {
                 if (mobile != from && from.CanBeHarmful(mobile, false))
                 {
-                    double chance = ((4 * mobile.Skills[SkillName.MagicResist].Value) + 150) / 700;
+                    double chance = (4 * mobile.Skills[SkillName.MagicResist].Value + 150) / 700;
 
                     if (chance < Utility.RandomDouble())
                     {
@@ -164,8 +164,8 @@ namespace Server.Items
 
         private static void EndDelay_Callback(object obj)
         {
-            if (obj is Mobile)
-                EndDelay((Mobile)obj);
+            if (obj is Mobile mobile)
+                EndDelay(mobile);
         }
 
         public static void EndDelay(Mobile m)
@@ -209,8 +209,8 @@ namespace Server.Items
 
                 IEntity to;
 
-                if (p is Mobile)
-                    to = (Mobile)p;
+                if (p is Mobile mobile)
+                    to = mobile;
                 else
                     to = new Entity(Serial.Zero, new Point3D(p), from.Map);
 

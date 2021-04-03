@@ -64,7 +64,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int Worth
         {
-            get { return m_Worth; }
+            get => m_Worth;
             set
             {
                 m_Worth = value;
@@ -127,17 +127,15 @@ namespace Server.Items
 
             Container root = parent as Container;
 
-            while (root != null && root.Parent is Container)
+            while (root != null && root.Parent is Container container)
             {
-                root = (Container)root.Parent;
+                root = container;
             }
 
             parent = root ?? parent;
 
-            if (parent is SecureTradeContainer && AccountGold.ConvertOnTrade)
+            if (parent is SecureTradeContainer trade && AccountGold.ConvertOnTrade)
             {
-                SecureTradeContainer trade = (SecureTradeContainer)parent;
-
                 if (trade.Trade.From.Container == trade)
                 {
                     tradeInfo = trade.Trade.From;
@@ -149,9 +147,9 @@ namespace Server.Items
                     owner = tradeInfo.Mobile;
                 }
             }
-            else if (parent is BankBox && AccountGold.ConvertOnBank)
+            else if (parent is BankBox box && AccountGold.ConvertOnBank)
             {
-                owner = ((BankBox)parent).Owner;
+                owner = box.Owner;
             }
 
             if (owner == null || owner.Account == null || !owner.Account.DepositGold(Worth))

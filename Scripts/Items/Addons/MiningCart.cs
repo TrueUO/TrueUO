@@ -36,17 +36,7 @@ namespace Server.Items
         private bool m_IsRewardItem;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get
-            {
-                return m_IsRewardItem;
-            }
-            set
-            {
-                m_IsRewardItem = value;
-            }
-        }
+        public bool IsRewardItem { get => m_IsRewardItem; set => m_IsRewardItem = value; }
 
         private MiningCartType m_CartType;
 
@@ -58,10 +48,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int Gems
         {
-            get
-            {
-                return m_Gems;
-            }
+            get => m_Gems;
             set
             {
                 m_Gems = value;
@@ -74,10 +61,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int Ore
         {
-            get
-            {
-                return m_Ore;
-            }
+            get => m_Ore;
             set
             {
                 m_Ore = value;
@@ -90,7 +74,6 @@ namespace Server.Items
 
         [Constructable]
         public MiningCart(MiningCartType type)
-            : base()
         {
             m_CartType = type;
 
@@ -204,7 +187,7 @@ namespace Server.Items
             *
             */
 
-            if (!from.InRange(GetWorldLocation(), 2) || !from.InLOS(this) || !((from.Z - Z) > -3 && (from.Z - Z) < 3))
+            if (!from.InRange(GetWorldLocation(), 2) || !from.InLOS(this) || !(from.Z - Z > -3 && from.Z - Z < 3))
             {
                 from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1019045); // I can't reach that.
             }
@@ -362,14 +345,14 @@ namespace Server.Items
             {
                 base.GetProperties(list);
 
-                if (Addon is MiningCart)
+                if (Addon is MiningCart cart)
                 {
-                    switch (((MiningCart)Addon).CartType)
+                    switch (cart.CartType)
                     {
                         case MiningCartType.OreSouth:
-                        case MiningCartType.OreEast: list.Add(1094724, ((MiningCart)Addon).Ore.ToString()); break; // Ore: ~1_COUNT~
+                        case MiningCartType.OreEast: list.Add(1094724, cart.Ore.ToString()); break; // Ore: ~1_COUNT~
                         case MiningCartType.GemSouth:
-                        case MiningCartType.GemEast: list.Add(1094723, ((MiningCart)Addon).Gems.ToString()); break; // Gems: ~1_COUNT~
+                        case MiningCartType.GemEast: list.Add(1094723, cart.Gems.ToString()); break; // Gems: ~1_COUNT~
                     }
                 }
             }
@@ -460,10 +443,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsRewardItem
         {
-            get
-            {
-                return m_IsRewardItem;
-            }
+            get => m_IsRewardItem;
             set
             {
                 m_IsRewardItem = value;
@@ -476,10 +456,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int Gems
         {
-            get
-            {
-                return m_Gems;
-            }
+            get => m_Gems;
             set
             {
                 m_Gems = value;
@@ -492,10 +469,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int Ore
         {
-            get
-            {
-                return m_Ore;
-            }
+            get => m_Ore;
             set
             {
                 m_Ore = value;
@@ -505,7 +479,6 @@ namespace Server.Items
 
         [Constructable]
         public MiningCartDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }

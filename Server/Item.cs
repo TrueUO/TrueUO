@@ -807,11 +807,11 @@ namespace Server
 			get => m_GridLocation;
 			set
 			{
-				if (Parent is Container)
+				if (Parent is Container container)
 				{
-					if (value < 0 || value > 0x7C || !((Container)Parent).IsFreePosition(value))
+					if (value < 0 || value > 0x7C || !container.IsFreePosition(value))
 					{
-						m_GridLocation = ((Container)Parent).GetNewPosition(0);
+						m_GridLocation = container.GetNewPosition(0);
 					}
 					else
 					{
@@ -1483,7 +1483,7 @@ namespace Server
 					{
 						if (!ip.Movable || rpm == from || ip.Map == bounce.m_Map && ip.GetWorldLocation() == bounce.m_WorldLoc)
 						{
-                            if (from != null && ip is Container c && (c.TotalItems >= c.MaxItems || c.TotalWeight >= c.MaxWeight))
+                            if (from != null && !(ip is BankBox) && ip is Container c && (c.TotalItems >= c.MaxItems || c.IsDecoContainer && c.TotalWeight >= c.MaxWeight))
                             {
                                 MoveToWorld(from.Location, from.Map);
                             }
@@ -1770,13 +1770,13 @@ namespace Server
 
 			SetLastMoved();
 
-			if (Parent is Mobile)
+			if (Parent is Mobile mobile)
 			{
-				((Mobile)Parent).RemoveItem(this);
+				mobile.RemoveItem(this);
 			}
-			else if (Parent is Item)
+			else if (Parent is Item item)
 			{
-				((Item)Parent).RemoveItem(this);
+				item.RemoveItem(this);
 			}
 
 			if (m_Map != map)
@@ -2068,9 +2068,9 @@ namespace Server
 
 		public virtual bool OnDragDrop(Mobile from, Item dropped)
 		{
-			if (Parent is Container)
+			if (Parent is Container container)
 			{
-				return ((Container)Parent).OnStackAttempt(from, this, dropped);
+				return container.OnStackAttempt(from, this, dropped);
 			}
 
 			return StackWith(from, dropped);
@@ -4208,13 +4208,13 @@ namespace Server
 
 			SetFlag(ImplFlag.Deleted, true);
 
-			if (Parent is Mobile)
+			if (Parent is Mobile mobile)
 			{
-				((Mobile)Parent).RemoveItem(this);
+				mobile.RemoveItem(this);
 			}
-			else if (Parent is Item)
+			else if (Parent is Item item)
 			{
-				((Item)Parent).RemoveItem(this);
+				item.RemoveItem(this);
 			}
 
 			ClearBounce();
@@ -6201,10 +6201,13 @@ namespace Server
 			{
 				List<ItemSocket> list = new List<ItemSocket>();
 
-				foreach (ItemSocket socket in TimerRegistry.Keys.Where(s => TimerRegistry[s] < DateTime.UtcNow))
+				foreach (ItemSocket socket in TimerRegistry.Keys)
 				{
-					list.Add(socket);
-				}
+                    if (TimerRegistry[socket] < DateTime.UtcNow)
+                    {
+                        list.Add(socket);
+                    }
+                }
 
 				for (int i = 0; i < list.Count; i++)
 				{

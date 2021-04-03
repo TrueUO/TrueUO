@@ -6,7 +6,7 @@ namespace Server.Items
 {
     public class ReforgingContext
     {
-        public Dictionary<BaseTool, ReforgingInfo> Contexts { get; set; }
+        public Dictionary<BaseTool, ReforgingInfo> Contexts { get; }
 
         public ReforgingContext(Mobile m)
         {
