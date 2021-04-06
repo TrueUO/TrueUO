@@ -297,10 +297,14 @@ namespace Server.Spells.SkillMasteries
                             {
                                 default: args = "5\t0\t0\t0"; break;
                                 case 2: args = "5\t5\t0\t0"; break;
-                                case 3: args = "5\t5\t5\t5"; break;
+                                case 3:
+                                    {
+                                        args = "5\t5\t5\t5";
+                                        m.AddStatMod(new StatMod(StatType.Str, "SavingThrow_Str", 5, TimeSpan.Zero));
+                                        break;
+                                    }
                             }
-
-                            m.AddStatMod(new StatMod(StatType.Str, "SavingThrow_Str", 5, TimeSpan.Zero));
+                            
                             BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.SavingThrow, 1156031, 1156032, args, true)); // Provides a chance to block disarm attempts based on Mastery level, weapon skill level and tactics skill level.
                         }
                         break;
