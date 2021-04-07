@@ -17,14 +17,14 @@ namespace Server.Items
         {
         }
 
-        public override void GetProperties(ObjectPropertyList list)
-        {
-            Addon.GetProperties(list);
-        }
-
         public PetCastleComponent(Serial serial)
             : base(serial)
         {
+        }
+
+        public override void GetProperties(ObjectPropertyList list)
+        {
+            Addon.GetProperties(list);
         }
 
         public override void Serialize(GenericWriter writer)
@@ -50,13 +50,12 @@ namespace Server.Items
         private int _UsesRemaining;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int UsesRemaining { get { return _UsesRemaining; } set { _UsesRemaining = value; UpdateProperties(); } }
+        public int UsesRemaining { get => _UsesRemaining; set { _UsesRemaining = value; UpdateProperties(); } }
 
         public override bool ForceShowProperties => true;
 
         [Constructable]
         public PetCastleAddon(DirectionType type, int uses)
-            : base()
         {
             Weight = 0;
 
@@ -208,12 +207,18 @@ namespace Server.Items
 
             protected override void OnTarget(Mobile from, object targeted)
             {
-                if (targeted is BaseCreature)
-                    m_Post.EndStable(from, (BaseCreature)targeted);
+                if (targeted is BaseCreature creature)
+                {
+                    m_Post.EndStable(from, creature);
+                }
                 else if (targeted == from)
+                {
                     from.SendLocalizedMessage(502672); // HA HA HA! Sorry, I am not an inn.
+                }
                 else
+                {
                     from.SendLocalizedMessage(1048053); // You can't stable that!
+                }
             }
         }
 
@@ -268,8 +273,7 @@ namespace Server.Items
             {
                 from.SendLocalizedMessage(1048053); // You can't stable that!
             }
-            else if ((pet is PackLlama || pet is PackHorse || pet is Beetle) &&
-                     (pet.Backpack != null && pet.Backpack.Items.Count > 0))
+            else if ((pet is PackLlama || pet is PackHorse || pet is Beetle) && pet.Backpack != null && pet.Backpack.Items.Count > 0)
             {
                 from.SendLocalizedMessage(1042563); // You need to unload your pet.
             }
@@ -281,7 +285,7 @@ namespace Server.Items
             {
                 from.SendLocalizedMessage(1042565); // You have too many pets in the stables!
             }
-            else if ((from.Backpack != null && from.Backpack.ConsumeTotal(typeof(Gold), 30)) || Banker.Withdraw(from, 30))
+            else if (from.Backpack != null && from.Backpack.ConsumeTotal(typeof(Gold), 30) || Banker.Withdraw(from, 30))
             {
                 pet.ControlTarget = null;
                 pet.ControlOrder = OrderType.Stay;
@@ -331,7 +335,7 @@ namespace Server.Items
                 {
                     ++stabled;
 
-                    if ((from.Followers + pet.ControlSlots) <= from.FollowersMax)
+                    if (from.Followers + pet.ControlSlots <= from.FollowersMax)
                     {
                         UsesRemaining--;
 
@@ -407,7 +411,7 @@ namespace Server.Items
             if (pet == null || pet.Deleted || from.Map != Map || !from.InRange(this, 14) || !from.Stabled.Contains(pet) || !from.CheckAlive() || !Check(from))
                 return;
 
-            if ((from.Followers + pet.ControlSlots) <= from.FollowersMax)
+            if (from.Followers + pet.ControlSlots <= from.FollowersMax)
             {
                 UsesRemaining--;
 
@@ -483,8 +487,8 @@ namespace Server.Items
 
                 AddPage(0);
 
-                AddBackground(0, 0, 325, 50 + (list.Count * 20), 9250);
-                AddAlphaRegion(5, 5, 315, 40 + (list.Count * 20));
+                AddBackground(0, 0, 325, 50 + list.Count * 20, 9250);
+                AddAlphaRegion(5, 5, 315, 40 + list.Count * 20);
 
                 AddHtml(15, 15, 275, 20, "<BASEFONT COLOR=#FFFFFF>Select a pet to retrieve from the stables:</BASEFONT>", false, false);
 
@@ -495,8 +499,8 @@ namespace Server.Items
                     if (pet == null || pet.Deleted)
                         continue;
 
-                    AddButton(15, 39 + (i * 20), 10006, 10006, i + 1, GumpButtonType.Reply, 0);
-                    AddHtml(32, 35 + (i * 20), 275, 18, string.Format("<BASEFONT COLOR=#C0C0EE>{0}</BASEFONT>", pet.Name), false, false);
+                    AddButton(15, 39 + i * 20, 10006, 10006, i + 1, GumpButtonType.Reply, 0);
+                    AddHtml(32, 35 + i * 20, 275, 18, string.Format("<BASEFONT COLOR=#C0C0EE>{0}</BASEFONT>", pet.Name), false, false);
                 }
             }
 
@@ -547,7 +551,7 @@ namespace Server.Items
         private int _UsesRemaining;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int UsesRemaining { get { return _UsesRemaining; } set { _UsesRemaining = value; InvalidateProperties(); } }
+        public int UsesRemaining { get => _UsesRemaining; set { _UsesRemaining = value; InvalidateProperties(); } }
 
         [Constructable]
         public PetCastleDeed()
@@ -557,10 +561,14 @@ namespace Server.Items
 
         [Constructable]
         public PetCastleDeed(int uses)
-            : base()
         {
             _UsesRemaining = uses;
             LootType = LootType.Blessed;
+        }
+
+        public PetCastleDeed(Serial serial)
+            : base(serial)
+        {
         }
 
         public virtual bool Dye(Mobile from, DyeTub sender)
@@ -577,11 +585,6 @@ namespace Server.Items
             base.GetProperties(list);
 
             list.Add(1060584, _UsesRemaining.ToString()); // uses remaining: ~1_val~
-        }
-
-        public PetCastleDeed(Serial serial)
-            : base(serial)
-        {
         }
 
         public void GetOptions(RewardOptionList list)

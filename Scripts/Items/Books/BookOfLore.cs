@@ -73,6 +73,11 @@ namespace Server.Items
             PageID = pid;
         }
 
+        public PageOfLore(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void OnDoubleClick(Mobile from)
         {
             if (!IsChildOf(from.Backpack))
@@ -144,13 +149,8 @@ namespace Server.Items
             var content = Table.FirstOrDefault(x => x.Story == Story && x.PageID == PageID);
 
             list.Add(1157254, "The Tale of " + Misc.ServerList.ServerName);
-            list.Add(1114778, PageOfLore.GetStoryName(content.Story));
+            list.Add(1114778, GetStoryName(content.Story));
             list.Add(1159635, content.PageID.ToString());
-        }
-
-        public PageOfLore(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
@@ -158,7 +158,7 @@ namespace Server.Items
             base.Serialize(writer);
             writer.Write(0);
 
-            writer.Write((int)PageID);
+            writer.Write(PageID);
             writer.Write((int)Story);
         }
 
@@ -193,6 +193,11 @@ namespace Server.Items
             Content = new List<int>();
         }
 
+        public BookOfLore(Serial serial)
+            : base(serial)
+        {
+        }
+
         public bool CheckAccessible(Mobile from, Item item)
         {
             if (from.AccessLevel >= AccessLevel.GameMaster)
@@ -221,7 +226,7 @@ namespace Server.Items
             {
                 from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1019045); // I can't reach that.
             }
-            else if ((Content == null) || (!Content.Any()))
+            else if (Content == null || !Content.Any())
             {
                 from.SendLocalizedMessage(1159628); // This book contains no pages...
             }
@@ -236,8 +241,8 @@ namespace Server.Items
 
         public class BookOfLoreGump : Gump
         {
-            public BookOfLore Book { get; set; }
-            public int Page { get; set; }
+            public BookOfLore Book { get; }
+            public int Page { get; }
 
             public BookOfLoreGump(BookOfLore book, int page)
                 : base(100, 100)
@@ -308,18 +313,13 @@ namespace Server.Items
             }
         }
 
-        public BookOfLore(Serial serial)
-            : base(serial)
-        {
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
             writer.Write(0);
 
             writer.Write((int)Level);
-            writer.Write((int)CurrentPage);
+            writer.Write(CurrentPage);
             writer.Write((int)Story);
 
             writer.Write(Content.Count);

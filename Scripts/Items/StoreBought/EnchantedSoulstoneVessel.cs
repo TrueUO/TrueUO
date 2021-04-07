@@ -13,20 +13,12 @@ namespace Server.Items
         private Mobile m_Owned;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public Mobile Owned
-        {
-            get { return m_Owned; }
-            set { m_Owned = value; InvalidateProperties(); }
-        }
+        public Mobile Owned { get => m_Owned; set { m_Owned = value; InvalidateProperties(); } }
 
         private bool m_IsRewardItem;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get { return m_IsRewardItem; }
-            set { m_IsRewardItem = value; InvalidateProperties(); }
-        }
+        public bool IsRewardItem { get => m_IsRewardItem; set { m_IsRewardItem = value; InvalidateProperties(); } }
 
         public override int DefaultMaxItems => 20;
 
@@ -38,6 +30,11 @@ namespace Server.Items
         {
             LootType = LootType.Blessed;
             Weight = 10.0;
+        }
+
+        public EnchantedSoulstoneVessel(Serial serial)
+            : base(serial)
+        {
         }
 
         public bool CheckAccount(Mobile from)
@@ -141,11 +138,6 @@ namespace Server.Items
             {
                 list.Add(1159626); // Account Bound Once Secured
             }
-        }
-
-        public EnchantedSoulstoneVessel(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)

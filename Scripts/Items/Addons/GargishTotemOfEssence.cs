@@ -14,14 +14,14 @@ namespace Server.Items
         {
         }
 
-        public override void GetProperties(ObjectPropertyList list)
-        {
-            Addon.GetProperties(list);
-        }
-
         public GargishTotemOfEssenceComponent(Serial serial)
             : base(serial)
         {
+        }
+
+        public override void GetProperties(ObjectPropertyList list)
+        {
+            Addon.GetProperties(list);
         }
 
         public override void Serialize(GenericWriter writer)
@@ -57,16 +57,16 @@ namespace Server.Items
             Weight = 0;
         }
 
+        public GargishTotemOfEssence(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);
 
             list.Add(1159590, ResourceCount.ToString()); // Essences: ~1_COUNT~	
-        }
-
-        public GargishTotemOfEssence(Serial serial)
-            : base(serial)
-        {
         }
 
         public override BaseAddonDeed Deed
@@ -85,17 +85,17 @@ namespace Server.Items
         private int m_ResourceCount;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int ResourceCount { get { return m_ResourceCount; } set { m_ResourceCount = value; UpdateProperties(); } }
+        public int ResourceCount { get => m_ResourceCount; set { m_ResourceCount = value; UpdateProperties(); } }
 
         public override void OnComponentUsed(AddonComponent c, Mobile from)
         {
             BaseHouse house = BaseHouse.FindHouseAt(this);
 
-            if (!from.InRange(GetWorldLocation(), 2) || !from.InLOS(this) || !((from.Z - Z) > -3 && (from.Z - Z) < 3))
+            if (!from.InRange(GetWorldLocation(), 2) || !from.InLOS(this) || !(from.Z - Z > -3 && from.Z - Z < 3))
             {
                 from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1019045); // I can't reach that.
             }
-            else if (house != null && (house.IsOwner(from) || (house.LockDowns.ContainsKey(this) && house.LockDowns[this] == from)))
+            else if (house != null && (house.IsOwner(from) || house.LockDowns.ContainsKey(this) && house.LockDowns[this] == from))
             {
                 if (m_ResourceCount > 0)
                 {
@@ -174,20 +174,20 @@ namespace Server.Items
         private bool m_IsRewardItem;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsRewardItem
-        {
-            get { return m_IsRewardItem; }
-            set { m_IsRewardItem = value; InvalidateProperties(); }
-        }
+        public bool IsRewardItem { get => m_IsRewardItem; set { m_IsRewardItem = value; InvalidateProperties(); } }
 
         private int m_ResourceCount;
 
         [Constructable]
         public GargishTotemOfEssenceDeed()
-            : base()
         {
             LootType = LootType.Blessed;
         }
+
+        public GargishTotemOfEssenceDeed(Serial serial)
+            : base(serial)
+        {
+        }        
 
         public virtual bool Dye(Mobile from, DyeTub sender)
         {
@@ -198,16 +198,11 @@ namespace Server.Items
             return true;
         }
 
-        public GargishTotemOfEssenceDeed(Serial serial)
-            : base(serial)
-        {
-        }        
-
         public override BaseAddon Addon
         {
             get
             {
-                GargishTotemOfEssence addon = new GargishTotemOfEssence()
+                GargishTotemOfEssence addon = new GargishTotemOfEssence
                 {
                     IsRewardItem = m_IsRewardItem
                 };
