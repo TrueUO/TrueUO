@@ -366,7 +366,7 @@ namespace Server.Spells.SkillMasteries
 
         public int GetMasteryLevel()
         {
-            return MasteryInfo.GetMasteryLevel(Caster, CastSkill);
+            return Caster is BaseCreature ? 1 : MasteryInfo.GetMasteryLevel(Caster, CastSkill);
         }
 
         public void UpdateParty()
