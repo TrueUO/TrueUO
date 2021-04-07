@@ -74,6 +74,11 @@ namespace Server.Items
             }
         }
 
+        public PetCastleAddon(Serial serial)
+            : base(serial)
+        {
+        }
+
         public bool Check(Mobile from)
         {
             BaseHouse house = BaseHouse.FindHouseAt(from);
@@ -513,10 +518,6 @@ namespace Server.Items
                     m_Post.EndClaimList(m_From, m_List[index]);
                 }
             }
-        }
-        public PetCastleAddon(Serial serial)
-            : base(serial)
-        {
         }
 
         public override BaseAddonDeed Deed => new PetCastleDeed(UsesRemaining);

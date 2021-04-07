@@ -360,14 +360,7 @@ namespace Server.Items
         {
             System.Collections.Generic.List<string> list = BaseBoat.Boats.Where(b => !string.IsNullOrEmpty(b.ShipName)).Select(x => x.ShipName).ToList();
 
-            if (list.Count > 0)
-            {
-                _ShipName = list[Utility.Random(list.Count)];
-            }
-            else
-            {
-                _ShipName = _ShipNames[Utility.Random(_ShipNames.Length)];
-            }
+            _ShipName = list.Count > 0 ? list[Utility.Random(list.Count)] : _ShipNames[Utility.Random(_ShipNames.Length)];
 
             InvalidateProperties();
             ColUtility.Free(list);
@@ -659,7 +652,11 @@ namespace Server.Items
         {
         }
 
-        public override void OnDoubleClick(Mobile m)
+        public PeculiarCoconut(Serial serial) : base(serial)
+        {
+        }
+
+        public override void OnDoubleClick(Mobile from)
         {
             if (!IsPalmTree)
             {
@@ -670,13 +667,9 @@ namespace Server.Items
                 }
                 else
                 {
-                    m.SendLocalizedMessage(1112573); // This must be locked down or secured in order to use it.
+                    from.SendLocalizedMessage(1112573); // This must be locked down or secured in order to use it.
                 }
             }
-        }
-
-        public PeculiarCoconut(Serial serial) : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
@@ -694,7 +687,7 @@ namespace Server.Items
 
     public class PirateChestTreasure : Item
     {
-        public Item Chest { get; set; }
+        public Item Chest { get; }
 
         [Constructable]
         public PirateChestTreasure(int id, Item chest)
@@ -741,7 +734,12 @@ namespace Server.Items
             Weight = 2.0;
         }
 
-        public void OnFlip(Mobile from)
+        public PirateChest(Serial serial)
+            : base(serial)
+        {
+        }
+
+        public void OnFlip(Mobile m)
         {
             switch (ItemID)
             {
@@ -779,13 +777,10 @@ namespace Server.Items
 
         public void RemoveTreasure()
         {
-            if (Treasure != null)
-            {
-                Treasure.Delete();
-            }
+            Treasure?.Delete();
         }
 
-        public override void OnLocationChange(Point3D old)
+        public override void OnLocationChange(Point3D oldLocation)
         {
             if (Treasure != null)
             {
@@ -821,11 +816,6 @@ namespace Server.Items
             base.OnAfterDelete();
 
             RemoveTreasure();
-        }
-
-        public PirateChest(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
@@ -1144,6 +1134,11 @@ namespace Server.Items
             Hue = 2721;
         }
 
+        public HooksTreasureMap(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void OnDoubleClick(Mobile from)
         {
             if (!from.HasGump(typeof(HooksTreasureMapGump)))
@@ -1169,11 +1164,6 @@ namespace Server.Items
                 AddHtml(150, 99, 320, 98, "<BASEFONT COLOR=#DFDFDF>The map likely leads to great treasure, however understanding it is beyond your comprehension.</BASEFONT>", false, false);
                 AddHtml(150, 197, 320, 98, "<BASEFONT COLOR=#DFDFDF>Deciphering it will require one with the reputation as a famed Artifact Hunter.</BASEFONT>", false, false);
             }
-        }
-
-        public HooksTreasureMap(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)

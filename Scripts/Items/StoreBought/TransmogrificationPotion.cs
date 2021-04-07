@@ -22,19 +22,18 @@ namespace Server.Items
 
         [Constructable]
         public RobeTransmogrificationPotion()
-            : base()
         {
             Hue = 2741;
-        }
-
-        public override bool CheckMagicalItem(List<ValuedProperty> props)
-        {
-            return props.Any(x => x.Value != 0);
         }
 
         public RobeTransmogrificationPotion(Serial serial)
             : base(serial)
         {
+        }
+
+        public override bool CheckMagicalItem(List<ValuedProperty> props)
+        {
+            return props.Any(x => x.Value != 0);
         }
 
         public override void Serialize(GenericWriter writer)
@@ -62,19 +61,18 @@ namespace Server.Items
 
         [Constructable]
         public HeadTransmogrificationPotion()
-            : base()
         {
             Hue = 2736;
-        }
-
-        public override bool CheckMagicalItem(List<ValuedProperty> props)
-        {
-            return props.Any(x => !_ExcludeArmorProperties.Contains(x.GetType()) && x is MageArmorProperty);
         }
 
         public HeadTransmogrificationPotion(Serial serial)
             : base(serial)
         {
+        }
+
+        public override bool CheckMagicalItem(List<ValuedProperty> props)
+        {
+            return props.Any(x => !_ExcludeArmorProperties.Contains(x.GetType()) && x is MageArmorProperty);
         }
 
         public override void Serialize(GenericWriter writer)
@@ -102,9 +100,13 @@ namespace Server.Items
 
         [Constructable]
         public ShieldTransmogrificationPotion()
-            : base()
         {
             Hue = 2732;
+        }
+
+        public ShieldTransmogrificationPotion(Serial serial)
+            : base(serial)
+        {
         }
 
         public override bool CheckRules()
@@ -121,11 +123,6 @@ namespace Server.Items
         public override bool CheckMagicalItem(List<ValuedProperty> props)
         {
             return props.Any(x => !_ExcludeArmorProperties.Contains(x.GetType()));
-        }
-
-        public ShieldTransmogrificationPotion(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
@@ -193,13 +190,13 @@ namespace Server.Items
             }
         }
 
-        public readonly Type[] _ExcludeArmorProperties = new Type[]
+        public readonly Type[] _ExcludeArmorProperties =
         {
-            typeof(PhysicalResistProperty),  // Physical Resist
-            typeof(FireResistProperty),  // Fire Resist
-            typeof(ColdResistProperty),  // Cold Resist
-            typeof(PoisonResistProperty),  // Poison Resist
-            typeof(EnergyResistProperty),  // Energy Resist
+            typeof(PhysicalResistProperty), // Physical Resist
+            typeof(FireResistProperty),     // Fire Resist
+            typeof(ColdResistProperty),     // Cold Resist
+            typeof(PoisonResistProperty),   // Poison Resist
+            typeof(EnergyResistProperty)    // Energy Resist
         };
 
         public virtual bool CheckRules()
@@ -294,7 +291,8 @@ namespace Server.Items
                             from.SendLocalizedMessage(1159504); // The destination item must be free of any magical properties.
                             return;
                         }
-                        else if (targetitem.HasSocket<Transmogrified>())
+
+                        if (targetitem.HasSocket<Transmogrified>())
                         {
                             from.Send(new AsciiMessage(-1, -1, MessageType.Label, 946, 3, "System", "This item has already been transmogrified."));
                         }
@@ -306,7 +304,7 @@ namespace Server.Items
 
                     int message = 0;
 
-                    if (targetitem == null || targetitem.Layer != Potion.ItemLayer)
+                    if (targetitem.Layer != Potion.ItemLayer)
                     {
                         message = Potion.ValidFailMessage;
                     }

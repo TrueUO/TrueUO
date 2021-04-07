@@ -16,16 +16,16 @@ namespace Server.Mobiles
             Hue = 2758;
         }
 
+        public WildfireOstardStatue(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);
 
             list.Add(1158954); // *Redeemable for a pet*<br>*Requires Grandmaster Taming to Claim Pet*
-        }
-
-        public WildfireOstardStatue(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void OnDoubleClick(Mobile from)
