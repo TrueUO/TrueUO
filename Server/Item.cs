@@ -1284,7 +1284,8 @@ namespace Server
 			}
 
 			AddCraftedProperties(list);
-			AddLootTypeProperty(list);
+            AddItemSocketCraftedProperties(list);
+            AddLootTypeProperty(list);
 			AddUsesRemainingProperties(list);
 			AddWeightProperty(list);
 
@@ -1301,8 +1302,8 @@ namespace Server
 		/// </summary>
 		/// <param name="list"></param>
 		public virtual void AddCraftedProperties(ObjectPropertyList list)
-		{
-		}
+		{            
+        }
 
 		/// <summary>
 		/// Overrideable, used for IUsesRemaining UsesRemaining property
@@ -1375,7 +1376,18 @@ namespace Server
 			}
 		}
 
-		public virtual void AddItemPowerProperties(ObjectPropertyList list)
+        public virtual void AddItemSocketCraftedProperties(ObjectPropertyList list)
+        {
+            if (Sockets != null)
+            {
+                foreach (ItemSocket socket in Sockets)
+                {
+                    socket.GetCraftedProperties(list);
+                }
+            }
+        }
+
+        public virtual void AddItemPowerProperties(ObjectPropertyList list)
 		{
 		}
 
@@ -6087,7 +6099,11 @@ namespace Server
 		{
 		}
 
-		public virtual void OnOwnerDuped(Item newItem)
+        public virtual void GetCraftedProperties(ObjectPropertyList list)
+        {
+        }
+
+        public virtual void OnOwnerDuped(Item newItem)
 		{
 			ItemSocket newSocket = null;
 

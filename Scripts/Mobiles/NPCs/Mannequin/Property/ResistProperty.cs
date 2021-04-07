@@ -5,6 +5,7 @@ namespace Server.Mobiles.MannequinProperty
 {
     public abstract class ResistAttr : ValuedProperty
     {
+        public override bool IsMagical => true;
         public override Catalog Catalog => Catalog.Resistances;
         public override bool AlwaysVisible => true;
         public abstract ResistanceType Resist { get; }

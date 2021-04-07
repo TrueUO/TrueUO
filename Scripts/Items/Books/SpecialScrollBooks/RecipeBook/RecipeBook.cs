@@ -238,7 +238,8 @@ namespace Server.Items
             new RecipeScrollDefinition(170, 1111, Expansion.HS, RecipeSkillName.Tailoring),
             new RecipeScrollDefinition(171, 466, Expansion.ML, RecipeSkillName.Tinkering),
             new RecipeScrollDefinition(172, 467, Expansion.ML, RecipeSkillName.Tinkering),
-            new RecipeScrollDefinition(173, 468, Expansion.ML, RecipeSkillName.Tinkering)
+            new RecipeScrollDefinition(173, 468, Expansion.ML, RecipeSkillName.Tinkering),
+            new RecipeScrollDefinition(174, 172, Expansion.HS, RecipeSkillName.Carpentry)
         };
 
         [Constructable]

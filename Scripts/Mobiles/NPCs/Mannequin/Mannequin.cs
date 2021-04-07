@@ -199,6 +199,26 @@ namespace Server.Mobiles
             return cat.OrderByDescending(x => x.Hue).ToList();
         }
 
+        public static List<ValuedProperty> FindMagicalItemProperty(Item item)
+        {
+            List<Type> ll = System.Reflection.Assembly.GetExecutingAssembly().GetTypes()
+              .ToList().Where(r => r.FullName.Contains("MannequinProperty") && r.IsClass && !r.IsAbstract).ToList();
+
+            List<ValuedProperty> cat = new List<ValuedProperty>();
+
+            ll.ForEach(x =>
+            {
+                object CI = Activator.CreateInstance(Type.GetType(x.FullName));
+
+                if (CI is ValuedProperty p && p.Matches(item) && p.IsMagical)
+                {
+                    cat.Add(p);
+                }
+            });
+
+            return cat;
+        }
+
         public override void GetContextMenuEntries(Mobile from, List<ContextMenuEntry> list)
         {
             base.GetContextMenuEntries(from, list);

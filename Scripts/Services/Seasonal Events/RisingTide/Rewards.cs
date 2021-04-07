@@ -360,14 +360,7 @@ namespace Server.Items
         {
             System.Collections.Generic.List<string> list = BaseBoat.Boats.Where(b => !string.IsNullOrEmpty(b.ShipName)).Select(x => x.ShipName).ToList();
 
-            if (list.Count > 0)
-            {
-                _ShipName = list[Utility.Random(list.Count)];
-            }
-            else
-            {
-                _ShipName = _ShipNames[Utility.Random(_ShipNames.Length)];
-            }
+            _ShipName = list.Count > 0 ? list[Utility.Random(list.Count)] : _ShipNames[Utility.Random(_ShipNames.Length)];
 
             InvalidateProperties();
             ColUtility.Free(list);
@@ -632,6 +625,545 @@ namespace Server.Items
         public BarbedWhipOfPlundering(Serial serial)
             : base(serial)
         {
+        }
+
+        public override void Serialize(GenericWriter writer)
+        {
+            base.Serialize(writer);
+            writer.Write(0);
+        }
+
+        public override void Deserialize(GenericReader reader)
+        {
+            base.Deserialize(reader);
+            reader.ReadInt();
+        }
+    }
+
+    public class PeculiarCoconut : Item
+    {
+        public override int LabelNumber => IsPalmTree ? 1159580 : 1025923;  // palm tree - coconut
+
+        public bool IsPalmTree => ItemID != 0xA73E;
+
+        [Constructable]
+        public PeculiarCoconut()
+            : base(0xA73E)
+        {
+        }
+
+        public PeculiarCoconut(Serial serial) : base(serial)
+        {
+        }
+
+        public override void OnDoubleClick(Mobile from)
+        {
+            if (!IsPalmTree)
+            {
+                if (IsSecure || IsLockedDown)
+                {
+                    ItemID = Utility.RandomList(0xA63F, 0xA640, 0xA641, 0xA642, 0xA643, 0xA644);
+                    Weight = 5;
+                }
+                else
+                {
+                    from.SendLocalizedMessage(1112573); // This must be locked down or secured in order to use it.
+                }
+            }
+        }
+
+        public override void Serialize(GenericWriter writer)
+        {
+            base.Serialize(writer);
+            writer.Write(0);
+        }
+
+        public override void Deserialize(GenericReader reader)
+        {
+            base.Deserialize(reader);
+            reader.ReadInt();
+        }
+    }
+
+    public class PirateChestTreasure : Item
+    {
+        public Item Chest { get; }
+
+        [Constructable]
+        public PirateChestTreasure(int id, Item chest)
+            : base(id)
+        {
+            Chest = chest;
+            Movable = false;
+        }
+
+        public PirateChestTreasure(Serial serial)
+            : base(serial)
+        {
+        }
+
+        public override void Serialize(GenericWriter writer)
+        {
+            base.Serialize(writer);
+            writer.Write(0);
+        }
+
+        public override void Deserialize(GenericReader reader)
+        {
+            base.Deserialize(reader);
+            reader.ReadInt();
+
+            if (Chest == null)
+                Delete();
+        }
+    }
+
+    [Furniture]
+    public class PirateChest : BaseContainer, IFlipable
+    {
+        public override int LabelNumber => 1015097; // Chest    
+
+        public override int DefaultGumpID => 0x49;
+
+        public Item Treasure { get; set; }
+
+        [Constructable]
+        public PirateChest()
+            : base(0xA639)
+        {
+            Weight = 2.0;
+        }
+
+        public PirateChest(Serial serial)
+            : base(serial)
+        {
+        }
+
+        public void OnFlip(Mobile m)
+        {
+            switch (ItemID)
+            {
+                case 0xA639:
+                    ItemID = 0xA63A;
+                    break;
+                case 0xA63A:
+                    ItemID = 0xA639;
+                    break;
+            }
+        }
+
+        public override void Open(Mobile from)
+        {
+            switch (ItemID)
+            {
+                default:
+                case 0xA639: ItemID = 0xA63B; AddTreasure(0xA63D); break;
+                case 0xA63A: ItemID = 0xA63C; AddTreasure(0xA63E); break;
+                case 0xA63B: ItemID = 0xA639; RemoveTreasure(); break;
+                case 0xA63C: ItemID = 0xA63A; RemoveTreasure(); break;
+            }
+
+            DisplayTo(from);
+        }
+
+        public void AddTreasure(int id)
+        {
+            if (IsLockedDown || IsSecure)
+            {
+                Treasure = new PirateChestTreasure(id, this);
+                Treasure.MoveToWorld(new Point3D(X, Y, Z + 1), Map);
+            }
+        }
+
+        public void RemoveTreasure()
+        {
+            Treasure?.Delete();
+        }
+
+        public override void OnLocationChange(Point3D oldLocation)
+        {
+            if (Treasure != null)
+            {
+                if (IsLockedDown || IsSecure)
+                {
+                    Treasure.Location = new Point3D(X, Y, Z + 1);
+                }
+                else
+                {
+                    RemoveTreasure();
+                }
+            }                
+        }
+
+        public override void OnLockDownChange()
+        {
+            if (IsLockedDown)
+            {
+                RemoveTreasure();
+            }
+        }
+
+        public override void OnSecureChange()
+        {
+            if (IsSecure)
+            {
+                RemoveTreasure();
+            }
+        }
+
+        public override void OnAfterDelete()
+        {
+            base.OnAfterDelete();
+
+            RemoveTreasure();
+        }
+
+        public override void Serialize(GenericWriter writer)
+        {
+            base.Serialize(writer);
+            writer.Write(0);
+
+            writer.Write(Treasure);
+        }
+
+        public override void Deserialize(GenericReader reader)
+        {
+            base.Deserialize(reader);
+            reader.ReadInt();
+
+            Treasure = reader.ReadItem();
+        }
+    }
+
+    public class Orchid1 : Item
+    {
+        public override int LabelNumber => 1159575;  // orchid
+
+        [Constructable]
+        public Orchid1()
+            : base(0xA648)
+        {
+            if (0.15 >= Utility.RandomDouble())
+            {
+                Hue = Utility.RandomList(1100, 1153, 1173, 1918, 1289, 2735, 2736, 2753);
+            }
+            else
+            {
+                Hue = Utility.RandomList(0, 2, 12, 17, 38, 43, 52, 67);
+            }           
+        }
+
+        public Orchid1(Serial serial)
+            : base(serial)
+        {
+        }
+
+        public override void Serialize(GenericWriter writer)
+        {
+            base.Serialize(writer);
+            writer.Write(0);
+        }
+
+        public override void Deserialize(GenericReader reader)
+        {
+            base.Deserialize(reader);
+            reader.ReadInt();
+        }
+    }
+
+    public class Orchid2 : Item
+    {
+        public override int LabelNumber => 1159575;  // orchid
+
+        [Constructable]
+        public Orchid2()
+            : base(0xA647)
+        {
+            if (0.15 >= Utility.RandomDouble())
+            {
+                Hue = Utility.RandomList(1100, 1153, 1173, 1918, 1289, 2735, 2736, 2753);
+            }
+            else
+            {
+                Hue = Utility.RandomList(0, 2, 12, 17, 38, 43, 52, 67);
+            }
+        }
+
+        public Orchid2(Serial serial)
+            : base(serial)
+        {
+        }
+
+        public override void Serialize(GenericWriter writer)
+        {
+            base.Serialize(writer);
+            writer.Write(0);
+        }
+
+        public override void Deserialize(GenericReader reader)
+        {
+            base.Deserialize(reader);
+            reader.ReadInt();
+        }
+    }
+
+    public class Orchid3 : Item
+    {
+        public override int LabelNumber => 1159575;  // orchid
+
+        [Constructable]
+        public Orchid3()
+            : base(0xA646)
+        {
+            if (0.15 >= Utility.RandomDouble())
+            {
+                Hue = Utility.RandomList(1100, 1153, 1173, 1918, 1289, 2735, 2736, 2753);
+            }
+            else
+            {
+                Hue = Utility.RandomList(0, 2, 12, 17, 38, 43, 52, 67);
+            }
+        }
+
+        public Orchid3(Serial serial)
+            : base(serial)
+        {
+        }
+
+        public override void Serialize(GenericWriter writer)
+        {
+            base.Serialize(writer);
+            writer.Write(0);
+        }
+
+        public override void Deserialize(GenericReader reader)
+        {
+            base.Deserialize(reader);
+            reader.ReadInt();
+        }
+    }
+
+    public class LandlubberRewardDeed : BaseRewardTitleDeed
+    {
+        public override TextDefinition Title => 1159576;  // Landlubber
+
+        [Constructable]
+        public LandlubberRewardDeed()
+        {
+        }
+
+        public LandlubberRewardDeed(Serial serial)
+            : base(serial)
+        {
+        }
+
+        public override void Serialize(GenericWriter writer)
+        {
+            base.Serialize(writer);
+            writer.Write(0);
+        }
+
+        public override void Deserialize(GenericReader reader)
+        {
+            base.Deserialize(reader);
+            reader.ReadInt();
+        }
+    }
+
+    public class SeaWaspRewardDeed : BaseRewardTitleDeed
+    {
+        public override TextDefinition Title => 1159577;  // Sea Wasp
+
+        [Constructable]
+        public SeaWaspRewardDeed()
+        {
+        }
+
+        public SeaWaspRewardDeed(Serial serial)
+            : base(serial)
+        {
+        }
+
+        public override void Serialize(GenericWriter writer)
+        {
+            base.Serialize(writer);
+            writer.Write(0);
+        }
+
+        public override void Deserialize(GenericReader reader)
+        {
+            base.Deserialize(reader);
+            reader.ReadInt();
+        }
+    }
+
+    public class FirstMateRewardDeed : BaseRewardTitleDeed
+    {
+        public override TextDefinition Title => 1159578;  // First Mate
+
+        [Constructable]
+        public FirstMateRewardDeed()
+        {
+        }
+
+        public FirstMateRewardDeed(Serial serial)
+            : base(serial)
+        {
+        }
+
+        public override void Serialize(GenericWriter writer)
+        {
+            base.Serialize(writer);
+            writer.Write(0);
+        }
+
+        public override void Deserialize(GenericReader reader)
+        {
+            base.Deserialize(reader);
+            reader.ReadInt();
+        }
+    }
+
+    public class PirateLordRewardDeed : BaseRewardTitleDeed
+    {
+        public override TextDefinition Title => 1159579;  // Pirate Lord
+
+        [Constructable]
+        public PirateLordRewardDeed()
+        {
+        }
+
+        public PirateLordRewardDeed(Serial serial)
+            : base(serial)
+        {
+        }
+
+        public override void Serialize(GenericWriter writer)
+        {
+            base.Serialize(writer);
+            writer.Write(0);
+        }
+
+        public override void Deserialize(GenericReader reader)
+        {
+            base.Deserialize(reader);
+            reader.ReadInt();
+        }
+    }
+
+    public class PirateShieldRecipeScroll : RecipeScroll
+    {
+        [Constructable]
+        public PirateShieldRecipeScroll()
+            : base(172)
+        {
+        }
+
+        public PirateShieldRecipeScroll(Serial serial)
+            : base(serial)
+        {
+        }
+
+        public override void Serialize(GenericWriter writer)
+        {
+            base.Serialize(writer);
+            writer.Write(0);
+        }
+
+        public override void Deserialize(GenericReader reader)
+        {
+            base.Deserialize(reader);
+            reader.ReadInt();
+        }
+    }
+
+    [Flipable(0xA649, 0xA64A)]
+    public class HooksShield : BaseShield
+    {
+        public override int LabelNumber => 1159584; // Hook's Shield
+
+        public override bool IsArtifact => true;
+
+        [Constructable]
+        public HooksShield()
+            : base(0xA649)
+        {
+            Weight = 8.0;
+            
+            Attributes.SpellChanneling = 1;
+            Attributes.DefendChance = 15;
+            Attributes.SpellDamage = 10;
+            Attributes.CastSpeed = 1;
+        }
+
+        public HooksShield(Serial serial)
+            : base(serial)
+        {
+        }
+
+        public override int BasePhysicalResistance => 0;
+        public override int BaseFireResistance => 10;
+        public override int BaseColdResistance => 0;
+        public override int BasePoisonResistance => 10;
+        public override int BaseEnergyResistance => 0;
+        public override int InitMinHits => 255;
+        public override int InitMaxHits => 255;
+        public override int StrReq => 20;
+
+        public override void Deserialize(GenericReader reader)
+        {
+            base.Deserialize(reader);
+            reader.ReadInt();
+        }
+
+        public override void Serialize(GenericWriter writer)
+        {
+            base.Serialize(writer);
+            writer.Write(0);
+        }
+    }
+
+    public class HooksTreasureMap : Item
+    {
+        public override int LabelNumber => 1159641; // Hook's Treasure Map
+
+        [Constructable]
+        public HooksTreasureMap()
+            : base(0x14ED)
+        {
+            Hue = 2721;
+        }
+
+        public HooksTreasureMap(Serial serial)
+            : base(serial)
+        {
+        }
+
+        public override void OnDoubleClick(Mobile from)
+        {
+            if (!from.HasGump(typeof(HooksTreasureMapGump)))
+            {
+                from.SendGump(new HooksTreasureMapGump());
+                from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1157722, "its origin"); // *Your proficiency in ~1_SKILL~ reveals more about the item*
+            }
+        }
+
+        private class HooksTreasureMapGump : Gump
+        {
+            public HooksTreasureMapGump()
+                : base(100, 100)
+            {
+                AddPage(0);
+
+                AddBackground(0, 0, 480, 320, 0x6DB);
+                AddSpriteImage(24, 24, 0x474, 60, 60, 108, 108);
+                AddImage(15, 15, 0xA9F);
+                AddImageTiledButton(22, 22, 0x176F, 0x176F, 0x0, GumpButtonType.Page, 0, 0x14ED, 0xAA1, 33, 44);
+                AddHtml(150, 15, 320, 22, "<BASEFONT COLOR=#D5D52A><DIV ALIGN=CENTER>Hook's Treasure Map</DIV></BASEFONT>", false, false);
+                AddHtml(150, 46, 320, 44, "<BASEFONT COLOR=#AABFD4><DIV ALIGN=CENTER>Purchased from the Black Market</DIV></BASEFONT>", false, false);
+                AddHtml(150, 99, 320, 98, "<BASEFONT COLOR=#DFDFDF>The map likely leads to great treasure, however understanding it is beyond your comprehension.</BASEFONT>", false, false);
+                AddHtml(150, 197, 320, 98, "<BASEFONT COLOR=#DFDFDF>Deciphering it will require one with the reputation as a famed Artifact Hunter.</BASEFONT>", false, false);
+            }
         }
 
         public override void Serialize(GenericWriter writer)

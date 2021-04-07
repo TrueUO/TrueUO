@@ -2486,6 +2486,11 @@ namespace Server.Multis
                         ad.Movable = false;
                     }
 
+                    if (item is EnchantedSoulstoneVessel esv && esv.Owned == null)
+                    {
+                        esv.Owned = m;
+                    }
+
                     m.CloseGump(typeof(SetSecureLevelGump));
                     m.SendGump(new SetSecureLevelGump(m, info, this));
                 }

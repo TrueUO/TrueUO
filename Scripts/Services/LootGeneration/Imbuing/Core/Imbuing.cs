@@ -73,6 +73,10 @@ namespace Server.SkillHandlers
             {
                 from.SendLocalizedMessage(1079575);  // The item must be in your backpack to imbue it.
             }
+            else if (item.HasSocket<Transmogrified>())
+            {
+                from.SendLocalizedMessage(1159565); // You cannot imbue this transmogrified item.
+            }
             else if (item.LootType == LootType.Blessed || item.LootType == LootType.Newbied)
             {
                 from.SendLocalizedMessage(1080438);  // You cannot imbue a blessed item.

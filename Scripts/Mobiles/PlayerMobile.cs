@@ -3394,6 +3394,11 @@ namespace Server.Mobiles
 
         private bool FindItems_Callback(Item item)
         {
+            if (item is Runebook && item.Parent is RunebookStrap || item is Spellbook && item.Parent is SpellbookStrap)
+            {
+                return false;
+            }
+
             if (!item.Deleted && (item.LootType == LootType.Blessed || item.Insured))
             {
                 if (Backpack != item.Parent)
@@ -3401,6 +3406,7 @@ namespace Server.Mobiles
                     return true;
                 }
             }
+
             return false;
         }
 
