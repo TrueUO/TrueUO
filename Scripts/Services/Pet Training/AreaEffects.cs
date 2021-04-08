@@ -218,9 +218,11 @@ namespace Server.Mobiles
                 Timer timer = _Table[defender];
 
                 if (timer != null)
+                {
                     timer.Stop();
+                }
 
-                _Table[defender] = Timer.DelayCall(TimeSpan.FromSeconds(30), EndNausea, defender);
+                _Table[defender] = creature is LadyMelisande ? Timer.DelayCall(TimeSpan.FromSeconds(30), EndNausea, defender) : Timer.DelayCall(TimeSpan.FromSeconds(5), EndNausea, defender);
             }
             else
             {
@@ -230,7 +232,7 @@ namespace Server.Mobiles
             defender.Animate(32, 5, 1, true, false, 0); // bow animation
             defender.SendLocalizedMessage(1072068); // Your enemy's putrid presence envelops you, overwhelming you with nausea.
 
-            BuffInfo.AddBuff(defender, new BuffInfo(BuffIcon.AuraOfNausea, 1153792, 1153819, TimeSpan.FromSeconds(30), defender, "60\t60\t60\t5"));
+            BuffInfo.AddBuff(defender, new BuffInfo(BuffIcon.AuraOfNausea, 1153792, 1153819, creature is LadyMelisande ? TimeSpan.FromSeconds(30) : TimeSpan.FromSeconds(5), defender, "60\t60\t60\t5"));
         }
 
         public static void EndNausea(Mobile m)
