@@ -81,7 +81,9 @@ namespace Server.Items
         Horse,
         Pig,
         Goat,
-        IceFiend
+        IceFiend,
+        Mummy,
+        SnowElemental
     }
 
     public class MonsterStatuetteInfo
@@ -165,6 +167,8 @@ namespace Server.Items
             /* Pig */               new MonsterStatuetteInfo(1159417, 0x2101, 0x0C5),
             /* Goat */              new MonsterStatuetteInfo(1159418, 0x2580, 0x09A),
             /* Ice Fiend */         new MonsterStatuetteInfo(1159419, 0x2587, 0x166),
+            /* Mummy */             new MonsterStatuetteInfo(1159553, 0x25A7, 0x1D8),
+            /* Snow Elemental */    new MonsterStatuetteInfo(1159555, 0x20ED, 0x108),
         };
 
         public MonsterStatuetteInfo(int labelNumber, int itemID, int baseSoundID)
@@ -223,6 +227,8 @@ namespace Server.Items
                 Hue = 0xF4;
             else if (m_Type == MonsterStatuetteType.ArchDemon)
                 Hue = 2021;
+            else if (m_Type == MonsterStatuetteType.SnowElemental)
+                Hue = 1150;
             else if (m_Type == MonsterStatuetteType.SakkhranBirdOfPrey)
             {
                 double ran = Utility.RandomDouble();

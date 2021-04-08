@@ -5,6 +5,7 @@ namespace Server.Mobiles.MannequinProperty
 {
     public abstract class SlayerProperty : ValuedProperty
     {
+        public override bool IsMagical => true;
         public override Catalog Catalog => Catalog.HitEffects;
         public abstract SlayerName Slayer { get; }
         public override int Hue => 0x43FF;
@@ -32,6 +33,7 @@ namespace Server.Mobiles.MannequinProperty
 
     public abstract class TalismanSlayerProperty : ValuedProperty
     {
+        public override bool IsMagical => true;
         public override Catalog Catalog => Catalog.HitEffects;
         public abstract TalismanSlayerName Slayer { get; }
         public override int Hue => 0x43FF;

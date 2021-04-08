@@ -5,6 +5,7 @@ namespace Server.Mobiles.MannequinProperty
 {
     public abstract class WeaponAttr : ValuedProperty
     {
+        public override bool IsMagical => true;
         public abstract AosWeaponAttribute Attribute { get; }
 
         public double GetPropertyValue(Item item)
@@ -323,6 +324,7 @@ namespace Server.Mobiles.MannequinProperty
 
     public abstract class ElementalDamageAttr : ValuedProperty
     {
+        public override bool IsMagical => true;
         public override Catalog Catalog => Catalog.Combat2;
         public override bool AlwaysVisible => true;
         public abstract AosElementAttribute Element { get; }
@@ -443,6 +445,7 @@ namespace Server.Mobiles.MannequinProperty
 
     public class VelocityProperty : ValuedProperty
     {
+        public override bool IsMagical => true;
         public override Catalog Catalog => Catalog.HitEffects;
         public override int LabelNumber => 1080416;  // Velocity
         public override int Description => 1152392;  // This property provides a chance for a ranged weapon to inflict additional damage.  The additional damage is increased by 3 points for each tile that the attacker is away from the target up to a maximum of 30 points of damage.  The damage inflicted is physical damage that can be lessened by a targets physical resistance.  This property can only be found on ranged weapons.

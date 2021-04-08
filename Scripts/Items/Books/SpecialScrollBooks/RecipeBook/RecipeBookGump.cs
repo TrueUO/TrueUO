@@ -187,6 +187,8 @@ namespace Server.Items
                     return "Stygian";
                 case Expansion.TOL:
                     return "ToL";
+                case Expansion.HS:
+                    return "HighSeas";
             }
         }
 

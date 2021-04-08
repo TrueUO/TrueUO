@@ -5,6 +5,7 @@ namespace Server.Mobiles.MannequinProperty
 {
     public abstract class ExtendedWeaponAttr : ValuedProperty
     {
+        public override bool IsMagical => true;
         public abstract ExtendedWeaponAttribute Attribute { get; }
 
         public double GetPropertyValue(Item item)
