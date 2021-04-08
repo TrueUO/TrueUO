@@ -173,7 +173,8 @@ namespace Server.Items
                                 item is BaseJewel || item is BaseStatuette ||
                                 item is BaseWeapon || item is Runebook ||
                                 item is BaseTalisman || item is Spellbook ||
-                                item.IsArtifact || BasePigmentsOfTokuno.IsValidItem(item);
+                                item.IsArtifact || BasePigmentsOfTokuno.IsValidItem(item) ||
+                                item is DecorativePlant;
 
                         if (!valid && item is BaseArmor armor)
                         {

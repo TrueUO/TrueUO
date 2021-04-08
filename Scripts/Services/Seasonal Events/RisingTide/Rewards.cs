@@ -642,7 +642,7 @@ namespace Server.Items
 
     public class PeculiarCoconut : Item
     {
-        public override int LabelNumber => IsPalmTree ? 1159580 : 1025923;  // palm tree - coconut
+        public override int LabelNumber => IsPalmTree ? 1159580 : 1159572;  // palm tree - Peculiar Coconut
 
         public bool IsPalmTree => ItemID != 0xA73E;
 
