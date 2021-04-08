@@ -223,7 +223,7 @@ namespace Server.Mobiles
                     timer.Stop();
                 }
 
-                _Table[defender] = creature is LadyMelisande ? Timer.DelayCall(TimeSpan.FromSeconds(30), EndNausea, defender) : Timer.DelayCall(TimeSpan.FromSeconds(5), EndNausea, defender);
+                _Table[defender] = creature is LadyMelisande ? Timer.DelayCall(TimeSpan.FromSeconds(30), EndNausea, defender) : Timer.DelayCall(TimeSpan.FromSeconds(4), EndNausea, defender);
             }
             else
             {
@@ -231,7 +231,7 @@ namespace Server.Mobiles
             }
 
             defender.SendLocalizedMessage(1072068); // Your enemy's putrid presence envelops you, overwhelming you with nausea.
-            BuffInfo.AddBuff(defender, new BuffInfo(BuffIcon.AuraOfNausea, 1153792, 1153819, creature is LadyMelisande ? TimeSpan.FromSeconds(30) : TimeSpan.FromSeconds(5), defender, "60\t60\t60\t5"));
+            BuffInfo.AddBuff(defender, new BuffInfo(BuffIcon.AuraOfNausea, 1153792, 1153819, creature is LadyMelisande ? TimeSpan.FromSeconds(30) : TimeSpan.FromSeconds(4), defender, "60\t60\t60\t5"));
             Server.Effects.SendPacket(defender.Location, defender.Map, new ParticleEffect(EffectType.FixedFrom, defender.Serial, Serial.Zero, 0x373A, defender.Location, defender.Location, 1, 15, false, false, 67, 0, 7, 9913, 1, defender.Serial, 183, 0));
             defender.PlaySound(0x1BB);            
         }
