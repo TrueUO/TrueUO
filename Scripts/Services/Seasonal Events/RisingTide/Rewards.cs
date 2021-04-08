@@ -3,6 +3,7 @@ using Server.Multis;
 using Server.Network;
 using System;
 using System.Linq;
+using Server.Engines.Craft;
 
 namespace Server.Items
 {
@@ -1078,11 +1079,11 @@ namespace Server.Items
     }
 
     [Flipable(0xA649, 0xA64A)]
-    public class HooksShield : BaseShield
+    public class HooksShield : BaseShield, IRepairable
     {
         public override int LabelNumber => 1159584; // Hook's Shield
-
         public override bool IsArtifact => true;
+        public CraftSystem RepairSystem => DefCarpentry.CraftSystem;
 
         [Constructable]
         public HooksShield()

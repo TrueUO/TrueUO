@@ -1,8 +1,11 @@
+using Server.Engines.Craft;
+
 namespace Server.Items
 {
-    public class PirateShield : BaseShield
+    public class PirateShield : BaseShield, IRepairable
     {
         public override int LabelNumber => 1126593; // shield
+        public CraftSystem RepairSystem => DefCarpentry.CraftSystem;
 
         [Constructable]
         public PirateShield()
