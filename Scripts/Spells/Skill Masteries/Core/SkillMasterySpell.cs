@@ -52,7 +52,7 @@ namespace Server.Spells.SkillMasteries
                 if (Caster == null)
                     return 0.0;
 
-                return (Caster.Skills[CastSkill].Value + Caster.Skills[DamageSkill].Value + (GetMasteryLevel() * 40)) / 3;
+                return (Caster.Skills[CastSkill].Value + Caster.Skills[DamageSkill].Value + GetMasteryLevel() * 40) / 3;
             }
         }
 
@@ -154,7 +154,7 @@ namespace Server.Spells.SkillMasteries
                 NegativeAttributes.OnCombatAction(Caster);
             }
 
-            if ((Caster is PlayerMobile && Caster.NetState == null) || Expires < DateTime.UtcNow || !Caster.Alive || Caster.IsDeadBondedPet)
+            if (Caster is PlayerMobile && Caster.NetState == null || Expires < DateTime.UtcNow || !Caster.Alive || Caster.IsDeadBondedPet)
             {
                 Expire();
             }
@@ -280,7 +280,7 @@ namespace Server.Spells.SkillMasteries
 
         public virtual int GetUpkeep()
         {
-            return (int)(UpKeep + (PartyCount() / 5));
+            return (int)(UpKeep + PartyCount() / 5);
         }
 
         public virtual void Expire(bool disrupt = false)
@@ -323,7 +323,7 @@ namespace Server.Spells.SkillMasteries
             double dSkill = Caster.Skills[DamageSkill].Value;
             double vSkill = GetResistSkill(victim);
 
-            double reduce = 1.0 - ((dSkill - vSkill) / dSkill);
+            double reduce = 1.0 - (dSkill - vSkill) / dSkill;
 
             if (reduce < 0) reduce = 0;
             if (reduce > 1) reduce = 1;
@@ -347,26 +347,28 @@ namespace Server.Spells.SkillMasteries
                 return true;
 
             int maxSkill = (1 + volumeMod) * 10;
-            maxSkill += (1 + (volumeMod / 6)) * 25;
+            maxSkill += (1 + volumeMod / 6) * 25;
 
             if (target.Skills[SkillName.MagicResist].Value < maxSkill)
+            {
                 target.CheckSkill(SkillName.MagicResist, 0.0, target.Skills[SkillName.MagicResist].Cap);
+            }
 
-            return (n >= Utility.RandomDouble());
+            return n >= Utility.RandomDouble();
         }
 
         public virtual double GetResistPercent(Mobile target, int level)
         {
             double value = GetResistSkill(target);
             double firstPercent = value / 5.0;
-            double secondPercent = value - (((Caster.Skills[CastSkill].Value - 20.0) / 5.0) + (1 + level) * 5.0);
+            double secondPercent = value - ((Caster.Skills[CastSkill].Value - 20.0) / 5.0 + (1 + level) * 5.0);
 
             return (firstPercent > secondPercent ? firstPercent : secondPercent) / 2.0;
         }
 
         public int GetMasteryLevel()
         {
-            return MasteryInfo.GetMasteryLevel(Caster, CastSkill);
+            return Caster is BaseCreature ? 1 : MasteryInfo.GetMasteryLevel(Caster, CastSkill);
         }
 
         public void UpdateParty()
@@ -1160,7 +1162,7 @@ namespace Server.Spells.SkillMasteries
         public static int GetAttributeBonus(Mobile m, AosAttribute attr)
         {
             int value = 0;
-            SkillMasterySpell spell = null;
+            SkillMasterySpell spell;
 
             switch (attr)
             {
