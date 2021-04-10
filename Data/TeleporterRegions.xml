@@ -1832,14 +1832,6 @@
 		<tiles from="(73, 694, 6)" frommap="Malas" to="(100, 556, -2)" tomap="Malas" />
 	</Teleporter>
 	<Teleporter>
-		<tiles from="(384, 810, -5)" frommap="Malas" to="(403, 1167, 0)" tomap="Malas" />
-	</Teleporter>
-	<Teleporter>
-		<tiles from="(403, 1169, 0)" frommap="Malas" to="(385, 811, -1)" tomap="Malas" />
-		<tiles from="(404, 1169, 0)" frommap="Malas" to="(385, 808, -1)" tomap="Malas" />
-		<tiles from="(405, 1169, 0)" frommap="Malas" to="(385, 808, -1)" tomap="Malas" />
-	</Teleporter>
-	<Teleporter>
 		<tiles from="(328, 1972, 5)" frommap="Malas" to="(1731, 978, -80)" tomap="Malas" />
 		<tiles from="(328, 1973, 5)" frommap="Malas" to="(1731, 978, -80)" tomap="Malas" />
 		<tiles from="(328, 1974, 5)" frommap="Malas" to="(1731, 978, -80)" tomap="Malas" />
@@ -2356,39 +2348,6 @@
 		<tiles from="(1789, 67, -26)" frommap="Ilshenar" to="(1036, 579, -78)" tomap="Ilshenar" />
 		<tiles from="(1789, 68, -26)" frommap="Ilshenar" to="(1036, 578, -78)" tomap="Ilshenar" />
 		<tiles from="(1789, 69, -26)" frommap="Ilshenar" to="(1036, 581, -78)" tomap="Ilshenar" />
-	</Teleporter>
-	<Teleporter>
-		<tiles from="(375, 802, 1)" frommap="Malas" to="(770, 1209, 25)" tomap="Tokuno" />
-	</Teleporter>
-	<Teleporter>
-		<tiles from="(412, 1123, 0)" frommap="Malas" to="(417, 806, -1)" tomap="Malas" />
-	</Teleporter>
-	<Teleporter>
-		<tiles from="(411, 1117, 0)" frommap="Malas" to="(422, 806, -1)" tomap="Malas" />
-	</Teleporter>
-	<Teleporter>
-		<tiles from="(421, 1092, 0)" frommap="Malas" to="(391, 803, -1)" tomap="Malas" />
-	</Teleporter>
-	<Teleporter>
-		<tiles from="(412, 1086, 0)" frommap="Malas" to="(391, 803, -1)" tomap="Malas" />
-	</Teleporter>
-	<Teleporter>
-		<tiles from="(389, 704, -1)" frommap="Malas" to="(384, 733, -1)" tomap="Malas" />
-	</Teleporter>
-	<Teleporter>
-		<tiles from="(426, 780, -1)" frommap="Malas" to="(384, 733, -1)" tomap="Malas" />
-	</Teleporter>
-	<Teleporter>
-		<tiles from="(331, 769, -1)" frommap="Malas" to="(384, 733, -1)" tomap="Malas" />
-	</Teleporter>
-	<Teleporter>
-		<tiles from="(355, 745, -1)" frommap="Malas" to="(384, 733, -1)" tomap="Malas" />
-	</Teleporter>
-	<Teleporter>
-		<tiles from="(330, 706, -1)" frommap="Malas" to="(384, 733, -1)" tomap="Malas" />
-	</Teleporter>
-	<Teleporter>
-		<tiles from="(391, 777, -1)" frommap="Malas" to="(770, 1209, 25)" tomap="Tokuno" />
 	</Teleporter>
 	<Teleporter>
 		<tiles from="(407, 254, 2)" frommap="Malas" to="(428, 318, 2)" tomap="Malas" />
