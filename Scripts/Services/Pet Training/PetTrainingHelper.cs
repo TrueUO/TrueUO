@@ -107,7 +107,6 @@ namespace Server.Mobiles
         LavaLizard = Tokuno | Chivalry | Bashing,
         RuneBeetle = Chivalry | Discordance | MageryMastery | Mysticism | Spellweaving,
         StygianDrake = Bashing | Chivalry | Discordance | Mysticism | Piercing | Poisoning | Slashing | Spellweaving | WrestlingMastery,
-        Triceratops = Bashing | Poisoning | Slashing | WrestlingMastery,
         TsukiWolf = Tokuno | Chivalry | Discordance | Mysticism | Necromage | Necromancy | Poisoning | Spellweaving | WrestlingMastery,
         Triton = Chivalry | Discordance | MageryMastery | Mysticism | Poisoning | Spellweaving | Bushido | Ninjitsu | BattleDefense | Bashing | Piercing | Slashing | WrestlingMastery,
         CoconutCrab = GreaterDragon | BattleDefense | Bashing | Piercing | Slashing | WrestlingMastery,
@@ -283,6 +282,7 @@ namespace Server.Mobiles
         public static SpecialAbility[] SpecialAbilitySkeletalCat;
         public static SpecialAbility[] SpecialAbilityCoconutCrab;
         public static SpecialAbility[] SpecialAbilityPhoenix;
+        public static SpecialAbility[] SpecialAbilityTriceratops;
         #endregion
 
         #region AreaEffect Defs
@@ -628,6 +628,12 @@ namespace Server.Mobiles
                 SpecialAbility.Inferno, SpecialAbility.LightningForce, SpecialAbility.ManaDrain, SpecialAbility.RagingBreath,
                 SpecialAbility.Repel, SpecialAbility.SearingWounds, SpecialAbility.VenomousBite, SpecialAbility.ViciousBite
             };
+
+            SpecialAbilityTriceratops = new[]
+            {
+                SpecialAbility.ManaDrain, SpecialAbility.Repel, SpecialAbility.SearingWounds,
+                SpecialAbility.TailSwipe, SpecialAbility.VenomousBite, SpecialAbility.ViciousBite
+            };
             #endregion
 
             #region Area Effect Packages
@@ -796,7 +802,7 @@ namespace Server.Mobiles
                 new TrainingDefinition(typeof(StygianDrake), Class.MagicalClawedAndTailed, MagicalAbility.StygianDrake, SpecialAbilityClawedTailedAndMagical1, WepAbility2, AreaEffectArea1, 4, 5),
                 new TrainingDefinition(typeof(SwampDragon), Class.Untrainable, MagicalAbility.None, SpecialAbilityNone, WepAbilityNone, AreaEffectNone, 1, 1),
                 new TrainingDefinition(typeof(TimberWolf), Class.Clawed, MagicalAbility.StandardClawedOrTailed, SpecialAbilityClawed, WepAbility1, AreaEffectNone, 1, 3),
-                new TrainingDefinition(typeof(Triceratops), Class.Tailed, MagicalAbility.Triceratops, SpecialAbilitySabreTri, WepAbilityNone, AreaEffectNone, 3, 5),
+                new TrainingDefinition(typeof(Triceratops), Class.Tailed, MagicalAbility.DragonWolf, SpecialAbilityTriceratops, WepAbility1, AreaEffectArea3, 3, 5),
                 new TrainingDefinition(typeof(TropicalBird), Class.Clawed, MagicalAbility.StandardClawedOrTailed, SpecialAbilityClawed, WepAbility1, AreaEffectNone, 1, 2),
                 new TrainingDefinition(typeof(TsukiWolf), Class.MagicalClawedTailedNecromanticAndTokuno, MagicalAbility.TsukiWolf, SpecialAbilityTsukiWolf, WepAbility2, AreaEffectArea1, 3, 5),
                 new TrainingDefinition(typeof(Turkey), Class.Clawed, MagicalAbility.StandardClawedOrTailed, SpecialAbilityClawed, WepAbility1, AreaEffectNone, 1, 2),
