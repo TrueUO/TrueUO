@@ -217,7 +217,9 @@ namespace Server.Mobiles
             TrainingProfile profile = GetTrainingProfile(bc, create);
 
             if (profile != null)
+            {
                 return profile.PlanningProfile;
+            }
 
             return null;
         }
@@ -247,42 +249,34 @@ namespace Server.Mobiles
         #endregion
 
         #region SpecialAbility Defs
-        public static SpecialAbility[] SpecialAbilityNone;
-        public static SpecialAbility[] SpecialAbilityUnicorn;
-        public static SpecialAbility[] SpecialAbilityMagical1;
-        public static SpecialAbility[] SpecialAbilityMagical2;
-        public static SpecialAbility[] SpecialAbilityMagical3;
-        public static SpecialAbility[] SpecialAbilityMagical4;
-        public static SpecialAbility[] SpecialAbilityNecroMagical;
-        public static SpecialAbility[] SpecialAbilityBites;
-        public static SpecialAbility[] SpecialAbilityAnimalStandard;
-        public static SpecialAbility[] SpecialAbilityBitingAnimal;
-        public static SpecialAbility[] SpecialAbilityClawed;
-        public static SpecialAbility[] SpecialAbilityTailed;
-        public static SpecialAbility[] SpecialAbilityClawedAndTailed;
-        public static SpecialAbility[] SpecialAbilityInsectoid;
-        public static SpecialAbility[] SpecialAbilityMagicalInsectoid;
-        public static SpecialAbility[] SpecialAbilityStickySkin;
-        public static SpecialAbility[] SpecialAbilityBitingStickySkin;
-        public static SpecialAbility[] SpecialAbilityTailedAndStickySkin;
-        public static SpecialAbility[] SpecialAbilityBitingTailed;
-        public static SpecialAbility[] SpecialAbilityBitingClawedAndTailed;
-        public static SpecialAbility[] SpecialAbilityClawedAndNecromantic;
-        public static SpecialAbility[] SpecialAbilityClawedTailedAndMagical1;
-        public static SpecialAbility[] SpecialAbilityClawedTailedAndMagical2;
-        public static SpecialAbility[] SpecialAbilityBaneDragon;
-        public static SpecialAbility[] SpecialAbilityDreadSpider;
-        public static SpecialAbility[] SpecialAbilityFireBeetle;
-        public static SpecialAbility[] SpecialAbilityImp;
-        public static SpecialAbility[] SpecialAbilityTsukiWolf;
-        public static SpecialAbility[] SpecialAbilitySabreTri;
         public static SpecialAbility[] RuleBreakers;
-        public static SpecialAbility[] SpecialAbilityTriton;
-        public static SpecialAbility[] SpecialAbilityGrizzledMare;
-        public static SpecialAbility[] SpecialAbilitySkeletalCat;
-        public static SpecialAbility[] SpecialAbilityCoconutCrab;
-        public static SpecialAbility[] SpecialAbilityPhoenix;
-        public static SpecialAbility[] SpecialAbilityTriceratops;
+        public static SpecialAbility[] SpecialAbilityNone;
+        private static SpecialAbility[] SpecialAbilityUnicorn;
+        private static SpecialAbility[] SpecialAbilityAnimalStandard;
+        private static SpecialAbility[] SpecialAbilityBitingAnimal;
+        private static SpecialAbility[] SpecialAbilityClawed;
+        private static SpecialAbility[] SpecialAbilityTailed;
+        private static SpecialAbility[] SpecialAbilityClawedAndTailed;
+        private static SpecialAbility[] SpecialAbilityMagicalInsectoid;
+        private static SpecialAbility[] SpecialAbilityStickySkin;
+        private static SpecialAbility[] SpecialAbilityBitingStickySkin;
+        private static SpecialAbility[] SpecialAbilityTailedAndStickySkin;
+        private static SpecialAbility[] SpecialAbilityBitingTailed;
+        private static SpecialAbility[] SpecialAbilityBitingClawedAndTailed;
+        private static SpecialAbility[] SpecialAbilityClawedAndNecromantic;
+        private static SpecialAbility[] SpecialAbilityClawedTailedAndMagical1;
+        private static SpecialAbility[] SpecialAbilityClawedTailedAndMagical2;
+        private static SpecialAbility[] SpecialAbilityBaneDragon;
+        private static SpecialAbility[] SpecialAbilityDreadSpider;
+        private static SpecialAbility[] SpecialAbilityImp;
+        private static SpecialAbility[] SpecialAbilityTsukiWolf;
+        private static SpecialAbility[] SpecialAbilitySabreTri;
+        private static SpecialAbility[] SpecialAbilityTriton;
+        private static SpecialAbility[] SpecialAbilityGrizzledMare;
+        private static SpecialAbility[] SpecialAbilitySkeletalCat;
+        private static SpecialAbility[] SpecialAbilityCoconutCrab;
+        private static SpecialAbility[] SpecialAbilityPhoenix;
+        private static SpecialAbility[] SpecialAbilityTriceratops;
         #endregion
 
         #region AreaEffect Defs
@@ -421,40 +415,6 @@ namespace Server.Mobiles
             #region Special Ability Packages
             SpecialAbilityNone = new SpecialAbility[] { };
 
-            SpecialAbilityMagical1 = new[]
-            {
-                SpecialAbility.AngryFire, SpecialAbility.ConductiveBlast, SpecialAbility.DragonBreath, SpecialAbility.Inferno,
-                SpecialAbility.LightningForce, SpecialAbility.RagingBreath
-            };
-
-            SpecialAbilityMagical2 = new[]
-            {
-                SpecialAbility.AngryFire, SpecialAbility.ConductiveBlast, SpecialAbility.DragonBreath, SpecialAbility.Inferno,
-                SpecialAbility.LightningForce, SpecialAbility.RagingBreath, SpecialAbility.StealLife
-            };
-
-            SpecialAbilityMagical3 = new[]
-            {
-                SpecialAbility.AngryFire, SpecialAbility.ConductiveBlast, SpecialAbility.DragonBreath, SpecialAbility.Inferno,
-                SpecialAbility.LightningForce, SpecialAbility.RagingBreath
-            };
-
-            SpecialAbilityMagical4 = new[]
-            {
-                SpecialAbility.AngryFire, SpecialAbility.DragonBreath, SpecialAbility.Inferno, SpecialAbility.RagingBreath
-            };
-
-            SpecialAbilityNecroMagical = new[]
-            {
-                SpecialAbility.AngryFire, SpecialAbility.ConductiveBlast, SpecialAbility.DragonBreath, SpecialAbility.Inferno,
-                SpecialAbility.LightningForce, SpecialAbility.RagingBreath, SpecialAbility.LifeLeech
-            };
-
-            SpecialAbilityBites = new[]
-            {
-                SpecialAbility.VenomousBite, SpecialAbility.ViciousBite
-            };
-
             SpecialAbilityAnimalStandard = new[]
             {
                 SpecialAbility.ManaDrain, SpecialAbility.Repel, SpecialAbility.SearingWounds
@@ -478,11 +438,6 @@ namespace Server.Mobiles
             SpecialAbilityClawedAndTailed = new[]
             {
                 SpecialAbility.ManaDrain, SpecialAbility.Repel, SpecialAbility.SearingWounds, SpecialAbility.GraspingClaw, SpecialAbility.TailSwipe
-            };
-
-            SpecialAbilityInsectoid = new[]
-            {
-                 SpecialAbility.ManaDrain, SpecialAbility.Repel, SpecialAbility.SearingWounds, SpecialAbility.RuneCorruption
             };
 
             SpecialAbilityMagicalInsectoid = new[]
@@ -561,12 +516,6 @@ namespace Server.Mobiles
                 SpecialAbility.AngryFire, SpecialAbility.ConductiveBlast, SpecialAbility.DragonBreath, SpecialAbility.Inferno,
                 SpecialAbility.LightningForce, SpecialAbility.ManaDrain, SpecialAbility.RagingBreath,
                 SpecialAbility.Repel, SpecialAbility.SearingWounds, SpecialAbility.StealLife
-            };
-
-            SpecialAbilityFireBeetle = new[]
-            {
-                SpecialAbility.ManaDrain, SpecialAbility.Repel, SpecialAbility.SearingWounds, SpecialAbility.RuneCorruption,
-                SpecialAbility.AngryFire, SpecialAbility.DragonBreath, SpecialAbility.Inferno, SpecialAbility.RagingBreath
             };
 
             SpecialAbilityImp = new[]
@@ -834,47 +783,42 @@ namespace Server.Mobiles
         {
             LoadDefinitions();
 
-            _TrainingPoints = new List<TrainingPoint>();
-
-            _TrainingPoints.Add(new TrainingPoint(PetStat.Str, 3.0, 1, 700, 1061146, 1157507));
-            _TrainingPoints.Add(new TrainingPoint(PetStat.Dex, 0.1, 1, 150, 1061147, 1157508));
-            _TrainingPoints.Add(new TrainingPoint(PetStat.Int, 0.5, 1, 700, 1061148, 1157509));
-
-            _TrainingPoints.Add(new TrainingPoint(PetStat.Hits, 3.0, 1, 1100, 1061149, 1157510));
-            _TrainingPoints.Add(new TrainingPoint(PetStat.Stam, 0.5, 1, 150, 1061150, 1157511));
-            _TrainingPoints.Add(new TrainingPoint(PetStat.Mana, 0.5, 1, 1500, 1061151, 1157512));
-
-            _TrainingPoints.Add(new TrainingPoint(PetStat.RegenHits, 18.0, 1, 20, 1075627, 1157513));
-            _TrainingPoints.Add(new TrainingPoint(PetStat.RegenStam, 12.0, 1, 30, 1079411, 1157514));
-            _TrainingPoints.Add(new TrainingPoint(PetStat.RegenMana, 12.0, 1, 30, 1079410, 1157515));
-
-            _TrainingPoints.Add(new TrainingPoint(PetStat.BaseDamage, 5.0, 1, 22, 1157506, 1157516));
-
-            _TrainingPoints.Add(new TrainingPoint(ResistanceType.Physical, 3.0, 1, 80, 1061158, 1157517));
-            _TrainingPoints.Add(new TrainingPoint(ResistanceType.Fire, 3.0, 1, 80, 1061159, 1157518));
-            _TrainingPoints.Add(new TrainingPoint(ResistanceType.Cold, 3.0, 1, 80, 1061160, 1157519));
-            _TrainingPoints.Add(new TrainingPoint(ResistanceType.Poison, 3.0, 1, 80, 1061161, 1157520));
-            _TrainingPoints.Add(new TrainingPoint(ResistanceType.Energy, 3.0, 1, 80, 1061162, 1157521));
-
-            _TrainingPoints.Add(new TrainingPoint(SkillName.Magery, 0.5, 50, 200, 1002106, 1157522));
-            _TrainingPoints.Add(new TrainingPoint(SkillName.EvalInt, 1.0, 50, 200, 1044076, 1157522));
-            _TrainingPoints.Add(new TrainingPoint(SkillName.Necromancy, 0.5, 50, 200, 1044109, 1157522));
-            _TrainingPoints.Add(new TrainingPoint(SkillName.SpiritSpeak, 1.0, 50, 200, 1044092, 1157522));
-            _TrainingPoints.Add(new TrainingPoint(SkillName.Chivalry, 0.5, 50, 200, 1044111, 1157522));
-            _TrainingPoints.Add(new TrainingPoint(SkillName.Focus, 0.1, 50, 200, 1044110, 1157522));
-            _TrainingPoints.Add(new TrainingPoint(SkillName.Bushido, 0.5, 50, 200, 1044112, 1157522));
-            _TrainingPoints.Add(new TrainingPoint(SkillName.Ninjitsu, 0.5, 50, 200, 1044113, 1157522));
-            _TrainingPoints.Add(new TrainingPoint(SkillName.Spellweaving, 0.5, 50, 200, 1044114, 1157522));
-            _TrainingPoints.Add(new TrainingPoint(SkillName.Mysticism, 0.5, 50, 200, 1044115, 1157522));
-            _TrainingPoints.Add(new TrainingPoint(SkillName.Meditation, 0.1, 50, 200, 1044106, 1157522));
-            _TrainingPoints.Add(new TrainingPoint(SkillName.MagicResist, 0.1, 50, 200, 1044086, 1157522));
-
-            _TrainingPoints.Add(new TrainingPoint(SkillName.Wrestling, 1.0, 50, 200, 1044103, 1157522));
-            _TrainingPoints.Add(new TrainingPoint(SkillName.Tactics, 1.0, 50, 200, 1044087, 1157522));
-            _TrainingPoints.Add(new TrainingPoint(SkillName.Anatomy, 0.1, 50, 200, 1044061, 1157522));
-            _TrainingPoints.Add(new TrainingPoint(SkillName.Parry, 0.1, 50, 200, 1002118, 1157522));
-            _TrainingPoints.Add(new TrainingPoint(SkillName.Healing, 0.1, 50, 200, 1002082, 1157522));
-            _TrainingPoints.Add(new TrainingPoint(SkillName.Discordance, 0.1, 50, 200, 1044075, 1157522));
+            _TrainingPoints = new List<TrainingPoint>
+            {
+                new TrainingPoint(PetStat.Str, 3.0, 1, 700, 1061146, 1157507),
+                new TrainingPoint(PetStat.Dex, 0.1, 1, 150, 1061147, 1157508),
+                new TrainingPoint(PetStat.Int, 0.5, 1, 700, 1061148, 1157509),
+                new TrainingPoint(PetStat.Hits, 3.0, 1, 1100, 1061149, 1157510),
+                new TrainingPoint(PetStat.Stam, 0.5, 1, 150, 1061150, 1157511),
+                new TrainingPoint(PetStat.Mana, 0.5, 1, 1500, 1061151, 1157512),
+                new TrainingPoint(PetStat.RegenHits, 18.0, 1, 20, 1075627, 1157513),
+                new TrainingPoint(PetStat.RegenStam, 12.0, 1, 30, 1079411, 1157514),
+                new TrainingPoint(PetStat.RegenMana, 12.0, 1, 30, 1079410, 1157515),
+                new TrainingPoint(PetStat.BaseDamage, 5.0, 1, 22, 1157506, 1157516),
+                new TrainingPoint(ResistanceType.Physical, 3.0, 1, 80, 1061158, 1157517),
+                new TrainingPoint(ResistanceType.Fire, 3.0, 1, 80, 1061159, 1157518),
+                new TrainingPoint(ResistanceType.Cold, 3.0, 1, 80, 1061160, 1157519),
+                new TrainingPoint(ResistanceType.Poison, 3.0, 1, 80, 1061161, 1157520),
+                new TrainingPoint(ResistanceType.Energy, 3.0, 1, 80, 1061162, 1157521),
+                new TrainingPoint(SkillName.Magery, 0.5, 50, 200, 1002106, 1157522),
+                new TrainingPoint(SkillName.EvalInt, 1.0, 50, 200, 1044076, 1157522),
+                new TrainingPoint(SkillName.Necromancy, 0.5, 50, 200, 1044109, 1157522),
+                new TrainingPoint(SkillName.SpiritSpeak, 1.0, 50, 200, 1044092, 1157522),
+                new TrainingPoint(SkillName.Chivalry, 0.5, 50, 200, 1044111, 1157522),
+                new TrainingPoint(SkillName.Focus, 0.1, 50, 200, 1044110, 1157522),
+                new TrainingPoint(SkillName.Bushido, 0.5, 50, 200, 1044112, 1157522),
+                new TrainingPoint(SkillName.Ninjitsu, 0.5, 50, 200, 1044113, 1157522),
+                new TrainingPoint(SkillName.Spellweaving, 0.5, 50, 200, 1044114, 1157522),
+                new TrainingPoint(SkillName.Mysticism, 0.5, 50, 200, 1044115, 1157522),
+                new TrainingPoint(SkillName.Meditation, 0.1, 50, 200, 1044106, 1157522),
+                new TrainingPoint(SkillName.MagicResist, 0.1, 50, 200, 1044086, 1157522),
+                new TrainingPoint(SkillName.Wrestling, 1.0, 50, 200, 1044103, 1157522),
+                new TrainingPoint(SkillName.Tactics, 1.0, 50, 200, 1044087, 1157522),
+                new TrainingPoint(SkillName.Anatomy, 0.1, 50, 200, 1044061, 1157522),
+                new TrainingPoint(SkillName.Parry, 0.1, 50, 200, 1002118, 1157522),
+                new TrainingPoint(SkillName.Healing, 0.1, 50, 200, 1002082, 1157522),
+                new TrainingPoint(SkillName.Discordance, 0.1, 50, 200, 1044075, 1157522)
+            };
 
             TextDefinition[][] loc = _MagicalAbilityLocalizations;
 
@@ -1292,7 +1236,7 @@ namespace Server.Mobiles
             {
                 if (ValidateTrainingPoint(bc, skill) && profile.AddAbility(skill))
                 {
-                    bc.Skills[skill].Cap = 100 + (value / 10);
+                    bc.Skills[skill].Cap = 100 + value / 10;
 
                     return true;
                 }
