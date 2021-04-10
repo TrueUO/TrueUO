@@ -251,32 +251,31 @@ namespace Server.Mobiles
         #region SpecialAbility Defs
         public static SpecialAbility[] RuleBreakers;
         public static SpecialAbility[] SpecialAbilityNone;
-        private static SpecialAbility[] SpecialAbilityUnicorn;
-        private static SpecialAbility[] SpecialAbilityAnimalStandard;
-        private static SpecialAbility[] SpecialAbilityBitingAnimal;
-        private static SpecialAbility[] SpecialAbilityClawed;
-        private static SpecialAbility[] SpecialAbilityTailed;
-        private static SpecialAbility[] SpecialAbilityClawedAndTailed;
-        private static SpecialAbility[] SpecialAbilityMagicalInsectoid;
-        private static SpecialAbility[] SpecialAbilityStickySkin;
-        private static SpecialAbility[] SpecialAbilityBitingStickySkin;
-        private static SpecialAbility[] SpecialAbilityTailedAndStickySkin;
-        private static SpecialAbility[] SpecialAbilityBitingTailed;
-        private static SpecialAbility[] SpecialAbilityBitingClawedAndTailed;
-        private static SpecialAbility[] SpecialAbilityClawedAndNecromantic;
-        private static SpecialAbility[] SpecialAbilityClawedTailedAndMagical1;
-        private static SpecialAbility[] SpecialAbilityClawedTailedAndMagical2;
-        private static SpecialAbility[] SpecialAbilityBaneDragon;
-        private static SpecialAbility[] SpecialAbilityDreadSpider;
-        private static SpecialAbility[] SpecialAbilityImp;
-        private static SpecialAbility[] SpecialAbilityTsukiWolf;
-        private static SpecialAbility[] SpecialAbilitySabreTri;
-        private static SpecialAbility[] SpecialAbilityTriton;
-        private static SpecialAbility[] SpecialAbilityGrizzledMare;
-        private static SpecialAbility[] SpecialAbilitySkeletalCat;
-        private static SpecialAbility[] SpecialAbilityCoconutCrab;
-        private static SpecialAbility[] SpecialAbilityPhoenix;
-        private static SpecialAbility[] SpecialAbilityTriceratops;
+        public static SpecialAbility[] SpecialAbilityUnicorn;
+        public static SpecialAbility[] SpecialAbilityAnimalStandard;
+        public static SpecialAbility[] SpecialAbilityBitingAnimal;
+        public static SpecialAbility[] SpecialAbilityClawed;
+        public static SpecialAbility[] SpecialAbilityTailed;
+        public static SpecialAbility[] SpecialAbilityClawedAndTailed;
+        public static SpecialAbility[] SpecialAbilityMagicalInsectoid;
+        public static SpecialAbility[] SpecialAbilityStickySkin;
+        public static SpecialAbility[] SpecialAbilityBitingStickySkin;
+        public static SpecialAbility[] SpecialAbilityTailedAndStickySkin;
+        public static SpecialAbility[] SpecialAbilityBitingTailed;
+        public static SpecialAbility[] SpecialAbilityBitingClawedAndTailed;
+        public static SpecialAbility[] SpecialAbilityClawedAndNecromantic;
+        public static SpecialAbility[] SpecialAbilityClawedTailedAndMagical1;
+        public static SpecialAbility[] SpecialAbilityClawedTailedAndMagical2;
+        public static SpecialAbility[] SpecialAbilityBaneDragon;
+        public static SpecialAbility[] SpecialAbilityDreadSpider;
+        public static SpecialAbility[] SpecialAbilityImp;
+        public static SpecialAbility[] SpecialAbilityTsukiWolf;
+        public static SpecialAbility[] SpecialAbilitySabreTri;
+        public static SpecialAbility[] SpecialAbilityTriton;
+        public static SpecialAbility[] SpecialAbilityGrizzledMare;
+        public static SpecialAbility[] SpecialAbilitySkeletalCat;
+        public static SpecialAbility[] SpecialAbilityCoconutCrab;
+        public static SpecialAbility[] SpecialAbilityPhoenix;
         #endregion
 
         #region AreaEffect Defs
@@ -578,7 +577,7 @@ namespace Server.Mobiles
                 SpecialAbility.Repel, SpecialAbility.SearingWounds, SpecialAbility.VenomousBite, SpecialAbility.ViciousBite
             };
 
-            SpecialAbilityTriceratops = new[]
+            SpecialAbility[] SpecialAbilityTriceratops =
             {
                 SpecialAbility.ManaDrain, SpecialAbility.Repel, SpecialAbility.SearingWounds,
                 SpecialAbility.TailSwipe, SpecialAbility.VenomousBite, SpecialAbility.ViciousBite
