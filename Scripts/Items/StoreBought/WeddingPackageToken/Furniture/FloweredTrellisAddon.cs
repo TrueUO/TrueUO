@@ -32,33 +32,33 @@ namespace Server.Items
                 AddComponent(new AddonComponent(list[i, 0]), list[i, 1], list[i, 2], list[i, 3]);
         }
 
-        private static readonly int[,] _RoseEast = new int[,]
+        private static readonly int[,] _RoseSouth = new int[,]
         {
             {40585, 0, 0, 0}, {40586, -1, 0, 0}, {40587, -2, 0, 0}, {40588, -3, 0, 0}
 		};
 
-        private static readonly int[,] _RoseSouth = new int[,]
+        private static readonly int[,] _RoseEast = new int[,]
         {
             {40600, 0, 0, 0}, {40601, 0, -1, 0}, {40602, 0, -2, 0}, {40603, 0, -3, 0}
         };
 
-        private static readonly int[,] _LeafyEast =
+        private static readonly int[,] _LeafySouth =
         {
             {40645, 0, 0, 0}, {40646, -1, 0, 0}, {40647, -2, 0, 0}, {40648, -3, 0, 0}
         };
 
-        private static readonly int[,] _LeafySouth =
+        private static readonly int[,] _LeafyEast =
         {
             {40666, 0, 0, 0}, {40665, 0, -1, 0}, {40664, 0, -2, 0}, {40663, 0, -3, 0}
         };
 
-        private static readonly int[,] _BigflowEast =
+        private static readonly int[,] _BigflowSouth =
         {
             {40613, 0, 0, 0}, {40614, -1, 0, 0}, {40615, -2, 0, 0}, {40616, -3, 0, 0},
             {40617, -4, 0, 0}
         };
 
-        private static readonly int[,] _BigflowSouth =
+        private static readonly int[,] _BigflowEast =
         {
             {40649, 0, 0, 0}, {40650, 0, -1, 0}, {40651, 0, -2, 0}, {40652, 0, -3, 0},
             {40653, 0, -4, 0}

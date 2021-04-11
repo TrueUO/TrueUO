@@ -562,14 +562,6 @@ namespace Server.Engines.VendorSearching
                         {
                             User.SendLocalizedMessage(1154672); // You cannot afford to teleport to the vendor.
                         }
-                        else if (VendorMap.SetLocation == Point3D.Zero && !VendorSearch.CanSearch(User))
-                        {
-                            User.SendLocalizedMessage(1154680); //Before using vendor search, you must be in a justice region or a safe log-out location (such as an inn or a house which has you on its Owner, Co-owner, or Friends list). 
-                        }
-                        else if (VendorMap.SetLocation == Point3D.Zero && !VendorSearch.CanSearch(User))
-                        {
-                            User.SendLocalizedMessage(501035); // You cannot teleport from here to the destination.
-                        }
                         else
                         {
                             new Spells.Fourth.RecallSpell(User, VendorMap, VendorMap).Cast();
