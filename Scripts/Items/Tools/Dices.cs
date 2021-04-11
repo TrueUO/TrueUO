@@ -52,10 +52,20 @@ namespace Server.Items
             int one = Utility.Random(1, 6);
             int two = Utility.Random(1, 6);
 
-            SendLocalizedMessage(MessageType.Emote, 1042713, AffixType.Prepend, from.Name + " ", ""); // The first die rolls to a stop and shows:
-            SendLocalizedMessage(MessageType.Regular, 1042714, AffixType.Append, " " + one, ""); // The first die rolls to a stop and shows:
-            SendLocalizedMessage(MessageType.Regular, 1042715, AffixType.Append, " " + two, ""); // The second die stops and shows:
-            SendLocalizedMessage(MessageType.Regular, 1042716, AffixType.Append, " " + (one + two), ""); // Total for this roll:
+            if (RootParent == from)
+            {
+                from.Send(new MessageLocalizedAffix(Serial.Zero, 0, MessageType.Regular, 0x3B2, 3, 1042713, "", AffixType.Prepend, from.Name + " ", ""));
+                from.Send(new MessageLocalizedAffix(Serial.Zero, 0, MessageType.Regular, 0x3B2, 3, 1042714, "", AffixType.Append, " " + one, ""));
+                from.Send(new MessageLocalizedAffix(Serial.Zero, 0, MessageType.Regular, 0x3B2, 3, 1042715, "", AffixType.Append, " " + two, ""));
+                from.Send(new MessageLocalizedAffix(Serial.Zero, 0, MessageType.Regular, 0x3B2, 3, 1042716, "", AffixType.Append, " " + (one + two), ""));
+            }
+            else if (RootParent == null)
+            {
+                SendLocalizedMessage(MessageType.Label, 1042713, AffixType.Prepend, from.Name + " ", ""); // The first die rolls to a stop and shows:
+                SendLocalizedMessage(MessageType.Label, 1042714, AffixType.Append, " " + one, ""); // The first die rolls to a stop and shows:
+                SendLocalizedMessage(MessageType.Label, 1042715, AffixType.Append, " " + two, ""); // The second die stops and shows:
+                SendLocalizedMessage(MessageType.Label, 1042716, AffixType.Append, " " + (one + two), ""); // Total for this roll:
+            }
         }
 
         public override void Serialize(GenericWriter writer)
