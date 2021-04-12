@@ -166,11 +166,11 @@ namespace Server.Items
                         case 6: Attributes.SpellChanneling += attrInfo.ShieldSpellChanneling; break;
                     }
                 }
-            }
 
-            if (Attributes.SpellChanneling > 0 && Attributes.CastSpeed != -1)
-            {
-                Attributes.CastSpeed -= 1;
+                if (Attributes.SpellChanneling > 0 && Attributes.CastSpeed != -1)
+                {
+                    Attributes.CastSpeed -= 1;
+                }
             }
         }
 
