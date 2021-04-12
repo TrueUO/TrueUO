@@ -40,6 +40,7 @@ namespace Server.Items
             typeof(ShatterPotion),
             typeof(FearEssence),
             typeof(InvisibilityPotion),
+            typeof(DarkglowPotion),
             typeof(GreaterConflagrationPotion),
             typeof(ParasiticPotion),
             typeof(ExplodingTarPotion),
