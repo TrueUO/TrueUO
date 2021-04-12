@@ -593,6 +593,7 @@ namespace Server.Engines.Quests
         }
 
         public override bool ClickTitle => false;
+
         public override void InitOutfit()
         {
             if (Female)
@@ -612,18 +613,20 @@ namespace Server.Engines.Quests
             switch (Utility.Random(4))
             {
                 case 0:
-                    AddItem(new ShortHair(Utility.RandomHairHue()));
+                    HairItemID = 0x203B;
                     break;
                 case 1:
-                    AddItem(new TwoPigTails(Utility.RandomHairHue()));
+                    HairItemID = 0x2049;
                     break;
                 case 2:
-                    AddItem(new ReceedingHair(Utility.RandomHairHue()));
+                    HairItemID = 0x2048;
                     break;
                 case 3:
-                    AddItem(new KrisnaHair(Utility.RandomHairHue()));
+                    HairItemID = 0x204A;
                     break;
             }
+
+            HairHue = Race.RandomHairHue();
 
             PackGold(200, 250);
         }

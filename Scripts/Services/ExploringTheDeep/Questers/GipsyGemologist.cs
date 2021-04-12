@@ -8,8 +8,6 @@ namespace Server.Mobiles
 {
     public class GipsyGemologist : Mobile
     {
-        public virtual bool IsInvulnerable => true;
-
         [Constructable]
         public GipsyGemologist()
         {
@@ -21,11 +19,11 @@ namespace Server.Mobiles
 
             Hue = Utility.RandomSkinHue();
 
-            AddItem(new LongHair(2213));
             AddItem(new Backpack());
             AddItem(new Shoes(0x737));
             AddItem(new Skirt(0x1BB));
             AddItem(new FancyShirt(0x535));
+
             Utility.AssignRandomHair(this);
         }
 
