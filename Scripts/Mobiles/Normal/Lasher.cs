@@ -42,7 +42,7 @@ namespace Server.Mobiles
     }
 
     [CorpseName("a Lasher corpse")]
-    public class Lasher : BaseMount
+    public class Lasher : BaseMount, IVanityMount
     {
         [Constructable]
         public Lasher()

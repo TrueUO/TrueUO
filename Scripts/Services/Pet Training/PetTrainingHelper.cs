@@ -283,6 +283,7 @@ namespace Server.Mobiles
         public static SpecialAbility[] SpecialAbilityCoconutCrab;
         public static SpecialAbility[] SpecialAbilityPhoenix;
         public static SpecialAbility[] SpecialAbilityTriceratops;
+        public static SpecialAbility[] SpecialAbilityWindrunner;
         #endregion
 
         #region AreaEffect Defs
@@ -634,6 +635,12 @@ namespace Server.Mobiles
                 SpecialAbility.ManaDrain, SpecialAbility.Repel, SpecialAbility.SearingWounds,
                 SpecialAbility.TailSwipe, SpecialAbility.VenomousBite, SpecialAbility.ViciousBite
             };
+
+            SpecialAbilityWindrunner = new[]
+            {
+                SpecialAbility.LifeLeech, SpecialAbility.ManaDrain, SpecialAbility.Repel,
+                SpecialAbility.SearingWounds, SpecialAbility.TailSwipe
+            };
             #endregion
 
             #region Area Effect Packages
@@ -815,7 +822,7 @@ namespace Server.Mobiles
                 new TrainingDefinition(typeof(WildTiger), Class.ClawedAndTailed, MagicalAbility.Poisoning, SpecialAbilityNone, WepAbility3, AreaEffectNone, 2, 5),
                 new TrainingDefinition(typeof(WildWhiteTiger), Class.ClawedAndTailed, MagicalAbility.Poisoning, SpecialAbilityNone, WepAbility3, AreaEffectNone, 2, 5),
                 new TrainingDefinition(typeof(WildBlackTiger), Class.ClawedAndTailed, MagicalAbility.Poisoning, SpecialAbilityNone, WepAbility3, AreaEffectNone, 2, 5),
-                new TrainingDefinition(typeof(Windrunner), Class.TailedAndNecromantic, MagicalAbility.None, SpecialAbilityNone, WepAbilityNone, AreaEffectNone, 2, 4),
+                new TrainingDefinition(typeof(Windrunner), Class.TailedAndNecromantic, MagicalAbility.Hellcat, SpecialAbilityWindrunner, WepAbility1, AreaEffectNone, 2, 4),
                 new TrainingDefinition(typeof(WolfSpider), Class.None, MagicalAbility.Vartiety, SpecialAbilityBitingAnimal, WepAbility1, AreaEffectDisease, 1, 3),
                 new TrainingDefinition(typeof(Triton), Class.None, MagicalAbility.Triton, SpecialAbilityTriton, WepAbility9, AreaEffectArea2, 2, 5),
                 new TrainingDefinition(typeof(Eowmu), Class.Clawed, MagicalAbility.None, SpecialAbilityNone, WepAbilityNone, AreaEffectNone, 1, 3),
