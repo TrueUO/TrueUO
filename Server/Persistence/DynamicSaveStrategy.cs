@@ -105,7 +105,7 @@ namespace Server
 
 			//Start the producer.
 			Parallel.ForEach(items, () => new QueuedMemoryWriter(),
-				(Item item, ParallelLoopState state, QueuedMemoryWriter writer) =>
+				(item, state, writer) =>
 				{
 					long startPosition = writer.Position;
 
@@ -115,7 +115,7 @@ namespace Server
 
 					writer.QueueForIndex(item, size);
 
-					if (item.Decays && item.Parent == null && item.Map != Map.Internal && DateTime.UtcNow > (item.LastMoved + item.DecayTime))
+					if (item.Decays && item.Parent == null && item.Map != Map.Internal && DateTime.UtcNow > item.LastMoved + item.DecayTime)
 					{
 						_decayBag.Add(item);
 					}
@@ -148,7 +148,7 @@ namespace Server
 
 			//Start the producer.
 			Parallel.ForEach(mobiles, () => new QueuedMemoryWriter(),
-				(Mobile mobile, ParallelLoopState state, QueuedMemoryWriter writer) =>
+				(mobile, state, writer) =>
 				{
 					long startPosition = writer.Position;
 
@@ -186,7 +186,7 @@ namespace Server
 
 			//Start the producer.
 			Parallel.ForEach(guilds, () => new QueuedMemoryWriter(),
-				(BaseGuild guild, ParallelLoopState state, QueuedMemoryWriter writer) =>
+				(guild, state, writer) =>
 				{
 					long startPosition = writer.Position;
 

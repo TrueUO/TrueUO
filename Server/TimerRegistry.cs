@@ -42,7 +42,7 @@ namespace Server
             });
         }
 
-        public static Dictionary<string, List<Timer>> Timers { get; set; } = new Dictionary<string, List<Timer>>();
+        public static Dictionary<string, List<Timer>> Timers { get; } = new Dictionary<string, List<Timer>>();
 
         public static void Register<T>(string id, T instance, TimeSpan duration, Action<T> callback)
         {

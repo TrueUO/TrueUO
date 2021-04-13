@@ -184,7 +184,7 @@ namespace Server
                                 line += $" [{diff:#,0}]";
                         }
 
-                        var tabs = new string('\t', 6 - (line.Length / 8));
+                        var tabs = new string('\t', 6 - line.Length / 8);
 
                         tw.WriteLine($"{line}{tabs}{name}");
                     }

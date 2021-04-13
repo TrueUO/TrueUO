@@ -165,7 +165,7 @@ namespace Server
 
 			private int _Plat, _Gold;
 
-			public Mobile User { get; private set; }
+			public Mobile User { get; }
 			public VirtualCheck Check { get; private set; }
 
 			public EditGump(Mobile user, VirtualCheck check)

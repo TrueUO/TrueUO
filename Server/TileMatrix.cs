@@ -193,7 +193,7 @@ namespace Server
 
 						lock (shared)
 						{
-							if (x >= 0 && x < shared.m_BlockWidth && y >= 0 && y < shared.m_BlockHeight)
+							if (x < shared.m_BlockWidth && y < shared.m_BlockHeight)
 							{
 								StaticTile[][][][] theirTiles = shared.m_StaticTiles[x];
 
@@ -325,7 +325,7 @@ namespace Server
 
 						lock (shared)
 						{
-							if (x >= 0 && x < shared.m_BlockWidth && y >= 0 && y < shared.m_BlockHeight)
+							if (x < shared.m_BlockWidth && y < shared.m_BlockHeight)
 							{
 								LandTile[][] theirTiles = shared.m_LandTiles[x];
 
@@ -538,7 +538,7 @@ namespace Server
 
 		public int Height => 0;
 
-		public bool Ignored => m_ID == 2 || m_ID == 0x1DB || (m_ID >= 0x1AE && m_ID <= 0x1B5);
+		public bool Ignored => m_ID == 2 || m_ID == 0x1DB || m_ID >= 0x1AE && m_ID <= 0x1B5;
 
 		public LandTile(short id, sbyte z)
 		{

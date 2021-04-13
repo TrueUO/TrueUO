@@ -113,7 +113,7 @@ namespace Server.Network
 
 		public void Enqueue(byte[] buffer, int offset, int size)
 		{
-			if ((m_Size + size) > m_Buffer.Length)
+			if (m_Size + size > m_Buffer.Length)
 			{
 				SetCapacity((m_Size + size + 2047) & ~2047);
 			}

@@ -131,7 +131,7 @@ namespace Server
                 newblue = 1;
             }
 
-            return (short)((newred << 10) | (newgreen << 5) | (newblue));
+            return (short)((newred << 10) | (newgreen << 5) | newblue);
         }
 
         private const int ScaleI = 255 / 31;
@@ -156,12 +156,12 @@ namespace Server
             return (hue & 0x1f) * ScaleI;
         }
 
-        public static unsafe void ApplyTo(Bitmap bmp, int hue, bool onlyHueGrayPixels)
+        public static void ApplyTo(Bitmap bmp, int hue, bool onlyHueGrayPixels)
         {
             ApplyTo(bmp, GetHue(hue), onlyHueGrayPixels);
         }
 
-        public static unsafe void ApplyTo(Bitmap bmp, Hue hue, bool onlyHueGrayPixels)
+        public static void ApplyTo(Bitmap bmp, Hue hue, bool onlyHueGrayPixels)
         {
             ApplyTo(bmp, hue?.Colors, onlyHueGrayPixels);
         }
@@ -182,7 +182,7 @@ namespace Server
 
             ushort* pBuffer = (ushort*)bd.Scan0;
             ushort* pLineEnd = pBuffer + width;
-            ushort* pImageEnd = pBuffer + (stride * height);
+            ushort* pImageEnd = pBuffer + stride * height;
 
             if (onlyHueGrayPixels)
             {

@@ -240,8 +240,7 @@ namespace Server.Items
 
 				int maxItems = MaxItems;
 
-				if (checkItems && maxItems != 0 &&
-					(TotalItems + plusItems + item.TotalItems + (item.IsVirtualItem ? 0 : 1)) > maxItems)
+				if (checkItems && maxItems != 0 && TotalItems + plusItems + item.TotalItems + (item.IsVirtualItem ? 0 : 1) > maxItems)
 				{
 					if (message)
 					{
@@ -253,7 +252,7 @@ namespace Server.Items
 
                 int maxWeight = MaxWeight;
 
-                if (maxWeight != 0 && (TotalWeight + plusWeight + item.TotalWeight + item.PileWeight) > maxWeight)
+                if (maxWeight != 0 && TotalWeight + plusWeight + item.TotalWeight + item.PileWeight > maxWeight)
                 {
                     if (message)
                     {

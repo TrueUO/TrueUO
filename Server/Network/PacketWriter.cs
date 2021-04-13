@@ -254,7 +254,7 @@ namespace Server.Network
 
 			int length = value.Length;
 
-			m_Stream.SetLength(m_Stream.Length + ((length + 1) * 2));
+			m_Stream.SetLength(m_Stream.Length + (length + 1) * 2);
 
 			m_Stream.Position += Encoding.Unicode.GetBytes(value, 0, length, m_Stream.GetBuffer(), (int)m_Stream.Position);
 			m_Stream.Position += 2;

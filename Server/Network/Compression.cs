@@ -56,10 +56,10 @@ namespace Server.Network
 		private const int TerminalCodeLength = 4;
 
 		// If our input exceeds this length, we cannot possibly compress it within the buffer
-		private const int DefiniteOverflow = ((BufferSize * 8) - TerminalCodeLength) / MinimalCodeLength;
+		private const int DefiniteOverflow = (BufferSize * 8 - TerminalCodeLength) / MinimalCodeLength;
 
 		// If our input exceeds this length, we may potentially overflow the buffer
-		private const int PossibleOverflow = ((BufferSize * 8) - TerminalCodeLength) / MaximalCodeLength;
+		private const int PossibleOverflow = (BufferSize * 8 - TerminalCodeLength) / MaximalCodeLength;
 
 		public static unsafe void Compress(byte[] input, int offset, int count, byte[] output, ref int length)
 		{
@@ -78,7 +78,7 @@ namespace Server.Network
                 throw new ArgumentOutOfRangeException(nameof(count));
             }
 
-            if ((input.Length - offset) < count)
+            if (input.Length - offset < count)
             {
                 throw new ArgumentException();
             }

@@ -37,12 +37,12 @@ namespace Server
 	{
 		public delegate IEnumerable<T> Selector<out T>(Sector sector, Rectangle2D bounds);
 
-		public static Selector<NetState> ClientSelector { get; set; }
-		public static Selector<IEntity> EntitySelector { get; set; }
-		public static Selector<Mobile> MobileSelector { get; set; }
-		public static Selector<Item> ItemSelector { get; set; }
-		public static Selector<BaseMulti> MultiSelector { get; set; }
-		public static Selector<StaticTile[]> MultiTileSelector { get; set; }
+		public static Selector<NetState> ClientSelector { get; }
+		public static Selector<IEntity> EntitySelector { get; }
+		public static Selector<Mobile> MobileSelector { get; }
+		public static Selector<Item> ItemSelector { get; }
+		public static Selector<BaseMulti> MultiSelector { get; }
+		public static Selector<StaticTile[]> MultiTileSelector { get; }
 
 		static PooledEnumeration()
 		{

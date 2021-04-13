@@ -188,7 +188,7 @@ namespace Server
 
 								if (clilocsCount != 0)
 								{
-									fs.Seek(fs.Position + (clilocsCount * 4), SeekOrigin.Begin); // binary block bypass
+									fs.Seek(fs.Position + clilocsCount * 4, SeekOrigin.Begin); // binary block bypass
 								}
 
 								tileList.Add(new MultiTileEntry(ItemId, x, y, z, flagg));
@@ -964,17 +964,17 @@ namespace Server
 			{
 				switch (length)
 				{
-					case 12: c += ((uint)s[k + 11]) << 24; goto case 11;
-					case 11: c += ((uint)s[k + 10]) << 16; goto case 10;
-					case 10: c += ((uint)s[k + 9]) << 8; goto case 9;
+					case 12: c += (uint)s[k + 11] << 24; goto case 11;
+					case 11: c += (uint)s[k + 10] << 16; goto case 10;
+					case 10: c += (uint)s[k + 9] << 8; goto case 9;
 					case 9: c += s[k + 8]; goto case 8;
-					case 8: b += ((uint)s[k + 7]) << 24; goto case 7;
-					case 7: b += ((uint)s[k + 6]) << 16; goto case 6;
-					case 6: b += ((uint)s[k + 5]) << 8; goto case 5;
+					case 8: b += (uint)s[k + 7] << 24; goto case 7;
+					case 7: b += (uint)s[k + 6] << 16; goto case 6;
+					case 6: b += (uint)s[k + 5] << 8; goto case 5;
 					case 5: b += s[k + 4]; goto case 4;
-					case 4: a += ((uint)s[k + 3]) << 24; goto case 3;
-					case 3: a += ((uint)s[k + 2]) << 16; goto case 2;
-					case 2: a += ((uint)s[k + 1]) << 8; goto case 1;
+					case 4: a += (uint)s[k + 3] << 24; goto case 3;
+					case 3: a += (uint)s[k + 2] << 16; goto case 2;
+					case 2: a += (uint)s[k + 1] << 8; goto case 1;
 					case 1: a += s[k]; break;
 				}
 

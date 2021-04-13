@@ -482,7 +482,7 @@ namespace Server
 
 		public override void Write(short value)
 		{
-			if ((m_Index + 2) > m_Buffer.Length)
+			if (m_Index + 2 > m_Buffer.Length)
 			{
 				Flush();
 			}
@@ -494,7 +494,7 @@ namespace Server
 
 		public override void Write(ushort value)
 		{
-			if ((m_Index + 2) > m_Buffer.Length)
+			if (m_Index + 2 > m_Buffer.Length)
 			{
 				Flush();
 			}
@@ -506,7 +506,7 @@ namespace Server
 
 		public override unsafe void Write(double value)
 		{
-			if ((m_Index + 8) > m_Buffer.Length)
+			if (m_Index + 8 > m_Buffer.Length)
 			{
 				Flush();
 			}
@@ -521,7 +521,7 @@ namespace Server
 
 		public override unsafe void Write(float value)
 		{
-			if ((m_Index + 4) > m_Buffer.Length)
+			if (m_Index + 4 > m_Buffer.Length)
 			{
 				Flush();
 			}
@@ -538,7 +538,7 @@ namespace Server
 
 		public override void Write(char value)
 		{
-			if ((m_Index + 8) > m_Buffer.Length)
+			if (m_Index + 8 > m_Buffer.Length)
 			{
 				Flush();
 			}

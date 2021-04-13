@@ -26,7 +26,7 @@ namespace Server
 	[AttributeUsage(AttributeTargets.Method)]
 	public class CallPriorityAttribute : Attribute
 	{
-		public int Priority { get; set; }
+		public int Priority { get; }
 
 		public CallPriorityAttribute(int priority)
 		{
@@ -123,7 +123,7 @@ namespace Server
 	[AttributeUsage(AttributeTargets.Class)]
 	public class DeleteConfirmAttribute : Attribute
 	{
-		public string Message { get; set; }
+		public string Message { get; }
 
 		public DeleteConfirmAttribute()
 			: this("Are you sure you wish to delete this item?")

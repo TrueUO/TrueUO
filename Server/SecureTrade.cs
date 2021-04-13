@@ -222,7 +222,7 @@ namespace Server
 					if (m_From.Mobile.Account != null)
 					{
 						double cur = m_From.Mobile.Account.TotalCurrency;
-						double off = m_From.Plat + (m_From.Gold / Math.Max(1.0, AccountGold.CurrencyThreshold));
+						double off = m_From.Plat + m_From.Gold / Math.Max(1.0, AccountGold.CurrencyThreshold);
 
 						if (off > cur)
 						{
@@ -234,7 +234,7 @@ namespace Server
 					if (m_To.Mobile.Account != null)
 					{
 						double cur = m_To.Mobile.Account.TotalCurrency;
-						double off = m_To.Plat + (m_To.Gold / Math.Max(1.0, AccountGold.CurrencyThreshold));
+						double off = m_To.Plat + m_To.Gold / Math.Max(1.0, AccountGold.CurrencyThreshold);
 
 						if (off > cur)
 						{

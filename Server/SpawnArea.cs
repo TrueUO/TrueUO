@@ -236,7 +236,7 @@ namespace Server
 				return;
 			}
 
-			if (region == null || (!region.IsDefault && (region.Area == null || region.Area.Length == 0)))
+			if (region == null || !region.IsDefault && (region.Area == null || region.Area.Length == 0))
 			{
 				return;
 			}
@@ -284,7 +284,7 @@ namespace Server
 				_Points.Add(p);
 			}
 
-			Center = new Point2D(_Bounds.Start.X + (_Bounds.Width / 2), _Bounds.Start.Y + (_Bounds.Height / 2));
+			Center = new Point2D(_Bounds.Start.X + _Bounds.Width / 2, _Bounds.Start.Y + _Bounds.Height / 2);
 		}
 
 		private IEnumerable<Point3D> Compute(Rectangle3D area)

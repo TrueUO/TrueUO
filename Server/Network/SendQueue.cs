@@ -180,9 +180,9 @@ namespace Server.Network
                 throw new ArgumentException("Offset and length do not point to a valid segment within the buffer.");
             }
 
-            int existingBytes = (_pending.Count * m_CoalesceBufferSize) + (_buffered == null ? 0 : _buffered.Length);
+            int existingBytes = _pending.Count * m_CoalesceBufferSize + (_buffered == null ? 0 : _buffered.Length);
 
-			if ((existingBytes + length) > PendingCap)
+			if (existingBytes + length > PendingCap)
 			{
 				throw new CapacityExceededException();
 			}

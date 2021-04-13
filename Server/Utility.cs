@@ -686,8 +686,7 @@ namespace Server
 		#region In[...]Range
 		public static bool InRange(Point3D p1, Point3D p2, int range)
 		{
-			return (p1.m_X >= (p2.m_X - range)) && (p1.m_X <= (p2.m_X + range)) && (p1.m_Y >= (p2.m_Y - range)) &&
-				   (p1.m_Y <= (p2.m_Y + range));
+			return p1.m_X >= p2.m_X - range && p1.m_X <= p2.m_X + range && p1.m_Y >= p2.m_Y - range && p1.m_Y <= p2.m_Y + range;
 		}
 
 		public static bool InUpdateRange(Point3D p1, Point3D p2)

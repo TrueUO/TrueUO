@@ -27,12 +27,12 @@ namespace Server.ContextMenus
 		/// <summary>
 		///     Gets or sets the localization number containing the name of this entry.
 		/// </summary>
-		public int Number { get; set; }
+		public int Number { get; }
 
 		/// <summary>
 		///     Gets or sets the maximum range at which this entry may be used, in tiles. A value of -1 signifies no maximum range.
 		/// </summary>
-		public int Range { get; set; }
+		public int Range { get; }
 
 		/// <summary>
 		///     Gets or sets the color for this entry. Format is A1-R5-G5-B5.

@@ -1,6 +1,4 @@
-#region References
 using Server.Network;
-#endregion
 
 namespace Server.Menus.Questions
 {
@@ -15,7 +13,7 @@ namespace Server.Menus.Questions
 
 		int IMenu.EntryLength => m_Answers.Length;
 
-		public string Question { get; set; }
+		public string Question { get; }
 
 		public string[] Answers => m_Answers;
 

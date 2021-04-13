@@ -218,7 +218,7 @@ namespace Server
 
 					var pLineEnd = pBuffer + bd.Width;
 
-					var pEnd = pBuffer + (bd.Height * lineDelta);
+					var pEnd = pBuffer + bd.Height * lineDelta;
 
 					var foundPixel = false;
 

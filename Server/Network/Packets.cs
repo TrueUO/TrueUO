@@ -186,7 +186,7 @@ namespace Server.Network
 		public MapPatches()
 			: base(0xBF)
 		{
-			EnsureCapacity(9 + (3 * 8));
+			EnsureCapacity(9 + 3 * 8);
 
 			m_Stream.Write((short)0x0018);
 
@@ -213,7 +213,7 @@ namespace Server.Network
 		public ObjectHelpResponse(IEntity e, string text)
 			: base(0xB7)
 		{
-			EnsureCapacity(9 + (text.Length * 2));
+			EnsureCapacity(9 + text.Length * 2);
 
 			m_Stream.Write(e.Serial);
 			m_Stream.WriteBigUniNull(text);

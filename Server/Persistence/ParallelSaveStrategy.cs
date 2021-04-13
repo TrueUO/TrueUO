@@ -179,7 +179,7 @@ namespace Server
 				metrics.OnItemSaved(length);
 			}
 
-			if (item.Decays && item.Parent == null && item.Map != Map.Internal && DateTime.UtcNow > (item.LastMoved + item.DecayTime))
+			if (item.Decays && item.Parent == null && item.Map != Map.Internal && DateTime.UtcNow > item.LastMoved + item.DecayTime)
 			{
 				_decayQueue.Enqueue(item);
 			}
@@ -211,7 +211,7 @@ namespace Server
 			{
 				Consumer consumer = consumers[cycle++ % consumers.Length];
 
-				if ((consumer.tail - consumer.head) < consumer.buffer.Length)
+				if (consumer.tail - consumer.head < consumer.buffer.Length)
 				{
 					consumer.buffer[consumer.tail % consumer.buffer.Length].value = value;
 					consumer.tail++;

@@ -87,7 +87,7 @@ namespace Server
 		public static bool HaltOnWarning { get; private set; }
 		public static bool VBdotNet { get; private set; }
 
-		public static List<string> DataDirectories { get; private set; }
+		public static List<string> DataDirectories { get; }
 
 		public static Assembly Assembly { get; set; }
 

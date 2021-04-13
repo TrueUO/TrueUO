@@ -29,7 +29,7 @@ namespace Server
 
 	public class Entity : IEntity, IComparable<Entity>
 	{
-		public Serial Serial { get; private set; }
+		public Serial Serial { get; }
 
 		public Point3D Location { get; set; }
 		public Map Map { get; set; }

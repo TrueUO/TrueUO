@@ -169,7 +169,7 @@ namespace Server
 
 						for (var y = 0; y < height; ++y, line += delta)
 						{
-							count = (*lookup++ * 2);
+							count = *lookup++ * 2;
 
 							var cur = line;
 

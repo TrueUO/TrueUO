@@ -208,7 +208,7 @@ namespace Server
 
 						for (int i = 0; i < 0x4000; ++i)
 						{
-							if (i == 1 || (i > 0 && (i & 0x1F) == 0))
+							if (i == 1 || i > 0 && (i & 0x1F) == 0)
 							{
 								bin.ReadInt32(); // header
 							}

@@ -473,7 +473,7 @@ namespace Server.Network
             }
 
             int count = pvSrc.ReadUInt16();
-			if (count < 100 && pvSrc.Size == (1 + 2 + 4 + 2 + (count * 6)))
+			if (count < 100 && pvSrc.Size == 1 + 2 + 4 + 2 + (count * 6))
 			{
 				List<SellItemResponse> sellList = new List<SellItemResponse>(count);
 
@@ -954,7 +954,7 @@ namespace Server.Network
 			Mobile from = state.Mobile;
 			Prompt p = from.Prompt;
 
-			int promptSerial = (p != null && p.Sender != null) ? p.Sender.Serial.Value : from.Serial.Value;
+			int promptSerial = p != null && p.Sender != null ? p.Sender.Serial.Value : from.Serial.Value;
 
 			if (p != null && promptSerial == serial && p.TypeId == prompt)
 			{

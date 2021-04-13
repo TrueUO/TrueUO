@@ -20,6 +20,7 @@ namespace Server
 		private int activeCount;
 		private ManualResetEvent idle;
 		private long position;
+
 		public FileQueue(int concurrentWrites, FileCommitCallback callback)
 		{
 			if (concurrentWrites < 1)
@@ -29,7 +30,7 @@ namespace Server
 
             if (bufferSize < 1)
             {
-                throw new ArgumentOutOfRangeException("bufferSize");
+                throw new ArgumentOutOfRangeException(nameof(bufferSize));
             }
 
             if (callback == null)

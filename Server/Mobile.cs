@@ -312,7 +312,7 @@ namespace Server
 				return false;
 			}
 
-			return (DateTime.UtcNow - m_Added) >= m_Duration;
+			return DateTime.UtcNow - m_Added >= m_Duration;
 		}
 
 		public TimeSpan TimeLeft()
@@ -339,7 +339,7 @@ namespace Server
 		public Mobile Damager => m_Damager;
 		public int DamageGiven { get; set; }
 		public DateTime LastDamage { get => m_LastDamage; set => m_LastDamage = value; }
-		public bool HasExpired => DateTime.UtcNow > (m_LastDamage + m_ExpireDelay);
+		public bool HasExpired => DateTime.UtcNow > m_LastDamage + m_ExpireDelay;
 		public List<DamageEntry> Responsible { get; set; }
 
 		private static TimeSpan m_ExpireDelay = TimeSpan.FromMinutes(2.0);
