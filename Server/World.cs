@@ -957,12 +957,13 @@ namespace Server
 			{
 				return FindItem(serial);
 			}
-			else if (serial.IsMobile)
-			{
-				return FindMobile(serial);
-			}
 
-			return null;
+            if (serial.IsMobile)
+            {
+                return FindMobile(serial);
+            }
+
+            return null;
 		}
 
 		public static Mobile FindMobile(Serial serial)

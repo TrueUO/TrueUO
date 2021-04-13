@@ -127,7 +127,7 @@ namespace Server
 
 					return writer;
 				},
-				(writer) =>
+				writer =>
 				{
 					writer.Flush();
 
@@ -165,7 +165,7 @@ namespace Server
 
 					return writer;
 				},
-				(writer) =>
+				writer =>
 				{
 					writer.Flush();
 
@@ -203,7 +203,7 @@ namespace Server
 
 					return writer;
 				},
-				(writer) =>
+				writer =>
 				{
 					writer.Flush();
 

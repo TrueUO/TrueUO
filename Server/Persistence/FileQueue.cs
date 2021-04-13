@@ -92,7 +92,8 @@ namespace Server
             {
                 throw new ArgumentOutOfRangeException("size");
             }
-            else if ((buffer.Length - offset) < size)
+
+            if (buffer.Length - offset < size)
             {
                 throw new ArgumentException();
             }

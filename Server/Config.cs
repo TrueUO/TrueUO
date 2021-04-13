@@ -671,12 +671,12 @@ namespace Server
 				return defaultValue;
 			}
 
-			if (Regex.IsMatch(value, @"(true|yes|on|1|enabled)", RegexOptions.IgnoreCase))
+			if (Regex.IsMatch(value, "(true|yes|on|1|enabled)", RegexOptions.IgnoreCase))
 			{
 				return true;
 			}
 
-			if (Regex.IsMatch(value, @"(false|no|off|0|disabled)", RegexOptions.IgnoreCase))
+			if (Regex.IsMatch(value, "(false|no|off|0|disabled)", RegexOptions.IgnoreCase))
 			{
 				return false;
 			}

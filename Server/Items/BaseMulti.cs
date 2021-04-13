@@ -71,11 +71,9 @@ namespace Server.Items
 					{
 						return 1020000 + id;
 					}
-					else
-					{
-						return 1078872 + id;
-					}
-				}
+
+                    return 1078872 + id;
+                }
 
 				return base.LabelNumber;
 			}
