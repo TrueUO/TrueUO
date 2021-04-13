@@ -4613,13 +4613,10 @@ namespace Server.Multis
 
         public override void OnClick()
         {
-            if (m_Item is AuctionSafe safe)
+            if (m_Item is AuctionSafe safe && safe.Auction != null && !safe.Auction.CanModify)
             {
-                if (safe.Auction != null && !safe.Auction.CanModify)
-                {
-                    Owner.From.SendLocalizedMessage(1156431); // You cannot modify this while an auction is in progress.
-                    return;
-                }
+                Owner.From.SendLocalizedMessage(1156431); // You cannot modify this while an auction is in progress.
+                return;
             }
 
             ISecurable sec = GetSecurable(Owner.From, m_Item);

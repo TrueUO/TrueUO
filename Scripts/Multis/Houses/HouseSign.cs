@@ -97,12 +97,9 @@ namespace Server.Multis
 
         public void ShowSign(Mobile m)
         {
-            if (m_Owner != null && m.AccessLevel == AccessLevel.Player)
+            if (m_Owner != null && m.AccessLevel == AccessLevel.Player && m_Owner.IsFriend(m))
             {
-                if (m_Owner.IsFriend(m))
-                {
-                    m_Owner.RefreshDecay();
-                }
+                m_Owner.RefreshDecay();
             }
 
             m.SendGump(new HouseGump(HouseGumpPage.Information, m, m_Owner));
