@@ -328,8 +328,8 @@ namespace Server.Items
                 double healing = m_Healer.Skills[primarySkill].Value;
                 double anatomy = m_Healer.Skills[secondarySkill].Value;
                 double chance = (healing - 68.0) / 50.0 - m_Slips * 0.02;
-
-                if ((checkSkills = healing >= 80.0 && anatomy >= 80.0) && chance > Utility.RandomDouble() || Engines.VvV.ViceVsVirtueSystem.Enabled && petPatient is Engines.VvV.VvVMount && petPatient.ControlMaster == m_Healer)
+                
+                if ((checkSkills = healing >= 80.0 && anatomy >= 80.0) && chance > Utility.RandomDouble() || Engines.VvV.ViceVsVirtueSystem.Enabled && petPatient is Engines.VvV.VvVMount && petPatient.ControlMaster == m_Healer || petPatient is IVanityMount && petPatient.TrainingProfile == null)
                 {
                     if (m_Patient.Map == null || !m_Patient.Map.CanFit(m_Patient.Location, 16, false, false))
                     {
@@ -406,7 +406,11 @@ namespace Server.Items
                 }
                 else
                 {
-                    if (petPatient != null && petPatient.IsDeadPet)
+                    if (healing < 80.0 || anatomy < 80.0)
+                    {
+                        healerNumber = 1049656; // You lack the skill to resurrect the dead.
+                    }
+                    else if (petPatient != null && petPatient.IsDeadPet)
                     {
                         healerNumber = 503256; // You fail to resurrect the creature.
                     }

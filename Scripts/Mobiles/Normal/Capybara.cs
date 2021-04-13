@@ -48,7 +48,7 @@ namespace Server.Mobiles
     }
 
     [CorpseName("a capybara corpse")]
-    public class Capybara : BaseMount
+    public class Capybara : BaseMount, IVanityMount
     {
         [Constructable]
         public Capybara()
