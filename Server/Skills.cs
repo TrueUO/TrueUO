@@ -888,22 +888,24 @@ namespace Server
 			{
 				return false;
 			}
-			else if (!from.Region.OnSkillUse(from, skillID))
-			{
-				return false;
-			}
-			else if (!from.AllowSkillUse((SkillName)skillID))
-			{
-				return false;
-			}
 
-			if (skillID >= 0 && skillID < SkillInfo.Table.Length)
+            if (!from.Region.OnSkillUse(from, skillID))
+            {
+                return false;
+            }
+
+            if (!from.AllowSkillUse((SkillName)skillID))
+            {
+                return false;
+            }
+
+            if (skillID >= 0 && skillID < SkillInfo.Table.Length)
 			{
 				SkillInfo info = SkillInfo.Table[skillID];
 
 				if (info.Callback != null)
-				{
-					if (Core.TickCount - from.NextSkillTime >= 0 && (info.UseWhileCasting || from.Spell == null))
+                {
+                    if (Core.TickCount - from.NextSkillTime >= 0 && (info.UseWhileCasting || from.Spell == null))
 					{
 						from.DisruptiveAction();
 
@@ -911,11 +913,9 @@ namespace Server
 
 						return true;
 					}
-					else
-					{
-						from.SendSkillMessage();
-					}
-				}
+
+                    from.SendSkillMessage();
+                }
 				else
 				{
 					from.SendLocalizedMessage(500014); // That skill cannot be used directly.

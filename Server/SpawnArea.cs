@@ -137,13 +137,13 @@ namespace Server
 
 		private readonly HashSet<Point3D> _Points;
 
-		public SpawnValidator Validator { get; private set; }
+		public SpawnValidator Validator { get; }
 
-		public TileFlag[] Filters { get; private set; }
+		public TileFlag[] Filters { get; }
 
-		public Map Facet { get; private set; }
+		public Map Facet { get; }
 
-		public string Region { get; private set; }
+		public string Region { get; }
 
 		public Point2D Center { get; private set; }
 

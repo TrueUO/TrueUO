@@ -551,9 +551,7 @@ namespace Server
 		Unsupported = -3,
 		Supported = -2,
 		NotReady = -1,
-
-		Failure = 0,
-
-		Success = 1,
-	}
+        Failure = 0,
+        Success = 1
+    }
 }

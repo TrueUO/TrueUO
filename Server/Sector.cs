@@ -38,7 +38,7 @@ namespace Server
 
 			if (regRect == null)
 			{
-				throw new ArgumentException("obj is not a RegionRect", "obj");
+				throw new ArgumentException("obj is not a RegionRect", nameof(obj));
 			}
 
 			return ((IComparable)m_Region).CompareTo(regRect.m_Region);
