@@ -16,7 +16,7 @@ namespace Server
 		private static readonly BinaryReader m_IndexReader;
 		private static readonly BinaryReader m_StreamReader;
 
-		public static bool UsingUOPFormat { get; private set; }
+		public static bool UsingUOPFormat { get; }
 
 		public static MultiComponentList GetComponents(int multiID)
 		{

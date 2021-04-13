@@ -15,7 +15,7 @@ namespace Server
 		Equipment
 	}
 
-	public struct Body
+	public readonly struct Body
 	{
 		private readonly int m_BodyID;
 

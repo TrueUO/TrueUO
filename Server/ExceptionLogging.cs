@@ -5,7 +5,7 @@ namespace Server.Diagnostics
 {
     public class ExceptionLogging
     {
-        public static string LogDirectory { get; set; }
+        public static string LogDirectory { get; }
 
         private static StreamWriter _Output;
 

@@ -4,7 +4,7 @@ using System;
 
 namespace Server
 {
-	public struct Serial : IComparable, IComparable<Serial>
+	public readonly struct Serial : IComparable, IComparable<Serial>
 	{
 		private readonly int m_Serial;
 
@@ -21,10 +21,9 @@ namespace Server
 		{
 			get
 			{
-				while (World.FindMobile(m_LastMobile = m_LastMobile + 1) != null)
+				while (World.FindMobile(m_LastMobile += 1) != null)
 				{
-					;
-				}
+                }
 
 				return m_LastMobile;
 			}
@@ -34,10 +33,9 @@ namespace Server
 		{
 			get
 			{
-				while (World.FindItem(m_LastItem = m_LastItem + 1) != null)
+				while (World.FindItem(m_LastItem += 1) != null)
 				{
-					;
-				}
+                }
 
 				return m_LastItem;
 			}
