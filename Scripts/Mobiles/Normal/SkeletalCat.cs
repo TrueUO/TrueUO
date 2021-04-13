@@ -42,7 +42,7 @@ namespace Server.Mobiles
     }
 
     [CorpseName("a Skeletal Cat corpse")]
-    public class SkeletalCat : BaseMount
+    public class SkeletalCat : BaseMount, IVanityMount
     {
         [Constructable]
         public SkeletalCat()

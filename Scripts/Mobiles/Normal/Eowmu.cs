@@ -42,7 +42,7 @@ namespace Server.Mobiles
     }
 
     [CorpseName("an eowmu corpse")]
-    public class Eowmu : BaseMount
+    public class Eowmu : BaseMount, IVanityMount
     {
         [Constructable]
         public Eowmu()
