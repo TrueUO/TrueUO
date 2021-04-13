@@ -418,7 +418,7 @@ namespace Server
 
 		public override void Write(long value)
 		{
-			if ((m_Index + 8) > m_Buffer.Length)
+			if (m_Index + 8 > m_Buffer.Length)
 			{
 				Flush();
 			}
@@ -436,7 +436,7 @@ namespace Server
 
 		public override void Write(ulong value)
 		{
-			if ((m_Index + 8) > m_Buffer.Length)
+			if (m_Index + 8 > m_Buffer.Length)
 			{
 				Flush();
 			}
@@ -454,7 +454,7 @@ namespace Server
 
 		public override void Write(int value)
 		{
-			if ((m_Index + 4) > m_Buffer.Length)
+			if (m_Index + 4 > m_Buffer.Length)
 			{
 				Flush();
 			}

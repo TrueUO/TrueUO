@@ -68,7 +68,7 @@ namespace Server.Network
 
 		public int ReadInt32()
 		{
-			if ((m_Index + 4) > m_Size)
+			if (m_Index + 4 > m_Size)
 			{
 				return 0;
 			}
@@ -78,7 +78,7 @@ namespace Server.Network
 
 		public short ReadInt16()
 		{
-			if ((m_Index + 2) > m_Size)
+			if (m_Index + 2 > m_Size)
 			{
 				return 0;
 			}
@@ -88,7 +88,7 @@ namespace Server.Network
 
 		public byte ReadByte()
 		{
-			if ((m_Index + 1) > m_Size)
+			if (m_Index + 1 > m_Size)
 			{
 				return 0;
 			}
@@ -98,7 +98,7 @@ namespace Server.Network
 
 		public uint ReadUInt32()
 		{
-			if ((m_Index + 4) > m_Size)
+			if (m_Index + 4 > m_Size)
 			{
 				return 0;
 			}

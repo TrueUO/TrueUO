@@ -4,11 +4,7 @@ namespace Server.Gumps
 {
 	public class ECHandleInput : GumpEntry
 	{
-		public ECHandleInput()
-		{
-		}
-
-		public override string Compile()
+        public override string Compile()
 		{
 			return string.Format("{{ echandleinput }}");
 		}

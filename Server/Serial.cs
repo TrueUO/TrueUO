@@ -23,6 +23,7 @@ namespace Server
 			{
 				while (World.FindMobile(m_LastMobile += 1) != null)
 				{
+                    // needed.
                 }
 
 				return m_LastMobile;
@@ -35,6 +36,7 @@ namespace Server
 			{
 				while (World.FindItem(m_LastItem += 1) != null)
 				{
+                    // needed.
                 }
 
 				return m_LastItem;

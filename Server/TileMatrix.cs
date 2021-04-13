@@ -471,7 +471,7 @@ namespace Server
 		{
 			try
 			{
-				int offset = ((x * m_BlockHeight) + y) * 196 + 4;
+				int offset = (x * m_BlockHeight + y) * 196 + 4;
 
 				if (m_MapIndex != null)
 				{

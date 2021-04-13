@@ -43,7 +43,7 @@ namespace Server
 
 		public void Add(Point3D p)
 		{
-			if ((m_Count + 1) > m_List.Length)
+			if (m_Count + 1 > m_List.Length)
 			{
 				Point3D[] old = m_List;
 				m_List = new Point3D[old.Length * 2];

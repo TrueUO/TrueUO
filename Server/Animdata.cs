@@ -145,7 +145,7 @@ namespace Server
         public class Data
         {
             public sbyte[] FrameData { get; set; }
-            public byte Unknown { get; private set; }
+            public byte Unknown { get; }
             public byte FrameCount { get; set; }
             public byte FrameInterval { get; set; }
             public byte FrameStart { get; set; }

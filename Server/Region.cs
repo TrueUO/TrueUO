@@ -722,7 +722,7 @@ namespace Server
 
 			if (reg == null)
 			{
-				throw new ArgumentException("obj is not a Region", "obj");
+				throw new ArgumentException("obj is not a Region", nameof(obj));
 			}
 
 			// Dynamic regions go first

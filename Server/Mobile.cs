@@ -8897,9 +8897,7 @@ namespace Server
 			get => m_Poison;
 			set
 			{
-				/*if ( m_Poison != value && (m_Poison == null || value == null || m_Poison.Level < value.Level) )
-				{*/
-				m_Poison = value;
+                m_Poison = value;
 				Delta(MobileDelta.HealthbarPoison);
 
 				if (m_PoisonTimer != null)
@@ -8919,8 +8917,7 @@ namespace Server
 				}
 
 				CheckStatTimers();
-				/*}*/
-			}
+            }
 		}
 
 		/// <summary>

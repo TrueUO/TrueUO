@@ -24,7 +24,7 @@ namespace Server
 		{
 			if (concurrentWrites < 1)
 			{
-				throw new ArgumentOutOfRangeException("concurrentWrites");
+				throw new ArgumentOutOfRangeException(nameof(concurrentWrites));
 			}
 
             if (bufferSize < 1)
@@ -34,7 +34,7 @@ namespace Server
 
             if (callback == null)
             {
-                throw new ArgumentNullException("callback");
+                throw new ArgumentNullException(nameof(callback));
             }
 
             syncRoot = new object();
@@ -80,17 +80,17 @@ namespace Server
 		{
 			if (buffer == null)
 			{
-				throw new ArgumentNullException("buffer");
+				throw new ArgumentNullException(nameof(buffer));
 			}
 
             if (offset < 0)
             {
-                throw new ArgumentOutOfRangeException("offset");
+                throw new ArgumentOutOfRangeException(nameof(offset));
             }
 
             if (size < 0)
             {
-                throw new ArgumentOutOfRangeException("size");
+                throw new ArgumentOutOfRangeException(nameof(size));
             }
 
             if (buffer.Length - offset < size)
@@ -158,7 +158,7 @@ namespace Server
 		{
 			if (slot < 0 || slot >= active.Length)
 			{
-				throw new ArgumentOutOfRangeException("slot");
+				throw new ArgumentOutOfRangeException(nameof(slot));
 			}
 
 			lock (syncRoot)

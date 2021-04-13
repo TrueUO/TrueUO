@@ -694,16 +694,14 @@ namespace Server
 		{
 			int range = Core.GlobalUpdateRange;
 
-			return (p1.m_X >= (p2.m_X - range)) && (p1.m_X <= (p2.m_X + range)) && (p1.m_Y >= (p2.m_Y - range)) &&
-				   (p1.m_Y <= (p2.m_Y + range));
+			return p1.m_X >= p2.m_X - range && p1.m_X <= p2.m_X + range && p1.m_Y >= p2.m_Y - range && p1.m_Y <= p2.m_Y + range;
 		}
 
 		public static bool InUpdateRange(Point2D p1, Point2D p2)
 		{
 			int range = Core.GlobalUpdateRange;
 
-			return (p1.m_X >= (p2.m_X - range)) && (p1.m_X <= (p2.m_X + range)) && (p1.m_Y >= (p2.m_Y - range)) &&
-				   (p1.m_Y <= (p2.m_Y + range));
+			return p1.m_X >= p2.m_X - range && p1.m_X <= p2.m_X + range && p1.m_Y >= p2.m_Y - range && p1.m_Y <= p2.m_Y + range;
 		}
 
 		public static bool InUpdateRange(Mobile m, IPoint3D p)
@@ -730,7 +728,7 @@ namespace Server
 				p2 = p2Item.GetWorldLocation();
 			}
 
-			return (p1.X >= (p2.X - range)) && (p1.X <= (p2.X + range)) && (p1.Y >= (p2.Y - range)) && (p1.Y <= (p2.Y + range));
+			return p1.X >= p2.X - range && p1.X <= p2.X + range && p1.Y >= p2.Y - range && p1.Y <= p2.Y + range;
 		}
 		#endregion
 
