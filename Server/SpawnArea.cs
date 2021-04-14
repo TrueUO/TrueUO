@@ -66,10 +66,10 @@ namespace Server
 				yield break;
 			}
 
-			int x, y, z = Math.Min(rect.Start.Z, rect.End.Z);
+			int y, z = Math.Min(rect.Start.Z, rect.End.Z);
 			int ow, oh, od = rect.Depth;
 
-			x = rect.Start.X;
+			var x = rect.Start.X;
 
 			while (x < rect.End.X)
 			{

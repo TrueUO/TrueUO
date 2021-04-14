@@ -26,7 +26,7 @@ namespace Server
 	[AttributeUsage(AttributeTargets.Method)]
 	public class CallPriorityAttribute : Attribute
 	{
-		public int Priority { get; set; }
+		public int Priority { get; }
 
 		public CallPriorityAttribute(int priority)
 		{

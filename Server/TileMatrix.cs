@@ -193,7 +193,7 @@ namespace Server
 
 						lock (shared)
 						{
-							if (x >= 0 && x < shared.m_BlockWidth && y >= 0 && y < shared.m_BlockHeight)
+							if (x < shared.m_BlockWidth && y < shared.m_BlockHeight)
 							{
 								StaticTile[][][][] theirTiles = shared.m_StaticTiles[x];
 

@@ -911,8 +911,7 @@ namespace Server.Items
 			if (total >= amount)
 			{
 				// We've enough, so consume it
-
-				int need = amount;
+                int need = amount;
 
 				for (int i = 0; i < items.Length; ++i)
 				{
@@ -952,7 +951,7 @@ namespace Server.Items
 			return ConsumeUpTo(type, amount, true);
 		}
 
-		public int ConsumeUpTo(Type type, int amount, bool recurse)
+        private int ConsumeUpTo(Type type, int amount, bool recurse)
 		{
 			int consumed = 0;
 
@@ -998,7 +997,7 @@ namespace Server.Items
 					}
 					else if (recurse && item is Container)
 					{
-						RecurseConsumeUpTo(item, type, amount, recurse, ref consumed, toDelete);
+						RecurseConsumeUpTo(item, type, amount, true, ref consumed, toDelete);
 					}
 				}
 			}
@@ -1272,7 +1271,7 @@ namespace Server.Items
 
 					if (recurse && item is Container)
 					{
-						RecurseFindItemsByType(item, type, recurse, list);
+						RecurseFindItemsByType(item, type, true, list);
 					}
 				}
 			}
@@ -1312,7 +1311,7 @@ namespace Server.Items
 
 					if (recurse && item is Container)
 					{
-						RecurseFindItemsByType(item, types, recurse, list);
+						RecurseFindItemsByType(item, types, true, list);
 					}
 				}
 			}
@@ -1345,7 +1344,7 @@ namespace Server.Items
 
                     if (recurse && item is Container)
                     {
-                        Item check = RecurseFindItemByType(item, type, recurse);
+                        Item check = RecurseFindItemByType(item, type, true);
 
                         if (check != null)
                         {
@@ -1385,7 +1384,7 @@ namespace Server.Items
 
                     if (recurse && item is Container)
                     {
-                        Item check = RecurseFindItemByType(item, types, recurse);
+                        Item check = RecurseFindItemByType(item, types, true);
 
                         if (check != null)
                         {
@@ -1440,17 +1439,14 @@ namespace Server.Items
 				{
 					Item item = items[i];
 
-					if (item is T typedItem)
+					if (item is T typedItem && (predicate == null || predicate(typedItem)))
 					{
-                        if (predicate == null || predicate(typedItem))
-						{
-							list.Add(typedItem);
-						}
-					}
+                        list.Add(typedItem);
+                    }
 
 					if (recurse && item is Container)
 					{
-						RecurseFindItemsByType(item, recurse, list, predicate);
+						RecurseFindItemsByType(item, true, list, predicate);
 					}
 				}
 			}
@@ -1495,7 +1491,7 @@ namespace Server.Items
 					}
 					else if (recurse && item is Container)
 					{
-						T check = RecurseFindItemByType(item, recurse, predicate);
+						T check = RecurseFindItemByType(item, true, predicate);
 
 						if (check != null)
 						{

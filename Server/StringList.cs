@@ -15,14 +15,14 @@ namespace Server
             Localization = new StringList();
         }
 
-        public List<StringEntry> Entries { get; set; }
+        private List<StringEntry> Entries { get; }
 
-        public Dictionary<int, string> StringTable;
+        private readonly Dictionary<int, string> StringTable;
         private readonly Dictionary<int, StringEntry> EntryTable;
 
-        public string Language { get; private set; }
+        public string Language { get; }
 
-        public string this[int number]
+        private string this[int number]
         {
             get
             {
@@ -35,17 +35,12 @@ namespace Server
             }
         }
 
-        public StringList()
+        private StringList()
             : this("enu")
         {
         }
 
         public StringList(string language)
-            : this(language, true)
-        {
-        }
-
-        public StringList(string language, bool format)
         {
             Language = language;            
 
@@ -91,7 +86,7 @@ namespace Server
         }
 
         //C# argument support
-        public static Regex FormatExpression = new Regex(@"~(\d)+_.*?~", RegexOptions.IgnoreCase);
+        private static readonly Regex FormatExpression = new Regex(@"~(\d)+_.*?~", RegexOptions.IgnoreCase);
 
         public static string MatchComparison(Match m)
         {

@@ -290,7 +290,7 @@ namespace Server
 		private readonly Dictionary<string, Region> m_Regions;
 		private Region m_DefaultRegion;
 
-		public int Season { get; set; }
+		public int Season { get; }
 
 		private readonly Sector[][] m_Sectors;
 		private readonly Sector m_InvalidSector;

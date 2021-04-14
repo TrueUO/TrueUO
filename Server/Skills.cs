@@ -585,8 +585,8 @@ namespace Server
 
 		public int Localization => 1044060 + SkillID;
 
-		private static SkillInfo[] m_Table = new SkillInfo[58]
-		{
+		private static SkillInfo[] m_Table =
+        {
 			new SkillInfo(0, "Alchemy", 0.0, 5.0, 5.0, "Alchemist", null, 0.0, 0.5, 0.5, 1.0, StatCode.Int, StatCode.Dex),
 			new SkillInfo(1, "Anatomy", 0.0, 0.0, 0.0, "Biologist", null, 0.15, 0.15, 0.7, 1.0, StatCode.Int, StatCode.Str),
 			new SkillInfo(2, "Animal Lore", 0.0, 0.0, 0.0, "Naturalist", null, 0.0, 0.0, 1.0, 1.0, StatCode.Int, StatCode.Str),

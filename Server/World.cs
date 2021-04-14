@@ -203,7 +203,7 @@ namespace Server
 
 		public static string LoadingType { get; private set; }
 
-		private static readonly Type[] m_SerialTypeArray = new Type[1] { typeof(Serial) };
+		private static readonly Type[] m_SerialTypeArray = { typeof(Serial) };
 
 		private static List<Tuple<ConstructorInfo, string>> ReadTypes(BinaryReader tdbReader)
 		{

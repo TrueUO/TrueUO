@@ -8679,9 +8679,7 @@ namespace Server
 				return false;
 			}
 
-			return this == m ||
-				   (m.m_Map == m_Map && (!m.Hidden || (IsStaff() && m_AccessLevel >= m.AccessLevel)) &&
-					(m.Alive || (Skills.SpiritSpeak.Value >= 100.0) || !Alive || IsStaff() || m.Warmode));
+			return this == m || m.m_Map == m_Map && (!m.Hidden || IsStaff() && m_AccessLevel >= m.AccessLevel) && (m.Alive || Skills.SpiritSpeak.Value >= 100.0 || !Alive || IsStaff() || m.Warmode);
 		}
 
 		public virtual bool CanBeRenamedBy(Mobile from)
@@ -8690,17 +8688,7 @@ namespace Server
 		}
 
 		[CommandProperty(AccessLevel.GameMaster)]
-		public string Language
-		{
-			get => m_Language;
-			set
-			{
-				if (m_Language != value)
-				{
-					m_Language = value;
-				}
-			}
-		}
+		public string Language { get => m_Language; set => m_Language = value; }
 
 		[CommandProperty(AccessLevel.Decorator)]
 		public int SpeechHue { get => m_SpeechHue; set => m_SpeechHue = value; }
