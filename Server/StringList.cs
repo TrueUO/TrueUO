@@ -15,14 +15,14 @@ namespace Server
             Localization = new StringList();
         }
 
-        private List<StringEntry> Entries { get; }
+        public List<StringEntry> Entries { get; set; }
 
-        private readonly Dictionary<int, string> StringTable;
+        public Dictionary<int, string> StringTable;
         private readonly Dictionary<int, StringEntry> EntryTable;
 
-        public string Language { get; }
+        public string Language { get; private set; }
 
-        private string this[int number]
+        public string this[int number]
         {
             get
             {
@@ -35,12 +35,17 @@ namespace Server
             }
         }
 
-        private StringList()
+        public StringList()
             : this("enu")
         {
         }
 
         public StringList(string language)
+            : this(language, true)
+        {
+        }
+
+        public StringList(string language, bool format)
         {
             Language = language;            
 
@@ -86,7 +91,7 @@ namespace Server
         }
 
         //C# argument support
-        private static readonly Regex FormatExpression = new Regex(@"~(\d)+_.*?~", RegexOptions.IgnoreCase);
+        public static Regex FormatExpression = new Regex(@"~(\d)+_.*?~", RegexOptions.IgnoreCase);
 
         public static string MatchComparison(Match m)
         {
@@ -147,8 +152,8 @@ namespace Server
 
     public class StringEntry
     {
-        public int Number { get; private set; }
-        public string Text { get; private set; }
+        public int Number { get; }
+        public string Text { get; }
 
         public StringEntry(int number, string text)
         {
@@ -158,9 +163,7 @@ namespace Server
 
         private string m_FmtTxt;
 
-        private static readonly Regex m_RegEx = new Regex(
-            @"~(\d+)[_\w]+~",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.CultureInvariant);
+        private static readonly Regex m_RegEx = new Regex(@"~(\d+)[_\w]+~", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.CultureInvariant);
 
         private static readonly object[] m_Args = { "", "", "", "", "", "", "", "", "", "", "" };
 
