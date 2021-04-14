@@ -148,16 +148,14 @@ namespace Server.Items
 
                 protected override void OnTarget(Mobile from, object targ)
                 {
-                    if (targ is IPoint2D)
+                    if (targ is IPoint2D p)
                     {
-                        IPoint2D p = (IPoint2D)targ;
-
-                        if (targ != from)
+                        if (!Equals(p, from))
                         {
                             p = new Point2D(p.X, p.Y);
                         }
 
-                        if (targ is Mobile mobile && mobile == from)
+                        if (p is Mobile mobile && mobile == from)
                         {
                             from.SendLocalizedMessage(502474); // The animal begins to follow you.
                         }
@@ -165,9 +163,10 @@ namespace Server.Items
                         {
                             from.SendLocalizedMessage(502479); // The animal walks where it was instructed to.
                         }
+
                         m_Creature.TargetLocation = p;
 
-                        if (Siege.SiegeShard && m_Crook is IUsesRemaining)
+                        if (Siege.SiegeShard && m_Crook != null)
                         {
                             Siege.CheckUsesRemaining(from, m_Crook);
                         }
