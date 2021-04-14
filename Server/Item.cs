@@ -5825,10 +5825,10 @@ namespace Server
 
 		public override string ToString()
 		{
-			return string.Format("0x{0:X} \"{1}\"", m_Serial.Value, GetType().Name);
+			return $"0x{m_Serial.Value:X} \"{GetType().Name}\"";
 		}
 
-		internal int m_TypeRef;
+		internal readonly int m_TypeRef;
 
 		public Item()
 		{

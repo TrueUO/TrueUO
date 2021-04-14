@@ -6944,7 +6944,7 @@ namespace Server
 			{
 				foreach (Gump gump in ns.Gumps)
 				{
-					if (type.IsAssignableFrom(gump.GetType()))
+					if (type.IsInstanceOfType(gump))
 					{
 						return gump;
 					}

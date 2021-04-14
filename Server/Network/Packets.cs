@@ -1884,7 +1884,7 @@ namespace Server.Network
 
 	public sealed class ServerChange : Packet
 	{
-		public ServerChange(IEntity m, Map map)
+		public ServerChange(IPoint3D m, Map map)
 			: base(0x76, 16)
 		{
 			m_Stream.Write((short)m.X);

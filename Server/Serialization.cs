@@ -863,7 +863,7 @@ namespace Server
 
 			Write(set.Count);
 
-			foreach (Item item in set)
+			foreach (var item in set)
 			{
 				Write(item);
 			}
@@ -963,7 +963,7 @@ namespace Server
 
 			Write(set.Count);
 
-			foreach (Mobile mob in set)
+			foreach (var mob in set)
 			{
 				Write(mob);
 			}
@@ -1063,7 +1063,7 @@ namespace Server
 
 			Write(set.Count);
 
-			foreach (BaseGuild guild in set)
+			foreach (var guild in set)
 			{
 				Write(guild);
 			}
@@ -2160,7 +2160,7 @@ namespace Server
 
 			Write(set.Count);
 
-			foreach (Item item in set)
+			foreach (var item in set)
 			{
 				Write(item);
 			}
@@ -2260,7 +2260,7 @@ namespace Server
 
 			Write(set.Count);
 
-			foreach (Mobile mob in set)
+			foreach (var mob in set)
 			{
 				Write(mob);
 			}
@@ -2360,7 +2360,7 @@ namespace Server
 
 			Write(set.Count);
 
-			foreach (BaseGuild guild in set)
+			foreach (var guild in set)
 			{
 				Write(guild);
 			}

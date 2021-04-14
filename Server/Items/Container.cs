@@ -968,8 +968,7 @@ namespace Server.Items
 			return consumed;
 		}
 
-		private static void RecurseConsumeUpTo(
-			Item current, Type type, int amount, bool recurse, ref int consumed, Queue<Item> toDelete)
+		private static void RecurseConsumeUpTo(Item current, Type type, int amount, bool recurse, ref int consumed, Queue<Item> toDelete)
 		{
 			if (current != null && current.Items.Count > 0)
 			{
@@ -979,7 +978,7 @@ namespace Server.Items
 				{
 					Item item = list[i];
 
-					if (type.IsAssignableFrom(item.GetType()))
+					if (type.IsInstanceOfType(item))
 					{
 						int need = amount - consumed;
 						int theirAmount = item.Amount;
@@ -1266,7 +1265,7 @@ namespace Server.Items
 				{
 					Item item = items[i];
 
-					if (type.IsAssignableFrom(item.GetType())) // item.GetType().IsAssignableFrom( type ) )
+					if (type.IsInstanceOfType(item))
 					{
 						list.Add(item);
 					}
@@ -1339,7 +1338,7 @@ namespace Server.Items
 				{
 					Item item = list[i];
 
-					if (type.IsAssignableFrom(item.GetType()))
+					if (type.IsInstanceOfType(item))
 					{
 						return item;
 					}
@@ -1441,11 +1440,9 @@ namespace Server.Items
 				{
 					Item item = items[i];
 
-					if (typeof(T).IsAssignableFrom(item.GetType()))
+					if (item is T typedItem)
 					{
-						T typedItem = (T)item;
-
-						if (predicate == null || predicate(typedItem))
+                        if (predicate == null || predicate(typedItem))
 						{
 							list.Add(typedItem);
 						}
@@ -1489,11 +1486,9 @@ namespace Server.Items
 				{
 					Item item = list[i];
 
-					if (typeof(T).IsAssignableFrom(item.GetType()))
+					if (item is T typedItem)
 					{
-						T typedItem = (T)item;
-
-						if (predicate == null || predicate(typedItem))
+                        if (predicate == null || predicate(typedItem))
 						{
 							return typedItem;
 						}

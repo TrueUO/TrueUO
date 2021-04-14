@@ -948,8 +948,8 @@ namespace Server
 			}
 		}
 
-		internal static List<Type> m_ItemTypes = new List<Type>();
-		internal static List<Type> m_MobileTypes = new List<Type>();
+		internal static readonly List<Type> m_ItemTypes = new List<Type>();
+		internal static readonly List<Type> m_MobileTypes = new List<Type>();
 
 		public static IEntity FindEntity(Serial serial)
 		{

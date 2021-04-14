@@ -187,19 +187,17 @@ namespace Server
 
             if (onlyHueGrayPixels)
             {
-                int c, r, g, b;
-
                 while (pBuffer < pImageEnd)
                 {
                     while (pBuffer < pLineEnd)
                     {
-                        c = *pBuffer;
+                        int c = *pBuffer;
 
                         if (c != 0)
                         {
-                            r = (c >> 10) & 0x1F;
-                            g = (c >> 5) & 0x1F;
-                            b = c & 0x1F;
+                            var r = (c >> 10) & 0x1F;
+                            var g = (c >> 5) & 0x1F;
+                            var b = c & 0x1F;
 
                             if (r == g && r == b)
                             {
