@@ -74,7 +74,7 @@ namespace Server
 			m_Active = false;
 		}
 
-		private void Add<T>(ref List<T> list, T value)
+		private static void Add<T>(ref List<T> list, T value)
 		{
 			if (list == null)
 			{
@@ -84,7 +84,7 @@ namespace Server
 			list.Add(value);
 		}
 
-		private void Remove<T>(ref List<T> list, T value)
+		private static void Remove<T>(ref List<T> list, T value)
 		{
 			if (list != null)
 			{
@@ -97,7 +97,7 @@ namespace Server
 			}
 		}
 
-		private void Replace<T>(ref List<T> list, T oldValue, T newValue)
+		private static void Replace<T>(ref List<T> list, T oldValue, T newValue)
 		{
 			if (oldValue != null && newValue != null)
 			{

@@ -811,7 +811,7 @@ namespace Server
 			}
 		}
 
-		public MultiComponentList(List<MultiTileEntry> list)
+		public MultiComponentList(IReadOnlyList<MultiTileEntry> list)
 		{
 			MultiTileEntry[] allTiles = m_List = new MultiTileEntry[list.Count];
 
@@ -922,7 +922,7 @@ namespace Server
 			 */
 			maxId = 0x10000;
 
-			return new string[] { "build/multicollection/{0:000000}.bin", "" };
+			return new[] { "build/multicollection/{0:000000}.bin", "" };
 		}
 
 		public static ulong HashLittle2(string s)

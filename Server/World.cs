@@ -203,7 +203,7 @@ namespace Server
 
 		public static string LoadingType { get; private set; }
 
-		private static readonly Type[] m_SerialTypeArray = new Type[1] { typeof(Serial) };
+		private static readonly Type[] m_SerialTypeArray = { typeof(Serial) };
 
 		private static List<Tuple<ConstructorInfo, string>> ReadTypes(BinaryReader tdbReader)
 		{
@@ -799,7 +799,7 @@ namespace Server
 			}
 		}
 
-		private static void SaveIndex<T>(List<T> list, string path) where T : IEntityEntry
+		private static void SaveIndex<T>(IReadOnlyList<T> list, string path) where T : IEntityEntry
 		{
 			if (!Directory.Exists("Saves/Mobiles/"))
 			{
@@ -948,8 +948,8 @@ namespace Server
 			}
 		}
 
-		internal static List<Type> m_ItemTypes = new List<Type>();
-		internal static List<Type> m_MobileTypes = new List<Type>();
+		internal static readonly List<Type> m_ItemTypes = new List<Type>();
+		internal static readonly List<Type> m_MobileTypes = new List<Type>();
 
 		public static IEntity FindEntity(Serial serial)
 		{

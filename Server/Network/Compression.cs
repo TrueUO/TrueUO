@@ -95,9 +95,7 @@ namespace Server.Network
 
 			fixed (int* pTable = _huffmanTable)
 			{
-				int* pEntry;
-
-				fixed (byte* pInputBuffer = input)
+                fixed (byte* pInputBuffer = input)
 				{
 					byte* pInput = pInputBuffer + offset, pInputEnd = pInput + count;
 
@@ -105,7 +103,9 @@ namespace Server.Network
 					{
 						byte* pOutput = pOutputBuffer, pOutputEnd = pOutput + BufferSize;
 
-						while (pInput < pInputEnd)
+                        int* pEntry;
+
+                        while (pInput < pInputEnd)
 						{
 							pEntry = &pTable[*pInput++ << 1];
 
@@ -219,7 +219,7 @@ namespace Server.Network
 
 	public sealed class Compressor32 : ICompressor
 	{
-		internal class SafeNativeMethods
+        private class SafeNativeMethods
 		{
 			[DllImport("zlibwapi32")]
 			internal static extern string zlibVersion();

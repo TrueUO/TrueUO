@@ -80,7 +80,7 @@ namespace Server
 		{
 			if (FileOperations.AreSynchronous)
 			{
-				fileStream.Write(chunk.Buffer, chunk.Offset, chunk.Size);
+				fileStream.Write(chunk.Buffer, FileQueue.Chunk.Offset, chunk.Size);
 
 				if (metrics != null)
 				{
@@ -96,7 +96,7 @@ namespace Server
 					writeCallback = OnWrite;
 				}
 
-				fileStream.BeginWrite(chunk.Buffer, chunk.Offset, chunk.Size, writeCallback, chunk);
+				fileStream.BeginWrite(chunk.Buffer, FileQueue.Chunk.Offset, chunk.Size, writeCallback, chunk);
 			}
 		}
 

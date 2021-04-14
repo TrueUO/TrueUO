@@ -421,7 +421,7 @@ namespace Server
 				return -1;
 			}
 
-			if (l == null && r != null)
+			if (l == null)
 			{
 				return 1;
 			}

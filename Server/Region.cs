@@ -444,7 +444,7 @@ namespace Server
 
 			do
 			{
-				if (regionType.IsAssignableFrom(r.GetType()))
+				if (regionType.IsInstanceOfType(r))
 				{
 					return r;
 				}
@@ -681,13 +681,13 @@ namespace Server
 			return GetEnumeratedMultis(predicate).Count();
 		}
 
-		private IEnumerable<T> GetDistinctEnumeration<T>(List<T> list, Func<T, bool> predicate)
+		private IEnumerable<T> GetDistinctEnumeration<T>(IReadOnlyList<T> list, Func<T, bool> predicate)
 			where T : IEntity
 		{
 			return GetEnumeration(list, predicate).Distinct();
 		}
 
-		private IEnumerable<T> GetEnumeration<T>(List<T> list, Func<T, bool> predicate)
+		private IEnumerable<T> GetEnumeration<T>(IReadOnlyList<T> list, Func<T, bool> predicate)
 			where T : IEntity
 		{
 			T e;
@@ -1236,7 +1236,7 @@ namespace Server
 			Utility.PopColor();
 		}
 
-		private static void LoadRegions(XmlElement xml, Map map, Region parent)
+		private static void LoadRegions(XmlNode xml, Map map, Region parent)
 		{
 			foreach (XmlElement xmlReg in xml.SelectNodes("region"))
 			{
