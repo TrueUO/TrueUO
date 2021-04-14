@@ -318,9 +318,9 @@ namespace Server
 			return (cidrPrefixValue & mask) == (ipValue & mask);
 		}
 
-		private static uint OrderedAddressValue(byte[] bytes)
+		private static uint OrderedAddressValue(IReadOnlyList<byte> bytes)
 		{
-			if (bytes.Length != 4)
+			if (bytes.Count != 4)
 			{
 				return 0;
 			}

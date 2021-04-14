@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 
 using Server.Guilds;
@@ -71,7 +72,7 @@ namespace Server
 			}
 		}
 
-		private Task StartCommitTask(BlockingCollection<QueuedMemoryWriter> threadWriter, SequentialFileWriter data, SequentialFileWriter index)
+		private static Task StartCommitTask(BlockingCollection<QueuedMemoryWriter> threadWriter, SequentialFileWriter data, SequentialFileWriter index)
 		{
 			Task commitTask = Task.Factory.StartNew(() =>
 			{
@@ -243,7 +244,7 @@ namespace Server
 			_guildIndex.Close();
 		}
 
-		private void WriteCount(SequentialFileWriter indexFile, int count)
+		private static void WriteCount(Stream indexFile, int count)
 		{
 			//Equiv to GenericWriter.Write( (int)count );
 			byte[] buffer = new byte[4];
@@ -262,7 +263,7 @@ namespace Server
 			SaveTypeDatabase(World.MobileTypesPath, World.m_MobileTypes);
 		}
 
-		private void SaveTypeDatabase(string path, List<Type> types)
+		private static void SaveTypeDatabase(string path, IReadOnlyCollection<Type> types)
 		{
 			BinaryFileWriter bfw = new BinaryFileWriter(path, false);
 

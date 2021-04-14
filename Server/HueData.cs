@@ -1,5 +1,6 @@
 #region References
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -156,19 +157,19 @@ namespace Server
             return (hue & 0x1f) * ScaleI;
         }
 
-        public static unsafe void ApplyTo(Bitmap bmp, int hue, bool onlyHueGrayPixels)
+        public static void ApplyTo(Bitmap bmp, int hue, bool onlyHueGrayPixels)
         {
             ApplyTo(bmp, GetHue(hue), onlyHueGrayPixels);
         }
 
-        public static unsafe void ApplyTo(Bitmap bmp, Hue hue, bool onlyHueGrayPixels)
+        private static void ApplyTo(Bitmap bmp, Hue hue, bool onlyHueGrayPixels)
         {
             ApplyTo(bmp, hue?.Colors, onlyHueGrayPixels);
         }
 
-        public static unsafe void ApplyTo(Bitmap bmp, short[] colors, bool onlyHueGrayPixels)
+        private static unsafe void ApplyTo(Bitmap bmp, IReadOnlyList<short> colors, bool onlyHueGrayPixels)
         {
-            if (bmp == null || colors == null || colors.Length < 32)
+            if (bmp == null || colors == null || colors.Count < 32)
             {
                 return;
             }

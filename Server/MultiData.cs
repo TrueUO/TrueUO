@@ -811,7 +811,7 @@ namespace Server
 			}
 		}
 
-		public MultiComponentList(List<MultiTileEntry> list)
+		public MultiComponentList(IReadOnlyList<MultiTileEntry> list)
 		{
 			MultiTileEntry[] allTiles = m_List = new MultiTileEntry[list.Count];
 

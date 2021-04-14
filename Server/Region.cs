@@ -1236,7 +1236,7 @@ namespace Server
 			Utility.PopColor();
 		}
 
-		private static void LoadRegions(XmlElement xml, Map map, Region parent)
+		private static void LoadRegions(XmlNode xml, Map map, Region parent)
 		{
 			foreach (XmlElement xmlReg in xml.SelectNodes("region"))
 			{

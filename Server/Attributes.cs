@@ -65,16 +65,11 @@ namespace Server
 			return 0;
 		}
 
-		private int GetPriority(MethodInfo mi)
+		private static int GetPriority(MethodInfo mi)
 		{
 			object[] objs = mi.GetCustomAttributes(typeof(CallPriorityAttribute), true);
 
-			if (objs == null)
-			{
-				return 0;
-			}
-
-			if (objs.Length == 0)
+            if (objs.Length == 0)
 			{
 				return 0;
 			}

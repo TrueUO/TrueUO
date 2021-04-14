@@ -105,7 +105,7 @@ namespace Server.Network
 
 	public sealed class DisplaySecureTrade : Packet
 	{
-		public DisplaySecureTrade(Mobile them, Container first, Container second, string name)
+		public DisplaySecureTrade(IEntity them, IEntity first, IEntity second, string name)
 			: base(0x6F)
 		{
 			if (name == null)
@@ -127,7 +127,7 @@ namespace Server.Network
 
 	public sealed class CloseSecureTrade : Packet
 	{
-		public CloseSecureTrade(Container cont)
+		public CloseSecureTrade(IEntity cont)
 			: base(0x6F)
 		{
 			EnsureCapacity(8);
@@ -152,7 +152,7 @@ namespace Server.Network
 			: this(cont, TradeFlag.Update, first ? 1 : 0, second ? 1 : 0)
 		{ }
 
-		public UpdateSecureTrade(Container cont, TradeFlag flag, int first, int second)
+		public UpdateSecureTrade(IEntity cont, TradeFlag flag, int first, int second)
 			: base(0x6F)
 		{
 			EnsureCapacity(17);
@@ -166,7 +166,7 @@ namespace Server.Network
 
 	public sealed class SecureTradeEquip : Packet
 	{
-		public SecureTradeEquip(Item item, Mobile m)
+		public SecureTradeEquip(Item item, IEntity m)
 			: base(0x25, 21)
 		{
 			m_Stream.Write(item.Serial);
@@ -222,7 +222,7 @@ namespace Server.Network
 
 	public sealed class VendorBuyContent : Packet
 	{
-		public VendorBuyContent(List<BuyItemState> list)
+		public VendorBuyContent(IReadOnlyList<BuyItemState> list)
 			: base(0x3C)
 		{
 			EnsureCapacity(list.Count * 20 + 5);
@@ -252,7 +252,7 @@ namespace Server.Network
 
 	public sealed class DisplayBuyList : Packet
 	{
-		public DisplayBuyList(Mobile vendor)
+		public DisplayBuyList(IEntity vendor)
 			: base(0x24, 9)
 		{
 			m_Stream.Write(vendor.Serial);
@@ -263,7 +263,7 @@ namespace Server.Network
 
 	public sealed class VendorBuyList : Packet
 	{
-		public VendorBuyList(Mobile vendor, List<BuyItemState> list)
+		public VendorBuyList(Mobile vendor, IReadOnlyList<BuyItemState> list)
 			: base(0x74)
 		{
 			EnsureCapacity(256);
@@ -294,7 +294,7 @@ namespace Server.Network
 
 	public sealed class VendorSellList : Packet
 	{
-		public VendorSellList(Mobile shopkeeper, ICollection<SellItemState> sis)
+		public VendorSellList(IEntity shopkeeper, ICollection<SellItemState> sis)
 			: base(0x9E)
 		{
 			EnsureCapacity(256);
@@ -331,22 +331,22 @@ namespace Server.Network
 
 	public sealed class EndVendorSell : Packet
 	{
-		public EndVendorSell(Mobile Vendor)
+		public EndVendorSell(IEntity vendor)
 			: base(0x3B, 8)
 		{
 			m_Stream.Write((ushort)8); //length
-			m_Stream.Write(Vendor.Serial);
+			m_Stream.Write(vendor.Serial);
 			m_Stream.Write((byte)0);
 		}
 	}
 
 	public sealed class EndVendorBuy : Packet
 	{
-		public EndVendorBuy(Mobile Vendor)
+		public EndVendorBuy(IEntity vendor)
 			: base(0x3B, 8)
 		{
 			m_Stream.Write((ushort)8); //length
-			m_Stream.Write(Vendor.Serial);
+			m_Stream.Write(vendor.Serial);
 			m_Stream.Write((byte)0);
 		}
 	}
@@ -2425,7 +2425,7 @@ namespace Server.Network
 
 	public sealed class DisplayGump : Packet
 	{
-		public DisplayGump(Gump g, string layout, string[] text)
+		public DisplayGump(Gump g, string layout, IReadOnlyList<string> text)
 			: base(0xB0)
 		{
 			if (layout == null)
@@ -2442,9 +2442,9 @@ namespace Server.Network
 			m_Stream.Write((ushort)(layout.Length + 1));
 			m_Stream.WriteAsciiNull(layout);
 
-			m_Stream.Write((ushort)text.Length);
+			m_Stream.Write((ushort)text.Count);
 
-			for (int i = 0; i < text.Length; ++i)
+			for (int i = 0; i < text.Count; ++i)
 			{
 				string v = text[i];
 
@@ -3592,10 +3592,10 @@ namespace Server.Network
 
 	public sealed class CharacterList : Packet
 	{
-		public CharacterList(IAccount a, CityInfo[] info, bool IsEnhancedClient)
+		public CharacterList(IAccount a, IReadOnlyList<CityInfo> info, bool IsEnhancedClient)
 			: base(0xA9)
 		{
-			EnsureCapacity(11 + (a.Length * 60) + (info.Length * 89));
+			EnsureCapacity(11 + (a.Length * 60) + (info.Count * 89));
 
 			int highSlot = -1;
 
@@ -3624,9 +3624,9 @@ namespace Server.Network
 				}
 			}
 
-			m_Stream.Write((byte)info.Length);
+			m_Stream.Write((byte)info.Count);
 
-			for (int i = 0; i < info.Length; ++i)
+			for (int i = 0; i < info.Count; ++i)
 			{
 				CityInfo ci = info[i];
 
@@ -3861,16 +3861,16 @@ namespace Server.Network
 
 	public sealed class AccountLoginAck : Packet
 	{
-		public AccountLoginAck(ServerInfo[] info)
+		public AccountLoginAck(IReadOnlyList<ServerInfo> info)
 			: base(0xA8)
 		{
-			EnsureCapacity(6 + (info.Length * 40));
+			EnsureCapacity(6 + info.Count * 40);
 
 			m_Stream.Write((byte)0x5D); // Unknown
 
-			m_Stream.Write((ushort)info.Length);
+			m_Stream.Write((ushort)info.Count);
 
-			for (int i = 0; i < info.Length; ++i)
+			for (int i = 0; i < info.Count; ++i)
 			{
 				ServerInfo si = info[i];
 

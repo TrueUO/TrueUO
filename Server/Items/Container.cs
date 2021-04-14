@@ -1514,11 +1514,11 @@ namespace Server.Items
 		}
 		#endregion
 
-		private static bool InTypeList(Item item, Type[] types)
+		private static bool InTypeList(Item item, IReadOnlyList<Type> types)
 		{
 			Type t = item.GetType();
 
-			for (int i = 0; i < types.Length; ++i)
+			for (int i = 0; i < types.Count; ++i)
 			{
 				if (types[i].IsAssignableFrom(t))
 				{
