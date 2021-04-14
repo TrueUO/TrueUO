@@ -3356,7 +3356,7 @@ namespace Server.Network
 			return p;
 		}
 
-		public PingAck(byte ping)
+        private PingAck(byte ping)
 			: base(0x73, 2)
 		{
 			m_Stream.Write(ping);
@@ -3577,7 +3577,7 @@ namespace Server.Network
 			SetDisabled(feature, false);
 		}
 
-		public static void SetDisabled(ThirdPartyFeature feature, bool value)
+        private static void SetDisabled(ThirdPartyFeature feature, bool value)
 		{
 			if (value)
 			{

@@ -260,9 +260,10 @@ namespace Server
 	{
         public const int SectorSize = 16;
 		public const int SectorShift = 4;
-		public static int SectorActiveRange = 2;
 
-		private static readonly Map[] m_Maps = new Map[0x100];
+        private const int SectorActiveRange = 2;
+
+        private static readonly Map[] m_Maps = new Map[0x100];
 
         public static Map[] Maps => m_Maps;
 

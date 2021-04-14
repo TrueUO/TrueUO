@@ -301,7 +301,7 @@ namespace Server
 		}
 
 		[MethodImpl(MethodImplOptions.Synchronized)]
-		public LandTile[] GetLandBlock(int x, int y)
+        private LandTile[] GetLandBlock(int x, int y)
 		{
 			if (x < 0 || y < 0 || x >= m_BlockWidth || y >= m_BlockHeight || m_Map == null)
 			{
@@ -325,7 +325,7 @@ namespace Server
 
 						lock (shared)
 						{
-							if (x >= 0 && x < shared.m_BlockWidth && y >= 0 && y < shared.m_BlockHeight)
+							if (x < shared.m_BlockWidth && y < shared.m_BlockHeight)
 							{
 								LandTile[][] theirTiles = shared.m_LandTiles[x];
 
@@ -458,7 +458,7 @@ namespace Server
 		private DateTime m_NextStaticWarning;
 		private DateTime m_NextLandWarning;
 
-		public void Force()
+		public static void Force()
 		{
 			if (ScriptCompiler.Assemblies == null || ScriptCompiler.Assemblies.Length == 0)
 			{

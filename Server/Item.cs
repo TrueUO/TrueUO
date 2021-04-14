@@ -1664,11 +1664,6 @@ namespace Server
                 return DeathMoveResult.MoveToBackpack;
             }
 
-            if (CheckNewbied() && parent.Kills < 5)
-            {
-                return DeathMoveResult.MoveToBackpack;
-            }
-
             if (parent.Player && Nontransferable)
             {
                 return DeathMoveResult.MoveToBackpack;
@@ -1690,11 +1685,6 @@ namespace Server
             }
 
             if (CheckBlessed(parent))
-            {
-                return DeathMoveResult.MoveToBackpack;
-            }
-
-            if (CheckNewbied() && parent.Kills < 5)
             {
                 return DeathMoveResult.MoveToBackpack;
             }
@@ -5818,12 +5808,7 @@ namespace Server
 			return m != null && m == BlessedFor;
 		}
 
-		public virtual bool CheckNewbied()
-		{
-			return m_LootType == LootType.Newbied;
-		}
-
-		public virtual bool IsStandardLoot()
+        public virtual bool IsStandardLoot()
 		{
 			if (Mobile.InsuranceEnabled && Insured)
 			{

@@ -187,7 +187,7 @@ namespace Server
 
 			//Start the producer.
 			Parallel.ForEach(guilds, () => new QueuedMemoryWriter(),
-				(BaseGuild guild, ParallelLoopState state, QueuedMemoryWriter writer) =>
+                (guild, state, writer) =>
 				{
 					long startPosition = writer.Position;
 

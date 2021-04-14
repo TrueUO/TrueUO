@@ -803,20 +803,20 @@ namespace Server
         }
 
 		#region Random
-		/// <summary>
-		/// Enables or disables floating dice. 
-		/// Floating dice uses a double to obtain a lower average value range.
-		/// Consistent average values for [1,000,000 x 1d6+0] rolls: [Integral: 3.50]  [Floating: 2.25]
-		/// </summary>
-		public static bool FloatingDice = false;
+        /// <summary>
+        /// Enables or disables floating dice. 
+        /// Floating dice uses a double to obtain a lower average value range.
+        /// Consistent average values for [1,000,000 x 1d6+0] rolls: [Integral: 3.50]  [Floating: 2.25]
+        /// </summary>
+        private const bool FloatingDice = false;
 
-		//4d6+8 would be: Utility.Dice( 4, 6, 8 )
+        //4d6+8 would be: Utility.Dice( 4, 6, 8 )
 		public static int Dice(int numDice, int numSides, int bonus)
 		{
 			return Dice(numDice, numSides, bonus, FloatingDice);
 		}
 
-		public static int Dice(int numDice, int numSides, int bonus, bool floating)
+        private static int Dice(int numDice, int numSides, int bonus, bool floating)
 		{
 			if (floating)
 			{

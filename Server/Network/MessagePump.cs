@@ -231,7 +231,7 @@ namespace Server.Network
 						return;
 					}
 
-					PacketHandler handler = ns.GetHandler(packetID);
+					PacketHandler handler = NetState.GetHandler(packetID);
 
 					if (handler == null)
 					{

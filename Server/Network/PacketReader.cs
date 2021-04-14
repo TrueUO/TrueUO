@@ -225,7 +225,7 @@ namespace Server.Network
 			return sb.ToString();
 		}
 
-		public bool IsSafeChar(int c)
+        private static bool IsSafeChar(int c)
 		{
 			return c >= 0x20 && c < 0xFFFE;
 		}
