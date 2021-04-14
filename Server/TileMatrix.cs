@@ -647,7 +647,7 @@ namespace Server
 
 		public int Version => m_Version;
 
-		public UOPIndex(FileStream stream)
+		public UOPIndex(Stream stream)
 		{
 			m_Reader = new BinaryReader(stream);
 			m_Length = (int)stream.Length;

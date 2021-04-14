@@ -681,13 +681,13 @@ namespace Server
 			return GetEnumeratedMultis(predicate).Count();
 		}
 
-		private IEnumerable<T> GetDistinctEnumeration<T>(List<T> list, Func<T, bool> predicate)
+		private IEnumerable<T> GetDistinctEnumeration<T>(IReadOnlyList<T> list, Func<T, bool> predicate)
 			where T : IEntity
 		{
 			return GetEnumeration(list, predicate).Distinct();
 		}
 
-		private IEnumerable<T> GetEnumeration<T>(List<T> list, Func<T, bool> predicate)
+		private IEnumerable<T> GetEnumeration<T>(IReadOnlyList<T> list, Func<T, bool> predicate)
 			where T : IEntity
 		{
 			T e;

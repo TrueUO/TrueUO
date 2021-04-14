@@ -325,14 +325,14 @@ namespace Server
 				m_Signal.Set();
 			}
 
-			public void TimerMain()
+			public static void TimerMain()
 			{
-				long now;
-				int i, j;
-				bool loaded;
-
-				while (!Core.Closing)
+                while (!Core.Closing)
 				{
+                    long now;
+                    int i, j;
+                    bool loaded;
+
 					if (World.Loading || World.Saving)
 					{
 						m_Signal.WaitOne(1, false);

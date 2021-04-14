@@ -257,7 +257,7 @@ namespace Server
 			indexFile.Write(buffer, 0, buffer.Length);
 		}
 
-		private void SaveTypeDatabases()
+		private static void SaveTypeDatabases()
 		{
 			SaveTypeDatabase(World.ItemTypesPath, World.m_ItemTypes);
 			SaveTypeDatabase(World.MobileTypesPath, World.m_MobileTypes);

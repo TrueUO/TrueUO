@@ -1256,7 +1256,7 @@ namespace Server.Items
 			return m_FindItemsList.ToArray();
 		}
 
-		private static void RecurseFindItemsByType(Item current, Type type, bool recurse, List<Item> list)
+		private static void RecurseFindItemsByType(Item current, Type type, bool recurse, ICollection<Item> list)
 		{
 			if (current != null && current.Items.Count > 0)
 			{
@@ -1296,7 +1296,7 @@ namespace Server.Items
 			return m_FindItemsList.ToArray();
 		}
 
-		private static void RecurseFindItemsByType(Item current, Type[] types, bool recurse, List<Item> list)
+		private static void RecurseFindItemsByType(Item current, IReadOnlyList<Type> types, bool recurse, ICollection<Item> list)
 		{
 			if (current != null && current.Items.Count > 0)
 			{
@@ -1369,7 +1369,7 @@ namespace Server.Items
 			return RecurseFindItemByType(this, types, recurse);
 		}
 
-		private static Item RecurseFindItemByType(Item current, Type[] types, bool recurse)
+		private static Item RecurseFindItemByType(Item current, IReadOnlyList<Type> types, bool recurse)
 		{
 			if (current != null && current.Items.Count > 0)
 			{
@@ -1430,7 +1430,7 @@ namespace Server.Items
 			return list;
 		}
 
-		private static void RecurseFindItemsByType<T>(Item current, bool recurse, List<T> list, Predicate<T> predicate)
+		private static void RecurseFindItemsByType<T>(Item current, bool recurse, ICollection<T> list, Predicate<T> predicate)
 			where T : Item
 		{
 			if (current != null && current.Items.Count > 0)
@@ -1514,7 +1514,7 @@ namespace Server.Items
 		}
 		#endregion
 
-		private static bool InTypeList(Item item, IReadOnlyList<Type> types)
+		private static bool InTypeList(IEntity item, IReadOnlyList<Type> types)
 		{
 			Type t = item.GetType();
 

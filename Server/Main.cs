@@ -408,7 +408,7 @@ namespace Server
 			_Signal.Set();
 		}
 
-		public static void Setup(string[] args)
+		public static void Setup(IEnumerable<string> args)
 		{
 #if DEBUG
 			Debug = true;
@@ -511,7 +511,7 @@ namespace Server
 
 			Timer.TimerThread ttObj = new Timer.TimerThread();
 
-			_TimerThread = new Thread(ttObj.TimerMain)
+			_TimerThread = new Thread(Timer.TimerThread.TimerMain)
 			{
 				Name = "Timer Thread"
 			};
