@@ -70,10 +70,8 @@ namespace Server.Items
 
             protected override void OnTarget(Mobile from, object targ)
             {
-                if (targ is BaseCreature && IsHerdable((BaseCreature)targ))
+                if (targ is BaseCreature bc && IsHerdable(bc))
                 {
-                    BaseCreature bc = (BaseCreature)targ;
-
                     if (bc.Controlled && bc.ControlMaster != from)
                     {
                         bc.PrivateOverheadMessage(MessageType.Regular, 0x3B2, 502467, from.NetState); // That animal looks tame already.
@@ -84,7 +82,9 @@ namespace Server.Items
                         double max = bc.CurrentTameSkill + 30 + Utility.Random(10);
 
                         if (max <= from.Skills[SkillName.Herding].Value)
+                        {
                             bc.PrivateOverheadMessage(MessageType.Regular, 0x3B2, 502471, from.NetState); // That wasn't even challenging.
+                        }
 
                         if (from.CheckTargetSkill(SkillName.Herding, bc, min, max))
                         {
@@ -103,7 +103,7 @@ namespace Server.Items
                 }
             }
 
-            private bool IsHerdable(BaseCreature bc)
+            private static bool IsHerdable(BaseCreature bc)
             {
                 if (bc.IsParagon)
                     return false;
@@ -113,9 +113,7 @@ namespace Server.Items
 
                 Map map = bc.Map;
 
-                ChampionSpawnRegion region = Region.Find(bc.Home, map) as ChampionSpawnRegion;
-
-                if (region != null)
+                if (Region.Find(bc.Home, map) is ChampionSpawnRegion region)
                 {
                     ChampionSpawn spawn = region.ChampionSpawn;
 
@@ -124,8 +122,12 @@ namespace Server.Items
                         Type t = bc.GetType();
 
                         foreach (Type type in m_ChampTamables)
+                        {
                             if (type == t)
+                            {
                                 return true;
+                            }
+                        }
                     }
                 }
 
@@ -151,10 +153,11 @@ namespace Server.Items
                         IPoint2D p = (IPoint2D)targ;
 
                         if (targ != from)
+                        {
                             p = new Point2D(p.X, p.Y);
+                        }
 
-
-                        if (targ is Mobile && (Mobile)targ == from)
+                        if (targ is Mobile mobile && mobile == from)
                         {
                             from.SendLocalizedMessage(502474); // The animal begins to follow you.
                         }
