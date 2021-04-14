@@ -103,9 +103,8 @@ namespace Server.Gumps
 				{
 					m_Type = value;
 
-					if (Parent != null)
-						Parent.Invalidate();
-				}
+                    Parent?.Invalidate();
+                }
 			}
 		}
 
@@ -158,13 +157,13 @@ namespace Server.Gumps
 			switch (m_Type)
 			{
 				case GumpHtmlLocalizedType.Plain:
-				return string.Format("{{ xmfhtmlgump {0} {1} {2} {3} {4} {5} {6} }}", m_X, m_Y, m_Width, m_Height, m_Number, m_Background ? 1 : 0, m_Scrollbar ? 1 : 0);
+				return $"{{ xmfhtmlgump {m_X} {m_Y} {m_Width} {m_Height} {m_Number} {(m_Background ? 1 : 0)} {(m_Scrollbar ? 1 : 0)} }}";
 
 				case GumpHtmlLocalizedType.Color:
-				return string.Format("{{ xmfhtmlgumpcolor {0} {1} {2} {3} {4} {5} {6} {7} }}", m_X, m_Y, m_Width, m_Height, m_Number, m_Background ? 1 : 0, m_Scrollbar ? 1 : 0, m_Color);
+				return $"{{ xmfhtmlgumpcolor {m_X} {m_Y} {m_Width} {m_Height} {m_Number} {(m_Background ? 1 : 0)} {(m_Scrollbar ? 1 : 0)} {m_Color} }}";
 
 				default: // GumpHtmlLocalizedType.Args
-				return string.Format("{{ xmfhtmltok {0} {1} {2} {3} {4} {5} {6} {7} @{8}@ }}", m_X, m_Y, m_Width, m_Height, m_Background ? 1 : 0, m_Scrollbar ? 1 : 0, m_Color, m_Number, m_Args);
+				return $"{{ xmfhtmltok {m_X} {m_Y} {m_Width} {m_Height} {(m_Background ? 1 : 0)} {(m_Scrollbar ? 1 : 0)} {m_Color} {m_Number} @{m_Args}@ }}";
 			}
 		}
 
