@@ -1419,10 +1419,29 @@ namespace Server.Mobiles
 
             double distance = m_Mobile.GetDistanceToSqrt(target);
 
-            if (distance < 1 || distance > 15)
+            if (target is Mobile)
+            {
+                Mobile mTarget = (Mobile)target;
+                if (!mTarget.Alive ||
+                    mTarget.Combatant == m_Mobile ||
+                    m_Mobile.Combatant == mTarget)
+                {
+                    m_Mobile.TargetLocation = null;
+                    return false; // Do not herd after being attacked by the herder or if they are dead
+                }
+
+                m_Mobile.CurrentSpeed = m_Mobile.ActiveSpeed;
+                if (distance > 1)
+                {
+                    bool bRun = (distance > 5);
+                    WalkMobileRange((IPoint3D)target, 1, bRun, 0, 1);
+                }
+                return true;
+            }
+            else if (distance < 1 || distance > 15)
             {
                 m_Mobile.TargetLocation = null;
-                return false; // At the target or too far away
+                return false; // Stop herding when target is reached or too far away (does not apply to shepherd)
             }
 
             DoMove(m_Mobile.GetDirectionTo(target));
