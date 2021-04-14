@@ -152,8 +152,8 @@ namespace Server
 
     public class StringEntry
     {
-        public int Number { get; private set; }
-        public string Text { get; private set; }
+        public int Number { get; }
+        public string Text { get; }
 
         public StringEntry(int number, string text)
         {
@@ -163,9 +163,7 @@ namespace Server
 
         private string m_FmtTxt;
 
-        private static readonly Regex m_RegEx = new Regex(
-            @"~(\d+)[_\w]+~",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.CultureInvariant);
+        private static readonly Regex m_RegEx = new Regex(@"~(\d+)[_\w]+~", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.CultureInvariant);
 
         private static readonly object[] m_Args = { "", "", "", "", "", "", "", "", "", "", "" };
 

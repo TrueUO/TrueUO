@@ -385,10 +385,12 @@ namespace Server
 
 			Closing = true;
 
-			if (Debug)
-				Console.Write("Exiting...");
+            if (Debug)
+            {
+                Console.Write("Exiting...");
+            }
 
-			World.WaitForWriteCompletion();
+            World.WaitForWriteCompletion();
 
 			if (!_Crashed)
 			{
@@ -397,9 +399,11 @@ namespace Server
 
 			Timer.TimerThread.Set();
 
-			if (Debug)
-				Console.WriteLine("done");
-		}
+            if (Debug)
+            {
+                Console.WriteLine("done");
+            }
+        }
 
 		private static readonly AutoResetEvent _Signal = new AutoResetEvent(true);
 
@@ -408,13 +412,12 @@ namespace Server
 			_Signal.Set();
 		}
 
-		public static void Setup(string[] args)
+		public static void Setup(IEnumerable<string> args)
 		{
 #if DEBUG
 			Debug = true;
 #endif
-
-			AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
 			AppDomain.CurrentDomain.ProcessExit += CurrentDomain_ProcessExit;
 
 			foreach (string a in args)
@@ -509,9 +512,7 @@ namespace Server
 				Directory.SetCurrentDirectory(BaseDirectory);
 			}
 
-			Timer.TimerThread ttObj = new Timer.TimerThread();
-
-			_TimerThread = new Thread(ttObj.TimerMain)
+            _TimerThread = new Thread(Timer.TimerThread.TimerMain)
 			{
 				Name = "Timer Thread"
 			};
@@ -659,7 +660,7 @@ namespace Server
 
 			foreach (Map m in Map.AllMaps)
 			{
-				m.Tiles.Force();
+				TileMatrix.Force();
 			}
 
 			NetState.Initialize();

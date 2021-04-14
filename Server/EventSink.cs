@@ -242,10 +242,10 @@ namespace Server
 
 	public class WorldBroadcastEventArgs : EventArgs
 	{
-		public int Hue { get; set; }
-		public bool Ascii { get; set; }
-		public AccessLevel Access { get; set; }
-		public string Text { get; set; }
+		public int Hue { get; }
+		public bool Ascii { get; }
+		public AccessLevel Access { get; }
+		public string Text { get; }
 
 		public WorldBroadcastEventArgs(int hue, bool ascii, AccessLevel access, string text)
 		{
@@ -862,7 +862,7 @@ namespace Server
 		}
 	}
 
-	public struct SkillNameValue
+	public readonly struct SkillNameValue
 	{
 		private readonly SkillName m_Name;
 		private readonly int m_Value;

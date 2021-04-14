@@ -66,10 +66,10 @@ namespace Server
 				yield break;
 			}
 
-			int x, y, z = Math.Min(rect.Start.Z, rect.End.Z);
+			int y, z = Math.Min(rect.Start.Z, rect.End.Z);
 			int ow, oh, od = rect.Depth;
 
-			x = rect.Start.X;
+			var x = rect.Start.X;
 
 			while (x < rect.End.X)
 			{
@@ -183,40 +183,40 @@ namespace Server
 			return _Points.Contains(p);
 		}
 
-		public Point3D GetRandom()
-		{
-			if (Facet == null || Facet == Map.Internal || Count == 0)
-			{
-				return Point3D.Zero;
-			}
+        public Point3D GetRandom()
+        {
+            while (true)
+            {
+                if (Facet == null || Facet == Map.Internal || Count == 0)
+                {
+                    return Point3D.Zero;
+                }
 
-			Point3D p = Point3D.Zero;
+                Point3D p = Point3D.Zero;
 
-			if (Count <= 1024)
-			{
-				p = _Points.ElementAt(Utility.Random(Count));
-			}
+                if (Count <= 1024)
+                {
+                    p = _Points.ElementAt(Utility.Random(Count));
+                }
 
-			if (p == Point3D.Zero)
-			{
-				do
-				{
-					p.X = Utility.RandomMinMax(_Bounds.Start.X, _Bounds.End.X);
-					p.Y = Utility.RandomMinMax(_Bounds.Start.Y, _Bounds.End.Y);
-					p.Z = Facet.Tiles.GetLandTile(p.X, p.Y).Z;
-				}
-				while (!Contains(p));
-			}
+                if (p == Point3D.Zero)
+                {
+                    do
+                    {
+                        p.X = Utility.RandomMinMax(_Bounds.Start.X, _Bounds.End.X);
+                        p.Y = Utility.RandomMinMax(_Bounds.Start.Y, _Bounds.End.Y);
+                        p.Z = Facet.Tiles.GetLandTile(p.X, p.Y).Z;
+                    } while (!Contains(p));
+                }
 
-			if (Validator == null || Validator(Facet, p.X, p.Y, p.Z))
-			{
-				return p;
-			}
+                if (Validator == null || Validator(Facet, p.X, p.Y, p.Z))
+                {
+                    return p;
+                }
+            }
+        }
 
-			return GetRandom();
-		}
-
-		public void Invalidate()
+        public void Invalidate()
 		{
 			_Points.Clear();
 

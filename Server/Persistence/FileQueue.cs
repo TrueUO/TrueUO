@@ -216,7 +216,7 @@ namespace Server
 			}
 
 			public byte[] Buffer => buffer;
-			public int Offset => 0;
+			public static int Offset => 0;
 			public int Size => size;
 			public void Commit()
 			{
