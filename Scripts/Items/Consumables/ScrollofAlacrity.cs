@@ -1,19 +1,23 @@
 using Server.Engines.Quests;
 using Server.Mobiles;
+using Server.Network;
 using System;
-using System.Collections;
+using System.Collections.Generic;
 
 namespace Server.Items
 {
     [TypeAlias("Server.Items.ScrollofAlacrity")]
     public class ScrollOfAlacrity : SpecialScroll
     {
+        private static readonly Dictionary<Mobile, Timer> Table = new Dictionary<Mobile, Timer>();
+
         public override int LabelNumber => 1078604;// Scroll of Alacrity
 
         public override int Message => 1078602;/*Using a Scroll of Transcendence for a given skill will permanently increase your current 
         *level in that skill by the amount of points displayed on the scroll.
         *As you may not gain skills beyond your maximum skill cap, any excess points will be lost.*/
 
+        public override int Title => 1078604; // Scroll of Alacrity
         public override string DefaultTitle => "<basefont color=#FFFFFF>Scroll of Alacrity:</basefont>";
 
         public ScrollOfAlacrity()
@@ -46,9 +50,7 @@ namespace Server.Items
             if (!base.CanUse(from))
                 return false;
 
-            PlayerMobile pm = from as PlayerMobile;
-
-            if (pm == null)
+            if (!(from is PlayerMobile pm))
                 return false;
 
             for (int i = pm.Quests.Count - 1; i >= 0; i--)
@@ -61,7 +63,7 @@ namespace Server.Items
 
                     if (objective is ApprenticeObjective)
                     {
-                        from.SendMessage("You are already under the effect of an enhanced skillgain quest.");
+                        from.SendLocalizedMessage(1079254); // You may not use your Scroll of Alacrity while your character is on a new player skill quest.
                         return false;
                     }
                 }
@@ -81,9 +83,7 @@ namespace Server.Items
             if (!CanUse(from))
                 return;
 
-            PlayerMobile pm = from as PlayerMobile;
-
-            if (pm == null)
+            if (!(from is PlayerMobile pm))
                 return;
 
             double tskill = from.Skills[Skill].Base;
@@ -98,23 +98,25 @@ namespace Server.Items
 
             from.SendLocalizedMessage(1077956); // You are infused with intense energy. You are under the effects of an accelerated skillgain scroll.
 
-            Effects.PlaySound(from.Location, from.Map, 0x1E9);
-            Effects.SendTargetParticles(from, 0x373A, 35, 45, 0x00, 0x00, 9502, (EffectLayer)255, 0x100);
+            Effects.SendPacket(from.Location, from.Map, new ParticleEffect(EffectType.FixedFrom, from.Serial, Serial.Zero, 0, from.Location, from.Location, 0, 0, false, false, 0, 0, 0, 5060, 1, from.Serial, 59, 0));
+            Effects.SendPacket(from.Location, from.Map, new ParticleEffect(EffectType.Moving, Serial.Zero, from.Serial, 0x36D4, new Point3D(from.X - 6, from.Y - 6, from.Z + 15), from.Location, 7, 0, false, false, 1178, 0, 0, 0, 1, from.Serial, 91, 0));
+            Effects.SendPacket(from.Location, from.Map, new ParticleEffect(EffectType.Moving, Serial.Zero, from.Serial, 0x36D4, new Point3D(from.X - 4, from.Y - 6, from.Z + 15), from.Location, 7, 0, false, false, 1178, 0, 0, 0, 1, from.Serial, 91, 0));
+            Effects.SendPacket(from.Location, from.Map, new ParticleEffect(EffectType.Moving, Serial.Zero, from.Serial, 0x36D4, new Point3D(from.X - 6, from.Y - 4, from.Z + 15), from.Location, 7, 0, false, false, 1178, 0, 0, 0, 1, from.Serial, 91, 0));
+            Effects.SendPacket(from.Location, from.Map, new ParticleEffect(EffectType.FixedFrom, from.Serial, Serial.Zero, 0x375A, from.Location, from.Location, 35, 90, false, false, 0, 0, 0, 0, 1, from.Serial, 91, 0));
+
+            Effects.PlaySound(from.Location, from.Map, 0x100);
+            Effects.PlaySound(from.Location, from.Map, 0x0FF);
 
             pm.AcceleratedStart = DateTime.UtcNow + TimeSpan.FromMinutes(15);
 
-            Timer t = (Timer)m_Table[from];
-
-            m_Table[from] = Timer.DelayCall(TimeSpan.FromMinutes(15), new TimerStateCallback(Expire_Callback), from);
+            Table[from] = Timer.DelayCall(TimeSpan.FromMinutes(15), new TimerStateCallback(Expire_Callback), from);
 
             pm.AcceleratedSkill = Skill;
 
             BuffInfo.AddBuff(pm, new BuffInfo(BuffIcon.ArcaneEmpowerment, 1078511, 1078512, TimeSpan.FromMinutes(15), pm, GetName(), true));
 
             Delete();
-        }
-
-        private static readonly Hashtable m_Table = new Hashtable();
+        }        
 
         private static void Expire_Callback(object state)
         {
@@ -123,9 +125,9 @@ namespace Server.Items
 
         public static bool AlacrityEnd(Mobile m)
         {
-            m_Table.Remove(m);
+            Table.Remove(m);
 
-            m.PlaySound(0x1F8);
+            m.PlaySound(0x100);
 
             BuffInfo.RemoveBuff(m, BuffIcon.ArcaneEmpowerment);
 

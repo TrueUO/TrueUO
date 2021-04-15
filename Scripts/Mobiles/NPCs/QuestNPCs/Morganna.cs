@@ -45,15 +45,7 @@ namespace Server.Engines.Quests
 
         public override bool CanOffer()
         {
-            PlayerMobile pm = Owner;
-
-            if (pm.AcceleratedStart > DateTime.UtcNow)
-            {
-                Owner.SendLocalizedMessage(1077951); // You are already under the effect of an accelerated skillgain scroll.
-                return false;
-            }
-
-            return Owner.Skills.SpiritSpeak.Base < 50;
+            return TeachQuestCheck(SkillName.SpiritSpeak);
         }
 
         public override void OnCompleted()
@@ -104,11 +96,6 @@ namespace Server.Engines.Quests
         public override void Advertise()
         {
             Say(1078132); // Want to learn how to channel the supernatural?
-        }
-
-        public override void OnOfferFailed()
-        {
-            Say(1077772); // I cannot teach you, for you know all I can teach!
         }
 
         public override void InitBody()
