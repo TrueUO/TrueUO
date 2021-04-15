@@ -64,17 +64,26 @@ namespace Server.Engines.Quests.Haven
 
         public override bool IsEnemy(Mobile m)
         {
-            if (m.Player || m is BaseVendor)
-                return false;
-
-            if (m is BaseCreature bc)
+            while (true)
             {
-                Mobile master = bc.GetMaster();
-                if (master != null)
-                    return IsEnemy(master);
-            }
+                if (m.Player || m is BaseVendor)
+                {
+                    return false;
+                }
 
-            return m.Karma < 0;
+                if (m is BaseCreature bc)
+                {
+                    Mobile master = bc.GetMaster();
+
+                    if (master != null)
+                    {
+                        m = master;
+                        continue;
+                    }
+                }
+
+                return m.Karma < 0;
+            }
         }
 
         public bool WillFire(Cannon cannon, Mobile target)

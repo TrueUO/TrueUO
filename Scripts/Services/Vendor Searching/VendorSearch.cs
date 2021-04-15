@@ -104,17 +104,21 @@ namespace Server.Engines.VendorSearching
 
         private static VendorItem GetParentVendorItem(PlayerVendor pv, Container parent)
         {
-            VendorItem vendorItem = pv.GetVendorItem(parent);
-
-            if (vendorItem == null)
+            while (true)
             {
-                if (parent.Parent is Container container)
-                {
-                    return GetParentVendorItem(pv, container);
-                }
-            }
+                VendorItem vendorItem = pv.GetVendorItem(parent);
 
-            return vendorItem;
+                if (vendorItem == null)
+                {
+                    if (parent.Parent is Container container)
+                    {
+                        parent = container;
+                        continue;
+                    }
+                }
+
+                return vendorItem;
+            }
         }
 
         public static bool CheckMatch(Item item, int price, SearchCriteria searchCriteria)
