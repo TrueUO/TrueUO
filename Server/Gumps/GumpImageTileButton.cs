@@ -93,18 +93,8 @@ namespace Server.Gumps
 		public GumpButtonType Type
 		{
 			get => m_Type;
-			set
-			{
-				if (m_Type != value)
-				{
-					m_Type = value;
-
-					Gump parent = Parent;
-
-                    parent?.Invalidate();
-                }
-			}
-		}
+			set => m_Type = value;
+        }
 
 		public int Param
 		{

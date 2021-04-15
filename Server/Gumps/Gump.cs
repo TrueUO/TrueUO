@@ -46,7 +46,7 @@ namespace Server.Gumps
 			m_Strings = new List<string>();
 		}
 
-		public void Invalidate()
+		public void Invalidate() // Since we no longer do anything with this we can simplify the core method.
 		{
 			//if ( m_Strings.Count > 0 )
 			//	m_Strings.Clear();
@@ -56,96 +56,15 @@ namespace Server.Gumps
 
 		public List<GumpEntry> Entries => m_Entries;
 
-		public int Serial
-		{
-			get => m_Serial;
-			set
-			{
-				if (m_Serial != value)
-				{
-					m_Serial = value;
-					Invalidate();
-				}
-			}
-		}
+		public int Serial { get => m_Serial; set => m_Serial = value; }
 
-		public int X
-		{
-			get => m_X;
-			set
-			{
-				if (m_X != value)
-				{
-					m_X = value;
-					Invalidate();
-				}
-			}
-		}
+		public int X { get => m_X; set => m_X = value; }
+        public int Y { get => m_Y; set => m_Y = value; }
 
-		public int Y
-		{
-			get => m_Y;
-			set
-			{
-				if (m_Y != value)
-				{
-					m_Y = value;
-					Invalidate();
-				}
-			}
-		}
-
-		public bool Disposable
-		{
-			get => m_Disposable;
-			set
-			{
-				if (m_Disposable != value)
-				{
-					m_Disposable = value;
-					Invalidate();
-				}
-			}
-		}
-
-		public bool Resizable
-		{
-			get => m_Resizable;
-			set
-			{
-				if (m_Resizable != value)
-				{
-					m_Resizable = value;
-					Invalidate();
-				}
-			}
-		}
-
-		public bool Dragable
-		{
-			get => m_Dragable;
-			set
-			{
-				if (m_Dragable != value)
-				{
-					m_Dragable = value;
-					Invalidate();
-				}
-			}
-		}
-
-		public bool Closable
-		{
-			get => m_Closable;
-			set
-			{
-				if (m_Closable != value)
-				{
-					m_Closable = value;
-					Invalidate();
-				}
-			}
-		}
+		public bool Disposable { get => m_Disposable; set => m_Disposable = value; }
+        public bool Resizable { get => m_Resizable; set => m_Resizable = value; }
+        public bool Dragable { get => m_Dragable; set => m_Dragable = value; }
+        public bool Closable { get => m_Closable; set => m_Closable = value; }
 
 		public void AddPage(int page)
 		{
@@ -378,8 +297,7 @@ namespace Server.Gumps
 			}
 			else if (!m_Entries.Contains(g))
 			{
-				Invalidate();
-				m_Entries.Add(g);
+                m_Entries.Add(g);
 			}
 		}
 
@@ -390,7 +308,6 @@ namespace Server.Gumps
 				return;
 			}
 
-			Invalidate();
 			m_Entries.Remove(g);
 			g.Parent = null;
 		}

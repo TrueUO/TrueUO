@@ -97,16 +97,8 @@ namespace Server.Gumps
 		public GumpHtmlLocalizedType Type
 		{
 			get => m_Type;
-			set
-			{
-				if (m_Type != value)
-				{
-					m_Type = value;
-
-                    Parent?.Invalidate();
-                }
-			}
-		}
+			set => m_Type = value;
+        }
 
 		public GumpHtmlLocalized(int x, int y, int width, int height, int number, bool background, bool scrollbar)
 		{
