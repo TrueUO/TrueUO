@@ -71,11 +71,9 @@ namespace Server.Items
 					{
 						return 1020000 + id;
 					}
-					else
-					{
-						return 1078872 + id;
-					}
-				}
+
+                    return 1078872 + id;
+                }
 
 				return base.LabelNumber;
 			}
@@ -90,7 +88,7 @@ namespace Server.Items
 
 			int w = Components.Width;
 			int h = Components.Height - 1;
-			int v = min + ((w > h ? w : h) / 2);
+			int v = min + (w > h ? w : h) / 2;
 
 			if (v > max)
 				v = max;

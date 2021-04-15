@@ -25,7 +25,7 @@ namespace Server.Multis
 
         public override int ItemID
         {
-            get { return base.ItemID; }
+            get => base.ItemID;
             set
             {
                 base.ItemID = value;
@@ -44,10 +44,8 @@ namespace Server.Multis
 
                 return Target as HouseTeleporterTile;
             }
-            set
-            {
-                Target = value;
-            }
+
+            set => Target = value;
         }
 
         private bool IsMoveOver => ItemID == 0x574A || ItemID == 0xA1CB || ItemID == 0xA1CC || ItemID == 0x40BB;
@@ -55,7 +53,7 @@ namespace Server.Multis
         [CommandProperty(AccessLevel.GameMaster)]
         public int Charges
         {
-            get { return _Charges; }
+            get => _Charges;
             set
             {
                 _Charges = value;
@@ -245,20 +243,16 @@ namespace Server.Multis
                     return;
                 }
 
-                if (targeted is Item)
+                if (targeted is Item item)
                 {
-                    Item item = targeted as Item;
-
                     if (!item.IsChildOf(from.Backpack))
                     {
                         from.SendLocalizedMessage(1054107); // This item must be in your backpack.
                         return;
                     }
 
-                    if (item is GateTravelScroll)
+                    if (item is GateTravelScroll scroll)
                     {
-                        GateTravelScroll scroll = item as GateTravelScroll;
-
                         if (Item.Charges >= MaxCharges)
                         {
                             from.SendLocalizedMessage(1115126); // The House Teleporter cannot be charged any further.
@@ -270,7 +264,7 @@ namespace Server.Multis
 
                             if (scroll.Amount <= scrollsNeeded)
                             {
-                                Item.Charges = Math.Min(MaxCharges, Item.Charges + (scroll.Amount * 5));
+                                Item.Charges = Math.Min(MaxCharges, Item.Charges + scroll.Amount * 5);
                                 scroll.Delete();
                             }
                             else
@@ -370,37 +364,44 @@ namespace Server.Multis
                 from.SendLocalizedMessage(1005561, "", 0x22); // Thou'rt a criminal and cannot escape so easily.
                 return false;
             }
-            else if (SpellHelper.CheckCombat(from))
+
+            if (SpellHelper.CheckCombat(from))
             {
                 from.SendLocalizedMessage(1005564, "", 0x22); // Wouldst thou flee during the heat of battle??
                 return false;
             }
-            else if (destMap == Map.Felucca && from is PlayerMobile && ((PlayerMobile)from).Young)
+
+            if (destMap == Map.Felucca && from is PlayerMobile mobile && mobile.Young)
             {
-                from.SendLocalizedMessage(1049543); // You decide against traveling to Felucca while you are still young.
+                mobile.SendLocalizedMessage(1049543); // You decide against traveling to Felucca while you are still young.
                 return false;
             }
-            else if (SpellHelper.RestrictRedTravel && from.Murderer && destMap.Rules != MapRules.FeluccaRules && !Siege.SiegeShard)
+
+            if (SpellHelper.RestrictRedTravel && from.Murderer && destMap.Rules != MapRules.FeluccaRules && !Siege.SiegeShard)
             {
                 from.SendLocalizedMessage(1019004); // You are not allowed to travel there.
                 return false;
             }
-            else if (Region.FindRegions(dest, destMap).Any(r => r.Name == "Abyss") && from is PlayerMobile && !((PlayerMobile)from).AbyssEntry)
+
+            if (Region.FindRegions(dest, destMap).Any(r => r.Name == "Abyss") && from is PlayerMobile pm && !pm.AbyssEntry)
             {
-                from.SendLocalizedMessage(1112226); // Thou must be on a Sacred Quest to pass through.
+                pm.SendLocalizedMessage(1112226); // Thou must be on a Sacred Quest to pass through.
                 return false;
             }
-            else if (CityTradeSystem.HasTrade(from))
+
+            if (CityTradeSystem.HasTrade(from))
             {
                 from.SendLocalizedMessage(1151733); // You cannot do that while carrying a Trade Order.
                 return false;
             }
-            else if (from.Holding != null)
+
+            if (from.Holding != null)
             {
                 from.SendLocalizedMessage(1071955); // You cannot teleport while dragging an object.
                 return false;
             }
-            else if (from.Target != null)
+
+            if (from.Target != null)
             {
                 from.SendLocalizedMessage(500310); // You are too busy with something else.
                 return false;
@@ -416,10 +417,8 @@ namespace Server.Multis
                 m.SendLocalizedMessage(1114918); // Select a House Teleporter to link to.
                 m.BeginTarget(-1, false, TargetFlags.None, (from, targeted) =>
                 {
-                    if (targeted is HouseTeleporterTile)
+                    if (targeted is HouseTeleporterTile tile)
                     {
-                        HouseTeleporterTile tile = targeted as HouseTeleporterTile;
-
                         if (tile.IsChildOf(m.Backpack))
                         {
                             tile.Link = this;
@@ -436,6 +435,7 @@ namespace Server.Multis
                                     tile.UsesCharges = true;
 
                                 int charges = _Charges + tile.Charges;
+
                                 Charges = charges / 2;
                                 tile.Charges = charges / 2;
                             }
@@ -510,12 +510,12 @@ namespace Server.Multis
                         new EffectTimer(target.Location, target.Map, 2023, -1, TimeSpan.FromSeconds(0.4)).Start();
                     }
 
-                    m_Teleporter.OnAfterTeleport(m);
+                    m_Teleporter.OnAfterTeleport();
                 }
             }
         }
 
-        public override void OnAfterTeleport(Mobile m)
+        public override void OnAfterTeleport()
         {
             if (UsesCharges)
             {
@@ -549,7 +549,7 @@ namespace Server.Multis
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             _Charges = reader.ReadInt();
             UsesCharges = reader.ReadBool();
@@ -658,7 +658,7 @@ namespace Server.Multis
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -697,13 +697,15 @@ namespace Server.Multis
         {
             base.Serialize(writer);
             writer.Write(0);
+
             writer.Write(VetReward);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
+
             VetReward = reader.ReadBool();
         }
     }

@@ -105,7 +105,7 @@ namespace Server.Network
 
 	public sealed class DisplaySecureTrade : Packet
 	{
-		public DisplaySecureTrade(Mobile them, Container first, Container second, string name)
+		public DisplaySecureTrade(IEntity them, IEntity first, IEntity second, string name)
 			: base(0x6F)
 		{
 			if (name == null)
@@ -127,7 +127,7 @@ namespace Server.Network
 
 	public sealed class CloseSecureTrade : Packet
 	{
-		public CloseSecureTrade(Container cont)
+		public CloseSecureTrade(IEntity cont)
 			: base(0x6F)
 		{
 			EnsureCapacity(8);
@@ -148,11 +148,11 @@ namespace Server.Network
 
 	public sealed class UpdateSecureTrade : Packet
 	{
-		public UpdateSecureTrade(Container cont, bool first, bool second)
+		public UpdateSecureTrade(IEntity cont, bool first, bool second)
 			: this(cont, TradeFlag.Update, first ? 1 : 0, second ? 1 : 0)
 		{ }
 
-		public UpdateSecureTrade(Container cont, TradeFlag flag, int first, int second)
+		public UpdateSecureTrade(IEntity cont, TradeFlag flag, int first, int second)
 			: base(0x6F)
 		{
 			EnsureCapacity(17);
@@ -166,7 +166,7 @@ namespace Server.Network
 
 	public sealed class SecureTradeEquip : Packet
 	{
-		public SecureTradeEquip(Item item, Mobile m)
+		public SecureTradeEquip(Item item, IEntity m)
 			: base(0x25, 21)
 		{
 			m_Stream.Write(item.Serial);
@@ -222,7 +222,7 @@ namespace Server.Network
 
 	public sealed class VendorBuyContent : Packet
 	{
-		public VendorBuyContent(List<BuyItemState> list)
+		public VendorBuyContent(IReadOnlyList<BuyItemState> list)
 			: base(0x3C)
 		{
 			EnsureCapacity(list.Count * 20 + 5);
@@ -252,7 +252,7 @@ namespace Server.Network
 
 	public sealed class DisplayBuyList : Packet
 	{
-		public DisplayBuyList(Mobile vendor)
+		public DisplayBuyList(IEntity vendor)
 			: base(0x24, 9)
 		{
 			m_Stream.Write(vendor.Serial);
@@ -263,7 +263,7 @@ namespace Server.Network
 
 	public sealed class VendorBuyList : Packet
 	{
-		public VendorBuyList(Mobile vendor, List<BuyItemState> list)
+		public VendorBuyList(Mobile vendor, IReadOnlyList<BuyItemState> list)
 			: base(0x74)
 		{
 			EnsureCapacity(256);
@@ -294,7 +294,7 @@ namespace Server.Network
 
 	public sealed class VendorSellList : Packet
 	{
-		public VendorSellList(Mobile shopkeeper, ICollection<SellItemState> sis)
+		public VendorSellList(IEntity shopkeeper, ICollection<SellItemState> sis)
 			: base(0x9E)
 		{
 			EnsureCapacity(256);
@@ -331,29 +331,29 @@ namespace Server.Network
 
 	public sealed class EndVendorSell : Packet
 	{
-		public EndVendorSell(Mobile Vendor)
+		public EndVendorSell(IEntity vendor)
 			: base(0x3B, 8)
 		{
 			m_Stream.Write((ushort)8); //length
-			m_Stream.Write(Vendor.Serial);
+			m_Stream.Write(vendor.Serial);
 			m_Stream.Write((byte)0);
 		}
 	}
 
 	public sealed class EndVendorBuy : Packet
 	{
-		public EndVendorBuy(Mobile Vendor)
+		public EndVendorBuy(IEntity vendor)
 			: base(0x3B, 8)
 		{
 			m_Stream.Write((ushort)8); //length
-			m_Stream.Write(Vendor.Serial);
+			m_Stream.Write(vendor.Serial);
 			m_Stream.Write((byte)0);
 		}
 	}
 
 	public sealed class DeathAnimation : Packet
 	{
-		public DeathAnimation(Mobile killed, Item corpse)
+		public DeathAnimation(IEntity killed, IEntity corpse)
 			: base(0xAF, 13)
 		{
 			m_Stream.Write(killed.Serial);
@@ -431,7 +431,7 @@ namespace Server.Network
 
 	public sealed class DisplayEquipmentInfo : Packet
 	{
-		public DisplayEquipmentInfo(Item item, EquipmentInfo info)
+		public DisplayEquipmentInfo(IEntity item, EquipmentInfo info)
 			: base(0xBF)
 		{
 			EquipInfoAttribute[] attrs = info.Attributes;
@@ -545,7 +545,7 @@ namespace Server.Network
 
 	public sealed class UnicodePrompt : Packet
 	{
-		public UnicodePrompt(Prompt prompt, Mobile to)
+		public UnicodePrompt(Prompt prompt, IEntity to)
 			: base(0xC2)
 		{
 			EnsureCapacity(21);
@@ -817,7 +817,7 @@ namespace Server.Network
 			: this(m, m.LightLevel)
 		{ }
 
-		public PersonalLightLevel(Mobile m, int level)
+		public PersonalLightLevel(IEntity m, int level)
 			: base(0x4E, 6)
 		{
 			m_Stream.Write(m.Serial);
@@ -827,7 +827,7 @@ namespace Server.Network
 
 	public sealed class PersonalLightLevelZero : Packet
 	{
-		public PersonalLightLevelZero(Mobile m)
+		public PersonalLightLevelZero(IEntity m)
 			: base(0x4E, 6)
 		{
 			m_Stream.Write(m.Serial);
@@ -905,7 +905,7 @@ namespace Server.Network
 
 	public sealed class DisplayProfile : Packet
 	{
-		public DisplayProfile(bool realSerial, Mobile m, string header, string body, string footer)
+		public DisplayProfile(bool realSerial, IEntity m, string header, string body, string footer)
 			: base(0xB8)
 		{
 			if (header == null)
@@ -1699,7 +1699,7 @@ namespace Server.Network
 
 	public sealed class DisplaySpellbook : Packet
 	{
-		public DisplaySpellbook(Item book)
+		public DisplaySpellbook(IEntity book)
 			: base(0x24, 9)
 		{
 			m_Stream.Write(book.Serial);
@@ -1710,7 +1710,7 @@ namespace Server.Network
 
 	public sealed class SpellbookContent : Packet
 	{
-		public SpellbookContent(Item item, int graphic, int offset, ulong content)
+		public SpellbookContent(IEntity item, int graphic, int offset, ulong content)
 			: base(0xBF)
 		{
 			EnsureCapacity(23);
@@ -1839,7 +1839,7 @@ namespace Server.Network
 
 	public sealed class Swing : Packet
 	{
-		public Swing(int flag, Mobile attacker, IDamageable defender)
+		public Swing(int flag, IEntity attacker, IEntity defender)
 			: base(0x2F, 10)
 		{
 			m_Stream.Write((byte)flag);
@@ -1866,7 +1866,7 @@ namespace Server.Network
 
 	public sealed class RemoveItem : Packet
 	{
-		public RemoveItem(Item item)
+		public RemoveItem(IEntity item)
 			: base(0x1D, 5)
 		{
 			m_Stream.Write(item.Serial);
@@ -1875,7 +1875,7 @@ namespace Server.Network
 
 	public sealed class RemoveMobile : Packet
 	{
-		public RemoveMobile(Mobile m)
+		public RemoveMobile(IEntity m)
 			: base(0x1D, 5)
 		{
 			m_Stream.Write(m.Serial);
@@ -1884,7 +1884,7 @@ namespace Server.Network
 
 	public sealed class ServerChange : Packet
 	{
-		public ServerChange(Mobile m, Map map)
+		public ServerChange(IPoint3D m, Map map)
 			: base(0x76, 16)
 		{
 			m_Stream.Write((short)m.X);
@@ -2425,7 +2425,7 @@ namespace Server.Network
 
 	public sealed class DisplayGump : Packet
 	{
-		public DisplayGump(Gump g, string layout, string[] text)
+		public DisplayGump(Gump g, string layout, IReadOnlyList<string> text)
 			: base(0xB0)
 		{
 			if (layout == null)
@@ -2442,9 +2442,9 @@ namespace Server.Network
 			m_Stream.Write((ushort)(layout.Length + 1));
 			m_Stream.WriteAsciiNull(layout);
 
-			m_Stream.Write((ushort)text.Length);
+			m_Stream.Write((ushort)text.Count);
 
-			for (int i = 0; i < text.Length; ++i)
+			for (int i = 0; i < text.Count; ++i)
 			{
 				string v = text[i];
 
@@ -2581,7 +2581,7 @@ namespace Server.Network
 
 	public sealed class MapChange : Packet
 	{
-		public MapChange(Mobile m)
+		public MapChange(IEntity m)
 			: base(0xBF)
 		{
 			EnsureCapacity(6);
@@ -2709,7 +2709,7 @@ namespace Server.Network
 
 	public sealed class MobileHits : Packet
 	{
-		public MobileHits(Mobile m)
+		public MobileHits(IDamageable m)
 			: base(0xA1, 9)
 		{
 			m_Stream.Write(m.Serial);
@@ -2815,7 +2815,7 @@ namespace Server.Network
 	// unsure of proper format, client crashes
 	public sealed class MobileName : Packet
 	{
-		public MobileName(Mobile m)
+		public MobileName(IEntity m)
 			: base(0x98)
 		{
 			string name = m.Name;
@@ -2834,7 +2834,7 @@ namespace Server.Network
 
 	public sealed class MobileAnimation : Packet
 	{
-		public MobileAnimation(Mobile m, int action, int frameCount, int repeatCount, bool forward, bool repeat, int delay)
+		public MobileAnimation(IEntity m, int action, int frameCount, int repeatCount, bool forward, bool repeat, int delay)
 			: base(0x6E, 14)
 		{
 			m_Stream.Write(m.Serial);
@@ -2849,7 +2849,7 @@ namespace Server.Network
 
 	public sealed class NewMobileAnimation : Packet
 	{
-		public NewMobileAnimation(Mobile m, AnimationType type, int action, int delay)
+		public NewMobileAnimation(IEntity m, AnimationType type, int action, int delay)
 			: base(0xE2, 10)
 		{
 			m_Stream.Write(m.Serial);
@@ -3356,7 +3356,7 @@ namespace Server.Network
 			return p;
 		}
 
-		public PingAck(byte ping)
+        private PingAck(byte ping)
 			: base(0x73, 2)
 		{
 			m_Stream.Write(ping);
@@ -3365,7 +3365,7 @@ namespace Server.Network
 
 	public sealed class MovementRej : Packet
 	{
-		public MovementRej(int seq, Mobile m)
+		public MovementRej(int seq, IEntity m)
 			: base(0x21, 8)
 		{
 			m_Stream.Write((byte)seq);
@@ -3577,7 +3577,7 @@ namespace Server.Network
 			SetDisabled(feature, false);
 		}
 
-		public static void SetDisabled(ThirdPartyFeature feature, bool value)
+        private static void SetDisabled(ThirdPartyFeature feature, bool value)
 		{
 			if (value)
 			{
@@ -3592,10 +3592,10 @@ namespace Server.Network
 
 	public sealed class CharacterList : Packet
 	{
-		public CharacterList(IAccount a, CityInfo[] info, bool IsEnhancedClient)
+		public CharacterList(IAccount a, IReadOnlyList<CityInfo> info, bool IsEnhancedClient)
 			: base(0xA9)
 		{
-			EnsureCapacity(11 + (a.Length * 60) + (info.Length * 89));
+			EnsureCapacity(11 + (a.Length * 60) + (info.Count * 89));
 
 			int highSlot = -1;
 
@@ -3624,9 +3624,9 @@ namespace Server.Network
 				}
 			}
 
-			m_Stream.Write((byte)info.Length);
+			m_Stream.Write((byte)info.Count);
 
-			for (int i = 0; i < info.Length; ++i)
+			for (int i = 0; i < info.Count; ++i)
 			{
 				CityInfo ci = info[i];
 
@@ -3861,16 +3861,16 @@ namespace Server.Network
 
 	public sealed class AccountLoginAck : Packet
 	{
-		public AccountLoginAck(ServerInfo[] info)
+		public AccountLoginAck(IReadOnlyList<ServerInfo> info)
 			: base(0xA8)
 		{
-			EnsureCapacity(6 + (info.Length * 40));
+			EnsureCapacity(6 + info.Count * 40);
 
 			m_Stream.Write((byte)0x5D); // Unknown
 
-			m_Stream.Write((ushort)info.Length);
+			m_Stream.Write((ushort)info.Count);
 
-			for (int i = 0; i < info.Length; ++i)
+			for (int i = 0; i < info.Count; ++i)
 			{
 				ServerInfo si = info[i];
 

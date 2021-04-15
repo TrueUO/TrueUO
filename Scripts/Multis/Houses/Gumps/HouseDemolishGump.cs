@@ -84,7 +84,7 @@ namespace Server.Gumps
                         return;
                     }
 
-                    else if (m_House.HasActiveAuction)
+                    if (m_House.HasActiveAuction)
                     {
                         m_Mobile.SendLocalizedMessage(1156453);
                         // You cannot currently take this action because you have auction safes locked down in your home. You must remove them first.

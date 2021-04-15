@@ -10,7 +10,7 @@ namespace Server
         private static int[] m_Header;
         private static byte[] m_Unknown;
 
-        public static Hashtable AnimData { get; set; }
+        private static Hashtable AnimData { get; set; }
 
         static Animdata()
         {
@@ -95,12 +95,14 @@ namespace Server
         public static void Save(string path)
         {
             string FileName = Path.Combine(path, "animdata.mul");
+
             using (FileStream fs = new FileStream(FileName, FileMode.Create, FileAccess.Write, FileShare.Write))
             {
                 using (BinaryWriter bin = new BinaryWriter(fs))
                 {
                     int id = 0;
                     int h = 0;
+
                     while (id < m_Header.Length * 8)
                     {
                         bin.Write(m_Header[h++]);
@@ -144,11 +146,11 @@ namespace Server
 
         public class Data
         {
-            public sbyte[] FrameData { get; set; }
-            public byte Unknown { get; private set; }
-            public byte FrameCount { get; set; }
-            public byte FrameInterval { get; set; }
-            public byte FrameStart { get; set; }
+            public sbyte[] FrameData { get; }
+            public byte Unknown { get; }
+            public byte FrameCount { get; }
+            public byte FrameInterval { get; }
+            public byte FrameStart { get; }
 
             public Data(sbyte[] frame, byte unk, byte fcount, byte finter, byte fstart)
             {

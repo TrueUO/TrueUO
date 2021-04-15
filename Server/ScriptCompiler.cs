@@ -14,12 +14,12 @@ namespace Server
 
 		public static bool Compile(bool debug, bool cache)
 		{
-			List<Assembly> assemblies = new List<Assembly>();
+            List<Assembly> assemblies = new List<Assembly>
+            {
+                Assembly.LoadFrom("Scripts.dll"), typeof(ScriptCompiler).Assembly
+            };
 
-			assemblies.Add(Assembly.LoadFrom("Scripts.dll"));
-			assemblies.Add(typeof(ScriptCompiler).Assembly);
-
-			Assemblies = assemblies.ToArray();
+            Assemblies = assemblies.ToArray();
 
 			Utility.PushColor(ConsoleColor.Yellow);
 			Console.WriteLine("Scripts: Verifying...");
@@ -421,7 +421,7 @@ namespace Server
 				return -1;
 			}
 
-			if (l == null && r != null)
+			if (l == null)
 			{
 				return 1;
 			}

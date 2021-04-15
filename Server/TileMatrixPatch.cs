@@ -58,7 +58,7 @@ namespace Server
 		}
 
 		[MethodImpl(MethodImplOptions.Synchronized)]
-		private unsafe int PatchLand(TileMatrix matrix, string dataPath, string indexPath)
+		private static unsafe int PatchLand(TileMatrix matrix, string dataPath, string indexPath)
 		{
 			using (FileStream fsData = new FileStream(dataPath, FileMode.Open, FileAccess.Read, FileShare.Read))
 			{
