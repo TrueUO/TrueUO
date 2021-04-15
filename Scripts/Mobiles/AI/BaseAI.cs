@@ -131,8 +131,7 @@ namespace Server.Mobiles
                 m_AI = ai;
                 m_Order = order;
 
-                if (mobile.IsDeadPet && (order == OrderType.Guard || order == OrderType.Attack || order == OrderType.Transfer ||
-                                         order == OrderType.Drop))
+                if (mobile.IsDeadPet && (order == OrderType.Guard || order == OrderType.Attack || order == OrderType.Transfer || order == OrderType.Drop))
                 {
                     Enabled = false;
                 }
@@ -147,8 +146,7 @@ namespace Server.Mobiles
                         m_From.RevealingAction();
                     }
 
-                    if (m_Mobile.IsDeadPet && (m_Order == OrderType.Guard || m_Order == OrderType.Attack ||
-                                               m_Order == OrderType.Transfer || m_Order == OrderType.Drop))
+                    if (m_Mobile.IsDeadPet && (m_Order == OrderType.Guard || m_Order == OrderType.Attack || m_Order == OrderType.Transfer || m_Order == OrderType.Drop))
                     {
                         return;
                     }
@@ -1422,12 +1420,8 @@ namespace Server.Mobiles
             if (target is Mobile mTarget)
             {
 
-                if (!mTarget.Alive ||
-                    mTarget.Combatant == m_Mobile ||
-                    m_Mobile.Combatant == mTarget ||
-                    (m_Mobile.ControlMaster !=null && m_Mobile.ControlMaster != mTarget) ||
-                    mTarget.Map != m_Mobile.Map ||
-                    distance > 45)
+                if (!mTarget.Alive || mTarget.Combatant == m_Mobile || m_Mobile.Combatant == mTarget || m_Mobile.ControlMaster !=null && m_Mobile.ControlMaster != mTarget ||
+                    mTarget.Map != m_Mobile.Map || distance > 45)
                 {
                     m_Mobile.TargetLocation = null;
                     return false; // Do not herd after being attacked by the herder, if they are dead, or if they leave the area
@@ -1438,6 +1432,7 @@ namespace Server.Mobiles
                 if (distance > 1)
                 {
                     bool bRun = distance > 5;
+
                     WalkMobileRange(mTarget, 1, bRun, 0, 1);
                 }
 
@@ -1447,6 +1442,7 @@ namespace Server.Mobiles
             if (distance < 1 || distance > 15)
             {
                 m_Mobile.TargetLocation = null;
+
                 return false; // Stop herding when target is reached or too far away (does not apply to shepherd)
             }
 
@@ -1880,9 +1876,9 @@ namespace Server.Mobiles
 
         private class TransferItem : Item
         {
-            public static bool IsInCombat(BaseCreature creature)
+            public static bool IsInCombat(Mobile creature)
             {
-                return (creature != null && (creature.Aggressors.Count > 0 || creature.Aggressed.Count > 0));
+                return creature != null && (creature.Aggressors.Count > 0 || creature.Aggressed.Count > 0);
             }
 
             private readonly BaseCreature m_Creature;
