@@ -1,4 +1,5 @@
 using Server.Mobiles;
+using Server.Network;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -136,6 +137,26 @@ namespace Server.Engines.Quests
 
         public virtual bool CanOffer()
         {
+            return true;
+        }
+
+        public bool TeachQuestCheck(SkillName skillname)
+        {
+            PlayerMobile pm = Owner;
+            Mobile quester = Quester as Mobile;
+
+            if (pm.AcceleratedStart > DateTime.UtcNow)
+            {
+                quester.PublicOverheadMessage(MessageType.Regular, 0x3B2, 1079287); // You may not take a new player quest while under the effects of a Scroll of Alacrity.
+                return false;
+            }
+
+            if (Owner.Skills[skillname].Base >= 50)
+            {
+                quester.PublicOverheadMessage(MessageType.Regular, 0x3B2, 1077772); // I cannot teach you, for you know all I can teach!
+                return false;
+            }
+
             return true;
         }
 
