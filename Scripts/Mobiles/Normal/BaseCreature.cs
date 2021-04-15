@@ -152,7 +152,7 @@ namespace Server.Mobiles
 
     public class DamageStore : IComparable
     {
-        public Mobile m_Mobile;
+        public readonly Mobile m_Mobile;
         public int m_Damage;
         public bool m_HasRight;
 
@@ -522,7 +522,7 @@ namespace Server.Mobiles
         #endregion
 
         #region Pet Training
-        public static double MaxTameRequirement = 108.0;
+        public const double MaxTameRequirement = 108.0;
 
         private AbilityProfile _Profile;
         private TrainingProfile _TrainingProfile;
@@ -791,7 +791,7 @@ namespace Server.Mobiles
 
         public static bool IsSoulboundEnemies => Engines.Fellowship.ForsakenFoesEvent.Instance.Running;
 
-        public static Type[] _SoulboundCreatures =
+        public static readonly Type[] _SoulboundCreatures =
         {
             typeof(MerchantCaptain), typeof(PirateCrew), typeof(PirateCaptain), typeof(MerchantCrew), typeof(Osiredon), typeof(Charydbis), typeof(CorgulTheSoulBinder)
         };
@@ -1872,8 +1872,8 @@ namespace Server.Mobiles
         #endregion
 
         #region SA / High Seas Tasty Treats/Vial of Armor Essense
-        private int m_TempDamageBonus = 0;
-        private int m_TempDamageAbsorb = 0;
+        private int m_TempDamageBonus;
+        private int m_TempDamageAbsorb;
 
         public int TempDamageBonus { get => m_TempDamageBonus; set => m_TempDamageBonus = value; }
         public int TempDamageAbsorb { get => m_TempDamageAbsorb; set => m_TempDamageAbsorb = value; }
@@ -2883,7 +2883,7 @@ namespace Server.Mobiles
             return false;
         }
 
-        public virtual bool CheckFoodPreference(Item fed, FoodType type, Type[] types)
+        public virtual bool CheckFoodPreference(Item fed, FoodType type, IEnumerable<Type> types)
         {
             if ((FavoriteFood & type) == 0)
             {
@@ -4362,7 +4362,7 @@ namespace Server.Mobiles
 
         private static Mobile m_NoDupeGuards;
 
-        public void ReleaseGuardDupeLock()
+        public static void ReleaseGuardDupeLock()
         {
             m_NoDupeGuards = null;
         }
@@ -5525,25 +5525,7 @@ namespace Server.Mobiles
             }
         }
 
-        public virtual bool IsAggressiveMonster => IsMonster 
-        										&&
-        										 ( m_FightMode == FightMode.Closest 
-        										|| m_FightMode == FightMode.Strongest 
-        										|| m_FightMode == FightMode.Weakest 
-        										|| m_FightMode == FightMode.Good
-        										 );
-
-        private class FKEntry
-        {
-            public Mobile m_Mobile;
-            public int m_Damage;
-
-            public FKEntry(Mobile m, int damage)
-            {
-                m_Mobile = m;
-                m_Damage = damage;
-            }
-        }
+        public virtual bool IsAggressiveMonster => IsMonster && ( m_FightMode == FightMode.Closest || m_FightMode == FightMode.Strongest || m_FightMode == FightMode.Weakest || m_FightMode == FightMode.Good);
 
         public List<DamageStore> LootingRights { get; set; }
 
@@ -6252,7 +6234,7 @@ namespace Server.Mobiles
             return true;
         }
 
-        private static readonly bool EnableRummaging = true;
+        private const bool EnableRummaging = true;
 
         private const double ChanceToRummage = 0.5; // 50%
 
@@ -7465,7 +7447,7 @@ namespace Server.Mobiles
 
         public List<BaseCreature> ToDelete { get; set; } = new List<BaseCreature>();
 
-        public CreatureDeleteTimer()
+        private CreatureDeleteTimer()
             : base(TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(5))
         {
             Priority = TimerPriority.OneMinute;
