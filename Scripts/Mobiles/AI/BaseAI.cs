@@ -1419,10 +1419,30 @@ namespace Server.Mobiles
 
             double distance = m_Mobile.GetDistanceToSqrt(target);
 
+            if (target is Mobile mTarget)
+            {
+                if (!mTarget.Alive || mTarget.Combatant == m_Mobile || m_Mobile.Combatant == mTarget)
+                {
+                    m_Mobile.TargetLocation = null;
+                    return false; // Do not herd after being attacked by the herder or if they are dead
+                }
+
+                m_Mobile.CurrentSpeed = m_Mobile.ActiveSpeed;
+
+                if (distance > 1)
+                {
+                    bool bRun = distance > 5;
+
+                    WalkMobileRange(mTarget, 1, bRun, 0, 1);
+                }
+
+                return true;
+            }
+
             if (distance < 1 || distance > 15)
             {
                 m_Mobile.TargetLocation = null;
-                return false; // At the target or too far away
+                return false; // Stop herding when target is reached or too far away (does not apply to shepherd)
             }
 
             DoMove(m_Mobile.GetDirectionTo(target));
@@ -1458,17 +1478,13 @@ namespace Server.Mobiles
                     m_Mobile.DebugSay("My master told me to follow: {0}", m_Mobile.ControlTarget.Name);
 
                     // Not exactly OSI style, but better than nothing.
-                    bool bRun = (iCurrDist > 5);
+                    bool bRun = iCurrDist > 5;
 
                     if (WalkMobileRange(m_Mobile.ControlTarget, 1, bRun, 0, 1))
                     {
-                        if (m_Mobile.Combatant != null && !m_Mobile.Combatant.Deleted && m_Mobile.Combatant.Alive &&
-                            (!(m_Mobile.Combatant is Mobile) || !((Mobile)m_Mobile.Combatant).IsDeadBondedPet))
+                        if (m_Mobile.Combatant != null && !m_Mobile.Combatant.Deleted && m_Mobile.Combatant.Alive && (!(m_Mobile.Combatant is Mobile) || !((Mobile)m_Mobile.Combatant).IsDeadBondedPet))
                         {
                             m_Mobile.Warmode = true;
-
-                            //if (!DirectionLocked)
-                            //	m_Mobile.Direction = m_Mobile.GetDirectionTo(m_Mobile.Combatant);
                         }
                         else
                         {
