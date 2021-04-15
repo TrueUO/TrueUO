@@ -1421,10 +1421,16 @@ namespace Server.Mobiles
 
             if (target is Mobile mTarget)
             {
-                if (!mTarget.Alive || mTarget.Combatant == m_Mobile || m_Mobile.Combatant == mTarget)
+
+                if (!mTarget.Alive ||
+                    mTarget.Combatant == m_Mobile ||
+                    m_Mobile.Combatant == mTarget ||
+                    (m_Mobile.ControlMaster !=null && m_Mobile.ControlMaster != mTarget) ||
+                    mTarget.Map != m_Mobile.Map ||
+                    distance > 45)
                 {
                     m_Mobile.TargetLocation = null;
-                    return false; // Do not herd after being attacked by the herder or if they are dead
+                    return false; // Do not herd after being attacked by the herder, if they are dead, or if they leave the area
                 }
 
                 m_Mobile.CurrentSpeed = m_Mobile.ActiveSpeed;
@@ -1432,7 +1438,6 @@ namespace Server.Mobiles
                 if (distance > 1)
                 {
                     bool bRun = distance > 5;
-
                     WalkMobileRange(mTarget, 1, bRun, 0, 1);
                 }
 
