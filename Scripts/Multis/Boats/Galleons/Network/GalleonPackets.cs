@@ -1,10 +1,10 @@
-﻿using Server.Multis;
+using Server.Multis;
 
 namespace Server.Network
 {
     public sealed class BoatDriverLock : Packet
     {
-        public BoatDriverLock(Mobile m) : base(0xBF)
+        public BoatDriverLock(IEntity m) : base(0xBF)
         {
             short length = 19;
             EnsureCapacity(length);

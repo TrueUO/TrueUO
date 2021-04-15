@@ -10,7 +10,7 @@ namespace Server
         private static readonly Dictionary<string, NameList> m_Table;
         private readonly string m_Type;
         private readonly string[] m_List;
-        public NameList(string type, XmlElement xml)
+        public NameList(string type, XmlNode xml)
         {
             m_Type = type;
             m_List = xml.InnerText.Split(',');
