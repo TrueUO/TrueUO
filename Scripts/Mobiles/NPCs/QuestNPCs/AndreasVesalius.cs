@@ -49,15 +49,7 @@ namespace Server.Engines.Quests
 
         public override bool CanOffer()
         {
-            PlayerMobile pm = Owner;
-
-            if (pm.AcceleratedStart > DateTime.UtcNow)
-            {
-                Owner.SendLocalizedMessage(1077951); // You are already under the effect of an accelerated skillgain scroll.
-                return false;
-            }
-
-            return Owner.Skills.Anatomy.Base < 50;
+            return TeachQuestCheck(SkillName.Anatomy);
         }
 
         public override void OnCompleted()
@@ -103,11 +95,6 @@ namespace Server.Engines.Quests
         public override void Advertise()
         {
             Say(1078138); // Learning of the body will allow you to excel in combat.
-        }
-
-        public override void OnOfferFailed()
-        {
-            Say(1077772); // I cannot teach you, for you know all I can teach!
         }
 
         public override void InitBody()
