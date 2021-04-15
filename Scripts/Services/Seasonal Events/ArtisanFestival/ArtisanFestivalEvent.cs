@@ -256,28 +256,34 @@ namespace Server.Engines.ArtisanFestival
 
         private void IncreaseStage(int newStage)
         {
-            if (newStage > 0)
+            while (true)
             {
-                RemoveCurrentTCMessage();
-            }
-
-            if (newStage < Stages)
-            {
-                var cityInstance = CityLoyaltySystem.GetCityInstance(CityOrder[newStage]);
-
-                if (cityInstance != null && cityInstance.Treasury >= _DefaultCityGold)
+                if (newStage > 0)
                 {
-                    Stage++;
-                    AddCurrentTCMessage();
+                    RemoveCurrentTCMessage();
+                }
+
+                if (newStage < Stages)
+                {
+                    var cityInstance = CityLoyaltySystem.GetCityInstance(CityOrder[newStage]);
+
+                    if (cityInstance != null && cityInstance.Treasury >= _DefaultCityGold)
+                    {
+                        Stage++;
+                        AddCurrentTCMessage();
+                    }
+                    else
+                    {
+                        newStage = ++newStage;
+                        continue;
+                    }
                 }
                 else
                 {
-                    IncreaseStage(++newStage);
+                    Deactivate();
                 }
-            }
-            else
-            {
-                Deactivate();
+
+                break;
             }
         }
 

@@ -711,15 +711,34 @@ namespace Server.Engines.Shadowguard
 
         private void InvalidateID()
         {
-            switch (ItemID)
+            while (true)
             {
-                default: ItemID = 39911; InvalidateID(); break;
-                case 39911: _Flow = Flow.NorthSouth; break;
-                case 39915: _Flow = Flow.SouthEastCorner; break;
-                case 39919: _Flow = Flow.SouthWestCorner; break;
-                case 39924: _Flow = Flow.EastWest; break;
-                case 39928: _Flow = Flow.NorthEastCorner; break;
-                case 39932: _Flow = Flow.NorthWestCorner; break;
+                switch (ItemID)
+                {
+                    default:
+                        ItemID = 39911;
+                        continue;
+                    case 39911:
+                        _Flow = Flow.NorthSouth;
+                        break;
+                    case 39915:
+                        _Flow = Flow.SouthEastCorner;
+                        break;
+                    case 39919:
+                        _Flow = Flow.SouthWestCorner;
+                        break;
+                    case 39924:
+                        _Flow = Flow.EastWest;
+                        break;
+                    case 39928:
+                        _Flow = Flow.NorthEastCorner;
+                        break;
+                    case 39932:
+                        _Flow = Flow.NorthWestCorner;
+                        break;
+                }
+
+                break;
             }
         }
 
