@@ -181,7 +181,7 @@ namespace Server.Gumps
 
     public class XmlCategorizedAddGump : Gump
     {
-        public static bool OldStyle = PropsConfig.OldStyle;
+        public static readonly bool OldStyle = PropsConfig.OldStyle;
 
         public static readonly int GumpOffsetX = PropsConfig.GumpOffsetX;
         public static readonly int GumpOffsetY = PropsConfig.GumpOffsetY;

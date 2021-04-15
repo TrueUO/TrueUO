@@ -11420,7 +11420,6 @@ namespace Server.Mobiles
                 return NewSpawnObjects.ToArray();
             }
         }
-
         #endregion
     }
 }
