@@ -928,9 +928,9 @@ namespace Server.Mobiles
                     // then parse to get the index value
                     string[] arrayvalue = arraystring[1].Split(']');
 
-                    if (arrayvalue.Length > 0)
+                    if (arrayvalue.Length > 0 && (!int.TryParse(arrayvalue[0], out index)))
                     {
-                        if (!int.TryParse(arrayvalue[0], out index)) index = -1;
+                        index = -1;
                     }
                 }
 
@@ -941,7 +941,8 @@ namespace Server.Mobiles
 
                     if (plookup != null)
                     {
-                        if (!plookup.CanRead) return "Property is write only.";
+                        if (!plookup.CanRead)
+                            return "Property is write only.";
 
                         ptype = plookup.PropertyType;
                         if (ptype.IsPrimitive)
