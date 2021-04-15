@@ -8,16 +8,16 @@ namespace Server.Gumps
 {
     public class XmlSetListOptionGump : Gump
     {
-        protected PropertyInfo m_Property;
-        protected Mobile m_Mobile;
-        protected object m_Object;
+        protected readonly PropertyInfo m_Property;
+        protected readonly Mobile m_Mobile;
+        protected readonly object m_Object;
 #if (NEWTIMERS)
-        protected Stack<PropertiesGump.StackEntry> m_Stack;
+        protected readonly Stack<PropertiesGump.StackEntry> m_Stack;
 #else
 		protected Stack m_Stack;
 #endif
-        protected int m_Page;
-        protected ArrayList m_List;
+        protected readonly int m_Page;
+        protected readonly ArrayList m_List;
 
         public static readonly bool OldStyle = PropsConfig.OldStyle;
 
@@ -53,8 +53,8 @@ namespace Server.Gumps
         public static readonly int EntryHeight = PropsConfig.EntryHeight;
         public static readonly int BorderSize = PropsConfig.BorderSize;
 
-        private static readonly int EntryWidth = 212;
-        private static readonly int EntryCount = 13;
+        private const int EntryWidth = 212;
+        private const int EntryCount = 13;
 
         private static readonly int TotalWidth = OffsetSize + EntryWidth + OffsetSize + SetWidth + OffsetSize;
 
@@ -63,15 +63,15 @@ namespace Server.Gumps
         private static readonly bool PrevLabel = OldStyle, NextLabel = OldStyle;
 
         private static readonly int PrevLabelOffsetX = PrevWidth + 1;
-        private static readonly int PrevLabelOffsetY = 0;
+        private const int PrevLabelOffsetY = 0;
 
-        private static readonly int NextLabelOffsetX = -29;
-        private static readonly int NextLabelOffsetY = 0;
+        private const int NextLabelOffsetX = -29;
+        private const int NextLabelOffsetY = 0;
 
-        protected object[] m_Values;
+        protected readonly object[] m_Values;
 
 #if (NEWTIMERS)
-        public XmlSetListOptionGump(PropertyInfo prop, Mobile mobile, object o, Stack<PropertiesGump.StackEntry> stack, int propspage, ArrayList list, string[] names, object[] values) : base(GumpOffsetX, GumpOffsetY)
+        public XmlSetListOptionGump(PropertyInfo prop, Mobile mobile, object o, Stack<PropertiesGump.StackEntry> stack, int propspage, ArrayList list, IReadOnlyList<string> names, object[] values) : base(GumpOffsetX, GumpOffsetY)
 #else
 		public XmlSetListOptionGump( PropertyInfo prop, Mobile mobile, object o, Stack stack, int propspage, ArrayList list, string[] names, object[] values ) : base( GumpOffsetX, GumpOffsetY )
 #endif
@@ -85,7 +85,7 @@ namespace Server.Gumps
 
             m_Values = values;
 
-            int pages = (names.Length + EntryCount - 1) / EntryCount;
+            int pages = (names.Count + EntryCount - 1) / EntryCount;
             int index = 0;
 
             for (int page = 1; page <= pages; ++page)
@@ -93,7 +93,7 @@ namespace Server.Gumps
                 AddPage(page);
 
                 int start = (page - 1) * EntryCount;
-                int count = names.Length - start;
+                int count = names.Count - start;
 
                 if (count > EntryCount)
                     count = EntryCount;

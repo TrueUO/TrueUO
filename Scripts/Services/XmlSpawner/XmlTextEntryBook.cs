@@ -21,7 +21,8 @@ namespace Server.Items
             // break up the text into single line length pieces
             while (text != null && current < text.Length)
             {
-                int lineCount = 10;
+                const int lineCount = 10;
+
                 string[] lines = new string[lineCount];
 
                 // place the line on the page

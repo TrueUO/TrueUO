@@ -46,7 +46,7 @@ namespace Server.Gumps
         public static readonly int EntryHeight = PropsConfig.EntryHeight;
         public static readonly int BorderSize = PropsConfig.BorderSize;
 
-        private static readonly int EntryWidth = 212;
+        private const int EntryWidth = 212;
 
         private static readonly int TotalWidth = OffsetSize + EntryWidth + OffsetSize + SetWidth + OffsetSize;
         private static readonly int TotalHeight = OffsetSize + 5 * (EntryHeight + OffsetSize);

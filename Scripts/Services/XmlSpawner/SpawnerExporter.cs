@@ -70,7 +70,7 @@ namespace Server.Mobiles
                 return false;
             }
 
-            private void ExportSpawners(ArrayList spawners, string filename)
+            private static void ExportSpawners(ICollection spawners, string filename)
             {
                 if (spawners.Count == 0)
                     return;
@@ -104,7 +104,7 @@ namespace Server.Mobiles
                 }
             }
 
-            private void ExportSpawner(Spawner spawner, XmlWriter xml)
+            private static void ExportSpawner(Spawner spawner, XmlWriter xml)
             {
                 xml.WriteStartElement("spawner");
 

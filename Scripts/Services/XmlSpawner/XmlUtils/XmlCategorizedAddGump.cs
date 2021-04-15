@@ -212,7 +212,7 @@ namespace Server.Gumps
 
         public static readonly int OffsetSize = PropsConfig.OffsetSize;
 
-        public static readonly int EntryHeight = 24;
+        public const int EntryHeight = 24;
         public static readonly int BorderSize = PropsConfig.BorderSize;
 
         private static readonly bool PrevLabel = false, NextLabel = false;
@@ -292,7 +292,7 @@ namespace Server.Gumps
             int y = BorderSize + OffsetSize;
 
             if (OldStyle)
-                AddImageTiled(x, y, TotalWidth - (OffsetSize * 3) - SetWidth, EntryHeight, HeaderGumpID);
+                AddImageTiled(x, y, TotalWidth - OffsetSize * 3 - SetWidth, EntryHeight, HeaderGumpID);
             else
                 AddImageTiled(x, y, PrevWidth, EntryHeight, HeaderGumpID);
 
@@ -364,12 +364,12 @@ namespace Server.Gumps
 
                     Rectangle2D bounds = ItemBounds.Table[itemID];
 
-                    if (itemID != 1 && bounds.Height < (EntryHeight * 2))
+                    if (itemID != 1 && bounds.Height < EntryHeight * 2)
                     {
                         if (bounds.Height < EntryHeight)
                             AddItem(x - OffsetSize - 22 - ((i % 2) * 44) - (bounds.Width / 2) - bounds.X, y + (EntryHeight / 2) - (bounds.Height / 2) - bounds.Y, itemID);
                         else
-                            AddItem(x - OffsetSize - 22 - ((i % 2) * 44) - (bounds.Width / 2) - bounds.X, y + EntryHeight - 1 - bounds.Height - bounds.Y, itemID);
+                            AddItem(x - OffsetSize - 22 - ((i % 2) * 44) - bounds.Width / 2 - bounds.X, y + EntryHeight - 1 - bounds.Height - bounds.Y, itemID);
                     }
                 }
             }

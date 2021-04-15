@@ -51,7 +51,7 @@ namespace Server.Mobiles
 
             }
 
-            public void GumpDisplayCallback(object state)
+            public static void GumpDisplayCallback(object state)
             {
                 object[] args = (object[])state;
 
@@ -78,7 +78,7 @@ namespace Server.Mobiles
         public class SearchEntry
         {
             public bool Selected;
-            public object Object;
+            public readonly object Object;
 
             public SearchEntry(object o)
             {
