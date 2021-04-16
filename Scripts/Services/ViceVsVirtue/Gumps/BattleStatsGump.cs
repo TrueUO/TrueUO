@@ -11,7 +11,7 @@ namespace Server.Engines.VvV
 
         public static readonly int Color16 = Quests.BaseQuestGump.C32216(0xB22222);
 
-        public BattleStatsGump(PlayerMobile pm, VvVBattle battle)
+        public BattleStatsGump(Mobile pm, VvVBattle battle)
             : base(50, 50)
         {
             Battle = battle;

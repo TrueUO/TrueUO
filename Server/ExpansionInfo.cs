@@ -190,13 +190,13 @@ namespace Server
 		}
 
 		public int ID { get; }
-		public string Name { get; set; }
+		public string Name { get; }
 
-		public ClientFlags ClientFlags { get; set; }
-		public FeatureFlags SupportedFeatures { get; set; }
-		public CharacterListFlags CharacterListFlags { get; set; }
-		public ClientVersion RequiredClient { get; set; }
-		public HousingFlags CustomHousingFlag { get; set; }
+		public ClientFlags ClientFlags { get; }
+		public FeatureFlags SupportedFeatures { get; }
+		public CharacterListFlags CharacterListFlags { get; }
+		public ClientVersion RequiredClient { get; }
+		public HousingFlags CustomHousingFlag { get; }
 
 		public ExpansionInfo(
 			int id,

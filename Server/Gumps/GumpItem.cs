@@ -68,10 +68,10 @@ namespace Server.Gumps
         {
             if (m_Hue == 0)
             {
-                return string.Format("{{ tilepic {0} {1} {2} }}", m_X, m_Y, m_ItemID);
+                return $"{{ tilepic {m_X} {m_Y} {m_ItemID} }}";
             }
 
-            return string.Format("{{ tilepichue {0} {1} {2} {3} }}", m_X, m_Y, m_ItemID, m_Hue);
+            return $"{{ tilepichue {m_X} {m_Y} {m_ItemID} {m_Hue} }}";
         }
 
 		private static readonly byte[] m_LayoutName = Gump.StringToBuffer("tilepic");

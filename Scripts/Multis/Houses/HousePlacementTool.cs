@@ -260,7 +260,7 @@ namespace Server.Items
 
                 HousePlacementEntry entry = entries[i];
 
-                int y = 70 + (index * 20);
+                int y = 70 + index * 20;
                 int storage = (int)(entry.Storage * BaseHouse.GlobalBonusStorageScalar);
                 int lockdowns = (int)(entry.Lockdowns * BaseHouse.GlobalBonusStorageScalar);
 
@@ -320,7 +320,7 @@ namespace Server.Items
             }
             else
             {
-                page = 1 + (i / 14);
+                page = 1 + i / 14;
                 index = i % 14;
             }
         }
@@ -355,8 +355,10 @@ namespace Server.Items
 
             if (ip != null)
             {
-                if (ip is Item)
-                    ip = ((Item)ip).GetWorldTop();
+                if (ip is Item item)
+                {
+                    ip = item.GetWorldTop();
+                }
 
                 Point3D p = new Point3D(ip);
 
@@ -445,16 +447,16 @@ namespace Server.Items
             new HousePlacementEntry(typeof(TheTerraceGardens),          1159269,    4076,   2038,   4688,   2344,   78, 46136250, 0, 16,    0,  0x149B),
             new HousePlacementEntry(typeof(TheKeepCalmAndCarryOnKeep),  1159414,    2625,   1312,   3019,   1509,   52, 23006250, 0, 11,    0,  0x149C),
             new HousePlacementEntry(typeof(TheRavenloftKeep),           1159415,    2625,   1312,   3019,   1509,   52, 24457500, 0, 11,    0,  0x149D),
-            new HousePlacementEntry(typeof(TheQueensRetreatKeep),       1159416,    2625,   1312,   3019,   1509,   52, 27641250, 0, 11,    0,  0x149E),
+            new HousePlacementEntry(typeof(TheQueensRetreatKeep),       1159416,    2625,   1312,   3019,   1509,   52, 27641250, 0, 11,    0,  0x149E)
         };
 
-        private static readonly HousePlacementEntry[] m_CustomHouseContest = new HousePlacementEntry[]
+        private static readonly HousePlacementEntry[] m_CustomHouseContest =
         {
             new HousePlacementEntry(typeof(HouseFoundation), 1158538,   2625,   1312,   3019,   1509,   78, 525000, 0,  10, 0,  0x147C), // 23x23 3-Story Customizable Keep
-            new HousePlacementEntry(typeof(HouseFoundation), 1158539,   4076,   2038,   4688,   2344,   78, 525000, 0,  10, 0,  0x147D),  // 32x32 3-Story Customizable Castle
+            new HousePlacementEntry(typeof(HouseFoundation), 1158539,   4076,   2038,   4688,   2344,   78, 525000, 0,  10, 0,  0x147D) // 32x32 3-Story Customizable Castle
         };
 
-        private static readonly HousePlacementEntry[] m_TwoStoryFoundations = new HousePlacementEntry[]
+        private static readonly HousePlacementEntry[] m_TwoStoryFoundations =
         {
             new HousePlacementEntry(typeof(HouseFoundation), 1060241,   425,    212,    489,    244,    10, 33000, 0,   4,  0,  0x13EC), // 7x7 2-Story Customizable House
             new HousePlacementEntry(typeof(HouseFoundation), 1060242,   580,    290,    667,    333,    14, 37000, 0,   5,  0,  0x13ED), // 7x8 2-Story Customizable House
@@ -505,7 +507,7 @@ namespace Server.Items
             new HousePlacementEntry(typeof(HouseFoundation), 1060319,   1300,   650,    1495,   747,    28, 102000, 0,  7,  0,  0x143A)// 13x13 2-Story Customizable House
         };
 
-        private static readonly HousePlacementEntry[] m_ThreeStoryFoundations = new HousePlacementEntry[]
+        private static readonly HousePlacementEntry[] m_ThreeStoryFoundations =
         {
             new HousePlacementEntry(typeof(HouseFoundation), 1060272,   1150,   575,    1323,   661,    24, 77000, 0,   8,  0,  0x140B), // 9x14 3-Story Customizable House
             new HousePlacementEntry(typeof(HouseFoundation), 1060284,   1200,   600,    1380,   690,    26, 85000, 0,   8,  0,  0x1417), // 10x14 3-Story Customizable House
@@ -621,30 +623,31 @@ namespace Server.Items
         {
             object obj = m_Table[house.GetType()];
 
-            if (obj is HousePlacementEntry)
+            if (obj is HousePlacementEntry entry)
             {
-                return ((HousePlacementEntry)obj);
+                return entry;
             }
-            else if (obj is ArrayList)
-            {
-                ArrayList list = (ArrayList)obj;
 
+            if (obj is ArrayList list)
+            {
                 for (int i = 0; i < list.Count; ++i)
                 {
                     HousePlacementEntry e = (HousePlacementEntry)list[i];
 
                     if (e.m_MultiID == house.ItemID)
+                    {
                         return e;
+                    }
                 }
             }
-            else if (obj is Hashtable)
+            else if (obj is Hashtable table)
             {
-                Hashtable table = (Hashtable)obj;
-
                 obj = table[house.ItemID];
 
-                if (obj is HousePlacementEntry)
-                    return (HousePlacementEntry)obj;
+                if (obj is HousePlacementEntry placementEntry)
+                {
+                    return placementEntry;
+                }
             }
 
             return null;
@@ -737,17 +740,17 @@ namespace Server.Items
 
                             house.MoveToWorld(center, from.Map);
 
-                            if (house is HouseFoundation)
-                                ((HouseFoundation)house).OnPlacement();
+                            if (house is HouseFoundation foundation)
+                                foundation.OnPlacement();
 
                             for (int i = 0; i < toMove.Count; ++i)
                             {
                                 object o = toMove[i];
 
-                                if (o is Mobile)
-                                    ((Mobile)o).Location = house.BanLocation;
-                                else if (o is Item)
-                                    ((Item)o).Location = house.BanLocation;
+                                if (o is Mobile mobile)
+                                    mobile.Location = house.BanLocation;
+                                else if (o is Item item)
+                                    item.Location = house.BanLocation;
                             }
 
                             if (tool != null)
@@ -833,10 +836,10 @@ namespace Server.Items
                         {
                             object o = toMove[i];
 
-                            if (o is Mobile)
-                                ((Mobile)o).Location = banLoc;
-                            else if (o is Item)
-                                ((Item)o).Location = banLoc;
+                            if (o is Mobile mobile)
+                                mobile.Location = banLoc;
+                            else if (o is Item item)
+                                item.Location = banLoc;
                         }
 
                         prev.MoveToWorld(center, from.Map);
@@ -917,10 +920,8 @@ namespace Server.Items
 
                     m_Table[e.m_Type] = list;
                 }
-                else if (obj is ArrayList)
+                else if (obj is ArrayList list)
                 {
-                    ArrayList list = (ArrayList)obj;
-
                     if (list.Count == 8)
                     {
                         Hashtable table = new Hashtable();
@@ -937,9 +938,9 @@ namespace Server.Items
                         list.Add(e);
                     }
                 }
-                else if (obj is Hashtable)
+                else if (obj is Hashtable hashtable)
                 {
-                    ((Hashtable)obj)[e.m_MultiID] = e;
+                    hashtable[e.m_MultiID] = e;
                 }
             }
         }
@@ -1002,7 +1003,7 @@ namespace Server.Items
 
             for (int i = 0; i < m_Entries.Length; ++i)
             {
-                int page = 1 + (i / 14);
+                int page = 1 + i / 14;
                 int index = i % 14;
 
                 if (index == 0)
@@ -1024,7 +1025,7 @@ namespace Server.Items
 
                 HousePlacementEntry entry = m_Entries[i];
 
-                int y = 70 + (index * 20);
+                int y = 70 + index * 20;
                 int storage = (int)(entry.Storage * BaseHouse.GlobalBonusStorageScalar);
                 int lockdowns = (int)(entry.Lockdowns * BaseHouse.GlobalBonusStorageScalar);
 
@@ -1095,10 +1096,10 @@ namespace Server.Items
 
                             foreach (Mobile mobile in newHouse.InternalizedVendors)
                             {
-                                if (mobile is PlayerVendor)
-                                    ((PlayerVendor)mobile).House = newHouse;
-                                else if (mobile is PlayerBarkeeper)
-                                    ((PlayerBarkeeper)mobile).House = newHouse;
+                                if (mobile is PlayerVendor playerVendor)
+                                    playerVendor.House = newHouse;
+                                else if (mobile is PlayerBarkeeper playerBarkeeper)
+                                    playerBarkeeper.House = newHouse;
                             }
 
                             if (m_House.MovingCrate != null)

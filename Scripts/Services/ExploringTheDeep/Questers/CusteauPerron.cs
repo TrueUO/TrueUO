@@ -8,8 +8,6 @@ namespace Server.Mobiles
 {
     public class CousteauPerron : Mobile
     {
-        public virtual bool IsInvulnerable => true;
-
         [Constructable]
         public CousteauPerron()
         {
@@ -22,12 +20,12 @@ namespace Server.Mobiles
             CantWalk = true;
             Hue = Utility.RandomSkinHue();
             Utility.AssignRandomHair(this);
+            HairItemID = 0x203C;
 
             AddItem(new Backpack());
             AddItem(new FurBoots(2017));
             AddItem(new LongPants(2017));
             AddItem(new Doublet(1326));
-            AddItem(new LongHair(2213));
             AddItem(new Cloak(2017));
             AddItem(new Cap(398));
 
@@ -35,6 +33,7 @@ namespace Server.Mobiles
             {
                 Hue = 2213
             };
+
             AddItem(gloves);
         }
 
