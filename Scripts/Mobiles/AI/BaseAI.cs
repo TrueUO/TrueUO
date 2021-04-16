@@ -2147,7 +2147,7 @@ namespace Server.Mobiles
         {
             if (DateTime.UtcNow >= m_Mobile.BardEndTime && (m_Mobile.BardMaster == null || m_Mobile.BardMaster.Deleted ||
                                                             m_Mobile.BardMaster.Map != m_Mobile.Map ||
-                                                            m_Mobile.GetDistanceToSqrt(m_Mobile.BardMaster) > m_Mobile.RangePerception))
+                                                            !m_Mobile.InRange((IPoint3D)m_Mobile.BardMaster, m_Mobile.RangePerception)))
             {
                 m_Mobile.DebugSay("I have lost my provoker");
                 m_Mobile.BardProvoked = false;
@@ -2159,8 +2159,9 @@ namespace Server.Mobiles
             }
             else
             {
-                if (m_Mobile.BardTarget == null || m_Mobile.BardTarget.Deleted || m_Mobile.BardTarget.Map != m_Mobile.Map ||
-                    m_Mobile.GetDistanceToSqrt(m_Mobile.BardTarget) > m_Mobile.RangePerception)
+                m_Mobile.BardEndTime = DateTime.UtcNow + TimeSpan.FromSeconds(30.0);
+
+                if (m_Mobile.BardTarget == null || m_Mobile.BardTarget.Deleted || m_Mobile.BardTarget.Map != m_Mobile.Map || !m_Mobile.InRange((IPoint3D)m_Mobile.BardTarget, m_Mobile.RangePerception))
                 {
                     m_Mobile.DebugSay("I have lost my provoke target");
                     m_Mobile.BardProvoked = false;
