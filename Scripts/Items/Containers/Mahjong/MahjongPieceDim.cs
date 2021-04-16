@@ -1,6 +1,6 @@
 namespace Server.Engines.Mahjong
 {
-    public struct MahjongPieceDim
+    public readonly struct MahjongPieceDim
     {
         private readonly Point2D m_Position;
         private readonly int m_Width;

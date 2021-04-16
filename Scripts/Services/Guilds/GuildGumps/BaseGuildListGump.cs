@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Server.Guilds
 {
-    public struct InfoField<T>
+    public readonly struct InfoField<T>
     {
         public InfoField(TextDefinition name, int width, IComparer<T> comparer)
         {
