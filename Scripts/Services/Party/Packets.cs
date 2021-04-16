@@ -34,7 +34,7 @@ namespace Server.Engines.PartySystem
 
     public sealed class PartyRemoveMember : Packet
     {
-        public PartyRemoveMember(Mobile removed, Party p)
+        public PartyRemoveMember(IEntity removed, Party p)
             : base(0xBF)
         {
             EnsureCapacity(11 + p.Count * 4);
@@ -52,7 +52,7 @@ namespace Server.Engines.PartySystem
 
     public sealed class PartyTextMessage : Packet
     {
-        public PartyTextMessage(bool toAll, Mobile from, string text)
+        public PartyTextMessage(bool toAll, IEntity from, string text)
             : base(0xBF)
         {
             if (text == null)
@@ -69,7 +69,7 @@ namespace Server.Engines.PartySystem
 
     public sealed class PartyInvitation : Packet
     {
-        public PartyInvitation(Mobile leader)
+        public PartyInvitation(IEntity leader)
             : base(0xBF)
         {
             EnsureCapacity(10);
