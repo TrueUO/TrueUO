@@ -38,10 +38,10 @@ namespace Server.Engines.UOStore
     {
         public static readonly string FilePath = Path.Combine("Saves/Misc", "UltimaStore.bin");
 
-        public static bool Enabled { get { return Configuration.Enabled; } set { Configuration.Enabled = value; } }
+        public static bool Enabled { get => Configuration.Enabled; set => Configuration.Enabled = value; }
 
-        public static List<StoreEntry> Entries { get; private set; }
-        public static Dictionary<Mobile, List<Item>> PendingItems { get; private set; }
+        public static List<StoreEntry> Entries { get; }
+        public static Dictionary<Mobile, List<Item>> PendingItems { get; }
 
         private static UltimaStoreContainer _UltimaStoreContainer;
 
@@ -640,14 +640,14 @@ namespace Server.Engines.UOStore
                     {
                         if (m.Backpack != null && m.Alive && m.Backpack.TryDropItem(m, item, false))
                         {
-                            if (item is IPromotionalToken && ((IPromotionalToken)item).ItemName != null)
+                            if (item is IPromotionalToken token && token.ItemName != null)
                             {
                                 // A token has been placed in your backpack. Double-click it to redeem your ~1_PROMO~.
-                                m.SendLocalizedMessage(1075248, ((IPromotionalToken)item).ItemName.ToString());
+                                m.SendLocalizedMessage(1075248, token.ItemName.ToString());
                             }
                             else if (item.LabelNumber > 0 || item.Name != null)
                             {
-                                string name = item.LabelNumber > 0 ? ("#" + item.LabelNumber) : item.Name;
+                                string name = item.LabelNumber > 0 ? "#" + item.LabelNumber : item.Name;
 
                                 // Your purchase of ~1_ITEM~ has been placed in your backpack.
                                 m.SendLocalizedMessage(1156844, name);
@@ -691,11 +691,11 @@ namespace Server.Engines.UOStore
             {
                 if (td.Number > 0 && VendorSearch.StringList != null)
                 {
-                    str += string.Format("{0} ", VendorSearch.StringList.GetString(td.Number));
+                    str += $"{VendorSearch.StringList.GetString(td.Number)} ";
                 }
                 else if (!string.IsNullOrWhiteSpace(td.String))
                 {
-                    str += string.Format("{0} ", td.String);
+                    str += $"{td.String} ";
                 }
             }
 
@@ -718,7 +718,7 @@ namespace Server.Engines.UOStore
         {
             if (forcedEntry != null)
             {
-                return new List<StoreEntry>() { forcedEntry };
+                return new List<StoreEntry> { forcedEntry };
             }
 
             return Entries.Where(e => e.Category == cat).ToList();
@@ -780,9 +780,9 @@ namespace Server.Engines.UOStore
             {
                 case CurrencyType.Sovereigns:
                     {
-                        if (m is PlayerMobile)
+                        if (m is PlayerMobile mobile)
                         {
-                            return ((PlayerMobile)m).AccountSovereigns;
+                            return mobile.AccountSovereigns;
                         }
                     }
                     break;
@@ -817,9 +817,9 @@ namespace Server.Engines.UOStore
             }
             else if (total > GetCurrency(m, true))
             {
-                if (m is PlayerMobile)
+                if (m is PlayerMobile mobile)
                 {
-                    BaseGump.SendGump(new NoFundsGump((PlayerMobile)m));
+                    BaseGump.SendGump(new NoFundsGump(mobile));
                 }
             }
             else
@@ -891,7 +891,7 @@ namespace Server.Engines.UOStore
             {
                 case CurrencyType.Sovereigns:
                     {
-                        if (m is PlayerMobile && ((PlayerMobile)m).WithdrawSovereigns(amount))
+                        if (m is PlayerMobile mobile && mobile.WithdrawSovereigns(amount))
                         {
                             return amount;
                         }
@@ -923,7 +923,7 @@ namespace Server.Engines.UOStore
         }
 
         #region Player Persistence
-        public static Dictionary<Mobile, PlayerProfile> PlayerProfiles { get; private set; }
+        public static Dictionary<Mobile, PlayerProfile> PlayerProfiles { get; }
 
         public static PlayerProfile GetProfile(Mobile m, bool create = true)
         {
@@ -1069,7 +1069,7 @@ namespace Server.Engines.UOStore
             return item;
         }
 
-        public Item GetDisplayItem(Type t)
+        public static Item GetDisplayItem(Type t)
         {
             return _DisplayItems.FirstOrDefault(x => x.GetType() == t);
         }
