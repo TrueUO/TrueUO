@@ -17,7 +17,7 @@ namespace Server.Engines.UOStore
     public static class Configuration
     {
         public static bool Enabled { get; set; }
-        public static string Website { get; set; }
+        public static string Website { get; }
 
         /// <summary>
         ///     A hook to allow handling of custom currencies.
@@ -25,17 +25,17 @@ namespace Server.Engines.UOStore
         ///     If 'consume' is less than zero, return the currency total.
         ///     Else deduct from the currency total, return the amount consumed.
         /// </summary>
-        public static CustomCurrencyHandler ResolveCurrency { get; set; }
+        public static CustomCurrencyHandler ResolveCurrency { get; }
 
-        public static CurrencyType CurrencyImpl { get; set; }
-        public static string CurrencyName { get; set; }
-        public static bool CurrencyDisplay { get; set; }
+        public static CurrencyType CurrencyImpl { get; }
+        public static string CurrencyName { get; }
+        public static bool CurrencyDisplay { get; }
 
-        public static PointsType PointsImpl { get; set; }
+        public static PointsType PointsImpl { get; }
 
-        public static double CostMultiplier { get; set; }
+        public static double CostMultiplier { get; }
 
-        public static int CartCapacity { get; set; }
+        public static int CartCapacity { get; }
 
         static Configuration()
         {
