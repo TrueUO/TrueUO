@@ -4,7 +4,7 @@ namespace Server.Engines.PartySystem
 {
     public sealed class PartyEmptyList : Packet
     {
-        public PartyEmptyList(Mobile m)
+        public PartyEmptyList(IEntity m)
             : base(0xBF)
         {
             EnsureCapacity(7);

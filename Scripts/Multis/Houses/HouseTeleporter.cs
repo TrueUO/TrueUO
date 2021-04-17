@@ -37,29 +37,11 @@ namespace Server.Items
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public Item Target
-        {
-            get
-            {
-                return m_Target;
-            }
-            set
-            {
-                m_Target = value;
-            }
-        }
+        public Item Target { get => m_Target; set => m_Target = value; }
+
         [CommandProperty(AccessLevel.GameMaster)]
-        public SecureLevel Level
-        {
-            get
-            {
-                return m_Level;
-            }
-            set
-            {
-                m_Level = value;
-            }
-        }
+        public SecureLevel Level { get => m_Level; set => m_Level = value; }
+
         public virtual bool CheckAccess(Mobile m)
         {
             BaseHouse house = BaseHouse.FindHouseAt(this);
@@ -87,7 +69,7 @@ namespace Server.Items
 
         public override bool OnMoveOver(Mobile m)
         {
-            if (m is PlayerMobile && ((PlayerMobile)m).DesignContext != null)
+            if (m is PlayerMobile mobile && mobile.DesignContext != null)
             {
                 return true;
             }
@@ -115,40 +97,22 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1); // version
 
             writer.Write((int)m_Level);
-
             writer.Write(m_Target);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 1:
-                    {
-                        m_Level = (SecureLevel)reader.ReadInt();
-                        goto case 0;
-                    }
-                case 0:
-                    {
-                        m_Target = reader.ReadItem();
-
-                        if (version < 0)
-                            m_Level = SecureLevel.Anyone;
-
-                        break;
-                    }
-            }
+            m_Level = (SecureLevel)reader.ReadInt();
+            m_Target = reader.ReadItem();
         }
 
-        public virtual void OnAfterTeleport(Mobile m)
+        public virtual void OnAfterTeleport()
         {
         }
 
@@ -214,7 +178,7 @@ namespace Server.Items
                             new EffectTimer(target.Location, target.Map, 2023, -1, TimeSpan.FromSeconds(0.4)).Start();
                         }
 
-                        m_Teleporter.OnAfterTeleport(m);
+                        m_Teleporter.OnAfterTeleport();
                     }
                 }
             }

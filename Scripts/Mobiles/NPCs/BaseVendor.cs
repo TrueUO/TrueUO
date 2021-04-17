@@ -587,11 +587,7 @@ namespace Server.Mobiles
             {
                 Item item = Items[i];
 
-                if (item is Hair || item is Beard)
-                {
-                    item.Hue = 0;
-                }
-                else if (item is BaseClothing || item is BaseWeapon || item is BaseArmor || item is BaseTool)
+                if (item is BaseClothing || item is BaseWeapon || item is BaseArmor || item is BaseTool)
                 {
                     item.Hue = GetRandomNecromancerHue();
                 }

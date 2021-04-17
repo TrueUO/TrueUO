@@ -678,350 +678,360 @@ namespace Server.Mobiles
         // set property values with support for nested attributes
         public static string SetPropertyValue(XmlSpawner spawner, object o, string name, string value)
         {
-            if (o == null)
+            while (true)
             {
-                return "Null object";
-            }
-
-            Type type = o.GetType();
-
-            PropertyInfo[] props = type.GetProperties(BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public);
-
-            // parse the strings of the form property.attribute into two parts
-            // first get the property
-            string[] arglist = ParseString(name, 2, ".");
-
-            string propname = arglist[0];
-
-            // do a bit of parsing to handle array references
-            string[] arraystring = propname.Split('[');
-            int index = 0;
-            if (arraystring.Length > 1)
-            {
-                propname = arraystring[0]; // parse the property name from the indexing
-
-                string[] arrayvalue = arraystring[1].Split(']'); // then parse to get the index value
-
-                if (arrayvalue.Length > 0)
+                if (o == null)
                 {
-                    int.TryParse(arraystring[0], out index);
-                }
-            }
-
-            if (arglist.Length == 2)
-            {
-                PropertyInfo plookup = LookupPropertyInfo(spawner, type, propname);
-
-                object po;
-                if (plookup != null)
-                {
-                    po = plookup.GetValue(o, null);
-
-                    return SetPropertyValue(spawner, po, arglist[1], value); // now set the nested attribute using the new property list
+                    return "Null object";
                 }
 
-                foreach (PropertyInfo p in props) // is a nested property with attributes so first get the property
+                Type type = o.GetType();
+
+                PropertyInfo[] props = type.GetProperties(BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public);
+
+                // parse the strings of the form property.attribute into two parts
+                // first get the property
+                string[] arglist = ParseString(name, 2, ".");
+
+                string propname = arglist[0];
+
+                // do a bit of parsing to handle array references
+                string[] arraystring = propname.Split('[');
+                int index = 0;
+                if (arraystring.Length > 1)
                 {
-                    if (Insensitive.Equals(p.Name, propname))
+                    propname = arraystring[0]; // parse the property name from the indexing
+
+                    string[] arrayvalue = arraystring[1].Split(']'); // then parse to get the index value
+
+                    if (arrayvalue.Length > 0)
                     {
-                        po = p.GetValue(o, null);
-
-                        return SetPropertyValue(spawner, po, arglist[1], value); // now set the nested attribute using the new property list
+                        int.TryParse(arraystring[0], out index);
                     }
                 }
-            }
-            else
-            {
-                // its just a simple single property
 
-                PropertyInfo plookup = LookupPropertyInfo(spawner, type, propname);
-
-                if (plookup != null)
+                if (arglist.Length == 2)
                 {
-                    if (!plookup.CanWrite)
-                        return "Property is read only.";
+                    PropertyInfo plookup = LookupPropertyInfo(spawner, type, propname);
 
-                    string returnvalue = InternalSetValue(null, o, plookup, value, false, index);
-
-                    return returnvalue;
-                }
-                // note, looping through all of the props turns out to be a significant performance bottleneck
-                // good place for optimization
-
-                foreach (PropertyInfo p in props)
-                {
-                    if (Insensitive.Equals(p.Name, propname))
+                    object po;
+                    if (plookup != null)
                     {
-                        if (!p.CanWrite)
-                            return "Property is read only.";
+                        po = plookup.GetValue(o, null);
 
-                        string returnvalue = InternalSetValue(null, o, p, value, false, index);
+                        o = po;
+                        name = arglist[1];
+                        continue;
+                    }
+
+                    foreach (PropertyInfo p in props) // is a nested property with attributes so first get the property
+                    {
+                        if (Insensitive.Equals(p.Name, propname))
+                        {
+                            po = p.GetValue(o, null);
+
+                            return SetPropertyValue(spawner, po, arglist[1], value); // now set the nested attribute using the new property list
+                        }
+                    }
+                }
+                else
+                {
+                    // its just a simple single property
+
+                    PropertyInfo plookup = LookupPropertyInfo(spawner, type, propname);
+
+                    if (plookup != null)
+                    {
+                        if (!plookup.CanWrite) return "Property is read only.";
+
+                        string returnvalue = InternalSetValue(null, o, plookup, value, false, index);
 
                         return returnvalue;
+                    }
+                    // note, looping through all of the props turns out to be a significant performance bottleneck
+                    // good place for optimization
 
+                    foreach (PropertyInfo p in props)
+                    {
+                        if (Insensitive.Equals(p.Name, propname))
+                        {
+                            if (!p.CanWrite) return "Property is read only.";
+
+                            string returnvalue = InternalSetValue(null, o, p, value, false, index);
+
+                            return returnvalue;
+                        }
                     }
                 }
-            }
 
-            return "Property not found.";
+                return "Property not found.";
+            }
         }
 
         public static string SetPropertyObject(XmlSpawner spawner, object o, string name, object value)
         {
-            if (o == null)
+            while (true)
             {
-                return "Null object";
-            }
-
-            Type type = o.GetType();
-
-            PropertyInfo[] props = type.GetProperties(BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public);
-
-            // parse the strings of the form property.attribute into two parts
-            // first get the property
-            string[] arglist = ParseString(name, 2, ".");
-
-            if (arglist.Length == 2)
-            {
-                // is a nested property with attributes so first get the property
-
-                // use the lookup table for optimization if possible
-                PropertyInfo plookup = LookupPropertyInfo(spawner, type, arglist[0]);
-
-                object po;
-                if (plookup != null)
+                if (o == null)
                 {
-                    po = plookup.GetValue(o, null);
-
-                    return SetPropertyObject(spawner, po, arglist[1], value); // now set the nested attribute using the new property list
+                    return "Null object";
                 }
 
-                foreach (PropertyInfo p in props)
+                Type type = o.GetType();
+
+                PropertyInfo[] props = type.GetProperties(BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public);
+
+                // parse the strings of the form property.attribute into two parts
+                // first get the property
+                string[] arglist = ParseString(name, 2, ".");
+
+                if (arglist.Length == 2)
                 {
-                    if (Insensitive.Equals(p.Name, arglist[0]))
+                    // is a nested property with attributes so first get the property
+
+                    // use the lookup table for optimization if possible
+                    PropertyInfo plookup = LookupPropertyInfo(spawner, type, arglist[0]);
+
+                    object po;
+                    if (plookup != null)
                     {
-                        po = p.GetValue(o, null);
+                        po = plookup.GetValue(o, null);
 
-                        return SetPropertyObject(spawner, po, arglist[1], value); // now set the nested attribute using the new property list
-
-                    }
-                }
-            }
-            else
-            {
-                // its just a simple single property
-
-                // use the lookup table for optimization if possible
-                PropertyInfo plookup = LookupPropertyInfo(spawner, type, name);
-
-                if (plookup != null)
-                {
-                    if (!plookup.CanWrite)
-                        return "Property is read only.";
-
-                    if (plookup.PropertyType == typeof(Mobile))
-                    {
-                        plookup.SetValue(o, value, null);
-
-                        return "Property has been set.";
+                        o = po;
+                        name = arglist[1];
+                        continue;
                     }
 
-                    return "Property is not of type Mobile.";
-                }
-
-                foreach (PropertyInfo p in props)
-                {
-                    if (Insensitive.Equals(p.Name, name))
+                    foreach (PropertyInfo p in props)
                     {
-
-                        if (!p.CanWrite)
-                            return "Property is read only.";
-
-                        if (p.PropertyType == typeof(Mobile))
+                        if (Insensitive.Equals(p.Name, arglist[0]))
                         {
-                            p.SetValue(o, value, null);
+                            po = p.GetValue(o, null);
+
+                            return SetPropertyObject(spawner, po, arglist[1], value); // now set the nested attribute using the new property list
+                        }
+                    }
+                }
+                else
+                {
+                    // its just a simple single property
+
+                    // use the lookup table for optimization if possible
+                    PropertyInfo plookup = LookupPropertyInfo(spawner, type, name);
+
+                    if (plookup != null)
+                    {
+                        if (!plookup.CanWrite) return "Property is read only.";
+
+                        if (plookup.PropertyType == typeof(Mobile))
+                        {
+                            plookup.SetValue(o, value, null);
 
                             return "Property has been set.";
                         }
 
                         return "Property is not of type Mobile.";
                     }
-                }
-            }
 
-            return "Property not found.";
+                    foreach (PropertyInfo p in props)
+                    {
+                        if (Insensitive.Equals(p.Name, name))
+                        {
+                            if (!p.CanWrite) return "Property is read only.";
+
+                            if (p.PropertyType == typeof(Mobile))
+                            {
+                                p.SetValue(o, value, null);
+
+                                return "Property has been set.";
+                            }
+
+                            return "Property is not of type Mobile.";
+                        }
+                    }
+                }
+
+                return "Property not found.";
+            }
         }
 
         public static string GetPropertyValue(XmlSpawner spawner, object o, string name, out Type ptype)
         {
-            ptype = null;
-            if (o == null || name == null) return null;
-
-            Type type = o.GetType();
-            object po = null;
-
-            PropertyInfo[] props;
-            try
+            while (true)
             {
-                props = type.GetProperties(BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public);
-            }
-            catch
-            {
-                Console.WriteLine("GetProperties error with type {0}", type);
-                return null;
-            }
+                ptype = null;
+                if (o == null || name == null) return null;
 
-            // parse the strings of the form property.attribute into two parts
-            // first get the property
-            string[] arglist = ParseString(name, 2, ".");
-            string propname = arglist[0];
-            // parse up to 4 comma separated args for special keyword properties
-            string[] keywordargs = ParseString(propname, 4, ",");
+                Type type = o.GetType();
+                object po = null;
 
-            if (keywordargs[0] == "SERIAL")
-            {
+                PropertyInfo[] props;
                 try
                 {
-                    if (o is Mobile mobile)
-                    {
-                        ptype = mobile.Serial.GetType();
-
-                        return string.Format("Serial = {0}", mobile.Serial);
-                    }
-
-                    if (o is Item item)
-                    {
-                        ptype = item.Serial.GetType();
-
-                        return string.Format("Serial = {0}", item.Serial);
-                    }
-
-                    return "Object is not item/mobile";
+                    props = type.GetProperties(BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public);
+                }
+                catch
+                {
+                    Console.WriteLine("GetProperties error with type {0}", type);
+                    return null;
                 }
 
-                catch { return "Serial not found."; }
-            }
+                // parse the strings of the form property.attribute into two parts
+                // first get the property
+                string[] arglist = ParseString(name, 2, ".");
+                string propname = arglist[0];
+                // parse up to 4 comma separated args for special keyword properties
+                string[] keywordargs = ParseString(propname, 4, ",");
 
-            if (keywordargs[0] == "TYPE")
-            {
-                ptype = typeof(Type);
-
-                return string.Format("Type = {0}", o.GetType().Name);
-
-            }
-
-            // do a bit of parsing to handle array references
-            string[] arraystring = arglist[0].Split('[');
-            int index = -1;
-            if (arraystring.Length > 1)
-            {
-                // parse the property name from the indexing
-                propname = arraystring[0];
-
-                // then parse to get the index value
-                string[] arrayvalue = arraystring[1].Split(']');
-
-                if (arrayvalue.Length > 0)
+                if (keywordargs[0] == "SERIAL")
                 {
-                    if (!int.TryParse(arrayvalue[0], out index))
-                        index = -1;
-                }
-            }
-
-            if (arglist.Length == 2)
-            {
-                // use the lookup table for optimization if possible
-                PropertyInfo plookup = LookupPropertyInfo(spawner, type, propname);
-
-                if (plookup != null)
-                {
-                    if (!plookup.CanRead)
-                        return "Property is write only.";
-
-                    ptype = plookup.PropertyType;
-                    if (ptype.IsPrimitive)
+                    try
                     {
-                        po = plookup.GetValue(o, null);
-                    }
-                    else if (ptype.GetInterface("IList") != null && index >= 0)
-                    {
-                        try
+                        if (o is Mobile mobile)
                         {
-                            object arrayvalue = plookup.GetValue(o, null);
-                            po = ((IList<object>)arrayvalue)[index];
+                            ptype = mobile.Serial.GetType();
+
+                            return string.Format("Serial = {0}", mobile.Serial);
                         }
-                        catch { }
+
+                        if (o is Item item)
+                        {
+                            ptype = item.Serial.GetType();
+
+                            return string.Format("Serial = {0}", item.Serial);
+                        }
+
+                        return "Object is not item/mobile";
                     }
-                    else
+
+                    catch
                     {
-                        po = plookup.GetValue(o, null);
+                        return "Serial not found.";
                     }
-                    
-                    return GetPropertyValue(spawner, po, arglist[1], out ptype); // now set the nested attribute using the new property list
                 }
 
-                foreach (PropertyInfo p in props) // now set the nested attribute using the new property list
+                if (keywordargs[0] == "TYPE")
                 {
-                    if (Insensitive.Equals(p.Name, propname))
+                    ptype = typeof(Type);
+
+                    return string.Format("Type = {0}", o.GetType().Name);
+                }
+
+                // do a bit of parsing to handle array references
+                string[] arraystring = arglist[0].Split('[');
+                int index = -1;
+                if (arraystring.Length > 1)
+                {
+                    // parse the property name from the indexing
+                    propname = arraystring[0];
+
+                    // then parse to get the index value
+                    string[] arrayvalue = arraystring[1].Split(']');
+
+                    if (arrayvalue.Length > 0 && (!int.TryParse(arrayvalue[0], out index)))
                     {
-                        if (!p.CanRead)
+                        index = -1;
+                    }
+                }
+
+                if (arglist.Length == 2)
+                {
+                    // use the lookup table for optimization if possible
+                    PropertyInfo plookup = LookupPropertyInfo(spawner, type, propname);
+
+                    if (plookup != null)
+                    {
+                        if (!plookup.CanRead)
                             return "Property is write only.";
 
-                        ptype = p.PropertyType;
+                        ptype = plookup.PropertyType;
                         if (ptype.IsPrimitive)
                         {
-                            po = p.GetValue(o, null);
+                            po = plookup.GetValue(o, null);
                         }
                         else if (ptype.GetInterface("IList") != null && index >= 0)
                         {
                             try
                             {
-                                object arrayvalue = p.GetValue(o, null);
-                                po = ((IList<object>)arrayvalue)[index];
+                                object arrayvalue = plookup.GetValue(o, null);
+                                po = ((IList<object>) arrayvalue)[index];
                             }
-                            catch { }
+                            catch
+                            {
+                            }
                         }
                         else
                         {
-                            po = p.GetValue(o, null);
+                            po = plookup.GetValue(o, null);
                         }
-                        
-                        return GetPropertyValue(spawner, po, arglist[1], out ptype); // now set the nested attribute using the new property list
+
+                        o = po;
+                        name = arglist[1];
+                        continue;
                     }
-                }
-            }
-            else
-            {
-                // use the lookup table for optimization if possible
-                PropertyInfo plookup = LookupPropertyInfo(spawner, type, propname);
 
-                if (plookup != null)
-                {
-                    if (!plookup.CanRead)
-                        return "Property is write only.";
-
-                    ptype = plookup.PropertyType;
-
-                    return InternalGetValue(o, plookup, index);
-                }
-
-                // its just a simple single property
-                foreach (PropertyInfo p in props)
-                {
-                    //if ( Insensitive.Equals( p.Name, name ) )
-                    if (Insensitive.Equals(p.Name, propname))
+                    foreach (PropertyInfo p in props) // now set the nested attribute using the new property list
                     {
-                        if (!p.CanRead)
-                            return "Property is write only.";
+                        if (Insensitive.Equals(p.Name, propname))
+                        {
+                            if (!p.CanRead) return "Property is write only.";
 
-                        ptype = p.PropertyType;
+                            ptype = p.PropertyType;
+                            if (ptype.IsPrimitive)
+                            {
+                                po = p.GetValue(o, null);
+                            }
+                            else if (ptype.GetInterface("IList") != null && index >= 0)
+                            {
+                                try
+                                {
+                                    object arrayvalue = p.GetValue(o, null);
+                                    po = ((IList<object>) arrayvalue)[index];
+                                }
+                                catch
+                                {
+                                }
+                            }
+                            else
+                            {
+                                po = p.GetValue(o, null);
+                            }
 
-                        return InternalGetValue(o, p, index);
+                            return GetPropertyValue(spawner, po, arglist[1], out ptype); // now set the nested attribute using the new property list
+                        }
                     }
                 }
-            }
+                else
+                {
+                    // use the lookup table for optimization if possible
+                    PropertyInfo plookup = LookupPropertyInfo(spawner, type, propname);
 
-            return "Property not found.";
+                    if (plookup != null)
+                    {
+                        if (!plookup.CanRead) return "Property is write only.";
+
+                        ptype = plookup.PropertyType;
+
+                        return InternalGetValue(o, plookup, index);
+                    }
+
+                    // its just a simple single property
+                    foreach (PropertyInfo p in props)
+                    {
+                        //if ( Insensitive.Equals( p.Name, name ) )
+                        if (Insensitive.Equals(p.Name, propname))
+                        {
+                            if (!p.CanRead) return "Property is write only.";
+
+                            ptype = p.PropertyType;
+
+                            return InternalGetValue(o, p, index);
+                        }
+                    }
+                }
+
+                return "Property not found.";
+            }
         }
 
         // added in arg parsing to handle object property setting

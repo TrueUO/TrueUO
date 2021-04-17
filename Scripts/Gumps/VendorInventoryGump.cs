@@ -11,7 +11,7 @@ namespace Server.Gumps
         private readonly BaseHouse m_House;
         private readonly ArrayList m_Inventories;
 
-        public VendorInventoryGump(BaseHouse house, Mobile from)
+        public VendorInventoryGump(BaseHouse house, IEntity from)
             : base(50, 50)
         {
             m_House = house;

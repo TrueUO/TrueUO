@@ -491,7 +491,7 @@ namespace Server
 	[Serializable]
 	public class MobileNotConnectedException : Exception
 	{
-		public MobileNotConnectedException(Mobile source, string message)
+		public MobileNotConnectedException(IEntity source, string message)
 			: base(message)
 		{
 			Source = source.ToString();
@@ -1088,7 +1088,7 @@ namespace Server
                 name = string.Empty;
             }
 
-            string prefix = ""; // still needs to be defined due to cliloc. Only defined in PlayerMobile. BaseCreature and BaseVendor require the suffix for the title and use the same cliloc.
+            const string prefix = ""; // still needs to be defined due to cliloc. Only defined in PlayerMobile. BaseCreature and BaseVendor require the suffix for the title and use the same cliloc.
 
             string suffix = "";
 
@@ -1320,30 +1320,34 @@ namespace Server
 
         public bool InLOS(object target)
         {
-            if (m_Deleted || m_Map == null)
+            while (true)
             {
-                return false;
-            }
+                if (m_Deleted || m_Map == null)
+                {
+                    return false;
+                }
 
-            if (target == this || IsStaff())
-            {
-                return true;
-            }
-
-            if (target is Item item)
-            {
-                if (item.RootParent == this)
+                if (target == this || IsStaff())
                 {
                     return true;
                 }
 
-                if (item.Parent is Container)
+                if (target is Item item)
                 {
-                    return InLOS(item.Parent);
-                }
-            }
+                    if (item.RootParent == this)
+                    {
+                        return true;
+                    }
 
-            return m_Map.LineOfSight(this, target);
+                    if (item.Parent is Container)
+                    {
+                        target = item.Parent;
+                        continue;
+                    }
+                }
+
+                return m_Map.LineOfSight(this, target);
+            }
         }
 
         public bool InLOS(Point3D target)
@@ -4643,7 +4647,7 @@ namespace Server
 				m_RelativeTo = relativeTo;
 			}
 
-			private int GetDistance(IEntity p)
+			private int GetDistance(IPoint3D p)
 			{
 				int x = m_RelativeTo.X - p.X;
 				int y = m_RelativeTo.Y - p.Y;
@@ -4652,7 +4656,7 @@ namespace Server
 				x *= 11;
 				y *= 11;
 
-				return (x * x) + (y * y) + (z * z);
+				return x * x + y * y + z * z;
 			}
 
 			public int Compare(IEntity x, IEntity y)
@@ -6940,7 +6944,7 @@ namespace Server
 			{
 				foreach (Gump gump in ns.Gumps)
 				{
-					if (type.IsAssignableFrom(gump.GetType()))
+					if (type.IsInstanceOfType(gump))
 					{
 						return gump;
 					}
@@ -8675,9 +8679,7 @@ namespace Server
 				return false;
 			}
 
-			return this == m ||
-				   (m.m_Map == m_Map && (!m.Hidden || (IsStaff() && m_AccessLevel >= m.AccessLevel)) &&
-					(m.Alive || (Skills.SpiritSpeak.Value >= 100.0) || !Alive || IsStaff() || m.Warmode));
+			return this == m || m.m_Map == m_Map && (!m.Hidden || IsStaff() && m_AccessLevel >= m.AccessLevel) && (m.Alive || Skills.SpiritSpeak.Value >= 100.0 || !Alive || IsStaff() || m.Warmode);
 		}
 
 		public virtual bool CanBeRenamedBy(Mobile from)
@@ -8686,17 +8688,7 @@ namespace Server
 		}
 
 		[CommandProperty(AccessLevel.GameMaster)]
-		public string Language
-		{
-			get => m_Language;
-			set
-			{
-				if (m_Language != value)
-				{
-					m_Language = value;
-				}
-			}
-		}
+		public string Language { get => m_Language; set => m_Language = value; }
 
 		[CommandProperty(AccessLevel.Decorator)]
 		public int SpeechHue { get => m_SpeechHue; set => m_SpeechHue = value; }
@@ -8897,9 +8889,7 @@ namespace Server
 			get => m_Poison;
 			set
 			{
-				/*if ( m_Poison != value && (m_Poison == null || value == null || m_Poison.Level < value.Level) )
-				{*/
-				m_Poison = value;
+                m_Poison = value;
 				Delta(MobileDelta.HealthbarPoison);
 
 				if (m_PoisonTimer != null)
@@ -8919,8 +8909,7 @@ namespace Server
 				}
 
 				CheckStatTimers();
-				/*}*/
-			}
+            }
 		}
 
 		/// <summary>

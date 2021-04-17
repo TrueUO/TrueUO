@@ -2,7 +2,7 @@ namespace Server.Network
 {
     public class UpdateStatueAnimation : Packet
     {
-        public UpdateStatueAnimation(Mobile m, int status, int animation, int frame)
+        public UpdateStatueAnimation(IEntity m, int status, int animation, int frame)
             : base(0xBF, 17)
         {
             m_Stream.Write((short)0x11);

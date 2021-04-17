@@ -93,19 +93,20 @@ namespace Server.SkillHandlers
                 }
                 else
                 {
-                    int range = (int)targ.GetDistanceToSqrt(from);
                     int maxRange = BaseInstrument.GetBardRange(from, SkillName.Discordance);
+                    bool inRange = targ.InRange((IPoint3D)targ, maxRange);
+
                     Map targetMap = targ.Map;
 
                     if (targ is BaseMount mount && mount.Rider != null)
                     {
                         Mobile rider = mount.Rider;
 
-                        range = (int)rider.GetDistanceToSqrt(from);
+                        inRange = rider.InRange((IPoint3D)targ, maxRange);
                         targetMap = rider.Map;
                     }
 
-                    if (from.Map != targetMap || range > maxRange)
+                    if (from.Map != targetMap || !inRange)
                     {
                         ends = true;
                     }

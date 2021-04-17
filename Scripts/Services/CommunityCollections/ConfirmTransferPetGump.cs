@@ -38,10 +38,14 @@ namespace Server.Gumps
         public override void OnResponse(Network.NetState state, RelayInfo info)
         {
             if (m_Collection == null || m_Pet == null || m_Pet.Deleted || m_Pet.ControlMaster != state.Mobile || !state.Mobile.InRange(m_Location, 2))
+            {
                 return;
+            }
 
-            if (info.ButtonID == (int)Buttons.Continue && state.Mobile is PlayerMobile)
-                m_Collection.DonatePet((PlayerMobile)state.Mobile, m_Pet);
+            if (info.ButtonID == (int) Buttons.Continue && state.Mobile is PlayerMobile mobile)
+            {
+                m_Collection.DonatePet(mobile, m_Pet);
+            }
         }
     }
 }

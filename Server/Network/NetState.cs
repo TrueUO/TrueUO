@@ -824,7 +824,7 @@ namespace Server.Network
 			return false;
 		}
 
-		public PacketHandler GetHandler(int packetID)
+		public static PacketHandler GetHandler(int packetID)
 		{
 			return PacketHandlers.GetHandler(packetID);
 		}

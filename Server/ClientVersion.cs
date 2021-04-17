@@ -277,16 +277,18 @@ namespace Server
 			{
 				return 0;
 			}
-			else if (IsNull(x))
-			{
-				return -1;
-			}
-			else if (IsNull(y))
-			{
-				return 1;
-			}
 
-			ClientVersion a = x as ClientVersion;
+            if (IsNull(x))
+            {
+                return -1;
+            }
+
+            if (IsNull(y))
+            {
+                return 1;
+            }
+
+            ClientVersion a = x as ClientVersion;
 			ClientVersion b = y as ClientVersion;
 
 			if (IsNull(a) || IsNull(b))
@@ -303,16 +305,18 @@ namespace Server
 			{
 				return 0;
 			}
-			else if (IsNull(a))
-			{
-				return -1;
-			}
-			else if (IsNull(b))
-			{
-				return 1;
-			}
 
-			return a.CompareTo(b);
+            if (IsNull(a))
+            {
+                return -1;
+            }
+
+            if (IsNull(b))
+            {
+                return 1;
+            }
+
+            return a.CompareTo(b);
 		}
 	}
 }
