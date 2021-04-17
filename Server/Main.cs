@@ -765,9 +765,9 @@ namespace Server
 			}
 		}
 
-		public static int GlobalUpdateRange { get; set; }
-		public static int GlobalMaxUpdateRange { get; set; }
-		public static int GlobalRadarRange { get; set; }
+		public static int GlobalUpdateRange { get; }
+		public static int GlobalMaxUpdateRange { get; }
+		public static int GlobalRadarRange { get; }
 
 		private static int m_ItemCount, m_MobileCount, m_CustomsCount;
 

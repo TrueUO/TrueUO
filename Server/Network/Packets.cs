@@ -2678,9 +2678,9 @@ namespace Server.Network
 
 	public static class AttributeNormalizer
 	{
-		public static int Maximum { get; set; } = 25;
+		public static int Maximum { get; } = 25;
 
-		public static bool Enabled { get; set; } = true;
+		public static bool Enabled { get; } = true;
 
 		public static void Write(PacketWriter stream, int cur, int max)
 		{
@@ -3476,9 +3476,10 @@ namespace Server.Network
 			: this(city, building, 0, x, y, z, Map.Trammel)
 		{ }
 
-		public string City { get; set; }
-		public string Building { get; set; }
-		public int Description { get; set; }
+		public string City { get; }
+		public string Building { get; }
+		public int Description { get; }
+
 		public int X { get => m_Location.X; set => m_Location.X = value; }
 		public int Y { get => m_Location.Y; set => m_Location.Y = value; }
 		public int Z { get => m_Location.Z; set => m_Location.Z = value; }
@@ -3836,13 +3837,13 @@ namespace Server.Network
 
 	public sealed class ServerInfo
 	{
-		public string Name { get; set; }
+		public string Name { get; }
 
-		public int FullPercent { get; set; }
+		public int FullPercent { get; }
 
-		public int TimeZone { get; set; }
+		public int TimeZone { get; }
 
-		public IPEndPoint Address { get; set; }
+		public IPEndPoint Address { get; }
 
 		public ServerInfo(string name, int fullPercent, TimeZone tz, IPEndPoint address)
 		{

@@ -58,7 +58,7 @@ namespace Server
 				return callback.Method.Name;
 			}
 
-			return string.Format("{0}.{1}", callback.Method.DeclaringType.FullName, callback.Method.Name);
+			return $"{callback.Method.DeclaringType.FullName}.{callback.Method.Name}";
 		}
 
 		public static void DumpInfo(TextWriter tw)

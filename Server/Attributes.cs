@@ -118,7 +118,7 @@ namespace Server
 	[AttributeUsage(AttributeTargets.Class)]
 	public class DeleteConfirmAttribute : Attribute
 	{
-		public string Message { get; set; }
+        private string Message { get; }
 
 		public DeleteConfirmAttribute()
 			: this("Are you sure you wish to delete this item?")
@@ -157,10 +157,10 @@ namespace Server
 	[AttributeUsage(AttributeTargets.Constructor)]
 	public class ConstructableAttribute : Attribute
 	{
-		public AccessLevel AccessLevel { get; set; }
+		public AccessLevel AccessLevel { get; }
 
 		public ConstructableAttribute()
-			: this(AccessLevel.Player) //Lowest accesslevel for current functionality (Level determined by access to [add)
+			: this(AccessLevel.Player) //Lowest access level for current functionality (Level determined by access to [add)
 		{ }
 
 		public ConstructableAttribute(AccessLevel accessLevel)

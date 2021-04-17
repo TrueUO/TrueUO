@@ -42,7 +42,7 @@ namespace Server
             });
         }
 
-        public static Dictionary<string, List<Timer>> Timers { get; set; } = new Dictionary<string, List<Timer>>();
+        public static Dictionary<string, List<Timer>> Timers { get; } = new Dictionary<string, List<Timer>>();
 
         public static void Register<T>(string id, T instance, TimeSpan duration, Action<T> callback)
         {
@@ -262,11 +262,11 @@ namespace Server
 
     public class RegistryTimer<T> : Timer
     {
-        public Dictionary<T, long> Registry { get; set; } = new Dictionary<T, long>();
+        public Dictionary<T, long> Registry { get; } = new Dictionary<T, long>();
 
-        public Action<T> Callback { get; set; }
-        public bool RemoveOnExpire { get; set; }
-        public bool CheckDeleted { get; set; }
+        public Action<T> Callback { get; }
+        public bool RemoveOnExpire { get; }
+        public bool CheckDeleted { get; }
 
         public RegistryTimer(TimeSpan delay, Action<T> callback, bool removeOnExpire, bool checkDeleted, TimerPriority? priority)
             : base(delay, delay)

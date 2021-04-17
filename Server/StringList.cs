@@ -20,7 +20,7 @@ namespace Server
         public Dictionary<int, string> StringTable;
         private readonly Dictionary<int, StringEntry> EntryTable;
 
-        public string Language { get; private set; }
+        public string Language { get; }
 
         public string this[int number]
         {
@@ -49,7 +49,7 @@ namespace Server
         {
             Language = language;            
 
-            string path = Core.FindDataFile(string.Format("Cliloc.{0}", language));
+            string path = Core.FindDataFile($"Cliloc.{language}");
 
             if (path == null)
             {
