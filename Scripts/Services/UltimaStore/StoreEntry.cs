@@ -62,14 +62,14 @@ namespace Server.Engines.UOStore
                     // Your purchased item will be delivered to you once you are resurrected.
                     m.SendLocalizedMessage(m.Alive ? 1156846 : 1156848);
                 }
-                else if (item is IPromotionalToken && ((IPromotionalToken)item).ItemName != null)
+                else if (item is IPromotionalToken token && token.ItemName != null)
                 {
                     // A token has been placed in your backpack. Double-click it to redeem your ~1_PROMO~.
-                    m.SendLocalizedMessage(1075248, ((IPromotionalToken)item).ItemName.ToString());
+                    m.SendLocalizedMessage(1075248, token.ItemName.ToString());
                 }
                 else if (item.LabelNumber > 0 || item.Name != null)
                 {
-                    string name = item.LabelNumber > 0 ? ("#" + item.LabelNumber) : item.Name;
+                    string name = item.LabelNumber > 0 ? "#" + item.LabelNumber : item.Name;
 
                     m.SendLocalizedMessage(1156844, name); // Your purchase of ~1_ITEM~ has been placed in your backpack.
                 }
@@ -86,7 +86,7 @@ namespace Server.Engines.UOStore
                 return true;
             }
 
-            Utility.WriteConsoleColor(ConsoleColor.Red, string.Format("[Ultima Store Warning]: {0} failed to construct.", ItemType.Name));
+            Utility.WriteConsoleColor(ConsoleColor.Red, $"[Ultima Store Warning]: {ItemType.Name} failed to construct.");
 
             return false;
         }
