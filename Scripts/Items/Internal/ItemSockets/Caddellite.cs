@@ -108,9 +108,9 @@ namespace Server.Items
             }
         }
 
-        private static Rectangle2D _CraftRec = new Rectangle2D(6017, 3743, 8, 8);
-        private static Rectangle2D _CookingRec = new Rectangle2D(6002, 3779, 7, 2);
-        private static Rectangle2D _ScribeRec = new Rectangle2D(5999, 3771, 5, 2);
+        private static readonly Rectangle2D _CraftRec = new Rectangle2D(6017, 3743, 8, 8);
+        private static readonly Rectangle2D _CookingRec = new Rectangle2D(6002, 3779, 7, 2);
+        private static readonly Rectangle2D _ScribeRec = new Rectangle2D(5999, 3771, 5, 2);
 
         public static void CheckWaterSource(Mobile from, BaseBeverage beverage, Item item)
         {
@@ -174,7 +174,7 @@ namespace Server.Items
             else
             {
                 BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.CaddelliteInfused, 1158662, 1158677,
-                    string.Format("{0}\t{1}\t{2}\t{3}", equipped != null && equipped.Owner is BaseWeapon ? "100" : "0", equipped != null && equipped.Owner is Spellbook ? "100" : "0", pet != null ? pet.Name : "", pet != null ? "100" : "0")));
+                    $"{(equipped != null && equipped.Owner is BaseWeapon ? "100" : "0")}\t{(equipped != null && equipped.Owner is Spellbook ? "100" : "0")}\t{(pet != null ? pet.Name : "")}\t{(pet != null ? "100" : "0")}"));
             }
         }
 
