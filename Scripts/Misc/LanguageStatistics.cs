@@ -257,7 +257,7 @@ namespace Server.Misc
             return string.Format("Unknown code {0}", code);
         }
 
-        struct InternationalCode
+        readonly struct InternationalCode
         {
             readonly string m_Code;
             readonly string m_Language;
