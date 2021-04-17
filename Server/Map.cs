@@ -723,10 +723,9 @@ namespace Server
 				{
 					Mobile m = mobs[i];
 
-					if (m.Location.X == x && m.Location.Y == y && (m.AccessLevel == AccessLevel.Player || !m.Hidden))
+					if (m.Location.X == x && m.Location.Y == y && (m.AccessLevel == AccessLevel.Player || !m.Hidden) && m.Z + 16 > z && z + height > m.Z)
 					{
-						if (m.Z + 16 > z && z + height > m.Z)
-							return false;
+                        return false;
 					}
 				}
 			}
