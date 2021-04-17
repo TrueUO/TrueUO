@@ -329,7 +329,7 @@ namespace Server.Items
             }
         }
 
-        private IEntity ReadEntity(GenericReader reader)
+        private static IEntity ReadEntity(GenericReader reader)
         {
             return World.FindEntity(reader.ReadInt());
         }

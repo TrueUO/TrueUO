@@ -1,5 +1,6 @@
 using Server.Commands;
 using System;
+using System.Collections.Generic;
 using System.IO;
 
 namespace Server.Misc
@@ -166,9 +167,9 @@ namespace Server.Misc
             return anySuccess;
         }
 
-        private static DirectoryInfo Match(string[] paths, string match)
+        private static DirectoryInfo Match(IReadOnlyList<string> paths, string match)
         {
-            for (int i = 0; i < paths.Length; ++i)
+            for (int i = 0; i < paths.Count; ++i)
             {
                 DirectoryInfo info = new DirectoryInfo(paths[i]);
 
