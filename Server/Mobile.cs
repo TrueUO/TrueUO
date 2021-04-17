@@ -312,7 +312,7 @@ namespace Server
 				return false;
 			}
 
-			return (DateTime.UtcNow - m_Added) >= m_Duration;
+			return DateTime.UtcNow - m_Added >= m_Duration;
 		}
 
 		public TimeSpan TimeLeft()
@@ -339,7 +339,7 @@ namespace Server
 		public Mobile Damager => m_Damager;
 		public int DamageGiven { get; set; }
 		public DateTime LastDamage { get => m_LastDamage; set => m_LastDamage = value; }
-		public bool HasExpired => DateTime.UtcNow > (m_LastDamage + m_ExpireDelay);
+		public bool HasExpired => DateTime.UtcNow > m_LastDamage + m_ExpireDelay;
 		public List<DamageEntry> Responsible { get; set; }
 
 		private static TimeSpan m_ExpireDelay = TimeSpan.FromMinutes(2.0);
@@ -1041,7 +1041,7 @@ namespace Server
 
         public int GetAOSStatus(int index)
         {
-            return (m_AOSStatusHandler == null) ? 0 : m_AOSStatusHandler(this, index);
+            return m_AOSStatusHandler == null ? 0 : m_AOSStatusHandler(this, index);
         }
 
         public virtual void SendPropertiesTo(Mobile from)
@@ -1628,7 +1628,7 @@ namespace Server
 
         public override string ToString()
         {
-            return string.Format("0x{0:X} \"{1}\"", m_Serial.Value, Name);
+            return $"0x{m_Serial.Value:X} \"{Name}\"";
         }
 
         public long NextActionTime { get; set; }
@@ -1752,7 +1752,7 @@ namespace Server
 
         public void UpdateAggrExpire()
         {
-            if (m_Deleted || (m_Aggressors.Count == 0 && m_Aggressed.Count == 0))
+            if (m_Deleted || m_Aggressors.Count == 0 && m_Aggressed.Count == 0)
             {
                 StopAggrExpire();
             }
@@ -1764,7 +1764,7 @@ namespace Server
 
         private void AggroExpireOnTick()
         {
-            if (Deleted || (Aggressors.Count == 0 && Aggressed.Count == 0))
+            if (Deleted || Aggressors.Count == 0 && Aggressed.Count == 0)
             {
                 StopAggrExpire();
             }
@@ -2041,7 +2041,7 @@ namespace Server
 
                     m_Combatant = value;
 
-                    if (!Region.OnCombatantChange(this, old, m_Combatant) || (m_Combatant != null && !CanBeHarmful(m_Combatant, false)))
+                    if (!Region.OnCombatantChange(this, old, m_Combatant) || m_Combatant != null && !CanBeHarmful(m_Combatant, false))
                     {
                         m_Combatant = old;
                         --m_ChangingCombatant;
@@ -2092,7 +2092,7 @@ namespace Server
             int xDelta = m_Location.m_X - p.m_X;
             int yDelta = m_Location.m_Y - p.m_Y;
 
-            return Math.Sqrt((xDelta * xDelta) + (yDelta * yDelta));
+            return Math.Sqrt(xDelta * xDelta + yDelta * yDelta);
         }
 
         public double GetDistanceToSqrt(Mobile m)
@@ -2100,7 +2100,7 @@ namespace Server
             int xDelta = m_Location.m_X - m.m_Location.m_X;
             int yDelta = m_Location.m_Y - m.m_Location.m_Y;
 
-            return Math.Sqrt((xDelta * xDelta) + (yDelta * yDelta));
+            return Math.Sqrt(xDelta * xDelta + yDelta * yDelta);
         }
 
         public double GetDistanceToSqrt(IPoint2D p)
@@ -2108,7 +2108,7 @@ namespace Server
             int xDelta = m_Location.m_X - p.X;
             int yDelta = m_Location.m_Y - p.Y;
 
-            return Math.Sqrt((xDelta * xDelta) + (yDelta * yDelta));
+            return Math.Sqrt(xDelta * xDelta + yDelta * yDelta);
         }
 
         public virtual void AggressiveAction(Mobile aggressor)
@@ -2930,7 +2930,7 @@ namespace Server
             {
                 // We are actually moving (not just a direction change)
 
-                if (m_Paralyzed || m_Frozen || (m_Spell != null && !m_Spell.CheckMovement(this)))
+                if (m_Paralyzed || m_Frozen || m_Spell != null && !m_Spell.CheckMovement(this))
                 {
                     SendLocalizedMessage(500111); // You are frozen and can not move.
 
@@ -2995,7 +2995,7 @@ namespace Server
                             {
                                 Mobile m = oldSector.Mobiles[i];
 
-                                if (m != this && m.X == oldX && m.Y == oldY && (m.Z + 15) > oldZ && (oldZ + 15) > m.Z && !m.OnMoveOff(this))
+                                if (m != this && m.X == oldX && m.Y == oldY && m.Z + 15 > oldZ && oldZ + 15 > m.Z && !m.OnMoveOff(this))
                                 {
                                     return false;
                                 }
@@ -3005,8 +3005,7 @@ namespace Server
                             {
                                 Item item = oldSector.Items[i];
 
-                                if (item.AtWorldPoint(oldX, oldY) &&
-                                    (item.Z == oldZ || ((item.Z + item.ItemData.Height) > oldZ && (oldZ + 15) > item.Z)) && !item.OnMoveOff(this))
+                                if (item.AtWorldPoint(oldX, oldY) && (item.Z == oldZ || item.Z + item.ItemData.Height > oldZ && oldZ + 15 > item.Z) && !item.OnMoveOff(this))
                                 {
                                     return false;
                                 }
@@ -3016,7 +3015,7 @@ namespace Server
                             {
                                 Mobile m = newSector.Mobiles[i];
 
-                                if (m.X == x && m.Y == y && (m.Z + 15) > newZ && (newZ + 15) > m.Z && !m.OnMoveOver(this))
+                                if (m.X == x && m.Y == y && m.Z + 15 > newZ && newZ + 15 > m.Z && !m.OnMoveOver(this))
                                 {
                                     return false;
                                 }
@@ -3026,8 +3025,7 @@ namespace Server
                             {
                                 Item item = newSector.Items[i];
 
-                                if (item.AtWorldPoint(x, y) &&
-                                    (item.Z == newZ || ((item.Z + item.ItemData.Height) >= newZ && (newZ + 15) > item.Z)) && !item.OnMoveOver(this))
+                                if (item.AtWorldPoint(x, y) && (item.Z == newZ || item.Z + item.ItemData.Height >= newZ && newZ + 15 > item.Z) && !item.OnMoveOver(this))
                                 {
                                     return false;
                                 }
@@ -3039,12 +3037,12 @@ namespace Server
                             {
                                 Mobile m = oldSector.Mobiles[i];
 
-                                if (m != this && m.X == oldX && m.Y == oldY && (m.Z + 15) > oldZ && (oldZ + 15) > m.Z && !m.OnMoveOff(this))
+                                if (m != this && m.X == oldX && m.Y == oldY && m.Z + 15 > oldZ && oldZ + 15 > m.Z && !m.OnMoveOff(this))
                                 {
                                     return false;
                                 }
 
-                                if (m.X == x && m.Y == y && (m.Z + 15) > newZ && (newZ + 15) > m.Z && !m.OnMoveOver(this))
+                                if (m.X == x && m.Y == y && m.Z + 15 > newZ && newZ + 15 > m.Z && !m.OnMoveOver(this))
                                 {
                                     return false;
                                 }
@@ -3054,14 +3052,12 @@ namespace Server
                             {
                                 Item item = oldSector.Items[i];
 
-                                if (item.AtWorldPoint(oldX, oldY) &&
-                                    (item.Z == oldZ || ((item.Z + item.ItemData.Height) > oldZ && (oldZ + 15) > item.Z)) && !item.OnMoveOff(this))
+                                if (item.AtWorldPoint(oldX, oldY) && (item.Z == oldZ || item.Z + item.ItemData.Height > oldZ && oldZ + 15 > item.Z) && !item.OnMoveOff(this))
                                 {
                                     return false;
                                 }
 
-                                if (item.AtWorldPoint(x, y) &&
-                                    (item.Z == newZ || ((item.Z + item.ItemData.Height) >= newZ && (newZ + 15) > item.Z)) && !item.OnMoveOver(this))
+                                if (item.AtWorldPoint(x, y) && (item.Z == newZ || item.Z + item.ItemData.Height >= newZ && newZ + 15 > item.Z) && !item.OnMoveOver(this))
                                 {
                                     return false;
                                 }
@@ -5360,7 +5356,7 @@ namespace Server
 				return 0;
 			}
 
-			if ((Hits + amount) > HitsMax)
+			if (Hits + amount > HitsMax)
 			{
 				amount = HitsMax - Hits;
 			}
@@ -6298,10 +6294,10 @@ namespace Server
 						op.WriteLine();
 					}
 
-					Utility.WriteConsoleColor(ConsoleColor.Red, string.Format("Offending Mobile: {0} [{1}]", GetType(), this));
-					Utility.WriteConsoleColor(ConsoleColor.Red, string.Format("Offending Item: {0} [{1}]", item, item.GetType()));
-					Utility.WriteConsoleColor(ConsoleColor.Red, string.Format("Equipped Item: {0} [{1}]", equipped, equipped.GetType()));
-					Utility.WriteConsoleColor(ConsoleColor.Red, string.Format("Layer: {0}", item.Layer.ToString()));
+					Utility.WriteConsoleColor(ConsoleColor.Red, $"Offending Mobile: {GetType()} [{this}]");
+					Utility.WriteConsoleColor(ConsoleColor.Red, $"Offending Item: {item} [{item.GetType()}]");
+					Utility.WriteConsoleColor(ConsoleColor.Red, $"Equipped Item: {equipped} [{equipped.GetType()}]");
+					Utility.WriteConsoleColor(ConsoleColor.Red, $"Layer: {item.Layer.ToString()}");
 				}
 				catch (Exception e)
 				{
@@ -6620,7 +6616,7 @@ namespace Server
 				{
 					m_Fame = value;
 
-					if (ShowFameTitle && (m_Player || m_Body.IsHuman) && (oldValue >= 10000) != (value >= 10000))
+					if (ShowFameTitle && (m_Player || m_Body.IsHuman) && oldValue >= 10000 != value >= 10000)
 					{
 						InvalidateProperties();
 					}
@@ -7296,8 +7292,7 @@ namespace Server
 				return false;
 			}
 
-			if (m_Deleted || target.m_Deleted || !Alive || IsDeadBondedPet ||
-				(!allowDead && (!target.Alive || target.IsDeadBondedPet)))
+			if (m_Deleted || target.m_Deleted || !Alive || IsDeadBondedPet || !allowDead && (!target.Alive || target.IsDeadBondedPet))
 			{
 				if (message)
 				{
@@ -7400,7 +7395,7 @@ namespace Server
 				return false;
 			}
 
-			if (m_Deleted || (!ignoreOurBlessedness && m_Blessed) || !Alive || IsDeadBondedPet || target.Deleted)
+			if (m_Deleted || !ignoreOurBlessedness && m_Blessed || !Alive || IsDeadBondedPet || target.Deleted)
 			{
 				if (message)
 				{
@@ -8246,7 +8241,7 @@ namespace Server
 		{
 			int flags = 0x0;
 
-			if (m_Paralyzed || m_Frozen || (m_Spell != null && !m_Spell.CheckMovement(this)))
+			if (m_Paralyzed || m_Frozen || m_Spell != null && !m_Spell.CheckMovement(this))
 			{
 				flags |= 0x01;
 			}
@@ -8944,8 +8939,8 @@ namespace Server
 		{
 			if (poison != null)
 			{
-				LocalOverheadMessage(MessageType.Regular, 0x21, 1042857 + (poison.RealLevel * 2));
-				NonlocalOverheadMessage(MessageType.Regular, 0x21, 1042858 + (poison.RealLevel * 2), Name);
+				LocalOverheadMessage(MessageType.Regular, 0x21, 1042857 + poison.RealLevel * 2);
+				NonlocalOverheadMessage(MessageType.Regular, 0x21, 1042858 + poison.RealLevel * 2, Name);
 			}
 		}
 
@@ -9563,7 +9558,7 @@ namespace Server
 									update = false;
 								}
 
-								if (m.m_NetState != null && (update || (isTeleport && !NoMoveHS)) && m.CanSee(this))
+								if (m.m_NetState != null && (update || isTeleport && !NoMoveHS) && m.CanSee(this))
 								{
 									m.m_NetState.Send(MobileIncoming.Create(m.m_NetState, m, this));
 
@@ -9636,7 +9631,7 @@ namespace Server
 								update = false;
 							}
 
-							if ((update || (isTeleport && !NoMoveHS)) && ns.Mobile.CanSee(this))
+							if ((update || isTeleport && !NoMoveHS) && ns.Mobile.CanSee(this))
 							{
 								ns.Send(MobileIncoming.Create(ns, ns.Mobile, this));
 
@@ -10204,7 +10199,7 @@ namespace Server
 
 		public virtual bool CheckNonlocalLift(Mobile from, Item item)
 		{
-			if (from == this || (from.AccessLevel > AccessLevel && from.AccessLevel >= AccessLevel.GameMaster))
+			if (from == this || from.AccessLevel > AccessLevel && from.AccessLevel >= AccessLevel.GameMaster)
 			{
 				return true;
 			}
@@ -10433,7 +10428,7 @@ namespace Server
 
         public virtual bool CheckNonlocalDrop(Mobile from, Item item, Item target)
 		{
-			if (from == this || (from.AccessLevel > AccessLevel && from.AccessLevel >= AccessLevel.GameMaster))
+			if (from == this || from.AccessLevel > AccessLevel && from.AccessLevel >= AccessLevel.GameMaster)
 			{
 				return true;
 			}
@@ -10460,7 +10455,7 @@ namespace Server
 
 		public virtual bool AllowEquipFrom(Mobile mob)
 		{
-			return mob == this || (mob.AccessLevel >= AccessLevel.Decorator && mob.AccessLevel > AccessLevel);
+			return mob == this || mob.AccessLevel >= AccessLevel.Decorator && mob.AccessLevel > AccessLevel;
 		}
 
 		public virtual bool EquipItem(Item item)
@@ -10602,13 +10597,13 @@ namespace Server
 
 			Direction ret;
 
-			if (((ay >> 1) - ax) >= 0)
+			if ((ay >> 1) - ax >= 0)
 			{
-				ret = (ry > 0) ? Direction.Up : Direction.Down;
+				ret = ry > 0 ? Direction.Up : Direction.Down;
 			}
-			else if (((ax >> 1) - ay) >= 0)
+			else if ((ax >> 1) - ay >= 0)
 			{
-				ret = (rx > 0) ? Direction.Left : Direction.Right;
+				ret = rx > 0 ? Direction.Left : Direction.Right;
 			}
 			else if (rx >= 0 && ry >= 0)
 			{
@@ -10654,9 +10649,8 @@ namespace Server
 		public virtual void ProcessDelta()
 		{
 			Mobile m = this;
-			MobileDelta delta;
 
-			delta = m.m_DeltaFlags;
+            var delta = m.m_DeltaFlags;
 
 			if (delta == MobileDelta.None)
 			{
@@ -10906,13 +10900,9 @@ namespace Server
 			sendIncoming = sendIncoming || sendNonlocalIncoming;
 			sendHits = sendHits || sendAll;
 
-			if (m.m_Map != null &&
-				(sendRemove || sendIncoming || sendPublicStats || sendHits || sendMoving || sendOPLUpdate || sendHair ||
-				 sendFacialHair || sendHealthbarPoison || sendHealthbarYellow || sendFace))
+			if (m.m_Map != null && (sendRemove || sendIncoming || sendPublicStats || sendHits || sendMoving || sendOPLUpdate || sendHair || sendFacialHair || sendHealthbarPoison || sendHealthbarYellow || sendFace))
 			{
-				Mobile beholder;
-
-				Packet hitsPacket = null;
+                Packet hitsPacket = null;
 				Packet statPacketTrue = null;
 				Packet statPacketFalse = null;
 				Packet deadPacket = null;
@@ -10928,10 +10918,10 @@ namespace Server
 				IPooledEnumerable<NetState> eable = m.Map.GetClientsInRange(m.m_Location);
 
 				foreach (NetState state in eable)
-				{
-					beholder = state.Mobile;
+                {
+                    var beholder = state.Mobile;
 
-					if (beholder != m && Utility.InUpdateRange(beholder, m) && beholder.CanSee(m))
+                    if (beholder != m && Utility.InUpdateRange(beholder, m) && beholder.CanSee(m))
 					{
 						if (sendRemove)
 						{
@@ -11081,7 +11071,7 @@ namespace Server
 							state.Send(OPLPacket);
 						}
 					}
-				}
+                }
 
 				Packet.Release(hitsPacket);
 				Packet.Release(statPacketTrue);
@@ -11173,7 +11163,7 @@ namespace Server
 						m_Kills = 0;
 					}
 
-					if ((oldValue >= 5) != (m_Kills >= 5))
+					if (oldValue >= 5 != m_Kills >= 5)
 					{
 						Delta(MobileDelta.Noto);
 						InvalidateProperties();
@@ -11647,20 +11637,17 @@ namespace Server
 		#region InRange
 		public bool InRange(Point2D p, int range)
 		{
-			return (p.m_X >= (m_Location.m_X - range)) && (p.m_X <= (m_Location.m_X + range)) &&
-				   (p.m_Y >= (m_Location.m_Y - range)) && (p.m_Y <= (m_Location.m_Y + range));
+			return p.m_X >= m_Location.m_X - range && p.m_X <= m_Location.m_X + range && p.m_Y >= m_Location.m_Y - range && p.m_Y <= m_Location.m_Y + range;
 		}
 
 		public bool InRange(Point3D p, int range)
 		{
-			return (p.m_X >= (m_Location.m_X - range)) && (p.m_X <= (m_Location.m_X + range)) &&
-				   (p.m_Y >= (m_Location.m_Y - range)) && (p.m_Y <= (m_Location.m_Y + range));
+			return p.m_X >= m_Location.m_X - range && p.m_X <= m_Location.m_X + range && p.m_Y >= m_Location.m_Y - range && p.m_Y <= m_Location.m_Y + range;
 		}
 
 		public bool InRange(IPoint2D p, int range)
 		{
-			return (p.X >= (m_Location.m_X - range)) && (p.X <= (m_Location.m_X + range)) && (p.Y >= (m_Location.m_Y - range)) &&
-				   (p.Y <= (m_Location.m_Y + range));
+			return p.X >= m_Location.m_X - range && p.X <= m_Location.m_X + range && p.Y >= m_Location.m_Y - range && p.Y <= m_Location.m_Y + range;
 		}
 
 		public bool InUpdateRange(IPoint2D p)
