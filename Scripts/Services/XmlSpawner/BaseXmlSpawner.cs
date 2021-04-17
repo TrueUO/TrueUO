@@ -20,7 +20,7 @@ namespace Server.Mobiles
 
         public class TypeInfo
         {
-            public List<PropertyInfo> plist = new List<PropertyInfo>(); // hold propertyinfo list
+            public readonly List<PropertyInfo> Plist = new List<PropertyInfo>(); // hold propertyinfo list
             public Type t;
         }
 
@@ -148,14 +148,18 @@ namespace Server.Mobiles
 
         public static bool IsTypeKeyword(string typeName)
         {
-            if (string.IsNullOrEmpty(typeName) || !char.IsUpper(typeName[0])) return false;
-            return (typeKeywordHash.ContainsKey(typeName));
+            if (string.IsNullOrEmpty(typeName) || !char.IsUpper(typeName[0]))
+                return false;
+
+            return typeKeywordHash.ContainsKey(typeName);
         }
 
         public static bool IsTypeOrItemKeyword(string typeName)
         {
-            if (string.IsNullOrEmpty(typeName) || !char.IsUpper(typeName[0])) return false;
-            return (typeKeywordHash.ContainsKey(typeName));
+            if (string.IsNullOrEmpty(typeName) || !char.IsUpper(typeName[0]))
+                return false;
+
+            return typeKeywordHash.ContainsKey(typeName);
         }
 
         public static void RemoveKeyword(string name)
@@ -341,7 +345,7 @@ namespace Server.Mobiles
                 private readonly XmlSpawner m_Spawner;
                 private readonly string m_Condition;
                 private readonly int m_Goto;
-                private TimeSpan m_Repeatdelay;
+                private readonly TimeSpan m_Repeatdelay;
 
                 public KeywordTimer(XmlSpawner spawner, KeywordTag tag, TimeSpan delay, TimeSpan repeatdelay, string condition, int gotogroup)
                     : base(delay)
@@ -415,7 +419,9 @@ namespace Server.Mobiles
         public static string TagInfo(KeywordTag tag)
         {
             if (tag != null)
-                return (string.Format("{0} : type={1} cond={2} go={3} del={4} end={5}", tag.Typename, tag.Type, tag.m_Condition, tag.m_Goto, tag.m_Delay, tag.m_End));
+            {
+                return $"{tag.Typename} : type={tag.Type} cond={tag.m_Condition} go={tag.m_Goto} del={tag.m_Delay} end={tag.m_End}";
+            }
 
             return null;
         }
@@ -441,7 +447,8 @@ namespace Server.Mobiles
                     return spawner.m_KeywordTagList[i];
                 }
             }
-            return (null);
+
+            return null;
         }
 
         #endregion
@@ -456,7 +463,7 @@ namespace Server.Mobiles
             {
                 value = p.GetValue(o, null);
             }
-            else if ((type.GetInterface("IList") != null) && index >= 0)
+            else if (type.GetInterface("IList") != null && index >= 0)
             {
                 try
                 {
@@ -479,21 +486,21 @@ namespace Server.Mobiles
             else if (IsChar(type))
                 toString = string.Format("'{0}' ({1} [0x{1:X}])", value, (int)value);
             else if (IsString(type))
-                toString = string.Format("\"{0}\"", value);
+                toString = $"\"{value}\"";
             else
                 toString = value.ToString();
 
-            return string.Format("{0} = {1}", p.Name, toString);
+            return $"{p.Name} = {toString}";
         }
 
         public static bool IsItem(Type type)
         {
-            return (type != null && (type == typeof(Item) || type.IsSubclassOf(typeof(Item))));
+            return type != null && (type == typeof(Item) || type.IsSubclassOf(typeof(Item)));
         }
 
         public static bool IsMobile(Type type)
         {
-            return (type != null && (type == typeof(Mobile) || type.IsSubclassOf(typeof(Mobile))));
+            return type != null && (type == typeof(Mobile) || type.IsSubclassOf(typeof(Mobile)));
         }
 
         public static string ConstructFromString(PropertyInfo p, Type type, object obj, string value, ref object constructed)
@@ -891,14 +898,14 @@ namespace Server.Mobiles
                         {
                             ptype = mobile.Serial.GetType();
 
-                            return string.Format("Serial = {0}", mobile.Serial);
+                            return $"Serial = {mobile.Serial}";
                         }
 
                         if (o is Item item)
                         {
                             ptype = item.Serial.GetType();
 
-                            return string.Format("Serial = {0}", item.Serial);
+                            return $"Serial = {item.Serial}";
                         }
 
                         return "Object is not item/mobile";
@@ -914,7 +921,7 @@ namespace Server.Mobiles
                 {
                     ptype = typeof(Type);
 
-                    return string.Format("Type = {0}", o.GetType().Name);
+                    return $"Type = {o.GetType().Name}";
                 }
 
                 // do a bit of parsing to handle array references
@@ -928,7 +935,7 @@ namespace Server.Mobiles
                     // then parse to get the index value
                     string[] arrayvalue = arraystring[1].Split(']');
 
-                    if (arrayvalue.Length > 0 && (!int.TryParse(arrayvalue[0], out index)))
+                    if (arrayvalue.Length > 0 && !int.TryParse(arrayvalue[0], out index))
                     {
                         index = -1;
                     }
@@ -1176,7 +1183,7 @@ namespace Server.Mobiles
                                         int min, max;
                                         if (int.TryParse(value_keywordargs[1], out min) && int.TryParse(value_keywordargs[2], out max))
                                         {
-                                            incvalue = string.Format("{0}", Utility.RandomMinMax(min, max));
+                                            incvalue = $"{Utility.RandomMinMax(min, max)}";
                                         }
                                         else { status_str = "Invalid INC args : " + arglist[1]; no_error = false; }
                                     }
@@ -1192,7 +1199,7 @@ namespace Server.Mobiles
                                     // see if it was successful
                                     if (ptype == null)
                                     {
-                                        status_str = string.Format("Cant find {0}", arglist[0]);
+                                        status_str = $"Cant find {arglist[0]}";
                                         no_error = false;
                                     }
                                     else
@@ -1424,7 +1431,7 @@ namespace Server.Mobiles
                     tinfo = to;
 
                     // now search the property list
-                    foreach (PropertyInfo p in to.plist)
+                    foreach (PropertyInfo p in to.Plist)
                     {
                         if (Insensitive.Equals(p.Name, propname))
                         {
@@ -1460,7 +1467,7 @@ namespace Server.Mobiles
                     }
 
                     // and add the property to the tinfo property list
-                    tinfo.plist.Add(p);
+                    tinfo.Plist.Add(p);
                     return p;
                 }
             }
@@ -2149,8 +2156,7 @@ namespace Server.Mobiles
                 if (!item.Deleted && (name.Length == 0 || string.Compare(item.Name, name, true) == 0))
                 {
 
-                    if (typestr == null ||
-                        targettype != null && (itemtype.Equals(targettype) || itemtype.IsSubclassOf(targettype)))
+                    if (typestr == null || targettype != null && (itemtype == targettype || itemtype.IsSubclassOf(targettype)))
                     {
                         founditem = item;
                         count++;
@@ -2188,8 +2194,8 @@ namespace Server.Mobiles
             foreach (Mobile mobile in World.Mobiles.Values) // search through all mobiles in the world and find one with a matching name
             {
                 Type mobtype = mobile.GetType();
-                if (!mobile.Deleted && (name.Length == 0 || string.Compare(mobile.Name, name, true) == 0) && (typestr == null ||
-                    targettype != null && (mobtype.Equals(targettype) || mobtype.IsSubclassOf(targettype))))
+
+                if (!mobile.Deleted && (name.Length == 0 || string.Compare(mobile.Name, name, true) == 0) && (typestr == null || targettype != null && (mobtype == targettype || mobtype.IsSubclassOf(targettype))))
                 {
                     foundmobile = mobile;
                     count++;
@@ -2338,11 +2344,9 @@ namespace Server.Mobiles
                         deletelist = new List<Item>();
                     deletelist.Add(item);
                 }
-                else
-                    if (name.Length == 0 || string.Compare(item.Name, name, true) == 0)
+                else if (name.Length == 0 || string.Compare(item.Name, name, true) == 0)
                 {
-                    if (typestr == null ||
-                        targettype != null && (item.GetType().Equals(targettype) || item.GetType().IsSubclassOf(targettype)))
+                    if (typestr == null || targettype != null && (item.GetType() == targettype || item.GetType().IsSubclassOf(targettype)))
                     {
                         founditem = item;
                         break;
@@ -2399,12 +2403,10 @@ namespace Server.Mobiles
                         deletelist = new List<Mobile>();
                     deletelist.Add(m);
                 }
-                else
-                    if (name.Length == 0 || string.Compare(m.Name, name, true) == 0)
+                else if (name.Length == 0 || string.Compare(m.Name, name, true) == 0)
                 {
 
-                    if (typestr == null ||
-                        targettype != null && (m.GetType().Equals(targettype) || m.GetType().IsSubclassOf(targettype)))
+                    if (typestr == null || targettype != null && (m.GetType() == targettype || m.GetType().IsSubclassOf(targettype)))
                     {
                         foundmobile = m;
                         break;
@@ -2415,7 +2417,9 @@ namespace Server.Mobiles
             if (deletelist != null)
             {
                 foreach (Mobile i in deletelist)
+                {
                     spawner.RecentMobileSearchList.Remove(i);
+                }
             }
 
             return foundmobile;
@@ -3040,13 +3044,13 @@ namespace Server.Mobiles
                                     Mobile dummy = FindMobileByName(spawner, CommandMobileName, "Mobile");
                                     if (dummy != null)
                                     {
-                                        CommandSystem.Handle(dummy, string.Format("{0}{1}", CommandSystem.Prefix, arglist[1]));
+                                        CommandSystem.Handle(dummy, $"{CommandSystem.Prefix}{arglist[1]}");
                                     }
                                 }
                                 else
                                     if (triggermob != null && !triggermob.Deleted)
                                 {
-                                    CommandSystem.Handle(triggermob, string.Format("{0}{1}", CommandSystem.Prefix, arglist[1]));
+                                    CommandSystem.Handle(triggermob, $"{CommandSystem.Prefix}{arglist[1]}");
                                 }
                             }
                             else
