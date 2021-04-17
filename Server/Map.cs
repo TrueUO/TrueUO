@@ -593,13 +593,10 @@ namespace Server
 			{
 				foreach (Mobile m in mobs)
 				{
-					if (m.Location.m_X == x && m.Location.m_Y == y && (m.AccessLevel == AccessLevel.Player || !m.Hidden))
+					if (m.Location.m_X == x && m.Location.m_Y == y && (m.AccessLevel == AccessLevel.Player || !m.Hidden) && m.Z + 16 > z && z + height > m.Z)
 					{
-						if (m.Z + 16 > z && z + height > m.Z)
-						{
-							return false;
-						}
-					}
+                        return false;
+                    }
 				}
 			}
 
