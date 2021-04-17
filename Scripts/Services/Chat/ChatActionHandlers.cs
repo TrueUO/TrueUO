@@ -32,7 +32,7 @@ namespace Server.Engines.Chat
         {
             if (from.NextMessage < Core.TickCount)
             {
-                channel.SendMessage(57, from, from.GetColorCharacter() + from.Username, string.Format("{{{0}}} {1}", channel.Name, param)); // %1: %2
+                channel.SendMessage(57, from, ChatUser.GetColorCharacter() + from.Username, $"{{{channel.Name}}} {param}"); // %1: %2
                 ChatLogging.LogMessage(channel.Name, from.Username, param);
 
                 from.NextMessage = Core.TickCount + ChatSystem.ChatDelay;

@@ -5,11 +5,12 @@ namespace Server.Engines.Chat
 {
     public class ChatSystem
     {
-        public static readonly bool Enabled = Config.Get("Chat.Enabled", true);
-        public static readonly bool AllowCreateChannels = Config.Get("Chat.AllowCreateChannels", true);
-        public static readonly string DefaultChannel = "Help";
+        private static readonly bool Enabled = Config.Get("Chat.Enabled", true);
 
-        public static readonly long ChatDelay = 5000;
+        public static readonly bool AllowCreateChannels = Config.Get("Chat.AllowCreateChannels", true);
+        public const string DefaultChannel = "Help";
+
+        public const long ChatDelay = 5000;
 
         public static void Initialize()
         {
