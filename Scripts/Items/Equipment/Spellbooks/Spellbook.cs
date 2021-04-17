@@ -1098,6 +1098,21 @@ namespace Server.Items
             }
         }
 
+        public double GetBookBaseSkill(Spellbook book, Mobile from)
+        {
+            double skill;
+
+            switch(book.SpellbookType)
+            {
+                default:
+                case SpellbookType.Regular: skill = from.Skills.Magery.BaseFixedPoint; break;
+                case SpellbookType.Necromancer: skill = from.Skills.Necromancy.BaseFixedPoint; break;
+                case SpellbookType.Mystic: skill = from.Skills.Mysticism.BaseFixedPoint; break;
+            }
+
+            return skill;
+        }
+
         public virtual int OnCraft(
             int quality,
             bool makersMark,
@@ -1108,21 +1123,21 @@ namespace Server.Items
             CraftItem craftItem,
             int resHue)
         {
-            int magery = from.Skills.Magery.BaseFixedPoint;
+            double skill = GetBookBaseSkill(this, from);
 
-            if (magery >= 800)
+            if (skill >= 800)
             {
                 int[] propertyCounts;
                 int minIntensity;
                 int maxIntensity;
 
-                if (magery >= 1000)
+                if (skill >= 1000)
                 {
-                    if (magery >= 1200)
+                    if (skill >= 1200)
                     {
                         propertyCounts = m_LegendPropertyCounts;
                     }
-                    else if (magery >= 1100)
+                    else if (skill >= 1100)
                     {
                         propertyCounts = m_ElderPropertyCounts;
                     }
@@ -1134,7 +1149,7 @@ namespace Server.Items
                     minIntensity = 55;
                     maxIntensity = 75;
                 }
-                else if (magery >= 900)
+                else if (skill >= 900)
                 {
                     propertyCounts = m_MasterPropertyCounts;
                     minIntensity = 25;
