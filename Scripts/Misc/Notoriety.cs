@@ -297,159 +297,165 @@ namespace Server.Misc
 
         public static int MobileNotoriety(Mobile source, IDamageable damageable)
         {
-            Mobile target = damageable as Mobile;
-
-            if (target == null)
-                return Notoriety.CanBeAttacked;
-
-            if (target.Blessed)
-                return Notoriety.Invulnerable;
-
-            if (target is BaseVendor vendor && vendor.IsInvulnerable)
-                return Notoriety.Invulnerable;
-
-            if (target is PlayerVendor || target is TownCrier)
-                return Notoriety.Invulnerable;
-
-            EnemyOfOneContext context = EnemyOfOneSpell.GetContext(source);
-
-            if (context != null && context.IsEnemy(target))
-                return Notoriety.Enemy;
-
-            if (PVPArenaSystem.IsEnemy(source, target))
-                return Notoriety.Enemy;
-
-            if (PVPArenaSystem.IsFriendly(source, target))
-                return Notoriety.Ally;
-
-            if (target.IsStaff())
-                return Notoriety.CanBeAttacked;
-
-            var bc = target as BaseCreature;
-
-            if (source.Player && bc != null)
+            while (true)
             {
-                Mobile master = bc.GetMaster();
+                Mobile target = damageable as Mobile;
 
-                if (master != null && master.IsStaff())
+                if (target == null)
                     return Notoriety.CanBeAttacked;
 
-                master = bc.ControlMaster;
+                if (target.Blessed)
+                    return Notoriety.Invulnerable;
 
-                if (master != null && !bc.ForceNotoriety)
-                {
-                    if (source == master && CheckAggressor(target.Aggressors, source))
-                        return Notoriety.CanBeAttacked;
+                if (target is BaseVendor vendor && vendor.IsInvulnerable)
+                    return Notoriety.Invulnerable;
 
-                    if (CheckAggressor(source.Aggressors, bc))
-                        return Notoriety.CanBeAttacked;
+                if (target is PlayerVendor || target is TownCrier)
+                    return Notoriety.Invulnerable;
 
-                    return MobileNotoriety(source, master);
-                }
-            }
+                EnemyOfOneContext context = EnemyOfOneSpell.GetContext(source);
 
-            if (target.Murderer)
-                return Notoriety.Murderer;
-
-            if (target.Body.IsMonster && IsSummoned(bc))
-            {
-                if (!(target is BaseFamiliar) && !(target is ArcaneFey) && !(target is Golem))
-                    return Notoriety.Murderer;
-            }
-
-            if (bc != null && (bc.AlwaysMurderer || bc.IsAnimatedDead))
-            {
-                return Notoriety.Murderer;
-            }
-
-            if (target.Criminal)
-                return Notoriety.Criminal;
-
-            Guild sourceGuild = GetGuildFor(source.Guild as Guild, source);
-            Guild targetGuild = GetGuildFor(target.Guild as Guild, target);
-
-            if (sourceGuild != null && targetGuild != null)
-            {
-                if (sourceGuild == targetGuild)
-                    return Notoriety.Ally;
-
-                if (sourceGuild.IsAlly(targetGuild))
-                    return Notoriety.Ally;
-
-                if (sourceGuild.IsEnemy(targetGuild))
+                if (context != null && context.IsEnemy(target))
                     return Notoriety.Enemy;
-            }
 
-            if (ViceVsVirtueSystem.Enabled && ViceVsVirtueSystem.IsEnemy(source, target) && (ViceVsVirtueSystem.EnhancedRules || source.Map == ViceVsVirtueSystem.Facet))
-                return Notoriety.Enemy;
+                if (PVPArenaSystem.IsEnemy(source, target))
+                    return Notoriety.Enemy;
 
-            if (Stealing.ClassicMode && target is PlayerMobile mobile && mobile.PermaFlags.Contains(source))
-                return Notoriety.CanBeAttacked;
+                if (PVPArenaSystem.IsFriendly(source, target))
+                    return Notoriety.Ally;
 
-            if (bc != null && bc.AlwaysAttackable)
-            {
-                return Notoriety.CanBeAttacked;
-            }
-
-            if (CheckHouseFlag(source, target, target.Location, target.Map))
-                return Notoriety.CanBeAttacked;
-
-            //If Target is NOT A baseCreature, OR it's a BC and the BC is initial innocent...
-            if (!(bc != null && ((BaseCreature)target).InitialInnocent))
-            {
-                if (!target.Body.IsHuman && !target.Body.IsGhost && !IsPet(target as BaseCreature) && !(target is PlayerMobile))
+                if (target.IsStaff())
                     return Notoriety.CanBeAttacked;
-            }
 
-            if (CheckAggressor(source.Aggressors, target))
-                return Notoriety.CanBeAttacked;
+                var bc = target as BaseCreature;
 
-            if (source is PlayerMobile pm && CheckPetAggressor(pm, target))
-                return Notoriety.CanBeAttacked;
-
-            if (CheckAggressed(source.Aggressed, target))
-                return Notoriety.CanBeAttacked;
-
-            if (source is PlayerMobile playerMobile && CheckPetAggressed(playerMobile, target))
-                return Notoriety.CanBeAttacked;
-
-            if (bc != null)
-            {
-                if (bc.AlwaysInnocent)
+                if (source.Player && bc != null)
                 {
-                    return Notoriety.Innocent;
+                    Mobile master = bc.GetMaster();
+
+                    if (master != null && master.IsStaff())
+                        return Notoriety.CanBeAttacked;
+
+                    master = bc.ControlMaster;
+
+                    if (master != null && !bc.ForceNotoriety)
+                    {
+                        if (source == master && CheckAggressor(target.Aggressors, source))
+                            return Notoriety.CanBeAttacked;
+
+                        if (CheckAggressor(source.Aggressors, bc))
+                            return Notoriety.CanBeAttacked;
+
+                        damageable = master;
+                        continue;
+                    }
                 }
 
-                if (bc.Controlled && bc.ControlOrder == OrderType.Guard && bc.ControlTarget == source)
+                if (target.Murderer)
+                    return Notoriety.Murderer;
+
+                if (target.Body.IsMonster && IsSummoned(bc))
+                {
+                    if (!(target is BaseFamiliar) && !(target is ArcaneFey) && !(target is Golem))
+                    {
+                        return Notoriety.Murderer;
+                    }
+                }
+
+                if (bc != null && (bc.AlwaysMurderer || bc.IsAnimatedDead))
+                {
+                    return Notoriety.Murderer;
+                }
+
+                if (target.Criminal)
+                    return Notoriety.Criminal;
+
+                Guild sourceGuild = GetGuildFor(source.Guild as Guild, source);
+                Guild targetGuild = GetGuildFor(target.Guild as Guild, target);
+
+                if (sourceGuild != null && targetGuild != null)
+                {
+                    if (sourceGuild == targetGuild)
+                        return Notoriety.Ally;
+
+                    if (sourceGuild.IsAlly(targetGuild))
+                        return Notoriety.Ally;
+
+                    if (sourceGuild.IsEnemy(targetGuild))
+                        return Notoriety.Enemy;
+                }
+
+                if (ViceVsVirtueSystem.Enabled && ViceVsVirtueSystem.IsEnemy(source, target) && (ViceVsVirtueSystem.EnhancedRules || source.Map == ViceVsVirtueSystem.Facet))
+                    return Notoriety.Enemy;
+
+                if (Stealing.ClassicMode && target is PlayerMobile mobile && mobile.PermaFlags.Contains(source))
+                    return Notoriety.CanBeAttacked;
+
+                if (bc != null && bc.AlwaysAttackable)
                 {
                     return Notoriety.CanBeAttacked;
                 }
-            }
 
-            if (source is BaseCreature creature)
-            {
-                Mobile master = creature.GetMaster();
+                if (CheckHouseFlag(source, target, target.Location, target.Map))
+                    return Notoriety.CanBeAttacked;
 
-                if (master != null)
+                //If Target is NOT A baseCreature, OR it's a BC and the BC is initial innocent...
+                if (!(bc != null && ((BaseCreature) target).InitialInnocent))
                 {
-                    if (CheckAggressor(master.Aggressors, target))
-                    {
+                    if (!target.Body.IsHuman && !target.Body.IsGhost && !IsPet(target as BaseCreature) && !(target is PlayerMobile))
                         return Notoriety.CanBeAttacked;
+                }
+
+                if (CheckAggressor(source.Aggressors, target))
+                    return Notoriety.CanBeAttacked;
+
+                if (source is PlayerMobile pm && CheckPetAggressor(pm, target))
+                    return Notoriety.CanBeAttacked;
+
+                if (CheckAggressed(source.Aggressed, target))
+                    return Notoriety.CanBeAttacked;
+
+                if (source is PlayerMobile playerMobile && CheckPetAggressed(playerMobile, target))
+                    return Notoriety.CanBeAttacked;
+
+                if (bc != null)
+                {
+                    if (bc.AlwaysInnocent)
+                    {
+                        return Notoriety.Innocent;
                     }
 
-                    if (MobileNotoriety(master, target) == Notoriety.CanBeAttacked)
-                    {
-                        return Notoriety.CanBeAttacked;
-                    }
-
-                    if (target is BaseCreature)
+                    if (bc.Controlled && bc.ControlOrder == OrderType.Guard && bc.ControlTarget == source)
                     {
                         return Notoriety.CanBeAttacked;
                     }
                 }
-            }
 
-            return Notoriety.Innocent;
+                if (source is BaseCreature creature)
+                {
+                    Mobile master = creature.GetMaster();
+
+                    if (master != null)
+                    {
+                        if (CheckAggressor(master.Aggressors, target))
+                        {
+                            return Notoriety.CanBeAttacked;
+                        }
+
+                        if (MobileNotoriety(master, target) == Notoriety.CanBeAttacked)
+                        {
+                            return Notoriety.CanBeAttacked;
+                        }
+
+                        if (target is BaseCreature)
+                        {
+                            return Notoriety.CanBeAttacked;
+                        }
+                    }
+                }
+
+                return Notoriety.Innocent;
+            }
         }
 
         public static bool CheckHouseFlag(Mobile from, Mobile m, Point3D p, Map map)

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 
 using Server.Guilds;
@@ -87,13 +88,13 @@ namespace Server
 			return processorCount - 1;
 		}
 
-		private void SaveTypeDatabases()
+		private static void SaveTypeDatabases()
 		{
 			SaveTypeDatabase(World.ItemTypesPath, World.m_ItemTypes);
 			SaveTypeDatabase(World.MobileTypesPath, World.m_MobileTypes);
 		}
 
-		private void SaveTypeDatabase(string path, List<Type> types)
+		private static void SaveTypeDatabase(string path, IReadOnlyCollection<Type> types)
 		{
 			BinaryFileWriter bfw = new BinaryFileWriter(path, false);
 
@@ -125,7 +126,7 @@ namespace Server
 			WriteCount(guildIndex, BaseGuild.List.Count);
 		}
 
-		private void WriteCount(SequentialFileWriter indexFile, int count)
+		private static void WriteCount(Stream indexFile, int count)
 		{
 			byte[] buffer = new byte[4];
 

@@ -52,7 +52,7 @@ namespace Server.Network
 			{ }
 		}
 
-		private Socket Bind(IPEndPoint ipep)
+		private static Socket Bind(IPEndPoint ipep)
 		{
 			Socket s = new Socket(ipep.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
 
@@ -190,7 +190,7 @@ namespace Server.Network
 			{ }
 		}
 
-		private bool VerifySocket(Socket socket)
+		private static bool VerifySocket(Socket socket)
 		{
 			try
 			{
@@ -218,7 +218,7 @@ namespace Server.Network
 			Core.Set();
 		}
 
-		private void Release(Socket socket)
+		private static void Release(Socket socket)
 		{
 			try
 			{

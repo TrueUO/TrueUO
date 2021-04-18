@@ -60,7 +60,7 @@ namespace Server.Engines.Chat
 
                 ChatSystem.SendCommandTo(user.Mobile, ChatCommand.JoinedChannel, m_Name);
 
-                SendCommand(ChatCommand.AddUserToChannel, user.GetColorCharacter() + user.Username);
+                SendCommand(ChatCommand.AddUserToChannel, ChatUser.GetColorCharacter() + user.Username);
 
                 m_Users.Add(user);
                 user.CurrentChannel = this;
@@ -79,7 +79,8 @@ namespace Server.Engines.Chat
                 user.CurrentChannel = null;
 
                 SendCommand(ChatCommand.RemoveUserFromChannel, user, user.Username);
-                ChatSystem.SendCommandTo(user.Mobile, ChatCommand.LeaveChannel, string.Format("{{{0}}}", m_Name));
+
+                ChatSystem.SendCommandTo(user.Mobile, ChatCommand.LeaveChannel, $"{{{m_Name}}}");
                 ChatSystem.SendCommandTo(user.Mobile, ChatCommand.LeftChannel, m_Name);
 
                 ChatLogging.LogLeave(Name, user.Username);
@@ -89,7 +90,7 @@ namespace Server.Engines.Chat
             }
         }
 
-        public bool AlwaysAvailable { get { return m_AlwaysAvailable; } set { m_AlwaysAvailable = value; } }
+        public bool AlwaysAvailable { get => m_AlwaysAvailable; set => m_AlwaysAvailable = value; }
 
         public void SendMessage(int number, ChatUser from, string param1, string param2)
         {
@@ -121,7 +122,7 @@ namespace Server.Engines.Chat
         {
             foreach (ChatUser user in m_Users)
             {
-                ChatSystem.SendCommandTo(to.Mobile, ChatCommand.AddUserToChannel, user.GetColorCharacter() + user.Username, string.Format("{{{0}}}", m_Name));
+                ChatSystem.SendCommandTo(to.Mobile, ChatCommand.AddUserToChannel, ChatUser.GetColorCharacter() + user.Username, $"{{{m_Name}}}");
             }
         }
 

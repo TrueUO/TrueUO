@@ -170,7 +170,7 @@ namespace Server.Multis
                 return false;
             }
 
-            return (val == 0 || ((int)ExpansionInfo.CoreExpansion.CustomHousingFlag & val) != 0);
+            return val == 0 || ((int)ExpansionInfo.CoreExpansion.CustomHousingFlag & val) != 0;
         }
 
         private static int[] CreateTable(int length)
@@ -360,9 +360,9 @@ namespace Server.Multis
 
         public int GetInt32(object obj)
         {
-            if (obj is int)
+            if (obj is int i)
             {
-                return (int)obj;
+                return i;
             }
 
             return 0;

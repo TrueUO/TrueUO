@@ -1,4 +1,3 @@
-#region References
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -7,7 +6,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-#endregion
 
 namespace Server
 {
@@ -15,14 +13,13 @@ namespace Server
 	{
 		public sealed class Entry : IEquatable<Entry>, IComparable<Entry>
 		{
-			public int FileIndex { get; private set; }
+			public int FileIndex { get; }
 
-			public string File { get; private set; }
-			public string Scope { get; private set; }
+			public string File { get; }
+			public string Scope { get; }
+            public string Desc { get; }
+            public string Key { get; }
 
-			public string Desc { get; set; }
-
-			public string Key { get; set; }
 			public string Value { get; set; }
 
 			public bool UseDefault { get; set; }
@@ -671,12 +668,12 @@ namespace Server
 				return defaultValue;
 			}
 
-			if (Regex.IsMatch(value, @"(true|yes|on|1|enabled)", RegexOptions.IgnoreCase))
+			if (Regex.IsMatch(value, "(true|yes|on|1|enabled)", RegexOptions.IgnoreCase))
 			{
 				return true;
 			}
 
-			if (Regex.IsMatch(value, @"(false|no|off|0|disabled)", RegexOptions.IgnoreCase))
+			if (Regex.IsMatch(value, "(false|no|off|0|disabled)", RegexOptions.IgnoreCase))
 			{
 				return false;
 			}

@@ -10,7 +10,7 @@ namespace Server.Gumps
     public abstract class BaseVendorRentalGump : Gump
     {
         protected BaseVendorRentalGump(GumpType type, VendorRentalDuration duration, int price, int renewalPrice,
-            Mobile landlord, Mobile renter, bool landlordRenew, bool renterRenew, bool renew)
+            IEntity landlord, IEntity renter, bool landlordRenew, bool renterRenew, bool renew)
             : base(100, 100)
         {
             if (type == GumpType.Offer)

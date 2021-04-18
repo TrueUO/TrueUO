@@ -27,7 +27,7 @@ namespace Server
 
 		public void Add(int keyword)
 		{
-			if ((m_Count + 1) > m_Keywords.Length)
+			if (m_Count + 1 > m_Keywords.Length)
 			{
 				int[] old = m_Keywords;
 				m_Keywords = new int[old.Length * 2];
