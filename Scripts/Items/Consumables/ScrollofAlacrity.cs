@@ -8,17 +8,16 @@ namespace Server.Items
 {
     [TypeAlias("Server.Items.ScrollofAlacrity")]
     public class ScrollOfAlacrity : SpecialScroll
-    {
-        private static readonly Dictionary<Mobile, Timer> Table = new Dictionary<Mobile, Timer>();
+    {        
+        public override int LabelNumber => 1078604; // Scroll of Alacrity
 
-        public override int LabelNumber => 1078604;// Scroll of Alacrity
-
-        public override int Message => 1078602;/*Using a Scroll of Transcendence for a given skill will permanently increase your current 
+        public override int Message => 1078602;
+        /*Using a Scroll of Transcendence for a given skill will permanently increase your current 
         *level in that skill by the amount of points displayed on the scroll.
         *As you may not gain skills beyond your maximum skill cap, any excess points will be lost.*/
 
         public override int Title => 1078604; // Scroll of Alacrity
-        public override string DefaultTitle => "<basefont color=#FFFFFF>Scroll of Alacrity:</basefont>";
+        public override string DefaultTitle => "<basefont color=#FFFFFF>Scroll of Alacrity:</basefont>";        
 
         public ScrollOfAlacrity()
             : this(SkillName.Alchemy)
@@ -94,9 +93,7 @@ namespace Server.Items
                 from.SendLocalizedMessage(1094935);	/*You cannot increase this skill at this time. The skill may be locked or set to lower in your skill menu.
                 *If you are at your total skill cap, you must use a Powerscroll to increase your current skill cap.*/
                 return;
-            }
-
-            from.SendLocalizedMessage(1077956); // You are infused with intense energy. You are under the effects of an accelerated skillgain scroll.
+            }            
 
             Effects.SendPacket(from.Location, from.Map, new ParticleEffect(EffectType.FixedFrom, from.Serial, Serial.Zero, 0, from.Location, from.Location, 0, 0, false, false, 0, 0, 0, 5060, 1, from.Serial, 59, 0));
             Effects.SendPacket(from.Location, from.Map, new ParticleEffect(EffectType.Moving, Serial.Zero, from.Serial, 0x36D4, new Point3D(from.X - 6, from.Y - 6, from.Z + 15), from.Location, 7, 0, false, false, 1178, 0, 0, 0, 1, from.Serial, 91, 0));
@@ -104,37 +101,183 @@ namespace Server.Items
             Effects.SendPacket(from.Location, from.Map, new ParticleEffect(EffectType.Moving, Serial.Zero, from.Serial, 0x36D4, new Point3D(from.X - 6, from.Y - 4, from.Z + 15), from.Location, 7, 0, false, false, 1178, 0, 0, 0, 1, from.Serial, 91, 0));
             Effects.SendPacket(from.Location, from.Map, new ParticleEffect(EffectType.FixedFrom, from.Serial, Serial.Zero, 0x375A, from.Location, from.Location, 35, 90, false, false, 0, 0, 0, 0, 1, from.Serial, 91, 0));
 
-            Effects.PlaySound(from.Location, from.Map, 0x100);
-            Effects.PlaySound(from.Location, from.Map, 0x0FF);
+            Effects.PlaySound(from.Location, from.Map, 0x100);            
 
-            pm.AcceleratedStart = DateTime.UtcNow + TimeSpan.FromMinutes(15);
-
-            Table[from] = Timer.DelayCall(TimeSpan.FromMinutes(15), new TimerStateCallback(Expire_Callback), from);
-
-            pm.AcceleratedSkill = Skill;
-
-            BuffInfo.AddBuff(pm, new BuffInfo(BuffIcon.ArcaneEmpowerment, 1078511, 1078512, TimeSpan.FromMinutes(15), pm, GetName(), true));
-
+            CreateTimer(pm, 900, Skill);
+            StartTimer(pm);
+            
             Delete();
+        }
+
+        public class AlacrityArray
+        {
+            public Mobile Mobile { get; set; }
+            public ExpireTimer Timer { get; set; }
+            public SkillName Skill { get; set; }
+        }
+
+        private static readonly List<AlacrityArray> Table = new List<AlacrityArray>();
+
+        public static void Configure()
+        {
+            EventSink.Login += OnLogin;
+            EventSink.Logout += OnLogout;
+        }
+
+        private static void OnLogin(LoginEventArgs e)
+        {
+            Timer.DelayCall(TimeSpan.FromSeconds(1), () => StartTimer(e.Mobile));
+        }
+
+        private static void OnLogout(LogoutEventArgs e)
+        {
+            StopTimer(e.Mobile);
+        }
+
+        public class ExpireTimer : Timer
+        {
+            private readonly Mobile m_Mobile;
+            public int Tick;
+
+            public ExpireTimer(Mobile m, int tick)
+                : base(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1))
+            {
+                m_Mobile = m;
+                Tick = tick;
+            }
+
+            protected override void OnTick()
+            {
+                if (Tick <= 0)
+                {
+                    RemoveTimer(m_Mobile);
+                }
+                else
+                {
+                    Tick--;
+                }
+            }
+        }
+
+        public static AlacrityArray Contains(Mobile m)
+        {
+            AlacrityArray arr = null;
+
+            foreach (var t in Table)
+            {
+                if (t.Mobile == m)
+                {
+                    arr = t;
+                    break;
+                }
+            }
+
+            return arr;            
+        }
+
+        public static void CreateTimer(Mobile m, int tick, SkillName skillname)
+        {
+            if (m != null)
+            {
+                var contains = Contains(m);
+
+                if (contains == null)
+                {
+                    Table.Add(new AlacrityArray { Mobile = m, Timer = new ExpireTimer(m, tick), Skill = skillname });
+                    Console.WriteLine("CreateTimer " + tick);
+                }
+            }
+        }
+
+        public static void RemoveTimer(Mobile m)
+        {
+            if (m == null)
+                return;
+
+            var contains = Contains(m);
+
+            if (contains != null)
+            {
+                ExpireTimer t = contains.Timer;
+
+                if (t != null)
+                {
+                    t.Stop();
+                    Table.Remove(contains);
+
+                    if (((PlayerMobile)m).AcceleratedStart > DateTime.UtcNow)
+                    {
+                        ((PlayerMobile)m).AcceleratedStart = DateTime.UtcNow;
+                    }
+
+                    m.PlaySound(0x100);
+                    BuffInfo.RemoveBuff(m, BuffIcon.ArcaneEmpowerment);
+                    m.SendLocalizedMessage(1077957);// The intense energy dissipates. You are no longer under the effects of an accelerated skillgain scroll.
+
+                    Console.WriteLine("RemoveTimer " + t.Tick);
+                }
+            }
+        }
+
+        public static void StartTimer(Mobile m)
+        {
+            if (m == null)
+                return;
+
+            var contains = Contains(m);
+
+            if (contains != null)
+            {
+                ExpireTimer t = contains.Timer;
+
+                if (t != null)
+                {
+                    t.Start();
+
+                    m.SendLocalizedMessage(1077956); // You are infused with intense energy. You are under the effects of an accelerated skillgain scroll.
+
+                    m.PlaySound(0x0FF);
+
+                    ((PlayerMobile)m).AcceleratedStart = DateTime.UtcNow + TimeSpan.FromSeconds(t.Tick);
+                    ((PlayerMobile)m).AcceleratedSkill = contains.Skill;
+
+                    BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.ArcaneEmpowerment, 1078511, 1078512, TimeSpan.FromSeconds(t.Tick), m, SkillInfo.Table[(int)contains.Skill].Name)); 
+                    Console.WriteLine("StartTimer " + t.Tick);
+                }
+            }
+            else
+            {
+                if (((PlayerMobile)m).AcceleratedStart > DateTime.UtcNow)
+                {
+                    ((PlayerMobile)m).AcceleratedStart = DateTime.UtcNow;
+                }
+            }
+        }
+
+        public static void StopTimer(Mobile m)
+        {
+            if (m == null)
+                return;
+
+            var contains = Contains(m);
+
+            if (contains != null)
+            {
+                ExpireTimer t = contains.Timer;
+
+                if (t != null)
+                {
+                    t.Stop();
+
+                    if (((PlayerMobile)m).AcceleratedStart > DateTime.UtcNow)
+                    {
+                        ((PlayerMobile)m).AcceleratedStart = DateTime.UtcNow;
+                    }
+
+                    Console.WriteLine("StopTimer " + t.Tick);
+                }
+            }
         }        
-
-        private static void Expire_Callback(object state)
-        {
-            AlacrityEnd((Mobile)state);
-        }
-
-        public static bool AlacrityEnd(Mobile m)
-        {
-            Table.Remove(m);
-
-            m.PlaySound(0x100);
-
-            BuffInfo.RemoveBuff(m, BuffIcon.ArcaneEmpowerment);
-
-            m.SendLocalizedMessage(1077957);// The intense energy dissipates. You are no longer under the effects of an accelerated skillgain scroll.
-
-            return true;
-        }
 
         public static ScrollOfAlacrity CreateRandom()
         {
