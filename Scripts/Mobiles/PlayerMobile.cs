@@ -1498,14 +1498,6 @@ namespace Server.Mobiles
             if (pm == null)
                 return;
 
-            #region Scroll of Alacrity
-            if (pm.AcceleratedStart > DateTime.UtcNow)
-            {
-                pm.AcceleratedStart = DateTime.UtcNow;
-                ScrollOfAlacrity.AlacrityEnd(pm);
-            }
-            #endregion
-
             BaseFamiliar.OnLogout(pm);
 
             BasketOfHerbs.CheckBonus(pm);
@@ -1531,7 +1523,7 @@ namespace Server.Mobiles
                 pm.BlanketOfDarknessLogout = false;
                 pm.LastOnline = DateTime.UtcNow;
             }
-
+            
             DisguiseTimers.StartTimer(e.Mobile);
 
             Timer.DelayCall(TimeSpan.Zero, new TimerStateCallback(ClearSpecialMovesCallback), e.Mobile);
@@ -1592,7 +1584,7 @@ namespace Server.Mobiles
                 pm.AutoStablePets();
             }
 
-            DisguiseTimers.StopTimer(from);
+            DisguiseTimers.StopTimer(from);            
         }
 
         public override void RevealingAction()
@@ -3339,12 +3331,7 @@ namespace Server.Mobiles
                     Waypoints.RemoveHealers(this, Map);
                 }
 
-                #region Scroll of Alacrity
-                if (AcceleratedStart > DateTime.UtcNow)
-                {
-                    BuffInfo.AddBuff(this, new BuffInfo(BuffIcon.ArcaneEmpowerment, 1078511, 1078512, AcceleratedSkill.ToString()));
-                }
-                #endregion
+                ScrollOfAlacrity.StartTimer(this);
             }
         }
 
@@ -3607,6 +3594,7 @@ namespace Server.Mobiles
 
             PolymorphSpell.StopTimer(this);
             IncognitoSpell.StopTimer(this);
+            ScrollOfAlacrity.StopTimer(this);
             DisguiseTimers.RemoveTimer(this);
 
             WeakenSpell.RemoveEffects(this);
@@ -4734,6 +4722,7 @@ namespace Server.Mobiles
             BaseHouse.HandleDeletion(this);
 
             DisguiseTimers.RemoveTimer(this);
+            ScrollOfAlacrity.RemoveTimer(this);
         }
 
         public delegate void PlayerPropertiesEventHandler(PlayerPropertiesEventArgs e);
