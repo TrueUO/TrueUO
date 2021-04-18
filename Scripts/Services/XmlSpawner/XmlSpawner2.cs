@@ -7621,48 +7621,51 @@ namespace Server.Mobiles
         // return the next subgroup in the sequence.
         public int NextSequentialIndex(int sgroup)
         {
-            if (m_SpawnObjects == null || m_SpawnObjects.Count == 0)
-                return 0;
-
-            int finddirection = 1;
-            int largergroup = -1;
-
-            //find the next subgroup that is greater than the current one
-            for (int j = 0; j < m_SpawnObjects.Count; j++)
+            while (true)
             {
-                SpawnObject s = m_SpawnObjects[j];
-                if (s.SubGroup > 0 && (s.Ignore || s.Disabled)) continue;
+                if (m_SpawnObjects == null || m_SpawnObjects.Count == 0) return 0;
 
-                int thisgroup = s.SubGroup;
+                int finddirection = 1;
+                int largergroup = -1;
 
-                // start off by finding a subgroup that is larger
-                if (finddirection == 1)
+                //find the next subgroup that is greater than the current one
+                for (int j = 0; j < m_SpawnObjects.Count; j++)
                 {
-                    if (thisgroup > sgroup)
-                    {
-                        largergroup = thisgroup;
+                    SpawnObject s = m_SpawnObjects[j];
+                    if (s.SubGroup > 0 && (s.Ignore || s.Disabled)) continue;
 
-                        // then work backward to find the group that is less than this but still larger than the current
-                        finddirection = -1;
+                    int thisgroup = s.SubGroup;
+
+                    // start off by finding a subgroup that is larger
+                    if (finddirection == 1)
+                    {
+                        if (thisgroup > sgroup)
+                        {
+                            largergroup = thisgroup;
+
+                            // then work backward to find the group that is less than this but still larger than the current
+                            finddirection = -1;
+                        }
+                    }
+                    else
+                    {
+                        if (thisgroup > sgroup && thisgroup < largergroup)
+                        {
+                            largergroup = thisgroup;
+
+                            finddirection = -1;
+                        }
                     }
                 }
-                else
+
+                if (largergroup < 0 && sgroup >= 0) // if couldnt find one larger, then it is time to wraparound
                 {
-                    if (thisgroup > sgroup && thisgroup < largergroup)
-                    {
-                        largergroup = thisgroup;
-
-                        finddirection = -1;
-                    }
+                    sgroup = -1;
+                    continue;
                 }
-            }
 
-            if (largergroup < 0 && sgroup >= 0) // if couldnt find one larger, then it is time to wraparound
-            {
-                return (NextSequentialIndex(-1));
+                return largergroup;
             }
-
-            return largergroup;
         }
 
         public int GetCurrentAvailableSequentialSpawnIndex(int sgroup) // returns the spawn index of a spawn entry in the current sequential subgroup

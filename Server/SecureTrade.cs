@@ -116,7 +116,7 @@ namespace Server
 			Close();
 		}
 
-		public void Close()
+        private void Close()
 		{
 			if (!m_Valid)
 			{

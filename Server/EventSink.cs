@@ -242,10 +242,10 @@ namespace Server
 
 	public class WorldBroadcastEventArgs : EventArgs
 	{
-		public int Hue { get; set; }
-		public bool Ascii { get; set; }
-		public AccessLevel Access { get; set; }
-		public string Text { get; set; }
+		public int Hue { get; }
+		public bool Ascii { get; }
+		public AccessLevel Access { get; }
+		public string Text { get; }
 
 		public WorldBroadcastEventArgs(int hue, bool ascii, AccessLevel access, string text)
 		{
@@ -862,7 +862,7 @@ namespace Server
 		}
 	}
 
-	public struct SkillNameValue
+	public readonly struct SkillNameValue
 	{
 		private readonly SkillName m_Name;
 		private readonly int m_Value;
@@ -1785,732 +1785,459 @@ namespace Server
 		public static event MultiDesignQueryHandler MultiDesign;
 
 		public static void InvokeOnItemObtained(OnItemObtainedEventArgs e)
-		{
-			if (OnItemObtained != null)
-			{
-				OnItemObtained(e);
-			}
-		}
+        {
+            OnItemObtained?.Invoke(e);
+        }
 
 		public static void InvokeCheckEquipItem(CheckEquipItemEventArgs e)
-		{
-			if (CheckEquipItem != null)
-			{
-				CheckEquipItem(e);
-			}
-		}
+        {
+            CheckEquipItem?.Invoke(e);
+        }
 
 		public static void InvokeContextMenu(ContextMenuEventArgs e)
-		{
-			if (ContextMenu != null)
-			{
-				ContextMenu(e);
-			}
-		}
+        {
+            ContextMenu?.Invoke(e);
+        }
 
 		public static void InvokeWorldBroadcast(WorldBroadcastEventArgs e)
-		{
-			if (WorldBroadcast != null)
-			{
-				WorldBroadcast(e);
-			}
-		}
+        {
+            WorldBroadcast?.Invoke(e);
+        }
 
 		public static void InvokeClientVersionReceived(ClientVersionReceivedArgs e)
-		{
-			if (ClientVersionReceived != null)
-			{
-				ClientVersionReceived(e);
-			}
-		}
+        {
+            ClientVersionReceived?.Invoke(e);
+        }
 
 		public static void InvokeClientTypeReceived(ClientTypeReceivedArgs e)
-		{
-			if (ClientTypeReceived != null)
-			{
-				ClientTypeReceived(e);
-			}
-		}
+        {
+            ClientTypeReceived?.Invoke(e);
+        }
 
 		public static void InvokeServerStarted()
-		{
-			if (ServerStarted != null)
-			{
-				ServerStarted();
-			}
-		}
+        {
+            ServerStarted?.Invoke();
+        }
 
 		public static void InvokeCreateGuild(CreateGuildEventArgs e)
-		{
-			if (CreateGuild != null)
-			{
-				CreateGuild(e);
-			}
-		}
+        {
+            CreateGuild?.Invoke(e);
+        }
 
 		public static void InvokeSetAbility(SetAbilityEventArgs e)
-		{
-			if (SetAbility != null)
-			{
-				SetAbility(e);
-			}
-		}
+        {
+            SetAbility?.Invoke(e);
+        }
 
 		public static void InvokeGuildGumpRequest(GuildGumpRequestArgs e)
-		{
-			if (GuildGumpRequest != null)
-			{
-				GuildGumpRequest(e);
-			}
-		}
+        {
+            GuildGumpRequest?.Invoke(e);
+        }
 
 		public static void InvokeQuestGumpRequest(QuestGumpRequestArgs e)
-		{
-			if (QuestGumpRequest != null)
-			{
-				QuestGumpRequest(e);
-			}
-		}
+        {
+            QuestGumpRequest?.Invoke(e);
+        }
 
 		public static void InvokeFastWalk(FastWalkEventArgs e)
-		{
-			if (FastWalk != null)
-			{
-				FastWalk(e);
-			}
-		}
+        {
+            FastWalk?.Invoke(e);
+        }
 
 		public static void InvokeDeleteRequest(DeleteRequestEventArgs e)
-		{
-			if (DeleteRequest != null)
-			{
-				DeleteRequest(e);
-			}
-		}
+        {
+            DeleteRequest?.Invoke(e);
+        }
 
 		public static void InvokeGameLogin(GameLoginEventArgs e)
-		{
-			if (GameLogin != null)
-			{
-				GameLogin(e);
-			}
-		}
+        {
+            GameLogin?.Invoke(e);
+        }
 
 		public static void InvokeCommand(CommandEventArgs e)
-		{
-			if (Command != null)
-			{
-				Command(e);
-			}
-		}
+        {
+            Command?.Invoke(e);
+        }
 
 		public static void InvokeAggressiveAction(AggressiveActionEventArgs e)
-		{
-			if (AggressiveAction != null)
-			{
-				AggressiveAction(e);
-			}
-		}
+        {
+            AggressiveAction?.Invoke(e);
+        }
 
 		public static void InvokeProfileRequest(ProfileRequestEventArgs e)
-		{
-			if (ProfileRequest != null)
-			{
-				ProfileRequest(e);
-			}
-		}
+        {
+            ProfileRequest?.Invoke(e);
+        }
 
 		public static void InvokeChangeProfileRequest(ChangeProfileRequestEventArgs e)
-		{
-			if (ChangeProfileRequest != null)
-			{
-				ChangeProfileRequest(e);
-			}
-		}
+        {
+            ChangeProfileRequest?.Invoke(e);
+        }
 
 		public static void InvokePaperdollRequest(PaperdollRequestEventArgs e)
-		{
-			if (PaperdollRequest != null)
-			{
-				PaperdollRequest(e);
-			}
-		}
+        {
+            PaperdollRequest?.Invoke(e);
+        }
 
 		public static void InvokeAccountLogin(AccountLoginEventArgs e)
-		{
-			if (AccountLogin != null)
-			{
-				AccountLogin(e);
-			}
-		}
+        {
+            AccountLogin?.Invoke(e);
+        }
 
 		public static void InvokeVirtueItemRequest(VirtueItemRequestEventArgs e)
-		{
-			if (VirtueItemRequest != null)
-			{
-				VirtueItemRequest(e);
-			}
-		}
+        {
+            VirtueItemRequest?.Invoke(e);
+        }
 
 		public static void InvokeVirtueGumpRequest(VirtueGumpRequestEventArgs e)
-		{
-			if (VirtueGumpRequest != null)
-			{
-				VirtueGumpRequest(e);
-			}
-		}
+        {
+            VirtueGumpRequest?.Invoke(e);
+        }
 
 		public static void InvokeVirtueMacroRequest(VirtueMacroRequestEventArgs e)
-		{
-			if (VirtueMacroRequest != null)
-			{
-				VirtueMacroRequest(e);
-			}
-		}
+        {
+            VirtueMacroRequest?.Invoke(e);
+        }
 
 		public static void InvokePlayerDeath(PlayerDeathEventArgs e)
-		{
-			if (PlayerDeath != null)
-			{
-				PlayerDeath(e);
-			}
-		}
+        {
+            PlayerDeath?.Invoke(e);
+        }
 
 		public static void InvokeCreatureDeath(CreatureDeathEventArgs e)
-		{
-			if (CreatureDeath != null)
-			{
-				CreatureDeath(e);
-			}
-		}
+        {
+            CreatureDeath?.Invoke(e);
+        }
 
 		public static void InvokeRenameRequest(RenameRequestEventArgs e)
-		{
-			if (RenameRequest != null)
-			{
-				RenameRequest(e);
-			}
-		}
+        {
+            RenameRequest?.Invoke(e);
+        }
 
 		public static void InvokeLogout(LogoutEventArgs e)
-		{
-			if (Logout != null)
-			{
-				Logout(e);
-			}
-		}
+        {
+            Logout?.Invoke(e);
+        }
 
 		public static void InvokeSocketConnect(SocketConnectEventArgs e)
-		{
-			if (SocketConnect != null)
-			{
-				SocketConnect(e);
-			}
-		}
+        {
+            SocketConnect?.Invoke(e);
+        }
 
 		public static void InvokeConnected(ConnectedEventArgs e)
-		{
-			if (Connected != null)
-			{
-				Connected(e);
-			}
-		}
+        {
+            Connected?.Invoke(e);
+        }
 
 		public static void InvokeDisconnected(DisconnectedEventArgs e)
-		{
-			if (Disconnected != null)
-			{
-				Disconnected(e);
-			}
-		}
+        {
+            Disconnected?.Invoke(e);
+        }
 
 		public static void InvokeAnimateRequest(AnimateRequestEventArgs e)
-		{
-			if (AnimateRequest != null)
-			{
-				AnimateRequest(e);
-			}
-		}
+        {
+            AnimateRequest?.Invoke(e);
+        }
 
 		public static void InvokeCastSpellRequest(CastSpellRequestEventArgs e)
-		{
-			if (CastSpellRequest != null)
-			{
-				CastSpellRequest(e);
-			}
-		}
+        {
+            CastSpellRequest?.Invoke(e);
+        }
 
 		public static void InvokeBandageTargetRequest(BandageTargetRequestEventArgs e)
-		{
-			if (BandageTargetRequest != null)
-			{
-				BandageTargetRequest(e);
-			}
-		}
+        {
+            BandageTargetRequest?.Invoke(e);
+        }
 
 		public static void InvokeOpenSpellbookRequest(OpenSpellbookRequestEventArgs e)
-		{
-			if (OpenSpellbookRequest != null)
-			{
-				OpenSpellbookRequest(e);
-			}
-		}
+        {
+            OpenSpellbookRequest?.Invoke(e);
+        }
 
 		public static void InvokeDisarmRequest(DisarmRequestEventArgs e)
-		{
-			if (DisarmRequest != null)
-			{
-				DisarmRequest(e);
-			}
-		}
+        {
+            DisarmRequest?.Invoke(e);
+        }
 
 		public static void InvokeStunRequest(StunRequestEventArgs e)
-		{
-			if (StunRequest != null)
-			{
-				StunRequest(e);
-			}
-		}
+        {
+            StunRequest?.Invoke(e);
+        }
 
 		public static void InvokeHelpRequest(HelpRequestEventArgs e)
-		{
-			if (HelpRequest != null)
-			{
-				HelpRequest(e);
-			}
-		}
+        {
+            HelpRequest?.Invoke(e);
+        }
 
 		public static void InvokeShutdown(ShutdownEventArgs e)
-		{
-			if (Shutdown != null)
-			{
-				Shutdown(e);
-			}
-		}
+        {
+            Shutdown?.Invoke(e);
+        }
 
 		public static void InvokeCrashed(CrashedEventArgs e)
-		{
-			if (Crashed != null)
-			{
-				Crashed(e);
-			}
-		}
+        {
+            Crashed?.Invoke(e);
+        }
 
 		public static void InvokeHungerChanged(HungerChangedEventArgs e)
-		{
-			if (HungerChanged != null)
-			{
-				HungerChanged(e);
-			}
-		}
+        {
+            HungerChanged?.Invoke(e);
+        }
 
 		public static void InvokeMovement(MovementEventArgs e)
-		{
-			if (Movement != null)
-			{
-				Movement(e);
-			}
-		}
+        {
+            Movement?.Invoke(e);
+        }
 
 		public static void InvokeServerList(ServerListEventArgs e)
-		{
-			if (ServerList != null)
-			{
-				ServerList(e);
-			}
-		}
+        {
+            ServerList?.Invoke(e);
+        }
 
 		public static void InvokeLogin(LoginEventArgs e)
-		{
-			if (Login != null)
-			{
-				Login(e);
-			}
-		}
+        {
+            Login?.Invoke(e);
+        }
 
 		public static void InvokeSpeech(SpeechEventArgs e)
-		{
-			if (Speech != null)
-			{
-				Speech(e);
-			}
-		}
+        {
+            Speech?.Invoke(e);
+        }
 
 		public static void InvokeCharacterCreated(CharacterCreatedEventArgs e)
-		{
-			if (CharacterCreated != null)
-			{
-				CharacterCreated(e);
-			}
-		}
+        {
+            CharacterCreated?.Invoke(e);
+        }
 
 		public static void InvokeOpenDoorMacroUsed(OpenDoorMacroEventArgs e)
-		{
-			if (OpenDoorMacroUsed != null)
-			{
-				OpenDoorMacroUsed(e);
-			}
-		}
+        {
+            OpenDoorMacroUsed?.Invoke(e);
+        }
 
 		public static void InvokeWorldLoad()
-		{
-			if (WorldLoad != null)
-			{
-				WorldLoad();
-			}
-		}
+        {
+            WorldLoad?.Invoke();
+        }
 
 		public static void InvokeWorldSave(WorldSaveEventArgs e)
-		{
-			if (WorldSave != null)
-			{
-				WorldSave(e);
-			}
-		}
+        {
+            WorldSave?.Invoke(e);
+        }
 
 		public static void InvokeBeforeWorldSave(BeforeWorldSaveEventArgs e)
-		{
-			if (BeforeWorldSave != null)
-			{
-				BeforeWorldSave(e);
-			}
-		}
+        {
+            BeforeWorldSave?.Invoke(e);
+        }
 
 		public static void InvokeAfterWorldSave(AfterWorldSaveEventArgs e)
-		{
-			if (AfterWorldSave != null)
-			{
-				AfterWorldSave(e);
-			}
-		}
+        {
+            AfterWorldSave?.Invoke(e);
+        }
 
 		public static void InvokeOnKilledBy(OnKilledByEventArgs e)
-		{
-			if (OnKilledBy != null)
-			{
-				OnKilledBy(e);
-			}
-		}
+        {
+            OnKilledBy?.Invoke(e);
+        }
 
 		public static void InvokeOnItemUse(OnItemUseEventArgs e)
-		{
-			if (OnItemUse != null)
-			{
-				OnItemUse(e);
-			}
-		}
+        {
+            OnItemUse?.Invoke(e);
+        }
 
 		public static void InvokeOnEnterRegion(OnEnterRegionEventArgs e)
-		{
-			if (OnEnterRegion != null)
-			{
-				OnEnterRegion(e);
-			}
-		}
+        {
+            OnEnterRegion?.Invoke(e);
+        }
 
 		public static void InvokeOnConsume(OnConsumeEventArgs e)
-		{
-			if (OnConsume != null)
-			{
-				OnConsume(e);
-			}
-		}
+        {
+            OnConsume?.Invoke(e);
+        }
 
 		public static void InvokeOnPropertyChanged(OnPropertyChangedEventArgs e)
-		{
-			if (OnPropertyChanged != null)
-			{
-				OnPropertyChanged(e);
-			}
-		}
+        {
+            OnPropertyChanged?.Invoke(e);
+        }
 
 		public static void InvokeBODUsed(BODUsedEventArgs e)
-		{
-			if (BODUsed != null)
-			{
-				BODUsed(e);
-			}
-		}
+        {
+            BODUsed?.Invoke(e);
+        }
 
 		public static void InvokeBODOffered(BODOfferEventArgs e)
-		{
-			if (BODOffered != null)
-			{
-				BODOffered(e);
-			}
-		}
+        {
+            BODOffered?.Invoke(e);
+        }
 
 		public static void InvokeResourceHarvestAttempt(ResourceHarvestAttemptEventArgs e)
-		{
-			if (ResourceHarvestAttempt != null)
-			{
-				ResourceHarvestAttempt(e);
-			}
-		}
+        {
+            ResourceHarvestAttempt?.Invoke(e);
+        }
 
 		public static void InvokeResourceHarvestSuccess(ResourceHarvestSuccessEventArgs e)
-		{
-			if (ResourceHarvestSuccess != null)
-			{
-				ResourceHarvestSuccess(e);
-			}
-		}
+        {
+            ResourceHarvestSuccess?.Invoke(e);
+        }
 
 		public static void InvokeCraftSuccess(CraftSuccessEventArgs e)
-		{
-			if (CraftSuccess != null)
-			{
-				CraftSuccess(e);
-			}
-		}
+        {
+            CraftSuccess?.Invoke(e);
+        }
 
 		public static void InvokeSkillGain(SkillGainEventArgs e)
-		{
-			if (SkillGain != null)
-			{
-				SkillGain(e);
-			}
-		}
+        {
+            SkillGain?.Invoke(e);
+        }
 
 		public static void InvokeSkillCheck(SkillCheckEventArgs e)
-		{
-			if (SkillCheck != null)
-			{
-				SkillCheck(e);
-			}
-		}
+        {
+            SkillCheck?.Invoke(e);
+        }
 
 		public static void InvokeSkillCapChange(SkillCapChangeEventArgs e)
-		{
-			if (SkillCapChange != null)
-			{
-				SkillCapChange(e);
-			}
-		}
+        {
+            SkillCapChange?.Invoke(e);
+        }
 
 		public static void InvokeStatCapChange(StatCapChangeEventArgs e)
-		{
-			if (StatCapChange != null)
-			{
-				StatCapChange(e);
-			}
-		}
+        {
+            StatCapChange?.Invoke(e);
+        }
 
 		public static void InvokeQuestComplete(QuestCompleteEventArgs e)
-		{
-			if (QuestComplete != null)
-			{
-				QuestComplete(e);
-			}
-		}
+        {
+            QuestComplete?.Invoke(e);
+        }
 
 		public static void InvokeItemCreated(ItemCreatedEventArgs e)
-		{
-			if (ItemCreated != null)
-			{
-				ItemCreated(e);
-			}
-		}
+        {
+            ItemCreated?.Invoke(e);
+        }
 
 		public static void InvokeItemDeleted(ItemDeletedEventArgs e)
-		{
-			if (ItemDeleted != null)
-			{
-				ItemDeleted(e);
-			}
-		}
+        {
+            ItemDeleted?.Invoke(e);
+        }
 
 		public static void InvokeMobileCreated(MobileCreatedEventArgs e)
-		{
-			if (MobileCreated != null)
-			{
-				MobileCreated(e);
-			}
-		}
+        {
+            MobileCreated?.Invoke(e);
+        }
 
 		public static void InvokeMobileDeleted(MobileDeletedEventArgs e)
-		{
-			if (MobileDeleted != null)
-			{
-				MobileDeleted(e);
-			}
-		}
+        {
+            MobileDeleted?.Invoke(e);
+        }
 
 		public static void InvokeTargetedSpell(TargetedSpellEventArgs e)
-		{
-			if (TargetedSpell != null)
-			{
-				TargetedSpell(e);
-			}
-		}
+        {
+            TargetedSpell?.Invoke(e);
+        }
 
 		public static void InvokeTargetedSkill(TargetedSkillEventArgs e)
-		{
-			if (TargetedSkill != null)
-			{
-				TargetedSkill(e);
-			}
-		}
+        {
+            TargetedSkill?.Invoke(e);
+        }
 
 		public static void InvokeTargetedItemUse(TargetedItemUseEventArgs e)
-		{
-			if (TargetedItemUse != null)
-			{
-				TargetedItemUse(e);
-			}
-		}
+        {
+            TargetedItemUse?.Invoke(e);
+        }
 
 		public static void InvokeTargetByResourceMacro(TargetByResourceMacroEventArgs e)
-		{
-			if (TargetByResourceMacro != null)
-			{
-				TargetByResourceMacro(e);
-			}
-		}
+        {
+            TargetByResourceMacro?.Invoke(e);
+        }
 
 		public static void InvokeEquipMacro(EquipMacroEventArgs e)
-		{
-			if (EquipMacro != null)
-			{
-				EquipMacro(e);
-			}
-		}
+        {
+            EquipMacro?.Invoke(e);
+        }
 
 		public static void InvokeUnequipMacro(UnequipMacroEventArgs e)
-		{
-			if (UnequipMacro != null)
-			{
-				UnequipMacro(e);
-			}
-		}
+        {
+            UnequipMacro?.Invoke(e);
+        }
 
 		public static void InvokeJoinGuild(JoinGuildEventArgs e)
-		{
-			if (JoinGuild != null)
-			{
-				JoinGuild(e);
-			}
-		}
+        {
+            JoinGuild?.Invoke(e);
+        }
 
 		public static void InvokeTameCreature(TameCreatureEventArgs e)
-		{
-			if (TameCreature != null)
-			{
-				TameCreature(e);
-			}
-		}
+        {
+            TameCreature?.Invoke(e);
+        }
 
 		public static void InvokeValidVendorPurchase(ValidVendorPurchaseEventArgs e)
-		{
-			if (ValidVendorPurchase != null)
-			{
-				ValidVendorPurchase(e);
-			}
-		}
+        {
+            ValidVendorPurchase?.Invoke(e);
+        }
 
 		public static void InvokeValidVendorSell(ValidVendorSellEventArgs e)
-		{
-			if (ValidVendorSell != null)
-			{
-				ValidVendorSell(e);
-			}
-		}
+        {
+            ValidVendorSell?.Invoke(e);
+        }
 
 		public static void InvokeCorpseLoot(CorpseLootEventArgs e)
-		{
-			if (CorpseLoot != null)
-			{
-				CorpseLoot(e);
-			}
-		}
+        {
+            CorpseLoot?.Invoke(e);
+        }
 
 		public static void InvokeRepairItem(RepairItemEventArgs e)
-		{
-			if (RepairItem != null)
-			{
-				RepairItem(e);
-			}
-		}
+        {
+            RepairItem?.Invoke(e);
+        }
 
 		public static void InvokeAlterItem(AlterItemEventArgs e)
-		{
-			if (AlterItem != null)
-			{
-				AlterItem(e);
-			}
-		}
+        {
+            AlterItem?.Invoke(e);
+        }
 
 		public static void InvokePlacePlayerVendor(PlacePlayerVendorEventArgs e)
-		{
-			if (PlacePlayerVendor != null)
-			{
-				PlacePlayerVendor(e);
-			}
-		}
+        {
+            PlacePlayerVendor?.Invoke(e);
+        }
 
 		public static void InvokeFameChange(FameChangeEventArgs e)
-		{
-			if (FameChange != null)
-			{
-				FameChange(e);
-			}
-		}
+        {
+            FameChange?.Invoke(e);
+        }
 
 		public static void InvokeKarmaChange(KarmaChangeEventArgs e)
-		{
-			if (KarmaChange != null)
-			{
-				KarmaChange(e);
-			}
-		}
+        {
+            KarmaChange?.Invoke(e);
+        }
 
 		public static void InvokeVirtueLevelChange(VirtueLevelChangeEventArgs e)
-		{
-			if (VirtueLevelChange != null)
-			{
-				VirtueLevelChange(e);
-			}
-		}
+        {
+            VirtueLevelChange?.Invoke(e);
+        }
 
 		public static void InvokePlayerMurdered(PlayerMurderedEventArgs e)
-		{
-			if (PlayerMurdered != null)
-			{
-				PlayerMurdered(e);
-			}
-		}
+        {
+            PlayerMurdered?.Invoke(e);
+        }
 
 		public static void InvokeAccountGoldChange(AccountGoldChangeEventArgs e)
-		{
-			if (AccountGoldChange != null)
-			{
-				AccountGoldChange(e);
-			}
-		}
+        {
+            AccountGoldChange?.Invoke(e);
+        }
 
 		public static void InvokeContainerDroppedTo(ContainerDroppedToEventArgs e)
-		{
-			if (ContainerDroppedTo != null)
-			{
-				ContainerDroppedTo(e);
-			}
-		}
+        {
+            ContainerDroppedTo?.Invoke(e);
+        }
 
 		public static void InvokeTeleportMovement(TeleportMovementEventArgs e)
-		{
-			if (TeleportMovement != null)
-			{
-				TeleportMovement(e);
-			}
-		}
+        {
+            TeleportMovement?.Invoke(e);
+        }
 
 		public static void InvokeMultiDesignQuery(MultiDesignQueryEventArgs e)
-		{
-			if (MultiDesign != null)
-			{
-				MultiDesign(e);
-			}
-		}
+        {
+            MultiDesign?.Invoke(e);
+        }
 
 		public static void Reset()
 		{

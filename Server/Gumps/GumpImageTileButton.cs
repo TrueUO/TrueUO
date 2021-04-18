@@ -101,11 +101,8 @@ namespace Server.Gumps
 
 					Gump parent = Parent;
 
-					if (parent != null)
-					{
-						parent.Invalidate();
-					}
-				}
+                    parent?.Invalidate();
+                }
 			}
 		}
 
@@ -149,10 +146,10 @@ namespace Server.Gumps
         {
             if (m_LocalizedTooltip > 0)
             {
-                return string.Format("{{ buttontileart {0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} }}{{ tooltip {11} }}", m_X, m_Y, m_ID1, m_ID2, (int) m_Type, m_Param, m_ButtonID, m_ItemID, m_Hue, m_Width, m_Height, m_LocalizedTooltip);
+                return $"{{ buttontileart {m_X} {m_Y} {m_ID1} {m_ID2} {(int) m_Type} {m_Param} {m_ButtonID} {m_ItemID} {m_Hue} {m_Width} {m_Height} }}{{ tooltip {m_LocalizedTooltip} }}";
             }
 
-            return string.Format("{{ buttontileart {0} {1} {2} {3} {4} {5} {6} {7} {8} {9} {10} }}", m_X, m_Y, m_ID1, m_ID2, (int)m_Type, m_Param, m_ButtonID, m_ItemID, m_Hue, m_Width, m_Height);
+            return $"{{ buttontileart {m_X} {m_Y} {m_ID1} {m_ID2} {(int) m_Type} {m_Param} {m_ButtonID} {m_ItemID} {m_Hue} {m_Width} {m_Height} }}";
         }
 
 		private static readonly byte[] m_LayoutName = Gump.StringToBuffer("buttontileart");

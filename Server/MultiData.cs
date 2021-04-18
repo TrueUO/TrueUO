@@ -16,7 +16,7 @@ namespace Server
 		private static readonly BinaryReader m_IndexReader;
 		private static readonly BinaryReader m_StreamReader;
 
-		public static bool UsingUOPFormat { get; private set; }
+		public static bool UsingUOPFormat { get; }
 
 		public static MultiComponentList GetComponents(int multiID)
 		{
@@ -811,7 +811,7 @@ namespace Server
 			}
 		}
 
-		public MultiComponentList(List<MultiTileEntry> list)
+		public MultiComponentList(IReadOnlyList<MultiTileEntry> list)
 		{
 			MultiTileEntry[] allTiles = m_List = new MultiTileEntry[list.Count];
 
@@ -922,7 +922,7 @@ namespace Server
 			 */
 			maxId = 0x10000;
 
-			return new string[] { "build/multicollection/{0:000000}.bin", "" };
+			return new[] { "build/multicollection/{0:000000}.bin", "" };
 		}
 
 		public static ulong HashLittle2(string s)

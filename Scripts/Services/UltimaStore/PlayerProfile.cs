@@ -7,7 +7,7 @@ namespace Server.Engines.UOStore
         public const StoreCategory DefaultCategory = StoreCategory.Featured;
         public const SortBy DefaultSortBy = SortBy.Newest;
 
-        public Dictionary<StoreEntry, int> Cart { get; private set; }
+        public Dictionary<StoreEntry, int> Cart { get; }
 
         public Mobile Player { get; private set; }
 

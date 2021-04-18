@@ -96,7 +96,7 @@ namespace Server.Items
             }
         }
 
-        private void ClearComponents(Item item)
+        private static void ClearComponents(IEntity item)
         {
             if (item is BaseAddon addon)
             {

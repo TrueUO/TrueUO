@@ -16,7 +16,7 @@ namespace Server.Engines.VendorSearching
 {
     public class VendorSearch
     {
-        public static string FilePath = Path.Combine("Saves/Misc", "VendorSearch.bin");
+        public static readonly string FilePath = Path.Combine("Saves/Misc", "VendorSearch.bin");
         public static StringList StringList => StringList.Localization;
 
         public static List<SearchItem> DoSearchAuction(SearchCriteria criteria)
@@ -104,17 +104,21 @@ namespace Server.Engines.VendorSearching
 
         private static VendorItem GetParentVendorItem(PlayerVendor pv, Container parent)
         {
-            VendorItem vendorItem = pv.GetVendorItem(parent);
-
-            if (vendorItem == null)
+            while (true)
             {
-                if (parent.Parent is Container container)
-                {
-                    return GetParentVendorItem(pv, container);
-                }
-            }
+                VendorItem vendorItem = pv.GetVendorItem(parent);
 
-            return vendorItem;
+                if (vendorItem == null)
+                {
+                    if (parent.Parent is Container container)
+                    {
+                        parent = container;
+                        continue;
+                    }
+                }
+
+                return vendorItem;
+            }
         }
 
         public static bool CheckMatch(Item item, int price, SearchCriteria searchCriteria)
@@ -621,10 +625,11 @@ namespace Server.Engines.VendorSearching
                     Categories.Add(sort);
                 });
 
-            Keywords = new Dictionary<string, Type>();
+            Keywords = new Dictionary<string, Type>
+            {
+                ["power scroll"] = typeof(PowerScroll), ["stat scroll"] = typeof(StatCapScroll)
+            };
 
-            Keywords["power scroll"] = typeof(PowerScroll);
-            Keywords["stat scroll"] = typeof(StatCapScroll);
         }
 
         public static string GetItemName(Item item)
@@ -731,13 +736,17 @@ namespace Server.Engines.VendorSearching
             return basestring;
         }
 
-        private static List<Item> GetItems(PlayerVendor pv)
+        private static List<Item> GetItems(Mobile pv)
         {
             List<Item> list = new List<Item>();
 
             foreach (Item item in pv.Items)
+            {
                 if (item.Movable && item != pv.Backpack && item.Layer != Layer.Hair && item.Layer != Layer.FacialHair)
+                {
                     list.Add(item);
+                }
+            }
 
             if (pv.Backpack != null)
             {

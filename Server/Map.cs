@@ -37,12 +37,12 @@ namespace Server
 	{
 		public delegate IEnumerable<T> Selector<out T>(Sector sector, Rectangle2D bounds);
 
-		public static Selector<NetState> ClientSelector { get; set; }
-		public static Selector<IEntity> EntitySelector { get; set; }
-		public static Selector<Mobile> MobileSelector { get; set; }
-		public static Selector<Item> ItemSelector { get; set; }
-		public static Selector<BaseMulti> MultiSelector { get; set; }
-		public static Selector<StaticTile[]> MultiTileSelector { get; set; }
+		public static Selector<NetState> ClientSelector { get; }
+		public static Selector<IEntity> EntitySelector { get; }
+		public static Selector<Mobile> MobileSelector { get; }
+		public static Selector<Item> ItemSelector { get; }
+		public static Selector<BaseMulti> MultiSelector { get; }
+		public static Selector<StaticTile[]> MultiTileSelector { get; }
 
 		static PooledEnumeration()
 		{
@@ -260,9 +260,10 @@ namespace Server
 	{
         public const int SectorSize = 16;
 		public const int SectorShift = 4;
-		public static int SectorActiveRange = 2;
 
-		private static readonly Map[] m_Maps = new Map[0x100];
+        private const int SectorActiveRange = 2;
+
+        private static readonly Map[] m_Maps = new Map[0x100];
 
         public static Map[] Maps => m_Maps;
 
@@ -289,7 +290,7 @@ namespace Server
 		private readonly Dictionary<string, Region> m_Regions;
 		private Region m_DefaultRegion;
 
-		public int Season { get; set; }
+		public int Season { get; }
 
 		private readonly Sector[][] m_Sectors;
 		private readonly Sector m_InvalidSector;
@@ -534,7 +535,7 @@ namespace Server
 
 			TileFlag landFlags = TileData.LandTable[lt.ID & TileData.MaxLandValue].Flags;
 
-			if ((landFlags & TileFlag.Impassable) != 0 && avgZ > z && (z + height) > lowZ)
+			if ((landFlags & TileFlag.Impassable) != 0 && avgZ > z && z + height > lowZ)
 			{
 				return false;
 			}
@@ -552,12 +553,12 @@ namespace Server
 				impassable = id.Impassable;
 				roof = (id.Flags & TileFlag.Roof) != 0;
 
-				if ((surface || impassable) && (!ignoreRoof || !roof) && (t.Z + id.CalcHeight) > z && (z + height) > t.Z)
+				if ((surface || impassable) && (!ignoreRoof || !roof) && t.Z + id.CalcHeight > z && z + height > t.Z)
 				{
 					return false;
 				}
 
-				if (surface && !impassable && z == (t.Z + id.CalcHeight))
+				if (surface && !impassable && z == t.Z + id.CalcHeight)
 				{
 					hasSurface = true;
 				}
@@ -576,8 +577,7 @@ namespace Server
 					surface = id.Surface;
 					impassable = id.Impassable;
 
-					if ((surface || impassable || checkBlocksFit && item.BlocksFit) && (item.Z + id.CalcHeight) > z &&
-						(z + height) > item.Z)
+					if ((surface || impassable || checkBlocksFit && item.BlocksFit) && item.Z + id.CalcHeight > z && z + height > item.Z)
 					{
 						return false;
 					}
@@ -593,13 +593,10 @@ namespace Server
 			{
 				foreach (Mobile m in mobs)
 				{
-					if (m.Location.m_X == x && m.Location.m_Y == y && (m.AccessLevel == AccessLevel.Player || !m.Hidden))
+					if (m.Location.m_X == x && m.Location.m_Y == y && (m.AccessLevel == AccessLevel.Player || !m.Hidden) && m.Z + 16 > z && z + height > m.Z)
 					{
-						if ((m.Z + 16) > z && (z + height) > m.Z)
-						{
-							return false;
-						}
-					}
+                        return false;
+                    }
 				}
 			}
 
@@ -650,7 +647,7 @@ namespace Server
 				}
 			}
 
-            if (impassable && avgZ > z && (z + height) > lowZ)
+            if (impassable && avgZ > z && z + height > lowZ)
 				return false;
 
             if (!impassable && z == avgZ && !lt.Ignored)
@@ -663,11 +660,12 @@ namespace Server
 				ItemData id = TileData.ItemTable[staticTiles[i].ID & TileData.MaxItemValue];
 				surface = id.Surface;
 				impassable = id.Impassable;
+
 				if (checkmob)
 				{
 					wet = (id.Flags & TileFlag.Wet) != 0;
 					
-					if (cantwalk && !wet) // dont allow wateronly creatures on land
+					if (cantwalk && !wet) // don't allow water only creatures on land
 						impassable = true;
 					
 					if (canswim && wet) // allow water creatures on water
@@ -677,10 +675,10 @@ namespace Server
 					}
 				}
 
-				if ((surface || impassable) && (staticTiles[i].Z + id.CalcHeight) > z && (z + height) > staticTiles[i].Z)
+				if ((surface || impassable) && staticTiles[i].Z + id.CalcHeight > z && z + height > staticTiles[i].Z)
 					return false;
 
-                if (surface && !impassable && z == (staticTiles[i].Z + id.CalcHeight))
+                if (surface && !impassable && z == staticTiles[i].Z + id.CalcHeight)
                     hasSurface = true;
             }
 
@@ -701,7 +699,7 @@ namespace Server
 					{
 						wet = (id.Flags & TileFlag.Wet) != 0;
 						
-						if (cantwalk && !wet) // dont allow wateronly creatures on land
+						if (cantwalk && !wet) // don't allow water only creatures on land
 							impassable = true;
 						
 						if (canswim && wet) // allow water creatures on water
@@ -711,10 +709,10 @@ namespace Server
 						}
 					}
 
-					if ((surface || impassable || checkBlocksFit && item.BlocksFit) && (item.Z + id.CalcHeight) > z && (z + height) > item.Z)
+					if ((surface || impassable || checkBlocksFit && item.BlocksFit) && item.Z + id.CalcHeight > z && z + height > item.Z)
 						return false;
 
-                    if (surface && !impassable && !item.Movable && z == (item.Z + id.CalcHeight))
+                    if (surface && !impassable && !item.Movable && z == item.Z + id.CalcHeight)
                         hasSurface = true;
                 }
 			}
@@ -725,10 +723,9 @@ namespace Server
 				{
 					Mobile m = mobs[i];
 
-					if (m.Location.X == x && m.Location.Y == y && (m.AccessLevel == AccessLevel.Player || !m.Hidden))
+					if (m.Location.X == x && m.Location.Y == y && (m.AccessLevel == AccessLevel.Player || !m.Hidden) && m.Z + 16 > z && z + height > m.Z)
 					{
-						if ((m.Z + 16) > z && (z + height) > m.Z)
-							return false;
+                        return false;
 					}
 				}
 			}
@@ -830,8 +827,8 @@ namespace Server
 		{
 			for (int i = 0; i < 10; i++)
 			{
-				int x = center.X + (Utility.Random((range * 2) + 1) - range);
-				int y = center.Y + (Utility.Random((range * 2) + 1) - range);
+				int x = center.X + (Utility.Random(range * 2 + 1) - range);
+				int y = center.Y + (Utility.Random(range * 2 + 1) - range);
 				int z = GetAverageZ(x, y);
 
 				if (CanSpawnMobile(new Point2D(x, y), center.Z))
@@ -1481,11 +1478,11 @@ namespace Server
 			set => m_DefaultRegion = value;
 		}
 
-		public MapRules Rules { get; set; }
+		public MapRules Rules { get; }
 
 		public Sector InvalidSector => m_InvalidSector;
 
-		public string Name { get; set; }
+		public string Name { get; }
 
 		public class NullEnumerable<T> : IPooledEnumerable<T>
 		{
@@ -1619,7 +1616,7 @@ namespace Server
 			else if (o is Item item)
 			{
 				p = item.GetWorldLocation();
-				p.Z += (item.ItemData.Height / 2) + 1;
+				p.Z += item.ItemData.Height / 2 + 1;
 			}
 			else if (o is Point3D point)
 			{
@@ -1639,7 +1636,7 @@ namespace Server
 			{
                 ItemData id = TileData.ItemTable[st.ItemID & TileData.MaxItemValue];
 
-				p = new Point3D(st.X, st.Y, st.Z - id.CalcHeight + (id.Height / 2));
+				p = new Point3D(st.X, st.Y, st.Z - id.CalcHeight + id.Height / 2);
 			}
 			else if (o is IPoint3D point3D)
 			{
