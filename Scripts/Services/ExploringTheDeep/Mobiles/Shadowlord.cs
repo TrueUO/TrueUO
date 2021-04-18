@@ -164,7 +164,7 @@ namespace Server.Mobiles
                 if (ds.m_HasRight)
                 {
                     int luck = ds.m_Mobile is PlayerMobile mobile ? mobile.RealLuck : ds.m_Mobile.Luck;
-                    int chance = 75 + (luck / 15);
+                    int chance = 75 + luck / 15;
 
                     if (chance > Utility.Random(5000))
                     {
