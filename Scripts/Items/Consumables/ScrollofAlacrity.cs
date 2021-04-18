@@ -184,7 +184,6 @@ namespace Server.Items
                 if (contains == null)
                 {
                     Table.Add(new AlacrityArray { Mobile = m, Timer = new ExpireTimer(m, tick), Skill = skillname });
-                    Console.WriteLine("CreateTimer " + tick);
                 }
             }
         }
@@ -213,8 +212,6 @@ namespace Server.Items
                     m.PlaySound(0x100);
                     BuffInfo.RemoveBuff(m, BuffIcon.ArcaneEmpowerment);
                     m.SendLocalizedMessage(1077957);// The intense energy dissipates. You are no longer under the effects of an accelerated skillgain scroll.
-
-                    Console.WriteLine("RemoveTimer " + t.Tick);
                 }
             }
         }
@@ -241,8 +238,7 @@ namespace Server.Items
                     ((PlayerMobile)m).AcceleratedStart = DateTime.UtcNow + TimeSpan.FromSeconds(t.Tick);
                     ((PlayerMobile)m).AcceleratedSkill = contains.Skill;
 
-                    BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.ArcaneEmpowerment, 1078511, 1078512, TimeSpan.FromSeconds(t.Tick), m, SkillInfo.Table[(int)contains.Skill].Name)); 
-                    Console.WriteLine("StartTimer " + t.Tick);
+                    BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.ArcaneEmpowerment, 1078511, 1078512, TimeSpan.FromSeconds(t.Tick), m, SkillInfo.Table[(int)contains.Skill].Name));
                 }
             }
             else
@@ -273,8 +269,6 @@ namespace Server.Items
                     {
                         ((PlayerMobile)m).AcceleratedStart = DateTime.UtcNow;
                     }
-
-                    Console.WriteLine("StopTimer " + t.Tick);
                 }
             }
         }        
