@@ -9,7 +9,6 @@ using Server.Regions;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 
 namespace Server.Mobiles
@@ -238,21 +237,48 @@ namespace Server.Mobiles
                     }
                 }
 
-                Region r = Region.Regions.FirstOrDefault(reg => reg.Map == item.Map && !string.IsNullOrEmpty(reg.Name) && string.Equals(reg.Name, regionname, StringComparison.CurrentCultureIgnoreCase));
+                Region r = null;
+
+                for (var index = 0; index < Region.Regions.Count; index++)
+                {
+                    var reg = Region.Regions[index];
+
+                    if (reg.Map == item.Map && !string.IsNullOrEmpty(reg.Name) && string.Equals(reg.Name, regionname, StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        r = reg;
+                        break;
+                    }
+                }
 
                 if (r == null)
+                {
                     return false;
+                }
 
                 return r.Contains(loc);
             }
 
             if (o is Mobile mob)
             {
-                Region r = Region.Regions.FirstOrDefault(reg => reg.Map == mob.Map && !string.IsNullOrEmpty(reg.Name) && string.Equals(reg.Name, regionname, StringComparison.CurrentCultureIgnoreCase));
+                Region r = null;
 
-                if (r == null) return false;
-                return (r.Contains(mob.Location));
+                for (var index = 0; index < Region.Regions.Count; index++)
+                {
+                    var reg = Region.Regions[index];
 
+                    if (reg.Map == mob.Map && !string.IsNullOrEmpty(reg.Name) && string.Equals(reg.Name, regionname, StringComparison.CurrentCultureIgnoreCase))
+                    {
+                        r = reg;
+                        break;
+                    }
+                }
+
+                if (r == null)
+                {
+                    return false;
+                }
+
+                return r.Contains(mob.Location);
             }
 
             return false;
@@ -318,10 +344,23 @@ namespace Server.Mobiles
         {
             if (o is Mobile m)
             {
-                if (m.Map != Map.Internal || m.Account != null || (m as IMount)?.Rider != null ||
-                    m is GalleonPilot || m is PetParrot || GenericBuyInfo.IsDisplayCache(m) || m is EffectMobile ||
-                    m is BaseCreature creature && creature.IsStabled || m is PlayerVendor && BaseHouse.AllHouses.Any(x => x.InternalizedVendors.Contains(m)))
+                bool any = false;
+
+                for (var index = 0; index < BaseHouse.AllHouses.Count; index++)
+                {
+                    var x = BaseHouse.AllHouses[index];
+
+                    if (x.InternalizedVendors.Contains(m))
+                    {
+                        any = true;
+                        break;
+                    }
+                }
+
+                if (m.Map != Map.Internal || m.Account != null || (m as IMount)?.Rider != null || m is GalleonPilot || m is PetParrot || GenericBuyInfo.IsDisplayCache(m) || m is EffectMobile || m is BaseCreature creature && creature.IsStabled || m is PlayerVendor && any)
+                {
                     return true;
+                }
             }
             else if (o is Item i)
             {
