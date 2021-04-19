@@ -109,32 +109,27 @@ namespace Server.Network
 			}
 
 			if (ipep.Address.Equals(IPAddress.Any) || ipep.Address.Equals(IPAddress.IPv6Any))
-			{
-				NetworkInterface[] adapters = NetworkInterface.GetAllNetworkInterfaces();
-				foreach (NetworkInterface adapter in adapters)
-				{
-					IPInterfaceProperties properties = adapter.GetIPProperties();
-					foreach (UnicastIPAddressInformation unicast in properties.UnicastAddresses)
-					{
-						if (ipep.AddressFamily == unicast.Address.AddressFamily)
-						{
-							Utility.PushColor(ConsoleColor.Green);
-							Console.WriteLine("Listening: {0}:{1}", unicast.Address, ipep.Port);
-							Utility.PopColor();
-						}
-					}
-				}
-				/*
-                try {
-                Console.WriteLine( "Listening: {0}:{1}", IPAddress.Loopback, ipep.Port );
-                IPHostEntry iphe = Dns.GetHostEntry( Dns.GetHostName() );
-                IPAddress[] ip = iphe.AddressList;
-                for ( int i = 0; i < ip.Length; ++i )
-                Console.WriteLine( "Listening: {0}:{1}", ip[i], ipep.Port );
+            {
+                NetworkInterface[] adapters = NetworkInterface.GetAllNetworkInterfaces();
+
+                for (var index = 0; index < adapters.Length; index++)
+                {
+                    NetworkInterface adapter = adapters[index];
+                    IPInterfaceProperties properties = adapter.GetIPProperties();
+
+                    for (var i = 0; i < properties.UnicastAddresses.Count; i++)
+                    {
+                        UnicastIPAddressInformation unicast = properties.UnicastAddresses[i];
+
+                        if (ipep.AddressFamily == unicast.Address.AddressFamily)
+                        {
+                            Utility.PushColor(ConsoleColor.Green);
+                            Console.WriteLine("Listening: {0}:{1}", unicast.Address, ipep.Port);
+                            Utility.PopColor();
+                        }
+                    }
                 }
-                catch { }
-                */
-			}
+            }
 			else
 			{
 				Utility.PushColor(ConsoleColor.Green);

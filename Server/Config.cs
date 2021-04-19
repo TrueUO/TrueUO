@@ -40,7 +40,7 @@ namespace Server
 
 			public override string ToString()
 			{
-				return string.Format("{0}.{1}{2}={3}", Scope, UseDefault ? "@" : "", Key, Value);
+				return $"{Scope}.{(UseDefault ? "@" : "")}{Key}={Value}";
 			}
 
 			public override int GetHashCode()
@@ -310,25 +310,27 @@ namespace Server
 				{
 					line.Clear();
 
-					foreach (string word in e.Desc.Split(' '))
-					{
-						if ((line + word).Length > 100)
-						{
-							content.AppendLine(string.Format("# {0}", line));
-							line.Clear();
-						}
+                    for (var index = 0; index < e.Desc.Split(' ').Length; index++)
+                    {
+                        string word = e.Desc.Split(' ')[index];
 
-						line.AppendFormat("{0} ", word);
-					}
+                        if ((line + word).Length > 100)
+                        {
+                            content.AppendLine($"# {line}");
+                            line.Clear();
+                        }
 
-					if (line.Length > 0)
+                        line.AppendFormat("{0} ", word);
+                    }
+
+                    if (line.Length > 0)
 					{
-						content.AppendLine(string.Format("# {0}", line));
+						content.AppendLine($"# {line}");
 						line.Clear();
 					}
 				}
 
-				content.AppendLine(string.Format("{0}{1}={2}", e.UseDefault ? "@" : string.Empty, e.Key, e.Value));
+				content.AppendLine($"{(e.UseDefault ? "@" : string.Empty)}{e.Key}={e.Value}");
 			}
 
 			File.WriteAllText(path, content.ToString());
