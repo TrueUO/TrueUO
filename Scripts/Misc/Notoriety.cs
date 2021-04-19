@@ -10,7 +10,6 @@ using Server.SkillHandlers;
 using Server.Spells.Chivalry;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 #endregion
 
 namespace Server.Misc
@@ -538,12 +537,32 @@ namespace Server.Misc
 
         public static bool CheckPetAggressor(PlayerMobile source, Mobile target)
         {
-            return source.AllFollowers.Any(follower => CheckAggressor(follower.Aggressors, target));
+            for (var index = 0; index < source.AllFollowers.Count; index++)
+            {
+                var follower = source.AllFollowers[index];
+
+                if (CheckAggressor(follower.Aggressors, target))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public static bool CheckPetAggressed(PlayerMobile source, Mobile target)
         {
-            return source.AllFollowers.Any(follower => CheckAggressed(follower.Aggressed, target));
+            for (var index = 0; index < source.AllFollowers.Count; index++)
+            {
+                var follower = source.AllFollowers[index];
+
+                if (CheckAggressed(follower.Aggressed, target))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }
