@@ -1427,6 +1427,7 @@ namespace Server.Mobiles
                 if (!mTarget.Alive || m_Mobile.Combatant != null)
                 {
                     m_Mobile.TargetLocation = null;
+                    m_Mobile.CurrentSpeed = m_Mobile.ActiveSpeed;
                     return false; // Do not herd after being attacked by the herder or if they are dead
                 }
 
@@ -1445,6 +1446,7 @@ namespace Server.Mobiles
             if (distance < 1 || distance > 30)
             {
                 m_Mobile.TargetLocation = null;
+                m_Mobile.CurrentSpeed = m_Mobile.ActiveSpeed;
                 return false; // Stop herding when target is reached or too far away (does not apply to shepherd)
             }
 
