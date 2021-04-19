@@ -3,7 +3,6 @@ using Server.Engines.Quests;
 using Server.Mobiles;
 using Server.Network;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -42,8 +41,12 @@ namespace Server.Items
         private static bool Check()
         {
             foreach (Item item in World.Items.Values)
+            {
                 if (item is MasterThinkerContoller && !item.Deleted)
+                {
                     return true;
+                }
+            }
 
             return false;
         }
@@ -139,7 +142,14 @@ namespace Server.Items
         {
             if (m_Controller != null)
             {
-                if (MasterThinkerContoller.Array.Count(s => s.Mobile == from) == 0)
+                int count = 0;
+
+                foreach (var s in MasterThinkerContoller.Array)
+                {
+                    if (s.Mobile == from) count++;
+                }
+
+                if (count == 0)
                 {
                     MasterThinkerContoller.Array.Add(new MasterThinkerContoller.MasterThinkerArray { Mobile = from, Book = false, Pant = false, Tunic = false });
                 }
@@ -175,7 +185,14 @@ namespace Server.Items
 
         private static int ClickCheck(IEntity from)
         {
-            return MasterThinkerContoller.Array.Count(s => s.Mobile == from && s.Pant && s.Book && s.Tunic);
+            int count = 0;
+
+            foreach (var s in MasterThinkerContoller.Array)
+            {
+                if (s.Mobile == from && s.Pant && s.Book && s.Tunic) count++;
+            }
+
+            return count;
         }
 
         public override void Serialize(GenericWriter writer)
