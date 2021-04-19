@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 
 using Server.Items;
 
@@ -137,7 +136,33 @@ namespace Server.Misc
 
                 var itemID = item.ItemID;
 
-                return !GargoyleOnlyIDs.Any(id => id == itemID) && !ElfOnlyIDs.Any(id => id == itemID);
+                bool any1 = false;
+
+                for (var index = 0; index < GargoyleOnlyIDs.Length; index++)
+                {
+                    var id = GargoyleOnlyIDs[index];
+
+                    if (id == itemID)
+                    {
+                        any1 = true;
+                        break;
+                    }
+                }
+
+                bool any2 = false;
+
+                for (var index = 0; index < ElfOnlyIDs.Length; index++)
+                {
+                    var id = ElfOnlyIDs[index];
+
+                    if (id == itemID)
+                    {
+                        any2 = true;
+                        break;
+                    }
+                }
+
+                return !any1 && !any2;
             }
 
             public override int ClipSkinHue(int hue)
@@ -295,14 +320,31 @@ namespace Server.Misc
 
                 var itemID = item.ItemID;
 
-                return !GargoyleOnlyIDs.Any(id => id == itemID);
+                bool any = false;
+
+                for (var index = 0; index < GargoyleOnlyIDs.Length; index++)
+                {
+                    var id = GargoyleOnlyIDs[index];
+
+                    if (id == itemID)
+                    {
+                        any = true;
+                        break;
+                    }
+                }
+
+                return !any;
             }
 
             public override int ClipSkinHue(int hue)
             {
                 for (int i = 0; i < m_SkinHues.Length; i++)
+                {
                     if (m_SkinHues[i] == hue)
+                    {
                         return hue;
+                    }
+                }
 
                 return m_SkinHues[0];
             }
@@ -436,7 +478,20 @@ namespace Server.Misc
             {
                 var itemID = item.ItemID;
 
-                return !(item is BaseQuiver) && GargoyleOnlyIDs.Any(id => id == itemID);
+                bool any = false;
+
+                for (var index = 0; index < GargoyleOnlyIDs.Length; index++)
+                {
+                    var id = GargoyleOnlyIDs[index];
+
+                    if (id == itemID)
+                    {
+                        any = true;
+                        break;
+                    }
+                }
+
+                return !(item is BaseQuiver) && any;
             }
 
             public override int ClipSkinHue(int hue)
@@ -488,7 +543,30 @@ namespace Server.Misc
 
         public static bool ValidateEquipment(Mobile from, Item equipment, bool message)
         {
-            if ((AllRaceTypes.Any(type => type == equipment.GetType()) || AllRaceIDs.Any(id => id == equipment.ItemID)) && ValidateElfOrHuman(from, equipment))
+            for (var index = 0; index < AllRaceTypes.Length; index++)
+            {
+                var type = AllRaceTypes[index];
+
+                if (type == equipment.GetType())
+                {
+                    return true;
+                }
+            }
+
+            bool any = false;
+
+            for (var index = 0; index < AllRaceIDs.Length; index++)
+            {
+                var id = AllRaceIDs[index];
+
+                if (id == equipment.ItemID)
+                {
+                    any = true;
+                    break;
+                }
+            }
+
+            if (any && ValidateElfOrHuman(from, equipment))
             {
                 return true;
             }
@@ -556,9 +634,14 @@ namespace Server.Misc
         {
             var itemID = item.ItemID;
 
-            if (GargoyleOnlyIDs.Any(id => id == itemID))
+            for (var index = 0; index < GargoyleOnlyIDs.Length; index++)
             {
-                return Race.Gargoyle;
+                var id = GargoyleOnlyIDs[index];
+
+                if (id == itemID)
+                {
+                    return Race.Gargoyle;
+                }
             }
 
             var elfOrHuman = item as ICanBeElfOrHuman;
@@ -568,9 +651,14 @@ namespace Server.Misc
                 return elfOrHuman.ElfOnly ? Race.Elf : Race.Human;
             }
 
-            if (ElfOnlyIDs.Any(id => id == itemID))
+            for (var index = 0; index < ElfOnlyIDs.Length; index++)
             {
-                return Race.Elf;
+                var id = ElfOnlyIDs[index];
+
+                if (id == itemID)
+                {
+                    return Race.Elf;
+                }
             }
 
             return Race.Human;

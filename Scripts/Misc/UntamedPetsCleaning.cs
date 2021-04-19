@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Mobiles
 {
@@ -16,11 +15,14 @@ namespace Server.Mobiles
         {
             List<Mobile> list = new List<Mobile>();
 
-            foreach (BaseCreature b in World.Mobiles.Values.OfType<BaseCreature>())
+            foreach (Mobile value in World.Mobiles.Values)
             {
-                if (b.RemoveOnSave && !b.Controlled && b.ControlMaster == null)
+                if (value is BaseCreature b)
                 {
-                    list.Add(b);
+                    if (b.RemoveOnSave && !b.Controlled && b.ControlMaster == null)
+                    {
+                        list.Add(b);
+                    }
                 }
             }
 
