@@ -853,6 +853,9 @@ namespace Server.Mobiles
             if (CheckCharming())
                 return true;
 
+            if(Action==ActionType.Combat && CheckHerding())
+                return true;
+            
             switch (Action)
             {
                 case ActionType.Wander:
@@ -1420,11 +1423,12 @@ namespace Server.Mobiles
             if (target is Mobile mTarget)
             {
 
-                if (!mTarget.Alive || mTarget.Combatant == m_Mobile || m_Mobile.Combatant == mTarget || m_Mobile.ControlMaster !=null && m_Mobile.ControlMaster != mTarget ||
+                if (!mTarget.Alive || m_Mobile.Combatant != null || (m_Mobile.ControlMaster != null && m_Mobile.ControlMaster != mTarget) ||
                     mTarget.Map != m_Mobile.Map || distance > 45)
                 {
                     m_Mobile.TargetLocation = null;
-                    return false; // Do not herd after being attacked by the herder, if they are dead, or if they leave the area
+                    m_Mobile.CurrentSpeed = m_Mobile.ActiveSpeed;
+                    return false; // Do not herd after being attacked, if it has been tamed, if the herder left the area or if they are dead
                 }
 
                 m_Mobile.CurrentSpeed = m_Mobile.ActiveSpeed;
@@ -1439,10 +1443,10 @@ namespace Server.Mobiles
                 return true;
             }
 
-            if (distance < 1 || distance > 15)
+            if (distance < 1 || distance > 30)
             {
                 m_Mobile.TargetLocation = null;
-
+                m_Mobile.CurrentSpeed = m_Mobile.ActiveSpeed;
                 return false; // Stop herding when target is reached or too far away (does not apply to shepherd)
             }
 

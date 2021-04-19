@@ -87,7 +87,7 @@ namespace Server.Misc
                 return true;
             }
 
-            if (from is PlayerMobile pm && pm.Young && (!(target is PlayerMobile) || !((PlayerMobile) target).Young))
+            if (from is PlayerMobile pm && pm.Young && (!(target is PlayerMobile) || !((PlayerMobile)target).Young))
             {
                 return false; // Young players cannot perform beneficial actions towards older players
             }
@@ -248,10 +248,32 @@ namespace Server.Misc
 
                 Party sourceParty = Party.Get(source);
 
-                foreach (Mobile m in target.Aggressors)
+                bool any = false;
+
+                for (var index = 0; index < target.Aggressors.Count; index++)
                 {
+                    var m = target.Aggressors[index];
+
+                    if (m.IsPlayer())
+                    {
+                        any = true;
+                        break;
+                    }
+                }
+
+                if (!any)
+                {
+                    return actual;
+                }
+
+                for (var index = 0; index < target.Aggressors.Count; index++)
+                {
+                    Mobile m = target.Aggressors[index];
+
                     if (m == source || sourceParty != null && Party.Get(m) == sourceParty || sourceGuild != null && m.Guild == sourceGuild)
+                    {
                         return actual;
+                    }
                 }
 
                 return Notoriety.Innocent;
@@ -498,9 +520,9 @@ namespace Server.Misc
             return false;
         }
 
-        public static bool CheckAggressed( List<AggressorInfo> list, Mobile target )
+        public static bool CheckAggressed(List<AggressorInfo> list, Mobile target)
         {
-            for( int i = 0; i < list.Count; ++i )
+            for (int i = 0; i < list.Count; ++i)
             {
                 AggressorInfo info = list[i];
 
