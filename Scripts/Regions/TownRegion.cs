@@ -1,6 +1,5 @@
 using Server.Engines.VvV;
 using Server.Mobiles;
-using System.Linq;
 using System.Xml;
 
 namespace Server.Regions
@@ -40,7 +39,15 @@ namespace Server.Regions
 
         private bool IsVvVBattleRegion()
         {
-            return CityInfo.Infos.Any(kvp => IsPartOf(kvp.Value.Name) && Map == Map.Felucca);
+            foreach (var kvp in CityInfo.Infos)
+            {
+                if (IsPartOf(kvp.Value.Name) && Map == Map.Felucca)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

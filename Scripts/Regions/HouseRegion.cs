@@ -5,7 +5,6 @@ using Server.Mobiles;
 using Server.Multis;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Regions
 {
@@ -84,7 +83,27 @@ namespace Server.Regions
 
         private bool ExcludeItem(Item item)
         {
-            return IsStairArea(item) || m_ItemTypes.Any(t => t == item.GetType() || item.GetType().IsSubclassOf(t));
+            #region Heritage Custom
+            if (item is AddonComponent component && (component.Addon is HouseStairs.SingleStairAddon || component.Addon is HouseStairs.ComplexStairAddon))
+            {
+                return true;
+            }
+            #endregion
+
+            bool any = false;
+
+            for (var index = 0; index < m_ItemTypes.Length; index++)
+            {
+                var t = m_ItemTypes[index];
+
+                if (t == item.GetType() || item.GetType().IsSubclassOf(t))
+                {
+                    any = true;
+                    break;
+                }
+            }
+
+            return IsStairArea(item) || any;
         }
 
         private static readonly Type[] m_ItemTypes =
