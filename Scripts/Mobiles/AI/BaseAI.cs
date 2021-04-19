@@ -131,8 +131,7 @@ namespace Server.Mobiles
                 m_AI = ai;
                 m_Order = order;
 
-                if (mobile.IsDeadPet && (order == OrderType.Guard || order == OrderType.Attack || order == OrderType.Transfer ||
-                                         order == OrderType.Drop))
+                if (mobile.IsDeadPet && (order == OrderType.Guard || order == OrderType.Attack || order == OrderType.Transfer || order == OrderType.Drop))
                 {
                     Enabled = false;
                 }
@@ -147,8 +146,7 @@ namespace Server.Mobiles
                         m_From.RevealingAction();
                     }
 
-                    if (m_Mobile.IsDeadPet && (m_Order == OrderType.Guard || m_Order == OrderType.Attack ||
-                                               m_Order == OrderType.Transfer || m_Order == OrderType.Drop))
+                    if (m_Mobile.IsDeadPet && (m_Order == OrderType.Guard || m_Order == OrderType.Attack || m_Order == OrderType.Transfer || m_Order == OrderType.Drop))
                     {
                         return;
                     }
@@ -1424,7 +1422,9 @@ namespace Server.Mobiles
 
             if (target is Mobile mTarget)
             {
-                if (!mTarget.Alive || m_Mobile.Combatant != null)
+
+                if (!mTarget.Alive || mTarget.Combatant == m_Mobile || m_Mobile.Combatant == mTarget || m_Mobile.ControlMaster !=null && m_Mobile.ControlMaster != mTarget ||
+                    mTarget.Map != m_Mobile.Map || distance > 45)
                 {
                     m_Mobile.TargetLocation = null;
                     m_Mobile.CurrentSpeed = m_Mobile.ActiveSpeed;
@@ -1880,9 +1880,9 @@ namespace Server.Mobiles
 
         private class TransferItem : Item
         {
-            public static bool IsInCombat(BaseCreature creature)
+            public static bool IsInCombat(Mobile creature)
             {
-                return (creature != null && (creature.Aggressors.Count > 0 || creature.Aggressed.Count > 0));
+                return creature != null && (creature.Aggressors.Count > 0 || creature.Aggressed.Count > 0);
             }
 
             private readonly BaseCreature m_Creature;
@@ -2151,7 +2151,7 @@ namespace Server.Mobiles
         {
             if (DateTime.UtcNow >= m_Mobile.BardEndTime && (m_Mobile.BardMaster == null || m_Mobile.BardMaster.Deleted ||
                                                             m_Mobile.BardMaster.Map != m_Mobile.Map ||
-                                                            m_Mobile.GetDistanceToSqrt(m_Mobile.BardMaster) > m_Mobile.RangePerception))
+                                                            !m_Mobile.InRange((IPoint3D)m_Mobile.BardMaster, m_Mobile.RangePerception)))
             {
                 m_Mobile.DebugSay("I have lost my provoker");
                 m_Mobile.BardProvoked = false;
@@ -2163,8 +2163,9 @@ namespace Server.Mobiles
             }
             else
             {
-                if (m_Mobile.BardTarget == null || m_Mobile.BardTarget.Deleted || m_Mobile.BardTarget.Map != m_Mobile.Map ||
-                    m_Mobile.GetDistanceToSqrt(m_Mobile.BardTarget) > m_Mobile.RangePerception)
+                m_Mobile.BardEndTime = DateTime.UtcNow + TimeSpan.FromSeconds(30.0);
+
+                if (m_Mobile.BardTarget == null || m_Mobile.BardTarget.Deleted || m_Mobile.BardTarget.Map != m_Mobile.Map || !m_Mobile.InRange((IPoint3D)m_Mobile.BardTarget, m_Mobile.RangePerception))
                 {
                     m_Mobile.DebugSay("I have lost my provoke target");
                     m_Mobile.BardProvoked = false;

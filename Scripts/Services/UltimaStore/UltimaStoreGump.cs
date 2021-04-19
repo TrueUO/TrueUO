@@ -170,7 +170,7 @@ namespace Server.Engines.UOStore
             AddECHandleInput();
 
             AddButton(598, 36, Category == StoreCategory.Cart ? 0x9C5E : 0x9C54, 0x9C5E, 113, GumpButtonType.Reply, 0);
-            AddHtmlLocalized(628, 39, 123, 25, 1156593, string.Format("@{0}@{1}", UltimaStore.CartCount(User), Configuration.CartCapacity), 0x7FFF, false, false);
+            AddHtmlLocalized(628, 39, 123, 25, 1156593, $"@{UltimaStore.CartCount(User)}@{Configuration.CartCapacity}", 0x7FFF, false, false);
 
             AddECHandleInput();
 
@@ -207,19 +207,19 @@ namespace Server.Engines.UOStore
                         int index = UltimaStore.Entries.IndexOf(entry);
 
                         if (entry.Name[0].Number > 0)
-                            AddHtmlLocalized(175, 84 + (35 * i), 256, 25, entry.Name[0].Number, 0x6B55, false, false);
+                            AddHtmlLocalized(175, 84 + 35 * i, 256, 25, entry.Name[0].Number, 0x6B55, false, false);
                         else
-                            AddHtml(175, 84 + (35 * i), 256, 25, Color(C16232(0x6B55), entry.Name[0].String), false, false);
+                            AddHtml(175, 84 + 35 * i, 256, 25, Color(C16232(0x6B55), entry.Name[0].String), false, false);
 
-                        AddButton(431, 81 + (35 * i), 0x9C52, 0x9C5C, index + 2000, GumpButtonType.Reply, 0);
+                        AddButton(431, 81 + 35 * i, 0x9C52, 0x9C5C, index + 2000, GumpButtonType.Reply, 0);
 
-                        AddLabelCropped(457, 82 + (35 * i), 38, 22, 0x9C2, amount.ToString());
-                        AddLabelCropped(531, 82 + (35 * i), 100, 14, 0x1C7, (entry.Cost * amount).ToString("N0"));
+                        AddLabelCropped(457, 82 + 35 * i, 38, 22, 0x9C2, amount.ToString());
+                        AddLabelCropped(531, 82 + 35 * i, 100, 14, 0x1C7, (entry.Cost * amount).ToString("N0"));
 
-                        AddButton(653, 81 + (35 * i), 0x9C52, 0x9C5C, index + 3000, GumpButtonType.Reply, 0);
-                        AddHtmlLocalized(653, 84 + (35 * i), 64, 22, 1114513, "#1011403", 0x7FFF, false, false); // Remove
+                        AddButton(653, 81 + 35 * i, 0x9C52, 0x9C5C, index + 3000, GumpButtonType.Reply, 0);
+                        AddHtmlLocalized(653, 84 + 35 * i, 64, 22, 1114513, "#1011403", 0x7FFF, false, false); // Remove
 
-                        AddImage(175, 109 + (35 * i), 0x9C4D);
+                        AddImage(175, 109 + 35 * i, 0x9C4D);
 
                         ++i;
                     }
@@ -284,20 +284,20 @@ namespace Server.Engines.UOStore
                     for (int j = 0; j < entry.Name.Length; j++)
                     {
                         if (entry.Name[j].Number > 0)
-                            AddHtmlLocalized(x, y + (j * 14) + 4, 183, 25, 1114513, string.Format("#{0}", entry.Name[j].Number.ToString()), 0x7FFF, false, false);
+                            AddHtmlLocalized(x, y + j * 14 + 4, 183, 25, 1114513, $"#{entry.Name[j].Number.ToString()}", 0x7FFF, false, false);
                         else
-                            AddHtml(x, y + (j * 14) + 4, 183, 25, ColorAndCenter("#FFFFFF", entry.Name[j].String), false, false);
+                            AddHtml(x, y + j * 14 + 4, 183, 25, ColorAndCenter("#FFFFFF", entry.Name[j].String), false, false);
                     }
 
                     if (entry.ItemID > 0)
                     {
                         Rectangle2D b = ItemBounds.Table[entry.ItemID];
 
-                        AddItem((x + 91) - b.Width / 2 - b.X, (y + 108) - b.Height / 2 - b.Y, entry.ItemID, entry.Hue);
+                        AddItem(x + 91 - b.Width / 2 - b.X, y + 108 - b.Height / 2 - b.Y, entry.ItemID, entry.Hue);
                     }
                     else
                     {
-                        AddImage((x + 91) - 72, (y + 108) - 72, entry.GumpID);
+                        AddImage(x + 91 - 72, y + 108 - 72, entry.GumpID);
                     }
 
                     AddImage(x + 60, y + 192, 0x9C56);
@@ -328,7 +328,7 @@ namespace Server.Engines.UOStore
             }
         }
 
-        public bool IsFeatured(StoreEntry entry)
+        public static bool IsFeatured(StoreEntry entry)
         {
             return entry.Category == StoreCategory.Featured ||
                 UltimaStore.Entries.Any(e => e.ItemType == entry.ItemType && e.Category == StoreCategory.Featured);
@@ -354,9 +354,9 @@ namespace Server.Engines.UOStore
 
         public override void OnServerClose(NetState owner)
         {
-            if (owner.Mobile is PlayerMobile)
+            if (owner.Mobile is PlayerMobile mobile)
             {
-                ReleaseHidden((PlayerMobile)owner.Mobile);
+                ReleaseHidden(mobile);
             }
         }
 
@@ -572,12 +572,12 @@ namespace Server.Engines.UOStore
 
     public class ConfirmCartGump : BaseGump
     {
-        public UltimaStoreGump Gump { get; private set; }
-        public StoreEntry Entry { get; private set; }
-        public int Current { get; private set; }
+        public UltimaStoreGump Gump { get; }
+        public StoreEntry Entry { get; }
+        public int Current { get; }
 
         public ConfirmCartGump(PlayerMobile pm, UltimaStoreGump gump, StoreEntry entry, int current = 0)
-            : base(pm, gump.X + (760 / 2) - 205, gump.Y + (574 / 2) - 100)
+            : base(pm, gump.X + 760 / 2 - 205, gump.Y + 574 / 2 - 100)
         {
             Gump = gump;
             Entry = entry;
@@ -595,11 +595,11 @@ namespace Server.Engines.UOStore
             {
                 if (Entry.Name[i].Number > 0)
                 {
-                    AddHtmlLocalized(10, 60 + (i * 14), 400, 20, 1114513, string.Format("#{0}", Entry.Name[i].Number), 0x6B45, false, false);
+                    AddHtmlLocalized(10, 60 + i * 14, 400, 20, 1114513, $"#{Entry.Name[i].Number}", 0x6B45, false, false);
                 }
                 else
                 {
-                    AddHtml(10, 60 + (i * 14), 400, 20, ColorAndCenter(C16232(0x6B45), Entry.Name[i].String), false, false);
+                    AddHtml(10, 60 + i * 14, 400, 20, ColorAndCenter(C16232(0x6B45), Entry.Name[i].String), false, false);
                 }
             }
 
@@ -730,7 +730,7 @@ namespace Server.Engines.UOStore
             AddBackground(0, 0, 410, 200, 0x9C40);
             AddHtmlLocalized(10, 10, 400, 20, 1114513, "#1156747", 0x7FFF, false, false); // Insufficient Funds
 
-            AddHtml(30, 60, 350, 60, Color("#da0000", string.Format("This transaction cannot be completed due to insufficient funds available. Visit your shards website for more information on how to obtain {0}.", Configuration.CurrencyName)), false, false);
+            AddHtml(30, 60, 350, 60, Color("#da0000", $"This transaction cannot be completed due to insufficient funds available. Visit your shards website for more information on how to obtain {Configuration.CurrencyName}."), false, false);
 
             AddECHandleInput();
 
@@ -774,7 +774,7 @@ namespace Server.Engines.UOStore
 
     public class PromoCodeGump : BaseGump
     {
-        public BaseGump Gump { get; private set; }
+        public BaseGump Gump { get; }
 
         public PromoCodeGump(PlayerMobile pm, BaseGump gump)
             : base(pm, 10, 10)
@@ -834,8 +834,8 @@ namespace Server.Engines.UOStore
 
     public class PromoItemGump : BaseGump
     {
-        public int Image { get; private set; }
-        public StoreEntry Entry { get; private set; }
+        public int Image { get; }
+        public StoreEntry Entry { get; }
 
         public PromoItemGump(PlayerMobile pm, StoreEntry entry, int image)
             : base(pm, 150, 200)
@@ -870,11 +870,11 @@ namespace Server.Engines.UOStore
             {
                 if (Entry.Name[j].Number > 0)
                 {
-                    AddHtmlLocalized(76, 92 + (j * 14) + 4, 183, 25, 1114513, string.Format("#{0}", Entry.Name[j].Number.ToString()), 0x7FFF, false, false);
+                    AddHtmlLocalized(76, 92 + j * 14 + 4, 183, 25, 1114513, $"#{Entry.Name[j].Number.ToString()}", 0x7FFF, false, false);
                 }
                 else
                 {
-                    AddHtml(76, 92 + (j * 14) + 4, 183, 25, ColorAndCenter("#FFFFFF", Entry.Name[j].String), false, false);
+                    AddHtml(76, 92 + j * 14 + 4, 183, 25, ColorAndCenter("#FFFFFF", Entry.Name[j].String), false, false);
                 }
             }
 

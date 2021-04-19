@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Linq;
 
 namespace Server.Items
 {
@@ -39,7 +40,6 @@ namespace Server.Items
 
         private static readonly SkillName[] m_PossibleSpellbookSkills =
         {
-            SkillName.Magery,
             SkillName.Meditation,
             SkillName.EvalInt,
             SkillName.MagicResist
@@ -1065,7 +1065,26 @@ namespace Server.Items
 
         private static void ApplySkillBonus(AosSkillBonuses attrs, int min, int max, int index, int low, int high)
         {
-            SkillName[] possibleSkills = attrs.Owner is Spellbook ? m_PossibleSpellbookSkills : m_PossibleBonusSkills;
+            SkillName[] possibleSkills;
+
+            if (attrs.Owner is Spellbook book)
+            {
+                SkillName[] booktypeskills;
+
+                switch (book.SpellbookType)
+                {
+                    default:
+                    case SpellbookType.Regular: booktypeskills = new SkillName[] { SkillName.Magery }; break;
+                    case SpellbookType.Necromancer: booktypeskills = new SkillName[] { SkillName.Necromancy, SkillName.SpiritSpeak }; break;
+                    case SpellbookType.Mystic: booktypeskills = new SkillName[] { SkillName.Mysticism, SkillName.Focus }; break;
+                }
+
+                possibleSkills = m_PossibleSpellbookSkills.Concat(booktypeskills).ToArray();
+            }
+            else
+            {
+                possibleSkills = m_PossibleBonusSkills;
+            }
 
             SkillName sk;
             bool found;

@@ -184,13 +184,6 @@ namespace Server.Items
                     }
                 case 0:
                     {
-                        m_TargetMap = Map;
-
-                        if (m_TargetMap == null || m_TargetMap == Map.Internal)
-                        {
-                            m_TargetMap = Map.Trammel;
-                        }
-
                         break;
                     }
             }

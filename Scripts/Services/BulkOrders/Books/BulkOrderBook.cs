@@ -164,10 +164,16 @@ namespace Server.Engines.BulkOrders
 
         public void InvalidateContainers(object parent)
         {
-            if (parent != null && parent is Container c)
+            while (true)
             {
-                c.InvalidateProperties();
-                InvalidateContainers(c.Parent);
+                if (parent != null && parent is Container c)
+                {
+                    c.InvalidateProperties();
+                    parent = c.Parent;
+                    continue;
+                }
+
+                break;
             }
         }
 

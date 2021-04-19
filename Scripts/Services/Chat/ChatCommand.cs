@@ -45,6 +45,6 @@ namespace Server.Engines.Chat
         /// <summary>
         /// Send a message putting Channel name at top and telling player he left the channel.
         /// </summary>
-        LeftChannel = 0x3F4,
+        LeftChannel = 0x3F4
     }
 }

@@ -15,17 +15,17 @@ namespace Server.Engines.Chat
 
         public Mobile Mobile => m_Mobile;
 
-        public string Username => string.Format("<{0}>{1}", m_Mobile.Serial.Value, m_Mobile.Name);
+        public string Username => $"<{m_Mobile.Serial.Value}>{m_Mobile.Name}";
 
-        public Channel CurrentChannel { get { return m_Channel; } set { m_Channel = value; } }
+        public Channel CurrentChannel { get => m_Channel; set => m_Channel = value; }
 
-        public bool IsOnline => (m_Mobile.NetState != null);
+        public bool IsOnline => m_Mobile.NetState != null;
 
         public long NextMessage { get; set; }
 
         public const char NormalColorCharacter = '0';
 
-        public char GetColorCharacter()
+        public static char GetColorCharacter()
         {
             return NormalColorCharacter;
         }

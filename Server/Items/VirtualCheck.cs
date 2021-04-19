@@ -22,7 +22,7 @@ namespace Server
 
 		public override string DefaultName => "Offer Of Currency";
 
-		public EditGump Editor { get; private set; }
+        private EditGump Editor { get; set; }
 
 		private int _Plat;
 
@@ -152,9 +152,9 @@ namespace Server
 			Delete();
 		}
 
-		public class EditGump : Gump
+        private class EditGump : Gump
 		{
-			public enum Buttons
+            private enum Buttons
 			{
 				Close,
 				Clear,
@@ -165,7 +165,7 @@ namespace Server
 
 			private int _Plat, _Gold;
 
-			public Mobile User { get; private set; }
+            private Mobile User { get; }
 			public VirtualCheck Check { get; private set; }
 
 			public EditGump(Mobile user, VirtualCheck check)

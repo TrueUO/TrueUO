@@ -130,11 +130,14 @@ namespace Server.Network
 		public CloseSecureTrade(IEntity cont)
 			: base(0x6F)
 		{
-			EnsureCapacity(8);
+			EnsureCapacity(17);
 
 			m_Stream.Write((byte)1); // Close
 			m_Stream.Write(cont.Serial);
-		}
+            m_Stream.Write(0);
+            m_Stream.Write(0);
+            m_Stream.Write(false);
+        }
 	}
 
 	public enum TradeFlag : byte
@@ -161,7 +164,8 @@ namespace Server.Network
 			m_Stream.Write(cont.Serial);
 			m_Stream.Write(first);
 			m_Stream.Write(second);
-		}
+            m_Stream.Write(false);
+        }
 	}
 
 	public sealed class SecureTradeEquip : Packet
