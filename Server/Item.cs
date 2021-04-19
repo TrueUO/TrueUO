@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
 
 using Server.ContextMenus;
 using Server.Items;
@@ -2054,14 +2053,24 @@ namespace Server
 
             if (Sockets != null && item.Sockets != null)
             {
-                if (Sockets.Any(s => !item.HasSocket(s.GetType())))
+                for (var index = 0; index < Sockets.Count; index++)
                 {
-                    return false;
+                    var s = Sockets[index];
+
+                    if (!item.HasSocket(s.GetType()))
+                    {
+                        return false;
+                    }
                 }
 
-                if (item.Sockets.Any(s => !HasSocket(s.GetType())))
+                for (var index = 0; index < item.Sockets.Count; index++)
                 {
-                    return false;
+                    var s = item.Sockets[index];
+
+                    if (!HasSocket(s.GetType()))
+                    {
+                        return false;
+                    }
                 }
             }
 
@@ -5961,7 +5970,20 @@ namespace Server
 				return null;
 			}
 
-			return Sockets.FirstOrDefault(s => s.GetType() == typeof(T)) as T;
+            ItemSocket first = null;
+
+            for (var index = 0; index < Sockets.Count; index++)
+            {
+                var s = Sockets[index];
+
+                if (s.GetType() == typeof(T))
+                {
+                    first = s;
+                    break;
+                }
+            }
+
+            return first as T;
 		}
 
 		public T GetSocket<T>(Func<T, bool> predicate) where T : ItemSocket
@@ -5971,7 +5993,20 @@ namespace Server
 				return null;
 			}
 
-			return Sockets.FirstOrDefault(s => s.GetType() == typeof(T) && (predicate == null || predicate(s as T))) as T;
+            ItemSocket first = null;
+
+            for (var index = 0; index < Sockets.Count; index++)
+            {
+                var s = Sockets[index];
+
+                if (s.GetType() == typeof(T) && (predicate == null || predicate(s as T)))
+                {
+                    first = s;
+                    break;
+                }
+            }
+
+            return first as T;
 		}
 
 		public ItemSocket GetSocket(Type type)
@@ -5981,8 +6016,18 @@ namespace Server
 				return null;
 			}
 
-			return Sockets.FirstOrDefault(s => s.GetType() == type);
-		}
+            for (var index = 0; index < Sockets.Count; index++)
+            {
+                var s = Sockets[index];
+
+                if (s.GetType() == type)
+                {
+                    return s;
+                }
+            }
+
+            return null;
+        }
 
 		public bool HasSocket<T>()
 		{
@@ -5991,8 +6036,18 @@ namespace Server
 				return false;
 			}
 
-			return Sockets.Any(s => s.GetType() == typeof(T));
-		}
+            for (var index = 0; index < Sockets.Count; index++)
+            {
+                var s = Sockets[index];
+
+                if (s.GetType() == typeof(T))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
 
 		public bool HasSocket(Type t)
 		{
@@ -6001,8 +6056,18 @@ namespace Server
 				return false;
 			}
 
-			return Sockets.Any(s => s.GetType() == t);
-		}
+            for (var index = 0; index < Sockets.Count; index++)
+            {
+                var s = Sockets[index];
+
+                if (s.GetType() == t)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
 		#endregion
 	}
 

@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -1575,26 +1574,43 @@ namespace Server
 			if (list == null || action == null)
 				return;
 
-			List<T> l = list.ToList();
+            List<T> l = new List<T>();
 
-			foreach (T o in l)
-				action(o);
+            foreach (var unknown in list)
+            {
+                l.Add(unknown);
+            }
 
-			Free(l);
+            for (var index = 0; index < l.Count; index++)
+            {
+                T o = l[index];
+
+                action(o);
+            }
+
+            Free(l);
 		}
 
-		public static void ForEach<TKey, TValue>(
-			IDictionary<TKey, TValue> dictionary, Action<KeyValuePair<TKey, TValue>> action)
+		public static void ForEach<TKey, TValue>(IDictionary<TKey, TValue> dictionary, Action<KeyValuePair<TKey, TValue>> action)
 		{
 			if (dictionary == null || dictionary.Count == 0 || action == null)
 				return;
 
-			List<KeyValuePair<TKey, TValue>> l = dictionary.ToList();
+            List<KeyValuePair<TKey, TValue>> l = new List<KeyValuePair<TKey, TValue>>();
 
-			foreach (KeyValuePair<TKey, TValue> kvp in l)
-				action(kvp);
+            foreach (var pair in dictionary)
+            {
+                l.Add(pair);
+            }
 
-			Free(l);
+            for (var index = 0; index < l.Count; index++)
+            {
+                KeyValuePair<TKey, TValue> kvp = l[index];
+
+                action(kvp);
+            }
+
+            Free(l);
 		}
 
 		public static void ForEach<TKey, TValue>(IDictionary<TKey, TValue> dictionary, Action<TKey, TValue> action)
@@ -1602,12 +1618,21 @@ namespace Server
 			if (dictionary == null || dictionary.Count == 0 || action == null)
 				return;
 
-			List<KeyValuePair<TKey, TValue>> l = dictionary.ToList();
+            List<KeyValuePair<TKey, TValue>> l = new List<KeyValuePair<TKey, TValue>>();
 
-			foreach (KeyValuePair<TKey, TValue> kvp in l)
-				action(kvp.Key, kvp.Value);
+            foreach (var pair in dictionary)
+            {
+                l.Add(pair);
+            }
 
-			Free(l);
+            for (var index = 0; index < l.Count; index++)
+            {
+                KeyValuePair<TKey, TValue> kvp = l[index];
+
+                action(kvp.Key, kvp.Value);
+            }
+
+            Free(l);
 		}
 
 		public static void For<T>(IEnumerable<T> list, Action<int, T> action)
@@ -1615,12 +1640,19 @@ namespace Server
 			if (list == null || action == null)
 				return;
 
-			List<T> l = list.ToList();
+            List<T> l = new List<T>();
 
-			for (int i = 0; i < l.Count; i++)
-				action(i, l[i]);
+            foreach (var unknown in list)
+            {
+                l.Add(unknown);
+            }
 
-			Free(l);
+            for (int i = 0; i < l.Count; i++)
+            {
+                action(i, l[i]);
+            }
+
+            Free(l);
 		}
 
 		public static void For<TKey, TValue>(IDictionary<TKey, TValue> list, Action<int, TKey, TValue> action)
@@ -1628,9 +1660,14 @@ namespace Server
 			if (list == null || action == null)
 				return;
 
-			List<KeyValuePair<TKey, TValue>> l = list.ToList();
+            List<KeyValuePair<TKey, TValue>> l = new List<KeyValuePair<TKey, TValue>>();
 
-			for (int i = 0; i < l.Count; i++)
+            foreach (var pair in list)
+            {
+                l.Add(pair);
+            }
+
+            for (int i = 0; i < l.Count; i++)
 				action(i, l[i].Key, l[i].Value);
 
 			Free(l);
@@ -1691,14 +1728,21 @@ namespace Server
 				return;
 			}
 
-			List<T> toList = list.ToList();
+            List<T> toList = new List<T>();
 
-			foreach (T o in toList)
-			{
-				action(o);
-			}
+            foreach (var unknown in list)
+            {
+                toList.Add(unknown);
+            }
 
-			Free(toList);
+            for (var index = 0; index < toList.Count; index++)
+            {
+                T o = toList[index];
+
+                action(o);
+            }
+
+            Free(toList);
 		}
 
 		public static void SafeDelete<T>(List<T> list)
