@@ -83,13 +83,6 @@ namespace Server.Regions
 
         private bool ExcludeItem(Item item)
         {
-            #region Heritage Custom
-            if (item is AddonComponent component && (component.Addon is HouseStairs.SingleStairAddon || component.Addon is HouseStairs.ComplexStairAddon))
-            {
-                return true;
-            }
-            #endregion
-
             bool any = false;
 
             for (var index = 0; index < m_ItemTypes.Length; index++)
