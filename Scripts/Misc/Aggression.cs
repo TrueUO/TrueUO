@@ -2,7 +2,6 @@ using Server.Mobiles;
 using Server.Network;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Misc
 {
@@ -44,13 +43,19 @@ namespace Server.Misc
         {
             Mobile killed = e.Mobile;
 
-            foreach (Mobile m in killed.Aggressed.Select(m => m.Defender))
+            for (var index = 0; index < killed.Aggressed.Count; index++)
             {
+                var m1 = killed.Aggressed[index];
+
+                Mobile m = m1.Defender;
                 CheckCombat(m);
             }
 
-            foreach (Mobile m in killed.Aggressors.Select(x => x.Attacker))
+            for (var index = 0; index < killed.Aggressors.Count; index++)
             {
+                var x = killed.Aggressors[index];
+
+                Mobile m = x.Attacker;
                 CheckCombat(m);
             }
 
@@ -61,13 +66,19 @@ namespace Server.Misc
         {
             Mobile killed = e.Creature;
 
-            foreach (Mobile m in killed.Aggressed.Select(x => x.Defender))
+            for (var index = 0; index < killed.Aggressed.Count; index++)
             {
+                var x = killed.Aggressed[index];
+
+                Mobile m = x.Defender;
                 CheckCombat(m);
             }
 
-            foreach (Mobile m in killed.Aggressors.Select(x => x.Attacker))
+            for (var index = 0; index < killed.Aggressors.Count; index++)
             {
+                var x = killed.Aggressors[index];
+
+                Mobile m = x.Attacker;
                 CheckCombat(m);
             }
         }

@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Xml;
 
 using Server.Items;
@@ -531,9 +530,16 @@ namespace Server
 		}
 
 		public List<Mobile> GetPlayers(Func<Mobile, bool> predicate)
-		{
-			return GetEnumeratedPlayers(predicate).ToList();
-		}
+        {
+            List<Mobile> list = new List<Mobile>();
+
+            foreach (var player in GetEnumeratedPlayers(predicate))
+            {
+                list.Add(player);
+            }
+
+            return list;
+        }
 
 		public IEnumerable<Mobile> GetEnumeratedPlayers()
 		{
@@ -543,15 +549,17 @@ namespace Server
 		public IEnumerable<Mobile> GetEnumeratedPlayers(Func<Mobile, bool> predicate)
 		{
 			if (Sectors != null)
-			{
-				foreach (Sector s in Sectors)
-				{
-					foreach (Mobile o in GetDistinctEnumeration(s.Players, predicate))
-					{
-						yield return o;
-					}
-				}
-			}
+            {
+                for (var index = 0; index < Sectors.Length; index++)
+                {
+                    Sector s = Sectors[index];
+
+                    foreach (Mobile o in GetDistinctEnumeration(s.Players, predicate))
+                    {
+                        yield return o;
+                    }
+                }
+            }
 		}
 
 		public int GetPlayerCount()
@@ -560,9 +568,16 @@ namespace Server
 		}
 
 		public int GetPlayerCount(Func<Mobile, bool> predicate)
-		{
-			return GetEnumeratedPlayers(predicate).Count();
-		}
+        {
+            int count = 0;
+
+            foreach (var player in GetEnumeratedPlayers(predicate))
+            {
+                count++;
+            }
+
+            return count;
+        }
 
 		public List<Mobile> GetMobiles()
 		{
@@ -570,9 +585,16 @@ namespace Server
 		}
 
 		public List<Mobile> GetMobiles(Func<Mobile, bool> predicate)
-		{
-			return GetEnumeratedMobiles(predicate).ToList();
-		}
+        {
+            List<Mobile> list = new List<Mobile>();
+
+            foreach (var mobile in GetEnumeratedMobiles(predicate))
+            {
+                list.Add(mobile);
+            }
+
+            return list;
+        }
 
 		public IEnumerable<Mobile> GetEnumeratedMobiles()
 		{
@@ -582,15 +604,17 @@ namespace Server
 		public IEnumerable<Mobile> GetEnumeratedMobiles(Func<Mobile, bool> predicate)
 		{
 			if (Sectors != null)
-			{
-				foreach (Sector s in Sectors)
-				{
-					foreach (Mobile o in GetDistinctEnumeration(s.Mobiles, predicate))
-					{
-						yield return o;
-					}
-				}
-			}
+            {
+                for (var index = 0; index < Sectors.Length; index++)
+                {
+                    Sector s = Sectors[index];
+
+                    foreach (Mobile o in GetDistinctEnumeration(s.Mobiles, predicate))
+                    {
+                        yield return o;
+                    }
+                }
+            }
 		}
 
 		public int GetMobileCount()
@@ -599,9 +623,16 @@ namespace Server
 		}
 
 		public int GetMobileCount(Func<Mobile, bool> predicate)
-		{
-			return GetEnumeratedMobiles(predicate).Count();
-		}
+        {
+            int count = 0;
+
+            foreach (var mobile in GetEnumeratedMobiles(predicate))
+            {
+                count++;
+            }
+
+            return count;
+        }
 
 		public List<Item> GetItems()
 		{
@@ -609,9 +640,16 @@ namespace Server
 		}
 
 		public List<Item> GetItems(Func<Item, bool> predicate)
-		{
-			return GetEnumeratedItems(predicate).ToList();
-		}
+        {
+            List<Item> list = new List<Item>();
+
+            foreach (var item in GetEnumeratedItems(predicate))
+            {
+                list.Add(item);
+            }
+
+            return list;
+        }
 
 		public IEnumerable<Item> GetEnumeratedItems()
 		{
@@ -621,15 +659,17 @@ namespace Server
 		public IEnumerable<Item> GetEnumeratedItems(Func<Item, bool> predicate)
 		{
 			if (Sectors != null)
-			{
-				foreach (Sector s in Sectors)
-				{
-					foreach (Item o in GetDistinctEnumeration(s.Items, predicate))
-					{
-						yield return o;
-					}
-				}
-			}
+            {
+                for (var index = 0; index < Sectors.Length; index++)
+                {
+                    Sector s = Sectors[index];
+
+                    foreach (Item o in GetDistinctEnumeration(s.Items, predicate))
+                    {
+                        yield return o;
+                    }
+                }
+            }
 		}
 
 		public int GetItemCount()
@@ -638,9 +678,16 @@ namespace Server
 		}
 
 		public int GetItemCount(Func<Item, bool> predicate)
-		{
-			return GetEnumeratedItems(predicate).Count();
-		}
+        {
+            int count = 0;
+
+            foreach (var item in GetEnumeratedItems(predicate))
+            {
+                count++;
+            }
+
+            return count;
+        }
 
 		public List<BaseMulti> GetMultis()
 		{
@@ -648,9 +695,16 @@ namespace Server
 		}
 
 		public List<BaseMulti> GetMultis(Func<BaseMulti, bool> predicate)
-		{
-			return GetEnumeratedMultis(predicate).ToList();
-		}
+        {
+            List<BaseMulti> list = new List<BaseMulti>();
+
+            foreach (var multi in GetEnumeratedMultis(predicate))
+            {
+                list.Add(multi);
+            }
+
+            return list;
+        }
 
 		public IEnumerable<BaseMulti> GetEnumeratedMultis()
 		{
@@ -660,15 +714,17 @@ namespace Server
 		public IEnumerable<BaseMulti> GetEnumeratedMultis(Func<BaseMulti, bool> predicate)
 		{
 			if (Sectors != null)
-			{
-				foreach (Sector s in Sectors)
-				{
-					foreach (BaseMulti o in GetDistinctEnumeration(s.Multis, predicate))
-					{
-						yield return o;
-					}
-				}
-			}
+            {
+                for (var index = 0; index < Sectors.Length; index++)
+                {
+                    Sector s = Sectors[index];
+
+                    foreach (BaseMulti o in GetDistinctEnumeration(s.Multis, predicate))
+                    {
+                        yield return o;
+                    }
+                }
+            }
 		}
 
 		public int GetMultiCount()
@@ -677,15 +733,30 @@ namespace Server
 		}
 
 		public int GetMultiCount(Func<BaseMulti, bool> predicate)
-		{
-			return GetEnumeratedMultis(predicate).Count();
-		}
+        {
+            int count = 0;
+
+            foreach (var multi in GetEnumeratedMultis(predicate))
+            {
+                count++;
+            }
+
+            return count;
+        }
 
 		private IEnumerable<T> GetDistinctEnumeration<T>(IReadOnlyList<T> list, Func<T, bool> predicate)
 			where T : IEntity
-		{
-			return GetEnumeration(list, predicate).Distinct();
-		}
+        {
+            HashSet<T> set = new HashSet<T>();
+
+            foreach (T entity in GetEnumeration(list, predicate))
+            {
+                if (set.Add(entity))
+                {
+                    yield return entity;
+                }
+            }
+        }
 
 		private IEnumerable<T> GetEnumeration<T>(IReadOnlyList<T> list, Func<T, bool> predicate)
 			where T : IEntity

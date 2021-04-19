@@ -453,13 +453,16 @@ namespace Server
 
 			IEnumerable<T> vals = Enum.GetValues(t).Cast<T>();
 
-			foreach (T o in vals.Where(o => o.Equals(value)))
-			{
-				InternalSet(key, o.ToString(CultureInfo.InvariantCulture));
-				return;
-			}
+            foreach (T o in vals)
+            {
+                if (o.Equals(value))
+                {
+                    InternalSet(key, o.ToString(CultureInfo.InvariantCulture));
+                    return;
+                }
+            }
 
-			throw new ArgumentException("Enumerated value not found");
+            throw new ArgumentException("Enumerated value not found");
 		}
 
 		private static void Warn<T>(string key)
@@ -747,12 +750,15 @@ namespace Server
 
 			IEnumerable<T> vals = Enum.GetValues(typeof(T)).Cast<T>();
 
-			foreach (T o in vals.Where(o => Insensitive.Equals(value, o.ToString(CultureInfo.InvariantCulture))))
-			{
-				return o;
-			}
+            foreach (T o in vals)
+            {
+                if (Insensitive.Equals(value, o.ToString(CultureInfo.InvariantCulture)))
+                {
+                    return o;
+                }
+            }
 
-			Warn<T>(key);
+            Warn<T>(key);
 
 			return defaultValue;
 		}
