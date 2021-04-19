@@ -32,7 +32,10 @@ namespace Server.Regions
                     }
                 }
 
-                GoLocation = first.Location;
+                if (first != null)
+                {
+                    GoLocation = first.Location;
+                }
             }
         }
 
