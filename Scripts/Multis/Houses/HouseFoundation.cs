@@ -9,7 +9,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
-using System.Linq;
 
 namespace Server.Multis
 {
@@ -1189,7 +1188,46 @@ namespace Server.Multis
 
         public static bool IsStair(int id)
         {
-            return m_StairSeqs.Any(seq => id >= seq && id <= seq + 8) || m_StairIDs.Any(stairID => stairID == id) || m_CornerIDs.Any(cornerID => cornerID == id);
+            bool any = false;
+
+            for (var index = 0; index < m_StairSeqs.Length; index++)
+            {
+                var seq = m_StairSeqs[index];
+
+                if (id >= seq && id <= seq + 8)
+                {
+                    any = true;
+                    break;
+                }
+            }
+
+            bool any1 = false;
+
+            for (var index = 0; index < m_StairIDs.Length; index++)
+            {
+                var stairId = m_StairIDs[index];
+
+                if (stairId == id)
+                {
+                    any1 = true;
+                    break;
+                }
+            }
+
+            bool any2 = false;
+
+            for (var index = 0; index < m_CornerIDs.Length; index++)
+            {
+                var cornerId = m_CornerIDs[index];
+
+                if (cornerId == id)
+                {
+                    any2 = true;
+                    break;
+                }
+            }
+
+            return any || any1 || any2;
         }
 
         public static bool IsStair(int id, ref int dir)
