@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.Chat
 {
@@ -103,7 +102,17 @@ namespace Server.Engines.Chat
 
         public static ChatUser GetChatUser(string username)
         {
-            return m_Users.FirstOrDefault(user => user.Username == username);
+            for (var index = 0; index < m_Users.Count; index++)
+            {
+                var user = m_Users[index];
+
+                if (user.Username == username)
+                {
+                    return user;
+                }
+            }
+
+            return null;
         }
 
         public static void GlobalSendCommand(ChatCommand command, string param1 = null, string param2 = null)

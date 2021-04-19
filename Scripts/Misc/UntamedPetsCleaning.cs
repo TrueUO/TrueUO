@@ -17,12 +17,9 @@ namespace Server.Mobiles
 
             foreach (Mobile value in World.Mobiles.Values)
             {
-                if (value is BaseCreature b)
+                if (value is BaseCreature b && b.RemoveOnSave && !b.Controlled && b.ControlMaster == null)
                 {
-                    if (b.RemoveOnSave && !b.Controlled && b.ControlMaster == null)
-                    {
-                        list.Add(b);
-                    }
+                    list.Add(b);
                 }
             }
 
