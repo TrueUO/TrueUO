@@ -553,37 +553,39 @@ namespace Server
 			for (int x = 0; x < newWidth; ++x)
 			{
 				for (int y = 0; y < newHeight; ++y)
-				{
-					StaticTile[] tiles = newTiles[x][y];
+                {
+                    StaticTile[] tiles = newTiles[x][y];
 
-					foreach (StaticTile tile in tiles)
-					{
-						int vx = x - m_Center.X;
-						int vy = y - m_Center.Y;
+                    for (var i = 0; i < tiles.Length; i++)
+                    {
+                        StaticTile tile = tiles[i];
 
-						if (vx < m_Min.m_X)
-						{
-							m_Min.m_X = vx;
-						}
+                        int vx = x - m_Center.X;
+                        int vy = y - m_Center.Y;
 
-						if (vy < m_Min.m_Y)
-						{
-							m_Min.m_Y = vy;
-						}
+                        if (vx < m_Min.m_X)
+                        {
+                            m_Min.m_X = vx;
+                        }
 
-						if (vx > m_Max.m_X)
-						{
-							m_Max.m_X = vx;
-						}
+                        if (vy < m_Min.m_Y)
+                        {
+                            m_Min.m_Y = vy;
+                        }
 
-						if (vy > m_Max.m_Y)
-						{
-							m_Max.m_Y = vy;
-						}
+                        if (vx > m_Max.m_X)
+                        {
+                            m_Max.m_X = vx;
+                        }
 
-						m_List[index++] = new MultiTileEntry((ushort)tile.ID, (short)vx, (short)vy, (short)tile.Z, TileFlag.Background);
-					}
-				}
+                        if (vy > m_Max.m_Y)
+                        {
+                            m_Max.m_Y = vy;
+                        }
+
+                        m_List[index++] = new MultiTileEntry((ushort) tile.ID, (short) vx, (short) vy, (short) tile.Z, TileFlag.Background);
+                    }
+                }
 			}
 		}
 
@@ -635,16 +637,18 @@ namespace Server
 
 			writer.Write(m_List.Length);
 
-			foreach (MultiTileEntry ent in m_List)
-			{
-				writer.Write(ent.m_ItemID);
-				writer.Write(ent.m_OffsetX);
-				writer.Write(ent.m_OffsetY);
-				writer.Write(ent.m_OffsetZ);
+            for (var index = 0; index < m_List.Length; index++)
+            {
+                MultiTileEntry ent = m_List[index];
 
-				writer.Write((ulong)ent.m_Flags);
-			}
-		}
+                writer.Write(ent.m_ItemID);
+                writer.Write(ent.m_OffsetX);
+                writer.Write(ent.m_OffsetY);
+                writer.Write(ent.m_OffsetZ);
+
+                writer.Write((ulong) ent.m_Flags);
+            }
+        }
 
 		public MultiComponentList(GenericReader reader)
 		{

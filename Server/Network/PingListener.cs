@@ -1,4 +1,4 @@
-﻿#region References
+#region References
 using System;
 using System.Net;
 using System.Net.Sockets;
@@ -69,8 +69,6 @@ namespace Server.Network
 			IPEndPoint ripep = new IPEndPoint(IPAddress.Any, Port);
 			byte[] recvd = _Listener.EndReceive(r, ref ripep);
 
-			//Console.WriteLine("[PING]: \"{0}\" Received from {1}", Encoding.UTF8.GetString(recvd), ripep);
-
 			BeginSend(recvd, ripep);
 
 			BeginReceive();
@@ -78,9 +76,7 @@ namespace Server.Network
 
 		private void BeginSend(byte[] data, IPEndPoint ipep)
 		{
-			//Console.WriteLine("[PONG]: \"{0}\" Sent to {1}", Encoding.UTF8.GetString(data), ipep);
-
-			_Listener.BeginSend(data, data.Length, ipep, EndSend, _Listener);
+            _Listener.BeginSend(data, data.Length, ipep, EndSend, _Listener);
 		}
 
 		private void EndSend(IAsyncResult asyncResult)
