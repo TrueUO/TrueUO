@@ -9,6 +9,7 @@ namespace Server.Mobiles
     public class Meraktus : BaseChampion
     {
         public override ChampionSkullType SkullType => ChampionSkullType.Pain;
+        public override bool CanGivePowerscrolls => false;
 
         public override Type[] UniqueList => new Type[] { typeof(Subdue) };
         public override Type[] SharedList => new Type[]
@@ -62,8 +63,6 @@ namespace Server.Mobiles
 
             Fame = 70000;
             Karma = -70000;
-
-            NoKillAwards = true;
 
             Timer.DelayCall(TimeSpan.FromSeconds(1), SpawnTormented);
 
