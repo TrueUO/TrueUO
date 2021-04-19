@@ -218,8 +218,10 @@ namespace Server.Misc
             string data;
             Match match;
 
-            foreach (string service in services)
+            for (var index = 0; index < services.Length; index++)
             {
+                string service = services[index];
+
                 if (!string.IsNullOrWhiteSpace(service))
                 {
                     try

@@ -82,12 +82,18 @@ namespace Server
 
             XmlElement root = doc["names"];
 
-            foreach (XmlElement element in root.GetElementsByTagName("namelist"))
+            var name = root.GetElementsByTagName("namelist");
+
+            for (var index = 0; index < name.Count; index++)
             {
+                var element = (XmlElement) name[index];
+
                 string type = element.GetAttribute("type");
 
                 if (string.IsNullOrEmpty(type))
+                {
                     continue;
+                }
 
                 try
                 {

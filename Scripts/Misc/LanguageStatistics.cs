@@ -231,8 +231,12 @@ namespace Server.Misc
                 List<InternationalCodeCounter> list = new List<InternationalCodeCounter>(ht.Values);
                 list.Sort(InternationalCodeComparer.Instance);
 
-                foreach (InternationalCodeCounter c in list)
+                for (var index = 0; index < list.Count; index++)
+                {
+                    InternationalCodeCounter c = list[index];
+
                     writer.WriteLine("{0}‎ : {1}", GetFormattedInfo(c.Code), c.Count);
+                }
 
                 e.Mobile.SendMessage("Languages list generated.");
             }
