@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 using Server.Network;
 #endregion
@@ -35,8 +34,18 @@ namespace Server.Items
 				return false;
 			}
 
-			return Items.All(i => i.GridLocation != pos);
-		}
+            for (var index = 0; index < Items.Count; index++)
+            {
+                var i = Items[index];
+
+                if (i.GridLocation == pos)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
 
 		public virtual byte GetNewPosition(byte current)
 		{

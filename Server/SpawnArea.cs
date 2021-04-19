@@ -42,8 +42,7 @@ namespace Server
 
 			int hash = GetHashCode(region.Map, name, filters, validator);
 
-
-			if (!_Cache.TryGetValue(hash, out SpawnArea o) || o == null)
+            if (!_Cache.TryGetValue(hash, out SpawnArea o) || o == null)
 			{
 				o = new SpawnArea(region.Map, name, filters, validator);
 
@@ -97,7 +96,19 @@ namespace Server
 				return _EmptyFilters;
 			}
 
-			return _AllFilters.Where(f => f != TileFlag.None && filter.HasFlag(f)).ToArray();
+            List<TileFlag> list = new List<TileFlag>();
+
+            for (var index = 0; index < _AllFilters.Length; index++)
+            {
+                var f = _AllFilters[index];
+
+                if (f != TileFlag.None && filter.HasFlag(f))
+                {
+                    list.Add(f);
+                }
+            }
+
+            return list.ToArray();
 		}
 
 		private static int GetHashCode(Map facet, string region, IEnumerable<TileFlag> filters, SpawnValidator validator)
@@ -284,7 +295,7 @@ namespace Server
 				_Points.Add(p);
 			}
 
-			Center = new Point2D(_Bounds.Start.X + (_Bounds.Width / 2), _Bounds.Start.Y + (_Bounds.Height / 2));
+			Center = new Point2D(_Bounds.Start.X + _Bounds.Width / 2, _Bounds.Start.Y + _Bounds.Height / 2);
 		}
 
 		private IEnumerable<Point3D> Compute(Rectangle3D area)
@@ -337,25 +348,54 @@ namespace Server
 
 						TileFlag flags = TileData.LandTable[land.ID].Flags;
 
-						if (Filters.Any(f => flags.HasFlag(f)))
+                        bool any1 = false;
+
+                        for (var index = 0; index < Filters.Length; index++)
+                        {
+                            var f = Filters[index];
+
+                            if (flags.HasFlag(f))
+                            {
+                                any1 = true;
+                                break;
+                            }
+                        }
+
+                        if (any1)
 						{
 							continue;
 						}
 
 						bool valid = true;
 
-						foreach (StaticTile tile in Facet.Tiles.GetStaticTiles(p.X, p.Y))
-						{
-							flags = TileData.ItemTable[tile.ID].Flags;
+                        var tiles = Facet.Tiles.GetStaticTiles(p.X, p.Y);
 
-							if (Filters.Any(f => flags.HasFlag(f)))
-							{
-								valid = false;
-								break;
-							}
-						}
+                        for (var index = 0; index < tiles.Length; index++)
+                        {
+                            StaticTile tile = tiles[index];
+                            flags = TileData.ItemTable[tile.ID].Flags;
 
-						if (!valid)
+                            bool any2 = false;
+
+                            for (var i = 0; i < Filters.Length; i++)
+                            {
+                                var f = Filters[i];
+
+                                if (flags.HasFlag(f))
+                                {
+                                    any2 = true;
+                                    break;
+                                }
+                            }
+
+                            if (any2)
+                            {
+                                valid = false;
+                                break;
+                            }
+                        }
+
+                        if (!valid)
 						{
 							continue;
 						}

@@ -163,8 +163,12 @@ namespace Server
                     tw.WriteLine();
 
                     var total = (double)m_Timers[i].Count;
+                    var timers = new Dictionary<string, int>();
 
-                    var timers = m_Timers[i].GroupBy(t => t.ToString()).ToDictionary(o => o.Key, o => o.Count());
+                    foreach (var grouping in m_Timers[i].GroupBy(t => t.ToString()))
+                    {
+                        timers.Add(grouping.Key, grouping.Count());
+                    }
 
                     foreach (var o in timers.OrderByDescending(o => o.Value))
                     {
