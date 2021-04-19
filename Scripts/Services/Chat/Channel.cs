@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace Server.Engines.Chat
 {
@@ -177,7 +176,17 @@ namespace Server.Engines.Chat
 
         public static Channel FindChannelByName(string name)
         {
-            return m_Channels.FirstOrDefault(channel => channel.Name == name);
+            for (var index = 0; index < m_Channels.Count; index++)
+            {
+                var channel = m_Channels[index];
+
+                if (channel.Name == name)
+                {
+                    return channel;
+                }
+            }
+
+            return null;
         }
 
         public static Channel Default => FindChannelByName(ChatSystem.DefaultChannel);
