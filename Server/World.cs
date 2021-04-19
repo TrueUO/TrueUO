@@ -102,15 +102,17 @@ namespace Server
 
 			p.Acquire();
 
-			foreach (NetState s in list)
-			{
-				if (s.Mobile != null && s.Mobile.AccessLevel >= access)
-				{
-					s.Send(p);
-				}
-			}
+            for (var index = 0; index < list.Count; index++)
+            {
+                NetState s = list[index];
 
-			p.Release();
+                if (s.Mobile != null && s.Mobile.AccessLevel >= access)
+                {
+                    s.Send(p);
+                }
+            }
+
+            p.Release();
 
 			NetState.FlushAll();
 		}
@@ -241,7 +243,7 @@ namespace Server
 						Console.WriteLine("Error: Type '{0}' was not found.", typeName);
 					}
 
-					throw new Exception(String.Format("Missing type '{0}'", typeName));
+					throw new Exception($"Missing type '{typeName}'");
 				}
 
 				if (t.IsAbstract)
@@ -280,7 +282,7 @@ namespace Server
 							Console.WriteLine("Error: Type '{0}' is abstract.", typeName);
 						}
 
-						throw new Exception(String.Format("Abstract type '{0}'", typeName));
+						throw new Exception($"Abstract type '{typeName}'");
 					}
 				}
 
@@ -292,7 +294,7 @@ namespace Server
 				}
 				else
 				{
-					throw new Exception(string.Format("Type '{0}' does not have a serialization constructor", t));
+					throw new Exception($"Type '{t}' does not have a serialization constructor");
 				}
 			}
 
@@ -513,7 +515,7 @@ namespace Server
 
 								if (reader.Position != (entry.Position + entry.Length))
 								{
-									throw new Exception(string.Format("***** Bad serialize on {0} *****", m.GetType()));
+									throw new Exception($"***** Bad serialize on {m.GetType()} *****");
 								}
 							}
 							catch (Exception e)
@@ -558,7 +560,7 @@ namespace Server
 
 								if (reader.Position != (entry.Position + entry.Length))
 								{
-									throw new Exception(string.Format("***** Bad serialize on {0} *****", item.GetType()));
+									throw new Exception($"***** Bad serialize on {item.GetType()} *****");
 								}
 							}
 							catch (Exception e)
@@ -603,7 +605,7 @@ namespace Server
 
 								if (reader.Position != (entry.Position + entry.Length))
 								{
-									throw new Exception(string.Format("***** Bad serialize on Guild {0} *****", g.Id));
+									throw new Exception($"***** Bad serialize on Guild {g.Id} *****");
 								}
 							}
 							catch (Exception e)
@@ -692,15 +694,7 @@ namespace Server
 					Utility.PopColor();
 				}
 
-				throw new Exception(
-					string.Format(
-						"Load failed (items={0}, mobiles={1}, guilds={2}, type={3}, serial={4})",
-						failedItems,
-						failedMobiles,
-						failedGuilds,
-						failedType,
-						failedSerial),
-						failed);
+				throw new Exception($"Load failed (items={failedItems}, mobiles={failedMobiles}, guilds={failedGuilds}, type={failedType}, serial={failedSerial})", failed);
 			}
 
 			EventSink.InvokeWorldLoad();

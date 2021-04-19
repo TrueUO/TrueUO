@@ -669,15 +669,17 @@ namespace Server
             }
 
             if (checkMobiles)
-			{
-				foreach (Mobile m in mobs)
-				{
-					if (m.Location.m_X == x && m.Location.m_Y == y && (m.AccessLevel == AccessLevel.Player || !m.Hidden) && m.Z + 16 > z && z + height > m.Z)
-					{
+            {
+                for (var index = 0; index < mobs.Count; index++)
+                {
+                    Mobile m = mobs[index];
+
+                    if (m.Location.m_X == x && m.Location.m_Y == y && (m.AccessLevel == AccessLevel.Player || !m.Hidden) && m.Z + 16 > z && z + height > m.Z)
+                    {
                         return false;
                     }
-				}
-			}
+                }
+            }
 
 			return !requireSurface || hasSurface;
 		}

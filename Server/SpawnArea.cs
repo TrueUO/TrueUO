@@ -269,18 +269,19 @@ namespace Server
 				int x1 = short.MaxValue, y1 = short.MaxValue, z1 = sbyte.MaxValue;
 				int x2 = short.MinValue, y2 = short.MinValue, z2 = sbyte.MinValue;
 
-				foreach (Rectangle3D o in region.Area)
-				{
-					x1 = Math.Min(x1, o.Start.X);
-					y1 = Math.Min(y1, o.Start.Y);
-					z1 = Math.Min(z1, o.Start.Z);
+                for (var index = 0; index < region.Area.Length; index++)
+                {
+                    Rectangle3D o = region.Area[index];
+                    x1 = Math.Min(x1, o.Start.X);
+                    y1 = Math.Min(y1, o.Start.Y);
+                    z1 = Math.Min(z1, o.Start.Z);
 
-					x2 = Math.Max(x2, o.End.X);
-					y2 = Math.Max(y2, o.End.Y);
-					z2 = Math.Max(z2, o.End.Z);
-				}
+                    x2 = Math.Max(x2, o.End.X);
+                    y2 = Math.Max(y2, o.End.Y);
+                    z2 = Math.Max(z2, o.End.Z);
+                }
 
-				_Bounds = new Rectangle3D(x1, y1, z1, x2 - x1, y2 - y1, z2 - z1);
+                _Bounds = new Rectangle3D(x1, y1, z1, x2 - x1, y2 - y1, z2 - z1);
 
 				bounds = region.Area;
 			}

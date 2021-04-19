@@ -149,19 +149,20 @@ namespace Server
 
 			string fullPath = null;
 
-			foreach (string p in DataDirectories)
-			{
-				fullPath = Path.Combine(p, path);
+            for (var index = 0; index < DataDirectories.Count; index++)
+            {
+                string p = DataDirectories[index];
+                fullPath = Path.Combine(p, path);
 
-				if (File.Exists(fullPath))
-				{
-					break;
-				}
+                if (File.Exists(fullPath))
+                {
+                    break;
+                }
 
-				fullPath = null;
-			}
+                fullPath = null;
+            }
 
-			return fullPath;
+            return fullPath;
 		}
 
 		public static string FindDataFile(string format, params object[] args)
@@ -251,12 +252,13 @@ namespace Server
 				if (!close && !Service)
 				{
 					try
-					{
-						foreach (Listener l in MessagePump.Listeners)
-						{
-							l.Dispose();
-						}
-					}
+                    {
+                        for (var index = 0; index < MessagePump.Listeners.Length; index++)
+                        {
+                            Listener l = MessagePump.Listeners[index];
+                            l.Dispose();
+                        }
+                    }
 					catch
 					{
 					}
@@ -658,12 +660,13 @@ namespace Server
 
 			MessagePump = new MessagePump();
 
-			foreach (Map m in Map.AllMaps)
-			{
-				TileMatrix.Force();
-			}
+            for (var index = 0; index < Map.AllMaps.Count; index++)
+            {
+                Map m = Map.AllMaps[index];
+                TileMatrix.Force();
+            }
 
-			NetState.Initialize();
+            NetState.Initialize();
 		}
 
 		public static void Run()
@@ -783,11 +786,12 @@ namespace Server
 
 			VerifySerialization(Assembly.GetCallingAssembly());
 
-			foreach (Assembly a in ScriptCompiler.Assemblies)
-			{
-				VerifySerialization(a);
-			}
-		}
+            for (var index = 0; index < ScriptCompiler.Assemblies.Length; index++)
+            {
+                Assembly a = ScriptCompiler.Assemblies[index];
+                VerifySerialization(a);
+            }
+        }
 
 		private static readonly Type[] m_SerialTypeArray = { typeof(Serial) };
 
@@ -966,20 +970,24 @@ namespace Server
 		}
 
 		public override void Write(char ch)
-		{
-			foreach (TextWriter t in _Streams)
-			{
-				t.Write(ch);
-			}
-		}
+        {
+            for (var index = 0; index < _Streams.Count; index++)
+            {
+                TextWriter t = _Streams[index];
+
+                t.Write(ch);
+            }
+        }
 
 		public override void WriteLine(string line)
-		{
-			foreach (TextWriter t in _Streams)
-			{
-				t.WriteLine(line);
-			}
-		}
+        {
+            for (var index = 0; index < _Streams.Count; index++)
+            {
+                TextWriter t = _Streams[index];
+
+                t.WriteLine(line);
+            }
+        }
 
 		public override void WriteLine(string line, params object[] args)
 		{

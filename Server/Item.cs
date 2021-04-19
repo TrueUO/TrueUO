@@ -1367,20 +1367,22 @@ namespace Server
 		public virtual void AddItemSocketProperties(ObjectPropertyList list)
 		{
 			if (Sockets != null)
-			{
-				foreach (ItemSocket socket in Sockets)
-				{
-					socket.GetProperties(list);
-				}
-			}
+            {
+                for (var index = 0; index < Sockets.Count; index++)
+                {
+                    ItemSocket socket = Sockets[index];
+                    socket.GetProperties(list);
+                }
+            }
 		}
 
         public virtual void AddItemSocketCraftedProperties(ObjectPropertyList list)
         {
             if (Sockets != null)
             {
-                foreach (ItemSocket socket in Sockets)
+                for (var index = 0; index < Sockets.Count; index++)
                 {
+                    ItemSocket socket = Sockets[index];
                     socket.GetCraftedProperties(list);
                 }
             }
@@ -2480,12 +2482,13 @@ namespace Server
 			writer.Write(Sockets != null ? Sockets.Count : 0);
 
 			if (Sockets != null)
-			{
-				foreach (ItemSocket socket in Sockets)
-				{
-					ItemSocket.Save(socket, writer);
-				}
-			}
+            {
+                for (var index = 0; index < Sockets.Count; index++)
+                {
+                    ItemSocket socket = Sockets[index];
+                    ItemSocket.Save(socket, writer);
+                }
+            }
 
 			// 13: Merge sync
 			// 12: Light no longer backed by Direction

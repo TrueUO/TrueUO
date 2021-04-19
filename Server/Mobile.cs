@@ -3177,8 +3177,9 @@ namespace Server
 
                 Packet[][] cache = m_MovingPacketCache;
 
-                foreach (Mobile m in m_MoveClientList)
+                for (var index = 0; index < m_MoveClientList.Count; index++)
                 {
+                    Mobile m = m_MoveClientList[index];
                     NetState ns = m.NetState;
 
                     if (ns != null && m.InUpdateRange(m_Location) && m.CanSee(this))
@@ -6937,15 +6938,17 @@ namespace Server
 			NetState ns = m_NetState;
 
 			if (ns != null)
-			{
-				foreach (Gump gump in ns.Gumps)
-				{
-					if (type.IsInstanceOfType(gump))
-					{
-						return gump;
-					}
-				}
-			}
+            {
+                for (var index = 0; index < ns.Gumps.Count; index++)
+                {
+                    Gump gump = ns.Gumps[index];
+
+                    if (type.IsInstanceOfType(gump))
+                    {
+                        return gump;
+                    }
+                }
+            }
 
 			return null;
 		}
@@ -6998,14 +7001,16 @@ namespace Server
 
 				ns.ClearGumps();
 
-				foreach (Gump gump in gumps)
-				{
-					ns.Send(new CloseGump(gump.TypeID, 0));
+                for (var index = 0; index < gumps.Count; index++)
+                {
+                    Gump gump = gumps[index];
 
-					gump.OnServerClose(ns);
-				}
+                    ns.Send(new CloseGump(gump.TypeID, 0));
 
-				return true;
+                    gump.OnServerClose(ns);
+                }
+
+                return true;
 			}
 
             return false;
@@ -9402,12 +9407,14 @@ namespace Server
 				SendRemovePacket();
 			}
 
-			foreach (Item o in m_Items)
-			{
-				o.Map = map;
-			}
+            for (var index = 0; index < m_Items.Count; index++)
+            {
+                Item o = m_Items[index];
 
-			m_Map = map;
+                o.Map = map;
+            }
+
+            m_Map = map;
 
 			m_Location = newLocation;
 

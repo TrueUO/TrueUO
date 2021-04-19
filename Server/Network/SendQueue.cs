@@ -182,7 +182,7 @@ namespace Server.Network
 
             int existingBytes = (_pending.Count * m_CoalesceBufferSize) + (_buffered == null ? 0 : _buffered.Length);
 
-			if ((existingBytes + length) > PendingCap)
+			if (existingBytes + length > PendingCap)
 			{
 				throw new CapacityExceededException();
 			}
