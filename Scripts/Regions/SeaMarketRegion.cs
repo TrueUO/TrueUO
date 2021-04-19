@@ -6,7 +6,6 @@ using Server.Multis;
 using Server.Spells;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Xml;
 
 namespace Server.Regions
@@ -35,24 +34,19 @@ namespace Server.Regions
 
                 if (value)
                 {
-                    if (m_Region1 != null)
-                        m_Region1.StartTimer();
-
-                    if (m_Region2 != null)
-                        m_Region2.StartTimer();
+                    m_Region1?.StartTimer();
+                    m_Region2?.StartTimer();
                 }
                 else
                 {
-                    if (m_Region1 != null)
-                        m_Region1.StopTimer();
-
-                    if (m_Region2 != null)
-                        m_Region2.StopTimer();
+                    m_Region1?.StopTimer();
+                    m_Region2?.StopTimer();
                 }
             }
         }
 
         public static Rectangle2D[] Bounds => m_Bounds;
+
         private static readonly Rectangle2D[] m_Bounds =
         {
             new Rectangle2D(4529, 2296, 45, 112)
@@ -203,8 +197,15 @@ namespace Server.Regions
         {
             List<BaseBoat> list = new List<BaseBoat>();
 
-            foreach (BaseBoat boat in GetEnumeratedMultis().OfType<BaseBoat>())
-                list.Add(boat);
+            foreach (BaseMulti multi in GetEnumeratedMultis())
+            {
+                BaseBoat boat = multi as BaseBoat;
+
+                if (boat != null)
+                {
+                    list.Add(boat);
+                }
+            }
 
             return list;
         }
