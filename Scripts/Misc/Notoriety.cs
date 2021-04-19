@@ -249,15 +249,32 @@ namespace Server.Misc
 
                 Party sourceParty = Party.Get(source);
 
-                if (!target.Aggressors.Any(m => m.IsPlayer()))
+                bool any = false;
+
+                for (var index = 0; index < target.Aggressors.Count; index++)
+                {
+                    var m = target.Aggressors[index];
+
+                    if (m.IsPlayer())
+                    {
+                        any = true;
+                        break;
+                    }
+                }
+
+                if (!any)
                 {
                     return actual;
                 }
 
-                foreach (Mobile m in target.Aggressors)
+                for (var index = 0; index < target.Aggressors.Count; index++)
                 {
+                    Mobile m = target.Aggressors[index];
+
                     if (m == source || sourceParty != null && Party.Get(m) == sourceParty || sourceGuild != null && m.Guild == sourceGuild)
+                    {
                         return actual;
+                    }
                 }
 
                 return Notoriety.Innocent;
