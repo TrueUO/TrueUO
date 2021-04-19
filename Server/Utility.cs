@@ -873,33 +873,47 @@ namespace Server
 				int minIdx = -1;
 				int maxIdx = -1;
 
-				foreach (TEnum val in values)
-				{
-					++curIdx;
+                for (var index = 0; index < values.Length; index++)
+                {
+                    TEnum val = values[index];
 
-					if (Equals(val, min))
-						minIdx = curIdx;
-					else if (Equals(val, max))
-						maxIdx = curIdx;
-				}
+                    ++curIdx;
 
-				if (minIdx == 0 && maxIdx == values.Length - 1)
-					return RandomList(values);
+                    if (Equals(val, min))
+                    {
+                        minIdx = curIdx;
+                    }
+                    else if (Equals(val, max))
+                    {
+                        maxIdx = curIdx;
+                    }
+                }
 
-				curIdx = -1;
+                if (minIdx == 0 && maxIdx == values.Length - 1)
+                {
+                    return RandomList(values);
+                }
+
+                curIdx = -1;
 
 				if (minIdx >= 0)
 				{
 					if (minIdx == maxIdx)
-						curIdx = minIdx;
-					else if (maxIdx > minIdx)
-						curIdx = RandomMinMax(minIdx, maxIdx);
-				}
+                    {
+                        curIdx = minIdx;
+                    }
+                    else if (maxIdx > minIdx)
+                    {
+                        curIdx = RandomMinMax(minIdx, maxIdx);
+                    }
+                }
 
 				if (curIdx >= 0 && curIdx < values.Length)
-					return values[curIdx];
+                {
+                    return values[curIdx];
+                }
 
-				return RandomList(min, max);
+                return RandomList(min, max);
 			}
 
 			return default;

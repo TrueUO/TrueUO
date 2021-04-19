@@ -1282,25 +1282,30 @@ namespace Server
 				Utility.PopColor();
 			}
 			else
-			{
-				foreach (XmlElement facet in root.SelectNodes("Facet"))
-				{
-					Map map = null;
-					if (ReadMap(facet, "name", ref map))
-					{
-						if (map == Map.Internal)
-						{
-							Utility.PushColor(ConsoleColor.Red);
-							Console.WriteLine("Invalid internal map in a facet element");
-							Utility.PopColor();
-						}
-						else
-						{
-							LoadRegions(facet, map, null);
-						}
-					}
-				}
-			}
+            {
+                var list = root.SelectNodes("Facet");
+
+                for (var index = 0; index < list.Count; index++)
+                {
+                    var facet = (XmlElement) list[index];
+
+                    Map map = null;
+
+                    if (ReadMap(facet, "name", ref map))
+                    {
+                        if (map == Map.Internal)
+                        {
+                            Utility.PushColor(ConsoleColor.Red);
+                            Console.WriteLine("Invalid internal map in a facet element");
+                            Utility.PopColor();
+                        }
+                        else
+                        {
+                            LoadRegions(facet, map, null);
+                        }
+                    }
+                }
+            }
 
 			Utility.PushColor(ConsoleColor.Green);
 			Console.WriteLine("done");
@@ -1308,46 +1313,49 @@ namespace Server
 		}
 
 		private static void LoadRegions(XmlNode xml, Map map, Region parent)
-		{
-			foreach (XmlElement xmlReg in xml.SelectNodes("region"))
-			{
-				Expansion expansion = Expansion.None;
+        {
+            var regs = xml.SelectNodes("region");
 
-				if (ReadEnum(xmlReg, "expansion", ref expansion, false) && expansion > Core.Expansion)
-				{
-					continue;
-				}
+            for (var index = 0; index < regs.Count; index++)
+            {
+                var xmlReg = (XmlElement) regs[index];
+                Expansion expansion = Expansion.None;
 
-				Type type = DefaultRegionType;
+                if (ReadEnum(xmlReg, "expansion", ref expansion, false) && expansion > Core.Expansion)
+                {
+                    continue;
+                }
 
-				ReadType(xmlReg, "type", ref type, false);
+                Type type = DefaultRegionType;
 
-				if (!typeof(Region).IsAssignableFrom(type))
-				{
-					Utility.PushColor(ConsoleColor.Red);
-					Console.WriteLine("Invalid region type '{0}' in regions.xml", type.FullName);
-					Utility.PopColor();
-					continue;
-				}
+                ReadType(xmlReg, "type", ref type, false);
 
-				Region region = null;
-				try
-				{
-					region = (Region)Activator.CreateInstance(type, xmlReg, map, parent);
-				}
-				catch (Exception ex)
-				{
-					Utility.PushColor(ConsoleColor.Red);
-					Console.WriteLine("Error during the creation of region type '{0}': {1}", type.FullName, ex);
-					Utility.PopColor();
-					continue;
-				}
+                if (!typeof(Region).IsAssignableFrom(type))
+                {
+                    Utility.PushColor(ConsoleColor.Red);
+                    Console.WriteLine("Invalid region type '{0}' in regions.xml", type.FullName);
+                    Utility.PopColor();
+                    continue;
+                }
 
-				region.Register();
+                Region region = null;
+                try
+                {
+                    region = (Region) Activator.CreateInstance(type, xmlReg, map, parent);
+                }
+                catch (Exception ex)
+                {
+                    Utility.PushColor(ConsoleColor.Red);
+                    Console.WriteLine("Error during the creation of region type '{0}': {1}", type.FullName, ex);
+                    Utility.PopColor();
+                    continue;
+                }
 
-				LoadRegions(xmlReg, map, region);
-			}
-		}
+                region.Register();
+
+                LoadRegions(xmlReg, map, region);
+            }
+        }
 
 		public Region(XmlElement xml, Map map, Region parent)
 		{
@@ -1381,23 +1389,26 @@ namespace Server
 			ReadInt32(zrange, "max", ref maxZ, false);
 
 			List<Rectangle3D> area = new List<Rectangle3D>();
-			foreach (XmlElement xmlRect in xml.SelectNodes("rect"))
-			{
-				Expansion expansion = Expansion.None;
+            var list = xml.SelectNodes("rect");
 
-				if (ReadEnum(xmlRect, "expansion", ref expansion, false) && expansion > Core.Expansion)
-				{
-					continue;
-				}
+            for (var index = 0; index < list.Count; index++)
+            {
+                var xmlRect = (XmlElement) list[index];
+                Expansion expansion = Expansion.None;
 
-				Rectangle3D rect = new Rectangle3D();
-				if (ReadRectangle3D(xmlRect, minZ, maxZ, ref rect))
-				{
-					area.Add(rect);
-				}
-			}
+                if (ReadEnum(xmlRect, "expansion", ref expansion, false) && expansion > Core.Expansion)
+                {
+                    continue;
+                }
 
-			m_Area = area.ToArray();
+                Rectangle3D rect = new Rectangle3D();
+                if (ReadRectangle3D(xmlRect, minZ, maxZ, ref rect))
+                {
+                    area.Add(rect);
+                }
+            }
+
+            m_Area = area.ToArray();
 
 			if (m_Area.Length == 0)
 			{

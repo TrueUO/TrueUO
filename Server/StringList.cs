@@ -173,10 +173,12 @@ namespace Server
             {
                 m_FmtTxt = m_RegEx.Replace(Text, "{$1}");
             }
+
             for (int i = 0; i < args.Length && i < 10; i++)
             {
                 m_Args[i + 1] = args[i];
             }
+
             return string.Format(m_FmtTxt, m_Args);
         }
     }
