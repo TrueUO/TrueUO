@@ -2,7 +2,6 @@ using Server.Items;
 using Server.Mobiles;
 using Server.Network;
 using System;
-using System.Linq;
 using Server.Engines.Despise;
 
 /*The animal tamer attempts to guide their pet on the path of skill gain, increasing the pet's skill gains based on the tamer's 
@@ -35,7 +34,9 @@ namespace Server.Spells.SkillMasteries
         public override bool CheckCast()
         {
             if (IsInCooldown(Caster, GetType()))
+            {
                 return false;
+            }
 
             if (GetSpell(Caster, GetType()) != null) // does this expire or not let you cast it again?>
             {
@@ -43,7 +44,19 @@ namespace Server.Spells.SkillMasteries
                 return false;
             }
 
-            if (Caster is PlayerMobile pm && pm.AllFollowers == null || ((PlayerMobile)Caster).AllFollowers.Count(m => !(m is DespiseCreature)) == 0)
+            int count = 0;
+
+            for (var index = 0; index < ((PlayerMobile) Caster).AllFollowers.Count; index++)
+            {
+                var m = ((PlayerMobile) Caster).AllFollowers[index];
+
+                if (!(m is DespiseCreature))
+                {
+                    count++;
+                }
+            }
+
+            if ((Caster is PlayerMobile pm && pm.AllFollowers == null || count == 0) && Caster != null)
             {
                 Caster.SendLocalizedMessage(1156112); // This ability requires you to have pets.
                 return false;
@@ -65,24 +78,18 @@ namespace Server.Spells.SkillMasteries
             {
                 if (Caster is PlayerMobile)
                 {
-                    foreach (Mobile m in ((PlayerMobile)Caster).AllFollowers)
+                    for (var index = 0; index < ((PlayerMobile) Caster).AllFollowers.Count; index++)
                     {
+                        Mobile m = ((PlayerMobile) Caster).AllFollowers[index];
+
                         if (m.Map == Caster.Map && Caster.InRange(m.Location, PartyRange) && !(m is DespiseCreature))
                         {
-                            Effects.SendLocationParticles(
-                                EffectItem.Create(m.Location, m.Map, EffectItem.DefaultDuration), 0, 0, 0, 0, 0, 5060,
-                                0);
+                            Effects.SendLocationParticles(EffectItem.Create(m.Location, m.Map, EffectItem.DefaultDuration), 0, 0, 0, 0, 0, 5060, 0);
                             Effects.PlaySound(m.Location, m.Map, 0x243);
 
-                            Effects.SendMovingParticles(
-                                new Entity(Serial.Zero, new Point3D(m.X - 6, m.Y - 6, m.Z + 15), m.Map), m, 0x36D4, 7,
-                                0, false, true, 1494, 0, 9502, 1, 0, (EffectLayer) 255, 0x100);
-                            Effects.SendMovingParticles(
-                                new Entity(Serial.Zero, new Point3D(m.X - 4, m.Y - 6, m.Z + 15), m.Map), m, 0x36D4, 7,
-                                0, false, true, 1494, 0, 9502, 1, 0, (EffectLayer) 255, 0x100);
-                            Effects.SendMovingParticles(
-                                new Entity(Serial.Zero, new Point3D(m.X - 6, m.Y - 4, m.Z + 15), m.Map), m, 0x36D4, 7,
-                                0, false, true, 1494, 0, 9502, 1, 0, (EffectLayer) 255, 0x100);
+                            Effects.SendMovingParticles(new Entity(Serial.Zero, new Point3D(m.X - 6, m.Y - 6, m.Z + 15), m.Map), m, 0x36D4, 7, 0, false, true, 1494, 0, 9502, 1, 0, (EffectLayer) 255, 0x100);
+                            Effects.SendMovingParticles(new Entity(Serial.Zero, new Point3D(m.X - 4, m.Y - 6, m.Z + 15), m.Map), m, 0x36D4, 7, 0, false, true, 1494, 0, 9502, 1, 0, (EffectLayer) 255, 0x100);
+                            Effects.SendMovingParticles(new Entity(Serial.Zero, new Point3D(m.X - 6, m.Y - 4, m.Z + 15), m.Map), m, 0x36D4, 7, 0, false, true, 1494, 0, 9502, 1, 0, (EffectLayer) 255, 0x100);
 
                             Effects.SendTargetParticles(m, 0x375A, 35, 90, 0x00, 0x00, 9502, (EffectLayer) 255, 0x100);
                         }
