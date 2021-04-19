@@ -42,10 +42,7 @@ namespace Server
         {
             NetState ns = m.NetState;
 
-            if (ns != null)
-            {
-                ns.Send(new RemoveWaypoint(e.Serial));
-            }
+            ns?.Send(new RemoveWaypoint(e.Serial));
         }
 
         public static void OnMapChange(Mobile m, Map oldMap)
@@ -53,7 +50,9 @@ namespace Server
             NetState ns = m.NetState;
 
             if (ns == null || !ns.IsEnhancedClient)
+            {
                 return;
+            }
 
             if (m.Alive)
             {
@@ -73,7 +72,9 @@ namespace Server
             NetState ns = m.NetState;
 
             if (ns == null)
+            {
                 return;
+            }
 
             AddHealers(m);
         }
@@ -89,7 +90,9 @@ namespace Server
         public static void RemoveQuesters(Mobile m, NetState ns, Map oldMap)
         {
             if (m == null || oldMap == null)
+            {
                 return;
+            }
 
             for (var index = 0; index < BaseVendor.AllVendors.Count; index++)
             {
@@ -131,12 +134,9 @@ namespace Server
             {
                 BaseVendor vendor = BaseVendor.AllVendors[index];
 
-                if (vendor is BaseHealer healer)
+                if (vendor is BaseHealer healer && !healer.Deleted && healer.Map == m.Map)
                 {
-                    if (!healer.Deleted && healer.Map == m.Map)
-                    {
-                        Create(m, healer, WaypointType.Resurrection);
-                    }
+                    Create(m, healer, WaypointType.Resurrection);
                 }
             }
         }
@@ -144,23 +144,24 @@ namespace Server
         public static void RemoveHealers(Mobile m, Map oldMap)
         {
             if (m == null || oldMap == null)
+            {
                 return;
+            }
 
             NetState ns = m.NetState;
 
             if (ns == null)
+            {
                 return;
+            }
 
             for (var index = 0; index < BaseVendor.AllVendors.Count; index++)
             {
                 BaseVendor vendor = BaseVendor.AllVendors[index];
 
-                if (vendor is BaseHealer healer)
+                if (vendor is BaseHealer healer && !healer.Deleted && healer.Map == oldMap)
                 {
-                    if (!healer.Deleted && healer.Map == oldMap)
-                    {
-                        ns.Send(new RemoveWaypoint(healer.Serial));
-                    }
+                    ns.Send(new RemoveWaypoint(healer.Serial));
                 }
             }
         }
@@ -227,9 +228,13 @@ namespace Server
             m_Stream.Write((ushort)(ignoreObject ? 1 : 0));
 
             if (type == WaypointType.Corpse)
+            {
                 m_Stream.Write(1046414);
+            }
             else
+            {
                 m_Stream.Write(1062613);
+            }
 
             m_Stream.WriteLittleUniNull(name);
 
