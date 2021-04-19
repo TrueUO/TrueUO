@@ -56,13 +56,10 @@ namespace Server.Spells.SkillMasteries
                 }
             }
 
-            if (Caster is PlayerMobile pm && pm.AllFollowers == null || count == 0)
+            if ((Caster is PlayerMobile pm && pm.AllFollowers == null || count == 0) && Caster != null)
             {
-                if (Caster != null)
-                {
-                    Caster.SendLocalizedMessage(1156112); // This ability requires you to have pets.
-                    return false;
-                }
+                Caster.SendLocalizedMessage(1156112); // This ability requires you to have pets.
+                return false;
             }
 
             return base.CheckCast();
