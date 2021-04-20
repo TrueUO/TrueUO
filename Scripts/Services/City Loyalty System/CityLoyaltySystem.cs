@@ -298,12 +298,9 @@ namespace Server.Engines.CityLoyalty
             {
                 PointsEntry pointsEntry = PlayerTable[index];
 
-                if (pointsEntry is CityLoyaltyEntry entry)
+                if (pointsEntry is CityLoyaltyEntry entry && entry.IsCitizen)
                 {
-                    if (entry.IsCitizen)
-                    {
-                        count++;
-                    }
+                    count++;
                 }
             }
 
