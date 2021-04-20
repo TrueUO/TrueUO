@@ -128,8 +128,19 @@ namespace Server.Engines.VendorSearching
 
             int buttonIdx = 50;
 
-            SearchCriteriaCategory.AllCategories.ToList().ForEach(x =>
+            List<SearchCriteriaCategory> list = new List<SearchCriteriaCategory>();
+
+            for (var index = 0; index < SearchCriteriaCategory.AllCategories.Length; index++)
             {
+                var category = SearchCriteriaCategory.AllCategories[index];
+
+                list.Add(category);
+            }
+
+            for (var index = 0; index < list.Count; index++)
+            {
+                var x = list[index];
+
                 AddPage(x.PageID);
 
                 if (x.Category == Category.PriceRange)
@@ -171,8 +182,19 @@ namespace Server.Engines.VendorSearching
 
                     yOffset = 0;
 
-                    x.Criteria.ToList().ForEach(y =>
+                    List<SearchCriterionEntry> list1 = new List<SearchCriterionEntry>();
+
+                    for (var i = 0; i < x.Criteria.Length; i++)
                     {
+                        var criterion = x.Criteria[i];
+
+                        list1.Add(criterion);
+                    }
+
+                    for (var i = 0; i < list1.Count; i++)
+                    {
+                        var y = list1[i];
+
                         AddHtmlLocalized(306, 50 + yOffset * 22, 215, 20, y.Cliloc, LabelColor, false, false);
                         AddButton(266, 50 + yOffset * 22, 30533, 30533, buttonIdx, GumpButtonType.Reply, 0);
 
@@ -186,9 +208,9 @@ namespace Server.Engines.VendorSearching
 
                         yOffset++;
                         buttonIdx++;
-                    });
+                    }
                 }
-            });
+            }
         }
 
         public override void OnResponse(RelayInfo info)
