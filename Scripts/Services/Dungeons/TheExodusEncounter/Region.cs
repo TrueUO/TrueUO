@@ -55,12 +55,19 @@ namespace Server.Engines.Exodus
         {
             foreach (Mobile m in GetEnumeratedMobiles())
             {
-                if (m is PlayerMobile && m.AccessLevel == AccessLevel.Player)
+                if (m is PlayerMobile pm && m.AccessLevel == AccessLevel.Player)
                 {
                     Point3D p = Random_Locations[Utility.Random(Random_Locations.Length)];
 
                     m.MoveToWorld(p, m.Map);
-                    BaseCreature.TeleportPets(m, p, m.Map);
+
+                    if (pm.AllFollowers.Count > 0)
+                    {
+                        foreach (Mobile mob in pm.AllFollowers)
+                        {
+                            mob.MoveToWorld(p, m.Map);
+                        }
+                    }
                 }
             }
 

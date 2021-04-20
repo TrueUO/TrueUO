@@ -200,11 +200,24 @@ namespace Server.Items
         {
             if (VerLorRegController.Active && VerLorRegController.Mobile != null && ExodusSummoningAlter.CheckExodus())
             {
+                // teleport party member's pets
+                if (from is PlayerMobile pm)
+                {
+                    foreach (BaseCreature pet in pm.AllFollowers.OfType<BaseCreature>())
+                    {
+                        if (pet.Alive && pet.InRange(pm.Location, 5) && !(pet is BaseMount mount && mount.Rider != null))
+                        {
+                            pet.FixedParticles(0x376A, 9, 32, 0x13AF, EffectLayer.Waist);
+                            pet.PlaySound(0x1FE);
+                            pet.MoveToWorld(m_TeleportDest, Map.Ilshenar);
+                        }
+                    }
+                }
+
                 // teleport party member
                 from.FixedParticles(0x376A, 9, 32, 0x13AF, EffectLayer.Waist);
                 from.PlaySound(0x1FE);
                 from.MoveToWorld(m_TeleportDest, Map.Ilshenar);
-                BaseCreature.TeleportPets(from, m_TeleportDest, Map.Ilshenar);
 
                 // Robe of Rite Delete
                 RobeofRite robe = from.FindItemOnLayer(Layer.OuterTorso) as RobeofRite;

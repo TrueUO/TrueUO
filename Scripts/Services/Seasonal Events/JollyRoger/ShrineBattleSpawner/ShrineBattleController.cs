@@ -4,9 +4,9 @@ using Server.Regions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml;
 
 namespace Server.Engines.JollyRoger
-
 {
     public enum Shrine
     {        
@@ -36,13 +36,12 @@ namespace Server.Engines.JollyRoger
 
     public class ShrineBattleRegion : BaseRegion
     {
-        public ShrineBattleController _Controller { get; }
+        [CommandProperty(AccessLevel.GameMaster)]
+        public ShrineBattleController Controller { get; set; }
 
-        public ShrineBattleRegion(ShrineBattleController controller)
-            : base(string.Format("{0} Fragment Region", controller.Shrine.ToString()), controller.Map, DefaultPriority, ShrineBattleController._FragmentRegionTable[(int)controller.Shrine])
-        {
-            _Controller = controller;
-        }
+        public ShrineBattleRegion(XmlElement xml, Map map, Region parent)
+            : base(xml, map, parent)
+        { }
     }
 
     public class ShrineBattleController : Item
@@ -62,7 +61,8 @@ namespace Server.Engines.JollyRoger
             }
         }
 
-        private ShrineBattleRegion m_Region;
+        [CommandProperty(AccessLevel.GameMaster)]
+        public ShrineBattleRegion Region { get; set; }
 
         [CommandProperty(AccessLevel.Administrator)]
         public bool ForceRespawn
@@ -112,37 +112,51 @@ namespace Server.Engines.JollyRoger
 
         [Constructable]
         public ShrineBattleController(Shrine shrine)
-            : base(3796)
+            : base(7960)
         {
+            Name = string.Format("{0} Shrine Battle Controller", shrine.ToString());
             Shrine = shrine;
-
             Movable = false;
             Visible = false;
+            Weight = 0;
 
             Spawn = new Dictionary<BaseCreature, List<BaseCreature>>();
         }
 
+        public override void GetProperties(ObjectPropertyList list)
+        {
+            base.GetProperties(list);
+
+            list.Add(1157254, "Do not remove !!");
+        }
+
         public override void OnMapChange()
         {
-            UpdateRegion();
+            RegisterRegion();
         }
 
         public override void OnAfterDelete()
         {
             base.OnAfterDelete();
 
-            UpdateRegion();
+            UnRegisterRegion();
         }
 
-        public void UpdateRegion()
+        public void RegisterRegion()
         {
-            if (m_Region != null)
-                m_Region.Unregister();
-
-            if (!Deleted && Map != Map.Internal)
+            if (Region == null && Map != Map.Internal && GetRegion() is ShrineBattleRegion reg)
             {
-                m_Region = new ShrineBattleRegion(this);
-                m_Region.Register();
+                Region = reg;
+                Region.Controller = this;
+            }
+        }
+
+        public void UnRegisterRegion()
+        {
+            if (Region != null)
+            {
+                Region.Controller = null;
+                Region = null;
             }
         }
 
@@ -166,18 +180,6 @@ namespace Server.Engines.JollyRoger
             new[] { typeof(DreadSpider), typeof(GiantBlackWidow), typeof(Scorpion), typeof(TerathanWarrior), typeof(WolfSpider) },
             new[] { typeof(MLDryad), typeof(CuSidhe), typeof(Wisp), typeof(Satyr), typeof(Centaur) },
             new[] { typeof(SwampTentacle), typeof(PlagueBeast), typeof(Bogling), typeof(FeralTreefellow) }
-        };
-
-        public static readonly Rectangle2D[] _FragmentRegionTable =
-        {
-            new Rectangle2D(2488, 3928, 6, 6), // Valor
-            new Rectangle2D(1600, 2489, 2, 2), // Spirituality
-            new Rectangle2D(3352, 286, 6, 7), // Sacrifice
-            new Rectangle2D(1297, 629, 8, 8), // Justice
-            new Rectangle2D(4270, 3694, 7, 6), // Humility
-            new Rectangle2D(1723, 3526, 5, 3), // Honor
-            new Rectangle2D(4208, 561, 6, 6), // Honesty
-            new Rectangle2D(1856, 873, 4, 4) // Compassion
         };
 
         public void BeginInvasion()
@@ -404,7 +406,7 @@ namespace Server.Engines.JollyRoger
                 }
             }
 
-            Timer.DelayCall(TimeSpan.Zero, UpdateRegion);
+            Timer.DelayCall(TimeSpan.Zero, RegisterRegion);
         }
 
         public static void Initialize()
