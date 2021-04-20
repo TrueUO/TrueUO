@@ -39,7 +39,7 @@ namespace Server.Gumps
 
 		public override string Compile()
 		{
-			return string.Format("{{ group {0} }}", m_Group);
+			return $"{{ group {m_Group} }}";
 		}
 
 		private static readonly byte[] m_LayoutName = Gump.StringToBuffer("group");

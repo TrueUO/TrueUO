@@ -22,6 +22,7 @@ namespace Server.Mobiles
             : base(serial)
         {
         }
+
         public override bool CanBeParagon => false;
         public abstract ChampionSkullType SkullType { get; }
         public abstract Type[] UniqueList { get; }
@@ -29,7 +30,7 @@ namespace Server.Mobiles
         public abstract Type[] DecorativeList { get; }
         public abstract MonsterStatuetteType[] StatueTypes { get; }
         public virtual bool NoGoodies => false;
-
+        public virtual bool DoesGoldShower => true;
         public virtual bool CanGivePowerscrolls => true;
         public virtual bool RestrictedToFelucca => true;
         public virtual int PowerScrollAmount => ChampionSystem.PowerScrollAmount;
@@ -288,9 +289,14 @@ namespace Server.Mobiles
                 GivePowerScrolls();
 
                 if (NoGoodies)
+                {
                     return base.OnBeforeDeath();
+                }
 
-                GoldShower.DoForChamp(Location, Map);
+                if (DoesGoldShower)
+                {
+                    GoldShower.DoForChamp(Location, Map);
+                }
             }
 
             return base.OnBeforeDeath();

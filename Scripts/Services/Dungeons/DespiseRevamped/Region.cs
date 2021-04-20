@@ -23,34 +23,46 @@ namespace Server.Engines.Despise
 
         private Rectangle2D m_KickBounds = new Rectangle2D(5576, 626, 6, 10);
 
-        public bool IsInGoodRegion(Point3D loc)
+        private static bool IsInGoodRegion(Point3D loc)
         {
             foreach (Rectangle2D rec in DespiseController.GoodBounds)
+            {
                 if (rec.Contains(loc))
+                {
                     return true;
+                }
+            }
 
             return false;
         }
 
-        public bool IsInEvilRegion(Point3D loc)
+        private static bool IsInEvilRegion(Point3D loc)
         {
             foreach (Rectangle2D rec in DespiseController.EvilBounds)
+            {
                 if (rec.Contains(loc))
+                {
                     return true;
+                }
+            }
 
             return false;
         }
 
-        public bool IsInLowerRegion(Point3D loc)
+        private static bool IsInLowerRegion(Point3D loc)
         {
             foreach (Rectangle2D rec in DespiseController.LowerLevelBounds)
+            {
                 if (rec.Contains(loc))
+                {
                     return true;
+                }
+            }
 
             return false;
         }
 
-        public bool IsInStartRegion(Point3D loc)
+        private static bool IsInStartRegion(Point3D loc)
         {
             return !IsInLowerRegion(loc) && !IsInEvilRegion(loc) && !IsInGoodRegion(loc);
         }
@@ -113,7 +125,7 @@ namespace Server.Engines.Despise
                     if (topdam != null && highest > 0)
                     {
                         int mobKarma = Math.Abs(despiseCreature.Karma);
-                        int karma = (int) (((double) mobKarma / 10) * highest / despiseCreature.HitsMax);
+                        int karma = (int) ((double) mobKarma / 10 * highest / despiseCreature.HitsMax);
 
                         if (karma < 1)
                             karma = 1;

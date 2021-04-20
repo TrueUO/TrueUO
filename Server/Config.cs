@@ -1,4 +1,3 @@
-#region References
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -7,7 +6,6 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
-#endregion
 
 namespace Server
 {
@@ -15,14 +13,13 @@ namespace Server
 	{
 		public sealed class Entry : IEquatable<Entry>, IComparable<Entry>
 		{
-			public int FileIndex { get; private set; }
+			public int FileIndex { get; }
 
-			public string File { get; private set; }
-			public string Scope { get; private set; }
+			public string File { get; }
+			public string Scope { get; }
+            public string Desc { get; }
+            public string Key { get; }
 
-			public string Desc { get; set; }
-
-			public string Key { get; set; }
 			public string Value { get; set; }
 
 			public bool UseDefault { get; set; }
@@ -43,7 +40,7 @@ namespace Server
 
 			public override string ToString()
 			{
-				return string.Format("{0}.{1}{2}={3}", Scope, UseDefault ? "@" : "", Key, Value);
+				return $"{Scope}.{(UseDefault ? "@" : "")}{Key}={Value}";
 			}
 
 			public override int GetHashCode()
@@ -313,25 +310,27 @@ namespace Server
 				{
 					line.Clear();
 
-					foreach (string word in e.Desc.Split(' '))
-					{
-						if ((line + word).Length > 100)
-						{
-							content.AppendLine(string.Format("# {0}", line));
-							line.Clear();
-						}
+                    for (var index = 0; index < e.Desc.Split(' ').Length; index++)
+                    {
+                        string word = e.Desc.Split(' ')[index];
 
-						line.AppendFormat("{0} ", word);
-					}
+                        if ((line + word).Length > 100)
+                        {
+                            content.AppendLine($"# {line}");
+                            line.Clear();
+                        }
 
-					if (line.Length > 0)
+                        line.AppendFormat("{0} ", word);
+                    }
+
+                    if (line.Length > 0)
 					{
-						content.AppendLine(string.Format("# {0}", line));
+						content.AppendLine($"# {line}");
 						line.Clear();
 					}
 				}
 
-				content.AppendLine(string.Format("{0}{1}={2}", e.UseDefault ? "@" : string.Empty, e.Key, e.Value));
+				content.AppendLine($"{(e.UseDefault ? "@" : string.Empty)}{e.Key}={e.Value}");
 			}
 
 			File.WriteAllText(path, content.ToString());
@@ -456,13 +455,16 @@ namespace Server
 
 			IEnumerable<T> vals = Enum.GetValues(t).Cast<T>();
 
-			foreach (T o in vals.Where(o => o.Equals(value)))
-			{
-				InternalSet(key, o.ToString(CultureInfo.InvariantCulture));
-				return;
-			}
+            foreach (T o in vals)
+            {
+                if (o.Equals(value))
+                {
+                    InternalSet(key, o.ToString(CultureInfo.InvariantCulture));
+                    return;
+                }
+            }
 
-			throw new ArgumentException("Enumerated value not found");
+            throw new ArgumentException("Enumerated value not found");
 		}
 
 		private static void Warn<T>(string key)
@@ -671,12 +673,12 @@ namespace Server
 				return defaultValue;
 			}
 
-			if (Regex.IsMatch(value, @"(true|yes|on|1|enabled)", RegexOptions.IgnoreCase))
+			if (Regex.IsMatch(value, "(true|yes|on|1|enabled)", RegexOptions.IgnoreCase))
 			{
 				return true;
 			}
 
-			if (Regex.IsMatch(value, @"(false|no|off|0|disabled)", RegexOptions.IgnoreCase))
+			if (Regex.IsMatch(value, "(false|no|off|0|disabled)", RegexOptions.IgnoreCase))
 			{
 				return false;
 			}
@@ -750,12 +752,15 @@ namespace Server
 
 			IEnumerable<T> vals = Enum.GetValues(typeof(T)).Cast<T>();
 
-			foreach (T o in vals.Where(o => Insensitive.Equals(value, o.ToString(CultureInfo.InvariantCulture))))
-			{
-				return o;
-			}
+            foreach (T o in vals)
+            {
+                if (Insensitive.Equals(value, o.ToString(CultureInfo.InvariantCulture)))
+                {
+                    return o;
+                }
+            }
 
-			Warn<T>(key);
+            Warn<T>(key);
 
 			return defaultValue;
 		}

@@ -28,8 +28,7 @@ namespace Server.Services.Virtues
 
     public class VirtueHelper
     {
-        public static readonly VirtueName[] Virtues = //
-            Enum.GetValues(typeof(VirtueName)).Cast<VirtueName>().ToArray();
+        public static readonly VirtueName[] Virtues = Enum.GetValues(typeof(VirtueName)).Cast<VirtueName>().ToArray();
 
         public static bool HasAny(Mobile from, VirtueName virtue)
         {

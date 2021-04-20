@@ -7,6 +7,6 @@ namespace Server.Targeting
 	{
 		None = 0x00,
 		Harmful = 0x01,
-		Beneficial = 0x02,
-	}
+		Beneficial = 0x02
+    }
 }

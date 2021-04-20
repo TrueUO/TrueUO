@@ -77,7 +77,7 @@ namespace Server.Items
 
 		public override bool IsAccessibleTo(Mobile check)
 		{
-			if ((check == m_Owner && m_Open) || check.AccessLevel >= AccessLevel.GameMaster)
+			if (check == m_Owner && m_Open || check.AccessLevel >= AccessLevel.GameMaster)
 			{
 				return base.IsAccessibleTo(check);
 			}
@@ -87,7 +87,7 @@ namespace Server.Items
 
 		public override bool OnDragDrop(Mobile from, Item dropped)
 		{
-			if ((from == m_Owner && m_Open) || from.AccessLevel >= AccessLevel.GameMaster)
+			if (from == m_Owner && m_Open || from.AccessLevel >= AccessLevel.GameMaster)
 			{
 				return base.OnDragDrop(from, dropped);
 			}

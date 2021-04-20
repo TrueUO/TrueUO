@@ -25,18 +25,13 @@ namespace Server.Items
         {
             if (Owner != null && !Owner.Deleted && Owner.RootParent is Mobile m)
             {
-                m.SendLocalizedMessage(1155618, string.IsNullOrEmpty(Owner.Name) ? string.Format("#{0}", Owner.LabelNumber) : Owner.Name); // Your ~1_name~'s Tincture of Silver has worn off.
+                m.SendLocalizedMessage(1155618, string.IsNullOrEmpty(Owner.Name) ? $"#{Owner.LabelNumber}" : Owner.Name); // Your ~1_name~'s Tincture of Silver has worn off.
             }
         }
 
         public static SlayerName GetSlayer(Item item)
         {
-            if (item == null)
-            {
-                return SlayerName.None;
-            }
-
-            SlayerSocket socket = item.GetSocket<SlayerSocket>();
+            SlayerSocket socket = item?.GetSocket<SlayerSocket>();
 
             if (socket != null)
             {

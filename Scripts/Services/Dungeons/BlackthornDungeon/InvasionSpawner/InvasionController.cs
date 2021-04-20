@@ -3,7 +3,6 @@ using Server.Items;
 using Server.Mobiles;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.Blackthorn
 {
@@ -67,7 +66,9 @@ namespace Server.Engines.Blackthorn
             get
             {
                 if (Spawn == null || Spawn.Count == 0)
+                {
                     return 0;
+                }
 
                 int count = 0;
 
@@ -76,7 +77,19 @@ namespace Server.Engines.Blackthorn
                     if (kvp.Key.Alive)
                         count++;
 
-                    count += kvp.Value.Count(bc => bc.Alive);
+                    int alive = 0;
+
+                    for (var index = 0; index < kvp.Value.Count; index++)
+                    {
+                        var bc = kvp.Value[index];
+
+                        if (bc.Alive)
+                        {
+                            alive++;
+                        }
+                    }
+
+                    count += alive;
                 }
 
                 return count;
@@ -101,7 +114,9 @@ namespace Server.Engines.Blackthorn
             SpawnZones = new List<Rectangle2D>();
 
             if (Enabled)
+            {
                 Timer.DelayCall(TimeSpan.FromSeconds(10), BeginInvasion);
+            }
         }
 
         public InvasionController(Serial serial) : base(serial)
@@ -135,7 +150,9 @@ namespace Server.Engines.Blackthorn
         public void BeginInvasion()
         {
             if (!Enabled)
+            {
                 return;
+            }
 
             RemoveSpawn();
 
@@ -157,7 +174,17 @@ namespace Server.Engines.Blackthorn
 
             CurrentInvasion = newCity;
             InvasionType = newType;
-            SpawnZones = Defs[CurrentInvasion].SpawnRecs.ToList();
+
+            List<Rectangle2D> list = new List<Rectangle2D>();
+
+            for (var index = 0; index < Defs[CurrentInvasion].SpawnRecs.Length; index++)
+            {
+                var rec = Defs[CurrentInvasion].SpawnRecs[index];
+
+                list.Add(rec);
+            }
+
+            SpawnZones = list;
 
             Beacon = new InvasionBeacon(this);
             Beacon.MoveToWorld(Defs[CurrentInvasion].BeaconLoc, Map);
@@ -292,9 +319,21 @@ namespace Server.Engines.Blackthorn
                 foreach (KeyValuePair<BaseCreature, List<BaseCreature>> kvp in Spawn)
                 {
                     if (kvp.Value.Contains(bc))
+                    {
                         kvp.Value.Remove(bc);
+                    }
 
-                    int count = kvp.Value.Count(b => b != null && b.Alive);
+                    int count = 0;
+
+                    for (var index = 0; index < kvp.Value.Count; index++)
+                    {
+                        var b = kvp.Value[index];
+
+                        if (b != null && b.Alive)
+                        {
+                            count++;
+                        }
+                    }
 
                     if (count == 0 && kvp.Key.Alive)
                     {
@@ -318,11 +357,15 @@ namespace Server.Engines.Blackthorn
                 {
                     list = new List<BaseCreature>(kvp.Value);
 
-                    foreach (BaseCreature b in list)
+                    for (var index = 0; index < list.Count; index++)
+                    {
+                        BaseCreature b = list[index];
+
                         if (b == null || !b.Alive || b.Deleted)
                         {
                             kvp.Value.Remove(b);
                         }
+                    }
                 }
 
                 if (list != null && list.Count > 0)
@@ -356,7 +399,9 @@ namespace Server.Engines.Blackthorn
             foreach (Mobile m in eable)
             {
                 if (m != null && m.NetState != null)
+                {
                     m.PrivateOverheadMessage(Network.MessageType.Regular, 1154, 1154550, m.NetState); // *A sound roars in the distance...Minax's Beacon is vulnerable to attack!!*
+                }
             }
 
             eable.Free();
@@ -380,12 +425,16 @@ namespace Server.Engines.Blackthorn
 
                 if (rights != null)
                 {
-                    foreach (Mobile damager in rights)
+                    for (var index = 0; index < rights.Count; index++)
                     {
+                        Mobile damager = rights[index];
+
                         if (damager.InRange(Beacon.Location, 12))
                         {
                             if (0.15 < Utility.RandomDouble())
+                            {
                                 continue;
+                            }
 
                             Item i = CreateItem(damager);
 
@@ -444,11 +493,15 @@ namespace Server.Engines.Blackthorn
 
             foreach (KeyValuePair<BaseCreature, List<BaseCreature>> kvp in copy)
             {
-                foreach (BaseCreature bc in kvp.Value)
+                for (var index = 0; index < kvp.Value.Count; index++)
+                {
+                    BaseCreature bc = kvp.Value[index];
+
                     if (bc.Alive)
                     {
                         bc.Kill();
                     }
+                }
 
                 if (kvp.Key.Alive)
                 {
@@ -471,14 +524,26 @@ namespace Server.Engines.Blackthorn
             writer.Write(CurrentWave);
 
             writer.Write(SpawnZones == null ? 0 : SpawnZones.Count);
-            SpawnZones.ForEach(rec => writer.Write(rec));
+
+            for (var index = 0; index < SpawnZones.Count; index++)
+            {
+                var rec = SpawnZones[index];
+
+                writer.Write(rec);
+            }
 
             writer.Write(Spawn == null ? 0 : Spawn.Count);
+
             foreach (KeyValuePair<BaseCreature, List<BaseCreature>> kvp in Spawn)
             {
                 writer.Write(kvp.Key);
                 writer.Write(kvp.Value.Count);
-                kvp.Value.ForEach(bc => writer.Write(bc));
+                for (var index = 0; index < kvp.Value.Count; index++)
+                {
+                    var bc = kvp.Value[index];
+
+                    writer.Write(bc);
+                }
             }
 
             Timer.DelayCall(TimeSpan.FromSeconds(30), CleanupSpawn);
@@ -522,9 +587,7 @@ namespace Server.Engines.Blackthorn
 
                 for (int j = 0; j < c; j++)
                 {
-                    BaseCreature spawn = reader.ReadMobile() as BaseCreature;
-
-                    if (spawn != null)
+                    if (reader.ReadMobile() is BaseCreature spawn)
                     {
                         list.Add(spawn);
                     }
@@ -565,98 +628,73 @@ namespace Server.Engines.Blackthorn
                 TramInstance.MoveToWorld(new Point3D(6359, 2570, 0), Map.Felucca);
             }
 
-            Defs = new Dictionary<City, InvasionDefinition>();
-
-            Defs[City.Moonglow] = new InvasionDefinition(
-                new[]
-                {
-                    new Rectangle2D(6314, 2571, 10, 5),
-                    new Rectangle2D(6288, 2535, 8, 15),
-                    new Rectangle2D(6322, 2527, 8, 8),
-                    new Rectangle2D(6302, 2524, 10, 5)
-                },
-                new Point3D(6317, 2555, 0));
-
-            Defs[City.Britain] = new InvasionDefinition(
-                new[]
-                {
-                    new Rectangle2D(6296, 2464, 7, 7),
-                    new Rectangle2D(6332, 2473, 8, 10),
-                    new Rectangle2D(6320, 2508, 3, 8),
-                    new Rectangle2D(6287, 2494, 8, 8)
-                },
-                new Point3D(6316, 2477, 11));
-
-            Defs[City.Jhelom] = new InvasionDefinition(
-                new[]
-                {
-                    new Rectangle2D(6450, 2465, 10, 8),
-                    new Rectangle2D(6418, 2497, 15, 5),
-                    new Rectangle2D(6417, 2469, 5, 10),
-                    new Rectangle2D(6432, 2507, 10, 5)
-                },
-                new Point3D(6448, 2492, 5));
-
-            Defs[City.Yew] = new InvasionDefinition(
-                new[]
-                {
-                    new Rectangle2D(6314, 2397, 12, 5),
-                    new Rectangle2D(6317, 2440, 10, 10),
-                    new Rectangle2D(6286, 2432, 8, 8),
-                    new Rectangle2D(6289, 2405, 5, 5)
-                },
-                new Point3D(6305, 2423, 0));
-
-            Defs[City.Minoc] = new InvasionDefinition(
-                new[]
-                {
-                    new Rectangle2D(6309, 2339, 10, 5),
-                    new Rectangle2D(6290, 2367, 5, 10),
-                    new Rectangle2D(6304, 2378, 10, 5),
-                    new Rectangle2D(6323, 2344, 5, 10)
-                },
-                new Point3D(6307, 2362, 15));
-
-            Defs[City.Trinsic] = new InvasionDefinition(
-                new[]
-                {
-                    new Rectangle2D(6356, 2371, 10, 10),
-                    new Rectangle2D(6354, 2344, 5, 10),
-                    new Rectangle2D(6366, 2344, 5, 7),
-                    new Rectangle2D(6386, 2355, 8, 8)
-                },
-                new Point3D(6402, 2368, 25));
-
-            Defs[City.SkaraBrae] = new InvasionDefinition(
-                new[]
-                {
-                    new Rectangle2D(6434, 2330, 10, 5),
-                    new Rectangle2D(6456, 2342, 5, 10),
-                    new Rectangle2D(6458, 2368, 15, 6),
-                    new Rectangle2D(6440, 2384, 10, 3),
-                    new Rectangle2D(6412, 2360, 12, 12)
-                },
-                new Point3D(6442, 2351, 0));
-
-            Defs[City.NewMagincia] = new InvasionDefinition(
-                new[]
-                {
-                    new Rectangle2D(6426, 2397, 10, 5),
-                    new Rectangle2D(6444, 2446, 10, 5),
-                    new Rectangle2D(6436, 2395, 5, 8),
-                    new Rectangle2D(6419, 2446, 10, 5)
-                },
-                new Point3D(6440, 2419, 26));
-
-            Defs[City.Vesper] = new InvasionDefinition(
-                new[]
-                {
-                    new Rectangle2D(6428, 2534, 10, 5),
-                    new Rectangle2D(6458, 2534, 5, 10),
-                    new Rectangle2D(6460, 2551, 5, 10),
-                    new Rectangle2D(6433, 2561, 6, 6)
-                },
-                new Point3D(6444, 2553, 0));
+            Defs = new Dictionary<City, InvasionDefinition>
+            {
+                [City.Moonglow] = new InvasionDefinition(
+                    new[]
+                    {
+                        new Rectangle2D(6314, 2571, 10, 5), new Rectangle2D(6288, 2535, 8, 15),
+                        new Rectangle2D(6322, 2527, 8, 8), new Rectangle2D(6302, 2524, 10, 5)
+                    },
+                    new Point3D(6317, 2555, 0)),
+                [City.Britain] = new InvasionDefinition(
+                    new[]
+                    {
+                        new Rectangle2D(6296, 2464, 7, 7), new Rectangle2D(6332, 2473, 8, 10),
+                        new Rectangle2D(6320, 2508, 3, 8), new Rectangle2D(6287, 2494, 8, 8)
+                    },
+                    new Point3D(6316, 2477, 11)),
+                [City.Jhelom] = new InvasionDefinition(
+                    new[]
+                    {
+                        new Rectangle2D(6450, 2465, 10, 8), new Rectangle2D(6418, 2497, 15, 5),
+                        new Rectangle2D(6417, 2469, 5, 10), new Rectangle2D(6432, 2507, 10, 5)
+                    },
+                    new Point3D(6448, 2492, 5)),
+                [City.Yew] = new InvasionDefinition(
+                    new[]
+                    {
+                        new Rectangle2D(6314, 2397, 12, 5), new Rectangle2D(6317, 2440, 10, 10),
+                        new Rectangle2D(6286, 2432, 8, 8), new Rectangle2D(6289, 2405, 5, 5)
+                    },
+                    new Point3D(6305, 2423, 0)),
+                [City.Minoc] = new InvasionDefinition(
+                    new[]
+                    {
+                        new Rectangle2D(6309, 2339, 10, 5), new Rectangle2D(6290, 2367, 5, 10),
+                        new Rectangle2D(6304, 2378, 10, 5), new Rectangle2D(6323, 2344, 5, 10)
+                    },
+                    new Point3D(6307, 2362, 15)),
+                [City.Trinsic] = new InvasionDefinition(
+                    new[]
+                    {
+                        new Rectangle2D(6356, 2371, 10, 10), new Rectangle2D(6354, 2344, 5, 10),
+                        new Rectangle2D(6366, 2344, 5, 7), new Rectangle2D(6386, 2355, 8, 8)
+                    },
+                    new Point3D(6402, 2368, 25)),
+                [City.SkaraBrae] = new InvasionDefinition(
+                    new[]
+                    {
+                        new Rectangle2D(6434, 2330, 10, 5), new Rectangle2D(6456, 2342, 5, 10),
+                        new Rectangle2D(6458, 2368, 15, 6), new Rectangle2D(6440, 2384, 10, 3),
+                        new Rectangle2D(6412, 2360, 12, 12)
+                    },
+                    new Point3D(6442, 2351, 0)),
+                [City.NewMagincia] = new InvasionDefinition(
+                    new[]
+                    {
+                        new Rectangle2D(6426, 2397, 10, 5), new Rectangle2D(6444, 2446, 10, 5),
+                        new Rectangle2D(6436, 2395, 5, 8), new Rectangle2D(6419, 2446, 10, 5)
+                    },
+                    new Point3D(6440, 2419, 26)),
+                [City.Vesper] = new InvasionDefinition(
+                    new[]
+                    {
+                        new Rectangle2D(6428, 2534, 10, 5), new Rectangle2D(6458, 2534, 5, 10),
+                        new Rectangle2D(6460, 2551, 5, 10), new Rectangle2D(6433, 2561, 6, 6)
+                    },
+                    new Point3D(6444, 2553, 0))
+            };
         }
     }
 }

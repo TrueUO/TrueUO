@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Xml;
 
 using Server.Items;
@@ -444,7 +443,7 @@ namespace Server
 
 			do
 			{
-				if (regionType.IsAssignableFrom(r.GetType()))
+				if (regionType.IsInstanceOfType(r))
 				{
 					return r;
 				}
@@ -531,9 +530,16 @@ namespace Server
 		}
 
 		public List<Mobile> GetPlayers(Func<Mobile, bool> predicate)
-		{
-			return GetEnumeratedPlayers(predicate).ToList();
-		}
+        {
+            List<Mobile> list = new List<Mobile>();
+
+            foreach (var player in GetEnumeratedPlayers(predicate))
+            {
+                list.Add(player);
+            }
+
+            return list;
+        }
 
 		public IEnumerable<Mobile> GetEnumeratedPlayers()
 		{
@@ -543,15 +549,17 @@ namespace Server
 		public IEnumerable<Mobile> GetEnumeratedPlayers(Func<Mobile, bool> predicate)
 		{
 			if (Sectors != null)
-			{
-				foreach (Sector s in Sectors)
-				{
-					foreach (Mobile o in GetDistinctEnumeration(s.Players, predicate))
-					{
-						yield return o;
-					}
-				}
-			}
+            {
+                for (var index = 0; index < Sectors.Length; index++)
+                {
+                    Sector s = Sectors[index];
+
+                    foreach (Mobile o in GetDistinctEnumeration(s.Players, predicate))
+                    {
+                        yield return o;
+                    }
+                }
+            }
 		}
 
 		public int GetPlayerCount()
@@ -560,9 +568,16 @@ namespace Server
 		}
 
 		public int GetPlayerCount(Func<Mobile, bool> predicate)
-		{
-			return GetEnumeratedPlayers(predicate).Count();
-		}
+        {
+            int count = 0;
+
+            foreach (var player in GetEnumeratedPlayers(predicate))
+            {
+                count++;
+            }
+
+            return count;
+        }
 
 		public List<Mobile> GetMobiles()
 		{
@@ -570,9 +585,16 @@ namespace Server
 		}
 
 		public List<Mobile> GetMobiles(Func<Mobile, bool> predicate)
-		{
-			return GetEnumeratedMobiles(predicate).ToList();
-		}
+        {
+            List<Mobile> list = new List<Mobile>();
+
+            foreach (var mobile in GetEnumeratedMobiles(predicate))
+            {
+                list.Add(mobile);
+            }
+
+            return list;
+        }
 
 		public IEnumerable<Mobile> GetEnumeratedMobiles()
 		{
@@ -582,15 +604,17 @@ namespace Server
 		public IEnumerable<Mobile> GetEnumeratedMobiles(Func<Mobile, bool> predicate)
 		{
 			if (Sectors != null)
-			{
-				foreach (Sector s in Sectors)
-				{
-					foreach (Mobile o in GetDistinctEnumeration(s.Mobiles, predicate))
-					{
-						yield return o;
-					}
-				}
-			}
+            {
+                for (var index = 0; index < Sectors.Length; index++)
+                {
+                    Sector s = Sectors[index];
+
+                    foreach (Mobile o in GetDistinctEnumeration(s.Mobiles, predicate))
+                    {
+                        yield return o;
+                    }
+                }
+            }
 		}
 
 		public int GetMobileCount()
@@ -599,9 +623,16 @@ namespace Server
 		}
 
 		public int GetMobileCount(Func<Mobile, bool> predicate)
-		{
-			return GetEnumeratedMobiles(predicate).Count();
-		}
+        {
+            int count = 0;
+
+            foreach (var mobile in GetEnumeratedMobiles(predicate))
+            {
+                count++;
+            }
+
+            return count;
+        }
 
 		public List<Item> GetItems()
 		{
@@ -609,9 +640,16 @@ namespace Server
 		}
 
 		public List<Item> GetItems(Func<Item, bool> predicate)
-		{
-			return GetEnumeratedItems(predicate).ToList();
-		}
+        {
+            List<Item> list = new List<Item>();
+
+            foreach (var item in GetEnumeratedItems(predicate))
+            {
+                list.Add(item);
+            }
+
+            return list;
+        }
 
 		public IEnumerable<Item> GetEnumeratedItems()
 		{
@@ -621,15 +659,17 @@ namespace Server
 		public IEnumerable<Item> GetEnumeratedItems(Func<Item, bool> predicate)
 		{
 			if (Sectors != null)
-			{
-				foreach (Sector s in Sectors)
-				{
-					foreach (Item o in GetDistinctEnumeration(s.Items, predicate))
-					{
-						yield return o;
-					}
-				}
-			}
+            {
+                for (var index = 0; index < Sectors.Length; index++)
+                {
+                    Sector s = Sectors[index];
+
+                    foreach (Item o in GetDistinctEnumeration(s.Items, predicate))
+                    {
+                        yield return o;
+                    }
+                }
+            }
 		}
 
 		public int GetItemCount()
@@ -638,9 +678,16 @@ namespace Server
 		}
 
 		public int GetItemCount(Func<Item, bool> predicate)
-		{
-			return GetEnumeratedItems(predicate).Count();
-		}
+        {
+            int count = 0;
+
+            foreach (var item in GetEnumeratedItems(predicate))
+            {
+                count++;
+            }
+
+            return count;
+        }
 
 		public List<BaseMulti> GetMultis()
 		{
@@ -648,9 +695,16 @@ namespace Server
 		}
 
 		public List<BaseMulti> GetMultis(Func<BaseMulti, bool> predicate)
-		{
-			return GetEnumeratedMultis(predicate).ToList();
-		}
+        {
+            List<BaseMulti> list = new List<BaseMulti>();
+
+            foreach (var multi in GetEnumeratedMultis(predicate))
+            {
+                list.Add(multi);
+            }
+
+            return list;
+        }
 
 		public IEnumerable<BaseMulti> GetEnumeratedMultis()
 		{
@@ -660,15 +714,17 @@ namespace Server
 		public IEnumerable<BaseMulti> GetEnumeratedMultis(Func<BaseMulti, bool> predicate)
 		{
 			if (Sectors != null)
-			{
-				foreach (Sector s in Sectors)
-				{
-					foreach (BaseMulti o in GetDistinctEnumeration(s.Multis, predicate))
-					{
-						yield return o;
-					}
-				}
-			}
+            {
+                for (var index = 0; index < Sectors.Length; index++)
+                {
+                    Sector s = Sectors[index];
+
+                    foreach (BaseMulti o in GetDistinctEnumeration(s.Multis, predicate))
+                    {
+                        yield return o;
+                    }
+                }
+            }
 		}
 
 		public int GetMultiCount()
@@ -677,17 +733,32 @@ namespace Server
 		}
 
 		public int GetMultiCount(Func<BaseMulti, bool> predicate)
-		{
-			return GetEnumeratedMultis(predicate).Count();
-		}
+        {
+            int count = 0;
 
-		private IEnumerable<T> GetDistinctEnumeration<T>(List<T> list, Func<T, bool> predicate)
+            foreach (var multi in GetEnumeratedMultis(predicate))
+            {
+                count++;
+            }
+
+            return count;
+        }
+
+		private IEnumerable<T> GetDistinctEnumeration<T>(IReadOnlyList<T> list, Func<T, bool> predicate)
 			where T : IEntity
-		{
-			return GetEnumeration(list, predicate).Distinct();
-		}
+        {
+            HashSet<T> set = new HashSet<T>();
 
-		private IEnumerable<T> GetEnumeration<T>(List<T> list, Func<T, bool> predicate)
+            foreach (T entity in GetEnumeration(list, predicate))
+            {
+                if (set.Add(entity))
+                {
+                    yield return entity;
+                }
+            }
+        }
+
+		private IEnumerable<T> GetEnumeration<T>(IReadOnlyList<T> list, Func<T, bool> predicate)
 			where T : IEntity
 		{
 			T e;
@@ -722,7 +793,7 @@ namespace Server
 
 			if (reg == null)
 			{
-				throw new ArgumentException("obj is not a Region", "obj");
+				throw new ArgumentException("obj is not a Region", nameof(obj));
 			}
 
 			// Dynamic regions go first
@@ -1211,72 +1282,80 @@ namespace Server
 				Utility.PopColor();
 			}
 			else
-			{
-				foreach (XmlElement facet in root.SelectNodes("Facet"))
-				{
-					Map map = null;
-					if (ReadMap(facet, "name", ref map))
-					{
-						if (map == Map.Internal)
-						{
-							Utility.PushColor(ConsoleColor.Red);
-							Console.WriteLine("Invalid internal map in a facet element");
-							Utility.PopColor();
-						}
-						else
-						{
-							LoadRegions(facet, map, null);
-						}
-					}
-				}
-			}
+            {
+                var list = root.SelectNodes("Facet");
+
+                for (var index = 0; index < list.Count; index++)
+                {
+                    var facet = (XmlElement) list[index];
+
+                    Map map = null;
+
+                    if (ReadMap(facet, "name", ref map))
+                    {
+                        if (map == Map.Internal)
+                        {
+                            Utility.PushColor(ConsoleColor.Red);
+                            Console.WriteLine("Invalid internal map in a facet element");
+                            Utility.PopColor();
+                        }
+                        else
+                        {
+                            LoadRegions(facet, map, null);
+                        }
+                    }
+                }
+            }
 
 			Utility.PushColor(ConsoleColor.Green);
 			Console.WriteLine("done");
 			Utility.PopColor();
 		}
 
-		private static void LoadRegions(XmlElement xml, Map map, Region parent)
-		{
-			foreach (XmlElement xmlReg in xml.SelectNodes("region"))
-			{
-				Expansion expansion = Expansion.None;
+		private static void LoadRegions(XmlNode xml, Map map, Region parent)
+        {
+            var regs = xml.SelectNodes("region");
 
-				if (ReadEnum(xmlReg, "expansion", ref expansion, false) && expansion > Core.Expansion)
-				{
-					continue;
-				}
+            for (var index = 0; index < regs.Count; index++)
+            {
+                var xmlReg = (XmlElement) regs[index];
+                Expansion expansion = Expansion.None;
 
-				Type type = DefaultRegionType;
+                if (ReadEnum(xmlReg, "expansion", ref expansion, false) && expansion > Core.Expansion)
+                {
+                    continue;
+                }
 
-				ReadType(xmlReg, "type", ref type, false);
+                Type type = DefaultRegionType;
 
-				if (!typeof(Region).IsAssignableFrom(type))
-				{
-					Utility.PushColor(ConsoleColor.Red);
-					Console.WriteLine("Invalid region type '{0}' in regions.xml", type.FullName);
-					Utility.PopColor();
-					continue;
-				}
+                ReadType(xmlReg, "type", ref type, false);
 
-				Region region = null;
-				try
-				{
-					region = (Region)Activator.CreateInstance(type, xmlReg, map, parent);
-				}
-				catch (Exception ex)
-				{
-					Utility.PushColor(ConsoleColor.Red);
-					Console.WriteLine("Error during the creation of region type '{0}': {1}", type.FullName, ex);
-					Utility.PopColor();
-					continue;
-				}
+                if (!typeof(Region).IsAssignableFrom(type))
+                {
+                    Utility.PushColor(ConsoleColor.Red);
+                    Console.WriteLine("Invalid region type '{0}' in regions.xml", type.FullName);
+                    Utility.PopColor();
+                    continue;
+                }
 
-				region.Register();
+                Region region = null;
+                try
+                {
+                    region = (Region) Activator.CreateInstance(type, xmlReg, map, parent);
+                }
+                catch (Exception ex)
+                {
+                    Utility.PushColor(ConsoleColor.Red);
+                    Console.WriteLine("Error during the creation of region type '{0}': {1}", type.FullName, ex);
+                    Utility.PopColor();
+                    continue;
+                }
 
-				LoadRegions(xmlReg, map, region);
-			}
-		}
+                region.Register();
+
+                LoadRegions(xmlReg, map, region);
+            }
+        }
 
 		public Region(XmlElement xml, Map map, Region parent)
 		{
@@ -1310,23 +1389,26 @@ namespace Server
 			ReadInt32(zrange, "max", ref maxZ, false);
 
 			List<Rectangle3D> area = new List<Rectangle3D>();
-			foreach (XmlElement xmlRect in xml.SelectNodes("rect"))
-			{
-				Expansion expansion = Expansion.None;
+            var list = xml.SelectNodes("rect");
 
-				if (ReadEnum(xmlRect, "expansion", ref expansion, false) && expansion > Core.Expansion)
-				{
-					continue;
-				}
+            for (var index = 0; index < list.Count; index++)
+            {
+                var xmlRect = (XmlElement) list[index];
+                Expansion expansion = Expansion.None;
 
-				Rectangle3D rect = new Rectangle3D();
-				if (ReadRectangle3D(xmlRect, minZ, maxZ, ref rect))
-				{
-					area.Add(rect);
-				}
-			}
+                if (ReadEnum(xmlRect, "expansion", ref expansion, false) && expansion > Core.Expansion)
+                {
+                    continue;
+                }
 
-			m_Area = area.ToArray();
+                Rectangle3D rect = new Rectangle3D();
+                if (ReadRectangle3D(xmlRect, minZ, maxZ, ref rect))
+                {
+                    area.Add(rect);
+                }
+            }
+
+            m_Area = area.ToArray();
 
 			if (m_Area.Length == 0)
 			{

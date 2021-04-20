@@ -142,9 +142,9 @@ namespace Server.Items
 
         public static IEnumerable<T> GetContextsForVictim<T>(Mobile victim) where T : PropertyEffect
         {
-            foreach (PropertyEffect effect in Effects.OfType<T>().Where(e => e.Victim == victim))
+            foreach (var effect in Effects.OfType<T>().Where(e => e.Victim == victim))
             {
-                yield return effect as T;
+                yield return effect;
             }
         }
     }
@@ -397,13 +397,15 @@ namespace Server.Items
             BuffInfo.RemoveBuff(Victim, BuffIcon.SplinteringEffect);
         }
 
-        public void StartForceWalk(Mobile m)
+        public static void StartForceWalk(Mobile m)
         {
             if (m.NetState != null && m.AccessLevel < AccessLevel.GameMaster)
+            {
                 m.SendSpeedControl(SpeedControlType.WalkSpeed);
+            }
         }
 
-        public void EndForceWalk(Mobile m)
+        public static void EndForceWalk(Mobile m)
         {
             m.SendSpeedControl(SpeedControlType.Disable);
         }
@@ -474,8 +476,9 @@ namespace Server.Items
     public class BoneBreakerContext : PropertyEffect
     {
         public static Dictionary<Mobile, DateTime> _Immunity;
-        private static TimeSpan _EffectsDuration = TimeSpan.FromSeconds(4);
-        private static TimeSpan _ImmunityDuration = TimeSpan.FromSeconds(60);
+
+        private static readonly TimeSpan _EffectsDuration = TimeSpan.FromSeconds(4);
+        private static readonly TimeSpan _ImmunityDuration = TimeSpan.FromSeconds(60);
 
         public BoneBreakerContext(Mobile attacker, Mobile defender, Item weapon)
             : base(attacker, defender, weapon, _EffectsDuration, TimeSpan.FromSeconds(1))

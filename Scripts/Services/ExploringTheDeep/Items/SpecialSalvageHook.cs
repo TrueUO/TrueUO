@@ -177,7 +177,7 @@ namespace Server.Items
             return count;
         }
 
-        protected void Spawn(Point3D p, Map map, BaseCreature spawn)
+        private static void Spawn(Point3D p, Map map, ISpawnable spawn)
         {
             if (map == null)
             {

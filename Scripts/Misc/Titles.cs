@@ -429,10 +429,14 @@ namespace Server.Misc
 
             List<VeteranTitle> titles = new List<VeteranTitle>();
 
-            foreach (VeteranTitle title in VeteranTitles)
+            for (var index = 0; index < VeteranTitles.Length; index++)
             {
+                VeteranTitle title = VeteranTitles[index];
+
                 if (years >= title.Years)
+                {
                     titles.Add(title);
+                }
             }
 
             return titles;

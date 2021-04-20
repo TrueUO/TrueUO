@@ -15,7 +15,7 @@ namespace Server
 		Equipment
 	}
 
-	public struct Body
+	public readonly struct Body
 	{
 		private readonly int m_BodyID;
 
@@ -80,8 +80,8 @@ namespace Server
             }
 		}
 
-		public bool IsHuman => (m_BodyID >= 0 && m_BodyID < m_Types.Length && m_Types[m_BodyID] == BodyType.Human && m_BodyID != 402 &&
-					m_BodyID != 403 && m_BodyID != 607 && m_BodyID != 608 && m_BodyID != 970) || m_BodyID == 694 || m_BodyID == 695;
+		public bool IsHuman => m_BodyID >= 0 && m_BodyID < m_Types.Length && m_Types[m_BodyID] == BodyType.Human && m_BodyID != 402 &&
+            m_BodyID != 403 && m_BodyID != 607 && m_BodyID != 608 && m_BodyID != 970 || m_BodyID == 694 || m_BodyID == 695;
 
 		public bool IsMale => m_BodyID == 183 || m_BodyID == 185 || m_BodyID == 400 || m_BodyID == 402 || m_BodyID == 605 ||
 					m_BodyID == 607 || m_BodyID == 750 || m_BodyID == 666 || m_BodyID == 694;
@@ -118,7 +118,7 @@ namespace Server
 
 		public override string ToString()
 		{
-			return string.Format("0x{0:X}", m_BodyID);
+			return $"0x{m_BodyID:X}";
 		}
 
 		public override int GetHashCode()

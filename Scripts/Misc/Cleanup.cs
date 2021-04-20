@@ -39,16 +39,26 @@ namespace Server.Misc
 
                 if (item is BaseHouse house)
                 {
-                    foreach (RelocatedEntity relEntity in house.RelocatedEntities)
+                    for (var index = 0; index < house.RelocatedEntities.Count; index++)
                     {
+                        RelocatedEntity relEntity = house.RelocatedEntities[index];
+
                         if (relEntity.Entity is Item entity)
+                        {
                             validItems.Add(entity);
+                        }
                     }
 
-                    foreach (VendorInventory inventory in house.VendorInventories)
+                    for (var index = 0; index < house.VendorInventories.Count; index++)
                     {
-                        foreach (Item subItem in inventory.Items)
+                        VendorInventory inventory = house.VendorInventories[index];
+
+                        for (var i = 0; i < inventory.Items.Count; i++)
+                        {
+                            Item subItem = inventory.Items[i];
+
                             validItems.Add(subItem);
+                        }
                     }
                 }
                 else if (item is BankBox box)

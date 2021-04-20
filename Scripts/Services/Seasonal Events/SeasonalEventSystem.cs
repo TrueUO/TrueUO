@@ -14,7 +14,6 @@ using Server.Mobiles;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace Server.Engines.SeasonalEvents
 {
@@ -120,12 +119,35 @@ namespace Server.Engines.SeasonalEvents
 
         public static TEvent GetEvent<TEvent>() where TEvent : SeasonalEvent
         {
-            return Entries.FirstOrDefault(e => e.GetType() == typeof(TEvent)) as TEvent;
+            SeasonalEvent first = null;
+
+            for (var index = 0; index < Entries.Count; index++)
+            {
+                var e = Entries[index];
+
+                if (e.GetType() == typeof(TEvent))
+                {
+                    first = e;
+                    break;
+                }
+            }
+
+            return first as TEvent;
         }
 
         public static SeasonalEvent GetEvent(EventType type)
         {
-            return Entries.FirstOrDefault(e => e.EventType == type);
+            for (var index = 0; index < Entries.Count; index++)
+            {
+                var e = Entries[index];
+
+                if (e.EventType == type)
+                {
+                    return e;
+                }
+            }
+
+            return null;
         }
 
         public static void OnToTDeactivated(Mobile from)
@@ -312,13 +334,13 @@ namespace Server.Engines.SeasonalEvents
         {
             if (Running && !IsActive())
             {
-                Utility.WriteConsoleColor(ConsoleColor.Green, string.Format("Disabling {0}", Name));
+                Utility.WriteConsoleColor(ConsoleColor.Green, $"Disabling {Name}");
 
                 Remove();
             }
             else if (!Running && IsActive())
             {
-                Utility.WriteConsoleColor(ConsoleColor.Green, string.Format("Enabling {0}", Name));
+                Utility.WriteConsoleColor(ConsoleColor.Green, $"Enabling {Name}");
 
                 Generate();
             }
