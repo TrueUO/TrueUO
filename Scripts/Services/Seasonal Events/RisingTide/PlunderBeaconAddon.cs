@@ -578,14 +578,17 @@ namespace Server.Items
 
             bool any = false;
 
-            for (var index = 0; index < Beacons.Count; index++)
+            if (Beacons != null)
             {
-                var b = Beacons[index];
-
-                if (b.Spawn != null && b.Spawn.ContainsKey(killed))
+                for (var index = 0; index < Beacons.Count; index++)
                 {
-                    any = true;
-                    break;
+                    var b = Beacons[index];
+
+                    if (b.Spawn != null && b.Spawn.ContainsKey(killed))
+                    {
+                        any = true;
+                        break;
+                    }
                 }
             }
 
