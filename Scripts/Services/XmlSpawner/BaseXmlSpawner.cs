@@ -724,12 +724,13 @@ namespace Server.Mobiles
                         continue;
                     }
 
-                    foreach (PropertyInfo p in props) // is a nested property with attributes so first get the property
+                    for (var i = 0; i < props.Length; i++)
                     {
+                        PropertyInfo p = props[i];
+
                         if (Insensitive.Equals(p.Name, propname))
                         {
                             po = p.GetValue(o, null);
-
                             return SetPropertyValue(spawner, po, arglist[1], value); // now set the nested attribute using the new property list
                         }
                     }
@@ -751,11 +752,16 @@ namespace Server.Mobiles
                     // note, looping through all of the props turns out to be a significant performance bottleneck
                     // good place for optimization
 
-                    foreach (PropertyInfo p in props)
+                    for (var i = 0; i < props.Length; i++)
                     {
+                        PropertyInfo p = props[i];
+
                         if (Insensitive.Equals(p.Name, propname))
                         {
-                            if (!p.CanWrite) return "Property is read only.";
+                            if (!p.CanWrite)
+                            {
+                                return "Property is read only.";
+                            }
 
                             string returnvalue = InternalSetValue(null, o, p, value, false, index);
 
@@ -788,7 +794,6 @@ namespace Server.Mobiles
                 if (arglist.Length == 2)
                 {
                     // is a nested property with attributes so first get the property
-
                     // use the lookup table for optimization if possible
                     PropertyInfo plookup = LookupPropertyInfo(spawner, type, arglist[0]);
 
@@ -802,12 +807,13 @@ namespace Server.Mobiles
                         continue;
                     }
 
-                    foreach (PropertyInfo p in props)
+                    for (var index = 0; index < props.Length; index++)
                     {
+                        PropertyInfo p = props[index];
+
                         if (Insensitive.Equals(p.Name, arglist[0]))
                         {
                             po = p.GetValue(o, null);
-
                             return SetPropertyObject(spawner, po, arglist[1], value); // now set the nested attribute using the new property list
                         }
                     }
@@ -815,34 +821,40 @@ namespace Server.Mobiles
                 else
                 {
                     // its just a simple single property
-
                     // use the lookup table for optimization if possible
+
                     PropertyInfo plookup = LookupPropertyInfo(spawner, type, name);
 
                     if (plookup != null)
                     {
-                        if (!plookup.CanWrite) return "Property is read only.";
+                        if (!plookup.CanWrite)
+                        {
+                            return "Property is read only.";
+                        }
 
                         if (plookup.PropertyType == typeof(Mobile))
                         {
                             plookup.SetValue(o, value, null);
-
                             return "Property has been set.";
                         }
 
                         return "Property is not of type Mobile.";
                     }
 
-                    foreach (PropertyInfo p in props)
+                    for (var index = 0; index < props.Length; index++)
                     {
+                        PropertyInfo p = props[index];
+
                         if (Insensitive.Equals(p.Name, name))
                         {
-                            if (!p.CanWrite) return "Property is read only.";
+                            if (!p.CanWrite)
+                            {
+                                return "Property is read only.";
+                            }
 
                             if (p.PropertyType == typeof(Mobile))
                             {
                                 p.SetValue(o, value, null);
-
                                 return "Property has been set.";
                             }
 
@@ -970,13 +982,19 @@ namespace Server.Mobiles
                         continue;
                     }
 
-                    foreach (PropertyInfo p in props) // now set the nested attribute using the new property list
+                    for (var i = 0; i < props.Length; i++)
                     {
+                        PropertyInfo p = props[i];
+
                         if (Insensitive.Equals(p.Name, propname))
                         {
-                            if (!p.CanRead) return "Property is write only.";
+                            if (!p.CanRead)
+                            {
+                                return "Property is write only.";
+                            }
 
                             ptype = p.PropertyType;
+
                             if (ptype.IsPrimitive)
                             {
                                 po = p.GetValue(o, null);
@@ -1008,7 +1026,10 @@ namespace Server.Mobiles
 
                     if (plookup != null)
                     {
-                        if (!plookup.CanRead) return "Property is write only.";
+                        if (!plookup.CanRead)
+                        {
+                            return "Property is write only.";
+                        }
 
                         ptype = plookup.PropertyType;
 
@@ -1016,12 +1037,16 @@ namespace Server.Mobiles
                     }
 
                     // its just a simple single property
-                    foreach (PropertyInfo p in props)
+                    for (var i = 0; i < props.Length; i++)
                     {
+                        PropertyInfo p = props[i];
                         //if ( Insensitive.Equals( p.Name, name ) )
                         if (Insensitive.Equals(p.Name, propname))
                         {
-                            if (!p.CanRead) return "Property is write only.";
+                            if (!p.CanRead)
+                            {
+                                return "Property is write only.";
+                            }
 
                             ptype = p.PropertyType;
 
@@ -1415,8 +1440,9 @@ namespace Server.Mobiles
             PropertyInfo pinfo = null;
             TypeInfo tinfo = null;
 
-            foreach (TypeInfo to in spawner.PropertyInfoList)
+            for (var index = 0; index < spawner.PropertyInfoList.Count; index++)
             {
+                TypeInfo to = spawner.PropertyInfoList[index];
                 // check the type
                 if (to.t == type)
                 {
@@ -1424,8 +1450,10 @@ namespace Server.Mobiles
                     tinfo = to;
 
                     // now search the property list
-                    foreach (PropertyInfo p in to.plist)
+                    for (var i = 0; i < to.plist.Count; i++)
                     {
+                        PropertyInfo p = to.plist[i];
+
                         if (Insensitive.Equals(p.Name, propname))
                         {
                             pinfo = p;
@@ -1443,8 +1471,10 @@ namespace Server.Mobiles
 
             PropertyInfo[] props = type.GetProperties(BindingFlags.Static | BindingFlags.Instance | BindingFlags.Public);
 
-            foreach (PropertyInfo p in props)
+            for (var index = 0; index < props.Length; index++)
             {
+                PropertyInfo p = props[index];
+
                 if (Insensitive.Equals(p.Name, propname))
                 {
                     // did we find the type at least?
@@ -1555,9 +1585,16 @@ namespace Server.Mobiles
                     // count nearby players
                     if (spawner?.SpawnRegion != null && range < 0)
                     {
-                        foreach (Mobile p in spawner.SpawnRegion.GetPlayers())
+                        var ps = spawner.SpawnRegion.GetPlayers();
+
+                        for (var index = 0; index < ps.Count; index++)
                         {
-                            if (p.AccessLevel <= spawner.TriggerAccessLevel) nplayers++;
+                            Mobile p = ps[index];
+
+                            if (p.AccessLevel <= spawner.TriggerAccessLevel)
+                            {
+                                nplayers++;
+                            }
                         }
                     }
                     else if (o is Item item)
@@ -2273,8 +2310,10 @@ namespace Server.Mobiles
             List<XmlSpawner> deletelist = null;
             XmlSpawner foundspawner = null;
 
-            foreach (XmlSpawner s in spawner.RecentSpawnerSearchList)
+            for (var index = 0; index < spawner.RecentSpawnerSearchList.Count; index++)
             {
+                XmlSpawner s = spawner.RecentSpawnerSearchList[index];
+
                 if (s.Deleted)
                 {
                     // clean it up
@@ -2291,8 +2330,11 @@ namespace Server.Mobiles
 
             if (deletelist != null)
             {
-                foreach (XmlSpawner i in deletelist)
+                for (var index = 0; index < deletelist.Count; index++)
+                {
+                    XmlSpawner i = deletelist[index];
                     spawner.RecentSpawnerSearchList.Remove(i);
+                }
             }
 
             return foundspawner;
@@ -2329,20 +2371,25 @@ namespace Server.Mobiles
                 targettype = SpawnerType.GetType(typestr);
             }
 
-            foreach (Item item in spawner.RecentItemSearchList)
+            for (var index = 0; index < spawner.RecentItemSearchList.Count; index++)
             {
+                Item item = spawner.RecentItemSearchList[index];
+
                 if (item.Deleted)
                 {
                     // clean it up
                     if (deletelist == null)
+                    {
                         deletelist = new List<Item>();
+                    }
+
                     deletelist.Add(item);
                 }
-                else
-                    if (name.Length == 0 || string.Compare(item.Name, name, true) == 0)
+                else if (name.Length == 0 || string.Compare(item.Name, name, true) == 0)
                 {
                     if (typestr == null ||
-                        targettype != null && (item.GetType().Equals(targettype) || item.GetType().IsSubclassOf(targettype)))
+                        targettype != null &&
+                        (item.GetType().Equals(targettype) || item.GetType().IsSubclassOf(targettype)))
                     {
                         founditem = item;
                         break;
@@ -2352,8 +2399,11 @@ namespace Server.Mobiles
 
             if (deletelist != null)
             {
-                foreach (Item i in deletelist)
+                for (var index = 0; index < deletelist.Count; index++)
+                {
+                    Item i = deletelist[index];
                     spawner.RecentItemSearchList.Remove(i);
+                }
             }
 
             return founditem;
@@ -2379,32 +2429,38 @@ namespace Server.Mobiles
 
         public static Mobile FindInRecentMobileSearchList(XmlSpawner spawner, string name, string typestr)
         {
-            if (spawner == null || name == null || spawner.RecentMobileSearchList == null) return null;
+            if (spawner == null || name == null || spawner.RecentMobileSearchList == null)
+            {
+                return null;
+            }
 
             List<Mobile> deletelist = null;
             Mobile foundmobile = null;
 
             Type targettype = null;
+
             if (typestr != null)
             {
                 targettype = SpawnerType.GetType(typestr);
             }
 
-            foreach (Mobile m in spawner.RecentMobileSearchList)
+            for (var index = 0; index < spawner.RecentMobileSearchList.Count; index++)
             {
+                Mobile m = spawner.RecentMobileSearchList[index];
+
                 if (m.Deleted)
                 {
                     // clean it up
                     if (deletelist == null)
+                    {
                         deletelist = new List<Mobile>();
+                    }
+
                     deletelist.Add(m);
                 }
-                else
-                    if (name.Length == 0 || string.Compare(m.Name, name, true) == 0)
+                else if (name.Length == 0 || string.Compare(m.Name, name, true) == 0)
                 {
-
-                    if (typestr == null ||
-                        targettype != null && (m.GetType().Equals(targettype) || m.GetType().IsSubclassOf(targettype)))
+                    if (typestr == null || targettype != null && (m.GetType().Equals(targettype) || m.GetType().IsSubclassOf(targettype)))
                     {
                         foundmobile = m;
                         break;
@@ -2414,8 +2470,11 @@ namespace Server.Mobiles
 
             if (deletelist != null)
             {
-                foreach (Mobile i in deletelist)
+                for (var index = 0; index < deletelist.Count; index++)
+                {
+                    Mobile i = deletelist[index];
                     spawner.RecentMobileSearchList.Remove(i);
+                }
             }
 
             return foundmobile;
