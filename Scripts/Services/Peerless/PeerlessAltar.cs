@@ -287,8 +287,6 @@ namespace Server.Items
 
             for (var index = 0; index < Keys.Length; index++)
             {
-                var key = Keys[index];
-
                 count++;
             }
 
@@ -466,14 +464,11 @@ namespace Server.Items
                     {
                         Mobile follower = mobile.AllFollowers[index];
 
-                        if (follower is BaseCreature pet)
+                        if (follower is BaseCreature pet && pet.Alive && pet.InRange(mobile.Location, 5) && !(pet is BaseMount mount && mount.Rider != null) && CanEnter(pet))
                         {
-                            if (pet.Alive && pet.InRange(mobile.Location, 5) && !(pet is BaseMount mount && mount.Rider != null) && CanEnter(pet))
-                            {
-                                pet.FixedParticles(0x376A, 9, 32, 0x13AF, EffectLayer.Waist);
-                                pet.PlaySound(0x1FE);
-                                pet.MoveToWorld(TeleportDest, Map);
-                            }
+                            pet.FixedParticles(0x376A, 9, 32, 0x13AF, EffectLayer.Waist);
+                            pet.PlaySound(0x1FE);
+                            pet.MoveToWorld(TeleportDest, Map);
                         }
                     }
                 }
@@ -590,46 +585,43 @@ namespace Server.Items
                 {
                     Mobile follower = mobile.AllFollowers[index];
 
-                    if (follower is BaseCreature pet)
+                    if (follower is BaseCreature pet && ((pet.Alive || pet.IsBonded) && pet.Map != Map.Internal && MobileIsInBossArea(pet)))
                     {
-                        if ((pet.Alive || pet.IsBonded) && pet.Map != Map.Internal && MobileIsInBossArea(pet))
+                        if (pet is BaseMount mount)
                         {
-                            if (pet is BaseMount mount)
+                            if (mount.Rider != null && mount.Rider != fighter)
                             {
-                                if (mount.Rider != null && mount.Rider != fighter)
+                                mount.Rider.FixedParticles(0x376A, 9, 32, 0x13AF, EffectLayer.Waist);
+                                mount.Rider.PlaySound(0x1FE);
+
+                                if (this is CitadelAltar)
                                 {
-                                    mount.Rider.FixedParticles(0x376A, 9, 32, 0x13AF, EffectLayer.Waist);
-                                    mount.Rider.PlaySound(0x1FE);
-
-                                    if (this is CitadelAltar)
-                                    {
-                                        mount.Rider.MoveToWorld(ExitDest, Map.Tokuno);
-                                    }
-                                    else
-                                    {
-                                        mount.Rider.MoveToWorld(ExitDest, Map);
-                                    }
-
-                                    continue;
+                                    mount.Rider.MoveToWorld(ExitDest, Map.Tokuno);
+                                }
+                                else
+                                {
+                                    mount.Rider.MoveToWorld(ExitDest, Map);
                                 }
 
-                                if (mount.Rider != null)
-                                {
-                                    continue;
-                                }
+                                continue;
                             }
 
-                            pet.FixedParticles(0x376A, 9, 32, 0x13AF, EffectLayer.Waist);
-                            pet.PlaySound(0x1FE);
+                            if (mount.Rider != null)
+                            {
+                                continue;
+                            }
+                        }
 
-                            if (this is CitadelAltar)
-                            {
-                                pet.MoveToWorld(ExitDest, Map.Tokuno);
-                            }
-                            else
-                            {
-                                pet.MoveToWorld(ExitDest, Map);
-                            }
+                        pet.FixedParticles(0x376A, 9, 32, 0x13AF, EffectLayer.Waist);
+                        pet.PlaySound(0x1FE);
+
+                        if (this is CitadelAltar)
+                        {
+                            pet.MoveToWorld(ExitDest, Map.Tokuno);
+                        }
+                        else
+                        {
+                            pet.MoveToWorld(ExitDest, Map);
                         }
                     }
                 }

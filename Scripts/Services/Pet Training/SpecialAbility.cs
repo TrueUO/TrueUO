@@ -578,12 +578,9 @@ namespace Server.Mobiles
 
                 foreach (IDamageable indirectTarget in Spells.SpellHelper.AcquireIndirectTargets(creature, target, creature.Map, 5))
                 {
-                    if (indirectTarget is Mobile m)
+                    if (indirectTarget is Mobile m && m.InRange(creature.Location, MaxRange))
                     {
-                        if (m.InRange(creature.Location, MaxRange))
-                        {
-                            list.Add(m);
-                        }
+                        list.Add(m);
                     }
                 }
 

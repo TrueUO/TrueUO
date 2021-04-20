@@ -118,12 +118,9 @@ namespace Server.Mobiles
 
             foreach (object o in eable)
             {
-                if (o is Mobile m)
+                if (o is Mobile m && ValidTarget(creature, m))
                 {
-                    if (ValidTarget(creature, m))
-                    {
-                        yield return m;
-                    }
+                    yield return m;
                 }
             }
 

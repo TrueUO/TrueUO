@@ -1741,13 +1741,10 @@ namespace Server.Mobiles
             {
                 Item item = User.Backpack.Items[index];
 
-                if (item is PowerScroll ps)
+                if (item is PowerScroll ps && ps.Skill == name && ps.Value == 100 + value / 10)
                 {
-                    if (ps.Skill == name && ps.Value == 100 + value / 10)
-                    {
-                        scroll = ps;
-                        break;
-                    }
+                    scroll = ps;
+                    break;
                 }
             }
 
