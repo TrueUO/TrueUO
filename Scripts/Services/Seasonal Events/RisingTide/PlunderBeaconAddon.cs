@@ -122,13 +122,15 @@ namespace Server.Items
         {
             base.OnLocationChange(old);
 
-            foreach (MannedCannon c in Cannons)
+            for (var index = 0; index < Cannons.Count; index++)
             {
+                MannedCannon c = Cannons[index];
                 c.Location = new Point3D(X + (c.X - old.X), Y + (c.Y - old.Y), Z + (c.Z - old.Z));
             }
 
-            foreach (BaseCreature c in Crew)
+            for (var index = 0; index < Crew.Count; index++)
             {
+                BaseCreature c = Crew[index];
                 c.Location = new Point3D(X + (c.X - old.X), Y + (c.Y - old.Y), Z + (c.Z - old.Z));
             }
 
@@ -150,13 +152,16 @@ namespace Server.Items
         {
             base.OnMapChange();
 
-            foreach (MannedCannon c in Cannons)
+            for (var index = 0; index < Cannons.Count; index++)
             {
+                MannedCannon c = Cannons[index];
                 c.Map = Map;
             }
 
-            foreach (BaseCreature c in Crew)
+            for (var index = 0; index < Crew.Count; index++)
             {
+                BaseCreature c = Crew[index];
+
                 if (c != null && !c.Deleted)
                 {
                     c.Map = Map;
@@ -244,9 +249,11 @@ namespace Server.Items
             }
             else if (CannonsOperational && NextShoot < DateTime.UtcNow)
             {
-                foreach (MannedCannon c in Cannons)
+                for (var index = 0; index < Cannons.Count; index++)
                 {
-                    if (c != null && !c.Deleted && (c.CanFireUnmanned || (c.Operator != null && !c.Operator.Deleted && c.Operator.Alive)))
+                    MannedCannon c = Cannons[index];
+
+                    if (c != null && !c.Deleted && (c.CanFireUnmanned || c.Operator != null && !c.Operator.Deleted && c.Operator.Alive))
                     {
                         c.Scan(true);
                     }
@@ -312,7 +319,17 @@ namespace Server.Items
 
         private int SpawnCount()
         {
-            return Spawn.Keys.Count(s => s != null && !s.Deleted);
+            int count = 0;
+
+            foreach (var s in Spawn.Keys)
+            {
+                if (s != null && !s.Deleted)
+                {
+                    count++;
+                }
+            }
+
+            return count;
         }
 
         private readonly Type[] _SpawnTypes =
@@ -331,8 +348,10 @@ namespace Server.Items
                 Beacon.Delete();
             }
 
-            foreach (BaseCreature bc in Crew)
+            for (var index = 0; index < Crew.Count; index++)
             {
+                BaseCreature bc = Crew[index];
+
                 if (bc != null && !bc.Deleted)
                 {
                     bc.Kill();
@@ -347,8 +366,10 @@ namespace Server.Items
                 }
             }
 
-            foreach (MannedCannon cannon in Cannons)
+            for (var index = 0; index < Cannons.Count; index++)
             {
+                MannedCannon cannon = Cannons[index];
+
                 cannon.Delete();
             }
 
@@ -411,8 +432,9 @@ namespace Server.Items
                         //Spawn = reader.ReadStrongMobileList<BaseCreature>();
                         List<BaseCreature> list = reader.ReadStrongMobileList<BaseCreature>();
 
-                        foreach (BaseCreature bc in list)
+                        for (var index = 0; index < list.Count; index++)
                         {
+                            BaseCreature bc = list[index];
                             Spawn[bc] = true;
                         }
                     }
@@ -554,7 +576,20 @@ namespace Server.Items
         {
             var killed = e.Creature as BaseCreature;
 
-            if (killed != null && Beacons != null && Beacons.Any(b => b.Spawn != null && b.Spawn.ContainsKey(killed)))
+            bool any = false;
+
+            for (var index = 0; index < Beacons.Count; index++)
+            {
+                var b = Beacons[index];
+
+                if (b.Spawn != null && b.Spawn.ContainsKey(killed))
+                {
+                    any = true;
+                    break;
+                }
+            }
+
+            if (killed != null && Beacons != null && any)
             {
                 double chance = killed is PirateCrew ? 0.15 : 0.025;
 
