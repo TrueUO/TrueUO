@@ -2,7 +2,6 @@ using Server.Mobiles;
 using Server.Regions;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.Quests
 {
@@ -527,7 +526,20 @@ namespace Server.Engines.Quests
 
         public override void OnCompleted()
         {
-            if (Quest != null && Quest.Owner != null && Quest.Owner.Murderer && Quest.Owner.DoneQuests.FirstOrDefault(info => info.QuestType == typeof(ResponsibilityQuest)) == null)
+            QuestRestartInfo first = null;
+
+            for (var index = 0; index < Quest.Owner.DoneQuests.Count; index++)
+            {
+                var info = Quest.Owner.DoneQuests[index];
+
+                if (info.QuestType == typeof(ResponsibilityQuest))
+                {
+                    first = info;
+                    break;
+                }
+            }
+
+            if (Quest != null && Quest.Owner != null && Quest.Owner.Murderer && first == null)
             {
                 QuestHelper.Delay(Quest.Owner, typeof(ResponsibilityQuest), Quest.RestartDelay);
             }
