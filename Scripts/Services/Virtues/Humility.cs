@@ -302,21 +302,30 @@ namespace Server.Services.Virtues
 
                 owner.FixedEffect(0x373A, 10, 16);
 
-                foreach (ResistanceMod mods in mod)
+                for (var index = 0; index < mod.Length; index++)
+                {
+                    ResistanceMod mods = mod[index];
+
                     owner.AddResistanceMod(mods);
+                }
 
                 Table[owner] = mod;
-                pets.ForEach(
-                    m =>
+
+                for (var i = 0; i < pets.Count; i++)
+                {
+                    var m = pets[i];
+                    mod = GetMod;
+
+                    for (var index = 0; index < mod.Length; index++)
                     {
-                        mod = GetMod;
+                        ResistanceMod mods = mod[index];
 
-                        foreach (ResistanceMod mods in mod)
-                            m.AddResistanceMod(mods);
+                        m.AddResistanceMod(mods);
+                    }
 
-                        m.FixedEffect(0x373A, 10, 16);
-                        Table[m] = mod;
-                    });
+                    m.FixedEffect(0x373A, 10, 16);
+                    Table[m] = mod;
+                }
             }
 
             public void AddPet(Mobile pet)
@@ -327,8 +336,12 @@ namespace Server.Services.Virtues
 
                     pet.FixedEffect(0x373A, 10, 16);
 
-                    foreach (ResistanceMod mods in mod)
+                    for (var index = 0; index < mod.Length; index++)
+                    {
+                        ResistanceMod mods = mod[index];
+
                         pet.AddResistanceMod(mods);
+                    }
 
                     Table[pet] = mod;
                 }
@@ -338,8 +351,12 @@ namespace Server.Services.Virtues
             {
                 foreach (KeyValuePair<Mobile, ResistanceMod[]> kvp in Table)
                 {
-                    foreach (ResistanceMod mod in kvp.Value)
+                    for (var index = 0; index < kvp.Value.Length; index++)
+                    {
+                        ResistanceMod mod = kvp.Value[index];
+
                         kvp.Key.RemoveResistanceMod(mod);
+                    }
 
                     BuffInfo.RemoveBuff(kvp.Key, BuffIcon.HumilityDebuff);
                 }

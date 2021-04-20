@@ -1,6 +1,5 @@
 using Server.Engines.PartySystem;
 using Server.Gumps;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -44,8 +43,12 @@ namespace Server.Items
 
                     if (p != null)
                     {
-                        foreach (Mobile m in p.Members.Select(x => x.Mobile))
+                        for (var index = 0; index < p.Members.Count; index++)
                         {
+                            var x = p.Members[index];
+
+                            Mobile m = x.Mobile;
+
                             if (m.InRange(from.Location, 25))
                             {
                                 m.CloseGump(typeof(ConfirmEntranceGump));
@@ -65,12 +68,16 @@ namespace Server.Items
         public override void OnAfterDelete()
         {
             if (Altar == null)
+            {
                 return;
+            }
 
             Altar.MasterKeys.Remove(this);
 
             if (Altar.MasterKeys.Count == 0 && Altar.Fighters.Count == 0)
+            {
                 Altar.FinishSequence();
+            }
         }
 
         public override void Serialize(GenericWriter writer)
@@ -84,7 +91,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             Altar = reader.ReadItem() as PeerlessAltar;
         }

@@ -2,7 +2,6 @@ using Server.Items;
 using Server.Network;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Mobiles
 {
@@ -29,7 +28,9 @@ namespace Server.Mobiles
         public static void CheckCombatTrigger(Mobile attacker, Mobile defender, ref int damage, DamageType type)
         {
             if (defender == null)
+            {
                 return;
+            }
 
             if (attacker is BaseCreature attackCreature && !attackCreature.Summoned)
             {
@@ -39,9 +40,17 @@ namespace Server.Mobiles
                 {
                     SpecialAbility ability = null;
 
-                    SpecialAbility[] abilties = profile.EnumerateSpecialAbilities().Where(m =>
-                        (type == DamageType.Melee && m.TriggerOnDoMeleeDamage || type >= DamageType.Spell && m.TriggerOnDoSpellDamage) &&
-                        !m.IsInCooldown(attacker)).ToArray();
+                    List<SpecialAbility> list = new List<SpecialAbility>();
+
+                    foreach (var m in profile.EnumerateSpecialAbilities())
+                    {
+                        if ((type == DamageType.Melee && m.TriggerOnDoMeleeDamage || type >= DamageType.Spell && m.TriggerOnDoSpellDamage) && !m.IsInCooldown(attacker))
+                        {
+                            list.Add(m);
+                        }
+                    }
+
+                    SpecialAbility[] abilties = list.ToArray();
 
                     if (abilties.Length > 0)
                     {
@@ -63,9 +72,17 @@ namespace Server.Mobiles
                 {
                     SpecialAbility ability = null;
 
-                    SpecialAbility[] abilties = profile.EnumerateSpecialAbilities().Where(m =>
-                        (type == DamageType.Melee && m.TriggerOnGotMeleeDamage || type >= DamageType.Spell && m.TriggerOnGotSpellDamage) &&
-                        !m.IsInCooldown(defender)).ToArray();
+                    List<SpecialAbility> list = new List<SpecialAbility>();
+
+                    foreach (var m in profile.EnumerateSpecialAbilities())
+                    {
+                        if ((type == DamageType.Melee && m.TriggerOnGotMeleeDamage || type >= DamageType.Spell && m.TriggerOnGotSpellDamage) && !m.IsInCooldown(defender))
+                        {
+                            list.Add(m);
+                        }
+                    }
+
+                    SpecialAbility[] abilties = list.ToArray();
 
                     if (abilties.Length > 0)
                     {
@@ -91,7 +108,17 @@ namespace Server.Mobiles
                 {
                     SpecialAbility ability = null;
 
-                    SpecialAbility[] abilties = profile.EnumerateSpecialAbilities().Where(m => m.TriggerOnThink && !m.IsInCooldown(bc)).ToArray();
+                    List<SpecialAbility> list = new List<SpecialAbility>();
+
+                    foreach (var m in profile.EnumerateSpecialAbilities())
+                    {
+                        if (m.TriggerOnThink && !m.IsInCooldown(bc))
+                        {
+                            list.Add(m);
+                        }
+                    }
+
+                    SpecialAbility[] abilties = list.ToArray();
 
                     if (abilties.Length > 0)
                     {
@@ -109,12 +136,17 @@ namespace Server.Mobiles
             {
                 SpecialAbility ability = null;
 
-                SpecialAbility[] abilties =
-                    profile.EnumerateSpecialAbilities().Where(
-                        m =>
-                        m.TriggerOnThink &&
-                        !m.IsInCooldown(bc) &&
-                        !m.RequiresCombatant).ToArray();
+                List<SpecialAbility> list = new List<SpecialAbility>();
+
+                foreach (var m in profile.EnumerateSpecialAbilities())
+                {
+                    if (m.TriggerOnThink && !m.IsInCooldown(bc) && !m.RequiresCombatant)
+                    {
+                        list.Add(m);
+                    }
+                }
+
+                SpecialAbility[] abilties = list.ToArray();
 
                 if (abilties.Length > 0)
                 {
@@ -139,11 +171,17 @@ namespace Server.Mobiles
             {
                 SpecialAbility ability = null;
 
-                SpecialAbility[] abilties = profile.EnumerateSpecialAbilities().Where(m =>
-                    m.TriggerOnApproach &&
-                    bc.InRange(mobile.Location, m.MaxRange) &&
-                    !bc.InRange(oldLocation, m.MaxRange) &&
-                    !m.IsInCooldown(bc)).ToArray();
+                List<SpecialAbility> list = new List<SpecialAbility>();
+
+                foreach (var m in profile.EnumerateSpecialAbilities())
+                {
+                    if (m.TriggerOnApproach && bc.InRange(mobile.Location, m.MaxRange) && !bc.InRange(oldLocation, m.MaxRange) && !m.IsInCooldown(bc))
+                    {
+                        list.Add(m);
+                    }
+                }
+
+                SpecialAbility[] abilties = list.ToArray();
 
                 if (abilties.Length > 0)
                 {
@@ -536,12 +574,22 @@ namespace Server.Mobiles
 
             if (def.AttacksMultipleTargets)
             {
-                List<Mobile> list = Spells.SpellHelper.AcquireIndirectTargets(creature, target, creature.Map, 5).OfType<Mobile>().Where(m => m.InRange(creature.Location, MaxRange)).ToList();
+                List<Mobile> list = new List<Mobile>();
+
+                foreach (IDamageable indirectTarget in Spells.SpellHelper.AcquireIndirectTargets(creature, target, creature.Map, 5))
+                {
+                    if (indirectTarget is Mobile m && m.InRange(creature.Location, MaxRange))
+                    {
+                        list.Add(m);
+                    }
+                }
 
                 for (int i = 0; i < 5; i++)
                 {
                     if (list.Count == 0)
+                    {
                         break;
+                    }
 
                     Mobile m = i == 0 ? target : list[Utility.Random(list.Count)];
 
@@ -557,7 +605,7 @@ namespace Server.Mobiles
             }
         }
 
-        public void BreathEffect_Callback(BaseCreature creature, Mobile target, DragonBreathDefinition def)
+        public static void BreathEffect_Callback(BaseCreature creature, Mobile target, DragonBreathDefinition def)
         {
             creature.RevealingAction();
 
@@ -582,7 +630,7 @@ namespace Server.Mobiles
             Timer.DelayCall(TimeSpan.FromSeconds(def.DamageDelay), BreathDamage_Callback, creature, target, def);
         }
 
-        public void BreathDamage_Callback(BaseCreature creature, Mobile target, DragonBreathDefinition def)
+        public static void BreathDamage_Callback(BaseCreature creature, Mobile target, DragonBreathDefinition def)
         {
             if (target is BaseCreature baseCreature && baseCreature.BreathImmune)
             {
@@ -596,7 +644,7 @@ namespace Server.Mobiles
             }
         }
 
-        public void BreathDealDamage(BaseCreature creature, Mobile target, DragonBreathDefinition def)
+        public static void BreathDealDamage(BaseCreature creature, Mobile target, DragonBreathDefinition def)
         {
             if (!Spells.Bushido.Evasion.CheckSpellEvasion(target))
             {
@@ -614,7 +662,7 @@ namespace Server.Mobiles
             }
         }
 
-        public int BreathComputeDamage(BaseCreature creature, DragonBreathDefinition def)
+        public static int BreathComputeDamage(BaseCreature creature, DragonBreathDefinition def)
         {
             int damage = (int)(creature.Hits * def.DamageScalar);
 
@@ -633,49 +681,49 @@ namespace Server.Mobiles
 
         public class DragonBreathDefinition
         {
-            public Type[] Uses { get; private set; }
+            public Type[] Uses { get; }
 
             // Base damage given is: CurrentHitPoints * BreathDamageScalar
-            public double DamageScalar { get; private set; }
+            public double DamageScalar { get; }
 
             // Creature stops moving for 1.0 seconds while breathing
-            public double StallTime { get; private set; }
+            public double StallTime { get; }
 
             // Effect is sent 1.3 seconds after BreathAngerSound and BreathAngerAnimation is played
-            public double EffectDelay { get; private set; }
+            public double EffectDelay { get; }
 
             // Damage is given 1.0 seconds after effect is sent
-            public double DamageDelay { get; private set; }
+            public double DamageDelay { get; }
 
             // Damage types
-            public int PhysicalDamage { get; private set; }
-            public int FireDamage { get; private set; }
-            public int ColdDamage { get; private set; }
-            public int PoisonDamage { get; private set; }
-            public int EnergyDamage { get; private set; }
-            public int ChaosDamage { get; private set; }
-            public int DirectDamage { get; private set; }
+            public int PhysicalDamage { get; }
+            public int FireDamage { get; }
+            public int ColdDamage { get; }
+            public int PoisonDamage { get; }
+            public int EnergyDamage { get; }
+            public int ChaosDamage { get; }
+            public int DirectDamage { get; }
 
-            public double MinDelay { get; private set; }
-            public double MaxDelay { get; private set; }
+            public double MinDelay { get; }
+            public double MaxDelay { get; }
 
             // Effect details and sound
-            public int EffectItemID { get; private set; }
-            public int EffectSpeed { get; private set; }
+            public int EffectItemID { get; }
+            public int EffectSpeed { get; }
             public int EffectDuration { get; private set; }
-            public bool EffectExplodes { get; private set; }
-            public bool EffectFixedDir { get; private set; }
-            public int EffectHue { get; private set; }
-            public int EffectRenderMode { get; private set; }
+            public bool EffectExplodes { get; }
+            public bool EffectFixedDir { get; }
+            public int EffectHue { get; }
+            public int EffectRenderMode { get; }
 
-            public int EffectSound { get; private set; }
+            public int EffectSound { get; }
 
             // Anger sound/animations
-            public int AngerAnimation { get; private set; }
+            public int AngerAnimation { get; }
 
-            public bool AttacksMultipleTargets { get; private set; }
+            public bool AttacksMultipleTargets { get; }
 
-            public static List<DragonBreathDefinition> Definitions { get; private set; } = new List<DragonBreathDefinition>();
+            public static List<DragonBreathDefinition> Definitions { get; } = new List<DragonBreathDefinition>();
 
             public static void Initialize()
             {
@@ -859,7 +907,31 @@ namespace Server.Mobiles
 
             public static DragonBreathDefinition GetDefinition(BaseCreature bc)
             {
-                DragonBreathDefinition def = Definitions.FirstOrDefault(d => d.Uses != null && d.Uses.Any(type => type == bc.GetType()));
+                DragonBreathDefinition def = null;
+
+                for (var index = 0; index < Definitions.Count; index++)
+                {
+                    var d = Definitions[index];
+
+                    bool any = false;
+
+                    for (var i = 0; i < d.Uses.Length; i++)
+                    {
+                        var type = d.Uses[i];
+
+                        if (type == bc.GetType())
+                        {
+                            any = true;
+                            break;
+                        }
+                    }
+
+                    if (d.Uses != null && any)
+                    {
+                        def = d;
+                        break;
+                    }
+                }
 
                 if (def == null)
                 {
@@ -1230,8 +1302,10 @@ namespace Server.Mobiles
 
             eable.Free();
 
-            foreach (Mobile m in list)
+            for (var index = 0; index < list.Count; index++)
             {
+                Mobile m = list[index];
+
                 creature.DoHarmful(m, false);
 
                 m.FixedParticles(0x374A, 10, 15, 5013, 0x496, 0, EffectLayer.Waist);
@@ -1308,8 +1382,8 @@ namespace Server.Mobiles
 
         public class InternalTimer : Timer
         {
-            public Mobile Attacker { get; set; }
-            public Mobile Defender { get; set; }
+            public Mobile Attacker { get; }
+            public Mobile Defender { get; }
 
             private int _Tick;
 
@@ -1393,7 +1467,7 @@ namespace Server.Mobiles
 
         private class InternalTimer : Timer
         {
-            public Mobile Defender { get; set; }
+            public Mobile Defender { get; }
 
             public InternalTimer(Mobile defender)
                 : base(TimeSpan.FromSeconds(10))
@@ -1432,8 +1506,8 @@ namespace Server.Mobiles
 
         private class InternalTimer : Timer
         {
-            public BaseCreature Attacker { get; set; }
-            public Mobile Defender { get; set; }
+            public BaseCreature Attacker { get; }
+            public Mobile Defender { get; }
             public int Ticks { get; set; }
 
             public InternalTimer(BaseCreature creature, Mobile defender)
@@ -1486,8 +1560,10 @@ namespace Server.Mobiles
             if (p == null)
                 return;
 
-            foreach (Mobile m in list)
+            for (var index = 0; index < list.Count; index++)
             {
+                Mobile m = list[index];
+
                 defender.PlaySound(0xDD);
                 defender.FixedParticles(0x3728, 244, 25, 9941, 1266, 0, EffectLayer.Waist);
 
@@ -1640,14 +1716,16 @@ namespace Server.Mobiles
             }
 
             for (int i = 0; i < mods.Count; ++i)
+            {
                 defender.AddResistanceMod(mods[i]);
+            }
 
             defender.FixedEffect(0x37B9, 10, 5);
 
             timer = new ExpireTimer(defender, mods, TimeSpan.FromSeconds(5.0));
             timer.Start();
 
-            BuffInfo.AddBuff(defender, new BuffInfo(BuffIcon.RuneBeetleCorruption, 1153796, 1153823, TimeSpan.FromSeconds(5.0), defender, string.Format("{0}\t{1}\t{2}\t{3}\t{4}", phy, cold, poison, energy, fire)));
+            BuffInfo.AddBuff(defender, new BuffInfo(BuffIcon.RuneBeetleCorruption, 1153796, 1153823, TimeSpan.FromSeconds(5.0), defender, $"{phy}\t{cold}\t{poison}\t{energy}\t{fire}"));
 
             _Table[defender] = timer;
         }
@@ -1761,7 +1839,7 @@ namespace Server.Mobiles
             TryInfect(creature, defender);
         }
 
-        private void TryInfect(BaseCreature creature, Mobile attacker)
+        private static void TryInfect(Mobile creature, Mobile attacker)
         {
             if (!_Table.ContainsKey(attacker) && creature.InRange(attacker, 1) && 0.25 > Utility.RandomDouble() && !FountainOfFortune.UnderProtection(attacker))
             {
@@ -1785,7 +1863,7 @@ namespace Server.Mobiles
                 attacker.AddStatMod(new StatMod(StatType.Int, "BloodWorm_Int", -Int, TimeSpan.FromSeconds(60)));
 
                 // -~1_STR~ strength.<br>-~2_INT~ intelligence.<br>-~3_DEX~ dexterity.<br> Drains all stamina.
-                BuffInfo.AddBuff(attacker, new BuffInfo(BuffIcon.BloodwormAnemia, 1153797, 1153824, string.Format("{0}\t{1}\t{2}", str, dex, Int)));
+                BuffInfo.AddBuff(attacker, new BuffInfo(BuffIcon.BloodwormAnemia, 1153797, 1153824, $"{str}\t{dex}\t{Int}"));
 
                 _Table.Add(attacker, timer);
             }
@@ -2107,7 +2185,7 @@ namespace Server.Mobiles
 
         public override void DoEffects(BaseCreature creature, Mobile target, ref int damage)
         {
-            int seconds = (int)Math.Max(1, (13.0 - (target.Skills[SkillName.MagicResist].Value / 10.0)));
+            int seconds = (int)Math.Max(1, 13.0 - target.Skills[SkillName.MagicResist].Value / 10.0);
 
             int number;
 
@@ -2184,35 +2262,38 @@ namespace Server.Mobiles
 
         public override void DoEffects(BaseCreature creature, Mobile defender, ref int damage)
         {
-            foreach (Mobile m in AreaEffect.FindValidTargets(creature, 2).OfType<Mobile>())
+            foreach (Mobile target in AreaEffect.FindValidTargets(creature, 2))
             {
-                if (!CanDrainLife(creature, defender))
+                if (target is Mobile m)
                 {
-                    continue;
+                    if (!CanDrainLife(creature, defender))
+                    {
+                        continue;
+                    }
+
+                    creature.DoHarmful(defender);
+
+                    defender.FixedParticles(0x374A, 10, 15, 5013, 0x496, 0, EffectLayer.Waist);
+                    defender.PlaySound(0x231);
+
+                    defender.SendMessage("You feel the life drain out of you!");
+
+                    int toDrain = GetDrainAmount(creature, defender);
+
+                    if (defender is PlayerMobile mobile)
+                    {
+                        toDrain = (int) LifeShieldLotion.HandleLifeDrain(mobile, toDrain);
+                    }
+
+                    creature.Hits += toDrain;
+                    AOS.Damage(m, creature, toDrain, 0, 0, 0, 0, 0, 0, 100);
+
+                    creature.OnDrainLife(defender);
                 }
-
-                creature.DoHarmful(defender);
-
-                defender.FixedParticles(0x374A, 10, 15, 5013, 0x496, 0, EffectLayer.Waist);
-                defender.PlaySound(0x231);
-
-                defender.SendMessage("You feel the life drain out of you!");
-
-                int toDrain = GetDrainAmount(creature, defender);
-
-                if (defender is PlayerMobile mobile)
-                {
-                    toDrain = (int)LifeShieldLotion.HandleLifeDrain(mobile, toDrain);
-                }
-
-                creature.Hits += toDrain;
-                AOS.Damage(m, creature, toDrain, 0, 0, 0, 0, 0, 0, 100);
-
-                creature.OnDrainLife(defender);
             }
         }
 
-        public bool CanDrainLife(BaseCreature bc, Mobile victim)
+        public static bool CanDrainLife(BaseCreature bc, Mobile victim)
         {
             if (bc is Succubus && victim.Female)
             {
@@ -2222,7 +2303,7 @@ namespace Server.Mobiles
             return true;
         }
 
-        public int GetDrainAmount(BaseCreature bc, Mobile victim)
+        public static int GetDrainAmount(BaseCreature bc, Mobile victim)
         {
             int amount = Utility.RandomMinMax(10, 40);
 
@@ -2248,7 +2329,7 @@ namespace Server.Mobiles
 
         public override bool Validate(BaseCreature attacker, Mobile defender)
         {
-            if (defender.Hits < (defender.HitsMax * .33))
+            if (defender.Hits < defender.HitsMax * .33)
             {
                 return false;
             }

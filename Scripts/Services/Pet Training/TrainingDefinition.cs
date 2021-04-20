@@ -1,6 +1,5 @@
 using Server.Items;
 using System;
-using System.Linq;
 
 namespace Server.Mobiles
 {
@@ -39,12 +38,38 @@ namespace Server.Mobiles
 
         public bool HasSpecialAbility(SpecialAbility ability)
         {
-            return SpecialAbilities != null && SpecialAbilities.Any(a => a == ability);
+            bool any = false;
+
+            for (var index = 0; index < SpecialAbilities.Length; index++)
+            {
+                var a = SpecialAbilities[index];
+
+                if (a == ability)
+                {
+                    any = true;
+                    break;
+                }
+            }
+
+            return SpecialAbilities != null && any;
         }
 
         public bool HasAreaEffect(AreaEffect ability)
         {
-            return AreaEffects != null && AreaEffects.Any(a => a == ability);
+            bool any = false;
+
+            for (var index = 0; index < AreaEffects.Length; index++)
+            {
+                var a = AreaEffects[index];
+
+                if (a == ability)
+                {
+                    any = true;
+                    break;
+                }
+            }
+
+            return AreaEffects != null && any;
         }
     }
 }

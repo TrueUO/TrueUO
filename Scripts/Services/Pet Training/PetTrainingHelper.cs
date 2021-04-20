@@ -3,7 +3,6 @@ using Server.Items;
 using Server.SkillHandlers;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Mobiles
 {
@@ -126,7 +125,9 @@ namespace Server.Mobiles
         public static TrainingDefinition GetTrainingDefinition(BaseCreature bc)
         {
             if (bc == null)
+            {
                 return null;
+            }
 
             // First, see if the creature has its own
             TrainingDefinition def = bc.TrainingDefinition;
@@ -137,7 +138,16 @@ namespace Server.Mobiles
             }
 
             // Next, we see if there is a pre-defined def
-            def = Definitions.FirstOrDefault(d => d.CreatureType == bc.GetType());
+            for (var index = 0; index < Definitions.Length; index++)
+            {
+                var d = Definitions[index];
+
+                if (d.CreatureType == bc.GetType())
+                {
+                    def = d;
+                    break;
+                }
+            }
 
             if (bc is VvVMount)
             {
@@ -165,28 +175,44 @@ namespace Server.Mobiles
 
         public static TrainingPoint GetTrainingPoint(object o)
         {
-            foreach (TrainingPoint tp in _TrainingPoints)
+            for (var index = 0; index < _TrainingPoints.Count; index++)
             {
+                TrainingPoint tp = _TrainingPoints[index];
+
                 if (tp.TrainPoint is PetStat stat && o is PetStat petStat && stat == petStat)
+                {
                     return tp;
+                }
 
                 if (tp.TrainPoint is MagicalAbility point && o is MagicalAbility ability && point == ability)
+                {
                     return tp;
+                }
 
                 if (tp.TrainPoint is SpecialAbility trainPoint && o is SpecialAbility specialAbility && trainPoint == specialAbility)
+                {
                     return tp;
+                }
 
                 if (tp.TrainPoint is WeaponAbility weaponAbility && o is WeaponAbility ability1 && weaponAbility == ability1)
+                {
                     return tp;
+                }
 
                 if (tp.TrainPoint is AreaEffect effect && o is AreaEffect areaEffect && effect == areaEffect)
+                {
                     return tp;
+                }
 
                 if (tp.TrainPoint is SkillName name && o is SkillName skillName && name == skillName)
+                {
                     return tp;
+                }
 
                 if (tp.TrainPoint is ResistanceType type && o is ResistanceType resistanceType && type == resistanceType)
+                {
                     return tp;
+                }
             }
 
             return null;
@@ -261,7 +287,7 @@ namespace Server.Mobiles
         #endregion
 
         #region Weapon Ability Defs
-        public static WeaponAbility[] WeaponAbilities =
+        public static readonly WeaponAbility[] WeaponAbilities =
         {
             WeaponAbility.NerveStrike,
             WeaponAbility.WhirlwindAttack,
@@ -1116,8 +1142,10 @@ namespace Server.Mobiles
 
             if (tp.Requirements != null && tp.Requirements.Length > 0)
             {
-                foreach (TrainingPointRequirement req in tp.Requirements)
+                for (var index = 0; index < tp.Requirements.Length; index++)
                 {
+                    TrainingPointRequirement req = tp.Requirements[index];
+
                     if (req != null)
                     {
                         if (req.Requirement is SkillName name && bc.Skills[name].Base > 0)
@@ -1235,7 +1263,9 @@ namespace Server.Mobiles
             TrainingDefinition def = GetTrainingDefinition(bc);
 
             if (def == null)
+            {
                 return false;
+            }
 
             return (def.MagicalAbilities & ability) != 0;
         }
@@ -1245,10 +1275,19 @@ namespace Server.Mobiles
             TrainingDefinition def = GetTrainingDefinition(bc);
 
             if (def == null)
+            {
                 return false;
+            }
 
-            if (def.SpecialAbilities.Any(a => a == ability))
-                return true;
+            for (var index = 0; index < def.SpecialAbilities.Length; index++)
+            {
+                var a = def.SpecialAbilities[index];
+
+                if (a == ability)
+                {
+                    return true;
+                }
+            }
 
             AbilityProfile profile = GetAbilityProfile(bc);
 
@@ -1260,10 +1299,19 @@ namespace Server.Mobiles
             TrainingDefinition def = GetTrainingDefinition(bc);
 
             if (def == null)
+            {
                 return false;
+            }
 
-            if (def.AreaEffects.Any(a => a == ability))
-                return true;
+            for (var index = 0; index < def.AreaEffects.Length; index++)
+            {
+                var a = def.AreaEffects[index];
+
+                if (a == ability)
+                {
+                    return true;
+                }
+            }
 
             AbilityProfile profile = GetAbilityProfile(bc);
 
@@ -1275,9 +1323,21 @@ namespace Server.Mobiles
             TrainingDefinition def = GetTrainingDefinition(bc);
 
             if (def == null)
+            {
                 return false;
+            }
 
-            return def.WeaponAbilities.Any(a => a == ability);
+            for (var index = 0; index < def.WeaponAbilities.Length; index++)
+            {
+                var a = def.WeaponAbilities[index];
+
+                if (a == ability)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public static bool ValidateTrainingPoint(BaseCreature bc, SkillName skill)
@@ -1308,7 +1368,7 @@ namespace Server.Mobiles
             {
                 AbilityProfile profile = GetAbilityProfile(bc);
 
-                if (profile != null/* && profile.TokunoTame*/)
+                if (profile != null)
                 {
                     bc.CheckSkill(skill, 0.0, bc.Skills[skill].Cap);
                 }
@@ -1317,7 +1377,7 @@ namespace Server.Mobiles
         #endregion
 
         #region Skill Categories
-        public static SkillName[] MagicSkills =
+        public static readonly SkillName[] MagicSkills =
         {
             SkillName.Magery,
             SkillName.EvalInt,
@@ -1334,7 +1394,7 @@ namespace Server.Mobiles
             SkillName.Discordance
         };
 
-        public static SkillName[] CombatSkills =
+        public static readonly SkillName[] CombatSkills =
         {
             SkillName.Wrestling,
             SkillName.Tactics,
@@ -1492,7 +1552,9 @@ namespace Server.Mobiles
             foreach (object abil in Enum.GetValues(typeof(MagicalAbility)))
             {
                 if ((ability & (MagicalAbility)abil) != 0)
+                {
                     return GetMagicialAbilityLocalization((MagicalAbility)abil);
+                }
             }
 
             return null;
@@ -1561,7 +1623,18 @@ namespace Server.Mobiles
 
         public static TextDefinition[] GetLocalization(SkillName skill)
         {
-            TrainingPoint tp = _TrainingPoints.FirstOrDefault(t => t.TrainPoint is SkillName name && name == skill);
+            TrainingPoint tp = null;
+
+            for (var index = 0; index < _TrainingPoints.Count; index++)
+            {
+                var t = _TrainingPoints[index];
+
+                if (t.TrainPoint is SkillName name && name == skill)
+                {
+                    tp = t;
+                    break;
+                }
+            }
 
             if (tp != null)
             {
@@ -1605,8 +1678,10 @@ namespace Server.Mobiles
 
             if (o is SkillName name)
             {
-                foreach (SkillName skill in CombatSkills)
+                for (var index = 0; index < CombatSkills.Length; index++)
                 {
+                    SkillName skill = CombatSkills[index];
+
                     if (name == skill)
                     {
                         return 1157496;

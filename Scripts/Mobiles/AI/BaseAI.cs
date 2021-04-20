@@ -1,4 +1,3 @@
-#region References
 using Server.ContextMenus;
 using Server.Gumps;
 using Server.Items;
@@ -9,8 +8,6 @@ using Server.Targets;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-#endregion
 
 namespace Server.Mobiles
 {
@@ -1635,8 +1632,12 @@ namespace Server.Mobiles
             Mobile closestMob = combatant;
             double closestDist = combatant == null ? m_Mobile.RangePerception : combatant.GetDistanceToSqrt(controlMaster);
 
-            foreach (Mobile aggressor in controlMaster.Aggressors.Select(x => x.Attacker))
+            for (var index = 0; index < controlMaster.Aggressors.Count; index++)
             {
+                var x = controlMaster.Aggressors[index];
+
+                Mobile aggressor = x.Attacker;
+
                 if (ValidGuardTarget(aggressor))
                 {
                     double dist = aggressor.GetDistanceToSqrt(controlMaster);
@@ -1649,8 +1650,12 @@ namespace Server.Mobiles
                 }
             }
 
-            foreach (Mobile aggressed in controlMaster.Aggressed.Select(x => x.Defender))
+            for (var index = 0; index < controlMaster.Aggressed.Count; index++)
             {
+                var x = controlMaster.Aggressed[index];
+
+                Mobile aggressed = x.Defender;
+
                 if (ValidGuardTarget(aggressed))
                 {
                     double dist = aggressed.GetDistanceToSqrt(controlMaster);
