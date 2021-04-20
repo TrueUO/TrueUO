@@ -106,7 +106,7 @@ namespace Server.Mobiles
             AddImage(28, 220, 0x826);
 
             AddHtmlLocalized(47, 220, 160, 18, 1049594, 0xC8, false, false); // Loyalty Rating
-            AddHtmlLocalized(53, 236, 160, 18, (!Creature.Controlled || Creature.Loyalty == 0) ? 1061643 : 1049595 + (Creature.Loyalty / 10), _Label, false, false);
+            AddHtmlLocalized(53, 236, 160, 18, !Creature.Controlled || Creature.Loyalty == 0 ? 1061643 : 1049595 + Creature.Loyalty / 10, _Label, false, false);
 
             AddButton(240, 328, 0x15E1, 0x15E5, 0, GumpButtonType.Page, 2);
             AddButton(217, 328, 0x15E3, 0x15E7, 0, GumpButtonType.Page, Pages(profile));
@@ -410,7 +410,7 @@ namespace Server.Mobiles
 
                                         if (cap > 0)
                                         {
-                                            AddHtml(180, y, 75, 18, string.Format("<div align=right>{0:F1}</div>", cap), false, false);
+                                            AddHtml(180, y, 75, 18, $"<div align=right>{cap:F1}</div>", false, false);
                                         }
                                     }
                                 }
@@ -526,7 +526,7 @@ namespace Server.Mobiles
             }
         }
 
-        public int AdvPage(AbilityProfile profile)
+        public static int AdvPage(AbilityProfile profile)
         {
             int advcount = profile.Advancements.Count;
 
@@ -544,20 +544,24 @@ namespace Server.Mobiles
             return advpage;
         }
 
-        public int Pages(AbilityProfile profile)
+        public static int Pages(AbilityProfile profile)
         {
             if (profile == null || profile.Advancements == null || profile.Advancements.Count == 0)
+            {
                 return 8;
+            }
 
             return 8 + AdvPage(profile);
         }
 
-        private static string FormatSkill(BaseCreature c, SkillName name)
+        private static string FormatSkill(Mobile c, SkillName name)
         {
             if (c.Skills[name].Base < 10.0)
+            {
                 return "<div align=right>---</div>";
+            }
 
-            return string.Format("<div align=right>{0:F1}/{1}</div>", c.Skills[name].Value, c.Skills[name].Cap);
+            return $"<div align=right>{c.Skills[name].Value:F1}/{c.Skills[name].Cap}</div>";
         }
 
         private static string FormatAttributes(int cur, int max)
@@ -565,7 +569,7 @@ namespace Server.Mobiles
             if (max == 0)
                 return "<div align=right>---</div>";
 
-            return string.Format("<div align=right>{0}/{1}</div>", cur, max);
+            return $"<div align=right>{cur}/{max}</div>";
         }
 
         private static string FormatStat(int val)
@@ -573,7 +577,7 @@ namespace Server.Mobiles
             if (val == 0)
                 return "<div align=right>---</div>";
 
-            return string.Format("<div align=right>{0}</div>", val);
+            return $"<div align=right>{val}</div>";
         }
 
         public static string FormatDouble(double val)
@@ -581,7 +585,7 @@ namespace Server.Mobiles
             if (val == 0)
                 return "<div align=right>---</div>";
 
-            return string.Format("<div align=right>{0:F1}</div>", val);
+            return $"<div align=right>{val:F1}</div>";
         }
 
         public static string FormatDouble(double val, bool dontshowzero = true, bool percentage = false)
@@ -593,10 +597,10 @@ namespace Server.Mobiles
 
             if (percentage)
             {
-                return string.Format("<div align=right>{0:F1}%</div>", val);
+                return $"<div align=right>{val:F1}%</div>";
             }
 
-            return string.Format("<div align=right>{0:F1}</div>", val);
+            return $"<div align=right>{val:F1}</div>";
         }
 
         public static string FormatElement(int val, string color)
@@ -604,28 +608,34 @@ namespace Server.Mobiles
             if (color == null)
             {
                 if (val <= 0)
+                {
                     return "<div align=right>---</div>";
+                }
 
-                return string.Format("<div align=right>{0}%</div>", val);
+                return $"<div align=right>{val}%</div>";
             }
 
             if (val <= 0)
-                return string.Format("<BASEFONT COLOR={0}><div align=right>---</div>", color);
+            {
+                return $"<BASEFONT COLOR={color}><div align=right>---</div>";
+            }
 
-            return string.Format("<BASEFONT COLOR={1}><div align=right>{0}%</div>", val, color);
+            return $"<BASEFONT COLOR={color}><div align=right>{val}%</div>";
         }
 
         public static string FormatDamage(int min, int max)
         {
             if (min <= 0 || max <= 0)
+            {
                 return "<div align=right>---</div>";
+            }
 
-            return string.Format("<div align=right>{0}-{1}</div>", min, max);
+            return $"<div align=right>{min}-{max}</div>";
         }
 
-        public string FormatPetSlots(int min, int max)
+        public static string FormatPetSlots(int min, int max)
         {
-            return string.Format("<BASEFONT COLOR=#57412F>{0} => {1}", min.ToString(), max.ToString());
+            return $"<BASEFONT COLOR=#57412F>{min.ToString()} => {max.ToString()}";
         }
     }
 
@@ -647,9 +657,7 @@ namespace Server.Mobiles
         public override void AddGumpLayout()
         {
             List<BaseCreature> pets = new List<BaseCreature>(User.AllFollowers.OfType<BaseCreature>().Where(p =>
-                p.TrainingProfile != null &&
-                p.TrainingProfile.HasBegunTraining &&
-                p.Map == User.Map));
+                p.TrainingProfile != null && p.TrainingProfile.HasBegunTraining && p.Map == User.Map));
 
             if (pets.Count == 0)
             {
@@ -663,7 +671,7 @@ namespace Server.Mobiles
                 pets.Insert(0, Creature);
             }
 
-            int length = 254 + ((pets.Count - 1) * 60);
+            int length = 254 + (pets.Count - 1) * 60;
 
             AddBackground(0, 24, 254, length, 0x24A4);
 
@@ -675,12 +683,12 @@ namespace Server.Mobiles
             {
                 BaseCreature pet = pets[i];
 
-                AddHtml(53, 60 + (40 * i), 210, 18, Color("#000080", pet.Name), false, false);
+                AddHtml(53, 60 + 40 * i, 210, 18, Color("#000080", pet.Name), false, false);
 
                 TrainingProfile trainProfile = PetTrainingHelper.GetTrainingProfile(pet);
                 double progress = 0.0;
 
-                AddImage(53, 80 + (40 * i), 0x805);
+                AddImage(53, 80 + 40 * i, 0x805);
 
                 if (trainProfile != null)
                 {
@@ -688,11 +696,11 @@ namespace Server.Mobiles
 
                     if (progress >= 1)
                     {
-                        AddBackground(53, 80 + (40 * i), (int)(109.0 * (progress / 100)), 11, 0x806);
+                        AddBackground(53, 80 + 40 * i, (int)(109.0 * (progress / 100)), 11, 0x806);
                     }
                 }
 
-                AddHtml(162, 78 + (40 * i), 50, 18, NewAnimalLoreGump.FormatDouble(progress, false, true), false, false);
+                AddHtml(162, 78 + 40 * i, 50, 18, NewAnimalLoreGump.FormatDouble(progress, false, true), false, false);
             }
         }
     }
@@ -847,14 +855,18 @@ namespace Server.Mobiles
         {
             int y = 90;
 
-            foreach (SkillName skill in PetTrainingHelper.MagicSkills)
+            for (var index = 0; index < PetTrainingHelper.MagicSkills.Length; index++)
             {
+                SkillName skill = PetTrainingHelper.MagicSkills[index];
+
                 if (!PetTrainingHelper.CommonSkill(Creature, skill) && Creature.Skills[skill].Base <= 0 || Creature.Skills[skill].Cap >= 120)
+                {
                     continue;
+                }
 
                 TrainingPoint tp = PetTrainingHelper.GetTrainingPoint(skill);
 
-                AddButton(275, y, 4005, 4007, 100 + (int)skill, GumpButtonType.Reply, 0);
+                AddButton(275, y, 4005, 4007, 100 + (int) skill, GumpButtonType.Reply, 0);
                 Record(tp, 320, y + 2);
 
                 y += 22;
@@ -865,8 +877,10 @@ namespace Server.Mobiles
         {
             int y = 90;
 
-            foreach (SkillName skill in PetTrainingHelper.CombatSkills)
+            for (var index = 0; index < PetTrainingHelper.CombatSkills.Length; index++)
             {
+                SkillName skill = PetTrainingHelper.CombatSkills[index];
+
                 if (!PetTrainingHelper.CommonSkill(Creature, skill) && Creature.Skills[skill].Base <= 0 || Creature.Skills[skill].Cap >= 120)
                 {
                     continue;
@@ -874,7 +888,7 @@ namespace Server.Mobiles
 
                 TrainingPoint tp = PetTrainingHelper.GetTrainingPoint(skill);
 
-                AddButton(275, y, 4005, 4007, 100 + (int)skill, GumpButtonType.Reply, 0);
+                AddButton(275, y, 4005, 4007, 100 + (int) skill, GumpButtonType.Reply, 0);
                 Record(tp, 320, y + 2);
 
                 y += 22;
@@ -917,10 +931,12 @@ namespace Server.Mobiles
             {
                 SpecialAbility abil = SpecialAbility.Abilities[i];
 
-                if (AbilityProfile.HasAbility(abil) || (AbilityProfile.HasSpecialMagicalAbility() && !AbilityProfile.IsRuleBreaker(abil)))
+                if (AbilityProfile.HasAbility(abil) || AbilityProfile.HasSpecialMagicalAbility() && !AbilityProfile.IsRuleBreaker(abil))
+                {
                     continue;
+                }
 
-                if (Definition.HasSpecialAbility(abil) || (AbilityProfile.HasAbility(MagicalAbility.Poisoning) && abil is VenomousBite))
+                if (Definition.HasSpecialAbility(abil) || AbilityProfile.HasAbility(MagicalAbility.Poisoning) && abil is VenomousBite)
                 {
                     TrainingPoint tp = PetTrainingHelper.GetTrainingPoint(abil);
 
@@ -961,9 +977,11 @@ namespace Server.Mobiles
                 AreaEffect abil = AreaEffect.Effects[i];
 
                 if (AbilityProfile.HasAbility(abil))
+                {
                     continue;
+                }
 
-                if (Definition.HasAreaEffect(abil) || (AbilityProfile.HasAbility(MagicalAbility.Poisoning) && abil is PoisonBreath))
+                if (Definition.HasAreaEffect(abil) || AbilityProfile.HasAbility(MagicalAbility.Poisoning) && abil is PoisonBreath)
                 {
                     TrainingPoint tp = PetTrainingHelper.GetTrainingPoint(abil);
 
@@ -1025,8 +1043,10 @@ namespace Server.Mobiles
                     return true;
                 }
 
-                foreach (SpecialAbility ability in abilities)
+                for (var index = 0; index < abilities.Length; index++)
                 {
+                    SpecialAbility ability = abilities[index];
+
                     if (!AbilityProfile.HasAbility(ability))
                     {
                         return true;
@@ -1040,8 +1060,10 @@ namespace Server.Mobiles
                     return false;
                 }
 
-                foreach (WeaponAbility ability in weaponAbilities)
+                for (var index = 0; index < weaponAbilities.Length; index++)
                 {
+                    WeaponAbility ability = weaponAbilities[index];
+
                     if (!AbilityProfile.HasAbility(ability))
                     {
                         return true;
@@ -1060,8 +1082,10 @@ namespace Server.Mobiles
                     return true;
                 }
 
-                foreach (AreaEffect ability in effects)
+                for (var index = 0; index < effects.Length; index++)
                 {
+                    AreaEffect ability = effects[index];
+
                     if (!AbilityProfile.HasAbility(ability))
                     {
                         return true;
@@ -1070,8 +1094,9 @@ namespace Server.Mobiles
             }
             else if (o is SkillName[] names)
             {
-                foreach (SkillName name in names)
+                for (var index = 0; index < names.Length; index++)
                 {
+                    SkillName name = names[index];
                     Skill skill = Creature.Skills[name];
 
                     if (skill.Base > 0 && skill.Cap < 120)
@@ -1272,7 +1297,7 @@ namespace Server.Mobiles
 
             if (StartValue > 0)
             {
-                double valueWeight = (Value * weight);
+                double valueWeight = Value * weight;
                 double maxWeight = max * weight;
                 double nonAdjustedWeight = (Value - StartValue) * weight;
 
@@ -1330,12 +1355,18 @@ namespace Server.Mobiles
                     TrainingPointRequirement req = TrainingPoint.Requirements[i];
 
                     if (req == null)
+                    {
                         continue;
+                    }
 
                     if (req.Name.Number > 0)
-                        AddHtmlLocalized(45, 225 + (i * 20), 190, 18, req.Name.Number, false, false);
+                    {
+                        AddHtmlLocalized(45, 225 + i * 20, 190, 18, req.Name.Number, false, false);
+                    }
                     else if (req.Name.String != null)
-                        AddHtml(45, 225 + (i * 20), 190, 18, req.Name.String, false, false);
+                    {
+                        AddHtml(45, 225 + i * 20, 190, 18, req.Name.String, false, false);
+                    }
 
                     AddTooltip(1157523);
 
@@ -1346,7 +1377,7 @@ namespace Server.Mobiles
                         reqCost = 0;
                     }
 
-                    AddLabel(245, 225 + (i * 20), 0x26, reqCost.ToString());
+                    AddLabel(245, 225 + i * 20, 0x26, reqCost.ToString());
                     AddTooltip(1157523);
                 }
 
@@ -1364,14 +1395,14 @@ namespace Server.Mobiles
                     case 200: cliloc = 1049642; break;
                 }
 
-                AddHtmlLocalized(45, 225, 225, 60, cliloc, string.Format("#{0}", TrainingPoint.Name.Number), 0, false, false);
+                AddHtmlLocalized(45, 225, 225, 60, cliloc, $"#{TrainingPoint.Name.Number}", 0, false, false);
             }
 
             AddHtmlLocalized(305, 225, 145, 18, 1157490, false, false); // Avail. Training Points:
             AddLabel(455, 225, avail <= 0 ? 0x26 : 0, avail.ToString());
 
             AddHtmlLocalized(305, 245, 145, 18, 1113646, false, false); // Total Property Weight:
-            AddLabel(455, 245, 0, string.Format("{0}/{1}", ((int)(Value * weight)).ToString(), (max * weight).ToString()));
+            AddLabel(455, 245, 0, $"{((int) (Value * weight)).ToString()}/{(max * weight).ToString()}");
 
             if (TrainingPoint.Name.Number > 0)
                 AddHtmlLocalized(305, 265, 145, 18, TrainingPoint.Name.Number, false, false);
@@ -1380,7 +1411,7 @@ namespace Server.Mobiles
 
             if (TrainingPoint.TrainPoint is SkillName)
             {
-                AddLabel(455, 265, 0, (100.0 + ((double)Value / 10)).ToString("0.0"));
+                AddLabel(455, 265, 0, (100.0 + (double)Value / 10).ToString("0.0"));
             }
             else
             {
@@ -1487,7 +1518,7 @@ namespace Server.Mobiles
                         }
                         else
                         {
-                            Value = Value - (TrainingPoint.GetMax(Creature) / 10);
+                            Value = Value - TrainingPoint.GetMax(Creature) / 10;
                         }
                     }
                     Refresh();
@@ -1543,7 +1574,7 @@ namespace Server.Mobiles
                         }
                         else
                         {
-                            Value += (TrainingPoint.GetMax(Creature) / 10);
+                            Value += TrainingPoint.GetMax(Creature) / 10;
                         }
                     }
                     Refresh();
@@ -1700,9 +1731,25 @@ namespace Server.Mobiles
         private bool CheckPowerScroll(SkillName name, int value, ref Item scroll)
         {
             if (User.Backpack == null)
+            {
                 return false;
+            }
 
-            scroll = User.Backpack.Items.OfType<PowerScroll>().FirstOrDefault(ps => ps.Skill == name && ps.Value == 100 + (value / 10));
+            scroll = null;
+
+            for (var index = 0; index < User.Backpack.Items.Count; index++)
+            {
+                Item item = User.Backpack.Items[index];
+
+                if (item is PowerScroll ps)
+                {
+                    if (ps.Skill == name && ps.Value == 100 + value / 10)
+                    {
+                        scroll = ps;
+                        break;
+                    }
+                }
+            }
 
             return scroll != null;
         }
@@ -1710,7 +1757,7 @@ namespace Server.Mobiles
 
     public class PetTrainingPlanningGump : BaseGump
     {
-        public BaseCreature Creature { get; private set; }
+        public BaseCreature Creature { get; }
 
         public PetTrainingPlanningGump(PlayerMobile pm, BaseCreature bc)
             : base(pm, 50, 200)
@@ -1763,7 +1810,7 @@ namespace Server.Mobiles
                 int value = entry.TrainPoint is SkillName ? entry.Value + 1000 : entry.Value;
 
                 AddLabel(460, y, entry.Value == 0 ? 0x27 : 0, value.ToString());
-                AddLabel(510, y, entry.Cost == 0 ? 0x27 : 0, string.Format("-{0}", entry.Cost));
+                AddLabel(510, y, entry.Cost == 0 ? 0x27 : 0, $"-{entry.Cost}");
 
                 total += entry.Cost;
                 y += 22;

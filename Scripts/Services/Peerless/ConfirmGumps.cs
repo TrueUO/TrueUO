@@ -26,7 +26,7 @@ namespace Server.Gumps
 
         public override void OnResponse(NetState sender, RelayInfo info)
         {
-            Mobile from = sender.Mobile as Mobile;
+            Mobile from = sender.Mobile;
 
             switch (info.ButtonID)
             {
@@ -37,7 +37,9 @@ namespace Server.Gumps
                 case 1:
                     {
                         if (_Key == null || _Key.Altar == null)
+                        {
                             return;
+                        }
 
                         _Key.Altar.SendConfirmations(from);
                         _Key.Delete();
@@ -80,7 +82,9 @@ namespace Server.Gumps
             Mobile from = sender.Mobile;
 
             if (_Altar == null)
+            {
                 return;
+            }
 
             int button = info.ButtonID;
 
@@ -123,7 +127,7 @@ namespace Server.Gumps
 
         private readonly object _Altar;
 
-        public ConfirmExitGump(object altar) : base()
+        public ConfirmExitGump(object altar)
         {
             _Altar = altar;
         }
@@ -131,10 +135,14 @@ namespace Server.Gumps
         public override void Confirm(Mobile from)
         {
             if (_Altar == null)
+            {
                 return;
+            }
 
-            if (_Altar is PeerlessAltar)
-                ((PeerlessAltar)_Altar).Exit(from);
+            if (_Altar is PeerlessAltar altar)
+            {
+                altar.Exit(from);
+            }
         }
     }
 }

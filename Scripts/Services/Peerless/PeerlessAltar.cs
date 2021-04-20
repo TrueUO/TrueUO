@@ -4,7 +4,6 @@ using Server.Mobiles;
 using Server.Network;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -48,11 +47,7 @@ namespace Server.Items
         public DateTime Deadline { get; set; }
 
         [CommandProperty(AccessLevel.Counselor)]
-        public bool ResetPeerless
-        {
-            get { return false; }
-            set { if (value == true) FinishSequence(); }
-        }
+        public bool ResetPeerless { get => false; set { if (value) FinishSequence(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public int FighterCount => Fighters != null ? Fighters.Count : 0;
@@ -87,10 +82,11 @@ namespace Server.Items
         public override bool CheckLift(Mobile from, Item item, ref LRReason reject)
         {
             if (from.AccessLevel > AccessLevel.Player)
+            {
                 return base.CheckLift(from, item, ref reject);
-            else
-                reject = LRReason.CannotLift;
+            }
 
+            reject = LRReason.CannotLift;
             return false;
         }
 
@@ -140,9 +136,35 @@ namespace Server.Items
                     }
                 }
 
-                if (KeyValidation.Any(x => x.Active))
+                bool any = false;
+
+                for (var index = 0; index < KeyValidation.Count; index++)
                 {
-                    if (KeyValidation.Any(x => x.Key == dropped.GetType() && !x.Active))
+                    var x = KeyValidation[index];
+
+                    if (x.Active)
+                    {
+                        any = true;
+                        break;
+                    }
+                }
+
+                if (any)
+                {
+                    bool any1 = false;
+
+                    for (var index = 0; index < KeyValidation.Count; index++)
+                    {
+                        var x = KeyValidation[index];
+
+                        if (x.Key == dropped.GetType() && !x.Active)
+                        {
+                            any1 = true;
+                            break;
+                        }
+                    }
+
+                    if (any1)
                     {
                         KeyValidation.Find(s => s.Key == dropped.GetType()).Active = true;
                     }
@@ -210,28 +232,46 @@ namespace Server.Items
                 return false;
             }
 
-            return KeyValidation.Count(x => x.Active) == Keys.Length;
+            int count = 0;
+
+            for (var index = 0; index < KeyValidation.Count; index++)
+            {
+                var x = KeyValidation[index];
+
+                if (x.Active)
+                {
+                    count++;
+                }
+            }
+
+            return count == Keys.Length;
         }
 
         public virtual bool IsKey(Item item)
         {
             if (Keys == null || item == null)
+            {
                 return false;
+            }
 
             bool isKey = false;
 
             // check if item is key	
             for (int i = 0; i < Keys.Length && !isKey; i++)
             {
-                if (Keys[i].IsAssignableFrom(item.GetType()))
+                if (Keys[i].IsInstanceOfType(item))
+                {
                     isKey = true;
+                }
             }
 
             // check if item is already in container			
             for (int i = 0; i < Items.Count && isKey; i++)
             {
                 if (Items[i].GetType() == item.GetType())
+                {
                     return false;
+                }
             }
 
             return isKey;
@@ -241,10 +281,18 @@ namespace Server.Items
 
         public virtual void KeyStartTimer(Mobile from)
         {
-            if (m_KeyResetTimer != null)
-                m_KeyResetTimer.Stop();
+            m_KeyResetTimer?.Stop();
 
-            m_KeyResetTimer = Timer.DelayCall(TimeSpan.FromSeconds(30 * Keys.Count()), () =>
+            int count = 0;
+
+            for (var index = 0; index < Keys.Length; index++)
+            {
+                var key = Keys[index];
+
+                count++;
+            }
+
+            m_KeyResetTimer = Timer.DelayCall(TimeSpan.FromSeconds(30 * count), () =>
             {
                 from.SendLocalizedMessage(1072679); // Your realm offering has reset. You will need to start over.
 
@@ -261,8 +309,7 @@ namespace Server.Items
 
         public virtual void KeyStopTimer()
         {
-            if (m_KeyResetTimer != null)
-                m_KeyResetTimer.Stop();
+            m_KeyResetTimer?.Stop();
 
             m_KeyResetTimer = null;
         }
@@ -270,14 +317,9 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(5); // version
 
             writer.Write(Owner);
-
-            // version 4 remove pet table
-
-            // version 3 remove IsAvailable
 
             // version 1
             writer.Write(m_Helpers != null);
@@ -303,7 +345,6 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             int version = reader.ReadInt();
 
             switch (version)
@@ -315,15 +356,12 @@ namespace Server.Items
                     }
                 case 4:
                 case 3:
-                    if (version < 5)
-                    {
-                        reader.ReadBool();
-                    }
-                    goto case 2;
                 case 2:
                 case 1:
                     if (reader.ReadBool())
+                    {
                         m_Helpers = reader.ReadStrongMobileList<BaseCreature>();
+                    }
                     goto case 0;
                 case 0:
                     Peerless = reader.ReadMobile() as BasePeerless;
@@ -336,26 +374,13 @@ namespace Server.Items
                     MasterKeys = reader.ReadStrongItemList();
                     Fighters = reader.ReadStrongMobileList();
 
-                    if (version < 4)
-                    {
-                        int count = reader.ReadInt();
-
-                        for (int i = 0; i < count; i++)
-                        {
-                            reader.ReadMobile();
-                            reader.ReadStrongMobileList();
-                        }
-                    }
-
-                    if (version < 2)
-                        reader.ReadBool();
-
                     if (Peerless == null && m_Helpers.Count > 0)
+                    {
                         Timer.DelayCall(TimeSpan.FromSeconds(30), CleanupHelpers);
+                    }
 
                     break;
             }
-
 
             if (Owner != null && Peerless == null)
             {
@@ -368,14 +393,18 @@ namespace Server.Items
             for (int i = Items.Count - 1; i >= 0; --i)
             {
                 if (i < Items.Count)
+                {
                     Items[i].Delete();
+                }
             }
         }
 
         public virtual void AddFighter(Mobile fighter)
         {
             if (!Fighters.Contains(fighter))
+            {
                 Fighters.Add(fighter);
+            }
         }
 
         public virtual void SendConfirmations(Mobile from)
@@ -384,8 +413,12 @@ namespace Server.Items
 
             if (party != null)
             {
-                foreach (Mobile m in party.Members.Select(info => info.Mobile))
+                for (var index = 0; index < party.Members.Count; index++)
                 {
+                    var info = party.Members[index];
+
+                    Mobile m = info.Mobile;
+
                     if (m.InRange(from.Location, 25) && CanEnter(m))
                     {
                         m.SendGump(new ConfirmEntranceGump(this, from));
@@ -427,15 +460,20 @@ namespace Server.Items
             if (CanEnter(fighter))
             {
                 // teleport party member's pets
-                if (fighter is PlayerMobile)
+                if (fighter is PlayerMobile mobile)
                 {
-                    foreach (BaseCreature pet in ((PlayerMobile)fighter).AllFollowers.OfType<BaseCreature>())
+                    for (var index = 0; index < mobile.AllFollowers.Count; index++)
                     {
-                        if (pet.Alive && pet.InRange(fighter.Location, 5) && !(pet is BaseMount && ((BaseMount)pet).Rider != null) && CanEnter(pet))
+                        Mobile follower = mobile.AllFollowers[index];
+
+                        if (follower is BaseCreature pet)
                         {
-                            pet.FixedParticles(0x376A, 9, 32, 0x13AF, EffectLayer.Waist);
-                            pet.PlaySound(0x1FE);
-                            pet.MoveToWorld(TeleportDest, Map);
+                            if (pet.Alive && pet.InRange(mobile.Location, 5) && !(pet is BaseMount mount && mount.Rider != null) && CanEnter(pet))
+                            {
+                                pet.FixedParticles(0x376A, 9, 32, 0x13AF, EffectLayer.Waist);
+                                pet.PlaySound(0x1FE);
+                                pet.MoveToWorld(TeleportDest, Map);
+                            }
                         }
                     }
                 }
@@ -483,7 +521,12 @@ namespace Server.Items
             {
                 var fighters = new List<Mobile>(Fighters);
 
-                fighters.ForEach(x => Exit(x));
+                for (var index = 0; index < fighters.Count; index++)
+                {
+                    var x = fighters[index];
+
+                    Exit(x);
+                }
 
                 ColUtility.Free(fighters);
             }
@@ -493,7 +536,12 @@ namespace Server.Items
             {
                 var keys = new List<Item>(MasterKeys);
 
-                keys.ForEach(x => x.Delete());
+                for (var index = 0; index < keys.Count; index++)
+                {
+                    var x = keys[index];
+
+                    x.Delete();
+                }
 
                 ColUtility.Free(keys);
             }
@@ -526,45 +574,63 @@ namespace Server.Items
                 fighter.PlaySound(0x1FE);
 
                 if (this is CitadelAltar)
+                {
                     fighter.MoveToWorld(ExitDest, Map.Tokuno);
+                }
                 else
+                {
                     fighter.MoveToWorld(ExitDest, Map);
+                }
             }
 
-            // teleport his pets
-            if (fighter is PlayerMobile)
+            // teleport fighters pets
+            if (fighter is PlayerMobile mobile)
             {
-                foreach (BaseCreature pet in ((PlayerMobile)fighter).AllFollowers.OfType<BaseCreature>())
+                for (var index = 0; index < mobile.AllFollowers.Count; index++)
                 {
-                    if (pet != null && (pet.Alive || pet.IsBonded) && pet.Map != Map.Internal && MobileIsInBossArea(pet))
+                    Mobile follower = mobile.AllFollowers[index];
+
+                    if (follower is BaseCreature pet)
                     {
-                        if (pet is BaseMount)
+                        if ((pet.Alive || pet.IsBonded) && pet.Map != Map.Internal && MobileIsInBossArea(pet))
                         {
-                            BaseMount mount = (BaseMount) pet;
-
-                            if (mount.Rider != null && mount.Rider != fighter)
+                            if (pet is BaseMount mount)
                             {
-                                mount.Rider.FixedParticles(0x376A, 9, 32, 0x13AF, EffectLayer.Waist);
-                                mount.Rider.PlaySound(0x1FE);
+                                if (mount.Rider != null && mount.Rider != fighter)
+                                {
+                                    mount.Rider.FixedParticles(0x376A, 9, 32, 0x13AF, EffectLayer.Waist);
+                                    mount.Rider.PlaySound(0x1FE);
 
-                                if (this is CitadelAltar)
-                                    mount.Rider.MoveToWorld(ExitDest, Map.Tokuno);
-                                else
-                                    mount.Rider.MoveToWorld(ExitDest, Map);
+                                    if (this is CitadelAltar)
+                                    {
+                                        mount.Rider.MoveToWorld(ExitDest, Map.Tokuno);
+                                    }
+                                    else
+                                    {
+                                        mount.Rider.MoveToWorld(ExitDest, Map);
+                                    }
 
-                                continue;
+                                    continue;
+                                }
+
+                                if (mount.Rider != null)
+                                {
+                                    continue;
+                                }
                             }
-                            else if (mount.Rider != null)
-                                continue;
+
+                            pet.FixedParticles(0x376A, 9, 32, 0x13AF, EffectLayer.Waist);
+                            pet.PlaySound(0x1FE);
+
+                            if (this is CitadelAltar)
+                            {
+                                pet.MoveToWorld(ExitDest, Map.Tokuno);
+                            }
+                            else
+                            {
+                                pet.MoveToWorld(ExitDest, Map);
+                            }
                         }
-
-                        pet.FixedParticles(0x376A, 9, 32, 0x13AF, EffectLayer.Waist);
-                        pet.PlaySound(0x1FE);
-
-                        if (this is CitadelAltar)
-                            pet.MoveToWorld(ExitDest, Map.Tokuno);
-                        else
-                            pet.MoveToWorld(ExitDest, Map);
                     }
                 }
             }
@@ -619,10 +685,14 @@ namespace Server.Items
             if (BossBounds == null || BossBounds.Length == 0)
                 return true;
 
-            foreach (Rectangle2D rec in BossBounds)
+            for (var index = 0; index < BossBounds.Length; index++)
             {
+                Rectangle2D rec = BossBounds[index];
+
                 if (rec.Contains(loc))
+                {
                     return true;
+                }
             }
 
             return false;
@@ -630,12 +700,22 @@ namespace Server.Items
 
         public virtual void SendMessage(int message)
         {
-            Fighters.ForEach(x => x.SendLocalizedMessage(message));
+            for (var index = 0; index < Fighters.Count; index++)
+            {
+                var x = Fighters[index];
+
+                x.SendLocalizedMessage(message);
+            }
         }
 
         public virtual void SendMessage(int message, object param)
         {
-            Fighters.ForEach(x => x.SendLocalizedMessage(message, param.ToString()));
+            for (var index = 0; index < Fighters.Count; index++)
+            {
+                var x = Fighters[index];
+
+                x.SendLocalizedMessage(message, param.ToString());
+            }
         }
 
         private Timer m_SlayTimer;
@@ -649,8 +729,7 @@ namespace Server.Items
 
         public virtual void StopDeadlineTimer()
         {
-            if (m_DeadlineTimer != null)
-                m_DeadlineTimer.Stop();
+            m_DeadlineTimer?.Stop();
 
             m_DeadlineTimer = null;
 
@@ -662,21 +741,23 @@ namespace Server.Items
 
         public virtual void StopSlayTimer()
         {
-            if (m_SlayTimer != null)
-                m_SlayTimer.Stop();
+            m_SlayTimer?.Stop();
 
             m_SlayTimer = null;
         }
 
         public virtual void StartSlayTimer()
         {
-            if (m_SlayTimer != null)
-                m_SlayTimer.Stop();
+            m_SlayTimer?.Stop();
 
             if (TimeToSlay != TimeSpan.Zero)
+            {
                 Deadline = DateTime.UtcNow + TimeToSlay;
+            }
             else
+            {
                 Deadline = DateTime.UtcNow + TimeSpan.FromHours(1);
+            }
 
             m_SlayTimer = Timer.DelayCall(TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(5), DeadlineCheck);
             m_SlayTimer.Priority = TimerPriority.OneMinute;
@@ -728,7 +809,9 @@ namespace Server.Items
                 BaseCreature c = m_Helpers[i];
 
                 if (c.Alive)
+                {
                     return false;
+                }
             }
 
             return true;
@@ -741,7 +824,9 @@ namespace Server.Items
                 BaseCreature c = m_Helpers[i];
 
                 if (c != null && c.Alive)
+                {
                     c.Delete();
+                }
             }
 
             m_Helpers.Clear();

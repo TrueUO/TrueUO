@@ -37,9 +37,9 @@ namespace Server.Mobiles
 
     public class TrainingPointRequirement
     {
-        public object Requirement { get; set; }
-        public int Cost { get; set; }
-        public TextDefinition Name { get; set; }
+        public object Requirement { get; }
+        public int Cost { get; }
+        public TextDefinition Name { get; }
 
         public TrainingPointRequirement(object requirement, int cost, TextDefinition name)
         {

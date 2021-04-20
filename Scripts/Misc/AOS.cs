@@ -16,7 +16,6 @@ using Server.Spells.SkillMasteries;
 using Server.Spells.Spellweaving;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server
 {
@@ -512,17 +511,34 @@ namespace Server
 
         public static int[] GetValues(Mobile m, params AosAttribute[] attributes)
         {
-            return EnumerateValues(m, attributes).ToArray();
+            List<int> list = new List<int>();
+
+            foreach (var value in EnumerateValues(m, attributes))
+            {
+                list.Add(value);
+            }
+
+            return list.ToArray();
         }
 
         public static int[] GetValues(Mobile m, IEnumerable<AosAttribute> attributes)
         {
-            return EnumerateValues(m, attributes).ToArray();
+            List<int> list = new List<int>();
+
+            foreach (var value in EnumerateValues(m, attributes))
+            {
+                list.Add(value);
+            }
+
+            return list.ToArray();
         }
 
         public static IEnumerable<int> EnumerateValues(Mobile m, IEnumerable<AosAttribute> attributes)
         {
-            return attributes.Select(a => GetValue(m, a));
+            foreach (var a in attributes)
+            {
+                yield return GetValue(m, a);
+            }
         }
 
         public static int GetValue(Mobile m, AosAttribute attribute)
@@ -1009,17 +1025,34 @@ namespace Server
 
         public static int[] GetValues(Mobile m, params AosWeaponAttribute[] attributes)
         {
-            return EnumerateValues(m, attributes).ToArray();
+            List<int> list = new List<int>();
+
+            foreach (var value in EnumerateValues(m, attributes))
+            {
+                list.Add(value);
+            }
+
+            return list.ToArray();
         }
 
         public static int[] GetValues(Mobile m, IEnumerable<AosWeaponAttribute> attributes)
         {
-            return EnumerateValues(m, attributes).ToArray();
+            List<int> list = new List<int>();
+
+            foreach (var value in EnumerateValues(m, attributes))
+            {
+                list.Add(value);
+            }
+
+            return list.ToArray();
         }
 
         public static IEnumerable<int> EnumerateValues(Mobile m, IEnumerable<AosWeaponAttribute> attributes)
         {
-            return attributes.Select(a => GetValue(m, a));
+            foreach (var a in attributes)
+            {
+                yield return GetValue(m, a);
+            }
         }
 
         public static int GetValue(Mobile m, AosWeaponAttribute attribute)
@@ -1320,17 +1353,34 @@ namespace Server
 
         public static int[] GetValues(Mobile m, params AosArmorAttribute[] attributes)
         {
-            return EnumerateValues(m, attributes).ToArray();
+            List<int> list = new List<int>();
+
+            foreach (var value in EnumerateValues(m, attributes))
+            {
+                list.Add(value);
+            }
+
+            return list.ToArray();
         }
 
         public static int[] GetValues(Mobile m, IEnumerable<AosArmorAttribute> attributes)
         {
-            return EnumerateValues(m, attributes).ToArray();
+            List<int> list = new List<int>();
+
+            foreach (var value in EnumerateValues(m, attributes))
+            {
+                list.Add(value);
+            }
+
+            return list.ToArray();
         }
 
         public static IEnumerable<int> EnumerateValues(Mobile m, IEnumerable<AosArmorAttribute> attributes)
         {
-            return attributes.Select(a => GetValue(m, a));
+            foreach (var a in attributes)
+            {
+                yield return GetValue(m, a);
+            }
         }
 
         public static int GetValue(Mobile m, AosArmorAttribute attribute)
@@ -1736,17 +1786,34 @@ namespace Server
 
         public static int[] GetValues(Mobile m, params SAAbsorptionAttribute[] attributes)
         {
-            return EnumerateValues(m, attributes).ToArray();
+            List<int> list = new List<int>();
+
+            foreach (var value in EnumerateValues(m, attributes))
+            {
+                list.Add(value);
+            }
+
+            return list.ToArray();
         }
 
         public static int[] GetValues(Mobile m, IEnumerable<SAAbsorptionAttribute> attributes)
         {
-            return EnumerateValues(m, attributes).ToArray();
+            List<int> list = new List<int>();
+
+            foreach (var value in EnumerateValues(m, attributes))
+            {
+                list.Add(value);
+            }
+
+            return list.ToArray();
         }
 
         public static IEnumerable<int> EnumerateValues(Mobile m, IEnumerable<SAAbsorptionAttribute> attributes)
         {
-            return attributes.Select(a => GetValue(m, a));
+            foreach (var a in attributes)
+            {
+                yield return GetValue(m, a);
+            }
         }
 
         public static int GetValue(Mobile m, SAAbsorptionAttribute attribute)
