@@ -92,13 +92,13 @@ namespace Server.Multis
                 boat.UpdateComponents();
 
                 if (boat.PlayerCount > 0)
+                {
                     boat.Refresh();
+                }
             }
 
-            for (var index = 0; index < toDelete.Count; index++)
+            foreach (BaseBoat b in toDelete)
             {
-                BaseBoat b = toDelete[index];
-
                 b.Delete();
             }
 
@@ -3156,12 +3156,9 @@ namespace Server.Multis
 
             foreach (IEntity entity in GetEntitiesOnBoard())
             {
-                if (entity is PlayerMobile x)
+                if (entity is PlayerMobile x && x != pilot)
                 {
-                    if (x != pilot)
-                    {
-                        list.Add(x);
-                    }
+                    list.Add(x);
                 }
             }
 
@@ -3173,7 +3170,9 @@ namespace Server.Multis
             }
 
             if (IsMoving)
+            {
                 StopMove(false);
+            }
         }
 
         public void RemovePilot(Mobile from)
@@ -3182,7 +3181,9 @@ namespace Server.Multis
             VirtualMount.Internalize();
 
             if (IsMoving)
+            {
                 StopMove(false);
+            }
 
             Pilot.SendLocalizedMessage(1149592); // You are no longer piloting this vessel.
 
@@ -3192,12 +3193,9 @@ namespace Server.Multis
 
             foreach (IEntity entity in GetEntitiesOnBoard())
             {
-                if (entity is PlayerMobile x)
+                if (entity is PlayerMobile x && x != Pilot)
                 {
-                    if (x != Pilot)
-                    {
-                        list.Add(x);
-                    }
+                    list.Add(x);
                 }
             }
 
@@ -3257,18 +3255,15 @@ namespace Server.Multis
         {
             foreach (Mobile mobile in MobilesOnBoard)
             {
-                if (mobile is PlayerMobile m)
+                if (mobile is PlayerMobile m && m.NetState != null)
                 {
-                    if (m.NetState != null)
+                    if (message is int i)
                     {
-                        if (message is int i)
-                        {
-                            m.SendLocalizedMessage(i);
-                        }
-                        else if (message is string s)
-                        {
-                            m.SendMessage(s);
-                        }
+                        m.SendLocalizedMessage(i);
+                    }
+                    else if (message is string s)
+                    {
+                        m.SendMessage(s);
                     }
                 }
             }
@@ -3279,16 +3274,24 @@ namespace Server.Multis
             if (message is int i)
             {
                 if (TillerMan is Mobile mobile)
+                {
                     mobile.Say(i);
+                }
                 else if (TillerMan is TillerMan man)
+                {
                     man.Say(i);
+                }
             }
             else if (message is string s)
             {
                 if (TillerMan is Mobile mobile)
+                {
                     mobile.Say(s);
+                }
                 else if (TillerMan is TillerMan man)
+                {
                     man.Say(1060658, s);
+                }
             }
         }
 
