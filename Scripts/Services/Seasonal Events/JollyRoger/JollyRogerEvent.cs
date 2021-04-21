@@ -551,59 +551,59 @@ namespace Server.Engines.JollyRoger
         {
             Item item;
 
-            if (map.FindItem<ShrineBattleController>(new Point3D(1859, 878, -1)) == null)
+            if (map.FindItem<ShrineBattleController>(new Point3D(1858, 875, 5)) == null)
             {
                 item = new ShrineBattleController(Shrine.Compassion);
-                item.MoveToWorld(new Point3D(1859, 878, -1), map);
+                item.MoveToWorld(new Point3D(1858, 875, 5), map);
                 WeakEntityCollection.Add(EntityName, item);
             }
 
-            if (map.FindItem<ShrineBattleController>(new Point3D(4211, 564, 65)) == null)
+            if (map.FindItem<ShrineBattleController>(new Point3D(4209, 564, 51)) == null)
             {
                 item = new ShrineBattleController(Shrine.Honesty);
-                item.MoveToWorld(new Point3D(4211, 564, 65), map);
+                item.MoveToWorld(new Point3D(4209, 564, 51), map);
                 WeakEntityCollection.Add(EntityName, item);
             }
 
-            if (map.FindItem<ShrineBattleController>(new Point3D(1728, 3531, 3)) == null)
+            if (map.FindItem<ShrineBattleController>(new Point3D(1727, 3528, 7)) == null)
             {
                 item = new ShrineBattleController(Shrine.Honor);
-                item.MoveToWorld(new Point3D(1728, 3531, 3), map);
+                item.MoveToWorld(new Point3D(1727, 3528, 7), map);
                 WeakEntityCollection.Add(EntityName, item);
             }
 
-            if (map.FindItem<ShrineBattleController>(new Point3D(4272, 3692, 0)) == null)
+            if (map.FindItem<ShrineBattleController>(new Point3D(4274, 3697, 4)) == null)
             {
                 item = new ShrineBattleController(Shrine.Humility);
-                item.MoveToWorld(new Point3D(4272, 3692, 0), map);
+                item.MoveToWorld(new Point3D(4274, 3697, 4), map);
                 WeakEntityCollection.Add(EntityName, item);
             }
 
-            if (map.FindItem<ShrineBattleController>(new Point3D(1298, 629, 16)) == null)
+            if (map.FindItem<ShrineBattleController>(new Point3D(1301, 634, 21)) == null)
             {
                 item = new ShrineBattleController(Shrine.Justice);
-                item.MoveToWorld(new Point3D(1298, 629, 16), map);
+                item.MoveToWorld(new Point3D(1301, 634, 21), map);
                 WeakEntityCollection.Add(EntityName, item);
             }
 
-            if (map.FindItem<ShrineBattleController>(new Point3D(3352, 287, 4)) == null)
+            if (map.FindItem<ShrineBattleController>(new Point3D(3355, 290, 9)) == null)
             {
                 item = new ShrineBattleController(Shrine.Sacrifice);
-                item.MoveToWorld(new Point3D(3352, 287, 4), map);
+                item.MoveToWorld(new Point3D(3355, 290, 9), map);
                 WeakEntityCollection.Add(EntityName, item);
             }
 
-            if (map.FindItem<ShrineBattleController>(new Point3D(1600, 2488, 5)) == null)
+            if (map.FindItem<ShrineBattleController>(new Point3D(1601, 2490, 14)) == null)
             {
                 item = new ShrineBattleController(Shrine.Spirituality);
-                item.MoveToWorld(new Point3D(1600, 2488, 5), map);
+                item.MoveToWorld(new Point3D(1601, 2490, 14), map);
                 WeakEntityCollection.Add(EntityName, item);
             }
 
-            if (map.FindItem<ShrineBattleController>(new Point3D(2489, 3927, 5)) == null)
+            if (map.FindItem<ShrineBattleController>(new Point3D(2492, 3931, 9)) == null)
             {
                 item = new ShrineBattleController(Shrine.Valor);
-                item.MoveToWorld(new Point3D(2489, 3927, 5), map);
+                item.MoveToWorld(new Point3D(2492, 3931, 9), map);
                 WeakEntityCollection.Add(EntityName, item);
             }
         }
