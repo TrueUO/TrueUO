@@ -570,10 +570,14 @@ namespace Server.Multis
         public SecurityLevel GetSecurityLevel(Mobile from)
         {
             if (m_SecurityEntry == null)
+            {
                 m_SecurityEntry = new SecurityEntry(this);
+            }
 
             if (from.AccessLevel > AccessLevel.Player || IsOwner(from))
+            {
                 return SecurityLevel.Captain;
+            }
 
             return m_SecurityEntry.GetEffectiveLevel(from);
         }
@@ -581,7 +585,9 @@ namespace Server.Multis
         public bool IsPublic()
         {
             if (m_SecurityEntry == null)
+            {
                 m_SecurityEntry = new SecurityEntry(this);
+            }
 
             return m_SecurityEntry.IsPublic;
         }
@@ -594,7 +600,9 @@ namespace Server.Multis
         public override bool HasAccess(Mobile from)
         {
             if (Owner == null || Scuttled && IsEnemy(from))
+            {
                 return true;
+            }
 
             return GetSecurityLevel(from) > SecurityLevel.Denied;
         }
@@ -620,25 +628,22 @@ namespace Server.Multis
             {
                 Item fixture = Fixtures[index];
 
-                if (fixture is WeaponPad pad)
+                if (fixture is WeaponPad pad && pad.Map != Map.Internal && !pad.Deleted)
                 {
-                    if (pad.Map != Map.Internal && !pad.Deleted)
+                    IShipCannon cannon;
+
+                    if (heavy)
                     {
-                        IShipCannon cannon;
+                        cannon = new Carronade(this);
+                    }
+                    else
+                    {
+                        cannon = new Culverin(this);
+                    }
 
-                        if (heavy)
-                        {
-                            cannon = new Carronade(this);
-                        }
-                        else
-                        {
-                            cannon = new Culverin(this);
-                        }
-
-                        if (!TryAddCannon(captain, pad.Location, cannon, null))
-                        {
-                            cannon.Delete();
-                        }
+                    if (!TryAddCannon(captain, pad.Location, cannon, null))
+                    {
+                        cannon.Delete();
                     }
                 }
             }
@@ -756,31 +761,28 @@ namespace Server.Multis
             {
                 Item fixture = Fixtures[index];
 
-                if (fixture is WeaponPad pad)
+                if (fixture is WeaponPad pad && pad.X == pnt.X && pad.Y == pnt.Y)
                 {
-                    if (pad.X == pnt.X && pad.Y == pnt.Y)
+                    pnt.Z = pad.Z + TileData.ItemTable[pad.ItemID & TileData.MaxItemValue].CalcHeight;
+                    IPooledEnumerable eable = Map.GetMobilesInRange(pnt, 0);
+
+                    //Lets check for mobiles
+                    foreach (Mobile mob in eable)
                     {
-                        pnt.Z = pad.Z + TileData.ItemTable[pad.ItemID & TileData.MaxItemValue].CalcHeight;
-                        IPooledEnumerable eable = Map.GetMobilesInRange(pnt, 0);
-
-                        //Lets check for mobiles
-                        foreach (Mobile mob in eable)
+                        if (!mob.Hidden && mob.AccessLevel == AccessLevel.Player)
                         {
-                            if (!mob.Hidden && mob.AccessLevel == AccessLevel.Player)
+                            if (from != null)
                             {
-                                if (from != null)
-                                {
-                                    from.SendMessage("The weapon pad must be clear of obstructions to place a cannon.");
-                                }
-
-                                eable.Free();
-                                return false;
+                                from.SendMessage("The weapon pad must be clear of obstructions to place a cannon.");
                             }
-                        }
 
-                        eable.Free();
-                        return true;
+                            eable.Free();
+                            return false;
+                        }
                     }
+
+                    eable.Free();
+                    return true;
                 }
             }
 
@@ -968,12 +970,9 @@ namespace Server.Multis
                 {
                     Item item = Cannons[index];
 
-                    if (item is IShipCannon cannon)
+                    if (item is IShipCannon cannon && cannon.AmmoType != AmmunitionType.Empty)
                     {
-                        if (cannon.AmmoType != AmmunitionType.Empty)
-                        {
-                            return DryDockResult.Cannon;
-                        }
+                        return DryDockResult.Cannon;
                     }
                 }
             }
@@ -1000,13 +999,10 @@ namespace Server.Multis
                     {
                         Item fixture = Fixtures[index];
 
-                        if (fixture is WeaponPad p)
+                        if (fixture is WeaponPad p && p.X == c.X && p.Y == c.Y)
                         {
-                            if (p.X == c.X && p.Y == c.Y)
-                            {
-                                pad = p;
-                                break;
-                            }
+                            pad = p;
+                            break;
                         }
                     }
 
