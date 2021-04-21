@@ -915,7 +915,7 @@ namespace Server.Mobiles
 
                     bool any = false;
 
-                    if (d != null)
+                    if (bc != null)
                     {
                         for (var i = 0; i < d.Uses.Length; i++)
                         {
