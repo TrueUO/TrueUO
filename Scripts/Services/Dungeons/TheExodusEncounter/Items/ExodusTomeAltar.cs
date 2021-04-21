@@ -244,14 +244,11 @@ namespace Server.Items
                     {
                         Mobile follower = pm.AllFollowers[index];
 
-                        if (follower is BaseCreature pet)
+                        if (follower is BaseCreature pet && pet.Alive && pet.InRange(pm.Location, 5) && !(pet is BaseMount mount && mount.Rider != null))
                         {
-                            if (pet.Alive && pet.InRange(pm.Location, 5) && !(pet is BaseMount mount && mount.Rider != null))
-                            {
-                                pet.FixedParticles(0x376A, 9, 32, 0x13AF, EffectLayer.Waist);
-                                pet.PlaySound(0x1FE);
-                                pet.MoveToWorld(m_TeleportDest, Map.Ilshenar);
-                            }
+                            pet.FixedParticles(0x376A, 9, 32, 0x13AF, EffectLayer.Waist);
+                            pet.PlaySound(0x1FE);
+                            pet.MoveToWorld(m_TeleportDest, Map.Ilshenar);
                         }
                     }
                 }
