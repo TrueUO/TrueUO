@@ -106,8 +106,10 @@ namespace Server.Multis
         {
             MultiComponentList mcl = MultiData.GetComponents(ItemID);
 
-            foreach (MultiTileEntry mte in mcl.List)
+            for (var index = 0; index < mcl.List.Length; index++)
             {
+                MultiTileEntry mte = mcl.List[index];
+
                 if (mte.m_Flags == TileFlag.None || mte.m_Flags == TileFlag.Generic)
                 {
                     ushort itemID = mte.m_ItemID;
@@ -230,22 +232,62 @@ namespace Server.Multis
 
         private bool IsMainHold(int id)
         {
-            return HoldItemIDs.Any(listID => listID == id);
+            for (var index = 0; index < HoldItemIDs.Length; index++)
+            {
+                var listId = HoldItemIDs[index];
+
+                if (listId == id)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private bool IsHold(int id)
         {
-            return HoldIDs.Any(listID => listID == id);
+            for (var index = 0; index < HoldIDs.Length; index++)
+            {
+                var listId = HoldIDs[index];
+
+                if (listId == id)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private bool IsWheel(int id)
         {
-            return WheelItemIDs.Any(listID => listID == id);
+            for (var index = 0; index < WheelItemIDs.Length; index++)
+            {
+                var listId = WheelItemIDs[index];
+
+                if (listId == id)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private bool IsWeaponPad(int id)
         {
-            return CannonTileIDs.Any(listID => listID == id);
+            for (var index = 0; index < CannonTileIDs.Length; index++)
+            {
+                var listId = CannonTileIDs[index];
+
+                if (listId == id)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public void AddGalleonPilot(Direction direction)
@@ -321,9 +363,21 @@ namespace Server.Multis
         public override bool Contains(int x, int y)
         {
             if (base.Contains(x, y))
+            {
                 return true;
+            }
 
-            return Fixtures.Any(f => f.X == x && f.Y == y);
+            for (var index = 0; index < Fixtures.Count; index++)
+            {
+                var f = Fixtures[index];
+
+                if (f.X == x && f.Y == y)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public override bool IsExcludedTile(StaticTile tile)
@@ -333,11 +387,16 @@ namespace Server.Multis
 
         public override bool IsExcludedTile(StaticTile[] tiles)
         {
-            foreach (StaticTile tile in tiles)
+            for (var index = 0; index < tiles.Length; index++)
             {
+                StaticTile tile = tiles[index];
+
                 if (!IsMastTile(tile))
+                {
                     return false;
+                }
             }
+
             return true;
         }
 
@@ -557,24 +616,29 @@ namespace Server.Multis
         {
             bool heavy = Utility.RandomBool();
 
-            foreach (WeaponPad pad in Fixtures.OfType<WeaponPad>())
+            for (var index = 0; index < Fixtures.Count; index++)
             {
-                if (pad.Map != Map.Internal && !pad.Deleted)
+                Item fixture = Fixtures[index];
+
+                if (fixture is WeaponPad pad)
                 {
-                    IShipCannon cannon;
+                    if (pad.Map != Map.Internal && !pad.Deleted)
+                    {
+                        IShipCannon cannon;
 
-                    if (heavy)
-                    {
-                        cannon = new Carronade(this);
-                    }
-                    else
-                    {
-                        cannon = new Culverin(this);
-                    }
+                        if (heavy)
+                        {
+                            cannon = new Carronade(this);
+                        }
+                        else
+                        {
+                            cannon = new Culverin(this);
+                        }
 
-                    if (!TryAddCannon(captain, pad.Location, cannon, null))
-                    {
-                        cannon.Delete();
+                        if (!TryAddCannon(captain, pad.Location, cannon, null))
+                        {
+                            cannon.Delete();
+                        }
                     }
                 }
             }
@@ -584,10 +648,7 @@ namespace Server.Multis
         {
             if (!IsNearLandOrDocks(this) && !force)
             {
-                if (from != null)
-                {
-                    from.SendLocalizedMessage(1116076); // The ship must be near shore or a sea market to deploy this weapon.
-                }
+                from?.SendLocalizedMessage(1116076); // The ship must be near shore or a sea market to deploy this weapon.
             }
             else
             {
@@ -667,17 +728,23 @@ namespace Server.Multis
         public bool IsValidCannonSpot(ref Point3D pnt, Mobile from)
         {
             if (Map == null || Map == Map.Internal)
+            {
                 return false;
+            }
 
             //Lets see if a cannon exists here
             if (Cannons != null)
             {
-                foreach (Item cannon in Cannons)
+                for (var index = 0; index < Cannons.Count; index++)
                 {
+                    Item cannon = Cannons[index];
+
                     if (cannon.X == pnt.X && cannon.Y == pnt.Y)
                     {
                         if (from != null)
+                        {
                             from.SendLocalizedMessage(1116075); //There is already a weapon deployed here.
+                        }
 
                         return false;
                     }
@@ -685,33 +752,39 @@ namespace Server.Multis
             }
 
             //Now we can check for a valid cannon tile ID
-            foreach (WeaponPad pad in Fixtures.OfType<WeaponPad>())
+            for (var index = 0; index < Fixtures.Count; index++)
             {
-                if (pad.X == pnt.X && pad.Y == pnt.Y)
+                Item fixture = Fixtures[index];
+
+                if (fixture is WeaponPad pad)
                 {
-                    pnt.Z = pad.Z + TileData.ItemTable[pad.ItemID & TileData.MaxItemValue].CalcHeight;
-                    IPooledEnumerable eable = Map.GetMobilesInRange(pnt, 0);
-
-                    //Lets check for mobiles
-                    foreach (Mobile mob in eable)
+                    if (pad.X == pnt.X && pad.Y == pnt.Y)
                     {
-                        if (!mob.Hidden && mob.AccessLevel == AccessLevel.Player)
+                        pnt.Z = pad.Z + TileData.ItemTable[pad.ItemID & TileData.MaxItemValue].CalcHeight;
+                        IPooledEnumerable eable = Map.GetMobilesInRange(pnt, 0);
+
+                        //Lets check for mobiles
+                        foreach (Mobile mob in eable)
                         {
-                            if (from != null)
-                                from.SendMessage("The weapon pad must be clear of obstructions to place a cannon.");
+                            if (!mob.Hidden && mob.AccessLevel == AccessLevel.Player)
+                            {
+                                if (from != null)
+                                {
+                                    from.SendMessage("The weapon pad must be clear of obstructions to place a cannon.");
+                                }
 
-                            eable.Free();
-                            return false;
+                                eable.Free();
+                                return false;
+                            }
                         }
-                    }
 
-                    eable.Free();
-                    return true;
+                        eable.Free();
+                        return true;
+                    }
                 }
             }
 
-            if (from != null)
-                from.SendLocalizedMessage(1116626); //You must use this on a ship weapon pad.
+            from?.SendLocalizedMessage(1116626); //You must use this on a ship weapon pad.
 
             return false;
         }
@@ -720,8 +793,10 @@ namespace Server.Multis
         {
             base.OnLocationChange(old);
 
-            foreach (Item fixture in Fixtures)
+            for (var index = 0; index < Fixtures.Count; index++)
             {
+                Item fixture = Fixtures[index];
+
                 fixture.Location = new Point3D(X + (fixture.X - old.X), Y + (fixture.Y - old.Y), Z + (fixture.Z - old.Z));
             }
 
@@ -735,8 +810,10 @@ namespace Server.Multis
 
             if (Cannons != null)
             {
-                foreach (Item cannon in Cannons)
+                for (var index = 0; index < Cannons.Count; index++)
                 {
+                    Item cannon = Cannons[index];
+
                     cannon.Location = new Point3D(X + (cannon.X - old.X), Y + (cannon.Y - old.Y), Z + (cannon.Z - old.Z));
                 }
             }
@@ -746,8 +823,9 @@ namespace Server.Multis
         {
             base.OnMapChange();
 
-            foreach (Item fixture in Fixtures)
+            for (var index = 0; index < Fixtures.Count; index++)
             {
+                Item fixture = Fixtures[index];
                 fixture.Map = Map;
             }
 
@@ -761,8 +839,9 @@ namespace Server.Multis
 
             if (Cannons != null)
             {
-                foreach (Item cannon in Cannons)
+                for (var index = 0; index < Cannons.Count; index++)
                 {
+                    Item cannon = Cannons[index];
                     cannon.Map = Map;
                 }
             }
@@ -820,8 +899,9 @@ namespace Server.Multis
         {
             List<Item> list = new List<Item>(Fixtures.Where(f => !f.Deleted));
 
-            foreach (Item fixture in list)
+            for (var index = 0; index < list.Count; index++)
             {
+                Item fixture = list[index];
                 fixture.Delete();
             }
 
@@ -829,8 +909,9 @@ namespace Server.Multis
             {
                 list = new List<Item>(Cannons);
 
-                foreach (Item cannon in list)
+                for (var index = 0; index < list.Count; index++)
                 {
+                    Item cannon = list[index];
                     cannon.Delete();
                 }
 
@@ -841,8 +922,10 @@ namespace Server.Multis
             {
                 list = new List<Item>(Addons.Keys.Where(a => a != null && !a.Deleted));
 
-                foreach (Item addon in list)
+                for (var index = 0; index < list.Count; index++)
                 {
+                    Item addon = list[index];
+
                     addon.Delete();
                 }
 
@@ -863,23 +946,34 @@ namespace Server.Multis
         public override DryDockResult CheckDryDock(Mobile from, Mobile dockmaster)
         {
             if (this is BaseGalleon && GalleonHold.Items.Count > 0)
+            {
                 return DryDockResult.Hold;
+            }
 
             Container pack = from.Backpack;
 
             if (dockmaster != null && pack != null && pack.GetAmount(typeof(Gold)) < DockMaster.DryDockAmount && Banker.GetBalance(from) < DockMaster.DryDockAmount)
+            {
                 return DryDockResult.NotEnoughGold;
+            }
 
             if (DamageTaken != DamageLevel.Pristine)
+            {
                 return DryDockResult.Damaged;
+            }
 
             if (Cannons != null && Cannons.Count > 0)
             {
-                foreach (IShipCannon cannon in Cannons.OfType<IShipCannon>())
+                for (var index = 0; index < Cannons.Count; index++)
                 {
-                    if (cannon.AmmoType != AmmunitionType.Empty)
+                    Item item = Cannons[index];
+
+                    if (item is IShipCannon cannon)
                     {
-                        return DryDockResult.Cannon;
+                        if (cannon.AmmoType != AmmunitionType.Empty)
+                        {
+                            return DryDockResult.Cannon;
+                        }
                     }
                 }
             }
@@ -892,15 +986,35 @@ namespace Server.Multis
             if (Cannons != null)
             {
                 if (_InternalCannon == null)
-                    _InternalCannon = new Dictionary<Item, Item>();
-
-                Cannons.ForEach(c =>
                 {
-                    Item pad = Fixtures.OfType<WeaponPad>().FirstOrDefault(p => p.X == c.X && p.Y == c.Y);
+                    _InternalCannon = new Dictionary<Item, Item>();
+                }
+
+                for (var i = 0; i < Cannons.Count; i++)
+                {
+                    var c = Cannons[i];
+
+                    Item pad = null;
+
+                    for (var index = 0; index < Fixtures.Count; index++)
+                    {
+                        Item fixture = Fixtures[index];
+
+                        if (fixture is WeaponPad p)
+                        {
+                            if (p.X == c.X && p.Y == c.Y)
+                            {
+                                pad = p;
+                                break;
+                            }
+                        }
+                    }
 
                     if (pad != null)
+                    {
                         _InternalCannon[c] = pad;
-                });
+                    }
+                }
             }
 
             base.OnDryDock(from);
@@ -913,12 +1027,16 @@ namespace Server.Multis
 
             MultiComponentList mcl = MultiData.GetComponents(ItemID);
 
-            foreach (MultiTileEntry mte in mcl.List)
+            for (var index = 0; index < mcl.List.Length; index++)
             {
+                MultiTileEntry mte = mcl.List[index];
+
                 if (mte.m_Flags == TileFlag.None)
                 {
-                    foreach (Item f in Fixtures)
+                    for (var i = 0; i < Fixtures.Count; i++)
                     {
+                        Item f = Fixtures[i];
+
                         if (f.X - X == mte.m_OffsetX && f.Y - Y == mte.m_OffsetY && f.Z - Z == mte.m_OffsetZ)
                         {
                             f.ItemID = mte.m_ItemID;
@@ -942,8 +1060,10 @@ namespace Server.Multis
 
         public override IEnumerable<IEntity> GetComponents()
         {
-            foreach (Item fixture in Fixtures)
+            for (var index = 0; index < Fixtures.Count; index++)
             {
+                Item fixture = Fixtures[index];
+
                 yield return fixture;
             }
 
@@ -969,8 +1089,10 @@ namespace Server.Multis
         {
             if (Cannons != null)
             {
-                foreach (Item cannon in Cannons)
+                for (var index = 0; index < Cannons.Count; index++)
                 {
+                    Item cannon = Cannons[index];
+
                     UpdateCannonID(cannon);
                 }
             }
@@ -1101,8 +1223,10 @@ namespace Server.Multis
 
         public void PaintComponents()
         {
-            foreach (Item f in Fixtures)
+            for (var index = 0; index < Fixtures.Count; index++)
             {
+                Item f = Fixtures[index];
+
                 if (f.GetType() != typeof(MooringLine) && f.GetType() != typeof(ShipWheel))
                 {
                     f.Hue = Hue;
@@ -1262,12 +1386,28 @@ namespace Server.Multis
 
             IPooledEnumerable eable = Map.GetItemsInRange(p, 0);
 
-            foreach (DeckItem item in eable.OfType<DeckItem>())
+            foreach (object o in eable)
             {
-                if (m_ShipAddonTiles.Any(id => id == item.ItemID) && (Addons == null || !Addons.ContainsValue(item)))
+                if (o is DeckItem item)
                 {
-                    eable.Free();
-                    return true;
+                    bool any = false;
+
+                    for (var index = 0; index < m_ShipAddonTiles.Length; index++)
+                    {
+                        var id = m_ShipAddonTiles[index];
+
+                        if (id == item.ItemID)
+                        {
+                            any = true;
+                            break;
+                        }
+                    }
+
+                    if (any && (Addons == null || !Addons.ContainsValue(item)))
+                    {
+                        eable.Free();
+                        return true;
+                    }
                 }
             }
 
@@ -1284,11 +1424,20 @@ namespace Server.Multis
 
             IPooledEnumerable eable = Map.GetItemsInRange(addon.Location, 0);
 
-            foreach (DeckItem item in eable.OfType<DeckItem>())
+            foreach (object o in eable)
             {
-                if (m_ShipAddonTiles.Any(id => id == item.ItemID))
+                if (o is DeckItem item)
                 {
-                    Addons[addon] = item;
+                    for (var index = 0; index < m_ShipAddonTiles.Length; index++)
+                    {
+                        var id = m_ShipAddonTiles[index];
+
+                        if (id == item.ItemID)
+                        {
+                            Addons[addon] = item;
+                            break;
+                        }
+                    }
                 }
             }
 
@@ -1594,9 +1743,14 @@ namespace Server.Multis
             }
             else
             {
-                foreach (IGalleonFixture fixture in Fixtures.OfType<IGalleonFixture>())
+                for (var index = 0; index < Fixtures.Count; index++)
                 {
-                    fixture.Galleon = this;
+                    Item item = Fixtures[index];
+
+                    if (item is IGalleonFixture fixture)
+                    {
+                        fixture.Galleon = this;
+                    }
                 }
             }
         }
