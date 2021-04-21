@@ -152,7 +152,7 @@ namespace Server.Engines.Quests
                     {
                         var quest = QuestHelper.Construct(info.QuestType);
 
-                        if (quest != null)
+                        if (quest != null && quest.Title != null)
                         {
                             if (quest.Title is int iTitle)
                             {
