@@ -915,16 +915,19 @@ namespace Server.Mobiles
 
                     bool any = false;
 
-                    if (bc != null)
+                    if (d.Uses != null)
                     {
                         for (var i = 0; i < d.Uses.Length; i++)
                         {
-                            var type = d.Uses[i];
-
-                            if (type == bc.GetType())
+                            if (d.Uses != null)
                             {
-                                any = true;
-                                break;
+                                var type = d.Uses[i];
+
+                                if (type == bc.GetType())
+                                {
+                                    any = true;
+                                    break;
+                                }
                             }
                         }
 
