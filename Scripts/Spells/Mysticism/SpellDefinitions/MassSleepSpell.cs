@@ -1,6 +1,5 @@
 using Server.Targeting;
 using System;
-using System.Linq;
 
 namespace Server.Spells.Mysticism
 {
@@ -61,16 +60,19 @@ namespace Server.Spells.Mysticism
                 if (map == null)
                     return;
 
-                foreach (Mobile m in AcquireIndirectTargets(p, 3).OfType<Mobile>())
+                foreach (IDamageable target in AcquireIndirectTargets(p, 3))
                 {
-                    double duration = ((Caster.Skills[CastSkill].Value + Caster.Skills[DamageSkill].Value) / 20) + 3;
-                    duration -= GetResistSkill(m) / 10;
-
-                    if (duration > 0)
+                    if (target is Mobile m)
                     {
-                        Caster.DoHarmful(m);
+                        double duration = ((Caster.Skills[CastSkill].Value + Caster.Skills[DamageSkill].Value) / 20) + 3;
+                        duration -= GetResistSkill(m) / 10;
 
-                        SleepSpell.DoSleep(Caster, m, TimeSpan.FromSeconds(duration));
+                        if (duration > 0)
+                        {
+                            Caster.DoHarmful(m);
+
+                            SleepSpell.DoSleep(Caster, m, TimeSpan.FromSeconds(duration));
+                        }
                     }
                 }
             }
