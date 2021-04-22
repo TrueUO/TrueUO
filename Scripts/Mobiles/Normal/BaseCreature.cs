@@ -7347,9 +7347,7 @@ namespace Server.Mobiles
                         {
                             Mobile owner = c.ControlMaster;
 
-                            if (!c.IsStabled && !(c is BaseVendor) &&
-                                (owner == null || owner.Deleted || owner.Map != c.Map || !owner.InRange(c, 12) || !c.CanSee(owner) ||
-                                 !c.InLOS(owner)))
+                            if (!c.IsStabled && !(c is BaseVendor) && (owner == null || owner.Deleted || owner.Map != c.Map || !owner.InRange(c, 12) || !c.CanSee(owner) || !c.InLOS(owner)))
                             {
                                 if (c.OwnerAbandonTime == DateTime.MinValue)
                                 {
@@ -7394,7 +7392,9 @@ namespace Server.Mobiles
                             if (c.RemoveStep >= 20)
                             {
                                 lock (toRemove)
+                                {
                                     toRemove.Add(c);
+                                }
                             }
                         }
                         else
@@ -7404,29 +7404,34 @@ namespace Server.Mobiles
                     }
                 });
 
-            foreach (BaseCreature c in toRelease.Where(c => c != null))
+            for (var index = 0; index < toRelease.Count; index++)
             {
-                if (c.IsDeadBondedPet)
+                BaseCreature c = toRelease[index];
+
+                if (c != null)
                 {
-                    c.Delete();
-                    continue;
+                    if (c.IsDeadBondedPet)
+                    {
+                        c.Delete();
+                        continue;
+                    }
+
+                    c.Say(1043255, c.Name); // ~1_NAME~ appears to have decided that is better off without a master!
+                    c.Loyalty = BaseCreature.MaxLoyalty; // Wonderfully Happy
+                    c.IsBonded = false;
+                    c.BondingBegin = DateTime.MinValue;
+                    c.OwnerAbandonTime = DateTime.MinValue;
+                    c.ControlTarget = null;
+
+                    if (c.AIObject != null)
+                    {
+                        c.AIObject.DoOrderRelease();
+                    }
+
+                    // this will prevent no release of creatures left alone with AI disabled (and consequent bug of Followers)
+                    c.DropBackpack();
+                    c.RemoveOnSave = true;
                 }
-
-                c.Say(1043255, c.Name); // ~1_NAME~ appears to have decided that is better off without a master!
-                c.Loyalty = BaseCreature.MaxLoyalty; // Wonderfully Happy
-                c.IsBonded = false;
-                c.BondingBegin = DateTime.MinValue;
-                c.OwnerAbandonTime = DateTime.MinValue;
-                c.ControlTarget = null;
-
-                if (c.AIObject != null)
-                {
-                    c.AIObject.DoOrderRelease();
-                }
-
-                // this will prevent no release of creatures left alone with AI disabled (and consequent bug of Followers)
-                c.DropBackpack();
-                c.RemoveOnSave = true;
             }
 
             // added code to handle removing of wild creatures in house regions
@@ -7455,7 +7460,17 @@ namespace Server.Mobiles
 
         protected override void OnTick()
         {
-            var toDelete = ToDelete.Where(bc => bc.Deleted || bc.DeleteTime < DateTime.UtcNow).ToList();
+            var toDelete = new List<BaseCreature>();
+
+            for (var index = 0; index < ToDelete.Count; index++)
+            {
+                var bc = ToDelete[index];
+
+                if (bc.Deleted || bc.DeleteTime < DateTime.UtcNow)
+                {
+                    toDelete.Add(bc);
+                }
+            }
 
             for (int i = 0; i < toDelete.Count; i++)
             {
