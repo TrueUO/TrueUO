@@ -398,12 +398,9 @@ namespace Server.Engines.Shadowguard
             {
                 ShadowguardCypress tree = Trees[index];
 
-                if (tree != null && !tree.Deleted)
+                if (tree != null && !tree.Deleted && tree.Foilage != null)
                 {
-                    if (tree.Foilage != null)
-                    {
-                        tree.Foilage.ItemID--;
-                    }
+                    tree.Foilage.ItemID--;
                 }
             }
         }
@@ -419,12 +416,9 @@ namespace Server.Engines.Shadowguard
             {
                 ShadowguardCypress tree = Trees[index];
 
-                if (tree != null && !tree.Deleted)
+                if (tree != null && !tree.Deleted && tree.Foilage != null)
                 {
-                    if (tree.Foilage != null)
-                    {
-                        tree.Foilage.ItemID++;
-                    }
+                    tree.Foilage.ItemID++;
                 }
             }
         }
@@ -549,7 +543,9 @@ namespace Server.Engines.Shadowguard
                 Armor.Add(armor);
 
                 if (i > 13)
+                {
                     armor.ItemID = 0x1512;
+                }
             });
 
             for (int i = 0; i < toSpawn; i++)
@@ -825,10 +821,11 @@ namespace Server.Engines.Shadowguard
             for (int i = 0; i < count; i++)
             {
                 if (Spawn == null)
+                {
                     Spawn = new List<BaseCreature>();
+                }
 
-                BaseCreature bc = reader.ReadMobile() as BaseCreature;
-                if (bc != null)
+                if (reader.ReadMobile() is BaseCreature bc)
                 {
                     if (bc is EnsorcelledArmor armor)
                     {
@@ -917,12 +914,9 @@ namespace Server.Engines.Shadowguard
                 {
                     var c = FlowCheckers[index];
 
-                    if (FlowCheckers != null)
+                    if (FlowCheckers != null && c.Complete)
                     {
-                        if (c.Complete)
-                        {
-                            count++;
-                        }
+                        count++;
                     }
                 }
 
