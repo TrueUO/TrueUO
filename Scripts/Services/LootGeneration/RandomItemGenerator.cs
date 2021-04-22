@@ -3,7 +3,6 @@ using Server.Engines.Shadowguard;
 using Server.Mobiles;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -112,16 +111,41 @@ namespace Server.Items
         public BossEntry(int bonus, params Type[] list)
         {
             Bonus = bonus;
-            List = list.ToList();
+
+            List<Type> boss = new List<Type>();
+
+            for (var index = 0; index < list.Length; index++)
+            {
+                var type = list[index];
+
+                boss.Add(type);
+            }
+
+            List = boss;
         }
 
         public static List<BossEntry> Entries { get; set; }
 
         public static void CheckBoss(BaseCreature bc, ref int budget)
         {
-            foreach (BossEntry entry in Entries)
+            for (var i = 0; i < Entries.Count; i++)
             {
-                if (entry.List.FirstOrDefault(t => t == bc.GetType() || bc.GetType().IsSubclassOf(t)) != null)
+                BossEntry entry = Entries[i];
+
+                Type first = null;
+
+                for (var index = 0; index < entry.List.Count; index++)
+                {
+                    var t = entry.List[index];
+
+                    if (t == bc.GetType() || bc.GetType().IsSubclassOf(t))
+                    {
+                        first = t;
+                        break;
+                    }
+                }
+
+                if (first != null)
                 {
                     budget += entry.Bonus;
                     return;
