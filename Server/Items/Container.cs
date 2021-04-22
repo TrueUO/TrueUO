@@ -78,15 +78,17 @@ namespace Server.Items
 		}
 
 		public virtual void ValidatePositions()
-		{
-			foreach (Item item in Items)
-			{
-				if (IsFreePosition(item.GridLocation))
-				{
-					item.GridLocation = GetNewPosition(item.GridLocation);
-				}
-			}
-		}
+        {
+            for (var index = 0; index < Items.Count; index++)
+            {
+                Item item = Items[index];
+
+                if (IsFreePosition(item.GridLocation))
+                {
+                    item.GridLocation = GetNewPosition(item.GridLocation);
+                }
+            }
+        }
 		#endregion
 
 		private static ContainerSnoopHandler m_SnoopHandler;
@@ -301,16 +303,18 @@ namespace Server.Items
             {
                 return false;
             }
-            
-			foreach (Item i in Items)
-			{
-				if (i.WillStack(from, item))
-				{
-					return true;
-				}
-			}
 
-			return false;
+            for (var index = 0; index < Items.Count; index++)
+            {
+                Item i = Items[index];
+
+                if (i.WillStack(from, item))
+                {
+                    return true;
+                }
+            }
+
+            return false;
 		}
 
 		public virtual void SendFullItemsMessage(Mobile to, Item item)
@@ -1966,11 +1970,13 @@ namespace Server.Items
 
 			to.Send(new ContainerContent(to, this));
 
-			foreach (Item o in Items)
-			{
-				to.Send(o.OPLPacket);
-			}
-		}
+            for (var index = 0; index < Items.Count; index++)
+            {
+                Item o = Items[index];
+
+                to.Send(o.OPLPacket);
+            }
+        }
 
 		public void ProcessOpeners(Mobile opener)
 		{

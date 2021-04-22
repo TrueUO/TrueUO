@@ -149,38 +149,36 @@ namespace Server.Items
                             var x2 = m_Cleanup[index];
                             Mobile m = x2.mobiles;
 
-                            if (set.Add(m))
+                            if (set.Add(m) && m_Cleanup.Find(x => x.mobiles == m && x.confirm) != null)
                             {
-                                if (m_Cleanup.Find(x => x.mobiles == m && x.confirm) != null)
+                                double point = 0;
+
+                                for (var i = 0; i < m_Cleanup.Count; i++)
                                 {
-                                    double point = 0;
+                                    var x = m_Cleanup[i];
 
-                                    for (var i = 0; i < m_Cleanup.Count; i++)
+                                    if (x.mobiles == m && x.confirm)
                                     {
-                                        var x = m_Cleanup[i];
-
-                                        if (x.mobiles == m && x.confirm)
-                                        {
-                                            point += x.points;
-                                        }
+                                        point += x.points;
                                     }
-
-                                    int count = 0;
-
-                                    for (var i = 0; i < m_Cleanup.Count; i++)
-                                    {
-                                        var r = m_Cleanup[i];
-
-                                        if (r.mobiles == m)
-                                        {
-                                            count++;
-                                        }
-                                    }
-
-                                    m.SendLocalizedMessage(1151280, $"{point.ToString()}\t{count}"); // You have received approximately ~1_VALUE~points for turning in ~2_COUNT~items for Clean Up Britannia.
-
-                                    PointsSystem.CleanUpBritannia.AwardPoints(m, point);
                                 }
+
+                                int count = 0;
+
+                                for (var i = 0; i < m_Cleanup.Count; i++)
+                                {
+                                    var r = m_Cleanup[i];
+
+                                    if (r.mobiles == m)
+                                    {
+                                        count++;
+                                    }
+                                }
+
+                                m.SendLocalizedMessage(1151280,
+                                    $"{point.ToString()}\t{count}"); // You have received approximately ~1_VALUE~points for turning in ~2_COUNT~items for Clean Up Britannia.
+
+                                PointsSystem.CleanUpBritannia.AwardPoints(m, point);
                             }
                         }
 
