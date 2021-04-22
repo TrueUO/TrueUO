@@ -25,8 +25,10 @@ namespace Server.Engines.Despise
 
         private static bool IsInGoodRegion(Point3D loc)
         {
-            foreach (Rectangle2D rec in DespiseController.GoodBounds)
+            for (var index = 0; index < DespiseController.GoodBounds.Length; index++)
             {
+                Rectangle2D rec = DespiseController.GoodBounds[index];
+
                 if (rec.Contains(loc))
                 {
                     return true;
@@ -38,8 +40,10 @@ namespace Server.Engines.Despise
 
         private static bool IsInEvilRegion(Point3D loc)
         {
-            foreach (Rectangle2D rec in DespiseController.EvilBounds)
+            for (var index = 0; index < DespiseController.EvilBounds.Length; index++)
             {
+                Rectangle2D rec = DespiseController.EvilBounds[index];
+
                 if (rec.Contains(loc))
                 {
                     return true;
@@ -51,8 +55,10 @@ namespace Server.Engines.Despise
 
         private static bool IsInLowerRegion(Point3D loc)
         {
-            foreach (Rectangle2D rec in DespiseController.LowerLevelBounds)
+            for (var index = 0; index < DespiseController.LowerLevelBounds.Length; index++)
             {
+                Rectangle2D rec = DespiseController.LowerLevelBounds[index];
+
                 if (rec.Contains(loc))
                 {
                     return true;
@@ -94,8 +100,10 @@ namespace Server.Engines.Despise
             {
                 Dictionary<DespiseCreature, int> creatures = new Dictionary<DespiseCreature, int>();
 
-                foreach (DamageEntry de in despiseCreature.DamageEntries)
+                for (var index = 0; index < despiseCreature.DamageEntries.Count; index++)
                 {
+                    DamageEntry de = despiseCreature.DamageEntries[index];
+
                     if (de.Damager is DespiseCreature creat)
                     {
                         if (!creat.Controlled || creat.Orb == null)
@@ -204,12 +212,18 @@ namespace Server.Engines.Despise
 
         public static void GetArmyPower(ref int good, ref int evil)
         {
-            foreach (WispOrb orb in WispOrb.Orbs)
+            for (var index = 0; index < WispOrb.Orbs.Count; index++)
             {
+                WispOrb orb = WispOrb.Orbs[index];
+
                 if (orb.Alignment == Alignment.Good)
+                {
                     good += orb.GetArmyPower();
+                }
                 else if (orb.Alignment == Alignment.Evil)
+                {
                     evil += orb.GetArmyPower();
+                }
             }
         }
 

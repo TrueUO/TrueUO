@@ -44,8 +44,12 @@ namespace Server.Items
                     list.Add(kvp.Key);
             }
 
-            foreach (Mobile m in list)
+            for (var index = 0; index < list.Count; index++)
+            {
+                Mobile m = list[index];
+
                 m_Table.Remove(m);
+            }
         }
 
         public static bool HasItem(Mobile from, Type type)

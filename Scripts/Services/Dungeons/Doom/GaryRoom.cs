@@ -5,7 +5,6 @@ using Server.Network;
 using Server.Regions;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.Doom
 {
@@ -97,7 +96,21 @@ namespace Server.Engines.Doom
 
         public void OnTick()
         {
-            if (NextRoll < DateTime.UtcNow && GetEnumeratedMobiles().OfType<PlayerMobile>().Any(p => p.Alive))
+            bool any = false;
+
+            foreach (Mobile mobile in GetEnumeratedMobiles())
+            {
+                if (mobile is PlayerMobile p)
+                {
+                    if (p.Alive)
+                    {
+                        any = true;
+                        break;
+                    }
+                }
+            }
+
+            if (NextRoll < DateTime.UtcNow && any)
             {
                 DoRoll();
                 NextRoll = DateTime.UtcNow + RollDelay;
@@ -132,9 +145,12 @@ namespace Server.Engines.Doom
                     }
                     else
                     {
-                        foreach (PlayerMobile m in GetEnumeratedMobiles().OfType<PlayerMobile>())
+                        foreach (Mobile mobile in GetEnumeratedMobiles())
                         {
-                            m.SendMessage("- {0} -", (roll + 1).ToString());
+                            if (mobile is PlayerMobile m)
+                            {
+                                m.SendMessage("- {0} -", (roll + 1).ToString());
+                            }
                         }
                     }
                 });
@@ -169,8 +185,12 @@ namespace Server.Engines.Doom
 
         public void ChangeStatues()
         {
-            foreach (DisplayStatue statue in GetStatues())
+            var statues = GetStatues();
+
+            for (var index = 0; index < statues.Length; index++)
             {
+                DisplayStatue statue = statues[index];
+
                 statue.AssignRandom();
             }
         }
@@ -310,7 +330,19 @@ namespace Server.Engines.Doom
         {
             if (Dice == null || Dice.Deleted)
             {
-                Sapphired20 dice = GetEnumeratedItems().OfType<Sapphired20>().FirstOrDefault(i => !i.Deleted);
+                Sapphired20 dice = null;
+
+                foreach (Item item in GetEnumeratedItems())
+                {
+                    if (item is Sapphired20 i)
+                    {
+                        if (!i.Deleted)
+                        {
+                            dice = i;
+                            break;
+                        }
+                    }
+                }
 
                 if (dice != null)
                 {
@@ -341,7 +373,19 @@ namespace Server.Engines.Doom
             {
                 if (Statues[i] == null || Statues[i].Deleted)
                 {
-                    DisplayStatue s = GetEnumeratedItems().OfType<DisplayStatue>().FirstOrDefault(st => Array.IndexOf(Statues, st) == -1);
+                    DisplayStatue s = null;
+
+                    foreach (Item item in GetEnumeratedItems())
+                    {
+                        if (item is DisplayStatue st)
+                        {
+                            if (Array.IndexOf(Statues, st) == -1)
+                            {
+                                s = st;
+                                break;
+                            }
+                        }
+                    }
 
                     if (s == null)
                     {

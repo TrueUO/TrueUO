@@ -7,7 +7,6 @@ using Server.Network;
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.SkillHandlers
 {
@@ -203,11 +202,20 @@ namespace Server.SkillHandlers
 
         public static bool IsSpecialImbuable(Type type)
         {
-            if (_SpecialImbuable.Any(i => i == type))
-                return true;
+            for (var index = 0; index < _SpecialImbuable.Length; index++)
+            {
+                var i = _SpecialImbuable[index];
+
+                if (i == type)
+                {
+                    return true;
+                }
+            }
 
             if (type.IsSubclassOf(typeof(BaseGlovesOfMining)) || typeof(IFishingAttire).IsAssignableFrom(type))
+            {
                 return true;
+            }
 
             return false;
         }
@@ -230,14 +238,20 @@ namespace Server.SkillHandlers
         public static bool NonCraftableImbuable(Item item)
         {
             if (item is BaseWand)
+            {
                 return true;
+            }
 
             Type type = item.GetType();
 
-            foreach (Type t in _NonCraftables)
+            for (var index = 0; index < _NonCraftables.Length; index++)
             {
+                Type t = _NonCraftables[index];
+
                 if (t == type)
+                {
                     return true;
+                }
             }
 
             return false;
@@ -426,7 +440,20 @@ namespace Server.SkillHandlers
                 //Removes skill bonus if that group already exists on the item
                 for (int j = 0; j < 5; j++)
                 {
-                    if (jewel.SkillBonuses.GetBonus(j) > 0 && group.Any(sk => sk == jewel.SkillBonuses.GetSkill(j)))
+                    bool any = false;
+
+                    for (var index = 0; index < group.Length; index++)
+                    {
+                        var sk = group[index];
+
+                        if (sk == jewel.SkillBonuses.GetSkill(j))
+                        {
+                            any = true;
+                            break;
+                        }
+                    }
+
+                    if (jewel.SkillBonuses.GetBonus(j) > 0 && any)
                     {
                         jewel.SkillBonuses.SetBonus(j, 0.0);
                         jewel.SkillBonuses.SetSkill(j, SkillName.Alchemy);
@@ -1368,28 +1395,52 @@ namespace Server.SkillHandlers
             }
 
             if (aosAttrs != null)
+            {
                 foreach (int i in Enum.GetValues(typeof(AosAttribute)))
+                {
                     weight += GetIntensityForAttribute(item, (AosAttribute)i, id, aosAttrs[(AosAttribute)i], trueWeight, imbuing);
+                }
+            }
 
             if (wepAttrs != null)
+            {
                 foreach (long i in Enum.GetValues(typeof(AosWeaponAttribute)))
+                {
                     weight += GetIntensityForAttribute(item, (AosWeaponAttribute)i, id, wepAttrs[(AosWeaponAttribute)i], trueWeight, imbuing);
+                }
+            }
 
             if (saAttrs != null)
+            {
                 foreach (int i in Enum.GetValues(typeof(SAAbsorptionAttribute)))
+                {
                     weight += GetIntensityForAttribute(item, (SAAbsorptionAttribute)i, id, saAttrs[(SAAbsorptionAttribute)i], trueWeight, imbuing);
+                }
+            }
 
             if (armorAttrs != null)
+            {
                 foreach (int i in Enum.GetValues(typeof(AosArmorAttribute)))
+                {
                     weight += GetIntensityForAttribute(item, (AosArmorAttribute)i, id, armorAttrs[(AosArmorAttribute)i], trueWeight, imbuing);
+                }
+            }
 
             if (resistAttrs != null && !(item is BaseWeapon))
+            {
                 foreach (int i in Enum.GetValues(typeof(AosElementAttribute)))
+                {
                     weight += GetIntensityForAttribute(item, (AosElementAttribute)i, id, resistAttrs[(AosElementAttribute)i], trueWeight, imbuing);
+                }
+            }
 
             if (extattrs != null)
+            {
                 foreach (int i in Enum.GetValues(typeof(ExtendedWeaponAttribute)))
+                {
                     weight += GetIntensityForAttribute(item, (ExtendedWeaponAttribute)i, id, extattrs[(ExtendedWeaponAttribute)i], trueWeight, imbuing);
+                }
+            }
 
             weight += CheckSkillBonuses(item, id, trueWeight, imbuing);
 
@@ -1605,7 +1656,22 @@ namespace Server.SkillHandlers
 
         public static SkillName[] GetSkillGroup(SkillName skill)
         {
-            return m_SkillGroups.FirstOrDefault(list => list.Any(sk => sk == skill));
+            for (var index = 0; index < m_SkillGroups.Length; index++)
+            {
+                var list = m_SkillGroups[index];
+
+                for (var i = 0; i < list.Length; i++)
+                {
+                    var sk = list[i];
+
+                    if (sk == skill)
+                    {
+                        return list;
+                    }
+                }
+            }
+
+            return new SkillName[] { };
         }
 
         public static int GetAvailableSkillIndex(AosSkillBonuses skills)
@@ -1625,9 +1691,14 @@ namespace Server.SkillHandlers
         {
             for (int i = 0; i < m_SkillGroups.Length; i++)
             {
-                if (m_SkillGroups[i].Any(sk => sk == skill))
+                for (var index = 0; index < m_SkillGroups[i].Length; index++)
                 {
-                    return i;
+                    var sk = m_SkillGroups[i][index];
+
+                    if (sk == skill)
+                    {
+                        return i;
+                    }
                 }
             }
 
@@ -1750,10 +1821,14 @@ namespace Server.SkillHandlers
 
         public static bool IsInNonImbueList(Type itemType)
         {
-            foreach (Type type in m_CannotImbue)
+            for (var index = 0; index < m_CannotImbue.Length; index++)
             {
+                Type type = m_CannotImbue[index];
+
                 if (type == itemType)
+                {
                     return true;
+                }
             }
 
             return false;
