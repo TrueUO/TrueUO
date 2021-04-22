@@ -3632,7 +3632,9 @@ namespace Server.Multis
                     Item item = kvp.Key;
 
                     if (!(item is Container))
+                    {
                         count += item.TotalItems;
+                    }
 
                     count++;
                 }
@@ -3649,12 +3651,9 @@ namespace Server.Multis
             {
                 Mobile playerVendor = PlayerVendors[index];
 
-                if (playerVendor is CommissionPlayerVendor vendor)
+                if (playerVendor is CommissionPlayerVendor vendor && vendor.Backpack != null)
                 {
-                    if (vendor.Backpack != null)
-                    {
-                        count += vendor.Backpack.TotalItems;
-                    }
+                    count += vendor.Backpack.TotalItems;
                 }
             }
 
