@@ -55,119 +55,116 @@ namespace Server.Accounting
 
                 foreach (IAccount account in Accounts.GetAccounts())
                 {
-                    if (account is Account a)
+                    if (account is Account a && a.Count > 0)
                     {
-                        if (a.Count > 0)
+                        try
                         {
-                            try
+                            if (!AccountGold.Enabled)
                             {
-                                if (!AccountGold.Enabled)
-                                {
-                                    share = (int) Math.Truncate((a.TotalCurrency / a.Count) * CurrencyThreshold);
-                                    found += a.TotalCurrency * CurrencyThreshold;
-                                }
+                                share = (int) Math.Truncate((a.TotalCurrency / a.Count) * CurrencyThreshold);
+                                found += a.TotalCurrency * CurrencyThreshold;
+                            }
 
-                                for (var index = 0; index < a.m_Mobiles.Length; index++)
-                                {
-                                    Mobile m = a.m_Mobiles[index];
+                            for (var index = 0; index < a.m_Mobiles.Length; index++)
+                            {
+                                Mobile m = a.m_Mobiles[index];
 
-                                    if (m != null)
+                                if (m != null)
+                                {
+                                    box = m.FindBankNoCreate();
+
+                                    if (box == null)
                                     {
-                                        box = m.FindBankNoCreate();
+                                        continue;
+                                    }
 
-                                        if (box == null)
+                                    if (AccountGold.Enabled)
+                                    {
+                                        var os = checks = box.FindItemsByType<BankCheck>();
+
+                                        for (var i = 0; i < os.Count; i++)
                                         {
-                                            continue;
-                                        }
+                                            BankCheck o = os[i];
 
-                                        if (AccountGold.Enabled)
-                                        {
-                                            var os = checks = box.FindItemsByType<BankCheck>();
+                                            found += o.Worth;
 
-                                            for (var i = 0; i < os.Count; i++)
+                                            if (!a.DepositGold(o.Worth))
                                             {
-                                                BankCheck o = os[i];
-
-                                                found += o.Worth;
-
-                                                if (!a.DepositGold(o.Worth))
-                                                {
-                                                    break;
-                                                }
-
-                                                converted += o.Worth;
-                                                o.Delete();
+                                                break;
                                             }
 
-                                            checks.Clear();
-                                            checks.TrimExcess();
+                                            converted += o.Worth;
+                                            o.Delete();
+                                        }
 
-                                            var type = gold = box.FindItemsByType<Gold>();
+                                        checks.Clear();
+                                        checks.TrimExcess();
 
-                                            for (var i = 0; i < type.Count; i++)
+                                        var type = gold = box.FindItemsByType<Gold>();
+
+                                        for (var i = 0; i < type.Count; i++)
+                                        {
+                                            Gold o = type[i];
+
+                                            found += o.Amount;
+
+                                            if (!a.DepositGold(o.Amount))
                                             {
-                                                Gold o = type[i];
-
-                                                found += o.Amount;
-
-                                                if (!a.DepositGold(o.Amount))
-                                                {
-                                                    break;
-                                                }
-
-                                                converted += o.Amount;
-                                                o.Delete();
+                                                break;
                                             }
 
-                                            gold.Clear();
-                                            gold.TrimExcess();
+                                            converted += o.Amount;
+                                            o.Delete();
                                         }
-                                        else
+
+                                        gold.Clear();
+                                        gold.TrimExcess();
+                                    }
+                                    else
+                                    {
+                                        shared = share;
+
+                                        while (shared > 0)
                                         {
-                                            shared = share;
-
-                                            while (shared > 0)
+                                            if (shared > 60000)
                                             {
-                                                if (shared > 60000)
-                                                {
-                                                    diff = (int) Math.Min(10000000, shared);
+                                                diff = (int) Math.Min(10000000, shared);
 
-                                                    if (a.WithdrawGold(diff))
-                                                    {
-                                                        box.DropItem(new BankCheck(diff));
-                                                    }
-                                                    else
-                                                    {
-                                                        break;
-                                                    }
+                                                if (a.WithdrawGold(diff))
+                                                {
+                                                    box.DropItem(new BankCheck(diff));
                                                 }
                                                 else
                                                 {
-                                                    diff = (int) Math.Min(60000, shared);
-
-                                                    if (a.WithdrawGold(diff))
-                                                    {
-                                                        box.DropItem(new Gold(diff));
-                                                    }
-                                                    else
-                                                    {
-                                                        break;
-                                                    }
+                                                    break;
                                                 }
-
-                                                converted += diff;
-                                                shared -= diff;
                                             }
-                                        }
+                                            else
+                                            {
+                                                diff = (int) Math.Min(60000, shared);
 
-                                        box.UpdateTotals();
+                                                if (a.WithdrawGold(diff))
+                                                {
+                                                    box.DropItem(new Gold(diff));
+                                                }
+                                                else
+                                                {
+                                                    break;
+                                                }
+                                            }
+
+                                            converted += diff;
+                                            shared -= diff;
+                                        }
                                     }
+
+                                    box.UpdateTotals();
                                 }
                             }
-                            catch (Exception ex)
-                            {
-                                Diagnostics.ExceptionLogging.LogException(ex);
-                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Diagnostics.ExceptionLogging.LogException(ex);
                         }
                     }
                 }
@@ -566,13 +563,10 @@ namespace Server.Accounting
                 {
                     Mobile mobile = m_Mobiles[index];
 
-                    if (mobile is PlayerMobile pm)
+                    if (mobile is PlayerMobile pm && pm.NetState != null)
                     {
-                        if (pm.NetState != null)
-                        {
-                            online = pm;
-                            break;
-                        }
+                        online = pm;
+                        break;
                     }
                 }
 
@@ -1255,24 +1249,21 @@ namespace Server.Accounting
             {
                 Mobile mobile = m_Mobiles[index];
 
-                if (mobile is PlayerMobile m)
+                if (mobile is PlayerMobile m && m.Young)
                 {
-                    if (m.Young)
+                    m.Young = false;
+
+                    if (m.NetState == null)
                     {
-                        m.Young = false;
-
-                        if (m.NetState == null)
-                        {
-                            continue;
-                        }
-
-                        if (message > 0)
-                        {
-                            m.SendLocalizedMessage(message);
-                        }
-
-                        m.SendLocalizedMessage(1019039); // You are no longer considered a young player of Ultima Online, and are no longer subject to the limitations and benefits of being in that caste.
+                        continue;
                     }
+
+                    if (message > 0)
+                    {
+                        m.SendLocalizedMessage(message);
+                    }
+
+                    m.SendLocalizedMessage(1019039); // You are no longer considered a young player of Ultima Online, and are no longer subject to the limitations and benefits of being in that caste.
                 }
             }
         }

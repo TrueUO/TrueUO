@@ -73,20 +73,17 @@ namespace Server.Misc
 
                     foreach (IAccount account in Accounts.GetAccounts())
                     {
-                        if (account is Account a)
+                        if (account is Account a && a.LoginIPs.Length > 0)
                         {
-                            if (a.LoginIPs.Length > 0)
-                            {
-                                IPAddress ip = a.LoginIPs[0];
+                            IPAddress ip = a.LoginIPs[0];
 
-                                if (m_IPTable.ContainsKey(ip))
-                                {
-                                    m_IPTable[ip]++;
-                                }
-                                else
-                                {
-                                    m_IPTable[ip] = 1;
-                                }
+                            if (m_IPTable.ContainsKey(ip))
+                            {
+                                m_IPTable[ip]++;
+                            }
+                            else
+                            {
+                                m_IPTable[ip] = 1;
                             }
                         }
                     }
