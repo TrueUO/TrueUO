@@ -4,7 +4,6 @@ using Server.Items;
 using Server.Mobiles;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.VoidPool
 {
@@ -423,20 +422,23 @@ namespace Server.Engines.VoidPool
 
             List<Mobile> list = Region.GetPlayers();
 
-            foreach (Mobile m in list)
+            for (var index = 0; index < list.Count; index++)
             {
+                Mobile m = list[index];
+
                 if (GetCurrentPoints(m) > 0)
                 {
                     PointsSystem.VoidPool.AwardPoints(m, GetCurrentPoints(m));
                 }
             }
 
-            foreach (Mobile m in list)
+            for (var index = 0; index < list.Count; index++)
             {
+                Mobile m = list[index];
+
                 if (CurrentScore.ContainsKey(m))
                 {
-                    m.SendLocalizedMessage(1152650, string.Format("{0}\t{1}\t{2}\t{3}", GetTotalWaves(m), Wave.ToString(), Wave.ToString(), CurrentScore[m]));
-                    // During the battle, you helped fight back ~1_COUNT~ out of ~2_TOTAL~ waves of enemy forces. Your final wave was ~3_MAX~. Your total score for the battle was ~4_SCORE~ points.
+                    m.SendLocalizedMessage(1152650, $"{GetTotalWaves(m)}\t{Wave.ToString()}\t{Wave.ToString()}\t{CurrentScore[m]}"); // During the battle, you helped fight back ~1_COUNT~ out of ~2_TOTAL~ waves of enemy forces. Your final wave was ~3_MAX~. Your total score for the battle was ~4_SCORE~ points.
 
                     if (m is PlayerMobile mobile)
                     {
@@ -459,11 +461,14 @@ namespace Server.Engines.VoidPool
             if (Waves == null)
                 return;
 
-            Waves.ForEach(info =>
+            for (var index = 0; index < Waves.Count; index++)
             {
+                var info = Waves[index];
+
                 if (info.Creatures.Contains(killed))
                 {
                     List<DamageStore> list = killed.GetLootingRights();
+
                     list.Sort();
 
                     for (int i = 0; i < list.Count; i++)
@@ -498,8 +503,10 @@ namespace Server.Engines.VoidPool
 
                     if (info.Creatures.Count == 0)
                     {
-                        foreach (Mobile m in info.Credit)
+                        for (var i = 0; i < info.Credit.Count; i++)
                         {
+                            Mobile m = info.Credit[i];
+
                             if (m.Region == Region && m is PlayerMobile)
                             {
                                 double award = Math.Max(0, Map == Map.Felucca ? Stage * 2 : Stage);
@@ -517,9 +524,9 @@ namespace Server.Engines.VoidPool
                     }
 
                     if (killed.Corpse != null && !killed.Corpse.Deleted)
-                        ((Corpse)killed.Corpse).BeginDecay(TimeSpan.FromMinutes(1));
+                        ((Corpse) killed.Corpse).BeginDecay(TimeSpan.FromMinutes(1));
                 }
-            });
+            }
         }
 
         public void ClearSpawners()
@@ -598,12 +605,16 @@ namespace Server.Engines.VoidPool
         public int GetCurrentPoints(Mobile from)
         {
             if (Waves == null)
+            {
                 return 0;
+            }
 
             int points = 0;
 
-            foreach (WaveInfo info in Waves)
+            for (var index = 0; index < Waves.Count; index++)
             {
+                WaveInfo info = Waves[index];
+
                 if (info.Credit.Contains(from))
                 {
                     points += Map == Map.Felucca ? Stage * 2 : Stage;
@@ -615,7 +626,19 @@ namespace Server.Engines.VoidPool
 
         public int GetTotalWaves(Mobile from)
         {
-            return Waves.Count(i => i.Wave > 2 && i.Credit.Contains(from));
+            int count = 0;
+
+            for (var index = 0; index < Waves.Count; index++)
+            {
+                var i = Waves[index];
+
+                if (i.Wave > 2 && i.Credit.Contains(from))
+                {
+                    count++;
+                }
+            }
+
+            return count;
         }
 
         public static int GetPlayerScore(Dictionary<Mobile, long> score, Mobile m)
@@ -652,16 +675,20 @@ namespace Server.Engines.VoidPool
                 Timer = null;
             }
 
-            foreach (WayPoint wp in WaypointsA)
+            for (var index = 0; index < WaypointsA.Count; index++)
             {
+                WayPoint wp = WaypointsA[index];
+
                 if (wp != null && !wp.Deleted)
                 {
                     wp.Delete();
                 }
             }
 
-            foreach (WayPoint wp in WaypointsB)
+            for (var index = 0; index < WaypointsB.Count; index++)
             {
+                WayPoint wp = WaypointsB[index];
+
                 if (wp != null && !wp.Deleted)
                 {
                     wp.Delete();
@@ -703,8 +730,17 @@ namespace Server.Engines.VoidPool
             writer.Write(WaypointsA.Count);
             writer.Write(WaypointsB.Count);
 
-            WaypointsA.ForEach(w => writer.Write(w));
-            WaypointsB.ForEach(w => writer.Write(w));
+            for (var index = 0; index < WaypointsA.Count; index++)
+            {
+                var w = WaypointsA[index];
+                writer.Write(w);
+            }
+
+            for (var index = 0; index < WaypointsB.Count; index++)
+            {
+                var w = WaypointsB[index];
+                writer.Write(w);
+            }
         }
 
         public override void Deserialize(GenericReader reader)
