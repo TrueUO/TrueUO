@@ -7435,8 +7435,10 @@ namespace Server.Mobiles
             }
 
             // added code to handle removing of wild creatures in house regions
-            foreach (BaseCreature c in toRemove)
+            for (var index = 0; index < toRemove.Count; index++)
             {
+                BaseCreature c = toRemove[index];
+
                 c.Delete();
             }
 
