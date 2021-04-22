@@ -35,15 +35,19 @@ namespace Server.Engines.TreasuresOfKotlCity
 
             List<Item> contains = new List<Item>(Items);
 
-            foreach (Item item in contains)
+            for (var index = 0; index < contains.Count; index++)
             {
+                Item item = contains[index];
+
                 item.Delete();
             }
 
             ColUtility.Free(contains);
 
             for (int i = 0; i < Utility.RandomMinMax(6, 12); i++)
+            {
                 DropItem(Loot.RandomGem());
+            }
 
             DropItem(new Gold(Utility.RandomMinMax(800, 1100)));
 
@@ -131,7 +135,9 @@ namespace Server.Engines.TreasuresOfKotlCity
                 int skill = (int)m.Skills[SkillName.DetectHidden].Value;
 
                 if (skill >= 80 && Utility.Random(300) < skill)
+                {
                     return true;
+                }
             }
 
             return false;
@@ -152,7 +158,9 @@ namespace Server.Engines.TreasuresOfKotlCity
         public void TryDelayedLock()
         {
             if (Locked || m_Timer != null && m_Timer.Running)
+            {
                 return;
+            }
 
             EndTimer();
 

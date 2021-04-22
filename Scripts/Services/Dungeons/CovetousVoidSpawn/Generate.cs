@@ -3,7 +3,6 @@ using Server.Items;
 using Server.Mobiles;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.VoidPool
 {
@@ -118,32 +117,40 @@ namespace Server.Engines.VoidPool
             if (one == null || two == null)
                 return;
 
-            foreach (WayPoint w in one.WaypointsA)
+            for (var index = 0; index < one.WaypointsA.Count; index++)
             {
+                WayPoint w = one.WaypointsA[index];
+
                 if (w != null && !w.Deleted)
                 {
                     w.Delete();
                 }
             }
 
-            foreach (WayPoint w in one.WaypointsB)
+            for (var index = 0; index < one.WaypointsB.Count; index++)
             {
+                WayPoint w = one.WaypointsB[index];
+
                 if (w != null && !w.Deleted)
                 {
                     w.Delete();
                 }
             }
 
-            foreach (WayPoint w in two.WaypointsA)
+            for (var index = 0; index < two.WaypointsA.Count; index++)
             {
+                WayPoint w = two.WaypointsA[index];
+
                 if (w != null && !w.Deleted)
                 {
                     w.Delete();
                 }
             }
 
-            foreach (WayPoint w in two.WaypointsB)
+            for (var index = 0; index < two.WaypointsB.Count; index++)
             {
+                WayPoint w = two.WaypointsB[index];
+
                 if (w != null && !w.Deleted)
                 {
                     w.Delete();
@@ -383,8 +390,31 @@ namespace Server.Engines.VoidPool
 
         public static void ConvertSpawners()
         {
-            Region tram = Region.Regions.FirstOrDefault(r => r.Map == Map.Trammel && r.Name == "Covetous");
-            Region fel = Region.Regions.FirstOrDefault(r => r.Map == Map.Felucca && r.Name == "Covetous");
+            Region tram = null;
+
+            for (var index = 0; index < Region.Regions.Count; index++)
+            {
+                var r = Region.Regions[index];
+
+                if (r.Map == Map.Trammel && r.Name == "Covetous")
+                {
+                    tram = r;
+                    break;
+                }
+            }
+
+            Region fel = null;
+
+            for (var index = 0; index < Region.Regions.Count; index++)
+            {
+                var r = Region.Regions[index];
+
+                if (r.Map == Map.Felucca && r.Name == "Covetous")
+                {
+                    fel = r;
+                    break;
+                }
+            }
 
             ConvertRegionSpawners(tram);
             ConvertRegionSpawners(fel);
@@ -397,16 +427,22 @@ namespace Server.Engines.VoidPool
 
             List<XmlSpawner> list = new List<XmlSpawner>();
 
-            foreach (Sector s in r.Sectors)
+            for (var index = 0; index < r.Sectors.Length; index++)
             {
-                foreach (Item i in s.Items)
+                Sector s = r.Sectors[index];
+
+                for (var index1 = 0; index1 < s.Items.Count; index1++)
                 {
+                    Item i = s.Items[index1];
+
                     if (i is XmlSpawner && _SpawnerBounds.Contains(i))
                     {
                         XmlSpawner spawner = i as XmlSpawner;
 
-                        foreach (XmlSpawner.SpawnObject obj in spawner.SpawnObjects)
+                        for (var i1 = 0; i1 < spawner.SpawnObjects.Length; i1++)
                         {
+                            XmlSpawner.SpawnObject obj = spawner.SpawnObjects[i1];
+
                             if (obj.TypeName != null)
                             {
                                 string name = obj.TypeName.ToLower();
@@ -427,7 +463,12 @@ namespace Server.Engines.VoidPool
                 }
             }
 
-            list.ForEach(spawner => spawner.DoRespawn = true);
+            for (var index = 0; index < list.Count; index++)
+            {
+                var spawner = list[index];
+
+                spawner.DoRespawn = true;
+            }
 
             ColUtility.Free(list);
         }
