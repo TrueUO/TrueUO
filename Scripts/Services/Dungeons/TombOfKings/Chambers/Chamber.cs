@@ -33,14 +33,20 @@ namespace Server.Engines.TombOfKings
             if (ChamberLever.Levers.Count == 0)
                 return;
 
-            foreach (ChamberInfo info in m_ChamberInfos)
+            for (var index = 0; index < m_ChamberInfos.Length; index++)
+            {
+                ChamberInfo info = m_ChamberInfos[index];
+
                 m_Chambers.Add(new Chamber(info));
+            }
 
             // randomize
             List<ChamberLever> levers = new List<ChamberLever>(ChamberLever.Levers);
 
-            foreach (Chamber chamber in m_Chambers)
+            for (var index = 0; index < m_Chambers.Count; index++)
             {
+                Chamber chamber = m_Chambers[index];
+
                 int idx = Utility.Random(levers.Count);
 
                 chamber.Lever = levers[idx];

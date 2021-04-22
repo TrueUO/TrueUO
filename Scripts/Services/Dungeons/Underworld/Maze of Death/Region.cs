@@ -55,8 +55,10 @@ namespace Server.Regions
 
             Path = new List<Point2D>();
 
-            foreach (var point in _Points)
+            for (var index = 0; index < _Points.Length; index++)
             {
+                var point = _Points[index];
+
                 Path.Add(point);
             }
 
