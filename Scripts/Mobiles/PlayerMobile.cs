@@ -947,12 +947,9 @@ namespace Server.Mobiles
         {
             foreach (Mobile value in World.Mobiles.Values)
             {
-                if (value is PlayerMobile pm)
+                if (value is PlayerMobile pm && ((!pm.Mounted || pm.Mount != null && pm.Mount is EtherealMount) && pm.AllFollowers.Count > pm.AutoStabled.Count || pm.Mounted && pm.AllFollowers.Count > pm.AutoStabled.Count + 1))
                 {
-                    if ((!pm.Mounted || pm.Mount != null && pm.Mount is EtherealMount) && pm.AllFollowers.Count > pm.AutoStabled.Count || pm.Mounted && pm.AllFollowers.Count > pm.AutoStabled.Count + 1)
-                    {
-                        pm.AutoStablePets(); /* autostable checks summons, et al: no need here */
-                    }
+                    pm.AutoStablePets(); /* autostable checks summons, et al: no need here */
                 }
             }
         }
