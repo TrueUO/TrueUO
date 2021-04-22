@@ -2559,17 +2559,49 @@ namespace Server.Multis
 
         public SecureInfo GetSecureInfoFor(Item item)
         {
-            return Secures.FirstOrDefault(info => info.Item == item);
+            for (var index = 0; index < Secures.Count; index++)
+            {
+                var info = Secures[index];
+
+                if (info.Item == item)
+                {
+                    return info;
+                }
+            }
+
+            return null;
         }
 
         public SecureInfo GetSecureInfoFor(Mobile from, Item item)
         {
-            return Secures.FirstOrDefault(info => info.Item == item && (info.Owner == from || IsOwner(from)));
+            for (var index = 0; index < Secures.Count; index++)
+            {
+                var info = Secures[index];
+
+                if (info.Item == item && (info.Owner == from || IsOwner(from)))
+                {
+                    return info;
+                }
+            }
+
+            return null;
         }
 
         public List<SecureInfo> GetSecureInfosFor(Mobile from)
         {
-            return Secures.Where(s => s.Owner == from).ToList();
+            List<SecureInfo> list = new List<SecureInfo>();
+
+            for (var index = 0; index < Secures.Count; index++)
+            {
+                var s = Secures[index];
+
+                if (s.Owner == from)
+                {
+                    list.Add(s);
+                }
+            }
+
+            return list;
         }
 
         public bool ReleaseSecure(Mobile m, Item item)
@@ -2611,7 +2643,20 @@ namespace Server.Multis
 
         private bool CanRelease(Mobile from, Item item)
         {
-            if (item is Container && item.Items.Any(i => i is CraftableHouseItem || i is CraftableMetalHouseDoor || i is CraftableStoneHouseDoor))
+            bool any = false;
+
+            for (var index = 0; index < item.Items.Count; index++)
+            {
+                var i = item.Items[index];
+
+                if (i is CraftableHouseItem || i is CraftableMetalHouseDoor || i is CraftableStoneHouseDoor)
+                {
+                    any = true;
+                    break;
+                }
+            }
+
+            if (item is Container && any)
             {
                 from.SendLocalizedMessage(1010417); // You may not release this at this time.
                 return false;
@@ -2639,13 +2684,13 @@ namespace Server.Multis
                 return;
             }
 
-            foreach (SecureInfo info in Secures)
+            for (var index = 0; index < Secures.Count; index++)
             {
-                StrongBox c = info.Item as StrongBox;
+                SecureInfo info = Secures[index];
 
-                if (c != null && !c.Deleted && c.Owner == from)
+                if (info.Item is StrongBox c && !c.Deleted && c.Owner == from)
                 {
-                    from.SendLocalizedMessage(502112);//You already have a strong box
+                    from.SendLocalizedMessage(502112); //You already have a strong box
                     return;
                 }
             }
@@ -3385,8 +3430,10 @@ namespace Server.Multis
         {
             List<Item> list = new List<Item>(VendorRentalContracts.Where(c => c.RootParent != null || FindHouseAt(c) != this));
 
-            foreach (Item contract in list)
+            for (var index = 0; index < list.Count; index++)
             {
+                Item contract = list[index];
+
                 VendorRentalContracts.Remove(contract);
                 contract.IsLockedDown = false;
                 contract.Movable = true;
@@ -3396,19 +3443,29 @@ namespace Server.Multis
         private void CheckUnregisteredAddons()
         {
             if (Region == null || Addons == null)
-                return;
-
-            foreach (Item item in Region.GetEnumeratedItems().Where(i => i is IAddon))
             {
-                if (Addons.ContainsKey(item))
-                    continue;
-
-                Addons[item] = Owner;
+                return;
             }
 
-            foreach (Item item in Region.GetEnumeratedItems().Where(i => i is AddonComponent component && component.Addon == null))
+            foreach (Item item in Region.GetEnumeratedItems())
             {
-                item.Delete();
+                if (item is IAddon)
+                {
+                    if (Addons.ContainsKey(item))
+                    {
+                        continue;
+                    }
+
+                    Addons[item] = Owner;
+                }
+            }
+
+            foreach (Item item in Region.GetEnumeratedItems())
+            {
+                if (item is AddonComponent component && component.Addon == null)
+                {
+                    item.Delete();
+                }
             }
         }
 
@@ -3423,7 +3480,9 @@ namespace Server.Multis
             }
 
             foreach (KeyValuePair<Item, Mobile> kvp in lockDowns)
+            {
                 SetLockdown(kvp.Value, kvp.Key, true);
+            }
         }
 
         public static void HandleDeletion(Mobile mob)
@@ -3586,11 +3645,16 @@ namespace Server.Multis
         {
             int count = 0;
 
-            foreach (CommissionPlayerVendor vendor in PlayerVendors.OfType<CommissionPlayerVendor>())
+            for (var index = 0; index < PlayerVendors.Count; index++)
             {
-                if (vendor.Backpack != null)
+                Mobile playerVendor = PlayerVendors[index];
+
+                if (playerVendor is CommissionPlayerVendor vendor)
                 {
-                    count += vendor.Backpack.TotalItems;
+                    if (vendor.Backpack != null)
+                    {
+                        count += vendor.Backpack.TotalItems;
+                    }
                 }
             }
 
@@ -3748,9 +3812,16 @@ namespace Server.Multis
 
             CheckUnregisteredAddons();
 
-            foreach (Mobile m in GetMobiles().Where(m => m is Mannequin || m is Steward))
+            var ms = GetMobiles();
+
+            for (var index = 0; index < ms.Count; index++)
             {
-                Mannequin.ForceRedeed(m);
+                Mobile m = ms[index];
+
+                if (m is Mannequin || m is Steward)
+                {
+                    Mannequin.ForceRedeed(m);
+                }
             }
 
             if (m_Region != null)
