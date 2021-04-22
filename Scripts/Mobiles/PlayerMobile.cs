@@ -38,7 +38,6 @@ using Server.Targeting;
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 using RankDefinition = Server.Guilds.RankDefinition;
 #endregion
@@ -867,7 +866,18 @@ namespace Server.Mobiles
 
                     e.List.ForEach(serial =>
                     {
-                        Item item = pack.Items.FirstOrDefault(i => i.Serial == serial);
+                        Item item = null;
+
+                        for (var index = 0; index < pack.Items.Count; index++)
+                        {
+                            var i = pack.Items[index];
+
+                            if (i.Serial == serial)
+                            {
+                                item = i;
+                                break;
+                            }
+                        }
 
                         if (item != null)
                         {
@@ -935,9 +945,9 @@ namespace Server.Mobiles
 
         private static void CheckPets()
         {
-            foreach (PlayerMobile pm in World.Mobiles.Values.OfType<PlayerMobile>())
+            foreach (Mobile value in World.Mobiles.Values)
             {
-                if ((!pm.Mounted || pm.Mount != null && pm.Mount is EtherealMount) && pm.AllFollowers.Count > pm.AutoStabled.Count || pm.Mounted && pm.AllFollowers.Count > pm.AutoStabled.Count + 1)
+                if (value is PlayerMobile pm && ((!pm.Mounted || pm.Mount is EtherealMount) && pm.AllFollowers.Count > pm.AutoStabled.Count || pm.Mounted && pm.AllFollowers.Count > pm.AutoStabled.Count + 1))
                 {
                     pm.AutoStablePets(); /* autostable checks summons, et al: no need here */
                 }
@@ -1643,7 +1653,18 @@ namespace Server.Mobiles
                 Mobile aggressiveMaster = creature.ControlMaster;
 
                 // First lets find out if the creatures master is in our aggressor list
-                AggressorInfo info = Aggressors.FirstOrDefault(i => i.Attacker == aggressiveMaster);
+                AggressorInfo info = null;
+
+                for (var index = 0; index < Aggressors.Count; index++)
+                {
+                    var i = Aggressors[index];
+
+                    if (i.Attacker == aggressiveMaster)
+                    {
+                        info = i;
+                        break;
+                    }
+                }
 
                 if (info != null)
                 {
@@ -1665,16 +1686,49 @@ namespace Server.Mobiles
                 }
 
                 // Now, if I am in the creatures master aggressor list, it needs to be refreshed
-                info = aggressiveMaster.Aggressors.FirstOrDefault(i => i.Attacker == this);
+                info = null;
+
+                for (var index = 0; index < aggressiveMaster.Aggressors.Count; index++)
+                {
+                    var i = aggressiveMaster.Aggressors[index];
+
+                    if (i.Attacker == this)
+                    {
+                        info = i;
+                        break;
+                    }
+                }
 
                 info?.Refresh();
 
-                info = Aggressed.FirstOrDefault(i => i.Defender == aggressiveMaster);
+                info = null;
+
+                for (var index = 0; index < Aggressed.Count; index++)
+                {
+                    var i = Aggressed[index];
+
+                    if (i.Defender == aggressiveMaster)
+                    {
+                        info = i;
+                        break;
+                    }
+                }
 
                 info?.Refresh();
 
                 // next lets find out if we're on the creatures master aggressed list
-                info = aggressiveMaster.Aggressed.FirstOrDefault(i => i.Defender == this);
+                info = null;
+
+                for (var index = 0; index < aggressiveMaster.Aggressed.Count; index++)
+                {
+                    var i = aggressiveMaster.Aggressed[index];
+
+                    if (i.Defender == this)
+                    {
+                        info = i;
+                        break;
+                    }
+                }
 
                 if (info != null)
                 {
@@ -2041,7 +2095,20 @@ namespace Server.Mobiles
                 {
                     AggressorInfo info = Aggressed[i];
 
-                    if (info.Defender.InRange(Location, Core.GlobalMaxUpdateRange) && info.Defender.DamageEntries.Any(de => de.Damager == this))
+                    bool any = false;
+
+                    for (var index = 0; index < info.Defender.DamageEntries.Count; index++)
+                    {
+                        var de = info.Defender.DamageEntries[index];
+
+                        if (de.Damager == this)
+                        {
+                            any = true;
+                            break;
+                        }
+                    }
+
+                    if (info.Defender.InRange(Location, Core.GlobalMaxUpdateRange) && any)
                     {
                         info.Defender.RegisterDamage(amount, from);
                     }
@@ -2056,7 +2123,20 @@ namespace Server.Mobiles
                 {
                     AggressorInfo info = Aggressors[i];
 
-                    if (info.Attacker.InRange(Location, Core.GlobalMaxUpdateRange) && info.Attacker.DamageEntries.Any(de => de.Damager == this))
+                    bool any = false;
+
+                    for (var index = 0; index < info.Attacker.DamageEntries.Count; index++)
+                    {
+                        var de = info.Attacker.DamageEntries[index];
+
+                        if (de.Damager == this)
+                        {
+                            any = true;
+                            break;
+                        }
+                    }
+
+                    if (info.Attacker.InRange(Location, Core.GlobalMaxUpdateRange) && any)
                     {
                         info.Attacker.RegisterDamage(amount, from);
                     }
