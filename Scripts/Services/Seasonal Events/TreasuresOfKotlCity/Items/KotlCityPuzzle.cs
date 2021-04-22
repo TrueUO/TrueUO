@@ -27,12 +27,9 @@ namespace Server.Engines.TreasuresOfKotlCity
                 {
                     AddonComponent component = Components[index];
 
-                    if (component is KotlCityPuzzleComponent comp)
+                    if (component is KotlCityPuzzleComponent comp && (value && comp.Active || !value && !comp.Active))
                     {
-                        if (value && comp.Active || !value && !comp.Active)
-                        {
-                            comp.Active = !value;
-                        }
+                        comp.Active = !value;
                     }
                 }
 
