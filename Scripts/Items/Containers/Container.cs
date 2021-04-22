@@ -266,8 +266,10 @@ namespace Server.Items
             {
                 List<BankCheck> checks = new List<BankCheck>(Items.OfType<BankCheck>());
 
-                foreach (BankCheck check in checks)
+                for (var index = 0; index < checks.Count; index++)
                 {
+                    BankCheck check = checks[index];
+
                     if (from.Account.DepositGold(check.Worth))
                     {
                         from.SendLocalizedMessage(1042672, true, check.Worth.ToString("#,0"));

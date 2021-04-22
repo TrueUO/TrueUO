@@ -2,7 +2,6 @@ using Server.ContextMenus;
 using Server.Engines.Points;
 using Server.Mobiles;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -119,11 +118,42 @@ namespace Server.Items
 
                 List<Item> list = c.FindItemsByType<Item>();
 
-                m_Cleanup.Where(r => list.Select(k => k.Serial).Contains(r.items.Serial)).ToList().ForEach(k => k.confirm = true);
+                List<CleanupArray> list1 = new List<CleanupArray>();
+
+                for (var index = 0; index < m_Cleanup.Count; index++)
+                {
+                    var r = m_Cleanup[index];
+
+                    for (var i = 0; i < list.Count; i++)
+                    {
+                        var k = list[i];
+                        var serial = k.Serial;
+
+                        if (Equals(serial, r.items.Serial))
+                        {
+                            list1.Add(r);
+                            break;
+                        }
+                    }
+                }
+
+                list1.ForEach(k => k.confirm = true);
             }
             else
             {
-                m_Cleanup.Where(r => r.items.Serial == item.Serial).ToList().ForEach(k => k.confirm = true);
+                List<CleanupArray> list = new List<CleanupArray>();
+
+                for (var index = 0; index < m_Cleanup.Count; index++)
+                {
+                    var r = m_Cleanup[index];
+
+                    if (r.items.Serial == item.Serial)
+                    {
+                        list.Add(r);
+                    }
+                }
+
+                list.ForEach(k => k.confirm = true);
             }
         }
     }
