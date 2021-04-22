@@ -17,7 +17,7 @@ namespace Server.Engines.VendorSearching
             Criteria = criteria;
         }
 
-        public static SearchCriteriaCategory[] AllCategories =
+        public static readonly SearchCriteriaCategory[] AllCategories =
         {
             new SearchCriteriaCategory(Category.PriceRange, 2, 1154512, new SearchCriterionEntry[] { /* Price Range */
             }),

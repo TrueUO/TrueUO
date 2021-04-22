@@ -7,7 +7,7 @@ namespace Server.Items
     // This will only hit targets that are in combat with the user.
     public class MysticArc : WeaponAbility
     {
-        private readonly int m_Damage = 15;
+        private const int m_Damage = 15;
         private Mobile m_Target;
         private Mobile m_Mobile;
 

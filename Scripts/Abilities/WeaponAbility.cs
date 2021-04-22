@@ -155,7 +155,7 @@ namespace Server.Items
             return false;
         }
 
-        private int GetSkillLocalization(SkillName skill)
+        private static int GetSkillLocalization(SkillName skill)
         {
             switch (skill)
             {
@@ -420,27 +420,29 @@ namespace Server.Items
 
         private static readonly Hashtable m_PlayersTable = new Hashtable();
 
-        private static void AddContext(Mobile m, WeaponAbilityContext context)
+        private static void AddContext(IEntity m, WeaponAbilityContext context)
         {
             m_PlayersTable[m] = context;
         }
 
-        private static void RemoveContext(Mobile m)
+        private static void RemoveContext(IEntity m)
         {
             WeaponAbilityContext context = GetContext(m);
 
             if (context != null)
+            {
                 RemoveContext(m, context);
+            }
         }
 
-        private static void RemoveContext(Mobile m, WeaponAbilityContext context)
+        private static void RemoveContext(IEntity m, WeaponAbilityContext context)
         {
             m_PlayersTable.Remove(m);
 
             context.Timer.Stop();
         }
 
-        private static WeaponAbilityContext GetContext(Mobile m)
+        private static WeaponAbilityContext GetContext(IEntity m)
         {
             return m_PlayersTable[m] as WeaponAbilityContext;
         }

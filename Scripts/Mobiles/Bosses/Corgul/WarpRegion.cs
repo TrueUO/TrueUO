@@ -13,7 +13,7 @@ namespace Server.Regions
 
         public Rectangle2D Bounds => m_Bounds;
 
-        public CorgulWarpRegion(CorgulAltar ped, Rectangle2D rec)
+        public CorgulWarpRegion(IEntity ped, Rectangle2D rec)
             : base("Corgul Warp Region", ped.Map, DefaultPriority, rec)
         {
             m_Bounds = rec;

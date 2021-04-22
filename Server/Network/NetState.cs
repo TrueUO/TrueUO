@@ -139,12 +139,9 @@ namespace Server.Network
 		}
 
 		public void RemoveTrade(SecureTrade trade)
-		{
-			if (Trades != null)
-			{
-				Trades.Remove(trade);
-			}
-		}
+        {
+            Trades?.Remove(trade);
+        }
 
 		public SecureTrade FindTrade(Mobile m)
 		{
@@ -153,15 +150,17 @@ namespace Server.Network
 				return null;
 			}
 
-			foreach (SecureTrade trade in Trades)
-			{
-				if (trade.From.Mobile == m || trade.To.Mobile == m)
-				{
-					return trade;
-				}
-			}
+            for (var index = 0; index < Trades.Count; index++)
+            {
+                SecureTrade trade = Trades[index];
 
-			return null;
+                if (trade.From.Mobile == m || trade.To.Mobile == m)
+                {
+                    return trade;
+                }
+            }
+
+            return null;
 		}
 
 		public SecureTradeContainer FindTradeContainer(Mobile m)
@@ -171,23 +170,24 @@ namespace Server.Network
 				return null;
 			}
 
-			foreach (SecureTrade trade in Trades)
-			{
-				SecureTradeInfo from = trade.From;
-				SecureTradeInfo to = trade.To;
+            for (var index = 0; index < Trades.Count; index++)
+            {
+                SecureTrade trade = Trades[index];
+                SecureTradeInfo from = trade.From;
+                SecureTradeInfo to = trade.To;
 
-				if (from.Mobile == Mobile && to.Mobile == m)
-				{
-					return from.Container;
-				}
+                if (from.Mobile == Mobile && to.Mobile == m)
+                {
+                    return from.Container;
+                }
 
-				if (from.Mobile == m && to.Mobile == Mobile)
-				{
-					return to.Container;
-				}
-			}
+                if (from.Mobile == m && to.Mobile == Mobile)
+                {
+                    return to.Container;
+                }
+            }
 
-			return null;
+            return null;
 		}
 
 		public SecureTradeContainer AddTrade(NetState state)
@@ -736,48 +736,52 @@ namespace Server.Network
 		}
 
 		public static void Pause()
-		{
-			m_Paused = true;
+        {
+            m_Paused = true;
 
-			foreach (NetState ns in m_Instances)
-			{
-				lock (ns.m_AsyncLock)
-				{
-					ns.m_AsyncState |= AsyncState.Paused;
-				}
-			}
-		}
+            for (var index = 0; index < m_Instances.Count; index++)
+            {
+                NetState ns = m_Instances[index];
+
+                lock (ns.m_AsyncLock)
+                {
+                    ns.m_AsyncState |= AsyncState.Paused;
+                }
+            }
+        }
 
 		public static void Resume()
-		{
-			m_Paused = false;
+        {
+            m_Paused = false;
 
-			foreach (NetState ns in m_Instances)
-			{
-				if (ns.Socket == null)
-				{
-					continue;
-				}
+            for (var index = 0; index < m_Instances.Count; index++)
+            {
+                NetState ns = m_Instances[index];
 
-				lock (ns.m_AsyncLock)
-				{
-					ns.m_AsyncState &= ~AsyncState.Paused;
+                if (ns.Socket == null)
+                {
+                    continue;
+                }
 
-					try
-					{
-						if ((ns.m_AsyncState & AsyncState.Pending) == 0)
-						{
-							ns.InternalBeginReceive();
-						}
-					}
-					catch (Exception ex)
-					{
-						TraceException(ex);
-						ns.Dispose(false);
-					}
-				}
-			}
-		}
+                lock (ns.m_AsyncLock)
+                {
+                    ns.m_AsyncState &= ~AsyncState.Paused;
+
+                    try
+                    {
+                        if ((ns.m_AsyncState & AsyncState.Pending) == 0)
+                        {
+                            ns.InternalBeginReceive();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        TraceException(ex);
+                        ns.Dispose(false);
+                    }
+                }
+            }
+        }
 
 		public bool Flush()
 		{
@@ -824,7 +828,7 @@ namespace Server.Network
 			return false;
 		}
 
-		public PacketHandler GetHandler(int packetID)
+		public static PacketHandler GetHandler(int packetID)
 		{
 			return PacketHandlers.GetHandler(packetID);
 		}
@@ -836,8 +840,10 @@ namespace Server.Network
 			while (--index >= 0)
 			{
 				if (index < m_Instances.Count)
-					m_Instances[index]?.Flush();
-			}
+                {
+                    m_Instances[index]?.Flush();
+                }
+            }
 		}
 
 		private static int m_CoalesceSleep = -1;
@@ -1065,7 +1071,7 @@ namespace Server.Network
 				{
 					ExpansionInfo info = ExpansionInfo.Table[i];
 
-					if ((info.RequiredClient != null && Version >= info.RequiredClient) || ((Flags & info.ClientFlags) != 0))
+					if (info.RequiredClient != null && Version >= info.RequiredClient || (Flags & info.ClientFlags) != 0)
 					{
 						return info;
 					}

@@ -9,7 +9,7 @@ namespace Server.Mobiles
         private RefinementCraftType m_RefineType;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public RefinementCraftType RefineType { get { return m_RefineType; } set { m_RefineType = value; } }
+        public RefinementCraftType RefineType { get => m_RefineType; set => m_RefineType = value; }
 
         private readonly List<SBInfo> m_SBInfos = new List<SBInfo>();
         protected override List<SBInfo> SBInfos => m_SBInfos;
@@ -55,13 +55,15 @@ namespace Server.Mobiles
         {
             base.Serialize(writer);
             writer.Write(0);
+
             writer.Write((int)m_RefineType);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int v = reader.ReadInt();
+            reader.ReadInt();
+
             m_RefineType = (RefinementCraftType)reader.ReadInt();
         }
     }

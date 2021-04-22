@@ -60,8 +60,10 @@ namespace Server.Items
                 list.AddRange(kvp.Value);
             }
 
-            foreach (PlunderBeaconAddon beacon in list)
+            for (var index = 0; index < list.Count; index++)
             {
+                PlunderBeaconAddon beacon = list[index];
+
                 beacon.Delete();
             }
 

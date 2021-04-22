@@ -15,7 +15,7 @@ namespace Server.Mobiles
         {
             public InternalBuyInfo()
             {
-                Add(new GenericBuyInfo("1031235", typeof(FreshGinger), 505, 10, 11235, 0));
+                Add(new GenericBuyInfo(typeof(FreshGinger), 505, 10, 11235, 0));
                 Add(new GenericBuyInfo(typeof(Cabbage), 5, 20, 0xC7B, 0, true));
                 Add(new GenericBuyInfo(typeof(Cantaloupe), 6, 20, 0xC79, 0, true));
                 Add(new GenericBuyInfo(typeof(Carrot), 3, 20, 0xC78, 0, true));
@@ -38,7 +38,6 @@ namespace Server.Mobiles
                 Add(new GenericBuyInfo(typeof(Grapes), 3, 20, 0x9D1, 0, true));
                 Add(new GenericBuyInfo(typeof(Apple), 3, 20, 0x9D0, 0, true));
                 Add(new GenericBuyInfo(typeof(SheafOfHay), 2, 20, 0xF36, 0));
-                Add(new GenericBuyInfo(typeof(Hoe), 5, 20, 3897, 0));
             }
         }
 

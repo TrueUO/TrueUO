@@ -178,27 +178,36 @@ namespace Server
             {
                 if (r.Name != null && r is TownRegion)
                 {
-                    return string.Format("somewhere near {0}.", r.Name);
+                    return $"somewhere near {r.Name}.";
                 }
 
                 if (r.Name != null && r is DungeonRegion)
                 {
-                    return string.Format("somewhere in dungeon {0}.", r.Name);
+                    return $"somewhere in dungeon {r.Name}.";
                 }
             }
 
             int mapID = map.MapID;
+
             if (mapID < 0 || mapID > m_Locations.Length)
+            {
                 return "an unknown location";
+            }
 
             WorldLocationInfo[] infos = m_Locations[mapID];
 
-            foreach (WorldLocationInfo info in infos)
+            for (var index = 0; index < infos.Length; index++)
             {
-                foreach (Rectangle2D rec in info.m_Bounds)
+                WorldLocationInfo info = infos[index];
+
+                for (var i = 0; i < info.m_Bounds.Length; i++)
                 {
+                    Rectangle2D rec = info.m_Bounds[i];
+
                     if (rec.Contains(p))
+                    {
                         return info.m_RegionName;
+                    }
                 }
             }
 

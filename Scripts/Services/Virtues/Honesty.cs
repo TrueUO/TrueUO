@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-
 using Server.Engines.CannedEvil;
 using Server.Items;
 using Server.Mobiles;
@@ -326,7 +325,17 @@ namespace Server.Services.Virtues
 
                 if (!string.IsNullOrWhiteSpace(socket.HonestyRegion) && BaseVendor.AllVendors.Count >= 10)
                 {
-                    List<BaseVendor> matchedVendors = BaseVendor.AllVendors.Where(vendor => (vendor.Map == socket.Owner.Map && vendor.Region.IsPartOf(socket.HonestyRegion))).ToList();
+                    List<BaseVendor> matchedVendors = new List<BaseVendor>();
+
+                    for (var index = 0; index < BaseVendor.AllVendors.Count; index++)
+                    {
+                        var vendor = BaseVendor.AllVendors[index];
+
+                        if (vendor.Map == socket.Owner.Map && vendor.Region.IsPartOf(socket.HonestyRegion))
+                        {
+                            matchedVendors.Add(vendor);
+                        }
+                    }
 
                     if (matchedVendors.Count > 0)
                     {
@@ -343,8 +352,10 @@ namespace Server.Services.Virtues
 
         private static void CheckChests()
         {
-            foreach (Point3D loc in _ChestLocations)
+            for (var index = 0; index < _ChestLocations.Length; index++)
             {
+                Point3D loc = _ChestLocations[index];
+
                 CheckLocation(loc, Map.Trammel);
                 CheckLocation(loc, Map.Felucca);
             }

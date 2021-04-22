@@ -1,21 +1,3 @@
-/***************************************************************************
-*                           SequentialFileWriter.cs
-*                            -------------------
-*   begin                : May 1, 2002
-*   copyright            : (C) The RunUO Software Team
-*   email                : info@runuo.com
-*
-*   $Id: SequentialFileWriter.cs 4 2006-06-15 04:28:39Z mark $
-*
-***************************************************************************/
-/***************************************************************************
-*
-*   This program is free software; you can redistribute it and/or modify
-*   it under the terms of the GNU General Public License as published by
-*   the Free Software Foundation; either version 2 of the License, or
-*   (at your option) any later version.
-*
-***************************************************************************/
 using System;
 using System.IO;
 
@@ -31,7 +13,7 @@ namespace Server
 		{
 			if (path == null)
 			{
-				throw new ArgumentNullException("path");
+				throw new ArgumentNullException(nameof(path));
 			}
 
 			this.metrics = metrics;
@@ -98,7 +80,7 @@ namespace Server
 		{
 			if (FileOperations.AreSynchronous)
 			{
-				fileStream.Write(chunk.Buffer, chunk.Offset, chunk.Size);
+				fileStream.Write(chunk.Buffer, FileQueue.Chunk.Offset, chunk.Size);
 
 				if (metrics != null)
 				{
@@ -114,7 +96,7 @@ namespace Server
 					writeCallback = OnWrite;
 				}
 
-				fileStream.BeginWrite(chunk.Buffer, chunk.Offset, chunk.Size, writeCallback, chunk);
+				fileStream.BeginWrite(chunk.Buffer, FileQueue.Chunk.Offset, chunk.Size, writeCallback, chunk);
 			}
 		}
 

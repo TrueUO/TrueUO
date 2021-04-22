@@ -2,7 +2,6 @@ using Server.Mobiles;
 using Server.Network;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.Quests
 {
@@ -74,10 +73,30 @@ namespace Server.Engines.Quests
             {
                 if (AllObjectives)
                 {
-                    return m_Objectives.All(obj => obj.Completed);
+                    for (var index = 0; index < m_Objectives.Count; index++)
+                    {
+                        var obj = m_Objectives[index];
+
+                        if (!obj.Completed)
+                        {
+                            return false;
+                        }
+                    }
+
+                    return true;
                 }
 
-                return m_Objectives.Any(obj => obj.Completed);
+                for (var index = 0; index < m_Objectives.Count; index++)
+                {
+                    var obj = m_Objectives[index];
+
+                    if (obj.Completed)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
             }
         }
 
@@ -87,10 +106,30 @@ namespace Server.Engines.Quests
             {
                 if (AllObjectives)
                 {
-                    return m_Objectives.All(obj => obj.Failed);
+                    for (var index = 0; index < m_Objectives.Count; index++)
+                    {
+                        var obj = m_Objectives[index];
+
+                        if (!obj.Failed)
+                        {
+                            return false;
+                        }
+                    }
+
+                    return true;
                 }
 
-                return m_Objectives.Any(obj => obj.Failed);
+                for (var index = 0; index < m_Objectives.Count; index++)
+                {
+                    var obj = m_Objectives[index];
+
+                    if (obj.Failed)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
             }
         }
 
@@ -102,7 +141,17 @@ namespace Server.Engines.Quests
 
         public bool HasTimer()
         {
-            return m_Objectives.Any(obj => obj.Timed);
+            for (var index = 0; index < m_Objectives.Count; index++)
+            {
+                var obj = m_Objectives[index];
+
+                if (obj.Timed)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public void StartTimer()

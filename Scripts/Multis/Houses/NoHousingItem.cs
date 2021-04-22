@@ -41,7 +41,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
 
             if (m_Timer != null)
@@ -58,8 +57,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             DateTime next = reader.ReadDateTime();
             m_Area = new Rectangle3D[reader.ReadInt()];

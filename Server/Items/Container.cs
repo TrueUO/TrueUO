@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 using Server.Network;
 #endregion
@@ -35,8 +34,18 @@ namespace Server.Items
 				return false;
 			}
 
-			return Items.All(i => i.GridLocation != pos);
-		}
+            for (var index = 0; index < Items.Count; index++)
+            {
+                var i = Items[index];
+
+                if (i.GridLocation == pos)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
 
 		public virtual byte GetNewPosition(byte current)
 		{
@@ -250,39 +259,38 @@ namespace Server.Items
 
 					return false;
 				}
-				else
-				{
-					int maxWeight = MaxWeight;
 
-					if (maxWeight != 0 && (TotalWeight + plusWeight + item.TotalWeight + item.PileWeight) > maxWeight)
-					{
-						if (message)
-						{
-							SendFullWeightMessage(m, item);
-						}
+                int maxWeight = MaxWeight;
 
-						return false;
-					}
-				}
-			}
+                if (maxWeight != 0 && (TotalWeight + plusWeight + item.TotalWeight + item.PileWeight) > maxWeight)
+                {
+                    if (message)
+                    {
+                        SendFullWeightMessage(m, item);
+                    }
+
+                    return false;
+                }
+            }
 
 			object parent = Parent;
 
 			while (parent != null)
-			{
-				if (parent is Container container)
+            {
+                if (parent is Container container)
 				{
 					return container.CheckHold(m, item, message, checkItems, plusItems, plusWeight);
 				}
-				else if (parent is Item pItem)
-				{
-					parent = pItem.Parent;
-				}
-				else
-				{
-					break;
-				}
-			}
+
+                if (parent is Item pItem)
+                {
+                    parent = pItem.Parent;
+                }
+                else
+                {
+                    break;
+                }
+            }
 
 			return true;
 		}
@@ -487,12 +495,13 @@ namespace Server.Items
 			{
 				throw new ArgumentException();
 			}
-			else if (grouper == null)
-			{
-				throw new ArgumentNullException();
-			}
 
-			Item[][][] items = new Item[types.Length][][];
+            if (grouper == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            Item[][][] items = new Item[types.Length][][];
 			int[][] totals = new int[types.Length][];
 
 			for (int i = 0; i < types.Length; ++i)
@@ -622,12 +631,13 @@ namespace Server.Items
 			{
 				throw new ArgumentException();
 			}
-			else if (grouper == null)
-			{
-				throw new ArgumentNullException();
-			}
 
-			Item[][][] items = new Item[types.Length][][];
+            if (grouper == null)
+            {
+                throw new ArgumentNullException();
+            }
+
+            Item[][][] items = new Item[types.Length][][];
 			int[][] totals = new int[types.Length][];
 
 			for (int i = 0; i < types.Length; ++i)
@@ -910,8 +920,7 @@ namespace Server.Items
 			if (total >= amount)
 			{
 				// We've enough, so consume it
-
-				int need = amount;
+                int need = amount;
 
 				for (int i = 0; i < items.Length; ++i)
 				{
@@ -951,7 +960,7 @@ namespace Server.Items
 			return ConsumeUpTo(type, amount, true);
 		}
 
-		public int ConsumeUpTo(Type type, int amount, bool recurse)
+        private int ConsumeUpTo(Type type, int amount, bool recurse)
 		{
 			int consumed = 0;
 
@@ -967,8 +976,7 @@ namespace Server.Items
 			return consumed;
 		}
 
-		private static void RecurseConsumeUpTo(
-			Item current, Type type, int amount, bool recurse, ref int consumed, Queue<Item> toDelete)
+		private static void RecurseConsumeUpTo(Item current, Type type, int amount, bool recurse, ref int consumed, Queue<Item> toDelete)
 		{
 			if (current != null && current.Items.Count > 0)
 			{
@@ -978,7 +986,7 @@ namespace Server.Items
 				{
 					Item item = list[i];
 
-					if (type.IsAssignableFrom(item.GetType()))
+					if (type.IsInstanceOfType(item))
 					{
 						int need = amount - consumed;
 						int theirAmount = item.Amount;
@@ -998,7 +1006,7 @@ namespace Server.Items
 					}
 					else if (recurse && item is Container)
 					{
-						RecurseConsumeUpTo(item, type, amount, recurse, ref consumed, toDelete);
+						RecurseConsumeUpTo(item, type, amount, true, ref consumed, toDelete);
 					}
 				}
 			}
@@ -1255,7 +1263,7 @@ namespace Server.Items
 			return m_FindItemsList.ToArray();
 		}
 
-		private static void RecurseFindItemsByType(Item current, Type type, bool recurse, List<Item> list)
+		private static void RecurseFindItemsByType(Item current, Type type, bool recurse, ICollection<Item> list)
 		{
 			if (current != null && current.Items.Count > 0)
 			{
@@ -1265,14 +1273,14 @@ namespace Server.Items
 				{
 					Item item = items[i];
 
-					if (type.IsAssignableFrom(item.GetType())) // item.GetType().IsAssignableFrom( type ) )
+					if (type.IsInstanceOfType(item))
 					{
 						list.Add(item);
 					}
 
 					if (recurse && item is Container)
 					{
-						RecurseFindItemsByType(item, type, recurse, list);
+						RecurseFindItemsByType(item, type, true, list);
 					}
 				}
 			}
@@ -1295,7 +1303,7 @@ namespace Server.Items
 			return m_FindItemsList.ToArray();
 		}
 
-		private static void RecurseFindItemsByType(Item current, Type[] types, bool recurse, List<Item> list)
+		private static void RecurseFindItemsByType(Item current, IReadOnlyList<Type> types, bool recurse, ICollection<Item> list)
 		{
 			if (current != null && current.Items.Count > 0)
 			{
@@ -1312,7 +1320,7 @@ namespace Server.Items
 
 					if (recurse && item is Container)
 					{
-						RecurseFindItemsByType(item, types, recurse, list);
+						RecurseFindItemsByType(item, types, true, list);
 					}
 				}
 			}
@@ -1338,20 +1346,21 @@ namespace Server.Items
 				{
 					Item item = list[i];
 
-					if (type.IsAssignableFrom(item.GetType()))
+					if (type.IsInstanceOfType(item))
 					{
 						return item;
 					}
-					else if (recurse && item is Container)
-					{
-						Item check = RecurseFindItemByType(item, type, recurse);
 
-						if (check != null)
-						{
-							return check;
-						}
-					}
-				}
+                    if (recurse && item is Container)
+                    {
+                        Item check = RecurseFindItemByType(item, type, true);
+
+                        if (check != null)
+                        {
+                            return check;
+                        }
+                    }
+                }
 			}
 
 			return null;
@@ -1367,7 +1376,7 @@ namespace Server.Items
 			return RecurseFindItemByType(this, types, recurse);
 		}
 
-		private static Item RecurseFindItemByType(Item current, Type[] types, bool recurse)
+		private static Item RecurseFindItemByType(Item current, IReadOnlyList<Type> types, bool recurse)
 		{
 			if (current != null && current.Items.Count > 0)
 			{
@@ -1381,16 +1390,17 @@ namespace Server.Items
 					{
 						return item;
 					}
-					else if (recurse && item is Container)
-					{
-						Item check = RecurseFindItemByType(item, types, recurse);
 
-						if (check != null)
-						{
-							return check;
-						}
-					}
-				}
+                    if (recurse && item is Container)
+                    {
+                        Item check = RecurseFindItemByType(item, types, true);
+
+                        if (check != null)
+                        {
+                            return check;
+                        }
+                    }
+                }
 			}
 
 			return null;
@@ -1427,7 +1437,7 @@ namespace Server.Items
 			return list;
 		}
 
-		private static void RecurseFindItemsByType<T>(Item current, bool recurse, List<T> list, Predicate<T> predicate)
+		private static void RecurseFindItemsByType<T>(Item current, bool recurse, ICollection<T> list, Predicate<T> predicate)
 			where T : Item
 		{
 			if (current != null && current.Items.Count > 0)
@@ -1438,19 +1448,14 @@ namespace Server.Items
 				{
 					Item item = items[i];
 
-					if (typeof(T).IsAssignableFrom(item.GetType()))
+					if (item is T typedItem && (predicate == null || predicate(typedItem)))
 					{
-						T typedItem = (T)item;
-
-						if (predicate == null || predicate(typedItem))
-						{
-							list.Add(typedItem);
-						}
-					}
+                        list.Add(typedItem);
+                    }
 
 					if (recurse && item is Container)
 					{
-						RecurseFindItemsByType(item, recurse, list, predicate);
+						RecurseFindItemsByType(item, true, list, predicate);
 					}
 				}
 			}
@@ -1486,18 +1491,16 @@ namespace Server.Items
 				{
 					Item item = list[i];
 
-					if (typeof(T).IsAssignableFrom(item.GetType()))
+					if (item is T typedItem)
 					{
-						T typedItem = (T)item;
-
-						if (predicate == null || predicate(typedItem))
+                        if (predicate == null || predicate(typedItem))
 						{
 							return typedItem;
 						}
 					}
 					else if (recurse && item is Container)
 					{
-						T check = RecurseFindItemByType(item, recurse, predicate);
+						T check = RecurseFindItemByType(item, true, predicate);
 
 						if (check != null)
 						{
@@ -1511,11 +1514,11 @@ namespace Server.Items
 		}
 		#endregion
 
-		private static bool InTypeList(Item item, Type[] types)
+		private static bool InTypeList(IEntity item, IReadOnlyList<Type> types)
 		{
 			Type t = item.GetType();
 
-			for (int i = 0; i < types.Length; ++i)
+			for (int i = 0; i < types.Count; ++i)
 			{
 				if (types[i].IsAssignableFrom(t))
 				{
@@ -1780,18 +1783,16 @@ namespace Server.Items
 		}
 
 		public override bool OnDragDrop(Mobile from, Item dropped)
-		{
-			if (TryDropItem(from, dropped, true))
+        {
+            if (TryDropItem(from, dropped, true))
 			{
 				from.SendSound(GetDroppedSound(dropped), GetWorldLocation());
 
 				return true;
 			}
-			else
-			{
-				return false;
-			}
-		}
+
+            return false;
+        }
 
 		public virtual bool TryDropItem(Mobile from, Item dropped, bool sendFullMessage)
 		{
@@ -2151,11 +2152,9 @@ namespace Server.Items
 			{
 				return data;
 			}
-			else
-			{
-				return m_Default;
-			}
-		}
+
+            return m_Default;
+        }
 
 		private readonly int m_GumpID;
 		private readonly Rectangle2D m_Bounds;

@@ -1,5 +1,6 @@
 #region References
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
@@ -156,19 +157,19 @@ namespace Server
             return (hue & 0x1f) * ScaleI;
         }
 
-        public static unsafe void ApplyTo(Bitmap bmp, int hue, bool onlyHueGrayPixels)
+        public static void ApplyTo(Bitmap bmp, int hue, bool onlyHueGrayPixels)
         {
             ApplyTo(bmp, GetHue(hue), onlyHueGrayPixels);
         }
 
-        public static unsafe void ApplyTo(Bitmap bmp, Hue hue, bool onlyHueGrayPixels)
+        private static void ApplyTo(Bitmap bmp, Hue hue, bool onlyHueGrayPixels)
         {
             ApplyTo(bmp, hue?.Colors, onlyHueGrayPixels);
         }
 
-        public static unsafe void ApplyTo(Bitmap bmp, short[] colors, bool onlyHueGrayPixels)
+        private static unsafe void ApplyTo(Bitmap bmp, IReadOnlyList<short> colors, bool onlyHueGrayPixels)
         {
-            if (bmp == null || colors == null || colors.Length < 32)
+            if (bmp == null || colors == null || colors.Count < 32)
             {
                 return;
             }
@@ -186,19 +187,17 @@ namespace Server
 
             if (onlyHueGrayPixels)
             {
-                int c, r, g, b;
-
                 while (pBuffer < pImageEnd)
                 {
                     while (pBuffer < pLineEnd)
                     {
-                        c = *pBuffer;
+                        int c = *pBuffer;
 
                         if (c != 0)
                         {
-                            r = (c >> 10) & 0x1F;
-                            g = (c >> 5) & 0x1F;
-                            b = c & 0x1F;
+                            var r = (c >> 10) & 0x1F;
+                            var g = (c >> 5) & 0x1F;
+                            var b = c & 0x1F;
 
                             if (r == g && r == b)
                             {

@@ -2327,7 +2327,7 @@ namespace Server.Mobiles
             SendLocalizedMessage(1060868); // Target the item you wish to toggle insurance status on <ESC> to cancel
         }
 
-        private bool CanInsure(Item item)
+        private static bool CanInsure(Item item)
         {
             if (item is BaseQuiver && item.LootType == LootType.Regular)
             {
@@ -2339,8 +2339,7 @@ namespace Server.Mobiles
                 return false;
             }
 
-            if (item is Spellbook && item.LootType == LootType.Blessed || item is Runebook || item is PotionKeg ||
-                item is VvVSigil)
+            if (item is Spellbook && item.LootType == LootType.Blessed || item is Runebook || item is PotionKeg || item is VvVSigil)
             {
                 return false;
             }
@@ -2366,7 +2365,9 @@ namespace Server.Mobiles
             }
 
             if (item.LootType == LootType.Blessed)
+            {
                 return false;
+            }
 
             return true;
         }
@@ -2856,17 +2857,18 @@ namespace Server.Mobiles
             }
         }
 
-        public void ClearCoOwners_Callback(Mobile from, bool okay, object state)
+        public static void ClearCoOwners_Callback(Mobile from, bool okay, object state)
         {
             BaseHouse house = (BaseHouse)state;
 
             if (house.Deleted)
+            {
                 return;
+            }
 
             if (okay && house.IsCoOwner(from))
             {
                 house.CoOwners?.Remove(from);
-
                 from.SendLocalizedMessage(501300); // You have been removed as a house co-owner.
             }
         }
@@ -5210,9 +5212,8 @@ namespace Server.Mobiles
         }
 
         #region Fastwalk Prevention
-        private static readonly bool FastwalkPrevention = true; // Is fastwalk prevention enabled?
-
-        private static readonly int FastwalkThreshold = 400; // Fastwalk prevention will become active after 0.4 seconds
+        private const bool FastwalkPrevention = true; // Is fastwalk prevention enabled?
+        private const int FastwalkThreshold = 400; // Fastwalk prevention will become active after 0.4 seconds
 
         private long m_NextMovementTime;
         private bool m_HasMoved;

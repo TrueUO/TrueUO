@@ -1,7 +1,6 @@
 using Server.Mobiles;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.Quests
 {
@@ -50,7 +49,31 @@ namespace Server.Engines.Quests
 
         public static TimeSpan GetCooldown(TierQuestInfo tierInfo, Type questType)
         {
-            TierInfo info = tierInfo.Tiers.FirstOrDefault(i => i.Quests.Any(q => q == questType));
+            TierInfo info = null;
+
+            for (var index = 0; index < tierInfo.Tiers.Length; index++)
+            {
+                var i = tierInfo.Tiers[index];
+
+                bool any = false;
+
+                for (var index1 = 0; index1 < i.Quests.Length; index1++)
+                {
+                    var q = i.Quests[index1];
+
+                    if (q == questType)
+                    {
+                        any = true;
+                        break;
+                    }
+                }
+
+                if (any)
+                {
+                    info = i;
+                    break;
+                }
+            }
 
             if (info != null)
             {
@@ -62,7 +85,31 @@ namespace Server.Engines.Quests
 
         public static int GetCompleteReq(TierQuestInfo tierInfo, Type questType)
         {
-            TierInfo info = tierInfo.Tiers.FirstOrDefault(i => i.Quests.Any(q => q == questType));
+            TierInfo info = null;
+
+            for (var index = 0; index < tierInfo.Tiers.Length; index++)
+            {
+                var i = tierInfo.Tiers[index];
+
+                bool any = false;
+
+                for (var index1 = 0; index1 < i.Quests.Length; index1++)
+                {
+                    var q = i.Quests[index1];
+
+                    if (q == questType)
+                    {
+                        any = true;
+                        break;
+                    }
+                }
+
+                if (any)
+                {
+                    info = i;
+                    break;
+                }
+            }
 
             if (info != null)
             {

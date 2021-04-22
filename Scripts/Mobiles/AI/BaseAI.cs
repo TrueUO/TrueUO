@@ -1,4 +1,3 @@
-#region References
 using Server.ContextMenus;
 using Server.Gumps;
 using Server.Items;
@@ -9,8 +8,6 @@ using Server.Targets;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-#endregion
 
 namespace Server.Mobiles
 {
@@ -131,8 +128,7 @@ namespace Server.Mobiles
                 m_AI = ai;
                 m_Order = order;
 
-                if (mobile.IsDeadPet && (order == OrderType.Guard || order == OrderType.Attack || order == OrderType.Transfer ||
-                                         order == OrderType.Drop))
+                if (mobile.IsDeadPet && (order == OrderType.Guard || order == OrderType.Attack || order == OrderType.Transfer || order == OrderType.Drop))
                 {
                     Enabled = false;
                 }
@@ -147,8 +143,7 @@ namespace Server.Mobiles
                         m_From.RevealingAction();
                     }
 
-                    if (m_Mobile.IsDeadPet && (m_Order == OrderType.Guard || m_Order == OrderType.Attack ||
-                                               m_Order == OrderType.Transfer || m_Order == OrderType.Drop))
+                    if (m_Mobile.IsDeadPet && (m_Order == OrderType.Guard || m_Order == OrderType.Attack || m_Order == OrderType.Transfer || m_Order == OrderType.Drop))
                     {
                         return;
                     }
@@ -855,6 +850,9 @@ namespace Server.Mobiles
             if (CheckCharming())
                 return true;
 
+            if(Action==ActionType.Combat && CheckHerding())
+                return true;
+            
             switch (Action)
             {
                 case ActionType.Wander:
@@ -1419,10 +1417,34 @@ namespace Server.Mobiles
 
             double distance = m_Mobile.GetDistanceToSqrt(target);
 
-            if (distance < 1 || distance > 15)
+            if (target is Mobile mTarget)
+            {
+
+                if (!mTarget.Alive || m_Mobile.Combatant != null || (m_Mobile.ControlMaster != null && m_Mobile.ControlMaster != mTarget) ||
+                    mTarget.Map != m_Mobile.Map || distance > 45)
+                {
+                    m_Mobile.TargetLocation = null;
+                    m_Mobile.CurrentSpeed = m_Mobile.ActiveSpeed;
+                    return false; // Do not herd after being attacked, if it has been tamed, if the herder left the area or if they are dead
+                }
+
+                m_Mobile.CurrentSpeed = m_Mobile.ActiveSpeed;
+
+                if (distance > 1)
+                {
+                    bool bRun = distance > 5;
+
+                    WalkMobileRange(mTarget, 1, bRun, 0, 1);
+                }
+
+                return true;
+            }
+
+            if (distance < 1 || distance > 30)
             {
                 m_Mobile.TargetLocation = null;
-                return false; // At the target or too far away
+                m_Mobile.CurrentSpeed = m_Mobile.ActiveSpeed;
+                return false; // Stop herding when target is reached or too far away (does not apply to shepherd)
             }
 
             DoMove(m_Mobile.GetDirectionTo(target));
@@ -1458,17 +1480,13 @@ namespace Server.Mobiles
                     m_Mobile.DebugSay("My master told me to follow: {0}", m_Mobile.ControlTarget.Name);
 
                     // Not exactly OSI style, but better than nothing.
-                    bool bRun = (iCurrDist > 5);
+                    bool bRun = iCurrDist > 5;
 
                     if (WalkMobileRange(m_Mobile.ControlTarget, 1, bRun, 0, 1))
                     {
-                        if (m_Mobile.Combatant != null && !m_Mobile.Combatant.Deleted && m_Mobile.Combatant.Alive &&
-                            (!(m_Mobile.Combatant is Mobile) || !((Mobile)m_Mobile.Combatant).IsDeadBondedPet))
+                        if (m_Mobile.Combatant != null && !m_Mobile.Combatant.Deleted && m_Mobile.Combatant.Alive && (!(m_Mobile.Combatant is Mobile) || !((Mobile)m_Mobile.Combatant).IsDeadBondedPet))
                         {
                             m_Mobile.Warmode = true;
-
-                            //if (!DirectionLocked)
-                            //	m_Mobile.Direction = m_Mobile.GetDirectionTo(m_Mobile.Combatant);
                         }
                         else
                         {
@@ -1614,8 +1632,12 @@ namespace Server.Mobiles
             Mobile closestMob = combatant;
             double closestDist = combatant == null ? m_Mobile.RangePerception : combatant.GetDistanceToSqrt(controlMaster);
 
-            foreach (Mobile aggressor in controlMaster.Aggressors.Select(x => x.Attacker))
+            for (var index = 0; index < controlMaster.Aggressors.Count; index++)
             {
+                var x = controlMaster.Aggressors[index];
+
+                Mobile aggressor = x.Attacker;
+
                 if (ValidGuardTarget(aggressor))
                 {
                     double dist = aggressor.GetDistanceToSqrt(controlMaster);
@@ -1628,8 +1650,12 @@ namespace Server.Mobiles
                 }
             }
 
-            foreach (Mobile aggressed in controlMaster.Aggressed.Select(x => x.Defender))
+            for (var index = 0; index < controlMaster.Aggressed.Count; index++)
             {
+                var x = controlMaster.Aggressed[index];
+
+                Mobile aggressed = x.Defender;
+
                 if (ValidGuardTarget(aggressed))
                 {
                     double dist = aggressed.GetDistanceToSqrt(controlMaster);
@@ -1859,9 +1885,9 @@ namespace Server.Mobiles
 
         private class TransferItem : Item
         {
-            public static bool IsInCombat(BaseCreature creature)
+            public static bool IsInCombat(Mobile creature)
             {
-                return (creature != null && (creature.Aggressors.Count > 0 || creature.Aggressed.Count > 0));
+                return creature != null && (creature.Aggressors.Count > 0 || creature.Aggressed.Count > 0);
             }
 
             private readonly BaseCreature m_Creature;
@@ -2130,7 +2156,7 @@ namespace Server.Mobiles
         {
             if (DateTime.UtcNow >= m_Mobile.BardEndTime && (m_Mobile.BardMaster == null || m_Mobile.BardMaster.Deleted ||
                                                             m_Mobile.BardMaster.Map != m_Mobile.Map ||
-                                                            m_Mobile.GetDistanceToSqrt(m_Mobile.BardMaster) > m_Mobile.RangePerception))
+                                                            !m_Mobile.InRange((IPoint3D)m_Mobile.BardMaster, m_Mobile.RangePerception)))
             {
                 m_Mobile.DebugSay("I have lost my provoker");
                 m_Mobile.BardProvoked = false;
@@ -2142,8 +2168,9 @@ namespace Server.Mobiles
             }
             else
             {
-                if (m_Mobile.BardTarget == null || m_Mobile.BardTarget.Deleted || m_Mobile.BardTarget.Map != m_Mobile.Map ||
-                    m_Mobile.GetDistanceToSqrt(m_Mobile.BardTarget) > m_Mobile.RangePerception)
+                m_Mobile.BardEndTime = DateTime.UtcNow + TimeSpan.FromSeconds(30.0);
+
+                if (m_Mobile.BardTarget == null || m_Mobile.BardTarget.Deleted || m_Mobile.BardTarget.Map != m_Mobile.Map || !m_Mobile.InRange((IPoint3D)m_Mobile.BardTarget, m_Mobile.RangePerception))
                 {
                     m_Mobile.DebugSay("I have lost my provoke target");
                     m_Mobile.BardProvoked = false;

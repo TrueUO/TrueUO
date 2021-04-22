@@ -172,8 +172,12 @@ namespace Server.Misc
             points += CombatTrainingSpell.RegenBonus(from);
             points += BarrabHemolymphConcentrate.HPRegenBonus(from);
 
-            foreach (RegenBonusHandler handler in HitsBonusHandlers)
+            for (var index = 0; index < HitsBonusHandlers.Count; index++)
+            {
+                RegenBonusHandler handler = HitsBonusHandlers[index];
+
                 points += handler(from);
+            }
 
             return points;
         }
@@ -200,8 +204,12 @@ namespace Server.Misc
             if (points < -1)
                 points = -1;
 
-            foreach (RegenBonusHandler handler in StamBonusHandlers)
+            for (var index = 0; index < StamBonusHandlers.Count; index++)
+            {
+                RegenBonusHandler handler = StamBonusHandlers[index];
+
                 points += handler(from);
+            }
 
             return points;
         }
@@ -221,8 +229,12 @@ namespace Server.Misc
             if (from is PlayerMobile && from.Race == Race.Gargoyle)
                 points += 2;
 
-            foreach (RegenBonusHandler handler in ManaBonusHandlers)
+            for (var index = 0; index < ManaBonusHandlers.Count; index++)
+            {
+                RegenBonusHandler handler = ManaBonusHandlers[index];
+
                 points += handler(from);
+            }
 
             return points;
         }

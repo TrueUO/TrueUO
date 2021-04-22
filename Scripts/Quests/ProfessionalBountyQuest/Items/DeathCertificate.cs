@@ -11,7 +11,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public string Owner => m_Owner;
 
-        public DeathCertificate(Mobile owner)
+        public DeathCertificate(IEntity owner)
             : base(0x14F0)
         {
             if (owner is PirateCaptain capt)

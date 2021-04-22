@@ -162,29 +162,27 @@ namespace Server.Network
 		{
 			if (buffer == null)
 			{
-				throw new ArgumentNullException("buffer");
+				throw new ArgumentNullException(nameof(buffer));
 			}
 
             if (!(offset >= 0 && offset < buffer.Length))
             {
-                throw new ArgumentOutOfRangeException(
-                    "offset", offset, "Offset must be greater than or equal to zero and less than the size of the buffer.");
+                throw new ArgumentOutOfRangeException(nameof(offset), offset, "Offset must be greater than or equal to zero and less than the size of the buffer.");
             }
 
             if (length < 0 || length > buffer.Length)
             {
-                throw new ArgumentOutOfRangeException(
-                    "length", length, "Length cannot be less than zero or greater than the size of the buffer.");
+                throw new ArgumentOutOfRangeException(nameof(length), length, "Length cannot be less than zero or greater than the size of the buffer.");
             }
 
-            if ((buffer.Length - offset) < length)
+            if (buffer.Length - offset < length)
             {
                 throw new ArgumentException("Offset and length do not point to a valid segment within the buffer.");
             }
 
             int existingBytes = (_pending.Count * m_CoalesceBufferSize) + (_buffered == null ? 0 : _buffered.Length);
 
-			if ((existingBytes + length) > PendingCap)
+			if (existingBytes + length > PendingCap)
 			{
 				throw new CapacityExceededException();
 			}
