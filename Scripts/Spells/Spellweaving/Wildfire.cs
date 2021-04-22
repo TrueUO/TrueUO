@@ -123,6 +123,7 @@ namespace Server.Spells.Spellweaving
         public class InternalTarget : Target
         {
             private readonly WildfireSpell m_Owner;
+
             public InternalTarget(WildfireSpell owner)
                 : base(12, true, TargetFlags.None)
             {
@@ -226,12 +227,9 @@ namespace Server.Spells.Spellweaving
 
                 foreach (IDamageable target in m_Spell.AcquireIndirectTargets(m_Location, m_Range))
                 {
-                    if (target is Mobile m)
+                    if (target is Mobile m && !m_Table.ContainsKey(m))
                     {
-                        if (!m_Table.ContainsKey(m))
-                        {
-                            yield return m;
-                        }
+                        yield return m;
                     }
                 }
             }

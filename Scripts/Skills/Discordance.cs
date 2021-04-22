@@ -1,4 +1,3 @@
-#region References
 using Server.Engines.Quests;
 using Server.Items;
 using Server.Mobiles;
@@ -6,8 +5,6 @@ using Server.Targeting;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-#endregion
 
 namespace Server.SkillHandlers
 {
@@ -249,8 +246,12 @@ namespace Server.SkillHandlers
 
                                     if (quest != null)
                                     {
-                                        foreach (BaseObjective objective in quest.Objectives)
+                                        for (var index = 0; index < quest.Objectives.Count; index++)
+                                        {
+                                            BaseObjective objective = quest.Objectives[index];
+
                                             objective.Update(targ);
+                                        }
                                     }
                                 }
                             }
@@ -289,7 +290,18 @@ namespace Server.SkillHandlers
 
             private bool CanDiscordPVP(Mobile m)
             {
-                return !m_Table.Values.Any(info => info.m_From == m && info.m_PVP);
+                bool any = false;
+
+                foreach (var info in m_Table.Values)
+                {
+                    if (info.m_From == m && info.m_PVP)
+                    {
+                        any = true;
+                        break;
+                    }
+                }
+
+                return !any;
             }
         }
 
@@ -334,14 +346,13 @@ namespace Server.SkillHandlers
             {
                 if (m_PVP)
                 {
-                    foreach (Item item in m_Target.Items)
+                    for (var index = 0; index < m_Target.Items.Count; index++)
                     {
+                        Item item = m_Target.Items[index];
+
                         AosSkillBonuses bonuses = RunicReforging.GetAosSkillBonuses(item);
 
-                        if (bonuses != null)
-                        {
-                            bonuses.Remove();
-                        }
+                        bonuses?.Remove();
                     }
                 }
                 else
@@ -372,14 +383,13 @@ namespace Server.SkillHandlers
                 {
                     Timer.DelayCall(() =>
                     {
-                        foreach (Item item in m_Target.Items)
+                        for (var index = 0; index < m_Target.Items.Count; index++)
                         {
+                            Item item = m_Target.Items[index];
+
                             AosSkillBonuses bonuses = RunicReforging.GetAosSkillBonuses(item);
 
-                            if (bonuses != null)
-                            {
-                                bonuses.AddTo(m_Target);
-                            }
+                            bonuses?.AddTo(m_Target);
                         }
                     });
                 }

@@ -6,7 +6,6 @@ using Server.Regions;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 
 namespace Server.Misc
@@ -21,9 +20,7 @@ namespace Server.Misc
 
     public class AccountHandler
     {
-        public static PasswordProtection ProtectPasswords = Config.GetEnum(
-            "Accounts.ProtectPasswords",
-            PasswordProtection.NewSecureCrypt);
+        public static PasswordProtection ProtectPasswords = Config.GetEnum("Accounts.ProtectPasswords", PasswordProtection.NewSecureCrypt);
 
         private static readonly int MaxAccountsPerIP = Config.Get("Accounts.AccountsPerIp", 1);
         private static readonly bool AutoAccountCreation = Config.Get("Accounts.AutoCreateAccounts", true);
@@ -74,16 +71,23 @@ namespace Server.Misc
                 {
                     m_IPTable = new Dictionary<IPAddress, int>();
 
-                    foreach (Account a in Accounts.GetAccounts().OfType<Account>())
+                    foreach (IAccount account in Accounts.GetAccounts())
                     {
-                        if (a.LoginIPs.Length > 0)
+                        if (account is Account a)
                         {
-                            IPAddress ip = a.LoginIPs[0];
+                            if (a.LoginIPs.Length > 0)
+                            {
+                                IPAddress ip = a.LoginIPs[0];
 
-                            if (m_IPTable.ContainsKey(ip))
-                                m_IPTable[ip]++;
-                            else
-                                m_IPTable[ip] = 1;
+                                if (m_IPTable.ContainsKey(ip))
+                                {
+                                    m_IPTable[ip]++;
+                                }
+                                else
+                                {
+                                    m_IPTable[ip] = 1;
+                                }
+                            }
                         }
                     }
                 }
