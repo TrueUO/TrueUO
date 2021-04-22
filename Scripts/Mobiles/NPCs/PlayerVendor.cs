@@ -1607,7 +1607,17 @@ namespace Server.Mobiles
 
         protected override void OnTick()
         {
-            var list = PlayerVendor.PlayerVendors.Where(v => !v.Deleted && !v.IsCommission && v.NextPayTime <= DateTime.UtcNow).ToList();
+            var list = new List<PlayerVendor>();
+
+            for (var index = 0; index < PlayerVendor.PlayerVendors.Count; index++)
+            {
+                var v = PlayerVendor.PlayerVendors[index];
+
+                if (!v.Deleted && !v.IsCommission && v.NextPayTime <= DateTime.UtcNow)
+                {
+                    list.Add(v);
+                }
+            }
 
             for (int i = 0; i < list.Count; i++)
             {
@@ -1636,7 +1646,20 @@ namespace Server.Mobiles
 
             ColUtility.Free(list);
 
-            var rentals = PlayerVendor.PlayerVendors.OfType<RentedVendor>().Where(rv => !rv.Deleted && rv.RentalExpireTime <= DateTime.UtcNow).ToList();
+            var rentals = new List<RentedVendor>();
+
+            for (var index = 0; index < PlayerVendor.PlayerVendors.Count; index++)
+            {
+                PlayerVendor vendor = PlayerVendor.PlayerVendors[index];
+
+                if (vendor is RentedVendor rv)
+                {
+                    if (!rv.Deleted && rv.RentalExpireTime <= DateTime.UtcNow)
+                    {
+                        rentals.Add(rv);
+                    }
+                }
+            }
 
             for (int i = 0; i < rentals.Count; i++)
             {
