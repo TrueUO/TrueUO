@@ -1,7 +1,6 @@
 using Server.Items;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.TreasuresOfKotlCity
 {
@@ -24,11 +23,16 @@ namespace Server.Engines.TreasuresOfKotlCity
             get => _Complete;
             set
             {
-                foreach (KotlCityPuzzleComponent comp in Components.OfType<KotlCityPuzzleComponent>())
+                for (var index = 0; index < Components.Count; index++)
                 {
-                    if (value && comp.Active || !value && !comp.Active)
+                    AddonComponent component = Components[index];
+
+                    if (component is KotlCityPuzzleComponent comp)
                     {
-                        comp.Active = !value;
+                        if (value && comp.Active || !value && !comp.Active)
+                        {
+                            comp.Active = !value;
+                        }
                     }
                 }
 

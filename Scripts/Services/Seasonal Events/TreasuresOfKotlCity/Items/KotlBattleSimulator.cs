@@ -156,10 +156,12 @@ namespace Server.Engines.TreasuresOfKotlCity
                 WheelsOfTime.Instance.TimeWarpEnds = DateTime.UtcNow + TimeSpan.FromSeconds(10);
             }
 
-            PowerCoreDockingStation.Stations.ForEach(station =>
+            for (var index = 0; index < PowerCoreDockingStation.Stations.Count; index++)
             {
+                var station = PowerCoreDockingStation.Stations[index];
+
                 station.Deactivate();
-            });
+            }
 
             Active = false;
             Level = 0;
@@ -224,7 +226,12 @@ namespace Server.Engines.TreasuresOfKotlCity
             if (Spawn != null)
             {
                 writer.Write(Spawn.Count);
-                Spawn.ForEach(sp => writer.Write(sp as Mobile));
+                for (var index = 0; index < Spawn.Count; index++)
+                {
+                    var sp = Spawn[index];
+
+                    writer.Write(sp as Mobile);
+                }
             }
             else
             {
