@@ -30,10 +30,23 @@ namespace Server.Engines.VoidPool
 
         public static VoidPoolStats GetStats(VoidPoolController controller)
         {
-            VoidPoolStats stats = Stats.FirstOrDefault(s => s.Controller == controller);
+            VoidPoolStats stats = null;
+
+            for (var index = 0; index < Stats.Count; index++)
+            {
+                var s = Stats[index];
+
+                if (s.Controller == controller)
+                {
+                    stats = s;
+                    break;
+                }
+            }
 
             if (stats == null)
+            {
                 stats = new VoidPoolStats(controller);
+            }
 
             return stats;
         }
@@ -128,8 +141,9 @@ namespace Server.Engines.VoidPool
             }
 
             writer.Write(Top20.Count);
-            foreach (Dictionary<Mobile, long> dic in Top20)
+            for (var index = 0; index < Top20.Count; index++)
             {
+                Dictionary<Mobile, long> dic = Top20[index];
                 writer.Write(dic.Count);
                 foreach (KeyValuePair<Mobile, long> kvp in dic)
                 {
@@ -154,8 +168,9 @@ namespace Server.Engines.VoidPool
                     writer.Write(1);
 
                     writer.Write(Stats.Count);
-                    foreach (VoidPoolStats stats in Stats)
+                    for (var index = 0; index < Stats.Count; index++)
                     {
+                        VoidPoolStats stats = Stats[index];
                         stats.Serialize(writer);
                     }
                 });
@@ -224,6 +239,7 @@ namespace Server.Engines.VoidPool
         public static bool CheckAddTop20(VoidPoolController controller)
         {
             long total = GetCollectiveScore(controller.CurrentScore);
+
             VoidPoolStats stats = GetStats(controller);
 
             List<Dictionary<Mobile, long>> copy = new List<Dictionary<Mobile, long>>(stats.Top20);

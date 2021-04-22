@@ -1,7 +1,6 @@
 using Server.Items;
 using Server.Mobiles;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.TreasuresOfKotlCity
 {
@@ -123,7 +122,19 @@ namespace Server.Engines.TreasuresOfKotlCity
 
         public void Activate()
         {
-            if (Link && Stations != null && Stations.Count(s => s.Active) == Stations.Count)
+            int count = 0;
+
+            for (var index = 0; index < Stations.Count; index++)
+            {
+                var s = Stations[index];
+
+                if (s.Active)
+                {
+                    count++;
+                }
+            }
+
+            if (Link && Stations != null && count == Stations.Count)
             {
                 if (!KotlBattleSimulator.Instance.Active)
                 {
@@ -133,37 +144,58 @@ namespace Server.Engines.TreasuresOfKotlCity
 
                     if (r != null)
                     {
-                        foreach (PlayerMobile pm in r.GetEnumeratedMobiles().OfType<PlayerMobile>())
-                            pm.SendLocalizedMessage(1157026); // [Kotl City Hologenerator]:  Great Battle simulation now active! Proceed to city center!
+                        foreach (Mobile mobile in r.GetEnumeratedMobiles())
+                        {
+                            if (mobile is PlayerMobile pm)
+                            {
+                                pm.SendLocalizedMessage(1157026); // [Kotl City Hologenerator]:  Great Battle simulation now active! Proceed to city center!
+                            }
+                        }
                     }
                 }
             }
 
-            foreach (AddonComponent comp in Components)
+            for (var index = 0; index < Components.Count; index++)
             {
+                AddonComponent comp = Components[index];
+
                 if (comp.ItemID == 40146)
+                {
                     comp.ItemID = 40147;
+                }
 
                 if (comp.ItemID == 40173)
+                {
                     comp.ItemID = 40142;
+                }
 
                 if (comp.ItemID == 40174)
+                {
                     comp.ItemID = 40169;
+                }
             }
         }
 
         public void Deactivate()
         {
-            foreach (AddonComponent comp in Components)
+            for (var index = 0; index < Components.Count; index++)
             {
+                AddonComponent comp = Components[index];
+
                 if (comp.ItemID == 40147)
+                {
                     comp.ItemID = 40146;
+                }
 
                 if (comp.ItemID == 40142)
+                {
                     comp.ItemID = 40173;
+                }
 
                 if (comp.ItemID == 40169)
+                {
                     comp.ItemID = 40174;
+                }
             }
 
             List<Item> delete = new List<Item>();

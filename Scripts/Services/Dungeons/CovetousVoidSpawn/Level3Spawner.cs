@@ -2,7 +2,6 @@ using Server.ContextMenus;
 using Server.Mobiles;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.VoidPool
 {
@@ -121,11 +120,13 @@ namespace Server.Engines.VoidPool
 
                     List<DamageStore> list = bc.GetLootingRights();
 
-                    foreach (DamageStore ds in list)
+                    for (var index = 0; index < list.Count; index++)
                     {
+                        DamageStore ds = list[index];
+
                         if (ds.m_HasRight)
                         {
-                            int points = (bc.Fame / 998) / list.Count;
+                            int points = bc.Fame / 998 / list.Count;
 
                             if (points > 0)
                             {
@@ -153,7 +154,9 @@ namespace Server.Engines.VoidPool
         public void Reset(SpawnEntry entry)
         {
             if (!Active)
+            {
                 return;
+            }
 
             VoidType type = entry.SpawnType;
 
@@ -168,16 +171,28 @@ namespace Server.Engines.VoidPool
 
         public void StartSpawn()
         {
-            foreach (SpawnEntry entry in Spawns)
+            for (var index = 0; index < Spawns.Count; index++)
             {
-                entry.SpawnType = (VoidType)Utility.RandomMinMax(0, 4);
+                SpawnEntry entry = Spawns[index];
+
+                entry.SpawnType = (VoidType) Utility.RandomMinMax(0, 4);
                 entry.DoSpawn();
             }
         }
 
         public SpawnEntry FindEntryFor(BaseCreature bc)
         {
-            return Spawns.FirstOrDefault(sp => sp.Spawn.Contains(bc));
+            for (var index = 0; index < Spawns.Count; index++)
+            {
+                var sp = Spawns[index];
+
+                if (sp.Spawn.Contains(bc))
+                {
+                    return sp;
+                }
+            }
+
+            return null;
         }
 
         public void Deactivate(bool deactivate = true)
@@ -189,17 +204,22 @@ namespace Server.Engines.VoidPool
 
             if (Spawns != null)
             {
-                foreach (SpawnEntry entry in Spawns)
+                for (var index = 0; index < Spawns.Count; index++)
                 {
+                    SpawnEntry entry = Spawns[index];
                     List<BaseCreature> list = new List<BaseCreature>();
 
-                    foreach (BaseCreature bc in entry.Spawn)
+                    for (var i = 0; i < entry.Spawn.Count; i++)
                     {
+                        BaseCreature bc = entry.Spawn[i];
                         list.Add(bc);
                     }
 
-                    foreach (BaseCreature creature in list)
+                    for (var i = 0; i < list.Count; i++)
+                    {
+                        BaseCreature creature = list[i];
                         creature.Delete();
+                    }
 
                     ColUtility.Free(list);
                 }
@@ -329,7 +349,11 @@ namespace Server.Engines.VoidPool
                 writer.Write(0);
 
                 writer.Write(Spawn.Count);
-                Spawn.ForEach(s => writer.Write(s));
+                for (var index = 0; index < Spawn.Count; index++)
+                {
+                    var s = Spawn[index];
+                    writer.Write(s);
+                }
             }
 
             public void Deserialize(GenericReader reader)

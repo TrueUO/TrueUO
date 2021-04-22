@@ -63,19 +63,28 @@ namespace Server.Engines.TreasuresOfKotlCity
 
         private static void AddComplexComponent(BaseAddon addon, int item, int xoffset, int yoffset, int zoffset, int hue, int lightsource, string name, int amount)
         {
-            AddonComponent ac;
-            ac = new AddonComponent(item);
+            var ac = new AddonComponent(item);
+
             if (!string.IsNullOrEmpty(name))
+            {
                 ac.Name = name;
+            }
+
             if (hue != 0)
+            {
                 ac.Hue = hue;
+            }
+
             if (amount > 1)
             {
                 ac.Stackable = true;
                 ac.Amount = amount;
             }
+
             if (lightsource != -1)
+            {
                 ac.Light = (LightType)lightsource;
+            }
 
             addon.AddComponent(ac, xoffset, yoffset, zoffset);
         }
