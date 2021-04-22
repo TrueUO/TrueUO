@@ -100,19 +100,17 @@ namespace Server.Engines.Doom
 
             foreach (Mobile mobile in GetEnumeratedMobiles())
             {
-                if (mobile is PlayerMobile p)
+                if (mobile is PlayerMobile p && (p.Alive))
                 {
-                    if (p.Alive)
-                    {
-                        any = true;
-                        break;
-                    }
+                    any = true;
+                    break;
                 }
             }
 
             if (NextRoll < DateTime.UtcNow && any)
             {
                 DoRoll();
+
                 NextRoll = DateTime.UtcNow + RollDelay;
             }
         }
@@ -121,6 +119,7 @@ namespace Server.Engines.Doom
         {
             GaryTheDungeonMaster g = GetGary();
             Sapphired20 d = GetDice();
+
             int roll = ForceRoll >= 0 && ForceRoll < 20 ? ForceRoll : Utility.Random(20);
 
             g.PublicOverheadMessage(MessageType.Regular, 0x3B2, 1080099); // *Gary rolls the sapphire d20*
@@ -334,13 +333,10 @@ namespace Server.Engines.Doom
 
                 foreach (Item item in GetEnumeratedItems())
                 {
-                    if (item is Sapphired20 i)
+                    if (item is Sapphired20 i && (!i.Deleted))
                     {
-                        if (!i.Deleted)
-                        {
-                            dice = i;
-                            break;
-                        }
+                        dice = i;
+                        break;
                     }
                 }
 
@@ -355,6 +351,7 @@ namespace Server.Engines.Doom
                     {
                         Movable = false
                     };
+
                     Dice.MoveToWorld(_DiceLoc, Map.Malas);
                 }
             }
@@ -377,13 +374,10 @@ namespace Server.Engines.Doom
 
                     foreach (Item item in GetEnumeratedItems())
                     {
-                        if (item is DisplayStatue st)
+                        if (item is DisplayStatue st && Array.IndexOf(Statues, st) == -1)
                         {
-                            if (Array.IndexOf(Statues, st) == -1)
-                            {
-                                s = st;
-                                break;
-                            }
+                            s = st;
+                            break;
                         }
                     }
 
