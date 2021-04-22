@@ -1652,12 +1652,9 @@ namespace Server.Mobiles
             {
                 PlayerVendor vendor = PlayerVendor.PlayerVendors[index];
 
-                if (vendor is RentedVendor rv)
+                if (vendor is RentedVendor rv && !rv.Deleted && rv.RentalExpireTime <= DateTime.UtcNow)
                 {
-                    if (!rv.Deleted && rv.RentalExpireTime <= DateTime.UtcNow)
-                    {
-                        rentals.Add(rv);
-                    }
+                    rentals.Add(rv);
                 }
             }
 
