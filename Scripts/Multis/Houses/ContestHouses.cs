@@ -1,7 +1,6 @@
 using Server.Items;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Multis
 {
@@ -63,8 +62,10 @@ namespace Server.Multis
 
             if (Fixtures != null)
             {
-                foreach (Item item in Fixtures)
+                for (var index = 0; index < Fixtures.Count; index++)
                 {
+                    Item item = Fixtures[index];
+
                     item.Delete();
                 }
             }
@@ -80,8 +81,10 @@ namespace Server.Multis
 
             if (Fixtures != null)
             {
-                foreach (Item item in Fixtures)
+                for (var index = 0; index < Fixtures.Count; index++)
                 {
+                    Item item = Fixtures[index];
+
                     item.Location = new Point3D(item.X + x, item.Y + y, item.Z + z);
                 }
             }
@@ -93,8 +96,10 @@ namespace Server.Multis
 
             if (Fixtures != null)
             {
-                foreach (Item item in Fixtures)
+                for (var index = 0; index < Fixtures.Count; index++)
                 {
+                    Item item = Fixtures[index];
+
                     item.Map = Map;
                 }
             }
@@ -131,10 +136,26 @@ namespace Server.Multis
 
             if (!isInside)
             {
-                return Fixtures != null && Fixtures.OfType<HouseTeleporter>().Any(fix => fix.Location == p);
+                bool any = false;
+
+                for (var index = 0; index < Fixtures.Count; index++)
+                {
+                    Item fixture = Fixtures[index];
+
+                    if (fixture is HouseTeleporter fix)
+                    {
+                        if (fix.Location == p)
+                        {
+                            any = true;
+                            break;
+                        }
+                    }
+                }
+
+                return Fixtures != null && any;
             }
 
-            return isInside;
+            return true;
         }
 
         public virtual void AutoAddFixtures()
@@ -143,8 +164,10 @@ namespace Server.Multis
 
             Dictionary<int, List<MultiTileEntry>> teleporters = new Dictionary<int, List<MultiTileEntry>>();
 
-            foreach (MultiTileEntry entry in components.List)
+            for (var index = 0; index < components.List.Length; index++)
             {
+                MultiTileEntry entry = components.List[index];
+
                 if (entry.m_Flags == 0)
                 {
                     // Telepoters
@@ -180,14 +203,27 @@ namespace Server.Multis
                 }
             }
 
-            foreach (BaseDoor door in Doors.OfType<BaseDoor>())
+            for (var index = 0; index < Doors.Count; index++)
             {
-                foreach (BaseDoor check in Doors.OfType<BaseDoor>().Where(d => d != door))
+                Item item = Doors[index];
+
+                if (item is BaseDoor door)
                 {
-                    if (door.InRange(check.Location, 1))
+                    for (var i = 0; i < Doors.Count; i++)
                     {
-                        door.Link = check;
-                        check.Link = door;
+                        Item houseDoor = Doors[i];
+
+                        if (houseDoor is BaseDoor check)
+                        {
+                            if (check != door)
+                            {
+                                if (door.InRange(check.Location, 1))
+                                {
+                                    door.Link = check;
+                                    check.Link = door;
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -227,8 +263,9 @@ namespace Server.Multis
 
             if (Fixtures != null)
             {
-                foreach (Item item in Fixtures)
+                for (var index = 0; index < Fixtures.Count; index++)
                 {
+                    Item item = Fixtures[index];
                     writer.Write(item);
                 }
             }

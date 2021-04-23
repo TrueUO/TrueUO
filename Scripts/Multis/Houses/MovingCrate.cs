@@ -40,8 +40,10 @@ namespace Server.Multis
         public override void DropItem(Item dropped)
         {
             // 1. Try to stack the item
-            foreach (Item item in Items)
+            for (var index = 0; index < Items.Count; index++)
             {
+                Item item = Items[index];
+
                 if (item is PackingBox)
                 {
                     List<Item> subItems = item.Items;
@@ -57,8 +59,10 @@ namespace Server.Multis
             }
 
             // 2. Try to drop the item into an existing container
-            foreach (Item item in Items)
+            for (var index = 0; index < Items.Count; index++)
             {
+                Item item = Items[index];
+
                 if (item is PackingBox packingBox)
                 {
                     Container box = packingBox;
@@ -141,16 +145,20 @@ namespace Server.Multis
 
             List<Item> toRemove = new List<Item>();
 
-            foreach (Item item in Items)
+            for (var index = 0; index < Items.Count; index++)
             {
+                Item item = Items[index];
+
                 if (item is PackingBox && item.Items.Count == 0)
                 {
                     toRemove.Add(item);
                 }
             }
 
-            foreach (Item item in toRemove)
+            for (var index = 0; index < toRemove.Count; index++)
             {
+                Item item = toRemove[index];
+
                 item.Delete();
             }
 
@@ -205,8 +213,10 @@ namespace Server.Multis
         {
             bool[,] positions = new bool[Rows, Columns];
 
-            foreach (Item item in Items)
+            for (var index = 0; index < Items.Count; index++)
             {
+                Item item = Items[index];
+
                 if (item is PackingBox)
                 {
                     int i = (item.Y - Bounds.Y) / VerticalSpacing;
