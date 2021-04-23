@@ -155,7 +155,6 @@ namespace Server.Mobiles
                     switch (Utility.Random(7))
                     {
                         default:
-                        case 0:
                             bc = new BoundSoul();
                             break;
                         case 1:

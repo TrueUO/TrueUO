@@ -979,13 +979,10 @@ namespace Server.Engines.MyrmidexInvasion
 
                 foreach (Item item in BattleRegion.GetEnumeratedItems())
                 {
-                    if (item is BattleFlag i)
+                    if (item is BattleFlag i && i.ItemID == 17099)
                     {
-                        if (i.ItemID == 17099)
-                        {
-                            flag = i;
-                            break;
-                        }
+                        flag = i;
+                        break;
                     }
                 }
 
@@ -999,13 +996,10 @@ namespace Server.Engines.MyrmidexInvasion
 
                 foreach (Item item in BattleRegion.GetEnumeratedItems())
                 {
-                    if (item is BattleFlag i)
+                    if (item is BattleFlag i && i.ItemID == 1068)
                     {
-                        if (i.ItemID == 1068)
-                        {
-                            flag = i;
-                            break;
-                        }
+                        flag = i;
+                        break;
                     }
                 }
 

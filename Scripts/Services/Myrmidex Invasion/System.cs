@@ -6,7 +6,6 @@ using Server.Targeting;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace Server.Engines.MyrmidexInvasion
 {
@@ -115,9 +114,21 @@ namespace Server.Engines.MyrmidexInvasion
         public static AllianceEntry GetEntry(PlayerMobile pm)
         {
             if (pm == null)
+            {
                 return null;
+            }
 
-            return AllianceEntries.FirstOrDefault(e => e.Player == pm);
+            for (var index = 0; index < AllianceEntries.Count; index++)
+            {
+                var e = AllianceEntries[index];
+
+                if (e.Player == pm)
+                {
+                    return e;
+                }
+            }
+
+            return null;
         }
 
         public static void Configure()
@@ -155,7 +166,11 @@ namespace Server.Engines.MyrmidexInvasion
                     writer.Write(0);
 
                     writer.Write(AllianceEntries.Count);
-                    AllianceEntries.ForEach(entry => entry.Serialize(writer));
+                    for (var index = 0; index < AllianceEntries.Count; index++)
+                    {
+                        var entry = AllianceEntries[index];
+                        entry.Serialize(writer);
+                    }
 
                     writer.Write(MoonstonePowerGeneratorAddon.Boss);
                 });

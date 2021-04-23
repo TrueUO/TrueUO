@@ -254,8 +254,6 @@ namespace Server.Engines.CityLoyalty
                 {
                     for (var index = 0; index < Crate.Entry.Details.Count; index++)
                     {
-                        TradeEntry.TradeDetails detail = Crate.Entry.Details[index];
-
                         var list = new List<Item>(Player.Backpack.Items);
 
                         for (var i = 0; i < list.Count; i++)

@@ -1,6 +1,5 @@
 using Server.Mobiles;
 using System;
-using System.Linq;
 
 namespace Server.Engines.MyrmidexInvasion
 {
@@ -55,16 +54,27 @@ namespace Server.Engines.MyrmidexInvasion
         public static void DisplayWaveInfo(BattleSpawner spawner, Mobile m)
         {
             int delay = 0;
+
             foreach (System.Collections.Generic.KeyValuePair<int, System.Collections.Generic.List<BaseCreature>> kvp in spawner.MyrmidexTeam)
             {
                 if (kvp.Value.Count > 0)
                 {
                     int wave = kvp.Key + 1;
-                    int count = kvp.Value.Count(bc => bc.Alive);
+                    int count = 0;
+
+                    for (var index = 0; index < kvp.Value.Count; index++)
+                    {
+                        var bc = kvp.Value[index];
+
+                        if (bc.Alive)
+                        {
+                            count++;
+                        }
+                    }
 
                     Timer.DelayCall(TimeSpan.FromSeconds(delay), () =>
                     {
-                        m.SendLocalizedMessage(1156606, string.Format("{0}\t{1}\t{2}", (BattleSpawner.WaveCount - count).ToString(), BattleSpawner.WaveCount.ToString(), wave.ToString())); // Myrmidex have lost ~1_VAL~ of ~2_VAL~ from wave ~3_VAL~ of their front line.	
+                        m.SendLocalizedMessage(1156606, $"{(BattleSpawner.WaveCount - count).ToString()}\t{BattleSpawner.WaveCount.ToString()}\t{wave.ToString()}"); // Myrmidex have lost ~1_VAL~ of ~2_VAL~ from wave ~3_VAL~ of their front line.	
                     });
                 }
 
@@ -72,16 +82,27 @@ namespace Server.Engines.MyrmidexInvasion
             }
 
             delay = 0;
+
             foreach (System.Collections.Generic.KeyValuePair<int, System.Collections.Generic.List<BaseCreature>> kvp in spawner.TribeTeam)
             {
                 if (kvp.Value.Count > 0)
                 {
                     int wave = kvp.Key + 1;
-                    int count = kvp.Value.Count(bc => bc.Alive);
+                    int count = 0;
+
+                    for (var index = 0; index < kvp.Value.Count; index++)
+                    {
+                        var bc = kvp.Value[index];
+
+                        if (bc.Alive)
+                        {
+                            count++;
+                        }
+                    }
 
                     Timer.DelayCall(TimeSpan.FromSeconds(delay), () =>
                     {
-                        m.SendLocalizedMessage(1156607, string.Format("{0}\t{1}\t{2}", (BattleSpawner.WaveCount - count).ToString(), BattleSpawner.WaveCount.ToString(), wave.ToString())); // Myrmidex have lost ~1_VAL~ of ~2_VAL~ from wave ~3_VAL~ of their front line.	
+                        m.SendLocalizedMessage(1156607, $"{(BattleSpawner.WaveCount - count).ToString()}\t{BattleSpawner.WaveCount.ToString()}\t{wave.ToString()}"); // Myrmidex have lost ~1_VAL~ of ~2_VAL~ from wave ~3_VAL~ of their front line.	
                     });
                 }
 
