@@ -16,7 +16,6 @@ using Server.Misc;
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 #endregion
 
 namespace Server.Items
@@ -1554,10 +1553,24 @@ namespace Server.Items
 
         private Item GetRandomValidItem(Mobile m)
         {
-            Item[] items = m.Items.Where(item => _DamageLayers.Contains(item.Layer) && item is IWearableDurability).ToArray();
+            List<Item> list = new List<Item>();
+
+            for (var index = 0; index < m.Items.Count; index++)
+            {
+                var item = m.Items[index];
+
+                if (_DamageLayers.Contains(item.Layer) && item is IWearableDurability)
+                {
+                    list.Add(item);
+                }
+            }
+
+            Item[] items = list.ToArray();
 
             if (items.Length == 0)
+            {
                 return null;
+            }
 
             return items[Utility.Random(items.Length)];
         }

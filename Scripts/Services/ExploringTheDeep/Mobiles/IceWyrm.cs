@@ -2,7 +2,6 @@ using Server.Engines.Quests;
 using Server.Items;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Mobiles
 {
@@ -21,12 +20,15 @@ namespace Server.Mobiles
             SetResistance(ResistanceType.Cold, 100);
 
             Timer SelfDeleteTimer = new InternalSelfDeleteTimer(this);
+
             SelfDeleteTimer.Start();
 
             Tamable = false;
 
             if (Instances == null)
+            {
                 Instances = new List<IceWyrm>();
+            }
 
             Instances.Add(this);
         }
@@ -69,18 +71,27 @@ namespace Server.Mobiles
         {
             List<DamageStore> rights = GetLootingRights();
 
-            foreach (Mobile m in rights.Select(x => x.m_Mobile).Distinct())
+            HashSet<Mobile> set = new HashSet<Mobile>();
+
+            for (var index = 0; index < rights.Count; index++)
             {
-                if (m is PlayerMobile pm && pm.ExploringTheDeepQuest == ExploringTheDeepQuestChain.CusteauPerron)
+                var x = rights[index];
+
+                Mobile m = x.m_Mobile;
+
+                if (set.Add(m))
                 {
-                    Item item = new IceWyrmScale();
-
-                    if (pm.Backpack == null || !pm.Backpack.TryDropItem(pm, item, false))
+                    if (m is PlayerMobile pm && pm.ExploringTheDeepQuest == ExploringTheDeepQuestChain.CusteauPerron)
                     {
-                        pm.BankBox.DropItem(item);
-                    }
+                        Item item = new IceWyrmScale();
 
-                    pm.SendLocalizedMessage(1154489); // You received a Quest Item!
+                        if (pm.Backpack == null || !pm.Backpack.TryDropItem(pm, item, false))
+                        {
+                            pm.BankBox.DropItem(item);
+                        }
+
+                        pm.SendLocalizedMessage(1154489); // You received a Quest Item!
+                    }
                 }
             }
 

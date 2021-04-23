@@ -1,7 +1,6 @@
 using Server.Items;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Mobiles
 {
@@ -282,11 +281,18 @@ namespace Server.Mobiles
         {
             if (EconomyItem)
             {
-                foreach (GenericBuyInfo bii in vendor.GetBuyInfo().OfType<GenericBuyInfo>())
+                var infos = vendor.GetBuyInfo();
+
+                for (var index = 0; index < infos.Length; index++)
                 {
-                    if (bii.Type == m_Type || m_Type == typeof(UncutCloth) && bii.Type == typeof(Cloth) || m_Type == typeof(Cloth) && bii.Type == typeof(UncutCloth))
+                    IBuyItemInfo info = infos[index];
+
+                    if (info is GenericBuyInfo bii)
                     {
-                        bii.TotalBought += amount;
+                        if (bii.Type == m_Type || m_Type == typeof(UncutCloth) && bii.Type == typeof(Cloth) || m_Type == typeof(Cloth) && bii.Type == typeof(UncutCloth))
+                        {
+                            bii.TotalBought += amount;
+                        }
                     }
                 }
             }
@@ -298,11 +304,18 @@ namespace Server.Mobiles
         {
             if (EconomyItem)
             {
-                foreach (GenericBuyInfo bii in vendor.GetBuyInfo().OfType<GenericBuyInfo>())
+                var infos = vendor.GetBuyInfo();
+
+                for (var index = 0; index < infos.Length; index++)
                 {
-                    if (bii.Type == m_Type || m_Type == typeof(UncutCloth) && bii.Type == typeof(Cloth) || m_Type == typeof(Cloth) && bii.Type == typeof(UncutCloth))
+                    IBuyItemInfo info = infos[index];
+
+                    if (info is GenericBuyInfo bii)
                     {
-                        bii.TotalSold += amount;
+                        if (bii.Type == m_Type || m_Type == typeof(UncutCloth) && bii.Type == typeof(Cloth) || m_Type == typeof(Cloth) && bii.Type == typeof(UncutCloth))
+                        {
+                            bii.TotalSold += amount;
+                        }
                     }
                 }
             }

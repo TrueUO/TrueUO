@@ -3,7 +3,6 @@ using Server.Mobiles;
 using Server.Network;
 using Server.Targeting;
 using System;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -119,7 +118,17 @@ namespace Server.Items
 
         private static bool IsSnake(BaseCreature bc)
         {
-            return m_SnakeTypes.Any(t => t == bc.GetType());
+            for (var index = 0; index < m_SnakeTypes.Length; index++)
+            {
+                var t = m_SnakeTypes[index];
+
+                if (t == bc.GetType())
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private static readonly Type[] m_SnakeTypes =

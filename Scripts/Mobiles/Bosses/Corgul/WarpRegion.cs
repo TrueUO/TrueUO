@@ -2,7 +2,6 @@ using Server.Items;
 using Server.Mobiles;
 using Server.Multis;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Regions
 {
@@ -41,7 +40,9 @@ namespace Server.Regions
                             t = 0;
                         }
                         else
+                        {
                             t++;
+                        }
                     }
                 }
             }
@@ -50,10 +51,16 @@ namespace Server.Regions
         public override void OnUnregister()
         {
             if (m_Markers == null)
+            {
                 return;
+            }
 
-            foreach (Item i in m_Markers)
+            for (var index = 0; index < m_Markers.Count; index++)
+            {
+                Item i = m_Markers[index];
+
                 i.Delete();
+            }
 
             m_Markers.Clear();
         }
@@ -61,34 +68,46 @@ namespace Server.Regions
         public void CheckEnter(BaseBoat boat)
         {
             if (boat == null || Map == null || Map == Map.Internal)
+            {
                 return;
+            }
 
             //Do not enter corgul region if we aren't in this region anymore
             Region r = Find(boat.Location, boat.Map);
+
             if (r != null && !r.IsPartOf(this))
+            {
                 return;
+            }
 
             Map map = Map;
 
             List<PlayerMobile> pms = new List<PlayerMobile>();
+
             bool hasMap = false;
 
-            foreach (PlayerMobile i in boat.GetEntitiesOnBoard().OfType<PlayerMobile>())
+            foreach (IEntity entity in boat.GetEntitiesOnBoard())
             {
-                if (i.NetState != null)
+                if (entity is PlayerMobile i)
                 {
-                    pms.Add(i);
-                    PlayerMobile pm = i;
-
-                    if (pm.Backpack == null)
-                        continue;
-
-                    Item item = pm.Backpack.FindItemByType(typeof(CorgulIslandMap));
-
-                    if (item is CorgulIslandMap islandMap && Contains(islandMap.DestinationPoint))
+                    if (i.NetState != null)
                     {
-                        hasMap = true;
-                        break;
+                        pms.Add(i);
+
+                        PlayerMobile pm = i;
+
+                        if (pm.Backpack == null)
+                        {
+                            continue;
+                        }
+
+                        Item item = pm.Backpack.FindItemByType(typeof(CorgulIslandMap));
+
+                        if (item is CorgulIslandMap islandMap && Contains(islandMap.DestinationPoint))
+                        {
+                            hasMap = true;
+                            break;
+                        }
                     }
                 }
             }
@@ -111,10 +130,14 @@ namespace Server.Regions
 
                     //int z = this.Map.GetAverageZ(boat.X, boat.Y);
                     if (boat.Z != 0)
+                    {
                         boat.Z = 0;
+                    }
 
                     if (boat.TillerMan != null)
+                    {
                         boat.TillerManSay(501425); //Ar, turbulent water!
+                    }
                 }
                 else
                 {

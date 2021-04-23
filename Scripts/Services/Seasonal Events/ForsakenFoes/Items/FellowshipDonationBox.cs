@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -114,11 +113,20 @@ namespace Server.Items
 
                     writer.Write(Donations.Count);
 
-                    Donations.ToList().ForEach(s =>
+                    List<KeyValuePair<Mobile, int>> list = new List<KeyValuePair<Mobile, int>>();
+
+                    foreach (var donation in Donations)
                     {
+                        list.Add(donation);
+                    }
+
+                    for (var index = 0; index < list.Count; index++)
+                    {
+                        var s = list[index];
+
                         writer.Write(s.Key);
                         writer.Write(s.Value);
-                    });
+                    }
                 });
         }
 
