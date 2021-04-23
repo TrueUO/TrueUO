@@ -3257,7 +3257,6 @@ namespace Server.Multis
             writer.Write(23); // version
 
             writer.Write((int)_CurrentDecay);
-
             writer.WriteItemList(Carpets, true);
 
             writer.Write((int)m_CurrentStage);
@@ -3269,6 +3268,7 @@ namespace Server.Multis
             writer.WriteMobileList(InternalizedVendors, true);
 
             writer.WriteEncodedInt(RelocatedEntities.Count);
+
             for (var index = 0; index < RelocatedEntities.Count; index++)
             {
                 RelocatedEntity relEntity = RelocatedEntities[index];
@@ -3276,11 +3276,14 @@ namespace Server.Multis
                 writer.Write(relEntity.Owner);
                 writer.Write(relEntity.RelativeLocation);
 
-                if (relEntity.Entity is Item item && item.Deleted ||
-                    relEntity.Entity is Mobile mobile && mobile.Deleted)
+                if (relEntity.Entity is Item item && item.Deleted || relEntity.Entity is Mobile mobile && mobile.Deleted)
+                {
                     writer.Write(Serial.MinusOne);
+                }
                 else
+                {
                     writer.Write(relEntity.Entity.Serial);
+                }
             }
 
             writer.WriteEncodedInt(VendorInventories.Count);
@@ -3294,6 +3297,7 @@ namespace Server.Multis
             writer.Write(RestrictDecay);
 
             writer.Write(Visits.Count);
+
             foreach (KeyValuePair<Mobile, DateTime> kvp in Visits)
             {
                 writer.Write(kvp.Key);
@@ -3308,6 +3312,7 @@ namespace Server.Multis
             writer.Write(LastTraded);
 
             writer.Write(Addons.Count);
+
             foreach (KeyValuePair<Item, Mobile> kvp in Addons)
             {
                 writer.Write(kvp.Key);
@@ -3317,7 +3322,9 @@ namespace Server.Multis
             writer.Write(Secures.Count);
 
             for (int i = 0; i < Secures.Count; ++i)
+            {
                 Secures[i].Serialize(writer);
+            }
 
             writer.Write(m_Public);
 
@@ -3365,221 +3372,151 @@ namespace Server.Multis
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             int count;
 
             Visits = new Dictionary<Mobile, DateTime>();
 
-            if (version < 21)
+            _CurrentDecay = (DecayType)reader.ReadInt();
+            Carpets = reader.ReadStrongItemList();
+
+            int stage = reader.ReadInt();
+
+            m_CurrentStage = (DecayLevel)stage;
+            NextDecayStage = reader.ReadDateTime();
+
+            m_RelativeBanLocation = reader.ReadPoint3D();
+
+            VendorRentalContracts = reader.ReadStrongItemList();
+            InternalizedVendors = reader.ReadStrongMobileList();
+
+            int relocatedCount = reader.ReadEncodedInt();
+            for (int i = 0; i < relocatedCount; i++)
             {
-                SecureInfo.VersionInsertion = true;
+                Mobile m;
+
+                m = reader.ReadMobile();
+
+                Point3D relLocation = reader.ReadPoint3D();
+                IEntity entity = World.FindEntity(reader.ReadInt());
+
+                if (entity != null)
+                    RelocatedEntities.Add(new RelocatedEntity(entity, relLocation, m));
             }
 
-            switch (version)
+            int inventoryCount = reader.ReadEncodedInt();
+
+            for (int i = 0; i < inventoryCount; i++)
             {
-                case 23: 
-                case 22:
-                    {
-                        _CurrentDecay = (DecayType)reader.ReadInt();
-                        goto case 21;
-                    }
-                case 21: 
-                case 20: 
-                case 19: 
-                case 18: 
-                case 17:
-                    {
-                        Carpets = reader.ReadStrongItemList();
-                        goto case 16;
-                    }
-                case 16: 
-                case 15:
-                    {
-                        int stage = reader.ReadInt();
+                VendorInventory inventory = new VendorInventory(this, reader);
+                VendorInventories.Add(inventory);
+            }
 
-                        m_CurrentStage = (DecayLevel)stage;
-                        NextDecayStage = reader.ReadDateTime();
-                        goto case 14;
-                    }
-                case 14:
-                    {
-                        m_RelativeBanLocation = reader.ReadPoint3D();
-                        goto case 13;
-                    }
-                case 13: 
-                case 12:
-                    {
-                        VendorRentalContracts = reader.ReadStrongItemList();
-                        InternalizedVendors = reader.ReadStrongMobileList();
+            LastRefreshed = reader.ReadDateTime();
+            RestrictDecay = reader.ReadBool();
 
-                        int relocatedCount = reader.ReadEncodedInt();
-                        for (int i = 0; i < relocatedCount; i++)
-                        {
-                            Mobile m;
+            int c = reader.ReadInt();
+            for (int i = 0; i < c; i++)
+            {
+                Mobile visitor = reader.ReadMobile();
+                DateTime lastVisit = reader.ReadDateTime();
 
-                            m = reader.ReadMobile();
+                if (visitor != null)
+                {
+                    Visits[visitor] = lastVisit;
+                }
+            }
 
-                            Point3D relLocation = reader.ReadPoint3D();
-                            IEntity entity = World.FindEntity(reader.ReadInt());
+            Price = reader.ReadInt();
+            Access = reader.ReadStrongMobileList();
+            BuiltOn = reader.ReadDateTime();
+            LastTraded = reader.ReadDateTime();
 
-                            if (entity != null)
-                                RelocatedEntities.Add(new RelocatedEntity(entity, relLocation, m));
-                        }
+            Addons = new Dictionary<Item, Mobile>();
+            int a = reader.ReadInt();
 
-                        int inventoryCount = reader.ReadEncodedInt();
-                        for (int i = 0; i < inventoryCount; i++)
-                        {
-                            VendorInventory inventory = new VendorInventory(this, reader);
-                            VendorInventories.Add(inventory);
-                        }
+            for (int i = 0; i < a; i++)
+            {
+                Item item = reader.ReadItem();
+                Mobile mob = reader.ReadMobile();
 
-                        goto case 11;
-                    }
-                case 11:
-                    {
-                        LastRefreshed = reader.ReadDateTime();
-                        RestrictDecay = reader.ReadBool();
-                        goto case 10;
-                    }
-                case 10: 
-                case 9:
-                    {
-                        int c = reader.ReadInt();
+                if (item != null)
+                {
+                    Addons[item] = mob != null ? mob : Owner;
+                }
+            }
 
-                        for (int i = 0; i < c; i++)
-                        {
-                            Mobile visitor = reader.ReadMobile();
-                            DateTime lastVisit = reader.ReadDateTime();
+            count = reader.ReadInt();
+            Secures = new List<SecureInfo>(count);
 
-                            if (visitor != null)
-                            {
-                                Visits[visitor] = lastVisit;
-                            }
-                        }
+            for (int i = 0; i < count; ++i)
+            {
+                SecureInfo info = new SecureInfo(reader);
 
-                        goto case 8;
-                    }
-                case 8:
-                    {
-                        Price = reader.ReadInt();
-                        goto case 7;
-                    }
-                case 7:
-                    {
-                        Access = reader.ReadStrongMobileList();
-                        goto case 6;
-                    }
-                case 6:
-                    {
-                        BuiltOn = reader.ReadDateTime();
-                        LastTraded = reader.ReadDateTime();
-                        goto case 5;
-                    }
-                case 5: 
-                case 4:
-                    {
-                        Addons = new Dictionary<Item, Mobile>();
+                if (info.Item != null)
+                {
+                    info.Item.IsSecure = info.IsLockdown ? false : true;
+                    Secures.Add(info);
+                }
+            }
 
-                        int c = reader.ReadInt();
+            m_Public = reader.ReadBool();
 
-                        for (int i = 0; i < c; i++)
-                        {
-                            Item item = reader.ReadItem();
-                            Mobile mob = reader.ReadMobile();
+            m_Owner = reader.ReadMobile();
 
-                            if (item != null)
-                            {
-                                Addons[item] = mob != null ? mob : Owner;
-                            }
-                        }
+            UpdateRegion();
 
-                        goto case 3;
-                    }
-                case 3:
-                    {
-                        count = reader.ReadInt();
-                        Secures = new List<SecureInfo>(count);
+            CoOwners = reader.ReadStrongMobileList();
+            Friends = reader.ReadStrongMobileList();
+            Bans = reader.ReadStrongMobileList();
 
-                        for (int i = 0; i < count; ++i)
-                        {
-                            SecureInfo info = new SecureInfo(reader);
+            Sign = reader.ReadItem() as HouseSign;
+            m_Trash = reader.ReadItem() as TrashBarrel;
 
-                            if (info.Item != null)
-                            {
-                                info.Item.IsSecure = info.IsLockdown ? false : true;
-                                Secures.Add(info);
-                            }
-                        }
+            Doors = reader.ReadStrongItemList();
 
-                        goto case 2;
-                    }
-                case 2:
-                    {
-                        m_Public = reader.ReadBool();
-                        goto case 1;
-                    }
-                case 1:
-                case 0:
-                    {
-                        m_Owner = reader.ReadMobile();
+            LockDowns = new Dictionary<Item, Mobile>();
 
-                        UpdateRegion();
+            int lockDowns = reader.ReadInt();
 
-                        CoOwners = reader.ReadStrongMobileList();
-                        Friends = reader.ReadStrongMobileList();
-                        Bans = reader.ReadStrongMobileList();
+            for (int i = 0; i < lockDowns; i++)
+            {
+                Item item = reader.ReadItem();
+                Mobile m = reader.ReadMobile();
 
-                        Sign = reader.ReadItem() as HouseSign;
-                        m_Trash = reader.ReadItem() as TrashBarrel;
+                if (item != null)
+                {
+                    item.IsLockedDown = true;
+                    LockDowns[item] = m != null ? m : Owner;
+                }
+            }
 
-                        Doors = reader.ReadStrongItemList();
+            for (int i = 0; i < VendorRentalContracts.Count; ++i)
+            {
+                VendorRentalContracts[i].IsLockedDown = true;
+            }
 
-                        LockDowns = new Dictionary<Item, Mobile>();
+            MaxLockDowns = reader.ReadInt();
+            MaxSecures = reader.ReadInt();
 
-                        int c = reader.ReadInt();
+            if ((Map == null || Map == Map.Internal) && Location == Point3D.Zero)
+            {
+                Delete();
+            }
 
-                        for (int i = 0; i < c; i++)
-                        {
-                            Item item = reader.ReadItem();
-                            Mobile m = reader.ReadMobile();
+            if (m_Owner != null)
+            {
+                List<BaseHouse> list = null;
 
-                            if (item != null)
-                            {
-                                item.IsLockedDown = true;
-                                LockDowns[item] = m != null ? m : Owner;
-                            }
-                        }
+                m_Table.TryGetValue(m_Owner, out list);
 
-                        for (int i = 0; i < VendorRentalContracts.Count; ++i)
-                        {
-                            VendorRentalContracts[i].IsLockedDown = true;
-                        }
+                if (list == null)
+                {
+                    m_Table[m_Owner] = list = new List<BaseHouse>();
+                }
 
-                        MaxLockDowns = reader.ReadInt();
-                        MaxSecures = reader.ReadInt();
-
-                        if ((Map == null || Map == Map.Internal) && Location == Point3D.Zero)
-                        {
-                            Delete();
-                        }
-
-                        if (m_Owner != null)
-                        {
-                            List<BaseHouse> list = null;
-
-                            m_Table.TryGetValue(m_Owner, out list);
-
-                            if (list == null)
-                            {
-                                m_Table[m_Owner] = list = new List<BaseHouse>();
-                            }
-
-                            list.Add(this);
-                        }
-
-                        break;
-                    }
+                list.Add(this);
             }
 
             if (!CheckDecay())
@@ -4377,10 +4314,6 @@ namespace Server.Multis
         public Mobile Owner { get; set; }
         public bool IsLockdown { get; set; }
 
-        #region *ONLY USED IN BASEHOUSE VERSION 21*
-        public static bool VersionInsertion { get; set; }
-        #endregion
-
         public SecureInfo(Item item, SecureLevel level, Mobile owner, bool isLockdown = false)
         {
             Item = item;
@@ -4391,7 +4324,7 @@ namespace Server.Multis
 
         public SecureInfo(GenericReader reader)
         {
-            int version = VersionInsertion ? 0 : reader.ReadInt();
+            int version = reader.ReadInt();
 
             switch (version)
             {
