@@ -2,7 +2,6 @@ using Server.Engines.Quests;
 using Server.Items;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Mobiles
 {
@@ -21,12 +20,15 @@ namespace Server.Mobiles
             SetResistance(ResistanceType.Cold, 100);
 
             Timer SelfDeleteTimer = new InternalSelfDeleteTimer(this);
+
             SelfDeleteTimer.Start();
 
             Tamable = false;
 
             if (Instances == null)
+            {
                 Instances = new List<IceWyrm>();
+            }
 
             Instances.Add(this);
         }
@@ -69,9 +71,15 @@ namespace Server.Mobiles
         {
             List<DamageStore> rights = GetLootingRights();
 
-            foreach (Mobile m in rights.Select(x => x.m_Mobile).Distinct())
+            HashSet<Mobile> set = new HashSet<Mobile>();
+
+            for (var index = 0; index < rights.Count; index++)
             {
-                if (m is PlayerMobile pm && pm.ExploringTheDeepQuest == ExploringTheDeepQuestChain.CusteauPerron)
+                var x = rights[index];
+
+                Mobile m = x.m_Mobile;
+
+                if (set.Add(m) && m is PlayerMobile pm && pm.ExploringTheDeepQuest == ExploringTheDeepQuestChain.CusteauPerron)
                 {
                     Item item = new IceWyrmScale();
 

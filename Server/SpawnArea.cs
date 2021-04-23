@@ -1,9 +1,7 @@
-#region References
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-#endregion
 
 namespace Server
 {
@@ -117,9 +115,14 @@ namespace Server
 			{
 				int hash = region.Length;
 
-				hash = region.Aggregate(hash, (v, c) => unchecked((v * 397) ^ Convert.ToInt32(c)));
+                for (var index = 0; index < region.Length; index++)
+                {
+                    var c = region[index];
 
-				hash = (hash * 397) ^ facet.MapID;
+                    hash = unchecked((hash * 397) ^ Convert.ToInt32(c));
+                }
+
+                hash = (hash * 397) ^ facet.MapID;
 				hash = (hash * 397) ^ facet.MapIndex;
 
 				TileFlag filter = TileFlag.None;
@@ -302,25 +305,32 @@ namespace Server
 		private IEnumerable<Point3D> Compute(Rectangle3D area)
 		{
 			// Check all corners to skip large bodies of water.
-			if (Filters.Contains(TileFlag.Wet))
-			{
-				LandTile land1 = Facet.Tiles.GetLandTile(area.Start.X, area.Start.Y); // TL
-				LandTile land2 = Facet.Tiles.GetLandTile(area.End.X, area.Start.Y); // TR
-				LandTile land3 = Facet.Tiles.GetLandTile(area.Start.X, area.End.Y); // BL
-				LandTile land4 = Facet.Tiles.GetLandTile(area.End.X, area.End.Y); // BR
+            for (var index = 0; index < Filters.Length; index++)
+            {
+                var filter = Filters[index];
 
-				bool ignore1 = land1.Ignored || TileData.LandTable[land1.ID].Flags.HasFlag(TileFlag.Wet);
-				bool ignore2 = land2.Ignored || TileData.LandTable[land2.ID].Flags.HasFlag(TileFlag.Wet);
-				bool ignore3 = land3.Ignored || TileData.LandTable[land3.ID].Flags.HasFlag(TileFlag.Wet);
-				bool ignore4 = land4.Ignored || TileData.LandTable[land4.ID].Flags.HasFlag(TileFlag.Wet);
+                if (Equals(filter, TileFlag.Wet))
+                {
+                    LandTile land1 = Facet.Tiles.GetLandTile(area.Start.X, area.Start.Y); // TL
+                    LandTile land2 = Facet.Tiles.GetLandTile(area.End.X, area.Start.Y); // TR
+                    LandTile land3 = Facet.Tiles.GetLandTile(area.Start.X, area.End.Y); // BL
+                    LandTile land4 = Facet.Tiles.GetLandTile(area.End.X, area.End.Y); // BR
 
-				if (ignore1 && ignore2 && ignore3 && ignore4)
-				{
-					yield break;
-				}
-			}
+                    bool ignore1 = land1.Ignored || TileData.LandTable[land1.ID].Flags.HasFlag(TileFlag.Wet);
+                    bool ignore2 = land2.Ignored || TileData.LandTable[land2.ID].Flags.HasFlag(TileFlag.Wet);
+                    bool ignore3 = land3.Ignored || TileData.LandTable[land3.ID].Flags.HasFlag(TileFlag.Wet);
+                    bool ignore4 = land4.Ignored || TileData.LandTable[land4.ID].Flags.HasFlag(TileFlag.Wet);
 
-			Point3D p = Point3D.Zero;
+                    if (ignore1 && ignore2 && ignore3 && ignore4)
+                    {
+                        yield break;
+                    }
+
+                    break;
+                }
+            }
+
+            Point3D p = Point3D.Zero;
 
 			for (p.X = area.Start.X; p.X <= area.End.X; p.X++)
 			{

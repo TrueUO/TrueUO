@@ -1,7 +1,6 @@
 using Server.Engines.PartySystem;
 using Server.Mobiles;
 using Server.Targeting;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -63,7 +62,19 @@ namespace Server.Items
                 {
                     if (altar.CheckParty(altar.Owner, from))
                     {
-                        if (altar.Rituals.Count(s => s.RitualMobile == from) == 0)
+                        int count = 0;
+
+                        for (var index = 0; index < altar.Rituals.Count; index++)
+                        {
+                            var s = altar.Rituals[index];
+
+                            if (s.RitualMobile == from)
+                            {
+                                count++;
+                            }
+                        }
+
+                        if (count == 0)
                         {
                             altar.Rituals.Add(new RitualArray { RitualMobile = from, Ritual1 = false, Ritual2 = false });
                         }
