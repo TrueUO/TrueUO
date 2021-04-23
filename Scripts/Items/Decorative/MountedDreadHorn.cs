@@ -1,8 +1,13 @@
+using Server.Engines.Craft;
+using System;
+
 namespace Server.Items
 {
     [Flipable(0x3158, 0x3159)]
-    public class MountedDreadHorn : Item
+    public class MountedDreadHorn : Item, ICraftable
     {
+        public override int LabelNumber => 1074464;// mounted Dread Horn
+
         [Constructable]
         public MountedDreadHorn()
             : base(0x3158)
@@ -15,19 +20,28 @@ namespace Server.Items
         {
         }
 
-        public override int LabelNumber => 1074464;// mounted Dread Horn
+        public int OnCraft(int quality, bool makersMark, Mobile from, CraftSystem craftSystem, Type typeRes, ITool tool, CraftItem craftItem, int resHue)
+        {
+            Type resourceType = typeRes;
+
+            if (resourceType == null)
+                resourceType = craftItem.Resources.GetAt(0).ItemType;
+
+            Hue = CraftResources.GetHue(CraftResources.GetFromType(resourceType));
+
+            return 1;
+        }
+    
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
-            writer.Write(0); // version
+            writer.Write(0);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }
