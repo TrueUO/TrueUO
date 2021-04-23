@@ -367,8 +367,10 @@ namespace Server.Multis
 
             for (int i = 0; i < yard.Count; ++i)
             {
-                foreach (BaseHouse b in _houses)
+                for (var index = 0; index < _houses.Count; index++)
                 {
+                    BaseHouse b = _houses[index];
+
                     if (b.Contains(yard[i]))
                     {
                         return HousePlacementResult.BadStatic; // Broke rule #3

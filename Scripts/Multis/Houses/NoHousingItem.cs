@@ -50,8 +50,12 @@ namespace Server.Items
 
             writer.Write(m_Area.Length);
 
-            foreach (Rectangle3D rect in m_Area)
+            for (var index = 0; index < m_Area.Length; index++)
+            {
+                Rectangle3D rect = m_Area[index];
+
                 writer.Write(rect);
+            }
         }
 
         public override void Deserialize(GenericReader reader)
