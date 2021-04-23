@@ -790,15 +790,11 @@ namespace Server.Engines.Quests
                         {
                             BaseObjective objective = quest.Objectives[index1];
 
-                            if (objective is ObtainObjective obtain)
+                            if (objective is ObtainObjective obtain && obtain.IsObjective(item))
                             {
-                                if (obtain.IsObjective(item))
-                                {
-                                    obtain.CurProgress += item.Amount;
-                                    quest.OnObjectiveUpdate(item);
-
-                                    return true;
-                                }
+                                obtain.CurProgress += item.Amount;
+                                quest.OnObjectiveUpdate(item);
+                                return true;
                             }
                         }
 

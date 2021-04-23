@@ -232,18 +232,17 @@ namespace Server.Gumps
             NetState ns = pm.NetState;
 
             if (ns == null)
+            {
                 yield break;
+            }
 
             for (var index = 0; index < ns.Gumps.Count; index++)
             {
                 Gump nsGump = ns.Gumps[index];
 
-                if (nsGump is BaseGump gump)
+                if (nsGump is BaseGump gump && gump.GetType() == typeof(T) && (predicate == null || predicate(gump as T)))
                 {
-                    if (gump.GetType() == typeof(T) && (predicate == null || predicate(gump as T)))
-                    {
-                        yield return gump as T;
-                    }
+                    yield return gump as T;
                 }
             }
         }
@@ -254,18 +253,17 @@ namespace Server.Gumps
             List<T> list = new List<T>();
 
             if (ns == null)
+            {
                 return list;
+            }
 
             for (var index = 0; index < ns.Gumps.Count; index++)
             {
                 Gump nsGump = ns.Gumps[index];
 
-                if (nsGump is BaseGump gump)
+                if (nsGump is BaseGump gump && gump.GetType() == typeof(T))
                 {
-                    if (gump.GetType() == typeof(T))
-                    {
-                        list.Add(gump as T);
-                    }
+                    list.Add(gump as T);
                 }
             }
 
@@ -278,18 +276,17 @@ namespace Server.Gumps
             List<BaseGump> list = new List<BaseGump>();
 
             if (ns == null)
+            {
                 return list;
+            }
 
             for (var index = 0; index < ns.Gumps.Count; index++)
             {
                 Gump nsGump = ns.Gumps[index];
 
-                if (nsGump is BaseGump gump)
+                if (nsGump is BaseGump gump && (!checkOpen || gump.Open))
                 {
-                    if (!checkOpen || gump.Open)
-                    {
-                        list.Add(gump);
-                    }
+                    list.Add(gump);
                 }
             }
 

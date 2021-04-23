@@ -373,12 +373,9 @@ namespace Server.Items
             {
                 Item item = from.Items[index];
 
-                if (item is BaseArmor armor)
+                if (item is BaseArmor armor && (armor.m_RefinedPhysical > 0 || armor.m_RefinedFire > 0 || armor.m_RefinedCold > 0 || armor.m_RefinedPoison > 0 || armor.m_RefinedEnergy > 0))
                 {
-                    if (armor.m_RefinedPhysical > 0 || armor.m_RefinedFire > 0 || armor.m_RefinedCold > 0 || armor.m_RefinedPoison > 0 || armor.m_RefinedEnergy > 0)
-                    {
-                        return true;
-                    }
+                    return true;
                 }
             }
 
@@ -428,7 +425,9 @@ namespace Server.Items
             }
 
             if (RefinedDefenseChance != 0)
+            {
                 list.Add(1153733, string.Format("{0}\t{1}", "", RefinedDefenseChance.ToString()));
+            }
         }
 
         public static int GetInherentLowerManaCost(Mobile from)
