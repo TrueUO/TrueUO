@@ -142,13 +142,10 @@ namespace Server.Multis
                 {
                     Item fixture = Fixtures[index];
 
-                    if (fixture is HouseTeleporter fix)
+                    if (fixture is HouseTeleporter fix && fix.Location == p)
                     {
-                        if (fix.Location == p)
-                        {
-                            any = true;
-                            break;
-                        }
+                        any = true;
+                        break;
                     }
                 }
 
@@ -213,16 +210,10 @@ namespace Server.Multis
                     {
                         Item houseDoor = Doors[i];
 
-                        if (houseDoor is BaseDoor check)
+                        if (houseDoor is BaseDoor check && check != door && door.InRange(check.Location, 1))
                         {
-                            if (check != door)
-                            {
-                                if (door.InRange(check.Location, 1))
-                                {
-                                    door.Link = check;
-                                    check.Link = door;
-                                }
-                            }
+                            door.Link = check;
+                            check.Link = door;
                         }
                     }
                 }
