@@ -4,7 +4,6 @@ using Server.Regions;
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Spells.Spellweaving
 {
@@ -22,6 +21,7 @@ namespace Server.Spells.Spellweaving
         public override TimeSpan CastDelayBase => TimeSpan.FromSeconds(2.5);
         public override double RequiredSkill => 66.0;
         public override int RequiredMana => 50;
+
         public override void OnCast()
         {
             Caster.Target = new InternalTarget(this);
@@ -69,17 +69,34 @@ namespace Server.Spells.Spellweaving
         private bool CanFitFire(Point3D p, Mobile caster)
         {
             if (!Caster.Map.CanFit(p, 12, true, false))
-                return false;
-            if (BaseHouse.FindHouseAt(p, caster.Map, 20) != null)
-                return false;
-            foreach (RegionRect r in caster.Map.GetSector(p).RegionRects)
             {
-                if (!r.Contains(p))
-                    continue;
-                GuardedRegion reg = (GuardedRegion)Region.Find(p, caster.Map).GetRegion(typeof(GuardedRegion));
-                if (reg != null && !reg.Disabled)
-                    return false;
+                return false;
             }
+
+            if (BaseHouse.FindHouseAt(p, caster.Map, 20) != null)
+            {
+                return false;
+            }
+
+            var rs = caster.Map.GetSector(p).RegionRects;
+
+            for (var index = 0; index < rs.Count; index++)
+            {
+                RegionRect r = rs[index];
+
+                if (!r.Contains(p))
+                {
+                    continue;
+                }
+
+                GuardedRegion reg = (GuardedRegion) Region.Find(p, caster.Map).GetRegion(typeof(GuardedRegion));
+
+                if (reg != null && !reg.Disabled)
+                {
+                    return false;
+                }
+            }
+
             return true;
         }
 
@@ -90,10 +107,14 @@ namespace Server.Spells.Spellweaving
         {
             List<Mobile> mobiles = new List<Mobile>(m_Table.Keys);
 
-            foreach (Mobile m in mobiles)
+            for (var index = 0; index < mobiles.Count; index++)
             {
+                Mobile m = mobiles[index];
+
                 if (Core.TickCount - m_Table[m] >= 0)
+                {
                     m_Table.Remove(m);
+                }
             }
 
             ColUtility.Free(mobiles);
@@ -102,6 +123,7 @@ namespace Server.Spells.Spellweaving
         public class InternalTarget : Target
         {
             private readonly WildfireSpell m_Owner;
+
             public InternalTarget(WildfireSpell owner)
                 : base(12, true, TargetFlags.None)
             {
@@ -147,29 +169,50 @@ namespace Server.Spells.Spellweaving
             protected override void OnTick()
             {
                 if (m_Owner == null || m_Map == null || m_Map == Map.Internal)
+                {
                     return;
+                }
 
                 m_LifeSpan -= 1;
-                List<Mobile> targets = GetTargets().Where(m => BaseHouse.FindHouseAt(m.Location, m.Map, 20) == null).ToList();
+
+                List<Mobile> targets = new List<Mobile>();
+
+                foreach (var m in GetTargets())
+                {
+                    if (BaseHouse.FindHouseAt(m.Location, m.Map, 20) == null)
+                    {
+                        targets.Add(m);
+                    }
+                }
+
                 int count = targets.Count;
 
-                foreach (Mobile m in targets)
+                for (var index = 0; index < targets.Count; index++)
                 {
+                    Mobile m = targets[index];
+
                     m_Owner.DoHarmful(m);
 
                     if (m_Map.CanFit(m.Location, 12, true, false))
+                    {
                         new FireItem(m_LifeSpan).MoveToWorld(m.Location, m_Map);
+                    }
 
                     Effects.PlaySound(m.Location, m_Map, 0x5CF);
-                    double sdiBonus = (double)AosAttributes.GetValue(m_Owner, AosAttribute.SpellDamage) / 100;
+
+                    double sdiBonus = (double) AosAttributes.GetValue(m_Owner, AosAttribute.SpellDamage) / 100;
 
                     if (m is PlayerMobile && sdiBonus > .15)
+                    {
                         sdiBonus = .15;
+                    }
 
-                    int damage = m_Damage + (int)(m_Damage * sdiBonus);
+                    int damage = m_Damage + (int) (m_Damage * sdiBonus);
 
                     if (count > 1)
+                    {
                         damage /= Math.Min(3, count);
+                    }
 
                     AOS.Damage(m, m_Owner, damage, 0, 100, 0, 0, 0, 0, 0, DamageType.SpellAOE);
                     Table[m] = Core.TickCount + 1000;
@@ -182,7 +225,13 @@ namespace Server.Spells.Spellweaving
             {
                 DefragTable();
 
-                return m_Spell.AcquireIndirectTargets(m_Location, m_Range).OfType<Mobile>().Where(m => !m_Table.ContainsKey(m));
+                foreach (IDamageable target in m_Spell.AcquireIndirectTargets(m_Location, m_Range))
+                {
+                    if (target is Mobile m && !m_Table.ContainsKey(m))
+                    {
+                        yield return m;
+                    }
+                }
             }
         }
 
