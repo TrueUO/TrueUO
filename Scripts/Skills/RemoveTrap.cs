@@ -218,7 +218,9 @@ namespace Server.SkillHandlers
         public static bool IsDisarming(Mobile from, TreasureMapChest chest)
         {
             if (_Table == null)
+            {
                 return false;
+            }
 
             return _Table.ContainsKey(from);
         }
@@ -226,9 +228,19 @@ namespace Server.SkillHandlers
         public static bool IsBeingDisarmed(TreasureMapChest chest)
         {
             if (_Table == null)
+            {
                 return false;
+            }
 
-            return _Table.Values.Any(timer => timer.Chest == chest);
+            foreach (var timer in _Table.Values)
+            {
+                if (timer.Chest == chest)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 

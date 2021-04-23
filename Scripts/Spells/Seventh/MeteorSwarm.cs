@@ -2,7 +2,7 @@ using Server.Items;
 using Server.Mobiles;
 using Server.Targeting;
 using System;
-using System.Linq;
+using System.Collections.Generic;
 
 namespace Server.Spells.Seventh
 {
@@ -35,13 +35,16 @@ namespace Server.Spells.Seventh
         public override int GetMana()
         {
             if (Item != null)
+            {
                 return 0;
+            }
 
             return base.GetMana();
         }
 
         public override SpellCircle Circle => SpellCircle.Seventh;
         public override bool DelayedDamage => true;
+
         public override void OnCast()
         {
             Caster.Target = new InternalTarget(this, Item);
@@ -75,29 +78,40 @@ namespace Server.Spells.Seventh
                     p = pItem.GetWorldLocation();
                 }
 
-                System.Collections.Generic.List<IDamageable> targets = AcquireIndirectTargets(p, 2).ToList();
+                List<IDamageable> targets = new List<IDamageable>();
+
+                foreach (var target in AcquireIndirectTargets(p, 2))
+                {
+                    targets.Add(target);
+                }
 
                 int count = Math.Max(1, targets.Count);
 
                 Effects.PlaySound(p, Caster.Map, 0x160);
 
-                foreach (IDamageable id in targets)
+                for (var index = 0; index < targets.Count; index++)
                 {
+                    IDamageable id = targets[index];
                     Mobile m = id as Mobile;
+
                     double damage = GetNewAosDamage(51, 1, 5, id is PlayerMobile, id);
 
                     if (count > 2)
+                    {
                         damage = (damage * 2) / count;
+                    }
 
                     IDamageable source = Caster;
                     IDamageable target = id;
 
                     if (SpellHelper.CheckReflect(this, ref source, ref target))
                     {
-                        Timer.DelayCall(TimeSpan.FromSeconds(.5), () =>
-                        {
-                            source.MovingParticles(target, item != null ? 0xA1ED : 0x36D4, 7, 0, false, true, 9501, 1, 0, 0x100);
-                        });
+                        Timer.DelayCall(TimeSpan.FromSeconds(.5),
+                            () =>
+                            {
+                                source.MovingParticles(target, item != null ? 0xA1ED : 0x36D4, 7, 0, false, true, 9501,
+                                    1, 0, 0x100);
+                            });
                     }
 
                     if (m != null)
