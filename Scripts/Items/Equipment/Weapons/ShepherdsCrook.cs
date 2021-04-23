@@ -63,39 +63,47 @@ namespace Server.Items
             private readonly ShepherdsCrook m_Crook;
 
             public HerdingTarget(ShepherdsCrook crook)
-                : base(10, false, TargetFlags.None)
+                : base(14, false, TargetFlags.None)
             {
                 m_Crook = crook;
             }
 
             protected override void OnTarget(Mobile from, object targ)
             {
-                if (targ is BaseCreature bc)
+                if (targ is BaseCreature bc && IsHerdable(bc))
                 {
-                    if (IsHerdable(bc))
+                    if (bc.Controlled && bc.ControlMaster != from)
                     {
-                        if (bc.Controlled)
+                        bc.PrivateOverheadMessage(MessageType.Regular, 0x3B2, 502467, from.NetState); // That animal looks tame already.
+                    }
+                    else
+                    {
+                        double min = bc.CurrentTameSkill - 30;
+                        double max = bc.CurrentTameSkill + 30 + Utility.Random(10);
+
+                        if (max <= from.Skills[SkillName.Herding].Value)
                         {
-                            bc.PrivateOverheadMessage(MessageType.Regular, 0x3B2, 502467, from.NetState); // That animal looks tame already.
+                            bc.PrivateOverheadMessage(MessageType.Regular, 0x3B2, 502471, from.NetState); // That wasn't even challenging.
                         }
-                        else
+
+                        if (from.CheckTargetSkill(SkillName.Herding, bc, min, max))
                         {
                             from.SendLocalizedMessage(502475); // Click where you wish the animal to go.
                             from.Target = new InternalTarget(bc, m_Crook);
                         }
-                    }
-                    else
-                    {
-                        from.SendLocalizedMessage(502468); // That is not a herdable animal.
+                        else
+                        {
+                            from.SendLocalizedMessage(502472); // You don't seem to be able to persuade that to move.
+                        }
                     }
                 }
                 else
                 {
-                    from.SendLocalizedMessage(502472); // You don't seem to be able to persuade that to move.
+                    from.SendLocalizedMessage(502468); // That is not a herdable animal.
                 }
             }
 
-            private bool IsHerdable(BaseCreature bc)
+            private static bool IsHerdable(BaseCreature bc)
             {
                 if (bc.IsParagon)
                     return false;
@@ -105,9 +113,7 @@ namespace Server.Items
 
                 Map map = bc.Map;
 
-                ChampionSpawnRegion region = Region.Find(bc.Home, map) as ChampionSpawnRegion;
-
-                if (region != null)
+                if (Region.Find(bc.Home, map) is ChampionSpawnRegion region)
                 {
                     ChampionSpawn spawn = region.ChampionSpawn;
 
@@ -116,8 +122,12 @@ namespace Server.Items
                         Type t = bc.GetType();
 
                         foreach (Type type in m_ChampTamables)
+                        {
                             if (type == t)
+                            {
                                 return true;
+                            }
+                        }
                     }
                 }
 
@@ -130,7 +140,7 @@ namespace Server.Items
                 private readonly ShepherdsCrook m_Crook;
 
                 public InternalTarget(BaseCreature c, ShepherdsCrook crook)
-                    : base(10, true, TargetFlags.None)
+                    : base(15, true, TargetFlags.None)
                 {
                     m_Creature = c;
                     m_Crook = crook;
@@ -140,29 +150,27 @@ namespace Server.Items
                 {
                     if (targ is IPoint2D p)
                     {
-                        double min = m_Creature.CurrentTameSkill - 30;
-                        double max = m_Creature.CurrentTameSkill + 30 + Utility.Random(10);
-
-                        if (max <= from.Skills[SkillName.Herding].Value)
-                            m_Creature.PrivateOverheadMessage(MessageType.Regular, 0x3B2, 502471, from.NetState); // That wasn't even challenging.
-
-                        if (from.CheckTargetSkill(SkillName.Herding, m_Creature, min, max))
+                        if (!Equals(p, from))
                         {
-                            if (p != from)
-                                p = new Point2D(p.X, p.Y);
+                            p = new Point2D(p.X, p.Y);
+                        }
 
-                            m_Creature.TargetLocation = p;
-                            from.SendLocalizedMessage(502479); // The animal walks where it was instructed to.
-
-                            if (Siege.SiegeShard && m_Crook is IUsesRemaining)
-                            {
-                                Siege.CheckUsesRemaining(from, m_Crook);
-                            }
+                        if (p is Mobile mobile && mobile == from)
+                        {
+                            from.SendLocalizedMessage(502474); // The animal begins to follow you.
                         }
                         else
                         {
-                            from.SendLocalizedMessage(502472); // You don't seem to be able to persuade that to move.
+                            from.SendLocalizedMessage(502479); // The animal walks where it was instructed to.
                         }
+
+                        m_Creature.TargetLocation = p;
+
+                        if (Siege.SiegeShard && m_Crook != null)
+                        {
+                            Siege.CheckUsesRemaining(from, m_Crook);
+                        }
+
                     }
                 }
             }

@@ -21,8 +21,10 @@ namespace Server.Engines.MiniChamps
         [Description("MiniChampion Generator")]
         public static void GenStoneRuins_OnCommand(CommandEventArgs e)
         {
-            foreach (MiniChamp controller in Controllers)
+            for (var index = 0; index < Controllers.Count; index++)
             {
+                MiniChamp controller = Controllers[index];
+
                 controller.Delete();
             }
 
@@ -241,8 +243,10 @@ namespace Server.Engines.MiniChamps
 
         public void Despawn()
         {
-            foreach (Mobile toDespawn in Despawns)
+            for (var index = 0; index < Despawns.Count; index++)
             {
+                Mobile toDespawn = Despawns[index];
+
                 toDespawn.Delete();
             }
 
@@ -252,13 +256,17 @@ namespace Server.Engines.MiniChamps
         public void OnSlice()
         {
             if (!m_Active || Deleted)
+            {
                 return;
+            }
 
             bool changed = false;
             bool done = true;
 
-            foreach (MiniChampSpawnInfo spawn in Spawn)
+            for (var index = 0; index < Spawn.Count; index++)
             {
+                MiniChampSpawnInfo spawn = Spawn[index];
+
                 if (spawn.Slice() && !changed)
                 {
                     changed = true;
@@ -277,8 +285,10 @@ namespace Server.Engines.MiniChamps
 
             if (m_Active)
             {
-                foreach (MiniChampSpawnInfo spawn in Spawn)
+                for (var index = 0; index < Spawn.Count; index++)
                 {
+                    MiniChampSpawnInfo spawn = Spawn[index];
+
                     if (spawn.Respawn() && !changed)
                     {
                         changed = true;
@@ -294,10 +304,14 @@ namespace Server.Engines.MiniChamps
 
         public void ClearSpawn()
         {
-            foreach (MiniChampSpawnInfo spawn in Spawn)
+            for (var index = 0; index < Spawn.Count; index++)
             {
-                foreach (Mobile creature in spawn.Creatures)
+                MiniChampSpawnInfo spawn = Spawn[index];
+
+                for (var i = 0; i < spawn.Creatures.Count; i++)
                 {
+                    Mobile creature = spawn.Creatures[i];
+
                     Despawns.Add(creature);
                 }
             }
@@ -321,8 +335,10 @@ namespace Server.Engines.MiniChamps
                     MinotaurShouts();
                 }
 
-                foreach (MiniChampTypeInfo type in levelInfo.Types)
+                for (var index = 0; index < levelInfo.Types.Length; index++)
                 {
+                    MiniChampTypeInfo type = levelInfo.Types[index];
+
                     Spawn.Add(new MiniChampSpawnInfo(this, type));
                 }
             }
@@ -361,7 +377,9 @@ namespace Server.Engines.MiniChamps
             foreach (Mobile x in eable)
             {
                 if (x is PlayerMobile)
+                {
                     x.SendLocalizedMessage(cliloc);
+                }
             }
 
             eable.Free();

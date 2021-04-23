@@ -138,17 +138,10 @@ namespace Server.Engines.Despise
                 m_Timer = null;
             }
 
-            if (m_LowerRegion != null)
-                m_LowerRegion.Unregister();
-
-            if (m_EvilRegion != null)
-                m_EvilRegion.Unregister();
-
-            if (m_GoodRegion != null)
-                m_GoodRegion.Unregister();
-
-            if (m_StartRegion != null)
-                m_StartRegion.Unregister();
+            m_LowerRegion?.Unregister();
+            m_EvilRegion?.Unregister();
+            m_GoodRegion?.Unregister();
+            m_StartRegion?.Unregister();
 
             m_LowerRegion = null;
             m_EvilRegion = null;
@@ -220,14 +213,18 @@ namespace Server.Engines.Despise
             }
         }
 
-        public int GetArmyPower(Alignment alignment)
+        private static int GetArmyPower(Alignment alignment)
         {
             int power = 0;
+
             foreach (WispOrb orb in WispOrb.Orbs)
             {
                 if (orb.Conscripted && orb.Alignment == alignment)
+                {
                     power += orb.GetArmyPower();
+                }
             }
+
             return power;
         }
 
@@ -388,7 +385,7 @@ namespace Server.Engines.Despise
             BeginCleanupTimer();
         }
 
-        private void SendRegionMessage(DespiseRegion region, int cliloc)
+        private static void SendRegionMessage(Region region, int cliloc)
         {
             if (region != null)
             {
@@ -479,12 +476,12 @@ namespace Server.Engines.Despise
             }
         }
 
-        public bool HasPlayers(Region r)
+        private static bool HasPlayers(Region r)
         {
             return r != null && r.GetPlayerCount() > 0;
         }
 
-        private Point3D GetRandomLoc(Rectangle2D rec)
+        private static Point3D GetRandomLoc(Rectangle2D rec)
         {
             Map map = Map.Trammel;
             Point3D p = new Point3D(rec.X, rec.Y, map.GetAverageZ(rec.X, rec.Y));
@@ -623,11 +620,11 @@ namespace Server.Engines.Despise
             new Rectangle2D(5379, 771, 247, 250)
         };
 
-        private static Rectangle2D EvilKickBounds = new Rectangle2D(5500, 571, 20, 5);
-        private static Rectangle2D GoodKickBounds = new Rectangle2D(5484, 567, 15, 8);
-        private static Rectangle2D BossEntranceLocation = new Rectangle2D(5391, 855, 13, 15);
+        private static readonly Rectangle2D EvilKickBounds = new Rectangle2D(5500, 571, 20, 5);
+        private static readonly Rectangle2D GoodKickBounds = new Rectangle2D(5484, 567, 15, 8);
+        private static readonly Rectangle2D BossEntranceLocation = new Rectangle2D(5391, 855, 13, 15);
 
-        private static Point3D BossLocation = new Point3D(5556, 823, 45);
+        private static readonly Point3D BossLocation = new Point3D(5556, 823, 45);
 
         #endregion
 

@@ -1,7 +1,6 @@
 using Server.Items;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Mobiles
 {
@@ -42,11 +41,25 @@ namespace Server.Mobiles
 
             if (vendor != null && BaseVendor.UseVendorEconomy)
             {
-                IBuyItemInfo buyInfo = vendor.GetBuyInfo().OfType<GenericBuyInfo>().FirstOrDefault(info => info.EconomyItem && info.Type == item.GetType());
+                IBuyItemInfo buyInfo = null;
+
+                var infos = vendor.GetBuyInfo();
+
+                for (var index = 0; index < infos.Length; index++)
+                {
+                    IBuyItemInfo info = infos[index];
+
+                    if (info is GenericBuyInfo gbi && gbi.EconomyItem && gbi.Type == item.GetType())
+                    {
+                        buyInfo = gbi;
+                        break;
+                    }
+                }
 
                 if (buyInfo != null)
                 {
                     int sold = buyInfo.TotalSold;
+
                     price = (int)(buyInfo.Price * .75);
 
                     return Math.Max(1, price);

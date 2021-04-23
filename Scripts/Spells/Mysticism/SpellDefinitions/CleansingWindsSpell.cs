@@ -50,6 +50,7 @@ namespace Server.Spells.Mysticism
                 Caster.PlaySound(0x64C);
 
                 List<Mobile> targets = new List<Mobile> { targeted };
+
                 targets.AddRange(FindAdditionalTargets(targeted).Take(3)); // This effect can hit up to 3 additional players beyond the primary target.
 
                 double primarySkill = Caster.Skills[CastSkill].Value;
@@ -58,8 +59,10 @@ namespace Server.Spells.Mysticism
                 int toHeal = (int)((primarySkill + secondarySkill) / 4.0) + Utility.RandomMinMax(-3, 3);
                 toHeal /= targets.Count; // The effectiveness of the spell is reduced by the number of targets affected.
 
-                foreach (Mobile target in targets)
+                for (var index = 0; index < targets.Count; index++)
                 {
+                    Mobile target = targets[index];
+
                     // WARNING: This spell will flag the caster as a criminal if a criminal or murderer party member is close enough
                     // to the target to receive the benefits from the area of effect.
                     Caster.DoBeneficial(target);
@@ -71,12 +74,13 @@ namespace Server.Spells.Mysticism
                     if (target.Poisoned)
                     {
                         int poisonLevel = target.Poison.RealLevel + 1;
-                        int chanceToCure = (10000 + (int)((primarySkill + secondarySkill) / 2 * 75) - (poisonLevel * 1750)) / 100;
+                        int chanceToCure =
+                            (10000 + (int) ((primarySkill + secondarySkill) / 2 * 75) - (poisonLevel * 1750)) / 100;
 
                         if (chanceToCure > Utility.Random(100) && target.CurePoison(Caster))
                         {
                             // Poison reduces healing factor by 15% per level of poison.
-                            toHealMod -= (int)(toHeal * poisonLevel * 0.15);
+                            toHealMod -= (int) (toHeal * poisonLevel * 0.15);
                         }
                         else
                         {
@@ -97,11 +101,13 @@ namespace Server.Spells.Mysticism
                     {
                         // Each Curse reduces healing by 3 points + 1% per curse level.
                         toHealMod = toHealMod - (curseLevel * 3);
-                        toHealMod = toHealMod - (int)(toHealMod * (curseLevel / 100.0));
+                        toHealMod = toHealMod - (int) (toHealMod * (curseLevel / 100.0));
                     }
 
                     if (toHealMod > 0)
+                    {
                         SpellHelper.Heal(toHealMod, target, Caster);
+                    }
                 }
             }
 
@@ -122,18 +128,24 @@ namespace Server.Spells.Mysticism
             Party casterParty = Party.Get(Caster);
 
             if (casterParty == null)
+            {
                 yield break;
+            }
 
             IPooledEnumerable eable = Caster.Map.GetMobilesInRange(new Point3D(targeted), 2);
 
             foreach (Mobile m in eable)
             {
                 if (m == null || m == targeted)
+                {
                     continue;
+                }
 
                 // Players in the area must be in the casters party in order to receive the beneficial effects of the spell.
                 if (Caster.CanBeBeneficial(m, false) && casterParty.Contains(m))
+                {
                     yield return m;
+                }
             }
 
             eable.Free();
@@ -246,7 +258,9 @@ namespace Server.Spells.Mysticism
                     return;
 
                 if (!from.CanSee(o))
+                {
                     from.SendLocalizedMessage(500237); // Target can not be seen.
+                }
                 else
                 {
                     SpellHelper.Turn(from, o);

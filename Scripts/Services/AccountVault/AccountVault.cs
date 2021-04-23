@@ -10,8 +10,8 @@ using Server.Spells;
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Globalization;
+using System.Linq;
 
 namespace Server.AccountVault
 {
@@ -355,8 +355,10 @@ namespace Server.AccountVault
             var cont = Container;
             var items = new List<Item>(Items.Where(i => i != cont && !i.IsChildOf(cont)));
 
-            foreach (var item in items)
+            for (var index = 0; index < items.Count; index++)
             {
+                var item = items[index];
+
                 cont.DropItem(item);
             }
 
@@ -502,7 +504,20 @@ namespace Server.AccountVault
 
             for (int i = 0; i < list.Count; i++)
             {
-                if (!list.Any(vault => vault.Index == i))
+                bool any = false;
+
+                for (var index = 0; index < list.Count; index++)
+                {
+                    var vault = list[index];
+
+                    if (vault.Index == i)
+                    {
+                        any = true;
+                        break;
+                    }
+                }
+
+                if (!any)
                 {
                     Index = i;
                     break;
@@ -534,7 +549,17 @@ namespace Server.AccountVault
                 return null;
             }
 
-            return Vaults.FirstOrDefault(v => v.Account == m.Account.Username && Region.Find(v.GetWorldLocation(), v.Map).IsPartOf(reg) && v.Map == m.Map);
+            for (var index = 0; index < Vaults.Count; index++)
+            {
+                var v = Vaults[index];
+
+                if (v.Account == m.Account.Username && Region.Find(v.GetWorldLocation(), v.Map).IsPartOf(reg) && v.Map == m.Map)
+                {
+                    return v;
+                }
+            }
+
+            return null;
         }
 
         public static void TryRentVault(PlayerMobile pm, AccountVault vault)
@@ -648,6 +673,7 @@ namespace Server.AccountVault
         public static T FindNearest<T>(IEntity e, Func<T, bool> predicate = null) where T : IEntity
         {
             IPooledEnumerable eable = null;
+
             var loc = e.Location;
             var map = e.Map;
 
@@ -655,7 +681,21 @@ namespace Server.AccountVault
             {
                 eable = map.GetObjectsInRange(loc, i);
 
-                var toFind = eable.OfType<T>().FirstOrDefault(entity => predicate == null || predicate(entity));
+                var toFind = default(T);
+
+                foreach (object o in eable)
+                {
+                    if (o is T)
+                    {
+                        T __94256075 = (T) o;
+
+                        if (predicate == null || predicate(__94256075))
+                        {
+                            toFind = __94256075;
+                            break;
+                        }
+                    }
+                }
 
                 if (toFind != null)
                 {
@@ -676,9 +716,14 @@ namespace Server.AccountVault
         {
             var reg = Region.Find(v.GetWorldLocation(), v.Map);
 
-            if (SystemSettings.VaultRegions.Any(r => reg.IsPartOf(r)))
+            for (var index = 0; index < SystemSettings.VaultRegions.Length; index++)
             {
-                return ValidateMap(v);
+                var r = SystemSettings.VaultRegions[index];
+
+                if (reg.IsPartOf(r))
+                {
+                    return ValidateMap(v);
+                }
             }
 
             return false;

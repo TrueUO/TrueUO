@@ -1,4 +1,4 @@
-using System.Linq;
+using System.Collections.Generic;
 
 namespace Server.Items
 {
@@ -48,7 +48,15 @@ namespace Server.Items
         {
             if (DamageStore != null)
             {
-                System.Collections.Generic.List<Mobile> eligables = DamageStore.Keys.Where(m => m.InRange(Location, 20)).ToList();
+                List<Mobile> eligables = new List<Mobile>();
+
+                foreach (var m in DamageStore.Keys)
+                {
+                    if (m.InRange(Location, 20))
+                    {
+                        eligables.Add(m);
+                    }
+                }
 
                 for (int i = 0; i < eligables.Count; i++)
                 {
@@ -60,7 +68,9 @@ namespace Server.Items
             }
 
             if (Controller != null)
+            {
                 Controller.OnBeaconDestroyed();
+            }
 
             return base.OnBeforeDestroyed();
         }

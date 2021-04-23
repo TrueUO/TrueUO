@@ -3,7 +3,6 @@ using Server.Mobiles;
 using Server.Network;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.Quests.Doom
 {
@@ -13,7 +12,7 @@ namespace Server.Engines.Quests.Doom
         private SkeletalDragon m_Dragon;
         private bool m_Summoning;
 
-        public static List<BellOfTheDead> Instances { get; set; } // Just incase someone has more than 1
+        public static List<BellOfTheDead> Instances { get; set; } // Just in case someone has more than one.
 
         [Constructable]
         public BellOfTheDead()
@@ -34,18 +33,21 @@ namespace Server.Engines.Quests.Doom
         }
 
         public override int LabelNumber => 1050018;// bell of the dead
+
         [CommandProperty(AccessLevel.GameMaster, AccessLevel.Administrator)]
         public Chyloth Chyloth
         {
             get => m_Chyloth;
             set => m_Chyloth = value;
         }
+
         [CommandProperty(AccessLevel.GameMaster, AccessLevel.Administrator)]
         public SkeletalDragon Dragon
         {
             get => m_Dragon;
             set => m_Dragon = value;
         }
+
         [CommandProperty(AccessLevel.GameMaster, AccessLevel.Administrator)]
         public bool Summoning
         {
@@ -56,9 +58,22 @@ namespace Server.Engines.Quests.Doom
         public static void TryRemoveDragon(SkeletalDragon dragon)
         {
             if (Instances == null)
+            {
                 return;
+            }
 
-            BellOfTheDead bell = Instances.FirstOrDefault(x => x.Dragon == dragon);
+            BellOfTheDead bell = null;
+
+            for (var index = 0; index < Instances.Count; index++)
+            {
+                var x = Instances[index];
+
+                if (x.Dragon == dragon)
+                {
+                    bell = x;
+                    break;
+                }
+            }
 
             if (bell != null)
             {

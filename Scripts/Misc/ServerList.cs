@@ -151,12 +151,18 @@ namespace Server.Misc
         private static bool HasPublicIPAddress()
         {
             NetworkInterface[] adapters = NetworkInterface.GetAllNetworkInterfaces();
-            System.Collections.Generic.IEnumerable<IPAddress> uips = adapters.Select(a => a.GetIPProperties())
-                               .SelectMany(p => p.UnicastAddresses.Cast<IPAddressInformation>(), (p, u) => u.Address);
 
-            return
-                uips.Any(
-                    ip => !IPAddress.IsLoopback(ip) && ip.AddressFamily != AddressFamily.InterNetworkV6 && !IsPrivateNetwork(ip));
+            System.Collections.Generic.IEnumerable<IPAddress> uips = adapters.Select(a => a.GetIPProperties()).SelectMany(p => p.UnicastAddresses.Cast<IPAddressInformation>(), (p, u) => u.Address);
+
+            foreach (var ip in uips)
+            {
+                if (!IPAddress.IsLoopback(ip) && ip.AddressFamily != AddressFamily.InterNetworkV6 && !IsPrivateNetwork(ip))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private static bool IsPrivateNetwork(IPAddress ip)
@@ -218,8 +224,10 @@ namespace Server.Misc
             string data;
             Match match;
 
-            foreach (string service in services)
+            for (var index = 0; index < services.Length; index++)
             {
+                string service = services[index];
+
                 if (!string.IsNullOrWhiteSpace(service))
                 {
                     try

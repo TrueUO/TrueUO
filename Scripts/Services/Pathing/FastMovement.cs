@@ -73,7 +73,29 @@ namespace Server.Movement
             IEnumerable<StaticTile> tiles,
             IEnumerable<Item> items)
         {
-            return tiles.All(t => IsOk(t, ourZ, ourTop)) && items.All(i => IsOk(m, i, ourZ, ourTop, ignoreDoors, ignoreSpellFields));
+            bool tile = true;
+
+            foreach (var t in tiles)
+            {
+                if (!IsOk(t, ourZ, ourTop))
+                {
+                    tile = false;
+                    break;
+                }
+            }
+
+            bool item = true;
+
+            foreach (var i in items)
+            {
+                if (!IsOk(m, i, ourZ, ourTop, ignoreDoors, ignoreSpellFields))
+                {
+                    item = false;
+                    break;
+                }
+            }
+
+            return tile && item;
         }
 
         private static bool Check(
@@ -542,9 +564,11 @@ namespace Server.Movement
 
             StaticTile[] staticTiles = map.Tiles.GetStaticTiles(xCheck, yCheck, true);
 
-            foreach (StaticTile tile in staticTiles)
+            for (var index = 0; index < staticTiles.Length; index++)
             {
+                StaticTile tile = staticTiles[index];
                 ItemData tileData = TileData.ItemTable[tile.ID & TileData.MaxItemValue];
+
                 int calcTop = tile.Z + tileData.CalcHeight;
 
                 if (isSet && calcTop < zCenter)

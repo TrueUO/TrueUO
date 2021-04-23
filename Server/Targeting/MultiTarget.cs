@@ -6,9 +6,9 @@ namespace Server.Targeting
 {
 	public abstract class MultiTarget : Target
 	{
-		public int MultiID { get; set; }
+		public int MultiID { get; }
 
-		public Point3D Offset { get; set; }
+		public Point3D Offset { get; }
 
 		protected MultiTarget(int multiID, Point3D offset)
 			: this(multiID, offset, 10, true, TargetFlags.None)

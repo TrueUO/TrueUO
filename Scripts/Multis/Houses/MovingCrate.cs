@@ -12,8 +12,10 @@ namespace Server.Multis
         public static readonly int Columns = 5;
         public static readonly int HorizontalSpacing = 25;
         public static readonly int VerticalSpacing = 25;
+
         private BaseHouse m_House;
         private Timer m_InternalizeTimer;
+
         public MovingCrate(BaseHouse house)
             : base(0xE3D)
         {
@@ -29,34 +31,19 @@ namespace Server.Multis
         }
 
         public override int LabelNumber => 1061690;// Packing Crate
-        public BaseHouse House
-        {
-            get
-            {
-                return m_House;
-            }
-            set
-            {
-                m_House = value;
-            }
-        }
         public override int DefaultMaxItems => 0;
         public override int DefaultMaxWeight => 0;
         public override bool IsDecoContainer => false;
-        /*
-        public override void AddNameProperties( ObjectPropertyList list )
-        {
-        base.AddNameProperties( list );
 
-        if ( House != null && House.InternalizedVendors.Count > 0 )
-        list.Add( 1061833, House.InternalizedVendors.Count.ToString() ); // This packing crate contains ~1_COUNT~ vendors/barkeepers.
-        }
-        */
+        public BaseHouse House { get => m_House; set => m_House = value; }
+
         public override void DropItem(Item dropped)
         {
             // 1. Try to stack the item
-            foreach (Item item in Items)
+            for (var index = 0; index < Items.Count; index++)
             {
+                Item item = Items[index];
+
                 if (item is PackingBox)
                 {
                     List<Item> subItems = item.Items;
@@ -72,11 +59,13 @@ namespace Server.Multis
             }
 
             // 2. Try to drop the item into an existing container
-            foreach (Item item in Items)
+            for (var index = 0; index < Items.Count; index++)
             {
-                if (item is PackingBox)
+                Item item = Items[index];
+
+                if (item is PackingBox packingBox)
                 {
-                    Container box = (Container)item;
+                    Container box = packingBox;
                     List<Item> subItems = box.Items;
 
                     if (subItems.Count < MaxItemsPerSubcontainer)
@@ -155,17 +144,32 @@ namespace Server.Multis
             }
 
             List<Item> toRemove = new List<Item>();
-            foreach (Item item in Items)
-                if (item is PackingBox && item.Items.Count == 0)
-                    toRemove.Add(item);
 
-            foreach (Item item in toRemove)
+            for (var index = 0; index < Items.Count; index++)
+            {
+                Item item = Items[index];
+
+                if (item is PackingBox && item.Items.Count == 0)
+                {
+                    toRemove.Add(item);
+                }
+            }
+
+            for (var index = 0; index < toRemove.Count; index++)
+            {
+                Item item = toRemove[index];
+
                 item.Delete();
+            }
 
             if (TotalItems == 0)
+            {
                 Delete();
+            }
             else
+            {
                 Internalize();
+            }
         }
 
         public override void OnAfterDelete()
@@ -182,7 +186,6 @@ namespace Server.Multis
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(1);
 
             writer.Write(m_House);
@@ -191,8 +194,7 @@ namespace Server.Multis
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
 
             m_House = reader.ReadItem() as BaseHouse;
 
@@ -205,30 +207,39 @@ namespace Server.Multis
             {
                 Timer.DelayCall(TimeSpan.Zero, Delete);
             }
-
-            if (version == 0)
-                MaxItems = -1; // reset to default
         }
 
         private Point3D GetFreeLocation()
         {
             bool[,] positions = new bool[Rows, Columns];
 
-            foreach (Item item in Items)
+            for (var index = 0; index < Items.Count; index++)
             {
+                Item item = Items[index];
+
                 if (item is PackingBox)
                 {
                     int i = (item.Y - Bounds.Y) / VerticalSpacing;
+
                     if (i < 0)
+                    {
                         i = 0;
+                    }
                     else if (i >= Rows)
+                    {
                         i = Rows - 1;
+                    }
 
                     int j = (item.X - Bounds.X) / HorizontalSpacing;
+
                     if (j < 0)
+                    {
                         j = 0;
+                    }
                     else if (j >= Columns)
+                    {
                         j = Columns - 1;
+                    }
 
                     positions[i, j] = true;
                 }
@@ -312,18 +323,13 @@ namespace Server.Multis
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(1); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
-
-            if (version == 0)
-                MaxItems = -1; // reset to default
+            reader.ReadEncodedInt();
         }
     }
 }

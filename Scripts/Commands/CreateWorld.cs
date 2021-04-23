@@ -156,25 +156,34 @@ namespace Server.Commands
         public static void DoAllCommands(GumpType type, Mobile from)
         {
             List<int> ids = new List<int>();
-            foreach (CommandEntry entry in Commands)
+
+            for (var index = 0; index < Commands.Count; index++)
             {
+                CommandEntry entry = Commands[index];
+
                 ids.Add(entry.CheckID);
             }
+
             DoCommands(ids.ToArray(), type, from);
         }
 
         public static void DoCommands(int[] selections, GumpType type, Mobile from)
         {
             World.Broadcast(0x35, false, "The world is generating. This may take some time...");
+
             string prefix = CommandSystem.Prefix;
 
             string error = null;
             WorldCreating = true;
 
-            foreach (int sel in selections)
+            for (var index = 0; index < selections.Length; index++)
             {
-                foreach (CommandEntry entry in Commands)
+                int sel = selections[index];
+
+                for (var i = 0; i < Commands.Count; i++)
                 {
+                    CommandEntry entry = Commands[i];
+
                     if (entry.CheckID == sel)
                     {
                         switch (type)
@@ -186,7 +195,8 @@ namespace Server.Commands
                                 {
                                     if (entry.Delay > 0)
                                     {
-                                        DoDelayedCommand(from, TimeSpan.FromMinutes(entry.Delay), prefix + entry.CreateCommand);
+                                        DoDelayedCommand(from, TimeSpan.FromMinutes(entry.Delay),
+                                            prefix + entry.CreateCommand);
                                     }
                                     else
                                     {
@@ -194,7 +204,9 @@ namespace Server.Commands
                                     }
 
                                     if (CreateWorldData.CreateTable.ContainsKey(sel))
+                                    {
                                         CreateWorldData.CreateTable[sel] = true;
+                                    }
                                 }
 
                                 break;
@@ -205,8 +217,11 @@ namespace Server.Commands
                                     CommandSystem.Handle(from, prefix + entry.DeleteCommand);
 
                                     if (CreateWorldData.CreateTable.ContainsKey(sel))
+                                    {
                                         CreateWorldData.CreateTable[sel] = false;
+                                    }
                                 }
+
                                 break;
                         }
                     }
@@ -316,11 +331,13 @@ namespace Server.Gumps
             AddImageTiled(10, 20, 220, 10 + items * 25, 3004);
             int y = 25;
 
-            foreach (CreateWorld.CommandEntry entry in CreateWorld.Commands)
+            for (var index = 0; index < CreateWorld.Commands.Count; index++)
             {
+                CreateWorld.CommandEntry entry = CreateWorld.Commands[index];
+
                 bool created = CreateWorldData.CreateTable.ContainsKey(entry.CheckID) && CreateWorldData.CreateTable[entry.CheckID];
 
-                AddLabel(20, y + 1, created ? 200 : 338, string.Format("{0} {1}", entry.Name, created ? "[created]" : "[not created]"));
+                AddLabel(20, y + 1, created ? 200 : 338, $"{entry.Name} {(created ? "[created]" : "[not created]")}");
                 AddCheck(210, y - 2, 210, 211, m_Type == CreateWorld.GumpType.Create ? !created : created, entry.CheckID);
 
                 y += 25;
@@ -504,7 +521,15 @@ namespace Server.Gumps
                 case 115:
                     return WeakEntityCollection.HasCollection("sa");
                 case 116:
-                    return World.Items.Values.Count(i => i != null && (i is XmlSpawner || i is Spawner)) > 1000;
+                    int count = 0;
+                    foreach (var i in World.Items.Values)
+                    {
+                        if (i != null && (i is XmlSpawner || i is Spawner))
+                        {
+                            count++;
+                        }
+                    }
+                    return count > 1000;
                 case 117:
                     return WeakEntityCollection.HasCollection("despise");
                 case 118:
@@ -556,8 +581,10 @@ namespace Server.Gumps
             {
                 CreateTable = new Dictionary<int, bool>();
 
-                foreach (CreateWorld.CommandEntry entry in CreateWorld.Commands)
+                for (var index = 0; index < CreateWorld.Commands.Count; index++)
                 {
+                    CreateWorld.CommandEntry entry = CreateWorld.Commands[index];
+
                     CreateTable[entry.CheckID] = HasGenerated(entry.CheckID);
                 }
             }

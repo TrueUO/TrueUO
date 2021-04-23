@@ -70,7 +70,7 @@ namespace Server.Items
             const int width = 300;
             const int height = 300;
 
-            SetDisplay(p.X - (width / 2), p.Y - (height / 2), p.X + (width / 2), p.Y + (height / 2), width, height);
+            SetDisplay(p.X - width / 2, p.Y - height / 2, p.X + width / 2, p.Y + height / 2, width, height);
             AddWorldPin(p.X, p.Y);
 
             DeleteTime = DateTime.UtcNow + TimeSpan.FromMinutes(DeleteDelayMinutes);
@@ -94,15 +94,15 @@ namespace Server.Items
         {
             string[] name = Name();
 
-            list.Add(1154559, string.Format("{0}\t{1}", name[0], name[1])); // Map to Vendor ~1_Name~: ~2_Shop~
+            list.Add(1154559, $"{name[0]}\t{name[1]}"); // Map to Vendor ~1_Name~: ~2_Shop~
         }
 
         public new string[] Name()
         {
             string[] array = new string[2];
 
-            string Name = "Unknown";
-            string Shop = "Unknown";
+            string name = "Unknown";
+            string shop = "Unknown";
 
             if (IsAuction)
             {
@@ -113,22 +113,22 @@ namespace Server.Items
                         BaseHouse house = BaseHouse.FindHouseAt(AuctionSafe);
 
                         if (house != null)
-                            Name = house.Sign.GetName();
+                            name = house.Sign.GetName();
                     }
 
-                    Shop = SearchItem.LabelNumber != 0 ? string.Format("#{0}", SearchItem.LabelNumber) : SearchItem.Name;
+                    shop = SearchItem.LabelNumber != 0 ? $"#{SearchItem.LabelNumber}" : SearchItem.Name;
                 }
             }
             else
             {
                 if (Vendor != null)
                 {
-                    Name = Vendor.Name;
-                    Shop = Vendor.ShopName;
+                    name = Vendor.Name;
+                    shop = Vendor.ShopName;
                 }
             }
 
-            return new[] { Name, Shop };
+            return new[] { name, shop };
         }
 
         public override void GetProperties(ObjectPropertyList list)
@@ -138,9 +138,9 @@ namespace Server.Items
             string[] coord = GetCoords();
 
             if (SetLocation == Point3D.Zero)
-                list.Add(1154639, string.Format("{0}\t{1}", coord[0], coord[1])); //  Vendor Located at ~1_loc~ (~2_facet~)
+                list.Add(1154639, $"{coord[0]}\t{coord[1]}"); //  Vendor Located at ~1_loc~ (~2_facet~)
             else
-                list.Add(1154638, string.Format("{0}\t{1}", coord[0], coord[1])); //  Return to ~1_loc~ (~2_facet~)                
+                list.Add(1154638, $"{coord[0]}\t{coord[1]}"); //  Return to ~1_loc~ (~2_facet~)                
 
             if (!IsSale())
             {
@@ -191,7 +191,7 @@ namespace Server.Items
 
                 if (Sextant.Format(new Point3D(x, y, z), map, ref xLong, ref yLat, ref xMins, ref yMins, ref xEast, ref ySouth))
                 {
-                    return new[] { string.Format("{0}o {1}'{2}, {3}o {4}'{5}", yLat, yMins, ySouth ? "S" : "N", xLong, xMins, xEast ? "E" : "W"), map.ToString() };
+                    return new[] {$"{yLat}o {yMins}'{(ySouth ? "S" : "N")}, {xLong}o {xMins}'{(xEast ? "E" : "W")}", map.ToString() };
                 }
             }
 

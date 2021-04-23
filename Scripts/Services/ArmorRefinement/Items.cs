@@ -53,7 +53,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public RefinementType RefinementType
         {
-            get { return m_RefinementType; }
+            get => m_RefinementType;
             set
             {
                 m_RefinementType = value;
@@ -66,7 +66,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public RefinementCraftType CraftType
         {
-            get { return m_CraftType; }
+            get => m_CraftType;
             set
             {
                 RefinementCraftType old = m_CraftType;
@@ -83,10 +83,10 @@ namespace Server.Items
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public RefinementSubCraftType SubCraftType { get { return m_SubCraftType; } set { m_SubCraftType = value; } }
+        public RefinementSubCraftType SubCraftType { get => m_SubCraftType; set => m_SubCraftType = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public ModType ModType { get { return m_ModType; } set { m_ModType = value; InvalidateProperties(); } }
+        public ModType ModType { get => m_ModType; set { m_ModType = value; InvalidateProperties(); } }
 
         [Constructable]
         public RefinementComponent()
@@ -107,15 +107,15 @@ namespace Server.Items
 
         public override void AddNameProperty(ObjectPropertyList list)
         {
-            list.Add(1153966, string.Format("#{0}\t#{1}", Labels[(int)m_RefinementType][(int)m_CraftType], GetModLabel())); // ~1_OBJTYPE~ ~2_BONUSLEVEL~
+            list.Add(1153966, $"#{Labels[(int) m_RefinementType][(int) m_CraftType]}\t#{GetModLabel()}"); // ~1_OBJTYPE~ ~2_BONUSLEVEL~
         }
 
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);
 
-            list.Add(1154002, string.Format("#{0}", 1153954 + (int)m_SubCraftType));                // Armor Type: ~1_TYPE~
-            list.Add(1154124, string.Format("#{0}", m_RefinementType == RefinementType.Reinforcing ? 1154123 : 1154122));  // Bonus Type: ~1_TYPE~
+            list.Add(1154002, $"#{1153954 + (int) m_SubCraftType}");                // Armor Type: ~1_TYPE~
+            list.Add(1154124, $"#{(m_RefinementType == RefinementType.Reinforcing ? 1154123 : 1154122)}");  // Bonus Type: ~1_TYPE~
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -195,12 +195,12 @@ namespace Server.Items
             }
         }
 
-        private readonly int[][] Labels = new int[][]
+        private readonly int[][] Labels =
         {
                         //Scour   Thread     Varnish
                         //Polish  Wash       Gloss
-			new int[] { 1153951, 1153948, 1153952 },
-            new int[] { 1153950, 1153949, 1153953 }
+			new[] { 1153951, 1153948, 1153952 },
+            new[] { 1153950, 1153949, 1153953 }
         };
 
         private int GetModLabel()
@@ -216,11 +216,11 @@ namespace Server.Items
             }
         }
 
-        private readonly int[][] ItemIDs = new int[][]
+        private readonly int[][] ItemIDs =
         {
                      // Smith  Tail  Carp
-			new int[] { 19673, 5163, 11617 }, //Reinforcing
-			new int[] { 19672, 5162, 19674 }  //Deflecting
+			new[] { 19673, 5163, 11617 }, //Reinforcing
+			new[] { 19672, 5162, 19674 }  //Deflecting
 		};
 
         private void GetItemID()
@@ -277,7 +277,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int v = reader.ReadInt();
+            reader.ReadInt();
 
             m_RefinementType = (RefinementType)reader.ReadInt();
             m_CraftType = (RefinementCraftType)reader.ReadInt();
@@ -299,7 +299,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public RefinementType RefinementType
         {
-            get { return m_RefinementType; }
+            get => m_RefinementType;
             set
             {
                 m_RefinementType = value;
@@ -312,7 +312,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public RefinementCraftType CraftType
         {
-            get { return m_CraftType; }
+            get => m_CraftType;
             set
             {
                 RefinementCraftType old = m_CraftType;
@@ -329,16 +329,16 @@ namespace Server.Items
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public RefinementSubCraftType SubCraftType { get { return m_SubCraftType; } set { m_SubCraftType = value; InvalidateProperties(); } }
+        public RefinementSubCraftType SubCraftType { get => m_SubCraftType; set { m_SubCraftType = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public ModType ModType { get { return m_ModType; } set { m_ModType = value; InvalidateProperties(); ApplyModAmount(); } }
+        public ModType ModType { get => m_ModType; set { m_ModType = value; InvalidateProperties(); ApplyModAmount(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int ModAmount { get { return m_ModAmount; } set { m_ModAmount = value; if (m_ModAmount > 5) m_ModAmount = 5; if (m_ModAmount < 1) m_ModAmount = 1; ; } }
+        public int ModAmount { get => m_ModAmount; set { m_ModAmount = value; if (m_ModAmount > 5) m_ModAmount = 5; if (m_ModAmount < 1) m_ModAmount = 1; } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool CheckBonus { get { return m_CheckBonus; } set { m_CheckBonus = value; } }
+        public bool CheckBonus { get => m_CheckBonus; set => m_CheckBonus = value; }
 
         public ModEntry Entry => m_Entry;
 
@@ -397,7 +397,7 @@ namespace Server.Items
         {
             base.GetProperties(list);
 
-            list.Add(1154002, string.Format("#{0}", (1153954 + (int)m_SubCraftType).ToString()));                // Armor Type: ~1_TYPE~
+            list.Add(1154002, $"#{(1153954 + (int) m_SubCraftType).ToString()}");                // Armor Type: ~1_TYPE~
             list.Add(1154124, m_RefinementType == RefinementType.Reinforcing ? "#1154123" : "#1154122");         // Bonus Type: ~1_TYPE~
         }
 
@@ -451,17 +451,17 @@ namespace Server.Items
 
         public string GetNameArgs()
         {
-            return string.Format("#{0}\t#{1}\t#{2}", LabelPrefix[(int)m_RefinementType][(int)m_CraftType], LabelSuffix[(int)m_CraftType], GetModLabel());
+            return $"#{LabelPrefix[(int) m_RefinementType][(int) m_CraftType]}\t#{LabelSuffix[(int) m_CraftType]}\t#{GetModLabel()}";
         }
 
-        public int[][] LabelPrefix = new int[][]
-        {             //Scoured  Cured    Varnished
-                      //Polished Washed   Glazed
-		    new int[] { 1153971, 1153968, 1153972 }, // Reinforcing
-			new int[] { 1153970, 1153969, 1153973 }  // Deflecting
+        public readonly int[][] LabelPrefix =
+        {           //Scoured  Cured    Varnished
+                    //Polished Washed   Glazed
+		    new[] { 1153971, 1153968, 1153972 }, // Reinforcing
+			new[] { 1153970, 1153969, 1153973 }  // Deflecting
 		};
 
-        public int[] LabelSuffix = new int[]
+        public readonly int[] LabelSuffix =
         {
           //Plating  Thread   Resin
 			1153975, 1153974, 1153976       //Reinforcing and Deflecting
@@ -480,10 +480,10 @@ namespace Server.Items
             }
         }
 
-        private readonly int[][] ItemIDs = new int[][]
-        {            // Smith  Tail   Carp  
-			new int[] { 19676, 19675, 19677 },  //Reinforcing
-			new int[] { 19676, 19675, 19677 }   //Deflecing
+        private readonly int[][] ItemIDs =
+        {           // Smith  Tail   Carp  
+			new[] { 19676, 19675, 19677 },  //Reinforcing
+			new[] { 19676, 19675, 19677 }   //Deflecing
 		};
 
         public static bool CheckForVendor(Mobile from, RefinementItem item)
@@ -492,7 +492,7 @@ namespace Server.Items
 
             foreach (Mobile m in eable)
             {
-                if (m is ArmorRefiner && ((ArmorRefiner)m).RefineType == item.CraftType)
+                if (m is ArmorRefiner refiner && refiner.RefineType == item.CraftType)
                 {
                     eable.Free();
                     return true;
@@ -528,14 +528,13 @@ namespace Server.Items
             writer.Write((int)m_ModType);
             writer.Write(m_ModAmount);
             writer.Write(m_CheckBonus);
-
             m_Entry.Serialize(writer);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int v = reader.ReadInt();
+            reader.ReadInt();
 
             m_RefinementType = (RefinementType)reader.ReadInt();
             m_CraftType = (RefinementCraftType)reader.ReadInt();
@@ -543,7 +542,6 @@ namespace Server.Items
             m_ModType = (ModType)reader.ReadInt();
             m_ModAmount = reader.ReadInt();
             m_CheckBonus = reader.ReadBool();
-
             m_Entry = new ModEntry(reader);
         }
     }
@@ -623,7 +621,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int v = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -660,7 +658,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int v = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -697,7 +695,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int v = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

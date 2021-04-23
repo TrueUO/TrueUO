@@ -90,11 +90,17 @@ namespace Server.Engines.PartySystem
                 Mobile m = from.LastKiller;
 
                 if (m == from)
+                {
                     p.SendPublicMessage(from, "I killed myself !!");
+                }
                 else if (m == null)
+                {
                     p.SendPublicMessage(from, "I was killed !!");
+                }
                 else
-                    p.SendPublicMessage(from, string.Format("I was killed by {0} !!", m.Name));
+                {
+                    p.SendPublicMessage(from, $"I was killed by {m.Name} !!");
+                }
             }
         }
 

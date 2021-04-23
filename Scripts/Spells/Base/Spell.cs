@@ -14,7 +14,6 @@ using Server.Spells.Second;
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 #endregion
 
@@ -118,8 +117,10 @@ namespace Server.Spells
 
                 if (DelayDamageFamily != null)
                 {
-                    foreach (Type familyType in DelayDamageFamily)
+                    for (var index = 0; index < DelayDamageFamily.Length; index++)
                     {
+                        Type familyType = DelayDamageFamily[index];
+
                         m_ContextTable.Add(familyType, contexts);
                     }
                 }
@@ -159,8 +160,10 @@ namespace Server.Spells
 
             if (DelayDamageFamily != null)
             {
-                foreach (Type t in DelayDamageFamily)
+                for (var index = 0; index < DelayDamageFamily.Length; index++)
                 {
+                    Type t = DelayDamageFamily[index];
+
                     if (m_ContextTable.TryGetValue(t, out contexts))
                     {
                         contexts.Remove(d);
@@ -806,7 +809,18 @@ namespace Server.Spells
 
             Type[] types = spellType.GetNestedTypes(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
-            Type targetType = types.FirstOrDefault(t => t.IsSubclassOf(typeof(Target)));
+            Type targetType = null;
+
+            for (var index = 0; index < types.Length; index++)
+            {
+                var t = types[index];
+
+                if (t.IsSubclassOf(typeof(Target)))
+                {
+                    targetType = t;
+                    break;
+                }
+            }
 
             if (targetType != null)
             {

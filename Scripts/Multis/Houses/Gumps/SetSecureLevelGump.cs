@@ -58,12 +58,12 @@ namespace Server.Gumps
 
         public int GetColor(SecureLevel level)
         {
-            return (m_Info.Level == level) ? 0x7F18 : 0x7FFF;
+            return m_Info.Level == level ? 0x7F18 : 0x7FFF;
         }
 
         public int GetFirstID(SecureLevel level)
         {
-            return (m_Info.Level == level) ? 4006 : 4005;
+            return m_Info.Level == level ? 4006 : 4005;
         }
 
         public override void OnResponse(NetState state, RelayInfo info)

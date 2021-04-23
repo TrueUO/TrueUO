@@ -1,7 +1,6 @@
 using Server.Items;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Multis
 {
@@ -63,8 +62,10 @@ namespace Server.Multis
 
             if (Fixtures != null)
             {
-                foreach (Item item in Fixtures)
+                for (var index = 0; index < Fixtures.Count; index++)
                 {
+                    Item item = Fixtures[index];
+
                     item.Delete();
                 }
             }
@@ -80,8 +81,10 @@ namespace Server.Multis
 
             if (Fixtures != null)
             {
-                foreach (Item item in Fixtures)
+                for (var index = 0; index < Fixtures.Count; index++)
                 {
+                    Item item = Fixtures[index];
+
                     item.Location = new Point3D(item.X + x, item.Y + y, item.Z + z);
                 }
             }
@@ -93,8 +96,10 @@ namespace Server.Multis
 
             if (Fixtures != null)
             {
-                foreach (Item item in Fixtures)
+                for (var index = 0; index < Fixtures.Count; index++)
                 {
+                    Item item = Fixtures[index];
+
                     item.Map = Map;
                 }
             }
@@ -131,10 +136,23 @@ namespace Server.Multis
 
             if (!isInside)
             {
-                return Fixtures != null && Fixtures.OfType<HouseTeleporter>().Any(fix => fix.Location == p);
+                bool any = false;
+
+                for (var index = 0; index < Fixtures.Count; index++)
+                {
+                    Item fixture = Fixtures[index];
+
+                    if (fixture is HouseTeleporter fix && fix.Location == p)
+                    {
+                        any = true;
+                        break;
+                    }
+                }
+
+                return Fixtures != null && any;
             }
 
-            return isInside;
+            return true;
         }
 
         public virtual void AutoAddFixtures()
@@ -143,8 +161,10 @@ namespace Server.Multis
 
             Dictionary<int, List<MultiTileEntry>> teleporters = new Dictionary<int, List<MultiTileEntry>>();
 
-            foreach (MultiTileEntry entry in components.List)
+            for (var index = 0; index < components.List.Length; index++)
             {
+                MultiTileEntry entry = components.List[index];
+
                 if (entry.m_Flags == 0)
                 {
                     // Telepoters
@@ -180,14 +200,21 @@ namespace Server.Multis
                 }
             }
 
-            foreach (BaseDoor door in Doors.OfType<BaseDoor>())
+            for (var index = 0; index < Doors.Count; index++)
             {
-                foreach (BaseDoor check in Doors.OfType<BaseDoor>().Where(d => d != door))
+                Item item = Doors[index];
+
+                if (item is BaseDoor door)
                 {
-                    if (door.InRange(check.Location, 1))
+                    for (var i = 0; i < Doors.Count; i++)
                     {
-                        door.Link = check;
-                        check.Link = door;
+                        Item houseDoor = Doors[i];
+
+                        if (houseDoor is BaseDoor check && check != door && door.InRange(check.Location, 1))
+                        {
+                            door.Link = check;
+                            check.Link = door;
+                        }
                     }
                 }
             }
@@ -196,11 +223,11 @@ namespace Server.Multis
             {
                 if (kvp.Value.Count > 2)
                 {
-                    Utility.WriteConsoleColor(ConsoleColor.Yellow, string.Format("Warning: More than 2 teleporters detected for {0}!", kvp.Key.ToString("X")));
+                    Utility.WriteConsoleColor(ConsoleColor.Yellow, string.Format("Warning: More than 2 teleporters detected for {0:X}!", kvp.Key));
                 }
                 else if (kvp.Value.Count <= 1)
                 {
-                    Utility.WriteConsoleColor(ConsoleColor.Yellow, string.Format("Warning: 1 or less teleporters detected for {0}!", kvp.Key.ToString("X")));
+                    Utility.WriteConsoleColor(ConsoleColor.Yellow, string.Format("Warning: 1 or less teleporters detected for {0:X}!", kvp.Key));
 
                     continue;
                 }
@@ -227,8 +254,9 @@ namespace Server.Multis
 
             if (Fixtures != null)
             {
-                foreach (Item item in Fixtures)
+                for (var index = 0; index < Fixtures.Count; index++)
                 {
+                    Item item = Fixtures[index];
                     writer.Write(item);
                 }
             }
@@ -257,7 +285,7 @@ namespace Server.Multis
 
     public class TrinsicKeep : BaseContestHouse
     {
-        private static readonly Rectangle2D[] AreaArray = new Rectangle2D[]
+        private static readonly Rectangle2D[] AreaArray =
         {
             new Rectangle2D(-11, -11, 23, 23), new Rectangle2D(-10, 13, 6, 1),
             new Rectangle2D(-2, 13, 6, 1), new Rectangle2D(6, 13, 7, 1)
@@ -293,7 +321,7 @@ namespace Server.Multis
     {
         public override Rectangle2D[] Area => AreaArray;
 
-        private static readonly Rectangle2D[] AreaArray = new Rectangle2D[]
+        private static readonly Rectangle2D[] AreaArray =
         {
             new Rectangle2D(-15, -15, 31, 31),
             new Rectangle2D(-14, 16, 11, 1),
@@ -405,7 +433,7 @@ namespace Server.Multis
 
     public class FeudalCastle : BaseContestHouse
     {
-        private static readonly Rectangle2D[] AreaArray = new Rectangle2D[]
+        private static readonly Rectangle2D[] AreaArray =
         {
             new Rectangle2D(-15, -15, 31, 31),
             new Rectangle2D(5, 16, 1, 1),
@@ -467,12 +495,12 @@ namespace Server.Multis
 
     public class TraditionalKeep : BaseContestHouse
     {
-        private static readonly Rectangle2D[] AreaArray = new Rectangle2D[]
+        private static readonly Rectangle2D[] AreaArray =
         {
             new Rectangle2D(-11, -11, 23, 23),
             new Rectangle2D(-10, 13, 6, 1),
             new Rectangle2D(-2, 13, 6, 1),
-            new Rectangle2D(6, 13, 7, 1),
+            new Rectangle2D(6, 13, 7, 1)
         };
 
         public TraditionalKeep(Mobile owner)
@@ -687,7 +715,7 @@ namespace Server.Multis
 
     public class OkinawaSweetDreamCastle : BaseContestHouse
     {
-        private static readonly Rectangle2D[] AreaArray = new Rectangle2D[]
+        private static readonly Rectangle2D[] AreaArray =
         {
             new Rectangle2D(-15, -15, 31, 31),
             new Rectangle2D(-14, 16, 6, 1),
@@ -749,7 +777,7 @@ namespace Server.Multis
 
     public class GrimswindSisters : BaseContestHouse
     {
-        private static readonly Rectangle2D[] AreaArray = new Rectangle2D[]
+        private static readonly Rectangle2D[] AreaArray =
         {
             new Rectangle2D(-15, -15, 31, 31),
             new Rectangle2D(-14, 16, 9, 1),
@@ -837,7 +865,7 @@ namespace Server.Multis
 
     public class KeepIncarcerated : BaseContestHouse
     {
-        private static readonly Rectangle2D[] AreaArray = new Rectangle2D[]
+        private static readonly Rectangle2D[] AreaArray =
         {
             new Rectangle2D(-11, -11, 23, 23), new Rectangle2D(-10, 13, 4, 1),
             new Rectangle2D(-3, 13, 9, 1), new Rectangle2D(9, 13, 4, 1)
@@ -897,9 +925,9 @@ namespace Server.Multis
 
     public class DesertRose : BaseContestHouse
     {
-        private static readonly Rectangle2D[] AreaArray = new Rectangle2D[]
+        private static readonly Rectangle2D[] AreaArray =
         {
-            new Rectangle2D(-11, -11, 23, 23), new Rectangle2D(-7, 13, 11, 1),
+            new Rectangle2D(-11, -11, 23, 23), new Rectangle2D(-7, 13, 11, 1)
         };
 
         public override Rectangle2D[] Area => AreaArray;
@@ -930,7 +958,7 @@ namespace Server.Multis
 
     public class TheCloversKeep : BaseContestHouse
     {
-        private static readonly Rectangle2D[] AreaArray = new Rectangle2D[]
+        private static readonly Rectangle2D[] AreaArray =
         {
             new Rectangle2D(-11, -11, 23, 23), new Rectangle2D(-8, 13, 2, 1),
             new Rectangle2D(-4, 13, 10, 1), new Rectangle2D(8, 13, 2, 1)
@@ -1016,13 +1044,13 @@ namespace Server.Multis
 
     public class TheHouseBuiltOnTheRuins : BaseContestHouse
     {
-        private static readonly Rectangle2D[] AreaArray = new Rectangle2D[]
+        private static readonly Rectangle2D[] AreaArray =
         {
             new Rectangle2D(-15, -15, 31, 31),
             new Rectangle2D(-13, 16, 3, 1),
             new Rectangle2D(-7, 16, 3, 1),
             new Rectangle2D(2, 16, 3, 1),
-             new Rectangle2D(10, 16, 3, 1)
+            new Rectangle2D(10, 16, 3, 1)
         };
 
         public override Rectangle2D[] Area => AreaArray;
@@ -1105,12 +1133,12 @@ namespace Server.Multis
 
     public class TheTerraceGardens : BaseContestHouse
     {
-        private static readonly Rectangle2D[] AreaArray = new Rectangle2D[]
+        private static readonly Rectangle2D[] AreaArray =
         {
             new Rectangle2D(-15, -15, 31, 31),
             new Rectangle2D(-11, 16, 4, 1),
             new Rectangle2D(-3, 16, 8, 1),
-            new Rectangle2D(9, 16, 3, 1),
+            new Rectangle2D(9, 16, 3, 1)
         };
 
         public override Rectangle2D[] Area => AreaArray;

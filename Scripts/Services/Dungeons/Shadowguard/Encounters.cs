@@ -45,9 +45,21 @@ namespace Server.Engines.Shadowguard
         public override void CheckEncounter()
         {
             if (Completed || Bottles == null)
+            {
                 return;
+            }
 
-            int liquorCount = Bottles.Count(b => b != null && !b.Deleted);
+            int liquorCount = 0;
+
+            for (var index = 0; index < Bottles.Count; index++)
+            {
+                var b = Bottles[index];
+
+                if (b != null && !b.Deleted)
+                {
+                    liquorCount++;
+                }
+            }
 
             if (liquorCount < LiquorCount)
             {
@@ -134,8 +146,12 @@ namespace Server.Engines.Shadowguard
             {
                 List<ShadowguardBottleOfLiquor> list = new List<ShadowguardBottleOfLiquor>(Bottles.Where(b => b != null && !b.Deleted));
 
-                foreach (ShadowguardBottleOfLiquor bottle in list)
+                for (var index = 0; index < list.Count; index++)
+                {
+                    ShadowguardBottleOfLiquor bottle = list[index];
+
                     bottle.Delete();
+                }
 
                 ColUtility.Free(list);
 
@@ -158,10 +174,24 @@ namespace Server.Engines.Shadowguard
             writer.Write(Wave);
 
             writer.Write(Pirates == null ? 0 : Pirates.Count);
-            if (Pirates != null) Pirates.ForEach(p => writer.Write(p));
+            if (Pirates != null)
+            {
+                for (var index = 0; index < Pirates.Count; index++)
+                {
+                    var p = Pirates[index];
+                    writer.Write(p);
+                }
+            }
 
             writer.Write(Bottles == null ? 0 : Bottles.Count);
-            if (Bottles != null) Bottles.ForEach(b => writer.Write(b));
+            if (Bottles != null)
+            {
+                for (var index = 0; index < Bottles.Count; index++)
+                {
+                    var b = Bottles[index];
+                    writer.Write(b);
+                }
+            }
         }
 
         public override void Deserialize(GenericReader reader)
@@ -238,7 +268,9 @@ namespace Server.Engines.Shadowguard
             foreach (int i in Enum.GetValues(typeof(VirtueType)))
             {
                 if (i > 7)
+                {
                     break;
+                }
 
                 ShadowguardCypress tree = new ShadowguardCypress(this, (VirtueType)i);
                 Point3D p = points[Utility.Random(points.Count)];
@@ -267,18 +299,26 @@ namespace Server.Engines.Shadowguard
         public override void CheckEncounter()
         {
             if (Trees == null)
+            {
                 return;
+            }
 
             int treeCount = Trees.Count;
 
-            foreach (ShadowguardCypress tree in Trees)
+            for (var index = 0; index < Trees.Count; index++)
             {
+                ShadowguardCypress tree = Trees[index];
+
                 if (tree == null || tree.Deleted)
+                {
                     treeCount--;
+                }
             }
 
             if (treeCount <= 0)
+            {
                 CompleteEncounter();
+            }
         }
 
         public override void CompleteEncounter()
@@ -294,8 +334,12 @@ namespace Server.Engines.Shadowguard
             {
                 List<BaseCreature> list = new List<BaseCreature>(Spawn.Where(e => e != null && e.Alive));
 
-                foreach (BaseCreature spawn in list)
+                for (var index = 0; index < list.Count; index++)
+                {
+                    BaseCreature spawn = list[index];
+
                     spawn.Delete();
+                }
 
                 ColUtility.Free(list);
 
@@ -323,8 +367,12 @@ namespace Server.Engines.Shadowguard
             {
                 List<ShadowguardCypress> list = new List<ShadowguardCypress>(Trees.Where(t => t != null && !t.Deleted));
 
-                foreach (ShadowguardCypress tree in list)
+                for (var index = 0; index < list.Count; index++)
+                {
+                    ShadowguardCypress tree = list[index];
+
                     tree.Delete();
+                }
 
                 ColUtility.Free(list);
 
@@ -342,11 +390,15 @@ namespace Server.Engines.Shadowguard
         public void OnApplePicked()
         {
             if (Trees == null)
-                return;
-
-            foreach (ShadowguardCypress tree in Trees.Where(t => t != null && !t.Deleted))
             {
-                if (tree.Foilage != null)
+                return;
+            }
+
+            for (var index = 0; index < Trees.Count; index++)
+            {
+                ShadowguardCypress tree = Trees[index];
+
+                if (tree != null && !tree.Deleted && tree.Foilage != null)
                 {
                     tree.Foilage.ItemID--;
                 }
@@ -356,11 +408,15 @@ namespace Server.Engines.Shadowguard
         public void OnAppleDeleted()
         {
             if (Trees == null)
-                return;
-
-            foreach (ShadowguardCypress tree in Trees.Where(t => t != null && !t.Deleted))
             {
-                if (tree.Foilage != null)
+                return;
+            }
+
+            for (var index = 0; index < Trees.Count; index++)
+            {
+                ShadowguardCypress tree = Trees[index];
+
+                if (tree != null && !tree.Deleted && tree.Foilage != null)
                 {
                     tree.Foilage.ItemID++;
                 }
@@ -379,10 +435,24 @@ namespace Server.Engines.Shadowguard
             writer.WriteItem(Apple);
 
             writer.Write(Trees == null ? 0 : Trees.Count);
-            if (Trees != null) Trees.ForEach(t => writer.Write(t));
+            if (Trees != null)
+            {
+                for (var index = 0; index < Trees.Count; index++)
+                {
+                    var t = Trees[index];
+                    writer.Write(t);
+                }
+            }
 
             writer.Write(Spawn == null ? 0 : Spawn.Count);
-            if (Spawn != null) Spawn.ForEach(s => writer.Write(s));
+            if (Spawn != null)
+            {
+                for (var index = 0; index < Spawn.Count; index++)
+                {
+                    var s = Spawn[index];
+                    writer.Write(s);
+                }
+            }
 
             writer.Write(Bones);
         }
@@ -473,7 +543,9 @@ namespace Server.Engines.Shadowguard
                 Armor.Add(armor);
 
                 if (i > 13)
+                {
                     armor.ItemID = 0x1512;
+                }
             });
 
             for (int i = 0; i < toSpawn; i++)
@@ -521,10 +593,26 @@ namespace Server.Engines.Shadowguard
         public override void CheckEncounter()
         {
             if (Completed || Armor == null)
+            {
                 return;
+            }
 
-            if (Armor.Count(a => a != null && !a.Deleted) == 0)
+            int count = 0;
+
+            for (var index = 0; index < Armor.Count; index++)
+            {
+                var a = Armor[index];
+
+                if (a != null && !a.Deleted)
+                {
+                    count++;
+                }
+            }
+
+            if (count == 0)
+            {
                 CompleteEncounter();
+            }
         }
 
         public override void OnCreatureKilled(BaseCreature bc)
@@ -539,7 +627,9 @@ namespace Server.Engines.Shadowguard
         public void AddDestroyedArmor(Item item)
         {
             if (DestroyedArmor != null)
+            {
                 DestroyedArmor.Add(item);
+            }
         }
 
         public override void CompleteEncounter()
@@ -555,8 +645,12 @@ namespace Server.Engines.Shadowguard
             {
                 List<BaseCreature> list = new List<BaseCreature>(Spawn.Where(s => s != null && !s.Deleted));
 
-                foreach (BaseCreature spawn in list)
+                for (var index = 0; index < list.Count; index++)
+                {
+                    BaseCreature spawn = list[index];
+
                     spawn.Delete();
+                }
 
                 ColUtility.Free(list);
 
@@ -571,8 +665,12 @@ namespace Server.Engines.Shadowguard
             {
                 List<Item> list = new List<Item>(Armor.Where(i => i != null && !i.Deleted));
 
-                foreach (Item armor in list)
+                for (var index = 0; index < list.Count; index++)
+                {
+                    Item armor = list[index];
+
                     armor.Delete();
+                }
 
                 ColUtility.Free(list);
 
@@ -584,8 +682,12 @@ namespace Server.Engines.Shadowguard
             {
                 List<Item> list = new List<Item>(DestroyedArmor.Where(i => i != null && !i.Deleted));
 
-                foreach (Item dest in list)
+                for (var index = 0; index < list.Count; index++)
+                {
+                    Item dest = list[index];
+
                     dest.Delete();
+                }
 
                 ColUtility.Free(list);
 
@@ -597,8 +699,12 @@ namespace Server.Engines.Shadowguard
             {
                 List<Item> list = new List<Item>(Items.Where(i => i != null && !i.Deleted));
 
-                foreach (Item item in list)
+                for (var index = 0; index < list.Count; index++)
+                {
+                    Item item = list[index];
+
                     item.Delete();
+                }
 
                 ColUtility.Free(list);
 
@@ -637,16 +743,44 @@ namespace Server.Engines.Shadowguard
             writer.Write(0);
 
             writer.Write(Armor == null ? 0 : Armor.Count);
-            if (Armor != null) Armor.ForEach(a => writer.Write(a));
+            if (Armor != null)
+            {
+                for (var index = 0; index < Armor.Count; index++)
+                {
+                    var a = Armor[index];
+                    writer.Write(a);
+                }
+            }
 
             writer.Write(DestroyedArmor == null ? 0 : DestroyedArmor.Count);
-            if (DestroyedArmor != null) DestroyedArmor.ForEach(a => writer.Write(a));
+            if (DestroyedArmor != null)
+            {
+                for (var index = 0; index < DestroyedArmor.Count; index++)
+                {
+                    var a = DestroyedArmor[index];
+                    writer.Write(a);
+                }
+            }
 
             writer.Write(Spawn == null ? 0 : Spawn.Count);
-            if (Spawn != null) Spawn.ForEach(a => writer.Write(a));
+            if (Spawn != null)
+            {
+                for (var index = 0; index < Spawn.Count; index++)
+                {
+                    var a = Spawn[index];
+                    writer.Write(a);
+                }
+            }
 
             writer.Write(Items == null ? 0 : Items.Count);
-            if (Items != null) Items.ForEach(i => writer.Write(i));
+            if (Items != null)
+            {
+                for (var index = 0; index < Items.Count; index++)
+                {
+                    var i = Items[index];
+                    writer.Write(i);
+                }
+            }
         }
 
         public override void Deserialize(GenericReader reader)
@@ -687,10 +821,11 @@ namespace Server.Engines.Shadowguard
             for (int i = 0; i < count; i++)
             {
                 if (Spawn == null)
+                {
                     Spawn = new List<BaseCreature>();
+                }
 
-                BaseCreature bc = reader.ReadMobile() as BaseCreature;
-                if (bc != null)
+                if (reader.ReadMobile() is BaseCreature bc)
                 {
                     if (bc is EnsorcelledArmor armor)
                     {
@@ -754,20 +889,41 @@ namespace Server.Engines.Shadowguard
         public void UseSpigot(ShadowguardSpigot spigot, Mobile m)
         {
             if (FlowCheckers == null)
-                return;
-
-            foreach (FlowChecker checker in FlowCheckers)
             {
+                return;
+            }
+
+            for (var index = 0; index < FlowCheckers.Count; index++)
+            {
+                FlowChecker checker = FlowCheckers[index];
+
                 if (checker.CheckUse(spigot, m))
+                {
                     return;
+                }
             }
         }
 
         public override void CheckEncounter()
         {
-            if (FlowCheckers != null && FlowCheckers.Count(c => c.Complete) == 4)
+            int count = 0;
+
+            if (FlowCheckers != null)
             {
-                CompleteEncounter();
+                for (var index = 0; index < FlowCheckers.Count; index++)
+                {
+                    var c = FlowCheckers[index];
+
+                    if (FlowCheckers != null && c.Complete)
+                    {
+                        count++;
+                    }
+                }
+
+                if (FlowCheckers != null && count == 4)
+                {
+                    CompleteEncounter();
+                }
             }
         }
 
@@ -838,8 +994,12 @@ namespace Server.Engines.Shadowguard
             {
                 List<BaseCreature> list = new List<BaseCreature>(Elementals.Where(t => t != null && !t.Deleted));
 
-                foreach (BaseCreature elemental in list)
+                for (var index = 0; index < list.Count; index++)
+                {
+                    BaseCreature elemental = list[index];
+
                     elemental.Delete();
+                }
 
                 ColUtility.Free(list);
 
@@ -854,8 +1014,12 @@ namespace Server.Engines.Shadowguard
             {
                 List<Item> list = new List<Item>(ShadowguardCanals.Where(i => i != null && !i.Deleted));
 
-                foreach (Item canal in list)
+                for (var index = 0; index < list.Count; index++)
+                {
+                    Item canal = list[index];
+
                     canal.Delete();
+                }
 
                 ColUtility.Free(list);
 
@@ -1099,11 +1263,21 @@ namespace Server.Engines.Shadowguard
                 int time = 200;
 
                 if (_Spigot.ItemID == 39922)
+                {
                     _Spigot.ItemID = 17294;
+                }
                 else if (_Spigot.ItemID == 39909)
+                {
                     _Spigot.ItemID = 17278;
+                }
 
-                _Checked.ForEach(i => i.Movable = false);
+                for (var index = 0; index < _Checked.Count; index++)
+                {
+                    var i = _Checked[index];
+
+                    i.Movable = false;
+                }
+
                 ColUtility.For(_Checked, (i, item) =>
                 {
                     Timer.DelayCall(TimeSpan.FromMilliseconds(time), Fill, item);
@@ -1159,7 +1333,14 @@ namespace Server.Engines.Shadowguard
                 writer.Write(_Drain);
 
                 writer.Write(_Checked == null ? 0 : _Checked.Count);
-                if (_Checked != null) _Checked.ForEach(c => writer.Write(c));
+                if (_Checked != null)
+                {
+                    for (var index = 0; index < _Checked.Count; index++)
+                    {
+                        var c = _Checked[index];
+                        writer.Write(c);
+                    }
+                }
             }
         }
 
@@ -1169,13 +1350,32 @@ namespace Server.Engines.Shadowguard
             writer.Write(0);
 
             writer.Write(Elementals == null ? 0 : Elementals.Count);
-            if (Elementals != null) Elementals.ForEach(e => writer.Write(e));
+            if (Elementals != null)
+            {
+                for (var index = 0; index < Elementals.Count; index++)
+                {
+                    var e = Elementals[index];
+                    writer.Write(e);
+                }
+            }
 
             writer.Write(ShadowguardCanals == null ? 0 : ShadowguardCanals.Count);
-            if (ShadowguardCanals != null) ShadowguardCanals.ForEach(c => writer.Write(c));
+            if (ShadowguardCanals != null)
+                for (var index = 0; index < ShadowguardCanals.Count; index++)
+                {
+                    var c = ShadowguardCanals[index];
+                    writer.Write(c);
+                }
 
             writer.Write(FlowCheckers == null ? 0 : FlowCheckers.Count);
-            if (FlowCheckers != null) FlowCheckers.ForEach(f => f.Serialize(writer));
+            if (FlowCheckers != null)
+            {
+                for (var index = 0; index < FlowCheckers.Count; index++)
+                {
+                    var f = FlowCheckers[index];
+                    f.Serialize(writer);
+                }
+            }
         }
 
         public override void Deserialize(GenericReader reader)
@@ -1289,9 +1489,11 @@ namespace Server.Engines.Shadowguard
             Rectangle2D rec = SpawnRecs[0];
             ConvertOffset(ref rec);
 
-            foreach (Rectangle2D r in SpawnRecs)
+            for (var index = 0; index < SpawnRecs.Length; index++)
             {
+                Rectangle2D r = SpawnRecs[index];
                 Rectangle2D copy = r;
+
                 ConvertOffset(ref copy);
 
                 if (copy.Contains(p))
@@ -1343,8 +1545,12 @@ namespace Server.Engines.Shadowguard
             {
                 List<BaseCreature> list = new List<BaseCreature>(Drakes.Where(d => d != null && !d.Deleted));
 
-                foreach (BaseCreature drake in list)
+                for (var index = 0; index < list.Count; index++)
+                {
+                    BaseCreature drake = list[index];
+
                     drake.Delete();
+                }
 
                 ColUtility.Free(list);
 
@@ -1356,8 +1562,12 @@ namespace Server.Engines.Shadowguard
             {
                 List<Item> list = new List<Item>(Bells.Where(b => b != null && !b.Deleted));
 
-                foreach (Item bell in list)
+                for (var index = 0; index < list.Count; index++)
+                {
+                    Item bell = list[index];
+
                     bell.Delete();
+                }
 
                 ColUtility.Free(list);
                 ColUtility.Free(Bells);
@@ -1379,10 +1589,24 @@ namespace Server.Engines.Shadowguard
             writer.Write(Dragon);
 
             writer.Write(Drakes == null ? 0 : Drakes.Count);
-            if (Drakes != null) Drakes.ForEach(d => writer.Write(d));
+            if (Drakes != null)
+            {
+                for (var index = 0; index < Drakes.Count; index++)
+                {
+                    var d = Drakes[index];
+                    writer.Write(d);
+                }
+            }
 
             writer.Write(Bells == null ? 0 : Bells.Count);
-            if (Bells != null) Bells.ForEach(b => writer.Write(b));
+            if (Bells != null)
+            {
+                for (var index = 0; index < Bells.Count; index++)
+                {
+                    var b = Bells[index];
+                    writer.Write(b);
+                }
+            }
         }
 
         public override void Deserialize(GenericReader reader)
@@ -1482,9 +1706,12 @@ namespace Server.Engines.Shadowguard
         {
             base.CompleteEncounter();
 
-            foreach (PlayerMobile pm in Region.GetEnumeratedMobiles().OfType<PlayerMobile>())
+            foreach (Mobile mobile in Region.GetEnumeratedMobiles())
             {
-                Controller.CompleteRoof(pm);
+                if (mobile is PlayerMobile pm)
+                {
+                    Controller.CompleteRoof(pm);
+                }
             }
         }
 
@@ -1511,11 +1738,16 @@ namespace Server.Engines.Shadowguard
             Mobile m = PartyLeader;
 
             if (m == null)
-                return;
-
-            foreach (PlayerMobile pm in Region.GetEnumeratedMobiles().OfType<PlayerMobile>())
             {
-                pm.AddRewardTitle(1156318); // Destroyer of the Time Rift
+                return;
+            }
+
+            foreach (Mobile mobile in Region.GetEnumeratedMobiles())
+            {
+                if (mobile is PlayerMobile pm)
+                {
+                    pm.AddRewardTitle(1156318); // Destroyer of the Time Rift
+                }
             }
         }
 
@@ -1580,7 +1812,14 @@ namespace Server.Engines.Shadowguard
             writer.Write(Minax);
             writer.Write(Bosses == null ? 0 : Bosses.Count);
 
-            if (Bosses != null) Bosses.ForEach(b => writer.Write(b.Name));
+            if (Bosses != null)
+            {
+                for (var index = 0; index < Bosses.Count; index++)
+                {
+                    var b = Bosses[index];
+                    writer.Write(b.Name);
+                }
+            }
         }
 
         public override void Deserialize(GenericReader reader)

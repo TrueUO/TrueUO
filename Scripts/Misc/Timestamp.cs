@@ -16,7 +16,7 @@ namespace System
 
         public override Encoding Encoding => Encoding.ASCII;
 
-        private string Timestamp => string.Format("{0:D2}:{1:D2}:{2:D2} ", DateTime.UtcNow.Hour, DateTime.UtcNow.Minute, DateTime.UtcNow.Second);
+        private string Timestamp => $"{DateTime.UtcNow.Hour:D2}:{DateTime.UtcNow.Minute:D2}:{DateTime.UtcNow.Second:D2} ";
 
         public static void Initialize()
         {

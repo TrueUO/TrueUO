@@ -10,7 +10,6 @@ using Server.Spells;
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.Shadowguard
 {
@@ -130,10 +129,14 @@ namespace Server.Engines.Shadowguard
         public void OnTick()
         {
             if (Encounters == null)
-                return;
-
-            Encounters.ForEach(e =>
             {
+                return;
+            }
+
+            for (var index = 0; index < Encounters.Count; index++)
+            {
+                var e = Encounters[index];
+
                 if (e != null)
                 {
                     if (e.EncounterDuration != TimeSpan.MaxValue)
@@ -158,7 +161,7 @@ namespace Server.Engines.Shadowguard
                         e.OnTick();
                     }
                 }
-            });
+            }
         }
 
         public void CompleteRoof(Mobile m)
@@ -182,9 +185,12 @@ namespace Server.Engines.Shadowguard
 
             if (!expired)
             {
-                foreach (PlayerMobile pm in encounter.Region.GetEnumeratedMobiles().OfType<PlayerMobile>())
+                foreach (Mobile mobile in encounter.Region.GetEnumeratedMobiles())
                 {
-                    AddToTable(pm, encounter.Encounter);
+                    if (mobile is PlayerMobile pm)
+                    {
+                        AddToTable(pm, encounter.Encounter);
+                    }
                 }
             }
         }
@@ -197,12 +203,16 @@ namespace Server.Engines.Shadowguard
             if (Table != null && Table.ContainsKey(m))
             {
                 if ((Table[m] & encounter) == 0)
+                {
                     Table[m] |= encounter;
+                }
             }
             else
             {
                 if (Table == null)
+                {
                     Table = new Dictionary<Mobile, EncounterType>();
+                }
 
                 Table[m] = encounter;
             }
@@ -232,8 +242,10 @@ namespace Server.Engines.Shadowguard
             {
                 if (p != null)
                 {
-                    foreach (PartyMemberInfo info in p.Members)
+                    for (var index = 0; index < p.Members.Count; index++)
                     {
+                        PartyMemberInfo info = p.Members[index];
+
                         if (Table == null || !Table.ContainsKey(info.Mobile) || (Table[info.Mobile] & EncounterType.Required) != EncounterType.Required)
                         {
                             m.SendLocalizedMessage(1156249); // All members of your party must complete each of the Shadowguard Towers before attempting the finale. 
@@ -250,10 +262,14 @@ namespace Server.Engines.Shadowguard
 
             if (p != null)
             {
-                foreach (PartyMemberInfo info in p.Members)
+                for (var index = 0; index < p.Members.Count; index++)
                 {
-                    foreach (ShadowguardEncounter enc in Encounters)
+                    PartyMemberInfo info = p.Members[index];
+
+                    for (var i = 0; i < Encounters.Count; i++)
                     {
+                        ShadowguardEncounter enc = Encounters[i];
+
                         if (enc.PartyLeader != null)
                         {
                             Party party = Party.Get(enc.PartyLeader);
@@ -273,9 +289,7 @@ namespace Server.Engines.Shadowguard
 
                                 if (mob == info.Mobile || party != null && party.Contains(info.Mobile))
                                 {
-                                    m.SendLocalizedMessage(1156189,
-                                        info.Mobile
-                                            .Name); // ~1_NAME~ in your party is already attempting to join a Shadowguard encounter.  Start a new party without them or wait until they are finished and try again.
+                                    m.SendLocalizedMessage(1156189, info.Mobile.Name); // ~1_NAME~ in your party is already attempting to join a Shadowguard encounter.  Start a new party without them or wait until they are finished and try again.
                                     return false;
                                 }
                             }
@@ -284,10 +298,14 @@ namespace Server.Engines.Shadowguard
                 }
             }
 
-            foreach (ShadowguardEncounter instance in Encounters)
+            for (var index = 0; index < Encounters.Count; index++)
             {
+                ShadowguardEncounter instance = Encounters[index];
+
                 if (instance.PartyLeader == m)
+                {
                     return false;
+                }
             }
 
             return true;
@@ -331,14 +349,40 @@ namespace Server.Engines.Shadowguard
                 List<ShadowguardInstance> instances;
 
                 if (type == EncounterType.Roof)
-                    instances = Instances.Where(e => e.IsRoof && !e.InUse).ToList();
+                {
+                    instances = new List<ShadowguardInstance>();
+
+                    for (var index = 0; index < Instances.Count; index++)
+                    {
+                        var e = Instances[index];
+
+                        if (e.IsRoof && !e.InUse)
+                        {
+                            instances.Add(e);
+                        }
+                    }
+                }
                 else
-                    instances = Instances.Where(e => !e.IsRoof && !e.InUse).ToList();
+                {
+                    instances = new List<ShadowguardInstance>();
+
+                    for (var index = 0; index < Instances.Count; index++)
+                    {
+                        var e = Instances[index];
+
+                        if (!e.IsRoof && !e.InUse)
+                        {
+                            instances.Add(e);
+                        }
+                    }
+                }
 
                 ShadowguardInstance inst = null;
 
                 if (instances.Count > 0)
+                {
                     inst = instances[Utility.Random(instances.Count)];
+                }
 
                 ColUtility.Free(instances);
                 return inst;
@@ -346,10 +390,30 @@ namespace Server.Engines.Shadowguard
 
             if (type == EncounterType.Roof)
             {
-                return Instances.FirstOrDefault(e => e.IsRoof && !e.InUse);
+                for (var index = 0; index < Instances.Count; index++)
+                {
+                    var e = Instances[index];
+
+                    if (e.IsRoof && !e.InUse)
+                    {
+                        return e;
+                    }
+                }
+
+                return null;
             }
 
-            return Instances.FirstOrDefault(e => !e.IsRoof && !e.InUse);
+            for (var index = 0; index < Instances.Count; index++)
+            {
+                var e = Instances[index];
+
+                if (!e.IsRoof && !e.InUse)
+                {
+                    return e;
+                }
+            }
+
+            return null;
         }
 
         public void AddToQueue(Mobile m, EncounterType encounter)
@@ -372,7 +436,14 @@ namespace Server.Engines.Shadowguard
 
             Queue.Add(m, encounter);
 
-            int order = Array.IndexOf(Queue.Keys.ToArray(), m) + 1;
+            List<Mobile> list = new List<Mobile>();
+
+            foreach (var key in Queue.Keys)
+            {
+                list.Add(key);
+            }
+
+            int order = Array.IndexOf(list.ToArray(), m) + 1;
 
             m.SendLocalizedMessage(1156182, order > 1 ? order.ToString() : "next");
             /* The fortress is currently full right now. You are currently ~1_NUM~ in the queue.  
@@ -415,17 +486,23 @@ namespace Server.Engines.Shadowguard
                     RemoveFromQueue(m);
 
                     if (i == 0)
+                    {
                         message = true;
+                    }
 
                     continue;
                 }
 
-                foreach (ShadowguardEncounter inst in Encounters)
+                for (var index = 0; index < Encounters.Count; index++)
                 {
+                    ShadowguardEncounter inst = Encounters[index];
+
                     if (inst.PartyLeader == m)
                     {
                         if (i == 0)
+                        {
                             message = true;
+                        }
 
                         RemoveFromQueue(m);
                     }
@@ -462,11 +539,20 @@ namespace Server.Engines.Shadowguard
                     Party p = Party.Get(mob);
 
                     if (p != null)
-                        p.Members.ForEach(info => info.Mobile.SendLocalizedMessage(1156190, i + 1 > 1 ? i.ToString() : "next"));
+                    {
+                        for (var index = 0; index < p.Members.Count; index++)
+                        {
+                            var info = p.Members[index];
+
+                            info.Mobile.SendLocalizedMessage(1156190, i + 1 > 1 ? i.ToString() : "next");
+                        }
+                    }
                     //A Shadowguard encounter has opened. You are currently ~1_NUM~ in the 
                     //queue. If you are next, you may proceed to the entry stone to join.
                     else
+                    {
                         mob.SendLocalizedMessage(1156190, i + 1 > 1 ? i.ToString() : "next");
+                    }
                 });
             }
         }
@@ -534,10 +620,12 @@ namespace Server.Engines.Shadowguard
 
             if (Encounters != null)
             {
-                Encounters.ForEach(e =>
-                    {
-                        e.Reset();
-                    });
+                for (var index = 0; index < Encounters.Count; index++)
+                {
+                    var e = Encounters[index];
+
+                    e.Reset();
+                }
 
                 ColUtility.Free(Encounters);
                 Encounters = null;
@@ -556,14 +644,16 @@ namespace Server.Engines.Shadowguard
 
             if (Instances != null)
             {
-                Instances.ForEach(inst =>
+                for (var index = 0; index < Instances.Count; index++)
                 {
+                    var inst = Instances[index];
+
                     if (inst.Region != null)
                     {
                         inst.ClearRegion();
                         inst.Region.Unregister();
                     }
-                });
+                }
 
                 ColUtility.Free(Instances);
                 Instances = null;
@@ -598,11 +688,14 @@ namespace Server.Engines.Shadowguard
             writer.Write(Lobby);
 
             writer.Write(Encounters.Count);
-            Encounters.ForEach(encounter =>
+
+            for (var index = 0; index < Encounters.Count; index++)
             {
-                writer.Write((int)encounter.Encounter);
+                var encounter = Encounters[index];
+
+                writer.Write((int) encounter.Encounter);
                 encounter.Serialize(writer);
-            });
+            }
 
             writer.Write(Table == null ? 0 : Table.Count);
 
@@ -616,7 +709,13 @@ namespace Server.Engines.Shadowguard
             }
 
             writer.Write(Addons.Count);
-            Addons.ForEach(addon => writer.Write(addon));
+
+            for (var index = 0; index < Addons.Count; index++)
+            {
+                var addon = Addons[index];
+
+                writer.Write(addon);
+            }
         }
 
         public override void Deserialize(GenericReader reader)

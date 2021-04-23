@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -152,15 +151,17 @@ namespace Server.Items
 
             if (categories != null)
             {
-                foreach (PropInfo cat in categories)
+                for (var index = 0; index < categories.Length; index++)
                 {
-                    if (PropCategories[(int)cat.ItemType] == null)
+                    PropInfo cat = categories[index];
+
+                    if (PropCategories[(int) cat.ItemType] == null)
                     {
-                        PropCategories[(int)cat.ItemType] = cat;
+                        PropCategories[(int) cat.ItemType] = cat;
                     }
                     else
                     {
-                        throw new ArgumentException(string.Format("Property Category {0} already exists for {1}!", cat.ItemType.ToString(), attribute));
+                        throw new ArgumentException($"Property Category {cat.ItemType.ToString()} already exists for {attribute}!");
                     }
                 }
             }
@@ -611,7 +612,7 @@ namespace Server.Items
         {
             if (Table.ContainsKey(id))
             {
-                throw new ArgumentException(string.Format("ID Already Exists: {0}", id));
+                throw new ArgumentException($"ID Already Exists: {id}");
             }
 
             info.ID = id;
@@ -620,7 +621,17 @@ namespace Server.Items
 
         public PropInfo GetItemTypeInfo(ItemType type)
         {
-            return PropCategories.FirstOrDefault(prop => prop != null && prop.ItemType == type);
+            for (var index = 0; index < PropCategories.Length; index++)
+            {
+                var prop = PropCategories[index];
+
+                if (prop != null && prop.ItemType == type)
+                {
+                    return prop;
+                }
+            }
+
+            return null;
         }
 
         public bool CanImbue(ItemType type)
@@ -773,7 +784,17 @@ namespace Server.Items
         /// <returns></returns>
         public static bool ForcesNewLootMax(Item item, int id)
         {
-            return _ForceUseNewTable.Any(i => i == id);
+            for (var index = 0; index < _ForceUseNewTable.Length; index++)
+            {
+                var i = _ForceUseNewTable[index];
+
+                if (i == id)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public static int[] GetMaxOvercappedRange(Item item, int id)

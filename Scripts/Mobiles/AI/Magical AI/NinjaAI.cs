@@ -102,22 +102,34 @@ namespace Server.Mobiles
             Mobile c = m_Mobile.Combatant as Mobile;
 
             if (c == null)
+            {
                 return;
+            }
 
             List<INinjaWeapon> list = new List<INinjaWeapon>();
             int d = (int)m_Mobile.GetDistanceToSqrt(c.Location);
 
-            foreach (Item item in m_Mobile.Items)
-                if (item is INinjaWeapon weapon && weapon.UsesRemaining > 0 && d >= weapon.WeaponMinRange &&
-                    d <= weapon.WeaponMaxRange)
+            for (var index = 0; index < m_Mobile.Items.Count; index++)
+            {
+                Item item = m_Mobile.Items[index];
+
+                if (item is INinjaWeapon weapon && weapon.UsesRemaining > 0 && d >= weapon.WeaponMinRange && d <= weapon.WeaponMaxRange)
+                {
                     list.Add(weapon);
+                }
+            }
 
             if (m_Mobile.Backpack != null)
             {
-                foreach (Item item in m_Mobile.Backpack.Items)
-                    if (item is INinjaWeapon weapon && weapon.UsesRemaining > 0 && d >= weapon.WeaponMinRange &&
-                        d <= weapon.WeaponMaxRange)
+                for (var index = 0; index < m_Mobile.Backpack.Items.Count; index++)
+                {
+                    Item item = m_Mobile.Backpack.Items[index];
+
+                    if (item is INinjaWeapon weapon && weapon.UsesRemaining > 0 && d >= weapon.WeaponMinRange && d <= weapon.WeaponMaxRange)
+                    {
                         list.Add(weapon);
+                    }
+                }
             }
 
             if (list.Count > 0)

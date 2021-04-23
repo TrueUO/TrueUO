@@ -66,7 +66,6 @@ namespace Server.Movement
 
 	public interface IMovementImpl
 	{
-		//bool CheckMovement(IPoint3D p, Direction d, out int newZ);
-		bool CheckMovement(IPoint3D p, Map map, Point3D loc, Direction d, out int newZ);
+        bool CheckMovement(IPoint3D p, Map map, Point3D loc, Direction d, out int newZ);
 	}
 }

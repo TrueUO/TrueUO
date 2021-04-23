@@ -92,11 +92,15 @@ namespace Server.Multis
                 boat.UpdateComponents();
 
                 if (boat.PlayerCount > 0)
+                {
                     boat.Refresh();
+                }
             }
 
             foreach (BaseBoat b in toDelete)
+            {
                 b.Delete();
+            }
 
             toDelete.Clear();
             toDelete.TrimExcess();
@@ -144,14 +148,36 @@ namespace Server.Multis
         public static bool HasBoat(Mobile from)
         {
             if (from.AccessLevel > AccessLevel.Player)
+            {
                 return false;
+            }
 
-            return Boats.Any(boat => boat.Owner == from && !boat.Deleted && boat.Map != Map.Internal && !boat.IsRowBoat);
+            for (var index = 0; index < Boats.Count; index++)
+            {
+                var boat = Boats[index];
+
+                if (boat.Owner == from && !boat.Deleted && boat.Map != Map.Internal && !boat.IsRowBoat)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public static BaseBoat GetBoat(Mobile from)
         {
-            return Boats.FirstOrDefault(boat => boat.Owner == from && !boat.Deleted && boat.Map != Map.Internal && !boat.IsRowBoat);
+            for (var index = 0; index < Boats.Count; index++)
+            {
+                var boat = Boats[index];
+
+                if (boat.Owner == from && !boat.Deleted && boat.Map != Map.Internal && !boat.IsRowBoat)
+                {
+                    return boat;
+                }
+            }
+
+            return null;
         }
 
         public static bool IsValidLocation(Point3D p, Map map)
@@ -184,7 +210,17 @@ namespace Server.Multis
 
         public static bool IsDriving(Mobile from)
         {
-            return Boats.Any(b => b.Pilot == from);
+            for (var index = 0; index < Boats.Count; index++)
+            {
+                var b = Boats[index];
+
+                if (b.Pilot == from)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public static int GetID(int multiID, Direction direction)
@@ -2214,8 +2250,10 @@ namespace Server.Multis
             int count = m_Facing - old & 0x7;
             count /= 2;
 
-            foreach (IEntity e in toMove)
+            for (var index = 0; index < toMove.Count; index++)
             {
+                IEntity e = toMove[index];
+
                 if (e != null)
                 {
                     e.Location = Rotate(e.Location, count);
@@ -2607,7 +2645,9 @@ namespace Server.Multis
                 NoMoveHS = false;
 
                 foreach (IEntity e in toMove)
+                {
                     e.NoMoveHS = false;
+                }
 
                 SendContainerPacket();
 
@@ -3112,13 +3152,27 @@ namespace Server.Multis
 
             Refresh(pilot);
 
-            GetEntitiesOnBoard().OfType<PlayerMobile>().Where(x => x != pilot).ToList().ForEach(y =>
+            List<PlayerMobile> list = new List<PlayerMobile>();
+
+            foreach (IEntity entity in GetEntitiesOnBoard())
             {
+                if (entity is PlayerMobile x && x != pilot)
+                {
+                    list.Add(x);
+                }
+            }
+
+            for (var index = 0; index < list.Count; index++)
+            {
+                var y = list[index];
+
                 y.SendLocalizedMessage(1149664, pilot.Name); // ~1_NAME~ has assumed control of the ship.
-            });
+            }
 
             if (IsMoving)
+            {
                 StopMove(false);
+            }
         }
 
         public void RemovePilot(Mobile from)
@@ -3127,16 +3181,30 @@ namespace Server.Multis
             VirtualMount.Internalize();
 
             if (IsMoving)
+            {
                 StopMove(false);
+            }
 
             Pilot.SendLocalizedMessage(1149592); // You are no longer piloting this vessel.
 
             Refresh(from);
 
-            GetEntitiesOnBoard().OfType<PlayerMobile>().Where(x => x != Pilot).ToList().ForEach(y =>
+            List<PlayerMobile> list = new List<PlayerMobile>();
+
+            foreach (IEntity entity in GetEntitiesOnBoard())
             {
+                if (entity is PlayerMobile x && x != Pilot)
+                {
+                    list.Add(x);
+                }
+            }
+
+            for (var index = 0; index < list.Count; index++)
+            {
+                var y = list[index];
+
                 y.SendLocalizedMessage(1149668, Pilot.Name); // ~1_NAME~ has relinquished control of the ship.
-            });
+            }
 
             Pilot = null;
         }
@@ -3144,7 +3212,9 @@ namespace Server.Multis
         public void RowBoat_Tick_Callback()
         {
             if (!MobilesOnBoard.Any())
+            {
                 Delete();
+            }
         }
 
         public Point3D GetRotatedLocation(int x, int y)
@@ -3171,20 +3241,31 @@ namespace Server.Multis
             if (TillerMan != null)
             {
                 if (TillerMan is Mobile mobile)
+                {
                     mobile.InvalidateProperties();
+                }
                 else if (TillerMan is Item item)
+                {
                     item.InvalidateProperties();
+                }
             }
         }
 
         public void SendMessageToAllOnBoard(object message)
         {
-            foreach (Mobile m in MobilesOnBoard.OfType<PlayerMobile>().Where(pm => pm.NetState != null))
+            foreach (Mobile mobile in MobilesOnBoard)
             {
-                if (message is int i)
-                    m.SendLocalizedMessage(i);
-                else if (message is string s)
-                    m.SendMessage(s);
+                if (mobile is PlayerMobile m && m.NetState != null)
+                {
+                    if (message is int i)
+                    {
+                        m.SendLocalizedMessage(i);
+                    }
+                    else if (message is string s)
+                    {
+                        m.SendMessage(s);
+                    }
+                }
             }
         }
 
@@ -3193,16 +3274,24 @@ namespace Server.Multis
             if (message is int i)
             {
                 if (TillerMan is Mobile mobile)
+                {
                     mobile.Say(i);
+                }
                 else if (TillerMan is TillerMan man)
+                {
                     man.Say(i);
+                }
             }
             else if (message is string s)
             {
                 if (TillerMan is Mobile mobile)
+                {
                     mobile.Say(s);
+                }
                 else if (TillerMan is TillerMan man)
+                {
                     man.Say(1060658, s);
+                }
             }
         }
 
@@ -3394,8 +3483,10 @@ namespace Server.Multis
 
             writer.Write(m_Waypoints.Count);
 
-            foreach (Point2D p in m_Waypoints)
+            for (var index = 0; index < m_Waypoints.Count; index++)
             {
+                Point2D p = m_Waypoints[index];
+
                 writer.Write(p);
             }
         }

@@ -6,7 +6,6 @@ using Server.Spells.Fourth;
 using Server.Spells.Seventh;
 using Server.Spells.Sixth;
 using Server.Spells.Third;
-using System.Linq;
 using System.Xml;
 
 namespace Server.Regions
@@ -97,7 +96,17 @@ namespace Server.Regions
 
             if (m is PlayerMobile pm)
             {
-                int equipment = pm.Items.Count(i => (i is CanvassRobe || i is BootsOfBallast || i is NictitatingLens || i is AquaPendant || i is GargishNictitatingLens) && i.Parent is Mobile mobile && mobile.FindItemOnLayer(i.Layer) == i);
+                int equipment = 0;
+
+                for (var index = 0; index < pm.Items.Count; index++)
+                {
+                    var i = pm.Items[index];
+
+                    if ((i is CanvassRobe || i is BootsOfBallast || i is NictitatingLens || i is AquaPendant || i is GargishNictitatingLens) && i.Parent is Mobile mobile && mobile.FindItemOnLayer(i.Layer) == i)
+                    {
+                        equipment++;
+                    }
+                }
 
                 if (pm.AccessLevel == AccessLevel.Player)
                 {
@@ -109,7 +118,19 @@ namespace Server.Regions
 
                     if (pm.AllFollowers.Count != 0)
                     {
-                        if (pm.AllFollowers.Count(x => x is Paralithode) == 0)
+                        int count = 0;
+
+                        for (var index = 0; index < pm.AllFollowers.Count; index++)
+                        {
+                            var x = pm.AllFollowers[index];
+
+                            if (x is Paralithode)
+                            {
+                                count++;
+                            }
+                        }
+
+                        if (count == 0)
                         {
                             pm.SendLocalizedMessage(1154412); // You cannot proceed while pets are under your control!
                             return false;

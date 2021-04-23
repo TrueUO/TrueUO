@@ -1,7 +1,6 @@
 using Server.Items;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Mobiles
 {
@@ -23,10 +22,23 @@ namespace Server.Mobiles
 
         public void AddToPlan(object tp, int value, int cost)
         {
-            PlanningEntry entry = Entries.FirstOrDefault(e => e.TrainPoint == tp);
+            PlanningEntry entry = null;
+
+            for (var index = 0; index < Entries.Count; index++)
+            {
+                var e = Entries[index];
+
+                if (e.TrainPoint == tp)
+                {
+                    entry = e;
+                    break;
+                }
+            }
 
             if (entry != null)
+            {
                 Entries.Remove(entry);
+            }
 
             Entries.Add(new PlanningEntry(tp, value, cost));
 
@@ -34,19 +46,22 @@ namespace Server.Mobiles
             {
                 TrainingPoint trainingPoint = PetTrainingHelper.GetTrainingPoint(ability);
 
-                foreach (PlanningEntry en in Entries)
+                for (var index = 0; index < Entries.Count; index++)
                 {
+                    PlanningEntry en = Entries[index];
+
                     if (trainingPoint.Requirements != null && trainingPoint.Requirements.Length > 0)
                     {
-                        foreach (TrainingPointRequirement req in trainingPoint.Requirements)
+                        for (var i = 0; i < trainingPoint.Requirements.Length; i++)
                         {
-                            if (req != null)
+                            TrainingPointRequirement req = trainingPoint.Requirements[i];
+
+                            if (req != null && (req.Requirement is WeaponAbility && en.TrainPoint is WeaponAbility ||
+                                                req.Requirement is SpecialAbility && en.TrainPoint is SpecialAbility ||
+                                                req.Requirement is AreaEffect && en.TrainPoint is AreaEffect))
                             {
-                                if (req.Requirement is WeaponAbility && en.TrainPoint is WeaponAbility || req.Requirement is SpecialAbility && en.TrainPoint is SpecialAbility || req.Requirement is AreaEffect && en.TrainPoint is AreaEffect)
-                                {
-                                    en.Value = 0;
-                                    en.Cost = 0;
-                                }
+                                en.Value = 0;
+                                en.Cost = 0;
                             }
                         }
                     }
@@ -56,7 +71,7 @@ namespace Server.Mobiles
 
         public class PlanningEntry
         {
-            public object TrainPoint { get; private set; }
+            public object TrainPoint { get; }
             public int Value { get; set; }
             public int Cost { get; set; }
 

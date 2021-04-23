@@ -323,177 +323,153 @@ namespace Server.Misc
 
         private static void HandlePaging(string sub)
         {
-            if (sub.StartsWith("help", StringComparison.OrdinalIgnoreCase) ||
-                sub.StartsWith("?", StringComparison.OrdinalIgnoreCase))
+            while (true)
             {
-                DisplayPagingHelp();
-
-                HandlePaging(string.Empty);
-                return;
-            }
-
-            if (PageQueue.List.Count == 0)
-            {
-                Console.WriteLine("There are no pages in the queue.");
-
-                if (_Pages != null)
+                if (sub.StartsWith("help", StringComparison.OrdinalIgnoreCase) || sub.StartsWith("?", StringComparison.OrdinalIgnoreCase))
                 {
-                    _Pages = null;
-
-                    Console.WriteLine("[Pages]: Disabled page mode.");
-                }
-
-                return;
-            }
-
-            if (string.IsNullOrWhiteSpace(sub))
-            {
-                if (_Pages == null)
-                {
-                    Console.WriteLine("[Pages]: Enabled page mode.");
-
                     DisplayPagingHelp();
+
+                    sub = string.Empty;
+                    continue;
                 }
 
-                _Pages = PageQueue.List.Cast<PageEntry>().ToArray();
-
-                const string format = "{0:D3}:\t{1}\t{2}";
-
-                for (int i = 0; i < _Pages.Length; i++)
+                if (PageQueue.List.Count == 0)
                 {
-                    Console.WriteLine(format, i + 1, _Pages[i].Type, _Pages[i].Sender);
-                }
+                    Console.WriteLine("There are no pages in the queue.");
 
-                return;
-            }
-
-            if (sub.StartsWith("exit", StringComparison.OrdinalIgnoreCase))
-            {
-                if (_Pages != null)
-                {
-                    _Pages = null;
-
-                    Console.WriteLine("[Pages]: Disabled page mode.");
-                }
-
-                return;
-            }
-
-            if (sub.StartsWith("clear", StringComparison.OrdinalIgnoreCase))
-            {
-                if (_Pages != null)
-                {
-                    foreach (PageEntry page in _Pages)
+                    if (_Pages != null)
                     {
-                        PageQueue.Remove(page);
+                        _Pages = null;
+
+                        Console.WriteLine("[Pages]: Disabled page mode.");
                     }
 
-                    Console.WriteLine("[Pages]: Queue cleared.");
-
-                    Array.Clear(_Pages, 0, _Pages.Length);
-
-                    _Pages = null;
-
-                    Console.WriteLine("[Pages]: Disabled page mode.");
+                    return;
                 }
 
-                return;
-            }
-
-            if (sub.StartsWith("remove", StringComparison.OrdinalIgnoreCase))
-            {
-                string[] args;
-
-                PageEntry page = FindPage(sub, out args);
-
-                if (page == null)
+                if (string.IsNullOrWhiteSpace(sub))
                 {
-                    Console.WriteLine("[Pages]: Invalid page entry.");
+                    if (_Pages == null)
+                    {
+                        Console.WriteLine("[Pages]: Enabled page mode.");
+
+                        DisplayPagingHelp();
+                    }
+
+                    _Pages = PageQueue.List.Cast<PageEntry>().ToArray();
+
+                    const string format = "{0:D3}:\t{1}\t{2}";
+
+                    for (int i = 0; i < _Pages.Length; i++)
+                    {
+                        Console.WriteLine(format, i + 1, _Pages[i].Type, _Pages[i].Sender);
+                    }
+
+                    return;
                 }
-                else
+
+                if (sub.StartsWith("exit", StringComparison.OrdinalIgnoreCase))
                 {
+                    if (_Pages != null)
+                    {
+                        _Pages = null;
+
+                        Console.WriteLine("[Pages]: Disabled page mode.");
+                    }
+
+                    return;
+                }
+
+                if (sub.StartsWith("clear", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (_Pages != null)
+                    {
+                        foreach (PageEntry page in _Pages)
+                        {
+                            PageQueue.Remove(page);
+                        }
+
+                        Console.WriteLine("[Pages]: Queue cleared.");
+
+                        Array.Clear(_Pages, 0, _Pages.Length);
+
+                        _Pages = null;
+
+                        Console.WriteLine("[Pages]: Disabled page mode.");
+                    }
+
+                    return;
+                }
+
+                if (sub.StartsWith("remove", StringComparison.OrdinalIgnoreCase))
+                {
+                    string[] args;
+
+                    PageEntry page = FindPage(sub, out args);
+
+                    if (page == null)
+                    {
+                        Console.WriteLine("[Pages]: Invalid page entry.");
+                    }
+                    else
+                    {
+                        PageQueue.Remove(page);
+
+                        Console.WriteLine("[Pages]: Removed from queue.");
+                    }
+
+                    sub = string.Empty;
+                    continue;
+                }
+
+                if (sub.StartsWith("handle", StringComparison.OrdinalIgnoreCase))
+                {
+                    string[] args;
+
+                    PageEntry page = FindPage(sub, out args);
+
+                    if (page == null)
+                    {
+                        Console.WriteLine("[Pages]: Invalid page entry.");
+
+                        sub = string.Empty;
+                        continue;
+                    }
+
+                    if (args.Length <= 0)
+                    {
+                        Console.WriteLine("[Pages]: Message required.");
+
+                        sub = string.Empty;
+                        continue;
+                    }
+
+                    page.Sender.SendGump(new MessageSentGump(page.Sender, ServerList.ServerName, string.Join(" ", args)));
+
+                    Console.WriteLine("[Pages]: Message sent.");
+
                     PageQueue.Remove(page);
 
                     Console.WriteLine("[Pages]: Removed from queue.");
+
+                    sub = string.Empty;
+                    continue;
                 }
 
-                HandlePaging(string.Empty);
-                return;
-            }
-
-            if (sub.StartsWith("handle", StringComparison.OrdinalIgnoreCase))
-            {
-                string[] args;
-
-                PageEntry page = FindPage(sub, out args);
-
-                if (page == null)
+                if (sub.StartsWith("view", StringComparison.OrdinalIgnoreCase))
                 {
-                    Console.WriteLine("[Pages]: Invalid page entry.");
+                    string[] args;
 
-                    HandlePaging(string.Empty);
-                    return;
-                }
+                    PageEntry page = FindPage(sub, out args);
 
-                if (args.Length <= 0)
-                {
-                    Console.WriteLine("[Pages]: Message required.");
+                    if (page == null)
+                    {
+                        Console.WriteLine("[Pages]: Invalid page entry.");
 
-                    HandlePaging(string.Empty);
-                    return;
-                }
+                        sub = string.Empty;
+                        continue;
+                    }
 
-                page.Sender.SendGump(new MessageSentGump(page.Sender, ServerList.ServerName, string.Join(" ", args)));
-
-                Console.WriteLine("[Pages]: Message sent.");
-
-                PageQueue.Remove(page);
-
-                Console.WriteLine("[Pages]: Removed from queue.");
-
-                HandlePaging(string.Empty);
-                return;
-            }
-
-            if (sub.StartsWith("view", StringComparison.OrdinalIgnoreCase))
-            {
-                string[] args;
-
-                PageEntry page = FindPage(sub, out args);
-
-                if (page == null)
-                {
-                    Console.WriteLine("[Pages]: Invalid page entry.");
-
-                    HandlePaging(string.Empty);
-                    return;
-                }
-
-                int idx = Array.IndexOf(_Pages, page) + 1;
-
-                Console.WriteLine("[Pages]: {0:D3}:\t{1}\t{2}", idx, page.Type, page.Sender);
-
-                if (!string.IsNullOrWhiteSpace(page.Message))
-                {
-                    Console.WriteLine("[Pages]: {0}", page.Message);
-                }
-                else
-                {
-                    Console.WriteLine("[Pages]: No message supplied.");
-                }
-
-                HandlePaging(string.Empty);
-                return;
-            }
-
-            if (_Pages != null)
-            {
-                string[] args;
-
-                PageEntry page = FindPage(sub, out args);
-
-                if (page != null)
-                {
                     int idx = Array.IndexOf(_Pages, page) + 1;
 
                     Console.WriteLine("[Pages]: {0:D3}:\t{1}\t{2}", idx, page.Type, page.Sender);
@@ -507,15 +483,43 @@ namespace Server.Misc
                         Console.WriteLine("[Pages]: No message supplied.");
                     }
 
-                    HandlePaging(string.Empty);
-                    return;
+                    sub = string.Empty;
+                    continue;
                 }
 
-                Array.Clear(_Pages, 0, _Pages.Length);
+                if (_Pages != null)
+                {
+                    string[] args;
 
-                _Pages = null;
+                    PageEntry page = FindPage(sub, out args);
 
-                Console.WriteLine("[Pages]: Disabled page mode.");
+                    if (page != null)
+                    {
+                        int idx = Array.IndexOf(_Pages, page) + 1;
+
+                        Console.WriteLine("[Pages]: {0:D3}:\t{1}\t{2}", idx, page.Type, page.Sender);
+
+                        if (!string.IsNullOrWhiteSpace(page.Message))
+                        {
+                            Console.WriteLine("[Pages]: {0}", page.Message);
+                        }
+                        else
+                        {
+                            Console.WriteLine("[Pages]: No message supplied.");
+                        }
+
+                        sub = string.Empty;
+                        continue;
+                    }
+
+                    Array.Clear(_Pages, 0, _Pages.Length);
+
+                    _Pages = null;
+
+                    Console.WriteLine("[Pages]: Disabled page mode.");
+                }
+
+                break;
             }
         }
 

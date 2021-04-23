@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.Linq;
 
 using Server.ContextMenus;
 using Server.Items;
@@ -1368,20 +1367,22 @@ namespace Server
 		public virtual void AddItemSocketProperties(ObjectPropertyList list)
 		{
 			if (Sockets != null)
-			{
-				foreach (ItemSocket socket in Sockets)
-				{
-					socket.GetProperties(list);
-				}
-			}
+            {
+                for (var index = 0; index < Sockets.Count; index++)
+                {
+                    ItemSocket socket = Sockets[index];
+                    socket.GetProperties(list);
+                }
+            }
 		}
 
         public virtual void AddItemSocketCraftedProperties(ObjectPropertyList list)
         {
             if (Sockets != null)
             {
-                foreach (ItemSocket socket in Sockets)
+                for (var index = 0; index < Sockets.Count; index++)
                 {
+                    ItemSocket socket = Sockets[index];
                     socket.GetCraftedProperties(list);
                 }
             }
@@ -1664,11 +1665,6 @@ namespace Server
                 return DeathMoveResult.MoveToBackpack;
             }
 
-            if (CheckNewbied() && parent.Kills < 5)
-            {
-                return DeathMoveResult.MoveToBackpack;
-            }
-
             if (parent.Player && Nontransferable)
             {
                 return DeathMoveResult.MoveToBackpack;
@@ -1690,11 +1686,6 @@ namespace Server
             }
 
             if (CheckBlessed(parent))
-            {
-                return DeathMoveResult.MoveToBackpack;
-            }
-
-            if (CheckNewbied() && parent.Kills < 5)
             {
                 return DeathMoveResult.MoveToBackpack;
             }
@@ -2064,14 +2055,24 @@ namespace Server
 
             if (Sockets != null && item.Sockets != null)
             {
-                if (Sockets.Any(s => !item.HasSocket(s.GetType())))
+                for (var index = 0; index < Sockets.Count; index++)
                 {
-                    return false;
+                    var s = Sockets[index];
+
+                    if (!item.HasSocket(s.GetType()))
+                    {
+                        return false;
+                    }
                 }
 
-                if (item.Sockets.Any(s => !HasSocket(s.GetType())))
+                for (var index = 0; index < item.Sockets.Count; index++)
                 {
-                    return false;
+                    var s = item.Sockets[index];
+
+                    if (!HasSocket(s.GetType()))
+                    {
+                        return false;
+                    }
                 }
             }
 
@@ -2481,12 +2482,13 @@ namespace Server
 			writer.Write(Sockets != null ? Sockets.Count : 0);
 
 			if (Sockets != null)
-			{
-				foreach (ItemSocket socket in Sockets)
-				{
-					ItemSocket.Save(socket, writer);
-				}
-			}
+            {
+                for (var index = 0; index < Sockets.Count; index++)
+                {
+                    ItemSocket socket = Sockets[index];
+                    ItemSocket.Save(socket, writer);
+                }
+            }
 
 			// 13: Merge sync
 			// 12: Light no longer backed by Direction
@@ -5818,12 +5820,7 @@ namespace Server
 			return m != null && m == BlessedFor;
 		}
 
-		public virtual bool CheckNewbied()
-		{
-			return m_LootType == LootType.Newbied;
-		}
-
-		public virtual bool IsStandardLoot()
+        public virtual bool IsStandardLoot()
 		{
 			if (Mobile.InsuranceEnabled && Insured)
 			{
@@ -5840,10 +5837,10 @@ namespace Server
 
 		public override string ToString()
 		{
-			return string.Format("0x{0:X} \"{1}\"", m_Serial.Value, GetType().Name);
+			return $"0x{m_Serial.Value:X} \"{GetType().Name}\"";
 		}
 
-		internal int m_TypeRef;
+		internal readonly int m_TypeRef;
 
 		public Item()
 		{
@@ -5976,7 +5973,20 @@ namespace Server
 				return null;
 			}
 
-			return Sockets.FirstOrDefault(s => s.GetType() == typeof(T)) as T;
+            ItemSocket first = null;
+
+            for (var index = 0; index < Sockets.Count; index++)
+            {
+                var s = Sockets[index];
+
+                if (s.GetType() == typeof(T))
+                {
+                    first = s;
+                    break;
+                }
+            }
+
+            return first as T;
 		}
 
 		public T GetSocket<T>(Func<T, bool> predicate) where T : ItemSocket
@@ -5986,7 +5996,20 @@ namespace Server
 				return null;
 			}
 
-			return Sockets.FirstOrDefault(s => s.GetType() == typeof(T) && (predicate == null || predicate(s as T))) as T;
+            ItemSocket first = null;
+
+            for (var index = 0; index < Sockets.Count; index++)
+            {
+                var s = Sockets[index];
+
+                if (s.GetType() == typeof(T) && (predicate == null || predicate(s as T)))
+                {
+                    first = s;
+                    break;
+                }
+            }
+
+            return first as T;
 		}
 
 		public ItemSocket GetSocket(Type type)
@@ -5996,8 +6019,18 @@ namespace Server
 				return null;
 			}
 
-			return Sockets.FirstOrDefault(s => s.GetType() == type);
-		}
+            for (var index = 0; index < Sockets.Count; index++)
+            {
+                var s = Sockets[index];
+
+                if (s.GetType() == type)
+                {
+                    return s;
+                }
+            }
+
+            return null;
+        }
 
 		public bool HasSocket<T>()
 		{
@@ -6006,8 +6039,18 @@ namespace Server
 				return false;
 			}
 
-			return Sockets.Any(s => s.GetType() == typeof(T));
-		}
+            for (var index = 0; index < Sockets.Count; index++)
+            {
+                var s = Sockets[index];
+
+                if (s.GetType() == typeof(T))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
 
 		public bool HasSocket(Type t)
 		{
@@ -6016,8 +6059,18 @@ namespace Server
 				return false;
 			}
 
-			return Sockets.Any(s => s.GetType() == t);
-		}
+            for (var index = 0; index < Sockets.Count; index++)
+            {
+                var s = Sockets[index];
+
+                if (s.GetType() == t)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
 		#endregion
 	}
 

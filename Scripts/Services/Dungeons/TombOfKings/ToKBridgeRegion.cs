@@ -21,8 +21,10 @@ namespace Server.Regions
         {
             m_Blocks = new List<Item>();
 
-            foreach (Rectangle3D r3d in Area)
+            for (var index = 0; index < Area.Length; index++)
             {
+                Rectangle3D r3d = Area[index];
+
                 Rectangle2D r2d = new Rectangle2D(r3d.Start, r3d.End);
 
                 foreach (Item item in Map.GetItemsInBounds(r2d))
@@ -38,8 +40,10 @@ namespace Server.Regions
                 return;
             }
 
-            foreach (Item item in m_Blocks)
+            for (var index = 0; index < m_Blocks.Count; index++)
             {
+                Item item = m_Blocks[index];
+
                 item.Hue = 0x807;
                 item.Visible = false;
             }
@@ -71,20 +75,32 @@ namespace Server.Regions
 
             Utility.FixMinMax(ref m_HuePointer, 0, m_Hues.Length - 1);
 
-            foreach (Item item in m_Blocks)
+            for (var index = 0; index < m_Blocks.Count; index++)
+            {
+                Item item = m_Blocks[index];
+
                 item.Hue = m_Hues[m_HuePointer];
+            }
 
             if (m_HuePointer == 0)
             {
-                foreach (Item item in m_Blocks)
+                for (var index = 0; index < m_Blocks.Count; index++)
+                {
+                    Item item = m_Blocks[index];
+
                     item.Visible = false;
+                }
 
                 m_FadingTimer.Stop();
             }
             else if (m_HuePointer == 1)
             {
-                foreach (Item item in m_Blocks)
+                for (var index = 0; index < m_Blocks.Count; index++)
+                {
+                    Item item = m_Blocks[index];
+
                     item.Visible = true;
+                }
             }
             else if (m_HuePointer == m_Hues.Length - 1)
             {
