@@ -6,7 +6,6 @@ using Server.Prompts;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Gumps
 {
@@ -577,8 +576,10 @@ namespace Server.Gumps
                 {
                     List<Mobile> list = new List<Mobile>(house.CoOwners);
 
-                    foreach (Mobile m in list)
+                    for (var index = 0; index < list.Count; index++)
                     {
+                        Mobile m = list[index];
+
                         house.RemoveCoOwner(from, m, false);
                     }
 
@@ -604,8 +605,10 @@ namespace Server.Gumps
                 {
                     List<Mobile> list = new List<Mobile>(house.Friends);
 
-                    foreach (Mobile m in list)
+                    for (var index = 0; index < list.Count; index++)
                     {
+                        Mobile m = list[index];
+
                         house.RemoveFriend(from, m, false);
                     }
 
@@ -721,20 +724,28 @@ namespace Server.Gumps
                         newHouse.VendorInventories.AddRange(house.VendorInventories);
                         house.VendorInventories.Clear();
 
-                        foreach (VendorInventory inventory in newHouse.VendorInventories)
+                        for (var index = 0; index < newHouse.VendorInventories.Count; index++)
                         {
+                            VendorInventory inventory = newHouse.VendorInventories[index];
+
                             inventory.House = newHouse;
                         }
 
                         newHouse.InternalizedVendors.AddRange(house.InternalizedVendors);
                         house.InternalizedVendors.Clear();
 
-                        foreach (Mobile mobile in newHouse.InternalizedVendors)
+                        for (var index = 0; index < newHouse.InternalizedVendors.Count; index++)
                         {
+                            Mobile mobile = newHouse.InternalizedVendors[index];
+
                             if (mobile is PlayerVendor playerVendor)
+                            {
                                 playerVendor.House = newHouse;
+                            }
                             else if (mobile is PlayerBarkeeper playerBarkeeper)
+                            {
                                 playerBarkeeper.House = newHouse;
+                            }
                         }
 
                         if (house.MovingCrate != null)
@@ -750,13 +761,17 @@ namespace Server.Gumps
                         newHouse.MoveToWorld(new Point3D(house.X + house.ConvertOffsetX, house.Y + house.ConvertOffsetY, house.Z + house.ConvertOffsetZ), house.Map);
                         house.Delete();
 
-                        foreach (Item item in items)
+                        for (var index = 0; index < items.Count; index++)
                         {
+                            Item item = items[index];
+
                             item.Location = newHouse.BanLocation;
                         }
 
-                        foreach (Mobile mobile in mobiles)
+                        for (var index = 0; index < mobiles.Count; index++)
                         {
+                            Mobile mobile = mobiles[index];
+
                             mobile.Location = newHouse.BanLocation;
                         }
 
@@ -792,11 +807,35 @@ namespace Server.Gumps
 
                 if (house is BaseContestHouse contestHouse && contestHouse.HouseType == ContestHouseType.Keep || house is Keep)
                 {
-                    entries = HousePlacementEntry.PreBuiltHouses.Where(e => e.MultiID != house.ItemID && (e.MultiID == 0x007C || e.MultiID == 0x147E || e.MultiID >= 0x1484)).ToArray();
+                    List<HousePlacementEntry> list = new List<HousePlacementEntry>();
+
+                    for (var index = 0; index < HousePlacementEntry.PreBuiltHouses.Length; index++)
+                    {
+                        var e = HousePlacementEntry.PreBuiltHouses[index];
+
+                        if (e.MultiID != house.ItemID && (e.MultiID == 0x007C || e.MultiID == 0x147E || e.MultiID >= 0x1484))
+                        {
+                            list.Add(e);
+                        }
+                    }
+
+                    entries = list.ToArray();
                 }
                 else if (house is BaseContestHouse baseContestHouse && baseContestHouse.HouseType == ContestHouseType.Castle || house is Castle)
                 {
-                    entries = HousePlacementEntry.PreBuiltHouses.Where(e => e.MultiID != house.ItemID && (e.MultiID == 0x007E || e.MultiID >= 0x147F && e.MultiID <= 0x1483)).ToArray();
+                    List<HousePlacementEntry> list = new List<HousePlacementEntry>();
+
+                    for (var index = 0; index < HousePlacementEntry.PreBuiltHouses.Length; index++)
+                    {
+                        var e = HousePlacementEntry.PreBuiltHouses[index];
+
+                        if (e.MultiID != house.ItemID && (e.MultiID == 0x007E || e.MultiID >= 0x147F && e.MultiID <= 0x1483))
+                        {
+                            list.Add(e);
+                        }
+                    }
+
+                    entries = list.ToArray();
                 }
 
                 if (entries != null)

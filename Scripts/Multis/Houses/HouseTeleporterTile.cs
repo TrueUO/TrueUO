@@ -8,7 +8,6 @@ using Server.Targeting;
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Multis
 {
@@ -383,7 +382,18 @@ namespace Server.Multis
                 return false;
             }
 
-            if (Region.FindRegions(dest, destMap).Any(r => r.Name == "Abyss") && from is PlayerMobile pm && !pm.AbyssEntry)
+            bool any = false;
+
+            foreach (var r in Region.FindRegions(dest, destMap))
+            {
+                if (r.Name == "Abyss")
+                {
+                    any = true;
+                    break;
+                }
+            }
+
+            if (any && from is PlayerMobile pm && !pm.AbyssEntry)
             {
                 pm.SendLocalizedMessage(1112226); // Thou must be on a Sacred Quest to pass through.
                 return false;

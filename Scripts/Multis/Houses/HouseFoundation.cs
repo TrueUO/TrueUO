@@ -630,13 +630,21 @@ namespace Server.Multis
 
             RelocateEntities();
 
-            foreach (Item item in GetItems())
+            var list = GetItems();
+
+            for (var index = 0; index < list.Count; index++)
             {
+                Item item = list[index];
+
                 item.Location = BanLocation;
             }
 
-            foreach (Mobile mobile in GetMobiles())
+            var mobiles = GetMobiles();
+
+            for (var index = 0; index < mobiles.Count; index++)
             {
+                Mobile mobile = mobiles[index];
+
                 if (mobile is Mannequin || mobile is Steward)
                 {
                     Mannequin.ForceRedeed(mobile, this);
@@ -1046,11 +1054,23 @@ namespace Server.Multis
             // Eject all from house
             from.RevealingAction();
 
-            foreach (Item item in GetItems())
-                item.Location = BanLocation;
+            var list = GetItems();
 
-            foreach (Mobile mobile in GetMobiles())
+            for (var index = 0; index < list.Count; index++)
+            {
+                Item item = list[index];
+
+                item.Location = BanLocation;
+            }
+
+            var mobiles = GetMobiles();
+
+            for (var index = 0; index < mobiles.Count; index++)
+            {
+                Mobile mobile = mobiles[index];
+
                 mobile.Location = BanLocation;
+            }
 
             // Restore relocated entities
             RestoreRelocatedEntities();
@@ -1674,11 +1694,23 @@ namespace Server.Multis
                 // Eject all from house
                 from.RevealingAction();
 
-                foreach (Item item in context.Foundation.GetItems())
-                    item.Location = context.Foundation.BanLocation;
+                var list = context.Foundation.GetItems();
 
-                foreach (Mobile mobile in context.Foundation.GetMobiles())
+                for (var index = 0; index < list.Count; index++)
+                {
+                    Item item = list[index];
+
+                    item.Location = context.Foundation.BanLocation;
+                }
+
+                var mobiles = context.Foundation.GetMobiles();
+
+                for (var index = 0; index < mobiles.Count; index++)
+                {
+                    Mobile mobile = mobiles[index];
+
                     mobile.Location = context.Foundation.BanLocation;
+                }
 
                 // Restore relocated entities
                 context.Foundation.RestoreRelocatedEntities();
@@ -2206,7 +2238,12 @@ namespace Server.Multis
             if (state == null)
                 return;
 
-            foundation.Fixtures.ForEach(x => state.Send(x.RemovePacket));
+            for (var index = 0; index < foundation.Fixtures.Count; index++)
+            {
+                var x = foundation.Fixtures[index];
+
+                state.Send(x.RemovePacket);
+            }
 
             if (foundation.Signpost != null)
                 state.Send(foundation.Signpost.RemovePacket);
@@ -2239,7 +2276,12 @@ namespace Server.Multis
             if (state == null)
                 return;
 
-            context.Foundation.Fixtures.ForEach(x => x.SendInfoTo(state));
+            for (var index = 0; index < context.Foundation.Fixtures.Count; index++)
+            {
+                var x = context.Foundation.Fixtures[index];
+
+                x.SendInfoTo(state);
+            }
 
             if (context.Foundation.Signpost != null)
                 context.Foundation.Signpost.SendInfoTo(state);
