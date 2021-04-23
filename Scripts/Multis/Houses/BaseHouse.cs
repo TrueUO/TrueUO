@@ -583,12 +583,9 @@ namespace Server.Multis
             {
                 Mobile playerVendor = PlayerVendors[index];
 
-                if (playerVendor is PlayerVendor vendor)
+                if (playerVendor is PlayerVendor vendor && vendor.CanInteractWith(m, false))
                 {
-                    if (vendor.CanInteractWith(m, false))
-                    {
-                        return true;
-                    }
+                    return true;
                 }
             }
 
