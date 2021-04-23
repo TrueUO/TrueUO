@@ -160,7 +160,13 @@ namespace Server.Gumps
 
         public virtual void OnClosed()
         {
-            Children.ForEach(child => child.Close());
+            for (var index = 0; index < Children.Count; index++)
+            {
+                var child = Children[index];
+
+                child.Close();
+            }
+
             Children.Clear();
 
             Open = false;
@@ -210,7 +216,15 @@ namespace Server.Gumps
 
         public static T GetGump<T>(PlayerMobile pm, Func<T, bool> predicate) where T : Gump
         {
-            return EnumerateGumps<T>(pm).FirstOrDefault(x => predicate == null || predicate(x));
+            foreach (var x in EnumerateGumps<T>(pm))
+            {
+                if (predicate == null || predicate(x))
+                {
+                    return x;
+                }
+            }
+
+            return null;
         }
 
         public static IEnumerable<T> EnumerateGumps<T>(PlayerMobile pm, Func<T, bool> predicate = null) where T : Gump
@@ -220,10 +234,17 @@ namespace Server.Gumps
             if (ns == null)
                 yield break;
 
-            foreach (BaseGump gump in ns.Gumps.OfType<BaseGump>().Where(g => g.GetType() == typeof(T) &&
-                (predicate == null || predicate(g as T))))
+            for (var index = 0; index < ns.Gumps.Count; index++)
             {
-                yield return gump as T;
+                Gump nsGump = ns.Gumps[index];
+
+                if (nsGump is BaseGump gump)
+                {
+                    if (gump.GetType() == typeof(T) && (predicate == null || predicate(gump as T)))
+                    {
+                        yield return gump as T;
+                    }
+                }
             }
         }
 
@@ -235,9 +256,17 @@ namespace Server.Gumps
             if (ns == null)
                 return list;
 
-            foreach (BaseGump gump in ns.Gumps.OfType<BaseGump>().Where(g => g.GetType() == typeof(T)))
+            for (var index = 0; index < ns.Gumps.Count; index++)
             {
-                list.Add(gump as T);
+                Gump nsGump = ns.Gumps[index];
+
+                if (nsGump is BaseGump gump)
+                {
+                    if (gump.GetType() == typeof(T))
+                    {
+                        list.Add(gump as T);
+                    }
+                }
             }
 
             return list;
@@ -251,9 +280,17 @@ namespace Server.Gumps
             if (ns == null)
                 return list;
 
-            foreach (BaseGump gump in ns.Gumps.OfType<BaseGump>().Where(g => !checkOpen || g.Open))
+            for (var index = 0; index < ns.Gumps.Count; index++)
             {
-                list.Add(gump);
+                Gump nsGump = ns.Gumps[index];
+
+                if (nsGump is BaseGump gump)
+                {
+                    if (!checkOpen || gump.Open)
+                    {
+                        list.Add(gump);
+                    }
+                }
             }
 
             return list;
@@ -267,9 +304,14 @@ namespace Server.Gumps
             {
                 List<BaseGump> gumps = GetGumps(pm, checkOpen);
 
-                foreach (BaseGump gump in gumps.Where(g => g.CloseOnMapChange))
+                for (var index = 0; index < gumps.Count; index++)
                 {
-                    pm.CloseGump(gump.GetType());
+                    BaseGump gump = gumps[index];
+
+                    if (gump.CloseOnMapChange)
+                    {
+                        pm.CloseGump(gump.GetType());
+                    }
                 }
 
                 ColUtility.Free(gumps);
@@ -621,8 +663,10 @@ namespace Server.Gumps
                             {
                                 string[] lines = text.Split(_Split);
 
-                                foreach (string str in lines)
+                                for (var index = 0; index < lines.Length; index++)
                                 {
+                                    string str = lines[index];
+
                                     _PropertyList.Add(str);
                                 }
                             }

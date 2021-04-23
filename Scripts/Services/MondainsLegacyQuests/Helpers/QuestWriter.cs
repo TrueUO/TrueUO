@@ -81,8 +81,10 @@ namespace Server.Engines.Quests
 
             writer.Write(quests.Count);
 
-            foreach (BaseQuest quest in quests)
+            for (var index = 0; index < quests.Count; index++)
             {
+                BaseQuest quest = quests[index];
+
                 Type(writer, quest.GetType());
 
                 SubWrite(writer, quest.Serialize);
