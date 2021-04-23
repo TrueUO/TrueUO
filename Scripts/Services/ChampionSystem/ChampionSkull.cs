@@ -6,11 +6,8 @@ namespace Server.Items
 {
     public class ChampionSkull : Item
     {
-        public static readonly ChampionSkullType[] Types = 
-            Enum.GetValues(typeof(ChampionSkullType))
-                .Cast<ChampionSkullType>()
-                .Where(o => o != ChampionSkullType.None)
-                .ToArray();
+        public static readonly ChampionSkullType[] Types = Enum.GetValues(typeof(ChampionSkullType)).Cast<ChampionSkullType>()
+                .Where(o => o != ChampionSkullType.None).ToArray();
 
         public static ChampionSkullType RandomType => Types[Utility.Random(Types.Length)];
 
