@@ -3,7 +3,6 @@ using Server.Mobiles;
 using Server.Multis;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Regions
 {
@@ -15,15 +14,21 @@ namespace Server.Regions
 
             Timer.DelayCall(TimeSpan.FromSeconds(30), () =>
             {
-                foreach (CorgulRegion reg in Regions.OfType<CorgulRegion>())
+                for (var index = 0; index < Regions.Count; index++)
                 {
-                    if (reg.Altar != null && reg.Altar.Activated)
-                        continue;
+                    Region region = Regions[index];
 
-                    foreach (BaseMulti multi in reg.GetEnumeratedMultis())
+                    if (region is CorgulRegion reg)
                     {
-                        if (multi is BaseBoat boat)
-                            reg.RemoveBoat(boat);
+                        if (reg.Altar != null && reg.Altar.Activated)
+                        {
+                            continue;
+                        }
+
+                        foreach (BaseMulti multi in reg.GetEnumeratedMultis())
+                        {
+                            if (multi is BaseBoat boat) reg.RemoveBoat(boat);
+                        }
                     }
                 }
             });
@@ -74,10 +79,16 @@ namespace Server.Regions
         public override void OnUnregister()
         {
             if (m_Markers == null)
+            {
                 return;
+            }
 
-            foreach (Item i in m_Markers)
+            for (var index = 0; index < m_Markers.Count; index++)
+            {
+                Item i = m_Markers[index];
+
                 i.Delete();
+            }
 
             m_Markers.Clear();
         }
@@ -109,26 +120,34 @@ namespace Server.Regions
         {
             List<Mobile> list = GetMobiles();
 
-            foreach (Mobile m in list)
+            for (var index = 0; index < list.Count; index++)
             {
+                Mobile m = list[index];
+
                 if (message && m is PlayerMobile)
+                {
                     m.SendMessage("You have failed to meet the deadline.");
+                }
 
                 if (BaseBoat.FindBoatAt(m, m.Map) != null)
+                {
                     continue;
+                }
 
-                if (m is PlayerMobile || m is BaseCreature creature && creature.Controlled || ((BaseCreature)m).Summoned)
+                if (m is PlayerMobile || m is BaseCreature creature && creature.Controlled || ((BaseCreature) m).Summoned)
                 {
                     Point3D go = CorgulAltar.GetRandomPoint(CorgulAltar.LandKickLocation, Map);
                     BaseCreature.TeleportPets(m, go, Map);
                     m.MoveToWorld(go, Map);
                 }
-
             }
 
-            foreach (BaseBoat b in GetEnumeratedMultis().OfType<BaseBoat>())
+            foreach (BaseMulti multi in GetEnumeratedMultis())
             {
-                RemoveBoat(b);
+                if (multi is BaseBoat b)
+                {
+                    RemoveBoat(b);
+                }
             }
         }
 

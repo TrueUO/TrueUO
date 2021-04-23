@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-
 using Server.Items;
 
 namespace Server.Engines.CityLoyalty
@@ -30,10 +28,14 @@ namespace Server.Engines.CityLoyalty
             get
             {
                 string str = "";
-                Details.ForEach(d =>
-                    {
-                        str += d.ItemType.Name + ", ";
-                    });
+
+                for (var index = 0; index < Details.Count; index++)
+                {
+                    var d = Details[index];
+
+                    str += d.ItemType.Name + ", ";
+                }
+
                 return str;
             }
         }
@@ -60,14 +62,18 @@ namespace Server.Engines.CityLoyalty
         public int CalculateGold()
         {
             if (Distance == 0)
+            {
                 return 0;
+            }
 
             int gold = 0;
 
-            Details.ForEach(d =>
-                {
-                    gold += d.Worth * 3;
-                });
+            for (var index = 0; index < Details.Count; index++)
+            {
+                var d = Details[index];
+
+                gold += d.Worth * 3;
+            }
 
             return Math.Max(CityTradeSystem.TurnInGold, gold + (Distance * 10) + Math.Min(25000, (Kills * 500)));
         }
@@ -128,11 +134,40 @@ namespace Server.Engines.CityLoyalty
                     return true;
                 }
 
-                var list = Interchangeables.FirstOrDefault(l => l.Any(t => t == type));
+                var list = new Type[] { };
 
-                if (list != null)
+                for (var index = 0; index < Interchangeables.Length; index++)
                 {
-                    return list.Any(t => t == ItemType);
+                    var l = Interchangeables[index];
+
+                    bool any = false;
+
+                    for (var i = 0; i < l.Length; i++)
+                    {
+                        var t = l[i];
+
+                        if (t == type)
+                        {
+                            any = true;
+                            break;
+                        }
+                    }
+
+                    if (any)
+                    {
+                        list = l;
+                        break;
+                    }
+                }
+
+                for (var index = 0; index < list.Length; index++)
+                {
+                    var t = list[index];
+
+                    if (t == ItemType)
+                    {
+                        return true;
+                    }
                 }
 
                 return false;
@@ -140,7 +175,19 @@ namespace Server.Engines.CityLoyalty
 
             public int Count(TradeOrderCrate crate)
             {
-                return crate.Items.Where(i => Match(i.GetType())).Sum(item => item.Amount);
+                int sum = 0;
+
+                for (var index = 0; index < crate.Items.Count; index++)
+                {
+                    var i = crate.Items[index];
+
+                    if (Match(i.GetType()))
+                    {
+                        sum += i.Amount;
+                    }
+                }
+
+                return sum;
             }
 
             public static Type[][] Interchangeables => _Interchangeables;
@@ -187,7 +234,12 @@ namespace Server.Engines.CityLoyalty
             writer.Write(Distance);
 
             writer.Write(Details.Count);
-            Details.ForEach(d => d.Serialize(writer));
+            for (var index = 0; index < Details.Count; index++)
+            {
+                var d = Details[index];
+
+                d.Serialize(writer);
+            }
         }
     }
 }
