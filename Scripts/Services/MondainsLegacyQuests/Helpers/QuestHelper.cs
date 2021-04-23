@@ -4,7 +4,6 @@ using Server.Regions;
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.Quests
 {
@@ -182,7 +181,17 @@ namespace Server.Engines.Quests
 
         public static QuestRestartInfo GetRestartInfo(PlayerMobile pm, Type quest)
         {
-            return pm.DoneQuests.FirstOrDefault(ri => ri.QuestType == quest);
+            for (var index = 0; index < pm.DoneQuests.Count; index++)
+            {
+                var ri = pm.DoneQuests[index];
+
+                if (ri.QuestType == quest)
+                {
+                    return ri;
+                }
+            }
+
+            return null;
         }
 
         public static bool CheckDoneOnce(PlayerMobile player, BaseQuest quest, Mobile quester, bool message)
@@ -192,14 +201,19 @@ namespace Server.Engines.Quests
 
         public static bool CheckDoneOnce(PlayerMobile player, Type questType, Mobile quester, bool message)
         {
-            if (player.DoneQuests.Any(x => x.QuestType == questType))
+            for (var index = 0; index < player.DoneQuests.Count; index++)
             {
-                if (message && quester != null)
-                {
-                    quester.SayTo(player, 1075454, 0x3B2); // I can not offer you the quest again.
-                }
+                var x = player.DoneQuests[index];
 
-                return true;
+                if (x.QuestType == questType)
+                {
+                    if (message && quester != null)
+                    {
+                        quester.SayTo(player, 1075454, 0x3B2); // I can not offer you the quest again.
+                    }
+
+                    return true;
+                }
             }
 
             return false;
@@ -209,7 +223,18 @@ namespace Server.Engines.Quests
         {
             if (type.IsSubclassOf(typeof(Item)))
             {
-                QuestRestartInfo info = player.DoneQuests.FirstOrDefault(x => x.QuestType == type);
+                QuestRestartInfo info = null;
+
+                for (var index = 0; index < player.DoneQuests.Count; index++)
+                {
+                    var x = player.DoneQuests[index];
+
+                    if (x.QuestType == type)
+                    {
+                        info = x;
+                        break;
+                    }
+                }
 
                 if (info != null)
                 {
@@ -270,9 +295,35 @@ namespace Server.Engines.Quests
         public static bool InProgress(PlayerMobile player, Type[] quests)
         {
             if (quests == null)
+            {
                 return false;
+            }
 
-            BaseQuest quest = player.Quests.FirstOrDefault(q => quests.Any(questerType => questerType == q.GetType()));
+            BaseQuest quest = null;
+
+            for (var i = 0; i < player.Quests.Count; i++)
+            {
+                var q = player.Quests[i];
+
+                bool any = false;
+
+                for (var index = 0; index < quests.Length; index++)
+                {
+                    var questerType = quests[index];
+
+                    if (questerType == q.GetType())
+                    {
+                        any = true;
+                        break;
+                    }
+                }
+
+                if (any)
+                {
+                    quest = q;
+                    break;
+                }
+            }
 
             if (quest != null)
             {
@@ -300,7 +351,18 @@ namespace Server.Engines.Quests
         /// <returns></returns>
         public static bool InProgress(PlayerMobile player, Mobile quester)
         {
-            BaseQuest quest = player.Quests.FirstOrDefault(q => q.QuesterType == quester.GetType());
+            BaseQuest quest = null;
+
+            for (var index = 0; index < player.Quests.Count; index++)
+            {
+                var q = player.Quests[index];
+
+                if (q.QuesterType == quester.GetType())
+                {
+                    quest = q;
+                    break;
+                }
+            }
 
             if (quest != null)
             {
@@ -402,15 +464,37 @@ namespace Server.Engines.Quests
 
         public static bool InChainProgress(PlayerMobile pm, BaseQuest quest)
         {
-            return pm.Quests.Any(q => q.ChainID != QuestChain.None && q.ChainID == quest.ChainID && q.GetType() != quest.GetType());
+            for (var index = 0; index < pm.Quests.Count; index++)
+            {
+                var q = pm.Quests[index];
+
+                if (q.ChainID != QuestChain.None && q.ChainID == quest.ChainID && q.GetType() != quest.GetType())
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public static bool ValidateRegion(string name)
         {
             if (string.IsNullOrEmpty(name))
+            {
                 return false;
+            }
 
-            return Region.Regions.Any(r => r.Name == name);
+            for (var index = 0; index < Region.Regions.Count; index++)
+            {
+                var r = Region.Regions[index];
+
+                if (r.Name == name)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public static void CompleteQuest(PlayerMobile from, BaseQuest quest)
@@ -692,19 +776,29 @@ namespace Server.Engines.Quests
 
         public static bool CheckRewardItem(PlayerMobile player, Item item)
         {
-            foreach (BaseQuest quest in player.Quests)
+            for (var index = 0; index < player.Quests.Count; index++)
             {
-                if (quest.Objectives.Any(obj => obj is ObtainObjective))
-                {
-                    foreach (ObtainObjective obtain in quest.Objectives.OfType<ObtainObjective>())
-                    {
-                        if (obtain.IsObjective(item))
-                        {
-                            obtain.CurProgress += item.Amount;
-                            quest.OnObjectiveUpdate(item);
+                BaseQuest quest = player.Quests[index];
 
-                            return true;
+                for (var i = 0; i < quest.Objectives.Count; i++)
+                {
+                    var obj = quest.Objectives[i];
+
+                    if (obj is ObtainObjective)
+                    {
+                        for (var index1 = 0; index1 < quest.Objectives.Count; index1++)
+                        {
+                            BaseObjective objective = quest.Objectives[index1];
+
+                            if (objective is ObtainObjective obtain && obtain.IsObjective(item))
+                            {
+                                obtain.CurProgress += item.Amount;
+                                quest.OnObjectiveUpdate(item);
+                                return true;
+                            }
                         }
+
+                        break;
                     }
                 }
             }
@@ -857,7 +951,20 @@ namespace Server.Engines.Quests
 
         public static T GetQuest<T>(PlayerMobile pm) where T : BaseQuest
         {
-            return pm.Quests.FirstOrDefault(quest => quest.GetType() == typeof(T)) as T;
+            BaseQuest first = null;
+
+            for (var index = 0; index < pm.Quests.Count; index++)
+            {
+                var quest = pm.Quests[index];
+
+                if (quest.GetType() == typeof(T))
+                {
+                    first = quest;
+                    break;
+                }
+            }
+
+            return first as T;
         }
     }
 
