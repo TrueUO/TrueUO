@@ -4,7 +4,6 @@ using Server.Regions;
 using Server.Engines.CannedEvil;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Mobiles
 {
@@ -145,8 +144,10 @@ namespace Server.Mobiles
 
         public void SpawnHelpers()
         {
-            foreach (Point3D pnt in _SpawnLocs)
+            for (var index = 0; index < _SpawnLocs.Length; index++)
             {
+                Point3D pnt = _SpawnLocs[index];
+
                 for (int i = 0; i < _SpawnPerLoc; i++)
                 {
                     BaseCreature bc;
@@ -154,13 +155,27 @@ namespace Server.Mobiles
                     switch (Utility.Random(7))
                     {
                         default:
-                        case 0: bc = new BoundSoul(); break;
-                        case 1: bc = new SoulboundApprenticeMage(); break;
-                        case 2: bc = new SoulboundBattleMage(); break;
-                        case 3: bc = new SoulboundPirateCaptain(); break;
-                        case 4: bc = new SoulboundPirateRaider(); break;
-                        case 5: bc = new SoulboundSpellSlinger(); break;
-                        case 6: bc = new SoulboundSwashbuckler(); break;
+                        case 0:
+                            bc = new BoundSoul();
+                            break;
+                        case 1:
+                            bc = new SoulboundApprenticeMage();
+                            break;
+                        case 2:
+                            bc = new SoulboundBattleMage();
+                            break;
+                        case 3:
+                            bc = new SoulboundPirateCaptain();
+                            break;
+                        case 4:
+                            bc = new SoulboundPirateRaider();
+                            break;
+                        case 5:
+                            bc = new SoulboundSpellSlinger();
+                            break;
+                        case 6:
+                            bc = new SoulboundSwashbuckler();
+                            break;
                     }
 
                     m_Helpers.Add(bc);
@@ -232,7 +247,19 @@ namespace Server.Mobiles
 
             if (!m_HasDone2ndSpawn && m_Helpers.Count > 0)
             {
-                if (m_Helpers.Count(bc => bc.Alive && !bc.Deleted) == 0)
+                int count = 0;
+
+                for (var index = 0; index < m_Helpers.Count; index++)
+                {
+                    var bc = m_Helpers[index];
+
+                    if (bc.Alive && !bc.Deleted)
+                    {
+                        count++;
+                    }
+                }
+
+                if (count == 0)
                 {
                     Timer.DelayCall(TimeSpan.FromSeconds(5), SpawnHelpers);
                     m_HasDone2ndSpawn = true;
@@ -245,18 +272,28 @@ namespace Server.Mobiles
             List<Mobile> targets = new List<Mobile>();
 
             IPooledEnumerable eable = GetMobilesInRange(12);
+
             foreach (Mobile mob in eable)
             {
                 if (!CanBeHarmful(mob) || mob == this)
+                {
                     continue;
+                }
+
                 if (mob is BaseCreature bc && (bc.Controlled || bc.Summoned || bc.Team != Team))
+                {
                     targets.Add(bc);
+                }
                 else if (mob is PlayerMobile && mob.Alive)
+                {
                     targets.Add(mob);
+                }
             }
+
             eable.Free();
 
             PlaySound(0x2F3);
+
             for (int i = 0; i < targets.Count; ++i)
             {
                 Mobile m = targets[i];
@@ -288,6 +325,7 @@ namespace Server.Mobiles
             new InternalTimer(this, range);
 
             IPooledEnumerable eable = GetMobilesInRange(range);
+
             foreach (Mobile m in eable)
             {
                 if ((m is PlayerMobile || m is BaseCreature creature && creature.GetMaster() is PlayerMobile) && CanBeHarmful(m))
@@ -295,6 +333,7 @@ namespace Server.Mobiles
                     Timer.DelayCall(TimeSpan.FromSeconds(1), new TimerStateCallback(DoDamage_Callback), m);
                 }
             }
+
             eable.Free();
 
             m_NextArea = DateTime.UtcNow + TimeSpan.FromSeconds(Utility.RandomMinMax(60, 180));
@@ -366,7 +405,9 @@ namespace Server.Mobiles
             base.OnDeath(c);
 
             if (m_Altar != null)
+            {
                 m_Altar.OnBossKilled();
+            }
 
             c.DropItem(new MessageInABottle(c.Map));
             c.DropItem(new SpecialFishingNet());
@@ -374,12 +415,16 @@ namespace Server.Mobiles
 
             if (m_Helpers != null)
             {
-                foreach (BaseCreature bc in m_Helpers)
+                for (var index = 0; index < m_Helpers.Count; index++)
                 {
+                    BaseCreature bc = m_Helpers[index];
+
                     RegisterDamageTo(bc);
 
                     if (bc != null && bc.Alive)
+                    {
                         bc.Kill();
+                    }
                 }
             }
         }
@@ -412,11 +457,16 @@ namespace Server.Mobiles
         {
             base.Serialize(writer);
             writer.Write(1);
+
             writer.Write(m_HasDone2ndSpawn);
             writer.Write(m_Altar);
             writer.Write(m_Helpers.Count);
-            foreach (BaseCreature bc in m_Helpers)
+            for (var index = 0; index < m_Helpers.Count; index++)
+            {
+                BaseCreature bc = m_Helpers[index];
+
                 writer.Write(bc);
+            }
         }
 
         public override void Deserialize(GenericReader reader)

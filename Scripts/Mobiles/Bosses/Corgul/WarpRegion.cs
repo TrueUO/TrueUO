@@ -88,26 +88,23 @@ namespace Server.Regions
 
             foreach (IEntity entity in boat.GetEntitiesOnBoard())
             {
-                if (entity is PlayerMobile i)
+                if (entity is PlayerMobile i && i.NetState != null)
                 {
-                    if (i.NetState != null)
+                    pms.Add(i);
+
+                    PlayerMobile pm = i;
+
+                    if (pm.Backpack == null)
                     {
-                        pms.Add(i);
+                        continue;
+                    }
 
-                        PlayerMobile pm = i;
+                    Item item = pm.Backpack.FindItemByType(typeof(CorgulIslandMap));
 
-                        if (pm.Backpack == null)
-                        {
-                            continue;
-                        }
-
-                        Item item = pm.Backpack.FindItemByType(typeof(CorgulIslandMap));
-
-                        if (item is CorgulIslandMap islandMap && Contains(islandMap.DestinationPoint))
-                        {
-                            hasMap = true;
-                            break;
-                        }
+                    if (item is CorgulIslandMap islandMap && Contains(islandMap.DestinationPoint))
+                    {
+                        hasMap = true;
+                        break;
                     }
                 }
             }

@@ -49,13 +49,10 @@ namespace Server.Mobiles
                 {
                     IBuyItemInfo info = infos[index];
 
-                    if (info is GenericBuyInfo info1)
+                    if (info is GenericBuyInfo gbi && gbi.EconomyItem && gbi.Type == item.GetType())
                     {
-                        if (info1.EconomyItem && info1.Type == item.GetType())
-                        {
-                            buyInfo = info1;
-                            break;
-                        }
+                        buyInfo = gbi;
+                        break;
                     }
                 }
 

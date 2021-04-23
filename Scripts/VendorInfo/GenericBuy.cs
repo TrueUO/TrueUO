@@ -287,12 +287,9 @@ namespace Server.Mobiles
                 {
                     IBuyItemInfo info = infos[index];
 
-                    if (info is GenericBuyInfo bii)
+                    if (info is GenericBuyInfo bii && (bii.Type == m_Type || m_Type == typeof(UncutCloth) && bii.Type == typeof(Cloth) || m_Type == typeof(Cloth) && bii.Type == typeof(UncutCloth)))
                     {
-                        if (bii.Type == m_Type || m_Type == typeof(UncutCloth) && bii.Type == typeof(Cloth) || m_Type == typeof(Cloth) && bii.Type == typeof(UncutCloth))
-                        {
-                            bii.TotalBought += amount;
-                        }
+                        bii.TotalBought += amount;
                     }
                 }
             }
@@ -310,12 +307,9 @@ namespace Server.Mobiles
                 {
                     IBuyItemInfo info = infos[index];
 
-                    if (info is GenericBuyInfo bii)
+                    if (info is GenericBuyInfo bii && (bii.Type == m_Type || m_Type == typeof(UncutCloth) && bii.Type == typeof(Cloth) || m_Type == typeof(Cloth) && bii.Type == typeof(UncutCloth)))
                     {
-                        if (bii.Type == m_Type || m_Type == typeof(UncutCloth) && bii.Type == typeof(Cloth) || m_Type == typeof(Cloth) && bii.Type == typeof(UncutCloth))
-                        {
-                            bii.TotalSold += amount;
-                        }
+                        bii.TotalSold += amount;
                     }
                 }
             }
