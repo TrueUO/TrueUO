@@ -273,7 +273,17 @@ namespace Server.Engines.Plants
 
         public SeedEntry GetExisting(Seed seed)
         {
-            return Entries.FirstOrDefault(e => e != null && e.Seed != null && e.Seed.PlantType == seed.PlantType && e.Seed.PlantHue == seed.PlantHue);
+            for (var index = 0; index < Entries.Count; index++)
+            {
+                var e = Entries[index];
+
+                if (e != null && e.Seed != null && e.Seed.PlantType == seed.PlantType && e.Seed.PlantHue == seed.PlantHue)
+                {
+                    return e;
+                }
+            }
+
+            return null;
         }
 
         public override void GetProperties(ObjectPropertyList list)
@@ -293,8 +303,10 @@ namespace Server.Engines.Plants
         {
             List<Item> toDelete = new List<Item>(Items);
 
-            foreach (Item item in toDelete)
+            for (var index = 0; index < toDelete.Count; index++)
             {
+                Item item = toDelete[index];
+
                 if (item != null && item.Amount == 0)
                 {
                     item.Delete();
@@ -303,8 +315,10 @@ namespace Server.Engines.Plants
 
             List<SeedEntry> entries = new List<SeedEntry>(Entries);
 
-            foreach (SeedEntry entry in entries)
+            for (var index = 0; index < entries.Count; index++)
             {
+                SeedEntry entry = entries[index];
+
                 if (entry != null && (entry.Seed == null || entry.Seed.Amount == 0 || entry.Seed.Deleted))
                 {
                     Entries.Remove(entry);
@@ -388,8 +402,10 @@ namespace Server.Engines.Plants
             Timer.DelayCall(
                 () =>
                 {
-                    foreach (Item item in Items)
+                    for (var index = 0; index < Items.Count; index++)
                     {
+                        Item item = Items[index];
+
                         if (item.Movable)
                         {
                             item.Movable = false;
