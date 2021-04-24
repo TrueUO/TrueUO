@@ -371,20 +371,17 @@ namespace Server.Engines.VvV
                         pm.SendGump(new BattleWarningGump(pm));
                         Warned.Add(pm);
                     }
-                    else if (vvv && pm.Alive && !pm.Hidden && BaseBoat.FindBoatAt(pm.Location, pm.Map) == null && BaseHouse.FindHouseAt(pm) == null)
+                    else if (vvv && pm.Alive && !pm.Hidden && BaseBoat.FindBoatAt(pm.Location, pm.Map) == null && BaseHouse.FindHouseAt(pm) == null && pm.Guild is Guild g)
                     {
-                        if (pm.Guild is Guild g)
-                        {
-                            BattleTeam t = GetTeam(g);
+                        BattleTeam t = GetTeam(g);
 
-                            if (team == null)
-                            {
-                                team = t;
-                            }
-                            else if (t != team && UnContested)
-                            {
-                                UnContested = false;
-                            }
+                        if (team == null)
+                        {
+                            team = t;
+                        }
+                        else if (t != team && UnContested)
+                        {
+                            UnContested = false;
                         }
                     }
 
@@ -667,19 +664,16 @@ namespace Server.Engines.VvV
 
             foreach (Mobile mobile in Region.GetEnumeratedMobiles())
             {
-                if (mobile is PlayerMobile pm)
+                if (mobile is PlayerMobile pm && pm.NetState != null && pm.QuestArrow == null)
                 {
-                    if (pm.NetState != null && pm.QuestArrow == null)
+                    for (var index = 0; index < Altars.Count; index++)
                     {
-                        for (var index = 0; index < Altars.Count; index++)
-                        {
-                            VvVAltar altar = Altars[index];
+                        VvVAltar altar = Altars[index];
 
-                            if (altar.IsActive)
-                            {
-                                pm.QuestArrow = new AltarArrow(pm, altar);
-                                break;
-                            }
+                        if (altar.IsActive)
+                        {
+                            pm.QuestArrow = new AltarArrow(pm, altar);
+                            break;
                         }
                     }
                 }
@@ -895,7 +889,7 @@ namespace Server.Engines.VvV
 
             foreach (Mobile p in Region.GetEnumeratedMobiles())
             {
-                if (p is PlayerMobile)
+                if (p is PlayerMobile && p.QuestArrow != null)
                 {
                     if (p.QuestArrow != null)
                     {
@@ -1107,13 +1101,10 @@ namespace Server.Engines.VvV
 
             foreach (Mobile mobile in Region.GetEnumeratedMobiles())
             {
-                if (mobile is PlayerMobile m)
+                if (mobile is PlayerMobile m && ViceVsVirtueSystem.IsVvV(m))
                 {
-                    if (ViceVsVirtueSystem.IsVvV(m))
-                    {
-                        m.CloseGump(typeof(VvVBattleStatusGump));
-                        m.SendGump(new BattleStatsGump(m, this));
-                    }
+                    m.CloseGump(typeof(VvVBattleStatusGump));
+                    m.SendGump(new BattleStatsGump(m, this));
                 }
             }
         }
