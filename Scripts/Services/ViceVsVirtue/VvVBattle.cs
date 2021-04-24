@@ -891,10 +891,7 @@ namespace Server.Engines.VvV
             {
                 if (p is PlayerMobile && p.QuestArrow != null)
                 {
-                    if (p.QuestArrow != null)
-                    {
-                        p.QuestArrow = null;
-                    }
+                    p.QuestArrow = null;
                 }
             }
 
