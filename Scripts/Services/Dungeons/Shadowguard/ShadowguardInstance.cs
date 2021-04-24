@@ -50,13 +50,13 @@ namespace Server.Engines.Shadowguard
 
             if (!fromQueue && p != null)
             {
-                foreach (PartyMemberInfo info in p.Members)
+                for (var index = 0; index < p.Members.Count; index++)
                 {
+                    PartyMemberInfo info = p.Members[index];
+
                     if (!Controller.Lobby.Contains(new Point2D(info.Mobile.X, info.Mobile.Y)))
                     {
-                        m.SendLocalizedMessage(1156186); // All members of your party must remain in the lobby of Shadowguard 
-                        // while your encounter is prepared. Make sure all members of your party 
-                        // are in the lobby and try again. 
+                        m.SendLocalizedMessage(1156186); // All members of your party must remain in the lobby of Shadowguard while your encounter is prepared. Make sure all members of your party are in the lobby and try again. 
                         return false;
                     }
                 }
@@ -126,12 +126,18 @@ namespace Server.Engines.Shadowguard
         private bool IsInDeleteList(Item item)
         {
             if (item == null)
-                return false;
-
-            foreach (Type t in DeleteList)
             {
+                return false;
+            }
+
+            for (var index = 0; index < DeleteList.Length; index++)
+            {
+                Type t = DeleteList[index];
+
                 if (item.GetType() == t)
+                {
                     return true;
+                }
             }
 
             return false;
@@ -145,14 +151,18 @@ namespace Server.Engines.Shadowguard
         public static void Initialize()
         {
             if (ShadowguardController.Instance == null)
+            {
                 return;
+            }
 
             ColUtility.ForEach(ShadowguardController.Instance.Addons.Where(addon => addon.Map != Map.Internal), addon =>
                 {
                     ShadowguardInstance instance = ShadowguardController.GetInstance(addon.Location, addon.Map);
 
                     if (instance != null && !instance.InUse)
+                    {
                         instance.ClearRegion();
+                    }
                 });
         }
     }
