@@ -222,11 +222,12 @@ namespace Server.Engines.VvV
 
         public void SpawnAltars()
         {
-            foreach (Point3D p in CityInfo.Infos[City].AltarLocs)
+            for (var index = 0; index < CityInfo.Infos[City].AltarLocs.Length; index++)
             {
+                Point3D p = CityInfo.Infos[City].AltarLocs[index];
                 VvVAltar altar = new VvVAltar(this);
-                altar.MoveToWorld(p, Map.Felucca);
 
+                altar.MoveToWorld(p, Map.Felucca);
                 Altars.Add(altar);
             }
         }
@@ -317,10 +318,20 @@ namespace Server.Engines.VvV
 
             if (KillCooldown != null)
             {
-                List<Mobile> list = KillCooldown.Keys.Where(mob => KillCooldown[mob] < DateTime.UtcNow).ToList();
+                List<Mobile> list = new List<Mobile>();
 
-                foreach (Mobile m in list)
+                foreach (var mob in KillCooldown.Keys)
                 {
+                    if (KillCooldown[mob] < DateTime.UtcNow)
+                    {
+                        list.Add(mob);
+                    }
+                }
+
+                for (var index = 0; index < list.Count; index++)
+                {
+                    Mobile m = list[index];
+
                     KillCooldown.Remove(m);
                 }
 
@@ -329,50 +340,58 @@ namespace Server.Engines.VvV
 
             if (Turrets != null)
             {
-                Turrets.ForEach(t => { t.Scan(); });
+                for (var index = 0; index < Turrets.Count; index++)
+                {
+                    var t = Turrets[index];
+
+                    t.Scan();
+                }
             }
         }
 
         public void CheckParticipation()
         {
             if (Region == null)
+            {
                 return;
+            }
 
             BattleTeam team = null;
             UnContested = true;
             bool checkAggression = ViceVsVirtueSystem.EnhancedRules && NextCombatHeatCycle < DateTime.UtcNow;
 
-            foreach (PlayerMobile pm in Region.GetEnumeratedMobiles().OfType<PlayerMobile>())
+            foreach (Mobile mobile in Region.GetEnumeratedMobiles())
             {
-                bool vvv = ViceVsVirtueSystem.IsVvV(pm);
-
-                if (!vvv && !Warned.Contains(pm) && pm.AccessLevel == AccessLevel.Player)
+                if (mobile is PlayerMobile pm)
                 {
-                    pm.SendGump(new BattleWarningGump(pm));
-                    Warned.Add(pm);
-                }
-                else if (vvv && pm.Alive && !pm.Hidden && BaseBoat.FindBoatAt(pm.Location, pm.Map) == null && BaseHouse.FindHouseAt(pm) == null)
-                {
-                    Guild g = pm.Guild as Guild;
+                    bool vvv = ViceVsVirtueSystem.IsVvV(pm);
 
-                    if (g != null)
+                    if (!vvv && !Warned.Contains(pm) && pm.AccessLevel == AccessLevel.Player)
                     {
-                        BattleTeam t = GetTeam(g);
+                        pm.SendGump(new BattleWarningGump(pm));
+                        Warned.Add(pm);
+                    }
+                    else if (vvv && pm.Alive && !pm.Hidden && BaseBoat.FindBoatAt(pm.Location, pm.Map) == null && BaseHouse.FindHouseAt(pm) == null)
+                    {
+                        if (pm.Guild is Guild g)
+                        {
+                            BattleTeam t = GetTeam(g);
 
-                        if (team == null)
-                        {
-                            team = t;
-                        }
-                        else if (t != team && UnContested)
-                        {
-                            UnContested = false;
+                            if (team == null)
+                            {
+                                team = t;
+                            }
+                            else if (t != team && UnContested)
+                            {
+                                UnContested = false;
+                            }
                         }
                     }
-                }
 
-                if (checkAggression && (vvv || ViceVsVirtueSystem.IsVvVCombatant(pm)))
-                {
-                    AddAggression(pm);
+                    if (checkAggression && (vvv || ViceVsVirtueSystem.IsVvVCombatant(pm)))
+                    {
+                        AddAggression(pm);
+                    }
                 }
             }
 
@@ -405,8 +424,10 @@ namespace Server.Engines.VvV
 
             List<Mobile> list = new List<Mobile>(BattleAggression.Keys);
 
-            foreach (Mobile m in list)
+            for (var index = 0; index < list.Count; index++)
             {
+                Mobile m = list[index];
+
                 if (BattleAggression[m] < DateTime.UtcNow && !m.Region.IsPartOf(Region))
                 {
                     BattleAggression.Remove(m);
@@ -439,30 +460,45 @@ namespace Server.Engines.VvV
 
             if (Region is GuardedRegion guardedRegion)
             {
-               guardedRegion.Disabled = false;
+                guardedRegion.Disabled = false;
 
-                foreach (PlayerMobile pm in Region.GetEnumeratedMobiles().OfType<PlayerMobile>())
+                foreach (Mobile mobile in Region.GetEnumeratedMobiles())
                 {
-                    pm.RecheckTownProtection();
+                    if (mobile is PlayerMobile pm)
+                    {
+                        pm.RecheckTownProtection();
+                    }
                 }
             }
 
-            foreach (VvVAltar altar in Altars)
+            for (var index = 0; index < Altars.Count; index++)
             {
+                VvVAltar altar = Altars[index];
+
                 if (!altar.Deleted)
+                {
                     altar.Delete();
+                }
             }
 
-            foreach (VvVTrap trap in Traps)
+            for (var index = 0; index < Traps.Count; index++)
             {
+                VvVTrap trap = Traps[index];
+
                 if (!trap.Deleted)
+                {
                     trap.Delete();
+                }
             }
 
-            foreach (CannonTurret turret in Turrets)
+            for (var index = 0; index < Turrets.Count; index++)
             {
+                CannonTurret turret = Turrets[index];
+
                 if (!turret.Deleted)
+                {
                     turret.Delete();
+                }
             }
 
             if (VicePriest != null)
@@ -528,7 +564,9 @@ namespace Server.Engines.VvV
             List<Guild> added = new List<Guild>();
 
             if (leader == null || leader.Guild == null)
+            {
                 return;
+            }
 
             leader.Silver += AwardSilver(WinSilver + OppositionCount(leader.Guild) * 50);
 
@@ -537,11 +575,11 @@ namespace Server.Engines.VvV
                 Guild g = m.Guild as Guild;
 
                 if (g == null)
+                {
                     continue;
+                }
 
-                PlayerMobile pm = m as PlayerMobile;
-
-                if (pm != null)
+                if (m is PlayerMobile pm)
                 {
                     BattleTeam team = GetTeam(g);
                     VvVPlayerBattleStats stats = GetPlayerStats(pm);
@@ -606,10 +644,14 @@ namespace Server.Engines.VvV
         public void CheckArrow(PlayerMobile pm)
         {
             if (pm.NetState == null)
-                return;
-
-            foreach (VvVAltar altar in Altars)
             {
+                return;
+            }
+
+            for (var index = 0; index < Altars.Count; index++)
+            {
+                VvVAltar altar = Altars[index];
+
                 if (altar.IsActive)
                 {
                     pm.QuestArrow = new AltarArrow(pm, altar);
@@ -623,16 +665,21 @@ namespace Server.Engines.VvV
             if (Altars == null || Region == null)
                 return;
 
-            foreach (PlayerMobile pm in Region.GetEnumeratedMobiles().OfType<PlayerMobile>())
+            foreach (Mobile mobile in Region.GetEnumeratedMobiles())
             {
-                if (pm.NetState != null && pm.QuestArrow == null)
+                if (mobile is PlayerMobile pm)
                 {
-                    foreach (VvVAltar altar in Altars)
+                    if (pm.NetState != null && pm.QuestArrow == null)
                     {
-                        if (altar.IsActive)
+                        for (var index = 0; index < Altars.Count; index++)
                         {
-                            pm.QuestArrow = new AltarArrow(pm, altar);
-                            break;
+                            VvVAltar altar = Altars[index];
+
+                            if (altar.IsActive)
+                            {
+                                pm.QuestArrow = new AltarArrow(pm, altar);
+                                break;
+                            }
                         }
                     }
                 }
@@ -642,12 +689,25 @@ namespace Server.Engines.VvV
         public VvVPlayerBattleStats GetPlayerStats(PlayerMobile pm)
         {
             if (pm == null || pm.Guild == null)
+            {
                 return null;
+            }
 
             Guild g = pm.Guild as Guild;
 
             BattleTeam team = GetTeam(g);
-            VvVPlayerBattleStats stats = team.PlayerStats.FirstOrDefault(s => s.Player == pm);
+            VvVPlayerBattleStats stats = null;
+
+            for (var index = 0; index < team.PlayerStats.Count; index++)
+            {
+                var s = team.PlayerStats[index];
+
+                if (s.Player == pm)
+                {
+                    stats = s;
+                    break;
+                }
+            }
 
             if (stats == null)
             {
@@ -660,10 +720,23 @@ namespace Server.Engines.VvV
 
         public BattleTeam GetTeam(Guild g)
         {
-            BattleTeam team = Teams.FirstOrDefault(t => t.Guild != null && (t.Guild == g || t.Guild.IsAlly(g)));
+            BattleTeam team = null;
+
+            for (var index = 0; index < Teams.Count; index++)
+            {
+                var t = Teams[index];
+
+                if (t.Guild != null && (t.Guild == g || t.Guild.IsAlly(g)))
+                {
+                    team = t;
+                    break;
+                }
+            }
 
             if (team != null)
+            {
                 return team;
+            }
 
             team = new BattleTeam(g);
             Teams.Add(team);
@@ -809,19 +882,26 @@ namespace Server.Engines.VvV
         public void OccupyAltar(Guild g)
         {
             if (!OnGoing || g == null)
+            {
                 return;
+            }
 
             BattleTeam team = GetTeam(g);
 
             team.Score += (int)AltarPoints;
             team.Silver += AwardSilver(AltarSilver + OppositionCount(g) * 50);
 
-            SendStatusMessage(string.Format("{0} claimed the altar!", g.Abbreviation));
+            SendStatusMessage($"{g.Abbreviation} claimed the altar!");
 
-            foreach (PlayerMobile p in Region.GetEnumeratedMobiles().Where(player => player is PlayerMobile))
+            foreach (Mobile p in Region.GetEnumeratedMobiles())
             {
-                if (p.QuestArrow != null)
-                    p.QuestArrow = null;
+                if (p is PlayerMobile)
+                {
+                    if (p.QuestArrow != null)
+                    {
+                        p.QuestArrow = null;
+                    }
+                }
             }
 
             CheckScore();
@@ -831,7 +911,9 @@ namespace Server.Engines.VvV
         public void CheckOccupation()
         {
             if (!OnGoing)
+            {
                 return;
+            }
 
             if (Teams.Count == 1)
             {
@@ -925,17 +1007,23 @@ namespace Server.Engines.VvV
             List<Guild> exempt = new List<Guild>();
             int count = 0;
 
-            foreach (BattleTeam team in Teams)
+            for (var index = 0; index < Teams.Count; index++)
             {
+                BattleTeam team = Teams[index];
+
                 if (team.Guild == null || team.Guild == g || team.Guild.IsAlly(g) || exempt.Contains(g))
+                {
                     continue;
+                }
 
                 count++;
 
                 if (team.Guild.Alliance != null)
                 {
-                    foreach (Guild guil in team.Guild.Alliance.Members)
+                    for (var i = 0; i < team.Guild.Alliance.Members.Count; i++)
                     {
+                        Guild guil = team.Guild.Alliance.Members[i];
+
                         if (!exempt.Contains(guil))
                         {
                             exempt.Add(guil);
@@ -986,22 +1074,26 @@ namespace Server.Engines.VvV
         public void UpdateAllGumps()
         {
             if (Region == null)
-                return;
-
-            foreach (PlayerMobile m in Region.GetEnumeratedMobiles().OfType<PlayerMobile>())
             {
-                if (!ViceVsVirtueSystem.IsVvV(m) || m.NetState == null)
-                    continue;
+                return;
+            }
 
-                VvVBattleStatusGump g = m.FindGump(typeof(VvVBattleStatusGump)) as VvVBattleStatusGump;
+            foreach (Mobile mobile in Region.GetEnumeratedMobiles())
+            {
+                if (mobile is PlayerMobile m)
+                {
+                    if (!ViceVsVirtueSystem.IsVvV(m) || m.NetState == null) continue;
 
-                if (g == null)
-                {
-                    BaseGump.SendGump(new VvVBattleStatusGump(m, this));
-                }
-                else
-                {
-                    g.Refresh(true, false);
+                    VvVBattleStatusGump g = m.FindGump(typeof(VvVBattleStatusGump)) as VvVBattleStatusGump;
+
+                    if (g == null)
+                    {
+                        BaseGump.SendGump(new VvVBattleStatusGump(m, this));
+                    }
+                    else
+                    {
+                        g.Refresh(true, false);
+                    }
                 }
             }
         }
@@ -1009,14 +1101,19 @@ namespace Server.Engines.VvV
         public void SendBattleStatsGump()
         {
             if (Region == null)
-                return;
-
-            foreach (PlayerMobile m in Region.GetEnumeratedMobiles().OfType<PlayerMobile>())
             {
-                if (ViceVsVirtueSystem.IsVvV(m))
+                return;
+            }
+
+            foreach (Mobile mobile in Region.GetEnumeratedMobiles())
+            {
+                if (mobile is PlayerMobile m)
                 {
-                    m.CloseGump(typeof(VvVBattleStatusGump));
-                    m.SendGump(new BattleStatsGump(m, this));
+                    if (ViceVsVirtueSystem.IsVvV(m))
+                    {
+                        m.CloseGump(typeof(VvVBattleStatusGump));
+                        m.SendGump(new BattleStatsGump(m, this));
+                    }
                 }
             }
         }
@@ -1026,13 +1123,17 @@ namespace Server.Engines.VvV
             Messages.Add(message);
 
             if (sendgumps)
+            {
                 UpdateAllGumps();
+            }
         }
 
         public void AddCannonTurret(CannonTurret turret)
         {
             if (!Turrets.Contains(turret))
+            {
                 Turrets.Add(turret);
+            }
         }
 
         public VvVBattle(GenericReader reader, ViceVsVirtueSystem system)
@@ -1146,26 +1247,30 @@ namespace Server.Engines.VvV
                 writer.Write(VirtuePriest);
 
                 writer.Write(Altars.Count);
-                Altars.ForEach(altar => writer.Write(altar));
+                for (var index = 0; index < Altars.Count; index++)
+                {
+                    var altar = Altars[index];
+                    writer.Write(altar);
+                }
 
-                /*writer.Write(GuildStats.Count);
-                foreach (KeyValuePair<Guild, VvVGuildBattleStats> kvp in GuildStats)
-                {
-                    writer.Write(kvp.Key);
-                    kvp.Value.Serialize(writer);
-                }*/
                 writer.Write(Teams.Count);
-                foreach (BattleTeam team in Teams)
+                for (var index = 0; index < Teams.Count; index++)
                 {
+                    BattleTeam team = Teams[index];
                     team.Serialize(writer);
                 }
 
                 writer.Write(Traps.Count);
-                Traps.ForEach(t => writer.Write(t));
+                for (var index = 0; index < Traps.Count; index++)
+                {
+                    var t = Traps[index];
+                    writer.Write(t);
+                }
             }
             else
+            {
                 writer.Write(1);
-
+            }
         }
     }
 }
