@@ -11754,7 +11754,7 @@ namespace Server
 			}
 		}
 
-		private static int m_BodyWeight = 14;
+		private static int m_BodyWeight = 11;
 
 		public static int BodyWeight { get => m_BodyWeight; set => m_BodyWeight = value; }
 

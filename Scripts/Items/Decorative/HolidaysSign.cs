@@ -82,11 +82,22 @@ namespace Server.Items
             public override void OnClick()
             {
                 if (Sign.GumpID == 1676)
+                {
                     Sign.GumpID = 1673;
+                }
                 else
+                {
                     Sign.GumpID++;
+                }
 
-                _From.SendLocalizedMessage(1158830, string.Format("{0}", SingType.ToList().Find(x => x.Key == Sign.GumpID).Value)); // The sign text has been set to: ~1_TEXT~
+                List<KeyValuePair<int, string>> list = new List<KeyValuePair<int, string>>();
+
+                foreach (var pair in SingType)
+                {
+                    list.Add(pair);
+                }
+
+                _From.SendLocalizedMessage(1158830, $"{list.Find(x => x.Key == Sign.GumpID).Value}"); // The sign text has been set to: ~1_TEXT~
             }
         }
 
@@ -127,7 +138,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             GumpID = reader.ReadInt();
         }
