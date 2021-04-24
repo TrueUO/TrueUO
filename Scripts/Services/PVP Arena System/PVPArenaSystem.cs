@@ -4,7 +4,6 @@ using Server.Gumps;
 using Server.Mobiles;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 //TODO: Party: 1152064 You cannot invite other players in an arena to your party!
 namespace Server.Engines.ArenaSystem
@@ -41,15 +40,22 @@ namespace Server.Engines.ArenaSystem
 
         public void OnTick()
         {
-            Arenas.ForEach(a => a.OnTick());
+            for (var index = 0; index < Arenas.Count; index++)
+            {
+                var a = Arenas[index];
+
+                a.OnTick();
+            }
         }
 
         public List<ArenaDuel> GetBookedDuels()
         {
             List<ArenaDuel> booked = new List<ArenaDuel>();
 
-            foreach (PVPArena arena in Arenas)
+            for (var index = 0; index < Arenas.Count; index++)
             {
+                PVPArena arena = Arenas[index];
+
                 if (arena.BookedDuels.Count > 0)
                 {
                     booked.AddRange(arena.BookedDuels);
@@ -61,12 +67,16 @@ namespace Server.Engines.ArenaSystem
 
         public ArenaDuel GetBookedDuel(PlayerMobile pm)
         {
-            foreach (PVPArena arena in Arenas)
+            for (var index = 0; index < Arenas.Count; index++)
             {
+                PVPArena arena = Arenas[index];
+
                 if (arena.BookedDuels.Count > 0)
                 {
-                    foreach (ArenaDuel duel in arena.BookedDuels)
+                    for (var i = 0; i < arena.BookedDuels.Count; i++)
                     {
+                        ArenaDuel duel = arena.BookedDuels[i];
+
                         if (duel.IsParticipant(pm))
                         {
                             return duel;
@@ -253,7 +263,18 @@ namespace Server.Engines.ArenaSystem
 
         private ArenaDefinition GetDefinition(string name)
         {
-            ArenaDefinition def = ArenaDefinition.Definitions.FirstOrDefault(d => d.Name == name);
+            ArenaDefinition def = null;
+
+            for (var index = 0; index < ArenaDefinition.Definitions.Length; index++)
+            {
+                var d = ArenaDefinition.Definitions[index];
+
+                if (d.Name == name)
+                {
+                    def = d;
+                    break;
+                }
+            }
 
             if (def == null)
             {
@@ -341,8 +362,10 @@ namespace Server.Engines.ArenaSystem
 
                 if (Arenas != null)
                 {
-                    foreach (PVPArena arena in Arenas)
+                    for (var index = 0; index < Arenas.Count; index++)
                     {
+                        PVPArena arena = Arenas[index];
+
                         arena.ConfigureArena();
                     }
 
@@ -376,7 +399,20 @@ namespace Server.Engines.ArenaSystem
 
         private static bool CanInitialize(ArenaDefinition def)
         {
-            return !Instance.IsBlocked(def) && (Arenas == null || Arenas.All(arena => arena.Definition != def));
+            bool all = true;
+
+            for (var index = 0; index < Arenas.Count; index++)
+            {
+                var arena = Arenas[index];
+
+                if (arena.Definition == def)
+                {
+                    all = false;
+                    break;
+                }
+            }
+
+            return !Instance.IsBlocked(def) && (Arenas == null || all);
         }
 
         [Usage("ArenaSetup")]

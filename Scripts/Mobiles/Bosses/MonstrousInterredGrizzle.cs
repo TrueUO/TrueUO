@@ -1,28 +1,12 @@
 using Server.Items;
 using Server.Spells;
 using System;
-using System.Linq;
 
 namespace Server.Mobiles
 {
     [CorpseName("a monstrous interred grizzle corpse")]
     public class MonstrousInterredGrizzle : BasePeerless
     {
-        private static readonly int[] m_Tiles =
-        {
-            -2, 0,
-            2, 0,
-            2, -2,
-            2, 2,
-            -2, -2,
-            -2, 2,
-            0, 2,
-            1, 0,
-            0, -2
-        };
-
-        private readonly DateTime m_NextDrop = DateTime.UtcNow;
-
         [Constructable]
         public MonstrousInterredGrizzle()
             : base(AIType.AI_Spellweaving, FightMode.Closest, 10, 1, 0.2, 0.4)
@@ -192,9 +176,12 @@ namespace Server.Mobiles
 
             if (!Deleted && Map != Map.Internal && Map != null)
             {
-                foreach (Mobile m in SpellHelper.AcquireIndirectTargets(m_Owner, Location, Map, 0).OfType<Mobile>())
+                foreach (IDamageable target in SpellHelper.AcquireIndirectTargets(m_Owner, Location, Map, 0))
                 {
-                    OnMoveOver(m);
+                    if (target is Mobile m)
+                    {
+                        OnMoveOver(m);
+                    }
                 }
             }
         }

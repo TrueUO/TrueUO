@@ -1,7 +1,7 @@
 using Server.Items;
 using Server.Spells;
 using System;
-using System.Linq;
+using System.Collections.Generic;
 
 namespace Server.Mobiles
 {
@@ -127,7 +127,15 @@ namespace Server.Mobiles
 
         private void Teleport()
         {
-            System.Collections.Generic.List<PlayerMobile> toTele = SpellHelper.AcquireIndirectTargets(this, Location, Map, StrikingRange).OfType<PlayerMobile>().ToList();
+            List<PlayerMobile> toTele = new List<PlayerMobile>();
+
+            foreach (IDamageable target in SpellHelper.AcquireIndirectTargets(this, Location, Map, StrikingRange))
+            {
+                if (target is PlayerMobile mobile)
+                {
+                    toTele.Add(mobile);
+                }
+            }
 
             if (toTele.Count > 0)
             {
@@ -220,19 +228,22 @@ namespace Server.Mobiles
             if (Map == null)
                 return;
 
-            foreach (Mobile m in SpellHelper.AcquireIndirectTargets(this, Location, Map, StrikingRange).OfType<Mobile>())
+            foreach (IDamageable target in SpellHelper.AcquireIndirectTargets(this, Location, Map, StrikingRange))
             {
-                if (m.GetStatMod("DreadHornStr") == null)
+                if (target is Mobile m)
                 {
-                    double percent = m.Skills.MagicResist.Value / 100;
-                    int malas = (int)(-20 + (percent * 5.2));
+                    if (m.GetStatMod("DreadHornStr") == null)
+                    {
+                        double percent = m.Skills.MagicResist.Value / 100;
+                        int malas = (int) (-20 + (percent * 5.2));
 
-                    m.AddStatMod(new StatMod(StatType.Str, "DreadHornStr", m.Str < Math.Abs(malas) ? m.Str / 2 : malas, TimeSpan.FromSeconds(60)));
-                    m.AddStatMod(new StatMod(StatType.Dex, "DreadHornDex", m.Dex < Math.Abs(malas) ? m.Dex / 2 : malas, TimeSpan.FromSeconds(60)));
-                    m.AddStatMod(new StatMod(StatType.Int, "DreadHornInt", m.Int < Math.Abs(malas) ? m.Int / 2 : malas, TimeSpan.FromSeconds(60)));
+                        m.AddStatMod(new StatMod(StatType.Str, "DreadHornStr", m.Str < Math.Abs(malas) ? m.Str / 2 : malas, TimeSpan.FromSeconds(60)));
+                        m.AddStatMod(new StatMod(StatType.Dex, "DreadHornDex", m.Dex < Math.Abs(malas) ? m.Dex / 2 : malas, TimeSpan.FromSeconds(60)));
+                        m.AddStatMod(new StatMod(StatType.Int, "DreadHornInt", m.Int < Math.Abs(malas) ? m.Int / 2 : malas, TimeSpan.FromSeconds(60)));
+                    }
+
+                    m.SendLocalizedMessage(1075081); // *Dreadhorns eyes light up, his mouth almost a grin, as he slams one hoof to the ground!*
                 }
-
-                m.SendLocalizedMessage(1075081); // *Dreadhorns eyes light up, his mouth almost a grin, as he slams one hoof to the ground!*
             }
 
             // earthquake

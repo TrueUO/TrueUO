@@ -34,7 +34,21 @@ namespace Server.Engines.ArenaSystem
             for (int i = 0; i < ArenaDefinition.Definitions.Length; i++)
             {
                 ArenaDefinition def = ArenaDefinition.Definitions[i];
-                bool exists = PVPArenaSystem.Arenas != null && PVPArenaSystem.Arenas.Any(arena => arena.Definition == def);
+
+                bool any = false;
+
+                for (var index = 0; index < PVPArenaSystem.Arenas.Count; index++)
+                {
+                    var arena = PVPArenaSystem.Arenas[index];
+
+                    if (arena.Definition == def)
+                    {
+                        any = true;
+                        break;
+                    }
+                }
+
+                bool exists = PVPArenaSystem.Arenas != null && any;
 
                 AddHtml(45, 105 + (i * 25), 200, 20, Color("#FFFFFF", $"{def.Name} [{(exists ? "Enabled" : PVPArenaSystem.Instance != null && PVPArenaSystem.Instance.IsBlocked(def) ? "Blocked" : "Disabled")}]"), false, false);
                 AddButton(10, 105 + (i * 25), !exists ? 4023 : 4017, !exists ? 4024 : 4018, i + 500, GumpButtonType.Reply, 0);
@@ -54,7 +68,21 @@ namespace Server.Engines.ArenaSystem
             if (id >= 0 && id < ArenaDefinition.Definitions.Length)
             {
                 ArenaDefinition def = ArenaDefinition.Definitions[id];
-                bool exists = PVPArenaSystem.Arenas != null && PVPArenaSystem.Arenas.Any(arena => arena.Definition == def);
+
+                bool any = false;
+
+                for (var index = 0; index < PVPArenaSystem.Arenas.Count; index++)
+                {
+                    var arena = PVPArenaSystem.Arenas[index];
+
+                    if (arena.Definition == def)
+                    {
+                        any = true;
+                        break;
+                    }
+                }
+
+                bool exists = PVPArenaSystem.Arenas != null && any;
 
                 SendGump(new GenericConfirmCallbackGump<ArenaDefinition>(
                     User,
@@ -74,7 +102,18 @@ namespace Server.Engines.ArenaSystem
                             {
                                 if (PVPArenaSystem.Arenas != null)
                                 {
-                                    PVPArena arena = PVPArenaSystem.Arenas.FirstOrDefault(a => a.Definition == d);
+                                    PVPArena arena = null;
+
+                                    for (var index = 0; index < PVPArenaSystem.Arenas.Count; index++)
+                                    {
+                                        var a = PVPArenaSystem.Arenas[index];
+
+                                        if (a.Definition == d)
+                                        {
+                                            arena = a;
+                                            break;
+                                        }
+                                    }
 
                                     if (arena != null)
                                     {
@@ -1449,13 +1488,25 @@ namespace Server.Engines.ArenaSystem
                         Refresh();
                         break;
                     case 2:
-                        ArenaStats stats = Stats.FirstOrDefault(s => s.Owner == User);
+                        ArenaStats stats = null;
+
+                        for (var index = 0; index < Stats.Count; index++)
+                        {
+                            var s = Stats[index];
+
+                            if (s.Owner == User)
+                            {
+                                stats = s;
+                                break;
+                            }
+                        }
 
                         if (stats != null)
                         {
                             int index = Stats.IndexOf(stats);
                             Page = index / 10;
                         }
+
                         Refresh();
                         break;
                     case 3:

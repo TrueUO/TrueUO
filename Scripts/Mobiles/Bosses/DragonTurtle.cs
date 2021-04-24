@@ -90,8 +90,9 @@ namespace Server.Mobiles
 
             List<Tuple<Point3D, int>> copy = new List<Tuple<Point3D, int>>(_BubbleLocs.Where(tup => tup.Item1 == m.Location));
 
-            foreach (Tuple<Point3D, int> t in copy)
+            for (var index = 0; index < copy.Count; index++)
             {
+                Tuple<Point3D, int> t = copy[index];
                 Point3D p = m.Location;
                 int hue = 0;
 

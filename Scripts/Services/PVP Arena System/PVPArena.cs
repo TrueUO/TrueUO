@@ -3,15 +3,15 @@ using Server.Mobiles;
 using Server.Regions;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.ArenaSystem
 {
     [PropertyObject]
     public class PVPArena
     {
-        public static TimeSpan PendingDuelExpirationTime = TimeSpan.FromMinutes(10);
-        public static TimeSpan BookedDuelBegin = TimeSpan.FromSeconds(10);
+        private static readonly TimeSpan PendingDuelExpirationTime = TimeSpan.FromMinutes(10);
+        private static readonly TimeSpan BookedDuelBegin = TimeSpan.FromSeconds(10);
+
         public static int StartRank = 10000;
 
         [CommandProperty(AccessLevel.GameMaster)]
@@ -143,10 +143,14 @@ namespace Server.Engines.ArenaSystem
 
             if (_Remove.Count > 0)
             {
-                foreach (ArenaDuel duel in _Remove)
+                for (var index = 0; index < _Remove.Count; index++)
                 {
+                    ArenaDuel duel = _Remove[index];
+
                     if (PendingDuels.ContainsKey(duel))
+                    {
                         PendingDuels.Remove(duel);
+                    }
                 }
 
                 _Remove.Clear();
@@ -176,12 +180,30 @@ namespace Server.Engines.ArenaSystem
 
         public ArenaDuel GetPendingDuel(Mobile m)
         {
-            return PendingDuels.Keys.FirstOrDefault(d => m is PlayerMobile mobile && d.IsParticipant(mobile));
+            foreach (var d in PendingDuels.Keys)
+            {
+                if (m is PlayerMobile mobile && d.IsParticipant(mobile))
+                {
+                    return d;
+                }
+            }
+
+            return null;
         }
 
         public List<ArenaDuel> GetPendingPublic()
         {
-            return PendingDuels.Keys.Where(d => d.RoomType == RoomType.Public && d.ParticipantCount < d.Entries).ToList();
+            List<ArenaDuel> list = new List<ArenaDuel>();
+
+            foreach (var d in PendingDuels.Keys)
+            {
+                if (d.RoomType == RoomType.Public && d.ParticipantCount < d.Entries)
+                {
+                    list.Add(d);
+                }
+            }
+
+            return list;
         }
 
         public void TryBeginDuel(ArenaDuel duel)
@@ -207,15 +229,18 @@ namespace Server.Engines.ArenaSystem
         {
             CurrentDuel = null;
 
-            foreach (Corpse corpse in Region.GetEnumeratedItems().OfType<Corpse>())
+            foreach (Item item in Region.GetEnumeratedItems())
             {
-                if (corpse.Owner != null && corpse.Owner.InRange(corpse.Location, 30))
+                if (item is Corpse corpse)
                 {
-                    corpse.MoveToWorld(corpse.Owner.Location, corpse.Owner.Map);
-                }
-                else
-                {
-                    corpse.MoveToWorld(GetRandomRemovalLocation(), Definition.Map);
+                    if (corpse.Owner != null && corpse.Owner.InRange(corpse.Location, 30))
+                    {
+                        corpse.MoveToWorld(corpse.Owner.Location, corpse.Owner.Map);
+                    }
+                    else
+                    {
+                        corpse.MoveToWorld(GetRandomRemovalLocation(), Definition.Map);
+                    }
                 }
             }
 
@@ -246,8 +271,10 @@ namespace Server.Engines.ArenaSystem
             // lets remove pets, too
             if (m is PlayerMobile mobile && mobile.AllFollowers.Count > 0)
             {
-                foreach (Mobile mob in mobile.AllFollowers)
+                for (var index = 0; index < mobile.AllFollowers.Count; index++)
                 {
+                    Mobile mob = mobile.AllFollowers[index];
+
                     if (mob.Region.IsPartOf<ArenaRegion>())
                     {
                         mob.MoveToWorld(p, map);
@@ -314,7 +341,18 @@ namespace Server.Engines.ArenaSystem
             foreach (KeyValuePair<PlayerMobile, PlayerStatsEntry> part in duel.GetParticipants())
             {
                 PlayerMobile pm = part.Key;
-                ArenaStats stats = rankings.FirstOrDefault(r => r.Owner == pm);
+                ArenaStats stats = null;
+
+                for (var index = 0; index < rankings.Count; index++)
+                {
+                    var r = rankings[index];
+
+                    if (r.Owner == pm)
+                    {
+                        stats = r;
+                        break;
+                    }
+                }
 
                 if (stats == null)
                 {
@@ -342,20 +380,23 @@ namespace Server.Engines.ArenaSystem
             writer.Write(1);
 
             writer.Write(SurvivalRankings.Count);
-            foreach (ArenaStats ranking in SurvivalRankings)
+            for (var index = 0; index < SurvivalRankings.Count; index++)
             {
+                ArenaStats ranking = SurvivalRankings[index];
                 ranking.Serialize(writer);
             }
 
             writer.Write(TeamRankings.Count);
-            foreach (ArenaStats ranking in TeamRankings)
+            for (var index = 0; index < TeamRankings.Count; index++)
             {
+                ArenaStats ranking = TeamRankings[index];
                 ranking.Serialize(writer);
             }
 
             writer.Write(Blockers.Count);
-            foreach (Item blocker in Blockers)
+            for (var index = 0; index < Blockers.Count; index++)
             {
+                Item blocker = Blockers[index];
                 writer.Write(blocker);
             }
 
@@ -372,8 +413,9 @@ namespace Server.Engines.ArenaSystem
             }
 
             writer.Write(BookedDuels.Count);
-            foreach (ArenaDuel duel in BookedDuels)
+            for (var index = 0; index < BookedDuels.Count; index++)
             {
+                ArenaDuel duel = BookedDuels[index];
                 duel.Serialize(writer);
             }
 
@@ -458,8 +500,9 @@ namespace Server.Engines.ArenaSystem
 
             if (version == 0)
             {
-                foreach (var blocker in Blockers)
+                for (var index = 0; index < Blockers.Count; index++)
                 {
+                    var blocker = Blockers[index];
                     blocker?.Delete();
                 }
 
