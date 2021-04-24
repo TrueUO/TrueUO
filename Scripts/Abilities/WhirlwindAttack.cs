@@ -63,9 +63,9 @@ namespace Server.Items
 
             foreach (IDamageable target in SpellHelper.AcquireIndirectTargets(attacker, attacker, attacker.Map, 1))
             {
-                if (target is Mobile m)
+                if (target is Mobile m && (attacker.InRange(m, weapon.MaxRange) && m != defender))
                 {
-                    if (attacker.InRange(m, weapon.MaxRange) && m != defender) list.Add(m);
+                    list.Add(m);
                 }
             }
 
@@ -74,6 +74,7 @@ namespace Server.Items
             if (count > 0)
             {
                 double bushido = attacker.Skills.Bushido.Value;
+
                 int bonus = 0;
 
                 if (bushido > 0)
