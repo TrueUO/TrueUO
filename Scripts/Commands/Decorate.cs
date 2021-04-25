@@ -962,38 +962,56 @@ namespace Server.Commands
             }
             else if (item is Moongate moonGate)
             {
-                foreach (string param in m_Params)
+                for (var index = 0; index < m_Params.Length; index++)
                 {
+                    string param = m_Params[index];
+
                     int indexOf = param.IndexOf('=');
 
                     if (param.StartsWith("TargetMap"))
+                    {
                         moonGate.TargetMap = Map.Parse(param.Substring(++indexOf));
+                    }
                     else if (param.StartsWith("Target"))
+                    {
                         moonGate.Target = Point3D.Parse(param.Substring(++indexOf));
+                    }
                 }
             }
             else if (item is TeleportRope rope)
             {
-                foreach (string param in m_Params)
+                for (var index = 0; index < m_Params.Length; index++)
                 {
+                    string param = m_Params[index];
+
                     int indexOf = param.IndexOf('=');
 
                     if (param.StartsWith("ToMap"))
+                    {
                         rope.ToMap = Map.Parse(param.Substring(++indexOf));
+                    }
                     else if (param.StartsWith("ToLocation"))
+                    {
                         rope.ToLocation = Point3D.Parse(param.Substring(++indexOf));
+                    }
                 }
             }
             else if (item is InstanceExitGate gate)
             {
-                foreach (string param in m_Params)
+                for (var index = 0; index < m_Params.Length; index++)
                 {
+                    string param = m_Params[index];
+
                     int indexOf = param.IndexOf('=');
 
                     if (param.StartsWith("MapDest"))
+                    {
                         gate.MapDest = Map.Parse(param.Substring(++indexOf));
+                    }
                     else if (param.StartsWith("LocDest"))
+                    {
                         gate.LocDest = Point3D.Parse(param.Substring(++indexOf));
+                    }
                 }
             }
             else if (m_ItemID > 0)

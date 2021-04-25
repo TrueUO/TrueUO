@@ -1,12 +1,13 @@
-#region References
-using Server.Accounting;
-using Server.Engines.Help;
-using Server.Network;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading;
-using System.IO;
-#endregion
+using Server.Accounting;
+using Server.Diagnostics;
+using Server.Engines.Help;
+using Server.Network;
 
 namespace Server.Misc
 {
@@ -52,7 +53,7 @@ namespace Server.Misc
                 }
                 catch (Exception e)
                 {
-                    Diagnostics.ExceptionLogging.LogException(e);
+                    ExceptionLogging.LogException(e);
                 }
             };
         }
@@ -133,7 +134,7 @@ namespace Server.Misc
             {
                 string sub = input.Substring(3).Trim();
 
-                System.Collections.Generic.List<NetState> states = NetState.Instances;
+                List<NetState> states = NetState.Instances;
 
                 if (states.Count == 0)
                 {
@@ -157,7 +158,7 @@ namespace Server.Misc
             {
                 string sub = input.Substring(4).Trim();
 
-                System.Collections.Generic.List<NetState> states = NetState.Instances;
+                List<NetState> states = NetState.Instances;
 
                 if (states.Count == 0)
                 {
@@ -213,7 +214,7 @@ namespace Server.Misc
                         {
                             AutoSave.Save();
 
-                            System.Diagnostics.Process.Start(path);
+                            Process.Start(path);
                             Core.Kill();
                         }
                     }
@@ -228,7 +229,7 @@ namespace Server.Misc
                         }
                         else
                         {
-                            System.Diagnostics.Process.Start(path);
+                            Process.Start(path);
                             Core.Kill();
                         }
                     }
@@ -240,15 +241,16 @@ namespace Server.Misc
                     break;
                 case "online":
                     {
-                        System.Collections.Generic.List<NetState> states = NetState.Instances;
+                        List<NetState> states = NetState.Instances;
 
                         if (states.Count == 0)
                         {
                             Console.WriteLine("There are no users online at this time.");
                         }
 
-                        foreach (NetState t in states)
+                        for (var index = 0; index < states.Count; index++)
                         {
+                            NetState t = states[index];
                             Account a = t.Account as Account;
 
                             if (a == null)
@@ -356,7 +358,16 @@ namespace Server.Misc
                         DisplayPagingHelp();
                     }
 
-                    _Pages = PageQueue.List.Cast<PageEntry>().ToArray();
+                    List<PageEntry> list = new List<PageEntry>();
+
+                    for (var index = 0; index < PageQueue.List.Count; index++)
+                    {
+                        var entry = (PageEntry) PageQueue.List[index];
+
+                        list.Add(entry);
+                    }
+
+                    _Pages = list.ToArray();
 
                     const string format = "{0:D3}:\t{1}\t{2}";
 
@@ -384,8 +395,10 @@ namespace Server.Misc
                 {
                     if (_Pages != null)
                     {
-                        foreach (PageEntry page in _Pages)
+                        for (var index = 0; index < _Pages.Length; index++)
                         {
+                            PageEntry page = _Pages[index];
+
                             PageQueue.Remove(page);
                         }
 
@@ -533,11 +546,25 @@ namespace Server.Misc
 
                 if (args.Length > 2)
                 {
-                    args = args.Skip(2).ToArray();
+                    List<string> list = new List<string>();
+
+                    foreach (var s in args.Skip(2))
+                    {
+                        list.Add(s);
+                    }
+
+                    args = list.ToArray();
                 }
                 else
                 {
-                    args = args.Skip(1).ToArray();
+                    List<string> list = new List<string>();
+
+                    foreach (var s in args.Skip(1))
+                    {
+                        list.Add(s);
+                    }
+
+                    args = list.ToArray();
                 }
             }
 

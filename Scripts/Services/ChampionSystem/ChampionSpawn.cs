@@ -599,24 +599,27 @@ namespace Server.Engines.CannedEvil
 
             if (TimerRunning && _NextGhostCheck < DateTime.UtcNow)
             {
-                foreach (PlayerMobile ghost in m_Region.GetEnumeratedMobiles().OfType<PlayerMobile>())
+                foreach (Mobile mobile in m_Region.GetEnumeratedMobiles())
                 {
-                    if (!ghost.Alive && (ghost.Corpse == null || ghost.Corpse.Deleted))
+                    if (mobile is PlayerMobile ghost)
                     {
-                        Map map = ghost.Map;
-                        Point3D loc = ExorcismSpell.GetNearestShrine(ghost, ref map);
+                        if (!ghost.Alive && (ghost.Corpse == null || ghost.Corpse.Deleted))
+                        {
+                            Map map = ghost.Map;
+                            Point3D loc = ExorcismSpell.GetNearestShrine(ghost, ref map);
 
-                        if (loc != Point3D.Zero)
-                        {
-                            ghost.MoveToWorld(loc, map);
+                            if (loc != Point3D.Zero)
+                            {
+                                ghost.MoveToWorld(loc, map);
+                            }
+                            else
+                            {
+                                ghost.MoveToWorld(new Point3D(989, 520, -50), Map.Malas);
+                            }
                         }
-                        else
-                        {
-                            ghost.MoveToWorld(new Point3D(989, 520, -50), Map.Malas);
-                        }
+
+                        _NextGhostCheck = DateTime.UtcNow + TimeSpan.FromMinutes(Utility.RandomMinMax(5, 8));
                     }
-
-                    _NextGhostCheck = DateTime.UtcNow + TimeSpan.FromMinutes(Utility.RandomMinMax(5, 8));
                 }
             }
         }
@@ -678,25 +681,38 @@ namespace Server.Engines.CannedEvil
         public void Respawn()
         {
             if (!m_Active || Deleted || m_Champion != null)
+            {
                 return;
+            }
 
             int currentLevel = Level;
             int currentRank = Rank;
             int maxSpawn = (int)(MaxKills * 0.5d * SpawnMod);
+
             if (currentLevel >= 16)
+            {
                 maxSpawn = Math.Min(maxSpawn, MaxKills - m_Kills);
+            }
+
             if (maxSpawn < 3)
+            {
                 maxSpawn = 3;
+            }
 
             int spawnRadius = (int)(SpawnRadius * ChampionSystem.SpawnRadiusModForLevel(Level));
-            Rectangle2D spawnBounds = new Rectangle2D(new Point2D(X - spawnRadius, Y - spawnRadius),
-                new Point2D(X + spawnRadius, Y + spawnRadius));
+
+            Rectangle2D spawnBounds = new Rectangle2D(new Point2D(X - spawnRadius, Y - spawnRadius), new Point2D(X + spawnRadius, Y + spawnRadius));
 
             int mobCount = 0;
-            foreach (Mobile m in m_Creatures)
+
+            for (var index = 0; index < m_Creatures.Count; index++)
             {
+                Mobile m = m_Creatures[index];
+
                 if (GetRankFor(m) == currentRank)
+                {
                     ++mobCount;
+                }
             }
 
             while (mobCount <= maxSpawn)
@@ -1031,19 +1047,27 @@ namespace Server.Engines.CannedEvil
         public virtual void RegisterDamageTo(Mobile m)
         {
             if (m == null)
-                return;
-
-            foreach (DamageEntry de in m.DamageEntries)
             {
+                return;
+            }
+
+            for (var index = 0; index < m.DamageEntries.Count; index++)
+            {
+                DamageEntry de = m.DamageEntries[index];
+
                 if (de.HasExpired)
+                {
                     continue;
+                }
 
                 Mobile damager = de.Damager;
 
                 Mobile master = damager.GetDamageMaster(m);
 
                 if (master != null)
+                {
                     damager = master;
+                }
 
                 RegisterDamage(damager, de.DamageGiven);
             }
@@ -1119,7 +1143,6 @@ namespace Server.Engines.CannedEvil
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(8); // version
 
             writer.Write(StartLevel);
@@ -1207,7 +1230,6 @@ namespace Server.Engines.CannedEvil
 
                             m_DamageEntries.Add(m, damage);
                         }
-
                         goto case 4;
                     }
                 case 4:
@@ -1215,25 +1237,21 @@ namespace Server.Engines.CannedEvil
                         m_ConfinedRoaming = reader.ReadBool();
                         m_Idol = reader.ReadItem<IdolOfTheChampion>();
                         m_HasBeenAdvanced = reader.ReadBool();
-
                         goto case 3;
                     }
                 case 3:
                     {
                         m_SpawnArea = reader.ReadRect2D();
-
                         goto case 2;
                     }
                 case 2:
                     {
                         m_RandomizeType = reader.ReadBool();
-
                         goto case 1;
                     }
                 case 1:
                     {
                         m_Kills = reader.ReadInt();
-
                         goto case 0;
                     }
                 case 0:
@@ -1265,9 +1283,14 @@ namespace Server.Engines.CannedEvil
                     }
             }
 
-            foreach (BaseCreature bc in m_Creatures.OfType<BaseCreature>())
+            for (var index = 0; index < m_Creatures.Count; index++)
             {
-                bc.IsChampionSpawn = true;
+                Mobile creature = m_Creatures[index];
+
+                if (creature is BaseCreature bc)
+                {
+                    bc.IsChampionSpawn = true;
+                }
             }
 
             Timer.DelayCall(TimeSpan.Zero, UpdateRegion);
@@ -1300,12 +1323,25 @@ namespace Server.Engines.CannedEvil
 
             static ChampionSpawnInfoGump()
             {
-                gWidth = gWidths.Sum();
+                int sum = 0;
+
+                for (var index = 0; index < gWidths.Length; index++)
+                {
+                    var width = gWidths[index];
+
+                    sum += width;
+                }
+
+                gWidth = sum;
+
                 int tab = 0;
+
                 gTab = new int[gWidths.Length];
+
                 for (int i = 0; i < gWidths.Length; ++i)
                 {
                     gTab[i] = tab;
+
                     tab += gWidths[i];
                 }
             }
@@ -1348,14 +1384,23 @@ namespace Server.Engines.CannedEvil
                 top += gRowHeight;
 
                 List<Damager> damagers = new List<Damager>();
+
                 foreach (Mobile mob in spawn.m_DamageEntries.Keys)
                 {
                     damagers.Add(new Damager(mob, spawn.m_DamageEntries[mob]));
                 }
-                damagers = damagers.OrderByDescending(x => x.Damage).ToList();
 
-                foreach (Damager damager in damagers)
+                damagers = new List<Damager>();
+
+                foreach (var damager in damagers.OrderByDescending(x => x.Damage))
                 {
+                    damagers.Add(damager);
+                }
+
+                for (var index = 0; index < damagers.Count; index++)
+                {
+                    Damager damager = damagers[index];
+
                     AddLabelCropped(gTab[1], top, 100, gRowHeight, gFontHue, damager.Mobile.RawName);
                     AddLabelCropped(gTab[2], top, 80, gRowHeight, gFontHue, damager.Damage.ToString());
                     top += gRowHeight;
@@ -1428,8 +1473,10 @@ namespace Server.Engines.CannedEvil
                 {
                     List<Item> list = new List<Item>(m.Backpack.Items.Where(i => i.LootType == LootType.Cursed));
 
-                    foreach (Item item in list)
+                    for (var index = 0; index < list.Count; index++)
                     {
+                        Item item = list[index];
+
                         item.MoveToWorld(m.Location, m.Map);
                     }
 
