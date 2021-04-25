@@ -27,19 +27,24 @@ namespace Server.Items
         {
             bool any = false;
 
-            for (var index = 0; index < Contexts.Count; index++)
+            if (Contexts != null)
             {
-                var c = Contexts[index];
-
-                if (c.Attacker == attacker)
+                for (var index = 0; index < Contexts.Count; index++)
                 {
-                    any = true;
-                    break;
+                    var c = Contexts[index];
+
+                    if (c.Attacker == attacker)
+                    {
+                        any = true;
+                        break;
+                    }
                 }
             }
 
             if (!Validate(attacker) || Contexts != null && any)
+            {
                 return;
+            }
 
             ClearCurrentAbility(attacker);
 
