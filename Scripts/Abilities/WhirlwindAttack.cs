@@ -33,7 +33,7 @@ namespace Server.Items
                 {
                     var c = Contexts[index];
 
-                    if (c.Attacker == attacker)
+                    if (Contexts != null && c.Attacker == attacker)
                     {
                         any = true;
                         break;
