@@ -189,7 +189,15 @@ namespace Server.Mobiles
                         toCondemn.Frozen = false;
                         toCondemn.SendLocalizedMessage(1005603); // You can move again!
 
-                        loc = m_Table.ToList().Find(x => x.Key == toCondemn).Value;
+                        List<KeyValuePair<Mobile, Point3D>> list = new List<KeyValuePair<Mobile, Point3D>>();
+
+                        foreach (var pair in m_Table)
+                        {
+                            list.Add(pair);
+                        }
+
+                        loc = list.Find(x => x.Key == toCondemn).Value;
+
                         toCondemn.MoveToWorld(loc, map);
 
                         m_Table.Remove(toCondemn);

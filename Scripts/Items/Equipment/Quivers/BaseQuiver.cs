@@ -334,7 +334,9 @@ namespace Server.Items
             if (!CheckType(item))
             {
                 if (message)
+                {
                     m.SendLocalizedMessage(1074836); // The container can not hold that type of object.
+                }
 
                 return false;
             }
@@ -344,20 +346,31 @@ namespace Server.Items
             if (ammo != null && ammo.Amount > 0)
             {
                 if (IsArrowAmmo && item is Bolt)
+                {
                     return false;
+                }
 
                 if (!IsArrowAmmo && item is Arrow)
+                {
                     return false;
+                }
             }
 
             if (!checkItems || Items.Count < DefaultMaxItems)
             {
                 int currentAmount = 0;
 
-                Items.ForEach(i => currentAmount += i.Amount);
+                for (var index = 0; index < Items.Count; index++)
+                {
+                    var i = Items[index];
+
+                    currentAmount += i.Amount;
+                }
 
                 if (item.Amount + currentAmount <= m_Capacity)
+                {
                     return base.CheckHold(m, item, message, checkItems, plusItems, plusWeight);
+                }
             }
 
             return false;
@@ -374,10 +387,19 @@ namespace Server.Items
 
             if (ammo != null)
             {
-                int currentAmount = Items.Sum(i => i.Amount);
+                int currentAmount = 0;
+
+                for (var index = 0; index < Items.Count; index++)
+                {
+                    var i = Items[index];
+
+                    currentAmount += i.Amount;
+                }
 
                 if (item.Amount + currentAmount <= m_Capacity)
+                {
                     return base.CheckStack(from, item);
+                }
             }
 
             return false;
@@ -1168,21 +1190,39 @@ namespace Server.Items
 
             bool Refill<T>(Mobile m, Container c) where T : Item
             {
-                List<T> list = c.FindItemsByType<T>(true).ToList();
+                List<T> list = new List<T>();
+
+                var type = c.FindItemsByType<T>(true);
+
+                for (var index = 0; index < type.Count; index++)
+                {
+                    T item = type[index];
+
+                    list.Add(item);
+                }
 
                 if (list.Count > 0)
                 {
                     int amt = 0;
-                    list = list.OrderByDescending(e => e.Amount).ToList();
+                    list = new List<T>();
+
+                    foreach (var item in list.OrderByDescending(e => e.Amount))
+                    {
+                        list.Add(item);
+                    }
 
                     int famount = m_quiver.Ammo == null ? 0 : m_quiver.Ammo.Amount;
-                    if (m_quiver.Ammo != null)
-                        m_quiver.Ammo.Delete();
 
-                    while ((famount < m_quiver.Capacity) && (list.Count > 0))
+                    if (m_quiver.Ammo != null)
+                    {
+                        m_quiver.Ammo.Delete();
+                    }
+
+                    while (famount < m_quiver.Capacity && list.Count > 0)
                     {
                         T data = list[list.Count - 1];
                         int remaining = m_quiver.Capacity - famount;
+
                         if (data.Amount > remaining)
                         {
                             famount += remaining;
@@ -1198,7 +1238,7 @@ namespace Server.Items
                         }
                     }
 
-                    if ((amt > 0) && (m != null))
+                    if (amt > 0 && m != null)
                     {
                         T obj = (T)Activator.CreateInstance(typeof(T));
                         obj.Amount = famount;
@@ -1219,35 +1259,43 @@ namespace Server.Items
                 while (owner != null)
                 {
                     if (owner is Mobile)
+                    {
                         break;
+                    }
+
                     if (owner is Item item)
                     {
                         owner = item.Parent;
                         continue;
                     }
+
                     owner = null;
                 }
 
                 if (owner == null)
+                {
                     return;
-
-                if (!(owner is Mobile))
-                    return;
+                }
 
                 Mobile m = (Mobile)owner;
 
-
                 if (m.Backpack == null)
+                {
                     return;
+                }
 
                 if (!(m.Items.Contains(m_quiver) || m_quiver.IsChildOf(m.Backpack)))
+                {
                     return;
+                }
 
                 // Try to fill from the bank box
-                if ((m.BankBox != null) && (m.BankBox.Opened))
+                if (m.BankBox != null && m.BankBox.Opened)
                 {
                     if (m_quiver.IsArrowAmmo ? Refill<Arrow>(m, m.BankBox) : Refill<Bolt>(m, m.BankBox))
+                    {
                         return;
+                    }
                 }
 
                 // Otherwise look for secure containers within two tiles

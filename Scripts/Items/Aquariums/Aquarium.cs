@@ -7,7 +7,6 @@ using Server.Targeting;
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -545,10 +544,14 @@ namespace Server.Items
             LiveCreatures = 0;
             List<BaseFish> fish = FindItemsByType<BaseFish>();
 
-            foreach (BaseFish f in fish)
+            for (var index = 0; index < fish.Count; index++)
             {
+                BaseFish f = fish[index];
+
                 if (!f.Dead)
+                {
                     ++LiveCreatures;
+                }
             }
         }
 
@@ -1771,7 +1774,17 @@ namespace Server.Items
 
         protected override void OnTick()
         {
-            List<Aquarium> list = Aquariums.Where(a => a.NextEvaluate <= DateTime.UtcNow).ToList();
+            List<Aquarium> list = new List<Aquarium>();
+
+            for (var index = 0; index < Aquariums.Count; index++)
+            {
+                var a = Aquariums[index];
+
+                if (a.NextEvaluate <= DateTime.UtcNow)
+                {
+                    list.Add(a);
+                }
+            }
 
             for (int i = 0; i < list.Count; i++)
             {

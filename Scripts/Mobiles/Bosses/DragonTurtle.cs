@@ -90,9 +90,10 @@ namespace Server.Mobiles
 
             List<Tuple<Point3D, int>> copy = new List<Tuple<Point3D, int>>(_BubbleLocs.Where(tup => tup.Item1 == m.Location));
 
-            foreach (Tuple<Point3D, int> t in copy)
+            for (var index = 0; index < copy.Count; index++)
             {
                 Point3D p = m.Location;
+
                 int hue = 0;
 
                 for (int i = 0; i < _BubbleLocs.Count; i++)
@@ -114,6 +115,7 @@ namespace Server.Mobiles
         private long _NextBubbleWander;
         private long _NextBubbleAttack;
         private bool _DoingBubbles;
+
         public List<Tuple<Point3D, int>> _BubbleLocs { get; set; }
         public Dictionary<Mobile, int> _Affected { get; set; }
 
