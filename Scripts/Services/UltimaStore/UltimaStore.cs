@@ -440,7 +440,18 @@ namespace Server.Engines.UOStore
         #region Constructors
         public static Item ConstructHairDye(Mobile m, StoreEntry entry)
         {
-            NaturalHairDye.HairDyeInfo info = NaturalHairDye.Table.FirstOrDefault(x => x.Localization == entry.Name[1].Number);
+            NaturalHairDye.HairDyeInfo info = null;
+
+            for (var index = 0; index < NaturalHairDye.Table.Length; index++)
+            {
+                var x = NaturalHairDye.Table[index];
+
+                if (x.Localization == entry.Name[1].Number)
+                {
+                    info = x;
+                    break;
+                }
+            }
 
             if (info != null)
             {
@@ -452,7 +463,18 @@ namespace Server.Engines.UOStore
 
         public static Item ConstructHaochisPigment(Mobile m, StoreEntry entry)
         {
-            HaochisPigment.HoachisPigmentInfo info = HaochisPigment.Table.FirstOrDefault(x => x.Localization == entry.Name[1].Number);
+            HaochisPigment.HoachisPigmentInfo info = null;
+
+            for (var index = 0; index < HaochisPigment.Table.Length; index++)
+            {
+                var x = HaochisPigment.Table[index];
+
+                if (x.Localization == entry.Name[1].Number)
+                {
+                    info = x;
+                    break;
+                }
+            }
 
             if (info != null)
             {
@@ -687,8 +709,10 @@ namespace Server.Engines.UOStore
         {
             string str = string.Empty;
 
-            foreach (TextDefinition td in text)
+            for (var index = 0; index < text.Length; index++)
             {
+                TextDefinition td = text[index];
+
                 if (td.Number > 0 && VendorSearch.StringList != null)
                 {
                     str += $"{VendorSearch.StringList.GetString(td.Number)} ";
@@ -721,7 +745,19 @@ namespace Server.Engines.UOStore
                 return new List<StoreEntry> { forcedEntry };
             }
 
-            return Entries.Where(e => e.Category == cat).ToList();
+            List<StoreEntry> list = new List<StoreEntry>();
+
+            for (var index = 0; index < Entries.Count; index++)
+            {
+                var e = Entries[index];
+
+                if (e.Category == cat)
+                {
+                    list.Add(e);
+                }
+            }
+
+            return list;
         }
 
         public static void SortList(List<StoreEntry> list, SortBy sort)
@@ -1071,7 +1107,17 @@ namespace Server.Engines.UOStore
 
         public static Item GetDisplayItem(Type t)
         {
-            return _DisplayItems.FirstOrDefault(x => x.GetType() == t);
+            for (var index = 0; index < _DisplayItems.Count; index++)
+            {
+                var x = _DisplayItems[index];
+
+                if (x.GetType() == t)
+                {
+                    return x;
+                }
+            }
+
+            return null;
         }
 
         public override void Serialize(GenericWriter writer)
