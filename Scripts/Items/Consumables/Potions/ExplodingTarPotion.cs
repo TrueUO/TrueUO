@@ -74,7 +74,9 @@ namespace Server.Items
         public virtual void Explode(Mobile from, Point3D loc, Map map)
         {
             if (Deleted || map == null)
+            {
                 return;
+            }
 
             Consume();
 
@@ -84,12 +86,9 @@ namespace Server.Items
 
             foreach (IDamageable target in SpellHelper.AcquireIndirectTargets(from, loc, map, Radius))
             {
-                if (target is PlayerMobile m)
+                if (target is PlayerMobile m && Utility.Random(skill) > m.Skills[SkillName.MagicResist].Value / 2)
                 {
-                    if (Utility.Random(skill) > m.Skills[SkillName.MagicResist].Value / 2)
-                    {
-                        AddEffects(m);
-                    }
+                    AddEffects(m);
                 }
             }
         }
