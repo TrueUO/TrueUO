@@ -77,12 +77,16 @@ namespace Server.Items
 
             List<FillableContainer> toCheck = new List<FillableContainer>(World.Items.Values.OfType<FillableContainer>().Where(i => i is FillableContainer && i.ContentType == FillableContentType.None));
 
-            foreach (FillableContainer cont in toCheck)
+            for (var index = 0; index < toCheck.Count; index++)
             {
+                FillableContainer cont = toCheck[index];
+
                 cont.AcquireContent();
 
                 if (cont.ContentType == FillableContentType.None)
+                {
                     fail++;
+                }
 
                 count++;
             }
@@ -208,8 +212,10 @@ namespace Server.Items
         {
             int count = 0;
 
-            foreach (Item item in Items)
+            for (var index = 0; index < Items.Count; index++)
             {
+                Item item = Items[index];
+
                 count += item.Amount;
             }
 
@@ -354,7 +360,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(2); // version
 
             writer.Write(TotalTraps);
@@ -376,14 +381,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             int version = reader.ReadEncodedInt();
-
-            if (version == 1)
-            {
-                MaxSpawnCount = Utility.RandomMinMax(3, 5);
-                TotalTraps = 1;
-            }
 
             switch (version)
             {
@@ -460,21 +458,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(2); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
-
-            if (version == 0 && m_Content == null)
-                Timer.DelayCall(TimeSpan.Zero, AcquireContent);
-
-            if (version == 1)
-                MaxSpawnCount = 5;
+            reader.ReadEncodedInt();
         }
 
         protected override int GetSpawnCount(bool all)

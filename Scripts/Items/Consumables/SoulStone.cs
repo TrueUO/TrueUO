@@ -6,8 +6,6 @@ using Server.Mobiles;
 using Server.Multis;
 using Server.Network;
 using System;
-using System.Linq;
-
 
 namespace Server.Items
 {
@@ -438,24 +436,21 @@ namespace Server.Items
 
             private void CheckSkill(Mobile from)
             {
-                if (m_Skill.SkillName == SkillName.AnimalTaming)
+                if (m_Skill.SkillName == SkillName.AnimalTaming && from is PlayerMobile owner && owner.AllFollowers != null && owner.AllFollowers.Count > 0)
                 {
-                    PlayerMobile owner = from as PlayerMobile;
-
-                    if (owner != null && owner.AllFollowers != null && owner.AllFollowers.Count > 0)
+                    for (var index = 0; index < owner.AllFollowers.Count; index++)
                     {
-                        foreach (BaseCreature bc in owner.AllFollowers.OfType<BaseCreature>())
-                        {
-                            if (bc.CheckControlChance(owner))
-                            {
-                                bc.ControlTarget = null;
-                                bc.ControlOrder = OrderType.None;
+                        Mobile follower = owner.AllFollowers[index];
 
-                                if (bc is BaseMount mount && mount.Rider == from)
-                                {
-                                    from.SendLocalizedMessage(1042317); // You may not ride at this time
-                                    mount.Rider = null;
-                                }
+                        if (follower is BaseCreature bc && bc.CheckControlChance(owner))
+                        {
+                            bc.ControlTarget = null;
+                            bc.ControlOrder = OrderType.None;
+
+                            if (bc is BaseMount mount && mount.Rider == from)
+                            {
+                                from.SendLocalizedMessage(1042317); // You may not ride at this time
+                                mount.Rider = null;
                             }
                         }
                     }
