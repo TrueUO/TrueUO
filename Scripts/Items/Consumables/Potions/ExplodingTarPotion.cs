@@ -5,11 +5,9 @@ using Server.Mobiles;
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
-    [TypeAlias("Server.Items.ExplodingTarPotion")]
     public class ExplodingTarPotion : BasePotion
     {
         public virtual int Radius => 4;
@@ -57,20 +55,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
-
-            if (version == 0)
-            {
-                reader.ReadInt();
-            }
+            reader.ReadInt();
         }
 
         public void Explode_Callback(object state)
@@ -83,7 +74,9 @@ namespace Server.Items
         public virtual void Explode(Mobile from, Point3D loc, Map map)
         {
             if (Deleted || map == null)
+            {
                 return;
+            }
 
             Consume();
 
@@ -91,9 +84,9 @@ namespace Server.Items
 
             var skill = (int)from.Skills[SkillName.Alchemy].Value + AosAttributes.GetValue(from, AosAttribute.EnhancePotions);
 
-            foreach (PlayerMobile m in SpellHelper.AcquireIndirectTargets(from, loc, map, Radius).OfType<PlayerMobile>())
+            foreach (IDamageable target in SpellHelper.AcquireIndirectTargets(from, loc, map, Radius))
             {
-                if (Utility.Random(skill) > m.Skills[SkillName.MagicResist].Value / 2)
+                if (target is PlayerMobile m && Utility.Random(skill) > m.Skills[SkillName.MagicResist].Value / 2)
                 {
                     AddEffects(m);
                 }

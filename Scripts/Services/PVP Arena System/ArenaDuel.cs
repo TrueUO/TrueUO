@@ -204,8 +204,10 @@ namespace Server.Engines.ArenaSystem
             if (Teams == null || Teams.Count == 0)
                 yield break;
 
-            foreach (ArenaTeam team in Teams)
+            for (var index = 0; index < Teams.Count; index++)
             {
+                ArenaTeam team = Teams[index];
+
                 foreach (KeyValuePair<PlayerMobile, PlayerStatsEntry> player in team.Players)
                 {
                     if (!inArena || InArena(player.Key))
@@ -365,7 +367,17 @@ namespace Server.Engines.ArenaSystem
 
         public ArenaTeam GetTeam(PlayerMobile pm)
         {
-            return Teams.FirstOrDefault(team => team.Contains(pm));
+            for (var index = 0; index < Teams.Count; index++)
+            {
+                var team = Teams[index];
+
+                if (team.Contains(pm))
+                {
+                    return team;
+                }
+            }
+
+            return null;
         }
 
         public void MoveToArena(PlayerMobile pm)
@@ -387,8 +399,10 @@ namespace Server.Engines.ArenaSystem
 
             bool allin = true;
 
-            foreach (ArenaTeam team in Teams)
+            for (var index = 0; index < Teams.Count; index++)
             {
+                ArenaTeam team = Teams[index];
+
                 foreach (PlayerMobile player in team.Players.Keys)
                 {
                     if (!InArena(player))
@@ -508,8 +522,10 @@ namespace Server.Engines.ArenaSystem
 
             List<PlayerMobile> partList = ParticipantList();
 
-            foreach (PlayerMobile pm in partList)
+            for (var index = 0; index < partList.Count; index++)
             {
+                PlayerMobile pm = partList[index];
+
                 if (pm != pm1 && pm != pm2)
                 {
                     _StartPoints[pm] = Arena.Definition.StartLocations[_StartPoints.Count];
@@ -536,8 +552,10 @@ namespace Server.Engines.ArenaSystem
 
         public void PlaceBlockers()
         {
-            foreach (Rectangle2D rec in Arena.Definition.EffectAreas)
+            for (var index = 0; index < Arena.Definition.EffectAreas.Length; index++)
             {
+                Rectangle2D rec = Arena.Definition.EffectAreas[index];
+
                 var list = new List<Item>(Arena.Blockers);
 
                 for (int x = rec.X; x < rec.X + rec.Width; x++)
@@ -557,7 +575,8 @@ namespace Server.Engines.ArenaSystem
                             Arena.Blockers.Add(blocker);
                         }
 
-                        blocker.MoveToWorld(new Point3D(x, y, Arena.Definition.Map.GetAverageZ(x, y)), Arena.Definition.Map);
+                        blocker.MoveToWorld(new Point3D(x, y, Arena.Definition.Map.GetAverageZ(x, y)),
+                            Arena.Definition.Map);
                     }
                 }
             }
@@ -565,16 +584,20 @@ namespace Server.Engines.ArenaSystem
 
         public void RemoveBlockers()
         {
-            foreach (Item item in Arena.Blockers)
+            for (var index = 0; index < Arena.Blockers.Count; index++)
             {
+                Item item = Arena.Blockers[index];
+
                 item.Z -= 20;
             }
         }
 
         public void DoStartEffects()
         {
-            foreach (Rectangle2D rec in Arena.Definition.EffectAreas)
+            for (var index = 0; index < Arena.Definition.EffectAreas.Length; index++)
             {
+                Rectangle2D rec = Arena.Definition.EffectAreas[index];
+
                 for (int x = rec.X; x < rec.X + rec.Width; x++)
                 {
                     for (int y = rec.Y; y < rec.Y + rec.Height; y++)
@@ -667,16 +690,15 @@ namespace Server.Engines.ArenaSystem
                 }
             }
 
-            foreach (ArenaTeam team in Teams)
+            for (var index = 0; index < Teams.Count; index++)
             {
+                ArenaTeam team = Teams[index];
+
                 if (team != winner)
                 {
                     foreach (PlayerMobile pm in team.Players.Keys)
                     {
-                        PVPArenaSystem.SendMessage(pm,
-                            team.Count == 1
-                                ? 1116489
-                                : 1116488); // You have lost the duel... : Your team has lost the duel...
+                        PVPArenaSystem.SendMessage(pm, team.Count == 1 ? 1116489 : 1116488); // You have lost the duel... : Your team has lost the duel...
                     }
                 }
             }
@@ -709,8 +731,19 @@ namespace Server.Engines.ArenaSystem
         {
             foreach (KeyValuePair<PlayerMobile, PlayerStatsEntry> kvp in GetParticipants(true))
             {
-                ArenaTeam team = Teams.FirstOrDefault(t => t.Contains(kvp.Key));
                 PlayerStatsEntry stats = kvp.Value;
+                ArenaTeam team = null;
+
+                for (var index = 0; index < Teams.Count; index++)
+                {
+                    var t = Teams[index];
+
+                    if (t.Contains(kvp.Key))
+                    {
+                        team = t;
+                        break;
+                    }
+                }
 
                 if (winner == null)
                 {
@@ -773,10 +806,14 @@ namespace Server.Engines.ArenaSystem
 
                 List<ArenaTeam> stillAlive = new List<ArenaTeam>();
 
-                foreach (ArenaTeam team in Teams)
+                for (var index = 0; index < Teams.Count; index++)
                 {
+                    ArenaTeam team = Teams[index];
+
                     if (CheckTeamAlive(mobile, team))
+                    {
                         stillAlive.Add(team);
+                    }
                 }
 
                 if (stillAlive.Count == 1)
@@ -790,7 +827,18 @@ namespace Server.Engines.ArenaSystem
 
         public bool CheckTeamAlive(PlayerMobile justDied, ArenaTeam team)
         {
-            return team.Players.Keys.FirstOrDefault(p => p != justDied && p.Alive) != null;
+            PlayerMobile first = null;
+
+            foreach (var p in team.Players.Keys)
+            {
+                if (p != justDied && p.Alive)
+                {
+                    first = p;
+                    break;
+                }
+            }
+
+            return first != null;
         }
 
         public void SendResults(ArenaTeam winner)
@@ -935,8 +983,10 @@ namespace Server.Engines.ArenaSystem
 
         public void Closeout()
         {
-            foreach (ArenaTeam team in Teams)
+            for (var index = 0; index < Teams.Count; index++)
             {
+                ArenaTeam team = Teams[index];
+
                 team.Players.Clear();
                 team.Players = null;
                 team.PlayerZero = null;
@@ -1051,8 +1101,9 @@ namespace Server.Engines.ArenaSystem
             }
 
             writer.Write(Warned.Count);
-            foreach (PlayerMobile pm in Warned)
+            for (var index = 0; index < Warned.Count; index++)
             {
+                PlayerMobile pm = Warned[index];
                 writer.Write(pm);
             }
         }
