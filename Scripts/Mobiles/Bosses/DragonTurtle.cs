@@ -92,8 +92,8 @@ namespace Server.Mobiles
 
             for (var index = 0; index < copy.Count; index++)
             {
-                Tuple<Point3D, int> t = copy[index];
                 Point3D p = m.Location;
+
                 int hue = 0;
 
                 for (int i = 0; i < _BubbleLocs.Count; i++)
@@ -115,6 +115,7 @@ namespace Server.Mobiles
         private long _NextBubbleWander;
         private long _NextBubbleAttack;
         private bool _DoingBubbles;
+
         public List<Tuple<Point3D, int>> _BubbleLocs { get; set; }
         public Dictionary<Mobile, int> _Affected { get; set; }
 
