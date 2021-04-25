@@ -1,9 +1,7 @@
 using Server.Gumps;
-using System.Linq;
 
 namespace Server.Items
 {
-    [TypeAlias("Server.Items.LuteTunedToStones")]
     public class Lute : BaseInstrument
     {
         private bool m_LuteTunedToStones;
@@ -55,11 +53,18 @@ namespace Server.Items
 
         public override void PlayInstrumentWell(Mobile from)
         {
-            var smfs = from.Backpack.FindItemByType(typeof(SheetMusicForStones)) as SheetMusicForStones;
-
-            if (smfs != null && !smfs.Active)
+            if (from.Backpack.FindItemByType(typeof(SheetMusicForStones)) is SheetMusicForStones smfs && !smfs.Active)
             {
-                var box = from.Map.GetItemsInRange(from.Location, 3).FirstOrDefault(x => x.ItemID == 19724 && x.Hue == 1111);
+                Item box = null;
+
+                foreach (var x in from.Map.GetItemsInRange(from.Location, 3))
+                {
+                    if (x.ItemID == 19724 && x.Hue == 1111)
+                    {
+                        box = x;
+                        break;
+                    }
+                }
 
                 if (box != null)
                 {

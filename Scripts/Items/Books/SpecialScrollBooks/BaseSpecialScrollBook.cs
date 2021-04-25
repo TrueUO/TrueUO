@@ -4,7 +4,6 @@ using Server.Mobiles;
 using Server.Multis;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -128,7 +127,21 @@ namespace Server.Items
 
         public virtual void Construct(Mobile m, SkillName sk, double value)
         {
-            SpecialScroll scroll = Items.OfType<SpecialScroll>().FirstOrDefault(s => s.Skill == sk && s.Value == value);
+            SpecialScroll scroll = null;
+
+            for (var index = 0; index < Items.Count; index++)
+            {
+                Item item = Items[index];
+
+                if (item is SpecialScroll s)
+                {
+                    if (s.Skill == sk && s.Value == value)
+                    {
+                        scroll = s;
+                        break;
+                    }
+                }
+            }
 
             if (scroll != null)
             {
@@ -168,7 +181,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(3); // version
 
             writer.Write((int)Level);
@@ -178,7 +190,6 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             int version = reader.ReadInt();
 
             if (version > 2)
@@ -190,8 +201,10 @@ namespace Server.Items
             Timer.DelayCall(
                 () =>
                 {
-                    foreach (Item item in Items)
+                    for (var index = 0; index < Items.Count; index++)
                     {
+                        Item item = Items[index];
+
                         if (item.Movable)
                         {
                             item.Movable = false;

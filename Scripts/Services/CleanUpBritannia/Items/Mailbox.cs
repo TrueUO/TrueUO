@@ -2,7 +2,6 @@ using Server.ContextMenus;
 using Server.Multis;
 using Server.Network;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -247,12 +246,24 @@ namespace Server.Items
         private void Defrag()
         {
             if (Contents == null)
-                return;
-
-            List<Item> remove = Contents.Keys.Where(k => k.Deleted || !Items.Contains(k)).ToList();
-
-            foreach (Item item in remove)
             {
+                return;
+            }
+
+            List<Item> remove = new List<Item>();
+
+            foreach (var k in Contents.Keys)
+            {
+                if (k.Deleted || !Items.Contains(k))
+                {
+                    remove.Add(k);
+                }
+            }
+
+            for (var index = 0; index < remove.Count; index++)
+            {
+                Item item = remove[index];
+
                 Contents.Remove(item);
             }
 
@@ -267,7 +278,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1);
 
             writer.Write(Contents == null ? 0 : Contents.Count);
@@ -285,7 +295,6 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             int version = reader.ReadInt();
 
             switch (version)

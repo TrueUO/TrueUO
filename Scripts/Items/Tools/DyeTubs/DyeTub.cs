@@ -3,9 +3,7 @@ using Server.Gumps;
 using Server.Multis;
 using Server.Targeting;
 using System.Collections.Generic;
-
 using System;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -68,7 +66,20 @@ namespace Server.Items
 
         public virtual bool CanForceDye(Item item)
         {
-            return ForcedDyables != null && ForcedDyables.Any(t => t == item.GetType());
+            bool any = false;
+
+            for (var index = 0; index < ForcedDyables.Length; index++)
+            {
+                var t = ForcedDyables[index];
+
+                if (t == item.GetType())
+                {
+                    any = true;
+                    break;
+                }
+            }
+
+            return ForcedDyables != null && any;
         }
 
         public override void Serialize(GenericWriter writer)
@@ -143,7 +154,7 @@ namespace Server.Items
                         }
                         else
                         {
-                            bool okay = (item.IsChildOf(from.Backpack));
+                            bool okay = item.IsChildOf(@from.Backpack);
 
                             if (!okay)
                             {
@@ -208,10 +219,8 @@ namespace Server.Items
                         var armor = item as BaseArmor;
                         var clothing = item as BaseClothing;
 
-                        if ((armor != null && (armor.MaterialType == ArmorMaterialType.Leather ||
-                            armor.MaterialType == ArmorMaterialType.Studded)) ||
-                            (clothing != null && (clothing.DefaultResource == CraftResource.RegularLeather)) ||
-                            m_Tub.CanForceDye(item))
+                        if (armor != null && (armor.MaterialType == ArmorMaterialType.Leather || armor.MaterialType == ArmorMaterialType.Studded) ||
+                            clothing != null && clothing.DefaultResource == CraftResource.RegularLeather || m_Tub.CanForceDye(item))
                         {
                             if (!from.InRange(m_Tub.GetWorldLocation(), 1) || !from.InRange(item.GetWorldLocation(), 1))
                             {
@@ -240,7 +249,7 @@ namespace Server.Items
                     {
                         var armor = item as BaseArmor;
 
-                        if ((armor != null && armor.MaterialType >= ArmorMaterialType.Ringmail && armor.MaterialType <= ArmorMaterialType.Plate) || m_Tub.CanForceDye(item))
+                        if (armor != null && armor.MaterialType >= ArmorMaterialType.Ringmail && armor.MaterialType <= ArmorMaterialType.Plate || m_Tub.CanForceDye(item))
                         {
                             if (!from.InRange(m_Tub.GetWorldLocation(), 1) || !from.InRange(item.GetWorldLocation(), 1))
                             {

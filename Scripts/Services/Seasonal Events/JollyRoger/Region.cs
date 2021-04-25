@@ -80,33 +80,65 @@ namespace Server.Regions
 
         public override void OnEnter(Mobile m)
         {
-            var virtue = Virtue.FirstOrDefault(x => x.Area.Contains(m.Location));
+            VirtueDef virtue = null;
+
+            for (var index = 0; index < Virtue.Count; index++)
+            {
+                var x = Virtue[index];
+
+                if (x.Area.Contains(m.Location))
+                {
+                    virtue = x;
+                    break;
+                }
+            }
 
             var list = JollyRogerData.GetList(m);
 
             if (list != null && list.Shrine != null)
             {
-                var s = list.Shrine.FirstOrDefault(x => x.Shrine == virtue.Shrine);
+                ShrineArray s = null;
+
+                for (var index = 0; index < list.Shrine.Count; index++)
+                {
+                    var x = list.Shrine[index];
+
+                    if (virtue != null && x.Shrine == virtue.Shrine)
+                    {
+                        s = x;
+                        break;
+                    }
+                }
 
                 if (s != null && s.MasterDeath >= 3)
                 {
-                    if (!list.Cloak && list.Shrine.Count == 8 && !list.Shrine.Any(x => x.MasterDeath < 3))
+                    bool any = false;
+
+                    for (var index = 0; index < list.Shrine.Count; index++)
+                    {
+                        var x = list.Shrine[index];
+
+                        if (x.MasterDeath < 3)
+                        {
+                            any = true;
+                            break;
+                        }
+                    }
+
+                    if (!list.Cloak && list.Shrine.Count == 8 && !any)
                     {
                         var item = new CloakOfTheVirtuous();
 
                         if (m.Backpack == null || !m.Backpack.TryDropItem(m, item, false))
                         {
-                            m.SendLocalizedMessage(1152337,
-                                item.ToString()); // A reward of ~1_ITEM~ will be delivered to you once you free up room in your backpack.
+                            m.SendLocalizedMessage(1152337, item.ToString()); // A reward of ~1_ITEM~ will be delivered to you once you free up room in your backpack.
                             item.Delete();
                         }
                         else
                         {
-                            m.PrivateOverheadMessage(MessageType.Regular, 0x47E, 1159339,
-                                m.NetState); // Thous hast proven thou walks the path of Virtue!
+                            m.PrivateOverheadMessage(MessageType.Regular, 0x47E, 1159339, m.NetState); // Thous hast proven thou walks the path of Virtue!
                             JollyRogerData.SetCloak(m, true);
-                            m.SendLocalizedMessage(1152339,
-                                item.ToString()); // A reward of ~1_ITEM~ has been placed in your backpack.
+                            m.SendLocalizedMessage(1152339, item.ToString()); // A reward of ~1_ITEM~ has been placed in your backpack.
                             m.PlaySound(0x419);
                         }
                     }

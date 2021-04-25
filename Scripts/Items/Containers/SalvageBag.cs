@@ -3,7 +3,6 @@ using Server.Engines.Craft;
 using Server.Network;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -42,32 +41,52 @@ namespace Server.Items
         #region Checks
         private bool Resmeltables() //Where context menu checks for metal items and dragon barding deeds
         {
-            foreach (Item i in Items)
+            for (var index = 0; index < Items.Count; index++)
             {
+                Item i = Items[index];
+
                 if (i != null && !i.Deleted)
                 {
                     if (i is BaseWeapon weapon)
                     {
                         if (CraftResources.GetType(weapon.Resource) == CraftResourceType.Metal)
+                        {
                             return true;
+                        }
                     }
+
                     if (i is BaseArmor armor)
                     {
                         if (CraftResources.GetType(armor.Resource) == CraftResourceType.Metal)
+                        {
                             return true;
+                        }
                     }
+
                     if (i is DragonBardingDeed)
+                    {
                         return true;
+                    }
                 }
             }
+
             return false;
         }
 
         private bool Scissorables() //Where context menu checks for Leather items and cloth items
         {
-            return Items.Any(i => (i != null) && (!i.Deleted) && (i is IScissorable) && (i is Item));
-        }
+            for (var index = 0; index < Items.Count; index++)
+            {
+                var i = Items[index];
 
+                if (i != null && !i.Deleted && i is IScissorable)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
         #endregion	
 
         #region Resmelt.cs
@@ -133,7 +152,7 @@ namespace Server.Items
                     if (skill > 100.0)
                         skill = 100.0;
 
-                    double amount = (((4 + skill) * craftResource.Amount - 4) * 0.0068);
+                    double amount = ((4 + skill) * craftResource.Amount - 4) * 0.0068;
 
                     if (amount < 2)
                         ingot.Amount = 2;
@@ -167,21 +186,32 @@ namespace Server.Items
 
             return false;
         }
-
         #endregion
 
         #region Salvaging
         private void SalvageIngots(Mobile from)
         {
-            bool ToolFound = from.Backpack.Items.Any(i => i is ITool tool && tool.CraftSystem == DefBlacksmithy.CraftSystem);
+            bool toolFound = false;
 
-            if (!ToolFound)
+            for (var index = 0; index < from.Backpack.Items.Count; index++)
+            {
+                var i = from.Backpack.Items[index];
+
+                if (i is ITool tool && tool.CraftSystem == DefBlacksmithy.CraftSystem)
+                {
+                    toolFound = true;
+                    break;
+                }
+            }
+
+            if (!toolFound)
             {
                 from.SendLocalizedMessage(1079822); // You need a blacksmithing tool in order to salvage ingots.
                 return;
             }
 
             bool anvil, forge;
+
             DefBlacksmithy.CheckAnvilAndForge(from, 2, out anvil, out forge);
 
             if (!forge)
@@ -265,13 +295,15 @@ namespace Server.Items
                 }
             }
 
-            from.SendLocalizedMessage(1079974, string.Format("{0}\t{1}", salvaged, salvaged + notSalvaged)); // Salvaged: ~1_COUNT~/~2_NUM~ tailored items
+            from.SendLocalizedMessage(1079974, $"{salvaged}\t{salvaged + notSalvaged}"); // Salvaged: ~1_COUNT~/~2_NUM~ tailored items
 
-            Container pack = from.Backpack;
+            var @is = FindItemsByType(typeof(Item), true);
 
-            foreach (Item i in FindItemsByType(typeof(Item), true))
+            for (var index = 0; index < @is.Length; index++)
             {
-                if ((i is Leather) || (i is Cloth) || (i is SpinedLeather) || (i is HornedLeather) || (i is BarbedLeather) || (i is Bandage) || (i is Bone))
+                Item i = @is[index];
+
+                if (i is Leather || i is Cloth || i is SpinedLeather || i is HornedLeather || i is BarbedLeather || i is Bandage || i is Bone)
                 {
                     from.AddToBackpack(i);
                 }
@@ -284,7 +316,6 @@ namespace Server.Items
 
             SalvageCloth(from);
         }
-
         #endregion
 
         #region ContextMenuEntries

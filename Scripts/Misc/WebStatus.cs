@@ -3,7 +3,6 @@ using Server.Guilds;
 using Server.Network;
 using System;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
 #endregion
@@ -130,53 +129,59 @@ namespace Server.Misc
 
                 int index = 0;
 
-                foreach (Mobile m in NetState.Instances.Where(state => state.Mobile != null).Select(state => state.Mobile))
+                for (var i = 0; i < NetState.Instances.Count; i++)
                 {
-                    ++index;
+                    var state = NetState.Instances[i];
 
-                    Guild g = m.Guild as Guild;
-
-                    op.Write("         <tr class=\"ruo-result " + (index % 2 == 0 ? "even" : "odd") + "\"><td>");
-
-                    if (g != null)
+                    if (state.Mobile != null)
                     {
-                        op.Write(Encode(m.Name));
-                        op.Write(" [");
+                        Mobile m = state.Mobile;
+                        ++index;
 
-                        string title = m.GuildTitle;
+                        Guild g = m.Guild as Guild;
 
-                        title = title != null ? title.Trim() : string.Empty;
+                        op.Write("         <tr class=\"ruo-result " + (index % 2 == 0 ? "even" : "odd") + "\"><td>");
 
-                        if (title.Length > 0)
+                        if (g != null)
                         {
-                            op.Write(Encode(title));
-                            op.Write(", ");
+                            op.Write(Encode(m.Name));
+                            op.Write(" [");
+
+                            string title = m.GuildTitle;
+
+                            title = title != null ? title.Trim() : string.Empty;
+
+                            if (title.Length > 0)
+                            {
+                                op.Write(Encode(title));
+                                op.Write(", ");
+                            }
+
+                            op.Write(Encode(g.Abbreviation));
+
+                            op.Write(']');
+                        }
+                        else
+                        {
+                            op.Write(Encode(m.Name));
                         }
 
-                        op.Write(Encode(g.Abbreviation));
-
-                        op.Write(']');
+                        op.Write("</td><td>");
+                        op.Write(m.X);
+                        op.Write(", ");
+                        op.Write(m.Y);
+                        op.Write(", ");
+                        op.Write(m.Z);
+                        op.Write(" (");
+                        op.Write(m.Map);
+                        op.Write(")</td><td>");
+                        op.Write(m.Kills);
+                        op.Write("</td><td>");
+                        op.Write(m.Karma);
+                        op.Write(" / ");
+                        op.Write(m.Fame);
+                        op.WriteLine("</td></tr>");
                     }
-                    else
-                    {
-                        op.Write(Encode(m.Name));
-                    }
-
-                    op.Write("</td><td>");
-                    op.Write(m.X);
-                    op.Write(", ");
-                    op.Write(m.Y);
-                    op.Write(", ");
-                    op.Write(m.Z);
-                    op.Write(" (");
-                    op.Write(m.Map);
-                    op.Write(")</td><td>");
-                    op.Write(m.Kills);
-                    op.Write("</td><td>");
-                    op.Write(m.Karma);
-                    op.Write(" / ");
-                    op.Write(m.Fame);
-                    op.WriteLine("</td></tr>");
                 }
 
                 op.WriteLine("         <tr>");

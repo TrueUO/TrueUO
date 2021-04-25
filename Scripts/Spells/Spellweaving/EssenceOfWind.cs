@@ -69,19 +69,22 @@ namespace Server.Spells.Spellweaving
                 int fcMalus = FocusLevel + 1;
                 int ssiMalus = 2 * (FocusLevel + 1);
 
-                foreach (Mobile m in AcquireIndirectTargets(Caster.Location, 5 + FocusLevel).OfType<Mobile>())
+                foreach (IDamageable target in AcquireIndirectTargets(Caster.Location, 5 + FocusLevel))
                 {
-                    Caster.DoHarmful(m);
-
-                    SpellHelper.Damage(this, m, damage, 0, 0, 100, 0, 0);
-
-                    if (!CheckResisted(m))	//No message on resist
+                    if (target is Mobile m)
                     {
-                        m_Table[m] = new EssenceOfWindInfo(m, fcMalus, ssiMalus, duration);
+                        Caster.DoHarmful(m);
 
-                        BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.EssenceOfWind, 1075802, duration, m, $"{fcMalus.ToString()}\t{ssiMalus.ToString()}"));
+                        SpellHelper.Damage(this, m, damage, 0, 0, 100, 0, 0);
 
-                        m.Delta(MobileDelta.WeaponDamage);
+                        if (!CheckResisted(m)) //No message on resist
+                        {
+                            m_Table[m] = new EssenceOfWindInfo(m, fcMalus, ssiMalus, duration);
+
+                            BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.EssenceOfWind, 1075802, duration, m, $"{fcMalus.ToString()}\t{ssiMalus.ToString()}"));
+
+                            m.Delta(MobileDelta.WeaponDamage);
+                        }
                     }
                 }
             }
