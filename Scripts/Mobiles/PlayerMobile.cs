@@ -856,9 +856,7 @@ namespace Server.Mobiles
 
         public static void EquipMacro(EquipMacroEventArgs e)
         {
-            PlayerMobile pm = e.Mobile as PlayerMobile;
-
-            if (pm != null && pm.Backpack != null && pm.Alive && e.List != null && e.List.Count > 0)
+            if (e.Mobile is PlayerMobile pm && pm.Backpack != null && pm.Alive && e.List != null && e.List.Count > 0)
             {
                 if (pm.IsStaff() || Core.TickCount - pm.NextActionTime >= 0)
                 {
@@ -914,9 +912,7 @@ namespace Server.Mobiles
 
         public static void UnequipMacro(UnequipMacroEventArgs e)
         {
-            PlayerMobile pm = e.Mobile as PlayerMobile;
-
-            if (pm != null && pm.Backpack != null && pm.Alive && e.List != null && e.List.Count > 0)
+            if (e.Mobile is PlayerMobile pm && pm.Backpack != null && pm.Alive && e.List != null && e.List.Count > 0)
             {
                 if (pm.IsStaff() || Core.TickCount - pm.NextActionTime >= 0)
                 {
@@ -924,9 +920,11 @@ namespace Server.Mobiles
 
                     List<Item> worn = new List<Item>(pm.Items);
 
-                    foreach (Item item in worn)
+                    for (var index = 0; index < worn.Count; index++)
                     {
-                        if (e.List.Contains((int)item.Layer))
+                        Item item = worn[index];
+
+                        if (e.List.Contains((int) item.Layer))
                         {
                             pack.TryDropItem(pm, item, false);
                         }
@@ -1564,13 +1562,17 @@ namespace Server.Mobiles
                 // Eject all from house
                 from.RevealingAction();
 
-                foreach (Item item in context.Foundation.GetItems())
+                var list = context.Foundation.GetItems();
+                for (var index = 0; index < list.Count; index++)
                 {
+                    Item item = list[index];
                     item.Location = context.Foundation.BanLocation;
                 }
 
-                foreach (Mobile mobile in context.Foundation.GetMobiles())
+                var mobiles = context.Foundation.GetMobiles();
+                for (var index = 0; index < mobiles.Count; index++)
                 {
+                    Mobile mobile = mobiles[index];
                     mobile.Location = context.Foundation.BanLocation;
                 }
 
@@ -1578,9 +1580,7 @@ namespace Server.Mobiles
                 context.Foundation.RestoreRelocatedEntities();
             }
 
-            PlayerMobile pm = e.Mobile as PlayerMobile;
-
-            if (pm != null)
+            if (e.Mobile is PlayerMobile pm)
             {
                 pm.m_GameTime += DateTime.UtcNow - pm.m_SessionStart;
 
@@ -2643,35 +2643,47 @@ namespace Server.Mobiles
         private void OpenItemInsuranceMenu()
         {
             if (!CheckAlive())
+            {
                 return;
+            }
 
             List<Item> items = new List<Item>();
 
-            foreach (Item item in Items)
+            for (var index = 0; index < Items.Count; index++)
             {
+                Item item = Items[index];
+
                 if (DisplayInItemInsuranceGump(item))
+                {
                     items.Add(item);
+                }
             }
 
             Container pack = Backpack;
 
             if (pack != null)
+            {
                 items.AddRange(pack.FindItemsByType<Item>(true, DisplayInItemInsuranceGump));
-
-            // TODO: Investigate item sorting
+            }
 
             CloseGump(typeof(ItemInsuranceMenuGump));
 
             if (items.Count == 0)
+            {
                 SendLocalizedMessage(1114915, "", 0x35); // None of your current items meet the requirements for insurance.
+            }
             else
+            {
                 SendGump(new ItemInsuranceMenuGump(this, items.ToArray()));
+            }
         }
 
         private bool DisplayInItemInsuranceGump(Item item)
         {
             if (item.Parent is LockableContainer container && container.Locked)
+            {
                 return false;
+            }
 
             return (item.Visible || AccessLevel >= AccessLevel.GameMaster) && (item.Insured || CanInsure(item));
         }
@@ -3181,8 +3193,10 @@ namespace Server.Mobiles
 
             if (item is Container)
             {
-                foreach (Item subItem in item.Items)
+                for (var index = 0; index < item.Items.Count; index++)
                 {
+                    Item subItem = item.Items[index];
+
                     int msg = CheckContentForTrade(subItem);
 
                     if (msg != 0)
@@ -6011,15 +6025,23 @@ namespace Server.Mobiles
             public bool HasChampionTitle(PlayerMobile pm)
             {
                 if (m_Harrower > 0)
+                {
                     return true;
+                }
 
                 if (m_Values == null)
-                    return false;
-
-                foreach (TitleInfo info in m_Values)
                 {
+                    return false;
+                }
+
+                for (var index = 0; index < m_Values.Length; index++)
+                {
+                    TitleInfo info = m_Values[index];
+
                     if (info.Value > 300)
+                    {
                         return true;
+                    }
                 }
 
                 return false;
