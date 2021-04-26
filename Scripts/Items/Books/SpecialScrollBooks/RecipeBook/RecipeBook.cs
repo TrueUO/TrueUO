@@ -4,7 +4,6 @@ using Server.Mobiles;
 using Server.Multis;
 using Server.Prompts;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -257,18 +256,63 @@ namespace Server.Items
         {
             Recipes = new List<RecipeScrollDefinition>();
 
-            Definitions.ToList().ForEach(x =>
+            List<RecipeScrollDefinition> list = new List<RecipeScrollDefinition>();
+
+            for (var index = 0; index < Definitions.Length; index++)
             {
+                var definition = Definitions[index];
+                list.Add(definition);
+            }
+
+            for (var index = 0; index < list.Count; index++)
+            {
+                List<RecipeScrollDefinition> list1 = new List<RecipeScrollDefinition>();
+
+                for (var i = 0; i < Definitions.Length; i++)
+                {
+                    var definition = Definitions[i];
+                    list1.Add(definition);
+                }
+
+                var x = list1[index];
+
                 Recipes.Add(x);
-            });
+            }
         }
 
         public void ReLoadDefinitions()
         {
-            Definitions.Where(n => !Recipes.Any(o => o.RecipeID == n.RecipeID)).ToList().ForEach(x =>
+            List<RecipeScrollDefinition> list = new List<RecipeScrollDefinition>();
+
+            for (var index = 0; index < Definitions.Length; index++)
             {
+                var n = Definitions[index];
+
+                bool all = true;
+
+                for (var i = 0; i < Recipes.Count; i++)
+                {
+                    var o = Recipes[i];
+
+                    if (o.RecipeID == n.RecipeID)
+                    {
+                        all = false;
+                        break;
+                    }
+                }
+
+                if (all)
+                {
+                    list.Add(n);
+                }
+            }
+
+            for (var index = 0; index < list.Count; index++)
+            {
+                var x = list[index];
+
                 Recipes.Add(x);
-            });
+            }
         }
 
         public bool CheckAccessible(Mobile from, Item item)
@@ -351,25 +395,34 @@ namespace Server.Items
 
             if (dropped is RecipeScroll recipe)
             {
-                if (Recipes.Any(x => x.RecipeID == recipe.RecipeID))
+                for (var index = 0; index < Recipes.Count; index++)
                 {
-                    Recipes.ForEach(x =>
+                    var x1 = Recipes[index];
+
+                    if (x1.RecipeID == recipe.RecipeID)
                     {
-                        if (x.RecipeID == recipe.RecipeID)
-                            x.Amount += 1;
-                    });
+                        for (var i = 0; i < Recipes.Count; i++)
+                        {
+                            var x = Recipes[i];
 
-                    InvalidateProperties();
+                            if (x.RecipeID == recipe.RecipeID)
+                            {
+                                x.Amount += 1;
+                            }
+                        }
 
-                    from.SendLocalizedMessage(1158826); // Recipe added to the book.
+                        InvalidateProperties();
 
-                    if (from is PlayerMobile mobile)
-                    {
-                        mobile.SendGump(new RecipeBookGump(mobile, this));
+                        from.SendLocalizedMessage(1158826); // Recipe added to the book.
+
+                        if (from is PlayerMobile mobile)
+                        {
+                            mobile.SendGump(new RecipeBookGump(mobile, this));
+                        }
+
+                        recipe.Delete();
+                        return true;
                     }
-
-                    recipe.Delete();
-                    return true;
                 }
 
                 from.SendLocalizedMessage(1158825); // That is not a recipe.
@@ -396,16 +449,17 @@ namespace Server.Items
 
             writer.Write(Recipes.Count);
 
-            Recipes.ForEach(s =>
+            for (var index = 0; index < Recipes.Count; index++)
             {
+                var s = Recipes[index];
+
                 writer.Write(s.ID);
                 writer.Write(s.RecipeID);
-                writer.Write((int)s.Expansion);
-                writer.Write((int)s.Skill);
+                writer.Write((int) s.Expansion);
+                writer.Write((int) s.Skill);
                 writer.Write(s.Amount);
                 writer.Write(s.Price);
-            });
-
+            }
         }
 
         public override void Deserialize(GenericReader reader)
@@ -440,7 +494,16 @@ namespace Server.Items
         {
             base.GetProperties(list);
 
-            list.Add(1158849, string.Format("{0}", Recipes.Sum(x => x.Amount))); // Recipes in book: ~1_val~
+            int sum = 0;
+
+            for (var index = 0; index < Recipes.Count; index++)
+            {
+                var x = Recipes[index];
+
+                sum += x.Amount;
+            }
+
+            list.Add(1158849, $"{sum}"); // Recipes in book: ~1_val~
 
             if (!string.IsNullOrEmpty(BookName))
             {

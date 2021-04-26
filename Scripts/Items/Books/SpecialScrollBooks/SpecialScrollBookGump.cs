@@ -1,7 +1,6 @@
 using Server.Items;
 using Server.Mobiles;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Gumps
 {
@@ -209,23 +208,54 @@ namespace Server.Gumps
 
         public bool HasScroll(List<SkillName> skills)
         {
-            return Book.Items.OfType<SpecialScroll>().Any(scroll => skills.Contains(scroll.Skill));
+            for (var index = 0; index < Book.Items.Count; index++)
+            {
+                Item item = Book.Items[index];
+
+                if (item is SpecialScroll scroll)
+                {
+                    if (skills.Contains(scroll.Skill))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         public bool HasScroll(SkillName skill)
         {
-            return Book.Items.OfType<SpecialScroll>().Any(scroll => skill == scroll.Skill);
+            for (var index = 0; index < Book.Items.Count; index++)
+            {
+                Item item = Book.Items[index];
+
+                if (item is SpecialScroll scroll)
+                {
+                    if (skill == scroll.Skill)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         public int GetTotalScrolls(SkillName skill, double value)
         {
             int count = 0;
 
-            foreach (SpecialScroll scroll in Book.Items.OfType<SpecialScroll>())
+            for (var index = 0; index < Book.Items.Count; index++)
             {
-                if (scroll.Skill == skill && value == scroll.Value)
+                Item item = Book.Items[index];
+
+                if (item is SpecialScroll scroll)
                 {
-                    count++;
+                    if (scroll.Skill == skill && value == scroll.Value)
+                    {
+                        count++;
+                    }
                 }
             }
 
