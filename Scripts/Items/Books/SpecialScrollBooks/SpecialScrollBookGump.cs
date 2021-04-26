@@ -212,12 +212,9 @@ namespace Server.Gumps
             {
                 Item item = Book.Items[index];
 
-                if (item is SpecialScroll scroll)
+                if (item is SpecialScroll scroll && skills.Contains(scroll.Skill))
                 {
-                    if (skills.Contains(scroll.Skill))
-                    {
-                        return true;
-                    }
+                    return true;
                 }
             }
 
@@ -230,12 +227,9 @@ namespace Server.Gumps
             {
                 Item item = Book.Items[index];
 
-                if (item is SpecialScroll scroll)
+                if (item is SpecialScroll scroll && skill == scroll.Skill)
                 {
-                    if (skill == scroll.Skill)
-                    {
-                        return true;
-                    }
+                    return true;
                 }
             }
 
@@ -250,12 +244,9 @@ namespace Server.Gumps
             {
                 Item item = Book.Items[index];
 
-                if (item is SpecialScroll scroll)
+                if (item is SpecialScroll scroll && scroll.Skill == skill && value == scroll.Value)
                 {
-                    if (scroll.Skill == skill && value == scroll.Value)
-                    {
-                        count++;
-                    }
+                    count++;
                 }
             }
 

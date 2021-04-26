@@ -133,13 +133,10 @@ namespace Server.Items
             {
                 Item item = Items[index];
 
-                if (item is SpecialScroll s)
+                if (item is SpecialScroll s && s.Skill == sk && s.Value == value)
                 {
-                    if (s.Skill == sk && s.Value == value)
-                    {
-                        scroll = s;
-                        break;
-                    }
+                    scroll = s;
+                    break;
                 }
             }
 
