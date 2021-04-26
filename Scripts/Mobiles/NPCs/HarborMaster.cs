@@ -5,7 +5,6 @@ using Server.Multis;
 using Server.Network;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Mobiles
 {
@@ -89,7 +88,17 @@ namespace Server.Mobiles
 
             private static bool IsSpecialShip(BaseBoat b)
             {
-                return m_ShipTypes.Any(t => t == b.GetType());
+                for (var index = 0; index < m_ShipTypes.Length; index++)
+                {
+                    var t = m_ShipTypes[index];
+
+                    if (t == b.GetType())
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
             }
 
             public override void OnClick()
@@ -112,8 +121,16 @@ namespace Server.Mobiles
                         }
                         else
                         {
-                            KeyType[] Types = Enum.GetValues(typeof(KeyType)).Cast<KeyType>().ToArray();
-                            Key packKey = new Key(Types[Utility.Random(Types.Length)], boat.PPlank.KeyValue, boat)
+                            List<KeyType> list = new List<KeyType>();
+
+                            foreach (KeyType type in Enum.GetValues(typeof(KeyType)))
+                            {
+                                list.Add(type);
+                            }
+
+                            KeyType[] types = list.ToArray();
+
+                            Key packKey = new Key(types[Utility.Random(types.Length)], boat.PPlank.KeyValue, boat)
                             {
                                 MaxRange = 10,
                                 Name = "a ship key"

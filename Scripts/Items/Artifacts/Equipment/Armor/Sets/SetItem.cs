@@ -330,16 +330,21 @@ namespace Server
 
         public static SlayerName GetSetSlayer(Mobile m)
         {
-            foreach (ISetItem item in m.Items.OfType<ISetItem>())
+            for (var index = 0; index < m.Items.Count; index++)
             {
-                if (item.SetID == SetItem.Aloron && item.SetEquipped)
-                {
-                    return SlayerName.Dinosaur;
-                }
+                Item mItem = m.Items[index];
 
-                if (item.SetID == SetItem.Darden && item.SetEquipped)
+                if (mItem is ISetItem item)
                 {
-                    return SlayerName.Myrmidex;
+                    if (item.SetID == SetItem.Aloron && item.SetEquipped)
+                    {
+                        return SlayerName.Dinosaur;
+                    }
+
+                    if (item.SetID == SetItem.Darden && item.SetEquipped)
+                    {
+                        return SlayerName.Myrmidex;
+                    }
                 }
             }
 

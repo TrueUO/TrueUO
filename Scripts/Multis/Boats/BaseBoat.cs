@@ -97,8 +97,10 @@ namespace Server.Multis
                 }
             }
 
-            foreach (BaseBoat b in toDelete)
+            for (var index = 0; index < toDelete.Count; index++)
             {
+                BaseBoat b = toDelete[index];
+
                 b.Delete();
             }
 
@@ -3211,7 +3213,15 @@ namespace Server.Multis
 
         public void RowBoat_Tick_Callback()
         {
-            if (!MobilesOnBoard.Any())
+            bool any = false;
+
+            foreach (var mobile in MobilesOnBoard)
+            {
+                any = true;
+                break;
+            }
+
+            if (!any)
             {
                 Delete();
             }

@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -158,10 +157,19 @@ namespace Server.Items
 
             if (bandage != null)
             {
-                int currentAmount = Items.Sum(i => i.Amount);
+                int currentAmount = 0;
+
+                for (var index = 0; index < Items.Count; index++)
+                {
+                    var i = Items[index];
+
+                    currentAmount += i.Amount;
+                }
 
                 if (item.Amount + currentAmount <= MaxBandage)
+                {
                     return base.CheckStack(from, item);
+                }
             }
 
             return false;

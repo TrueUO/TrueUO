@@ -7,7 +7,6 @@ using Server.Network;
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 #endregion
 
 namespace Server.Mobiles
@@ -98,7 +97,18 @@ namespace Server.Mobiles
         {
             for (int i = 0; i < _Quests.Length; i++)
             {
-                BaseQuest quest = player.Quests.FirstOrDefault(q => q.GetType() == _Quests[i]);
+                BaseQuest quest = null;
+
+                for (var index = 0; index < player.Quests.Count; index++)
+                {
+                    var q = player.Quests[index];
+
+                    if (q.GetType() == _Quests[i])
+                    {
+                        quest = q;
+                        break;
+                    }
+                }
 
                 if (quest != null)
                 {

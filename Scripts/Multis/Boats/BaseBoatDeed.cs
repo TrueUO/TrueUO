@@ -1,7 +1,7 @@
+using System.Linq;
 using Server.Gumps;
 using Server.Items;
 using Server.Regions;
-using System.Linq;
 
 namespace Server.Multis
 {
@@ -123,10 +123,18 @@ namespace Server.Multis
             {
                 if (boat.IsRowBoat)
                 {
-                    BaseBoat lastrowboat = World.Items.Values.OfType<BaseBoat>().Where(x => x.Owner == from && x.IsRowBoat && x.Map != Map.Internal && !x.MobilesOnBoard.Any()).OrderByDescending(y => y.Serial).FirstOrDefault();
+                    BaseBoat lastrowboat = null;
+
+                    foreach (var baseBoat in World.Items.Values.OfType<BaseBoat>().Where(x => x.Owner == from && x.IsRowBoat && x.Map != Map.Internal && !x.MobilesOnBoard.Any()).OrderByDescending(y => y.Serial))
+                    {
+                        lastrowboat = baseBoat;
+                        break;
+                    }
 
                     if (lastrowboat != null)
+                    {
                         lastrowboat.Delete();
+                    }
                 }
                 else
                 {
