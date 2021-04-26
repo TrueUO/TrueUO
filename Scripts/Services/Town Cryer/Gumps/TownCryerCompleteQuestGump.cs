@@ -1,7 +1,7 @@
+using System.Linq;
 using Server.Engines.Quests;
 using Server.Gumps;
 using Server.Mobiles;
-using System.Linq;
 
 namespace Server.Services.TownCryer
 {
@@ -25,7 +25,18 @@ namespace Server.Services.TownCryer
             Title = quest.Title;
             Body = quest.Complete;
 
-            TownCryerNewsEntry entry = TownCryerSystem.NewsEntries.FirstOrDefault(e => e.QuestType == quest.GetType());
+            TownCryerNewsEntry entry = null;
+
+            for (var index = 0; index < TownCryerSystem.NewsEntries.Count; index++)
+            {
+                var e = TownCryerSystem.NewsEntries[index];
+
+                if (e.QuestType == quest.GetType())
+                {
+                    entry = e;
+                    break;
+                }
+            }
 
             if (entry != null)
             {

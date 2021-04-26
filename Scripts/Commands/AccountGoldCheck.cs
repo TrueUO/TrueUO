@@ -16,10 +16,13 @@ namespace Server.Items
 
                     Dictionary<string, long> table = new Dictionary<string, long>();
 
-                    foreach (Account account in Accounts.GetAccounts().OfType<Account>())
+                    foreach (IAccount getAccount in Accounts.GetAccounts())
                     {
-                        table[account.Username] = (long)(account.TotalCurrency * Account.CurrencyThreshold);
-                        currency += account.TotalCurrency;
+                        if (getAccount is Account account)
+                        {
+                            table[account.Username] = (long) (account.TotalCurrency * Account.CurrencyThreshold);
+                            currency += account.TotalCurrency;
+                        }
                     }
 
                     using (StreamWriter op = new StreamWriter("TotalAccountGold.txt", true))
