@@ -522,14 +522,20 @@ namespace Server.Mobiles
 
             bool any = false;
 
-            for (var index = 0; index < SpecialAbilities.Length; index++)
+            if (SpecialAbilities != null)
             {
-                var a = SpecialAbilities[index];
-
-                if (!a.NaturalAbility)
+                for (var index = 0; index < SpecialAbilities.Length; index++)
                 {
-                    any = true;
-                    break;
+                    if (SpecialAbilities != null)
+                    {
+                        var a = SpecialAbilities[index];
+
+                        if (!a.NaturalAbility)
+                        {
+                            any = true;
+                            break;
+                        }
+                    }
                 }
             }
 
