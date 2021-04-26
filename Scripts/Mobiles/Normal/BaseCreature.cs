@@ -628,7 +628,9 @@ namespace Server.Mobiles
             if (CanLowerSlot() && max > min)
             {
                 if (_InitAverage == null)
+                {
                     _InitAverage = new List<double>();
+                }
 
                 _InitAverage.Add((value - min) / (max - min));
             }
@@ -645,7 +647,17 @@ namespace Server.Mobiles
 
         private bool CanLowerSlot()
         {
-            return _SlotLowerables.Any(t => t == GetType());
+            for (var index = 0; index < _SlotLowerables.Length; index++)
+            {
+                var t = _SlotLowerables[index];
+
+                if (t == GetType())
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public void CalculateSlots(int slots)
@@ -663,9 +675,18 @@ namespace Server.Mobiles
             ControlSlotsMax = def.ControlSlotsMax;
 
             if (_InitAverage == null)
+            {
                 return;
+            }
 
-            double total = _InitAverage.Sum(d => d);
+            double total = 0;
+
+            for (var index = 0; index < _InitAverage.Count; index++)
+            {
+                var d = _InitAverage[index];
+
+                total += d;
+            }
 
             if (total / _InitAverage.Count <= AverageThreshold)
             {
@@ -724,7 +745,19 @@ namespace Server.Mobiles
             }
             else
             {
-                MasteryInfo[] mInfo = MasteryInfo.Infos.Where(i => i.MasterySkill == _Mastery && !i.Passive && (i.SpellType != typeof(BodyGuardSpell) || Controlled)).ToArray();
+                List<MasteryInfo> list = new List<MasteryInfo>();
+
+                for (var index = 0; index < MasteryInfo.Infos.Count; index++)
+                {
+                    var i = MasteryInfo.Infos[index];
+
+                    if (i.MasterySkill == _Mastery && !i.Passive && (i.SpellType != typeof(BodyGuardSpell) || Controlled))
+                    {
+                        list.Add(i);
+                    }
+                }
+
+                MasteryInfo[] mInfo = list.ToArray();
 
                 if (mInfo.Length > 0)
                 {
@@ -5872,13 +5905,21 @@ namespace Server.Mobiles
                             {
                                 if (ds.m_Mobile is PlayerMobile pm)
                                 {
-                                    foreach (Mobile pet in pm.AllFollowers)
+                                    for (var index = 0; index < pm.AllFollowers.Count; index++)
                                     {
-                                        if (DamageEntries.Any(de => de.Damager == pet))
+                                        Mobile pet = pm.AllFollowers[index];
+
+                                        for (var index1 = 0; index1 < DamageEntries.Count; index1++)
                                         {
-                                            titles.Add(pet);
-                                            fame.Add(totalFame);
-                                            karma.Add(totalKarma);
+                                            var de = DamageEntries[index1];
+
+                                            if (de.Damager == pet)
+                                            {
+                                                titles.Add(pet);
+                                                fame.Add(totalFame);
+                                                karma.Add(totalKarma);
+                                                break;
+                                            }
                                         }
                                     }
                                 }
