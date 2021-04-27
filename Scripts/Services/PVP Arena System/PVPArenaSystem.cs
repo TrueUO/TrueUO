@@ -401,14 +401,17 @@ namespace Server.Engines.ArenaSystem
         {
             bool all = true;
 
-            for (var index = 0; index < Arenas.Count; index++)
+            if (Arenas != null)
             {
-                var arena = Arenas[index];
-
-                if (arena.Definition == def)
+                for (var index = 0; index < Arenas.Count; index++)
                 {
-                    all = false;
-                    break;
+                    var arena = Arenas[index];
+
+                    if (arena.Definition == def)
+                    {
+                        all = false;
+                        break;
+                    }
                 }
             }
 
