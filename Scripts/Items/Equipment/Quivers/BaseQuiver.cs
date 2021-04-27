@@ -22,31 +22,15 @@ namespace Server.Items
         private bool _ElvesOnly;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool IsVvVItem
-        {
-            get { return _VvVItem; }
-            set { _VvVItem = value; InvalidateProperties(); }
-        }
+        public bool IsVvVItem { get => _VvVItem; set { _VvVItem = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public Mobile Owner
-        {
-            get { return _Owner; }
-            set { _Owner = value; if (_Owner != null) _OwnerName = _Owner.Name; InvalidateProperties(); }
-        }
+        public Mobile Owner { get => _Owner; set { _Owner = value; if (_Owner != null) _OwnerName = _Owner.Name; InvalidateProperties(); } }
 
-        public virtual string OwnerName
-        {
-            get { return _OwnerName; }
-            set { _OwnerName = value; InvalidateProperties(); }
-        }
+        public virtual string OwnerName { get => _OwnerName; set { _OwnerName = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool ElfOnly
-        {
-            get { return _ElvesOnly; }
-            set { _ElvesOnly = value; }
-        }
+        public bool ElfOnly { get => _ElvesOnly; set => _ElvesOnly = value; }
 
         public override int DefaultGumpID => 0x108;
 
@@ -82,141 +66,38 @@ namespace Server.Items
         public bool IsArrowAmmo { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public AosAttributes Attributes
-        {
-            get
-            {
-                return m_Attributes;
-            }
-            set
-            {
-            }
-        }
+        public AosAttributes Attributes { get => m_Attributes; set { } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public AosSkillBonuses SkillBonuses
-        {
-            get
-            {
-                return m_AosSkillBonuses;
-            }
-            set
-            {
-            }
-        }
+        public AosSkillBonuses SkillBonuses { get => m_AosSkillBonuses; set { } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public AosElementAttributes Resistances
-        {
-            get
-            {
-                return m_Resistances;
-            }
-            set
-            {
-            }
-        }
+        public AosElementAttributes Resistances { get => m_Resistances; set { } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int Capacity
-        {
-            get
-            {
-                return m_Capacity;
-            }
-            set
-            {
-                m_Capacity = value;
-                InvalidateProperties();
-            }
-        }
+        public int Capacity { get => m_Capacity; set { m_Capacity = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int LowerAmmoCost
-        {
-            get
-            {
-                return m_Attributes.LowerAmmoCost;
-            }
-            set
-            {
-                m_Attributes.LowerAmmoCost = value;
-                InvalidateProperties();
-            }
-        }
+        public int LowerAmmoCost { get => m_Attributes.LowerAmmoCost; set { m_Attributes.LowerAmmoCost = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int WeightReduction
-        {
-            get
-            {
-                return m_WeightReduction;
-            }
-            set
-            {
-                m_WeightReduction = value;
-                InvalidateProperties();
-            }
-        }
+        public int WeightReduction { get => m_WeightReduction; set { m_WeightReduction = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int DamageIncrease
-        {
-            get
-            {
-                return m_DamageIncrease;
-            }
-            set
-            {
-                m_DamageIncrease = value;
-                InvalidateProperties();
-            }
-        }
+        public int DamageIncrease { get => m_DamageIncrease; set { m_DamageIncrease = value; InvalidateProperties(); } }
 
         private Mobile m_Crafter;
         private ItemQuality m_Quality;
         private bool m_PlayerConstructed;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public Mobile Crafter
-        {
-            get
-            {
-                return m_Crafter;
-            }
-            set
-            {
-                m_Crafter = value;
-                InvalidateProperties();
-            }
-        }
+        public Mobile Crafter { get => m_Crafter; set { m_Crafter = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public ItemQuality Quality
-        {
-            get
-            {
-                return m_Quality;
-            }
-            set
-            {
-                m_Quality = value;
-                InvalidateProperties();
-            }
-        }
+        public ItemQuality Quality { get => m_Quality; set { m_Quality = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool PlayerConstructed
-        {
-            get
-            {
-                return m_PlayerConstructed;
-            }
-            set
-            {
-                m_PlayerConstructed = value;
-            }
-        }
+        public bool PlayerConstructed { get => m_PlayerConstructed; set => m_PlayerConstructed = value; }
 
         public Item Ammo => Items.Count > 0 ? Items[0] : null;
 
@@ -250,9 +131,7 @@ namespace Server.Items
 
         public override void OnAfterDuped(Item newItem)
         {
-            BaseQuiver quiver = newItem as BaseQuiver;
-
-            if (quiver != null)
+            if (newItem is BaseQuiver quiver)
             {
                 quiver.m_Attributes = new AosAttributes(newItem, m_Attributes);
                 quiver.m_AosSkillBonuses = new AosSkillBonuses(newItem, m_AosSkillBonuses);
@@ -261,9 +140,7 @@ namespace Server.Items
                 quiver.m_SetSkillBonuses = new AosSkillBonuses(newItem, m_SetSkillBonuses);
             }
 
-            GargishLeatherWingArmor wing = newItem as GargishLeatherWingArmor;
-
-            if (wing != null)
+            if (newItem is GargishLeatherWingArmor wing)
             {
                 int phys, fire, cold, pois, nrgy, chaos, direct;
                 phys = fire = cold = pois = nrgy = chaos = direct = 0;
@@ -299,7 +176,7 @@ namespace Server.Items
             return total;
         }
 
-        private static readonly Type[] m_Ammo = new Type[]
+        private static readonly Type[] m_Ammo =
         {
             typeof(Arrow), typeof(Bolt)
         };
@@ -329,12 +206,16 @@ namespace Server.Items
         public override bool CheckHold(Mobile m, Item item, bool message, bool checkItems, int plusItems, int plusWeight)
         {
             if (!Movable)
+            {
                 return false;
+            }
 
             if (!CheckType(item))
             {
                 if (message)
+                {
                     m.SendLocalizedMessage(1074836); // The container can not hold that type of object.
+                }
 
                 return false;
             }
@@ -344,20 +225,31 @@ namespace Server.Items
             if (ammo != null && ammo.Amount > 0)
             {
                 if (IsArrowAmmo && item is Bolt)
+                {
                     return false;
+                }
 
                 if (!IsArrowAmmo && item is Arrow)
+                {
                     return false;
+                }
             }
 
             if (!checkItems || Items.Count < DefaultMaxItems)
             {
                 int currentAmount = 0;
 
-                Items.ForEach(i => currentAmount += i.Amount);
+                for (var index = 0; index < Items.Count; index++)
+                {
+                    var i = Items[index];
+
+                    currentAmount += i.Amount;
+                }
 
                 if (item.Amount + currentAmount <= m_Capacity)
+                {
                     return base.CheckHold(m, item, message, checkItems, plusItems, plusWeight);
+                }
             }
 
             return false;
@@ -374,10 +266,19 @@ namespace Server.Items
 
             if (ammo != null)
             {
-                int currentAmount = Items.Sum(i => i.Amount);
+                int currentAmount = 0;
+
+                for (var index = 0; index < Items.Count; index++)
+                {
+                    var i = Items[index];
+
+                    currentAmount += i.Amount;
+                }
 
                 if (item.Amount + currentAmount <= m_Capacity)
+                {
                     return base.CheckStack(from, item);
+                }
             }
 
             return false;
@@ -697,7 +598,7 @@ namespace Server.Items
 
         private static bool GetSaveFlag(SaveFlag flags, SaveFlag toGet)
         {
-            return ((flags & toGet) != 0);
+            return (flags & toGet) != 0;
         }
 
         [Flags]
@@ -722,14 +623,17 @@ namespace Server.Items
             SetCold = 0x00010000,
             SetPoison = 0x00020000,
             SetEnergy = 0x00040000,
-            ElvesOnly = 0x00080000,
+            ElvesOnly = 0x00080000
         }
 
         public override void GetContextMenuEntries(Mobile from, List<ContextMenuEntry> list)
         {
             base.GetContextMenuEntries(from, list);
-            if (from.Items.Contains(this) || (from.Backpack != null && IsChildOf(from.Backpack)))
+
+            if (from.Items.Contains(this) || from.Backpack != null && IsChildOf(from.Backpack))
+            {
                 list.Add(new RefillQuiverEntry(this));
+            }
         }
 
         public override void Serialize(GenericWriter writer)
@@ -741,19 +645,14 @@ namespace Server.Items
             writer.Write(_Owner);
             writer.Write(_OwnerName);
 
-            // Version 3 takes out LowerAmmoCost
-
             SaveFlag flags = SaveFlag.None;
 
-            // Version 2
             writer.Write(IsArrowAmmo);
 
-            // Version 1
             m_AosSkillBonuses.Serialize(writer);
             m_Resistances.Serialize(writer);
 
             SetSaveFlag(ref flags, SaveFlag.Attributes, !m_Attributes.IsEmpty);
-            //SetSaveFlag(ref flags, SaveFlag.LowerAmmoCost, m_LowerAmmoCost != 0);
             SetSaveFlag(ref flags, SaveFlag.WeightReduction, m_WeightReduction != 0);
             SetSaveFlag(ref flags, SaveFlag.DamageIncrease, m_DamageIncrease != 0);
             SetSaveFlag(ref flags, SaveFlag.Crafter, m_Crafter != null);
@@ -779,9 +678,6 @@ namespace Server.Items
             if (GetSaveFlag(flags, SaveFlag.Attributes))
                 m_Attributes.Serialize(writer);
 
-            //if (GetSaveFlag(flags, SaveFlag.LowerAmmoCost))
-            //    writer.Write((int)m_LowerAmmoCost);
-
             if (GetSaveFlag(flags, SaveFlag.WeightReduction))
                 writer.Write(m_WeightReduction);
 
@@ -797,7 +693,6 @@ namespace Server.Items
             if (GetSaveFlag(flags, SaveFlag.Capacity))
                 writer.Write(m_Capacity);
 
-            #region Mondain's Legacy Sets
             if (GetSaveFlag(flags, SaveFlag.SetPhysical))
                 writer.WriteEncodedInt(m_SetPhysicalBonus);
 
@@ -830,7 +725,6 @@ namespace Server.Items
 
             if (GetSaveFlag(flags, SaveFlag.ElvesOnly))
                 writer.Write(_ElvesOnly);
-            #endregion
         }
 
         public override void Deserialize(GenericReader reader)
@@ -853,31 +747,18 @@ namespace Server.Items
                     goto case 1;
                 case 1:
                     {
-                        if (version == 1)
-                        {
-                            IsArrowAmmo = (Ammo == null || Ammo is Arrow);
-                        }
                         m_AosSkillBonuses = new AosSkillBonuses(this, reader);
                         m_Resistances = new AosElementAttributes(this, reader);
                         goto case 0;
                     }
                 case 0:
                     {
-                        if (version == 0)
-                        {
-                            m_AosSkillBonuses = new AosSkillBonuses(this);
-                            m_Resistances = new AosElementAttributes(this);
-                        }
-
                         SaveFlag flags = (SaveFlag)reader.ReadEncodedInt();
 
                         if (GetSaveFlag(flags, SaveFlag.Attributes))
                             m_Attributes = new AosAttributes(this, reader);
                         else
                             m_Attributes = new AosAttributes(this);
-
-                        if (version < 3 && GetSaveFlag(flags, SaveFlag.LowerAmmoCost))
-                            m_Attributes.LowerAmmoCost = reader.ReadInt();
 
                         if (GetSaveFlag(flags, SaveFlag.WeightReduction))
                             m_WeightReduction = reader.ReadInt();
@@ -1009,7 +890,7 @@ namespace Server.Items
 
         public virtual int Pieces => 0;
 
-        public virtual bool BardMasteryBonus => (SetID == SetItem.Virtuoso);
+        public virtual bool BardMasteryBonus => SetID == SetItem.Virtuoso;
 
         public bool IsSetItem => SetID != SetItem.None;
 
@@ -1018,141 +899,37 @@ namespace Server.Items
         private bool m_LastEquipped;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int SetHue
-        {
-            get
-            {
-                return m_SetHue;
-            }
-            set
-            {
-                m_SetHue = value;
-                InvalidateProperties();
-            }
-        }
+        public int SetHue { get => m_SetHue; set { m_SetHue = value; InvalidateProperties(); } }
 
-        public bool SetEquipped
-        {
-            get
-            {
-                return m_SetEquipped;
-            }
-            set
-            {
-                m_SetEquipped = value;
-            }
-        }
+        public bool SetEquipped { get => m_SetEquipped; set => m_SetEquipped = value; }
 
-        public bool LastEquipped
-        {
-            get
-            {
-                return m_LastEquipped;
-            }
-            set
-            {
-                m_LastEquipped = value;
-            }
-        }
+        public bool LastEquipped { get => m_LastEquipped; set => m_LastEquipped = value; }
 
         private int m_SetPhysicalBonus, m_SetFireBonus, m_SetColdBonus, m_SetPoisonBonus, m_SetEnergyBonus;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int SetPhysicalBonus
-        {
-            get
-            {
-                return m_SetPhysicalBonus;
-            }
-            set
-            {
-                m_SetPhysicalBonus = value;
-                InvalidateProperties();
-            }
-        }
+        public int SetPhysicalBonus { get => m_SetPhysicalBonus; set { m_SetPhysicalBonus = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int SetFireBonus
-        {
-            get
-            {
-                return m_SetFireBonus;
-            }
-            set
-            {
-                m_SetFireBonus = value;
-                InvalidateProperties();
-            }
-        }
+        public int SetFireBonus { get => m_SetFireBonus; set { m_SetFireBonus = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int SetColdBonus
-        {
-            get
-            {
-                return m_SetColdBonus;
-            }
-            set
-            {
-                m_SetColdBonus = value;
-                InvalidateProperties();
-            }
-        }
+        public int SetColdBonus { get => m_SetColdBonus; set { m_SetColdBonus = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int SetPoisonBonus
-        {
-            get
-            {
-                return m_SetPoisonBonus;
-            }
-            set
-            {
-                m_SetPoisonBonus = value;
-                InvalidateProperties();
-            }
-        }
+        public int SetPoisonBonus { get => m_SetPoisonBonus; set { m_SetPoisonBonus = value; InvalidateProperties(); } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int SetEnergyBonus
-        {
-            get
-            {
-                return m_SetEnergyBonus;
-            }
-            set
-            {
-                m_SetEnergyBonus = value;
-                InvalidateProperties();
-            }
-        }
+        public int SetEnergyBonus { get => m_SetEnergyBonus; set { m_SetEnergyBonus = value; InvalidateProperties(); } }
 
         private AosAttributes m_SetAttributes;
         private AosSkillBonuses m_SetSkillBonuses;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public AosAttributes SetAttributes
-        {
-            get
-            {
-                return m_SetAttributes;
-            }
-            set
-            {
-            }
-        }
+        public AosAttributes SetAttributes { get => m_SetAttributes; set { } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public AosSkillBonuses SetSkillBonuses
-        {
-            get
-            {
-                return m_SetSkillBonuses;
-            }
-            set
-            {
-            }
-        }
+        public AosSkillBonuses SetSkillBonuses { get => m_SetSkillBonuses; set { } }
 
         public class RefillQuiverEntry : ContextMenuEntry
         {
@@ -1166,23 +943,29 @@ namespace Server.Items
                 Enabled = m_quiver.Ammo == null || m_quiver.Ammo.Amount < m_quiver.Capacity;
             }
 
-            bool Refill<T>(Mobile m, Container c) where T : Item
+            private bool Refill<T>(Mobile m, Container c) where T : Item
             {
                 List<T> list = c.FindItemsByType<T>(true).ToList();
 
                 if (list.Count > 0)
                 {
                     int amt = 0;
+
                     list = list.OrderByDescending(e => e.Amount).ToList();
 
                     int famount = m_quiver.Ammo == null ? 0 : m_quiver.Ammo.Amount;
-                    if (m_quiver.Ammo != null)
-                        m_quiver.Ammo.Delete();
 
-                    while ((famount < m_quiver.Capacity) && (list.Count > 0))
+                    if (m_quiver.Ammo != null)
+                    {
+                        m_quiver.Ammo.Delete();
+                    }
+
+                    while (famount < m_quiver.Capacity && list.Count > 0)
                     {
                         T data = list[list.Count - 1];
+
                         int remaining = m_quiver.Capacity - famount;
+
                         if (data.Amount > remaining)
                         {
                             famount += remaining;
@@ -1198,7 +981,7 @@ namespace Server.Items
                         }
                     }
 
-                    if ((amt > 0) && (m != null))
+                    if (amt > 0 && m != null)
                     {
                         T obj = (T)Activator.CreateInstance(typeof(T));
                         obj.Amount = famount;
@@ -1212,58 +995,76 @@ namespace Server.Items
 
             public override void OnClick()
             {
-                if ((m_quiver == null) || m_quiver.Deleted || (m_quiver.Ammo != null && m_quiver.Ammo.Amount >= m_quiver.Capacity))
+                if (m_quiver == null || m_quiver.Deleted || m_quiver.Ammo != null && m_quiver.Ammo.Amount >= m_quiver.Capacity)
+                {
                     return;
+                }
 
                 object owner = m_quiver.Parent;
+
                 while (owner != null)
                 {
                     if (owner is Mobile)
+                    {
                         break;
+                    }
+
                     if (owner is Item item)
                     {
                         owner = item.Parent;
                         continue;
                     }
+
                     owner = null;
                 }
 
                 if (owner == null)
+                {
                     return;
-
-                if (!(owner is Mobile))
-                    return;
+                }
 
                 Mobile m = (Mobile)owner;
 
-
                 if (m.Backpack == null)
+                {
                     return;
+                }
 
                 if (!(m.Items.Contains(m_quiver) || m_quiver.IsChildOf(m.Backpack)))
+                {
                     return;
+                }
 
                 // Try to fill from the bank box
-                if ((m.BankBox != null) && (m.BankBox.Opened))
+                if (m.BankBox != null && m.BankBox.Opened)
                 {
                     if (m_quiver.IsArrowAmmo ? Refill<Arrow>(m, m.BankBox) : Refill<Bolt>(m, m.BankBox))
+                    {
                         return;
+                    }
                 }
 
                 // Otherwise look for secure containers within two tiles
                 IPooledEnumerable<Item> items = m.Map.GetItemsInRange(m.Location, 1);
+
                 foreach (Item i in items)
                 {
                     if (!(i is Container))
+                    {
                         continue;
+                    }
 
                     Container c = (Container)i;
 
                     if (!c.IsSecure || !c.IsAccessibleTo(m))
+                    {
                         continue;
+                    }
 
                     if (m_quiver.IsArrowAmmo ? Refill<Arrow>(m, c) : Refill<Bolt>(m, c))
+                    {
                         return;
+                    }
                 }
 
                 m.SendLocalizedMessage(1072673); //There are no source containers nearby.
