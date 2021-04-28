@@ -2270,7 +2270,7 @@ namespace Server.Mobiles
                 {
                     if (m_Mobile != null)
                     {
-                        op.WriteLine("NaN in TransformMoveDelay: {0}, {1}, {2}, {3}", DateTime.UtcNow, GetType(), m_Mobile == null ? "null" : m_Mobile.GetType().ToString(), m_Mobile.StamMax);
+                        op.WriteLine("NaN in TransformMoveDelay: {0}, {1}, {2}, {3}", DateTime.UtcNow, GetType(), m_Mobile == null ? "null" : m_Mobile.GetType().ToString(), m_Mobile?.StamMax);
                     }
                 }
 

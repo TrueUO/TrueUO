@@ -52,58 +52,55 @@ namespace Server.Spells.SkillMasteries
         {
             BaseWeapon weapon = GetWeapon();
 
-            if (weapon is BaseRanged ranged && !(ranged is BaseThrown))
+            if (weapon is BaseRanged ranged && !(ranged is BaseThrown) && o is IPoint3D p && SpellHelper.CheckTown(p, Caster) && CheckSequence())
             {
-                if (o is IPoint3D p && SpellHelper.CheckTown(p, Caster) && CheckSequence())
+                List<Mobile> targets = new List<Mobile>();
+
+                foreach (IDamageable target in AcquireIndirectTargets(p, 5))
                 {
-                    List<Mobile> targets = new List<Mobile>();
-
-                    foreach (IDamageable target in AcquireIndirectTargets(p, 5))
+                    if (target is Mobile mobile)
                     {
-                        if (target is Mobile mobile)
-                        {
-                            targets.Add(mobile);
-                        }
+                        targets.Add(mobile);
                     }
-
-                    int count = targets.Count;
-
-                    for (var index = 0; index < targets.Count; index++)
-                    {
-                        Mobile mob = targets[index];
-
-                        Caster.MovingEffect(mob, ranged.EffectID, 18, 1, false, false);
-
-                        if (ranged.CheckHit(Caster, mob))
-                        {
-                            double damage = GetNewAosDamage(40, 1, 5, mob);
-
-                            if (count > 2)
-                            {
-                                damage = damage / count;
-                            }
-
-                            damage *= GetDamageScalar(mob);
-                            Caster.DoHarmful(mob);
-
-                            SpellHelper.Damage(this, mob, damage, 0, 100, 0, 0, 0);
-
-                            Server.Timer.DelayCall(TimeSpan.FromMilliseconds(800), obj =>
-                            {
-                                Mobile mobile = obj;
-
-                                mobile?.FixedParticles(0x36BD, 20, 10, 5044, EffectLayer.Head);
-                            }, mob);
-
-                            mob.PlaySound(0x1DD);
-                        }
-                    }
-
-                    ColUtility.Free(targets);
-
-                    ranged.PlaySwingAnimation(Caster);
-                    Caster.PlaySound(0x101);
                 }
+
+                int count = targets.Count;
+
+                for (var index = 0; index < targets.Count; index++)
+                {
+                    Mobile mob = targets[index];
+
+                    Caster.MovingEffect(mob, ranged.EffectID, 18, 1, false, false);
+
+                    if (ranged.CheckHit(Caster, mob))
+                    {
+                        double damage = GetNewAosDamage(40, 1, 5, mob);
+
+                        if (count > 2)
+                        {
+                            damage = damage / count;
+                        }
+
+                        damage *= GetDamageScalar(mob);
+                        Caster.DoHarmful(mob);
+
+                        SpellHelper.Damage(this, mob, damage, 0, 100, 0, 0, 0);
+
+                        Server.Timer.DelayCall(TimeSpan.FromMilliseconds(800), obj =>
+                        {
+                            Mobile mobile = obj;
+
+                            mobile?.FixedParticles(0x36BD, 20, 10, 5044, EffectLayer.Head);
+                        }, mob);
+
+                        mob.PlaySound(0x1DD);
+                    }
+                }
+
+                ColUtility.Free(targets);
+
+                ranged.PlaySwingAnimation(Caster);
+                Caster.PlaySound(0x101);
             }
         }
     }
