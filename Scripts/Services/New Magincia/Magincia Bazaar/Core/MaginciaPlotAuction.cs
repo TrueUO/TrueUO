@@ -188,39 +188,59 @@ namespace Server.Engines.NewMagincia
                 {
                     // get a list of specific type (as opposed to next available)
                     List<BidEntry> specifics = new List<BidEntry>();
-                    foreach (BidEntry bid in winners)
+                    for (var index = 0; index < winners.Count; index++)
                     {
+                        BidEntry bid = winners[index];
+
                         if (bid.BidType == BidType.Specific)
+                        {
                             specifics.Add(bid);
+                        }
                     }
 
                     // one 1 specific!
                     if (specifics.Count == 1)
+                    {
                         winner = specifics[0].Bidder;
+                    }
                     else if (specifics.Count > 1)
                     {
                         //gets oldest specific
                         BidEntry oldest = null;
-                        foreach (BidEntry entry in specifics)
+
+                        for (var index = 0; index < specifics.Count; index++)
                         {
+                            BidEntry entry = specifics[index];
+
                             if (oldest == null || entry.DatePlaced < oldest.DatePlaced)
+                            {
                                 oldest = entry;
+                            }
                         }
 
-                        winner = oldest.Bidder;
+                        if (oldest != null)
+                        {
+                            winner = oldest.Bidder;
+                        }
                     }
                     else
                     {
                         //no specifics! gets oldest of list of winners
                         BidEntry oldest = null;
-                        foreach (BidEntry entry in winners)
+                        for (var index = 0; index < winners.Count; index++)
                         {
+                            BidEntry entry = winners[index];
+
                             if (oldest == null || entry.DatePlaced < oldest.DatePlaced)
+                            {
                                 oldest = entry;
+                            }
                         }
 
                         if (oldest != null)
+                        {
                             winner = oldest.Bidder;
+                        }
                     }
                 }
             }

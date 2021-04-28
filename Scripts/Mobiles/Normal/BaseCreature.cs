@@ -191,9 +191,10 @@ namespace Server.Mobiles
 
                 if (objs.Length > 0)
                 {
-                    FriendlyNameAttribute friendly = objs[0] as FriendlyNameAttribute;
-
-                    return friendly.FriendlyName;
+                    if (objs[0] is FriendlyNameAttribute friendly)
+                    {
+                        return friendly.FriendlyName;
+                    }
                 }
             }
 
@@ -1611,9 +1612,9 @@ namespace Server.Mobiles
 
             ApplyPoisonResult result = base.ApplyPoison(from, poison);
 
-            if (from != null && result == ApplyPoisonResult.Poisoned && PoisonTimer is PoisonImpl.PoisonTimer)
+            if (from != null && result == ApplyPoisonResult.Poisoned && PoisonTimer is PoisonImpl.PoisonTimer timer)
             {
-                (PoisonTimer as PoisonImpl.PoisonTimer).From = from;
+                timer.From = from;
             }
 
             return result;
@@ -7270,7 +7271,7 @@ namespace Server.Mobiles
         {
             if (Map != null && Map != Map.Internal && FightMode != FightMode.None && RangeHome >= 0)
             {
-                if (!Controlled && !Summoned && Spawner is Spawner && (Spawner as Spawner).Map == Map)
+                if (!Controlled && !Summoned && Spawner is Spawner spawner && spawner.Map == Map)
                 {
                     return true;
                 }

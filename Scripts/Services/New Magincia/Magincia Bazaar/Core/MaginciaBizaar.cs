@@ -346,30 +346,35 @@ namespace Server.Engines.NewMagincia
             MaginciaBazaarPlot plot = GetBiddingPlot(from);
 
             if (plot != null)
+            {
                 return plot.Auction.RetractBid(from);
+            }
 
             return RetractBid(from);
         }
 
         public static bool RetractBid(Mobile from)
         {
-            Account acct = from.Account as Account;
-
-            for (int i = 0; i < acct.Length; i++)
+            if (from.Account is Account acct)
             {
-                Mobile m = acct[i];
-
-                if (m == null)
-                    continue;
-
-                if (m_NextAvailable.ContainsKey(m))
+                for (int i = 0; i < acct.Length; i++)
                 {
-                    BidEntry entry = m_NextAvailable[m];
+                    Mobile m = acct[i];
 
-                    if (entry != null && Banker.Deposit(m, entry.Amount))
+                    if (m == null)
                     {
-                        m_NextAvailable.Remove(m);
-                        return true;
+                        continue;
+                    }
+
+                    if (m_NextAvailable.ContainsKey(m))
+                    {
+                        BidEntry entry = m_NextAvailable[m];
+
+                        if (entry != null && Banker.Deposit(m, entry.Amount))
+                        {
+                            m_NextAvailable.Remove(m);
+                            return true;
+                        }
                     }
                 }
             }
