@@ -63,10 +63,13 @@ namespace Server.Items
         public static void ExpireBonus(object o)
         {
             object[] objects = (object[])o;
-            Mobile mob = objects[0] as Mobile;
+
             SkillMod sm = objects[1] as SkillMod;
 
-            mob.RemoveSkillMod(sm);
+            if (objects[0] is Mobile mob)
+            {
+                mob.RemoveSkillMod(sm);
+            }
         }
 
         public static bool IsInCooldown(Mobile m)

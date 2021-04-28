@@ -74,18 +74,21 @@ namespace Server.Engines.MiniChamps
                     loc = Owner.BossSpawnPoint;
                 }
 
-                bc.Home = Owner.Location;
-                bc.RangeHome = Owner.SpawnRange;
-                bc.Tamable = false;
-                bc.OnBeforeSpawn(loc, map);
-                bc.MoveToWorld(loc, map);
-
-                if (bc.Fame > Utility.Random(100000) || bc is BaseRenowned)
+                if (bc != null)
                 {
-                    DropEssence(bc);
-                }
+                    bc.Home = Owner.Location;
+                    bc.RangeHome = Owner.SpawnRange;
+                    bc.Tamable = false;
+                    bc.OnBeforeSpawn(loc, map);
+                    bc.MoveToWorld(loc, map);
 
-                Creatures.Add(bc);
+                    if (bc.Fame > Utility.Random(100000) || bc is BaseRenowned)
+                    {
+                        DropEssence(bc);
+                    }
+
+                    Creatures.Add(bc);
+                }
 
                 ++Spawned;
 

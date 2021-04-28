@@ -97,7 +97,25 @@ namespace Server.Engines.JollyRoger
 
         public static int GetShrineHue(Shrine shrine)
         {
-            return ShrineDef.FirstOrDefault(x => x.Shrine == shrine).Hue;
+            ShrineDef first = null;
+
+            for (var index = 0; index < ShrineDef.Count; index++)
+            {
+                var x = ShrineDef[index];
+
+                if (x.Shrine == shrine)
+                {
+                    first = x;
+                    break;
+                }
+            }
+
+            if (first != null)
+            {
+                return first.Hue;
+            }
+
+            return default;
         }
 
         public static Shrine GetShrine(int cliloc)
@@ -107,12 +125,48 @@ namespace Server.Engines.JollyRoger
 
         public static Shrine GetShrine(Item item)
         {
-            return ShrineDef.FirstOrDefault(x => x.Hue == item.Hue).Shrine;
+            ShrineDef first = null;
+
+            for (var index = 0; index < ShrineDef.Count; index++)
+            {
+                var x = ShrineDef[index];
+
+                if (x.Hue == item.Hue)
+                {
+                    first = x;
+                    break;
+                }
+            }
+
+            if (first != null)
+            {
+                return first.Shrine;
+            }
+
+            return default;
         }
 
         public static int GetTitle(Shrine shrine)
         {
-            return ShrineDef.FirstOrDefault(x => x.Shrine == shrine).TitleCliloc;
+            ShrineDef first = null;
+
+            for (var index = 0; index < ShrineDef.Count; index++)
+            {
+                var x = ShrineDef[index];
+
+                if (x.Shrine == shrine)
+                {
+                    first = x;
+                    break;
+                }
+            }
+
+            if (first != null)
+            {
+                return first.TitleCliloc;
+            }
+
+            return default;
         }
 
         public static void AddMasterKill(Mobile m, Shrine shrine)
@@ -180,18 +234,44 @@ namespace Server.Engines.JollyRoger
 
         public static void TitleCheck(Mobile m, Shrine shrine)
         {
-            var list = _List.FirstOrDefault(x => x.Mobile == m);
-            var pm = m as PlayerMobile;
+            RewardArray list = null;
 
-            if (pm != null && list != null && list.Shrine != null)
+            for (var index = 0; index < _List.Count; index++)
             {
-                var count = list.Shrine.FirstOrDefault(x => x.Shrine == shrine).FragmentCount;
-                var playerTitle = GetShrineTitle(pm);
-                var shrineTitle = GetTitle(shrine);
+                var x = _List[index];
 
-                if (playerTitle == 0 || playerTitle != shrineTitle && list.Shrine.Any(x => x.FragmentCount < count && x.Shrine != shrine))
+                if (x.Mobile == m)
                 {
-                    SetShrineTitle(pm, shrineTitle);
+                    list = x;
+                    break;
+                }
+            }
+
+            if (m is PlayerMobile pm && list != null && list.Shrine != null)
+            {
+                ShrineArray first = null;
+
+                for (var index = 0; index < list.Shrine.Count; index++)
+                {
+                    var x = list.Shrine[index];
+
+                    if (x.Shrine == shrine)
+                    {
+                        first = x;
+                        break;
+                    }
+                }
+
+                if (first != null)
+                {
+                    var count = first.FragmentCount;
+                    var playerTitle = GetShrineTitle(pm);
+                    var shrineTitle = GetTitle(shrine);
+
+                    if (playerTitle == 0 || playerTitle != shrineTitle && list.Shrine.Any(x => x.FragmentCount < count && x.Shrine != shrine))
+                    {
+                        SetShrineTitle(pm, shrineTitle);
+                    }
                 }
             }
         }
@@ -211,12 +291,14 @@ namespace Server.Engines.JollyRoger
 
                 writer.Write(l.Shrine.Count);
 
-                l.Shrine.ForEach(s =>
+                for (var index = 0; index < l.Shrine.Count; index++)
                 {
-                    writer.Write((int)s.Shrine);
+                    var s = l.Shrine[index];
+
+                    writer.Write((int) s.Shrine);
                     writer.Write(s.FragmentCount);
                     writer.Write(s.MasterDeath);
-                });
+                }
             });
 
             writer.Write(ShrineTitles.Count);

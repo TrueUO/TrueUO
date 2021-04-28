@@ -57,15 +57,18 @@ namespace Server.Items
                 return false;
             }
 
-            int amount = ((MaritimeCargo)item).GetAwardAmount() * 1000;
+            if (item != null)
+            {
+                int amount = ((MaritimeCargo) item).GetAwardAmount() * 1000;
 
-            if (Donations.ContainsKey(from))
-            {
-                Donations[from] += amount;
-            }
-            else
-            {
-                Donations.Add(from, amount);
+                if (Donations.ContainsKey(from))
+                {
+                    Donations[from] += amount;
+                }
+                else
+                {
+                    Donations.Add(from, amount);
+                }
             }
 
             from.SendLocalizedMessage(1159032, string.Format("{0}", Donations[from].ToString())); // The Fellowship thanks you for your donation. You have donated ~1_val~ worth of goods!
@@ -76,7 +79,10 @@ namespace Server.Items
                 from.AddToBackpack(new FellowshipCoin());
             }
 
-            item.Delete();
+            if (item != null)
+            {
+                item.Delete();
+            }
 
             return true;
         }

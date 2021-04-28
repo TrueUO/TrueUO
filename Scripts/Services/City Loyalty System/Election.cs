@@ -78,35 +78,49 @@ namespace Server.Engines.CityLoyalty
             CityLoyaltyEntry pentry = City.GetPlayerEntry<CityLoyaltyEntry>(pm);
 
             if (pm.Young)
+            {
                 pm.SendMessage("Young players cannot be nominated for the ballot!");
+            }
             else if (!City.IsCitizen(pm) || pentry == null)
+            {
                 pm.SendLocalizedMessage(1153890); // You must be a citizen of this City to nominate yourself for the ballot! 
+            }
             else if (City.GetLoyaltyRating(pm) < LoyaltyRating.Adored)
+            {
                 pm.SendLocalizedMessage(1153891); // You must at least be adored within the City to nominate yourself for the ballot. 
+            }
             else
             {
-                Account a = pm.Account as Account;
-                for (int i = 0; i < a.Length; i++)
+                if (pm.Account is Account a)
                 {
-                    Mobile m = a[i];
-
-                    if (!(m is PlayerMobile))
-                        continue;
-
-                    BallotEntry ballot = Candidates.FirstOrDefault(entry => entry.Player == m);
-
-                    if (ballot != null)
+                    for (int i = 0; i < a.Length; i++)
                     {
-                        pm.SendLocalizedMessage(ballot.Endorsements.Count > 0 ? 1153917 : 1153889);  // A character from this account is currently endorsed for Candidacy and cannot be nominated.                                                                      // A character from this account has already been nominated to run for office.
-                        return false;                                                                // A character from this account has already been nominated to run for office. 
-                    }
+                        Mobile m = a[i];
 
-                    ballot = Candidates.FirstOrDefault(entry => entry.Endorsements.Contains(m));
+                        if (!(m is PlayerMobile))
+                        {
+                            continue;
+                        }
 
-                    if (ballot != null)
-                    {
-                        pm.SendLocalizedMessage(1153892); // A character from this account has already endorsed a nominee! 
-                        return false;
+                        BallotEntry ballot = Candidates.FirstOrDefault(entry => entry.Player == m);
+
+                        if (ballot != null)
+                        {
+                            pm.SendLocalizedMessage(ballot.Endorsements.Count > 0
+                                ? 1153917
+                                : 1153889); // A character from this account is currently endorsed for Candidacy and cannot be nominated.                                                                      // A character from this account has already been nominated to run for office.
+                            return
+                                false; // A character from this account has already been nominated to run for office. 
+                        }
+
+                        ballot = Candidates.FirstOrDefault(entry => entry.Endorsements.Contains(m));
+
+                        if (ballot != null)
+                        {
+                            pm.SendLocalizedMessage(
+                                1153892); // A character from this account has already endorsed a nominee! 
+                            return false;
+                        }
                     }
                 }
 
@@ -496,10 +510,23 @@ namespace Server.Engines.CityLoyalty
 
         public void OnRejectOffice(PlayerMobile pm)
         {
-            BallotEntry entry = Candidates.FirstOrDefault(c => c.Player == pm);
+            BallotEntry entry = null;
+
+            for (var index = 0; index < Candidates.Count; index++)
+            {
+                var c = Candidates[index];
+
+                if (c.Player == pm)
+                {
+                    entry = c;
+                    break;
+                }
+            }
 
             if (entry != null)
+            {
                 Candidates.Remove(entry);
+            }
 
             AutoPickGovernor = DateTime.Now + TimeSpan.FromDays(Utility.RandomMinMax(2, 4));
         }

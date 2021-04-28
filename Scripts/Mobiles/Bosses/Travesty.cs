@@ -12,11 +12,16 @@ namespace Server.Mobiles
         public override WeaponAbility GetWeaponAbility()
         {
             if (Weapon == null)
+            {
                 return null;
+            }
 
-            BaseWeapon weapon = Weapon as BaseWeapon;
+            if (Weapon is BaseWeapon weapon)
+            {
+                return Utility.RandomBool() ? weapon.PrimaryAbility : weapon.SecondaryAbility;
+            }
 
-            return Utility.RandomBool() ? weapon.PrimaryAbility : weapon.SecondaryAbility;
+            return null;
         }
 
         private DateTime m_NextBodyChange;

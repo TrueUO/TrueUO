@@ -86,7 +86,7 @@ namespace Server.Regions
 
             if (list != null && list.Shrine != null)
             {
-                var s = list.Shrine.FirstOrDefault(x => x.Shrine == virtue.Shrine);
+                var s = list.Shrine.FirstOrDefault(x => virtue != null && x.Shrine == virtue.Shrine);
 
                 if (s != null && s.MasterDeath >= 3)
                 {

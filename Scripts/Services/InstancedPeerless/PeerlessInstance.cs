@@ -95,8 +95,12 @@ namespace Server.Engines.InstancedPeerless
             State = InstanceState.Fighting;
 
             m_Boss = Activator.CreateInstance(m_Owner.BossType) as Mobile;
-            m_Boss.OnBeforeSpawn(m_BossSpawnLocation, m_Owner.Map);
-            m_Boss.MoveToWorld(m_BossSpawnLocation, m_Owner.Map);
+
+            if (m_Boss != null)
+            {
+                m_Boss.OnBeforeSpawn(m_BossSpawnLocation, m_Owner.Map);
+                m_Boss.MoveToWorld(m_BossSpawnLocation, m_Owner.Map);
+            }
 
             m_SliceTimer = new SliceTimer(this);
             m_SliceTimer.Start();
@@ -115,7 +119,9 @@ namespace Server.Engines.InstancedPeerless
             if (m_State == InstanceState.Fighting && m_Boss.Deleted)
             {
                 if (m_KickTimer != null)
+                {
                     m_KickTimer.Stop();
+                }
 
                 m_KickTimer = Timer.DelayCall(TimeSpan.FromMinutes(15.0), Kick);
 
@@ -127,8 +133,12 @@ namespace Server.Engines.InstancedPeerless
         {
             List<Mobile> fighters = new List<Mobile>(m_Fighters);
 
-            foreach (Mobile m in fighters)
+            for (var index = 0; index < fighters.Count; index++)
+            {
+                Mobile m = fighters[index];
+
                 Kick(m);
+            }
 
             FreeInstance();
         }
@@ -190,8 +200,12 @@ namespace Server.Engines.InstancedPeerless
             if (m_Boss != null)
                 m_Boss.Delete();
 
-            foreach (Mobile m in m_Fighters)
+            for (var index = 0; index < m_Fighters.Count; index++)
+            {
+                Mobile m = m_Fighters[index];
+
                 Kick(m);
+            }
 
             m_Region.Unregister();
         }
