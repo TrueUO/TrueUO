@@ -28,11 +28,11 @@ namespace Server.Items
         {
             PlayerMobile pm = e.Mobile as PlayerMobile;
 
-            if (pm.AbyssEntry)
+            if (pm != null && pm.AbyssEntry)
             {
                 pm.SendLocalizedMessage(1112697);  //You enter a state of peaceful contemplation, focusing on the meaning of Singularity.
             }
-            else if (!e.Handled && pm.InRange(Location, 2) && e.Speech.ToLower().Trim() == "unorus" && QuestHelper.CheckDoneOnce(pm, typeof(TheArisenQuest), null, false))
+            else if (pm != null && !e.Handled && pm.InRange(Location, 2) && e.Speech.ToLower().Trim() == "unorus" && QuestHelper.CheckDoneOnce(pm, typeof(TheArisenQuest), null, false))
             {
                 e.Handled = true;
                 e.Mobile.PlaySound(0xF9);

@@ -2,7 +2,6 @@ using Server.Gumps;
 using Server.Items;
 using Server.Mobiles;
 using System;
-using System.Linq;
 
 namespace Server.Engines.Quests
 {
@@ -73,12 +72,30 @@ namespace Server.Engines.Quests
         {
             int offset = 163;
             int page = 1;
-            SlayObjective slay = Objectives.FirstOrDefault(o => o is SlayObjective) as SlayObjective;
+
+            BaseObjective first = null;
+
+            for (var index = 0; index < Objectives.Count; index++)
+            {
+                var o = Objectives[index];
+
+                if (o is SlayObjective)
+                {
+                    first = o;
+                    break;
+                }
+            }
+
+            SlayObjective slay = first as SlayObjective;
 
             if (offer)
+            {
                 gump.AddHtmlLocalized(130, 45, 270, 16, 1049010, 0xFFFFFF, false, false); // Quest Offer
+            }
             else
+            {
                 gump.AddHtmlLocalized(130, 45, 270, 16, 1046026, 0xFFFFFF, false, false); // Quest Log
+            }
 
             gump.AddHtmlObject(160, 70, 200, 40, Title, BaseQuestGump.DarkGreen, false, false);
 
@@ -87,16 +104,19 @@ namespace Server.Engines.Quests
 
             gump.AddHtmlLocalized(98, 147, 312, 16, 1072208, 0x2710, false, false); // All of the following	
             gump.AddHtmlLocalized(98, offset, 30, 16, 1072204, 0x15F90, false, false); // Slay	
-            gump.AddLabel(133, offset, 0x481, "10   " + slay.Name); // %count% + %name%
-
-            offset += 16;
-
-            if (!offer)
+            if (slay != null)
             {
-                gump.AddHtmlLocalized(103, offset, 120, 16, 3000087, 0x15F90, false, false); // Total			
-                gump.AddLabel(223, offset, 0x481, slay.CurProgress.ToString());  // %current progress%
+                gump.AddLabel(133, offset, 0x481, "10   " + slay.Name); // %count% + %name%
 
                 offset += 16;
+
+                if (!offer)
+                {
+                    gump.AddHtmlLocalized(103, offset, 120, 16, 3000087, 0x15F90, false, false); // Total			
+                    gump.AddLabel(223, offset, 0x481, slay.CurProgress.ToString()); // %current progress%
+
+                    offset += 16;
+                }
             }
 
             offset += 75;

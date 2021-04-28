@@ -287,18 +287,21 @@ namespace Server.Mobiles
 
             if (m_NextMoveCheck < DateTime.UtcNow && !m_Galleon.Scuttled && !m_Blockade)
             {
-                Point3D pnt = m_TargetBoat != null ? m_TargetBoat.Location : focusMob.Location;
-
-                int dist = (int)GetDistanceToSqrt(pnt);
-
-                if (!Aggressive && dist < 25)
-                    MoveBoat(pnt);
-                else if (Aggressive && dist >= 10 && dist <= 35)
-                    MoveBoat(pnt);
-                else
+                if (focusMob != null)
                 {
-                    m_Galleon.StopMove(false);
-                    ResumeCourseTimed(TimeSpan.FromMinutes(2), false); //Loiter
+                    Point3D pnt = m_TargetBoat != null ? m_TargetBoat.Location : focusMob.Location;
+
+                    int dist = (int)GetDistanceToSqrt(pnt);
+
+                    if (!Aggressive && dist < 25)
+                        MoveBoat(pnt);
+                    else if (Aggressive && dist >= 10 && dist <= 35)
+                        MoveBoat(pnt);
+                    else
+                    {
+                        m_Galleon.StopMove(false);
+                        ResumeCourseTimed(TimeSpan.FromMinutes(2), false); //Loiter
+                    }
                 }
             }
 
@@ -318,14 +321,16 @@ namespace Server.Mobiles
             {
                 int closest = 25;
 
-                foreach (Mobile mob in m_Crew)
+                for (var index = 0; index < m_Crew.Count; index++)
                 {
+                    Mobile mob = m_Crew[index];
+
                     if (mob.Alive && mob.Combatant is Mobile mobile)
                     {
-                        if (focus == null || (int)focus.GetDistanceToSqrt(mob) < closest)
+                        if (focus == null || (int) focus.GetDistanceToSqrt(mob) < closest)
                         {
                             focus = mobile;
-                            closest = (int)focus.GetDistanceToSqrt(mob);
+                            closest = (int) focus.GetDistanceToSqrt(mob);
                         }
                     }
                 }
@@ -382,28 +387,36 @@ namespace Server.Mobiles
         {
             List<Item> cannons = new List<Item>(m_Galleon.Cannons.Where(i => !i.Deleted));
 
-            foreach (IShipCannon cannon in cannons.OfType<IShipCannon>())
+            for (var index = 0; index < cannons.Count; index++)
             {
-                if (m_ShootTable.ContainsKey(cannon) && m_ShootTable[cannon] > DateTime.UtcNow)
+                Item item = cannons[index];
+
+                if (item is IShipCannon cannon)
+                {
+                    if (m_ShootTable.ContainsKey(cannon) && m_ShootTable[cannon] > DateTime.UtcNow)
+                    {
                         continue;
+                    }
 
-                Direction facing = cannon.GetFacing();
+                    Direction facing = cannon.GetFacing();
 
-                if (shootAtBoat && HasTarget(focus, cannon, true))
-                {
-                    cannon.AmmoType = AmmunitionType.Cannonball;
-                }
-                else if (!shootAtBoat && HasTarget(focus, cannon, false))
-                {
-                    cannon.AmmoType = AmmunitionType.Grapeshot;
-                }
-                else
-                {
-                    continue;
-                }
+                    if (shootAtBoat && HasTarget(focus, cannon, true))
+                    {
+                        cannon.AmmoType = AmmunitionType.Cannonball;
+                    }
+                    else if (!shootAtBoat && HasTarget(focus, cannon, false))
+                    {
+                        cannon.AmmoType = AmmunitionType.Grapeshot;
+                    }
+                    else
+                    {
+                        continue;
+                    }
 
-                cannon.Shoot(this);
-                m_ShootTable[cannon] = DateTime.UtcNow + ShootFrequency + TimeSpan.FromSeconds(Utility.RandomMinMax(0, 3));
+                    cannon.Shoot(this);
+                    m_ShootTable[cannon] = DateTime.UtcNow + ShootFrequency +
+                                           TimeSpan.FromSeconds(Utility.RandomMinMax(0, 3));
+                }
             }
         }
 
@@ -473,13 +486,20 @@ namespace Server.Mobiles
         private bool IsInBattle()
         {
             if (Combatant != null)
-                return true;
-
-            foreach (Mobile mob in m_Crew)
             {
-                if (mob.Alive && mob.Combatant != null)
-                    return true;
+                return true;
             }
+
+            for (var index = 0; index < m_Crew.Count; index++)
+            {
+                Mobile mob = m_Crew[index];
+
+                if (mob.Alive && mob.Combatant != null)
+                {
+                    return true;
+                }
+            }
+
             return false;
         }
 
@@ -530,17 +550,23 @@ namespace Server.Mobiles
         public void CheckCrew()
         {
             if (m_Galleon == null || m_Crew == null || Map == null || Map == Map.Internal)
+            {
                 return;
+            }
 
             List<Mobile> crew = new List<Mobile>(m_Crew.Where(m => m != null && m.Alive && m.Map != null && m.Map != Map.Internal));
 
             if (m_Galleon.GalleonPilot != null)
+            {
                 crew.Add(m_Galleon.GalleonPilot);
+            }
 
             crew.Add(this);
 
-            foreach (Mobile crewman in crew)
+            for (var index = 0; index < crew.Count; index++)
             {
+                Mobile crewman = crew[index];
+
                 if (!m_Galleon.Contains(crewman))
                 {
                     crewman.MoveToWorld(new Point3D(m_Galleon.X + Utility.RandomList(-1, 1), m_Galleon.Y + Utility.RandomList(-1, 0, 1), m_Galleon.ZSurface), Map);
@@ -632,8 +658,11 @@ namespace Server.Mobiles
             writer.Write(m_OnCourse);
 
             writer.Write(m_Crew.Count);
-            foreach (Mobile mob in m_Crew)
+            for (var index = 0; index < m_Crew.Count; index++)
+            {
+                Mobile mob = m_Crew[index];
                 writer.Write(mob);
+            }
         }
 
         public override void Deserialize(GenericReader reader)
