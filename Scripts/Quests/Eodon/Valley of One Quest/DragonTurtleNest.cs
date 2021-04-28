@@ -185,7 +185,7 @@ namespace Server.Items
             BaseCreature hatchling = objs[0] as BaseCreature;
             Mobile focus = objs[1] as Mobile;
 
-            if (hatchling != null)
+            if (hatchling != null && focus != null) 
             {
                 focus.PublicOverheadMessage(Network.MessageType.Regular, 0x35, 1156496); // *The Hatchling safely burrows into the sand*
                 Timer.DelayCall(TimeSpan.FromSeconds(1), hatchling.Delete);
@@ -193,12 +193,9 @@ namespace Server.Items
 
             if (focus is PlayerMobile mobile)
             {
-                EmptyNestQuest quest = QuestHelper.GetQuest(mobile, typeof(EmptyNestQuest)) as EmptyNestQuest;
-
-                if (quest != null)
+                if (QuestHelper.GetQuest(mobile, typeof(EmptyNestQuest)) is EmptyNestQuest quest)
                 {
-                    quest.Update(hatchling);
-                    // Quest Complete and crap can be handled in update
+                    quest.Update(hatchling); // Quest Complete and crap can be handled in update
                 }
             }
 
