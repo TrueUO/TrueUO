@@ -12,11 +12,16 @@ namespace Server.Mobiles
         public override WeaponAbility GetWeaponAbility()
         {
             if (Weapon == null)
+            {
                 return null;
+            }
 
-            BaseWeapon weapon = Weapon as BaseWeapon;
+            if (Weapon is BaseWeapon weapon)
+            {
+                return Utility.RandomBool() ? weapon.PrimaryAbility : weapon.SecondaryAbility;
+            }
 
-            return Utility.RandomBool() ? weapon.PrimaryAbility : weapon.SecondaryAbility;
+            return null;
         }
 
         private DateTime m_NextBodyChange;
@@ -177,15 +182,12 @@ namespace Server.Mobiles
             FacialHairItemID = attacker.FacialHairItemID;
             FacialHairHue = attacker.FacialHairHue;
 
-            foreach (Item item in attacker.Items)
+            for (var index = 0; index < attacker.Items.Count; index++)
             {
-                if (item.Layer < Layer.Mount &&
-                    item.Layer != Layer.Backpack &&
-                    item.Layer != Layer.Mount &&
-                    item.Layer != Layer.Bank &&
-                    item.Layer != Layer.Hair &&
-                    item.Layer != Layer.Face &&
-                    item.Layer != Layer.FacialHair)
+                Item item = attacker.Items[index];
+
+                if (item.Layer < Layer.Mount && item.Layer != Layer.Backpack && item.Layer != Layer.Mount && item.Layer != Layer.Bank &&
+                    item.Layer != Layer.Hair && item.Layer != Layer.Face && item.Layer != Layer.FacialHair)
                 {
                     if (FindItemOnLayer(item.Layer) == null)
                     {

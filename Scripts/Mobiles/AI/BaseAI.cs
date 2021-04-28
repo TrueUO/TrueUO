@@ -2268,12 +2268,10 @@ namespace Server.Mobiles
             {
                 using (StreamWriter op = new StreamWriter("nan_transform.txt", true))
                 {
-                    op.WriteLine(
-                        "NaN in TransformMoveDelay: {0}, {1}, {2}, {3}",
-                        DateTime.UtcNow,
-                        GetType(),
-                        m_Mobile == null ? "null" : m_Mobile.GetType().ToString(),
-                        m_Mobile.StamMax);
+                    if (m_Mobile != null)
+                    {
+                        op.WriteLine("NaN in TransformMoveDelay: {0}, {1}, {2}, {3}", DateTime.UtcNow, GetType(), m_Mobile == null ? "null" : m_Mobile.GetType().ToString(), m_Mobile.StamMax);
+                    }
                 }
 
                 return 1.0;
