@@ -1,5 +1,11 @@
 #region References
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Server.ContextMenus;
+using Server.Engines.Fellowship;
 using Server.Engines.PartySystem;
 using Server.Engines.Quests.Doom;
 using Server.Engines.VvV;
@@ -18,10 +24,7 @@ using Server.Spells.Sixth;
 using Server.Spells.SkillMasteries;
 using Server.Spells.Spellweaving;
 using Server.Targeting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
 #endregion
 
 namespace Server.Mobiles
@@ -189,10 +192,8 @@ namespace Server.Mobiles
             {
                 object[] objs = t.GetCustomAttributes(typeof(FriendlyNameAttribute), false);
 
-                if (objs.Length > 0)
+                if (objs.Length > 0 && objs[0] is FriendlyNameAttribute friendly)
                 {
-                    FriendlyNameAttribute friendly = objs[0] as FriendlyNameAttribute;
-
                     return friendly.FriendlyName;
                 }
             }
@@ -822,7 +823,7 @@ namespace Server.Mobiles
             }
         }
 
-        public static bool IsSoulboundEnemies => Engines.Fellowship.ForsakenFoesEvent.Instance.Running;
+        public static bool IsSoulboundEnemies => ForsakenFoesEvent.Instance.Running;
 
         public static readonly Type[] _SoulboundCreatures =
         {
@@ -1611,9 +1612,9 @@ namespace Server.Mobiles
 
             ApplyPoisonResult result = base.ApplyPoison(from, poison);
 
-            if (from != null && result == ApplyPoisonResult.Poisoned && PoisonTimer is PoisonImpl.PoisonTimer)
+            if (from != null && result == ApplyPoisonResult.Poisoned && PoisonTimer is PoisonImpl.PoisonTimer timer)
             {
-                (PoisonTimer as PoisonImpl.PoisonTimer).From = from;
+                timer.From = from;
             }
 
             return result;
@@ -7270,7 +7271,7 @@ namespace Server.Mobiles
         {
             if (Map != null && Map != Map.Internal && FightMode != FightMode.None && RangeHome >= 0)
             {
-                if (!Controlled && !Summoned && Spawner is Spawner && (Spawner as Spawner).Map == Map)
+                if (!Controlled && !Summoned && Spawner is Spawner spawner && spawner.Map == Map)
                 {
                     return true;
                 }

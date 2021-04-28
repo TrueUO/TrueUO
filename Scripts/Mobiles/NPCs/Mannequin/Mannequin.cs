@@ -161,60 +161,99 @@ namespace Server.Mobiles
 
         public static List<ValuedProperty> FindItemsProperty(List<Item> item)
         {
-            List<Type> ll = System.Reflection.Assembly.GetExecutingAssembly().GetTypes()
-              .Where(r => r.FullName.Contains("MannequinProperty") && r.IsClass && !r.IsAbstract).ToList();
+            List<Type> ll = new List<Type>();
+
+            var rs = System.Reflection.Assembly.GetExecutingAssembly().GetTypes();
+
+            for (var index = 0; index < rs.Length; index++)
+            {
+                var r = rs[index];
+
+                if (r.FullName != null && r.FullName.Contains("MannequinProperty") && r.IsClass && !r.IsAbstract)
+                {
+                    ll.Add(r);
+                }
+            }
 
             List<ValuedProperty> cat = new List<ValuedProperty>();
 
-            ll.ForEach(x =>
+            for (var index = 0; index < ll.Count; index++)
             {
+                var x = ll[index];
+
                 object CI = Activator.CreateInstance(Type.GetType(x.FullName));
 
                 if (CI is ValuedProperty p && (p.Matches(item) || p.AlwaysVisible))
                 {
                     cat.Add(p);
                 }
-            });
+            }
 
             return cat;
         }
 
         public static List<ValuedProperty> FindItemProperty(Item item, bool visible = false)
         {
-            List<Type> ll = System.Reflection.Assembly.GetExecutingAssembly().GetTypes()
-              .Where(r => r.FullName.Contains("MannequinProperty") && r.IsClass && !r.IsAbstract).ToList();
+            List<Type> ll = new List<Type>();
+
+            var rs = System.Reflection.Assembly.GetExecutingAssembly().GetTypes();
+
+            for (var index = 0; index < rs.Length; index++)
+            {
+                var r = rs[index];
+
+                if (r.FullName != null && r.FullName.Contains("MannequinProperty") && r.IsClass && !r.IsAbstract)
+                {
+                    ll.Add(r);
+                }
+            }
 
             List<ValuedProperty> cat = new List<ValuedProperty>();
 
-            ll.ForEach(x =>
+            for (var index = 0; index < ll.Count; index++)
             {
+                var x = ll[index];
+
                 object CI = Activator.CreateInstance(Type.GetType(x.FullName));
 
                 if (CI is ValuedProperty p && (p.Matches(item) || visible && p.AlwaysVisible))
                 {
                     cat.Add(p);
                 }
-            });
+            }
 
             return cat.OrderByDescending(x => x.Hue).ToList();
         }
 
         public static List<ValuedProperty> FindMagicalItemProperty(Item item)
         {
-            List<Type> ll = System.Reflection.Assembly.GetExecutingAssembly().GetTypes()
-              .Where(r => r.FullName.Contains("MannequinProperty") && r.IsClass && !r.IsAbstract).ToList();
+            List<Type> ll = new List<Type>();
+
+            var rs = System.Reflection.Assembly.GetExecutingAssembly().GetTypes();
+
+            for (var index = 0; index < rs.Length; index++)
+            {
+                var r = rs[index];
+
+                if (r.FullName != null && r.FullName.Contains("MannequinProperty") && r.IsClass && !r.IsAbstract)
+                {
+                    ll.Add(r);
+                }
+            }
 
             List<ValuedProperty> cat = new List<ValuedProperty>();
 
-            ll.ForEach(x =>
+            for (var index = 0; index < ll.Count; index++)
             {
+                var x = ll[index];
+
                 object CI = Activator.CreateInstance(Type.GetType(x.FullName));
 
                 if (CI is ValuedProperty p && p.Matches(item) && p.IsMagical)
                 {
                     cat.Add(p);
                 }
-            });
+            }
 
             return cat;
         }

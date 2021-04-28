@@ -2268,12 +2268,10 @@ namespace Server.Mobiles
             {
                 using (StreamWriter op = new StreamWriter("nan_transform.txt", true))
                 {
-                    op.WriteLine(
-                        "NaN in TransformMoveDelay: {0}, {1}, {2}, {3}",
-                        DateTime.UtcNow,
-                        GetType(),
-                        m_Mobile == null ? "null" : m_Mobile.GetType().ToString(),
-                        m_Mobile.StamMax);
+                    if (m_Mobile != null)
+                    {
+                        op.WriteLine("NaN in TransformMoveDelay: {0}, {1}, {2}, {3}", DateTime.UtcNow, GetType(), m_Mobile == null ? "null" : m_Mobile.GetType().ToString(), m_Mobile.StamMax);
+                    }
                 }
 
                 return 1.0;
@@ -2286,7 +2284,7 @@ namespace Server.Mobiles
 
         public virtual bool CheckMove()
         {
-            return (Core.TickCount - NextMove >= 0);
+            return Core.TickCount - NextMove >= 0;
         }
 
         public virtual bool DoMove(Direction d)
@@ -2298,16 +2296,14 @@ namespace Server.Mobiles
         {
             MoveResult res = DoMoveImpl(d);
 
-            return (res == MoveResult.Success || res == MoveResult.SuccessAutoTurn ||
-                    (badStateOk && res == MoveResult.BadState));
+            return res == MoveResult.Success || res == MoveResult.SuccessAutoTurn || badStateOk && res == MoveResult.BadState;
         }
 
         private static readonly Queue<Item> m_Obstacles = new Queue<Item>();
 
         public virtual MoveResult DoMoveImpl(Direction d)
         {
-            if (m_Mobile.Deleted || m_Mobile.Frozen || m_Mobile.Paralyzed || !m_Mobile.CanMove ||
-                (m_Mobile.Spell != null && m_Mobile.Spell.IsCasting && m_Mobile.FreezeOnCast) || m_Mobile.DisallowAllMoves)
+            if (m_Mobile.Deleted || m_Mobile.Frozen || m_Mobile.Paralyzed || !m_Mobile.CanMove || m_Mobile.Spell != null && m_Mobile.Spell.IsCasting && m_Mobile.FreezeOnCast || m_Mobile.DisallowAllMoves)
             {
                 return MoveResult.BadState;
             }

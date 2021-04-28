@@ -62,9 +62,7 @@ namespace Server.Mobiles
         {
             if (!e.Handled && e.Mobile.InRange(Location, 2))
             {
-                PlayerMobile pm = e.Mobile as PlayerMobile;
-
-                if (pm.AbyssEntry)
+                if (e.Mobile is PlayerMobile pm && pm.AbyssEntry)
                 {
                     pm.SendMessage("You have completed the Sacred Quest already!");
                 }
@@ -76,7 +74,7 @@ namespace Server.Mobiles
                     {
                         case "hello":
                             {
-                                Say("Greetings Adventurer! If you are seeking to enter the Abyss, I may be of assitance to you.");
+                                Say("Greetings Adventurer! If you are seeking to enter the Abyss, I may be of assistance to you.");
                                 break;
                             }
                         case "secret":

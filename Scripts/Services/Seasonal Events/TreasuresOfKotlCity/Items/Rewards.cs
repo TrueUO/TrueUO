@@ -51,7 +51,7 @@ namespace Server.Items
             {
                 SkeletalHangmanAddon addon = Addon as SkeletalHangmanAddon;
 
-                if (addon._Clicker != null)
+                if (addon?._Clicker != null)
                 {
                     list.Add(1156983, addon._Clicker.Name);
                 }

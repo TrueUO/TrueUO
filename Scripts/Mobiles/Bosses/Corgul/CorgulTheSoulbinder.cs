@@ -302,15 +302,28 @@ namespace Server.Mobiles
                     pm.SetMountBlock(BlockMountType.DismountRecovery, TimeSpan.FromSeconds(10), true);
                 }
 
-                double damage = m.Hits * 0.6;
-                if (damage < 10.0)
-                    damage = 10.0;
-                else if (damage > 75.0)
-                    damage = 75.0;
-                DoHarmful(m);
-                AOS.Damage(m, this, (int)damage, 100, 0, 0, 0, 0);
-                if (m.Alive && m.Body.IsHuman && !m.Mounted)
+                if (m != null)
+                {
+                    double damage = m.Hits * 0.6;
+
+                    if (damage < 10.0)
+                    {
+                        damage = 10.0;
+                    }
+                    else if (damage > 75.0)
+                    {
+                        damage = 75.0;
+                    }
+
+                    DoHarmful(m);
+
+                    AOS.Damage(m, this, (int)damage, 100, 0, 0, 0, 0);
+                }
+
+                if (m != null && m.Alive && m.Body.IsHuman && !m.Mounted)
+                {
                     m.Animate(20, 7, 1, true, false, 0);
+                }
             }
 
 

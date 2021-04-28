@@ -69,11 +69,13 @@ namespace Server.Mobiles
             }
             else if (AcquireFocusMob(m_Mobile.RangePerception, m_Mobile.FightMode, false))
             {
-                m_Mobile.DebugSay("My move is blocked, so I am going to attack {0}", m_Mobile.FocusMob.Name);
+                if (m_Mobile.FocusMob != null)
+                {
+                    m_Mobile.DebugSay("My move is blocked, so I am going to attack {0}", m_Mobile.FocusMob.Name);
+                    m_Mobile.Combatant = m_Mobile.FocusMob;
+                }
 
-                m_Mobile.Combatant = m_Mobile.FocusMob;
                 Action = ActionType.Combat;
-
                 return true;
             }
             else if (m_Mobile.GetDistanceToSqrt(c) > m_Mobile.RangePerception + 1)

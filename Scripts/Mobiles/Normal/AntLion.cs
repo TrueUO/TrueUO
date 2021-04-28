@@ -99,11 +99,11 @@ namespace Server.Mobiles
             base.OnThink();
 
             if (!(Combatant is Mobile))
+            {
                 return;
+            }
 
-            Mobile combatant = Combatant as Mobile;
-
-            if (_NextTunnel < DateTime.UtcNow && combatant.InRange(Location, 10))
+            if (Combatant is Mobile combatant && _NextTunnel < DateTime.UtcNow && combatant.InRange(Location, 10))
             {
                 _NextTunnel = DateTime.UtcNow + TimeSpan.FromSeconds(Utility.RandomMinMax(30, 40));
                 DoTunnel(combatant);
