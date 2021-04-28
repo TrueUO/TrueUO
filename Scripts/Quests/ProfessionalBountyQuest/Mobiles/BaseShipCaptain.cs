@@ -55,7 +55,7 @@ namespace Server.Mobiles
         public override int TreasureMapLevel => 5;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public virtual TimeSpan ShootFrequency => TimeSpan.FromSeconds(Math.Min(20, 20.0 - (m_Crew.Count * 2.5)));
+        public virtual TimeSpan ShootFrequency => TimeSpan.FromSeconds(Math.Min(20, 20.0 - m_Crew.Count * 2.5));
 
         [Constructable]
         public BaseShipCaptain() : this(null) { }
@@ -280,35 +280,44 @@ namespace Server.Mobiles
             Mobile focusMob = GetFocusMob();
 
             if (m_TargetBoat == null || !InRange(m_TargetBoat.Location, 25))
+            {
                 m_TargetBoat = GetFocusBoat(focusMob);
+            }
 
             if (focusMob == null && m_TargetBoat == null)
-                return;
-
-            if (m_NextMoveCheck < DateTime.UtcNow && !m_Galleon.Scuttled && !m_Blockade)
             {
-                if (focusMob != null)
+                return;
+            }
+
+            if (m_NextMoveCheck < DateTime.UtcNow && !m_Galleon.Scuttled && !m_Blockade && focusMob != null)
+            {
+                Point3D pnt = m_TargetBoat != null ? m_TargetBoat.Location : focusMob.Location;
+
+                int dist = (int) GetDistanceToSqrt(pnt);
+
+                if (!Aggressive && dist < 25)
                 {
-                    Point3D pnt = m_TargetBoat != null ? m_TargetBoat.Location : focusMob.Location;
-
-                    int dist = (int)GetDistanceToSqrt(pnt);
-
-                    if (!Aggressive && dist < 25)
-                        MoveBoat(pnt);
-                    else if (Aggressive && dist >= 10 && dist <= 35)
-                        MoveBoat(pnt);
-                    else
-                    {
-                        m_Galleon.StopMove(false);
-                        ResumeCourseTimed(TimeSpan.FromMinutes(2), false); //Loiter
-                    }
+                    MoveBoat(pnt);
+                }
+                else if (Aggressive && dist >= 10 && dist <= 35)
+                {
+                    MoveBoat(pnt);
+                }
+                else
+                {
+                    m_Galleon.StopMove(false);
+                    ResumeCourseTimed(TimeSpan.FromMinutes(2), false); //Loiter
                 }
             }
 
             if (m_TargetBoat != null && !m_TargetBoat.Scuttled)
+            {
                 ShootCannons(focusMob, true);
+            }
             else
+            {
                 ShootCannons(focusMob, false);
+            }
         }
 
         private BaseGalleon m_TargetBoat;
@@ -456,9 +465,9 @@ namespace Server.Mobiles
                     Point3D newPoint;
 
                     if (xOffset == 0)
-                        newPoint = new Point3D(pnt.X + (xOffset + i), pnt.Y + (yOffset * currentRange), pnt.Z);
+                        newPoint = new Point3D(pnt.X + xOffset + i, pnt.Y + yOffset * currentRange, pnt.Z);
                     else
-                        newPoint = new Point3D(pnt.X + (xOffset * currentRange), pnt.Y + (yOffset + i), pnt.Z);
+                        newPoint = new Point3D(pnt.X + xOffset * currentRange, pnt.Y + yOffset + i, pnt.Z);
 
                     if (shootatboat)
                     {
