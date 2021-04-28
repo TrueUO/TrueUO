@@ -126,47 +126,55 @@ namespace Server.SkillHandlers
                     {
                         if (m_Target.Race != Race.Elf)
                         {
-                            int toConsume = theirPack.GetAmount(typeof(Gold)) / 10;
-                            int max = 10 + m_From.Fame / 2500;
-
-                            if (max > 14)
+                            if (theirPack != null)
                             {
-                                max = 14;
-                            }
-                            else if (max < 10)
-                            {
-                                max = 10;
-                            }
+                                int toConsume = theirPack.GetAmount(typeof(Gold)) / 10;
+                                int max = 10 + m_From.Fame / 2500;
 
-                            if (toConsume > max)
-                            {
-                                toConsume = max;
-                            }
-
-                            if (toConsume > 0)
-                            {
-                                int consumed = theirPack.ConsumeUpTo(typeof(Gold), toConsume);
-
-                                if (consumed > 0)
+                                if (max > 14)
                                 {
-                                    m_Target.PublicOverheadMessage(MessageType.Regular, m_Target.SpeechHue, 500405);
-                                    // I feel sorry for thee...
+                                    max = 14;
+                                }
+                                else if (max < 10)
+                                {
+                                    max = 10;
+                                }
 
-                                    Gold gold = new Gold(consumed);
+                                if (toConsume > max)
+                                {
+                                    toConsume = max;
+                                }
 
-                                    m_From.AddToBackpack(gold);
-                                    m_From.PlaySound(gold.GetDropSound());
+                                if (toConsume > 0)
+                                {
+                                    int consumed = theirPack.ConsumeUpTo(typeof(Gold), toConsume);
 
-                                    if (m_From.Karma > -3000)
+                                    if (consumed > 0)
                                     {
-                                        int toLose = m_From.Karma + 3000;
+                                        m_Target.PublicOverheadMessage(MessageType.Regular, m_Target.SpeechHue, 500405);
+                                        // I feel sorry for thee...
 
-                                        if (toLose > 40)
+                                        Gold gold = new Gold(consumed);
+
+                                        m_From.AddToBackpack(gold);
+                                        m_From.PlaySound(gold.GetDropSound());
+
+                                        if (m_From.Karma > -3000)
                                         {
-                                            toLose = 40;
-                                        }
+                                            int toLose = m_From.Karma + 3000;
 
-                                        Titles.AwardKarma(m_From, -toLose, true);
+                                            if (toLose > 40)
+                                            {
+                                                toLose = 40;
+                                            }
+
+                                            Titles.AwardKarma(m_From, -toLose, true);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        m_Target.PublicOverheadMessage(MessageType.Regular, m_Target.SpeechHue, 500407);
+                                        // I have not enough money to give thee any!
                                     }
                                 }
                                 else
@@ -174,11 +182,6 @@ namespace Server.SkillHandlers
                                     m_Target.PublicOverheadMessage(MessageType.Regular, m_Target.SpeechHue, 500407);
                                     // I have not enough money to give thee any!
                                 }
-                            }
-                            else
-                            {
-                                m_Target.PublicOverheadMessage(MessageType.Regular, m_Target.SpeechHue, 500407);
-                                // I have not enough money to give thee any!
                             }
                         }
                         else
