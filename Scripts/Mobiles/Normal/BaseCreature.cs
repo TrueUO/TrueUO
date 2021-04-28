@@ -189,12 +189,9 @@ namespace Server.Mobiles
             {
                 object[] objs = t.GetCustomAttributes(typeof(FriendlyNameAttribute), false);
 
-                if (objs.Length > 0)
+                if (objs.Length > 0 && objs[0] is FriendlyNameAttribute friendly)
                 {
-                    if (objs[0] is FriendlyNameAttribute friendly)
-                    {
-                        return friendly.FriendlyName;
-                    }
+                    return friendly.FriendlyName;
                 }
             }
 
@@ -5566,15 +5563,32 @@ namespace Server.Mobiles
         public bool HasLootingRights(Mobile m)
         {
             if (LootingRights == null)
+            {
                 return false;
+            }
 
-            return LootingRights.FirstOrDefault(ds => ds.m_Mobile == m && ds.m_HasRight) != null;
+            DamageStore first = null;
+
+            for (var index = 0; index < LootingRights.Count; index++)
+            {
+                var ds = LootingRights[index];
+
+                if (ds.m_Mobile == m && ds.m_HasRight)
+                {
+                    first = ds;
+                    break;
+                }
+            }
+
+            return first != null;
         }
 
         public Mobile GetHighestDamager()
         {
             if (LootingRights == null || LootingRights.Count == 0)
+            {
                 return null;
+            }
 
             return LootingRights[0].m_Mobile;
         }
@@ -6698,6 +6712,7 @@ namespace Server.Mobiles
             if (m == null || m == this || !CanBeHarmful(m, false) || creaturesOnly && !(m is BaseCreature))
             {
                 List<AggressorInfo> list = new List<AggressorInfo>();
+
                 list.AddRange(Aggressors.Where(info => !creaturesOnly || info.Attacker is PlayerMobile));
 
                 if (list.Count > 0)
@@ -7265,20 +7280,17 @@ namespace Server.Mobiles
         /* until we are sure about who should be getting deleted, move them instead */
         /* On OSI, they despawn */
 
-        private bool m_ReturnQueued;
-
         private bool IsSpawnerBound()
         {
-            if (Map != null && Map != Map.Internal && FightMode != FightMode.None && RangeHome >= 0)
+            if (Map != null && Map != Map.Internal && FightMode != FightMode.None && RangeHome >= 0 && !Controlled && !Summoned && Spawner is Spawner spawner && spawner.Map == Map)
             {
-                if (!Controlled && !Summoned && Spawner is Spawner spawner && spawner.Map == Map)
-                {
-                    return true;
-                }
+                return true;
             }
 
             return false;
         }
+
+        private bool m_ReturnQueued;
 
         public virtual bool ReturnsToHome => m_SeeksHome && Home != Point3D.Zero && !m_ReturnQueued && !Controlled && !Summoned;
 
