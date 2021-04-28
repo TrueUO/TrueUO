@@ -135,8 +135,8 @@ namespace Server.Engines.VvV
         public void Complete(Guild g)
         {
             Timer.DelayCall(TimeSpan.FromSeconds(5), DoOccupy, new object[] { Battle, g });
-
             Timer.DelayCall(TimeSpan.FromSeconds(2), DoFireworks);
+
             IsActive = false;
 
             if (OccupationTimer != null)
@@ -151,20 +151,24 @@ namespace Server.Engines.VvV
             }
 
             Timer.DelayCall(TimeSpan.FromMinutes(2), () =>
+            {
+                for (var index = 0; index < Torches.Count; index++)
                 {
-                    Torches.ForEach(t => t.Delete());
-                    Torches.Clear();
-                });
+                    var t = Torches[index];
+
+                    t.Delete();
+                }
+
+                Torches.Clear();
+            });
         }
 
         public static void DoOccupy(object obj)
         {
-            object[] objs = obj as object[];
-            VvVBattle battle = objs[0] as VvVBattle;
-            Guild g = objs[1] as Guild;
-
-            if (battle != null && g != null)
+            if (obj is object[] objs && objs[0] is VvVBattle battle && objs[1] is Guild g)
+            {
                 battle.OccupyAltar(g);
+            }
         }
 
         public void DoFireworks()
@@ -187,13 +191,14 @@ namespace Server.Engines.VvV
         public static void LaunchFireworks(Point3D p, Map map)
         {
             if (map == null || map == Map.Internal)
+            {
                 return;
+            }
 
             Point3D startLoc = new Point3D(p.X, p.Y, p.Z + 10);
             Point3D endLoc = new Point3D(p.X + Utility.RandomMinMax(-1, 1), p.Y + Utility.RandomMinMax(-1, 1), p.Z + 32);
 
-            Effects.SendMovingEffect(new Entity(Serial.Zero, startLoc, map), new Entity(Serial.Zero, endLoc, map),
-                0x36E4, 5, 0, false, false);
+            Effects.SendMovingEffect(new Entity(Serial.Zero, startLoc, map), new Entity(Serial.Zero, endLoc, map), 0x36E4, 5, 0, false, false);
 
             Timer.DelayCall(TimeSpan.FromSeconds(1.0), () =>
                 {
@@ -213,7 +218,9 @@ namespace Server.Engines.VvV
                         hue = 0;
 
                     if (Utility.RandomBool())
+                    {
                         hue = Utility.RandomList(0x47E, 0x47F, 0x480, 0x482, 0x66D);
+                    }
 
                     int renderMode = Utility.RandomList(0, 2, 3, 4, 5, 7);
 
@@ -225,9 +232,12 @@ namespace Server.Engines.VvV
         public void CheckOccupy()
         {
             if (!IsActive || Map == null || Map == Map.Internal)
+            {
                 return;
+            }
 
             IPooledEnumerable eable = Map.GetMobilesInBounds(new Rectangle2D(X - 2, Y - 2, 5, 5));
+
             int count = 0;
 
             foreach (Mobile m in eable)
@@ -275,7 +285,13 @@ namespace Server.Engines.VvV
                 OccupationTimer = null;
             }
 
-            Torches.ForEach(t => t.Delete());
+            for (var index = 0; index < Torches.Count; index++)
+            {
+                var t = Torches[index];
+
+                t.Delete();
+            }
+
             Torches.Clear();
         }
 
@@ -351,7 +367,11 @@ namespace Server.Engines.VvV
         {
             base.Delete();
 
-            Torches.ForEach(t => t.Delete());
+            for (var index = 0; index < Torches.Count; index++)
+            {
+                var t = Torches[index];
+                t.Delete();
+            }
 
             if (OccupationTimer != null)
             {
@@ -379,10 +399,18 @@ namespace Server.Engines.VvV
             writer.Write(IsActive);
 
             writer.Write(Braziers.Count);
-            Braziers.ForEach(b => writer.Write(b));
+            for (var index = 0; index < Braziers.Count; index++)
+            {
+                var b = Braziers[index];
+                writer.Write(b);
+            }
 
             writer.Write(Torches.Count);
-            Torches.ForEach(t => writer.Write(t));
+            for (var index = 0; index < Torches.Count; index++)
+            {
+                var t = Torches[index];
+                writer.Write(t);
+            }
         }
 
         public override void Deserialize(GenericReader reader)

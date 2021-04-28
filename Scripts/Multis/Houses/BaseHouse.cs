@@ -2000,18 +2000,20 @@ namespace Server.Multis
 
             for (int i = 0; Doors != null && i < Doors.Count; ++i)
             {
-                BaseDoor door = Doors[i] as BaseDoor;
-                Point3D p = door.Location;
-
-                if (door.Open)
-                    p = new Point3D(p.X - door.Offset.X, p.Y - door.Offset.Y, p.Z - door.Offset.Z);
-
-                if (from.Z + 16 >= p.Z && p.Z + 16 >= from.Z)
+                if (Doors[i] is BaseDoor door)
                 {
-                    if (from.InRange(p, 1))
+                    Point3D p = door.Location;
+
+                    if (door.Open)
+                        p = new Point3D(p.X - door.Offset.X, p.Y - door.Offset.Y, p.Z - door.Offset.Z);
+
+                    if (from.Z + 16 >= p.Z && p.Z + 16 >= from.Z)
                     {
-                        from.SendLocalizedMessage(502120); // You cannot place a trash barrel near a door or near steps.
-                        return;
+                        if (from.InRange(p, 1))
+                        {
+                            from.SendLocalizedMessage(502120); // You cannot place a trash barrel near a door or near steps.
+                            return;
+                        }
                     }
                 }
             }
@@ -2532,17 +2534,24 @@ namespace Server.Multis
         public bool IsSameAccount(Mobile one, Mobile two)
         {
             if (one == null || two == null)
+            {
                 return false;
+            }
 
             if (one == two)
-                return true;
-
-            Account acct = one.Account as Account;
-
-            for (int i = 0; i < acct.Length; ++i)
             {
-                if (acct[i] != null && acct[i] == two)
-                    return true;
+                return true;
+            }
+
+            if (one.Account is Account acct)
+            {
+                for (int i = 0; i < acct.Length; ++i)
+                {
+                    if (acct[i] != null && acct[i] == two)
+                    {
+                        return true;
+                    }
+                }
             }
 
             return false;
@@ -2657,15 +2666,18 @@ namespace Server.Multis
 
                         SecureInfo info2 = new SecureInfo(ad, SecureLevel.Owner, m);
 
-                        ad.IsLockedDown = false;
-                        ad.IsSecure = true;
+                        if (ad != null)
+                        {
+                            ad.IsLockedDown = false;
+                            ad.IsSecure = true;
 
-                        Secures.Add(info2);
+                            Secures.Add(info2);
 
-                        if (LockDowns.ContainsKey(ad))
-                            LockDowns.Remove(ad);
+                            if (LockDowns.ContainsKey(ad))
+                                LockDowns.Remove(ad);
 
-                        ad.Movable = false;
+                            ad.Movable = false;
+                        }
                     }
 
                     if (item is EnchantedSoulstoneVessel esv && esv.Owned == null)
@@ -2888,18 +2900,22 @@ namespace Server.Multis
 
             for (int i = 0; Doors != null && i < Doors.Count; ++i)
             {
-                BaseDoor door = Doors[i] as BaseDoor;
-                Point3D p = door.Location;
-
-                if (door.Open)
-                    p = new Point3D(p.X - door.Offset.X, p.Y - door.Offset.Y, p.Z - door.Offset.Z);
-
-                if (from.Z + 16 >= p.Z && p.Z + 16 >= from.Z)
+                if (Doors[i] is BaseDoor door)
                 {
-                    if (from.InRange(p, 1))
+                    Point3D p = door.Location;
+
+                    if (door.Open)
                     {
-                        from.SendLocalizedMessage(502113); // You cannot place a strongbox near a door or near steps.
-                        return;
+                        p = new Point3D(p.X - door.Offset.X, p.Y - door.Offset.Y, p.Z - door.Offset.Z);
+                    }
+
+                    if (from.Z + 16 >= p.Z && p.Z + 16 >= from.Z)
+                    {
+                        if (from.InRange(p, 1))
+                        {
+                            from.SendLocalizedMessage(502113); // You cannot place a strongbox near a door or near steps.
+                            return;
+                        }
                     }
                 }
             }
@@ -3559,15 +3575,20 @@ namespace Server.Multis
             List<BaseHouse> houses = GetHouses(mob);
 
             if (houses.Count == 0)
+            {
                 return;
+            }
 
             Account acct = mob.Account as Account;
             Mobile trans = null;
 
-            for (int i = 0; i < acct.Length; ++i)
+            if (acct != null)
             {
-                if (acct[i] != null && acct[i] != mob)
-                    trans = acct[i];
+                for (int i = 0; i < acct.Length; ++i)
+                {
+                    if (acct[i] != null && acct[i] != mob)
+                        trans = acct[i];
+                }
             }
 
             for (int i = 0; i < houses.Count; ++i)
@@ -3577,12 +3598,18 @@ namespace Server.Multis
                 bool canClaim = false;
 
                 if (trans == null)
+                {
                     canClaim = house.CoOwners.Count > 0;
+                }
 
                 if (trans == null && !canClaim)
+                {
                     Timer.DelayCall(TimeSpan.Zero, house.Delete);
+                }
                 else
+                {
                     house.Owner = trans;
+                }
             }
 
             ColUtility.Free(houses);
@@ -4147,15 +4174,23 @@ namespace Server.Multis
         public bool IsCoOwner(Mobile m)
         {
             if (m == null || CoOwners == null)
+            {
                 return false;
+            }
 
             if (IsOwner(m) || CoOwners.Contains(m))
-                return true;
-
-            foreach (Mobile mob in CoOwners)
             {
+                return true;
+            }
+
+            for (var index = 0; index < CoOwners.Count; index++)
+            {
+                Mobile mob = CoOwners[index];
+
                 if (AccountHandler.CheckAccount(mob, m))
+                {
                     return true;
+                }
             }
 
             return false;
@@ -4815,13 +4850,17 @@ namespace Server.Multis
 
             for (int i = 0; i < doors.Count; i++)
             {
-                BaseDoor door = doors[i] as BaseDoor;
+                if (doors[i] is BaseDoor door)
+                {
+                    Point3D doorLoc = door.GetWorldLocation();
 
-                Point3D doorLoc = door.GetWorldLocation();
-                int doorHeight = door.ItemData.CalcHeight;
+                    int doorHeight = door.ItemData.CalcHeight;
 
-                if (Utility.InRange(doorLoc, p, 1) && (p.Z == doorLoc.Z || p.Z + height > doorLoc.Z && doorLoc.Z + doorHeight > p.Z))
-                    return AddonFitResult.DoorTooClose;
+                    if (Utility.InRange(doorLoc, p, 1) && (p.Z == doorLoc.Z || p.Z + height > doorLoc.Z && doorLoc.Z + doorHeight > p.Z))
+                    {
+                        return AddonFitResult.DoorTooClose;
+                    }
+                }
             }
 
             return AddonFitResult.Valid;
@@ -4841,27 +4880,28 @@ namespace Server.Multis
 
             protected override void OnTarget(Mobile from, object targeted)
             {
-                IPoint3D p = targeted as IPoint3D;
-
-                Point3D point = new Point3D(p.X, p.Y, p.Z);
-
-                BaseHouse house = BaseHouse.FindHouseAt(point, from.Map, 0);
-
-                AddonFitResult result = CouldFit(point, from.Map, from, ref house);
-
-                if (house != null && house == House && house.Owner == from && result == AddonFitResult.Valid)
+                if (targeted is IPoint3D p)
                 {
-                    if (House.Release(from, Item))
+                    Point3D point = new Point3D(p.X, p.Y, p.Z);
+
+                    BaseHouse house = BaseHouse.FindHouseAt(point, from.Map, 0);
+
+                    AddonFitResult result = CouldFit(point, from.Map, from, ref house);
+
+                    if (house != null && house == House && house.Owner == from && result == AddonFitResult.Valid)
                     {
-                        Item.MoveToWorld(point, from.Map);
-                        Item.Movable = true;
+                        if (House.Release(from, Item))
+                        {
+                            Item.MoveToWorld(point, from.Map);
+                            Item.Movable = true;
 
-                        from.SendLocalizedMessage(1159159); // This container has been released and is no longer secure.
+                            from.SendLocalizedMessage(1159159); // This container has been released and is no longer secure.
+                        }
                     }
-                }
-                else
-                {
-                    from.SendLocalizedMessage(1149667); // Invalid target.
+                    else
+                    {
+                        from.SendLocalizedMessage(1149667); // Invalid target.
+                    }
                 }
             }
 

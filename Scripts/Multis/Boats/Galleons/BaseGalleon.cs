@@ -1877,13 +1877,17 @@ namespace Server.Multis
         public bool IsInParty(Mobile from)
         {
             if (from == null || Galleon == null || Galleon.Owner == null)
+            {
                 return false;
+            }
 
             Party fromParty = Party.Get(from);
             Party ownerParty = Party.Get(Galleon.Owner);
 
             if (fromParty == null || ownerParty == null)
+            {
                 return false;
+            }
 
             if (fromParty == ownerParty)
             {
@@ -1894,18 +1898,18 @@ namespace Server.Multis
                     case PartyAccess.MemberOnly: return true;
                 }
             }
+
             return false;
         }
 
         public bool IsInGuild(Mobile from)
         {
             if (from == null || Galleon == null || Galleon.Owner == null)
+            {
                 return false;
+            }
 
-            Guild fromGuild = from.Guild as Guild;
-            Guild ownerGuild = Galleon.Owner.Guild as Guild;
-
-            return fromGuild != null && ownerGuild != null && fromGuild == ownerGuild;
+            return from.Guild is Guild fromGuild && Galleon.Owner.Guild is Guild ownerGuild && fromGuild == ownerGuild;
         }
 
         public void SetToDefault()

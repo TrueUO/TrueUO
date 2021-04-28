@@ -86,8 +86,15 @@ namespace Server.Engines.VvV
 
             if (ventry != null && ventry.Active)
             {
-                List<DamageEntry> list = victim.DamageEntries.OrderBy(d => -d.DamageGiven).ToList();
+                List<DamageEntry> list = new List<DamageEntry>();
+
+                foreach (var entry in victim.DamageEntries.OrderBy(d => -d.DamageGiven))
+                {
+                    list.Add(entry);
+                }
+
                 List<Mobile> handled = new List<Mobile>();
+
                 bool statloss = false;
 
                 for (int i = 0; i < list.Count; i++)
@@ -149,16 +156,23 @@ namespace Server.Engines.VvV
         public void AddPlayer(PlayerMobile pm)
         {
             if (pm == null || pm.Guild == null)
+            {
                 return;
+            }
 
             Guild g = pm.Guild as Guild;
-            VvVPlayerEntry entry = GetEntry(pm, true) as VvVPlayerEntry;
 
-            if (!entry.Active)
+            if (GetEntry(pm, true) is VvVPlayerEntry entry && !entry.Active)
+            {
                 entry.Active = true;
+            }
 
             pm.SendLocalizedMessage(1155564); // You have joined Vice vs Virtue!
-            pm.SendLocalizedMessage(1063156, g.Name); // The guild information for ~1_val~ has been updated.
+
+            if (g != null)
+            {
+                pm.SendLocalizedMessage(1063156, g.Name); // The guild information for ~1_val~ has been updated.
+            }
 
             pm.Delta(MobileDelta.Noto);
             pm.ProcessDelta();
@@ -256,8 +270,9 @@ namespace Server.Engines.VvV
         {
             List<Guild> guilds = new List<Guild>();
 
-            foreach (NetState ns in NetState.Instances)
+            for (var index = 0; index < NetState.Instances.Count; index++)
             {
+                NetState ns = NetState.Instances[index];
                 Mobile m = ns.Mobile;
 
                 if (m != null)
@@ -267,24 +282,29 @@ namespace Server.Engines.VvV
 
                     if (g != null && entry != null && entry.Guild == g && !guilds.Contains(g))
                     {
-                        bool hasally = false;
+                        bool hasAlly = false;
 
-                        foreach (Guild guild in guilds)
+                        for (var i = 0; i < guilds.Count; i++)
                         {
+                            Guild guild = guilds[i];
+
                             if (guild.IsAlly(g))
                             {
-                                hasally = true;
+                                hasAlly = true;
                                 break;
                             }
                         }
 
-                        if (!hasally)
+                        if (!hasAlly)
+                        {
                             guilds.Add(g);
+                        }
                     }
                 }
             }
 
             int count = guilds.Count;
+
             guilds.Clear();
             guilds.TrimExcess();
 
@@ -362,8 +382,10 @@ namespace Server.Engines.VvV
 
         public void SendVvVMessage(string message)
         {
-            foreach (NetState state in NetState.Instances)
+            for (var index = 0; index < NetState.Instances.Count; index++)
             {
+                NetState state = NetState.Instances[index];
+
                 if (state.Mobile != null && IsVvV(state.Mobile))
                 {
                     Mobile m = state.Mobile;
@@ -378,8 +400,10 @@ namespace Server.Engines.VvV
 
         public void SendVvVMessage(int cliloc, string args = "")
         {
-            foreach (NetState state in NetState.Instances)
+            for (var index = 0; index < NetState.Instances.Count; index++)
             {
+                NetState state = NetState.Instances[index];
+
                 if (state.Mobile != null && IsVvV(state.Mobile))
                 {
                     Mobile m = state.Mobile;
@@ -507,11 +531,11 @@ namespace Server.Engines.VvV
         public static void OnPlayerDeath(PlayerDeathEventArgs e)
         {
             if (!Enabled)
+            {
                 return;
+            }
 
-            PlayerMobile pm = e.Mobile as PlayerMobile;
-
-            if (pm != null && Instance != null)
+            if (e.Mobile is PlayerMobile pm && Instance != null)
             {
                 Instance.HandlePlayerDeath(pm);
             }
@@ -600,8 +624,31 @@ namespace Server.Engines.VvV
                 return false;
             }
 
-            TemporaryCombatant tempA = TempCombatants.FirstOrDefault(c => c.From == a);
-            TemporaryCombatant tempB = TempCombatants.FirstOrDefault(c => c.From == b);
+            TemporaryCombatant tempA = null;
+
+            for (var index = 0; index < TempCombatants.Count; index++)
+            {
+                var c = TempCombatants[index];
+
+                if (c.From == a)
+                {
+                    tempA = c;
+                    break;
+                }
+            }
+
+            TemporaryCombatant tempB = null;
+
+            for (var index = 0; index < TempCombatants.Count; index++)
+            {
+                var c = TempCombatants[index];
+
+                if (c.From == b)
+                {
+                    tempB = c;
+                    break;
+                }
+            }
 
             if (tempA != null && (tempA.Friendly == b || tempA.FriendlyGuild != null && tempA.FriendlyGuild == guildB))
             {
@@ -620,7 +667,20 @@ namespace Server.Engines.VvV
         {
             CheckTempCombatants();
 
-            return IsVvV(mobile) || TempCombatants != null && TempCombatants.Any(c => c.From == mobile);
+            bool isCombatant = false;
+
+            for (var index = 0; index < TempCombatants.Count; index++)
+            {
+                var c = TempCombatants[index];
+
+                if (c.From == mobile)
+                {
+                    isCombatant = true;
+                    break;
+                }
+            }
+
+            return IsVvV(mobile) || TempCombatants != null && isCombatant;
         }
 
         public static void CheckHarmful(Mobile attacker, Mobile defender)
@@ -628,9 +688,24 @@ namespace Server.Engines.VvV
             CheckTempCombatants();
 
             if (attacker == null || defender == null || IsAllied(attacker, defender))
+            {
                 return;
+            }
 
-            if (!IsVvV(attacker) && IsVvV(defender) && !defender.Aggressed.Any(info => info.Defender == attacker))
+            bool canHarm = false;
+
+            for (var index = 0; index < defender.Aggressed.Count; index++)
+            {
+                var info = defender.Aggressed[index];
+
+                if (info.Defender == attacker)
+                {
+                    canHarm = true;
+                    break;
+                }
+            }
+
+            if (!IsVvV(attacker) && IsVvV(defender) && !canHarm)
             {
                 AddTempParticipant(attacker, null);
             }
@@ -641,12 +716,39 @@ namespace Server.Engines.VvV
             CheckTempCombatants();
 
             if (from == null || target == null || IsVvV(from) && IsAllied(from, target))
+            {
                 return;
+            }
 
             if (!IsVvV(from) && IsVvV(target))
             {
-                if (target.Aggressors.Any(info => IsVvV(info.Attacker)) ||
-                    target.Aggressed.Any(info => IsVvV(info.Defender)))
+                bool attacker = false;
+
+                for (var index = 0; index < target.Aggressors.Count; index++)
+                {
+                    var info = target.Aggressors[index];
+
+                    if (IsVvV(info.Attacker))
+                    {
+                        attacker = true;
+                        break;
+                    }
+                }
+
+                bool defender = false;
+
+                for (var index = 0; index < target.Aggressed.Count; index++)
+                {
+                    var info = target.Aggressed[index];
+
+                    if (IsVvV(info.Defender))
+                    {
+                        defender = true;
+                        break;
+                    }
+                }
+
+                if (attacker || defender)
                 {
                     AddTempParticipant(from, target);
                 }
@@ -691,15 +793,21 @@ namespace Server.Engines.VvV
 
         public static TemporaryCombatant GetTempCombatant(Mobile from, Mobile to)
         {
-            foreach (TemporaryCombatant combatant in TempCombatants)
+            for (var index = 0; index < TempCombatants.Count; index++)
             {
+                TemporaryCombatant combatant = TempCombatants[index];
+
                 if (combatant.From == from)
                 {
                     if (combatant.Friendly == null && to == null)
+                    {
                         return combatant;
+                    }
 
                     if (combatant.Friendly == to || combatant.FriendlyGuild != null && combatant.FriendlyGuild == from.Guild as Guild)
+                    {
                         return combatant;
+                    }
                 }
             }
 
@@ -800,22 +908,30 @@ namespace Server.Engines.VvV
             writer.Write(ShowNewRules == null ? 0 : ShowNewRules.Count);
             if (ShowNewRules != null)
             {
-                foreach (PlayerMobile pm in ShowNewRules)
+                for (var index = 0; index < ShowNewRules.Count; index++)
+                {
+                    PlayerMobile pm = ShowNewRules[index];
                     writer.Write(pm);
+                }
             }
 
             writer.Write(EnhancedRules);
             writer.Write(Enabled);
 
             writer.Write(ExemptCities.Count);
-            ExemptCities.ForEach(c => writer.Write((int)c));
+            for (var index = 0; index < ExemptCities.Count; index++)
+            {
+                var c = ExemptCities[index];
+                writer.Write((int) c);
+            }
 
             writer.Write(HasGenerated);
             Battle.Serialize(writer);
 
             writer.Write(VvVItems.Count);
-            foreach (Item item in VvVItems)
+            for (var index = 0; index < VvVItems.Count; index++)
             {
+                Item item = VvVItems[index];
                 writer.Write(item);
             }
 
@@ -924,12 +1040,13 @@ namespace Server.Engines.VvV
 
         public void FixVvVItems()
         {
-            foreach (Item item in VvVItems)
+            for (var index = 0; index < VvVItems.Count; index++)
             {
-                if (item is Spellbook)
+                Item item = VvVItems[index];
+
+                if (item is Spellbook book)
                 {
-                    Spellbook book = item as Spellbook;
-                    NegativeAttributes attrs = RunicReforging.GetNegativeAttributes(item);
+                    NegativeAttributes attrs = RunicReforging.GetNegativeAttributes(book);
 
                     if (attrs != null)
                     {
@@ -977,8 +1094,10 @@ namespace Server.Engines.VvV
         {
             List<Mobile> list = new List<Mobile>(World.Mobiles.Values.Where(m => m is SilverTrader));
 
-            foreach (Mobile mob in list)
+            for (var index = 0; index < list.Count; index++)
             {
+                Mobile mob = list[index];
+
                 mob.Delete();
             }
 
@@ -990,23 +1109,33 @@ namespace Server.Engines.VvV
         private static void OnEnhancedRulesEnabled()
         {
             if (Instance == null || !Enabled)
+            {
                 return;
+            }
 
             Timer.DelayCall(TimeSpan.FromSeconds(1), () =>
+            {
+                foreach (Mobile value in World.Mobiles.Values)
                 {
-                    foreach (PlayerMobile pm in World.Mobiles.Values.OfType<PlayerMobile>().Where(pm => IsVvV(pm)))
+                    if (value is PlayerMobile pm)
                     {
-                        VvVPlayerEntry entry = Instance.GetPlayerEntry<VvVPlayerEntry>(pm);
-
-                        if (entry != null)
+                        if (IsVvV(pm))
                         {
-                            if (ShowNewRules == null)
-                                ShowNewRules = new List<PlayerMobile>();
+                            VvVPlayerEntry entry = Instance.GetPlayerEntry<VvVPlayerEntry>(pm);
 
-                            ShowNewRules.Add(pm);
+                            if (entry != null)
+                            {
+                                if (ShowNewRules == null)
+                                {
+                                    ShowNewRules = new List<PlayerMobile>();
+                                }
+
+                                ShowNewRules.Add(pm);
+                            }
                         }
                     }
-                });
+                }
+            });
         }
 
         private static readonly string _EnhancedRulesNotice = string.Format("Notice: The Vice Vs Virtue system has recently enabled enhanced rules. To avoid any issues and " +
