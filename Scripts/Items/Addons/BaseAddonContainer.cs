@@ -40,8 +40,12 @@ namespace Server.Items
                     {
                         Hue = value;
 
-                        foreach (AddonContainerComponent c in m_Components)
+                        for (var index = 0; index < m_Components.Count; index++)
+                        {
+                            AddonContainerComponent c = m_Components[index];
+
                             c.Hue = value;
+                        }
                     }
                 }
             }
@@ -76,10 +80,16 @@ namespace Server.Items
             base.OnLocationChange(oldLoc);
 
             if (Deleted)
+            {
                 return;
+            }
 
-            foreach (AddonContainerComponent c in m_Components)
+            for (var index = 0; index < m_Components.Count; index++)
+            {
+                AddonContainerComponent c = m_Components[index];
+
                 c.Location = new Point3D(X + c.Offset.X, Y + c.Offset.Y, Z + c.Offset.Z);
+            }
         }
 
         public override void OnMapChange()
@@ -87,10 +97,16 @@ namespace Server.Items
             base.OnMapChange();
 
             if (Deleted)
+            {
                 return;
+            }
 
-            foreach (AddonContainerComponent c in m_Components)
+            for (var index = 0; index < m_Components.Count; index++)
+            {
+                AddonContainerComponent c = m_Components[index];
+
                 c.Map = Map;
+            }
         }
 
         public override void OnDelete()
@@ -102,8 +118,10 @@ namespace Server.Items
 
             List<AddonContainerComponent> components = new List<AddonContainerComponent>(m_Components);
 
-            foreach (AddonContainerComponent component in components)
+            for (var index = 0; index < components.Count; index++)
             {
+                AddonContainerComponent component = components[index];
+
                 component.Addon = null;
                 component.Delete();
             }
@@ -118,8 +136,10 @@ namespace Server.Items
         {
             InvalidateProperties();
 
-            foreach (AddonContainerComponent o in Components)
+            for (var index = 0; index < Components.Count; index++)
             {
+                AddonContainerComponent o = Components[index];
+
                 o.InvalidateProperties();
             }
         }
@@ -140,8 +160,12 @@ namespace Server.Items
         {
             base.OnAfterDelete();
 
-            foreach (AddonContainerComponent c in m_Components)
+            for (var index = 0; index < m_Components.Count; index++)
+            {
+                AddonContainerComponent c = m_Components[index];
+
                 c.Delete();
+            }
         }
 
         public override void Serialize(GenericWriter writer)
@@ -187,39 +211,57 @@ namespace Server.Items
         public AddonFitResult CouldFit(IPoint3D p, Map map, Mobile from, ref BaseHouse house)
         {
             if (Deleted)
-                return AddonFitResult.Blocked;
-
-            foreach (AddonContainerComponent c in m_Components)
             {
+                return AddonFitResult.Blocked;
+            }
+
+            for (var index = 0; index < m_Components.Count; index++)
+            {
+                AddonContainerComponent c = m_Components[index];
+
                 Point3D p3D = new Point3D(p.X + c.Offset.X, p.Y + c.Offset.Y, p.Z + c.Offset.Z);
 
                 if (!map.CanFit(p3D.X, p3D.Y, p3D.Z, c.ItemData.Height, false, true, c.Z == 0))
+                {
                     return AddonFitResult.Blocked;
-                if (!BaseAddon.CheckHouse(from, p3D, map, c.ItemData.Height, ref house))
+                }
+
+                if (!BaseAddon.CheckHouse(@from, p3D, map, c.ItemData.Height, ref house))
+                {
                     return AddonFitResult.NotInHouse;
+                }
 
                 if (c.NeedsWall)
                 {
                     Point3D wall = c.WallPosition;
 
                     if (!BaseAddon.IsWall(p3D.X + wall.X, p3D.Y + wall.Y, p3D.Z + wall.Z, map))
+                    {
                         return AddonFitResult.NoWall;
+                    }
                 }
             }
 
             Point3D p3 = new Point3D(p.X, p.Y, p.Z);
 
             if (!map.CanFit(p3.X, p3.Y, p3.Z, ItemData.Height, false, true, Z == 0))
+            {
                 return AddonFitResult.Blocked;
+            }
+
             if (!BaseAddon.CheckHouse(from, p3, map, ItemData.Height, ref house))
+            {
                 return AddonFitResult.NotInHouse;
+            }
 
             if (NeedsWall)
             {
                 Point3D wall = WallPosition;
 
                 if (!BaseAddon.IsWall(p3.X + wall.X, p3.Y + wall.Y, p3.Z + wall.Z, map))
+                {
                     return AddonFitResult.NoWall;
+                }
             }
 
             if (house != null)
@@ -231,25 +273,35 @@ namespace Server.Items
                     BaseDoor door = doors[i] as BaseDoor;
 
                     if (door == null)
+                    {
                         continue;
+                    }
 
                     Point3D doorLoc = door.GetWorldLocation();
+
                     int doorHeight = door.ItemData.CalcHeight;
 
-                    foreach (AddonContainerComponent c in m_Components)
+                    for (var index = 0; index < m_Components.Count; index++)
                     {
+                        AddonContainerComponent c = m_Components[index];
                         Point3D addonLoc = new Point3D(p.X + c.Offset.X, p.Y + c.Offset.Y, p.Z + c.Offset.Z);
+
                         int addonHeight = c.ItemData.CalcHeight;
 
                         if (Utility.InRange(doorLoc, addonLoc, 1) && (addonLoc.Z == doorLoc.Z || addonLoc.Z + addonHeight > doorLoc.Z && doorLoc.Z + doorHeight > addonLoc.Z))
+                        {
                             return AddonFitResult.DoorTooClose;
+                        }
                     }
 
                     Point3D addonLo = new Point3D(p.X, p.Y, p.Z);
+
                     int addonHeigh = ItemData.CalcHeight;
 
                     if (Utility.InRange(doorLoc, addonLo, 1) && (addonLo.Z == doorLoc.Z || addonLo.Z + addonHeigh > doorLoc.Z && doorLoc.Z + doorHeight > addonLo.Z))
+                    {
                         return AddonFitResult.DoorTooClose;
+                    }
                 }
             }
 
