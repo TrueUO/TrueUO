@@ -539,13 +539,13 @@ namespace Server.Spells
                     toCreature = toCreature.GetMaster() as BaseCreature;
                 }
 
-                if (toCreature.IsEnemy(fromCreature))   //Natural Enemies
+                if (toCreature != null && toCreature.IsEnemy(fromCreature))   //Natural Enemies
                 {
                     return true;
                 }
 
                 //All involved are monsters- no damage. If falls through this statement, normal noto rules apply
-                if (!toCreature.Controlled && !toCreature.Summoned && !fromCreature.Controlled && !fromCreature.Summoned) //All involved are monsters- no damage
+                if (toCreature != null && fromCreature != null && !toCreature.Controlled && !toCreature.Summoned && !fromCreature.Controlled && !fromCreature.Summoned) //All involved are monsters- no damage
                 {
                     return false;
                 }
@@ -556,14 +556,12 @@ namespace Server.Spells
                 return true;
             }
 
-            return (noto != Notoriety.Innocent || from.Murderer);
+            return noto != Notoriety.Innocent || @from.Murderer;
         }
 
         public static bool CheckResponsible(ref Mobile m)
         {
-            var bc = m as BaseCreature;
-
-            if (bc != null && bc.GetMaster() != null)
+            if (m is BaseCreature bc && bc.GetMaster() != null)
             {
                 m = bc.GetMaster();
                 return true;

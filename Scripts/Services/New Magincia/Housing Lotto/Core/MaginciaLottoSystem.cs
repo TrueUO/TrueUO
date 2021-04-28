@@ -439,27 +439,28 @@ namespace Server.Engines.NewMagincia
                 return;
             }
 
-            var account = from.Account as Account;
-
-            for (int i = 0; i < account.Length; i++)
+            if (from.Account is Account account)
             {
-                var m = account[i];
-
-                if (m == from)
+                for (int i = 0; i < account.Length; i++)
                 {
-                    continue;
-                }
+                    var m = account[i];
 
-                if (m_MessageQueue.ContainsKey(m) && m_MessageQueue[m].Contains(message))
-                {
-                    m_MessageQueue[m].Remove(message);
-
-                    if (m_MessageQueue[m].Count == 0)
+                    if (m == from)
                     {
-                        m_MessageQueue.Remove(m);
+                        continue;
                     }
 
-                    break;
+                    if (m_MessageQueue.ContainsKey(m) && m_MessageQueue[m].Contains(message))
+                    {
+                        m_MessageQueue[m].Remove(message);
+
+                        if (m_MessageQueue[m].Count == 0)
+                        {
+                            m_MessageQueue.Remove(m);
+                        }
+
+                        break;
+                    }
                 }
             }
         }
@@ -488,12 +489,16 @@ namespace Server.Engines.NewMagincia
         {
             List<Mobile> mobiles = new List<Mobile>(m_MessageQueue.Keys);
 
-            foreach (Mobile m in mobiles)
+            for (var index = 0; index < mobiles.Count; index++)
             {
+                Mobile m = mobiles[index];
+
                 List<NewMaginciaMessage> messages = new List<NewMaginciaMessage>(m_MessageQueue[m]);
 
-                foreach (NewMaginciaMessage message in messages)
+                for (var i = 0; i < messages.Count; i++)
                 {
+                    NewMaginciaMessage message = messages[i];
+
                     if (m_MessageQueue.ContainsKey(m) && m_MessageQueue[m].Contains(message) && message.Expired)
                     {
                         m_MessageQueue[m].Remove(message);
@@ -528,18 +533,36 @@ namespace Server.Engines.NewMagincia
 
             if (m.Account != null)
             {
-                foreach (var kvp in m_MessageQueue.Where(kvp => kvp.Key != m && kvp.Key.Account != null && kvp.Key.Account.Username == m.Account.Username && kvp.Value.Any(message => message.AccountBound)))
+                foreach (var kvp in m_MessageQueue)
                 {
-                    if (list == null)
-                    {
-                        list = new List<NewMaginciaMessage>();
-                    }
+                    bool any = false;
 
-                    foreach (var message in kvp.Value)
+                    for (var index = 0; index < kvp.Value.Count; index++)
                     {
+                        var message = kvp.Value[index];
+
                         if (message.AccountBound)
                         {
-                            list.Add(message);
+                            any = true;
+                            break;
+                        }
+                    }
+
+                    if (kvp.Key != m && kvp.Key.Account != null && kvp.Key.Account.Username == m.Account.Username && any)
+                    {
+                        if (list == null)
+                        {
+                            list = new List<NewMaginciaMessage>();
+                        }
+
+                        for (var index = 0; index < kvp.Value.Count; index++)
+                        {
+                            var message = kvp.Value[index];
+
+                            if (message.AccountBound)
+                            {
+                                list.Add(message);
+                            }
                         }
                     }
                 }
@@ -547,7 +570,12 @@ namespace Server.Engines.NewMagincia
 
             if (list != null)
             {
-                list = list.OrderBy(message => message.Expires).ToList();
+                list = new List<NewMaginciaMessage>();
+
+                foreach (var maginciaMessage in list.OrderBy(message => message.Expires))
+                {
+                    list.Add(maginciaMessage);
+                }
             }
 
             return list;
@@ -556,14 +584,18 @@ namespace Server.Engines.NewMagincia
         public static void CheckMessages(Mobile from)
         {
             if (!m_MessageQueue.ContainsKey(from) || m_MessageQueue[from] == null || m_MessageQueue[from].Count == 0)
+            {
                 return;
+            }
 
             List<NewMaginciaMessage> list = new List<NewMaginciaMessage>(m_MessageQueue[from]);
 
             for (int i = 0; i < list.Count; i++)
             {
                 if (list[i].Expired)
+                {
                     m_MessageQueue[from].Remove(list[i]);
+                }
             }
         }
         #endregion
@@ -573,7 +605,9 @@ namespace Server.Engines.NewMagincia
             Account acct = from.Account as Account;
 
             if (acct == null)
+            {
                 return;
+            }
 
             for (int i = 0; i < acct.Length; i++)
             {
@@ -582,8 +616,10 @@ namespace Server.Engines.NewMagincia
                 if (m == null)
                     continue;
 
-                foreach (MaginciaHousingPlot plot in m_Plots)
+                for (var index = 0; index < m_Plots.Count; index++)
                 {
+                    MaginciaHousingPlot plot = m_Plots[index];
+
                     if (plot.Expires != DateTime.MinValue && plot.Winner == m)
                     {
                         from.SendGump(new PlotWinnerGump(plot));

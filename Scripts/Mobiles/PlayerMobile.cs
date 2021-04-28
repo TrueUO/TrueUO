@@ -4047,9 +4047,9 @@ namespace Server.Mobiles
 
             ApplyPoisonResult result = base.ApplyPoison(from, poison);
 
-            if (from != null && result == ApplyPoisonResult.Poisoned && PoisonTimer is PoisonImpl.PoisonTimer)
+            if (from != null && result == ApplyPoisonResult.Poisoned && PoisonTimer is PoisonImpl.PoisonTimer timer)
             {
-                (PoisonTimer as PoisonImpl.PoisonTimer).From = from;
+                timer.From = from;
             }
 
             return result;
