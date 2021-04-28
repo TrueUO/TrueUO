@@ -37,6 +37,8 @@ namespace Server.Engines.Quests
         public virtual bool ShowRewards => true;
         public virtual bool CanRefuseReward => false;
 
+        public virtual bool IsQuestionQuest => false;
+
         private List<BaseObjective> m_Objectives;
         private List<BaseReward> m_Rewards;
         private PlayerMobile m_Owner;

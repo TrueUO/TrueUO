@@ -14,6 +14,7 @@ namespace Server.Engines.Quests
         }
 
         public override bool ShowDescription => false;
+        public override bool IsQuestionQuest => true;
 
         public override QuestChain ChainID => QuestChain.CloakOfHumility;
         public override Type NextQuest => typeof(CommunityServiceMuseumQuest);

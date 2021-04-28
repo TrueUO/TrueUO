@@ -1,3 +1,6 @@
+using Server.Engines.Quests.RitualQuest;
+using Server.Items;
+
 namespace Server.Mobiles
 {
     [CorpseName("a night terror corpse")]
@@ -10,10 +13,11 @@ namespace Server.Mobiles
             Name = "Night Terror";
             Body = 0x30c;
             Hue = 2963;
+            BaseSoundID = 0x17A;
 
             SetStr(385, 467);
             SetDex(40, 70);
-            SetInt(600, 800);
+            SetInt(600, 1050);
 
             SetHits(50000);
 
@@ -25,11 +29,11 @@ namespace Server.Mobiles
             SetDamageType(ResistanceType.Poison, 20);
             SetDamageType(ResistanceType.Energy, 20);
 
-            SetResistance(ResistanceType.Physical, 60, 70);
+            SetResistance(ResistanceType.Physical, 70, 85);
             SetResistance(ResistanceType.Fire, 100);
-            SetResistance(ResistanceType.Cold, 80, 90);
+            SetResistance(ResistanceType.Cold, 70, 85);
             SetResistance(ResistanceType.Poison, 100);
-            SetResistance(ResistanceType.Energy, 70, 80);
+            SetResistance(ResistanceType.Energy, 70, 85);
 
             SetSkill(SkillName.MagicResist, 90.0, 100.0);
             SetSkill(SkillName.Tactics, 120.0);
@@ -41,6 +45,8 @@ namespace Server.Mobiles
             SetSkill(SkillName.EvalInt, 110.0);
             SetSkill(SkillName.Necromancy, 120.0);
             SetSkill(SkillName.SpiritSpeak, 120.0);
+            SetSkill(SkillName.Focus, 60.0, 70.0);
+            SetSkill(SkillName.Meditation, 50.0, 60.0);
 
             Fame = 8000;
             Karma = -8000;
@@ -64,6 +70,13 @@ namespace Server.Mobiles
             AddLoot(LootPack.FilthyRich, 3);
         }
 
+        public override void OnDeath(Container c)
+        {
+            base.OnDeath(c);
+
+            c.AddItem(new NightTerrorHeart());
+        }
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -73,7 +86,7 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }
