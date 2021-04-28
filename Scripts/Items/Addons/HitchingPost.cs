@@ -209,9 +209,15 @@ namespace Server.Items
 
                     if (pet == null || pet.Deleted)
                     {
-                        pet.IsStabled = false;
+                        if (pet != null)
+                        {
+                            pet.IsStabled = false;
+                        }
+
                         from.Stabled.RemoveAt(i);
+
                         --i;
+
                         continue;
                     }
 
@@ -478,11 +484,9 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(4); // version
 
             writer.Write(m_Replica);
-
             writer.Write((int)m_Level);
             writer.Write(m_UsesRemaining);
             writer.Write(m_Charges);
@@ -491,42 +495,12 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            if (Weight == 1)
-                Weight = 10;
-
-            switch (version)
-            {
-                case 4:
-                    {
-                        m_Replica = reader.ReadBool();
-                        goto case 3;
-                    }
-                case 3:
-                    {
-                        m_Level = (SecureLevel)reader.ReadInt();
-                        goto case 2;
-                    }
-                case 2:
-                    {
-                        m_UsesRemaining = reader.ReadInt();
-                        goto case 1;
-                    }
-                case 1:
-                    {
-                        m_Charges = reader.ReadInt();
-                        goto case 0;
-                    }
-                case 0:
-                    {
-                        break;
-                    }
-            }
-
-            if (version < 4)
-                m_Replica = true;
+            m_Replica = reader.ReadBool();
+            m_Level = (SecureLevel)reader.ReadInt();
+            m_UsesRemaining = reader.ReadInt();
+            m_Charges = reader.ReadInt();
         }
     }
 }

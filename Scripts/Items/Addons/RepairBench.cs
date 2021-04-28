@@ -7,7 +7,6 @@ using Server.Network;
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -62,7 +61,16 @@ namespace Server.Items
 
         public static RepairBenchDefinition GetInfo(RepairSkillType type)
         {
-            return Definitions.ToList().Find(x => x.Skill == type);
+            List<RepairBenchDefinition> list = new List<RepairBenchDefinition>();
+
+            for (var index = 0; index < Definitions.Length; index++)
+            {
+                var definition = Definitions[index];
+
+                list.Add(definition);
+            }
+
+            return list.Find(x => x.Skill == type);
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
@@ -124,10 +132,21 @@ namespace Server.Items
             {
                 Tools = new List<RepairBenchDefinition>();
 
-                Definitions.ToList().ForEach(x =>
+                List<RepairBenchDefinition> list = new List<RepairBenchDefinition>();
+
+                for (var index = 0; index < Definitions.Length; index++)
                 {
+                    var definition = Definitions[index];
+
+                    list.Add(definition);
+                }
+
+                for (var index = 0; index < list.Count; index++)
+                {
+                    var x = list[index];
+
                     Tools.Add(x);
-                });
+                }
             }
             else
             {
@@ -142,7 +161,21 @@ namespace Server.Items
 
         public void AccessibleFailMessage(Mobile from)
         {
-            Components.FirstOrDefault().SendLocalizedMessageTo(from, 1061637); // You are not allowed to access this.
+            AddonComponent first = null;
+
+            for (var index = 0; index < Components.Count; index++)
+            {
+                var component = Components[index];
+
+                first = component;
+
+                break;
+            }
+
+            if (first != null)
+            {
+                first.SendLocalizedMessageTo(from, 1061637); // You are not allowed to access this.
+            }
         }
 
         public bool CheckAccessible(Mobile from, Item item)
@@ -233,12 +266,14 @@ namespace Server.Items
 
             if (Tools != null)
             {
-                Tools.ForEach(x =>
+                for (var index = 0; index < Tools.Count; index++)
                 {
-                    writer.Write((int)x.Skill);
-                    writer.Write((int)x.SkillValue);
+                    var x = Tools[index];
+
+                    writer.Write((int) x.Skill);
+                    writer.Write((int) x.SkillValue);
                     writer.Write(x.Charges);
-                });
+                }
             }
         }
 
@@ -328,8 +363,18 @@ namespace Server.Items
 
             if (Tools != null)
             {
-                int[] value = Tools.Select(x => x.Charges).ToArray();
-                list.Add(1158899, string.Format("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}", value[0], value[1], value[2], value[3], value[4], value[5], value[6])); // Tinkering: ~1_CHARGES~<br>Blacksmithing: ~2_CHARGES~<br>Carpentry: ~3_CHARGES~<br>Tailoring: ~4_CHARGES~<br>Fletching: ~5_CHARGES~<br>Masonry: ~6_CHARGES~<br>Glassblowing: ~7_CHARGES~
+                List<int> charges = new List<int>();
+
+                for (var index = 0; index < Tools.Count; index++)
+                {
+                    var x = Tools[index];
+
+                    charges.Add(x.Charges);
+                }
+
+                int[] value = charges.ToArray();
+
+                list.Add(1158899, $"{value[0]}\t{value[1]}\t{value[2]}\t{value[3]}\t{value[4]}\t{value[5]}\t{value[6]}"); // Tinkering: ~1_CHARGES~<br>Blacksmithing: ~2_CHARGES~<br>Carpentry: ~3_CHARGES~<br>Tailoring: ~4_CHARGES~<br>Fletching: ~5_CHARGES~<br>Masonry: ~6_CHARGES~<br>Glassblowing: ~7_CHARGES~
             }
         }
 
@@ -371,12 +416,14 @@ namespace Server.Items
 
             if (Tools != null)
             {
-                Tools.ForEach(x =>
+                for (var index = 0; index < Tools.Count; index++)
                 {
-                    writer.Write((int)x.Skill);
-                    writer.Write((int)x.SkillValue);
+                    var x = Tools[index];
+
+                    writer.Write((int) x.Skill);
+                    writer.Write((int) x.SkillValue);
                     writer.Write(x.Charges);
-                });
+                }
             }
         }
 
@@ -612,26 +659,55 @@ namespace Server.Items
 
                 if (targeted is RepairDeed repairDeed)
                 {
-                    if (m_Addon.Tools.Any(x => x.Skill == repairDeed.RepairSkill && x.Charges >= 500))
+                    bool any = false;
+
+                    for (var index = 0; index < m_Addon.Tools.Count; index++)
+                    {
+                        var x = m_Addon.Tools[index];
+
+                        if (x.Skill == repairDeed.RepairSkill && x.Charges >= 500)
+                        {
+                            any = true;
+                            break;
+                        }
+                    }
+
+                    if (any)
                     {
                         from.SendLocalizedMessage(1158778); // This would exceed the maximum charges allowed on this magic item.
                         from.Target = new InternalTarget(from, m_Gump, m_Addon);
                     }
-                    else if (m_Addon.Tools.Any(x => x.Skill == repairDeed.RepairSkill && x.Charges != 0 && x.SkillValue != repairDeed.SkillLevel))
-                    {
-                        from.SendLocalizedMessage(1158866); // The repair bench contains deeds that do not match the skill of the deed you are trying to add.
-                        from.Target = new InternalTarget(from, m_Gump, m_Addon);
-                    }
                     else
                     {
-                        RepairBenchDefinition tool = m_Addon.Tools.Find(x => x.Skill == repairDeed.RepairSkill);
+                        bool any1 = false;
 
-                        tool.SkillValue = repairDeed.SkillLevel;
-                        tool.Charges++;
+                        for (var index = 0; index < m_Addon.Tools.Count; index++)
+                        {
+                            var x = m_Addon.Tools[index];
 
-                        repairDeed.Delete();
+                            if (x.Skill == repairDeed.RepairSkill && x.Charges != 0 && x.SkillValue != repairDeed.SkillLevel)
+                            {
+                                any1 = true;
+                                break;
+                            }
+                        }
 
-                        from.Target = new InternalTarget(from, m_Gump, m_Addon);
+                        if (any1)
+                        {
+                            from.SendLocalizedMessage(1158866); // The repair bench contains deeds that do not match the skill of the deed you are trying to add.
+                            from.Target = new InternalTarget(from, m_Gump, m_Addon);
+                        }
+                        else
+                        {
+                            RepairBenchDefinition tool = m_Addon.Tools.Find(x => x.Skill == repairDeed.RepairSkill);
+
+                            tool.SkillValue = repairDeed.SkillLevel;
+                            tool.Charges++;
+
+                            repairDeed.Delete();
+
+                            from.Target = new InternalTarget(from, m_Gump, m_Addon);
+                        }
                     }
                 }
                 else if (targeted is Container c)
@@ -642,18 +718,41 @@ namespace Server.Items
                         {
                             RepairDeed deed = (RepairDeed)c.Items[i];
 
-                            if (m_Addon.Tools.Any(x => x.Skill == deed.RepairSkill && x.Charges >= 500))
+                            bool any = false;
+
+                            for (var index = 0; index < m_Addon.Tools.Count; index++)
+                            {
+                                var x = m_Addon.Tools[index];
+
+                                if (x.Skill == deed.RepairSkill && x.Charges >= 500)
+                                {
+                                    any = true;
+                                    break;
+                                }
+                            }
+
+                            if (any)
                             {
                                 from.SendLocalizedMessage(1158778); // This would exceed the maximum charges allowed on this magic item.
                             }
-                            else if (m_Addon.Tools.Any(x => x.Skill == deed.RepairSkill && x.SkillValue == deed.SkillLevel))
+                            else
                             {
-                                RepairBenchDefinition tool = m_Addon.Tools.Find(x => x.Skill == deed.RepairSkill);
+                                for (var index = 0; index < m_Addon.Tools.Count; index++)
+                                {
+                                    var x1 = m_Addon.Tools[index];
 
-                                tool.SkillValue = deed.SkillLevel;
-                                tool.Charges++;
+                                    if (x1.Skill == deed.RepairSkill && x1.SkillValue == deed.SkillLevel)
+                                    {
+                                        RepairBenchDefinition tool =
+                                            m_Addon.Tools.Find(x => x.Skill == deed.RepairSkill);
 
-                                deed.Delete();
+                                        tool.SkillValue = deed.SkillLevel;
+                                        tool.Charges++;
+
+                                        deed.Delete();
+                                        break;
+                                    }
+                                }
                             }
                         }
                     }

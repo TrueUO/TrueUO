@@ -146,11 +146,26 @@ namespace Server.Items
         {
             base.GetProperties(list);
 
-            var content = Table.FirstOrDefault(x => x.Story == Story && x.PageID == PageID);
+            StoryDefinition content = null;
+
+            for (var index = 0; index < Table.Length; index++)
+            {
+                var x = Table[index];
+
+                if (x.Story == Story && x.PageID == PageID)
+                {
+                    content = x;
+                    break;
+                }
+            }
 
             list.Add(1157254, "The Tale of " + Misc.ServerList.ServerName);
-            list.Add(1114778, GetStoryName(content.Story));
-            list.Add(1159635, content.PageID.ToString());
+
+            if (content != null)
+            {
+                list.Add(1114778, GetStoryName(content.Story));
+                list.Add(1159635, content.PageID.ToString());
+            }
         }
 
         public override void Serialize(GenericWriter writer)
@@ -264,7 +279,18 @@ namespace Server.Items
                 Page = page;
                 Book.CurrentPage = page;
 
-                var content = PageOfLore.Table.FirstOrDefault(x => x.Story == book.Story && x.PageID == Page);
+                StoryDefinition content = null;
+
+                for (var index = 0; index < PageOfLore.Table.Length; index++)
+                {
+                    var x = PageOfLore.Table[index];
+
+                    if (x.Story == book.Story && x.PageID == Page)
+                    {
+                        content = x;
+                        break;
+                    }
+                }
 
                 AddPage(0);
 
@@ -324,11 +350,12 @@ namespace Server.Items
 
             writer.Write(Content.Count);
 
-            Content.ForEach(s =>
+            for (var index = 0; index < Content.Count; index++)
             {
-                writer.Write(s);
-            });
+                var s = Content[index];
 
+                writer.Write(s);
+            }
         }
 
         public override void Deserialize(GenericReader reader)
