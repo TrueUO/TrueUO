@@ -1,17 +1,23 @@
 #region References
+
+using System;
+using System.Collections.Generic;
 using Server.Accounting;
 using Server.ContextMenus;
+using Server.Diagnostics;
 using Server.Engines.ArenaSystem;
 using Server.Engines.BulkOrders;
 using Server.Engines.CannedEvil;
 using Server.Engines.CityLoyalty;
 using Server.Engines.Craft;
 using Server.Engines.Help;
+using Server.Engines.JollyRoger;
 using Server.Engines.PartySystem;
 using Server.Engines.Points;
 using Server.Engines.Quests;
 using Server.Engines.Shadowguard;
 using Server.Engines.SphynxFortune;
+using Server.Engines.UOStore;
 using Server.Engines.VendorSearching;
 using Server.Engines.VoidPool;
 using Server.Engines.VvV;
@@ -29,17 +35,16 @@ using Server.Spells.Bushido;
 using Server.Spells.Fifth;
 using Server.Spells.First;
 using Server.Spells.Fourth;
+using Server.Spells.Mysticism;
 using Server.Spells.Necromancy;
 using Server.Spells.Ninjitsu;
+using Server.Spells.Second;
 using Server.Spells.Seventh;
 using Server.Spells.Sixth;
 using Server.Spells.SkillMasteries;
 using Server.Targeting;
+using LoyaltyRating = Server.Engines.Points.LoyaltyRating;
 
-using System;
-using System.Collections.Generic;
-
-using RankDefinition = Server.Guilds.RankDefinition;
 #endregion
 
 namespace Server.Mobiles
@@ -116,7 +121,7 @@ namespace Server.Mobiles
     }
     #endregion
 
-    public partial class PlayerMobile : Mobile, IHonorTarget
+    public class PlayerMobile : Mobile, IHonorTarget
     {
         public static List<PlayerMobile> Instances { get; }
 
@@ -544,7 +549,7 @@ namespace Server.Mobiles
                         }
                         catch (Exception e)
                         {
-                            Diagnostics.ExceptionLogging.LogException(e);
+                            ExceptionLogging.LogException(e);
                         }
 
                         if (ammo != null)
@@ -976,7 +981,7 @@ namespace Server.Mobiles
             }
             else
             {
-                max += Spells.Mysticism.StoneFormSpell.GetMaxResistBonus(this);
+                max += StoneFormSpell.GetMaxResistBonus(this);
             }
 
             if (Race == Race.Elf && type == ResistanceType.Energy)
@@ -1472,7 +1477,7 @@ namespace Server.Mobiles
             }
             catch (Exception e)
             {
-                Diagnostics.ExceptionLogging.LogException(e);
+                ExceptionLogging.LogException(e);
             }
             finally
             {
@@ -1641,8 +1646,8 @@ namespace Server.Mobiles
 
         public override void OnSubItemRemoved(Item item)
         {
-            if (Engines.UOStore.UltimaStore.HasPendingItem(this))
-                Timer.DelayCall(TimeSpan.FromSeconds(1.5), Engines.UOStore.UltimaStore.CheckPendingItem, this);
+            if (UltimaStore.HasPendingItem(this))
+                Timer.DelayCall(TimeSpan.FromSeconds(1.5), UltimaStore.CheckPendingItem, this);
         }
 
         public override void AggressiveAction(Mobile aggressor, bool criminal)
@@ -2276,7 +2281,7 @@ namespace Server.Mobiles
 
                 if (Alive)
                 {
-                    list.Add(new Engines.Points.LoyaltyRating(this));
+                    list.Add(new LoyaltyRating(this));
                 }
 
                 list.Add(new OpenBackpackEntry(this));
@@ -3695,7 +3700,7 @@ namespace Server.Mobiles
             ClumsySpell.RemoveEffects(this);
             FeeblemindSpell.RemoveEffects(this);
             CurseSpell.RemoveEffect(this);
-            Spells.Second.ProtectionSpell.EndProtection(this);
+            ProtectionSpell.EndProtection(this);
 
 
             EndAction(typeof(PolymorphSpell));
@@ -4047,9 +4052,9 @@ namespace Server.Mobiles
 
             ApplyPoisonResult result = base.ApplyPoison(from, poison);
 
-            if (from != null && result == ApplyPoisonResult.Poisoned && PoisonTimer is PoisonImpl.PoisonTimer)
+            if (from != null && result == ApplyPoisonResult.Poisoned && PoisonTimer is PoisonImpl.PoisonTimer timer)
             {
-                (PoisonTimer as PoisonImpl.PoisonTimer).From = from;
+                timer.From = from;
             }
 
             return result;
@@ -4839,7 +4844,7 @@ namespace Server.Mobiles
         {
             base.GetProperties(list);
 
-            Engines.JollyRoger.JollyRogerData.DisplayTitle(this, list);
+            JollyRogerData.DisplayTitle(this, list);
 
             if (m_SubtitleSkillTitle != null)
                 list.Add(1042971, m_SubtitleSkillTitle);

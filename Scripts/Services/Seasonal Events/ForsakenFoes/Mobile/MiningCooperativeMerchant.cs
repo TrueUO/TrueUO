@@ -4,7 +4,6 @@ using Server.Mobiles;
 using Server.Network;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace Server.Engines.Quests
 {
@@ -43,7 +42,17 @@ namespace Server.Engines.Quests
         {
             string acc = from.Account.ToString();
 
-            return PurchaseList.Any(x => x.Account == acc);
+            for (var index = 0; index < PurchaseList.Count; index++)
+            {
+                var x = PurchaseList[index];
+
+                if (x.Account == acc)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public static int PurchaseAmount(Mobile from)
@@ -52,7 +61,23 @@ namespace Server.Engines.Quests
 
             if (CheckList(from))
             {
-                amount = PurchaseList.FirstOrDefault(x => x.Account == from.Account.ToString()).Purchase;
+                CooperativeArray first = null;
+
+                for (var index = 0; index < PurchaseList.Count; index++)
+                {
+                    var x = PurchaseList[index];
+
+                    if (x.Account == from.Account.ToString())
+                    {
+                        first = x;
+                        break;
+                    }
+                }
+
+                if (first != null)
+                {
+                    amount = first.Purchase;
+                }
             }
 
             return amount;
@@ -73,11 +98,13 @@ namespace Server.Engines.Quests
 
                     writer.Write(PurchaseList.Count);
 
-                    PurchaseList.ForEach(s =>
+                    for (var index = 0; index < PurchaseList.Count; index++)
                     {
+                        var s = PurchaseList[index];
+
                         writer.Write(s.Account);
                         writer.Write(s.Purchase);
-                    });
+                    }
                 });
         }
 

@@ -59,27 +59,41 @@ namespace Server.Items
             base.GetProperties(list);
 
             if (Quest == null)
+            {
                 return;
+            }
 
             int loc = 1116453; //~1_val~: ~2_val~/~3_val~
+
             FishQuestObjective obj = Quest.GetObjective();
 
             if (obj == null)
-                Delete();
-
-            foreach (KeyValuePair<Type, int[]> kvp in obj.Line)
             {
-                int idx = FishQuestHelper.GetIndexForType(kvp.Key);
-                list.Add(loc, "#{0}\t{1}\t{2}", FishQuestHelper.Labels[idx], kvp.Value[0].ToString(), kvp.Value[1].ToString());
-                loc++;
+                Delete();
+            }
+
+            if (obj != null)
+            {
+                foreach (KeyValuePair<Type, int[]> kvp in obj.Line)
+                {
+                    int idx = FishQuestHelper.GetIndexForType(kvp.Key);
+
+                    list.Add(loc, "#{0}\t{1}\t{2}", FishQuestHelper.Labels[idx], kvp.Value[0].ToString(), kvp.Value[1].ToString());
+
+                    loc++;
+                }
             }
 
             object delivery = GetDeliveryInfo();
 
             if (delivery is string s)
+            {
                 list.Add(s);
+            }
             else
+            {
                 list.Add((int)delivery);
+            }
 
             list.Add(1076255); //NO-TRADE
 

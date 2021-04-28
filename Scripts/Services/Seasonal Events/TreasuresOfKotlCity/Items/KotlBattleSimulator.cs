@@ -149,11 +149,14 @@ namespace Server.Engines.TreasuresOfKotlCity
                 WheelsOfTime.Instance.RockBarrier = new KotlWallAddon();
             }
 
-            WheelsOfTime.Instance.RockBarrier.MoveToWorld(WheelsOfTime.RockBarrierLocation, Map.TerMur);
-
             if (WheelsOfTime.Instance != null)
             {
-                WheelsOfTime.Instance.TimeWarpEnds = DateTime.UtcNow + TimeSpan.FromSeconds(10);
+                WheelsOfTime.Instance.RockBarrier.MoveToWorld(WheelsOfTime.RockBarrierLocation, Map.TerMur);
+
+                if (WheelsOfTime.Instance != null)
+                {
+                    WheelsOfTime.Instance.TimeWarpEnds = DateTime.UtcNow + TimeSpan.FromSeconds(10);
+                }
             }
 
             for (var index = 0; index < PowerCoreDockingStation.Stations.Count; index++)
@@ -242,7 +245,7 @@ namespace Server.Engines.TreasuresOfKotlCity
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             Instance = this;
 
@@ -297,26 +300,6 @@ namespace Server.Engines.TreasuresOfKotlCity
                         }
                     }
                 }
-            }
-
-            // Teleporter Fix
-            if (version == 0)
-            {
-                Timer.DelayCall(TimeSpan.FromSeconds(20), () =>
-                    {
-                        if (Map != null)
-                        {
-                            IPooledEnumerable eable = Map.GetItemsInRange(new Point3D(644, 2308, 0), 0);
-
-                            foreach (Item i in eable)
-                            {
-                                if (i is Teleporter teleporter)
-                                {
-                                    teleporter.PointDest = new Point3D(543, 2479, 2);
-                                }
-                            }
-                        }
-                    });
             }
         }
     }

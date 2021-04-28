@@ -46,14 +46,16 @@ namespace Server.Engines.Quests
                     {
                         kvp.Value[0] += item.Amount;
 
-                        if (IsCompleted && Quest.Owner != null)
+                        if (Quest.Owner != null && IsCompleted)
                         {
                             CurProgress = 500;
                             Quest.Owner.SendLocalizedMessage(1072273, null, 0x23); // You've completed a quest!  Don't forget to collect your reward.							
                             Quest.Owner.SendSound(Quest.CompleteSound);
                         }
-                        else
+                        else if (Quest.Owner != null)
+                        {
                             Quest.Owner.SendSound(Quest.UpdateSound);
+                        }
 
                         return true;
                     }
