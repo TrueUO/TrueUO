@@ -2,7 +2,6 @@ using Server.Network;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace Server.Engines.SphynxFortune
 {
@@ -179,28 +178,65 @@ namespace Server.Engines.SphynxFortune
 
         public static bool UnderEffect(Mobile from)
         {
-            return Fountains.Any(x => x.Mobile == from);
+            for (var index = 0; index < Fountains.Count; index++)
+            {
+                var x = Fountains[index];
+
+                if (x.Mobile == from)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public static int GetResistanceBonus(Mobile from, ResistanceType type)
         {
-            return Fountains.Where(x => x.Mobile == from && (x.Type == EnumType.ResistanceType) && Enum.GetName(typeof(ResistanceType), type) == x.TypeValue.ToString()).Sum(y => y.Value);
+            int sum = 0;
+
+            for (var index = 0; index < Fountains.Count; index++)
+            {
+                var x = Fountains[index];
+
+                if (x.Mobile == from && x.Type == EnumType.ResistanceType && Enum.GetName(typeof(ResistanceType), type) == x.TypeValue.ToString())
+                {
+                    sum += x.Value;
+                }
+            }
+
+            return sum;
         }
 
         public static int GetAosAttributeBonus(Mobile from, AosAttribute type)
         {
-            return Fountains.Where(x => x.Mobile == from && (x.Type == EnumType.AosAttribute) && Enum.GetName(typeof(AosAttribute), type) == x.TypeValue.ToString()).Sum(y => y.Value);
+            int sum = 0;
+
+            for (var index = 0; index < Fountains.Count; index++)
+            {
+                var x = Fountains[index];
+
+                if (x.Mobile == from && x.Type == EnumType.AosAttribute && Enum.GetName(typeof(AosAttribute), type) == x.TypeValue.ToString())
+                {
+                    sum += x.Value;
+                }
+            }
+
+            return sum;
         }
 
         public static void DefragTables()
         {
-            Fountains.ForEach(x =>
+            for (var index = 0; index < Fountains.Count; index++)
             {
+                var x = Fountains[index];
+
                 if (DateTime.UtcNow > x.Date + TimeSpan.FromHours(24))
                 {
                     x.Mobile.SendLocalizedMessage(1060859); // The effects of the Sphynx have worn off.
                 }
-            });
+            }
+
             Fountains.RemoveAll(x => DateTime.UtcNow > x.Date + TimeSpan.FromHours(24));
         }
 
@@ -223,14 +259,16 @@ namespace Server.Engines.SphynxFortune
 
                     writer.Write(Fountains.Count);
 
-                    Fountains.ForEach(s =>
+                    for (var index = 0; index < Fountains.Count; index++)
                     {
+                        var s = Fountains[index];
+
                         writer.Write(s.Mobile);
                         writer.Write(s.Date);
-                        writer.Write((int)s.Type);
-                        writer.Write((int)s.TypeValue);
+                        writer.Write((int) s.Type);
+                        writer.Write((int) s.TypeValue);
                         writer.Write(s.Value);
-                    });
+                    }
                 });
         }
 

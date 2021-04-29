@@ -54,9 +54,18 @@ namespace Server.Engines.VvV
             switch (Filter)
             {
                 default:
-                case Filter.Score: list = list.OrderBy(e => -e.Score).ToList(); break;
-                case Filter.Kills: list = list.OrderBy(e => -e.Kills).ToList(); break;
-                case Filter.ReturnedSigils: list = list.OrderBy(e => -e.ReturnedSigils).ToList(); break;
+                case Filter.Score:
+                    list = new List<VvVGuildStats>();
+                    foreach (var stats in list.OrderBy(e => -e.Score)) list.Add(stats);
+                    break;
+                case Filter.Kills:
+                    list = new List<VvVGuildStats>();
+                    foreach (var stats in list.OrderBy(e => -e.Kills)) list.Add(stats);
+                    break;
+                case Filter.ReturnedSigils:
+                    list = new List<VvVGuildStats>();
+                    foreach (var stats in list.OrderBy(e => -e.ReturnedSigils)) list.Add(stats);
+                    break;
             }
 
             int pages = (int)Math.Ceiling((double)list.Count / PerPage);

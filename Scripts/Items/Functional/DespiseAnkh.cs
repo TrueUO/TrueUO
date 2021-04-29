@@ -1,4 +1,3 @@
-using System.Linq;
 using Server.Engines.Quests;
 using Server.Items;
 using Server.Mobiles;
@@ -36,18 +35,27 @@ namespace Server.Engines.Despise
         {
             if (from.InRange(c.Location, 3) && from.Backpack != null)
             {
-                if (WispOrb.Orbs.Any(x => x.Owner == from))
+                for (var index = 0; index < WispOrb.Orbs.Count; index++)
                 {
-                    LabelTo(from, 1153357); // Thou can guide but one of us.
-                    return;
+                    var x = WispOrb.Orbs[index];
+
+                    if (x.Owner == from)
+                    {
+                        LabelTo(from, 1153357); // Thou can guide but one of us.
+                        return;
+                    }
                 }
 
                 Alignment alignment = Alignment.Neutral;
 
                 if (from.Karma > 0 && m_Alignment == Alignment.Good)
+                {
                     alignment = Alignment.Good;
+                }
                 else if (from.Karma < 0 && m_Alignment == Alignment.Evil)
+                {
                     alignment = Alignment.Evil;
+                }
 
                 if (alignment != Alignment.Neutral)
                 {
@@ -66,7 +74,9 @@ namespace Server.Engines.Despise
                     }
                 }
                 else
+                {
                     LabelTo(from, 1153350); // Thy spirit be not compatible with our goals!
+                }
             }
         }
 

@@ -1,9 +1,7 @@
 using Server.Commands;
 using Server.Mobiles;
 using Server.Gumps;
-
 using System;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -116,10 +114,54 @@ namespace Server.Items
         {
             base.GetProperties(list);
 
-            list.Add(KeyValidation != null && KeyValidation.Any(x => x.Key == typeof(FlyWheel) && x.Active) ? 1154448 : 1154432);
-            list.Add(KeyValidation != null && KeyValidation.Any(x => x.Key == typeof(WireSpool) && x.Active) ? 1154449 : 1154434);
-            list.Add(KeyValidation != null && KeyValidation.Any(x => x.Key == typeof(PowerCore) && x.Active) ? 1154450 : 1154435);
-            list.Add(KeyValidation != null && KeyValidation.Any(x => x.Key == typeof(BearingAssembly) && x.Active) ? 1154451 : 1154436);
+            bool flyWheel = false;
+            for (var index = 0; index < KeyValidation.Count; index++)
+            {
+                var x = KeyValidation[index];
+                if (x.Key == typeof(FlyWheel) && x.Active)
+                {
+                    flyWheel = true;
+                    break;
+                }
+            }
+
+            bool wireSpool = false;
+            for (var index = 0; index < KeyValidation.Count; index++)
+            {
+                var x = KeyValidation[index];
+                if (x.Key == typeof(WireSpool) && x.Active)
+                {
+                    wireSpool = true;
+                    break;
+                }
+            }
+
+            bool powerCore = false;
+            for (var index = 0; index < KeyValidation.Count; index++)
+            {
+                var x = KeyValidation[index];
+                if (x.Key == typeof(PowerCore) && x.Active)
+                {
+                    powerCore = true;
+                    break;
+                }
+            }
+
+            bool bearingAssembly = false;
+            for (var index = 0; index < KeyValidation.Count; index++)
+            {
+                var x = KeyValidation[index];
+                if (x.Key == typeof(BearingAssembly) && x.Active)
+                {
+                    bearingAssembly = true;
+                    break;
+                }
+            }
+
+            list.Add(KeyValidation != null && flyWheel ? 1154448 : 1154432);
+            list.Add(KeyValidation != null && wireSpool ? 1154449 : 1154434);
+            list.Add(KeyValidation != null && powerCore ? 1154450 : 1154435);
+            list.Add(KeyValidation != null && bearingAssembly ? 1154451 : 1154436);
         }
 
         public void Activate(Mobile from)
