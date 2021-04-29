@@ -70,8 +70,8 @@ namespace Server.Spells.SkillMasteries
 
                 if (SpellHelper.CheckTown(Caster, Caster) && CheckSequence())
                 {
-                    double skill = ((Caster.Skills[CastSkill].Value * 2) + Caster.Skills[DamageSkill].Value) / 3;
-                    TimeSpan duration = TimeSpan.FromSeconds(1.0 + (skill / 40.0));
+                    double skill = (Caster.Skills[CastSkill].Value * 2 + Caster.Skills[DamageSkill].Value) / 3;
+                    TimeSpan duration = TimeSpan.FromSeconds(1.0 + skill / 40.0);
 
                     Direction d = Utility.GetDirection(Caster, p);
                     Point3D loc = Caster.Location;
@@ -121,15 +121,9 @@ namespace Server.Spells.SkillMasteries
                 {
                     foreach (IDamageable target in AcquireIndirectTargets(item.Location, 1))
                     {
-                        if (target is Mobile m)
+                        if (target is Mobile m && m.Z + 16 > item.Z && item.Z + 12 > m.Z && !list.ContainsKey(m))
                         {
-                            if (m.Z + 16 > item.Z && item.Z + 12 > m.Z)
-                            {
-                                if (!list.ContainsKey(m))
-                                {
-                                    list.Add(m, item);
-                                }
-                            }
+                            list.Add(m, item);
                         }
                     }
                 }
@@ -163,7 +157,7 @@ namespace Server.Spells.SkillMasteries
 
                 SkillName damageSkill = Caster.Skills[SkillName.Focus].Value > Caster.Skills[SkillName.Imbuing].Value ? SkillName.Focus : SkillName.Imbuing;
 
-                double skill = ((Caster.Skills[SkillName.Mysticism].Value) + Caster.Skills[damageSkill].Value * 2) / 3;
+                double skill = (Caster.Skills[SkillName.Mysticism].Value + Caster.Skills[damageSkill].Value * 2) / 3;
                 skill /= m.Player ? 3.5 : 2;
 
                 int damage = (int)skill + Utility.RandomMinMax(-3, 3);
@@ -171,7 +165,7 @@ namespace Server.Spells.SkillMasteries
 
                 int sdiBonus = SpellHelper.GetSpellDamageBonus(Caster, m, CastSkill, Caster.Player && m.Player);
 
-                damage *= (100 + sdiBonus);
+                damage *= 100 + sdiBonus;
                 damage /= 100;
 
                 Caster.DoHarmful(m);

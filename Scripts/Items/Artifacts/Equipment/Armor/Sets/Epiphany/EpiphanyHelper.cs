@@ -80,13 +80,10 @@ namespace Server.Items
             {
                 Item mItem = m.Items[index];
 
-                if (mItem is IEpiphanyArmor i)
+                if (mItem is IEpiphanyArmor i && i.Type == type)
                 {
-                    if (i.Type == type)
-                    {
-                        item = i;
-                        break;
-                    }
+                    item = i;
+                    break;
                 }
             }
 

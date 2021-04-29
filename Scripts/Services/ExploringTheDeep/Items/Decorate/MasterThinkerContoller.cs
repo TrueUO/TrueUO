@@ -144,9 +144,14 @@ namespace Server.Items
             {
                 int count = 0;
 
-                foreach (var s in MasterThinkerContoller.Array)
+                for (var index = 0; index < MasterThinkerContoller.Array.Count; index++)
                 {
-                    if (s.Mobile == from) count++;
+                    var s = MasterThinkerContoller.Array[index];
+
+                    if (s.Mobile == from)
+                    {
+                        count++;
+                    }
                 }
 
                 if (count == 0)
@@ -170,13 +175,10 @@ namespace Server.Items
                     from.PublicOverheadMessage(MessageType.Regular, 0x3B2, 1154221); // *You carefully examine the garment and take note of it's superior quality. You surmise it would be useful in keeping you warm in a cold environment*
                 }
 
-                if (ClickCheck(from) == 1)
+                if (ClickCheck(from) == 1 && from is PlayerMobile pm && pm.ExploringTheDeepQuest == ExploringTheDeepQuestChain.HeplerPaulsonComplete)
                 {
-                    if (from is PlayerMobile pm && pm.ExploringTheDeepQuest == ExploringTheDeepQuestChain.HeplerPaulsonComplete)
-                    {
-                        pm.ExploringTheDeepQuest = ExploringTheDeepQuestChain.CusteauPerronHouse;
-                        MasterThinkerContoller.Array.RemoveAll(s => s.Mobile == from);
-                    }
+                    pm.ExploringTheDeepQuest = ExploringTheDeepQuestChain.CusteauPerronHouse;
+                    MasterThinkerContoller.Array.RemoveAll(s => s.Mobile == from);
                 }
             }
         }
@@ -185,9 +187,14 @@ namespace Server.Items
         {
             int count = 0;
 
-            foreach (var s in MasterThinkerContoller.Array)
+            for (var index = 0; index < MasterThinkerContoller.Array.Count; index++)
             {
-                if (s.Mobile == from && s.Pant && s.Book && s.Tunic) count++;
+                var s = MasterThinkerContoller.Array[index];
+
+                if (s.Mobile == from && s.Pant && s.Book && s.Tunic)
+                {
+                    count++;
+                }
             }
 
             return count;

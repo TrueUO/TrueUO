@@ -16,12 +16,9 @@ namespace Server.Items
         {
             foreach (Mobile bound in Map.Malas.GetMobilesInBounds(new Rectangle2D(1808, 1784, 31, 31)))
             {
-                if (bound is PlayerMobile x)
+                if (bound is PlayerMobile x && x == from)
                 {
-                    if (x == from)
-                    {
-                        return true;
-                    }
+                    return true;
                 }
             }
 
