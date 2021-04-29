@@ -703,15 +703,26 @@ namespace Server.Items
                                 }
                         }
 
-                        if (Utility.RandomDouble() < 0.05)
-                            fish.Hue = m_FishHues[Utility.Random(m_FishHues.Length)];
-                        else if (Utility.RandomDouble() < 0.5)
-                            fish.Hue = Utility.RandomMinMax(0x100, 0x3E5);
+                        if (fish != null)
+                        {
+                            if (Utility.RandomDouble() < 0.05)
+                            {
+                                fish.Hue = m_FishHues[Utility.Random(m_FishHues.Length)];
+                            }
+                            else if (Utility.RandomDouble() < 0.5)
+                            {
+                                fish.Hue = Utility.RandomMinMax(0x100, 0x3E5);
+                            }
 
-                        if (AddFish(fish))
-                            Events.Add(message);
-                        else
-                            fish.Delete();
+                            if (AddFish(fish))
+                            {
+                                Events.Add(message);
+                            }
+                            else
+                            {
+                                fish.Delete();
+                            }
+                        }
                     }
                 }
 
@@ -1676,7 +1687,7 @@ namespace Server.Items
 
                 if (_Barrel.IsChildOf(from.Backpack))
                 {
-                    var addon = _Barrel.Addon as Aquarium;
+                    var addon = (Aquarium) _Barrel.Addon;
 
                     Spells.SpellHelper.GetSurfaceTop(ref p);
 

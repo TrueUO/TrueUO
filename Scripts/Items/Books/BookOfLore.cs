@@ -106,7 +106,15 @@ namespace Server.Items
 
                 if (item is BookOfLore book)
                 {
-                    if (book.Content.Any())
+                    bool any = false;
+
+                    for (var index = 0; index < book.Content.Count;)
+                    {
+                        any = true;
+                        break;
+                    }
+
+                    if (any)
                     {
                         if (book.Story != Story)
                         {
@@ -146,11 +154,26 @@ namespace Server.Items
         {
             base.GetProperties(list);
 
-            var content = Table.FirstOrDefault(x => x.Story == Story && x.PageID == PageID);
+            StoryDefinition content = null;
+
+            for (var index = 0; index < Table.Length; index++)
+            {
+                var x = Table[index];
+
+                if (x.Story == Story && x.PageID == PageID)
+                {
+                    content = x;
+                    break;
+                }
+            }
 
             list.Add(1157254, "The Tale of " + Misc.ServerList.ServerName);
-            list.Add(1114778, GetStoryName(content.Story));
-            list.Add(1159635, content.PageID.ToString());
+
+            if (content != null)
+            {
+                list.Add(1114778, GetStoryName(content.Story));
+                list.Add(1159635, content.PageID.ToString());
+            }
         }
 
         public override void Serialize(GenericWriter writer)
@@ -226,16 +249,29 @@ namespace Server.Items
             {
                 from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1019045); // I can't reach that.
             }
-            else if (Content == null || !Content.Any())
-            {
-                from.SendLocalizedMessage(1159628); // This book contains no pages...
-            }
             else
             {
-                if (from.HasGump(typeof(BookOfLoreGump)))
-                    return;
+                bool any = false;
 
-                from.SendGump(new BookOfLoreGump(this, CurrentPage));
+                for (var index = 0; index < Content.Count;)
+                {
+                    any = true;
+                    break;
+                }
+
+                if (!any && Content == null)
+                {
+                    from.SendLocalizedMessage(1159628); // This book contains no pages...
+                }
+                else
+                {
+                    if (from.HasGump(typeof(BookOfLoreGump)))
+                    {
+                        return;
+                    }
+
+                    from.SendGump(new BookOfLoreGump(this, CurrentPage));
+                }
             }
         }
 
@@ -264,7 +300,18 @@ namespace Server.Items
                 Page = page;
                 Book.CurrentPage = page;
 
-                var content = PageOfLore.Table.FirstOrDefault(x => x.Story == book.Story && x.PageID == Page);
+                StoryDefinition content = null;
+
+                for (var index = 0; index < PageOfLore.Table.Length; index++)
+                {
+                    var x = PageOfLore.Table[index];
+
+                    if (x.Story == book.Story && x.PageID == Page)
+                    {
+                        content = x;
+                        break;
+                    }
+                }
 
                 AddPage(0);
 
@@ -272,25 +319,29 @@ namespace Server.Items
                 AddImage(85, 18, 0xA9D);
                 AddHtml(163, 45, 150, 70, string.Format("<BASEFONT COLOR=#000080><DIV ALIGN=CENTER>The Tale of {0}</DIV></BASEFONT>", Misc.ServerList.ServerName), false, false);
                 AddHtml(100, 120, 270, 20, string.Format("<BASEFONT COLOR=#15156A><DIV ALIGN=CENTER>{0}</DIV></BASEFONT>", PageOfLore.GetStoryName(book.Story)), false, false);
-                AddHtml(115, 145, 250, 126, string.Format("<BASEFONT COLOR=#1F1F1F>{0}</BASEFONT>", content.ArticlePart1), false, false);
-                AddHtml(115, 275, 250, 126, string.Format("<BASEFONT COLOR=#1F1F1F>{0}</BASEFONT>", content.ArticlePart2), false, false);
-                AddButton(200, 420, 0x15E3, 0x15E7, 11001, GumpButtonType.Reply, 0);
-                AddHtml(110, 419, 250, 18, string.Format("<BASEFONT COLOR=#1F1F1F><DIV ALIGN=CENTER>{0}</DIV></BASEFONT>", Page.ToString()), false, false);
-                AddButton(250, 420, 0x15E1, 0x15E5, 11000, GumpButtonType.Reply, 0);
 
-                AddImage(435, 52, content.BGumpID);
-                AddImage(426, 42, 0xA9E);
-
-                if (content.UPCGumpID != 0)
+                if (content != null)
                 {
-                    AddImage(418, 35, content.UPCGumpID);
-                    AddImage(409, 25, 0xAA1);
-                }
+                    AddHtml(115, 145, 250, 126, string.Format("<BASEFONT COLOR=#1F1F1F>{0}</BASEFONT>", content.ArticlePart1), false, false);
+                    AddHtml(115, 275, 250, 126, string.Format("<BASEFONT COLOR=#1F1F1F>{0}</BASEFONT>", content.ArticlePart2), false, false);
+                    AddButton(200, 420, 0x15E3, 0x15E7, 11001, GumpButtonType.Reply, 0);
+                    AddHtml(110, 419, 250, 18, string.Format("<BASEFONT COLOR=#1F1F1F><DIV ALIGN=CENTER>{0}</DIV></BASEFONT>", Page.ToString()), false, false);
+                    AddButton(250, 420, 0x15E1, 0x15E5, 11000, GumpButtonType.Reply, 0);
 
-                if (content.BRCGumpID != 0)
-                {
-                    AddImage(591, 363, content.BRCGumpID);
-                    AddImage(582, 353, 0xAA1);
+                    AddImage(435, 52, content.BGumpID);
+                    AddImage(426, 42, 0xA9E);
+
+                    if (content.UPCGumpID != 0)
+                    {
+                        AddImage(418, 35, content.UPCGumpID);
+                        AddImage(409, 25, 0xAA1);
+                    }
+
+                    if (content.BRCGumpID != 0)
+                    {
+                        AddImage(591, 363, content.BRCGumpID);
+                        AddImage(582, 353, 0xAA1);
+                    }
                 }
             }
 
@@ -324,11 +375,12 @@ namespace Server.Items
 
             writer.Write(Content.Count);
 
-            Content.ForEach(s =>
+            for (var index = 0; index < Content.Count; index++)
             {
-                writer.Write(s);
-            });
+                var s = Content[index];
 
+                writer.Write(s);
+            }
         }
 
         public override void Deserialize(GenericReader reader)

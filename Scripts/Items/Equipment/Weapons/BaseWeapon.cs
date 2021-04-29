@@ -1085,9 +1085,7 @@ namespace Server.Items
 
         public virtual bool CheckHit(Mobile attacker, IDamageable damageable)
         {
-            Mobile defender = damageable as Mobile;
-
-            if (defender == null)
+            if (!(damageable is Mobile defender))
             {
                 if (damageable is IDamageableItem item)
                 {
@@ -1097,8 +1095,8 @@ namespace Server.Items
                 return true;
             }
 
-            BaseWeapon atkWeapon = attacker.Weapon as BaseWeapon;
-            BaseWeapon defWeapon = defender.Weapon as BaseWeapon;
+            BaseWeapon atkWeapon = (BaseWeapon) attacker.Weapon;
+            BaseWeapon defWeapon = (BaseWeapon) defender.Weapon;
 
             Skill atkSkill = attacker.Skills[atkWeapon.Skill];
             Skill defSkill = defender.Skills[defWeapon.Skill];
@@ -1106,15 +1104,17 @@ namespace Server.Items
             double atkValue = atkWeapon.GetAttackSkillValue(attacker, defender);
             double defValue = defWeapon.GetDefendSkillValue(attacker, defender);
 
-            double ourValue, theirValue;
-
             int bonus = 0;
 
             if (atkValue <= -20.0)
+            {
                 atkValue = -19.9;
+            }
 
             if (defValue <= -20.0)
+            {
                 defValue = -19.9;
+            }
 
             bonus += AosAttributes.GetValue(attacker, AosAttribute.AttackChance);
 
@@ -1126,61 +1126,61 @@ namespace Server.Items
             //SA Gargoyle cap is 50, else 45
             bonus = Math.Min(attacker.Race == Race.Gargoyle ? 50 : 45, bonus);
 
-            ourValue = (atkValue + 20.0) * (100 + bonus);
+            var ourValue = (atkValue + 20.0) * (100 + bonus);
 
             bonus = AosAttributes.GetValue(defender, AosAttribute.DefendChance);
 
             ForceArrow.ForceArrowInfo info = ForceArrow.GetInfo(attacker, defender);
 
             if (info != null && info.Defender == defender)
+            {
                 bonus -= info.DefenseChanceMalus;
+            }
 
             int max = 45 + BaseArmor.GetRefinedDefenseChance(defender) + WhiteTigerFormSpell.GetDefenseCap(defender);
 
             // Defense Chance Increase = 45%
             if (bonus > max)
+            {
                 bonus = max;
+            }
 
-            theirValue = (defValue + 20.0) * (100 + bonus);
+            var theirValue = (defValue + 20.0) * (100 + bonus);
 
             bonus = 0;
 
             double chance = ourValue / (theirValue * 2.0);
 
-            chance *= 1.0 + ((double)bonus / 100);
+            chance *= 1.0 + (double)bonus / 100;
 
             if (atkWeapon is BaseThrown thrown)
             {
                 //Distance malas
                 if (attacker.InRange(defender, 1))  //Close Quarters
                 {
-                    chance -= (.12 - Math.Min(12, (attacker.Skills[SkillName.Throwing].Value + attacker.RawDex) / 20) / 10);
+                    chance -= 0.12 - Math.Min(12, (attacker.Skills[SkillName.Throwing].Value + attacker.RawDex) / 20) / 10;
                 }
                 else if (attacker.GetDistanceToSqrt(defender) < thrown.MinThrowRange)  //too close
                 {
-                    chance -= .12;
+                    chance -= 0.12;
                 }
 
                 //shield penalty
-                BaseShield shield = attacker.FindItemOnLayer(Layer.TwoHanded) as BaseShield;
-
-                if (shield != null)
+                if (attacker.FindItemOnLayer(Layer.TwoHanded) is BaseShield)
                 {
                     double malus = Math.Min(90, 1200 / Math.Max(1.0, attacker.Skills[SkillName.Parry].Value));
 
-                    chance = chance - (chance * (malus / 100));
+                    chance = chance - chance * (malus / 100);
                 }
             }
 
             if (defWeapon is BaseThrown)
             {
-                BaseShield shield = defender.FindItemOnLayer(Layer.TwoHanded) as BaseShield;
-
-                if (shield != null)
+                if (defender.FindItemOnLayer(Layer.TwoHanded) is BaseShield)
                 {
                     double malus = Math.Min(90, 1200 / Math.Max(1.0, defender.Skills[SkillName.Parry].Value));
 
-                    chance = chance + (chance * (malus / 100));
+                    chance = chance + chance * (malus / 100);
                 }
             }
 
@@ -1190,7 +1190,9 @@ namespace Server.Items
             }
 
             if (m_AosWeaponAttributes.MageWeapon > 0 && attacker.Skills[SkillName.Magery].Value > atkSkill.Value)
+            {
                 return attacker.CheckSkill(SkillName.Magery, chance);
+            }
 
             return attacker.CheckSkill(atkSkill.SkillName, chance);
         }
@@ -1387,17 +1389,15 @@ namespace Server.Items
 
                 if (shield != null && success)
                 {
-                    shield.LastParryChance = (int)(chance * 100);
+                    shield.LastParryChance = (int) (chance * 100);
                     shield.InvalidateProperties();
                 }
 
                 return success;
             }
 
-            if (!(defender.Weapon is Fists) && !(defender.Weapon is BaseRanged))
+            if (!(defender.Weapon is Fists) && !(defender.Weapon is BaseRanged) && defender.Weapon is BaseWeapon weapon)
             {
-                BaseWeapon weapon = defender.Weapon as BaseWeapon;
-
                 if (weapon.Attributes.BalancedWeapon > 0)
                 {
                     return false;
@@ -1446,7 +1446,7 @@ namespace Server.Items
 
                 if (success)
                 {
-                    weapon.LastParryChance = (int)(chance * 100);
+                    weapon.LastParryChance = (int) (chance * 100);
                     weapon.InvalidateProperties();
                 }
 
