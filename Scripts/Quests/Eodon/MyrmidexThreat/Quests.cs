@@ -4,7 +4,6 @@ using Server.Gumps;
 using Server.Items;
 using Server.Mobiles;
 using System;
-using System.Linq;
 
 namespace Server.Engines.Quests
 {
@@ -530,21 +529,27 @@ namespace Server.Engines.Quests
 
         public void Update(Type t)
         {
-            foreach (InternalObjective obj in Objectives.OfType<InternalObjective>())
+            for (var index = 0; index < Objectives.Count; index++)
             {
-                if (obj.Update(t))
+                BaseObjective objective = Objectives[index];
+
+                if (objective is InternalObjective obj && obj.Update(t))
                 {
                     if (Completed)
+                    {
                         OnCompleted();
+                    }
                     else if (obj.Completed)
+                    {
                         Owner.SendSound(UpdateSound);
+                    }
                 }
             }
         }
 
         public class InternalObjective : BaseObjective
         {
-            public Type GameType { get; set; }
+            private Type GameType { get; }
 
             public InternalObjective(Type type)
                 : base(3)
@@ -564,8 +569,9 @@ namespace Server.Engines.Quests
                         Quest.Owner.SendSound(Quest.UpdateSound);
 
                         if (CurProgress <= MaxProgress)
-                            Quest.Owner.SendLocalizedMessage(1156795, string.Format("{0}\t{1}\t{2}", CurProgress.ToString(), MaxProgress.ToString(), "Chuckles' Luck")); // [Quest Event: Getting Even] You have won ~1_count~ of ~2_req~ games of ~3_game~!
-
+                        {
+                            Quest.Owner.SendLocalizedMessage(1156795, $"{CurProgress.ToString()}\t{MaxProgress.ToString()}\t{"Chuckles' Luck"}"); // [Quest Event: Getting Even] You have won ~1_count~ of ~2_req~ games of ~3_game~!
+                        }
                     }
                     else if (t == typeof(HiMiddleLow))
                     {
@@ -573,8 +579,9 @@ namespace Server.Engines.Quests
                         Quest.Owner.SendSound(Quest.UpdateSound);
 
                         if (CurProgress <= MaxProgress)
-                            Quest.Owner.SendLocalizedMessage(1156795, string.Format("{0}\t{1}\t{2}", CurProgress.ToString(), MaxProgress.ToString(), "Hi-Middle-Low")); // [Quest Event: Getting Even] You have won ~1_count~ of ~2_req~ games of ~3_game~!
-
+                        {
+                            Quest.Owner.SendLocalizedMessage(1156795, $"{CurProgress.ToString()}\t{MaxProgress.ToString()}\t{"Hi-Middle-Low"}"); // [Quest Event: Getting Even] You have won ~1_count~ of ~2_req~ games of ~3_game~!
+                        }
                     }
                     else if (t == typeof(DiceRider))
                     {
@@ -582,8 +589,9 @@ namespace Server.Engines.Quests
                         Quest.Owner.SendSound(Quest.UpdateSound);
 
                         if (CurProgress <= MaxProgress)
-                            Quest.Owner.SendLocalizedMessage(1156795, string.Format("{0}\t{1}\t{2}", CurProgress.ToString(), MaxProgress.ToString(), "Dice Rider")); // [Quest Event: Getting Even] You have won ~1_count~ of ~2_req~ games of ~3_game~!
-
+                        {
+                            Quest.Owner.SendLocalizedMessage(1156795, $"{CurProgress.ToString()}\t{MaxProgress.ToString()}\t{"Dice Rider"}"); // [Quest Event: Getting Even] You have won ~1_count~ of ~2_req~ games of ~3_game~!
+                        }
                     }
 
                     return true;

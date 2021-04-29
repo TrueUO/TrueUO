@@ -3,7 +3,6 @@ using Server.Items;
 using Server.Mobiles;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.Despise
 {
@@ -109,10 +108,14 @@ namespace Server.Engines.Despise
 
         public static WispOrb GetWispOrb(Mobile from)
         {
-            foreach (WispOrb orb in WispOrb.Orbs)
+            for (var index = 0; index < WispOrb.Orbs.Count; index++)
             {
+                WispOrb orb = WispOrb.Orbs[index];
+
                 if (orb != null && !orb.Deleted && orb.Owner == from)
+                {
                     return orb;
+                }
             }
 
             return null;
@@ -174,10 +177,14 @@ namespace Server.Engines.Despise
             players.AddRange(m_EvilRegion.GetPlayers());
             players.AddRange(m_StartRegion.GetPlayers());
 
-            foreach (Mobile m in players)
+            for (var index = 0; index < players.Count; index++)
             {
+                Mobile m = players[index];
+
                 if (!m.Player)
+                {
                     continue;
+                }
 
                 WispOrb orb = GetWispOrb(m);
                 m.PlaySound(0x66C);
@@ -190,15 +197,18 @@ namespace Server.Engines.Despise
                 }
                 else if (orb.Alignment == strongest)
                 {
-                    m.SendLocalizedMessage(1153332); // The Call to Arms has sounded. The forces of your alignment are strong, and you have been called to battle!
+                    m.SendLocalizedMessage(
+                        1153332); // The Call to Arms has sounded. The forces of your alignment are strong, and you have been called to battle!
 
                     if (orb.Conscripted)
                     {
-                        m.SendLocalizedMessage(1153337); // You will be teleported into the depths of the dungeon within 60 seconds to heed the Call to Arms, unless you release your conscripted creature or it dies.
+                        m.SendLocalizedMessage(
+                            1153337); // You will be teleported into the depths of the dungeon within 60 seconds to heed the Call to Arms, unless you release your conscripted creature or it dies.
                         m_ToTransport.Add(m);
                     }
                     else
-                        m.SendLocalizedMessage(1153338); // You have under 60 seconds to conscript a creature to answer the Call to Arms, or you will not be summoned for the battle.
+                        m.SendLocalizedMessage(
+                            1153338); // You have under 60 seconds to conscript a creature to answer the Call to Arms, or you will not be summoned for the battle.
                 }
             }
 
@@ -217,8 +227,10 @@ namespace Server.Engines.Despise
         {
             int power = 0;
 
-            foreach (WispOrb orb in WispOrb.Orbs)
+            for (var index = 0; index < WispOrb.Orbs.Count; index++)
             {
+                WispOrb orb = WispOrb.Orbs[index];
+
                 if (orb.Conscripted && orb.Alignment == alignment)
                 {
                     power += orb.GetArmyPower();
@@ -281,28 +293,50 @@ namespace Server.Engines.Despise
         {
             if (reset)
             {
-                foreach (XmlSpawner spawner in m_EvilSpawners)
-                    if (spawner.Running)
-                        spawner.DoReset = true;
+                for (var index = 0; index < m_EvilSpawners.Count; index++)
+                {
+                    XmlSpawner spawner = m_EvilSpawners[index];
 
-                foreach (XmlSpawner spawner in m_GoodSpawners)
                     if (spawner.Running)
+                    {
                         spawner.DoReset = true;
+                    }
+                }
+
+                for (var index = 0; index < m_GoodSpawners.Count; index++)
+                {
+                    XmlSpawner spawner = m_GoodSpawners[index];
+
+                    if (spawner.Running)
+                    {
+                        spawner.DoReset = true;
+                    }
+                }
             }
             else
             {
                 List<XmlSpawner> useList;
 
                 if (m_SequenceAlignment == Alignment.Good)
+                {
                     useList = m_EvilSpawners;
+                }
                 else
+                {
                     useList = m_GoodSpawners;
+                }
 
                 if (useList == null)
+                {
                     return;
+                }
 
-                foreach (XmlSpawner spawner in useList)
+                for (var index = 0; index < useList.Count; index++)
+                {
+                    XmlSpawner spawner = useList[index];
+
                     spawner.DoRespawn = true;
+                }
 
                 ColUtility.Free(useList);
             }
@@ -407,8 +441,10 @@ namespace Server.Engines.Despise
             List<Mobile> mobiles = m_LowerRegion.GetPlayers();
             Rectangle2D bounds = m_SequenceAlignment == Alignment.Evil ? EvilKickBounds : GoodKickBounds;
 
-            foreach (Mobile m in mobiles)
+            for (var index = 0; index < mobiles.Count; index++)
             {
+                Mobile m = mobiles[index];
+
                 WispOrb orb = GetWispOrb(m);
                 Point3D p = GetRandomLoc(bounds);
 
@@ -426,7 +462,9 @@ namespace Server.Engines.Despise
                     m.SendLocalizedMessage(1153312); // The Wisp Orb dissolves into aether.
                 }
                 else if (orb != null && orb.Pet != null && orb.Pet.Alive)
+                {
                     orb.Pet.MoveToWorld(p, Map.Trammel);
+                }
 
                 m.SendLocalizedMessage(1153346); // You are summoned back to your stronghold.
             }
@@ -438,11 +476,15 @@ namespace Server.Engines.Despise
         {
             List<Mobile> list = new List<Mobile>(m_ToTransport);
 
-            foreach (Mobile m in list)
+            for (var index = 0; index < list.Count; index++)
             {
+                Mobile m = list[index];
                 WispOrb orb = GetWispOrb(m);
+
                 if (orb == null || orb.Deleted || !orb.Conscripted || m.Region == null || !m.Region.IsPartOf<DespiseRegion>())
+                {
                     m_ToTransport.Remove(m);
+                }
             }
 
             if (m_ToTransport.Count == 0)
@@ -452,8 +494,10 @@ namespace Server.Engines.Despise
             }
             else
             {
-                foreach (Mobile m in m_ToTransport)
+                for (var index = 0; index < m_ToTransport.Count; index++)
                 {
+                    Mobile m = m_ToTransport[index];
+
                     if (m != null && m.Region != null && m.Region.IsPartOf<DespiseRegion>())
                     {
                         WispOrb orb = GetWispOrb(m);
@@ -525,8 +569,12 @@ namespace Server.Engines.Despise
             m_CleanupTimer = Timer.DelayCall(TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(5), EndSequence);
             m_CleanupTimer.Start();
 
-            foreach (Mobile m in m_LowerRegion.GetMobiles())
+            var ms = m_LowerRegion.GetMobiles();
+
+            for (var index = 0; index < ms.Count; index++)
             {
+                Mobile m = ms[index];
+
                 if (m is DespiseCreature creature && creature.Orb != null)
                 {
                     creature.Delete();
@@ -594,8 +642,13 @@ namespace Server.Engines.Despise
         private void SendReadyMessage_Callback(object o)
         {
             int cliloc = (int)o;
-            foreach (Mobile m in m_ToTransport)
+
+            for (var index = 0; index < m_ToTransport.Count; index++)
+            {
+                Mobile m = m_ToTransport[index];
+
                 m.SendLocalizedMessage(cliloc);
+            }
         }
 
         #endregion
@@ -633,8 +686,12 @@ namespace Server.Engines.Despise
             IPooledEnumerable eable = Map.Trammel.GetItemsInRange(new Point3D(5474, 525, 79), 3);
 
             foreach (Item item in eable)
+            {
                 if (item is RejuvinationAddonComponent && !item.Deleted)
+                {
                     item.Delete();
+                }
+            }
         }
 
         public DespiseController(Serial serial)
@@ -735,35 +792,42 @@ namespace Server.Engines.Despise
 
         public void CheckSpawnersVersion3()
         {
-            foreach (XmlSpawner spawner in World.Items.Values.OfType<XmlSpawner>().Where(s => s.Name != null && s.Name.ToLower().IndexOf("despiserevamped") >= 0))
+            foreach (Item value in World.Items.Values)
             {
-                foreach (XmlSpawner.SpawnObject obj in spawner.SpawnObjects)
+                if (value is XmlSpawner spawner && spawner.Name != null && spawner.Name.ToLower().IndexOf("despiserevamped") >= 0)
                 {
-                    if (obj.TypeName != null)
+                    for (var index = 0; index < spawner.SpawnObjects.Length; index++)
                     {
-                        if (obj.TypeName.ToLower().IndexOf("berlingblades") >= 0)
+                        XmlSpawner.SpawnObject obj = spawner.SpawnObjects[index];
+
+                        if (obj.TypeName != null)
                         {
-                            string name = obj.TypeName;
+                            if (obj.TypeName.ToLower().IndexOf("berlingblades") >= 0)
+                            {
+                                string name = obj.TypeName;
 
-                            obj.TypeName = name.Replace("BerlingBlades", "BirlingBlades");
+                                obj.TypeName = name.Replace("BerlingBlades", "BirlingBlades");
+                            }
+                            else if (obj.TypeName.ToLower().IndexOf("sagittari") >= 0)
+                            {
+                                string name = obj.TypeName;
+
+                                obj.TypeName = name.Replace("Sagittari", "Sagittarri");
+                            }
                         }
-                        else if (obj.TypeName.ToLower().IndexOf("sagittari") >= 0)
+
+                        if (obj.TypeName != null && (Region.Find(spawner.Location, spawner.Map) == m_GoodRegion || Region.Find(spawner.Location, spawner.Map) == m_EvilRegion) && obj.TypeName.IndexOf(",{RND,1,5}") < 0)
                         {
-                            string name = obj.TypeName;
-
-                            obj.TypeName = name.Replace("Sagittari", "Sagittarri");
+                            obj.TypeName = obj.TypeName + ",{RND,1,5}";
                         }
-                    }
-
-                    if ((Region.Find(spawner.Location, spawner.Map) == m_GoodRegion || Region.Find(spawner.Location, spawner.Map) == m_EvilRegion) && obj.TypeName.IndexOf(",{RND,1,5}") < 0) 
-                    {
-                        obj.TypeName = obj.TypeName + ",{RND,1,5}";
                     }
                 }
             }
 
-            foreach (Region r in new Region[] { m_GoodRegion, m_EvilRegion, m_LowerRegion, m_StartRegion })
+            for (var index = 0; index < new Region[] {m_GoodRegion, m_EvilRegion, m_LowerRegion, m_StartRegion}.Length; index++)
             {
+                Region r = new Region[] {m_GoodRegion, m_EvilRegion, m_LowerRegion, m_StartRegion}[index];
+
                 foreach (Item item in r.GetEnumeratedItems())
                 {
                     if (item is Moongate || item is GateTeleporter)
