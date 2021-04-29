@@ -1,8 +1,6 @@
 using Server.Items;
-
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Mobiles
 {
@@ -76,13 +74,16 @@ namespace Server.Mobiles
 
             if (Peaced != null)
             {
-                var peaced = Peaced.Keys.ToList();
+                var peaced = new List<Mobile>();
+
+                foreach (var key in Peaced.Keys)
+                {
+                    peaced.Add(key);
+                }
 
                 for (int i = 0; i < peaced.Count; i++)
                 {
-                    var pm = peaced[i] as PlayerMobile;
-
-                    if (pm != null)
+                    if (peaced[i] is PlayerMobile pm)
                     {
                         pm.PeacedUntil = DateTime.UtcNow;
                     }
@@ -102,13 +103,15 @@ namespace Server.Mobiles
         public void AreaPeace()
         {
             if (Combatant == null || Deleted || !Alive || m_NextPeace > DateTime.UtcNow || 0.1 < Utility.RandomDouble())
+            {
                 return;
+            }
 
             IPooledEnumerable eable = GetMobilesInRange(RangePerception);
 
-            foreach (var p in eable.OfType<PlayerMobile>())
+            foreach (object o in eable)
             {
-                if (IsValidTarget(p))
+                if (o is PlayerMobile p && IsValidTarget(p))
                 {
                     AddPeaceEffects(p);
                 }
