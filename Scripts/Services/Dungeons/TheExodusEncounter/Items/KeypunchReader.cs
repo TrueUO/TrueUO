@@ -73,9 +73,30 @@ namespace Server.Items
 
             IEnumerable<Item> punch = items.Where(x => x is PunchCard);
 
-            if (punch.Count() >= 50)
+            var enumerable = new List<Item>();
+
+            foreach (var item in punch)
             {
-                punch.ToList().ForEach(f => f.Delete());
+                enumerable.Add(item);
+            }
+
+            if (enumerable.Count >= 50)
+            {
+                List<Item> list = new List<Item>();
+
+                for (var index = 0; index < enumerable.Count; index++)
+                {
+                    var item = enumerable[index];
+
+                    list.Add(item);
+                }
+
+                for (var index = 0; index < list.Count; index++)
+                {
+                    var f = list[index];
+
+                    f.Delete();
+                }
 
                 from.AddToBackpack(new NexusAddonDeed());
                 from.SendLocalizedMessage(1152376); // As you feed the punch card into the machine it turns on! 

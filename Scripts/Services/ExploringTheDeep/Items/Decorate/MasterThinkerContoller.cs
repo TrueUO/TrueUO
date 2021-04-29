@@ -172,9 +172,7 @@ namespace Server.Items
 
                 if (ClickCheck(from) == 1)
                 {
-                    PlayerMobile pm = from as PlayerMobile;
-
-                    if (pm.ExploringTheDeepQuest == ExploringTheDeepQuestChain.HeplerPaulsonComplete)
+                    if (from is PlayerMobile pm && pm.ExploringTheDeepQuest == ExploringTheDeepQuestChain.HeplerPaulsonComplete)
                     {
                         pm.ExploringTheDeepQuest = ExploringTheDeepQuestChain.CusteauPerronHouse;
                         MasterThinkerContoller.Array.RemoveAll(s => s.Mobile == from);

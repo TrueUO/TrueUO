@@ -2,7 +2,6 @@ using Server.Items;
 using Server.Misc;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Spells.SkillMasteries
 {
@@ -114,15 +113,23 @@ namespace Server.Spells.SkillMasteries
         {
             Dictionary<Mobile, InternalItem> list = new Dictionary<Mobile, InternalItem>();
 
-            foreach (InternalItem item in Items)
+            for (var index = 0; index < Items.Count; index++)
             {
+                InternalItem item = Items[index];
+
                 if (!item.Deleted)
                 {
-                    foreach (Mobile m in AcquireIndirectTargets(item.Location, 1).OfType<Mobile>().Where(m => m.Z + 16 > item.Z && item.Z + 12 > m.Z))
+                    foreach (IDamageable target in AcquireIndirectTargets(item.Location, 1))
                     {
-                        if (!list.ContainsKey(m))
+                        if (target is Mobile m)
                         {
-                            list.Add(m, item);
+                            if (m.Z + 16 > item.Z && item.Z + 12 > m.Z)
+                            {
+                                if (!list.ContainsKey(m))
+                                {
+                                    list.Add(m, item);
+                                }
+                            }
                         }
                     }
                 }
@@ -139,8 +146,10 @@ namespace Server.Spells.SkillMasteries
 
         public override void OnExpire()
         {
-            foreach (InternalItem item in Items)
+            for (var index = 0; index < Items.Count; index++)
             {
+                InternalItem item = Items[index];
+
                 item.Delete();
             }
         }

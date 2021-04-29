@@ -2,7 +2,6 @@ using Server.Engines.Quests;
 using Server.Items;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Mobiles
 {
@@ -75,18 +74,27 @@ namespace Server.Mobiles
         {
             List<DamageStore> rights = GetLootingRights();
 
-            foreach (Mobile m in rights.Select(x => x.m_Mobile).Distinct())
+            HashSet<Mobile> set = new HashSet<Mobile>();
+
+            for (var index = 0; index < rights.Count; index++)
             {
-                if (m is PlayerMobile pm && pm.ExploringTheDeepQuest == ExploringTheDeepQuestChain.CollectTheComponent)
+                var x = rights[index];
+
+                Mobile m = x.m_Mobile;
+
+                if (set.Add(m))
                 {
-                    Item item = new MercutiosCutlass();
-
-                    if (pm.Backpack == null || !pm.Backpack.TryDropItem(pm, item, false))
+                    if (m is PlayerMobile pm && pm.ExploringTheDeepQuest == ExploringTheDeepQuestChain.CollectTheComponent)
                     {
-                        pm.BankBox.DropItem(item);
-                    }
+                        Item item = new MercutiosCutlass();
 
-                    pm.SendLocalizedMessage(1154489); // You received a Quest Item!
+                        if (pm.Backpack == null || !pm.Backpack.TryDropItem(pm, item, false))
+                        {
+                            pm.BankBox.DropItem(item);
+                        }
+
+                        pm.SendLocalizedMessage(1154489); // You received a Quest Item!
+                    }
                 }
             }
 
@@ -160,7 +168,6 @@ namespace Server.Mobiles
                 SpawnBrigand(defender);
         }
 
-        #region Helpers
         public void SpawnBrigand(Mobile target)
         {
             Map map = Map;
@@ -213,7 +220,6 @@ namespace Server.Mobiles
                 }
             }
         }
-        #endregion
 
         public override void Serialize(GenericWriter writer)
         {

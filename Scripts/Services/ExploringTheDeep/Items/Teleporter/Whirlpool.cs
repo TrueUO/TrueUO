@@ -2,7 +2,6 @@ using Server.Engines.Quests;
 using Server.Mobiles;
 using Server.Spells;
 using System;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -180,7 +179,17 @@ namespace Server.Items
 
             if (m_Active && CanTeleport(from))
             {
-                int equipment = mobile.Items.Count(i => (i is CanvassRobe || i is BootsOfBallast || i is NictitatingLens || i is AquaPendant || i is GargishNictitatingLens) && i.Parent is Mobile parent && parent.FindItemOnLayer(i.Layer) == i);
+                int equipment = 0;
+
+                for (var index = 0; index < mobile.Items.Count; index++)
+                {
+                    var i = mobile.Items[index];
+
+                    if ((i is CanvassRobe || i is BootsOfBallast || i is NictitatingLens || i is AquaPendant || i is GargishNictitatingLens) && i.Parent is Mobile parent && parent.FindItemOnLayer(i.Layer) == i)
+                    {
+                        equipment++;
+                    }
+                }
 
                 if (equipment < 4)
                 {

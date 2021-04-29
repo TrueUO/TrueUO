@@ -53,8 +53,10 @@ namespace Server.Engines.CannedEvil
                     list.Add(item);
             }
 
-            foreach (ChampionSpawn cs in list)
+            for (var index = 0; index < list.Count; index++)
             {
+                var cs = (ChampionSpawn) list[index];
+
                 cs.Delete();
             }
         }

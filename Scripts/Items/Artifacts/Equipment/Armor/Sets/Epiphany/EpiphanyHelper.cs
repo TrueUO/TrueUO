@@ -2,7 +2,6 @@ using Server.Misc;
 using Server.Mobiles;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -23,9 +22,23 @@ namespace Server.Items
         public static int GetFrequency(Mobile m, IEpiphanyArmor armor)
         {
             if (m == null)
+            {
                 return 1;
+            }
 
-            return Math.Max(1, Math.Min(5, m.Items.Count(i => i is IEpiphanyArmor eArmor && eArmor.Alignment == armor.Alignment && eArmor.Type == armor.Type)));
+            int count = 0;
+
+            for (var index = 0; index < m.Items.Count; index++)
+            {
+                var i = m.Items[index];
+
+                if (i is IEpiphanyArmor eArmor && eArmor.Alignment == armor.Alignment && eArmor.Type == armor.Type)
+                {
+                    count++;
+                }
+            }
+
+            return Math.Max(1, Math.Min(5, count));
         }
 
         public static int GetBonus(Mobile m, IEpiphanyArmor armor)
@@ -61,10 +74,26 @@ namespace Server.Items
 
         public static void CheckHit(Mobile m, int damage, SurgeType type)
         {
-            IEpiphanyArmor item = m.Items.OfType<IEpiphanyArmor>().FirstOrDefault(i => i.Type == type);
+            IEpiphanyArmor item = null;
+
+            for (var index = 0; index < m.Items.Count; index++)
+            {
+                Item mItem = m.Items[index];
+
+                if (mItem is IEpiphanyArmor i)
+                {
+                    if (i.Type == type)
+                    {
+                        item = i;
+                        break;
+                    }
+                }
+            }
 
             if (item == null)
+            {
                 return;
+            }
 
             if (Table == null)
             {
@@ -93,7 +122,9 @@ namespace Server.Items
                 Table[m].Remove(type);
 
                 if (Table[m].Count == 0)
+                {
                     Table.Remove(m);
+                }
 
                 switch (type)
                 {
@@ -111,8 +142,10 @@ namespace Server.Items
 
         public static void OnKarmaChange(Mobile m)
         {
-            foreach (Item item in m.Items)
+            for (var index = 0; index < m.Items.Count; index++)
             {
+                Item item = m.Items[index];
+
                 if (item is IEpiphanyArmor)
                 {
                     item.InvalidateProperties();
