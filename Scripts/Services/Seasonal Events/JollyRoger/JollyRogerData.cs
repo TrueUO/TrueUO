@@ -92,7 +92,16 @@ namespace Server.Engines.JollyRoger
 
         public static int FragmentRandomHue()
         {
-            return Utility.RandomList(ShrineDef.Select(x => x.Hue).ToArray());
+            List<int> list = new List<int>();
+
+            for (var index = 0; index < ShrineDef.Count; index++)
+            {
+                var x = ShrineDef[index];
+
+                list.Add(x.Hue);
+            }
+
+            return Utility.RandomList(list.ToArray());
         }
 
         public static int GetShrineHue(Shrine shrine)
@@ -181,9 +190,8 @@ namespace Server.Engines.JollyRoger
         public static void TitleCheck(Mobile m, Shrine shrine)
         {
             var list = _List.FirstOrDefault(x => x.Mobile == m);
-            var pm = m as PlayerMobile;
 
-            if (pm != null && list != null && list.Shrine != null)
+            if (m is PlayerMobile pm && list != null && list.Shrine != null)
             {
                 var count = list.Shrine.FirstOrDefault(x => x.Shrine == shrine).FragmentCount;
                 var playerTitle = GetShrineTitle(pm);

@@ -96,12 +96,16 @@ namespace Server.Items
         public static void InvalidateLocations()
         {
             if (m_InvalidatedLocations)
+            {
                 return;
+            }
 
             int c = 0;
 
-            foreach (FishInfo info in m_FishInfos)
+            for (var index = 0; index < m_FishInfos.Count; index++)
             {
+                FishInfo info = m_FishInfos[index];
+
                 if (info.Location is string str)
                 {
                     if (str == "Trammel")
@@ -142,34 +146,73 @@ namespace Server.Items
 
         public static bool IsRareFish(Type type)
         {
-            return m_FishInfos.Any(info => info.Type == type);
+            for (var index = 0; index < m_FishInfos.Count; index++)
+            {
+                var info = m_FishInfos[index];
+
+                if (info.Type == type)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public static FishInfo GetInfo(Type type)
         {
-            return m_FishInfos.FirstOrDefault(info => info.Type == type);
+            for (var index = 0; index < m_FishInfos.Count; index++)
+            {
+                var info = m_FishInfos[index];
+
+                if (info.Type == type)
+                {
+                    return info;
+                }
+            }
+
+            return null;
         }
 
         public static FishInfo GetInfo(int hue)
         {
-            return m_FishInfos.FirstOrDefault(info => info.Hue == hue);
+            for (var index = 0; index < m_FishInfos.Count; index++)
+            {
+                var info = m_FishInfos[index];
+
+                if (info.Hue == hue)
+                {
+                    return info;
+                }
+            }
+
+            return null;
         }
 
         public static int GetIndexFromType(Type type)
         {
             if (type == null)
+            {
                 return -1;
+            }
 
             for (int i = 0; i < m_FishInfos.Count; i++)
+            {
                 if (m_FishInfos[i].Type == type)
+                {
                     return i;
+                }
+            }
+
             return -1;
         }
 
         public static Type GetTypeFromIndex(int index)
         {
             if (index < 0 || index >= m_FishInfos.Count)
+            {
                 return m_FishInfos[0].Type;
+            }
 
             return m_FishInfos[index].Type;
         }
@@ -177,14 +220,27 @@ namespace Server.Items
         public static int GetFishHue(int index)
         {
             if (index < 0 || index >= m_FishInfos.Count)
+            {
                 return 0;
+            }
 
             return m_FishInfos[index].Hue;
         }
 
         public static int GetFishHue(Type type)
         {
-            var info = m_FishInfos.FirstOrDefault(i => i.Type == type);
+            FishInfo info = null;
+
+            for (var index = 0; index < m_FishInfos.Count; index++)
+            {
+                var i = m_FishInfos[index];
+
+                if (i.Type == type)
+                {
+                    info = i;
+                    break;
+                }
+            }
 
             if (info != null)
             {
@@ -197,14 +253,27 @@ namespace Server.Items
         public static object GetFishLabel(int index)
         {
             if (index < 0 || index >= m_FishInfos.Count)
+            {
                 return 0;
+            }
 
             return m_FishInfos[index].LabelNumber;
         }
 
         public static object GetFishLabel(Type type)
         {
-            var info = m_FishInfos.FirstOrDefault(i => i.Type == type);
+            FishInfo info = null;
+
+            for (var index = 0; index < m_FishInfos.Count; index++)
+            {
+                var i = m_FishInfos[index];
+
+                if (i.Type == type)
+                {
+                    info = i;
+                    break;
+                }
+            }
 
             if (info != null)
             {
@@ -216,7 +285,18 @@ namespace Server.Items
 
         public static string GetFishLocation(Type type)
         {
-            var info = m_FishInfos.FirstOrDefault(i => i.Type == type);
+            FishInfo info = null;
+
+            for (var index = 0; index < m_FishInfos.Count; index++)
+            {
+                var i = m_FishInfos[index];
+
+                if (i.Type == type)
+                {
+                    info = i;
+                    break;
+                }
+            }
 
             if (info != null)
             {

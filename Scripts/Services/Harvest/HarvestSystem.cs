@@ -5,7 +5,6 @@ using Server.Mobiles;
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.Harvest
 {
@@ -323,7 +322,9 @@ namespace Server.Engines.Harvest
             IPooledEnumerable eable = m.GetItemsInRange(0);
 
             foreach (Item obj in eable)
+            {
                 atFeet.Add(obj);
+            }
 
             eable.Free();
 
@@ -602,8 +603,10 @@ namespace Server.Engines.Harvest
 
                     if (tiles.Length > 0)
                     {
-                        foreach (StaticTile tile in tiles)
+                        for (var index = 0; index < tiles.Length; index++)
                         {
+                            StaticTile tile = tiles[index];
+
                             int id = (tile.ID & 0x3FFF) | 0x4000;
 
                             if (definition.Validate(id))
@@ -640,11 +643,14 @@ namespace Server.Engines.Harvest
                 {
                     StaticTile[] tiles = map.Tiles.GetStaticTiles(x, y, false);
 
-                    foreach (StaticTile tile in tiles)
+                    for (var index = 0; index < tiles.Length; index++)
                     {
+                        StaticTile tile = tiles[index];
+
                         int itemID = tile.ID;
 
-                        if (itemID == 0xED3 || itemID == 0xEDF || itemID == 0xEE0 || itemID == 0xEE1 || itemID == 0xEE2 || itemID == 0xEE8)
+                        if (itemID == 0xED3 || itemID == 0xEDF || itemID == 0xEE0 || itemID == 0xEE1 ||
+                            itemID == 0xEE2 || itemID == 0xEE8)
                         {
                             if (m is PlayerMobile player)
                             {
@@ -652,9 +658,12 @@ namespace Server.Engines.Harvest
 
                                 if (qs is WitchApprenticeQuest)
                                 {
-                                    if (qs.FindObjective(typeof(FindIngredientObjective)) is FindIngredientObjective obj && !obj.Completed && obj.Ingredient == Ingredient.Bones)
+                                    if (qs.FindObjective(
+                                            typeof(FindIngredientObjective)) is FindIngredientObjective obj &&
+                                        !obj.Completed && obj.Ingredient == Ingredient.Bones)
                                     {
-                                        player.SendLocalizedMessage(1055037); // You finish your grim work, finding some of the specific bones listed in the Hag's recipe.
+                                        player.SendLocalizedMessage(
+                                            1055037); // You finish your grim work, finding some of the specific bones listed in the Hag's recipe.
                                         obj.Complete();
 
                                         return true;
@@ -682,8 +691,10 @@ namespace Server.Engines.Harvest
                 {
                     StaticTile[] tiles = map.Tiles.GetStaticTiles(x, y, false);
 
-                    foreach (StaticTile tile in tiles)
+                    for (var index = 0; index < tiles.Length; index++)
                     {
+                        StaticTile tile = tiles[index];
+
                         int itemID = tile.ID;
 
                         if (itemID == 0xD15 || itemID == 0xD16)
@@ -694,9 +705,12 @@ namespace Server.Engines.Harvest
 
                                 if (qs is WitchApprenticeQuest)
                                 {
-                                    if (qs.FindObjective(typeof(FindIngredientObjective)) is FindIngredientObjective obj && !obj.Completed && obj.Ingredient == Ingredient.RedMushrooms)
+                                    if (qs.FindObjective(
+                                            typeof(FindIngredientObjective)) is FindIngredientObjective obj &&
+                                        !obj.Completed && obj.Ingredient == Ingredient.RedMushrooms)
                                     {
-                                        player.SendLocalizedMessage(1055036); // You slice a red cap mushroom from its stem.
+                                        player.SendLocalizedMessage(
+                                            1055036); // You slice a red cap mushroom from its stem.
                                         obj.Complete();
 
                                         return true;
@@ -732,7 +746,17 @@ namespace Server
     {
         private static bool IsNotChoppables(Item item)
         {
-            return _NotChoppables.Any(t => t == item.GetType());
+            for (var index = 0; index < _NotChoppables.Length; index++)
+            {
+                var t = _NotChoppables[index];
+
+                if (t == item.GetType())
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private static readonly Type[] _NotChoppables =

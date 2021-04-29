@@ -4829,8 +4829,8 @@ namespace Server.Multis
 
         private class InternalTarget : Target
         {
-            public Item Item { get; set; }
-            public BaseHouse House { get; set; }
+            private Item Item { get; }
+            private BaseHouse House { get; }
 
             public InternalTarget(Item item, BaseHouse house)
                 : base(8, true, TargetFlags.None)
@@ -4841,27 +4841,28 @@ namespace Server.Multis
 
             protected override void OnTarget(Mobile from, object targeted)
             {
-                IPoint3D p = targeted as IPoint3D;
-
-                Point3D point = new Point3D(p.X, p.Y, p.Z);
-
-                BaseHouse house = BaseHouse.FindHouseAt(point, from.Map, 0);
-
-                AddonFitResult result = CouldFit(point, from.Map, from, ref house);
-
-                if (house != null && house == House && house.Owner == from && result == AddonFitResult.Valid)
+                if (targeted is IPoint3D p)
                 {
-                    if (House.Release(from, Item))
+                    Point3D point = new Point3D(p.X, p.Y, p.Z);
+
+                    BaseHouse house = BaseHouse.FindHouseAt(point, from.Map, 0);
+
+                    AddonFitResult result = CouldFit(point, from.Map, from, ref house);
+
+                    if (house != null && house == House && house.Owner == from && result == AddonFitResult.Valid)
                     {
-                        Item.MoveToWorld(point, from.Map);
-                        Item.Movable = true;
+                        if (House.Release(from, Item))
+                        {
+                            Item.MoveToWorld(point, from.Map);
+                            Item.Movable = true;
 
-                        from.SendLocalizedMessage(1159159); // This container has been released and is no longer secure.
+                            from.SendLocalizedMessage(1159159); // This container has been released and is no longer secure.
+                        }
                     }
-                }
-                else
-                {
-                    from.SendLocalizedMessage(1149667); // Invalid target.
+                    else
+                    {
+                        from.SendLocalizedMessage(1149667); // Invalid target.
+                    }
                 }
             }
 

@@ -4,7 +4,6 @@ using Server.Gumps;
 using Server.Items;
 using Server.Mobiles;
 using System;
-using System.Linq;
 
 namespace Server.Engines.Quests
 {
@@ -530,14 +529,23 @@ namespace Server.Engines.Quests
 
         public void Update(Type t)
         {
-            foreach (InternalObjective obj in Objectives.OfType<InternalObjective>())
+            for (var index = 0; index < Objectives.Count; index++)
             {
-                if (obj.Update(t))
+                BaseObjective objective = Objectives[index];
+
+                if (objective is InternalObjective obj)
                 {
-                    if (Completed)
-                        OnCompleted();
-                    else if (obj.Completed)
-                        Owner.SendSound(UpdateSound);
+                    if (obj.Update(t))
+                    {
+                        if (Completed)
+                        {
+                            OnCompleted();
+                        }
+                        else if (obj.Completed)
+                        {
+                            Owner.SendSound(UpdateSound);
+                        }
+                    }
                 }
             }
         }
