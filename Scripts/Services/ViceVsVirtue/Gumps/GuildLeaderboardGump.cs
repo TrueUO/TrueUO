@@ -49,7 +49,7 @@ namespace Server.Engines.VvV
             AddButton(280, 290, 4005, 4007, 4, GumpButtonType.Reply, 0);
             AddHtmlLocalized(315, 290, 150, 20, 1114924, 0xFFFF, false, false); // Guild Rankings
 
-            List<VvVGuildStats> list = new List<VvVGuildStats>(ViceVsVirtueSystem.Instance.GuildStats.Values);
+            List<VvVGuildStats> list;
 
             switch (Filter)
             {
@@ -133,22 +133,22 @@ namespace Server.Engines.VvV
 
         private string CenterGray(string format)
         {
-            return string.Format("<basefont color=#A9A9A9><DIV ALIGN=CENTER>{0}</DIV>", format);
+            return $"<basefont color=#A9A9A9><DIV ALIGN=CENTER>{format}</DIV>";
         }
 
         private string RightGray(string format)
         {
-            return string.Format("<basefont color=#A9A9A9><DIV ALIGN=RIGHT>{0}</DIV>", format);
+            return $"<basefont color=#A9A9A9><DIV ALIGN=RIGHT>{format}</DIV>";
         }
 
         private string LeftGray(string format)
         {
-            return string.Format("<basefont color=#A9A9A9><DIV ALIGN=LEFT>{0}</DIV>", format);
+            return $"<basefont color=#A9A9A9><DIV ALIGN=LEFT>{format}</DIV>";
         }
 
         private string RightGreen(string format)
         {
-            return string.Format("<basefont color=#00FA9A><DIV ALIGN=RIGHT>{0}</DIV>", format);
+            return $"<basefont color=#00FA9A><DIV ALIGN=RIGHT>{format}</DIV>";
         }
     }
 }

@@ -111,12 +111,9 @@ namespace Server.Mobiles
 
             foreach (object o in eable)
             {
-                if (o is PlayerMobile p)
+                if (o is PlayerMobile p && IsValidTarget(p))
                 {
-                    if (IsValidTarget(p))
-                    {
-                        AddPeaceEffects(p);
-                    }
+                    AddPeaceEffects(p);
                 }
             }
 
