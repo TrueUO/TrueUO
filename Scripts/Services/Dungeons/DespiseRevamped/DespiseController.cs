@@ -794,34 +794,31 @@ namespace Server.Engines.Despise
         {
             foreach (Item value in World.Items.Values)
             {
-                if (value is XmlSpawner spawner)
+                if (value is XmlSpawner spawner && spawner.Name != null && spawner.Name.ToLower().IndexOf("despiserevamped") >= 0)
                 {
-                    if (spawner.Name != null && spawner.Name.ToLower().IndexOf("despiserevamped") >= 0)
+                    for (var index = 0; index < spawner.SpawnObjects.Length; index++)
                     {
-                        for (var index = 0; index < spawner.SpawnObjects.Length; index++)
+                        XmlSpawner.SpawnObject obj = spawner.SpawnObjects[index];
+
+                        if (obj.TypeName != null)
                         {
-                            XmlSpawner.SpawnObject obj = spawner.SpawnObjects[index];
-
-                            if (obj.TypeName != null)
+                            if (obj.TypeName.ToLower().IndexOf("berlingblades") >= 0)
                             {
-                                if (obj.TypeName.ToLower().IndexOf("berlingblades") >= 0)
-                                {
-                                    string name = obj.TypeName;
+                                string name = obj.TypeName;
 
-                                    obj.TypeName = name.Replace("BerlingBlades", "BirlingBlades");
-                                }
-                                else if (obj.TypeName.ToLower().IndexOf("sagittari") >= 0)
-                                {
-                                    string name = obj.TypeName;
-
-                                    obj.TypeName = name.Replace("Sagittari", "Sagittarri");
-                                }
+                                obj.TypeName = name.Replace("BerlingBlades", "BirlingBlades");
                             }
-
-                            if (obj.TypeName != null && (Region.Find(spawner.Location, spawner.Map) == m_GoodRegion || Region.Find(spawner.Location, spawner.Map) == m_EvilRegion) && obj.TypeName.IndexOf(",{RND,1,5}") < 0)
+                            else if (obj.TypeName.ToLower().IndexOf("sagittari") >= 0)
                             {
-                                obj.TypeName = obj.TypeName + ",{RND,1,5}";
+                                string name = obj.TypeName;
+
+                                obj.TypeName = name.Replace("Sagittari", "Sagittarri");
                             }
+                        }
+
+                        if (obj.TypeName != null && (Region.Find(spawner.Location, spawner.Map) == m_GoodRegion || Region.Find(spawner.Location, spawner.Map) == m_EvilRegion) && obj.TypeName.IndexOf(",{RND,1,5}") < 0)
+                        {
+                            obj.TypeName = obj.TypeName + ",{RND,1,5}";
                         }
                     }
                 }
