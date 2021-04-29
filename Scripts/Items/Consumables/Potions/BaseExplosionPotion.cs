@@ -145,8 +145,10 @@ namespace Server.Items
                 list.Add(from);
             }
 
-            foreach (Mobile m in list)
+            for (var index = 0; index < list.Count; index++)
             {
+                Mobile m = list[index];
+
                 from.DoHarmful(m);
 
                 int damage = Utility.RandomMinMax(min, max);
