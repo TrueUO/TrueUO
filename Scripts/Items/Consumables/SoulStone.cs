@@ -207,7 +207,7 @@ namespace Server.Items
                 from.SendLocalizedMessage(1070735); // You may not use a Soulstone while your character is paralyzed.
                 return false;
             }
-            if (pm.AcceleratedStart > DateTime.UtcNow)
+            if (pm != null && pm.AcceleratedStart > DateTime.UtcNow)
             {
                 from.SendLocalizedMessage(1078115); // You may not use a soulstone while your character is under the effects of a Scroll of Alacrity.
                 return false;
@@ -604,8 +604,7 @@ namespace Server.Items
                 }
 
                 #region Scroll of ALacrity
-                PlayerMobile pm = from as PlayerMobile;
-                if (pm.AcceleratedStart > DateTime.UtcNow)
+                if (from is PlayerMobile pm && pm.AcceleratedStart > DateTime.UtcNow)
                 {
                     // <CENTER>Unable to Absorb Selected Skill from Soulstone</CENTER>
                     /*You may not use a soulstone while your character is under the effects of a Scroll of Alacrity.*/

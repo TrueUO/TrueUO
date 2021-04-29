@@ -1,7 +1,7 @@
 using Server.Mobiles;
 using Server.Targeting;
 using System;
-using System.Linq;
+using System.Collections.Generic;
 
 namespace Server.Spells.Seventh
 {
@@ -45,17 +45,28 @@ namespace Server.Spells.Seventh
                     p = item.GetWorldLocation();
                 }
 
-                System.Collections.Generic.List<IDamageable> targets = AcquireIndirectTargets(p, 2).ToList();
+                List<IDamageable> targets = new List<IDamageable>();
+
+                foreach (var target in AcquireIndirectTargets(p, 2))
+                {
+                    targets.Add(target);
+                }
+
                 int count = Math.Max(1, targets.Count);
 
-                foreach (IDamageable dam in targets)
+                for (var index = 0; index < targets.Count; index++)
                 {
+                    IDamageable dam = targets[index];
+
                     IDamageable id = dam;
                     Mobile m = id as Mobile;
+
                     double damage = GetNewAosDamage(51, 1, 5, id is PlayerMobile, id);
 
                     if (count > 2)
+                    {
                         damage = (damage * 2) / count;
+                    }
 
                     Mobile source = Caster;
                     SpellHelper.CheckReflect(this, ref source, ref id);
@@ -80,6 +91,7 @@ namespace Server.Spells.Seventh
         private class InternalTarget : Target
         {
             private readonly ChainLightningSpell m_Owner;
+
             public InternalTarget(ChainLightningSpell owner)
                 : base(10, true, TargetFlags.None)
             {
@@ -88,10 +100,10 @@ namespace Server.Spells.Seventh
 
             protected override void OnTarget(Mobile from, object o)
             {
-                IPoint3D p = o as IPoint3D;
-
-                if (p != null)
+                if (o is IPoint3D p)
+                {
                     m_Owner.Target(p);
+                }
             }
 
             protected override void OnTargetFinish(Mobile from)
