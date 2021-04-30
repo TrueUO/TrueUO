@@ -96,7 +96,7 @@ namespace Server.Items
         public bool CanLight => m_Cleaned && m_Charged && m_Primed && m_AmmoType != AmmunitionType.Empty && m_LoadedAmmo != null;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public double Durability => (m_Hits / (double)MaxHits) * 100.0;
+        public double Durability => m_Hits / (double)MaxHits * 100.0;
 
         public override bool ForceShowProperties => true;
 
@@ -349,9 +349,9 @@ namespace Server.Items
                             for (int i = -lateralOffset; i <= lateralOffset; i++)
                             {
                                 if (xOffset == 0)
-                                    newPoint = new Point3D(pnt.X + (xOffset + i), pnt.Y + (yOffset * currentRange), pnt.Z);
+                                    newPoint = new Point3D(pnt.X + xOffset + i, pnt.Y + yOffset * currentRange, pnt.Z);
                                 else
-                                    newPoint = new Point3D(pnt.X + (xOffset * currentRange), pnt.Y + (yOffset + i), pnt.Z);
+                                    newPoint = new Point3D(pnt.X + xOffset * currentRange, pnt.Y + yOffset + i, pnt.Z);
 
                                 //For Testing
                                 /*if (i == -lateralOffset || i == lateralOffset)
@@ -399,9 +399,9 @@ namespace Server.Items
                             for (int i = -lateralOffset; i <= lateralOffset; i++)
                             {
                                 if (xOffset == 0)
-                                    newPoint = new Point3D(pnt.X + (xOffset + i), pnt.Y + (yOffset * currentRange), pnt.Z);
+                                    newPoint = new Point3D(pnt.X + xOffset + i, pnt.Y + yOffset * currentRange, pnt.Z);
                                 else
-                                    newPoint = new Point3D(pnt.X + (xOffset * currentRange), pnt.Y + (yOffset + i), pnt.Z);
+                                    newPoint = new Point3D(pnt.X + xOffset * currentRange, pnt.Y + yOffset + i, pnt.Z);
 
                                 mobiles.AddRange(FindMobiles(shooter, newPoint, map, true, true, true, true));
 
@@ -612,18 +612,15 @@ namespace Server.Items
 
                     foreach (Mobile mobile in target.MobilesOnBoard)
                     {
-                        if (mobile is PlayerMobile mob)
+                        if (mobile is PlayerMobile mob && shooter.CanBeHarmful(mob, false))
                         {
-                            if (shooter.CanBeHarmful(mob, false))
+                            if (m_Galleon.GetSecurityLevel(mob) > highest)
                             {
-                                if (m_Galleon.GetSecurityLevel(mob) > highest)
-                                {
-                                    candidates.Insert(0, mob);
-                                }
-                                else
-                                {
-                                    candidates.Add(mob);
-                                }
+                                candidates.Insert(0, mob);
+                            }
+                            else
+                            {
+                                candidates.Add(mob);
                             }
                         }
                     }
@@ -756,7 +753,7 @@ namespace Server.Items
 
             double ingotsNeeded = 36 * (100 - Durability);
 
-            ingotsNeeded -= (from.Skills[SkillName.Blacksmith].Value / 200.0) * ingotsNeeded;
+            ingotsNeeded -= @from.Skills[SkillName.Blacksmith].Value / 200.0 * ingotsNeeded;
 
             double min = ingotsNeeded / 10;
             double ingots1 = pack.GetAmount(typeof(IronIngot));
@@ -778,7 +775,7 @@ namespace Server.Items
             else
             {
                 ingotsUsed = ingots;
-                percRepaired = (ingots / ingotsNeeded) * 100;
+                percRepaired = ingots / ingotsNeeded * 100;
             }
 
             double toConsume = 0;
