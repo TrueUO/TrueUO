@@ -97,20 +97,26 @@ namespace Server
             Mobile m = damageable as Mobile;
 
             if (damageable == null || damageable.Deleted || !damageable.Alive || damage <= 0)
+            {
                 return 0;
+            }
 
             if (m != null && phys == 0 && fire == 100 && cold == 0 && pois == 0 && nrgy == 0)
+            {
                 MeerMage.StopEffect(m, true);
+            }
 
             if (m != null)
             {
-                m.Items.ForEach(i =>
+                for (var index = 0; index < m.Items.Count; index++)
                 {
-                    ITalismanProtection prot = i as ITalismanProtection;
+                    var i = m.Items[index];
 
-                    if (prot != null)
+                    if (i is ITalismanProtection prot)
+                    {
                         damage = prot.Protection.ScaleDamage(from, damage);
-                });
+                    }
+                }
             }
 
             Fix(ref phys);

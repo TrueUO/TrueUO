@@ -104,10 +104,7 @@ namespace Server.Items
         {
             base.StopTimers();
 
-            if (Hatch != null)
-            {
-                Hatch.Reset();  
-            }
+            Hatch?.Reset();
         }
 
         public override void GetProperties(ObjectPropertyList list)
@@ -115,46 +112,59 @@ namespace Server.Items
             base.GetProperties(list);
 
             bool flyWheel = false;
-            for (var index = 0; index < KeyValidation.Count; index++)
-            {
-                var x = KeyValidation[index];
-                if (x.Key == typeof(FlyWheel) && x.Active)
-                {
-                    flyWheel = true;
-                    break;
-                }
-            }
-
             bool wireSpool = false;
-            for (var index = 0; index < KeyValidation.Count; index++)
-            {
-                var x = KeyValidation[index];
-                if (x.Key == typeof(WireSpool) && x.Active)
-                {
-                    wireSpool = true;
-                    break;
-                }
-            }
-
             bool powerCore = false;
-            for (var index = 0; index < KeyValidation.Count; index++)
+            bool bearingAssembly = false;
+
+            if (KeyValidation != null)
             {
-                var x = KeyValidation[index];
-                if (x.Key == typeof(PowerCore) && x.Active)
+                for (var index = 0; index < KeyValidation.Count; index++)
                 {
-                    powerCore = true;
-                    break;
+                    var x = KeyValidation[index];
+                    if (x.Key == typeof(FlyWheel) && x.Active)
+                    {
+                        flyWheel = true;
+                        break;
+                    }
                 }
             }
 
-            bool bearingAssembly = false;
-            for (var index = 0; index < KeyValidation.Count; index++)
+            if (KeyValidation != null)
             {
-                var x = KeyValidation[index];
-                if (x.Key == typeof(BearingAssembly) && x.Active)
+                for (var index = 0; index < KeyValidation.Count; index++)
                 {
-                    bearingAssembly = true;
-                    break;
+                    var x = KeyValidation[index];
+                    if (x.Key == typeof(WireSpool) && x.Active)
+                    {
+                        wireSpool = true;
+                        break;
+                    }
+                }
+            }
+
+            if (KeyValidation != null)
+            {
+                for (var index = 0; index < KeyValidation.Count; index++)
+                {
+                    var x = KeyValidation[index];
+                    if (x.Key == typeof(PowerCore) && x.Active)
+                    {
+                        powerCore = true;
+                        break;
+                    }
+                }
+            }
+
+            if (KeyValidation != null)
+            {
+                for (var index = 0; index < KeyValidation.Count; index++)
+                {
+                    var x = KeyValidation[index];
+                    if (x.Key == typeof(BearingAssembly) && x.Active)
+                    {
+                        bearingAssembly = true;
+                        break;
+                    }
                 }
             }
 
@@ -250,15 +260,10 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             Winch = reader.ReadItem() as WinchAssembly;
             Hatch = reader.ReadItem() as Hatch;
-
-            if (version == 0 && Winch != null)
-            {
-                Winch.Hatch = Hatch;
-            }
         }
     }
 
