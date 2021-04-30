@@ -91,14 +91,12 @@ namespace Server.Items
 
         private static void Unload(Mobile from, INinjaWeapon weapon)
         {
-            if (weapon.UsesRemaining > 0)
+            if (weapon.UsesRemaining > 0 && Activator.CreateInstance(weapon.AmmoType, weapon.UsesRemaining) is INinjaAmmo ammo)
             {
-                INinjaAmmo ammo = Activator.CreateInstance(weapon.AmmoType, weapon.UsesRemaining) as INinjaAmmo;
-
                 ammo.Poison = weapon.Poison;
                 ammo.PoisonCharges = weapon.PoisonCharges;
 
-                from.AddToBackpack((Item)ammo);
+                from.AddToBackpack((Item) ammo);
 
                 weapon.UsesRemaining = 0;
                 weapon.PoisonCharges = 0;
@@ -200,7 +198,7 @@ namespace Server.Items
 
         private static bool CombatCheck(Mobile attacker, Mobile defender) /* mod'd from baseweapon */
         {
-            BaseWeapon defWeapon = defender.Weapon as BaseWeapon;
+            BaseWeapon defWeapon = (BaseWeapon) defender.Weapon;
 
             Skill atkSkill = defender.Skills.Ninjitsu;
             Skill defSkill = defender.Skills[defWeapon.Skill];
@@ -277,11 +275,7 @@ namespace Server.Items
 
         private static void OnHit(object[] states)
         {
-            Mobile from = states[0] as Mobile;
-            Mobile target = states[1] as Mobile;
-            INinjaWeapon weapon = states[2] as INinjaWeapon;
-
-            if (from.CanBeHarmful(target))
+            if (states[0] is Mobile from && states[1] is Mobile target && states[2] is INinjaWeapon weapon && from.CanBeHarmful(target))
             {
                 from.DoHarmful(target);
 
@@ -310,9 +304,7 @@ namespace Server.Items
 
         private static void OnTarget(Mobile from, object targeted, INinjaWeapon weapon)
         {
-            PlayerMobile player = from as PlayerMobile;
-
-            if (WeaponIsValid(weapon, from))
+            if (from is PlayerMobile player && WeaponIsValid(weapon, from))
             {
                 if (targeted is Mobile mobile)
                 {
@@ -331,12 +323,11 @@ namespace Server.Items
 
         private static bool WeaponIsValid(INinjaWeapon weapon, Mobile from)
         {
-            Item item = weapon as Item;
-
-            if (!item.Deleted && item.RootParent == from)
+            if (weapon is Item item && !item.Deleted && item.RootParent == from)
             {
                 return true;
             }
+
             return false;
         }
 

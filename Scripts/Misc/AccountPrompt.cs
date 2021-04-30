@@ -14,7 +14,7 @@ namespace Server.Misc
 
                 string key = Console.ReadLine();
 
-                if (key.ToUpper() == "Y")
+                if (key != null && key.ToUpper() == "Y")
                 {
                     Console.WriteLine();
 

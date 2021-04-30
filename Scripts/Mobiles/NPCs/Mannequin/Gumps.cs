@@ -290,18 +290,56 @@ namespace Server.Gumps
         public double GetItemValue(List<ItemPropDefinition> list, int label)
         {
             if (list == null)
+            {
                 return 0;
+            }
 
             ItemPropDefinition l = list.FirstOrDefault();
 
             double v1 = 0;
             double v2 = 0;
 
-            if (l.EquipmentItem.Any(r => r.LabelNumber == label))
-                v1 = l.EquipmentItem.FirstOrDefault(r => r.LabelNumber == label).Value;
+            if (l != null && l.EquipmentItem.Any(r => r.LabelNumber == label))
+            {
+                ValuedProperty first = null;
 
-            if (l.SelectItem.Any(r => r.LabelNumber == label))
-                v2 = l.SelectItem.FirstOrDefault(r => r.LabelNumber == label).Value;
+                for (var index = 0; index < l.EquipmentItem.Count; index++)
+                {
+                    var r = l.EquipmentItem[index];
+
+                    if (r.LabelNumber == label)
+                    {
+                        first = r;
+                        break;
+                    }
+                }
+
+                if (first != null)
+                {
+                    v1 = first.Value;
+                }
+            }
+
+            if (l != null && l.SelectItem.Any(r => r.LabelNumber == label))
+            {
+                ValuedProperty first = null;
+
+                for (var index = 0; index < l.SelectItem.Count; index++)
+                {
+                    var r = l.SelectItem[index];
+
+                    if (r.LabelNumber == label)
+                    {
+                        first = r;
+                        break;
+                    }
+                }
+
+                if (first != null)
+                {
+                    v2 = first.Value;
+                }
+            }
 
             return v2 - v1;
         }
@@ -314,33 +352,33 @@ namespace Server.Gumps
             {
                 if (parmv == 0)
                 {
-                    name = string.Format("<BASEFONT COLOR=#80BFFF>{0}</BASEFONT>", ev);
+                    name = $"<BASEFONT COLOR=#80BFFF>{ev}</BASEFONT>";
                 }
                 else
                 {
-                    name = string.Format("<BASEFONT COLOR=#80BFFF>{0}/{1}</BASEFONT>", ev, parmv);
+                    name = $"<BASEFONT COLOR=#80BFFF>{ev}/{parmv}</BASEFONT>";
                 }
             }
             else if (diff < 0)
             {
                 if (parmv == 0)
                 {
-                    name = string.Format("<BASEFONT COLOR=#800000>{0} (-{1})</BASEFONT>", ev, Math.Abs(diff));
+                    name = $"<BASEFONT COLOR=#800000>{ev} (-{Math.Abs(diff)})</BASEFONT>";
                 }
                 else
                 {
-                    name = string.Format("<BASEFONT COLOR=#800000>{0}/{1} (-{2})</BASEFONT>", ev, parmv, Math.Abs(diff));
+                    name = $"<BASEFONT COLOR=#800000>{ev}/{parmv} (-{Math.Abs(diff)})</BASEFONT>";
                 }
             }
             else
             {
                 if (parmv == 0)
                 {
-                    name = string.Format("<BASEFONT COLOR=#008000>{0} (+{1})</BASEFONT>", ev, diff);
+                    name = $"<BASEFONT COLOR=#008000>{ev} (+{diff})</BASEFONT>";
                 }
                 else
                 {
-                    name = string.Format("<BASEFONT COLOR=#008000>{0}/{1} (+{2})</BASEFONT>", ev, parmv, diff);
+                    name = $"<BASEFONT COLOR=#008000>{ev}/{parmv} (+{diff})</BASEFONT>";
                 }
             }
 

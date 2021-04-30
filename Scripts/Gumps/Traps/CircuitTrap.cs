@@ -98,7 +98,7 @@ namespace Server.Gumps
                 int x = sx + (col * 40);
                 int y = sy + (line * 40);
 
-                AddImage(x, y, i == count - 1 ? 0x9A8 : Progress.Contains(i) ? 0x868 : 0x25F8);
+                AddImage(x, y, i == count - 1 ? 0x9A8 : Progress != null && Progress.Contains(i) ? 0x868 : 0x25F8);
 
                 if (line + 1 < sq)
                 {

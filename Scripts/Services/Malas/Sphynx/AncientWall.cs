@@ -1,6 +1,5 @@
 using Server.Mobiles;
 using System;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -15,7 +14,15 @@ namespace Server.Items
 
         public bool IsInsidePyramid(Mobile from)
         {
-            return Map.Malas.GetMobilesInBounds(new Rectangle2D(1808, 1784, 31, 31)).OfType<PlayerMobile>().Any(x => x == from);
+            foreach (Mobile bound in Map.Malas.GetMobilesInBounds(new Rectangle2D(1808, 1784, 31, 31)))
+            {
+                if (bound is PlayerMobile x && x == from)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -50,7 +57,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             if (Z != -110)
             {

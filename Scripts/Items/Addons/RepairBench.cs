@@ -124,10 +124,12 @@ namespace Server.Items
             {
                 Tools = new List<RepairBenchDefinition>();
 
-                Definitions.ToList().ForEach(x =>
+                for (var index = 0; index < Definitions.ToList().Count; index++)
                 {
+                    var x = Definitions.ToList()[index];
+
                     Tools.Add(x);
-                });
+                }
             }
             else
             {
@@ -142,7 +144,18 @@ namespace Server.Items
 
         public void AccessibleFailMessage(Mobile from)
         {
-            Components.FirstOrDefault().SendLocalizedMessageTo(from, 1061637); // You are not allowed to access this.
+            AddonComponent first = null;
+
+            foreach (var component in Components)
+            {
+                first = component;
+                break;
+            }
+
+            if (first != null)
+            {
+                first.SendLocalizedMessageTo(@from, 1061637); // You are not allowed to access this.
+            }
         }
 
         public bool CheckAccessible(Mobile from, Item item)

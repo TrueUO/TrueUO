@@ -126,8 +126,12 @@ namespace Server.Items
 
                 for (int i = 0; i < p; i++)
                 {
-                    List<BasePotion> potions = m.Backpack.FindItemsByType<BasePotion>();
-                    potions[Utility.Random(potions.Count)].Consume();
+                    if (m.Backpack != null)
+                    {
+                        List<BasePotion> potions = m.Backpack.FindItemsByType<BasePotion>();
+
+                        potions[Utility.Random(potions.Count)].Consume();
+                    }
                 }
             }
         }

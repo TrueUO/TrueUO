@@ -23,8 +23,7 @@ namespace Server.Spells.Ninjitsu
         public override bool BlockedByAnimalForm => false;
         public override bool CheckCast()
         {
-            PlayerMobile pm = Caster as PlayerMobile; // IsStealthing should be moved to Server.Mobiles
-            if (!pm.IsStealthing)
+            if (Caster is PlayerMobile pm && !pm.IsStealthing)
             {
                 Caster.SendLocalizedMessage(1063087); // You must be in stealth mode to use this ability.
                 return false;
@@ -54,9 +53,7 @@ namespace Server.Spells.Ninjitsu
             Point3D from = Caster.Location;
             Point3D to = new Point3D(p);
 
-            PlayerMobile pm = Caster as PlayerMobile; // IsStealthing should be moved to Server.Mobiles
-
-            if (!pm.IsStealthing)
+            if (Caster is PlayerMobile pm && !pm.IsStealthing)
             {
                 Caster.SendLocalizedMessage(1063087); // You must be in stealth mode to use this ability.
             }

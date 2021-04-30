@@ -51,13 +51,14 @@ namespace Server.Items
                 map = m.Map;
             }
 
-            TeleporterComponent c = Addon.Components.FirstOrDefault(x => x is TeleporterComponent && x != this) as TeleporterComponent;
+            if (Addon.Components.FirstOrDefault(x => x is TeleporterComponent && x != this) is TeleporterComponent c)
+            {
+                Point3D p = new Point3D(c.Location.X, c.Location.Y, c._Direction == Direction.Up ? Location.Z + 20 : c.Location.Z);
 
-            Point3D p = new Point3D(c.Location.X, c.Location.Y, c._Direction == Direction.Up ? Location.Z + 20 : c.Location.Z);
+                BaseCreature.TeleportPets(m, p, map);
 
-            BaseCreature.TeleportPets(m, p, map);
-
-            m.MoveToWorld(p, map);
+                m.MoveToWorld(p, map);
+            }
         }
 
         public override void Serialize(GenericWriter writer)

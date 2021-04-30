@@ -53,7 +53,12 @@ namespace Server.Engines.Quests
                             Quest.Owner.SendSound(Quest.CompleteSound);
                         }
                         else
-                            Quest.Owner.SendSound(Quest.UpdateSound);
+                        {
+                            if (Quest.Owner != null)
+                            {
+                                Quest.Owner.SendSound(Quest.UpdateSound);
+                            }
+                        }
 
                         return true;
                     }

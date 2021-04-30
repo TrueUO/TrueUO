@@ -107,11 +107,15 @@ namespace Server.Engines.ShameRevamped
         public void SpawnGuardian()
         {
             Guardian = Activator.CreateInstance(GuardianType) as ShameGuardian;
-            Guardian.Altar = this;
-            Guardian.MoveToWorld(SpawnLocation, Map);
 
-            Guardian.Home = SpawnLocation;
-            Guardian.RangeHome = 8;
+            if (Guardian != null)
+            {
+                Guardian.Altar = this;
+                Guardian.MoveToWorld(SpawnLocation, Map);
+
+                Guardian.Home = SpawnLocation;
+                Guardian.RangeHome = 8;
+            }
 
             DeadLine = DateTime.UtcNow + TimeSpan.FromHours(1);
         }

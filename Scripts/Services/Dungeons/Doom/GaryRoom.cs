@@ -163,17 +163,21 @@ namespace Server.Engines.Doom
                     else
                     {
                         Spawn = Activator.CreateInstance(_MonsterList[roll]) as BaseCreature;
-                        Spawn.Kills = 100;
 
-                        if (Spawn is Dragon)
+                        if (Spawn != null)
                         {
-                            Spawn.Body = 155;
-                            Spawn.CorpseNameOverride = "a rotting corpse";
-                        }
+                            Spawn.Kills = 100;
 
-                        Spawn.MoveToWorld(_SpawnLoc, Map.Malas);
-                        Spawn.Home = _SpawnLoc;
-                        Spawn.RangeHome = 7;
+                            if (Spawn is Dragon)
+                            {
+                                Spawn.Body = 155;
+                                Spawn.CorpseNameOverride = "a rotting corpse";
+                            }
+
+                            Spawn.MoveToWorld(_SpawnLoc, Map.Malas);
+                            Spawn.Home = _SpawnLoc;
+                            Spawn.RangeHome = 7;
+                        }
                     }
 
                     ChangeStatues();

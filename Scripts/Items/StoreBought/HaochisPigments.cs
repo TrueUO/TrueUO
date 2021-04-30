@@ -1,5 +1,3 @@
-using System.Linq;
-
 namespace Server.Items
 {
     public enum HaochisPigmentType
@@ -54,15 +52,23 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public HaochisPigmentType Type
         {
-            get
-            {
-                return m_Type;
-            }
+            get => m_Type;
             set
             {
                 m_Type = value;
 
-                HoachisPigmentInfo info = m_Table.FirstOrDefault(x => x.Type == m_Type);
+                HoachisPigmentInfo info = null;
+
+                for (var index = 0; index < m_Table.Length; index++)
+                {
+                    var x = m_Table[index];
+
+                    if (x.Type == m_Type)
+                    {
+                        info = x;
+                        break;
+                    }
+                }
 
                 if (info != null)
                 {
@@ -82,7 +88,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0);
             writer.Write((int)m_Type);
         }
@@ -90,8 +95,8 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
             Type = (HaochisPigmentType)reader.ReadInt();
         }
 
@@ -118,9 +123,9 @@ namespace Server.Items
 
         public class HoachisPigmentInfo
         {
-            public HaochisPigmentType Type { get; private set; }
-            public int Hue { get; private set; }
-            public int Localization { get; private set; }
+            public HaochisPigmentType Type { get; }
+            public int Hue { get; }
+            public int Localization { get; }
 
             public HoachisPigmentInfo(HaochisPigmentType type, int hue, int loc)
             {

@@ -173,18 +173,24 @@ namespace Server.Spells.Necromancy
             Party p = Party.Get(m);
 
             if (p != null && p.Contains(Caster))
+            {
                 return false;
+            }
 
             if (m.Guild != null && Caster.Guild != null)
             {
                 Guild mGuild = m.Guild as Guild;
                 Guild cGuild = Caster.Guild as Guild;
 
-                if (mGuild.IsAlly(cGuild))
+                if (mGuild != null && mGuild.IsAlly(cGuild))
+                {
                     return false;
+                }
 
                 if (mGuild == cGuild)
+                {
                     return false;
+                }
             }
 
             return true;

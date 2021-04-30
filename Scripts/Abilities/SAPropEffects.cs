@@ -122,22 +122,71 @@ namespace Server.Items
 
         public static bool VictimIsUnderEffects<T>(Mobile from)
         {
-            return Effects.Any(e => e.Victim == from && e.GetType() == typeof(T));
+            for (var index = 0; index < Effects.Count; index++)
+            {
+                var e = Effects[index];
+
+                if (e.Victim == from && e.GetType() == typeof(T))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public static T GetContextForAttacker<T>(Mobile from) where T : PropertyEffect
         {
-            return Effects.FirstOrDefault(e => e.Attacker == from && e.GetType() == typeof(T)) as T;
+            PropertyEffect first = null;
+
+            for (var index = 0; index < Effects.Count; index++)
+            {
+                var e = Effects[index];
+
+                if (e.Attacker == from && e.GetType() == typeof(T))
+                {
+                    first = e;
+                    break;
+                }
+            }
+
+            return first as T;
         }
 
         public static T GetContextForVictim<T>(Mobile from) where T : PropertyEffect
         {
-            return Effects.FirstOrDefault(e => e.Victim == from && e.GetType() == typeof(T)) as T;
+            PropertyEffect first = null;
+
+            for (var index = 0; index < Effects.Count; index++)
+            {
+                var e = Effects[index];
+
+                if (e.Victim == from && e.GetType() == typeof(T))
+                {
+                    first = e;
+                    break;
+                }
+            }
+
+            return first as T;
         }
 
         public static T GetContext<T>(Mobile from, Mobile victim) where T : PropertyEffect
         {
-            return Effects.FirstOrDefault(e => e.Attacker == from && e.Victim == victim && e.GetType() == typeof(T)) as T;
+            PropertyEffect first = null;
+
+            for (var index = 0; index < Effects.Count; index++)
+            {
+                var e = Effects[index];
+
+                if (e.Attacker == from && e.Victim == victim && e.GetType() == typeof(T))
+                {
+                    first = e;
+                    break;
+                }
+            }
+
+            return first as T;
         }
 
         public static IEnumerable<T> GetContextsForVictim<T>(Mobile victim) where T : PropertyEffect
@@ -542,14 +591,20 @@ namespace Server.Items
         public static bool IsImmune(Mobile m)
         {
             if (_Immunity == null)
+            {
                 return false;
+            }
 
             List<Mobile> list = new List<Mobile>(_Immunity.Keys);
 
-            foreach (Mobile mob in list)
+            for (var index = 0; index < list.Count; index++)
             {
+                Mobile mob = list[index];
+
                 if (_Immunity[mob] < DateTime.UtcNow)
+                {
                     _Immunity.Remove(mob);
+                }
             }
 
             ColUtility.Free(list);
@@ -651,14 +706,20 @@ namespace Server.Items
         public static bool IsImmune(Mobile m)
         {
             if (_Immunity == null)
+            {
                 return false;
+            }
 
             List<Mobile> list = new List<Mobile>(_Immunity.Keys);
 
-            foreach (Mobile mob in list)
+            for (var index = 0; index < list.Count; index++)
             {
+                Mobile mob = list[index];
+
                 if (_Immunity[mob] < DateTime.UtcNow)
+                {
                     _Immunity.Remove(mob);
+                }
             }
 
             ColUtility.Free(list);
@@ -721,12 +782,16 @@ namespace Server.Items
         public static bool IsImmune(Mobile m)
         {
             if (_Immunity == null)
+            {
                 return false;
+            }
 
             List<Mobile> list = new List<Mobile>(_Immunity.Keys);
 
-            foreach (Mobile mob in list)
+            for (var index = 0; index < list.Count; index++)
             {
+                Mobile mob = list[index];
+
                 if (_Immunity[mob] < DateTime.UtcNow)
                     _Immunity.Remove(mob);
             }
@@ -739,7 +804,9 @@ namespace Server.Items
         public static void AddImmunity(Mobile m)
         {
             if (_Immunity == null)
+            {
                 _Immunity = new Dictionary<Mobile, DateTime>();
+            }
 
             _Immunity[m] = DateTime.UtcNow + TimeSpan.FromSeconds(60);
         }

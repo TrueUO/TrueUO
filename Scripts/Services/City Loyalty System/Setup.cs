@@ -1,7 +1,6 @@
 using Server.Commands;
 using Server.Items;
 using System;
-using System.Linq;
 
 namespace Server.Engines.CityLoyalty
 {
@@ -18,30 +17,30 @@ namespace Server.Engines.CityLoyalty
 
         public static void Delete(CommandEventArgs e)
         {
-            CityLoyaltySystem.Cities.ForEach(city =>
+            for (var index = 0; index < CityLoyaltySystem.Cities.Count; index++)
+            {
+                var city = CityLoyaltySystem.Cities[index];
+
+                city.Stone?.Delete();
+
+                city.Herald?.Delete();
+
+                if (city.Captain != null)
                 {
-                    if (city.Stone != null) city.Stone.Delete();
-                    if (city.Herald != null) city.Herald.Delete();
+                    city.Captain.Box?.Delete();
 
-                    if (city.Captain != null)
-                    {
-                        if (city.Captain.Box != null)
-                            city.Captain.Box.Delete();
+                    city.Captain.Delete();
+                }
 
-                        city.Captain.Delete();
-                    }
+                if (city.Minister != null)
+                {
+                    city.Minister.DonationCrate?.Delete();
 
-                    if (city.Minister != null)
-                    {
-                        if (city.Minister.DonationCrate != null)
-                            city.Minister.DonationCrate.Delete();
+                    city.Minister.DonationPost?.Delete();
 
-                        if (city.Minister.DonationPost != null)
-                            city.Minister.DonationPost.Delete();
-
-                        city.Minister.Delete();
-                    }
-                });
+                    city.Minister.Delete();
+                }
+            }
         }
 
         public static void Setup(CommandEventArgs e)
@@ -169,19 +168,36 @@ namespace Server.Engines.CityLoyalty
                         break;
                 }
 
-                Region r = Region.Regions.FirstOrDefault(reg => reg.Map == Map.Felucca && reg.Name == name);
+                Region r = null;
+
+                for (var index = 0; index < Region.Regions.Count; index++)
+                {
+                    var reg = Region.Regions[index];
+
+                    if (reg.Map == Map.Felucca && reg.Name == name)
+                    {
+                        r = reg;
+                        break;
+                    }
+                }
 
                 if (r != null)
                 {
                     SlimTheFence slim = new SlimTheFence();
 
                     if (!HasType(r, slim.GetType()))
+                    {
                         slim.MoveToWorld(p, Map.Felucca);
+                    }
                     else
+                    {
                         slim.Delete();
+                    }
                 }
                 else
+                {
                     Console.WriteLine("WARNING: {0} Region not found!", name);
+                }
             }
 
         }
