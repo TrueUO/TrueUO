@@ -52,13 +52,13 @@ namespace Server.Items
 
         public void ScaleUses()
         {
-            m_UsesRemaining = (m_UsesRemaining * GetUsesScalar()) / 100;
+            m_UsesRemaining = m_UsesRemaining * GetUsesScalar() / 100;
             InvalidateProperties();
         }
 
         public void UnscaleUses()
         {
-            m_UsesRemaining = (m_UsesRemaining * 100) / GetUsesScalar();
+            m_UsesRemaining = m_UsesRemaining * 100 / GetUsesScalar();
         }
 
         public int GetUsesScalar()
@@ -641,8 +641,8 @@ namespace Server.Items
         {
             int scale = 100 + GetDurabilityBonus();
 
-            m_Hits = ((m_Hits * 100) + (scale - 1)) / scale;
-            m_MaxHits = ((m_MaxHits * 100) + (scale - 1)) / scale;
+            m_Hits = (m_Hits * 100 + (scale - 1)) / scale;
+            m_MaxHits = (m_MaxHits * 100 + (scale - 1)) / scale;
 
             InvalidateProperties();
         }
@@ -651,8 +651,8 @@ namespace Server.Items
         {
             int scale = 100 + GetDurabilityBonus();
 
-            m_Hits = ((m_Hits * scale) + 99) / 100;
-            m_MaxHits = ((m_MaxHits * scale) + 99) / 100;
+            m_Hits = (m_Hits * scale + 99) / 100;
+            m_MaxHits = (m_MaxHits * scale + 99) / 100;
 
             if (m_MaxHits > 255)
                 m_MaxHits = 255;
@@ -1174,14 +1174,11 @@ namespace Server.Items
                 }
             }
 
-            if (defWeapon is BaseThrown)
+            if (defWeapon is BaseThrown && defender.FindItemOnLayer(Layer.TwoHanded) is BaseShield)
             {
-                if (defender.FindItemOnLayer(Layer.TwoHanded) is BaseShield)
-                {
-                    double malus = Math.Min(90, 1200 / Math.Max(1.0, defender.Skills[SkillName.Parry].Value));
+                double malus = Math.Min(90, 1200 / Math.Max(1.0, defender.Skills[SkillName.Parry].Value));
 
-                    chance = chance + chance * (malus / 100);
-                }
+                chance = chance + chance * (malus / 100);
             }
 
             if (chance < 0.02)
@@ -1405,7 +1402,7 @@ namespace Server.Items
 
                 double divisor = weapon.Layer == Layer.OneHanded && defender.Player ? 48000.0 : 41140.0;
 
-                double chance = (parry * bushido) / divisor;
+                double chance = parry * bushido / divisor;
 
                 double aosChance = parry / 800.0;
 
@@ -2505,7 +2502,7 @@ namespace Server.Items
             int damageBonus = 0;
 
             int inscribeSkill = attacker.Skills[SkillName.Inscribe].Fixed;
-            int inscribeBonus = (inscribeSkill + (1000 * (inscribeSkill / 1000))) / 200;
+            int inscribeBonus = (inscribeSkill + 1000 * (inscribeSkill / 1000)) / 200;
 
             damageBonus += inscribeBonus;
             damageBonus += attacker.Int / 10;
@@ -2516,7 +2513,7 @@ namespace Server.Items
                 damage -= (int)(damage * ((double)Feint.Registry[defender].DamageReduction / 100));
 
             // All hit spells use 80 eval
-            int evalScale = 30 + ((9 * 800) / 100);
+            int evalScale = 30 + 9 * 800 / 100;
 
             damage = AOS.Scale(damage, evalScale);
 
@@ -2723,7 +2720,7 @@ namespace Server.Items
         {
             // Message?
             // Effects?
-            defender.Stam -= (damagegiven * (100 - m_AosWeaponAttributes.HitFatigue)) / 100;
+            defender.Stam -= damagegiven * (100 - m_AosWeaponAttributes.HitFatigue) / 100;
 
             if (ProcessingMultipleHits)
                 BlockHitEffects = true;
@@ -2734,7 +2731,7 @@ namespace Server.Items
             // Message?
             defender.FixedParticles(0x3789, 10, 25, 5032, EffectLayer.Head);
             defender.PlaySound(0x1F8);
-            defender.Mana -= (damagegiven * (100 - m_AosWeaponAttributes.HitManaDrain)) / 100;
+            defender.Mana -= damagegiven * (100 - m_AosWeaponAttributes.HitManaDrain) / 100;
 
             if (ProcessingMultipleHits)
                 BlockHitEffects = true;
@@ -3153,7 +3150,7 @@ namespace Server.Items
             }
             #endregion
 
-            double totalBonus = strengthBonus + anatomyBonus + tacticsBonus + lumberBonus + (damageBonus / 100.0);
+            double totalBonus = strengthBonus + anatomyBonus + tacticsBonus + lumberBonus + damageBonus / 100.0;
 
             return damage + (int)(damage * totalBonus);
         }
@@ -3169,7 +3166,7 @@ namespace Server.Items
 
             if (m_MaxHits > 0 && m_Hits < m_MaxHits)
             {
-                scale = 50 + ((50 * m_Hits) / m_MaxHits);
+                scale = 50 + 50 * m_Hits / m_MaxHits;
             }
 
             return AOS.Scale(damage, scale);
