@@ -2049,17 +2049,21 @@ namespace Server
                 list.Add(1076187);
         }
 
-        public const double CombatDecayChance = 0.02;
+        private const double CombatDecayChance = 0.02;
 
         public static void OnCombatAction(Mobile m)
         {
             if (m == null || !m.Alive)
+            {
                 return;
+            }
 
             List<Item> list = new List<Item>();
 
-            foreach (Item item in m.Items)
+            for (var index = 0; index < m.Items.Count; index++)
             {
+                Item item = m.Items[index];
+
                 if (item is IDurability)
                 {
                     NegativeAttributes attrs = RunicReforging.GetNegativeAttributes(item);
@@ -2071,12 +2075,16 @@ namespace Server
                 }
             }
 
-            foreach (Item item in list)
+            for (var index = 0; index < list.Count; index++)
             {
+                Item item = list[index];
+
                 IDurability dur = item as IDurability;
 
                 if (dur == null)
+                {
                     continue;
+                }
 
                 if (dur.HitPoints >= 1)
                 {
@@ -2096,7 +2104,9 @@ namespace Server
                         dur.MaxHitPoints--;
 
                         if (item.Parent is Mobile mobile)
+                        {
                             mobile.LocalOverheadMessage(Network.MessageType.Regular, 0x3B2, 1061121); // Your equipment is severely damaged.
+                        }
                     }
                     else
                     {
