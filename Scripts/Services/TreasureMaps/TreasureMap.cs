@@ -499,7 +499,7 @@ namespace Server.Items
                 width = 600;
                 height = 600;
             }
-            if (map == Map.TerMur)
+            else if (map == Map.TerMur)
             {
                 width = 200;
                 height = 200;
