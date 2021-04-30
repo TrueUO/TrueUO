@@ -445,8 +445,7 @@ namespace Server.Items
             //no-go in towns, houses, dungeons and champspawns
             if (reg != null)
             {
-                if (reg.IsPartOf<TownRegion>() || reg.IsPartOf<DungeonRegion>() ||
-                    reg.IsPartOf<ChampionSpawnRegion>() || reg.IsPartOf<HouseRegion>())
+                if (reg.IsPartOf<TownRegion>() || reg.IsPartOf<DungeonRegion>() || reg.IsPartOf<ChampionSpawnRegion>() || reg.IsPartOf<HouseRegion>())
                 {
                     return false;
                 }
@@ -460,8 +459,11 @@ namespace Server.Items
             }
 
             //Rare occrunces where a static tile needs to be checked
-            foreach (StaticTile tile in map.Tiles.GetStaticTiles(x, y, true))
+            var tiles = map.Tiles.GetStaticTiles(x, y, true);
+
+            for (var index = 0; index < tiles.Length; index++)
             {
+                StaticTile tile = tiles[index];
                 ItemData td = TileData.ItemTable[tile.ID & TileData.MaxItemValue];
 
                 if ((td.Flags & TileFlag.Impassable) > 0)
@@ -769,8 +771,10 @@ namespace Server.Items
 
             List<BaseHarvestTool> items = m.Backpack.FindItemsByType<BaseHarvestTool>();
 
-            foreach (BaseHarvestTool tool in items)
+            for (var index = 0; index < items.Count; index++)
             {
+                BaseHarvestTool tool = items[index];
+
                 if (tool.HarvestSystem == Mining.System)
                 {
                     return true;
