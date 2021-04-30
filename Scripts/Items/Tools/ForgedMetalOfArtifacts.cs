@@ -64,25 +64,26 @@ namespace Server.Items
 
         public override void OnDoubleClick(Mobile from)
         {
-            PlayerMobile pm = from as PlayerMobile;
-
-            from.CloseGump(typeof(InternalGump));
-            from.CloseGump(typeof(CancelGump));
-
-            if (IsChildOf(from.Backpack))
+            if (from is PlayerMobile pm)
             {
-                if (pm.NextEnhanceSuccess)
+                from.CloseGump(typeof(InternalGump));
+                from.CloseGump(typeof(CancelGump));
+
+                if (IsChildOf(from.Backpack))
                 {
-                    from.SendGump(new CancelGump(pm, this));
+                    if (pm.NextEnhanceSuccess)
+                    {
+                        from.SendGump(new CancelGump(pm, this));
+                    }
+                    else
+                    {
+                        from.SendGump(new InternalGump(pm, this));
+                    }
                 }
                 else
                 {
-                    from.SendGump(new InternalGump(pm, this));
+                    from.SendLocalizedMessage(1042001); // That must be in your pack for you to use it.
                 }
-            }
-            else
-            {
-                from.SendLocalizedMessage(1042001); // That must be in your pack for you to use it.
             }
         }
 

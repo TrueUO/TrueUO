@@ -8,15 +8,16 @@ namespace Server
     public class NameList
     {
         private static readonly Dictionary<string, NameList> m_Table;
-        private readonly string m_Type;
         private readonly string[] m_List;
-        public NameList(string type, XmlNode xml)
+
+        public NameList(XmlNode xml)
         {
-            m_Type = type;
             m_List = xml.InnerText.Split(',');
 
             for (int i = 0; i < m_List.Length; ++i)
+            {
                 m_List[i] = Utility.Intern(m_List[i].Trim());
+            }
         }
 
         static NameList()
@@ -26,7 +27,9 @@ namespace Server
             string filePath = Path.Combine(Core.BaseDirectory, "Data/names.xml");
 
             if (!File.Exists(filePath))
+            {
                 return;
+            }
 
             try
             {
@@ -39,12 +42,12 @@ namespace Server
             }
         }
 
-        public string Type => m_Type;
         public string[] List => m_List;
+
         public static NameList GetNameList(string type)
         {
-            NameList n = null;
-            m_Table.TryGetValue(type, out n);
+            m_Table.TryGetValue(type, out var n);
+
             return n;
         }
 
@@ -53,7 +56,9 @@ namespace Server
             NameList list = GetNameList(type);
 
             if (list != null)
+            {
                 return list.GetRandomName();
+            }
 
             return "";
         }
@@ -61,8 +66,12 @@ namespace Server
         public bool ContainsName(string name)
         {
             for (int i = 0; i < m_List.Length; i++)
+            {
                 if (name == m_List[i])
+                {
                     return true;
+                }
+            }
 
             return false;
         }
@@ -70,7 +79,9 @@ namespace Server
         public string GetRandomName()
         {
             if (m_List.Length > 0)
+            {
                 return m_List[Utility.Random(m_List.Length)];
+            }
 
             return "";
         }
@@ -82,28 +93,31 @@ namespace Server
 
             XmlElement root = doc["names"];
 
-            var name = root.GetElementsByTagName("namelist");
-
-            for (var index = 0; index < name.Count; index++)
+            if (root != null)
             {
-                var element = (XmlElement) name[index];
+                var name = root.GetElementsByTagName("namelist");
 
-                string type = element.GetAttribute("type");
-
-                if (string.IsNullOrEmpty(type))
+                for (var index = 0; index < name.Count; index++)
                 {
-                    continue;
-                }
+                    var element = (XmlElement) name[index];
 
-                try
-                {
-                    NameList list = new NameList(type, element);
+                    string type = element.GetAttribute("type");
 
-                    m_Table[type] = list;
-                }
-                catch (Exception e)
-                {
-                    Diagnostics.ExceptionLogging.LogException(e);
+                    if (string.IsNullOrEmpty(type))
+                    {
+                        continue;
+                    }
+
+                    try
+                    {
+                        NameList list = new NameList(element);
+
+                        m_Table[type] = list;
+                    }
+                    catch (Exception e)
+                    {
+                        Diagnostics.ExceptionLogging.LogException(e);
+                    }
                 }
             }
         }

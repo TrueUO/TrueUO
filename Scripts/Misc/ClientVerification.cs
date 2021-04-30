@@ -81,11 +81,13 @@ namespace Server.Misc
             ClientVersion version = e.Version;
 
             if (state.Mobile != null && state.Mobile.IsStaff())
+            {
                 return;
+            }
 
             ClientVersion required = Required;
 
-            if (required != null && version < required && (m_OldClientResponse == OldClientResponse.Kick || m_OldClientResponse == OldClientResponse.LenientKick && DateTime.UtcNow - state.Mobile.CreationTime > m_AgeLeniency && state.Mobile is PlayerMobile pm && pm.GameTime > m_GameTimeLeniency))
+            if (state.Mobile != null && required != null && version < required && (m_OldClientResponse == OldClientResponse.Kick || m_OldClientResponse == OldClientResponse.LenientKick && DateTime.UtcNow - state.Mobile.CreationTime > m_AgeLeniency && state.Mobile is PlayerMobile pm && pm.GameTime > m_GameTimeLeniency))
             {
                 kickMessage = $"This server requires your client version be at least {required}.";
             }
@@ -117,7 +119,7 @@ namespace Server.Misc
                 }
             }
 
-            if (kickMessage != null)
+            if (kickMessage != null && state.Mobile != null)
             {
                 state.Mobile.SendMessage(0x22, kickMessage);
                 state.Mobile.SendMessage(0x22, "You will be disconnected in {0} seconds.", KickDelay.TotalSeconds);
@@ -133,7 +135,7 @@ namespace Server.Misc
                     }
                 });
             }
-            else if (Required != null && version < Required)
+            else if (Required != null && version < Required && state.Mobile != null)
             {
                 switch (m_OldClientResponse)
                 {
