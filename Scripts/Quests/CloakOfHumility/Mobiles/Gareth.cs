@@ -22,7 +22,7 @@ namespace Server.Engines.Quests
 
         public override void OnOfferFailed()
         {
-            Say(1075787); // I feel that thou hast yet more to learn about Humility... Please ponder these things further, and visit me again on the 'morrow.
+            Say(1075787, 0x3B2); // I feel that thou hast yet more to learn about Humility... Please ponder these things further, and visit me again on the 'morrow.
         }
 
         public override void InitBody()
@@ -44,6 +44,18 @@ namespace Server.Engines.Quests
             AddItem(new BodySash());
             AddItem(new FancyShirt(6));
             AddItem(new LongPants());
+        }
+
+        public override void OnTalk(PlayerMobile player)
+        {
+            if (QuestHelper.GetQuest(player, typeof(TheQuestionsQuest)) is TheQuestionsQuest q && !q.Completed)
+            {
+                SayTo(player, 1080107, 0x3B2); // I'm sorry, I have nothing for you at this time.                
+            }
+            else
+            {
+                base.OnTalk(player);
+            }
         }
 
         private DateTime m_NextTalk;

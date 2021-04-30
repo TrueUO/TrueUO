@@ -3,17 +3,17 @@ using Server.Items;
 
 namespace Server.Mobiles
 {
-    public class Dierdre : HumilityQuestMobile
+    public class Deirdre : HumilityQuestMobile
     {
-        public override int Greeting => 1075744;
+        public override int Greeting => 1075744; // The cloak thou wearest looks warm.
 
         [Constructable]
-        public Dierdre()
+        public Deirdre()
             : base("Dierdre", "the Beggar")
         {
         }
 
-        public Dierdre(Serial serial)
+        public Deirdre(Serial serial)
             : base(serial)
         {
         }
@@ -25,6 +25,8 @@ namespace Server.Mobiles
             Female = true;
             Race = Race.Human;
             Body = 0x191;
+
+            SpeechHue = 20;
 
             Hue = Race.RandomSkinHue();
             HairItemID = Race.RandomHair(true);

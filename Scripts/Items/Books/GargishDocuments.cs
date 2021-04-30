@@ -27,7 +27,7 @@ namespace Server.Items
         public override void AddNameProperty(ObjectPropertyList list)
         {
             if (Title is int iTitle)
-                list.Add(1150928, string.Format("#{0}", iTitle));  // Gargish Document - ~1_NAME~
+                list.Add(1150928, string.Format("#{0}", iTitle)); // Gargish Document - ~1_NAME~
             else if (Title is string sTitle)
                 list.Add(1150928, sTitle);
             else
@@ -57,22 +57,20 @@ namespace Server.Items
 
     public class GargishDocumentNote : Note
     {
+        public override int[] Contents => new int[] { };
         public virtual int Title => 0;
 
         public GargishDocumentNote()
         {
         }
 
-        public GargishDocumentNote(int content) : base(content)
-        {
-        }
-
         public override void AddNameProperty(ObjectPropertyList list)
         {
-            list.Add(1150928, string.Format("#{0}", Title));  // Gargish Document - ~1_NAME~
+            list.Add(1150928, string.Format("#{0}", Title)); // Gargish Document - ~1_NAME~
         }
 
-        public GargishDocumentNote(Serial serial) : base(serial)
+        public GargishDocumentNote(Serial serial)
+            : base(serial)
         {
         }
 
@@ -91,17 +89,18 @@ namespace Server.Items
 
     public class ChallengeRite : GargishDocumentBook
     {
-        public override object Title => 1150904;  // The Challenge Rite
-        public override object Author => "unknown";
+        public override object Title => 1150904; // The Challenge Rite
+        public override object Author => 1113299; // <center>(unknown)</center>
         public override int[] Contents => new[] { 1150915, 1150916, 1150917, 1150918, 1150919, 1150920, 1150921, 1150922 };
 
         [Constructable]
         public ChallengeRite()
         {
-            Hue = 1007;
+            Hue = 2505;
         }
 
-        public ChallengeRite(Serial serial) : base(serial)
+        public ChallengeRite(Serial serial)
+            : base(serial)
         {
         }
 
@@ -120,17 +119,18 @@ namespace Server.Items
 
     public class OnTheVoid : GargishDocumentBook
     {
-        public override object Title => 1150907;  // On the Void
-        public override object Author => "Prugyilonus";
+        public override object Title => 1150907; // On the Void
+        public override object Author => 1150892; // Prugyilonus
         public override int[] Contents => new[] { 1150894, 1150895, 1150896 };
 
         [Constructable]
         public OnTheVoid()
         {
-            Hue = 404;
+            Hue = 2587;
         }
 
-        public OnTheVoid(Serial serial) : base(serial)
+        public OnTheVoid(Serial serial)
+            : base(serial)
         {
         }
 
@@ -149,17 +149,18 @@ namespace Server.Items
 
     public class InMemory : GargishDocumentBook
     {
-        public override object Title => 1150913;  // In Memory
-        public override object Author => "Queen Zhah";
+        public override object Title => 1150913; // In Memory
+        public override object Author => 1150898; // Zhah
         public override int[] Contents => new[] { 1151071, 1151072, 1151073 };
 
         [Constructable]
         public InMemory()
         {
-            Hue = 375;
+            Hue = 2550;
         }
 
-        public InMemory(Serial serial) : base(serial)
+        public InMemory(Serial serial)
+            : base(serial)
         {
         }
 
@@ -193,8 +194,8 @@ namespace Server.Items
 
         private static readonly int[] m_Contents = new int[34];
 
-        public override object Title => 1150914;  // Chronicle of the Gargoyle Queen Vol. 1
-        public override object Author => "Queen Zhah";
+        public override object Title => 1150914; // Chronicle of the Gargoyle Queen Vol. 1
+        public override object Author => 1151074; // Queen Zhah
         public override int[] Contents => m_Contents;
 
         private int m_Charges;
@@ -205,7 +206,7 @@ namespace Server.Items
         [Constructable]
         public ChronicleOfTheGargoyleQueen1()
         {
-            Hue = 567;
+            Hue = 2576;
             m_Charges = 500;
         }
 
@@ -240,14 +241,18 @@ namespace Server.Items
 
     public class AnthenaeumDecree : GargishDocumentNote
     {
-        public override int Title => 1150905;  // Athenaeum Decree
+        public override int Title => 1150905; // Athenaeum Decree
+
+        public override int[] Contents => new[] { 1150891 };
 
         [Constructable]
-        public AnthenaeumDecree() : base(1150891)
+        public AnthenaeumDecree()
         {
+            Hue = 2515;
         }
 
-        public AnthenaeumDecree(Serial serial) : base(serial)
+        public AnthenaeumDecree(Serial serial)
+            : base(serial)
         {
         }
 
@@ -266,17 +271,18 @@ namespace Server.Items
 
     public class LetterFromTheKing : GargishDocumentNote
     {
-        public override int Title => 1150906;  // A Letter from the King
+        public override int Title => 1150906; // A Letter from the King
 
-        private readonly string m_Content = "To Her Honor the High Broodmother, Lady Zhah from his majesty, King Trajalem:<br><br>	High Broodmother, I have received your latest petition regarding your desires and I once again must remind you that I have absolutely no interest in altering tradition or granting you the freedom from the slavery you have deluded yourself into believing makes up your life.<br><br>Please remember that your office may be stripped by me if you are deemed unfit to lead the other Broodmothers. Be happy with your place and do not forget it; this is the last time I will lower myself to respond to these ridiculous accusations and requests.";
+        public override int[] Contents => new[] { 1150923, 1150924 };
 
         [Constructable]
         public LetterFromTheKing()
         {
-            NoteString = m_Content;
+            Hue = 2514;
         }
 
-        public LetterFromTheKing(Serial serial) : base(serial)
+        public LetterFromTheKing(Serial serial)
+            : base(serial)
         {
         }
 
@@ -297,12 +303,16 @@ namespace Server.Items
     {
         public override int Title => 1150908;  // Shilaxrinar's Memorial
 
+        public override int[] Contents => new[] { 1150899, 1150900 };
+
         [Constructable]
-        public ShilaxrinarsMemorial() : base(1150899)
+        public ShilaxrinarsMemorial()
         {
+            Hue = 2515;
         }
 
-        public ShilaxrinarsMemorial(Serial serial) : base(serial)
+        public ShilaxrinarsMemorial(Serial serial)
+            : base(serial)
         {
         }
 
@@ -323,12 +333,16 @@ namespace Server.Items
     {
         public override int Title => 1150909;  // To the High Scholar
 
+        public override int[] Contents => new[] { 1151062, 1151063 };
+
         [Constructable]
-        public ToTheHighScholar() : base(1151062)
+        public ToTheHighScholar()
         {
+            Hue = 2514;
         }
 
-        public ToTheHighScholar(Serial serial) : base(serial)
+        public ToTheHighScholar(Serial serial)
+            : base(serial)
         {
         }
 
@@ -349,12 +363,16 @@ namespace Server.Items
     {
         public override int Title => 1150910;  // To the High Broodmother
 
+        public override int[] Contents => new[] { 1151064, 1151065 };
+
         [Constructable]
-        public ToTheHighBroodmother() : base(1151064)
+        public ToTheHighBroodmother()
         {
+            Hue = 2514;
         }
 
-        public ToTheHighBroodmother(Serial serial) : base(serial)
+        public ToTheHighBroodmother(Serial serial)
+            : base(serial)
         {
         }
 
@@ -375,12 +393,16 @@ namespace Server.Items
     {
         public override int Title => 1150911;  // Reply to the High Scholar
 
+        public override int[] Contents => new[] { 1151066, 1151067, 1151068 };
+
         [Constructable]
-        public ReplyToTheHighScholar() : base(1151066)
+        public ReplyToTheHighScholar()
         {
+            Hue = 2514;
         }
 
-        public ReplyToTheHighScholar(Serial serial) : base(serial)
+        public ReplyToTheHighScholar(Serial serial)
+            : base(serial)
         {
         }
 
@@ -399,14 +421,18 @@ namespace Server.Items
 
     public class AccessToTheIsle : GargishDocumentNote
     {
-        public override int Title => 1150912;  // Access to the Isle
+        public override int Title => 1150912; // Access to the Isle
+
+        public override int[] Contents => new[] { 1151069 };
 
         [Constructable]
-        public AccessToTheIsle() : base(1151069)
+        public AccessToTheIsle()
         {
+            Hue = 2515;
         }
 
-        public AccessToTheIsle(Serial serial) : base(serial)
+        public AccessToTheIsle(Serial serial)
+            : base(serial)
         {
         }
 

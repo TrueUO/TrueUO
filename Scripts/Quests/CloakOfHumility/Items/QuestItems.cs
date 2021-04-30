@@ -35,6 +35,17 @@ namespace Server.Engines.Quests
         [Constructable]
         public GreyCloak()
         {
+            LootType = LootType.Blessed;
+            Hue = 902;
+        }
+
+        public override bool Nontransferable { get { return true; } }
+
+        public override void AddWeightProperty(ObjectPropertyList list)
+        {
+            base.AddWeightProperty(list);
+
+            list.Add(1072351); // Quest Item
         }
 
         public GreyCloak(Serial serial)
@@ -45,14 +56,12 @@ namespace Server.Engines.Quests
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             int version = reader.ReadInt();
 
             if (version == 0)
@@ -176,6 +185,16 @@ namespace Server.Engines.Quests
         [Constructable]
         public BrassRing()
         {
+            LootType = LootType.Blessed;
+        }
+
+        public override bool Nontransferable { get { return true; } }
+
+        public override void AddWeightProperty(ObjectPropertyList list)
+        {
+            base.AddWeightProperty(list);
+
+            list.Add(1072351); // Quest Item
         }
 
         public BrassRing(Serial serial)
@@ -230,6 +249,15 @@ namespace Server.Engines.Quests
         [Constructable]
         public PairOfWorkGloves()
         {
+        }
+
+        public override bool Nontransferable { get { return true; } }
+
+        public override void AddNameProperties(ObjectPropertyList list)
+        {
+            base.AddNameProperties(list);
+
+            list.Add(1072351); // Quest Item
         }
 
         public PairOfWorkGloves(Serial serial)

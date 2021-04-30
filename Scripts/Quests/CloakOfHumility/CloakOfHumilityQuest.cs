@@ -44,39 +44,6 @@ namespace Server.Engines.Quests
          * learned.<br>*/
         public override object FailedMsg => 1075713;
 
-        public override bool RenderObjective(MondainQuestGump g, bool offer)
-        {
-            if (offer)
-                g.AddHtmlLocalized(130, 45, 270, 16, 1049010, 0xFFFFFF, false, false); // Quest Offer
-            else
-                g.AddHtmlLocalized(130, 45, 270, 16, 1046026, 0xFFFFFF, false, false); // Quest Log
-
-            g.AddButton(130, 430, 0x2EEF, 0x2EF1, (int)Buttons.PreviousPage, GumpButtonType.Reply, 0);
-            g.AddButton(275, 430, 0x2EE9, 0x2EEB, (int)Buttons.NextPage, GumpButtonType.Reply, 0);
-
-            g.AddHtmlObject(160, 70, 200, 40, Title, BaseQuestGump.DarkGreen, false, false);
-            g.AddHtmlLocalized(98, 140, 312, 16, 1049073, 0x2710, false, false); // Objective:
-
-            g.AddHtmlLocalized(98, 156, 312, 16, 1072208, 0x2710, false, false); // All of the following	
-
-            int offset = 172;
-            string str;
-
-            foreach (QuestionAndAnswerObjective obj in Objectives.OfType<QuestionAndAnswerObjective>())
-            {
-                if (offer)
-                    str = string.Format("Answer {0} questions correctly.", obj.MaxProgress);
-                else
-                    str = string.Format("Answer {0}/{1} questions answered correctly.", obj.CurProgress, obj.MaxProgress);
-
-                g.AddHtmlObject(98, offset, 312, 16, str, BaseQuestGump.LightGreen, false, false);
-
-                offset += 16;
-            }
-
-            return true;
-        }
-
         public override void OnAccept()
         {
             base.OnAccept();
@@ -150,7 +117,8 @@ namespace Server.Engines.Quests
     {
         public CommunityServiceMuseumQuest()
         {
-            AddObjective(new CollectionsObtainObjective(typeof(ShepherdsCrookOfHumility), "Shepherd's Crook of Humility", 1));
+            AddObjective(new CollectionsObtainObjective(typeof(ShepherdsCrookOfHumility), "Shepherd's Crook of Humility (Replica)", 1));
+            AddReward(new BaseReward(1075852)); // A better understanding of Britannia's people
         }
 
         public override QuestChain ChainID => QuestChain.CloakOfHumility;
@@ -173,6 +141,9 @@ namespace Server.Engines.Quests
         /*Terrific! The Museum is a worthy cause. Many will benefit from the inspiration and learning that thine donation hath supported.*/
         public override object Complete => 1075721;
 
+        // Well done! Thou hast completed this step of the quest. Please return and speak with Gareth.
+        public override int CompleteMessage { get { return 1075790; } }
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -190,7 +161,8 @@ namespace Server.Engines.Quests
     {
         public CommunityServiceZooQuest()
         {
-            AddObjective(new CollectionsObtainObjective(typeof(ForTheLifeOfBritanniaSash), "Life of Britannia Sash", 1));
+            AddObjective(new CollectionsObtainObjective(typeof(ForTheLifeOfBritanniaSash), "For the Life of Britannia Sash", 1));
+            AddReward(new BaseReward(1075853)); // A better understanding of Britannia's wildlife
         }
 
         public override QuestChain ChainID => QuestChain.CloakOfHumility;
@@ -213,6 +185,9 @@ namespace Server.Engines.Quests
         /*Wonderful! The Zoo is a very special place from which people young and old canst benefit. Thanks to thee, it can continue to thrive.*/
         public override object Complete => 1075727;
 
+        // Well done! Thou hast completed this step of the quest. Please return and speak with Gareth.
+        public override int CompleteMessage { get { return 1075790; } }
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -230,7 +205,8 @@ namespace Server.Engines.Quests
     {
         public CommunityServiceLibraryQuest()
         {
-            AddObjective(new CollectionsObtainObjective(typeof(SpecialPrintingOfVirtue), "Special Printing of 'Virtue' Book", 1));
+            AddObjective(new CollectionsObtainObjective(typeof(SpecialPrintingOfVirtue), "Special Printing of 'Virtue' by Lord British", 1));
+            AddReward(new BaseReward(1075854)); // A better understanding of Britannia's history
         }
 
         public override QuestChain ChainID => QuestChain.CloakOfHumility;
@@ -253,6 +229,9 @@ namespace Server.Engines.Quests
         /*Very good! The library is of great import to the people of Britannia. Thou hath done a worthy deed and this is thy last 
          * required donation. I encourage thee to continue contributing to thine community, beyond the obligations of this endeavor.*/
         public override object Complete => 1075733;
+
+        // Well done! Thou hast completed this step of the quest. Please return and speak with Gareth.
+        public override int CompleteMessage { get { return 1075790; } }
 
         public override void Serialize(GenericWriter writer)
         {
@@ -280,7 +259,7 @@ namespace Server.Engines.Quests
         public WhosMostHumbleQuest()
         {
             AddObjective(new ObtainObjective(typeof(IronChain), "Iron Chain", 1));
-            AddReward(new BaseReward(typeof(GoldShield), "A Gold Shield"));
+            AddReward(new BaseReward(1075855)); // A chance to better know thyself
         }
 
         public override QuestChain ChainID => QuestChain.CloakOfHumility;
@@ -306,12 +285,13 @@ namespace Server.Engines.Quests
          * shield, a symbol of accomplishment and pride for the many things that thou hast done for our people.<BR><BR><br>Dost thou accept?*/
         public override object Complete => 1075782;
 
+        // Well done! Thou hast completed this step of the quest. Please return and speak with Gareth.
+        public override int CompleteMessage { get { return 1075790; } }
+
         public override void OnAccept()
         {
             base.OnAccept();
-
-            Owner.SendGump(new QuestInfoGump(1075736)); // Excellent. When thou hast satisfied the needs of the most humble, thou wilt be given an item meant for me. Take this <B>brass ring</B> to start ye on the way.
-
+            
             Item cloak = new GreyCloak();
             Item ring = new BrassRing();
 

@@ -246,10 +246,10 @@ namespace Server.Engines.Quests.RitualQuest
             }
         }
 
-        private static readonly int[] m_Contents = new int[42];
+        private static readonly int[] m_Contents = new int[43];
 
         public override object Title => 1151164;  // Chronicle of the Gargoyle Queen Vol. II
-        public override object Author => "Queen Zhah";
+        public override object Author => 1151074; // Queen Zhah
         public override int[] Contents => m_Contents;
 
         [Constructable]
@@ -280,16 +280,16 @@ namespace Server.Engines.Quests.RitualQuest
     {
         public static void Initialize()
         {
-            for (int i = 0; i < 23; i++)
+            for (int i = 0; i < 55; i++)
             {
                 m_Contents[i] = 1151018 + i;
             }
         }
 
-        private static readonly int[] m_Contents = new int[23];
+        private static readonly int[] m_Contents = new int[56];
 
         public override object Title => 1151165;  // Chronicle of the Gargoyle Queen Vol. III
-        public override object Author => "Queen Zhah";
+        public override object Author => 1151074; // Queen Zhah
         public override int[] Contents => m_Contents;
 
         [Constructable]

@@ -68,13 +68,7 @@ namespace Server.Mobiles
         public override void GenerateLoot()
         {
             AddLoot(LootPack.FilthyRich, 3);
-        }
-
-        public override void OnDeath(Container c)
-        {
-            base.OnDeath(c);
-
-            c.AddItem(new NightTerrorHeart());
+            AddLoot(LootPack.LootItem<NightTerrorHeart>());
         }
 
         public override void Serialize(GenericWriter writer)

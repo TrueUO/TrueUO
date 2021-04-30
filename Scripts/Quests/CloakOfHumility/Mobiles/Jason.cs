@@ -41,6 +41,7 @@ namespace Server.Mobiles
             Race = Race.Human;
             Body = 0x190;
 
+            SpeechHue = 60;
             Hue = Race.RandomSkinHue();
             HairItemID = Race.RandomHair(false);
             HairHue = Race.RandomHairHue();

@@ -87,7 +87,7 @@ namespace Server.Engines.Quests
             next.Home = next.Location;
             next.RangeHome = 5;
 
-            next = new Dierdre();
+            next = new Deirdre();
             next.MoveToWorld(new Point3D(1442, 1600, 20), Map.Felucca);
             next.Home = next.Location;
             next.RangeHome = 40;

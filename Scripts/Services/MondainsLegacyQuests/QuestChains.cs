@@ -46,7 +46,7 @@ namespace Server.Engines.Quests
 
         static BaseChain()
         {
-            Chains = new Type[30][];
+            Chains = new Type[31][];
 
             Chains[(int)QuestChain.None] = new Type[] { };
 

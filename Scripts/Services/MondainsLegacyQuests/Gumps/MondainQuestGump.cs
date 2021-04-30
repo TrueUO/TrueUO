@@ -114,6 +114,9 @@ namespace Server.Engines.Quests
                     case Section.Failed:
                         SecQuestionFailed();
                         break;
+                    case Section.Complete:
+                        SecQuestionComplete();
+                        break;
                 }
             }
             else
@@ -273,6 +276,34 @@ namespace Server.Engines.Quests
             AddHtmlObject(98, 156, 312, 180, fail, 0x15F90, false, true);
 
             AddButton(95, 395, 0x2EE6, 0x2EE8, (int)Buttons.Close, GumpButtonType.Reply, 0);
+            AddHtmlLocalized(0, 0, 0, 0, 1060675, false, false); // CLOSE
+        }
+
+        public virtual void SecQuestionComplete()
+        {
+            if (m_Quest == null)
+                return;
+
+            if (m_Quest.Complete == null)
+            {
+                if (QuestHelper.TryDeleteItems(m_Quest))
+                {
+                    if (QuestHelper.AnyRewards(m_Quest))
+                    {
+                        m_Section = Section.Rewards;
+                        SecRewards();
+                    }
+                    else
+                        m_Quest.GiveRewards();
+                }
+
+                return;
+            }
+
+            AddHtmlLocalized(130, 45, 270, 16, 1049010, 0x7FFF, false, false); // Quest Offer
+            AddHtmlObject(98, 156, 312, 180, m_Quest.Complete, 0x15F90, false, true);
+
+            AddButton(95, 395, 0x2EE6, 0x2EE8, (int)Buttons.Complete, GumpButtonType.Reply, 0);
             AddHtmlLocalized(0, 0, 0, 0, 1060675, false, false); // CLOSE
         }
 
