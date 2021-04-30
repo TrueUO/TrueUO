@@ -24,8 +24,8 @@ namespace Server.Engines.JollyRoger
 
     public class SherryStrongBox : Container
     {
-        private static List<BoxArray> Permission = new List<BoxArray>();
-        private static string FilePath = Path.Combine("Saves/Misc", "SherryStrongBox.bin");
+        private static readonly List<BoxArray> Permission = new List<BoxArray>();
+        private static readonly string FilePath = Path.Combine("Saves/Misc", "SherryStrongBox.bin");
 
         [Constructable]
         public SherryStrongBox()
@@ -39,7 +39,20 @@ namespace Server.Engines.JollyRoger
 
         public static void AddPermission(Mobile from)
         {
-            if (!Permission.Any(x => x.Mobile == from))
+            bool any = false;
+
+            for (var index = 0; index < Permission.Count; index++)
+            {
+                var x = Permission[index];
+
+                if (x.Mobile == from)
+                {
+                    any = true;
+                    break;
+                }
+            }
+
+            if (!any)
             {
                 Permission.Add(new BoxArray(from, false));
             }
@@ -51,16 +64,45 @@ namespace Server.Engines.JollyRoger
             {
                 if (Permission != null)
                 {
-                    var p = Permission.FirstOrDefault(x => x.Mobile == from);
+                    BoxArray p = null;
+
+                    for (var index = 0; index < Permission.Count; index++)
+                    {
+                        var x = Permission[index];
+
+                        if (x.Mobile == from)
+                        {
+                            p = x;
+                            break;
+                        }
+                    }
 
                     if (p != null)
                     {
                         if (!p.Reward)
                         {
                             Item item = new SheetMusicForStones();
+
                             from.AddToBackpack(item);
                             from.SendLocalizedMessage(1152339, "#1159343"); // A reward of ~1_ITEM~ has been placed in your backpack.
-                            Permission.FirstOrDefault(x => x.Mobile == from).Reward = true;
+
+                            BoxArray first = null;
+
+                            for (var index = 0; index < Permission.Count; index++)
+                            {
+                                var x = Permission[index];
+
+                                if (x.Mobile == from)
+                                {
+                                    first = x;
+                                    break;
+                                }
+                            }
+
+                            if (first != null)
+                            {
+                                first.Reward = true;
+                            }
                         }
                         else
                         {
@@ -69,8 +111,7 @@ namespace Server.Engines.JollyRoger
                     }
                     else
                     {
-                        PrivateOverheadMessage(MessageType.Regular, 0x47E, 500648,
-                            from.NetState); // This chest seems to be locked.
+                        PrivateOverheadMessage(MessageType.Regular, 0x47E, 500648, from.NetState); // This chest seems to be locked.
                     }
                 }
             }
@@ -96,11 +137,13 @@ namespace Server.Engines.JollyRoger
 
                     writer.Write(Permission.Count);
 
-                    Permission.ForEach(s =>
+                    for (var index = 0; index < Permission.Count; index++)
                     {
+                        var s = Permission[index];
+
                         writer.Write(s.Mobile);
                         writer.Write(s.Reward);
-                    });
+                    }
                 });
         }
 
@@ -328,7 +371,13 @@ namespace Server.Engines.JollyRoger
 
             if (LuteList != null)
             {
-                LuteList.ForEach(f => f.Delete());
+                for (var index = 0; index < LuteList.Count; index++)
+                {
+                    var f = LuteList[index];
+
+                    f.Delete();
+                }
+
                 LuteList.Clear();
             }            
 
@@ -400,8 +449,7 @@ namespace Server.Engines.JollyRoger
                 }
                 else
                 {
-                    PrivateOverheadMessage(MessageType.Regular, 0x47E, 1159380,
-                        from.NetState); // * You attempt to understand the spirit but your connection to them is weak... *
+                    PrivateOverheadMessage(MessageType.Regular, 0x47E, 1159380, from.NetState); // * You attempt to understand the spirit but your connection to them is weak... *
                 }
             }
         }
@@ -422,7 +470,12 @@ namespace Server.Engines.JollyRoger
             {
                 writer.Write(LuteList.Count);
 
-                LuteList.ForEach(x => writer.Write(x));
+                for (var index = 0; index < LuteList.Count; index++)
+                {
+                    var x = LuteList[index];
+
+                    writer.Write(x);
+                }
             }
         }
 

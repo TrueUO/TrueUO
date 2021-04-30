@@ -2,7 +2,6 @@ using Server.Engines.Craft;
 using Server.Items;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.BulkOrders
 {
@@ -213,7 +212,17 @@ namespace Server.Engines.BulkOrders
 
         public static bool CannotAssignMaterial(Type t)
         {
-            return _NonMaterials.Any(x => x == t || t.IsSubclassOf(x));
+            for (var index = 0; index < _NonMaterials.Length; index++)
+            {
+                var x = _NonMaterials[index];
+
+                if (x == t || t.IsSubclassOf(x))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private static readonly Type[] _NonMaterials =
@@ -267,14 +276,20 @@ namespace Server.Engines.BulkOrders
 
         public static bool CheckTinkerType(Type actual, Type lookingfor)
         {
-            foreach (Type[] types in _TinkerTypeTable)
+            for (var index = 0; index < _TinkerTypeTable.Length; index++)
             {
-                foreach (Type t in types)
+                Type[] types = _TinkerTypeTable[index];
+
+                for (var i = 0; i < types.Length; i++)
                 {
+                    Type t = types[i];
+
                     if (t == lookingfor) // found the list, lets see if the actual is here
                     {
-                        foreach (Type t2 in types)
+                        for (var index1 = 0; index1 < types.Length; index1++)
                         {
+                            Type t2 = types[index1];
+
                             if (t2 == actual)
                             {
                                 return true;
@@ -282,15 +297,6 @@ namespace Server.Engines.BulkOrders
                         }
                     }
                 }
-
-                /*if (types[0] == lookingfor)
-                {
-                    foreach (Type t in types)
-                    {
-                        if (actual == t)
-                            return true;
-                    }
-                }*/
             }
 
             return false;

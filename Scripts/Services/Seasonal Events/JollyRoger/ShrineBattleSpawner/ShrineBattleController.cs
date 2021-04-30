@@ -245,20 +245,21 @@ namespace Server.Engines.JollyRoger
 
                 for (int s = 0; s < 10; s++)
                 {
-                    BaseCreature bc = Activator.CreateInstance(_SpawnTable[(int)type][Utility.Random(_SpawnTable[(int)type].Length)]) as BaseCreature;
-
-                    bc.Kills = 100;
-
-                    if (bc.FightMode == FightMode.Evil)
+                    if (Activator.CreateInstance(_SpawnTable[(int)type][Utility.Random(_SpawnTable[(int)type].Length)]) is BaseCreature bc)
                     {
-                        bc.FightMode = FightMode.Aggressor;
+                        bc.Kills = 100;
+
+                        if (bc.FightMode == FightMode.Evil)
+                        {
+                            bc.FightMode = FightMode.Aggressor;
+                        }
+
+                        list.Add(bc);
+
+                        Point3D point = points[Utility.Random(points.Count)];
+
+                        SpawnMobile(bc, point);
                     }
-
-                    list.Add(bc);
-
-                    Point3D point = points[Utility.Random(points.Count)];
-
-                    SpawnMobile(bc, point);
                 }
 
                 ShrineMaster capt = new ShrineMaster(type, this)
@@ -409,15 +410,18 @@ namespace Server.Engines.JollyRoger
             writer.Write(FragmentCount);
 
             writer.Write(Spawn == null ? 0 : Spawn.Count);
-            foreach (KeyValuePair<BaseCreature, List<BaseCreature>> kvp in Spawn)
+            if (Spawn != null)
             {
-                writer.Write(kvp.Key);
-                writer.Write(kvp.Value.Count);
-                for (var index = 0; index < kvp.Value.Count; index++)
+                foreach (KeyValuePair<BaseCreature, List<BaseCreature>> kvp in Spawn)
                 {
-                    var bc = kvp.Value[index];
+                    writer.Write(kvp.Key);
+                    writer.Write(kvp.Value.Count);
+                    for (var index = 0; index < kvp.Value.Count; index++)
+                    {
+                        var bc = kvp.Value[index];
 
-                    writer.Write(bc);
+                        writer.Write(bc);
+                    }
                 }
             }
 
