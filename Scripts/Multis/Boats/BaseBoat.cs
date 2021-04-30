@@ -308,16 +308,19 @@ namespace Server.Multis
                 {
                     if (this is BaseGalleon)
                     {
-                        BaseGalleon galleon = this as BaseGalleon;
-
-                        galleon.InvalidateGalleon();
-
-                        if (galleon.GalleonPilot != null)
+                        if (this is BaseGalleon galleon)
                         {
-                            galleon.GalleonPilot.InvalidateProperties();
+                            galleon.InvalidateGalleon();
 
-                            if (m_DamageTaken == DamageLevel.Severely)
-                                galleon.GalleonPilot.Say(1116687); // Arr, we be scuttled!
+                            if (galleon.GalleonPilot != null)
+                            {
+                                galleon.GalleonPilot.InvalidateProperties();
+
+                                if (m_DamageTaken == DamageLevel.Severely)
+                                {
+                                    galleon.GalleonPilot.Say(1116687); // Arr, we be scuttled!
+                                }
+                            }
                         }
                     }
                     else
@@ -325,12 +328,18 @@ namespace Server.Multis
                         if (TillerMan != null)
                         {
                             if (TillerMan is Mobile mobile)
+                            {
                                 mobile.InvalidateProperties();
+                            }
                             else if (TillerMan is Item item)
+                            {
                                 item.InvalidateProperties();
+                            }
 
                             if (m_DamageTaken == DamageLevel.Severely)
+                            {
                                 TillerManSay(1116687); // Arr, we be scuttled!
+                            }
                         }
                     }
                 }
