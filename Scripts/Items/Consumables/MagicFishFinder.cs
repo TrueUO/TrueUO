@@ -92,7 +92,18 @@ namespace Server.Items
         {
             if (Schools.ContainsKey(m.Map))
             {
-                SchoolEntry entry = Schools[m.Map].FirstOrDefault(e => m.InRange(e.Location, SchoolRange));
+                SchoolEntry entry = null;
+
+                for (var index = 0; index < Schools[m.Map].Count; index++)
+                {
+                    var e = Schools[m.Map][index];
+
+                    if (m.InRange(e.Location, SchoolRange))
+                    {
+                        entry = e;
+                        break;
+                    }
+                }
 
                 if (entry != null)
                 {

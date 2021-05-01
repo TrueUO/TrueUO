@@ -2,7 +2,6 @@ using Server.Mobiles;
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -120,9 +119,11 @@ namespace Server.Items
         {
             if (m is PlayerMobile pm)
             {
-                foreach (BaseCreature pet in pm.AllFollowers.OfType<BaseCreature>())
+                for (var index = 0; index < pm.AllFollowers.Count; index++)
                 {
-                    if (UnderInfluence(pet))
+                    Mobile follower = pm.AllFollowers[index];
+
+                    if (follower is BaseCreature pet && UnderInfluence(pet))
                     {
                         return pet;
                     }
@@ -173,9 +174,7 @@ namespace Server.Items
 
         public static void OnLogin(LoginEventArgs e)
         {
-            PlayerMobile pm = e.Mobile as PlayerMobile;
-
-            if (pm != null)
+            if (e.Mobile is PlayerMobile pm)
             {
                 Timer.DelayCall(() => Caddellite.UpdateBuff(pm));
             }
