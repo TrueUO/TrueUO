@@ -71,19 +71,16 @@ namespace Server.Mobiles
 
                 Mobile m = x.m_Mobile;
 
-                if (set.Add(m))
+                if (set.Add(m) && m is PlayerMobile pm && pm.ExploringTheDeepQuest == ExploringTheDeepQuestChain.CollectTheComponent)
                 {
-                    if (m is PlayerMobile pm && pm.ExploringTheDeepQuest == ExploringTheDeepQuestChain.CollectTheComponent)
+                    Item item = new AquaGem();
+
+                    if (pm.Backpack == null || !pm.Backpack.TryDropItem(pm, item, false))
                     {
-                        Item item = new AquaGem();
-
-                        if (pm.Backpack == null || !pm.Backpack.TryDropItem(pm, item, false))
-                        {
-                            pm.BankBox.DropItem(item);
-                        }
-
-                        pm.SendLocalizedMessage(1154489); // You received a Quest Item!
+                        pm.BankBox.DropItem(item);
                     }
+
+                    pm.SendLocalizedMessage(1154489); // You received a Quest Item!
                 }
             }
 
