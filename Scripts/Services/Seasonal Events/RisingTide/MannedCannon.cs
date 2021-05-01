@@ -176,9 +176,9 @@ namespace Server.Items
                             for (int i = -lateralOffset; i <= lateralOffset; i++)
                             {
                                 if (xOffset == 0)
-                                    newPoint = new Point3D(pnt.X + (xOffset + i), pnt.Y + (yOffset * currentRange), pnt.Z);
+                                    newPoint = new Point3D(pnt.X + xOffset + i, pnt.Y + yOffset * currentRange, pnt.Z);
                                 else
-                                    newPoint = new Point3D(pnt.X + (xOffset * currentRange), pnt.Y + (yOffset + i), pnt.Z);
+                                    newPoint = new Point3D(pnt.X + xOffset * currentRange, pnt.Y + yOffset + i, pnt.Z);
 
                                 BaseGalleon g = FindValidBoatTarget(newPoint, map, ammo);
 
@@ -204,9 +204,9 @@ namespace Server.Items
                             for (int i = -lateralOffset; i <= lateralOffset; i++)
                             {
                                 if (xOffset == 0)
-                                    newPoint = new Point3D(pnt.X + (xOffset + i), pnt.Y + (yOffset * currentRange), pnt.Z);
+                                    newPoint = new Point3D(pnt.X + xOffset + i, pnt.Y + yOffset * currentRange, pnt.Z);
                                 else
-                                    newPoint = new Point3D(pnt.X + (xOffset * currentRange), pnt.Y + (yOffset + i), pnt.Z);
+                                    newPoint = new Point3D(pnt.X + xOffset * currentRange, pnt.Y + yOffset + i, pnt.Z);
 
                                 foreach (Mobile m in GetTargets(newPoint, map))
                                 {
@@ -389,18 +389,15 @@ namespace Server.Items
 
                         foreach (Mobile mobile in target.MobilesOnBoard)
                         {
-                            if (mobile is PlayerMobile mob)
+                            if (mobile is PlayerMobile mob && Operator.CanBeHarmful(mob, false))
                             {
-                                if (Operator.CanBeHarmful(mob, false))
+                                if (target is BaseGalleon galleon && galleon.GetSecurityLevel(mob) > highest)
                                 {
-                                    if (target is BaseGalleon galleon && galleon.GetSecurityLevel(mob) > highest)
-                                    {
-                                        candidates.Insert(0, mob);
-                                    }
-                                    else
-                                    {
-                                        candidates.Add(mob);
-                                    }
+                                    candidates.Insert(0, mob);
+                                }
+                                else
+                                {
+                                    candidates.Add(mob);
                                 }
                             }
                         }

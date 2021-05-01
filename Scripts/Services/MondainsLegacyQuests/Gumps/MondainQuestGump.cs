@@ -636,11 +636,10 @@ namespace Server.Engines.Quests
                     }
                     break;
                 case (int)Buttons.ResignQuest: // resign quest
-                    if (!m_Offer)
-                        if (m_From != null)
-                        {
-                            m_From.SendGump(new MondainResignGump(m_Quest));
-                        }
+                    if (!m_Offer && m_From != null)
+                    {
+                        m_From.SendGump(new MondainResignGump(m_Quest));
+                    }
                     break;
                 case (int)Buttons.AcceptReward: // accept reward
                     if (!m_Offer && m_Section == Section.Rewards && m_Completed)
