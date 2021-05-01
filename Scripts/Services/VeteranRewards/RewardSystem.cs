@@ -315,31 +315,42 @@ namespace Server.Engines.VeteranRewards
         public static int GetRewardYear(Item item, object[] args)
         {
             if (m_Lists == null)
+            {
                 SetupRewardTables();
+            }
 
             Type type = item.GetType();
 
-            for (int i = 0; i < m_Lists.Length; ++i)
+            if (m_Lists != null)
             {
-                RewardList list = m_Lists[i];
-                RewardEntry[] entries = list.Entries;
-
-                for (int j = 0; j < entries.Length; ++j)
+                for (int i = 0; i < m_Lists.Length; ++i)
                 {
-                    if (entries[j].ItemType == type)
+                    RewardList list = m_Lists[i];
+                    RewardEntry[] entries = list.Entries;
+
+                    for (int j = 0; j < entries.Length; ++j)
                     {
-                        if (args == null && entries[j].Args.Length == 0)
-                            return i + 1;
-
-                        if (args.Length == entries[j].Args.Length)
+                        if (entries[j].ItemType == type)
                         {
-                            bool match = true;
-
-                            for (int k = 0; match && k < args.Length; ++k)
-                                match = (args[k].Equals(entries[j].Args[k]));
-
-                            if (match)
+                            if (args == null && entries[j].Args.Length == 0)
+                            {
                                 return i + 1;
+                            }
+
+                            if (args != null && args.Length == entries[j].Args.Length)
+                            {
+                                bool match = true;
+
+                                for (int k = 0; match && k < args.Length; ++k)
+                                {
+                                    match = args[k].Equals(entries[j].Args[k]);
+                                }
+
+                                if (match)
+                                {
+                                    return i + 1;
+                                }
+                            }
                         }
                     }
                 }

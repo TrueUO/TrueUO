@@ -1669,7 +1669,9 @@ namespace Server
         public void CheckCancelMorph(Mobile m)
         {
             if (m == null)
+            {
                 return;
+            }
 
             double minSkill, maxSkill;
 
@@ -1678,7 +1680,8 @@ namespace Server
 
             if (context != null)
             {
-                Spell spell = context.Spell as Spell;
+                Spell spell = (Spell) context.Spell;
+
                 spell.GetCastSkills(out minSkill, out maxSkill);
 
                 if (m.Skills[spell.CastSkill].Value < minSkill)

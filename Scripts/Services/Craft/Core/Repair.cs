@@ -81,7 +81,7 @@ namespace Server.Engines.Craft
                 }
 
                 // 40% - (1% per hp lost) - (1% per 10 craft skill)
-                return (40 + (maxHits - curHits)) - (int)(value / 10);
+                return 40 + (maxHits - curHits) - (int)(value / 10);
             }
 
             private bool CheckWeaken(Mobile mob, SkillName skill, int curHits, int maxHits)
@@ -91,7 +91,7 @@ namespace Server.Engines.Craft
 
             private int GetRepairDifficulty(int curHits, int maxHits)
             {
-                return (((maxHits - curHits) * 1250) / Math.Max(maxHits, 1)) - 250;
+                return (maxHits - curHits) * 1250 / Math.Max(maxHits, 1) - 250;
             }
 
             private bool CheckRepairDifficulty(Mobile mob, SkillName skill, int curHits, int maxHits)
@@ -543,8 +543,10 @@ namespace Server.Engines.Craft
                     {
                         from.SendLocalizedMessage(number);
 
-                        if (toDelete)
+                        if (toDelete && m_Deed != null)
+                        {
                             m_Deed.Delete();
+                        }
                     }
                 }
             }
@@ -648,7 +650,7 @@ namespace Server.Engines.Craft
                                     from.SendLocalizedMessage(1157030, name); // You repair ~1_CREATURE~, but it barely helps.
 
                                 toDelete = true;
-                                double delay = 10 - (skillValue / 16.65);
+                                double delay = 10 - skillValue / 16.65;
 
                                 from.BeginAction(typeof(IRepairableMobile));
                                 Timer.DelayCall(TimeSpan.FromSeconds(delay), new TimerStateCallback(EndMobileRepair), from);

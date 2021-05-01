@@ -621,7 +621,9 @@ namespace Server
                 FinishCall();
 
                 if (sign == -1)
+                {
                     Neg();
+                }
             }
 
             return true;
@@ -642,7 +644,7 @@ namespace Server
 
             m_Calls.Push(new CallInfo(type, method));
 
-            if (type.IsValueType)
+            if (!(type is null) && type.IsValueType)
             {
                 LocalBuilder temp = AcquireTemp(type);
 

@@ -917,7 +917,9 @@ namespace Server.Items
         public void DoLoad(Mobile from, Item ammo)
         {
             Timer.DelayCall(ActionTime, new TimerStateCallback(Load), new object[] { from, ammo });
+
             int cliloc = ammo is ICannonAmmo cannonAmmo && cannonAmmo.AmmoType == AmmunitionType.Cannonball ? 1116036 : 1116037;
+
             AddAction(from, 1149647); //loading started.
             DoAreaMessage(cliloc, 10, from);
         }
@@ -940,7 +942,9 @@ namespace Server.Items
             }
 
             if (from.HasGump(typeof(CannonGump)))
+            {
                 ResendGump(from);
+            }
 
             InvalidateProperties();
         }
@@ -948,7 +952,8 @@ namespace Server.Items
         public void Charge(object state)
         {
             object[] obj = (object[])state;
-            Mobile from = obj[0] as Mobile;
+
+            Mobile from = (Mobile) obj[0];
             Type type = obj[1] as Type;
 
             if (from.InRange(Location, 3))
@@ -958,7 +963,9 @@ namespace Server.Items
                 DoAreaMessage(1116061, 10, from); //~1_NAME~ finishes charging the cannon.
 
                 if (type != null && from.Backpack != null)
+                {
                     from.Backpack.ConsumeTotal(type, 1);
+                }
             }
             else
             {
@@ -967,7 +974,9 @@ namespace Server.Items
             }
 
             if (from.HasGump(typeof(CannonGump)))
+            {
                 ResendGump(from);
+            }
 
             InvalidateProperties();
         }
@@ -975,7 +984,8 @@ namespace Server.Items
         public void Prime(object state)
         {
             object[] obj = (object[])state;
-            Mobile from = obj[0] as Mobile;
+
+            Mobile from = (Mobile) obj[0];
             Type type = obj[1] as Type;
 
             if (from.InRange(Location, 3))
@@ -985,7 +995,9 @@ namespace Server.Items
                 DoAreaMessage(1116064, 10, from); //~1_NAME~ finishes priming the cannon. It is ready to be fired!
 
                 if (type != null && from.Backpack != null)
+                {
                     from.Backpack.ConsumeTotal(type, 1);
+                }
             }
             else
             {
@@ -994,7 +1006,9 @@ namespace Server.Items
             }
 
             if (from.HasGump(typeof(CannonGump)))
+            {
                 ResendGump(from);
+            }
 
             InvalidateProperties();
         }
@@ -1002,8 +1016,10 @@ namespace Server.Items
         public void Load(object state)
         {
             object[] obj = (object[])state;
-            Mobile from = obj[0] as Mobile;
+
+            Mobile from = (Mobile) obj[0];
             Item ammo = obj[1] as Item;
+
             int cliloc = 1116062;
 
             if (ammo is ICannonAmmo cannonAmmo && cannonAmmo.AmmoType == AmmunitionType.Grapeshot)
@@ -1033,7 +1049,9 @@ namespace Server.Items
             }
 
             if (from.HasGump(typeof(CannonGump)))
+            {
                 ResendGump(from);
+            }
 
             InvalidateProperties();
         }
@@ -1041,7 +1059,9 @@ namespace Server.Items
         public void RemoveCharge(Mobile from)
         {
             if (from == null || !m_Charged)
+            {
                 return;
+            }
 
             Type type = this is LightShipCannon ? typeof(LightPowderCharge) : typeof(HeavyPowderCharge);
 
@@ -1050,8 +1070,11 @@ namespace Server.Items
             if (item != null)
             {
                 Container pack = from.Backpack;
+
                 if (pack != null || !pack.TryDropItem(from, item, false))
+                {
                     item.MoveToWorld(from.Location, from.Map);
+                }
             }
 
             m_Charged = false;
@@ -1059,7 +1082,9 @@ namespace Server.Items
             DoAreaMessage(1116065, 10, from); //~1_NAME~ carefully removes the powder charge from the cannon.
 
             if (from.HasGump(typeof(CannonGump)))
+            {
                 ResendGump(from);
+            }
 
             InvalidateProperties();
         }
@@ -1121,8 +1146,11 @@ namespace Server.Items
             if (item != null)
             {
                 Container pack = from.Backpack;
+
                 if (pack != null || !pack.TryDropItem(from, item, false))
+                {
                     item.MoveToWorld(from.Location, from.Map);
+                }
             }
 
             m_Primed = false;
