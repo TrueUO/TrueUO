@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -94,7 +93,15 @@ namespace Server.Items
 
         public static AmmoInfo GetAmmoInfo(AmmunitionType ammoType)
         {
-            return Infos.Values.FirstOrDefault(i => i.AmmoType == ammoType);
+            foreach (var i in Infos.Values)
+            {
+                if (i.AmmoType == ammoType)
+                {
+                    return i;
+                }
+            }
+
+            return null;
         }
 
         public static void GetSurfaceTop(ref Point3D p, Map map)
@@ -102,8 +109,10 @@ namespace Server.Items
             StaticTile[] tiles = map.Tiles.GetStaticTiles(p.X, p.Y, true);
             int z = p.Z;
 
-            foreach (StaticTile tile in tiles)
+            for (var index = 0; index < tiles.Length; index++)
             {
+                StaticTile tile = tiles[index];
+
                 ItemData id = TileData.ItemTable[tile.ID & TileData.MaxItemValue];
 
                 if (id.Surface && (z == p.Z || tile.Z + id.CalcHeight > z))
@@ -118,7 +127,16 @@ namespace Server.Items
 
         public static TextDefinition GetAmmoName(IShipCannon cannon)
         {
-            AmmoInfo info = Infos.Values.FirstOrDefault(i => i.AmmoType == cannon.AmmoType);
+            AmmoInfo info = null;
+
+            foreach (var i in Infos.Values)
+            {
+                if (i.AmmoType == cannon.AmmoType)
+                {
+                    info = i;
+                    break;
+                }
+            }
 
             if (info == null)
             {

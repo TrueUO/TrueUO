@@ -106,7 +106,25 @@ namespace Server.Engines.JollyRoger
 
         public static int GetShrineHue(Shrine shrine)
         {
-            return ShrineDef.FirstOrDefault(x => x.Shrine == shrine).Hue;
+            ShrineDef shrineDef = null;
+
+            for (var index = 0; index < ShrineDef.Count; index++)
+            {
+                var x = ShrineDef[index];
+
+                if (x.Shrine == shrine)
+                {
+                    shrineDef = x;
+                    break;
+                }
+            }
+
+            if (shrineDef != null)
+            {
+                return shrineDef.Hue;
+            }
+
+            return default;
         }
 
         public static Shrine GetShrine(int cliloc)
@@ -116,17 +134,64 @@ namespace Server.Engines.JollyRoger
 
         public static Shrine GetShrine(Item item)
         {
-            return ShrineDef.FirstOrDefault(x => x.Hue == item.Hue).Shrine;
+            ShrineDef first = null;
+
+            for (var index = 0; index < ShrineDef.Count; index++)
+            {
+                var x = ShrineDef[index];
+
+                if (x.Hue == item.Hue)
+                {
+                    first = x;
+                    break;
+                }
+            }
+
+            if (first != null)
+            {
+                return first.Shrine;
+            }
+
+            return default;
         }
 
         public static int GetTitle(Shrine shrine)
         {
-            return ShrineDef.FirstOrDefault(x => x.Shrine == shrine).TitleCliloc;
+            ShrineDef first = null;
+
+            for (var index = 0; index < ShrineDef.Count; index++)
+            {
+                var x = ShrineDef[index];
+
+                if (x.Shrine == shrine)
+                {
+                    first = x;
+                    break;
+                }
+            }
+
+            if (first != null)
+            {
+                return first.TitleCliloc;
+            }
+
+            return default;
         }
 
         public static void AddMasterKill(Mobile m, Shrine shrine)
         {
-            var list = _List.FirstOrDefault(x => x.Mobile == m);
+            RewardArray list = null;
+
+            for (var index = 0; index < _List.Count; index++)
+            {
+                var x = _List[index];
+
+                if (x.Mobile == m)
+                {
+                    list = x;
+                    break;
+                }
+            }
 
             if (list != null && list.Shrine != null)
             {
@@ -159,7 +224,18 @@ namespace Server.Engines.JollyRoger
                 return;
             }
 
-            var list = _List.FirstOrDefault(x => x.Mobile == m);
+            RewardArray list = null;
+
+            for (var index = 0; index < _List.Count; index++)
+            {
+                var x = _List[index];
+
+                if (x.Mobile == m)
+                {
+                    list = x;
+                    break;
+                }
+            }
 
             if (list != null && list.Shrine != null)
             {
@@ -189,17 +265,57 @@ namespace Server.Engines.JollyRoger
 
         public static void TitleCheck(Mobile m, Shrine shrine)
         {
-            var list = _List.FirstOrDefault(x => x.Mobile == m);
+            RewardArray list = null;
+
+            for (var index = 0; index < _List.Count; index++)
+            {
+                var x = _List[index];
+
+                if (x.Mobile == m)
+                {
+                    list = x;
+                    break;
+                }
+            }
 
             if (m is PlayerMobile pm && list != null && list.Shrine != null)
             {
-                var count = list.Shrine.FirstOrDefault(x => x.Shrine == shrine).FragmentCount;
-                var playerTitle = GetShrineTitle(pm);
-                var shrineTitle = GetTitle(shrine);
+                ShrineArray first = null;
 
-                if (playerTitle == 0 || playerTitle != shrineTitle && list.Shrine.Any(x => x.FragmentCount < count && x.Shrine != shrine))
+                for (var index = 0; index < list.Shrine.Count; index++)
                 {
-                    SetShrineTitle(pm, shrineTitle);
+                    var x = list.Shrine[index];
+
+                    if (x.Shrine == shrine)
+                    {
+                        first = x;
+                        break;
+                    }
+                }
+
+                if (first != null)
+                {
+                    var count = first.FragmentCount;
+                    var playerTitle = GetShrineTitle(pm);
+                    var shrineTitle = GetTitle(shrine);
+
+                    bool hasTitle = false;
+
+                    for (var index = 0; index < list.Shrine.Count; index++)
+                    {
+                        var x = list.Shrine[index];
+
+                        if (x.FragmentCount < count && x.Shrine != shrine)
+                        {
+                            hasTitle = true;
+                            break;
+                        }
+                    }
+
+                    if (playerTitle == 0 || playerTitle != shrineTitle && hasTitle)
+                    {
+                        SetShrineTitle(pm, shrineTitle);
+                    }
                 }
             }
         }
@@ -211,21 +327,25 @@ namespace Server.Engines.JollyRoger
 
             writer.Write(_List.Count);
 
-            _List.ForEach(l =>
+            for (var index = 0; index < _List.Count; index++)
             {
+                var l = _List[index];
+
                 writer.Write(l.Mobile);
                 writer.Write(l.Tabard);
                 writer.Write(l.Cloak);
 
                 writer.Write(l.Shrine.Count);
 
-                l.Shrine.ForEach(s =>
+                for (var i = 0; i < l.Shrine.Count; i++)
                 {
-                    writer.Write((int)s.Shrine);
+                    var s = l.Shrine[i];
+
+                    writer.Write((int) s.Shrine);
                     writer.Write(s.FragmentCount);
                     writer.Write(s.MasterDeath);
-                });
-            });
+                }
+            }
 
             writer.Write(ShrineTitles.Count);
 

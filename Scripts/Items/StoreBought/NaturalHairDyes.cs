@@ -1,6 +1,5 @@
 using Server.Gumps;
 using Server.Mobiles;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -42,10 +41,7 @@ namespace Server.Items
 
         protected TextDefinition Label
         {
-            get
-            {
-                return m_Label;
-            }
+            get => m_Label;
             set
             {
                 m_Label = value;
@@ -56,15 +52,23 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public HairDyeType Type
         {
-            get
-            {
-                return m_Type;
-            }
+            get => m_Type;
             set
             {
                 m_Type = value;
 
-                HairDyeInfo info = m_Table.FirstOrDefault(x => x.Type == m_Type);
+                HairDyeInfo info = null;
+
+                for (var index = 0; index < m_Table.Length; index++)
+                {
+                    var x = m_Table[index];
+
+                    if (x.Type == m_Type)
+                    {
+                        info = x;
+                        break;
+                    }
+                }
 
                 if (info != null)
                 {
@@ -104,7 +108,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0);
 
             writer.WriteEncodedInt((int)m_Type);
@@ -113,8 +116,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             Type = (HairDyeType)reader.ReadEncodedInt();
         }
@@ -141,9 +143,9 @@ namespace Server.Items
 
         public class HairDyeInfo
         {
-            public HairDyeType Type { get; private set; }
-            public int Hue { get; private set; }
-            public int Localization { get; private set; }
+            public HairDyeType Type { get; }
+            public int Hue { get; }
+            public int Localization { get; }
 
             public HairDyeInfo(HairDyeType type, int hue, int loc)
             {
@@ -156,8 +158,8 @@ namespace Server.Items
 
     public class HairDyeConfirmGump : BaseGump
     {
-        public int Hue { get; private set; }
-        public Item Dye { get; private set; }
+        private int Hue { get; }
+        private Item Dye { get; }
 
         public HairDyeConfirmGump(PlayerMobile pm, int hue, Item dye)
             : base(pm, 200, 200)
