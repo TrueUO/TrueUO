@@ -5,7 +5,6 @@ using Server.Mobiles;
 using Server.Prompts;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Gumps
 {
@@ -345,9 +344,9 @@ namespace Server.Gumps
                 {
                     if (item.Points <= points)
                     {
-                        if (item is CollectionHuedItem)
+                        if (item is CollectionHuedItem huedItem)
                         {
-                            m_Owner.SendGump(new CommunityCollectionGump(m_Owner, m_Collection, m_Location, Section.Hues, (CollectionHuedItem)item));
+                            m_Owner.SendGump(new CommunityCollectionGump(m_Owner, m_Collection, m_Location, Section.Hues, huedItem));
                         }
                         else
                         {
@@ -371,6 +370,7 @@ namespace Server.Gumps
             private readonly IComunityCollection m_Collection;
             private readonly CollectionItem m_Selected;
             private readonly Point3D m_Location;
+
             public InternalPrompt(IComunityCollection collection, CollectionItem selected, Point3D location)
             {
                 m_Collection = collection;
@@ -415,13 +415,20 @@ namespace Server.Gumps
                     int goldcount = 0;
                     int accountcount = acct == null ? 0 : acct.TotalGold;
                     int amountRemaining = amount;
-                    foreach (Item item in items)
+
+                    for (var index = 0; index < items.Length; index++)
+                    {
+                        Item item = items[index];
+
                         goldcount += item.Amount;
+                    }
 
                     if (goldcount >= amountRemaining)
                     {
-                        foreach (Item item in items)
+                        for (var index = 0; index < items.Length; index++)
                         {
+                            Item item = items[index];
+
                             if (item.Amount <= amountRemaining)
                             {
                                 item.Delete();
@@ -439,8 +446,10 @@ namespace Server.Gumps
                     }
                     else if (goldcount + accountcount >= amountRemaining)
                     {
-                        foreach (Item item in items)
+                        for (var index = 0; index < items.Length; index++)
                         {
+                            Item item = items[index];
+
                             amountRemaining -= item.Amount;
                             item.Delete();
                         }
@@ -488,7 +497,8 @@ namespace Server.Gumps
                             from.SendGump(new CommunityCollectionGump((PlayerMobile)from, m_Collection, m_Location));
                             return;
                         }
-                        else if (amount * m_Selected.Points < 1)
+
+                        if (amount * m_Selected.Points < 1)
                         {
                             from.SendLocalizedMessage(m_Selected.Type == typeof(Gold) ? 1073182 : 1073167); // You do not have enough of that item to make a donation!
                             from.SendGump(new CommunityCollectionGump((PlayerMobile)from, m_Collection, m_Location));
@@ -551,14 +561,20 @@ namespace Server.Gumps
         {
             if (pm.Quests != null)
             {
-                foreach (BaseQuest q in pm.Quests)
+                for (var index = 0; index < pm.Quests.Count; index++)
                 {
+                    BaseQuest q = pm.Quests[index];
+
                     if (!q.Completed)
                     {
-                        foreach (BaseObjective obj in q.Objectives)
+                        for (var i = 0; i < q.Objectives.Count; i++)
                         {
-                            if (obj is CollectionsObtainObjective && item.Type == ((CollectionsObtainObjective)obj).Obtain)
+                            BaseObjective obj = q.Objectives[i];
+
+                            if (obj is CollectionsObtainObjective && item.Type == ((CollectionsObtainObjective) obj).Obtain)
+                            {
                                 return false;
+                            }
                         }
                     }
                 }
@@ -580,45 +596,68 @@ namespace Server.Gumps
             {
                 return true;
             }
-            else if (!checkDerives)
+
+            if (!checkDerives)
             {
                 return false;
             }
-            else
+
+            bool lobsters = false;
+            for (var index = 0; index < BaseHighseasFish.Lobsters.Length; index++)
             {
-                if (type == typeof(Lobster) && BaseHighseasFish.Lobsters.Any(x => x == t))
+                var x = BaseHighseasFish.Lobsters[index];
+                if (x == t)
                 {
-                    return true;
-                }
-                else if (type == typeof(Crab) && BaseHighseasFish.Crabs.Any(x => x == t))
-                {
-                    return true;
-                }
-                else if (type == typeof(Fish) && t != typeof(BaseCrabAndLobster) && !t.IsSubclassOf(typeof(BaseCrabAndLobster)) && (t.IsSubclassOf(type) || t == typeof(BaseHighseasFish) || t.IsSubclassOf(typeof(BaseHighseasFish))))
-                {
-                    return true;
-                }
-                else
-                {
-                    return t.IsSubclassOf(type);
+                    lobsters = true;
+                    break;
                 }
             }
+            if (type == typeof(Lobster) && lobsters)
+            {
+                return true;
+            }
+
+            bool crabs = false;
+            for (var index = 0; index < BaseHighseasFish.Crabs.Length; index++)
+            {
+                var x = BaseHighseasFish.Crabs[index];
+                if (x == t)
+                {
+                    crabs = true;
+                    break;
+                }
+            }
+
+            if (type == typeof(Crab) && crabs)
+            {
+                return true;
+            }
+
+            if (type == typeof(Fish) && t != typeof(BaseCrabAndLobster) && !t.IsSubclassOf(typeof(BaseCrabAndLobster)) && (t.IsSubclassOf(type) || t == typeof(BaseHighseasFish) || t.IsSubclassOf(typeof(BaseHighseasFish))))
+            {
+                return true;
+            }
+
+            return t.IsSubclassOf(type);
         }
 
         public static int GetTypes(PlayerMobile pm, CollectionItem colItem)
         {
             Type type = colItem.Type;
+
             bool derives = type == typeof(BaseScales) || type == typeof(Fish) || type == typeof(Crab) || type == typeof(Lobster);
 
             int count = 0;
 
-            foreach (Item item in pm.Backpack.Items)
+            for (var index = 0; index < pm.Backpack.Items.Count; index++)
             {
+                Item item = pm.Backpack.Items[index];
+
                 if (CheckType(item, type, derives) && colItem.Validate(pm, GetActual(item)))
                 {
-                    if (item is CommodityDeed)
+                    if (item is CommodityDeed deed)
                     {
-                        count += ((CommodityDeed)item).Commodity.Amount;
+                        count += deed.Commodity.Amount;
                     }
                     else
                     {
@@ -633,12 +672,15 @@ namespace Server.Gumps
         public static List<Item> FindTypes(PlayerMobile pm, CollectionItem colItem)
         {
             Type type = colItem.Type;
+
             bool derives = type == typeof(BaseScales) || type == typeof(Fish) || type == typeof(Crab) || type == typeof(Lobster);
 
             List<Item> list = new List<Item>();
 
-            foreach (Item item in pm.Backpack.Items)
+            for (var index = 0; index < pm.Backpack.Items.Count; index++)
             {
+                Item item = pm.Backpack.Items[index];
+
                 if (CheckType(item, type, derives) && colItem.Validate(pm, GetActual(item)))
                 {
                     list.Add(item);

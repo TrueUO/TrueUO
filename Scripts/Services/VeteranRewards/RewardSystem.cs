@@ -198,19 +198,35 @@ namespace Server.Engines.VeteranRewards
 
             Type type = item.GetType();
 
-            if (m_Lists != null)
+            for (int i = 0; i < m_Lists.Length; ++i)
             {
-                for (int i = 0; i < m_Lists.Length; ++i)
-                {
-                    RewardList list = m_Lists[i];
-                    RewardEntry[] entries = list.Entries;
-                    TimeSpan ts;
+                RewardList list = m_Lists[i];
+                RewardEntry[] entries = list.Entries;
+                TimeSpan ts;
 
-                    for (int j = 0; j < entries.Length; ++j)
+                for (int j = 0; j < entries.Length; ++j)
+                {
+                    if (entries[j].ItemType == type)
                     {
-                        if (entries[j].ItemType == type)
+                        if (args == null && entries[j].Args.Length == 0)
                         {
-                            if (args == null && entries[j].Args.Length == 0)
+                            if (i > 0 && !HasAccess(from, list, out ts))
+                            {
+                                from.SendLocalizedMessage(1008126, true, Math.Ceiling(ts.TotalDays / 30.0).ToString()); // Your account is not old enough to use this item. Months until you can use this item : 
+                                return false;
+                            }
+
+                            return true;
+                        }
+
+                        if (args.Length == entries[j].Args.Length)
+                        {
+                            bool match = true;
+
+                            for (int k = 0; match && k < args.Length; ++k)
+                                match = (args[k].Equals(entries[j].Args[k]));
+
+                            if (match)
                             {
                                 if (i > 0 && !HasAccess(from, list, out ts))
                                 {
@@ -219,27 +235,6 @@ namespace Server.Engines.VeteranRewards
                                 }
 
                                 return true;
-                            }
-
-                            if (args != null && args.Length == entries[j].Args.Length)
-                            {
-                                bool match = true;
-
-                                for (int k = 0; match && k < args.Length; ++k)
-                                {
-                                    match = (args[k].Equals(entries[j].Args[k]));
-                                }
-
-                                if (match)
-                                {
-                                    if (i > 0 && !HasAccess(from, list, out ts))
-                                    {
-                                        from.SendLocalizedMessage(1008126, true, Math.Ceiling(ts.TotalDays / 30.0).ToString()); // Your account is not old enough to use this item. Months until you can use this item : 
-                                        return false;
-                                    }
-
-                                    return true;
-                                }
                             }
                         }
                     }
@@ -252,14 +247,10 @@ namespace Server.Engines.VeteranRewards
 
         private static bool UseableByAnyone(Type type)
         {
-            for (var index = 0; index < _AnyoneTypes.Length; index++)
+            foreach (Type t in _AnyoneTypes)
             {
-                Type t = _AnyoneTypes[index];
-
                 if (t == type || type.IsSubclassOf(t))
-                {
                     return true;
-                }
             }
 
             return false;
@@ -280,30 +271,23 @@ namespace Server.Engines.VeteranRewards
         public static int GetRewardYearHue(int hue)
         {
             if (m_Lists == null)
-            {
                 SetupRewardTables();
-            }
 
-            if (m_Lists != null)
+            for (int i = 0; i < m_Lists.Length; ++i)
             {
-                for (int i = 0; i < m_Lists.Length; ++i)
+                RewardList list = m_Lists[i];
+                RewardEntry[] entries = list.Entries;
+
+                for (int j = 0; j < entries.Length; ++j)
                 {
-                    RewardList list = m_Lists[i];
-                    RewardEntry[] entries = list.Entries;
+                    if (entries[j].Args.Length == 0)
+                        continue;
 
-                    for (int j = 0; j < entries.Length; ++j)
+                    if (hue.Equals(entries[j].Args[0]))
                     {
-                        if (entries[j].Args.Length == 0)
-                        {
-                            continue;
-                        }
+                        int level = i + 1;
 
-                        if (hue.Equals(entries[j].Args[0]))
-                        {
-                            int level = i + 1;
-
-                            return 1076216 + (level < 10 ? level : level < 12 ? level - 9 + 4240 : level - 11 + 37585);
-                        }
+                        return 1076216 + ((level < 10) ? level : (level < 12) ? ((level - 9) + 4240) : ((level - 11) + 37585));
                     }
                 }
             }
@@ -315,42 +299,31 @@ namespace Server.Engines.VeteranRewards
         public static int GetRewardYear(Item item, object[] args)
         {
             if (m_Lists == null)
-            {
                 SetupRewardTables();
-            }
 
             Type type = item.GetType();
 
-            if (m_Lists != null)
+            for (int i = 0; i < m_Lists.Length; ++i)
             {
-                for (int i = 0; i < m_Lists.Length; ++i)
+                RewardList list = m_Lists[i];
+                RewardEntry[] entries = list.Entries;
+
+                for (int j = 0; j < entries.Length; ++j)
                 {
-                    RewardList list = m_Lists[i];
-                    RewardEntry[] entries = list.Entries;
-
-                    for (int j = 0; j < entries.Length; ++j)
+                    if (entries[j].ItemType == type)
                     {
-                        if (entries[j].ItemType == type)
+                        if (args == null && entries[j].Args.Length == 0)
+                            return i + 1;
+
+                        if (args.Length == entries[j].Args.Length)
                         {
-                            if (args == null && entries[j].Args.Length == 0)
-                            {
+                            bool match = true;
+
+                            for (int k = 0; match && k < args.Length; ++k)
+                                match = (args[k].Equals(entries[j].Args[k]));
+
+                            if (match)
                                 return i + 1;
-                            }
-
-                            if (args != null && args.Length == entries[j].Args.Length)
-                            {
-                                bool match = true;
-
-                                for (int k = 0; match && k < args.Length; ++k)
-                                {
-                                    match = args[k].Equals(entries[j].Args[k]);
-                                }
-
-                                if (match)
-                                {
-                                    return i + 1;
-                                }
-                            }
                         }
                     }
                 }
