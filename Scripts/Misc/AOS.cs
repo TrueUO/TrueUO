@@ -182,12 +182,16 @@ namespace Server
                 }
 
                 if (totalDamage < 1)
+                {
                     totalDamage = 1;
+                }
             }
             else if (m is PlayerMobile)
             {
                 if (quiver != null)
+                {
                     damage += damage * quiver.DamageIncrease / 100;
+                }
 
                 totalDamage = Math.Min(damage, ranged ? 30 : 35);	// Direct Damage cap of 30/35
             }
@@ -196,7 +200,9 @@ namespace Server
                 totalDamage = damage;
 
                 if (quiver != null)
+                {
                     totalDamage += totalDamage * quiver.DamageIncrease / 100;
+                }
             }
 
             // object being damaged is not a mobile, so we will end here
@@ -212,7 +218,7 @@ namespace Server
             }
 
             var fromCreature = from as BaseCreature;
-            var toCreature = m as BaseCreature;
+            var toCreature = (BaseCreature) m;
 
             if (from != null && !from.Deleted && from.Alive && !from.IsDeadBondedPet)
             {

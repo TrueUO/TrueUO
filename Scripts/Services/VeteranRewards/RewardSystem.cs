@@ -198,35 +198,19 @@ namespace Server.Engines.VeteranRewards
 
             Type type = item.GetType();
 
-            for (int i = 0; i < m_Lists.Length; ++i)
+            if (m_Lists != null)
             {
-                RewardList list = m_Lists[i];
-                RewardEntry[] entries = list.Entries;
-                TimeSpan ts;
-
-                for (int j = 0; j < entries.Length; ++j)
+                for (int i = 0; i < m_Lists.Length; ++i)
                 {
-                    if (entries[j].ItemType == type)
+                    RewardList list = m_Lists[i];
+                    RewardEntry[] entries = list.Entries;
+                    TimeSpan ts;
+
+                    for (int j = 0; j < entries.Length; ++j)
                     {
-                        if (args == null && entries[j].Args.Length == 0)
+                        if (entries[j].ItemType == type)
                         {
-                            if (i > 0 && !HasAccess(from, list, out ts))
-                            {
-                                from.SendLocalizedMessage(1008126, true, Math.Ceiling(ts.TotalDays / 30.0).ToString()); // Your account is not old enough to use this item. Months until you can use this item : 
-                                return false;
-                            }
-
-                            return true;
-                        }
-
-                        if (args.Length == entries[j].Args.Length)
-                        {
-                            bool match = true;
-
-                            for (int k = 0; match && k < args.Length; ++k)
-                                match = (args[k].Equals(entries[j].Args[k]));
-
-                            if (match)
+                            if (args == null && entries[j].Args.Length == 0)
                             {
                                 if (i > 0 && !HasAccess(from, list, out ts))
                                 {
@@ -235,6 +219,27 @@ namespace Server.Engines.VeteranRewards
                                 }
 
                                 return true;
+                            }
+
+                            if (args != null && args.Length == entries[j].Args.Length)
+                            {
+                                bool match = true;
+
+                                for (int k = 0; match && k < args.Length; ++k)
+                                {
+                                    match = (args[k].Equals(entries[j].Args[k]));
+                                }
+
+                                if (match)
+                                {
+                                    if (i > 0 && !HasAccess(from, list, out ts))
+                                    {
+                                        from.SendLocalizedMessage(1008126, true, Math.Ceiling(ts.TotalDays / 30.0).ToString()); // Your account is not old enough to use this item. Months until you can use this item : 
+                                        return false;
+                                    }
+
+                                    return true;
+                                }
                             }
                         }
                     }
@@ -247,10 +252,14 @@ namespace Server.Engines.VeteranRewards
 
         private static bool UseableByAnyone(Type type)
         {
-            foreach (Type t in _AnyoneTypes)
+            for (var index = 0; index < _AnyoneTypes.Length; index++)
             {
+                Type t = _AnyoneTypes[index];
+
                 if (t == type || type.IsSubclassOf(t))
+                {
                     return true;
+                }
             }
 
             return false;
@@ -271,23 +280,30 @@ namespace Server.Engines.VeteranRewards
         public static int GetRewardYearHue(int hue)
         {
             if (m_Lists == null)
-                SetupRewardTables();
-
-            for (int i = 0; i < m_Lists.Length; ++i)
             {
-                RewardList list = m_Lists[i];
-                RewardEntry[] entries = list.Entries;
+                SetupRewardTables();
+            }
 
-                for (int j = 0; j < entries.Length; ++j)
+            if (m_Lists != null)
+            {
+                for (int i = 0; i < m_Lists.Length; ++i)
                 {
-                    if (entries[j].Args.Length == 0)
-                        continue;
+                    RewardList list = m_Lists[i];
+                    RewardEntry[] entries = list.Entries;
 
-                    if (hue.Equals(entries[j].Args[0]))
+                    for (int j = 0; j < entries.Length; ++j)
                     {
-                        int level = i + 1;
+                        if (entries[j].Args.Length == 0)
+                        {
+                            continue;
+                        }
 
-                        return 1076216 + ((level < 10) ? level : (level < 12) ? ((level - 9) + 4240) : ((level - 11) + 37585));
+                        if (hue.Equals(entries[j].Args[0]))
+                        {
+                            int level = i + 1;
+
+                            return 1076216 + (level < 10 ? level : level < 12 ? level - 9 + 4240 : level - 11 + 37585);
+                        }
                     }
                 }
             }
