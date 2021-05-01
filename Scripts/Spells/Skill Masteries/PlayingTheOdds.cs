@@ -83,20 +83,17 @@ namespace Server.Spells.SkillMasteries
 
                 foreach (IDamageable target in AcquireIndirectTargets(Caster.Location, 5))
                 {
-                    if (target is Mobile mob)
+                    if (target is Mobile mob && HitLower.ApplyDefense(mob))
                     {
-                        if (HitLower.ApplyDefense(mob))
+                        if (wep is BaseRanged ranged && !(ranged is BaseThrown))
                         {
-                            if (wep is BaseRanged ranged && !(ranged is BaseThrown))
-                            {
-                                Caster.MovingEffect(mob, ranged.EffectID, 18, 1, false, false);
-                            }
-
-                            mob.PlaySound(0x28E);
-                            Effects.SendTargetEffect(mob, 0x37BE, 1, 4, 0x23, 3);
-
-                            Caster.DoHarmful(mob);
+                            Caster.MovingEffect(mob, ranged.EffectID, 18, 1, false, false);
                         }
+
+                        mob.PlaySound(0x28E);
+                        Effects.SendTargetEffect(mob, 0x37BE, 1, 4, 0x23, 3);
+
+                        Caster.DoHarmful(mob);
                     }
                 }
 

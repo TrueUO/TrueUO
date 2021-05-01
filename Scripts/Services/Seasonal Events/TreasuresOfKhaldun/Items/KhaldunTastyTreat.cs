@@ -123,12 +123,9 @@ namespace Server.Items
                 {
                     Mobile follower = pm.AllFollowers[index];
 
-                    if (follower is BaseCreature pet)
+                    if (follower is BaseCreature pet && UnderInfluence(pet))
                     {
-                        if (UnderInfluence(pet))
-                        {
-                            return pet;
-                        }
+                        return pet;
                     }
                 }
             }
