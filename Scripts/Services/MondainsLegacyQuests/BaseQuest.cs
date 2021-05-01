@@ -192,7 +192,7 @@ namespace Server.Engines.Quests
         public bool TeachQuestCheck(SkillName skillname)
         {
             PlayerMobile pm = Owner;
-            Mobile quester = Quester as Mobile;
+            Mobile quester = (Mobile) Quester;
 
             if (pm.AcceleratedStart > DateTime.UtcNow)
             {

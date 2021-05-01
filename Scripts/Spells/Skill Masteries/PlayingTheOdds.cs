@@ -1,6 +1,5 @@
 using Server.Items;
 using System;
-using System.Linq;
 
 namespace Server.Spells.SkillMasteries
 {
@@ -82,19 +81,22 @@ namespace Server.Spells.SkillMasteries
 
                 AddToCooldown(TimeSpan.FromSeconds(90));
 
-                foreach (Mobile mob in AcquireIndirectTargets(Caster.Location, 5).OfType<Mobile>())
+                foreach (IDamageable target in AcquireIndirectTargets(Caster.Location, 5))
                 {
-                    if (HitLower.ApplyDefense(mob))
+                    if (target is Mobile mob)
                     {
-                        if (wep is BaseRanged ranged && !(ranged is BaseThrown))
+                        if (HitLower.ApplyDefense(mob))
                         {
-                            Caster.MovingEffect(mob, ranged.EffectID, 18, 1, false, false);
+                            if (wep is BaseRanged ranged && !(ranged is BaseThrown))
+                            {
+                                Caster.MovingEffect(mob, ranged.EffectID, 18, 1, false, false);
+                            }
+
+                            mob.PlaySound(0x28E);
+                            Effects.SendTargetEffect(mob, 0x37BE, 1, 4, 0x23, 3);
+
+                            Caster.DoHarmful(mob);
                         }
-
-                        mob.PlaySound(0x28E);
-                        Effects.SendTargetEffect(mob, 0x37BE, 1, 4, 0x23, 3);
-
-                        Caster.DoHarmful(mob);
                     }
                 }
 
@@ -122,8 +124,10 @@ namespace Server.Spells.SkillMasteries
         {
             if (PartyList != null)
             {
-                foreach (Mobile m in PartyList)
+                for (var index = 0; index < PartyList.Count; index++)
                 {
+                    Mobile m = PartyList[index];
+
                     RemovePartyEffects(m);
                 }
             }

@@ -5,7 +5,6 @@ using Server.Network;
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.SkillHandlers
 {
@@ -73,17 +72,33 @@ namespace Server.SkillHandlers
                         {
                             from.SendLocalizedMessage(1159063); // That trap is already being disarmed.
                         }
-                        else if (tChest.AncientGuardians.Any(g => !g.Deleted))
-                        {
-                            from.PrivateOverheadMessage(MessageType.Regular, 1150, 1159060, from.NetState); // *Your attempt fails as the the mechanism jams and you are attacked by an Ancient Chest Guardian!*
-                        }
                         else
                         {
-                            from.PlaySound(0x241);
+                            bool any = false;
 
-                            from.PrivateOverheadMessage(MessageType.Regular, 1150, 1159057, from.NetState); // *You delicately manipulate the trigger mechanism...*
+                            for (var index = 0; index < tChest.AncientGuardians.Count; index++)
+                            {
+                                var g = tChest.AncientGuardians[index];
 
-                            StartChestDisarmTimer(from, tChest);
+                                if (!g.Deleted)
+                                {
+                                    any = true;
+                                    break;
+                                }
+                            }
+
+                            if (any)
+                            {
+                                from.PrivateOverheadMessage(MessageType.Regular, 1150, 1159060, from.NetState); // *Your attempt fails as the the mechanism jams and you are attacked by an Ancient Chest Guardian!*
+                            }
+                            else
+                            {
+                                from.PlaySound(0x241);
+
+                                from.PrivateOverheadMessage(MessageType.Regular, 1150, 1159057, from.NetState); // *You delicately manipulate the trigger mechanism...*
+
+                                StartChestDisarmTimer(from, tChest);
+                            }
                         }
                     }
                     else

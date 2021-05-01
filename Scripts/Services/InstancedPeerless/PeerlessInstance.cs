@@ -14,9 +14,6 @@ namespace Server.Engines.InstancedPeerless
 
     public class PeerlessInstance
     {
-        private const int BusyHue = 1;
-        private const int EmptyHue = 60;
-
         private readonly PeerlessPlatform m_Owner;
         private InstanceRegion m_Region;
         private List<Mobile> m_Fighters;
@@ -36,15 +33,19 @@ namespace Server.Engines.InstancedPeerless
 
         public InstanceState State
         {
-            get { return m_State; }
+            get => m_State;
             set
             {
                 m_State = value;
 
                 if (m_State == InstanceState.Available)
+                {
                     m_Light.Hue = 0;
+                }
                 else
+                {
                     m_Light.Hue = 0x21;
+                }
             }
         }
 
@@ -94,7 +95,7 @@ namespace Server.Engines.InstancedPeerless
         {
             State = InstanceState.Fighting;
 
-            m_Boss = Activator.CreateInstance(m_Owner.BossType) as Mobile;
+            m_Boss = (Mobile) Activator.CreateInstance(m_Owner.BossType);
             m_Boss.OnBeforeSpawn(m_BossSpawnLocation, m_Owner.Map);
             m_Boss.MoveToWorld(m_BossSpawnLocation, m_Owner.Map);
 
@@ -115,7 +116,9 @@ namespace Server.Engines.InstancedPeerless
             if (m_State == InstanceState.Fighting && m_Boss.Deleted)
             {
                 if (m_KickTimer != null)
+                {
                     m_KickTimer.Stop();
+                }
 
                 m_KickTimer = Timer.DelayCall(TimeSpan.FromMinutes(15.0), Kick);
 
@@ -127,8 +130,12 @@ namespace Server.Engines.InstancedPeerless
         {
             List<Mobile> fighters = new List<Mobile>(m_Fighters);
 
-            foreach (Mobile m in fighters)
+            for (var index = 0; index < fighters.Count; index++)
+            {
+                Mobile m = fighters[index];
+
                 Kick(m);
+            }
 
             FreeInstance();
         }
@@ -169,10 +176,14 @@ namespace Server.Engines.InstancedPeerless
             }
 
             if (m_SliceTimer != null)
+            {
                 m_SliceTimer.Stop();
+            }
 
             if (m_KickTimer != null)
+            {
                 m_KickTimer.Stop();
+            }
 
             State = InstanceState.Available;
 
@@ -182,21 +193,30 @@ namespace Server.Engines.InstancedPeerless
         public void OnDelete()
         {
             if (m_SliceTimer != null)
+            {
                 m_SliceTimer.Stop();
+            }
 
             if (m_KickTimer != null)
+            {
                 m_KickTimer.Stop();
+            }
 
             if (m_Boss != null)
+            {
                 m_Boss.Delete();
+            }
 
-            foreach (Mobile m in m_Fighters)
+            for (var index = 0; index < m_Fighters.Count; index++)
+            {
+                Mobile m = m_Fighters[index];
+
                 Kick(m);
+            }
 
             m_Region.Unregister();
         }
 
-        #region Serialization
         public PeerlessInstance(GenericReader reader)
         {
             m_Owner = reader.ReadItem<PeerlessPlatform>();
@@ -209,7 +229,9 @@ namespace Server.Engines.InstancedPeerless
             Mobile boss = reader.ReadMobile();
 
             if (boss != null)
+            {
                 boss.Delete();
+            }
 
             Initialize();
         }
@@ -224,7 +246,6 @@ namespace Server.Engines.InstancedPeerless
             writer.Write(m_RegionBounds);
             writer.Write(m_Boss);
         }
-        #endregion
     }
 
     public class SliceTimer : Timer

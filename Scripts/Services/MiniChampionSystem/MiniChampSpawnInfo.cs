@@ -64,7 +64,7 @@ namespace Server.Engines.MiniChamps
 
             while (Creatures.Count < Required && Spawned < MaxSpawned)
             {
-                BaseCreature bc = Activator.CreateInstance(MonsterType) as BaseCreature;
+                BaseCreature bc = (BaseCreature) Activator.CreateInstance(MonsterType);
 
                 Map map = Owner.Map;
                 Point3D loc = map.GetSpawnPosition(Owner.Location, Owner.SpawnRange);
@@ -109,8 +109,7 @@ namespace Server.Engines.MiniChamps
 
         public void AddProperties(ObjectPropertyList list, int cliloc)
         {
-            list.Add(cliloc, "{0}: Killed {1}/{2}, Spawned {3}/{4}",
-                MonsterType.Name, Killed, Required, Spawned, MaxSpawned);
+            list.Add(cliloc, "{0}: Killed {1}/{2}, Spawned {3}/{4}", MonsterType.Name, Killed, Required, Spawned, MaxSpawned);
         }
 
         public void Serialize(GenericWriter writer)

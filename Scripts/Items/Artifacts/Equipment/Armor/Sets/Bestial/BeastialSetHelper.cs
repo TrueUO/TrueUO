@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server
 {
@@ -13,9 +12,11 @@ namespace Server
         public static void OnHeal(Mobile healed, Mobile healer, ref int toHeal)
         {
             if (_Table == null || !_Table.ContainsKey(healed))
+            {
                 return;
+            }
 
-            int block = (TotalPieces(healed) * _Table[healed].Level) + 2;
+            int block = TotalPieces(healed) * _Table[healed].Level + 2;
 
             toHeal = Math.Max(1, toHeal - block);
 
@@ -26,19 +27,20 @@ namespace Server
         {
             int equipped = TotalPieces(victim);
 
-            if (/*victim != attacker && */equipped > 0 && victim.Hits - damage < (victim.HitsMax / 2))
+            if (equipped > 0 && victim.Hits - damage < victim.HitsMax / 2)
             {
                 if (_Table == null || !_Table.ContainsKey(victim))
                 {
                     AddBerserk(victim);
                     return;
                 }
-                else if (!_Table[victim].Running)
+
+                if (!_Table[victim].Running)
                 {
                     return;
                 }
 
-                int absorb = (equipped * _Table[victim].Level) + 2;
+                int absorb = equipped * _Table[victim].Level + 2;
 
                 damage = Math.Max(1, damage - absorb);
 
@@ -51,12 +53,14 @@ namespace Server
         public static int GetTotalBerserk(Item item)
         {
             if (item == null)
+            {
                 return 0;
+            }
 
-            Mobile m = item.RootParent as Mobile;
-
-            if (m != null && _Table != null && _Table.ContainsKey(m))
+            if (item.RootParent is Mobile m && _Table != null && _Table.ContainsKey(m))
+            {
                 return _Table[m].Level;
+            }
 
             return 1;
         }
@@ -78,13 +82,17 @@ namespace Server
             }
 
             if (item is ISetItem setItem && setItem.SetID == SetItem.Bestial)
+            {
                 item.Hue = 2010;
+            }
         }
 
         public static void DoHue(Mobile m, int hue)
         {
-            foreach (Item i in m.Items)
+            for (var index = 0; index < m.Items.Count; index++)
             {
+                Item i = m.Items[index];
+
                 if (i is ISetItem setItem && setItem.SetID == SetItem.Bestial && i.Hue != hue)
                 {
                     i.Hue = hue;
@@ -96,7 +104,19 @@ namespace Server
 
         public static int TotalPieces(Mobile m)
         {
-            return m.Items.Count(i => i is ISetItem item && item.SetID == SetItem.Bestial);
+            int count = 0;
+
+            for (var index = 0; index < m.Items.Count; index++)
+            {
+                var i = m.Items[index];
+
+                if (i is ISetItem item && item.SetID == SetItem.Bestial)
+                {
+                    count++;
+                }
+            }
+
+            return count;
         }
 
         public static void AddBerserk(Mobile m)
@@ -204,8 +224,10 @@ namespace Server
                 Mobile.HueMod = StartHue;
                 Mobile.SendLocalizedMessage(1151535); //Your berserk rage has subsided. 
 
-                foreach (Item item in Mobile.Items)
+                for (var index = 0; index < Mobile.Items.Count; index++)
                 {
+                    Item item = Mobile.Items[index];
+
                     if (item is ISetItem setItem && setItem.SetID == SetItem.Bestial)
                     {
                         item.Hue = 2010;

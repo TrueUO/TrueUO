@@ -280,7 +280,23 @@ namespace Server.Commands
                     {
                         object[] a = t.GetCustomAttributes(typeof(ConstructableAttribute), false);
 
-                        if (a.OfType<ConstructableAttribute>().Any(ca => ca.AccessLevel > m.AccessLevel))
+                        bool any = false;
+
+                        for (var index = 0; index < a.Length; index++)
+                        {
+                            object o1 = a[index];
+
+                            if (o1 is ConstructableAttribute ca)
+                            {
+                                if (ca.AccessLevel > m.AccessLevel)
+                                {
+                                    any = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        if (any)
                         {
                             continue;
                         }

@@ -135,11 +135,15 @@ namespace Server.Engines.VvV
                     }
 
                     if (!statloss && isEnemy)
+                    {
                         statloss = true;
+                    }
                 }
 
                 if (statloss)
+                {
                     ApplySkillLoss(victim);
+                }
 
                 ColUtility.Free(list);
                 ColUtility.Free(handled);
@@ -149,13 +153,17 @@ namespace Server.Engines.VvV
         public void AddPlayer(PlayerMobile pm)
         {
             if (pm == null || pm.Guild == null)
+            {
                 return;
+            }
 
-            Guild g = pm.Guild as Guild;
-            VvVPlayerEntry entry = GetEntry(pm, true) as VvVPlayerEntry;
+            Guild g = (Guild) pm.Guild;
+            VvVPlayerEntry entry = (VvVPlayerEntry) GetEntry(pm, true);
 
             if (!entry.Active)
+            {
                 entry.Active = true;
+            }
 
             pm.SendLocalizedMessage(1155564); // You have joined Vice vs Virtue!
             pm.SendLocalizedMessage(1063156, g.Name); // The guild information for ~1_val~ has been updated.
@@ -362,8 +370,10 @@ namespace Server.Engines.VvV
 
         public void SendVvVMessage(string message)
         {
-            foreach (NetState state in NetState.Instances)
+            for (var index = 0; index < NetState.Instances.Count; index++)
             {
+                NetState state = NetState.Instances[index];
+
                 if (state.Mobile != null && IsVvV(state.Mobile))
                 {
                     Mobile m = state.Mobile;
@@ -378,8 +388,10 @@ namespace Server.Engines.VvV
 
         public void SendVvVMessage(int cliloc, string args = "")
         {
-            foreach (NetState state in NetState.Instances)
+            for (var index = 0; index < NetState.Instances.Count; index++)
             {
+                NetState state = NetState.Instances[index];
+
                 if (state.Mobile != null && IsVvV(state.Mobile))
                 {
                     Mobile m = state.Mobile;
