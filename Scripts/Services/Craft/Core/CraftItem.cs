@@ -735,38 +735,43 @@ namespace Server.Engines.Craft
         private int ConsumeQuantityByMapLevel(Mobile from, Container cont, Type[][] types, int[] amounts)
         {
             if (types.Length != amounts.Length)
+            {
                 throw new ArgumentException();
+            }
 
             Item[][] items = new Item[types.Length][];
+
             int[] totals = new int[types.Length];
 
             for (int i = 0; i < types.Length; ++i)
             {
-                MapRes mapRes = Resources.GetAt(i) as MapRes;
+                MapRes mapRes = (MapRes) Resources.GetAt(i);
+
                 items[i] = cont.FindItemsByType(types[i], true);
 
                 for (int j = 0; j < items[i].Length; ++j)
-                {                    
-                    var tmap = items[i][j] as TreasureMap;
-
-                    if (tmap != null && tmap.Level == mapRes.MapLevel && tmap.CompletedBy == from)
+                {
+                    if (items[i][j] is TreasureMap tmap && tmap.Level == mapRes.MapLevel && tmap.CompletedBy == from)
                     {
                         totals[i] += items[i][j].Amount;
                     }
                 }
 
                 if (totals[i] < amounts[i])
+                {
                     return i;
+                }
             }
 
             for (int i = 0; i < types.Length; ++i)
             {
                 int need = amounts[i];
-                MapRes mapRes = Resources.GetAt(i) as MapRes;
+
+                MapRes mapRes = (MapRes) Resources.GetAt(i);
 
                 for (int j = 0; j < items[i].Length; ++j)
                 {
-                    var tmap = items[i][j] as TreasureMap;
+                    var tmap = (TreasureMap) items[i][j];
 
                     int theirAmount = tmap.Amount;
 
@@ -942,9 +947,7 @@ namespace Server.Engines.Craft
 
             for (int i = 0; i < items.Length; ++i)
             {
-                TreasureMap tmap = items[i] as TreasureMap;
-
-                if (tmap != null && tmap.Level == reslevel && tmap.CompletedBy == from)
+                if (items[i] is TreasureMap tmap && tmap.Level == reslevel && tmap.CompletedBy == from)
                 {
                     amount += items[i].Amount;
                 }                

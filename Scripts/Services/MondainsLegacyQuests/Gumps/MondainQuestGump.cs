@@ -622,7 +622,7 @@ namespace Server.Engines.Quests
                 case (int)Buttons.Close: // close quest list
                     break;
                 case (int)Buttons.CloseQuest: // close quest
-                    m_From.SendGump(new MondainQuestGump(m_From));
+                    if (m_From != null) m_From.SendGump(new MondainQuestGump(m_From));
                     break;
                 case (int)Buttons.AcceptQuest: // accept quest
                     if (m_Offer)
@@ -632,12 +632,14 @@ namespace Server.Engines.Quests
                     if (m_Offer)
                     {
                         m_Quest.OnRefuse();
-                        m_From.SendGump(new MondainQuestGump(m_Quest, Section.Refuse, true));
+                        if (m_From != null) m_From.SendGump(new MondainQuestGump(m_Quest, Section.Refuse, true));
                     }
                     break;
                 case (int)Buttons.ResignQuest: // resign quest
-                    if (!m_Offer)
+                    if (!m_Offer && m_From != null)
+                    {
                         m_From.SendGump(new MondainResignGump(m_Quest));
+                    }
                     break;
                 case (int)Buttons.AcceptReward: // accept reward
                     if (!m_Offer && m_Section == Section.Rewards && m_Completed)
@@ -651,21 +653,26 @@ namespace Server.Engines.Quests
                     if (m_Section == Section.Objectives || m_Section == Section.Rewards && !m_Completed)
                     {
                         m_Section = (Section)((int)m_Section - 1);
-                        m_From.SendGump(new MondainQuestGump(m_Quest, m_Section, m_Offer));
+                        if (m_From != null) m_From.SendGump(new MondainQuestGump(m_Quest, m_Section, m_Offer));
                     }
                     break;
                 case (int)Buttons.NextPage: // next page
                     if (m_Section == Section.Description || m_Section == Section.Objectives)
                     {
                         m_Section = (Section)((int)m_Section + 1);
-                        m_From.SendGump(new MondainQuestGump(m_Quest, m_Section, m_Offer));
+                        if (m_From != null) m_From.SendGump(new MondainQuestGump(m_Quest, m_Section, m_Offer));
                     }
                     break;
                 case (int)Buttons.Complete: // player complete quest
                     if (!m_Offer && m_Section == Section.Complete)
                     {
                         if (!m_Quest.Completed)
-                            m_From.SendLocalizedMessage(1074861); // You do not have everything you need!
+                        {
+                            if (m_From != null)
+                            {
+                                m_From.SendLocalizedMessage(1074861); // You do not have everything you need!
+                            }
+                        }
                         else
                         {
                             if (QuestHelper.TryDeleteItems(m_Quest))
@@ -675,25 +682,28 @@ namespace Server.Engines.Quests
 
                                 if (!QuestHelper.AnyRewards(m_Quest))
                                     m_Quest.GiveRewards();
-                                else
+                                else if (m_From != null)
                                     m_From.SendGump(new MondainQuestGump(m_Quest, Section.Rewards, false, true));
                             }
                             else
                             {
-                                m_From.SendLocalizedMessage(1074861); // You do not have everything you need!
+                                if (m_From != null)
+                                    m_From.SendLocalizedMessage(1074861); // You do not have everything you need!
                             }
                         }
                     }
                     break;
                 case (int)Buttons.CompleteQuest: // admin complete quest
-                    if ((int)m_From.AccessLevel > (int)AccessLevel.Counselor && m_Quest != null)
+                    if (m_From != null && (int)m_From.AccessLevel > (int)AccessLevel.Counselor && m_Quest != null)
                         QuestHelper.CompleteQuest(m_From, m_Quest);
                     break;
                 default: // show quest
-                    if (m_Section != Section.Main || info.ButtonID >= m_From.Quests.Count + ButtonOffset || info.ButtonID < ButtonOffset)
+                    if (m_From != null && (m_Section != Section.Main || info.ButtonID >= m_From.Quests.Count + ButtonOffset || info.ButtonID < ButtonOffset))
                         break;
 
-                    m_From.SendGump(new MondainQuestGump(m_From.Quests[info.ButtonID - ButtonOffset], Section.Description, false));
+                    if (m_From != null)
+                        m_From.SendGump(new MondainQuestGump(m_From.Quests[info.ButtonID - ButtonOffset],
+                            Section.Description, false));
                     break;
             }
         }

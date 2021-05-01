@@ -70,7 +70,7 @@ namespace Server.Items
         public bool Empty => !CanLight && Items.Count == 0;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public double Durability => (m_Hits / (double)MaxHits) * 100.0;
+        public double Durability => m_Hits / (double)MaxHits * 100.0;
 
         public override bool ForceShowProperties => true;
         public override int DefaultGumpID => 0x9CE7;
@@ -576,9 +576,9 @@ namespace Server.Items
                             for (int i = -lateralOffset; i <= lateralOffset; i++)
                             {
                                 if (xOffset == 0)
-                                    newPoint = new Point3D(pnt.X + (xOffset + i), pnt.Y + (yOffset * currentRange), pnt.Z);
+                                    newPoint = new Point3D(pnt.X + xOffset + i, pnt.Y + yOffset * currentRange, pnt.Z);
                                 else
-                                    newPoint = new Point3D(pnt.X + (xOffset * currentRange), pnt.Y + (yOffset + i), pnt.Z);
+                                    newPoint = new Point3D(pnt.X + xOffset * currentRange, pnt.Y + yOffset + i, pnt.Z);
 
                                 BaseBoat b = FindValidBoatTarget(newPoint, map, ammo);
 
@@ -624,9 +624,9 @@ namespace Server.Items
                             for (int i = -lateralOffset; i <= lateralOffset; i++)
                             {
                                 if (xOffset == 0)
-                                    newPoint = new Point3D(pnt.X + (xOffset + i), pnt.Y + (yOffset * currentRange), pnt.Z);
+                                    newPoint = new Point3D(pnt.X + xOffset + i, pnt.Y + yOffset * currentRange, pnt.Z);
                                 else
-                                    newPoint = new Point3D(pnt.X + (xOffset * currentRange), pnt.Y + (yOffset + i), pnt.Z);
+                                    newPoint = new Point3D(pnt.X + xOffset * currentRange, pnt.Y + yOffset + i, pnt.Z);
 
                                 BaseBoat b = FindValidBoatTarget(newPoint, map, ammo);
 
@@ -781,9 +781,10 @@ namespace Server.Items
         public virtual void OnShipHit(object obj)
         {
             object[] list = (object[])obj;
+
             BaseBoat target = list[0] as BaseBoat;
             Point3D pnt = (Point3D)list[1];
-            AmmoInfo ammoInfo = list[2] as AmmoInfo;
+            AmmoInfo ammoInfo = (AmmoInfo) list[2];
             Mobile shooter = list[3] as Mobile;
 
             if (target != null && Galleon != null)
@@ -879,11 +880,14 @@ namespace Server.Items
                 Mobile mob = dam as Mobile;
 
                 if (mob != null && (!shooter.CanBeHarmful(mob, false) || Galleon.Contains(mob)))
+                {
                     continue;
+                }
 
                 if (mob is PlayerMobile || mob is BaseCreature)
                 {
                     shooter.DoHarmful(mob);
+
                     AOS.Damage(mob, shooter, 35, info.PhysicalDamage, info.FireDamage, info.ColdDamage, info.PoisonDamage, info.EnergyDamage);
                 }
             }
@@ -895,15 +899,17 @@ namespace Server.Items
         {
             object[] objects = (object[])obj;
             Mobile toHit = objects[0] as Mobile;
-            AmmoInfo info = objects[2] as AmmoInfo;
-            Mobile shooter = objects[3] as Mobile;
+            AmmoInfo info = (AmmoInfo) objects[2];
+            Mobile shooter = (Mobile) objects[3];
 
             int damage = (int)(Utility.RandomMinMax(info.MinDamage, info.MaxDamage) * Galleon.CannonDamageMod);
 
             if (toHit != null)
             {
                 Effects.SendPacket(toHit.Location, toHit.Map, new GraphicalEffect(EffectType.FixedXYZ, Serial.Zero, Serial.Zero, 0x36CB, toHit.Location, toHit.Location, 15, 15, true, true));
+
                 shooter.DoHarmful(toHit);
+
                 AOS.Damage(toHit, shooter, damage, info.PhysicalDamage, info.FireDamage, info.ColdDamage, info.PoisonDamage, info.EnergyDamage);
             }
         }
@@ -913,15 +919,19 @@ namespace Server.Items
             object[] objects = (object[])obj;
             DamageableItem toHit = objects[0] as DamageableItem;
             AmmoInfo info = objects[2] as AmmoInfo;
-            Mobile shooter = objects[3] as Mobile;
+            Mobile shooter = (Mobile) objects[3];
 
             if (info == null || toHit == null || toHit.Map == null)
+            {
                 return;
+            }
 
             int damage = (int)(Utility.RandomMinMax(info.MinDamage, info.MaxDamage) * Galleon.CannonDamageMod);
 
             shooter.DoHarmful(toHit);
+
             AOS.Damage(toHit, shooter, damage, info.PhysicalDamage, info.FireDamage, info.ColdDamage, info.PoisonDamage, info.EnergyDamage);
+
             Effects.SendLocationEffect(new Point3D(toHit.X, toHit.Y, toHit.Z + 5), toHit.Map, Utility.RandomBool() ? 14000 : 14013, 15, 10);
             Effects.PlaySound(toHit.Location, toHit.Map, 0x207);
         }
@@ -975,7 +985,7 @@ namespace Server.Items
 
             double ingotsNeeded = 36 * (int)DamageState;
 
-            ingotsNeeded -= (from.Skills[SkillName.Blacksmith].Value / 200.0) * ingotsNeeded;
+            ingotsNeeded -= @from.Skills[SkillName.Blacksmith].Value / 200.0 * ingotsNeeded;
 
             double min = ingotsNeeded / 10;
             double ingots1 = pack.GetAmount(typeof(IronIngot));
@@ -997,7 +1007,7 @@ namespace Server.Items
             else
             {
                 ingotsUsed = ingots;
-                percRepaired = (ingots / ingotsNeeded) * 100;
+                percRepaired = ingots / ingotsNeeded * 100;
             }
 
             double toConsume = 0;
@@ -1017,11 +1027,20 @@ namespace Server.Items
             }
 
             m_Hits += (int)((MaxHits - m_Hits) * (percRepaired / 100));
-            if (m_Hits > MaxHits) m_Hits = MaxHits;
+
+            if (m_Hits > MaxHits)
+            {
+                m_Hits = MaxHits;
+            }
+
             InvalidateDamageState();
 
             percRepaired += Durability;
-            if (percRepaired > 100) percRepaired = 100;
+
+            if (percRepaired > 100)
+            {
+                percRepaired = 100;
+            }
 
             from.SendLocalizedMessage(1116605, string.Format("{0}\t{1}", ((int)temp).ToString(), ((int)percRepaired).ToString())); //You make repairs to the cannon using ~1_METAL~ ingots. The cannon is now ~2_DMGPCT~% repaired.
         }
@@ -1223,8 +1242,10 @@ namespace Server.Items
 
             List<PlayerMobile> list = new List<PlayerMobile>(Viewing.OfType<PlayerMobile>());
 
-            foreach (PlayerMobile pm in list)
+            for (var index = 0; index < list.Count; index++)
             {
+                PlayerMobile pm = list[index];
+
                 ShipCannonGump gump = BaseGump.GetGump<ShipCannonGump>(pm, g => g.Cannon == this);
 
                 if (gump != null)
@@ -1342,7 +1363,7 @@ namespace Server.Items
 
                     for (int i = list.Count - 1; i >= 0; i--)
                     {
-                        AddHtmlLocalized(10, 112 + (actual * 18), 230, 18, Cannon.Actions[User][i], actual == list.Count - 1 ? 0x7FE7 : 0x3DEF, false, false);
+                        AddHtmlLocalized(10, 112 + actual * 18, 230, 18, Cannon.Actions[User][i], actual == list.Count - 1 ? 0x7FE7 : 0x3DEF, false, false);
                         actual++;
                     }
                 }

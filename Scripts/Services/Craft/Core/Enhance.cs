@@ -328,7 +328,7 @@ namespace Server.Engines.Craft
         public static void BeginTarget(Mobile from, CraftSystem craftSystem, ITool tool)
         {
             CraftContext context = craftSystem.GetContext(from);
-            PlayerMobile user = from as PlayerMobile;
+            PlayerMobile user = (PlayerMobile) from;
 
             if (context == null)
                 return;
