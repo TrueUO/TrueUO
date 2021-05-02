@@ -57,7 +57,7 @@ namespace Server.Engines.CityLoyalty
             if (entry == null)
                 return 1;
 
-            return Math.Min(8, Math.Max(1, (entry.Completed / 25) + 1));
+            return Math.Min(8, Math.Max(1, entry.Completed / 25 + 1));
         }
 
         public static bool HasTrade(Mobile from)
@@ -124,7 +124,20 @@ namespace Server.Engines.CityLoyalty
 
                     if (t != null)
                     {
-                        if (entry.Details.Any(x => x.ItemType.Name == t.Name))
+                        bool any = false;
+
+                        for (var index = 0; index < entry.Details.Count; index++)
+                        {
+                            var x = entry.Details[index];
+
+                            if (x.ItemType.Name == t.Name)
+                            {
+                                any = true;
+                                break;
+                            }
+                        }
+
+                        if (any)
                         {
                             continue;
                         }
@@ -317,7 +330,18 @@ namespace Server.Engines.CityLoyalty
 
         public static int GetDistance(TradeMinister origin, City destination)
         {
-            TradeMinister destMinister = TradeMinister.Ministers.FirstOrDefault(m => m.City == destination);
+            TradeMinister destMinister = null;
+
+            for (var index = 0; index < TradeMinister.Ministers.Count; index++)
+            {
+                var m = TradeMinister.Ministers[index];
+
+                if (m.City == destination)
+                {
+                    destMinister = m;
+                    break;
+                }
+            }
 
             if (destMinister != null)
             {
@@ -330,10 +354,13 @@ namespace Server.Engines.CityLoyalty
         public static Type GetRandomTrade(City originCity, City dest, ref int worth, ref string name)
         {
             Region region = CityLoyaltySystem.GetCityInstance(originCity).Definition.Region;
+
             List<BaseVendor> list = new List<BaseVendor>(region.GetEnumeratedMobiles().OfType<BaseVendor>().Where(bv => bv.GetBuyInfo() != null && bv.GetBuyInfo().Length > 0));
 
             if (list.Count == 0)
+            {
                 return null;
+            }
 
             do
             {
@@ -367,8 +394,10 @@ namespace Server.Engines.CityLoyalty
             List<TradeOrderCrate> crates = new List<TradeOrderCrate>(ActiveTrades.Values);
             List<BaseCreature> toDelete = new List<BaseCreature>();
 
-            foreach (TradeOrderCrate c in crates)
+            for (var index = 0; index < crates.Count; index++)
             {
+                TradeOrderCrate c = crates[index];
+
                 if (c.Expired)
                 {
                     c.Owner.SendMessage("The crate expired...");
@@ -385,16 +414,22 @@ namespace Server.Engines.CityLoyalty
                 foreach (KeyValuePair<BaseCreature, DateTime> kvp in Ambushers)
                 {
                     if (kvp.Value < DateTime.UtcNow)
+                    {
                         toDelete.Add(kvp.Key);
+                    }
                 }
 
-                toDelete.ForEach(bc =>
-                    {
-                        if (!bc.Deleted)
-                            bc.Delete();
+                for (var index = 0; index < toDelete.Count; index++)
+                {
+                    var bc = toDelete[index];
 
-                        Ambushers.Remove(bc);
-                    });
+                    if (!bc.Deleted)
+                    {
+                        bc.Delete();
+                    }
+
+                    Ambushers.Remove(bc);
+                }
             }
 
             toDelete.Clear();
@@ -406,7 +441,9 @@ namespace Server.Engines.CityLoyalty
         public static void CheckAmbush(TradeOrderCrate crate)
         {
             if (crate == null || crate.Deleted || crate.Entry == null || crate.Expired || crate.Entry.LastAmbush + TimeSpan.FromMinutes(AmbushWaitDuration) > DateTime.UtcNow)
+            {
                 return;
+            }
 
             if (crate.RootParentEntity is Mobile m && !m.Region.IsPartOf<GuardedRegion>())
             {
@@ -499,9 +536,14 @@ namespace Server.Engines.CityLoyalty
                         }
                     }
 
-                    foreach (Skill sk in bc.Skills.Where(s => s.Base > 0))
+                    for (var index = 0; index < bc.Skills.Length; index++)
                     {
-                        sk.Base += sk.Base * (difficulty);
+                        Skill sk = bc.Skills[index];
+
+                        if (sk.Base > 0)
+                        {
+                            sk.Base += sk.Base * difficulty;
+                        }
                     }
 
                     bc.RawStr += (int)(bc.RawStr * difficulty);
@@ -617,7 +659,7 @@ namespace Server.Engines.CityLoyalty
                 impassable = false;
             }
 
-            if (impassable && avgZ > z && (z + height) > lowZ)
+            if (impassable && avgZ > z && z + height > lowZ)
                 return false;
 
             if (!impassable && z == avgZ && !lt.Ignored)
@@ -643,10 +685,10 @@ namespace Server.Engines.CityLoyalty
                     impassable = false;
                 }
 
-                if ((surface || impassable) && (staticTiles[i].Z + id.CalcHeight) > z && (z + height) > staticTiles[i].Z)
+                if ((surface || impassable) && staticTiles[i].Z + id.CalcHeight > z && z + height > staticTiles[i].Z)
                     return false;
 
-                if (surface && !impassable && z == (staticTiles[i].Z + id.CalcHeight))
+                if (surface && !impassable && z == staticTiles[i].Z + id.CalcHeight)
                     hasSurface = true;
             }
 
@@ -671,13 +713,13 @@ namespace Server.Engines.CityLoyalty
                         impassable = false;
                     }
 
-                    if ((surface || impassable) && (item.Z + id.CalcHeight) > z && (z + height) > item.Z)
+                    if ((surface || impassable) && item.Z + id.CalcHeight > z && z + height > item.Z)
                     {
                         eable.Free();
                         return false;
                     }
 
-                    if (surface && !impassable && !item.Movable && z == (item.Z + id.CalcHeight))
+                    if (surface && !impassable && !item.Movable && z == item.Z + id.CalcHeight)
                     {
                         hasSurface = true;
                     }
@@ -694,7 +736,7 @@ namespace Server.Engines.CityLoyalty
                 {
                     if (m.AccessLevel == AccessLevel.Player || !m.Hidden)
                     {
-                        if ((m.Z + 16) > z && (z + height) > m.Z)
+                        if (m.Z + 16 > z && z + height > m.Z)
                         {
                             eable.Free();
                             return false;

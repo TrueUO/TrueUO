@@ -62,7 +62,16 @@ namespace Server.Items
 
         public static RepairBenchDefinition GetInfo(RepairSkillType type)
         {
-            return Definitions.ToList().Find(x => x.Skill == type);
+            List<RepairBenchDefinition> list = new List<RepairBenchDefinition>();
+
+            for (var index = 0; index < Definitions.Length; index++)
+            {
+                var definition = Definitions[index];
+
+                list.Add(definition);
+            }
+
+            return list.Find(x => x.Skill == type);
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
@@ -154,7 +163,7 @@ namespace Server.Items
 
             if (first != null)
             {
-                first.SendLocalizedMessageTo(@from, 1061637); // You are not allowed to access this.
+                first.SendLocalizedMessageTo(from, 1061637); // You are not allowed to access this.
             }
         }
 
@@ -246,12 +255,13 @@ namespace Server.Items
 
             if (Tools != null)
             {
-                Tools.ForEach(x =>
+                for (var index = 0; index < Tools.Count; index++)
                 {
-                    writer.Write((int)x.Skill);
-                    writer.Write((int)x.SkillValue);
+                    var x = Tools[index];
+                    writer.Write((int) x.Skill);
+                    writer.Write((int) x.SkillValue);
                     writer.Write(x.Charges);
-                });
+                }
             }
         }
 
@@ -384,19 +394,20 @@ namespace Server.Items
 
             if (Tools != null)
             {
-                Tools.ForEach(x =>
+                for (var index = 0; index < Tools.Count; index++)
                 {
-                    writer.Write((int)x.Skill);
-                    writer.Write((int)x.SkillValue);
+                    var x = Tools[index];
+                    writer.Write((int) x.Skill);
+                    writer.Write((int) x.SkillValue);
                     writer.Write(x.Charges);
-                });
+                }
             }
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             m_IsRewardItem = reader.ReadBool();
 

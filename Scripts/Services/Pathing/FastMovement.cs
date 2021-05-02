@@ -1,10 +1,8 @@
-#region References
 using Server.Items;
 using Server.Mobiles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-#endregion
 
 namespace Server.Movement
 {
@@ -149,12 +147,15 @@ namespace Server.Movement
             TileFlag flags;
 
             #region Tiles
-            foreach (StaticTile tile in tiles)
+            for (var index = 0; index < tiles.Length; index++)
             {
+                StaticTile tile = tiles[index];
+
                 itemData = TileData.ItemTable[tile.ID & TileData.MaxItemValue];
                 flags = itemData.Flags;
 
-                if (m != null && m.Flying && (Insensitive.Equals(itemData.Name, "hover over") || (flags & TileFlag.HoverOver) != 0))
+                if (m != null && m.Flying &&
+                    (Insensitive.Equals(itemData.Name, "hover over") || (flags & TileFlag.HoverOver) != 0))
                 {
                     newZ = tile.Z;
                     return true;
@@ -163,7 +164,8 @@ namespace Server.Movement
                 // Stygian Dragon
                 if (m != null && m.Body == 826 && map != null && map.MapID == 5)
                 {
-                    if (x >= 307 && x <= 354 && y >= 126 && y <= 192 || x >= 42 && x <= 89 && (y >= 333 && y <= 399 || y >= 531 && y <= 597 || y >= 739 && y <= 805))
+                    if (x >= 307 && x <= 354 && y >= 126 && y <= 192 || x >= 42 && x <= 89 &&
+                        (y >= 333 && y <= 399 || y >= 531 && y <= 597 || y >= 739 && y <= 805))
                     {
                         if (tile.Z > newZ)
                         {
@@ -242,17 +244,22 @@ namespace Server.Movement
             #endregion
 
             #region Items
-            foreach (Item item in items)
+            for (var index = 0; index < items.Count; index++)
             {
+                Item item = items[index];
+
                 itemData = item.ItemData;
                 flags = itemData.Flags;
 
                 #region SA
-                if (m != null && m.Flying && (Insensitive.Equals(itemData.Name, "hover over") || (flags & TileFlag.HoverOver) != 0))
+
+                if (m != null && m.Flying &&
+                    (Insensitive.Equals(itemData.Name, "hover over") || (flags & TileFlag.HoverOver) != 0))
                 {
                     newZ = item.Z;
                     return true;
                 }
+
                 #endregion
 
                 if (item.Movable)
@@ -260,7 +267,8 @@ namespace Server.Movement
                     continue;
                 }
 
-                if ((flags & ImpassableSurface) != TileFlag.Surface && (m != null && !m.CanSwim || (flags & TileFlag.Wet) == 0))
+                if ((flags & ImpassableSurface) != TileFlag.Surface &&
+                    (m != null && !m.CanSwim || (flags & TileFlag.Wet) == 0))
                 {
                     continue;
                 }
@@ -325,6 +333,7 @@ namespace Server.Movement
                 newZ = ourZ;
                 moveIsOk = true;
             }
+
             #endregion
 
             if (!considerLand || landBlocks || stepTop < landZ)

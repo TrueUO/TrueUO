@@ -3,7 +3,6 @@ using Server.Items;
 using Server.Mobiles;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.ShameRevamped
 {
@@ -202,26 +201,42 @@ namespace Server.Engines.ShameRevamped
         public static void ResetOldSpawners(bool reset = true)
         {
             Region r = Region.Find(new Point3D(5538, 170, 5), Map.Trammel);
-            foreach (XmlSpawner spawner in r.GetEnumeratedItems().OfType<XmlSpawner>())
+
+            foreach (Item item in r.GetEnumeratedItems())
             {
-                if (spawner.Name.ToLower() != "shame_revamped" && spawner.Name.ToLower() != "shame_chest")
+                if (item is XmlSpawner spawner)
                 {
-                    if (reset)
-                        spawner.DoReset = true;
-                    else
-                        spawner.DoRespawn = true;
+                    if (spawner.Name.ToLower() != "shame_revamped" && spawner.Name.ToLower() != "shame_chest")
+                    {
+                        if (reset)
+                        {
+                            spawner.DoReset = true;
+                        }
+                        else
+                        {
+                            spawner.DoRespawn = true;
+                        }
+                    }
                 }
             }
 
             r = Region.Find(new Point3D(5538, 170, 5), Map.Felucca);
-            foreach (XmlSpawner spawner in r.GetEnumeratedItems().OfType<XmlSpawner>())
+
+            foreach (Item item in r.GetEnumeratedItems())
             {
-                if (spawner.Name.ToLower() != "shame_revamped" && spawner.Name.ToLower() != "shame_chest")
+                if (item is XmlSpawner spawner)
                 {
-                    if (reset)
-                        spawner.DoReset = true;
-                    else
-                        spawner.DoRespawn = true;
+                    if (spawner.Name.ToLower() != "shame_revamped" && spawner.Name.ToLower() != "shame_chest")
+                    {
+                        if (reset)
+                        {
+                            spawner.DoReset = true;
+                        }
+                        else
+                        {
+                            spawner.DoRespawn = true;
+                        }
+                    }
                 }
             }
         }

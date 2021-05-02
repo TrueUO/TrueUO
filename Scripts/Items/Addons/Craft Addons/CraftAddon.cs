@@ -75,7 +75,7 @@ namespace Server.Items
                         return AddonFitResult.Blocked;
                     }
 
-                    if (!CheckHouse(@from, p3D, map, c.ItemData.Height, ref house))
+                    if (!CheckHouse(from, p3D, map, c.ItemData.Height, ref house))
                     {
                         return AddonFitResult.NotInHouse;
                     }
