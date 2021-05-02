@@ -205,12 +205,9 @@ namespace Server
 
                 foreach (Item value in World.Items.Values)
                 {
-                    if (value is XmlSpawner item)
+                    if (value is XmlSpawner item && item.Map == Map.Trammel && item.Running)
                     {
-                        if (item.Map == Map.Trammel && item.Running)
-                        {
-                            toReset.Add(item);
-                        }
+                        toReset.Add(item);
                     }
                 }
 
@@ -477,8 +474,8 @@ namespace Server
 
         public static bool CanBlessItem(PlayerMobile pm, Item item)
         {
-            return (pm.Items.Contains(item) || (pm.Backpack != null && pm.Backpack.Items.Contains(item)) && !item.Stackable &&
-                    (item is BaseArmor || item is BaseJewel || item is BaseClothing || item is BaseWeapon));
+            return pm.Items.Contains(item) || pm.Backpack != null && pm.Backpack.Items.Contains(item) && !item.Stackable &&
+                (item is BaseArmor || item is BaseJewel || item is BaseClothing || item is BaseWeapon);
         }
 
         public static void CheckUsesRemaining(Mobile from, Item item)

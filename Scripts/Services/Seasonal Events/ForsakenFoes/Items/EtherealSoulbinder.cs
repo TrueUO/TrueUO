@@ -136,13 +136,7 @@ namespace Server.Items
 
             if (e.Creature is BaseCreature bc && bc.IsSoulBound && killer is PlayerMobile && killer.Backpack != null)
             {
-                EtherealSoulbinder es = null;
-
-                foreach (var soulbinder in killer.Backpack.FindItemsByType<EtherealSoulbinder>().OrderByDescending(x => x.SoulPoint < x.MaxSoulPoint))
-                {
-                    es = soulbinder;
-                    break;
-                }
+                EtherealSoulbinder es = killer.Backpack.FindItemsByType<EtherealSoulbinder>().OrderByDescending(x => x.SoulPoint < x.MaxSoulPoint).FirstOrDefault();
 
                 if (es != null)
                 {
