@@ -734,13 +734,10 @@ namespace Server.Engines.CityLoyalty
 
                 foreach (Mobile m in eable)
                 {
-                    if (m.AccessLevel == AccessLevel.Player || !m.Hidden)
+                    if ((m.AccessLevel == AccessLevel.Player || !m.Hidden) && m.Z + 16 > z && z + height > m.Z)
                     {
-                        if (m.Z + 16 > z && z + height > m.Z)
-                        {
-                            eable.Free();
-                            return false;
-                        }
+                        eable.Free();
+                        return false;
                     }
                 }
 

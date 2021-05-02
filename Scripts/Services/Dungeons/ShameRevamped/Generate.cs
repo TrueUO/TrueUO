@@ -204,18 +204,15 @@ namespace Server.Engines.ShameRevamped
 
             foreach (Item item in r.GetEnumeratedItems())
             {
-                if (item is XmlSpawner spawner)
+                if (item is XmlSpawner spawner && spawner.Name.ToLower() != "shame_revamped" && spawner.Name.ToLower() != "shame_chest")
                 {
-                    if (spawner.Name.ToLower() != "shame_revamped" && spawner.Name.ToLower() != "shame_chest")
+                    if (reset)
                     {
-                        if (reset)
-                        {
-                            spawner.DoReset = true;
-                        }
-                        else
-                        {
-                            spawner.DoRespawn = true;
-                        }
+                        spawner.DoReset = true;
+                    }
+                    else
+                    {
+                        spawner.DoRespawn = true;
                     }
                 }
             }
@@ -224,18 +221,15 @@ namespace Server.Engines.ShameRevamped
 
             foreach (Item item in r.GetEnumeratedItems())
             {
-                if (item is XmlSpawner spawner)
+                if (item is XmlSpawner spawner && spawner.Name.ToLower() != "shame_revamped" && spawner.Name.ToLower() != "shame_chest")
                 {
-                    if (spawner.Name.ToLower() != "shame_revamped" && spawner.Name.ToLower() != "shame_chest")
+                    if (reset)
                     {
-                        if (reset)
-                        {
-                            spawner.DoReset = true;
-                        }
-                        else
-                        {
-                            spawner.DoRespawn = true;
-                        }
+                        spawner.DoReset = true;
+                    }
+                    else
+                    {
+                        spawner.DoRespawn = true;
                     }
                 }
             }
