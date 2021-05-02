@@ -45,7 +45,18 @@ namespace Server.Items
 
         public bool CheckPermission(Mobile from)
         {
-            SecretChestArray p = list.FirstOrDefault(x => x.Mobile == from);
+            SecretChestArray p = null;
+
+            for (var index = 0; index < list.Count; index++)
+            {
+                var x = list[index];
+
+                if (x.Mobile == from)
+                {
+                    p = x;
+                    break;
+                }
+            }
 
             return LockingPerson.Account == from.Account || p != null && p.Permission;
         }
@@ -54,7 +65,18 @@ namespace Server.Items
         {
             if (Locked && from.AccessLevel < AccessLevel.GameMaster && LockingPerson.Account != from.Account)
             {
-                SecretChestArray l = list.FirstOrDefault(x => x.Mobile == from);
+                SecretChestArray l = null;
+
+                for (var index = 0; index < list.Count; index++)
+                {
+                    var x = list[index];
+
+                    if (x.Mobile == from)
+                    {
+                        l = x;
+                        break;
+                    }
+                }
 
                 if (l == null)
                 {
@@ -330,10 +352,23 @@ namespace Server.Items
                     }
                 case 1:
                     {
-                        SecretChestArray l = Chest.list.FirstOrDefault(x => x.Mobile == from);
+                        SecretChestArray l = null;
+
+                        for (var index = 0; index < Chest.list.Count; index++)
+                        {
+                            var x = Chest.list[index];
+
+                            if (x.Mobile == from)
+                            {
+                                l = x;
+                                break;
+                            }
+                        }
 
                         if (l == null)
+                        {
                             return;
+                        }
 
                         if (Chest.SecretKey.SequenceEqual(TempSecretKey))
                         {

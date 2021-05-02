@@ -1,7 +1,6 @@
 using Server.Mobiles;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -113,9 +112,37 @@ namespace Server.Items
 
         public static bool HasGroup(Type type, Type colType)
         {
-            foreach (Type[] typeList in _PetGroups)
+            for (var index = 0; index < _PetGroups.Length; index++)
             {
-                if (typeList.Any(x => type == x) && typeList.Any(x => colType == x))
+                Type[] typeList = _PetGroups[index];
+
+                bool any = false;
+
+                for (var i = 0; i < typeList.Length; i++)
+                {
+                    var x = typeList[i];
+
+                    if (type == x)
+                    {
+                        any = true;
+                        break;
+                    }
+                }
+
+                bool col = false;
+
+                for (var i = 0; i < typeList.Length; i++)
+                {
+                    var x = typeList[i];
+
+                    if (colType == x)
+                    {
+                        col = true;
+                        break;
+                    }
+                }
+
+                if (any && col)
                 {
                     return true;
                 }
