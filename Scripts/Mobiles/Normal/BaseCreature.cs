@@ -809,7 +809,20 @@ namespace Server.Mobiles
                     return false;
                 }
 
-                return _IsSoulBound || _SoulboundCreatures.Any(c => c == GetType());
+                bool any = false;
+
+                for (var index = 0; index < _SoulboundCreatures.Length; index++)
+                {
+                    var c = _SoulboundCreatures[index];
+
+                    if (c == GetType())
+                    {
+                        any = true;
+                        break;
+                    }
+                }
+
+                return _IsSoulBound || any;
             }
             set
             {
@@ -2921,7 +2934,15 @@ namespace Server.Mobiles
                 return false;
             }
 
-            return types.Any(t => t == fed.GetType() || fed.GetType().IsSubclassOf(t));
+            foreach (var t in types)
+            {
+                if (t == fed.GetType() || fed.GetType().IsSubclassOf(t))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public virtual bool CheckFeed(Mobile from, Item dropped)
@@ -4954,28 +4975,44 @@ namespace Server.Mobiles
                     Backpack b = new CreatureBackpack(Name);
 
                     List<Item> list = new List<Item>(Backpack.Items);
-                    foreach (Item item in list)
+
+                    for (var index = 0; index < list.Count; index++)
                     {
+                        Item item = list[index];
+
                         if (item.Movable)
+                        {
                             b.DropItem(item);
+                        }
                         else
+                        {
                             item.Delete();
+                        }
                     }
 
                     BaseHouse house = BaseHouse.FindHouseAt(this);
+
                     if (house != null)
                     {
                         if (Backpack.Items.Count == 0)
+                        {
                             b.Delete();
+                        }
                         else
+                        {
                             b.MoveToWorld(house.BanLocation, house.Map);
+                        }
                     }
                     else
                     {
                         if (Backpack.Items.Count == 0)
+                        {
                             b.Delete();
+                        }
                         else
+                        {
                             b.MoveToWorld(Location, Map);
+                        }
                     }
                 }
             }
@@ -7210,8 +7247,10 @@ namespace Server.Mobiles
 
             eable.Free();
 
-            foreach (Mobile m in move)
+            for (var index = 0; index < move.Count; index++)
             {
+                Mobile m = move[index];
+
                 m.MoveToWorld(loc, map);
             }
 

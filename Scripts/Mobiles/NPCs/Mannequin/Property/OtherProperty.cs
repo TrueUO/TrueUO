@@ -2,7 +2,6 @@ using Server.Items;
 using Server.Misc;
 
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Mobiles.MannequinProperty
 {
@@ -107,9 +106,14 @@ namespace Server.Mobiles.MannequinProperty
             if (item is BaseArmor armor)
             {
                 if (armor.ArmorAttributes.MageArmor != 0 || armor.Attributes.SpellChanneling != 0)
+                {
                     return true;
-                else if (armor.DefMedAllowance != ArmorMeditationAllowance.None)
+                }
+
+                if (armor.DefMedAllowance != ArmorMeditationAllowance.None)
+                {
                     return true;
+                }
             }
 
             return false;
@@ -122,7 +126,20 @@ namespace Server.Mobiles.MannequinProperty
 
         public override bool Matches(List<Item> items)
         {
-            return !items.Any(x => !CheckMedable(x));
+            bool matches = false;
+
+            for (var index = 0; index < items.Count; index++)
+            {
+                var x = items[index];
+
+                if (!CheckMedable(x))
+                {
+                    matches = true;
+                    break;
+                }
+            }
+
+            return !matches;
         }
     }
 
@@ -185,7 +202,12 @@ namespace Server.Mobiles.MannequinProperty
         {
             double total = 0;
 
-            items.ForEach(x => total += GetPropertyValue(x));
+            for (var index = 0; index < items.Count; index++)
+            {
+                var x = items[index];
+
+                total += GetPropertyValue(x);
+            }
 
             Value = total;
 
@@ -221,10 +243,14 @@ namespace Server.Mobiles.MannequinProperty
 
         public override bool Matches(List<Item> items)
         {
-            foreach (Item i in items)
+            for (var index = 0; index < items.Count; index++)
             {
+                Item i = items[index];
+
                 if (GetPropertyValue(i))
+                {
                     return true;
+                }
             }
 
             return false;
@@ -253,10 +279,14 @@ namespace Server.Mobiles.MannequinProperty
 
         public override bool Matches(List<Item> items)
         {
-            foreach (Item i in items)
+            for (var index = 0; index < items.Count; index++)
             {
+                Item i = items[index];
+
                 if (GetPropertyValue(i))
+                {
                     return true;
+                }
             }
 
             return false;

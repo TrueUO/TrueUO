@@ -2,7 +2,6 @@ using Server.Engines.JollyRoger;
 using Server.Gumps;
 using Server.Mobiles;
 using Server.Network;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -23,16 +22,27 @@ namespace Server.Items
         public override void OnComponentUsed(AddonComponent c, Mobile from)
         {
             var l = JollyRogerData.GetList(from);
-            var pm = from as PlayerMobile;
 
-            if (pm != null && l != null && l.Shrine != null)
+            if (from is PlayerMobile pm && l != null && l.Shrine != null)
             {
                 var title = JollyRogerData.GetShrineTitle(pm);
 
                 if (title > 0)
                 {
                     var shrine = JollyRogerData.GetShrine(title);
-                    var s = l.Shrine.FirstOrDefault(y => y.Shrine == shrine);
+
+                    ShrineArray s = null;
+
+                    for (var index = 0; index < l.Shrine.Count; index++)
+                    {
+                        var y = l.Shrine[index];
+
+                        if (y.Shrine == shrine)
+                        {
+                            s = y;
+                            break;
+                        }
+                    }
 
                     if (s != null)
                     {
