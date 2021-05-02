@@ -1425,8 +1425,10 @@ namespace Server.Spells.SkillMasteries
                     {
                         int count = 0;
 
-                        foreach (Skill sk in m.Skills)
+                        for (var index = 0; index < m.Skills.Length; index++)
                         {
+                            Skill sk = m.Skills[index];
+
                             if (sk.IsMastery)
                             {
                                 count++;

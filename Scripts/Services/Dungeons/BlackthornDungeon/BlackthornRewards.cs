@@ -1,7 +1,6 @@
 using Server.Items;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.Blackthorn
 {
@@ -180,7 +179,20 @@ namespace Server.Engines.Blackthorn
 
         public static bool IsTokunoDyable(Type t)
         {
-            return Rewards.FirstOrDefault(item => item.Type == t) != null;
+            CollectionItem first = null;
+
+            for (var index = 0; index < Rewards.Count; index++)
+            {
+                var item = Rewards[index];
+
+                if (item.Type == t)
+                {
+                    first = item;
+                    break;
+                }
+            }
+
+            return first != null;
         }
     }
 }
