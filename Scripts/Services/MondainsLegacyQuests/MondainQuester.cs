@@ -51,6 +51,12 @@ namespace Server.Engines.Quests
 
         public virtual void OnTalk(PlayerMobile player)
         {
+            if (player.Quests.Count >= 10)
+            {
+                SayTo(player, 1156899, 0x3B2); // You are too busy with your other quests, perhaps I will have something for you after you finish one of your current quests.
+                return;
+            }
+
             if (QuestHelper.DeliveryArrived(player, this))
                 return;
 

@@ -30,9 +30,10 @@ namespace Server.Items
 
             if (pm.AbyssEntry)
             {
-                pm.SendLocalizedMessage(1112697);  //You enter a state of peaceful contemplation, focusing on the meaning of Singularity.
+                pm.SendLocalizedMessage(1112697); // You enter a state of peaceful contemplation, focusing on the meaning of Singularity.
+                pm.PlaySound(249);
             }
-            else if (!e.Handled && pm.InRange(Location, 2) && e.Speech.ToLower().Trim() == "unorus" && QuestHelper.CheckDoneOnce(pm, typeof(TheArisenQuest), null, false))
+            else if (!e.Handled && pm.InRange(Location, 2) && e.Speech.ToLower().Trim() == "unorus")
             {
                 e.Handled = true;
                 e.Mobile.PlaySound(0xF9);
@@ -41,7 +42,8 @@ namespace Server.Items
 
                 if (HasDelay(pm) && pm.AccessLevel == AccessLevel.Player)
                 {
-                    pm.PublicOverheadMessage(MessageType.Regular, 0x47E, 1112685); // You need more time to contemplate the Book of Circles before trying again.
+                    PrivateOverheadMessage(MessageType.Regular, 1150, 1112685, pm.NetState); // You need more time to contemplate the Book of Circles before trying again.
+                    pm.PlaySound(249);
                 }
                 else if (quest == null)
                 {

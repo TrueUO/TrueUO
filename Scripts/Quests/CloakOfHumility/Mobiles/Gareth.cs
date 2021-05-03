@@ -112,13 +112,13 @@ namespace Server.Engines.Quests
         {
             if (TheQuestionsQuest.CooldownTable.ContainsKey(player))
             {
-                SayTo(player, 1075787, 946); // I feel that thou hast yet more to learn about Humility... Please ponder these things further, and visit me again on the 'morrow.
+                SayTo(player, 1075787, 1150); // I feel that thou hast yet more to learn about Humility... Please ponder these things further, and visit me again on the 'morrow.
                 return;
             }
 
             if (QuestHelper.GetQuest(player, typeof(TheQuestionsQuest)) is TheQuestionsQuest q && !q.Completed)
             {
-                SayTo(player, 1080107, 946); // I'm sorry, I have nothing for you at this time.
+                SayTo(player, 1080107, 0x3B2); // I'm sorry, I have nothing for you at this time.
                 return;
             }
 
@@ -142,13 +142,13 @@ namespace Server.Engines.Quests
 
             if (CheckQuestStatus(player, HumilityQuestStatus.RewardAccepted))
             {
-                SayTo(player, 1075898, 946); // Worry not, noble one! We shall never forget thy deeds!
+                SayTo(player, 1075898, 0x3B2); // Worry not, noble one! We shall never forget thy deeds!
                 return;
             }
 
             if (CheckQuestStatus(player, HumilityQuestStatus.Finished))
             {
-                SayTo(player, 1075899, 946); // Hail, friend!
+                SayTo(player, 1075899, 0x3B2); // Hail, friend!
                 return;
             }
 
