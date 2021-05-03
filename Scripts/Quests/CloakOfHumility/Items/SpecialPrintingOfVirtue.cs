@@ -8,7 +8,7 @@ namespace Server.Items
         public SpecialPrintingOfVirtue()
             : base(0xFF0, "Virtue", "Lord British", 20, false)
         {
-            Hue = 0x47E;
+            Hue = 1150;
 
             Pages[0].Lines = new string[] { "  Within this world", "live people with many", "different ideals, and", "this is good. Yet what", "is it within the people", "of our land that sorts", "out the good from the", "evil, the cherished" };
 

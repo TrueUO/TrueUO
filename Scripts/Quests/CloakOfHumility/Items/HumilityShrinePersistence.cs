@@ -36,7 +36,7 @@ namespace Server.Engines.Quests
 
         public override void OnMovement(Mobile m, Point3D oldLocation)
         {
-            if (m is PlayerMobile && m_Rec.Contains(m) && m.Backpack != null)
+            if (m is PlayerMobile pm && m_Rec.Contains(m) && m.Backpack != null && Gareth.CheckQuestStatus(pm, HumilityQuestStatus.RewardRefused))
             {
                 Item item = m.Backpack.FindItemByType(typeof(GreyCloak));
 
@@ -49,6 +49,11 @@ namespace Server.Engines.Quests
 
                     m.Backpack.DropItem(new HumilityCloak());
                     cloak.Delete();
+
+                    m.PlaySound(0x244);
+                    Effects.SendTargetParticles(m, 0x376A, 1, 32, 0x13A6, EffectLayer.Waist);
+
+                    Gareth.AddQuestStatus(pm, HumilityQuestStatus.Finished);
                 }
             }
         }
@@ -78,12 +83,9 @@ namespace Server.Engines.Quests
         public static void SetupMobiles()
         {
             BaseCreature next = new Gareth();
-            next.MoveToWorld(new Point3D(2023, 2841, 20), Map.Trammel);
-            next.Home = next.Location;
-            next.RangeHome = 5;
 
             next = new Gareth();
-            next.MoveToWorld(new Point3D(2023, 2841, 20), Map.Felucca);
+            next.MoveToWorld(new Point3D(2023, 2841, 20), Siege.SiegeShard ? Map.Felucca : Map.Trammel);
             next.Home = next.Location;
             next.RangeHome = 5;
 

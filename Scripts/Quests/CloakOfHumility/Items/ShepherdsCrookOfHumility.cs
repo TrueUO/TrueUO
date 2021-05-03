@@ -2,11 +2,12 @@ namespace Server.Items
 {
     public class ShepherdsCrookOfHumility : ShepherdsCrook
     {
-        public override int LabelNumber => 1075856;  // Shepherd's Crook of Humility (Replica)
+        public override int LabelNumber => 1075791; // A Replica of the Shepherd's Crook of Humility
 
         [Constructable]
         public ShepherdsCrookOfHumility()
         {
+            Hue = 902;
         }
 
         public ShepherdsCrookOfHumility(Serial serial)

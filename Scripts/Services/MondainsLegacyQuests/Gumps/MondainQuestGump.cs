@@ -210,19 +210,15 @@ namespace Server.Engines.Quests
 
             if (!m_Quest.RenderDescription(this, m_Offer))
             {
-                if (m_Offer)
-                    AddHtmlLocalized(130, 45, 270, 16, 1049010, 0xFFFFFF, false, false); // Quest Offer
-                else
-                    AddHtmlLocalized(130, 45, 270, 16, 1046026, 0xFFFFFF, false, false); // Quest Log
+                AddHtmlLocalized(130, 45, 270, 16, 1049010, 0x7FFF, false, false); // Quest Offer
 
-                if (m_Quest.Failed)
-                    AddHtmlLocalized(160, 80, 200, 32, 500039, 0x3C00, false, false); // Failed!
+                if (m_Quest.Title != null)
+                {
+                    AddHtmlObject(160, 108, 250, 16, m_Quest.Title, 0x2710, false, false);
+                    AddHtmlLocalized(98, 140, 312, 16, 1072202, 0x2710, false, false); // Description
+                }                
 
-                AddHtmlObject(160, 108, 250, 16, m_Quest.Title, DarkGreen, false, false);
-
-                AddHtmlLocalized(98, 140, 312, 16, 1072202, 0x2710, false, false); // Description
-
-                AddHtmlObject(98, 156, 312, 180, m_Quest.Description, LightGreen, false, true);
+                AddHtmlObject(98, 156, 312, 180, m_Quest.Description, 0x15F90, false, true);
 
                 if (m_Offer)
                 {

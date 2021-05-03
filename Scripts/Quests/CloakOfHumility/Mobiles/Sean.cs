@@ -53,6 +53,8 @@ namespace Server.Mobiles
 
             SetWearable(new SmithHammer());
             SetWearable(new FullApron());
+            SetWearable(new Shirt(), 696);
+            SetWearable(new ThighBoots());
         }
 
         public override void Serialize(GenericWriter writer)

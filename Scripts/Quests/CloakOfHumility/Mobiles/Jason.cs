@@ -4,7 +4,7 @@ namespace Server.Mobiles
 {
     public class Jason : HumilityQuestMobile
     {
-        public override int Greeting => 1075764;
+        public override int Greeting => 1075764; // Thou looketh like a fellow healer in that cloak.
 
         public override bool IsActiveVendor => true;
         public override bool CanTeach => true;
@@ -50,7 +50,7 @@ namespace Server.Mobiles
         public override void InitOutfit()
         {
             AddItem(new Items.Backpack());
-            AddItem(new Items.Robe(Utility.RandomYellowHue()));
+            AddItem(new Items.Robe(149));
             AddItem(new Items.Sandals());
         }
 

@@ -36,8 +36,8 @@ namespace Server.Mobiles
         {
             AddItem(new Backpack());
             AddItem(new FancyShirt());
-            AddItem(new Doublet(1109));
-            AddItem(new LongPants(Utility.RandomBlueHue()));
+            AddItem(new Doublet(902));
+            AddItem(new LongPants(500));
             AddItem(new Boots());
         }
 

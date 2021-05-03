@@ -3,6 +3,7 @@ using Server.Items;
 
 namespace Server.Mobiles
 {
+    [TypeAlias("Server.Mobiles.Dierdre")]
     public class Deirdre : HumilityQuestMobile
     {
         public override int Greeting => 1075744; // The cloak thou wearest looks warm.
@@ -36,9 +37,8 @@ namespace Server.Mobiles
         public override void InitOutfit()
         {
             AddItem(new Backpack());
-            AddItem(new Sandals());
-            AddItem(new FancyShirt());
-            AddItem(new PlainDress());
+            SetWearable(new FancyShirt(), 846);
+            SetWearable(new Skirt(), 846);
         }
 
         public override void Serialize(GenericWriter writer)
