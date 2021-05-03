@@ -24,9 +24,9 @@ namespace Server.SkillHandlers
         {
             m.Target = new InternalTarget();
 
-            m.SendLocalizedMessage(502368); // Wich trap will you attempt to disarm?
+            m.SendLocalizedMessage(502368); // Which trap will you attempt to disarm?
 
-            return TimeSpan.FromSeconds(10.0); // 10 second delay before beign able to re-use a skill
+            return TimeSpan.FromSeconds(10.0); // 10 second delay before being able to re-use a skill
         }
 
         private class InternalTarget : Target
@@ -307,7 +307,7 @@ namespace Server.SkillHandlers
                 From.SendLocalizedMessage(1159061); // Your ghostly fingers cannot manipulate the mechanism...
                 RemoveTrap.EndChestDisarmTimer(From);
             }
-            else if (!From.InRange(Chest.GetWorldLocation(), 16) || Chest.Deleted)
+            else if (!From.InRange(Chest.GetWorldLocation(), 2) || Chest.Deleted)
             {
                 From.SendLocalizedMessage(1159058); // You are too far away from the chest to manipulate the trigger mechanism.
                 RemoveTrap.EndChestDisarmTimer(From);
