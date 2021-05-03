@@ -8,8 +8,8 @@ namespace Server.Engines.Quests
 {
     public class Gareth : MondainQuester
     {
-        public static readonly Dictionary<Mobile, HumilityQuestStatus> Table = new Dictionary<Mobile, HumilityQuestStatus>();
-        public static string FilePath = Path.Combine("Saves/Misc", "CloakOfHumility.bin");
+        private static readonly Dictionary<Mobile, HumilityQuestStatus> _Table = new Dictionary<Mobile, HumilityQuestStatus>();
+        private static readonly string _FilePath = Path.Combine("Saves/Misc", "CloakOfHumility.bin");
 
         public static void Configure()
         {
@@ -54,14 +54,14 @@ namespace Server.Engines.Quests
         public static void OnSave(WorldSaveEventArgs e)
         {
             Persistence.Serialize(
-                FilePath,
+                _FilePath,
                 writer =>
                 {
                     writer.Write(0);
 
-                    writer.Write(Table.Count);
+                    writer.Write(_Table.Count);
 
-                    foreach (var t in Table)
+                    foreach (var t in _Table)
                     {
                         writer.Write(t.Key);
                         writer.Write((int)t.Value);
@@ -72,7 +72,7 @@ namespace Server.Engines.Quests
         public static void OnLoad()
         {
             Persistence.Deserialize(
-                FilePath,
+                _FilePath,
                 reader =>
                 {
                     int version = reader.ReadInt();
@@ -85,7 +85,7 @@ namespace Server.Engines.Quests
 
                         if (m != null)
                         {
-                            Table.Add(m, s);
+                            _Table.Add(m, s);
                         }
                     }
                 });
@@ -93,18 +93,18 @@ namespace Server.Engines.Quests
 
         public static bool CheckQuestStatus(Mobile m, HumilityQuestStatus status)
         {
-            return Table.ContainsKey(m) && Table[m] == status;
+            return _Table.ContainsKey(m) && _Table[m] == status;
         }
 
         public static void AddQuestStatus(Mobile m, HumilityQuestStatus status)
         {
-            if (Table.ContainsKey(m))
+            if (_Table.ContainsKey(m))
             {
-                Table[m] = status;
+                _Table[m] = status;
             }
             else
             {
-                Table.Add(m, status);
+                _Table.Add(m, status);
             }
         }
 
