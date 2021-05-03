@@ -18,6 +18,7 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1074340;// Prism of Light Admission Ticket
+
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);
@@ -25,6 +26,8 @@ namespace Server.Items
             list.Add(1074841); // Double click to transport out of the Prism of Light dungeon
             list.Add(1075269); // Destroyed when dropped
         }
+
+        public override int Lifespan => 43200; // 12 hours
 
         public override void OnDoubleClick(Mobile from)
         {
