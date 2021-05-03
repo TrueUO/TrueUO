@@ -82,6 +82,11 @@ namespace Server.Engines.Quests.RitualQuest
         {
         }
 
+        public Linzrom(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void InitBody()
         {
             InitStats(100, 100, 25);
@@ -110,11 +115,6 @@ namespace Server.Engines.Quests.RitualQuest
             {
                 SayTo(player, 1080107, 0x3B2); // I'm sorry, I have nothing for you at this time.
             }
-        }
-
-        public Linzrom(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
@@ -358,18 +358,18 @@ namespace Server.Engines.Quests.RitualQuest
         {
         }
 
-        public override void OnDoubleClick(Mobile m)
+        public override void OnDoubleClick(Mobile from)
         {
-            PlayerMobile pm = (PlayerMobile) m;
+            PlayerMobile pm = (PlayerMobile) from;
 
-            if (m.AccessLevel > AccessLevel.Player || QuestHelper.HasQuest(pm, typeof(HairOfTheDryadQueen)))
+            if (from.AccessLevel > AccessLevel.Player || QuestHelper.HasQuest(pm, typeof(HairOfTheDryadQueen)))
             {
                 var quest = QuestHelper.GetQuest<KnowledgeOfNature>(pm);
 
                 if (quest != null && quest.Completed)
                 {
-                    SayTo(m, 1151355, 0x3B2); // You may not obtain more than one of this item.
-                    SayTo(m, 1080107, 0x3B2); // I'm sorry, I have nothing for you at this time.
+                    SayTo(from, 1151355, 0x3B2); // You may not obtain more than one of this item.
+                    SayTo(from, 1080107, 0x3B2); // I'm sorry, I have nothing for you at this time.
                 }
 
                 if (quest == null)
@@ -398,6 +398,11 @@ namespace Server.Engines.Quests.RitualQuest
             Name = "Queen Oakwhisper";
         }
 
+        public QueenOakwhisper(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void InitBody()
         {
             InitStats(100, 100, 25);
@@ -409,11 +414,6 @@ namespace Server.Engines.Quests.RitualQuest
         public override int GetIdleSound()
         {
             return 1404;
-        }
-
-        public QueenOakwhisper(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
