@@ -233,15 +233,13 @@ namespace Server.Items
             {
                 list = new List<RecipeScrollDefinition>();
 
-                for (var i = 0; i < m_Book.Recipes.Count; i++)
+                m_Book.Recipes.ForEach(x =>
                 {
-                    var x = m_Book.Recipes[i];
-
                     if (CheckFilter(x))
                     {
                         list.Add(x);
                     }
-                }
+                });
             }
 
             m_List = list;
@@ -292,12 +290,7 @@ namespace Server.Items
             AddImageTiled(313, 64, 100, 352, 1416);
             AddImageTiled(415, 64, 76, 352, 200);
 
-            list = new List<RecipeScrollDefinition>();
-
-            foreach (var definition in list.OrderBy(x => x.ID))
-            {
-                list.Add(definition);
-            }
+            list = list.OrderBy(x => x.ID).ToList();
 
             for (int i = index; i < index + count && i >= 0 && i < list.Count; ++i)
             {
@@ -454,15 +447,11 @@ namespace Server.Items
 
                                 if (from.AddToBackpack(item))
                                 {
-                                    for (var i = 0; i < m_Book.Recipes.Count; i++)
+                                    m_Book.Recipes.ForEach(x =>
                                     {
-                                        var x = m_Book.Recipes[i];
-
                                         if (x.RecipeID == recipe.RecipeID)
-                                        {
                                             x.Amount = x.Amount - 1;
-                                        }
-                                    }
+                                    });
 
                                     m_Book.InvalidateProperties();
 
