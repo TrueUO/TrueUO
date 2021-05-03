@@ -56,6 +56,11 @@ namespace Server.Items
         {
         }
 
+        public override void AddNameProperty(ObjectPropertyList list)
+        {
+            base.AddNameProperty(list);
+        }
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
