@@ -34,9 +34,13 @@ namespace Server.Items
             if (IsChildOf(from.Backpack))
             {
                 if (from.Region.IsPartOf("Prism of Light"))
+                {
                     Teleport(from);
+                }
                 else
+                {
                     from.SendLocalizedMessage(1074840); // This ticket can only be used while you are in the Prism of Light dungeon.
+                }
             }
         }
 
@@ -45,7 +49,9 @@ namespace Server.Items
             bool ret = base.DropToWorld(from, p);
 
             if (ret)
+            {
                 DestroyItem(from);
+            }
 
             return ret;
         }
@@ -55,7 +61,9 @@ namespace Server.Items
             bool ret = base.DropToMobile(from, target, p);
 
             if (ret)
+            {
                 DestroyItem(from);
+            }
 
             return ret;
         }
@@ -65,7 +73,9 @@ namespace Server.Items
             bool ret = base.DropToItem(from, target, p);
 
             if (ret && Parent != from.Backpack)
+            {
                 DestroyItem(from);
+            }
 
             return ret;
         }
@@ -88,8 +98,10 @@ namespace Server.Items
                 {
                     List<Mobile> mobiles = region.GetMobiles();
 
-                    foreach (Mobile m in mobiles)
+                    for (var index = 0; index < mobiles.Count; index++)
                     {
+                        Mobile m = mobiles[index];
+
                         if (m is BaseCreature bc && bc.ControlMaster == from)
                         {
                             bc.MoveToWorld(new Point3D(3785, 1107, 20), Map);
