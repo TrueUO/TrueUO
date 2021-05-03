@@ -257,18 +257,22 @@ namespace Server.Items
         {
             Recipes = new List<RecipeScrollDefinition>();
 
-            Definitions.ToList().ForEach(x =>
+            for (var index = 0; index < Definitions.ToList().Count; index++)
             {
+                var x = Definitions.ToList()[index];
+
                 Recipes.Add(x);
-            });
+            }
         }
 
         public void ReLoadDefinitions()
         {
-            Definitions.Where(n => !Recipes.Any(o => o.RecipeID == n.RecipeID)).ToList().ForEach(x =>
+            for (var index = 0; index < Definitions.Where(n => Recipes.All(o => o.RecipeID != n.RecipeID)).ToList().Count; index++)
             {
+                var x = Definitions.Where(n => Recipes.All(o => o.RecipeID != n.RecipeID)).ToList()[index];
+
                 Recipes.Add(x);
-            });
+            }
         }
 
         public bool CheckAccessible(Mobile from, Item item)
@@ -351,25 +355,34 @@ namespace Server.Items
 
             if (dropped is RecipeScroll recipe)
             {
-                if (Recipes.Any(x => x.RecipeID == recipe.RecipeID))
+                for (var index = 0; index < Recipes.Count; index++)
                 {
-                    Recipes.ForEach(x =>
+                    var x1 = Recipes[index];
+
+                    if (x1.RecipeID == recipe.RecipeID)
                     {
-                        if (x.RecipeID == recipe.RecipeID)
-                            x.Amount += 1;
-                    });
+                        for (var i = 0; i < Recipes.Count; i++)
+                        {
+                            var x = Recipes[i];
 
-                    InvalidateProperties();
+                            if (x.RecipeID == recipe.RecipeID)
+                            {
+                                x.Amount += 1;
+                            }
+                        }
 
-                    from.SendLocalizedMessage(1158826); // Recipe added to the book.
+                        InvalidateProperties();
 
-                    if (from is PlayerMobile mobile)
-                    {
-                        mobile.SendGump(new RecipeBookGump(mobile, this));
+                        @from.SendLocalizedMessage(1158826); // Recipe added to the book.
+
+                        if (@from is PlayerMobile mobile)
+                        {
+                            mobile.SendGump(new RecipeBookGump(mobile, this));
+                        }
+
+                        recipe.Delete();
+                        return true;
                     }
-
-                    recipe.Delete();
-                    return true;
                 }
 
                 from.SendLocalizedMessage(1158825); // That is not a recipe.
@@ -396,16 +409,16 @@ namespace Server.Items
 
             writer.Write(Recipes.Count);
 
-            Recipes.ForEach(s =>
+            for (var index = 0; index < Recipes.Count; index++)
             {
+                var s = Recipes[index];
                 writer.Write(s.ID);
                 writer.Write(s.RecipeID);
-                writer.Write((int)s.Expansion);
-                writer.Write((int)s.Skill);
+                writer.Write((int) s.Expansion);
+                writer.Write((int) s.Skill);
                 writer.Write(s.Amount);
                 writer.Write(s.Price);
-            });
-
+            }
         }
 
         public override void Deserialize(GenericReader reader)

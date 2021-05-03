@@ -182,7 +182,7 @@ namespace Server.Items
         {
             while (true)
             {
-                if (parent != null && parent is Container c)
+                if (parent is Container c)
                 {
                     c.InvalidateProperties();
                     parent = c.Parent;
