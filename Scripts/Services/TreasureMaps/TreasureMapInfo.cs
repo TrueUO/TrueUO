@@ -592,7 +592,7 @@ namespace Server.Items
 
         private static readonly Type[] _SpecialCacheHordeAndTrove =
         {
-            typeof(OctopusNecklace), typeof(SkullGnarledStaff), typeof(GargishGnarledStaff), typeof(SkullLongsword), typeof(GargishSkullLongsword)
+            typeof(OctopusNecklace), typeof(SkullGnarledStaff), typeof(GargishSkullGnarledStaff), typeof(SkullLongsword), typeof(GargishSkullLongsword)
         };
 
         private static readonly Type[] _DecorativeMinorArtifacts =
@@ -962,7 +962,7 @@ namespace Server.Items
                             deco = Loot.Construct(type);
                         }
 
-                        if (deco is SkullGnarledStaff || deco is GargishGnarledStaff || deco is SkullLongsword || deco is GargishSkullLongsword)
+                        if (deco is SkullGnarledStaff || deco is GargishSkullGnarledStaff || deco is SkullLongsword || deco is GargishSkullLongsword)
                         {
                             if (package == TreasurePackage.Artisan)
                             {
