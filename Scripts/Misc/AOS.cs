@@ -249,16 +249,14 @@ namespace Server
                 {
                     int reflectPhys = Math.Min(105, AosAttributes.GetValue(m, AosAttribute.ReflectPhysical));
 
-                    if (reflectPhys != 0)
+                    if (reflectPhys != 0 && m != null)
                     {
                         if (from is ExodusMinion minion && minion.FieldActive || from is ExodusOverseer overseer && overseer.FieldActive)
                         {
                             from.FixedParticles(0x376A, 20, 10, 0x2530, EffectLayer.Waist);
                             from.PlaySound(0x2F4);
-                            if (m != null)
-                            {
-                                m.SendAsciiMessage("Your weapon cannot penetrate the creature's magical barrier");
-                            }
+
+                            m.SendAsciiMessage("Your weapon cannot penetrate the creature's magical barrier");
                         }
                         else
                         {
