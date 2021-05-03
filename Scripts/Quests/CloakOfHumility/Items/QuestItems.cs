@@ -12,18 +12,18 @@ namespace Server.Engines.Quests
             LootType = LootType.Blessed;
         }
 
-        public override bool Nontransferable { get { return true; } }
+        public IronChain(Serial serial)
+            : base(serial)
+        {
+        }
+
+        public override bool Nontransferable => true;
 
         public override void AddWeightProperty(ObjectPropertyList list)
         {
             base.AddWeightProperty(list);
 
             list.Add(1072351); // Quest Item
-        }
-
-        public IronChain(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
@@ -50,18 +50,18 @@ namespace Server.Engines.Quests
             Hue = 902;
         }
 
-        public override bool Nontransferable { get { return true; } }
+        public GreyCloak(Serial serial)
+            : base(serial)
+        {
+        }
+
+        public override bool Nontransferable => true;
 
         public override void AddWeightProperty(ObjectPropertyList list)
         {
             base.AddWeightProperty(list);
 
             list.Add(1072351); // Quest Item
-        }
-
-        public GreyCloak(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
@@ -73,10 +73,7 @@ namespace Server.Engines.Quests
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
-
-            if (version == 0)
-                reader.ReadMobile();
+            reader.ReadInt();
         }
     }
 
@@ -91,18 +88,18 @@ namespace Server.Engines.Quests
             LootType = LootType.Blessed;
         }
 
-        public override bool Nontransferable { get { return true; } }
+        public SeasonedSkillet(Serial serial)
+            : base(serial)
+        {
+        }
+
+        public override bool Nontransferable => true;
 
         public override void AddWeightProperty(ObjectPropertyList list)
         {
             base.AddWeightProperty(list);
 
             list.Add(1072351); // Quest Item
-        }
-
-        public SeasonedSkillet(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
@@ -129,18 +126,18 @@ namespace Server.Engines.Quests
             LootType = LootType.Blessed;
         }
 
-        public override bool Nontransferable { get { return true; } }
+        public VillageCauldron(Serial serial)
+            : base(serial)
+        {
+        }
+
+        public override bool Nontransferable => true;
 
         public override void AddWeightProperty(ObjectPropertyList list)
         {
             base.AddWeightProperty(list);
 
             list.Add(1072351); // Quest Item
-        }
-
-        public VillageCauldron(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
@@ -168,18 +165,18 @@ namespace Server.Engines.Quests
             LootType = LootType.Blessed;
         }
 
-        public override bool Nontransferable { get { return true; } }
+        public ShortStool(Serial serial)
+            : base(serial)
+        {
+        }
+
+        public override bool Nontransferable => true;
 
         public override void AddWeightProperty(ObjectPropertyList list)
         {
             base.AddWeightProperty(list);
 
             list.Add(1072351); // Quest Item
-        }
-
-        public ShortStool(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
@@ -206,18 +203,18 @@ namespace Server.Engines.Quests
             LootType = LootType.Blessed;
         }
 
-        public override bool Nontransferable { get { return true; } }
+        public FriendshipMug(Serial serial)
+            : base(serial)
+        {
+        }
+
+        public override bool Nontransferable => true;
 
         public override void AddWeightProperty(ObjectPropertyList list)
         {
             base.AddWeightProperty(list);
 
             list.Add(1072351); // Quest Item
-        }
-
-        public FriendshipMug(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
@@ -243,18 +240,18 @@ namespace Server.Engines.Quests
             LootType = LootType.Blessed;
         }
 
-        public override bool Nontransferable { get { return true; } }
+        public BrassRing(Serial serial)
+            : base(serial)
+        {
+        }
+
+        public override bool Nontransferable => true;
 
         public override void AddWeightProperty(ObjectPropertyList list)
         {
             base.AddWeightProperty(list);
 
             list.Add(1072351); // Quest Item
-        }
-
-        public BrassRing(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
@@ -280,18 +277,18 @@ namespace Server.Engines.Quests
             LootType = LootType.Blessed;
         }
 
-        public override bool Nontransferable { get { return true; } }
+        public WornHammer(Serial serial)
+            : base(serial)
+        {
+        }
+
+        public override bool Nontransferable => true;
 
         public override void AddWeightProperty(ObjectPropertyList list)
         {
             base.AddWeightProperty(list);
 
             list.Add(1072351); // Quest Item
-        }
-
-        public WornHammer(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
@@ -318,18 +315,18 @@ namespace Server.Engines.Quests
             LootType = LootType.Blessed;
         }
 
-        public override bool Nontransferable { get { return true; } }
+        public PairOfWorkGloves(Serial serial)
+            : base(serial)
+        {
+        }
+
+        public override bool Nontransferable => true;
 
         public override void AddNameProperties(ObjectPropertyList list)
         {
             base.AddNameProperties(list);
 
             list.Add(1072351); // Quest Item
-        }
-
-        public PairOfWorkGloves(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)

@@ -20,7 +20,7 @@ namespace Server.Engines.Quests
         ContinueQuestion
     }
 
-    public class MondainQuestGump : BaseQuestGump
+    public sealed class MondainQuestGump : BaseQuestGump
     {
         private const int ButtonOffset = 13;
         private readonly object m_Quester;
@@ -203,7 +203,7 @@ namespace Server.Engines.Quests
             Failed
         }
 
-        public virtual void SecQuestionDescription()
+        public void SecQuestionDescription()
         {
             if (m_Quest == null)
                 return;
@@ -231,7 +231,7 @@ namespace Server.Engines.Quests
             }
         }
 
-        public virtual void SecQuestionObjectives()
+        public void SecQuestionObjectives()
         {
             if (m_Quest == null)
                 return;
@@ -243,7 +243,7 @@ namespace Server.Engines.Quests
             AddHtmlLocalized(0, 0, 0, 0, 1011036, false, false); // OKAY
         }
 
-        public virtual void SecQuestionRefuse()
+        public void SecQuestionRefuse()
         {
             if (m_Quest == null)
                 return;
@@ -258,7 +258,7 @@ namespace Server.Engines.Quests
             }
         }
 
-        public virtual void SecQuestionFailed()
+        public void SecQuestionFailed()
         {
             if (m_Quest == null)
                 return;            
@@ -275,7 +275,7 @@ namespace Server.Engines.Quests
             AddHtmlLocalized(0, 0, 0, 0, 1060675, false, false); // CLOSE
         }
 
-        public virtual void SecQuestionComplete()
+        public void SecQuestionComplete()
         {
             if (m_Quest == null)
                 return;
@@ -303,7 +303,7 @@ namespace Server.Engines.Quests
             AddHtmlLocalized(0, 0, 0, 0, 1060675, false, false); // CLOSE
         }
 
-        public virtual void SecMain()
+        public void SecMain()
         {
             if (m_From == null)
                 return;
@@ -328,7 +328,7 @@ namespace Server.Engines.Quests
             AddButton(313, 455, 0x2EEC, 0x2EEE, (int)Buttons.Close, GumpButtonType.Reply, 0);
         }        
 
-        public virtual void SecDescription()
+        public void SecDescription()
         {
             if (m_Quest == null)
                 return;
@@ -368,7 +368,7 @@ namespace Server.Engines.Quests
             }
         }
 
-        public virtual void SecObjectives()
+        public void SecObjectives()
         {
             if (m_Quest == null)
                 return;
@@ -597,7 +597,7 @@ namespace Server.Engines.Quests
             }
         }
 
-        public virtual void SecRewards()
+        public void SecRewards()
         {
             if (m_Quest == null)
                 return;
@@ -648,7 +648,7 @@ namespace Server.Engines.Quests
             }
         }
 
-        public virtual void SecRefuse()
+        public void SecRefuse()
         {
             if (m_Quest == null)
                 return;
@@ -662,7 +662,7 @@ namespace Server.Engines.Quests
             }
         }
 
-        public virtual void SecInProgress()
+        public void SecInProgress()
         {
             if (m_Quest == null)
                 return;
@@ -673,7 +673,7 @@ namespace Server.Engines.Quests
             AddButton(313, 455, 0x2EE6, 0x2EE8, (int)Buttons.Close, GumpButtonType.Reply, 0);
         }
 
-        public virtual void SecComplete()
+        public void SecComplete()
         {
             if (m_Quest == null)
                 return;
@@ -702,7 +702,7 @@ namespace Server.Engines.Quests
             AddButton(95, 455, 0x2EE9, 0x2EEB, (int)Buttons.Complete, GumpButtonType.Reply, 0);
         }
 
-        public virtual void SecFailed()
+        public void SecFailed()
         {
             if (m_Quest == null)
                 return;
@@ -718,7 +718,7 @@ namespace Server.Engines.Quests
             AddButton(313, 455, 0x2EE6, 0x2EE8, (int)Buttons.Close, GumpButtonType.Reply, 0);
         }
 
-        public virtual string FormatSeconds(int seconds)
+        public string FormatSeconds(int seconds)
         {
             int hours = seconds / 3600;
 
@@ -741,7 +741,7 @@ namespace Server.Engines.Quests
             return seconds.ToString();
         }
 
-        public virtual string ReturnTo()
+        public string ReturnTo()
         {
             if (m_Quest == null)
                 return null;

@@ -12,6 +12,11 @@ namespace Server.Items
         {
         }
 
+        public Note(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void OnDoubleClick(Mobile m)
         {
             if (m.InRange(GetWorldLocation(), 3))
@@ -23,27 +28,29 @@ namespace Server.Items
 
         private class InternalGump : Gump
         {
-            private readonly Note m_Note;
-
             public InternalGump(Note note)
                 : base(245, 200)
             {
-                m_Note = note;
+                var mNote = note;
+
                 int page = 0;
-                int pages = m_Note.Contents.Length;
+                int pages = mNote.Contents.Length;
 
                 AddImage(0, 0, 0x27);
 
                 page++;
                 AddPage(page);                
 
-                for (int i = 0; i < m_Note.Contents.Length; i++)
+                for (int i = 0; i < mNote.Contents.Length; i++)
                 {
-                    int cliloc = m_Note.Contents[i];
+                    int cliloc = mNote.Contents[i];
+
                     bool endPage = false;
 
                     if (cliloc <= 0)
+                    {
                         continue;
+                    }
 
                     if (page == 1)
                     {
@@ -75,11 +82,6 @@ namespace Server.Items
                     }
                 }
             }
-        }
-
-        public Note(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
