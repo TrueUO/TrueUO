@@ -218,7 +218,7 @@ namespace Server
             }
 
             var fromCreature = from as BaseCreature;
-            var toCreature = (BaseCreature) m;
+            var toCreature = m as BaseCreature;
 
             if (from != null && !from.Deleted && from.Alive && !from.IsDeadBondedPet)
             {
@@ -255,7 +255,10 @@ namespace Server
                         {
                             from.FixedParticles(0x376A, 20, 10, 0x2530, EffectLayer.Waist);
                             from.PlaySound(0x2F4);
-                            m.SendAsciiMessage("Your weapon cannot penetrate the creature's magical barrier");
+                            if (m != null)
+                            {
+                                m.SendAsciiMessage("Your weapon cannot penetrate the creature's magical barrier");
+                            }
                         }
                         else
                         {
