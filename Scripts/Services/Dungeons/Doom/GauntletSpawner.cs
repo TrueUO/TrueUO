@@ -200,11 +200,14 @@ namespace Server.Engines.Doom
 
             IPooledEnumerable<IEntity> e = map.GetObjectsInRange(p, range);
 
-            foreach (T o in (predicate != null ? e.OfType<T>().Where(predicate) : e.OfType<T>()).Where(o => o != null))
+            foreach (T o in predicate != null ? e.OfType<T>().Where(predicate) : e.OfType<T>())
             {
-                value = o;
-                any = true;
-                break;
+                if (o != null)
+                {
+                    value = o;
+                    any = true;
+                    break;
+                }
             }
 
             e.Free();
@@ -662,13 +665,29 @@ namespace Server.Engines.Doom
 
                 if (reg != null)
                 {
-                    playerCount = reg.GetEnumeratedMobiles().Count(m => m is PlayerMobile && m.AccessLevel == AccessLevel.Player);
+                    playerCount = 0;
+
+                    foreach (var m in reg.GetEnumeratedMobiles())
+                    {
+                        if (m is PlayerMobile && m.AccessLevel == AccessLevel.Player)
+                        {
+                            playerCount++;
+                        }
+                    }
                 }
             }
 
             if (playerCount == 0 && m_Region != null)
             {
-                playerCount = m_Region.GetEnumeratedMobiles().Count(m => m.AccessLevel == AccessLevel.Player);
+                playerCount = 0;
+
+                foreach (var m in m_Region.GetEnumeratedMobiles())
+                {
+                    if (m.AccessLevel == AccessLevel.Player)
+                    {
+                        playerCount++;
+                    }
+                }
             }
 
             int count = (playerCount + PlayersPerSpawn - 1) / PlayersPerSpawn;
@@ -682,7 +701,9 @@ namespace Server.Engines.Doom
         public virtual void ClearCreatures()
         {
             for (int i = 0; i < m_Creatures.Count; ++i)
+            {
                 m_Creatures[i].Delete();
+            }
 
             m_Creatures.Clear();
         }
@@ -694,14 +715,18 @@ namespace Server.Engines.Doom
             int count = ComputeSpawnCount();
 
             for (int i = 0; i < count; ++i)
+            {
                 Spawn();
+            }
 
             ClearTraps();
 
             count = ComputeTrapCount();
 
             for (int i = 0; i < count; ++i)
+            {
                 SpawnTrap();
+            }
         }
 
         public virtual void Spawn()

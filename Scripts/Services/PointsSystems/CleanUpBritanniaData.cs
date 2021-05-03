@@ -712,9 +712,9 @@ namespace Server.Engines.Points
                 return 1000;
             }
 
-            foreach (CraftSystem system in CraftSystem.Systems)
+            for (var index = 0; index < CraftSystem.Systems.Count; index++)
             {
-                CraftItem crItem = null;
+                CraftSystem system = CraftSystem.Systems[index];
 
                 if (system != null && system.CraftItems != null)
                 {
@@ -729,7 +729,7 @@ namespace Server.Engines.Points
                         type = typeof(GoldBracelet);
                     }
 
-                    crItem = system.CraftItems.SearchFor(type);
+                    var crItem = system.CraftItems.SearchFor(type);
 
                     if (crItem != null && crItem.Resources != null)
                     {
@@ -747,35 +747,73 @@ namespace Server.Engines.Points
                         {
                             switch (resource.Resource)
                             {
-                                default: award = amount * .1; break;
-                                case CraftResource.DullCopper: award = amount * .47; break;
-                                case CraftResource.ShadowIron: award = amount * .73; break;
-                                case CraftResource.Copper: award = amount * 1.0; break;
-                                case CraftResource.Bronze: award = amount * 1.47; break;
-                                case CraftResource.Gold: award = amount * 2.5; break;
-                                case CraftResource.Agapite: award = amount * 5.0; break;
-                                case CraftResource.Verite: award = amount * 8.5; break;
-                                case CraftResource.Valorite: award = amount * 10; break;
-                                case CraftResource.SpinedLeather: award = amount * 0.5; break;
-                                case CraftResource.HornedLeather: award = amount * 1.0; break;
-                                case CraftResource.BarbedLeather: award = amount * 2.0; break;
-                                case CraftResource.OakWood: award = amount * .17; break;
-                                case CraftResource.AshWood: award = amount * .33; break;
-                                case CraftResource.YewWood: award = amount * .67; break;
-                                case CraftResource.Heartwood: award = amount * 1.0; break;
-                                case CraftResource.Bloodwood: award = amount * 2.17; break;
-                                case CraftResource.Frostwood: award = amount * 3.17; break;
+                                default:
+                                    award = amount * .1;
+                                    break;
+                                case CraftResource.DullCopper:
+                                    award = amount * .47;
+                                    break;
+                                case CraftResource.ShadowIron:
+                                    award = amount * .73;
+                                    break;
+                                case CraftResource.Copper:
+                                    award = amount * 1.0;
+                                    break;
+                                case CraftResource.Bronze:
+                                    award = amount * 1.47;
+                                    break;
+                                case CraftResource.Gold:
+                                    award = amount * 2.5;
+                                    break;
+                                case CraftResource.Agapite:
+                                    award = amount * 5.0;
+                                    break;
+                                case CraftResource.Verite:
+                                    award = amount * 8.5;
+                                    break;
+                                case CraftResource.Valorite:
+                                    award = amount * 10;
+                                    break;
+                                case CraftResource.SpinedLeather:
+                                    award = amount * 0.5;
+                                    break;
+                                case CraftResource.HornedLeather:
+                                    award = amount * 1.0;
+                                    break;
+                                case CraftResource.BarbedLeather:
+                                    award = amount * 2.0;
+                                    break;
+                                case CraftResource.OakWood:
+                                    award = amount * .17;
+                                    break;
+                                case CraftResource.AshWood:
+                                    award = amount * .33;
+                                    break;
+                                case CraftResource.YewWood:
+                                    award = amount * .67;
+                                    break;
+                                case CraftResource.Heartwood:
+                                    award = amount * 1.0;
+                                    break;
+                                case CraftResource.Bloodwood:
+                                    award = amount * 2.17;
+                                    break;
+                                case CraftResource.Frostwood:
+                                    award = amount * 3.17;
+                                    break;
                             }
                         }
 
-                        int weight = item is BaseWeapon weapon && !weapon.DImodded ? Imbuing.GetTotalWeight(weapon, 12, false, true) : Imbuing.GetTotalWeight(item, -1, false, true);
+                        int weight = item is BaseWeapon weapon && !weapon.DImodded
+                            ? Imbuing.GetTotalWeight(weapon, 12, false, true)
+                            : Imbuing.GetTotalWeight(item, -1, false, true);
 
                         if (weight > 0)
                         {
                             award += weight / 30;
                         }
 
-                        return (int)award;
+                        return (int) award;
                     }
                 }
             }

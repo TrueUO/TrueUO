@@ -18,18 +18,12 @@ namespace Server.Gumps
 					return;
 				}
 
-				if (_Parent != null)
-				{
-					_Parent.Remove(this);
-				}
+                _Parent?.Remove(this);
 
-				_Parent = value;
+                _Parent = value;
 
-				if (_Parent != null)
-				{
-					_Parent.Add(this);
-				}
-			}
+                _Parent?.Add(this);
+            }
 		}
 
 		protected void Delta(ref int var, int val)
@@ -41,11 +35,8 @@ namespace Server.Gumps
 
 			var = val;
 
-			if (_Parent != null)
-			{
-				_Parent.Invalidate();
-			}
-		}
+            _Parent?.Invalidate();
+        }
 
 		protected void Delta(ref bool var, bool val)
 		{
@@ -56,11 +47,8 @@ namespace Server.Gumps
 
 			var = val;
 
-			if (_Parent != null)
-			{
-				_Parent.Invalidate();
-			}
-		}
+            _Parent?.Invalidate();
+        }
 
 		protected void Delta(ref string var, string val)
 		{
@@ -71,11 +59,8 @@ namespace Server.Gumps
 
 			var = val;
 
-			if (_Parent != null)
-			{
-				_Parent.Invalidate();
-			}
-		}
+            _Parent?.Invalidate();
+        }
 
 		public abstract string Compile();
 		public abstract void AppendTo(IGumpWriter disp);

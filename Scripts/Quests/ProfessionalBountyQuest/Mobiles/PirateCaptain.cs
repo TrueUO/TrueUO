@@ -231,7 +231,9 @@ namespace Server.Mobiles
             m_Quest = quest;
 
             if (quest.Galleon != null)
+            {
                 quest.Galleon.CapturedCaptain = this;
+            }
 
             Timer.DelayCall(TimeSpan.FromSeconds(2.5), new TimerStateCallback(MoveCaptainToShip), new object[] { x, y, pole });
         }
@@ -239,12 +241,14 @@ namespace Server.Mobiles
         private void MoveCaptainToShip(object obj)
         {
             object[] objs = (object[])obj;
+
             int x = (int)objs[0];
             int y = (int)objs[1];
-            Item pole = objs[2] as Item;
 
-            if (pole != null)
+            if (objs[2] is Item pole)
+            {
                 MoveToWorld(new Point3D(x, y, pole.Z), pole.Map);
+            }
 
             Blessed = true;
             Title = "[Captured Captain]";
@@ -254,6 +258,7 @@ namespace Server.Mobiles
         {
             List<PlayerMobile> hasQuest = new List<PlayerMobile>();
             List<DamageStore> rights = GetLootingRights();
+
             for (int i = 0; i < rights.Count; i++)
             {
                 if (!rights[i].m_HasRight)

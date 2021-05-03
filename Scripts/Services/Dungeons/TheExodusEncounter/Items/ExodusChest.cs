@@ -134,8 +134,13 @@ namespace Server.Items
             for (int i = 0; i < Loot.GemTypes.Length; i++)
             {
                 item = Activator.CreateInstance(Loot.GemTypes[i]) as Item;
-                item.Amount = Utility.Random(1, 6);
-                DropItem(item);
+
+                if (item != null)
+                {
+                    item.Amount = Utility.Random(1, 6);
+
+                    DropItem(item);
+                }
             }
 
             if (0.25 > Utility.RandomDouble())

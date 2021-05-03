@@ -122,29 +122,78 @@ namespace Server.Items
 
         public static bool VictimIsUnderEffects<T>(Mobile from)
         {
-            return Effects.Any(e => e.Victim == from && e.GetType() == typeof(T));
+            for (var index = 0; index < Effects.Count; index++)
+            {
+                var e = Effects[index];
+
+                if (e.Victim == from && e.GetType() == typeof(T))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public static T GetContextForAttacker<T>(Mobile from) where T : PropertyEffect
         {
-            return Effects.FirstOrDefault(e => e.Attacker == from && e.GetType() == typeof(T)) as T;
+            PropertyEffect first = null;
+
+            for (var index = 0; index < Effects.Count; index++)
+            {
+                var e = Effects[index];
+
+                if (e.Attacker == from && e.GetType() == typeof(T))
+                {
+                    first = e;
+                    break;
+                }
+            }
+
+            return first as T;
         }
 
         public static T GetContextForVictim<T>(Mobile from) where T : PropertyEffect
         {
-            return Effects.FirstOrDefault(e => e.Victim == from && e.GetType() == typeof(T)) as T;
+            PropertyEffect first = null;
+
+            for (var index = 0; index < Effects.Count; index++)
+            {
+                var e = Effects[index];
+
+                if (e.Victim == from && e.GetType() == typeof(T))
+                {
+                    first = e;
+                    break;
+                }
+            }
+
+            return first as T;
         }
 
         public static T GetContext<T>(Mobile from, Mobile victim) where T : PropertyEffect
         {
-            return Effects.FirstOrDefault(e => e.Attacker == from && e.Victim == victim && e.GetType() == typeof(T)) as T;
+            PropertyEffect first = null;
+
+            for (var index = 0; index < Effects.Count; index++)
+            {
+                var e = Effects[index];
+
+                if (e.Attacker == from && e.Victim == victim && e.GetType() == typeof(T))
+                {
+                    first = e;
+                    break;
+                }
+            }
+
+            return first as T;
         }
 
         public static IEnumerable<T> GetContextsForVictim<T>(Mobile victim) where T : PropertyEffect
         {
-            foreach (PropertyEffect effect in Effects.OfType<T>().Where(e => e.Victim == victim))
+            foreach (var effect in Effects.OfType<T>().Where(e => e.Victim == victim))
             {
-                yield return effect as T;
+                yield return effect;
             }
         }
     }
@@ -397,13 +446,15 @@ namespace Server.Items
             BuffInfo.RemoveBuff(Victim, BuffIcon.SplinteringEffect);
         }
 
-        public void StartForceWalk(Mobile m)
+        public static void StartForceWalk(Mobile m)
         {
             if (m.NetState != null && m.AccessLevel < AccessLevel.GameMaster)
+            {
                 m.SendSpeedControl(SpeedControlType.WalkSpeed);
+            }
         }
 
-        public void EndForceWalk(Mobile m)
+        public static void EndForceWalk(Mobile m)
         {
             m.SendSpeedControl(SpeedControlType.Disable);
         }
@@ -474,8 +525,9 @@ namespace Server.Items
     public class BoneBreakerContext : PropertyEffect
     {
         public static Dictionary<Mobile, DateTime> _Immunity;
-        private static TimeSpan _EffectsDuration = TimeSpan.FromSeconds(4);
-        private static TimeSpan _ImmunityDuration = TimeSpan.FromSeconds(60);
+
+        private static readonly TimeSpan _EffectsDuration = TimeSpan.FromSeconds(4);
+        private static readonly TimeSpan _ImmunityDuration = TimeSpan.FromSeconds(60);
 
         public BoneBreakerContext(Mobile attacker, Mobile defender, Item weapon)
             : base(attacker, defender, weapon, _EffectsDuration, TimeSpan.FromSeconds(1))
@@ -539,14 +591,20 @@ namespace Server.Items
         public static bool IsImmune(Mobile m)
         {
             if (_Immunity == null)
+            {
                 return false;
+            }
 
             List<Mobile> list = new List<Mobile>(_Immunity.Keys);
 
-            foreach (Mobile mob in list)
+            for (var index = 0; index < list.Count; index++)
             {
+                Mobile mob = list[index];
+
                 if (_Immunity[mob] < DateTime.UtcNow)
+                {
                     _Immunity.Remove(mob);
+                }
             }
 
             ColUtility.Free(list);
@@ -648,14 +706,20 @@ namespace Server.Items
         public static bool IsImmune(Mobile m)
         {
             if (_Immunity == null)
+            {
                 return false;
+            }
 
             List<Mobile> list = new List<Mobile>(_Immunity.Keys);
 
-            foreach (Mobile mob in list)
+            for (var index = 0; index < list.Count; index++)
             {
+                Mobile mob = list[index];
+
                 if (_Immunity[mob] < DateTime.UtcNow)
+                {
                     _Immunity.Remove(mob);
+                }
             }
 
             ColUtility.Free(list);
@@ -718,12 +782,16 @@ namespace Server.Items
         public static bool IsImmune(Mobile m)
         {
             if (_Immunity == null)
+            {
                 return false;
+            }
 
             List<Mobile> list = new List<Mobile>(_Immunity.Keys);
 
-            foreach (Mobile mob in list)
+            for (var index = 0; index < list.Count; index++)
             {
+                Mobile mob = list[index];
+
                 if (_Immunity[mob] < DateTime.UtcNow)
                     _Immunity.Remove(mob);
             }
@@ -736,7 +804,9 @@ namespace Server.Items
         public static void AddImmunity(Mobile m)
         {
             if (_Immunity == null)
+            {
                 _Immunity = new Dictionary<Mobile, DateTime>();
+            }
 
             _Immunity[m] = DateTime.UtcNow + TimeSpan.FromSeconds(60);
         }

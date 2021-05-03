@@ -5,7 +5,6 @@ using Server.Multis;
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Server.Regions;
 
 namespace Server.Items
@@ -97,7 +96,7 @@ namespace Server.Items
         public bool CanLight => m_Cleaned && m_Charged && m_Primed && m_AmmoType != AmmunitionType.Empty && m_LoadedAmmo != null;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public double Durability => (m_Hits / (double)MaxHits) * 100.0;
+        public double Durability => m_Hits / (double)MaxHits * 100.0;
 
         public override bool ForceShowProperties => true;
 
@@ -186,7 +185,9 @@ namespace Server.Items
         public void TryLightFuse(Mobile from)
         {
             if (from == null)
+            {
                 return;
+            }
 
             Container pack = from.Backpack;
 
@@ -196,8 +197,10 @@ namespace Server.Items
 
                 if (items != null)
                 {
-                    foreach (Item item in items)
+                    for (var index = 0; index < items.Length; index++)
                     {
+                        Item item = items[index];
+
                         if (item is Matches matches && matches.IsLight)
                         {
                             LightFuse(from);
@@ -210,8 +213,10 @@ namespace Server.Items
 
                 if (items != null)
                 {
-                    foreach (Item item in items)
+                    for (var index = 0; index < items.Length; index++)
                     {
+                        Item item = items[index];
+
                         if (item is Torch torch && torch.Burning)
                         {
                             LightFuse(from);
@@ -344,9 +349,9 @@ namespace Server.Items
                             for (int i = -lateralOffset; i <= lateralOffset; i++)
                             {
                                 if (xOffset == 0)
-                                    newPoint = new Point3D(pnt.X + (xOffset + i), pnt.Y + (yOffset * currentRange), pnt.Z);
+                                    newPoint = new Point3D(pnt.X + xOffset + i, pnt.Y + yOffset * currentRange, pnt.Z);
                                 else
-                                    newPoint = new Point3D(pnt.X + (xOffset * currentRange), pnt.Y + (yOffset + i), pnt.Z);
+                                    newPoint = new Point3D(pnt.X + xOffset * currentRange, pnt.Y + yOffset + i, pnt.Z);
 
                                 //For Testing
                                 /*if (i == -lateralOffset || i == lateralOffset)
@@ -362,8 +367,12 @@ namespace Server.Items
                                 mobs.AddRange(FindMobiles(shooter, newPoint, map, false, false, false, true));
                             }
 
-                            foreach (Mobile m in mobs)
+                            for (var index = 0; index < mobs.Count; index++)
+                            {
+                                Mobile m = mobs[index];
+
                                 list.Add(m);
+                            }
 
                             if (list.Count > 0)
                             {
@@ -390,9 +399,9 @@ namespace Server.Items
                             for (int i = -lateralOffset; i <= lateralOffset; i++)
                             {
                                 if (xOffset == 0)
-                                    newPoint = new Point3D(pnt.X + (xOffset + i), pnt.Y + (yOffset * currentRange), pnt.Z);
+                                    newPoint = new Point3D(pnt.X + xOffset + i, pnt.Y + yOffset * currentRange, pnt.Z);
                                 else
-                                    newPoint = new Point3D(pnt.X + (xOffset * currentRange), pnt.Y + (yOffset + i), pnt.Z);
+                                    newPoint = new Point3D(pnt.X + xOffset * currentRange, pnt.Y + yOffset + i, pnt.Z);
 
                                 mobiles.AddRange(FindMobiles(shooter, newPoint, map, true, true, true, true));
 
@@ -446,9 +455,11 @@ namespace Server.Items
 
                 StaticTile[] tiles = map.Tiles.GetStaticTiles(newPoint.X, newPoint.Y, true);
 
-                foreach (StaticTile tile in tiles)
+                for (var index = 0; index < tiles.Length; index++)
                 {
+                    StaticTile tile = tiles[index];
                     ItemData id = TileData.ItemTable[tile.ID & TileData.MaxItemValue];
+
                     bool isWater = tile.ID >= 0x1796 && tile.ID <= 0x17B2;
 
                     if (!isWater && id.Surface && !id.Impassable)
@@ -536,7 +547,7 @@ namespace Server.Items
             BaseBoat target = list[0] as BaseBoat;
             Point3D pnt = (Point3D)list[1];
             AmmoInfo ammoInfo = list[2] as AmmoInfo;
-            Mobile shooter = list[3] as Mobile;
+            Mobile shooter = (Mobile) list[3];
 
             if (target != null && m_Galleon != null)
             {
@@ -556,7 +567,7 @@ namespace Server.Items
                 int yOffset = 0;
                 Point3D hit = pnt;
 
-                if (!ammoInfo.RequiresSurface)
+                if (ammoInfo != null && !ammoInfo.RequiresSurface)
                 {
                     switch (d)
                     {
@@ -590,24 +601,38 @@ namespace Server.Items
                 Mobile victim = target.Owner;
 
                 if (victim != null && target.Contains(victim) && shooter.CanBeHarmful(victim, false))
+                {
                     shooter.DoHarmful(victim);
+                }
                 else
                 {
                     List<Mobile> candidates = new List<Mobile>();
+
                     SecurityLevel highest = SecurityLevel.Passenger;
 
-                    foreach (PlayerMobile mob in target.MobilesOnBoard.OfType<PlayerMobile>().Where(pm => shooter.CanBeHarmful(pm, false)))
+                    foreach (Mobile mobile in target.MobilesOnBoard)
                     {
-                        if (m_Galleon.GetSecurityLevel(mob) > highest)
-                            candidates.Insert(0, mob);
-                        else
-                            candidates.Add(mob);
+                        if (mobile is PlayerMobile mob && shooter.CanBeHarmful(mob, false))
+                        {
+                            if (m_Galleon.GetSecurityLevel(mob) > highest)
+                            {
+                                candidates.Insert(0, mob);
+                            }
+                            else
+                            {
+                                candidates.Add(mob);
+                            }
+                        }
                     }
 
                     if (candidates.Count > 0)
+                    {
                         shooter.DoHarmful(candidates[0]);
+                    }
                     else if (victim != null && shooter.IsHarmfulCriminal(victim))
+                    {
                         shooter.CriminalAction(false);
+                    }
 
                     ColUtility.Free(candidates);
                 }
@@ -619,7 +644,9 @@ namespace Server.Items
                     foreach (Item item in eable)
                     {
                         if (item is BaseCannon cannon && !m_Galleon.Contains(cannon))
+                        {
                             cannon.OnDamage(damage, shooter);
+                        }
                     }
 
                     eable.Free();
@@ -630,25 +657,32 @@ namespace Server.Items
         public virtual void OnMobileHit(object obj)
         {
             object[] objects = (object[])obj;
-            List<Mobile> mobsToHit = objects[0] as List<Mobile>;
-            AmmoInfo info = objects[2] as AmmoInfo;
-            Mobile shooter = objects[3] as Mobile;
+
+            List<Mobile> mobsToHit = (List<Mobile>) objects[0];
+            AmmoInfo info = (AmmoInfo) objects[2];
+            Mobile shooter = (Mobile) objects[3];
 
             int damage = (int)(Utility.RandomMinMax(info.MinDamage, info.MaxDamage) * m_Galleon.CannonDamageMod);
 
-            Mobile toHit = null;
+            Mobile toHit;
 
             if (!info.SingleTarget)
             {
-                foreach (Mobile mob in mobsToHit)
+                for (var index = 0; index < mobsToHit.Count; index++)
                 {
+                    Mobile mob = mobsToHit[index];
+
                     toHit = mob;
 
                     if (toHit is BaseSeaChampion && info.AmmoType != AmmunitionType.Empty && info.AmmoType == AmmunitionType.Cannonball)
+                    {
                         damage *= 100;
+                    }
 
                     shooter.DoHarmful(toHit);
+
                     AOS.Damage(toHit, shooter, damage, info.PhysicalDamage, info.FireDamage, info.ColdDamage, info.PoisonDamage, info.EnergyDamage);
+
                     Effects.SendLocationEffect(toHit.Location, toHit.Map, Utility.RandomBool() ? 14000 : 14013, 15, 10);
                     Effects.PlaySound(toHit.Location, toHit.Map, 0x207);
                 }
@@ -661,10 +695,14 @@ namespace Server.Items
                 {
                     //only cannonballs will get the damage bonus
                     if (toHit is BaseSeaChampion && info.AmmoType != AmmunitionType.Empty && info.AmmoType == AmmunitionType.Cannonball)
+                    {
                         damage *= 75;
+                    }
 
                     shooter.DoHarmful(toHit);
+
                     AOS.Damage(toHit, shooter, damage, info.PhysicalDamage, info.FireDamage, info.ColdDamage, info.PoisonDamage, info.EnergyDamage);
+
                     Effects.SendLocationEffect(toHit.Location, toHit.Map, Utility.RandomBool() ? 14000 : 14013, 15, 10);
                     Effects.PlaySound(toHit.Location, toHit.Map, 0x207);
                 }
@@ -709,11 +747,13 @@ namespace Server.Items
             Container hold = m_Galleon.GalleonHold;
 
             if (pack == null)
+            {
                 return;
+            }
 
             double ingotsNeeded = 36 * (100 - Durability);
 
-            ingotsNeeded -= (from.Skills[SkillName.Blacksmith].Value / 200.0) * ingotsNeeded;
+            ingotsNeeded -= @from.Skills[SkillName.Blacksmith].Value / 200.0 * ingotsNeeded;
 
             double min = ingotsNeeded / 10;
             double ingots1 = pack.GetAmount(typeof(IronIngot));
@@ -735,7 +775,7 @@ namespace Server.Items
             else
             {
                 ingotsUsed = ingots;
-                percRepaired = (ingots / ingotsNeeded) * 100;
+                percRepaired = ingots / ingotsNeeded * 100;
             }
 
             double toConsume = 0;
@@ -755,29 +795,45 @@ namespace Server.Items
             }
 
             m_Hits += (int)((MaxHits - m_Hits) * (percRepaired / 100));
-            if (m_Hits > MaxHits) m_Hits = MaxHits;
+
+            if (m_Hits > MaxHits)
+            {
+                m_Hits = MaxHits;
+            }
+
             InvalidateDamageState();
 
             percRepaired += Durability;
-            if (percRepaired > 100) percRepaired = 100;
+
+            if (percRepaired > 100)
+            {
+                percRepaired = 100;
+            }
 
             from.SendLocalizedMessage(1116605, string.Format("{0}\t{1}", ((int)temp).ToString(), ((int)percRepaired).ToString())); //You make repairs to the cannon using ~1_METAL~ ingots. The cannon is now ~2_DMGPCT~% repaired.
         }
 
         public bool VerifyAmmo(Type type)
         {
-            foreach (Type ammoType in LoadTypes)
+            for (var index = 0; index < LoadTypes.Length; index++)
             {
+                Type ammoType = LoadTypes[index];
+
                 if (type == ammoType || type.IsSubclassOf(ammoType))
+                {
                     return true;
+                }
             }
+
             return false;
         }
 
         public bool TryClean(Mobile from)
         {
             if (m_Cleaned && m_Cleansliness == 0)
+            {
                 from.SendLocalizedMessage(1116007); //The cannon is already clean
+            }
             else if (CheckForItem(typeof(Swab), from))
             {
                 AddAction(from, 1149641); //Cleaning started.
@@ -861,7 +917,9 @@ namespace Server.Items
         public void DoLoad(Mobile from, Item ammo)
         {
             Timer.DelayCall(ActionTime, new TimerStateCallback(Load), new object[] { from, ammo });
+
             int cliloc = ammo is ICannonAmmo cannonAmmo && cannonAmmo.AmmoType == AmmunitionType.Cannonball ? 1116036 : 1116037;
+
             AddAction(from, 1149647); //loading started.
             DoAreaMessage(cliloc, 10, from);
         }
@@ -884,7 +942,9 @@ namespace Server.Items
             }
 
             if (from.HasGump(typeof(CannonGump)))
+            {
                 ResendGump(from);
+            }
 
             InvalidateProperties();
         }
@@ -892,7 +952,8 @@ namespace Server.Items
         public void Charge(object state)
         {
             object[] obj = (object[])state;
-            Mobile from = obj[0] as Mobile;
+
+            Mobile from = (Mobile) obj[0];
             Type type = obj[1] as Type;
 
             if (from.InRange(Location, 3))
@@ -902,7 +963,9 @@ namespace Server.Items
                 DoAreaMessage(1116061, 10, from); //~1_NAME~ finishes charging the cannon.
 
                 if (type != null && from.Backpack != null)
+                {
                     from.Backpack.ConsumeTotal(type, 1);
+                }
             }
             else
             {
@@ -911,7 +974,9 @@ namespace Server.Items
             }
 
             if (from.HasGump(typeof(CannonGump)))
+            {
                 ResendGump(from);
+            }
 
             InvalidateProperties();
         }
@@ -919,7 +984,8 @@ namespace Server.Items
         public void Prime(object state)
         {
             object[] obj = (object[])state;
-            Mobile from = obj[0] as Mobile;
+
+            Mobile from = (Mobile) obj[0];
             Type type = obj[1] as Type;
 
             if (from.InRange(Location, 3))
@@ -929,7 +995,9 @@ namespace Server.Items
                 DoAreaMessage(1116064, 10, from); //~1_NAME~ finishes priming the cannon. It is ready to be fired!
 
                 if (type != null && from.Backpack != null)
+                {
                     from.Backpack.ConsumeTotal(type, 1);
+                }
             }
             else
             {
@@ -938,7 +1006,9 @@ namespace Server.Items
             }
 
             if (from.HasGump(typeof(CannonGump)))
+            {
                 ResendGump(from);
+            }
 
             InvalidateProperties();
         }
@@ -946,8 +1016,10 @@ namespace Server.Items
         public void Load(object state)
         {
             object[] obj = (object[])state;
-            Mobile from = obj[0] as Mobile;
+
+            Mobile from = (Mobile) obj[0];
             Item ammo = obj[1] as Item;
+
             int cliloc = 1116062;
 
             if (ammo is ICannonAmmo cannonAmmo && cannonAmmo.AmmoType == AmmunitionType.Grapeshot)
@@ -977,7 +1049,9 @@ namespace Server.Items
             }
 
             if (from.HasGump(typeof(CannonGump)))
+            {
                 ResendGump(from);
+            }
 
             InvalidateProperties();
         }
@@ -985,7 +1059,9 @@ namespace Server.Items
         public void RemoveCharge(Mobile from)
         {
             if (from == null || !m_Charged)
+            {
                 return;
+            }
 
             Type type = this is LightShipCannon ? typeof(LightPowderCharge) : typeof(HeavyPowderCharge);
 
@@ -994,8 +1070,11 @@ namespace Server.Items
             if (item != null)
             {
                 Container pack = from.Backpack;
+
                 if (pack != null || !pack.TryDropItem(from, item, false))
+                {
                     item.MoveToWorld(from.Location, from.Map);
+                }
             }
 
             m_Charged = false;
@@ -1003,7 +1082,9 @@ namespace Server.Items
             DoAreaMessage(1116065, 10, from); //~1_NAME~ carefully removes the powder charge from the cannon.
 
             if (from.HasGump(typeof(CannonGump)))
+            {
                 ResendGump(from);
+            }
 
             InvalidateProperties();
         }
@@ -1065,8 +1146,11 @@ namespace Server.Items
             if (item != null)
             {
                 Container pack = from.Backpack;
+
                 if (pack != null || !pack.TryDropItem(from, item, false))
+                {
                     item.MoveToWorld(from.Location, from.Map);
+                }
             }
 
             m_Primed = false;

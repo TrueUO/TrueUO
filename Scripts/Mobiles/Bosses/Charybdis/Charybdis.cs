@@ -22,7 +22,13 @@ namespace Server.Mobiles
         public override int DamageRange => 10;
 
         public override int Meat => 5;
-        public override double TreasureMapChance => .50;
+        public override bool AutoDispel => true;
+        public override double AutoDispelChance => 1.0;
+        public override bool BardImmune => true;
+        public override bool Unprovokable => true;
+        public override bool Uncalmable => true;
+        public override Poison PoisonImmune => Poison.Lethal;
+        public override double TreasureMapChance => 0.50;
         public override int TreasureMapLevel => 5;
 
         public override Type[] UniqueList => new[] { typeof(FishermansHat), typeof(FishermansVest), typeof(FishermansEelskinGloves), typeof(FishermansTrousers) };
@@ -163,7 +169,9 @@ namespace Server.Mobiles
                 LandTile t = map.Tiles.GetLandTile(newLoc.X, newLoc.Y);
 
                 if (!Spells.SpellHelper.CheckMulti(new Point3D(newLoc.X, newLoc.Y, newLoc.Z), map) && IsSeaTile(t))
+                {
                     break;
+                }
             }
 
             if (newLoc == Point3D.Zero || GetDistanceToSqrt(newLoc) > 15)
@@ -408,8 +416,6 @@ namespace Server.Mobiles
             public override bool Unprovokable => true;
             public override bool Uncalmable => true;
             public override Poison PoisonImmune => Poison.Lethal;
-
-            public override int Meat => 1;
 
             public EffectSpawn(Serial serial)
                 : base(serial)
@@ -675,8 +681,11 @@ namespace Server.Mobiles
             writer.Write(0);
 
             writer.Write(m_Tentacles.Count);
-            foreach (Mobile tent in m_Tentacles)
+            for (var index = 0; index < m_Tentacles.Count; index++)
+            {
+                Mobile tent = m_Tentacles[index];
                 writer.Write(tent);
+            }
         }
 
         public override void Deserialize(GenericReader reader)
@@ -689,7 +698,9 @@ namespace Server.Mobiles
             {
                 Mobile tent = reader.ReadMobile();
                 if (tent != null && !tent.Deleted && tent.Alive)
+                {
                     m_Tentacles.Add(tent);
+                }
             }
 
             m_NextSpawn = DateTime.UtcNow;

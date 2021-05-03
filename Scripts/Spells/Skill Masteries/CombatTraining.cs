@@ -32,12 +32,28 @@ namespace Server.Spells.SkillMasteries
                 double lore = Caster.Skills[SkillName.AnimalLore].Base;
                 bool asone = SpellType == TrainingType.AsOne;
 
-                double skillvalue = (taming + (lore / 2));
+                double skillvalue = taming + lore / 2;
                 int mastery_base = 12;
-                if (skillvalue < 150) mastery_base = 12;
-                if (skillvalue < 165) mastery_base = 10;
-                if (skillvalue < 180) mastery_base = 8;
-                if (skillvalue >= 180) mastery_base = 6;
+
+                if (skillvalue < 150)
+                {
+                    mastery_base = 12;
+                }
+
+                if (skillvalue < 165)
+                {
+                    mastery_base = 10;
+                }
+
+                if (skillvalue < 180)
+                {
+                    mastery_base = 8;
+                }
+
+                if (skillvalue >= 180)
+                {
+                    mastery_base = 6;
+                }
 
                 return asone ? mastery_base * 2 : mastery_base;
             }
@@ -103,15 +119,29 @@ namespace Server.Spells.SkillMasteries
             /* As One - Requires multiple pets to active */
             if (type == TrainingType.AsOne && Caster is PlayerMobile pm)
             {
-                var list = pm.AllFollowers.Where(x => x.Map != Map.Internal && x.InRange(Caster, 100) && x != target).ToList();
+                var list = new List<Mobile>();
+
+                for (var index = 0; index < pm.AllFollowers.Count; index++)
+                {
+                    var x = pm.AllFollowers[index];
+
+                    if (x.Map != Map.Internal && x.InRange(Caster, 100) && x != target)
+                    {
+                        list.Add(x);
+                    }
+                }
 
                 if (list.Count > 0)
                 {
-                    list.ForEach(x =>
+                    for (var index = 0; index < list.Count; index++)
                     {
-                        Effects.SendPacket(x.Location, x.Map, new ParticleEffect(EffectType.FixedFrom, x.Serial, Serial.Zero, 0x376A, x.Location, x.Location, 1, 32, false, false, 1262, 0, 0, 9502, 1, x.Serial, 199, 0));
-                        Effects.SendPacket(x.Location, x.Map, new GraphicalEffect(EffectType.FixedFrom, x.Serial, Serial.Zero, 0x375A, x.Location, x.Location, 35, 90, true, true));
-                    });
+                        var x = list[index];
+
+                        Effects.SendPacket(x.Location, x.Map, new ParticleEffect(EffectType.FixedFrom, x.Serial, Serial.Zero, 0x376A, x.Location,
+                                x.Location, 1, 32, false, false, 1262, 0, 0, 9502, 1, x.Serial, 199, 0));
+                        Effects.SendPacket(x.Location, x.Map, new GraphicalEffect(EffectType.FixedFrom, x.Serial, Serial.Zero, 0x375A, x.Location,
+                                x.Location, 35, 90, true, true));
+                    }
                 }
                 else
                 {
@@ -241,16 +271,33 @@ namespace Server.Spells.SkillMasteries
                             if (bc.GetMaster() is PlayerMobile)
                             {
                                 PlayerMobile pm = bc.GetMaster() as PlayerMobile;
-                                List<Mobile> list = pm.AllFollowers.Where(m => m.Map != Map.Internal && m.InRange(pm, 15) && m.CanBeHarmful(attacker)).ToList();
+
+                                List<Mobile> list = new List<Mobile>();
+
+                                if (pm != null)
+                                {
+                                    for (var index = 0; index < pm.AllFollowers.Count; index++)
+                                    {
+                                        var m = pm.AllFollowers[index];
+
+                                        if (m.Map != Map.Internal && m.InRange(pm, 15) && m.CanBeHarmful(attacker))
+                                        {
+                                            list.Add(m);
+                                        }
+                                    }
+                                }
 
                                 if (list.Count > 1)
                                 {
                                     damage /= list.Count;
 
-                                    foreach (Mobile m in list)
+                                    for (var index = 0; index < list.Count; index++)
                                     {
-                                        Effects.SendPacket(m.Location, m.Map, new ParticleEffect(EffectType.FixedFrom, m.Serial, Serial.Zero, 0x374A, m.Location, m.Location, 1, 32, false, false, 2734, 0, 0, 9502, 1, m.Serial, 42, 0));
-                                        
+                                        Mobile m = list[index];
+
+                                        Effects.SendPacket(m.Location, m.Map,
+                                            new ParticleEffect(EffectType.FixedFrom, m.Serial, Serial.Zero, 0x374A, m.Location, m.Location, 1, 32, false, false, 2734, 0, 0, 9502, 1, m.Serial, 42, 0));
+
                                         if (m != defender)
                                         {
                                             m.Damage(damage, attacker, true, false);

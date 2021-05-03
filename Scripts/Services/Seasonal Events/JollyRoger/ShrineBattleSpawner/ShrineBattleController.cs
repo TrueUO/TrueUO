@@ -3,7 +3,6 @@ using Server.Mobiles;
 using Server.Regions;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Xml;
 
 namespace Server.Engines.JollyRoger
@@ -92,16 +91,32 @@ namespace Server.Engines.JollyRoger
             get
             {
                 if (Spawn == null || Spawn.Count == 0)
+                {
                     return 0;
+                }
 
                 int count = 0;
 
                 foreach (KeyValuePair<BaseCreature, List<BaseCreature>> kvp in Spawn)
                 {
                     if (kvp.Key.Alive)
+                    {
                         count++;
+                    }
 
-                    count += kvp.Value.Count(bc => bc.Alive);
+                    int count1 = 0;
+
+                    for (var index = 0; index < kvp.Value.Count; index++)
+                    {
+                        var bc = kvp.Value[index];
+
+                        if (bc.Alive)
+                        {
+                            count1++;
+                        }
+                    }
+
+                    count += count1;
                 }
 
                 return count;
@@ -189,7 +204,14 @@ namespace Server.Engines.JollyRoger
 
             m_Active = true;
 
-            List<Rectangle2D> SpawnZones = Defs[Shrine].ToList();
+            List<Rectangle2D> SpawnZones = new List<Rectangle2D>();
+
+            for (var index = 0; index < Defs[Shrine].Length; index++)
+            {
+                var rectangle2D = Defs[Shrine][index];
+
+                SpawnZones.Add(rectangle2D);
+            }
 
             for (int i = 0; i < 3; i++)
             {
@@ -223,20 +245,21 @@ namespace Server.Engines.JollyRoger
 
                 for (int s = 0; s < 10; s++)
                 {
-                    BaseCreature bc = Activator.CreateInstance(_SpawnTable[(int)type][Utility.Random(_SpawnTable[(int)type].Length)]) as BaseCreature;
-
-                    bc.Kills = 100;
-
-                    if (bc.FightMode == FightMode.Evil)
+                    if (Activator.CreateInstance(_SpawnTable[(int)type][Utility.Random(_SpawnTable[(int)type].Length)]) is BaseCreature bc)
                     {
-                        bc.FightMode = FightMode.Aggressor;
+                        bc.Kills = 100;
+
+                        if (bc.FightMode == FightMode.Evil)
+                        {
+                            bc.FightMode = FightMode.Aggressor;
+                        }
+
+                        list.Add(bc);
+
+                        Point3D point = points[Utility.Random(points.Count)];
+
+                        SpawnMobile(bc, point);
                     }
-
-                    list.Add(bc);
-
-                    Point3D point = points[Utility.Random(points.Count)];
-
-                    SpawnMobile(bc, point);
                 }
 
                 ShrineMaster capt = new ShrineMaster(type, this)
@@ -261,7 +284,18 @@ namespace Server.Engines.JollyRoger
 
         public void OnMasterDestroyed()
         {
-            if (Spawn != null && !Spawn.Any(x => x.Key.Alive))
+            bool any = false;
+
+            foreach (var x in Spawn)
+            {
+                if (x.Key.Alive)
+                {
+                    any = true;
+                    break;
+                }
+            }
+
+            if (Spawn != null && !any)
             {
                 RemoveSpawn();
             }
@@ -269,7 +303,20 @@ namespace Server.Engines.JollyRoger
 
         public bool MasterBlessCheck(ShrineMaster master)
         {
-            return master != null && Spawn != null && Spawn.ContainsKey(master) && !Spawn[master].Any(x => x.Alive);
+            bool any = false;
+
+            for (var index = 0; index < Spawn[master].Count; index++)
+            {
+                var x = Spawn[master][index];
+
+                if (x.Alive)
+                {
+                    any = true;
+                    break;
+                }
+            }
+
+            return Spawn != null && Spawn.ContainsKey(master) && !any;
         }
 
         public void CleanupSpawn()
@@ -285,8 +332,10 @@ namespace Server.Engines.JollyRoger
                 {
                     list = new List<BaseCreature>(kvp.Value);
 
-                    foreach (BaseCreature b in list)
+                    for (var index = 0; index < list.Count; index++)
                     {
+                        BaseCreature b = list[index];
+
                         if (b == null || !b.Alive || b.Deleted)
                         {
                             kvp.Value.Remove(b);
@@ -326,8 +375,10 @@ namespace Server.Engines.JollyRoger
 
             foreach (KeyValuePair<BaseCreature, List<BaseCreature>> kvp in copy)
             {
-                foreach (BaseCreature bc in kvp.Value)
+                for (var index = 0; index < kvp.Value.Count; index++)
                 {
+                    BaseCreature bc = kvp.Value[index];
+
                     if (bc.Alive)
                     {
                         bc.Kill();
@@ -359,11 +410,19 @@ namespace Server.Engines.JollyRoger
             writer.Write(FragmentCount);
 
             writer.Write(Spawn == null ? 0 : Spawn.Count);
-            foreach (KeyValuePair<BaseCreature, List<BaseCreature>> kvp in Spawn)
+            if (Spawn != null)
             {
-                writer.Write(kvp.Key);
-                writer.Write(kvp.Value.Count);
-                kvp.Value.ForEach(bc => writer.Write(bc));
+                foreach (KeyValuePair<BaseCreature, List<BaseCreature>> kvp in Spawn)
+                {
+                    writer.Write(kvp.Key);
+                    writer.Write(kvp.Value.Count);
+                    for (var index = 0; index < kvp.Value.Count; index++)
+                    {
+                        var bc = kvp.Value[index];
+
+                        writer.Write(bc);
+                    }
+                }
             }
 
             Timer.DelayCall(TimeSpan.FromSeconds(30), CleanupSpawn);
@@ -390,9 +449,7 @@ namespace Server.Engines.JollyRoger
 
                 for (int j = 0; j < c; j++)
                 {
-                    BaseCreature spawn = reader.ReadMobile() as BaseCreature;
-
-                    if (spawn != null)
+                    if (reader.ReadMobile() is BaseCreature spawn)
                     {
                         list.Add(spawn);
                     }
@@ -411,67 +468,55 @@ namespace Server.Engines.JollyRoger
 
         public static void Initialize()
         {
-            Defs = new Dictionary<Shrine, Rectangle2D[]>();
-
-            Defs[Shrine.Honesty] = new[]
+            Defs = new Dictionary<Shrine, Rectangle2D[]>
+            {
+                [Shrine.Honesty] =
+                    new[]
+                    {
+                        new Rectangle2D(4211, 554, 11, 5), new Rectangle2D(4210, 580, 11, 6),
+                        new Rectangle2D(4223, 567, 7, 10)
+                    },
+                [Shrine.Honor] =
+                    new[]
+                    {
+                        new Rectangle2D(1722, 3512, 13, 6), new Rectangle2D(1708, 3523, 6, 10),
+                        new Rectangle2D(1715, 3534, 11, 6)
+                    },
+                [Shrine.Humility] =
+                    new[]
+                    {
+                        new Rectangle2D(4268, 3687, 7, 4), new Rectangle2D(4259, 3698, 5, 10),
+                        new Rectangle2D(4268, 3707, 7, 3)
+                    },
+                [Shrine.Justice] =
+                    new[]
+                    {
+                        new Rectangle2D(1287, 627, 6, 13), new Rectangle2D(1287, 617, 23, 7),
+                        new Rectangle2D(1310, 625, 9, 18), new Rectangle2D(1289, 643, 19, 7)
+                    },
+                [Shrine.Sacrifice] =
+                    new[]
+                    {
+                        new Rectangle2D(3334, 280, 10, 20), new Rectangle2D(3334, 303, 43, 10),
+                        new Rectangle2D(3367, 279, 10, 20), new Rectangle2D(3334, 266, 43, 10)
+                    },
+                [Shrine.Spirituality] =
+                    new[]
+                    {
+                        new Rectangle2D(1586, 2477, 23, 6), new Rectangle2D(1577, 2477, 8, 26),
+                        new Rectangle2D(1586, 2497, 23, 6), new Rectangle2D(1611, 2477, 6, 26)
+                    },
+                [Shrine.Valor] =
+                    new[]
+                    {
+                        new Rectangle2D(2483, 3921, 19, 5), new Rectangle2D(2498, 3927, 4, 14),
+                        new Rectangle2D(2483, 3927, 4, 14), new Rectangle2D(2483, 3942, 19, 5)
+                    },
+                [Shrine.Compassion] = new[]
                 {
-                    new Rectangle2D(4211, 554, 11, 5),
-                    new Rectangle2D(4210, 580, 11, 6),
-                    new Rectangle2D(4223, 567, 7, 10)
-                };
-
-            Defs[Shrine.Honor] = new[]
-                {
-                    new Rectangle2D(1722, 3512, 13, 6),
-                    new Rectangle2D(1708, 3523, 6, 10),
-                    new Rectangle2D(1715, 3534, 11, 6)
-                };
-
-            Defs[Shrine.Humility] = new[]
-            {
-                new Rectangle2D(4268, 3687, 7, 4),
-                new Rectangle2D(4259, 3698, 5, 10),
-                new Rectangle2D(4268, 3707, 7, 3)
-            };
-
-            Defs[Shrine.Justice] = new[]
-            {
-                new Rectangle2D(1287, 627, 6, 13),
-                new Rectangle2D(1287, 617, 23, 7),
-                new Rectangle2D(1310, 625, 9, 18),
-                new Rectangle2D(1289, 643, 19, 7)
-            };
-
-            Defs[Shrine.Sacrifice] = new[]
-            {
-                new Rectangle2D(3334, 280, 10, 20),
-                new Rectangle2D(3334, 303, 43, 10),
-                new Rectangle2D(3367, 279, 10, 20),
-                new Rectangle2D(3334, 266, 43, 10)
-            };
-
-            Defs[Shrine.Spirituality] = new[]
-            {
-                new Rectangle2D(1586, 2477, 23, 6),
-                new Rectangle2D(1577, 2477, 8, 26),
-                new Rectangle2D(1586, 2497, 23, 6),
-                new Rectangle2D(1611, 2477, 6, 26)
-            };
-
-            Defs[Shrine.Valor] = new[]
-            {
-                new Rectangle2D(2483, 3921, 19, 5),
-                new Rectangle2D(2498, 3927, 4, 14),
-                new Rectangle2D(2483, 3927, 4, 14),
-                new Rectangle2D(2483, 3942, 19, 5)
-            };
-
-            Defs[Shrine.Compassion] = new[]
-            {
-                new Rectangle2D(1845, 855, 25, 9),
-                new Rectangle2D(1839, 865, 6, 20),
-                new Rectangle2D(1848, 889, 23, 5),
-                new Rectangle2D(1870, 867, 6, 19)
+                    new Rectangle2D(1845, 855, 25, 9), new Rectangle2D(1839, 865, 6, 20),
+                    new Rectangle2D(1848, 889, 23, 5), new Rectangle2D(1870, 867, 6, 19)
+                }
             };
         }
     }

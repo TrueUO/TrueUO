@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
@@ -318,9 +317,9 @@ namespace Server
 			return (cidrPrefixValue & mask) == (ipValue & mask);
 		}
 
-		private static uint OrderedAddressValue(byte[] bytes)
+		private static uint OrderedAddressValue(IReadOnlyList<byte> bytes)
 		{
-			if (bytes.Length != 4)
+			if (bytes.Count != 4)
 			{
 				return 0;
 			}
@@ -694,16 +693,14 @@ namespace Server
 		{
 			int range = Core.GlobalUpdateRange;
 
-			return (p1.m_X >= (p2.m_X - range)) && (p1.m_X <= (p2.m_X + range)) && (p1.m_Y >= (p2.m_Y - range)) &&
-				   (p1.m_Y <= (p2.m_Y + range));
+			return p1.m_X >= p2.m_X - range && p1.m_X <= p2.m_X + range && p1.m_Y >= p2.m_Y - range && p1.m_Y <= p2.m_Y + range;
 		}
 
 		public static bool InUpdateRange(Point2D p1, Point2D p2)
 		{
 			int range = Core.GlobalUpdateRange;
 
-			return (p1.m_X >= (p2.m_X - range)) && (p1.m_X <= (p2.m_X + range)) && (p1.m_Y >= (p2.m_Y - range)) &&
-				   (p1.m_Y <= (p2.m_Y + range));
+			return p1.m_X >= p2.m_X - range && p1.m_X <= p2.m_X + range && p1.m_Y >= p2.m_Y - range && p1.m_Y <= p2.m_Y + range;
 		}
 
 		public static bool InUpdateRange(Mobile m, IPoint3D p)
@@ -730,7 +727,7 @@ namespace Server
 				p2 = p2Item.GetWorldLocation();
 			}
 
-			return (p1.X >= (p2.X - range)) && (p1.X <= (p2.X + range)) && (p1.Y >= (p2.Y - range)) && (p1.Y <= (p2.Y + range));
+			return p1.X >= p2.X - range && p1.X <= p2.X + range && p1.Y >= p2.Y - range && p1.Y <= p2.Y + range;
 		}
 		#endregion
 
@@ -743,50 +740,42 @@ namespace Server
 			int ady = Math.Abs(dy);
 
 			if (adx >= ady * 3)
-			{
-				if (dx > 0)
+            {
+                if (dx > 0)
 				{
 					return Direction.East;
 				}
-				else
-				{
-					return Direction.West;
-				}
-			}
-			else if (ady >= adx * 3)
-			{
-				if (dy > 0)
-				{
-					return Direction.South;
-				}
-				else
-				{
-					return Direction.North;
-				}
-			}
-			else if (dx > 0)
-			{
-				if (dy > 0)
-				{
-					return Direction.Down;
-				}
-				else
-				{
-					return Direction.Right;
-				}
-			}
-			else
-			{
-				if (dy > 0)
-				{
-					return Direction.Left;
-				}
-				else
-				{
-					return Direction.Up;
-				}
-			}
-		}
+
+                return Direction.West;
+            }
+
+            if (ady >= adx * 3)
+            {
+                if (dy > 0)
+                {
+                    return Direction.South;
+                }
+
+                return Direction.North;
+            }
+
+            if (dx > 0)
+            {
+                if (dy > 0)
+                {
+                    return Direction.Down;
+                }
+
+                return Direction.Right;
+            }
+
+            if (dy > 0)
+            {
+                return Direction.Left;
+            }
+
+            return Direction.Up;
+        }
 
 		public static object GetArrayCap(Array array, int index)
 		{
@@ -794,8 +783,8 @@ namespace Server
 		}
 
 		public static object GetArrayCap(Array array, int index, object emptyValue)
-		{
-			if (array.Length > 0)
+        {
+            if (array.Length > 0)
 			{
 				if (index < 0)
 				{
@@ -808,27 +797,25 @@ namespace Server
 
 				return array.GetValue(index);
 			}
-			else
-			{
-				return emptyValue;
-			}
-		}
+
+            return emptyValue;
+        }
 
 		#region Random
-		/// <summary>
-		/// Enables or disables floating dice. 
-		/// Floating dice uses a double to obtain a lower average value range.
-		/// Consistent average values for [1,000,000 x 1d6+0] rolls: [Integral: 3.50]  [Floating: 2.25]
-		/// </summary>
-		public static bool FloatingDice = false;
+        /// <summary>
+        /// Enables or disables floating dice. 
+        /// Floating dice uses a double to obtain a lower average value range.
+        /// Consistent average values for [1,000,000 x 1d6+0] rolls: [Integral: 3.50]  [Floating: 2.25]
+        /// </summary>
+        private const bool FloatingDice = false;
 
-		//4d6+8 would be: Utility.Dice( 4, 6, 8 )
+        //4d6+8 would be: Utility.Dice( 4, 6, 8 )
 		public static int Dice(int numDice, int numSides, int bonus)
 		{
 			return Dice(numDice, numSides, bonus, FloatingDice);
 		}
 
-		public static int Dice(int numDice, int numSides, int bonus, bool floating)
+        private static int Dice(int numDice, int numSides, int bonus, bool floating)
 		{
 			if (floating)
 			{
@@ -886,33 +873,47 @@ namespace Server
 				int minIdx = -1;
 				int maxIdx = -1;
 
-				foreach (TEnum val in values)
-				{
-					++curIdx;
+                for (var index = 0; index < values.Length; index++)
+                {
+                    TEnum val = values[index];
 
-					if (Equals(val, min))
-						minIdx = curIdx;
-					else if (Equals(val, max))
-						maxIdx = curIdx;
-				}
+                    ++curIdx;
 
-				if (minIdx == 0 && maxIdx == values.Length - 1)
-					return RandomList(values);
+                    if (Equals(val, min))
+                    {
+                        minIdx = curIdx;
+                    }
+                    else if (Equals(val, max))
+                    {
+                        maxIdx = curIdx;
+                    }
+                }
 
-				curIdx = -1;
+                if (minIdx == 0 && maxIdx == values.Length - 1)
+                {
+                    return RandomList(values);
+                }
+
+                curIdx = -1;
 
 				if (minIdx >= 0)
 				{
 					if (minIdx == maxIdx)
-						curIdx = minIdx;
-					else if (maxIdx > minIdx)
-						curIdx = RandomMinMax(minIdx, maxIdx);
-				}
+                    {
+                        curIdx = minIdx;
+                    }
+                    else if (maxIdx > minIdx)
+                    {
+                        curIdx = RandomMinMax(minIdx, maxIdx);
+                    }
+                }
 
 				if (curIdx >= 0 && curIdx < values.Length)
-					return values[curIdx];
+                {
+                    return values[curIdx];
+                }
 
-				return RandomList(min, max);
+                return RandomList(min, max);
 			}
 
 			return default;
@@ -951,20 +952,19 @@ namespace Server
 		}
 
 		public static int Random(int from, int count)
-		{
-			if (count == 0)
+        {
+            if (count == 0)
 			{
 				return from;
 			}
-			else if (count > 0)
-			{
-				return from + RandomImpl.Next(count);
-			}
-			else
-			{
-				return from - RandomImpl.Next(-count);
-			}
-		}
+
+            if (count > 0)
+            {
+                return from + RandomImpl.Next(count);
+            }
+
+            return from - RandomImpl.Next(-count);
+        }
 
 		public static int Random(int count)
 		{
@@ -1142,20 +1142,19 @@ namespace Server
 		}
 
 		public static int ClipDyedHue(int hue)
-		{
-			if (hue < 2)
+        {
+            if (hue < 2)
 			{
 				return 2;
 			}
-			else if (hue > 1001)
-			{
-				return 1001;
-			}
-			else
-			{
-				return hue;
-			}
-		}
+
+            if (hue > 1001)
+            {
+                return 1001;
+            }
+
+            return hue;
+        }
 
 		/// <summary>
 		///     Random hue in the range 2-1001
@@ -1180,20 +1179,19 @@ namespace Server
 
 		//[Obsolete( "Depreciated, use the methods for the Mobile's race", false )]
 		public static int ClipSkinHue(int hue)
-		{
-			if (hue < 1002)
+        {
+            if (hue < 1002)
 			{
 				return 1002;
 			}
-			else if (hue > 1058)
-			{
-				return 1058;
-			}
-			else
-			{
-				return hue;
-			}
-		}
+
+            if (hue > 1058)
+            {
+                return 1058;
+            }
+
+            return hue;
+        }
 
 		//[Obsolete( "Depreciated, use the methods for the Mobile's race", false )]
 		public static int RandomSkinHue()
@@ -1203,20 +1201,19 @@ namespace Server
 
 		//[Obsolete( "Depreciated, use the methods for the Mobile's race", false )]
 		public static int ClipHairHue(int hue)
-		{
-			if (hue < 1102)
+        {
+            if (hue < 1102)
 			{
 				return 1102;
 			}
-			else if (hue > 1149)
-			{
-				return 1149;
-			}
-			else
-			{
-				return hue;
-			}
-		}
+
+            if (hue > 1149)
+            {
+                return 1149;
+            }
+
+            return hue;
+        }
 
 		//[Obsolete( "Depreciated, use the methods for the Mobile's race", false )]
 		public static int RandomHairHue()
@@ -1225,8 +1222,8 @@ namespace Server
 		}
 		#endregion
 
-		private static readonly SkillName[] m_AllSkills = new[]
-		{
+		private static readonly SkillName[] m_AllSkills =
+        {
 			SkillName.Alchemy, SkillName.Anatomy, SkillName.AnimalLore, SkillName.ItemID, SkillName.ArmsLore, SkillName.Parry,
 			SkillName.Begging, SkillName.Blacksmith, SkillName.Fletching, SkillName.Peacemaking, SkillName.Camping,
 			SkillName.Carpentry, SkillName.Cartography, SkillName.Cooking, SkillName.DetectHidden, SkillName.Discordance,
@@ -1240,11 +1237,13 @@ namespace Server
 			SkillName.Ninjitsu, SkillName.Spellweaving, SkillName.Mysticism, SkillName.Imbuing, SkillName.Throwing
 		};
 
-		private static readonly SkillName[] m_CombatSkills = new[]
-		{SkillName.Archery, SkillName.Swords, SkillName.Macing, SkillName.Fencing, SkillName.Wrestling};
+		private static readonly SkillName[] m_CombatSkills =
+        {
+            SkillName.Archery, SkillName.Swords, SkillName.Macing, SkillName.Fencing, SkillName.Wrestling
+        };
 
-		private static readonly SkillName[] m_CraftSkills = new[]
-		{
+		private static readonly SkillName[] m_CraftSkills =
+        {
 			SkillName.Alchemy, SkillName.Blacksmith, SkillName.Fletching, SkillName.Carpentry, SkillName.Cartography,
 			SkillName.Cooking, SkillName.Inscribe, SkillName.Tailoring, SkillName.Tinkering
 		};
@@ -1589,26 +1588,43 @@ namespace Server
 			if (list == null || action == null)
 				return;
 
-			List<T> l = list.ToList();
+            List<T> l = new List<T>();
 
-			foreach (T o in l)
-				action(o);
+            foreach (var unknown in list)
+            {
+                l.Add(unknown);
+            }
 
-			Free(l);
+            for (var index = 0; index < l.Count; index++)
+            {
+                T o = l[index];
+
+                action(o);
+            }
+
+            Free(l);
 		}
 
-		public static void ForEach<TKey, TValue>(
-			IDictionary<TKey, TValue> dictionary, Action<KeyValuePair<TKey, TValue>> action)
+		public static void ForEach<TKey, TValue>(IDictionary<TKey, TValue> dictionary, Action<KeyValuePair<TKey, TValue>> action)
 		{
 			if (dictionary == null || dictionary.Count == 0 || action == null)
 				return;
 
-			List<KeyValuePair<TKey, TValue>> l = dictionary.ToList();
+            List<KeyValuePair<TKey, TValue>> l = new List<KeyValuePair<TKey, TValue>>();
 
-			foreach (KeyValuePair<TKey, TValue> kvp in l)
-				action(kvp);
+            foreach (var pair in dictionary)
+            {
+                l.Add(pair);
+            }
 
-			Free(l);
+            for (var index = 0; index < l.Count; index++)
+            {
+                KeyValuePair<TKey, TValue> kvp = l[index];
+
+                action(kvp);
+            }
+
+            Free(l);
 		}
 
 		public static void ForEach<TKey, TValue>(IDictionary<TKey, TValue> dictionary, Action<TKey, TValue> action)
@@ -1616,12 +1632,21 @@ namespace Server
 			if (dictionary == null || dictionary.Count == 0 || action == null)
 				return;
 
-			List<KeyValuePair<TKey, TValue>> l = dictionary.ToList();
+            List<KeyValuePair<TKey, TValue>> l = new List<KeyValuePair<TKey, TValue>>();
 
-			foreach (KeyValuePair<TKey, TValue> kvp in l)
-				action(kvp.Key, kvp.Value);
+            foreach (var pair in dictionary)
+            {
+                l.Add(pair);
+            }
 
-			Free(l);
+            for (var index = 0; index < l.Count; index++)
+            {
+                KeyValuePair<TKey, TValue> kvp = l[index];
+
+                action(kvp.Key, kvp.Value);
+            }
+
+            Free(l);
 		}
 
 		public static void For<T>(IEnumerable<T> list, Action<int, T> action)
@@ -1629,12 +1654,19 @@ namespace Server
 			if (list == null || action == null)
 				return;
 
-			List<T> l = list.ToList();
+            List<T> l = new List<T>();
 
-			for (int i = 0; i < l.Count; i++)
-				action(i, l[i]);
+            foreach (var unknown in list)
+            {
+                l.Add(unknown);
+            }
 
-			Free(l);
+            for (int i = 0; i < l.Count; i++)
+            {
+                action(i, l[i]);
+            }
+
+            Free(l);
 		}
 
 		public static void For<TKey, TValue>(IDictionary<TKey, TValue> list, Action<int, TKey, TValue> action)
@@ -1642,9 +1674,14 @@ namespace Server
 			if (list == null || action == null)
 				return;
 
-			List<KeyValuePair<TKey, TValue>> l = list.ToList();
+            List<KeyValuePair<TKey, TValue>> l = new List<KeyValuePair<TKey, TValue>>();
 
-			for (int i = 0; i < l.Count; i++)
+            foreach (var pair in list)
+            {
+                l.Add(pair);
+            }
+
+            for (int i = 0; i < l.Count; i++)
 				action(i, l[i].Key, l[i].Value);
 
 			Free(l);
@@ -1705,14 +1742,21 @@ namespace Server
 				return;
 			}
 
-			List<T> toList = list.ToList();
+            List<T> toList = new List<T>();
 
-			foreach (T o in toList)
-			{
-				action(o);
-			}
+            foreach (var unknown in list)
+            {
+                toList.Add(unknown);
+            }
 
-			Free(toList);
+            for (var index = 0; index < toList.Count; index++)
+            {
+                T o = toList[index];
+
+                action(o);
+            }
+
+            Free(toList);
 		}
 
 		public static void SafeDelete<T>(List<T> list)

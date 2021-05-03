@@ -28,7 +28,7 @@ namespace Server.Items
         {
             PlayerMobile pm = e.Mobile as PlayerMobile;
 
-            if (pm.AbyssEntry)
+            if (pm != null && pm.AbyssEntry)
             {
                 pm.SendLocalizedMessage(1112697); // You enter a state of peaceful contemplation, focusing on the meaning of Singularity.
                 pm.PlaySound(249);

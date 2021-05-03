@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Server.Engines.CannedEvil;
 using Server.Items;
 using Server.Misc;
@@ -189,7 +188,15 @@ namespace Server.Mobiles
                         toCondemn.Frozen = false;
                         toCondemn.SendLocalizedMessage(1005603); // You can move again!
 
-                        loc = m_Table.ToList().Find(x => x.Key == toCondemn).Value;
+                        List<KeyValuePair<Mobile, Point3D>> list = new List<KeyValuePair<Mobile, Point3D>>();
+
+                        foreach (var pair in m_Table)
+                        {
+                            list.Add(pair);
+                        }
+
+                        loc = list.Find(x => x.Key == toCondemn).Value;
+
                         toCondemn.MoveToWorld(loc, map);
 
                         m_Table.Remove(toCondemn);
@@ -311,7 +318,19 @@ namespace Server.Mobiles
             if (SummonedHelpers == null || SummonedHelpers.Count == 0)
                 return 0;
 
-            return SummonedHelpers.Count(bc => bc != null && bc.Alive);
+            int count = 0;
+
+            for (var index = 0; index < SummonedHelpers.Count; index++)
+            {
+                var bc = SummonedHelpers[index];
+
+                if (bc != null && bc.Alive)
+                {
+                    count++;
+                }
+            }
+
+            return count;
         }
 
         public virtual void DoSummon()
@@ -394,7 +413,11 @@ namespace Server.Mobiles
             writer.Write(SummonedHelpers == null ? 0 : SummonedHelpers.Count);
 
             if (SummonedHelpers != null)
-                SummonedHelpers.ForEach(m => writer.Write(m));
+                for (var index = 0; index < SummonedHelpers.Count; index++)
+                {
+                    var m = SummonedHelpers[index];
+                    writer.Write(m);
+                }
         }
 
         public override void Deserialize(GenericReader reader)

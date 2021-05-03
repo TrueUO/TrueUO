@@ -36,10 +36,7 @@ namespace Server.Multis
         [CommandProperty(AccessLevel.GameMaster)]
         public bool RestrictDecay
         {
-            get
-            {
-                return (m_Owner != null && m_Owner.RestrictDecay);
-            }
+            get => m_Owner != null && m_Owner.RestrictDecay;
             set
             {
                 if (m_Owner != null)
@@ -74,7 +71,7 @@ namespace Server.Multis
             base.GetProperties(list);
 
             list.Add(1061639, Utility.FixHtml(GetName())); // Name: ~1_NAME~
-            list.Add(1061640, (m_Owner == null || m_Owner.Owner == null) ? "nobody" : m_Owner.Owner.Name); // Owner: ~1_OWNER~
+            list.Add(1061640, m_Owner == null || m_Owner.Owner == null ? "nobody" : m_Owner.Owner.Name); // Owner: ~1_OWNER~
 
             if (m_Owner != null)
             {
@@ -100,12 +97,9 @@ namespace Server.Multis
 
         public void ShowSign(Mobile m)
         {
-            if (m_Owner != null && m.AccessLevel == AccessLevel.Player)
+            if (m_Owner != null && m.AccessLevel == AccessLevel.Player && m_Owner.IsFriend(m))
             {
-                if ((m_Owner.IsFriend(m)))
-                {
-                    m_Owner.RefreshDecay();
-                }
+                m_Owner.RefreshDecay();
             }
 
             m.SendGump(new HouseGump(HouseGumpPage.Information, m, m_Owner));

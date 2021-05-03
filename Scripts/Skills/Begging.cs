@@ -124,7 +124,7 @@ namespace Server.SkillHandlers
                     }
                     else if (m_From.CheckTargetSkill(SkillName.Begging, m_Target, 0.0, 100.0))
                     {
-                        if (m_Target.Race != Race.Elf)
+                        if (m_Target.Race != Race.Elf && theirPack != null)
                         {
                             int toConsume = theirPack.GetAmount(typeof(Gold)) / 10;
                             int max = 10 + m_From.Fame / 2500;

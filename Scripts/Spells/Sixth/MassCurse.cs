@@ -1,6 +1,5 @@
 using Server.Spells.Fourth;
 using Server.Targeting;
-using System.Linq;
 
 namespace Server.Spells.Sixth
 {
@@ -21,6 +20,7 @@ namespace Server.Spells.Sixth
         }
 
         public override SpellCircle Circle => SpellCircle.Sixth;
+
         public override void OnCast()
         {
             Caster.Target = new InternalTarget(this);
@@ -37,9 +37,12 @@ namespace Server.Spells.Sixth
                 SpellHelper.Turn(Caster, p);
                 SpellHelper.GetSurfaceTop(ref p);
 
-                foreach (Mobile m in AcquireIndirectTargets(p, 2).OfType<Mobile>())
+                foreach (IDamageable target in AcquireIndirectTargets(p, 2))
                 {
-                    CurseSpell.DoCurse(Caster, m, true);
+                    if (target is Mobile m)
+                    {
+                        CurseSpell.DoCurse(Caster, m, true);
+                    }
                 }
             }
 

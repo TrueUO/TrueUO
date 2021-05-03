@@ -62,12 +62,14 @@ namespace Server.ContextMenus
 
 			EventSink.InvokeContextMenu(new ContextMenuEventArgs(From, Target, list));
 
-			foreach (ContextMenuEntry e in list)
-			{
-				e.Owner = this;
-			}
+            for (var index = 0; index < list.Count; index++)
+            {
+                ContextMenuEntry e = list[index];
 
-			Entries = list.ToArray();
+                e.Owner = this;
+            }
+
+            Entries = list.ToArray();
 
 			list.Clear();
 			list.TrimExcess();
@@ -88,17 +90,19 @@ namespace Server.ContextMenus
 			IsDisposed = true;
 
 			if (Entries != null)
-			{
-				foreach (ContextMenuEntry e in Entries)
-				{
+            {
+                for (var index = 0; index < Entries.Length; index++)
+                {
+                    ContextMenuEntry e = Entries[index];
+
                     if (e != null)
                     {
                         e.Dispose();
                     }
                 }
 
-				Entries = null;
-			}
+                Entries = null;
+            }
 
 			if (From != null)
 			{
@@ -147,15 +151,17 @@ namespace Server.ContextMenus
 				object root = i.RootParent;
 
 				if (root is Mobile mobile && mobile != m && mobile.AccessLevel >= m.AccessLevel)
-				{
-					foreach (ContextMenuEntry e in c.Entries)
-					{
+                {
+                    for (var index = 0; index < c.Entries.Length; index++)
+                    {
+                        ContextMenuEntry e = c.Entries[index];
+
                         if (!e.NonLocalUse)
                         {
                             e.Enabled = false;
                         }
                     }
-				}
+                }
 			}
 
 			m.ContextMenu = c;

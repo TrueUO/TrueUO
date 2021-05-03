@@ -382,8 +382,29 @@ namespace Server.Mobiles
 
         public void SwitchClothes(Mobile from, Mobile m)
         {
-            List<Item> MobileItems = from.Items.Where(x => IsEquipped(x)).ToList();
-            List<Item> MannequinItems = m.Items.Where(x => IsEquipped(x)).ToList();
+            List<Item> MobileItems = new List<Item>();
+
+            for (var index = 0; index < from.Items.Count; index++)
+            {
+                var x = from.Items[index];
+
+                if (IsEquipped(x))
+                {
+                    MobileItems.Add(x);
+                }
+            }
+
+            List<Item> MannequinItems = new List<Item>();
+
+            for (var index = 0; index < m.Items.Count; index++)
+            {
+                var x = m.Items[index];
+
+                if (IsEquipped(x))
+                {
+                    MannequinItems.Add(x);
+                }
+            }
 
             MannequinItems.ForEach(x => m.RemoveItem(x));
             MobileItems.ForEach(x => from.RemoveItem(x));
@@ -860,13 +881,16 @@ namespace Server.Mobiles
 
             for (int i = 0; i < doors.Count; i++)
             {
-                BaseDoor door = doors[i] as BaseDoor;
+                BaseDoor door = (BaseDoor) doors[i];
 
                 Point3D doorLoc = door.GetWorldLocation();
+
                 int doorHeight = door.ItemData.CalcHeight;
 
                 if (Utility.InRange(doorLoc, p, 1) && (p.Z == doorLoc.Z || ((p.Z + height) > doorLoc.Z && (doorLoc.Z + doorHeight) > p.Z)))
+                {
                     return AddonFitResult.DoorTooClose;
+                }
             }
 
             return AddonFitResult.Valid;

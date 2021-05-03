@@ -96,9 +96,7 @@ namespace Server.Items
 
         public override void OnDoubleClick(Mobile from)
         {
-            PlayerMobile pm = from as PlayerMobile;
-
-            if (pm.ExploringTheDeepQuest > ExploringTheDeepQuestChain.None)
+            if (from is PlayerMobile pm && pm.ExploringTheDeepQuest > ExploringTheDeepQuestChain.None)
             {
                 if (!m_InUse)
                 {
@@ -177,7 +175,7 @@ namespace Server.Items
             return count;
         }
 
-        protected void Spawn(Point3D p, Map map, BaseCreature spawn)
+        private static void Spawn(Point3D p, Map map, ISpawnable spawn)
         {
             if (map == null)
             {
@@ -207,15 +205,16 @@ namespace Server.Items
 
         protected virtual void SpawnBaddies(Point3D p, Map map, Mobile from)
         {
-            if (from != null || map != null)
+            if (from != null && map != null)
             {
                 from.RevealingAction();
 
                 int count = GetSpawnCount();
-                BaseCreature spawn;
 
                 for (int i = 0; i < count; ++i)
                 {
+                    BaseCreature spawn;
+
                     switch (Utility.Random(4))
                     {
                         default:

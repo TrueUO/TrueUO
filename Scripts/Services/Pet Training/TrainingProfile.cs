@@ -37,7 +37,7 @@ namespace Server.Mobiles
         public double TrainingProgressMax { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public BaseCreature Creature { get; private set; }
+        public BaseCreature Creature { get; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public double TrainingProgressPercentile => TrainingProgress / TrainingProgressMax;
@@ -329,12 +329,14 @@ namespace Server.Mobiles
             }
         }
 
-        private double GetAdvance(double difficulty)
+        private static double GetAdvance(double difficulty)
         {
             double advance = difficulty / 64;
 
             if (advance >= 2.5)
+            {
                 advance = 2.5;
+            }
 
             return advance;
         }
@@ -346,9 +348,7 @@ namespace Server.Mobiles
                 return;
             }
 
-            PetTrainingProgressGump g = m.FindGump(typeof(PetTrainingProgressGump)) as PetTrainingProgressGump;
-
-            if (g == null)
+            if (!(m.FindGump(typeof(PetTrainingProgressGump)) is PetTrainingProgressGump g))
             {
                 BaseGump.SendGump(new PetTrainingProgressGump((PlayerMobile)m, Creature));
             }

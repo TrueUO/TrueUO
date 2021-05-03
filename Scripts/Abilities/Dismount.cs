@@ -110,7 +110,7 @@ namespace Server.Items
             }
         }
 
-        private bool CheckMountedNoLance(Mobile attacker, Mobile defender)
+        private static bool CheckMountedNoLance(Mobile attacker, Mobile defender)
         {
             if (!attacker.Mounted && !attacker.Flying)
                 return false;

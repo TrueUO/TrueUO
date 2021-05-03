@@ -1,6 +1,5 @@
+using System.Collections.Generic;
 using Server.Multis;
-
-using System.Linq;
 
 namespace Server.Items
 {
@@ -51,7 +50,17 @@ namespace Server.Items
 
         public static string GetRandomShip()
         {
-            var list = BaseBoat.Boats.Where(b => !string.IsNullOrEmpty(b.ShipName)).ToList();
+            var list = new List<BaseBoat>();
+
+            for (var index = 0; index < BaseBoat.Boats.Count; index++)
+            {
+                var b = BaseBoat.Boats[index];
+
+                if (!string.IsNullOrEmpty(b.ShipName))
+                {
+                    list.Add(b);
+                }
+            }
 
             if (list.Count > 0)
             {

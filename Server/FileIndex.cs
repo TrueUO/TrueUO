@@ -2,18 +2,17 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
-
 #endregion
 
 namespace Server
 {
 	public sealed class FileIndex
 	{
-		public Entry3D[] Index { get; private set; }
+		public Entry3D[] Index { get; }
 
 		public Stream Stream { get; private set; }
 
-		public long IdxLength { get; private set; }
+		public long IdxLength { get; }
 
 		private readonly string _Path;
 

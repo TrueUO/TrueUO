@@ -16,7 +16,6 @@ using Server.Spells.SkillMasteries;
 using Server.Spells.Spellweaving;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server
 {
@@ -98,20 +97,26 @@ namespace Server
             Mobile m = damageable as Mobile;
 
             if (damageable == null || damageable.Deleted || !damageable.Alive || damage <= 0)
+            {
                 return 0;
+            }
 
             if (m != null && phys == 0 && fire == 100 && cold == 0 && pois == 0 && nrgy == 0)
+            {
                 MeerMage.StopEffect(m, true);
+            }
 
             if (m != null)
             {
-                m.Items.ForEach(i =>
+                for (var index = 0; index < m.Items.Count; index++)
                 {
-                    ITalismanProtection prot = i as ITalismanProtection;
+                    var i = m.Items[index];
 
-                    if (prot != null)
+                    if (i is ITalismanProtection prot)
+                    {
                         damage = prot.Protection.ScaleDamage(from, damage);
-                });
+                    }
+                }
             }
 
             Fix(ref phys);
@@ -177,12 +182,16 @@ namespace Server
                 }
 
                 if (totalDamage < 1)
+                {
                     totalDamage = 1;
+                }
             }
             else if (m is PlayerMobile)
             {
                 if (quiver != null)
+                {
                     damage += damage * quiver.DamageIncrease / 100;
+                }
 
                 totalDamage = Math.Min(damage, ranged ? 30 : 35);	// Direct Damage cap of 30/35
             }
@@ -191,7 +200,9 @@ namespace Server
                 totalDamage = damage;
 
                 if (quiver != null)
+                {
                     totalDamage += totalDamage * quiver.DamageIncrease / 100;
+                }
             }
 
             // object being damaged is not a mobile, so we will end here
@@ -244,7 +255,10 @@ namespace Server
                         {
                             from.FixedParticles(0x376A, 20, 10, 0x2530, EffectLayer.Waist);
                             from.PlaySound(0x2F4);
-                            m.SendAsciiMessage("Your weapon cannot penetrate the creature's magical barrier");
+                            if (m != null)
+                            {
+                                m.SendAsciiMessage("Your weapon cannot penetrate the creature's magical barrier");
+                            }
                         }
                         else
                         {
@@ -512,17 +526,34 @@ namespace Server
 
         public static int[] GetValues(Mobile m, params AosAttribute[] attributes)
         {
-            return EnumerateValues(m, attributes).ToArray();
+            List<int> list = new List<int>();
+
+            foreach (var value in EnumerateValues(m, attributes))
+            {
+                list.Add(value);
+            }
+
+            return list.ToArray();
         }
 
         public static int[] GetValues(Mobile m, IEnumerable<AosAttribute> attributes)
         {
-            return EnumerateValues(m, attributes).ToArray();
+            List<int> list = new List<int>();
+
+            foreach (var value in EnumerateValues(m, attributes))
+            {
+                list.Add(value);
+            }
+
+            return list.ToArray();
         }
 
         public static IEnumerable<int> EnumerateValues(Mobile m, IEnumerable<AosAttribute> attributes)
         {
-            return attributes.Select(a => GetValue(m, a));
+            foreach (var a in attributes)
+            {
+                yield return GetValue(m, a);
+            }
         }
 
         public static int GetValue(Mobile m, AosAttribute attribute)
@@ -1009,17 +1040,34 @@ namespace Server
 
         public static int[] GetValues(Mobile m, params AosWeaponAttribute[] attributes)
         {
-            return EnumerateValues(m, attributes).ToArray();
+            List<int> list = new List<int>();
+
+            foreach (var value in EnumerateValues(m, attributes))
+            {
+                list.Add(value);
+            }
+
+            return list.ToArray();
         }
 
         public static int[] GetValues(Mobile m, IEnumerable<AosWeaponAttribute> attributes)
         {
-            return EnumerateValues(m, attributes).ToArray();
+            List<int> list = new List<int>();
+
+            foreach (var value in EnumerateValues(m, attributes))
+            {
+                list.Add(value);
+            }
+
+            return list.ToArray();
         }
 
         public static IEnumerable<int> EnumerateValues(Mobile m, IEnumerable<AosWeaponAttribute> attributes)
         {
-            return attributes.Select(a => GetValue(m, a));
+            foreach (var a in attributes)
+            {
+                yield return GetValue(m, a);
+            }
         }
 
         public static int GetValue(Mobile m, AosWeaponAttribute attribute)
@@ -1320,17 +1368,34 @@ namespace Server
 
         public static int[] GetValues(Mobile m, params AosArmorAttribute[] attributes)
         {
-            return EnumerateValues(m, attributes).ToArray();
+            List<int> list = new List<int>();
+
+            foreach (var value in EnumerateValues(m, attributes))
+            {
+                list.Add(value);
+            }
+
+            return list.ToArray();
         }
 
         public static int[] GetValues(Mobile m, IEnumerable<AosArmorAttribute> attributes)
         {
-            return EnumerateValues(m, attributes).ToArray();
+            List<int> list = new List<int>();
+
+            foreach (var value in EnumerateValues(m, attributes))
+            {
+                list.Add(value);
+            }
+
+            return list.ToArray();
         }
 
         public static IEnumerable<int> EnumerateValues(Mobile m, IEnumerable<AosArmorAttribute> attributes)
         {
-            return attributes.Select(a => GetValue(m, a));
+            foreach (var a in attributes)
+            {
+                yield return GetValue(m, a);
+            }
         }
 
         public static int GetValue(Mobile m, AosArmorAttribute attribute)
@@ -1607,7 +1672,9 @@ namespace Server
         public void CheckCancelMorph(Mobile m)
         {
             if (m == null)
+            {
                 return;
+            }
 
             double minSkill, maxSkill;
 
@@ -1616,7 +1683,8 @@ namespace Server
 
             if (context != null)
             {
-                Spell spell = context.Spell as Spell;
+                Spell spell = (Spell) context.Spell;
+
                 spell.GetCastSkills(out minSkill, out maxSkill);
 
                 if (m.Skills[spell.CastSkill].Value < minSkill)
@@ -1736,17 +1804,34 @@ namespace Server
 
         public static int[] GetValues(Mobile m, params SAAbsorptionAttribute[] attributes)
         {
-            return EnumerateValues(m, attributes).ToArray();
+            List<int> list = new List<int>();
+
+            foreach (var value in EnumerateValues(m, attributes))
+            {
+                list.Add(value);
+            }
+
+            return list.ToArray();
         }
 
         public static int[] GetValues(Mobile m, IEnumerable<SAAbsorptionAttribute> attributes)
         {
-            return EnumerateValues(m, attributes).ToArray();
+            List<int> list = new List<int>();
+
+            foreach (var value in EnumerateValues(m, attributes))
+            {
+                list.Add(value);
+            }
+
+            return list.ToArray();
         }
 
         public static IEnumerable<int> EnumerateValues(Mobile m, IEnumerable<SAAbsorptionAttribute> attributes)
         {
-            return attributes.Select(a => GetValue(m, a));
+            foreach (var a in attributes)
+            {
+                yield return GetValue(m, a);
+            }
         }
 
         public static int GetValue(Mobile m, SAAbsorptionAttribute attribute)
@@ -1976,17 +2061,21 @@ namespace Server
                 list.Add(1076187);
         }
 
-        public const double CombatDecayChance = 0.02;
+        private const double CombatDecayChance = 0.02;
 
         public static void OnCombatAction(Mobile m)
         {
             if (m == null || !m.Alive)
+            {
                 return;
+            }
 
             List<Item> list = new List<Item>();
 
-            foreach (Item item in m.Items)
+            for (var index = 0; index < m.Items.Count; index++)
             {
+                Item item = m.Items[index];
+
                 if (item is IDurability)
                 {
                     NegativeAttributes attrs = RunicReforging.GetNegativeAttributes(item);
@@ -1998,12 +2087,16 @@ namespace Server
                 }
             }
 
-            foreach (Item item in list)
+            for (var index = 0; index < list.Count; index++)
             {
+                Item item = list[index];
+
                 IDurability dur = item as IDurability;
 
                 if (dur == null)
+                {
                     continue;
+                }
 
                 if (dur.HitPoints >= 1)
                 {
@@ -2023,7 +2116,9 @@ namespace Server
                         dur.MaxHitPoints--;
 
                         if (item.Parent is Mobile mobile)
+                        {
                             mobile.LocalOverheadMessage(Network.MessageType.Regular, 0x3B2, 1061121); // Your equipment is severely damaged.
+                        }
                     }
                     else
                     {

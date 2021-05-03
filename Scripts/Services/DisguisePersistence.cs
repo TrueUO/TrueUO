@@ -1,7 +1,4 @@
-#region References
 using System.IO;
-using System.Linq;
-#endregion
 
 namespace Server.Items
 {
@@ -25,11 +22,14 @@ namespace Server.Items
 
                     writer.Write(DisguiseTimers.Timers.Count);
 
-                    foreach (Mobile m in DisguiseTimers.Timers.Keys.OfType<Mobile>())
+                    foreach (Mobile key in DisguiseTimers.Timers.Keys)
                     {
-                        writer.Write(m);
-                        writer.Write(DisguiseTimers.TimeRemaining(m));
-                        writer.Write(m.NameMod);
+                        if (key is Mobile m)
+                        {
+                            writer.Write(m);
+                            writer.Write(DisguiseTimers.TimeRemaining(m));
+                            writer.Write(m.NameMod);
+                        }
                     }
                 });
         }

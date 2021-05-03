@@ -1,7 +1,6 @@
 using Server.Items;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Mobiles
 {
@@ -36,7 +35,7 @@ namespace Server.Mobiles
         public int DamageIndex { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public BaseCreature Creature { get; private set; }
+        public BaseCreature Creature { get; }
 
         public List<object> Advancements { get; private set; }
 
@@ -89,16 +88,34 @@ namespace Server.Mobiles
             {
                 SpecialAbilities = new[] { ability };
             }
-            else if (!SpecialAbilities.Any(a => a == ability))
+            else
             {
-                SpecialAbility[] temp = SpecialAbilities;
+                bool any = false;
 
-                SpecialAbilities = new SpecialAbility[temp.Length + 1];
+                for (var index = 0; index < SpecialAbilities.Length; index++)
+                {
+                    var a = SpecialAbilities[index];
 
-                for (int i = 0; i < temp.Length; i++)
-                    SpecialAbilities[i] = temp[i];
+                    if (a == ability)
+                    {
+                        any = true;
+                        break;
+                    }
+                }
 
-                SpecialAbilities[temp.Length] = ability;
+                if (!any)
+                {
+                    SpecialAbility[] temp = SpecialAbilities;
+
+                    SpecialAbilities = new SpecialAbility[temp.Length + 1];
+
+                    for (int i = 0; i < temp.Length; i++)
+                    {
+                        SpecialAbilities[i] = temp[i];
+                    }
+
+                    SpecialAbilities[temp.Length] = ability;
+                }
             }
 
             OnAddAbility(ability, advancement);
@@ -112,16 +129,34 @@ namespace Server.Mobiles
             {
                 AreaEffects = new[] { ability };
             }
-            else if (!AreaEffects.Any(a => a == ability))
+            else
             {
-                AreaEffect[] temp = AreaEffects;
+                bool any = false;
 
-                AreaEffects = new AreaEffect[temp.Length + 1];
+                for (var index = 0; index < AreaEffects.Length; index++)
+                {
+                    var a = AreaEffects[index];
 
-                for (int i = 0; i < temp.Length; i++)
-                    AreaEffects[i] = temp[i];
+                    if (a == ability)
+                    {
+                        any = true;
+                        break;
+                    }
+                }
 
-                AreaEffects[temp.Length] = ability;
+                if (!any)
+                {
+                    AreaEffect[] temp = AreaEffects;
+
+                    AreaEffects = new AreaEffect[temp.Length + 1];
+
+                    for (int i = 0; i < temp.Length; i++)
+                    {
+                        AreaEffects[i] = temp[i];
+                    }
+
+                    AreaEffects[temp.Length] = ability;
+                }
             }
 
             OnAddAbility(ability, advancement);
@@ -135,16 +170,34 @@ namespace Server.Mobiles
             {
                 WeaponAbilities = new[] { ability };
             }
-            else if (!WeaponAbilities.Any(a => a == ability))
+            else
             {
-                WeaponAbility[] temp = WeaponAbilities;
+                bool any = false;
 
-                WeaponAbilities = new WeaponAbility[temp.Length + 1];
+                for (var index = 0; index < WeaponAbilities.Length; index++)
+                {
+                    var a = WeaponAbilities[index];
 
-                for (int i = 0; i < temp.Length; i++)
-                    WeaponAbilities[i] = temp[i];
+                    if (a == ability)
+                    {
+                        any = true;
+                        break;
+                    }
+                }
 
-                WeaponAbilities[temp.Length] = ability;
+                if (!any)
+                {
+                    WeaponAbility[] temp = WeaponAbilities;
+
+                    WeaponAbilities = new WeaponAbility[temp.Length + 1];
+
+                    for (int i = 0; i < temp.Length; i++)
+                    {
+                        WeaponAbilities[i] = temp[i];
+                    }
+
+                    WeaponAbilities[temp.Length] = ability;
+                }
             }
 
             OnAddAbility(ability, advancement);
@@ -163,10 +216,32 @@ namespace Server.Mobiles
 
         public void RemoveAbility(SpecialAbility ability)
         {
-            if (SpecialAbilities == null || !SpecialAbilities.Any(a => a == ability))
-                return;
+            bool any = false;
 
-            List<SpecialAbility> list = SpecialAbilities.ToList();
+            for (var index = 0; index < SpecialAbilities.Length; index++)
+            {
+                var a = SpecialAbilities[index];
+
+                if (a == ability)
+                {
+                    any = true;
+                    break;
+                }
+            }
+
+            if (SpecialAbilities == null || !any)
+            {
+                return;
+            }
+
+            List<SpecialAbility> list = new List<SpecialAbility>();
+
+            for (var index = 0; index < SpecialAbilities.Length; index++)
+            {
+                var specialAbility = SpecialAbilities[index];
+
+                list.Add(specialAbility);
+            }
 
             list.Remove(ability);
             RemovePetAdvancement(ability);
@@ -178,10 +253,32 @@ namespace Server.Mobiles
 
         public void RemoveAbility(WeaponAbility ability)
         {
-            if (WeaponAbilities == null || !WeaponAbilities.Any(a => a == ability))
-                return;
+            bool any = false;
 
-            List<WeaponAbility> list = WeaponAbilities.ToList();
+            for (var index = 0; index < WeaponAbilities.Length; index++)
+            {
+                var a = WeaponAbilities[index];
+
+                if (a == ability)
+                {
+                    any = true;
+                    break;
+                }
+            }
+
+            if (WeaponAbilities == null || !any)
+            {
+                return;
+            }
+
+            List<WeaponAbility> list = new List<WeaponAbility>();
+
+            for (var index = 0; index < WeaponAbilities.Length; index++)
+            {
+                var weaponAbility = WeaponAbilities[index];
+
+                list.Add(weaponAbility);
+            }
 
             list.Remove(ability);
             RemovePetAdvancement(ability);
@@ -193,10 +290,32 @@ namespace Server.Mobiles
 
         public void RemoveAbility(AreaEffect ability)
         {
-            if (AreaEffects == null || !AreaEffects.Any(a => a == ability))
-                return;
+            bool any = false;
 
-            List<AreaEffect> list = AreaEffects.ToList();
+            for (var index = 0; index < AreaEffects.Length; index++)
+            {
+                var a = AreaEffects[index];
+
+                if (a == ability)
+                {
+                    any = true;
+                    break;
+                }
+            }
+
+            if (AreaEffects == null || !any)
+            {
+                return;
+            }
+
+            List<AreaEffect> list = new List<AreaEffect>();
+
+            for (var index = 0; index < AreaEffects.Length; index++)
+            {
+                var effect = AreaEffects[index];
+
+                list.Add(effect);
+            }
 
             list.Remove(ability);
             RemovePetAdvancement(ability);
@@ -248,8 +367,10 @@ namespace Server.Mobiles
 
             if (trainPoint != null && trainPoint.Requirements != null)
             {
-                foreach (TrainingPointRequirement req in trainPoint.Requirements)
+                for (var index = 0; index < trainPoint.Requirements.Length; index++)
                 {
+                    TrainingPointRequirement req = trainPoint.Requirements[index];
+
                     if (req != null)
                     {
                         if (req.Requirement is SkillName name)
@@ -305,19 +426,49 @@ namespace Server.Mobiles
                 return (MagicalAbility & ability) != 0;
             }
 
-            if (o is SpecialAbility && SpecialAbilities != null)
+            if (o is SpecialAbility specialAbility && SpecialAbilities != null)
             {
-                return SpecialAbilities.Any(a => a == (SpecialAbility)o);
+                for (var index = 0; index < SpecialAbilities.Length; index++)
+                {
+                    var a = SpecialAbilities[index];
+
+                    if (a == specialAbility)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
             }
 
-            if (o is AreaEffect && AreaEffects != null)
+            if (o is AreaEffect effect && AreaEffects != null)
             {
-                return AreaEffects.Any(a => a == (AreaEffect)o);
+                for (var index = 0; index < AreaEffects.Length; index++)
+                {
+                    var a = AreaEffects[index];
+
+                    if (a == effect)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
             }
 
-            if (o is WeaponAbility && WeaponAbilities != null)
+            if (o is WeaponAbility weaponAbility && WeaponAbilities != null)
             {
-                return WeaponAbilities.Any(a => a == (WeaponAbility)o);
+                for (var index = 0; index < WeaponAbilities.Length; index++)
+                {
+                    var a = WeaponAbilities[index];
+
+                    if (a == weaponAbility)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
             }
 
             return false;
@@ -328,16 +479,36 @@ namespace Server.Mobiles
             int count = 0;
 
             if (MagicalAbility != MagicalAbility.None)
+            {
                 count++;
+            }
 
             if (SpecialAbilities != null)
-                count += SpecialAbilities.Count(a => !a.NaturalAbility);
+            {
+                int sac = 0;
+
+                for (var index = 0; index < SpecialAbilities.Length; index++)
+                {
+                    var a = SpecialAbilities[index];
+
+                    if (!a.NaturalAbility)
+                    {
+                        sac++;
+                    }
+                }
+
+                count += sac;
+            }
 
             if (AreaEffects != null)
+            {
                 count += AreaEffects.Length;
+            }
 
             if (WeaponAbilities != null)
+            {
                 count += WeaponAbilities.Length;
+            }
 
             return count;
         }
@@ -345,13 +516,30 @@ namespace Server.Mobiles
         public bool CanChooseMagicalAbility(MagicalAbility ability)
         {
             if (!Creature.Controlled)
+            {
                 return true;
+            }
 
-            if (HasSpecialMagicalAbility() &&
-                IsSpecialMagicalAbility(ability) &&
-                SpecialAbilities != null &&
-                SpecialAbilities.Length > 0 &&
-                SpecialAbilities.Any(a => !a.NaturalAbility))
+            bool any = false;
+
+            if (SpecialAbilities != null)
+            {
+                for (var index = 0; index < SpecialAbilities.Length; index++)
+                {
+                    if (SpecialAbilities != null)
+                    {
+                        var a = SpecialAbilities[index];
+
+                        if (!a.NaturalAbility)
+                        {
+                            any = true;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (HasSpecialMagicalAbility() && IsSpecialMagicalAbility(ability) && SpecialAbilities != null && SpecialAbilities.Length > 0 && any)
             {
                 return false;
             }
@@ -362,20 +550,75 @@ namespace Server.Mobiles
         public bool CanChooseSpecialAbility(SpecialAbility[] list)
         {
             if (!Creature.Controlled)
+            {
                 return true;
+            }
 
-            if (HasSpecialMagicalAbility() &&
-                list.Any(abil => IsRuleBreaker(abil)) &&
-                (AreaEffects == null || AreaEffects.Length == 0) &&
-                (SpecialAbilities == null || SpecialAbilities.Length == 0 || SpecialAbilities.All(a => a.NaturalAbility)))
+            bool all = true;
+
+            if (SpecialAbilities != null)
+            {
+                for (var index = 0; index < SpecialAbilities.Length; index++)
+                {
+                    var a = SpecialAbilities[index];
+
+                    if (!a.NaturalAbility)
+                    {
+                        all = false;
+                        break;
+                    }
+                }
+            }
+
+            bool any = false;
+
+            for (var index = 0; index < list.Length; index++)
+            {
+                var abil = list[index];
+
+                if (IsRuleBreaker(abil))
+                {
+                    any = true;
+                    break;
+                }
+            }
+
+            if (HasSpecialMagicalAbility() && any && (AreaEffects == null || AreaEffects.Length == 0) && (SpecialAbilities == null || SpecialAbilities.Length == 0 || all))
+            {
                 return true;
+            }
 
-            return !HasSpecialMagicalAbility() && (SpecialAbilities == null || SpecialAbilities.Count(a => !a.NaturalAbility) == 0) && AbilityCount() < 3;
+            int count = 0;
+
+            if (SpecialAbilities != null)
+            {
+                for (var index = 0; index < SpecialAbilities.Length; index++)
+                {
+                    var a = SpecialAbilities[index];
+
+                    if (!a.NaturalAbility)
+                    {
+                        count++;
+                    }
+                }
+            }
+
+            return !HasSpecialMagicalAbility() && (SpecialAbilities == null || count == 0) && AbilityCount() < 3;
         }
 
-        public bool IsRuleBreaker(SpecialAbility ability)
+        public static bool IsRuleBreaker(SpecialAbility ability)
         {
-            return PetTrainingHelper.RuleBreakers.Any(abil => abil == ability);
+            for (var index = 0; index < PetTrainingHelper.RuleBreakers.Length; index++)
+            {
+                var abil = PetTrainingHelper.RuleBreakers[index];
+
+                if (abil == ability)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public bool CanChooseAreaEffect()
@@ -406,7 +649,7 @@ namespace Server.Mobiles
                 (MagicalAbility & MagicalAbility.WrestlingMastery) != 0;
         }
 
-        public bool IsSpecialMagicalAbility(MagicalAbility ability)
+        public static bool IsSpecialMagicalAbility(MagicalAbility ability)
         {
             return ability != MagicalAbility.None && ability <= MagicalAbility.WrestlingMastery;
         }
@@ -526,14 +769,40 @@ namespace Server.Mobiles
             if (Advancements == null)
                 return true;
 
-            if (o is SpecialAbility)
+            if (o is SpecialAbility specialAbility)
             {
-                return SpecialAbilities != null && !Advancements.Any(s => s is SpecialAbility ability && ability == (SpecialAbility)o);
+                bool any = false;
+
+                for (var index = 0; index < Advancements.Count; index++)
+                {
+                    var s = Advancements[index];
+
+                    if (s is SpecialAbility ability && ability == specialAbility)
+                    {
+                        any = true;
+                        break;
+                    }
+                }
+
+                return SpecialAbilities != null && !any;
             }
 
-            if (o is WeaponAbility)
+            if (o is WeaponAbility weaponAbility)
             {
-                return WeaponAbilities != null && !Advancements.Any(s => s is WeaponAbility ability && ability == (WeaponAbility)o);
+                bool any = false;
+
+                for (var index = 0; index < Advancements.Count; index++)
+                {
+                    var s = Advancements[index];
+
+                    if (s is WeaponAbility ability && ability == weaponAbility)
+                    {
+                        any = true;
+                        break;
+                    }
+                }
+
+                return WeaponAbilities != null && !any;
             }
 
             return false;
@@ -543,33 +812,43 @@ namespace Server.Mobiles
         {
             if (MagicalAbility != MagicalAbility.None)
             {
-                foreach (MagicalAbility abil in PetTrainingHelper.MagicalAbilities)
+                for (var index = 0; index < PetTrainingHelper.MagicalAbilities.Length; index++)
                 {
+                    MagicalAbility abil = PetTrainingHelper.MagicalAbilities[index];
+
                     if ((MagicalAbility & abil) != 0)
+                    {
                         yield return abil;
+                    }
                 }
             }
 
             if (SpecialAbilities != null)
             {
-                foreach (SpecialAbility abil in SpecialAbilities)
+                for (var index = 0; index < SpecialAbilities.Length; index++)
                 {
+                    SpecialAbility abil = SpecialAbilities[index];
+
                     yield return abil;
                 }
             }
 
             if (AreaEffects != null)
             {
-                foreach (AreaEffect effect in AreaEffects)
+                for (var index = 0; index < AreaEffects.Length; index++)
                 {
+                    AreaEffect effect = AreaEffects[index];
+
                     yield return effect;
                 }
             }
 
             if (WeaponAbilities != null)
             {
-                foreach (WeaponAbility abil in WeaponAbilities)
+                for (var index = 0; index < WeaponAbilities.Length; index++)
                 {
+                    WeaponAbility abil = WeaponAbilities[index];
+
                     yield return abil;
                 }
             }
@@ -582,15 +861,24 @@ namespace Server.Mobiles
                 yield break;
             }
 
-            foreach (SpecialAbility ability in SpecialAbilities)
+            for (var index = 0; index < SpecialAbilities.Length; index++)
             {
+                SpecialAbility ability = SpecialAbilities[index];
+
                 yield return ability;
             }
         }
 
         public SpecialAbility[] GetSpecialAbilities()
         {
-            return EnumerateSpecialAbilities().ToArray();
+            List<SpecialAbility> list = new List<SpecialAbility>();
+
+            foreach (var ability in EnumerateSpecialAbilities())
+            {
+                list.Add(ability);
+            }
+
+            return list.ToArray();
         }
 
         public IEnumerable<AreaEffect> EnumerateAreaEffects()
@@ -600,15 +888,24 @@ namespace Server.Mobiles
                 yield break;
             }
 
-            foreach (AreaEffect ability in AreaEffects)
+            for (var index = 0; index < AreaEffects.Length; index++)
             {
+                AreaEffect ability = AreaEffects[index];
+
                 yield return ability;
             }
         }
 
         public AreaEffect[] GetAreaEffects()
         {
-            return EnumerateAreaEffects().ToArray();
+            List<AreaEffect> list = new List<AreaEffect>();
+
+            foreach (var effect in EnumerateAreaEffects())
+            {
+                list.Add(effect);
+            }
+
+            return list.ToArray();
         }
 
         public override string ToString()
@@ -697,8 +994,10 @@ namespace Server.Mobiles
 
             if (SpecialAbilities != null)
             {
-                foreach (SpecialAbility abil in SpecialAbilities)
+                for (var index = 0; index < SpecialAbilities.Length; index++)
                 {
+                    SpecialAbility abil = SpecialAbilities[index];
+
                     writer.Write(Array.IndexOf(SpecialAbility.Abilities, abil));
                 }
             }
@@ -707,8 +1006,10 @@ namespace Server.Mobiles
 
             if (AreaEffects != null)
             {
-                foreach (AreaEffect abil in AreaEffects)
+                for (var index = 0; index < AreaEffects.Length; index++)
                 {
+                    AreaEffect abil = AreaEffects[index];
+
                     writer.Write(Array.IndexOf(AreaEffect.Effects, abil));
                 }
             }
@@ -717,8 +1018,10 @@ namespace Server.Mobiles
 
             if (WeaponAbilities != null)
             {
-                foreach (WeaponAbility abil in WeaponAbilities)
+                for (var index = 0; index < WeaponAbilities.Length; index++)
                 {
+                    WeaponAbility abil = WeaponAbilities[index];
+
                     writer.Write(Array.IndexOf(WeaponAbility.Abilities, abil));
                 }
             }
@@ -727,12 +1030,14 @@ namespace Server.Mobiles
 
             if (Advancements != null)
             {
-                foreach (object o in Advancements)
+                for (var index = 0; index < Advancements.Count; index++)
                 {
+                    object o = Advancements[index];
+
                     if (o is MagicalAbility ability)
                     {
                         writer.Write(1);
-                        writer.Write((int)ability);
+                        writer.Write((int) ability);
                     }
                     else if (o is SpecialAbility specialAbility)
                     {
@@ -752,7 +1057,7 @@ namespace Server.Mobiles
                     else if (o is SkillName skillName)
                     {
                         writer.Write(5);
-                        writer.Write((int)skillName);
+                        writer.Write((int) skillName);
                     }
                     else
                     {

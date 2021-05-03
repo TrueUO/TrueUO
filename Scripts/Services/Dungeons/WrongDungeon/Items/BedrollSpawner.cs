@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -204,7 +203,19 @@ namespace Server.Items
                 else
                 {
                     mt.PointDest = m_RoomDestinations[Utility.Random(m_RoomDestinations.Length)];
-                    bedroll = Bedrolls.FirstOrDefault(x => x.InRange(mt.PointDest, 4) && x.PointDest == Point3D.Zero);
+
+                    bedroll = null;
+
+                    for (var index = 0; index < Bedrolls.Count; index++)
+                    {
+                        var x = Bedrolls[index];
+
+                        if (x.InRange(mt.PointDest, 4) && x.PointDest == Point3D.Zero)
+                        {
+                            bedroll = x;
+                            break;
+                        }
+                    }
 
                     if (bedroll != null)
                     {

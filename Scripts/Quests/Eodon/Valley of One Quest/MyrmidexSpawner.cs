@@ -139,7 +139,12 @@ namespace Server.Items
 
             if (Spawn != null)
             {
-                Spawn.ForEach(bc => writer.Write(bc));
+                for (var index = 0; index < Spawn.Count; index++)
+                {
+                    var bc = Spawn[index];
+
+                    writer.Write(bc);
+                }
             }
 
             Timer.DelayCall(TimeSpan.FromMinutes(1), CheckSpawn);

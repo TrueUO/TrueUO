@@ -15,7 +15,7 @@ namespace Server
 
 		public void AddRange(StaticTile[] tiles)
 		{
-			if ((m_Count + tiles.Length) > m_Tiles.Length)
+			if (m_Count + tiles.Length > m_Tiles.Length)
 			{
 				StaticTile[] old = m_Tiles;
 				m_Tiles = new StaticTile[(m_Count + tiles.Length) * 2];
@@ -34,7 +34,7 @@ namespace Server
 
 		public void Add(ushort id, sbyte z)
 		{
-			if ((m_Count + 1) > m_Tiles.Length)
+			if (m_Count + 1 > m_Tiles.Length)
 			{
 				StaticTile[] old = m_Tiles;
 				m_Tiles = new StaticTile[old.Length * 2];

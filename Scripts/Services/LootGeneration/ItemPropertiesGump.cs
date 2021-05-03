@@ -3,7 +3,6 @@ using Server.Items;
 using Server.Mobiles;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Gumps
 {
@@ -81,7 +80,15 @@ namespace Server.Gumps
             AddLabel(675, 30, 0, "Hats");
             AddLabel(775, 30, 0, "Jewels");
 
-            Infos = CompileList().ToList();
+            List<ItemPropertyInfo> list = new List<ItemPropertyInfo>();
+
+            foreach (var info in CompileList())
+            {
+                list.Add(info);
+            }
+
+            Infos = list;
+
             int index = 0;
             int page = 1;
             int y = 50;
@@ -141,8 +148,10 @@ namespace Server.Gumps
         {
             if (TypeFilter > ItemType.Invalid)
             {
-                foreach (int i in ItemPropertyInfo.LootTable[TypeFilter])
+                for (var index = 0; index < ItemPropertyInfo.LootTable[TypeFilter].Count; index++)
                 {
+                    int i = ItemPropertyInfo.LootTable[TypeFilter][index];
+
                     yield return ItemPropertyInfo.GetInfo(i);
                 }
 

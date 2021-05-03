@@ -125,7 +125,7 @@ namespace Server
 		}
 
 		// Each of these are localized to "~1_NOTHING~" which allows the string argument to be used
-		private static readonly int[] m_StringNumbers = new[] { 1042971, 1070722 };
+		private static readonly int[] m_StringNumbers = { 1042971, 1070722 };
 
 		private int GetStringNumber()
 		{

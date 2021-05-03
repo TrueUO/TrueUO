@@ -13,7 +13,7 @@ namespace Server.Engines.Chat
             if (param2 == null)
                 param2 = string.Empty;
 
-            EnsureCapacity(13 + ((param1.Length + param2.Length) * 2));
+            EnsureCapacity(13 + (param1.Length + param2.Length) * 2);
 
             m_Stream.Write((ushort)(number - 20));
 

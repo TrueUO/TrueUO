@@ -14,7 +14,6 @@ using Server.Spells.Seventh;
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Spells
 {
@@ -65,8 +64,10 @@ namespace Server.Spells
         {
             bool foundExempt = false;
 
-            foreach (SkillName skill in _Schools)
+            for (var index = 0; index < _Schools.Length; index++)
             {
+                SkillName skill = _Schools[index];
+
                 if (skill != focus && m.Skills[skill].Value >= 30.0)
                 {
                     if (!foundExempt && IsExempt(focus, skill))
@@ -255,8 +256,10 @@ namespace Server.Spells
 
             StaticTile[] tiles = map.Tiles.GetStaticTiles(p.X, p.Y, true);
 
-            foreach (StaticTile tile in tiles)
+            for (var index = 0; index < tiles.Length; index++)
             {
+                StaticTile tile = tiles[index];
+
                 if (tile.Z == p.Z && tile.ID >= 0x1796 && tile.ID <= 0x17B2)
                 {
                     return false;
@@ -536,13 +539,13 @@ namespace Server.Spells
                     toCreature = toCreature.GetMaster() as BaseCreature;
                 }
 
-                if (toCreature.IsEnemy(fromCreature))   //Natural Enemies
+                if (toCreature != null && toCreature.IsEnemy(fromCreature))   //Natural Enemies
                 {
                     return true;
                 }
 
                 //All involved are monsters- no damage. If falls through this statement, normal noto rules apply
-                if (!toCreature.Controlled && !toCreature.Summoned && !fromCreature.Controlled && !fromCreature.Summoned) //All involved are monsters- no damage
+                if (toCreature != null && fromCreature != null && !toCreature.Controlled && !toCreature.Summoned && !fromCreature.Controlled && !fromCreature.Summoned) //All involved are monsters- no damage
                 {
                     return false;
                 }
@@ -553,14 +556,12 @@ namespace Server.Spells
                 return true;
             }
 
-            return (noto != Notoriety.Innocent || from.Murderer);
+            return noto != Notoriety.Innocent || @from.Murderer;
         }
 
         public static bool CheckResponsible(ref Mobile m)
         {
-            var bc = m as BaseCreature;
-
-            if (bc != null && bc.GetMaster() != null)
+            if (m is BaseCreature bc && bc.GetMaster() != null)
             {
                 m = bc.GetMaster();
                 return true;
@@ -603,24 +604,27 @@ namespace Server.Spells
 
             IPooledEnumerable eable = map.GetObjectsInRange(new Point3D(p), range);
 
-            foreach (IDamageable id in eable.OfType<IDamageable>())
+            foreach (object o in eable)
             {
-                if (id == caster)
+                if (o is IDamageable id)
                 {
-                    continue;
-                }
+                    if (id == caster)
+                    {
+                        continue;
+                    }
 
-                if (!id.Alive || (losCheck && !caster.InLOS(id)) || !caster.CanBeHarmful(id, false))
-                {
-                    continue;
-                }
+                    if (!id.Alive || losCheck && !caster.InLOS(id) || !caster.CanBeHarmful(id, false))
+                    {
+                        continue;
+                    }
 
-                if (id is Mobile mobile && !ValidIndirectTarget(caster, mobile))
-                {
-                    continue;
-                }
+                    if (id is Mobile mobile && !ValidIndirectTarget(caster, mobile))
+                    {
+                        continue;
+                    }
 
-                yield return id;
+                    yield return id;
+                }
             }
 
             eable.Free();

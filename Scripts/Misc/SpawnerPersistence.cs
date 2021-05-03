@@ -322,17 +322,28 @@ namespace Server
 
             Timer.DelayCall(TimeSpan.FromSeconds(1), () =>
             {
-                IPooledEnumerable eable = null;
-                foreach (var reg in Region.Regions.OfType<TeleportRegion>())
-                {
-                    foreach (var rec in reg.Area)
-                    {
-                        eable = reg.Map.GetItemsInBounds(new Rectangle2D(rec.Start.X, rec.Start.Y, rec.Width, rec.Height));
+                IPooledEnumerable eable;
 
-                        foreach (var tele in eable.OfType<Teleporter>())
+                for (var index = 0; index < Region.Regions.Count; index++)
+                {
+                    Region region = Region.Regions[index];
+
+                    if (region is TeleportRegion reg)
+                    {
+                        for (var i = 0; i < reg.Area.Length; i++)
                         {
-                            delCount++;
-                            tele.Delete();
+                            var rec = reg.Area[i];
+
+                            eable = reg.Map.GetItemsInBounds(new Rectangle2D(rec.Start.X, rec.Start.Y, rec.Width, rec.Height));
+
+                            foreach (object o in eable)
+                            {
+                                if (o is Teleporter tele)
+                                {
+                                    delCount++;
+                                    tele.Delete();
+                                }
+                            }
                         }
                     }
                 }
@@ -409,26 +420,43 @@ namespace Server
         #region Tram Khaldun Generation
         public static void GenerateTramKhaldun()
         {
-            Region region = Region.Regions.FirstOrDefault(r => r.Map == Map.Felucca && r.Name == "Khaldun");
+            Region region = null;
+
+            for (var index = 0; index < Region.Regions.Count; index++)
+            {
+                var r = Region.Regions[index];
+
+                if (r.Map == Map.Felucca && r.Name == "Khaldun")
+                {
+                    region = r;
+                    break;
+                }
+            }
 
             if (region != null)
             {
                 int spawners = 0;
                 int teleporters = 0;
 
-                foreach (XmlSpawner spawner in region.GetEnumeratedItems().OfType<XmlSpawner>())
+                foreach (Item item in region.GetEnumeratedItems())
                 {
-                    CopyAndPlaceItem(spawner, spawner.Location, Map.Trammel);
-                    spawners++;
+                    if (item is XmlSpawner spawner)
+                    {
+                        CopyAndPlaceItem(spawner, spawner.Location, Map.Trammel);
+                        spawners++;
+                    }
                 }
 
-                foreach (Teleporter teleporter in region.GetEnumeratedItems().OfType<Teleporter>())
+                foreach (Item item in region.GetEnumeratedItems())
                 {
-                    CopyAndPlaceItem(teleporter, teleporter.Location, Map.Trammel);
-                    teleporters++;
+                    if (item is Teleporter teleporter)
+                    {
+                        CopyAndPlaceItem(teleporter, teleporter.Location, Map.Trammel);
+                        teleporters++;
+                    }
                 }
 
-                ToConsole(string.Format("Copied {0} khaldun spawners, {1} teleporters and placed in trammel!", spawners, teleporters));
+                ToConsole($"Copied {spawners} khaldun spawners, {teleporters} teleporters and placed in trammel!");
             }
             else
             {
@@ -741,10 +769,14 @@ namespace Server
 
             foreach (XmlSpawner spawner in World.Items.Values.OfType<XmlSpawner>())
             {
-                foreach (XmlSpawner.SpawnObject obj in spawner.SpawnObjects)
+                for (var index = 0; index < spawner.SpawnObjects.Length; index++)
                 {
+                    XmlSpawner.SpawnObject obj = spawner.SpawnObjects[index];
+
                     if (obj == null || obj.TypeName == null)
+                    {
                         continue;
+                    }
 
                     string typeName = obj.TypeName.ToLower();
                     string lookingFor = current.ToLower();
@@ -757,8 +789,10 @@ namespace Server
                 }
             }
 
-            foreach (XmlSpawner spawner in toDelete)
+            for (var index = 0; index < toDelete.Count; index++)
             {
+                XmlSpawner spawner = toDelete[index];
+
                 spawner.Delete();
             }
 
@@ -780,7 +814,9 @@ namespace Server
             foreach (ISpawner spawner in World.Items.Values.OfType<ISpawner>())
             {
                 if (Replace(spawner, current, replace, check))
+                {
                     count++;
+                }
             }
 
             ToConsole(string.Format("Spawn Replacement: {0} spawners replaced [{1} replaced with {2}].", count.ToString(), current, replace));
@@ -812,10 +848,14 @@ namespace Server
 
             if (spwner is XmlSpawner xmlSpawner)
             {
-                foreach (XmlSpawner.SpawnObject obj in xmlSpawner.SpawnObjects)
+                for (var index = 0; index < xmlSpawner.SpawnObjects.Length; index++)
                 {
+                    XmlSpawner.SpawnObject obj = xmlSpawner.SpawnObjects[index];
+
                     if (obj == null || obj.TypeName == null)
+                    {
                         continue;
+                    }
 
                     string typeName = obj.TypeName.ToLower();
                     string lookingFor = current.ToLower();
@@ -827,7 +867,9 @@ namespace Server
                             obj.TypeName = typeName.Replace(lookingFor, replace);
 
                             if (!replaced)
+                            {
                                 replaced = true;
+                            }
                         }
                     }
                 }
@@ -848,7 +890,9 @@ namespace Server
                             so.SpawnName = typeName.Replace(lookingFor, replace);
 
                             if (!replaced)
+                            {
                                 replaced = true;
+                            }
                         }
                     }
                 }
@@ -868,8 +912,10 @@ namespace Server
 
             List<XmlSpawner> list = new List<XmlSpawner>(World.Items.Values.OfType<XmlSpawner>());
 
-            foreach (XmlSpawner spawner in list)
+            for (var index = 0; index < list.Count; index++)
             {
+                XmlSpawner spawner = list[index];
+
                 if (predicate == null || predicate(spawner))
                 {
                     count += Remove(spawner, toRemove, ref deleted);
@@ -900,8 +946,10 @@ namespace Server
 
             int count = remove.Count;
 
-            foreach (XmlSpawner.SpawnObject obj in remove)
+            for (var index = 0; index < remove.Count; index++)
             {
+                XmlSpawner.SpawnObject obj = remove[index];
+
                 spawner.RemoveSpawnObject(obj);
 
                 foreach (IEntity e in obj.SpawnedObjects.OfType<IEntity>())
@@ -917,7 +965,7 @@ namespace Server
 
         public static void CopyAndPlaceItem(Item oldItem, Point3D p, Map map)
         {
-            Item newItem = Activator.CreateInstance(oldItem.GetType()) as Item;
+            Item newItem = (Item) Activator.CreateInstance(oldItem.GetType());
 
             Dupe.CopyProperties(oldItem, newItem);
 

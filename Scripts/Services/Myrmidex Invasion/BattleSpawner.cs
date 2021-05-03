@@ -94,8 +94,25 @@ namespace Server.Engines.MyrmidexInvasion
             TribeTeam = new Dictionary<int, List<BaseCreature>>();
             Players = new Dictionary<PlayerMobile, int>();
 
-            BattleRegion = Region.Regions.FirstOrDefault(r => r.GetType() == typeof(BattleRegion)) as BattleRegion;
-            BattleRegion.Spawner = Instance;
+            Region br = null;
+
+            for (var index = 0; index < Region.Regions.Count; index++)
+            {
+                var r = Region.Regions[index];
+
+                if (r.GetType() == typeof(BattleRegion))
+                {
+                    br = r;
+                    break;
+                }
+            }
+
+            BattleRegion = br as BattleRegion;
+
+            if (BattleRegion != null)
+            {
+                BattleRegion.Spawner = Instance;
+            }
 
             Timer = Timer.DelayCall(TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(10), OnTick);
             Timer.Start();
@@ -107,8 +124,25 @@ namespace Server.Engines.MyrmidexInvasion
         {
             if (Instance != null)
             {
-                Instance.BattleRegion = Region.Regions.FirstOrDefault(r => r.GetType() == typeof(BattleRegion)) as BattleRegion;
-                Instance.BattleRegion.Spawner = Instance;
+                Region br = null;
+
+                for (var index = 0; index < Region.Regions.Count; index++)
+                {
+                    var r = Region.Regions[index];
+
+                    if (r.GetType() == typeof(BattleRegion))
+                    {
+                        br = r;
+                        break;
+                    }
+                }
+
+                Instance.BattleRegion = br as BattleRegion;
+
+                if (Instance.BattleRegion != null)
+                {
+                    Instance.BattleRegion.Spawner = Instance;
+                }
             }
 
             CommandSystem.Register("CheckPoints", AccessLevel.GameMaster, e =>
@@ -271,8 +305,10 @@ namespace Server.Engines.MyrmidexInvasion
 
             if (list.ContainsKey(wave))
             {
-                foreach (BaseCreature bc in list[wave])
+                for (var index = 0; index < list[wave].Count; index++)
                 {
+                    BaseCreature bc = list[wave][index];
+
                     if (bc.Alive)
                     {
                         bc.Delete();
@@ -315,7 +351,12 @@ namespace Server.Engines.MyrmidexInvasion
 
         public void CheckWaves()
         {
-            List<int> list = MyrmidexTeam.Keys.ToList();
+            List<int> list = new List<int>();
+
+            foreach (var key in MyrmidexTeam.Keys)
+            {
+                list.Add(key);
+            }
 
             for (int i = 0; i < list.Count; i++)
             {
@@ -325,19 +366,40 @@ namespace Server.Engines.MyrmidexInvasion
                 if (bcList == null)
                     continue;
 
-                if (bcList.All(bc => bc == null || bc.Deleted || !bc.Alive))
+                bool all = true;
+
+                for (var index = 0; index < bcList.Count; index++)
+                {
+                    var bc = bcList[index];
+
+                    if (bc != null && !bc.Deleted && bc.Alive)
+                    {
+                        all = false;
+                        break;
+                    }
+                }
+
+                if (all)
                 {
                     ColUtility.Free(bcList);
 
                     if (MyrmidexTeam.ContainsKey(wave))
+                    {
                         MyrmidexTeam.Remove(wave);
+                    }
 
                     RegionMessage(i == 0 ? 1156604 : 1156605); // The Eodonians have secured new ground, the front line has moved up!
                 }
             }
 
             list.Clear();
-            list = TribeTeam.Keys.ToList();
+
+            list = new List<int>();
+
+            foreach (var key in TribeTeam.Keys)
+            {
+                list.Add(key);
+            }
 
             for (int i = 0; i < list.Count; i++)
             {
@@ -347,7 +409,20 @@ namespace Server.Engines.MyrmidexInvasion
                 if (bcList == null)
                     continue;
 
-                if (bcList.All(bc => bc == null || bc.Deleted || !bc.Alive))
+                bool all = true;
+
+                for (var index = 0; index < bcList.Count; index++)
+                {
+                    var bc = bcList[index];
+
+                    if (bc != null && !bc.Deleted && bc.Alive)
+                    {
+                        all = false;
+                        break;
+                    }
+                }
+
+                if (all)
                 {
                     ColUtility.Free(bcList);
 
@@ -366,18 +441,25 @@ namespace Server.Engines.MyrmidexInvasion
             if (allegiance == Allegiance.Myrmidex)
             {
                 int wave = MyrmidexTeam.Count;
+
                 MyrmidexTeam[wave] = new List<BaseCreature>();
+
                 List<BaseCreature> list = MyrmidexTeam[wave];
 
                 for (int i = 0; i < WaveCount; i++)
                 {
                     BaseCreature bc;
+
                     Type type = _MyrmidexTypes[wave][Utility.Random(_MyrmidexTypes[wave].Length)];
 
                     if (type.IsSubclassOf(typeof(BaseEodonTribesman)))
-                        bc = Activator.CreateInstance(type, EodonTribe.Barrab) as BaseCreature;
+                    {
+                        bc = (BaseCreature) Activator.CreateInstance(type, EodonTribe.Barrab);
+                    }
                     else
-                        bc = Activator.CreateInstance(type) as BaseCreature;
+                    {
+                        bc = (BaseCreature) Activator.CreateInstance(type);
+                    }
 
                     bc.NoLootOnDeath = true;
 
@@ -401,21 +483,27 @@ namespace Server.Engines.MyrmidexInvasion
             else
             {
                 int wave = TribeTeam.Count;
+
                 TribeTeam[wave] = new List<BaseCreature>();
+
                 List<BaseCreature> list = TribeTeam[wave];
 
                 for (int i = 0; i < WaveCount; i++)
                 {
                     BaseCreature bc;
+
                     Type type = _TribeTypes[wave][Utility.Random(_TribeTypes[wave].Length)];
 
                     if (type.IsSubclassOf(typeof(BaseEodonTribesman)))
                     {
                         EodonTribe tribe = Utility.RandomList(EodonTribe.Jukari, EodonTribe.Kurak, EodonTribe.Barako, EodonTribe.Urali, EodonTribe.Sakkhra);
-                        bc = Activator.CreateInstance(type, tribe) as BaseCreature;
+
+                        bc = (BaseCreature) Activator.CreateInstance(type, tribe);
                     }
                     else
-                        bc = Activator.CreateInstance(type) as BaseCreature;
+                    {
+                        bc = (BaseCreature) Activator.CreateInstance(type);
+                    }
 
                     bc.NoLootOnDeath = true;
 
@@ -474,7 +562,9 @@ namespace Server.Engines.MyrmidexInvasion
         public IEnumerable<PlayerMobile> GetPlayers(Allegiance allegiance)
         {
             if (BattleRegion == null)
+            {
                 return null;
+            }
 
             return BattleRegion.GetEnumeratedMobiles().OfType<PlayerMobile>().Where(p => MyrmidexInvasionSystem.IsAlliedWith(p, allegiance));
         }
@@ -482,9 +572,19 @@ namespace Server.Engines.MyrmidexInvasion
         public bool HasPlayers(bool ignorestaff = true)
         {
             if (BattleRegion == null)
+            {
                 return false;
+            }
 
-            return BattleRegion.GetEnumeratedMobiles().Any(m => m is PlayerMobile && (!ignorestaff || m.AccessLevel == AccessLevel.Player));
+            foreach (var m in BattleRegion.GetEnumeratedMobiles())
+            {
+                if (m is PlayerMobile && (!ignorestaff || m.AccessLevel == AccessLevel.Player))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public bool IsInMyrmidexObjective(Point3D p)
@@ -499,9 +599,12 @@ namespace Server.Engines.MyrmidexInvasion
 
         public void RegionMessage(int message)
         {
-            foreach (PlayerMobile pm in BattleRegion.GetEnumeratedMobiles().OfType<PlayerMobile>())
+            foreach (Mobile mobile in BattleRegion.GetEnumeratedMobiles())
             {
-                pm.SendLocalizedMessage(message);
+                if (mobile is PlayerMobile pm)
+                {
+                    pm.SendLocalizedMessage(message);
+                }
             }
         }
 
@@ -536,7 +639,7 @@ namespace Server.Engines.MyrmidexInvasion
 
             foreach (KeyValuePair<int, List<BaseCreature>> kvp in list)
             {
-                bclist.AddRange(kvp.Value.Where(bc => bc != null && !bc.Deleted && bc.Alive)); // Should be converted to not use LINQ here.
+                bclist.AddRange(kvp.Value.Where(bc => bc != null && !bc.Deleted && bc.Alive)); 
             }
 
             return bclist;
@@ -546,45 +649,57 @@ namespace Server.Engines.MyrmidexInvasion
         {
             List<DamageStore> rights = bc.GetLootingRights();
 
-            foreach (DamageStore ds in rights)
+            for (var index = 0; index < rights.Count; index++)
             {
+                DamageStore ds = rights[index];
+
                 if (ds.m_Mobile is PlayerMobile && ds.m_HasRight && MyrmidexInvasionSystem.AreEnemies(ds.m_Mobile, bc))
                 {
                     if (MyrmidexInvasionSystem.IsAlliedWith(bc, Allegiance.Myrmidex))
                     {
                         int points = 1;
+
                         if (IsFrontLine(ds.m_Mobile, bc))
                         {
-                            ds.m_Mobile.SendLocalizedMessage(
-                                1156599); // You assist the Eodonians in pushing back the Myrmidex!
+                            ds.m_Mobile.SendLocalizedMessage(1156599); // You assist the Eodonians in pushing back the Myrmidex!
                             points *= 4;
                         }
                         else
-                            ds.m_Mobile.SendLocalizedMessage(
-                                1156600); // You kill one of the Myrmidex away from the front ranks and gain little recognition.
+                        {
+                            ds.m_Mobile.SendLocalizedMessage(1156600); // You kill one of the Myrmidex away from the front ranks and gain little recognition.
+                        }
 
                         if (!Players.ContainsKey((PlayerMobile) ds.m_Mobile))
+                        {
                             Players[(PlayerMobile) ds.m_Mobile] = points;
+                        }
                         else
+                        {
                             Players[(PlayerMobile) ds.m_Mobile] += points;
+                        }
                     }
                     else
                     {
                         int points = 1;
+
                         if (IsFrontLine(ds.m_Mobile, bc))
                         {
-                            ds.m_Mobile.SendLocalizedMessage(
-                                1156598); // You assist the Myrmidex in pushing back the Eodonians!
+                            ds.m_Mobile.SendLocalizedMessage(1156598); // You assist the Myrmidex in pushing back the Eodonians!
                             points *= 4;
                         }
                         else
-                            ds.m_Mobile.SendLocalizedMessage(
-                                1156601); // You kill one of the Eodonians away from the front ranks and gain little recognition.
+                        {
+                            ds.m_Mobile.SendLocalizedMessage(1156601); // You kill one of the Eodonians away from the front ranks and gain little recognition.
+                        }
 
                         if (!Players.ContainsKey((PlayerMobile) ds.m_Mobile))
+                        {
                             Players[(PlayerMobile) ds.m_Mobile] = points;
+                        }
                         else
+                        {
                             Players[(PlayerMobile) ds.m_Mobile] += points;
+                        }
                     }
                 }
             }
@@ -621,16 +736,20 @@ namespace Server.Engines.MyrmidexInvasion
 
             foreach (KeyValuePair<int, List<BaseCreature>> kvp in MyrmidexTeam)
             {
-                foreach (BaseCreature bc in kvp.Value)
+                for (var index = 0; index < kvp.Value.Count; index++)
                 {
+                    BaseCreature bc = kvp.Value[index];
+
                     AssignNavpoints(bc, Allegiance.Myrmidex);
                 }
             }
 
             foreach (KeyValuePair<int, List<BaseCreature>> kvp in TribeTeam)
             {
-                foreach (BaseCreature bc in kvp.Value)
+                for (var index = 0; index < kvp.Value.Count; index++)
                 {
+                    BaseCreature bc = kvp.Value[index];
+
                     AssignNavpoints(bc, Allegiance.Tribes);
                 }
             }
@@ -665,8 +784,10 @@ namespace Server.Engines.MyrmidexInvasion
                 bc.CurrentNavPoint = Array.IndexOf(points.ToArray(), nearest);
 
                 //Randomize
-                points.ForEach(point =>
+                for (var i = 0; i < points.Count; i++)
                 {
+                    var point = points[i];
+
                     if (lane == 0)
                     {
                         point.X = point.X + Utility.RandomMinMax(0, 2);
@@ -679,7 +800,7 @@ namespace Server.Engines.MyrmidexInvasion
                     {
                         point.X = point.X + Utility.RandomMinMax(-2, 2);
                     }
-                });
+                }
 
                 bc.NavPoints[Map.TerMur] = points;
                 bc.AIObject.Activate();
@@ -763,33 +884,50 @@ namespace Server.Engines.MyrmidexInvasion
         public static void CheckPoints(CommandEventArgs e)
         {
             int hue = 1160;
-            foreach (Point2D[][] ps in _NavPoints1)
+
+            for (var index = 0; index < _NavPoints1.Length; index++)
             {
+                Point2D[][] ps = _NavPoints1[index];
+
                 hue++;
-                foreach (Point2D[] pss in ps)
+
+                for (var i = 0; i < ps.Length; i++)
                 {
-                    foreach (Point2D p in pss)
+                    Point2D[] pss = ps[i];
+
+                    for (var index1 = 0; index1 < pss.Length; index1++)
                     {
+                        Point2D p = pss[index1];
+
                         Static st = new Static(14089)
                         {
                             Hue = hue
                         };
+
                         st.MoveToWorld(new Point3D(p.X, p.Y, Map.TerMur.GetAverageZ(p.X, p.Y)), Map.TerMur);
                     }
                 }
             }
 
-            foreach (Point2D[][] ps in _NavPoints2)
+            for (var index = 0; index < _NavPoints2.Length; index++)
             {
+                Point2D[][] ps = _NavPoints2[index];
+
                 hue--;
-                foreach (Point2D[] pss in ps)
+
+                for (var i = 0; i < ps.Length; i++)
                 {
-                    foreach (Point2D p in pss)
+                    Point2D[] pss = ps[i];
+
+                    for (var index1 = 0; index1 < pss.Length; index1++)
                     {
+                        Point2D p = pss[index1];
+
                         Static st = new Static(14089)
                         {
                             Hue = hue
                         };
+
                         st.MoveToWorld(new Point3D(p.X, p.Y, Map.TerMur.GetAverageZ(p.X, p.Y)), Map.TerMur);
                     }
                 }
@@ -850,14 +988,34 @@ namespace Server.Engines.MyrmidexInvasion
         {
             if (BattleRegion != null)
             {
-                BattleFlag flag = BattleRegion.GetEnumeratedItems().OfType<BattleFlag>().FirstOrDefault(i => i.ItemID == 17099);
+                BattleFlag flag = null;
+
+                foreach (Item item in BattleRegion.GetEnumeratedItems())
+                {
+                    if (item is BattleFlag i && i.ItemID == 17099)
+                    {
+                        flag = i;
+                        break;
+                    }
+                }
+
                 if (flag != null)
                 {
                     TribalFlag = flag;
                     flag.BattleSpawner = this;
                 }
 
-                flag = BattleRegion.GetEnumeratedItems().OfType<BattleFlag>().FirstOrDefault(i => i.ItemID == 1068);
+                flag = null;
+
+                foreach (Item item in BattleRegion.GetEnumeratedItems())
+                {
+                    if (item is BattleFlag i && i.ItemID == 1068)
+                    {
+                        flag = i;
+                        break;
+                    }
+                }
+
                 if (flag != null)
                 {
                     MyrmidexFlag = flag;
@@ -896,7 +1054,11 @@ namespace Server.Engines.MyrmidexInvasion
             {
                 writer.Write(kvp.Key);
                 writer.Write(kvp.Value.Count);
-                kvp.Value.ForEach(bc => writer.Write(bc));
+                for (var index = 0; index < kvp.Value.Count; index++)
+                {
+                    var bc = kvp.Value[index];
+                    writer.Write(bc);
+                }
             }
 
             writer.Write(TribeTeam.Count);
@@ -904,7 +1066,11 @@ namespace Server.Engines.MyrmidexInvasion
             {
                 writer.Write(kvp.Key);
                 writer.Write(kvp.Value.Count);
-                kvp.Value.ForEach(bc => writer.Write(bc));
+                for (var index = 0; index < kvp.Value.Count; index++)
+                {
+                    var bc = kvp.Value[index];
+                    writer.Write(bc);
+                }
             }
 
             writer.Write(Players.Count);

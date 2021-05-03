@@ -510,9 +510,24 @@ namespace Server.Engines.BulkOrders
             Type t = GetTypeFromBOD(bod);
 
             if (t == null)
+            {
                 return false;
+            }
 
-            return _ExceptionalExcluded.FirstOrDefault(type => type == t) != null;
+            Type first = null;
+
+            for (var index = 0; index < _ExceptionalExcluded.Length; index++)
+            {
+                var type = _ExceptionalExcluded[index];
+
+                if (type == t)
+                {
+                    first = type;
+                    break;
+                }
+            }
+
+            return first != null;
         }
 
         public static bool CanUseMaterial(IBOD bod)

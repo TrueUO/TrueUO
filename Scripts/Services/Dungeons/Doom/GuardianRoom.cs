@@ -3,7 +3,6 @@ using Server.Mobiles;
 using Server.Regions;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Xml;
 
 namespace Server.Engines.Doom
@@ -68,7 +67,20 @@ namespace Server.Engines.Doom
 
         public bool CheckReset()
         {
-            if (GetPlayerCount() == 0 || Guardians == null || Guardians.Count == 0 || !Guardians.Any(x => !x.Deleted))
+            bool any = false;
+
+            for (var index = 0; index < Guardians.Count; index++)
+            {
+                var x = Guardians[index];
+
+                if (!x.Deleted)
+                {
+                    any = true;
+                    break;
+                }
+            }
+
+            if (!any || GetPlayerCount() == 0 || Guardians == null || Guardians.Count == 0)
             {
                 Reset();
                 return true;
@@ -98,10 +110,23 @@ namespace Server.Engines.Doom
                 pm.MoveToWorld(KickLoc, Map.Malas);
 
                 if (pm.Corpse != null)
+                {
                     pm.Corpse.MoveToWorld(KickLoc, Map.Malas);
+                }
             }
 
-            if (!GetEnumeratedMobiles().Any(mob => mob is PlayerMobile && mob.Alive))
+            bool any = false;
+
+            foreach (var mob in GetEnumeratedMobiles())
+            {
+                if (mob is PlayerMobile && mob.Alive)
+                {
+                    any = true;
+                    break;
+                }
+            }
+
+            if (!any)
             {
                 Reset();
             }

@@ -152,7 +152,7 @@ namespace Server.Mobiles
 
     public class DamageStore : IComparable
     {
-        public Mobile m_Mobile;
+        public readonly Mobile m_Mobile;
         public int m_Damage;
         public bool m_HasRight;
 
@@ -189,10 +189,8 @@ namespace Server.Mobiles
             {
                 object[] objs = t.GetCustomAttributes(typeof(FriendlyNameAttribute), false);
 
-                if (objs.Length > 0)
+                if (objs.Length > 0 && objs[0] is FriendlyNameAttribute friendly)
                 {
-                    FriendlyNameAttribute friendly = objs[0] as FriendlyNameAttribute;
-
                     return friendly.FriendlyName;
                 }
             }
@@ -522,7 +520,7 @@ namespace Server.Mobiles
         #endregion
 
         #region Pet Training
-        public static double MaxTameRequirement = 108.0;
+        public const double MaxTameRequirement = 108.0;
 
         private AbilityProfile _Profile;
         private TrainingProfile _TrainingProfile;
@@ -628,7 +626,9 @@ namespace Server.Mobiles
             if (CanLowerSlot() && max > min)
             {
                 if (_InitAverage == null)
+                {
                     _InitAverage = new List<double>();
+                }
 
                 _InitAverage.Add((value - min) / (max - min));
             }
@@ -645,7 +645,17 @@ namespace Server.Mobiles
 
         private bool CanLowerSlot()
         {
-            return _SlotLowerables.Any(t => t == GetType());
+            for (var index = 0; index < _SlotLowerables.Length; index++)
+            {
+                var t = _SlotLowerables[index];
+
+                if (t == GetType())
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public void CalculateSlots(int slots)
@@ -663,9 +673,18 @@ namespace Server.Mobiles
             ControlSlotsMax = def.ControlSlotsMax;
 
             if (_InitAverage == null)
+            {
                 return;
+            }
 
-            double total = _InitAverage.Sum(d => d);
+            double total = 0;
+
+            for (var index = 0; index < _InitAverage.Count; index++)
+            {
+                var d = _InitAverage[index];
+
+                total += d;
+            }
 
             if (total / _InitAverage.Count <= AverageThreshold)
             {
@@ -724,7 +743,19 @@ namespace Server.Mobiles
             }
             else
             {
-                MasteryInfo[] mInfo = MasteryInfo.Infos.Where(i => i.MasterySkill == _Mastery && !i.Passive && (i.SpellType != typeof(BodyGuardSpell) || Controlled)).ToArray();
+                List<MasteryInfo> list = new List<MasteryInfo>();
+
+                for (var index = 0; index < MasteryInfo.Infos.Count; index++)
+                {
+                    var i = MasteryInfo.Infos[index];
+
+                    if (i.MasterySkill == _Mastery && !i.Passive && (i.SpellType != typeof(BodyGuardSpell) || Controlled))
+                    {
+                        list.Add(i);
+                    }
+                }
+
+                MasteryInfo[] mInfo = list.ToArray();
 
                 if (mInfo.Length > 0)
                 {
@@ -778,7 +809,20 @@ namespace Server.Mobiles
                     return false;
                 }
 
-                return _IsSoulBound || _SoulboundCreatures.Any(c => c == GetType());
+                bool any = false;
+
+                for (var index = 0; index < _SoulboundCreatures.Length; index++)
+                {
+                    var c = _SoulboundCreatures[index];
+
+                    if (c == GetType())
+                    {
+                        any = true;
+                        break;
+                    }
+                }
+
+                return _IsSoulBound || any;
             }
             set
             {
@@ -791,7 +835,7 @@ namespace Server.Mobiles
 
         public static bool IsSoulboundEnemies => Engines.Fellowship.ForsakenFoesEvent.Instance.Running;
 
-        public static Type[] _SoulboundCreatures =
+        public static readonly Type[] _SoulboundCreatures =
         {
             typeof(MerchantCaptain), typeof(PirateCrew), typeof(PirateCaptain), typeof(MerchantCrew), typeof(Osiredon), typeof(Charydbis), typeof(CorgulTheSoulBinder)
         };
@@ -1578,9 +1622,9 @@ namespace Server.Mobiles
 
             ApplyPoisonResult result = base.ApplyPoison(from, poison);
 
-            if (from != null && result == ApplyPoisonResult.Poisoned && PoisonTimer is PoisonImpl.PoisonTimer)
+            if (from != null && result == ApplyPoisonResult.Poisoned && PoisonTimer is PoisonImpl.PoisonTimer timer)
             {
-                (PoisonTimer as PoisonImpl.PoisonTimer).From = from;
+                timer.From = from;
             }
 
             return result;
@@ -1872,8 +1916,8 @@ namespace Server.Mobiles
         #endregion
 
         #region SA / High Seas Tasty Treats/Vial of Armor Essense
-        private int m_TempDamageBonus = 0;
-        private int m_TempDamageAbsorb = 0;
+        private int m_TempDamageBonus;
+        private int m_TempDamageAbsorb;
 
         public int TempDamageBonus { get => m_TempDamageBonus; set => m_TempDamageBonus = value; }
         public int TempDamageAbsorb { get => m_TempDamageAbsorb; set => m_TempDamageAbsorb = value; }
@@ -2883,14 +2927,22 @@ namespace Server.Mobiles
             return false;
         }
 
-        public virtual bool CheckFoodPreference(Item fed, FoodType type, Type[] types)
+        public virtual bool CheckFoodPreference(Item fed, FoodType type, IEnumerable<Type> types)
         {
             if ((FavoriteFood & type) == 0)
             {
                 return false;
             }
 
-            return types.Any(t => t == fed.GetType() || fed.GetType().IsSubclassOf(t));
+            foreach (var t in types)
+            {
+                if (t == fed.GetType() || fed.GetType().IsSubclassOf(t))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public virtual bool CheckFeed(Mobile from, Item dropped)
@@ -4362,7 +4414,7 @@ namespace Server.Mobiles
 
         private static Mobile m_NoDupeGuards;
 
-        public void ReleaseGuardDupeLock()
+        public static void ReleaseGuardDupeLock()
         {
             m_NoDupeGuards = null;
         }
@@ -4923,28 +4975,44 @@ namespace Server.Mobiles
                     Backpack b = new CreatureBackpack(Name);
 
                     List<Item> list = new List<Item>(Backpack.Items);
-                    foreach (Item item in list)
+
+                    for (var index = 0; index < list.Count; index++)
                     {
+                        Item item = list[index];
+
                         if (item.Movable)
+                        {
                             b.DropItem(item);
+                        }
                         else
+                        {
                             item.Delete();
+                        }
                     }
 
                     BaseHouse house = BaseHouse.FindHouseAt(this);
+
                     if (house != null)
                     {
                         if (Backpack.Items.Count == 0)
+                        {
                             b.Delete();
+                        }
                         else
+                        {
                             b.MoveToWorld(house.BanLocation, house.Map);
+                        }
                     }
                     else
                     {
                         if (Backpack.Items.Count == 0)
+                        {
                             b.Delete();
+                        }
                         else
+                        {
                             b.MoveToWorld(Location, Map);
+                        }
                     }
                 }
             }
@@ -5525,40 +5593,39 @@ namespace Server.Mobiles
             }
         }
 
-        public virtual bool IsAggressiveMonster => IsMonster 
-        										&&
-        										 ( m_FightMode == FightMode.Closest 
-        										|| m_FightMode == FightMode.Strongest 
-        										|| m_FightMode == FightMode.Weakest 
-        										|| m_FightMode == FightMode.Good
-        										 );
-
-        private class FKEntry
-        {
-            public Mobile m_Mobile;
-            public int m_Damage;
-
-            public FKEntry(Mobile m, int damage)
-            {
-                m_Mobile = m;
-                m_Damage = damage;
-            }
-        }
+        public virtual bool IsAggressiveMonster => IsMonster && ( m_FightMode == FightMode.Closest || m_FightMode == FightMode.Strongest || m_FightMode == FightMode.Weakest || m_FightMode == FightMode.Good);
 
         public List<DamageStore> LootingRights { get; set; }
 
         public bool HasLootingRights(Mobile m)
         {
             if (LootingRights == null)
+            {
                 return false;
+            }
 
-            return LootingRights.FirstOrDefault(ds => ds.m_Mobile == m && ds.m_HasRight) != null;
+            DamageStore first = null;
+
+            for (var index = 0; index < LootingRights.Count; index++)
+            {
+                var ds = LootingRights[index];
+
+                if (ds.m_Mobile == m && ds.m_HasRight)
+                {
+                    first = ds;
+                    break;
+                }
+            }
+
+            return first != null;
         }
 
         public Mobile GetHighestDamager()
         {
             if (LootingRights == null || LootingRights.Count == 0)
+            {
                 return null;
+            }
 
             return LootingRights[0].m_Mobile;
         }
@@ -5890,13 +5957,21 @@ namespace Server.Mobiles
                             {
                                 if (ds.m_Mobile is PlayerMobile pm)
                                 {
-                                    foreach (Mobile pet in pm.AllFollowers)
+                                    for (var index = 0; index < pm.AllFollowers.Count; index++)
                                     {
-                                        if (DamageEntries.Any(de => de.Damager == pet))
+                                        Mobile pet = pm.AllFollowers[index];
+
+                                        for (var index1 = 0; index1 < DamageEntries.Count; index1++)
                                         {
-                                            titles.Add(pet);
-                                            fame.Add(totalFame);
-                                            karma.Add(totalKarma);
+                                            var de = DamageEntries[index1];
+
+                                            if (de.Damager == pet)
+                                            {
+                                                titles.Add(pet);
+                                                fame.Add(totalFame);
+                                                karma.Add(totalKarma);
+                                                break;
+                                            }
                                         }
                                     }
                                 }
@@ -6252,7 +6327,7 @@ namespace Server.Mobiles
             return true;
         }
 
-        private static readonly bool EnableRummaging = true;
+        private const bool EnableRummaging = true;
 
         private const double ChanceToRummage = 0.5; // 50%
 
@@ -6674,6 +6749,7 @@ namespace Server.Mobiles
             if (m == null || m == this || !CanBeHarmful(m, false) || creaturesOnly && !(m is BaseCreature))
             {
                 List<AggressorInfo> list = new List<AggressorInfo>();
+
                 list.AddRange(Aggressors.Where(info => !creaturesOnly || info.Attacker is PlayerMobile));
 
                 if (list.Count > 0)
@@ -7171,8 +7247,10 @@ namespace Server.Mobiles
 
             eable.Free();
 
-            foreach (Mobile m in move)
+            for (var index = 0; index < move.Count; index++)
             {
+                Mobile m = move[index];
+
                 m.MoveToWorld(loc, map);
             }
 
@@ -7241,20 +7319,17 @@ namespace Server.Mobiles
         /* until we are sure about who should be getting deleted, move them instead */
         /* On OSI, they despawn */
 
-        private bool m_ReturnQueued;
-
         private bool IsSpawnerBound()
         {
-            if (Map != null && Map != Map.Internal && FightMode != FightMode.None && RangeHome >= 0)
+            if (Map != null && Map != Map.Internal && FightMode != FightMode.None && RangeHome >= 0 && !Controlled && !Summoned && Spawner is Spawner spawner && spawner.Map == Map)
             {
-                if (!Controlled && !Summoned && Spawner is Spawner && (Spawner as Spawner).Map == Map)
-                {
-                    return true;
-                }
+                return true;
             }
 
             return false;
         }
+
+        private bool m_ReturnQueued;
 
         public virtual bool ReturnsToHome => m_SeeksHome && Home != Point3D.Zero && !m_ReturnQueued && !Controlled && !Summoned;
 
@@ -7365,9 +7440,7 @@ namespace Server.Mobiles
                         {
                             Mobile owner = c.ControlMaster;
 
-                            if (!c.IsStabled && !(c is BaseVendor) &&
-                                (owner == null || owner.Deleted || owner.Map != c.Map || !owner.InRange(c, 12) || !c.CanSee(owner) ||
-                                 !c.InLOS(owner)))
+                            if (!c.IsStabled && !(c is BaseVendor) && (owner == null || owner.Deleted || owner.Map != c.Map || !owner.InRange(c, 12) || !c.CanSee(owner) || !c.InLOS(owner)))
                             {
                                 if (c.OwnerAbandonTime == DateTime.MinValue)
                                 {
@@ -7412,7 +7485,9 @@ namespace Server.Mobiles
                             if (c.RemoveStep >= 20)
                             {
                                 lock (toRemove)
+                                {
                                     toRemove.Add(c);
+                                }
                             }
                         }
                         else
@@ -7422,34 +7497,41 @@ namespace Server.Mobiles
                     }
                 });
 
-            foreach (BaseCreature c in toRelease.Where(c => c != null))
+            for (var index = 0; index < toRelease.Count; index++)
             {
-                if (c.IsDeadBondedPet)
+                BaseCreature c = toRelease[index];
+
+                if (c != null)
                 {
-                    c.Delete();
-                    continue;
+                    if (c.IsDeadBondedPet)
+                    {
+                        c.Delete();
+                        continue;
+                    }
+
+                    c.Say(1043255, c.Name); // ~1_NAME~ appears to have decided that is better off without a master!
+                    c.Loyalty = BaseCreature.MaxLoyalty; // Wonderfully Happy
+                    c.IsBonded = false;
+                    c.BondingBegin = DateTime.MinValue;
+                    c.OwnerAbandonTime = DateTime.MinValue;
+                    c.ControlTarget = null;
+
+                    if (c.AIObject != null)
+                    {
+                        c.AIObject.DoOrderRelease();
+                    }
+
+                    // this will prevent no release of creatures left alone with AI disabled (and consequent bug of Followers)
+                    c.DropBackpack();
+                    c.RemoveOnSave = true;
                 }
-
-                c.Say(1043255, c.Name); // ~1_NAME~ appears to have decided that is better off without a master!
-                c.Loyalty = BaseCreature.MaxLoyalty; // Wonderfully Happy
-                c.IsBonded = false;
-                c.BondingBegin = DateTime.MinValue;
-                c.OwnerAbandonTime = DateTime.MinValue;
-                c.ControlTarget = null;
-
-                if (c.AIObject != null)
-                {
-                    c.AIObject.DoOrderRelease();
-                }
-
-                // this will prevent no release of creatures left alone with AI disabled (and consequent bug of Followers)
-                c.DropBackpack();
-                c.RemoveOnSave = true;
             }
 
             // added code to handle removing of wild creatures in house regions
-            foreach (BaseCreature c in toRemove)
+            for (var index = 0; index < toRemove.Count; index++)
             {
+                BaseCreature c = toRemove[index];
+
                 c.Delete();
             }
 
@@ -7465,7 +7547,7 @@ namespace Server.Mobiles
 
         public List<BaseCreature> ToDelete { get; set; } = new List<BaseCreature>();
 
-        public CreatureDeleteTimer()
+        private CreatureDeleteTimer()
             : base(TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(5))
         {
             Priority = TimerPriority.OneMinute;
@@ -7473,7 +7555,17 @@ namespace Server.Mobiles
 
         protected override void OnTick()
         {
-            var toDelete = ToDelete.Where(bc => bc.Deleted || bc.DeleteTime < DateTime.UtcNow).ToList();
+            var toDelete = new List<BaseCreature>();
+
+            for (var index = 0; index < ToDelete.Count; index++)
+            {
+                var bc = ToDelete[index];
+
+                if (bc.Deleted || bc.DeleteTime < DateTime.UtcNow)
+                {
+                    toDelete.Add(bc);
+                }
+            }
 
             for (int i = 0; i < toDelete.Count; i++)
             {

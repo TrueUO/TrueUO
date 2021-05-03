@@ -98,8 +98,12 @@ namespace Server.Items
         {
             List<Item> list = new List<Item>(Items);
 
-            foreach (Item item in list)
+            for (var index = 0; index < list.Count; index++)
+            {
+                Item item = list[index];
+
                 item.Delete();
+            }
 
             ColUtility.Free(list);
 

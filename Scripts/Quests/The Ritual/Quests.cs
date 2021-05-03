@@ -3,7 +3,6 @@ using Server.Items;
 using Server.Mobiles;
 using Server.Regions;
 using System;
-using System.Linq;
 
 namespace Server.Engines.Quests.RitualQuest
 {
@@ -291,7 +290,18 @@ namespace Server.Engines.Quests.RitualQuest
                     }
                 }
 
-                if (!GetEnumeratedMobiles().Any(m => m is BexilPunchingBag && !m.Deleted))
+                bool any = false;
+
+                foreach (var m in GetEnumeratedMobiles())
+                {
+                    if (m is BexilPunchingBag && !m.Deleted)
+                    {
+                        any = true;
+                        break;
+                    }
+                }
+
+                if (!any)
                 {
                     BexilPunchingBag bex = new BexilPunchingBag();
                     bex.MoveToWorld(new Point3D(403, 3391, 38), Map.TerMur);

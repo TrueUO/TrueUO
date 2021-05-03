@@ -25,32 +25,52 @@ namespace Server.Mobiles
 
         public static bool CheckRedFriendship(Mobile m)
         {
-            if (m is BaseCreature bc)
+            while (true)
             {
-                if (bc.Controlled && bc.ControlMaster is PlayerMobile)
-                    return CheckRedFriendship(bc.ControlMaster);
-                if (bc.Summoned && bc.SummonMaster is PlayerMobile)
-                    return CheckRedFriendship(bc.SummonMaster);
+                if (m is BaseCreature bc)
+                {
+                    if (bc.Controlled && bc.ControlMaster is PlayerMobile)
+                    {
+                        m = bc.ControlMaster;
+                        continue;
+                    }
+
+                    if (bc.Summoned && bc.SummonMaster is PlayerMobile)
+                    {
+                        m = bc.SummonMaster;
+                        continue;
+                    }
+                }
+
+                PlayerMobile player = m as PlayerMobile;
+
+                return player != null && player.SolenFriendship == SolenFriendship.Red;
             }
-
-            PlayerMobile player = m as PlayerMobile;
-
-            return player != null && player.SolenFriendship == SolenFriendship.Red;
         }
 
         public static bool CheckBlackFriendship(Mobile m)
         {
-            if (m is BaseCreature bc)
+            while (true)
             {
-                if (bc.Controlled && bc.ControlMaster is PlayerMobile)
-                    return CheckBlackFriendship(bc.ControlMaster);
-                if (bc.Summoned && bc.SummonMaster is PlayerMobile)
-                    return CheckBlackFriendship(bc.SummonMaster);
+                if (m is BaseCreature bc)
+                {
+                    if (bc.Controlled && bc.ControlMaster is PlayerMobile)
+                    {
+                        m = bc.ControlMaster;
+                        continue;
+                    }
+
+                    if (bc.Summoned && bc.SummonMaster is PlayerMobile)
+                    {
+                        m = bc.SummonMaster;
+                        continue;
+                    }
+                }
+
+                PlayerMobile player = m as PlayerMobile;
+
+                return player != null && player.SolenFriendship == SolenFriendship.Black;
             }
-
-            PlayerMobile player = m as PlayerMobile;
-
-            return player != null && player.SolenFriendship == SolenFriendship.Black;
         }
 
         public static void OnRedDamage(Mobile from)

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server
 {
@@ -52,31 +51,55 @@ namespace Server
             {
                 if (title != null)
                 {
-                    EnhancementAttributes match = EnhancementList[m].FirstOrDefault(attrs => attrs.Title == title);
+                    EnhancementAttributes match = null;
+
+                    for (var index = 0; index < EnhancementList[m].Count; index++)
+                    {
+                        var attrs = EnhancementList[m][index];
+
+                        if (attrs.Title == title)
+                        {
+                            match = attrs;
+                            break;
+                        }
+                    }
 
                     if (match != null && EnhancementList[m].Contains(match))
                     {
                         if (match.Attributes.BonusStr > 0)
+                        {
                             m.RemoveStatMod("MagicalEnhancementStr");
+                        }
 
                         if (match.Attributes.BonusDex > 0)
+                        {
                             m.RemoveStatMod("MagicalEnhancementDex");
+                        }
 
                         if (match.Attributes.BonusInt > 0)
+                        {
                             m.RemoveStatMod("MagicalEnhancementInt");
+                        }
 
                         EnhancementList[m].Remove(match);
                     }
                 }
 
                 if (EnhancementList[m].Count == 0 || title == null)
+                {
                     EnhancementList.Remove(m);
+                }
 
                 m.CheckStatTimers();
                 m.UpdateResistances();
                 m.Delta(MobileDelta.Stat | MobileDelta.WeaponDamage | MobileDelta.Hits | MobileDelta.Stam | MobileDelta.Mana);
 
-                m.Items.ForEach(i => i.InvalidateProperties());
+                for (var index = 0; index < m.Items.Count; index++)
+                {
+                    var i = m.Items[index];
+
+                    i.InvalidateProperties();
+                }
 
                 return true;
             }
@@ -92,7 +115,14 @@ namespace Server
             if (EnhancementList.ContainsKey(m))
             {
                 int value = 0;
-                EnhancementList[m].ForEach(attrs => value += attrs.Attributes[att]);
+
+                for (var index = 0; index < EnhancementList[m].Count; index++)
+                {
+                    var attrs = EnhancementList[m][index];
+
+                    value += attrs.Attributes[att];
+                }
+
                 return value;
             }
 
@@ -120,7 +150,18 @@ namespace Server
                 m.AddStatMod(new StatMod(StatType.Int, "MagicalEnhancementInt", value, TimeSpan.Zero));
             }
 
-            EnhancementAttributes match = EnhancementList[m].FirstOrDefault(attrs => attrs.Title == title);
+            EnhancementAttributes match = null;
+
+            for (var index = 0; index < EnhancementList[m].Count; index++)
+            {
+                var attrs = EnhancementList[m][index];
+
+                if (attrs.Title == title)
+                {
+                    match = attrs;
+                    break;
+                }
+            }
 
             if (match != null)
             {
@@ -142,12 +183,21 @@ namespace Server
         public static int GetValue(Mobile m, AosWeaponAttribute att)
         {
             if (m == null)
+            {
                 return 0;
+            }
 
             if (EnhancementList.ContainsKey(m))
             {
                 int value = 0;
-                EnhancementList[m].ForEach(attrs => value += attrs.WeaponAttributes[att]);
+
+                for (var index = 0; index < EnhancementList[m].Count; index++)
+                {
+                    var attrs = EnhancementList[m][index];
+
+                    value += attrs.WeaponAttributes[att];
+                }
+
                 return value;
             }
 
@@ -157,9 +207,22 @@ namespace Server
         public static void SetValue(Mobile m, AosWeaponAttribute att, int value, string title)
         {
             if (!EnhancementList.ContainsKey(m))
+            {
                 AddMobile(m);
+            }
 
-            EnhancementAttributes match = EnhancementList[m].FirstOrDefault(attrs => attrs.Title == title);
+            EnhancementAttributes match = null;
+
+            for (var index = 0; index < EnhancementList[m].Count; index++)
+            {
+                var attrs = EnhancementList[m][index];
+
+                if (attrs.Title == title)
+                {
+                    match = attrs;
+                    break;
+                }
+            }
 
             if (match != null)
             {
@@ -181,12 +244,21 @@ namespace Server
         public static int GetValue(Mobile m, AosArmorAttribute att)
         {
             if (m == null)
+            {
                 return 0;
+            }
 
             if (EnhancementList.ContainsKey(m))
             {
                 int value = 0;
-                EnhancementList[m].ForEach(attrs => value += attrs.ArmorAttributes[att]);
+
+                for (var index = 0; index < EnhancementList[m].Count; index++)
+                {
+                    var attrs = EnhancementList[m][index];
+
+                    value += attrs.ArmorAttributes[att];
+                }
+
                 return value;
             }
 
@@ -196,9 +268,22 @@ namespace Server
         public static void SetValue(Mobile m, AosArmorAttribute att, int value, string title)
         {
             if (!EnhancementList.ContainsKey(m))
+            {
                 AddMobile(m);
+            }
 
-            EnhancementAttributes match = EnhancementList[m].FirstOrDefault(attrs => attrs.Title == title);
+            EnhancementAttributes match = null;
+
+            for (var index = 0; index < EnhancementList[m].Count; index++)
+            {
+                var attrs = EnhancementList[m][index];
+
+                if (attrs.Title == title)
+                {
+                    match = attrs;
+                    break;
+                }
+            }
 
             if (match != null)
             {
@@ -220,12 +305,21 @@ namespace Server
         public static int GetValue(Mobile m, SAAbsorptionAttribute att)
         {
             if (m == null)
+            {
                 return 0;
+            }
 
             if (EnhancementList.ContainsKey(m))
             {
                 int value = 0;
-                EnhancementList[m].ForEach(attrs => value += attrs.AbsorptionAttributes[att]);
+
+                for (var index = 0; index < EnhancementList[m].Count; index++)
+                {
+                    var attrs = EnhancementList[m][index];
+
+                    value += attrs.AbsorptionAttributes[att];
+                }
+
                 return value;
             }
 
@@ -235,9 +329,22 @@ namespace Server
         public static void SetValue(Mobile m, SAAbsorptionAttribute att, int value, string title)
         {
             if (!EnhancementList.ContainsKey(m))
+            {
                 AddMobile(m);
+            }
 
-            EnhancementAttributes match = EnhancementList[m].FirstOrDefault(attrs => attrs.Title == title);
+            EnhancementAttributes match = null;
+
+            for (var index = 0; index < EnhancementList[m].Count; index++)
+            {
+                var attrs = EnhancementList[m][index];
+
+                if (attrs.Title == title)
+                {
+                    match = attrs;
+                    break;
+                }
+            }
 
             if (match != null)
             {
@@ -259,12 +366,21 @@ namespace Server
         public static int GetValue(Mobile m, ExtendedWeaponAttribute att)
         {
             if (m == null)
+            {
                 return 0;
+            }
 
             if (EnhancementList.ContainsKey(m))
             {
                 int value = 0;
-                EnhancementList[m].ForEach(attrs => value += attrs.ExtendedWeaponAttributes[att]);
+
+                for (var index = 0; index < EnhancementList[m].Count; index++)
+                {
+                    var attrs = EnhancementList[m][index];
+
+                    value += attrs.ExtendedWeaponAttributes[att];
+                }
+
                 return value;
             }
 
@@ -274,9 +390,22 @@ namespace Server
         public static void SetValue(Mobile m, ExtendedWeaponAttribute att, int value, string title)
         {
             if (!EnhancementList.ContainsKey(m))
+            {
                 AddMobile(m);
+            }
 
-            EnhancementAttributes match = EnhancementList[m].FirstOrDefault(attrs => attrs.Title == title);
+            EnhancementAttributes match = null;
+
+            for (var index = 0; index < EnhancementList[m].Count; index++)
+            {
+                var attrs = EnhancementList[m][index];
+
+                if (attrs.Title == title)
+                {
+                    match = attrs;
+                    break;
+                }
+            }
 
             if (match != null)
             {

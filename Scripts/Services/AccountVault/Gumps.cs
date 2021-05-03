@@ -4,7 +4,6 @@ using Server.Prompts;
 using Server.Engines.UOStore;
 
 using System.Globalization;
-using System.Linq;
 
 namespace Server.AccountVault
 {
@@ -112,8 +111,8 @@ namespace Server.AccountVault
 
         private class InternalPrompt : Prompt
         {
-            public PlayerMobile From { get; private set; }
-            public AccountVault Vault { get; private set; }
+            private PlayerMobile From { get; }
+            private AccountVault Vault { get; }
 
             public InternalPrompt(PlayerMobile from, AccountVault vault)
             {
@@ -177,7 +176,20 @@ namespace Server.AccountVault
 
         public static int VaultCount(string region)
         {
-            return AccountVault.Vaults.Count(v => v.Account == null && Region.Find(v.GetWorldLocation(), v.Map).IsPartOf(region) && AccountVault.ValidateMap(v));
+            int count = 0;
+
+            for (var index = 0; index < AccountVault.Vaults.Count; index++)
+            {
+                var v = AccountVault.Vaults[index];
+
+                if (v.Account == null && Region.Find(v.GetWorldLocation(), v.Map).IsPartOf(region) &&
+                    AccountVault.ValidateMap(v))
+                {
+                    count++;
+                }
+            }
+
+            return count;
         }
     }
 }

@@ -37,11 +37,17 @@ namespace Server.Services.Community_Collections
         private static void EventSink_WorldSave(WorldSaveEventArgs e)
         {
             List<BaseCollectionMobile> newMobiles = new List<BaseCollectionMobile>();
-            foreach (BaseCollectionMobile mob in m_Mobiles)
+
+            for (var index = 0; index < m_Mobiles.Count; index++)
             {
+                BaseCollectionMobile mob = m_Mobiles[index];
+
                 if (!mob.Deleted)
+                {
                     newMobiles.Add(mob);
+                }
             }
+
             m_Mobiles = newMobiles;
 
             Persistence.Serialize(
@@ -50,9 +56,10 @@ namespace Server.Services.Community_Collections
                 {
                     writer.WriteMobileList(m_Mobiles);
                     writer.Write(m_Mobiles.Count);
-                    foreach (BaseCollectionMobile mob in m_Mobiles)
+                    for (var index = 0; index < m_Mobiles.Count; index++)
                     {
-                        writer.Write((int)mob.CollectionID);
+                        BaseCollectionMobile mob = m_Mobiles[index];
+                        writer.Write((int) mob.CollectionID);
                         CollectionData data = mob.GetData();
                         data.Write(writer);
                         m_Collections[mob.CollectionID] = data;
@@ -77,17 +84,21 @@ namespace Server.Services.Community_Collections
                         CollectionData data = new CollectionData();
                         data.Read(reader);
                         int toRemove = -1;
-                        foreach (BaseCollectionMobile mob in mobs)
+                        for (var index = 0; index < mobs.Count; index++)
                         {
-                            if (mob.CollectionID == (Collection)collection)
+                            BaseCollectionMobile mob = mobs[index];
+                            if (mob.CollectionID == (Collection) collection)
                             {
                                 mob.SetData(data);
                                 toRemove = mobs.IndexOf(mob);
                                 break;
                             }
                         }
+
                         if (toRemove >= 0)
+                        {
                             mobs.RemoveAt(toRemove);
+                        }
                     }
                 });
 

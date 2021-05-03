@@ -1,4 +1,3 @@
-#region References
 using Server.Accounting;
 using Server.ContextMenus;
 using Server.Engines.BulkOrders;
@@ -12,8 +11,6 @@ using Server.Targeting;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-#endregion
 
 namespace Server.Mobiles
 {
@@ -587,11 +584,7 @@ namespace Server.Mobiles
             {
                 Item item = Items[i];
 
-                if (item is Hair || item is Beard)
-                {
-                    item.Hue = 0;
-                }
-                else if (item is BaseClothing || item is BaseWeapon || item is BaseArmor || item is BaseTool)
+                if (item is BaseClothing || item is BaseWeapon || item is BaseArmor || item is BaseTool)
                 {
                     item.Hue = GetRandomNecromancerHue();
                 }
@@ -1933,7 +1926,13 @@ namespace Server.Mobiles
         public static bool ConsumeGold(Container cont, double amount, bool recurse)
         {
             Queue<Gold> gold = new Queue<Gold>(FindGold(cont, recurse));
-            double total = gold.Aggregate(0.0, (c, g) => c + g.Amount);
+
+            double total = 0.0;
+
+            foreach (var gold1 in gold)
+            {
+                total = total + gold1.Amount;
+            }
 
             if (total < amount)
             {
@@ -2533,7 +2532,17 @@ namespace Server.Mobiles
 
         private PendingConvert GetConvert(Mobile from, BaseArmor armor)
         {
-            return _PendingConvertEntries.FirstOrDefault(c => c.From == from && c.Armor == armor);
+            for (var index = 0; index < _PendingConvertEntries.Count; index++)
+            {
+                var c = _PendingConvertEntries[index];
+
+                if (c.From == @from && c.Armor == armor)
+                {
+                    return c;
+                }
+            }
+
+            return null;
         }
 
         protected class PendingConvert

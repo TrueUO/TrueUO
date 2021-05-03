@@ -178,7 +178,9 @@ namespace Server.Engines.CannedEvil
         public static void LoadSpawns()
         {
             if (m_Initialized)
+            {
                 return;
+            }
 
             RemoveSpawns();
 
@@ -189,9 +191,15 @@ namespace Server.Engines.CannedEvil
             ChampionSpawn spawn;
 
             XmlDocument doc = new XmlDocument();
+
             doc.Load(m_ConfigPath);
-            foreach (XmlNode node in doc.GetElementsByTagName("championSystem")[0].ChildNodes)
+
+            var list = doc.GetElementsByTagName("championSystem")[0].ChildNodes;
+
+            for (var index = 0; index < list.Count; index++)
             {
+                XmlNode node = list[index];
+
                 if (node.Name.Equals("spawn"))
                 {
                     spawn = new ChampionSpawn
@@ -203,22 +211,26 @@ namespace Server.Engines.CannedEvil
                     if (value == null)
                         spawn.RandomizeType = true;
                     else
-                        spawn.Type = (ChampionSpawnType)Enum.Parse(typeof(ChampionSpawnType), value);
+                        spawn.Type = (ChampionSpawnType) Enum.Parse(typeof(ChampionSpawnType), value);
 
                     value = GetAttr(node, "spawnMod", "1.0");
                     spawn.SpawnMod = XmlConvert.ToDouble(value);
                     value = GetAttr(node, "killsMod", "1.0");
                     spawn.KillsMod = XmlConvert.ToDouble(value);
 
-                    foreach (XmlNode child in node.ChildNodes)
+                    for (var i = 0; i < node.ChildNodes.Count; i++)
                     {
+                        XmlNode child = node.ChildNodes[i];
+
                         if (child.Name.Equals("location"))
                         {
                             int x = XmlConvert.ToInt32(GetAttr(child, "x", "0"));
                             int y = XmlConvert.ToInt32(GetAttr(child, "y", "0"));
                             int z = XmlConvert.ToInt32(GetAttr(child, "z", "0"));
                             int r = XmlConvert.ToInt32(GetAttr(child, "radius", "0"));
+
                             string mapName = GetAttr(child, "map", "Felucca");
+
                             Map map = Map.Parse(mapName);
 
                             spawn.SpawnRadius = r;
@@ -245,8 +257,10 @@ namespace Server.Engines.CannedEvil
         {
             if (m_AllSpawns != null && m_AllSpawns.Count > 0)
             {
-                foreach (ChampionSpawn s in m_AllSpawns)
+                for (var index = 0; index < m_AllSpawns.Count; index++)
                 {
+                    ChampionSpawn s = m_AllSpawns[index];
+
                     if (s != null && !s.Deleted)
                     {
                         s.Delete();
@@ -259,9 +273,16 @@ namespace Server.Engines.CannedEvil
 
         private static string GetAttr(XmlNode node, string name, string def)
         {
-            XmlAttribute attr = node.Attributes[name];
-            if (attr != null)
-                return attr.Value;
+            if (node.Attributes != null)
+            {
+                XmlAttribute attr = node.Attributes[name];
+
+                if (attr != null)
+                {
+                    return attr.Value;
+                }
+            }
+
             return def;
         }
 
@@ -287,16 +308,23 @@ namespace Server.Engines.CannedEvil
             Dictionary<string, List<ChampionSpawn>> groups = new Dictionary<string, List<ChampionSpawn>>();
             m_LastRotate = DateTime.UtcNow;
 
-            foreach (ChampionSpawn spawn in m_AllSpawns)
+            for (var index = 0; index < m_AllSpawns.Count; index++)
             {
+                ChampionSpawn spawn = m_AllSpawns[index];
+
                 if (spawn != null && !spawn.Deleted)
                 {
                     List<ChampionSpawn> group;
+
                     if (spawn.GroupName == null)
                     {
                         spawn.AutoRestart = true;
+
                         if (!spawn.Active)
+                        {
                             spawn.Active = true;
+                        }
+
                         continue;
                     }
 
@@ -313,14 +341,21 @@ namespace Server.Engines.CannedEvil
             foreach (string key in groups.Keys)
             {
                 List<ChampionSpawn> group = groups[key];
-                foreach (ChampionSpawn spawn in group)
+
+                for (var index = 0; index < group.Count; index++)
                 {
+                    ChampionSpawn spawn = group[index];
                     spawn.AutoRestart = false;
                 }
+
                 ChampionSpawn s = group[Utility.Random(group.Count)];
+
                 s.AutoRestart = true;
+
                 if (!s.Active)
+                {
                     s.Active = true;
+                }
             }
         }
 
@@ -357,12 +392,25 @@ namespace Server.Engines.CannedEvil
 
             static ChampionSystemGump()
             {
-                gWidth = gWidths.Sum();
+                int sum = 0;
+
+                for (var index = 0; index < gWidths.Length; index++)
+                {
+                    var width = gWidths[index];
+
+                    sum += width;
+                }
+
+                gWidth = sum;
+
                 int tab = 0;
+
                 gTab = new int[gWidths.Length];
+
                 for (int i = 0; i < gWidths.Length; ++i)
                 {
                     gTab[i] = tab;
+
                     tab += gWidths[i];
                 }
             }
@@ -370,7 +418,19 @@ namespace Server.Engines.CannedEvil
             public ChampionSystemGump()
                 : base(40, 40)
             {
-                Spawners = m_AllSpawns.Where(spawn => spawn != null && !spawn.Deleted).ToList();
+                List<ChampionSpawn> list = new List<ChampionSpawn>();
+
+                for (var index = 0; index < m_AllSpawns.Count; index++)
+                {
+                    var spawn = m_AllSpawns[index];
+
+                    if (spawn != null && !spawn.Deleted)
+                    {
+                        list.Add(spawn);
+                    }
+                }
+
+                Spawners = list;
 
                 AddBackground(0, 0, gWidth, gBoarder * 2 + Spawners.Count * gRowHeight + gRowHeight * 2, 0x13BE);
 

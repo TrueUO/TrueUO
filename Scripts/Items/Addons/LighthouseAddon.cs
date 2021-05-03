@@ -2,7 +2,6 @@ using Server.Accounting;
 using Server.Engines.VeteranRewards;
 using Server.Multis;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -42,14 +41,20 @@ namespace Server.Items
                 // Requires no roof being over it
                 StaticTile[] staticTiles = map.Tiles.GetStaticTiles(p.X, p.Y, true);
 
-                foreach (StaticTile tile in staticTiles)
+                for (var index = 0; index < staticTiles.Length; index++)
                 {
+                    StaticTile tile = staticTiles[index];
+
                     if (tile.Z > p.Z)
+                    {
                         return AddonFitResult.Blocked;
+                    }
                 }
 
                 if (from != null)
+                {
                     from.SendLocalizedMessage(1154596); // Ships placed by this account will now be linked to this lighthouse when they decay. Lost ships will be  found in your house moving crate.
+                }
             }
 
             return result;
@@ -110,13 +115,19 @@ namespace Server.Items
 
                 if (cont != null)
                 {
-                    cont.Items.ForEach(i =>
+                    for (var index = 0; index < cont.Items.Count; index++)
+                    {
+                        var i = cont.Items[index];
+
+                        if (i is BaseWeapon)
                         {
-                            if (i is BaseWeapon)
-                                house.DropToMovingCrate(i);
-                            else
-                                i.Delete();
-                        });
+                            house.DropToMovingCrate(i);
+                        }
+                        else
+                        {
+                            i.Delete();
+                        }
+                    }
                 }
             }
 
@@ -155,7 +166,17 @@ namespace Server.Items
 
             Account a = m.Account as Account;
 
-            return Lighthouses.FirstOrDefault(l => l != null && !l.Deleted && l.LinkedAccount == a && a != null);
+            for (var index = 0; index < Lighthouses.Count; index++)
+            {
+                var lightHouse = Lighthouses[index];
+
+                if (lightHouse != null && !lightHouse.Deleted && lightHouse.LinkedAccount == a && a != null)
+                {
+                    return lightHouse;
+                }
+            }
+
+            return null;
         }
 
         public LighthouseAddon(Serial serial) : base(serial)

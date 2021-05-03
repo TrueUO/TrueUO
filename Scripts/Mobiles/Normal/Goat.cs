@@ -1,6 +1,4 @@
 using System;
-using System.Linq;
-
 using Server.Items;
 
 namespace Server.Mobiles
@@ -66,7 +64,17 @@ namespace Server.Mobiles
 
                 var type = f.GetType();
 
-                return _FeedTypes.Any(t => t == type || type.IsSubclassOf(t));
+                for (var index = 0; index < _FeedTypes.Length; index++)
+                {
+                    var t = _FeedTypes[index];
+
+                    if (t == type || type.IsSubclassOf(t))
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
             }
 
             return true;

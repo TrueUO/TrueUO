@@ -6,7 +6,9 @@ namespace Server
     public class ShrinkTable
     {
         public const int DefaultItemID = 0x1870;// Yellow virtue stone
+
         private static int[] m_Table;
+
         public static int Lookup(Mobile m)
         {
             return Lookup(m.Body.BodyID, DefaultItemID);
@@ -25,15 +27,21 @@ namespace Server
         public static int Lookup(int body, int defaultValue)
         {
             if (m_Table == null)
+            {
                 Load();
+            }
 
             int val = 0;
 
-            if (body >= 0 && body < m_Table.Length)
+            if (m_Table != null && body >= 0 && body < m_Table.Length)
+            {
                 val = m_Table[body];
+            }
 
             if (val == 0)
+            {
                 val = defaultValue;
+            }
 
             return val;
         }
@@ -59,7 +67,9 @@ namespace Server
                     line = line.Trim();
 
                     if (line.Length == 0 || line.StartsWith("#"))
+                    {
                         continue;
+                    }
 
                     try
                     {
@@ -71,7 +81,9 @@ namespace Server
                             int item = Utility.ToInt32(split[1]);
 
                             if (body >= 0 && body < m_Table.Length)
+                            {
                                 m_Table[body] = item;
+                            }
                         }
                     }
                     catch (Exception e)

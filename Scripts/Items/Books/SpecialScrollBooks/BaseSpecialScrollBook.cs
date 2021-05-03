@@ -4,7 +4,6 @@ using Server.Mobiles;
 using Server.Multis;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -128,7 +127,18 @@ namespace Server.Items
 
         public virtual void Construct(Mobile m, SkillName sk, double value)
         {
-            SpecialScroll scroll = Items.OfType<SpecialScroll>().FirstOrDefault(s => s.Skill == sk && s.Value == value);
+            SpecialScroll scroll = null;
+
+            for (var index = 0; index < Items.Count; index++)
+            {
+                Item item = Items[index];
+
+                if (item is SpecialScroll s && s.Skill == sk && s.Value == value)
+                {
+                    scroll = s;
+                    break;
+                }
+            }
 
             if (scroll != null)
             {
@@ -155,7 +165,10 @@ namespace Server.Items
                         scroll.IsLockedDown = false;
                     }
 
-                    m.SendLocalizedMessage(RemoveMessage);
+                    InvalidateContainers(Parent);
+
+                    m.UpdateTotals();
+                    m.SendLocalizedMessage(RemoveMessage);                             
                 }
             }
         }
@@ -165,10 +178,24 @@ namespace Server.Items
         {
         }
 
+        private void InvalidateContainers(object parent)
+        {
+            while (true)
+            {
+                if (parent is Container c)
+                {
+                    c.InvalidateProperties();
+                    parent = c.Parent;
+                    continue;
+                }
+
+                break;
+            }
+        }
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(3); // version
 
             writer.Write((int)Level);
@@ -178,20 +205,18 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            if (version > 2)
-            {
-                Level = (SecureLevel)reader.ReadInt();
-                _Capacity = reader.ReadInt();
-            }
+            Level = (SecureLevel)reader.ReadInt();
+            _Capacity = reader.ReadInt();
 
             Timer.DelayCall(
                 () =>
                 {
-                    foreach (Item item in Items)
+                    for (var index = 0; index < Items.Count; index++)
                     {
+                        Item item = Items[index];
+
                         if (item.Movable)
                         {
                             item.Movable = false;

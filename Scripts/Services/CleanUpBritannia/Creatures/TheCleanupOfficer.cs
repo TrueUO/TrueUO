@@ -55,8 +55,10 @@ namespace Server.Engines.CleanUpBritannia
 
         public override void OnDoubleClick(Mobile from)
         {
-            if (from is PlayerMobile && from.InRange(Location, 5))
-                from.SendGump(new CleanUpBritanniaRewardGump(this, from as PlayerMobile));
+            if (from is PlayerMobile pm && pm.InRange(Location, 5))
+            {
+                pm.SendGump(new CleanUpBritanniaRewardGump(this, pm));
+            }
         }
 
         public TheCleanupOfficer(Serial serial)
@@ -73,7 +75,7 @@ namespace Server.Engines.CleanUpBritannia
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

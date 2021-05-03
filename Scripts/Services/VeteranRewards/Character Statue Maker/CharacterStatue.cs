@@ -217,7 +217,6 @@ namespace Server.Mobiles
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
 
             writer.Write((int)m_Type);
@@ -234,8 +233,7 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
 
             m_Type = (StatueType)reader.ReadInt();
             m_Pose = (StatuePose)reader.ReadInt();
@@ -587,11 +585,9 @@ namespace Server.Mobiles
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(1); // version
 
             writer.Write((int)m_Type);
-
             writer.Write(m_Statue);
             writer.Write(m_IsRewardItem);
         }
@@ -599,15 +595,10 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadEncodedInt();
 
-            int version = reader.ReadEncodedInt();
-
-            if (version >= 1)
-            {
-                m_Type = (StatueType)reader.ReadInt();
-            }
-
-            m_Statue = reader.ReadMobile() as CharacterStatue;
+            m_Type = (StatueType)reader.ReadInt();
+            m_Statue = (CharacterStatue) reader.ReadMobile();
             m_IsRewardItem = reader.ReadBool();
         }
     }
@@ -616,6 +607,7 @@ namespace Server.Mobiles
     {
         private readonly Item m_Maker;
         private readonly StatueType m_Type;
+
         public CharacterStatueTarget(Item maker, StatueType type)
             : base(-1, true, TargetFlags.None)
         {
@@ -626,11 +618,16 @@ namespace Server.Mobiles
         public static AddonFitResult CouldFit(Point3D p, Map map, Mobile from, ref BaseHouse house)
         {
             if (!map.CanFit(p.X, p.Y, p.Z, 20, true, true, true))
+            {
                 return AddonFitResult.Blocked;
-            else if (!BaseAddon.CheckHouse(from, p, map, 20, ref house))
+            }
+
+            if (!BaseAddon.CheckHouse(from, p, map, 20, ref house))
+            {
                 return AddonFitResult.NotInHouse;
-            else
-                return CheckDoors(p, 20, house);
+            }
+
+            return CheckDoors(p, 20, house);
         }
 
         public static AddonFitResult CheckDoors(Point3D p, int height, BaseHouse house)
@@ -639,13 +636,16 @@ namespace Server.Mobiles
 
             for (int i = 0; i < doors.Count; i++)
             {
-                BaseDoor door = doors[i] as BaseDoor;
+                BaseDoor door = (BaseDoor) doors[i];
 
                 Point3D doorLoc = door.GetWorldLocation();
+
                 int doorHeight = door.ItemData.CalcHeight;
 
                 if (Utility.InRange(doorLoc, p, 1) && (p.Z == doorLoc.Z || ((p.Z + height) > doorLoc.Z && (doorLoc.Z + doorHeight) > p.Z)))
+                {
                     return AddonFitResult.DoorTooClose;
+                }
             }
 
             return AddonFitResult.Valid;

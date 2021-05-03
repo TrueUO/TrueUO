@@ -355,8 +355,10 @@ namespace Server.Misc
         {
             if (skills.Total / skills.Cap >= Utility.RandomDouble())
             {
-                foreach (Skill toLower in skills)
+                for (var index = 0; index < skills.Length; index++)
                 {
+                    Skill toLower = skills[index];
+
                     if (toLower != gainSKill && toLower.Lock == SkillLock.Down && toLower.BaseFixedPoint >= toGain)
                     {
                         toLower.BaseFixedPoint -= toGain;

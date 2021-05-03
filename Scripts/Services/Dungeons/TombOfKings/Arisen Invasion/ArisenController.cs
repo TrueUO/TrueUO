@@ -162,8 +162,12 @@ namespace Server.Items
                 m_SpawnTimer = null;
             }
 
-            foreach (XmlSpawner spawner in m_Spawners)
+            for (var index = 0; index < m_Spawners.Length; index++)
+            {
+                XmlSpawner spawner = m_Spawners[index];
+
                 spawner.Delete();
+            }
 
             m_Instance = null;
         }
@@ -177,8 +181,10 @@ namespace Server.Items
 
             m_Spawned = (hours >= SpawnHour && hours < DespawnHour) && !m_ForceDeactivate;
 
-            foreach (XmlSpawner spawner in m_Spawners)
+            for (var index = 0; index < m_Spawners.Length; index++)
             {
+                XmlSpawner spawner = m_Spawners[index];
+
                 if (!m_Spawned)
                 {
                     spawner.Reset();

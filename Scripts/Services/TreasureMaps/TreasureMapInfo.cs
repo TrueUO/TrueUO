@@ -296,7 +296,14 @@ namespace Server.Items
         {
             if (package == TreasurePackage.Artisan && level == TreasureLevel.Supply)
             {
-                return Recipe.Recipes.Values.ToArray();
+                List<Recipe> recipeList = new List<Recipe>();
+
+                foreach (var value in Recipe.Recipes.Values)
+                {
+                    recipeList.Add(value);
+                }
+
+                return recipeList.ToArray();
             }
 
             return null;
@@ -585,7 +592,7 @@ namespace Server.Items
 
         private static readonly Type[] _SpecialCacheHordeAndTrove =
         {
-            typeof(OctopusNecklace), typeof(SkullGnarledStaff), typeof(SkullLongsword)
+            typeof(OctopusNecklace), typeof(SkullGnarledStaff), typeof(GargishSkullGnarledStaff), typeof(SkullLongsword), typeof(GargishSkullLongsword)
         };
 
         private static readonly Type[] _DecorativeMinorArtifacts =
@@ -752,13 +759,14 @@ namespace Server.Items
             {
                 lootBag = new BagOfGems();
 
-                foreach (Type gemType in Loot.GemTypes)
+                for (var index = 0; index < Loot.GemTypes.Length; index++)
                 {
+                    Type gemType = Loot.GemTypes[index];
+
                     Item gem = Loot.Construct(gemType);
                     gem.Amount = amount;
 
                     lootBag.DropItem(gem);
-
                 }
 
                 chest.DropItem(lootBag);
@@ -773,8 +781,10 @@ namespace Server.Items
             {
                 amount = GetResourceAmount(level);
 
-                foreach (Type type in list)
+                for (var index = 0; index < list.Length; index++)
                 {
+                    Type type = list[index];
+
                     Item craft = Loot.Construct(type);
                     craft.Amount = amount;
 
@@ -793,8 +803,10 @@ namespace Server.Items
             {
                 amount = GetSpecialResourceAmount(quality);
 
-                foreach (Type type in list)
+                for (var index = 0; index < list.Length; index++)
                 {
+                    Type type = list[index];
+
                     Item specialCraft = Loot.Construct(type);
                     specialCraft.Amount = amount;
 
@@ -823,24 +835,30 @@ namespace Server.Items
 
                 if (transList != null)
                 {
-                    foreach (SkillName sk in transList)
+                    for (var index = 0; index < transList.Length; index++)
                     {
+                        SkillName sk = transList[index];
+
                         scrollList.Add(new Tuple<int, SkillName>(1, sk));
                     }
                 }
 
                 if (alacList != null)
                 {
-                    foreach (SkillName sk in alacList)
+                    for (var index = 0; index < alacList.Length; index++)
                     {
+                        SkillName sk = alacList[index];
+
                         scrollList.Add(new Tuple<int, SkillName>(2, sk));
                     }
                 }
 
                 if (pscrollList != null)
                 {
-                    foreach (SkillName sk in pscrollList)
+                    for (var index = 0; index < pscrollList.Length; index++)
                     {
+                        SkillName sk = pscrollList[index];
+
                         scrollList.Add(new Tuple<int, SkillName>(3, sk));
                     }
                 }
@@ -882,7 +900,20 @@ namespace Server.Items
                     {
                         Item deco = Loot.Construct(list[Utility.Random(list.Length)]);
 
-                        if (_DecorativeMinorArtifacts.Any(t => t == deco.GetType()))
+                        bool decorativeArtifact = false;
+
+                        for (var index = 0; index < _DecorativeMinorArtifacts.Length; index++)
+                        {
+                            var t = _DecorativeMinorArtifacts[index];
+
+                            if (t == deco.GetType())
+                            {
+                                decorativeArtifact = true;
+                                break;
+                            }
+                        }
+
+                        if (decorativeArtifact)
                         {
                             Container pack = new Backpack
                             {
@@ -919,7 +950,7 @@ namespace Server.Items
                 {
                     if (list.Length > 0)
                     {
-                        Type type = MutateType(list[Utility.Random(list.Length)], facet);
+                        Type type = MutateType(list[Utility.Random(list.Length)]);
                         Item deco;
 
                         if (type == null)
@@ -931,7 +962,7 @@ namespace Server.Items
                             deco = Loot.Construct(type);
                         }
 
-                        if (deco is SkullGnarledStaff || deco is SkullLongsword)
+                        if (deco is SkullGnarledStaff || deco is GargishSkullGnarledStaff || deco is SkullLongsword || deco is GargishSkullLongsword)
                         {
                             if (package == TreasurePackage.Artisan)
                             {
@@ -940,12 +971,26 @@ namespace Server.Items
                             else
                             {
                                 int min, max;
+
                                 GetMinMaxBudget(level, deco, out min, out max);
                                 RunicReforging.GenerateRandomItem(deco, from is PlayerMobile pm ? pm.RealLuck : from.Luck, min, max, chest.Map);
                             }
                         }
 
-                        if (_FunctionalMinorArtifacts.Any(t => t == type))
+                        bool functionalArtifacts = false;
+
+                        for (var index = 0; index < _FunctionalMinorArtifacts.Length; index++)
+                        {
+                            var t = _FunctionalMinorArtifacts[index];
+
+                            if (t == type)
+                            {
+                                functionalArtifacts = true;
+                                break;
+                            }
+                        }
+
+                        if (functionalArtifacts)
                         {
                             Container pack = new Backpack
                             {
@@ -986,17 +1031,8 @@ namespace Server.Items
             #endregion
         }
 
-        private static Type MutateType(Type type, TreasureFacet facet)
+        private static Type MutateType(Type type)
         {
-            if (type == typeof(SkullGnarledStaff))
-            {
-                type = typeof(GargishSkullGnarledStaff);
-            }
-            else if (type == typeof(SkullLongsword))
-            {
-                type = typeof(GargishSkullLongsword);
-            }
-
             return type;
         }
     }

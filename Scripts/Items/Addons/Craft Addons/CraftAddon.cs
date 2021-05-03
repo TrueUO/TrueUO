@@ -3,7 +3,6 @@ using Server.Multis;
 using Server.Network;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -28,8 +27,12 @@ namespace Server.Items
 
                     if (!Deleted && ShareHue && Tools != null)
                     {
-                        foreach (AddonToolComponent tool in Tools)
+                        for (var index = 0; index < Tools.Count; index++)
+                        {
+                            AddonToolComponent tool = Tools[index];
+
                             tool.Hue = value;
+                        }
                     }
                 }
             }
@@ -62,21 +65,29 @@ namespace Server.Items
 
             if (result == AddonFitResult.Valid)
             {
-                foreach (AddonToolComponent c in Tools)
+                for (var index = 0; index < Tools.Count; index++)
                 {
+                    AddonToolComponent c = Tools[index];
                     Point3D p3D = new Point3D(p.X + c.Offset.X, p.Y + c.Offset.Y, p.Z + c.Offset.Z);
 
                     if (!map.CanFit(p3D.X, p3D.Y, p3D.Z, c.ItemData.Height, false, true, c.Z == 0))
+                    {
                         return AddonFitResult.Blocked;
+                    }
+
                     if (!CheckHouse(from, p3D, map, c.ItemData.Height, ref house))
+                    {
                         return AddonFitResult.NotInHouse;
+                    }
 
                     if (c.NeedsWall)
                     {
                         Point3D wall = c.WallPosition;
 
                         if (!IsWall(p3D.X + wall.X, p3D.Y + wall.Y, p3D.Z + wall.Z, map))
+                        {
                             return AddonFitResult.NoWall;
+                        }
                     }
                 }
             }
@@ -152,7 +163,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             Level = (SecureLevel)reader.ReadInt();
 
@@ -191,10 +202,23 @@ namespace Server.Items
                     {
                         if (tool.CraftSystem == addon.CraftSystem)
                         {
-                            AddonToolComponent comp = addon.Tools.FirstOrDefault(t => t != null);
+                            AddonToolComponent comp = null;
+
+                            for (var index = 0; index < addon.Tools.Count; index++)
+                            {
+                                var t = addon.Tools[index];
+
+                                if (t != null)
+                                {
+                                    comp = t;
+                                    break;
+                                }
+                            }
 
                             if (comp == null)
+                            {
                                 return false;
+                            }
 
                             if (comp.UsesRemaining >= comp.MaxUses)
                             {
@@ -243,7 +267,7 @@ namespace Server.Items
             public override void Deserialize(GenericReader reader)
             {
                 base.Deserialize(reader);
-                int version = reader.ReadInt();
+                reader.ReadInt();
             }
         }
     }

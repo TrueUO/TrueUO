@@ -113,7 +113,7 @@ namespace Server.Items
             }
         }
 
-        public void Clear(SorcerersPlate plate)
+        private static void Clear(SorcerersPlate plate)
         {
             if (plate != null)
             {
@@ -126,7 +126,7 @@ namespace Server.Items
             }
         }
 
-        public bool Validate(SorcerersPlate plate)
+        private static bool Validate(SorcerersPlate plate)
         {
             return plate != null && plate.Reg != null && !plate.Reg.Deleted;
         }
@@ -146,21 +146,13 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
-            switch (version)
-            {
-                case 0:
-                    {
-                        m_PerfectBlackPearl = reader.ReadItem() as SorcerersPlate;
-                        m_BurstingBrimstone = reader.ReadItem() as SorcerersPlate;
-                        m_BrightDaemonBlood = reader.ReadItem() as SorcerersPlate;
-                        m_MightyMandrake = reader.ReadItem() as SorcerersPlate;
-                        m_BurlyBone = reader.ReadItem() as SorcerersPlate;
-
-                        break;
-                    }
-            }
+            m_PerfectBlackPearl = reader.ReadItem() as SorcerersPlate;
+            m_BurstingBrimstone = reader.ReadItem() as SorcerersPlate;
+            m_BrightDaemonBlood = reader.ReadItem() as SorcerersPlate;
+            m_MightyMandrake = reader.ReadItem() as SorcerersPlate;
+            m_BurlyBone = reader.ReadItem() as SorcerersPlate;
         }
     }
 
@@ -282,7 +274,7 @@ namespace Server.Items
                 m_Plate = plate;
             }
 
-            private bool CheckRegs(Item item)
+            private static bool CheckRegs(IEntity item)
             {
                 return item is PerfectBlackPearl || item is BurstingBrimstone || item is BrightDaemonBlood || item is MightyMandrake || item is BurlyBone;
             }

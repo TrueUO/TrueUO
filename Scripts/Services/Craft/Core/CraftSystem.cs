@@ -1,7 +1,6 @@
 using Server.Items;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.Craft
 {
@@ -154,7 +153,20 @@ namespace Server.Engines.Craft
 
         public virtual bool ConsumeOnFailure(Type resourceType, CraftItem craftItem)
         {
-            return !_GlobalNoConsume.Any(t => t == resourceType);
+            bool any = false;
+
+            for (var index = 0; index < _GlobalNoConsume.Length; index++)
+            {
+                var t = _GlobalNoConsume[index];
+
+                if (t == resourceType)
+                {
+                    any = true;
+                    break;
+                }
+            }
+
+            return !any;
         }
 
         public virtual bool ConsumeOnFailure(Mobile from, Type resourceType, CraftItem craftItem, ref MasterCraftsmanTalisman talisman)

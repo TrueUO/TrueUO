@@ -1,9 +1,7 @@
 using Server.Commands;
 using Server.Mobiles;
 using Server.Gumps;
-
 using System;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -106,20 +104,74 @@ namespace Server.Items
         {
             base.StopTimers();
 
-            if (Hatch != null)
-            {
-                Hatch.Reset();  
-            }
+            Hatch?.Reset();
         }
 
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);
 
-            list.Add(KeyValidation != null && KeyValidation.Any(x => x.Key == typeof(FlyWheel) && x.Active) ? 1154448 : 1154432);
-            list.Add(KeyValidation != null && KeyValidation.Any(x => x.Key == typeof(WireSpool) && x.Active) ? 1154449 : 1154434);
-            list.Add(KeyValidation != null && KeyValidation.Any(x => x.Key == typeof(PowerCore) && x.Active) ? 1154450 : 1154435);
-            list.Add(KeyValidation != null && KeyValidation.Any(x => x.Key == typeof(BearingAssembly) && x.Active) ? 1154451 : 1154436);
+            bool flyWheel = false;
+            bool wireSpool = false;
+            bool powerCore = false;
+            bool bearingAssembly = false;
+
+            if (KeyValidation != null)
+            {
+                for (var index = 0; index < KeyValidation.Count; index++)
+                {
+                    var x = KeyValidation[index];
+                    if (x.Key == typeof(FlyWheel) && x.Active)
+                    {
+                        flyWheel = true;
+                        break;
+                    }
+                }
+            }
+
+            if (KeyValidation != null)
+            {
+                for (var index = 0; index < KeyValidation.Count; index++)
+                {
+                    var x = KeyValidation[index];
+                    if (x.Key == typeof(WireSpool) && x.Active)
+                    {
+                        wireSpool = true;
+                        break;
+                    }
+                }
+            }
+
+            if (KeyValidation != null)
+            {
+                for (var index = 0; index < KeyValidation.Count; index++)
+                {
+                    var x = KeyValidation[index];
+                    if (x.Key == typeof(PowerCore) && x.Active)
+                    {
+                        powerCore = true;
+                        break;
+                    }
+                }
+            }
+
+            if (KeyValidation != null)
+            {
+                for (var index = 0; index < KeyValidation.Count; index++)
+                {
+                    var x = KeyValidation[index];
+                    if (x.Key == typeof(BearingAssembly) && x.Active)
+                    {
+                        bearingAssembly = true;
+                        break;
+                    }
+                }
+            }
+
+            list.Add(KeyValidation != null && flyWheel ? 1154448 : 1154432);
+            list.Add(KeyValidation != null && wireSpool ? 1154449 : 1154434);
+            list.Add(KeyValidation != null && powerCore ? 1154450 : 1154435);
+            list.Add(KeyValidation != null && bearingAssembly ? 1154451 : 1154436);
         }
 
         public void Activate(Mobile from)
@@ -208,15 +260,10 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             Winch = reader.ReadItem() as WinchAssembly;
             Hatch = reader.ReadItem() as Hatch;
-
-            if (version == 0 && Winch != null)
-            {
-                Winch.Hatch = Hatch;
-            }
         }
     }
 

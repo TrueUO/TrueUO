@@ -3,7 +3,6 @@ using Server.Mobiles;
 using Server.Regions;
 using Server.Spells;
 using System;
-using System.Linq;
 using System.Xml;
 
 namespace Server.Engines.Exodus
@@ -29,8 +28,9 @@ namespace Server.Engines.Exodus
 
         public class ExitTimer : Timer
         {
-            private static TimeSpan m_Delay = TimeSpan.FromMinutes(2);
-            private static TimeSpan m_Warning = TimeSpan.FromMinutes(8);
+            private static readonly TimeSpan m_Delay = TimeSpan.FromMinutes(2);
+            private static readonly TimeSpan m_Warning = TimeSpan.FromMinutes(8);
+
             readonly VerLorRegCity m_region;
 
             public ExitTimer(VerLorRegCity region) : base(m_Warning)
@@ -63,8 +63,10 @@ namespace Server.Engines.Exodus
 
                     if (pm.AllFollowers.Count > 0)
                     {
-                        foreach (Mobile mob in pm.AllFollowers)
+                        for (var index = 0; index < pm.AllFollowers.Count; index++)
                         {
+                            Mobile mob = pm.AllFollowers[index];
+
                             mob.MoveToWorld(p, m.Map);
                         }
                     }
@@ -108,7 +110,17 @@ namespace Server.Engines.Exodus
 
         private static bool IsDropKeyMobile(BaseCreature bc)
         {
-            return m_Mobile.Any(t => t == bc.GetType());
+            for (var index = 0; index < m_Mobile.Length; index++)
+            {
+                var t = m_Mobile[index];
+
+                if (t == bc.GetType())
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public override void OnDeath(Mobile m)

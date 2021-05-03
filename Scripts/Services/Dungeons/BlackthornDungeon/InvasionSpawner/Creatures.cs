@@ -4,7 +4,6 @@ using Server.Spells;
 using Server.Spells.Necromancy;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.Blackthorn
 {
@@ -268,8 +267,10 @@ namespace Server.Engines.Blackthorn
                     SetWearable(new LeatherHiroSode());
                     SetWearable(new SamuraiTabi(Utility.RandomNondyedHue()));
 
-                    if (_Sampire)
+                    if (_Sampire && w != null)
+                    {
                         w.WeaponAttributes.HitLeechHits = 100;
+                    }
 
                     SetSkill(SkillName.Parry, 120);
                     break;
@@ -304,10 +305,12 @@ namespace Server.Engines.Blackthorn
 
                     break;
                 case SkillName.Poisoning:
-                    BaseWeapon wep = RandomAssassinWeapon() as BaseWeapon;
-                    wep.Poison = Poison.Lethal;
-                    wep.PoisonCharges = 100;
-                    SetWearable(wep);
+                    if (RandomAssassinWeapon() is BaseWeapon wep)
+                    {
+                        wep.Poison = Poison.Lethal;
+                        wep.PoisonCharges = 100;
+                        SetWearable(wep);
+                    }
 
                     SetWearable(new LeatherChest());
                     SetWearable(new LeatherLegs());
@@ -493,10 +496,12 @@ namespace Server.Engines.Blackthorn
                             }
                         }
 
-                        list.ForEach(mob =>
-                            {
-                                AOS.Damage(mob, this, Utility.RandomMinMax(80, 90), 0, 0, 0, 0, 0, 100, 0);
-                            });
+                        for (var index = 0; index < list.Count; index++)
+                        {
+                            var mob = list[index];
+
+                            AOS.Damage(mob, this, Utility.RandomMinMax(80, 90), 0, 0, 0, 0, 0, 100, 0);
+                        }
 
                         list.Clear();
                         list.TrimExcess();
@@ -582,7 +587,18 @@ namespace Server.Engines.Blackthorn
             List<DamageStore> rights = GetLootingRights();
             rights.Sort();
 
-            List<Mobile> list = rights.Select(x => x.m_Mobile).Where(m => m.InRange(c.Location, 20)).ToList();
+            List<Mobile> list = new List<Mobile>();
+
+            for (var index = 0; index < rights.Count; index++)
+            {
+                var x = rights[index];
+                var m = x.m_Mobile;
+
+                if (m.InRange(c.Location, 20))
+                {
+                    list.Add(m);
+                }
+            }
 
             if (list.Count > 0)
             {

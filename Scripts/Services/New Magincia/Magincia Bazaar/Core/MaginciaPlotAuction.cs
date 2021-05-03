@@ -46,23 +46,26 @@ namespace Server.Engines.NewMagincia
 
         public bool RetractBid(Mobile from)
         {
-            Account acct = from.Account as Account;
-
-            for (int i = 0; i < acct.Length; i++)
+            if (from.Account is Account acct)
             {
-                Mobile m = acct[i];
-
-                if (m == null)
-                    continue;
-
-                if (m_Auctioners.ContainsKey(m))
+                for (int i = 0; i < acct.Length; i++)
                 {
-                    BidEntry entry = m_Auctioners[m];
+                    Mobile m = acct[i];
 
-                    if (entry != null && Banker.Deposit(m, entry.Amount))
+                    if (m == null)
                     {
-                        m_Auctioners.Remove(m);
-                        return true;
+                        continue;
+                    }
+
+                    if (m_Auctioners.ContainsKey(m))
+                    {
+                        BidEntry entry = m_Auctioners[m];
+
+                        if (entry != null && Banker.Deposit(m, entry.Amount))
+                        {
+                            m_Auctioners.Remove(m);
+                            return true;
+                        }
                     }
                 }
             }
@@ -73,33 +76,45 @@ namespace Server.Engines.NewMagincia
         public void RemoveBid(Mobile from)
         {
             if (m_Auctioners.ContainsKey(from))
+            {
                 m_Auctioners.Remove(from);
+            }
         }
 
         public int GetHighestBid()
         {
             int highest = -1;
+
             foreach (BidEntry entry in m_Auctioners.Values)
             {
                 if (entry.Amount >= highest)
+                {
                     highest = entry.Amount;
+                }
             }
+
             return highest;
         }
 
         public void OnTick()
         {
             if (m_AuctionEnd < DateTime.UtcNow)
+            {
                 EndAuction();
+            }
         }
 
         public void EndAuction()
         {
             if (m_Plot == null)
+            {
                 return;
+            }
 
             if (m_Plot.HasTempMulti())
+            {
                 m_Plot.RemoveTempPlot();
+            }
 
             Mobile winner = null;
             int highest = 0;
@@ -108,13 +123,17 @@ namespace Server.Engines.NewMagincia
 
             //Combine auction bids with the bids for next available plot
             foreach (KeyValuePair<Mobile, BidEntry> kvp in MaginciaBazaar.NextAvailable)
+            {
                 combined.Add(kvp.Key, kvp.Value);
+            }
 
             //Get highest bid
             foreach (BidEntry entry in combined.Values)
             {
                 if (entry.Amount > highest)
+                {
                     highest = entry.Amount;
+                }
             }
 
             // Check for owner, and if the owner has a match bad AND hasn't bidded on another plot!
@@ -169,39 +188,59 @@ namespace Server.Engines.NewMagincia
                 {
                     // get a list of specific type (as opposed to next available)
                     List<BidEntry> specifics = new List<BidEntry>();
-                    foreach (BidEntry bid in winners)
+                    for (var index = 0; index < winners.Count; index++)
                     {
+                        BidEntry bid = winners[index];
+
                         if (bid.BidType == BidType.Specific)
+                        {
                             specifics.Add(bid);
+                        }
                     }
 
                     // one 1 specific!
                     if (specifics.Count == 1)
+                    {
                         winner = specifics[0].Bidder;
+                    }
                     else if (specifics.Count > 1)
                     {
                         //gets oldest specific
                         BidEntry oldest = null;
-                        foreach (BidEntry entry in specifics)
+
+                        for (var index = 0; index < specifics.Count; index++)
                         {
+                            BidEntry entry = specifics[index];
+
                             if (oldest == null || entry.DatePlaced < oldest.DatePlaced)
+                            {
                                 oldest = entry;
+                            }
                         }
 
-                        winner = oldest.Bidder;
+                        if (oldest != null)
+                        {
+                            winner = oldest.Bidder;
+                        }
                     }
                     else
                     {
                         //no specifics! gets oldest of list of winners
                         BidEntry oldest = null;
-                        foreach (BidEntry entry in winners)
+                        for (var index = 0; index < winners.Count; index++)
                         {
+                            BidEntry entry = winners[index];
+
                             if (oldest == null || entry.DatePlaced < oldest.DatePlaced)
+                            {
                                 oldest = entry;
+                            }
                         }
 
                         if (oldest != null)
+                        {
                             winner = oldest.Bidder;
+                        }
                     }
                 }
             }

@@ -15,15 +15,14 @@ namespace Server.Spells.Bushido
 
             ClearCurrentMove(attacker);
 
-            BaseWeapon weapon = attacker.Weapon as BaseWeapon;
+            BaseWeapon weapon = (BaseWeapon) attacker.Weapon;
 
             List<Mobile> targets = new List<Mobile>();
             IPooledEnumerable eable = attacker.GetMobilesInRange(weapon.MaxRange);
 
             foreach (Mobile m in eable)
             {
-                if (m != defender && m != attacker && m.CanBeHarmful(attacker, false) && attacker.InLOS(m) &&
-                    SpellHelper.ValidIndirectTarget(attacker, m))
+                if (m != defender && m != attacker && m.CanBeHarmful(attacker, false) && attacker.InLOS(m) && SpellHelper.ValidIndirectTarget(attacker, m))
                 {
                     targets.Add(m);
                 }

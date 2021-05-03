@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
 using Server.Commands;
 
@@ -144,10 +143,18 @@ namespace Server
         {
             var timer = GetTimerFor(id, instance);
 
-            if (Debug) Console.WriteLine("Updating Registry for {0} - {1}...", id, instance);
+            if (Debug)
+            {
+                Console.WriteLine("Updating Registry for {0} - {1}...", id, instance);
+            }
+
             if (timer != null)
             {
-                if (Debug) Console.WriteLine("Complete!");
+                if (Debug)
+                {
+                    Console.WriteLine("Complete!");
+                }
+
                 timer.Registry[instance] = Core.TickCount + (long)duration.TotalMilliseconds;
                 return true;
             }
@@ -164,7 +171,20 @@ namespace Server
         {
             if (Timers.ContainsKey(id))
             {
-                return Timers[id].FirstOrDefault(t => t is RegistryTimer<T> regTimer && regTimer.Registry.Count < _RegistryThreshold) as RegistryTimer<T>;
+                Timer first = null;
+
+                for (var index = 0; index < Timers[id].Count; index++)
+                {
+                    var t = Timers[id][index];
+
+                    if (t is RegistryTimer<T> regTimer && regTimer.Registry.Count < _RegistryThreshold)
+                    {
+                        first = t;
+                        break;
+                    }
+                }
+
+                return first as RegistryTimer<T>;
             }
 
             if (create)
@@ -179,7 +199,20 @@ namespace Server
         {
             if (Timers.ContainsKey(id))
             {
-                return Timers[id].FirstOrDefault(t => t is RegistryTimer<T> timer && timer.Registry.ContainsKey(instance)) as RegistryTimer<T>;
+                Timer first = null;
+
+                for (var index = 0; index < Timers[id].Count; index++)
+                {
+                    var t = Timers[id][index];
+
+                    if (t is RegistryTimer<T> timer && timer.Registry.ContainsKey(instance))
+                    {
+                        first = t;
+                        break;
+                    }
+                }
+
+                return first as RegistryTimer<T>;
             }
 
             return null;
@@ -211,9 +244,14 @@ namespace Server
         {
             foreach (var kvp in Timers)
             {
-                if (kvp.Value.Any(t => t == timer))
+                for (var index = 0; index < kvp.Value.Count; index++)
                 {
-                    return kvp.Key;
+                    var t = kvp.Value[index];
+
+                    if (t == timer)
+                    {
+                        return kvp.Key;
+                    }
                 }
             }
 
@@ -283,7 +321,15 @@ namespace Server
 
         protected override void OnTick()
         {
-            List<T> instances = Registry.Keys.Where(v => Registry[v] <= Core.TickCount || (CheckDeleted && v is IEntity e && e.Deleted)).ToList();
+            List<T> instances = new List<T>();
+
+            foreach (var v in Registry.Keys)
+            {
+                if (Registry[v] <= Core.TickCount || CheckDeleted && v is IEntity e && e.Deleted)
+                {
+                    instances.Add(v);
+                }
+            }
 
             for (int i = 0; i < instances.Count; i++)
             {

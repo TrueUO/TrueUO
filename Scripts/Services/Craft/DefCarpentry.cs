@@ -1,7 +1,6 @@
 using Server.Items;
 
 using System;
-using System.Linq;
 
 namespace Server.Engines.Craft
 {
@@ -58,9 +57,14 @@ namespace Server.Engines.Craft
         {
             var itemType = item.ItemType;
 
-            if (_RetainsColor.Any(t => t == itemType || itemType.IsSubclassOf(t)))
+            for (var index = 0; index < _RetainsColor.Length; index++)
             {
-                return true;
+                var t = _RetainsColor[index];
+
+                if (t == itemType || itemType.IsSubclassOf(t))
+                {
+                    return true;
+                }
             }
 
             return base.RetainsColorFrom(item, type);

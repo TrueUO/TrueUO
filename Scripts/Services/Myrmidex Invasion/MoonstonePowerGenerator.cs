@@ -2,7 +2,6 @@ using Server.Commands;
 using Server.Mobiles;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -274,8 +273,10 @@ namespace Server.Items
         {
             bool active = true;
 
-            foreach (MoonstonePowerGeneratorAddon c in Generators)
+            for (var index = 0; index < Generators.Count; index++)
             {
+                MoonstonePowerGeneratorAddon c = Generators[index];
+
                 if (!c.Activated)
                 {
                     active = false;
@@ -296,7 +297,13 @@ namespace Server.Items
                 {
                     if (Boss == null)
                     {
-                        Generators.ForEach(c => c.Activated = true);
+                        for (var index = 0; index < Generators.Count; index++)
+                        {
+                            var c = Generators[index];
+
+                            c.Activated = true;
+                        }
+
                         CheckNetwork();
                     }
                 });
@@ -316,8 +323,10 @@ namespace Server.Items
         {
             bool allactive = true;
 
-            foreach (MoonstonePowerGeneratorAddon c in Generators)
+            for (var index = 0; index < Generators.Count; index++)
             {
+                MoonstonePowerGeneratorAddon c = Generators[index];
+
                 if (!c.Activated)
                 {
                     allactive = false;
@@ -330,8 +339,10 @@ namespace Server.Items
                 Boss = new Zipactriotl(true);
                 Boss.MoveToWorld(new Point3D(899, 2303, -20), Map.TerMur);
 
-                foreach (MoonstonePowerGeneratorAddon c in Generators)
+                for (var index = 0; index < Generators.Count; index++)
                 {
+                    MoonstonePowerGeneratorAddon c = Generators[index];
+
                     if (c.Generator != null)
                     {
                         c.Generator.CanSpawn = true;
@@ -371,31 +382,41 @@ namespace Server.Items
 
         public static void ResetGenerators(bool startup = false)
         {
-            Generators.ForEach(c =>
+            for (var index = 0; index < Generators.Count; index++)
+            {
+                var c = Generators[index];
+
+                c.Activated = false;
+                c.Reset();
+
+                if (c.Generator == null || c.Generator.Deleted)
                 {
-                    c.Activated = false;
-                    c.Reset();
+                    c.Generator = new MoonstonePowerGenerator(c);
+                    c.Generator.MoveToWorld(new Point3D(c.X, c.Y, c.Z + 5), c.Map);
+                }
 
-                    if (c.Generator == null || c.Generator.Deleted)
+                c.Generator.CanSpawn = false;
+
+                for (var i = 0; i < c.Components.Count; i++)
+                {
+                    var comp = c.Components[i];
+
+                    if (!comp.Visible)
                     {
-                        c.Generator = new MoonstonePowerGenerator(c);
-                        c.Generator.MoveToWorld(new Point3D(c.X, c.Y, c.Z + 5), c.Map);
+                        comp.Visible = true;
                     }
-
-                    c.Generator.CanSpawn = false;
-
-                    c.Components.ForEach(comp =>
-                    {
-                        if (!comp.Visible)
-                            comp.Visible = true;
-                    });
-                });
+                }
+            }
 
             if (!startup)
+            {
                 MorphItems();
+            }
 
             if (Boss != null)
+            {
                 Boss = null;
+            }
         }
 
         public MoonstonePowerGeneratorAddon(Serial serial)
@@ -550,11 +571,15 @@ namespace Server.Items
 
             if (Spawn != null)
             {
-                Spawn.ForEach(bc =>
+                for (var index = 0; index < Spawn.Count; index++)
+                {
+                    var bc = Spawn[index];
+
+                    if (bc != null && bc.Alive)
                     {
-                        if (bc != null && bc.Alive)
-                            bc.Kill();
-                    });
+                        bc.Kill();
+                    }
+                }
 
                 Spawn.Clear();
                 Spawn.TrimExcess();
@@ -569,10 +594,23 @@ namespace Server.Items
 
             if (Addon != null)
             {
-                AddonComponent comp = Addon.Components.FirstOrDefault(c => c.ItemID == 40157);
+                AddonComponent comp = null;
+
+                for (var index = 0; index < Addon.Components.Count; index++)
+                {
+                    var c = Addon.Components[index];
+
+                    if (c.ItemID == 40157)
+                    {
+                        comp = c;
+                        break;
+                    }
+                }
 
                 if (comp != null)
+                {
                     comp.Visible = false;
+                }
             }
 
             base.OnAfterDestroyed();

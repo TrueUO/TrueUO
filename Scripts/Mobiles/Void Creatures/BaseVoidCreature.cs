@@ -1,7 +1,6 @@
 using Server.Items;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Mobiles
 {
@@ -231,27 +230,37 @@ namespace Server.Mobiles
         {
             List<XmlSpawner> list = new List<XmlSpawner>();
 
-            foreach (XmlSpawner spawner in World.Items.Values.OfType<XmlSpawner>())
+            foreach (Item value in World.Items.Values)
             {
-                if (list.Contains(spawner))
-                    break;
-
-                foreach (XmlSpawner.SpawnObject obj in spawner.SpawnObjects)
+                if (value is XmlSpawner spawner)
                 {
-                    if (obj == null || obj.TypeName == null)
-                        continue;
-
-                    Type t = ScriptCompiler.FindTypeByName(obj.TypeName, true);
-
-                    if (t != null && t.IsSubclassOf(typeof(BaseVoidCreature)) || obj.TypeName.ToLower().StartsWith("korpre"))
+                    if (list.Contains(spawner))
                     {
-                        list.Add(spawner);
                         break;
+                    }
+
+                    for (var index = 0; index < spawner.SpawnObjects.Length; index++)
+                    {
+                        XmlSpawner.SpawnObject obj = spawner.SpawnObjects[index];
+
+                        if (obj == null || obj.TypeName == null)
+                        {
+                            continue;
+                        }
+
+                        Type t = ScriptCompiler.FindTypeByName(obj.TypeName, true);
+
+                        if (t != null && t.IsSubclassOf(typeof(BaseVoidCreature)) || obj.TypeName.ToLower().StartsWith("korpre"))
+                        {
+                            list.Add(spawner);
+                            break;
+                        }
                     }
                 }
             }
 
             list.ForEach(spawner => spawner.DoReset = true);
+
             Console.WriteLine("Reset {0} Void Spawn Spawners.", list.Count);
         }
 

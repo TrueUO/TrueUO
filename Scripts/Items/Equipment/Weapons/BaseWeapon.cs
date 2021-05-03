@@ -16,7 +16,6 @@ using Server.Misc;
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 #endregion
 
 namespace Server.Items
@@ -53,13 +52,13 @@ namespace Server.Items
 
         public void ScaleUses()
         {
-            m_UsesRemaining = (m_UsesRemaining * GetUsesScalar()) / 100;
+            m_UsesRemaining = m_UsesRemaining * GetUsesScalar() / 100;
             InvalidateProperties();
         }
 
         public void UnscaleUses()
         {
-            m_UsesRemaining = (m_UsesRemaining * 100) / GetUsesScalar();
+            m_UsesRemaining = m_UsesRemaining * 100 / GetUsesScalar();
         }
 
         public int GetUsesScalar()
@@ -642,8 +641,8 @@ namespace Server.Items
         {
             int scale = 100 + GetDurabilityBonus();
 
-            m_Hits = ((m_Hits * 100) + (scale - 1)) / scale;
-            m_MaxHits = ((m_MaxHits * 100) + (scale - 1)) / scale;
+            m_Hits = (m_Hits * 100 + (scale - 1)) / scale;
+            m_MaxHits = (m_MaxHits * 100 + (scale - 1)) / scale;
 
             InvalidateProperties();
         }
@@ -652,8 +651,8 @@ namespace Server.Items
         {
             int scale = 100 + GetDurabilityBonus();
 
-            m_Hits = ((m_Hits * scale) + 99) / 100;
-            m_MaxHits = ((m_MaxHits * scale) + 99) / 100;
+            m_Hits = (m_Hits * scale + 99) / 100;
+            m_MaxHits = (m_MaxHits * scale + 99) / 100;
 
             if (m_MaxHits > 255)
                 m_MaxHits = 255;
@@ -1086,9 +1085,7 @@ namespace Server.Items
 
         public virtual bool CheckHit(Mobile attacker, IDamageable damageable)
         {
-            Mobile defender = damageable as Mobile;
-
-            if (defender == null)
+            if (!(damageable is Mobile defender))
             {
                 if (damageable is IDamageableItem item)
                 {
@@ -1098,8 +1095,8 @@ namespace Server.Items
                 return true;
             }
 
-            BaseWeapon atkWeapon = attacker.Weapon as BaseWeapon;
-            BaseWeapon defWeapon = defender.Weapon as BaseWeapon;
+            BaseWeapon atkWeapon = (BaseWeapon) attacker.Weapon;
+            BaseWeapon defWeapon = (BaseWeapon) defender.Weapon;
 
             Skill atkSkill = attacker.Skills[atkWeapon.Skill];
             Skill defSkill = defender.Skills[defWeapon.Skill];
@@ -1107,15 +1104,17 @@ namespace Server.Items
             double atkValue = atkWeapon.GetAttackSkillValue(attacker, defender);
             double defValue = defWeapon.GetDefendSkillValue(attacker, defender);
 
-            double ourValue, theirValue;
-
             int bonus = 0;
 
             if (atkValue <= -20.0)
+            {
                 atkValue = -19.9;
+            }
 
             if (defValue <= -20.0)
+            {
                 defValue = -19.9;
+            }
 
             bonus += AosAttributes.GetValue(attacker, AosAttribute.AttackChance);
 
@@ -1127,62 +1126,59 @@ namespace Server.Items
             //SA Gargoyle cap is 50, else 45
             bonus = Math.Min(attacker.Race == Race.Gargoyle ? 50 : 45, bonus);
 
-            ourValue = (atkValue + 20.0) * (100 + bonus);
+            var ourValue = (atkValue + 20.0) * (100 + bonus);
 
             bonus = AosAttributes.GetValue(defender, AosAttribute.DefendChance);
 
             ForceArrow.ForceArrowInfo info = ForceArrow.GetInfo(attacker, defender);
 
             if (info != null && info.Defender == defender)
+            {
                 bonus -= info.DefenseChanceMalus;
+            }
 
             int max = 45 + BaseArmor.GetRefinedDefenseChance(defender) + WhiteTigerFormSpell.GetDefenseCap(defender);
 
             // Defense Chance Increase = 45%
             if (bonus > max)
+            {
                 bonus = max;
+            }
 
-            theirValue = (defValue + 20.0) * (100 + bonus);
+            var theirValue = (defValue + 20.0) * (100 + bonus);
 
             bonus = 0;
 
             double chance = ourValue / (theirValue * 2.0);
 
-            chance *= 1.0 + ((double)bonus / 100);
+            chance *= 1.0 + (double)bonus / 100;
 
             if (atkWeapon is BaseThrown thrown)
             {
                 //Distance malas
                 if (attacker.InRange(defender, 1))  //Close Quarters
                 {
-                    chance -= (.12 - Math.Min(12, (attacker.Skills[SkillName.Throwing].Value + attacker.RawDex) / 20) / 10);
+                    chance -= 0.12 - Math.Min(12, (attacker.Skills[SkillName.Throwing].Value + attacker.RawDex) / 20) / 10;
                 }
                 else if (attacker.GetDistanceToSqrt(defender) < thrown.MinThrowRange)  //too close
                 {
-                    chance -= .12;
+                    chance -= 0.12;
                 }
 
                 //shield penalty
-                BaseShield shield = attacker.FindItemOnLayer(Layer.TwoHanded) as BaseShield;
-
-                if (shield != null)
+                if (attacker.FindItemOnLayer(Layer.TwoHanded) is BaseShield)
                 {
                     double malus = Math.Min(90, 1200 / Math.Max(1.0, attacker.Skills[SkillName.Parry].Value));
 
-                    chance = chance - (chance * (malus / 100));
+                    chance = chance - chance * (malus / 100);
                 }
             }
 
-            if (defWeapon is BaseThrown)
+            if (defWeapon is BaseThrown && defender.FindItemOnLayer(Layer.TwoHanded) is BaseShield)
             {
-                BaseShield shield = defender.FindItemOnLayer(Layer.TwoHanded) as BaseShield;
+                double malus = Math.Min(90, 1200 / Math.Max(1.0, defender.Skills[SkillName.Parry].Value));
 
-                if (shield != null)
-                {
-                    double malus = Math.Min(90, 1200 / Math.Max(1.0, defender.Skills[SkillName.Parry].Value));
-
-                    chance = chance + (chance * (malus / 100));
-                }
+                chance = chance + chance * (malus / 100);
             }
 
             if (chance < 0.02)
@@ -1191,7 +1187,9 @@ namespace Server.Items
             }
 
             if (m_AosWeaponAttributes.MageWeapon > 0 && attacker.Skills[SkillName.Magery].Value > atkSkill.Value)
+            {
                 return attacker.CheckSkill(SkillName.Magery, chance);
+            }
 
             return attacker.CheckSkill(atkSkill.SkillName, chance);
         }
@@ -1388,17 +1386,15 @@ namespace Server.Items
 
                 if (shield != null && success)
                 {
-                    shield.LastParryChance = (int)(chance * 100);
+                    shield.LastParryChance = (int) (chance * 100);
                     shield.InvalidateProperties();
                 }
 
                 return success;
             }
 
-            if (!(defender.Weapon is Fists) && !(defender.Weapon is BaseRanged))
+            if (!(defender.Weapon is Fists) && !(defender.Weapon is BaseRanged) && defender.Weapon is BaseWeapon weapon)
             {
-                BaseWeapon weapon = defender.Weapon as BaseWeapon;
-
                 if (weapon.Attributes.BalancedWeapon > 0)
                 {
                     return false;
@@ -1406,7 +1402,7 @@ namespace Server.Items
 
                 double divisor = weapon.Layer == Layer.OneHanded && defender.Player ? 48000.0 : 41140.0;
 
-                double chance = (parry * bushido) / divisor;
+                double chance = parry * bushido / divisor;
 
                 double aosChance = parry / 800.0;
 
@@ -1447,7 +1443,7 @@ namespace Server.Items
 
                 if (success)
                 {
-                    weapon.LastParryChance = (int)(chance * 100);
+                    weapon.LastParryChance = (int) (chance * 100);
                     weapon.InvalidateProperties();
                 }
 
@@ -1554,10 +1550,24 @@ namespace Server.Items
 
         private Item GetRandomValidItem(Mobile m)
         {
-            Item[] items = m.Items.Where(item => _DamageLayers.Contains(item.Layer) && item is IWearableDurability).ToArray();
+            List<Item> list = new List<Item>();
+
+            for (var index = 0; index < m.Items.Count; index++)
+            {
+                var item = m.Items[index];
+
+                if (_DamageLayers.Contains(item.Layer) && item is IWearableDurability)
+                {
+                    list.Add(item);
+                }
+            }
+
+            Item[] items = list.ToArray();
 
             if (items.Length == 0)
+            {
                 return null;
+            }
 
             return items[Utility.Random(items.Length)];
         }
@@ -2492,7 +2502,7 @@ namespace Server.Items
             int damageBonus = 0;
 
             int inscribeSkill = attacker.Skills[SkillName.Inscribe].Fixed;
-            int inscribeBonus = (inscribeSkill + (1000 * (inscribeSkill / 1000))) / 200;
+            int inscribeBonus = (inscribeSkill + 1000 * (inscribeSkill / 1000)) / 200;
 
             damageBonus += inscribeBonus;
             damageBonus += attacker.Int / 10;
@@ -2503,7 +2513,7 @@ namespace Server.Items
                 damage -= (int)(damage * ((double)Feint.Registry[defender].DamageReduction / 100));
 
             // All hit spells use 80 eval
-            int evalScale = 30 + ((9 * 800) / 100);
+            int evalScale = 30 + 9 * 800 / 100;
 
             damage = AOS.Scale(damage, evalScale);
 
@@ -2710,7 +2720,7 @@ namespace Server.Items
         {
             // Message?
             // Effects?
-            defender.Stam -= (damagegiven * (100 - m_AosWeaponAttributes.HitFatigue)) / 100;
+            defender.Stam -= damagegiven * (100 - m_AosWeaponAttributes.HitFatigue) / 100;
 
             if (ProcessingMultipleHits)
                 BlockHitEffects = true;
@@ -2721,7 +2731,7 @@ namespace Server.Items
             // Message?
             defender.FixedParticles(0x3789, 10, 25, 5032, EffectLayer.Head);
             defender.PlaySound(0x1F8);
-            defender.Mana -= (damagegiven * (100 - m_AosWeaponAttributes.HitManaDrain)) / 100;
+            defender.Mana -= damagegiven * (100 - m_AosWeaponAttributes.HitManaDrain) / 100;
 
             if (ProcessingMultipleHits)
                 BlockHitEffects = true;
@@ -3140,7 +3150,7 @@ namespace Server.Items
             }
             #endregion
 
-            double totalBonus = strengthBonus + anatomyBonus + tacticsBonus + lumberBonus + (damageBonus / 100.0);
+            double totalBonus = strengthBonus + anatomyBonus + tacticsBonus + lumberBonus + damageBonus / 100.0;
 
             return damage + (int)(damage * totalBonus);
         }
@@ -3156,7 +3166,7 @@ namespace Server.Items
 
             if (m_MaxHits > 0 && m_Hits < m_MaxHits)
             {
-                scale = 50 + ((50 * m_Hits) / m_MaxHits);
+                scale = 50 + 50 * m_Hits / m_MaxHits;
             }
 
             return AOS.Scale(damage, scale);

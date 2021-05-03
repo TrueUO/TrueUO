@@ -47,13 +47,13 @@ namespace Server.Items
                 int minutes = t.Minutes;
 
                 if (weeks > 0)
-                    list.Add(string.Format("Lifespan: {0} {1}", weeks, weeks == 1 ? "week" : "weeks"));
+                    list.Add($"Lifespan: {weeks} {(weeks == 1 ? "week" : "weeks")}");
                 else if (days > 0)
-                    list.Add(string.Format("Lifespan: {0} {1}", days, days == 1 ? "day" : "days"));
+                    list.Add($"Lifespan: {days} {(days == 1 ? "day" : "days")}");
                 else if (hours > 0)
-                    list.Add(string.Format("Lifespan: {0} {1}", hours, hours == 1 ? "hour" : "hours"));
+                    list.Add($"Lifespan: {hours} {(hours == 1 ? "hour" : "hours")}");
                 else if (minutes > 0)
-                    list.Add(string.Format("Lifespan: {0} {1}", minutes, minutes == 1 ? "minute" : "minutes"));
+                    list.Add($"Lifespan: {minutes} {(minutes == 1 ? "minute" : "minutes")}");
                 else
                     list.Add(1072517, m_Lifespan.ToString()); // Lifespan: ~1_val~ seconds
             }

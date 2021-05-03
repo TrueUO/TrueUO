@@ -181,31 +181,29 @@ namespace Server.Items
 
         private void OnComplete(object o)
         {
-            object[] objs = o as object[];
-            BaseCreature hatchling = objs[0] as BaseCreature;
-            Mobile focus = objs[1] as Mobile;
-
-            if (hatchling != null)
+            if (o is object[] objs)
             {
-                focus.PublicOverheadMessage(Network.MessageType.Regular, 0x35, 1156496); // *The Hatchling safely burrows into the sand*
-                Timer.DelayCall(TimeSpan.FromSeconds(1), hatchling.Delete);
-            }
+                BaseCreature hatchling = objs[0] as BaseCreature;
+                Mobile focus = objs[1] as Mobile;
 
-            if (focus is PlayerMobile mobile)
-            {
-                EmptyNestQuest quest = QuestHelper.GetQuest(mobile, typeof(EmptyNestQuest)) as EmptyNestQuest;
-
-                if (quest != null)
+                if (hatchling != null && focus != null) 
                 {
-                    quest.Update(hatchling);
-                    // Quest Complete and crap can be handled in update
+                    focus.PublicOverheadMessage(Network.MessageType.Regular, 0x35, 1156496); // *The Hatchling safely burrows into the sand*
+                    Timer.DelayCall(TimeSpan.FromSeconds(1), hatchling.Delete);
+                }
+
+                if (focus is PlayerMobile mobile && QuestHelper.GetQuest(mobile, typeof(EmptyNestQuest)) is EmptyNestQuest quest)
+                {
+                    quest.Update(hatchling); // Quest Complete and crap can be handled in update
                 }
             }
 
             Timer.DelayCall(TimeSpan.FromMinutes(1), () =>
             {
                 if (Egg != null && !Egg.Visible)
+                {
                     Egg.Visible = true;
+                }
             });
 
             IsHatching = false;

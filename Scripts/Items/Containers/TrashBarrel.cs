@@ -2,7 +2,6 @@ using Server.Engines.Points;
 using Server.Multis;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -24,21 +23,20 @@ namespace Server.Items
         {
         }
 
-        public override int LabelNumber => 1041064;// a trash barrel
-        public override int DefaultMaxWeight => 0;// A value of 0 signals unlimited weight
+        public override int LabelNumber => 1041064; // a trash barrel
+        public override int DefaultMaxWeight => 0; // A value of 0 signals unlimited weight
         public override bool IsDecoContainer => false;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             if (Items.Count > 0)
             {
@@ -124,30 +122,69 @@ namespace Server.Items
                 for (int i = items.Count - 1; i >= 0; --i)
                 {
                     if (i >= items.Count)
+                    {
                         continue;
+                    }
 
                     ConfirmCleanupItem(items[i]);
 
-                    #region SA
-                    if (.01 > Utility.RandomDouble())
+                    if (0.01 > Utility.RandomDouble())
+                    {
                         DropToCavernOfDiscarded(items[i]);
+                    }
                     else
+                    {
                         items[i].Delete();
-                    #endregion
+                    }
                 }
 
-                if (m_Cleanup.Any(x => x.mobiles != null))
+                foreach (var x1 in m_Cleanup)
                 {
-                    foreach (Mobile m in m_Cleanup.Select(x => x.mobiles).Distinct())
+                    if (x1.mobiles != null)
                     {
-                        if (m_Cleanup.Find(x => x.mobiles == m && x.confirm) != null)
+                        HashSet<Mobile> set = new HashSet<Mobile>();
+
+                        for (var index = 0; index < m_Cleanup.Count; index++)
                         {
-                            double point = m_Cleanup.Where(x => x.mobiles == m && x.confirm).Sum(x => x.points);
-                            m.SendLocalizedMessage(1151280, string.Format("{0}\t{1}", point.ToString(), m_Cleanup.Count(r => r.mobiles == m))); // You have received approximately ~1_VALUE~points for turning in ~2_COUNT~items for Clean Up Britannia.
-                            PointsSystem.CleanUpBritannia.AwardPoints(m, point);
+                            var x2 = m_Cleanup[index];
+                            Mobile m = x2.mobiles;
+
+                            if (set.Add(m) && m_Cleanup.Find(x => x.mobiles == m && x.confirm) != null)
+                            {
+                                double point = 0;
+
+                                for (var i = 0; i < m_Cleanup.Count; i++)
+                                {
+                                    var x = m_Cleanup[i];
+
+                                    if (x.mobiles == m && x.confirm)
+                                    {
+                                        point += x.points;
+                                    }
+                                }
+
+                                int count = 0;
+
+                                for (var i = 0; i < m_Cleanup.Count; i++)
+                                {
+                                    var r = m_Cleanup[i];
+
+                                    if (r.mobiles == m)
+                                    {
+                                        count++;
+                                    }
+                                }
+
+                                m.SendLocalizedMessage(1151280,
+                                    $"{point.ToString()}\t{count}"); // You have received approximately ~1_VALUE~points for turning in ~2_COUNT~items for Clean Up Britannia.
+
+                                PointsSystem.CleanUpBritannia.AwardPoints(m, point);
+                            }
                         }
+
+                        m_Cleanup.Clear();
+                        break;
                     }
-                    m_Cleanup.Clear();
                 }
             }
 
@@ -173,11 +210,12 @@ namespace Server.Items
             }
         }
 
-        #region SA
         public static void DropToCavernOfDiscarded(Item item)
         {
             if (item == null || item.Deleted)
+            {
                 return;
+            }
 
             Rectangle2D rec = new Rectangle2D(901, 482, 40, 27);
             Map map = Map.TerMur;
@@ -199,6 +237,5 @@ namespace Server.Items
 
             item.Delete();
         }
-        #endregion
     }
 }

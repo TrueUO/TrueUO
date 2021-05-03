@@ -26,6 +26,7 @@ namespace Server.Accounting
         private static MD5CryptoServiceProvider m_MD5HashProvider;
         private static SHA1CryptoServiceProvider m_SHA1HashProvider;
         private static SHA512CryptoServiceProvider m_SHA512HashProvider;
+
         private static byte[] m_HashBuffer;
 
         public static void Configure()
@@ -52,9 +53,9 @@ namespace Server.Accounting
                 long share = 0, shared;
                 int diff;
 
-                foreach (Account a in Accounts.GetAccounts().OfType<Account>())
+                foreach (IAccount account in Accounts.GetAccounts())
                 {
-                    if (a.Count > 0)
+                    if (account is Account a && a.Count > 0)
                     {
                         try
                         {
@@ -64,8 +65,10 @@ namespace Server.Accounting
                                 found += a.TotalCurrency * CurrencyThreshold;
                             }
 
-                            foreach (Mobile m in a.m_Mobiles)
+                            for (var index = 0; index < a.m_Mobiles.Length; index++)
                             {
+                                Mobile m = a.m_Mobiles[index];
+
                                 if (m != null)
                                 {
                                     box = m.FindBankNoCreate();
@@ -77,8 +80,12 @@ namespace Server.Accounting
 
                                     if (AccountGold.Enabled)
                                     {
-                                        foreach (BankCheck o in checks = box.FindItemsByType<BankCheck>())
+                                        var os = checks = box.FindItemsByType<BankCheck>();
+
+                                        for (var i = 0; i < os.Count; i++)
                                         {
+                                            BankCheck o = os[i];
+
                                             found += o.Worth;
 
                                             if (!a.DepositGold(o.Worth))
@@ -93,8 +100,12 @@ namespace Server.Accounting
                                         checks.Clear();
                                         checks.TrimExcess();
 
-                                        foreach (Gold o in gold = box.FindItemsByType<Gold>())
+                                        var type = gold = box.FindItemsByType<Gold>();
+
+                                        for (var i = 0; i < type.Count; i++)
                                         {
+                                            Gold o = type[i];
+
                                             found += o.Amount;
 
                                             if (!a.DepositGold(o.Amount))
@@ -323,8 +334,10 @@ namespace Server.Accounting
             LoginIPs = LoadAddressList(node);
             IPRestrictions = LoadAccessCheck(node);
 
-            foreach (Mobile m in m_Mobiles)
+            for (var index = 0; index < m_Mobiles.Length; index++)
             {
+                Mobile m = m_Mobiles[index];
+
                 if (m != null)
                 {
                     m.Account = this;
@@ -335,7 +348,15 @@ namespace Server.Accounting
 
             if (totalGameTime == TimeSpan.Zero)
             {
-                totalGameTime = m_Mobiles.OfType<PlayerMobile>().Aggregate(totalGameTime, (current, m) => current + m.GameTime);
+                for (var index = 0; index < m_Mobiles.Length; index++)
+                {
+                    Mobile mobile = m_Mobiles[index];
+
+                    if (mobile is PlayerMobile playerMobile)
+                    {
+                        totalGameTime = totalGameTime + playerMobile.GameTime;
+                    }
+                }
             }
 
             m_TotalGameTime = totalGameTime;
@@ -361,8 +382,12 @@ namespace Server.Accounting
 
             if (chars != null)
             {
-                foreach (XmlElement ele in chars.GetElementsByTagName("char"))
+                var name = chars.GetElementsByTagName("char");
+
+                for (var i = 0; i < name.Count; i++)
                 {
+                    var ele = (XmlElement) name[i];
+
                     try
                     {
                         int index = Utility.GetXMLInt32(Utility.GetAttribute(ele, "index", "0"), 0);
@@ -532,7 +557,18 @@ namespace Server.Accounting
         {
             get
             {
-                var online = m_Mobiles.OfType<PlayerMobile>().FirstOrDefault(pm => pm.NetState != null);
+                PlayerMobile online = null;
+
+                for (var index = 0; index < m_Mobiles.Length; index++)
+                {
+                    Mobile mobile = m_Mobiles[index];
+
+                    if (mobile is PlayerMobile pm && pm.NetState != null)
+                    {
+                        online = pm;
+                        break;
+                    }
+                }
 
                 if (online != null)
                 {
@@ -658,8 +694,10 @@ namespace Server.Accounting
 
                 List<BaseHouse> list = BaseHouse.GetHouses(m);
 
-                foreach (BaseHouse h in list)
+                for (var index = 0; index < list.Count; index++)
                 {
+                    BaseHouse h = list[index];
+
                     h.Delete();
                 }
 
@@ -855,12 +893,8 @@ namespace Server.Accounting
 
             if (accessCheck != null)
             {
-                stringList =
-                    accessCheck.GetElementsByTagName("ip")
-                               .Cast<XmlElement>()
-                               .Select(ip => Utility.GetText(ip, null))
-                               .Where(text => text != null)
-                               .ToArray();
+                stringList = accessCheck.GetElementsByTagName("ip").Cast<XmlElement>().Select(ip => Utility.GetText(ip, null))
+                               .Where(text => text != null).ToArray();
             }
             else
             {
@@ -944,8 +978,12 @@ namespace Server.Accounting
                 return list;
             }
 
-            foreach (XmlElement ele in chars.GetElementsByTagName("char"))
+            var name = chars.GetElementsByTagName("char");
+
+            for (var i = 0; i < name.Count; i++)
             {
+                var ele = (XmlElement) name[i];
+
                 try
                 {
                     int index = Utility.GetXMLInt32(Utility.GetAttribute(ele, "index", "0"), 0);
@@ -981,8 +1019,12 @@ namespace Server.Accounting
 
             List<AccountComment> list = new List<AccountComment>();
 
-            foreach (XmlElement comment in comments.GetElementsByTagName("comment"))
+            var name = comments.GetElementsByTagName("comment");
+
+            for (var index = 0; index < name.Count; index++)
             {
+                var comment = (XmlElement) name[index];
+
                 try
                 {
                     list.Add(new AccountComment(comment));
@@ -1012,8 +1054,12 @@ namespace Server.Accounting
 
             List<AccountTag> list = new List<AccountTag>();
 
-            foreach (XmlElement tag in tags.GetElementsByTagName("tag"))
+            var name = tags.GetElementsByTagName("tag");
+
+            for (var index = 0; index < name.Count; index++)
             {
+                var tag = (XmlElement) name[index];
+
                 try
                 {
                     list.Add(new AccountTag(tag));
@@ -1092,7 +1138,18 @@ namespace Server.Accounting
         /// <param name="value">Tag value.</param>
         public void SetTag(string name, string value)
         {
-            var tag = Tags.FirstOrDefault(t => t.Name == name);
+            AccountTag tag = null;
+
+            for (var index = 0; index < Tags.Count; index++)
+            {
+                var t = Tags[index];
+
+                if (t.Name == name)
+                {
+                    tag = t;
+                    break;
+                }
+            }
 
             if (tag != null)
             {
@@ -1110,7 +1167,20 @@ namespace Server.Accounting
         /// <param name="name">Name of the desired tag value.</param>
         public string GetTag(string name)
         {
-            return Tags.Where(tag => tag.Name == name).Select(tag => tag.Value).FirstOrDefault();
+            for (var index = 0; index < Tags.Count; index++)
+            {
+                var tag = Tags[index];
+
+                if (tag.Name == name)
+                {
+                    var s = tag.Value;
+
+
+                    return s;
+                }
+            }
+
+            return null;
         }
 
         public void SetUnspecifiedBan(Mobile from)
@@ -1175,22 +1245,26 @@ namespace Server.Accounting
         {
             Young = false;
 
-            foreach (PlayerMobile m in m_Mobiles.OfType<PlayerMobile>().Where(m => m.Young))
+            for (var index = 0; index < m_Mobiles.Length; index++)
             {
-                m.Young = false;
+                Mobile mobile = m_Mobiles[index];
 
-                if (m.NetState == null)
+                if (mobile is PlayerMobile m && m.Young)
                 {
-                    continue;
-                }
+                    m.Young = false;
 
-                if (message > 0)
-                {
-                    m.SendLocalizedMessage(message);
-                }
+                    if (m.NetState == null)
+                    {
+                        continue;
+                    }
 
-                m.SendLocalizedMessage(1019039);
-                // You are no longer considered a young player of Ultima Online, and are no longer subject to the limitations and benefits of being in that caste.
+                    if (message > 0)
+                    {
+                        m.SendLocalizedMessage(message);
+                    }
+
+                    m.SendLocalizedMessage(1019039); // You are no longer considered a young player of Ultima Online, and are no longer subject to the limitations and benefits of being in that caste.
+                }
             }
         }
 
@@ -1418,8 +1492,10 @@ namespace Server.Accounting
             {
                 xml.WriteStartElement("comments");
 
-                foreach (AccountComment c in m_Comments)
+                for (var index = 0; index < m_Comments.Count; index++)
                 {
+                    AccountComment c = m_Comments[index];
+
                     c.Save(xml);
                 }
 
@@ -1430,8 +1506,10 @@ namespace Server.Accounting
             {
                 xml.WriteStartElement("tags");
 
-                foreach (AccountTag t in m_Tags)
+                for (var index = 0; index < m_Tags.Count; index++)
                 {
+                    AccountTag t = m_Tags[index];
+
                     t.Save(xml);
                 }
 
@@ -1444,8 +1522,10 @@ namespace Server.Accounting
 
                 xml.WriteAttributeString("count", LoginIPs.Length.ToString());
 
-                foreach (IPAddress ip in LoginIPs)
+                for (var index = 0; index < LoginIPs.Length; index++)
                 {
+                    IPAddress ip = LoginIPs[index];
+
                     xml.WriteStartElement("ip");
                     xml.WriteString(ip.ToString());
                     xml.WriteEndElement();
@@ -1458,8 +1538,10 @@ namespace Server.Accounting
             {
                 xml.WriteStartElement("accessCheck");
 
-                foreach (string ip in IPRestrictions)
+                for (var index = 0; index < IPRestrictions.Length; index++)
                 {
+                    string ip = IPRestrictions[index];
+
                     xml.WriteStartElement("ip");
                     xml.WriteString(ip);
                     xml.WriteEndElement();

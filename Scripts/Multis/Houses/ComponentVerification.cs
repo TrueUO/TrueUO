@@ -1,8 +1,5 @@
-#region References
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-#endregion
 
 namespace Server.Multis
 {
@@ -170,7 +167,7 @@ namespace Server.Multis
                 return false;
             }
 
-            return (val == 0 || ((int)ExpansionInfo.CoreExpansion.CustomHousingFlag & val) != 0);
+            return val == 0 || ((int)ExpansionInfo.CoreExpansion.CustomHousingFlag & val) != 0;
         }
 
         private static int[] CreateTable(int length)
@@ -208,12 +205,18 @@ namespace Server.Multis
 
             int featureCID = ss.GetColumnID("FeatureMask");
 
-            foreach (DataRecord record in ss.Records)
+            for (var i = 0; i < ss.Records.Length; i++)
             {
+                DataRecord record = ss.Records[i];
+
                 int fid = record.GetInt32(featureCID);
 
-                foreach (int itemID in tileCIDs.Select(v => record.GetInt32(v)))
+                for (var index = 0; index < tileCIDs.Length; index++)
                 {
+                    var v = tileCIDs[index];
+
+                    int itemID = record.GetInt32(v);
+
                     if (itemID > 0 && itemID < table.Length)
                     {
                         table[itemID] = fid;
@@ -360,9 +363,9 @@ namespace Server.Multis
 
         public int GetInt32(object obj)
         {
-            if (obj is int)
+            if (obj is int i)
             {
-                return (int)obj;
+                return i;
             }
 
             return 0;

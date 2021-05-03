@@ -27,12 +27,14 @@ namespace Server.Engines.NewMagincia
                 if (bankItems != null && bankItems.Length > 0)
                     items.AddRange(bankItems);
 
-                foreach (Item item in items)
+                for (var index = 0; index < items.Count; index++)
                 {
-                    WritOfLease lease = item as WritOfLease;
+                    Item item = items[index];
 
-                    if (lease != null && !lease.Expired && lease.Plot != null && lease.Plot.Bounds.Contains(p) && from.Map == lease.Plot.Map)
+                    if (item is WritOfLease lease && !lease.Expired && lease.Plot != null && lease.Plot.Bounds.Contains(p) && from.Map == lease.Plot.Map)
+                    {
                         return true;
+                    }
                 }
             }
 

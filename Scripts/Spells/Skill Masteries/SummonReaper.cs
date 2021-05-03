@@ -2,7 +2,6 @@ using Server.Items;
 using Server.Mobiles;
 using Server.Spells.Spellweaving;
 using System;
-using System.Linq;
 
 namespace Server.Spells.SkillMasteries
 {
@@ -163,13 +162,16 @@ namespace Server.Spells.SkillMasteries
         {
             DoEffects();
 
-            foreach (Mobile m in SpellHelper.AcquireIndirectTargets(this, this, Map, 4).OfType<Mobile>())
+            foreach (IDamageable target in SpellHelper.AcquireIndirectTargets(this, this, Map, 4))
             {
-                int damage = Utility.RandomMinMax(10, 20);
+                if (target is Mobile m)
+                {
+                    int damage = Utility.RandomMinMax(10, 20);
 
-                AOS.Damage(m, this, damage, 0, 0, 0, 100, 0, DamageType.SpellAOE);
+                    AOS.Damage(m, this, damage, 0, 0, 0, 100, 0, DamageType.SpellAOE);
 
-                m.RevealingAction();
+                    m.RevealingAction();
+                }
             }
         }
 

@@ -159,12 +159,12 @@ namespace Server.Engines.VvV
 
         public static void DoOccupy(object obj)
         {
-            object[] objs = obj as object[];
-            VvVBattle battle = objs[0] as VvVBattle;
-            Guild g = objs[1] as Guild;
+            object[] objs = (object[]) obj;
 
-            if (battle != null && g != null)
+            if (objs[0] is VvVBattle battle && objs[1] is Guild g)
+            {
                 battle.OccupyAltar(g);
+            }
         }
 
         public void DoFireworks()

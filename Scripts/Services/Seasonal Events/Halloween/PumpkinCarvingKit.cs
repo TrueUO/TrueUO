@@ -127,14 +127,38 @@ namespace Server.Items
         }
 
         public override int LitItemID => PumpkinDefinition.FirstOrDefault(x => x.UnlitItemID == ItemID).LitItemID;
-        public override int UnlitItemID { get { return PumpkinDefinition.FirstOrDefault(x => x.LitItemID == ItemID).UnlitItemID; } }
+
+        public override int UnlitItemID { get
+        {
+            PumpkinDefinition first = null;
+
+            for (var index = 0; index < PumpkinDefinition.Length; index++)
+            {
+                var x = PumpkinDefinition[index];
+
+                if (x.LitItemID == ItemID)
+                {
+                    first = x;
+                    break;
+                }
+            }
+
+            if (first != null)
+            {
+                return first.UnlitItemID;
+            }
+
+            return default;
+        } }
 
         public override void GetProperties(ObjectPropertyList list)
         {
             base.GetProperties(list);
 
             if (CarvedBy != null)
+            {
                 list.Add(1154350, CarvedBy); // Carved By ~1_NAME~
+            }
         }
 
         public override void Serialize(GenericWriter writer)

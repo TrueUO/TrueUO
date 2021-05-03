@@ -90,9 +90,10 @@ namespace Server.Mobiles
 
             List<Tuple<Point3D, int>> copy = new List<Tuple<Point3D, int>>(_BubbleLocs.Where(tup => tup.Item1 == m.Location));
 
-            foreach (Tuple<Point3D, int> t in copy)
+            for (var index = 0; index < copy.Count; index++)
             {
                 Point3D p = m.Location;
+
                 int hue = 0;
 
                 for (int i = 0; i < _BubbleLocs.Count; i++)
@@ -114,6 +115,7 @@ namespace Server.Mobiles
         private long _NextBubbleWander;
         private long _NextBubbleAttack;
         private bool _DoingBubbles;
+
         public List<Tuple<Point3D, int>> _BubbleLocs { get; set; }
         public Dictionary<Mobile, int> _Affected { get; set; }
 
@@ -272,36 +274,50 @@ namespace Server.Mobiles
 
         private void RemoveMod_Callback(object obj)
         {
-            object[] o = obj as object[];
-            Mobile m = o[0] as Mobile;
-            ResistanceMod mod = (ResistanceMod)o[1];
+            if (obj is object[] o)
+            {
+                Mobile m = o[0] as Mobile;
+                ResistanceMod mod = (ResistanceMod)o[1];
 
-            m.RemoveResistanceMod(mod);
-            BuffInfo.RemoveBuff(m, BuffIcon.DragonTurtleDebuff);
+                if (m != null)
+                {
+                    m.RemoveResistanceMod(mod);
 
-            if (_Affected != null && _Affected.ContainsKey(m))
-                _Affected.Remove(m);
+                    BuffInfo.RemoveBuff(m, BuffIcon.DragonTurtleDebuff);
+
+                    if (_Affected != null && _Affected.ContainsKey(m))
+                    {
+                        _Affected.Remove(m);
+                    }
+                }
+            }
         }
 
         private void DoAttack_Callback(object obj)
         {
             if (!Alive)
-                return;
-
-            object[] o = obj as object[];
-            Mobile mob = o[0] as Mobile;
-            int hue = (int)o[1];
-
-            ResistanceType type = GetResistanceFromHue(hue);
-            int damage = Utility.RandomMinMax(60, 80);
-
-            switch (type)
             {
-                case ResistanceType.Physical: AOS.Damage(mob, this, damage, 100, 0, 0, 0, 0); break;
-                case ResistanceType.Fire: AOS.Damage(mob, this, damage, 0, 100, 0, 0, 0); break;
-                case ResistanceType.Cold: AOS.Damage(mob, this, damage, 0, 0, 100, 0, 0); break;
-                case ResistanceType.Poison: AOS.Damage(mob, this, damage, 0, 0, 0, 100, 0); break;
-                case ResistanceType.Energy: AOS.Damage(mob, this, damage, 0, 0, 0, 0, 100); break;
+                return;
+            }
+
+            if (obj is object[] o)
+            {
+                Mobile mob = o[0] as Mobile;
+
+                int hue = (int)o[1];
+
+                ResistanceType type = GetResistanceFromHue(hue);
+
+                int damage = Utility.RandomMinMax(60, 80);
+
+                switch (type)
+                {
+                    case ResistanceType.Physical: AOS.Damage(mob, this, damage, 100, 0, 0, 0, 0); break;
+                    case ResistanceType.Fire: AOS.Damage(mob, this, damage, 0, 100, 0, 0, 0); break;
+                    case ResistanceType.Cold: AOS.Damage(mob, this, damage, 0, 0, 100, 0, 0); break;
+                    case ResistanceType.Poison: AOS.Damage(mob, this, damage, 0, 0, 0, 100, 0); break;
+                    case ResistanceType.Energy: AOS.Damage(mob, this, damage, 0, 0, 0, 0, 100); break;
+                }
             }
         }
 

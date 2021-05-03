@@ -134,7 +134,7 @@ namespace Server.Items
 
             m_IngredientTable.Add(new IngredientDropEntry(typeof(ChaosVortex), true, 0.25, typeof(ChagaMushroom)));
 
-            m_IngredientTable.Add(new IngredientDropEntry(typeof(BaseCreature), false, "Cavern of the Discarded", 0.05, typeof(DelicateScales),
+            m_IngredientTable.Add(new IngredientDropEntry(typeof(BaseCreature), false, "Cavern of the Discarded", 0.10, typeof(DelicateScales),
                 typeof(ArcanicRuneStone), typeof(PowderedIron), typeof(EssenceBalance), typeof(CrushedGlass), typeof(CrystallineBlackrock),
                 typeof(ElvenFletching), typeof(CrystalShards), typeof(Lodestone), typeof(AbyssalCloth), typeof(SeedOfRenewal)));
 
@@ -170,10 +170,14 @@ namespace Server.Items
         {
             if (m_IngredientTable != null)
             {
-                foreach (IngredientDropEntry entry in m_IngredientTable)
+                for (var index = 0; index < m_IngredientTable.Count; index++)
                 {
+                    IngredientDropEntry entry = m_IngredientTable[index];
+
                     if (entry == null)
+                    {
                         continue;
+                    }
 
                     if (entry.Region != null)
                     {
@@ -194,7 +198,9 @@ namespace Server.Items
                             Region r = Server.Region.Find(c.Location, c.Map);
 
                             if (r == null || !r.IsPartOf(entry.Region))
+                            {
                                 continue;
+                            }
                         }
                     }
 
@@ -213,14 +219,18 @@ namespace Server.Items
 
                     if (entry.DropMultiples)
                     {
-                        foreach (Type type in entry.Ingredients)
+                        for (var i = 0; i < entry.Ingredients.Length; i++)
                         {
+                            Type type = entry.Ingredients[i];
+
                             if (toBeat >= Utility.RandomDouble())
                             {
                                 Item drop = Loot.Construct(type);
 
                                 if (drop != null)
+                                {
                                     drops.Add(drop);
+                                }
                             }
                         }
                     }
@@ -232,8 +242,10 @@ namespace Server.Items
                             drops.Add(drop);
                     }
 
-                    foreach (Item item in drops)
+                    for (var i = 0; i < drops.Count; i++)
                     {
+                        Item item = drops[i];
+
                         c.DropItem(item);
                     }
 

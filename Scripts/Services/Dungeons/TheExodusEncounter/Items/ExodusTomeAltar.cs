@@ -7,7 +7,6 @@ using Server.Mobiles;
 using Server.Network;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -99,29 +98,38 @@ namespace Server.Items
         {
             base.OnAfterDelete();
 
-            if (m_ExodusAlterAddon != null)
-                m_ExodusAlterAddon.Delete();
+            m_ExodusAlterAddon?.Delete();
 
             if (Altar != null)
+            {
                 Altar = null;
+            }
         }
 
         public override void OnMapChange()
         {
             if (Deleted)
+            {
                 return;
+            }
 
             if (m_ExodusAlterAddon != null)
+            {
                 m_ExodusAlterAddon.Map = Map;
+            }
         }
 
         public override void OnLocationChange(Point3D oldLoc)
         {
             if (Deleted)
+            {
                 return;
+            }
 
             if (m_ExodusAlterAddon != null)
+            {
                 m_ExodusAlterAddon.Location = new Point3D(X - 1, Y - 1, Z - 18);
+            }
         }
 
         public override void Serialize(GenericWriter writer)
@@ -146,8 +154,10 @@ namespace Server.Items
 
             if (party != null)
             {
-                foreach (PartyMemberInfo info in party.Members)
+                for (var index = 0; index < party.Members.Count; index++)
                 {
+                    PartyMemberInfo info = party.Members[index];
+
                     if (info.Mobile == m)
                     {
                         return true;
@@ -164,7 +174,17 @@ namespace Server.Items
 
             if (party != null)
             {
-                int MemberRange = party.Members.Count(x => !from.InRange(x.Mobile, 5));
+                int MemberRange = 0;
+
+                for (var index = 0; index < party.Members.Count; index++)
+                {
+                    var x = party.Members[index];
+
+                    if (!from.InRange(x.Mobile, 5))
+                    {
+                        MemberRange++;
+                    }
+                }
 
                 if (MemberRange != 0)
                 {
@@ -174,19 +194,36 @@ namespace Server.Items
 
                 RobeofRite robe;
 
-                foreach (PartyMemberInfo info in party.Members)
+                for (var i = 0; i < party.Members.Count; i++)
                 {
+                    PartyMemberInfo info = party.Members[i];
+
                     robe = info.Mobile.FindItemOnLayer(Layer.OuterTorso) as RobeofRite;
 
-                    if (!m_Rituals.Any(z => z.RitualMobile == info.Mobile && z.Ritual1 && z.Ritual2) || robe == null)
+                    bool any = false;
+
+                    for (var index = 0; index < m_Rituals.Count; index++)
+                    {
+                        var completed = m_Rituals[index];
+
+                        if (completed.RitualMobile == info.Mobile && completed.Ritual1 && completed.Ritual2)
+                        {
+                            any = true;
+                            break;
+                        }
+                    }
+
+                    if (!any || robe == null)
                     {
                         from.SendLocalizedMessage(1153609, info.Mobile.Name); // ~1_PLAYER~ has not fulfilled all the requirements of the Ritual! You cannot commence until they do.
                         return;
                     }
                 }
 
-                foreach (PartyMemberInfo info in party.Members)
+                for (var index = 0; index < party.Members.Count; index++)
                 {
+                    PartyMemberInfo info = party.Members[index];
+
                     SendBattleground(info.Mobile);
                 }
             }
@@ -203,9 +240,11 @@ namespace Server.Items
                 // teleport party member's pets
                 if (from is PlayerMobile pm)
                 {
-                    foreach (BaseCreature pet in pm.AllFollowers.OfType<BaseCreature>())
+                    for (var index = 0; index < pm.AllFollowers.Count; index++)
                     {
-                        if (pet.Alive && pet.InRange(pm.Location, 5) && !(pet is BaseMount mount && mount.Rider != null))
+                        Mobile follower = pm.AllFollowers[index];
+
+                        if (follower is BaseCreature pet && pet.Alive && pet.InRange(pm.Location, 5) && !(pet is BaseMount mount && mount.Rider != null))
                         {
                             pet.FixedParticles(0x376A, 9, 32, 0x13AF, EffectLayer.Waist);
                             pet.PlaySound(0x1FE);
@@ -220,9 +259,7 @@ namespace Server.Items
                 from.MoveToWorld(m_TeleportDest, Map.Ilshenar);
 
                 // Robe of Rite Delete
-                RobeofRite robe = from.FindItemOnLayer(Layer.OuterTorso) as RobeofRite;
-
-                if (robe != null)
+                if (from.FindItemOnLayer(Layer.OuterTorso) is RobeofRite robe)
                 {
                     robe.Delete();
                 }
