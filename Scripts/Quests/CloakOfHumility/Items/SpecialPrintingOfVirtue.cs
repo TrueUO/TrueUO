@@ -58,7 +58,7 @@ namespace Server.Items
 
         public override void AddNameProperty(ObjectPropertyList list)
         {
-            base.AddNameProperty(list);
+            list.Add(LabelNumber);
         }
 
         public override void Serialize(GenericWriter writer)
