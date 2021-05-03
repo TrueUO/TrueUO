@@ -771,25 +771,37 @@ namespace Server.Engines.Quests
                 case (int)Buttons.Close: // close quest list
                     break;
                 case (int)Buttons.CloseQuest: // close quest
-                    if (m_From != null) m_From.SendGump(new MondainQuestGump(m_From));
+                    if (m_From != null)
+                    {
+                        m_From.SendGump(new MondainQuestGump(m_From));
+                    }
                     break;
                 case (int)Buttons.AcceptQuest: // accept quest
                     if (m_Offer)
+                    {
                         m_Quest.OnAccept();
+                    }
                     break;
                 case (int)Buttons.ContinueQuestion:
                     if (m_Offer)
+                    {
                         m_Quest.OnAccept();
+                    }
                     break;
                 case (int)Buttons.AcceptQuestion:
-                    if (m_Offer)
+                    if (m_Offer && m_From != null)
+                    {
                         m_From.SendGump(new MondainQuestGump(m_Quest, Section.Objectives, true));
+                    }
                     break;
                 case (int)Buttons.RefuseQuest: // refuse quest
                     if (m_Offer)
                     {
                         m_Quest.OnRefuse();
-                        if (m_From != null) m_From.SendGump(new MondainQuestGump(m_Quest, Section.Refuse, true));
+                        if (m_From != null)
+                        {
+                            m_From.SendGump(new MondainQuestGump(m_Quest, Section.Refuse, true));
+                        }
                     }
                     break;
                 case (int)Buttons.ResignQuest: // resign quest

@@ -360,7 +360,7 @@ namespace Server.Engines.Quests.RitualQuest
 
         public override void OnDoubleClick(Mobile m)
         {
-            PlayerMobile pm = m as PlayerMobile;
+            PlayerMobile pm = (PlayerMobile) m;
 
             if (m.AccessLevel > AccessLevel.Player || QuestHelper.HasQuest(pm, typeof(HairOfTheDryadQueen)))
             {
