@@ -592,7 +592,7 @@ namespace Server.Items
 
         private static readonly Type[] _SpecialCacheHordeAndTrove =
         {
-            typeof(OctopusNecklace), typeof(SkullGnarledStaff), typeof(SkullLongsword)
+            typeof(OctopusNecklace), typeof(SkullGnarledStaff), typeof(GargishGnarledStaff), typeof(SkullLongsword), typeof(GargishSkullLongsword)
         };
 
         private static readonly Type[] _DecorativeMinorArtifacts =
@@ -950,7 +950,7 @@ namespace Server.Items
                 {
                     if (list.Length > 0)
                     {
-                        Type type = MutateType(list[Utility.Random(list.Length)], facet);
+                        Type type = MutateType(list[Utility.Random(list.Length)]);
                         Item deco;
 
                         if (type == null)
@@ -962,7 +962,7 @@ namespace Server.Items
                             deco = Loot.Construct(type);
                         }
 
-                        if (deco is SkullGnarledStaff || deco is SkullLongsword)
+                        if (deco is SkullGnarledStaff || deco is GargishGnarledStaff || deco is SkullLongsword || deco is GargishSkullLongsword)
                         {
                             if (package == TreasurePackage.Artisan)
                             {
@@ -971,6 +971,7 @@ namespace Server.Items
                             else
                             {
                                 int min, max;
+
                                 GetMinMaxBudget(level, deco, out min, out max);
                                 RunicReforging.GenerateRandomItem(deco, from is PlayerMobile pm ? pm.RealLuck : from.Luck, min, max, chest.Map);
                             }
@@ -1030,17 +1031,8 @@ namespace Server.Items
             #endregion
         }
 
-        private static Type MutateType(Type type, TreasureFacet facet)
+        private static Type MutateType(Type type)
         {
-            if (type == typeof(SkullGnarledStaff))
-            {
-                type = typeof(GargishSkullGnarledStaff);
-            }
-            else if (type == typeof(SkullLongsword))
-            {
-                type = typeof(GargishSkullLongsword);
-            }
-
             return type;
         }
     }
