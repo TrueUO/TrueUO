@@ -347,10 +347,31 @@ namespace Server.Engines.Quests.RitualQuest
 
         public static void Initialize()
         {
+            var map = Map.TerMur;
+
             if (Instance == null)
             {
                 Instance = new QueenOakwhisper();
-                Instance.MoveToWorld(new Point3D(846, 2773, 0), Map.TerMur);
+                Instance.MoveToWorld(new Point3D(846, 2773, 0), map);
+            }
+
+            if (map.FindItem<Teleporter>(new Point3D(856, 2783, 5)) == null)
+            {
+                var tele = new Teleporter
+                {
+                    PointDest = new Point3D(4446, 3692, 0),
+                    MapDest = Map.Trammel
+                };
+                tele.MoveToWorld(new Point3D(856, 2783, 5), map);
+            }
+
+            if (map.FindItem<Static>(new Point3D(856, 2783, 5)) == null)
+            {
+                var st = new Static(0x375A)
+                {
+                    Weight = 0
+                };
+                st.MoveToWorld(new Point3D(856, 2783, 5), map);
             }
         }
 
