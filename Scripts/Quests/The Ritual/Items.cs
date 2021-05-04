@@ -411,6 +411,11 @@ namespace Server.Engines.Quests.RitualQuest
             QuestItem = true;
         }
 
+        public HairOfADryadQueen(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override bool DropToWorld(Mobile from, Point3D p)
         {
             Delete();
@@ -425,11 +430,6 @@ namespace Server.Engines.Quests.RitualQuest
             base.GetProperties(list);
 
             list.Add(1075269); // Destroyed when dropped
-        }
-
-        public HairOfADryadQueen(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
@@ -458,6 +458,11 @@ namespace Server.Engines.Quests.RitualQuest
             QuestItem = true;
         }
 
+        public NightTerrorHeart(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override bool DropToWorld(Mobile from, Point3D p)
         {
             Delete();
@@ -472,11 +477,6 @@ namespace Server.Engines.Quests.RitualQuest
             base.GetProperties(list);
 
             list.Add(1075269); // Destroyed when dropped
-        }
-
-        public NightTerrorHeart(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)

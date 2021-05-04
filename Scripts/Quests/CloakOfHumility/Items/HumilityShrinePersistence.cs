@@ -82,7 +82,7 @@ namespace Server.Engines.Quests
 
         public static void SetupMobiles()
         {
-            BaseCreature next = new Gareth();
+            BaseCreature next;
 
             next = new Gareth();
             next.MoveToWorld(new Point3D(2023, 2841, 20), Siege.SiegeShard ? Map.Felucca : Map.Trammel);

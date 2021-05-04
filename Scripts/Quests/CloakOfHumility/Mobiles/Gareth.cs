@@ -76,6 +76,7 @@ namespace Server.Engines.Quests
                 reader =>
                 {
                     int version = reader.ReadInt();
+
                     int count = reader.ReadInt();
 
                     for (int i = count; i > 0; i--)
