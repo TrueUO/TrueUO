@@ -343,14 +343,28 @@ namespace Server.Engines.Quests
                 if (m_Quest.Failed)
                     AddHtmlLocalized(160, 80, 200, 32, 500039, 0x3C00, false, false); // Failed!
 
-                AddHtmlLocalized(130, 68, 220, 48, 1114513, string.Format("@#{0}", m_Quest.Title), 0x2710, false, false); // <DIV ALIGN=CENTER>~1_TOKEN~</DIV>
+                if (m_Quest.Title is int)
+                {
+                    AddHtmlLocalized(130, 68, 220, 48, 1114513, string.Format("@#{0}", m_Quest.Title), 0x2710, false, false); // <DIV ALIGN=CENTER>~1_TOKEN~</DIV>
+                }
+                else
+                {
+                    AddHtml(130, 68, 220, 48, string.Format("<BASEFONT COLOR=#2AD580><DIV ALIGN=CENTER>{0}</DIV>", m_Quest.Title), false, false);
+                }
 
                 if (m_Quest.ChainID != QuestChain.None)
                     AddHtmlLocalized(98, 140, 312, 16, 1075024, 0x2710, false, false); // Description (quest chain)
                 else
                     AddHtmlLocalized(98, 140, 312, 16, 1072202, 0x2710, false, false); // Description
 
-                AddHtmlObject(98, 156, 312, 240, m_Quest.Description, 0x15F90, false, true);
+                if (m_Quest.Description is int)
+                {
+                    AddHtmlObject(98, 156, 312, 240, m_Quest.Description, 0x15F90, false, true);
+                }
+                else
+                {
+                    AddHtml(130, 68, 220, 48, string.Format("<BASEFONT COLOR=#BFEA95>{0}</DIV>", m_Quest.Description), false, false);
+                }
 
                 if (m_Offer)
                 {
@@ -656,8 +670,25 @@ namespace Server.Engines.Quests
             if (m_Offer)
             {
                 AddHtmlLocalized(130, 45, 270, 16, 3006156, 0xFFFFFF, false, false); // Quest Conversation
-                AddHtmlLocalized(130, 68, 220, 48, 1114513, string.Format("@#{0}", m_Quest.Title), 0x2710, false, false); // <DIV ALIGN=CENTER>~1_TOKEN~</DIV>
-                AddHtmlObject(98, 140, 312, 180, m_Quest.Refuse, 0x15F90, false, true);
+
+                if (m_Quest.Title is int)
+                {
+                    AddHtmlLocalized(130, 68, 220, 48, 1114513, string.Format("@#{0}", m_Quest.Title), 0x2710, false, false); // <DIV ALIGN=CENTER>~1_TOKEN~</DIV>
+                }
+                else
+                {
+                    AddHtml(130, 68, 220, 48, string.Format("<BASEFONT COLOR=#2AD580><DIV ALIGN=CENTER>{0}</DIV>", m_Quest.Title), false, false);
+                }
+
+                if (m_Quest.Refuse is int)
+                {
+                    AddHtmlObject(98, 140, 312, 180, m_Quest.Refuse, 0x15F90, false, true);
+                }
+                else
+                {
+                    AddHtml(98, 140, 312, 180, string.Format("<BASEFONT COLOR=#BFEA95>{0}", m_Quest.Refuse), false, true);
+                }
+
                 AddButton(313, 455, 0x2EE6, 0x2EE8, (int)Buttons.Close, GumpButtonType.Reply, 0);
             }
         }
@@ -667,9 +698,26 @@ namespace Server.Engines.Quests
             if (m_Quest == null)
                 return;
 
-            AddHtmlLocalized(130, 45, 270, 16, 3006156, 0xFFFFFF, false, false); // Quest Conversation				
-            AddHtmlLocalized(130, 68, 220, 48, 1114513, string.Format("@#{0}", m_Quest.Title), 0x2710, false, false); // <DIV ALIGN=CENTER>~1_TOKEN~</DIV>
-            AddHtmlObject(98, 140, 312, 180, m_Quest.Uncomplete, 0x15F90, false, true);
+            AddHtmlLocalized(130, 45, 270, 16, 3006156, 0xFFFFFF, false, false); // Quest Conversation			
+
+            if (m_Quest.Title is int)
+            {
+                AddHtmlLocalized(130, 68, 220, 48, 1114513, string.Format("@#{0}", m_Quest.Title), 0x2710, false, false); // <DIV ALIGN=CENTER>~1_TOKEN~</DIV>
+            }
+            else
+            {
+                AddHtml(130, 68, 220, 48, string.Format("<BASEFONT COLOR=#2AD580><DIV ALIGN=CENTER>{0}</DIV>", m_Quest.Title), false, false);
+            }
+
+            if (m_Quest.Uncomplete is int)
+            {
+                AddHtmlObject(98, 140, 312, 180, m_Quest.Uncomplete, 0x15F90, false, true);
+            }
+            else
+            {
+                AddHtml(98, 140, 312, 180, string.Format("<BASEFONT COLOR=#BFEA95>{0}", m_Quest.Uncomplete), false, true);
+            }
+
             AddButton(313, 455, 0x2EE6, 0x2EE8, (int)Buttons.Close, GumpButtonType.Reply, 0);
         }
 
@@ -695,8 +743,24 @@ namespace Server.Engines.Quests
             }
 
             AddHtmlLocalized(130, 45, 270, 16, 3006156, 0xFFFFFF, false, false); // Quest Conversation
-            AddHtmlLocalized(130, 68, 220, 48, 1114513, string.Format("@#{0}", m_Quest.Title), 0x2710, false, false); // <DIV ALIGN=CENTER>~1_TOKEN~</DIV>
-            AddHtmlObject(98, 140, 312, 180, m_Quest.Complete, 0x15F90, false, true);
+
+            if (m_Quest.Title is int)
+            {
+                AddHtmlLocalized(130, 68, 220, 48, 1114513, string.Format("@#{0}", m_Quest.Title), 0x2710, false, false); // <DIV ALIGN=CENTER>~1_TOKEN~</DIV>
+            }
+            else
+            {
+                AddHtml(130, 68, 220, 48, string.Format("<BASEFONT COLOR=#2AD580><DIV ALIGN=CENTER>{0}</DIV>", m_Quest.Title), false, false);
+            }
+
+            if (m_Quest.Complete is int)
+            {
+                AddHtmlObject(98, 140, 312, 180, m_Quest.Complete, 0x15F90, false, true);
+            }
+            else
+            {
+                AddHtml(98, 140, 312, 180, string.Format("<BASEFONT COLOR=#BFEA95>{0}", m_Quest.Complete), false, true);
+            }
 
             AddButton(313, 455, 0x2EE6, 0x2EE8, (int)Buttons.Close, GumpButtonType.Reply, 0);
             AddButton(95, 455, 0x2EE9, 0x2EEB, (int)Buttons.Complete, GumpButtonType.Reply, 0);
