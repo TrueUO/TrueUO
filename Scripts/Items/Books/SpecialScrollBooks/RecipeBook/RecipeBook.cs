@@ -4,7 +4,6 @@ using Server.Mobiles;
 using Server.Multis;
 using Server.Prompts;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -257,9 +256,27 @@ namespace Server.Items
         {
             Recipes = new List<RecipeScrollDefinition>();
 
-            for (var index = 0; index < Definitions.ToList().Count; index++)
+            List<RecipeScrollDefinition> list = new List<RecipeScrollDefinition>();
+
+            for (var index = 0; index < Definitions.Length; index++)
             {
-                var x = Definitions.ToList()[index];
+                var definition = Definitions[index];
+
+                list.Add(definition);
+            }
+
+            for (var index = 0; index < list.Count; index++)
+            {
+                List<RecipeScrollDefinition> defList = new List<RecipeScrollDefinition>();
+
+                for (var i = 0; i < Definitions.Length; i++)
+                {
+                    var definition = Definitions[i];
+
+                    defList.Add(definition);
+                }
+
+                var x = defList[index];
 
                 Recipes.Add(x);
             }
@@ -267,9 +284,59 @@ namespace Server.Items
 
         public void ReLoadDefinitions()
         {
-            for (var index = 0; index < Definitions.Where(n => Recipes.All(o => o.RecipeID != n.RecipeID)).ToList().Count; index++)
+            List<RecipeScrollDefinition> list = new List<RecipeScrollDefinition>();
+
+            for (var index = 0; index < Definitions.Length; index++)
             {
-                var x = Definitions.Where(n => Recipes.All(o => o.RecipeID != n.RecipeID)).ToList()[index];
+                var n = Definitions[index];
+
+                bool all = true;
+
+                for (var i = 0; i < Recipes.Count; i++)
+                {
+                    var o = Recipes[i];
+
+                    if (o.RecipeID == n.RecipeID)
+                    {
+                        all = false;
+                        break;
+                    }
+                }
+
+                if (all)
+                {
+                    list.Add(n);
+                }
+            }
+
+            for (var index = 0; index < list.Count; index++)
+            {
+                List<RecipeScrollDefinition> defList = new List<RecipeScrollDefinition>();
+
+                for (var i = 0; i < Definitions.Length; i++)
+                {
+                    var n = Definitions[i];
+
+                    bool all = true;
+
+                    for (var recipe = 0; recipe < Recipes.Count; recipe++)
+                    {
+                        var o = Recipes[recipe];
+
+                        if (o.RecipeID == n.RecipeID)
+                        {
+                            all = false;
+                            break;
+                        }
+                    }
+
+                    if (all)
+                    {
+                        defList.Add(n);
+                    }
+                }
+
+                var x = defList[index];
 
                 Recipes.Add(x);
             }
@@ -278,12 +345,16 @@ namespace Server.Items
         public bool CheckAccessible(Mobile from, Item item)
         {
             if (from.AccessLevel >= AccessLevel.GameMaster)
+            {
                 return true; // Staff can access anything
+            }
 
             BaseHouse house = BaseHouse.FindHouseAt(item);
 
             if (house == null)
+            {
                 return false;
+            }
 
             switch (Level)
             {
@@ -338,9 +409,13 @@ namespace Server.Items
                     SecureTrade trade = cont.Trade;
 
                     if (trade != null && trade.From.Mobile == from)
+                    {
                         trade.To.Mobile.SendGump(new RecipeBookGump(trade.To.Mobile, this));
+                    }
                     else if (trade != null && trade.To.Mobile == from)
+                    {
                         trade.From.Mobile.SendGump(new RecipeBookGump(trade.From.Mobile, this));
+                    }
                 }
             }
         }
@@ -373,9 +448,9 @@ namespace Server.Items
 
                         InvalidateProperties();
 
-                        @from.SendLocalizedMessage(1158826); // Recipe added to the book.
+                        from.SendLocalizedMessage(1158826); // Recipe added to the book.
 
-                        if (@from is PlayerMobile mobile)
+                        if (from is PlayerMobile mobile)
                         {
                             mobile.SendGump(new RecipeBookGump(mobile, this));
                         }
@@ -453,7 +528,16 @@ namespace Server.Items
         {
             base.GetProperties(list);
 
-            list.Add(1158849, string.Format("{0}", Recipes.Sum(x => x.Amount))); // Recipes in book: ~1_val~
+            int sum = 0;
+
+            for (var index = 0; index < Recipes.Count; index++)
+            {
+                var x = Recipes[index];
+
+                sum += x.Amount;
+            }
+
+            list.Add(1158849, $"{sum}"); // Recipes in book: ~1_val~
 
             if (!string.IsNullOrEmpty(BookName))
             {
@@ -508,7 +592,9 @@ namespace Server.Items
             public override void OnResponse(Mobile from, string text)
             {
                 if (text.Length > 40)
+                {
                     text = text.Substring(0, 40);
+                }
 
                 if (from.CheckAlive() && m_Book.IsChildOf(from.Backpack))
                 {
