@@ -4251,12 +4251,9 @@ namespace Server.Mobiles
                     BuffInfo.AddBuff(aggressor, new BuffInfo(BuffIcon.HeatOfBattleStatus, 1153801, 1153827, Aggression.CombatHeatDelay, aggressor, true));
                 }
             }
-            else if (aggressor is BaseCreature creature)
+            else if (aggressor is BaseCreature creature && creature.GetMaster() is PlayerMobile pm)
             {
-                if (creature.GetMaster() is PlayerMobile pm)
-                {
-                    AggressiveAction(pm, criminal);
-                }
+                AggressiveAction(pm, criminal);
             }
 
             base.AggressiveAction(aggressor, criminal);
