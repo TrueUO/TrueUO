@@ -2,17 +2,16 @@ using Server.Gumps;
 
 namespace Server.Items
 {
-    public abstract class Note : Item
+    public abstract class Note : Item // BaseNote - Base class.
     {
-        public abstract int[] Contents { get; }
+        protected abstract int[] Contents { get; }
 
-        [Constructable]
-        public Note()
+        protected Note()
             : base(0x14ED)
         {
         }
 
-        public Note(Serial serial)
+        protected Note(Serial serial)
             : base(serial)
         {
         }
