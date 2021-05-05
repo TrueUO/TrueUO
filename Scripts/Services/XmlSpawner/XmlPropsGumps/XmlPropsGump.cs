@@ -531,21 +531,32 @@ namespace Server.Gumps
 
                         while (true)
                         {
-                            Type baseType = type.BaseType;
+                            if (!(type is null))
+                            {
+                                Type baseType = type.BaseType;
 
-                            if (baseType == null || baseType == typeofObject)
-                                break;
+                                if (baseType == null || baseType == typeofObject)
+                                {
+                                    break;
+                                }
 
-                            if (baseType.GetProperty(prop.Name, prop.PropertyType) != null)
-                                type = baseType;
-                            else
-                                break;
+                                if (baseType.GetProperty(prop.Name, prop.PropertyType) != null)
+                                {
+                                    type = baseType;
+                                }
+                                else
+                                {
+                                    break;
+                                }
+                            }
                         }
 
                         ArrayList list = (ArrayList)groups[type];
 
                         if (list == null)
+                        {
                             groups[type] = list = new ArrayList();
+                        }
 
                         list.Add(prop);
                     }
