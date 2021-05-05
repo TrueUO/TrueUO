@@ -15,17 +15,20 @@ namespace Server.Engines.Quests
         NextPage,
         Complete,
         CompleteQuest,
-        RefuseReward
+        RefuseReward,
+        AcceptQuestion,
+        ContinueQuestion
     }
 
-    public class MondainQuestGump : BaseQuestGump
+    public sealed class MondainQuestGump : BaseQuestGump
     {
-        private const int ButtonOffset = 11;
+        private const int ButtonOffset = 13;
         private readonly object m_Quester;
         private readonly PlayerMobile m_From;
         private readonly BaseQuest m_Quest;
         private readonly bool m_Offer;
         private readonly bool m_Completed;
+        private readonly bool m_IsQuestionQuest;
         private Section m_Section;
 
         public MondainQuestGump(PlayerMobile from)
@@ -63,79 +66,129 @@ namespace Server.Engines.Quests
             m_Completed = completed;
 
             if (quest != null)
-                m_From = quest.Owner;
-            else
-                m_From = owner;
-
-            Closable = false;
-            Disposable = true;
-            Dragable = true;
-            Resizable = false;
-
-            AddPage(0);
-
-            AddImageTiled(50, 20, 400, 460, 0x1404);
-            AddImageTiled(50, 29, 30, 450, 0x28DC);
-            AddImageTiled(34, 140, 17, 339, 0x242F);
-            AddImage(48, 135, 0x28AB);
-            AddImage(-16, 285, 0x28A2);
-            AddImage(0, 10, 0x28B5);
-            AddImage(25, 0, 0x28B4);
-            AddImageTiled(83, 15, 350, 15, 0x280A);
-            AddImage(34, 479, 0x2842);
-            AddImage(442, 479, 0x2840);
-            AddImageTiled(51, 479, 392, 17, 0x2775);
-            AddImageTiled(415, 29, 44, 450, 0xA2D);
-            AddImageTiled(415, 29, 30, 450, 0x28DC);
-            AddImage(370, 50, 0x589);
-
-            if ((int)m_From.AccessLevel > (int)AccessLevel.Counselor && quest != null)
             {
-                AddButton(379, 60, 0x15A9, 0x15A9, (int)Buttons.CompleteQuest, GumpButtonType.Reply, 0);
+                m_From = quest.Owner;
+                m_IsQuestionQuest = quest.IsQuestionQuest;
             }
             else
             {
-                if (m_Quest == null)
+                m_From = owner;
+            }            
+
+            if (m_IsQuestionQuest)
+            {
+                Disposable = false;
+                Closable = false;
+
+                AddImageTiled(50, 20, 400, 400, 0x1404);
+                AddImageTiled(83, 15, 350, 15, 0x280A);
+                AddImageTiled(50, 29, 30, 390, 0x28DC);
+                AddImageTiled(34, 140, 17, 279, 0x242F);
+                AddImage(48, 135, 0x28AB);
+                AddImage(-16, 285, 0x28A2);
+                AddImage(0, 10, 0x28B5);
+                AddImage(25, 0, 0x28B4);
+                AddImageTiled(415, 29, 44, 390, 0xA2D);
+                AddImageTiled(415, 29, 30, 390, 0x28DC);
+                AddLabel(100, 50, 0x481, "");
+                AddImage(370, 50, 0x589);
+                AddImage(379, 60, 0x15E8);
+                AddImage(425, 0, 0x28C9);
+                AddImage(34, 419, 0x2842);
+                AddImage(442, 419, 0x2840);
+                AddImageTiled(51, 419, 392, 17, 0x2775);
+                AddImage(90, 33, 0x232D);
+                AddImageTiled(130, 65, 175, 1, 0x238D);
+
+                switch (m_Section)
                 {
-                    AddImage(379, 60, 0x15A9);
+                    case Section.Description:
+                        SecQuestionDescription();
+                        break;
+                    case Section.Objectives:
+                        SecQuestionObjectives();
+                        break;
+                    case Section.Refuse:
+                        SecQuestionRefuse();
+                        break;
+                    case Section.Failed:
+                        SecQuestionFailed();
+                        break;
+                    case Section.Complete:
+                        SecQuestionComplete();
+                        break;
+                }
+            }
+            else
+            {
+                AddPage(0);
+
+                Closable = false;
+
+                AddImageTiled(50, 20, 400, 460, 0x1404);
+                AddImageTiled(50, 29, 30, 450, 0x28DC);
+                AddImageTiled(34, 140, 17, 339, 0x242F);
+                AddImage(48, 135, 0x28AB);
+                AddImage(-16, 285, 0x28A2);
+                AddImage(0, 10, 0x28B5);
+                AddImage(25, 0, 0x28B4);
+                AddImageTiled(83, 15, 350, 15, 0x280A);
+                AddImage(34, 479, 0x2842);
+                AddImage(442, 479, 0x2840);
+                AddImageTiled(51, 479, 392, 17, 0x2775);
+                AddImageTiled(415, 29, 44, 450, 0xA2D);
+                AddImageTiled(415, 29, 30, 450, 0x28DC);
+                AddLabel(100, 50, 0x481, "");
+                AddImage(370, 50, 0x589);
+
+                if ((int)m_From.AccessLevel > (int)AccessLevel.Counselor && quest != null)
+                {
+                    AddButton(379, 60, 0x15A9, 0x15A9, (int)Buttons.CompleteQuest, GumpButtonType.Reply, 0);
                 }
                 else
                 {
-                    AddImage(379, 60, 0x1580);
+                    if (m_Quest == null)
+                    {
+                        AddImage(379, 60, 0x15A9);
+                    }
+                    else
+                    {
+                        AddImage(379, 60, 0x1580);
+                    }
                 }
-            }
 
-            AddImage(425, 0, 0x28C9);
-            AddImage(90, 33, 0x232D);
-            AddImageTiled(130, 65, 175, 1, 0x238D);
+                AddImage(425, 0, 0x28C9);
+                AddImage(90, 33, 0x232D);
+                AddImageTiled(130, 65, 175, 1, 0x238D);
 
-            switch (m_Section)
-            {
-                case Section.Main:
-                    SecMain();
-                    break;
-                case Section.Description:
-                    SecDescription();
-                    break;
-                case Section.Objectives:
-                    SecObjectives();
-                    break;
-                case Section.Rewards:
-                    SecRewards();
-                    break;
-                case Section.Refuse:
-                    SecRefuse();
-                    break;
-                case Section.Complete:
-                    SecComplete();
-                    break;
-                case Section.InProgress:
-                    SecInProgress();
-                    break;
-                case Section.Failed:
-                    SecFailed();
-                    break;
-            }
+                switch (m_Section)
+                {
+                    case Section.Main:
+                        SecMain();
+                        break;
+                    case Section.Description:
+                        SecDescription();
+                        break;
+                    case Section.Objectives:
+                        SecObjectives();
+                        break;
+                    case Section.Rewards:
+                        SecRewards();
+                        break;
+                    case Section.Refuse:
+                        SecRefuse();
+                        break;
+                    case Section.Complete:
+                        SecComplete();
+                        break;
+                    case Section.InProgress:
+                        SecInProgress();
+                        break;
+                    case Section.Failed:
+                        SecFailed();
+                        break;
+                }
+            }           
         }
 
         public enum Section
@@ -150,7 +203,107 @@ namespace Server.Engines.Quests
             Failed
         }
 
-        public virtual void SecMain()
+        public void SecQuestionDescription()
+        {
+            if (m_Quest == null)
+                return;
+
+            if (!m_Quest.RenderDescription(this, m_Offer))
+            {
+                AddHtmlLocalized(130, 45, 270, 16, 1049010, 0x7FFF, false, false); // Quest Offer
+
+                if (m_Quest.Title != null)
+                {
+                    AddHtmlObject(160, 108, 250, 16, m_Quest.Title, 0x2710, false, false);
+                    AddHtmlLocalized(98, 140, 312, 16, 1072202, 0x2710, false, false); // Description
+                }                
+
+                AddHtmlObject(98, 156, 312, 180, m_Quest.Description, 0x15F90, false, true);
+
+                if (m_Offer)
+                {
+                    AddButton(95, 395, 0x2EE0, 0x2EE2, (int)Buttons.AcceptQuestion, GumpButtonType.Reply, 0);
+                    AddHtmlLocalized(0, 0, 0, 0, 1013076, false, false); // Accept
+
+                    AddButton(313, 395, 0x2EF2, 0x2EF4, (int)Buttons.RefuseQuest, GumpButtonType.Reply, 0);
+                    AddHtmlLocalized(0, 0, 0, 0, 1013077, false, false); // Refuse
+                }
+            }
+        }
+
+        public void SecQuestionObjectives()
+        {
+            if (m_Quest == null)
+                return;
+
+            AddHtmlLocalized(130, 45, 270, 16, 1049010, 0x7FFF, false, false); // Quest Offer
+            AddHtmlObject(98, 156, 312, 180, m_Quest.Uncomplete, 0x15F90, false, true);
+
+            AddButton(95, 395, 0x2EE9, 0x2EEB, (int)Buttons.ContinueQuestion, GumpButtonType.Reply, 0);
+            AddHtmlLocalized(0, 0, 0, 0, 1011036, false, false); // OKAY
+        }
+
+        public void SecQuestionRefuse()
+        {
+            if (m_Quest == null)
+                return;
+
+            if (m_Offer)
+            {
+                AddHtmlLocalized(130, 45, 270, 16, 1049010, 0x7FFF, false, false); // Quest Offer
+                AddHtmlObject(98, 156, 312, 180, m_Quest.Refuse, 0x15F90, false, true);
+
+                AddButton(95, 395, 0x2EE6, 0x2EE8, (int)Buttons.Close, GumpButtonType.Reply, 0);
+                AddHtmlLocalized(0, 0, 0, 0, 1060675, false, false); // CLOSE
+            }
+        }
+
+        public void SecQuestionFailed()
+        {
+            if (m_Quest == null)
+                return;            
+
+            object fail = m_Quest.FailedMsg;
+
+            if (fail == null)
+                fail = "You have failed to meet the conditions of the quest.";
+
+            AddHtmlLocalized(130, 45, 270, 16, 1049010, 0x7FFF, false, false); // Quest Offer
+            AddHtmlObject(98, 156, 312, 180, fail, 0x15F90, false, true);
+
+            AddButton(95, 395, 0x2EE6, 0x2EE8, (int)Buttons.Close, GumpButtonType.Reply, 0);
+            AddHtmlLocalized(0, 0, 0, 0, 1060675, false, false); // CLOSE
+        }
+
+        public void SecQuestionComplete()
+        {
+            if (m_Quest == null)
+                return;
+
+            if (m_Quest.Complete == null)
+            {
+                if (QuestHelper.TryDeleteItems(m_Quest))
+                {
+                    if (QuestHelper.AnyRewards(m_Quest))
+                    {
+                        m_Section = Section.Rewards;
+                        SecRewards();
+                    }
+                    else
+                        m_Quest.GiveRewards();
+                }
+
+                return;
+            }
+
+            AddHtmlLocalized(130, 45, 270, 16, 1049010, 0x7FFF, false, false); // Quest Offer
+            AddHtmlObject(98, 156, 312, 180, m_Quest.Complete, 0x15F90, false, true);
+
+            AddButton(95, 395, 0x2EE6, 0x2EE8, (int)Buttons.Complete, GumpButtonType.Reply, 0);
+            AddHtmlLocalized(0, 0, 0, 0, 1060675, false, false); // CLOSE
+        }
+
+        public void SecMain()
         {
             if (m_From == null)
                 return;
@@ -161,6 +314,9 @@ namespace Server.Engines.Quests
 
             for (int i = m_From.Quests.Count - 1; i >= 0; i--)
             {
+                if (m_From.Quests[i].IsQuestionQuest)
+                    continue;
+
                 BaseQuest quest = m_From.Quests[i];
 
                 AddHtmlObject(98, offset, 270, 21, quest.Title, quest.Failed ? 0x3C00 : White, false, false);
@@ -170,9 +326,9 @@ namespace Server.Engines.Quests
             }
 
             AddButton(313, 455, 0x2EEC, 0x2EEE, (int)Buttons.Close, GumpButtonType.Reply, 0);
-        }
+        }        
 
-        public virtual void SecDescription()
+        public void SecDescription()
         {
             if (m_Quest == null)
                 return;
@@ -187,14 +343,28 @@ namespace Server.Engines.Quests
                 if (m_Quest.Failed)
                     AddHtmlLocalized(160, 80, 200, 32, 500039, 0x3C00, false, false); // Failed!
 
-                AddHtmlObject(160, 70, 200, 40, m_Quest.Title, DarkGreen, false, false);
+                if (m_Quest.Title is int)
+                {
+                    AddHtmlLocalized(130, 68, 220, 48, 1114513, string.Format("@#{0}", m_Quest.Title), 0x2710, false, false); // <DIV ALIGN=CENTER>~1_TOKEN~</DIV>
+                }
+                else
+                {
+                    AddHtml(130, 68, 220, 48, string.Format("<BASEFONT COLOR=#2AD580><DIV ALIGN=CENTER>{0}</DIV>", m_Quest.Title), false, false);
+                }
 
                 if (m_Quest.ChainID != QuestChain.None)
                     AddHtmlLocalized(98, 140, 312, 16, 1075024, 0x2710, false, false); // Description (quest chain)
                 else
                     AddHtmlLocalized(98, 140, 312, 16, 1072202, 0x2710, false, false); // Description
 
-                AddHtmlObject(98, 156, 312, 180, m_Quest.Description, LightGreen, false, true);
+                if (m_Quest.Description is int)
+                {
+                    AddHtmlObject(98, 156, 312, 240, m_Quest.Description, 0x15F90, false, true);
+                }
+                else
+                {
+                    AddHtml(130, 68, 220, 48, string.Format("<BASEFONT COLOR=#BFEA95>{0}</DIV>", m_Quest.Description), false, false);
+                }
 
                 if (m_Offer)
                 {
@@ -212,7 +382,7 @@ namespace Server.Engines.Quests
             }
         }
 
-        public virtual void SecObjectives()
+        public void SecObjectives()
         {
             if (m_Quest == null)
                 return;
@@ -235,7 +405,7 @@ namespace Server.Engines.Quests
                 else
                     AddHtmlLocalized(130, 45, 270, 16, 1046026, 0xFFFFFF, false, false); // Quest Log
 
-                AddHtmlObject(160, 70, 200, 40, m_Quest.Title, DarkGreen, false, false);
+                AddHtmlLocalized(130, 68, 220, 48, 1114513, string.Format("@#{0}", m_Quest.Title), 0x2710, false, false); // <DIV ALIGN=CENTER>~1_TOKEN~</DIV>
                 AddHtmlLocalized(98, 140, 312, 16, 1049073, 0x2710, false, false); // Objective:
 
                 if (m_Quest.AllObjectives)
@@ -441,7 +611,7 @@ namespace Server.Engines.Quests
             }
         }
 
-        public virtual void SecRewards()
+        public void SecRewards()
         {
             if (m_Quest == null)
                 return;
@@ -451,7 +621,7 @@ namespace Server.Engines.Quests
             else
                 AddHtmlLocalized(130, 45, 270, 16, 1046026, 0xFFFFFF, false, false); // Quest Log	
 
-            AddHtmlObject(160, 70, 200, 40, m_Quest.Title, DarkGreen, false, false);
+            AddHtmlLocalized(130, 68, 220, 48, 1114513, string.Format("@#{0}", m_Quest.Title), 0x2710, false, false); // <DIV ALIGN=CENTER>~1_TOKEN~</DIV>
             AddHtmlLocalized(98, 140, 312, 16, 1072201, 0x2710, false, false); // Reward	
 
             int offset = 163;
@@ -492,7 +662,7 @@ namespace Server.Engines.Quests
             }
         }
 
-        public virtual void SecRefuse()
+        public void SecRefuse()
         {
             if (m_Quest == null)
                 return;
@@ -500,28 +670,58 @@ namespace Server.Engines.Quests
             if (m_Offer)
             {
                 AddHtmlLocalized(130, 45, 270, 16, 3006156, 0xFFFFFF, false, false); // Quest Conversation
-                AddImage(140, 110, 0x4B9);
-                AddHtmlObject(160, 70, 200, 40, m_Quest.Title, DarkGreen, false, false);
-                AddHtmlObject(98, 140, 312, 180, m_Quest.Refuse, LightGreen, false, true);
+
+                if (m_Quest.Title is int)
+                {
+                    AddHtmlLocalized(130, 68, 220, 48, 1114513, string.Format("@#{0}", m_Quest.Title), 0x2710, false, false); // <DIV ALIGN=CENTER>~1_TOKEN~</DIV>
+                }
+                else
+                {
+                    AddHtml(130, 68, 220, 48, string.Format("<BASEFONT COLOR=#2AD580><DIV ALIGN=CENTER>{0}</DIV>", m_Quest.Title), false, false);
+                }
+
+                if (m_Quest.Refuse is int)
+                {
+                    AddHtmlObject(98, 140, 312, 180, m_Quest.Refuse, 0x15F90, false, true);
+                }
+                else
+                {
+                    AddHtml(98, 140, 312, 180, string.Format("<BASEFONT COLOR=#BFEA95>{0}", m_Quest.Refuse), false, true);
+                }
 
                 AddButton(313, 455, 0x2EE6, 0x2EE8, (int)Buttons.Close, GumpButtonType.Reply, 0);
             }
         }
 
-        public virtual void SecInProgress()
+        public void SecInProgress()
         {
             if (m_Quest == null)
                 return;
 
-            AddHtmlLocalized(130, 45, 270, 16, 3006156, 0xFFFFFF, false, false); // Quest Conversation				
-            AddImage(140, 110, 0x4B9);
-            AddHtmlObject(160, 70, 200, 40, m_Quest.Title, DarkGreen, false, false);
-            AddHtmlObject(98, 140, 312, 180, m_Quest.Uncomplete, LightGreen, false, true);
+            AddHtmlLocalized(130, 45, 270, 16, 3006156, 0xFFFFFF, false, false); // Quest Conversation			
+
+            if (m_Quest.Title is int)
+            {
+                AddHtmlLocalized(130, 68, 220, 48, 1114513, string.Format("@#{0}", m_Quest.Title), 0x2710, false, false); // <DIV ALIGN=CENTER>~1_TOKEN~</DIV>
+            }
+            else
+            {
+                AddHtml(130, 68, 220, 48, string.Format("<BASEFONT COLOR=#2AD580><DIV ALIGN=CENTER>{0}</DIV>", m_Quest.Title), false, false);
+            }
+
+            if (m_Quest.Uncomplete is int)
+            {
+                AddHtmlObject(98, 140, 312, 180, m_Quest.Uncomplete, 0x15F90, false, true);
+            }
+            else
+            {
+                AddHtml(98, 140, 312, 180, string.Format("<BASEFONT COLOR=#BFEA95>{0}", m_Quest.Uncomplete), false, true);
+            }
 
             AddButton(313, 455, 0x2EE6, 0x2EE8, (int)Buttons.Close, GumpButtonType.Reply, 0);
         }
 
-        public virtual void SecComplete()
+        public void SecComplete()
         {
             if (m_Quest == null)
                 return;
@@ -543,15 +743,30 @@ namespace Server.Engines.Quests
             }
 
             AddHtmlLocalized(130, 45, 270, 16, 3006156, 0xFFFFFF, false, false); // Quest Conversation
-            AddImage(140, 110, 0x4B9);
-            AddHtmlObject(160, 70, 200, 40, m_Quest.Title, DarkGreen, false, false);
-            AddHtmlObject(98, 140, 312, 180, m_Quest.Complete, LightGreen, false, true);
+
+            if (m_Quest.Title is int)
+            {
+                AddHtmlLocalized(130, 68, 220, 48, 1114513, string.Format("@#{0}", m_Quest.Title), 0x2710, false, false); // <DIV ALIGN=CENTER>~1_TOKEN~</DIV>
+            }
+            else
+            {
+                AddHtml(130, 68, 220, 48, string.Format("<BASEFONT COLOR=#2AD580><DIV ALIGN=CENTER>{0}</DIV>", m_Quest.Title), false, false);
+            }
+
+            if (m_Quest.Complete is int)
+            {
+                AddHtmlObject(98, 140, 312, 180, m_Quest.Complete, 0x15F90, false, true);
+            }
+            else
+            {
+                AddHtml(98, 140, 312, 180, string.Format("<BASEFONT COLOR=#BFEA95>{0}", m_Quest.Complete), false, true);
+            }
 
             AddButton(313, 455, 0x2EE6, 0x2EE8, (int)Buttons.Close, GumpButtonType.Reply, 0);
             AddButton(95, 455, 0x2EE9, 0x2EEB, (int)Buttons.Complete, GumpButtonType.Reply, 0);
         }
 
-        public virtual void SecFailed()
+        public void SecFailed()
         {
             if (m_Quest == null)
                 return;
@@ -562,14 +777,12 @@ namespace Server.Engines.Quests
                 fail = "You have failed to meet the conditions of the quest.";
 
             AddHtmlLocalized(130, 45, 270, 16, 3006156, 0xFFFFFF, false, false); // Quest Conversation				
-            AddImage(140, 110, 0x4B9);
-            AddHtmlObject(160, 70, 200, 40, m_Quest.Title, DarkGreen, false, false);
-            AddHtmlObject(98, 140, 312, 240, fail, LightGreen, false, true);
-
+            AddHtmlLocalized(130, 68, 220, 48, 1114513, string.Format("@#{0}", m_Quest.Title), 0x2710, false, false); // <DIV ALIGN=CENTER>~1_TOKEN~</DIV>
+            AddHtmlObject(98, 140, 312, 240, fail, 0x15F90, false, true);
             AddButton(313, 455, 0x2EE6, 0x2EE8, (int)Buttons.Close, GumpButtonType.Reply, 0);
         }
 
-        public virtual string FormatSeconds(int seconds)
+        public string FormatSeconds(int seconds)
         {
             int hours = seconds / 3600;
 
@@ -592,7 +805,7 @@ namespace Server.Engines.Quests
             return seconds.ToString();
         }
 
-        public virtual string ReturnTo()
+        public string ReturnTo()
         {
             if (m_Quest == null)
                 return null;
@@ -622,17 +835,37 @@ namespace Server.Engines.Quests
                 case (int)Buttons.Close: // close quest list
                     break;
                 case (int)Buttons.CloseQuest: // close quest
-                    if (m_From != null) m_From.SendGump(new MondainQuestGump(m_From));
+                    if (m_From != null)
+                    {
+                        m_From.SendGump(new MondainQuestGump(m_From));
+                    }
                     break;
                 case (int)Buttons.AcceptQuest: // accept quest
                     if (m_Offer)
+                    {
                         m_Quest.OnAccept();
+                    }
+                    break;
+                case (int)Buttons.ContinueQuestion:
+                    if (m_Offer)
+                    {
+                        m_Quest.OnAccept();
+                    }
+                    break;
+                case (int)Buttons.AcceptQuestion:
+                    if (m_Offer && m_From != null)
+                    {
+                        m_From.SendGump(new MondainQuestGump(m_Quest, Section.Objectives, true));
+                    }
                     break;
                 case (int)Buttons.RefuseQuest: // refuse quest
                     if (m_Offer)
                     {
                         m_Quest.OnRefuse();
-                        if (m_From != null) m_From.SendGump(new MondainQuestGump(m_Quest, Section.Refuse, true));
+                        if (m_From != null)
+                        {
+                            m_From.SendGump(new MondainQuestGump(m_Quest, Section.Refuse, true));
+                        }
                     }
                     break;
                 case (int)Buttons.ResignQuest: // resign quest
