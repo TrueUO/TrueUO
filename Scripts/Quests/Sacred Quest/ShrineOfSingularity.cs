@@ -26,40 +26,43 @@ namespace Server.Items
         public override bool HandlesOnSpeech => true;
         public override void OnSpeech(SpeechEventArgs e)
         {
-            PlayerMobile pm = e.Mobile as PlayerMobile;
-
-            if (pm != null && pm.AbyssEntry)
+            if (e.Mobile is PlayerMobile pm)
             {
-                pm.SendLocalizedMessage(1112697);  //You enter a state of peaceful contemplation, focusing on the meaning of Singularity.
-            }
-            else if (pm != null && !e.Handled && pm.InRange(Location, 2) && e.Speech.ToLower().Trim() == "unorus" && QuestHelper.CheckDoneOnce(pm, typeof(TheArisenQuest), null, false))
-            {
-                e.Handled = true;
-                e.Mobile.PlaySound(0xF9);
-
-                var quest = QuestHelper.GetQuest<QuestOfSingularity>(pm);
-
-                if (HasDelay(pm) && pm.AccessLevel == AccessLevel.Player)
+                if (pm.AbyssEntry)
                 {
-                    pm.PublicOverheadMessage(MessageType.Regular, 0x47E, 1112685); // You need more time to contemplate the Book of Circles before trying again.
+                    pm.SendLocalizedMessage(1112697); // You enter a state of peaceful contemplation, focusing on the meaning of Singularity.
+                    pm.PlaySound(249);
                 }
-                else if (quest == null)
+                else if (!e.Handled && pm.InRange(Location, 2) && e.Speech.ToLower().Trim() == "unorus")
                 {
-                    quest = new QuestOfSingularity
+                    e.Handled = true;
+                    e.Mobile.PlaySound(0xF9);
+
+                    var quest = QuestHelper.GetQuest<QuestOfSingularity>(pm);
+
+                    if (HasDelay(pm) && pm.AccessLevel == AccessLevel.Player)
                     {
-                        Owner = pm,
-                        Quester = this
-                    };
+                        PrivateOverheadMessage(MessageType.Regular, 1150, 1112685, pm.NetState); // You need more time to contemplate the Book of Circles before trying again.
+                        pm.PlaySound(249);
+                    }
+                    else if (quest == null)
+                    {
+                        quest = new QuestOfSingularity
+                        {
+                            Owner = pm,
+                            Quester = this
+                        };
 
-                    pm.SendGump(new MondainQuestGump(quest));
-                }
-                else if (quest.Completed)
-                {
-                    pm.SendGump(new MondainQuestGump(quest, MondainQuestGump.Section.Complete, false, true));
-                }
-                else if (!pm.HasGump(typeof(QAndAGump)))
-                {
-                    pm.SendGump(new QAndAGump(pm, quest));
+                        pm.SendGump(new MondainQuestGump(quest));
+                    }
+                    else if (quest.Completed)
+                    {
+                        pm.SendGump(new MondainQuestGump(quest, MondainQuestGump.Section.Complete, false, true));
+                    }
+                    else if (!pm.HasGump(typeof(QAndAGump)))
+                    {
+                        pm.SendGump(new QAndAGump(pm, quest));
+                    }
                 }
             }
         }
@@ -86,17 +89,20 @@ namespace Server.Items
         {
             List<Mobile> list = new List<Mobile>(m_RestartTable.Keys);
 
-            foreach (Mobile mob in list)
+            for (var index = 0; index < list.Count; index++)
             {
+                Mobile mob = list[index];
+
                 if (m_RestartTable[mob] < DateTime.UtcNow)
+                {
                     m_RestartTable.Remove(mob);
+                }
             }
         }
 
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(2); // version
 
             Timer.DelayCall(TimeSpan.FromSeconds(10), DefragDelays_Callback);
@@ -105,7 +111,6 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             int version = reader.ReadInt();
 
             Instance = this;

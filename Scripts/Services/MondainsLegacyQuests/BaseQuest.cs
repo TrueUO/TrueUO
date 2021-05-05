@@ -36,6 +36,8 @@ namespace Server.Engines.Quests
         public virtual bool ShowRewards => true;
         public virtual bool CanRefuseReward => false;
 
+        public virtual bool IsQuestionQuest => false;
+
         private List<BaseObjective> m_Objectives;
         private List<BaseReward> m_Rewards;
         private PlayerMobile m_Owner;
@@ -229,8 +231,12 @@ namespace Server.Engines.Quests
 
         public virtual void OnAccept()
         {
-            m_Owner.PlaySound(AcceptSound);
-            m_Owner.SendLocalizedMessage(1049019); // You have accepted the Quest.
+            if (!IsQuestionQuest)
+            {
+                m_Owner.PlaySound(AcceptSound);
+                m_Owner.SendLocalizedMessage(1049019); // You have accepted the Quest.
+            }
+
             m_Owner.Quests.Add(this);
 
             // give items if any		
@@ -314,8 +320,11 @@ namespace Server.Engines.Quests
 
         public virtual void OnCompleted()
         {
-            m_Owner.SendLocalizedMessage(CompleteMessage, null, 0x23); // You've completed a quest!  Don't forget to collect your reward.							
-            m_Owner.PlaySound(CompleteSound);
+            if (!IsQuestionQuest)
+            {
+                m_Owner.SendLocalizedMessage(CompleteMessage, null, 0x23); // You've completed a quest!  Don't forget to collect your reward.							
+                m_Owner.PlaySound(CompleteSound);
+            }
         }
 
         public virtual void GiveRewards()

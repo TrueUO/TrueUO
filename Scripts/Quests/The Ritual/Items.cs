@@ -153,7 +153,7 @@ namespace Server.Engines.Quests.RitualQuest
         public SoulbinderTear()
             : base(0xE2A)
         {
-            Hue = 2076;
+            Hue = 2640;
             QuestItem = true;
         }
 
@@ -246,19 +246,59 @@ namespace Server.Engines.Quests.RitualQuest
             }
         }
 
-        private static readonly int[] m_Contents = new int[42];
+        private static readonly int[] m_Contents = new int[43];
 
         public override object Title => 1151164;  // Chronicle of the Gargoyle Queen Vol. II
-        public override object Author => "Queen Zhah";
+        public override object Author => 1151074; // Queen Zhah
         public override int[] Contents => m_Contents;
 
         [Constructable]
         public ChronicleOfTheGargoyleQueen2()
         {
-            Hue = 573;
+            Hue = 2566;
         }
 
         public ChronicleOfTheGargoyleQueen2(Serial serial)
+            : base(serial)
+        {
+        }
+
+        public override void Serialize(GenericWriter writer)
+        {
+            base.Serialize(writer);
+            writer.Write(0);
+        }
+
+        public override void Deserialize(GenericReader reader)
+        {
+            base.Deserialize(reader);
+            reader.ReadInt();
+        }
+    }
+
+    public class ChronicleOfTheGargoyleQueen3 : GargishDocumentBook
+    {
+        public static void Initialize()
+        {
+            for (int i = 0; i < 55; i++)
+            {
+                m_Contents[i] = 1151018 + i;
+            }
+        }
+
+        private static readonly int[] m_Contents = new int[56];
+
+        public override object Title => 1151165;  // Chronicle of the Gargoyle Queen Vol. III
+        public override object Author => 1151074; // Queen Zhah
+        public override int[] Contents => m_Contents;
+
+        [Constructable]
+        public ChronicleOfTheGargoyleQueen3()
+        {
+            Hue = 2586;
+        }
+
+        public ChronicleOfTheGargoyleQueen3(Serial serial)
             : base(serial)
         {
         }
@@ -285,10 +325,158 @@ namespace Server.Engines.Quests.RitualQuest
         {
             Light = LightType.Circle150;
             Hue = 2599;
+            Weight = 10.0;
         }
 
         public TerMurSnowglobe(Serial serial) : base(serial)
         {
+        }
+
+        public override void Serialize(GenericWriter writer)
+        {
+            base.Serialize(writer);
+            writer.Write(0);
+        }
+
+        public override void Deserialize(GenericReader reader)
+        {
+            base.Deserialize(reader);
+            reader.ReadInt(); // version
+        }
+    }
+
+    public class MysteriousStandart : Item
+    {
+        public static Item InstanceTram { get; set; }
+
+        public static void Initialize()
+        {
+            if (InstanceTram == null)
+            {
+                InstanceTram = new MysteriousStandart();
+                InstanceTram.MoveToWorld(new Point3D(4444, 3694, 5), Map.Trammel);
+            }
+        }
+
+        [Constructable]
+        public MysteriousStandart()
+            : base(0x159E)
+        {
+            Name = "Mysterious Standart";
+            Hue = 22;
+            Movable = false;
+        }
+
+        public MysteriousStandart(Serial serial)
+            : base(serial)
+        {
+        }
+
+        public override void OnDoubleClick(Mobile from)
+        {
+            if (QuestHelper.HasQuest((PlayerMobile)from, typeof(HairOfTheDryadQueen)))
+            {
+                from.MoveToWorld(new Point3D(856, 2783, 5), Map.TerMur);
+            }
+        }
+
+        public override void Serialize(GenericWriter writer)
+        {
+            base.Serialize(writer);
+            writer.Write(0);
+        }
+
+        public override void Deserialize(GenericReader reader)
+        {
+            base.Deserialize(reader);
+            reader.ReadInt();
+
+            if (Map == Map.Trammel)
+            {
+                InstanceTram = this;
+            }
+        }
+    }
+
+    public class HairOfADryadQueen : BaseDecayingItem
+    {
+        public override int LabelNumber => 1151168; // Hair of a Dryad Queen
+        public override int Lifespan => 86400;
+        public override bool HiddenQuestItemHue => true;
+
+        public HairOfADryadQueen()
+            : base(0xC60)
+        {
+            Hue = 2563;
+            QuestItem = true;
+        }
+
+        public HairOfADryadQueen(Serial serial)
+            : base(serial)
+        {
+        }
+
+        public override bool DropToWorld(Mobile from, Point3D p)
+        {
+            Delete();
+
+            from.SendLocalizedMessage(500461); // You destroy the item.
+
+            return true;
+        }
+
+        public override void GetProperties(ObjectPropertyList list)
+        {
+            base.GetProperties(list);
+
+            list.Add(1075269); // Destroyed when dropped
+        }
+
+        public override void Serialize(GenericWriter writer)
+        {
+            base.Serialize(writer);
+            writer.Write(0);
+        }
+
+        public override void Deserialize(GenericReader reader)
+        {
+            base.Deserialize(reader);
+            reader.ReadInt(); // version
+        }
+    }
+
+    public class NightTerrorHeart : BaseDecayingItem
+    {
+        public override int LabelNumber => 1151171; // Night Terror Heart
+        public override int Lifespan => 86400;
+        public override bool HiddenQuestItemHue => true;
+
+        public NightTerrorHeart()
+            : base(0x1CF0)
+        {
+            Hue = 96;
+            QuestItem = true;
+        }
+
+        public NightTerrorHeart(Serial serial)
+            : base(serial)
+        {
+        }
+
+        public override bool DropToWorld(Mobile from, Point3D p)
+        {
+            Delete();
+
+            from.SendLocalizedMessage(500461); // You destroy the item.
+
+            return true;
+        }
+
+        public override void GetProperties(ObjectPropertyList list)
+        {
+            base.GetProperties(list);
+
+            list.Add(1075269); // Destroyed when dropped
         }
 
         public override void Serialize(GenericWriter writer)

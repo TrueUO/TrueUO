@@ -6,13 +6,24 @@ namespace Server.Engines.Quests
         public override int LabelNumber => 1075788;  // Iron Chain
 
         [Constructable]
-        public IronChain() : base(0x1A07)
+        public IronChain()
+            : base(0x1F0A)
         {
+            LootType = LootType.Blessed;
         }
 
         public IronChain(Serial serial)
             : base(serial)
         {
+        }
+
+        public override bool Nontransferable => true;
+
+        public override void AddWeightProperty(ObjectPropertyList list)
+        {
+            base.AddWeightProperty(list);
+
+            list.Add(1072351); // Quest Item
         }
 
         public override void Serialize(GenericWriter writer)
@@ -30,11 +41,13 @@ namespace Server.Engines.Quests
 
     public class GreyCloak : Cloak
     {
-        public override int LabelNumber => 1075789;  // A Plain Grey Cloak
+        public override int LabelNumber => 1075789; // A Plain Grey Cloak
 
         [Constructable]
         public GreyCloak()
         {
+            LootType = LootType.Blessed;
+            Hue = 902;
         }
 
         public GreyCloak(Serial serial)
@@ -42,36 +55,51 @@ namespace Server.Engines.Quests
         {
         }
 
+        public override bool Nontransferable => true;
+
+        public override void AddWeightProperty(ObjectPropertyList list)
+        {
+            base.AddWeightProperty(list);
+
+            list.Add(1072351); // Quest Item
+        }
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
-
-            if (version == 0)
-                reader.ReadMobile();
+            reader.ReadInt();
         }
     }
 
-    public class SeasonedSkillet : Item
+    public class SeasonedSkillet : Skillet
     {
         public override int LabelNumber => 1075774;  // Seasoned Skillet
 
         [Constructable]
-        public SeasonedSkillet() : base(0x097F)
+        public SeasonedSkillet()
+            : base(70)
         {
+            LootType = LootType.Blessed;
         }
 
         public SeasonedSkillet(Serial serial)
             : base(serial)
         {
+        }
+
+        public override bool Nontransferable => true;
+
+        public override void AddWeightProperty(ObjectPropertyList list)
+        {
+            base.AddWeightProperty(list);
+
+            list.Add(1072351); // Quest Item
         }
 
         public override void Serialize(GenericWriter writer)
@@ -89,12 +117,13 @@ namespace Server.Engines.Quests
 
     public class VillageCauldron : Item
     {
-        public override int LabelNumber => 1075775;  // Village Cauldron
+        public override int LabelNumber => 1075775; // Village Cauldron
 
         [Constructable]
         public VillageCauldron()
-            : base(Utility.RandomMinMax(0x0974, 0x0975))
+            : base(0x9ED)
         {
+            LootType = LootType.Blessed;
         }
 
         public VillageCauldron(Serial serial)
@@ -102,6 +131,15 @@ namespace Server.Engines.Quests
         {
         }
 
+        public override bool Nontransferable => true;
+
+        public override void AddWeightProperty(ObjectPropertyList list)
+        {
+            base.AddWeightProperty(list);
+
+            list.Add(1072351); // Quest Item
+        }
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -115,13 +153,16 @@ namespace Server.Engines.Quests
         }
     }
 
-    public class ShortStool : Stool
+    public class ShortStool : Item
     {
         public override int LabelNumber => 1075776;  // Short Stool
 
         [Constructable]
         public ShortStool()
+            : base(0x11FC)
         {
+            Weight = 3.0;
+            LootType = LootType.Blessed;
         }
 
         public ShortStool(Serial serial)
@@ -129,6 +170,15 @@ namespace Server.Engines.Quests
         {
         }
 
+        public override bool Nontransferable => true;
+
+        public override void AddWeightProperty(ObjectPropertyList list)
+        {
+            base.AddWeightProperty(list);
+
+            list.Add(1072351); // Quest Item
+        }
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -142,18 +192,29 @@ namespace Server.Engines.Quests
         }
     }
 
-    public class FriendshipMug : CeramicMug
+    public class FriendshipMug : Item
     {
-        public override int LabelNumber => 1075777;  // Friendship Mug
+        public override int LabelNumber => 1042976; // a mug of Ale
 
         [Constructable]
         public FriendshipMug()
+            : base(0x9EF)
         {
+            LootType = LootType.Blessed;
         }
 
         public FriendshipMug(Serial serial)
             : base(serial)
         {
+        }
+
+        public override bool Nontransferable => true;
+
+        public override void AddWeightProperty(ObjectPropertyList list)
+        {
+            base.AddWeightProperty(list);
+
+            list.Add(1072351); // Quest Item
         }
 
         public override void Serialize(GenericWriter writer)
@@ -176,11 +237,21 @@ namespace Server.Engines.Quests
         [Constructable]
         public BrassRing()
         {
+            LootType = LootType.Blessed;
         }
 
         public BrassRing(Serial serial)
             : base(serial)
         {
+        }
+
+        public override bool Nontransferable => true;
+
+        public override void AddWeightProperty(ObjectPropertyList list)
+        {
+            base.AddWeightProperty(list);
+
+            list.Add(1072351); // Quest Item
         }
 
         public override void Serialize(GenericWriter writer)
@@ -196,18 +267,28 @@ namespace Server.Engines.Quests
         }
     }
 
-    public class WornHammer : Item
+    public class WornHammer : ProspectorsTool
     {
-        public override int LabelNumber => 1075779;  // Worn Hammer
+        public override int LabelNumber => 1075779; // Worn Hammer
 
         [Constructable]
-        public WornHammer() : base(0x102A)
+        public WornHammer()
         {
+            LootType = LootType.Blessed;
         }
 
         public WornHammer(Serial serial)
             : base(serial)
         {
+        }
+
+        public override bool Nontransferable => true;
+
+        public override void AddWeightProperty(ObjectPropertyList list)
+        {
+            base.AddWeightProperty(list);
+
+            list.Add(1072351); // Quest Item
         }
 
         public override void Serialize(GenericWriter writer)
@@ -225,16 +306,27 @@ namespace Server.Engines.Quests
 
     public class PairOfWorkGloves : LeatherGloves
     {
-        public override int LabelNumber => 1075780;  // Pair of Work Gloves
+        public override int LabelNumber => 1075780; // Pair of Work Gloves
 
         [Constructable]
         public PairOfWorkGloves()
         {
+            Hue = 828;
+            LootType = LootType.Blessed;
         }
 
         public PairOfWorkGloves(Serial serial)
             : base(serial)
         {
+        }
+
+        public override bool Nontransferable => true;
+
+        public override void AddNameProperties(ObjectPropertyList list)
+        {
+            base.AddNameProperties(list);
+
+            list.Add(1072351); // Quest Item
         }
 
         public override void Serialize(GenericWriter writer)

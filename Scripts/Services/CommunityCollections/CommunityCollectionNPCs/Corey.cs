@@ -89,6 +89,7 @@ namespace Server.Items
             Donations.Add(new CollectionItem(typeof(BookOfChivalry), 0x2252, 1061666, 0x0, 12));
 
             int[] hues = new int[] { 0x1E0, 0x190, 0x151 };
+            Rewards.Add(new CollectionItem(typeof(SpecialPrintingOfVirtue), 0xFF0, 1075793, 0x47E, 5000.0, true));
             Rewards.Add(new CollectionHuedItem(typeof(LibraryFriendBodySash), 0x1541, 1073346, 0x190, 100000.0, hues));
             Rewards.Add(new CollectionHuedItem(typeof(LibraryFriendFeatheredHat), 0x171A, 1073347, 0x190, 100000.0, hues));
             Rewards.Add(new CollectionHuedItem(typeof(LibraryFriendSurcoat), 0x1FFD, 1073348, 0x190, 100000.0, hues));

@@ -1240,6 +1240,8 @@ namespace Server.Mobiles
                 pm.ValidateEquipment();
 
                 ReportMurdererGump.CheckMurderer(pm);
+
+                QuestHelper.QuestionQuestCheck(pm);
             }
 
             if (Siege.SiegeShard && from.Map == Map.Trammel && from.AccessLevel == AccessLevel.Player)

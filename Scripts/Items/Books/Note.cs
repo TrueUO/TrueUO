@@ -2,37 +2,18 @@ using Server.Gumps;
 
 namespace Server.Items
 {
-    public class Note : Item
+    public abstract class Note : Item // BaseNote - Base class.
     {
-        private string m_String;
-        public string NoteString { get => m_String; set => m_String = value; }
+        protected abstract int[] Contents { get; }
 
-        private int m_Number;
-        public int Number { get => m_Number; set => m_Number = value; }
-
-        [Constructable]
-        public Note() : base(5357)
+        protected Note()
+            : base(0x14ED)
         {
         }
 
-        [Constructable]
-        public Note(string content) : base(5357)
+        protected Note(Serial serial)
+            : base(serial)
         {
-            m_String = content;
-        }
-
-        [Constructable]
-        public Note(int number) : base(5357)
-        {
-            m_Number = number;
-        }
-
-        public Note(object content) : base(0x1234)
-        {
-            if (content is int i)
-                m_Number = i;
-            else if (content is string s)
-                m_String = s;
         }
 
         public override void OnDoubleClick(Mobile m)
@@ -46,42 +27,78 @@ namespace Server.Items
 
         private class InternalGump : Gump
         {
-            public InternalGump(Note note) : base(50, 50)
+            public InternalGump(Note note)
+                : base(245, 200)
             {
-                AddImage(0, 0, 9380);
-                AddImage(114, 0, 9381);
-                AddImage(171, 0, 9382);
-                AddImage(0, 140, 9386);
-                AddImage(114, 140, 9387);
-                AddImage(171, 140, 9388);
+                var mNote = note;
 
-                if (note.NoteString != null)
-                    AddHtml(38, 55, 200, 178, "<basefont color=#black>" + note.NoteString, false, true);
-                else if (note.Number > 0)
-                    AddHtmlLocalized(38, 55, 200, 178, note.Number, 1, false, true);
+                int page = 0;
+                int pages = mNote.Contents.Length;
+
+                AddImage(0, 0, 0x27);
+
+                page++;
+                AddPage(page);                
+
+                for (int i = 0; i < mNote.Contents.Length; i++)
+                {
+                    int cliloc = mNote.Contents[i];
+
+                    bool endPage = false;
+
+                    if (cliloc <= 0)
+                    {
+                        continue;
+                    }
+
+                    if (page == 1)
+                    {
+                        endPage = true;
+                    }
+                    else if (page <= pages)
+                    {
+                        endPage = true;
+                    }
+
+                    AddHtmlLocalized(45, 30, 165, 200, cliloc, 0x0, false, false);
+
+                    AddLabel(90, 245, 0x0, string.Format("    {0}", i + 1));
+
+                    if (page < pages)
+                    {
+                        AddButton(203, 267, 0x825, 0x825, 0, GumpButtonType.Page, page + 1);
+                    }
+
+                    if (page - 1 > 0)
+                    {
+                        AddButton(203, 5, 0x824, 0x824, 0, GumpButtonType.Page, page - 1);
+                    }
+
+                    if (endPage)
+                    {
+                        page++;
+                        AddPage(page);
+                    }
+                }
             }
-        }
-
-        public Note(Serial serial) : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(0);
-
-            writer.Write(m_String);
-            writer.Write(m_Number);
+            writer.Write(1);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            reader.ReadInt();
+            int version = reader.ReadInt();
 
-            m_String = reader.ReadString();
-            m_Number = reader.ReadInt();
+            if (version < 1)
+            {
+                reader.ReadString();
+                reader.ReadInt();
+            }
         }
     }
 }

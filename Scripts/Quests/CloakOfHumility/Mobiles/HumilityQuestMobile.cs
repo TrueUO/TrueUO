@@ -138,8 +138,6 @@ namespace Server.Engines.Quests
 
     public class HumilityQuestMobileInfo
     {
-        // Greeting(say), Greeting2(gump), Desire(say), Gift(say), OnExchange(say)
-
         private readonly Type m_Needs;
         private readonly Type m_Gives;
         private readonly int m_NeedsLoc;
@@ -241,13 +239,13 @@ namespace Server.Engines.Quests
         public static Type[] MobileTypes => m_MobileTypes;
         private static readonly Type[] m_MobileTypes =
         {
-            typeof(Maribel),
-            typeof(Dierdre),
-            typeof(Kevin),
-            typeof(Jason),
-            typeof(Walton),
-            typeof(Nelson),
-            typeof(Sean)
+            typeof(Deirdre),
+			typeof(Jason),
+			typeof(Kevin),
+			typeof(Maribel),
+			typeof(Nelson),
+			typeof(Walton),
+			typeof(Sean)
         };
     }
 }

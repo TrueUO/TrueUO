@@ -28,75 +28,88 @@ namespace Server.Items
 
         private class InternalGump : Gump
         {
-            public readonly int Page1X = 40;
-            public readonly int Page2X = 230;
-            public readonly int StartY = 30;
-            public readonly int Width = 140;
-            public readonly int Height = 175;
-
             private readonly BaseLocalizedBook m_Book;
 
             public InternalGump(BaseLocalizedBook book)
-                : base(50, 50)
+                : base(245, 200)
             {
+                TypeID = 0x237B;
                 m_Book = book;
                 int page = 0;
                 int pages = (int)Math.Ceiling(m_Book.Contents.Length / 2.0);
 
-                AddPage(page);
-                AddImage(0, 0, 500);
+                AddImage(0, 0, 0x1FE);                
 
                 page++;
                 AddPage(page);
 
                 if (book.Title is int iTitle)
-                    AddHtmlLocalized(Page1X, 60, Width, 48, iTitle, false, false);
+                    AddHtmlLocalized(40, 30, 150, 48, iTitle, 0x0, false, false);
                 else if (book.Title is string sTitle)
-                    AddHtml(Page1X, 60, Width, 48, sTitle, false, false);
+                    AddHtml(40, 30, 150, 48, sTitle, false, false);
                 else
-                    AddLabel(Page1X, 60, 0, "A Book");
+                    AddLabel(40, 30, 0, "A Book");
 
-                AddHtml(40, 130, 200, 16, "by", false, false);
+                AddHtmlLocalized(40, 160, 150, 16, 1113300, 0x0, false, false); // by
 
                 if (book.Author is int iAuthor)
-                    AddHtmlLocalized(Page1X, 155, Width, 16, iAuthor, false, false);
+                    AddHtmlLocalized(40, 180, 150, 32, iAuthor, 0x0, false, false);
                 else if (book.Author is string sAuthor)
-                    AddHtml(Page1X, 155, Width, 16, sAuthor, false, false);
+                    AddHtml(40, 180, 150, 32, sAuthor, false, false);
                 else
-                    AddLabel(Page1X, 155, 0, "unknown");
+                    AddLabel(40, 180, 0, "unknown");
 
                 for (int i = 0; i < m_Book.Contents.Length; i++)
                 {
                     int cliloc = m_Book.Contents[i];
                     bool endPage = false;
-                    int x = Page1X;
+                    int x = 40;
+                    int y = 30;
+                    int width = 145;
 
                     if (cliloc <= 0)
                         continue;
 
                     if (page == 1)
                     {
-                        x = Page2X;
+                        x = 230;
                         endPage = true;
                     }
                     else
                     {
                         if ((i + 1) % 2 == 0)
-                            x = Page1X;
+                        {
+                            x = 40;
+                            y = 35;
+                            width = 150;
+                        }
                         else if (page <= pages)
                         {
                             endPage = true;
-                            x = Page2X;
+                            x = 230;
                         }
                     }
 
-                    AddHtmlLocalized(x, StartY, Width, Height, cliloc, false, false);
+                    AddHtmlLocalized(x, y, width, 160, cliloc, 0x0, false, false);
+
+                    if ((i + 1) % 2 == 0)
+                    {
+                        AddLabel(90, 200, 0x0, string.Format(" {0}", i + 1));
+                    }
+                    else
+                    {
+                        AddLabel(250, 200, 0x0, string.Format("      {0}", i + 1));
+                    }
 
                     if (page < pages)
-                        AddButton(356, 0, 502, 502, 0, GumpButtonType.Page, page + 1);
+                    {
+                        AddButton(356, 0, 0x200, 0x200, 0, GumpButtonType.Page, page + 1);
+                    }
 
-                    if (page > 0)
-                        AddButton(0, 0, 501, 501, 0, GumpButtonType.Page, page - 1);
+                    if (page - 1 > 0)
+                    {
+                        AddButton(0, 0, 0x1FF, 0x1FF, 0, GumpButtonType.Page, page - 1);
+                    }
 
                     if (endPage)
                     {
