@@ -146,11 +146,26 @@ namespace Server.Items
         {
             base.GetProperties(list);
 
-            var content = Table.FirstOrDefault(x => x.Story == Story && x.PageID == PageID);
+            StoryDefinition content = null;
+
+            for (var index = 0; index < Table.Length; index++)
+            {
+                var x = Table[index];
+
+                if (x.Story == Story && x.PageID == PageID)
+                {
+                    content = x;
+                    break;
+                }
+            }
 
             list.Add(1157254, "The Tale of " + Misc.ServerList.ServerName);
-            list.Add(1114778, GetStoryName(content.Story));
-            list.Add(1159635, content.PageID.ToString());
+
+            if (content != null)
+            {
+                list.Add(1114778, GetStoryName(content.Story));
+                list.Add(1159635, content.PageID.ToString());
+            }
         }
 
         public override void Serialize(GenericWriter writer)

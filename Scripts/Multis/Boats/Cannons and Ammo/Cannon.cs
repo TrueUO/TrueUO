@@ -1071,7 +1071,7 @@ namespace Server.Items
             {
                 Container pack = from.Backpack;
 
-                if (pack != null || !pack.TryDropItem(from, item, false))
+                if (pack != null && !pack.TryDropItem(from, item, false))
                 {
                     item.MoveToWorld(from.Location, from.Map);
                 }
@@ -1092,10 +1092,14 @@ namespace Server.Items
         public void RemoveLoad(Mobile from)
         {
             if (from == null || m_AmmoType == AmmunitionType.Empty)
+            {
                 return;
+            }
 
             if (m_Charged)
+            {
                 AddAction(from, 1149662); //Must remove charge first.
+            }
             else
             {
                 int cliloc = 0;
@@ -1115,8 +1119,11 @@ namespace Server.Items
                 if (item != null)
                 {
                     Container pack = from.Backpack;
-                    if (pack != null || !pack.TryDropItem(from, item, false))
+
+                    if (pack != null && !pack.TryDropItem(from, item, false))
+                    {
                         item.MoveToWorld(from.Location, from.Map);
+                    }
                 }
 
                 m_AmmoType = AmmunitionType.Empty;
@@ -1124,11 +1131,15 @@ namespace Server.Items
                 m_LoadedAmmo = null;
 
                 if (cliloc > 0)
+                {
                     DoAreaMessage(cliloc, 10, from); //~1_NAME~ carefully removes the powder charge from the cannon.
+                }
             }
 
             if (from.HasGump(typeof(CannonGump)))
+            {
                 ResendGump(from);
+            }
 
             InvalidateProperties();
         }
@@ -1136,10 +1147,14 @@ namespace Server.Items
         public void RemovePrime(Mobile from)
         {
             if (from == null || !m_Primed)
+            {
                 return;
+            }
 
             if (m_AmmoType != AmmunitionType.Empty)
+            {
                 AddAction(from, 1149663); //Must unload first.
+            }
 
             Item item = Loot.Construct(typeof(FuseCord));
 
@@ -1147,7 +1162,7 @@ namespace Server.Items
             {
                 Container pack = from.Backpack;
 
-                if (pack != null || !pack.TryDropItem(from, item, false))
+                if (pack != null && !pack.TryDropItem(from, item, false))
                 {
                     item.MoveToWorld(from.Location, from.Map);
                 }
@@ -1158,7 +1173,9 @@ namespace Server.Items
             DoAreaMessage(1116068, 10, from); //~1_NAME~ carefully removes the cannon fuse from the cannon.
 
             if (from.HasGump(typeof(CannonGump)))
+            {
                 ResendGump(from);
+            }
 
             InvalidateProperties();
         }

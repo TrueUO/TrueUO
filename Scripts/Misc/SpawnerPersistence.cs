@@ -1102,12 +1102,14 @@ namespace Server
             {
                 List<Item> list = r.GetEnumeratedItems().Where(i => i is XmlSpawner || i is Spawner).ToList();
 
-                foreach (Item item in list)
+                for (var index = 0; index < list.Count; index++)
                 {
+                    Item item = list[index];
+
                     item.Delete();
                 }
 
-                ToConsole(string.Format("Deleted {0} Spawners in {1}.", list.Count, region));
+                ToConsole($"Deleted {list.Count} Spawners in {region}.");
                 ColUtility.Free(list);
             }
 
@@ -1123,11 +1125,11 @@ namespace Server
 
             if (file != null)
             {
-                path = string.Format("Spawns/{0}.xml", file);
+                path = $"Spawns/{file}.xml";
 
                 if (!File.Exists(path))
                 {
-                    ToConsole(string.Format("Cannot proceed. {0} does not exist.", file), ConsoleColor.Red);
+                    ToConsole($"Cannot proceed. {file} does not exist.", ConsoleColor.Red);
                     return;
                 }
             }
@@ -1143,10 +1145,14 @@ namespace Server
                 }
             }
 
-            foreach (Item item in list)
-                item.Delete();
+            for (var index = 0; index < list.Count; index++)
+            {
+                Item item = list[index];
 
-            ToConsole(string.Format("Deleted {0} Spawners in {1}.", list.Count, map));
+                item.Delete();
+            }
+
+            ToConsole($"Deleted {list.Count} Spawners in {map}.");
 
             ColUtility.Free(list);
             eable.Free();
@@ -1167,7 +1173,7 @@ namespace Server
 
             XmlSpawner.XmlLoadFromFile(filename, SpawnerPrefix, null, Point3D.Zero, map, false, 0, false, out processedmaps, out processedspawners);
 
-            ToConsole(string.Format("Created {0} spawners from {1} with -{2}- prefix.", processedspawners, location, SpawnerPrefix == string.Empty ? "NO" : SpawnerPrefix));
+            ToConsole($"Created {processedspawners} spawners from {location} with -{(SpawnerPrefix == string.Empty ? "NO" : SpawnerPrefix)}- prefix.");
         }
 
         #region XmlSpawner to Spawner Conversion
@@ -1178,6 +1184,7 @@ namespace Server
             if (Directory.Exists(filename))
             {
                 List<string> files = null;
+
                 string[] dirs = null;
 
                 try
@@ -1192,8 +1199,10 @@ namespace Server
 
                 if (dirs != null && dirs.Length > 0)
                 {
-                    foreach (string dir in dirs)
+                    for (var index = 0; index < dirs.Length; index++)
                     {
+                        string dir = dirs[index];
+
                         try
                         {
                             string[] dirFiles = Directory.GetFiles(dir, "*.xml");
@@ -1206,114 +1215,126 @@ namespace Server
                     }
                 }
 
-                ToConsole(string.Format("Found {0} Xmlspawner files for conversion.", files.Count), files.Count > 0 ? ConsoleColor.Green : ConsoleColor.Red);
-
-                if (files.Count > 0)
+                if (files != null)
                 {
-                    int converted = 0;
-                    int failed = 0;
-                    int keep = 0;
+                    ToConsole($"Found {files.Count} Xmlspawner files for conversion.", files.Count > 0 ? ConsoleColor.Green : ConsoleColor.Red);
 
-                    foreach (string file in files)
+                    if (files.Count > 0)
                     {
-                        FileStream fs = null;
+                        int converted = 0;
+                        int failed = 0;
+                        int keep = 0;
 
-                        try
+                        for (var i = 0; i < files.Count; i++)
                         {
-                            fs = File.Open(file, FileMode.Open, FileAccess.Read);
-                        }
-                        catch (Exception e)
-                        {
-                            Diagnostics.ExceptionLogging.LogException(e);
-                        }
+                            string file = files[i];
 
-                        if (fs == null)
-                        {
-                            ToConsole(string.Format("Unable to open {0} for loading", filename), ConsoleColor.Red);
-                            continue;
-                        }
+                            FileStream fs = null;
 
-                        DataSet ds = new DataSet("Spawns");
-
-                        try
-                        {
-                            ds.ReadXml(fs);
-                        }
-                        catch
-                        {
-                            fs.Close();
-                            ToConsole(string.Format("Error reading xml file {0}", filename), ConsoleColor.Red);
-                            continue;
-                        }
-
-                        if (ds.Tables != null && ds.Tables.Count > 0)
-                        {
-                            if (ds.Tables["Points"] != null && ds.Tables["Points"].Rows.Count > 0)
+                            try
                             {
-                                foreach (DataRow dr in ds.Tables["Points"].Rows)
+                                fs = File.Open(file, FileMode.Open, FileAccess.Read);
+                            }
+                            catch (Exception e)
+                            {
+                                Diagnostics.ExceptionLogging.LogException(e);
+                            }
+
+                            if (fs == null)
+                            {
+                                ToConsole($"Unable to open {filename} for loading", ConsoleColor.Red);
+                                continue;
+                            }
+
+                            DataSet ds = new DataSet("Spawns");
+
+                            try
+                            {
+                                ds.ReadXml(fs);
+                            }
+                            catch
+                            {
+                                fs.Close();
+                                ToConsole($"Error reading xml file {filename}", ConsoleColor.Red);
+                                continue;
+                            }
+
+                            if (ds.Tables != null && ds.Tables.Count > 0)
+                            {
+                                if (ds.Tables["Points"] != null && ds.Tables["Points"].Rows.Count > 0)
                                 {
-                                    string id = null;
-
-                                    try
+                                    for (var index = 0; index < ds.Tables["Points"].Rows.Count; index++)
                                     {
-                                        id = (string)dr["UniqueId"];
-                                    }
-                                    catch (Exception e)
-                                    {
-                                        Diagnostics.ExceptionLogging.LogException(e);
-                                    }
+                                        DataRow dr = ds.Tables["Points"].Rows[index];
 
-                                    bool convert = id != null && ConvertSpawner(id, dr);
-
-                                    if (!convert)
-                                    {
-                                        Point3D loc = Point3D.Zero;
-                                        Map spawnMap = null;
+                                        string id = null;
 
                                         try
                                         {
-                                            loc = new Point3D(int.Parse((string)dr["CentreX"]), int.Parse((string)dr["CentreY"]), int.Parse((string)dr["CentreZ"]));
-                                            spawnMap = Map.Parse((string)dr["Map"]);
+                                            id = (string) dr["UniqueId"];
                                         }
                                         catch (Exception e)
                                         {
                                             Diagnostics.ExceptionLogging.LogException(e);
                                         }
 
-                                        if (loc != Point3D.Zero && spawnMap != null && spawnMap != Map.Internal)
+                                        bool convert = id != null && ConvertSpawner(id, dr);
+
+                                        if (!convert)
                                         {
-                                            if (!ConvertSpawnerByLocation(loc, spawnMap, dr, ref keep))
+                                            Point3D loc = Point3D.Zero;
+                                            Map spawnMap = null;
+
+                                            try
                                             {
-                                                failed++;
+                                                loc = new Point3D(int.Parse((string) dr["CentreX"]), int.Parse((string) dr["CentreY"]), int.Parse((string) dr["CentreZ"]));
+
+                                                spawnMap = Map.Parse((string) dr["Map"]);
                                             }
-                                            else
+                                            catch (Exception e)
                                             {
-                                                converted++;
+                                                Diagnostics.ExceptionLogging.LogException(e);
+                                            }
+
+                                            if (loc != Point3D.Zero && spawnMap != null && spawnMap != Map.Internal)
+                                            {
+                                                if (!ConvertSpawnerByLocation(loc, spawnMap, dr, ref keep))
+                                                {
+                                                    failed++;
+                                                }
+                                                else
+                                                {
+                                                    converted++;
+                                                }
                                             }
                                         }
-                                    }
-                                    else
-                                    {
-                                        converted++;
+                                        else
+                                        {
+                                            converted++;
+                                        }
                                     }
                                 }
                             }
+
+                            fs.Close();
                         }
 
-                        fs.Close();
+                        if (converted > 0)
+                        {
+                            ToConsole($"Converted {converted} XmlSpawners to standard spawners.");
+                        }
+
+                        if (failed > 0)
+                        {
+                            ToConsole($"Failed to convert {failed} XmlSpawners to standard spawners. {keep} kept due to XmlSpawner Functionality", ConsoleColor.Red);
+                        }
+
+                        _SpawnsConverted = true;
                     }
-
-                    if (converted > 0)
-                        ToConsole(string.Format("Converted {0} XmlSpawners to standard spawners.", converted));
-
-                    if (failed > 0)
-                        ToConsole(string.Format("Failed to convert {0} XmlSpawners to standard spawners. {1} kept due to XmlSpawner Functionality", failed, keep), ConsoleColor.Red);
-
-                    _SpawnsConverted = true;
-                }
-                else
-                {
-                    ToConsole(string.Format("Directory Not Found: {0}", filename), ConsoleColor.Red);
+                    else
+                    {
+                        ToConsole($"Directory Not Found: {filename}", ConsoleColor.Red);
+                    }
                 }
             }
         }
@@ -1652,11 +1673,14 @@ namespace Server
 
                 if (dirs != null && dirs.Length > 0)
                 {
-                    foreach (string dir in dirs)
+                    for (var index = 0; index < dirs.Length; index++)
                     {
+                        string dir = dirs[index];
+
                         try
                         {
                             string[] dirFiles = Directory.GetFiles(dir, "*.xml");
+
                             files.AddRange(dirFiles);
                         }
                         catch (Exception e)
@@ -1666,120 +1690,129 @@ namespace Server
                     }
                 }
 
-                ToConsole(string.Format("Found {0} Xmlspawner files for conversion.", files.Count), files.Count > 0 ? ConsoleColor.Green : ConsoleColor.Red);
-                ToConsole("Deleting spawners...", ConsoleColor.Cyan);
-                long start = Core.TickCount;
-
-                if (files.Count > 0)
+                if (files != null)
                 {
-                    int deletedxml = 0;
-                    int nodelelete = 0;
+                    ToConsole($"Found {files.Count} Xmlspawner files for conversion.", files.Count > 0 ? ConsoleColor.Green : ConsoleColor.Red);
+                    ToConsole("Deleting spawners...", ConsoleColor.Cyan);
 
-                    foreach (string file in files)
+                    long start = Core.TickCount;
+
+                    if (files.Count > 0)
                     {
-                        FileStream fs = null;
+                        int deletedxml = 0;
+                        int nodelelete = 0;
 
-                        try
+                        for (var index = 0; index < files.Count; index++)
                         {
-                            fs = File.Open(file, FileMode.Open, FileAccess.Read);
-                        }
-                        catch (Exception e)
-                        {
-                            Diagnostics.ExceptionLogging.LogException(e);
-                        }
+                            string file = files[index];
 
-                        if (fs == null)
-                        {
-                            ToConsole(string.Format("Unable to open {0} for loading", filename), ConsoleColor.Red);
-                            continue;
-                        }
+                            FileStream fs = null;
 
-                        DataSet ds = new DataSet("Spawns");
-
-                        try
-                        {
-                            ds.ReadXml(fs);
-                        }
-                        catch
-                        {
-                            fs.Close();
-                            ToConsole(string.Format("Error reading xml file {0}", filename), ConsoleColor.Red);
-                            continue;
-                        }
-
-                        if (ds.Tables != null && ds.Tables.Count > 0)
-                        {
-                            if (ds.Tables["Points"] != null && ds.Tables["Points"].Rows.Count > 0)
+                            try
                             {
-                                foreach (DataRow dr in ds.Tables["Points"].Rows)
+                                fs = File.Open(file, FileMode.Open, FileAccess.Read);
+                            }
+                            catch (Exception e)
+                            {
+                                Diagnostics.ExceptionLogging.LogException(e);
+                            }
+
+                            if (fs == null)
+                            {
+                                ToConsole($"Unable to open {filename} for loading", ConsoleColor.Red);
+                                continue;
+                            }
+
+                            DataSet ds = new DataSet("Spawns");
+
+                            try
+                            {
+                                ds.ReadXml(fs);
+                            }
+                            catch
+                            {
+                                fs.Close();
+                                ToConsole($"Error reading xml file {filename}", ConsoleColor.Red);
+                                continue;
+                            }
+
+                            if (ds.Tables != null && ds.Tables.Count > 0)
+                            {
+                                if (ds.Tables["Points"] != null && ds.Tables["Points"].Rows.Count > 0)
                                 {
-                                    string id = null;
+                                    for (var i = 0; i < ds.Tables["Points"].Rows.Count; i++)
+                                    {
+                                        DataRow dr = ds.Tables["Points"].Rows[i];
 
-                                    try
-                                    {
-                                        id = (string)dr["UniqueId"];
-                                    }
-                                    catch (Exception e)
-                                    {
-                                        Diagnostics.ExceptionLogging.LogException(e);
-                                    }
-
-                                    if (DeleteSpawner(id))
-                                    {
-                                        deletedxml++;
-                                    }
-                                    else
-                                    {
-                                        bool deleted = false;
+                                        string id = null;
 
                                         try
                                         {
-                                            Point3D loc = new Point3D(int.Parse((string)dr["CentreX"]), int.Parse((string)dr["CentreY"]), int.Parse((string)dr["CentreZ"]));
-                                            Map spawnMap = Map.Parse((string)dr["Map"]);
-                                            string name = (string)dr["Name"];
-
-                                            if (spawnMap != null)
-                                            {
-                                                IPooledEnumerable eable = spawnMap.GetItemsInRange(loc, 0);
-
-                                                foreach (Item item in eable)
-                                                {
-                                                    if (item is XmlSpawner && item.Name == name)
-                                                    {
-                                                        item.Delete();
-                                                        deletedxml++;
-                                                        deleted = true;
-                                                        break;
-                                                    }
-                                                }
-
-                                                eable.Free();
-                                            }
+                                            id = (string) dr["UniqueId"];
                                         }
                                         catch (Exception e)
                                         {
                                             Diagnostics.ExceptionLogging.LogException(e);
                                         }
 
-                                        if (!deleted)
+                                        if (DeleteSpawner(id))
                                         {
-                                            nodelelete++;
+                                            deletedxml++;
+                                        }
+                                        else
+                                        {
+                                            bool deleted = false;
 
-                                            ToConsole(string.Format("Failed to Delete: {0} in {1}", (string)dr["Name"], file));
+                                            try
+                                            {
+                                                Point3D loc = new Point3D(int.Parse((string) dr["CentreX"]), int.Parse((string) dr["CentreY"]), int.Parse((string) dr["CentreZ"]));
+                                                Map spawnMap = Map.Parse((string) dr["Map"]);
+
+                                                string name = (string) dr["Name"];
+
+                                                if (spawnMap != null)
+                                                {
+                                                    IPooledEnumerable eable = spawnMap.GetItemsInRange(loc, 0);
+
+                                                    foreach (Item item in eable)
+                                                    {
+                                                        if (item is XmlSpawner && item.Name == name)
+                                                        {
+                                                            item.Delete();
+                                                            deletedxml++;
+                                                            deleted = true;
+                                                            break;
+                                                        }
+                                                    }
+
+                                                    eable.Free();
+                                                }
+                                            }
+                                            catch (Exception e)
+                                            {
+                                                Diagnostics.ExceptionLogging.LogException(e);
+                                            }
+
+                                            if (!deleted)
+                                            {
+                                                nodelelete++;
+
+                                                ToConsole(string.Format("Failed to Delete: {0} in {1}", (string) dr["Name"], file));
+                                            }
                                         }
                                     }
                                 }
                             }
+
+                            fs.Close();
                         }
 
-                        fs.Close();
+                        ToConsole($"Deleted {deletedxml} XmlSpawners [{nodelelete} failed] in {((Core.TickCount - start) / 1000).ToString()} seconds.", ConsoleColor.Cyan);
                     }
-
-                    ToConsole(string.Format("Deleted {0} XmlSpawners [{1} failed] in {2} seconds.", deletedxml, nodelelete, ((Core.TickCount - start) / 1000).ToString()), ConsoleColor.Cyan);
-                }
-                else
-                {
-                    ToConsole(string.Format("Directory Not Found: {0}", filename), ConsoleColor.Red);
+                    else
+                    {
+                        ToConsole($"Directory Not Found: {filename}", ConsoleColor.Red);
+                    }
                 }
             }
         }
