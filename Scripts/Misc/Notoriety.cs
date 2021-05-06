@@ -281,10 +281,14 @@ namespace Server.Misc
             else
             {
                 if (target.Murderer)
+                {
                     return Notoriety.Murderer;
+                }
 
                 if (target.Criminal && target.Map != null && (target.Map.Rules & MapRules.HarmfulRestrictions) == 0)
+                {
                     return Notoriety.Criminal;
+                }
 
                 Guild sourceGuild = GetGuildFor(source.Guild as Guild, source);
                 Guild targetGuild = GetGuildFor(target.Guild, target.Owner);
@@ -292,24 +296,36 @@ namespace Server.Misc
                 if (sourceGuild != null && targetGuild != null)
                 {
                     if (sourceGuild == targetGuild || sourceGuild.IsAlly(targetGuild))
+                    {
                         return Notoriety.Ally;
+                    }
 
                     if (sourceGuild.IsEnemy(targetGuild))
+                    {
                         return Notoriety.Enemy;
+                    }
                 }
 
                 if (CheckHouseFlag(source, target.Owner, target.Location, target.Map))
+                {
                     return Notoriety.CanBeAttacked;
+                }
 
                 if (!(target.Owner is PlayerMobile) && !IsPet(target.Owner as BaseCreature))
+                {
                     return Notoriety.CanBeAttacked;
+                }
 
                 List<Mobile> list = target.Aggressors;
 
-                foreach (Mobile m in list)
+                for (var index = 0; index < list.Count; index++)
                 {
+                    Mobile m = list[index];
+
                     if (m == source)
+                    {
                         return Notoriety.CanBeAttacked;
+                    }
                 }
 
                 return Notoriety.Innocent;
@@ -484,15 +500,19 @@ namespace Server.Misc
             BaseHouse house = BaseHouse.FindHouseAt(p, map, 16);
 
             if (house == null || house.Public || !house.IsFriend(from))
+            {
                 return false;
+            }
 
             if (m != null && house.IsFriend(m))
+            {
                 return false;
+            }
 
-            BaseCreature c = m as BaseCreature;
-
-            if (c != null && !c.Deleted && c.Controlled && c.ControlMaster != null)
-                return !house.IsFriend(c.ControlMaster);
+            if (m is BaseCreature bc && !bc.Deleted && bc.Controlled && bc.ControlMaster != null)
+            {
+                return !house.IsFriend(bc.ControlMaster);
+            }
 
             return true;
         }

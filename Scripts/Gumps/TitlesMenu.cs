@@ -315,10 +315,14 @@ namespace Server.Gumps
 
                     AddPage(page);
 
-                    foreach (Skill sk in User.Skills)
+                    for (var i = 0; i < User.Skills.Length; i++)
                     {
+                        Skill sk = User.Skills[i];
+
                         if (sk.Base < 30)
+                        {
                             continue;
+                        }
 
                         string title = Titles.GetSkillTitle(User, sk);
 
@@ -327,7 +331,8 @@ namespace Server.Gumps
                             AddHtml(260, 70 + (index * 22), 245, 16, Color("#FFFFFF", title), false, false);
                         }
 
-                        AddCallbackButton(225, 70 + (index * 22), 4005, 4007, sk.Info.SkillID + 102, GumpButtonType.Reply, 0, b =>
+                        AddCallbackButton(225, 70 + (index * 22), 4005, 4007, sk.Info.SkillID + 102,
+                            GumpButtonType.Reply, 0, b =>
                             {
                                 TitleSelected = b.ButtonID - 102;
                                 ShowingDescription = true;
@@ -499,26 +504,33 @@ namespace Server.Gumps
 
                     AddPage(page);
 
-                    foreach (Skill sk in User.Skills)
+                    for (var i = 0; i < User.Skills.Length; i++)
                     {
-                        if (sk.Base < 30)
-                            continue;
+                        Skill sk = User.Skills[i];
 
-                        AddHtml(260, 70 + (index * 22), 245, 16, Color("#FFFFFF", "the " + sk.Info.Title), false, false);
-                        AddCallbackButton(225, 70 + (index * 22), 4005, 4007, sk.Info.SkillID + 45000, GumpButtonType.Reply, 0, b =>
+                        if (sk.Base < 30)
                         {
-                            TitleSelected = b.ButtonID - 45000;
-                            ShowingDescription = true;
-                            Refresh();
-                        });
+                            continue;
+                        }
+
+                        AddHtml(260, 70 + index * 22, 245, 16, Color("#FFFFFF", "the " + sk.Info.Title), false, false);
+
+                        AddCallbackButton(225, 70 + index * 22, 4005, 4007, sk.Info.SkillID + 45000,
+                            GumpButtonType.Reply, 0, b =>
+                            {
+                                TitleSelected = b.ButtonID - 45000;
+                                ShowingDescription = true;
+                                Refresh();
+                            });
 
                         index++;
                         CheckPage(ref index, ref page);
 
-                        if ((SkillName)sk.Info.SkillID == User.Skills.CurrentMastery && User.Skills.CurrentMastery != SkillName.Alchemy)
+                        if ((SkillName) sk.Info.SkillID == User.Skills.CurrentMastery && User.Skills.CurrentMastery != SkillName.Alchemy)
                         {
-                            AddHtml(260, 70 + (index * 22), 160, 16, Color("#FFFFFF", MasteryInfo.GetTitle(User)), false, false);
-                            AddCallbackButton(225, 70 + (index * 22), 4005, 4007, 999999, GumpButtonType.Reply, 0, b =>
+                            AddHtml(260, 70 + index * 22, 160, 16, Color("#FFFFFF", MasteryInfo.GetTitle(User)), false, false);
+
+                            AddCallbackButton(225, 70 + index * 22, 4005, 4007, 999999, GumpButtonType.Reply, 0, b =>
                             {
                                 TitleSelected = 999999;
                                 ShowingDescription = true;
@@ -726,10 +738,14 @@ namespace Server.Gumps
 
                     AddPage(page);
 
-                    foreach (Skill sk in User.Skills)
+                    for (var i = 0; i < User.Skills.Length; i++)
                     {
+                        Skill sk = User.Skills[i];
+
                         if (sk.Base < 30)
+                        {
                             continue;
+                        }
 
                         string title = Titles.GetSkillTitle(User, sk);
 
@@ -738,14 +754,16 @@ namespace Server.Gumps
                             AddHtml(260, 70 + (index * 22), 245, 16, Color("#FFFFFF", title), false, false);
                         }
 
-                        AddCallbackButton(225, 70 + (index * 22), 4005, 4007, sk.Info.SkillID + 404, GumpButtonType.Reply, 0, b =>
-                        {
-                            TitleSelected = b.ButtonID - 404;
-                            ShowingDescription = true;
-                            Refresh();
-                        });
+                        AddCallbackButton(225, 70 + (index * 22), 4005, 4007, sk.Info.SkillID + 404,
+                            GumpButtonType.Reply, 0, b =>
+                            {
+                                TitleSelected = b.ButtonID - 404;
+                                ShowingDescription = true;
+                                Refresh();
+                            });
 
                         index++;
+
                         CheckPage(ref index, ref page);
                     }
                 }
@@ -1138,14 +1156,21 @@ namespace Server.Gumps
 
         private bool IsCityTitle(int id)
         {
-            return (id >= 1152739 && id <= 1152893) || (id >= 1151739 && id <= 1151747) || id == 1155481 || id == 1154017;
+            return id >= 1152739 && id <= 1152893 || id >= 1151739 && id <= 1151747 || id == 1155481 || id == 1154017;
         }
 
         public List<int> GetCityTitles()
         {
             IEnumerable<int> list = User.RewardTitles.OfType<int>().Where(i => IsCityTitle(i));
 
-            return list.ToList();
+            List<int> ownedTitles = new List<int>();
+
+            foreach (var i in list)
+            {
+                ownedTitles.Add(i);
+            }
+
+            return ownedTitles;
         }
 
         public void Refresh(bool recompile = true)

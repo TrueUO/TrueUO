@@ -443,6 +443,7 @@ namespace Server.Engines.PartySystem
         private class RejoinTimer : Timer
         {
             private readonly Mobile m_Mobile;
+
             public RejoinTimer(Mobile m)
                 : base(TimeSpan.FromSeconds(1.0))
             {
@@ -454,7 +455,9 @@ namespace Server.Engines.PartySystem
                 Party p = Get(m_Mobile);
 
                 if (p == null)
+                {
                     return;
+                }
 
                 m_Mobile.SendLocalizedMessage(1005437); // You have rejoined the party.
                 m_Mobile.Send(new PartyMemberList(p));
@@ -462,8 +465,9 @@ namespace Server.Engines.PartySystem
                 Packet message = Packet.Acquire(new MessageLocalizedAffix(Serial.MinusOne, -1, MessageType.Label, 0x3B2, 3, 1008087, "", AffixType.Prepend | AffixType.System, m_Mobile.Name, ""));
                 Packet attrs = Packet.Acquire(new MobileAttributesN(m_Mobile));
 
-                foreach (PartyMemberInfo mi in p.Members)
+                for (var index = 0; index < p.Members.Count; index++)
                 {
+                    PartyMemberInfo mi = p.Members[index];
                     Mobile m = mi.Mobile;
 
                     if (m != m_Mobile)
@@ -475,7 +479,9 @@ namespace Server.Engines.PartySystem
                         m_Mobile.Send(new MobileAttributesN(m));
 
                         if (m_Mobile.NetState != null && m_Mobile.NetState.IsEnhancedClient)
+                        {
                             Waypoints.Create(m_Mobile, m, WaypointType.PartyMember);
+                        }
                     }
                 }
 

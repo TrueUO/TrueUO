@@ -12,10 +12,10 @@ namespace Server.Items
         public override bool ForceShowProperties => true;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public Map MapDest { get { return m_MapDest; } set { m_MapDest = value; } }
+        public Map MapDest { get => m_MapDest; set => m_MapDest = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public Point3D LocDest { get { return m_LocDest; } set { m_LocDest = value; } }
+        public Point3D LocDest { get => m_LocDest; set => m_LocDest = value; }
 
         [Constructable]
         public InstanceExitGate()
@@ -38,7 +38,9 @@ namespace Server.Items
         public override bool OnMoveOver(Mobile m)
         {
             if (!m.HasGump(typeof(ConfirmExitInstanceGump)))
+            {
                 m.SendGump(new ConfirmExitInstanceGump(this));
+            }
 
             return base.OnMoveOver(m);
         }
@@ -60,7 +62,6 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            /*int version = */
             reader.ReadInt();
 
             m_MapDest = reader.ReadMap();

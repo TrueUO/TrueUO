@@ -4163,10 +4163,14 @@ namespace Server.Multis
         public bool IsOwner(Mobile m)
         {
             if (m == null)
+            {
                 return false;
+            }
 
             if (m == m_Owner || m.AccessLevel >= AccessLevel.GameMaster)
+            {
                 return true;
+            }
 
             return AccountHandler.CheckAccount(m, m_Owner);
         }
@@ -4174,15 +4178,23 @@ namespace Server.Multis
         public bool IsCoOwner(Mobile m)
         {
             if (m == null || CoOwners == null)
+            {
                 return false;
+            }
 
             if (IsOwner(m) || CoOwners.Contains(m))
-                return true;
-
-            foreach (Mobile mob in CoOwners)
             {
+                return true;
+            }
+
+            for (var index = 0; index < CoOwners.Count; index++)
+            {
+                Mobile mob = CoOwners[index];
+
                 if (AccountHandler.CheckAccount(mob, m))
+                {
                     return true;
+                }
             }
 
             return false;
@@ -4191,7 +4203,9 @@ namespace Server.Multis
         public bool IsGuildMember(Mobile m)
         {
             if (m == null || Owner == null || Owner.Guild == null)
+            {
                 return false;
+            }
 
             return m.Guild == Owner.Guild;
         }

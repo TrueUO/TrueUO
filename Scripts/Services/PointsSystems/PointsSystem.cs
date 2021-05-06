@@ -289,11 +289,13 @@ namespace Server.Engines.Points
 
             writer.Write(PlayerTable.Count);
 
-            PlayerTable.ForEach(entry =>
-                {
-                    writer.Write(entry.Player);
-                    entry.Serialize(writer);
-                });
+            for (var index = 0; index < PlayerTable.Count; index++)
+            {
+                var entry = PlayerTable[index];
+
+                writer.Write(entry.Player);
+                entry.Serialize(writer);
+            }
         }
 
         public virtual void Deserialize(GenericReader reader)
@@ -356,11 +358,13 @@ namespace Server.Engines.Points
                     writer.Write(2);
 
                     writer.Write(Systems.Count);
-                    Systems.ForEach(s =>
+                    for (var index = 0; index < Systems.Count; index++)
                     {
-                        writer.Write((int)s.Loyalty);
+                        var s = Systems[index];
+
+                        writer.Write((int) s.Loyalty);
                         s.Serialize(writer);
-                    });
+                    }
                 });
         }
 
@@ -457,12 +461,22 @@ namespace Server.Engines.Points
 
         public static void OnKilledBy(Mobile victim, Mobile damager)
         {
-            Systems.ForEach(s => s.ProcessKill(victim, damager));
+            for (var index = 0; index < Systems.Count; index++)
+            {
+                var s = Systems[index];
+
+                s.ProcessKill(victim, damager);
+            }
         }
 
         public static void CompleteQuest(QuestCompleteEventArgs e)
         {
-            Systems.ForEach(s => s.ProcessQuest(e.Mobile, e.QuestType));
+            for (var index = 0; index < Systems.Count; index++)
+            {
+                var s = Systems[index];
+
+                s.ProcessQuest(e.Mobile, e.QuestType);
+            }
         }
         #endregion
     }
