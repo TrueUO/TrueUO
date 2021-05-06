@@ -132,10 +132,14 @@ namespace Server.Items
 
         public bool IsCoolingDown(Mobile from)
         {
-            foreach (FountainOfFortune fountain in m_Fountains)
+            for (var index = 0; index < m_Fountains.Count; index++)
             {
+                FountainOfFortune fountain = m_Fountains[index];
+
                 if (fountain.RewardCooldown != null && fountain.RewardCooldown.ContainsKey(from))
+                {
                     return true;
+                }
             }
 
             return false;
@@ -186,21 +190,31 @@ namespace Server.Items
 
         public static void DefragTables()
         {
-            foreach (FountainOfFortune fountain in m_Fountains)
+            for (var index = 0; index < m_Fountains.Count; index++)
             {
+                FountainOfFortune fountain = m_Fountains[index];
+
                 List<Mobile> list = new List<Mobile>(fountain.ResCooldown.Keys);
                 List<Mobile> list2 = new List<Mobile>(fountain.RewardCooldown.Keys);
 
-                foreach (Mobile m in list)
+                for (var i = 0; i < list.Count; i++)
                 {
+                    Mobile m = list[i];
+
                     if (fountain.ResCooldown.ContainsKey(m) && fountain.ResCooldown[m] < DateTime.UtcNow)
+                    {
                         fountain.ResCooldown.Remove(m);
+                    }
                 }
 
-                foreach (Mobile m in list2)
+                for (var i = 0; i < list2.Count; i++)
                 {
+                    Mobile m = list2[i];
+
                     if (fountain.RewardCooldown.ContainsKey(m) && fountain.RewardCooldown[m] < DateTime.UtcNow)
+                    {
                         fountain.RewardCooldown.Remove(m);
+                    }
                 }
 
                 list.Clear();
@@ -208,45 +222,60 @@ namespace Server.Items
             }
 
             List<Mobile> remove = new List<Mobile>();
+
             foreach (KeyValuePair<Mobile, DateTime> kvp in m_LuckTable)
             {
                 if (kvp.Value < DateTime.UtcNow)
+                {
                     remove.Add(kvp.Key);
+                }
             }
 
-            remove.ForEach(m =>
-                {
-                    m_LuckTable.Remove(m);
+            for (var index = 0; index < remove.Count; index++)
+            {
+                var m = remove[index];
 
-                    if (m.NetState != null)
-                        m.SendLocalizedMessage(1079552); //Your luck just ran out.
-                });
+                m_LuckTable.Remove(m);
+
+                if (m.NetState != null)
+                {
+                    m.SendLocalizedMessage(1079552); //Your luck just ran out.
+                }
+            }
 
             remove.Clear();
 
             foreach (KeyValuePair<Mobile, DateTime> kvp in m_SpecialProtection)
             {
                 if (kvp.Value < DateTime.UtcNow)
+                {
                     remove.Add(kvp.Key);
+                }
             }
 
-            remove.ForEach(m =>
+            for (var index = 0; index < remove.Count; index++)
             {
+                var m = remove[index];
+
                 m_SpecialProtection.Remove(m);
-            });
+            }
 
             remove.Clear();
 
             foreach (KeyValuePair<Mobile, DateTime> kvp in m_BalmBoost)
             {
                 if (kvp.Value < DateTime.UtcNow)
+                {
                     remove.Add(kvp.Key);
+                }
             }
 
-            remove.ForEach(m =>
+            for (var index = 0; index < remove.Count; index++)
             {
+                var m = remove[index];
+
                 m_BalmBoost.Remove(m);
-            });
+            }
 
             remove.Clear();
         }
