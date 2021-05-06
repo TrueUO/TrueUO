@@ -61,7 +61,7 @@ namespace Server.Items
                     typeof(RatmanArcher), typeof(RatmanMage),
                     typeof(SavageRider), typeof(SavageShaman),
                     typeof(Savage), typeof(Titan),
-                    typeof(Troglodyte), typeof(Troll),
+                    typeof(Troll),
                     typeof(Troglodyte), typeof(MougGuur),
                     typeof(Chiikkaha), typeof(Minotaur),
                     typeof(MinotaurGeneral), typeof(Medusa),

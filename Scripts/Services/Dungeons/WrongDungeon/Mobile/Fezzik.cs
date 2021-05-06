@@ -51,6 +51,8 @@ namespace Server.Mobiles
 
         public override int Meat => 2;
 
+        public override bool AllureImmune => true;
+
         public override void AlterDamageScalarFrom(Mobile caster, ref double scalar)
         {
             if (0.5 >= Utility.RandomDouble())

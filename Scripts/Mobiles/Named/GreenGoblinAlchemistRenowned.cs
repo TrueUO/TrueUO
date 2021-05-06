@@ -47,8 +47,6 @@ namespace Server.Mobiles
         public override Type[] UniqueSAList => new Type[] { typeof(ObsidianEarrings), typeof(TheImpalersPick) };
         public override Type[] SharedSAList => new Type[] { };
 
-        public override bool AllureImmune => true;
-
         public override int GetAngerSound() { return 0x600; }
         public override int GetIdleSound() { return 0x600; }
         public override int GetAttackSound() { return 0x5FD; }

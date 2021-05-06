@@ -204,13 +204,13 @@ namespace Server.Mobiles
 
         public override MeatType MeatType => MeatType.Ribs;
         public override int Meat => 2;
+        public override bool AllureImmune => true;
 
         public override void OnDeath(Container c)
         {
             base.OnDeath(c);
 
-            if (Wall != null)
-                Wall.OnTrollKilled();
+            Wall?.OnTrollKilled();
         }
 
         public override int TreasureMapLevel => 1;
