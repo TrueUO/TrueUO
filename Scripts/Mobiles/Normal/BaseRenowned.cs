@@ -27,6 +27,7 @@ namespace Server.Mobiles
         public abstract Type[] SharedSAList { get; }
 
         public virtual bool NoGoodies => false;
+        public override bool AllureImmune => true;
 
         public override void Serialize(GenericWriter writer)
         {
