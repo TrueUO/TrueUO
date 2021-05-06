@@ -22,7 +22,8 @@ namespace Server.Engines.Quests
         {
             InitStats(100, 100, 25);
 
-            Female = false;
+            CantWalk = true;
+            Female = true;
             Race = Race.Human;
             Body = 0x191;
 
@@ -52,7 +53,7 @@ namespace Server.Engines.Quests
     {
         public InTheCourtOfTruthQuest()
         {
-            AddObjective(new ObtainObjective(typeof(ShornWool), "Shorn Wool", 1, 0xDFE, 0, 2051));
+            AddObjective(new ObtainObjective(typeof(ThreateningNote), "Evidence", 1, 0x46B3, 0, 66));
             AddReward(new BaseReward(typeof(BarristersRobe), 1, "A Barrister's Robe", 0x1F03, 1367));
         }
 

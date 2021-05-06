@@ -22,6 +22,7 @@ namespace Server.Engines.Quests
         {
             InitStats(100, 100, 25);
 
+            CantWalk = true;
             Female = false;
             Race = Race.Human;
             Body = 0x190;
@@ -56,7 +57,7 @@ namespace Server.Engines.Quests
     {
         public TheSpiritRangerQuest()
         {
-            AddObjective(new ObtainObjective(typeof(RangersNecklace), "Ranger's Necklace", 1, 0x3BB5, 0, 2051));
+            AddObjective(new ObtainObjective(typeof(RangersNecklace), "Ranger's Necklace", 1, 0x3BB5, 0, 2498));
             AddReward(new BaseReward(typeof(AnkhNecklace), 1, "Ankh Necklace", 0x3BB5, 2498));
         }
 

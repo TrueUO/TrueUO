@@ -26,7 +26,7 @@ namespace Server.Items
             g.AddImageTiledButton(22, 22, 0x176F, 0x176F, 0x0, GumpButtonType.Page, 0, ItemID, Hue, 33, 44);
             g.AddHtml(150, 15, 320, 22, "<BASEFONT COLOR=#D5D52A><DIV ALIGN=CENTER>A Frothy Mug of Purple Ale</DIV>", false, false);
             g.AddHtml(150, 46, 320, 44, "<BASEFONT COLOR=#AABFD4><DIV ALIGN=CENTER>Shared by Dupre</DIV>", false, false);
-            g.AddHtml(150, 99, 320, 98, "<BASEFONT COLOR=#DFDFDF>A specialty of the Keg and Rnehor. Dupre is known to enjoy a mug or two of Purple Ale.", false, false);
+            g.AddHtml(150, 99, 320, 98, "<BASEFONT COLOR=#DFDFDF>A specialty of the Keg and Anchor, Dupre is known to enjoy a mug or two of Purple Ale.", false, false);
             g.AddHtml(150, 197, 320, 98, "<BASEFONT COLOR=#DFDFDF>In proving your Honor to Dupre in battle against the daemon Arcadion, he has shared this mug of ale with you.", false, false);
 
             from.SendGump(g);

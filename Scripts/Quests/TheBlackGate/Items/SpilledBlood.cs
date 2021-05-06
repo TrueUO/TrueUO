@@ -3,15 +3,15 @@ using System.Collections.Generic;
 
 namespace Server.Items
 {
-    public class RawGinsengDecoration : Item
+    public class SpilledBlood : Item
     {
         private readonly Dictionary<Mobile, int> list = new Dictionary<Mobile, int>();
 
         [Constructable]
-        public RawGinsengDecoration()
-            : base(0x18EA)
+        public SpilledBlood()
+            : base(0x122A)
         {
-            Name = "Raw Ginseng";
+            Name = "Spilled Blood From Julia's Final Battle";
             Weight = 0.0;
             Movable = false;
         }
@@ -24,11 +24,11 @@ namespace Server.Items
                 return;
             }
 
-            PrivateOverheadMessage(MessageType.Regular, 1150, false, "*You harvest some fresh ginseng. It does not have a long shelf life and will spoil in about 3 days!*", from.NetState);
+            PrivateOverheadMessage(MessageType.Regular, 1150, false, "*The blood is still wet despite the event happening some time ago...you collect a vial and tuck it away*", from.NetState);
 
             if (list.ContainsKey(from))
             {
-                if (list[from] >= 2)
+                if (list[from] >= 1)
                 {
                     from.SendLocalizedMessage(1071539); // Sorry. You cannot receive another item at this time.
                     return;
@@ -41,40 +41,10 @@ namespace Server.Items
                 list.Add(from, 0);
             }
 
-            from.AddToBackpack(new RawGinseng());            
+            from.AddToBackpack(new VialOfBlood());
         }
 
-        public RawGinsengDecoration(Serial serial)
-            : base(serial)
-        {
-        }
-
-        public override void Serialize(GenericWriter writer)
-        {
-            base.Serialize(writer);
-            writer.Write(0); // version
-        }
-
-        public override void Deserialize(GenericReader reader)
-        {
-            base.Deserialize(reader);
-            reader.ReadInt();
-        }
-    }
-
-    public class RawGinseng : BaseDecayingItem
-    {
-        [Constructable]
-        public RawGinseng()
-            : base(0x18EB)
-        {
-            Name = "Raw Ginseng";
-            Weight = 1.0;
-        }
-
-        public override int Lifespan => 4320;
-
-        public RawGinseng(Serial serial)
+        public SpilledBlood(Serial serial)
             : base(serial)
         {
         }

@@ -22,7 +22,8 @@ namespace Server.Engines.Quests
         {
             InitStats(100, 100, 25);
 
-            Female = false;
+            CantWalk = true;
+            Female = true;
             Race = Race.Human;
             Body = 0x191;
 
