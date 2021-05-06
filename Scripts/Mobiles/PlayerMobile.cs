@@ -862,8 +862,10 @@ namespace Server.Mobiles
                 {
                     Container pack = pm.Backpack;
 
-                    e.List.ForEach(serial =>
+                    for (var itemSerial = 0; itemSerial < e.List.Count; itemSerial++)
                     {
+                        var serial = e.List[itemSerial];
+
                         Item item = null;
 
                         for (var index = 0; index < pack.Items.Count; index++)
@@ -899,7 +901,7 @@ namespace Server.Mobiles
                                 pm.EquipItem(item);
                             }
                         }
-                    });
+                    }
 
                     pm.NextActionTime = Core.TickCount + ActionDelay * e.List.Count;
                 }
