@@ -4,7 +4,7 @@ namespace Server.Items
 {
     public abstract class Note : Item // BaseNote - Base class.
     {
-        protected abstract int[] Contents { get; }
+        public abstract int[] Contents { get; }
 
         protected Note()
             : base(0x14ED)
