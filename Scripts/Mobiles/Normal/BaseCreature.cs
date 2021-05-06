@@ -2101,8 +2101,10 @@ namespace Server.Mobiles
                         bool allPack = true;
                         bool anyPack = false;
 
-                        foreach (Item s in list)
+                        for (var index = 0; index < list.Count; index++)
                         {
+                            Item s = list[index];
+
                             //corpse.AddCarvedItem(s, from);
                             if (!from.PlaceInBackpack(s))
                             {
@@ -2123,8 +2125,10 @@ namespace Server.Mobiles
                     }
                     else
                     {
-                        foreach (Item s in list)
+                        for (var index = 0; index < list.Count; index++)
                         {
+                            Item s = list[index];
+
                             corpse.AddCarvedItem(s, from);
                         }
 
@@ -4144,7 +4148,19 @@ namespace Server.Mobiles
             if (ControlMaster != null && ControlMaster != aggressor)
             {
                 var master = ControlMaster;
-                AggressorInfo info = master.Aggressors.FirstOrDefault(i => i.Attacker == aggressor);
+
+                AggressorInfo info = null;
+
+                for (var index = 0; index < master.Aggressors.Count; index++)
+                {
+                    var i = master.Aggressors[index];
+
+                    if (i.Attacker == aggressor)
+                    {
+                        info = i;
+                        break;
+                    }
+                }
 
                 if (info != null)
                 {
@@ -4166,22 +4182,49 @@ namespace Server.Mobiles
                 }
 
                 // Now, if the master is in the aggressor list, it needs to be refreshed
-                info = aggressor.Aggressors.FirstOrDefault(i => i.Attacker == master);
+                info = null;
 
-                if (info != null)
+                for (var index = 0; index < aggressor.Aggressors.Count; index++)
                 {
-                    info.Refresh();
+                    var i = aggressor.Aggressors[index];
+
+                    if (i.Attacker == master)
+                    {
+                        info = i;
+                        break;
+                    }
                 }
 
-                info = master.Aggressed.FirstOrDefault(i => i.Defender == aggressor);
+                info?.Refresh();
 
-                if (info != null)
+                info = null;
+
+                for (var index = 0; index < master.Aggressed.Count; index++)
                 {
-                    info.Refresh();
+                    var i = master.Aggressed[index];
+
+                    if (i.Defender == aggressor)
+                    {
+                        info = i;
+                        break;
+                    }
                 }
+
+                info?.Refresh();
 
                 // next lets find out if our master is on the aggressors aggressed list
-                info = aggressor.Aggressed.FirstOrDefault(i => i.Defender == master);
+                info = null;
+
+                for (var index = 0; index < aggressor.Aggressed.Count; index++)
+                {
+                    var i = aggressor.Aggressed[index];
+
+                    if (i.Defender == master)
+                    {
+                        info = i;
+                        break;
+                    }
+                }
 
                 if (info != null)
                 {
@@ -4208,14 +4251,9 @@ namespace Server.Mobiles
                     BuffInfo.AddBuff(aggressor, new BuffInfo(BuffIcon.HeatOfBattleStatus, 1153801, 1153827, Aggression.CombatHeatDelay, aggressor, true));
                 }
             }
-            else if (aggressor is BaseCreature creature)
+            else if (aggressor is BaseCreature creature && creature.GetMaster() is PlayerMobile pm)
             {
-                var pm = creature.GetMaster() as PlayerMobile;
-
-                if (pm != null)
-                {
-                    AggressiveAction(pm, criminal);
-                }
+                AggressiveAction(pm, criminal);
             }
 
             base.AggressiveAction(aggressor, criminal);
@@ -6775,11 +6813,14 @@ namespace Server.Mobiles
         public virtual Mobile GetSecondTarget(BaseCreature first)
         {
             if (first == null)
+            {
                 return null;
+            }
 
             int range = BaseInstrument.GetBardRange(this, SkillName.Provocation);
 
             IPooledEnumerable eable = Map.GetMobilesInRange(Location, range);
+
             List<Mobile> possibles = new List<Mobile>();
 
             foreach (Mobile m in eable)
@@ -7059,11 +7100,14 @@ namespace Server.Mobiles
         public virtual bool Rummage()
         {
             if (Map == null)
+            {
                 return false;
+            }
 
             Corpse toRummage = null;
 
             IPooledEnumerable eable = Map.GetItemsInRange(Location, 2);
+
             foreach (Item item in eable)
             {
                 if (item is Corpse corpse && corpse.Items.Count > 0)

@@ -181,17 +181,24 @@ namespace Server.Mobiles
 
                     int successes = 0, failures = 0;
 
-                    foreach (XmlElement spawner in root.GetElementsByTagName("spawner"))
+                    if (root != null)
                     {
-                        try
+                        var name = root.GetElementsByTagName("spawner");
+
+                        for (var index = 0; index < name.Count; index++)
                         {
-                            ImportSpawner(spawner);
-                            successes++;
-                        }
-                        catch (Exception ex)
-                        {
-                            failures++;
-                            Diagnostics.ExceptionLogging.LogException(ex);
+                            var spawner = (XmlElement) name[index];
+
+                            try
+                            {
+                                ImportSpawner(spawner);
+                                successes++;
+                            }
+                            catch (Exception ex)
+                            {
+                                failures++;
+                                Diagnostics.ExceptionLogging.LogException(ex);
+                            }
                         }
                     }
 

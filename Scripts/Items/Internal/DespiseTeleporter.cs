@@ -65,8 +65,10 @@ namespace Server.Items
 
             eable.Free();
 
-            foreach (Mobile m in move)
+            for (var index = 0; index < move.Count; index++)
             {
+                Mobile m = move[index];
+
                 m.MoveToWorld(loc, map);
             }
 
@@ -150,8 +152,10 @@ namespace Server.Items
         {
             if (Teleporters != null)
             {
-                foreach (InternalTeleporter tele in Teleporters)
+                for (var index = 0; index < Teleporters.Count; index++)
                 {
+                    InternalTeleporter tele = Teleporters[index];
+
                     if (tele != null && !tele.Deleted)
                     {
                         tele.Delete();
@@ -188,7 +192,12 @@ namespace Server.Items
             }
             else
             {
-                Teleporters.ForEach(t => t.PointDest = p);
+                for (var index = 0; index < Teleporters.Count; index++)
+                {
+                    var t = Teleporters[index];
+
+                    t.PointDest = p;
+                }
             }
         }
 
@@ -200,7 +209,12 @@ namespace Server.Items
             }
             else
             {
-                Teleporters.ForEach(t => t.MapDest = map);
+                for (var index = 0; index < Teleporters.Count; index++)
+                {
+                    var t = Teleporters[index];
+
+                    t.MapDest = map;
+                }
             }
         }
 
@@ -208,7 +222,12 @@ namespace Server.Items
         {
             if (Teleporters != null)
             {
-                Teleporters.ForEach(t => t.Map = Map);
+                for (var index = 0; index < Teleporters.Count; index++)
+                {
+                    var t = Teleporters[index];
+
+                    t.Map = Map;
+                }
             }
         }
 
@@ -216,10 +235,12 @@ namespace Server.Items
         {
             if (Teleporters != null)
             {
-                Teleporters.ForEach(t =>
-                    {
-                        t.Location = new Point3D(X + (t.X - old.X), Y + (t.Y - old.Y), Z + (t.Z - old.Z));
-                    });
+                for (var index = 0; index < Teleporters.Count; index++)
+                {
+                    var t = Teleporters[index];
+
+                    t.Location = new Point3D(X + (t.X - old.X), Y + (t.Y - old.Y), Z + (t.Z - old.Z));
+                }
             }
         }
 
@@ -229,7 +250,12 @@ namespace Server.Items
 
             if (Teleporters != null)
             {
-                Teleporters.ForEach(t => t.Delete());
+                for (var index = 0; index < Teleporters.Count; index++)
+                {
+                    var t = Teleporters[index];
+
+                    t.Delete();
+                }
 
                 ColUtility.Free(Teleporters);
             }
@@ -252,7 +278,12 @@ namespace Server.Items
 
             if (Teleporters != null)
             {
-                Teleporters.ForEach(t => writer.Write(t));
+                for (var index = 0; index < Teleporters.Count; index++)
+                {
+                    var t = Teleporters[index];
+
+                    writer.Write(t);
+                }
             }
         }
 

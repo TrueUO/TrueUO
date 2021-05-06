@@ -164,18 +164,20 @@ namespace Server.Misc
 
         public override void ProcessKill(Mobile victim, Mobile killer)
         {
-            PlayerMobile pm = killer as PlayerMobile;
-            BaseCreature bc = victim as BaseCreature;
-
-            if (DropEra == TreasuresOfTokunoEra.None || pm == null || bc == null || !CheckLocation(bc) || !CheckLocation(pm) || !killer.InRange(victim, 18) || !pm.Alive || bc.GivenSpecialArtifact)
+            if (DropEra == TreasuresOfTokunoEra.None || !(killer is PlayerMobile pm) || !(victim is BaseCreature bc) || !CheckLocation(bc) || !CheckLocation(pm) || !killer.InRange(victim, 18) || !pm.Alive || bc.GivenSpecialArtifact)
+            {
                 return;
+            }
 
             if (bc.Controlled || bc.Owners.Count > 0 || bc.Fame <= 0)
+            {
                 return;
+            }
 
             //25000 for 1/100 chance, 10 hyrus
             //1500, 1/1000 chance, 20 lizard men for that chance.
             int luck = Math.Max(0, pm.RealLuck);
+
             AwardPoints(pm, (int)Math.Max(0, (bc.Fame * (1 + Math.Sqrt(luck) / 100))));
 
             //This is the Exponentional regression with only 2 datapoints.
@@ -272,13 +274,9 @@ namespace Server.Misc
 
             public override void Deserialize(GenericReader reader)
             {
-                int version = reader.ReadInt();
-
-                if (version > 0)
-                {
-                    base.Deserialize(reader);
-                }
-
+                reader.ReadInt();
+                base.Deserialize(reader);
+                
                 TurnIns = reader.ReadInt();
             }
         }
@@ -461,11 +459,14 @@ namespace Server.Gumps
             Item item = ((ItemTileButtonInfo)buttonInfo).Item;
 
             if (!(pm != null && item.IsChildOf(pm.Backpack) && pm.InRange(m_Collector.Location, 7)))
+            {
                 return;
+            }
 
             item.Delete();
 
             PointsSystem.TreasuresOfTokuno.TurnIn(pm);
+
             int turnIns = PointsSystem.TreasuresOfTokuno.GetTurnIns(pm);
 
             if (turnIns >= TreasuresOfTokuno.ItemsPerReward)
@@ -475,7 +476,9 @@ namespace Server.Gumps
                 pm.CloseGump(typeof(ToTTurnInGump));	//Sanity
 
                 if (!pm.HasGump(typeof(ToTRedeemGump)))
+                {
                     pm.SendGump(new ToTRedeemGump(m_Collector, false));
+                }
             }
             else
             {
@@ -486,25 +489,33 @@ namespace Server.Gumps
                 pm.CloseGump(typeof(ToTTurnInGump)); //Sanity
 
                 if (buttons.Count > 0)
+                {
                     pm.SendGump(new ToTTurnInGump(m_Collector, buttons));
+                }
             }
         }
 
         public override void HandleCancel(NetState sender)
         {
-            PlayerMobile pm = sender.Mobile as PlayerMobile;
-
-            if (pm == null || !pm.InRange(m_Collector.Location, 7))
+            if (!(sender.Mobile is PlayerMobile pm) || !pm.InRange(m_Collector.Location, 7))
+            {
                 return;
+            }
 
             int turnIns = PointsSystem.TreasuresOfTokuno.GetTurnIns(pm);
 
             if (turnIns == 0)
+            {
                 m_Collector.SayTo(pm, 1071013); // Bring me 10 of the lost treasures of Tokuno and I will reward you with a valuable item.
-            else if (turnIns < TreasuresOfTokuno.ItemsPerReward)	//This case should ALWAYS be true with this gump, jsut a sanity check
-                m_Collector.SayTo(pm, 1070981, string.Format("{0}\t{1}", turnIns, TreasuresOfTokuno.ItemsPerReward)); // You have turned in ~1_COUNT~ minor artifacts. Turn in ~2_NUM~ to receive a reward.
+            }
+            else if (turnIns < TreasuresOfTokuno.ItemsPerReward) // This case should ALWAYS be true with this gump, just a sanity check
+            {
+                m_Collector.SayTo(pm, 1070981, $"{turnIns}\t{TreasuresOfTokuno.ItemsPerReward}"); // You have turned in ~1_COUNT~ minor artifacts. Turn in ~2_NUM~ to receive a reward.
+            }
             else
+            {
                 m_Collector.SayTo(pm, 1070982); // When you wish to choose your reward, you have but to approach me again.
+            }
         }
     }
 }
@@ -658,10 +669,13 @@ namespace Server.Gumps
         public override void HandleButtonResponse(NetState sender, int adjustedButton, ImageTileButtonInfo buttonInfo)
         {
             PlayerMobile pm = sender.Mobile as PlayerMobile;
+
             int turnIns = PointsSystem.TreasuresOfTokuno.GetTurnIns(pm);
 
             if (pm == null || !pm.InRange(m_Collector.Location, 7) || !(turnIns >= TreasuresOfTokuno.ItemsPerReward))
+            {
                 return;
+            }
 
             bool pigments = buttonInfo is PigmentsTileButtonInfo;
 
@@ -669,13 +683,13 @@ namespace Server.Gumps
 
             if (pigments)
             {
-                PigmentsTileButtonInfo p = buttonInfo as PigmentsTileButtonInfo;
+                PigmentsTileButtonInfo p = (PigmentsTileButtonInfo) buttonInfo;
 
                 item = new PigmentsOfTokuno(p.Pigment);
             }
             else
             {
-                TypeTileButtonInfo t = buttonInfo as TypeTileButtonInfo;
+                var t = (TypeTileButtonInfo) buttonInfo;
 
                 if (t.Type == typeof(PigmentsOfTokuno))	//Special case of course.
                 {
@@ -697,7 +711,9 @@ namespace Server.Gumps
             }
 
             if (item == null)
+            {
                 return; //Sanity
+            }
 
             if (pm.AddToBackpack(item))
             {
@@ -714,28 +730,25 @@ namespace Server.Gumps
 
         public override void HandleCancel(NetState sender)
         {
-            PlayerMobile pm = sender.Mobile as PlayerMobile;
-
-            if (pm == null || !pm.InRange(m_Collector.Location, 7))
+            if (!(sender.Mobile is PlayerMobile pm) || !pm.InRange(m_Collector.Location, 7))
+            {
                 return;
+            }
 
             int turnIns = PointsSystem.TreasuresOfTokuno.GetTurnIns(pm);
 
             if (turnIns == 0)
+            {
                 m_Collector.SayTo(pm, 1071013); // Bring me 10 of the lost treasures of Tokuno and I will reward you with a valuable item.
+            }
             else if (turnIns < TreasuresOfTokuno.ItemsPerReward)	//This and above case should ALWAYS be FALSE with this gump, jsut a sanity check
+            {
                 m_Collector.SayTo(pm, 1070981, string.Format("{0}\t{1}", turnIns, TreasuresOfTokuno.ItemsPerReward)); // You have turned in ~1_COUNT~ minor artifacts. Turn in ~2_NUM~ to receive a reward.
+            }
             else
+            {
                 m_Collector.SayTo(pm, 1070982); // When you wish to choose your reward, you have but to approach me again.
+            }
         }
     }
 }
-
-/* Notes
-
-Pigments of tokuno do NOT check for if item is already hued 0;  APPARENTLY he still accepts it if it's < 10 charges.
-
-Chest of Heirlooms don't show if unlocked.
-
-Chest of heirlooms, locked, HARD to pick at 100 lock picking but not impossible.  had 95 health to 0, cause it's trapped >< (explosion i think)
-*/

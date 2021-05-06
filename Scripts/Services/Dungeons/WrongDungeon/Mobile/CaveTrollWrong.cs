@@ -42,7 +42,7 @@ namespace Server.Mobiles
         }
 
         public override bool CanRummageCorpses => true;
-
+        public override bool AllureImmune => true;
         public override int TreasureMapLevel => 3;
 
         public override int Meat => 2;

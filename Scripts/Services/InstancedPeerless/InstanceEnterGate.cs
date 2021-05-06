@@ -35,7 +35,9 @@ namespace Server.Engines.InstancedPeerless
             else
             {
                 if (!m.HasGump(typeof(ConfirmJoinInstanceGump)))
+                {
                     m.SendGump(new ConfirmJoinInstanceGump(m_Instance));
+                }
             }
 
             return base.OnMoveOver(m);
@@ -55,8 +57,6 @@ namespace Server.Engines.InstancedPeerless
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            /*int version = */
             reader.ReadInt();
 
             Delete();

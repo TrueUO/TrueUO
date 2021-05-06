@@ -71,20 +71,28 @@ namespace Server.Items
 
                         if (pack != null && pack.ConsumeTotal(typeof(Gold), price) || Banker.Withdraw(m_From, price))
                         {
-                            m_Book.Recipes.ForEach(x =>
+                            for (var index = 0; index < m_Book.Recipes.Count; index++)
                             {
+                                var x = m_Book.Recipes[index];
+
                                 if (x.RecipeID == m_Recipe.RecipeID)
+                                {
                                     x.Amount -= 1;
-                            });
+                                }
+                            }
 
                             m_Book.InvalidateProperties();
 
                             pv.HoldGold += price;
 
                             if (m_From.AddToBackpack(item))
+                            {
                                 m_From.SendLocalizedMessage(1158820); // The recipe has been placed in your backpack.
+                            }
                             else
+                            {
                                 pv.SayTo(m_From, 503204); // You do not have room in your backpack for this.
+                            }
 
                             m_From.SendGump(new RecipeBookGump(m_From, m_Book));
                         }

@@ -197,7 +197,39 @@ namespace Server.Engines.JollyRoger
             {
                 if (list.Shrine.Any(y => y.Shrine == shrine))
                 {
-                    _List.FirstOrDefault(x => x.Mobile == m).Shrine.FirstOrDefault(y => y.Shrine == shrine).MasterDeath++;
+                    RewardArray reward = null;
+
+                    for (var index = 0; index < _List.Count; index++)
+                    {
+                        var x = _List[index];
+
+                        if (x.Mobile == m)
+                        {
+                            reward = x;
+                            break;
+                        }
+                    }
+
+                    ShrineArray shrineArray = null;
+
+                    if (reward != null)
+                    {
+                        for (var index = 0; index < reward.Shrine.Count; index++)
+                        {
+                            var y = reward.Shrine[index];
+
+                            if (y.Shrine == shrine)
+                            {
+                                shrineArray = y;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (shrineArray != null)
+                    {
+                        shrineArray.MasterDeath++;
+                    }
                 }
                 else
                 {

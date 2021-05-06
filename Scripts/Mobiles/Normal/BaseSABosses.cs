@@ -4,11 +4,8 @@ using System.Collections.Generic;
 
 namespace Server.Mobiles
 {
-    [TypeAlias("Server.Mobiles.BaseSABosses")]
     public abstract class BaseSABoss : BasePeerless
     {
-        public override bool GiveMLSpecial => false;
-
         Dictionary<Mobile, int> m_DamageEntries;
         public BaseSABoss(AIType aiType, FightMode fightMode, int rangePerception, int rangeFight, double activeSpeed, double passiveSpeed)
             : base(aiType, fightMode, rangePerception, rangeFight, activeSpeed, passiveSpeed)
@@ -23,8 +20,8 @@ namespace Server.Mobiles
         public abstract Type[] UniqueSAList { get; }
         public abstract Type[] SharedSAList { get; }
 
+        public override bool GiveMLSpecial => false;
         public virtual bool NoGoodies => false;
-
         public override bool DropPrimer => false;
 
         public override void Serialize(GenericWriter writer)
@@ -42,16 +39,22 @@ namespace Server.Mobiles
         public virtual void RegisterDamageTo(Mobile m)
         {
             if (m == null)
-                return;
-
-            foreach (DamageEntry de in m.DamageEntries)
             {
+                return;
+            }
+
+            for (var index = 0; index < m.DamageEntries.Count; index++)
+            {
+                DamageEntry de = m.DamageEntries[index];
+
                 Mobile damager = de.Damager;
 
                 Mobile master = damager.GetDamageMaster(m);
 
                 if (master != null)
+                {
                     damager = master;
+                }
 
                 RegisterDamage(damager, de.DamageGiven);
             }
