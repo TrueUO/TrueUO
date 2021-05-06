@@ -18,15 +18,20 @@ namespace Server.Spells.Spellweaving
         public override TimeSpan CastDelayBase => TimeSpan.FromSeconds(3);
         public override double RequiredSkill => 52.0;
         public override int RequiredMana => 40;
+
         public static bool IsValidTarget(BaseCreature bc)
         {
-            if (bc == null || bc.IsParagon || bc.Controlled && !bc.Allured || bc.Summoned || bc.AllureImmune)
+            if (bc == null || bc is BaseChampion || bc is BaseRenowned || bc.IsParagon || bc.Controlled && !bc.Allured || bc.Summoned || bc.AllureImmune)
+            {
                 return false;
+            }
 
             SlayerEntry slayer = SlayerGroup.GetEntryByName(SlayerName.Repond);
 
             if (slayer != null && slayer.Slays(bc))
+            {
                 return true;
+            }
 
             return false;
         }

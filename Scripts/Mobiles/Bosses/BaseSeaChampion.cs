@@ -28,8 +28,6 @@ namespace Server.Mobiles
 
         public override double BonusPetDamageScalar => 1.75;
 
-        public override bool AllureImmune => true;
-
         public BaseSeaChampion(Mobile fisher, AIType ai, FightMode fm)
             : base(ai, fm)
         {
