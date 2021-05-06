@@ -21,7 +21,7 @@ namespace Server.Spells.Spellweaving
 
         public static bool IsValidTarget(BaseCreature bc)
         {
-            if (bc == null || bc is BaseChampion || bc is BaseRenowned || bc.IsParagon || bc.Controlled && !bc.Allured || bc.Summoned || bc.AllureImmune)
+            if (bc == null || bc is BaseChampion || bc is BaseRenowned || bc is BasePeerless || bc.IsParagon || bc.Controlled && !bc.Allured || bc.Summoned || bc.AllureImmune)
             {
                 return false;
             }
