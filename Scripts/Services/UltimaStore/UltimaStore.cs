@@ -384,7 +384,17 @@ namespace Server.Engines.UOStore
 
         public static StoreEntry GetEntry(Type t)
         {
-            return Entries.FirstOrDefault(e => e.ItemType == t);
+            for (var index = 0; index < Entries.Count; index++)
+            {
+                var e = Entries[index];
+
+                if (e.ItemType == t)
+                {
+                    return e;
+                }
+            }
+
+            return null;
         }
 
         public static void Register(StoreEntry entry)
@@ -903,15 +913,16 @@ namespace Server.Engines.UOStore
 
                 PlayerProfile profile = GetProfile(m);
 
-                foreach (StoreEntry entry in remove)
+                for (var index = 0; index < remove.Count; index++)
                 {
+                    StoreEntry entry = remove[index];
+
                     profile.RemoveFromCart(entry);
                 }
 
                 if (fail)
                 {
-                    // Failed to process one of your items. Please check your cart and try again.
-                    m.SendLocalizedMessage(1156853);
+                    m.SendLocalizedMessage(1156853); // Failed to process one of your items. Please check your cart and try again.
                 }
             }
         }
