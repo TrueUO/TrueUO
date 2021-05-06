@@ -57,7 +57,7 @@ namespace Server.Items
 
     public class GargishDocumentNote : Note
     {
-        protected override int[] Contents => new int[] { };
+        public override int[] Contents => new int[] { };
         public virtual int Title => 0;
 
         public GargishDocumentNote()
@@ -243,7 +243,7 @@ namespace Server.Items
     {
         public override int Title => 1150905; // Athenaeum Decree
 
-        protected override int[] Contents => new[] { 1150891 };
+        public override int[] Contents => new[] { 1150891 };
 
         [Constructable]
         public AnthenaeumDecree()
@@ -273,7 +273,7 @@ namespace Server.Items
     {
         public override int Title => 1150906; // A Letter from the King
 
-        protected override int[] Contents => new[] { 1150923, 1150924 };
+        public override int[] Contents => new[] { 1150923, 1150924 };
 
         [Constructable]
         public LetterFromTheKing()
@@ -303,7 +303,7 @@ namespace Server.Items
     {
         public override int Title => 1150908;  // Shilaxrinar's Memorial
 
-        protected override int[] Contents => new[] { 1150899, 1150900 };
+        public override int[] Contents => new[] { 1150899, 1150900 };
 
         [Constructable]
         public ShilaxrinarsMemorial()
@@ -333,7 +333,7 @@ namespace Server.Items
     {
         public override int Title => 1150909;  // To the High Scholar
 
-        protected override int[] Contents => new[] { 1151062, 1151063 };
+        public override int[] Contents => new[] { 1151062, 1151063 };
 
         [Constructable]
         public ToTheHighScholar()
@@ -363,7 +363,7 @@ namespace Server.Items
     {
         public override int Title => 1150910;  // To the High Broodmother
 
-        protected override int[] Contents => new[] { 1151064, 1151065 };
+        public override int[] Contents => new[] { 1151064, 1151065 };
 
         [Constructable]
         public ToTheHighBroodmother()
@@ -393,7 +393,7 @@ namespace Server.Items
     {
         public override int Title => 1150911;  // Reply to the High Scholar
 
-        protected override int[] Contents => new[] { 1151066, 1151067, 1151068 };
+        public override int[] Contents => new[] { 1151066, 1151067, 1151068 };
 
         [Constructable]
         public ReplyToTheHighScholar()
@@ -423,7 +423,7 @@ namespace Server.Items
     {
         public override int Title => 1150912; // Access to the Isle
 
-        protected override int[] Contents => new[] { 1151069 };
+        public override int[] Contents => new[] { 1151069 };
 
         [Constructable]
         public AccessToTheIsle()
