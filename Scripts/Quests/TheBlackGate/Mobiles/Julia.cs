@@ -1,5 +1,6 @@
 using Server.Items;
 using System;
+using System.Linq;
 
 namespace Server.Engines.Quests
 {
@@ -29,6 +30,13 @@ namespace Server.Engines.Quests
             Hue = 0;
         }
 
+        public override void InitOutfit()
+        {
+            AddItem(new Backpack());
+            SetWearable(new DeathShroud());
+            SetWearable(new SmithHammer(), 2500);
+        }
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -46,8 +54,15 @@ namespace Server.Engines.Quests
     {
         public TheTreasuredSacrificeQuest()
         {
-            AddObjective(new CollectionsObtainObjective(typeof(ShepherdsCrookOfHumility), "Shepherd's Crook of Humility (Replica)", 1));
-            AddReward(new BaseReward(1075852)); // A better understanding of Britannia's people
+            AddObjective(new ObtainObjective(typeof(BarristersRobe), "A Barrister's Robe", 1, 0x1F03, 0, 1367));
+            AddObjective(new ObtainObjective(typeof(AnkhNecklace), "Ankh Necklace", 1, 0x3BB5, 0, 2498));
+            AddObjective(new ObtainObjective(typeof(VialOfBlood), "A Vile of Blood", 1, 0xE24, 0, 44));
+            AddObjective(new ObtainObjective(typeof(Illumination), "An Illumination", 1, 0x1C13, 0, 2747));
+            AddObjective(new ObtainObjective(typeof(MugOfPurpleAle), "Mug of Purple Ale", 1, 0x9EF, 0, 1158));
+            AddObjective(new ObtainObjective(typeof(EmbroideredPillow), "An Embroidered Pillow", 1, 0x9E1D, 0, 2125));
+            AddObjective(new ObtainObjective(typeof(BrokenFellowshipSword), "A Broken Fellowship Sword", 1, 0xA33F, 0, 2117));
+            AddObjective(new ObtainObjective(typeof(ShornWool), "Shorn Wool", 1, 0xDFE, 0, 2051));
+            AddReward(new BaseReward(null, 1, "A Virtue Rune", VirtueRune.GetRandomVirtueID(), 0));
         }
 
         public override object Title => "The Treasured Sacrifice";
@@ -60,10 +75,19 @@ namespace Server.Engines.Quests
 
         public override object Complete => "With your help, Julia has collected charms from all the companions. Your sacrifice of these powerful relics does not go unnoticed. Julia smiles a ghostly grin and you feel a warmth about the air as she begins to bind the charms to ethereal plane.";
 
+        public override void GiveRewards()
+        {
+            base.GiveRewards();
+
+            var virtue = VirtueRune.virtueList.FirstOrDefault(x => x.Value == Rewards.FirstOrDefault().Image);
+
+            Owner.AddToBackpack(new VirtueRune(virtue.Key, virtue.Value));
+        }
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(0); // version
+            writer.Write(0);
         }
 
         public override void Deserialize(GenericReader reader)

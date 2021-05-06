@@ -1,4 +1,5 @@
 using Server.Items;
+using Server.Mobiles;
 using System;
 
 namespace Server.Engines.Quests
@@ -55,8 +56,11 @@ namespace Server.Engines.Quests
     {
         public InTheFaceOfDragonsQuest()
         {
-            AddObjective(new CollectionsObtainObjective(typeof(ShepherdsCrookOfHumility), "Shepherd's Crook of Humility (Replica)", 1));
-            AddReward(new BaseReward(1075852)); // A better understanding of Britannia's people
+            AddObjective(new SlayObjective(typeof(Drake), "drakes", 40));
+            AddObjective(new SlayObjective(typeof(Dragon), "dragons", 20));
+            AddObjective(new SlayObjective(typeof(GreaterDragon), "greater dragons", 5));
+
+            AddReward(new BaseReward(typeof(BrokenFellowshipSword), "A Broken Fellowship Sword", 0xA33F, 2117));
         }
 
         public override object Title => "In The Face of Dragons";

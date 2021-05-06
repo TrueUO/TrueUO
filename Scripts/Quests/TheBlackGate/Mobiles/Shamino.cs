@@ -56,8 +56,8 @@ namespace Server.Engines.Quests
     {
         public TheSpiritRangerQuest()
         {
-            AddObjective(new CollectionsObtainObjective(typeof(ShepherdsCrookOfHumility), "Shepherd's Crook of Humility (Replica)", 1));
-            AddReward(new BaseReward(1075852)); // A better understanding of Britannia's people
+            AddObjective(new ObtainObjective(typeof(RangersNecklace), "Ranger's Necklace", 1, 0x3BB5, 0, 2051));
+            AddReward(new BaseReward(typeof(AnkhNecklace), 1, "Ankh Necklace", 0x3BB5, 2498));
         }
 
         public override object Title => "The Spirit Ranger";

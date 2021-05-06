@@ -53,8 +53,10 @@ namespace Server.Engines.Quests
     {
         public TheHonestyInInsanityQuest()
         {
-            AddObjective(new CollectionsObtainObjective(typeof(ShepherdsCrookOfHumility), "Shepherd's Crook of Humility (Replica)", 1));
-            AddReward(new BaseReward(1075852)); // A better understanding of Britannia's people
+            AddObjective(new ObtainObjective(typeof(CompassionSage), "Compassion Sage", 1, 0x1844, 0, 66));
+            AddObjective(new ObtainObjective(typeof(RawGinseng), "Raw Ginseng", 1, 0x18EB));
+
+            AddReward(new BaseReward(typeof(Illumination), "An Illumination", 0x1C13, 2747));
         }
 
         public override object Title => "The Honesty in Insanity";

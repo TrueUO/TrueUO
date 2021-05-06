@@ -54,8 +54,11 @@ namespace Server.Engines.Quests
     {
         public InServiceOfThePoorhouseQuest()
         {
-            AddObjective(new CollectionsObtainObjective(typeof(ShepherdsCrookOfHumility), "Shepherd's Crook of Humility (Replica)", 1));
-            AddReward(new BaseReward(1075852)); // A better understanding of Britannia's people
+            AddObjective(new InternalObjective());
+            AddObjective(new ObtainObjective(typeof(BreadLoaf), "bread loaf", 1, 0x103B));
+            AddObjective(new ObtainObjective(typeof(Shoes), "shoes", 1, 0x170F));
+
+            AddReward(new BaseReward(typeof(EmbroideredPillow), "An Embroidered Pillow", 0x9E1D, 2125));
         }
 
         public override object Title => "In Service of the Poorhouse";
@@ -78,6 +81,39 @@ namespace Server.Engines.Quests
         {
             base.Deserialize(reader);
             reader.ReadInt();
+        }
+
+        private class InternalObjective : ObtainObjective
+        {
+            public InternalObjective()
+                : base(typeof(Pitcher), "milk", 1)
+            {
+            }
+
+            public override bool IsObjective(Item item)
+            {
+                if (base.IsObjective(item))
+                {
+                    Pitcher pitcher = (Pitcher)item;
+
+                    if (pitcher.Content == BeverageType.Milk && !pitcher.IsEmpty)
+                        return true;
+                }
+
+                return false;
+            }
+
+            public override void Serialize(GenericWriter writer)
+            {
+                base.Serialize(writer);
+                writer.WriteEncodedInt(0); // version
+            }
+
+            public override void Deserialize(GenericReader reader)
+            {
+                base.Deserialize(reader);
+                reader.ReadEncodedInt();
+            }
         }
     }
 }

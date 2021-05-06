@@ -52,8 +52,8 @@ namespace Server.Engines.Quests
     {
         public InTheCourtOfTruthQuest()
         {
-            AddObjective(new CollectionsObtainObjective(typeof(ShepherdsCrookOfHumility), "Shepherd's Crook of Humility (Replica)", 1));
-            AddReward(new BaseReward(1075852)); // A better understanding of Britannia's people
+            AddObjective(new ObtainObjective(typeof(ShornWool), "Shorn Wool", 1, 0xDFE, 0, 2051));
+            AddReward(new BaseReward(typeof(BarristersRobe), 1, "A Barrister's Robe", 0x1F03, 1367));
         }
 
         public override object Title => "In the Court of Truth";

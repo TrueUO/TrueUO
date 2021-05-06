@@ -1,4 +1,5 @@
 using Server.Items;
+using Server.Mobiles;
 using System;
 
 namespace Server.Engines.Quests
@@ -56,8 +57,9 @@ namespace Server.Engines.Quests
     {
         public ThePurpleAleOfHonorQuest()
         {
-            AddObjective(new CollectionsObtainObjective(typeof(ShepherdsCrookOfHumility), "Shepherd's Crook of Humility (Replica)", 1));
-            AddReward(new BaseReward(1075852)); // A better understanding of Britannia's people
+            AddObjective(new SlayObjective(typeof(UnboundEnergyVortex), "unbound energy vortex", 1));
+
+            AddReward(new BaseReward(typeof(MugOfPurpleAle), "Mug of Purple Ale", 0x09EF, 1158));
         }
 
         public override object Title => "The Purple Ale of Honor";

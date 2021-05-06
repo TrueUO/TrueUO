@@ -1,4 +1,5 @@
 using Server.Items;
+using Server.Mobiles;
 using System;
 
 namespace Server.Engines.Quests
@@ -54,8 +55,9 @@ namespace Server.Engines.Quests
     {
         public TheShepherdsWayQuest()
         {
-            AddObjective(new CollectionsObtainObjective(typeof(ShepherdsCrookOfHumility), "Shepherd's Crook of Humility (Replica)", 1));
-            AddReward(new BaseReward(1075852)); // A better understanding of Britannia's people
+            AddObjective(new SlayObjective(typeof(Troglodyte), "troglodytes", 50));
+
+            AddReward(new BaseReward(typeof(ShornWool), "Shorn Wool", 0xDFE, 2051));
         }
 
         public override object Title => "The Shepherd's Way";
