@@ -80,8 +80,10 @@ namespace Server.Engines.NewMagincia
             {
                 List<BaseCreature> list = new List<BaseCreature>(entry.Creatures);
 
-                foreach (BaseCreature bc in list)
+                for (var index = 0; index < list.Count; index++)
                 {
+                    BaseCreature bc = list[index];
+
                     if (from.Stabled.Count < AnimalTrainer.GetMaxStabled(from))
                     {
                         bc.Blessed = false;
