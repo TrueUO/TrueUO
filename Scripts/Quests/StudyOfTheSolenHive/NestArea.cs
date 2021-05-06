@@ -27,11 +27,17 @@ namespace Server.Engines.Quests.Naturalist
             get
             {
                 int n = 0;
-                foreach (NestArea area in m_Areas)
+
+                for (var index = 0; index < m_Areas.Length; index++)
                 {
+                    NestArea area = m_Areas[index];
+
                     if (!area.Special)
+                    {
                         n++;
+                    }
                 }
+
                 return n;
             }
         }
@@ -50,11 +56,16 @@ namespace Server.Engines.Quests.Naturalist
         }
         public static NestArea Find(IPoint2D p)
         {
-            foreach (NestArea area in m_Areas)
+            for (var index = 0; index < m_Areas.Length; index++)
             {
+                NestArea area = m_Areas[index];
+
                 if (area.Contains(p))
+                {
                     return area;
+                }
             }
+
             return null;
         }
 
@@ -70,11 +81,16 @@ namespace Server.Engines.Quests.Naturalist
 
         public bool Contains(IPoint2D p)
         {
-            foreach (Rectangle2D rect in m_Rects)
+            for (var index = 0; index < m_Rects.Length; index++)
             {
+                Rectangle2D rect = m_Rects[index];
+
                 if (rect.Contains(p))
+                {
                     return true;
+                }
             }
+
             return false;
         }
     }
