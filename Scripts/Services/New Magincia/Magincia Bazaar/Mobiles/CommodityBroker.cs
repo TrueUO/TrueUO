@@ -39,10 +39,14 @@ namespace Server.Engines.NewMagincia
         {
             int total = 0;
 
-            foreach (CommodityBrokerEntry entry in m_CommodityEntries)
+            for (var index = 0; index < m_CommodityEntries.Count; index++)
             {
+                CommodityBrokerEntry entry = m_CommodityEntries[index];
+
                 if (entry.SellPricePer > 0)
+                {
                     total += entry.Stock * entry.SellPricePer;
+                }
             }
 
             double perc = total * .05;
@@ -87,10 +91,14 @@ namespace Server.Engines.NewMagincia
 
         public override bool HasValidEntry(Mobile m)
         {
-            foreach (CommodityBrokerEntry entry in m_CommodityEntries)
+            for (var index = 0; index < m_CommodityEntries.Count; index++)
             {
+                CommodityBrokerEntry entry = m_CommodityEntries[index];
+
                 if (entry.Stock > 0)
+                {
                     return true;
+                }
             }
 
             return false;
@@ -107,15 +115,20 @@ namespace Server.Engines.NewMagincia
                 amountToAdd = deed.Commodity.Amount;
             }
 
-            foreach (CommodityBrokerEntry entry in m_CommodityEntries)
+            for (var index = 0; index < m_CommodityEntries.Count; index++)
             {
+                CommodityBrokerEntry entry = m_CommodityEntries[index];
+
                 if (entry.CommodityType == type)
                 {
                     entry.Stock += amountToAdd;
                     item.Delete();
 
                     if (from != null && Plot.Owner == from)
-                        from.SendLocalizedMessage(1150220, string.Format("{0}\t#{1}\t{2}", amountToAdd.ToString(), entry.Label, Plot.ShopName == null ? "an unnamed shop" : Plot.ShopName)); // You have added ~1_QUANTITY~ units of ~2_ITEMNAME~ to the inventory of "~3_SHOPNAME~"
+                    {
+                        from.SendLocalizedMessage(1150220, $"{amountToAdd.ToString()}\t#{entry.Label}\t{(Plot.ShopName == null ? "an unnamed shop" : Plot.ShopName)}"); // You have added ~1_QUANTITY~ units of ~2_ITEMNAME~ to the inventory of "~3_SHOPNAME~"
+                    }
+
                     break;
                 }
             }
@@ -123,10 +136,14 @@ namespace Server.Engines.NewMagincia
 
         private bool HasType(Type type)
         {
-            foreach (CommodityBrokerEntry entry in m_CommodityEntries)
+            for (var index = 0; index < m_CommodityEntries.Count; index++)
             {
+                CommodityBrokerEntry entry = m_CommodityEntries[index];
+
                 if (entry.CommodityType == type)
+                {
                     return true;
+                }
             }
 
             return false;
@@ -249,16 +266,18 @@ namespace Server.Engines.NewMagincia
         private void TakeCommodities(Container c, Type type, ref int amount)
         {
             if (c == null)
+            {
                 return;
+            }
 
             Item[] items = c.FindItemsByType(typeof(CommodityDeed));
             List<Item> toSell = new List<Item>();
 
-            foreach (Item item in items)
+            for (var index = 0; index < items.Length; index++)
             {
-                CommodityDeed commodityDeed = item as CommodityDeed;
+                Item item = items[index];
 
-                if (commodityDeed != null && commodityDeed.Commodity != null && commodityDeed.Commodity.GetType() == type)
+                if (item is CommodityDeed commodityDeed && commodityDeed.Commodity != null && commodityDeed.Commodity.GetType() == type)
                 {
                     Item commodity = commodityDeed.Commodity;
 
@@ -271,6 +290,7 @@ namespace Server.Engines.NewMagincia
                     {
                         CommodityDeed newDeed = new CommodityDeed();
                         Item newItem = Loot.Construct(type);
+
                         newItem.Amount = amount;
                         newDeed.SetCommodity(newItem);
 
@@ -282,8 +302,10 @@ namespace Server.Engines.NewMagincia
                 }
             }
 
-            foreach (Item item in toSell)
+            for (var index = 0; index < toSell.Count; index++)
             {
+                Item item = toSell[index];
+
                 AddInventory(null, item);
             }
         }
@@ -296,10 +318,14 @@ namespace Server.Engines.NewMagincia
             Item[] items = c.FindItemsByType(type);
             List<Item> toSell = new List<Item>();
 
-            foreach (Item item in items)
+            for (var index = 0; index < items.Length; index++)
             {
+                Item item = items[index];
+
                 if (amount <= 0)
+                {
                     break;
+                }
 
                 if (item.Amount <= amount)
                 {
@@ -316,8 +342,10 @@ namespace Server.Engines.NewMagincia
                 }
             }
 
-            foreach (Item item in toSell)
+            for (var index = 0; index < toSell.Count; index++)
             {
+                Item item = toSell[index];
+
                 AddInventory(null, item);
             }
         }
@@ -325,13 +353,18 @@ namespace Server.Engines.NewMagincia
         public int GetCommodityType(Container c, Type type)
         {
             if (c == null)
+            {
                 return 0;
+            }
 
             Item[] items = c.FindItemsByType(typeof(CommodityDeed));
+
             int amt = 0;
 
-            foreach (Item item in items)
+            for (var index = 0; index < items.Length; index++)
             {
+                Item item = items[index];
+
                 if (item is CommodityDeed deed && deed.Commodity != null && deed.Commodity.GetType() == type)
                 {
                     amt += deed.Commodity.Amount;
@@ -356,8 +389,9 @@ namespace Server.Engines.NewMagincia
             writer.Write(0);
 
             writer.Write(m_CommodityEntries.Count);
-            foreach (CommodityBrokerEntry entry in m_CommodityEntries)
+            for (var index = 0; index < m_CommodityEntries.Count; index++)
             {
+                CommodityBrokerEntry entry = m_CommodityEntries[index];
                 entry.Serialize(writer);
             }
         }

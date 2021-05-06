@@ -22,17 +22,23 @@ namespace Server.Engines.NewMagincia
 
         public override void OnLocationChange(Point3D old)
         {
-            foreach (Item item in m_Fillers)
+            for (var index = 0; index < m_Fillers.Count; index++)
             {
+                Item item = m_Fillers[index];
+
                 if (item != null && !item.Deleted)
+                {
                     item.Location = new Point3D(X + (item.X - old.X), Y + (item.Y - old.Y), Z + (item.Z - old.Z));
+                }
             }
         }
 
         public override void OnMapChange()
         {
-            foreach (Item item in m_Fillers)
+            for (var index = 0; index < m_Fillers.Count; index++)
             {
+                Item item = m_Fillers[index];
+
                 if (item != null && !item.Deleted)
                 {
                     item.Map = Map;
@@ -42,8 +48,10 @@ namespace Server.Engines.NewMagincia
 
         public override void OnAfterDelete()
         {
-            foreach (Item item in m_Fillers)
+            for (var index = 0; index < m_Fillers.Count; index++)
             {
+                Item item = m_Fillers[index];
+
                 if (item != null && !item.Deleted)
                 {
                     item.Delete();
@@ -63,8 +71,11 @@ namespace Server.Engines.NewMagincia
             writer.Write(0);
 
             writer.Write(m_Fillers.Count);
-            foreach (Item item in m_Fillers)
+            for (var index = 0; index < m_Fillers.Count; index++)
+            {
+                Item item = m_Fillers[index];
                 writer.Write(item);
+            }
         }
 
         public override void Deserialize(GenericReader reader)

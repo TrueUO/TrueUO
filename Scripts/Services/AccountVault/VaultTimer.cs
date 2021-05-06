@@ -14,8 +14,10 @@ namespace Server.AccountVault
 
         public static void OnTick()
         {
-            foreach (var vault in AccountVault.Vaults)
+            for (var index = 0; index < AccountVault.Vaults.Count; index++)
             {
+                var vault = AccountVault.Vaults[index];
+
                 if (vault.Account != null)
                 {
                     vault.OnTick();

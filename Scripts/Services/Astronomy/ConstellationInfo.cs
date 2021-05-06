@@ -121,8 +121,9 @@ namespace Server.Engines.Astronomy
 
             writer.Write(StarPositions.Length);
 
-            foreach (StarPosition pos in StarPositions)
+            for (var index = 0; index < StarPositions.Length; index++)
             {
+                StarPosition pos = StarPositions[index];
                 writer.Write(pos.ImageID);
                 writer.Write(pos.X);
                 writer.Write(pos.Y);
