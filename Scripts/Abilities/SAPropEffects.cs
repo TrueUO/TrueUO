@@ -194,12 +194,9 @@ namespace Server.Items
             {
                 PropertyEffect propertyEffect = Effects[index];
 
-                if (propertyEffect is T effect)
+                if (propertyEffect is T effect && (effect.Victim == victim))
                 {
-                    if (effect.Victim == victim)
-                    {
-                        yield return effect;
-                    }
+                    yield return effect;
                 }
             }
         }
