@@ -4,14 +4,14 @@ namespace Server.Items
 {
     public abstract class Note : Item // BaseNote - Base class.
     {
-        protected abstract int[] Contents { get; }
+        public abstract int[] Contents { get; }
 
-        protected Note()
+        public Note()
             : base(0x14ED)
         {
         }
 
-        protected Note(Serial serial)
+        public Note(Serial serial)
             : base(serial)
         {
         }
