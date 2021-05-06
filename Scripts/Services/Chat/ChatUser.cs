@@ -122,13 +122,19 @@ namespace Server.Engines.Chat
 
         public static void GlobalSendCommand(ChatCommand command, ChatUser initiator, string param1 = null, string param2 = null)
         {
-            foreach (ChatUser user in m_Users.ToArray())
+            for (var index = 0; index < m_Users.ToArray().Length; index++)
             {
+                ChatUser user = m_Users.ToArray()[index];
+
                 if (user == initiator)
+                {
                     continue;
+                }
 
                 if (user.CheckOnline())
+                {
                     ChatSystem.SendCommandTo(user.m_Mobile, command, param1, param2);
+                }
             }
         }
     }

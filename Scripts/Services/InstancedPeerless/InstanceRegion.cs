@@ -43,10 +43,10 @@ namespace Server.Engines.InstancedPeerless
         {
             Mobile from = e.Mobile;
 
-            InstanceRegion region = from.Region as InstanceRegion;
-
-            if (region != null)
+            if (from.Region is InstanceRegion region)
+            {
                 region.Owner.Kick(from);
+            }
         }
 
         public override void OnExit(Mobile m)

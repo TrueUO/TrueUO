@@ -3,7 +3,6 @@ using Server.Network;
 using Server.Spells.SkillMasteries;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -191,9 +190,17 @@ namespace Server.Items
 
         public static IEnumerable<T> GetContextsForVictim<T>(Mobile victim) where T : PropertyEffect
         {
-            foreach (var effect in Effects.OfType<T>().Where(e => e.Victim == victim))
+            for (var index = 0; index < Effects.Count; index++)
             {
-                yield return effect;
+                PropertyEffect propertyEffect = Effects[index];
+
+                if (propertyEffect is T effect)
+                {
+                    if (effect.Victim == victim)
+                    {
+                        yield return effect;
+                    }
+                }
             }
         }
     }

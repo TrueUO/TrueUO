@@ -97,8 +97,10 @@ namespace Server.Multis
                 }
             }
 
-            foreach (BaseBoat b in toDelete)
+            for (var index = 0; index < toDelete.Count; index++)
             {
+                BaseBoat b = toDelete[index];
+
                 b.Delete();
             }
 
