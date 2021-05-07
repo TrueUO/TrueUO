@@ -23,11 +23,6 @@ namespace Server.Engines.Quests
             m.SendMessage("The Black Gate Quest Generated!");
         }
 
-        public static void Delete(CommandEventArgs e)
-        {
-            WeakEntityCollection.Delete(EntityName);
-        }
-
         public static void Generate(Mobile m)
         {
             Mobile quester = new Julia();
@@ -77,6 +72,11 @@ namespace Server.Engines.Quests
             decor = new RawGinsengDecoration();
             decor.MoveToWorld(new Point3D(3386, 319, 4), Map.Trammel);
             WeakEntityCollection.Add(EntityName, decor);
+        }
+
+        public static void Delete(CommandEventArgs e)
+        {
+            WeakEntityCollection.Delete(EntityName);
         }
     }
 }

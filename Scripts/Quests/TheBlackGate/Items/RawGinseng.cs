@@ -16,6 +16,11 @@ namespace Server.Items
             Movable = false;
         }
 
+        public RawGinsengDecoration(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void OnDoubleClick(Mobile from)
         {
             if (!from.InRange(this, 3))
@@ -44,11 +49,6 @@ namespace Server.Items
             from.AddToBackpack(new RawGinseng());            
         }
 
-        public RawGinsengDecoration(Serial serial)
-            : base(serial)
-        {
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -64,6 +64,8 @@ namespace Server.Items
 
     public class RawGinseng : BaseDecayingItem
     {
+        public override int Lifespan => 4320;
+
         [Constructable]
         public RawGinseng()
             : base(0x18EB)
@@ -71,8 +73,6 @@ namespace Server.Items
             Name = "Raw Ginseng";
             Weight = 1.0;
         }
-
-        public override int Lifespan => 4320;
 
         public RawGinseng(Serial serial)
             : base(serial)

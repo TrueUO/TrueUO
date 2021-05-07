@@ -13,6 +13,11 @@ namespace Server.Items
             Hue = 2117;
         }
 
+        public BrokenFellowshipSword(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void OnDoubleClick(Mobile from)
         {
             Gump g = new Gump(100, 100);
@@ -31,11 +36,6 @@ namespace Server.Items
 
             from.PrivateOverheadMessage(MessageType.Regular, 0x47E, 1157722, "its origin", from.NetState); // *Your proficiency in ~1_SKILL~ reveals more about the item*
             from.SendSound(from.Female ? 0x30B : 0x41A);
-        }
-
-        public BrokenFellowshipSword(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
