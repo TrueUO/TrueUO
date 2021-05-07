@@ -16,6 +16,11 @@ namespace Server.Items
             Movable = false;
         }
 
+        public SpilledBlood(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void OnDoubleClick(Mobile from)
         {
             if (!from.InRange(this, 3))
@@ -42,11 +47,6 @@ namespace Server.Items
             }
 
             from.AddToBackpack(new VialOfBlood());
-        }
-
-        public SpilledBlood(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)

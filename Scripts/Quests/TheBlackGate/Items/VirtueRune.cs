@@ -23,6 +23,11 @@ namespace Server.Items
             Name = name;
         }
 
+        public VirtueRune(Serial serial)
+            : base(serial)
+        {
+        }
+
         public static int GetRandomVirtueID()
         {
             return virtueList.ElementAt(Utility.Random(virtueList.Count)).Value;
@@ -51,18 +56,13 @@ namespace Server.Items
             g.AddImageTiledButton(22, 22, 0x176F, 0x176F, 0x0, GumpButtonType.Page, 0, ItemID, Hue, 33, 36);
             g.AddHtml(150, 15, 320, 22, string.Format("<BASEFONT COLOR=#D5D52A><DIV ALIGN=CENTER>{0}</DIV>", Name), false, false);
             g.AddHtml(150, 46, 320, 44, "<BASEFONT COLOR=#AABFD4><DIV ALIGN=CENTER>Given to you by Julia as a thanks for restoring protection to the Shrines of Britannia</DIV>", false, false);
-            g.AddHtml(150, 99, 320, 98, "<BASEFONT COLOR=#DFDFDF>The artisanship of the heavy stone rune is like nothing you haue ever seen. The sigil is carved and adorned with exacting precision.", false, false);
+            g.AddHtml(150, 99, 320, 98, "<BASEFONT COLOR=#DFDFDF>The artisanship of the heavy stone rune is like nothing you have ever seen. The sigil is carved and adorned with exacting precision.", false, false);
             g.AddHtml(150, 197, 320, 98, "<BASEFONT COLOR=#DFDFDF>Despite the the size and heft of the stone, it is uncharacteristically easy to move.", false, false);
 
             from.SendGump(g);
 
             from.PrivateOverheadMessage(MessageType.Regular, 0x47E, 1157722, "its origin", from.NetState); // *Your proficiency in ~1_SKILL~ reveals more about the item*
             from.SendSound(from.Female ? 0x30B : 0x41A);
-        }
-
-        public VirtueRune(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)

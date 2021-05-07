@@ -17,6 +17,11 @@ namespace Server.Items
             Movable = false;
         }
 
+        public BonesOfAFallenRanger(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void OnDoubleClick(Mobile from)
         {
             if (!from.InRange(this, 3))
@@ -45,11 +50,6 @@ namespace Server.Items
             from.AddToBackpack(new RawGinseng());
         }
 
-        public BonesOfAFallenRanger(Serial serial)
-            : base(serial)
-        {
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -73,6 +73,11 @@ namespace Server.Items
             Hue = 2498;
         }
 
+        public RangersNecklace(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void OnDoubleClick(Mobile from)
         {
             Gump g = new Gump(100, 100);
@@ -90,11 +95,6 @@ namespace Server.Items
 
             from.PrivateOverheadMessage(MessageType.Regular, 0x47E, 1157722, "its origin", from.NetState); // *Your proficiency in ~1_SKILL~ reveals more about the item*
             from.SendSound(from.Female ? 0x30B : 0x41A);
-        }
-
-        public RangersNecklace(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
