@@ -86,10 +86,11 @@ namespace Server.Engines.Quests
             {
                 BaseReward first = null;
 
-                foreach (var reward in Rewards)
+                for (var index = 0; index < Rewards.Count; index++)
                 {
+                    var reward = Rewards[index];
+
                     first = reward;
-                    break;
                 }
 
                 if (first != null && x.Value == first.Image)
