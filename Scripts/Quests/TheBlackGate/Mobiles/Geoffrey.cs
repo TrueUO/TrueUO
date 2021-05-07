@@ -70,9 +70,9 @@ namespace Server.Engines.Quests
 
         public override object Refuse => "Then rue got no time for you! If you can't summon the courage to join in this fight be gone with you!";
 
-        public override object Uncomplete => "What are you waiting for? We don't haue time to lose! The Fellowship is there trying to recruit a dragon army to destroy Britannia! Go to Destard and thin the herd!";
+        public override object Uncomplete => "What are you waiting for? We don't have time to lose! The Fellowship is there trying to recruit a dragon army to destroy Britannia! Go to Destard and thin the herd!";
 
-        public override object Complete => "You summoned your inner courage and headed deep inside the dreaded Destard to encounter the dragon herd. As your eyes awoke with the power of nightsight you could see deep into the dungeon. Hundreds of lizard-eyes looked back at you and attacked at once! One by one you dispatched countless drakes and dragons. You are tired from battle but invigorated with your victory! Sir Geoffrey is quite pleased and proud of your progress. He gives you a damaged Fellowship sword as a memento of your valiant efforts!";
+        public override object Complete => "You summoned your inner courage and headed deep inside the dreaded Destard to encounter the dragon herd. As your eyes awoke with the power of night sight you could see deep into the dungeon. Hundreds of lizard-eyes looked back at you and attacked at once! One by one you dispatched countless drakes and dragons. You are tired from battle but invigorated with your victory! Sir Geoffrey is quite pleased and proud of your progress. He gives you a damaged Fellowship sword as a memento of your valiant efforts!";
 
         public override void Serialize(GenericWriter writer)
         {

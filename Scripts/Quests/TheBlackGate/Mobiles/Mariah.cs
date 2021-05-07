@@ -66,9 +66,9 @@ namespace Server.Engines.Quests
 
         public override object Refuse => "Mariah's fate will rest in those who seek the truth in what Mariah has discovered in the depths of her insanity.";
 
-        public override object Uncomplete => "You must find compassion sage and raw ginseng before it is too late! Venture to the Exodus Dungeon in Ilshenar, there you will find Compassion Sage carried by Controllers. Raw ginseng can be found growing in the northern forest of Britainnia.";
+        public override object Uncomplete => "You must find compassion sage and raw ginseng before it is too late! Venture to the Exodus Dungeon in Ilshenar, there you will find Compassion Sage carried by Controllers. Raw ginseng can be found growing in the northern forest of Britannia.";
 
-        public override object Complete => "The healers start right away on preparing the salve. Mariah's condition improves with each passinf moment. She thanks you immensly for your service during her time of need. While suffering maladies of the tetrahedron Mariah has drafted Illuminations from the Book of Truth. She gives you one with smile, \"Be true to the origins of Britannia and you will succeed in your endevor.\"";
+        public override object Complete => "The healers start right away on preparing the salve. Mariah's condition improves with each passing moment. She thanks you immensely for your service during her time of need. While suffering maladies of the tetrahedron Mariah has drafted Illuminations from the Book of Truth. She gives you one with smile, \"Be true to the origins of Britannia and you will succeed in your endeavor.\"";
 
         public override void Serialize(GenericWriter writer)
         {
