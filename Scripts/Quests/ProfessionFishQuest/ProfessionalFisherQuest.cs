@@ -143,7 +143,9 @@ namespace Server.Engines.Quests
                     if (obj != null)
                     {
                         foreach (KeyValuePair<Type, int[]> kvp in obj.Line)
+                        {
                             entry.OnQuestResign(kvp.Key);
+                        }
                     }
                 }
             }
@@ -185,35 +187,53 @@ namespace Server.Engines.Quests
         public void DeleteQuestItems()
         {
             if (m_Crate == null)
+            {
                 return;
+            }
 
             Container hold = null;
+
             if (m_Crate.RootParent is Container parent)
+            {
                 hold = parent;
+            }
 
             //Deletes quest reqeust
             FishQuestObjective obj = GetObjective();
+
             if (obj != null)
             {
                 foreach (KeyValuePair<Type, int[]> kvp in obj.Line)
+                {
                     m_Crate.ConsumeTotal(kvp.Key, kvp.Value[1]);
+                }
             }
 
             //then moves any extras to the hold
             if (hold != null)
             {
-                foreach (Item item in new List<Item>(m_Crate.Items))
+                var list = new List<Item>(m_Crate.Items);
+
+                for (var index = 0; index < list.Count; index++)
+                {
+                    Item item = list[index];
+
                     hold.DropItem(item);
+                }
             }
 
             if (m_Crate != null)
+            {
                 m_Crate.Delete();
+            }
         }
 
         public FishQuestObjective GetObjective()
         {
             if (Objectives.Count > 0)
+            {
                 return Objectives[0] as FishQuestObjective;
+            }
 
             return null;
         }
