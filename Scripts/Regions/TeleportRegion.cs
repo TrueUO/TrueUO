@@ -100,7 +100,9 @@ namespace Server.Regions
                 string filePath = Path.Combine("Data", "TeleporterRegions.xml");
 
                 if (!File.Exists(filePath))
+                {
                     return;
+                }
 
                 XmlDocument doc = new XmlDocument();
                 doc.Load(filePath);
@@ -147,7 +149,7 @@ namespace Server.Regions
 
                     if (fromMap == null)
                     {
-                        throw new ArgumentException($"Map parsed as null: {@from}");
+                        throw new ArgumentException($"Map parsed as null: {from}");
                     }
 
                     if (toMap == null)
@@ -160,7 +162,7 @@ namespace Server.Regions
                         continue;
                     }
 
-                    list.Add(new WorldLocation(@from, fromMap), new WorldLocation(to, toMap));
+                    list.Add(new WorldLocation(from, fromMap), new WorldLocation(to, toMap));
 
                     if (list.Count == 1)
                     {
@@ -172,7 +174,7 @@ namespace Server.Regions
                     {
                         bool any = false;
 
-                        foreach (var s in fromMap.FindItems<Static>(@from, 0))
+                        foreach (var s in fromMap.FindItems<Static>(from, 0))
                         {
                             if (s.ItemID == id)
                             {
@@ -190,7 +192,7 @@ namespace Server.Regions
                                 st.Hue = hue;
                             }
 
-                            st.MoveToWorld(@from, fromMap);
+                            st.MoveToWorld(from, fromMap);
                         }
                     }
                 }
@@ -202,17 +204,14 @@ namespace Server.Regions
 
                     foreach (var kvp in list)
                     {
-                        recs[i++] = new Rectangle3D(kvp.Key.Location.X, kvp.Key.Location.Y, kvp.Key.Location.Z - 5, 1,
-                            1, 10);
+                        recs[i++] = new Rectangle3D(kvp.Key.Location.X, kvp.Key.Location.Y, kvp.Key.Location.Z - 5, 1, 1, 10);
                     }
 
                     TeleportRegion teleRegion;
 
-                    if (!Siege.SiegeShard && locMap != null && locMap.Rules != MapRules.FeluccaRules &&
-                        teleMap.Rules == MapRules.FeluccaRules)
+                    if (!Siege.SiegeShard && locMap != null && locMap.Rules != MapRules.FeluccaRules && teleMap.Rules == MapRules.FeluccaRules)
                     {
-                        teleRegion = new TeleportRegionPVPWarning($"Teleport Region {unique.ToString()}", locMap, recs,
-                            list);
+                        teleRegion = new TeleportRegionPVPWarning($"Teleport Region {unique.ToString()}", locMap, recs, list);
                     }
                     else
                     {
@@ -238,9 +237,7 @@ namespace Server.Regions
         {
             if (m.CanBeginAction(typeof(Teleporter)))
             {
-                var pm = m as PlayerMobile;
-
-                if (pm != null)
+                if (m is PlayerMobile pm)
                 {
                     if (pm.DisabledPvpWarning)
                     {

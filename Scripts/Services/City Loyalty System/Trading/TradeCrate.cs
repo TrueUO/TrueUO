@@ -167,7 +167,7 @@ namespace Server.Engines.CityLoyalty
                     {
                         if (message)
                         {
-                            @from.SendLocalizedMessage(
+                            from.SendLocalizedMessage(
                                 1151726); // You are trying to add too many of this item to the trade order. Only add the required quantity
                         }
 
