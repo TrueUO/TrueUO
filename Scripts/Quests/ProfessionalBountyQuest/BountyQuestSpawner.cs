@@ -17,7 +17,9 @@ namespace Server.Engines.Quests
             m_ActiveZones = new Dictionary<SpawnZone, List<BaseShipCaptain>>();
 
             foreach (int i in Enum.GetValues(typeof(SpawnZone)))
+            {
                 m_ActiveZones.Add((SpawnZone)i, new List<BaseShipCaptain>());
+            }
         }
 
         public static void GenerateShipSpawner()
@@ -118,10 +120,14 @@ namespace Server.Engines.Quests
 
                 foreach (List<BaseShipCaptain> list in m_ActiveZones.Values)
                 {
-                    foreach (BaseShipCaptain capt in list)
+                    for (var index = 0; index < list.Count; index++)
                     {
+                        BaseShipCaptain capt = list[index];
+
                         if (capt is MerchantCaptain)
+                        {
                             count++;
+                        }
                     }
                 }
 
@@ -292,12 +298,20 @@ namespace Server.Engines.Quests
 
             foreach (List<BaseShipCaptain> list in m_ActiveZones.Values)
             {
-                foreach (BaseShipCaptain capt in list)
+                for (var index = 0; index < list.Count; index++)
+                {
+                    BaseShipCaptain capt = list[index];
+
                     ToRemove.Add(capt);
+                }
             }
 
-            foreach (BaseShipCaptain cap in ToRemove)
+            for (var index = 0; index < ToRemove.Count; index++)
+            {
+                BaseShipCaptain cap = ToRemove[index];
+
                 cap.TryDecayGalleon(cap.Galleon);
+            }
         }
 
         public void SpawnPirateAndGalleon(SpawnZone zone, Map map)
@@ -705,8 +719,11 @@ namespace Server.Engines.Quests
             {
                 writer.Write((int)kvp.Key);
                 writer.Write(kvp.Value.Count);
-                foreach (BaseShipCaptain capt in kvp.Value)
+                for (var index = 0; index < kvp.Value.Count; index++)
+                {
+                    BaseShipCaptain capt = kvp.Value[index];
                     writer.Write(capt);
+                }
             }
 
             writer.Write(m_Bounties.Count);

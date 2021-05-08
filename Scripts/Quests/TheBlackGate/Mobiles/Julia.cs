@@ -1,6 +1,6 @@
 using Server.Items;
 using System;
-using System.Collections.Generic;
+using System.Linq;
 
 namespace Server.Engines.Quests
 {
@@ -85,25 +85,7 @@ namespace Server.Engines.Quests
         {
             base.GiveRewards();
 
-            var virtue = new KeyValuePair<string, int>();
-
-            foreach (var x in VirtueRune.virtueList)
-            {
-                BaseReward first = null;
-
-                for (var index = 0; index < Rewards.Count; index++)
-                {
-                    var reward = Rewards[index];
-
-                    first = reward;
-                }
-
-                if (first != null && x.Value == first.Image)
-                {
-                    virtue = x;
-                    break;
-                }
-            }
+            var virtue = VirtueRune.virtueList.FirstOrDefault(x => x.Value == Rewards.FirstOrDefault().Image);
 
             Owner.AddToBackpack(new VirtueRune(virtue.Key, virtue.Value));
         }

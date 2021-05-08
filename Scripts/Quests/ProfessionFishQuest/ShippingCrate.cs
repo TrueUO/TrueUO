@@ -227,7 +227,7 @@ namespace Server.Items
 
         public object GetDeliveryInfo()
         {
-            if (Quest != null && Quest is ProfessionalFisherQuest && Quest.TurnIn != null)
+            if (Quest != null && Quest.TurnIn != null)
             {
                 Region reg = Quest.TurnIn.Region;
 
@@ -251,6 +251,7 @@ namespace Server.Items
                 if (reg.Name == "Papua")
                     return 1116503;
             }
+
             return "Unknown Delivery";
         }
 

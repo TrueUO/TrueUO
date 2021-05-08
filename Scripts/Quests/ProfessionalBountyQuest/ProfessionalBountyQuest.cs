@@ -60,8 +60,10 @@ namespace Server.Engines.Quests
                 m_Captain = captain;
                 CompileHelpersList(captain);
 
-                foreach (BaseObjective obj in Objectives)
+                for (var index = 0; index < Objectives.Count; index++)
                 {
+                    BaseObjective obj = Objectives[index];
+
                     if (obj is BountyQuestObjective objective)
                     {
                         objective.Captured = true;
@@ -76,8 +78,10 @@ namespace Server.Engines.Quests
             m_Captain = captain;
             CompileHelpersList(captain);
 
-            foreach (BaseObjective obj in Objectives)
+            for (var index = 0; index < Objectives.Count; index++)
             {
+                BaseObjective obj = Objectives[index];
+
                 if (obj is BountyQuestObjective objective)
                 {
                     objective.Captured = false;
@@ -161,8 +165,11 @@ namespace Server.Engines.Quests
         public override void GiveRewards()
         {
             bool captured = false;
-            foreach (BaseObjective obj in Objectives)
+
+            for (var index = 0; index < Objectives.Count; index++)
             {
+                BaseObjective obj = Objectives[index];
+
                 if (obj is BountyQuestObjective o && o.Captured)
                 {
                     captured = true;
@@ -192,8 +199,10 @@ namespace Server.Engines.Quests
             if (m_Helpers.Count > 1)
                 eachAward = totalAward / m_Helpers.Count;
 
-            foreach (Mobile mob in m_Helpers)
+            for (var index = 0; index < m_Helpers.Count; index++)
             {
+                Mobile mob = m_Helpers[index];
+
                 if (mob.NetState != null || mob == Owner)
                 {
                     mob.AddToBackpack(new Gold(eachAward));
@@ -205,12 +214,18 @@ namespace Server.Engines.Quests
                         if (reward != null)
                         {
                             if (reward is RuinedShipPlans)
+                            {
                                 mob.SendLocalizedMessage(1149838); //Here is something special!  It's a salvaged set of orc ship plans.  Parts of it are unreadable, but if you could get another copy you might be able to fill in some of the missing parts...
+                            }
                             else
+                            {
                                 mob.SendLocalizedMessage(1149840); //Here is some special cannon ammunition.  It's imported!
+                            }
 
                             if (reward is HeavyFlameCannonball || reward is LightFlameCannonball || reward is HeavyFrostCannonball || reward is LightFrostCannonball)
+                            {
                                 reward.Amount = Utility.RandomMinMax(5, 10);
+                            }
 
                             mob.AddToBackpack(reward);
                         }
@@ -220,10 +235,14 @@ namespace Server.Engines.Quests
                 }
                 else
                 {
-                    foreach (Mobile mobile in m_Helpers)
+                    for (var i = 0; i < m_Helpers.Count; i++)
                     {
+                        Mobile mobile = m_Helpers[i];
+
                         if (mobile != mob && mobile.NetState != null)
+                        {
                             mobile.SendLocalizedMessage(1149837, string.Format("{0}\t{1}\t{2}", eachAward, mob.Name, Owner.Name)); //~1_val~ gold is for ~2_val~, I can't find them so I'm giving this to Captain ~3_val~.
+                        }
                     }
 
                     Owner.AddToBackpack(new Gold(eachAward));
@@ -285,8 +304,11 @@ namespace Server.Engines.Quests
             writer.Write(m_Galleon);
 
             writer.Write(m_Helpers.Count);
-            foreach (Mobile mob in m_Helpers)
+            for (var index = 0; index < m_Helpers.Count; index++)
+            {
+                Mobile mob = m_Helpers[index];
                 writer.Write(mob);
+            }
         }
 
         public override void Deserialize(GenericReader reader)

@@ -127,21 +127,36 @@ namespace Server.Items
         {
             base.OnLocationChange(old);
 
-            Tools.ForEach(t => t.Location = new Point3D(X + t.Offset.X, Y + t.Offset.Y, Z + t.Offset.Z));
+            for (var index = 0; index < Tools.Count; index++)
+            {
+                var t = Tools[index];
+
+                t.Location = new Point3D(X + t.Offset.X, Y + t.Offset.Y, Z + t.Offset.Z);
+            }
         }
 
         public override void OnMapChange()
         {
             base.OnMapChange();
 
-            Tools.ForEach(t => t.Map = Map);
+            for (var index = 0; index < Tools.Count; index++)
+            {
+                var t = Tools[index];
+
+                t.Map = Map;
+            }
         }
 
         public override void OnAfterDelete()
         {
             base.OnAfterDelete();
 
-            Tools.ForEach(t => t.Delete());
+            for (var index = 0; index < Tools.Count; index++)
+            {
+                var t = Tools[index];
+
+                t.Delete();
+            }
         }
 
         public CraftAddon(Serial serial)
@@ -157,7 +172,11 @@ namespace Server.Items
             writer.Write((int)Level);
 
             writer.Write(Tools.Count);
-            Tools.ForEach(t => writer.Write(t));
+            for (var index = 0; index < Tools.Count; index++)
+            {
+                var t = Tools[index];
+                writer.Write(t);
+            }
         }
 
         public override void Deserialize(GenericReader reader)
@@ -172,9 +191,7 @@ namespace Server.Items
             int count = reader.ReadInt();
             for (int i = 0; i < count; i++)
             {
-                AddonToolComponent tool = reader.ReadItem() as AddonToolComponent;
-
-                if (tool != null)
+                if (reader.ReadItem() is AddonToolComponent tool)
                 {
                     tool.SetCraftSystem(CraftSystem);
                     Tools.Add(tool);
@@ -194,9 +211,8 @@ namespace Server.Items
             public override bool OnDragDrop(Mobile from, Item dropped)
             {
                 BaseHouse house = BaseHouse.FindHouseAt(this);
-                CraftAddon addon = Addon as CraftAddon;
 
-                if (house != null && addon != null && house.HasSecureAccess(from, addon.Level))
+                if (house != null && Addon is CraftAddon addon && house.HasSecureAccess(from, addon.Level))
                 {
                     if (dropped is ITool tool && !(tool is BaseRunicTool))
                     {
@@ -226,13 +242,15 @@ namespace Server.Items
                                 return false;
                             }
 
-                            int toadd = Math.Min(tool.UsesRemaining, comp.MaxUses - comp.UsesRemaining);
+                            int toAdd = Math.Min(tool.UsesRemaining, comp.MaxUses - comp.UsesRemaining);
 
-                            comp.UsesRemaining += toadd;
-                            tool.UsesRemaining -= toadd;
+                            comp.UsesRemaining += toAdd;
+                            tool.UsesRemaining -= toAdd;
 
                             if (tool.UsesRemaining <= 0 && !tool.Deleted)
+                            {
                                 tool.Delete();
+                            }
 
                             from.SendLocalizedMessage(1155741); // Charges have been added to the power tool.
 

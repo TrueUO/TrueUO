@@ -45,14 +45,18 @@ namespace Server.Mobiles
             if (m == null)
                 return;
 
-            foreach (DamageEntry de in m.DamageEntries)
+            for (var index = 0; index < m.DamageEntries.Count; index++)
             {
+                DamageEntry de = m.DamageEntries[index];
+
                 Mobile damager = de.Damager;
 
                 Mobile master = damager.GetDamageMaster(m);
 
                 if (master != null)
+                {
                     damager = master;
+                }
 
                 RegisterDamage(damager, de.DamageGiven);
             }
