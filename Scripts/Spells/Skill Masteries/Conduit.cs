@@ -124,7 +124,13 @@ namespace Server.Spells.SkillMasteries
 
                     if (toAffect != null && callback != null)
                     {
-                        toAffect.ForEach(m => callback(m, conduit.Strength / 100.0));
+                        for (var index = 0; index < toAffect.Count; index++)
+                        {
+                            var m = toAffect[index];
+
+                            callback(m, conduit.Strength / 100.0);
+                        }
+
                         ColUtility.Free(toAffect);
                         return true;
                     }

@@ -3,7 +3,6 @@ using Server.Items;
 using Server.Spells;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Mobiles
 {
@@ -78,7 +77,19 @@ namespace Server.Mobiles
                 return 0;
             }
 
-            return SummonedHelpers.Count(bc => bc != null && bc.Alive);
+            int count = 0;
+
+            for (var index = 0; index < SummonedHelpers.Count; index++)
+            {
+                var bc = SummonedHelpers[index];
+
+                if (bc != null && bc.Alive)
+                {
+                    count++;
+                }
+            }
+
+            return count;
         }
 
         public void Summon(Mobile target, bool initial = false)
@@ -230,7 +241,20 @@ namespace Server.Mobiles
             {
                 if (InitialSpawn != null)
                 {
-                    if (InitialSpawn.All(s => s.Deleted))
+                    bool all = true;
+
+                    for (var index = 0; index < InitialSpawn.Count; index++)
+                    {
+                        var s = InitialSpawn[index];
+
+                        if (!s.Deleted)
+                        {
+                            all = false;
+                            break;
+                        }
+                    }
+
+                    if (all)
                     {
                         ColUtility.Free(InitialSpawn);
                         InitialSpawn = null;
@@ -246,9 +270,7 @@ namespace Server.Mobiles
 
             if (Combatant == null)
             {
-                if (SpawnLocation != Point3D.Zero &&
-                    _LastActivity > DateTime.MinValue &&
-                    _LastActivity + TimeSpan.FromHours(2) < DateTime.UtcNow)
+                if (SpawnLocation != Point3D.Zero && _LastActivity > DateTime.MinValue && _LastActivity + TimeSpan.FromHours(2) < DateTime.UtcNow)
                 {
                     Delete();
                 }
@@ -276,20 +298,30 @@ namespace Server.Mobiles
 
                     PlaySound(0x20D);
 
-                    foreach (Mobile m in SpellHelper.AcquireIndirectTargets(this, Location, Map, 10).OfType<Mobile>())
+                    foreach (IDamageable target in SpellHelper.AcquireIndirectTargets(this, Location, Map, 10))
                     {
-                        int range = (int)GetDistanceToSqrt(m);
-
-                        if (range < 1) range = 1;
-                        if (range > 4) range = 4;
-
-                        m.PlaySound(0x20D);
-                        AOS.Damage(this, m, baseDamage / range, 0, 0, 0, 0, 0, 100, 0);
-
-                        if (!switched && 0.2 > Utility.RandomDouble())
+                        if (target is Mobile m)
                         {
-                            Combatant = m;
-                            switched = true;
+                            int range = (int) GetDistanceToSqrt(m);
+
+                            if (range < 1)
+                            {
+                                range = 1;
+                            }
+
+                            if (range > 4)
+                            {
+                                range = 4;
+                            }
+
+                            m.PlaySound(0x20D);
+                            AOS.Damage(this, m, baseDamage / range, 0, 0, 0, 0, 0, 100, 0);
+
+                            if (!switched && 0.2 > Utility.RandomDouble())
+                            {
+                                Combatant = m;
+                                switched = true;
+                            }
                         }
                     }
                 }
@@ -309,11 +341,12 @@ namespace Server.Mobiles
             {
                 List<DamageStore> rights = GetLootingRights();
 
-                foreach (DamageStore ds in rights)
+                for (var index = 0; index < rights.Count; index++)
                 {
-                    if (ds.m_Mobile is PlayerMobile && ds.m_HasRight)
+                    DamageStore ds = rights[index];
+
+                    if (ds.m_Mobile is PlayerMobile m && ds.m_HasRight)
                     {
-                        PlayerMobile m = ds.m_Mobile as PlayerMobile;
                         int ordersComplete = 0;
 
                         if (KrampusEvent.Instance.CompleteTable.ContainsKey(m))
@@ -418,12 +451,24 @@ namespace Server.Mobiles
             writer.Write(SummonedHelpers == null ? 0 : SummonedHelpers.Count);
 
             if (SummonedHelpers != null)
-                SummonedHelpers.ForEach(m => writer.Write(m));
+            {
+                for (var index = 0; index < SummonedHelpers.Count; index++)
+                {
+                    var m = SummonedHelpers[index];
+                    writer.Write(m);
+                }
+            }
 
             writer.Write(InitialSpawn == null ? 0 : InitialSpawn.Count);
 
             if (InitialSpawn != null)
-                InitialSpawn.ForEach(m => writer.Write(m));
+            {
+                for (var index = 0; index < InitialSpawn.Count; index++)
+                {
+                    var m = InitialSpawn[index];
+                    writer.Write(m);
+                }
+            }
         }
 
         public override void Deserialize(GenericReader reader)
