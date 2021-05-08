@@ -180,12 +180,9 @@ namespace Server.Mobiles
                     {
                         Mobile creature = Spawn.Creatures[index];
 
-                        if (creature is KhalAnkurWarriors x)
+                        if (creature is KhalAnkurWarriors warrior && warrior._Type == KhalAnkurWarriors.WarriorType.General && !warrior.Deleted)
                         {
-                            if (x._Type == KhalAnkurWarriors.WarriorType.General && !x.Deleted)
-                            {
-                                count++;
-                            }
+                            count++;
                         }
                     }
 

@@ -119,16 +119,26 @@ namespace Server.Mobiles
             m_Crates.Add(crate);
 
             if (!pack.ConsumeTotal(typeof(Gold), DryDockAmount))
+            {
                 Banker.Withdraw(from, DryDockAmount);
+            }
 
             bool cantMove = false;
+
             List<Item> items = new List<Item>(hold.Items);
-            foreach (Item item in items)
+
+            for (var index = 0; index < items.Count; index++)
             {
+                Item item = items[index];
+
                 if (item.Movable)
+                {
                     crate.DropItem(item);
+                }
                 else
+                {
                     cantMove = true;
+                }
             }
 
             Point3D pnt = Point3D.Zero;
@@ -195,15 +205,19 @@ namespace Server.Mobiles
         public BaseBoat GetBoatInRegion(Mobile from)
         {
             if (Map == null || Map == Map.Internal || Region == null)
-                return null;
-
-            foreach (Rectangle3D rec in Region.Area)
             {
+                return null;
+            }
+
+            for (var index = 0; index < Region.Area.Length; index++)
+            {
+                Rectangle3D rec = Region.Area[index];
+
                 IPooledEnumerable eable = Map.GetItemsInBounds(new Rectangle2D(rec.Start.X, rec.Start.Y, rec.Width, rec.Height));
 
                 foreach (Item item in eable)
                 {
-                    if (item is BaseBoat boat && boat.Owner == from && InRange(boat.Location, DryDockDistance))
+                    if (item is BaseBoat boat && boat.Owner == @from && InRange(boat.Location, DryDockDistance))
                     {
                         eable.Free();
                         return boat;
@@ -212,6 +226,7 @@ namespace Server.Mobiles
 
                 eable.Free();
             }
+
             return null;
         }
 
