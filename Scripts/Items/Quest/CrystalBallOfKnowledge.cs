@@ -1,6 +1,5 @@
 using Server.Gumps;
 using Server.Network;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -50,11 +49,6 @@ namespace Server.Items
                 // You must have the object in your backpack to use it.
                 from.SendLocalizedMessage(1042010);
             }
-            /*else if ( ??? ) // TODO (SA)
-			{
-				// You cannot use the Crystal Ball of Knowledge right now.
-				from.SendLocalizedMessage( 1112569 );
-			}*/
             else if (!from.HasGump(typeof(ToggleActivationGump)))
             {
                 from.SendGump(new ToggleActivationGump(this));
@@ -63,19 +57,35 @@ namespace Server.Items
 
         public static bool IsAllowed(SkillName skill)
         {
-            return _ExcludedSkills.All(sk => sk != skill);
+            for (var index = 0; index < _ExcludedSkills.Length; index++)
+            {
+                var sk = _ExcludedSkills[index];
+
+                if (sk == skill)
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         public static bool HasActiveBall(Mobile from)
         {
             if (from.Backpack == null)
+            {
                 return false;
+            }
 
             CrystalBallOfKnowledge[] balls = from.Backpack.FindItemsByType<CrystalBallOfKnowledge>().ToArray();
 
             for (int i = 0; i < balls.Length; i++)
+            {
                 if (balls[i].Active)
+                {
                     return true;
+                }
+            }
 
             return false;
         }

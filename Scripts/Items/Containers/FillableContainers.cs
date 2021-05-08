@@ -75,7 +75,7 @@ namespace Server.Items
             int count = 0;
             int fail = 0;
 
-            List<FillableContainer> toCheck = new List<FillableContainer>(World.Items.Values.OfType<FillableContainer>().Where(i => i is FillableContainer && i.ContentType == FillableContentType.None));
+            List<FillableContainer> toCheck = new List<FillableContainer>(World.Items.Values.OfType<FillableContainer>().Where(i => i.ContentType == FillableContentType.None));
 
             for (var index = 0; index < toCheck.Count; index++)
             {
@@ -1617,11 +1617,11 @@ namespace Server.Items
             foreach (Mobile mob in eable)
             {
                 if (nearest != null && mob.GetDistanceToSqrt(loc) > nearest.GetDistanceToSqrt(loc) && !(nearest is Cobbler && mob is Provisioner))
+                {
                     continue;
+                }
 
-                FillableContent check = m_AcquireTable[mob.GetType()] as FillableContent;
-
-                if (check != null)
+                if (m_AcquireTable[mob.GetType()] is FillableContent check)
                 {
                     nearest = mob;
                     content = check;

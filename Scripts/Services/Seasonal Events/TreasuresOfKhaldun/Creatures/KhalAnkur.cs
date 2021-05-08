@@ -3,7 +3,6 @@ using Server.Items;
 using Server.Network;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Mobiles
 {
@@ -173,9 +172,27 @@ namespace Server.Mobiles
 
                     m_NextSpawn = DateTime.UtcNow + TimeSpan.FromSeconds(Utility.RandomMinMax(120, 180));
                 }
-                else if (Spawn.Creatures.OfType<KhalAnkurWarriors>().Count(x => x._Type == KhalAnkurWarriors.WarriorType.General && !x.Deleted) <= 0)
+                else
                 {
-                    Blessed = false;
+                    int count = 0;
+
+                    for (var index = 0; index < Spawn.Creatures.Count; index++)
+                    {
+                        Mobile creature = Spawn.Creatures[index];
+
+                        if (creature is KhalAnkurWarriors x)
+                        {
+                            if (x._Type == KhalAnkurWarriors.WarriorType.General && !x.Deleted)
+                            {
+                                count++;
+                            }
+                        }
+                    }
+
+                    if (count <= 0)
+                    {
+                        Blessed = false;
+                    }
                 }
             }
         }
