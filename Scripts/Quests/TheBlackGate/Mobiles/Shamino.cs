@@ -3,15 +3,15 @@ using System;
 
 namespace Server.Engines.Quests
 {
-    public class Shamino : MondainQuester
+    public class ShaminoStatue : MondainQuester
     {
         [Constructable]
-        public Shamino()
+        public ShaminoStatue()
             : base("A Statue Of Shamino")
         {
         }
 
-        public Shamino(Serial serial)
+        public ShaminoStatue(Serial serial)
             : base(serial)
         {
         }
@@ -25,19 +25,39 @@ namespace Server.Engines.Quests
             CantWalk = true;
             Female = false;
             Race = Race.Human;
-            Body = 0x190;
 
             Hue = 2955;
+            HairItemID = 0x2045;
+            HairHue = 2955;
+            FacialHairItemID = 0x2041;
+            FacialHairHue = 2955;
         }
 
         public override void InitOutfit()
         {
             AddItem(new Backpack());
-            SetWearable(new StuddedArms(), 2955);
-            SetWearable(new StuddedChest(), 2955);
-            SetWearable(new StuddedGloves(), 2955);
-            SetWearable(new ThighBoots(), 2955);
-            SetWearable(new Cloak(), 2955);
+
+            Item arms = new StuddedArms
+            {
+                Hue = 2955
+            };
+            AddItem(arms);
+
+            Item chest = new StuddedChest
+            {
+                Hue = 2955
+            };
+            AddItem(chest);
+
+            Item gloves = new StuddedGloves
+            {
+                Hue = 2955
+            };
+            AddItem(gloves);
+
+
+            AddItem(new ThighBoots(2955));
+            AddItem(new Cloak(2955));
         }
 
         public override void Serialize(GenericWriter writer)

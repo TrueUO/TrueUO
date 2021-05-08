@@ -26,19 +26,22 @@ namespace Server.Engines.Quests
             CantWalk = true;
             Female = false;
             Race = Race.Human;
-            Body = 0x190;
 
             Hue = 33770;
+            HairItemID = 0x203B;
+            HairHue = 1117;
+            FacialHairItemID = 0x2041;
+            FacialHairHue = 1117;
         }
 
         public override void InitOutfit()
         {
             AddItem(new Backpack());
-            SetWearable(new PlateArms());
-            SetWearable(new PlateChest());
-            SetWearable(new PlateLegs());
-            SetWearable(new PlateGloves());
-            SetWearable(new BodySash(), 1158);
+            AddItem(new PlateArms());
+            AddItem(new PlateChest());
+            AddItem(new PlateLegs());
+            AddItem(new PlateGloves());
+            AddItem(new BodySash(1158));
         }
 
         public override void Serialize(GenericWriter writer)

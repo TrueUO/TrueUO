@@ -18,12 +18,12 @@ namespace Server.Engines.Quests
             Mobile m = e.Mobile;
 
             Delete(e);
-            Generate(m);
+            Generate();
 
             m.SendMessage("The Black Gate Quest Generated!");
         }
 
-        public static void Generate(Mobile m)
+        public static void Generate()
         {
             Mobile quester = new Julia();
             quester.MoveToWorld(new Point3D(2572, 526, 15), Map.Trammel);
@@ -33,7 +33,7 @@ namespace Server.Engines.Quests
             quester.MoveToWorld(new Point3D(3711, 2249, 20), Map.Trammel);
             WeakEntityCollection.Add(EntityName, quester);
 
-            quester = new Shamino();
+            quester = new ShaminoStatue();
             quester.MoveToWorld(new Point3D(742, 2163, 0), Map.Trammel);
             WeakEntityCollection.Add(EntityName, quester);
 

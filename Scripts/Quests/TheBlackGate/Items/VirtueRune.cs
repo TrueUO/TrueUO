@@ -7,6 +7,7 @@ namespace Server.Items
 {
     public class VirtueRune : Item
     {
+        [Constructable]
         public VirtueRune()
             : this(virtueList.ElementAt(Utility.Random(virtueList.Count)))
         {
@@ -33,7 +34,7 @@ namespace Server.Items
             return virtueList.ElementAt(Utility.Random(virtueList.Count)).Value;
         }
 
-        public static readonly Dictionary<string, int> virtueList = new Dictionary<string, int> 
+        private static readonly Dictionary<string, int> _virtueList = new Dictionary<string, int> 
         {
             {"Compassion", 0xA51B },
             {"Honesty", 0xA519},
@@ -44,6 +45,8 @@ namespace Server.Items
             {"Spirituality", 0xA517},
             {"Valor", 0xA525}
         };
+
+        public static Dictionary<string, int> virtueList => _virtueList;
 
         public override void OnDoubleClick(Mobile from)
         {

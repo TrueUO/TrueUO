@@ -25,15 +25,16 @@ namespace Server.Engines.Quests
             CantWalk = true;
             Female = true;
             Race = Race.Human;
-            Body = 0x191;
 
             Hue = 33770;
+            HairItemID = 0x203C;
+            HairHue = 1126;
         }
 
         public override void InitOutfit()
         {
             AddItem(new Backpack());
-            SetWearable(new Robe(), 1367);
+            AddItem(new Robe(1367));
         }
 
         public override void Serialize(GenericWriter writer)

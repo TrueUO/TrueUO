@@ -26,22 +26,27 @@ namespace Server.Engines.Quests
             CantWalk = true;
             Female = true;
             Race = Race.Human;
-            Body = 0x191;
 
             Hue = 0;
+            HairItemID = 0x2045;
         }
 
         public override void InitOutfit()
         {
             AddItem(new Backpack());
-            SetWearable(new DeathShroud());
-            SetWearable(new SmithHammer(), 2500);
+            AddItem(new DeathShroud());
+
+            Item hammer = new SmithHammer
+            {
+                Hue = 2500
+            };
+            AddItem(hammer);
         }
 
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(0); // version
+            writer.Write(0);
         }
 
         public override void Deserialize(GenericReader reader)

@@ -64,14 +64,14 @@ namespace Server.Items
 
     public class RawGinseng : BaseDecayingItem
     {
-        public override int Lifespan => 4320;
+        public override int Lifespan => 259200;
+        public override bool UseSeconds => false;
 
         [Constructable]
         public RawGinseng()
             : base(0x18EB)
         {
             Name = "Raw Ginseng";
-            Weight = 1.0;
         }
 
         public RawGinseng(Serial serial)

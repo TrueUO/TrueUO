@@ -87,7 +87,7 @@ namespace Server.Items
             g.AddBackground(0, 0, 480, 320, 0x6DB);
             g.AddSpriteImage(24, 24, 0x474, 60, 60, 108, 108);
             g.AddImage(15, 15, 0xA9F);
-            g.AddImageTiledButton(22, 22, 0x176F, 0x176F, 0x0, GumpButtonType.Page, 0, ItemID, Hue, 33, 44);
+            g.AddImageTiledButton(22, 22, 0x176F, 0x176F, 0x0, GumpButtonType.Page, 0, ItemID, Hue, 33, 42);
             g.AddHtml(150, 15, 320, 22, "<BASEFONT COLOR=#D5D52A><DIV ALIGN=CENTER>A Threatening Note</DIV>", false, false);
             g.AddHtml(150, 46, 320, 44, "<BASEFONT COLOR=#AABFD4><DIV ALIGN=CENTER>Found at the site of the Yew Winery Break in</DIV>", false, false);
             g.AddHtml(150, 99, 320, 98, "<BASEFONT COLOR=#DFDFDF>The note is quite disturbing. The details threaten the accused should they not steal from the Winery!", false, false);
