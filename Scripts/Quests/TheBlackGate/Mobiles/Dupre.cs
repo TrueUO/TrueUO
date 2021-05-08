@@ -59,6 +59,8 @@ namespace Server.Engines.Quests
 
     public class ThePurpleAleOfHonorQuest : BaseQuest
     {
+        public override bool DoneOnce => true;
+
         public ThePurpleAleOfHonorQuest()
         {
             AddObjective(new SlayObjective(typeof(UnboundEnergyVortex), "unbound energy vortex", 1));

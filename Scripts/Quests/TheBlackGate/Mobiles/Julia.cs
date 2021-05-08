@@ -58,6 +58,8 @@ namespace Server.Engines.Quests
 
     public class TheTreasuredSacrificeQuest : BaseQuest
     {
+        public override bool DoneOnce => true;
+
         public TheTreasuredSacrificeQuest()
         {
             AddObjective(new ObtainObjective(typeof(BarristersRobe), "A Barrister's Robe", 1, 0x1F03, 0, 1367));

@@ -53,6 +53,8 @@ namespace Server.Engines.Quests
 
     public class TheHonestyInInsanityQuest : BaseQuest
     {
+        public override bool DoneOnce => true;
+
         public TheHonestyInInsanityQuest()
         {
             AddObjective(new ObtainObjective(typeof(CompassionSage), "Compassion Sage", 1, 0x1844, 0, 66));

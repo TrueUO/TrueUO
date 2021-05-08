@@ -55,6 +55,8 @@ namespace Server.Engines.Quests
 
     public class TheShepherdsWayQuest : BaseQuest
     {
+        public override bool DoneOnce => true;
+
         public TheShepherdsWayQuest()
         {
             AddObjective(new SlayObjective(typeof(Troglodyte), "troglodytes", 50));

@@ -58,6 +58,8 @@ namespace Server.Engines.Quests
 
     public class InTheFaceOfDragonsQuest : BaseQuest
     {
+        public override bool DoneOnce => true;
+
         public InTheFaceOfDragonsQuest()
         {
             AddObjective(new SlayObjective(typeof(Drake), "drakes", 40));

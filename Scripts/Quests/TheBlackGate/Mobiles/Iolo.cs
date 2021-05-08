@@ -56,6 +56,8 @@ namespace Server.Engines.Quests
 
     public class InServiceOfThePoorhouseQuest : BaseQuest
     {
+        public override bool DoneOnce => true;
+
         public InServiceOfThePoorhouseQuest()
         {
             AddObjective(new InternalObjective());

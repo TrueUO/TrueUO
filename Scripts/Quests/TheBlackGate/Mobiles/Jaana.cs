@@ -52,6 +52,8 @@ namespace Server.Engines.Quests
 
     public class InTheCourtOfTruthQuest : BaseQuest
     {
+        public override bool DoneOnce => true;
+
         public InTheCourtOfTruthQuest()
         {
             AddObjective(new ObtainObjective(typeof(ThreateningNote), "Evidence", 1, 0x46B3, 0, 66));

@@ -75,6 +75,8 @@ namespace Server.Engines.Quests
 
     public class TheSpiritRangerQuest : BaseQuest
     {
+        public override bool DoneOnce => true;
+
         public TheSpiritRangerQuest()
         {
             AddObjective(new ObtainObjective(typeof(RangersNecklace), "Ranger's Necklace", 1, 0x3BB5, 0, 2498));
