@@ -510,20 +510,10 @@ namespace Server.Engines.Quests
 
         public override bool RenderObjective(MondainQuestGump g, bool offer)
         {
-            if (offer)
-                g.AddHtmlLocalized(130, 45, 270, 16, 1049010, 0xFFFFFF, false, false); // Quest Offer
-            else
-                g.AddHtmlLocalized(130, 45, 270, 16, 1046026, 0xFFFFFF, false, false); // Quest Log
-
-            g.AddButton(130, 430, 0x2EEF, 0x2EF1, (int)Buttons.PreviousPage, GumpButtonType.Reply, 0);
-            g.AddButton(275, 430, 0x2EE9, 0x2EEB, (int)Buttons.NextPage, GumpButtonType.Reply, 0);
-
-            g.AddHtmlObject(160, 70, 330, 16, Title, BaseQuestGump.DarkGreen, false, false);
-            g.AddHtmlLocalized(98, 140, 312, 16, 1049073, 0x2710, false, false); // Objective:
-
             g.AddHtmlLocalized(98, 160, 312, 16, 1156792, 0x15F90, false, false); //Win 3 Games of "Chuckle's Luck" at the Fortune's Fire Casino
             g.AddHtmlLocalized(98, 176, 312, 16, 1156793, 0x15F90, false, false); //Win 3 games of "Hi-Middle-Lo" at the Fortune's Fire Casino
             g.AddHtmlLocalized(98, 192, 312, 16, 1156794, 0x15F90, false, false); //Win 3 games of "Dice Rider" at the Fortune's Fire Casino
+
             return true;
         }
 
