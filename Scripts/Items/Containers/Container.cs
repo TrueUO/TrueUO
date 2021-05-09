@@ -1040,22 +1040,6 @@ namespace Server.Items
         {
         }
 
-        [CommandProperty(AccessLevel.GameMaster)]
-        public override int GumpID
-        {
-            get
-            {
-                if (ItemID == 0xA308 || ItemID == 0xA309 || ItemID == 0xE40 || ItemID == 0xE41)
-                    return 0x42;
-                if (ItemID == 0xa306 || ItemID == 0xA307 || ItemID == 0xA30A || ItemID == 0xA30B)
-                    return 0x4A;
-                if (ItemID == 0xE43 || ItemID == 0xE42)
-                    return 0x49;
-
-                return base.GumpID;
-            }
-        }
-
         public void OnFlip(Mobile m)
         {
             switch (ItemID)

@@ -141,7 +141,7 @@ namespace Server.Items
 		}
 
 		[CommandProperty(AccessLevel.GameMaster)]
-		public virtual int GumpID { get => m_GumpID == -1 ? DefaultGumpID : m_GumpID; set => m_GumpID = value; }
+		public int GumpID { get => m_GumpID == -1 ? DefaultGumpID : m_GumpID; set => m_GumpID = value; }
 
 		[CommandProperty(AccessLevel.GameMaster)]
 		public int DropSound { get => m_DropSound == -1 ? DefaultDropSound : m_DropSound; set => m_DropSound = value; }
