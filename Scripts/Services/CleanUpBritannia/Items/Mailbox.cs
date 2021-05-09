@@ -162,7 +162,7 @@ namespace Server.Items
 
                 if (IsLockedDown)
                 {
-                    SendLocalizedMessageTo(@from, 1061637); // You are not allowed to access this.
+                    SendLocalizedMessageTo(from, 1061637); // You are not allowed to access this.
                     return;
                 }
             }

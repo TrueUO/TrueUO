@@ -556,7 +556,7 @@ namespace Server.Spells
                 return true;
             }
 
-            return noto != Notoriety.Innocent || @from.Murderer;
+            return noto != Notoriety.Innocent || from.Murderer;
         }
 
         public static bool CheckResponsible(ref Mobile m)
