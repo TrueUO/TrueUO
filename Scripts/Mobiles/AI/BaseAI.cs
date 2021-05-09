@@ -312,8 +312,8 @@ namespace Server.Mobiles
                 return;
             }
 
-            bool isOwner = @from == m_Mobile.ControlMaster;
-            bool isFriend = !isOwner && m_Mobile.IsPetFriend(@from);
+            bool isOwner = from == m_Mobile.ControlMaster;
+            bool isFriend = !isOwner && m_Mobile.IsPetFriend(from);
 
             if (!isOwner && !isFriend)
             {
@@ -359,7 +359,7 @@ namespace Server.Mobiles
                 return true;
             }
 
-            return @from.Alive && @from.InRange(m_Mobile.Location, 3) && m_Mobile.IsHumanInTown();
+            return from.Alive && from.InRange(m_Mobile.Location, 3) && m_Mobile.IsHumanInTown();
         }
 
         private static readonly SkillName[] m_KeywordTable =

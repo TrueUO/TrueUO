@@ -263,9 +263,13 @@ namespace Server.Items
             m.Animate(AnimationType.Attack, 3);
 
             if (Primed == CannonAction.Stop)
+            {
                 AddAction(m, 1149682); // Priming resumed.
+            }
             else
+            {
                 AddAction(m, 1149650); // Priming started.
+            }
 
             Timer.DelayCall(ActionTime, () =>
             {
@@ -383,9 +387,19 @@ namespace Server.Items
             return base.CheckHold(m, item, message, checkItems, plusItems, plusWeight);
         }
 
-        private bool CheckType(Item item)
+        private bool CheckType(IEntity item)
         {
-            return _Types.Any(t => t == item.GetType() || item.GetType().IsSubclassOf(t));
+            for (var index = 0; index < _Types.Length; index++)
+            {
+                var t = _Types[index];
+
+                if (t == item.GetType() || item.GetType().IsSubclassOf(t))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private readonly Type[] _Types =
@@ -420,17 +434,34 @@ namespace Server.Items
 
         public Direction GetFacing()
         {
-            if (BaseGalleon.CannonIDs[0].Any(id => id == ItemID))
+            for (var index = 0; index < BaseGalleon.CannonIDs[0].Length; index++)
             {
-                return Direction.South;
+                var id = BaseGalleon.CannonIDs[0][index];
+
+                if (id == ItemID)
+                {
+                    return Direction.South;
+                }
             }
-            if (BaseGalleon.CannonIDs[1].Any(id => id == ItemID))
+
+            for (var index = 0; index < BaseGalleon.CannonIDs[1].Length; index++)
             {
-                return Direction.West;
+                var id = BaseGalleon.CannonIDs[1][index];
+
+                if (id == ItemID)
+                {
+                    return Direction.West;
+                }
             }
-            if (BaseGalleon.CannonIDs[2].Any(id => id == ItemID))
+
+            for (var index = 0; index < BaseGalleon.CannonIDs[2].Length; index++)
             {
-                return Direction.North;
+                var id = BaseGalleon.CannonIDs[2][index];
+
+                if (id == ItemID)
+                {
+                    return Direction.North;
+                }
             }
 
             return Direction.East;
@@ -439,16 +470,34 @@ namespace Server.Items
         public void DoAreaMessage(int cliloc, int range, Mobile from)
         {
             if (from == null)
+            {
                 return;
+            }
 
-            Galleon.GetEntitiesOnBoard().OfType<PlayerMobile>().Where(x => x != from && Galleon.GetSecurityLevel(x) > SecurityLevel.Denied)
-                .ToList().ForEach(y => { y.SendLocalizedMessage(cliloc, from.Name); });
+            List<PlayerMobile> list = new List<PlayerMobile>();
+
+            foreach (IEntity entity in Galleon.GetEntitiesOnBoard())
+            {
+                if (entity is PlayerMobile pm && pm != from && Galleon.GetSecurityLevel(pm) > SecurityLevel.Denied)
+                {
+                    list.Add(pm);
+                }
+            }
+
+            for (var index = 0; index < list.Count; index++)
+            {
+                var player = list[index];
+
+                player.SendLocalizedMessage(cliloc, from.Name);
+            }
         }
 
         public void TryLightFuse(Mobile from)
         {
             if (from == null)
+            {
                 return;
+            }
 
             Container pack = from.Backpack;
 
@@ -458,8 +507,10 @@ namespace Server.Items
 
                 if (items != null)
                 {
-                    foreach (Item item in items)
+                    for (var index = 0; index < items.Length; index++)
                     {
+                        Item item = items[index];
+
                         if (item is Matches matches && matches.IsLight)
                         {
                             LightFuse(from);
@@ -472,8 +523,10 @@ namespace Server.Items
 
                 if (items != null)
                 {
-                    foreach (Item item in items)
+                    for (var index = 0; index < items.Length; index++)
                     {
+                        Item item = items[index];
+
                         if (item is Torch torch && torch.Burning)
                         {
                             LightFuse(from);
@@ -588,8 +641,10 @@ namespace Server.Items
                                 damageables.AddRange(FindDamageables(shooter, newPoint, map, false, false, false, true, true));
                             }
 
-                            foreach (IDamageable m in damageables)
+                            for (var index = 0; index < damageables.Count; index++)
                             {
+                                IDamageable m = damageables[index];
+
                                 list.Add(m);
                             }
 
@@ -636,8 +691,10 @@ namespace Server.Items
                                 damageables.AddRange(FindDamageables(shooter, newPoint, map, true, true, false, true, true));
                             }
 
-                            foreach (IDamageable m in damageables)
+                            for (var index = 0; index < damageables.Count; index++)
                             {
+                                IDamageable m = damageables[index];
+
                                 list.Add(m);
                             }
 
@@ -678,7 +735,7 @@ namespace Server.Items
             }
         }
 
-        private BaseBoat FindValidBoatTarget(Point3D newPoint, Map map, AmmoInfo info)
+        private static BaseBoat FindValidBoatTarget(Point3D newPoint, Map map, AmmoInfo info)
         {
             BaseBoat boat = BaseBoat.FindBoatAt(newPoint, map);
 
@@ -701,9 +758,11 @@ namespace Server.Items
 
                 StaticTile[] tiles = map.Tiles.GetStaticTiles(newPoint.X, newPoint.Y, true);
 
-                foreach (StaticTile tile in tiles)
+                for (var index = 0; index < tiles.Length; index++)
                 {
+                    StaticTile tile = tiles[index];
                     ItemData id = TileData.ItemTable[tile.ID & TileData.MaxItemValue];
+
                     bool isWater = tile.ID >= 0x1796 && tile.ID <= 0x17B2;
 
                     if (!isWater && id.Surface && !id.Impassable)
@@ -761,7 +820,9 @@ namespace Server.Items
                 Delete();
 
                 if (from != null && from.InRange(Location, 5))
+                {
                     from.SendLocalizedMessage(1116297); // The ship cannon has been destroyed!
+                }
             }
 
             InvalidateProperties();
@@ -871,24 +932,29 @@ namespace Server.Items
             List<IDamageable> list = new List<IDamageable>();
 
             if (Map == null || Map == Map.Internal || Galleon == null)
+            {
                 return;
+            }
 
             IPooledEnumerable eable = Map.GetObjectsInRange(pnt, 0);
 
-            foreach (IDamageable dam in eable.OfType<IDamageable>())
+            foreach (object o in eable)
             {
-                Mobile mob = dam as Mobile;
-
-                if (mob != null && (!shooter.CanBeHarmful(mob, false) || Galleon.Contains(mob)))
+                if (o is IDamageable dam)
                 {
-                    continue;
-                }
+                    Mobile mob = dam as Mobile;
 
-                if (mob is PlayerMobile || mob is BaseCreature)
-                {
-                    shooter.DoHarmful(mob);
+                    if (mob != null && (!shooter.CanBeHarmful(mob, false) || Galleon.Contains(mob)))
+                    {
+                        continue;
+                    }
 
-                    AOS.Damage(mob, shooter, 35, info.PhysicalDamage, info.FireDamage, info.ColdDamage, info.PoisonDamage, info.EnergyDamage);
+                    if (mob is PlayerMobile || mob is BaseCreature)
+                    {
+                        shooter.DoHarmful(mob);
+
+                        AOS.Damage(mob, shooter, 35, info.PhysicalDamage, info.FireDamage, info.ColdDamage, info.PoisonDamage, info.EnergyDamage);
+                    }
                 }
             }
 
@@ -941,34 +1007,53 @@ namespace Server.Items
             List<IDamageable> list = new List<IDamageable>();
 
             if (map == null || map == Map.Internal || Galleon == null)
+            {
                 return list;
+            }
 
             IPooledEnumerable eable = map.GetObjectsInRange(pnt, 0);
 
-            foreach (IDamageable dam in eable.OfType<IDamageable>())
+            foreach (object o in eable)
             {
-                Mobile mob = dam as Mobile;
+                if (o is IDamageable dam)
+                {
+                    Mobile mob = dam as Mobile;
 
-                if (mob != null && (!shooter.CanBeHarmful(mob, false) || Galleon.Contains(mob)))
-                    continue;
+                    if (mob != null && (!shooter.CanBeHarmful(mob, false) || Galleon.Contains(mob)))
+                    {
+                        continue;
+                    }
 
-                if (!items && dam is DamageableItem)
-                    continue;
+                    if (!items && dam is DamageableItem)
+                    {
+                        continue;
+                    }
 
-                if (items && dam is DamageableItem item && item.CanDamage && !Galleon.Contains(dam))
-                    list.Add(item);
+                    if (items && dam is DamageableItem item && item.CanDamage && !Galleon.Contains(dam))
+                    {
+                        list.Add(item);
+                    }
 
-                if (player && mob is PlayerMobile)
-                    list.Add(mob);
+                    if (player && mob is PlayerMobile)
+                    {
+                        list.Add(mob);
+                    }
 
-                if (monsters && mob is BaseCreature bc && !bc.Controlled && !bc.Summoned)
-                    list.Add(mob);
+                    if (monsters && mob is BaseCreature bc && !bc.Controlled && !bc.Summoned)
+                    {
+                        list.Add(mob);
+                    }
 
-                if (pet && mob is BaseCreature creature && (creature.Controlled || creature.Summoned))
-                    list.Add(mob);
+                    if (pet && mob is BaseCreature creature && (creature.Controlled || creature.Summoned))
+                    {
+                        list.Add(mob);
+                    }
 
-                if (seacreature && (mob is BaseSeaChampion || mob is Kraken))
-                    list.Add(mob);
+                    if (seacreature && (mob is BaseSeaChampion || mob is Kraken))
+                    {
+                        list.Add(mob);
+                    }
+                }
             }
 
             eable.Free();
@@ -981,11 +1066,13 @@ namespace Server.Items
             Container hold = Galleon.GalleonHold;
 
             if (pack == null)
+            {
                 return;
+            }
 
             double ingotsNeeded = 36 * (int)DamageState;
 
-            ingotsNeeded -= @from.Skills[SkillName.Blacksmith].Value / 200.0 * ingotsNeeded;
+            ingotsNeeded -= from.Skills[SkillName.Blacksmith].Value / 200.0 * ingotsNeeded;
 
             double min = ingotsNeeded / 10;
             double ingots1 = pack.GetAmount(typeof(IronIngot));
@@ -1062,30 +1149,35 @@ namespace Server.Items
                 Viewing.Add(from);
             }
 
-            foreach (PlayerMobile pm in Viewing.OfType<PlayerMobile>())
+            for (var index = 0; index < Viewing.Count; index++)
             {
-                ShipCannonGump gump = BaseGump.GetGump<ShipCannonGump>(pm, g => g.Cannon == this);
+                Mobile mobile = Viewing[index];
 
-                if (gump != null)
+                if (mobile is PlayerMobile pm)
                 {
-                    if (delay != TimeSpan.Zero)
+                    ShipCannonGump gump = BaseGump.GetGump<ShipCannonGump>(pm, g => g.Cannon == this);
+
+                    if (gump != null)
                     {
-                        Timer.DelayCall(delay, () => gump.Refresh());
+                        if (delay != TimeSpan.Zero)
+                        {
+                            Timer.DelayCall(delay, () => gump.Refresh());
+                        }
+                        else
+                        {
+                            gump.Refresh();
+                        }
                     }
                     else
                     {
-                        gump.Refresh();
-                    }
-                }
-                else
-                {
-                    if (delay != TimeSpan.Zero)
-                    {
-                        Timer.DelayCall(delay, () => BaseGump.SendGump(new ShipCannonGump(pm, this)));
-                    }
-                    else
-                    {
-                        BaseGump.SendGump(new ShipCannonGump(pm, this));
+                        if (delay != TimeSpan.Zero)
+                        {
+                            Timer.DelayCall(delay, () => BaseGump.SendGump(new ShipCannonGump(pm, this)));
+                        }
+                        else
+                        {
+                            BaseGump.SendGump(new ShipCannonGump(pm, this));
+                        }
                     }
                 }
             }
