@@ -277,29 +277,9 @@ namespace Server.Engines.Quests
 
         public override bool RenderObjective(MondainQuestGump g, bool offer)
         {
-            if (offer)
-                g.AddHtmlLocalized(130, 45, 270, 16, 1049010, 0xFFFFFF, false, false); // Quest Offer
-            else
-                g.AddHtmlLocalized(130, 45, 270, 16, 1046026, 0xFFFFFF, false, false); // Quest Log
+            g.AddHtmlLocalized(98, 172, 312, 32, 1116710, 0x15F90, false, false); // Capture or kill a pirate listed on the bulletin board.
 
-            g.AddButton(130, 430, 0x2EEF, 0x2EF1, (int)Buttons.PreviousPage, GumpButtonType.Reply, 0);
-            g.AddButton(275, 430, 0x2EE9, 0x2EEB, (int)Buttons.NextPage, GumpButtonType.Reply, 0);
-
-            g.AddHtmlObject(160, 70, 330, 16, Title, BaseQuestGump.DarkGreen, false, false);
-            g.AddHtmlLocalized(98, 140, 312, 16, 1049073, 0x2710, false, false); // Objective:
-            g.AddHtmlLocalized(98, 156, 312, 16, 1072208, 0x2710, false, false); // All of the following	
-
-            int offset = 172;
-
-            g.AddHtmlLocalized(98, offset, 312, 16, 1116710, 0x2710, false, false);  // Capture or kill a pirate listed on the bulletin board.
-
-            offset += 16;
-
-            g.AddHtmlLocalized(98, offset, 312, 32, 1116711, 0x15F90, false, false); //Return to the officer with the pirate or a death certificate for your reward.
-
-            offset += 32;
-
-            g.AddHtmlLocalized(98, offset, 312, 32, 1116712, 0x15F90, false, false); //The gold listed on the bulletin board and a special reward from the officer if captured alive.
+            g.AddHtmlLocalized(98, 220, 312, 32, 1116711, 0x15F90, false, false); // Return to the officer with the pirate or a death certificate for your reward.
 
             return true;
         }

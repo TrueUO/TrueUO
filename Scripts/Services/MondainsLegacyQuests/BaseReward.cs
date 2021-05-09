@@ -25,11 +25,20 @@ namespace Server.Engines.Quests
             : this(type, 1, name)
         { }
 
+        public BaseReward(Type type, object name, int img, int hue)
+            : this(type, 1, name, img, hue)
+        { }
+
         public BaseReward(Type type, int amount, object name)
+        : this(type, amount, name, 0, 0)
+        { }
+
+        public BaseReward(Type type, int amount, object name, int img, int hue)
         {
             Type = type;
             Amount = amount;
             Name = name;
+            Image = img;
         }
 
         public BaseQuest Quest { get; set; }
@@ -39,6 +48,10 @@ namespace Server.Engines.Quests
         public int Amount { get; set; }
 
         public object Name { get; }
+
+        public int Image { get; set; }
+
+        public int Hue { get; set; }
 
         public static int SatchelHue()
         {
