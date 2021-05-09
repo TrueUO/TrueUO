@@ -478,12 +478,9 @@ namespace Server.Items
 
             foreach (IEntity entity in Galleon.GetEntitiesOnBoard())
             {
-                if (entity is PlayerMobile pm)
+                if (entity is PlayerMobile pm && pm != from && Galleon.GetSecurityLevel(pm) > SecurityLevel.Denied)
                 {
-                    if (pm != from && Galleon.GetSecurityLevel(pm) > SecurityLevel.Denied)
-                    {
-                        list.Add(pm);
-                    }
+                    list.Add(pm);
                 }
             }
 

@@ -235,18 +235,15 @@ namespace Server.Regions
 
         public override void OnEnter(Mobile m)
         {
-            if (m.CanBeginAction(typeof(Teleporter)))
+            if (m.CanBeginAction(typeof(Teleporter)) && (m is PlayerMobile pm))
             {
-                if (m is PlayerMobile pm)
+                if (pm.DisabledPvpWarning)
                 {
-                    if (pm.DisabledPvpWarning)
-                    {
-                        DoTeleport(m);
-                    }
-                    else if (!pm.HasGump(typeof(PvpWarningGump)))
-                    {
-                        pm.SendGump(new PvpWarningGump(m, this));
-                    }
+                    DoTeleport(m);
+                }
+                else if (!pm.HasGump(typeof(PvpWarningGump)))
+                {
+                    pm.SendGump(new PvpWarningGump(m, this));
                 }
             }
         }
