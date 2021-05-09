@@ -56,18 +56,7 @@ namespace Server.Engines.Quests
         }
 
         public override bool RenderObjective(MondainQuestGump g, bool offer)
-        {
-            if (offer)
-                g.AddHtmlLocalized(130, 45, 270, 16, 1049010, 0xFFFFFF, false, false); // Quest Offer
-            else
-                g.AddHtmlLocalized(130, 45, 270, 16, 1046026, 0xFFFFFF, false, false); // Quest Log
-
-            g.AddButton(130, 430, 0x2EEF, 0x2EF1, (int)Buttons.PreviousPage, GumpButtonType.Reply, 0);
-            g.AddButton(275, 430, 0x2EE9, 0x2EEB, (int)Buttons.NextPage, GumpButtonType.Reply, 0);
-
-            g.AddHtmlObject(160, 70, 330, 16, Title, BaseQuestGump.DarkGreen, false, false);
-            g.AddHtmlLocalized(98, 140, 312, 16, 1049073, 0x2710, false, false); // Objective:
-            g.AddHtmlLocalized(98, 156, 312, 16, 1072208, 0x2710, false, false); // All of the following	
+        {	
             g.AddHtmlLocalized(98, 1, 40, 16, 1072207, 0x15F90, false, false); // Deliver
             g.AddHtmlLocalized(143, 172, 300, 16, 1156516, 0xFFFF, false, false); // Orders from King Blackthorn to Sir Geoffrey
 
@@ -176,15 +165,6 @@ namespace Server.Engines.Quests
 
         public override bool RenderObjective(MondainQuestGump g, bool offer)
         {
-            if (offer)
-                g.AddHtmlLocalized(130, 45, 270, 16, 1049010, 0xFFFFFF, false, false); // Quest Offer
-            else
-                g.AddHtmlLocalized(130, 45, 270, 16, 1046026, 0xFFFFFF, false, false); // Quest Log
-
-            g.AddButton(130, 430, 0x2EEF, 0x2EF1, (int)Buttons.PreviousPage, GumpButtonType.Reply, 0);
-            g.AddButton(275, 430, 0x2EE9, 0x2EEB, (int)Buttons.NextPage, GumpButtonType.Reply, 0);
-
-            g.AddHtmlObject(160, 70, 330, 16, Title, BaseQuestGump.DarkGreen, false, false);
             g.AddHtmlLocalized(98, 140, 312, 16, 1049073, 0x2710, false, false); // Objective:
             g.AddHtmlLocalized(98, 156, 312, 16, 1072208, 0x2710, false, false); // All of the following	
             g.AddHtmlLocalized(98, 172, 300, 16, 1156533, 0xFFFF, false, false); // Slay the Tyrannosaurus Rex
@@ -230,15 +210,6 @@ namespace Server.Engines.Quests
 
         public override bool RenderObjective(MondainQuestGump g, bool offer)
         {
-            if (offer)
-                g.AddHtmlLocalized(130, 45, 270, 16, 1049010, 0xFFFFFF, false, false); // Quest Offer
-            else
-                g.AddHtmlLocalized(130, 45, 270, 16, 1046026, 0xFFFFFF, false, false); // Quest Log
-
-            g.AddButton(130, 430, 0x2EEF, 0x2EF1, (int)Buttons.PreviousPage, GumpButtonType.Reply, 0);
-            g.AddButton(275, 430, 0x2EE9, 0x2EEB, (int)Buttons.NextPage, GumpButtonType.Reply, 0);
-
-            g.AddHtmlObject(160, 70, 330, 16, Title, BaseQuestGump.DarkGreen, false, false);
             g.AddHtmlLocalized(98, 140, 312, 16, 1049073, 0x2710, false, false); // Objective:
             g.AddHtmlLocalized(98, 156, 312, 16, 1072208, 0x2710, false, false); // All of the following
             g.AddHtmlLocalized(98, 172, 300, 16, 1156534, 0xFFFF, false, false); // Rescue 5 Dragon Turtle Hatchlings from poachers
@@ -511,15 +482,6 @@ namespace Server.Engines.Quests
 
         public override bool RenderObjective(MondainQuestGump g, bool offer)
         {
-            if (offer)
-                g.AddHtmlLocalized(130, 45, 270, 16, 1049010, 0xFFFFFF, false, false); // Quest Offer
-            else
-                g.AddHtmlLocalized(130, 45, 270, 16, 1046026, 0xFFFFFF, false, false); // Quest Log
-
-            g.AddButton(130, 430, 0x2EEF, 0x2EF1, (int)Buttons.PreviousPage, GumpButtonType.Reply, 0);
-            g.AddButton(275, 430, 0x2EE9, 0x2EEB, (int)Buttons.NextPage, GumpButtonType.Reply, 0);
-
-            g.AddHtmlObject(160, 70, 330, 16, Title, BaseQuestGump.DarkGreen, false, false);
             g.AddHtmlLocalized(98, 140, 312, 16, 1049073, 0x2710, false, false); // Objective:
             g.AddHtmlLocalized(98, 156, 312, 16, 1072208, 0x2710, false, false); // All of the following	
             g.AddHtmlLocalized(98, 172, 300, 16, 1156544, 0xFFFF, false, false); // Rescue 5 tiger cubs from the trapper enclosures.
@@ -618,15 +580,6 @@ namespace Server.Engines.Quests
 
         public override bool RenderObjective(MondainQuestGump g, bool offer)
         {
-            if (offer)
-                g.AddHtmlLocalized(130, 45, 270, 16, 1049010, 0xFFFFFF, false, false); // Quest Offer
-            else
-                g.AddHtmlLocalized(130, 45, 270, 16, 1046026, 0xFFFFFF, false, false); // Quest Log
-
-            g.AddButton(130, 430, 0x2EEF, 0x2EF1, (int)Buttons.PreviousPage, GumpButtonType.Reply, 0);
-            g.AddButton(275, 430, 0x2EE9, 0x2EEB, (int)Buttons.NextPage, GumpButtonType.Reply, 0);
-
-            g.AddHtmlObject(160, 70, 330, 16, Title, BaseQuestGump.DarkGreen, false, false);
             g.AddHtmlLocalized(98, 140, 312, 16, 1049073, 0x2710, false, false); // Objective:
             g.AddHtmlLocalized(98, 156, 312, 16, 1072208, 0x2710, false, false); // All of the following	
             g.AddHtmlLocalized(98, 172, 300, 16, 1156547, 0xFFFF, false, false); // Defeat the Great Ape
