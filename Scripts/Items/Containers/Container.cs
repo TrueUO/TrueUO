@@ -1049,7 +1049,7 @@ namespace Server.Items
                     return 0x42;
                 if (ItemID == 0xa306 || ItemID == 0xA307 || ItemID == 0xA30A || ItemID == 0xA30B)
                     return 0x4A;
-                if (ItemID == 0xE43 || ItemID == 0xE43)
+                if (ItemID == 0xE43 || ItemID == 0xE42)
                     return 0x49;
 
                 return base.GumpID;
