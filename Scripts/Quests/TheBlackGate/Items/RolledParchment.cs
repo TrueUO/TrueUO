@@ -12,7 +12,7 @@ namespace Server.Items
         public RolledParchment()
             : base(0x46B3)
         {
-            Name = "a RolledParchment";
+            Name = "a Rolled Parchment";
             Hue = 66;
             Weight = 0.0;
             Movable = false;

@@ -217,7 +217,7 @@ namespace Server.Mobiles
 
                 foreach (Item item in eable)
                 {
-                    if (item is BaseBoat boat && boat.Owner == @from && InRange(boat.Location, DryDockDistance))
+                    if (item is BaseBoat boat && boat.Owner == from && InRange(boat.Location, DryDockDistance))
                     {
                         eable.Free();
                         return boat;
