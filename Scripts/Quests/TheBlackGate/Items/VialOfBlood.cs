@@ -32,6 +32,7 @@ namespace Server.Items
             g.AddHtml(150, 99, 320, 98, "<BASEFONT COLOR=#DFDFDF>Julia was killed some time back by the vengeful troll G'thunk. The ground is still wet with her Sacrifice.", false, false);
             g.AddHtml(150, 197, 320, 98, "<BASEFONT COLOR=#DFDFDF>Her blood stands as a reminder of the sacrifice you must ultimately make to save virtue and rebuild the shrines...", false, false);
 
+            from.CloseGump(typeof(Gump));
             from.SendGump(g);
 
             from.PrivateOverheadMessage(MessageType.Regular, 0x47E, 1157722, "its origin", from.NetState); // *Your proficiency in ~1_SKILL~ reveals more about the item*

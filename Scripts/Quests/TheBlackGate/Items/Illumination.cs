@@ -32,6 +32,7 @@ namespace Server.Items
             g.AddHtml(150, 99, 320, 98, "<BASEFONT COLOR=#DFDFDF>The ornate illumination was painstakingly copied from the book of truth by Mariah.", false, false);
             g.AddHtml(150, 197, 320, 98, "<BASEFONT COLOR=#DFDFDF>Great care was taken to make an honest recreation from the famed Book of Truth.", false, false);
 
+            from.CloseGump(typeof(Gump));
             from.SendGump(g);
 
             from.PrivateOverheadMessage(MessageType.Regular, 0x47E, 1157722, "its origin", from.NetState); // *Your proficiency in ~1_SKILL~ reveals more about the item*
