@@ -127,9 +127,7 @@ namespace Server.Misc
 
             public override bool ValidateEquipment(Item item)
             {
-                var elfOrHuman = item as ICanBeElfOrHuman;
-
-                if (elfOrHuman != null)
+                if (item is ICanBeElfOrHuman elfOrHuman)
                 {
                     return !elfOrHuman.ElfOnly;
                 }
@@ -311,9 +309,7 @@ namespace Server.Misc
 
             public override bool ValidateEquipment(Item item)
             {
-                var elfOrHuman = item as ICanBeElfOrHuman;
-
-                if (elfOrHuman != null && elfOrHuman.ElfOnly)
+                if (item is ICanBeElfOrHuman elfOrHuman && elfOrHuman.ElfOnly)
                 {
                     return true;
                 }
@@ -357,8 +353,12 @@ namespace Server.Misc
             public override int ClipHairHue(int hue)
             {
                 for (int i = 0; i < m_HairHues.Length; i++)
+                {
                     if (m_HairHues[i] == hue)
+                    {
                         return hue;
+                    }
+                }
 
                 return m_HairHues[0];
             }
@@ -514,8 +514,12 @@ namespace Server.Misc
             public override int ClipHairHue(int hue)
             {
                 for (int i = 0; i < m_HornHues.Length; i++)
+                {
                     if (m_HornHues[i] == hue)
+                    {
                         return hue;
+                    }
+                }
 
                 return m_HornHues[0];
             }
@@ -620,9 +624,7 @@ namespace Server.Misc
 
         public static bool ValidateElfOrHuman(Mobile from, Item equipment)
         {
-            var elfOrHuman = equipment as ICanBeElfOrHuman;
-
-            if (elfOrHuman != null)
+            if (equipment is ICanBeElfOrHuman elfOrHuman)
             {
                 return from.Race == Race.Elf || !elfOrHuman.ElfOnly;
             }
@@ -644,9 +646,7 @@ namespace Server.Misc
                 }
             }
 
-            var elfOrHuman = item as ICanBeElfOrHuman;
-
-            if (elfOrHuman != null)
+            if (item is ICanBeElfOrHuman elfOrHuman)
             {
                 return elfOrHuman.ElfOnly ? Race.Elf : Race.Human;
             }

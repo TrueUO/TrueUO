@@ -88,14 +88,14 @@ namespace Server.Misc
                 return;
             }
 
-            PlayerMobile pm = from as PlayerMobile;
-
-            if (pm != null)
+            if (from is PlayerMobile pm)
             {
                 int amt = 10;
 
                 if (++pm.StepsTaken % amt == 0)
+                {
                     --from.Stam;
+                }
             }
         }
 
