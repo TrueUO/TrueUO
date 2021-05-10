@@ -1303,24 +1303,22 @@ namespace Server.Engines.Craft
                 return true;
             }
 
+            CraftRes craftResources = Resources.GetAt(index);
+
+            if (craftResources.MessageNumber > 0)
             {
-                CraftRes res = Resources.GetAt(index);
-
-                if (res.MessageNumber > 0)
-                {
-                    message = res.MessageNumber;
-                }
-                else if (!string.IsNullOrEmpty(res.MessageString))
-                {
-                    message = res.MessageString;
-                }
-                else
-                {
-                    message = 502925; // You don't have the resources required to make that item.
-                }
-
-                return false;
+                message = craftResources.MessageNumber;
             }
+            else if (!string.IsNullOrEmpty(craftResources.MessageString))
+            {
+                message = craftResources.MessageString;
+            }
+            else
+            {
+                message = 502925; // You don't have the resources required to make that item.
+            }
+
+            return false;
         }
 
         private int m_ResHue;
