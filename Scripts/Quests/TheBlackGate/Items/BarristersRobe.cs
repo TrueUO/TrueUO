@@ -31,6 +31,7 @@ namespace Server.Items
             g.AddHtml(150, 99, 320, 98, "<BASEFONT COLOR=#DFDFDF>The robe commonly worn by those standing as barristers before the Court of Truth in Yew.", false, false);
             g.AddHtml(150, 197, 320, 98, "<BASEFONT COLOR=#DFDFDF>In delivering evidence against the Fellowship, you have brought Justice to those who seek to harm Britannia.", false, false);
 
+            from.CloseGump(typeof(Gump));
             from.SendGump(g);
 
             from.PrivateOverheadMessage(MessageType.Regular, 0x47E, 1157722, "its origin", from.NetState); // *Your proficiency in ~1_SKILL~ reveals more about the item*

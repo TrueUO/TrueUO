@@ -32,6 +32,7 @@ namespace Server.Items
             g.AddHtml(150, 99, 320, 98, "<BASEFONT COLOR=#DFDFDF>The blade is in quite poor repair. clearly showing signs of its use in a fierce battle. The former owner faired far worse.", false, false);
             g.AddHtml(150, 197, 320, 98, "<BASEFONT COLOR=#DFDFDF>Your valiant efforts in Destard stopped the Fellowship Killers from raising an army of dragons against Britannia.", false, false);
 
+            from.CloseGump(typeof(Gump));
             from.SendGump(g);
 
             from.PrivateOverheadMessage(MessageType.Regular, 0x47E, 1157722, "its origin", from.NetState); // *Your proficiency in ~1_SKILL~ reveals more about the item*

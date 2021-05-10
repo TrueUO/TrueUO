@@ -5,7 +5,7 @@ namespace Server.Engines.Quests
 {
     public static class GenerateTheBlackGate
     {
-        public static readonly string EntityName = "theblackgate";
+        private const string EntityName = "theblackgate";
 
         public static void Initialize()
         {
