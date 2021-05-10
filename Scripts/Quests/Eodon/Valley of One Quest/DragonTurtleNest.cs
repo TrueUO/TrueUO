@@ -54,38 +54,36 @@ namespace Server.Items
 
         public override void OnMovement(Mobile m, Point3D oldLocation)
         {
-            if (m is PlayerMobile pm && pm.Location != oldLocation && pm.InRange(Location, 3) && (!FocusList.Contains(pm) || 0.015 > Utility.RandomDouble()))
+            if (m is PlayerMobile pm && pm.Location != oldLocation && pm.InRange(Location, 3) && (!FocusList.Contains(pm) || 0.015 > Utility.RandomDouble())
+                && QuestHelper.GetQuest(pm, typeof(EmptyNestQuest)) is EmptyNestQuest quest && !quest.Completed)
             {
-                if (QuestHelper.GetQuest(pm, typeof(EmptyNestQuest)) is EmptyNestQuest quest && !quest.Completed)
+                if (Focus == null)
                 {
-                    if (Focus == null)
-                    {
-                        Focus = pm;
-                        pm.RevealingAction();
-                        SpawnPoachers(pm);
+                    Focus = pm;
+                    pm.RevealingAction();
+                    SpawnPoachers(pm);
 
-                        DeadlineTimer = Timer.DelayCall(TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(5), () =>
+                    DeadlineTimer = Timer.DelayCall(TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(5), () =>
+                    {
+                        DeadlineTimer.Stop();
+
+                        if (Poachers != null && Poachers.Count > 0)
                         {
-                            DeadlineTimer.Stop();
+                            Delete();
+                        }
+                        else
+                        {
+                            Focus = null;
+                            Hatchling = null;
+                            CooldownEnds = DateTime.MinValue;
+                        }
+                    });
 
-                            if (Poachers != null && Poachers.Count > 0)
-                            {
-                                Delete();
-                            }
-                            else
-                            {
-                                Focus = null;
-                                Hatchling = null;
-                                CooldownEnds = DateTime.MinValue;
-                            }
-                        });
-
-                        DeadlineTimer.Start();
-                    }
-                    else if (IsInCooldown)
-                    {
-                        CooldownEnds = DateTime.UtcNow + TimeSpan.FromMinutes(2);
-                    }
+                    DeadlineTimer.Start();
+                }
+                else if (IsInCooldown)
+                {
+                    CooldownEnds = DateTime.UtcNow + TimeSpan.FromMinutes(2);
                 }
             }
         }
