@@ -44,7 +44,9 @@ namespace Server.Items
             base.OnLocationChange(oldLocation);
 
             if (Door != null)
+            {
                 Door.MoveToWorld(new Point3D(X + DoorOffset.X, Y + DoorOffset.Y, Z + DoorOffset.Z), Map);
+            }
 
             if (Cub != null)
             {
@@ -58,18 +60,26 @@ namespace Server.Items
             base.OnMapChange();
 
             if (Door != null)
+            {
                 Door.Map = Map;
+            }
 
             if (Cub != null)
+            {
                 Cub.Map = Map;
+            }
         }
 
         public bool Contains(Point3D p)
         {
-            foreach (AddonComponent c in Components)
+            for (var index = 0; index < Components.Count; index++)
             {
+                AddonComponent c = Components[index];
+
                 if (c.Location == p)
+                {
                     return true;
+                }
             }
 
             return Door != null && Door.Location == p;
@@ -82,7 +92,6 @@ namespace Server.Items
                 pm.PrivateOverheadMessage(MessageType.Regular, 0x35, 1156501, pm.NetState); // *You watch as the Tiger Cub safely returns to the Kurak Tribe*
 
                 Timer.DelayCall(TimeSpan.FromSeconds(.25), Delete);
-                //1156499;*The enclosure unlocks!*  Is this used?
 
                 if (Cub != null)
                 {
@@ -99,7 +108,9 @@ namespace Server.Items
             if (Utility.RandomBool())
             {
                 if (Door != null)
+                {
                     pm.PrivateOverheadMessage(MessageType.Regular, 0x35, 1156493, pm.NetState); //*A poisonous dart embeds itself into your neck!*
+                }
 
                 Effects.PlaySound(pm.Location, pm.Map, 0x22E);
 
@@ -109,7 +120,9 @@ namespace Server.Items
             else
             {
                 if (Door != null)
+                {
                     pm.PrivateOverheadMessage(MessageType.Regular, 0x35, 1156494, pm.NetState); //*You are ambushed by attacking trappers!*
+                }
 
                 SpawnTrappers(pm);
             }
@@ -118,7 +131,9 @@ namespace Server.Items
         public void SpawnTrappers(Mobile m)
         {
             if (m == null || !m.Alive)
+            {
                 return;
+            }
 
             for (int i = 0; i < 3; i++)
             {
@@ -149,10 +164,14 @@ namespace Server.Items
             base.Delete();
 
             if (Door != null)
+            {
                 Door.Delete();
+            }
 
             if (Cub != null && Cub.Protector == null)
+            {
                 Cub.Delete();
+            }
         }
 
         public CubEnclosure(Serial serial) : base(serial)
@@ -177,7 +196,9 @@ namespace Server.Items
             Cub = reader.ReadMobile() as TigerCub;
 
             if (Door != null)
+            {
                 Door.Enclosure = this;
+            }
         }
     }
 
@@ -200,22 +221,12 @@ namespace Server.Items
         {
             if (from is PlayerMobile mobile && mobile.InRange(GetWorldLocation(), 2) && mobile.InLOS(this))
             {
-                PrideOfTheAmbushQuest quest = QuestHelper.GetQuest(mobile, typeof(PrideOfTheAmbushQuest)) as PrideOfTheAmbushQuest;
-
-                if (quest != null)
+                if (QuestHelper.GetQuest(mobile, typeof(PrideOfTheAmbushQuest)) is PrideOfTheAmbushQuest)
                 {
                     mobile.SendGump(new LockingMechanismGump(mobile, this));
                 }
             }
         }
-
-        private readonly int[] m_Possibles =
-        {
-                0,   1,   2,   3,
-                4,   5,   6,   7,
-                8,   9,  10,  11,
-                12, 13,  14,  15
-        };
 
         private readonly int[][] _Paths =
         {
@@ -230,7 +241,7 @@ namespace Server.Items
             new[] { 0, 1, 5, 6, 7, 11, 10, 9, 13, 14, 15 },
             new[] { 0, 1, 5, 6, 7, 11, 15 },
             new[] { 0, 1, 5, 6, 10, 9, 13, 14, 15 },
-            new[] { 0, 1, 2, 3, 7, 6, 5, 4, 8, 9, 1, 11, 12, 13, 14, 15 },
+            new[] { 0, 1, 2, 3, 7, 6, 5, 4, 8, 9, 10, 11, 12, 13, 14, 15 },
             new[] { 0, 4, 8, 12, 13, 14, 15 },
             new[] { 0, 4, 5, 9, 8, 12, 13, 14, 10, 6, 2, 3, 7, 11, 15 }
         };
@@ -255,8 +266,7 @@ namespace Server.Items
                 Door = door;
                 User = pm;
 
-                Progress = new List<int>();
-                Progress.Add(0);
+                Progress = new List<int> {0};
 
                 AddGumpLayout();
             }
@@ -323,7 +333,6 @@ namespace Server.Items
                         xOffset = x + (40 * i);
                         yOffset = y;
                     }
-
                     else if (i < 8)
                     {
                         xOffset = x + (40 * (i - 4));
@@ -343,10 +352,14 @@ namespace Server.Items
                     AddImage(xOffset, yOffset, itemID);
 
                     if (i == Progress[Progress.Count - 1])
+                    {
                         AddImage(xOffset + 8, yOffset + 8, 5032);
+                    }
 
                     if (ShowNext && Progress.Count <= Path.Count && i == Path[Progress.Count])
+                    {
                         AddImage(xOffset + 8, yOffset + 8, 2361);
+                    }
                 }
 
                 ShowNext = false;
@@ -369,13 +382,17 @@ namespace Server.Items
             public override void OnResponse(NetState state, RelayInfo info)
             {
                 if (info.ButtonID > 0 && info.ButtonID <= 5)
+                {
                     HandleButton(info.ButtonID);
+                }
             }
 
             public void HandleButton(int id)
             {
                 if (Door == null || Door.Deleted)
+                {
                     return;
+                }
 
                 if (id > 0 && id < 5)
                 {
@@ -384,7 +401,9 @@ namespace Server.Items
                     int pick;
 
                     if (Progress.Count >= 0 && Progress.Count < Path.Count)
+                    {
                         next = Path[Progress.Count];
+                    }
 
                     switch (id)
                     {
@@ -395,7 +414,7 @@ namespace Server.Items
                         case 4: pick = current - 1; break;
                     }
 
-                    if (Progress.Contains(pick) || pick < 0 || pick > 15)      //Off board or already chosen spot
+                    if (Progress.Contains(pick) || pick < 0 || pick > 15) //Off board or already chosen spot
                     {
                         User.PlaySound(0x5B6);
                         Refresh();
@@ -405,19 +424,23 @@ namespace Server.Items
                         User.PlaySound(0x3D);
 
                         if (Door.Enclosure != null)
+                        {
                             Door.Enclosure.OnPuzzleCompleted(User);
+                        }
                     }
-                    else if (pick == next)                                          //Found next 
+                    else if (pick == next) //Found next 
                     {
                         Progress.Add(pick);
 
                         User.PlaySound(0x1F5);
                         Refresh();
                     }
-                    else // Wrong Mutha Fucka!
+                    else // Wrong
                     {
                         if (Door.Enclosure != null)
+                        {
                             Door.Enclosure.OnBadDirection(User);
+                        }
 
                         ClearProgress();
                     }
