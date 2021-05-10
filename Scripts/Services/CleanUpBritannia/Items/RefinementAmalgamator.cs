@@ -58,6 +58,11 @@ namespace Server.Items
             }
             else
             {
+                if (ToUpgrade == component) // Can't target the same one twice.
+                {
+                    return;
+                }
+
                 if (ToUpgrade.RefinementType != component.RefinementType || ToUpgrade.CraftType != component.CraftType || ToUpgrade.SubCraftType != component.SubCraftType || ToUpgrade.ModType != component.ModType)
                 {
                     m.SendLocalizedMessage(1154354); // This refinement does not match the type currently being combined.
