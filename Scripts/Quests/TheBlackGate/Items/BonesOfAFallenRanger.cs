@@ -91,6 +91,7 @@ namespace Server.Items
             g.AddHtml(150, 46, 320, 44, "<BASEFONT COLOR=#AABFD4><DIV ALIGN=CENTER>Recovered from a Fallen Ranger in Hythloth</DIV>", false, false);
             g.AddHtml(150, 99, 320, 98, "<BASEFONT COLOR=#DFDFDF>You should return the item to Shamino's statue at once!", false, false);
 
+            from.CloseGump(typeof(Gump));
             from.SendGump(g);
 
             from.PrivateOverheadMessage(MessageType.Regular, 0x47E, 1157722, "its origin", from.NetState); // *Your proficiency in ~1_SKILL~ reveals more about the item*

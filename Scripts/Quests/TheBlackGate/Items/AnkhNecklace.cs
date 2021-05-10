@@ -21,6 +21,7 @@ namespace Server.Items
         public override void OnDoubleClick(Mobile from)
         {
             Gump g = new Gump(100, 100);
+
             g.AddPage(0);
 
             g.AddBackground(0, 0, 480, 320, 0x6DB);
@@ -32,6 +33,7 @@ namespace Server.Items
             g.AddHtml(150, 99, 320, 98, "<BASEFONT COLOR=#DFDFDF>You recovered the spirit of the fallen ranger in Hytloth for Shamino.", false, false);
             g.AddHtml(150, 197, 320, 98, "<BASEFONT COLOR=#DFDFDF>You have proven your own Spirituality in performing this solemn deed, and for that Shamino has given you the necklace.", false, false);
 
+            from.CloseGump(typeof(Gump));
             from.SendGump(g);
 
             from.PrivateOverheadMessage(MessageType.Regular, 0x47E, 1157722, "its origin", from.NetState); // *Your proficiency in ~1_SKILL~ reveals more about the item*
