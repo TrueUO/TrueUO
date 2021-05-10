@@ -1620,9 +1620,7 @@ namespace Server.Accounting
                 acc.m_YoungTimer = null;
             }
 
-            PlayerMobile m = e.Mobile as PlayerMobile;
-
-            if (m != null)
+            if (e.Mobile is PlayerMobile m)
             {
                 acc.m_TotalGameTime += DateTime.UtcNow - m.SessionStart;
             }
@@ -1652,10 +1650,7 @@ namespace Server.Accounting
             TimeSpan ts = YoungDuration - acc.TotalGameTime;
             int hours = Math.Max((int)ts.TotalHours, 0);
 
-            m.SendAsciiMessage(
-                "You will enjoy the benefits and relatively safe status of a young player for {0} more hour{1}.",
-                hours,
-                hours != 1 ? "s" : "");
+            m.SendAsciiMessage("You will enjoy the benefits and relatively safe status of a young player for {0} more hour{1}.", hours, hours != 1 ? "s" : "");
         }
 
         private class YoungTimer : Timer

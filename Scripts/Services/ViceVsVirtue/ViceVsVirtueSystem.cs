@@ -681,12 +681,9 @@ namespace Server.Engines.VvV
                 return;
             }
 
-            if (!IsVvV(from) && IsVvV(target))
+            if (!IsVvV(from) && IsVvV(target) && (target.Aggressors.Any(info => IsVvV(info.Attacker)) || target.Aggressed.Any(info => IsVvV(info.Defender))))
             {
-                if (target.Aggressors.Any(info => IsVvV(info.Attacker)) || target.Aggressed.Any(info => IsVvV(info.Defender)))
-                {
-                    AddTempParticipant(from, target);
-                }
+                AddTempParticipant(from, target);
             }
         }
 
@@ -1022,18 +1019,18 @@ namespace Server.Engines.VvV
             {
                 foreach (Mobile value in World.Mobiles.Values)
                 {
-                    if (value is PlayerMobile pm)
+                    if (value is PlayerMobile pm && IsVvV(pm))
                     {
-                        if (IsVvV(pm))
+                        VvVPlayerEntry entry = Instance.GetPlayerEntry<VvVPlayerEntry>(pm);
+
+                        if (entry != null)
                         {
-                            VvVPlayerEntry entry = Instance.GetPlayerEntry<VvVPlayerEntry>(pm);
-
-                            if (entry != null)
+                            if (ShowNewRules == null)
                             {
-                                if (ShowNewRules == null) ShowNewRules = new List<PlayerMobile>();
-
-                                ShowNewRules.Add(pm);
+                                ShowNewRules = new List<PlayerMobile>();
                             }
+
+                            ShowNewRules.Add(pm);
                         }
                     }
                 }

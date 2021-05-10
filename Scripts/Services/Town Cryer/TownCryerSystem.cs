@@ -357,9 +357,7 @@ namespace Server.Services.TownCryer
                     list.Add(new UpdateCityEntry(tc));
                 }
 
-                Guild g = pm.Guild as Guild;
-
-                if (g != null && pm.GuildRank != null && pm.GuildRank.Rank >= 3 && g.Leader == pm && (pm.AccessLevel > AccessLevel.Player || g.Members.Count >= MinGuildMemberCount))
+                if (pm.Guild is Guild g && pm.GuildRank != null && pm.GuildRank.Rank >= 3 && g.Leader == pm && (pm.AccessLevel > AccessLevel.Player || g.Members.Count >= MinGuildMemberCount))
                 {
                     list.Add(new UpdateGuildEntry(pm, tc));
                 }
@@ -638,9 +636,7 @@ namespace Server.Services.TownCryer
 
                     for (int i = 0; i < count; i++)
                     {
-                        PlayerMobile pm = reader.ReadMobile() as PlayerMobile;
-
-                        if (pm != null)
+                        if (reader.ReadMobile() is PlayerMobile pm)
                         {
                             AddExempt(pm);
                         }
@@ -807,13 +803,9 @@ namespace Server.Services.TownCryer
 
         public override void OnClick()
         {
-            PlayerMobile pm = Owner.From as PlayerMobile;
-
-            if (pm != null)
+            if (Owner.From is PlayerMobile pm)
             {
-                Guild g = pm.Guild as Guild;
-
-                if (g != null && pm.GuildRank != null && pm.GuildRank.Rank >= 3 && (pm.AccessLevel > AccessLevel.Player || g.Members.Count >= TownCryerSystem.MinGuildMemberCount))
+                if (pm.Guild is Guild g && pm.GuildRank != null && pm.GuildRank.Rank >= 3 && (pm.AccessLevel > AccessLevel.Player || g.Members.Count >= TownCryerSystem.MinGuildMemberCount))
                 {
                     if (TownCryerSystem.HasGuildEntry(g))
                     {

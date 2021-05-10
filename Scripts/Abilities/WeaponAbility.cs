@@ -334,14 +334,16 @@ namespace Server.Items
         public static bool IsWeaponAbility(Mobile m, WeaponAbility a)
         {
             if (a == null)
+            {
                 return true;
+            }
 
             if (!m.Player)
+            {
                 return true;
+            }
 
-            BaseWeapon weapon = m.Weapon as BaseWeapon;
-
-            return weapon != null && (weapon.PrimaryAbility == a || weapon.SecondaryAbility == a);
+            return m.Weapon is BaseWeapon weapon && (weapon.PrimaryAbility == a || weapon.SecondaryAbility == a);
         }
 
         public virtual bool ValidatesDuringHit => true;
