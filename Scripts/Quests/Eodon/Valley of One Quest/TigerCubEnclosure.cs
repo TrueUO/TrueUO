@@ -219,12 +219,9 @@ namespace Server.Items
 
         public override void OnDoubleClick(Mobile from)
         {
-            if (from is PlayerMobile mobile && mobile.InRange(GetWorldLocation(), 2) && mobile.InLOS(this))
+            if (from is PlayerMobile mobile && mobile.InRange(GetWorldLocation(), 2) && mobile.InLOS(this) && (QuestHelper.GetQuest(mobile, typeof(PrideOfTheAmbushQuest)) is PrideOfTheAmbushQuest))
             {
-                if (QuestHelper.GetQuest(mobile, typeof(PrideOfTheAmbushQuest)) is PrideOfTheAmbushQuest)
-                {
-                    mobile.SendGump(new LockingMechanismGump(mobile, this));
-                }
+                mobile.SendGump(new LockingMechanismGump(mobile, this));
             }
         }
 

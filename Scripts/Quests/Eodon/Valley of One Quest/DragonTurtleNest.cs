@@ -56,9 +56,7 @@ namespace Server.Items
         {
             if (m is PlayerMobile pm && pm.Location != oldLocation && pm.InRange(Location, 3) && (!FocusList.Contains(pm) || 0.015 > Utility.RandomDouble()))
             {
-                EmptyNestQuest quest = QuestHelper.GetQuest(pm, typeof(EmptyNestQuest)) as EmptyNestQuest;
-
-                if (quest != null && !quest.Completed)
+                if (QuestHelper.GetQuest(pm, typeof(EmptyNestQuest)) is EmptyNestQuest quest && !quest.Completed)
                 {
                     if (Focus == null)
                     {
@@ -71,7 +69,9 @@ namespace Server.Items
                             DeadlineTimer.Stop();
 
                             if (Poachers != null && Poachers.Count > 0)
+                            {
                                 Delete();
+                            }
                             else
                             {
                                 Focus = null;
@@ -95,10 +95,14 @@ namespace Server.Items
             Map map = m.Map;
 
             if (map == null || map == Map.Internal)
+            {
                 return;
+            }
 
             if (Poachers == null)
+            {
                 Poachers = new List<BaseCreature>();
+            }
 
             for (int i = 0; i < 3; i++)
             {
@@ -147,7 +151,9 @@ namespace Server.Items
                             SpawnPoachers(Hatchling);
 
                             if (Egg != null)
+                            {
                                 Egg.Visible = false;
+                            }
                         });
                     }
                     else
@@ -158,7 +164,9 @@ namespace Server.Items
                             Timer.DelayCall(TimeSpan.FromSeconds(1), OnComplete, new object[] { Hatchling, Focus });
 
                             if (!FocusList.Contains(Focus))
+                            {
                                 FocusList.Add(Focus);
+                            }
                         }
                         else
                             Delete();
@@ -220,7 +228,9 @@ namespace Server.Items
             }
 
             if (Poachers != null)
+            {
                 ColUtility.Free(Poachers);
+            }
         }
 
         public NestWithEgg(Serial serial)
@@ -244,10 +254,14 @@ namespace Server.Items
             Hatchling = reader.ReadMobile() as BaseCreature;
 
             if (Hatchling != null)
+            {
                 Hatchling.Delete();
+            }
 
             if (Egg != null && !Egg.Visible)
+            {
                 Egg.Visible = true;
+            }
 
             FocusList = new List<Mobile>();
         }

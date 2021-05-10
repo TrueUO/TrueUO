@@ -1,5 +1,4 @@
 using Server.Engines.Harvest;
-using Server.Gumps;
 using Server.Items;
 using Server.Mobiles;
 using Server.Network;
@@ -298,7 +297,6 @@ namespace Server.Engines.Quests
 
         public TheGreatVolcanoQuest()
         {
-            //AddObjective( new ObtainObjective( typeof(LavaStone), "Recover 5 lava rocks from the Caldera of the Great Volcano", 5 ) );
             AddObjective(new InternalObjective());
             AddReward(new BaseReward(typeof(FiresOfKukuzz), 1, 1156553)); // Trust of the Jukari Tribe
         }
@@ -308,16 +306,20 @@ namespace Server.Engines.Quests
         public static bool OnHarvest(Mobile m, Item tool)
         {
             if (!(m is PlayerMobile) || m.Map != Map.TerMur)
+            {
                 return false;
+            }
 
-            PlayerMobile pm = m as PlayerMobile;
+            PlayerMobile pm = (PlayerMobile) m;
 
             if ((pm.ToggleMiningStone || pm.ToggleStoneOnly) && VolcanoMineBounds.Contains(m.Location))
             {
                 object locked = tool;
 
                 if (!m.BeginAction(locked))
+                {
                     return false;
+                }
 
                 m.Animate(AnimationType.Attack, 3);
 
@@ -328,9 +330,7 @@ namespace Server.Engines.Quests
 
                 Timer.DelayCall(Mining.System.OreAndStone.EffectDelay, () =>
                     {
-                        TheGreatVolcanoQuest quest = QuestHelper.GetQuest(pm, typeof(TheGreatVolcanoQuest)) as TheGreatVolcanoQuest;
-
-                        if (quest != null && !quest.Completed && 0.05 > Utility.RandomDouble())
+                        if (QuestHelper.GetQuest(pm, typeof(TheGreatVolcanoQuest)) is TheGreatVolcanoQuest quest && !quest.Completed && 0.05 > Utility.RandomDouble())
                         {
                             if (m.CheckSkill(SkillName.Mining, 90, 100))
                             {
@@ -368,13 +368,19 @@ namespace Server.Engines.Quests
                                     quest.Update(m);
                                 }
                                 else
+                                {
                                     m.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1156509); // You loosen some dirt but fail to find anything.
+                                }
                             }
                             else
+                            {
                                 m.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1156509); // You loosen some dirt but fail to find anything.
+                            }
                         }
                         else
+                        {
                             m.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1156509); // You loosen some dirt but fail to find anything.
+                        }
 
                         if (tool is IUsesRemaining remaining)
                         {
@@ -398,8 +404,10 @@ namespace Server.Engines.Quests
 
         public bool Update(object o)
         {
-            foreach (BaseObjective obj in Objectives)
+            for (var index = 0; index < Objectives.Count; index++)
             {
+                BaseObjective obj = Objectives[index];
+
                 obj.Update(o);
 
                 if (!Completed)
@@ -491,8 +499,10 @@ namespace Server.Engines.Quests
 
         public bool Update(object o)
         {
-            foreach (BaseObjective obj in Objectives)
+            for (var index = 0; index < Objectives.Count; index++)
             {
+                BaseObjective obj = Objectives[index];
+
                 obj.Update(o);
 
                 if (!Completed)

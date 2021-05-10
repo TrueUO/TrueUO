@@ -612,10 +612,10 @@ namespace Server.Mobiles
 
             if (Protector is PlayerMobile mobile && InRange(Home, 2))
             {
-                PrideOfTheAmbushQuest quest = QuestHelper.GetQuest(mobile, typeof(PrideOfTheAmbushQuest)) as PrideOfTheAmbushQuest;
-
-                if (quest != null && !quest.Completed)
+                if (QuestHelper.GetQuest(mobile, typeof(PrideOfTheAmbushQuest)) is PrideOfTheAmbushQuest quest && !quest.Completed)
+                {
                     quest.Update(this);
+                }
 
                 mobile.PrivateOverheadMessage(Network.MessageType.Regular, 0x35, 1156501, mobile.NetState); // *You watch as the Tiger Cub safely returns to the Kurak Tribe*
 
