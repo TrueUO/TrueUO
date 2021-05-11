@@ -5,12 +5,12 @@ namespace Server.Items
     public class MentoSeasoning : Item
     {
         public override int LabelNumber => 1116299; // Mento Seasoning
+        public override int Hue => 2591;
 
         [Constructable]
         public MentoSeasoning()
             : base(0x996)
         {
-            Hue = 2591;
         }
 
         public MentoSeasoning(Serial serial) : base(serial)
@@ -33,12 +33,12 @@ namespace Server.Items
     public class SamuelsSecretSauce : Item
     {
         public override int LabelNumber => 1116338; // Samuel's Secret Sauce
+        public override int Hue => 1461;
 
         [Constructable]
         public SamuelsSecretSauce()
             : base(0x99B)
         {
-            Hue = 1461;
         }
 
         public SamuelsSecretSauce(Serial serial) : base(serial)
@@ -61,12 +61,12 @@ namespace Server.Items
     public class DarkTruffle : Item
     {
         public override int LabelNumber => 1116300; // dark truffle
+        public override int Hue => 2021;
 
         [Constructable]
         public DarkTruffle()
             : base(0xD18)
         {
-            Hue = 2021;
         }
 
         public DarkTruffle(Serial serial)
@@ -177,6 +177,7 @@ namespace Server.Items
     public class Salt : Item
     {
         public override int LabelNumber => 1159201; // salt
+        public override int Hue => 1150;
 
         [Constructable]
         public Salt()
@@ -205,12 +206,12 @@ namespace Server.Items
     public class FreshSeasoning : Item
     {
         public override int LabelNumber => 1159200; // fresh seasoning
+        public override int Hue => 1150;
 
         [Constructable]
         public FreshSeasoning()
             : base(0x1006)
         {
-            Hue = 1150;
         }
 
         public FreshSeasoning(Serial serial)

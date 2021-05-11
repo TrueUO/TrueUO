@@ -445,18 +445,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
-
-            if (version <= 0 && ItemID == 0x318F)
-                ItemID = 0x318C;
+            reader.ReadInt();
         }
     }
 
@@ -849,6 +844,8 @@ namespace Server.Items
 
     public class Scourge : Item, ICommodity
     {
+        public override int Hue => 150;
+
         [Constructable]
         public Scourge()
             : this(1)
@@ -867,7 +864,6 @@ namespace Server.Items
         {
             Stackable = true;
             Amount = amount;
-            Hue = 150;
         }
 
         public Scourge(Serial serial)
@@ -893,6 +889,8 @@ namespace Server.Items
 
     public class Putrefaction : Item, ICommodity
     {
+        public override int Hue => 883;
+
         [Constructable]
         public Putrefaction()
             : this(1)
@@ -911,7 +909,6 @@ namespace Server.Items
         {
             Stackable = true;
             Amount = amount;
-            Hue = 883;
         }
 
         public Putrefaction(Serial serial)
@@ -937,6 +934,8 @@ namespace Server.Items
 
     public class Taint : Item, ICommodity
     {
+        public override int Hue => 731;
+
         [Constructable]
         public Taint()
             : this(1)
@@ -955,7 +954,6 @@ namespace Server.Items
         {
             Stackable = true;
             Amount = amount;
-            Hue = 731;
         }
 
         public Taint(Serial serial)

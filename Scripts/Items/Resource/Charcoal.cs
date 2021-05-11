@@ -3,6 +3,7 @@ namespace Server.Items
     public class Charcoal : Item, ICommodity
     {
         public override int LabelNumber => 1116303;  // charcoal
+        public override int Hue => 1190;
 
         TextDefinition ICommodity.Description => LabelNumber;
         bool ICommodity.IsDeedable => true;
@@ -19,7 +20,6 @@ namespace Server.Items
         {
             Stackable = true;
             Amount = amount;
-            Hue = 1190;
         }
 
         public Charcoal(Serial serial)

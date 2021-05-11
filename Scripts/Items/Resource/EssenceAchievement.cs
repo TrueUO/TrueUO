@@ -14,7 +14,6 @@ namespace Server.Items
         {
             Stackable = true;
             Amount = amount;
-            Hue = 1724;
         }
 
         public EssenceAchievement(Serial serial)
@@ -23,6 +22,7 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1113325;// essence of achievement
+        public override int Hue => 1724;
         TextDefinition ICommodity.Description => LabelNumber;
         bool ICommodity.IsDeedable => true;
 
