@@ -47,9 +47,7 @@ namespace Server.Spells.SkillMasteries
 
         protected override void OnTarget(object o)
         {
-            IPoint3D p = o as IPoint3D;
-
-            if (p != null && CheckSequence())
+            if (o is IPoint3D p && CheckSequence())
             {
                 Rectangle2D rec = new Rectangle2D(p.X - 3, p.Y - 3, 6, 6);
                 Skulls = new List<Item>();

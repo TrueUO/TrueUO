@@ -240,8 +240,10 @@ namespace Server.Mobiles
 
             if (attacker is PlayerMobile)
             {
-                foreach (Mobile ts in ((PlayerMobile)attacker).AllFollowers)
+                for (var index = 0; index < ((PlayerMobile) attacker).AllFollowers.Count; index++)
                 {
+                    Mobile ts = ((PlayerMobile) attacker).AllFollowers[index];
+
                     if (ts is BaseTalismanSummon && ts.InRange(defender.Location, ts.Weapon.MaxRange))
                     {
                         ts.Weapon.OnSwing(ts, defender);

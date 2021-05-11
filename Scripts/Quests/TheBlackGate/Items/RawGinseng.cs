@@ -5,13 +5,14 @@ namespace Server.Items
 {
     public class RawGinsengDecoration : Item
     {
+        public override string DefaultName => "Raw Ginseng";
+
         private readonly Dictionary<Mobile, int> list = new Dictionary<Mobile, int>();
 
         [Constructable]
         public RawGinsengDecoration()
             : base(0x18EA)
         {
-            Name = "Raw Ginseng";
             Weight = 0.0;
             Movable = false;
         }
@@ -64,6 +65,7 @@ namespace Server.Items
 
     public class RawGinseng : BaseDecayingItem
     {
+        public override string DefaultName => "Raw Ginseng";
         public override int Lifespan => 259200;
         public override bool UseSeconds => false;
 
@@ -71,7 +73,6 @@ namespace Server.Items
         public RawGinseng()
             : base(0x18EB)
         {
-            Name = "Raw Ginseng";
         }
 
         public RawGinseng(Serial serial)

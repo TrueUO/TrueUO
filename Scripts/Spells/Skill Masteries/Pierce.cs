@@ -51,9 +51,7 @@ namespace Server.Spells.SkillMasteries
 
             ClearCurrentMove(attacker);
 
-            BaseWeapon weapon = attacker.Weapon as BaseWeapon;
-
-            if (weapon != null && (_Table == null || !_Table.ContainsKey(attacker)))
+            if (attacker.Weapon is BaseWeapon weapon && (_Table == null || !_Table.ContainsKey(attacker)))
             {
                 int toDrain = (int)(attacker.Skills[MoveSkill].Value + attacker.Skills[SkillName.Tactics].Value + (MasteryInfo.GetMasteryLevel(attacker, SkillName.Fencing) * 40) / 3);
                 toDrain /= 3;

@@ -320,10 +320,12 @@ namespace Server.Engines.Quests
             }
 
             AddImage(425, 0, 0x28C9);
-            AddImage(90, 33, 0x232D);            
-
+            AddImage(90, 33, 0x232D);
+            
             if (isconversation)
                 AddHtmlLocalized(130, 45, 270, 16, 3006156, 0xFFFFFF, false, false); // Quest Conversation
+            else if (m_Completed)
+                AddHtmlLocalized(130, 45, 270, 16, 1072201, 0xFFFFFF, false, false); // Reward
             else if (m_Offer)
                 AddHtmlLocalized(130, 45, 270, 16, 1049010, 0xFFFFFF, false, false); // Quest Offer
             else
@@ -755,12 +757,10 @@ namespace Server.Engines.Quests
             if (m_Quest == null)
                 return;
 
-            SecBackground(true);
-            SecHeader();
+            SecBackground();
+            SecHeader();            
 
-            AddHtmlLocalized(98, 140, 312, 16, 1072201, 0x2710, false, false); // Reward	
-
-            int offset = 163;
+            int offset = 140;
 
             for (int i = 0; i < m_Quest.Rewards.Count; i++)
             {
@@ -768,12 +768,12 @@ namespace Server.Engines.Quests
 
                 if (reward != null)
                 {
-                    AddImage(105, offset, 0x4B9);
-                    AddHtmlObject(133, offset, 280, m_Quest.Rewards.Count == 1 ? 100 : 16, reward.Name, 0x15F90, false, false);
+                    AddImage(107, offset + 7, 0x4B9);
+                    AddHtmlObject(135, offset + 6, 280, m_Quest.Rewards.Count == 1 ? 100 : 16, reward.Name, 0x15F90, false, false);
 
                     if (reward.Image > 0)
                     {
-                        AddItem(283, offset - 6, reward.Image);
+                        AddItem(285, offset, reward.Image);
                     }
 
                     offset += 16;

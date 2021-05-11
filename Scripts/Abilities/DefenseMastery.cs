@@ -31,7 +31,9 @@ namespace Server.Items
         public override void OnHit(Mobile attacker, Mobile defender, int damage)
         {
             if (!Validate(attacker) || !CheckMana(attacker, true))
+            {
                 return;
+            }
 
             ClearCurrentAbility(attacker);
 
@@ -41,10 +43,10 @@ namespace Server.Items
 
             int modifier = (int)(30.0 * ((Math.Max(attacker.Skills[SkillName.Bushido].Value, attacker.Skills[SkillName.Ninjitsu].Value) - 50.0) / 70.0));
 
-            DefenseMasteryInfo info = m_Table[attacker] as DefenseMasteryInfo;
-
-            if (info != null)
+            if (m_Table[attacker] is DefenseMasteryInfo info)
+            {
                 EndDefense(info);
+            }
 
             ResistanceMod mod = new ResistanceMod(ResistanceType.Physical, 50 + modifier);
             attacker.AddResistanceMod(mod);
