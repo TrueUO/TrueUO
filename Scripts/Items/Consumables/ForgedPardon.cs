@@ -8,21 +8,25 @@ namespace Server.Items
         public static Dictionary<Mobile, DateTime> Table => m_Table;
         private static readonly Dictionary<Mobile, DateTime> m_Table = new Dictionary<Mobile, DateTime>();
 
-        public override int LabelNumber => 1116234;
+        public override int LabelNumber => 1116234; // Forged Pardon
+        public override int Hue => 1177;
 
         [Constructable]
         public ForgedPardon()
             : base(10289)
         {
-            Hue = 1177;
         }
 
         public override void OnDoubleClick(Mobile from)
         {
             if (!IsChildOf(from.Backpack))
+            {
                 from.SendLocalizedMessage(1042004); //That must be in your pack for you to use it.
+            }
             else if (from.Kills <= 0)
+            {
                 from.SendMessage("You have no use for this item.");
+            }
             else if (CanUsePardon(from))
             {
                 from.Kills--;
@@ -36,16 +40,19 @@ namespace Server.Items
         public static bool CanUsePardon(Mobile from)
         {
             Defrag();
+
             if (m_Table.ContainsKey(from))
             {
                 from.SendLocalizedMessage(1116587); //You must wait 24 hours before using another forged pardon.
                 return false;
             }
+
             if (Spells.SpellHelper.CheckCombat(from))
             {
                 from.SendLocalizedMessage(1116588); //You cannot use a forged pardon while in combat.
                 return false;
             }
+
             return true;
         }
 

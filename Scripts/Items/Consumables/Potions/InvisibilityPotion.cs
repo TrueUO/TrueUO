@@ -6,11 +6,11 @@ namespace Server.Items
     public class InvisibilityPotion : BasePotion
     {
         private static readonly Hashtable m_Table = new Hashtable();
+
         [Constructable]
         public InvisibilityPotion()
             : base(0xF0A, PotionEffect.Invisibility)
         {
-            Hue = 0x48D;
         }
 
         public InvisibilityPotion(Serial serial)
@@ -19,6 +19,8 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1072941;// Potion of Invisibility
+        public override int Hue => 0x48D;
+
         public static void Hide(Mobile m)
         {
             Effects.SendLocationParticles(EffectItem.Create(new Point3D(m.X, m.Y, m.Z + 16), m.Map, EffectItem.DefaultDuration), 0x376A, 10, 15, 5045);

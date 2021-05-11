@@ -21,6 +21,7 @@ namespace Server.Items
         public Map LinkMap { get => m_LinkMap; set => m_LinkMap = value; }
 
         public override int LabelNumber => 1115929; // Endless Decanter of Water
+        public override int Hue => 0x399;
 
         public override int ComputeItemID()
         {
@@ -31,7 +32,6 @@ namespace Server.Items
         public EndlessDecanter() : base(BeverageType.Water)
         {
             Weight = 2.0;
-            Hue = 0x399;
         }
 
         public EndlessDecanter(Serial serial) : base(serial)

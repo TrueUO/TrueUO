@@ -10,7 +10,6 @@ namespace Server.Items
         public TribalPaint()
             : base(0x9EC)
         {
-            Hue = 2101;
             Weight = 2.0;
             Stackable = true;
         }
@@ -21,6 +20,8 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1040000;// savage kin paint
+        public override int Hue => 2101;
+
         public override void OnDoubleClick(Mobile from)
         {
             if (IsChildOf(from.Backpack))

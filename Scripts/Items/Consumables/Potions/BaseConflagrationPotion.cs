@@ -13,10 +13,11 @@ namespace Server.Items
 
         public override bool RequireFreeHand => false;
 
+        public override int Hue => 0x489;
+
         public BaseConflagrationPotion(PotionEffect effect)
             : base(0xF06, effect)
         {
-            Hue = 0x489;
         }
 
         public BaseConflagrationPotion(Serial serial)
@@ -40,10 +41,10 @@ namespace Server.Items
                 return;
             }
 
-            ThrowTarget targ = from.Target as ThrowTarget;
-
-            if (targ != null && targ.Potion == this)
+            if (from.Target is ThrowTarget targ && targ.Potion == this)
+            {
                 return;
+            }
 
             from.RevealingAction();
 
@@ -84,10 +85,10 @@ namespace Server.Items
             // Check if any other players are using this potion
             for (int i = 0; i < m_Users.Count; i++)
             {
-                ThrowTarget targ = m_Users[i].Target as ThrowTarget;
-
-                if (targ != null && targ.Potion == this)
+                if (m_Users[i].Target is ThrowTarget targ && targ.Potion == this)
+                {
                     Target.Cancel(from);
+                }
             }
 
             // Effects
@@ -111,20 +112,20 @@ namespace Server.Items
 
         public static void AddDelay(Mobile m)
         {
-            Timer timer = m_Delay[m] as Timer;
-
-            if (timer != null)
+            if (m_Delay[m] is Timer timer)
+            {
                 timer.Stop();
+            }
 
             m_Delay[m] = Timer.DelayCall(TimeSpan.FromSeconds(30), new TimerStateCallback(EndDelay_Callback), m);
         }
 
         public static int GetDelay(Mobile m)
         {
-            Timer timer = m_Delay[m] as Timer;
-
-            if (timer != null && timer.Next > DateTime.UtcNow)
+            if (m_Delay[m] is Timer timer && timer.Next > DateTime.UtcNow)
+            {
                 return (int)(timer.Next - DateTime.UtcNow).TotalSeconds;
+            }
 
             return 0;
         }
@@ -137,9 +138,7 @@ namespace Server.Items
 
         public static void EndDelay(Mobile m)
         {
-            Timer timer = m_Delay[m] as Timer;
-
-            if (timer != null)
+            if (m_Delay[m] is Timer timer)
             {
                 timer.Stop();
                 m_Delay.Remove(m);
@@ -312,7 +311,9 @@ namespace Server.Items
                 protected override void OnTick()
                 {
                     if (m_Item.Deleted)
+                    {
                         return;
+                    }
 
                     if (DateTime.UtcNow > m_End)
                     {
@@ -324,13 +325,18 @@ namespace Server.Items
                     Mobile from = m_Item.From;
 
                     if (m_Item.Map == null || from == null)
+                    {
                         return;
+                    }
 
                     List<Mobile> mobiles = new List<Mobile>();
                     IPooledEnumerable eable = m_Item.GetMobilesInRange(0);
 
                     foreach (Mobile mobile in eable)
+                    {
                         mobiles.Add(mobile);
+                    }
+
                     eable.Free();
 
                     for (int i = 0; i < mobiles.Count; i++)

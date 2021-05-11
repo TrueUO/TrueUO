@@ -15,7 +15,6 @@ namespace Server.Items
             : base(0x1E85)
         {
             Stackable = true;
-            Hue = 0x21;
             Amount = amount;
         }
 
@@ -28,7 +27,9 @@ namespace Server.Items
         bool ICommodity.IsDeedable => true;
 
         public override int LabelNumber => 1053123;// red leaves
+        public override int Hue => 0x21;
         public override double DefaultWeight => 0.1;
+
         public override void OnDoubleClick(Mobile from)
         {
             if (!IsChildOf(from.Backpack))

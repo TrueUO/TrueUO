@@ -8,15 +8,17 @@ namespace Server.Items
         [Constructable]
         public ElixirOfRebirth() : base(0x24E2)
         {
-            Hue = 0x48E;
         }
 
         public override int LabelNumber => 1112762;  // elixir of rebirth
+        public override int Hue => 0x48E;
 
         public override void OnDoubleClick(Mobile from)
         {
             if (!IsChildOf(from.Backpack))
+            {
                 from.SendLocalizedMessage(1062334); // This item must be in your backpack to be used.
+            }
             else
             {
                 from.Target = new ResurrectTarget(this);
@@ -76,14 +78,12 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             reader.ReadInt();
         }
     }

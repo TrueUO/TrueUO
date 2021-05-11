@@ -10,6 +10,8 @@ namespace Server.Items
     public class FearEssence : BasePotion
     {
         public override int LabelNumber => 1115744;  // fear essence
+        public override int Hue => 5;
+
         public virtual int Radius => 20;
         public override bool RequireFreeHand => false;
 
@@ -17,7 +19,6 @@ namespace Server.Items
         public FearEssence()
             : base(0xF0D, PotionEffect.FearEssence)
         {
-            Hue = 5;
             Weight = 2.0;
         }
 
@@ -42,15 +43,17 @@ namespace Server.Items
                 return;
             }
 
-            ThrowTarget targ = from.Target as ThrowTarget;
-
-            if (targ != null && targ.Potion == this)
+            if (from.Target is ThrowTarget targ && targ.Potion == this)
+            {
                 return;
+            }
 
             from.RevealingAction();
 
             if (!m_Users.Contains(from))
+            {
                 m_Users.Add(from);
+            }
 
             from.Target = new ThrowTarget(this);
         }
@@ -79,17 +82,19 @@ namespace Server.Items
         public virtual void Explode(Mobile from, Point3D loc, Map map)
         {
             if (Deleted || map == null)
+            {
                 return;
+            }
 
             Consume();
 
             // Check if any other players are using this potion
             for (int i = 0; i < m_Users.Count; i++)
             {
-                ThrowTarget targ = m_Users[i].Target as ThrowTarget;
-
-                if (targ != null && targ.Potion == this)
+                if (m_Users[i].Target is ThrowTarget targ && targ.Potion == this)
+                {
                     Target.Cancel(from);
+                }
             }
 
             Timer.DelayCall(TimeSpan.FromSeconds(1), new TimerStateCallback(TarEffect), new object[] { loc, map });
@@ -170,9 +175,7 @@ namespace Server.Items
 
         public static void EndDelay(Mobile m)
         {
-            Timer timer = m_Delay[m] as Timer;
-
-            if (timer != null)
+            if (m_Delay[m] is Timer timer)
             {
                 timer.Stop();
                 m_Delay.Remove(m);

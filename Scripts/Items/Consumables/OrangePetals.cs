@@ -7,6 +7,7 @@ namespace Server.Items
     public class OrangePetals : Item, ICommodity
     {
         private static readonly Hashtable m_Table = new Hashtable();
+
         [Constructable]
         public OrangePetals()
             : this(1)
@@ -18,7 +19,6 @@ namespace Server.Items
             : base(0x1021)
         {
             Stackable = true;
-            Hue = 0x2B;
             Amount = amount;
         }
 
@@ -31,7 +31,9 @@ namespace Server.Items
         bool ICommodity.IsDeedable => true;
 
         public override int LabelNumber => 1053122;// orange petals
+        public override int Hue => 0x2B;
         public override double DefaultWeight => 1.0;
+
         public static void RemoveContext(Mobile m)
         {
             OrangePetalsContext context = GetContext(m);

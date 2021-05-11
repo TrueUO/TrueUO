@@ -202,12 +202,12 @@ namespace Server.Items
             {
                 Item[] items = from.Backpack.FindItemsByType(typeof(HarvestMap));
 
-                foreach (Item item in items)
+                for (var index = 0; index < items.Length; index++)
                 {
-                    HarvestMap harvestmap = item as HarvestMap;
+                    Item item = items[index];
 
-                    if (harvestmap != null && harvestmap.TargetMap == map && harvestmap.UsesRemaining > 0
-                        && def.GetBank(map, p.X, p.Y) == def.GetBank(harvestmap.TargetMap, harvestmap.Target.X, harvestmap.Target.Y))
+                    if (item is HarvestMap harvestmap && harvestmap.TargetMap == map && harvestmap.UsesRemaining > 0 && def.GetBank(map, p.X, p.Y) == def.GetBank(harvestmap.TargetMap, harvestmap.Target.X,
+                            harvestmap.Target.Y))
                     {
                         return harvestmap;
                     }

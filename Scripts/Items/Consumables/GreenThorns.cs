@@ -19,7 +19,6 @@ namespace Server.Items
         {
             Stackable = true;
             Weight = 1.0;
-            Hue = 0x42;
             Amount = amount;
         }
 
@@ -32,6 +31,8 @@ namespace Server.Items
         bool ICommodity.IsDeedable => true;
 
         public override int LabelNumber => 1060837;// green thorns
+        public override int Hue => 0x42;
+
         public override void OnDoubleClick(Mobile from)
         {
             if (!IsChildOf(from.Backpack))
@@ -264,23 +265,30 @@ namespace Server.Items
         public Point3D Location => m_Location;
         public Map Map => m_Map;
         public Mobile From => m_From;
+
         public static GreenThornsEffect Create(Mobile from, LandTarget land)
         {
             if (!from.Map.CanSpawnMobile(land.Location))
+            {
                 return null;
+            }
 
             int tileID = land.TileID;
 
-            foreach (TilesAndEffect taep in m_Table)
+            for (var index = 0; index < m_Table.Length; index++)
             {
+                TilesAndEffect taep = m_Table[index];
+
                 bool contains = false;
 
                 for (int i = 0; !contains && i < taep.Tiles.Length; i += 2)
+                {
                     contains = tileID >= taep.Tiles[i] && tileID <= taep.Tiles[i + 1];
+                }
 
                 if (contains)
                 {
-                    GreenThornsEffect effect = (GreenThornsEffect)Activator.CreateInstance(taep.Effect, land.Location, from.Map, from);
+                    GreenThornsEffect effect = (GreenThornsEffect) Activator.CreateInstance(taep.Effect, land.Location, from.Map, from);
                     return effect;
                 }
             }
@@ -681,10 +689,11 @@ namespace Server.Items
             : base(0x913)
         {
             Movable = false;
-            Hue = 0x1;
         }
 
         public override string DefaultName => "a hole";
+        public override int Hue => 0x1;
+
         public static void Create(Point3D location, Map map)
         {
             GreenThornsSHTeleporter tele = new GreenThornsSHTeleporter();

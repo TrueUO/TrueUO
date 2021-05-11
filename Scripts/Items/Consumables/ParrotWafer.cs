@@ -6,7 +6,6 @@ namespace Server.Items
         public ParrotWafer()
             : base(0x2FD6)
         {
-            Hue = 0x38;
             Stackable = true;
         }
 
@@ -16,6 +15,7 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1072904;// Parrot Wafers
+        public override int Hue => 0x38;
 
         public override void Serialize(GenericWriter writer)
         {

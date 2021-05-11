@@ -6,12 +6,12 @@ namespace Server.Items
     public class SkinTingeingTincture : Item
     {
         public override int LabelNumber => 1114770;  //Skin Tingeing Tincture
+        public override int Hue => 90;
 
         [Constructable]
         public SkinTingeingTincture()
             : base(0xEFF)
         {
-            Hue = 90;
         }
 
         public override void GetProperties(ObjectPropertyList list)

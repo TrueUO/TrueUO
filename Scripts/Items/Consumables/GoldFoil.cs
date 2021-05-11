@@ -3,6 +3,7 @@ namespace Server.Items
     public class GoldFoil : Item
     {
         public override int LabelNumber => 1124032;  // foil sheet
+        public override int Hue => 1281;
 
         [Constructable]
         public GoldFoil() : this(1)
@@ -16,7 +17,6 @@ namespace Server.Items
             Stackable = true;
             Amount = amount;
             Weight = 2.0;
-            Hue = 1281;
         }
 
         public GoldFoil(Serial serial)

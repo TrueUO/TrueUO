@@ -3,11 +3,11 @@ namespace Server.Items
     public class PumpkinPizza : CheesePizza
     {
         public override int LabelNumber => 1153775;  // Pumpkin Pizza
+        public override int Hue => 0xF3;
 
         [Constructable]
         public PumpkinPizza()
         {
-            Hue = 0xF3;
         }
 
         public PumpkinPizza(Serial serial)
