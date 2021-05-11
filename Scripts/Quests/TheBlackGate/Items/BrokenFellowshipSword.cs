@@ -5,11 +5,12 @@ namespace Server.Items
 {
     public class BrokenFellowshipSword : Item
     {
+        public override string DefaultName => "a Broken Fellowship Sword";
+
         [Constructable]
         public BrokenFellowshipSword()
             : base(0xA33F)
         {
-            Name = "a Broken Fellowship Sword";
             Hue = 2117;
         }
 

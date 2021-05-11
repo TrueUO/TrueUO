@@ -4,11 +4,12 @@ namespace Server.Items
 {
     public class VialOfBlood : Item
     {
+        public override string DefaultName => "a vial of blood";
+
         [Constructable]
         public VialOfBlood()
             : base(0xE24)
         {
-            Name = "a vial of blood";
             Hue = 44;
         }
 

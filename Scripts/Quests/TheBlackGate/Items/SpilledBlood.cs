@@ -5,13 +5,14 @@ namespace Server.Items
 {
     public class SpilledBlood : Item
     {
+        public override string DefaultName => "Spilled Blood From Julia's Final Battle";
+
         private readonly Dictionary<Mobile, int> list = new Dictionary<Mobile, int>();
 
         [Constructable]
         public SpilledBlood()
             : base(0x122A)
         {
-            Name = "Spilled Blood From Julia's Final Battle";
             Weight = 0.0;
             Movable = false;
         }

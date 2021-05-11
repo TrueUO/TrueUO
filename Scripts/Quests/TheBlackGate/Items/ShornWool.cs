@@ -4,11 +4,12 @@ namespace Server.Items
 {
     public class ShornWool : Item
     {
+        public override string DefaultName => "a Shorn Wool";
+
         [Constructable]
         public ShornWool()
             : base(0xDFE)
         {
-            Name = "a Shorn Wool";
             Hue = 2051;
         }
 

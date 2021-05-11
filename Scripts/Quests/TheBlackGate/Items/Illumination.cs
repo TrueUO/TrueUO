@@ -4,11 +4,12 @@ namespace Server.Items
 {
     public class Illumination : Item
     {
+        public override string DefaultName => "an Illumination";
+
         [Constructable]
         public Illumination()
             : base(0x1C13)
         {
-            Name = "an Illumination";
             Hue = 2747;
         }
 

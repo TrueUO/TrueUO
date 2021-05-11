@@ -6,13 +6,14 @@ namespace Server.Items
 {
     public class BonesOfAFallenRanger : Item
     {
+        public override string DefaultName => "Bones Of A Fallen Ranger";
+
         private readonly Dictionary<Mobile, int> list = new Dictionary<Mobile, int>();
 
         [Constructable]
         public BonesOfAFallenRanger()
             : base(0x1B0C)
         {
-            Name = "Bones Of A Fallen Ranger";
             Weight = 0.0;
             Movable = false;
         }
@@ -65,11 +66,12 @@ namespace Server.Items
 
     public class RangersNecklace : BaseNecklace
     {
+        public override string DefaultName => "Ankh Necklace";
+
         [Constructable]
         public RangersNecklace()
             : base(0x3BB5)
         {
-            Name = "Ankh Necklace";
             Hue = 2498;
         }
 

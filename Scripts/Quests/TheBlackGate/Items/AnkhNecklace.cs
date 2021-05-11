@@ -4,11 +4,12 @@ namespace Server.Items
 {
     public class AnkhNecklace : BaseNecklace
     {
+        public override string DefaultName => "Ankh Necklace";
+
         [Constructable]
         public AnkhNecklace()
             : base(0x3BB5)
         {
-            Name = "Ankh Necklace";
             Hue = 2498;
         }
 

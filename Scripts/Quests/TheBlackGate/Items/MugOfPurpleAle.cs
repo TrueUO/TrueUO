@@ -4,6 +4,7 @@ namespace Server.Items
 {
     public class MugOfPurpleAle : BaseBeverage
     {
+        public override string DefaultName => "Mug Of Purple Ale";
         public override int MaxQuantity => 5;
         public override int ComputeItemID() { return ItemID; }
 
@@ -11,7 +12,6 @@ namespace Server.Items
         public MugOfPurpleAle()
         {
             ItemID = 0x9EF;
-            Name = "Mug Of Purple Ale";
             Hue = 1158;
             Quantity = 5;
         }

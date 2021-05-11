@@ -6,13 +6,14 @@ namespace Server.Items
 {
     public class RolledParchment : Item
     {
+        public override string DefaultName => "a Rolled Parchment";
+
         private readonly Dictionary<Mobile, int> list = new Dictionary<Mobile, int>();
 
         [Constructable]
         public RolledParchment()
             : base(0x46B3)
         {
-            Name = "a RolledParchment";
             Hue = 66;
             Weight = 0.0;
             Movable = false;

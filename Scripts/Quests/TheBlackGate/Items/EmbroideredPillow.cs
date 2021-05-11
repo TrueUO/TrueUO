@@ -4,11 +4,12 @@ namespace Server.Items
 {
     public class EmbroideredPillow : Item
     {
+        public override string DefaultName => "an Embroidered Pillow";
+
         [Constructable]
         public EmbroideredPillow()
             : base(0x9E1D)
         {
-            Name = "an Embroidered Pillow";
             Hue = 2125;
         }
 
