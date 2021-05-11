@@ -1152,29 +1152,15 @@ namespace Server.Items
 
         public override void OnDoubleClick(Mobile from)
         {
-            if (!from.HasGump(typeof(HooksTreasureMapGump)))
+            QuestRewardGump g = new QuestRewardGump(this, from)
             {
-                from.SendGump(new HooksTreasureMapGump());
-                from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1157722, "its origin"); // *Your proficiency in ~1_SKILL~ reveals more about the item*
-            }
-        }
+                Title = "Hook's Treasure Map",
+                Description = "Purchased from the Black Market",
+                Line1 = "The map likely leads to great treasure, however understanding it is beyond your comprehension.",
+                Line2 = "Deciphering it will require one with the reputation as a famed Artifact Hunter."
+            };
 
-        private class HooksTreasureMapGump : Gump
-        {
-            public HooksTreasureMapGump()
-                : base(100, 100)
-            {
-                AddPage(0);
-
-                AddBackground(0, 0, 480, 320, 0x6DB);
-                AddSpriteImage(24, 24, 0x474, 60, 60, 108, 108);
-                AddImage(15, 15, 0xA9F);
-                AddImageTiledButton(22, 22, 0x176F, 0x176F, 0x0, GumpButtonType.Page, 0, 0x14ED, 0xAA1, 33, 44);
-                AddHtml(150, 15, 320, 22, "<BASEFONT COLOR=#D5D52A><DIV ALIGN=CENTER>Hook's Treasure Map</DIV></BASEFONT>", false, false);
-                AddHtml(150, 46, 320, 44, "<BASEFONT COLOR=#AABFD4><DIV ALIGN=CENTER>Purchased from the Black Market</DIV></BASEFONT>", false, false);
-                AddHtml(150, 99, 320, 98, "<BASEFONT COLOR=#DFDFDF>The map likely leads to great treasure, however understanding it is beyond your comprehension.</BASEFONT>", false, false);
-                AddHtml(150, 197, 320, 98, "<BASEFONT COLOR=#DFDFDF>Deciphering it will require one with the reputation as a famed Artifact Hunter.</BASEFONT>", false, false);
-            }
+            g.RenderString(from);
         }
 
         public override void Serialize(GenericWriter writer)

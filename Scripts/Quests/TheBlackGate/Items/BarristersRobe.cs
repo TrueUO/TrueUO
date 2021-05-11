@@ -5,10 +5,11 @@ namespace Server.Items
 {
     public class BarristersRobe : Robe
     {
+        public override string DefaultName => "a Barrister's Robe";
+
         [Constructable]
         public BarristersRobe()
         {
-            Name = "a Barrister's Robe";
             Hue = 1367;
         }
 
