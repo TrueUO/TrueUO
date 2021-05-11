@@ -3,11 +3,12 @@ namespace Server.Mobiles
     [CorpseName("a rotting corpse")]
     public class Zombie : BaseCreature
     {
+        public override string DefaultName => "a zombie";
+
         [Constructable]
         public Zombie()
             : base(AIType.AI_Melee, FightMode.Closest, 10, 1, 0.2, 0.4)
         {
-            Name = "a zombie";
             Body = 3;
             BaseSoundID = 471;
 

@@ -8790,7 +8790,9 @@ namespace Server
 		[CommandProperty(AccessLevel.Decorator)]
 		public virtual string TitleName => m_Name;
 
-		[CommandProperty(AccessLevel.Decorator)]
+        public virtual string DefaultName => null;
+
+        [CommandProperty(AccessLevel.Decorator)]
 		public string Name
 		{
 			get
@@ -8800,7 +8802,7 @@ namespace Server
 					return m_NameMod;
 				}
 
-				return m_Name;
+				return DefaultName ?? m_Name;
 			}
 			set
 			{
