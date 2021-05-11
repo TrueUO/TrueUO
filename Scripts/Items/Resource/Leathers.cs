@@ -20,12 +20,12 @@ namespace Server.Items
             m_Resource = resource;
         }
 
-        public override int Hue => CraftResources.GetHue(m_Resource);
-
         public BaseLeather(Serial serial)
             : base(serial)
         {
         }
+
+        public override int Hue => CraftResources.GetHue(m_Resource);
 
         [CommandProperty(AccessLevel.GameMaster)]
         public CraftResource Resource
