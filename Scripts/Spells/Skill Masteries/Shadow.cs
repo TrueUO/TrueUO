@@ -59,10 +59,10 @@ namespace Server.Spells.SkillMasteries
 
         public static double GetDifficultyFactor(Mobile m)
         {
-            ShadowSpell spell = GetSpell(m, typeof(ShadowSpell)) as ShadowSpell;
-
-            if (spell != null)
-                return ((spell.Caster.Skills[spell.CastSkill].Value + spell.Caster.Skills[spell.DamageSkill].Value + (spell.GetMasteryLevel() * 40)) / 3) / 150;
+            if (GetSpell(m, typeof(ShadowSpell)) is ShadowSpell spell)
+            {
+                return (spell.Caster.Skills[spell.CastSkill].Value + spell.Caster.Skills[spell.DamageSkill].Value + spell.GetMasteryLevel() * 40) / 3 / 150;
+            }
 
             return 0.0;
         }

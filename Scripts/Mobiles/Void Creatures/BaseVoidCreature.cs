@@ -16,8 +16,6 @@ namespace Server.Mobiles
     {
         public static int MutateCheck => Utility.RandomMinMax(30, 120);
 
-        public static bool RemoveFromSpawners => true;
-
         private DateTime m_NextMutate;
         private bool m_BuddyMutate;
 
@@ -58,17 +56,18 @@ namespace Server.Mobiles
         public bool MutateGrouped()
         {
             if (!m_BuddyMutate)
+            {
                 return false;
+            }
 
             List<BaseVoidCreature> buddies = new List<BaseVoidCreature>();
             IPooledEnumerable eable = GetMobilesInRange(12);
 
             foreach (Mobile m in eable)
             {
-                if (m != this && IsEvolutionType(m) && !m.Deleted && m.Alive && !buddies.Contains((BaseVoidCreature)m))
+                if (m != this && IsEvolutionType(m) && !m.Deleted && m.Alive && !buddies.Contains((BaseVoidCreature)m) && ((BaseVoidCreature)m).BuddyMutate)
                 {
-                    if (((BaseVoidCreature)m).BuddyMutate)
-                        buddies.Add((BaseVoidCreature)m);
+                    buddies.Add((BaseVoidCreature) m);
                 }
             }
 
@@ -78,8 +77,12 @@ namespace Server.Mobiles
             {
                 Mutate(VoidEvolution.Grouping);
 
-                foreach (BaseVoidCreature k in buddies)
+                for (var index = 0; index < buddies.Count; index++)
+                {
+                    BaseVoidCreature k = buddies[index];
+
                     k.Mutate(VoidEvolution.Grouping);
+                }
 
                 ColUtility.Free(buddies);
 
@@ -93,7 +96,9 @@ namespace Server.Mobiles
         public bool IsEvolutionType(Mobile from)
         {
             if (Stage == 0 && from.GetType() != GetType())
+            {
                 return false;
+            }
 
             return from is BaseVoidCreature;
         }
@@ -200,8 +205,10 @@ namespace Server.Mobiles
                     if (xml.SpawnObjects == null)
                         return;
 
-                    foreach (XmlSpawner.SpawnObject so in xml.SpawnObjects)
+                    for (var index = 0; index < xml.SpawnObjects.Length; index++)
                     {
+                        XmlSpawner.SpawnObject so = xml.SpawnObjects[index];
+
                         for (int i = 0; i < so.SpawnedObjects.Count; ++i)
                         {
                             if (so.SpawnedObjects[i] == this)
@@ -224,46 +231,6 @@ namespace Server.Mobiles
         {
         }
 
-        private static bool _CheckSpawners;
-
-        public static void RemoveVoidSpawners()
-        {
-            List<XmlSpawner> list = new List<XmlSpawner>();
-
-            foreach (Item value in World.Items.Values)
-            {
-                if (value is XmlSpawner spawner)
-                {
-                    if (list.Contains(spawner))
-                    {
-                        break;
-                    }
-
-                    for (var index = 0; index < spawner.SpawnObjects.Length; index++)
-                    {
-                        XmlSpawner.SpawnObject obj = spawner.SpawnObjects[index];
-
-                        if (obj == null || obj.TypeName == null)
-                        {
-                            continue;
-                        }
-
-                        Type t = ScriptCompiler.FindTypeByName(obj.TypeName, true);
-
-                        if (t != null && t.IsSubclassOf(typeof(BaseVoidCreature)) || obj.TypeName.ToLower().StartsWith("korpre"))
-                        {
-                            list.Add(spawner);
-                            break;
-                        }
-                    }
-                }
-            }
-
-            list.ForEach(spawner => spawner.DoReset = true);
-
-            Console.WriteLine("Reset {0} Void Spawn Spawners.", list.Count);
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -276,22 +243,10 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
-
-            if (version == 0 && !_CheckSpawners && RemoveFromSpawners)
-            {
-                Console.WriteLine("Removing Spawners...");
-                Timer.DelayCall(TimeSpan.FromSeconds(30), RemoveVoidSpawners);
-
-                _CheckSpawners = true;
-            }
+            reader.ReadInt();
 
             m_NextMutate = reader.ReadDateTime();
-
-            if (version > 0)
-                m_BuddyMutate = reader.ReadBool();
-            else
-                m_BuddyMutate = true;
+            m_BuddyMutate = reader.ReadBool();
         }
     }
 }
