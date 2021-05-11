@@ -228,9 +228,7 @@ namespace Server.Items
 
         public static void CheckHit(Mobile attacker, Mobile defender, int damage)
         {
-            BaseShield shield = defender.FindItemOnLayer(Layer.TwoHanded) as BaseShield;
-
-            if (shield != null && shield.ArmorAttributes.SoulCharge > 0 && shield.ArmorAttributes.SoulCharge > Utility.Random(100))
+            if (defender.FindItemOnLayer(Layer.TwoHanded) is BaseShield shield && shield.ArmorAttributes.SoulCharge > 0 && shield.ArmorAttributes.SoulCharge > Utility.Random(100))
             {
                 SoulChargeContext sc = GetContextForVictim<SoulChargeContext>(defender);
 

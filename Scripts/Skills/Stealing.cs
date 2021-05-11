@@ -303,9 +303,7 @@ namespace Server.SkillHandlers
 
                 if (house != null)
                 {
-                    var rootItem = root as Item;
-
-                    if (rootItem != null)
+                    if (root is Item rootItem)
                     {
                         SecureInfo secure = house.GetSecureInfoFor(rootItem);
 
