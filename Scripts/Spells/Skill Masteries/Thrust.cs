@@ -60,9 +60,7 @@ namespace Server.Spells.SkillMasteries
                 return false;
             }
 
-            ThrustSpell spell = GetSpell(Caster, GetType()) as ThrustSpell;
-
-            if (spell != null)
+            if (GetSpell(Caster, GetType()) is ThrustSpell spell)
             {
                 spell.Expire();
                 return false;
@@ -101,7 +99,8 @@ namespace Server.Spells.SkillMasteries
                 DefenseModifier = (GetMasteryLevel() * 6);
 
                 Target = defender;
-                new InternalTimer(this, defender);
+
+                var internalTimer = new InternalTimer(this, defender); // Possible unassigned object with simply the new expression.
             }
             else
             {
