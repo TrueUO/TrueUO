@@ -100,7 +100,7 @@ namespace Server.Spells.SkillMasteries
 
                 Target = defender;
 
-                var internalTimer = new InternalTimer(this, defender); // Possible unassigned object with simply the new expression.
+                new InternalTimer(this, defender);
             }
             else
             {

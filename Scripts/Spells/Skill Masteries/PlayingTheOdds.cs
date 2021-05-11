@@ -164,15 +164,9 @@ namespace Server.Spells.SkillMasteries
 
         public static int RangeModifier(BaseWeapon weapon)
         {
-            if (weapon is BaseRanged && !(weapon is BaseThrown))
+            if (weapon is BaseRanged && !(weapon is BaseThrown) && weapon.RootParent is Mobile m && GetSpell(m, typeof(PlayingTheOddsSpell)) is PlayingTheOddsSpell)
             {
-                if (weapon.RootParent is Mobile m)
-                {
-                    if (GetSpell(m, typeof(PlayingTheOddsSpell)) is PlayingTheOddsSpell spell)
-                    {
-                        return weapon.DefMaxRange / 2;
-                    }
-                }
+                return weapon.DefMaxRange / 2;
             }
 
             return weapon.DefMaxRange;
