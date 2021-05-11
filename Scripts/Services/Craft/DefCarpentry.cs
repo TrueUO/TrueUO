@@ -1,7 +1,6 @@
 using Server.Items;
 
 using System;
-using System.Linq;
 
 namespace Server.Engines.Craft
 {
@@ -58,9 +57,14 @@ namespace Server.Engines.Craft
         {
             var itemType = item.ItemType;
 
-            if (_RetainsColor.Any(t => t == itemType || itemType.IsSubclassOf(t)))
+            for (var index = 0; index < _RetainsColor.Length; index++)
             {
-                return true;
+                var t = _RetainsColor[index];
+
+                if (t == itemType || itemType.IsSubclassOf(t))
+                {
+                    return true;
+                }
             }
 
             return base.RetainsColorFrom(item, type);
@@ -459,6 +463,10 @@ namespace Server.Engines.Craft
             ForceNonExceptional(index);
 
             AddCraft(typeof(GargishWoodenShield), 1062760, 1095768, 52.6, 77.6, typeof(Board), 1044041, 9, 1044351);
+
+            index = AddCraft(typeof(PirateShield), 1062760, 1159585, 70.0, 90.0, typeof(Board), 1044041, 12, 1044351);
+            AddRes(index, typeof(IronIngot), 1044036, 8, 1044037);
+            AddRecipe(index, (int)CraftRecipes.PirateShield);
 
             // Instruments
             index = AddCraft(typeof(LapHarp), 1044293, 1023762, 63.1, 88.1, typeof(Board), 1044041, 20, 1044351);

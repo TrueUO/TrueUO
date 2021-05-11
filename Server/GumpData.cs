@@ -1,14 +1,9 @@
 #region References
-
 using System;
 using System.Collections;
-
 using System.Drawing;
-
 using System.Drawing.Imaging;
-
 using System.IO;
-
 #endregion
 
 namespace Server

@@ -13,10 +13,25 @@ namespace Server.Gumps
         public MannequinCompareGump(Mannequin mann, Item item)
             : base(100, 100)
         {
-            _SameItem = mann.Items.FirstOrDefault(x => mann.LayerValidation(x, item));
+            Item matches = null;
+
+            for (var index = 0; index < mann.Items.Count; index++)
+            {
+                var x = mann.Items[index];
+
+                if (mann.LayerValidation(x, item))
+                {
+                    matches = x;
+                    break;
+                }
+            }
+
+            _SameItem = matches;
 
             if (_SameItem == null)
+            {
                 return;
+            }
 
             AddPage(0);
 
@@ -63,7 +78,9 @@ namespace Server.Gumps
             for (int i = 0; i < SelectItem.Count; i++)
             {
                 if (SelectItem[i].LabelNumber == 1159280) // Medable Armor - not appear
+                {
                     continue;
+                }
 
                 if (SelectItem[i].IsSpriteGraph)
                 {
@@ -81,9 +98,15 @@ namespace Server.Gumps
                     {
                         double ev = 0;
 
-                        if (EquipmentItem.Any(a => a.LabelNumber == SelectItem[i].LabelNumber))
+                        for (var index = 0; index < EquipmentItem.Count; index++)
                         {
-                            ev = EquipmentItem.Find(a => a.LabelNumber == SelectItem[i].LabelNumber).Value;
+                            var a1 = EquipmentItem[index];
+
+                            if (a1.LabelNumber == SelectItem[i].LabelNumber)
+                            {
+                                ev = EquipmentItem.Find(a => a.LabelNumber == SelectItem[i].LabelNumber).Value;
+                                break;
+                            }
                         }
 
                         AddHtml(460, 94 + 18 * i, 100, 18, Color(SelectItem[i].Value, SelectItem[i].Cap, ev), false, false);
@@ -102,30 +125,30 @@ namespace Server.Gumps
             {
                 if (v1 == diffv || diffv == 0)
                 {
-                    name = string.Format("<BASEFONT COLOR=#FFFFFF>{0}</BASEFONT>", v1);
+                    name = $"<BASEFONT COLOR=#FFFFFF>{v1}</BASEFONT>";
                 }
                 else if (v1 > ev)
                 {
-                    name = string.Format("<BASEFONT COLOR=#008000>{0} (+{1})</BASEFONT>", v1, diffv);
+                    name = $"<BASEFONT COLOR=#008000>{v1} (+{diffv})</BASEFONT>";
                 }
                 else
                 {
-                    name = string.Format("<BASEFONT COLOR=#800000>{0} ({1})</BASEFONT>", v1, diffv);
+                    name = $"<BASEFONT COLOR=#800000>{v1} ({diffv})</BASEFONT>";
                 }
             }
             else
             {
                 if (v1 == diffv || diffv == 0)
                 {
-                    name = string.Format("<BASEFONT COLOR=#FFFFFF>{0}/{1}</BASEFONT>", v1, v2);
+                    name = $"<BASEFONT COLOR=#FFFFFF>{v1}/{v2}</BASEFONT>";
                 }
                 else if (v1 > ev)
                 {
-                    name = string.Format("<BASEFONT COLOR=#008000>{0}/{1} (+{2})</BASEFONT>", v1, v2, diffv);
+                    name = $"<BASEFONT COLOR=#008000>{v1}/{v2} (+{diffv})</BASEFONT>";
                 }
                 else
                 {
-                    name = string.Format("<BASEFONT COLOR=#800000>{0}/{1} ({2})</BASEFONT>", v1, v2, diffv);
+                    name = $"<BASEFONT COLOR=#800000>{v1}/{v2} ({diffv})</BASEFONT>";
                 }
             }
 
@@ -193,7 +216,20 @@ namespace Server.Gumps
 
             if (_Item != null)
             {
-                _SameItem = _Mannequin.Items.FirstOrDefault(x => _Mannequin.LayerValidation(x, item));
+                Item sameItem = null;
+
+                for (var index = 0; index < _Mannequin.Items.Count; index++)
+                {
+                    var x = _Mannequin.Items[index];
+
+                    if (_Mannequin.LayerValidation(x, item))
+                    {
+                        sameItem = x;
+                        break;
+                    }
+                }
+
+                _SameItem = sameItem;
 
                 if (_SameItem != null)
                 {
@@ -202,36 +238,57 @@ namespace Server.Gumps
                         new ItemPropDefinition(_Item, _SameItem)
                     };
 
-                    list = _Mannequin.Items.Where(x => x != _SameItem).ToList();
+                    list = new List<Item>();
+
+                    for (var index = 0; index < _Mannequin.Items.Count; index++)
+                    {
+                        var x = _Mannequin.Items[index];
+
+                        if (x != _SameItem) list.Add(x);
+                    }
+
                     list.Add(_Item);
                 }
                 else
                 {
-                    list = _Mannequin.Items.ToList();
+                    list = new List<Item>();
+
+                    for (var index = 0; index < _Mannequin.Items.Count; index++)
+                    {
+                        var mannequinItem = _Mannequin.Items[index];
+
+                        list.Add(mannequinItem);
+                    }
+
                     list.Add(_Item);
                 }
-
-                lm = Mannequin.GetProperty(list);
             }
             else
             {
-                lm = Mannequin.GetProperty(_Mannequin.Items);
+                list = _Mannequin.Items;
             }
 
+            lm = Mannequin.GetProperty(list);
 
             AddHtmlLocalized(479, 10, 75, 18, 1114514, "#1158215", 0x42FF, false, false); // <DIV ALIGN=RIGHT>~1_TOKEN~</DIV>
 
             if (page > 0)
+            {
                 AddButton(554, 10, 0x15E3, 0x15E7, 1000, GumpButtonType.Reply, 0); // Next Page Button
+            }
             else
+            {
                 AddButton(554, 10, 0x15E1, 0x15E5, 1001, GumpButtonType.Reply, 0); // Previous Page Button
+            }
 
             int y = 0;
 
             LabelDefinition[] pages = page > 0 ? Page2 : Page1;
 
-            pages.ToList().ForEach(x =>
+            for (var index = 0; index < pages.ToList().Count; index++)
             {
+                var x = pages.ToList()[index];
+
                 y += 28;
 
                 if (lm.Any(l => l.Catalog == x.Catalog))
@@ -241,9 +298,10 @@ namespace Server.Gumps
 
                     y += 32;
 
-                    List<ValuedProperty> cataloglist = lm.Where(i => i.Catalog == x.Catalog).OrderBy(ii => ii.Order).ToList();
+                    List<ValuedProperty> cataloglist =
+                        lm.Where(i => i.Catalog == x.Catalog).OrderBy(ii => ii.Order).ToList();
 
-                    int columncount = x.ColumnLeftCount == 0 ? (int)Math.Ceiling(cataloglist.Count / (decimal)2) : x.ColumnLeftCount;
+                    int columncount = x.ColumnLeftCount == 0 ? (int) Math.Ceiling(cataloglist.Count / (decimal) 2) : x.ColumnLeftCount;
 
                     for (int i = 0; i < cataloglist.Count; i++)
                     {
@@ -255,14 +313,15 @@ namespace Server.Gumps
                             AddSpriteImage(10, y - 5, 0x9D3B, cataloglist[i].SpriteW, cataloglist[i].SpriteH, 30, 30);
                             AddTooltip(cataloglist[i].Description);
 
-                            if (cataloglist[i].IsBoolen)
+                            if (cataloglist[i].LabelNumber == 1159280) // Medable Armor
                             {
-                                if (cataloglist[i].BoolenValue)
+                                if (cataloglist[i].Matches(list))
                                 {
-                                    if (cataloglist[i].Value > 0)
-                                        AddHtmlLocalized(195, y, 100, 18, 1046362, 0x42FF, false, false); // Yes
-                                    else
-                                        AddHtmlLocalized(195, y, 100, 18, 1046363, 0x42FF, false, false); // No
+                                    AddHtmlLocalized(195, y, 100, 18, 1046362, 0x42FF, false, false); // Yes
+                                }
+                                else
+                                {
+                                    AddHtmlLocalized(195, y, 100, 18, 1046363, 0x42FF, false, false); // No
                                 }
                             }
                             else
@@ -273,14 +332,18 @@ namespace Server.Gumps
                         else
                         {
                             if (i == columncount)
+                            {
                                 y -= i * 30;
+                            }
 
                             AddHtmlLocalized(342, y, 200, 18, label, 0x560A, false, false);
                             AddSpriteImage(307, y - 5, 0x9D3B, cataloglist[i].SpriteW, cataloglist[i].SpriteH, 30, 30);
                             AddTooltip(cataloglist[i].Description);
 
                             if (!cataloglist[i].IsBoolen)
+                            {
                                 AddHtml(492, y, 100, 18, Color(cataloglist[i].Value, GetItemValue(CompareItem, label), cataloglist[i].Cap), false, false);
+                            }
                         }
 
                         y += 30;
@@ -288,24 +351,62 @@ namespace Server.Gumps
 
                     y += 3;
                 }
-            });
+            }
         }
 
         public double GetItemValue(List<ItemPropDefinition> list, int label)
         {
             if (list == null)
+            {
                 return 0;
+            }
 
             ItemPropDefinition l = list.FirstOrDefault();
 
             double v1 = 0;
             double v2 = 0;
 
-            if (l.EquipmentItem.Any(r => r.LabelNumber == label))
-                v1 = l.EquipmentItem.FirstOrDefault(r => r.LabelNumber == label).Value;
+            if (l != null && l.EquipmentItem.Any(r => r.LabelNumber == label))
+            {
+                ValuedProperty first = null;
 
-            if (l.SelectItem.Any(r => r.LabelNumber == label))
-                v2 = l.SelectItem.FirstOrDefault(r => r.LabelNumber == label).Value;
+                for (var index = 0; index < l.EquipmentItem.Count; index++)
+                {
+                    var r = l.EquipmentItem[index];
+
+                    if (r.LabelNumber == label)
+                    {
+                        first = r;
+                        break;
+                    }
+                }
+
+                if (first != null)
+                {
+                    v1 = first.Value;
+                }
+            }
+
+            if (l != null && l.SelectItem.Any(r => r.LabelNumber == label))
+            {
+                ValuedProperty first = null;
+
+                for (var index = 0; index < l.SelectItem.Count; index++)
+                {
+                    var r = l.SelectItem[index];
+
+                    if (r.LabelNumber == label)
+                    {
+                        first = r;
+                        break;
+                    }
+                }
+
+                if (first != null)
+                {
+                    v2 = first.Value;
+                }
+            }
 
             return v2 - v1;
         }
@@ -318,33 +419,33 @@ namespace Server.Gumps
             {
                 if (parmv == 0)
                 {
-                    name = string.Format("<BASEFONT COLOR=#80BFFF>{0}</BASEFONT>", ev);
+                    name = $"<BASEFONT COLOR=#80BFFF>{ev}</BASEFONT>";
                 }
                 else
                 {
-                    name = string.Format("<BASEFONT COLOR=#80BFFF>{0}/{1}</BASEFONT>", ev, parmv);
+                    name = $"<BASEFONT COLOR=#80BFFF>{ev}/{parmv}</BASEFONT>";
                 }
             }
             else if (diff < 0)
             {
                 if (parmv == 0)
                 {
-                    name = string.Format("<BASEFONT COLOR=#800000>{0} (-{1})</BASEFONT>", ev, Math.Abs(diff));
+                    name = $"<BASEFONT COLOR=#800000>{ev} (-{Math.Abs(diff)})</BASEFONT>";
                 }
                 else
                 {
-                    name = string.Format("<BASEFONT COLOR=#800000>{0}/{1} (-{2})</BASEFONT>", ev, parmv, Math.Abs(diff));
+                    name = $"<BASEFONT COLOR=#800000>{ev}/{parmv} (-{Math.Abs(diff)})</BASEFONT>";
                 }
             }
             else
             {
                 if (parmv == 0)
                 {
-                    name = string.Format("<BASEFONT COLOR=#008000>{0} (+{1})</BASEFONT>", ev, diff);
+                    name = $"<BASEFONT COLOR=#008000>{ev} (+{diff})</BASEFONT>";
                 }
                 else
                 {
-                    name = string.Format("<BASEFONT COLOR=#008000>{0}/{1} (+{2})</BASEFONT>", ev, parmv, diff);
+                    name = $"<BASEFONT COLOR=#008000>{ev}/{parmv} (+{diff})</BASEFONT>";
                 }
             }
 

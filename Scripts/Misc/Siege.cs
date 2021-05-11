@@ -1,4 +1,3 @@
-#region References
 using Server.Commands;
 using Server.Items;
 using Server.Mobiles;
@@ -7,8 +6,6 @@ using Server.Spells;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-#endregion
 
 namespace Server
 {
@@ -206,13 +203,18 @@ namespace Server
 
                 List<XmlSpawner> toReset = new List<XmlSpawner>();
 
-                foreach (XmlSpawner item in World.Items.Values.OfType<XmlSpawner>().Where(sp => sp.Map == Map.Trammel && sp.Running))
+                foreach (Item value in World.Items.Values)
                 {
-                    toReset.Add(item);
+                    if (value is XmlSpawner item && item.Map == Map.Trammel && item.Running)
+                    {
+                        toReset.Add(item);
+                    }
                 }
 
-                foreach (XmlSpawner item in toReset)
+                for (var index = 0; index < toReset.Count; index++)
                 {
+                    XmlSpawner item = toReset[index];
+
                     item.DoReset = true;
                 }
 
@@ -406,8 +408,10 @@ namespace Server
                 return false;
             }
 
-            foreach (Type type in _NoSellList)
+            for (var index = 0; index < _NoSellList.Length; index++)
             {
+                Type type = _NoSellList[index];
+
                 if (t == type || t.IsSubclassOf(type))
                 {
                     return false;
@@ -470,8 +474,8 @@ namespace Server
 
         public static bool CanBlessItem(PlayerMobile pm, Item item)
         {
-            return (pm.Items.Contains(item) || (pm.Backpack != null && pm.Backpack.Items.Contains(item)) && !item.Stackable &&
-                    (item is BaseArmor || item is BaseJewel || item is BaseClothing || item is BaseWeapon));
+            return pm.Items.Contains(item) || pm.Backpack != null && pm.Backpack.Items.Contains(item) && !item.Stackable &&
+                (item is BaseArmor || item is BaseJewel || item is BaseClothing || item is BaseWeapon);
         }
 
         public static void CheckUsesRemaining(Mobile from, Item item)

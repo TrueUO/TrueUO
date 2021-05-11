@@ -195,11 +195,14 @@ namespace Server.Guilds
             PlayerMobile pm = from as PlayerMobile;
             PlayerMobile targ = targeted as PlayerMobile;
 
-            Guild g = state as Guild;
+            Guild g = (Guild) state;
 
             if (pm == null || !IsMember(pm, guild) || !pm.GuildRank.GetFlag(RankFlags.CanInvitePlayer))
             {
-                pm.SendLocalizedMessage(503301); // You don't have permission to do that.
+                if (pm != null)
+                {
+                    pm.SendLocalizedMessage(503301); // You don't have permission to do that.
+                }
             }
             else if (targ == null)
             {

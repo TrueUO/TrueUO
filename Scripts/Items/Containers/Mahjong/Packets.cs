@@ -4,7 +4,7 @@ namespace Server.Engines.Mahjong
 {
     public sealed class MahjongJoinGame : Packet
     {
-        public MahjongJoinGame(MahjongGame game)
+        public MahjongJoinGame(IEntity game)
             : base(0xDA)
         {
             EnsureCapacity(9);

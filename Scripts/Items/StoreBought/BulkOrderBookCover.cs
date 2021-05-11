@@ -1,6 +1,5 @@
 using Server.Engines.BulkOrders;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -132,7 +131,18 @@ namespace Server.Items
 
         public void InvalidateHue()
         {
-            CoverInfo info = CoverInfo.Infos.FirstOrDefault(x => x.Type == _CoverType);
+            CoverInfo info = null;
+
+            for (var index = 0; index < CoverInfo.Infos.Count; index++)
+            {
+                var x = CoverInfo.Infos[index];
+
+                if (x.Type == _CoverType)
+                {
+                    info = x;
+                    break;
+                }
+            }
 
             if (info != null)
             {
@@ -142,7 +152,18 @@ namespace Server.Items
 
         public override void AddNameProperty(ObjectPropertyList list)
         {
-            CoverInfo info = CoverInfo.Infos.FirstOrDefault(x => x.Type == _CoverType);
+            CoverInfo info = null;
+
+            for (var index = 0; index < CoverInfo.Infos.Count; index++)
+            {
+                var x = CoverInfo.Infos[index];
+
+                if (x.Type == _CoverType)
+                {
+                    info = x;
+                    break;
+                }
+            }
 
             if (info != null)
             {

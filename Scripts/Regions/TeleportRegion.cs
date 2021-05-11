@@ -5,7 +5,6 @@ using System;
 using System.Xml;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace Server.Regions
 {
@@ -22,7 +21,21 @@ namespace Server.Regions
 
             if (points != null)
             {
-                GoLocation = points.Keys.FirstOrDefault(l => l.Location != Point3D.Zero).Location;
+                WorldLocation first = null;
+
+                foreach (var l in points.Keys)
+                {
+                    if (l.Location != Point3D.Zero)
+                    {
+                        first = l;
+                        break;
+                    }
+                }
+
+                if (first != null)
+                {
+                    GoLocation = first.Location;
+                }
             }
         }
 
@@ -31,7 +44,7 @@ namespace Server.Regions
         {
         }
 
-        private static Region GetParent(Rectangle3D[] recs, Map map)
+        private static Region GetParent(IReadOnlyList<Rectangle3D> recs, Map map)
         {
             return Find(new Point3D(recs[0].Start.X, recs[0].Start.Y, recs[0].Start.Z), map);
         }
@@ -46,7 +59,16 @@ namespace Server.Regions
 
         public virtual void DoTeleport(Mobile m)
         {
-            WorldLocation loc = TeleLocs.Keys.FirstOrDefault(l => l.Location.X == m.X && l.Location.Y == m.Y && l.Location.Z >= m.Z - 5 && l.Location.Z <= m.Z + 5 && l.Map == m.Map);
+            WorldLocation loc = null;
+
+            foreach (var l in TeleLocs.Keys)
+            {
+                if (l.Location.X == m.X && l.Location.Y == m.Y && l.Location.Z >= m.Z - 5 && l.Location.Z <= m.Z + 5 && l.Map == m.Map)
+                {
+                    loc = l;
+                    break;
+                }
+            }
 
             if (loc != null)
             {
@@ -78,7 +100,9 @@ namespace Server.Regions
                 string filePath = Path.Combine("Data", "TeleporterRegions.xml");
 
                 if (!File.Exists(filePath))
+                {
                     return;
+                }
 
                 XmlDocument doc = new XmlDocument();
                 doc.Load(filePath);
@@ -99,15 +123,21 @@ namespace Server.Regions
 
         private static void BuildTeleporters(string elementName, XmlElement root, ref int unique)
         {
-            foreach (XmlElement region in root.GetElementsByTagName(elementName))
+            var name = root.GetElementsByTagName(elementName);
+
+            for (var index = 0; index < name.Count; index++)
             {
+                var region = (XmlElement) name[index];
                 var list = new Dictionary<WorldLocation, WorldLocation>();
 
                 Map locMap = null;
                 Map teleMap = null;
 
-                foreach (XmlElement tile in region.GetElementsByTagName("tiles"))
+                var tiles = region.GetElementsByTagName("tiles");
+
+                for (var i = 0; i < tiles.Count; i++)
                 {
+                    var tile = (XmlElement) tiles[i];
                     Point3D from = Point3D.Parse(Utility.GetAttribute(tile, "from", "(0, 0, 0)"));
                     Map fromMap = Map.Parse(Utility.GetAttribute(tile, "frommap", null));
 
@@ -119,12 +149,12 @@ namespace Server.Regions
 
                     if (fromMap == null)
                     {
-                        throw new ArgumentException(string.Format("Map parsed as null: {0}", from));
+                        throw new ArgumentException($"Map parsed as null: {from}");
                     }
 
                     if (toMap == null)
                     {
-                        throw new ArgumentException(string.Format("Map parsed as null: {0}", to));
+                        throw new ArgumentException($"Map parsed as null: {to}");
                     }
 
                     if (Siege.SiegeShard && (fromMap == Map.Trammel || toMap == Map.Trammel))
@@ -142,7 +172,18 @@ namespace Server.Regions
 
                     if (id > -1)
                     {
-                        if (!fromMap.FindItems<Static>(from, 0).Any(s => s.ItemID == id))
+                        bool any = false;
+
+                        foreach (var s in fromMap.FindItems<Static>(from, 0))
+                        {
+                            if (s.ItemID == id)
+                            {
+                                any = true;
+                                break;
+                            }
+                        }
+
+                        if (!any)
                         {
                             var st = new Static(id);
 
@@ -170,11 +211,11 @@ namespace Server.Regions
 
                     if (!Siege.SiegeShard && locMap != null && locMap.Rules != MapRules.FeluccaRules && teleMap.Rules == MapRules.FeluccaRules)
                     {
-                        teleRegion = new TeleportRegionPVPWarning(string.Format("Teleport Region {0}", unique.ToString()), locMap, recs, list);
+                        teleRegion = new TeleportRegionPVPWarning($"Teleport Region {unique.ToString()}", locMap, recs, list);
                     }
                     else
                     {
-                        teleRegion = new TeleportRegion(string.Format("Teleport Region {0}", unique.ToString()), locMap, recs, list);
+                        teleRegion = new TeleportRegion($"Teleport Region {unique.ToString()}", locMap, recs, list);
                     }
 
                     teleRegion.Register();
@@ -194,20 +235,15 @@ namespace Server.Regions
 
         public override void OnEnter(Mobile m)
         {
-            if (m.CanBeginAction(typeof(Teleporter)))
+            if (m.CanBeginAction(typeof(Teleporter)) && (m is PlayerMobile pm))
             {
-                var pm = m as PlayerMobile;
-
-                if (pm != null)
+                if (pm.DisabledPvpWarning)
                 {
-                    if (pm.DisabledPvpWarning)
-                    {
-                        DoTeleport(m);
-                    }
-                    else if (!pm.HasGump(typeof(PvpWarningGump)))
-                    {
-                        pm.SendGump(new PvpWarningGump(m, this));
-                    }
+                    DoTeleport(m);
+                }
+                else if (!pm.HasGump(typeof(PvpWarningGump)))
+                {
+                    pm.SendGump(new PvpWarningGump(m, this));
                 }
             }
         }

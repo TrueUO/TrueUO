@@ -1,9 +1,7 @@
-#region References
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-#endregion
 
 namespace Server
 {
@@ -42,8 +40,7 @@ namespace Server
 
 			int hash = GetHashCode(region.Map, name, filters, validator);
 
-
-			if (!_Cache.TryGetValue(hash, out SpawnArea o) || o == null)
+            if (!_Cache.TryGetValue(hash, out SpawnArea o) || o == null)
 			{
 				o = new SpawnArea(region.Map, name, filters, validator);
 
@@ -66,10 +63,10 @@ namespace Server
 				yield break;
 			}
 
-			int x, y, z = Math.Min(rect.Start.Z, rect.End.Z);
+			int y, z = Math.Min(rect.Start.Z, rect.End.Z);
 			int ow, oh, od = rect.Depth;
 
-			x = rect.Start.X;
+			var x = rect.Start.X;
 
 			while (x < rect.End.X)
 			{
@@ -97,7 +94,19 @@ namespace Server
 				return _EmptyFilters;
 			}
 
-			return _AllFilters.Where(f => f != TileFlag.None && filter.HasFlag(f)).ToArray();
+            List<TileFlag> list = new List<TileFlag>();
+
+            for (var index = 0; index < _AllFilters.Length; index++)
+            {
+                var f = _AllFilters[index];
+
+                if (f != TileFlag.None && filter.HasFlag(f))
+                {
+                    list.Add(f);
+                }
+            }
+
+            return list.ToArray();
 		}
 
 		private static int GetHashCode(Map facet, string region, IEnumerable<TileFlag> filters, SpawnValidator validator)
@@ -106,9 +115,14 @@ namespace Server
 			{
 				int hash = region.Length;
 
-				hash = region.Aggregate(hash, (v, c) => unchecked((v * 397) ^ Convert.ToInt32(c)));
+                for (var index = 0; index < region.Length; index++)
+                {
+                    var c = region[index];
 
-				hash = (hash * 397) ^ facet.MapID;
+                    hash = unchecked((hash * 397) ^ Convert.ToInt32(c));
+                }
+
+                hash = (hash * 397) ^ facet.MapID;
 				hash = (hash * 397) ^ facet.MapIndex;
 
 				TileFlag filter = TileFlag.None;
@@ -137,13 +151,13 @@ namespace Server
 
 		private readonly HashSet<Point3D> _Points;
 
-		public SpawnValidator Validator { get; private set; }
+		public SpawnValidator Validator { get; }
 
-		public TileFlag[] Filters { get; private set; }
+		public TileFlag[] Filters { get; }
 
-		public Map Facet { get; private set; }
+		public Map Facet { get; }
 
-		public string Region { get; private set; }
+		public string Region { get; }
 
 		public Point2D Center { get; private set; }
 
@@ -183,40 +197,40 @@ namespace Server
 			return _Points.Contains(p);
 		}
 
-		public Point3D GetRandom()
-		{
-			if (Facet == null || Facet == Map.Internal || Count == 0)
-			{
-				return Point3D.Zero;
-			}
+        public Point3D GetRandom()
+        {
+            while (true)
+            {
+                if (Facet == null || Facet == Map.Internal || Count == 0)
+                {
+                    return Point3D.Zero;
+                }
 
-			Point3D p = Point3D.Zero;
+                Point3D p = Point3D.Zero;
 
-			if (Count <= 1024)
-			{
-				p = _Points.ElementAt(Utility.Random(Count));
-			}
+                if (Count <= 1024)
+                {
+                    p = _Points.ElementAt(Utility.Random(Count));
+                }
 
-			if (p == Point3D.Zero)
-			{
-				do
-				{
-					p.X = Utility.RandomMinMax(_Bounds.Start.X, _Bounds.End.X);
-					p.Y = Utility.RandomMinMax(_Bounds.Start.Y, _Bounds.End.Y);
-					p.Z = Facet.Tiles.GetLandTile(p.X, p.Y).Z;
-				}
-				while (!Contains(p));
-			}
+                if (p == Point3D.Zero)
+                {
+                    do
+                    {
+                        p.X = Utility.RandomMinMax(_Bounds.Start.X, _Bounds.End.X);
+                        p.Y = Utility.RandomMinMax(_Bounds.Start.Y, _Bounds.End.Y);
+                        p.Z = Facet.Tiles.GetLandTile(p.X, p.Y).Z;
+                    } while (!Contains(p));
+                }
 
-			if (Validator == null || Validator(Facet, p.X, p.Y, p.Z))
-			{
-				return p;
-			}
+                if (Validator == null || Validator(Facet, p.X, p.Y, p.Z))
+                {
+                    return p;
+                }
+            }
+        }
 
-			return GetRandom();
-		}
-
-		public void Invalidate()
+        public void Invalidate()
 		{
 			_Points.Clear();
 
@@ -258,18 +272,19 @@ namespace Server
 				int x1 = short.MaxValue, y1 = short.MaxValue, z1 = sbyte.MaxValue;
 				int x2 = short.MinValue, y2 = short.MinValue, z2 = sbyte.MinValue;
 
-				foreach (Rectangle3D o in region.Area)
-				{
-					x1 = Math.Min(x1, o.Start.X);
-					y1 = Math.Min(y1, o.Start.Y);
-					z1 = Math.Min(z1, o.Start.Z);
+                for (var index = 0; index < region.Area.Length; index++)
+                {
+                    Rectangle3D o = region.Area[index];
+                    x1 = Math.Min(x1, o.Start.X);
+                    y1 = Math.Min(y1, o.Start.Y);
+                    z1 = Math.Min(z1, o.Start.Z);
 
-					x2 = Math.Max(x2, o.End.X);
-					y2 = Math.Max(y2, o.End.Y);
-					z2 = Math.Max(z2, o.End.Z);
-				}
+                    x2 = Math.Max(x2, o.End.X);
+                    y2 = Math.Max(y2, o.End.Y);
+                    z2 = Math.Max(z2, o.End.Z);
+                }
 
-				_Bounds = new Rectangle3D(x1, y1, z1, x2 - x1, y2 - y1, z2 - z1);
+                _Bounds = new Rectangle3D(x1, y1, z1, x2 - x1, y2 - y1, z2 - z1);
 
 				bounds = region.Area;
 			}
@@ -284,31 +299,38 @@ namespace Server
 				_Points.Add(p);
 			}
 
-			Center = new Point2D(_Bounds.Start.X + (_Bounds.Width / 2), _Bounds.Start.Y + (_Bounds.Height / 2));
+			Center = new Point2D(_Bounds.Start.X + _Bounds.Width / 2, _Bounds.Start.Y + _Bounds.Height / 2);
 		}
 
 		private IEnumerable<Point3D> Compute(Rectangle3D area)
 		{
 			// Check all corners to skip large bodies of water.
-			if (Filters.Contains(TileFlag.Wet))
-			{
-				LandTile land1 = Facet.Tiles.GetLandTile(area.Start.X, area.Start.Y); // TL
-				LandTile land2 = Facet.Tiles.GetLandTile(area.End.X, area.Start.Y); // TR
-				LandTile land3 = Facet.Tiles.GetLandTile(area.Start.X, area.End.Y); // BL
-				LandTile land4 = Facet.Tiles.GetLandTile(area.End.X, area.End.Y); // BR
+            for (var index = 0; index < Filters.Length; index++)
+            {
+                var filter = Filters[index];
 
-				bool ignore1 = land1.Ignored || TileData.LandTable[land1.ID].Flags.HasFlag(TileFlag.Wet);
-				bool ignore2 = land2.Ignored || TileData.LandTable[land2.ID].Flags.HasFlag(TileFlag.Wet);
-				bool ignore3 = land3.Ignored || TileData.LandTable[land3.ID].Flags.HasFlag(TileFlag.Wet);
-				bool ignore4 = land4.Ignored || TileData.LandTable[land4.ID].Flags.HasFlag(TileFlag.Wet);
+                if (Equals(filter, TileFlag.Wet))
+                {
+                    LandTile land1 = Facet.Tiles.GetLandTile(area.Start.X, area.Start.Y); // TL
+                    LandTile land2 = Facet.Tiles.GetLandTile(area.End.X, area.Start.Y); // TR
+                    LandTile land3 = Facet.Tiles.GetLandTile(area.Start.X, area.End.Y); // BL
+                    LandTile land4 = Facet.Tiles.GetLandTile(area.End.X, area.End.Y); // BR
 
-				if (ignore1 && ignore2 && ignore3 && ignore4)
-				{
-					yield break;
-				}
-			}
+                    bool ignore1 = land1.Ignored || TileData.LandTable[land1.ID].Flags.HasFlag(TileFlag.Wet);
+                    bool ignore2 = land2.Ignored || TileData.LandTable[land2.ID].Flags.HasFlag(TileFlag.Wet);
+                    bool ignore3 = land3.Ignored || TileData.LandTable[land3.ID].Flags.HasFlag(TileFlag.Wet);
+                    bool ignore4 = land4.Ignored || TileData.LandTable[land4.ID].Flags.HasFlag(TileFlag.Wet);
 
-			Point3D p = Point3D.Zero;
+                    if (ignore1 && ignore2 && ignore3 && ignore4)
+                    {
+                        yield break;
+                    }
+
+                    break;
+                }
+            }
+
+            Point3D p = Point3D.Zero;
 
 			for (p.X = area.Start.X; p.X <= area.End.X; p.X++)
 			{
@@ -337,25 +359,54 @@ namespace Server
 
 						TileFlag flags = TileData.LandTable[land.ID].Flags;
 
-						if (Filters.Any(f => flags.HasFlag(f)))
+                        bool any1 = false;
+
+                        for (var index = 0; index < Filters.Length; index++)
+                        {
+                            var f = Filters[index];
+
+                            if (flags.HasFlag(f))
+                            {
+                                any1 = true;
+                                break;
+                            }
+                        }
+
+                        if (any1)
 						{
 							continue;
 						}
 
 						bool valid = true;
 
-						foreach (StaticTile tile in Facet.Tiles.GetStaticTiles(p.X, p.Y))
-						{
-							flags = TileData.ItemTable[tile.ID].Flags;
+                        var tiles = Facet.Tiles.GetStaticTiles(p.X, p.Y);
 
-							if (Filters.Any(f => flags.HasFlag(f)))
-							{
-								valid = false;
-								break;
-							}
-						}
+                        for (var index = 0; index < tiles.Length; index++)
+                        {
+                            StaticTile tile = tiles[index];
+                            flags = TileData.ItemTable[tile.ID].Flags;
 
-						if (!valid)
+                            bool any2 = false;
+
+                            for (var i = 0; i < Filters.Length; i++)
+                            {
+                                var f = Filters[i];
+
+                                if (flags.HasFlag(f))
+                                {
+                                    any2 = true;
+                                    break;
+                                }
+                            }
+
+                            if (any2)
+                            {
+                                valid = false;
+                                break;
+                            }
+                        }
+
+                        if (!valid)
 						{
 							continue;
 						}

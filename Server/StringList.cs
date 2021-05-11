@@ -100,7 +100,7 @@ namespace Server
 
         public static string FormatArguments(string entry)
         {
-            return FormatExpression.Replace(entry, new MatchEvaluator(MatchComparison));
+            return FormatExpression.Replace(entry, MatchComparison);
         }
 
         //UO tabbed argument conversion
@@ -111,7 +111,7 @@ namespace Server
                 return str;
             }
 
-            return CombineArguments(str, args.Split(new char[] { '\t' }));
+            return CombineArguments(str, args.Split('\t'));
         }
 
         public static string CombineArguments(string str, params object[] args)
@@ -121,7 +121,7 @@ namespace Server
 
         public static string CombineArguments(int number, string args)
         {
-            return CombineArguments(number, args.Split(new char[] { '\t' }));
+            return CombineArguments(number, args.Split('\t'));
         }
 
         public static string CombineArguments(int number, params object[] args)
@@ -152,8 +152,8 @@ namespace Server
 
     public class StringEntry
     {
-        public int Number { get; private set; }
-        public string Text { get; private set; }
+        public int Number { get; }
+        public string Text { get; }
 
         public StringEntry(int number, string text)
         {
@@ -163,22 +163,22 @@ namespace Server
 
         private string m_FmtTxt;
 
-        private static readonly Regex m_RegEx = new Regex(
-            @"~(\d+)[_\w]+~",
-            RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.CultureInvariant);
+        private static readonly Regex m_RegEx = new Regex(@"~(\d+)[_\w]+~", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.CultureInvariant);
 
-        private static readonly object[] m_Args = new object[] { "", "", "", "", "", "", "", "", "", "", "" };
+        private static readonly object[] m_Args = { "", "", "", "", "", "", "", "", "", "", "" };
 
         public string Format(params object[] args)
         {
             if (m_FmtTxt == null)
             {
-                m_FmtTxt = m_RegEx.Replace(Text, @"{$1}");
+                m_FmtTxt = m_RegEx.Replace(Text, "{$1}");
             }
+
             for (int i = 0; i < args.Length && i < 10; i++)
             {
                 m_Args[i + 1] = args[i];
             }
+
             return string.Format(m_FmtTxt, m_Args);
         }
     }

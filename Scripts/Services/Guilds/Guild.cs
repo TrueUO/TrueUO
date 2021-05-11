@@ -1077,8 +1077,10 @@ namespace Server.Guilds
                 return;
             }
 
-            foreach (WarDeclaration warDec in g.AcceptedWars)
+            for (var index = 0; index < g.AcceptedWars.Count; index++)
             {
+                WarDeclaration warDec = g.AcceptedWars[index];
+
                 Guild opponent = warDec.Opponent;
 
                 if (opponent.Alliance != null)
@@ -1138,8 +1140,10 @@ namespace Server.Guilds
 
             List.Remove(Id);
 
-            foreach (Mobile m in Members)
+            for (var index = 0; index < Members.Count; index++)
             {
+                Mobile m = Members[index];
+
                 m.SendLocalizedMessage(502131); // Your guild has disbanded.
 
                 if (m is PlayerMobile mobile)

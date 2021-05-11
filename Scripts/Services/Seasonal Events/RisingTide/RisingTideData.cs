@@ -3,7 +3,6 @@ using Server.Mobiles;
 using Server.Engines.RisingTide;
 
 using System;
-using System.Linq;
 
 namespace Server.Engines.Points
 {
@@ -38,25 +37,30 @@ namespace Server.Engines.Points
                         damager.SendLocalizedMessage(1158907); // You recover maritime trade cargo!
                     }
                 }
-                else if (CargoDropsTypes.Any(type => type == bc.GetType()))
-                {
-                    double chance = CargoChance;
-
-                    if (bc is BaseShipCaptain)
+                else
+                    for (var index = 0; index < CargoDropsTypes.Length; index++)
                     {
-                        chance = 0.33;
-                    }
+                        var type = CargoDropsTypes[index];
 
-                    if (chance > Utility.RandomDouble())
-                    {
-                        Container corpse = bc.Corpse;
-
-                        if (corpse != null)
+                        if (type == bc.GetType())
                         {
-                            corpse.DropItem(new MaritimeCargo());
+                            double chance = CargoChance;
+
+                            if (bc is BaseShipCaptain)
+                            {
+                                chance = 0.33;
+                            }
+
+                            if (chance > Utility.RandomDouble())
+                            {
+                                Container corpse = bc.Corpse;
+
+                                corpse?.DropItem(new MaritimeCargo());
+                            }
+
+                            break;
                         }
                     }
-                }
             }
         }
 
@@ -71,7 +75,18 @@ namespace Server.Engines.Points
             {
                 foreach (System.Collections.Generic.List<PlunderBeaconAddon> list in PlunderBeaconSpawner.Spawner.PlunderBeacons.Values)
                 {
-                    PlunderBeaconAddon addon = list.FirstOrDefault(beacon => beacon.Crew.Contains(bc) || beacon.Spawn.ContainsKey(bc) && beacon.Spawn[bc]);
+                    PlunderBeaconAddon addon = null;
+
+                    for (var index = 0; index < list.Count; index++)
+                    {
+                        var beacon = list[index];
+
+                        if (beacon.Crew.Contains(bc) || beacon.Spawn.ContainsKey(bc) && beacon.Spawn[bc])
+                        {
+                            addon = beacon;
+                            break;
+                        }
+                    }
 
                     if (addon != null)
                     {

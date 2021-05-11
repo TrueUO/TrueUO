@@ -279,8 +279,13 @@ namespace Server.Items
                 return;
 
             int randomrange = Utility.RandomMinMax(4, 7);
-            int mindmg = 60 + Utility.Random(60) - (randomrange * 10);
-            if (mindmg < 0) { mindmg = 1; }
+            int mindmg = 60 + Utility.Random(60) - randomrange * 10;
+
+            if (mindmg < 0)
+            {
+                mindmg = 1;
+            }
+
             int maxdmg = mindmg += Utility.Random(200);
 
             DoWrath(source, mindmg, maxdmg, randomrange);
@@ -319,8 +324,13 @@ namespace Server.Items
                 return;
 
             int randomrange = Utility.RandomMinMax(2, 4);
-            int mindmg = 30 + Utility.Random(30) - (randomrange * 10);
-            if (mindmg < 0) { mindmg = 1; }
+            int mindmg = 30 + Utility.Random(30) - randomrange * 10;
+
+            if (mindmg < 0)
+            {
+                mindmg = 1;
+            }
+
             int maxdmg = mindmg += Utility.Random(100);
 
             DoWrath(source, mindmg, maxdmg, randomrange);

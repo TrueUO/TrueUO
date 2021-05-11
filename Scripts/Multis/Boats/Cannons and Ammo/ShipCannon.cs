@@ -70,7 +70,7 @@ namespace Server.Items
         public bool Empty => !CanLight && Items.Count == 0;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public double Durability => (m_Hits / (double)MaxHits) * 100.0;
+        public double Durability => m_Hits / (double)MaxHits * 100.0;
 
         public override bool ForceShowProperties => true;
         public override int DefaultGumpID => 0x9CE7;
@@ -263,9 +263,13 @@ namespace Server.Items
             m.Animate(AnimationType.Attack, 3);
 
             if (Primed == CannonAction.Stop)
+            {
                 AddAction(m, 1149682); // Priming resumed.
+            }
             else
+            {
                 AddAction(m, 1149650); // Priming started.
+            }
 
             Timer.DelayCall(ActionTime, () =>
             {
@@ -383,9 +387,19 @@ namespace Server.Items
             return base.CheckHold(m, item, message, checkItems, plusItems, plusWeight);
         }
 
-        private bool CheckType(Item item)
+        private bool CheckType(IEntity item)
         {
-            return _Types.Any(t => t == item.GetType() || item.GetType().IsSubclassOf(t));
+            for (var index = 0; index < _Types.Length; index++)
+            {
+                var t = _Types[index];
+
+                if (t == item.GetType() || item.GetType().IsSubclassOf(t))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private readonly Type[] _Types =
@@ -420,17 +434,34 @@ namespace Server.Items
 
         public Direction GetFacing()
         {
-            if (BaseGalleon.CannonIDs[0].Any(id => id == ItemID))
+            for (var index = 0; index < BaseGalleon.CannonIDs[0].Length; index++)
             {
-                return Direction.South;
+                var id = BaseGalleon.CannonIDs[0][index];
+
+                if (id == ItemID)
+                {
+                    return Direction.South;
+                }
             }
-            if (BaseGalleon.CannonIDs[1].Any(id => id == ItemID))
+
+            for (var index = 0; index < BaseGalleon.CannonIDs[1].Length; index++)
             {
-                return Direction.West;
+                var id = BaseGalleon.CannonIDs[1][index];
+
+                if (id == ItemID)
+                {
+                    return Direction.West;
+                }
             }
-            if (BaseGalleon.CannonIDs[2].Any(id => id == ItemID))
+
+            for (var index = 0; index < BaseGalleon.CannonIDs[2].Length; index++)
             {
-                return Direction.North;
+                var id = BaseGalleon.CannonIDs[2][index];
+
+                if (id == ItemID)
+                {
+                    return Direction.North;
+                }
             }
 
             return Direction.East;
@@ -439,16 +470,34 @@ namespace Server.Items
         public void DoAreaMessage(int cliloc, int range, Mobile from)
         {
             if (from == null)
+            {
                 return;
+            }
 
-            Galleon.GetEntitiesOnBoard().OfType<PlayerMobile>().Where(x => x != from && Galleon.GetSecurityLevel(x) > SecurityLevel.Denied)
-                .ToList().ForEach(y => { y.SendLocalizedMessage(cliloc, from.Name); });
+            List<PlayerMobile> list = new List<PlayerMobile>();
+
+            foreach (IEntity entity in Galleon.GetEntitiesOnBoard())
+            {
+                if (entity is PlayerMobile pm && pm != from && Galleon.GetSecurityLevel(pm) > SecurityLevel.Denied)
+                {
+                    list.Add(pm);
+                }
+            }
+
+            for (var index = 0; index < list.Count; index++)
+            {
+                var player = list[index];
+
+                player.SendLocalizedMessage(cliloc, from.Name);
+            }
         }
 
         public void TryLightFuse(Mobile from)
         {
             if (from == null)
+            {
                 return;
+            }
 
             Container pack = from.Backpack;
 
@@ -458,8 +507,10 @@ namespace Server.Items
 
                 if (items != null)
                 {
-                    foreach (Item item in items)
+                    for (var index = 0; index < items.Length; index++)
                     {
+                        Item item = items[index];
+
                         if (item is Matches matches && matches.IsLight)
                         {
                             LightFuse(from);
@@ -472,8 +523,10 @@ namespace Server.Items
 
                 if (items != null)
                 {
-                    foreach (Item item in items)
+                    for (var index = 0; index < items.Length; index++)
                     {
+                        Item item = items[index];
+
                         if (item is Torch torch && torch.Burning)
                         {
                             LightFuse(from);
@@ -576,9 +629,9 @@ namespace Server.Items
                             for (int i = -lateralOffset; i <= lateralOffset; i++)
                             {
                                 if (xOffset == 0)
-                                    newPoint = new Point3D(pnt.X + (xOffset + i), pnt.Y + (yOffset * currentRange), pnt.Z);
+                                    newPoint = new Point3D(pnt.X + xOffset + i, pnt.Y + yOffset * currentRange, pnt.Z);
                                 else
-                                    newPoint = new Point3D(pnt.X + (xOffset * currentRange), pnt.Y + (yOffset + i), pnt.Z);
+                                    newPoint = new Point3D(pnt.X + xOffset * currentRange, pnt.Y + yOffset + i, pnt.Z);
 
                                 BaseBoat b = FindValidBoatTarget(newPoint, map, ammo);
 
@@ -588,8 +641,10 @@ namespace Server.Items
                                 damageables.AddRange(FindDamageables(shooter, newPoint, map, false, false, false, true, true));
                             }
 
-                            foreach (IDamageable m in damageables)
+                            for (var index = 0; index < damageables.Count; index++)
                             {
+                                IDamageable m = damageables[index];
+
                                 list.Add(m);
                             }
 
@@ -624,9 +679,9 @@ namespace Server.Items
                             for (int i = -lateralOffset; i <= lateralOffset; i++)
                             {
                                 if (xOffset == 0)
-                                    newPoint = new Point3D(pnt.X + (xOffset + i), pnt.Y + (yOffset * currentRange), pnt.Z);
+                                    newPoint = new Point3D(pnt.X + xOffset + i, pnt.Y + yOffset * currentRange, pnt.Z);
                                 else
-                                    newPoint = new Point3D(pnt.X + (xOffset * currentRange), pnt.Y + (yOffset + i), pnt.Z);
+                                    newPoint = new Point3D(pnt.X + xOffset * currentRange, pnt.Y + yOffset + i, pnt.Z);
 
                                 BaseBoat b = FindValidBoatTarget(newPoint, map, ammo);
 
@@ -636,8 +691,10 @@ namespace Server.Items
                                 damageables.AddRange(FindDamageables(shooter, newPoint, map, true, true, false, true, true));
                             }
 
-                            foreach (IDamageable m in damageables)
+                            for (var index = 0; index < damageables.Count; index++)
                             {
+                                IDamageable m = damageables[index];
+
                                 list.Add(m);
                             }
 
@@ -678,7 +735,7 @@ namespace Server.Items
             }
         }
 
-        private BaseBoat FindValidBoatTarget(Point3D newPoint, Map map, AmmoInfo info)
+        private static BaseBoat FindValidBoatTarget(Point3D newPoint, Map map, AmmoInfo info)
         {
             BaseBoat boat = BaseBoat.FindBoatAt(newPoint, map);
 
@@ -701,9 +758,11 @@ namespace Server.Items
 
                 StaticTile[] tiles = map.Tiles.GetStaticTiles(newPoint.X, newPoint.Y, true);
 
-                foreach (StaticTile tile in tiles)
+                for (var index = 0; index < tiles.Length; index++)
                 {
+                    StaticTile tile = tiles[index];
                     ItemData id = TileData.ItemTable[tile.ID & TileData.MaxItemValue];
+
                     bool isWater = tile.ID >= 0x1796 && tile.ID <= 0x17B2;
 
                     if (!isWater && id.Surface && !id.Impassable)
@@ -761,7 +820,9 @@ namespace Server.Items
                 Delete();
 
                 if (from != null && from.InRange(Location, 5))
+                {
                     from.SendLocalizedMessage(1116297); // The ship cannon has been destroyed!
+                }
             }
 
             InvalidateProperties();
@@ -781,9 +842,10 @@ namespace Server.Items
         public virtual void OnShipHit(object obj)
         {
             object[] list = (object[])obj;
+
             BaseBoat target = list[0] as BaseBoat;
             Point3D pnt = (Point3D)list[1];
-            AmmoInfo ammoInfo = list[2] as AmmoInfo;
+            AmmoInfo ammoInfo = (AmmoInfo) list[2];
             Mobile shooter = list[3] as Mobile;
 
             if (target != null && Galleon != null)
@@ -870,21 +932,29 @@ namespace Server.Items
             List<IDamageable> list = new List<IDamageable>();
 
             if (Map == null || Map == Map.Internal || Galleon == null)
+            {
                 return;
+            }
 
             IPooledEnumerable eable = Map.GetObjectsInRange(pnt, 0);
 
-            foreach (IDamageable dam in eable.OfType<IDamageable>())
+            foreach (object o in eable)
             {
-                Mobile mob = dam as Mobile;
-
-                if (mob != null && (!shooter.CanBeHarmful(mob, false) || Galleon.Contains(mob)))
-                    continue;
-
-                if (mob is PlayerMobile || mob is BaseCreature)
+                if (o is IDamageable dam)
                 {
-                    shooter.DoHarmful(mob);
-                    AOS.Damage(mob, shooter, 35, info.PhysicalDamage, info.FireDamage, info.ColdDamage, info.PoisonDamage, info.EnergyDamage);
+                    Mobile mob = dam as Mobile;
+
+                    if (mob != null && (!shooter.CanBeHarmful(mob, false) || Galleon.Contains(mob)))
+                    {
+                        continue;
+                    }
+
+                    if (mob is PlayerMobile || mob is BaseCreature)
+                    {
+                        shooter.DoHarmful(mob);
+
+                        AOS.Damage(mob, shooter, 35, info.PhysicalDamage, info.FireDamage, info.ColdDamage, info.PoisonDamage, info.EnergyDamage);
+                    }
                 }
             }
 
@@ -895,15 +965,17 @@ namespace Server.Items
         {
             object[] objects = (object[])obj;
             Mobile toHit = objects[0] as Mobile;
-            AmmoInfo info = objects[2] as AmmoInfo;
-            Mobile shooter = objects[3] as Mobile;
+            AmmoInfo info = (AmmoInfo) objects[2];
+            Mobile shooter = (Mobile) objects[3];
 
             int damage = (int)(Utility.RandomMinMax(info.MinDamage, info.MaxDamage) * Galleon.CannonDamageMod);
 
             if (toHit != null)
             {
                 Effects.SendPacket(toHit.Location, toHit.Map, new GraphicalEffect(EffectType.FixedXYZ, Serial.Zero, Serial.Zero, 0x36CB, toHit.Location, toHit.Location, 15, 15, true, true));
+
                 shooter.DoHarmful(toHit);
+
                 AOS.Damage(toHit, shooter, damage, info.PhysicalDamage, info.FireDamage, info.ColdDamage, info.PoisonDamage, info.EnergyDamage);
             }
         }
@@ -913,15 +985,19 @@ namespace Server.Items
             object[] objects = (object[])obj;
             DamageableItem toHit = objects[0] as DamageableItem;
             AmmoInfo info = objects[2] as AmmoInfo;
-            Mobile shooter = objects[3] as Mobile;
+            Mobile shooter = (Mobile) objects[3];
 
             if (info == null || toHit == null || toHit.Map == null)
+            {
                 return;
+            }
 
             int damage = (int)(Utility.RandomMinMax(info.MinDamage, info.MaxDamage) * Galleon.CannonDamageMod);
 
             shooter.DoHarmful(toHit);
+
             AOS.Damage(toHit, shooter, damage, info.PhysicalDamage, info.FireDamage, info.ColdDamage, info.PoisonDamage, info.EnergyDamage);
+
             Effects.SendLocationEffect(new Point3D(toHit.X, toHit.Y, toHit.Z + 5), toHit.Map, Utility.RandomBool() ? 14000 : 14013, 15, 10);
             Effects.PlaySound(toHit.Location, toHit.Map, 0x207);
         }
@@ -931,34 +1007,53 @@ namespace Server.Items
             List<IDamageable> list = new List<IDamageable>();
 
             if (map == null || map == Map.Internal || Galleon == null)
+            {
                 return list;
+            }
 
             IPooledEnumerable eable = map.GetObjectsInRange(pnt, 0);
 
-            foreach (IDamageable dam in eable.OfType<IDamageable>())
+            foreach (object o in eable)
             {
-                Mobile mob = dam as Mobile;
+                if (o is IDamageable dam)
+                {
+                    Mobile mob = dam as Mobile;
 
-                if (mob != null && (!shooter.CanBeHarmful(mob, false) || Galleon.Contains(mob)))
-                    continue;
+                    if (mob != null && (!shooter.CanBeHarmful(mob, false) || Galleon.Contains(mob)))
+                    {
+                        continue;
+                    }
 
-                if (!items && dam is DamageableItem)
-                    continue;
+                    if (!items && dam is DamageableItem)
+                    {
+                        continue;
+                    }
 
-                if (items && dam is DamageableItem item && item.CanDamage && !Galleon.Contains(dam))
-                    list.Add(item);
+                    if (items && dam is DamageableItem item && item.CanDamage && !Galleon.Contains(dam))
+                    {
+                        list.Add(item);
+                    }
 
-                if (player && mob is PlayerMobile)
-                    list.Add(mob);
+                    if (player && mob is PlayerMobile)
+                    {
+                        list.Add(mob);
+                    }
 
-                if (monsters && mob is BaseCreature bc && !bc.Controlled && !bc.Summoned)
-                    list.Add(mob);
+                    if (monsters && mob is BaseCreature bc && !bc.Controlled && !bc.Summoned)
+                    {
+                        list.Add(mob);
+                    }
 
-                if (pet && mob is BaseCreature creature && (creature.Controlled || creature.Summoned))
-                    list.Add(mob);
+                    if (pet && mob is BaseCreature creature && (creature.Controlled || creature.Summoned))
+                    {
+                        list.Add(mob);
+                    }
 
-                if (seacreature && (mob is BaseSeaChampion || mob is Kraken))
-                    list.Add(mob);
+                    if (seacreature && (mob is BaseSeaChampion || mob is Kraken))
+                    {
+                        list.Add(mob);
+                    }
+                }
             }
 
             eable.Free();
@@ -971,11 +1066,13 @@ namespace Server.Items
             Container hold = Galleon.GalleonHold;
 
             if (pack == null)
+            {
                 return;
+            }
 
             double ingotsNeeded = 36 * (int)DamageState;
 
-            ingotsNeeded -= (from.Skills[SkillName.Blacksmith].Value / 200.0) * ingotsNeeded;
+            ingotsNeeded -= from.Skills[SkillName.Blacksmith].Value / 200.0 * ingotsNeeded;
 
             double min = ingotsNeeded / 10;
             double ingots1 = pack.GetAmount(typeof(IronIngot));
@@ -997,7 +1094,7 @@ namespace Server.Items
             else
             {
                 ingotsUsed = ingots;
-                percRepaired = (ingots / ingotsNeeded) * 100;
+                percRepaired = ingots / ingotsNeeded * 100;
             }
 
             double toConsume = 0;
@@ -1017,11 +1114,20 @@ namespace Server.Items
             }
 
             m_Hits += (int)((MaxHits - m_Hits) * (percRepaired / 100));
-            if (m_Hits > MaxHits) m_Hits = MaxHits;
+
+            if (m_Hits > MaxHits)
+            {
+                m_Hits = MaxHits;
+            }
+
             InvalidateDamageState();
 
             percRepaired += Durability;
-            if (percRepaired > 100) percRepaired = 100;
+
+            if (percRepaired > 100)
+            {
+                percRepaired = 100;
+            }
 
             from.SendLocalizedMessage(1116605, string.Format("{0}\t{1}", ((int)temp).ToString(), ((int)percRepaired).ToString())); //You make repairs to the cannon using ~1_METAL~ ingots. The cannon is now ~2_DMGPCT~% repaired.
         }
@@ -1043,30 +1149,35 @@ namespace Server.Items
                 Viewing.Add(from);
             }
 
-            foreach (PlayerMobile pm in Viewing.OfType<PlayerMobile>())
+            for (var index = 0; index < Viewing.Count; index++)
             {
-                ShipCannonGump gump = BaseGump.GetGump<ShipCannonGump>(pm, g => g.Cannon == this);
+                Mobile mobile = Viewing[index];
 
-                if (gump != null)
+                if (mobile is PlayerMobile pm)
                 {
-                    if (delay != TimeSpan.Zero)
+                    ShipCannonGump gump = BaseGump.GetGump<ShipCannonGump>(pm, g => g.Cannon == this);
+
+                    if (gump != null)
                     {
-                        Timer.DelayCall(delay, () => gump.Refresh());
+                        if (delay != TimeSpan.Zero)
+                        {
+                            Timer.DelayCall(delay, () => gump.Refresh());
+                        }
+                        else
+                        {
+                            gump.Refresh();
+                        }
                     }
                     else
                     {
-                        gump.Refresh();
-                    }
-                }
-                else
-                {
-                    if (delay != TimeSpan.Zero)
-                    {
-                        Timer.DelayCall(delay, () => BaseGump.SendGump(new ShipCannonGump(pm, this)));
-                    }
-                    else
-                    {
-                        BaseGump.SendGump(new ShipCannonGump(pm, this));
+                        if (delay != TimeSpan.Zero)
+                        {
+                            Timer.DelayCall(delay, () => BaseGump.SendGump(new ShipCannonGump(pm, this)));
+                        }
+                        else
+                        {
+                            BaseGump.SendGump(new ShipCannonGump(pm, this));
+                        }
                     }
                 }
             }
@@ -1223,8 +1334,10 @@ namespace Server.Items
 
             List<PlayerMobile> list = new List<PlayerMobile>(Viewing.OfType<PlayerMobile>());
 
-            foreach (PlayerMobile pm in list)
+            for (var index = 0; index < list.Count; index++)
             {
+                PlayerMobile pm = list[index];
+
                 ShipCannonGump gump = BaseGump.GetGump<ShipCannonGump>(pm, g => g.Cannon == this);
 
                 if (gump != null)
@@ -1342,7 +1455,7 @@ namespace Server.Items
 
                     for (int i = list.Count - 1; i >= 0; i--)
                     {
-                        AddHtmlLocalized(10, 112 + (actual * 18), 230, 18, Cannon.Actions[User][i], actual == list.Count - 1 ? 0x7FE7 : 0x3DEF, false, false);
+                        AddHtmlLocalized(10, 112 + actual * 18, 230, 18, Cannon.Actions[User][i], actual == list.Count - 1 ? 0x7FE7 : 0x3DEF, false, false);
                         actual++;
                     }
                 }

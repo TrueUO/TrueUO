@@ -187,6 +187,8 @@ namespace Server.Items
                     return "Stygian";
                 case Expansion.TOL:
                     return "ToL";
+                case Expansion.HS:
+                    return "HighSeas";
             }
         }
 
@@ -231,13 +233,15 @@ namespace Server.Items
             {
                 list = new List<RecipeScrollDefinition>();
 
-                m_Book.Recipes.ForEach(x =>
+                for (var i = 0; i < m_Book.Recipes.Count; i++)
                 {
+                    var x = m_Book.Recipes[i];
+
                     if (CheckFilter(x))
                     {
                         list.Add(x);
                     }
-                });
+                }
             }
 
             m_List = list;
@@ -445,11 +449,15 @@ namespace Server.Items
 
                                 if (from.AddToBackpack(item))
                                 {
-                                    m_Book.Recipes.ForEach(x =>
+                                    for (var i = 0; i < m_Book.Recipes.Count; i++)
                                     {
+                                        var x = m_Book.Recipes[i];
+
                                         if (x.RecipeID == recipe.RecipeID)
+                                        {
                                             x.Amount = x.Amount - 1;
-                                    });
+                                        }
+                                    }
 
                                     m_Book.InvalidateProperties();
 

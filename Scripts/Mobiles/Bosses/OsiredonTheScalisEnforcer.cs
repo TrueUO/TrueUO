@@ -204,23 +204,35 @@ namespace Server.Mobiles
             List<Mobile> toExplode = new List<Mobile>();
 
             IPooledEnumerable eable = GetMobilesInRange(8);
+
             foreach (Mobile mob in eable)
             {
                 if (!CanBeHarmful(mob, false) || mob == this || mob is BaseCreature creature && creature.GetMaster() == this)
+                {
                     continue;
+                }
+
                 if (mob.Player)
+                {
                     toExplode.Add(mob);
+                }
+
                 if (mob is BaseCreature bc && (bc.Controlled || bc.Summoned || bc.Team != Team))
+                {
                     toExplode.Add(bc);
+                }
             }
             eable.Free();
 
-            foreach (Mobile mob in toExplode)
+            for (var index = 0; index < toExplode.Count; index++)
             {
+                Mobile mob = toExplode[index];
+
                 mob.FixedParticles(0x36BD, 20, 10, 5044, EffectLayer.Head);
                 mob.PlaySound(0x307);
 
                 int damage = Utility.RandomMinMax(50, 125);
+
                 AOS.Damage(mob, this, damage, 0, 100, 0, 0, 0);
             }
 

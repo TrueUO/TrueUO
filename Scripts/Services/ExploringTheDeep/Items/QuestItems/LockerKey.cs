@@ -99,7 +99,7 @@ namespace Server.Items
         {
             base.GetProperties(list);
 
-            list.Add(1154445, string.Format("#{0}", 1154427 + (int)m_Type)); // A Key to the Spare ~1_PART~ Parts Locker
+            list.Add(1154445, $"#{1154427 + (int) m_Type}"); // A Key to the Spare ~1_PART~ Parts Locker
             list.Add(1072351); // Quest Item
         }
 

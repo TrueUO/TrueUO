@@ -65,41 +65,49 @@ namespace Server.Network
 		}
 
 		private void CheckListener()
-		{
-			foreach (Listener l in Listeners)
-			{
-				Socket[] accepted = l.Slice();
+        {
+            for (var index = 0; index < Listeners.Length; index++)
+            {
+                Listener l = Listeners[index];
+                Socket[] accepted = l.Slice();
 
-				foreach (Socket s in accepted)
-				{
-					NetState ns = new NetState(s, this);
+                for (var i = 0; i < accepted.Length; i++)
+                {
+                    Socket s = accepted[i];
+                    NetState ns = new NetState(s, this);
 
-					ns.Start();
+                    ns.Start();
 
-					if (ns.Running && Display(ns))
-					{
-						Utility.PushColor(ConsoleColor.Green);
-						Console.WriteLine("Client: {0}: Connected. [{1} Online]", ns, NetState.Instances.Count);
-						Utility.PopColor();
-					}
-				}
-			}
-		}
+                    if (ns.Running && Display(ns))
+                    {
+                        Utility.PushColor(ConsoleColor.Green);
+                        Console.WriteLine("Client: {0}: Connected. [{1} Online]", ns, NetState.Instances.Count);
+                        Utility.PopColor();
+                    }
+                }
+            }
+        }
 
 		public static bool Display(NetState ns)
 		{
 			if (ns == null)
-				return false;
+            {
+                return false;
+            }
 
-			string state = ns.ToString();
+            string state = ns.ToString();
 
-			foreach (string str in _NoDisplay)
-			{
-				if (str == state)
-					return false;
-			}
+            for (var index = 0; index < _NoDisplay.Length; index++)
+            {
+                string str = _NoDisplay[index];
 
-			return true;
+                if (str == state)
+                {
+                    return false;
+                }
+            }
+
+            return true;
 		}
 
 		private static readonly string[] _NoDisplay =
@@ -231,7 +239,7 @@ namespace Server.Network
 						return;
 					}
 
-					PacketHandler handler = ns.GetHandler(packetID);
+					PacketHandler handler = NetState.GetHandler(packetID);
 
 					if (handler == null)
 					{

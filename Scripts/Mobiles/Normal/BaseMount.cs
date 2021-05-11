@@ -6,6 +6,10 @@ using System.Collections.Generic;
 
 namespace Server.Mobiles
 {
+    public interface IVanityMount
+    {
+    }
+
     public enum BlockMountType
     {
         None = -1,

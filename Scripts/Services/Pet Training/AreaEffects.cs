@@ -1,8 +1,8 @@
 using Server.Items;
+using Server.Network;
 using Server.Spells;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Mobiles
 {
@@ -24,7 +24,21 @@ namespace Server.Mobiles
             {
                 AreaEffect effect = null;
 
-                AreaEffect[] effects = profile.GetAreaEffects().Where(a => !a.IsInCooldown(bc)).ToArray();
+                List<AreaEffect> list = new List<AreaEffect>();
+
+                var af = profile.GetAreaEffects();
+
+                for (var index = 0; index < af.Length; index++)
+                {
+                    var a = af[index];
+
+                    if (!a.IsInCooldown(bc))
+                    {
+                        list.Add(a);
+                    }
+                }
+
+                AreaEffect[] effects = list.ToArray();
 
                 if (effects.Length > 0)
                 {
@@ -102,9 +116,9 @@ namespace Server.Mobiles
         {
             IPooledEnumerable eable = creature.GetMobilesInRange(range);
 
-            foreach (Mobile m in eable.OfType<Mobile>())
+            foreach (object o in eable)
             {
-                if (ValidTarget(creature, m))
+                if (o is Mobile m && ValidTarget(creature, m))
                 {
                     yield return m;
                 }
@@ -218,19 +232,21 @@ namespace Server.Mobiles
                 Timer timer = _Table[defender];
 
                 if (timer != null)
+                {
                     timer.Stop();
+                }
 
-                _Table[defender] = Timer.DelayCall(TimeSpan.FromSeconds(30), EndNausea, defender);
+                _Table[defender] = creature is LadyMelisande ? Timer.DelayCall(TimeSpan.FromSeconds(30), EndNausea, defender) : Timer.DelayCall(TimeSpan.FromSeconds(4), EndNausea, defender);
             }
             else
             {
                 _Table.Add(defender, Timer.DelayCall(TimeSpan.FromSeconds(30), EndNausea, defender));
             }
 
-            defender.Animate(32, 5, 1, true, false, 0); // bow animation
             defender.SendLocalizedMessage(1072068); // Your enemy's putrid presence envelops you, overwhelming you with nausea.
-
-            BuffInfo.AddBuff(defender, new BuffInfo(BuffIcon.AuraOfNausea, 1153792, 1153819, TimeSpan.FromSeconds(30), defender, "60\t60\t60\t5"));
+            BuffInfo.AddBuff(defender, new BuffInfo(BuffIcon.AuraOfNausea, 1153792, 1153819, creature is LadyMelisande ? TimeSpan.FromSeconds(30) : TimeSpan.FromSeconds(4), defender, "60\t60\t60\t5"));
+            Server.Effects.SendPacket(defender.Location, defender.Map, new ParticleEffect(EffectType.FixedFrom, defender.Serial, Serial.Zero, 0x373A, defender.Location, defender.Location, 1, 15, false, false, 67, 0, 7, 9913, 1, defender.Serial, 183, 0));
+            defender.PlaySound(0x1BB);            
         }
 
         public static void EndNausea(Mobile m)
@@ -363,7 +379,7 @@ namespace Server.Mobiles
             }
         }
 
-        public Poison GetPoison(BaseCreature bc)
+        public static Poison GetPoison(BaseCreature bc)
         {
             int level = 0;
             double total = bc.Skills[SkillName.Poisoning].Value;
@@ -382,8 +398,15 @@ namespace Server.Mobiles
 
         public int GetDamage(BaseCreature bc)
         {
-            if (_DamageCreatures.Any(t => t == bc.GetType()))
-                return 50;
+            for (var index = 0; index < _DamageCreatures.Length; index++)
+            {
+                var t = _DamageCreatures[index];
+
+                if (t == bc.GetType())
+                {
+                    return 50;
+                }
+            }
 
             return 0;
         }
@@ -475,32 +498,27 @@ namespace Server.Mobiles
                 Uses = uses;
             }
 
-            public static List<AuraDefinition> Definitions { get; private set; } = new List<AuraDefinition>();
+            public static List<AuraDefinition> Definitions { get; } = new List<AuraDefinition>();
 
             public static void Initialize()
             {
-                AuraDefinition defaul;
-                AuraDefinition cora;
-                AuraDefinition fireAura;
-                AuraDefinition coldAura;
-
-                defaul = new AuraDefinition();
+                var defaul = new AuraDefinition();
                 Definitions.Add(defaul);
 
-                cora = new AuraDefinition(typeof(CoraTheSorceress))
+                var cora = new AuraDefinition(typeof(CoraTheSorceress))
                 {
                     Damage = 10,
                     Fire = 0
                 };
                 Definitions.Add(cora);
 
-                fireAura = new AuraDefinition(typeof(FlameElemental), typeof(FireDaemon), typeof(LesserFlameElemental))
+                var fireAura = new AuraDefinition(typeof(FlameElemental), typeof(FireDaemon), typeof(LesserFlameElemental))
                 {
                     Damage = 7
                 };
                 Definitions.Add(fireAura);
 
-                coldAura = new AuraDefinition(typeof(ColdDrake), typeof(FrostDrake), typeof(FrostDragon), typeof(SnowElemental), typeof(FrostMite), typeof(IceFiend), typeof(IceElemental), typeof(CorporealBrume))
+                var coldAura = new AuraDefinition(typeof(ColdDrake), typeof(FrostDrake), typeof(FrostDragon), typeof(SnowElemental), typeof(FrostMite), typeof(IceFiend), typeof(IceElemental), typeof(CorporealBrume))
                 {
                     Damage = 15,
                     Fire = 0,
@@ -511,7 +529,31 @@ namespace Server.Mobiles
 
             public static AuraDefinition GetDefinition(BaseCreature bc)
             {
-                AuraDefinition def = Definitions.FirstOrDefault(d => d.Uses.Any(t => t == bc.GetType()));
+                AuraDefinition def = null;
+
+                for (var index = 0; index < Definitions.Count; index++)
+                {
+                    var d = Definitions[index];
+
+                    bool any = false;
+
+                    for (var i = 0; i < d.Uses.Length; i++)
+                    {
+                        var t = d.Uses[i];
+
+                        if (t == bc.GetType())
+                        {
+                            any = true;
+                            break;
+                        }
+                    }
+
+                    if (any)
+                    {
+                        def = d;
+                        break;
+                    }
+                }
 
                 if (def == null)
                 {

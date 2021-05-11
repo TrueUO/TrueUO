@@ -38,10 +38,10 @@ namespace Server.Engines.UOStore
     {
         public static readonly string FilePath = Path.Combine("Saves/Misc", "UltimaStore.bin");
 
-        public static bool Enabled { get { return Configuration.Enabled; } set { Configuration.Enabled = value; } }
+        public static bool Enabled { get => Configuration.Enabled; set => Configuration.Enabled = value; }
 
-        public static List<StoreEntry> Entries { get; private set; }
-        public static Dictionary<Mobile, List<Item>> PendingItems { get; private set; }
+        public static List<StoreEntry> Entries { get; }
+        public static Dictionary<Mobile, List<Item>> PendingItems { get; }
 
         private static UltimaStoreContainer _UltimaStoreContainer;
 
@@ -81,7 +81,7 @@ namespace Server.Engines.UOStore
             StoreCategory cat = StoreCategory.Featured;
             Register<PotionOfGloriousFortune>(1158688, 1158739, 0xA1E6, 0, 1195, 200, cat);
             Register<KnightChessPieceGuildstone>(1159490, 1159491, 0xA581, 0, 0, 500, cat);
-            Register<TransmogrificationPotion>(1159501, 1159496, 0xA1E9, 0, 2741, 1500, cat);
+            Register<RobeTransmogrificationPotion>(1159501, 1159496, 0xA1E9, 0, 2741, 1500, cat);
             Register<AnvilofArtifactsDeed>(1159437, 1159466, 0xA108, 0, 0, 1000, cat);
             Register<VirtueShield>(1109616, 1158384, 0x7818, 0, 0, 1500, cat);
             Register<PetBondingPotion>(1156613, 1156678, 0, 0x9CBC, 0, 500, cat);
@@ -119,7 +119,8 @@ namespace Server.Engines.UOStore
 
             // Equipment
             cat = StoreCategory.Equipment;
-            Register<TransmogrificationPotion>(1159501, 1159496, 0xA1E9, 0, 2741, 1500, cat);
+            Register<ShieldTransmogrificationPotion>(new TextDefinition[] { 1159501, 1159562 }, 1159567, 0xA1E9, 0, 2732, 700, cat);
+            Register<RobeTransmogrificationPotion>(new TextDefinition[] { 1159501, 1159503 }, 1159496, 0xA1E9, 0, 2741, 700, cat);
             Register<VirtueShield>(1109616, 1158384, 0x7818, 0, 0, 1500, cat);
             Register<HoodedBritanniaRobe>(1125155, 1158016, 0xA0AB, 0, 0, 1500, cat, ConstructRobe);
             Register<HoodedBritanniaRobe>(1125155, 1158016, 0xA0AC, 0, 0, 1500, cat, ConstructRobe);
@@ -317,6 +318,7 @@ namespace Server.Engines.UOStore
 
             // misc
             cat = StoreCategory.Misc;
+            Register<EnchantedSoulstoneVessel>(1126839, 1159627, 0xA73F, 0, 0, 1000, cat);
             Register<PotionOfGloriousFortune>(1158688, 1158739, 0xA1E6, 0, 1195, 200, cat);
             Register<RookChessPieceGuildstone>(1159490, 1159491, 0xA583, 0, 0, 500, cat);
             Register<LegacyGuildstone>(1159490, 1159491, 0xED4, 0, 0, 500, cat);
@@ -382,7 +384,17 @@ namespace Server.Engines.UOStore
 
         public static StoreEntry GetEntry(Type t)
         {
-            return Entries.FirstOrDefault(e => e.ItemType == t);
+            for (var index = 0; index < Entries.Count; index++)
+            {
+                var e = Entries[index];
+
+                if (e.ItemType == t)
+                {
+                    return e;
+                }
+            }
+
+            return null;
         }
 
         public static void Register(StoreEntry entry)
@@ -438,7 +450,18 @@ namespace Server.Engines.UOStore
         #region Constructors
         public static Item ConstructHairDye(Mobile m, StoreEntry entry)
         {
-            NaturalHairDye.HairDyeInfo info = NaturalHairDye.Table.FirstOrDefault(x => x.Localization == entry.Name[1].Number);
+            NaturalHairDye.HairDyeInfo info = null;
+
+            for (var index = 0; index < NaturalHairDye.Table.Length; index++)
+            {
+                var x = NaturalHairDye.Table[index];
+
+                if (x.Localization == entry.Name[1].Number)
+                {
+                    info = x;
+                    break;
+                }
+            }
 
             if (info != null)
             {
@@ -450,7 +473,18 @@ namespace Server.Engines.UOStore
 
         public static Item ConstructHaochisPigment(Mobile m, StoreEntry entry)
         {
-            HaochisPigment.HoachisPigmentInfo info = HaochisPigment.Table.FirstOrDefault(x => x.Localization == entry.Name[1].Number);
+            HaochisPigment.HoachisPigmentInfo info = null;
+
+            for (var index = 0; index < HaochisPigment.Table.Length; index++)
+            {
+                var x = HaochisPigment.Table[index];
+
+                if (x.Localization == entry.Name[1].Number)
+                {
+                    info = x;
+                    break;
+                }
+            }
 
             if (info != null)
             {
@@ -638,14 +672,14 @@ namespace Server.Engines.UOStore
                     {
                         if (m.Backpack != null && m.Alive && m.Backpack.TryDropItem(m, item, false))
                         {
-                            if (item is IPromotionalToken && ((IPromotionalToken)item).ItemName != null)
+                            if (item is IPromotionalToken token && token.ItemName != null)
                             {
                                 // A token has been placed in your backpack. Double-click it to redeem your ~1_PROMO~.
-                                m.SendLocalizedMessage(1075248, ((IPromotionalToken)item).ItemName.ToString());
+                                m.SendLocalizedMessage(1075248, token.ItemName.ToString());
                             }
                             else if (item.LabelNumber > 0 || item.Name != null)
                             {
-                                string name = item.LabelNumber > 0 ? ("#" + item.LabelNumber) : item.Name;
+                                string name = item.LabelNumber > 0 ? "#" + item.LabelNumber : item.Name;
 
                                 // Your purchase of ~1_ITEM~ has been placed in your backpack.
                                 m.SendLocalizedMessage(1156844, name);
@@ -685,15 +719,17 @@ namespace Server.Engines.UOStore
         {
             string str = string.Empty;
 
-            foreach (TextDefinition td in text)
+            for (var index = 0; index < text.Length; index++)
             {
+                TextDefinition td = text[index];
+
                 if (td.Number > 0 && VendorSearch.StringList != null)
                 {
-                    str += string.Format("{0} ", VendorSearch.StringList.GetString(td.Number));
+                    str += $"{VendorSearch.StringList.GetString(td.Number)} ";
                 }
                 else if (!string.IsNullOrWhiteSpace(td.String))
                 {
-                    str += string.Format("{0} ", td.String);
+                    str += $"{td.String} ";
                 }
             }
 
@@ -716,10 +752,22 @@ namespace Server.Engines.UOStore
         {
             if (forcedEntry != null)
             {
-                return new List<StoreEntry>() { forcedEntry };
+                return new List<StoreEntry> { forcedEntry };
             }
 
-            return Entries.Where(e => e.Category == cat).ToList();
+            List<StoreEntry> list = new List<StoreEntry>();
+
+            for (var index = 0; index < Entries.Count; index++)
+            {
+                var e = Entries[index];
+
+                if (e.Category == cat)
+                {
+                    list.Add(e);
+                }
+            }
+
+            return list;
         }
 
         public static void SortList(List<StoreEntry> list, SortBy sort)
@@ -778,9 +826,9 @@ namespace Server.Engines.UOStore
             {
                 case CurrencyType.Sovereigns:
                     {
-                        if (m is PlayerMobile)
+                        if (m is PlayerMobile mobile)
                         {
-                            return ((PlayerMobile)m).AccountSovereigns;
+                            return mobile.AccountSovereigns;
                         }
                     }
                     break;
@@ -815,9 +863,9 @@ namespace Server.Engines.UOStore
             }
             else if (total > GetCurrency(m, true))
             {
-                if (m is PlayerMobile)
+                if (m is PlayerMobile mobile)
                 {
-                    BaseGump.SendGump(new NoFundsGump((PlayerMobile)m));
+                    BaseGump.SendGump(new NoFundsGump(mobile));
                 }
             }
             else
@@ -865,15 +913,16 @@ namespace Server.Engines.UOStore
 
                 PlayerProfile profile = GetProfile(m);
 
-                foreach (StoreEntry entry in remove)
+                for (var index = 0; index < remove.Count; index++)
                 {
+                    StoreEntry entry = remove[index];
+
                     profile.RemoveFromCart(entry);
                 }
 
                 if (fail)
                 {
-                    // Failed to process one of your items. Please check your cart and try again.
-                    m.SendLocalizedMessage(1156853);
+                    m.SendLocalizedMessage(1156853); // Failed to process one of your items. Please check your cart and try again.
                 }
             }
         }
@@ -889,7 +938,7 @@ namespace Server.Engines.UOStore
             {
                 case CurrencyType.Sovereigns:
                     {
-                        if (m is PlayerMobile && ((PlayerMobile)m).WithdrawSovereigns(amount))
+                        if (m is PlayerMobile mobile && mobile.WithdrawSovereigns(amount))
                         {
                             return amount;
                         }
@@ -921,7 +970,7 @@ namespace Server.Engines.UOStore
         }
 
         #region Player Persistence
-        public static Dictionary<Mobile, PlayerProfile> PlayerProfiles { get; private set; }
+        public static Dictionary<Mobile, PlayerProfile> PlayerProfiles { get; }
 
         public static PlayerProfile GetProfile(Mobile m, bool create = true)
         {
@@ -1067,9 +1116,19 @@ namespace Server.Engines.UOStore
             return item;
         }
 
-        public Item GetDisplayItem(Type t)
+        public static Item GetDisplayItem(Type t)
         {
-            return _DisplayItems.FirstOrDefault(x => x.GetType() == t);
+            for (var index = 0; index < _DisplayItems.Count; index++)
+            {
+                var x = _DisplayItems[index];
+
+                if (x.GetType() == t)
+                {
+                    return x;
+                }
+            }
+
+            return null;
         }
 
         public override void Serialize(GenericWriter writer)

@@ -205,8 +205,8 @@ namespace Server.Commands
             CreateBigTeleporterItem(5387, 1326, false);
 
             // Generate Central Khaldun entrance
-            DisappearingRaiseSwitch sw = TryCreateItem(5459, 1426, 10, new DisappearingRaiseSwitch()) as DisappearingRaiseSwitch;
-            RaiseSwitch lv = TryCreateItem(5403, 1359, 0, new RaiseSwitch()) as RaiseSwitch;
+            DisappearingRaiseSwitch sw = (DisappearingRaiseSwitch) TryCreateItem(5459, 1426, 10, new DisappearingRaiseSwitch());
+            RaiseSwitch lv = (RaiseSwitch) TryCreateItem(5403, 1359, 0, new RaiseSwitch());
 
             RaisableItem stone = TryCreateItem(5403, 1360, 0, new RaisableItem(0x788, 10, 0x477, 0x475, TimeSpan.FromMinutes(1.5))) as RaisableItem;
             RaisableItem door = TryCreateItem(5524, 1367, 0, new RaisableItem(0x1D0, 20, 0x477, 0x475, TimeSpan.FromMinutes(5.0))) as RaisableItem;

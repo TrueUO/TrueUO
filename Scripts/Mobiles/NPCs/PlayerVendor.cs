@@ -10,7 +10,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 
 namespace Server.Mobiles
 {
@@ -84,13 +83,22 @@ namespace Server.Mobiles
         public override bool CheckHold(Mobile m, Item item, bool message, bool checkItems, int plusItems, int plusWeight)
         {
             if (!base.CheckHold(m, item, message, checkItems, plusItems, plusWeight))
-                return false;
-
-            if (Parent is PlayerVendor vendor && item is Container container && container.Items.OfType<Container>().Any())
             {
-                vendor.SayTo(m, 1017381); // You cannot place a container that has other containers in it on a vendor.
-
                 return false;
+            }
+
+            if (Parent is PlayerVendor vendor && item is Container container)
+            {
+                for (var index = 0; index < container.Items.Count; index++)
+                {
+                    Item containerItem = container.Items[index];
+
+                    if (containerItem is Container)
+                    {
+                        vendor.SayTo(m, 1017381); // You cannot place a container that has other containers in it on a vendor.
+                        return false;
+                    }
+                }
             }
 
             if (Parent is CommissionPlayerVendor commissionVendor)
@@ -100,7 +108,9 @@ namespace Server.Mobiles
                 if (house != null && !house.CheckAosStorage(1 + item.TotalItems + plusItems))
                 {
                     if (message)
+                    {
                         m.SendLocalizedMessage(1061839); // This action would exceed the secure storage limit of the house.
+                    }
 
                     return false;
                 }
@@ -569,8 +579,10 @@ namespace Server.Mobiles
                             HoldGold = 0;
                         }
 
-                        foreach (Item item in list)
+                        for (var index = 0; index < list.Count; index++)
                         {
+                            Item item = list[index];
+
                             House.MovingCrate.DropItem(item);
                         }
                     }
@@ -582,8 +594,10 @@ namespace Server.Mobiles
                         };
                         HoldGold = 0;
 
-                        foreach (Item item in list)
+                        for (var index = 0; index < list.Count; index++)
                         {
+                            Item item = list[index];
+
                             inventory.AddItem(item);
                         }
 
@@ -608,8 +622,10 @@ namespace Server.Mobiles
                         HoldGold = 0;
                     }
 
-                    foreach (Item item in list)
+                    for (var index = 0; index < list.Count; index++)
                     {
+                        Item item = list[index];
+
                         backpack.DropItem(item);
                     }
 
@@ -687,8 +703,10 @@ namespace Server.Mobiles
 
             if (item == Backpack)
             {
-                foreach (Item subItem in item.Items)
+                for (var index = 0; index < item.Items.Count; index++)
                 {
+                    Item subItem = item.Items[index];
+
                     RemoveVendorItem(subItem);
                 }
             }
@@ -1080,8 +1098,12 @@ namespace Server.Mobiles
                         IPooledEnumerable mobiles = e.Mobile.GetMobilesInRange(2);
 
                         foreach (Mobile m in mobiles)
+                        {
                             if (m is PlayerVendor vendor && vendor.CanSee(e.Mobile) && vendor.InLOS(e.Mobile))
+                            {
                                 vendor.OpenBackpack(from);
+                            }
+                        }
 
                         mobiles.Free();
                     }
@@ -1136,48 +1158,26 @@ namespace Server.Mobiles
             return false;
         }
 
-        protected List<Item> GetItems()
+        private List<Item> GetItems()
         {
             List<Item> list = new List<Item>();
 
-            foreach (Item item in Items)
-                if (item.Movable && item != Backpack && item.Layer != Layer.Hair && item.Layer != Layer.FacialHair)
-                    list.Add(item);
-
-            if (Backpack != null)
-                list.AddRange(Backpack.Items);
-
-            return list;
-        }
-
-        private void FixDresswear()
-        {
-            for (int i = 0; i < Items.Count; ++i)
+            for (var index = 0; index < Items.Count; index++)
             {
-                Item item = Items[i];
+                Item item = Items[index];
 
-                if (item is BaseHat)
-                    item.Layer = Layer.Helm;
-                else if (item is BaseMiddleTorso)
-                    item.Layer = Layer.MiddleTorso;
-                else if (item is BaseOuterLegs)
-                    item.Layer = Layer.OuterLegs;
-                else if (item is BaseOuterTorso)
-                    item.Layer = Layer.OuterTorso;
-                else if (item is BasePants)
-                    item.Layer = Layer.Pants;
-                else if (item is BaseShirt)
-                    item.Layer = Layer.Shirt;
-                else if (item is BaseWaist)
-                    item.Layer = Layer.Waist;
-                else if (item is BaseShoes)
+                if (item.Movable && item != Backpack && item.Layer != Layer.Hair && item.Layer != Layer.FacialHair)
                 {
-                    if (item is Sandals)
-                        item.Hue = 0;
-
-                    item.Layer = Layer.Shoes;
+                    list.Add(item);
                 }
             }
+
+            if (Backpack != null)
+            {
+                list.AddRange(Backpack.Items);
+            }
+
+            return list;
         }
 
         private VendorItem SetVendorItem(Item item, int price, string description)
@@ -1206,8 +1206,10 @@ namespace Server.Mobiles
                 vi.Invalidate();
                 m_SellItems.Remove(item);
 
-                foreach (Item subItem in item.Items)
+                for (var index = 0; index < item.Items.Count; index++)
                 {
+                    Item subItem = item.Items[index];
+
                     RemoveVendorItem(subItem);
                 }
 
@@ -1607,7 +1609,17 @@ namespace Server.Mobiles
 
         protected override void OnTick()
         {
-            var list = PlayerVendor.PlayerVendors.Where(v => !v.Deleted && !v.IsCommission && v.NextPayTime <= DateTime.UtcNow).ToList();
+            var list = new List<PlayerVendor>();
+
+            for (var index = 0; index < PlayerVendor.PlayerVendors.Count; index++)
+            {
+                var v = PlayerVendor.PlayerVendors[index];
+
+                if (!v.Deleted && !v.IsCommission && v.NextPayTime <= DateTime.UtcNow)
+                {
+                    list.Add(v);
+                }
+            }
 
             for (int i = 0; i < list.Count; i++)
             {
@@ -1636,7 +1648,17 @@ namespace Server.Mobiles
 
             ColUtility.Free(list);
 
-            var rentals = PlayerVendor.PlayerVendors.OfType<RentedVendor>().Where(rv => !rv.Deleted && rv.RentalExpireTime <= DateTime.UtcNow).ToList();
+            var rentals = new List<RentedVendor>();
+
+            for (var index = 0; index < PlayerVendor.PlayerVendors.Count; index++)
+            {
+                PlayerVendor vendor = PlayerVendor.PlayerVendors[index];
+
+                if (vendor is RentedVendor rv && !rv.Deleted && rv.RentalExpireTime <= DateTime.UtcNow)
+                {
+                    rentals.Add(rv);
+                }
+            }
 
             for (int i = 0; i < rentals.Count; i++)
             {

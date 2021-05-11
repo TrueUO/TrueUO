@@ -5,6 +5,7 @@ namespace Server.Mobiles.MannequinProperty
 {
     public abstract class AosArmorAttr : ValuedProperty
     {
+        public override bool IsMagical => true;
         public abstract AosArmorAttribute Attribute { get; }
 
         public double GetPropertyValue(Item item)
@@ -84,5 +85,12 @@ namespace Server.Mobiles.MannequinProperty
         public override int Hue => 0x1FF;
         public override int SpriteW => 240;
         public override int SpriteH => 60;
+    }
+
+    public class MageArmorProperty : AosArmorAttr
+    {
+        public override Catalog Catalog => Catalog.None;
+        public override int LabelNumber => 1079758;  // Mage Armor
+        public override AosArmorAttribute Attribute => AosArmorAttribute.MageArmor;
     }
 }

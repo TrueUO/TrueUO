@@ -4,8 +4,8 @@ namespace Server.ContextMenus
 {
     public class SimpleContextMenuEntry : ContextMenuEntry
     {
-        public Mobile From { get; private set; }
-        public Action<Mobile> Callback { get; set; }
+        private Mobile From { get; }
+        private Action<Mobile> Callback { get; }
 
         public SimpleContextMenuEntry(Mobile from, int localization, Action<Mobile> callback = null, int range = -1, bool enabled = true) : base(localization, range)
         {
@@ -25,9 +25,9 @@ namespace Server.ContextMenus
     {
         private readonly bool _NonLocalUse;
 
-        public Mobile From { get; private set; }
-        public T State { get; private set; }
-        public Action<Mobile, T> Callback { get; set; }
+        private Mobile From { get; }
+        private T State { get; }
+        private Action<Mobile, T> Callback { get; }
 
         public override bool NonLocalUse => _NonLocalUse;
 

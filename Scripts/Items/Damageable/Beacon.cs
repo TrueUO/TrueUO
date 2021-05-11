@@ -70,8 +70,10 @@ namespace Server.Items
 
             if (Rubble != null)
             {
-                foreach (var i in Rubble)
+                for (var index = 0; index < Rubble.Count; index++)
                 {
+                    var i = Rubble[index];
+
                     if (i.Z > Z)
                     {
                         i.Delete();
@@ -83,7 +85,12 @@ namespace Server.Items
                     }
                 }
 
-                delete.ForEach(i => Rubble.Remove(i));
+                for (var index = 0; index < delete.Count; index++)
+                {
+                    var i = delete[index];
+
+                    Rubble.Remove(i);
+                }
             }
 
             DoEffects(Location, Map);
@@ -215,22 +222,31 @@ namespace Server.Items
             foreach (Mobile m in eable)
             {
                 if (m.AccessLevel > AccessLevel.Player)
+                {
                     continue;
+                }
 
                 if (m is PlayerMobile || m is BaseCreature creature && creature.GetMaster() is PlayerMobile)
+                {
                     list.Add(m);
+                }
             }
 
             eable.Free();
 
-            list.ForEach(m =>
+            for (var index = 0; index < list.Count; index++)
             {
+                var m = list[index];
+
                 m.BoltEffect(0);
+
                 AOS.Damage(m, null, Utility.RandomMinMax(80, 90), 0, 0, 0, 0, 100);
 
                 if (m.NetState != null)
+                {
                     m.PrivateOverheadMessage(Network.MessageType.Regular, 1154, 1154552, m.NetState); // *The beacon blasts a surge of energy at you!"
-            });
+                }
+            }
 
             ColUtility.Free(list);
         }
@@ -250,7 +266,14 @@ namespace Server.Items
             writer.Write(Rubble == null ? 0 : Rubble.Count);
 
             if (Rubble != null)
-                Rubble.ForEach(i => writer.Write(i));
+            {
+                for (var index = 0; index < Rubble.Count; index++)
+                {
+                    var i = Rubble[index];
+
+                    writer.Write(i);
+                }
+            }
         }
 
         public override void Deserialize(GenericReader reader)

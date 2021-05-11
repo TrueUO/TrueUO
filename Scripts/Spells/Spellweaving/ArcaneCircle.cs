@@ -3,7 +3,6 @@ using Server.Mobiles;
 using Server.Spells.SkillMasteries;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Spells.Spellweaving
 {
@@ -20,6 +19,7 @@ namespace Server.Spells.Spellweaving
         public override TimeSpan CastDelayBase => TimeSpan.FromSeconds(0.5);
         public override double RequiredSkill => 0.0;
         public override int RequiredMana => 24;
+
         public static bool IsValidTile(int itemID)
         {
             //Per OSI, Center tile only
@@ -56,7 +56,16 @@ namespace Server.Spells.Spellweaving
 
                 duration += TimeSpan.FromHours(Math.Min(6, Arcanists.Count));
 
-                int strengthBonus = Math.Min(IsBonus(Caster.Location, Caster.Map) ? 6 : 5, Arcanists.Sum(m => GetStrength(m))); // Math.Min(Arcanists.Count, IsBonus(Caster.Location, Caster.Map) ? 6 : 5);	//The Sanctuary is a special, single location place
+                int sum = 0;
+
+                for (var index = 0; index < Arcanists.Count; index++)
+                {
+                    var m = Arcanists[index];
+
+                    sum += GetStrength(m);
+                }
+
+                int strengthBonus = Math.Min(IsBonus(Caster.Location, Caster.Map) ? 6 : 5, sum); //The Sanctuary is a special, single location place
 
                 for (int i = 0; i < Arcanists.Count; i++)
                 {

@@ -40,6 +40,7 @@ namespace Server.Mobiles
         }
 		
         public override bool CanBeParagon => false;
+        public override bool AllureImmune => true;
 		
         public override void Serialize(GenericWriter writer)
         {
@@ -50,7 +51,7 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

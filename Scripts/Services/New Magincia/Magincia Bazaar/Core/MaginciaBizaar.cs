@@ -172,10 +172,14 @@ namespace Server.Engines.NewMagincia
 
         public void OnTick()
         {
-            foreach (MaginciaBazaarPlot plot in m_Plots)
+            for (var index = 0; index < m_Plots.Count; index++)
             {
+                MaginciaBazaarPlot plot = m_Plots[index];
+
                 if (plot.Active)
+                {
                     plot.OnTick();
+                }
             }
 
             List<Mobile> toRemove = new List<Mobile>();
@@ -195,8 +199,10 @@ namespace Server.Engines.NewMagincia
                         deleted = true;
                     }
 
-                    foreach (BaseCreature bc in entry.Creatures)
+                    for (var index = 0; index < entry.Creatures.Count; index++)
                     {
+                        BaseCreature bc = entry.Creatures[index];
+
                         if (m.Stabled.Count < AnimalTrainer.GetMaxStabled(m))
                         {
                             PetBroker.SendToStables(m, bc);
@@ -250,10 +256,14 @@ namespace Server.Engines.NewMagincia
                 }
             }
 
-            foreach (Mobile m in toRemove)
+            for (var index = 0; index < toRemove.Count; index++)
             {
+                Mobile m = toRemove[index];
+
                 if (m_WarehouseStorage.ContainsKey(m))
+                {
                     m_WarehouseStorage.Remove(m);
+                }
             }
 
             ColUtility.Free(toRemove);
@@ -261,8 +271,10 @@ namespace Server.Engines.NewMagincia
 
         public void AddPlotSigns()
         {
-            foreach (MaginciaBazaarPlot plot in m_Plots)
+            for (var index = 0; index < m_Plots.Count; index++)
             {
+                MaginciaBazaarPlot plot = m_Plots[index];
+
                 Point3D loc = new Point3D(plot.PlotDef.SignLoc.X - 1, plot.PlotDef.SignLoc.Y, plot.PlotDef.SignLoc.Z);
 
                 Static pole = new Static(2592);
@@ -282,10 +294,14 @@ namespace Server.Engines.NewMagincia
 
         public static MaginciaBazaarPlot GetPlot(Mobile from)
         {
-            foreach (MaginciaBazaarPlot plot in m_Plots)
+            for (var index = 0; index < m_Plots.Count; index++)
             {
+                MaginciaBazaarPlot plot = m_Plots[index];
+
                 if (plot.IsOwner(from))
+                {
                     return plot;
+                }
             }
 
             return null;
@@ -293,10 +309,14 @@ namespace Server.Engines.NewMagincia
 
         public static bool HasPlot(Mobile from)
         {
-            foreach (MaginciaBazaarPlot plot in m_Plots)
+            for (var index = 0; index < m_Plots.Count; index++)
             {
+                MaginciaBazaarPlot plot = m_Plots[index];
+
                 if (plot.IsOwner(from))
+                {
                     return true;
+                }
             }
 
             return false;
@@ -327,10 +347,14 @@ namespace Server.Engines.NewMagincia
 
         public static MaginciaBazaarPlot GetBiddingPlotForAccount(Mobile from)
         {
-            foreach (MaginciaBazaarPlot plot in m_Plots)
+            for (var index = 0; index < m_Plots.Count; index++)
             {
+                MaginciaBazaarPlot plot = m_Plots[index];
+
                 if (plot.Auction != null && plot.Auction.Auctioners.ContainsKey(from))
+                {
                     return plot;
+                }
             }
 
             return null;
@@ -346,30 +370,35 @@ namespace Server.Engines.NewMagincia
             MaginciaBazaarPlot plot = GetBiddingPlot(from);
 
             if (plot != null)
+            {
                 return plot.Auction.RetractBid(from);
+            }
 
             return RetractBid(from);
         }
 
         public static bool RetractBid(Mobile from)
         {
-            Account acct = from.Account as Account;
-
-            for (int i = 0; i < acct.Length; i++)
+            if (from.Account is Account acct)
             {
-                Mobile m = acct[i];
-
-                if (m == null)
-                    continue;
-
-                if (m_NextAvailable.ContainsKey(m))
+                for (int i = 0; i < acct.Length; i++)
                 {
-                    BidEntry entry = m_NextAvailable[m];
+                    Mobile m = acct[i];
 
-                    if (entry != null && Banker.Deposit(m, entry.Amount))
+                    if (m == null)
                     {
-                        m_NextAvailable.Remove(m);
-                        return true;
+                        continue;
+                    }
+
+                    if (m_NextAvailable.ContainsKey(m))
+                    {
+                        BidEntry entry = m_NextAvailable[m];
+
+                        if (entry != null && Banker.Deposit(m, entry.Amount))
+                        {
+                            m_NextAvailable.Remove(m);
+                            return true;
+                        }
                     }
                 }
             }

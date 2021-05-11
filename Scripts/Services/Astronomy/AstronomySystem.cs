@@ -2,7 +2,6 @@ using Server.Items;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace Server.Engines.Astronomy
 {
@@ -90,12 +89,70 @@ namespace Server.Engines.Astronomy
 
             if (LoadedConstellations > 0)
             {
-                if (Constellations.Count(c => c.TimeCoordinate == TimeCoordinate.FiveToEight) > Constellations.Count(c => c.TimeCoordinate == TimeCoordinate.NineToEleven))
+                int count = 0;
+                for (var index = 0; index < Constellations.Count; index++)
+                {
+                    var c = Constellations[index];
+
+                    if (c.TimeCoordinate == TimeCoordinate.NineToEleven)
+                    {
+                        count++;
+                    }
+                }
+
+                int count1 = 0;
+                for (var index = 0; index < Constellations.Count; index++)
+                {
+                    var c = Constellations[index];
+                    if (c.TimeCoordinate == TimeCoordinate.FiveToEight) count1++;
+                }
+
+                if (count1 > count)
+                {
                     next = TimeCoordinate.NineToEleven;
-                else if (Constellations.Count(c => c.TimeCoordinate == TimeCoordinate.NineToEleven) > Constellations.Count(c => c.TimeCoordinate == TimeCoordinate.Midnight))
-                    next = TimeCoordinate.Midnight;
-                else if (Constellations.Count(c => c.TimeCoordinate == TimeCoordinate.Midnight) > Constellations.Count(c => c.TimeCoordinate == TimeCoordinate.OneToFour))
-                    next = TimeCoordinate.OneToFour;
+                }
+                else
+                {
+                    int count2 = 0;
+                    for (var index = 0; index < Constellations.Count; index++)
+                    {
+                        var c = Constellations[index];
+                        if (c.TimeCoordinate == TimeCoordinate.Midnight) count2++;
+                    }
+
+                    int count3 = 0;
+                    for (var index = 0; index < Constellations.Count; index++)
+                    {
+                        var c = Constellations[index];
+                        if (c.TimeCoordinate == TimeCoordinate.NineToEleven) count3++;
+                    }
+
+                    if (count3 > count2)
+                    {
+                        next = TimeCoordinate.Midnight;
+                    }
+                    else
+                    {
+                        int count4 = 0;
+                        for (var index = 0; index < Constellations.Count; index++)
+                        {
+                            var c = Constellations[index];
+                            if (c.TimeCoordinate == TimeCoordinate.OneToFour) count4++;
+                        }
+
+                        int count5 = 0;
+                        for (var index = 0; index < Constellations.Count; index++)
+                        {
+                            var c = Constellations[index];
+                            if (c.TimeCoordinate == TimeCoordinate.Midnight) count5++;
+                        }
+
+                        if (count5 > count4)
+                        {
+                            next = TimeCoordinate.OneToFour;
+                        }
+                    }
+                }
             }
 
             for (int i = 0; i < amount; i++)
@@ -136,22 +193,62 @@ namespace Server.Engines.Astronomy
 
         public static ConstellationInfo GetConstellation(int id)
         {
-            return Constellations.FirstOrDefault(info => info.Identifier == id);
+            for (var index = 0; index < Constellations.Count; index++)
+            {
+                var info = Constellations[index];
+
+                if (info.Identifier == id)
+                {
+                    return info;
+                }
+            }
+
+            return null;
         }
 
         public static ConstellationInfo GetConstellation(TimeCoordinate p, int ra, double dec)
         {
-            return Constellations.FirstOrDefault(c => c.TimeCoordinate == p && c.CoordRA == ra && c.CoordDEC == dec);
+            for (var index = 0; index < Constellations.Count; index++)
+            {
+                var c = Constellations[index];
+
+                if (c.TimeCoordinate == p && c.CoordRA == ra && c.CoordDEC == dec)
+                {
+                    return c;
+                }
+            }
+
+            return null;
         }
 
         private static bool CheckExists(TimeCoordinate p, int ra, double dec)
         {
-            return Constellations.Any(c => c.TimeCoordinate == p && c.CoordRA == ra && c.CoordDEC == dec);
+            for (var index = 0; index < Constellations.Count; index++)
+            {
+                var c = Constellations[index];
+
+                if (c.TimeCoordinate == p && c.CoordRA == ra && c.CoordDEC == dec)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public static bool CheckNameExists(string name)
         {
-            return Constellations.Any(c => !string.IsNullOrEmpty(c.Name) && c.Name.ToLower() == name.ToLower());
+            for (var index = 0; index < Constellations.Count; index++)
+            {
+                var c = Constellations[index];
+
+                if (!string.IsNullOrEmpty(c.Name) && c.Name.ToLower() == name.ToLower())
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public static TimeCoordinate GetTimeCoordinate(IEntity e)
@@ -235,8 +332,9 @@ namespace Server.Engines.Astronomy
 
                     writer.Write(Constellations.Count);
 
-                    foreach (ConstellationInfo info in Constellations)
+                    for (var index = 0; index < Constellations.Count; index++)
                     {
+                        ConstellationInfo info = Constellations[index];
                         info.Serialize(writer);
                     }
                 });

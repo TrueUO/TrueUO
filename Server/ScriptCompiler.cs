@@ -14,12 +14,12 @@ namespace Server
 
 		public static bool Compile(bool debug, bool cache)
 		{
-			List<Assembly> assemblies = new List<Assembly>();
+            List<Assembly> assemblies = new List<Assembly>
+            {
+                Assembly.LoadFrom("Scripts.dll"), typeof(ScriptCompiler).Assembly
+            };
 
-			assemblies.Add(Assembly.LoadFrom("Scripts.dll"));
-			assemblies.Add(typeof(ScriptCompiler).Assembly);
-
-			Assemblies = assemblies.ToArray();
+            Assemblies = assemblies.ToArray();
 
 			Utility.PushColor(ConsoleColor.Yellow);
 			Console.WriteLine("Scripts: Verifying...");
@@ -47,28 +47,32 @@ namespace Server
 		{
 			List<MethodInfo> invoke = new List<MethodInfo>();
 
-			foreach (Assembly a in Assemblies)
-			{
-				Type[] types = a.GetTypes();
+            for (var index = 0; index < Assemblies.Length; index++)
+            {
+                Assembly a = Assemblies[index];
+                Type[] types = a.GetTypes();
 
-				foreach (Type t in types)
-				{
-					MethodInfo m = t.GetMethod(method, BindingFlags.Static | BindingFlags.Public);
+                for (var i = 0; i < types.Length; i++)
+                {
+                    Type t = types[i];
+                    MethodInfo m = t.GetMethod(method, BindingFlags.Static | BindingFlags.Public);
 
-					if (m != null)
-					{
-						invoke.Add(m);
-					}
-				}
-			}
+                    if (m != null)
+                    {
+                        invoke.Add(m);
+                    }
+                }
+            }
 
-			invoke.Sort(new CallPriorityComparer());
+            invoke.Sort(new CallPriorityComparer());
 
-			foreach (MethodInfo m in invoke)
-			{
-				m.Invoke(null, null);
-			}
-		}
+            for (var index = 0; index < invoke.Count; index++)
+            {
+                MethodInfo m = invoke[index];
+
+                m.Invoke(null, null);
+            }
+        }
 
 		private static readonly Dictionary<Assembly, TypeCache> m_TypeCaches = new Dictionary<Assembly, TypeCache>();
 		private static TypeCache m_NullCache;
@@ -363,12 +367,14 @@ namespace Server
 					TypeAliasAttribute attr = type.GetCustomAttribute<TypeAliasAttribute>(false);
 
 					if (attr != null)
-					{
-						foreach (string a in attr.Aliases)
-						{
-							m_FullNames.Add(a, type);
-						}
-					}
+                    {
+                        for (var index = 0; index < attr.Aliases.Length; index++)
+                        {
+                            string a = attr.Aliases[index];
+
+                            m_FullNames.Add(a, type);
+                        }
+                    }
 				}
 			}
 
@@ -421,7 +427,7 @@ namespace Server
 				return -1;
 			}
 
-			if (l == null && r != null)
+			if (l == null)
 			{
 				return 1;
 			}

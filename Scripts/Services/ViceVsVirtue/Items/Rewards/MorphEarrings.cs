@@ -24,15 +24,20 @@ namespace Server.Items
         private void ValidateEquipment(Mobile m)
         {
             if (m == null)
+            {
                 return;
+            }
 
             Race race = m.Race;
+
             bool didDrop = false;
 
             List<Item> list = new List<Item>(m.Items);
 
-            foreach (Item item in list)
+            for (var index = 0; index < list.Count; index++)
             {
+                Item item = list[index];
+
                 if (!race.ValidateEquipment(item))
                 {
                     if (!didDrop)

@@ -38,7 +38,7 @@ namespace Server
 
 			if (regRect == null)
 			{
-				throw new ArgumentException("obj is not a RegionRect", "obj");
+				throw new ArgumentException("obj is not a RegionRect", nameof(obj));
 			}
 
 			return ((IComparable)m_Region).CompareTo(regRect.m_Region);
@@ -74,7 +74,7 @@ namespace Server
 			m_Active = false;
 		}
 
-		private void Add<T>(ref List<T> list, T value)
+		private static void Add<T>(ref List<T> list, T value)
 		{
 			if (list == null)
 			{
@@ -84,7 +84,7 @@ namespace Server
 			list.Add(value);
 		}
 
-		private void Remove<T>(ref List<T> list, T value)
+		private static void Remove<T>(ref List<T> list, T value)
 		{
 			if (list != null)
 			{
@@ -97,7 +97,7 @@ namespace Server
 			}
 		}
 
-		private void Replace<T>(ref List<T> list, T oldValue, T newValue)
+		private static void Replace<T>(ref List<T> list, T oldValue, T newValue)
 		{
 			if (oldValue != null && newValue != null)
 			{
@@ -212,14 +212,16 @@ namespace Server
 		private void UpdateMobileRegions()
 		{
 			if (m_Mobiles != null)
-			{
-				List<Mobile> sandbox = new List<Mobile>(m_Mobiles);
+            {
+                List<Mobile> sandbox = new List<Mobile>(m_Mobiles);
 
-				foreach (Mobile mob in sandbox)
-				{
-					mob.UpdateRegion();
-				}
-			}
+                for (var index = 0; index < sandbox.Count; index++)
+                {
+                    Mobile mob = sandbox[index];
+
+                    mob.UpdateRegion();
+                }
+            }
 		}
 
 		public void OnMultiEnter(BaseMulti multi)
@@ -237,20 +239,24 @@ namespace Server
 			if (!Active && m_Owner != Map.Internal)
 			{
 				if (m_Items != null)
-				{
-					foreach (Item item in m_Items)
-					{
-						item.OnSectorActivate();
-					}
-				}
+                {
+                    for (var index = 0; index < m_Items.Count; index++)
+                    {
+                        Item item = m_Items[index];
+
+                        item.OnSectorActivate();
+                    }
+                }
 
 				if (m_Mobiles != null)
-				{
-					foreach (Mobile mob in m_Mobiles)
-					{
-						mob.OnSectorActivate();
-					}
-				}
+                {
+                    for (var index = 0; index < m_Mobiles.Count; index++)
+                    {
+                        Mobile mob = m_Mobiles[index];
+
+                        mob.OnSectorActivate();
+                    }
+                }
 
 				m_Active = true;
 			}
@@ -261,20 +267,24 @@ namespace Server
 			if (Active)
 			{
 				if (m_Items != null)
-				{
-					foreach (Item item in m_Items)
-					{
-						item.OnSectorDeactivate();
-					}
-				}
+                {
+                    for (var index = 0; index < m_Items.Count; index++)
+                    {
+                        Item item = m_Items[index];
+
+                        item.OnSectorDeactivate();
+                    }
+                }
 
 				if (m_Mobiles != null)
-				{
-					foreach (Mobile mob in m_Mobiles)
-					{
-						mob.OnSectorDeactivate();
-					}
-				}
+                {
+                    for (var index = 0; index < m_Mobiles.Count; index++)
+                    {
+                        Mobile mob = m_Mobiles[index];
+
+                        mob.OnSectorDeactivate();
+                    }
+                }
 
 				m_Active = false;
 			}

@@ -5,13 +5,11 @@ using Server.Engines.Khaldun;
 using Server.Engines.Quests;
 using Server.Guilds;
 using Server.Gumps;
-using Server.Items;
 using Server.Mobiles;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Xml;
 
 namespace Server.Services.TownCryer
@@ -206,29 +204,72 @@ namespace Server.Services.TownCryer
 
         public static int CityEntryCount(City city)
         {
-            return CityEntries.Count(x => x.City == city);
+            int count = 0;
+
+            for (var index = 0; index < CityEntries.Count; index++)
+            {
+                var x = CityEntries[index];
+
+                if (x.City == city)
+                {
+                    count++;
+                }
+            }
+
+            return count;
         }
 
         public static bool HasGuildEntry(Guild g)
         {
             if (g == null)
+            {
                 return false;
+            }
 
-            return GuildEntries.Any(x => x.Guild == g);
+            for (var index = 0; index < GuildEntries.Count; index++)
+            {
+                var x = GuildEntries[index];
+
+                if (x.Guild == g)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public static bool HasCustomEntries()
         {
-            return GreetingsEntries.Any(x => x.Saves || x.Expires != DateTime.MinValue);
+            for (var index = 0; index < GreetingsEntries.Count; index++)
+            {
+                var x = GreetingsEntries[index];
+
+                if (x.Saves || x.Expires != DateTime.MinValue)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public static void CheckTimer()
         {
-            if (ModeratorEntries.Count > 0 ||
-                CityEntries.Count > 0 ||
-                GuildEntries.Count > 0 ||
-                GreetingsEntries.Any(e => e.Expires != DateTime.MinValue) ||
-                MysteriousPotionEffects != null)
+            bool any = false;
+
+            for (var index = 0; index < GreetingsEntries.Count; index++)
+            {
+                var e = GreetingsEntries[index];
+
+                if (e.Expires != DateTime.MinValue)
+                {
+                    any = true;
+                    break;
+                }
+            }
+
+            if (any || ModeratorEntries.Count > 0 || CityEntries.Count > 0 || GuildEntries.Count > 0 || MysteriousPotionEffects != null)
             {
                 if (Timer == null || !Timer.Running)
                 {
@@ -273,8 +314,10 @@ namespace Server.Services.TownCryer
             {
                 List<Mobile> list = new List<Mobile>(MysteriousPotionEffects.Keys);
 
-                foreach (Mobile m in list)
+                for (var index = 0; index < list.Count; index++)
                 {
+                    Mobile m = list[index];
+
                     if (MysteriousPotionEffects != null && MysteriousPotionEffects.ContainsKey(m) && MysteriousPotionEffects[m] < DateTime.UtcNow)
                     {
                         MysteriousPotionEffects.Remove(m);
@@ -314,9 +357,7 @@ namespace Server.Services.TownCryer
                     list.Add(new UpdateCityEntry(tc));
                 }
 
-                Guild g = pm.Guild as Guild;
-
-                if (g != null && pm.GuildRank != null && pm.GuildRank.Rank >= 3 && g.Leader == pm && (pm.AccessLevel > AccessLevel.Player || g.Members.Count >= MinGuildMemberCount))
+                if (pm.Guild is Guild g && pm.GuildRank != null && pm.GuildRank.Rank >= 3 && g.Leader == pm && (pm.AccessLevel > AccessLevel.Player || g.Members.Count >= MinGuildMemberCount))
                 {
                     list.Add(new UpdateGuildEntry(pm, tc));
                 }
@@ -389,8 +430,11 @@ namespace Server.Services.TownCryer
                 {
                     int index = 0;
 
-                    foreach (XmlElement reg in root.GetElementsByTagName("message"))
+                    var name = root.GetElementsByTagName("message");
+
+                    for (var i = 0; i < name.Count; i++)
                     {
+                        var reg = (XmlElement) name[i];
                         string title = Utility.GetText(reg["title"], null);
                         string body = Utility.GetText(reg["body"], null);
                         DateTime created = GetDateTime(Utility.GetText(reg["created"], null));
@@ -506,24 +550,64 @@ namespace Server.Services.TownCryer
             writer.Write(GreetingsEntries.Count);
 
             writer.Write(TownCryerExempt.Count);
-            foreach (PlayerMobile pm in TownCryerExempt)
-                writer.Write(pm);
 
-            writer.Write(GreetingsEntries.Count(x => x.Saves));
-            foreach (TownCryerGreetingEntry e in GreetingsEntries.Where(x => x.Saves))
-                e.Serialize(writer);
+            for (var index = 0; index < TownCryerExempt.Count; index++)
+            {
+                PlayerMobile pm = TownCryerExempt[index];
+
+                writer.Write(pm);
+            }
+
+            int count = 0;
+
+            for (var index = 0; index < GreetingsEntries.Count; index++)
+            {
+                var x = GreetingsEntries[index];
+
+                if (x.Saves)
+                {
+                    count++;
+                }
+            }
+
+            writer.Write(count);
+
+            for (var index = 0; index < GreetingsEntries.Count; index++)
+            {
+                TownCryerGreetingEntry e = GreetingsEntries[index];
+
+                if (e.Saves)
+                {
+                    e.Serialize(writer);
+                }
+            }
 
             writer.Write(ModeratorEntries.Count);
-            foreach (TownCryerModeratorEntry e in ModeratorEntries)
+
+            for (var index = 0; index < ModeratorEntries.Count; index++)
+            {
+                TownCryerModeratorEntry e = ModeratorEntries[index];
+
                 e.Serialize(writer);
+            }
 
             writer.Write(CityEntries.Count);
-            foreach (TownCryerCityEntry e in CityEntries)
+
+            for (var index = 0; index < CityEntries.Count; index++)
+            {
+                TownCryerCityEntry e = CityEntries[index];
+
                 e.Serialize(writer);
+            }
 
             writer.Write(GuildEntries.Count);
-            foreach (TownCryerGuildEntry e in GuildEntries)
+
+            for (var index = 0; index < GuildEntries.Count; index++)
+            {
+                TownCryerGuildEntry e = GuildEntries[index];
+
                 e.Serialize(writer);
+            }
 
             writer.Write(MysteriousPotionEffects != null ? MysteriousPotionEffects.Count : 0);
 
@@ -552,9 +636,7 @@ namespace Server.Services.TownCryer
 
                     for (int i = 0; i < count; i++)
                     {
-                        PlayerMobile pm = reader.ReadMobile() as PlayerMobile;
-
-                        if (pm != null)
+                        if (reader.ReadMobile() is PlayerMobile pm)
                         {
                             AddExempt(pm);
                         }
@@ -721,13 +803,9 @@ namespace Server.Services.TownCryer
 
         public override void OnClick()
         {
-            PlayerMobile pm = Owner.From as PlayerMobile;
-
-            if (pm != null)
+            if (Owner.From is PlayerMobile pm)
             {
-                Guild g = pm.Guild as Guild;
-
-                if (g != null && pm.GuildRank != null && pm.GuildRank.Rank >= 3 && (pm.AccessLevel > AccessLevel.Player || g.Members.Count >= TownCryerSystem.MinGuildMemberCount))
+                if (pm.Guild is Guild g && pm.GuildRank != null && pm.GuildRank.Rank >= 3 && (pm.AccessLevel > AccessLevel.Player || g.Members.Count >= TownCryerSystem.MinGuildMemberCount))
                 {
                     if (TownCryerSystem.HasGuildEntry(g))
                     {

@@ -341,17 +341,17 @@ namespace Server.Engines.Craft
 
             index = AddCraft(typeof(MaceBelt), 1015283, 1126020, 90.0, 110.0, typeof(Cloth), 1044455, 5, 1044287);
             AddRes(index, typeof(Leather), 1044462, 5, 1044463);
-            AddRes(index, typeof(Lodestone), 1113332, 5, 1044253);
+            AddRes(index, typeof(Lodestone), 1113348, 5, 1044253);
             AddRecipe(index, (int)CraftRecipes.MaceBelt);
 
             index = AddCraft(typeof(SwordBelt), 1015283, 1126021, 90.0, 110.0, typeof(Cloth), 1044455, 5, 1044287);
             AddRes(index, typeof(Leather), 1044462, 5, 1044463);
-            AddRes(index, typeof(Lodestone), 1113332, 5, 1044253);
+            AddRes(index, typeof(Lodestone), 1113348, 5, 1044253);
             AddRecipe(index, (int)CraftRecipes.SwordBelt);
 
             index = AddCraft(typeof(DaggerBelt), 1015283, 1159210, 90.0, 110.0, typeof(Cloth), 1044455, 5, 1044287);
             AddRes(index, typeof(Leather), 1044462, 5, 1044463);
-            AddRes(index, typeof(Lodestone), 1113332, 5, 1044253);
+            AddRes(index, typeof(Lodestone), 1113348, 5, 1044253);
             AddRecipe(index, (int)CraftRecipes.DaggerBelt);
 
             index = AddCraft(typeof(ElegantCollar), 1015283, 1159224, 90.0, 110.0, typeof(Cloth), 1044455, 5, 1044287);

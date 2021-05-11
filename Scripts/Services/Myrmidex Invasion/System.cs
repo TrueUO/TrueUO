@@ -6,7 +6,6 @@ using Server.Targeting;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace Server.Engines.MyrmidexInvasion
 {
@@ -65,36 +64,44 @@ namespace Server.Engines.MyrmidexInvasion
 
         public static bool IsAlliedWithMyrmidex(Mobile m)
         {
-            if (m is BaseCreature bc)
+            while (true)
             {
-                if (bc.GetMaster() != null)
+                if (m is BaseCreature bc)
                 {
-                    return IsAlliedWithMyrmidex(bc.GetMaster());
+                    if (bc.GetMaster() != null)
+                    {
+                        m = bc.GetMaster();
+                        continue;
+                    }
+
+                    return bc is MyrmidexLarvae || bc is MyrmidexWarrior || bc is MyrmidexQueen || bc is MyrmidexDrone || bc is BaseEodonTribesman man && man.TribeType == EodonTribe.Barrab;
                 }
 
-                return bc is MyrmidexLarvae || bc is MyrmidexWarrior || bc is MyrmidexQueen || bc is MyrmidexDrone || bc is BaseEodonTribesman man && man.TribeType == EodonTribe.Barrab;
+                AllianceEntry entry = GetEntry(m as PlayerMobile);
+
+                return entry != null && entry.Allegiance == Allegiance.Myrmidex;
             }
-
-            AllianceEntry entry = GetEntry(m as PlayerMobile);
-
-            return entry != null && entry.Allegiance == Allegiance.Myrmidex;
         }
 
         public static bool IsAlliedWithEodonTribes(Mobile m)
         {
-            if (m is BaseCreature bc)
+            while (true)
             {
-                if (bc.GetMaster() != null)
+                if (m is BaseCreature bc)
                 {
-                    return IsAlliedWithEodonTribes(bc.GetMaster());
+                    if (bc.GetMaster() != null)
+                    {
+                        m = bc.GetMaster();
+                        continue;
+                    }
+
+                    return bc is BaseEodonTribesman tribesman && tribesman.TribeType != EodonTribe.Barrab || bc is BritannianInfantry;
                 }
 
-                return bc is BaseEodonTribesman tribesman && tribesman.TribeType != EodonTribe.Barrab || bc is BritannianInfantry;
+                AllianceEntry entry = GetEntry(m as PlayerMobile);
+
+                return entry != null && entry.Allegiance == Allegiance.Tribes;
             }
-
-            AllianceEntry entry = GetEntry(m as PlayerMobile);
-
-            return entry != null && entry.Allegiance == Allegiance.Tribes;
         }
 
         public static bool CanRecieveQuest(PlayerMobile pm, Allegiance allegiance)
@@ -107,9 +114,21 @@ namespace Server.Engines.MyrmidexInvasion
         public static AllianceEntry GetEntry(PlayerMobile pm)
         {
             if (pm == null)
+            {
                 return null;
+            }
 
-            return AllianceEntries.FirstOrDefault(e => e.Player == pm);
+            for (var index = 0; index < AllianceEntries.Count; index++)
+            {
+                var e = AllianceEntries[index];
+
+                if (e.Player == pm)
+                {
+                    return e;
+                }
+            }
+
+            return null;
         }
 
         public static void Configure()
@@ -147,7 +166,11 @@ namespace Server.Engines.MyrmidexInvasion
                     writer.Write(0);
 
                     writer.Write(AllianceEntries.Count);
-                    AllianceEntries.ForEach(entry => entry.Serialize(writer));
+                    for (var index = 0; index < AllianceEntries.Count; index++)
+                    {
+                        var entry = AllianceEntries[index];
+                        entry.Serialize(writer);
+                    }
 
                     writer.Write(MoonstonePowerGeneratorAddon.Boss);
                 });

@@ -163,8 +163,12 @@ namespace Server
                     tw.WriteLine();
 
                     var total = (double)m_Timers[i].Count;
+                    var timers = new Dictionary<string, int>();
 
-                    var timers = m_Timers[i].GroupBy(t => t.ToString()).ToDictionary(o => o.Key, o => o.Count());
+                    foreach (var grouping in m_Timers[i].GroupBy(t => t.ToString()))
+                    {
+                        timers.Add(grouping.Key, grouping.Count());
+                    }
 
                     foreach (var o in timers.OrderByDescending(o => o.Value))
                     {
@@ -325,14 +329,14 @@ namespace Server
 				m_Signal.Set();
 			}
 
-			public void TimerMain()
+			public static void TimerMain()
 			{
-				long now;
-				int i, j;
-				bool loaded;
-
-				while (!Core.Closing)
+                while (!Core.Closing)
 				{
+                    long now;
+                    int i, j;
+                    bool loaded;
+
 					if (World.Loading || World.Saving)
 					{
 						m_Signal.WaitOne(1, false);

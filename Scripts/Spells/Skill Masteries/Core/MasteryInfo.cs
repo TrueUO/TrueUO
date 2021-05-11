@@ -2,7 +2,6 @@ using Server.Items;
 using Server.Mobiles;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Spells.SkillMasteries
 {
@@ -131,17 +130,47 @@ namespace Server.Spells.SkillMasteries
 
         public static MasteryInfo GetInfo(Type spell, SkillName skill)
         {
-            return Infos.FirstOrDefault(info => info.SpellType == spell && info.MasterySkill == skill);
+            for (var index = 0; index < Infos.Count; index++)
+            {
+                var info = Infos[index];
+
+                if (info.SpellType == spell && info.MasterySkill == skill)
+                {
+                    return info;
+                }
+            }
+
+            return null;
         }
 
         public static MasteryInfo GetInfo(int spellID)
         {
-            return Infos.FirstOrDefault(info => info.SpellID == spellID);
+            for (var index = 0; index < Infos.Count; index++)
+            {
+                var info = Infos[index];
+
+                if (info.SpellID == spellID)
+                {
+                    return info;
+                }
+            }
+
+            return null;
         }
 
         public static MasteryInfo GetInfo(int spellID, SkillName name)
         {
-            return Infos.FirstOrDefault(info => info.SpellID == spellID && info.MasterySkill == name);
+            for (var index = 0; index < Infos.Count; index++)
+            {
+                var info = Infos[index];
+
+                if (info.SpellID == spellID && info.MasterySkill == name)
+                {
+                    return info;
+                }
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -249,10 +278,12 @@ namespace Server.Spells.SkillMasteries
 
                 if (list != null)
                 {
-                    list.ForEach(spell =>
+                    for (var index = 0; index < list.Count; index++)
                     {
+                        var spell = list[index];
+
                         spell.Expire();
-                    });
+                    }
 
                     ColUtility.Free(list);
                 }
@@ -297,10 +328,14 @@ namespace Server.Spells.SkillMasteries
                             {
                                 default: args = "5\t0\t0\t0"; break;
                                 case 2: args = "5\t5\t0\t0"; break;
-                                case 3: args = "5\t5\t5\t5"; break;
+                                case 3:
+                                    {
+                                        args = "5\t5\t5\t5";
+                                        m.AddStatMod(new StatMod(StatType.Str, "SavingThrow_Str", 5, TimeSpan.Zero));
+                                        break;
+                                    }
                             }
-
-                            m.AddStatMod(new StatMod(StatType.Str, "SavingThrow_Str", 5, TimeSpan.Zero));
+                            
                             BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.SavingThrow, 1156031, 1156032, args, true)); // Provides a chance to block disarm attempts based on Mastery level, weapon skill level and tactics skill level.
                         }
                         break;
@@ -324,16 +359,21 @@ namespace Server.Spells.SkillMasteries
 
             if (m.Backpack != null)
             {
-                foreach (Item item in m.Backpack.FindItemsByType(typeof(BookOfMasteries)))
+                var type = m.Backpack.FindItemsByType(typeof(BookOfMasteries));
+
+                for (var index = 0; index < type.Length; index++)
                 {
+                    Item item = type[index];
                     BookOfMasteries book = item as BookOfMasteries;
 
                     book?.InvalidateProperties();
                 }
             }
 
-            foreach (Item item in m.Items)
+            for (var index = 0; index < m.Items.Count; index++)
             {
+                Item item = m.Items[index];
+
                 if (item is BookOfMasteries)
                 {
                     BookOfMasteries book = item as BookOfMasteries;
@@ -346,14 +386,29 @@ namespace Server.Spells.SkillMasteries
         public static PassiveSpell GetActivePassive(Mobile m)
         {
             if (m == null || m.Skills == null || Infos == null)
+            {
                 return PassiveSpell.None;
+            }
 
             SkillName mastery = m.Skills.CurrentMastery;
 
-            MasteryInfo info = Infos.FirstOrDefault(i => i.Passive && i.MasterySkill == mastery && i.PassiveSpell != PassiveSpell.AnticipateHit);
+            MasteryInfo info = null;
+
+            for (var index = 0; index < Infos.Count; index++)
+            {
+                var i = Infos[index];
+
+                if (i.Passive && i.MasterySkill == mastery && i.PassiveSpell != PassiveSpell.AnticipateHit)
+                {
+                    info = i;
+                    break;
+                }
+            }
 
             if (info != null)
+            {
                 return info.PassiveSpell;
+            }
 
             return PassiveSpell.None;
         }
@@ -403,10 +458,23 @@ namespace Server.Spells.SkillMasteries
 
         public static int GetSpellID(SkillName name)
         {
-            MasteryInfo info = Infos.FirstOrDefault(i => i.MasterySkill == name && i.Passive);
+            MasteryInfo info = null;
+
+            for (var index = 0; index < Infos.Count; index++)
+            {
+                var i = Infos[index];
+
+                if (i.MasterySkill == name && i.Passive)
+                {
+                    info = i;
+                    break;
+                }
+            }
 
             if (info == null)
+            {
                 return -1;
+            }
 
             return info.SpellID;
         }

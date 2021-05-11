@@ -134,6 +134,26 @@ namespace Server.Engines.Quests.RitualQuest
 
                                     quest.PuzzlesComplete++;
 
+                                    if (quest.PuzzlesComplete == 1)
+                                    {
+                                        mobile.SendLocalizedMessage(1151411); // You are quickly progressing through this challenge.                                        
+                                    }
+
+                                    if (quest.PuzzlesComplete == 2)
+                                    {
+                                        mobile.SendLocalizedMessage(1151410); // Only a few more patterns to match.
+                                    }
+
+                                    if (quest.PuzzlesComplete == 3)
+                                    {
+                                        mobile.SendLocalizedMessage(1151409); // You are now one step closer to retrieving the Crystal Lotus.
+                                    }
+
+                                    if (quest.PuzzlesComplete == 4)
+                                    {
+                                        mobile.SendLocalizedMessage(1151412); // One final pattern and you will have completed the puzzle.
+                                    }
+
                                     if (quest.PuzzlesComplete >= 5)
                                     {
                                         mobile.SendLocalizedMessage(1151306); // You may now retrieve a Pristine Crystal Lotus.

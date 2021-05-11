@@ -6,7 +6,6 @@ using Server.Targeting;
 using Server.Spells;
 
 using System;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -79,6 +78,9 @@ namespace Server.SkillHandlers
                     {
                         if (trg.Hidden && src != trg)
                         {
+                            if (src is BaseCreature bc && bc.Controlled && bc.ControlMaster == trg)
+                                continue;
+
                             double ss = srcSkill + Utility.Random(21) - 10;
                             double ts = trg.Skills[SkillName.Hiding].Value + Utility.Random(21) - 10;
                             double shadow = Spells.SkillMasteries.ShadowSpell.GetDifficultyFactor(trg);
@@ -214,7 +216,33 @@ namespace Server.SkillHandlers
             }
 
             // Checked aggressed/aggressors
-            if (src.Aggressed.Any(x => x.Defender == target) || src.Aggressors.Any(x => x.Attacker == target))
+            bool aggressed = false;
+
+            for (var index = 0; index < src.Aggressed.Count; index++)
+            {
+                var x = src.Aggressed[index];
+
+                if (x.Defender == target)
+                {
+                    aggressed = true;
+                    break;
+                }
+            }
+
+            bool aggressors = false;
+
+            for (var index = 0; index < src.Aggressors.Count; index++)
+            {
+                var x = src.Aggressors[index];
+
+                if (x.Attacker == target)
+                {
+                    aggressors = true;
+                    break;
+                }
+            }
+
+            if (aggressed || aggressors)
             {
                 return true;
             }

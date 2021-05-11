@@ -1,8 +1,6 @@
-using Server.ContextMenus;
 using Server.Multis;
 using Server.Network;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -25,11 +23,10 @@ namespace Server.Items
         [CommandProperty(AccessLevel.Decorator)]
         public override int ItemID
         {
-            get { return base.ItemID; }
+            get => base.ItemID;
             set
             {
                 base.ItemID = value;
-
                 CheckMailBox();
             }
         }
@@ -103,14 +100,10 @@ namespace Server.Items
             }
         }
 
-        public override void GetChildContextMenuEntries(Mobile from, List<ContextMenuEntry> list, Item item)
-        {
-            base.GetChildContextMenuEntries(from, list, item);
-        }
-
         public override bool OnDragDropInto(Mobile from, Item item, Point3D p)
         {
             bool dropped = base.OnDragDropInto(from, item, p);
+
             BaseHouse house = BaseHouse.FindHouseAt(this);
 
             if (house != null && dropped)
@@ -166,7 +159,8 @@ namespace Server.Items
                     SendLocalizedMessageTo(from, 1010563); // This container is secure.                    
                     return;
                 }
-                else if (IsLockedDown)
+
+                if (IsLockedDown)
                 {
                     SendLocalizedMessageTo(from, 1061637); // You are not allowed to access this.
                     return;
@@ -207,7 +201,9 @@ namespace Server.Items
             if (secure != null && !house.HasSecureAccess(from, secure))
             {
                 if (Contents == null)
+                {
                     Contents = new Dictionary<Item, Mobile>();
+                }
 
                 Contents[item] = from;
                 item.InvalidateProperties();
@@ -247,12 +243,24 @@ namespace Server.Items
         private void Defrag()
         {
             if (Contents == null)
-                return;
-
-            List<Item> remove = Contents.Keys.Where(k => k.Deleted || !Items.Contains(k)).ToList();
-
-            foreach (Item item in remove)
             {
+                return;
+            }
+
+            List<Item> remove = new List<Item>();
+
+            foreach (var k in Contents.Keys)
+            {
+                if (k.Deleted || !Items.Contains(k))
+                {
+                    remove.Add(k);
+                }
+            }
+
+            for (var index = 0; index < remove.Count; index++)
+            {
+                Item item = remove[index];
+
                 Contents.Remove(item);
             }
 
@@ -267,7 +275,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1);
 
             writer.Write(Contents == null ? 0 : Contents.Count);
@@ -285,7 +292,6 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             int version = reader.ReadInt();
 
             switch (version)

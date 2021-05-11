@@ -1,5 +1,4 @@
 #region References
-
 using Server.Accounting;
 using Server.Network;
 #endregion
@@ -12,14 +11,14 @@ namespace Server.Items
 
 		public SecureTrade Trade => m_Trade;
 
-		public SecureTradeContainer(SecureTrade trade)
+        public override Layer Layer => Layer.SecureTrade;
+
+        public SecureTradeContainer(SecureTrade trade)
 			: base(0x1E5E)
 		{
 			m_Trade = trade;
 			Movable = false;
-
-			Layer = Layer.SecureTrade;
-		}
+        }
 
 		public SecureTradeContainer(Serial serial)
 			: base(serial)

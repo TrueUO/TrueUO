@@ -1,8 +1,8 @@
+using Server.Gumps;
 using Server.Items;
 using Server.Mobiles;
 using Server.Regions;
 using System;
-using System.Linq;
 
 namespace Server.Engines.Quests.RitualQuest
 {
@@ -290,7 +290,18 @@ namespace Server.Engines.Quests.RitualQuest
                     }
                 }
 
-                if (!GetEnumeratedMobiles().Any(m => m is BexilPunchingBag && !m.Deleted))
+                bool any = false;
+
+                foreach (var m in GetEnumeratedMobiles())
+                {
+                    if (m is BexilPunchingBag && !m.Deleted)
+                    {
+                        any = true;
+                        break;
+                    }
+                }
+
+                if (!any)
                 {
                     BexilPunchingBag bex = new BexilPunchingBag();
                     bex.MoveToWorld(new Point3D(403, 3391, 38), Map.TerMur);
@@ -369,5 +380,180 @@ namespace Server.Engines.Quests.RitualQuest
             base.Deserialize(reader);
             reader.ReadInt(); // version
         }
+    }
+
+    public class HairOfTheDryadQueen : BaseQuest
+    {
+        public override QuestChain ChainID => QuestChain.Ritual2;
+        public override Type NextQuest => typeof(HeartOfTheNightTerror);
+
+        public override object Title => 1151127; // Ritual: Hair of the Dryad Queen
+
+        public override object Description => 1151128;
+        /*Hail, adventurer.<br><br> I have heard of your continued assistance and loyalty to our Queen, and I cannot thank you enough for what you have done.  
+         * Our darkest hour is approaching, and you have truly proven a valuable ally. <br><br>The Queen and her Advisor have begun preparing the empowerment ritual with the previous components you gathered. 
+         * They have made excellent progress and have informed me they are almost ready for the final two components.  Thus, I have been tasked with pointing you in the right direction.<br><br>	
+         * First, they require a strand of hair from a dryad queen.<br><br>	Forces of nature unto themselves, dryad queens oversee the rule of the lush and verdant forests throughout our world.  
+         * You must seek out Oakwhisper, Queen of the Fire Island dryad clan. She has aided us in the past and we hope she shall be willing do so once again.<br><br>	
+         * Journey to Fire Island and venture deep into the labyrinthine woods.  What you seek is an ancient, majestic tree that towers above all of the rest; it stands within a clearing full of life. <br><br> 
+         * Hanging upon this tree is a magical standard; place your hand upon it and you will be transported to Queen Oakwhisper's bower.<br><br>Approach the Dryad Queen and ask for her assistance.*/
+
+        public override object Refuse => 1151124;
+        /*You do not wish to assist us? Then we shall wait for someone who does not wish to sit idly by while our people suffer. 
+		Be gone from my sight, coward.*/
+
+        public override object Uncomplete => 1151129; // Have you met with Queen Oakwhisper?
+
+        public override object Complete => 1151130;
+        /*You have acquired a strand of Oakwhisper's hair? You have my gratitude for your continued support. Now, for the next component.*/
+
+        public HairOfTheDryadQueen()
+        {
+            AddObjective(new ObtainObjective(typeof(HairOfADryadQueen), "Hair of a Dryad Queen", 1, 0xC60, 0, 2563));
+            AddReward(new BaseReward(1151384)); // The gratitude of the Gargoyle Queen and the next quest in the chain.
+        }
+
+        public override void Serialize(GenericWriter writer)
+        {
+            base.Serialize(writer);
+            writer.Write(0);
+        }
+
+        public override void Deserialize(GenericReader reader)
+        {
+            base.Deserialize(reader);
+            reader.ReadInt(); // version
+        }
+    }
+
+    public class HeartOfTheNightTerror : BaseQuest
+    {
+        public override QuestChain ChainID => QuestChain.Ritual2;
+        public override Type NextQuest => null;
+
+        public override object Title => 1151139; // Ritual: Heart of the Night Terror
+
+        public override object Description => 1151140;
+        /*The bearer of the last component will be easy to find but extremely challenging to overcome, I fear. <br><br>	
+         * In eastern Ter Mur there lies a ghost town. Formerly a fishing village, this town was long since abandoned due to the instability of the land it sits upon. 
+         * Now, it is the haunting ground of a group of vile and insidious creatures:  the Night Terrors.<br><br>	
+         * The Night Terrors walk the empty streets of the village, slaying any who venture into their path.  
+         * It is the heart of one of these creatures that I require.  Journey to the village and slay one of the beasts. 
+         * Once you have done so, cut it open and tear out its heart. That is the final ingredient that needed for the ritual.<br><br>
+         * Be careful, as the beasts are fiercely protective of one another and are extremely powerful. I look forward to your return.<br><br>
+         */
+
+        public override object Refuse => 1151141;
+        /*You have come this far and turn away now? I am disappointed in you, adventurer, as are my people. Should you regain your sense of honor, do let me know.*/
+
+        public override object Uncomplete => 1151142; // Have you slain the beast and obtained its heart? Time is of the essence, friend; do not dally!
+
+        public override object Complete => 1151143;
+        /*The Night Terror is no more? I see by the heart in your hand that you have felled the beast. With this final component, you have given us more than a fighting chance against the Defiler.  
+         * You have proven yourself a great and powerful ally to our people, and the Queen has asked that I provide you with this small token of appreciation.<br><br>
+         * The time for battle is nigh, my friend, and I hope that you will stand by Queen Zhah when she goes to release the Defiler. With you standing by her, I know we shall succeed!
+         */
+
+        public HeartOfTheNightTerror()
+        {
+            AddObjective(new ObtainObjective(typeof(NightTerrorHeart), "Night Terror Heart", 1, 0x1CF0, 0, 96));
+            AddReward(new BaseReward(typeof(ChronicleOfTheGargoyleQueen3), 1151165)); // Chronicle of the Gargoyle Queen Vol. III
+        }
+
+        public override void Serialize(GenericWriter writer)
+        {
+            base.Serialize(writer);
+            writer.Write(0);
+        }
+
+        public override void Deserialize(GenericReader reader)
+        {
+            base.Deserialize(reader);
+            reader.ReadInt(); // version
+        }
+    }
+
+    public class KnowledgeOfNature : BaseQuest
+    {
+        public KnowledgeOfNature()
+        {
+            AddObjective(new QuestionAndAnswerObjective(4, m_EntryTable));
+        }
+
+        public override bool DoneOnce => true;
+        public override bool ShowDescription => false;
+        public override bool IsQuestionQuest => true;
+
+        public override object Title => 1151149; // Knowledge of Nature
+
+        /*Greetings, mortal. <br><br>	I sensed the aura of the Gargoyle Queen surrounding you, which is why you have been allowed entry into my bower.  
+        * Zhah proved herself a friend to my people long ago when she aided us in escaping her crumbling lands .   <br><br>Do not think that will be enough for me to provide you with what you seek.  <br><br>	
+        * I know that you require a strand of my hair, mortal; I am one with nature and can sense the thoughts of those who tread my forest.  While I understand you bear the intention of aiding the Gargoyle Queen, 
+        * you must first prove yourself a friend of the forest before I will part with it. <br><br>	I ask that you answer a few questions to show that you are knowledgeable about nature.  A series of questions; no more, no less.  
+        * If you answer them correctly and truthfully, I will bequeath a strand of my hair unto you. <br><br>	Do you accept?
+        */
+        public override object Description => 1151150;
+
+        //No? You will not gain my help without proving yourself.  If you will not do so, then apparently the Gargoyle Queen was a fool to choose you.
+        public override object Refuse => 1151151;
+
+        //Focusing yourself, you prepare to show your knowledge about the natural world.
+        public override object Uncomplete => 1151417;
+
+        /*Indeed, you possess great knowledge of nature, mortal. You have surprised me. <br><br>	
+         * Here, accept this strand of my hair with my blessing.  Tell the Gargoyle Queen that I wish her luck, 
+         * and hope that she will see her land whole again. <br><br>	May the sun shine on you, mortal. Farewell.
+         */
+        public override object Complete => 1151153;
+
+        /*
+         * It would appear that you need to improve your knowledge of nature, mortal. 
+         */
+        public override object FailedMsg => 1151152;
+
+        public override void OnAccept()
+        {
+            base.OnAccept();
+            Owner.SendGump(new QAndAGump(Owner, this));
+        }
+
+        public override void GiveRewards()
+        {
+            base.GiveRewards();
+
+            Owner.AddToBackpack(new HairOfADryadQueen());
+            Owner.SendLocalizedMessage(1151414); // Hair of a Dryad Queen has been placed in your backpack.
+        }
+
+        public override void Serialize(GenericWriter writer)
+        {
+            base.Serialize(writer);
+            writer.Write(0); // version
+        }
+
+        public override void Deserialize(GenericReader reader)
+        {
+            base.Deserialize(reader);
+            reader.ReadInt();
+        }
+
+        public static void Configure()
+        {
+            m_EntryTable[0] = new QuestionAndAnswerEntry(1151329, new object[] { 1151330 }, new object[] { 1151331, 1151332 }); //At what age does an oak tree begin to produce acorns?
+            m_EntryTable[1] = new QuestionAndAnswerEntry(1151333, new object[] { 1151337 }, new object[] { 1151334, 1151335, 1151336 }); //What is the process called in which a tree evaporates water through its leaves?
+            m_EntryTable[2] = new QuestionAndAnswerEntry(1151338, new object[] { 1151341 }, new object[] { 1151339, 1151340, 1151342 }); //What is the average lifespan of an oak tree?
+            m_EntryTable[3] = new QuestionAndAnswerEntry(1151343, new object[] { 1151347 }, new object[] { 1151344, 1151345, 1151346 }); //Of which family of trees is an oak?
+            m_EntryTable[4] = new QuestionAndAnswerEntry(1151348, new object[] { 1151349 }, new object[] { 1151350, 1151351, 1151352 }); //What is unique about pine trees?
+            m_EntryTable[5] = new QuestionAndAnswerEntry(1151353, new object[] { 1151356 }, new object[] { 1151354, 1151357, 1151358 }); //What is a pomaceous fruit?
+            m_EntryTable[6] = new QuestionAndAnswerEntry(1151359, new object[] { 1151362 }, new object[] { 1151360, 1151361, 1151363 }); //This plant is known as ‘deadly nightshade:’
+            m_EntryTable[7] = new QuestionAndAnswerEntry(1151364, new object[] { 1151360 }, new object[] { 1151361, 1151363, 1151365 }); //Which of the following plants possesses a fruit that is extremely poisonous and shaped like a spiked ball?
+            m_EntryTable[8] = new QuestionAndAnswerEntry(1151366, new object[] { 1151369 }, new object[] { 1151367, 1151368, 1151370 }); //Which is the species of flower that produces vanilla?
+            m_EntryTable[9] = new QuestionAndAnswerEntry(1151371, new object[] { 1151372 }, new object[] { 1151373 }); //A notch in the trunk of a tree will stay the same distance from the ground as the tree grows in height; true or false?
+            m_EntryTable[10] = new QuestionAndAnswerEntry(1151374, new object[] { 1151375 }, new object[] { 1151376, 1151377, 1151378 }); //Which tree type is called the ‘axe breaker?’
+            m_EntryTable[11] = new QuestionAndAnswerEntry(1151379, new object[] { 1151382 }, new object[] { 1151380, 1151381, 1151383 }); //Which commonly consumed vegetable can also to be used medicinally to treat burns, bee stings, and infections?
+        }
+
+        private static readonly QuestionAndAnswerEntry[] m_EntryTable = new QuestionAndAnswerEntry[12];
+        public static QuestionAndAnswerEntry[] EntryTable => m_EntryTable;
     }
 }

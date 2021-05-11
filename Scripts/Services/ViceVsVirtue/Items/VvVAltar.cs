@@ -137,6 +137,7 @@ namespace Server.Engines.VvV
             Timer.DelayCall(TimeSpan.FromSeconds(5), DoOccupy, new object[] { Battle, g });
 
             Timer.DelayCall(TimeSpan.FromSeconds(2), DoFireworks);
+
             IsActive = false;
 
             if (OccupationTimer != null)
@@ -151,20 +152,26 @@ namespace Server.Engines.VvV
             }
 
             Timer.DelayCall(TimeSpan.FromMinutes(2), () =>
+            {
+                for (var index = 0; index < Torches.Count; index++)
                 {
-                    Torches.ForEach(t => t.Delete());
-                    Torches.Clear();
-                });
+                    var t = Torches[index];
+
+                    t.Delete();
+                }
+
+                Torches.Clear();
+            });
         }
 
         public static void DoOccupy(object obj)
         {
-            object[] objs = obj as object[];
-            VvVBattle battle = objs[0] as VvVBattle;
-            Guild g = objs[1] as Guild;
+            object[] objs = (object[]) obj;
 
-            if (battle != null && g != null)
+            if (objs[0] is VvVBattle battle && objs[1] is Guild g)
+            {
                 battle.OccupyAltar(g);
+            }
         }
 
         public void DoFireworks()
@@ -275,7 +282,13 @@ namespace Server.Engines.VvV
                 OccupationTimer = null;
             }
 
-            Torches.ForEach(t => t.Delete());
+            for (var index = 0; index < Torches.Count; index++)
+            {
+                var t = Torches[index];
+
+                t.Delete();
+            }
+
             Torches.Clear();
         }
 
@@ -351,7 +364,12 @@ namespace Server.Engines.VvV
         {
             base.Delete();
 
-            Torches.ForEach(t => t.Delete());
+            for (var index = 0; index < Torches.Count; index++)
+            {
+                var t = Torches[index];
+
+                t.Delete();
+            }
 
             if (OccupationTimer != null)
             {
@@ -379,10 +397,18 @@ namespace Server.Engines.VvV
             writer.Write(IsActive);
 
             writer.Write(Braziers.Count);
-            Braziers.ForEach(b => writer.Write(b));
+            for (var index = 0; index < Braziers.Count; index++)
+            {
+                var b = Braziers[index];
+                writer.Write(b);
+            }
 
             writer.Write(Torches.Count);
-            Torches.ForEach(t => writer.Write(t));
+            for (var index = 0; index < Torches.Count; index++)
+            {
+                var t = Torches[index];
+                writer.Write(t);
+            }
         }
 
         public override void Deserialize(GenericReader reader)

@@ -3,7 +3,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-
 using Server.Network;
 #endregion
 
@@ -585,8 +584,8 @@ namespace Server
 
 		public int Localization => 1044060 + SkillID;
 
-		private static SkillInfo[] m_Table = new SkillInfo[58]
-		{
+		private static SkillInfo[] m_Table =
+        {
 			new SkillInfo(0, "Alchemy", 0.0, 5.0, 5.0, "Alchemist", null, 0.0, 0.5, 0.5, 1.0, StatCode.Int, StatCode.Dex),
 			new SkillInfo(1, "Anatomy", 0.0, 0.0, 0.0, "Biologist", null, 0.15, 0.15, 0.7, 1.0, StatCode.Int, StatCode.Str),
 			new SkillInfo(2, "Animal Lore", 0.0, 0.0, 0.0, "Naturalist", null, 0.0, 0.0, 1.0, 1.0, StatCode.Int, StatCode.Str),
@@ -888,22 +887,24 @@ namespace Server
 			{
 				return false;
 			}
-			else if (!from.Region.OnSkillUse(from, skillID))
-			{
-				return false;
-			}
-			else if (!from.AllowSkillUse((SkillName)skillID))
-			{
-				return false;
-			}
 
-			if (skillID >= 0 && skillID < SkillInfo.Table.Length)
+            if (!from.Region.OnSkillUse(from, skillID))
+            {
+                return false;
+            }
+
+            if (!from.AllowSkillUse((SkillName)skillID))
+            {
+                return false;
+            }
+
+            if (skillID >= 0 && skillID < SkillInfo.Table.Length)
 			{
 				SkillInfo info = SkillInfo.Table[skillID];
 
 				if (info.Callback != null)
-				{
-					if (Core.TickCount - from.NextSkillTime >= 0 && (info.UseWhileCasting || from.Spell == null))
+                {
+                    if (Core.TickCount - from.NextSkillTime >= 0 && (info.UseWhileCasting || from.Spell == null))
 					{
 						from.DisruptiveAction();
 
@@ -911,11 +912,9 @@ namespace Server
 
 						return true;
 					}
-					else
-					{
-						from.SendSkillMessage();
-					}
-				}
+
+                    from.SendSkillMessage();
+                }
 				else
 				{
 					from.SendLocalizedMessage(500014); // That skill cannot be used directly.
@@ -1048,9 +1047,6 @@ namespace Server
 							new Skill(this, null, reader);
 						}
 					}
-
-					//for ( int i = count; i < info.Length; ++i )
-					//	m_Skills[i] = new Skill( this, info[i], 0, 1000, SkillLock.Up );
 
 					break;
 				}

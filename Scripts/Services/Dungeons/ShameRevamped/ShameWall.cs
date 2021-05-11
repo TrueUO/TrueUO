@@ -77,10 +77,14 @@ namespace Server.Engines.ShameRevamped
             if (map == null || map == Map.Internal)
                 return;
 
-            foreach (AddonComponent component in wall.Components)
+            for (var index = 0; index < wall.Components.Count; index++)
             {
-                foreach (Point3D[] pnts in _TeleportLocs)
+                AddonComponent component = wall.Components[index];
+
+                for (var i = 0; i < _TeleportLocs.Length; i++)
                 {
+                    Point3D[] pnts = _TeleportLocs[i];
+
                     if (component.Location == pnts[0])
                     {
                         ConditionTeleporter oldtele = map.FindItem<ConditionTeleporter>(new Point3D(pnts[1]));

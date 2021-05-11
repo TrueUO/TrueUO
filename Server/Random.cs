@@ -124,10 +124,10 @@ namespace Server
 	{
 		private readonly RNGCryptoServiceProvider _CSP = new RNGCryptoServiceProvider();
 
-		private static readonly int BUFFER_SIZE = 0x4000;
-		private static readonly int LARGE_REQUEST = 0x40;
+        private const int BUFFER_SIZE = 0x4000;
+        private const int LARGE_REQUEST = 0x40;
 
-		private byte[] _Working = new byte[BUFFER_SIZE];
+        private byte[] _Working = new byte[BUFFER_SIZE];
 		private byte[] _Buffer = new byte[BUFFER_SIZE];
 
 		private int _Index;
@@ -255,7 +255,7 @@ namespace Server
 
 	public sealed class RDRand32 : IRandomImpl, IHardwareRNG
 	{
-		internal class SafeNativeMethods
+        private class SafeNativeMethods
 		{
 			[DllImport("drng32")]
 			internal static extern RDRandError rdrand_32(ref uint rand, bool retry);
@@ -264,10 +264,10 @@ namespace Server
 			internal static extern RDRandError rdrand_get_bytes(int n, byte[] buffer);
 		}
 
-		private static readonly int BUFFER_SIZE = 0x10000;
-		private static readonly int LARGE_REQUEST = 0x40;
+        private const int BUFFER_SIZE = 0x10000;
+        private const int LARGE_REQUEST = 0x40;
 
-		private byte[] _Working = new byte[BUFFER_SIZE];
+        private byte[] _Working = new byte[BUFFER_SIZE];
 		private byte[] _Buffer = new byte[BUFFER_SIZE];
 
 		private int _Index;
@@ -399,7 +399,7 @@ namespace Server
 
 	public sealed class RDRand64 : IRandomImpl, IHardwareRNG
 	{
-		internal class SafeNativeMethods
+        private class SafeNativeMethods
 		{
 			[DllImport("drng64")]
 			internal static extern RDRandError rdrand_64(ref ulong rand, bool retry);
@@ -408,10 +408,10 @@ namespace Server
 			internal static extern RDRandError rdrand_get_bytes(int n, byte[] buffer);
 		}
 
-		private static readonly int BUFFER_SIZE = 0x10000;
-		private static readonly int LARGE_REQUEST = 0x40;
+        private const int BUFFER_SIZE = 0x10000;
+        private const int LARGE_REQUEST = 0x40;
 
-		private byte[] _Working = new byte[BUFFER_SIZE];
+        private byte[] _Working = new byte[BUFFER_SIZE];
 		private byte[] _Buffer = new byte[BUFFER_SIZE];
 
 		private int _Index;
@@ -547,9 +547,7 @@ namespace Server
 		Unsupported = -3,
 		Supported = -2,
 		NotReady = -1,
-
-		Failure = 0,
-
-		Success = 1,
-	}
+        Failure = 0,
+        Success = 1
+    }
 }

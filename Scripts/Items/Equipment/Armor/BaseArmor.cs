@@ -320,15 +320,30 @@ namespace Server.Items
         {
             int value = 0;
 
-            foreach (BaseArmor armor in from.Items.OfType<BaseArmor>())
+            for (var index = 0; index < from.Items.Count; index++)
             {
-                switch (attr)
+                Item item = from.Items[index];
+
+                if (item is BaseArmor armor)
                 {
-                    case ResistanceType.Physical: value += armor.m_RefinedPhysical; break;
-                    case ResistanceType.Fire: value += armor.m_RefinedFire; break;
-                    case ResistanceType.Cold: value += armor.m_RefinedCold; break;
-                    case ResistanceType.Poison: value += armor.m_RefinedPoison; break;
-                    case ResistanceType.Energy: value += armor.m_RefinedEnergy; break;
+                    switch (attr)
+                    {
+                        case ResistanceType.Physical:
+                            value += armor.m_RefinedPhysical;
+                            break;
+                        case ResistanceType.Fire:
+                            value += armor.m_RefinedFire;
+                            break;
+                        case ResistanceType.Cold:
+                            value += armor.m_RefinedCold;
+                            break;
+                        case ResistanceType.Poison:
+                            value += armor.m_RefinedPoison;
+                            break;
+                        case ResistanceType.Energy:
+                            value += armor.m_RefinedEnergy;
+                            break;
+                    }
                 }
             }
 
@@ -339,9 +354,14 @@ namespace Server.Items
         {
             int value = 0;
 
-            foreach (BaseArmor armor in from.Items.OfType<BaseArmor>())
+            for (var index = 0; index < from.Items.Count; index++)
             {
-                value += armor.RefinedDefenseChance;
+                Item item = from.Items[index];
+
+                if (item is BaseArmor armor)
+                {
+                    value += armor.RefinedDefenseChance;
+                }
             }
 
             return value;
@@ -349,11 +369,17 @@ namespace Server.Items
 
         public static bool HasRefinedResist(Mobile from)
         {
-            return from.Items.OfType<BaseArmor>().Any(armor => armor.m_RefinedPhysical > 0 ||
-                                                               armor.m_RefinedFire > 0 ||
-                                                               armor.m_RefinedCold > 0 ||
-                                                               armor.m_RefinedPoison > 0 ||
-                                                               armor.m_RefinedEnergy > 0);
+            for (var index = 0; index < from.Items.Count; index++)
+            {
+                Item item = from.Items[index];
+
+                if (item is BaseArmor armor && (armor.m_RefinedPhysical > 0 || armor.m_RefinedFire > 0 || armor.m_RefinedCold > 0 || armor.m_RefinedPoison > 0 || armor.m_RefinedEnergy > 0))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public override void AddResistanceProperties(ObjectPropertyList list)
@@ -399,31 +425,38 @@ namespace Server.Items
             }
 
             if (RefinedDefenseChance != 0)
+            {
                 list.Add(1153733, string.Format("{0}\t{1}", "", RefinedDefenseChance.ToString()));
+            }
         }
 
         public static int GetInherentLowerManaCost(Mobile from)
         {
             int toReduce = 0;
 
-            foreach (BaseArmor armor in from.Items.OfType<BaseArmor>())
+            for (var index = 0; index < from.Items.Count; index++)
             {
-                if (armor.ArmorAttributes.MageArmor > 0 || armor.MaterialType == AMT.Wood || armor is BaseShield)
-                    continue;
+                Item item = from.Items[index];
 
-                switch (armor.MaterialType)
+                if (item is BaseArmor armor)
                 {
-                    case AMT.Studded:
-                    case AMT.Bone:
-                    case AMT.Stone:
-                        toReduce += 3;
-                        break;
-                    case AMT.Ringmail:
-                    case AMT.Chainmail:
-                    case AMT.Plate:
-                    case AMT.Dragon:
-                        toReduce += 1;
-                        break;
+                    if (armor.ArmorAttributes.MageArmor > 0 || armor.MaterialType == AMT.Wood ||
+                        armor is BaseShield) continue;
+
+                    switch (armor.MaterialType)
+                    {
+                        case AMT.Studded:
+                        case AMT.Bone:
+                        case AMT.Stone:
+                            toReduce += 3;
+                            break;
+                        case AMT.Ringmail:
+                        case AMT.Chainmail:
+                        case AMT.Plate:
+                        case AMT.Dragon:
+                            toReduce += 1;
+                            break;
+                    }
                 }
             }
 
@@ -2535,8 +2568,10 @@ namespace Server.Items
         {
             Type t = armor.GetType();
 
-            foreach (Type type in _MageArmorTypes)
+            for (var index = 0; index < _MageArmorTypes.Length; index++)
             {
+                Type type = _MageArmorTypes[index];
+
                 if (type == t || t.IsSubclassOf(type))
                 {
                     return true;

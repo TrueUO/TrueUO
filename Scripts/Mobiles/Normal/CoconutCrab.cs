@@ -42,7 +42,7 @@ namespace Server.Mobiles
     }
 
     [CorpseName("a Coconut Crab corpse")]
-    public class CoconutCrab : BaseMount
+    public class CoconutCrab : BaseMount, IVanityMount
     {
         [Constructable]
         public CoconutCrab()

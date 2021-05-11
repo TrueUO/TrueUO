@@ -52,7 +52,9 @@ namespace Server.Items
             Map map = Map;
 
             if (Spawn == null)
+            {
                 return;
+            }
 
             ColUtility.ForEach(Spawn.Where(bc => bc == null || !bc.Alive || bc.Deleted), bc => Spawn.Remove(bc));
 
@@ -62,6 +64,7 @@ namespace Server.Items
                 NextSpawn = DateTime.UtcNow + TimeSpan.FromMinutes(Utility.RandomMinMax(2, 5));
 
                 int time = 333;
+
                 for (int i = 0; i < SpawnCount - Spawn.Count; i++)
                 {
                     Timer.DelayCall(TimeSpan.FromMilliseconds(time), () =>
@@ -81,9 +84,7 @@ namespace Server.Items
                             }
                         }
 
-                        BaseCreature bc = Activator.CreateInstance(_SpawnList[Utility.Random(_SpawnList.Length)]) as BaseCreature;
-
-                        if (bc != null)
+                        if (Activator.CreateInstance(_SpawnList[Utility.Random(_SpawnList.Length)]) is BaseCreature bc)
                         {
                             Spawn.Add(bc);
                             bc.MoveToWorld(p, map);
@@ -100,14 +101,19 @@ namespace Server.Items
         public void CheckSpawn()
         {
             if (Spawn == null)
+            {
                 Delete();
+            }
             else
             {
                 int count = 0;
+
                 ColUtility.ForEach(Spawn.Where(bc => bc != null && bc.Alive), bc => count++);
 
                 if (count == 0)
+                {
                     Delete();
+                }
             }
 
         }
@@ -139,7 +145,12 @@ namespace Server.Items
 
             if (Spawn != null)
             {
-                Spawn.ForEach(bc => writer.Write(bc));
+                for (var index = 0; index < Spawn.Count; index++)
+                {
+                    var bc = Spawn[index];
+
+                    writer.Write(bc);
+                }
             }
 
             Timer.DelayCall(TimeSpan.FromMinutes(1), CheckSpawn);
@@ -163,10 +174,10 @@ namespace Server.Items
 
                         for (int i = 0; i < count; i++)
                         {
-                            BaseCreature bc = reader.ReadMobile() as BaseCreature;
-
-                            if (bc != null)
+                            if (reader.ReadMobile() is BaseCreature bc)
+                            {
                                 Spawn.Add(bc);
+                            }
                         }
                     }
 
@@ -174,15 +185,17 @@ namespace Server.Items
             }
 
             if (Spawn == null || Spawn.Count == 0)
+            {
                 Delete();
+            }
             else
             {
                 Timer.DelayCall(TimeSpan.FromSeconds(10), () =>
                 {
-                    EodonTribeRegion r = Region.Find(Location, Map) as EodonTribeRegion;
-
-                    if (r != null)
+                    if (Region.Find(Location, Map) is EodonTribeRegion r)
+                    {
                         Zone = r;
+                    }
                 });
             }
         }

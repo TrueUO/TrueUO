@@ -5,7 +5,6 @@ using Server.Network;
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.SkillHandlers
 {
@@ -25,9 +24,9 @@ namespace Server.SkillHandlers
         {
             m.Target = new InternalTarget();
 
-            m.SendLocalizedMessage(502368); // Wich trap will you attempt to disarm?
+            m.SendLocalizedMessage(502368); // Which trap will you attempt to disarm?
 
-            return TimeSpan.FromSeconds(10.0); // 10 second delay before beign able to re-use a skill
+            return TimeSpan.FromSeconds(10.0); // 10 second delay before being able to re-use a skill
         }
 
         private class InternalTarget : Target
@@ -73,17 +72,33 @@ namespace Server.SkillHandlers
                         {
                             from.SendLocalizedMessage(1159063); // That trap is already being disarmed.
                         }
-                        else if (tChest.AncientGuardians.Any(g => !g.Deleted))
-                        {
-                            from.PrivateOverheadMessage(MessageType.Regular, 1150, 1159060, from.NetState); // *Your attempt fails as the the mechanism jams and you are attacked by an Ancient Chest Guardian!*
-                        }
                         else
                         {
-                            from.PlaySound(0x241);
+                            bool any = false;
 
-                            from.PrivateOverheadMessage(MessageType.Regular, 1150, 1159057, from.NetState); // *You delicately manipulate the trigger mechanism...*
+                            for (var index = 0; index < tChest.AncientGuardians.Count; index++)
+                            {
+                                var g = tChest.AncientGuardians[index];
 
-                            StartChestDisarmTimer(from, tChest);
+                                if (!g.Deleted)
+                                {
+                                    any = true;
+                                    break;
+                                }
+                            }
+
+                            if (any)
+                            {
+                                from.PrivateOverheadMessage(MessageType.Regular, 1150, 1159060, from.NetState); // *Your attempt fails as the the mechanism jams and you are attacked by an Ancient Chest Guardian!*
+                            }
+                            else
+                            {
+                                from.PlaySound(0x241);
+
+                                from.PrivateOverheadMessage(MessageType.Regular, 1150, 1159057, from.NetState); // *You delicately manipulate the trigger mechanism...*
+
+                                StartChestDisarmTimer(from, tChest);
+                            }
                         }
                     }
                     else
@@ -218,7 +233,9 @@ namespace Server.SkillHandlers
         public static bool IsDisarming(Mobile from, TreasureMapChest chest)
         {
             if (_Table == null)
+            {
                 return false;
+            }
 
             return _Table.ContainsKey(from);
         }
@@ -226,9 +243,19 @@ namespace Server.SkillHandlers
         public static bool IsBeingDisarmed(TreasureMapChest chest)
         {
             if (_Table == null)
+            {
                 return false;
+            }
 
-            return _Table.Values.Any(timer => timer.Chest == chest);
+            foreach (var timer in _Table.Values)
+            {
+                if (timer.Chest == chest)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 
@@ -280,7 +307,7 @@ namespace Server.SkillHandlers
                 From.SendLocalizedMessage(1159061); // Your ghostly fingers cannot manipulate the mechanism...
                 RemoveTrap.EndChestDisarmTimer(From);
             }
-            else if (!From.InRange(Chest.GetWorldLocation(), 16) || Chest.Deleted)
+            else if (!From.InRange(Chest.GetWorldLocation(), 2) || Chest.Deleted)
             {
                 From.SendLocalizedMessage(1159058); // You are too far away from the chest to manipulate the trigger mechanism.
                 RemoveTrap.EndChestDisarmTimer(From);

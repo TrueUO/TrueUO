@@ -3,7 +3,6 @@ using Server.Gumps;
 using Server.Mobiles;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.SorcerersDungeon
 {
@@ -56,8 +55,12 @@ namespace Server.Engines.SorcerersDungeon
 
         private void Activate()
         {
-            foreach (Rectangle2D rec in Entries.Select(e => e.SpawnArea))
+            for (var index = 0; index < Entries.Count; index++)
             {
+                var e = Entries[index];
+
+                Rectangle2D rec = e.SpawnArea;
+
                 IPooledEnumerable eable = Map.Ilshenar.GetItemsInBounds(rec);
 
                 foreach (Item item in eable)
@@ -72,8 +75,12 @@ namespace Server.Engines.SorcerersDungeon
 
         public void Deactivate()
         {
-            foreach (Rectangle2D rec in Entries.Select(e => e.SpawnArea))
+            for (var index = 0; index < Entries.Count; index++)
             {
+                var e = Entries[index];
+
+                Rectangle2D rec = e.SpawnArea;
+
                 IPooledEnumerable eable = Map.Ilshenar.GetItemsInBounds(rec);
 
                 foreach (Item item in eable)
@@ -87,8 +94,10 @@ namespace Server.Engines.SorcerersDungeon
 
             EndTimer();
 
-            foreach (BaseCreature bc in Spawn)
+            for (var index = 0; index < Spawn.Count; index++)
             {
+                BaseCreature bc = Spawn[index];
+
                 bc.Delete();
             }
 
@@ -151,7 +160,7 @@ namespace Server.Engines.SorcerersDungeon
 
         public void DoSpawn(Type t, bool boss)
         {
-            BaseCreature spawn = Activator.CreateInstance(t) as BaseCreature;
+            BaseCreature spawn = (BaseCreature) Activator.CreateInstance(t);
 
             for (int i = 0; i < 20; i++)
             {
@@ -218,8 +227,9 @@ namespace Server.Engines.SorcerersDungeon
 
             writer.Write(Spawn.Count);
 
-            foreach (BaseCreature bc in Spawn)
+            for (var index = 0; index < Spawn.Count; index++)
             {
+                BaseCreature bc = Spawn[index];
                 writer.Write(bc);
             }
         }
@@ -236,9 +246,7 @@ namespace Server.Engines.SorcerersDungeon
 
             for (int i = 0; i < count; i++)
             {
-                BaseCreature bc = reader.ReadMobile() as BaseCreature;
-
-                if (bc != null)
+                if (reader.ReadMobile() is BaseCreature bc)
                 {
                     AddSpawn(bc);
                 }

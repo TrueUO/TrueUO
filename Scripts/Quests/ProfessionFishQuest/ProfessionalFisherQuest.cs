@@ -1,4 +1,3 @@
-using Server.Gumps;
 using Server.Items;
 using Server.Mobiles;
 using Server.Multis;
@@ -143,7 +142,9 @@ namespace Server.Engines.Quests
                     if (obj != null)
                     {
                         foreach (KeyValuePair<Type, int[]> kvp in obj.Line)
+                        {
                             entry.OnQuestResign(kvp.Key);
+                        }
                     }
                 }
             }
@@ -185,81 +186,62 @@ namespace Server.Engines.Quests
         public void DeleteQuestItems()
         {
             if (m_Crate == null)
+            {
                 return;
+            }
 
             Container hold = null;
+
             if (m_Crate.RootParent is Container parent)
+            {
                 hold = parent;
+            }
 
             //Deletes quest reqeust
             FishQuestObjective obj = GetObjective();
+
             if (obj != null)
             {
                 foreach (KeyValuePair<Type, int[]> kvp in obj.Line)
+                {
                     m_Crate.ConsumeTotal(kvp.Key, kvp.Value[1]);
+                }
             }
 
             //then moves any extras to the hold
             if (hold != null)
             {
-                foreach (Item item in new List<Item>(m_Crate.Items))
+                var list = new List<Item>(m_Crate.Items);
+
+                for (var index = 0; index < list.Count; index++)
+                {
+                    Item item = list[index];
+
                     hold.DropItem(item);
+                }
             }
 
             if (m_Crate != null)
+            {
                 m_Crate.Delete();
+            }
         }
 
         public FishQuestObjective GetObjective()
         {
             if (Objectives.Count > 0)
+            {
                 return Objectives[0] as FishQuestObjective;
+            }
 
             return null;
         }
 
         public override bool RenderObjective(MondainQuestGump g, bool offer)
         {
-            if (offer)
-                g.AddHtmlLocalized(130, 45, 270, 16, 1049010, 0xFFFFFF, false, false); // Quest Offer
-            else
-                g.AddHtmlLocalized(130, 45, 270, 16, 1046026, 0xFFFFFF, false, false); // Quest Log
+            g.AddHtmlLocalized(98, 172, 312, 32, 1116509, 0x15F90, false, false); // Fill the crate on your ship with the correct fish.
 
-            g.AddButton(130, 430, 0x2EEF, 0x2EF1, (int)Buttons.PreviousPage, GumpButtonType.Reply, 0);
-            g.AddButton(275, 430, 0x2EE9, 0x2EEB, (int)Buttons.NextPage, GumpButtonType.Reply, 0);
-
-            g.AddHtmlObject(160, 70, 200, 40, Title, BaseQuestGump.DarkGreen, false, false);
-            g.AddHtmlLocalized(98, 140, 312, 16, 1049073, 0x2710, false, false); // Objective:
-
-            g.AddHtmlLocalized(98, 160, 312, 16, 1116509, 0x15F90, false, false); //Fill the crate on your ship with the correct fish.
-            g.AddHtmlLocalized(98, 176, 312, 16, 1116518, 0x15F90, false, false); //Speak with the fishmonger at the port of delivery.
-
-            return true;
-        }
-
-        public override bool RenderDescription(MondainQuestGump g, bool offer)
-        {
-            if (offer)
-                g.AddHtmlLocalized(130, 45, 270, 16, 1049010, 0xFFFFFF, false, false); // Quest Offer
-            else
-                g.AddHtmlLocalized(130, 45, 270, 16, 1046026, 0xFFFFFF, false, false); // Quest Log
-
-            if (offer)
-            {
-                g.AddButton(95, 455, 0x2EE0, 0x2EE2, (int)Buttons.AcceptQuest, GumpButtonType.Reply, 0);
-                g.AddButton(313, 455, 0x2EF2, 0x2EF4, (int)Buttons.RefuseQuest, GumpButtonType.Reply, 0);
-            }
-            else
-            {
-                g.AddButton(95, 455, 0x2EF5, 0x2EF7, (int)Buttons.ResignQuest, GumpButtonType.Reply, 0);
-                g.AddButton(313, 455, 0x2EEC, 0x2EEE, (int)Buttons.CloseQuest, GumpButtonType.Reply, 0);
-            }
-
-            g.AddButton(275, 430, 0x2EE9, 0x2EEB, (int)Buttons.NextPage, GumpButtonType.Reply, 0);
-
-            g.AddHtmlObject(160, 70, 200, 40, Title, BaseQuestGump.DarkGreen, false, false);
-            g.AddHtmlLocalized(98, 140, 312, 16, 1072202, 0x2710, false, false); // Description
-            g.AddHtmlObject(98, 156, 312, 240, Description, BaseQuestGump.LightGreen, false, true);
+            g.AddHtmlLocalized(98, 220, 312, 32, 1116518, 0x15F90, false, false); // Speak with the fishmonger at the port of delivery.
 
             return true;
         }

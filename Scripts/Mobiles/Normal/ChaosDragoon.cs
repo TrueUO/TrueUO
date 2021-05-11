@@ -76,8 +76,11 @@ namespace Server.Mobiles
                     break;
             }
 
-            melee.Movable = false;
-            AddItem(melee);
+            if (melee != null)
+            {
+                melee.Movable = false;
+                AddItem(melee);
+            }
 
             DragonHelm helm = new DragonHelm
             {

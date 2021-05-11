@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace Server.Engines.Chat
 {
@@ -60,7 +59,7 @@ namespace Server.Engines.Chat
 
                 ChatSystem.SendCommandTo(user.Mobile, ChatCommand.JoinedChannel, m_Name);
 
-                SendCommand(ChatCommand.AddUserToChannel, user.GetColorCharacter() + user.Username);
+                SendCommand(ChatCommand.AddUserToChannel, ChatUser.GetColorCharacter() + user.Username);
 
                 m_Users.Add(user);
                 user.CurrentChannel = this;
@@ -79,7 +78,8 @@ namespace Server.Engines.Chat
                 user.CurrentChannel = null;
 
                 SendCommand(ChatCommand.RemoveUserFromChannel, user, user.Username);
-                ChatSystem.SendCommandTo(user.Mobile, ChatCommand.LeaveChannel, string.Format("{{{0}}}", m_Name));
+
+                ChatSystem.SendCommandTo(user.Mobile, ChatCommand.LeaveChannel, $"{{{m_Name}}}");
                 ChatSystem.SendCommandTo(user.Mobile, ChatCommand.LeftChannel, m_Name);
 
                 ChatLogging.LogLeave(Name, user.Username);
@@ -89,14 +89,18 @@ namespace Server.Engines.Chat
             }
         }
 
-        public bool AlwaysAvailable { get { return m_AlwaysAvailable; } set { m_AlwaysAvailable = value; } }
+        public bool AlwaysAvailable { get => m_AlwaysAvailable; set => m_AlwaysAvailable = value; }
 
         public void SendMessage(int number, ChatUser from, string param1, string param2)
         {
-            foreach (ChatUser user in m_Users)
+            for (var index = 0; index < m_Users.Count; index++)
             {
+                ChatUser user = m_Users[index];
+
                 if (user.CheckOnline())
+                {
                     user.SendMessage(number, from.Mobile, param1, param2);
+                }
             }
         }
 
@@ -107,21 +111,29 @@ namespace Server.Engines.Chat
 
         public void SendCommand(ChatCommand command, ChatUser initiator, string param1 = null, string param2 = null)
         {
-            foreach (ChatUser user in m_Users.ToArray())
+            for (var index = 0; index < m_Users.ToArray().Length; index++)
             {
+                ChatUser user = m_Users.ToArray()[index];
+
                 if (user == initiator)
+                {
                     continue;
+                }
 
                 if (user.CheckOnline())
+                {
                     ChatSystem.SendCommandTo(user.Mobile, command, param1, param2);
+                }
             }
         }
 
         public void SendUsersTo(ChatUser to)
         {
-            foreach (ChatUser user in m_Users)
+            for (var index = 0; index < m_Users.Count; index++)
             {
-                ChatSystem.SendCommandTo(to.Mobile, ChatCommand.AddUserToChannel, user.GetColorCharacter() + user.Username, string.Format("{{{0}}}", m_Name));
+                ChatUser user = m_Users[index];
+
+                ChatSystem.SendCommandTo(to.Mobile, ChatCommand.AddUserToChannel, ChatUser.GetColorCharacter() + user.Username, $"{{{m_Name}}}");
             }
         }
 
@@ -131,8 +143,10 @@ namespace Server.Engines.Chat
 
         public static void SendChannelsTo(ChatUser user)
         {
-            foreach (Channel channel in m_Channels)
+            for (var index = 0; index < m_Channels.Count; index++)
             {
+                Channel channel = m_Channels[index];
+
                 ChatSystem.SendCommandTo(user.Mobile, ChatCommand.AddChannel, channel.Name, "0");
             }
         }
@@ -176,7 +190,17 @@ namespace Server.Engines.Chat
 
         public static Channel FindChannelByName(string name)
         {
-            return m_Channels.FirstOrDefault(channel => channel.Name == name);
+            for (var index = 0; index < m_Channels.Count; index++)
+            {
+                var channel = m_Channels[index];
+
+                if (channel.Name == name)
+                {
+                    return channel;
+                }
+            }
+
+            return null;
         }
 
         public static Channel Default => FindChannelByName(ChatSystem.DefaultChannel);

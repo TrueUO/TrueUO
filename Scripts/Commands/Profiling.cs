@@ -130,16 +130,24 @@ namespace Server.Commands
 
                 op.WriteLine("# Items:");
 
-                foreach (DictionaryEntry de in items)
-                    op.WriteLine("{0}\t{1:F2}%\t{2}", de.Value, (100 * (int)de.Value) / (double)World.Items.Count, de.Key);
+                for (var index = 0; index < items.Count; index++)
+                {
+                    var de = (DictionaryEntry) items[index];
+
+                    op.WriteLine("{0}\t{1:F2}%\t{2}", de.Value, (100 * (int) de.Value) / (double) World.Items.Count, de.Key);
+                }
 
                 op.WriteLine();
                 op.WriteLine();
 
                 op.WriteLine("#Mobiles:");
 
-                foreach (DictionaryEntry de in mobiles)
-                    op.WriteLine("{0}\t{1:F2}%\t{2}", de.Value, (100 * (int)de.Value) / (double)World.Mobiles.Count, de.Key);
+                for (var index = 0; index < mobiles.Count; index++)
+                {
+                    var de = (DictionaryEntry) mobiles[index];
+
+                    op.WriteLine("{0}\t{1:F2}%\t{2}", de.Value, (100 * (int) de.Value) / (double) World.Mobiles.Count, de.Key);
+                }
             }
 
             e.Mobile.SendMessage("Object table has been generated. See the file : <servuo root>/objects.log");
@@ -220,17 +228,22 @@ namespace Server.Commands
 
                     list.Sort(new CountSorter());
 
-                    foreach (DictionaryEntry de in list)
+                    for (var index = 0; index < list.Count; index++)
                     {
-                        Type itemType = de.Key as Type;
-                        int[] countTable = de.Value as int[];
+                        var de = (DictionaryEntry) list[index];
+
+                        Type itemType = (Type) de.Key;
+
+                        int[] countTable = (int[]) de.Value;
 
                         op.WriteLine("# {0}", itemType.FullName);
 
                         for (int i = 0; i < countTable.Length; ++i)
                         {
                             if (countTable[i] > 0)
+                            {
                                 op.WriteLine("{0}\t{1:N0}", names[i], countTable[i]);
+                            }
                         }
 
                         op.WriteLine();
@@ -278,6 +291,7 @@ namespace Server.Commands
                 foreach (DictionaryEntry de in table)
                 {
                     Type type = (Type)de.Key;
+
                     int[] parms = (int[])de.Value;
 
                     op.WriteLine("{0}\t\t{1}\t\t{2}\t\t{3:F2}", type.Name, parms[0], parms[1], (double)parms[1] / parms[0]);
@@ -349,8 +363,12 @@ namespace Server.Commands
                     op.WriteLine();
                     op.WriteLine();
 
-                    foreach (DictionaryEntry de in list)
-                        op.WriteLine("{0}\t{1:F2}%\t{2}", de.Value, (100 * (int)de.Value) / (double)total, de.Key);
+                    for (var index = 0; index < list.Count; index++)
+                    {
+                        var de = (DictionaryEntry) list[index];
+
+                        op.WriteLine("{0}\t{1:F2}%\t{2}", de.Value, (100 * (int) de.Value) / (double) total, de.Key);
+                    }
                 }
             }
             catch (Exception e)
@@ -385,14 +403,18 @@ namespace Server.Commands
             private int GetCount(object obj)
             {
                 if (obj is int oI)
+                {
                     return oI;
+                }
 
                 if (obj is int[] list)
                 {
                     int total = 0;
 
                     for (int i = 0; i < list.Length; ++i)
+                    {
                         total += list[i];
+                    }
 
                     return total;
                 }

@@ -12,8 +12,8 @@ namespace Server.AccountVault
         [CommandProperty(AccessLevel.GameMaster)]
         public Auction Auction
         {
-            get { return _Auction ?? (_Auction = new Auction(null, this)); }
-            set { _Auction = value; }
+            get => _Auction ?? (_Auction = new Auction(null, this));
+            set => _Auction = value;
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
@@ -31,16 +31,16 @@ namespace Server.AccountVault
         public bool CheckAuctionItem(Item item)
         {
             if (_Auction == null || !_Auction.OnGoing || _Auction.AuctionItem == null)
+            {
                 return false;
+            }
 
             if (_Auction.AuctionItem == item)
             {
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
 
         public void OnAuctionTray()
@@ -60,9 +60,8 @@ namespace Server.AccountVault
             if (item != null)
             {
                 var name = Auction.AuctionItemName();
-                var vaultCont = item as AccountVaultContainer;
 
-                if (vaultCont != null)
+                if (item is AccountVaultContainer vaultCont)
                 {
                     if (vaultCont.TryClaim(m))
                     {
@@ -101,9 +100,7 @@ namespace Server.AccountVault
             }
             else
             {
-                var pm = from as PlayerMobile;
-
-                if (pm != null && _Auction != null)
+                if (from is PlayerMobile pm && _Auction != null)
                 {
                     if (_Auction.InClaimPeriod)
                     {
@@ -182,7 +179,7 @@ namespace Server.AccountVault
             }
         }
 
-        private static Point3D[] Locs = new[]
+        private static Point3D[] Locs =
         {
             new Point3D(1465, 1720, 0), new Point3D(1465, 1722, 0), new Point3D(1465, 1724, 0), new Point3D(1465, 1726, 0),
             new Point3D(1467, 1720, 0), new Point3D(1467, 1722, 0), new Point3D(1467, 1724, 0), new Point3D(1467, 1726, 0),

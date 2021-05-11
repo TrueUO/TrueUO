@@ -9,7 +9,6 @@ using Server.Mobiles;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace Server.Engines.Points
 {
@@ -74,8 +73,23 @@ namespace Server.Engines.Points
 
         private static void AddSystem(PointsSystem system)
         {
-            if (Systems.FirstOrDefault(s => s.Loyalty == system.Loyalty) != null)
+            PointsSystem first = null;
+
+            for (var index = 0; index < Systems.Count; index++)
+            {
+                var s = Systems[index];
+
+                if (s.Loyalty == system.Loyalty)
+                {
+                    first = s;
+                    break;
+                }
+            }
+
+            if (first != null)
+            {
                 return;
+            }
 
             Systems.Add(system);
         }
@@ -90,12 +104,14 @@ namespace Server.Engines.Points
 
         public virtual void ConvertFromOldSystem(PlayerMobile from, double points)
         {
-            PointsEntry entry = GetEntry(from, false);
+            PointsEntry entry = GetEntry(from);
 
             if (entry == null)
             {
                 if (points > MaxPoints)
+                {
                     points = MaxPoints;
+                }
 
                 AddEntry(from, true);
                 GetEntry(from).Points = points;
@@ -109,7 +125,9 @@ namespace Server.Engines.Points
         public virtual void AwardPoints(Mobile from, double points, bool quest = false, bool message = true)
         {
             if (!(from is PlayerMobile) || points <= 0)
+            {
                 return;
+            }
 
             PointsEntry entry = GetEntry(from);
 
@@ -135,7 +153,7 @@ namespace Server.Engines.Points
             if (quest)
                 from.SendLocalizedMessage(1113719, ((int)points).ToString(), 0x26); //You have received ~1_val~ loyalty points as a reward for completing the quest. 
             else
-                from.SendLocalizedMessage(1115920, string.Format("{0}\t{1}", Name, ((int)points).ToString()));  // Your loyalty to ~1_GROUP~ has increased by ~2_AMOUNT~;Original
+                from.SendLocalizedMessage(1115920, $"{Name}\t{((int) points).ToString()}");  // Your loyalty to ~1_GROUP~ has increased by ~2_AMOUNT~;Original
         }
 
         public virtual bool DeductPoints(Mobile from, double points, bool message = false)
@@ -151,7 +169,7 @@ namespace Server.Engines.Points
 
             if (message)
             {
-                from.SendLocalizedMessage(1115921, string.Format("{0}\t{1}", Name, ((int) points).ToString())); // Your loyalty to ~1_GROUP~ has decreased by ~2_AMOUNT~;Original
+                from.SendLocalizedMessage(1115921, $"{Name}\t{((int) points).ToString()}"); // Your loyalty to ~1_GROUP~ has decreased by ~2_AMOUNT~;Original
             }
 
             return true;
@@ -196,12 +214,27 @@ namespace Server.Engines.Points
             PlayerMobile pm = from as PlayerMobile;
 
             if (pm == null)
+            {
                 return null;
+            }
 
-            PointsEntry entry = PlayerTable.FirstOrDefault(e => e.Player == pm);
+            PointsEntry entry = null;
+
+            for (var index = 0; index < PlayerTable.Count; index++)
+            {
+                var e = PlayerTable[index];
+
+                if (e.Player == pm)
+                {
+                    entry = e;
+                    break;
+                }
+            }
 
             if (entry == null && (create || AutoAdd))
+            {
                 entry = AddEntry(pm);
+            }
 
             return entry;
         }
@@ -211,12 +244,29 @@ namespace Server.Engines.Points
             PlayerMobile pm = mobile as PlayerMobile;
 
             if (pm == null)
+            {
                 return null;
+            }
 
-            TEntry e = PlayerTable.FirstOrDefault(p => p.Player == pm) as TEntry;
+            PointsEntry first = null;
+
+            for (var index = 0; index < PlayerTable.Count; index++)
+            {
+                var p = PlayerTable[index];
+
+                if (p.Player == pm)
+                {
+                    first = p;
+                    break;
+                }
+            }
+
+            TEntry e = first as TEntry;
 
             if (e == null && (AutoAdd || create))
+            {
                 e = AddEntry(pm) as TEntry;
+            }
 
             return e;
         }
@@ -239,11 +289,13 @@ namespace Server.Engines.Points
 
             writer.Write(PlayerTable.Count);
 
-            PlayerTable.ForEach(entry =>
-                {
-                    writer.Write(entry.Player);
-                    entry.Serialize(writer);
-                });
+            for (var index = 0; index < PlayerTable.Count; index++)
+            {
+                var entry = PlayerTable[index];
+
+                writer.Write(entry.Player);
+                entry.Serialize(writer);
+            }
         }
 
         public virtual void Deserialize(GenericReader reader)
@@ -284,7 +336,17 @@ namespace Server.Engines.Points
         #region Static Methods and Accessors
         public static PointsSystem GetSystemInstance(PointsType t)
         {
-            return Systems.FirstOrDefault(s => s.Loyalty == t);
+            for (var index = 0; index < Systems.Count; index++)
+            {
+                var s = Systems[index];
+
+                if (s.Loyalty == t)
+                {
+                    return s;
+                }
+            }
+
+            return null;
         }
 
         public static void OnSave(WorldSaveEventArgs e)
@@ -296,11 +358,13 @@ namespace Server.Engines.Points
                     writer.Write(2);
 
                     writer.Write(Systems.Count);
-                    Systems.ForEach(s =>
+                    for (var index = 0; index < Systems.Count; index++)
                     {
-                        writer.Write((int)s.Loyalty);
+                        var s = Systems[index];
+
+                        writer.Write((int) s.Loyalty);
                         s.Serialize(writer);
-                    });
+                    }
                 });
         }
 
@@ -330,7 +394,7 @@ namespace Server.Engines.Points
                         }
                         catch
                         {
-                            throw new Exception(string.Format("Points System Failed Load: {0} Last Loaded...", loaded.ToString()));
+                            throw new Exception($"Points System Failed Load: {loaded.ToString()} Last Loaded...");
                         }
                     }
                 });
@@ -397,12 +461,22 @@ namespace Server.Engines.Points
 
         public static void OnKilledBy(Mobile victim, Mobile damager)
         {
-            Systems.ForEach(s => s.ProcessKill(victim, damager));
+            for (var index = 0; index < Systems.Count; index++)
+            {
+                var s = Systems[index];
+
+                s.ProcessKill(victim, damager);
+            }
         }
 
         public static void CompleteQuest(QuestCompleteEventArgs e)
         {
-            Systems.ForEach(s => s.ProcessQuest(e.Mobile, e.QuestType));
+            for (var index = 0; index < Systems.Count; index++)
+            {
+                var s = Systems[index];
+
+                s.ProcessQuest(e.Mobile, e.QuestType);
+            }
         }
         #endregion
     }
@@ -439,7 +513,9 @@ namespace Server.Engines.Points
         public override int GetHashCode()
         {
             if (Player != null)
+            {
                 return Player.GetHashCode();
+            }
 
             return base.GetHashCode();
         }

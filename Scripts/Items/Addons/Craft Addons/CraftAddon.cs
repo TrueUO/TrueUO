@@ -3,7 +3,6 @@ using Server.Multis;
 using Server.Network;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -28,8 +27,12 @@ namespace Server.Items
 
                     if (!Deleted && ShareHue && Tools != null)
                     {
-                        foreach (AddonToolComponent tool in Tools)
+                        for (var index = 0; index < Tools.Count; index++)
+                        {
+                            AddonToolComponent tool = Tools[index];
+
                             tool.Hue = value;
+                        }
                     }
                 }
             }
@@ -62,21 +65,29 @@ namespace Server.Items
 
             if (result == AddonFitResult.Valid)
             {
-                foreach (AddonToolComponent c in Tools)
+                for (var index = 0; index < Tools.Count; index++)
                 {
+                    AddonToolComponent c = Tools[index];
                     Point3D p3D = new Point3D(p.X + c.Offset.X, p.Y + c.Offset.Y, p.Z + c.Offset.Z);
 
                     if (!map.CanFit(p3D.X, p3D.Y, p3D.Z, c.ItemData.Height, false, true, c.Z == 0))
+                    {
                         return AddonFitResult.Blocked;
+                    }
+
                     if (!CheckHouse(from, p3D, map, c.ItemData.Height, ref house))
+                    {
                         return AddonFitResult.NotInHouse;
+                    }
 
                     if (c.NeedsWall)
                     {
                         Point3D wall = c.WallPosition;
 
                         if (!IsWall(p3D.X + wall.X, p3D.Y + wall.Y, p3D.Z + wall.Z, map))
+                        {
                             return AddonFitResult.NoWall;
+                        }
                     }
                 }
             }
@@ -116,21 +127,36 @@ namespace Server.Items
         {
             base.OnLocationChange(old);
 
-            Tools.ForEach(t => t.Location = new Point3D(X + t.Offset.X, Y + t.Offset.Y, Z + t.Offset.Z));
+            for (var index = 0; index < Tools.Count; index++)
+            {
+                var t = Tools[index];
+
+                t.Location = new Point3D(X + t.Offset.X, Y + t.Offset.Y, Z + t.Offset.Z);
+            }
         }
 
         public override void OnMapChange()
         {
             base.OnMapChange();
 
-            Tools.ForEach(t => t.Map = Map);
+            for (var index = 0; index < Tools.Count; index++)
+            {
+                var t = Tools[index];
+
+                t.Map = Map;
+            }
         }
 
         public override void OnAfterDelete()
         {
             base.OnAfterDelete();
 
-            Tools.ForEach(t => t.Delete());
+            for (var index = 0; index < Tools.Count; index++)
+            {
+                var t = Tools[index];
+
+                t.Delete();
+            }
         }
 
         public CraftAddon(Serial serial)
@@ -146,13 +172,17 @@ namespace Server.Items
             writer.Write((int)Level);
 
             writer.Write(Tools.Count);
-            Tools.ForEach(t => writer.Write(t));
+            for (var index = 0; index < Tools.Count; index++)
+            {
+                var t = Tools[index];
+                writer.Write(t);
+            }
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             Level = (SecureLevel)reader.ReadInt();
 
@@ -161,9 +191,7 @@ namespace Server.Items
             int count = reader.ReadInt();
             for (int i = 0; i < count; i++)
             {
-                AddonToolComponent tool = reader.ReadItem() as AddonToolComponent;
-
-                if (tool != null)
+                if (reader.ReadItem() is AddonToolComponent tool)
                 {
                     tool.SetCraftSystem(CraftSystem);
                     Tools.Add(tool);
@@ -183,18 +211,30 @@ namespace Server.Items
             public override bool OnDragDrop(Mobile from, Item dropped)
             {
                 BaseHouse house = BaseHouse.FindHouseAt(this);
-                CraftAddon addon = Addon as CraftAddon;
 
-                if (house != null && addon != null && house.HasSecureAccess(from, addon.Level))
+                if (house != null && Addon is CraftAddon addon && house.HasSecureAccess(from, addon.Level))
                 {
                     if (dropped is ITool tool && !(tool is BaseRunicTool))
                     {
                         if (tool.CraftSystem == addon.CraftSystem)
                         {
-                            AddonToolComponent comp = addon.Tools.FirstOrDefault(t => t != null);
+                            AddonToolComponent comp = null;
+
+                            for (var index = 0; index < addon.Tools.Count; index++)
+                            {
+                                var t = addon.Tools[index];
+
+                                if (t != null)
+                                {
+                                    comp = t;
+                                    break;
+                                }
+                            }
 
                             if (comp == null)
+                            {
                                 return false;
+                            }
 
                             if (comp.UsesRemaining >= comp.MaxUses)
                             {
@@ -202,13 +242,15 @@ namespace Server.Items
                                 return false;
                             }
 
-                            int toadd = Math.Min(tool.UsesRemaining, comp.MaxUses - comp.UsesRemaining);
+                            int toAdd = Math.Min(tool.UsesRemaining, comp.MaxUses - comp.UsesRemaining);
 
-                            comp.UsesRemaining += toadd;
-                            tool.UsesRemaining -= toadd;
+                            comp.UsesRemaining += toAdd;
+                            tool.UsesRemaining -= toAdd;
 
                             if (tool.UsesRemaining <= 0 && !tool.Deleted)
+                            {
                                 tool.Delete();
+                            }
 
                             from.SendLocalizedMessage(1155741); // Charges have been added to the power tool.
 
@@ -243,7 +285,7 @@ namespace Server.Items
             public override void Deserialize(GenericReader reader)
             {
                 base.Deserialize(reader);
-                int version = reader.ReadInt();
+                reader.ReadInt();
             }
         }
     }

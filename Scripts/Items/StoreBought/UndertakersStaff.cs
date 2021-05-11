@@ -155,8 +155,10 @@ namespace Server.Items
             {
                 List<Corpse> copy = new List<Corpse>(corpses);
 
-                foreach (Corpse c in copy)
+                for (var index = 0; index < copy.Count; index++)
                 {
+                    Corpse c = copy[index];
+
                     bool remove = false;
 
                     if (c.Map != m.Map)
@@ -178,11 +180,15 @@ namespace Server.Items
                     }
 
                     if (remove)
+                    {
                         corpses.Remove(c);
+                    }
                 }
 
                 if (corpses.Count == 0)
+                {
                     success = false;
+                }
             }
             else
             {
@@ -214,12 +220,16 @@ namespace Server.Items
             {
                 m.PlaySound(0xFA);
 
-                foreach (Corpse c in corpses)
+                for (var index = 0; index < corpses.Count; index++)
                 {
+                    Corpse c = corpses[index];
+
                     c.MoveToWorld(m.Location, m.Map);
 
                     if (Corpse.PlayerCorpses != null && Corpse.PlayerCorpses.ContainsKey(c))
+                    {
                         Corpse.PlayerCorpses[c]++;
+                    }
                 }
 
                 if (_SummonAll)
@@ -251,14 +261,18 @@ namespace Server.Items
         private int GetCorpseCount(Mobile m)
         {
             if (Corpse.PlayerCorpses == null)
+            {
                 return 0;
+            }
 
             int count = 0;
 
             foreach (KeyValuePair<Corpse, int> kvp in Corpse.PlayerCorpses)
             {
                 if (kvp.Key.Owner == m && kvp.Value < 3)
+                {
                     count++;
+                }
             }
 
             return count;
@@ -321,7 +335,9 @@ namespace Server.Items
             foreach (CorpseRetrieveTimer timer in _Timers.Values)
             {
                 if (timer.Staff == this)
+                {
                     return true;
+                }
             }
 
             return false;

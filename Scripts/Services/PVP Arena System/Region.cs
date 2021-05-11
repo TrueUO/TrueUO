@@ -59,6 +59,11 @@ namespace Server.Engines.ArenaSystem
             return base.OnDoubleClick(m, o);
         }
 
+        public override bool AllowHousing(Mobile from, Point3D p)
+        {
+            return false;
+        }
+
         public override bool AllowFlying(Mobile from)
         {
             if (Arena.CurrentDuel != null && !Arena.CurrentDuel.RidingFlyingAllowed)
@@ -87,8 +92,7 @@ namespace Server.Engines.ArenaSystem
                     return false;
                 }
 
-                if (!duel.FieldSpellsAllowed && (spell is FireFieldSpell || spell is ParalyzeFieldSpell || spell is PoisonFieldSpell || spell is EnergyFieldSpell
-                    || spell is WallOfStoneSpell))
+                if (!duel.FieldSpellsAllowed && (spell is FireFieldSpell || spell is ParalyzeFieldSpell || spell is PoisonFieldSpell || spell is EnergyFieldSpell || spell is WallOfStoneSpell))
                 {
                     m.SendLocalizedMessage(1010391); // A magical aura surrounds you and prevents the spell.
                     return false;

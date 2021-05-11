@@ -42,9 +42,9 @@ namespace Server.Items
 
             var region = (ShrineBattleRegion)Region.Find(new Point3D(p.X, p.Y, p.Z), from.Map).GetRegion(typeof(ShrineBattleRegion));
 
-            if (region != null && region._Controller != null)
+            if (region != null && region.Controller != null)
             {
-                _Controller = region._Controller;
+                _Controller = region.Controller;
 
                 if (!_Controller.Active && _Controller.FragmentCount < 8 &&
                     JollyRogerData.GetShrine(this) == _Controller.Shrine)

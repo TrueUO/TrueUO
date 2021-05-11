@@ -1,7 +1,7 @@
 using Server.Mobiles;
+using Server.Network;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.Quests
 {
@@ -35,6 +35,8 @@ namespace Server.Engines.Quests
         public virtual bool ShowDescription => true;
         public virtual bool ShowRewards => true;
         public virtual bool CanRefuseReward => false;
+
+        public virtual bool IsQuestionQuest => false;
 
         private List<BaseObjective> m_Objectives;
         private List<BaseReward> m_Rewards;
@@ -73,10 +75,30 @@ namespace Server.Engines.Quests
             {
                 if (AllObjectives)
                 {
-                    return m_Objectives.All(obj => obj.Completed);
+                    for (var index = 0; index < m_Objectives.Count; index++)
+                    {
+                        var obj = m_Objectives[index];
+
+                        if (!obj.Completed)
+                        {
+                            return false;
+                        }
+                    }
+
+                    return true;
                 }
 
-                return m_Objectives.Any(obj => obj.Completed);
+                for (var index = 0; index < m_Objectives.Count; index++)
+                {
+                    var obj = m_Objectives[index];
+
+                    if (obj.Completed)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
             }
         }
 
@@ -86,10 +108,30 @@ namespace Server.Engines.Quests
             {
                 if (AllObjectives)
                 {
-                    return m_Objectives.All(obj => obj.Failed);
+                    for (var index = 0; index < m_Objectives.Count; index++)
+                    {
+                        var obj = m_Objectives[index];
+
+                        if (!obj.Failed)
+                        {
+                            return false;
+                        }
+                    }
+
+                    return true;
                 }
 
-                return m_Objectives.Any(obj => obj.Failed);
+                for (var index = 0; index < m_Objectives.Count; index++)
+                {
+                    var obj = m_Objectives[index];
+
+                    if (obj.Failed)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
             }
         }
 
@@ -101,7 +143,17 @@ namespace Server.Engines.Quests
 
         public bool HasTimer()
         {
-            return m_Objectives.Any(obj => obj.Timed);
+            for (var index = 0; index < m_Objectives.Count; index++)
+            {
+                var obj = m_Objectives[index];
+
+                if (obj.Timed)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public void StartTimer()
@@ -139,6 +191,26 @@ namespace Server.Engines.Quests
             return true;
         }
 
+        public bool TeachQuestCheck(SkillName skillname)
+        {
+            PlayerMobile pm = Owner;
+            Mobile quester = (Mobile) Quester;
+
+            if (pm.AcceleratedStart > DateTime.UtcNow)
+            {
+                quester.PublicOverheadMessage(MessageType.Regular, 0x3B2, 1079287); // You may not take a new player quest while under the effects of a Scroll of Alacrity.
+                return false;
+            }
+
+            if (Owner.Skills[skillname].Base >= 50)
+            {
+                quester.PublicOverheadMessage(MessageType.Regular, 0x3B2, 1077772); // I cannot teach you, for you know all I can teach!
+                return false;
+            }
+
+            return true;
+        }
+
         public virtual void UpdateChain()
         {
             if (ChainID != QuestChain.None && StartingMobile != null)
@@ -159,8 +231,12 @@ namespace Server.Engines.Quests
 
         public virtual void OnAccept()
         {
-            m_Owner.PlaySound(AcceptSound);
-            m_Owner.SendLocalizedMessage(1049019); // You have accepted the Quest.
+            if (!IsQuestionQuest)
+            {
+                m_Owner.PlaySound(AcceptSound);
+                m_Owner.SendLocalizedMessage(1049019); // You have accepted the Quest.
+            }
+
             m_Owner.Quests.Add(this);
 
             // give items if any		
@@ -244,8 +320,11 @@ namespace Server.Engines.Quests
 
         public virtual void OnCompleted()
         {
-            m_Owner.SendLocalizedMessage(CompleteMessage, null, 0x23); // You've completed a quest!  Don't forget to collect your reward.							
-            m_Owner.PlaySound(CompleteSound);
+            if (!IsQuestionQuest)
+            {
+                m_Owner.SendLocalizedMessage(CompleteMessage, null, 0x23); // You've completed a quest!  Don't forget to collect your reward.							
+                m_Owner.PlaySound(CompleteSound);
+            }
         }
 
         public virtual void GiveRewards()

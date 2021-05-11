@@ -19,24 +19,26 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1111649;//Tripartite Key
+
         public override void OnDoubleClick(Mobile from)
         {
-            PlayerMobile pm = from as PlayerMobile;
-
-            if (!IsChildOf(from.Backpack))
+            if (from is PlayerMobile pm)
             {
-                from.SendLocalizedMessage(1042001); // That must be in your pack for you to use it.
-            }
-            else if (pm.AbyssEntry)
-            {
-                pm.SendMessage("You have completed a Sacred quest already!");
-                Delete();
-            }
-            else
-            {
-                pm.AbyssEntry = true;
-                pm.SendMessage("You have completed the Sacred quest and now have entry to the Underworld");
-                Delete();
+                if (!IsChildOf(from.Backpack))
+                {
+                    from.SendLocalizedMessage(1042001); // That must be in your pack for you to use it.
+                }
+                else if (pm.AbyssEntry)
+                {
+                    pm.SendMessage("You have completed a Sacred quest already!");
+                    Delete();
+                }
+                else
+                {
+                    pm.AbyssEntry = true;
+                    pm.SendMessage("You have completed the Sacred quest and now have entry to the Underworld");
+                    Delete();
+                }
             }
         }
 

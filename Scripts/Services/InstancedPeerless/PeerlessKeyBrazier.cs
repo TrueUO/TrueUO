@@ -14,7 +14,7 @@ namespace Server.Engines.InstancedPeerless
         public PeerlessPlatform Platform => m_Platform;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public Item Key { get { return m_Key; } set { m_Key = value; } }
+        public Item Key { get => m_Key; set => m_Key = value; }
 
         public PeerlessKeyBrazier(PeerlessPlatform platform)
             : base(0x19BB)

@@ -1,7 +1,6 @@
 using Server.Mobiles;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -50,7 +49,7 @@ namespace Server.Items
                 0x555, 0xAE, 0x94, 0x278, 0x32, 0x28, 0x327, 0x41A
             };
 
-            Rewards.Add(new CollectionItem(typeof(ForTheLifeOfBritanniaSash), 0x1541, 1075792, 0x0, 5000.0, true));
+            Rewards.Add(new CollectionItem(typeof(ForTheLifeOfBritanniaSash), 0x1541, 1075792, 183, 5000.0, true));
             Rewards.Add(new CollectionHuedItem(typeof(ZooMemberCloak), 0x1515, 1073221, 0x555, 100000.0, hues));
             Rewards.Add(new CollectionHuedItem(typeof(ZooMemberRobe), 0x1F03, 1073221, 0x555, 100000.0, hues));
             Rewards.Add(new CollectionHuedItem(typeof(ZooMemberSkirt), 0x1F01, 1073221, 0x555, 100000.0, hues));
@@ -113,9 +112,37 @@ namespace Server.Items
 
         public static bool HasGroup(Type type, Type colType)
         {
-            foreach (Type[] typeList in _PetGroups)
+            for (var index = 0; index < _PetGroups.Length; index++)
             {
-                if (typeList.Any(x => type == x) && typeList.Any(x => colType == x))
+                Type[] typeList = _PetGroups[index];
+
+                bool any = false;
+
+                for (var i = 0; i < typeList.Length; i++)
+                {
+                    var x = typeList[i];
+
+                    if (type == x)
+                    {
+                        any = true;
+                        break;
+                    }
+                }
+
+                bool col = false;
+
+                for (var i = 0; i < typeList.Length; i++)
+                {
+                    var x = typeList[i];
+
+                    if (colType == x)
+                    {
+                        col = true;
+                        break;
+                    }
+                }
+
+                if (any && col)
                 {
                     return true;
                 }

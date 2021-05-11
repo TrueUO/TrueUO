@@ -4,7 +4,7 @@ namespace Server.Mobiles
 {
     public abstract class BaseGuard : Mobile
     {
-        public BaseGuard(Mobile target)
+        public BaseGuard(IEntity target)
         {
             GuardImmune = true;
 

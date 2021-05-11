@@ -1,5 +1,4 @@
 using Server.Engines.Harvest;
-using Server.Gumps;
 using Server.Items;
 using Server.Mobiles;
 using Server.Network;
@@ -56,18 +55,7 @@ namespace Server.Engines.Quests
         }
 
         public override bool RenderObjective(MondainQuestGump g, bool offer)
-        {
-            if (offer)
-                g.AddHtmlLocalized(130, 45, 270, 16, 1049010, 0xFFFFFF, false, false); // Quest Offer
-            else
-                g.AddHtmlLocalized(130, 45, 270, 16, 1046026, 0xFFFFFF, false, false); // Quest Log
-
-            g.AddButton(130, 430, 0x2EEF, 0x2EF1, (int)Buttons.PreviousPage, GumpButtonType.Reply, 0);
-            g.AddButton(275, 430, 0x2EE9, 0x2EEB, (int)Buttons.NextPage, GumpButtonType.Reply, 0);
-
-            g.AddHtmlObject(160, 70, 330, 16, Title, BaseQuestGump.DarkGreen, false, false);
-            g.AddHtmlLocalized(98, 140, 312, 16, 1049073, 0x2710, false, false); // Objective:
-            g.AddHtmlLocalized(98, 156, 312, 16, 1072208, 0x2710, false, false); // All of the following	
+        {	
             g.AddHtmlLocalized(98, 1, 40, 16, 1072207, 0x15F90, false, false); // Deliver
             g.AddHtmlLocalized(143, 172, 300, 16, 1156516, 0xFFFF, false, false); // Orders from King Blackthorn to Sir Geoffrey
 
@@ -176,15 +164,6 @@ namespace Server.Engines.Quests
 
         public override bool RenderObjective(MondainQuestGump g, bool offer)
         {
-            if (offer)
-                g.AddHtmlLocalized(130, 45, 270, 16, 1049010, 0xFFFFFF, false, false); // Quest Offer
-            else
-                g.AddHtmlLocalized(130, 45, 270, 16, 1046026, 0xFFFFFF, false, false); // Quest Log
-
-            g.AddButton(130, 430, 0x2EEF, 0x2EF1, (int)Buttons.PreviousPage, GumpButtonType.Reply, 0);
-            g.AddButton(275, 430, 0x2EE9, 0x2EEB, (int)Buttons.NextPage, GumpButtonType.Reply, 0);
-
-            g.AddHtmlObject(160, 70, 330, 16, Title, BaseQuestGump.DarkGreen, false, false);
             g.AddHtmlLocalized(98, 140, 312, 16, 1049073, 0x2710, false, false); // Objective:
             g.AddHtmlLocalized(98, 156, 312, 16, 1072208, 0x2710, false, false); // All of the following	
             g.AddHtmlLocalized(98, 172, 300, 16, 1156533, 0xFFFF, false, false); // Slay the Tyrannosaurus Rex
@@ -230,15 +209,6 @@ namespace Server.Engines.Quests
 
         public override bool RenderObjective(MondainQuestGump g, bool offer)
         {
-            if (offer)
-                g.AddHtmlLocalized(130, 45, 270, 16, 1049010, 0xFFFFFF, false, false); // Quest Offer
-            else
-                g.AddHtmlLocalized(130, 45, 270, 16, 1046026, 0xFFFFFF, false, false); // Quest Log
-
-            g.AddButton(130, 430, 0x2EEF, 0x2EF1, (int)Buttons.PreviousPage, GumpButtonType.Reply, 0);
-            g.AddButton(275, 430, 0x2EE9, 0x2EEB, (int)Buttons.NextPage, GumpButtonType.Reply, 0);
-
-            g.AddHtmlObject(160, 70, 330, 16, Title, BaseQuestGump.DarkGreen, false, false);
             g.AddHtmlLocalized(98, 140, 312, 16, 1049073, 0x2710, false, false); // Objective:
             g.AddHtmlLocalized(98, 156, 312, 16, 1072208, 0x2710, false, false); // All of the following
             g.AddHtmlLocalized(98, 172, 300, 16, 1156534, 0xFFFF, false, false); // Rescue 5 Dragon Turtle Hatchlings from poachers
@@ -327,7 +297,6 @@ namespace Server.Engines.Quests
 
         public TheGreatVolcanoQuest()
         {
-            //AddObjective( new ObtainObjective( typeof(LavaStone), "Recover 5 lava rocks from the Caldera of the Great Volcano", 5 ) );
             AddObjective(new InternalObjective());
             AddReward(new BaseReward(typeof(FiresOfKukuzz), 1, 1156553)); // Trust of the Jukari Tribe
         }
@@ -337,16 +306,20 @@ namespace Server.Engines.Quests
         public static bool OnHarvest(Mobile m, Item tool)
         {
             if (!(m is PlayerMobile) || m.Map != Map.TerMur)
+            {
                 return false;
+            }
 
-            PlayerMobile pm = m as PlayerMobile;
+            PlayerMobile pm = (PlayerMobile) m;
 
             if ((pm.ToggleMiningStone || pm.ToggleStoneOnly) && VolcanoMineBounds.Contains(m.Location))
             {
                 object locked = tool;
 
                 if (!m.BeginAction(locked))
+                {
                     return false;
+                }
 
                 m.Animate(AnimationType.Attack, 3);
 
@@ -357,9 +330,7 @@ namespace Server.Engines.Quests
 
                 Timer.DelayCall(Mining.System.OreAndStone.EffectDelay, () =>
                     {
-                        TheGreatVolcanoQuest quest = QuestHelper.GetQuest(pm, typeof(TheGreatVolcanoQuest)) as TheGreatVolcanoQuest;
-
-                        if (quest != null && !quest.Completed && 0.05 > Utility.RandomDouble())
+                        if (QuestHelper.GetQuest(pm, typeof(TheGreatVolcanoQuest)) is TheGreatVolcanoQuest quest && !quest.Completed && 0.05 > Utility.RandomDouble())
                         {
                             if (m.CheckSkill(SkillName.Mining, 90, 100))
                             {
@@ -397,13 +368,19 @@ namespace Server.Engines.Quests
                                     quest.Update(m);
                                 }
                                 else
+                                {
                                     m.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1156509); // You loosen some dirt but fail to find anything.
+                                }
                             }
                             else
+                            {
                                 m.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1156509); // You loosen some dirt but fail to find anything.
+                            }
                         }
                         else
+                        {
                             m.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1156509); // You loosen some dirt but fail to find anything.
+                        }
 
                         if (tool is IUsesRemaining remaining)
                         {
@@ -427,8 +404,10 @@ namespace Server.Engines.Quests
 
         public bool Update(object o)
         {
-            foreach (BaseObjective obj in Objectives)
+            for (var index = 0; index < Objectives.Count; index++)
             {
+                BaseObjective obj = Objectives[index];
+
                 obj.Update(o);
 
                 if (!Completed)
@@ -511,15 +490,6 @@ namespace Server.Engines.Quests
 
         public override bool RenderObjective(MondainQuestGump g, bool offer)
         {
-            if (offer)
-                g.AddHtmlLocalized(130, 45, 270, 16, 1049010, 0xFFFFFF, false, false); // Quest Offer
-            else
-                g.AddHtmlLocalized(130, 45, 270, 16, 1046026, 0xFFFFFF, false, false); // Quest Log
-
-            g.AddButton(130, 430, 0x2EEF, 0x2EF1, (int)Buttons.PreviousPage, GumpButtonType.Reply, 0);
-            g.AddButton(275, 430, 0x2EE9, 0x2EEB, (int)Buttons.NextPage, GumpButtonType.Reply, 0);
-
-            g.AddHtmlObject(160, 70, 330, 16, Title, BaseQuestGump.DarkGreen, false, false);
             g.AddHtmlLocalized(98, 140, 312, 16, 1049073, 0x2710, false, false); // Objective:
             g.AddHtmlLocalized(98, 156, 312, 16, 1072208, 0x2710, false, false); // All of the following	
             g.AddHtmlLocalized(98, 172, 300, 16, 1156544, 0xFFFF, false, false); // Rescue 5 tiger cubs from the trapper enclosures.
@@ -529,8 +499,10 @@ namespace Server.Engines.Quests
 
         public bool Update(object o)
         {
-            foreach (BaseObjective obj in Objectives)
+            for (var index = 0; index < Objectives.Count; index++)
             {
+                BaseObjective obj = Objectives[index];
+
                 obj.Update(o);
 
                 if (!Completed)
@@ -618,15 +590,6 @@ namespace Server.Engines.Quests
 
         public override bool RenderObjective(MondainQuestGump g, bool offer)
         {
-            if (offer)
-                g.AddHtmlLocalized(130, 45, 270, 16, 1049010, 0xFFFFFF, false, false); // Quest Offer
-            else
-                g.AddHtmlLocalized(130, 45, 270, 16, 1046026, 0xFFFFFF, false, false); // Quest Log
-
-            g.AddButton(130, 430, 0x2EEF, 0x2EF1, (int)Buttons.PreviousPage, GumpButtonType.Reply, 0);
-            g.AddButton(275, 430, 0x2EE9, 0x2EEB, (int)Buttons.NextPage, GumpButtonType.Reply, 0);
-
-            g.AddHtmlObject(160, 70, 330, 16, Title, BaseQuestGump.DarkGreen, false, false);
             g.AddHtmlLocalized(98, 140, 312, 16, 1049073, 0x2710, false, false); // Objective:
             g.AddHtmlLocalized(98, 156, 312, 16, 1072208, 0x2710, false, false); // All of the following	
             g.AddHtmlLocalized(98, 172, 300, 16, 1156547, 0xFFFF, false, false); // Defeat the Great Ape

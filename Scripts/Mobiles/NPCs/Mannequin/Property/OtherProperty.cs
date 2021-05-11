@@ -92,42 +92,54 @@ namespace Server.Mobiles.MannequinProperty
 
     public class MedableArmorProperty : ValuedProperty
     {
+        public override bool IsMagical => true;
         public override Catalog Catalog => Catalog.Combat1;
         public override int Order => 6;
         public override bool AlwaysVisible => true;
         public override bool IsBoolen => true;
-        public override bool BoolenValue => true;
         public override int LabelNumber => 1159280;  // Medable Armor
         public override int SpriteW => 0;
         public override int SpriteH => 150;
 
-        public double GetPropertyValue(Item item)
+        public bool CheckMedable(Item item)
         {
-            return item is BaseArmor armor ? RegenRates.GetArmorMeditationValue(armor) : 0;
+            if (item is BaseArmor armor)
+            {
+                if (armor.ArmorAttributes.MageArmor != 0 || armor.Attributes.SpellChanneling != 0)
+                {
+                    return true;
+                }
+
+                if (armor.DefMedAllowance != ArmorMeditationAllowance.None)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public override bool Matches(Item item)
         {
-            double total = GetPropertyValue(item);
-
-            if (total != 0)
-                return true;
-
-            return false;
+            return CheckMedable(item);
         }
 
         public override bool Matches(List<Item> items)
         {
-            double total = 0;
+            bool matches = false;
 
-            items.ForEach(x => total += GetPropertyValue(x));
-
-            if (total != 0)
+            for (var index = 0; index < items.Count; index++)
             {
-                return true;
+                var x = items[index];
+
+                if (!CheckMedable(x))
+                {
+                    matches = true;
+                    break;
+                }
             }
 
-            return false;
+            return !matches;
         }
     }
 
@@ -161,6 +173,7 @@ namespace Server.Mobiles.MannequinProperty
 
     public class DamageModifierProperty : ValuedProperty
     {
+        public override bool IsMagical => true;
         public override Catalog Catalog => Catalog.Misc;
         public override int LabelNumber => 1159401;  // Damage Modifier
         public override int Description => 1152402;  // This property provides an increase to the damage you inflict on a successful ranged weapon attack.  The bonus damage is applied to the net damage inflicted (after all damage and resistance calculations are made).  This property can only be found on certain quivers.
@@ -189,7 +202,12 @@ namespace Server.Mobiles.MannequinProperty
         {
             double total = 0;
 
-            items.ForEach(x => total += GetPropertyValue(x));
+            for (var index = 0; index < items.Count; index++)
+            {
+                var x = items[index];
+
+                total += GetPropertyValue(x);
+            }
 
             Value = total;
 
@@ -204,6 +222,7 @@ namespace Server.Mobiles.MannequinProperty
 
     public class ManaPhaseProperty : ValuedProperty
     {
+        public override bool IsMagical => true;
         public override Catalog Catalog => Catalog.Combat1;
         public override int Order => 10;
         public override bool IsBoolen => true;
@@ -224,10 +243,14 @@ namespace Server.Mobiles.MannequinProperty
 
         public override bool Matches(List<Item> items)
         {
-            foreach (Item i in items)
+            for (var index = 0; index < items.Count; index++)
             {
+                Item i = items[index];
+
                 if (GetPropertyValue(i))
+                {
                     return true;
+                }
             }
 
             return false;
@@ -236,6 +259,7 @@ namespace Server.Mobiles.MannequinProperty
 
     public class SearingWeaponProperty : ValuedProperty
     {
+        public override bool IsMagical => true;
         public override Catalog Catalog => Catalog.HitEffects;
         public override bool IsBoolen => true;
         public override int LabelNumber => 1151183;  // Searing Weapon
@@ -255,10 +279,14 @@ namespace Server.Mobiles.MannequinProperty
 
         public override bool Matches(List<Item> items)
         {
-            foreach (Item i in items)
+            for (var index = 0; index < items.Count; index++)
             {
+                Item i = items[index];
+
                 if (GetPropertyValue(i))
+                {
                     return true;
+                }
             }
 
             return false;

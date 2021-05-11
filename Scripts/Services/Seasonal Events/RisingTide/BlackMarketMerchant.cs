@@ -32,14 +32,25 @@ namespace Server.Engines.RisingTide
             Hue = Utility.RandomSkinHue();
             Body = 0x190;
 
+            PackItem(new Orchid1());
+            PackItem(new Orchid2());
+            PackItem(new Orchid3());
+            PackItem(new GargishFellowshipMedallion());
+            PackItem(new FellowshipMedallion());
             PackItem(new QuartermasterRewardDeed());
             PackItem(new SailingMasterRewardDeed());
             PackItem(new BotswainRewardDeed());
             PackItem(new PowderMonkeyRewardDeed());
+            PackItem(new PirateLordRewardDeed());
+            PackItem(new FirstMateRewardDeed());
+            PackItem(new SeaWaspRewardDeed());
+            PackItem(new LandlubberRewardDeed());
             PackItem(new SpikedWhipOfPlundering());
             PackItem(new BladedWhipOfPlundering());
             PackItem(new BarbedWhipOfPlundering());
             PackItem(new TritonStatue());
+            PackItem(new PirateShieldRecipeScroll());
+            PackItem(new HooksShield());
         }
 
         public override void InitOutfit()

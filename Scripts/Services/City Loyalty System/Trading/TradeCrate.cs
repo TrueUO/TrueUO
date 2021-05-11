@@ -4,7 +4,6 @@ using Server.Items;
 using Server.Network;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.CityLoyalty
 {
@@ -26,10 +25,14 @@ namespace Server.Engines.CityLoyalty
                 if (Entry == null)
                     return false;
 
-                foreach (TradeEntry.TradeDetails details in Entry.Details)
+                for (var index = 0; index < Entry.Details.Count; index++)
                 {
+                    TradeEntry.TradeDetails details = Entry.Details[index];
+
                     if (details.Count(this) < details.Amount)
+                    {
                         return false;
+                    }
                 }
 
                 return true;
@@ -96,10 +99,17 @@ namespace Server.Engines.CityLoyalty
         {
             base.GetProperties(list);
 
-            list.Add(1151737, string.Format("#{0}", CityLoyaltySystem.CityLocalization(Entry.Destination))); // Destination City: ~1_city~
+            list.Add(1151737, $"#{CityLoyaltySystem.CityLocalization(Entry.Destination)}"); // Destination City: ~1_city~
             list.Add(1076255); // NO-TRADE
 
-            int weight = Items.Sum(x => x.Amount);
+            int weight = 0;
+
+            for (var index = 0; index < Items.Count; index++)
+            {
+                var x = Items[index];
+
+                weight += x.Amount;
+            }
 
             list.Add(1072241, "{0}\t{1}\t{2}\t{3}", Items.Count, DefaultMaxItems, weight, DefaultMaxWeight); // Contents: ~1_COUNT~/~2_MAXCOUNT items, ~3_WEIGHT~/~4_MAXWEIGHT~ stones
 
@@ -145,9 +155,11 @@ namespace Server.Engines.CityLoyalty
         {
             bool canAdd = false;
 
-            foreach (TradeEntry.TradeDetails details in Entry.Details)
+            for (var index = 0; index < Entry.Details.Count; index++)
             {
-                if(details.Match(item.GetType()))
+                TradeEntry.TradeDetails details = Entry.Details[index];
+
+                if (details.Match(item.GetType()))
                 {
                     int hasAmount = details.Count(this);
 
@@ -155,7 +167,8 @@ namespace Server.Engines.CityLoyalty
                     {
                         if (message)
                         {
-                            from.SendLocalizedMessage(1151726); // You are trying to add too many of this item to the trade order. Only add the required quantity
+                            from.SendLocalizedMessage(
+                                1151726); // You are trying to add too many of this item to the trade order. Only add the required quantity
                         }
 
                         break;
@@ -239,12 +252,14 @@ namespace Server.Engines.CityLoyalty
             {
                 if (Crate.IsChildOf(Player.Backpack) && !Crate.Deleted && Crate.Entry != null)
                 {
-                    foreach (TradeEntry.TradeDetails detail in Crate.Entry.Details)
+                    for (var index = 0; index < Crate.Entry.Details.Count; index++)
                     {
                         var list = new List<Item>(Player.Backpack.Items);
 
-                        foreach (var item in list)
+                        for (var i = 0; i < list.Count; i++)
                         {
+                            var item = list[i];
+
                             if (item.Amount == 1 && Crate.TryAddItem(Player, item, false))
                             {
                                 Crate.DropItem(item);

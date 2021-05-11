@@ -3,7 +3,6 @@ using Server.Network;
 using Server.Spells;
 
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -345,9 +344,21 @@ namespace Server.Items
         public List<Mobile> GetLootingRights()
         {
             if (DamageStore == null)
+            {
                 return null;
+            }
 
-            return DamageStore.Keys.Where(m => DamageStore[m] > 0 && DamageStore[m] >= HitsMax / 16).ToList();
+            List<Mobile> list = new List<Mobile>();
+
+            foreach (var m in DamageStore.Keys)
+            {
+                if (DamageStore[m] > 0 && DamageStore[m] >= HitsMax / 16)
+                {
+                    list.Add(m);
+                }
+            }
+
+            return list;
         }
 
         public virtual void OnDamage(int amount, Mobile from, bool willkill)

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.VvV
 {
@@ -80,10 +79,23 @@ namespace Server.Engines.VvV
         {
             get
             {
-                Region r = Region.Regions.FirstOrDefault(reg => reg.Name == Name && reg.Map == Map.Felucca);
+                Region r = null;
+
+                for (var index = 0; index < Region.Regions.Count; index++)
+                {
+                    var reg = Region.Regions[index];
+
+                    if (reg.Name == Name && reg.Map == Map.Felucca)
+                    {
+                        r = reg;
+                        break;
+                    }
+                }
 
                 if (r == null)
+                {
                     Console.WriteLine("WARNING: Region for {0} not found.", Name);
+                }
 
                 return r;
             }

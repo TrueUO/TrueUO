@@ -1,6 +1,7 @@
 using Server.Engines.Shadowguard;
 using Server.Mobiles;
 using System;
+using System.Collections.Generic;
 
 namespace Server.Items
 {
@@ -60,7 +61,7 @@ namespace Server.Items
                     typeof(RatmanArcher), typeof(RatmanMage),
                     typeof(SavageRider), typeof(SavageShaman),
                     typeof(Savage), typeof(Titan),
-                    typeof(Troglodyte), typeof(Troll),
+                    typeof(Troll),
                     typeof(Troglodyte), typeof(MougGuur),
                     typeof(Chiikkaha), typeof(Minotaur),
                     typeof(MinotaurGeneral), typeof(Medusa),
@@ -648,11 +649,11 @@ namespace Server.Items
             return false;
         }
 
-        private static SlayerEntry[] CompileEntries(SlayerGroup[] groups)
+        private static SlayerEntry[] CompileEntries(IReadOnlyList<SlayerGroup> groups)
         {
             SlayerEntry[] entries = new SlayerEntry[32];
 
-            for (int i = 0; i < groups.Length; ++i)
+            for (int i = 0; i < groups.Count; ++i)
             {
                 SlayerGroup g = groups[i];
 

@@ -190,7 +190,7 @@ namespace Server.Items
                     from.SendLocalizedMessage(500295); // You are too far away to do that.
                 }
 
-                if (targeted is Item item)
+                if (targeted is Item item && Addon != null)
                 {
                     Addon.TryTransmutate(from, item);
                 }

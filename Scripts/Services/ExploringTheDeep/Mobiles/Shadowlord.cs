@@ -2,7 +2,6 @@ using Server.Items;
 using Server.Spells;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Mobiles
 {
@@ -17,6 +16,7 @@ namespace Server.Mobiles
     public class Shadowlord : BasePeerless
     {
         private ShadowlordType m_Type;
+
         public virtual Type[] ArtifactDrops => _ArtifactTypes;
 
         private readonly Type[] _ArtifactTypes =
@@ -43,8 +43,6 @@ namespace Server.Mobiles
         public Shadowlord()
             : base(AIType.AI_NecroMage, FightMode.Closest, 10, 1, 0.2, 0.4)
         {
-            //m_Instances.Add(this);
-
             m_Type = (ShadowlordType)Utility.Random(3);
             Name = m_Type.ToString();
 
@@ -119,36 +117,62 @@ namespace Server.Mobiles
 
         public override void CheckReflect(Mobile caster, ref bool reflect)
         {
-            reflect = Wisps.Any(w => !w.Deleted && w.InRange(Location, 20));
+            reflect = false;
+
+            for (var index = 0; index < Wisps.Count; index++)
+            {
+                var w = Wisps[index];
+
+                if (!w.Deleted && w.InRange(Location, 20))
+                {
+                    reflect = true;
+                    break;
+                }
+            }
         }
 
         public override void OnDrainLife(Mobile victim)
         {
             if (Map == null || Altar == null)
+            {
                 return;
+            }
 
             var count = Altar == null ? 0 : Altar.Helpers.Count;
 
-            foreach (Mobile m in SpellHelper.AcquireIndirectTargets(this, Location, Map, 20).OfType<Mobile>())
+            foreach (IDamageable target in SpellHelper.AcquireIndirectTargets(this, Location, Map, 20))
             {
-                if (Altar.Helpers.Count < 6)
+                if (target is Mobile m)
                 {
-                    SpawnHelper(new DarkWisp(), Location);
-                }
-
-                if (Region.IsPartOf("Underwater World") && (Map == Map.Trammel || Map == Map.Felucca))
-                {
-                    int teleportchance = Hits / HitsMax;
-
-                    if (teleportchance < Utility.RandomDouble() && m.Alive)
+                    if (Altar.Helpers.Count < 6)
                     {
-                        switch (Utility.Random(6))
+                        SpawnHelper(new DarkWisp(), Location);
+                    }
+
+                    if (Region.IsPartOf("Underwater World") && (Map == Map.Trammel || Map == Map.Felucca))
+                    {
+                        int teleportchance = Hits / HitsMax;
+
+                        if (teleportchance < Utility.RandomDouble() && m.Alive)
                         {
-                            case 0: m.MoveToWorld(new Point3D(6431, 1664, 0), Map); break;
-                            case 1: m.MoveToWorld(new Point3D(6432, 1634, 0), Map); break;
-                            case 2: m.MoveToWorld(new Point3D(6401, 1657, 0), Map); break;
-                            case 3: m.MoveToWorld(new Point3D(6401, 1637, 0), Map); break;
-                            default: m.MoveToWorld(Location, Map); break;
+                            switch (Utility.Random(6))
+                            {
+                                case 0:
+                                    m.MoveToWorld(new Point3D(6431, 1664, 0), Map);
+                                    break;
+                                case 1:
+                                    m.MoveToWorld(new Point3D(6432, 1634, 0), Map);
+                                    break;
+                                case 2:
+                                    m.MoveToWorld(new Point3D(6401, 1657, 0), Map);
+                                    break;
+                                case 3:
+                                    m.MoveToWorld(new Point3D(6401, 1637, 0), Map);
+                                    break;
+                                default:
+                                    m.MoveToWorld(Location, Map);
+                                    break;
+                            }
                         }
                     }
                 }
@@ -159,12 +183,14 @@ namespace Server.Mobiles
         {
             List<DamageStore> rights = GetLootingRights();
 
-            foreach (DamageStore ds in rights)
+            for (var index = 0; index < rights.Count; index++)
             {
+                DamageStore ds = rights[index];
+
                 if (ds.m_HasRight)
                 {
                     int luck = ds.m_Mobile is PlayerMobile mobile ? mobile.RealLuck : ds.m_Mobile.Luck;
-                    int chance = 75 + (luck / 15);
+                    int chance = 75 + luck / 15;
 
                     if (chance > Utility.Random(5000))
                     {
@@ -176,10 +202,12 @@ namespace Server.Mobiles
                             if (m.Backpack == null || !m.Backpack.TryDropItem(m, artifact, false))
                             {
                                 m.BankBox.DropItem(artifact);
-                                m.SendMessage("For your valor in combating the fallen beast, a special reward has been placed in your bankbox.");
+                                m.SendMessage("For your valor in combating the fallen beast, a special reward has been placed in your bank box.");
                             }
                             else
+                            {
                                 m.SendLocalizedMessage(1062317); // For your valor in combating the fallen beast, a special reward has been bestowed on you.
+                            }
                         }
                     }
                 }

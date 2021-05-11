@@ -3,7 +3,6 @@ using Server.Spells;
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -13,6 +12,7 @@ namespace Server.Items
         private int m_Ticks = 0;
         private Mobile m_LitBy;
         private List<Mobile> m_Users;
+
         [Constructable]
         public Firebomb()
             : this(0x99B)
@@ -63,16 +63,23 @@ namespace Server.Items
             {
                 m_Timer = Timer.DelayCall(TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1), OnFirebombTimerTick);
                 m_LitBy = from;
+
                 from.SendLocalizedMessage(1060582); // You light the firebomb.  Throw it now!
             }
             else
+            {
                 from.SendLocalizedMessage(1060581); // You've already lit it!  Better throw it now!
+            }
 
             if (m_Users == null)
+            {
                 m_Users = new List<Mobile>();
+            }
 
             if (!m_Users.Contains(from))
+            {
                 m_Users.Add(from);
+            }
 
             from.Target = new ThrowTarget(this);
         }
@@ -97,27 +104,37 @@ namespace Server.Items
                         ++m_Ticks;
 
                         if (HeldBy != null)
+                        {
                             HeldBy.PublicOverheadMessage(MessageType.Regular, 957, false, m_Ticks.ToString());
+                        }
                         else if (RootParent == null)
+                        {
                             PublicOverheadMessage(MessageType.Regular, 957, false, m_Ticks.ToString());
+                        }
                         else if (RootParent is Mobile mobile)
+                        {
                             mobile.PublicOverheadMessage(MessageType.Regular, 957, false, m_Ticks.ToString());
+                        }
 
                         break;
                     }
                 default:
                     {
                         if (HeldBy != null)
+                        {
                             HeldBy.DropHolding();
+                        }
 
                         if (m_Users != null)
                         {
-                            foreach (Mobile m in m_Users)
+                            for (var index = 0; index < m_Users.Count; index++)
                             {
-                                ThrowTarget targ = m.Target as ThrowTarget;
+                                Mobile m = m_Users[index];
 
-                                if (targ != null && targ.Bomb == this)
+                                if (m.Target is ThrowTarget targ && targ.Bomb == this)
+                                {
                                     Target.Cancel(m);
+                                }
                             }
 
                             m_Users.Clear();
@@ -134,15 +151,35 @@ namespace Server.Items
                         {
                             IEnumerable<Mobile> targets = GetTargets();
 
-                            foreach (Mobile victim in targets)
+                            var enumerable = new List<Mobile>();
+
+                            foreach (var target in targets)
                             {
+                                enumerable.Add(target);
+                            }
+
+                            for (var index = 0; index < enumerable.Count; index++)
+                            {
+                                Mobile victim = enumerable[index];
+
                                 if (m_LitBy != null)
+                                {
                                     m_LitBy.DoHarmful(victim);
+                                }
 
                                 AOS.Damage(victim, m_LitBy, Utility.Random(3) + 4, 0, 100, 0, 0, 0);
                             }
 
-                            new FirebombField(m_LitBy, targets.ToList()).MoveToWorld(Location, Map);
+                            List<Mobile> list = new List<Mobile>();
+
+                            for (var index = 0; index < enumerable.Count; index++)
+                            {
+                                var target = enumerable[index];
+
+                                list.Add(target);
+                            }
+
+                            new FirebombField(m_LitBy, list).MoveToWorld(Location, Map);
                         }
 
                         m_Timer.Stop();

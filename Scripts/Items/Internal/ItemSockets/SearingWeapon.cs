@@ -98,10 +98,7 @@ namespace Server.Items
                 {
                     SearingWeapon socket = Weapon.GetSocket<SearingWeapon>();
 
-                    if (socket != null)
-                    {
-                        socket.ToggleExtinguish(From);
-                    }
+                    socket?.ToggleExtinguish(From);
                 }
             }
         }

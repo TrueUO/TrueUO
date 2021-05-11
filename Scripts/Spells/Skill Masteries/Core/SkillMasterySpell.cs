@@ -52,7 +52,7 @@ namespace Server.Spells.SkillMasteries
                 if (Caster == null)
                     return 0.0;
 
-                return (Caster.Skills[CastSkill].Value + Caster.Skills[DamageSkill].Value + (GetMasteryLevel() * 40)) / 3;
+                return (Caster.Skills[CastSkill].Value + Caster.Skills[DamageSkill].Value + GetMasteryLevel() * 40) / 3;
             }
         }
 
@@ -154,7 +154,7 @@ namespace Server.Spells.SkillMasteries
                 NegativeAttributes.OnCombatAction(Caster);
             }
 
-            if ((Caster is PlayerMobile && Caster.NetState == null) || Expires < DateTime.UtcNow || !Caster.Alive || Caster.IsDeadBondedPet)
+            if (Caster is PlayerMobile && Caster.NetState == null || Expires < DateTime.UtcNow || !Caster.Alive || Caster.IsDeadBondedPet)
             {
                 Expire();
             }
@@ -280,7 +280,7 @@ namespace Server.Spells.SkillMasteries
 
         public virtual int GetUpkeep()
         {
-            return (int)(UpKeep + (PartyCount() / 5));
+            return (int)(UpKeep + PartyCount() / 5);
         }
 
         public virtual void Expire(bool disrupt = false)
@@ -323,7 +323,7 @@ namespace Server.Spells.SkillMasteries
             double dSkill = Caster.Skills[DamageSkill].Value;
             double vSkill = GetResistSkill(victim);
 
-            double reduce = 1.0 - ((dSkill - vSkill) / dSkill);
+            double reduce = 1.0 - (dSkill - vSkill) / dSkill;
 
             if (reduce < 0) reduce = 0;
             if (reduce > 1) reduce = 1;
@@ -347,26 +347,28 @@ namespace Server.Spells.SkillMasteries
                 return true;
 
             int maxSkill = (1 + volumeMod) * 10;
-            maxSkill += (1 + (volumeMod / 6)) * 25;
+            maxSkill += (1 + volumeMod / 6) * 25;
 
             if (target.Skills[SkillName.MagicResist].Value < maxSkill)
+            {
                 target.CheckSkill(SkillName.MagicResist, 0.0, target.Skills[SkillName.MagicResist].Cap);
+            }
 
-            return (n >= Utility.RandomDouble());
+            return n >= Utility.RandomDouble();
         }
 
         public virtual double GetResistPercent(Mobile target, int level)
         {
             double value = GetResistSkill(target);
             double firstPercent = value / 5.0;
-            double secondPercent = value - (((Caster.Skills[CastSkill].Value - 20.0) / 5.0) + (1 + level) * 5.0);
+            double secondPercent = value - ((Caster.Skills[CastSkill].Value - 20.0) / 5.0 + (1 + level) * 5.0);
 
             return (firstPercent > secondPercent ? firstPercent : secondPercent) / 2.0;
         }
 
         public int GetMasteryLevel()
         {
-            return MasteryInfo.GetMasteryLevel(Caster, CastSkill);
+            return Caster is BaseCreature ? 1 : MasteryInfo.GetMasteryLevel(Caster, CastSkill);
         }
 
         public void UpdateParty()
@@ -385,8 +387,12 @@ namespace Server.Spells.SkillMasteries
 
             if (p != null)
             {
-                foreach (Mobile m in p.Members.Select(x => x.Mobile))
+                for (var index = 0; index < p.Members.Count; index++)
                 {
+                    var x = p.Members[index];
+
+                    Mobile m = x.Mobile;
+
                     if (!PartyList.Contains(m) && (!playersOnly || m is PlayerMobile) && ValidPartyMember(m))
                     {
                         AddPartyMember(m);
@@ -441,8 +447,10 @@ namespace Server.Spells.SkillMasteries
 
             if (m is PlayerMobile pm)
             {
-                foreach (Mobile pet in pm.AllFollowers)
+                for (var index = 0; index < pm.AllFollowers.Count; index++)
                 {
+                    Mobile pet = pm.AllFollowers[index];
+
                     if (!PartyList.Contains(pet) && ValidPartyMember(pet))
                     {
                         AddPartyMember(pet);
@@ -458,8 +466,10 @@ namespace Server.Spells.SkillMasteries
 
             if (m is PlayerMobile pm)
             {
-                foreach (Mobile pet in pm.AllFollowers)
+                for (var index = 0; index < pm.AllFollowers.Count; index++)
                 {
+                    Mobile pet = pm.AllFollowers[index];
+
                     if (PartyList.Contains(pet))
                     {
                         RemovePartyMember(pet);
@@ -472,8 +482,10 @@ namespace Server.Spells.SkillMasteries
         {
             if (m is PlayerMobile pm)
             {
-                foreach (Mobile pet in pm.AllFollowers)
+                for (var index = 0; index < pm.AllFollowers.Count; index++)
                 {
+                    Mobile pet = pm.AllFollowers[index];
+
                     if (!PartyList.Contains(pet) && ValidPartyMember(pet))
                     {
                         AddPartyMember(pet);
@@ -517,10 +529,14 @@ namespace Server.Spells.SkillMasteries
         {
             foreach (Mobile m in m_Table.Keys)
             {
-                foreach (SkillMasterySpell spell in m_Table[m])
+                for (var index = 0; index < m_Table[m].Count; index++)
                 {
+                    SkillMasterySpell spell = m_Table[m][index];
+
                     if (spell != null && spell.GetType() == type && spell.Target == target)
+                    {
                         return spell;
+                    }
                 }
             }
 
@@ -531,10 +547,14 @@ namespace Server.Spells.SkillMasteries
         {
             foreach (Mobile m in m_Table.Keys)
             {
-                foreach (SkillMasterySpell spell in m_Table[m])
+                for (var index = 0; index < m_Table[m].Count; index++)
                 {
+                    SkillMasterySpell spell = m_Table[m][index];
+
                     if (spell != null && spell.GetType() == type && spell.Target == target)
+                    {
                         return true;
+                    }
                 }
             }
 
@@ -547,7 +567,14 @@ namespace Server.Spells.SkillMasteries
 
             if (m_Table.ContainsKey(from))
             {
-                return m_Table[from].FirstOrDefault(spell => spell != null && spell.GetType() == type);
+                for (var index = 0; index < m_Table[from].Count; index++)
+                {
+                    var spell = m_Table[from][index];
+
+                    if (spell != null && spell.GetType() == type) return spell;
+                }
+
+                return null;
             }
 
             return null;
@@ -557,7 +584,20 @@ namespace Server.Spells.SkillMasteries
         {
             if (m_Table.ContainsKey(m))
             {
-                return m_Table[m].FirstOrDefault(sms => sms.GetType() == typeof(TSpell)) as TSpell;
+                SkillMasterySpell first = null;
+
+                for (var index = 0; index < m_Table[m].Count; index++)
+                {
+                    var sms = m_Table[m][index];
+
+                    if (sms.GetType() == typeof(TSpell))
+                    {
+                        first = sms;
+                        break;
+                    }
+                }
+
+                return first as TSpell;
             }
 
             return null;
@@ -567,7 +607,20 @@ namespace Server.Spells.SkillMasteries
         {
             if (m_Table.ContainsKey(caster))
             {
-                return m_Table[caster].FirstOrDefault(sms => sms.GetType() == typeof(TSpell) && sms.Target == target) as TSpell;
+                SkillMasterySpell first = null;
+
+                for (var index = 0; index < m_Table[caster].Count; index++)
+                {
+                    var sms = m_Table[caster][index];
+
+                    if (sms.GetType() == typeof(TSpell) && sms.Target == target)
+                    {
+                        first = sms;
+                        break;
+                    }
+                }
+
+                return first as TSpell;
             }
 
             return null;
@@ -578,7 +631,9 @@ namespace Server.Spells.SkillMasteries
             foreach (SkillMasterySpell spell in EnumerateAllSpells())
             {
                 if (predicate != null && predicate(spell))
+                {
                     return spell;
+                }
             }
 
             return null;
@@ -625,7 +680,17 @@ namespace Server.Spells.SkillMasteries
 
             if (m_Table.ContainsKey(from))
             {
-                return m_Table[from].Any(spell => spell.GetType() == type);
+                for (var index = 0; index < m_Table[from].Count; index++)
+                {
+                    var spell = m_Table[from][index];
+
+                    if (spell.GetType() == type)
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
             }
 
             return false;
@@ -637,7 +702,17 @@ namespace Server.Spells.SkillMasteries
 
             if (m_Table.ContainsKey(from))
             {
-                return m_Table[from].Any(spell => spell.GetType() == typeof(TSpell));
+                for (var index = 0; index < m_Table[from].Count; index++)
+                {
+                    var spell = m_Table[from][index];
+
+                    if (spell.GetType() == typeof(TSpell))
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
             }
 
             return false;
@@ -662,10 +737,14 @@ namespace Server.Spells.SkillMasteries
             //First checks the caster
             if (m_Table.ContainsKey(check))
             {
-                foreach (SkillMasterySpell spell in m_Table[check])
+                for (var index = 0; index < m_Table[check].Count; index++)
                 {
+                    SkillMasterySpell spell = m_Table[check][index];
+
                     if (spell != null && spell.GetType() == type)
+                    {
                         return spell;
+                    }
                 }
             }
             else
@@ -674,12 +753,15 @@ namespace Server.Spells.SkillMasteries
 
                 if (p != null)
                 {
-                    foreach (PartyMemberInfo info in p.Members)
+                    for (var index = 0; index < p.Members.Count; index++)
                     {
+                        PartyMemberInfo info = p.Members[index];
                         SkillMasterySpell spell = GetSpell(info.Mobile, type);
 
                         if (spell != null && spell.PartyEffects && from.InRange(info.Mobile.Location, spell.PartyRange) && spell.CheckPartyEffects(info.Mobile))
+                        {
                             return spell;
+                        }
                     }
                 }
             }
@@ -701,8 +783,10 @@ namespace Server.Spells.SkillMasteries
 
             if (p != null)
             {
-                foreach (PartyMemberInfo info in p.Members)
+                for (var index = 0; index < p.Members.Count; index++)
                 {
+                    PartyMemberInfo info = p.Members[index];
+
                     foreach (var spell in EnumerateSpells(info.Mobile))
                     {
                         if (spell.PartyEffects && (allowed == null || spell.CastSkill != allowed))
@@ -756,8 +840,10 @@ namespace Server.Spells.SkillMasteries
                 }
             }
 
-            foreach (SkillMasterySpell spell in list)
+            for (var index = 0; index < list.Count; index++)
             {
+                SkillMasterySpell spell = list[index];
+
                 yield return spell;
             }
         }
@@ -839,8 +925,12 @@ namespace Server.Spells.SkillMasteries
 
             if (PartyList != null)
             {
-                foreach (Mobile m in PartyList)
+                for (var index = 0; index < PartyList.Count; index++)
+                {
+                    Mobile m = PartyList[index];
+
                     m.Delta(MobileDelta.WeaponDamage);
+                }
 
                 ColUtility.Free(PartyList);
             }
@@ -1003,8 +1093,10 @@ namespace Server.Spells.SkillMasteries
 
             if (PartyList != null)
             {
-                foreach (Mobile m in PartyList)
+                for (var index = 0; index < PartyList.Count; index++)
                 {
+                    Mobile m = PartyList[index];
+
                     m.Delta(MobileDelta.WeaponDamage);
                 }
             }
@@ -1122,7 +1214,9 @@ namespace Server.Spells.SkillMasteries
         public static void RemoveFromCooldown(Type type, Mobile m)
         {
             if (_Cooldown == null)
+            {
                 return;
+            }
 
             SkillMasterySpell spell = null;
 
@@ -1133,7 +1227,9 @@ namespace Server.Spells.SkillMasteries
             }
 
             if (spell != null)
+            {
                 _Cooldown.Remove(spell);
+            }
 
             CheckCooldown();
         }
@@ -1141,26 +1237,37 @@ namespace Server.Spells.SkillMasteries
         public static void CheckCooldown()
         {
             if (_Cooldown == null)
+            {
                 return;
+            }
 
             List<SkillMasterySpell> spells = new List<SkillMasterySpell>();
 
             foreach (KeyValuePair<SkillMasterySpell, DateTime> kvp in _Cooldown)
             {
                 if (kvp.Value < DateTime.UtcNow)
+                {
                     spells.Add(kvp.Key);
+                }
             }
 
-            spells.ForEach(sp => _Cooldown.Remove(sp));
+            for (var index = 0; index < spells.Count; index++)
+            {
+                var sp = spells[index];
+
+                _Cooldown.Remove(sp);
+            }
 
             if (_Cooldown != null && _Cooldown.Count == 0)
+            {
                 _Cooldown = null;
+            }
         }
 
         public static int GetAttributeBonus(Mobile m, AosAttribute attr)
         {
             int value = 0;
-            SkillMasterySpell spell = null;
+            SkillMasterySpell spell;
 
             switch (attr)
             {
@@ -1318,8 +1425,10 @@ namespace Server.Spells.SkillMasteries
                     {
                         int count = 0;
 
-                        foreach (Skill sk in m.Skills)
+                        for (var index = 0; index < m.Skills.Length; index++)
                         {
+                            Skill sk = m.Skills[index];
+
                             if (sk.IsMastery)
                             {
                                 count++;

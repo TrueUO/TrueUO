@@ -1,7 +1,6 @@
 using Server.Network;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Spells.Spellweaving
 {
@@ -65,23 +64,26 @@ namespace Server.Spells.Spellweaving
 
                 TimeSpan duration = TimeSpan.FromSeconds(5 + FocusLevel);
 
-                foreach (Mobile m in AcquireIndirectTargets(Caster.Location, 3 + FocusLevel).OfType<Mobile>())
+                foreach (IDamageable target in AcquireIndirectTargets(Caster.Location, 3 + FocusLevel))
                 {
-                    Caster.DoHarmful(m);
-
-                    Spell oldSpell = m.Spell as Spell;
-
-                    SpellHelper.Damage(this, m, (m.Player && Caster.Player) ? pvpDamage : pvmDamage, 0, 0, 0, 0, 100);
-                    Effects.SendPacket(m.Location, m.Map, new HuedEffect(EffectType.FixedFrom, m.Serial, Serial.Zero, 0x1B6C, m.Location, m.Location, 10, 10, false, false, 0x480, 4));
-
-                    if (oldSpell != null && oldSpell != m.Spell)
+                    if (target is Mobile m)
                     {
-                        if (!CheckResisted(m))
-                        {
-                            m_Table[m] = Timer.DelayCall(duration, DoExpire, m);
+                        Caster.DoHarmful(m);
 
-                            BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.Thunderstorm, 1075800, duration, m, GetCastRecoveryMalus(m)));
-                            m.Delta(MobileDelta.WeaponDamage);
+                        Spell oldSpell = m.Spell as Spell;
+
+                        SpellHelper.Damage(this, m, (m.Player && Caster.Player) ? pvpDamage : pvmDamage, 0, 0, 0, 0, 100);
+                        Effects.SendPacket(m.Location, m.Map, new HuedEffect(EffectType.FixedFrom, m.Serial, Serial.Zero, 0x1B6C, m.Location, m.Location, 10, 10, false, false, 0x480, 4));
+
+                        if (oldSpell != null && oldSpell != m.Spell)
+                        {
+                            if (!CheckResisted(m))
+                            {
+                                m_Table[m] = Timer.DelayCall(duration, DoExpire, m);
+
+                                BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.Thunderstorm, 1075800, duration, m, GetCastRecoveryMalus(m)));
+                                m.Delta(MobileDelta.WeaponDamage);
+                            }
                         }
                     }
                 }

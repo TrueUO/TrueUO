@@ -1,11 +1,7 @@
-#region
-
 using System;
 using System.Collections.Generic;
 using Server.Items;
 using Server.Mobiles;
-
-#endregion
 
 namespace Server.Spells.Ninjitsu
 {

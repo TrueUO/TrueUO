@@ -223,10 +223,10 @@ namespace Server.Engines.Quests
             {
                 for (int i = 0; i < Quest.Objectives.Count; i++)
                 {
-                    EscortObjective escort = Quest.Objectives[i] as EscortObjective;
-
-                    if (escort != null && !escort.Completed && !escort.Failed)
+                    if (Quest.Objectives[i] is EscortObjective escort && !escort.Completed && !escort.Failed)
+                    {
                         return escort;
+                    }
                 }
             }
 
@@ -328,9 +328,7 @@ namespace Server.Engines.Quests
                         // compassion
                         bool gainedPath = false;
 
-                        PlayerMobile pm = escorter as PlayerMobile;
-
-                        if (pm != null)
+                        if (escorter is PlayerMobile pm)
                         {
                             if (pm.CompassionGains > 0 && DateTime.UtcNow > pm.NextCompassionDay)
                             {
@@ -347,11 +345,16 @@ namespace Server.Engines.Quests
                                 pm.SendLocalizedMessage(1074949, null, 0x2A);  // You have demonstrated your compassion!  Your kind actions have been noted.
 
                                 if (gainedPath)
+                                {
                                     pm.SendLocalizedMessage(1053005); // You have achieved a path in compassion!
+                                }
                                 else
+                                {
                                     pm.SendLocalizedMessage(1053002); // You have gained in compassion.
+                                }
 
                                 pm.NextCompassionDay = DateTime.UtcNow + TimeSpan.FromDays(1.0); // in one day CompassionGains gets reset to 0
+
                                 ++pm.CompassionGains;
                             }
                             else
@@ -402,10 +405,12 @@ namespace Server.Engines.Quests
 
         public static void DeleteEscort(Mobile owner)
         {
-            PlayerMobile pm = owner as PlayerMobile;
+            PlayerMobile pm = (PlayerMobile) owner;
 
-            foreach (BaseQuest escortquest in pm.Quests)
+            for (var index = 0; index < pm.Quests.Count; index++)
             {
+                BaseQuest escortquest = pm.Quests[index];
+
                 if (escortquest.Quester is BaseEscort)
                 {
                     BaseEscort escort = (BaseEscort) escortquest.Quester;

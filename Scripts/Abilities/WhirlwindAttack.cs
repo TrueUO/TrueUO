@@ -1,7 +1,6 @@
 using Server.Spells;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -16,18 +15,36 @@ namespace Server.Items
 
         public override bool OnBeforeDamage(Mobile attacker, Mobile defender)
         {
-            BaseWeapon wep = attacker.Weapon as BaseWeapon;
-
-            if (wep != null)
+            if (attacker.Weapon is BaseWeapon wep)
+            {
                 wep.ProcessingMultipleHits = true;
+            }
 
             return true;
         }
 
         public override void OnHit(Mobile attacker, Mobile defender, int damage)
         {
-            if (!Validate(attacker) || Contexts != null && Contexts.Any(c => c.Attacker == attacker))
+            bool any = false;
+
+            if (Contexts != null)
+            {
+                for (var index = 0; index < Contexts.Count; index++)
+                {
+                    var c = Contexts[index];
+
+                    if (Contexts != null && c.Attacker == attacker)
+                    {
+                        any = true;
+                        break;
+                    }
+                }
+            }
+
+            if (!Validate(attacker) || Contexts != null && any)
+            {
                 return;
+            }
 
             ClearCurrentAbility(attacker);
 
@@ -47,15 +64,22 @@ namespace Server.Items
             attacker.FixedEffect(0x3728, 10, 15);
             attacker.PlaySound(0x2A1);
 
-            List<Mobile> list = SpellHelper.AcquireIndirectTargets(attacker, attacker, attacker.Map, 1)
-                .OfType<Mobile>()
-                .Where(m => attacker.InRange(m, weapon.MaxRange) && m != defender).ToList();
+            List<Mobile> list = new List<Mobile>();
+
+            foreach (IDamageable target in SpellHelper.AcquireIndirectTargets(attacker, attacker, attacker.Map, 1))
+            {
+                if (target is Mobile m && (attacker.InRange(m, weapon.MaxRange) && m != defender))
+                {
+                    list.Add(m);
+                }
+            }
 
             int count = list.Count;
 
             if (count > 0)
             {
                 double bushido = attacker.Skills.Bushido.Value;
+
                 int bonus = 0;
 
                 if (bushido > 0)
@@ -68,8 +92,10 @@ namespace Server.Items
 
                 attacker.RevealingAction();
 
-                foreach (Mobile m in list)
+                for (var index = 0; index < list.Count; index++)
                 {
+                    Mobile m = list[index];
+
                     attacker.SendLocalizedMessage(1060161); // The whirling attack strikes a target!
                     m.SendLocalizedMessage(1060162); // You are struck by the whirling attack and take damage!
 
@@ -105,9 +131,22 @@ namespace Server.Items
         public static int DamageBonus(Mobile attacker, Mobile defender)
         {
             if (Contexts == null)
+            {
                 return 0;
+            }
 
-            var context = Contexts.FirstOrDefault(c => c.Attacker == attacker && c.Victims.Contains(defender));
+            WhirlwindAttackContext context = null;
+
+            for (var index = 0; index < Contexts.Count; index++)
+            {
+                var c = Contexts[index];
+
+                if (c.Attacker == attacker && c.Victims.Contains(defender))
+                {
+                    context = c;
+                    break;
+                }
+            }
 
             if (context != null)
             {

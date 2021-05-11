@@ -1,4 +1,3 @@
-#region References
 using Server.Commands;
 using Server.Engines.CityLoyalty;
 using Server.Gumps;
@@ -7,8 +6,6 @@ using Server.Network;
 using Server.Spells;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-#endregion
 
 namespace Server.Items
 {
@@ -51,8 +48,10 @@ namespace Server.Items
 
         private static int MoonGen(PMList list)
         {
-            foreach (PMEntry entry in list.Entries)
+            for (var index = 0; index < list.Entries.Length; index++)
             {
+                PMEntry entry = list.Entries[index];
+
                 PublicMoongate o = new PublicMoongate();
 
                 o.MoveToWorld(entry.Location, list.Map);
@@ -434,7 +433,31 @@ namespace Server.Items
 
         public static int IndexOfEntry(PMEntry entry)
         {
-            PMList list = AllLists.FirstOrDefault(o => o.Entries.Contains(entry));
+            PMList list = null;
+
+            for (var index = 0; index < AllLists.Length; index++)
+            {
+                var o = AllLists[index];
+
+                bool contains = false;
+
+                for (var i = 0; i < o.Entries.Length; i++)
+                {
+                    var oEntry = o.Entries[i];
+
+                    if (Equals(oEntry, entry))
+                    {
+                        contains = true;
+                        break;
+                    }
+                }
+
+                if (contains)
+                {
+                    list = o;
+                    break;
+                }
+            }
 
             return IndexOfEntry(list, entry);
         }
@@ -453,7 +476,17 @@ namespace Server.Items
         {
             if (list != null)
             {
-                return list.Entries.FirstOrDefault(o => o.Location == loc);
+                for (var index = 0; index < list.Entries.Length; index++)
+                {
+                    var o = list.Entries[index];
+
+                    if (o.Location == loc)
+                    {
+                        return o;
+                    }
+                }
+
+                return null;
             }
 
             return null;

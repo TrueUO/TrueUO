@@ -32,12 +32,28 @@ namespace Server.Spells.SkillMasteries
                 double lore = Caster.Skills[SkillName.AnimalLore].Base;
                 bool asone = SpellType == TrainingType.AsOne;
 
-                double skillvalue = (taming + (lore / 2));
+                double skillvalue = taming + lore / 2;
                 int mastery_base = 12;
-                if (skillvalue < 150) mastery_base = 12;
-                if (skillvalue < 165) mastery_base = 10;
-                if (skillvalue < 180) mastery_base = 8;
-                if (skillvalue >= 180) mastery_base = 6;
+
+                if (skillvalue < 150)
+                {
+                    mastery_base = 12;
+                }
+
+                if (skillvalue < 165)
+                {
+                    mastery_base = 10;
+                }
+
+                if (skillvalue < 180)
+                {
+                    mastery_base = 8;
+                }
+
+                if (skillvalue >= 180)
+                {
+                    mastery_base = 6;
+                }
 
                 return asone ? mastery_base * 2 : mastery_base;
             }
@@ -76,22 +92,12 @@ namespace Server.Spells.SkillMasteries
             return base.Cast();
         }
 
-        public override bool CheckCast()
-        {
-            if (Caster is PlayerMobile pm && pm.AllFollowers == null || ((PlayerMobile)Caster).AllFollowers.Count == 0)
-            {
-                Caster.SendLocalizedMessage(1156112); // This ability requires you to have pets.
-                return false;
-            }
-
-            return base.CheckCast();
-        }
-
         public override void SendCastEffect()
         {
             base.SendCastEffect();
 
-            Caster.PrivateOverheadMessage(MessageType.Regular, 0x35, false, "You ready your pet for combat, increasing its battle effectiveness!", Caster.NetState);
+            Effects.SendPacket(Caster.Location, Caster.Map, new HuedEffect(EffectType.FixedFrom, Caster.Serial, Serial.Zero, 0x37C4, Caster.Location, Caster.Location, 10, 14, false, false, 4, 0, 3));
+            Caster.PrivateOverheadMessage(MessageType.Regular, 52, true, "You ready your pet for combat, increasing its battle effectiveness!", Caster.NetState);
         }
 
         public override void OnCast()
@@ -100,21 +106,57 @@ namespace Server.Spells.SkillMasteries
         }
 
         public void OnSelected(TrainingType type, Mobile target)
-        {
-            if (!CheckSequence() || type == TrainingType.AsOne && Caster is PlayerMobile pm && pm.AllFollowers.Count(mob => mob != target) == 0)
+        {            
+            if (!CheckSequence())
             {
                 FinishSequence();
                 return;
             }
 
+            Effects.SendPacket(target.Location, target.Map, new ParticleEffect(EffectType.FixedFrom, target.Serial, Serial.Zero, 0x376A, target.Location, target.Location, 1, 32, false, false, 1262, 0, 0, 9502, 1, target.Serial, 199, 0));
+            Effects.SendPacket(target.Location, target.Map, new GraphicalEffect(EffectType.FixedFrom, target.Serial, Serial.Zero, 0x375A, target.Location, target.Location, 35, 90, true, true));
+
+            /* As One - Requires multiple pets to active */
+            if (type == TrainingType.AsOne && Caster is PlayerMobile pm)
+            {
+                var list = new List<Mobile>();
+
+                for (var index = 0; index < pm.AllFollowers.Count; index++)
+                {
+                    var x = pm.AllFollowers[index];
+
+                    if (x.Map != Map.Internal && x.InRange(Caster, 100) && x != target)
+                    {
+                        list.Add(x);
+                    }
+                }
+
+                if (list.Count > 0)
+                {
+                    for (var index = 0; index < list.Count; index++)
+                    {
+                        var x = list[index];
+
+                        Effects.SendPacket(x.Location, x.Map, new ParticleEffect(EffectType.FixedFrom, x.Serial, Serial.Zero, 0x376A, x.Location,
+                                x.Location, 1, 32, false, false, 1262, 0, 0, 9502, 1, x.Serial, 199, 0));
+                        Effects.SendPacket(x.Location, x.Map, new GraphicalEffect(EffectType.FixedFrom, x.Serial, Serial.Zero, 0x375A, x.Location,
+                                x.Location, 35, 90, true, true));
+                    }
+                }
+                else
+                {
+                    Caster.SendLocalizedMessage(1156110); // Your ability was canceled.
+                    FinishSequence();
+                    return;
+                }
+            }
+            
             SpellType = type;
             Target = target;
 
             _Phase = 0;
 
-            BeginTimer();
-
-            Target.FixedParticles(0x373A, 10, 80, 5018, 0, 0, EffectLayer.Waist);
+            BeginTimer();            
 
             BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.CombatTraining, 1155933, 1156107, $"{SpellType.ToString()}\t{Target.Name}\t{ScaleUpkeep().ToString()}"));
             //You train ~2_NAME~ to use ~1_SKILLNAME~.<br>Mana Upkeep: ~3_COST~
@@ -132,13 +174,19 @@ namespace Server.Spells.SkillMasteries
 
         protected override void DoEffects()
         {
-            Caster.FixedParticles(0x376A, 10, 30, 5052, 1261, 0, EffectLayer.LeftFoot, 0);
+            Effects.SendPacket(Caster.Location, Caster.Map, new ParticleEffect(EffectType.FixedFrom, Caster.Serial, Serial.Zero, 0x376A, Caster.Location, Caster.Location, 1, 32, false, false, 1262, 0, 0, 9502, 1, Caster.Serial, 215, 0));
             Caster.DisruptiveAction();
         }
 
         public override bool OnTick()
         {
             if (Target == null || Target.IsDeadBondedPet /* || Target.Map != Caster.Map*/)
+            {
+                Expire();
+                return false;
+            }
+
+            if (SpellType == TrainingType.AsOne && Caster is PlayerMobile pm && pm.AllFollowers.Count(m => m.Map != Map.Internal && m.InRange(pm.Location, 15)) < 2)
             {
                 Expire();
                 return false;
@@ -208,7 +256,7 @@ namespace Server.Spells.SkillMasteries
 
                             if (spell.Phase > 1)
                             {
-                                damage = damage - (int)(damage * spell.DamageMod);
+                                damage -= (int)(damage * spell.DamageMod);
                                 bc.FixedParticles(0x376A, 10, 30, 5052, 1261, 7, EffectLayer.LeftFoot, 0);
                             }
                             break;
@@ -223,14 +271,33 @@ namespace Server.Spells.SkillMasteries
                             if (bc.GetMaster() is PlayerMobile)
                             {
                                 PlayerMobile pm = bc.GetMaster() as PlayerMobile;
-                                List<Mobile> list = pm.AllFollowers.Where(m => (m == defender || m.InRange(defender.Location, 3)) && m.CanBeHarmful(attacker)).ToList();
 
-                                if (list.Count > 0)
+                                List<Mobile> list = new List<Mobile>();
+
+                                if (pm != null)
                                 {
-                                    damage = damage / list.Count;
-
-                                    foreach (Mobile m in list)
+                                    for (var index = 0; index < pm.AllFollowers.Count; index++)
                                     {
+                                        var m = pm.AllFollowers[index];
+
+                                        if (m.Map != Map.Internal && m.InRange(pm, 15) && m.CanBeHarmful(attacker))
+                                        {
+                                            list.Add(m);
+                                        }
+                                    }
+                                }
+
+                                if (list.Count > 1)
+                                {
+                                    damage /= list.Count;
+
+                                    for (var index = 0; index < list.Count; index++)
+                                    {
+                                        Mobile m = list[index];
+
+                                        Effects.SendPacket(m.Location, m.Map,
+                                            new ParticleEffect(EffectType.FixedFrom, m.Serial, Serial.Zero, 0x374A, m.Location, m.Location, 1, 32, false, false, 2734, 0, 0, 9502, 1, m.Serial, 42, 0));
+
                                         if (m != defender)
                                         {
                                             m.Damage(damage, attacker, true, false);
@@ -274,7 +341,7 @@ namespace Server.Spells.SkillMasteries
                         case TrainingType.Empowerment:
                             if (spell.Phase > 1)
                             {
-                                damage = damage + (int)(damage * spell.DamageMod);
+                                damage += (int)(damage * spell.DamageMod);
                                 creature.FixedParticles(0x376A, 10, 30, 5052, 1261, 7, EffectLayer.LeftFoot, 0);
                             }
                             break;
@@ -302,7 +369,7 @@ namespace Server.Spells.SkillMasteries
                         case TrainingType.Berserk:
                             if (spell.Phase > 1)
                             {
-                                damage = damage + (int)(damage * spell.DamageMod);
+                                damage += (int)(damage * spell.DamageMod);
                                 bc.FixedParticles(0x376A, 10, 30, 5052, 1261, 7, EffectLayer.LeftFoot, 0);
                             }
                             break;
@@ -363,9 +430,9 @@ namespace Server.Spells.SkillMasteries
 
                 if (targeted is BaseCreature bc && bc.GetMaster() == from && from.Spell == Spell)
                 {
-                    Spell.Caster.FixedEffect(0x3779, 10, 20, 1270, 0);
-                    Spell.Caster.SendSound(0x64E);
-
+                    from.SendSound(0x64E);
+                    Effects.SendPacket(from.Location, from.Map, new ParticleEffect(EffectType.FixedFrom, from.Serial, Serial.Zero, 0x3779, from.Location, from.Location, 1, 15, false, false, 63, 0, 0, 5060, 1, from.Serial, 215, 0));
+                    
                     int taming = (int)from.Skills[SkillName.AnimalTaming].Value;
                     int lore = (int)from.Skills[SkillName.AnimalLore].Value;
 
@@ -414,48 +481,58 @@ namespace Server.Spells.SkillMasteries
         public Mobile Caster { get; }
         public BaseCreature Target { get; }
 
-        public const int Hue = 0x07FF;
+        public const int Hue = 0xEF9;
 
-        public ChooseTrainingGump(Mobile caster, BaseCreature target, CombatTrainingSpell spell) : base(100, 100)
+        public ChooseTrainingGump(Mobile caster, BaseCreature target, CombatTrainingSpell spell)
+            : base(200, 100)
         {
             Spell = spell;
             Caster = caster;
             Target = target;
 
-            AddBackground(0, 0, 260, 187, 3600);
-            AddAlphaRegion(10, 10, 240, 167);
+            AddPage(0);
 
-            AddImageTiled(220, 15, 30, 162, 10464);
+            AddBackground(10, 10, 250, 178, 0x2436);
+            AddAlphaRegion(20, 20, 230, 158);
 
-            AddHtmlLocalized(20, 20, 150, 16, 1156113, Hue, false, false); // Select Training
+            AddImage(220, 20, 0x28E0);
+            AddImage(220, 72, 0x28E0);
+            AddImage(220, 124, 0x28E0);
+            AddItem(188, 16, 0x1AE3);
+            AddItem(198, 168, 0x1AE1);
+            AddItem(8, 15, 0x1AE2);
+            AddItem(2, 168, 0x1AE0);
 
-            int y = 40;
+            AddHtmlLocalized(30, 26, 200, 20, 1156113, Hue, false, false); // Select Training
+
+            int y = 53;
             if (MasteryInfo.HasLearned(caster, SkillName.AnimalTaming, 1))
             {
-                AddButton(20, y, 9762, 9763, 1, GumpButtonType.Reply, 0);
-                AddHtmlLocalized(43, y, 150, 16, 1156109, Hue, false, false); // Empowerment
-                y += 20;
+                AddButton(27, y, 0x25E6, 0x25E7, 1, GumpButtonType.Reply, 0);
+                AddHtmlLocalized(50, y - 2, 150, 20, 1156109, Hue, false, false); // Empowerment
+                y += 21;
+            }
+
+            if (MasteryInfo.HasLearned(caster, SkillName.AnimalTaming, 1))
+            {
+                AddButton(27, y, 0x25E6, 0x25E7, 4, GumpButtonType.Reply, 0);
+                AddHtmlLocalized(50, y, 150, 20, 1157544, Hue, false, false); // As One
+
+                y += 21;
             }
 
             if (MasteryInfo.HasLearned(caster, SkillName.AnimalTaming, 2))
             {
-                AddButton(20, y, 9762, 9763, 2, GumpButtonType.Reply, 0);
-                AddHtmlLocalized(43, y, 150, 16, 1153271, Hue, false, false); // Berserk
-                y += 20;
+                AddButton(27, y, 0x25E6, 0x25E7, 2, GumpButtonType.Reply, 0);
+                AddHtmlLocalized(50, y, 150, 20, 1153271, Hue, false, false); // Berserk
+                y += 21;
             }
 
             if (MasteryInfo.HasLearned(caster, SkillName.AnimalTaming, 3))
             {
-                AddButton(20, y, 9762, 9763, 3, GumpButtonType.Reply, 0);
-                AddHtmlLocalized(43, y, 150, 16, 1156108, Hue, false, false); // Consume Damage
-                y += 20;
-            }
-
-            if (MasteryInfo.HasLearned(caster, SkillName.AnimalTaming, 1))
-            {
-                AddButton(20, y, 9762, 9763, 4, GumpButtonType.Reply, 0);
-                AddHtmlLocalized(43, y, 150, 16, 1157544, Hue, false, false); // As One
-            }
+                AddButton(27, y, 0x25E6, 0x25E7, 3, GumpButtonType.Reply, 0);
+                AddHtmlLocalized(50, y, 150, 20, 1156108, Hue, false, false); // Consume Damage                
+            }            
         }
 
         public override void OnResponse(NetState state, RelayInfo info)

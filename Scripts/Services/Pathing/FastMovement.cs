@@ -1,10 +1,8 @@
-#region References
 using Server.Items;
 using Server.Mobiles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-#endregion
 
 namespace Server.Movement
 {
@@ -73,7 +71,29 @@ namespace Server.Movement
             IEnumerable<StaticTile> tiles,
             IEnumerable<Item> items)
         {
-            return tiles.All(t => IsOk(t, ourZ, ourTop)) && items.All(i => IsOk(m, i, ourZ, ourTop, ignoreDoors, ignoreSpellFields));
+            bool tile = true;
+
+            foreach (var t in tiles)
+            {
+                if (!IsOk(t, ourZ, ourTop))
+                {
+                    tile = false;
+                    break;
+                }
+            }
+
+            bool item = true;
+
+            foreach (var i in items)
+            {
+                if (!IsOk(m, i, ourZ, ourTop, ignoreDoors, ignoreSpellFields))
+                {
+                    item = false;
+                    break;
+                }
+            }
+
+            return tile && item;
         }
 
         private static bool Check(
@@ -127,12 +147,15 @@ namespace Server.Movement
             TileFlag flags;
 
             #region Tiles
-            foreach (StaticTile tile in tiles)
+            for (var index = 0; index < tiles.Length; index++)
             {
+                StaticTile tile = tiles[index];
+
                 itemData = TileData.ItemTable[tile.ID & TileData.MaxItemValue];
                 flags = itemData.Flags;
 
-                if (m != null && m.Flying && (Insensitive.Equals(itemData.Name, "hover over") || (flags & TileFlag.HoverOver) != 0))
+                if (m != null && m.Flying &&
+                    (Insensitive.Equals(itemData.Name, "hover over") || (flags & TileFlag.HoverOver) != 0))
                 {
                     newZ = tile.Z;
                     return true;
@@ -141,7 +164,8 @@ namespace Server.Movement
                 // Stygian Dragon
                 if (m != null && m.Body == 826 && map != null && map.MapID == 5)
                 {
-                    if (x >= 307 && x <= 354 && y >= 126 && y <= 192 || x >= 42 && x <= 89 && (y >= 333 && y <= 399 || y >= 531 && y <= 597 || y >= 739 && y <= 805))
+                    if (x >= 307 && x <= 354 && y >= 126 && y <= 192 || x >= 42 && x <= 89 &&
+                        (y >= 333 && y <= 399 || y >= 531 && y <= 597 || y >= 739 && y <= 805))
                     {
                         if (tile.Z > newZ)
                         {
@@ -220,17 +244,22 @@ namespace Server.Movement
             #endregion
 
             #region Items
-            foreach (Item item in items)
+            for (var index = 0; index < items.Count; index++)
             {
+                Item item = items[index];
+
                 itemData = item.ItemData;
                 flags = itemData.Flags;
 
                 #region SA
-                if (m != null && m.Flying && (Insensitive.Equals(itemData.Name, "hover over") || (flags & TileFlag.HoverOver) != 0))
+
+                if (m != null && m.Flying &&
+                    (Insensitive.Equals(itemData.Name, "hover over") || (flags & TileFlag.HoverOver) != 0))
                 {
                     newZ = item.Z;
                     return true;
                 }
+
                 #endregion
 
                 if (item.Movable)
@@ -238,7 +267,8 @@ namespace Server.Movement
                     continue;
                 }
 
-                if ((flags & ImpassableSurface) != TileFlag.Surface && (m != null && !m.CanSwim || (flags & TileFlag.Wet) == 0))
+                if ((flags & ImpassableSurface) != TileFlag.Surface &&
+                    (m != null && !m.CanSwim || (flags & TileFlag.Wet) == 0))
                 {
                     continue;
                 }
@@ -303,6 +333,7 @@ namespace Server.Movement
                 newZ = ourZ;
                 moveIsOk = true;
             }
+
             #endregion
 
             if (!considerLand || landBlocks || stepTop < landZ)
@@ -542,9 +573,11 @@ namespace Server.Movement
 
             StaticTile[] staticTiles = map.Tiles.GetStaticTiles(xCheck, yCheck, true);
 
-            foreach (StaticTile tile in staticTiles)
+            for (var index = 0; index < staticTiles.Length; index++)
             {
+                StaticTile tile = staticTiles[index];
                 ItemData tileData = TileData.ItemTable[tile.ID & TileData.MaxItemValue];
+
                 int calcTop = tile.Z + tileData.CalcHeight;
 
                 if (isSet && calcTop < zCenter)

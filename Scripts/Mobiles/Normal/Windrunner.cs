@@ -42,7 +42,7 @@ namespace Server.Mobiles
     }
 
     [CorpseName("a Windrunner corpse")]
-    public class Windrunner : BaseMount
+    public class Windrunner : BaseMount, IVanityMount
     {
         [Constructable]
         public Windrunner()
@@ -74,8 +74,12 @@ namespace Server.Mobiles
             SetResistance(ResistanceType.Energy, 30, 40);
 
             SetSkill(SkillName.MagicResist, 25.0, 30.0);
-            SetSkill(SkillName.Tactics, 30.0, 40.0);
-            SetSkill(SkillName.Wrestling, 30.0, 35.0);
+            SetSkill(SkillName.Tactics, 30.0, 45.0);
+            SetSkill(SkillName.Wrestling, 30.0, 40.0);
+            SetSkill(SkillName.DetectHidden, 30.0, 40.0);
+            SetSkill(SkillName.Necromancy, 15.0, 20.0);
+            SetSkill(SkillName.SpiritSpeak, 15.0, 20.0);
+            SetSkill(SkillName.Focus, 30.0, 35.0);
 
             Fame = 300;
             Karma = 300;

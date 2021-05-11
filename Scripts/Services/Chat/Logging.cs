@@ -25,7 +25,7 @@ namespace Server.Engines.Chat
 
             try
             {
-                m_Output = new StreamWriter(Path.Combine(directory, string.Format("{0}.log", DateTime.UtcNow.ToLongDateString())), true)
+                m_Output = new StreamWriter(Path.Combine(directory, $"{DateTime.UtcNow.ToLongDateString()}.log"), true)
                 {
                     AutoFlush = true
                 };
@@ -64,7 +64,7 @@ namespace Server.Engines.Chat
 
                     AppendPath(ref path, "chat");
                     AppendPath(ref path, "channels");
-                    path = Path.Combine(path, string.Format("{0}.log", channel));
+                    path = Path.Combine(path, $"{channel}.log");
 
                     channelOutput = new StreamWriter(path, true)
                     {

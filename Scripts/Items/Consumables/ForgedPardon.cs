@@ -52,14 +52,21 @@ namespace Server.Items
         public static void Defrag()
         {
             List<Mobile> toRemove = new List<Mobile>();
+
             foreach (KeyValuePair<Mobile, DateTime> kvp in m_Table)
             {
                 if (kvp.Value < DateTime.UtcNow)
+                {
                     toRemove.Add(kvp.Key);
+                }
             }
 
-            foreach (Mobile mob in toRemove)
+            for (var index = 0; index < toRemove.Count; index++)
+            {
+                Mobile mob = toRemove[index];
+
                 m_Table.Remove(mob);
+            }
         }
 
         public ForgedPardon(Serial serial)

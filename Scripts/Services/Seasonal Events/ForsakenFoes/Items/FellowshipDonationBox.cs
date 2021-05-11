@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -58,15 +57,18 @@ namespace Server.Items
                 return false;
             }
 
-            int amount = ((MaritimeCargo)item).GetAwardAmount() * 1000;
+            if (item != null)
+            {
+                int amount = ((MaritimeCargo) item).GetAwardAmount() * 1000;
 
-            if (Donations.ContainsKey(from))
-            {
-                Donations[from] += amount;
-            }
-            else
-            {
-                Donations.Add(from, amount);
+                if (Donations.ContainsKey(from))
+                {
+                    Donations[from] += amount;
+                }
+                else
+                {
+                    Donations.Add(from, amount);
+                }
             }
 
             from.SendLocalizedMessage(1159032, string.Format("{0}", Donations[from].ToString())); // The Fellowship thanks you for your donation. You have donated ~1_val~ worth of goods!
@@ -77,7 +79,7 @@ namespace Server.Items
                 from.AddToBackpack(new FellowshipCoin());
             }
 
-            item.Delete();
+            item?.Delete();
 
             return true;
         }
@@ -114,11 +116,20 @@ namespace Server.Items
 
                     writer.Write(Donations.Count);
 
-                    Donations.ToList().ForEach(s =>
+                    List<KeyValuePair<Mobile, int>> list = new List<KeyValuePair<Mobile, int>>();
+
+                    foreach (var donation in Donations)
                     {
+                        list.Add(donation);
+                    }
+
+                    for (var index = 0; index < list.Count; index++)
+                    {
+                        var s = list[index];
+
                         writer.Write(s.Key);
                         writer.Write(s.Value);
-                    });
+                    }
                 });
         }
 

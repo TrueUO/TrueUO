@@ -58,8 +58,10 @@ namespace Server.Items
                 donemessage = true;
             }
 
-            foreach (TenthAnniversarySculpture sculpture in m_sculptures)
+            for (var index = 0; index < m_sculptures.Count; index++)
             {
+                TenthAnniversarySculpture sculpture = m_sculptures[index];
+
                 if (sculpture.RewardCooldown != null && sculpture.RewardCooldown.ContainsKey(from))
                 {
                     if (!donemessage)
@@ -67,11 +69,17 @@ namespace Server.Items
                         TimeSpan left = sculpture.RewardCooldown[from] - DateTime.UtcNow;
 
                         if (left.TotalHours > 1)
-                            from.SendLocalizedMessage(1079550, ((int)left.TotalHours).ToString()); // You can improve your fortunes again in about ~1_TIME~ hours.
+                        {
+                            from.SendLocalizedMessage(1079550, ((int) left.TotalHours).ToString()); // You can improve your fortunes again in about ~1_TIME~ hours.
+                        }
                         else if (left.TotalMinutes > 1)
-                            from.SendLocalizedMessage(1079548, ((int)left.TotalMinutes).ToString()); // You can improve your fortunes in about ~1_TIME~ minutes.
+                        {
+                            from.SendLocalizedMessage(1079548, ((int) left.TotalMinutes).ToString()); // You can improve your fortunes in about ~1_TIME~ minutes.
+                        }
                         else
+                        {
                             from.SendLocalizedMessage(1079547); // Your fortunes are about to improve.
+                        }
                     }
 
                     return true;
@@ -83,33 +91,46 @@ namespace Server.Items
 
         public static void DefragTables()
         {
-            foreach (TenthAnniversarySculpture sculpture in m_sculptures)
+            for (var index = 0; index < m_sculptures.Count; index++)
             {
+                TenthAnniversarySculpture sculpture = m_sculptures[index];
+
                 List<Mobile> list = new List<Mobile>(sculpture.RewardCooldown.Keys);
 
-                foreach (Mobile m in list)
+                for (var i = 0; i < list.Count; i++)
                 {
+                    Mobile m = list[i];
+
                     if (sculpture.RewardCooldown.ContainsKey(m) && sculpture.RewardCooldown[m] < DateTime.UtcNow)
+                    {
                         sculpture.RewardCooldown.Remove(m);
+                    }
                 }
 
                 list.Clear();
             }
 
             List<Mobile> remove = new List<Mobile>();
+
             foreach (KeyValuePair<Mobile, DateTime> kvp in m_LuckTable)
             {
                 if (kvp.Value < DateTime.UtcNow)
+                {
                     remove.Add(kvp.Key);
+                }
             }
 
-            remove.ForEach(m =>
+            for (var index = 0; index < remove.Count; index++)
             {
+                var m = remove[index];
+
                 m_LuckTable.Remove(m);
 
                 if (m.NetState != null)
+                {
                     m.SendLocalizedMessage(1079552); //Your luck just ran out.
-            });
+                }
+            }
 
             remove.Clear();
         }

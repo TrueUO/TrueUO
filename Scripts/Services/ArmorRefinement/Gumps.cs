@@ -68,7 +68,7 @@ namespace Server.Gumps
             y += 25;
 
             AddHtmlLocalized(10, y, 200, 16, 1154107, WhiteLabel, false, false); // BONUS MOD CHANCE:
-            AddHtmlLocalized(170, y, 15, 16, 1114057, m_Item.GetBonusChance().ToString() + "%", WhiteLabel, false, false);
+            AddHtmlLocalized(170, y, 15, 16, 1114057, m_Item.GetBonusChance() + "%", WhiteLabel, false, false);
 
             AddButton(10, 320, 4017, 4019, 0, GumpButtonType.Reply, 0);
             AddHtmlLocalized(50, 320, 100, 16, 3002084, WhiteLabel, false, false); // Close
@@ -136,10 +136,8 @@ namespace Server.Gumps
                 if (m_Item == null || m_Item.Deleted)
                     return;
 
-                if (targeted is BaseArmor)
+                if (targeted is BaseArmor armor)
                 {
-                    BaseArmor armor = targeted as BaseArmor;
-
                     if (!armor.IsChildOf(from.Backpack))
                         from.SendLocalizedMessage(1054107); // This item must be in your backpack.
                     else if (armor.ArmorAttributes.MageArmor > 0)
@@ -184,7 +182,7 @@ namespace Server.Gumps
             }
         }
 
-        public int GetResistanceLabel(ResistanceType attr, int value)
+        public static int GetResistanceLabel(ResistanceType attr, int value)
         {
             if (value == 0)
                 return 1062648; // None Selected

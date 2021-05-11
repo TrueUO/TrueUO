@@ -18,13 +18,10 @@ namespace Server.Mobiles
             Title = "The Seamstress";
             Hue = Utility.RandomSkinHue();
             Blessed = true;
-
-            Utility.AssignRandomHair(this);
-
             Female = true;
             Race = Race.Human;
+            HairItemID = 0x203C;
 
-            AddItem(new LongHair(2213));
             AddItem(new Backpack());
             AddItem(new Sandals(2017));
             AddItem(new FullApron(1313));

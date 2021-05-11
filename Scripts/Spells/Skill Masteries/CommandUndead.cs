@@ -135,18 +135,28 @@ namespace Server.Spells.SkillMasteries
         public static bool ValidateTarget(BaseCreature bc)
         {
             if (bc is BaseRenowned || bc is BaseChampion || bc is Engines.Shadowguard.ShadowguardBoss)
-                return false;
-
-            foreach (Type t in _CommandTypes)
             {
-                if (t == bc.GetType())
-                    return true;
+                return false;
             }
 
-            foreach (Type t in _NoCommandTypes)
+            for (var index = 0; index < _CommandTypes.Length; index++)
             {
+                Type t = _CommandTypes[index];
+
                 if (t == bc.GetType())
+                {
+                    return true;
+                }
+            }
+
+            for (var index = 0; index < _NoCommandTypes.Length; index++)
+            {
+                Type t = _NoCommandTypes[index];
+
+                if (t == bc.GetType())
+                {
                     return false;
+                }
             }
 
             SlayerEntry entry = SlayerGroup.GetEntryByName(SlayerName.Silver);

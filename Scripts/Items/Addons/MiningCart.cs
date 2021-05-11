@@ -311,21 +311,29 @@ namespace Server.Items
                             }
 
                             int amount = Math.Min(5, m_Gems);
-                            gems.Amount = amount;
 
-                            if (!from.PlaceInBackpack(gems))
+                            if (gems != null)
                             {
-                                gems.Delete();
-                                from.SendLocalizedMessage(1078837); // Your backpack is full! Please make room and try again.
-                            }
-                            else
-                            {
-                                PublicOverheadMessage(MessageType.Regular, 0, 1094723, amount.ToString()); // Gems: ~1_COUNT~
-                                m_Gems -= amount;
+                                gems.Amount = amount;
+
+                                if (!from.PlaceInBackpack(gems))
+                                {
+                                    gems.Delete();
+
+                                    from.SendLocalizedMessage(1078837); // Your backpack is full! Please make room and try again.
+                                }
+                                else
+                                {
+                                    PublicOverheadMessage(MessageType.Regular, 0, 1094723, amount.ToString()); // Gems: ~1_COUNT~
+
+                                    m_Gems -= amount;
+                                }
                             }
                         }
                         else
+                        {
                             from.SendLocalizedMessage(1094725); // There are no more resources available at this time.
+                        }
 
                         break;
                 }
