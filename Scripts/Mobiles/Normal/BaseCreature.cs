@@ -5120,14 +5120,6 @@ namespace Server.Mobiles
             AddLoot(pack, Utility.RandomMinMax(min, max), 100.0);
         }
 
-        public virtual void AddLoot(LootPack pack, int min, int max, double chance)
-        {
-            if (min > max)
-                min = max;
-
-            AddLoot(pack, Utility.RandomMinMax(min, max), chance);
-        }
-
         public virtual void AddLoot(LootPack pack, int amount)
         {
             AddLoot(pack, amount, 100.0);
@@ -5168,96 +5160,6 @@ namespace Server.Mobiles
             pack.Generate(this);
         }
 
-        public static void GetRandomAOSStats(int minLevel, int maxLevel, out int attributeCount, out int min, out int max)
-        {
-            int v = RandomMinMaxScaled(minLevel, maxLevel);
-
-            if (v >= 5)
-            {
-                attributeCount = Utility.RandomMinMax(2, 6);
-                min = 20;
-                max = 70;
-            }
-            else if (v == 4)
-            {
-                attributeCount = Utility.RandomMinMax(2, 4);
-                min = 20;
-                max = 50;
-            }
-            else if (v == 3)
-            {
-                attributeCount = Utility.RandomMinMax(2, 3);
-                min = 20;
-                max = 40;
-            }
-            else if (v == 2)
-            {
-                attributeCount = Utility.RandomMinMax(1, 2);
-                min = 10;
-                max = 30;
-            }
-            else
-            {
-                attributeCount = 1;
-                min = 10;
-                max = 20;
-            }
-        }
-
-        public static int RandomMinMaxScaled(int min, int max)
-        {
-            if (min == max)
-            {
-                return min;
-            }
-
-            if (min > max)
-            {
-                int hold = min;
-                min = max;
-                max = hold;
-            }
-
-            /* Example:
-            *    min: 1
-            *    max: 5
-            *  count: 5
-            *
-            * total = (5*5) + (4*4) + (3*3) + (2*2) + (1*1) = 25 + 16 + 9 + 4 + 1 = 55
-            *
-            * chance for min+0 : 25/55 : 45.45%
-            * chance for min+1 : 16/55 : 29.09%
-            * chance for min+2 :  9/55 : 16.36%
-            * chance for min+3 :  4/55 :  7.27%
-            * chance for min+4 :  1/55 :  1.81%
-            */
-
-            int count = max - min + 1;
-            int total = 0, toAdd = count;
-
-            for (int i = 0; i < count; ++i, --toAdd)
-            {
-                total += toAdd * toAdd;
-            }
-
-            int rand = Utility.Random(total);
-            toAdd = count;
-
-            int val = min;
-
-            for (int i = 0; i < count; ++i, --toAdd, ++val)
-            {
-                rand -= toAdd * toAdd;
-
-                if (rand < 0)
-                {
-                    break;
-                }
-            }
-
-            return val;
-        }
-
         public void PackGold(int amount)
         {
             if (amount > 0)
@@ -5269,48 +5171,6 @@ namespace Server.Mobiles
         public void PackGold(int min, int max)
         {
             PackGold(Utility.RandomMinMax(min, max));
-        }
-
-        public void PackStatue(int min, int max)
-        {
-            PackStatue(Utility.RandomMinMax(min, max));
-        }
-
-        public void PackStatue(int amount)
-        {
-            for (int i = 0; i < amount; ++i)
-            {
-                PackStatue();
-            }
-        }
-
-        public void PackStatue()
-        {
-            PackItem(Loot.RandomStatue());
-        }
-
-        public void PackGem()
-        {
-            PackGem(1);
-        }
-
-        public void PackGem(int min, int max)
-        {
-            PackGem(Utility.RandomMinMax(min, max));
-        }
-
-        public void PackGem(int amount)
-        {
-            if (amount <= 0)
-            {
-                return;
-            }
-
-            Item gem = Loot.RandomGem();
-
-            gem.Amount = amount;
-
-            PackItem(gem);
         }
 
         public void PackItem(Item item)
@@ -5378,9 +5238,7 @@ namespace Server.Mobiles
 
             if (DeathAdderCharmable && from.CanBeHarmful(this, false))
             {
-                DeathAdder da = SummonFamiliarSpell.Table[from] as DeathAdder;
-
-                if (da != null && !da.Deleted)
+                if (SummonFamiliarSpell.Table[from] is DeathAdder da && !da.Deleted)
                 {
                     from.SendAsciiMessage("You charm the snake.  Select a target to attack.");
                     from.Target = new DeathAdderCharmTarget(this);
@@ -5635,29 +5493,6 @@ namespace Server.Mobiles
 
         public List<DamageStore> LootingRights { get; set; }
 
-        public bool HasLootingRights(Mobile m)
-        {
-            if (LootingRights == null)
-            {
-                return false;
-            }
-
-            DamageStore first = null;
-
-            for (var index = 0; index < LootingRights.Count; index++)
-            {
-                var ds = LootingRights[index];
-
-                if (ds.m_Mobile == m && ds.m_HasRight)
-                {
-                    first = ds;
-                    break;
-                }
-            }
-
-            return first != null;
-        }
-
         public Mobile GetHighestDamager()
         {
             if (LootingRights == null || LootingRights.Count == 0)
@@ -5666,11 +5501,6 @@ namespace Server.Mobiles
             }
 
             return LootingRights[0].m_Mobile;
-        }
-
-        public bool IsHighestDamager(Mobile m)
-        {
-            return LootingRights != null && LootingRights.Count > 0 && LootingRights[0].m_Mobile == m;
         }
 
         public Mobile RandomPlayerWithLootingRights()
@@ -6280,15 +6110,10 @@ namespace Server.Mobiles
         {
             base.OnRegionChange(Old, New);
 
-            if (Controlled)
+            if (Controlled && (Spawner is SpawnEntry se && !se.UnlinkOnTaming && (New == null || !New.AcceptsSpawnsFrom(se.Region))))
             {
-                SpawnEntry se = Spawner as SpawnEntry;
-
-                if (se != null && !se.UnlinkOnTaming && (New == null || !New.AcceptsSpawnsFrom(se.Region)))
-                {
-                    Spawner.Remove(this);
-                    Spawner = null;
-                }
+                Spawner.Remove(this);
+                Spawner = null;
             }
         }
 
@@ -7011,7 +6836,7 @@ namespace Server.Mobiles
                 CheckCastMastery();
             }
 
-            if (EnableRummaging && CanRummageCorpses && !Summoned && !Controlled && tc >= m_NextRummageTime)
+            if (CanRummageCorpses && !Summoned && !Controlled && tc >= m_NextRummageTime)
             {
                 double min, max;
 

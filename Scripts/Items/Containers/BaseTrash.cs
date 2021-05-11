@@ -56,15 +56,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         public virtual bool AddCleanupItem(Mobile from, Item item)
@@ -137,7 +135,12 @@ namespace Server.Items
                     }
                 }
 
-                list1.ForEach(k => k.confirm = true);
+                for (var index = 0; index < list1.Count; index++)
+                {
+                    var k = list1[index];
+
+                    k.confirm = true;
+                }
             }
             else
             {
@@ -153,7 +156,12 @@ namespace Server.Items
                     }
                 }
 
-                list.ForEach(k => k.confirm = true);
+                for (var index = 0; index < list.Count; index++)
+                {
+                    var k = list[index];
+
+                    k.confirm = true;
+                }
             }
         }
     }
