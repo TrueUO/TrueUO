@@ -4,9 +4,9 @@ namespace Server.Items
     public partial class BaseCostume : BaseShield
     {
         public bool m_Transformed;
-        private int m_Body = 0;
+
+        private int m_Body;
         private int m_Hue = -1;
-        private int m_SaveHueMod = -1;
 
         public virtual string CreatureName { get; private set; }
 
