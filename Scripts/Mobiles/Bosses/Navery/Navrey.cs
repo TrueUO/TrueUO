@@ -138,19 +138,26 @@ namespace Server.Mobiles
             }
 
             // for each with looting rights... give an eye of navrey if they have the quest
-            foreach (DamageStore d in rights)
+            for (var index = 0; index < rights.Count; index++)
             {
-                PlayerMobile pm = d.m_Mobile as PlayerMobile;
-                if (null != pm)
+                DamageStore d = rights[index];
+
+                if (d.m_Mobile is PlayerMobile pm)
                 {
-                    foreach (BaseQuest quest in pm.Quests)
+                    for (var i = 0; i < pm.Quests.Count; i++)
                     {
+                        BaseQuest quest = pm.Quests[i];
+
                         if (quest is GreenWithEnvyQuest)
                         {
                             Container pack = pm.Backpack;
                             Item item = new EyeOfNavrey();
+
                             if (pack == null || !pack.TryDropItem(pm, item, false))
+                            {
                                 pm.BankBox.DropItem(item);
+                            }
+
                             pm.SendLocalizedMessage(1095155); // As Navrey Night-Eyes dies, you find and claim one of her eyes as proof of her demise.
                             break;
                         }
@@ -170,10 +177,9 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
-            if (version >= 1)
-                m_Spawner = reader.ReadItem() as NavreysController;
+            m_Spawner = reader.ReadItem() as NavreysController;
         }
     }
 }
