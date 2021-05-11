@@ -5,13 +5,13 @@ namespace Server.Items
     public class ClockworkAssembly : Item, ICommodity
     {
         public override int LabelNumber => 1073426;  // Clockwork Assembly
+        public override int Hue => 1102;
 
         [Constructable]
         public ClockworkAssembly()
             : base(0x1EA8)
         {
             Weight = 5.0;
-            Hue = 1102;
         }
 
         public ClockworkAssembly(Serial serial)
