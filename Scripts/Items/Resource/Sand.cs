@@ -3,6 +3,7 @@ namespace Server.Items
     public class Sand : Item, ICommodity
     {
         public override int LabelNumber => 1044626;  // sand
+        public override int Hue => 2413;
         public override double DefaultWeight => 0.1;
 
         [Constructable]

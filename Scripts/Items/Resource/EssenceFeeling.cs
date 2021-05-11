@@ -14,7 +14,6 @@ namespace Server.Items
         {
             Stackable = true;
             Amount = amount;
-            Hue = 455;
         }
 
         public EssenceFeeling(Serial serial)
@@ -23,6 +22,7 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1113339;// essence of feeling
+        public override int Hue => 455;
         TextDefinition ICommodity.Description => LabelNumber;
         bool ICommodity.IsDeedable => true;
 
