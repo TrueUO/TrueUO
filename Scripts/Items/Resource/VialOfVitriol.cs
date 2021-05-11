@@ -1,6 +1,5 @@
 namespace Server.Items
 {
-    [TypeAlias("Server.Items.VialVitirol")]
     public class VialOfVitriol : Item, ICommodity
     {
         [Constructable]

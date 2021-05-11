@@ -4,10 +4,11 @@ namespace Server.Items
     {
         private CraftResource m_Resource;
 
+        public override int Hue => CraftResources.GetHue(m_Resource);
+
         public BaseGranite(CraftResource resource)
             : base(0x1779)
         {
-            Hue = CraftResources.GetHue(resource);
             Stackable = true;
 
             m_Resource = resource;

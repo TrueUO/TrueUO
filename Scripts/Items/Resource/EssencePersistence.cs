@@ -23,6 +23,8 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1113343;// essence of persistence
+        public override int Hue => 37;
+
         TextDefinition ICommodity.Description => LabelNumber;
         bool ICommodity.IsDeedable => true;
 

@@ -74,15 +74,20 @@ namespace Server.Items
                         Engines.Plants.PlantHue hue = dryReeds.PlantHue;
 
                         if (!dryReeds.IsChildOf(from.Backpack))
+                        {
                             from.SendLocalizedMessage(1116249); //That must be in your backpack for you to use it.
+                        }
                         else if (cont != null)
                         {
                             Item[] items = cont.FindItemsByType(typeof(DryReeds));
                             List<Item> list = new List<Item>();
+
                             int total = 0;
 
-                            foreach (Item it in items)
+                            for (var index = 0; index < items.Length; index++)
                             {
+                                Item it = items[index];
+
                                 if (it is DryReeds check)
                                 {
                                     if (dryReeds.PlantHue == check.PlantHue)
@@ -97,8 +102,10 @@ namespace Server.Items
 
                             if (list.Count > 0 && total > 1)
                             {
-                                foreach (Item it in list)
+                                for (var index = 0; index < list.Count; index++)
                                 {
+                                    Item it = list[index];
+
                                     if (it.Amount >= toConsume)
                                     {
                                         it.Consume(toConsume);
@@ -111,20 +118,28 @@ namespace Server.Items
                                     }
 
                                     if (toConsume <= 0)
+                                    {
                                         break;
+                                    }
                                 }
 
                                 SoftenedReeds sReed = new SoftenedReeds(hue);
 
                                 if (!from.Backpack.TryDropItem(from, sReed, false))
+                                {
                                     sReed.MoveToWorld(from.Location, from.Map);
+                                }
 
                                 m_UsesRemaining--;
 
                                 if (m_UsesRemaining <= 0)
+                                {
                                     Delete();
+                                }
                                 else
+                                {
                                     InvalidateProperties();
+                                }
 
                                 from.PlaySound(0x23E);
                             }
@@ -178,22 +193,17 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(2); // version
+
             writer.Write(m_UsesRemaining);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            if (version > 0)
-                m_UsesRemaining = reader.ReadInt();
-
-            if (version == 1)
-                ItemID = 0x1848;
+            m_UsesRemaining = reader.ReadInt();
         }
     }
 }

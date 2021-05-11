@@ -3,12 +3,12 @@ namespace Server.Items
     public class SaltedSerpentSteaks : Item
     {
         public override int LabelNumber => 1159163; // salted serpent steak
+        public override int Hue => 1150;
 
         [Constructable]
         public SaltedSerpentSteaks()
             : base(0xA421)
         {
-            Hue = 1150;
         }
 
         public SaltedSerpentSteaks(Serial serial)

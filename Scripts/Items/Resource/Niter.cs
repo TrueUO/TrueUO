@@ -176,11 +176,19 @@ namespace Server.Items
             List<HarvestBank> toRemove = new List<HarvestBank>();
 
             foreach (KeyValuePair<HarvestBank, DateTime> kvp in m_BankTable)
+            {
                 if (kvp.Value < DateTime.UtcNow)
+                {
                     toRemove.Add(kvp.Key);
+                }
+            }
 
-            foreach (HarvestBank bank in toRemove)
+            for (var index = 0; index < toRemove.Count; index++)
+            {
+                HarvestBank bank = toRemove[index];
+
                 m_BankTable.Remove(bank);
+            }
         }
 
         public NiterDeposit(Serial serial) : base(serial) { }

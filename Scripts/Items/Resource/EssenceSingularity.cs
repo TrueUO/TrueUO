@@ -14,7 +14,6 @@ namespace Server.Items
         {
             Stackable = true;
             Amount = amount;
-            Hue = 1109;
         }
 
         public EssenceSingularity(Serial serial)
@@ -23,6 +22,8 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1113341;// essence of singularity
+        public override int Hue => 1109;
+
         TextDefinition ICommodity.Description => LabelNumber;
         bool ICommodity.IsDeedable => true;
 

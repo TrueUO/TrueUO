@@ -3,6 +3,7 @@ namespace Server.Items
     public class Sand : Item, ICommodity
     {
         public override int LabelNumber => 1044626;  // sand
+        public override int Hue => 2413;
         public override double DefaultWeight => 0.1;
 
         [Constructable]
@@ -15,7 +16,6 @@ namespace Server.Items
         public Sand(int amount)
             : base(0x423A)
         {
-            Hue = 2413;
             Stackable = true;
             Amount = amount;
         }
@@ -31,7 +31,7 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(1); // version
+            writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)

@@ -14,7 +14,6 @@ namespace Server.Items
         {
             Stackable = true;
             Amount = amount;
-            Hue = 1156;
         }
 
         public EssenceDirection(Serial serial)
@@ -23,6 +22,8 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1113328;// essence of direction
+        public override int Hue => 1156;
+
         TextDefinition ICommodity.Description => LabelNumber;
         bool ICommodity.IsDeedable => true;
 

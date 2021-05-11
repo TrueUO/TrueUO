@@ -23,6 +23,8 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1113342;// essence of order
+        public override int Hue => 1153;
+
         TextDefinition ICommodity.Description => LabelNumber;
         bool ICommodity.IsDeedable => true;
 

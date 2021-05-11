@@ -1,6 +1,5 @@
 namespace Server.Items
 {
-    [TypeAlias("Server.Items.LavaSerpenCrust")]
     public class LavaSerpentCrust : Item, ICommodity
     {
         [Constructable]
