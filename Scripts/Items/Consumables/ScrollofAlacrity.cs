@@ -6,7 +6,6 @@ using System.Collections.Generic;
 
 namespace Server.Items
 {
-    [TypeAlias("Server.Items.ScrollofAlacrity")]
     public class ScrollOfAlacrity : SpecialScroll
     {        
         public override int LabelNumber => 1078604; // Scroll of Alacrity
@@ -163,8 +162,10 @@ namespace Server.Items
         {
             AlacrityArray arr = null;
 
-            foreach (var t in Table)
+            for (var index = 0; index < Table.Count; index++)
             {
+                var t = Table[index];
+
                 if (t.Mobile == m)
                 {
                     arr = t;
@@ -231,7 +232,7 @@ namespace Server.Items
                 {
                     t.Start();
 
-                    m.SendLocalizedMessage(1077956); // You are infused with intense energy. You are under the effects of an accelerated skillgain scroll.
+                    m.SendLocalizedMessage(1077956); // You are infused with intense energy. You are under the effects of an accelerated skill gain scroll.
 
                     m.PlaySound(0x0FF);
 
@@ -287,7 +288,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = InheritsItem ? 0 : reader.ReadInt(); //Required for SpecialScroll insertion
+            reader.ReadInt();
         }
     }
 }

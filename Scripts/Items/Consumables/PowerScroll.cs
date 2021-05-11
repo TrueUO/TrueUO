@@ -44,6 +44,8 @@ namespace Server.Items
 
         private static readonly List<SkillName> _Skills = new List<SkillName>();
 
+        public override int Hue => 0x481;
+
         public PowerScroll()
             : this(SkillName.Alchemy, 0.0)
         {
@@ -53,10 +55,10 @@ namespace Server.Items
         public PowerScroll(SkillName skill, double value)
             : base(skill, value)
         {
-            Hue = 0x481;
-
             if (Value == 105.0 || skill == SkillName.Blacksmith || skill == SkillName.Tailoring)
+            {
                 LootType = LootType.Regular;
+            }
         }
 
         public PowerScroll(Serial serial)
@@ -181,7 +183,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = InheritsItem ? 0 : reader.ReadInt(); // Required for SpecialScroll insertion
+            reader.ReadInt();
         }
     }
 }

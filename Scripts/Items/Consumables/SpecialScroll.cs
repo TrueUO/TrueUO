@@ -9,13 +9,6 @@ namespace Server.Items
         private SkillName m_Skill;
         private double m_Value;
 
-        #region Old Item Serialization Vars
-        /* DO NOT USE! Only used in serialization of special scrolls that originally derived from Item */
-        private bool m_InheritsItem;
-
-        protected bool InheritsItem => m_InheritsItem;
-        #endregion
-
         public abstract int Message { get; }
         public virtual int Title => 0;
         public abstract string DefaultTitle { get; }
@@ -98,7 +91,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(2); // version
 
             writer.Write((int)m_Skill);
@@ -108,42 +100,10 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 2:
-                case 1:
-                    {
-                        m_Skill = (SkillName)reader.ReadInt();
-                        m_Value = reader.ReadDouble();
-                        break;
-                    }
-                case 0:
-                    {
-                        m_InheritsItem = true;
-
-                        if (!(this is StatCapScroll))
-                            m_Skill = (SkillName)reader.ReadInt();
-                        else
-                            m_Skill = SkillName.Alchemy;
-
-                        if (this is ScrollOfAlacrity)
-                            m_Value = 0.0;
-                        else if (this is StatCapScroll)
-                            m_Value = reader.ReadInt();
-                        else
-                            m_Value = reader.ReadDouble();
-
-                        break;
-                    }
-            }
-
-            if (version == 1)
-            {
-                m_Value = Math.Floor(m_Value * 10) / 10.0;
-            }
+            m_Skill = (SkillName)reader.ReadInt();
+            m_Value = reader.ReadDouble();
         }
 
         public class InternalGump : Gump
