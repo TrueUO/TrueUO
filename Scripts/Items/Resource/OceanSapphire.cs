@@ -3,6 +3,7 @@ namespace Server.Items
     public class OceanSapphire : Item, ICommodity
     {
         public override int LabelNumber => 1159162;  // ocean sapphire
+        public override int Hue => 1917;
 
         [Constructable]
         public OceanSapphire()
@@ -14,7 +15,6 @@ namespace Server.Items
         public OceanSapphire(int amount)
             : base(0xA414)
         {
-            Hue = 1917;
             Stackable = true;
             Amount = amount;
         }

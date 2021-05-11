@@ -2,6 +2,9 @@ namespace Server.Items
 {
     public class BloodOfTheDarkFather : Item, ICommodity
     {
+        public override int LabelNumber => 1157343;// Blood of the Dark Father
+        public override int Hue => 2741;
+
         [Constructable]
         public BloodOfTheDarkFather()
             : this(1)
@@ -12,7 +15,6 @@ namespace Server.Items
         public BloodOfTheDarkFather(int amount)
             : base(0x9D7F)
         {
-            Hue = 2741;
             Stackable = true;
             Amount = amount;
         }
@@ -24,8 +26,6 @@ namespace Server.Items
 
         TextDefinition ICommodity.Description => LabelNumber;
         bool ICommodity.IsDeedable => true;
-
-        public override int LabelNumber => 1157343;// Blood of the Dark Father
 
         public override void Serialize(GenericWriter writer)
         {
