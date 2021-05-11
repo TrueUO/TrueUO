@@ -9,6 +9,8 @@ namespace Server.Items
 
         private int m_UsesRemaining;
 
+        public override int Hue => 2419;
+
         [Constructable]
         public PowderOfTemperament()
             : this(10)
@@ -20,7 +22,6 @@ namespace Server.Items
             : base(4102)
         {
             Weight = 1.0;
-            Hue = 2419;
             UsesRemaining = charges;
         }
 

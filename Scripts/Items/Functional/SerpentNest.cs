@@ -7,12 +7,12 @@ namespace Server.Items
     public class SerpentNest : Item
     {
         public override int LabelNumber => 1112582;  // a serpent's nest
+        public override int Hue => 0x456;
 
         [Constructable]
         public SerpentNest()
             : base(0x2233)
         {
-            Hue = 0x456;
             Movable = false;
         }
 
@@ -110,9 +110,7 @@ namespace Server.Items
 
         public override bool OnMoveOver(Mobile m)
         {
-            BaseCreature snake = m as BaseCreature;
-
-            if (snake != null && snake.CharmMaster != null)
+            if (m is BaseCreature snake && snake.CharmMaster != null)
             {
                 snake.CharmMaster.SendLocalizedMessage(1112588); // The snake begins searching for rare eggs.
                 snake.Frozen = true;
@@ -173,15 +171,12 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
-            writer.Write(0); // version
+            writer.Write(0); 
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            /*int version = */
             reader.ReadInt();
         }
     }

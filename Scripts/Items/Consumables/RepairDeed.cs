@@ -49,14 +49,16 @@ namespace Server.Items
             : base(0x14F0)
         {
             if (normalizeLevel)
+            {
                 SkillLevel = (int)(level / 10) * 10;
+            }
             else
+            {
                 SkillLevel = level;
+            }
 
             m_Skill = skill;
             m_Crafter = crafter;
-            Hue = 0x1BC;
-            LootType = LootType.Regular;
         }
 
         public RepairDeed(Serial serial)
@@ -64,7 +66,8 @@ namespace Server.Items
         {
         }
 
-        public override bool DisplayLootType => true;
+        public override int Hue => 0x1BC;
+
         [CommandProperty(AccessLevel.GameMaster)]
         public RepairSkillType RepairSkill
         {
