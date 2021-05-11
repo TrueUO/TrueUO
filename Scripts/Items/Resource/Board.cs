@@ -60,8 +60,9 @@ namespace Server.Items
             Amount = amount;
 
             m_Resource = resource;
-            Hue = CraftResources.GetHue(resource);
         }
+
+        public override int Hue => CraftResources.GetHue(m_Resource);
 
         public override void GetProperties(ObjectPropertyList list)
         {
@@ -77,8 +78,6 @@ namespace Server.Items
                     list.Add(CraftResources.GetName(m_Resource));
             }
         }
-
-
 
         public override void Serialize(GenericWriter writer)
         {
