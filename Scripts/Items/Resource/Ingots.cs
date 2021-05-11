@@ -3,8 +3,9 @@ namespace Server.Items
     public abstract class BaseIngot : Item, ICommodity, IResource
     {
         protected virtual CraftResource DefaultResource => CraftResource.Iron;
-
         private CraftResource m_Resource;
+
+        public override int Hue => CraftResources.GetHue(m_Resource);
 
         public BaseIngot(CraftResource resource)
             : this(resource, 1)
@@ -15,9 +16,8 @@ namespace Server.Items
             : base(0x1BF2)
         {
             Stackable = true;
-            Amount = amount;
-            Hue = CraftResources.GetHue(resource);
 
+            Amount = amount;
             m_Resource = resource;
         }
 
