@@ -511,10 +511,14 @@ namespace Server.Engines.Craft
         {
             Type t = item.GetType();
 
-            foreach (Type type in m_ClothColoredItemTable)
+            for (var index = 0; index < m_ClothColoredItemTable.Length; index++)
             {
+                Type type = m_ClothColoredItemTable[index];
+
                 if (type == t)
+                {
                     return true;
+                }
             }
 
             return false;
@@ -924,14 +928,17 @@ namespace Server.Engines.Craft
 
             for (int i = 0; i < items.Length; ++i)
             {
-                IPlantHue ph = items[i] as IPlantHue;
                 IPigmentHue pigh = items[i] as IPigmentHue;
 
-                if (context == null || ph != null && ph.PlantHue != context.RequiredPlantHue)
+                if (context == null || items[i] is IPlantHue ph && ph.PlantHue != context.RequiredPlantHue)
+                {
                     continue;
+                }
 
                 if (pigh != null && pigh.PigmentHue != context.RequiredPigmentHue)
+                {
                     continue;
+                }
 
                 amount += items[i].Amount;
             }
@@ -1413,9 +1420,7 @@ namespace Server.Engines.Craft
                 bonus = talisman.ExceptionalBonus / 100.0;
             }
 
-            MasterChefsApron apron = from.FindItemOnLayer(Layer.MiddleTorso) as MasterChefsApron;
-
-            if (apron != null)
+            if (from.FindItemOnLayer(Layer.MiddleTorso) is MasterChefsApron apron)
             {
                 bonus += apron.Bonus / 100.0;
             }
@@ -1659,8 +1664,6 @@ namespace Server.Engines.Craft
                 else
                 {
                     from.EndAction(typeof(CraftSystem));
-                    from.SendGump(new CraftGump(from, craftSystem, tool, RequiredExpansionMessage(RequiredExpansion)));
-                    //The {0} expansion is required to attempt this item.
                 }
             }
             else
@@ -1669,25 +1672,6 @@ namespace Server.Engines.Craft
             }
 
             AutoCraftTimer.EndTimer(from);
-        }
-
-        private object RequiredExpansionMessage(Expansion expansion)
-        {
-            switch (expansion)
-            {
-                case Expansion.SE:
-                    return 1063307; // The "Samurai Empire" expansion is required to attempt this item.
-                case Expansion.ML:
-                    return 1072650; // The "Mondain's Legacy" expansion is required to attempt this item.
-                case Expansion.SA:
-                    return 1094731; // You must have the Stygian Abyss expansion pack to use this feature.
-                case Expansion.HS:
-                    return 1116295; // You must have the High Seas booster pack to use this feature
-                case Expansion.TOL:
-                    return 1155875; // You must have the Time of Legends expansion to use this feature.
-                default:
-                    return string.Format("The \"{0}\" expansion is required to attempt this item.", ExpansionInfo.GetInfo(expansion).Name);
-            }
         }
 
         public void CompleteCraft(
@@ -1822,31 +1806,27 @@ namespace Server.Engines.Craft
                     MultipleSkillCheck(from, maxAmount);
                 }
 
-                if (craftSystem is DefBlacksmithy)
+                if (craftSystem is DefBlacksmithy && from.FindItemOnLayer(Layer.OneHanded) is AncientSmithyHammer hammer && hammer != tool)
                 {
-                    AncientSmithyHammer hammer = from.FindItemOnLayer(Layer.OneHanded) as AncientSmithyHammer;
-                    if (hammer != null && hammer != tool)
+                    if (hammer is HammerOfHephaestus)
                     {
-                        if (hammer is HammerOfHephaestus)
-                        {
-                            if (hammer.UsesRemaining > 0)
-                            {
-                                hammer.UsesRemaining--;
-                            }
-
-                            if (hammer.UsesRemaining < 1)
-                            {
-                                from.PlaceInBackpack(hammer);
-                            }
-                        }
-                        else
+                        if (hammer.UsesRemaining > 0)
                         {
                             hammer.UsesRemaining--;
+                        }
 
-                            if (hammer.UsesRemaining < 1)
-                            {
-                                hammer.Delete();
-                            }
+                        if (hammer.UsesRemaining < 1)
+                        {
+                            from.PlaceInBackpack(hammer);
+                        }
+                    }
+                    else
+                    {
+                        hammer.UsesRemaining--;
+
+                        if (hammer.UsesRemaining < 1)
+                        {
+                            hammer.Delete();
                         }
                     }
                 }
@@ -2261,7 +2241,9 @@ namespace Server.Engines.Craft
             CraftContext context = craftSystem.GetContext(from);
 
             if (context == null || HasResTarget(from))
+            {
                 return false;
+            }
 
             Type[][] types = new Type[Resources.Count][];
             Container pack = from.Backpack;
@@ -2280,23 +2262,37 @@ namespace Server.Engines.Craft
                     if (items != null)
                     {
                         if (items.Length > 0 && items[0] is IPlantHue)
-                            hue = ((IPlantHue) items[0]).PlantHue;
-                        else if (items.Length > 0 && items[0] is IPigmentHue)
-                            phue = ((IPigmentHue) items[0]).PigmentHue;
-
-                        foreach (Item item in items)
                         {
+                            hue = ((IPlantHue) items[0]).PlantHue;
+                        }
+                        else if (items.Length > 0 && items[0] is IPigmentHue)
+                        {
+                            phue = ((IPigmentHue) items[0]).PigmentHue;
+                        }
+
+                        for (var index = 0; index < items.Length; index++)
+                        {
+                            Item item = items[index];
+
                             if (item is IPlantHue plantHue && plantHue.PlantHue != hue)
+                            {
                                 return true;
+                            }
 
                             if (item is IPigmentHue pigmentHue && pigmentHue.PigmentHue != phue)
+                            {
                                 return true;
+                            }
                         }
 
                         if (hue != PlantHue.None)
+                        {
                             context.RequiredPlantHue = hue;
+                        }
                         else if (phue != PlantPigmentHue.None)
+                        {
                             context.RequiredPigmentHue = phue;
+                        }
                     }
                 }
             }
