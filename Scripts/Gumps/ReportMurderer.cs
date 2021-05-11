@@ -37,11 +37,13 @@ namespace Server.Gumps
             List<Mobile> killers = new List<Mobile>();
             List<Mobile> toGive = new List<Mobile>();
 
-            foreach (AggressorInfo ai in m.Aggressors)
+            for (var index = 0; index < m.Aggressors.Count; index++)
             {
+                AggressorInfo ai = m.Aggressors[index];
+
                 if (ai.Attacker.Player && ai.CanReportMurder && !ai.Reported)
                 {
-                    if (!((PlayerMobile)m).RecentlyReported.Contains(ai.Attacker))
+                    if (!((PlayerMobile) m).RecentlyReported.Contains(ai.Attacker))
                     {
                         if (!killers.Contains(ai.Attacker))
                         {
@@ -51,21 +53,31 @@ namespace Server.Gumps
                         }
                     }
                 }
+
                 if (ai.Attacker.Player && DateTime.UtcNow - ai.LastCombatTime < TimeSpan.FromSeconds(30.0) && !toGive.Contains(ai.Attacker))
+                {
                     toGive.Add(ai.Attacker);
+                }
             }
 
-            foreach (AggressorInfo ai in m.Aggressed)
+            for (var index = 0; index < m.Aggressed.Count; index++)
             {
+                AggressorInfo ai = m.Aggressed[index];
+
                 if (ai.Defender.Player && DateTime.UtcNow - ai.LastCombatTime < TimeSpan.FromSeconds(30.0) && !toGive.Contains(ai.Defender))
+                {
                     toGive.Add(ai.Defender);
+                }
             }
 
-            foreach (Mobile g in toGive)
+            for (var index = 0; index < toGive.Count; index++)
             {
+                Mobile g = toGive[index];
+
                 int n = Notoriety.Compute(g, m);
 
                 int theirKarma = m.Karma, ourKarma = g.Karma;
+
                 bool innocent = n == Notoriety.Innocent;
                 bool criminal = n == Notoriety.Criminal || n == Notoriety.Murderer;
 
@@ -73,9 +85,13 @@ namespace Server.Gumps
                 int karmaAward = 0;
 
                 if (innocent)
+                {
                     karmaAward = (ourKarma > -2500 ? -850 : -110 - (m.Karma / 100));
+                }
                 else if (criminal)
+                {
                     karmaAward = 50;
+                }
 
                 Titles.AwardFame(g, fameAward, false);
                 Titles.AwardKarma(g, karmaAward, true);
@@ -87,10 +103,14 @@ namespace Server.Gumps
             }
 
             if (m is PlayerMobile mobile && mobile.NpcGuild == NpcGuild.ThievesGuild)
+            {
                 return;
+            }
 
             if (killers.Count > 0)
+            {
                 new GumpTimer(m, killers).Start();
+            }
         }
 
         public static void ReportedListExpiry_Callback(object state)
@@ -149,8 +169,11 @@ namespace Server.Gumps
             }
 
             m_Idx++;
+
             if (m_Idx < m_Killers.Count)
+            {
                 from.SendGump(new ReportMurdererGump(m_Killers, m_Idx));
+            }
         }
 
         public static void CheckMurderer(Mobile m)

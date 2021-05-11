@@ -136,10 +136,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int MaxHitPoints
         {
-            get
-            {
-                return m_MaxHitPoints;
-            }
+            get => m_MaxHitPoints;
             set
             {
                 m_MaxHitPoints = value;
@@ -154,10 +151,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int HitPoints
         {
-            get
-            {
-                return m_HitPoints;
-            }
+            get => m_HitPoints;
             set
             {
                 if (value != m_HitPoints && MaxHitPoints > 0)
@@ -177,10 +171,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.Player)]
         public AosAttributes Attributes
         {
-            get
-            {
-                return m_AosAttributes;
-            }
+            get => m_AosAttributes;
             set
             {
             }
@@ -189,10 +180,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public AosElementAttributes Resistances
         {
-            get
-            {
-                return m_AosResistances;
-            }
+            get => m_AosResistances;
             set
             {
             }
@@ -201,10 +189,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public AosSkillBonuses SkillBonuses
         {
-            get
-            {
-                return m_AosSkillBonuses;
-            }
+            get => m_AosSkillBonuses;
             set
             {
             }
@@ -213,10 +198,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public SAAbsorptionAttributes AbsorptionAttributes
         {
-            get
-            {
-                return m_SAAbsorptionAttributes;
-            }
+            get => m_SAAbsorptionAttributes;
             set
             {
             }
@@ -225,10 +207,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.Player)]
         public NegativeAttributes NegativeAttributes
         {
-            get
-            {
-                return m_NegativeAttributes;
-            }
+            get => m_NegativeAttributes;
             set
             {
             }
@@ -237,10 +216,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public CraftResource Resource
         {
-            get
-            {
-                return m_Resource;
-            }
+            get => m_Resource;
             set
             {
                 m_Resource = value;
@@ -251,10 +227,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public GemType GemType
         {
-            get
-            {
-                return m_GemType;
-            }
+            get => m_GemType;
             set
             {
                 GemType old = m_GemType;
@@ -410,10 +383,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public Mobile Crafter
         {
-            get
-            {
-                return m_Crafter;
-            }
+            get => m_Crafter;
             set
             {
                 m_Crafter = value;
@@ -424,10 +394,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public ItemQuality Quality
         {
-            get
-            {
-                return m_Quality;
-            }
+            get => m_Quality;
             set
             {
                 m_Quality = value;
@@ -438,10 +405,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public bool PlayerConstructed
         {
-            get
-            {
-                return m_PlayerConstructed;
-            }
+            get => m_PlayerConstructed;
             set
             {
                 m_PlayerConstructed = value;
@@ -1134,12 +1098,6 @@ namespace Server.Items
             if (m_SetSkillBonuses == null)
                 m_SetSkillBonuses = new AosSkillBonuses(this);
             #endregion
-
-            if (version < 2)
-            {
-                m_Resource = CraftResource.Iron;
-                m_GemType = GemType.None;
-            }
         }
 
         #region ICraftable Members
@@ -1220,10 +1178,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int SetHue
         {
-            get
-            {
-                return m_SetHue;
-            }
+            get => m_SetHue;
             set
             {
                 m_SetHue = value;
@@ -1233,10 +1188,7 @@ namespace Server.Items
 
         public bool SetEquipped
         {
-            get
-            {
-                return m_SetEquipped;
-            }
+            get => m_SetEquipped;
             set
             {
                 m_SetEquipped = value;
@@ -1245,10 +1197,7 @@ namespace Server.Items
 
         public bool LastEquipped
         {
-            get
-            {
-                return m_LastEquipped;
-            }
+            get => m_LastEquipped;
             set
             {
                 m_LastEquipped = value;
@@ -1260,10 +1209,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int SetPhysicalBonus
         {
-            get
-            {
-                return m_SetPhysicalBonus;
-            }
+            get => m_SetPhysicalBonus;
             set
             {
                 m_SetPhysicalBonus = value;
@@ -1274,10 +1220,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int SetFireBonus
         {
-            get
-            {
-                return m_SetFireBonus;
-            }
+            get => m_SetFireBonus;
             set
             {
                 m_SetFireBonus = value;
@@ -1288,10 +1231,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int SetColdBonus
         {
-            get
-            {
-                return m_SetColdBonus;
-            }
+            get => m_SetColdBonus;
             set
             {
                 m_SetColdBonus = value;
@@ -1302,10 +1242,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int SetPoisonBonus
         {
-            get
-            {
-                return m_SetPoisonBonus;
-            }
+            get => m_SetPoisonBonus;
             set
             {
                 m_SetPoisonBonus = value;
@@ -1316,10 +1253,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public int SetEnergyBonus
         {
-            get
-            {
-                return m_SetEnergyBonus;
-            }
+            get => m_SetEnergyBonus;
             set
             {
                 m_SetEnergyBonus = value;
@@ -1333,10 +1267,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public AosAttributes SetAttributes
         {
-            get
-            {
-                return m_SetAttributes;
-            }
+            get => m_SetAttributes;
             set
             {
             }
@@ -1345,10 +1276,7 @@ namespace Server.Items
         [CommandProperty(AccessLevel.GameMaster)]
         public AosSkillBonuses SetSkillBonuses
         {
-            get
-            {
-                return m_SetSkillBonuses;
-            }
+            get => m_SetSkillBonuses;
             set
             {
             }
