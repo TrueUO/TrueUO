@@ -78,6 +78,26 @@ namespace Server.Items
             BuffInfo.RemoveBuff(info.Defender, BuffIcon.ForceArrow);
         }
 
+        public static bool HasForceArrow(Mobile attacker, Mobile defender)
+        {
+            if (!m_Table.ContainsKey(attacker))
+            {
+                return false;
+            }
+
+            for (var index = 0; index < m_Table[attacker].Count; index++)
+            {
+                ForceArrowInfo info = m_Table[attacker][index];
+
+                if (info.Defender == defender)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
         public static ForceArrowInfo GetInfo(Mobile attacker, Mobile defender)
         {
             if (!m_Table.ContainsKey(attacker))
