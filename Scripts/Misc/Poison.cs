@@ -210,10 +210,10 @@ namespace Server
                     }
                 }
 
-                IHonorTarget honorTarget = m_Mobile as IHonorTarget;
-
-                if (honorTarget != null && honorTarget.ReceivedHonorContext != null)
+                if (m_Mobile is IHonorTarget honorTarget && honorTarget.ReceivedHonorContext != null)
+                {
                     honorTarget.ReceivedHonorContext.OnTargetPoisoned();
+                }
 
                 if (m_From != null && m_Mobile != m_From && !m_From.InRange(m_Mobile.Location, 1) && m_Poison.m_Level >= 10 && m_Poison.m_Level <= 13) // darkglow
                 {
@@ -239,8 +239,10 @@ namespace Server
                     m_Mobile.RevealingAction();
                 }
 
-                if ((m_Index % m_Poison.m_MessageInterval) == 0)
+                if (m_Index % m_Poison.m_MessageInterval == 0)
+                {
                     m_Mobile.OnPoisoned(m_From, m_Poison, m_Poison);
+                }
             }
         }
     }

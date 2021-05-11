@@ -891,10 +891,7 @@ namespace Server.Mobiles
                 return;
             }
 
-            Mobile currentCombat = m_Mobile.Combatant as Mobile;
-
-            if (currentCombat != null && !aggressor.Hidden && currentCombat != aggressor &&
-                m_Mobile.GetDistanceToSqrt(currentCombat) > m_Mobile.GetDistanceToSqrt(aggressor))
+            if (m_Mobile.Combatant is Mobile currentCombat && !aggressor.Hidden && currentCombat != aggressor && m_Mobile.GetDistanceToSqrt(currentCombat) > m_Mobile.GetDistanceToSqrt(aggressor))
             {
                 m_Mobile.Combatant = aggressor;
             }
@@ -1315,7 +1312,7 @@ namespace Server.Mobiles
 
             WalkRandomInHome(3, 2, 1);
 
-            if (m_Mobile.Combatant is Mobile mobile && !mobile.Deleted && mobile.Alive && (!(mobile is Mobile) || !mobile.IsDeadBondedPet))
+            if (m_Mobile.Combatant is Mobile mobile && !mobile.Deleted && mobile.Alive && !mobile.IsDeadBondedPet)
             {
                 m_Mobile.Warmode = true;
             }
@@ -1348,7 +1345,7 @@ namespace Server.Mobiles
 
                     if (WalkMobileRange(m_Mobile.ControlMaster, 1, bRun, 0, 1))
                     {
-                        if (m_Mobile.Combatant is Mobile mobile && !mobile.Deleted && mobile.Alive && (!(mobile is Mobile) || !mobile.IsDeadBondedPet))
+                        if (m_Mobile.Combatant is Mobile mobile && !mobile.Deleted && mobile.Alive && !mobile.IsDeadBondedPet)
                         {
                             m_Mobile.Warmode = true;
                         }
@@ -1711,9 +1708,7 @@ namespace Server.Mobiles
 
         public bool ValidGuardTarget(Mobile combatant)
         {
-            return combatant != null && combatant != m_Mobile && combatant != m_Mobile.ControlMaster && !combatant.Deleted && m_Mobile.CanSee(combatant) &&
-                combatant.Alive && (!(combatant is Mobile) || !combatant.IsDeadBondedPet) &&
-                m_Mobile.CanBeHarmful(combatant, false) && combatant.Map == m_Mobile.Map && combatant.GetDistanceToSqrt(m_Mobile) <= m_Mobile.RangePerception;
+            return combatant != null && combatant != m_Mobile && combatant != m_Mobile.ControlMaster && !combatant.Deleted && m_Mobile.CanSee(combatant) && combatant.Alive && !combatant.IsDeadBondedPet && m_Mobile.CanBeHarmful(combatant, false) && combatant.Map == m_Mobile.Map && combatant.GetDistanceToSqrt(m_Mobile) <= m_Mobile.RangePerception;
         }
 
         public virtual bool DoOrderAttack()
@@ -1723,9 +1718,7 @@ namespace Server.Mobiles
                 return true;
             }
 
-            if (m_Mobile.ControlTarget == null || m_Mobile.ControlTarget.Deleted || m_Mobile.ControlTarget.Map != m_Mobile.Map ||
-                !m_Mobile.ControlTarget.Alive ||
-                m_Mobile.ControlTarget is Mobile mobile && mobile.IsDeadBondedPet)
+            if (m_Mobile.ControlTarget == null || m_Mobile.ControlTarget.Deleted || m_Mobile.ControlTarget.Map != m_Mobile.Map || !m_Mobile.ControlTarget.Alive || m_Mobile.ControlTarget is Mobile mobile && mobile.IsDeadBondedPet)
             {
                 m_Mobile.DebugSay("I think he might be dead. He's not anywhere around here at least. That's cool. I'm glad he's dead.");
 
@@ -1994,7 +1987,7 @@ namespace Server.Mobiles
                 else if (accepted && IsInCombat(m_Creature))
                 {
                     from.SendMessage("You may not transfer a pet that has recently been in combat.");
-                    to.SendMessage("The pet may not be transfered to you because it has recently been in combat.");
+                    to.SendMessage("The pet may not be transferred to you because it has recently been in combat.");
 
                     return false;
                 }
@@ -2011,8 +2004,7 @@ namespace Server.Mobiles
 
                 Delete();
 
-                if (m_Creature == null || m_Creature.Deleted || m_Creature.ControlMaster != from || !from.CheckAlive() ||
-                    !to.CheckAlive())
+                if (m_Creature == null || m_Creature.Deleted || m_Creature.ControlMaster != from || !from.CheckAlive() || !to.CheckAlive())
                 {
                     return;
                 }
@@ -2291,16 +2283,14 @@ namespace Server.Mobiles
         {
             MoveResult res = DoMoveImpl(d);
 
-            return res == MoveResult.Success || res == MoveResult.SuccessAutoTurn ||
-                   badStateOk && res == MoveResult.BadState;
+            return res == MoveResult.Success || res == MoveResult.SuccessAutoTurn || badStateOk && res == MoveResult.BadState;
         }
 
         private static readonly Queue<Item> m_Obstacles = new Queue<Item>();
 
         public virtual MoveResult DoMoveImpl(Direction d)
         {
-            if (m_Mobile.Deleted || m_Mobile.Frozen || m_Mobile.Paralyzed || !m_Mobile.CanMove ||
-                m_Mobile.Spell != null && m_Mobile.Spell.IsCasting && m_Mobile.FreezeOnCast || m_Mobile.DisallowAllMoves)
+            if (m_Mobile.Deleted || m_Mobile.Frozen || m_Mobile.Paralyzed || !m_Mobile.CanMove || m_Mobile.Spell != null && m_Mobile.Spell.IsCasting && m_Mobile.FreezeOnCast || m_Mobile.DisallowAllMoves)
             {
                 return MoveResult.BadState;
             }
@@ -2381,8 +2371,7 @@ namespace Server.Mobiles
                                     break;
                                 }
                             }
-                            else if (canDestroyObstacles && item.Movable && item.ItemData.Impassable &&
-                                     item.Z + item.ItemData.Height > m_Mobile.Z && m_Mobile.Z + 16 > item.Z)
+                            else if (canDestroyObstacles && item.Movable && item.ItemData.Impassable && item.Z + item.ItemData.Height > m_Mobile.Z && m_Mobile.Z + 16 > item.Z)
                             {
                                 if (!m_Mobile.InRange(item.GetWorldLocation(), 1))
                                 {
@@ -2755,10 +2744,8 @@ namespace Server.Mobiles
             }
             if (m_Mobile.Controlled)
             {
-                if (m_Mobile.ControlTarget == null || m_Mobile.ControlTarget.Deleted ||
-                    m_Mobile.ControlTarget is Mobile mobile && mobile.Hidden || !m_Mobile.ControlTarget.Alive ||
-                    m_Mobile.ControlTarget is Mobile target && target.IsDeadBondedPet ||
-                    !m_Mobile.InRange(m_Mobile.ControlTarget, m_Mobile.RangePerception * 2))
+                if (m_Mobile.ControlTarget == null || m_Mobile.ControlTarget.Deleted || m_Mobile.ControlTarget is Mobile mobile && mobile.Hidden || !m_Mobile.ControlTarget.Alive ||
+                    m_Mobile.ControlTarget is Mobile target && target.IsDeadBondedPet || !m_Mobile.InRange(m_Mobile.ControlTarget, m_Mobile.RangePerception * 2))
                 {
                     if (m_Mobile.ControlTarget != null && m_Mobile.ControlTarget != m_Mobile.ControlMaster)
                     {
