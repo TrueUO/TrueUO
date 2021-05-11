@@ -35,9 +35,7 @@ namespace Server.Spells.SkillMasteries
 
         public override void OnCast()
         {
-            BardSpell spell = GetSpell(Caster, GetType()) as BardSpell;
-
-            if (spell != null)
+            if (GetSpell(Caster, GetType()) is BardSpell spell)
             {
                 spell.Expire();
                 Caster.SendLocalizedMessage(1115774); //You halt your spellsong.
@@ -87,8 +85,10 @@ namespace Server.Spells.SkillMasteries
         {
             if (PartyList != null)
             {
-                foreach (Mobile m in PartyList) //Original Party list
+                for (var index = 0; index < PartyList.Count; index++)
                 {
+                    Mobile m = PartyList[index];
+
                     RemovePartyEffects(m);
                 }
             }
