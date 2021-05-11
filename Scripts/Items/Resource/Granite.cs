@@ -7,7 +7,6 @@ namespace Server.Items
         public BaseGranite(CraftResource resource)
             : base(0x1779)
         {
-            Hue = CraftResources.GetHue(resource);
             Stackable = true;
 
             m_Resource = resource;
@@ -17,6 +16,8 @@ namespace Server.Items
             : base(serial)
         {
         }
+
+        public override int Hue => CraftResources.GetHue(m_Resource);
 
         TextDefinition ICommodity.Description => LabelNumber;
         bool ICommodity.IsDeedable => true;

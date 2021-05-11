@@ -69,7 +69,6 @@ namespace Server.Items
         {
             Stackable = true;
             Amount = amount;
-            Hue = CraftResources.GetHue(resource);
 
             m_Resource = resource;
         }
@@ -78,6 +77,8 @@ namespace Server.Items
             : base(serial)
         {
         }
+
+        public override int Hue => CraftResources.GetHue(m_Resource);
 
         public override void AddNameProperty(ObjectPropertyList list)
         {
