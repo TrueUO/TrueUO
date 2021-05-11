@@ -144,40 +144,29 @@ namespace Server.Spells.SkillMasteries
 
         public static int HitChanceBonus(Mobile m)
         {
-            PlayingTheOddsSpell spell = GetSpellForParty(m, typeof(PlayingTheOddsSpell)) as PlayingTheOddsSpell;
-
-            if (spell != null)
+            if (GetSpellForParty(m, typeof(PlayingTheOddsSpell)) is PlayingTheOddsSpell spell)
+            {
                 return spell._HCIBonus;
+            }
 
             return 0;
         }
 
         public static int SwingSpeedBonus(Mobile m)
         {
-            PlayingTheOddsSpell spell = GetSpellForParty(m, typeof(PlayingTheOddsSpell)) as PlayingTheOddsSpell;
-
-            if (spell != null)
+            if (GetSpellForParty(m, typeof(PlayingTheOddsSpell)) is PlayingTheOddsSpell spell)
+            {
                 return spell._SSIBonus;
+            }
 
             return 0;
         }
 
         public static int RangeModifier(BaseWeapon weapon)
         {
-            if (weapon is BaseRanged && !(weapon is BaseThrown))
+            if (weapon is BaseRanged && !(weapon is BaseThrown) && weapon.RootParent is Mobile m && GetSpell(m, typeof(PlayingTheOddsSpell)) is PlayingTheOddsSpell)
             {
-                Mobile m = weapon.RootParent as Mobile;
-
-                if (m != null)
-                {
-                    PlayingTheOddsSpell spell = GetSpell(m, typeof(PlayingTheOddsSpell)) as PlayingTheOddsSpell;
-
-                    if (spell != null)
-                    {
-                        return weapon.DefMaxRange / 2;
-                    }
-
-                }
+                return weapon.DefMaxRange / 2;
             }
 
             return weapon.DefMaxRange;

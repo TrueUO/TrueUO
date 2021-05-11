@@ -79,8 +79,10 @@ namespace Server.Items
         {
             List<DamageStore> rights = killed.GetLootingRights();
 
-            rights.ForEach(ds =>
+            for (var index = 0; index < rights.Count; index++)
             {
+                var ds = rights[index];
+
                 if (ds.m_HasRight)
                 {
                     Mobile m = ds.m_Mobile;
@@ -92,13 +94,15 @@ namespace Server.Items
                         if (primer != null)
                         {
                             if (m.Backpack == null || !m.Backpack.TryDropItem(m, primer, false))
+                            {
                                 m.BankBox.DropItem(primer);
+                            }
                         }
 
                         m.SendLocalizedMessage(1156209); // You have received a mastery primer!
                     }
                 }
-            });
+            }
         }
 
         public static SkillMasteryPrimer GetRandom()
@@ -126,7 +130,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1); // version
 
             writer.Write(Volume);
@@ -136,23 +139,10 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 1:
-                    Volume = reader.ReadInt();
-                    Skill = (SkillName)reader.ReadInt();
-                    break;
-                case 0:
-
-                    Skill = (SkillName)reader.ReadInt();
-                    int id = reader.ReadInt();
-
-                    Volume = MasteryInfo.GetVolume(id, Skill);
-                    break;
-            }
+            Volume = reader.ReadInt();
+            Skill = (SkillName)reader.ReadInt();
         }
     }
 }

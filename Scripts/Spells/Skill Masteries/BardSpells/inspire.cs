@@ -65,8 +65,10 @@ namespace Server.Spells.SkillMasteries
         {
             if (PartyList != null)
             {
-                foreach (Mobile m in PartyList) //Original Party list
+                for (var index = 0; index < PartyList.Count; index++)
                 {
+                    Mobile m = PartyList[index];
+
                     RemovePartyEffects(m);
                 }
             }

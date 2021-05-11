@@ -81,9 +81,7 @@ namespace Server.Spells.SkillMasteries
 
         public override bool Cast()
         {
-            CombatTrainingSpell spell = GetSpell(Caster, typeof(CombatTrainingSpell)) as CombatTrainingSpell;
-
-            if (spell != null)
+            if (GetSpell(Caster, typeof(CombatTrainingSpell)) is CombatTrainingSpell spell)
             {
                 spell.Expire();
                 return false;
