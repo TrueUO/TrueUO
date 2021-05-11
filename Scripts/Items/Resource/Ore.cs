@@ -59,6 +59,8 @@ namespace Server.Items
             return 0x19B9;
         }
 
+        public override int Hue => CraftResources.GetHue(m_Resource);
+
         public BaseOre(CraftResource resource)
             : this(resource, 1)
         {
@@ -69,7 +71,6 @@ namespace Server.Items
         {
             Stackable = true;
             Amount = amount;
-            Hue = CraftResources.GetHue(resource);
 
             m_Resource = resource;
         }

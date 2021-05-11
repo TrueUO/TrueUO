@@ -4,12 +4,12 @@ namespace Server.Items
     public class BaseLog : Item, ICommodity, IAxe, IResource
     {
         private CraftResource m_Resource;
-
         [CommandProperty(AccessLevel.GameMaster)]
         public CraftResource Resource { get => m_Resource; set { m_Resource = value; InvalidateProperties(); } }
 
         TextDefinition ICommodity.Description => CraftResources.IsStandard(m_Resource) ? LabelNumber : 1075062 + ((int)m_Resource - (int)CraftResource.RegularWood);
         bool ICommodity.IsDeedable => true;
+
         [Constructable]
         public BaseLog() : this(1)
         {
@@ -34,8 +34,13 @@ namespace Server.Items
             Amount = amount;
 
             m_Resource = resource;
-            Hue = CraftResources.GetHue(resource);
         }
+
+        public BaseLog(Serial serial) : base(serial)
+        {
+        }
+
+        public override int Hue => CraftResources.GetHue(m_Resource);
 
         public override void GetProperties(ObjectPropertyList list)
         {
@@ -50,9 +55,6 @@ namespace Server.Items
                 else
                     list.Add(CraftResources.GetName(m_Resource));
             }
-        }
-        public BaseLog(Serial serial) : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)

@@ -16,10 +16,11 @@ namespace Server.Items
             Stackable = true;
             Weight = 1.0;
             Amount = amount;
-            Hue = CraftResources.GetHue(resource);
 
             m_Resource = resource;
         }
+
+        public override int Hue => CraftResources.GetHue(m_Resource);
 
         public BaseLeather(Serial serial)
             : base(serial)
