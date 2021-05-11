@@ -27,9 +27,7 @@ namespace Server.Items
 
         public static void OnLogin(LoginEventArgs e)
         {
-            PlayerMobile pm = e.Mobile as PlayerMobile;
-
-            if (pm != null)
+            if (e.Mobile is PlayerMobile pm)
             {
                 UpdateBuff(pm);
             }

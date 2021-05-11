@@ -39,10 +39,10 @@ namespace Server.Items
                 }
             }
 
-            Spell spell = defender.Spell as Spell;
-
-            if (spell != null && spell.IsCasting)
+            if (defender.Spell is Spell spell && spell.IsCasting)
+            {
                 spell.Disturb(DisturbType.Hurt, false, true);
+            }
         }
 
         private static readonly Dictionary<Mobile, List<ForceArrowInfo>> m_Table = new Dictionary<Mobile, List<ForceArrowInfo>>();
@@ -78,29 +78,21 @@ namespace Server.Items
             BuffInfo.RemoveBuff(info.Defender, BuffIcon.ForceArrow);
         }
 
-        public static bool HasForceArrow(Mobile attacker, Mobile defender)
-        {
-            if (!m_Table.ContainsKey(attacker))
-                return false;
-
-            foreach (ForceArrowInfo info in m_Table[attacker])
-            {
-                if (info.Defender == defender)
-                    return true;
-            }
-
-            return false;
-        }
-
         public static ForceArrowInfo GetInfo(Mobile attacker, Mobile defender)
         {
             if (!m_Table.ContainsKey(attacker))
-                return null;
-
-            foreach (ForceArrowInfo info in m_Table[attacker])
             {
+                return null;
+            }
+
+            for (var index = 0; index < m_Table[attacker].Count; index++)
+            {
+                ForceArrowInfo info = m_Table[attacker][index];
+
                 if (info.Defender == defender)
+                {
                     return info;
+                }
             }
 
             return null;

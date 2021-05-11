@@ -160,8 +160,6 @@ namespace Server.Items
             base.Deserialize(reader);
             int version = reader.ReadInt();
 
-            LootType = LootType.Blessed;
-
             switch (version)
             {
                 case 3:
@@ -282,8 +280,10 @@ namespace Server.Items
                 return false;
             }
 
-            foreach (Mobile m in Openers)
+            for (var index = 0; index < Openers.Count; index++)
             {
+                Mobile m = Openers[index];
+
                 if (IsOpen(m))
                 {
                     CloseGump(m);
@@ -368,46 +368,43 @@ namespace Server.Items
                 }
                 else if (m_Entries.Count < MaxEntries)
                 {
-                    if (rune is RecallRune)
+                    if (rune.Marked)
                     {
-                        if (rune.Marked)
+                        if (rune.Type == RecallRuneType.Ship)
                         {
-                            if (rune.Type == RecallRuneType.Ship)
-                            {
-                                RunebookEntry entry = new RunebookEntry(Point3D.Zero, null, null, null, rune.Type, rune.Galleon);
-                                m_Entries.Add(entry);
+                            RunebookEntry entry = new RunebookEntry(Point3D.Zero, null, null, null, rune.Type, rune.Galleon);
+                            m_Entries.Add(entry);
 
-                                rune.Delete();
+                            rune.Delete();
 
-                                from.Send(new PlaySound(0x42, GetWorldLocation()));
+                            from.Send(new PlaySound(0x42, GetWorldLocation()));
 
-                                from.SendAsciiMessage(entry.Description);
+                            from.SendAsciiMessage(entry.Description);
 
-                                return true;
-                            }
-
-                            if (rune.TargetMap != null)
-                            {
-                                m_Entries.Add(new RunebookEntry(rune.Target, rune.TargetMap, rune.Description, rune.House, rune.Type));
-
-                                rune.Delete();
-
-                                from.Send(new PlaySound(0x42, GetWorldLocation()));
-
-                                string desc = rune.Description;
-
-                                if (desc == null || (desc = desc.Trim()).Length == 0)
-                                    desc = "(indescript)";
-
-                                from.SendAsciiMessage(desc);
-
-                                return true;
-                            }
+                            return true;
                         }
-                        else
+
+                        if (rune.TargetMap != null)
                         {
-                            from.SendLocalizedMessage(502409); // This rune does not have a marked location.
+                            m_Entries.Add(new RunebookEntry(rune.Target, rune.TargetMap, rune.Description, rune.House, rune.Type));
+
+                            rune.Delete();
+
+                            from.Send(new PlaySound(0x42, GetWorldLocation()));
+
+                            string desc = rune.Description;
+
+                            if (desc == null || (desc = desc.Trim()).Length == 0)
+                                desc = "(indescript)";
+
+                            from.SendAsciiMessage(desc);
+
+                            return true;
                         }
+                    }
+                    else
+                    {
+                        from.SendLocalizedMessage(502409); // This rune does not have a marked location.
                     }
                 }
                 else
@@ -591,16 +588,6 @@ namespace Server.Items
 
                         break;
                     }
-            }
-
-            if (version < 3)
-            {
-                if (Galleon != null)
-                    Type = RecallRuneType.Ship;
-                else if (House != null)
-                    Type = RecallRuneType.Shop;
-                else
-                    Type = RecallRuneType.Normal;
             }
         }
 

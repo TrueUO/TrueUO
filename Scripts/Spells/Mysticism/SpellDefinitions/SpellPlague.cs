@@ -77,10 +77,14 @@ namespace Server.Spells.Mysticism
             {
                 if (kvp.Value != null)
                 {
-                    foreach (SpellPlagueTimer timer in kvp.Value)
+                    for (var index = 0; index < kvp.Value.Count; index++)
                     {
+                        SpellPlagueTimer timer = kvp.Value[index];
+
                         if (timer.Caster == from)
+                        {
                             return true;
+                        }
                     }
                 }
             }
@@ -232,10 +236,14 @@ namespace Server.Spells.Mysticism
 
                 foreach (KeyValuePair<Mobile, List<SpellPlagueTimer>> kvp in m_Table)
                 {
-                    foreach (SpellPlagueTimer Ttimer in kvp.Value)
+                    for (var index = 0; index < kvp.Value.Count; index++)
                     {
+                        SpellPlagueTimer Ttimer = kvp.Value[index];
+
                         if (Ttimer.Caster == caster)
+                        {
                             return;
+                        }
                     }
                 }
 
