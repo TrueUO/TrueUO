@@ -6,13 +6,14 @@ namespace Server.Items
 {
     public class RolledParchment : Item
     {
+        public override string DefaultName => "a Rolled Parchment";
+
         private readonly Dictionary<Mobile, int> list = new Dictionary<Mobile, int>();
 
         [Constructable]
         public RolledParchment()
             : base(0x46B3)
         {
-            Name = "a Rolled Parchment";
             Hue = 66;
             Weight = 0.0;
             Movable = false;
@@ -81,23 +82,15 @@ namespace Server.Items
 
         public override void OnDoubleClick(Mobile from)
         {
-            Gump g = new Gump(100, 100);
-            g.AddPage(0);
+            QuestRewardGump g = new QuestRewardGump(this, from)
+            {
+                Title = "A Threatening Note",
+                Description = "Found at the site of the Yew Winery Break in",
+                Line1 = "The note is quite disturbing. The details threaten the accused should they not steal from the Winery!",
+                Line2 = "Janna will most definitely be interested in this information!"
+            };
 
-            g.AddBackground(0, 0, 480, 320, 0x6DB);
-            g.AddSpriteImage(24, 24, 0x474, 60, 60, 108, 108);
-            g.AddImage(15, 15, 0xA9F);
-            g.AddImageTiledButton(22, 22, 0x176F, 0x176F, 0x0, GumpButtonType.Page, 0, ItemID, Hue, 33, 42);
-            g.AddHtml(150, 15, 320, 22, "<BASEFONT COLOR=#D5D52A><DIV ALIGN=CENTER>A Threatening Note</DIV>", false, false);
-            g.AddHtml(150, 46, 320, 44, "<BASEFONT COLOR=#AABFD4><DIV ALIGN=CENTER>Found at the site of the Yew Winery Break in</DIV>", false, false);
-            g.AddHtml(150, 99, 320, 98, "<BASEFONT COLOR=#DFDFDF>The note is quite disturbing. The details threaten the accused should they not steal from the Winery!", false, false);
-            g.AddHtml(150, 197, 320, 98, "<BASEFONT COLOR=#DFDFDF>Janna will most definitely be interested in this information!", false, false);
-
-            from.CloseGump(typeof(Gump));
-            from.SendGump(g);
-
-            from.PrivateOverheadMessage(MessageType.Regular, 0x47E, 1157722, "its origin", from.NetState); // *Your proficiency in ~1_SKILL~ reveals more about the item*
-            from.SendSound(from.Female ? 0x30B : 0x41A);
+            g.RenderString(from);
         }
 
         public override void Serialize(GenericWriter writer)
