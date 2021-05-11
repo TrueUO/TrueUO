@@ -155,18 +155,20 @@ namespace Server.Gumps
 
             if (ResurrectMessage.SilverSapling == m_Msg && 1 == info.ButtonID)
             {
-                PlayerMobile pm = from as PlayerMobile;
-                if (null != pm && pm.Region.IsPartOf("Abyss"))
+                if (from is PlayerMobile pm && pm.Region.IsPartOf("Abyss"))
                 {
                     pm.Location = pm.SSSeedLocation;
                     pm.Map = pm.SSSeedMap;
+
                     if (null != pm.Corpse)
                     {
                         pm.Corpse.Location = pm.Location;
                         pm.Corpse.Map = pm.Map;
                     }
+
                     pm.Resurrect();
                 }
+
                 return;
             }
 

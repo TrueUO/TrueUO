@@ -11,25 +11,13 @@ namespace Server.Items
         public virtual string CreatureName { get; private set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool Transformed
-        {
-            get { return m_Transformed; }
-            set { m_Transformed = value; }
-        }
+        public bool Transformed { get => m_Transformed; set => m_Transformed = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int CostumeBody
-        {
-            get { return m_Body; }
-            set { m_Body = value; }
-        }
+        public int CostumeBody { get => m_Body; set => m_Body = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public int CostumeHue
-        {
-            get { return m_Hue; }
-            set { m_Hue = value; }
-        }
+        public int CostumeHue { get => m_Hue; set => m_Hue = value; }
 
         public BaseCostume()
             : base(0x19BC)
@@ -79,10 +67,14 @@ namespace Server.Items
         public virtual bool Dye(Mobile from, DyeTub sender)
         {
             if (Deleted)
+            {
                 return false;
+            }
 
-            else if (RootParent is Mobile && from != RootParent)
+            if (RootParent is Mobile && from != RootParent)
+            {
                 return false;
+            }
 
             Hue = sender.DyedHue;
             return true;
@@ -115,9 +107,7 @@ namespace Server.Items
 
         public static void OnDamaged(Mobile m)
         {
-            BaseCostume costume = m.FindItemOnLayer(Layer.FirstValid) as BaseCostume;
-
-            if (costume != null)
+            if (m.FindItemOnLayer(Layer.FirstValid) is BaseCostume costume)
             {
                 m.AddToBackpack(costume);
             }
@@ -126,8 +116,8 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(3);
+
             writer.Write(m_Body);
             writer.Write(m_Hue);
         }
@@ -135,30 +125,10 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 3:
-                    m_Body = reader.ReadInt();
-                    m_Hue = reader.ReadInt();
-                    break;
-                case 2:
-                    m_Body = reader.ReadInt();
-                    m_Hue = reader.ReadInt();
-                    reader.ReadInt();
-                    break;
-                case 1:
-                    m_Body = reader.ReadInt();
-                    m_Hue = reader.ReadInt();
-                    reader.ReadInt();
-                    reader.ReadBool();
-
-                    m_SaveHueMod = reader.ReadInt();
-                    reader.ReadInt();
-                    break;
-            }
+            m_Body = reader.ReadInt();
+            m_Hue = reader.ReadInt();
 
             if (RootParent is Mobile mobile && mobile.Items.Contains(this))
             {
