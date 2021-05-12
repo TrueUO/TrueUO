@@ -5,7 +5,6 @@ namespace Server.Items
 {
     public class ArcaneGem : Item, ICommodity
     {
-        public const int DefaultArcaneHue = 2117;
         public override int LabelNumber => 1114115;  // Arcane Gem
 
         [Constructable]
@@ -34,6 +33,7 @@ namespace Server.Items
         public static bool ConsumeCharges(Mobile from, int amount)
         {
             List<Item> items = from.Items;
+
             int avail = 0;
 
             for (int i = 0; i < items.Count; ++i)
@@ -43,12 +43,16 @@ namespace Server.Items
                 if (obj is IArcaneEquip eq)
                 {
                     if (eq.IsArcane)
+                    {
                         avail += eq.CurArcaneCharges;
+                    }
                 }
             }
 
             if (avail < amount)
+            {
                 return false;
+            }
 
             for (int i = 0; i < items.Count; ++i)
             {
@@ -90,9 +94,14 @@ namespace Server.Items
             int v = (int)(m.Skills[SkillName.Tailoring].Value / 5);
 
             if (v < 16)
+            {
                 return 16;
+            }
+
             if (v > 24)
+            {
                 return 24;
+            }
 
             return v;
         }
@@ -107,18 +116,9 @@ namespace Server.Items
 
             if (obj is IArcaneEquip eq && eq is Item item)
             {
-                CraftResource resource = CraftResource.None;
-
-                if (item is BaseClothing clothing)
-                    resource = clothing.Resource;
-                else if (item is BaseArmor armor)
-                    resource = armor.Resource;
-                else if (item is BaseWeapon weapon) // Sanity, weapons cannot recieve gems...
-                    resource = weapon.Resource;
-
                 if (!item.IsChildOf(from.Backpack))
                 {
-                    from.SendMessage("You may only target items in your backpack.");
+                    from.SendLocalizedMessage(1045158); // You must have the item in your backpack to target it.
                     return;
                 }
 
@@ -128,7 +128,7 @@ namespace Server.Items
                 {
                     if (eq.CurArcaneCharges > 0)
                     {
-                        from.SendMessage("This item still has charges left.");
+                        from.SendLocalizedMessage(1075099); // You cannot recharge that item until all of its current charges have been used.
                     }
                     else
                     {
@@ -143,7 +143,6 @@ namespace Server.Items
                         {
                             eq.CurArcaneCharges += charges;
                             from.SendMessage("You are only able to restore some of the charges.");
-
                         }
 
                         Consume();
@@ -154,11 +153,13 @@ namespace Server.Items
                     bool isExceptional = false;
 
                     if (item is BaseClothing bc)
+                    {
                         isExceptional = bc.Quality == ItemQuality.Exceptional;
+                    }
                     else if (item is BaseArmor ba)
+                    {
                         isExceptional = ba.Quality == ItemQuality.Exceptional;
-                    else if (item is BaseWeapon bw)
-                        isExceptional = bw.Quality == ItemQuality.Exceptional;
+                    }
 
                     if (isExceptional)
                     {
@@ -167,7 +168,8 @@ namespace Server.Items
                             cloth.Quality = ItemQuality.Normal;
                             cloth.Crafter = from;
                         }
-                        else if (item is BaseArmor armor)
+
+                        if (item is BaseArmor armor)
                         {
                             if (armor.IsImbued || armor.IsArtifact || RunicReforging.GetArtifactRarity(armor) > 0)
                             {
@@ -183,20 +185,15 @@ namespace Server.Items
                             armor.PoisonBonus = 0;
                             armor.EnergyBonus = 0;
                         }
-                        else
-                        {
-                            BaseWeapon weapon = item as BaseWeapon; // Sanity, weapons cannot recieve gems...
-
-                            weapon.Quality = ItemQuality.Normal;
-                            weapon.Crafter = from;
-                        }
 
                         eq.CurArcaneCharges = eq.MaxArcaneCharges = charges;
 
-                        item.Hue = DefaultArcaneHue;
+                        item.Hue = 2117; // Default Arcane Hue
 
                         if (item.LootType == LootType.Blessed)
+                        {
                             item.LootType = LootType.Regular;
+                        }
 
                         Consume();
                     }
