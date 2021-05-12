@@ -116,11 +116,6 @@ namespace Server.Items
         {
         }
 
-        private static void AddComplexComponent(BaseAddon addon, int item, int xoffset, int yoffset, int zoffset, int hue, int lightsource)
-        {
-            AddComplexComponent(addon, item, xoffset, yoffset, zoffset, hue, lightsource, null, 1);
-        }
-
         private static void AddComplexComponent(BaseAddon addon, int item, int xoffset, int yoffset, int zoffset, int hue, int lightsource, string name, int amount)
         {
             var ac = new AddonComponent(item);

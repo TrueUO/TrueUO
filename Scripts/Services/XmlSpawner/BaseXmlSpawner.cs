@@ -2456,13 +2456,10 @@ namespace Server.Mobiles
 
                     deletelist.Add(m);
                 }
-                else if (name.Length == 0 || string.Compare(m.Name, name, true) == 0)
+                else if ((name.Length == 0 || string.Compare(m.Name, name, true) == 0) && (typestr == null || targettype != null && (m.GetType() == targettype || m.GetType().IsSubclassOf(targettype))))
                 {
-                    if (typestr == null || targettype != null && (m.GetType() == targettype || m.GetType().IsSubclassOf(targettype)))
-                    {
-                        foundmobile = m;
-                        break;
-                    }
+                    foundmobile = m;
+                    break;
                 }
             }
 
