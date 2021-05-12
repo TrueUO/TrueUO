@@ -55,6 +55,7 @@ namespace Server.Mobiles
         public override bool ClickTitle => false;
         public override bool ShowFameTitle => false;
         public override bool AlwaysMurderer => true;
+
         public override void GenerateLoot()
         {
             AddLoot(LootPack.Rich);
@@ -73,8 +74,8 @@ namespace Server.Mobiles
                 eq.CurArcaneCharges = eq.MaxArcaneCharges = 20;
             }
 
-            item.Hue = ArcaneGem.DefaultArcaneHue;
-            item.LootType = LootType.Newbied;
+            item.Hue = 2117;
+            item.Movable = false;
 
             AddItem(item);
         }
