@@ -3469,7 +3469,7 @@ namespace Server.Multis
 
                 if (info.Item != null)
                 {
-                    info.Item.IsSecure = info.IsLockdown ? false : true;
+                    info.Item.IsSecure = !info.IsLockdown;
                     Secures.Add(info);
                 }
             }

@@ -49,14 +49,16 @@ namespace Server.Items
             : base(0x14F0)
         {
             if (normalizeLevel)
+            {
                 SkillLevel = (int)(level / 10) * 10;
+            }
             else
+            {
                 SkillLevel = level;
+            }
 
             m_Skill = skill;
             m_Crafter = crafter;
-            Hue = 0x1BC;
-            LootType = LootType.Regular;
         }
 
         public RepairDeed(Serial serial)
@@ -64,7 +66,6 @@ namespace Server.Items
         {
         }
 
-        public override bool DisplayLootType => true;
         [CommandProperty(AccessLevel.GameMaster)]
         public RepairSkillType RepairSkill
         {
@@ -162,33 +163,6 @@ namespace Server.Items
             return IsNearType(m, RepairSkillInfo.GetInfo(m_Skill).NearbyTypes, 6);
         }
 
-        public static bool IsNearType(Mobile mob, Type type, int range)
-        {
-            bool mobs = type.IsSubclassOf(typeof(Mobile));
-            bool items = type.IsSubclassOf(typeof(Item));
-
-            IPooledEnumerable eable;
-
-            if (mobs)
-                eable = mob.GetMobilesInRange(range);
-            else if (items)
-                eable = mob.GetItemsInRange(range);
-            else
-                return false;
-
-            foreach (object obj in eable)
-            {
-                if (type.IsAssignableFrom(obj.GetType()))
-                {
-                    eable.Free();
-                    return true;
-                }
-            }
-
-            eable.Free();
-            return false;
-        }
-
         public static bool IsNearType(Mobile mob, Type[] types, int range)
         {
             IPooledEnumerable eable = mob.GetObjectsInRange(range);
@@ -214,7 +188,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
 
             writer.Write((int)m_Skill);
@@ -225,20 +198,11 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 0:
-                    {
-                        m_Skill = (RepairSkillType)reader.ReadInt();
-                        m_SkillLevel = reader.ReadDouble();
-                        m_Crafter = reader.ReadMobile();
-
-                        break;
-                    }
-            }
+            m_Skill = (RepairSkillType)reader.ReadInt();
+            m_SkillLevel = reader.ReadDouble();
+            m_Crafter = reader.ReadMobile();
         }
 
         private static TextDefinition GetSkillTitle(double skillLevel)
@@ -266,13 +230,13 @@ namespace Server.Items
     {
         private static readonly RepairSkillInfo[] m_Table =
         {
-                new RepairSkillInfo(DefBlacksmithy.CraftSystem,     typeof(Blacksmith), 1047013, 1023015),
-                new RepairSkillInfo(DefTailoring.CraftSystem,       typeof(Tailor),     1061132, 1022981),
-                new RepairSkillInfo(DefTinkering.CraftSystem,       typeof(Tinker),     1061166, 1022983),
-                new RepairSkillInfo(DefCarpentry.CraftSystem,       typeof(Carpenter),  1061135, 1060774),
-                new RepairSkillInfo(DefBowFletching.CraftSystem,    typeof(Bowyer),     1061134, 1023005),
-                new RepairSkillInfo(DefMasonry.CraftSystem,         typeof(Carpenter),  1061135, 1060774, 1044635),
-                new RepairSkillInfo(DefGlassblowing.CraftSystem,    typeof(Alchemist),  1111838, 1115634, 1044636)
+            new RepairSkillInfo(DefBlacksmithy.CraftSystem,     typeof(Blacksmith), 1047013, 1023015),
+            new RepairSkillInfo(DefTailoring.CraftSystem,       typeof(Tailor),     1061132, 1022981),
+            new RepairSkillInfo(DefTinkering.CraftSystem,       typeof(Tinker),     1061166, 1022983),
+            new RepairSkillInfo(DefCarpentry.CraftSystem,       typeof(Carpenter),  1061135, 1060774),
+            new RepairSkillInfo(DefBowFletching.CraftSystem,    typeof(Bowyer),     1061134, 1023005),
+            new RepairSkillInfo(DefMasonry.CraftSystem,         typeof(Carpenter),  1061135, 1060774, 1044635),
+            new RepairSkillInfo(DefGlassblowing.CraftSystem,    typeof(Alchemist),  1111838, 1115634, 1044636)
         };
 
         private readonly CraftSystem m_System;
@@ -301,12 +265,15 @@ namespace Server.Items
         public TextDefinition Description => m_Description;
         public CraftSystem System => m_System;
         public Type[] NearbyTypes => m_NearbyTypes;
+
         public static RepairSkillInfo GetInfo(RepairSkillType type)
         {
             int v = (int)type;
 
             if (v < 0 || v >= m_Table.Length)
+            {
                 v = 0;
+            }
 
             return m_Table[v];
         }

@@ -190,7 +190,9 @@ namespace Server.Engines.VeteranRewards
             public override bool OnDragDrop(Mobile from, Item dropped)
             {
                 if (Addon is DaviesLockerAddon && (dropped is SOS || dropped is TreasureMap))
-                    ((DaviesLockerAddon)Addon).TryAddEntry(dropped as Item, from);
+                {
+                    ((DaviesLockerAddon)Addon).TryAddEntry(dropped, from);
+                }
 
                 return false;
             }
@@ -200,7 +202,9 @@ namespace Server.Engines.VeteranRewards
                 base.GetContextMenuEntries(from, list);
 
                 if (Addon is DaviesLockerAddon)
+                {
                     SetSecureLevelEntry.AddTo(from, (DaviesLockerAddon)Addon, list);
+                }
             }
 
             public override void GetProperties(ObjectPropertyList list)
@@ -227,7 +231,7 @@ namespace Server.Engines.VeteranRewards
             public override void Deserialize(GenericReader reader)
             {
                 base.Deserialize(reader);
-                int version = reader.ReadInt();
+                reader.ReadInt();
             }
         }
     }
@@ -305,8 +309,9 @@ namespace Server.Engines.VeteranRewards
             writer.Write(South);
 
             writer.Write(Entries.Count);
-            foreach (DaviesLockerEntry entry in Entries)
+            for (var index = 0; index < Entries.Count; index++)
             {
+                DaviesLockerEntry entry = Entries[index];
                 if (entry is SOSEntry)
                     writer.Write(0);
                 else if (entry is TreasureMapEntry)
@@ -324,7 +329,7 @@ namespace Server.Engines.VeteranRewards
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             Entries = new List<DaviesLockerEntry>();
             South = reader.ReadBool();
@@ -826,21 +831,31 @@ namespace Server.Engines.VeteranRewards
             if (entry is SOSEntry sosEntry)
             {
                 if (!sosEntry.Opened)
+                {
                     return 1153570; // Unopened
+                }
 
                 if (sosEntry.IsAncient)
+                {
                     return 1153572; // Ancient
+                }
 
                 return 1153571; // Opened
             }
-            else if (entry is TreasureMapEntry mapEntry)
+
+            if (entry is TreasureMapEntry mapEntry)
             {
                 if (mapEntry.Completed)
+                {
                     return 1153582; // Completed
-                else if (mapEntry.Decoder != null)
+                }
+
+                if (mapEntry.Decoder != null)
+                {
                     return 1153581; // Decoded
-                else
-                    return 1153580; // Not Decoded
+                }
+
+                return 1153580; // Not Decoded
             }
 
             return 1153569; // Unknown
@@ -860,9 +875,9 @@ namespace Server.Engines.VeteranRewards
 
             protected override void OnTarget(Mobile from, object targeted)
             {
-                if (m_Addon != null && !m_Addon.Deleted && targeted is Item)
+                if (m_Addon != null && !m_Addon.Deleted && targeted is Item item)
                 {
-                    m_Addon.TryAddEntry(targeted as Item, from);
+                    m_Addon.TryAddEntry(item, from);
                     from.Target = new InternalTarget(from, m_Addon, m_Page);
                 }
             }
