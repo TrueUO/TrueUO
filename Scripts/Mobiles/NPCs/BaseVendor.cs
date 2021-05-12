@@ -52,8 +52,6 @@ namespace Server.Mobiles
 
         public override bool PlayerRangeSensitive => true;
 
-        public override bool UseSmartAI => true;
-
         public override bool AlwaysInnocent => true;
 
         public virtual bool IsActiveVendor => true;
