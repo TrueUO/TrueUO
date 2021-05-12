@@ -53,7 +53,6 @@ namespace Server.Mobiles
 
         public override bool AutoDispel => true;
         public override Poison PoisonImmune => Poison.Lethal;
-        public override bool UseSmartAI => true;
         public override bool ReacquireOnMovement => true;
         public override bool AttacksFocus => true;
         public override bool CanFlee => false;
@@ -360,7 +359,6 @@ namespace Server.Mobiles
 
         public override bool AutoDispel => true;
         public override Poison PoisonImmune => Poison.Lethal;
-        public override bool UseSmartAI => true;
         public override int TreasureMapLevel => 5;
 
         public GreatApe(Serial serial)
