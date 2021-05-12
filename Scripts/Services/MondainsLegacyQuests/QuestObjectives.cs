@@ -208,14 +208,20 @@ namespace Server.Engines.Quests
         public virtual bool IsObjective(Mobile mob)
         {
             if (Creatures == null)
-                return false;
-
-            foreach (Type type in Creatures)
             {
+                return false;
+            }
+
+            for (var index = 0; index < Creatures.Length; index++)
+            {
+                Type type = Creatures[index];
+
                 if (type.IsAssignableFrom(mob.GetType()))
                 {
                     if (Region != null && !mob.Region.IsPartOf(Region))
+                    {
                         return false;
+                    }
 
                     return true;
                 }
