@@ -1,8 +1,9 @@
-﻿namespace Server.Items
+namespace Server.Items
 {
     public class HelmOfVengence : NorseHelm
     {
-        public override int LabelNumber => 1116621;
+        public override int LabelNumber => 1116621; // Helm Of Vengeance
+        public override bool IsArtifact => true;
 
         public override int BasePhysicalResistance => 11;
         public override int BaseFireResistance => 10;
@@ -38,7 +39,7 @@
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }
