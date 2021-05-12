@@ -2684,38 +2684,9 @@ namespace Server.Mobiles
                 }
             }
 
-            if (version >= 18)
-            {
-                m_CorpseNameOverride = reader.ReadString();
-            }
-
-            if (version >= 19)
-            {
-                m_Allured = reader.ReadBool();
-            }
-
-            if (version <= 20)
-            {
-                reader.ReadInt();
-            }
-
-            if (version < 26)
-            {
-                CanMove = true;
-
-                ApproachWait = false;
-                ApproachRange = 10;
-            }
-
-            if (version >= 22)
-            {
-                m_EngravedText = reader.ReadString();
-            }
-
-            if (version == 23)
-            {
-                reader.ReadBool();
-            }
+            m_CorpseNameOverride = reader.ReadString();
+            m_Allured = reader.ReadBool();
+            m_EngravedText = reader.ReadString();
 
             if (version >= 24)
             {
@@ -2789,9 +2760,6 @@ namespace Server.Mobiles
             {
                 AdjustTameRequirements();
             }
-
-            if (AI == AIType.AI_UNUSED1 || AI == AIType.AI_UNUSED2)
-                AI = AIType.AI_Melee; // Can be safely removed on 1/1/2021 - Dan
         }
 
         public virtual bool IsHumanInTown()
@@ -3131,11 +3099,6 @@ namespace Server.Mobiles
                     m_AI = new NecroAI(this);
                     break;
             }
-        }
-
-        public void ChangeAIToDefault()
-        {
-            ChangeAIType(m_DefaultAI);
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
@@ -3792,30 +3755,6 @@ namespace Server.Mobiles
         public bool IsHurt()
         {
             return Hits != HitsMax;
-        }
-
-        public double GetHomeDistance()
-        {
-            return GetDistanceToSqrt(m_pHome);
-        }
-
-        public virtual int GetTeamSize(int iRange)
-        {
-            int iCount = 0;
-
-            IPooledEnumerable eable = GetMobilesInRange(iRange);
-
-            foreach (Mobile m in eable)
-            {
-                if (m is BaseCreature bc && bc.Team == Team && !bc.Deleted && m != this && CanSee(bc))
-                {
-                    iCount++;
-                }
-            }
-
-            eable.Free();
-
-            return iCount;
         }
 
         private class TameEntry : ContextMenuEntry
@@ -4550,7 +4489,6 @@ namespace Server.Mobiles
 
         protected override bool OnMove(Direction d)
         {
-
             if (Hidden) //Hidden, let's try stealth
             {
                 if (!Mounted && Skills.Stealth.Value >= 25.0 && CanStealth)
@@ -4574,7 +4512,6 @@ namespace Server.Mobiles
             }
 
             return true;
-
         }
 
         public override void OnMovement(Mobile m, Point3D oldLocation)
@@ -4657,67 +4594,6 @@ namespace Server.Mobiles
                     Timer.DelayCall(TimeSpan.Zero, ReleaseGuardDupeLock);
                 }
             }
-        }
-
-        public void AddSpellAttack(Type type)
-        {
-            m_arSpellAttack.Add(type);
-        }
-
-        public void AddSpellDefense(Type type)
-        {
-            m_arSpellDefense.Add(type);
-        }
-
-        public Spell GetAttackSpellRandom()
-        {
-            if (m_arSpellAttack.Count > 0)
-            {
-                Type type = m_arSpellAttack[Utility.Random(m_arSpellAttack.Count)];
-
-                object[] args = { this, null };
-                return Activator.CreateInstance(type, args) as Spell;
-            }
-
-            return null;
-        }
-
-        public Spell GetDefenseSpellRandom()
-        {
-            if (m_arSpellDefense.Count > 0)
-            {
-                Type type = m_arSpellDefense[Utility.Random(m_arSpellDefense.Count)];
-
-                object[] args = { this, null };
-                return Activator.CreateInstance(type, args) as Spell;
-            }
-
-            return null;
-        }
-
-        public Spell GetSpellSpecific(Type type)
-        {
-            int i;
-
-            for (i = 0; i < m_arSpellAttack.Count; i++)
-            {
-                if (m_arSpellAttack[i] == type)
-                {
-                    object[] args = { this, null };
-                    return Activator.CreateInstance(type, args) as Spell;
-                }
-            }
-
-            for (i = 0; i < m_arSpellDefense.Count; i++)
-            {
-                if (m_arSpellDefense[i] == type)
-                {
-                    object[] args = { this, null };
-                    return Activator.CreateInstance(type, args) as Spell;
-                }
-            }
-
-            return null;
         }
 
         #region Set[...]
@@ -4989,18 +4865,6 @@ namespace Server.Mobiles
         }
         #endregion
 
-        public static void Cap(ref int val, int min, int max)
-        {
-            if (val < min)
-            {
-                val = min;
-            }
-            else if (val > max)
-            {
-                val = max;
-            }
-        }
-
         public virtual void DropBackpack()
         {
             if (Backpack != null)
@@ -5117,14 +4981,6 @@ namespace Server.Mobiles
             AddLoot(pack, Utility.RandomMinMax(min, max), 100.0);
         }
 
-        public virtual void AddLoot(LootPack pack, int min, int max, double chance)
-        {
-            if (min > max)
-                min = max;
-
-            AddLoot(pack, Utility.RandomMinMax(min, max), chance);
-        }
-
         public virtual void AddLoot(LootPack pack, int amount)
         {
             AddLoot(pack, amount, 100.0);
@@ -5165,96 +5021,6 @@ namespace Server.Mobiles
             pack.Generate(this);
         }
 
-        public static void GetRandomAOSStats(int minLevel, int maxLevel, out int attributeCount, out int min, out int max)
-        {
-            int v = RandomMinMaxScaled(minLevel, maxLevel);
-
-            if (v >= 5)
-            {
-                attributeCount = Utility.RandomMinMax(2, 6);
-                min = 20;
-                max = 70;
-            }
-            else if (v == 4)
-            {
-                attributeCount = Utility.RandomMinMax(2, 4);
-                min = 20;
-                max = 50;
-            }
-            else if (v == 3)
-            {
-                attributeCount = Utility.RandomMinMax(2, 3);
-                min = 20;
-                max = 40;
-            }
-            else if (v == 2)
-            {
-                attributeCount = Utility.RandomMinMax(1, 2);
-                min = 10;
-                max = 30;
-            }
-            else
-            {
-                attributeCount = 1;
-                min = 10;
-                max = 20;
-            }
-        }
-
-        public static int RandomMinMaxScaled(int min, int max)
-        {
-            if (min == max)
-            {
-                return min;
-            }
-
-            if (min > max)
-            {
-                int hold = min;
-                min = max;
-                max = hold;
-            }
-
-            /* Example:
-            *    min: 1
-            *    max: 5
-            *  count: 5
-            *
-            * total = (5*5) + (4*4) + (3*3) + (2*2) + (1*1) = 25 + 16 + 9 + 4 + 1 = 55
-            *
-            * chance for min+0 : 25/55 : 45.45%
-            * chance for min+1 : 16/55 : 29.09%
-            * chance for min+2 :  9/55 : 16.36%
-            * chance for min+3 :  4/55 :  7.27%
-            * chance for min+4 :  1/55 :  1.81%
-            */
-
-            int count = max - min + 1;
-            int total = 0, toAdd = count;
-
-            for (int i = 0; i < count; ++i, --toAdd)
-            {
-                total += toAdd * toAdd;
-            }
-
-            int rand = Utility.Random(total);
-            toAdd = count;
-
-            int val = min;
-
-            for (int i = 0; i < count; ++i, --toAdd, ++val)
-            {
-                rand -= toAdd * toAdd;
-
-                if (rand < 0)
-                {
-                    break;
-                }
-            }
-
-            return val;
-        }
-
         public void PackGold(int amount)
         {
             if (amount > 0)
@@ -5266,48 +5032,6 @@ namespace Server.Mobiles
         public void PackGold(int min, int max)
         {
             PackGold(Utility.RandomMinMax(min, max));
-        }
-
-        public void PackStatue(int min, int max)
-        {
-            PackStatue(Utility.RandomMinMax(min, max));
-        }
-
-        public void PackStatue(int amount)
-        {
-            for (int i = 0; i < amount; ++i)
-            {
-                PackStatue();
-            }
-        }
-
-        public void PackStatue()
-        {
-            PackItem(Loot.RandomStatue());
-        }
-
-        public void PackGem()
-        {
-            PackGem(1);
-        }
-
-        public void PackGem(int min, int max)
-        {
-            PackGem(Utility.RandomMinMax(min, max));
-        }
-
-        public void PackGem(int amount)
-        {
-            if (amount <= 0)
-            {
-                return;
-            }
-
-            Item gem = Loot.RandomGem();
-
-            gem.Amount = amount;
-
-            PackItem(gem);
         }
 
         public void PackItem(Item item)
@@ -5375,9 +5099,7 @@ namespace Server.Mobiles
 
             if (DeathAdderCharmable && from.CanBeHarmful(this, false))
             {
-                DeathAdder da = SummonFamiliarSpell.Table[from] as DeathAdder;
-
-                if (da != null && !da.Deleted)
+                if (SummonFamiliarSpell.Table[from] is DeathAdder da && !da.Deleted)
                 {
                     from.SendAsciiMessage("You charm the snake.  Select a target to attack.");
                     from.Target = new DeathAdderCharmTarget(this);
@@ -7008,7 +6730,7 @@ namespace Server.Mobiles
                 CheckCastMastery();
             }
 
-            if (EnableRummaging && CanRummageCorpses && !Summoned && !Controlled && tc >= m_NextRummageTime)
+            if (CanRummageCorpses && !Summoned && !Controlled && tc >= m_NextRummageTime)
             {
                 double min, max;
 
