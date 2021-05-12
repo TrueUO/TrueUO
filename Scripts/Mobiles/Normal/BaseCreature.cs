@@ -5097,13 +5097,10 @@ namespace Server.Mobiles
                 }
             }
 
-            if (DeathAdderCharmable && from.CanBeHarmful(this, false))
+            if (DeathAdderCharmable && from.CanBeHarmful(this, false) && SummonFamiliarSpell.Table[from] is DeathAdder da && !da.Deleted)
             {
-                if (SummonFamiliarSpell.Table[from] is DeathAdder da && !da.Deleted)
-                {
-                    from.SendAsciiMessage("You charm the snake.  Select a target to attack.");
-                    from.Target = new DeathAdderCharmTarget(this);
-                }
+                from.SendLocalizedMessage(1114362); // You charm the snake. Select a target to attack.
+                from.Target = new DeathAdderCharmTarget(this);
             }
 
             base.OnDoubleClick(from);
@@ -5999,23 +5996,22 @@ namespace Server.Mobiles
         {
             base.OnRegionChange(Old, New);
 
-            if (Controlled)
+            if (Controlled && Spawner is SpawnEntry se && !se.UnlinkOnTaming && (New == null || !New.AcceptsSpawnsFrom(se.Region)))
             {
-                SpawnEntry se = Spawner as SpawnEntry;
-
-                if (se != null && !se.UnlinkOnTaming && (New == null || !New.AcceptsSpawnsFrom(se.Region)))
-                {
-                    Spawner.Remove(this);
-                    Spawner = null;
-                }
+                Spawner.Remove(this);
+                Spawner = null;
             }
         }
 
         public virtual double GetDispelDifficulty()
         {
             double dif = DispelDifficulty;
+
             if (SummonMaster != null)
+            {
                 dif += ArcaneEmpowermentSpell.GetDispellBonus(SummonMaster);
+            }
+
             return dif;
         }
 
@@ -6083,8 +6079,6 @@ namespace Server.Mobiles
 
             return true;
         }
-
-        private const bool EnableRummaging = true;
 
         private const double ChanceToRummage = 0.5; // 50%
 
