@@ -71,7 +71,7 @@ namespace Server.Mobiles
             {
                 if (!m.HasGump(typeof(HeplerPaulsonGump)))
                 {
-                    BaseGump.SendGump(new HeplerPaulsonGump(m as PlayerMobile));
+                    BaseGump.SendGump(new HeplerPaulsonGump((PlayerMobile) m));
                     pm.ExploringTheDeepQuest = ExploringTheDeepQuestChain.HeplerPaulson;
                 }
             }
@@ -82,13 +82,13 @@ namespace Server.Mobiles
             }
             else if (pm.ExploringTheDeepQuest == ExploringTheDeepQuestChain.CollectTheComponentComplete)
             {
-                BaseGump.SendGump(new HeplerPaulsonCollectCompleteGump(m as PlayerMobile));
+                BaseGump.SendGump(new HeplerPaulsonCollectCompleteGump((PlayerMobile) m));
             }
             else
             {
                 if (!m.HasGump(typeof(HeplerPaulsonCompleteGump)))
                 {
-                    BaseGump.SendGump(new HeplerPaulsonCompleteGump(m as PlayerMobile));
+                    BaseGump.SendGump(new HeplerPaulsonCompleteGump((PlayerMobile) m));
                 }
             }
         }
@@ -107,9 +107,7 @@ namespace Server.Mobiles
 
         public override bool OnDragDrop(Mobile from, Item dropped)
         {
-            PlayerMobile m = from as PlayerMobile;
-
-            if (m != null)
+            if (from is PlayerMobile m)
             {
                 if (dropped is BrokenShipwreckRemains)
                 {

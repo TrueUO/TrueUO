@@ -1142,7 +1142,7 @@ namespace Server.Mobiles
             if (dropped is SmallBOD || dropped is LargeBOD)
             {
                 PlayerMobile pm = from as PlayerMobile;
-                IBOD bod = dropped as IBOD;
+                IBOD bod = (IBOD) dropped;
 
                 if (BulkOrderSystem.NewSystemEnabled && Bribes != null && Bribes.ContainsKey(from) && Bribes[from].BOD == bod)
                 {
@@ -1779,9 +1779,11 @@ namespace Server.Mobiles
 
             cont = buyer.Backpack ?? buyer.BankBox;
 
-            foreach (BuyItemResponse buy in validBuy)
+            for (var index = 0; index < validBuy.Count; index++)
             {
+                BuyItemResponse buy = validBuy[index];
                 Serial ser = buy.Serial;
+
                 int amount = buy.Amount;
 
                 if (amount < 1)
@@ -1811,8 +1813,10 @@ namespace Server.Mobiles
                             amount = item.Amount;
                         }
 
-                        foreach (IShopSellInfo ssi in info)
+                        for (var i = 0; i < info.Length; i++)
                         {
+                            IShopSellInfo ssi = info[i];
+
                             if (ssi.IsSellable(item))
                             {
                                 if (ssi.IsResellable(item))
@@ -1860,7 +1864,7 @@ namespace Server.Mobiles
                         ProcessValidPurchase(amount, gbi, buyer, cont);
                     }
                 }
-            } //foreach
+            }
 
             if (discount > 0)
             {

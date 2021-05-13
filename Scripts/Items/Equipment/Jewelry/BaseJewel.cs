@@ -1169,7 +1169,7 @@ namespace Server.Items
 
         public virtual bool MixedSet => false;
 
-        public bool IsSetItem => SetID == SetItem.None ? false : true;
+        public bool IsSetItem => SetID != SetItem.None;
 
         private int m_SetHue;
         private bool m_SetEquipped;
@@ -1189,19 +1189,13 @@ namespace Server.Items
         public bool SetEquipped
         {
             get => m_SetEquipped;
-            set
-            {
-                m_SetEquipped = value;
-            }
+            set => m_SetEquipped = value;
         }
 
         public bool LastEquipped
         {
             get => m_LastEquipped;
-            set
-            {
-                m_LastEquipped = value;
-            }
+            set => m_LastEquipped = value;
         }
 
         private int m_SetPhysicalBonus, m_SetFireBonus, m_SetColdBonus, m_SetPoisonBonus, m_SetEnergyBonus;

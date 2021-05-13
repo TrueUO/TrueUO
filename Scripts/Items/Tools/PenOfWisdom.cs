@@ -99,10 +99,8 @@ namespace Server.Items
 
             protected override void OnTarget(Mobile from, object targ)
             {
-                if (targ is Runebook || targ is RunicAtlas)
+                if (targ is Runebook book)
                 {
-                    Runebook book = targ as Runebook;
-
                     if (!book.IsChildOf(from.Backpack) && book.Movable)
                     {
                         from.SendLocalizedMessage(1115329); // Runebooks you wish to copy must be in your backpack.
@@ -331,8 +329,10 @@ namespace Server.Items
                         }
                         else
                         {
-                            foreach (RunebookEntry entry in Checked)
+                            for (var index = 0; index < Checked.Count; index++)
                             {
+                                RunebookEntry entry = Checked[index];
+
                                 CopyBook.Entries.Add(entry);
                             }
 
@@ -369,7 +369,9 @@ namespace Server.Items
                         }
 
                         if (!from.HasGump(typeof(PenOfWisdomGump)))
+                        {
                             from.SendGump(new PenOfWisdomGump(from, Pen, SourceBook, CopyBook, Checked));
+                        }
 
                         break;
                     }

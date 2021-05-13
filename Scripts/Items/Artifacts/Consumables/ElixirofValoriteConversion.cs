@@ -25,9 +25,7 @@ namespace Server.Items
 
             if (item1 != null)
             {
-                BaseIngot m_Ore1 = item1 as BaseIngot;
-
-                int toConsume = m_Ore1.Amount;
+                BaseIngot m_Ore1 = item1;
 
                 if ((m_Ore1.Amount > 499) && (m_Ore1.Amount < 501))
                 {
