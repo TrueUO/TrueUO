@@ -231,17 +231,25 @@ namespace Server.Engines.Harvest
         public override void SendSuccessTo(Mobile from, Item item, HarvestResource resource)
         {
             if (item is BaseGranite)
+            {
                 from.SendLocalizedMessage(1044606); // You carefully extract some workable stone from the ore vein!
+            }
             else if (item is IGem)
+            {
                 from.SendLocalizedMessage(1112233); // You carefully extract a glistening gem from the vein!
+            }
             else if (item != null)
             {
-                foreach (HarvestResource res in OreAndStone.Resources)
+                for (var index = 0; index < OreAndStone.Resources.Length; index++)
                 {
+                    HarvestResource res = OreAndStone.Resources[index];
+
                     if (res.Types != null)
                     {
-                        foreach (Type type in res.Types)
+                        for (var i = 0; i < res.Types.Length; i++)
                         {
+                            Type type = res.Types[i];
+
                             if (item.GetType() == type)
                             {
                                 res.SendSuccessTo(from);
