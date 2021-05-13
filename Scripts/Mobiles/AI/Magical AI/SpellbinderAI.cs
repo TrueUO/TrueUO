@@ -231,19 +231,23 @@ namespace Server.Mobiles
             Spell spell = CheckCastHealingSpell();
 
             if (spell != null)
+            {
                 return spell;
+            }
 
             if (!(c is Mobile))
             {
                 return null;
             }
 
-            Mobile mob = c as Mobile;
-            double damage = (m_Mobile.Skills[SkillName.SpiritSpeak].Value - mob.Skills[SkillName.MagicResist].Value) / 10 +
-                         (mob.Player ? 18 : 30);
+            Mobile mob = (Mobile) c;
+
+            double damage = (m_Mobile.Skills[SkillName.SpiritSpeak].Value - mob.Skills[SkillName.MagicResist].Value) / 10 + (mob.Player ? 18 : 30);
 
             if (damage > c.Hits)
+            {
                 spell = new ManaDrainSpell(m_Mobile, null);
+            }
 
             switch (Utility.Random(16))
             {
@@ -568,9 +572,7 @@ namespace Server.Mobiles
                 Mobile active = null, inactive = null;
                 double actPrio = 0.0, inactPrio = 0.0;
 
-                Mobile comb = m_Mobile.Combatant as Mobile;
-
-                if (comb != null && !comb.Deleted && comb.Alive && !comb.IsDeadBondedPet && CanDispel(comb))
+                if (m_Mobile.Combatant is Mobile comb && !comb.Deleted && comb.Alive && !comb.IsDeadBondedPet && CanDispel(comb))
                 {
                     active = inactive = comb;
                     actPrio = inactPrio = m_Mobile.GetDistanceToSqrt(comb);

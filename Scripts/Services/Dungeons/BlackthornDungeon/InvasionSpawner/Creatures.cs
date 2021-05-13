@@ -54,7 +54,6 @@ namespace Server.Engines.Blackthorn
             return null;
         }
 
-        public override bool UseSmartAI => true;
         public virtual bool CanDoSpecial => SpellCaster;
 
         public virtual double MinSkill => 100.0;

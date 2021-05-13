@@ -48,7 +48,7 @@ namespace Server.Items
                 list.Add(from, 0);
             }
 
-            from.AddToBackpack(new RawGinseng());
+            from.AddToBackpack(new RangersNecklace());
         }
 
         public override void Serialize(GenericWriter writer)

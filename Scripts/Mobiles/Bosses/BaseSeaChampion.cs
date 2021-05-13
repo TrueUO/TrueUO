@@ -8,11 +8,13 @@ namespace Server.Mobiles
 {
     public class BaseSeaChampion : BaseChampion
     {
+        public override bool DoesGoldShower => false;
+        public override bool CanGivePowerscrolls => false;
+
         public override Type[] UniqueList => new Type[] { };
         public override Type[] SharedList => new Type[] { };
         public override Type[] DecorativeList => new Type[] { };
         public override MonsterStatuetteType[] StatueTypes => new MonsterStatuetteType[] { };
-
         public override ChampionSkullType SkullType => ChampionSkullType.None;
 
         private DateTime m_NextBoatDamage;
