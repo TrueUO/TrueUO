@@ -86,7 +86,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             Music = (MusicName)reader.ReadInt();
         }
@@ -203,16 +203,17 @@ namespace Server.Items
 
             writer.Write(List.Count);
 
-            List.ForEach(x =>
+            for (var index = 0; index < List.Count; index++)
             {
-                writer.Write((int)x);
-            });
+                var x = List[index];
+                writer.Write((int) x);
+            }
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             int count = reader.ReadInt();
 
@@ -264,14 +265,12 @@ namespace Server.Items
                     case 1: // Stop Song
                         {
                             sender.Mobile.Send(StopMusic.Instance);
-
                             break;
                         }
                     default:
                         {
                             int music = index - 100;
                             sender.Mobile.Send(new PlayMusic((MusicName)music));
-
                             return;
                         }
                 }
@@ -363,17 +362,18 @@ namespace Server.Items
 
             if (_List != null)
             {
-                _List.ForEach(x =>
+                for (var index = 0; index < _List.Count; index++)
                 {
-                    writer.Write((int)x);
-                });
+                    var x = _List[index];
+                    writer.Write((int) x);
+                }
             }
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             int count = reader.ReadInt();
 
