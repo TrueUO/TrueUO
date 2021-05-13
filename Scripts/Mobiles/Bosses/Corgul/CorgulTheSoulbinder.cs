@@ -32,9 +32,6 @@ namespace Server.Mobiles
         public override Type[] SharedList => new[] { typeof(HelmOfVengence), typeof(RingOfTheSoulbinder), typeof(RuneEngravedPegLeg), typeof(CullingBlade) };
         public override Type[] DecorativeList => new[] { typeof(EnchantedBladeDeed), typeof(EnchantedVortexDeed) };
 
-        public override bool NoGoodies => true;
-        public override bool RestrictedToFelucca => false;
-
         private readonly int _SpawnPerLoc = 15;
 
         private readonly Point3D[] _SpawnLocs =
