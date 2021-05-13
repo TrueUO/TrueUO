@@ -409,12 +409,10 @@ namespace Server.Engines.Quests
 
             for (var index = 0; index < pm.Quests.Count; index++)
             {
-                BaseQuest escortquest = pm.Quests[index];
+                BaseQuest escortQuest = pm.Quests[index];
 
-                if (escortquest.Quester is BaseEscort)
+                if (escortQuest.Quester is BaseEscort escort)
                 {
-                    BaseEscort escort = (BaseEscort) escortquest.Quester;
-
                     Timer.DelayCall(TimeSpan.FromSeconds(3), delegate
                     {
                         escort.Say(500901); // Ack!  My escort has come to haunt me!

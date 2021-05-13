@@ -1367,7 +1367,7 @@ namespace Server.Mobiles
             {
                 IBOD bod = targeted as IBOD;
 
-                if (bod is Item && ((Item)bod).IsChildOf(from.Backpack))
+                if (bod is Item bodItem && bodItem.IsChildOf(from.Backpack))
                 {
                     if (BulkOrderSystem.CanExchangeBOD(from, this, bod, -1))
                     {

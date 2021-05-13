@@ -211,9 +211,9 @@ namespace Server.Engines.VeteranRewards
 
             public override bool OnDragDrop(Mobile from, Item dropped)
             {
-                if (Addon is DaviesLockerAddon && (dropped is SOS || dropped is TreasureMap))
+                if (Addon is DaviesLockerAddon addon && (dropped is SOS || dropped is TreasureMap))
                 {
-                    ((DaviesLockerAddon)Addon).TryAddEntry(dropped, from);
+                    addon.TryAddEntry(dropped, from);
                 }
 
                 return false;
@@ -223,9 +223,9 @@ namespace Server.Engines.VeteranRewards
             {
                 base.GetContextMenuEntries(from, list);
 
-                if (Addon is DaviesLockerAddon)
+                if (Addon is DaviesLockerAddon addon)
                 {
-                    SetSecureLevelEntry.AddTo(from, (DaviesLockerAddon)Addon, list);
+                    SetSecureLevelEntry.AddTo(from, addon, list);
                 }
             }
 
@@ -233,9 +233,9 @@ namespace Server.Engines.VeteranRewards
             {
                 base.GetProperties(list);
 
-                if (Addon is DaviesLockerAddon)
+                if (Addon is DaviesLockerAddon addon)
                 {
-                    list.Add(1153648, ((DaviesLockerAddon)Addon).Entries.Count.ToString());
+                    list.Add(1153648, addon.Entries.Count.ToString());
                 }
             }
 
@@ -600,20 +600,24 @@ namespace Server.Engines.VeteranRewards
 
                 AddHtmlLocalized(78, y, 110, 20, GetFacet(entry), Yellow, false, false);
 
-                if (entry is TreasureMapEntry)
+                if (entry is TreasureMapEntry mapEntry)
                 {
-                    AddHtmlLocalized(174, y, 110, 20, GetPackage((TreasureMapEntry)entry), Yellow, false, false);
-                    AddHtmlLocalized(268, y, 110, 20, GetLevel((TreasureMapEntry)entry), Yellow, false, false);
+                    AddHtmlLocalized(174, y, 110, 20, GetPackage(mapEntry), Yellow, false, false);
+                    AddHtmlLocalized(268, y, 110, 20, GetLevel(mapEntry), Yellow, false, false);
                 }
                 else
                 {
                     AddHtmlLocalized(268, y, 110, 20, GetLevel(entry), Yellow, false, false);
                 }
 
-                if (entry is TreasureMapEntry && ((TreasureMapEntry)entry).Decoder == null || entry is SOSEntry && !((SOSEntry)entry).Opened)
+                if (entry is TreasureMapEntry treasureMapEntry && treasureMapEntry.Decoder == null || entry is SOSEntry sosEntry && !sosEntry.Opened)
+                {
                     AddHtmlLocalized(373, y, 90, 20, 1153569, Yellow, false, false); // Unknown
+                }
                 else
+                {
                     AddHtmlLocalized(373, y, 90, 20, 1060847, GetLocation(entry), Yellow, false, false); // ~1_val~ ~2_val~
+                }
 
                 AddHtmlLocalized(473, y, 100, 20, GetStatus(entry), Yellow, false, false);
 
@@ -731,17 +735,23 @@ namespace Server.Engines.VeteranRewards
         {
             Item item = null;
 
-            if (entry is SOSEntry)
-                item = Construct((SOSEntry)entry);
-            else if (entry is TreasureMapEntry)
-                item = Construct((TreasureMapEntry)entry);
+            if (entry is SOSEntry sosEntry)
+            {
+                item = Construct(sosEntry);
+            }
+            else if (entry is TreasureMapEntry mapEntry)
+            {
+                item = Construct(mapEntry);
+            }
 
             if (item != null)
             {
                 Container pack = from.Backpack;
 
                 if (pack == null || !pack.TryDropItem(from, item, false))
+                {
                     item.Delete();
+                }
                 else
                 {
                     if (m_List.Contains(entry))

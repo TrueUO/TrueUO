@@ -78,25 +78,32 @@ namespace Server.Gumps
             MatNext,
             Restore
         }
+
         public override void OnResponse(NetState state, RelayInfo info)
         {
             if (m_Statue == null || m_Statue.Deleted)
+            {
                 return;
+            }
 
             bool sendGump = false;
 
             if (info.ButtonID == (int)Buttons.Sculpt)
             {
-                if (m_Maker is CharacterStatueDeed)
+                if (m_Maker is CharacterStatueDeed deed)
                 {
-                    CharacterStatue backup = ((CharacterStatueDeed)m_Maker).Statue;
+                    CharacterStatue backup = deed.Statue;
 
                     if (backup != null)
+                    {
                         backup.Delete();
+                    }
                 }
 
                 if (m_Maker != null)
+                {
                     m_Maker.Delete();
+                }
 
                 m_Statue.Sculpt(state.Mobile);
             }
@@ -134,12 +141,14 @@ namespace Server.Gumps
             }
             else if (info.ButtonID == (int)Buttons.Restore)
             {
-                if (m_Maker is CharacterStatueDeed)
+                if (m_Maker is CharacterStatueDeed deed)
                 {
-                    CharacterStatue backup = ((CharacterStatueDeed)m_Maker).Statue;
+                    CharacterStatue backup = deed.Statue;
 
                     if (backup != null)
+                    {
                         m_Statue.Restore(backup);
+                    }
                 }
 
                 sendGump = true;
@@ -150,7 +159,9 @@ namespace Server.Gumps
             }
 
             if (sendGump)
+            {
                 state.Mobile.SendGump(new CharacterStatueGump(m_Maker, m_Statue, m_Owner));
+            }
         }
 
         private int GetMaterialNumber(StatueType type, StatueMaterial material)

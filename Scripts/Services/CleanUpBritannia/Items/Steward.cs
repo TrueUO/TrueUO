@@ -299,9 +299,9 @@ namespace Server.Mobiles
                 }
                 else
                 {
-                    if (_Mannequin is Steward)
+                    if (_Mannequin is Steward steward)
                     {
-                        ((Steward)_Mannequin).Keyword = text;
+                        steward.Keyword = text;
                         from.SendLocalizedMessage(1153257); // The keyword has been set.
                     }
                 }
@@ -310,11 +310,16 @@ namespace Server.Mobiles
 
         private static bool ContainsDisallowedSpeech(string text)
         {
-            foreach (string word in ProfanityProtection.Disallowed)
+            for (var index = 0; index < ProfanityProtection.Disallowed.Length; index++)
             {
+                string word = ProfanityProtection.Disallowed[index];
+
                 if (text.Contains(word))
+                {
                     return true;
+                }
             }
+
             return false;
         }
 
@@ -375,7 +380,7 @@ namespace Server.Mobiles
 
         public static bool IsEquipped(Item item)
         {
-            return item != null && item.Parent is Mobile && ((Mobile)item.Parent).FindItemOnLayer(item.Layer) == item &&
+            return item != null && item.Parent is Mobile mobile && mobile.FindItemOnLayer(item.Layer) == item &&
                    item.Layer != Layer.Mount && item.Layer != Layer.Bank &&
                    item.Layer != Layer.Invalid && item.Layer != Layer.Backpack && !(item is Backpack);
         }
@@ -902,7 +907,9 @@ namespace Server.Mobiles
             Map map = from.Map;
 
             if (p == null || map == null || _Deed == null || _Deed.Deleted)
+            {
                 return;
+            }
 
             if (_Deed.IsChildOf(from.Backpack))
             {
@@ -910,7 +917,7 @@ namespace Server.Mobiles
                 BaseHouse house = null;
                 Point3D loc = new Point3D(p);
 
-                if (targeted is Item && !((Item)targeted).IsLockedDown && !((Item)targeted).IsSecure && !(targeted is AddonComponent))
+                if (targeted is Item item && !item.IsLockedDown && !item.IsSecure && !(item is AddonComponent))
                 {
                     from.SendLocalizedMessage(1151655); // The mannequin cannot fit there.
                     return;

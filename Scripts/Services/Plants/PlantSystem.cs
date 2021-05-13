@@ -406,8 +406,10 @@ namespace Server.Engines.Plants
             {
                 PlantItem plant = (PlantItem)plants[i];
 
-                if (plant.IsGrowable && plant.RootParent as Mobile == null && now >= plant.PlantSystem.NextGrowth)
+                if (plant.IsGrowable && !(plant.RootParent is Mobile) && now >= plant.PlantSystem.NextGrowth)
+                {
                     plant.PlantSystem.DoGrowthCheck();
+                }
             }
         }
 

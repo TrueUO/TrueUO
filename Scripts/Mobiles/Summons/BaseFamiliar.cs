@@ -238,11 +238,11 @@ namespace Server.Mobiles
                 check.Weapon.OnSwing(check, defender);
             }
 
-            if (attacker is PlayerMobile)
+            if (attacker is PlayerMobile mobile)
             {
-                for (var index = 0; index < ((PlayerMobile) attacker).AllFollowers.Count; index++)
+                for (var index = 0; index < mobile.AllFollowers.Count; index++)
                 {
-                    Mobile ts = ((PlayerMobile) attacker).AllFollowers[index];
+                    Mobile ts = mobile.AllFollowers[index];
 
                     if (ts is BaseTalismanSummon && ts.InRange(defender.Location, ts.Weapon.MaxRange))
                     {

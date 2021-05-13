@@ -665,12 +665,13 @@ namespace Server.Mobiles
                 BaseHouse house = null;
                 Point3D loc = new Point3D(p);
 
-                if (targeted is Item && !((Item)targeted).IsLockedDown && !((Item)targeted).IsSecure && !(targeted is AddonComponent))
+                if (targeted is Item item && !item.IsLockedDown && !item.IsSecure && !(item is AddonComponent))
                 {
                     from.SendLocalizedMessage(1076191); // Statues can only be placed in houses.
                     return;
                 }
-                else if (from.IsBodyMod)
+
+                if (from.IsBodyMod)
                 {
                     from.SendLocalizedMessage(1073648); // You may only proceed while in your original state...
                     return;
@@ -685,8 +686,10 @@ namespace Server.Mobiles
 
                     house.Addons[plinth] = from;
 
-                    if (m_Maker is IRewardItem)
-                        statue.IsRewardItem = ((IRewardItem)m_Maker).IsRewardItem;
+                    if (m_Maker is IRewardItem rewardItem)
+                    {
+                        statue.IsRewardItem = rewardItem.IsRewardItem;
+                    }
 
                     statue.Plinth = plinth;
                     plinth.MoveToWorld(loc, map);
