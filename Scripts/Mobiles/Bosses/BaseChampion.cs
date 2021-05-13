@@ -24,15 +24,16 @@ namespace Server.Mobiles
         }
 
         public override bool CanBeParagon => false;
+
         public abstract ChampionSkullType SkullType { get; }
         public abstract Type[] UniqueList { get; }
         public abstract Type[] SharedList { get; }
         public abstract Type[] DecorativeList { get; }
         public abstract MonsterStatuetteType[] StatueTypes { get; }
-        public virtual bool NoGoodies => false;
+
         public virtual bool DoesGoldShower => true;
         public virtual bool CanGivePowerscrolls => true;
-        public virtual bool RestrictedToFelucca => true;
+
         public virtual int PowerScrollAmount => ChampionSystem.PowerScrollAmount;
 
         public override void Serialize(GenericWriter writer)
@@ -91,8 +92,10 @@ namespace Server.Mobiles
 
         public virtual void GivePowerScrolls()
         {
-            if (Map == null || RestrictedToFelucca && Map.Rules != MapRules.FeluccaRules)
+            if (Map == null || Map.Rules != MapRules.FeluccaRules)
+            {
                 return;
+            }
 
             List<Mobile> toGive = new List<Mobile>();
             List<DamageStore> rights = GetLootingRights();
@@ -287,11 +290,6 @@ namespace Server.Mobiles
             if (CanGivePowerscrolls && !NoKillAwards)
             {
                 GivePowerScrolls();
-
-                if (NoGoodies)
-                {
-                    return base.OnBeforeDeath();
-                }
 
                 if (DoesGoldShower)
                 {

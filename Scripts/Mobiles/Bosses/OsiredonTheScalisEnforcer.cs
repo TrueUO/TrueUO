@@ -34,8 +34,6 @@ namespace Server.Mobiles
         public override Type[] SharedList => new[] { typeof(MiniSoulForgeDeed) };
         public override Type[] DecorativeList => new[] { typeof(EnchantedBladeDeed), typeof(EnchantedVortexDeed) };
 
-        public override bool NoGoodies => true;
-
         [Constructable]
         public Osiredon()
             : this(null)
