@@ -80,70 +80,53 @@ namespace Server.Items
         #region Spawn Types
         private static readonly Type[][] m_SpawnTypes =
         {
-            new[]{ typeof(HeadlessOne), typeof(Skeleton) },
             new[]{ typeof(Mongbat), typeof(Ratman), typeof(HeadlessOne), typeof(Skeleton), typeof(Zombie) },
-            new[]{ typeof(OrcishMage), typeof(Gargoyle), typeof(Gazer), typeof(HellHound), typeof(EarthElemental) },
-            new[]{ typeof(Lich), typeof(OgreLord), typeof(DreadSpider), typeof(AirElemental), typeof(FireElemental) },
-            new[]{ typeof(DreadSpider), typeof(LichLord), typeof(Daemon), typeof(ElderGazer), typeof(OgreLord) },
-            new[]{ typeof(LichLord), typeof(Daemon), typeof(ElderGazer), typeof(PoisonElemental), typeof(BloodElemental) },
-            new[]{ typeof(AncientWyrm), typeof(Balron), typeof(BloodElemental), typeof(PoisonElemental), typeof(Titan) },
-            new[]{ typeof(BloodElemental), typeof(ColdDrake), typeof(FrostDragon), typeof(FrostDrake), typeof(GreaterDragon), typeof(PoisonElemental)}
+            new[]{ typeof(AirElemental), typeof(DreadSpider), typeof(EarthElemental), typeof(FireElemental), typeof(Gargoyle), typeof(Gazer), typeof(HellHound), typeof(Lich), typeof(EvilMage), typeof(OgreLord), typeof(Orc) },
+            new[]{ typeof(BloodElemental), typeof(Daemon), typeof(DreadSpider), typeof(ElderGazer), typeof(LichLord), typeof(OgreLord), typeof(PoisonElemental) },
+            new[]{ typeof(AncientWyrm), typeof(Balron), typeof(BloodElemental), typeof(PoisonElemental), typeof(Titan), typeof(GreaterDragon), typeof(ColdDrake), typeof(DragonWolf) },
+            new[]{ typeof(AncientWyrm), typeof(Balron), typeof(BloodElemental), typeof(PoisonElemental), typeof(Titan), typeof(GreaterDragon), typeof(ColdDrake), typeof(FrostDragon) },
         };
 
         private static readonly Type[][] m_TokunoSpawnTypes =
         {
-            new[]{ typeof(HeadlessOne), typeof(Skeleton) },
-            new[]{ typeof(HeadlessOne), typeof(Mongbat), typeof(Ratman), typeof(Skeleton), typeof(Zombie)  },
-            new[]{ typeof(EarthElemental), typeof(Gazer), typeof(Gargoyle), typeof(HellHound), typeof(OrcishMage) },
-            new[]{ typeof(AirElemental), typeof(DreadSpider), typeof(FireElemental), typeof(Lich), typeof(OgreLord) },
-            new[]{ typeof(ElderGazer), typeof(Daemon), typeof(DreadSpider), typeof(LichLord), typeof(OgreLord) },
-            new[]{ typeof(FanDancer), typeof(RevenantLion), typeof(Ronin), typeof(RuneBeetle) },
-            new[]{ typeof(Hiryu), typeof(LadyOfTheSnow), typeof(Oni), typeof(RuneBeetle), typeof(YomotsuWarrior), typeof(YomotsuPriest) },
-            new[]{ typeof(Yamandon), typeof(LadyOfTheSnow), typeof(RuneBeetle), typeof(YomotsuPriest) }
+            new[]{ typeof(Mongbat), typeof(Ratman), typeof(HeadlessOne), typeof(Skeleton), typeof(Zombie)  },
+            new[]{ typeof(AirElemental), typeof(DreadSpider), typeof(EarthElemental), typeof(FireElemental), typeof(Gargoyle), typeof(Gazer), typeof(HellHound), typeof(Lich), typeof(EvilMage), typeof(OgreLord), typeof(Orc) },
+            new[]{ typeof(Daemon), typeof(Devourer), typeof(DreadSpider), typeof(ElderGazer), typeof(FanDancer), typeof(LichLord), typeof(OgreLord), typeof(RevenantLion), typeof(Ronin), typeof(RuneBeetle) },
+            new[]{ typeof(RuneBeetle), typeof(LadyOfTheSnow), typeof(YomotsuElder), typeof(YomotsuPriest), typeof(YomotsuWarrior), typeof(Hiryu), typeof(Oni), typeof(DragonWolf) },
+            new[]{ typeof(RuneBeetle), typeof(LadyOfTheSnow), typeof(YomotsuElder), typeof(YomotsuPriest), typeof(YomotsuWarrior), typeof(Hiryu), typeof(Oni), typeof(Yamandon) }
         };
 
         private static readonly Type[][] m_MalasSpawnTypes =
         {
-            new[]{ typeof(HeadlessOne), typeof(Skeleton) },
             new[]{ typeof(Mongbat), typeof(Ratman), typeof(HeadlessOne), typeof(Skeleton), typeof(Zombie) },
-            new[]{ typeof(OrcishMage), typeof(Gargoyle), typeof(Gazer), typeof(HellHound), typeof(EarthElemental) },
-            new[]{ typeof(Lich), typeof(OgreLord), typeof(DreadSpider), typeof(AirElemental), typeof(FireElemental) },
-            new[]{ typeof(DreadSpider), typeof(LichLord), typeof(Daemon), typeof(ElderGazer), typeof(OgreLord) },
-            new[]{ typeof(LichLord), typeof(Ravager), typeof(WandererOfTheVoid), typeof(Minotaur) },
-            new[]{ typeof(Devourer), typeof(MinotaurScout), typeof(MinotaurCaptain), typeof(RottingCorpse), typeof(WandererOfTheVoid) },
-            new[]{ typeof(Devourer), typeof(MinotaurGeneral), typeof(MinotaurCaptain), typeof(RottingCorpse), typeof(WandererOfTheVoid) }
+            new[]{ typeof(AirElemental), typeof(DreadSpider), typeof(EarthElemental), typeof(FireElemental), typeof(Gargoyle), typeof(Gazer), typeof(HellHound), typeof(Lich), typeof(EvilMage), typeof(OgreLord), typeof(Orc) },
+            new[]{ typeof(Daemon), typeof(DreadSpider), typeof(ElderGazer), typeof(LichLord), typeof(OgreLord), typeof(Ravager), typeof(WandererOfTheVoid) },
+            new[]{ typeof(Devourer), typeof(RottingCorpse), typeof(WandererOfTheVoid), typeof(MinotaurCaptain), typeof(MinotaurScout), typeof(DragonWolf)  },
+            new[]{ typeof(Devourer), typeof(RottingCorpse), typeof(WandererOfTheVoid), typeof(MinotaurCaptain), typeof(MinotaurScout), typeof(MinotaurGeneral) }
         };
 
         private static readonly Type[][] m_IlshenarSpawnTypes =
         {
-            new[]{ typeof(HeadlessOne), typeof(Skeleton) },
             new[]{ typeof(Mongbat), typeof(Ratman), typeof(HeadlessOne), typeof(Skeleton), typeof(Zombie) },
-            new[]{ typeof(OrcishMage), typeof(Gargoyle), typeof(Gazer), typeof(HellHound), typeof(EarthElemental) },
-            new[]{ typeof(Lich), typeof(OgreLord), typeof(DreadSpider), typeof(AirElemental), typeof(FireElemental) },
-            new[]{ typeof(DreadSpider), typeof(LichLord), typeof(Daemon), typeof(ElderGazer), typeof(OgreLord) },
-            new[]{ typeof(DarkGuardian), typeof(ExodusOverseer), typeof(GargoyleDestroyer), typeof(GargoyleEnforcer), typeof(PoisonElemental) },
-            new[]{ typeof(Changeling), typeof(ExodusMinion), typeof(GargoyleEnforcer), typeof(GargoyleDestroyer), typeof(Titan) },
-            new[]{ typeof(RenegadeChangeling), typeof(ExodusMinion), typeof(GargoyleEnforcer), typeof(GargoyleDestroyer), typeof(Titan) }
+            new[]{ typeof(AirElemental), typeof(DreadSpider), typeof(EarthElemental), typeof(FireElemental), typeof(Gargoyle), typeof(Gazer), typeof(HellHound), typeof(Lich), typeof(EvilMage), typeof(OgreLord), typeof(Orc) },
+            new[]{ typeof(Daemon), typeof(DarkGuardian), typeof(DreadSpider), typeof(ElderGazer), typeof(ExodusMinion), typeof(GargoyleDestroyer), typeof(GargoyleEnforcer), typeof(LichLord), typeof(OgreLord), typeof(PoisonElemental) },
+            new[]{ typeof(ExodusMinion), typeof(GargoyleDestroyer), typeof(Titan), typeof(Changeling), typeof(EnslavedSatyr), typeof(DragonWolf) },
+            new[]{ typeof(ExodusMinion), typeof(GargoyleDestroyer), typeof(Titan), typeof(RenegadeChangeling), typeof(EnslavedSatyr) }
         };
 
         private static readonly Type[][] m_TerMurSpawnTypes =
         {
-            new[]{ typeof(HeadlessOne), typeof(Skeleton) },
-            new[]{ typeof(ClockworkScorpion), typeof(CorrosiveSlime), typeof(GreaterMongbat) },
-            new[]{ typeof(AcidSlug), typeof(FireElemental), typeof(WaterElemental) },
-            new[]{ typeof(LeatherWolf), typeof(StoneSlith), typeof(ToxicSlith) },
-            new[]{ typeof(BloodWorm), typeof(Kepetch), typeof(StoneSlith), typeof(ToxicSlith) },
-            new[]{ typeof(FireAnt), typeof(LavaElemental), typeof(MaddeningHorror) },
-            new[]{ typeof(EnragedEarthElemental), typeof(FireDaemon), typeof(GreaterPoisonElemental), typeof(LavaElemental), typeof(DragonWolf) },
-            new[]{ typeof(EnragedColossus), typeof(EnragedEarthElemental), typeof(FireDaemon), typeof(GreaterPoisonElemental), typeof(LavaElemental) }
+            new[]{ typeof(Mongbat), typeof(Ratman), typeof(HeadlessOne), typeof(Skeleton), typeof(ClockworkScorpion), typeof(CorrosiveSlime)  },
+            new[]{ typeof(AcidSlug), typeof(Slith), typeof(WaterElemental), typeof(LeatherWolf), typeof(StoneSlith), typeof(ToxicSlith) },
+            new[]{ typeof(BloodWorm), typeof(FireAnt), typeof(Kepetch), typeof(LavaElemental), typeof(MaddeningHorror), typeof(StoneSlith), typeof(ToxicSlith) },
+            new[]{ typeof(LavaElemental), typeof(GreaterPoisonElemental), typeof(EnragedEarthElemental), typeof(FireDaemon) },
+            new[]{ typeof(LavaElemental), typeof(GreaterPoisonElemental), typeof(EnragedEarthElemental), typeof(FireDaemon), typeof(EnragedColossus) }
         };
 
         private static readonly Type[][] m_EodonSpawnTypes =
         {
             new[] { typeof(MyrmidexLarvae), typeof(SilverbackGorilla), typeof(Panther), typeof(WildTiger) },
             new[] { typeof(AcidElemental), typeof(SandVortex), typeof(Lion), typeof(SabreToothedTiger) },
-            new[] { typeof(AcidElemental), typeof(SandVortex), typeof(Lion), typeof(SabreToothedTiger) },
-            new[] { typeof(Infernus), typeof(FireElemental), typeof(Dimetrosaur), typeof(Saurosaurus) },
             new[] { typeof(Infernus), typeof(FireElemental), typeof(Dimetrosaur), typeof(Saurosaurus) },
             new[] { typeof(KotlAutomaton), typeof(MyrmidexDrone), typeof(Allosaurus), typeof(Triceratops) },
             new[] { typeof(Anchisaur), typeof(Allosaurus), typeof(SandVortex) }
@@ -645,11 +628,10 @@ namespace Server.Items
             if (level >= 0 && level < spawns.Length)
             {
                 BaseCreature bc;
-                Type[] list = GetSpawnList(spawns, level);
 
                 try
                 {
-                    bc = (BaseCreature)Activator.CreateInstance(list[Utility.Random(list.Length)]);
+                    bc = (BaseCreature)Activator.CreateInstance(spawns[level][Utility.Random(spawns[level].Length)]);
                 }
                 catch (Exception e)
                 {
@@ -660,11 +642,11 @@ namespace Server.Items
                 bc.Home = p;
                 bc.RangeHome = 5;
 
-                if (guardian)
+                if (guardian && !bc.Tamable)
                 {
                     bc.Title = "(Guardian)";
 
-                    if (BaseCreature.IsSoulboundEnemies && !bc.Tamable)
+                    if (BaseCreature.IsSoulboundEnemies)
                     {
                         bc.IsSoulBound = true;
                     }
@@ -726,40 +708,6 @@ namespace Server.Items
             }
 
             return null;
-        }
-
-        public static Type[] GetSpawnList(Type[][] table, int level)
-        {
-            Type[] array;
-
-            switch (level)
-            {
-                default:
-                    array = table[level + 1];
-                    break;
-                case 2:
-                    List<Type> list1 = new List<Type>();
-                    list1.AddRange(table[2]);
-                    list1.AddRange(table[3]);
-
-                    array = list1.ToArray();
-                    break;
-                case 3:
-                    List<Type> list2 = new List<Type>();
-                    list2.AddRange(table[4]);
-                    list2.AddRange(table[5]);
-
-                    array = list2.ToArray();
-                    break;
-                case 4:
-                    array = table[6];
-                    break;
-                case 5:
-                    array = table[7];
-                    break;
-            }
-
-            return array;
         }
 
         public static bool HasDiggingTool(Mobile m)
@@ -1298,7 +1246,7 @@ namespace Server.Items
 
                         BaseCreature bc = Spawn(m_TreasureMap.Level, m_Chest.Location, m_Chest.Map, null, guardian);
 
-                        if (bc != null && guardian)
+                        if (bc != null && !bc.Tamable && guardian)
                         {
                             bc.Hue = 2725;
                             m_Chest.Guardians.Add(bc);
