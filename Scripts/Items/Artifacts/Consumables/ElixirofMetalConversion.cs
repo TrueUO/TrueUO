@@ -19,17 +19,14 @@ namespace Server.Items
 
         public override void OnDoubleClick(Mobile from)
         {
-
             Container backpack = from.Backpack;
             IronIngot item1 = (IronIngot)backpack.FindItemByType(typeof(IronIngot));
 
             if (item1 != null)
             {
-                BaseIngot m_Ore1 = item1 as BaseIngot;
+                BaseIngot m_Ore1 = item1;
 
-                int toConsume = m_Ore1.Amount;
-
-                if ((m_Ore1.Amount > 499) && (m_Ore1.Amount < 501))
+                if (m_Ore1.Amount > 499 && m_Ore1.Amount < 501)
                 {
                     m_Ore1.Delete();
 
@@ -52,7 +49,7 @@ namespace Server.Items
                     from.SendLocalizedMessage(1113048); // You've successfully converted the metal.
                     Delete();
                 }
-                else if ((m_Ore1.Amount < 500) || (m_Ore1.Amount > 500))
+                else if (m_Ore1.Amount < 500 || m_Ore1.Amount > 500)
                 {
                     from.SendLocalizedMessage(1113046); // You can only convert five hundred ingots at a time.
                 }
@@ -72,7 +69,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

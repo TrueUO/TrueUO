@@ -124,7 +124,7 @@ namespace Server.AccountVault
 
             if (Account == null && !HasVault(from))
             {
-                TryRentVault(from as PlayerMobile, this);
+                TryRentVault((PlayerMobile) from, this);
             }
             else if (from.Criminal)
             {
@@ -845,9 +845,7 @@ namespace Server.AccountVault
 
             public override void OnClick()
             {
-                var pm = Owner.From as PlayerMobile;
-
-                if (pm != null && Container != null && !Container.Deleted)
+                if (Owner.From is PlayerMobile pm && Container != null && !Container.Deleted)
                 {
                     BaseGump.SendGump(new ContainerDisplayGump(pm, Container, 1158005));
                 }

@@ -74,49 +74,70 @@ namespace Server.Engines.VeteranRewards
         public void TryAddEntry(Item item, Mobile from)
         {
             if (!CanUse(from) || item == null)
+            {
                 return;
+            }
 
             if (!CheckRange(from))
+            {
                 from.SendLocalizedMessage(3000268); // that is too far away.
+            }
             else if (!(item is TreasureMap || item is SOS || item is MessageInABottle))
+            {
                 from.SendLocalizedMessage(1153564); // That is not a treasure map or message in a bottle.
+            }
             else if (!item.IsChildOf(from.Backpack))
+            {
                 from.SendLocalizedMessage(1054107); // This item must be in your backpack.
+            }
             else if (Entries.Count >= 500)
+            {
                 from.SendLocalizedMessage(1153565); // The locker is full
+            }
             else
             {
                 DaviesLockerEntry entry = null;
 
-                if (item is TreasureMap)
-                    entry = new TreasureMapEntry((TreasureMap)item);
-                else if (item is SOS)
-                    entry = new SOSEntry((SOS)item);
-                else if (item is MessageInABottle)
-                    entry = new SOSEntry((MessageInABottle)item);
-
-                if (entry != null)
+                if (item is TreasureMap map)
                 {
-                    Entries.Add(entry);
-                    from.CloseGump(typeof(DaviesLockerGump));
-                    from.SendGump(new DaviesLockerGump(from, this));
-
-                    item.Delete();
-
-                    UpdateProperties();
+                    entry = new TreasureMapEntry(map);
                 }
+
+                if (item is SOS sos)
+                {
+                    entry = new SOSEntry(sos);
+                }
+
+                if (item is MessageInABottle bottle)
+                {
+                    entry = new SOSEntry(bottle);
+                }
+
+                Entries.Add(entry);
+                from.CloseGump(typeof(DaviesLockerGump));
+                from.SendGump(new DaviesLockerGump(from, this));
+
+                item.Delete();
+
+                UpdateProperties();
             }
         }
 
         private bool CheckRange(Mobile m)
         {
             if (Components == null || m.Map != Map)
-                return false;
-
-            foreach (AddonComponent c in Components)
             {
+                return false;
+            }
+
+            for (var index = 0; index < Components.Count; index++)
+            {
+                AddonComponent c = Components[index];
+
                 if (m.InRange(c.Location, 2))
+                {
                     return true;
+                }
             }
 
             return false;
@@ -136,8 +157,9 @@ namespace Server.Engines.VeteranRewards
             writer.Write((int)Level);
 
             writer.Write(Entries.Count);
-            foreach (DaviesLockerEntry entry in Entries)
+            for (var index = 0; index < Entries.Count; index++)
             {
+                DaviesLockerEntry entry = Entries[index];
                 if (entry is SOSEntry)
                     writer.Write(0);
                 else if (entry is TreasureMapEntry)
@@ -155,7 +177,7 @@ namespace Server.Engines.VeteranRewards
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             Entries = new List<DaviesLockerEntry>();
 
@@ -190,7 +212,9 @@ namespace Server.Engines.VeteranRewards
             public override bool OnDragDrop(Mobile from, Item dropped)
             {
                 if (Addon is DaviesLockerAddon && (dropped is SOS || dropped is TreasureMap))
-                    ((DaviesLockerAddon)Addon).TryAddEntry(dropped as Item, from);
+                {
+                    ((DaviesLockerAddon)Addon).TryAddEntry(dropped, from);
+                }
 
                 return false;
             }
@@ -200,7 +224,9 @@ namespace Server.Engines.VeteranRewards
                 base.GetContextMenuEntries(from, list);
 
                 if (Addon is DaviesLockerAddon)
+                {
                     SetSecureLevelEntry.AddTo(from, (DaviesLockerAddon)Addon, list);
+                }
             }
 
             public override void GetProperties(ObjectPropertyList list)
@@ -227,7 +253,7 @@ namespace Server.Engines.VeteranRewards
             public override void Deserialize(GenericReader reader)
             {
                 base.Deserialize(reader);
-                int version = reader.ReadInt();
+                reader.ReadInt();
             }
         }
     }
@@ -305,8 +331,9 @@ namespace Server.Engines.VeteranRewards
             writer.Write(South);
 
             writer.Write(Entries.Count);
-            foreach (DaviesLockerEntry entry in Entries)
+            for (var index = 0; index < Entries.Count; index++)
             {
+                DaviesLockerEntry entry = Entries[index];
                 if (entry is SOSEntry)
                     writer.Write(0);
                 else if (entry is TreasureMapEntry)
@@ -324,7 +351,7 @@ namespace Server.Engines.VeteranRewards
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             Entries = new List<DaviesLockerEntry>();
             South = reader.ReadBool();
@@ -826,21 +853,31 @@ namespace Server.Engines.VeteranRewards
             if (entry is SOSEntry sosEntry)
             {
                 if (!sosEntry.Opened)
+                {
                     return 1153570; // Unopened
+                }
 
                 if (sosEntry.IsAncient)
+                {
                     return 1153572; // Ancient
+                }
 
                 return 1153571; // Opened
             }
-            else if (entry is TreasureMapEntry mapEntry)
+
+            if (entry is TreasureMapEntry mapEntry)
             {
                 if (mapEntry.Completed)
+                {
                     return 1153582; // Completed
-                else if (mapEntry.Decoder != null)
+                }
+
+                if (mapEntry.Decoder != null)
+                {
                     return 1153581; // Decoded
-                else
-                    return 1153580; // Not Decoded
+                }
+
+                return 1153580; // Not Decoded
             }
 
             return 1153569; // Unknown
@@ -860,9 +897,9 @@ namespace Server.Engines.VeteranRewards
 
             protected override void OnTarget(Mobile from, object targeted)
             {
-                if (m_Addon != null && !m_Addon.Deleted && targeted is Item)
+                if (m_Addon != null && !m_Addon.Deleted && targeted is Item item)
                 {
-                    m_Addon.TryAddEntry(targeted as Item, from);
+                    m_Addon.TryAddEntry(item, from);
                     from.Target = new InternalTarget(from, m_Addon, m_Page);
                 }
             }
