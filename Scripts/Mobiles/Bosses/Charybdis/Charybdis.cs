@@ -35,6 +35,9 @@ namespace Server.Mobiles
         public override Type[] SharedList => new Type[] { };
         public override Type[] DecorativeList => new[] { typeof(EnchantedBladeDeed), typeof(EnchantedVortexDeed) };
 
+        public override bool DoesGoldShower => false;
+        public override bool CanGivePowerscrolls => false;
+
         [CommandProperty(AccessLevel.GameMaster)]
         public int Tentacles => m_Tentacles.Count;
 
