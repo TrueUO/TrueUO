@@ -85,7 +85,7 @@ namespace Server.Engines.Quests
 
         public override object Title => "The Spirit Ranger";
 
-        public override object Description => "You come upon a statue Ranger of the Ranger King Shamino, immediately your spirit is one with the statue, you know what must be done. A ranger has fallen deep inside Hythloth. Until the spirit of the ranger can be returned to the ethereal void there is great unrest in the spirit world. Without a word being spoken you know that you must find the fallen ranger deep inside Hythloth and return to Shamino's statue.";
+        public override object Description => "You come upon a statue of the Ranger King Shamino, immediately your spirit is one with the statue, you know what must be done. A ranger has fallen deep inside Hythloth. Until the spirit of the ranger can be returned to the ethereal void there is great unrest in the spirit world. Without a word being spoken you know that you must find the fallen ranger deep inside Hythloth and return to Shamino's statue.";
 
         public override object Refuse => "The statue goes cold and silent. Your spirit is weak.";
 
