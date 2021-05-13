@@ -32,7 +32,7 @@ namespace Server.Mobiles
         public abstract MonsterStatuetteType[] StatueTypes { get; }
 
         public virtual bool DoesGoldShower => true;
-        public virtual bool CanGivePowerscrolls => true;
+        public virtual bool CanGivePowerscrolls => Map.Rules == MapRules.FeluccaRules;
 
         public virtual int PowerScrollAmount => ChampionSystem.PowerScrollAmount;
 
@@ -287,9 +287,12 @@ namespace Server.Mobiles
 
         public override bool OnBeforeDeath()
         {
-            if (CanGivePowerscrolls && !NoKillAwards)
+            if (!NoKillAwards)
             {
-                GivePowerScrolls();
+                if (CanGivePowerscrolls)
+                {
+                    GivePowerScrolls();
+                }
 
                 if (DoesGoldShower)
                 {
