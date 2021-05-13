@@ -96,6 +96,7 @@ namespace Server.Mobiles
                 if (m_Charydbis != null && m_Charydbis.Alive)
                 {
                     Point3D pnt = new Point3D(m_CurrentLocation.X + 5, m_CurrentLocation.Y + 5, -5);
+
                     from.SendMessage(string.Format("The location you seek is: {0} in {1}", GetSextantLocation(pnt), m_Map));
                 }
                 else if (m_HasSpawned && (m_Charydbis == null || !m_Charydbis.Alive))
@@ -103,7 +104,10 @@ namespace Server.Mobiles
                     from.SendMessage("The creature you seek has already been slain.");
                 }
                 else
+                {
                     from.SendLocalizedMessage(1150198); //The spyglass goes dark, it has failed to find what you seek.
+                }
+
                 return false;
             }
 
@@ -124,15 +128,19 @@ namespace Server.Mobiles
             m_Map = map;
 
             from.SendLocalizedMessage(1150190); //You peer into the spyglass, images swirl in your mind as the magic device searches.
+
             m_NextSpawn = DateTime.UtcNow + NoSpawnDelay;
             m_IsSummoned = true;
             Point3D p = SOS.FindLocation(map);
+
             from.SendMessage(string.Format("The location you seek is: {0} in {1}", GetSextantLocation(p), m_Map));
+
             m_CurrentLocation = new Rectangle2D(p.X - 5, p.Y - 5, 10, 10);
             m_LastLocation = m_CurrentLocation;
             m_Timer = new InternalTimer(this, NoSpawnDelay);
             m_Timer.Start();
             m_LastAttempt = DateTime.UtcNow;
+
             return true;
         }
 
@@ -140,10 +148,13 @@ namespace Server.Mobiles
         {
             int xLong = 0, yLat = 0;
             int xMins = 0, yMins = 0;
+
             bool xEast = false, ySouth = false;
 
             if (Sextant.Format(pnt, m_Map, ref xLong, ref yLat, ref xMins, ref yMins, ref xEast, ref ySouth))
+            {
                 return string.Format("{0}° {1}'{2}, {3}° {4}'{5}", yLat, yMins, ySouth ? "S" : "N", xLong, xMins, xEast ? "E" : "W");
+            }
 
             return pnt.ToString();
         }
@@ -153,6 +164,7 @@ namespace Server.Mobiles
             Effects.PlaySound(pnt, map, 0x668);
 
             m_Charydbis = new Charydbis(from);
+
             from.SendMessage("It seems as though you've snagged your hook.");
 
             Timer.DelayCall(TimeSpan.FromSeconds(11), new TimerStateCallback(DoTeleportEffect), new object[] { pnt, map });
@@ -162,14 +174,17 @@ namespace Server.Mobiles
         public void DoTeleportEffect(object o)
         {
             object[] ojs = (object[])o;
+
             Point3D pnt = (Point3D)ojs[0];
             Map map = (Map)ojs[1];
+
             m_Charydbis.DoTeleportEffects(new Point3D(pnt.X, pnt.Y, map.GetAverageZ(pnt.X, pnt.Y)), map);
         }
 
         public void DoDelayedSpawn(object o)
         {
             object[] ojs = (object[])o;
+
             Mobile from = (Mobile)ojs[0];
             Point3D pnt = (Point3D)ojs[1];
             Map map = (Map)ojs[2];
@@ -180,7 +195,7 @@ namespace Server.Mobiles
             m_Charydbis.MoveToWorld(new Point3D(x, y, map.GetAverageZ(pnt.X, pnt.Y)), map);
             m_Charydbis.Combatant = from;
 
-            from.SendMessage("THATS NO FISH!");
+            from.SendMessage("THAT'S NO FISH!");
 
             if (boat != null)
             {
@@ -190,10 +205,13 @@ namespace Server.Mobiles
             for (int i = 0; i < 8; i++)
             {
                 x = pnt.X; y = pnt.Y;
+
                 if (TrySpawnMobile(ref x, ref y, map))
                 {
                     GiantTentacle tent = new GiantTentacle(m_Charydbis);
+
                     m_Charydbis.AddTentacle(tent);
+
                     tent.MoveToWorld(new Point3D(x, y, -5), map);
                 }
             }
@@ -243,11 +261,15 @@ namespace Server.Mobiles
             if (m_Charydbis != null && m_Charydbis.Alive)
             {
                 IPooledEnumerable eable = m_Charydbis.GetMobilesInRange(12);
+
                 foreach (Mobile mob in eable)
                 {
                     if (mob is PlayerMobile)
+                    {
                         mob.SendMessage("Charydbis sinks to the depths of the ocean from which it came from...You have taken too long!");
+                    }
                 }
+
                 eable.Free();
 
                 for (int x = m_Charydbis.X - 1; x <= m_Charydbis.X + 1; x++)
@@ -271,7 +293,9 @@ namespace Server.Mobiles
             m_NextSpawn = DateTime.UtcNow;
 
             if (m_Timer != null)
+            {
                 m_Timer.Stop();
+            }
         }
 
         private class InternalTimer : Timer
