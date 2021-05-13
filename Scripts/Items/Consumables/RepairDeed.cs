@@ -66,6 +66,8 @@ namespace Server.Items
         {
         }
 
+        public override int Hue => 0x1BC;
+
         [CommandProperty(AccessLevel.GameMaster)]
         public RepairSkillType RepairSkill
         {
