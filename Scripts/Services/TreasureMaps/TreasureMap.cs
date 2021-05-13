@@ -371,6 +371,28 @@ namespace Server.Items
             return GetRandomLocation(map, false);
         }
 
+        public static bool IsTameable(BaseCreature bc)
+        {
+            for (var index = 0; index < m_TameableCreatures.Length; index++)
+            {
+                var t = m_TameableCreatures[index];
+
+                if (t == bc.GetType())
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static readonly Type[] m_TameableCreatures =
+        {
+            typeof(Panther), typeof(WildTiger), typeof(Lion), typeof(SabreToothedTiger),
+            typeof(Dimetrosaur), typeof(Saurosaurus), typeof(Triceratops), typeof(DragonWolf),
+            typeof(FrostDragon)
+        };
+
         public static Point2D GetRandomLocation(Map map, bool eodon)
         {
             Rectangle2D[] recs;
@@ -642,9 +664,10 @@ namespace Server.Items
                 bc.Home = p;
                 bc.RangeHome = 5;
 
-                if (guardian && !bc.Tamable)
+                if (guardian && !IsTameable(bc))
                 {
                     bc.Title = "(Guardian)";
+                    bc.Tamable = false;
 
                     if (BaseCreature.IsSoulboundEnemies)
                     {
@@ -1145,7 +1168,7 @@ namespace Server.Items
                 m_LastMoveTime = from.LastMoveTime;
 
                 Priority = TimerPriority.TenMS;
-            }
+            }            
 
             protected override void OnTick()
             {
@@ -1246,9 +1269,8 @@ namespace Server.Items
 
                         BaseCreature bc = Spawn(m_TreasureMap.Level, m_Chest.Location, m_Chest.Map, null, guardian);
 
-                        if (bc != null && !bc.Tamable && guardian)
+                        if (bc != null && guardian && !IsTameable(bc))
                         {
-                            bc.Hue = 2725;
                             m_Chest.Guardians.Add(bc);
                         }
                     }
