@@ -15,7 +15,7 @@ namespace Server.Engines.Auction
 
         //Converts to gold/plat
         [CommandProperty(AccessLevel.GameMaster)]
-        public int TotalGoldBid => (int)(CurrentBid >= Account.CurrencyThreshold ? CurrentBid - (TotalPlatBid * Account.CurrencyThreshold) : CurrentBid);
+        public int TotalGoldBid => (int)(CurrentBid >= Account.CurrencyThreshold ? CurrentBid - TotalPlatBid * Account.CurrencyThreshold : CurrentBid);
 
         [CommandProperty(AccessLevel.GameMaster)]
         public int TotalPlatBid => (int)(CurrentBid >= Account.CurrencyThreshold ? CurrentBid / Account.CurrencyThreshold : 0);
@@ -36,9 +36,7 @@ namespace Server.Engines.Auction
 
         public void Refund(Auction auction, long amount)
         {
-            Account a = Mobile.Account as Account;
-
-            if (a != null)
+            if (Mobile.Account is Account a)
             {
                 a.DepositGold(amount);
                 VaultLogging.LogRefund(auction, Mobile, amount);

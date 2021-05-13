@@ -298,13 +298,9 @@ namespace Server.Engines.Auction
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
-            if (version > 0)
-                IsRewardItem = reader.ReadBool();
-
-            if (LootType != LootType.Blessed)
-                LootType = LootType.Blessed;
+            IsRewardItem = reader.ReadBool();
         }
     }
 }
