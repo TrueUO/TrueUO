@@ -441,12 +441,13 @@ namespace Server.Mobiles
         public static void CheckDropSOT(BaseCreature bc)
         {
             if (bc == null)
+            {
                 return;
+            }
 
             var killer = bc.FindMostRecentDamager(false);
-            var creature = killer as BaseCreature;
 
-            if (creature != null)
+            if (killer is BaseCreature creature)
             {
                 killer = creature.GetMaster();
             }
@@ -494,8 +495,7 @@ namespace Server.Mobiles
                     int cnt = reader.ReadInt();
                     for (int i = 0; i < cnt; i++)
                     {
-                        BaseCreature bc = reader.ReadMobile() as BaseCreature;
-                        if (bc != null)
+                        if (reader.ReadMobile() is BaseCreature bc)
                             m_Helpers.Add(bc);
                     }
                     break;
