@@ -112,9 +112,9 @@ namespace Server.Engines.ResortAndCasino
 
         public override void OnDoubleClick(Mobile m)
         {
-            if (m is PlayerMobile && InRange(m.Location, 3))
+            if (m is PlayerMobile mobile && InRange(mobile.Location, 3))
             {
-                SendGump((PlayerMobile)m);
+                SendGump(mobile);
             }
         }
 
@@ -170,7 +170,7 @@ namespace Server.Engines.ResortAndCasino
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int v = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -192,10 +192,10 @@ namespace Server.Engines.ResortAndCasino
                 AddGame(pm, game);
             }
 
-            ChucklesLuckGump g = pm.FindGump(typeof(ChucklesLuckGump)) as ChucklesLuckGump;
-
-            if (g != null)
+            if (pm.FindGump(typeof(ChucklesLuckGump)) is ChucklesLuckGump g)
+            {
                 g.Refresh();
+            }
             else
             {
                 pm.SendGump(new ChucklesLuckGump(pm, game));
@@ -216,7 +216,7 @@ namespace Server.Engines.ResortAndCasino
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int v = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -238,10 +238,10 @@ namespace Server.Engines.ResortAndCasino
                 AddGame(pm, game);
             }
 
-            HiMiddleLowGump g = pm.FindGump(typeof(HiMiddleLowGump)) as HiMiddleLowGump;
-
-            if (g != null)
+            if (pm.FindGump(typeof(HiMiddleLowGump)) is HiMiddleLowGump g)
+            {
                 g.Refresh();
+            }
             else
             {
                 pm.SendGump(new HiMiddleLowGump(pm, game));
@@ -262,7 +262,7 @@ namespace Server.Engines.ResortAndCasino
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int v = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -284,10 +284,10 @@ namespace Server.Engines.ResortAndCasino
                 AddGame(pm, game);
             }
 
-            DiceRiderGump g = pm.FindGump(typeof(DiceRiderGump)) as DiceRiderGump;
-
-            if (g != null)
+            if (pm.FindGump(typeof(DiceRiderGump)) is DiceRiderGump g)
+            {
                 g.Refresh();
+            }
             else
             {
                 pm.SendGump(new DiceRiderGump(pm, game));
@@ -308,7 +308,7 @@ namespace Server.Engines.ResortAndCasino
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int v = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 

@@ -74,49 +74,70 @@ namespace Server.Engines.VeteranRewards
         public void TryAddEntry(Item item, Mobile from)
         {
             if (!CanUse(from) || item == null)
+            {
                 return;
+            }
 
             if (!CheckRange(from))
+            {
                 from.SendLocalizedMessage(3000268); // that is too far away.
+            }
             else if (!(item is TreasureMap || item is SOS || item is MessageInABottle))
+            {
                 from.SendLocalizedMessage(1153564); // That is not a treasure map or message in a bottle.
+            }
             else if (!item.IsChildOf(from.Backpack))
+            {
                 from.SendLocalizedMessage(1054107); // This item must be in your backpack.
+            }
             else if (Entries.Count >= 500)
+            {
                 from.SendLocalizedMessage(1153565); // The locker is full
+            }
             else
             {
                 DaviesLockerEntry entry = null;
 
-                if (item is TreasureMap)
-                    entry = new TreasureMapEntry((TreasureMap)item);
-                else if (item is SOS)
-                    entry = new SOSEntry((SOS)item);
-                else if (item is MessageInABottle)
-                    entry = new SOSEntry((MessageInABottle)item);
-
-                if (entry != null)
+                if (item is TreasureMap map)
                 {
-                    Entries.Add(entry);
-                    from.CloseGump(typeof(DaviesLockerGump));
-                    from.SendGump(new DaviesLockerGump(from, this));
-
-                    item.Delete();
-
-                    UpdateProperties();
+                    entry = new TreasureMapEntry(map);
                 }
+
+                if (item is SOS sos)
+                {
+                    entry = new SOSEntry(sos);
+                }
+
+                if (item is MessageInABottle bottle)
+                {
+                    entry = new SOSEntry(bottle);
+                }
+
+                Entries.Add(entry);
+                from.CloseGump(typeof(DaviesLockerGump));
+                from.SendGump(new DaviesLockerGump(from, this));
+
+                item.Delete();
+
+                UpdateProperties();
             }
         }
 
         private bool CheckRange(Mobile m)
         {
             if (Components == null || m.Map != Map)
-                return false;
-
-            foreach (AddonComponent c in Components)
             {
+                return false;
+            }
+
+            for (var index = 0; index < Components.Count; index++)
+            {
+                AddonComponent c = Components[index];
+
                 if (m.InRange(c.Location, 2))
+                {
                     return true;
+                }
             }
 
             return false;
@@ -136,8 +157,9 @@ namespace Server.Engines.VeteranRewards
             writer.Write((int)Level);
 
             writer.Write(Entries.Count);
-            foreach (DaviesLockerEntry entry in Entries)
+            for (var index = 0; index < Entries.Count; index++)
             {
+                DaviesLockerEntry entry = Entries[index];
                 if (entry is SOSEntry)
                     writer.Write(0);
                 else if (entry is TreasureMapEntry)
@@ -155,7 +177,7 @@ namespace Server.Engines.VeteranRewards
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             Entries = new List<DaviesLockerEntry>();
 
