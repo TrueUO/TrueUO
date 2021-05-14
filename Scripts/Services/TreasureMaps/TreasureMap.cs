@@ -623,7 +623,7 @@ namespace Server.Items
             : base(serial)
         { }
 
-        public static BaseCreature Spawn(int level, Point3D p, bool guardian, Map map)
+        public static BaseCreature Spawn(int level, Point3D p, Map map, bool guardian)
         {
             Type[][] spawns;
 
@@ -684,53 +684,60 @@ namespace Server.Items
         public static BaseCreature Spawn(int level, Point3D p, Map map, Mobile target, bool guardian)
         {
             if (map == null)
-            {
                 return null;
-            }
 
-            BaseCreature c = Spawn(level, p, guardian, map);
+            BaseCreature bc = Spawn(level, p, map, guardian);
 
-            if (c != null)
+            if (bc != null)
             {
                 bool spawned = false;
 
-                for (int i = 0; !spawned && i < 10; ++i)
+                Point3D loc = GetRandomSpawnLocation(p, map);
+
+                if (loc != Point3D.Zero)
                 {
-                    int x = p.X - 3 + Utility.Random(7);
-                    int y = p.Y - 3 + Utility.Random(7);
-
-                    if (map.CanSpawnMobile(x, y, p.Z))
-                    {
-                        c.MoveToWorld(new Point3D(x, y, p.Z), map);
-                        spawned = true;
-                    }
-                    else
-                    {
-                        int z = map.GetAverageZ(x, y);
-
-                        if (map.CanSpawnMobile(x, y, z))
-                        {
-                            c.MoveToWorld(new Point3D(x, y, z), map);
-                            spawned = true;
-                        }
-                    }
+                    bc.MoveToWorld(p, map);
+                    spawned = true;
                 }
 
                 if (!spawned)
                 {
-                    c.Delete();
+                    bc.Delete();
                     return null;
                 }
 
                 if (target != null)
                 {
-                    Timer.DelayCall(() => c.Combatant = target);
+                    Timer.DelayCall(() => bc.Combatant = target);
                 }
 
-                return c;
+                return bc;
             }
 
             return null;
+        }
+
+        public static Point3D GetRandomSpawnLocation(Point3D p, Map map)
+        {
+            for (int i = 0; i < 10; ++i)
+            {
+                int x = p.X - 3 + Utility.Random(7);
+                int y = p.Y - 3 + Utility.Random(7);
+
+                if (map.CanSpawnMobile(x, y, p.Z))
+                {
+                    return new Point3D(x, y, p.Z);
+                }
+                else
+                {
+                    int z = map.GetAverageZ(x, y);
+
+                    if (map.CanSpawnMobile(x, y, z))
+                        return new Point3D(x, y, z);
+                }
+            }
+
+            return Point3D.Zero;
         }
 
         public static bool HasDiggingTool(Mobile m)
@@ -1260,8 +1267,7 @@ namespace Server.Items
 
                     m_TreasureMap.OnMapComplete(m_From, m_Chest);
 
-                    int spawns;
-                    spawns = 4;
+                    int spawns = Utility.RandomMinMax(4, 8);
 
                     for (int i = 0; i < spawns; ++i)
                     {
@@ -1271,9 +1277,11 @@ namespace Server.Items
 
                         if (bc != null && guardian && !IsTameable(bc))
                         {
-                            m_Chest.Guardians.Add(bc);
+                            m_Chest.Guardians.Add(bc);                            
                         }
                     }
+
+                    new ReturnToHomeTimer(m_Chest).Start();
                 }
                 else
                 {
@@ -1297,6 +1305,41 @@ namespace Server.Items
                 {
                     m_Dirt1.Delete();
                     m_Dirt2.Delete();
+                }
+            }
+
+            private class ReturnToHomeTimer : Timer
+            {
+                private readonly TreasureMapChest m_Chest;
+
+                public ReturnToHomeTimer(TreasureMapChest chest)
+                    : base(TimeSpan.FromSeconds(5.0), TimeSpan.FromSeconds(5.0))
+                {
+                    m_Chest = chest;
+                }
+
+                protected override void OnTick()
+                {
+                    if (m_Chest.Deleted || m_Chest.Guardians.Count == 0)
+                    {
+                        Stop();
+                    }
+                    else
+                    {
+                        foreach (var bc in m_Chest.Guardians)
+                        {
+                            if (!bc.InRange(m_Chest, 25))
+                                ReturnToHome(bc);
+                        }
+                    }
+                }
+
+                private void ReturnToHome(Mobile m)
+                {
+                    var loc = GetRandomSpawnLocation(m_Chest.Location, m_Chest.Map);
+
+                    if (loc != Point3D.Zero)
+                        m.MoveToWorld(loc, m_Chest.Map);
                 }
             }
 
