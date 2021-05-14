@@ -2,11 +2,12 @@ namespace Server.Items
 {
     public class ForTheLifeOfBritanniaSash : BodySash
     {
-        public override int LabelNumber => 1075792;  // For the Life of Britannia Sash
+        public override int LabelNumber => 1075792; // For the Life of Britannia Sash
 
         [Constructable]
         public ForTheLifeOfBritanniaSash()
         {
+            Hue = 183;
         }
 
         public ForTheLifeOfBritanniaSash(Serial serial)

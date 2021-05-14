@@ -66,8 +66,6 @@ namespace Server.Mobiles
         public virtual string DefaultName => "a changeling";
         public virtual int DefaultHue => 0;
 
-        public override bool UseSmartAI => true;
-
         public override bool ShowFameTitle => false;
         public override bool InitialInnocent => m_MorphedInto != null;
 

@@ -6,7 +6,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Reflection;
 using CPA = Server.CommandPropertyAttribute;
 #endregion
@@ -489,7 +488,17 @@ namespace Server.Gumps
                             else if (IsType(type, _TypeOfMap))
                             {
                                 //Must explicitly cast collection to avoid potential covariant cast runtime exception
-                                object[] values = Map.GetMapValues().Cast<object>().ToArray();
+                                List<object> list = new List<object>();
+
+                                var os = Map.GetMapValues();
+
+                                for (var i = 0; i < os.Length; i++)
+                                {
+                                    object o = os[i];
+                                    list.Add(o);
+                                }
+
+                                object[] values = list.ToArray();
 
                                 from.SendGump(new SetListOptionGump(prop, from, m_Object, m_Stack, m_Page, m_List, Map.GetMapNames(), values));
                             }
@@ -569,7 +578,15 @@ namespace Server.Gumps
 
         private static bool IsType(Type type, IEnumerable<Type> check)
         {
-            return check.Any(t => IsType(type, t));
+            foreach (var t in check)
+            {
+                if (IsType(type, t))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private static CPA GetCPA(PropertyInfo prop)

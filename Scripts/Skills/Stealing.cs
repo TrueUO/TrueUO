@@ -273,13 +273,13 @@ namespace Server.SkillHandlers
 
                         if (stolen != null)
                         {
-                            m_Thief.SendLocalizedMessage(502724); // You succesfully steal the item.
+                            m_Thief.SendLocalizedMessage(502724); // You successfully steal the item.
 
                             ItemFlags.SetTaken(stolen, true);
                             ItemFlags.SetStealable(stolen, false);
                             stolen.Movable = true;
 
-                            InvokeItemStoken(new ItemStolenEventArgs(stolen, m_Thief));
+                            InvokeItemStolen(new ItemStolenEventArgs(stolen, m_Thief));
 
                             if (si != null)
                             {
@@ -301,16 +301,11 @@ namespace Server.SkillHandlers
             {
                 var house = BaseHouse.FindHouseAt(stolen);
 
-                if (house != null)
+                if (house != null && (root is Item rootItem))
                 {
-                    var rootItem = root as Item;
+                    SecureInfo secure = house.GetSecureInfoFor(rootItem);
 
-                    if (rootItem != null)
-                    {
-                        SecureInfo secure = house.GetSecureInfoFor(rootItem);
-
-                        return secure != null && house.HasSecureAccess(m_Thief, secure);
-                    }
+                    return secure != null && house.HasSecureAccess(m_Thief, secure);
                 }
 
                 return true;
@@ -484,7 +479,7 @@ namespace Server.SkillHandlers
             return TimeSpan.FromSeconds(10.0);
         }
 
-        public static void InvokeItemStoken(ItemStolenEventArgs e)
+        public static void InvokeItemStolen(ItemStolenEventArgs e)
         {
             if (ItemStolen != null)
             {

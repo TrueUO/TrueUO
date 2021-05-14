@@ -26,7 +26,7 @@ namespace Server.Spells.Chivalry
         public override bool BlocksMovement => false;
         public override void OnCast()
         {
-            BaseWeapon weapon = Caster.Weapon as BaseWeapon;
+            BaseWeapon weapon = (BaseWeapon) Caster.Weapon;
 
             if (Caster.Player && (weapon == null || weapon is Fists))
             {

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Server.Engines.CannedEvil;
 using Server.Items;
 using Server.Misc;
@@ -319,7 +318,19 @@ namespace Server.Mobiles
             if (SummonedHelpers == null || SummonedHelpers.Count == 0)
                 return 0;
 
-            return SummonedHelpers.Count(bc => bc != null && bc.Alive);
+            int count = 0;
+
+            for (var index = 0; index < SummonedHelpers.Count; index++)
+            {
+                var bc = SummonedHelpers[index];
+
+                if (bc != null && bc.Alive)
+                {
+                    count++;
+                }
+            }
+
+            return count;
         }
 
         public virtual void DoSummon()
@@ -402,7 +413,11 @@ namespace Server.Mobiles
             writer.Write(SummonedHelpers == null ? 0 : SummonedHelpers.Count);
 
             if (SummonedHelpers != null)
-                SummonedHelpers.ForEach(m => writer.Write(m));
+                for (var index = 0; index < SummonedHelpers.Count; index++)
+                {
+                    var m = SummonedHelpers[index];
+                    writer.Write(m);
+                }
         }
 
         public override void Deserialize(GenericReader reader)

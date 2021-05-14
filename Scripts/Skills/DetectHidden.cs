@@ -78,6 +78,9 @@ namespace Server.SkillHandlers
                     {
                         if (trg.Hidden && src != trg)
                         {
+                            if (src is BaseCreature bc && bc.Controlled && bc.ControlMaster == trg)
+                                continue;
+
                             double ss = srcSkill + Utility.Random(21) - 10;
                             double ts = trg.Skills[SkillName.Hiding].Value + Utility.Random(21) - 10;
                             double shadow = Spells.SkillMasteries.ShadowSpell.GetDifficultyFactor(trg);

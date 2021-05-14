@@ -31,7 +31,6 @@ namespace Server.Engines.Harvest
             #region Lumberjacking
             HarvestDefinition lumber = new HarvestDefinition
             {
-
                 // Resource banks are every 4x3 tiles
                 BankWidth = 4,
                 BankHeight = 3,
@@ -162,12 +161,16 @@ namespace Server.Engines.Harvest
                     return;
                 }
 
-                foreach (HarvestResource res in m_Definition.Resources)
+                for (var index = 0; index < m_Definition.Resources.Length; index++)
                 {
+                    HarvestResource res = m_Definition.Resources[index];
+
                     if (res.Types != null)
                     {
-                        foreach (Type type in res.Types)
+                        for (var i = 0; i < res.Types.Length; i++)
                         {
+                            Type type = res.Types[i];
+
                             if (item.GetType() == type)
                             {
                                 res.SendSuccessTo(from);

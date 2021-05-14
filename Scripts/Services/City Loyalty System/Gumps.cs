@@ -410,9 +410,12 @@ namespace Server.Engines.CityLoyalty
                 AddBackground(0, 0, 400, 150, 5054);
                 AddHtmlLocalized(0, 12, 400, 20, CenterLoc, "#1155758", 0xFFFF, false, false); // City Stone
 
-                DateTime next = City.Election.NextElection();
+                if (City.Election != null)
+                {
+                    DateTime next = City.Election.NextElection();
 
-                AddHtmlLocalized(20, 45, 360, 60, 1153898, $"{City.Definition.Name}\t{(City.Governor == null ? "Vacant" : City.Governor.Name)}\t{next.ToString()}", 0xFFFF, false, false); // The current Governor of ~1_CITY~ is ~2_PLAYER~.  The next election cycle begins after ~3_DAYS~. 
+                    AddHtmlLocalized(20, 45, 360, 60, 1153898, $"{City.Definition.Name}\t{(City.Governor == null ? "Vacant" : City.Governor.Name)}\t{next.ToString()}", 0xFFFF, false, false); // The current Governor of ~1_CITY~ is ~2_PLAYER~.  The next election cycle begins after ~3_DAYS~. 
+                }
             }
             else
             {

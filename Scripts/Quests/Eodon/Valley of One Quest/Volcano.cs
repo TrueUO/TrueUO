@@ -34,10 +34,14 @@ namespace Server.Items
 
         public static bool InSafeZone(IPoint3D point)
         {
-            foreach (Rectangle2D rec in SafeZone)
+            for (var index = 0; index < SafeZone.Length; index++)
             {
+                Rectangle2D rec = SafeZone[index];
+
                 if (rec.Contains(point))
+                {
                     return true;
+                }
             }
 
             return false;
@@ -65,13 +69,16 @@ namespace Server.Items
         public Volcano()
         {
             _Region = new VolcanoRegion(this);
+
             Timer.DelayCall(TimeSpan.FromSeconds(10), TimeSpan.FromSeconds(10), OnTick);
         }
 
         public void OnTick()
         {
             if (_Region == null)
+            {
                 return;
+            }
 
             int count = _Region.GetPlayerCount();
 
@@ -84,11 +91,16 @@ namespace Server.Items
             if (count > 0 && _LavaTimer == null && _NextLava < DateTime.UtcNow)
             {
                 List<Mobile> players = _Region.GetPlayers();
-                players.ForEach(m =>
+
+                for (var index = 0; index < players.Count; index++)
                 {
+                    var m = players[index];
+
                     if (m.AccessLevel == AccessLevel.Player)
+                    {
                         m.PrivateOverheadMessage(MessageType.Regular, 0x21, 1156506, m.NetState); // *The Volcano is becoming unstable!*
-                });
+                    }
+                }
 
                 ColUtility.Free(players);
 
@@ -113,7 +125,7 @@ namespace Server.Items
 
         public bool CheckCoordinate(int x, int y)
         {
-            if (x <= _CurrentLava.X + 2 || x >= (_CurrentLava.X + _CurrentLava.Width) - 2 || y <= _CurrentLava.Y + 2 || y >= (_CurrentLava.Y + _CurrentLava.Height) - 2)
+            if (x <= _CurrentLava.X + 2 || x >= _CurrentLava.X + _CurrentLava.Width - 2 || y <= _CurrentLava.Y + 2 || y >= _CurrentLava.Y + _CurrentLava.Height - 2)
             {
                 return true;
             }
@@ -138,7 +150,9 @@ namespace Server.Items
                         foreach (Mobile m in mobiles)
                         {
                             if (m.AccessLevel == AccessLevel.Player && m is PlayerMobile)
+                            {
                                 m.PlaySound(520);
+                            }
                         }
 
                         mobiles.Free();
@@ -152,7 +166,9 @@ namespace Server.Items
                             foreach (Mobile m in eable)
                             {
                                 if (m.Alive && m.AccessLevel == AccessLevel.Player && (m is PlayerMobile || m is BaseCreature bc && bc.GetMaster() is PlayerMobile))
+                                {
                                     DoLavaDamageDelayed(m);
+                                }
                             }
 
                             eable.Free();
@@ -177,7 +193,9 @@ namespace Server.Items
         public void CheckMovement(Mobile m)
         {
             if (!m.Alive || m.AccessLevel > AccessLevel.Player || m is BaseCreature bc && bc.GetMaster() == null)
+            {
                 return;
+            }
 
             if (_LavaTimer != null && m.AccessLevel == AccessLevel.Player && m.Alive && _CurrentLava.Contains(m) && !_SafeZone.Contains(m) && !InSafeZone(m))
             {
@@ -216,7 +234,9 @@ namespace Server.Items
         public override void OnLocationChanged(Mobile m, Point3D oldLocation)
         {
             if (Volcano != null)
+            {
                 Volcano.CheckMovement(m);
+            }
 
             base.OnLocationChanged(m, oldLocation);
         }

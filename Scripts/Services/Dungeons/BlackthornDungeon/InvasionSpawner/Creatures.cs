@@ -54,7 +54,6 @@ namespace Server.Engines.Blackthorn
             return null;
         }
 
-        public override bool UseSmartAI => true;
         public virtual bool CanDoSpecial => SpellCaster;
 
         public virtual double MinSkill => 100.0;
@@ -267,8 +266,10 @@ namespace Server.Engines.Blackthorn
                     SetWearable(new LeatherHiroSode());
                     SetWearable(new SamuraiTabi(Utility.RandomNondyedHue()));
 
-                    if (_Sampire)
+                    if (_Sampire && w != null)
+                    {
                         w.WeaponAttributes.HitLeechHits = 100;
+                    }
 
                     SetSkill(SkillName.Parry, 120);
                     break;
@@ -303,10 +304,12 @@ namespace Server.Engines.Blackthorn
 
                     break;
                 case SkillName.Poisoning:
-                    BaseWeapon wep = RandomAssassinWeapon() as BaseWeapon;
-                    wep.Poison = Poison.Lethal;
-                    wep.PoisonCharges = 100;
-                    SetWearable(wep);
+                    if (RandomAssassinWeapon() is BaseWeapon wep)
+                    {
+                        wep.Poison = Poison.Lethal;
+                        wep.PoisonCharges = 100;
+                        SetWearable(wep);
+                    }
 
                     SetWearable(new LeatherChest());
                     SetWearable(new LeatherLegs());

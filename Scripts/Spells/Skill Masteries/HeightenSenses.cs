@@ -30,16 +30,16 @@ namespace Server.Spells.SkillMasteries
 
         public override bool CheckCast()
         {
-            HeightenedSensesSpell spell = GetSpell(Caster, GetType()) as HeightenedSensesSpell;
-
-            if (spell != null)
+            if (GetSpell(Caster, GetType()) is HeightenedSensesSpell spell)
             {
                 spell.Expire();
                 return false;
             }
 
             if (!HasShieldOrWeapon())
+            {
                 return false;
+            }
 
             return base.CheckCast();
         }
@@ -110,10 +110,10 @@ namespace Server.Spells.SkillMasteries
 
         public static double GetParryBonus(Mobile m)
         {
-            HeightenedSensesSpell spell = GetSpell(m, typeof(HeightenedSensesSpell)) as HeightenedSensesSpell;
-
-            if (spell != null)
+            if (GetSpell(m, typeof(HeightenedSensesSpell)) is HeightenedSensesSpell spell)
+            {
                 return spell.PropertyBonus() / 100.0;
+            }
 
             return 0;
         }

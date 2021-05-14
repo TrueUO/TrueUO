@@ -38,16 +38,18 @@ namespace Server.Guilds
 
         public override void OnResponse(NetState sender, RelayInfo info)
         {
-            PlayerMobile pm = sender.Mobile as PlayerMobile;
-
-            if (!IsMember(pm, guild))
-                return;
-
-            RankDefinition playerRank = pm.GuildRank;
-
-            switch (info.ButtonID)
+            if (sender.Mobile is PlayerMobile pm)
             {
-                case 1:
+                RankDefinition playerRank = pm.GuildRank;
+
+                if (!IsMember(pm, guild))
+                {
+                    return;
+                }
+
+                switch (info.ButtonID)
+                {
+                    case 1:
                     {
                         AllianceInfo alliance = guild.Alliance;
                         AllianceInfo otherAlliance = m_Other.Alliance;
@@ -118,11 +120,12 @@ namespace Server.Guilds
                         }
                         break;
                     }
-                default:
+                    default:
                     {
                         pm.SendGump(new OtherGuildInfo(pm, guild, m_Other));
                         break;
                     }
+                }
             }
         }
     }

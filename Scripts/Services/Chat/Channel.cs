@@ -93,10 +93,14 @@ namespace Server.Engines.Chat
 
         public void SendMessage(int number, ChatUser from, string param1, string param2)
         {
-            foreach (ChatUser user in m_Users)
+            for (var index = 0; index < m_Users.Count; index++)
             {
+                ChatUser user = m_Users[index];
+
                 if (user.CheckOnline())
+                {
                     user.SendMessage(number, from.Mobile, param1, param2);
+                }
             }
         }
 
@@ -107,20 +111,28 @@ namespace Server.Engines.Chat
 
         public void SendCommand(ChatCommand command, ChatUser initiator, string param1 = null, string param2 = null)
         {
-            foreach (ChatUser user in m_Users.ToArray())
+            for (var index = 0; index < m_Users.ToArray().Length; index++)
             {
+                ChatUser user = m_Users.ToArray()[index];
+
                 if (user == initiator)
+                {
                     continue;
+                }
 
                 if (user.CheckOnline())
+                {
                     ChatSystem.SendCommandTo(user.Mobile, command, param1, param2);
+                }
             }
         }
 
         public void SendUsersTo(ChatUser to)
         {
-            foreach (ChatUser user in m_Users)
+            for (var index = 0; index < m_Users.Count; index++)
             {
+                ChatUser user = m_Users[index];
+
                 ChatSystem.SendCommandTo(to.Mobile, ChatCommand.AddUserToChannel, ChatUser.GetColorCharacter() + user.Username, $"{{{m_Name}}}");
             }
         }
@@ -131,8 +143,10 @@ namespace Server.Engines.Chat
 
         public static void SendChannelsTo(ChatUser user)
         {
-            foreach (Channel channel in m_Channels)
+            for (var index = 0; index < m_Channels.Count; index++)
             {
+                Channel channel = m_Channels[index];
+
                 ChatSystem.SendCommandTo(user.Mobile, ChatCommand.AddChannel, channel.Name, "0");
             }
         }

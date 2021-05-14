@@ -39,9 +39,7 @@ namespace Server.Spells.SkillMasteries
 
         public override void OnCast()
         {
-            BardSpell spell = GetSpell(Caster, GetType()) as BardSpell;
-
-            if (spell != null)
+            if (GetSpell(Caster, GetType()) is BardSpell spell)
             {
                 spell.Expire();
                 Caster.SendLocalizedMessage(1115774); //You halt your spellsong.

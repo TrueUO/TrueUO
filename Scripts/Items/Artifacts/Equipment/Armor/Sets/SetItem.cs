@@ -1,6 +1,5 @@
 using Server.Items;
 using System;
-using System.Linq;
 
 namespace Server
 {
@@ -330,16 +329,21 @@ namespace Server
 
         public static SlayerName GetSetSlayer(Mobile m)
         {
-            foreach (ISetItem item in m.Items.OfType<ISetItem>())
+            for (var index = 0; index < m.Items.Count; index++)
             {
-                if (item.SetID == SetItem.Aloron && item.SetEquipped)
-                {
-                    return SlayerName.Dinosaur;
-                }
+                Item mItem = m.Items[index];
 
-                if (item.SetID == SetItem.Darden && item.SetEquipped)
+                if (mItem is ISetItem item)
                 {
-                    return SlayerName.Myrmidex;
+                    if (item.SetID == SetItem.Aloron && item.SetEquipped)
+                    {
+                        return SlayerName.Dinosaur;
+                    }
+
+                    if (item.SetID == SetItem.Darden && item.SetEquipped)
+                    {
+                        return SlayerName.Myrmidex;
+                    }
                 }
             }
 
@@ -364,17 +368,32 @@ namespace Server
         {
             int total = 0;
 
-            foreach (Item item in m.Items.Where(i => i is ISetItem item && item.IsSetItem && item.SetEquipped))
+            for (var index = 0; index < m.Items.Count; index++)
             {
-                ISetItem sItem = item as ISetItem;
+                Item item = m.Items[index];
 
-                switch (resist)
+                if (item is ISetItem setItem && setItem.IsSetItem && setItem.SetEquipped)
                 {
-                    case ResistanceType.Physical: total += item.PhysicalResistance + sItem.SetPhysicalBonus; break;
-                    case ResistanceType.Fire: total += item.FireResistance + sItem.SetFireBonus; break;
-                    case ResistanceType.Cold: total += item.ColdResistance + sItem.SetColdBonus; break;
-                    case ResistanceType.Poison: total += item.PoisonResistance + sItem.SetPoisonBonus; break;
-                    case ResistanceType.Energy: total += item.EnergyResistance + sItem.SetEnergyBonus; break;
+                    ISetItem sItem = item as ISetItem;
+
+                    switch (resist)
+                    {
+                        case ResistanceType.Physical:
+                            total += item.PhysicalResistance + sItem.SetPhysicalBonus;
+                            break;
+                        case ResistanceType.Fire:
+                            total += item.FireResistance + sItem.SetFireBonus;
+                            break;
+                        case ResistanceType.Cold:
+                            total += item.ColdResistance + sItem.SetColdBonus;
+                            break;
+                        case ResistanceType.Poison:
+                            total += item.PoisonResistance + sItem.SetPoisonBonus;
+                            break;
+                        case ResistanceType.Energy:
+                            total += item.EnergyResistance + sItem.SetEnergyBonus;
+                            break;
+                    }
                 }
             }
 

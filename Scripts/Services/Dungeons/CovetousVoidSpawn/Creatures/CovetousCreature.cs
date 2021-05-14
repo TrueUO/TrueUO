@@ -49,6 +49,7 @@ namespace Server.Mobiles
 
         public virtual bool IsMagical => AIObject is MageAI;
 
+        public override bool AllureImmune => true;
         public override bool GivesFameAndKarmaAward => false;
         public override bool PlayerRangeSensitive => false;
         public override bool CanDestroyObstacles => true;

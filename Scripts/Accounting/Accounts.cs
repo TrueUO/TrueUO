@@ -52,23 +52,32 @@ namespace Server.Accounting
             string filePath = Path.Combine("Saves/Accounts", "accounts.xml");
 
             if (!File.Exists(filePath))
+            {
                 return;
+            }
 
             XmlDocument doc = new XmlDocument();
             doc.Load(filePath);
 
             XmlElement root = doc["accounts"];
 
-            foreach (XmlElement account in root.GetElementsByTagName("account"))
+            if (root != null)
             {
-                try
+                var name = root.GetElementsByTagName("account");
+
+                for (var index = 0; index < name.Count; index++)
                 {
-                    Account acct = new Account(account);
-                }
-                catch (Exception e)
-                {
-                    Console.WriteLine("Warning: Account instance load failed");
-                    Diagnostics.ExceptionLogging.LogException(e);
+                    var account = (XmlElement) name[index];
+
+                    try
+                    {
+                        Account acct = new Account(account);
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine("Warning: Account instance load failed");
+                        Diagnostics.ExceptionLogging.LogException(e);
+                    }
                 }
             }
         }
@@ -76,7 +85,9 @@ namespace Server.Accounting
         public static void Save(WorldSaveEventArgs e)
         {
             if (!Directory.Exists("Saves/Accounts"))
+            {
                 Directory.CreateDirectory("Saves/Accounts");
+            }
 
             string filePath = Path.Combine("Saves/Accounts", "accounts.xml");
 
@@ -95,8 +106,12 @@ namespace Server.Accounting
 
                 xml.WriteAttributeString("count", m_Accounts.Count.ToString());
 
-                foreach (Account a in GetAccounts())
+                foreach (var account in GetAccounts())
+                {
+                    var a = (Account) account;
+
                     a.Save(xml);
+                }
 
                 xml.WriteEndElement();
 

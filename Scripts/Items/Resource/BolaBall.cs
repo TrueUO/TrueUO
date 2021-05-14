@@ -2,6 +2,8 @@ namespace Server.Items
 {
     public class BolaBall : Item
     {
+        public override int Hue => 0x8AC;
+
         [Constructable]
         public BolaBall()
             : this(1)
@@ -15,7 +17,6 @@ namespace Server.Items
             Weight = 4.0;
             Stackable = true;
             Amount = amount;
-            Hue = 0x8AC;
         }
 
         public BolaBall(Serial serial)

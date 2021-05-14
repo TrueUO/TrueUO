@@ -6,6 +6,7 @@ namespace Server.Items
         bool ICommodity.IsDeedable => true;
 
         public override int LabelNumber => 1040001; // tribal berry
+        public override int Hue => 6;
 
         [Constructable]
         public TribalBerry()
@@ -20,7 +21,6 @@ namespace Server.Items
             Weight = 1.0;
             Stackable = true;
             Amount = amount;
-            Hue = 6;
         }
 
         public TribalBerry(Serial serial)

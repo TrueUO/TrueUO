@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -56,9 +55,7 @@ namespace Server.Items
 
         public override void OnAfterDuped(Item newItem)
         {
-            FirstAidBelt belt = newItem as FirstAidBelt;
-
-            if (belt != null)
+            if (newItem is FirstAidBelt belt)
             {
                 belt.m_Attributes = new AosAttributes(newItem, m_Attributes);
             }
@@ -134,7 +131,12 @@ namespace Server.Items
             {
                 int currentAmount = 0;
 
-                Items.ForEach(i => currentAmount += i.Amount);
+                for (var index = 0; index < Items.Count; index++)
+                {
+                    var i = Items[index];
+
+                    currentAmount += i.Amount;
+                }
 
                 if (item.Amount + currentAmount <= MaxBandage)
                 {
@@ -158,10 +160,19 @@ namespace Server.Items
 
             if (bandage != null)
             {
-                int currentAmount = Items.Sum(i => i.Amount);
+                int currentAmount = 0;
+
+                for (var index = 0; index < Items.Count; index++)
+                {
+                    var i = Items[index];
+
+                    currentAmount += i.Amount;
+                }
 
                 if (item.Amount + currentAmount <= MaxBandage)
+                {
                     return base.CheckStack(from, item);
+                }
             }
 
             return false;

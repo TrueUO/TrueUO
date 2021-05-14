@@ -136,7 +136,9 @@ namespace Server.Engines.Shadowguard
             Type addon = AddonType;
 
             if (addon == null)
+            {
                 return;
+            }
 
             BaseAddon ad = Controller.Addons.FirstOrDefault(a => a.GetType() == addon && a.Map == Map.Internal);
 
@@ -146,8 +148,12 @@ namespace Server.Engines.Shadowguard
                 Controller.Addons.Add(ad);
             }
 
-            ad.MoveToWorld(new Point3D(Instance.Center.X - 1, Instance.Center.Y - 1, Instance.Center.Z), Map.TerMur);
-            Addon = ad;
+            if (ad != null)
+            {
+                ad.MoveToWorld(new Point3D(Instance.Center.X - 1, Instance.Center.Y - 1, Instance.Center.Z), Map.TerMur);
+
+                Addon = ad;
+            }
         }
 
         public void OnBeginEncounter()
@@ -155,8 +161,7 @@ namespace Server.Engines.Shadowguard
             AddPlayers(PartyLeader);
             HasBegun = true;
 
-            SendPartyMessage(1156251, 0x20);
-            //There is a 30 minute time limit for each encounter. You will receive a time limit warning at 5 minutes.
+            SendPartyMessage(1156251, 0x20); //There is a 30 minute time limit for each encounter. You will receive a time limit warning at 5 minutes.
         }
 
         public void AddPlayers(Mobile m)

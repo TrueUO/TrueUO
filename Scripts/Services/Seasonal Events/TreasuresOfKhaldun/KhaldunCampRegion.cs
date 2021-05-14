@@ -63,9 +63,12 @@ namespace Server.Engines.Khaldun
 
         public override void OnRegister()
         {
-            foreach (Point3D p in _GuardLocs)
+            for (var index = 0; index < _GuardLocs.Length; index++)
             {
+                Point3D p = _GuardLocs[index];
+
                 IPooledEnumerable eable = Map.GetMobilesInRange(p, 0);
+
                 bool empty = true;
 
                 foreach (object m in eable)
@@ -89,9 +92,12 @@ namespace Server.Engines.Khaldun
 
             for (int i = 0; i < _BlockerLocs.Length; i++)
             {
-                foreach (Point3D p in _BlockerLocs[i])
+                for (var index = 0; index < _BlockerLocs[i].Length; index++)
                 {
+                    Point3D p = _BlockerLocs[i][index];
+
                     IPooledEnumerable eable = Map.GetItemsInRange(p, 0);
+
                     bool empty = true;
 
                     foreach (object m in eable)

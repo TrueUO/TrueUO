@@ -200,7 +200,12 @@ namespace Server.Services.TownCryer
 
         private void BuildGuildPage()
         {
-            List<TownCryerGuildEntry> list = TownCryerSystem.GuildEntries.OrderBy(e => e.EventTime).ToList();
+            List<TownCryerGuildEntry> list = new List<TownCryerGuildEntry>();
+
+            foreach (var entry in TownCryerSystem.GuildEntries.OrderBy(e => e.EventTime))
+            {
+                list.Add(entry);
+            }
 
             int perPage = 20;
             int y = 170;

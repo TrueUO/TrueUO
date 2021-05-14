@@ -5,7 +5,6 @@ using Server.Mobiles;
 using Server.Network;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -453,10 +452,15 @@ namespace Server.Items
                 return false;
             }
 
-            if (AncientGuardians.Any(ag => ag.Alive))
+            for (var index = 0; index < AncientGuardians.Count; index++)
             {
-                from.SendLocalizedMessage(1046448); // You must first kill the guardians before you may open this chest.
-                return false;
+                var ag = AncientGuardians[index];
+
+                if (ag.Alive)
+                {
+                    from.SendLocalizedMessage(1046448); // You must first kill the guardians before you may open this chest.
+                    return false;
+                }
             }
 
             return !Locked;
@@ -500,7 +504,20 @@ namespace Server.Items
         {
             ExecuteTrap(from);
 
-            if (!AncientGuardians.Any(g => g != null && g.Alive))
+            bool guardians = false;
+
+            for (var index = 0; index < AncientGuardians.Count; index++)
+            {
+                var g = AncientGuardians[index];
+
+                if (g != null && g.Alive)
+                {
+                    guardians = true;
+                    break;
+                }
+            }
+
+            if (!guardians)
             {
                 BaseCreature spawn = TreasureMap.Spawn(Level, GetWorldLocation(), Map, from, false);
 
@@ -513,7 +530,9 @@ namespace Server.Items
                     spawn.Tamable = false;
 
                     if (spawn.HitsMaxSeed >= 0)
+                    {
                         spawn.HitsMaxSeed = (int)(spawn.HitsMaxSeed * Paragon.HitsBuff);
+                    }
 
                     spawn.RawStr = (int)(spawn.RawStr * Paragon.StrBuff);
                     spawn.RawInt = (int)(spawn.RawInt * Paragon.IntBuff);
@@ -530,7 +549,9 @@ namespace Server.Items
                         Skill skill = spawn.Skills[i];
 
                         if (skill.Base > 0.0)
+                        {
                             skill.Base *= Paragon.SkillsBuff;
+                        }
                     }
 
                     AncientGuardians.Add(spawn);

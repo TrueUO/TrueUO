@@ -263,19 +263,26 @@ namespace Server.Engines.Quests
         public static FishMonger GetRandomMonger(PlayerMobile player, FishMonger monger)
         {
             bool NOGO = true;
+
             FishMonger mob = null;
 
             List<FishMonger> mongers = new List<FishMonger>(m_Mongers);
 
             //First, remove quester
             if (mongers.Contains(monger))
+            {
                 mongers.Remove(monger);
+            }
 
             //Next, remove mongers from other facets in same region as quest giver
-            foreach (FishMonger m in m_Mongers)
+            for (var index = 0; index < m_Mongers.Count; index++)
             {
+                FishMonger m = m_Mongers[index];
+
                 if (m.Region != null && monger.Region != null && m.Region.Name == monger.Region.Name)
+                {
                     mongers.Remove(m);
+                }
             }
 
             //Now, remove mongers from other quests
@@ -311,18 +318,26 @@ namespace Server.Engines.Quests
         {
             List<BaseBoat> boats = new List<BaseBoat>();
 
-            foreach (BaseBoat boat in BaseBoat.Boats)
+            for (var index = 0; index < BaseBoat.Boats.Count; index++)
             {
+                BaseBoat boat = BaseBoat.Boats[index];
+
                 if (boat.Owner == from && !boat.IsRowBoat)
+                {
                     boats.Add(boat);
+                }
             }
 
             BaseBoat closest = null;
+
             int range = 5000;
 
-            foreach (BaseBoat boat in boats)
+            for (var index = 0; index < boats.Count; index++)
             {
-                int dist = (int)from.GetDistanceToSqrt(boat.Location);
+                BaseBoat boat = boats[index];
+
+                int dist = (int) from.GetDistanceToSqrt(boat.Location);
+
                 if (closest == null || dist < range)
                 {
                     closest = boat;
@@ -346,10 +361,14 @@ namespace Server.Engines.Quests
                     {
                         ProfessionalFisherQuest quest = player.Quests[i] as ProfessionalFisherQuest;
 
-                        if (quest.Completed)
+                        if (quest != null && quest.Completed)
+                        {
                             quests.Insert(0, quest);
+                        }
                         else
+                        {
                             quests.Add(quest);
+                        }
                     }
                 }
             }

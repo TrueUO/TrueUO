@@ -1,6 +1,5 @@
 using Server.Items;
 using System;
-using System.Linq;
 
 namespace Server.Spells.SkillMasteries
 {
@@ -82,9 +81,9 @@ namespace Server.Spells.SkillMasteries
 
                 AddToCooldown(TimeSpan.FromSeconds(90));
 
-                foreach (Mobile mob in AcquireIndirectTargets(Caster.Location, 5).OfType<Mobile>())
+                foreach (IDamageable target in AcquireIndirectTargets(Caster.Location, 5))
                 {
-                    if (HitLower.ApplyDefense(mob))
+                    if (target is Mobile mob && HitLower.ApplyDefense(mob))
                     {
                         if (wep is BaseRanged ranged && !(ranged is BaseThrown))
                         {
@@ -122,8 +121,10 @@ namespace Server.Spells.SkillMasteries
         {
             if (PartyList != null)
             {
-                foreach (Mobile m in PartyList)
+                for (var index = 0; index < PartyList.Count; index++)
                 {
+                    Mobile m = PartyList[index];
+
                     RemovePartyEffects(m);
                 }
             }
@@ -143,40 +144,29 @@ namespace Server.Spells.SkillMasteries
 
         public static int HitChanceBonus(Mobile m)
         {
-            PlayingTheOddsSpell spell = GetSpellForParty(m, typeof(PlayingTheOddsSpell)) as PlayingTheOddsSpell;
-
-            if (spell != null)
+            if (GetSpellForParty(m, typeof(PlayingTheOddsSpell)) is PlayingTheOddsSpell spell)
+            {
                 return spell._HCIBonus;
+            }
 
             return 0;
         }
 
         public static int SwingSpeedBonus(Mobile m)
         {
-            PlayingTheOddsSpell spell = GetSpellForParty(m, typeof(PlayingTheOddsSpell)) as PlayingTheOddsSpell;
-
-            if (spell != null)
+            if (GetSpellForParty(m, typeof(PlayingTheOddsSpell)) is PlayingTheOddsSpell spell)
+            {
                 return spell._SSIBonus;
+            }
 
             return 0;
         }
 
         public static int RangeModifier(BaseWeapon weapon)
         {
-            if (weapon is BaseRanged && !(weapon is BaseThrown))
+            if (weapon is BaseRanged && !(weapon is BaseThrown) && weapon.RootParent is Mobile m && GetSpell(m, typeof(PlayingTheOddsSpell)) is PlayingTheOddsSpell)
             {
-                Mobile m = weapon.RootParent as Mobile;
-
-                if (m != null)
-                {
-                    PlayingTheOddsSpell spell = GetSpell(m, typeof(PlayingTheOddsSpell)) as PlayingTheOddsSpell;
-
-                    if (spell != null)
-                    {
-                        return weapon.DefMaxRange / 2;
-                    }
-
-                }
+                return weapon.DefMaxRange / 2;
             }
 
             return weapon.DefMaxRange;

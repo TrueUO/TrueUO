@@ -6,12 +6,15 @@ namespace Server.Items
     public class UnholyBone : Item, ICarvable
     {
         private SpawnTimer m_Timer;
+
+        public override string DefaultName => "unholy bone";
+        public override int Hue => 0x497;
+
         [Constructable]
         public UnholyBone()
             : base(0xF7E)
         {
             Movable = false;
-            Hue = 0x497;
             m_Timer = new SpawnTimer(this);
             m_Timer.Start();
         }
@@ -21,7 +24,6 @@ namespace Server.Items
         {
         }
 
-        public override string DefaultName => "unholy bone";
         public bool Carve(Mobile from, Item item)
         {
             Effects.PlaySound(GetWorldLocation(), Map, 0x48F);

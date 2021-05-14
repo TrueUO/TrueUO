@@ -1,4 +1,3 @@
-#region References
 using Server.ContextMenus;
 using Server.Engines.Quests;
 using Server.Gumps;
@@ -7,8 +6,6 @@ using Server.Network;
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-#endregion
 
 namespace Server.Mobiles
 {
@@ -98,7 +95,18 @@ namespace Server.Mobiles
         {
             for (int i = 0; i < _Quests.Length; i++)
             {
-                BaseQuest quest = player.Quests.FirstOrDefault(q => q.GetType() == _Quests[i]);
+                BaseQuest quest = null;
+
+                for (var index = 0; index < player.Quests.Count; index++)
+                {
+                    var q = player.Quests[index];
+
+                    if (q.GetType() == _Quests[i])
+                    {
+                        quest = q;
+                        break;
+                    }
+                }
 
                 if (quest != null)
                 {
@@ -494,14 +502,12 @@ namespace Server.Mobiles
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
             reader.ReadInt();
         }
 

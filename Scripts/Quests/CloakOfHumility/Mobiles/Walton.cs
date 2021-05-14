@@ -5,7 +5,7 @@ namespace Server.Mobiles
 {
     public class Walton : HumilityQuestMobile
     {
-        public override int Greeting => 1075739;
+        public override int Greeting => 1075739; // A horse blanket would offer more comfort than thine cloak, mayhaps.
 
         [Constructable]
         public Walton()
@@ -26,6 +26,7 @@ namespace Server.Mobiles
             Race = Race.Human;
             Body = 0x190;
 
+            SpeechHue = 10;
             Hue = Race.RandomSkinHue();
             HairItemID = Race.RandomHair(false);
             HairHue = Race.RandomHairHue();
@@ -35,8 +36,8 @@ namespace Server.Mobiles
         {
             AddItem(new Backpack());
             AddItem(new FancyShirt());
-            AddItem(new Doublet(1109));
-            AddItem(new LongPants(Utility.RandomBlueHue()));
+            AddItem(new Doublet(902));
+            AddItem(new LongPants(500));
             AddItem(new Boots());
         }
 

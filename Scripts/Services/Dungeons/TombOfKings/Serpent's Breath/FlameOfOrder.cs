@@ -26,22 +26,29 @@ namespace Server.Items
             m_LOSBlockers = new List<LOSBlocker>(m_BarrierLocations.Length);
             m_MsgTriggers = new List<SBMessageTrigger>(m_MsgTriggerLocations.Length);
 
-            foreach (Point3D loc in m_BarrierLocations)
+            for (var index = 0; index < m_BarrierLocations.Length; index++)
             {
+                Point3D loc = m_BarrierLocations[index];
+
                 m_Barriers.Add(new EnergyBarrier(loc, map));
 
                 Blocker blocker = new Blocker();
+
                 blocker.MoveToWorld(loc, map);
                 m_Blockers.Add(blocker);
 
                 LOSBlocker losblocker = new LOSBlocker();
+
                 losblocker.MoveToWorld(loc, map);
                 m_LOSBlockers.Add(losblocker);
             }
 
-            foreach (Point3D loc in m_MsgTriggerLocations)
+            for (var index = 0; index < m_MsgTriggerLocations.Length; index++)
             {
+                Point3D loc = m_MsgTriggerLocations[index];
+
                 SBMessageTrigger trigger = new SBMessageTrigger(this);
+
                 trigger.MoveToWorld(loc, map);
                 m_MsgTriggers.Add(trigger);
             }
@@ -57,14 +64,23 @@ namespace Server.Items
             {
                 Visible = false;
 
-                foreach (EnergyBarrier barrier in m_Barriers)
+                for (var index = 0; index < m_Barriers.Count; index++)
+                {
+                    EnergyBarrier barrier = m_Barriers[index];
                     barrier.Active = false;
+                }
 
-                foreach (Blocker blocker in m_Blockers)
+                for (var index = 0; index < m_Blockers.Count; index++)
+                {
+                    Blocker blocker = m_Blockers[index];
                     blocker.Delete();
+                }
 
-                foreach (LOSBlocker losblocker in m_LOSBlockers)
+                for (var index = 0; index < m_LOSBlockers.Count; index++)
+                {
+                    LOSBlocker losblocker = m_LOSBlockers[index];
                     losblocker.Delete();
+                }
 
                 m_Blockers.Clear();
                 m_LOSBlockers.Clear();
@@ -75,16 +91,23 @@ namespace Server.Items
 
         protected void RestoreBarrier()
         {
-            foreach (EnergyBarrier barrier in m_Barriers)
-                barrier.Active = true;
-
-            foreach (Point3D loc in m_BarrierLocations)
+            for (var index = 0; index < m_Barriers.Count; index++)
             {
+                EnergyBarrier barrier = m_Barriers[index];
+                barrier.Active = true;
+            }
+
+            for (var index = 0; index < m_BarrierLocations.Length; index++)
+            {
+                Point3D loc = m_BarrierLocations[index];
+
                 Blocker blocker = new Blocker();
+
                 blocker.MoveToWorld(loc, Map);
                 m_Blockers.Add(blocker);
 
                 LOSBlocker losblocker = new LOSBlocker();
+
                 losblocker.MoveToWorld(loc, Map);
                 m_LOSBlockers.Add(losblocker);
             }
@@ -96,23 +119,27 @@ namespace Server.Items
         {
             base.OnAfterDelete();
 
-            foreach (Blocker blocker in m_Blockers)
+            for (var index = 0; index < m_Blockers.Count; index++)
             {
+                Blocker blocker = m_Blockers[index];
                 blocker.Delete();
             }
 
-            foreach (LOSBlocker losblocker in m_LOSBlockers)
+            for (var index = 0; index < m_LOSBlockers.Count; index++)
             {
+                LOSBlocker losblocker = m_LOSBlockers[index];
                 losblocker.Delete();
             }
 
-            foreach (SBMessageTrigger trigger in m_MsgTriggers)
+            for (var index = 0; index < m_MsgTriggers.Count; index++)
             {
+                SBMessageTrigger trigger = m_MsgTriggers[index];
                 trigger.Delete();
             }
 
-            foreach (EnergyBarrier barrier in m_Barriers)
+            for (var index = 0; index < m_Barriers.Count; index++)
             {
+                EnergyBarrier barrier = m_Barriers[index];
                 barrier.Delete();
             }
         }

@@ -78,35 +78,48 @@ namespace Server.Engines.CityLoyalty
             CityLoyaltyEntry pentry = City.GetPlayerEntry<CityLoyaltyEntry>(pm);
 
             if (pm.Young)
+            {
                 pm.SendMessage("Young players cannot be nominated for the ballot!");
+            }
             else if (!City.IsCitizen(pm) || pentry == null)
+            {
                 pm.SendLocalizedMessage(1153890); // You must be a citizen of this City to nominate yourself for the ballot! 
+            }
             else if (City.GetLoyaltyRating(pm) < LoyaltyRating.Adored)
+            {
                 pm.SendLocalizedMessage(1153891); // You must at least be adored within the City to nominate yourself for the ballot. 
+            }
             else
             {
-                Account a = pm.Account as Account;
-                for (int i = 0; i < a.Length; i++)
+                if (pm.Account is Account a)
                 {
-                    Mobile m = a[i];
-
-                    if (!(m is PlayerMobile))
-                        continue;
-
-                    BallotEntry ballot = Candidates.FirstOrDefault(entry => entry.Player == m);
-
-                    if (ballot != null)
+                    for (int i = 0; i < a.Length; i++)
                     {
-                        pm.SendLocalizedMessage(ballot.Endorsements.Count > 0 ? 1153917 : 1153889);  // A character from this account is currently endorsed for Candidacy and cannot be nominated.                                                                      // A character from this account has already been nominated to run for office.
-                        return false;                                                                // A character from this account has already been nominated to run for office. 
-                    }
+                        Mobile m = a[i];
 
-                    ballot = Candidates.FirstOrDefault(entry => entry.Endorsements.Contains(m));
+                        if (!(m is PlayerMobile))
+                        {
+                            continue;
+                        }
 
-                    if (ballot != null)
-                    {
-                        pm.SendLocalizedMessage(1153892); // A character from this account has already endorsed a nominee! 
-                        return false;
+                        BallotEntry ballot = Candidates.FirstOrDefault(entry => entry.Player == m);
+
+                        if (ballot != null)
+                        {
+                            pm.SendLocalizedMessage(ballot.Endorsements.Count > 0
+                                ? 1153917
+                                : 1153889); // A character from this account is currently endorsed for Candidacy and cannot be nominated.                                                                      // A character from this account has already been nominated to run for office.
+                            return
+                                false; // A character from this account has already been nominated to run for office. 
+                        }
+
+                        ballot = Candidates.FirstOrDefault(entry => entry.Endorsements.Contains(m));
+
+                        if (ballot != null)
+                        {
+                            pm.SendLocalizedMessage(1153892); // A character from this account has already endorsed a nominee! 
+                            return false;
+                        }
                     }
                 }
 
@@ -123,34 +136,41 @@ namespace Server.Engines.CityLoyalty
         public bool TryEndorse(PlayerMobile pm, PlayerMobile nominee)
         {
             if (pm.Young)
-                pm.SendMessage("Young players cannot endorose an nominee!");
+            {
+                pm.SendMessage("Young players cannot endorse a nominee!");
+            }
             else if (!City.IsCitizen(pm))
+            {
                 pm.SendLocalizedMessage(1153893); // You must be a citizen of this City to endorse a nominee for the ballot! 
+            }
             else
             {
-                Account a = pm.Account as Account;
-
-                for (int i = 0; i < a.Length; i++)
+                if (pm.Account is Account a)
                 {
-                    Mobile m = a[i];
-
-                    if (!(m is PlayerMobile))
-                        continue;
-
-                    BallotEntry ballot = Candidates.FirstOrDefault(entry => entry.Endorsements.Contains(m as PlayerMobile));
-
-                    if (ballot != null)
+                    for (int i = 0; i < a.Length; i++)
                     {
-                        pm.SendLocalizedMessage(1153892); // A character from this account has already endorsed a nominee! 
-                        return false;
-                    }
+                        Mobile m = a[i];
 
-                    BallotEntry ballot2 = Candidates.FirstOrDefault(entry => entry.Player == m);
+                        if (!(m is PlayerMobile))
+                        {
+                            continue;
+                        }
 
-                    if (ballot2 != null)
-                    {
-                        pm.SendLocalizedMessage(1153912); // A character from this account is currently nominated for candidacy and cannot offer an endorsement.  
-                        return false;
+                        BallotEntry ballot = Candidates.FirstOrDefault(entry => entry.Endorsements.Contains(m as PlayerMobile));
+
+                        if (ballot != null)
+                        {
+                            pm.SendLocalizedMessage(1153892); // A character from this account has already endorsed a nominee! 
+                            return false;
+                        }
+
+                        BallotEntry ballot2 = Candidates.FirstOrDefault(entry => entry.Player == m);
+
+                        if (ballot2 != null)
+                        {
+                            pm.SendLocalizedMessage(1153912); // A character from this account is currently nominated for candidacy and cannot offer an endorsement.  
+                            return false;
+                        }
                     }
                 }
 
@@ -161,8 +181,11 @@ namespace Server.Engines.CityLoyalty
                     //<CENTER>Are you sure you wish to endorse this nominee? All endorsements are final and cannot be changed!</CENTER>
                     pm.SendGump(new ConfirmCallbackGump(pm, null, 1154091, pentry, null, (m, o) =>
                     {
-                        BallotEntry e = o as BallotEntry;
-                        e.Endorsements.Add(m as PlayerMobile);
+                        if (o is BallotEntry e)
+                        {
+                            e.Endorsements.Add(m as PlayerMobile);
+                        }
+
                         m.PrivateOverheadMessage(Network.MessageType.Regular, 0x3B2, 1153913, m.NetState); // *You etch your endorsement for the nominee into the stone*
 
                     }));
@@ -177,25 +200,34 @@ namespace Server.Engines.CityLoyalty
         public bool TryVote(PlayerMobile voter, PlayerMobile candidate)
         {
             if (!CanVote())
+            {
                 voter.SendLocalizedMessage(1153919); // The stone is not currently accepting votes. 
+            }
             else if (voter.Young)
+            {
                 voter.SendMessage("Young players cannot vote in a city election!");
+            }
             else if (!City.IsCitizen(voter))
+            {
                 voter.SendLocalizedMessage(1153894); // You must be a citizen of this City to vote! 
+            }
             else if (City.GetLoyaltyRating(voter) < LoyaltyRating.Respected)
+            {
                 voter.SendLocalizedMessage(1154579); // You must be at least respected within the city to vote. 
+            }
             else
             {
-                Account a = voter.Account as Account;
-
-                for (int i = 0; i < a.Length; i++)
+                if (voter.Account is Account a)
                 {
-                    Mobile m = a[i];
-
-                    if (m is PlayerMobile && Candidates.FirstOrDefault(e => e.Votes.Contains(m)) != null)
+                    for (int i = 0; i < a.Length; i++)
                     {
-                        voter.SendLocalizedMessage(1153922); // This account has already cast a vote in this election. You may only vote once.
-                        return false;
+                        Mobile m = a[i];
+
+                        if (m is PlayerMobile && Candidates.FirstOrDefault(e => e.Votes.Contains(m)) != null)
+                        {
+                            voter.SendLocalizedMessage(1153922); // This account has already cast a vote in this election. You may only vote once.
+                            return false;
+                        }
                     }
                 }
 
@@ -206,8 +238,11 @@ namespace Server.Engines.CityLoyalty
                     //<CENTER>Are you sure you wish to cast your vote for this candidate? All votes are final and cannot be changed!</CENTER>
                     voter.SendGump(new ConfirmCallbackGump(voter, null, 1153921, pentry, null, (m, o) =>
                     {
-                        BallotEntry e = o as BallotEntry;
-                        e.Votes.Add(voter);
+                        if (o is BallotEntry e)
+                        {
+                            e.Votes.Add(voter);
+                        }
+
                         m.PrivateOverheadMessage(Network.MessageType.Regular, 0x3B2, 1153923, voter.NetState); // *You etch your vote into the stone* 
                     }));
                 }
@@ -256,18 +291,22 @@ namespace Server.Engines.CityLoyalty
         {
             int votes = 0;
 
-            Candidates.ForEach(c =>
-                {
-                    votes += c.Votes.Count;
-                });
+            for (var index = 0; index < Candidates.Count; index++)
+            {
+                var c = Candidates[index];
+
+                votes += c.Votes.Count;
+            }
 
             return votes;
         }
 
         public void OnTick()
         {
-            foreach (DateTime dt in StartTimes)
+            for (var index = 0; index < StartTimes.Length; index++)
             {
+                DateTime dt = StartTimes[index];
+
                 if (dt.Year == DateTime.Now.Year && DateTime.Now.Month == dt.Month && DateTime.Now.Day > 14 && !ElectionEnded)
                 {
                     EndElection();
@@ -304,10 +343,14 @@ namespace Server.Engines.CityLoyalty
 
             if (CanNominate())
             {
-                foreach (var entry in Candidates.ToList())
+                for (var index = 0; index < Candidates.ToList().Count; index++)
                 {
+                    var entry = Candidates.ToList()[index];
+
                     if (entry.TimeOfNomination + TimeSpan.FromHours(NominationDeadline) < DateTime.Now && entry.Endorsements.Count == 0)
+                    {
                         Candidates.Remove(entry);
+                    }
                 }
             }
         }
@@ -404,8 +447,10 @@ namespace Server.Engines.CityLoyalty
 
             DateTime closest = DateTime.MinValue;
 
-            foreach (DateTime dt in StartTimes)
+            for (var index = 0; index < StartTimes.Length; index++)
             {
+                DateTime dt = StartTimes[index];
+
                 if (DateTime.Now < dt)
                 {
                     if (closest == DateTime.MinValue || dt - DateTime.Now < closest - DateTime.Now)
@@ -421,14 +466,18 @@ namespace Server.Engines.CityLoyalty
         public bool CanNominate()
         {
             DateTime until = DateTime.MinValue;
+
             return CanNominate(out until);
         }
 
         public bool CanNominate(out DateTime until)
         {
             until = DateTime.Now;
-            foreach (DateTime dt in StartTimes)
+
+            for (var index = 0; index < StartTimes.Length; index++)
             {
+                DateTime dt = StartTimes[index];
+
                 if (dt.Year == DateTime.Now.Year && DateTime.Now.Month == dt.Month && DateTime.Now <= dt.AddDays(VotePeriod))
                 {
                     until = dt.AddDays(VotePeriod);
@@ -442,14 +491,18 @@ namespace Server.Engines.CityLoyalty
         public bool CanVote()
         {
             DateTime until = DateTime.MinValue;
+
             return CanVote(out until);
         }
 
         public bool CanVote(out DateTime until)
         {
             until = DateTime.Now;
-            foreach (DateTime dt in StartTimes)
+
+            for (var index = 0; index < StartTimes.Length; index++)
             {
+                DateTime dt = StartTimes[index];
+
                 if (dt.Year == DateTime.Now.Year && DateTime.Now.Month == dt.Month && DateTime.Now > dt.AddDays(VotePeriod) && DateTime.Now <= dt.AddDays(VotePeriod * 2))
                 {
                     until = dt.AddDays(VotePeriod * 2);
@@ -496,10 +549,23 @@ namespace Server.Engines.CityLoyalty
 
         public void OnRejectOffice(PlayerMobile pm)
         {
-            BallotEntry entry = Candidates.FirstOrDefault(c => c.Player == pm);
+            BallotEntry entry = null;
+
+            for (var index = 0; index < Candidates.Count; index++)
+            {
+                var c = Candidates[index];
+
+                if (c.Player == pm)
+                {
+                    entry = c;
+                    break;
+                }
+            }
 
             if (entry != null)
+            {
                 Candidates.Remove(entry);
+            }
 
             AutoPickGovernor = DateTime.Now + TimeSpan.FromDays(Utility.RandomMinMax(2, 4));
         }
@@ -512,11 +578,18 @@ namespace Server.Engines.CityLoyalty
             writer.Write(AutoPickGovernor);
 
             writer.Write(StartTimes.Length);
-            foreach (DateTime dt in StartTimes)
+            for (var index = 0; index < StartTimes.Length; index++)
+            {
+                DateTime dt = StartTimes[index];
                 writer.Write(dt);
+            }
 
             writer.Write(Candidates.Count);
-            Candidates.ForEach(entry => entry.Serialize(writer));
+            for (var index = 0; index < Candidates.Count; index++)
+            {
+                var entry = Candidates[index];
+                entry.Serialize(writer);
+            }
         }
 
         public CityElection(CityLoyaltySystem city, GenericReader reader)
@@ -605,10 +678,18 @@ namespace Server.Engines.CityLoyalty
             writer.Write(Hate);
 
             writer.Write(Endorsements.Count);
-            Endorsements.ForEach(p => writer.Write(p));
+            for (var index = 0; index < Endorsements.Count; index++)
+            {
+                var p = Endorsements[index];
+                writer.Write(p);
+            }
 
             writer.Write(Votes.Count);
-            Votes.ForEach(p => writer.Write(p));
+            for (var index = 0; index < Votes.Count; index++)
+            {
+                var p = Votes[index];
+                writer.Write(p);
+            }
         }
 
         public BallotEntry(GenericReader reader)

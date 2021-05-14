@@ -49,9 +49,7 @@ namespace Server.Items
 
             public override void AddNameProperty(ObjectPropertyList list)
             {
-                SkeletalHangmanAddon addon = Addon as SkeletalHangmanAddon;
-
-                if (addon._Clicker != null)
+                if (Addon is SkeletalHangmanAddon addon && addon._Clicker != null)
                 {
                     list.Add(1156983, addon._Clicker.Name);
                 }

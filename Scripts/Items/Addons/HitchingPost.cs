@@ -209,7 +209,11 @@ namespace Server.Items
 
                     if (pet == null || pet.Deleted)
                     {
-                        pet.IsStabled = false;
+                        if (pet != null)
+                        {
+                            pet.IsStabled = false;
+                        }
+
                         from.Stabled.RemoveAt(i);
                         --i;
                         continue;
@@ -383,7 +387,11 @@ namespace Server.Items
 
                     if (pet == null || pet.Deleted)
                     {
-                        pet.IsStabled = false;
+                        if (pet != null)
+                        {
+                            pet.IsStabled = false;
+                        }
+
                         from.Stabled.RemoveAt(i);
                         --i;
                         continue;

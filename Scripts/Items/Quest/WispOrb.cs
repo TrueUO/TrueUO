@@ -10,14 +10,12 @@ namespace Server.Engines.Despise
 {
     public enum LeashLength
     {
-        //Tight,
         Short,
         Long
     }
 
     public enum Aggression
     {
-        //Following,
         Defensive,
         Aggressive
     }

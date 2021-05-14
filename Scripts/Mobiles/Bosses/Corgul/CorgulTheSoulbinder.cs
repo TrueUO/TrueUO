@@ -32,9 +32,6 @@ namespace Server.Mobiles
         public override Type[] SharedList => new[] { typeof(HelmOfVengence), typeof(RingOfTheSoulbinder), typeof(RuneEngravedPegLeg), typeof(CullingBlade) };
         public override Type[] DecorativeList => new[] { typeof(EnchantedBladeDeed), typeof(EnchantedVortexDeed) };
 
-        public override bool NoGoodies => true;
-        public override bool RestrictedToFelucca => false;
-
         private readonly int _SpawnPerLoc = 15;
 
         private readonly Point3D[] _SpawnLocs =
@@ -302,15 +299,28 @@ namespace Server.Mobiles
                     pm.SetMountBlock(BlockMountType.DismountRecovery, TimeSpan.FromSeconds(10), true);
                 }
 
-                double damage = m.Hits * 0.6;
-                if (damage < 10.0)
-                    damage = 10.0;
-                else if (damage > 75.0)
-                    damage = 75.0;
-                DoHarmful(m);
-                AOS.Damage(m, this, (int)damage, 100, 0, 0, 0, 0);
-                if (m.Alive && m.Body.IsHuman && !m.Mounted)
+                if (m != null)
+                {
+                    double damage = m.Hits * 0.6;
+
+                    if (damage < 10.0)
+                    {
+                        damage = 10.0;
+                    }
+                    else if (damage > 75.0)
+                    {
+                        damage = 75.0;
+                    }
+
+                    DoHarmful(m);
+
+                    AOS.Damage(m, this, (int)damage, 100, 0, 0, 0, 0);
+                }
+
+                if (m != null && m.Alive && m.Body.IsHuman && !m.Mounted)
+                {
                     m.Animate(20, 7, 1, true, false, 0);
+                }
             }
 
 
@@ -431,12 +441,13 @@ namespace Server.Mobiles
         public static void CheckDropSOT(BaseCreature bc)
         {
             if (bc == null)
+            {
                 return;
+            }
 
             var killer = bc.FindMostRecentDamager(false);
-            var creature = killer as BaseCreature;
 
-            if (creature != null)
+            if (killer is BaseCreature creature)
             {
                 killer = creature.GetMaster();
             }
@@ -484,8 +495,7 @@ namespace Server.Mobiles
                     int cnt = reader.ReadInt();
                     for (int i = 0; i < cnt; i++)
                     {
-                        BaseCreature bc = reader.ReadMobile() as BaseCreature;
-                        if (bc != null)
+                        if (reader.ReadMobile() is BaseCreature bc)
                             m_Helpers.Add(bc);
                     }
                     break;

@@ -33,8 +33,10 @@ namespace Server.Items
 
             if (canEquip)
             {
-                foreach (Item armor in from.Items)
+                for (var index = 0; index < from.Items.Count; index++)
                 {
+                    Item armor = from.Items[index];
+
                     if (armor is IEpiphanyArmor)
                     {
                         armor.InvalidateProperties();
@@ -51,8 +53,10 @@ namespace Server.Items
 
             if (parent is Mobile m)
             {
-                foreach (Item armor in m.Items)
+                for (var index = 0; index < m.Items.Count; index++)
                 {
+                    Item armor = m.Items[index];
+
                     if (armor is IEpiphanyArmor)
                     {
                         armor.InvalidateProperties();
@@ -107,8 +111,10 @@ namespace Server.Items
 
             if (canEquip)
             {
-                foreach (Item armor in from.Items)
+                for (var index = 0; index < from.Items.Count; index++)
                 {
+                    Item armor = from.Items[index];
+
                     if (armor is IEpiphanyArmor)
                     {
                         armor.InvalidateProperties();
@@ -125,8 +131,10 @@ namespace Server.Items
 
             if (parent is Mobile m)
             {
-                foreach (Item armor in m.Items)
+                for (var index = 0; index < m.Items.Count; index++)
                 {
+                    Item armor = m.Items[index];
+
                     if (armor is IEpiphanyArmor)
                     {
                         armor.InvalidateProperties();
@@ -183,8 +191,10 @@ namespace Server.Items
 
             if (canEquip)
             {
-                foreach (Item armor in from.Items)
+                for (var index = 0; index < from.Items.Count; index++)
                 {
+                    Item armor = from.Items[index];
+
                     if (armor is IEpiphanyArmor)
                     {
                         armor.InvalidateProperties();
@@ -201,8 +211,10 @@ namespace Server.Items
 
             if (parent is Mobile m)
             {
-                foreach (Item armor in m.Items)
+                for (var index = 0; index < m.Items.Count; index++)
                 {
+                    Item armor = m.Items[index];
+
                     if (armor is IEpiphanyArmor)
                     {
                         armor.InvalidateProperties();
@@ -259,8 +271,10 @@ namespace Server.Items
 
             if (canEquip)
             {
-                foreach (Item armor in from.Items)
+                for (var index = 0; index < from.Items.Count; index++)
                 {
+                    Item armor = from.Items[index];
+
                     if (armor is IEpiphanyArmor)
                     {
                         armor.InvalidateProperties();
@@ -277,8 +291,10 @@ namespace Server.Items
 
             if (parent is Mobile m)
             {
-                foreach (Item armor in m.Items)
+                for (var index = 0; index < m.Items.Count; index++)
                 {
+                    Item armor = m.Items[index];
+
                     if (armor is IEpiphanyArmor)
                     {
                         armor.InvalidateProperties();
@@ -335,8 +351,10 @@ namespace Server.Items
 
             if (canEquip)
             {
-                foreach (Item armor in from.Items)
+                for (var index = 0; index < from.Items.Count; index++)
                 {
+                    Item armor = from.Items[index];
+
                     if (armor is IEpiphanyArmor)
                     {
                         armor.InvalidateProperties();
@@ -353,8 +371,10 @@ namespace Server.Items
 
             if (parent is Mobile m)
             {
-                foreach (Item armor in m.Items)
+                for (var index = 0; index < m.Items.Count; index++)
                 {
+                    Item armor = m.Items[index];
+
                     if (armor is IEpiphanyArmor)
                     {
                         armor.InvalidateProperties();

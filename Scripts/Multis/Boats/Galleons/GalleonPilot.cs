@@ -5,7 +5,6 @@ using Server.Multis;
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Mobiles
 {
@@ -29,8 +28,12 @@ namespace Server.Mobiles
 
             OriginalItems = new List<Item>();
 
-            foreach (Item item in Items)
+            for (var index = 0; index < Items.Count; index++)
+            {
+                Item item = Items[index];
+
                 OriginalItems.Add(item);
+            }
 
             SetSkill(SkillName.Cartography, 100.0);
         }
@@ -441,11 +444,22 @@ namespace Server.Mobiles
                 {
                     m_From.SendGump(new BasicConfirmGump<BaseGalleon>(new TextDefinition(1116618), (m, boat) => // Are you sure you wish to clear your ship's access list?
                     {
-                        boat.SecurityEntry.Manifest.Keys.Where(x => !boat.IsOwner(x)).ToList().ForEach(y =>
-                        {
-                            boat.SecurityEntry.RemoveFromAccessList(y);
-                        });
+                        List<Mobile> list = new List<Mobile>();
 
+                        foreach (var x in boat.SecurityEntry.Manifest.Keys)
+                        {
+                            if (!boat.IsOwner(x))
+                            {
+                                list.Add(x);
+                            }
+                        }
+
+                        for (var index = 0; index < list.Count; index++)
+                        {
+                            var y = list[index];
+
+                            boat.SecurityEntry.RemoveFromAccessList(y);
+                        }
                     }, m_Pilot.Galleon));
                 }
             }
@@ -485,8 +499,11 @@ namespace Server.Mobiles
             writer.Write(1);
 
             writer.Write(OriginalItems.Count);
-            foreach (Item item in OriginalItems)
+            for (var index = 0; index < OriginalItems.Count; index++)
+            {
+                Item item = OriginalItems[index];
                 writer.Write(item);
+            }
 
             writer.Write(Galleon);
         }

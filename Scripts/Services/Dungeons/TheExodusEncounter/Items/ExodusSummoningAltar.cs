@@ -2,7 +2,6 @@ using Server.Engines.Exodus;
 using Server.Engines.PartySystem;
 using Server.Mobiles;
 using Server.Targeting;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -76,7 +75,16 @@ namespace Server.Items
                 {
                     if (IsValidTile(staticTarget.ItemID) && (from.Map == Map.Felucca || from.Map == Map.Trammel))
                     {
-                        bool alter = from.Map.GetItemsInRange(staticTarget.Location, 5).Any(x => x is ExodusTomeAltar);
+                        bool alter = false;
+
+                        foreach (var x in from.Map.GetItemsInRange(staticTarget.Location, 5))
+                        {
+                            if (x is ExodusTomeAltar)
+                            {
+                                alter = true;
+                                break;
+                            }
+                        }
 
                         if (alter)
                         {
@@ -151,7 +159,20 @@ namespace Server.Items
 
         public static bool CheckExodus() // Before ritual check
         {
-            return ClockworkExodus.Instances.FirstOrDefault(m => m.Region.IsPartOf("Ver Lor Reg") && (m.Hits >= m.HitsMax * 0.60 && m.MinHits >= m.HitsMax * 0.60 || m.Hits >= m.HitsMax * 0.75)) != null;
+            ClockworkExodus first = null;
+
+            for (var index = 0; index < ClockworkExodus.Instances.Count; index++)
+            {
+                var m = ClockworkExodus.Instances[index];
+
+                if (m.Region.IsPartOf("Ver Lor Reg") && (m.Hits >= m.HitsMax * 0.60 && m.MinHits >= m.HitsMax * 0.60 || m.Hits >= m.HitsMax * 0.75))
+                {
+                    first = m;
+                    break;
+                }
+            }
+
+            return first != null;
         }
     }
 }

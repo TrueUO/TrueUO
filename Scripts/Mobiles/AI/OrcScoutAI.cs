@@ -79,8 +79,8 @@ namespace Server.Mobiles
                 if (c == null)
                 {
                     m_Mobile.DebugSay("My combatant has fled, so I am on guard");
-                    Action = ActionType.Guard;
 
+                    Action = ActionType.Guard;
                     return true;
                 }
             }
@@ -88,15 +88,19 @@ namespace Server.Mobiles
             if (MoveTo(c, true, m_Mobile.RangeFight))
             {
                 if (!DirectionLocked)
+                {
                     m_Mobile.Direction = m_Mobile.GetDirectionTo(c);
+                }
             }
             else if (AcquireFocusMob(m_Mobile.RangePerception, m_Mobile.FightMode, false))
             {
-                m_Mobile.DebugSay("My move is blocked, so I am going to attack {0}", m_Mobile.FocusMob.Name);
+                if (m_Mobile.FocusMob != null)
+                {
+                    m_Mobile.DebugSay("My move is blocked, so I am going to attack {0}", m_Mobile.FocusMob.Name);
+                    m_Mobile.Combatant = m_Mobile.FocusMob;
+                }
 
-                m_Mobile.Combatant = m_Mobile.FocusMob;
                 Action = ActionType.Combat;
-
                 return true;
             }
             else if (m_Mobile.GetDistanceToSqrt(c) > m_Mobile.RangePerception + 1)
@@ -104,7 +108,6 @@ namespace Server.Mobiles
                 m_Mobile.DebugSay("I cannot find {0}, so my guard is up", c.Name);
 
                 Action = ActionType.Guard;
-
                 return true;
             }
             else

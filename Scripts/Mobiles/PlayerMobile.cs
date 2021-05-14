@@ -290,9 +290,7 @@ namespace Server.Mobiles
         {
             get
             {
-                Account acct = Account as Account;
-
-                if (acct != null)
+                if (Account is Account acct)
                 {
                     return acct.Sovereigns;
                 }
@@ -309,9 +307,7 @@ namespace Server.Mobiles
 
         public bool DepositSovereigns(int amount)
         {
-            Account acct = Account as Account;
-
-            if (acct != null)
+            if (Account is Account acct)
             {
                 return acct.DepositSovereigns(amount);
             }
@@ -321,9 +317,7 @@ namespace Server.Mobiles
 
         public bool WithdrawSovereigns(int amount)
         {
-            Account acct = Account as Account;
-
-            if (acct != null)
+            if (Account is Account acct)
             {
                 return acct.WithdrawSovereigns(amount);
             }
@@ -698,9 +692,7 @@ namespace Server.Mobiles
 
                     if (objs.Length > 0)
                     {
-                        FlipableAttribute fp = objs[0] as FlipableAttribute;
-
-                        if (fp != null)
+                        if (objs[0] is FlipableAttribute fp)
                         {
                             int[] itemIDs = fp.ItemIDs;
 
@@ -862,8 +854,10 @@ namespace Server.Mobiles
                 {
                     Container pack = pm.Backpack;
 
-                    e.List.ForEach(serial =>
+                    for (var itemSerial = 0; itemSerial < e.List.Count; itemSerial++)
                     {
+                        var serial = e.List[itemSerial];
+
                         Item item = null;
 
                         for (var index = 0; index < pack.Items.Count; index++)
@@ -899,7 +893,7 @@ namespace Server.Mobiles
                                 pm.EquipItem(item);
                             }
                         }
-                    });
+                    }
 
                     pm.NextActionTime = Core.TickCount + ActionDelay * e.List.Count;
                 }
@@ -1220,8 +1214,7 @@ namespace Server.Mobiles
                 }
                 else if (from.AccessLevel >= AccessLevel.Administrator)
                 {
-                    notice =
-                        "The server is currently under lockdown. As you are an administrator, you may change this from the [Admin gump.";
+                    notice = "The server is currently under lockdown. As you are an administrator, you may change this from the [Admin gump.";
                 }
                 else
                 {
@@ -1232,14 +1225,14 @@ namespace Server.Mobiles
                 return;
             }
 
-            var pm = from as PlayerMobile;
-
-            if (pm != null)
+            if (from is PlayerMobile pm)
             {
                 pm.ClaimAutoStabledPets();
                 pm.ValidateEquipment();
 
                 ReportMurdererGump.CheckMurderer(pm);
+
+                QuestHelper.QuestionQuestCheck(pm);
             }
 
             if (Siege.SiegeShard && from.Map == Map.Trammel && from.AccessLevel == AccessLevel.Player)
@@ -1450,9 +1443,7 @@ namespace Server.Mobiles
                     }
 
                     #region Vice Vs Virtue
-                    IVvVItem vvvItem = item as IVvVItem;
-
-                    if (vvvItem != null && vvvItem.IsVvVItem && !ViceVsVirtueSystem.IsVvV(from))
+                    if (item is IVvVItem vvvItem && vvvItem.IsVvVItem && !ViceVsVirtueSystem.IsVvV(from))
                     {
                         from.AddToBackpack(item);
                         moved = true;
@@ -1515,17 +1506,13 @@ namespace Server.Mobiles
 
         private static void EventSink_Connected(ConnectedEventArgs e)
         {
-            PlayerMobile pm = e.Mobile as PlayerMobile;
-
-            if (pm != null)
+            if (e.Mobile is PlayerMobile pm)
             {
                 pm.m_SessionStart = DateTime.UtcNow;
 
                 pm.m_Quest?.StartTimer();
 
-                #region Mondain's Legacy
                 QuestHelper.StartTimer(pm);
-                #endregion
 
                 pm.BedrollLogout = false;
                 pm.BlanketOfDarknessLogout = false;
@@ -2171,14 +2158,12 @@ namespace Server.Mobiles
                 {
                     if (m_AnimalFormRestrictedSkills[i] == skill)
                     {
-                        #region Mondain's Legacy
                         AnimalFormContext context = AnimalForm.GetContext(this);
 
                         if (skill == SkillName.Stealing && context.StealingMod != null && context.StealingMod.Value > 0)
                         {
                             continue;
                         }
-                        #endregion
 
                         SendLocalizedMessage(1070771); // You cannot use that skill in this form.
                         return false;
@@ -3055,9 +3040,7 @@ namespace Server.Mobiles
             }
 
             #region Vice Vs Virtue
-            IVvVItem vvvItem = item as IVvVItem;
-
-            if (vvvItem != null && vvvItem.IsVvVItem && !ViceVsVirtueSystem.IsVvV(this))
+            if (item is IVvVItem vvvItem && vvvItem.IsVvVItem && !ViceVsVirtueSystem.IsVvV(this))
             {
                 return false;
             }
@@ -3393,12 +3376,10 @@ namespace Server.Mobiles
                 Timer.DelayCall(TimeSpan.FromSeconds(10), pm.RecoverAmmo);
             }
 
-            #region Mondain's Legacy
             if (InvisibilityPotion.HasTimer(this))
             {
                 InvisibilityPotion.Iterrupt(this);
             }
-            #endregion
 
             UndertakersStaff.TryRemoveTimer(this);
 
@@ -3420,7 +3401,7 @@ namespace Server.Mobiles
                     deathRobe.Delete();
                 }
 
-                if (NetState != null /*&& NetState.IsEnhancedClient*/)
+                if (NetState != null)
                 {
                     Waypoints.RemoveHealers(this, Map);
                 }
@@ -3991,10 +3972,7 @@ namespace Server.Mobiles
                 {
                     if (p == null)
                     {
-                        p =
-                            Packet.Acquire(
-                                new UnicodeMessage(
-                                    from.Serial, from.Body, MessageType.Regular, from.SpeechHue, 3, from.Language, from.Name, text));
+                        p = Packet.Acquire(new UnicodeMessage(from.Serial, from.Body, MessageType.Regular, from.SpeechHue, 3, from.Language, from.Name, text));
                     }
 
                     ns.Send(p);
@@ -4047,9 +4025,9 @@ namespace Server.Mobiles
 
             ApplyPoisonResult result = base.ApplyPoison(from, poison);
 
-            if (from != null && result == ApplyPoisonResult.Poisoned && PoisonTimer is PoisonImpl.PoisonTimer)
+            if (from != null && result == ApplyPoisonResult.Poisoned && PoisonTimer is PoisonImpl.PoisonTimer timer)
             {
-                (PoisonTimer as PoisonImpl.PoisonTimer).From = from;
+                timer.From = from;
             }
 
             return result;
@@ -4186,32 +4164,10 @@ namespace Server.Mobiles
                 case 30: goto case 29;
                 case 29:
                     {
-                        if (version < 40)
-                        {
-                            PointsSystem.DoomGauntlet.SetPoints(this, reader.ReadDouble());
-                        }
-
                         m_SSNextSeed = reader.ReadDateTime();
                         m_SSSeedExpire = reader.ReadDateTime();
                         m_SSSeedLocation = reader.ReadPoint3D();
                         m_SSSeedMap = reader.ReadMap();
-
-                        if (version < 40)
-                        {
-                            PointsSystem.VirtueArtifacts.SetPoints(this, reader.ReadInt());
-                        }
-
-                        if (version < 39)
-                        {
-                            List<BaseQuest> quests = QuestReader.Quests(reader, this);
-                            Dictionary<QuestChain, BaseChain> dic = QuestReader.Chains(reader);
-
-                            if (quests != null && quests.Count > 0)
-                                MondainQuestData.QuestData[this] = quests;
-
-                            if (dic != null && dic.Count > 0)
-                                MondainQuestData.ChainData[this] = dic;
-                        }
 
                         m_Collections = new Dictionary<Collection, int>();
                         m_RewardTitles = new List<object>();
@@ -4232,11 +4188,6 @@ namespace Server.Mobiles
                     }
                 case 28:
                     {
-                        if (version < 41)
-                        {
-                            reader.ReadDateTime();
-                        }
-
                         goto case 27;
                     }
                 case 27:
@@ -4287,10 +4238,6 @@ namespace Server.Mobiles
                     }
                 case 21:
                     {
-                        if (version < 40)
-                        {
-                            PointsSystem.TreasuresOfTokuno.Convert(this, reader.ReadEncodedInt(), reader.ReadInt());
-                        }
                         goto case 20;
                     }
                 case 20:
@@ -4374,8 +4321,6 @@ namespace Server.Mobiles
                 case 13: 
                 case 12:
                     {
-                        if (version < 34)
-                            BulkOrderSystem.SetBOBFilter(this, new BOBFilter(reader));
                         goto case 11;
                     }
                 case 11:
@@ -4453,8 +4398,6 @@ namespace Server.Mobiles
                 m_RecentlyReported = new List<Mobile>();
             }
 
-            #region Mondain's Legacy
-
             if (m_DoneQuests == null)
             {
                 m_DoneQuests = new List<QuestRestartInfo>();
@@ -4469,7 +4412,6 @@ namespace Server.Mobiles
             {
                 m_RewardTitles = new List<object>();
             }
-            #endregion
 
             // Professions weren't verified on 1.0 RC0
             if (!CharacterCreation.VerifyProfession(m_Profession))
@@ -4507,9 +4449,7 @@ namespace Server.Mobiles
 
             for (int i = 0; i < list.Count; ++i)
             {
-                BaseCreature bc = list[i] as BaseCreature;
-
-                if (bc != null)
+                if (list[i] is BaseCreature bc)
                 {
                     bc.IsStabled = true;
                     bc.StabledBy = this;
@@ -4853,14 +4793,16 @@ namespace Server.Mobiles
                 {
                     if (m_RewardTitles[m_SelectedTitle] is int)
                     {
-                        string cust = null;
+                        string customTitle;
 
-                        if ((int)m_RewardTitles[m_SelectedTitle] == 1154017 && CityLoyaltySystem.HasCustomTitle(this, out cust))
+                        if ((int)m_RewardTitles[m_SelectedTitle] == 1154017 && CityLoyaltySystem.HasCustomTitle(this, out customTitle))
                         {
-                            list.Add(1154017, cust); // ~1_TITLE~ of ~2_CITY~
+                            list.Add(1154017, customTitle); // ~1_TITLE~ of ~2_CITY~
                         }
                         else
+                        {
                             list.Add((int)m_RewardTitles[m_SelectedTitle]);
+                        }
                     }
                     else if (m_RewardTitles[m_SelectedTitle] is string)
                     {
@@ -4871,9 +4813,7 @@ namespace Server.Mobiles
 
             for (int i = AllFollowers.Count - 1; i >= 0; i--)
             {
-                BaseCreature c = AllFollowers[i] as BaseCreature;
-
-                if (c != null && c.ControlOrder == OrderType.Guard)
+                if (AllFollowers[i] is BaseCreature c && c.ControlOrder == OrderType.Guard)
                 {
                     list.Add(501129); // guarded
                     break;

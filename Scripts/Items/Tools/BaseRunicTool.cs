@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Server.Items
@@ -1079,7 +1080,14 @@ namespace Server.Items
                     case SpellbookType.Mystic: booktypeskills = new SkillName[] { SkillName.Mysticism, SkillName.Focus }; break;
                 }
 
-                possibleSkills = m_PossibleSpellbookSkills.Concat(booktypeskills).ToArray();
+                List<SkillName> list = new List<SkillName>();
+
+                foreach (var name in m_PossibleSpellbookSkills.Concat(booktypeskills))
+                {
+                    list.Add(name);
+                }
+
+                possibleSkills = list.ToArray();
             }
             else
             {

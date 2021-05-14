@@ -26,7 +26,10 @@ namespace Server.Engines.NewMagincia
         {
             if (m_Plot == null || !m_Plot.Active)
             {
-                from.SendMessage("New Magincia Bazaar Plot {0} is inactive at this time.", m_Plot.PlotDef.ID);
+                if (m_Plot != null)
+                {
+                    from.SendMessage("New Magincia Bazaar Plot {0} is inactive at this time.", m_Plot.PlotDef.ID);
+                }
             }
             else if (from.InRange(Location, 3))
             {

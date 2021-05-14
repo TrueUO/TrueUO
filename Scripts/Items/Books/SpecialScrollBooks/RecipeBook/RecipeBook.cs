@@ -261,20 +261,22 @@ namespace Server.Items
             for (var index = 0; index < Definitions.Length; index++)
             {
                 var definition = Definitions[index];
+
                 list.Add(definition);
             }
 
             for (var index = 0; index < list.Count; index++)
             {
-                List<RecipeScrollDefinition> list1 = new List<RecipeScrollDefinition>();
+                List<RecipeScrollDefinition> defList = new List<RecipeScrollDefinition>();
 
                 for (var i = 0; i < Definitions.Length; i++)
                 {
                     var definition = Definitions[i];
-                    list1.Add(definition);
+
+                    defList.Add(definition);
                 }
 
-                var x = list1[index];
+                var x = defList[index];
 
                 Recipes.Add(x);
             }
@@ -309,7 +311,32 @@ namespace Server.Items
 
             for (var index = 0; index < list.Count; index++)
             {
-                var x = list[index];
+                List<RecipeScrollDefinition> defList = new List<RecipeScrollDefinition>();
+
+                for (var i = 0; i < Definitions.Length; i++)
+                {
+                    var n = Definitions[i];
+
+                    bool all = true;
+
+                    for (var recipe = 0; recipe < Recipes.Count; recipe++)
+                    {
+                        var o = Recipes[recipe];
+
+                        if (o.RecipeID == n.RecipeID)
+                        {
+                            all = false;
+                            break;
+                        }
+                    }
+
+                    if (all)
+                    {
+                        defList.Add(n);
+                    }
+                }
+
+                var x = defList[index];
 
                 Recipes.Add(x);
             }
@@ -318,12 +345,16 @@ namespace Server.Items
         public bool CheckAccessible(Mobile from, Item item)
         {
             if (from.AccessLevel >= AccessLevel.GameMaster)
+            {
                 return true; // Staff can access anything
+            }
 
             BaseHouse house = BaseHouse.FindHouseAt(item);
 
             if (house == null)
+            {
                 return false;
+            }
 
             switch (Level)
             {
@@ -378,9 +409,13 @@ namespace Server.Items
                     SecureTrade trade = cont.Trade;
 
                     if (trade != null && trade.From.Mobile == from)
+                    {
                         trade.To.Mobile.SendGump(new RecipeBookGump(trade.To.Mobile, this));
+                    }
                     else if (trade != null && trade.To.Mobile == from)
+                    {
                         trade.From.Mobile.SendGump(new RecipeBookGump(trade.From.Mobile, this));
+                    }
                 }
             }
         }
@@ -452,7 +487,6 @@ namespace Server.Items
             for (var index = 0; index < Recipes.Count; index++)
             {
                 var s = Recipes[index];
-
                 writer.Write(s.ID);
                 writer.Write(s.RecipeID);
                 writer.Write((int) s.Expansion);
@@ -558,7 +592,9 @@ namespace Server.Items
             public override void OnResponse(Mobile from, string text)
             {
                 if (text.Length > 40)
+                {
                     text = text.Substring(0, 40);
+                }
 
                 if (from.CheckAlive() && m_Book.IsChildOf(from.Backpack))
                 {

@@ -35,7 +35,9 @@ namespace Server.Engines.CityLoyalty
         public override void AddNameProperty(ObjectPropertyList list)
         {
             if (City != null)
-                list.Add(1153887, string.Format("#{0}", CityLoyaltySystem.GetCityLocalization(City.City)));
+            {
+                list.Add(1153887, $"#{CityLoyaltySystem.GetCityLocalization(City.City)}");
+            }
         }
 
         public override void GetProperties(ObjectPropertyList list)
@@ -90,9 +92,7 @@ namespace Server.Engines.CityLoyalty
                         m.SendLocalizedMessage(1154027); // Which Citizen do you wish to bestow a title?
                         m.BeginTarget(10, false, TargetFlags.None, (mob, targeted) =>
                             {
-                                PlayerMobile pm = targeted as PlayerMobile;
-
-                                if (pm != null)
+                                if (targeted is PlayerMobile pm)
                                 {
                                     if (City.IsCitizen(pm))
                                     {
@@ -223,7 +223,11 @@ namespace Server.Engines.CityLoyalty
             writer.Write(Boxes == null ? 0 : Boxes.Count);
             if (Boxes != null)
             {
-                Boxes.ForEach(b => writer.Write(b));
+                for (var index = 0; index < Boxes.Count; index++)
+                {
+                    var b = Boxes[index];
+                    writer.Write(b);
+                }
             }
         }
 
@@ -235,17 +239,19 @@ namespace Server.Engines.CityLoyalty
             City = CityLoyaltySystem.GetCityInstance((City)reader.ReadInt());
 
             if (City != null)
+            {
                 City.Stone = this;
+            }
 
             int count = reader.ReadInt();
             for (int i = 0; i < count; i++)
             {
-                BallotBox box = reader.ReadItem() as BallotBox;
-
-                if (box != null)
+                if (reader.ReadItem() is BallotBox box)
                 {
                     if (Boxes == null)
+                    {
                         Boxes = new List<BallotBox>();
+                    }
 
                     Boxes.Add(box);
                 }

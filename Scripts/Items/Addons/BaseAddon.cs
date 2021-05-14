@@ -75,8 +75,10 @@ namespace Server.Items
         {
             Light = light;
 
-            foreach (AddonComponent c in Components)
+            for (var index = 0; index < Components.Count; index++)
             {
+                AddonComponent c = Components[index];
+
                 c.Light = light;
             }
         }
@@ -178,8 +180,10 @@ namespace Server.Items
                 return AddonFitResult.Blocked;
             }
 
-            foreach (AddonComponent c in m_Components)
+            for (var index = 0; index < m_Components.Count; index++)
             {
+                AddonComponent c = m_Components[index];
+
                 Point3D p3D = new Point3D(p.X + c.Offset.X, p.Y + c.Offset.Y, p.Z + c.Offset.Z);
 
                 if (!map.CanFit(p3D.X, p3D.Y, p3D.Z, Math.Max(1, c.ItemData.Height), false, true, c.Z == 0, true))
@@ -234,18 +238,25 @@ namespace Server.Items
 
                 for (int i = 0; i < doors.Count; ++i)
                 {
-                    BaseDoor door = doors[i] as BaseDoor;
-
-                    Point3D doorLoc = door.GetWorldLocation();
-                    int doorHeight = door.ItemData.CalcHeight;
-
-                    foreach (AddonComponent c in m_Components)
+                    if (doors[i] is BaseDoor door)
                     {
-                        Point3D addonLoc = new Point3D(p.X + c.Offset.X, p.Y + c.Offset.Y, p.Z + c.Offset.Z);
-                        int addonHeight = c.ItemData.CalcHeight;
+                        Point3D doorLoc = door.GetWorldLocation();
 
-                        if (Utility.InRange(doorLoc, addonLoc, 1) && (addonLoc.Z == doorLoc.Z || addonLoc.Z + addonHeight > doorLoc.Z && doorLoc.Z + doorHeight > addonLoc.Z))
-                            return AddonFitResult.DoorTooClose;
+                        int doorHeight = door.ItemData.CalcHeight;
+
+                        for (var index = 0; index < m_Components.Count; index++)
+                        {
+                            AddonComponent c = m_Components[index];
+
+                            Point3D addonLoc = new Point3D(p.X + c.Offset.X, p.Y + c.Offset.Y, p.Z + c.Offset.Z);
+
+                            int addonHeight = c.ItemData.CalcHeight;
+
+                            if (Utility.InRange(doorLoc, addonLoc, 1) && (addonLoc.Z == doorLoc.Z || addonLoc.Z + addonHeight > doorLoc.Z && doorLoc.Z + doorHeight > addonLoc.Z))
+                            {
+                                return AddonFitResult.DoorTooClose;
+                            }
+                        }
                     }
                 }
             }
@@ -268,7 +279,9 @@ namespace Server.Items
         public static bool IsWall(int x, int y, int z, Map map)
         {
             if (map == null)
+            {
                 return false;
+            }
 
             StaticTile[] tiles = map.Tiles.GetStaticTiles(x, y, true);
 
@@ -278,7 +291,9 @@ namespace Server.Items
                 ItemData id = TileData.ItemTable[t.ID & TileData.MaxItemValue];
 
                 if ((id.Flags & TileFlag.Wall) != 0 && z + 16 > t.Z && t.Z + t.Height > z)
+                {
                     return true;
+                }
             }
 
             return false;
@@ -293,27 +308,43 @@ namespace Server.Items
         public override void OnLocationChange(Point3D oldLoc)
         {
             if (Deleted)
+            {
                 return;
+            }
 
-            foreach (AddonComponent c in m_Components)
+            for (var index = 0; index < m_Components.Count; index++)
+            {
+                AddonComponent c = m_Components[index];
+
                 c.Location = new Point3D(X + c.Offset.X, Y + c.Offset.Y, Z + c.Offset.Z);
+            }
         }
 
         public override void OnMapChange()
         {
             if (Deleted)
+            {
                 return;
+            }
 
-            foreach (AddonComponent c in m_Components)
+            for (var index = 0; index < m_Components.Count; index++)
+            {
+                AddonComponent c = m_Components[index];
+
                 c.Map = Map;
+            }
         }
 
         public override void OnAfterDelete()
         {
             base.OnAfterDelete();
 
-            foreach (AddonComponent c in m_Components)
+            for (var index = 0; index < m_Components.Count; index++)
+            {
+                AddonComponent c = m_Components[index];
+
                 c.Delete();
+            }
         }
 
         public virtual bool ShareHue => true;
@@ -330,8 +361,12 @@ namespace Server.Items
 
                     if (!Deleted && ShareHue && m_Components != null)
                     {
-                        foreach (AddonComponent c in m_Components)
+                        for (var index = 0; index < m_Components.Count; index++)
+                        {
+                            AddonComponent c = m_Components[index];
+
                             c.Hue = value;
+                        }
                     }
                 }
             }
@@ -341,8 +376,10 @@ namespace Server.Items
         {
             InvalidateProperties();
 
-            foreach (AddonComponent o in Components)
+            for (var index = 0; index < Components.Count; index++)
             {
+                AddonComponent o = Components[index];
+
                 o.InvalidateProperties();
             }
         }
@@ -354,35 +391,19 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(2); // version
 
             writer.Write((int)m_Resource);
-
             writer.WriteItemList(m_Components);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 2:
-                    m_Resource = (CraftResource)reader.ReadInt();
-                    goto case 1;
-                case 1:
-                case 0:
-                    {
-                        m_Components = reader.ReadStrongItemList<AddonComponent>();
-                        break;
-                    }
-            }
-
-            if (version < 1 && Weight == 0)
-                Weight = -1;
+            m_Resource = (CraftResource)reader.ReadInt();
+            m_Components = reader.ReadStrongItemList<AddonComponent>();
         }
     }
 }

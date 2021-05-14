@@ -2,7 +2,6 @@ using Server.Engines.Quests;
 using Server.Items;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Mobiles
 {
@@ -54,7 +53,6 @@ namespace Server.Mobiles
 
         public override bool AutoDispel => true;
         public override Poison PoisonImmune => Poison.Lethal;
-        public override bool UseSmartAI => true;
         public override bool ReacquireOnMovement => true;
         public override bool AttacksFocus => true;
         public override bool CanFlee => false;
@@ -158,14 +156,15 @@ namespace Server.Mobiles
 
         private void ManaDrainEffects_Callback(object o)
         {
-            object[] objs = o as object[];
-            IPoint3D p = objs[0] as IPoint3D;
-            Map map = objs[1] as Map;
+            if (o is object[] objs)
+            {
+                IPoint3D p = objs[0] as IPoint3D;
 
-            FreezeItem item = new FreezeItem(Utility.RandomList(6913, 6915, 6917, 6919), this);
-            Spells.SpellHelper.GetSurfaceTop(ref p);
+                FreezeItem item = new FreezeItem(Utility.RandomList(6913, 6915, 6917, 6919), this);
+                Spells.SpellHelper.GetSurfaceTop(ref p);
 
-            item.MoveToWorld(new Point3D(p), Map);
+                item.MoveToWorld(new Point3D(p), Map);
+            }
         }
 
         private class FreezeItem : Item
@@ -360,7 +359,6 @@ namespace Server.Mobiles
 
         public override bool AutoDispel => true;
         public override Poison PoisonImmune => Poison.Lethal;
-        public override bool UseSmartAI => true;
         public override int TreasureMapLevel => 5;
 
         public GreatApe(Serial serial)
@@ -512,17 +510,37 @@ namespace Server.Mobiles
 
             foreach (Item item in eable)
             {
-                if (!item.Movable && _BarrelIDs.Any(id => id == item.ItemID))
+                bool any = false;
+
+                for (var index = 0; index < _BarrelIDs.Length; index++)
+                {
+                    var id = _BarrelIDs[index];
+
+                    if (id == item.ItemID)
+                    {
+                        any = true;
+                        break;
+                    }
+                }
+
+                if (!item.Movable && any)
+                {
                     items.Add(item);
+                }
             }
 
             eable.Free();
+
             int itemid;
 
             if (items.Count > 0)
+            {
                 itemid = items[Utility.Random(items.Count)].ItemID;
+            }
             else
+            {
                 itemid = -1;
+            }
 
             ColUtility.Free(items);
             return itemid;
@@ -592,10 +610,10 @@ namespace Server.Mobiles
 
             if (Protector is PlayerMobile mobile && InRange(Home, 2))
             {
-                PrideOfTheAmbushQuest quest = QuestHelper.GetQuest(mobile, typeof(PrideOfTheAmbushQuest)) as PrideOfTheAmbushQuest;
-
-                if (quest != null && !quest.Completed)
+                if (QuestHelper.GetQuest(mobile, typeof(PrideOfTheAmbushQuest)) is PrideOfTheAmbushQuest quest && !quest.Completed)
+                {
                     quest.Update(this);
+                }
 
                 mobile.PrivateOverheadMessage(Network.MessageType.Regular, 0x35, 1156501, mobile.NetState); // *You watch as the Tiger Cub safely returns to the Kurak Tribe*
 

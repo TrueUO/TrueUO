@@ -165,7 +165,10 @@ namespace Server.Items
                         scroll.IsLockedDown = false;
                     }
 
-                    m.SendLocalizedMessage(RemoveMessage);
+                    InvalidateContainers(Parent);
+
+                    m.UpdateTotals();
+                    m.SendLocalizedMessage(RemoveMessage);                             
                 }
             }
         }
@@ -175,10 +178,24 @@ namespace Server.Items
         {
         }
 
+        private void InvalidateContainers(object parent)
+        {
+            while (true)
+            {
+                if (parent is Container c)
+                {
+                    c.InvalidateProperties();
+                    parent = c.Parent;
+                    continue;
+                }
+
+                break;
+            }
+        }
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(3); // version
 
             writer.Write((int)Level);
@@ -188,14 +205,10 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            if (version > 2)
-            {
-                Level = (SecureLevel)reader.ReadInt();
-                _Capacity = reader.ReadInt();
-            }
+            Level = (SecureLevel)reader.ReadInt();
+            _Capacity = reader.ReadInt();
 
             Timer.DelayCall(
                 () =>

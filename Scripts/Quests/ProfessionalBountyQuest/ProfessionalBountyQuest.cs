@@ -1,5 +1,4 @@
 using Server.Engines.PartySystem;
-using Server.Gumps;
 using Server.Items;
 using Server.Mobiles;
 using Server.Multis;
@@ -60,8 +59,10 @@ namespace Server.Engines.Quests
                 m_Captain = captain;
                 CompileHelpersList(captain);
 
-                foreach (BaseObjective obj in Objectives)
+                for (var index = 0; index < Objectives.Count; index++)
                 {
+                    BaseObjective obj = Objectives[index];
+
                     if (obj is BountyQuestObjective objective)
                     {
                         objective.Captured = true;
@@ -76,8 +77,10 @@ namespace Server.Engines.Quests
             m_Captain = captain;
             CompileHelpersList(captain);
 
-            foreach (BaseObjective obj in Objectives)
+            for (var index = 0; index < Objectives.Count; index++)
             {
+                BaseObjective obj = Objectives[index];
+
                 if (obj is BountyQuestObjective objective)
                 {
                     objective.Captured = false;
@@ -161,8 +164,11 @@ namespace Server.Engines.Quests
         public override void GiveRewards()
         {
             bool captured = false;
-            foreach (BaseObjective obj in Objectives)
+
+            for (var index = 0; index < Objectives.Count; index++)
             {
+                BaseObjective obj = Objectives[index];
+
                 if (obj is BountyQuestObjective o && o.Captured)
                 {
                     captured = true;
@@ -192,8 +198,10 @@ namespace Server.Engines.Quests
             if (m_Helpers.Count > 1)
                 eachAward = totalAward / m_Helpers.Count;
 
-            foreach (Mobile mob in m_Helpers)
+            for (var index = 0; index < m_Helpers.Count; index++)
             {
+                Mobile mob = m_Helpers[index];
+
                 if (mob.NetState != null || mob == Owner)
                 {
                     mob.AddToBackpack(new Gold(eachAward));
@@ -205,12 +213,18 @@ namespace Server.Engines.Quests
                         if (reward != null)
                         {
                             if (reward is RuinedShipPlans)
+                            {
                                 mob.SendLocalizedMessage(1149838); //Here is something special!  It's a salvaged set of orc ship plans.  Parts of it are unreadable, but if you could get another copy you might be able to fill in some of the missing parts...
+                            }
                             else
+                            {
                                 mob.SendLocalizedMessage(1149840); //Here is some special cannon ammunition.  It's imported!
+                            }
 
                             if (reward is HeavyFlameCannonball || reward is LightFlameCannonball || reward is HeavyFrostCannonball || reward is LightFrostCannonball)
+                            {
                                 reward.Amount = Utility.RandomMinMax(5, 10);
+                            }
 
                             mob.AddToBackpack(reward);
                         }
@@ -220,10 +234,14 @@ namespace Server.Engines.Quests
                 }
                 else
                 {
-                    foreach (Mobile mobile in m_Helpers)
+                    for (var i = 0; i < m_Helpers.Count; i++)
                     {
+                        Mobile mobile = m_Helpers[i];
+
                         if (mobile != mob && mobile.NetState != null)
+                        {
                             mobile.SendLocalizedMessage(1149837, string.Format("{0}\t{1}\t{2}", eachAward, mob.Name, Owner.Name)); //~1_val~ gold is for ~2_val~, I can't find them so I'm giving this to Captain ~3_val~.
+                        }
                     }
 
                     Owner.AddToBackpack(new Gold(eachAward));
@@ -258,29 +276,9 @@ namespace Server.Engines.Quests
 
         public override bool RenderObjective(MondainQuestGump g, bool offer)
         {
-            if (offer)
-                g.AddHtmlLocalized(130, 45, 270, 16, 1049010, 0xFFFFFF, false, false); // Quest Offer
-            else
-                g.AddHtmlLocalized(130, 45, 270, 16, 1046026, 0xFFFFFF, false, false); // Quest Log
+            g.AddHtmlLocalized(98, 172, 312, 32, 1116710, 0x15F90, false, false); // Capture or kill a pirate listed on the bulletin board.
 
-            g.AddButton(130, 430, 0x2EEF, 0x2EF1, (int)Buttons.PreviousPage, GumpButtonType.Reply, 0);
-            g.AddButton(275, 430, 0x2EE9, 0x2EEB, (int)Buttons.NextPage, GumpButtonType.Reply, 0);
-
-            g.AddHtmlObject(160, 70, 330, 16, Title, BaseQuestGump.DarkGreen, false, false);
-            g.AddHtmlLocalized(98, 140, 312, 16, 1049073, 0x2710, false, false); // Objective:
-            g.AddHtmlLocalized(98, 156, 312, 16, 1072208, 0x2710, false, false); // All of the following	
-
-            int offset = 172;
-
-            g.AddHtmlLocalized(98, offset, 312, 16, 1116710, 0x2710, false, false);  // Capture or kill a pirate listed on the bulletin board.
-
-            offset += 16;
-
-            g.AddHtmlLocalized(98, offset, 312, 32, 1116711, 0x15F90, false, false); //Return to the officer with the pirate or a death certificate for your reward.
-
-            offset += 32;
-
-            g.AddHtmlLocalized(98, offset, 312, 32, 1116712, 0x15F90, false, false); //The gold listed on the bulletin board and a special reward from the officer if captured alive.
+            g.AddHtmlLocalized(98, 220, 312, 32, 1116711, 0x15F90, false, false); // Return to the officer with the pirate or a death certificate for your reward.
 
             return true;
         }
@@ -305,8 +303,11 @@ namespace Server.Engines.Quests
             writer.Write(m_Galleon);
 
             writer.Write(m_Helpers.Count);
-            foreach (Mobile mob in m_Helpers)
+            for (var index = 0; index < m_Helpers.Count; index++)
+            {
+                Mobile mob = m_Helpers[index];
                 writer.Write(mob);
+            }
         }
 
         public override void Deserialize(GenericReader reader)

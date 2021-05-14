@@ -441,18 +441,25 @@ namespace Server.Engines.MyrmidexInvasion
             if (allegiance == Allegiance.Myrmidex)
             {
                 int wave = MyrmidexTeam.Count;
+
                 MyrmidexTeam[wave] = new List<BaseCreature>();
+
                 List<BaseCreature> list = MyrmidexTeam[wave];
 
                 for (int i = 0; i < WaveCount; i++)
                 {
                     BaseCreature bc;
+
                     Type type = _MyrmidexTypes[wave][Utility.Random(_MyrmidexTypes[wave].Length)];
 
                     if (type.IsSubclassOf(typeof(BaseEodonTribesman)))
-                        bc = Activator.CreateInstance(type, EodonTribe.Barrab) as BaseCreature;
+                    {
+                        bc = (BaseCreature) Activator.CreateInstance(type, EodonTribe.Barrab);
+                    }
                     else
-                        bc = Activator.CreateInstance(type) as BaseCreature;
+                    {
+                        bc = (BaseCreature) Activator.CreateInstance(type);
+                    }
 
                     bc.NoLootOnDeath = true;
 
@@ -476,21 +483,27 @@ namespace Server.Engines.MyrmidexInvasion
             else
             {
                 int wave = TribeTeam.Count;
+
                 TribeTeam[wave] = new List<BaseCreature>();
+
                 List<BaseCreature> list = TribeTeam[wave];
 
                 for (int i = 0; i < WaveCount; i++)
                 {
                     BaseCreature bc;
+
                     Type type = _TribeTypes[wave][Utility.Random(_TribeTypes[wave].Length)];
 
                     if (type.IsSubclassOf(typeof(BaseEodonTribesman)))
                     {
                         EodonTribe tribe = Utility.RandomList(EodonTribe.Jukari, EodonTribe.Kurak, EodonTribe.Barako, EodonTribe.Urali, EodonTribe.Sakkhra);
-                        bc = Activator.CreateInstance(type, tribe) as BaseCreature;
+
+                        bc = (BaseCreature) Activator.CreateInstance(type, tribe);
                     }
                     else
-                        bc = Activator.CreateInstance(type) as BaseCreature;
+                    {
+                        bc = (BaseCreature) Activator.CreateInstance(type);
+                    }
 
                     bc.NoLootOnDeath = true;
 

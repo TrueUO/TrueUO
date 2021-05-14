@@ -32,9 +32,7 @@ namespace Server.Spells.SkillMasteries
                 return false;
             }
 
-            ToughnessSpell spell = GetSpell(Caster, GetType()) as ToughnessSpell;
-
-            if (spell != null)
+            if (GetSpell(Caster, GetType()) is ToughnessSpell spell)
             {
                 spell.Expire();
                 return false;
@@ -79,10 +77,10 @@ namespace Server.Spells.SkillMasteries
 
         public static int GetHPBonus(Mobile m)
         {
-            ToughnessSpell spell = GetSpell(m, typeof(ToughnessSpell)) as ToughnessSpell;
-
-            if (spell != null)
+            if (GetSpell(m, typeof(ToughnessSpell)) is ToughnessSpell spell)
+            {
                 return spell._HPBonus;
+            }
 
             return 0;
         }

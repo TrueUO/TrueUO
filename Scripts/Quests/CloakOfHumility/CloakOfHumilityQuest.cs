@@ -1,8 +1,8 @@
 using Server.Gumps;
 using Server.Items;
+using Server.Mobiles;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.Quests
 {
@@ -14,6 +14,7 @@ namespace Server.Engines.Quests
         }
 
         public override bool ShowDescription => false;
+        public override bool IsQuestionQuest => true;
 
         public override QuestChain ChainID => QuestChain.CloakOfHumility;
         public override Type NextQuest => typeof(CommunityServiceMuseumQuest);
@@ -43,39 +44,6 @@ namespace Server.Engines.Quests
          * learned.<br>*/
         public override object FailedMsg => 1075713;
 
-        public override bool RenderObjective(MondainQuestGump g, bool offer)
-        {
-            if (offer)
-                g.AddHtmlLocalized(130, 45, 270, 16, 1049010, 0xFFFFFF, false, false); // Quest Offer
-            else
-                g.AddHtmlLocalized(130, 45, 270, 16, 1046026, 0xFFFFFF, false, false); // Quest Log
-
-            g.AddButton(130, 430, 0x2EEF, 0x2EF1, (int)Buttons.PreviousPage, GumpButtonType.Reply, 0);
-            g.AddButton(275, 430, 0x2EE9, 0x2EEB, (int)Buttons.NextPage, GumpButtonType.Reply, 0);
-
-            g.AddHtmlObject(160, 70, 200, 40, Title, BaseQuestGump.DarkGreen, false, false);
-            g.AddHtmlLocalized(98, 140, 312, 16, 1049073, 0x2710, false, false); // Objective:
-
-            g.AddHtmlLocalized(98, 156, 312, 16, 1072208, 0x2710, false, false); // All of the following	
-
-            int offset = 172;
-            string str;
-
-            foreach (QuestionAndAnswerObjective obj in Objectives.OfType<QuestionAndAnswerObjective>())
-            {
-                if (offer)
-                    str = string.Format("Answer {0} questions correctly.", obj.MaxProgress);
-                else
-                    str = string.Format("Answer {0}/{1} questions answered correctly.", obj.CurProgress, obj.MaxProgress);
-
-                g.AddHtmlObject(98, offset, 312, 16, str, BaseQuestGump.LightGreen, false, false);
-
-                offset += 16;
-            }
-
-            return true;
-        }
-
         public override void OnAccept()
         {
             base.OnAccept();
@@ -88,17 +56,7 @@ namespace Server.Engines.Quests
             m_CooldownTable[Owner] = DateTime.UtcNow + TimeSpan.FromHours(24);
         }
 
-        public override bool CanOffer()
-        {
-            DefragCooldown();
-
-            if (!m_CooldownTable.ContainsKey(Owner) || Owner.AccessLevel > AccessLevel.Player)
-                return base.CanOffer();
-
-            return false;
-        }
-
-        private static void DefragCooldown()
+        public static void DefragCooldown()
         {
             List<Mobile> toRemove = new List<Mobile>();
 
@@ -119,6 +77,8 @@ namespace Server.Engines.Quests
         {
             base.Serialize(writer);
             writer.Write(0); // version
+
+            DefragCooldown();
         }
 
         public override void Deserialize(GenericReader reader)
@@ -149,7 +109,8 @@ namespace Server.Engines.Quests
     {
         public CommunityServiceMuseumQuest()
         {
-            AddObjective(new CollectionsObtainObjective(typeof(ShepherdsCrookOfHumility), "Shepherd's Crook of Humility", 1));
+            AddObjective(new CollectionsObtainObjective(typeof(ShepherdsCrookOfHumility), "Shepherd's Crook of Humility (Replica)", 1));
+            AddReward(new BaseReward(1075852)); // A better understanding of Britannia's people
         }
 
         public override QuestChain ChainID => QuestChain.CloakOfHumility;
@@ -172,6 +133,9 @@ namespace Server.Engines.Quests
         /*Terrific! The Museum is a worthy cause. Many will benefit from the inspiration and learning that thine donation hath supported.*/
         public override object Complete => 1075721;
 
+        // Well done! Thou hast completed this step of the quest. Please return and speak with Gareth.
+        public override int CompleteMessage { get { return 1075790; } }
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -189,7 +153,8 @@ namespace Server.Engines.Quests
     {
         public CommunityServiceZooQuest()
         {
-            AddObjective(new CollectionsObtainObjective(typeof(ForTheLifeOfBritanniaSash), "Life of Britannia Sash", 1));
+            AddObjective(new CollectionsObtainObjective(typeof(ForTheLifeOfBritanniaSash), "For the Life of Britannia Sash", 1));
+            AddReward(new BaseReward(1075853)); // A better understanding of Britannia's wildlife
         }
 
         public override QuestChain ChainID => QuestChain.CloakOfHumility;
@@ -212,6 +177,9 @@ namespace Server.Engines.Quests
         /*Wonderful! The Zoo is a very special place from which people young and old canst benefit. Thanks to thee, it can continue to thrive.*/
         public override object Complete => 1075727;
 
+        // Well done! Thou hast completed this step of the quest. Please return and speak with Gareth.
+        public override int CompleteMessage { get { return 1075790; } }
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -229,7 +197,8 @@ namespace Server.Engines.Quests
     {
         public CommunityServiceLibraryQuest()
         {
-            AddObjective(new CollectionsObtainObjective(typeof(SpecialPrintingOfVirtue), "Special Printing of 'Virtue' Book", 1));
+            AddObjective(new CollectionsObtainObjective(typeof(SpecialPrintingOfVirtue), "Special Printing of 'Virtue' by Lord British", 1));
+            AddReward(new BaseReward(1075854)); // A better understanding of Britannia's history
         }
 
         public override QuestChain ChainID => QuestChain.CloakOfHumility;
@@ -253,6 +222,9 @@ namespace Server.Engines.Quests
          * required donation. I encourage thee to continue contributing to thine community, beyond the obligations of this endeavor.*/
         public override object Complete => 1075733;
 
+        // Well done! Thou hast completed this step of the quest. Please return and speak with Gareth.
+        public override int CompleteMessage { get { return 1075790; } }
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -274,12 +246,10 @@ namespace Server.Engines.Quests
         private readonly Dictionary<int, HumilityQuestMobileInfo> m_Infos = new Dictionary<int, HumilityQuestMobileInfo>();
         public Dictionary<int, HumilityQuestMobileInfo> Infos => m_Infos;
 
-        public override bool CanRefuseReward => true;
-
         public WhosMostHumbleQuest()
         {
             AddObjective(new ObtainObjective(typeof(IronChain), "Iron Chain", 1));
-            AddReward(new BaseReward(typeof(GoldShield), "A Gold Shield"));
+            AddReward(new BaseReward(1075855)); // A chance to better know thyself
         }
 
         public override QuestChain ChainID => QuestChain.CloakOfHumility;
@@ -301,16 +271,19 @@ namespace Server.Engines.Quests
          * thou wear the plain grey cloak?*/
         public override object Uncomplete => 1075738;
 
-        /*Noble friend, thou hast performed tremendously! On behalf of the Rise of Britannia I wish to reward thee with this golden
-         * shield, a symbol of accomplishment and pride for the many things that thou hast done for our people.<BR><BR><br>Dost thou accept?*/
-        public override object Complete => 1075782;
+        /* Aha! Yes, this is exactly what I was looking for. What think ye of Sean?
+		 * Of all those I have met, he is the least concerned with others' opinions
+		 * of him. He excels at his craft, yet always believes he has something left
+		 * to learn. *looks at the iron chain necklace* And it shows, does it not? */
+        public override object Complete { get { return 1075773; } }
+
+        // Well done! Thou hast completed this step of the quest. Please return and speak with Gareth.
+        public override int CompleteMessage { get { return 1075790; } }
 
         public override void OnAccept()
         {
             base.OnAccept();
-
-            Owner.SendGump(new QuestInfoGump(1075736)); // Excellent. When thou hast satisfied the needs of the most humble, thou wilt be given an item meant for me. Take this <B>brass ring</B> to start ye on the way.
-
+            
             Item cloak = new GreyCloak();
             Item ring = new BrassRing();
 
@@ -370,30 +343,17 @@ namespace Server.Engines.Quests
 
         public override void GiveRewards()
         {
-            foreach (Item item in m_QuestItems)
-            {
-                if (item != null && !item.Deleted)
-                    item.Delete();
-            }
-
-            Owner.SendGump(new QuestInfoGump(1075783));
-
             base.GiveRewards();
-        }
 
-        public override void RefuseRewards()
-        {
-            foreach (Item item in m_QuestItems)
+            Gareth.AddQuestStatus(Owner, HumilityQuestStatus.RewardPending);
+
+            var quest = new HumilityProofGump
             {
-                if (item is GreyCloak cloak)
-                    cloak.Owner = Owner;
-                else if (item != null && !item.Deleted)
-                    item.Delete();
-            }
+                Owner = Owner,
+                Quester = null
+            };
 
-            Owner.SendGump(new QuestInfoGump(1075784));
-
-            base.RefuseRewards();
+            Owner.SendGump(new MondainQuestGump(quest));
         }
 
         public void AddQuestItem(Item item, Mobile from)
@@ -470,6 +430,139 @@ namespace Server.Engines.Quests
                 if (m != null)
                     m_GivenTo.Add(m);
             }
+        }
+    }
+
+    public enum HumilityQuestStatus
+    {
+        NonStarted,
+        RewardPending,
+        RewardRefused,
+        RewardAccepted,
+        Finished
+    }
+
+    public class HumilityProofGump : BaseQuest
+    {
+        public static void Initialize()
+        {
+            EventSink.Login += new LoginEventHandler(OnLogin);
+        }
+
+        private static void OnLogin(LoginEventArgs e)
+        {
+            PlayerMobile pm = e.Mobile as PlayerMobile;
+
+            if (pm != null && Gareth.CheckQuestStatus(pm, HumilityQuestStatus.RewardPending))
+            {
+                var quest = new HumilityProofGump
+                {
+                    Owner = pm,
+                    Quester = null
+                };
+
+                pm.SendGump(new MondainQuestGump(quest));
+            }
+        }
+
+        public HumilityProofGump()
+        {
+        }
+
+        public override bool ShowDescription => false;
+        public override bool IsQuestionQuest => true;
+
+        public override object Title => null;
+
+        /* Noble friend, thou hast performed tremendously! On behalf of the Rise
+		* of Britannia I wish to reward thee with this golden shield, a symbol
+		* of accomplishment and pride for the many things that thou hast done
+		* for our people.
+		* 
+		* Dost thou accept? */
+        public override object Description => 1075782;
+
+        /* *smiles* I understandeth thy feelings, friend. Ye shall remain
+		* anonymous then, to all those who shall benefit from thine efforts.
+		* 
+		* Yet, through all these trials, perhaps thou hast come a little
+		* closer to understanding the true nature of Humility.
+		* Thine efforts might seem small compared to the great world in
+		* which we live, but as more of our people work together, stronger
+		* shall our people be.
+		* 
+		* I wish for ye to keep the cloak I gave thee earlier. Thou canst
+		* do with it what thou will, but I hope that it shall serve as a
+		* reminder of the days ye spent engaged in our simple cause.
+		* And although I have nothing more for thee, I wouldest exhort ye
+		* to continue upon this path, always seeking opportunities to
+		* humble thyself to the demands of the world.
+		* There is a small island to the south upon which lies the Shrine
+		* of Humility. Seek solace there, and perhaps the answers to thine
+		* questions will become clear. 
+	    */
+        public override object Refuse => 1075784;
+
+        /* *smiles* Surely thy deeds will be recognized by those who see thee
+	    * wearing this shield! It shall serve as a reminder of the exalted
+	    * path that thou hast journeyed upon, and I wish to thank thee on
+	    * behalf of all whom thine efforts shall benefit. Ah, let us not
+	    * forget that old cloak I gavest thee - I shall take it back now and
+	    * give thee thine reward. 
+	    */
+        public override object Uncomplete => 1075783;
+
+        /* Ah yes, there is an island far to the south where ye canst find the
+		* Shrine of Humility. Seek solace there, my friend, that thine questions
+		* might be answered. */
+        public override object Complete => 1075900;
+
+        public override void OnAccept()
+        {
+            if (Owner.Backpack == null)
+                return;
+
+            var cloak = Owner.FindItemOnLayer(Layer.Cloak) as GreyCloak;
+
+            if (cloak == null)
+            {
+                Owner.DropHolding();
+                cloak = Owner.Backpack.FindItemByType<GreyCloak>();
+            }
+
+            if (cloak == null)
+                return;
+
+            cloak.Delete();
+
+            Owner.AddToBackpack(new ShieldOfRecognition());
+            Gareth.AddQuestStatus(Owner, HumilityQuestStatus.RewardAccepted);
+        }
+
+        public override void OnRefuse()
+        {
+            GreyCloak item = Owner.Backpack.FindItemByType(typeof(GreyCloak)) as GreyCloak;
+
+            if (item == null)
+                item = Owner.FindItemOnLayer(Layer.Cloak) as GreyCloak;
+
+            if (item != null)
+            {
+                item.Owner = Owner;
+                Gareth.AddQuestStatus(Owner, HumilityQuestStatus.RewardRefused);
+            }
+        }
+
+        public override void Serialize(GenericWriter writer)
+        {
+            base.Serialize(writer);
+            writer.Write(0);
+        }
+
+        public override void Deserialize(GenericReader reader)
+        {
+            base.Deserialize(reader);
+            reader.ReadInt();
         }
     }
 }

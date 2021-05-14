@@ -9,6 +9,7 @@ namespace Server.Engines.Doom
     {
         private LeverPuzzleController m_Controller;
         private Mobile m_Wanderer;
+
         public LampRoomBox(LeverPuzzleController controller)
             : base(0xe80)
         {
@@ -25,9 +26,14 @@ namespace Server.Engines.Doom
         public override void OnDoubleClick(Mobile m)
         {
             if (!m.InRange(GetWorldLocation(), 3))
+            {
                 return;
+            }
+
             if (m_Controller.Enabled)
+            {
                 return;
+            }
 
             if (m_Wanderer == null || !m_Wanderer.Alive)
             {
@@ -46,7 +52,9 @@ namespace Server.Engines.Doom
         public override void OnAfterDelete()
         {
             if (m_Controller != null && !m_Controller.Deleted)
+            {
                 m_Controller.Delete();
+            }
         }
 
         public override void Serialize(GenericWriter writer)
@@ -85,7 +93,9 @@ namespace Server.Engines.Doom
         public override void OnAfterDelete()
         {
             if (m_Controller != null && !m_Controller.Deleted)
+            {
                 m_Controller.Delete();
+            }
         }
 
         public override void Serialize(GenericWriter writer)
@@ -109,6 +119,7 @@ namespace Server.Engines.Doom
     {
         private ushort m_Code;
         private LeverPuzzleController m_Controller;
+
         public LeverPuzzleLever(ushort code, LeverPuzzleController controller)
             : base(0x108E)
         {
@@ -125,24 +136,30 @@ namespace Server.Engines.Doom
 
         [CommandProperty(AccessLevel.GameMaster)]
         public ushort Code => m_Code;
+
         public override void OnDoubleClick(Mobile m)
         {
-            if (m != null && m_Controller.Enabled)
+            if (m != null)
             {
-                ItemID ^= 2;
-                Effects.PlaySound(Location, Map, 0x3E8);
-                m_Controller.LeverPulled(m_Code);
-            }
-            else
-            {
-                m.SendLocalizedMessage(1060001); // You throw the switch, but the mechanism cannot be engaged again so soon.
+                if (m_Controller.Enabled)
+                {
+                    ItemID ^= 2;
+                    Effects.PlaySound(Location, Map, 0x3E8);
+                    m_Controller.LeverPulled(m_Code);
+                }
+                else
+                {
+                    m.SendLocalizedMessage(1060001); // You throw the switch, but the mechanism cannot be engaged again so soon.
+                }
             }
         }
 
         public override void OnAfterDelete()
         {
             if (m_Controller != null && !m_Controller.Deleted)
+            {
                 m_Controller.Delete();
+            }
         }
 
         public override void Serialize(GenericWriter writer)
@@ -164,7 +181,6 @@ namespace Server.Engines.Doom
         }
     }
 
-    [TypeAlias("Server.Engines.Doom.LampRoomTelePorter")]
     public class LampRoomTeleporter : Item
     {
         public LampRoomTeleporter(int[] dat)
@@ -180,6 +196,7 @@ namespace Server.Engines.Doom
         }
 
         public override bool HandlesOnMovement => true;
+
         public override bool OnMoveOver(Mobile m)
         {
             if (m != null && m is PlayerMobile)

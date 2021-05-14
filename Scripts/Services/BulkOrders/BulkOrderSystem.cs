@@ -3,7 +3,6 @@ using Server.Mobiles;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 namespace Server.Engines.BulkOrders
 {
@@ -450,17 +449,35 @@ namespace Server.Engines.BulkOrders
                 return false;
             }
 
-            if (bod is SmallBOD sb && sb.AmountCur > 0 || bod is LargeBOD lb && lb.Entries != null && lb.Entries.FirstOrDefault(e => e.Amount > 0) != null)
+            if (bod is SmallBOD sb && sb.AmountCur > 0)
             {
                 vendor.SayTo(from, 1152299, 0x3B2); // I am sorry to say I cannot work with a deed that is even partially filled.
                 return false;
             }
 
-            if (bod.AmountMax == 20 && (!CanBeExceptional(bod) || bod.RequireExceptional) &&
-                     (!CanUseMaterial(bod) ||
-                     (bod.Material == BulkMaterialType.Valorite ||
-                      bod.Material == BulkMaterialType.Frostwood ||
-                      bod.Material == BulkMaterialType.Barbed)))
+            if (bod is LargeBOD lb && lb.Entries != null)
+            {
+                LargeBulkEntry first = null;
+
+                for (var index = 0; index < lb.Entries.Length; index++)
+                {
+                    var e = lb.Entries[index];
+
+                    if (e.Amount > 0)
+                    {
+                        first = e;
+                        break;
+                    }
+                }
+
+                if (first != null)
+                {
+                    vendor.SayTo(from, 1152299, 0x3B2); // I am sorry to say I cannot work with a deed that is even partially filled.
+                    return false;
+                }
+            }
+
+            if (bod.AmountMax == 20 && (!CanBeExceptional(bod) || bod.RequireExceptional) && (!CanUseMaterial(bod) || bod.Material == BulkMaterialType.Valorite || bod.Material == BulkMaterialType.Frostwood || bod.Material == BulkMaterialType.Barbed))
             {
                 vendor.SayTo(from, 1152291, 0x3B2); // I won't be able to replace that bulk order with a better one.
                 return false;
@@ -510,9 +527,24 @@ namespace Server.Engines.BulkOrders
             Type t = GetTypeFromBOD(bod);
 
             if (t == null)
+            {
                 return false;
+            }
 
-            return _ExceptionalExcluded.FirstOrDefault(type => type == t) != null;
+            Type first = null;
+
+            for (var index = 0; index < _ExceptionalExcluded.Length; index++)
+            {
+                var type = _ExceptionalExcluded[index];
+
+                if (type == t)
+                {
+                    first = type;
+                    break;
+                }
+            }
+
+            return first != null;
         }
 
         public static bool CanUseMaterial(IBOD bod)

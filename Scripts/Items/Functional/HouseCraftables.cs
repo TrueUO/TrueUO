@@ -176,6 +176,8 @@ namespace Server.Items
             return quality;
         }
 
+        public override int LabelNumber => IDs[(int)_Type][0];
+
         public override void AddNameProperty(ObjectPropertyList list)
         {
             if (!CraftResources.IsStandard(_Resource))

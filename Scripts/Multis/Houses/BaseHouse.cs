@@ -2000,11 +2000,14 @@ namespace Server.Multis
 
             for (int i = 0; Doors != null && i < Doors.Count; ++i)
             {
-                BaseDoor door = Doors[i] as BaseDoor;
+                BaseDoor door = (BaseDoor) Doors[i];
+
                 Point3D p = door.Location;
 
                 if (door.Open)
+                {
                     p = new Point3D(p.X - door.Offset.X, p.Y - door.Offset.Y, p.Z - door.Offset.Z);
+                }
 
                 if (from.Z + 16 >= p.Z && p.Z + 16 >= from.Z)
                 {
@@ -2532,17 +2535,23 @@ namespace Server.Multis
         public bool IsSameAccount(Mobile one, Mobile two)
         {
             if (one == null || two == null)
+            {
                 return false;
+            }
 
             if (one == two)
+            {
                 return true;
+            }
 
-            Account acct = one.Account as Account;
+            Account acct = (Account) one.Account;
 
             for (int i = 0; i < acct.Length; ++i)
             {
                 if (acct[i] != null && acct[i] == two)
+                {
                     return true;
+                }
             }
 
             return false;
@@ -2647,13 +2656,15 @@ namespace Server.Multis
                     Secures.Add(info);
 
                     if (LockDowns.ContainsKey(item))
+                    {
                         LockDowns.Remove(item);
+                    }
 
                     item.Movable = false;
 
                     if (item is GardenShedAddon addon)
                     {
-                        GardenShedBarrel ad = addon.SecondContainer as GardenShedBarrel;
+                        GardenShedBarrel ad = (GardenShedBarrel) addon.SecondContainer;
 
                         SecureInfo info2 = new SecureInfo(ad, SecureLevel.Owner, m);
 
@@ -2663,7 +2674,9 @@ namespace Server.Multis
                         Secures.Add(info2);
 
                         if (LockDowns.ContainsKey(ad))
+                        {
                             LockDowns.Remove(ad);
+                        }
 
                         ad.Movable = false;
                     }
@@ -2888,11 +2901,14 @@ namespace Server.Multis
 
             for (int i = 0; Doors != null && i < Doors.Count; ++i)
             {
-                BaseDoor door = Doors[i] as BaseDoor;
+                BaseDoor door = (BaseDoor) Doors[i];
+
                 Point3D p = door.Location;
 
                 if (door.Open)
+                {
                     p = new Point3D(p.X - door.Offset.X, p.Y - door.Offset.Y, p.Z - door.Offset.Z);
+                }
 
                 if (from.Z + 16 >= p.Z && p.Z + 16 >= from.Z)
                 {
@@ -3453,7 +3469,7 @@ namespace Server.Multis
 
                 if (info.Item != null)
                 {
-                    info.Item.IsSecure = info.IsLockdown ? false : true;
+                    info.Item.IsSecure = !info.IsLockdown;
                     Secures.Add(info);
                 }
             }
@@ -3559,15 +3575,20 @@ namespace Server.Multis
             List<BaseHouse> houses = GetHouses(mob);
 
             if (houses.Count == 0)
+            {
                 return;
+            }
 
-            Account acct = mob.Account as Account;
+            Account acct = (Account) mob.Account;
+
             Mobile trans = null;
 
             for (int i = 0; i < acct.Length; ++i)
             {
                 if (acct[i] != null && acct[i] != mob)
+                {
                     trans = acct[i];
+                }
             }
 
             for (int i = 0; i < houses.Count; ++i)
@@ -3577,12 +3598,18 @@ namespace Server.Multis
                 bool canClaim = false;
 
                 if (trans == null)
+                {
                     canClaim = house.CoOwners.Count > 0;
+                }
 
                 if (trans == null && !canClaim)
+                {
                     Timer.DelayCall(TimeSpan.Zero, house.Delete);
+                }
                 else
+                {
                     house.Owner = trans;
+                }
             }
 
             ColUtility.Free(houses);
@@ -4136,10 +4163,14 @@ namespace Server.Multis
         public bool IsOwner(Mobile m)
         {
             if (m == null)
+            {
                 return false;
+            }
 
             if (m == m_Owner || m.AccessLevel >= AccessLevel.GameMaster)
+            {
                 return true;
+            }
 
             return AccountHandler.CheckAccount(m, m_Owner);
         }
@@ -4147,15 +4178,23 @@ namespace Server.Multis
         public bool IsCoOwner(Mobile m)
         {
             if (m == null || CoOwners == null)
+            {
                 return false;
+            }
 
             if (IsOwner(m) || CoOwners.Contains(m))
-                return true;
-
-            foreach (Mobile mob in CoOwners)
             {
+                return true;
+            }
+
+            for (var index = 0; index < CoOwners.Count; index++)
+            {
+                Mobile mob = CoOwners[index];
+
                 if (AccountHandler.CheckAccount(mob, m))
+                {
                     return true;
+                }
             }
 
             return false;
@@ -4164,7 +4203,9 @@ namespace Server.Multis
         public bool IsGuildMember(Mobile m)
         {
             if (m == null || Owner == null || Owner.Guild == null)
+            {
                 return false;
+            }
 
             return m.Guild == Owner.Guild;
         }
@@ -4815,13 +4856,16 @@ namespace Server.Multis
 
             for (int i = 0; i < doors.Count; i++)
             {
-                BaseDoor door = doors[i] as BaseDoor;
+                BaseDoor door = (BaseDoor) doors[i];
 
                 Point3D doorLoc = door.GetWorldLocation();
+
                 int doorHeight = door.ItemData.CalcHeight;
 
                 if (Utility.InRange(doorLoc, p, 1) && (p.Z == doorLoc.Z || p.Z + height > doorLoc.Z && doorLoc.Z + doorHeight > p.Z))
+                {
                     return AddonFitResult.DoorTooClose;
+                }
             }
 
             return AddonFitResult.Valid;
@@ -4829,8 +4873,8 @@ namespace Server.Multis
 
         private class InternalTarget : Target
         {
-            public Item Item { get; set; }
-            public BaseHouse House { get; set; }
+            private Item Item { get; }
+            private BaseHouse House { get; }
 
             public InternalTarget(Item item, BaseHouse house)
                 : base(8, true, TargetFlags.None)
@@ -4841,27 +4885,28 @@ namespace Server.Multis
 
             protected override void OnTarget(Mobile from, object targeted)
             {
-                IPoint3D p = targeted as IPoint3D;
-
-                Point3D point = new Point3D(p.X, p.Y, p.Z);
-
-                BaseHouse house = BaseHouse.FindHouseAt(point, from.Map, 0);
-
-                AddonFitResult result = CouldFit(point, from.Map, from, ref house);
-
-                if (house != null && house == House && house.Owner == from && result == AddonFitResult.Valid)
+                if (targeted is IPoint3D p)
                 {
-                    if (House.Release(from, Item))
+                    Point3D point = new Point3D(p.X, p.Y, p.Z);
+
+                    BaseHouse house = BaseHouse.FindHouseAt(point, from.Map, 0);
+
+                    AddonFitResult result = CouldFit(point, from.Map, from, ref house);
+
+                    if (house != null && house == House && house.Owner == from && result == AddonFitResult.Valid)
                     {
-                        Item.MoveToWorld(point, from.Map);
-                        Item.Movable = true;
+                        if (House.Release(from, Item))
+                        {
+                            Item.MoveToWorld(point, from.Map);
+                            Item.Movable = true;
 
-                        from.SendLocalizedMessage(1159159); // This container has been released and is no longer secure.
+                            from.SendLocalizedMessage(1159159); // This container has been released and is no longer secure.
+                        }
                     }
-                }
-                else
-                {
-                    from.SendLocalizedMessage(1149667); // Invalid target.
+                    else
+                    {
+                        from.SendLocalizedMessage(1149667); // Invalid target.
+                    }
                 }
             }
 

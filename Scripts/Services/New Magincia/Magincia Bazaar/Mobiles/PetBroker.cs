@@ -64,8 +64,10 @@ namespace Server.Engines.NewMagincia
         {
             bool hasValid = false;
 
-            foreach (PetBrokerEntry entry in m_BrokerEntries)
+            for (var index = 0; index < m_BrokerEntries.Count; index++)
             {
+                PetBrokerEntry entry = m_BrokerEntries[index];
+
                 if (entry.Pet != null)
                 {
                     if (m.Stabled.Count < AnimalTrainer.GetMaxStabled(m))
@@ -84,10 +86,14 @@ namespace Server.Engines.NewMagincia
 
         public bool HasEntry(BaseCreature bc)
         {
-            foreach (PetBrokerEntry entry in m_BrokerEntries)
+            for (var index = 0; index < m_BrokerEntries.Count; index++)
             {
+                PetBrokerEntry entry = m_BrokerEntries[index];
+
                 if (entry.Pet == bc)
+                {
                     return true;
+                }
             }
 
             return false;
@@ -97,10 +103,14 @@ namespace Server.Engines.NewMagincia
         {
             List<PetBrokerEntry> entries = new List<PetBrokerEntry>(m_BrokerEntries);
 
-            foreach (PetBrokerEntry entry in entries)
+            for (var index = 0; index < entries.Count; index++)
             {
+                PetBrokerEntry entry = entries[index];
+
                 if (entry.Pet == null || entry.Pet.Deleted)
+                {
                     m_BrokerEntries.Remove(entry);
+                }
             }
         }
 
@@ -108,10 +118,14 @@ namespace Server.Engines.NewMagincia
         {
             int total = 0;
 
-            foreach (PetBrokerEntry entry in m_BrokerEntries)
+            for (var index = 0; index < m_BrokerEntries.Count; index++)
             {
+                PetBrokerEntry entry = m_BrokerEntries[index];
+
                 if (entry.SalePrice > 0)
+                {
                     total += entry.SalePrice;
+                }
             }
 
             double perc = total * .05;
@@ -248,8 +262,9 @@ namespace Server.Engines.NewMagincia
             writer.Write(0);
 
             writer.Write(m_BrokerEntries.Count);
-            foreach (PetBrokerEntry entry in m_BrokerEntries)
+            for (var index = 0; index < m_BrokerEntries.Count; index++)
             {
+                PetBrokerEntry entry = m_BrokerEntries[index];
                 entry.Serialize(writer);
             }
         }
@@ -266,15 +281,16 @@ namespace Server.Engines.NewMagincia
             }
 
             Timer.DelayCall(TimeSpan.FromSeconds(10), () =>
+            {
+                for (var index = 0; index < m_BrokerEntries.Count; index++)
                 {
-                    foreach (PetBrokerEntry entry in m_BrokerEntries)
+                    PetBrokerEntry entry = m_BrokerEntries[index];
+                    if (entry.Pet != null && !entry.Pet.IsStabled)
                     {
-                        if (entry.Pet != null && !entry.Pet.IsStabled)
-                        {
-                            AddToViewTimer(entry.Pet);
-                        }
+                        AddToViewTimer(entry.Pet);
                     }
-                });
+                }
+            });
         }
     }
 }

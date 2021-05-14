@@ -3,8 +3,12 @@ namespace Server.Items
     public abstract class BaseScales : Item, ICommodity
     {
         protected virtual CraftResource DefaultResource => CraftResource.RedScales;
-
         private CraftResource m_Resource;
+
+        public override int LabelNumber => 1053139;// dragon scales
+        public override int Hue => CraftResources.GetHue(m_Resource);
+        public override double DefaultWeight => 0.1;
+
         public BaseScales(CraftResource resource)
             : this(resource, 1)
         {
@@ -15,7 +19,6 @@ namespace Server.Items
         {
             Stackable = true;
             Amount = amount;
-            Hue = CraftResources.GetHue(resource);
 
             m_Resource = resource;
         }
@@ -24,8 +27,6 @@ namespace Server.Items
             : base(serial)
         {
         }
-
-        public override int LabelNumber => 1053139;// dragon scales
 
         [CommandProperty(AccessLevel.GameMaster)]
         public CraftResource Resource
@@ -37,13 +38,13 @@ namespace Server.Items
                 InvalidateProperties();
             }
         }
-        public override double DefaultWeight => 0.1;
+
         TextDefinition ICommodity.Description => LabelNumber;
         bool ICommodity.IsDeedable => true;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
 
             writer.Write((int)m_Resource);
@@ -52,21 +53,9 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 1: // Reset from Resource System
-                    m_Resource = DefaultResource;
-                    reader.ReadString();
-                    break;
-                case 0:
-                    {
-                        m_Resource = (CraftResource)reader.ReadInt();
-                        break;
-                    }
-            }
+            m_Resource = (CraftResource)reader.ReadInt();
         }
     }
 

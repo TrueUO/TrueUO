@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 
 namespace Server.Engines.CityLoyalty
 {
@@ -42,10 +41,25 @@ namespace Server.Engines.CityLoyalty
             {
                 if (_Region == null)
                 {
-                    _Region = Region.Regions.FirstOrDefault(r => r.Name == Name && r.Map == CityLoyaltySystem.SystemMap);
+                    Region first = null;
+
+                    for (var index = 0; index < Region.Regions.Count; index++)
+                    {
+                        var r = Region.Regions[index];
+
+                        if (r.Name == Name && r.Map == CityLoyaltySystem.SystemMap)
+                        {
+                            first = r;
+                            break;
+                        }
+                    }
+
+                    _Region = first;
 
                     if (_Region == null)
+                    {
                         Console.WriteLine("WARNING: Region for {0} not found!", Name);
+                    }
                 }
 
                 return _Region;

@@ -3,6 +3,7 @@ namespace Server.Items
     public class BlackPowder : Item, ICommodity
     {
         public override int LabelNumber => 1095826;  // black powder
+        public override int Hue => 1109;
 
         TextDefinition ICommodity.Description => LabelNumber;
         bool ICommodity.IsDeedable => true;
@@ -19,7 +20,6 @@ namespace Server.Items
         {
             Stackable = true;
             Amount = amount;
-            Hue = 1109;
         }
 
         public BlackPowder(Serial serial)

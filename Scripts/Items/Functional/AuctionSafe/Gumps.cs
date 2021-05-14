@@ -382,14 +382,20 @@ namespace Server.Engines.Auction
                         if (Auction.CheckModifyAuction(User))
                         {
                             TextRelay relay = info.GetTextEntry(1);
+
                             string str = null;
 
                             if (relay != null)
-                                str = relay.Text;
-
-                            if (str != null || Guilds.BaseGuildGump.CheckProfanity(str, 140))
                             {
-                                Auction.Description = Utility.FixHtml(str.Trim());
+                                str = relay.Text;
+                            }
+
+                            if (str != null || Guilds.BaseGuildGump.CheckProfanity(null, 140))
+                            {
+                                if (str != null)
+                                {
+                                    Auction.Description = Utility.FixHtml(str.Trim());
+                                }
                             }
                             else
                             {

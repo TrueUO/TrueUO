@@ -36,7 +36,9 @@ namespace Server.Items
         public override bool OnDragDrop(Mobile from, Item item)
         {
             if (Boat == null || !Boat.Contains(from) || Boat.IsMoving)
+            {
                 return false;
+            }
 
             return base.OnDragDrop(from, item);
         }
@@ -44,7 +46,9 @@ namespace Server.Items
         public override bool OnDragDropInto(Mobile from, Item item, Point3D p)
         {
             if (Boat == null || !Boat.Contains(from) || Boat.IsMoving)
+            {
                 return false;
+            }
 
             return base.OnDragDropInto(from, item, p);
         }
@@ -52,7 +56,9 @@ namespace Server.Items
         public override bool CheckItemUse(Mobile from, Item item)
         {
             if (item != this && (Boat == null || !Boat.Contains(from) || Boat.IsMoving))
+            {
                 return false;
+            }
 
             return base.CheckItemUse(from, item);
         }
@@ -60,7 +66,9 @@ namespace Server.Items
         public override bool CheckLift(Mobile from, Item item, ref LRReason reject)
         {
             if (Boat == null || !Boat.Contains(from) || Boat.IsMoving)
+            {
                 return false;
+            }
 
             return base.CheckLift(from, item, ref reject);
         }
@@ -68,23 +76,31 @@ namespace Server.Items
         public override void OnAfterDelete()
         {
             if (Boat != null)
+            {
                 Boat.Delete();
+            }
         }
 
         public override void OnDoubleClick(Mobile from)
         {
             if (Boat == null || !Boat.Contains(from))
             {
-                if (Boat.TillerMan != null)
+                if (Boat != null && Boat.TillerMan != null)
+                {
                     Boat.TillerManSay(502490); // You must be on the ship to open the hold.
+                }
             }
             else if (Boat.IsMoving && Boat.IsClassicBoat)
             {
                 if (Boat.TillerMan != null)
+                {
                     Boat.TillerManSay(502491); // I can not open the hold while the ship is moving.
+                }
             }
             else
+            {
                 base.OnDoubleClick(from);
+            }
         }
 
         public override bool IsDecoContainer => false;
@@ -100,21 +116,13 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
-            switch (version)
+            Boat = reader.ReadItem() as BaseBoat;
+
+            if (Boat == null || Parent != null)
             {
-                case 0:
-                    {
-                        Boat = reader.ReadItem() as BaseBoat;
-
-                        if (Boat == null || Parent != null)
-                            Delete();
-
-                        Movable = false;
-
-                        break;
-                    }
+                Delete();
             }
         }
     }

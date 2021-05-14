@@ -66,8 +66,10 @@ namespace Server.Items
 
         public bool IsBound(Mobile m)
         {
-            foreach (BindEntry e in Friends)
+            for (var index = 0; index < Friends.Length; index++)
             {
+                BindEntry e = Friends[index];
+
                 if (e != null && m == e.Mobile)
                 {
                     return true;
@@ -305,9 +307,7 @@ namespace Server.Items
                     case 1:
                         if (RemoveFromBracelet)
                         {
-                            GreaterBraceletOfBinding bracelet = User.FindItemOnLayer(Layer.Bracelet) as GreaterBraceletOfBinding;
-
-                            if (bracelet != null && bracelet.Friends[Index] != null)
+                            if (User.FindItemOnLayer(Layer.Bracelet) is GreaterBraceletOfBinding bracelet && bracelet.Friends[Index] != null)
                             {
                                 BindEntry entry = bracelet.Friends[Index];
 
@@ -334,9 +334,7 @@ namespace Server.Items
                         }
                         else
                         {
-                            BraceletOfBinding brac = User.FindItemOnLayer(Layer.Bracelet) as BraceletOfBinding;
-
-                            if (brac != null)
+                            if (User.FindItemOnLayer(Layer.Bracelet) is BraceletOfBinding brac)
                             {
                                 BindEntry entry = new BindEntry(User, brac);
                                 Bracelet.Add(entry, Index);
@@ -391,8 +389,10 @@ namespace Server.Items
                 writer.Write(0);
             }
 
-            foreach (BindEntry entry in Friends)
+            for (var index = 0; index < Friends.Length; index++)
             {
+                BindEntry entry = Friends[index];
+
                 if (entry == null)
                 {
                     writer.Write(0);
@@ -410,7 +410,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
 
             if (reader.ReadInt() == 1)
             {

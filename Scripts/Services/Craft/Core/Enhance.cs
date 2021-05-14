@@ -132,14 +132,13 @@ namespace Server.Engines.Craft
             if (!CraftResources.IsStandard(ires.Resource))
                 return EnhanceResult.AlreadyEnhanced;
 
-            if (craftSystem is DefBlacksmithy)
+            if (craftSystem is DefBlacksmithy && (from.FindItemOnLayer(Layer.OneHanded) is AncientSmithyHammer hammer))
             {
-                AncientSmithyHammer hammer = from.FindItemOnLayer(Layer.OneHanded) as AncientSmithyHammer;
-                if (hammer != null)
+                hammer.UsesRemaining--;
+
+                if (hammer.UsesRemaining < 1)
                 {
-                    hammer.UsesRemaining--;
-                    if (hammer.UsesRemaining < 1)
-                        hammer.Delete();
+                    hammer.Delete();
                 }
             }
 
@@ -328,7 +327,7 @@ namespace Server.Engines.Craft
         public static void BeginTarget(Mobile from, CraftSystem craftSystem, ITool tool)
         {
             CraftContext context = craftSystem.GetContext(from);
-            PlayerMobile user = from as PlayerMobile;
+            PlayerMobile user = (PlayerMobile) from;
 
             if (context == null)
                 return;

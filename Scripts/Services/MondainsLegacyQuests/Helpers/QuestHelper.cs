@@ -966,6 +966,17 @@ namespace Server.Engines.Quests
 
             return first as T;
         }
+
+        public static void QuestionQuestCheck(PlayerMobile from)
+        {
+            for (int i = from.Quests.Count - 1; i >= 0; i--)
+            {
+                BaseQuest quest = from.Quests[i];
+
+                if (quest.IsQuestionQuest && !quest.Completed)
+                    quest.RemoveQuest();
+            }
+        }
     }
 
     public class SelectQuestItem : ContextMenuEntry

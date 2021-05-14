@@ -1,6 +1,5 @@
 using Server.Items;
 using System;
-using System.Linq;
 
 namespace Server.Multis
 {
@@ -270,26 +269,7 @@ namespace Server.Multis
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
-
-            if (version == 0)
-            {
-                Timer.DelayCall(() =>
-                {
-                    var deckItem = Fixtures.FirstOrDefault(f => m_WheelItemIDs.Any(listID => listID == f.ItemID));
-
-                    if (deckItem != null)
-                    {
-                        ShipWheel wheel = new ShipWheel(this, deckItem.ItemID);
-                        AddFixture(wheel);
-
-                        wheel.MoveToWorld(new Point3D(deckItem.X, deckItem.Y, deckItem.Z), deckItem.Map);
-
-                        deckItem.Delete();
-                        RemoveFixture(deckItem);
-                    }
-                });
-            }
+            reader.ReadInt();
         }
     }
 

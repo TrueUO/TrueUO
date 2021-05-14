@@ -5,7 +5,6 @@ using Server.Targeting;
 using System.Collections.Generic;
 
 using System;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -68,7 +67,20 @@ namespace Server.Items
 
         public virtual bool CanForceDye(Item item)
         {
-            return ForcedDyables != null && ForcedDyables.Any(t => t == item.GetType());
+            bool forcedDyables = false;
+
+            for (var index = 0; index < ForcedDyables.Length; index++)
+            {
+                var t = ForcedDyables[index];
+
+                if (t == item.GetType())
+                {
+                    forcedDyables = true;
+                    break;
+                }
+            }
+
+            return ForcedDyables != null && forcedDyables;
         }
 
         public override void Serialize(GenericWriter writer)

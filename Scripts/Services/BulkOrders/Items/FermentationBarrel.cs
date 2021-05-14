@@ -252,10 +252,14 @@ namespace Server.Items
         {
             for (int i = 0; i < _FruitTypes.Length; i++)
             {
-                foreach (Type type in _FruitTypes[i])
+                for (var index = 0; index < _FruitTypes[i].Length; index++)
                 {
+                    Type type = _FruitTypes[i][index];
+
                     if (type == t)
-                        return (FruitType)i + 1;
+                    {
+                        return (FruitType) i + 1;
+                    }
                 }
             }
 
@@ -265,10 +269,8 @@ namespace Server.Items
         private readonly Type[][] _FruitTypes =
         {
             new[] { typeof(GrapeBunch), typeof(Grapes) },
-            new[] { typeof(Apple) },
-            new[] { typeof(Peach) },
-            new[] { typeof(Pear) },
-            new[] { typeof(Plum) }
+            new[] { typeof(Apple) }, new[] { typeof(Peach) },
+            new[] { typeof(Pear) }, new[] { typeof(Plum) }
         };
 
         public override void GetProperties(ObjectPropertyList list)

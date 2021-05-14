@@ -1,10 +1,8 @@
-#region References
 using Server.Network;
 using Server.Spells;
 using Server.Targeting;
 using System;
-using System.Linq;
-#endregion
+using System.Collections.Generic;
 
 namespace Server.Items
 {
@@ -132,15 +130,25 @@ namespace Server.Items
             int min = Scale(from, MinDamage);
             int max = Scale(from, MaxDamage);
 
-            System.Collections.Generic.List<Mobile> list = SpellHelper.AcquireIndirectTargets(from, loc, map, ExplosionRange, false).OfType<Mobile>().ToList();
+            List<Mobile> list = new List<Mobile>();
+
+            foreach (IDamageable indirectTarget in SpellHelper.AcquireIndirectTargets(from, loc, map, ExplosionRange, false))
+            {
+                if (indirectTarget is Mobile mobile)
+                {
+                    list.Add(mobile);
+                }
+            }
 
             if (damageThrower && !list.Contains(from))
             {
                 list.Add(from);
             }
 
-            foreach (Mobile m in list)
+            for (var index = 0; index < list.Count; index++)
             {
+                Mobile m = list[index];
+
                 from.DoHarmful(m);
 
                 int damage = Utility.RandomMinMax(min, max);

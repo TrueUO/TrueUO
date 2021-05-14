@@ -3,6 +3,7 @@ namespace Server.Items
     public class Saltpeter : Item, ICommodity
     {
         public override int LabelNumber => 1116302;  // saltpeter
+        public override int Hue => 1150;
 
         TextDefinition ICommodity.Description => LabelNumber;
         bool ICommodity.IsDeedable => true;
@@ -19,7 +20,6 @@ namespace Server.Items
         {
             Stackable = true;
             Amount = count;
-            Hue = 1150;
         }
 
         public Saltpeter(Serial serial)

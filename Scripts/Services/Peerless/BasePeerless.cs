@@ -9,24 +9,12 @@ namespace Server.Mobiles
         private PeerlessAltar m_Altar;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public PeerlessAltar Altar
-        {
-            get
-            {
-                return m_Altar;
-            }
-            set
-            {
-                m_Altar = value;
-            }
-        }
+        public PeerlessAltar Altar { get => m_Altar; set => m_Altar = value; }
 
         public override bool CanBeParagon => false;
         public virtual bool DropPrimer => true;
         public virtual bool GiveMLSpecial => true;
-
         public override bool Unprovokable => true;
-        public virtual double ChangeCombatant => 0.3;
 
         public BasePeerless(Serial serial)
             : base(serial)
@@ -135,7 +123,6 @@ namespace Server.Mobiles
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
 
             writer.Write(m_Altar);
@@ -144,8 +131,7 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             m_Altar = reader.ReadItem() as PeerlessAltar;
         }
@@ -157,24 +143,16 @@ namespace Server.Mobiles
 
         private int m_CurrentWave;
 
-        public int CurrentWave
-        {
-            get
-            {
-                return m_CurrentWave;
-            }
-            set
-            {
-                m_CurrentWave = value;
-            }
-        }
+        public int CurrentWave { get => m_CurrentWave; set => m_CurrentWave = value; }
 
         public bool AllHelpersDead
         {
             get
             {
                 if (m_Altar != null)
+                {
                     return m_Altar.AllHelpersDead();
+                }
 
                 return true;
             }
@@ -228,7 +206,7 @@ namespace Server.Mobiles
         #endregion
 
         #region Fire Ring
-        private static readonly int[] m_North = new int[]
+        private static readonly int[] m_North =
         {
             -1, -1,
             1, -1,
@@ -236,7 +214,7 @@ namespace Server.Mobiles
             1, 2
         };
 
-        private static readonly int[] m_East = new int[]
+        private static readonly int[] m_East =
         {
             -1, 0,
             2, 0
@@ -256,7 +234,7 @@ namespace Server.Mobiles
                 p.X += m_North[i];
                 p.Y += m_North[i + 1];
 
-                IPoint3D po = p as IPoint3D;
+                IPoint3D po = p;
 
                 SpellHelper.GetSurfaceTop(ref po);
 
@@ -270,7 +248,7 @@ namespace Server.Mobiles
                 p.X += m_East[i];
                 p.Y += m_East[i + 1];
 
-                IPoint3D po = p as IPoint3D;
+                IPoint3D po = p;
 
                 SpellHelper.GetSurfaceTop(ref po);
 

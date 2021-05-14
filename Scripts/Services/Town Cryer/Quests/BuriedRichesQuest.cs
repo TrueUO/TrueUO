@@ -1,4 +1,3 @@
-using Server.Gumps;
 using Server.Items;
 using Server.Mobiles;
 using Server.Services.TownCryer;
@@ -221,27 +220,14 @@ namespace Server.Engines.Quests
 
         public override bool RenderObjective(MondainQuestGump g, bool offer)
         {
-            if (offer)
-                g.AddHtmlLocalized(130, 45, 270, 16, 1049010, 0xFFFFFF, false, false); // Quest Offer
-            else
-                g.AddHtmlLocalized(130, 45, 270, 16, 1046026, 0xFFFFFF, false, false); // Quest Log
-
-            g.AddButton(130, 430, 0x2EEF, 0x2EF1, (int)Buttons.PreviousPage, GumpButtonType.Reply, 0);
-            g.AddButton(275, 430, 0x2EE9, 0x2EEB, (int)Buttons.NextPage, GumpButtonType.Reply, 0);
-
-            g.AddHtmlObject(160, 70, 200, 40, Title, BaseQuestGump.DarkGreen, false, false);
-            g.AddHtmlLocalized(98, 140, 312, 16, 1049073, 0x2710, false, false); // Objective:
-
-            g.AddHtmlLocalized(98, 156, 312, 16, 1072208, 0x2710, false, false); // All of the following	
-
-            g.AddHtmlLocalized(98, 172, 312, 83, 1158234, BaseQuestGump.LightGreen, false, false);
+            g.AddHtmlLocalized(98, 172, 312, 83, 1158234, 0x15F90, false, false);
             /* Find the location marked on the Treasure Map given to you by the Cartographer and use the supplies the Provisioner 
             * gave you to recover the treasure.*/
 
-            g.AddHtmlLocalized(98, 255, 312, 40, 1158235, BaseQuestGump.LightGreen, false, false);
+            g.AddHtmlLocalized(98, 255, 312, 40, 1158235, 0x15F90, false, false);
             //Expand your experience as a Treasure Hunter to an Expertly Drawn Map.
 
-            g.AddHtmlLocalized(98, 335, 312, 40, 1158236, BaseQuestGump.LightGreen, false, false);
+            g.AddHtmlLocalized(98, 335, 312, 40, 1158236, 0x15F90, false, false);
             // Complete your experience as a Treasure Hunter by discovering the final treasure hoard.
 
             return true;

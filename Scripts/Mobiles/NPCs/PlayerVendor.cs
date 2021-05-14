@@ -10,7 +10,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 
 namespace Server.Mobiles
 {
@@ -84,13 +83,22 @@ namespace Server.Mobiles
         public override bool CheckHold(Mobile m, Item item, bool message, bool checkItems, int plusItems, int plusWeight)
         {
             if (!base.CheckHold(m, item, message, checkItems, plusItems, plusWeight))
-                return false;
-
-            if (Parent is PlayerVendor vendor && item is Container container && container.Items.OfType<Container>().Any())
             {
-                vendor.SayTo(m, 1017381); // You cannot place a container that has other containers in it on a vendor.
-
                 return false;
+            }
+
+            if (Parent is PlayerVendor vendor && item is Container container)
+            {
+                for (var index = 0; index < container.Items.Count; index++)
+                {
+                    Item containerItem = container.Items[index];
+
+                    if (containerItem is Container)
+                    {
+                        vendor.SayTo(m, 1017381); // You cannot place a container that has other containers in it on a vendor.
+                        return false;
+                    }
+                }
             }
 
             if (Parent is CommissionPlayerVendor commissionVendor)
@@ -100,7 +108,9 @@ namespace Server.Mobiles
                 if (house != null && !house.CheckAosStorage(1 + item.TotalItems + plusItems))
                 {
                     if (message)
+                    {
                         m.SendLocalizedMessage(1061839); // This action would exceed the secure storage limit of the house.
+                    }
 
                     return false;
                 }

@@ -31,7 +31,9 @@ namespace Server.Spells.SkillMasteries
         public override bool CheckCast()
         {
             if (IsInCooldown(Caster, GetType()))
+            {
                 return false;
+            }
 
             if (!CheckWeapon())
             {
@@ -39,9 +41,7 @@ namespace Server.Spells.SkillMasteries
                 return false;
             }
 
-            CalledShotSpell spell = GetSpell(Caster, GetType()) as CalledShotSpell;
-
-            if (spell != null)
+            if (GetSpell(Caster, GetType()) is CalledShotSpell spell)
             {
                 spell.Expire();
                 return false;
@@ -99,10 +99,10 @@ namespace Server.Spells.SkillMasteries
 
         public static int GetHitChanceBonus(Mobile m)
         {
-            CalledShotSpell spell = GetSpell(m, typeof(CalledShotSpell)) as CalledShotSpell;
-
-            if (spell != null)
+            if (GetSpell(m, typeof(CalledShotSpell)) is CalledShotSpell spell)
+            {
                 return spell._HCIBonus;
+            }
 
             return 0;
         }

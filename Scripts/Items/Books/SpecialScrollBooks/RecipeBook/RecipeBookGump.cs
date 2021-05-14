@@ -292,12 +292,7 @@ namespace Server.Items
             AddImageTiled(313, 64, 100, 352, 1416);
             AddImageTiled(415, 64, 76, 352, 200);
 
-            list = new List<RecipeScrollDefinition>();
-
-            foreach (var definition in list.OrderBy(x => x.ID))
-            {
-                list.Add(definition);
-            }
+            list = list.OrderBy(x => x.ID).ToList();
 
             for (int i = index; i < index + count && i >= 0 && i < list.Count; ++i)
             {

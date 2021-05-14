@@ -238,8 +238,10 @@ namespace Server.Items
 
         private void RenderConstellation()
         {
-            foreach (ConstellationInfo.StarPosition pos in Constellation.StarPositions)
+            for (var index = 0; index < Constellation.StarPositions.Length; index++)
             {
+                ConstellationInfo.StarPosition pos = Constellation.StarPositions[index];
+
                 AddImage(pos.X, pos.Y, pos.ImageID);
             }
         }

@@ -11,10 +11,10 @@ namespace Server.Items
 
         public override bool OnBeforeDamage(Mobile attacker, Mobile defender)
         {
-            BaseWeapon wep = attacker.Weapon as BaseWeapon;
-
-            if (wep != null)
+            if (attacker.Weapon is BaseWeapon wep)
+            {
                 wep.InDoubleStrike = true;
+            }
 
             return true;
         }

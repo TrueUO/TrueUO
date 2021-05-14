@@ -938,13 +938,19 @@ namespace Server.Items
                 m_AosSkillBonuses.Serialize(writer);
 
             if (GetSaveFlag(flags, SaveFlag.Protection))
-                m_Protection.Serialize(writer);
+            {
+                m_Protection?.Serialize(writer);
+            }
 
             if (GetSaveFlag(flags, SaveFlag.Killer))
-                m_Killer.Serialize(writer);
+            {
+                m_Killer?.Serialize(writer);
+            }
 
             if (GetSaveFlag(flags, SaveFlag.Summoner))
-                m_Summoner.Serialize(writer);
+            {
+                m_Summoner?.Serialize(writer);
+            }
 
             if (GetSaveFlag(flags, SaveFlag.Removal))
                 writer.WriteEncodedInt((int)m_Removal);

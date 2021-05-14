@@ -3,7 +3,6 @@ using Server.Multis;
 using Server.Network;
 using Server.Targeting;
 using System;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -182,7 +181,17 @@ namespace Server.Items
 
             private static bool IsSpecialTypes(Item item)
             {
-                return _IsSpecialTypes.Any(t => t == item.GetType());
+                for (var index = 0; index < _IsSpecialTypes.Length; index++)
+                {
+                    var t = _IsSpecialTypes[index];
+
+                    if (t == item.GetType())
+                    {
+                        return true;
+                    }
+                }
+
+                return false;
             }
 
             protected override void OnTarget(Mobile from, object targeted)

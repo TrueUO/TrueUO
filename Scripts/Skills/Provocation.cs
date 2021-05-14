@@ -110,8 +110,7 @@ namespace Server.SkillHandlers
                     {
                         from.SendLocalizedMessage(1049446); // You have no chance of provoking those creatures.
                     }
-                    else if (m_Creature.Map != target.Map ||
-                             !m_Creature.InRange(target, BaseInstrument.GetBardRange(from, SkillName.Provocation)))
+                    else if (target != null && (m_Creature.Map != target.Map || !m_Creature.InRange(target, BaseInstrument.GetBardRange(from, SkillName.Provocation))))
                     {
                         from.SendLocalizedMessage(1049450);
                         // The creatures you are trying to provoke are too far away from each other for your music to have an effect.
@@ -167,8 +166,12 @@ namespace Server.SkillHandlers
 
                                         if (quest != null)
                                         {
-                                            foreach (BaseObjective objective in quest.Objectives)
+                                            for (var index = 0; index < quest.Objectives.Count; index++)
+                                            {
+                                                BaseObjective objective = quest.Objectives[index];
+
                                                 objective.Update(creature);
+                                            }
                                         }
                                     }
                                     #endregion

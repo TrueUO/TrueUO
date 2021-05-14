@@ -78,7 +78,7 @@ namespace Server.Engines.Shadowguard
             int y = Utility.RandomMinMax(rec.Y, rec.Y + rec.Height);
             int z = -14;
 
-            x = x + (9 * row);
+            x = x + 9 * row;
 
             ShadowguardBottleOfLiquor bottle = new ShadowguardBottleOfLiquor(this);
             bottle.MoveToWorld(new Point3D(x, y, z), Map.TerMur);
@@ -98,7 +98,7 @@ namespace Server.Engines.Shadowguard
 
             int a = row % 2 == 0 ? 0 : 3;
             int startX = ranPnt.X + a;
-            int x = startX + (row / 2) * 9;
+            int x = startX + row / 2 * 9;
 
             ShadowguardPirate pirate = new ShadowguardPirate();
             pirate.MoveToWorld(new Point3D(x, ranPnt.Y, ranPnt.Z), Map.TerMur);
@@ -532,7 +532,7 @@ namespace Server.Engines.Shadowguard
             Spawn = new List<BaseCreature>();
             Items = new List<Item>();
 
-            int toSpawn = 1 + (PartySize() * 2);
+            int toSpawn = 1 + PartySize() * 2;
 
             ColUtility.For(SpawnPoints, (i, p) =>
             {
@@ -951,7 +951,7 @@ namespace Server.Engines.Shadowguard
             Elementals = new List<BaseCreature>();
             FlowCheckers = new List<FlowChecker>();
 
-            int toSpawn = 3 + (PartySize() * 2);
+            int toSpawn = 3 + PartySize() * 2;
 
             Timer.DelayCall(ShadowguardController.ReadyDuration + TimeSpan.FromSeconds(30), () =>
             {
@@ -1787,8 +1787,10 @@ namespace Server.Engines.Shadowguard
                 CurrentBoss.MoveToWorld(p, Map.TerMur);
             }
 
-            if (Bosses.Count == 0)
+            if (Bosses.Count == 0 && CurrentBoss != null)
+            {
                 CurrentBoss.IsLastBoss = true;
+            }
 
             if (Minax != null && Minax.Alive)
             {

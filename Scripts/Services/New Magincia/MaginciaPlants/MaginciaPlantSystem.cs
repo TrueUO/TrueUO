@@ -145,23 +145,25 @@ namespace Server.Engines.Plants
 
         public static bool IsValidLocation(Point3D p)
         {
-            /*foreach (Rectangle2D rec in m_MagGrowBounds)
+            for (var index = 0; index < m_NoGrowZones.Length; index++)
             {
+                Rectangle2D rec = m_NoGrowZones[index];
+
                 if (rec.Contains(p))
-                    return true;
-            }*/
-            foreach (Rectangle2D rec in m_NoGrowZones)
-            {
-                if (rec.Contains(p))
+                {
                     return false;
+                }
             }
 
-            foreach (Rectangle2D rec in MaginciaLottoSystem.MagHousingZones)
+            for (var index = 0; index < MaginciaLottoSystem.MagHousingZones.Length; index++)
             {
+                Rectangle2D rec = MaginciaLottoSystem.MagHousingZones[index];
                 Rectangle2D newRec = new Rectangle2D(rec.X - 2, rec.Y - 2, rec.Width + 4, rec.Height + 7);
 
                 if (newRec.Contains(p))
+                {
                     return false;
+                }
             }
 
             return true;
@@ -214,8 +216,12 @@ namespace Server.Engines.Plants
                     toRemove.Add(kvp.Key);
             }
 
-            foreach (Mobile m in toRemove)
+            for (var index = 0; index < toRemove.Count; index++)
+            {
+                Mobile m = toRemove[index];
+
                 PlantDelayTable.Remove(m);
+            }
         }
 
         public MaginciaPlantSystem(Serial serial) : base(serial)

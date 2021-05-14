@@ -11,6 +11,7 @@ namespace Server.Items
         Mobile Picker { get; set; }
         int MaxLockLevel { get; set; }
         int RequiredSkill { get; set; }
+
         void LockPick(Mobile from);
     }
 
@@ -42,18 +43,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
-
-            if (version == 0 && Weight == 0.1)
-                Weight = -1;
+            reader.ReadInt();
         }
 
         public override void OnDoubleClick(Mobile from)
@@ -108,10 +104,12 @@ namespace Server.Items
 
             Item item = (Item)lockpickable;
 
-            if (!from.InRange(item.GetWorldLocation(), 1))
+            if (item != null && from != null && !from.InRange(item.GetWorldLocation(), 1))
+            {
                 return;
+            }
 
-            if (lockpickable.LockLevel == 0 || lockpickable.LockLevel == -255)
+            if (lockpickable != null && (lockpickable.LockLevel == 0 || lockpickable.LockLevel == -255))
             {
                 // LockLevel of 0 means that the door can't be picklocked
                 // LockLevel of -255 means it's magic locked
@@ -119,7 +117,7 @@ namespace Server.Items
                 return;
             }
 
-            if (from.Skills[SkillName.Lockpicking].Value < lockpickable.RequiredSkill - SkillBonus)
+            if (lockpickable != null && from != null && from.Skills[SkillName.Lockpicking].Value < lockpickable.RequiredSkill - SkillBonus)
             {
                 /*
                 // Do some training to gain skills
@@ -129,45 +127,53 @@ namespace Server.Items
                 return;
             }
 
-            int maxlevel = lockpickable.MaxLockLevel;
-            int minLevel = lockpickable.LockLevel;
-
-            if (lockpickable is Skeletonkey)
+            if (lockpickable != null)
             {
-                minLevel -= SkillBonus;
-                maxlevel -= SkillBonus; //regulars subtract the bonus from the max level
-            }
+                int maxlevel = lockpickable.MaxLockLevel;
+                int minLevel = lockpickable.LockLevel;
 
-            if (this is MasterSkeletonKey || from.CheckTargetSkill(SkillName.Lockpicking, lockpickable, minLevel, maxlevel))
-            {
-                // Success! Pick the lock!
-                OnUse();
-
-                item.SendLocalizedMessageTo(from, 502076); // The lock quickly yields to your skill.
-                from.PlaySound(0x4A);
-                lockpickable.LockPick(from);
-            }
-            else
-            {
-                // The player failed to pick the lock
-                BrokeLockPickTest(from);
-                item.SendLocalizedMessageTo(from, 502075); // You are unable to pick the lock.
-
-                if (item is TreasureMapChest chest)
+                if (lockpickable is Skeletonkey)
                 {
-                    if (!chest.FailedLockpick)
-                    {
-                        chest.FailedLockpick = true;
-                    }
-                    else if (chest.Items.Count > 0 && 0.25 > Utility.RandomDouble())
-                    {
-                        Item toBreak = chest.Items[Utility.Random(chest.Items.Count)];
+                    minLevel -= SkillBonus;
+                    maxlevel -= SkillBonus; //regulars subtract the bonus from the max level
+                }
 
-                        if (!(toBreak is Container))
+                if (from != null && (this is MasterSkeletonKey || from.CheckTargetSkill(SkillName.Lockpicking, lockpickable, minLevel, maxlevel)))
+                {
+                    // Success! Pick the lock!
+                    OnUse();
+
+                    item.SendLocalizedMessageTo(from, 502076); // The lock quickly yields to your skill.
+                    from.PlaySound(0x4A);
+                    lockpickable.LockPick(from);
+                }
+                else
+                {
+                    // The player failed to pick the lock
+                    BrokeLockPickTest(from);
+                    item.SendLocalizedMessageTo(from, 502075); // You are unable to pick the lock.
+
+                    if (item is TreasureMapChest chest)
+                    {
+                        if (!chest.FailedLockpick)
                         {
-                            toBreak.Delete();
-                            Effects.PlaySound(chest.Location, chest.Map, 0x1DE);
-                            from.SendMessage(0x20, "The sound of gas escaping is heard from the chest.");
+                            chest.FailedLockpick = true;
+                        }
+                        else if (chest.Items.Count > 0 && 0.25 > Utility.RandomDouble())
+                        {
+                            Item toBreak = chest.Items[Utility.Random(chest.Items.Count)];
+
+                            if (!(toBreak is Container))
+                            {
+                                toBreak.Delete();
+
+                                Effects.PlaySound(chest.Location, chest.Map, 0x1DE);
+
+                                if (from != null)
+                                {
+                                    from.SendMessage(0x20, "The sound of gas escaping is heard from the chest.");
+                                }
+                            }
                         }
                     }
                 }

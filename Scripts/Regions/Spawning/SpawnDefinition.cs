@@ -180,16 +180,16 @@ namespace Server.Regions
         {
             Mobile mobile = CreateMobile();
 
-            BaseCreature creature = mobile as BaseCreature;
-
-            if (creature != null)
+            if (mobile is BaseCreature creature)
             {
                 creature.Home = entry.HomeLocation;
                 creature.RangeHome = entry.HomeRange;
             }
 
             if (entry.Direction != SpawnEntry.InvalidDirection)
+            {
                 mobile.Direction = entry.Direction;
+            }
 
             mobile.OnBeforeSpawn(loc, map);
             mobile.MoveToWorld(loc, map);
@@ -207,7 +207,9 @@ namespace Server.Regions
     public class SpawnItem : SpawnType
     {
         protected int m_Height;
+
         private static readonly Hashtable m_Table = new Hashtable();
+
         protected SpawnItem(Type type)
             : base(type)
         {
@@ -266,6 +268,7 @@ namespace Server.Regions
     {
         private readonly int m_ItemID;
         private readonly BaseTreasureChest.TreasureLevel m_Level;
+
         public SpawnTreasureChest(int itemID, BaseTreasureChest.TreasureLevel level)
             : base(typeof(BaseTreasureChest))
         {
@@ -275,6 +278,7 @@ namespace Server.Regions
 
         public int ItemID => m_ItemID;
         public BaseTreasureChest.TreasureLevel Level => m_Level;
+
         protected override void Init()
         {
             m_Height = TileData.ItemTable[m_ItemID & TileData.MaxItemValue].Height;
@@ -290,6 +294,7 @@ namespace Server.Regions
     {
         private readonly SpawnDefinition m_SpawnDefinition;
         private readonly int m_Weight;
+
         public SpawnGroupElement(SpawnDefinition spawnDefinition, int weight)
         {
             m_SpawnDefinition = spawnDefinition;
@@ -306,21 +311,28 @@ namespace Server.Regions
         private readonly string m_Name;
         private readonly SpawnGroupElement[] m_Elements;
         private readonly int m_TotalWeight;
+
         public SpawnGroup(string name, SpawnGroupElement[] elements)
         {
             m_Name = name;
             m_Elements = elements;
 
             m_TotalWeight = 0;
+
             for (int i = 0; i < elements.Length; i++)
+            {
                 m_TotalWeight += elements[i].Weight;
+            }
         }
 
         static SpawnGroup()
         {
             string path = Path.Combine(Core.BaseDirectory, "Data/SpawnDefinitions.xml");
+
             if (!File.Exists(path))
+            {
                 return;
+            }
 
             try
             {
@@ -328,37 +340,55 @@ namespace Server.Regions
                 doc.Load(path);
 
                 XmlElement root = doc["spawnDefinitions"];
+
                 if (root == null)
-                    return;
-
-                foreach (XmlElement xmlDef in root.SelectNodes("spawnGroup"))
                 {
-                    string name = null;
-                    if (!Region.ReadString(xmlDef, "name", ref name))
-                        continue;
+                    return;
+                }
 
-                    List<SpawnGroupElement> list = new List<SpawnGroupElement>();
-                    foreach (XmlNode node in xmlDef.ChildNodes)
+                var defs = root.SelectNodes("spawnGroup");
+
+                if (defs != null)
+                {
+                    for (var i = 0; i < defs.Count; i++)
                     {
-                        XmlElement el = node as XmlElement;
+                        var xmlDef = (XmlElement) defs[i];
 
-                        if (el != null)
+                        string name = null;
+
+                        if (!Region.ReadString(xmlDef, "name", ref name))
                         {
-                            SpawnDefinition def = GetSpawnDefinition(el);
-                            if (def == null)
-                                continue;
-
-                            int weight = 1;
-                            Region.ReadInt32(el, "weight", ref weight, false);
-
-                            SpawnGroupElement groupElement = new SpawnGroupElement(def, weight);
-                            list.Add(groupElement);
+                            continue;
                         }
-                    }
 
-                    SpawnGroupElement[] elements = list.ToArray();
-                    SpawnGroup group = new SpawnGroup(name, elements);
-                    Register(group);
+                        List<SpawnGroupElement> list = new List<SpawnGroupElement>();
+
+                        for (var index = 0; index < xmlDef.ChildNodes.Count; index++)
+                        {
+                            XmlNode node = xmlDef.ChildNodes[index];
+
+                            if (node is XmlElement el)
+                            {
+                                SpawnDefinition def = GetSpawnDefinition(el);
+
+                                if (def == null)
+                                {
+                                    continue;
+                                }
+
+                                int weight = 1;
+
+                                Region.ReadInt32(el, "weight", ref weight, false);
+
+                                SpawnGroupElement groupElement = new SpawnGroupElement(def, weight);
+                                list.Add(groupElement);
+                            }
+                        }
+
+                        SpawnGroupElement[] elements = list.ToArray();
+                        SpawnGroup group = new SpawnGroup(name, elements);
+                        Register(group);
+                    }
                 }
             }
             catch (Exception ex)
@@ -374,9 +404,13 @@ namespace Server.Regions
         public static void Register(SpawnGroup group)
         {
             if (m_Table.Contains(group.Name))
+            {
                 Console.WriteLine("Warning: Double SpawnGroup name '{0}'", group.Name);
+            }
             else
+            {
                 m_Table[group.Name] = group;
+            }
         }
 
         public override ISpawnable Spawn(SpawnEntry entry)
@@ -388,7 +422,9 @@ namespace Server.Regions
                 SpawnGroupElement element = m_Elements[i];
 
                 if (index < element.Weight)
+                {
                     return element.SpawnDefinition.Spawn(entry);
+                }
 
                 index -= element.Weight;
             }
@@ -401,7 +437,9 @@ namespace Server.Regions
             for (int i = 0; i < m_Elements.Length; i++)
             {
                 if (m_Elements[i].SpawnDefinition.CanSpawn(types))
+                {
                     return true;
+                }
             }
 
             return false;

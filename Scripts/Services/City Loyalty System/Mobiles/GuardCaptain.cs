@@ -5,7 +5,6 @@ using Server.Mobiles;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 
 namespace Server.Engines.CityLoyalty
 {
@@ -64,9 +63,20 @@ namespace Server.Engines.CityLoyalty
         {
             if (CitySystem != null && m is PlayerMobile pm && InRange(pm.Location, 2))
             {
-                Raider raider = pm.AllFollowers.FirstOrDefault(mob => mob is Raider && mob.InRange(Location, 2)) as Raider;
+                Mobile first = null;
 
-                if (raider != null)
+                for (var index = 0; index < pm.AllFollowers.Count; index++)
+                {
+                    var mob = pm.AllFollowers[index];
+
+                    if (mob is Raider && mob.InRange(Location, 2))
+                    {
+                        first = mob;
+                        break;
+                    }
+                }
+
+                if (first is Raider raider)
                 {
                     CitySystem.AwardLove(pm, 1000);
 
@@ -170,14 +180,20 @@ namespace Server.Engines.CityLoyalty
         public void CheckBannerCooldown()
         {
             if (_BannerCooldown == null || _BannerCooldown.Count == 0)
+            {
                 return;
+            }
 
             List<PlayerMobile> list = new List<PlayerMobile>(_BannerCooldown.Keys);
 
-            foreach (PlayerMobile pm in list)
+            for (var index = 0; index < list.Count; index++)
             {
+                PlayerMobile pm = list[index];
+
                 if (_BannerCooldown[pm] < DateTime.UtcNow)
+                {
                     _BannerCooldown.Remove(pm);
+                }
             }
 
             list.Clear();
@@ -217,7 +233,9 @@ namespace Server.Engines.CityLoyalty
             City = (City)reader.ReadInt();
 
             if (CitySystem != null)
+            {
                 CitySystem.Captain = this;
+            }
         }
     }
 }

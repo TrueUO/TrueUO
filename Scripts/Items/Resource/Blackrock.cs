@@ -2,11 +2,12 @@ namespace Server.Items
 {
     public class Blackrock : Item
     {
+        public override int Hue => 1954;
+
         [Constructable]
         public Blackrock()
             : base(Utility.RandomList(0x136C, 0x1EA7))
         {
-            Hue = 1954;
         }
 
         public Blackrock(Serial serial)

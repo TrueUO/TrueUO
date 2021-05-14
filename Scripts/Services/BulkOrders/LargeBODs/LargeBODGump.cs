@@ -3,7 +3,6 @@ using Server.Items;
 using Server.Mobiles;
 using Server.Network;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.BulkOrders
 {
@@ -156,10 +155,22 @@ namespace Server.Engines.BulkOrders
                 {
                     if (!m_Deed.Deleted && targeted is Container container)
                     {
-                        List<SmallBOD> list = container.Items.OfType<SmallBOD>().ToList();
+                        List<SmallBOD> list = new List<SmallBOD>();
 
-                        foreach (SmallBOD item in list)
+                        for (var index = 0; index < container.Items.Count; index++)
                         {
+                            Item item = container.Items[index];
+
+                            if (item is SmallBOD bod)
+                            {
+                                list.Add(bod);
+                            }
+                        }
+
+                        for (var index = 0; index < list.Count; index++)
+                        {
+                            SmallBOD item = list[index];
+
                             m_Deed.EndCombine(m_From, item);
                         }
 

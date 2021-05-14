@@ -32,7 +32,6 @@ namespace Server.Mobiles
         {
         }
 
-        public virtual bool IsInvulnerable => true;
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -42,18 +41,15 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
-
-            if (version == 1)
-            {
-                FacialHairItemID = 0x204B;
-            }
+            reader.ReadInt();
         }
 
         public override bool HandlesOnSpeech(Mobile from)
         {
             if (from.InRange(Location, 8))
+            {
                 return true;
+            }
 
             return base.HandlesOnSpeech(from);
         }
@@ -62,9 +58,7 @@ namespace Server.Mobiles
         {
             if (!e.Handled && e.Mobile.InRange(Location, 2))
             {
-                PlayerMobile pm = e.Mobile as PlayerMobile;
-
-                if (pm.AbyssEntry)
+                if (e.Mobile is PlayerMobile pm && pm.AbyssEntry)
                 {
                     pm.SendMessage("You have completed the Sacred Quest already!");
                 }
@@ -76,7 +70,7 @@ namespace Server.Mobiles
                     {
                         case "hello":
                             {
-                                Say("Greetings Adventurer! If you are seeking to enter the Abyss, I may be of assitance to you.");
+                                Say("Greetings Adventurer! If you are seeking to enter the Abyss, I may be of assistance to you.");
                                 break;
                             }
                         case "secret":
@@ -131,6 +125,7 @@ namespace Server.Mobiles
                             }
                     }
                 }
+
                 base.OnSpeech(e);
             }
         }

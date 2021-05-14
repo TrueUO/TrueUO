@@ -6,7 +6,6 @@ using Server.Multis;
 using Server.Network;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.VeteranRewards
 {
@@ -146,28 +145,60 @@ namespace Server.Engines.VeteranRewards
                         {
                             from.SendLocalizedMessage(1049607); // You have too many followers to control that creature.
                         }
-                        else if (((PlayerMobile)from).AllFollowers.Any(x => x is GadgetryTableGolem))
-                        {
-                            from.SendLocalizedMessage(1154576); // You cannot build another golem at this time because you are currently in control of one.
-                        }
-                        else if (from.Stabled.Any(x => x is GadgetryTableGolem))
-                        {
-                            from.SendLocalizedMessage(1154577); // You cannot build another golem at this time because you have one in the stables.
-                        }
-                        else if (DateTime.UtcNow > NextGolemTime)
-                        {
-                            Golem g = new GadgetryTableGolem(Scalar(from));
-
-                            if (g.SetControlMaster(from))
-                            {
-                                NextGolemTime = DateTime.UtcNow + TimeSpan.FromDays(1);
-                                g.MoveToWorld(from.Location, from.Map);
-                                from.PlaySound(0x241);
-                            }
-                        }
                         else
                         {
-                            from.SendLocalizedMessage(1154578); // A golem can only be built once every 24 hours.
+                            bool golemFollower = false;
+
+                            for (var index = 0; index < ((PlayerMobile) from).AllFollowers.Count; index++)
+                            {
+                                var x = ((PlayerMobile) from).AllFollowers[index];
+
+                                if (x is GadgetryTableGolem)
+                                {
+                                    golemFollower = true;
+                                    break;
+                                }
+                            }
+
+                            if (golemFollower)
+                            {
+                                from.SendLocalizedMessage(1154576); // You cannot build another golem at this time because you are currently in control of one.
+                            }
+                            else
+                            {
+                                bool golemStabled = false;
+
+                                for (var index = 0; index < from.Stabled.Count; index++)
+                                {
+                                    var x = from.Stabled[index];
+
+                                    if (x is GadgetryTableGolem)
+                                    {
+                                        golemStabled = true;
+                                        break;
+                                    }
+                                }
+
+                                if (golemStabled)
+                                {
+                                    from.SendLocalizedMessage(1154577); // You cannot build another golem at this time because you have one in the stables.
+                                }
+                                else if (DateTime.UtcNow > NextGolemTime)
+                                {
+                                    Golem g = new GadgetryTableGolem(Scalar(from));
+
+                                    if (g.SetControlMaster(from))
+                                    {
+                                        NextGolemTime = DateTime.UtcNow + TimeSpan.FromDays(1);
+                                        g.MoveToWorld(from.Location, from.Map);
+                                        from.PlaySound(0x241);
+                                    }
+                                }
+                                else
+                                {
+                                    from.SendLocalizedMessage(1154578); // A golem can only be built once every 24 hours.
+                                }
+                            }
                         }
                     }
                     else

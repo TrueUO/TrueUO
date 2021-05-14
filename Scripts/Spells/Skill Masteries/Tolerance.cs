@@ -24,9 +24,7 @@ namespace Server.Spells.SkillMasteries
 
         public override bool CheckCast()
         {
-            ToleranceSpell spell = GetSpell(Caster, typeof(ToleranceSpell)) as ToleranceSpell;
-
-            if (spell != null)
+            if (GetSpell(Caster, typeof(ToleranceSpell)) is ToleranceSpell spell)
             {
                 spell.Expire();
                 return false;
@@ -57,9 +55,7 @@ namespace Server.Spells.SkillMasteries
 
         public static bool OnPoisonApplied(Mobile m)
         {
-            ToleranceSpell spell = GetSpell(m, typeof(ToleranceSpell)) as ToleranceSpell;
-
-            if (spell != null)
+            if (GetSpell(m, typeof(ToleranceSpell)) is ToleranceSpell spell)
             {
                 double stamCost = (m.Skills[spell.CastSkill].Base + ((MasteryInfo.GetMasteryLevel(m, SkillName.Poisoning) * 30) + 10)) / 2;
 

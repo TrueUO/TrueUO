@@ -664,20 +664,23 @@ namespace Server.Items
 
             for (int i = 0; i < count; ++i)
             {
-                KeyValuePair<Item, Point3D> kvp = list[i];
-                Item item = kvp.Key;
-                Point3D loc = kvp.Value;
-
-                writer.Write(item);
-
-                if (item.Location == loc)
+                if (list != null)
                 {
-                    writer.Write(false);
-                }
-                else
-                {
-                    writer.Write(true);
-                    writer.Write(loc);
+                    KeyValuePair<Item, Point3D> kvp = list[i];
+                    Item item = kvp.Key;
+                    Point3D loc = kvp.Value;
+
+                    writer.Write(item);
+
+                    if (item.Location == loc)
+                    {
+                        writer.Write(false);
+                    }
+                    else
+                    {
+                        writer.Write(true);
+                        writer.Write(loc);
+                    }
                 }
             }
 

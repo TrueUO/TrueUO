@@ -198,8 +198,10 @@ namespace Server.Items
         {
             EnhancedBandage existing = null;
 
-            foreach (Item item in Items)
+            for (var index = 0; index < Items.Count; index++)
             {
+                Item item = Items[index];
+
                 if (item is EnhancedBandage bandage)
                 {
                     existing = bandage;
@@ -210,11 +212,11 @@ namespace Server.Items
             for (int i = Items.Count - 1; i >= 0 && m_Charges > 0; --i)
             {
                 if (Items[i] is EnhancedBandage)
+                {
                     continue;
+                }
 
-                Bandage bandage = Items[i] as Bandage;
-
-                if (bandage != null)
+                if (Items[i] is Bandage bandage)
                 {
                     Item enhanced;
 
