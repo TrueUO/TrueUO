@@ -55,9 +55,7 @@ namespace Server.Items
         {
             if (Expires < DateTime.UtcNow && !Owner.Deleted)
             {
-                var item = Owner as BaseDecayingItem;
-
-                if (item != null)
+                if (Owner is BaseDecayingItem item)
                 {
                     item.Decay();
                 }

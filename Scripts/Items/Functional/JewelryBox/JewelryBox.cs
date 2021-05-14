@@ -91,13 +91,18 @@ namespace Server.Items
 
         public bool IsAccept(Item item)
         {
-            foreach (Type type in _AcceptList)
+            for (var index = 0; index < _AcceptList.Length; index++)
+            {
+                Type type = _AcceptList[index];
+
                 if (item.GetType().IsSubclassOf(type))
+                {
                     return true;
+                }
+            }
 
             return false;
         }
-
 
         private readonly Type[] _AcceptList =
         {
