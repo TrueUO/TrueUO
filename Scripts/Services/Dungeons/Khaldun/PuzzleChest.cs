@@ -327,11 +327,17 @@ namespace Server.Items
             foreach (KeyValuePair<Mobile, PuzzleChestSolutionAndTime> kvp in m_Guesses)
             {
                 if (DateTime.UtcNow - kvp.Value.When > CleanupTime)
+                {
                     toDelete.Add(kvp.Key);
+                }
             }
 
-            foreach (Mobile m in toDelete)
+            for (var index = 0; index < toDelete.Count; index++)
+            {
+                Mobile m = toDelete[index];
+
                 m_Guesses.Remove(m);
+            }
         }
 
         public override void Serialize(GenericWriter writer)
@@ -400,8 +406,10 @@ namespace Server.Items
                 Item gem = Loot.RandomGem();
                 Type gemType = gem.GetType();
 
-                foreach (Item listGem in gems)
+                for (var index = 0; index < gems.Count; index++)
                 {
+                    Item listGem = gems[index];
+
                     if (listGem.GetType() == gemType)
                     {
                         listGem.Amount++;
@@ -411,14 +419,22 @@ namespace Server.Items
                 }
 
                 if (!gem.Deleted)
+                {
                     gems.Add(gem);
+                }
             }
 
-            foreach (Item gem in gems)
+            for (var index = 0; index < gems.Count; index++)
+            {
+                Item gem = gems[index];
+
                 DropItem(gem);
+            }
 
             if (0.2 > Utility.RandomDouble())
+            {
                 DropItem(new BagOfReagents(50));
+            }
 
             for (int i = 0; i < 2; i++)
             {

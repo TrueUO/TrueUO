@@ -471,9 +471,11 @@ namespace Server.Items
 
                 Sector sector = m.Map.GetSector(x, y);
 
-                foreach (Item item in sector.Items)
+                for (var index = 0; index < sector.Items.Count; index++)
                 {
-                    if (item.Location.X == x && item.Location.Y == y && (item.Z + item.ItemData.Height) > m.Z && (m.Z + 16) > item.Z && item is BaseDoor && m.CanSee(item) && m.InLOS(item))
+                    Item item = sector.Items[index];
+
+                    if (item.Location.X == x && item.Location.Y == y && item.Z + item.ItemData.Height > m.Z && m.Z + 16 > item.Z && item is BaseDoor && m.CanSee(item) && m.InLOS(item))
                     {
                         if (m.CheckAlive())
                         {
