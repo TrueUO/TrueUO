@@ -60,10 +60,15 @@ namespace Server.Mobiles
         {
             AddLoot(LootPack.Rich);
             AddLoot(LootPack.LootItem<ArcaneGem>(70.0));
+        }
 
-            if (Map == Map.Ilshenar)
+        public override void OnDeath(Container c)
+        {
+            base.OnDeath(c);
+
+            if (Map == Map.Ilshenar && Utility.RandomDouble() < 0.02)
             {
-                AddLoot(LootPack.LootItem<CompassionSage>(0.02));
+                c.DropItem(new CompassionSage());
             }
         }
 

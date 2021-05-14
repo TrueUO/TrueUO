@@ -60,8 +60,6 @@ namespace Server.Engines.JollyRoger
             return null;
         }
 
-        public override bool UseSmartAI => true;
-
         public virtual double MinSkill => 105.0;
         public virtual double MaxSkill => 130.0;
         public virtual int MinResist => 20;

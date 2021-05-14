@@ -12618,7 +12618,7 @@ namespace Server.Mobiles
 
                                     // ClearOnAdvance
                                     parmstr = GetParm(s, ":CA=");
-                                    bool clearAdvance = true;
+                                    var clearAdvance = true;
                                     // if kills needed is zero, then set CA to false by default.  This maintains consistency with the
                                     // previous default behavior for old spawn specs that havent specified CA
                                     if (killsNeeded == 0)

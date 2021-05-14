@@ -2186,8 +2186,7 @@ namespace Server.Mobiles
                 if (!item.Deleted && (name.Length == 0 || string.Compare(item.Name, name, true) == 0))
                 {
 
-                    if (typestr == null ||
-                        targettype != null && (itemtype.Equals(targettype) || itemtype.IsSubclassOf(targettype)))
+                    if (typestr == null || targettype != null && (itemtype == targettype || itemtype.IsSubclassOf(targettype)))
                     {
                         founditem = item;
                         count++;
@@ -2225,8 +2224,9 @@ namespace Server.Mobiles
             foreach (Mobile mobile in World.Mobiles.Values) // search through all mobiles in the world and find one with a matching name
             {
                 Type mobtype = mobile.GetType();
+
                 if (!mobile.Deleted && (name.Length == 0 || string.Compare(mobile.Name, name, true) == 0) && (typestr == null ||
-                    targettype != null && (mobtype.Equals(targettype) || mobtype.IsSubclassOf(targettype))))
+                    targettype != null && (mobtype == targettype || mobtype.IsSubclassOf(targettype))))
                 {
                     foundmobile = mobile;
                     count++;
@@ -2387,9 +2387,7 @@ namespace Server.Mobiles
                 }
                 else if (name.Length == 0 || string.Compare(item.Name, name, true) == 0)
                 {
-                    if (typestr == null ||
-                        targettype != null &&
-                        (item.GetType().Equals(targettype) || item.GetType().IsSubclassOf(targettype)))
+                    if (typestr == null || targettype != null && (item.GetType() == targettype || item.GetType().IsSubclassOf(targettype)))
                     {
                         founditem = item;
                         break;
@@ -2458,13 +2456,10 @@ namespace Server.Mobiles
 
                     deletelist.Add(m);
                 }
-                else if (name.Length == 0 || string.Compare(m.Name, name, true) == 0)
+                else if ((name.Length == 0 || string.Compare(m.Name, name, true) == 0) && (typestr == null || targettype != null && (m.GetType() == targettype || m.GetType().IsSubclassOf(targettype))))
                 {
-                    if (typestr == null || targettype != null && (m.GetType().Equals(targettype) || m.GetType().IsSubclassOf(targettype)))
-                    {
-                        foundmobile = m;
-                        break;
-                    }
+                    foundmobile = m;
+                    break;
                 }
             }
 
