@@ -277,11 +277,12 @@ namespace Server.Items
 
         private static void StealArtiesForceRespawn_OnCommand(CommandEventArgs e)
         {
-            if (Instance != null &&
-                Instance.m_Artifacts != null)
+            if (Instance != null && Instance.m_Artifacts != null)
             {
-                foreach (StealableInstance instance in Instance.m_Artifacts)
+                for (var index = 0; index < Instance.m_Artifacts.Length; index++)
                 {
+                    StealableInstance instance = Instance.m_Artifacts[index];
+
                     instance.ForceRespawn();
                 }
             }
@@ -324,10 +325,14 @@ namespace Server.Items
                 m_RespawnTimer = null;
             }
 
-            foreach (StealableInstance si in m_Artifacts)
+            for (var index = 0; index < m_Artifacts.Length; index++)
             {
+                StealableInstance si = m_Artifacts[index];
+
                 if (si.Item != null)
+                {
                     si.Item.Delete();
+                }
             }
 
             m_Instance = null;
@@ -335,8 +340,10 @@ namespace Server.Items
 
         public void CheckRespawn()
         {
-            foreach (StealableInstance si in m_Artifacts)
+            for (var index = 0; index < m_Artifacts.Length; index++)
             {
+                StealableInstance si = m_Artifacts[index];
+
                 si.CheckRespawn();
             }
         }

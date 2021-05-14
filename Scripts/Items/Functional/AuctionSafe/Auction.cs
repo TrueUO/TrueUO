@@ -223,11 +223,11 @@ namespace Server.Engines.Auction
         public bool TryBuyout(Mobile m)
         {
             if (!OnGoing || InClaimPeriod || Buyout <= 0)
+            {
                 return false;
+            }
 
-            Account acct = m.Account as Account;
-
-            if (acct != null)
+            if (m.Account is Account acct)
             {
                 if (!acct.WithdrawGold(Buyout))
                 {
@@ -361,11 +361,13 @@ namespace Server.Engines.Auction
         private void CloseGumps()
         {
             if (Viewers != null)
-                Viewers.ForEach(pm =>
+                for (var index = 0; index < Viewers.Count; index++)
                 {
+                    var pm = Viewers[index];
+
                     pm.CloseGump(typeof(AuctionBidGump));
                     pm.CloseGump(typeof(AuctionOwnerGump));
-                });
+                }
         }
 
         public void HouseCollapse()
@@ -374,8 +376,10 @@ namespace Server.Engines.Auction
 
             if (Bids != null)
             {
-                Bids.ForEach(bid =>
+                for (var index = 0; index < Bids.Count; index++)
                 {
+                    var bid = Bids[index];
+
                     string name = AuctionItemName();
 
                     if (string.IsNullOrEmpty(name))
@@ -383,18 +387,19 @@ namespace Server.Engines.Auction
                         name = "the item you bid on";
                     }
 
-                    NewMaginciaMessage mes = new NewMaginciaMessage(null, new TextDefinition(1156454), string.Format("{0}\t{1}\t{2}",
-                                                                CurrentPlatBid.ToString("N0", CultureInfo.GetCultureInfo("en-US")),
-                                                                CurrentGoldBid.ToString("N0", CultureInfo.GetCultureInfo("en-US")),
-                                                                name));
+                    NewMaginciaMessage mes = new NewMaginciaMessage(null, new TextDefinition(1156454), string.Format(
+                        "{0}\t{1}\t{2}",
+                        CurrentPlatBid.ToString("N0", CultureInfo.GetCultureInfo("en-US")),
+                        CurrentGoldBid.ToString("N0", CultureInfo.GetCultureInfo("en-US")),
+                        name));
                     /*Your winning bid amount of ~1_BIDAMT~plat and ~2_BIDAMT~gp for ~3_ITEMNAME~ has been refunded to you due to house collapse.*/
                     MaginciaLottoSystem.SendMessageTo(bid.Mobile, mes);
 
-                    Account a = bid.Mobile.Account as Account;
-
-                    if (a != null)
+                    if (bid.Mobile.Account is Account a)
+                    {
                         a.DepositGold(bid.CurrentBid);
-                });
+                    }
+                }
 
                 RemoveAuction();
             }
@@ -634,8 +639,10 @@ namespace Server.Engines.Auction
         {
             Timer.DelayCall(TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1), () =>
             {
-                Auctions.ForEach(a =>
+                for (var index = 0; index < Auctions.Count; index++)
                 {
+                    var a = Auctions[index];
+
                     if (a.OnGoing && a.EndTime < DateTime.Now && !a.InClaimPeriod)
                     {
                         a.EndAuction();
@@ -644,8 +651,7 @@ namespace Server.Engines.Auction
                     {
                         a.EndClaimPeriod();
                     }
-
-                });
+                }
             });
         }
         #endregion
