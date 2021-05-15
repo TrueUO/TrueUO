@@ -348,10 +348,10 @@ namespace Server
 			{
 				try {
 					if(SupportedTerminals[i] != "xterm")
-						Process.Start(SupportedTerminals[i], $"--working-directory={BaseDirectory} -x ./ServUO.sh");
+						Process.Start(SupportedTerminals[i], $"--working-directory={BaseDirectory} -x ./TrueUO.sh");
 					else
-						Process.Start(SupportedTerminals[i], $"-lcc {BaseDirectory} -e ./ServUO.sh");
-					Thread.Sleep(500); // a sleep here to not close the programm to quick, so that the new windows cant start.
+						Process.Start(SupportedTerminals[i], $"-lcc {BaseDirectory} -e ./TrueUO.sh");
+					Thread.Sleep(500); // a sleep here to not close the program to quick, so that the new windows cant start.
 				}
 				catch(System.ComponentModel.Win32Exception)
 				{
@@ -458,15 +458,15 @@ namespace Server
 				}
 				else if (Insensitive.Equals(a, "-h") || Insensitive.Equals(a, "-help"))
 				{
-					Console.WriteLine("An Ultima Online server emulator written in C# - Visit https://www.servuo.com for more information.\n\n");
+					Console.WriteLine("An Ultima Online server emulator written in C# - Visit https://github.com/TrueUO/TrueUO for more information.\n\n");
 					Console.WriteLine(AppDomain.CurrentDomain.FriendlyName + " [Parameter]\n\n");
-					Console.WriteLine("     -debug              Starting ServUO in Debug Mode. Debug Mode is being used in Core and Scripts to give extended inforamtion during runtime.");
-					Console.WriteLine("     -haltonwarning      ServUO halts if any warning is raised during compilation of scripts.");
+					Console.WriteLine("     -debug              Starting TrueUO in Debug Mode. Debug Mode is being used in Core and Scripts to give extended information during runtime.");
+					Console.WriteLine("     -haltonwarning      TrueUO halts if any warning is raised during compilation of scripts.");
 					Console.WriteLine("     -h or -help         Displays this help text.");
 					Console.WriteLine("     -nocache            No known effect.");
 					Console.WriteLine("     -noconsole          No user interaction during startup and runtime.");
 					Console.WriteLine("     -profile            Enables profiling allowing to get performance diagnostic information of packets, timers etc. in AdminGump -> Maintenance. Use with caution. This increases server load.");
-					Console.WriteLine("     -service            This parameter should be set if you're running ServUO as a Windows Service. No user interaction. *Windows only*");
+					Console.WriteLine("     -service            This parameter should be set if you're running TrueUO as a Windows Service. No user interaction. *Windows only*");
 					Console.WriteLine("     -usehrt             Enables High Resolution Timing if requirements are met. Increasing the resolution of the timer. *Windows only*");
 					Console.WriteLine("     -vb                 Enables compilation of VB.NET Scripts. Without this option VB.NET Scripts are skipped.");
 
@@ -525,7 +525,7 @@ namespace Server
 			Utility.PushColor(ConsoleColor.Cyan);
 #if DEBUG
 			Console.WriteLine(
-				"ServUO - [https://www.servuo.com] Version {0}.{1}, Build {2}.{3} - Build on {4} UTC - Debug",
+				"TrueUO - [https://github.com/TrueUO/TrueUO] Version {0}.{1}, Build {2}.{3} - Build on {4} UTC - Debug",
 				ver.Major,
 				ver.Minor,
 				ver.Build,
@@ -533,7 +533,7 @@ namespace Server
 				buildDate);
 #else
 			Console.WriteLine(
-				"ServUO - [https://www.servuo.com] Version {0}.{1}, Build {2}.{3} - Build on {4} UTC - Release",
+				"TrueUO - [https://github.com/TrueUO/TrueUO] Version {0}.{1}, Build {2}.{3} - Build on {4} UTC - Release",
 				ver.Major,
 				ver.Minor,
 				ver.Build,

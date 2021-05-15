@@ -10,10 +10,10 @@ using System.Runtime.InteropServices;
 // associated with an assembly.
 //
 
-[assembly: AssemblyTitle("ServUO Server")]
+[assembly: AssemblyTitle("TrueUO Server")]
 [assembly: AssemblyDescription("Ultima Online Server Emulator")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("The ServUO Team")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("")]
 [assembly: AssemblyCopyright("")]
 [assembly: AssemblyTrademark("")]
