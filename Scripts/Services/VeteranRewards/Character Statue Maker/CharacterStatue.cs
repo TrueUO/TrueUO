@@ -74,10 +74,7 @@ namespace Server.Mobiles
         [CommandProperty(AccessLevel.GameMaster)]
         public StatueType StatueType
         {
-            get
-            {
-                return m_Type;
-            }
+            get => m_Type;
             set
             {
                 m_Type = value;
@@ -88,10 +85,7 @@ namespace Server.Mobiles
         [CommandProperty(AccessLevel.GameMaster)]
         public StatuePose Pose
         {
-            get
-            {
-                return m_Pose;
-            }
+            get => m_Pose;
             set
             {
                 m_Pose = value;
@@ -101,10 +95,7 @@ namespace Server.Mobiles
         [CommandProperty(AccessLevel.GameMaster)]
         public StatueMaterial Material
         {
-            get
-            {
-                return m_Material;
-            }
+            get => m_Material;
             set
             {
                 m_Material = value;
@@ -115,10 +106,7 @@ namespace Server.Mobiles
         [CommandProperty(AccessLevel.GameMaster)]
         public Mobile SculptedBy
         {
-            get
-            {
-                return m_SculptedBy;
-            }
+            get => m_SculptedBy;
             set
             {
                 m_SculptedBy = value;
@@ -128,38 +116,21 @@ namespace Server.Mobiles
         [CommandProperty(AccessLevel.GameMaster)]
         public DateTime SculptedOn
         {
-            get
-            {
-                return m_SculptedOn;
-            }
-            set
-            {
-                m_SculptedOn = value;
-            }
+            get => m_SculptedOn;
+            set => m_SculptedOn = value;
         }
         public CharacterStatuePlinth Plinth
         {
-            get
-            {
-                return m_Plinth;
-            }
-            set
-            {
-                m_Plinth = value;
-            }
+            get => m_Plinth;
+            set => m_Plinth = value;
         }
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsRewardItem
         {
-            get
-            {
-                return m_IsRewardItem;
-            }
-            set
-            {
-                m_IsRewardItem = value;
-            }
+            get => m_IsRewardItem;
+            set => m_IsRewardItem = value;
         }
+
         public override void OnDoubleClick(Mobile from)
         {
             DisplayPaperdollTo(from);
@@ -186,8 +157,10 @@ namespace Server.Mobiles
             {
                 BaseHouse house = BaseHouse.FindHouseAt(this);
 
-                if ((house != null && house.IsCoOwner(from)) || (int)from.AccessLevel > (int)AccessLevel.Counselor)
+                if (house != null && house.IsCoOwner(from) || (int)from.AccessLevel > (int)AccessLevel.Counselor)
+                {
                     list.Add(new DemolishEntry(this));
+                }
             }
         }
 
@@ -497,14 +470,8 @@ namespace Server.Mobiles
         [CommandProperty(AccessLevel.GameMaster)]
         public CharacterStatue Statue
         {
-            get
-            {
-                return m_Statue;
-            }
-            set
-            {
-                m_Statue = value;
-            }
+            get => m_Statue;
+            set => m_Statue = value;
         }
         [CommandProperty(AccessLevel.GameMaster)]
         public StatueType StatueType
@@ -516,18 +483,12 @@ namespace Server.Mobiles
 
                 return m_Type;
             }
-            set
-            {
-                m_Type = value;
-            }
+            set => m_Type = value;
         }
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsRewardItem
         {
-            get
-            {
-                return m_IsRewardItem;
-            }
+            get => m_IsRewardItem;
             set
             {
                 m_IsRewardItem = value;
@@ -547,9 +508,7 @@ namespace Server.Mobiles
 
         public override void OnDoubleClick(Mobile from)
         {
-            Account acct = from.Account as Account;
-
-            if (acct != null && from.IsPlayer())
+            if (from.Account is Account acct && from.IsPlayer())
             {
                 TimeSpan time = TimeSpan.FromDays(RewardSystem.RewardInterval.TotalDays * 6) - (DateTime.UtcNow - acct.Created);
 
@@ -657,7 +616,9 @@ namespace Server.Mobiles
             Map map = from.Map;
 
             if (p == null || map == null || m_Maker == null || m_Maker.Deleted)
+            {
                 return;
+            }
 
             if (m_Maker.IsChildOf(from.Backpack))
             {
@@ -665,12 +626,13 @@ namespace Server.Mobiles
                 BaseHouse house = null;
                 Point3D loc = new Point3D(p);
 
-                if (targeted is Item && !((Item)targeted).IsLockedDown && !((Item)targeted).IsSecure && !(targeted is AddonComponent))
+                if (targeted is Item item && !item.IsLockedDown && !item.IsSecure && !(item is AddonComponent))
                 {
                     from.SendLocalizedMessage(1076191); // Statues can only be placed in houses.
                     return;
                 }
-                else if (from.IsBodyMod)
+
+                if (from.IsBodyMod)
                 {
                     from.SendLocalizedMessage(1073648); // You may only proceed while in your original state...
                     return;
@@ -685,18 +647,15 @@ namespace Server.Mobiles
 
                     house.Addons[plinth] = from;
 
-                    if (m_Maker is IRewardItem)
-                        statue.IsRewardItem = ((IRewardItem)m_Maker).IsRewardItem;
+                    if (m_Maker is IRewardItem rewardItem)
+                    {
+                        statue.IsRewardItem = rewardItem.IsRewardItem;
+                    }
 
                     statue.Plinth = plinth;
                     plinth.MoveToWorld(loc, map);
                     statue.InvalidatePose();
 
-                    /*
-                    * TODO: Previously the maker wasn't deleted until after statue
-                    * customization, leading to redeeding issues. Exact OSI behavior
-                    * needs looking into.
-                    */
                     m_Maker.Delete();
                     statue.Sculpt(from);
 
@@ -704,14 +663,22 @@ namespace Server.Mobiles
                     from.SendGump(new CharacterStatueGump(m_Maker, statue, from));
                 }
                 else if (result == AddonFitResult.Blocked)
+                {
                     from.SendLocalizedMessage(500269); // You cannot build that there.
+                }
                 else if (result == AddonFitResult.NotInHouse)
+                {
                     from.SendLocalizedMessage(1076192); // Statues can only be placed in houses where you are the owner or co-owner.
+                }
                 else if (result == AddonFitResult.DoorTooClose)
+                {
                     from.SendLocalizedMessage(500271); // You cannot build near the door.
+                }
             }
             else
+            {
                 from.SendLocalizedMessage(1042001); // That must be in your pack for you to use it.
+            }
         }
     }
 }

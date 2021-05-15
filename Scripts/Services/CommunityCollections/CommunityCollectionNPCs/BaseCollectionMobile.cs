@@ -140,27 +140,15 @@ namespace Server.Mobiles
         [CommandProperty(AccessLevel.GameMaster)]
         public int DonationLabel
         {
-            get
-            {
-                return m_DonationTitle is int ? (int)m_DonationTitle : 0;
-            }
-            set
-            {
-                m_DonationTitle = value;
-            }
+            get => m_DonationTitle is int title ? title : 0;
+            set => m_DonationTitle = value;
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public string DonationString
         {
-            get
-            {
-                return m_DonationTitle is string ? (string)m_DonationTitle : null;
-            }
-            set
-            {
-                m_DonationTitle = value;
-            }
+            get => m_DonationTitle is string stringTitle ? stringTitle : null;
+            set => m_DonationTitle = value;
         }
 
         public BaseCollectionMobile(string name, string title)
@@ -188,13 +176,15 @@ namespace Server.Mobiles
         {
             if (from.Alive)
             {
-                if (from.InRange(Location, 2) && from is PlayerMobile && CanDonate((PlayerMobile)from))
+                if (from.InRange(Location, 2) && from is PlayerMobile mobile && CanDonate(mobile))
                 {
-                    from.CloseGump(typeof(CommunityCollectionGump));
-                    from.SendGump(new CommunityCollectionGump((PlayerMobile)from, this, Location));
+                    mobile.CloseGump(typeof(CommunityCollectionGump));
+                    mobile.SendGump(new CommunityCollectionGump(mobile, this, Location));
                 }
                 else
+                {
                     from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1019045); // I can't reach that.
+                }
             }
         }
 

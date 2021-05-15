@@ -1097,7 +1097,7 @@ namespace Server.Engines.VendorSearching
                 {
                     var det = Details[index];
 
-                    if (det.Attribute is Layer attribute && attribute != (Layer) o)
+                    if (det.Attribute is Layer attribute && attribute != layerObject)
                     {
                         layer = det;
                         break;
