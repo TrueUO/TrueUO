@@ -5,8 +5,8 @@
 		<body><![CDATA[This is a test message, and the format you should use when using custom, pre-loaded Town Cryer Messages.]]></body>
 		<created>12/01/2018</created>
 		<expires>12/02/2018</expires>
-		<link>https://www.servuo.com/forum/</link>
-		<linktext>ServUO Forums</linktext>
+		<link>https://github.com/TrueUO/TrueUO/</link>
+		<linktext>TrueUO Source Code</linktext>
 	</message>
 </preloadedTC>
 
