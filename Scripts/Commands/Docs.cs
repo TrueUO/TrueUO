@@ -22,7 +22,7 @@ namespace Server.Commands
         }
 
         [Usage("DocGen")]
-        [Description("Generates ServUO documentation.")]
+        [Description("Generates TrueUO documentation.")]
         private static void DocGen_OnCommand(CommandEventArgs e)
         {
             World.Broadcast(0x35, true, "Documentation is being generated, please wait.");

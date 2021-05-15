@@ -227,8 +227,7 @@ namespace Server.Items
 
         public override void OnDoubleClick(Mobile from)
         {
-            if (from.IsStaff() || RootParent is PlayerVendor ||
-                (from.InRange(GetWorldLocation(), 2) && (Parent != null || (Z >= from.Z - 8 && Z <= from.Z + 16))))
+            if (from.IsStaff() || RootParent is PlayerVendor || from.InRange(GetWorldLocation(), 2) && (Parent != null || Z >= from.Z - 8 && Z <= from.Z + 16))
             {
                 Open(from);
             }
@@ -319,23 +318,17 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1000); // Version
+
             writer.Write(m_EngravedText);
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.PeekInt();
 
-            int version = reader.PeekInt();
-            switch (version)
-            {
-                case 1000:
-                    reader.ReadInt();
-                    m_EngravedText = reader.ReadString();
-                    break;
-            }
+            m_EngravedText = reader.ReadString();
         }
     }
 
@@ -465,15 +458,12 @@ namespace Server.Items
         {
             get
             {
-                Mobile m = ParentEntity as Mobile;
-                if (m != null && m.Player && m.Backpack == this)
+                if (ParentEntity is Mobile m && m.Player && m.Backpack == this)
                 {
                     return 550;
                 }
-                else
-                {
-                    return base.DefaultMaxWeight;
-                }
+
+                return base.DefaultMaxWeight;
             }
         }
         public bool Dye(Mobile from, DyeTub sender)
@@ -823,7 +813,7 @@ namespace Server.Items
         }
 
         /// <summary>
-        /// Due to popular demand, ServUO will be reproducing an EA bug that was never fixed.
+        /// Due to popular demand, TrueUO will be reproducing an EA bug that was never fixed.
         /// </summary>
         /// <param name="from"></param>
         /// <returns></returns>
