@@ -1,7 +1,6 @@
 using Server.Commands;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -111,7 +110,16 @@ namespace Server.Items
                     return;
                 }
 
-                entry = Schools[m.Map].FirstOrDefault(e => m.InRange(e.Location, MessageRange));
+                for (var index = 0; index < Schools[m.Map].Count; index++)
+                {
+                    var e = Schools[m.Map][index];
+
+                    if (m.InRange(e.Location, MessageRange))
+                    {
+                        entry = e;
+                        break;
+                    }
+                }
 
                 if (entry != null)
                 {
@@ -140,7 +148,18 @@ namespace Server.Items
 
             if (m.Backpack.FindItemByType<MagicalFishFinder>() != null && Schools.ContainsKey(m.Map))
             {
-                SchoolEntry entry = Schools[m.Map].FirstOrDefault(e => m.InRange(e.Location, SchoolRange));
+                SchoolEntry entry = null;
+
+                for (var index = 0; index < Schools[m.Map].Count; index++)
+                {
+                    var e = Schools[m.Map][index];
+
+                    if (m.InRange(e.Location, SchoolRange))
+                    {
+                        entry = e;
+                        break;
+                    }
+                }
 
                 if (entry != null)
                 {

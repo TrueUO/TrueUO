@@ -5,7 +5,6 @@ using Server.SkillHandlers;
 using Server.Targeting;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Gumps
 {
@@ -263,7 +262,20 @@ namespace Server.Gumps
                 }
                 else if (m is PlayerMobile pm)
                 {
-                    bool unraveled = cont.Items.FirstOrDefault(x => Imbuing.CanUnravelItem(m, x, false)) != null;
+                    Item first = null;
+
+                    for (var index = 0; index < cont.Items.Count; index++)
+                    {
+                        var x = cont.Items[index];
+
+                        if (Imbuing.CanUnravelItem(m, x, false))
+                        {
+                            first = x;
+                            break;
+                        }
+                    }
+
+                    bool unraveled = first != null;
 
                     if (unraveled)
                     {
@@ -340,13 +352,15 @@ namespace Server.Gumps
 
                     int count = 0;
 
-                    m_List.ForEach(x =>
+                    for (var index = 0; index < m_List.Count; index++)
                     {
+                        var x = m_List[index];
+
                         if (Imbuing.CanUnravelItem(User, x, true) && Imbuing.UnravelItem(User, x, true))
                         {
                             count++;
                         }
-                    });
+                    }
 
                     if (count > 0)
                     {
