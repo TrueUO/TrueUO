@@ -68,7 +68,12 @@ namespace Server.Items
                 Timer.DelayCall(TimeSpan.FromSeconds(Utility.RandomMinMax(60, 90)), () => Visible = true);
             }
 
-            Spawn.ForEach(s => s.Combatant = from);
+            for (var index = 0; index < Spawn.Count; index++)
+            {
+                var s = Spawn[index];
+
+                s.Combatant = from;
+            }
         }
 
         public override void OnLocationChange(Point3D oldLocation)
@@ -119,7 +124,11 @@ namespace Server.Items
             writer.Write(Addon);
             writer.Write(Spawn.Count);
 
-            Spawn.ForEach(sp => writer.Write(sp));
+            for (var index = 0; index < Spawn.Count; index++)
+            {
+                var sp = Spawn[index];
+                writer.Write(sp);
+            }
         }
 
         public override void Deserialize(GenericReader reader)
@@ -134,9 +143,7 @@ namespace Server.Items
 
             for (int i = 0; i < count; i++)
             {
-                BaseCreature bc = reader.ReadMobile() as BaseCreature;
-
-                if (bc != null)
+                if (reader.ReadMobile() is BaseCreature bc)
                 {
                     Spawn.Add(bc);
 
@@ -148,13 +155,17 @@ namespace Server.Items
             }
 
             if (Addon != null)
+            {
                 Addon.Foil = this;
+            }
         }
 
         public static void Generate()
         {
-            foreach (Point3D pnt in _SpawnLocs)
+            for (var index = 0; index < _SpawnLocs.Length; index++)
             {
+                Point3D pnt = _SpawnLocs[index];
+
                 MacawNest nest = new MacawNest();
                 nest.MoveToWorld(pnt, Map.TerMur);
             }

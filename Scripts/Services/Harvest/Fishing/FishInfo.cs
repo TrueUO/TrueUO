@@ -328,9 +328,7 @@ namespace Server.Items
             Type item = null;
             bool enhanced = false;
 
-            var baitable = harvestItem as IBaitable;
-
-            if (baitable != null)
+            if (harvestItem is IBaitable baitable)
             {
                 bait = baitable.BaitType;
                 enhanced = baitable.EnhancedBait;

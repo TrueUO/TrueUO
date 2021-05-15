@@ -157,13 +157,21 @@ namespace Server.Items
         {
             Container pack = from.Backpack;
 
-            foreach (Item item in new List<Item>(Items))
+            var list = new List<Item>(Items);
+
+            for (var index = 0; index < list.Count; index++)
             {
+                Item item = list[index];
+
                 if (item == null)
+                {
                     continue;
+                }
 
                 if (!pack.TryDropItem(from, item, false))
+                {
                     item.MoveToWorld(from.Location, from.Map);
+                }
 
                 from.SendLocalizedMessage(1116386, string.Format("#{0}", item.LabelNumber));
             }

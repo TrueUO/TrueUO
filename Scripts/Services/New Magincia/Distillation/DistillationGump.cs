@@ -333,16 +333,19 @@ namespace Server.Engines.Distillation
                 if (type == typeof(Pitcher))
                 {
                     int amount = 0;
+
                     BeverageType bType = liquor == Liquor.Brandy ? BeverageType.Wine : BeverageType.Water;
 
                     Item[] items = pack.FindItemsByType(type);
 
-                    foreach (Item item in items)
+                    for (var index = 0; index < items.Length; index++)
                     {
-                        Pitcher Pitcher = item as Pitcher;
+                        Item item = items[index];
 
-                        if (Pitcher != null && Pitcher.Content == bType && Pitcher.Quantity >= Pitcher.MaxQuantity)
+                        if (item is Pitcher pitcher && pitcher.Content == bType && pitcher.Quantity >= pitcher.MaxQuantity)
+                        {
                             amount++;
+                        }
                     }
 
                     return amount;
@@ -410,22 +413,25 @@ namespace Server.Engines.Distillation
                     else if (type == typeof(Pitcher))
                     {
                         toConsume = (int)(toConsume * percentage);
+
                         BeverageType bType = m_Def.Liquor == Liquor.Brandy ? BeverageType.Wine : BeverageType.Water;
 
                         Item[] items = pack.FindItemsByType(type);
 
-                        foreach (Item item in items)
+                        for (var index = 0; index < items.Length; index++)
                         {
-                            Pitcher Pitcher = item as Pitcher;
+                            Item item = items[index];
 
-                            if (Pitcher != null && Pitcher.Content == bType && Pitcher.Quantity >= Pitcher.MaxQuantity)
+                            if (item is Pitcher pitcher && pitcher.Content == bType && pitcher.Quantity >= pitcher.MaxQuantity)
                             {
-                                Pitcher.Quantity = 0;
+                                pitcher.Quantity = 0;
                                 toConsume--;
                             }
 
                             if (toConsume <= 0)
+                            {
                                 break;
+                            }
                         }
                     }
                     else if (type == typeof(PewterBowlOfCorn))
@@ -436,7 +442,9 @@ namespace Server.Engines.Distillation
                         int totalWooden = pack.GetAmount(typeof(WoodenBowlOfCorn));
 
                         if (totalPewter >= toConsume)
+                        {
                             pack.ConsumeTotal(type, toConsume);
+                        }
                         else
                         {
                             pack.ConsumeTotal(type, totalPewter);

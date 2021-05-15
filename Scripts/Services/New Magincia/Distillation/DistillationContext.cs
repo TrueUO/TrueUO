@@ -31,10 +31,14 @@ namespace Server.Engines.Distillation
 
         public bool YeastInUse(Yeast yeast)
         {
-            foreach (Yeast y in m_SelectedYeast)
+            for (var index = 0; index < m_SelectedYeast.Length; index++)
             {
+                Yeast y = m_SelectedYeast[index];
+
                 if (y != null && y == yeast)
+                {
                     return true;
+                }
             }
 
             return false;
