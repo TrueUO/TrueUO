@@ -1,12 +1,4 @@
-#region Header
-// **********
-// ServUO - Paladin.cs
-// **********
-#endregion
-
-#region References
 using Server.Items;
-#endregion
 
 namespace Server.Mobiles
 {

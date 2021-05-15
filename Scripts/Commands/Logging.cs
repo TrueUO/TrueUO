@@ -8,7 +8,9 @@ namespace Server.Commands
     {
         private static readonly char[] m_NotSafe = { '\\', '/', ':', '*', '?', '"', '<', '>', '|' };
         private static StreamWriter m_Output;
+
         private static bool m_Enabled = true;
+
         public static bool Enabled
         {
             get => m_Enabled;

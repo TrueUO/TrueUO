@@ -50,7 +50,9 @@ namespace Server.Mobiles
         public override bool OnBeforeDeath()
         {
             if (Map == null)
+            {
                 return base.OnBeforeDeath();
+            }
 
             FixedParticles(0x36BD, 20, 10, 5044, EffectLayer.Head);
             PlaySound(0x307);
@@ -66,14 +68,16 @@ namespace Server.Mobiles
                 }
             }
 
-            foreach (Mobile m in list)
+            for (var index = 0; index < list.Count; index++)
             {
+                Mobile m = list[index];
+
                 Timer.DelayCall(TimeSpan.FromSeconds(.5), mob =>
-                    {
-                        mob.FixedParticles(0x36BD, 20, 10, 5044, EffectLayer.Head);
-                        mob.PlaySound(0x307);
-                        AOS.Damage(mob, this, Utility.RandomMinMax(25, 50), 50, 50, 0, 0, 0);
-                    }, m);
+                {
+                    mob.FixedParticles(0x36BD, 20, 10, 5044, EffectLayer.Head);
+                    mob.PlaySound(0x307);
+                    AOS.Damage(mob, this, Utility.RandomMinMax(25, 50), 50, 50, 0, 0, 0);
+                }, m);
             }
 
             ColUtility.Free(list);

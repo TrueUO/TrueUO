@@ -1,10 +1,9 @@
-﻿using Server.Mobiles;
+using Server.Mobiles;
 using System;
 using System.Collections.Generic;
 
 namespace Server.Items
 {
-    [TypeAlias("drNO.ThieveItems.ManaDraught")]
     public class ManaDraught : Item
     {
         private static readonly Dictionary<PlayerMobile, DateTime> DaughtUsageList = new Dictionary<PlayerMobile, DateTime>();
@@ -32,8 +31,10 @@ namespace Server.Items
                 }
             }
 
-            foreach (PlayerMobile pm in toRemove)
+            for (var index = 0; index < toRemove.Count; index++)
             {
+                PlayerMobile pm = toRemove[index];
+
                 DaughtUsageList.Remove(pm);
             }
 
@@ -45,14 +46,14 @@ namespace Server.Items
             if (DaughtUsageList.ContainsKey(pm))
             {
                 if (DaughtUsageList[pm] + Cooldown >= DateTime.Now)
+                {
                     return false;
-                else
-                    return true;
-            }
-            else
-            {
+                }
+
                 return true;
             }
+
+            return true;
         }
 
         private void OnUsed(PlayerMobile by)

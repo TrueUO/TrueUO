@@ -150,7 +150,7 @@ namespace Server.Commands
                 }
             }
 
-            e.Mobile.SendMessage("Object table has been generated. See the file : <servuo root>/objects.log");
+            e.Mobile.SendMessage("Object table has been generated. See the file : <trueuo root>/objects.log");
         }
 
         [Usage("TraceExpanded")]
