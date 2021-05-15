@@ -32,10 +32,14 @@ namespace Server.Engines.Quests
         {
             if (pm.Quests != null)
             {
-                foreach (BaseQuest q in pm.Quests)
+                for (var index = 0; index < pm.Quests.Count; index++)
                 {
-                    foreach (BaseObjective obj in q.Objectives)
+                    BaseQuest q = pm.Quests[index];
+
+                    for (var i = 0; i < q.Objectives.Count; i++)
                     {
+                        BaseObjective obj = q.Objectives[i];
+
                         if (obj is CollectionsObtainObjective objective && objective.Obtain == item.GetType())
                         {
                             objective.HasObtained = true;

@@ -10,10 +10,10 @@ namespace Server
         {
             EventSink.ClientVersionReceived += delegate (ClientVersionReceivedArgs args)
             {
-                PlayerMobile pm = args.State.Mobile as PlayerMobile;
-
-                if (pm != null)
+                if (args.State.Mobile is PlayerMobile pm)
+                {
                     Timer.DelayCall(TimeSpan.Zero, pm.ResendBuffs);
+                }
             };
         }
 
@@ -152,26 +152,26 @@ namespace Server
         #region Convenience Methods
         public static void AddBuff(Mobile m, BuffInfo b)
         {
-            PlayerMobile pm = m as PlayerMobile;
-
-            if (pm != null)
+            if (m is PlayerMobile pm)
+            {
                 pm.AddBuff(b);
+            }
         }
 
         public static void RemoveBuff(Mobile m, BuffInfo b)
         {
-            PlayerMobile pm = m as PlayerMobile;
-
-            if (pm != null)
+            if (m is PlayerMobile pm)
+            {
                 pm.RemoveBuff(b);
+            }
         }
 
         public static void RemoveBuff(Mobile m, BuffIcon b)
         {
-            PlayerMobile pm = m as PlayerMobile;
-
-            if (pm != null)
+            if (m is PlayerMobile pm)
+            {
                 pm.RemoveBuff(b);
+            }
         }
         #endregion
     }

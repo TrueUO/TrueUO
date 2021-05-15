@@ -47,9 +47,7 @@ namespace Server.Spells.SkillMasteries
 
         protected override void OnTarget(object o)
         {
-            IPoint3D p = o as IPoint3D;
-
-            if (p != null && CheckSequence())
+            if (o is IPoint3D p && CheckSequence())
             {
                 Rectangle2D rec = new Rectangle2D(p.X - 3, p.Y - 3, 6, 6);
                 Skulls = new List<Item>();
@@ -124,7 +122,13 @@ namespace Server.Spells.SkillMasteries
 
                     if (toAffect != null && callback != null)
                     {
-                        toAffect.ForEach(m => callback(m, conduit.Strength / 100.0));
+                        for (var index = 0; index < toAffect.Count; index++)
+                        {
+                            var m = toAffect[index];
+
+                            callback(m, conduit.Strength / 100.0);
+                        }
+
                         ColUtility.Free(toAffect);
                         return true;
                     }

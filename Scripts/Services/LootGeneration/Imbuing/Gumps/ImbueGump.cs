@@ -2,7 +2,6 @@ using Server.Items;
 using Server.Mobiles;
 using Server.SkillHandlers;
 using System;
-using System.Linq;
 
 namespace Server.Gumps
 {
@@ -421,7 +420,20 @@ namespace Server.Gumps
 
                 for (int i = 0; i < 5; i++)
                 {
-                    if (bonuses.GetBonus(i) > 0 && group.Any(sk => sk == bonuses.GetSkill(i)))
+                    bool any = false;
+
+                    for (var index = 0; index < group.Length; index++)
+                    {
+                        var sk = group[index];
+
+                        if (sk == bonuses.GetSkill(i))
+                        {
+                            any = true;
+                            break;
+                        }
+                    }
+
+                    if (bonuses.GetBonus(i) > 0 && any)
                     {
                         return GetNameForAttribute(bonuses.GetSkill(i));
                     }

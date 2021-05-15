@@ -49,9 +49,7 @@ namespace Server.Spells.SkillMasteries
 
         protected override void OnTarget(object o)
         {
-            Mobile m = o as Mobile;
-
-            if (m != null)
+            if (o is Mobile m)
             {
                 if (GetSpell<DeathRaySpell>(Caster, m) != null)
                 {

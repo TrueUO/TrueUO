@@ -112,15 +112,21 @@ namespace Server
         {
             if (to.AddRewardTitle(m_Title))
             {
-                if (m_Title is int)
-                    to.SendLocalizedMessage(1073625, "#" + (int)m_Title); // The title "~1_TITLE~" has been bestowed upon you. 
-                else if (m_Title is string)
-                    to.SendLocalizedMessage(1073625, (string)m_Title); // The title "~1_TITLE~" has been bestowed upon you. 
+                if (m_Title is int intTitle)
+                {
+                    to.SendLocalizedMessage(1073625, "#" + intTitle); // The title "~1_TITLE~" has been bestowed upon you. 
+                }
+                else if (m_Title is string stringTitle)
+                {
+                    to.SendLocalizedMessage(1073625, stringTitle); // The title "~1_TITLE~" has been bestowed upon you. 
+                }
 
                 to.AddCollectionPoints(collection.CollectionID, (int)Points * -1);
             }
             else
+            {
                 to.SendLocalizedMessage(1073626); // You already have that title!
+            }
         }
     }
 
@@ -138,10 +144,10 @@ namespace Server
 
         public override bool Validate(PlayerMobile from, Item item)
         {
-            TreasureMap map = item as TreasureMap;
-
-            if (map != null && map.Level == m_Level)
+            if (item is TreasureMap map && map.Level == m_Level)
+            {
                 return true;
+            }
 
             return false;
         }
@@ -161,10 +167,10 @@ namespace Server
 
         public override bool Validate(PlayerMobile from, Item item)
         {
-            Spellbook spellbook = item as Spellbook;
-
-            if (spellbook != null && spellbook.SpellbookType == m_Type && spellbook.Content == 0)
+            if (item is Spellbook spellbook && spellbook.SpellbookType == m_Type && spellbook.Content == 0)
+            {
                 return true;
+            }
 
             return false;
         }

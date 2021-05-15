@@ -230,9 +230,11 @@ namespace Server.Items
         public bool IsFishBait()
         {
             if (m_BaitType == null)
+            {
                 Index = Utility.RandomMinMax(0, 34);
+            }
 
-            return !m_BaitType.IsSubclassOf(typeof(BaseCrabAndLobster));
+            return !(m_BaitType is null) && !m_BaitType.IsSubclassOf(typeof(BaseCrabAndLobster));
         }
 
         public Bait(Serial serial) : base(serial) { }
@@ -262,7 +264,6 @@ namespace Server.Items
                 m_Index = FishInfo.FishInfos.Count - 1;
 
             m_BaitType = FishInfo.FishInfos[m_Index].Type;
-            //Hue = FishInfo.FishInfos[m_Index].Hue;
             m_Label = FishInfo.GetFishLabel(m_Index);
         }
     }

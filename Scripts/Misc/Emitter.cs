@@ -621,7 +621,9 @@ namespace Server
                 FinishCall();
 
                 if (sign == -1)
+                {
                     Neg();
+                }
             }
 
             return true;
@@ -632,13 +634,17 @@ namespace Server
             Type type;
 
             if ((method.CallingConvention & CallingConventions.HasThis) != 0)
+            {
                 type = m_Stack.Peek();
+            }
             else
+            {
                 type = method.DeclaringType;
+            }
 
             m_Calls.Push(new CallInfo(type, method));
 
-            if (type.IsValueType)
+            if (!(type is null) && type.IsValueType)
             {
                 LocalBuilder temp = AcquireTemp(type);
 
@@ -654,21 +660,33 @@ namespace Server
             CallInfo call = m_Calls.Pop();
 
             if ((call.type.IsValueType || call.type.IsByRef) && call.method.DeclaringType != call.type)
+            {
                 m_Generator.Emit(OpCodes.Constrained, call.type);
+            }
 
-            if (call.method.DeclaringType.IsValueType || call.method.IsStatic)
+            if (!(call.method.DeclaringType is null) && (call.method.DeclaringType.IsValueType || call.method.IsStatic))
+            {
                 m_Generator.Emit(OpCodes.Call, call.method);
+            }
             else
+            {
                 m_Generator.Emit(OpCodes.Callvirt, call.method);
+            }
 
             for (int i = call.parms.Length - 1; i >= 0; --i)
+            {
                 Pop(call.parms[i].ParameterType);
+            }
 
             if ((call.method.CallingConvention & CallingConventions.HasThis) != 0)
+            {
                 Pop(call.method.DeclaringType);
+            }
 
             if (call.method.ReturnType != typeof(void))
+            {
                 Push(call.method.ReturnType);
+            }
         }
 
         public void ArgumentPushed()
@@ -680,10 +698,14 @@ namespace Server
             Type argumentType = m_Stack.Peek();
 
             if (!parm.ParameterType.IsAssignableFrom(argumentType))
+            {
                 throw new InvalidOperationException("Parameter type mismatch.");
+            }
 
             if (argumentType.IsValueType && !parm.ParameterType.IsValueType)
+            {
                 m_Generator.Emit(OpCodes.Box, argumentType);
+            }
         }
     }
 }

@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
-
 using Server.Spells.Mysticism;
 using Server.Spells.Spellweaving;
 using Server.Spells.Necromancy;
@@ -126,12 +124,32 @@ namespace Server.Spells.Fifth
 
         public static MagicReflectContext GetContext(Mobile m)
         {
-            return m_Table.FirstOrDefault(c => c.Caster == m);
+            for (var index = 0; index < m_Table.Count; index++)
+            {
+                var c = m_Table[index];
+
+                if (c.Caster == m)
+                {
+                    return c;
+                }
+            }
+
+            return null;
         }
 
         public static bool HasReflect(Mobile m)
         {
-            return m_Table.Any(c => c.Caster == m);
+            for (var index = 0; index < m_Table.Count; index++)
+            {
+                var c = m_Table[index];
+
+                if (c.Caster == m)
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public static bool CheckReflectDamage(Mobile m, Spell spell)
@@ -313,7 +331,15 @@ namespace Server.Spells.Fifth
 
             protected override void OnTick()
             {
-                List<Mobile> list = ExpireTable.Keys.Where(m => ExpireTable[m] < DateTime.UtcNow).ToList();
+                List<Mobile> list = new List<Mobile>();
+
+                foreach (var m in ExpireTable.Keys)
+                {
+                    if (ExpireTable[m] < DateTime.UtcNow)
+                    {
+                        list.Add(m);
+                    }
+                }
 
                 for (int i = 0; i < list.Count; i++)
                 {

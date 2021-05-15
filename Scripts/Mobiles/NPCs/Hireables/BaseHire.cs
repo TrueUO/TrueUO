@@ -3,7 +3,6 @@ using Server.Items;
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Mobiles
 {
@@ -87,12 +86,15 @@ namespace Server.Mobiles
         {
             if (Backpack != null)
             {
-                Item[] AllGold = Backpack.FindItemsByType(typeof(Gold), true);
+                Item[] allGold = Backpack.FindItemsByType(typeof(Gold), true);
 
-                if (AllGold != null)
+                if (allGold != null)
                 {
-                    foreach (Gold g in AllGold)
+                    for (var index = 0; index < allGold.Length; index++)
                     {
+                        var item = allGold[index];
+                        var g = (Gold) item;
+
                         GoldOnDeath += g.Amount;
                     }
                 }
@@ -316,7 +318,17 @@ namespace Server.Mobiles
 
             protected override void OnTick()
             {
-                var list = Hires.Where(v => v.NextPay <= DateTime.UtcNow).ToList();
+                var list = new List<BaseHire>();
+
+                for (var index = 0; index < Hires.Count; index++)
+                {
+                    var v = Hires[index];
+
+                    if (v.NextPay <= DateTime.UtcNow)
+                    {
+                        list.Add(v);
+                    }
+                }
 
                 for (int i = 0; i < list.Count; i++)
                 {

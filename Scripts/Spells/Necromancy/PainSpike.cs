@@ -57,12 +57,14 @@ namespace Server.Spells.Necromancy
             m.PlaySound(0x210);
 
             double damage = (((GetDamageSkill(Caster) - GetResistSkill(m)) / 10) + (m.Player ? 18 : 30)) * strength;
+
             m.CheckSkill(SkillName.MagicResist, 0.0, 120.0);	//Skill check for gain
 
             if (damage < 1)
+            {
                 damage = 1;
+            }
 
-            TimeSpan buffTime = TimeSpan.FromSeconds(10.0 * strength);
             InternalTimer t;
 
             if (m_Table.ContainsKey(m))
@@ -81,7 +83,10 @@ namespace Server.Spells.Necromancy
                 t.Start();
             }
 
-            BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.PainSpike, 1075667, t.Expires - DateTime.UtcNow, m, Convert.ToString((int)damage)));
+            if (t != null)
+            {
+                BuffInfo.AddBuff(m, new BuffInfo(BuffIcon.PainSpike, 1075667, t.Expires - DateTime.UtcNow, m, Convert.ToString((int) damage)));
+            }
 
             m.DFA = DFAlgorithm.PainSpike;
             AOS.Damage(m, Caster, (int)damage, 0, 0, 0, 0, 0, 0, 100);

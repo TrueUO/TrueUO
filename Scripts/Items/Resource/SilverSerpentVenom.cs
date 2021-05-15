@@ -6,6 +6,7 @@ namespace Server.Items
         bool ICommodity.IsDeedable => true;
 
         public override int LabelNumber => 1112173; // silver serpent venom
+        public override int Hue => 1155;
 
         [Constructable]
         public SilverSerpentVenom()
@@ -17,8 +18,6 @@ namespace Server.Items
         public SilverSerpentVenom(int amount)
             : base(0xE24)
         {
-            Hue = 1155;
-
             Stackable = true;
             Amount = amount;
         }
@@ -37,17 +36,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
-
-            switch (version)
-            {
-                case 1:
-                    break;
-                case 0:
-                    ItemID = 0xE24;
-                    Hue = 1155;
-                    break;
-            }
+            reader.ReadInt();
         }
     }
 }

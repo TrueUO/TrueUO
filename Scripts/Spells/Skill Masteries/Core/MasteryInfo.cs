@@ -374,11 +374,9 @@ namespace Server.Spells.SkillMasteries
             {
                 Item item = m.Items[index];
 
-                if (item is BookOfMasteries)
+                if (item is BookOfMasteries book)
                 {
-                    BookOfMasteries book = item as BookOfMasteries;
-
-                    book?.InvalidateProperties();
+                    book.InvalidateProperties();
                 }
             }
         }

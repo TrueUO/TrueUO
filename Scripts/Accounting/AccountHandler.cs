@@ -357,16 +357,13 @@ namespace Server.Misc
 
         public static bool CheckAccount(Mobile mobCheck, Mobile accCheck)
         {
-            if (accCheck != null)
+            if (accCheck != null && accCheck.Account is Account a)
             {
-                Account a = accCheck.Account as Account;
-
-                if (a != null)
+                for (int i = 0; i < a.Length; ++i)
                 {
-                    for (int i = 0; i < a.Length; ++i)
+                    if (a[i] == mobCheck)
                     {
-                        if (a[i] == mobCheck)
-                            return true;
+                        return true;
                     }
                 }
             }

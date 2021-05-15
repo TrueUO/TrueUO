@@ -741,22 +741,25 @@ namespace Server.Items
                             house.MoveToWorld(center, from.Map);
 
                             if (house is HouseFoundation foundation)
+                            {
                                 foundation.OnPlacement();
+                            }
 
                             for (int i = 0; i < toMove.Count; ++i)
                             {
                                 object o = toMove[i];
 
                                 if (o is Mobile mobile)
+                                {
                                     mobile.Location = house.BanLocation;
+                                }
                                 else if (o is Item item)
+                                {
                                     item.Location = house.BanLocation;
+                                }
                             }
 
-                            if (tool != null)
-                            {
-                                tool.OnPlacement(house);
-                            }
+                            tool.OnPlacement(house);
                         }
 
                         break;
@@ -1050,93 +1053,104 @@ namespace Server.Items
 
                 if (e != null)
                 {
-                    if (e != null)
+                    int cost = e.Cost - m_House.Price;
+
+                    if (cost > 0)
                     {
-                        int cost = e.Cost - m_House.Price;
-
-                        if (cost > 0)
+                        if (!Banker.Withdraw(m_From, cost, true))
                         {
-                            if (!Banker.Withdraw(m_From, cost, true))
-                            {
-                                m_From.SendLocalizedMessage(1061624); // You do not have enough funds in your bank to cover the difference between your old house and your new one.
-                                return;
-                            }
-                        }
-                        else if (cost < 0)
-                        {
-                            Banker.Deposit(m_From, -cost, true);
-                        }
-
-                        BaseHouse newHouse = e.ConstructHouse(m_From);
-
-                        if (newHouse != null)
-                        {
-                            newHouse.Price = e.Cost;
-
-                            m_House.MoveAllToCrate();
-
-                            newHouse.Friends = new List<Mobile>(m_House.Friends);
-                            newHouse.CoOwners = new List<Mobile>(m_House.CoOwners);
-                            newHouse.Bans = new List<Mobile>(m_House.Bans);
-                            newHouse.Access = new List<Mobile>(m_House.Access);
-                            newHouse.BuiltOn = m_House.BuiltOn;
-                            newHouse.LastTraded = m_House.LastTraded;
-                            newHouse.Public = m_House.Public;
-
-                            newHouse.VendorInventories.AddRange(m_House.VendorInventories);
-                            m_House.VendorInventories.Clear();
-
-                            foreach (VendorInventory inventory in newHouse.VendorInventories)
-                            {
-                                inventory.House = newHouse;
-                            }
-
-                            newHouse.InternalizedVendors.AddRange(m_House.InternalizedVendors);
-                            m_House.InternalizedVendors.Clear();
-
-                            foreach (Mobile mobile in newHouse.InternalizedVendors)
-                            {
-                                if (mobile is PlayerVendor playerVendor)
-                                    playerVendor.House = newHouse;
-                                else if (mobile is PlayerBarkeeper playerBarkeeper)
-                                    playerBarkeeper.House = newHouse;
-                            }
-
-                            if (m_House.MovingCrate != null)
-                            {
-                                newHouse.MovingCrate = m_House.MovingCrate;
-                                newHouse.MovingCrate.House = newHouse;
-                                m_House.MovingCrate = null;
-                            }
-
-                            List<Item> items = m_House.GetItems();
-                            List<Mobile> mobiles = m_House.GetMobiles();
-
-                            newHouse.MoveToWorld(new Point3D(m_House.X + m_House.ConvertOffsetX, m_House.Y + m_House.ConvertOffsetY, m_House.Z + m_House.ConvertOffsetZ), m_House.Map);
-                            m_House.Delete();
-
-                            foreach (Item item in items)
-                            {
-                                item.Location = newHouse.BanLocation;
-                            }
-
-                            foreach (Mobile mobile in mobiles)
-                            {
-                                mobile.Location = newHouse.BanLocation;
-                            }
-
-                            /* You have successfully replaced your original house with a new house.
-                            * The value of the replaced house has been deposited into your bank box.
-                            * All of the items in your original house have been relocated to a Moving Crate in the new house.
-                            * Any deed-based house add-ons have been converted back into deeds.
-                            * Vendors and barkeeps in the house, if any, have been stored in the Moving Crate as well.
-                            * Use the <B>Get Vendor</B> context-sensitive menu option on your character to retrieve them.
-                            * These containers can be used to re-create the vendor in a new location.
-                            * Any barkeepers have been converted into deeds.
-                            */
-                            m_From.SendGump(new NoticeGump(1060637, 30720, 1060012, 32512, 420, 280, null, null));
+                            m_From.SendLocalizedMessage(
+                                1061624); // You do not have enough funds in your bank to cover the difference between your old house and your new one.
                             return;
                         }
+                    }
+                    else if (cost < 0)
+                    {
+                        Banker.Deposit(m_From, -cost, true);
+                    }
+
+                    BaseHouse newHouse = e.ConstructHouse(m_From);
+
+                    if (newHouse != null)
+                    {
+                        newHouse.Price = e.Cost;
+
+                        m_House.MoveAllToCrate();
+
+                        newHouse.Friends = new List<Mobile>(m_House.Friends);
+                        newHouse.CoOwners = new List<Mobile>(m_House.CoOwners);
+                        newHouse.Bans = new List<Mobile>(m_House.Bans);
+                        newHouse.Access = new List<Mobile>(m_House.Access);
+                        newHouse.BuiltOn = m_House.BuiltOn;
+                        newHouse.LastTraded = m_House.LastTraded;
+                        newHouse.Public = m_House.Public;
+
+                        newHouse.VendorInventories.AddRange(m_House.VendorInventories);
+                        m_House.VendorInventories.Clear();
+
+                        for (var i = 0; i < newHouse.VendorInventories.Count; i++)
+                        {
+                            VendorInventory inventory = newHouse.VendorInventories[i];
+
+                            inventory.House = newHouse;
+                        }
+
+                        newHouse.InternalizedVendors.AddRange(m_House.InternalizedVendors);
+                        m_House.InternalizedVendors.Clear();
+
+                        for (var i = 0; i < newHouse.InternalizedVendors.Count; i++)
+                        {
+                            Mobile mobile = newHouse.InternalizedVendors[i];
+
+                            if (mobile is PlayerVendor playerVendor)
+                            {
+                                playerVendor.House = newHouse;
+                            }
+                            else if (mobile is PlayerBarkeeper playerBarkeeper)
+                            {
+                                playerBarkeeper.House = newHouse;
+                            }
+                        }
+
+                        if (m_House.MovingCrate != null)
+                        {
+                            newHouse.MovingCrate = m_House.MovingCrate;
+                            newHouse.MovingCrate.House = newHouse;
+                            m_House.MovingCrate = null;
+                        }
+
+                        List<Item> items = m_House.GetItems();
+                        List<Mobile> mobiles = m_House.GetMobiles();
+
+                        newHouse.MoveToWorld(
+                            new Point3D(m_House.X + m_House.ConvertOffsetX, m_House.Y + m_House.ConvertOffsetY,
+                                m_House.Z + m_House.ConvertOffsetZ), m_House.Map);
+                        m_House.Delete();
+
+                        for (var i = 0; i < items.Count; i++)
+                        {
+                            Item item = items[i];
+
+                            item.Location = newHouse.BanLocation;
+                        }
+
+                        for (var i = 0; i < mobiles.Count; i++)
+                        {
+                            Mobile mobile = mobiles[i];
+
+                            mobile.Location = newHouse.BanLocation;
+                        }
+
+                        /* You have successfully replaced your original house with a new house.
+                        * The value of the replaced house has been deposited into your bank box.
+                        * All of the items in your original house have been relocated to a Moving Crate in the new house.
+                        * Any deed-based house add-ons have been converted back into deeds.
+                        * Vendors and barkeeps in the house, if any, have been stored in the Moving Crate as well.
+                        * Use the <B>Get Vendor</B> context-sensitive menu option on your character to retrieve them.
+                        * These containers can be used to re-create the vendor in a new location.
+                        * Any barkeepers have been converted into deeds.
+                        */
+                        m_From.SendGump(new NoticeGump(1060637, 30720, 1060012, 32512, 420, 280, null, null));
                     }
                 }
             }

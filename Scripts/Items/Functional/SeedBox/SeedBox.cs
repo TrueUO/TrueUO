@@ -35,7 +35,14 @@ namespace Server.Engines.Plants
                 int count = 0;
 
                 if (Entries != null)
-                    Entries.ForEach(e => count += e == null || e.Seed == null ? 0 : e.Seed.Amount);
+                {
+                    for (var index = 0; index < Entries.Count; index++)
+                    {
+                        var e = Entries[index];
+
+                        count += e == null || e.Seed == null ? 0 : e.Seed.Amount;
+                    }
+                }
 
                 return count;
             }

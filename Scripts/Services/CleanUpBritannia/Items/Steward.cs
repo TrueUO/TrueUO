@@ -299,9 +299,9 @@ namespace Server.Mobiles
                 }
                 else
                 {
-                    if (_Mannequin is Steward)
+                    if (_Mannequin is Steward steward)
                     {
-                        ((Steward)_Mannequin).Keyword = text;
+                        steward.Keyword = text;
                         from.SendLocalizedMessage(1153257); // The keyword has been set.
                     }
                 }
@@ -310,11 +310,16 @@ namespace Server.Mobiles
 
         private static bool ContainsDisallowedSpeech(string text)
         {
-            foreach (string word in ProfanityProtection.Disallowed)
+            for (var index = 0; index < ProfanityProtection.Disallowed.Length; index++)
             {
+                string word = ProfanityProtection.Disallowed[index];
+
                 if (text.Contains(word))
+                {
                     return true;
+                }
             }
+
             return false;
         }
 
@@ -375,18 +380,49 @@ namespace Server.Mobiles
 
         public static bool IsEquipped(Item item)
         {
-            return item != null && item.Parent is Mobile && ((Mobile)item.Parent).FindItemOnLayer(item.Layer) == item &&
-                   item.Layer != Layer.Mount && item.Layer != Layer.Bank &&
+            return item != null && item.Parent is Mobile m && m.FindItemOnLayer(item.Layer) == item && item.Layer != Layer.Mount && item.Layer != Layer.Bank &&
                    item.Layer != Layer.Invalid && item.Layer != Layer.Backpack && !(item is Backpack);
         }
 
         public void SwitchClothes(Mobile from, Mobile m)
         {
-            List<Item> MobileItems = from.Items.Where(x => IsEquipped(x)).ToList();
-            List<Item> MannequinItems = m.Items.Where(x => IsEquipped(x)).ToList();
+            List<Item> MobileItems = new List<Item>();
 
-            MannequinItems.ForEach(x => m.RemoveItem(x));
-            MobileItems.ForEach(x => from.RemoveItem(x));
+            for (var index = 0; index < from.Items.Count; index++)
+            {
+                var x = from.Items[index];
+
+                if (IsEquipped(x))
+                {
+                    MobileItems.Add(x);
+                }
+            }
+
+            List<Item> MannequinItems = new List<Item>();
+
+            for (var index = 0; index < m.Items.Count; index++)
+            {
+                var x = m.Items[index];
+
+                if (IsEquipped(x))
+                {
+                    MannequinItems.Add(x);
+                }
+            }
+
+            for (var index = 0; index < MannequinItems.Count; index++)
+            {
+                var x = MannequinItems[index];
+
+                m.RemoveItem(x);
+            }
+
+            for (var index = 0; index < MobileItems.Count; index++)
+            {
+                var x = MobileItems[index];
+
+                from.RemoveItem(x);
+            }
 
             List<Item> ExceptItems = new List<Item>();
 
@@ -860,13 +896,16 @@ namespace Server.Mobiles
 
             for (int i = 0; i < doors.Count; i++)
             {
-                BaseDoor door = doors[i] as BaseDoor;
+                BaseDoor door = (BaseDoor) doors[i];
 
                 Point3D doorLoc = door.GetWorldLocation();
+
                 int doorHeight = door.ItemData.CalcHeight;
 
                 if (Utility.InRange(doorLoc, p, 1) && (p.Z == doorLoc.Z || ((p.Z + height) > doorLoc.Z && (doorLoc.Z + doorHeight) > p.Z)))
+                {
                     return AddonFitResult.DoorTooClose;
+                }
             }
 
             return AddonFitResult.Valid;
@@ -886,7 +925,7 @@ namespace Server.Mobiles
                 BaseHouse house = null;
                 Point3D loc = new Point3D(p);
 
-                if (targeted is Item && !((Item)targeted).IsLockedDown && !((Item)targeted).IsSecure && !(targeted is AddonComponent))
+                if (targeted is Item item && !item.IsLockedDown && !item.IsSecure && !(item is AddonComponent))
                 {
                     from.SendLocalizedMessage(1151655); // The mannequin cannot fit there.
                     return;

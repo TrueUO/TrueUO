@@ -183,128 +183,134 @@ namespace Server.Mobiles
                 switch (Utility.Random(3))
                 {
                     case 0: /* greater heal */
+                    {
+                        for (var index = 0; index < list.Count; index++)
                         {
-                            foreach (Mobile m in list)
+                            var m = (Mobile) list[index];
+
+                            bool isFriendly = m is Savage || m is SavageRider || m is SavageShaman || m is SavageRidgeback;
+
+                            if (!isFriendly)
                             {
-                                bool isFriendly = m is Savage || m is SavageRider || m is SavageShaman || m is SavageRidgeback;
-
-                                if (!isFriendly)
-                                {
-                                    continue;
-                                }
-
-                                if (m.Poisoned || MortalStrike.IsWounded(m) || !CanBeBeneficial(m))
-                                {
-                                    continue;
-                                }
-
-                                DoBeneficial(m);
-
-                                // Algorithm: (40% of magery) + (1-10)
-
-                                int toHeal = (int)(Skills[SkillName.Magery].Value * 0.4);
-                                toHeal += Utility.Random(1, 10);
-
-                                m.Heal(toHeal, this);
-
-                                m.FixedParticles(0x376A, 9, 32, 5030, EffectLayer.Waist);
-                                m.PlaySound(0x202);
+                                continue;
                             }
 
-                            break;
+                            if (m.Poisoned || MortalStrike.IsWounded(m) || !CanBeBeneficial(m))
+                            {
+                                continue;
+                            }
+
+                            DoBeneficial(m);
+
+                            // Algorithm: (40% of magery) + (1-10)
+
+                            int toHeal = (int) (Skills[SkillName.Magery].Value * 0.4);
+                            toHeal += Utility.Random(1, 10);
+
+                            m.Heal(toHeal, this);
+
+                            m.FixedParticles(0x376A, 9, 32, 5030, EffectLayer.Waist);
+                            m.PlaySound(0x202);
                         }
+
+                        break;
+                    }
                     case 1: /* lightning */
+                    {
+                        for (var index = 0; index < list.Count; index++)
                         {
-                            foreach (Mobile m in list)
+                            var m = (Mobile) list[index];
+
+                            bool isFriendly = m is Savage || m is SavageRider || m is SavageShaman || m is SavageRidgeback;
+
+                            if (isFriendly)
                             {
-                                bool isFriendly = m is Savage || m is SavageRider || m is SavageShaman || m is SavageRidgeback;
-
-                                if (isFriendly)
-                                {
-                                    continue;
-                                }
-
-                                if (!CanBeHarmful(m))
-                                {
-                                    continue;
-                                }
-
-                                DoHarmful(m);
-
-                                double damage;
-
-                                int baseDamage = 6 + (int)(Skills[SkillName.EvalInt].Value / 5.0);
-
-                                damage = Utility.RandomMinMax(baseDamage, baseDamage + 3);
-
-                                m.BoltEffect(0);
-
-                                SpellHelper.Damage(TimeSpan.FromSeconds(0.25), m, this, damage, 0, 0, 0, 0, 100);
+                                continue;
                             }
 
-                            break;
+                            if (!CanBeHarmful(m))
+                            {
+                                continue;
+                            }
+
+                            DoHarmful(m);
+
+                            double damage;
+
+                            int baseDamage = 6 + (int) (Skills[SkillName.EvalInt].Value / 5.0);
+
+                            damage = Utility.RandomMinMax(baseDamage, baseDamage + 3);
+
+                            m.BoltEffect(0);
+
+                            SpellHelper.Damage(TimeSpan.FromSeconds(0.25), m, this, damage, 0, 0, 0, 0, 100);
                         }
+
+                        break;
+                    }
                     case 2: /* poison */
+                    {
+                        for (var index = 0; index < list.Count; index++)
                         {
-                            foreach (Mobile m in list)
+                            var m = (Mobile) list[index];
+
+                            bool isFriendly = m is Savage || m is SavageRider || m is SavageShaman || m is SavageRidgeback;
+
+                            if (isFriendly)
                             {
-                                bool isFriendly = m is Savage || m is SavageRider || m is SavageShaman || m is SavageRidgeback;
-
-                                if (isFriendly)
-                                {
-                                    continue;
-                                }
-
-                                if (!CanBeHarmful(m))
-                                {
-                                    continue;
-                                }
-
-                                DoHarmful(m);
-
-                                if (m.Spell != null)
-                                {
-                                    m.Spell.OnCasterHurt();
-                                }
-
-                                m.Paralyzed = false;
-
-                                double total = Skills[SkillName.Magery].Value + Skills[SkillName.Poisoning].Value;
-
-                                double dist = GetDistanceToSqrt(m);
-
-                                if (dist >= 3.0)
-                                {
-                                    total -= (dist - 3.0) * 10.0;
-                                }
-
-                                int level;
-
-                                if (total >= 200.0 && Utility.Random(1, 100) <= 10)
-                                {
-                                    level = 3;
-                                }
-                                else if (total > 170.0)
-                                {
-                                    level = 2;
-                                }
-                                else if (total > 130.0)
-                                {
-                                    level = 1;
-                                }
-                                else
-                                {
-                                    level = 0;
-                                }
-
-                                m.ApplyPoison(this, Poison.GetPoison(level));
-
-                                m.FixedParticles(0x374A, 10, 15, 5021, EffectLayer.Waist);
-                                m.PlaySound(0x474);
+                                continue;
                             }
 
-                            break;
+                            if (!CanBeHarmful(m))
+                            {
+                                continue;
+                            }
+
+                            DoHarmful(m);
+
+                            if (m.Spell != null)
+                            {
+                                m.Spell.OnCasterHurt();
+                            }
+
+                            m.Paralyzed = false;
+
+                            double total = Skills[SkillName.Magery].Value + Skills[SkillName.Poisoning].Value;
+
+                            double dist = GetDistanceToSqrt(m);
+
+                            if (dist >= 3.0)
+                            {
+                                total -= (dist - 3.0) * 10.0;
+                            }
+
+                            int level;
+
+                            if (total >= 200.0 && Utility.Random(1, 100) <= 10)
+                            {
+                                level = 3;
+                            }
+                            else if (total > 170.0)
+                            {
+                                level = 2;
+                            }
+                            else if (total > 130.0)
+                            {
+                                level = 1;
+                            }
+                            else
+                            {
+                                level = 0;
+                            }
+
+                            m.ApplyPoison(this, Poison.GetPoison(level));
+
+                            m.FixedParticles(0x374A, 10, 15, 5021, EffectLayer.Waist);
+                            m.PlaySound(0x474);
                         }
+
+                        break;
+                    }
                 }
             }
         }

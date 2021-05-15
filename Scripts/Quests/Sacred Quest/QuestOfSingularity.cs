@@ -11,6 +11,7 @@ namespace Server.Engines.Quests
 
         public override bool DoneOnce => true;
         public override bool ShowDescription => false;
+        public override bool IsQuestionQuest => true;
 
         //La Insep Om
         public override object Title => 1112681;

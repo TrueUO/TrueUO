@@ -433,7 +433,7 @@ namespace Server.Items
                     {
                         from.SendLocalizedMessage(1054012); // You cannot bind a bracelet of binding to itself!
                     }
-                    else if (!bindBracelet.IsChildOf(from))
+                    else if (bindBracelet != null && !bindBracelet.IsChildOf(from))
                     {
                         from.SendLocalizedMessage(1042664); // You must have the object in your backpack to use it.
                     }

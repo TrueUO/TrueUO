@@ -1,6 +1,6 @@
 namespace Server.Items
 {
-    interface IDurability
+    internal interface IDurability
     {
         bool CanFortify { get; }
         int InitMinHits { get; }

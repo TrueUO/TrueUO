@@ -76,7 +76,7 @@ namespace Server.Items
                         else
                             from.SendLocalizedMessage(1113817); // Your ethereal mount's transparency has been restored.
 
-                        mount.Transparent = mount.Transparent ? false : true;
+                        mount.Transparent = !mount.Transparent;
                         mount.InvalidateProperties();
                     }
                 }

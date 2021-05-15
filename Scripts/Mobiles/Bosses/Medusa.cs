@@ -398,10 +398,14 @@ namespace Server.Mobiles
 
             int stones = 0;
 
-            foreach (Mobile m in m_Helpers)
+            for (var index = 0; index < m_Helpers.Count; index++)
             {
+                Mobile m = m_Helpers[index];
+
                 if (!(m is MedusaClone))
+                {
                     ++stones;
+                }
             }
 
             if (stones >= 5)
@@ -441,19 +445,29 @@ namespace Server.Mobiles
         {
             List<Mobile> toDelete = new List<Mobile>();
 
-            foreach (Mobile m in m_Helpers)
+            for (var index = 0; index < m_Helpers.Count; index++)
             {
+                Mobile m = m_Helpers[index];
+
                 if (m == null)
+                {
                     continue;
+                }
 
                 if (!m.Alive || m.Deleted)
+                {
                     toDelete.Add(m);
+                }
             }
 
-            foreach (Mobile m in toDelete)
+            for (var index = 0; index < toDelete.Count; index++)
             {
+                Mobile m = toDelete[index];
+
                 if (m_Helpers.Contains(m))
+                {
                     m_Helpers.Remove(m);
+                }
             }
         }
 
@@ -475,10 +489,14 @@ namespace Server.Mobiles
         {
             List<Mobile> stones = new List<Mobile>();
 
-            foreach (Mobile mob in m_Helpers)
+            for (var index = 0; index < m_Helpers.Count; index++)
             {
+                Mobile mob = m_Helpers[index];
+
                 if (!(mob is MedusaClone) && mob.Alive)
+                {
                     stones.Add(mob);
+                }
             }
 
             if (stones.Count == 0)
@@ -496,6 +514,7 @@ namespace Server.Mobiles
                 m_Helpers.Remove(m);
 
                 IPooledEnumerable eable = m.GetMobilesInRange(12);
+
                 foreach (Mobile targ in eable)
                 {
                     if (targ != null && targ.Player)
@@ -531,10 +550,14 @@ namespace Server.Mobiles
 
         public override void OnAfterDelete()
         {
-            foreach (Mobile m in m_Helpers)
+            for (var index = 0; index < m_Helpers.Count; index++)
             {
+                Mobile m = m_Helpers[index];
+
                 if (m != null && !m.Deleted)
+                {
                     m.Delete();
+                }
             }
 
             base.OnAfterDelete();
@@ -549,8 +572,11 @@ namespace Server.Mobiles
 
             writer.Write(m_Helpers.Count);
 
-            foreach (Mobile helper in m_Helpers)
+            for (var index = 0; index < m_Helpers.Count; index++)
+            {
+                Mobile helper = m_Helpers[index];
                 writer.Write(helper);
+            }
         }
 
         public override void Deserialize(GenericReader reader)
@@ -613,6 +639,7 @@ namespace Server.Mobiles
                     Mobile closest = null;
 
                     IPooledEnumerable eable = clone.GetMobilesInRange(12);
+
                     foreach (Mobile m in eable)
                     {
                         int d = (int)clone.GetDistanceToSqrt(m.Location);

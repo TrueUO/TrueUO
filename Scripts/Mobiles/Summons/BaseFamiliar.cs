@@ -16,25 +16,13 @@ namespace Server.Mobiles
         private DateTime m_SeperationStart;
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public DateTime SeperationStart
-        {
-            get { return m_SeperationStart; }
-            set { m_SeperationStart = value; }
-        }
+        public DateTime SeperationStart { get => m_SeperationStart; set => m_SeperationStart = value; }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public override IDamageable Combatant
-        {
-            get { return null; }
-            set { }
-        }
+        public override IDamageable Combatant { get => null; set { } }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public override OrderType ControlOrder
-        {
-            get { return OrderType.Come; }
-            set { }
-        }
+        public override OrderType ControlOrder { get => OrderType.Come; set { } }
 
         public BaseFamiliar()
             : base(AIType.AI_Melee, FightMode.Closest, 10, 1, -1, -1)
@@ -238,10 +226,12 @@ namespace Server.Mobiles
                 check.Weapon.OnSwing(check, defender);
             }
 
-            if (attacker is PlayerMobile)
+            if (attacker is PlayerMobile pm)
             {
-                foreach (Mobile ts in ((PlayerMobile)attacker).AllFollowers)
+                for (var index = 0; index < pm.AllFollowers.Count; index++)
                 {
+                    Mobile ts = pm.AllFollowers[index];
+
                     if (ts is BaseTalismanSummon && ts.InRange(defender.Location, ts.Weapon.MaxRange))
                     {
                         ts.Weapon.OnSwing(ts, defender);

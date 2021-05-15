@@ -161,8 +161,19 @@ namespace Server.Mobiles
 
         public static List<ValuedProperty> FindItemsProperty(List<Item> item)
         {
-            List<Type> ll = System.Reflection.Assembly.GetExecutingAssembly().GetTypes()
-              .Where(r => r.FullName.Contains("MannequinProperty") && r.IsClass && !r.IsAbstract).ToList();
+            List<Type> ll = new List<Type>();
+
+            var rs = System.Reflection.Assembly.GetExecutingAssembly().GetTypes();
+
+            for (var index = 0; index < rs.Length; index++)
+            {
+                var r = rs[index];
+
+                if (r.FullName != null && r.FullName.Contains("MannequinProperty") && r.IsClass && !r.IsAbstract)
+                {
+                    ll.Add(r);
+                }
+            }
 
             List<ValuedProperty> cat = new List<ValuedProperty>();
 
@@ -181,8 +192,19 @@ namespace Server.Mobiles
 
         public static List<ValuedProperty> FindItemProperty(Item item, bool visible = false)
         {
-            List<Type> ll = System.Reflection.Assembly.GetExecutingAssembly().GetTypes()
-              .Where(r => r.FullName.Contains("MannequinProperty") && r.IsClass && !r.IsAbstract).ToList();
+            List<Type> ll = new List<Type>();
+
+            var rs = System.Reflection.Assembly.GetExecutingAssembly().GetTypes();
+
+            for (var index = 0; index < rs.Length; index++)
+            {
+                var r = rs[index];
+
+                if (r.FullName != null && r.FullName.Contains("MannequinProperty") && r.IsClass && !r.IsAbstract)
+                {
+                    ll.Add(r);
+                }
+            }
 
             List<ValuedProperty> cat = new List<ValuedProperty>();
 
@@ -201,8 +223,19 @@ namespace Server.Mobiles
 
         public static List<ValuedProperty> FindMagicalItemProperty(Item item)
         {
-            List<Type> ll = System.Reflection.Assembly.GetExecutingAssembly().GetTypes()
-              .Where(r => r.FullName.Contains("MannequinProperty") && r.IsClass && !r.IsAbstract).ToList();
+            List<Type> ll = new List<Type>();
+
+            var rs = System.Reflection.Assembly.GetExecutingAssembly().GetTypes();
+
+            for (var index = 0; index < rs.Length; index++)
+            {
+                var r = rs[index];
+
+                if (r.FullName != null && r.FullName.Contains("MannequinProperty") && r.IsClass && !r.IsAbstract)
+                {
+                    ll.Add(r);
+                }
+            }
 
             List<ValuedProperty> cat = new List<ValuedProperty>();
 

@@ -65,9 +65,7 @@ namespace Server.Spells.SkillMasteries
 
         public override void OnCast()
         {
-            RampageSpell spell = GetSpell(Caster, typeof(RampageSpell)) as RampageSpell;
-
-            if (spell != null)
+            if (GetSpell(Caster, typeof(RampageSpell)) is RampageSpell spell)
             {
                 spell.Expire();
             }

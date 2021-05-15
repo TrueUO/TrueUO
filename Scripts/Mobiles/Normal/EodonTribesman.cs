@@ -3,7 +3,6 @@ using Server.Items;
 using Server.Spells.SkillMasteries;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Mobiles
 {
@@ -60,12 +59,21 @@ namespace Server.Mobiles
         {
             get
             {
-                BaseWeapon wep = Weapon as BaseWeapon;
-
-                if (wep == null)
+                if (!(Weapon is BaseWeapon wep))
+                {
                     return null;
+                }
 
-                MasteryInfo[] infos = MasteryInfo.Infos.Where(i => i.MasterySkill == wep.DefSkill && !i.Passive).ToArray();
+                List<MasteryInfo> list = new List<MasteryInfo>();
+
+                for (var index = 0; index < MasteryInfo.Infos.Count; index++)
+                {
+                    var i = MasteryInfo.Infos[index];
+
+                    if (i.MasterySkill == wep.DefSkill && !i.Passive) list.Add(i);
+                }
+
+                MasteryInfo[] infos = list.ToArray();
 
                 if (infos.Length > 0)
                 {
@@ -187,11 +195,26 @@ namespace Server.Mobiles
 
         public override bool IsEnemy(Mobile m)
         {
-            // Basically, this makes them FightMode.Agressor. More can can be added in to make htem attack others, such as other tribes, etc.
-            bool valid = Aggressors.FirstOrDefault(a => a.Attacker == m) != null;
+            // Basically, this makes them FightMode.Aggressor. More can can be added in to make them attack others, such as other tribes, etc.
+            AggressorInfo first = null;
+
+            for (var index = 0; index < Aggressors.Count; index++)
+            {
+                var a = Aggressors[index];
+
+                if (a.Attacker == m)
+                {
+                    first = a;
+                    break;
+                }
+            }
+
+            bool valid = first != null;
 
             if (!valid && MyrmidexInvasionSystem.Active)
+            {
                 valid = MyrmidexInvasionSystem.AreEnemies(this, m);
+            }
 
             return valid;
         }
@@ -201,10 +224,14 @@ namespace Server.Mobiles
             BaseWeapon wep = Weapon as BaseWeapon;
 
             if (wep == null)
+            {
                 return null;
+            }
 
             if (Utility.RandomBool())
+            {
                 return wep.PrimaryAbility;
+            }
 
             return wep.SecondaryAbility;
         }

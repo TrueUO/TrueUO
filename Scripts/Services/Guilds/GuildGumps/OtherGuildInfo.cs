@@ -194,10 +194,12 @@ namespace Server.Guilds
 
         public override void OnResponse(NetState sender, RelayInfo info)
         {
-            PlayerMobile pm = sender.Mobile as PlayerMobile;
+            PlayerMobile pm = (PlayerMobile) sender.Mobile;
 
             if (!IsMember(pm, guild))
+            {
                 return;
+            }
 
             RankDefinition playerRank = pm.GuildRank;
 
@@ -560,13 +562,15 @@ namespace Server.Guilds
 
         public void CreateAlliance_Callback(Mobile from, string text)
         {
-            PlayerMobile pm = from as PlayerMobile;
+            PlayerMobile pm = (PlayerMobile) from;
 
             AllianceInfo alliance = guild.Alliance;
             AllianceInfo otherAlliance = m_Other.Alliance;
 
             if (!IsMember(from, guild) || alliance != null)
+            {
                 return;
+            }
 
             RankDefinition playerRank = pm.GuildRank;
 

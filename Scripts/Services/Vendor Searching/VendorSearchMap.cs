@@ -77,17 +77,12 @@ namespace Server.Items
             Timer.DelayCall(TimeSpan.FromMinutes(DeleteDelayMinutes), Delete);
         }
 
-        public override bool DropToWorld(Mobile from, Point3D p)
+        public override bool Nontransferable { get { return true; } }
+
+        public override void HandleInvalidTransfer(Mobile from)
         {
             from.SendLocalizedMessage(500424); // You destroyed the item.
             Delete();
-
-            return true;
-        }
-
-        public override bool AllowSecureTrade(Mobile from, Mobile to, Mobile newOwner, bool accepted)
-        {
-            return false;
         }
 
         public override void AddNameProperty(ObjectPropertyList list)

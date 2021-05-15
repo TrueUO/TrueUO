@@ -1,8 +1,8 @@
+using System.Collections.Generic;
 using Server.Engines.Quests;
 using Server.Items;
 using Server.Mobiles;
 using Server.Engines.SeasonalEvents;
-using System.Linq;
 
 namespace Server.Engines.Fellowship
 {
@@ -406,8 +406,19 @@ namespace Server.Engines.Fellowship
 
         public static void RemoveOtherdecoration(Map map)
         {
-            blocker.ToList().ForEach(x =>
+            List<Point3D> list = new List<Point3D>();
+
+            for (var index = 0; index < blocker.Length; index++)
             {
+                var point3D = blocker[index];
+
+                list.Add(point3D);
+            }
+
+            for (var index = 0; index < list.Count; index++)
+            {
+                var x = list[index];
+
                 Item b = map.FindItem<Blocker>(new Point3D(x));
 
                 if (b != null)
@@ -421,7 +432,7 @@ namespace Server.Engines.Fellowship
                 {
                     lb.Delete();
                 }
-            });
+            }
 
             for (int i = 0; i < Workers.Length; i++)
             {
@@ -493,8 +504,19 @@ namespace Server.Engines.Fellowship
 
         public static void GenerateMapDecoration(Map map)
         {
-            blocker.ToList().ForEach(x =>
+            List<Point3D> list = new List<Point3D>();
+
+            for (var index = 0; index < blocker.Length; index++)
             {
+                var point3D = blocker[index];
+
+                list.Add(point3D);
+            }
+
+            for (var index = 0; index < list.Count; index++)
+            {
+                var x = list[index];
+
                 if (map.FindItem<Blocker>(new Point3D(x)) == null)
                 {
                     Blocker bl = new Blocker();
@@ -508,7 +530,7 @@ namespace Server.Engines.Fellowship
 
                     lb.MoveToWorld(new Point3D(x), map);
                 }
-            });
+            }
 
             for (int i = 0; i < Workers.Length; i++)
             {

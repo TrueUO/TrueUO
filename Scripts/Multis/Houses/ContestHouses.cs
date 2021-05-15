@@ -138,18 +138,21 @@ namespace Server.Multis
             {
                 bool any = false;
 
-                for (var index = 0; index < Fixtures.Count; index++)
+                if (Fixtures != null)
                 {
-                    Item fixture = Fixtures[index];
-
-                    if (fixture is HouseTeleporter fix && fix.Location == p)
+                    for (var index = 0; index < Fixtures.Count; index++)
                     {
-                        any = true;
-                        break;
+                        Item fixture = Fixtures[index];
+
+                        if (fixture is HouseTeleporter fix && fix.Location == p)
+                        {
+                            any = true;
+                            break;
+                        }
                     }
                 }
 
-                return Fixtures != null && any;
+                return any;
             }
 
             return true;

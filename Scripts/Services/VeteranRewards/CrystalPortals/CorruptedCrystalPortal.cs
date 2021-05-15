@@ -375,7 +375,7 @@ namespace Server.Items
                     break;
                 case "dungeon abyss":
                     {
-                        PlayerMobile pm = m as PlayerMobile;
+                        PlayerMobile pm = (PlayerMobile) m;
 
                         if (!pm.AbyssEntry)
                         {

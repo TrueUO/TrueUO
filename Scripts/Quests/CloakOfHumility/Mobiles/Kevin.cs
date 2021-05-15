@@ -4,7 +4,7 @@ namespace Server.Mobiles
 {
     public class Kevin : HumilityQuestMobile
     {
-        public override int Greeting => 1075759;
+        public override int Greeting => 1075759; // Art thou hiding under that cloak?
 
         public override bool IsActiveVendor => true;
         public override bool CanTeach => true;
@@ -34,6 +34,7 @@ namespace Server.Mobiles
             Race = Race.Human;
             Body = 0x190;
 
+            SpeechHue = 50;
             Hue = Race.RandomSkinHue();
             HairItemID = Race.RandomHair(false);
             HairHue = Race.RandomHairHue();

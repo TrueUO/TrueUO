@@ -81,9 +81,7 @@ namespace Server.Spells.SkillMasteries
 
         public override bool Cast()
         {
-            CombatTrainingSpell spell = GetSpell(Caster, typeof(CombatTrainingSpell)) as CombatTrainingSpell;
-
-            if (spell != null)
+            if (GetSpell(Caster, typeof(CombatTrainingSpell)) is CombatTrainingSpell spell)
             {
                 spell.Expire();
                 return false;
@@ -274,13 +272,16 @@ namespace Server.Spells.SkillMasteries
 
                                 List<Mobile> list = new List<Mobile>();
 
-                                for (var index = 0; index < pm.AllFollowers.Count; index++)
+                                if (pm != null)
                                 {
-                                    var m = pm.AllFollowers[index];
-
-                                    if (m.Map != Map.Internal && m.InRange(pm, 15) && m.CanBeHarmful(attacker))
+                                    for (var index = 0; index < pm.AllFollowers.Count; index++)
                                     {
-                                        list.Add(m);
+                                        var m = pm.AllFollowers[index];
+
+                                        if (m.Map != Map.Internal && m.InRange(pm, 15) && m.CanBeHarmful(attacker))
+                                        {
+                                            list.Add(m);
+                                        }
                                     }
                                 }
 

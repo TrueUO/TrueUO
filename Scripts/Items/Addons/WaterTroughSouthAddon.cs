@@ -15,13 +15,14 @@ namespace Server.Items
         }
 
         public override BaseAddonDeed Deed => new WaterTroughSouthDeed();
+        public override bool RetainDeedHue => true;
 
         public int Quantity { get => 500; set { } }
 
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(0); // version
+            writer.Write(0);
         }
 
         public override void Deserialize(GenericReader reader)
@@ -33,6 +34,8 @@ namespace Server.Items
 
     public class WaterTroughSouthDeed : BaseAddonDeed
     {
+        public override int LabelNumber => 1044350; // water trough (south)
+
         [Constructable]
         public WaterTroughSouthDeed()
         {
@@ -44,19 +47,17 @@ namespace Server.Items
         }
 
         public override BaseAddon Addon => new WaterTroughSouthAddon();
-        public override int LabelNumber => 1044350;// water trough (south)
+        
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

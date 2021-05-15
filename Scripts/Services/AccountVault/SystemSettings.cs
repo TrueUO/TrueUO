@@ -31,23 +31,41 @@ namespace Server.AccountVault
         internal static string Humanize(this TimeSpan timeSpan)
         {
             StringBuilder builder = new StringBuilder();
+
             if (timeSpan.Days > 0)
+            {
                 builder.AppendFormat("{0:%d} day(s)", timeSpan);
+            }
+
             if (timeSpan.Days > 0 && (timeSpan.Hours > 0 || timeSpan.Minutes > 0 || timeSpan.Seconds > 0))
+            {
                 builder.Append(", ");
+            }
 
             if (timeSpan.Hours > 0)
+            {
                 builder.AppendFormat("{0:%h} hour(s)", timeSpan);
+            }
+
             if (timeSpan.Hours > 0 && (timeSpan.Minutes > 0 || timeSpan.Seconds > 0))
+            {
                 builder.Append(", ");
+            }
 
             if (timeSpan.Minutes > 0)
+            {
                 builder.AppendFormat("{0:%m} minute(s)", timeSpan);
+            }
+
             if (timeSpan.Minutes > 0 && timeSpan.Seconds > 0)
+            {
                 builder.Append(", ");
+            }
 
             if (timeSpan.Seconds > 0)
+            {
                 builder.AppendFormat("{0:%s} second(s)", timeSpan);
+            }
 
             return builder.ToString();
         }
@@ -62,10 +80,8 @@ namespace Server.AccountVault
             {
                 return string.Format("Do you wish to rent a storage vault for {0} vault token[s] a month? You will need to keep your vault token balance up to date or risk losing your vault contents.", RentTokenValue);
             }
-            else
-            {
-                return string.Format("Do you wish to rent a storage vault for {0} gold a month? You will need to keep your vault token balance up to date or risk losing your vault contents.", RentGoldValue.ToString("N0", CultureInfo.GetCultureInfo("en-US")));
-            }
+
+            return string.Format("Do you wish to rent a storage vault for {0} gold a month? You will need to keep your vault token balance up to date or risk losing your vault contents.", RentGoldValue.ToString("N0", CultureInfo.GetCultureInfo("en-US")));
         }
 
         public static bool HasBalance(PlayerMobile pm, int amount = -1)
@@ -81,15 +97,13 @@ namespace Server.AccountVault
 
                 return storeProfile != null && storeProfile.VaultTokens >= amount;
             }
-            else
-            {
-                if (amount == -1)
-                {
-                    amount = RentGoldValue;
-                }
 
-                return pm.AccountGold.TotalCurrency >= amount;
+            if (amount == -1)
+            {
+                amount = RentGoldValue;
             }
+
+            return pm.AccountGold.TotalCurrency >= amount;
         }
 
         public static void WithdrawBalance(PlayerMobile pm, int amount = -1)
@@ -116,7 +130,7 @@ namespace Server.AccountVault
 
         public static string[] VaultRegions => _VaultRegions;
 
-        private static string[] _VaultRegions = new[]
+        private static string[] _VaultRegions =
         {
             "Royal City",
             "Papua",

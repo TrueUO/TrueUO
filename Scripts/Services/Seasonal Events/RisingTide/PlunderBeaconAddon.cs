@@ -277,7 +277,9 @@ namespace Server.Items
         private void SpawnHelper(bool initial)
         {
             if (Map == null || Beacon == null)
+            {
                 return;
+            }
 
             Point3D p = Location;
             Map map = Map;
@@ -289,7 +291,7 @@ namespace Server.Items
                 range = 8;
             }
 
-            BaseCreature creature = Activator.CreateInstance(_SpawnTypes[Utility.Random(_SpawnTypes.Length)]) as BaseCreature;
+            BaseCreature creature = (BaseCreature) Activator.CreateInstance(_SpawnTypes[Utility.Random(_SpawnTypes.Length)]);
 
             for (int i = 0; i < 50; i++)
             {
@@ -297,20 +299,19 @@ namespace Server.Items
 
                 if (map.CanFit(spawnLoc.X, spawnLoc.Y, spawnLoc.Z, 16, true, true, false, creature))
                 {
-                    if (creature != null)
+                    creature.MoveToWorld(spawnLoc, map);
+                    creature.Home = spawnLoc;
+                    creature.RangeHome = 10;
+
+                    if (BaseCreature.IsSoulboundEnemies)
                     {
-                        creature.MoveToWorld(spawnLoc, map);
-                        creature.Home = spawnLoc;
-                        creature.RangeHome = 10;
-
-                        if (BaseCreature.IsSoulboundEnemies)
-                            creature.IsSoulBound = true;
-
-                        Spawn.Add(creature, initial);
-
-                        NextSpawn = DateTime.UtcNow + TimeSpan.FromSeconds(Utility.RandomMinMax(30, 60));
-                        return;
+                        creature.IsSoulBound = true;
                     }
+
+                    Spawn.Add(creature, initial);
+
+                    NextSpawn = DateTime.UtcNow + TimeSpan.FromSeconds(Utility.RandomMinMax(30, 60));
+                    return;
                 }
             }
 

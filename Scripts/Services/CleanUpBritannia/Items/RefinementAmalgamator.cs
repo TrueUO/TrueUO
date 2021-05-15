@@ -1,4 +1,4 @@
-﻿using Server.Targeting;
+using Server.Targeting;
 using System.Collections.Generic;
 
 namespace Server.Items
@@ -27,8 +27,7 @@ namespace Server.Items
         {
             if (!IsChildOf(from.Backpack))
             {
-                // The item must be in your backpack to use it.
-                from.SendLocalizedMessage(1060640);
+                from.SendLocalizedMessage(1060640); // The item must be in your backpack to use it.
             }
             else
             {
@@ -59,10 +58,12 @@ namespace Server.Items
             }
             else
             {
-                if (ToUpgrade.RefinementType != component.RefinementType
-                            || ToUpgrade.CraftType != component.CraftType
-                            || ToUpgrade.SubCraftType != component.SubCraftType
-                            || ToUpgrade.ModType != component.ModType)
+                if (ToUpgrade == component) // Can't target the same one twice.
+                {
+                    return;
+                }
+
+                if (ToUpgrade.RefinementType != component.RefinementType || ToUpgrade.CraftType != component.CraftType || ToUpgrade.SubCraftType != component.SubCraftType || ToUpgrade.ModType != component.ModType)
                 {
                     m.SendLocalizedMessage(1154354); // This refinement does not match the type currently being combined.
                 }
@@ -73,8 +74,12 @@ namespace Server.Items
 
                     if (ToCombine.Count >= GetCombineTotal(component.ModType) - 1) // -1 because we're counting ToUpgrade
                     {
-                        foreach (RefinementComponent comp in ToCombine)
+                        for (var index = 0; index < ToCombine.Count; index++)
+                        {
+                            RefinementComponent comp = ToCombine[index];
+
                             comp.Delete();
+                        }
 
                         ToUpgrade.ModType++;
 
@@ -94,12 +99,16 @@ namespace Server.Items
         private void ValidateList(Mobile m)
         {
             if (ToCombine == null)
+            {
                 return;
+            }
 
             List<RefinementComponent> copy = new List<RefinementComponent>(ToCombine);
 
-            foreach (RefinementComponent comp in copy)
+            for (var index = 0; index < copy.Count; index++)
             {
+                RefinementComponent comp = copy[index];
+
                 if (comp == null || comp.Deleted || !comp.IsChildOf(m.Backpack))
                 {
                     ToCombine.Remove(comp);
@@ -136,9 +145,7 @@ namespace Server.Items
 
             protected override void OnTarget(Mobile from, object targeted)
             {
-                RefinementComponent item = targeted as RefinementComponent;
-
-                if (item == null)
+                if (!(targeted is RefinementComponent item))
                 {
                     from.SendLocalizedMessage(1154457); // This is not a refinement.
                 }
@@ -152,37 +159,6 @@ namespace Server.Items
                     {
                         m_Amalgamator.CheckCombine(from, item);
                     }
-                    /*RefinementComponent comp = (RefinementComponent)targeted;
-
-                    if (ToCombine == null)
-                    {
-                        if (comp.ModType == ModType.Invulnerability)
-                        {
-                            from.SendLocalizedMessage(1154353); // You can't upgrade this refinement.
-                        }
-                        else
-                        {
-                            from.SendLocalizedMessage(1154351); // Target the refinement you wish to combine.
-                            from.Target = new InternalTarget(from, comp);
-                        }
-                    }
-                    else
-                    {
-                        if (m_First.RefinementType != comp.RefinementType
-                            || m_First.CraftType != comp.CraftType
-                            || m_First.SubCraftType != comp.SubCraftType
-                            || m_First.ModType != comp.ModType)
-                        {
-                            from.SendLocalizedMessage(1154354); // This refinement does not match the type currently being combined.
-                        }
-                        else
-                        {
-                            comp.Delete();
-                            m_First.ModType++;
-
-                            from.SendLocalizedMessage(1154352); // You've completed the amalgamation and received an upgraded version of your refinement.
-                        }
-                    }*/
                 }
             }
         }
@@ -190,15 +166,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

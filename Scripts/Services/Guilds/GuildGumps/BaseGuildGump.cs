@@ -104,7 +104,7 @@ namespace Server.Guilds
 
         public override void OnResponse(NetState sender, RelayInfo info)
         {
-            PlayerMobile pm = sender.Mobile as PlayerMobile;
+            PlayerMobile pm = (PlayerMobile) sender.Mobile;
 
             if (!IsMember(pm, guild))
                 return;

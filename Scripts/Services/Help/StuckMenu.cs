@@ -4,7 +4,7 @@ using Server.Mobiles;
 using Server.Network;
 using Server.Spells;
 using System;
-using System.Linq;
+using System.Collections.Generic;
 
 namespace Server.Menus.Questions
 {
@@ -286,10 +286,22 @@ namespace Server.Menus.Questions
                 Map fromMap = m_Mobile.LogoutMap;
                 Point3D fromLoc = m_Mobile.LogoutLocation;
 
-                System.Collections.Generic.List<BaseCreature> move = fromMap.GetMobilesInRange(fromLoc, 3).Where(m => m is BaseCreature).Cast<BaseCreature>()
-                    .Where(pet => pet.Controlled && pet.ControlMaster == m_Mobile && pet.ControlOrder == OrderType.Guard || pet.ControlOrder == OrderType.Follow || pet.ControlOrder == OrderType.Come).ToList();
+                List<BaseCreature> move = new List<BaseCreature>();
 
-                move.ForEach(x => x.MoveToWorld(dest, destMap));
+                foreach (var m in fromMap.GetMobilesInRange(fromLoc, 3))
+                {
+                    if (m is BaseCreature bc && (bc.Controlled && bc.ControlMaster == m_Mobile && bc.ControlOrder == OrderType.Guard || bc.ControlOrder == OrderType.Follow || bc.ControlOrder == OrderType.Come))
+                    {
+                        move.Add(bc);
+                    }
+                }
+
+                for (var index = 0; index < move.Count; index++)
+                {
+                    var x = move[index];
+
+                    x.MoveToWorld(dest, destMap);
+                }
             }
 
             protected override void OnTick()

@@ -52,8 +52,6 @@ namespace Server.Mobiles
 
         public override bool PlayerRangeSensitive => true;
 
-        public override bool UseSmartAI => true;
-
         public override bool AlwaysInnocent => true;
 
         public virtual bool IsActiveVendor => true;
@@ -827,8 +825,10 @@ namespace Server.Mobiles
 
             IBuyItemInfo[] buyInfo = GetBuyInfo();
 
-            foreach (IBuyItemInfo bii in buyInfo)
+            for (var index = 0; index < buyInfo.Length; index++)
             {
+                IBuyItemInfo bii = buyInfo[index];
+
                 bii.OnRestock();
             }
         }
@@ -943,8 +943,10 @@ namespace Server.Mobiles
                 int price = 0;
                 string name = null;
 
-                foreach (IShopSellInfo ssi in sellInfo)
+                for (var index = 0; index < sellInfo.Length; index++)
                 {
+                    IShopSellInfo ssi = sellInfo[index];
+
                     if (ssi.IsSellable(item))
                     {
                         price = ssi.GetBuyPriceFor(item, this);
@@ -1066,12 +1068,16 @@ namespace Server.Mobiles
 
                 Dictionary<Item, SellItemState> table = new Dictionary<Item, SellItemState>();
 
-                foreach (IShopSellInfo ssi in info)
+                for (var index = 0; index < info.Length; index++)
                 {
+                    IShopSellInfo ssi = info[index];
+
                     Item[] items = pack.FindItemsByType(ssi.Types);
 
-                    foreach (Item item in items)
+                    for (var i = 0; i < items.Length; i++)
                     {
+                        Item item = items[i];
+
                         if (item is Container && item.Items.Count != 0)
                         {
                             continue;
@@ -1086,7 +1092,8 @@ namespace Server.Mobiles
 
                         if (item.IsStandardLoot() && item.Movable && ssi.IsSellable(item))
                         {
-                            table[item] = new SellItemState(item, ssi.GetSellPriceFor(item, this), ssi.GetNameFor(item));
+                            table[item] = new SellItemState(item, ssi.GetSellPriceFor(item, this),
+                                ssi.GetNameFor(item));
                         }
                     }
                 }
@@ -1135,7 +1142,7 @@ namespace Server.Mobiles
             if (dropped is SmallBOD || dropped is LargeBOD)
             {
                 PlayerMobile pm = from as PlayerMobile;
-                IBOD bod = dropped as IBOD;
+                IBOD bod = (IBOD) dropped;
 
                 if (BulkOrderSystem.NewSystemEnabled && Bribes != null && Bribes.ContainsKey(from) && Bribes[from].BOD == bod)
                 {
@@ -1292,8 +1299,10 @@ namespace Server.Mobiles
 
             IShopSellInfo[] info = GetSellInfo();
 
-            foreach (IShopSellInfo ssi in info)
+            for (var index = 0; index < info.Length; index++)
             {
+                IShopSellInfo ssi = info[index];
+
                 if (ssi.IsSellable(dropped))
                 {
                     SayTo(from, 501548, 0x3B2); // I thank thee.
@@ -1358,15 +1367,18 @@ namespace Server.Mobiles
             {
                 IBOD bod = targeted as IBOD;
 
-                if (bod is Item && ((Item)bod).IsChildOf(from.Backpack))
+                if (bod is Item bodItem && bodItem.IsChildOf(from.Backpack))
                 {
                     if (BulkOrderSystem.CanExchangeBOD(from, this, bod, -1))
                     {
                         int amount = BulkOrderSystem.GetBribe(bod);
+
                         amount *= BribeMultiplier;
 
                         if (Bribes == null)
+                        {
                             Bribes = new Dictionary<Mobile, PendingBribe>();
+                        }
 
                         // Per EA, new bribe replaced old pending bribe
                         if (!Bribes.ContainsKey(m))
@@ -1572,20 +1584,27 @@ namespace Server.Mobiles
 
             UpdateBuyInfo();
 
-            //var buyInfo = GetBuyInfo();
             IShopSellInfo[] info = GetSellInfo();
+
             double totalCost = 0.0;
+
             List<BuyItemResponse> validBuy = new List<BuyItemResponse>(list.Count);
+
             Container cont;
+
             bool bought = false;
             bool fromBank = false;
             bool fullPurchase = true;
+
             int controlSlots = buyer.FollowersMax - buyer.Followers;
 
-            foreach (BuyItemResponse buy in list)
+            for (var index = 0; index < list.Count; index++)
             {
+                BuyItemResponse buy = list[index];
                 Serial ser = buy.Serial;
+
                 int amount = buy.Amount;
+
                 double cost = 0;
 
                 if (ser.IsItem)
@@ -1615,13 +1634,15 @@ namespace Server.Mobiles
                             continue;
                         }
 
-                        foreach (IShopSellInfo ssi in info)
+                        for (var i = 0; i < info.Length; i++)
                         {
+                            IShopSellInfo ssi = info[i];
+
                             if (ssi.IsSellable(item))
                             {
                                 if (ssi.IsResellable(item))
                                 {
-                                    cost = (double)ssi.GetBuyPriceFor(item, this) * amount;
+                                    cost = (double) ssi.GetBuyPriceFor(item, this) * amount;
                                     validBuy.Add(buy);
                                     break;
                                 }
@@ -1669,7 +1690,7 @@ namespace Server.Mobiles
                         }
                     }
                 }
-            } //foreach
+            }
 
             if (fullPurchase && validBuy.Count == 0)
             {
@@ -1761,9 +1782,11 @@ namespace Server.Mobiles
 
             cont = buyer.Backpack ?? buyer.BankBox;
 
-            foreach (BuyItemResponse buy in validBuy)
+            for (var index = 0; index < validBuy.Count; index++)
             {
+                BuyItemResponse buy = validBuy[index];
                 Serial ser = buy.Serial;
+
                 int amount = buy.Amount;
 
                 if (amount < 1)
@@ -1793,8 +1816,10 @@ namespace Server.Mobiles
                             amount = item.Amount;
                         }
 
-                        foreach (IShopSellInfo ssi in info)
+                        for (var i = 0; i < info.Length; i++)
                         {
+                            IShopSellInfo ssi = info[i];
+
                             if (ssi.IsSellable(item))
                             {
                                 if (ssi.IsResellable(item))
@@ -1842,7 +1867,7 @@ namespace Server.Mobiles
                         ProcessValidPurchase(amount, gbi, buyer, cont);
                     }
                 }
-            } //foreach
+            }
 
             if (discount > 0)
             {
@@ -2536,7 +2561,7 @@ namespace Server.Mobiles
             {
                 var c = _PendingConvertEntries[index];
 
-                if (c.From == @from && c.Armor == armor)
+                if (c.From == from && c.Armor == armor)
                 {
                     return c;
                 }

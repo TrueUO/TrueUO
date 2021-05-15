@@ -195,13 +195,16 @@ namespace Server.Mobiles
 
         private void ManaDrainEffects_Callback(object o)
         {
-            object[] objs = o as object[];
-            IPoint3D p = objs[0] as IPoint3D;
+            if (o is object[] objs)
+            {
+                IPoint3D p = objs[0] as IPoint3D;
 
-            ManaDrainItem item = new ManaDrainItem(Utility.RandomList(6913, 6915, 6917, 6919), this);
-            Spells.SpellHelper.GetSurfaceTop(ref p);
+                ManaDrainItem item = new ManaDrainItem(Utility.RandomList(6913, 6915, 6917, 6919), this);
 
-            item.MoveToWorld(new Point3D(p), Map);
+                Spells.SpellHelper.GetSurfaceTop(ref p);
+
+                item.MoveToWorld(new Point3D(p), Map);
+            }
         }
 
         private class ManaDrainItem : Item

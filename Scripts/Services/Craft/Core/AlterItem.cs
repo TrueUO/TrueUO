@@ -3,7 +3,6 @@ using Server.Items;
 using Server.SkillHandlers;
 using Server.Targeting;
 using System;
-using System.Linq;
 
 namespace Server.Engines.Craft
 {
@@ -28,9 +27,22 @@ namespace Server.Engines.Craft
         public bool CheckInherit(Type original)
         {
             if (Inherit)
+            {
                 return true;
+            }
 
-            CraftSystem system = CraftContext.Systems.FirstOrDefault(sys => sys.GetType() == CraftSystem);
+            CraftSystem system = null;
+
+            for (var index = 0; index < CraftContext.Systems.Length; index++)
+            {
+                var sys = CraftContext.Systems[index];
+
+                if (sys.GetType() == CraftSystem)
+                {
+                    system = sys;
+                    break;
+                }
+            }
 
             if (system != null)
             {
@@ -357,31 +369,58 @@ namespace Server.Engines.Craft
             if (item is BaseWeapon weapon)
             {
                 if (weapon.SetID != SetItem.None || !weapon.CanAlter || weapon.NegativeAttributes.Antique != 0)
+                {
                     return false;
+                }
 
                 if (Race.Gargoyle.ValidateEquipment(weapon) && !weapon.IsArtifact)
+                {
                     return false;
+                }
             }
 
             if (item is BaseArmor armor)
             {
                 if (armor.SetID != SetItem.None || !armor.CanAlter || armor.NegativeAttributes.Antique != 0)
+                {
                     return false;
+                }
 
                 if (Race.Gargoyle.ValidateEquipment(armor) && !armor.IsArtifact)
+                {
                     return false;
+                }
 
-                if (ArmorType.Any(t => t == armor.GetType()) && armor.Resource > CraftResource.Iron)
+                bool armorType = false;
+
+                for (var index = 0; index < ArmorType.Length; index++)
+                {
+                    var t = ArmorType[index];
+
+                    if (t == armor.GetType())
+                    {
+                        armorType = true;
+                        break;
+                    }
+                }
+
+                if (armorType && armor.Resource > CraftResource.Iron)
+                {
                     return false;
+                }
             }
 
             if (item is BaseClothing cloth)
             {
                 if (cloth.SetID != SetItem.None || !cloth.CanAlter || cloth.NegativeAttributes.Antique != 0)
+                {
                     return false;
+                }
 
                 if (Race.Gargoyle.ValidateEquipment(cloth) && !cloth.IsArtifact)
+                {
                     return false;
+                }
             }
 
             if (item is BaseQuiver quiver && !quiver.CanAlter && quiver.SetID != SetItem.None)
@@ -390,10 +429,14 @@ namespace Server.Engines.Craft
             }
 
             if (item is IVvVItem vItem && vItem.IsVvVItem)
+            {
                 return false;
+            }
 
             if (item is IRewardItem)
+            {
                 return false;
+            }
 
             return true;
         }

@@ -10,9 +10,7 @@ namespace Server
         {
             int luck = killer is PlayerMobile mobile ? mobile.RealLuck : killer.Luck;
 
-            PlayerMobile pmKiller = killer as PlayerMobile;
-
-            if (pmKiller != null && pmKiller.SentHonorContext != null && pmKiller.SentHonorContext.Target == victim)
+            if (killer is PlayerMobile pmKiller && pmKiller.SentHonorContext != null && pmKiller.SentHonorContext.Target == victim)
             {
                 luck += pmKiller.SentHonorContext.PerfectionLuckBonus;
             }
@@ -35,7 +33,9 @@ namespace Server
             BaseCreature dead = m as BaseCreature;
 
             if (dead == null)
+            {
                 return 240;
+            }
 
             System.Collections.Generic.List<DamageStore> list = dead.GetLootingRights();
 

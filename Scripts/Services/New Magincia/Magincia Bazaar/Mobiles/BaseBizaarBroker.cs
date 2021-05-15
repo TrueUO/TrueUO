@@ -126,9 +126,14 @@ namespace Server.Engines.NewMagincia
         public override void Delete()
         {
             if (m_Plot != null && MaginciaBazaar.Instance != null)
+            {
                 MaginciaBazaar.Instance.AddInventoryToWarehouse(m_Plot.Owner, this);
+            }
 
-            m_Plot.Merchant = null;
+            if (m_Plot != null)
+            {
+                m_Plot.Merchant = null;
+            }
 
             base.Delete();
         }

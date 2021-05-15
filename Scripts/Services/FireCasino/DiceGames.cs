@@ -5,7 +5,6 @@ using Server.Network;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 
 namespace Server.Engines.ResortAndCasino
 {
@@ -19,8 +18,8 @@ namespace Server.Engines.ResortAndCasino
 
     public class BaseDiceGame
     {
-        public PlayerMobile Player { get; set; }
-        public CasinoDealer Dealer { get; set; }
+        public PlayerMobile Player { get; }
+        public CasinoDealer Dealer { get; }
 
         public int CurrentBet { get; set; }
         public int BettingOn { get; set; }
@@ -69,16 +68,36 @@ namespace Server.Engines.ResortAndCasino
             if (Roll == null)
                 return 0;
 
-            return Roll.Count(i => i == BettingOn);
+            int count = 0;
+
+            for (var index = 0; index < Roll.Count; index++)
+            {
+                var i = Roll[index];
+
+                if (i == BettingOn)
+                {
+                    count++;
+                }
+            }
+
+            return count;
         }
 
         public virtual int GetTotal()
         {
             if (Roll == null)
+            {
                 return 0;
+            }
 
             int total = 0;
-            Roll.ForEach(i => total += i);
+
+            for (var index = 0; index < Roll.Count; index++)
+            {
+                var i = Roll[index];
+
+                total += i;
+            }
 
             return total;
         }

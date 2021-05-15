@@ -49,9 +49,7 @@ namespace Server.Items
 
             protected override void OnTarget(Mobile from, object targeted)
             {
-                BaseCreature bc = targeted as BaseCreature;
-
-                if (bc != null && IsSnake(bc))
+                if (targeted is BaseCreature bc && IsSnake(bc))
                 {
                     if (bc.CharmMaster != null)
                     {

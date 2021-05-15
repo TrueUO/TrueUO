@@ -12,7 +12,6 @@ namespace Server.Items
         public MedusaLightScales(int amount)
             : base(9908)
         {
-            Hue = 1266;
             Stackable = true;
             Amount = amount;
         }
@@ -23,6 +22,7 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1112626;// Medusa Scales
+        public override int Hue => 1266;
 
         public override void Serialize(GenericWriter writer)
         {

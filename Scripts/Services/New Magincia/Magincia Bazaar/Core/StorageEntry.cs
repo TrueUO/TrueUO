@@ -28,8 +28,10 @@ namespace Server.Engines.NewMagincia
 
             if (broker is CommodityBroker commodityBroker)
             {
-                foreach (CommodityBrokerEntry entry in commodityBroker.CommodityEntries)
+                for (var index = 0; index < commodityBroker.CommodityEntries.Count; index++)
                 {
+                    CommodityBrokerEntry entry = commodityBroker.CommodityEntries[index];
+
                     if (entry.Stock > 0)
                     {
                         m_CommodityTypes[entry.CommodityType] = entry.Stock;
@@ -38,8 +40,10 @@ namespace Server.Engines.NewMagincia
             }
             else if (broker is PetBroker petBroker)
             {
-                foreach (PetBrokerEntry entry in petBroker.BrokerEntries)
+                for (var index = 0; index < petBroker.BrokerEntries.Count; index++)
                 {
+                    PetBrokerEntry entry = petBroker.BrokerEntries[index];
+
                     if (entry.Pet.Map != Map.Internal || !entry.Pet.IsStabled)
                     {
                         entry.Internalize();
@@ -90,10 +94,10 @@ namespace Server.Engines.NewMagincia
                     count = reader.ReadInt();
                     for (int i = 0; i < count; i++)
                     {
-                        BaseCreature bc = reader.ReadMobile() as BaseCreature;
-
-                        if (bc != null)
+                        if (reader.ReadMobile() is BaseCreature bc)
+                        {
                             m_Creatures.Add(bc);
+                        }
                     }
                     break;
                 case 0:
@@ -122,9 +126,7 @@ namespace Server.Engines.NewMagincia
                                 int c2 = reader.ReadInt();
                                 for (int i = 0; i < c2; i++)
                                 {
-                                    BaseCreature bc = reader.ReadMobile() as BaseCreature;
-
-                                    if (bc != null)
+                                    if (reader.ReadMobile() is BaseCreature bc)
                                     {
                                         m_Creatures.Add(bc);
                                     }
@@ -151,8 +153,9 @@ namespace Server.Engines.NewMagincia
             }
 
             writer.Write(m_Creatures.Count);
-            foreach (BaseCreature bc in m_Creatures)
+            for (var index = 0; index < m_Creatures.Count; index++)
             {
+                BaseCreature bc = m_Creatures[index];
                 writer.Write(bc);
             }
         }

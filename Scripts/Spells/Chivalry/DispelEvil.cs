@@ -2,7 +2,6 @@ using Server.Items;
 using Server.Mobiles;
 using Server.Spells.Necromancy;
 using System;
-using System.Linq;
 
 namespace Server.Spells.Chivalry
 {
@@ -40,57 +39,59 @@ namespace Server.Spells.Chivalry
                 int dispelSkill = ComputePowerValue(2);
                 double chiv = Caster.Skills.Chivalry.Value;
 
-                foreach (Mobile m in AcquireIndirectTargets(Caster.Location, 8).OfType<Mobile>())
+                foreach (IDamageable target in AcquireIndirectTargets(Caster.Location, 8))
                 {
-                    BaseCreature bc = m as BaseCreature;
-
-                    if (bc != null)
+                    if (target is Mobile m)
                     {
-                        bool dispellable = bc.Summoned && !bc.IsAnimatedDead;
-
-                        if (dispellable)
+                        if (m is BaseCreature bc)
                         {
-                            double dispelChance = (50.0 + ((100 * (chiv - bc.GetDispelDifficulty())) / (bc.DispelFocus * 2))) / 100;
-                            dispelChance *= dispelSkill / 100.0;
+                            bool dispellable = bc.Summoned && !bc.IsAnimatedDead;
 
-                            if (dispelChance > Utility.RandomDouble())
+                            if (dispellable)
                             {
-                                Effects.SendLocationParticles(EffectItem.Create(m.Location, m.Map, EffectItem.DefaultDuration), 0x3728, 8, 20, 5042);
-                                Effects.PlaySound(m, m.Map, 0x201);
+                                double dispelChance = (50.0 + 100 * (chiv - bc.GetDispelDifficulty()) / (bc.DispelFocus * 2)) / 100;
 
-                                m.Delete();
-                                continue;
+                                dispelChance *= dispelSkill / 100.0;
+
+                                if (dispelChance > Utility.RandomDouble())
+                                {
+                                    Effects.SendLocationParticles(EffectItem.Create(m.Location, m.Map, EffectItem.DefaultDuration), 0x3728, 8, 20, 5042);
+                                    Effects.PlaySound(m, m.Map, 0x201);
+
+                                    m.Delete();
+                                    continue;
+                                }
+                            }
+
+                            bool evil = !bc.Controlled && bc.Karma < 0;
+
+                            if (evil)
+                            {
+                                // TODO: Is this right?
+                                double fleeChance = (100 - Math.Sqrt(m.Fame / 2)) * chiv * dispelSkill;
+                                fleeChance /= 1000000;
+
+                                if (fleeChance > Utility.RandomDouble())
+                                {
+                                    // guide says 2 seconds, it's longer
+                                    bc.ForceFleeUntil = DateTime.UtcNow + TimeSpan.FromSeconds(30.0);
+                                }
                             }
                         }
 
-                        bool evil = !bc.Controlled && bc.Karma < 0;
-
-                        if (evil)
+                        TransformContext context = TransformationSpellHelper.GetContext(m);
+                        if (context != null && context.Spell is NecromancerSpell) //Trees are not evil!	TODO: OSI confirm?
                         {
-                            // TODO: Is this right?
-                            double fleeChance = (100 - Math.Sqrt(m.Fame / 2)) * chiv * dispelSkill;
-                            fleeChance /= 1000000;
+                            // transformed ..
+                            double drainChance = 0.5 * (Caster.Skills.Chivalry.Value / Math.Max(m.Skills.Necromancy.Value, 1));
 
-                            if (fleeChance > Utility.RandomDouble())
+                            if (drainChance > Utility.RandomDouble())
                             {
-                                // guide says 2 seconds, it's longer
-                                bc.ForceFleeUntil = DateTime.UtcNow + TimeSpan.FromSeconds(30.0);
+                                int drain = (5 * dispelSkill) / 100;
+
+                                m.Stam -= drain;
+                                m.Mana -= drain;
                             }
-                        }
-                    }
-
-                    TransformContext context = TransformationSpellHelper.GetContext(m);
-                    if (context != null && context.Spell is NecromancerSpell)	//Trees are not evil!	TODO: OSI confirm?
-                    {
-                        // transformed ..
-                        double drainChance = 0.5 * (Caster.Skills.Chivalry.Value / Math.Max(m.Skills.Necromancy.Value, 1));
-
-                        if (drainChance > Utility.RandomDouble())
-                        {
-                            int drain = (5 * dispelSkill) / 100;
-
-                            m.Stam -= drain;
-                            m.Mana -= drain;
                         }
                     }
                 }

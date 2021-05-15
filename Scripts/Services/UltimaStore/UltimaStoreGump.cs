@@ -3,7 +3,6 @@ using Server.Mobiles;
 using Server.Network;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.UOStore
 {
@@ -330,8 +329,20 @@ namespace Server.Engines.UOStore
 
         public static bool IsFeatured(StoreEntry entry)
         {
-            return entry.Category == StoreCategory.Featured ||
-                UltimaStore.Entries.Any(e => e.ItemType == entry.ItemType && e.Category == StoreCategory.Featured);
+            bool isFeatured = false;
+
+            for (var index = 0; index < UltimaStore.Entries.Count; index++)
+            {
+                var e = UltimaStore.Entries[index];
+
+                if (e.ItemType == entry.ItemType && e.Category == StoreCategory.Featured)
+                {
+                    isFeatured = true;
+                    break;
+                }
+            }
+
+            return entry.Category == StoreCategory.Featured || isFeatured;
         }
 
         public static void ReleaseHidden(PlayerMobile pm)

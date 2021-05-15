@@ -4,7 +4,7 @@ namespace Server.Mobiles
 {
     public class Maribel : HumilityQuestMobile
     {
-        public override int Greeting => 1075754;
+        public override int Greeting => 1075754; // You, in the grey cloak, art thou hungry?
 
         public override bool IsActiveVendor => true;
 
@@ -32,6 +32,7 @@ namespace Server.Mobiles
             Race = Race.Human;
             Body = 0x191;
 
+            SpeechHue = 40;
             Hue = 0x83EA;
             HairItemID = 0x2049;
         }

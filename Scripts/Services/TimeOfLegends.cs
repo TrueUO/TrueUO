@@ -98,7 +98,7 @@ namespace Server
 
         public static void CheckRecipeDrop(CreatureDeathEventArgs e)
         {
-            BaseCreature bc = e.Creature as BaseCreature;
+            BaseCreature bc = (BaseCreature) e.Creature;
             Container c = e.Corpse;
             Mobile killer = e.Killer;
 
@@ -109,7 +109,7 @@ namespace Server
 
                 if (killer != null)
                 {
-                    luck = Math.Min(1800, killer is PlayerMobile ? ((PlayerMobile)killer).RealLuck : killer.Luck);
+                    luck = Math.Min(1800, killer is PlayerMobile mobile ? mobile.RealLuck : killer.Luck);
                 }
 
                 if (luck > 0)

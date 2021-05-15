@@ -162,16 +162,22 @@ namespace Server.Engines.HuntsmasterChallenge
             PlayerMobile pm = from as PlayerMobile;
 
             if (pm == null || pm.NpcGuild != NpcGuild.RangersGuild)
+            {
                 return false;
+            }
 
             WorldLocationInfo info = WorldLocationInfo.Locations[0][m_BonusIndex];
 
             if (info != null)
             {
-                foreach (Rectangle2D rec in info.Bounds)
+                for (var index = 0; index < info.Bounds.Length; index++)
                 {
+                    Rectangle2D rec = info.Bounds[index];
+
                     if (rec.Contains(p))
+                    {
                         return true;
+                    }
                 }
             }
 
@@ -253,16 +259,21 @@ namespace Server.Engines.HuntsmasterChallenge
         {
             foreach (KeyValuePair<HuntType, List<HuntingKillEntry>> kvp in m_Leaders)
             {
-                foreach (HuntingKillEntry killEntry in kvp.Value)
+                for (var index = 0; index < kvp.Value.Count; index++)
                 {
+                    HuntingKillEntry killEntry = kvp.Value[index];
                     Mobile owner = killEntry.Owner;
 
                     if (owner != null)
                     {
                         if (!m_UnclaimedWinners.ContainsKey(owner))
+                        {
                             m_UnclaimedWinners[owner] = 1;
+                        }
                         else
+                        {
                             m_UnclaimedWinners[owner]++;
+                        }
                     }
                 }
             }
@@ -282,8 +293,10 @@ namespace Server.Engines.HuntsmasterChallenge
         {
             List<Mobile> copy = new List<Mobile>(m_UnclaimedWinners.Keys);
 
-            foreach (Mobile m in copy)
+            for (var index = 0; index < copy.Count; index++)
             {
+                Mobile m = copy[index];
+
                 if (m == from && m is PlayerMobile mobile)
                 {
                     mobile.SendGump(new HuntmasterRewardGump(vendor, mobile));
@@ -333,8 +346,11 @@ namespace Server.Engines.HuntsmasterChallenge
                 writer.Write((int)kvp.Key);
                 writer.Write(kvp.Value.Count);
 
-                foreach (HuntingKillEntry entry in kvp.Value)
+                for (var index = 0; index < kvp.Value.Count; index++)
+                {
+                    HuntingKillEntry entry = kvp.Value[index];
                     entry.Serialize(writer);
+                }
             }
 
             writer.Write(m_Leaders.Count);
@@ -343,8 +359,11 @@ namespace Server.Engines.HuntsmasterChallenge
                 writer.Write((int)kvp.Key);
                 writer.Write(kvp.Value.Count);
 
-                foreach (HuntingKillEntry entry in kvp.Value)
+                for (var index = 0; index < kvp.Value.Count; index++)
+                {
+                    HuntingKillEntry entry = kvp.Value[index];
                     entry.Serialize(writer);
+                }
             }
         }
 

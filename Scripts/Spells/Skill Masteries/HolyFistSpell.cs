@@ -58,9 +58,7 @@ namespace Server.Spells.SkillMasteries
 
         protected override void OnTarget(object o)
         {
-            IDamageable m = o as IDamageable;
-
-            if (m != null)
+            if (o is IDamageable m)
             {
                 if (CheckHSequence(m))
                 {

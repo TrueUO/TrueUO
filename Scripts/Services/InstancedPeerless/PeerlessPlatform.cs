@@ -43,10 +43,14 @@ namespace Server.Engines.InstancedPeerless
         public void Validate()
         {
             if (m_KeyExpireTimer != null)
-                m_KeyExpireTimer.Stop();
-
-            foreach (PeerlessKeyBrazier brazier in m_Braziers)
             {
+                m_KeyExpireTimer.Stop();
+            }
+
+            for (var index = 0; index < m_Braziers.Count; index++)
+            {
+                PeerlessKeyBrazier brazier = m_Braziers[index];
+
                 if (!Validate(brazier))
                 {
                     m_KeyExpireTimer = Timer.DelayCall(TimeSpan.FromMinutes(1.0), delegate { Clear(false); });
@@ -61,8 +65,12 @@ namespace Server.Engines.InstancedPeerless
             {
                 m_Summoner.SendLocalizedMessage(1113574); // Your party cannot join the queue because the following members have already registered with another group:
 
-                foreach (Mobile m in invalid)
+                for (var index = 0; index < invalid.Count; index++)
+                {
+                    Mobile m = invalid[index];
+
                     m_Summoner.SendMessage(m.Name);
+                }
 
                 Clear(true);
             }
@@ -89,12 +97,16 @@ namespace Server.Engines.InstancedPeerless
 
         private void Clear(bool returnKeys)
         {
-            foreach (PeerlessKeyBrazier brazier in m_Braziers)
+            for (var index = 0; index < m_Braziers.Count; index++)
             {
+                PeerlessKeyBrazier brazier = m_Braziers[index];
+
                 Item key = brazier.Key;
 
                 if (key == null)
+                {
                     continue;
+                }
 
                 if (returnKeys)
                 {
@@ -102,13 +114,17 @@ namespace Server.Engines.InstancedPeerless
                     m_Summoner.PlaceInBackpack(key);
                 }
                 else
+                {
                     key.Delete();
+                }
 
                 brazier.Key = null;
             }
 
             if (returnKeys)
+            {
                 m_Summoner.SendLocalizedMessage(1113576); // Your sacrificial keys have been returned to you.
+            }
 
             m_Summoner = null;
         }
@@ -124,10 +140,14 @@ namespace Server.Engines.InstancedPeerless
 
             foreach (List<Mobile> otherParty in m_PartyQueue)
             {
-                foreach (Mobile m in otherParty)
+                for (var index = 0; index < otherParty.Count; index++)
                 {
+                    Mobile m = otherParty[index];
+
                     if (party.Contains(m))
+                    {
                         invalid.Add(m);
+                    }
                 }
             }
 
@@ -137,12 +157,14 @@ namespace Server.Engines.InstancedPeerless
         private List<Mobile> GetParty(Mobile from)
         {
             List<Mobile> list = new List<Mobile>();
-            Party p = from.Party as Party;
 
-            if (p != null)
+            if (from.Party is Party p)
             {
-                foreach (PartyMemberInfo pmInfo in p.Members)
+                for (var index = 0; index < p.Members.Count; index++)
+                {
+                    PartyMemberInfo pmInfo = p.Members[index];
                     list.Add(pmInfo.Mobile);
+                }
             }
             else
             {
@@ -154,10 +176,14 @@ namespace Server.Engines.InstancedPeerless
 
         private PeerlessInstance AcquireEmptyInstance()
         {
-            foreach (PeerlessInstance instance in m_Instances)
+            for (var index = 0; index < m_Instances.Count; index++)
             {
+                PeerlessInstance instance = m_Instances[index];
+
                 if (instance.State == InstanceState.Available)
+                {
                     return instance;
+                }
             }
 
             return null;
@@ -189,8 +215,10 @@ namespace Server.Engines.InstancedPeerless
 
                 instance.Activate();
 
-                foreach (Mobile member in party)
+                for (var index = 0; index < party.Count; index++)
                 {
+                    Mobile member = party[index];
+
                     if (member.Region.IsPartOf("Stygian Abyss"))
                     {
                         member.SendGump(new RejoinInstanceGump(instance, OfferGumpTitle, OfferGumpDesc));
@@ -208,10 +236,16 @@ namespace Server.Engines.InstancedPeerless
             Clear(false);
 
             if (m_KeyExpireTimer != null)
+            {
                 m_KeyExpireTimer.Stop();
+            }
 
-            foreach (PeerlessInstance instance in m_Instances)
+            for (var index = 0; index < m_Instances.Count; index++)
+            {
+                PeerlessInstance instance = m_Instances[index];
+
                 instance.OnDelete();
+            }
         }
 
         public PeerlessPlatform(Serial serial)

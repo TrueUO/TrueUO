@@ -111,7 +111,10 @@ namespace Server.Spells.Spellweaving
 
                     BuffInfo.AddBuff(Caster, new BuffInfo(BuffIcon.ImmolatingWeapon, 1071028, 1153782, damage.ToString()));
 
-                    weapon.InvalidateProperties();
+                    if (weapon != null)
+                    {
+                        weapon.InvalidateProperties();
+                    }
                 }
             }
 

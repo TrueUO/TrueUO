@@ -71,8 +71,10 @@ namespace Server.Items
 
         public override void OnChop(Mobile from)
         {
-            foreach (AddonComponent comp in Components)
+            for (var index = 0; index < Components.Count; index++)
             {
+                AddonComponent comp = Components[index];
+
                 if (comp is GardenAddonComponent component && component.Plant != null)
                 {
                     from.SendLocalizedMessage(1150383); // You need to remove all plants through the plant menu before destroying this.

@@ -441,18 +441,25 @@ namespace Server.Engines.MyrmidexInvasion
             if (allegiance == Allegiance.Myrmidex)
             {
                 int wave = MyrmidexTeam.Count;
+
                 MyrmidexTeam[wave] = new List<BaseCreature>();
+
                 List<BaseCreature> list = MyrmidexTeam[wave];
 
                 for (int i = 0; i < WaveCount; i++)
                 {
                     BaseCreature bc;
+
                     Type type = _MyrmidexTypes[wave][Utility.Random(_MyrmidexTypes[wave].Length)];
 
                     if (type.IsSubclassOf(typeof(BaseEodonTribesman)))
-                        bc = Activator.CreateInstance(type, EodonTribe.Barrab) as BaseCreature;
+                    {
+                        bc = (BaseCreature) Activator.CreateInstance(type, EodonTribe.Barrab);
+                    }
                     else
-                        bc = Activator.CreateInstance(type) as BaseCreature;
+                    {
+                        bc = (BaseCreature) Activator.CreateInstance(type);
+                    }
 
                     bc.NoLootOnDeath = true;
 
@@ -476,21 +483,27 @@ namespace Server.Engines.MyrmidexInvasion
             else
             {
                 int wave = TribeTeam.Count;
+
                 TribeTeam[wave] = new List<BaseCreature>();
+
                 List<BaseCreature> list = TribeTeam[wave];
 
                 for (int i = 0; i < WaveCount; i++)
                 {
                     BaseCreature bc;
+
                     Type type = _TribeTypes[wave][Utility.Random(_TribeTypes[wave].Length)];
 
                     if (type.IsSubclassOf(typeof(BaseEodonTribesman)))
                     {
                         EodonTribe tribe = Utility.RandomList(EodonTribe.Jukari, EodonTribe.Kurak, EodonTribe.Barako, EodonTribe.Urali, EodonTribe.Sakkhra);
-                        bc = Activator.CreateInstance(type, tribe) as BaseCreature;
+
+                        bc = (BaseCreature) Activator.CreateInstance(type, tribe);
                     }
                     else
-                        bc = Activator.CreateInstance(type) as BaseCreature;
+                    {
+                        bc = (BaseCreature) Activator.CreateInstance(type);
+                    }
 
                     bc.NoLootOnDeath = true;
 
@@ -640,52 +653,52 @@ namespace Server.Engines.MyrmidexInvasion
             {
                 DamageStore ds = rights[index];
 
-                if (ds.m_Mobile is PlayerMobile && ds.m_HasRight && MyrmidexInvasionSystem.AreEnemies(ds.m_Mobile, bc))
+                if (ds.m_Mobile is PlayerMobile pm && ds.m_HasRight && MyrmidexInvasionSystem.AreEnemies(pm, bc))
                 {
                     if (MyrmidexInvasionSystem.IsAlliedWith(bc, Allegiance.Myrmidex))
                     {
                         int points = 1;
 
-                        if (IsFrontLine(ds.m_Mobile, bc))
+                        if (IsFrontLine(pm, bc))
                         {
-                            ds.m_Mobile.SendLocalizedMessage(1156599); // You assist the Eodonians in pushing back the Myrmidex!
+                            pm.SendLocalizedMessage(1156599); // You assist the Eodonians in pushing back the Myrmidex!
                             points *= 4;
                         }
                         else
                         {
-                            ds.m_Mobile.SendLocalizedMessage(1156600); // You kill one of the Myrmidex away from the front ranks and gain little recognition.
+                            pm.SendLocalizedMessage(1156600); // You kill one of the Myrmidex away from the front ranks and gain little recognition.
                         }
 
-                        if (!Players.ContainsKey((PlayerMobile) ds.m_Mobile))
+                        if (!Players.ContainsKey(pm))
                         {
-                            Players[(PlayerMobile) ds.m_Mobile] = points;
+                            Players[pm] = points;
                         }
                         else
                         {
-                            Players[(PlayerMobile) ds.m_Mobile] += points;
+                            Players[pm] += points;
                         }
                     }
                     else
                     {
                         int points = 1;
 
-                        if (IsFrontLine(ds.m_Mobile, bc))
+                        if (IsFrontLine(pm, bc))
                         {
-                            ds.m_Mobile.SendLocalizedMessage(1156598); // You assist the Myrmidex in pushing back the Eodonians!
+                            pm.SendLocalizedMessage(1156598); // You assist the Myrmidex in pushing back the Eodonians!
                             points *= 4;
                         }
                         else
                         {
-                            ds.m_Mobile.SendLocalizedMessage(1156601); // You kill one of the Eodonians away from the front ranks and gain little recognition.
+                            pm.SendLocalizedMessage(1156601); // You kill one of the Eodonians away from the front ranks and gain little recognition.
                         }
 
-                        if (!Players.ContainsKey((PlayerMobile) ds.m_Mobile))
+                        if (!Players.ContainsKey(pm))
                         {
-                            Players[(PlayerMobile) ds.m_Mobile] = points;
+                            Players[pm] = points;
                         }
                         else
                         {
-                            Players[(PlayerMobile) ds.m_Mobile] += points;
+                            Players[pm] += points;
                         }
                     }
                 }

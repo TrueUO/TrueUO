@@ -36,8 +36,10 @@ namespace Server.Items
             {
                 Visible = false;
 
-                foreach (FireBarrier barrier in m_Barriers)
+                for (var index = 0; index < m_Barriers.Count; index++)
                 {
+                    FireBarrier barrier = m_Barriers[index];
+
                     barrier.Active = false;
                 }
 
@@ -47,8 +49,10 @@ namespace Server.Items
 
         protected void RestoreBarrier()
         {
-            foreach (FireBarrier barrier in m_Barriers)
+            for (var index = 0; index < m_Barriers.Count; index++)
             {
+                FireBarrier barrier = m_Barriers[index];
+
                 barrier.Active = true;
             }
 
@@ -59,8 +63,10 @@ namespace Server.Items
         {
             base.OnAfterDelete();
 
-            foreach (FireBarrier barrier in m_Barriers)
+            for (var index = 0; index < m_Barriers.Count; index++)
             {
+                FireBarrier barrier = m_Barriers[index];
+
                 barrier.Delete();
             }
         }

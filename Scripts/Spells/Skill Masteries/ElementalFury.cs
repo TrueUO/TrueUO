@@ -42,9 +42,7 @@ namespace Server.Spells.SkillMasteries
                 return false;
             }
 
-            ElementalFurySpell spell = GetSpell(Caster, GetType()) as ElementalFurySpell;
-
-            if (spell != null)
+            if (GetSpell(Caster, GetType()) is ElementalFurySpell spell)
             {
                 spell.Expire();
                 return false;
@@ -140,7 +138,9 @@ namespace Server.Spells.SkillMasteries
             if (_Table != null)
             {
                 foreach (Mobile m in _Table.Keys)
+                {
                     BuffInfo.RemoveBuff(m, BuffIcon.ElementalFuryDebuff);
+                }
 
                 _Table.Clear();
             }

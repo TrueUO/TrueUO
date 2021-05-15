@@ -1,4 +1,4 @@
-using System.Linq;
+using System.Collections.Generic;
 
 namespace Server.Items
 {
@@ -103,9 +103,20 @@ namespace Server.Items
 
         public static RewardBookType RandomType()
         {
-            System.Collections.Generic.List<string[]> list = BookContents.Where(strList => !string.IsNullOrEmpty(strList[2])).ToList();
+            System.Collections.Generic.List<string[]> list = new List<string[]>();
+
+            for (var index = 0; index < BookContents.Length; index++)
+            {
+                var strList = BookContents[index];
+
+                if (!string.IsNullOrEmpty(strList[2]))
+                {
+                    list.Add(strList);
+                }
+            }
 
             int ran = Utility.Random(list.Count);
+
             ColUtility.Free(list);
 
             return (RewardBookType)ran;

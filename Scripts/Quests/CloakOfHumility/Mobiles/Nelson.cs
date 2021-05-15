@@ -4,7 +4,7 @@ namespace Server.Mobiles
 {
     public class Nelson : HumilityQuestMobile
     {
-        public override int Greeting => 1075749;
+        public override int Greeting => 1075749; // I doth have a similar cloak.
 
         [Constructable]
         public Nelson()
@@ -25,6 +25,7 @@ namespace Server.Mobiles
             Race = Race.Human;
             Body = 0x190;
 
+            SpeechHue = 30;
             Hue = Race.RandomSkinHue();
             HairItemID = Race.RandomHair(false);
             HairHue = Race.RandomHairHue();

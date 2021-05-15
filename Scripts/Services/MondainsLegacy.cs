@@ -121,8 +121,10 @@ namespace Server
         {
             Item item = Activator.CreateInstance(m_Artifacts[Utility.Random(m_Artifacts.Length)]) as Item;
 
-            if (item is ICanBeElfOrHuman)
-                ((ICanBeElfOrHuman)item).ElfOnly = false;
+            if (item is ICanBeElfOrHuman canBeElfOrHuman)
+            {
+                canBeElfOrHuman.ElfOnly = false;
+            }
 
             peerlessCorpse.DropItem(item);
         }

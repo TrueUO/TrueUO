@@ -37,16 +37,16 @@ namespace Server.Spells.SkillMasteries
                 return false;
             }
 
-            BodyGuardSpell spell = GetSpell(Caster, GetType()) as BodyGuardSpell;
-
-            if (spell != null)
+            if (GetSpell(Caster, GetType()) is BodyGuardSpell spell)
             {
                 spell.Expire(true);
                 return false;
             }
 
             if (!HasShield())
+            {
                 return false;
+            }
 
             return base.CheckCast();
         }
@@ -95,9 +95,7 @@ namespace Server.Spells.SkillMasteries
 
             if (protectee != null)
             {
-                BodyGuardSpell spell = GetSpell(s => s.GetType() == typeof(BodyGuardSpell) && s.Target == protectee) as BodyGuardSpell;
-
-                if (spell != null)
+                if (GetSpell(s => s.GetType() == typeof(BodyGuardSpell) && s.Target == protectee) is BodyGuardSpell)
                 {
                     Caster.SendLocalizedMessage(1156094); // Your target is already under the effect of this ability.
                 }

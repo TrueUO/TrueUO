@@ -3,8 +3,8 @@ namespace Server.Items
     public abstract class BaseLeather : Item, ICommodity
     {
         protected virtual CraftResource DefaultResource => CraftResource.RegularLeather;
-
         private CraftResource m_Resource;
+
         public BaseLeather(CraftResource resource)
             : this(resource, 1)
         {
@@ -16,7 +16,6 @@ namespace Server.Items
             Stackable = true;
             Weight = 1.0;
             Amount = amount;
-            Hue = CraftResources.GetHue(resource);
 
             m_Resource = resource;
         }
@@ -25,6 +24,8 @@ namespace Server.Items
             : base(serial)
         {
         }
+
+        public override int Hue => CraftResources.GetHue(m_Resource);
 
         [CommandProperty(AccessLevel.GameMaster)]
         public CraftResource Resource

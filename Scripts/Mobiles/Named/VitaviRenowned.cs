@@ -48,18 +48,12 @@ namespace Server.Mobiles
         }
 
         public override Type[] UniqueSAList => new Type[] { };
-
         public override Type[] SharedSAList => new[] { typeof(AxeOfAbandon), typeof(DemonBridleRing), typeof(VoidInfusedKilt) };
 
         public override InhumanSpeech SpeechType => InhumanSpeech.Ratman;
-        public override bool AllureImmune => true;
-
         public override bool CanRummageCorpses => true;
-
         public override int Meat => 1;
-
         public override int Hides => 8;
-
         public override HideType HideType => HideType.Spined;
 
         public override void GenerateLoot()
@@ -78,7 +72,7 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

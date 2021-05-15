@@ -100,7 +100,9 @@ namespace Server.Regions
                 string filePath = Path.Combine("Data", "TeleporterRegions.xml");
 
                 if (!File.Exists(filePath))
+                {
                     return;
+                }
 
                 XmlDocument doc = new XmlDocument();
                 doc.Load(filePath);
@@ -121,15 +123,21 @@ namespace Server.Regions
 
         private static void BuildTeleporters(string elementName, XmlElement root, ref int unique)
         {
-            foreach (XmlElement region in root.GetElementsByTagName(elementName))
+            var name = root.GetElementsByTagName(elementName);
+
+            for (var index = 0; index < name.Count; index++)
             {
+                var region = (XmlElement) name[index];
                 var list = new Dictionary<WorldLocation, WorldLocation>();
 
                 Map locMap = null;
                 Map teleMap = null;
 
-                foreach (XmlElement tile in region.GetElementsByTagName("tiles"))
+                var tiles = region.GetElementsByTagName("tiles");
+
+                for (var i = 0; i < tiles.Count; i++)
                 {
+                    var tile = (XmlElement) tiles[i];
                     Point3D from = Point3D.Parse(Utility.GetAttribute(tile, "from", "(0, 0, 0)"));
                     Map fromMap = Map.Parse(Utility.GetAttribute(tile, "frommap", null));
 
@@ -227,20 +235,15 @@ namespace Server.Regions
 
         public override void OnEnter(Mobile m)
         {
-            if (m.CanBeginAction(typeof(Teleporter)))
+            if (m.CanBeginAction(typeof(Teleporter)) && (m is PlayerMobile pm))
             {
-                var pm = m as PlayerMobile;
-
-                if (pm != null)
+                if (pm.DisabledPvpWarning)
                 {
-                    if (pm.DisabledPvpWarning)
-                    {
-                        DoTeleport(m);
-                    }
-                    else if (!pm.HasGump(typeof(PvpWarningGump)))
-                    {
-                        pm.SendGump(new PvpWarningGump(m, this));
-                    }
+                    DoTeleport(m);
+                }
+                else if (!pm.HasGump(typeof(PvpWarningGump)))
+                {
+                    pm.SendGump(new PvpWarningGump(m, this));
                 }
             }
         }

@@ -3,7 +3,6 @@ using Server.Mobiles;
 using Server.Network;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Engines.Shadowguard
 {
@@ -67,9 +66,23 @@ namespace Server.Engines.Shadowguard
         public int TotalSummons()
         {
             if (SummonedHelpers == null || SummonedHelpers.Count == 0)
+            {
                 return 0;
+            }
 
-            return SummonedHelpers.Count(bc => bc != null && bc.Alive);
+            int count = 0;
+
+            for (var index = 0; index < SummonedHelpers.Count; index++)
+            {
+                var bc = SummonedHelpers[index];
+
+                if (bc != null && bc.Alive)
+                {
+                    count++;
+                }
+            }
+
+            return count;
         }
 
         public override void OnGotMeleeAttack(Mobile m)
@@ -98,8 +111,10 @@ namespace Server.Engines.Shadowguard
             {
                 List<DamageStore> rights = GetLootingRights();
 
-                foreach (DamageStore ds in rights)
+                for (var index = 0; index < rights.Count; index++)
                 {
+                    DamageStore ds = rights[index];
+
                     if (ds.m_HasRight)
                     {
                         int luck = ds.m_Mobile is PlayerMobile mobile ? mobile.RealLuck : ds.m_Mobile.Luck;
@@ -116,10 +131,12 @@ namespace Server.Engines.Shadowguard
                                 if (m.Backpack == null || !m.Backpack.TryDropItem(m, artifact, false))
                                 {
                                     m.BankBox.DropItem(artifact);
-                                    m.SendMessage("For your valor in combating the fallen beast, a special reward has been placed in your bank box.");
+                                    m.SendMessage(
+                                        "For your valor in combating the fallen beast, a special reward has been placed in your bank box.");
                                 }
                                 else
-                                    m.SendLocalizedMessage(1062317); // For your valor in combating the fallen beast, a special reward has been bestowed on you.
+                                    m.SendLocalizedMessage(
+                                        1062317); // For your valor in combating the fallen beast, a special reward has been bestowed on you.
                             }
                         }
                     }
@@ -307,7 +324,14 @@ namespace Server.Engines.Shadowguard
             writer.Write(SummonedHelpers == null ? 0 : SummonedHelpers.Count);
 
             if (SummonedHelpers != null)
-                SummonedHelpers.ForEach(m => writer.Write(m));
+            {
+                for (var index = 0; index < SummonedHelpers.Count; index++)
+                {
+                    var m = SummonedHelpers[index];
+
+                    writer.Write(m);
+                }
+            }
         }
 
         public override void Deserialize(GenericReader reader)
@@ -703,22 +727,19 @@ namespace Server.Engines.Shadowguard
             base.OnThink();
 
             if (Combatant == null)
-                return;
-
-            if (Combatant is Mobile)
             {
-                Mobile m = Combatant as Mobile;
+                return;
+            }
 
-                if (InRange(m.Location, 10) && !InRange(m.Location, 2) && m.Alive && CanBeHarmful(m, false) && m.AccessLevel == AccessLevel.Player)
+            if (Combatant is Mobile m && InRange(m.Location, 10) && !InRange(m.Location, 2) && m.Alive && CanBeHarmful(m, false) && m.AccessLevel == AccessLevel.Player)
+            {
+                if (_NextTeleport < DateTime.UtcNow)
                 {
-                    if (_NextTeleport < DateTime.UtcNow)
-                    {
-                        _NextTeleport = DateTime.UtcNow + TimeSpan.FromSeconds(Utility.RandomMinMax(20, 30)); // too much
+                    _NextTeleport = DateTime.UtcNow + TimeSpan.FromSeconds(Utility.RandomMinMax(20, 30)); // too much
 
-                        m.MoveToWorld(GetSpawnPosition(1), Map);
-                        m.FixedParticles(0x376A, 9, 32, 0x13AF, EffectLayer.Waist);
-                        m.PlaySound(0x1FE);
-                    }
+                    m.MoveToWorld(GetSpawnPosition(1), Map);
+                    m.FixedParticles(0x376A, 9, 32, 0x13AF, EffectLayer.Waist);
+                    m.PlaySound(0x1FE);
                 }
             }
         }
@@ -850,7 +871,9 @@ namespace Server.Engines.Shadowguard
                         foreach (NetState ns in e)
                         {
                             if (ns.Mobile != null)
+                            {
                                 ns.Mobile.Send(flash);
+                            }
                         }
 
                         e.Free();

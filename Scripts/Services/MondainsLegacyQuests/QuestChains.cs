@@ -36,7 +36,8 @@ namespace Server.Engines.Quests
         AnimalTraining = 26,
         PaladinsOfTrinsic = 27,
         RightingWrong = 28,
-        Ritual = 29
+        Ritual = 29,
+        Ritual2 = 30
     }
 
     public class BaseChain
@@ -45,7 +46,7 @@ namespace Server.Engines.Quests
 
         static BaseChain()
         {
-            Chains = new Type[30][];
+            Chains = new Type[31][];
 
             Chains[(int)QuestChain.None] = new Type[] { };
 
@@ -78,6 +79,7 @@ namespace Server.Engines.Quests
             Chains[(int)QuestChain.PaladinsOfTrinsic] = new[] { typeof(PaladinsOfTrinsic), typeof(PaladinsOfTrinsic2) };
             Chains[(int)QuestChain.RightingWrong] = new[] { typeof(RightingWrongQuest2), typeof(RightingWrongQuest3), typeof(RightingWrongQuest4) };
             Chains[(int)QuestChain.Ritual] = new[] { typeof(RitualQuest.ScalesOfADreamSerpentQuest), typeof(RitualQuest.TearsOfASoulbinderQuest), typeof(RitualQuest.PristineCrystalLotusQuest) };
+            Chains[(int)QuestChain.Ritual2] = new[] { typeof(RitualQuest.HairOfTheDryadQueen), typeof(RitualQuest.HeartOfTheNightTerror) };
         }
 
         public Type CurrentQuest { get; set; }

@@ -1,6 +1,5 @@
 using Server.Multis;
 using System;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -303,7 +302,18 @@ namespace Server.Items
         {
             get
             {
-                TaxidermyKit.TrophyInfo info = TaxidermyKit.TrophyInfos.FirstOrDefault(i => i.CreatureType == m_TypeName);
+                TaxidermyKit.TrophyInfo info = null;
+
+                for (var index = 0; index < TaxidermyKit.TrophyInfos.Length; index++)
+                {
+                    var i = TaxidermyKit.TrophyInfos[index];
+
+                    if (i.CreatureType == m_TypeName)
+                    {
+                        info = i;
+                        break;
+                    }
+                }
 
                 if (info != null)
                 {
@@ -325,9 +335,22 @@ namespace Server.Items
         public override void OnComponentUsed(AddonComponent c, Mobile from)
         {
             if (m_TypeName == null)
+            {
                 return;
+            }
 
-            TaxidermyKit.TrophyInfo info = TaxidermyKit.TrophyInfos.FirstOrDefault(i => i.CreatureType == m_TypeName);
+            TaxidermyKit.TrophyInfo info = null;
+
+            for (var index = 0; index < TaxidermyKit.TrophyInfos.Length; index++)
+            {
+                var i = TaxidermyKit.TrophyInfos[index];
+
+                if (i.CreatureType == m_TypeName)
+                {
+                    info = i;
+                    break;
+                }
+            }
 
             if (info != null)
             {
@@ -338,7 +361,9 @@ namespace Server.Items
                     from.AddToBackpack(new FishTrophyDeed(m_FishWeight, m_Fisher, m_DateCaught, info.DeedNumber, info.AddonNumber, info.NorthID));
 
                     if (house.Addons.ContainsKey(this))
+                    {
                         house.Addons.Remove(this);
+                    }
 
                     Delete();
                 }

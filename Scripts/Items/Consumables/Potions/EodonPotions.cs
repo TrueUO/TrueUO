@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -181,12 +180,26 @@ namespace Server.Items
         public static EodonPotionContext GetContext(Mobile m, PotionEffect effect)
         {
             if (m == null)
+            {
                 return null;
+            }
 
             if (Contexts == null || !Contexts.ContainsKey(m) || Contexts[m] == null)
+            {
                 return null;
+            }
 
-            return Contexts[m].FirstOrDefault(c => c.Type == effect);
+            for (var index = 0; index < Contexts[m].Count; index++)
+            {
+                var c = Contexts[m][index];
+
+                if (c.Type == effect)
+                {
+                    return c;
+                }
+            }
+
+            return null;
         }
 
         public static void RemoveContext(Mobile m, PotionEffect effect)
@@ -249,8 +262,10 @@ namespace Server.Items
                 {
                     List<EodonPotionContext> contexts = new List<EodonPotionContext>(kvp.Value);
 
-                    foreach (EodonPotionContext context in contexts)
+                    for (var index = 0; index < contexts.Count; index++)
                     {
+                        EodonPotionContext context = contexts[index];
+
                         context.OnTick(kvp.Key);
                     }
 

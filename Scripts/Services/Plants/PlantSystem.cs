@@ -368,10 +368,14 @@ namespace Server.Engines.Plants
             {
                 List<PlantItem> plants = from.Backpack.FindItemsByType<PlantItem>();
 
-                foreach (PlantItem plant in plants)
+                for (var index = 0; index < plants.Count; index++)
                 {
+                    PlantItem plant = plants[index];
+
                     if (plant.IsGrowable)
+                    {
                         plant.PlantSystem.DoGrowthCheck();
+                    }
                 }
             }
 
@@ -381,10 +385,14 @@ namespace Server.Engines.Plants
             {
                 List<PlantItem> plants = bank.FindItemsByType<PlantItem>();
 
-                foreach (PlantItem plant in plants)
+                for (var index = 0; index < plants.Count; index++)
                 {
+                    PlantItem plant = plants[index];
+
                     if (plant.IsGrowable)
+                    {
                         plant.PlantSystem.DoGrowthCheck();
+                    }
                 }
             }
         }

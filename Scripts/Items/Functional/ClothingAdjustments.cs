@@ -1,7 +1,7 @@
 using Server.Engines.VeteranRewards;
 using Server.Network;
 using System;
-using System.Linq;
+using System.Collections.Generic;
 
 namespace Server.Items
 {
@@ -188,7 +188,17 @@ namespace Server.Items
 
         public bool IsAccept(Item item)
         {
-            return Definitions.Any(t => t.Type == item.GetType());
+            for (var index = 0; index < Definitions.Length; index++)
+            {
+                var t = Definitions[index];
+
+                if (t.Type == item.GetType())
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public override bool OnDragDrop(Mobile from, Item dropped)
@@ -204,7 +214,19 @@ namespace Server.Items
 
             int index = 0;
 
-            var clothlist = Definitions.Where(x => (int)x.Hue == dropped.Hue).ToArray();
+            List<ClothingRewardDefinition> list = new List<ClothingRewardDefinition>();
+
+            for (var i = 0; i < Definitions.Length; i++)
+            {
+                var x = Definitions[i];
+
+                if ((int) x.Hue == dropped.Hue)
+                {
+                    list.Add(x);
+                }
+            }
+
+            var clothlist = list.ToArray();
 
             for (int i = 0; i < clothlist.Length - 1 ; i++)
             {

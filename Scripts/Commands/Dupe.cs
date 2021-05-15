@@ -270,8 +270,10 @@ namespace Server.Commands
 
         public static void DupeChildren(Mobile m, Container src, Container dest)
         {
-            foreach (Item item in src.Items)
+            for (var index = 0; index < src.Items.Count; index++)
             {
+                Item item = src.Items[index];
+
                 try
                 {
                     Type t = item.GetType();

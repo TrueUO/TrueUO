@@ -106,7 +106,7 @@ namespace Server.AccountVault
 
         public class OpenVaultEntry : ContextMenuEntry
         {
-            public VaultManager Manager { get; private set; }
+            public VaultManager Manager { get; }
 
             public OpenVaultEntry(VaultManager manager)
                 : base(1157734, 8)
@@ -143,7 +143,7 @@ namespace Server.AccountVault
 
         public class RentVaultEntry : ContextMenuEntry
         {
-            public VaultManager Manager { get; private set; }
+            public VaultManager Manager { get; }
 
             public RentVaultEntry(VaultManager manager)
                  : base(1157733, 8)
@@ -153,9 +153,7 @@ namespace Server.AccountVault
 
             public override void OnClick()
             {
-                var pm = Owner.From as PlayerMobile;
-
-                if (pm != null)
+                if (Owner.From is PlayerMobile pm)
                 {
                     if (!AccountVault.HasVault(pm))
                     {
@@ -171,7 +169,7 @@ namespace Server.AccountVault
 
         public class ClaimVaultEntry : ContextMenuEntry
         {
-            public VaultManager Manager { get; private set; }
+            public VaultManager Manager { get; }
 
             public ClaimVaultEntry(VaultManager manager)
                 : base(1157735, 8)
@@ -181,9 +179,7 @@ namespace Server.AccountVault
 
             public override void OnClick()
             {
-                var pm = Owner.From as PlayerMobile;
-
-                if (pm != null)
+                if (Owner.From is PlayerMobile pm)
                 {
                     var vault = AccountVault.GetVault(pm);
 
@@ -207,8 +203,8 @@ namespace Server.AccountVault
 
         public class VaultActionsEntry : ContextMenuEntry
         {
-            public VaultManager Manager { get; private set; }
-            public AccountVault Vault { get; private set; }
+            public VaultManager Manager { get; }
+            public AccountVault Vault { get; }
 
             public VaultActionsEntry(VaultManager manager, AccountVault vault)
                 : base(1157978, 8)
@@ -219,9 +215,7 @@ namespace Server.AccountVault
 
             public override void OnClick()
             {
-                var pm = Owner.From as PlayerMobile;
-
-                if (pm != null && Vault != null)
+                if (Owner.From is PlayerMobile pm && Vault != null)
                 {
                     BaseGump.SendGump(new VaultActionsGump(pm, Vault));
                 }
@@ -230,7 +224,7 @@ namespace Server.AccountVault
 
         public class VaultLocationsEntry : ContextMenuEntry
         {
-            public VaultManager Manager { get; private set; }
+            public VaultManager Manager { get; }
 
             public VaultLocationsEntry(VaultManager manager)
                 : base(1158143, 8)
@@ -240,9 +234,7 @@ namespace Server.AccountVault
 
             public override void OnClick()
             {
-                var pm = Owner.From as PlayerMobile;
-
-                if (pm != null)
+                if (Owner.From is PlayerMobile pm)
                 {
                     BaseGump.SendGump(new VaultLocationsGump(pm));
                 }

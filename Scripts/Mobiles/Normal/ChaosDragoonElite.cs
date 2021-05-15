@@ -80,43 +80,46 @@ namespace Server.Mobiles
                     break;
             }
 
-            melee.Movable = false;
-            AddItem(melee);
+            if (melee != null)
+            {
+                melee.Movable = false;
+                AddItem(melee);
+            }
 
-            DragonChest Tunic = new DragonChest
+            DragonChest tunic = new DragonChest
             {
                 Resource = res,
                 Movable = false
             };
-            AddItem(Tunic);
+            AddItem(tunic);
 
-            DragonLegs Legs = new DragonLegs
+            DragonLegs legs = new DragonLegs
             {
                 Resource = res,
                 Movable = false
             };
-            AddItem(Legs);
+            AddItem(legs);
 
-            DragonArms Arms = new DragonArms
+            DragonArms arms = new DragonArms
             {
                 Resource = res,
                 Movable = false
             };
-            AddItem(Arms);
+            AddItem(arms);
 
-            DragonGloves Gloves = new DragonGloves
+            DragonGloves gloves = new DragonGloves
             {
                 Resource = res,
                 Movable = false
             };
-            AddItem(Gloves);
+            AddItem(gloves);
 
-            DragonHelm Helm = new DragonHelm
+            DragonHelm helm = new DragonHelm
             {
                 Resource = res,
                 Movable = false
             };
-            AddItem(Helm);
+            AddItem(helm);
 
             ChaosShield shield = new ChaosShield
             {

@@ -80,70 +80,53 @@ namespace Server.Items
         #region Spawn Types
         private static readonly Type[][] m_SpawnTypes =
         {
-            new[]{ typeof(HeadlessOne), typeof(Skeleton) },
             new[]{ typeof(Mongbat), typeof(Ratman), typeof(HeadlessOne), typeof(Skeleton), typeof(Zombie) },
-            new[]{ typeof(OrcishMage), typeof(Gargoyle), typeof(Gazer), typeof(HellHound), typeof(EarthElemental) },
-            new[]{ typeof(Lich), typeof(OgreLord), typeof(DreadSpider), typeof(AirElemental), typeof(FireElemental) },
-            new[]{ typeof(DreadSpider), typeof(LichLord), typeof(Daemon), typeof(ElderGazer), typeof(OgreLord) },
-            new[]{ typeof(LichLord), typeof(Daemon), typeof(ElderGazer), typeof(PoisonElemental), typeof(BloodElemental) },
-            new[]{ typeof(AncientWyrm), typeof(Balron), typeof(BloodElemental), typeof(PoisonElemental), typeof(Titan) },
-            new[]{ typeof(BloodElemental), typeof(ColdDrake), typeof(FrostDragon), typeof(FrostDrake), typeof(GreaterDragon), typeof(PoisonElemental)}
+            new[]{ typeof(AirElemental), typeof(DreadSpider), typeof(EarthElemental), typeof(FireElemental), typeof(Gargoyle), typeof(Gazer), typeof(HellHound), typeof(Lich), typeof(EvilMage), typeof(OgreLord), typeof(Orc) },
+            new[]{ typeof(BloodElemental), typeof(Daemon), typeof(DreadSpider), typeof(ElderGazer), typeof(LichLord), typeof(OgreLord), typeof(PoisonElemental) },
+            new[]{ typeof(AncientWyrm), typeof(Balron), typeof(BloodElemental), typeof(PoisonElemental), typeof(Titan), typeof(GreaterDragon), typeof(ColdDrake), typeof(DragonWolf) },
+            new[]{ typeof(AncientWyrm), typeof(Balron), typeof(BloodElemental), typeof(PoisonElemental), typeof(Titan), typeof(GreaterDragon), typeof(ColdDrake), typeof(FrostDragon) },
         };
 
         private static readonly Type[][] m_TokunoSpawnTypes =
         {
-            new[]{ typeof(HeadlessOne), typeof(Skeleton) },
-            new[]{ typeof(HeadlessOne), typeof(Mongbat), typeof(Ratman), typeof(Skeleton), typeof(Zombie)  },
-            new[]{ typeof(EarthElemental), typeof(Gazer), typeof(Gargoyle), typeof(HellHound), typeof(OrcishMage) },
-            new[]{ typeof(AirElemental), typeof(DreadSpider), typeof(FireElemental), typeof(Lich), typeof(OgreLord) },
-            new[]{ typeof(ElderGazer), typeof(Daemon), typeof(DreadSpider), typeof(LichLord), typeof(OgreLord) },
-            new[]{ typeof(FanDancer), typeof(RevenantLion), typeof(Ronin), typeof(RuneBeetle) },
-            new[]{ typeof(Hiryu), typeof(LadyOfTheSnow), typeof(Oni), typeof(RuneBeetle), typeof(YomotsuWarrior), typeof(YomotsuPriest) },
-            new[]{ typeof(Yamandon), typeof(LadyOfTheSnow), typeof(RuneBeetle), typeof(YomotsuPriest) }
+            new[]{ typeof(Mongbat), typeof(Ratman), typeof(HeadlessOne), typeof(Skeleton), typeof(Zombie)  },
+            new[]{ typeof(AirElemental), typeof(DreadSpider), typeof(EarthElemental), typeof(FireElemental), typeof(Gargoyle), typeof(Gazer), typeof(HellHound), typeof(Lich), typeof(EvilMage), typeof(OgreLord), typeof(Orc) },
+            new[]{ typeof(Daemon), typeof(Devourer), typeof(DreadSpider), typeof(ElderGazer), typeof(FanDancer), typeof(LichLord), typeof(OgreLord), typeof(RevenantLion), typeof(Ronin), typeof(RuneBeetle) },
+            new[]{ typeof(RuneBeetle), typeof(LadyOfTheSnow), typeof(YomotsuElder), typeof(YomotsuPriest), typeof(YomotsuWarrior), typeof(Hiryu), typeof(Oni), typeof(DragonWolf) },
+            new[]{ typeof(RuneBeetle), typeof(LadyOfTheSnow), typeof(YomotsuElder), typeof(YomotsuPriest), typeof(YomotsuWarrior), typeof(Hiryu), typeof(Oni), typeof(Yamandon) }
         };
 
         private static readonly Type[][] m_MalasSpawnTypes =
         {
-            new[]{ typeof(HeadlessOne), typeof(Skeleton) },
             new[]{ typeof(Mongbat), typeof(Ratman), typeof(HeadlessOne), typeof(Skeleton), typeof(Zombie) },
-            new[]{ typeof(OrcishMage), typeof(Gargoyle), typeof(Gazer), typeof(HellHound), typeof(EarthElemental) },
-            new[]{ typeof(Lich), typeof(OgreLord), typeof(DreadSpider), typeof(AirElemental), typeof(FireElemental) },
-            new[]{ typeof(DreadSpider), typeof(LichLord), typeof(Daemon), typeof(ElderGazer), typeof(OgreLord) },
-            new[]{ typeof(LichLord), typeof(Ravager), typeof(WandererOfTheVoid), typeof(Minotaur) },
-            new[]{ typeof(Devourer), typeof(MinotaurScout), typeof(MinotaurCaptain), typeof(RottingCorpse), typeof(WandererOfTheVoid) },
-            new[]{ typeof(Devourer), typeof(MinotaurGeneral), typeof(MinotaurCaptain), typeof(RottingCorpse), typeof(WandererOfTheVoid) }
+            new[]{ typeof(AirElemental), typeof(DreadSpider), typeof(EarthElemental), typeof(FireElemental), typeof(Gargoyle), typeof(Gazer), typeof(HellHound), typeof(Lich), typeof(EvilMage), typeof(OgreLord), typeof(Orc) },
+            new[]{ typeof(Daemon), typeof(DreadSpider), typeof(ElderGazer), typeof(LichLord), typeof(OgreLord), typeof(Ravager), typeof(WandererOfTheVoid) },
+            new[]{ typeof(Devourer), typeof(RottingCorpse), typeof(WandererOfTheVoid), typeof(MinotaurCaptain), typeof(MinotaurScout), typeof(DragonWolf)  },
+            new[]{ typeof(Devourer), typeof(RottingCorpse), typeof(WandererOfTheVoid), typeof(MinotaurCaptain), typeof(MinotaurScout), typeof(MinotaurGeneral) }
         };
 
         private static readonly Type[][] m_IlshenarSpawnTypes =
         {
-            new[]{ typeof(HeadlessOne), typeof(Skeleton) },
             new[]{ typeof(Mongbat), typeof(Ratman), typeof(HeadlessOne), typeof(Skeleton), typeof(Zombie) },
-            new[]{ typeof(OrcishMage), typeof(Gargoyle), typeof(Gazer), typeof(HellHound), typeof(EarthElemental) },
-            new[]{ typeof(Lich), typeof(OgreLord), typeof(DreadSpider), typeof(AirElemental), typeof(FireElemental) },
-            new[]{ typeof(DreadSpider), typeof(LichLord), typeof(Daemon), typeof(ElderGazer), typeof(OgreLord) },
-            new[]{ typeof(DarkGuardian), typeof(ExodusOverseer), typeof(GargoyleDestroyer), typeof(GargoyleEnforcer), typeof(PoisonElemental) },
-            new[]{ typeof(Changeling), typeof(ExodusMinion), typeof(GargoyleEnforcer), typeof(GargoyleDestroyer), typeof(Titan) },
-            new[]{ typeof(RenegadeChangeling), typeof(ExodusMinion), typeof(GargoyleEnforcer), typeof(GargoyleDestroyer), typeof(Titan) }
+            new[]{ typeof(AirElemental), typeof(DreadSpider), typeof(EarthElemental), typeof(FireElemental), typeof(Gargoyle), typeof(Gazer), typeof(HellHound), typeof(Lich), typeof(EvilMage), typeof(OgreLord), typeof(Orc) },
+            new[]{ typeof(Daemon), typeof(DarkGuardian), typeof(DreadSpider), typeof(ElderGazer), typeof(ExodusMinion), typeof(GargoyleDestroyer), typeof(GargoyleEnforcer), typeof(LichLord), typeof(OgreLord), typeof(PoisonElemental) },
+            new[]{ typeof(ExodusMinion), typeof(GargoyleDestroyer), typeof(Titan), typeof(Changeling), typeof(EnslavedSatyr), typeof(DragonWolf) },
+            new[]{ typeof(ExodusMinion), typeof(GargoyleDestroyer), typeof(Titan), typeof(RenegadeChangeling), typeof(EnslavedSatyr) }
         };
 
         private static readonly Type[][] m_TerMurSpawnTypes =
         {
-            new[]{ typeof(HeadlessOne), typeof(Skeleton) },
-            new[]{ typeof(ClockworkScorpion), typeof(CorrosiveSlime), typeof(GreaterMongbat) },
-            new[]{ typeof(AcidSlug), typeof(FireElemental), typeof(WaterElemental) },
-            new[]{ typeof(LeatherWolf), typeof(StoneSlith), typeof(ToxicSlith) },
-            new[]{ typeof(BloodWorm), typeof(Kepetch), typeof(StoneSlith), typeof(ToxicSlith) },
-            new[]{ typeof(FireAnt), typeof(LavaElemental), typeof(MaddeningHorror) },
-            new[]{ typeof(EnragedEarthElemental), typeof(FireDaemon), typeof(GreaterPoisonElemental), typeof(LavaElemental), typeof(DragonWolf) },
-            new[]{ typeof(EnragedColossus), typeof(EnragedEarthElemental), typeof(FireDaemon), typeof(GreaterPoisonElemental), typeof(LavaElemental) }
+            new[]{ typeof(Mongbat), typeof(Ratman), typeof(HeadlessOne), typeof(Skeleton), typeof(ClockworkScorpion), typeof(CorrosiveSlime)  },
+            new[]{ typeof(AcidSlug), typeof(Slith), typeof(WaterElemental), typeof(LeatherWolf), typeof(StoneSlith), typeof(ToxicSlith) },
+            new[]{ typeof(BloodWorm), typeof(FireAnt), typeof(Kepetch), typeof(LavaElemental), typeof(MaddeningHorror), typeof(StoneSlith), typeof(ToxicSlith) },
+            new[]{ typeof(LavaElemental), typeof(GreaterPoisonElemental), typeof(EnragedEarthElemental), typeof(FireDaemon) },
+            new[]{ typeof(LavaElemental), typeof(GreaterPoisonElemental), typeof(EnragedEarthElemental), typeof(FireDaemon), typeof(EnragedColossus) }
         };
 
         private static readonly Type[][] m_EodonSpawnTypes =
         {
             new[] { typeof(MyrmidexLarvae), typeof(SilverbackGorilla), typeof(Panther), typeof(WildTiger) },
             new[] { typeof(AcidElemental), typeof(SandVortex), typeof(Lion), typeof(SabreToothedTiger) },
-            new[] { typeof(AcidElemental), typeof(SandVortex), typeof(Lion), typeof(SabreToothedTiger) },
-            new[] { typeof(Infernus), typeof(FireElemental), typeof(Dimetrosaur), typeof(Saurosaurus) },
             new[] { typeof(Infernus), typeof(FireElemental), typeof(Dimetrosaur), typeof(Saurosaurus) },
             new[] { typeof(KotlAutomaton), typeof(MyrmidexDrone), typeof(Allosaurus), typeof(Triceratops) },
             new[] { typeof(Anchisaur), typeof(Allosaurus), typeof(SandVortex) }
@@ -388,6 +371,28 @@ namespace Server.Items
             return GetRandomLocation(map, false);
         }
 
+        public static bool IsTameable(BaseCreature bc)
+        {
+            for (var index = 0; index < m_TameableCreatures.Length; index++)
+            {
+                var t = m_TameableCreatures[index];
+
+                if (t == bc.GetType())
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static readonly Type[] m_TameableCreatures =
+        {
+            typeof(Panther), typeof(WildTiger), typeof(Lion), typeof(SabreToothedTiger),
+            typeof(Dimetrosaur), typeof(Saurosaurus), typeof(Triceratops), typeof(DragonWolf),
+            typeof(FrostDragon)
+        };
+
         public static Point2D GetRandomLocation(Map map, bool eodon)
         {
             Rectangle2D[] recs;
@@ -445,8 +450,7 @@ namespace Server.Items
             //no-go in towns, houses, dungeons and champspawns
             if (reg != null)
             {
-                if (reg.IsPartOf<TownRegion>() || reg.IsPartOf<DungeonRegion>() ||
-                    reg.IsPartOf<ChampionSpawnRegion>() || reg.IsPartOf<HouseRegion>())
+                if (reg.IsPartOf<TownRegion>() || reg.IsPartOf<DungeonRegion>() || reg.IsPartOf<ChampionSpawnRegion>() || reg.IsPartOf<HouseRegion>())
                 {
                     return false;
                 }
@@ -460,8 +464,11 @@ namespace Server.Items
             }
 
             //Rare occrunces where a static tile needs to be checked
-            foreach (StaticTile tile in map.Tiles.GetStaticTiles(x, y, true))
+            var tiles = map.Tiles.GetStaticTiles(x, y, true);
+
+            for (var index = 0; index < tiles.Length; index++)
             {
+                StaticTile tile = tiles[index];
                 ItemData td = TileData.ItemTable[tile.ID & TileData.MaxItemValue];
 
                 if ((td.Flags & TileFlag.Impassable) > 0)
@@ -499,7 +506,7 @@ namespace Server.Items
                 width = 600;
                 height = 600;
             }
-            if (map == Map.TerMur)
+            else if (map == Map.TerMur)
             {
                 width = 200;
                 height = 200;
@@ -616,7 +623,7 @@ namespace Server.Items
             : base(serial)
         { }
 
-        public static BaseCreature Spawn(int level, Point3D p, bool guardian, Map map)
+        public static BaseCreature Spawn(int level, Point3D p, Map map, bool guardian)
         {
             Type[][] spawns;
 
@@ -643,11 +650,10 @@ namespace Server.Items
             if (level >= 0 && level < spawns.Length)
             {
                 BaseCreature bc;
-                Type[] list = GetSpawnList(spawns, level);
 
                 try
                 {
-                    bc = (BaseCreature)Activator.CreateInstance(list[Utility.Random(list.Length)]);
+                    bc = (BaseCreature)Activator.CreateInstance(spawns[level][Utility.Random(spawns[level].Length)]);
                 }
                 catch (Exception e)
                 {
@@ -658,11 +664,12 @@ namespace Server.Items
                 bc.Home = p;
                 bc.RangeHome = 5;
 
-                if (guardian)
+                if (guardian && !IsTameable(bc))
                 {
                     bc.Title = "(Guardian)";
+                    bc.Tamable = false;
 
-                    if (BaseCreature.IsSoulboundEnemies && !bc.Tamable)
+                    if (BaseCreature.IsSoulboundEnemies)
                     {
                         bc.IsSoulBound = true;
                     }
@@ -677,87 +684,60 @@ namespace Server.Items
         public static BaseCreature Spawn(int level, Point3D p, Map map, Mobile target, bool guardian)
         {
             if (map == null)
-            {
                 return null;
-            }
 
-            BaseCreature c = Spawn(level, p, guardian, map);
+            BaseCreature bc = Spawn(level, p, map, guardian);
 
-            if (c != null)
+            if (bc != null)
             {
                 bool spawned = false;
 
-                for (int i = 0; !spawned && i < 10; ++i)
+                Point3D loc = GetRandomSpawnLocation(p, map);
+
+                if (loc != Point3D.Zero)
                 {
-                    int x = p.X - 3 + Utility.Random(7);
-                    int y = p.Y - 3 + Utility.Random(7);
-
-                    if (map.CanSpawnMobile(x, y, p.Z))
-                    {
-                        c.MoveToWorld(new Point3D(x, y, p.Z), map);
-                        spawned = true;
-                    }
-                    else
-                    {
-                        int z = map.GetAverageZ(x, y);
-
-                        if (map.CanSpawnMobile(x, y, z))
-                        {
-                            c.MoveToWorld(new Point3D(x, y, z), map);
-                            spawned = true;
-                        }
-                    }
+                    bc.MoveToWorld(p, map);
+                    spawned = true;
                 }
 
                 if (!spawned)
                 {
-                    c.Delete();
+                    bc.Delete();
                     return null;
                 }
 
                 if (target != null)
                 {
-                    Timer.DelayCall(() => c.Combatant = target);
+                    Timer.DelayCall(() => bc.Combatant = target);
                 }
 
-                return c;
+                return bc;
             }
 
             return null;
         }
 
-        public static Type[] GetSpawnList(Type[][] table, int level)
+        public static Point3D GetRandomSpawnLocation(Point3D p, Map map)
         {
-            Type[] array;
-
-            switch (level)
+            for (int i = 0; i < 10; ++i)
             {
-                default:
-                    array = table[level + 1];
-                    break;
-                case 2:
-                    List<Type> list1 = new List<Type>();
-                    list1.AddRange(table[2]);
-                    list1.AddRange(table[3]);
+                int x = p.X - 3 + Utility.Random(7);
+                int y = p.Y - 3 + Utility.Random(7);
 
-                    array = list1.ToArray();
-                    break;
-                case 3:
-                    List<Type> list2 = new List<Type>();
-                    list2.AddRange(table[4]);
-                    list2.AddRange(table[5]);
+                if (map.CanSpawnMobile(x, y, p.Z))
+                {
+                    return new Point3D(x, y, p.Z);
+                }
+                else
+                {
+                    int z = map.GetAverageZ(x, y);
 
-                    array = list2.ToArray();
-                    break;
-                case 4:
-                    array = table[6];
-                    break;
-                case 5:
-                    array = table[7];
-                    break;
+                    if (map.CanSpawnMobile(x, y, z))
+                        return new Point3D(x, y, z);
+                }
             }
 
-            return array;
+            return Point3D.Zero;
         }
 
         public static bool HasDiggingTool(Mobile m)
@@ -769,8 +749,10 @@ namespace Server.Items
 
             List<BaseHarvestTool> items = m.Backpack.FindItemsByType<BaseHarvestTool>();
 
-            foreach (BaseHarvestTool tool in items)
+            for (var index = 0; index < items.Count; index++)
             {
+                BaseHarvestTool tool = items[index];
+
                 if (tool.HarvestSystem == Mining.System)
                 {
                     return true;
@@ -1193,7 +1175,7 @@ namespace Server.Items
                 m_LastMoveTime = from.LastMoveTime;
 
                 Priority = TimerPriority.TenMS;
-            }
+            }            
 
             protected override void OnTick()
             {
@@ -1285,8 +1267,7 @@ namespace Server.Items
 
                     m_TreasureMap.OnMapComplete(m_From, m_Chest);
 
-                    int spawns;
-                    spawns = 4;
+                    int spawns = Utility.RandomMinMax(4, 8);
 
                     for (int i = 0; i < spawns; ++i)
                     {
@@ -1294,12 +1275,13 @@ namespace Server.Items
 
                         BaseCreature bc = Spawn(m_TreasureMap.Level, m_Chest.Location, m_Chest.Map, null, guardian);
 
-                        if (bc != null && guardian)
+                        if (bc != null && guardian && !IsTameable(bc))
                         {
-                            bc.Hue = 2725;
-                            m_Chest.Guardians.Add(bc);
+                            m_Chest.Guardians.Add(bc);                            
                         }
                     }
+
+                    new ReturnToHomeTimer(m_Chest).Start();
                 }
                 else
                 {
@@ -1323,6 +1305,47 @@ namespace Server.Items
                 {
                     m_Dirt1.Delete();
                     m_Dirt2.Delete();
+                }
+            }
+
+            private class ReturnToHomeTimer : Timer
+            {
+                private readonly TreasureMapChest m_Chest;
+
+                public ReturnToHomeTimer(TreasureMapChest chest)
+                    : base(TimeSpan.FromSeconds(5.0), TimeSpan.FromSeconds(5.0))
+                {
+                    m_Chest = chest;
+                }
+
+                protected override void OnTick()
+                {
+                    if (m_Chest.Deleted || m_Chest.Guardians.Count == 0)
+                    {
+                        Stop();
+                    }
+                    else
+                    {
+                        for (var index = 0; index < m_Chest.Guardians.Count; index++)
+                        {
+                            var bc = m_Chest.Guardians[index];
+
+                            if (!bc.InRange(m_Chest, 25))
+                            {
+                                ReturnToHome(bc);
+                            }
+                        }
+                    }
+                }
+
+                private void ReturnToHome(Mobile m)
+                {
+                    var loc = GetRandomSpawnLocation(m_Chest.Location, m_Chest.Map);
+
+                    if (loc != Point3D.Zero)
+                    {
+                        m.MoveToWorld(loc, m_Chest.Map);
+                    }
                 }
             }
 

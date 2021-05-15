@@ -94,18 +94,18 @@ namespace Server.Gumps
                     User.BeginPrompt(
                     (from, text, account) =>
                     {
-                        int v = 0;
-
                         if (account != null)
                         {
                             int canHold = Account.MaxSecureAmount - account.GetSecureAccountAmount(from);
 
                             if (text != null && !string.IsNullOrEmpty(text))
                             {
-                                v = Utility.ToInt32(text);
+                                var v = Utility.ToInt32(text);
 
                                 if (v <= 0 || v > canHold || v > Banker.GetBalance(from))
+                                {
                                     from.SendLocalizedMessage(1155867); // The amount entered is invalid. Verify that there are sufficient funds to complete this transaction.
+                                }
                                 else
                                 {
                                     Banker.Withdraw(from, v, true);
@@ -117,7 +117,9 @@ namespace Server.Gumps
                                 }
                             }
                             else
+                            {
                                 from.SendLocalizedMessage(1155867); // The amount entered is invalid. Verify that there are sufficient funds to complete this transaction.
+                            }
                         }
                     },
                     (from, text, a) =>
@@ -131,16 +133,16 @@ namespace Server.Gumps
                     User.BeginPrompt(
                     (from, text, ac) =>
                     {
-                        int v = 0;
-
                         if (ac != null)
                         {
                             if (text != null && !string.IsNullOrEmpty(text))
                             {
-                                v = Utility.ToInt32(text);
+                                var v = Utility.ToInt32(text);
 
-                                if (v <= 0 || v > acct.GetSecureAccountAmount(from))
+                                if (v <= 0 || v > ac.GetSecureAccountAmount(from))
+                                {
                                     from.SendLocalizedMessage(1155867); // The amount entered is invalid. Verify that there are sufficient funds to complete this transaction.
+                                }
                                 else
                                 {
                                     Banker.Deposit(from, v, true);
@@ -152,7 +154,9 @@ namespace Server.Gumps
                                 Timer.DelayCall(TimeSpan.FromSeconds(2), SendGump);
                             }
                             else
+                            {
                                 from.SendLocalizedMessage(1155867); // The amount entered is invalid. Verify that there are sufficient funds to complete this transaction.
+                            }
                         }
                     },
                     (from, text, act) =>

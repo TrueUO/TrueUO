@@ -216,20 +216,23 @@ namespace Server.Engines.Blackthorn
                 {
                     BaseCreature bc = Activator.CreateInstance(_SpawnTable[(int)InvasionType][Utility.Random(_SpawnTable[(int)InvasionType].Length)]) as BaseCreature;
 
-                    bc.Kills = 100;
+                    if (bc != null)
+                    {
+                        bc.Kills = 100;
 
-                    if (bc.FightMode == FightMode.Evil)
-                    {
-                        bc.FightMode = FightMode.Aggressor;
-                    }
+                        if (bc.FightMode == FightMode.Evil)
+                        {
+                            bc.FightMode = FightMode.Aggressor;
+                        }
 
-                    if (SpawnMobile(bc, spawnrec))
-                    {
-                        list.Add(bc);
-                    }
-                    else
-                    {
-                        bc.Delete();
+                        if (SpawnMobile(bc, spawnrec))
+                        {
+                            list.Add(bc);
+                        }
+                        else
+                        {
+                            bc.Delete();
+                        }
                     }
                 }
 
@@ -525,24 +528,31 @@ namespace Server.Engines.Blackthorn
 
             writer.Write(SpawnZones == null ? 0 : SpawnZones.Count);
 
-            for (var index = 0; index < SpawnZones.Count; index++)
+            if (SpawnZones != null)
             {
-                var rec = SpawnZones[index];
+                for (var index = 0; index < SpawnZones.Count; index++)
+                {
+                    var rec = SpawnZones[index];
 
-                writer.Write(rec);
+                    writer.Write(rec);
+                }
             }
 
             writer.Write(Spawn == null ? 0 : Spawn.Count);
 
-            foreach (KeyValuePair<BaseCreature, List<BaseCreature>> kvp in Spawn)
+            if (Spawn != null)
             {
-                writer.Write(kvp.Key);
-                writer.Write(kvp.Value.Count);
-                for (var index = 0; index < kvp.Value.Count; index++)
+                foreach (KeyValuePair<BaseCreature, List<BaseCreature>> kvp in Spawn)
                 {
-                    var bc = kvp.Value[index];
+                    writer.Write(kvp.Key);
+                    writer.Write(kvp.Value.Count);
 
-                    writer.Write(bc);
+                    for (var index = 0; index < kvp.Value.Count; index++)
+                    {
+                        var bc = kvp.Value[index];
+
+                        writer.Write(bc);
+                    }
                 }
             }
 

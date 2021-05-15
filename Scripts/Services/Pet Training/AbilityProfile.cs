@@ -522,14 +522,20 @@ namespace Server.Mobiles
 
             bool any = false;
 
-            for (var index = 0; index < SpecialAbilities.Length; index++)
+            if (SpecialAbilities != null)
             {
-                var a = SpecialAbilities[index];
-
-                if (!a.NaturalAbility)
+                for (var index = 0; index < SpecialAbilities.Length; index++)
                 {
-                    any = true;
-                    break;
+                    if (SpecialAbilities != null)
+                    {
+                        var a = SpecialAbilities[index];
+
+                        if (!a.NaturalAbility)
+                        {
+                            any = true;
+                            break;
+                        }
+                    }
                 }
             }
 
@@ -550,14 +556,17 @@ namespace Server.Mobiles
 
             bool all = true;
 
-            for (var index = 0; index < SpecialAbilities.Length; index++)
+            if (SpecialAbilities != null)
             {
-                var a = SpecialAbilities[index];
-
-                if (!a.NaturalAbility)
+                for (var index = 0; index < SpecialAbilities.Length; index++)
                 {
-                    all = false;
-                    break;
+                    var a = SpecialAbilities[index];
+
+                    if (!a.NaturalAbility)
+                    {
+                        all = false;
+                        break;
+                    }
                 }
             }
 
@@ -581,13 +590,16 @@ namespace Server.Mobiles
 
             int count = 0;
 
-            for (var index = 0; index < SpecialAbilities.Length; index++)
+            if (SpecialAbilities != null)
             {
-                var a = SpecialAbilities[index];
-
-                if (!a.NaturalAbility)
+                for (var index = 0; index < SpecialAbilities.Length; index++)
                 {
-                    count++;
+                    var a = SpecialAbilities[index];
+
+                    if (!a.NaturalAbility)
+                    {
+                        count++;
+                    }
                 }
             }
 

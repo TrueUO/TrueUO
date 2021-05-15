@@ -92,10 +92,7 @@ namespace Server.Misc
                 return false; // Young players cannot perform beneficial actions towards older players
             }
 
-            Guild fromGuild = from.Guild as Guild;
-            Guild targetGuild = target.Guild as Guild;
-
-            if (fromGuild != null && targetGuild != null)
+            if (from.Guild is Guild fromGuild && target.Guild is Guild targetGuild)
             {
                 if (targetGuild == fromGuild || fromGuild.IsAlly(targetGuild))
                 {
@@ -122,9 +119,7 @@ namespace Server.Misc
                 return true; // In felucca, anything goes
             }
 
-            BaseCreature bc = from as BaseCreature;
-
-            if (!from.Player && !(bc != null && bc.GetMaster() != null && bc.GetMaster().IsPlayer()))
+            if (!from.Player && !(from is BaseCreature bc && bc.GetMaster() != null && bc.GetMaster().IsPlayer()))
             {
                 if (!CheckAggressor(from.Aggressors, target) && !CheckAggressed(from.Aggressed, target) && target is PlayerMobile pm && pm.CheckYoungProtection(from))
                 {
@@ -182,9 +177,7 @@ namespace Server.Misc
         {
             Guild g = def;
 
-            BaseCreature c = m as BaseCreature;
-
-            if (c != null && c.Controlled && c.ControlMaster != null && !c.ForceNotoriety)
+            if (m is BaseCreature c && c.Controlled && c.ControlMaster != null && !c.ForceNotoriety)
             {
                 c.DisplayGuildTitle = false;
 
@@ -195,7 +188,9 @@ namespace Server.Misc
                 else
                 {
                     if (c.Map == null || c.Map == Map.Internal || c.ControlMaster.Guild == null)
+                    {
                         g = (Guild)(c.Guild = null);
+                    }
                 }
             }
 
@@ -205,13 +200,13 @@ namespace Server.Misc
         public static int CorpseNotoriety(Mobile source, Corpse target)
         {
             if (target.AccessLevel > AccessLevel.VIP)
+            {
                 return Notoriety.CanBeAttacked;
+            }
 
             Body body = target.Amount;
 
-            BaseCreature cretOwner = target.Owner as BaseCreature;
-
-            if (cretOwner != null)
+            if (target.Owner is BaseCreature creatureOwner)
             {
                 Guild sourceGuild = GetGuildFor(source.Guild as Guild, source);
                 Guild targetGuild = GetGuildFor(target.Guild, target.Owner);
@@ -219,28 +214,34 @@ namespace Server.Misc
                 if (sourceGuild != null && targetGuild != null)
                 {
                     if (sourceGuild == targetGuild)
+                    {
                         return Notoriety.Ally;
+                    }
 
                     if (sourceGuild.IsAlly(targetGuild))
+                    {
                         return Notoriety.Ally;
+                    }
 
                     if (sourceGuild.IsEnemy(targetGuild))
+                    {
                         return Notoriety.Enemy;
+                    }
                 }
 
-                if (ViceVsVirtueSystem.Enabled && ViceVsVirtueSystem.IsEnemy(source, cretOwner) && (ViceVsVirtueSystem.EnhancedRules || source.Map == ViceVsVirtueSystem.Facet))
+                if (ViceVsVirtueSystem.Enabled && ViceVsVirtueSystem.IsEnemy(source, creatureOwner) && (ViceVsVirtueSystem.EnhancedRules || source.Map == ViceVsVirtueSystem.Facet))
                     return Notoriety.Enemy;
 
-                if (CheckHouseFlag(source, cretOwner, target.Location, target.Map))
+                if (CheckHouseFlag(source, creatureOwner, target.Location, target.Map))
                     return Notoriety.CanBeAttacked;
 
                 int actual = Notoriety.CanBeAttacked;
 
                 if (target.Murderer)
                     actual = Notoriety.Murderer;
-                else if (body.IsMonster && IsSummoned(cretOwner))
+                else if (body.IsMonster && IsSummoned(creatureOwner))
                     actual = Notoriety.Murderer;
-                else if (cretOwner.AlwaysMurderer || cretOwner.IsAnimatedDead)
+                else if (creatureOwner.AlwaysMurderer || creatureOwner.IsAnimatedDead)
                     actual = Notoriety.Murderer;
 
                 if (DateTime.UtcNow >= target.TimeOfDeath + Corpse.MonsterLootRightSacrifice)
@@ -281,10 +282,14 @@ namespace Server.Misc
             else
             {
                 if (target.Murderer)
+                {
                     return Notoriety.Murderer;
+                }
 
                 if (target.Criminal && target.Map != null && (target.Map.Rules & MapRules.HarmfulRestrictions) == 0)
+                {
                     return Notoriety.Criminal;
+                }
 
                 Guild sourceGuild = GetGuildFor(source.Guild as Guild, source);
                 Guild targetGuild = GetGuildFor(target.Guild, target.Owner);
@@ -292,24 +297,36 @@ namespace Server.Misc
                 if (sourceGuild != null && targetGuild != null)
                 {
                     if (sourceGuild == targetGuild || sourceGuild.IsAlly(targetGuild))
+                    {
                         return Notoriety.Ally;
+                    }
 
                     if (sourceGuild.IsEnemy(targetGuild))
+                    {
                         return Notoriety.Enemy;
+                    }
                 }
 
                 if (CheckHouseFlag(source, target.Owner, target.Location, target.Map))
+                {
                     return Notoriety.CanBeAttacked;
+                }
 
                 if (!(target.Owner is PlayerMobile) && !IsPet(target.Owner as BaseCreature))
+                {
                     return Notoriety.CanBeAttacked;
+                }
 
                 List<Mobile> list = target.Aggressors;
 
-                foreach (Mobile m in list)
+                for (var index = 0; index < list.Count; index++)
                 {
+                    Mobile m = list[index];
+
                     if (m == source)
+                    {
                         return Notoriety.CanBeAttacked;
+                    }
                 }
 
                 return Notoriety.Innocent;
@@ -373,7 +390,9 @@ namespace Server.Misc
                 }
 
                 if (target.Murderer)
+                {
                     return Notoriety.Murderer;
+                }
 
                 if (target.Body.IsMonster && IsSummoned(bc))
                 {
@@ -389,7 +408,9 @@ namespace Server.Misc
                 }
 
                 if (target.Criminal)
+                {
                     return Notoriety.Criminal;
+                }
 
                 Guild sourceGuild = GetGuildFor(source.Guild as Guild, source);
                 Guild targetGuild = GetGuildFor(target.Guild as Guild, target);
@@ -484,15 +505,19 @@ namespace Server.Misc
             BaseHouse house = BaseHouse.FindHouseAt(p, map, 16);
 
             if (house == null || house.Public || !house.IsFriend(from))
+            {
                 return false;
+            }
 
             if (m != null && house.IsFriend(m))
+            {
                 return false;
+            }
 
-            BaseCreature c = m as BaseCreature;
-
-            if (c != null && !c.Deleted && c.Controlled && c.ControlMaster != null)
-                return !house.IsFriend(c.ControlMaster);
+            if (m is BaseCreature bc && !bc.Deleted && bc.Controlled && bc.ControlMaster != null)
+            {
+                return !house.IsFriend(bc.ControlMaster);
+            }
 
             return true;
         }

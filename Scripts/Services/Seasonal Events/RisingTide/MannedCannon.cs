@@ -3,7 +3,6 @@ using Server.Multis;
 using Server.Spells;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -53,17 +52,34 @@ namespace Server.Items
 
         public Direction GetFacing()
         {
-            if (BaseGalleon.CannonIDs[0].Any(id => id == ItemID))
+            for (var index = 0; index < BaseGalleon.CannonIDs[0].Length; index++)
             {
-                return Direction.South;
+                var id = BaseGalleon.CannonIDs[0][index];
+
+                if (id == ItemID)
+                {
+                    return Direction.South;
+                }
             }
-            if (BaseGalleon.CannonIDs[1].Any(id => id == ItemID))
+
+            for (var index = 0; index < BaseGalleon.CannonIDs[1].Length; index++)
             {
-                return Direction.West;
+                var id = BaseGalleon.CannonIDs[1][index];
+
+                if (id == ItemID)
+                {
+                    return Direction.West;
+                }
             }
-            if (BaseGalleon.CannonIDs[2].Any(id => id == ItemID))
+
+            for (var index = 0; index < BaseGalleon.CannonIDs[2].Length; index++)
             {
-                return Direction.North;
+                var id = BaseGalleon.CannonIDs[2][index];
+
+                if (id == ItemID)
+                {
+                    return Direction.North;
+                }
             }
 
             return Direction.East;
@@ -72,20 +88,24 @@ namespace Server.Items
         public bool Scan(bool shoot)
         {
             Target[] targets = AcquireTarget();
+
             bool acquiredTarget = false;
 
             if (targets != null && targets.Length > 0)
             {
-                foreach (Target t in targets)
+                for (var index = 0; index < targets.Length; index++)
                 {
+                    Target t = targets[index];
+
                     if (t.Entity is BaseGalleon galleon && AmmoType != AmmunitionType.Grapeshot)
                     {
                         if (shoot)
                         {
                             DoShootEffects();
+
                             TimeSpan delay = TimeSpan.FromSeconds(t.Range / 10.0);
 
-                            Timer.DelayCall(delay, new TimerStateCallback(OnShipHit), new object[] { galleon, t.Location, AmmoType });
+                            Timer.DelayCall(delay, new TimerStateCallback(OnShipHit), new object[] {galleon, t.Location, AmmoType});
                         }
 
                         acquiredTarget = true;
@@ -97,7 +117,8 @@ namespace Server.Items
                             DoShootEffects();
                             TimeSpan delay = TimeSpan.FromSeconds(t.Range / 10.0);
 
-                            Timer.DelayCall(delay, new TimerStateCallback(OnMobileHit), new object[] { m, t.Location, AmmoType });
+                            Timer.DelayCall(delay, new TimerStateCallback(OnMobileHit),
+                                new object[] {m, t.Location, AmmoType});
                         }
 
                         acquiredTarget = true;
@@ -155,9 +176,9 @@ namespace Server.Items
                             for (int i = -lateralOffset; i <= lateralOffset; i++)
                             {
                                 if (xOffset == 0)
-                                    newPoint = new Point3D(pnt.X + (xOffset + i), pnt.Y + (yOffset * currentRange), pnt.Z);
+                                    newPoint = new Point3D(pnt.X + xOffset + i, pnt.Y + yOffset * currentRange, pnt.Z);
                                 else
-                                    newPoint = new Point3D(pnt.X + (xOffset * currentRange), pnt.Y + (yOffset + i), pnt.Z);
+                                    newPoint = new Point3D(pnt.X + xOffset * currentRange, pnt.Y + yOffset + i, pnt.Z);
 
                                 BaseGalleon g = FindValidBoatTarget(newPoint, map, ammo);
 
@@ -183,9 +204,9 @@ namespace Server.Items
                             for (int i = -lateralOffset; i <= lateralOffset; i++)
                             {
                                 if (xOffset == 0)
-                                    newPoint = new Point3D(pnt.X + (xOffset + i), pnt.Y + (yOffset * currentRange), pnt.Z);
+                                    newPoint = new Point3D(pnt.X + xOffset + i, pnt.Y + yOffset * currentRange, pnt.Z);
                                 else
-                                    newPoint = new Point3D(pnt.X + (xOffset * currentRange), pnt.Y + (yOffset + i), pnt.Z);
+                                    newPoint = new Point3D(pnt.X + xOffset * currentRange, pnt.Y + yOffset + i, pnt.Z);
 
                                 foreach (Mobile m in GetTargets(newPoint, map))
                                 {
@@ -224,9 +245,12 @@ namespace Server.Items
         {
             if (Operator != null)
             {
-                foreach (Mobile m in SpellHelper.AcquireIndirectTargets(Operator, newPoint, map, 0).OfType<Mobile>())
+                foreach (IDamageable target in SpellHelper.AcquireIndirectTargets(Operator, newPoint, map, 0))
                 {
-                    yield return m;
+                    if (target is Mobile m)
+                    {
+                        yield return m;
+                    }
                 }
 
                 yield break;
@@ -273,9 +297,12 @@ namespace Server.Items
 
                 StaticTile[] tiles = map.Tiles.GetStaticTiles(newPoint.X, newPoint.Y, true);
 
-                foreach (StaticTile tile in tiles)
+                for (var index = 0; index < tiles.Length; index++)
                 {
+                    StaticTile tile = tiles[index];
+
                     ItemData id = TileData.ItemTable[tile.ID & TileData.MaxItemValue];
+
                     bool isWater = tile.ID >= 0x1796 && tile.ID <= 0x17B2;
 
                     if (!isWater && id.Surface && !id.Impassable)
@@ -360,9 +387,9 @@ namespace Server.Items
                         List<Mobile> candidates = new List<Mobile>();
                         SecurityLevel highest = SecurityLevel.Passenger;
 
-                        foreach (PlayerMobile mob in target.MobilesOnBoard.OfType<PlayerMobile>())
+                        foreach (Mobile mobile in target.MobilesOnBoard)
                         {
-                            if (Operator.CanBeHarmful(mob, false))
+                            if (mobile is PlayerMobile mob && Operator.CanBeHarmful(mob, false))
                             {
                                 if (target is BaseGalleon galleon && galleon.GetSecurityLevel(mob) > highest)
                                 {
@@ -393,7 +420,8 @@ namespace Server.Items
         public virtual void OnMobileHit(object obj)
         {
             object[] objects = (object[])obj;
-            Mobile toHit = objects[0] as Mobile;
+
+            Mobile toHit = (Mobile) objects[0];
 
             AmmoInfo ammoInfo = AmmoInfo.GetAmmoInfo((AmmunitionType)objects[2]);
 
@@ -407,6 +435,7 @@ namespace Server.Items
                 }
 
                 AOS.Damage(toHit, Operator, damage, ammoInfo.PhysicalDamage, ammoInfo.FireDamage, ammoInfo.ColdDamage, ammoInfo.PoisonDamage, ammoInfo.EnergyDamage);
+
                 Effects.SendLocationEffect(toHit.Location, toHit.Map, Utility.RandomBool() ? 14000 : 14013, 15, 10);
                 Effects.PlaySound(toHit.Location, toHit.Map, 0x207);
             }

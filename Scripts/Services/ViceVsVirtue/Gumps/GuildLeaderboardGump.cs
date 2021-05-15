@@ -49,14 +49,23 @@ namespace Server.Engines.VvV
             AddButton(280, 290, 4005, 4007, 4, GumpButtonType.Reply, 0);
             AddHtmlLocalized(315, 290, 150, 20, 1114924, 0xFFFF, false, false); // Guild Rankings
 
-            List<VvVGuildStats> list = new List<VvVGuildStats>(ViceVsVirtueSystem.Instance.GuildStats.Values);
+            List<VvVGuildStats> list;
 
             switch (Filter)
             {
                 default:
-                case Filter.Score: list = list.OrderBy(e => -e.Score).ToList(); break;
-                case Filter.Kills: list = list.OrderBy(e => -e.Kills).ToList(); break;
-                case Filter.ReturnedSigils: list = list.OrderBy(e => -e.ReturnedSigils).ToList(); break;
+                case Filter.Score:
+                    list = new List<VvVGuildStats>();
+                    foreach (var stats in list.OrderBy(e => -e.Score)) list.Add(stats);
+                    break;
+                case Filter.Kills:
+                    list = new List<VvVGuildStats>();
+                    foreach (var stats in list.OrderBy(e => -e.Kills)) list.Add(stats);
+                    break;
+                case Filter.ReturnedSigils:
+                    list = new List<VvVGuildStats>();
+                    foreach (var stats in list.OrderBy(e => -e.ReturnedSigils)) list.Add(stats);
+                    break;
             }
 
             int pages = (int)Math.Ceiling((double)list.Count / PerPage);
@@ -124,22 +133,22 @@ namespace Server.Engines.VvV
 
         private string CenterGray(string format)
         {
-            return string.Format("<basefont color=#A9A9A9><DIV ALIGN=CENTER>{0}</DIV>", format);
+            return $"<basefont color=#A9A9A9><DIV ALIGN=CENTER>{format}</DIV>";
         }
 
         private string RightGray(string format)
         {
-            return string.Format("<basefont color=#A9A9A9><DIV ALIGN=RIGHT>{0}</DIV>", format);
+            return $"<basefont color=#A9A9A9><DIV ALIGN=RIGHT>{format}</DIV>";
         }
 
         private string LeftGray(string format)
         {
-            return string.Format("<basefont color=#A9A9A9><DIV ALIGN=LEFT>{0}</DIV>", format);
+            return $"<basefont color=#A9A9A9><DIV ALIGN=LEFT>{format}</DIV>";
         }
 
         private string RightGreen(string format)
         {
-            return string.Format("<basefont color=#00FA9A><DIV ALIGN=RIGHT>{0}</DIV>", format);
+            return $"<basefont color=#00FA9A><DIV ALIGN=RIGHT>{format}</DIV>";
         }
     }
 }

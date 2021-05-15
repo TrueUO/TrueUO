@@ -276,10 +276,10 @@ namespace Server.Items
             {
                 SetInstrument(from, instrument);
 
-                InstrumentPickedCallback callback = state as InstrumentPickedCallback;
-
-                if (callback != null)
+                if (state is InstrumentPickedCallback callback)
+                {
                     callback(from, instrument);
+                }
             }
         }
 

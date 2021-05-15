@@ -361,10 +361,14 @@ namespace Server.Items
             {
                 StringBuilder sb = new StringBuilder();
 
-                foreach (BookPageInfo bpi in m_Pages)
+                for (var index = 0; index < m_Pages.Length; index++)
                 {
-                    foreach (string line in bpi.Lines)
+                    BookPageInfo bpi = m_Pages[index];
+
+                    for (var i = 0; i < bpi.Lines.Length; i++)
                     {
+                        string line = bpi.Lines[i];
+
                         sb.AppendLine(line);
                     }
                 }
@@ -379,8 +383,10 @@ namespace Server.Items
             {
                 List<string> lines = new List<string>();
 
-                foreach (BookPageInfo bpi in m_Pages)
+                for (var index = 0; index < m_Pages.Length; index++)
                 {
+                    BookPageInfo bpi = m_Pages[index];
+
                     lines.AddRange(bpi.Lines);
                 }
 

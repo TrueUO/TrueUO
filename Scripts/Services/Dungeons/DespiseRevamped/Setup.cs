@@ -65,9 +65,14 @@ namespace Server.Engines.Despise
                 e.Mobile.SendMessage("Despise setup complete");
             }
             else
+            {
                 e.Mobile.SendMessage("Despise appears to already be setup");
+            }
 
-            DespiseController.Instance.CheckSpawnersVersion3();
+            if (DespiseController.Instance != null)
+            {
+                DespiseController.Instance.CheckSpawnersVersion3();
+            }
         }
 
         public static void SetupTeleporters()

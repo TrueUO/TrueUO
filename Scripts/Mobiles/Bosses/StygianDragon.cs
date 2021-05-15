@@ -224,14 +224,16 @@ namespace Server.Mobiles
                     {
                         int damage;
 
-                        foreach (Mobile mob in m_ToDamage)
+                        for (var index = 0; index < m_ToDamage.Count; index++)
                         {
+                            Mobile mob = m_ToDamage[index];
+
                             damage = Utility.RandomMinMax(m_MinDamage, m_MaxDamage);
 
                             m_From.DoHarmful(mob);
                             AOS.Damage(mob, m_From, damage, 0, 100, 0, 0, 0);
 
-                            mob.FixedParticles(0x36BD, 1, 15, 9502, 0, 3, (EffectLayer)255);
+                            mob.FixedParticles(0x36BD, 1, 15, 9502, 0, 3, (EffectLayer) 255);
                         }
                     }
 
@@ -350,8 +352,10 @@ namespace Server.Mobiles
 
                     eable.Free();
 
-                    foreach (Mobile mob in list)
+                    for (var index = 0; index < list.Count; index++)
                     {
+                        Mobile mob = list[index];
+
                         DealDamage(mob);
                     }
 
