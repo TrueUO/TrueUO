@@ -15,12 +15,14 @@ namespace Server.Diagnostics
 
 			list.Sort(delegate (T a, T b) { return -a.TotalTime.CompareTo(b.TotalTime); });
 
-			foreach (T prof in list)
-			{
-				prof.WriteTo(op);
-				op.WriteLine();
-			}
-		}
+            for (var index = 0; index < list.Count; index++)
+            {
+                T prof = list[index];
+
+                prof.WriteTo(op);
+                op.WriteLine();
+            }
+        }
 
 		private readonly string _name;
 
