@@ -24,9 +24,7 @@ namespace Server
 
 		private static readonly Hashtable m_Patched = new Hashtable();
 
-		public static bool Modified { get; }
-
-		private static byte[] m_StreamBuffer;
+        private static byte[] m_StreamBuffer;
 
 		public static bool UOP => File.Exists(Core.FindDataFile("artLegacyMUL.uop"));
 		public static bool MUL => File.Exists(Core.FindDataFile("art.mul"));
