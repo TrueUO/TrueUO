@@ -1,7 +1,5 @@
 using Server.Items;
 
-using System.Linq;
-
 namespace Server.Engines.ArtisanFestival
 {
     public enum TreeStage
@@ -74,7 +72,18 @@ namespace Server.Engines.ArtisanFestival
 
         public void CheckTreeID()
         {
-            var tree = Components.FirstOrDefault(comp => comp is TownTreeComponent);
+            AddonComponent tree = null;
+
+            for (var index = 0; index < Components.Count; index++)
+            {
+                var comp = Components[index];
+
+                if (comp is TownTreeComponent)
+                {
+                    tree = comp;
+                    break;
+                }
+            }
 
             if (tree != null)
             {
@@ -110,7 +119,20 @@ namespace Server.Engines.ArtisanFestival
                             tree.ItemID = 0x9DBB;
                         }
 
-                        if (!Components.Any(c => c.ItemID == 0x9E97))
+                        bool any = false;
+
+                        for (var index = 0; index < Components.Count; index++)
+                        {
+                            var c = Components[index];
+
+                            if (c.ItemID == 0x9E97)
+                            {
+                                any = true;
+                                break;
+                            }
+                        }
+
+                        if (!any)
                         {
                             AddComponent(new AddonComponent(0x9E97) { Hue = 1265 }, tree.Offset.X + 1, tree.Offset.Y + 1, tree.Offset.Z + 65);
                         }
@@ -121,7 +143,18 @@ namespace Server.Engines.ArtisanFestival
 
             if ((int)_Stage != 5)
             {
-                var star = Components.FirstOrDefault(comp => comp.ItemID == 0x9E97);
+                AddonComponent star = null;
+
+                for (var index = 0; index < Components.Count; index++)
+                {
+                    var comp = Components[index];
+
+                    if (comp.ItemID == 0x9E97)
+                    {
+                        star = comp;
+                        break;
+                    }
+                }
 
                 if (star != null)
                 {
