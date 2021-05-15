@@ -148,13 +148,15 @@ namespace Server.Items
         {
             if (from.Alive)
             {
-                if (from.InRange(Location, 2) && from is PlayerMobile && CanDonate((PlayerMobile)from))
+                if (from.InRange(Location, 2) && from is PlayerMobile mobile && CanDonate(mobile))
                 {
-                    from.CloseGump(typeof(CommunityCollectionGump));
-                    from.SendGump(new CommunityCollectionGump((PlayerMobile)from, this, Location));
+                    mobile.CloseGump(typeof(CommunityCollectionGump));
+                    mobile.SendGump(new CommunityCollectionGump(mobile, this, Location));
                 }
                 else
+                {
                     from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1019045); // I can't reach that.
+                }
             }
         }
 

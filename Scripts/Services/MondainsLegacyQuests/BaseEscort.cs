@@ -411,10 +411,8 @@ namespace Server.Engines.Quests
             {
                 BaseQuest escortquest = pm.Quests[index];
 
-                if (escortquest.Quester is BaseEscort)
+                if (escortquest.Quester is BaseEscort escort)
                 {
-                    BaseEscort escort = (BaseEscort) escortquest.Quester;
-
                     Timer.DelayCall(TimeSpan.FromSeconds(3), delegate
                     {
                         escort.Say(500901); // Ack!  My escort has come to haunt me!

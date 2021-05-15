@@ -571,7 +571,7 @@ namespace Server.Gumps
                         {
                             BaseObjective obj = q.Objectives[i];
 
-                            if (obj is CollectionsObtainObjective && item.Type == ((CollectionsObtainObjective) obj).Obtain)
+                            if (obj is CollectionsObtainObjective objective && item.Type == objective.Obtain)
                             {
                                 return false;
                             }
@@ -585,9 +585,9 @@ namespace Server.Gumps
 
         public static bool CheckType(Item item, Type type, bool checkDerives)
         {
-            if (item is CommodityDeed && ((CommodityDeed)item).Commodity != null)
+            if (item is CommodityDeed deed && deed.Commodity != null)
             {
-                item = ((CommodityDeed)item).Commodity;
+                item = deed.Commodity;
             }
 
             Type t = item.GetType();
@@ -692,9 +692,9 @@ namespace Server.Gumps
 
         public static Item GetActual(Item item)
         {
-            if (item is CommodityDeed)
+            if (item is CommodityDeed deed)
             {
-                return ((CommodityDeed)item).Commodity;
+                return deed.Commodity;
             }
 
             return item;

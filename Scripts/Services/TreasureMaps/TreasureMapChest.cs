@@ -488,12 +488,7 @@ namespace Server.Items
 
                 if (0.1 >= Utility.RandomDouble()) // 10% chance to spawn a new monster
                 {
-                    BaseCreature spawn = TreasureMap.Spawn(Level, GetWorldLocation(), Map, from, false);
-
-                    if (spawn != null)
-                    {
-                        spawn.Hue = 2725;
-                    }
+                    TreasureMap.Spawn(Level, GetWorldLocation(), Map, from, false);
                 }
             }
 

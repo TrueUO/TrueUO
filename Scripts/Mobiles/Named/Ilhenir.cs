@@ -126,7 +126,7 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         public virtual void DropOoze()
@@ -145,25 +145,33 @@ namespace Server.Mobiles
                     bool found = false;
 
                     foreach (Item item in Map.GetItemsInRange(p, 0))
+                    {
                         if (item is StainedOoze)
                         {
                             found = true;
                             break;
                         }
+                    }
 
                     if (!found)
+                    {
                         break;
+                    }
                 }
 
                 ooze.MoveToWorld(p, Map);
             }
 
-            if (Combatant is PlayerMobile)
+            if (Combatant is PlayerMobile mobile)
             {
                 if (corrosive)
-                    ((PlayerMobile)Combatant).SendLocalizedMessage(1072071); // A corrosive gas seeps out of your enemy's skin!
+                {
+                    mobile.SendLocalizedMessage(1072071); // A corrosive gas seeps out of your enemy's skin!
+                }
                 else
-                    ((PlayerMobile)Combatant).SendLocalizedMessage(1072072); // A poisonous gas seeps out of your enemy's skin!
+                {
+                    mobile.SendLocalizedMessage(1072072); // A poisonous gas seeps out of your enemy's skin!
+                }
             }
         }
     }
@@ -198,17 +206,8 @@ namespace Server.Mobiles
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
-        public bool Corrosive
-        {
-            get
-            {
-                return m_Corrosive;
-            }
-            set
-            {
-                m_Corrosive = value;
-            }
-        }
+        public bool Corrosive { get => m_Corrosive; set => m_Corrosive = value; }
+
         public override void OnAfterDelete()
         {
             if (m_Timer != null)
@@ -227,11 +226,9 @@ namespace Server.Mobiles
 
                 for (int i = 0; i < items.Count; ++i)
                 {
-                    IDurability wearable = items[i] as IDurability;
-
-                    if (wearable != null && wearable.HitPoints >= 10 && Utility.RandomDouble() < 0.25)
+                    if (items[i] is IDurability wearable && wearable.HitPoints >= 10 && Utility.RandomDouble() < 0.25)
                     {
-                        wearable.HitPoints -= (wearable.HitPoints == 10) ? Utility.Random(1, 5) : 10;
+                        wearable.HitPoints -= wearable.HitPoints == 10 ? Utility.Random(1, 5) : 10;
                         damaged = true;
                     }
                 }
@@ -257,12 +254,12 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             m_Corrosive = reader.ReadBool();
 
             m_Timer = Timer.DelayCall(TimeSpan.Zero, TimeSpan.FromSeconds(1), OnTick);
-            m_Ticks = (ItemID == 0x122A) ? 0 : 30;
+            m_Ticks = ItemID == 0x122A ? 0 : 30;
         }
 
         private void OnTick()
@@ -272,12 +269,12 @@ namespace Server.Mobiles
 
             foreach (Mobile m in eable)
             {
-                if (m is BaseCreature)
+                if (m is BaseCreature bc)
                 {
-                    BaseCreature bc = (BaseCreature)m;
-
                     if (!bc.Controlled && !bc.Summoned)
+                    {
                         continue;
+                    }
                 }
                 else if (!m.Player)
                 {
@@ -285,7 +282,9 @@ namespace Server.Mobiles
                 }
 
                 if (m.Alive && !m.IsDeadBondedPet && m.CanBeDamaged())
+                {
                     toDamage.Add(m);
+                }
             }
 
             eable.Free();

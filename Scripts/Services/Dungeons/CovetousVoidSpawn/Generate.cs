@@ -435,10 +435,8 @@ namespace Server.Engines.VoidPool
                 {
                     Item i = s.Items[index1];
 
-                    if (i is XmlSpawner && _SpawnerBounds.Contains(i))
+                    if (i is XmlSpawner spawner && _SpawnerBounds.Contains(i))
                     {
-                        XmlSpawner spawner = i as XmlSpawner;
-
                         for (var i1 = 0; i1 < spawner.SpawnObjects.Length; i1++)
                         {
                             XmlSpawner.SpawnObject obj = spawner.SpawnObjects[i1];
