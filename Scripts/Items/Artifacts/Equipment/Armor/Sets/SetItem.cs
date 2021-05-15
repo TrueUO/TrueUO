@@ -374,7 +374,7 @@ namespace Server
 
                 if (item is ISetItem setItem && setItem.IsSetItem && setItem.SetEquipped)
                 {
-                    ISetItem sItem = item as ISetItem;
+                    ISetItem sItem = setItem;
 
                     switch (resist)
                     {
