@@ -20,7 +20,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Application\ServUO.csproj" />
+        <ProjectReference Include="..\Application\TrueUO.csproj" />
         <ProjectReference Include="..\Scripts\Scripts.csproj" />
         <ProjectReference Include="..\Server\Server.csproj" />
     </ItemGroup>
