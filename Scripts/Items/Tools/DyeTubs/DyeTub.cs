@@ -217,13 +217,8 @@ namespace Server.Items
                     }
                     else if (m_Tub.AllowLeather)
                     {
-                        var armor = item as BaseArmor;
-                        var clothing = item as BaseClothing;
-
-                        if ((armor != null && (armor.MaterialType == ArmorMaterialType.Leather ||
-                            armor.MaterialType == ArmorMaterialType.Studded)) ||
-                            (clothing != null && (clothing.DefaultResource == CraftResource.RegularLeather)) ||
-                            m_Tub.CanForceDye(item))
+                        if (item is BaseArmor armor && (armor.MaterialType == ArmorMaterialType.Leather || armor.MaterialType == ArmorMaterialType.Studded) ||
+                            item is BaseClothing clothing && (clothing.DefaultResource == CraftResource.RegularLeather) || m_Tub.CanForceDye(item))
                         {
                             if (!from.InRange(m_Tub.GetWorldLocation(), 1) || !from.InRange(item.GetWorldLocation(), 1))
                             {
@@ -250,9 +245,7 @@ namespace Server.Items
                     }
                     else if (m_Tub.AllowMetal)
                     {
-                        var armor = item as BaseArmor;
-
-                        if ((armor != null && armor.MaterialType >= ArmorMaterialType.Ringmail && armor.MaterialType <= ArmorMaterialType.Plate) || m_Tub.CanForceDye(item))
+                        if (item is BaseArmor armor && armor.MaterialType >= ArmorMaterialType.Ringmail && armor.MaterialType <= ArmorMaterialType.Plate || m_Tub.CanForceDye(item))
                         {
                             if (!from.InRange(m_Tub.GetWorldLocation(), 1) || !from.InRange(item.GetWorldLocation(), 1))
                             {

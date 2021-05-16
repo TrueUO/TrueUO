@@ -299,11 +299,11 @@ namespace Server.Items
             for (int i = 0; i < count; i++)
             {
                 if (Teleporters == null)
+                {
                     Teleporters = new List<InternalTeleporter>();
+                }
 
-                InternalTeleporter tele = reader.ReadItem() as InternalTeleporter;
-
-                if (tele != null)
+                if (reader.ReadItem() is InternalTeleporter tele)
                 {
                     Teleporters.Add(tele);
                     tele.Master = this;

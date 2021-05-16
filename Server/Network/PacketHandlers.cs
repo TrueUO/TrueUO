@@ -318,9 +318,7 @@ namespace Server.Network
 				{
 					Serial serial = pvSrc.ReadInt32();
 
-					SecureTradeContainer cont = World.FindItem(serial) as SecureTradeContainer;
-
-					if (cont != null)
+                    if (World.FindItem(serial) is SecureTradeContainer cont)
 					{
 						SecureTrade trade = cont.Trade;
 
@@ -338,9 +336,7 @@ namespace Server.Network
 				{
 					Serial serial = pvSrc.ReadInt32();
 
-					SecureTradeContainer cont = World.FindItem(serial) as SecureTradeContainer;
-
-					if (cont != null)
+                    if (World.FindItem(serial) is SecureTradeContainer cont)
 					{
 						SecureTrade trade = cont.Trade;
 
@@ -366,9 +362,7 @@ namespace Server.Network
 				{
 					Serial serial = pvSrc.ReadInt32();
 
-					SecureTradeContainer cont = World.FindItem(serial) as SecureTradeContainer;
-
-					if (cont != null)
+                    if (World.FindItem(serial) is SecureTradeContainer cont)
 					{
 						int gold = pvSrc.ReadInt32();
 						int plat = pvSrc.ReadInt32();
@@ -434,15 +428,10 @@ namespace Server.Network
 					buyList.Add(new BuyItemResponse(serial, amount));
 				}
 
-				if (buyList.Count > 0)
+				if (buyList.Count > 0 && vendor is IVendor v && v.OnBuyItems(state.Mobile, buyList))
 				{
-					IVendor v = vendor as IVendor;
-
-					if (v != null && v.OnBuyItems(state.Mobile, buyList))
-					{
-						state.Send(new EndVendorBuy(vendor));
-					}
-				}
+                    state.Send(new EndVendorBuy(vendor));
+                }
 			}
 			else
 			{
@@ -482,15 +471,10 @@ namespace Server.Network
 					}
 				}
 
-				if (sellList.Count > 0)
+				if (sellList.Count > 0 && vendor is IVendor v && v.OnSellItems(state.Mobile, sellList))
 				{
-					IVendor v = vendor as IVendor;
-
-					if (v != null && v.OnSellItems(state.Mobile, sellList))
-					{
-						state.Send(new EndVendorSell(vendor));
-					}
-				}
+                    state.Send(new EndVendorSell(vendor));
+                }
 			}
 		}
 
@@ -2200,40 +2184,35 @@ namespace Server.Network
 					}
 				}
 			}
-			else if (serial.IsItem)
+			else if (serial.IsItem && World.FindItem(serial) is IDamageable item)
 			{
-				IDamageable item = World.FindItem(serial) as IDamageable;
+                switch (type)
+                {
+                    case 0x00:
+                    {
+                        if (VerifyGC(state))
+                        {
+                            Console.WriteLine("God Client: {0}: Query 0x{1:X2} on {2} '{3}'", state, type, serial, item.Name);
+                        }
 
-				if (item != null)
-				{
-					switch (type)
-					{
-						case 0x00:
-						{
-							if (VerifyGC(state))
-							{
-								Console.WriteLine("God Client: {0}: Query 0x{1:X2} on {2} '{3}'", state, type, serial, item.Name);
-							}
-
-							break;
-						}
-						case 0x04: // Stats
-						{
-							item.OnStatsQuery(from);
-							break;
-						}
-						case 0x05:
-						{
-							break;
-						}
-						default:
-						{
-							pvSrc.Trace(state);
-							break;
-						}
-					}
-				}
-			}
+                        break;
+                    }
+                    case 0x04: // Stats
+                    {
+                        item.OnStatsQuery(@from);
+                        break;
+                    }
+                    case 0x05:
+                    {
+                        break;
+                    }
+                    default:
+                    {
+                        pvSrc.Trace(state);
+                        break;
+                    }
+                }
+            }
 		}
 
 		public delegate void PlayCharCallback(NetState state, bool val);

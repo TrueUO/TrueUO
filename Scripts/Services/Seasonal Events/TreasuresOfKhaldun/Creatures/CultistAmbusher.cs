@@ -172,12 +172,12 @@ namespace Server.Mobiles
 
         public override WeaponAbility GetWeaponAbility()
         {
-            BaseWeapon wep = Weapon as BaseWeapon;
-
-            if (wep != null && !(wep is Fists))
+            if (Weapon is BaseWeapon wep && !(wep is Fists))
             {
                 if (Utility.RandomDouble() > 0.5)
+                {
                     return wep.PrimaryAbility;
+                }
 
                 return wep.SecondaryAbility;
             }

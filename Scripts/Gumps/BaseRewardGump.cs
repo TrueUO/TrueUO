@@ -162,9 +162,7 @@ namespace Server.Gumps
 
         public virtual void OnConfirmed(CollectionItem citem, int index)
         {
-            Item item = Activator.CreateInstance(citem.Type) as Item;
-
-            if (item != null)
+            if (Activator.CreateInstance(citem.Type) is Item item)
             {
                 if (User.Backpack == null || !User.Backpack.TryDropItem(User, item, false))
                 {

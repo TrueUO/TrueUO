@@ -215,9 +215,10 @@ namespace Server.Engines.Shadowguard
             count = reader.ReadInt();
             for (int i = 0; i < count; i++)
             {
-                ShadowguardBottleOfLiquor b = reader.ReadItem() as ShadowguardBottleOfLiquor;
-                if (b != null)
+                if (reader.ReadItem() is ShadowguardBottleOfLiquor b)
+                {
                     Bottles.Add(b);
+                }
             }
 
             if (Pirates == null || Pirates.Count < 6)
@@ -473,9 +474,7 @@ namespace Server.Engines.Shadowguard
                     int count = reader.ReadInt();
                     for (int i = 0; i < count; i++)
                     {
-                        ShadowguardCypress tree = reader.ReadItem() as ShadowguardCypress;
-
-                        if (tree != null)
+                        if (reader.ReadItem() is ShadowguardCypress tree)
                         {
                             tree.Encounter = this;
                             Trees.Add(tree);
@@ -488,9 +487,7 @@ namespace Server.Engines.Shadowguard
                         if (Spawn == null)
                             Spawn = new List<BaseCreature>();
 
-                        BaseCreature bc = reader.ReadMobile() as BaseCreature;
-
-                        if (bc != null)
+                        if (reader.ReadMobile() is BaseCreature bc)
                             Spawn.Add(bc);
                     }
 
@@ -1318,9 +1315,7 @@ namespace Server.Engines.Shadowguard
                     if (_Checked == null)
                         _Checked = new List<ShadowguardCanal>();
 
-                    ShadowguardCanal c = reader.ReadItem() as ShadowguardCanal;
-
-                    if (c != null)
+                    if (reader.ReadItem() is ShadowguardCanal c)
                         _Checked.Add(c);
                 }
             }
@@ -1388,10 +1383,10 @@ namespace Server.Engines.Shadowguard
             int count = reader.ReadInt();
             for (int i = 0; i < count; i++)
             {
-                BaseCreature bc = reader.ReadMobile() as BaseCreature;
-
-                if (bc != null)
+                if (reader.ReadMobile() is BaseCreature bc)
+                {
                     Elementals.Add(bc);
+                }
             }
 
             count = reader.ReadInt();
@@ -1623,9 +1618,7 @@ namespace Server.Engines.Shadowguard
 
             for (int i = 0; i < count; i++)
             {
-                VileDrake d = reader.ReadMobile() as VileDrake;
-
-                if (d != null)
+                if (reader.ReadMobile() is VileDrake d)
                     Drakes.Add(d);
             }
 
@@ -1633,9 +1626,7 @@ namespace Server.Engines.Shadowguard
 
             for (int i = 0; i < count; i++)
             {
-                FeedingBell b = reader.ReadItem() as FeedingBell;
-
-                if (b != null)
+                if (reader.ReadItem() is FeedingBell b)
                     Bells.Add(b);
             }
 

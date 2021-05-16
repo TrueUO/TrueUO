@@ -163,14 +163,9 @@ namespace Server.Items
 
                 object[] objs = i.GetType().GetCustomAttributes(typeof(FlipableAttribute), true);
 
-                if (objs != null && objs.Length > 0)
+                if (objs.Length > 0 && objs[0] is FlipableAttribute fp)
                 {
-                    var fp = objs[0] as FlipableAttribute;
-
-                    if (fp != null)
-                    {
-                        itemIDs = fp.ItemIDs;
-                    }
+                    itemIDs = fp.ItemIDs;
                 }
 
                 AddItem(30, 150, itemIDs != null ? itemIDs[1] : i.ItemID);

@@ -214,9 +214,7 @@ namespace Server.Engines.Blackthorn
 
                 for (int i = 0; i < count; i++)
                 {
-                    BaseCreature bc = Activator.CreateInstance(_SpawnTable[(int)InvasionType][Utility.Random(_SpawnTable[(int)InvasionType].Length)]) as BaseCreature;
-
-                    if (bc != null)
+                    if (Activator.CreateInstance(_SpawnTable[(int)InvasionType][Utility.Random(_SpawnTable[(int)InvasionType].Length)]) is BaseCreature bc)
                     {
                         bc.Kills = 100;
 
