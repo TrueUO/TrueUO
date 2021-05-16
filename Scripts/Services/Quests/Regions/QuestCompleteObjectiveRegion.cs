@@ -24,16 +24,13 @@ namespace Server.Engines.Quests
         {
             base.OnEnter(m);
 
-            if (m_Quest != null && m_Objective != null)
+            if (m_Quest != null && m_Objective != null && m is PlayerMobile player && player.Quest != null && player.Quest.GetType() == m_Quest)
             {
-                if (m is PlayerMobile player && player.Quest != null && player.Quest.GetType() == m_Quest)
-                {
-                    QuestObjective obj = player.Quest.FindObjective(m_Objective);
+                QuestObjective obj = player.Quest.FindObjective(m_Objective);
 
-                    if (obj != null && !obj.Completed)
-                    {
-                        obj.Complete();
-                    }
+                if (obj != null && !obj.Completed)
+                {
+                    obj.Complete();
                 }
             }
         }

@@ -56,9 +56,7 @@ namespace Server.Items
         {
             if (from.Backpack != null && IsChildOf(from.Backpack) && Charges > 0)
             {
-                PowderOfTemperament powder = from.Backpack.FindItemByType(typeof(PowderOfTemperament)) as PowderOfTemperament;
-
-                if (powder != null)
+                if (from.Backpack.FindItemByType(typeof(PowderOfTemperament)) is PowderOfTemperament powder)
                 {
                     powder.UsesRemaining++;
                     Charges--;
@@ -127,7 +125,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1); // version
 
             writer.Write(_Charges);
@@ -136,13 +133,9 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             _Charges = reader.ReadInt();
-
-            if (version == 0)
-                ItemID = 0x1940;
         }
     }
 }

@@ -65,17 +65,18 @@ namespace Server.Engines.ArenaSystem
             int count = reader.ReadInt();
             for (int i = 0; i < count; i++)
             {
-                PlayerMobile pm = reader.ReadMobile() as PlayerMobile;
-
-                if (pm != null)
+                if (reader.ReadMobile() is PlayerMobile pm)
+                {
                     list.Add(pm);
+                }
             }
 
             // have to wait for everything else to deserialize :(
             Timer.DelayCall(() =>
             {
-                foreach (PlayerMobile pm in list)
+                for (var index = 0; index < list.Count; index++)
                 {
+                    PlayerMobile pm = list[index];
                     AddParticipant(pm);
                 }
             });

@@ -225,12 +225,14 @@ namespace Server.Engines.VvV
             for (int i = 0; i < count; i++)
             {
                 if (Links == null)
+                {
                     Links = new List<VvVTrap>();
+                }
 
-                VvVTrap link = reader.ReadItem() as VvVTrap;
-
-                if (link != null)
+                if (reader.ReadItem() is VvVTrap link)
+                {
                     Links.Add(link);
+                }
             }
 
             ParentTrap = reader.ReadItem() as VvVTrap;

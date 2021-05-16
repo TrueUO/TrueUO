@@ -42,10 +42,10 @@ namespace Server.Items
                 return;
             }
 
-            ThrowTarget targ = from.Target as ThrowTarget;
-
-            if (targ != null && targ.Potion == this)
+            if (from.Target is ThrowTarget targ && targ.Potion == this)
+            {
                 return;
+            }
 
             from.RevealingAction();
 

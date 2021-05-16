@@ -59,13 +59,11 @@ namespace Server.Engines.VvV
                 y += 16;
             }
 
-            Guild gu = User.Guild as Guild;
-
-            if (gu != null)
+            if (User.Guild is Guild guild)
             {
-                BattleTeam t = Battle.GetTeam(gu);
+                BattleTeam t = Battle.GetTeam(guild);
 
-                AddHtml(87, 268, 50, 20, string.Format("<basefont color=#FFFFFF>{0}", gu.Abbreviation), false, false);
+                AddHtml(87, 268, 50, 20, string.Format("<basefont color=#FFFFFF>{0}", guild.Abbreviation), false, false);
                 AddBackground(145, 271, (int)Math.Min(216, (t.Score * offset)), 12, 30584);
             }
 

@@ -39,9 +39,7 @@ namespace Server.Engines.Quests
         [Description("Displays the staff member the quests and status.")]
         public static void CheckQuests(CommandEventArgs e)
         {
-            var pm = e.Mobile as PlayerMobile;
-
-            if (pm != null)
+            if (e.Mobile is PlayerMobile pm)
             {
                 pm.BeginTarget(-1, false, TargetFlags.None, (m, targeted) =>
                 {

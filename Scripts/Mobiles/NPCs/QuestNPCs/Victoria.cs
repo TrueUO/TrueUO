@@ -71,9 +71,7 @@ namespace Server.Engines.Quests.Doom
 
         public override bool OnDragDrop(Mobile from, Item dropped)
         {
-            PlayerMobile player = from as PlayerMobile;
-
-            if (player != null)
+            if (from is PlayerMobile player)
             {
                 QuestSystem qs = player.Quest;
 
@@ -101,14 +99,12 @@ namespace Server.Engines.Quests.Doom
 
                                 if (!bones.Deleted)
                                 {
-                                    // TODO: Accurate?
                                     SayTo(from, 1050038); // You have already given me all the Daemon bones necessary to weave the spell.  Keep these for a later time.
                                 }
                             }
                         }
                         else
                         {
-                            // TODO: Accurate?
                             SayTo(from, 1050038); // You have already given me all the Daemon bones necessary to weave the spell.  Keep these for a later time.
                         }
 
