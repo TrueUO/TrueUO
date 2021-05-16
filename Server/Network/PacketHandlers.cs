@@ -2184,38 +2184,35 @@ namespace Server.Network
 					}
 				}
 			}
-			else if (serial.IsItem)
+			else if (serial.IsItem && World.FindItem(serial) is IDamageable item)
 			{
-                if (World.FindItem(serial) is IDamageable item)
-				{
-					switch (type)
-					{
-						case 0x00:
-						{
-							if (VerifyGC(state))
-							{
-								Console.WriteLine("God Client: {0}: Query 0x{1:X2} on {2} '{3}'", state, type, serial, item.Name);
-							}
+                switch (type)
+                {
+                    case 0x00:
+                    {
+                        if (VerifyGC(state))
+                        {
+                            Console.WriteLine("God Client: {0}: Query 0x{1:X2} on {2} '{3}'", state, type, serial, item.Name);
+                        }
 
-							break;
-						}
-						case 0x04: // Stats
-						{
-							item.OnStatsQuery(from);
-							break;
-						}
-						case 0x05:
-						{
-							break;
-						}
-						default:
-						{
-							pvSrc.Trace(state);
-							break;
-						}
-					}
-				}
-			}
+                        break;
+                    }
+                    case 0x04: // Stats
+                    {
+                        item.OnStatsQuery(@from);
+                        break;
+                    }
+                    case 0x05:
+                    {
+                        break;
+                    }
+                    default:
+                    {
+                        pvSrc.Trace(state);
+                        break;
+                    }
+                }
+            }
 		}
 
 		public delegate void PlayCharCallback(NetState state, bool val);
