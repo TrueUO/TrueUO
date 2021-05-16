@@ -502,11 +502,12 @@ namespace Server.Engines.NewMagincia
             if (check == null || checkAgainst == null)
                 return false;
 
-            Account acct1 = checkAgainst.Account as Account;
             Account acct2 = check.Account as Account;
 
-            if (acct1 != null && acct1 == acct2)
+            if (checkAgainst.Account is Account acct1 && acct1 == acct2)
+            {
                 return true;
+            }
 
             return false;
         }

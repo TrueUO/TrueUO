@@ -375,9 +375,7 @@ namespace Server.Mobiles
 
             for (int i = 0; i < m_ArmorBuyInfo.Count; ++i)
             {
-                GenericBuyInfo buy = m_ArmorBuyInfo[i] as GenericBuyInfo;
-
-                if (buy != null)
+                if (m_ArmorBuyInfo[i] is GenericBuyInfo buy)
                 {
                     buy.DeleteDisplayEntity();
                 }
@@ -1083,17 +1081,14 @@ namespace Server.Mobiles
                             continue;
                         }
 
-                        var lockable = item.ParentEntity as LockableContainer;
-
-                        if (lockable != null && lockable.Locked)
+                        if (item.ParentEntity is LockableContainer lockable && lockable.Locked)
                         {
                             continue;
                         }
 
                         if (item.IsStandardLoot() && item.Movable && ssi.IsSellable(item))
                         {
-                            table[item] = new SellItemState(item, ssi.GetSellPriceFor(item, this),
-                                ssi.GetNameFor(item));
+                            table[item] = new SellItemState(item, ssi.GetSellPriceFor(item, this), ssi.GetNameFor(item));
                         }
                     }
                 }
@@ -2467,9 +2462,7 @@ namespace Server.Mobiles
             from.SendGump(new Gumps.ConfirmCallbackGump((PlayerMobile)from, 1049004, 1154115, state, null,
                 (m, obj) =>
                 {
-                    BaseArmor ar = obj as BaseArmor;
-
-                    if (!Deleted && ar != null && armor.IsChildOf(m.Backpack) && CanConvertArmor(m, ar))
+                    if (!Deleted && obj is BaseArmor ar && armor.IsChildOf(m.Backpack) && CanConvertArmor(m, ar))
                     {
                         if (!InRange(m.Location, 3))
                         {

@@ -1666,9 +1666,8 @@ namespace Server.Gumps
             if (m_PageType == AdminGumpPage.Accounts)
             {
                 ArrayList list = m_List;
-                ArrayList rads = m_State as ArrayList;
 
-                if (list != null && rads != null)
+                if (list != null && m_State is ArrayList rads)
                 {
                     for (int i = 0, v = m_ListPage * 12; i < 12 && v < list.Count; ++i, ++v)
                     {
@@ -2195,12 +2194,15 @@ namespace Server.Gumps
                                             break;
 
                                         Mobile m = ns.Mobile;
-                                        Account a = ns.Account as Account;
 
                                         if (m != null)
+                                        {
                                             from.SendGump(new AdminGump(from, AdminGumpPage.ClientInfo, 0, null, null, m));
-                                        else if (a != null)
+                                        }
+                                        else if (ns.Account is Account a)
+                                        {
                                             from.SendGump(new AdminGump(from, AdminGumpPage.AccountDetails_Information, 0, null, null, a));
+                                        }
                                     }
 
                                     break;
@@ -2738,9 +2740,7 @@ namespace Server.Gumps
                                 {
                                     index -= 50;
 
-                                    Account a = m_State as Account;
-
-                                    if (a != null && index >= 0 && index < a.Length)
+                                    if (m_State is Account a && index >= 0 && index < a.Length)
                                     {
                                         Mobile m = a[index];
 
@@ -2914,9 +2914,7 @@ namespace Server.Gumps
                                 }
                             case 3:
                                 {
-                                    Account a = m.Account as Account;
-
-                                    if (a != null)
+                                    if (m.Account is Account a)
                                     {
                                         CommandLogging.WriteLine(from, "{0} {1} {2} {3}", from.AccessLevel, CommandLogging.Format(from), "banning", CommandLogging.Format(m));
                                         a.Banned = true;
@@ -2996,10 +2994,10 @@ namespace Server.Gumps
                         {
                             case 3:
                                 {
-                                    Account a = m.Account as Account;
-
-                                    if (a != null)
+                                    if (m.Account is Account a)
+                                    {
                                         from.SendGump(new BanDurationGump(a));
+                                    }
 
                                     break;
                                 }

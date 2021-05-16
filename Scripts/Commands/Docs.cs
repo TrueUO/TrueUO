@@ -2482,25 +2482,22 @@ namespace Server.Commands
             {
                 object[] attributes = paramType.GetCustomAttributes(typeofCustomEnum, false);
 
-                if (attributes.Length > 0)
+                if (attributes.Length > 0 && attributes[0] is CustomEnumAttribute attr)
                 {
-                    CustomEnumAttribute attr = attributes[0] as CustomEnumAttribute;
+                    StringBuilder sb = new StringBuilder();
 
-                    if (attr != null)
+                    sb.AppendFormat("Enumeration value or name. Possible named values include:{0}", HtmlNewLine);
+
+                    string[] names = attr.Names;
+
+                    for (var index = 0; index < names.Length; index++)
                     {
-                        StringBuilder sb = new StringBuilder();
+                        string n = names[index];
 
-                        sb.AppendFormat("Enumeration value or name. Possible named values include:{0}", HtmlNewLine);
-
-                        string[] names = attr.Names;
-
-                        foreach (string n in names)
-                        {
-                            sb.AppendFormat("{0}- {1}", HtmlNewLine, n);
-                        }
-
-                        return sb.ToString();
+                        sb.AppendFormat("{0}- {1}", HtmlNewLine, n);
                     }
+
+                    return sb.ToString();
                 }
             }
             else if (paramType == typeofMap)
@@ -2511,8 +2508,10 @@ namespace Server.Commands
 
                 string[] names = Map.GetMapNames();
 
-                foreach (string n in names)
+                for (var index = 0; index < names.Length; index++)
                 {
+                    string n = names[index];
+
                     sb.AppendFormat("{0}- {1}", HtmlNewLine, n);
                 }
 
@@ -2543,7 +2542,7 @@ namespace Server.Commands
                 indexHtml.WriteLine("<!DOCTYPE html>");
                 indexHtml.WriteLine("<html>");
                 indexHtml.WriteLine("   <head>");
-                indexHtml.WriteLine("      <title>RunUO Documentation - Class Overview</title>");
+                indexHtml.WriteLine("      <title>TrueUO Documentation - Class Overview</title>");
                 indexHtml.WriteLine("      <style type=\"text/css\">");
                 indexHtml.WriteLine("      body { background-color: white; font-family: Tahoma; color: #000000; }");
                 indexHtml.WriteLine("      a, a:visited { color: #000000; }");
@@ -2579,7 +2578,7 @@ namespace Server.Commands
                 nsHtml.WriteLine("<!DOCTYPE html>");
                 nsHtml.WriteLine("<html>");
                 nsHtml.WriteLine("   <head>");
-                nsHtml.WriteLine("      <title>RunUO Documentation - Class Overview - {0}</title>", name);
+                nsHtml.WriteLine("      <title>TrueUO Documentation - Class Overview - {0}</title>", name);
                 nsHtml.WriteLine("      <style type=\"text/css\">");
                 nsHtml.WriteLine("      body { background-color: white; font-family: Tahoma; color: #000000; }");
                 nsHtml.WriteLine("      a, a:visited { color: #000000; }");
@@ -2612,7 +2611,7 @@ namespace Server.Commands
                 typeHtml.WriteLine("<!DOCTYPE html>");
                 typeHtml.WriteLine("<html>");
                 typeHtml.WriteLine("   <head>");
-                typeHtml.WriteLine("      <title>RunUO Documentation - Class Overview - {0}</title>", info.TypeName);
+                typeHtml.WriteLine("      <title>TrueUO Documentation - Class Overview - {0}</title>", info.TypeName);
                 typeHtml.WriteLine("      <style type=\"text/css\">");
                 typeHtml.WriteLine("      body { background-color: white; font-family: Tahoma; color: #000000; }");
                 typeHtml.WriteLine("      a, a:visited { color: #000000; }");

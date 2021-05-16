@@ -1,14 +1,11 @@
 using Server.Gumps;
-using Server.Multis;
-using Server.Network;
-using System;
 
 namespace Server.Items
 {
     public enum AddonFacing
     {
         South = 0,
-        East = 1,
+        East = 1
     }
 
     public class DragonHeadAddon : BaseAddon
@@ -69,15 +66,13 @@ namespace Server.Items
             public override void Serialize(GenericWriter writer)
             {
                 base.Serialize(writer);
-
                 writer.WriteEncodedInt(0); // version
             }
 
             public override void Deserialize(GenericReader reader)
             {
                 base.Deserialize(reader);
-
-                int version = reader.ReadEncodedInt();
+                reader.ReadEncodedInt();
             }
         }
 
@@ -89,15 +84,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
         }
     }
 
@@ -134,15 +127,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         public void GetOptions(RewardOptionList list)
@@ -158,154 +149,6 @@ namespace Server.Items
 
             if (!Deleted)
                 base.OnDoubleClick(from);
-        }
-    }
-
-    // old classes
-    [TypeAlias("Server.Items.DragonHead")]
-    public class DragonHeadOld : Item, IAddon
-    {
-        public override bool IsArtifact => true;
-
-        [Constructable]
-        public DragonHeadOld()
-            : this(0x2234)
-        {
-        }
-
-        [Constructable]
-        public DragonHeadOld(int itemID)
-            : base(itemID)
-        {
-            Movable = false;
-        }
-
-        public DragonHeadOld(Serial serial)
-            : base(serial)
-        {
-        }
-
-        public override bool ForceShowProperties => true;
-
-        public Item Deed => new DragonHeadAddonDeed();
-        public bool FacingEast => ItemID == 0x2235;
-
-        void IChopable.OnChop(Mobile user)
-        {
-            OnDoubleClick(user);
-        }
-
-        public override void OnDoubleClick(Mobile from)
-        {
-            if (from.InRange(Location, 2))
-            {
-                BaseHouse house = BaseHouse.FindHouseAt(this);
-
-                if (house != null && house.IsOwner(from))
-                {
-                    from.CloseGump(typeof(RewardDemolitionGump));
-                    from.SendGump(new RewardDemolitionGump(this, 1049783)); // Do you wish to re-deed this decoration?
-                }
-                else
-                    from.SendLocalizedMessage(1049784); // You can only re-deed this decoration if you are the house owner or originally placed the decoration.
-            }
-            else
-                from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1019045); // I can't reach that.
-        }
-
-        public override void Serialize(GenericWriter writer)
-        {
-            base.Serialize(writer);
-
-            writer.WriteEncodedInt(0); // version
-        }
-
-        public override void Deserialize(GenericReader reader)
-        {
-            base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
-        }
-
-        public bool CouldFit(IPoint3D p, Map map)
-        {
-            if (map == null || !map.CanFit(p.X, p.Y, p.Z, ItemData.Height))
-                return false;
-
-            if (FacingEast)
-                return BaseAddon.IsWall(p.X - 1, p.Y, p.Z, map); // west wall                
-            else
-                return BaseAddon.IsWall(p.X, p.Y - 1, p.Z, map); // north wall
-        }
-    }
-
-    [TypeAlias("Server.Items.DragonHeadDeed")]
-    public class DragonHeadDeedOld : Item
-    {
-        public override int LabelNumber => 1028756;  // dragon head
-
-        [Constructable]
-        public DragonHeadDeedOld()
-            : base(0x14F0)
-        {
-            LootType = LootType.Blessed;
-            Weight = 1.0;
-        }
-
-        public DragonHeadDeedOld(Serial serial)
-            : base(serial)
-        {
-        }
-
-        public override void Serialize(GenericWriter writer)
-        {
-            base.Serialize(writer);
-
-            writer.WriteEncodedInt(0); // version
-        }
-
-        public override void Deserialize(GenericReader reader)
-        {
-            base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
-
-            Timer.DelayCall(TimeSpan.FromSeconds(10), Replace);
-        }
-
-        private void Replace()
-        {
-            Container c = Parent as Container;
-
-            if (c != null)
-            {
-                DragonHeadAddonDeed deed = new DragonHeadAddonDeed();
-                c.DropItem(deed);
-            }
-            else if (Parent == null)
-            {
-                BaseHouse house = BaseHouse.FindHouseAt(this);
-
-                DragonHeadAddonDeed deed = new DragonHeadAddonDeed();
-                deed.MoveToWorld(Location, Map);
-
-                deed.IsLockedDown = IsLockedDown;
-                deed.IsSecure = IsSecure;
-                deed.Movable = Movable;
-
-                if (house != null && house.LockDowns.ContainsKey(this))
-                {
-                    house.LockDowns.Remove(this);
-                    house.LockDowns.Add(deed, house.Owner);
-                }
-                else if (house != null && house.IsSecure(this))
-                {
-                    house.ReleaseSecure(house.Owner, this);
-                    house.AddSecure(house.Owner, deed);
-                }
-            }
-
-            Delete();
         }
     }
 }

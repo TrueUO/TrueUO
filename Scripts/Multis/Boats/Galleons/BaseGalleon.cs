@@ -476,12 +476,14 @@ namespace Server.Multis
             RecallRune newRune = new RecallRune();
             newRune.SetGalleon(this);
 
-            Container c = rune.Parent as Container;
-
-            if (c != null)
+            if (rune.Parent is Container c)
+            {
                 c.AddItem(newRune);
+            }
             else
+            {
                 newRune.MoveToWorld(from.Location, from.Map);
+            }
 
             rune.Delete();
             return true;
@@ -1822,14 +1824,16 @@ namespace Server.Multis
         public SecurityLevel GetImpliedAccess(Mobile from)
         {
             if (from == null)
+            {
                 return SecurityLevel.Denied;
+            }
 
-            Account acct = from.Account as Account;
-
-            if (acct != null)
+            if (from.Account is Account acct)
             {
                 if (HasImpliedAccess(acct, from))
+                {
                     return DefaultImpliedAccessLevel;
+                }
             }
 
             return SecurityLevel.Denied;
@@ -1900,12 +1904,11 @@ namespace Server.Multis
         public bool IsInGuild(Mobile from)
         {
             if (from == null || Galleon == null || Galleon.Owner == null)
+            {
                 return false;
+            }
 
-            Guild fromGuild = from.Guild as Guild;
-            Guild ownerGuild = Galleon.Owner.Guild as Guild;
-
-            return fromGuild != null && ownerGuild != null && fromGuild == ownerGuild;
+            return from.Guild is Guild fromGuild && Galleon.Owner.Guild is Guild ownerGuild && fromGuild == ownerGuild;
         }
 
         public void SetToDefault()

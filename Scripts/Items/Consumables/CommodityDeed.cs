@@ -16,12 +16,21 @@ namespace Server.Items
             int amount = cont.GetAmount(type, recurse);
 
             Item[] deeds = cont.FindItemsByType(typeof(CommodityDeed), recurse);
-            foreach (CommodityDeed deed in deeds)
+
+            for (var index = 0; index < deeds.Length; index++)
             {
+                var item = deeds[index];
+                var deed = (CommodityDeed) item;
+
                 if (deed.Commodity == null)
+                {
                     continue;
+                }
+
                 if (deed.Commodity.GetType() == type)
+                {
                     amount += deed.Commodity.Amount;
+                }
             }
 
             return amount;
@@ -32,12 +41,21 @@ namespace Server.Items
             int amount = cont.GetAmount(types, recurse);
 
             Item[] deeds = cont.FindItemsByType(typeof(CommodityDeed), recurse);
-            foreach (CommodityDeed deed in deeds)
+
+            for (var index = 0; index < deeds.Length; index++)
             {
+                var item = deeds[index];
+                var deed = (CommodityDeed) item;
+
                 if (deed.Commodity == null)
-                    continue;
-                foreach (Type type in types)
                 {
+                    continue;
+                }
+
+                for (var i = 0; i < types.Length; i++)
+                {
+                    Type type = types[i];
+
                     if (deed.Commodity.GetType() == type)
                     {
                         amount += deed.Commodity.Amount;
@@ -54,8 +72,11 @@ namespace Server.Items
             int left = amount;
 
             Item[] items = cont.FindItemsByType(type, recurse);
-            foreach (Item item in items)
+
+            for (var index = 0; index < items.Length; index++)
             {
+                Item item = items[index];
+
                 if (item.Amount <= left)
                 {
                     left -= item.Amount;
@@ -70,15 +91,27 @@ namespace Server.Items
             }
 
             if (!includeDeeds)
+            {
                 return amount - left;
+            }
 
             Item[] deeds = cont.FindItemsByType(typeof(CommodityDeed), recurse);
-            foreach (CommodityDeed deed in deeds)
+
+            for (var index = 0; index < deeds.Length; index++)
             {
+                var item = deeds[index];
+                var deed = (CommodityDeed) item;
+
                 if (deed.Commodity == null)
+                {
                     continue;
+                }
+
                 if (deed.Commodity.GetType() != type)
+                {
                     continue;
+                }
+
                 if (deed.Commodity.Amount <= left)
                 {
                     left -= deed.Commodity.Amount;
@@ -104,10 +137,9 @@ namespace Server.Items
         {
             Weight = 1.0;
             Hue = 0x47;
+            LootType = LootType.Blessed;
 
             Commodity = commodity;
-
-            LootType = LootType.Blessed;
         }
 
         [Constructable]
@@ -135,20 +167,20 @@ namespace Server.Items
             {
             	if (c.Description.Number > 0)
 	            {
-	                list.Add(1115599, string.Format("{0}\t#{1}", Commodity.Amount, c.Description.Number));
+	                list.Add(1115599, $"{Commodity.Amount}\t#{c.Description.Number}");
 	            }
 	            else if (c.Description.String != null)
 	            {
-	                list.Add(1115599, string.Format("{0}\t{1}", Commodity.Amount, c.Description.String));
+	                list.Add(1115599, $"{Commodity.Amount}\t{c.Description.String}");
 	            }
 	            else
 	            {
-	                list.Add(1115599, string.Format("{0}\t#{1}", Commodity.Amount, Commodity.LabelNumber));
+	                list.Add(1115599, $"{Commodity.Amount}\t#{Commodity.LabelNumber}");
 	            }
             }
             else
             {
-                list.Add(1115599, string.Format("{0}\t#{1}", Commodity.Amount, Commodity.LabelNumber));
+                list.Add(1115599, $"{Commodity.Amount}\t#{Commodity.LabelNumber}");
             }
         }
 
@@ -181,21 +213,9 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             Commodity = reader.ReadItem();
-
-            switch (version)
-            {
-                case 0:
-                    {
-                        if (Commodity != null)
-                        {
-                            Hue = 0x592;
-                        }
-                        break;
-                    }
-            }
         }
 
         public override void OnDelete()
@@ -299,7 +319,9 @@ namespace Server.Items
             protected override void OnTarget(Mobile from, object targeted)
             {
                 if (m_Deed.Deleted)
+                {
                     return;
+                }
 
                 int number;
 
@@ -311,12 +333,9 @@ namespace Server.Items
                 {
                     BankBox box = from.FindBankNoCreate();
                     CommodityDeedBox cox = CommodityDeedBox.Find(m_Deed);
-                    GalleonHold hold = item.RootParent as GalleonHold;
 
                     // Veteran Rewards mods
-                    if (box != null && m_Deed.IsChildOf(box) && item.IsChildOf(box) ||
-                        (cox != null && cox.IsSecure && item.IsChildOf(cox)) ||
-                        hold != null)
+                    if (box != null && m_Deed.IsChildOf(box) && item.IsChildOf(box) || cox != null && cox.IsSecure && item.IsChildOf(cox) || item.RootParent is GalleonHold)
                     {
                         if (m_Deed.SetCommodity(item))
                         {

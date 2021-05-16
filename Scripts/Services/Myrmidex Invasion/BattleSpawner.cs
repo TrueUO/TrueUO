@@ -1111,9 +1111,7 @@ namespace Server.Engines.MyrmidexInvasion
 
                 for (int j = 0; j < c; j++)
                 {
-                    BaseCreature bc = reader.ReadMobile() as BaseCreature;
-
-                    if (bc != null)
+                    if (reader.ReadMobile() is BaseCreature bc)
                     {
                         MyrmidexTeam[wave].Add(bc);
                         //AssignNavpoints(bc, Allegiance.Myrmidex);
@@ -1131,9 +1129,7 @@ namespace Server.Engines.MyrmidexInvasion
 
                 for (int j = 0; j < c; j++)
                 {
-                    BaseCreature bc = reader.ReadMobile() as BaseCreature;
-
-                    if (bc != null)
+                    if (reader.ReadMobile() is BaseCreature bc)
                     {
                         TribeTeam[wave].Add(bc);
                         //AssignNavpoints(bc, Allegiance.Tribes);

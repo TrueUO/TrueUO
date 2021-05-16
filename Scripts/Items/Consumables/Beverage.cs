@@ -1188,38 +1188,30 @@ namespace Server.Items
             {
                 egg.Pour(from, this);
             }
-            else if (targ is AddonComponent addonComponent &&
-                     (addonComponent.Addon is WaterVatEast || addonComponent.Addon is WaterVatSouth) &&
+            else if (targ is AddonComponent addonComponent && (addonComponent.Addon is WaterVatEast || addonComponent.Addon is WaterVatSouth) &&
                      Content == BeverageType.Water)
             {
-                PlayerMobile player = from as PlayerMobile;
-
-                if (player != null)
+                if (from is PlayerMobile player && player.Quest is SolenMatriarchQuest qs)
                 {
-                    SolenMatriarchQuest qs = player.Quest as SolenMatriarchQuest;
+                    QuestObjective obj = qs.FindObjective(typeof(GatherWaterObjective));
 
-                    if (qs != null)
+                    if (obj != null && !obj.Completed)
                     {
-                        QuestObjective obj = qs.FindObjective(typeof(GatherWaterObjective));
+                        BaseAddon vat = addonComponent.Addon;
 
-                        if (obj != null && !obj.Completed)
+                        if (vat.X > 5784 && vat.X < 5814 && vat.Y > 1903 && vat.Y < 1934 && (qs.RedSolen && vat.Map == Map.Trammel || !qs.RedSolen && vat.Map == Map.Felucca))
                         {
-                            BaseAddon vat = addonComponent.Addon;
-
-                            if (vat.X > 5784 && vat.X < 5814 && vat.Y > 1903 && vat.Y < 1934 && (qs.RedSolen && vat.Map == Map.Trammel || !qs.RedSolen && vat.Map == Map.Felucca))
+                            if (obj.CurProgress + Quantity > obj.MaxProgress)
                             {
-                                if (obj.CurProgress + Quantity > obj.MaxProgress)
-                                {
-                                    int delta = obj.MaxProgress - obj.CurProgress;
+                                int delta = obj.MaxProgress - obj.CurProgress;
 
-                                    Quantity -= delta;
-                                    obj.CurProgress = obj.MaxProgress;
-                                }
-                                else
-                                {
-                                    obj.CurProgress += Quantity;
-                                    Quantity = 0;
-                                }
+                                Quantity -= delta;
+                                obj.CurProgress = obj.MaxProgress;
+                            }
+                            else
+                            {
+                                obj.CurProgress += Quantity;
+                                Quantity = 0;
                             }
                         }
                     }
@@ -1280,10 +1272,10 @@ namespace Server.Items
 
             for (int i = 0; i < items.Length; ++i)
             {
-                BaseBeverage bev = items[i] as BaseBeverage;
-
-                if (bev != null && bev.Content == content && !bev.IsEmpty)
+                if (items[i] is BaseBeverage bev && bev.Content == content && !bev.IsEmpty)
+                {
                     total += bev.Quantity;
+                }
             }
 
             if (total >= quantity)

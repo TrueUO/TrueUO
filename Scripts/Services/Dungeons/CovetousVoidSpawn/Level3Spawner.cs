@@ -303,9 +303,7 @@ namespace Server.Engines.VoidPool
 
                 for (int i = 0; i < MaxCount; i++)
                 {
-                    BaseCreature bc = Activator.CreateInstance(types[Utility.Random(types.Length)], Utility.RandomMinMax(5, 15), false) as BaseCreature;
-
-                    if (bc != null)
+                    if (Activator.CreateInstance(types[Utility.Random(types.Length)], Utility.RandomMinMax(5, 15), false) is BaseCreature bc)
                     {
                         Rectangle2D rec = Bounds[Utility.Random(Bounds.Length)];
                         Point3D p = Point3D.Zero;
