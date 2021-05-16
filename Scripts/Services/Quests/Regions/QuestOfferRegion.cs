@@ -15,16 +15,17 @@ namespace Server.Engines.Quests
         }
 
         public Type Quest => m_Quest;
+
         public override void OnEnter(Mobile m)
         {
             base.OnEnter(m);
 
             if (m_Quest == null)
+            {
                 return;
+            }
 
-            PlayerMobile player = m as PlayerMobile;
-
-            if (player != null && player.Quest == null && QuestSystem.CanOfferQuest(m, m_Quest))
+            if (m is PlayerMobile player && player.Quest == null && QuestSystem.CanOfferQuest(m, m_Quest))
             {
                 try
                 {

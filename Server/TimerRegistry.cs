@@ -27,9 +27,7 @@ namespace Server
                         Console.WriteLine("Delay/Interval: {0}", kvp.Value[i].Interval);
                         Console.WriteLine("Timer Priority: {0}", kvp.Value[i].Priority);
 
-                        var dic = kvp.Value[i].GetType().GetProperty("Registry").GetValue(kvp.Value[i], null) as IDictionary;
-
-                        if (dic != null)
+                        if (kvp.Value[i].GetType().GetProperty("Registry")?.GetValue(kvp.Value[i], null) is IDictionary dic)
                         {
                             elements += dic.Count;
                         }
@@ -119,7 +117,7 @@ namespace Server
             }
             else if (Debug)
             {
-                Console.WriteLine("Instnace already exists in the timer registry!");
+                Console.WriteLine("Instance already exists in the timer registry!");
             }
         }
 

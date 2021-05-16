@@ -20,29 +20,30 @@ namespace Server.Spells.Spellweaving
 
         public static double GetDispellBonus(Mobile m)
         {
-            EmpowermentInfo info = m_Table[m] as EmpowermentInfo;
-
-            if (info != null)
+            if (m_Table[m] is EmpowermentInfo info)
+            {
                 return 10.0 * info.Focus;
+            }
+
             return 0.0;
         }
 
         public static int GetSpellBonus(Mobile m, bool playerVsPlayer)
         {
-            EmpowermentInfo info = m_Table[m] as EmpowermentInfo;
-
-            if (info != null)
+            if (m_Table[m] is EmpowermentInfo info)
+            {
                 return info.Bonus + (playerVsPlayer ? info.Focus : 0);
+            }
 
             return 0;
         }
 
         public static void AddHealBonus(Mobile m, ref int toHeal)
         {
-            EmpowermentInfo info = m_Table[m] as EmpowermentInfo;
-
-            if (info != null)
+            if (m_Table[m] is EmpowermentInfo info)
+            {
                 toHeal = (int)Math.Floor((1 + (10 + info.Bonus) / 100.0) * toHeal);
+            }
         }
 
         public static void RemoveBonus(Mobile m)
