@@ -90,9 +90,7 @@ namespace Server.Engines.TombOfKings
                 Mobile m = (Mobile)Activator.CreateInstance(creatureType);
                 m.MoveToWorld(Map.GetSpawnPosition(Location, 4), Map);
 
-                BaseCreature bc = m as BaseCreature;
-
-                if (bc != null)
+                if (m is BaseCreature bc)
                 {
                     bc.RangeHome = 5;
                     bc.Home = Location;

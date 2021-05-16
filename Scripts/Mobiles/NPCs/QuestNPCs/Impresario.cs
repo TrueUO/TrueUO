@@ -53,21 +53,18 @@ namespace Server.Engines.Quests.Collector
         {
             QuestSystem qs = player.Quest;
 
-            if (qs is CollectorQuest)
+            if (qs is CollectorQuest && qs.FindObjective(typeof(FindSheetMusicObjective)) is FindSheetMusicObjective obj && !obj.Completed)
             {
-                if (qs.FindObjective(typeof(FindSheetMusicObjective)) is FindSheetMusicObjective obj && !obj.Completed)
-                {
-                    Direction = GetDirectionTo(player);
+                Direction = GetDirectionTo(player);
 
-                    if (obj.IsInRightTheater())
-                    {
-                        player.CloseGump(typeof(SheetMusicOfferGump));
-                        player.SendGump(new SheetMusicOfferGump());
-                    }
-                    else
-                    {
-                        qs.AddConversation(new NoSheetMusicConversation());
-                    }
+                if (obj.IsInRightTheater())
+                {
+                    player.CloseGump(typeof(SheetMusicOfferGump));
+                    player.SendGump(new SheetMusicOfferGump());
+                }
+                else
+                {
+                    qs.AddConversation(new NoSheetMusicConversation());
                 }
             }
         }

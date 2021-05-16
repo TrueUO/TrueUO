@@ -85,9 +85,7 @@ namespace Server.Mobiles
 
         public override bool OnDragDrop(Mobile from, Item dropped)
         {
-            PlayerMobile pm = from as PlayerMobile;
-
-            if (pm != null)
+            if (from is PlayerMobile pm)
             {
                 if (pm.ExploringTheDeepQuest < ExploringTheDeepQuestChain.CusteauPerron)
                 {

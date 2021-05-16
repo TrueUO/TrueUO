@@ -8,6 +8,7 @@ namespace Server.Mobiles
     public class MeerEternal : BaseCreature
     {
         private DateTime m_NextAbilityTime;
+
         [Constructable]
         public MeerEternal()
             : base(AIType.AI_Spellweaving, FightMode.Aggressor, 10, 1, 0.2, 0.4)
@@ -55,6 +56,7 @@ namespace Server.Mobiles
         public override Poison PoisonImmune => Poison.Lethal;
         public override int TreasureMapLevel => 5;
         public override bool InitialInnocent => true;
+
         public override void GenerateLoot()
         {
             AddLoot(LootPack.FilthyRich, 2);
@@ -80,32 +82,27 @@ namespace Server.Mobiles
 
         public override void OnThink()
         {
-            if (DateTime.UtcNow >= m_NextAbilityTime)
+            if (DateTime.UtcNow >= m_NextAbilityTime && Combatant is Mobile combatant && combatant.Map == Map && combatant.InRange(this, 12))
             {
-                Mobile combatant = Combatant as Mobile;
+                m_NextAbilityTime = DateTime.UtcNow + TimeSpan.FromSeconds(Utility.RandomMinMax(10, 15));
 
-                if (combatant != null && combatant.Map == Map && combatant.InRange(this, 12))
+                int ability = Utility.Random(4);
+
+                switch (ability)
                 {
-                    m_NextAbilityTime = DateTime.UtcNow + TimeSpan.FromSeconds(Utility.RandomMinMax(10, 15));
-
-                    int ability = Utility.Random(4);
-
-                    switch (ability)
-                    {
-                        case 0:
-                            DoFocusedLeech(combatant, "Thine essence will fill my withering body with strength!");
-                            break;
-                        case 1:
-                            DoFocusedLeech(combatant, "I rebuke thee, worm, and cleanse thy vile spirit of its tainted blood!");
-                            break;
-                        case 2:
-                            DoFocusedLeech(combatant, "I devour your life's essence to strengthen my resolve!");
-                            break;
-                        case 3:
-                            DoAreaLeech();
-                            break;
-                            // TODO: Resurrect ability
-                    }
+                    case 0:
+                        DoFocusedLeech(combatant, "Thine essence will fill my withering body with strength!");
+                        break;
+                    case 1:
+                        DoFocusedLeech(combatant, "I rebuke thee, worm, and cleanse thy vile spirit of its tainted blood!");
+                        break;
+                    case 2:
+                        DoFocusedLeech(combatant, "I devour your life's essence to strengthen my resolve!");
+                        break;
+                    case 3:
+                        DoAreaLeech();
+                        break;
+                    // TODO: Resurrect ability
                 }
             }
 
