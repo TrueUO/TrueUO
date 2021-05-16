@@ -107,7 +107,7 @@ namespace Server.Items
                 _SlowEffects[m].Stop();
             }
 
-            _SlowEffects[m] = Timer.DelayCall(TimeSpan.FromMinutes(2), mob => RemoveEffects(mob), m);
+            _SlowEffects[m] = Timer.DelayCall(TimeSpan.FromMinutes(2), RemoveEffects, m);
 
             m.FixedParticles(0x36B0, 1, 14, 9915, 1109, 0, EffectLayer.Head);
 

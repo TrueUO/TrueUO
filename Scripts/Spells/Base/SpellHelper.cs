@@ -1717,7 +1717,7 @@ namespace Server.Spells
 
                     transformSpell.DoEffect(caster);
 
-                    TimerRegistry.Register(_TimerID, transformSpell, TimeSpan.FromSeconds(transformSpell.TickRate), TimeSpan.FromSeconds(transformSpell.TickRate), false, transSpell => OnTick(transSpell));
+                    TimerRegistry.Register(_TimerID, transformSpell, TimeSpan.FromSeconds(transformSpell.TickRate), TimeSpan.FromSeconds(transformSpell.TickRate), false, OnTick);
 
                     AddContext(caster, new TransformContext(mods, ourType, transformSpell));
                     return true;

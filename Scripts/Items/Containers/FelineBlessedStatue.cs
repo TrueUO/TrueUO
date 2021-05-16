@@ -11,7 +11,7 @@ namespace Server.Items
 
         public override int LabelNumber => 1075494; // Blessed Statue
 
-        private static readonly Type[] m_ResourceTypes = new Type[]
+        private static readonly Type[] m_ResourceTypes =
         {
             typeof(BlackPearl),
             typeof(Bloodmoss),
@@ -88,7 +88,7 @@ namespace Server.Items
                 NextReagentTime = DateTime.UtcNow + TimeSpan.FromSeconds(10);
             }
 
-            TimerRegistry.Register(TimerID, this, NextReagentTime - DateTime.UtcNow, false, statue => OnTick(statue));
+            TimerRegistry.Register(TimerID, this, NextReagentTime - DateTime.UtcNow, false, OnTick);
         }
 
         public void StopTimer()

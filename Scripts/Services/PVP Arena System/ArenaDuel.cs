@@ -683,10 +683,7 @@ namespace Server.Engines.ArenaSystem
 
                     PVPArenaSystem.SendMessage(pm, 1115975); // Congratulations! You have won the duel!
 
-                    Timer.DelayCall(TimeSpan.FromSeconds(1), player =>
-                        {
-                            DoWinEffects(player);
-                        }, pm);
+                    Timer.DelayCall(TimeSpan.FromSeconds(1), DoWinEffects, pm);
                 }
             }
 
@@ -934,18 +931,21 @@ namespace Server.Engines.ArenaSystem
         public bool IsEnemy(Mobile one, Mobile two)
         {
             if (InPreFight)
+            {
                 return false;
+            }
 
             if (one is BaseCreature creature)
+            {
                 one = creature.GetMaster();
+            }
 
             if (two is BaseCreature baseCreature)
+            {
                 two = baseCreature.GetMaster();
+            }
 
-            PlayerMobile pm1 = one as PlayerMobile;
-            PlayerMobile pm2 = two as PlayerMobile;
-
-            if (pm1 != null && pm2 != null)
+            if (one is PlayerMobile pm1 && two is PlayerMobile pm2)
             {
                 ArenaTeam team1 = GetTeam(pm1);
                 ArenaTeam team2 = GetTeam(pm2);
@@ -959,18 +959,21 @@ namespace Server.Engines.ArenaSystem
         public bool IsFriendly(Mobile one, Mobile two)
         {
             if (InPreFight)
+            {
                 return false;
+            }
 
             if (one is BaseCreature creature)
+            {
                 one = creature.GetMaster();
+            }
 
             if (two is BaseCreature baseCreature)
+            {
                 two = baseCreature.GetMaster();
+            }
 
-            PlayerMobile pm1 = one as PlayerMobile;
-            PlayerMobile pm2 = two as PlayerMobile;
-
-            if (pm1 != null && pm2 != null)
+            if (one is PlayerMobile pm1 && two is PlayerMobile pm2)
             {
                 ArenaTeam team1 = GetTeam(pm1);
                 ArenaTeam team2 = GetTeam(pm2);
@@ -1054,10 +1057,10 @@ namespace Server.Engines.ArenaSystem
             count = reader.ReadInt();
             for (int i = 0; i < count; i++)
             {
-                PlayerMobile pm = reader.ReadMobile() as PlayerMobile;
-
-                if (pm != null)
+                if (reader.ReadMobile() is PlayerMobile pm)
+                {
                     Warned.Add(pm);
+                }
             }
         }
 

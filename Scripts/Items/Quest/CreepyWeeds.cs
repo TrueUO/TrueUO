@@ -14,10 +14,7 @@ namespace Server.Items
             Weight = 1;
             Movable = false;
 
-            Timer.DelayCall(TimeSpan.FromMinutes(10.0), delegate
-            {
-                Delete();
-            });
+            Timer.DelayCall(TimeSpan.FromMinutes(10.0), Delete);
         }
 
         public CreepyWeeds(Serial serial)

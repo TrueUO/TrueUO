@@ -221,7 +221,8 @@ namespace Server.Items
                 }
             }
 
-            Timer.DelayCall(TimeSpan.FromSeconds(1), () => ClearContainer());
+            Timer.DelayCall(TimeSpan.FromSeconds(1), ClearContainer);
+
             KeyValidation = null;
         }
 

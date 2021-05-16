@@ -414,10 +414,7 @@ namespace Server.Engines.Blackthorn
         {
             OnEndInvasion();
 
-            Timer.DelayCall(TimeSpan.FromMinutes(2), () =>
-                {
-                    BeginInvasion();
-                });
+            Timer.DelayCall(TimeSpan.FromMinutes(2), BeginInvasion);
         }
 
         public void OnEndInvasion()

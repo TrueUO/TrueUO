@@ -174,9 +174,10 @@ namespace Server.Items
 
             // Bedrolls Spawn
 
-            foreach (BedrollEntry entry in m_Entries)
+            for (var index = 0; index < m_Entries.Length; index++)
             {
-                WrongBedrollBase item = (WrongBedrollBase)Activator.CreateInstance(entry.Type);
+                BedrollEntry entry = m_Entries[index];
+                WrongBedrollBase item = (WrongBedrollBase) Activator.CreateInstance(entry.Type);
 
                 item.Movable = false;
                 item.MoveToWorld(entry.Location, Map);
@@ -238,13 +239,23 @@ namespace Server.Items
         {
             if (Bedrolls != null)
             {
-                Bedrolls.ForEach(f => f.Delete());
+                for (var index = 0; index < Bedrolls.Count; index++)
+                {
+                    var f = Bedrolls[index];
+                    f.Delete();
+                }
+
                 Bedrolls.Clear();
             }
 
             if (MysteriousTunnels != null)
             {
-                MysteriousTunnels.ForEach(f => f.Delete());
+                for (var index = 0; index < MysteriousTunnels.Count; index++)
+                {
+                    var f = MysteriousTunnels[index];
+                    f.Delete();
+                }
+
                 MysteriousTunnels.Clear();
             }
         }
@@ -278,14 +289,14 @@ namespace Server.Items
 
             if (Bedrolls != null)
             {
-                Bedrolls.ForEach(x => writer.Write(x));
+                Bedrolls.ForEach(writer.Write);
             }
 
             writer.Write(MysteriousTunnels == null ? 0 : MysteriousTunnels.Count);
 
             if (MysteriousTunnels != null)
             {
-                MysteriousTunnels.ForEach(y => writer.Write(y));
+                MysteriousTunnels.ForEach(writer.Write);
             }
         }
 
@@ -313,19 +324,19 @@ namespace Server.Items
             int bedrollcount = reader.ReadInt();
             for (int x = 0; x < bedrollcount; x++)
             {
-                WrongBedrollBase wb = reader.ReadItem() as WrongBedrollBase;
-
-                if (wb != null)
+                if (reader.ReadItem() is WrongBedrollBase wb)
+                {
                     Bedrolls.Add(wb);
+                }
             }
 
             int mysteriouscount = reader.ReadInt();
             for (int y = 0; y < mysteriouscount; y++)
             {
-                MysteriousTunnel mt = reader.ReadItem() as MysteriousTunnel;
-
-                if (mt != null)
+                if (reader.ReadItem() is MysteriousTunnel mt)
+                {
                     MysteriousTunnels.Add(mt);
+                }
             }
 
             if (version == 0)

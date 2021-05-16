@@ -177,15 +177,17 @@ namespace Server.Mobiles
 
             List<ValuedProperty> cat = new List<ValuedProperty>();
 
-            ll.ForEach(x =>
+            for (var index = 0; index < ll.Count; index++)
             {
+                var x = ll[index];
+
                 object CI = Activator.CreateInstance(Type.GetType(x.FullName));
 
                 if (CI is ValuedProperty p && (p.Matches(item) || p.AlwaysVisible))
                 {
                     cat.Add(p);
                 }
-            });
+            }
 
             return cat;
         }
@@ -208,15 +210,17 @@ namespace Server.Mobiles
 
             List<ValuedProperty> cat = new List<ValuedProperty>();
 
-            ll.ForEach(x =>
+            for (var index = 0; index < ll.Count; index++)
             {
+                var x = ll[index];
+
                 object CI = Activator.CreateInstance(Type.GetType(x.FullName));
 
                 if (CI is ValuedProperty p && (p.Matches(item) || visible && p.AlwaysVisible))
                 {
                     cat.Add(p);
                 }
-            });
+            }
 
             return cat.OrderByDescending(x => x.Hue).ToList();
         }
@@ -239,15 +243,17 @@ namespace Server.Mobiles
 
             List<ValuedProperty> cat = new List<ValuedProperty>();
 
-            ll.ForEach(x =>
+            for (var index = 0; index < ll.Count; index++)
             {
+                var x = ll[index];
+
                 object CI = Activator.CreateInstance(Type.GetType(x.FullName));
 
                 if (CI is ValuedProperty p && p.Matches(item) && p.IsMagical)
                 {
                     cat.Add(p);
                 }
-            });
+            }
 
             return cat;
         }
@@ -291,15 +297,17 @@ namespace Server.Mobiles
 
             if (house != null)
             {
-                List<Item> toAdd = new List<Item>(mobile.Items.Where(i => IsEquipped(i)));
+                List<Item> toAdd = new List<Item>(mobile.Items.Where(IsEquipped));
 
                 if (mobile.Backpack != null)
                 {
                     toAdd.AddRange(mobile.Backpack.Items);
                 }
 
-                foreach (Item item in toAdd)
+                for (var index = 0; index < toAdd.Count; index++)
                 {
+                    Item item = toAdd[index];
+
                     house.DropToMovingCrate(item);
                 }
 
@@ -522,16 +530,38 @@ namespace Server.Mobiles
 
         public void SwitchClothes(Mobile from, Mobile m)
         {
-            List<Item> MobileItems = from.Items.Where(x => IsEquipped(x)).ToList();
-            List<Item> MannequinItems = m.Items.Where(x => IsEquipped(x)).ToList();
+            List<Item> MobileItems = new List<Item>();
+            foreach (var item in from.Items.Where(IsEquipped))
+            {
+                MobileItems.Add(item);
+            }
 
-            MannequinItems.ForEach(x => m.RemoveItem(x));
-            MobileItems.ForEach(x => from.RemoveItem(x));
+            List<Item> MannequinItems = new List<Item>();
+            foreach (var item in m.Items.Where(IsEquipped))
+            {
+                MannequinItems.Add(item);
+            }
+
+            for (var index = 0; index < MannequinItems.Count; index++)
+            {
+                var mannequinItem = MannequinItems[index];
+
+                m.RemoveItem(mannequinItem);
+            }
+
+            for (var index = 0; index < MobileItems.Count; index++)
+            {
+                var mobileItem = MobileItems[index];
+
+                from.RemoveItem(mobileItem);
+            }
 
             List<Item> ExceptItems = new List<Item>();
 
-            MannequinItems.ForEach(x =>
+            for (var index = 0; index < MannequinItems.Count; index++)
             {
+                var x = MannequinItems[index];
+
                 if (x.CanEquip(from))
                 {
                     from.EquipItem(x);
@@ -540,10 +570,12 @@ namespace Server.Mobiles
                 {
                     ExceptItems.Add(x);
                 }
-            });
+            }
 
-            MobileItems.ForEach(x =>
+            for (var index = 0; index < MobileItems.Count; index++)
             {
+                var x = MobileItems[index];
+
                 if (x.CanEquip(m))
                 {
                     m.EquipItem(x);
@@ -552,11 +584,17 @@ namespace Server.Mobiles
                 {
                     ExceptItems.Add(x);
                 }
-            });
+            }
 
             if (ExceptItems.Count > 0)
             {
-                ExceptItems.ForEach(x => from.AddToBackpack(x));
+                for (var index = 0; index < ExceptItems.Count; index++)
+                {
+                    var x = ExceptItems[index];
+
+                    from.AddToBackpack(x);
+                }
+
                 from.SendLocalizedMessage(1151641, ExceptItems.Count.ToString(), 0x22); // ~1_COUNT~ items could not be swapped between you and the mannequin. These items are now in your backpack, or on the floor at your feet if your backpack is too full to hold them.
             }
 
@@ -603,8 +641,19 @@ namespace Server.Mobiles
 
             public override void OnClick()
             {
-                List<Item> mannequinItems = _Mannequin.Items.Where(x => IsEquipped(x)).ToList();
-                mannequinItems.ForEach(x => _From.AddToBackpack(x));
+                List<Item> mannequinItems = new List<Item>();
+
+                foreach (var item in _Mannequin.Items.Where(IsEquipped))
+                {
+                    mannequinItems.Add(item);
+                }
+
+                for (var index = 0; index < mannequinItems.Count; index++)
+                {
+                    var x = mannequinItems[index];
+
+                    _From.AddToBackpack(x);
+                }
 
                 _Mannequin.Delete();
 
@@ -635,13 +684,11 @@ namespace Server.Mobiles
                 case 1:
                     {
                         Description = reader.ReadString();
-
                         goto case 0;
                     }
                 case 0:
                     {
                         Owner = reader.ReadMobile();
-
                         break;
                     }
             }

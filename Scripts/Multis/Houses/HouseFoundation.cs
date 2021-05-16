@@ -245,9 +245,7 @@ namespace Server.Multis
                 {
                     for (int j = 1; j <= Fixtures.Count; ++j)
                     {
-                        HouseTeleporter check = Fixtures[(i + j) % Fixtures.Count] as HouseTeleporter;
-
-                        if (check != null && check.ItemID == tp.ItemID)
+                        if (Fixtures[(i + j) % Fixtures.Count] is HouseTeleporter check && check.ItemID == tp.ItemID)
                         {
                             tp.Target = check;
                             break;
@@ -257,7 +255,9 @@ namespace Server.Multis
                 else if (fixture is BaseHouseDoor door)
                 {
                     if (door.Link != null)
+                    {
                         continue;
+                    }
 
                     DoorFacing linkFacing;
                     int xOffset, yOffset;
@@ -329,9 +329,7 @@ namespace Server.Multis
 
                     for (int j = i + 1; j < Fixtures.Count; ++j)
                     {
-                        BaseHouseDoor check = Fixtures[j] as BaseHouseDoor;
-
-                        if (check != null && check.Link == null && check.Facing == linkFacing && check.X - door.X == xOffset && check.Y - door.Y == yOffset && check.Z == door.Z)
+                        if (Fixtures[j] is BaseHouseDoor check && check.Link == null && check.Facing == linkFacing && check.X - door.X == xOffset && check.Y - door.Y == yOffset && check.Z == door.Z)
                         {
                             check.Link = door;
                             door.Link = check;
@@ -714,37 +712,27 @@ namespace Server.Multis
                     {
                         Signpost = reader.ReadItem();
                         SignpostGraphic = reader.ReadInt();
-
                         goto case 3;
                     }
                 case 3:
                     {
                         Type = (FoundationType)reader.ReadInt();
-
                         goto case 2;
                     }
                 case 2:
                     {
                         SignHanger = reader.ReadItem();
-
                         goto case 1;
                     }
                 case 1:
                 case 0:
                     {
-                        if (version < 3)
-                            Type = FoundationType.Stone;
-
-                        if (version < 4)
-                            SignpostGraphic = 9;
-
                         LastRevision = reader.ReadInt();
                         Fixtures = reader.ReadStrongItemList();
 
                         m_Current = new DesignState(this, reader);
                         m_Design = new DesignState(this, reader);
                         m_Backup = new DesignState(this, reader);
-
                         break;
                     }
             }
@@ -1752,9 +1740,7 @@ namespace Server.Multis
 
         public static void QueryDesignDetails(NetState state, PacketReader pvSrc)
         {
-            BaseMulti multi = World.FindItem(pvSrc.ReadInt32()) as BaseMulti;
-
-            if (multi != null)
+            if (World.FindItem(pvSrc.ReadInt32()) is BaseMulti multi)
             {
                 EventSink.InvokeMultiDesignQuery(new MultiDesignQueryEventArgs(state, multi));
             }
@@ -1770,9 +1756,7 @@ namespace Server.Multis
             Mobile from = state.Mobile;
             DesignContext context = DesignContext.Find(from);
 
-            HouseFoundation foundation = multi as HouseFoundation;
-
-            if (foundation != null && from.Map == foundation.Map)
+            if (multi is HouseFoundation foundation && from.Map == foundation.Map)
             {
                 int range = foundation.GetUpdateRange(from);
 
@@ -1781,9 +1765,13 @@ namespace Server.Multis
                     DesignState stateToSend;
 
                     if (context != null && context.Foundation == foundation)
+                    {
                         stateToSend = foundation.DesignState;
+                    }
                     else
+                    {
                         stateToSend = foundation.CurrentState;
+                    }
 
                     stateToSend.SendDetailedInfoTo(state);
                 }
