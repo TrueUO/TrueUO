@@ -163,10 +163,8 @@ namespace Server.Items
         }
 
         private void DropResource()
-        {            
-            var item = Activator.CreateInstance(m_ResourceTypes[Utility.Random(m_ResourceTypes.Length)]) as Item;           
-
-            if (item != null)
+        {
+            if (Activator.CreateInstance(m_ResourceTypes[Utility.Random(m_ResourceTypes.Length)]) is Item item)
             {
                 item.Amount = Utility.RandomMinMax(10, 20);
 

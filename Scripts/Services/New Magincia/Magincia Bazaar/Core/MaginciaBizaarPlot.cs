@@ -110,10 +110,7 @@ namespace Server.Engines.NewMagincia
             if (from == m_Owner)
                 return true;
 
-            Account acct1 = from.Account as Account;
-            Account acct2 = m_Owner.Account as Account;
-
-            return acct1 != null && acct2 != null && acct1 == acct2;
+            return from.Account is Account acct1 && m_Owner.Account is Account acct2 && acct1 == acct2;
         }
 
         public void AddPlotSign()

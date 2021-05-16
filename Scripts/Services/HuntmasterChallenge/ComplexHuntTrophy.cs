@@ -128,9 +128,7 @@ namespace Server.Items
             {
                 get
                 {
-                    HuntTrophyAddon addon = Addon as HuntTrophyAddon;
-
-                    if (addon != null)
+                    if (Addon is HuntTrophyAddon addon)
                     {
                         return addon.Info;
                     }
@@ -152,9 +150,7 @@ namespace Server.Items
             {
                 base.GetProperties(list);
 
-                HuntTrophyAddon addon = Addon as HuntTrophyAddon;
-
-                if (addon != null)
+                if (Addon is HuntTrophyAddon addon)
                 {
                     list.Add(1155708, addon.Owner != null ? addon.Owner : "Unknown"); // Hunter: ~1_NAME~
                     list.Add(1155709, addon.DateKilled); // Date of Kill: ~1_DATE~

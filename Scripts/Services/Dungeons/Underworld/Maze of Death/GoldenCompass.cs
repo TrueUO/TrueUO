@@ -83,10 +83,10 @@ namespace Server.Items
         {
             base.OnDelete();
 
-            Mobile m = RootParent as Mobile;
-
-            if (m != null)
+            if (RootParent is Mobile m)
+            {
                 m.CloseGump(typeof(CompassDirectionGump));
+            }
         }
 
         public override bool OnDroppedToMobile(Mobile from, Mobile target)

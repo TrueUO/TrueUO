@@ -96,10 +96,10 @@ namespace Server.Engines.Craft
 
             if (attrs.Length > 0)
             {
-                AlterableAttribute attr = attrs[0] as AlterableAttribute;
-
-                if (attr != null && (!inherit || attr.CheckInherit(t)))
+                if (attrs[0] is AlterableAttribute attr && (!inherit || attr.CheckInherit(t)))
+                {
                     return attr;
+                }
             }
 
             return null;

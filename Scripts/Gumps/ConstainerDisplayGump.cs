@@ -149,9 +149,7 @@ namespace Server.Gumps
                     list.Add(item);
                 }
 
-                var cont = item as Container;
-
-                if (cont != null)
+                if (item is Container cont)
                 {
                     AllContents(list, cont);
                 }

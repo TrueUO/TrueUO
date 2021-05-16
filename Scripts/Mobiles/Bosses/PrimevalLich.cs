@@ -105,10 +105,10 @@ namespace Server.Mobiles
         {
             if (m_NextDiscordTime <= DateTime.UtcNow)
             {
-                Mobile target = Combatant as Mobile;
-
-                if (target != null && target.InRange(this, 8) && CanBeHarmful(target))
+                if (Combatant is Mobile target && target.InRange(this, 8) && CanBeHarmful(target))
+                {
                     Discord(target);
+                }
             }
         }
 

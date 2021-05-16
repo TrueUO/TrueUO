@@ -84,8 +84,10 @@ namespace Server.Engines.VvV
             if (Backpack == null)
                 AddItem(new Backpack());
 
-            foreach (CollectionItem item in VvVRewards.Rewards)
+            for (var index = 0; index < VvVRewards.Rewards.Count; index++)
             {
+                CollectionItem item = VvVRewards.Rewards[index];
+
                 if (item.Tooltip == 0)
                 {
                     if (Backpack.GetAmount(item.Type) > 0)
@@ -93,20 +95,24 @@ namespace Server.Engines.VvV
                         Item itm = Backpack.FindItemByType(item.Type);
 
                         if (itm is IVvVItem vItem)
+                        {
                             vItem.IsVvVItem = true;
+                        }
 
                         continue;
                     }
 
-                    Item i = Activator.CreateInstance(item.Type) as Item;
-
-                    if (i != null)
+                    if (Activator.CreateInstance(item.Type) is Item i)
                     {
                         if (i is IOwnerRestricted restricted)
+                        {
                             restricted.OwnerName = "Your Player Name";
+                        }
 
                         if (i is IVvVItem vItem)
+                        {
                             vItem.IsVvVItem = true;
+                        }
 
                         NegativeAttributes neg = RunicReforging.GetNegativeAttributes(i);
 
@@ -150,49 +156,46 @@ namespace Server.Engines.VvV
                 {
                     if (dropped is IVvVItem && from.Race == Race.Gargoyle)
                     {
-                        foreach (Type[] t in _Table)
+                        for (var index = 0; index < _Table.Length; index++)
                         {
-                            if (dropped.GetType() == t[0])
+                            Type[] t = _Table[index];
+
+                            if (dropped.GetType() == t[0] && dropped is IDurability dur && dur.MaxHitPoints == 255 && dur.HitPoints == 255)
                             {
-                                IDurability dur = dropped as IDurability;
+                                Item item = Loot.Construct(t[1]);
 
-                                if (dur != null && dur.MaxHitPoints == 255 && dur.HitPoints == 255)
+                                if (item != null)
                                 {
-                                    Item item = Loot.Construct(t[1]);
+                                    VvVRewards.OnRewardItemCreated(from, item);
 
-                                    if (item != null)
+                                    if (item is GargishCrimsonCincture cincture)
                                     {
-                                        VvVRewards.OnRewardItemCreated(from, item);
-
-                                        if (item is GargishCrimsonCincture cincture)
-                                        {
-                                            cincture.Attributes.BonusDex = 10;
-                                        }
-
-                                        if (item is GargishMaceAndShieldGlasses glasses)
-                                        {
-                                            glasses.Attributes.WeaponDamage = 10;
-                                        }
-
-                                        if (item is GargishFoldedSteelGlasses steelGlasses)
-                                        {
-                                            steelGlasses.Attributes.DefendChance = 25;
-                                        }
-
-                                        if (item is GargishWizardsCrystalGlasses crystalGlasses)
-                                        {
-                                            crystalGlasses.PhysicalBonus = 5;
-                                            crystalGlasses.FireBonus = 5;
-                                            crystalGlasses.ColdBonus = 5;
-                                            crystalGlasses.PoisonBonus = 5;
-                                            crystalGlasses.EnergyBonus = 5;
-                                        }
-
-                                        from.AddToBackpack(item);
-                                        dropped.Delete();
-
-                                        return true;
+                                        cincture.Attributes.BonusDex = 10;
                                     }
+
+                                    if (item is GargishMaceAndShieldGlasses glasses)
+                                    {
+                                        glasses.Attributes.WeaponDamage = 10;
+                                    }
+
+                                    if (item is GargishFoldedSteelGlasses steelGlasses)
+                                    {
+                                        steelGlasses.Attributes.DefendChance = 25;
+                                    }
+
+                                    if (item is GargishWizardsCrystalGlasses crystalGlasses)
+                                    {
+                                        crystalGlasses.PhysicalBonus = 5;
+                                        crystalGlasses.FireBonus = 5;
+                                        crystalGlasses.ColdBonus = 5;
+                                        crystalGlasses.PoisonBonus = 5;
+                                        crystalGlasses.EnergyBonus = 5;
+                                    }
+
+                                    from.AddToBackpack(item);
+                                    dropped.Delete();
+
+                                    return true;
                                 }
                             }
                         }
@@ -221,15 +224,7 @@ namespace Server.Engines.VvV
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
-
-            if (version == 0)
-            {
-                Timer.DelayCall(() =>
-                    {
-                        ColUtility.SafeDelete(Backpack.Items, null);
-                    });
-            }
+            reader.ReadInt();
 
             Timer.DelayCall(TimeSpan.FromSeconds(5), StockInventory);
         }

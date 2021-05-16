@@ -95,14 +95,16 @@ namespace Server.Engines.Shadowguard
         {
             foreach (Item item in Region.GetEnumeratedItems())
             {
-                Corpse corpse = item as Corpse;
-
-                if (corpse != null)
+                if (item is Corpse corpse)
                 {
                     if (corpse.Owner is PlayerMobile)
+                    {
                         corpse.MoveToWorld(Controller.KickLocation, Map.TerMur);
+                    }
                     else
+                    {
                         corpse.Delete();
+                    }
                 }
                 else if (item is BaseAddon addon)
                 {
