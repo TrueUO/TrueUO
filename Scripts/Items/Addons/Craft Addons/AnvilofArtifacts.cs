@@ -6,7 +6,6 @@ using Server.Engines.Craft;
 using Server.Mobiles;
 
 using System.Collections.Generic;
-using System.Linq;
 using Server.ContextMenus;
 
 namespace Server.Items
@@ -454,18 +453,35 @@ namespace Server.Items
                         User.SendLocalizedMessage(1159448); // The magical aura that surrounded you dissipates and you feel that your exceptional item resist chances have returned to normal.
                     }
                 }
-                else if (Addon.UsesRemaining > 0 && Entry.Exceptional.Sum(x => x.Value) == maxexp && Entry.Runic.Sum(x => x.Value) == maxrunic)
-                {
-                    Entry.Anvil = Addon;
-                    Entry.Anvil.UsesRemaining--;
-
-                    User.SendLocalizedMessage(1159449); // A magical aura surrounds you and you feel that your next attempt to craft an exceptional piece of armor will have favorable bonus resists.
-                    Effects.SendPacket(User.Location, User.Map, new ParticleEffect(EffectType.FixedFrom, User.Serial, Server.Serial.Zero, 0x37C4, User.Location, User.Location, 1, 35, false, false, 1161, 0, 2, 0, 1, User.Serial, 209, 0));
-                    User.PlaySound(580);
-                }
                 else
                 {
-                    Timer.DelayCall(TimeSpan.FromSeconds(0.2), () => Refresh());
+                    int exceptionalSum = 0;
+
+                    foreach (var x in Entry.Exceptional)
+                    {
+                        exceptionalSum += x.Value;
+                    }
+
+                    int runicSum = 0;
+
+                    foreach (var x in Entry.Runic)
+                    {
+                        runicSum += x.Value;
+                    }
+
+                    if (Addon.UsesRemaining > 0 && exceptionalSum == maxexp && runicSum == maxrunic)
+                    {
+                        Entry.Anvil = Addon;
+                        Entry.Anvil.UsesRemaining--;
+
+                        User.SendLocalizedMessage(1159449); // A magical aura surrounds you and you feel that your next attempt to craft an exceptional piece of armor will have favorable bonus resists.
+                        Effects.SendPacket(User.Location, User.Map, new ParticleEffect(EffectType.FixedFrom, User.Serial, Server.Serial.Zero, 0x37C4, User.Location, User.Location, 1, 35, false, false, 1161, 0, 2, 0, 1, User.Serial, 209, 0));
+                        User.PlaySound(580);
+                    }
+                    else
+                    {
+                        Timer.DelayCall(TimeSpan.FromSeconds(0.2), () => Refresh());
+                    }
                 }
             }
         }

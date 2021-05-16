@@ -1164,9 +1164,7 @@ namespace Server.Items
 
                 int propertyCount = propertyCounts[Utility.Random(propertyCounts.Length)];
 
-                GuaranteedSpellbookImprovementTalisman talisman = from.FindItemOnLayer(Layer.Talisman) as GuaranteedSpellbookImprovementTalisman;
-
-                if (talisman != null && talisman.Charges > 0)
+                if (from.FindItemOnLayer(Layer.Talisman) is GuaranteedSpellbookImprovementTalisman talisman && talisman.Charges > 0)
                 {
                     propertyCount++;
                     talisman.Charges--;

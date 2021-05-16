@@ -99,9 +99,7 @@ namespace Server.Engines.VoidPool
 
         public void RemoveFromSpawner(ISpawnable spawnable)
         {
-            BaseCreature bc = spawnable as BaseCreature;
-
-            if (bc != null)
+            if (spawnable is BaseCreature bc)
             {
                 SpawnEntry entry = FindEntryFor(bc);
 
@@ -112,10 +110,7 @@ namespace Server.Engines.VoidPool
 
                     if (entry.CurrentCount == 0)
                     {
-                        Timer.DelayCall(TimeSpan.FromMinutes(Utility.RandomMinMax(2, 5)), en =>
-                            {
-                                Reset(en);
-                            }, entry);
+                        Timer.DelayCall(TimeSpan.FromMinutes(Utility.RandomMinMax(2, 5)), Reset, entry);
                     }
 
                     List<DamageStore> list = bc.GetLootingRights();
@@ -365,9 +360,7 @@ namespace Server.Engines.VoidPool
 
                 for (int i = 0; i < count; i++)
                 {
-                    BaseCreature bc = reader.ReadMobile() as BaseCreature;
-
-                    if (bc != null)
+                    if (reader.ReadMobile() is BaseCreature bc)
                     {
                         bc.Spawner = Spawner;
                         Spawn.Add(bc);

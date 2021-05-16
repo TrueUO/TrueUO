@@ -505,8 +505,19 @@ namespace Server.Mobiles
                     return;
                 }
 
-                List<Item> mannequinItems = _Mannequin.Items.Where(x => IsEquipped(x)).ToList();
-                mannequinItems.ForEach(x => _From.AddToBackpack(x));
+                List<Item> mannequinItems = new List<Item>();
+
+                foreach (var item in _Mannequin.Items.Where(IsEquipped))
+                {
+                    mannequinItems.Add(item);
+                }
+
+                for (var index = 0; index < mannequinItems.Count; index++)
+                {
+                    var x = mannequinItems[index];
+
+                    _From.AddToBackpack(x);
+                }
 
                 _Mannequin.Delete();
 
@@ -674,13 +685,26 @@ namespace Server.Mobiles
 
         public void ValidateItems(Mobile from, Mobile m)
         {
-            List<Item> MannequinItems = m.Items.Where(x => Steward.IsEquipped(x)).ToList();
-            MannequinItems.ForEach(x => _Mannequin.RemoveItem(x));
+            List<Item> MannequinItems = new List<Item>();
+
+            foreach (var item in m.Items.Where(Steward.IsEquipped))
+            {
+                MannequinItems.Add(item);
+            }
+
+            for (var index = 0; index < MannequinItems.Count; index++)
+            {
+                var x = MannequinItems[index];
+
+                _Mannequin.RemoveItem(x);
+            }
 
             List<Item> ExceptItems = new List<Item>();
 
-            MannequinItems.ForEach(x =>
+            for (var index = 0; index < MannequinItems.Count; index++)
             {
+                var x = MannequinItems[index];
+
                 if (x.CanEquip(m))
                 {
                     m.EquipItem(x);
@@ -689,11 +713,17 @@ namespace Server.Mobiles
                 {
                     ExceptItems.Add(x);
                 }
-            });
+            }
 
             if (ExceptItems.Count > 0)
             {
-                ExceptItems.ForEach(x => from.AddToBackpack(x));
+                for (var index = 0; index < ExceptItems.Count; index++)
+                {
+                    var x = ExceptItems[index];
+
+                    from.AddToBackpack(x);
+                }
+
                 from.SendLocalizedMessage(1151641, ExceptItems.Count.ToString(), 0x22); // ~1_COUNT~ items could not be swapped between you and the mannequin. These items are now in your backpack, or on the floor at your feet if your backpack is too full to hold them.
             }
         }
@@ -866,7 +896,7 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -883,11 +913,16 @@ namespace Server.Mobiles
         public static AddonFitResult CouldFit(Point3D p, Map map, Mobile from, ref BaseHouse house)
         {
             if (!map.CanFit(p.X, p.Y, p.Z, 20, true, true, true))
+            {
                 return AddonFitResult.Blocked;
-            else if (!BaseAddon.CheckHouse(from, p, map, 20, ref house))
+            }
+
+            if (!BaseAddon.CheckHouse(@from, p, map, 20, ref house))
+            {
                 return AddonFitResult.NotInHouse;
-            else
-                return CheckDoors(p, 20, house);
+            }
+
+            return CheckDoors(p, 20, house);
         }
 
         public static AddonFitResult CheckDoors(Point3D p, int height, BaseHouse house)

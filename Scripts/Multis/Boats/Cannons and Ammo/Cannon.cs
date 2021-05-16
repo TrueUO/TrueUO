@@ -1474,7 +1474,7 @@ namespace Server.Items
 
             InvalidateDamageState();
 
-            Timer.DelayCall(() => Replace());
+            Timer.DelayCall(Replace);
         }
 
         private void Replace()
