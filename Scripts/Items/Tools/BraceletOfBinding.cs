@@ -378,9 +378,7 @@ namespace Server.Items
 
                 if (m_Bracelet.CheckUse(m_From, false))
                 {
-                    Mobile boundRoot = m_Bracelet.Bound.RootParent as Mobile;
-
-                    if (boundRoot != null)
+                    if (m_Bracelet.Bound.RootParent is Mobile boundRoot)
                     {
                         m_Bracelet.Charges--;
                         Point3D loc = boundRoot.Location;

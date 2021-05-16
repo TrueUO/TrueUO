@@ -9859,9 +9859,7 @@ namespace Server
 		{
 			get
 			{
-				Item item = m_Weapon as Item;
-
-				if (item != null && !item.Deleted && item.Parent == this && CanSee(item))
+                if (m_Weapon is Item item && !item.Deleted && item.Parent == this && CanSee(item))
 				{
 					return m_Weapon;
 				}
@@ -11774,9 +11772,7 @@ namespace Server
 				Send(new StatLockInfo(this));
 			}
 
-			IParty ip = m_Party as IParty;
-
-			if (ip != null)
+            if (m_Party is IParty ip)
 			{
 				ip.OnStatsQuery(from, this);
 			}

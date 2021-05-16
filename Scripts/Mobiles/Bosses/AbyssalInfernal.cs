@@ -269,9 +269,7 @@ namespace Server.Mobiles
 
         private void DoDamage_Callback(object o)
         {
-            Mobile m = o as Mobile;
-
-            if (m != null && Map != null)
+            if (o is Mobile m && Map != null)
             {
                 IMount mount = m.Mount;
 
@@ -299,7 +297,6 @@ namespace Server.Mobiles
                 });
             }
         }
-
 
         #region Spawn
         public List<BaseCreature> SummonedHelpers { get; set; }
@@ -360,9 +357,7 @@ namespace Server.Mobiles
                     }
                 }
 
-                BaseCreature spawn = Activator.CreateInstance(type) as BaseCreature;
-
-                if (spawn != null)
+                if (Activator.CreateInstance(type) is BaseCreature spawn)
                 {
                     spawn.MoveToWorld(p, Map);
                     spawn.Team = Team;
@@ -375,7 +370,9 @@ namespace Server.Mobiles
                         if (s != null && s.Combatant != null)
                         {
                             if (!(s.Combatant is PlayerMobile) || !((PlayerMobile)s.Combatant).HonorActive)
+                            {
                                 s.Combatant = Combatant;
+                            }
                         }
 
                     }, spawn);
@@ -431,12 +428,12 @@ namespace Server.Mobiles
             {
                 for (int i = 0; i < count; i++)
                 {
-                    BaseCreature summon = reader.ReadMobile() as BaseCreature;
-
-                    if (summon != null)
+                    if (reader.ReadMobile() is BaseCreature summon)
                     {
                         if (SummonedHelpers == null)
+                        {
                             SummonedHelpers = new List<BaseCreature>();
+                        }
 
                         SummonedHelpers.Add(summon);
                     }

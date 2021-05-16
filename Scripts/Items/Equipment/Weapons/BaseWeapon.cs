@@ -1501,9 +1501,7 @@ namespace Server.Items
                         defender.Stam += Utility.RandomMinMax(1, (int)(bushido / 5)) + MasteryInfo.AnticipateHitBonus(defender) / 10;
                     }
 
-                    BaseShield shield = defender.FindItemOnLayer(Layer.TwoHanded) as BaseShield;
-
-                    if (shield != null)
+                    if (defender.FindItemOnLayer(Layer.TwoHanded) is BaseShield shield)
                     {
                         shield.OnHit(this, damage);
 
@@ -1532,9 +1530,7 @@ namespace Server.Items
 
             if (!blocked)
             {
-                IWearableDurability toHit = GetRandomValidItem(defender) as IWearableDurability;
-
-                if (toHit != null)
+                if (GetRandomValidItem(defender) is IWearableDurability toHit)
                 {
                     toHit.OnHit(this, damage); // call OnHit to lose durability
 
@@ -1792,14 +1788,9 @@ namespace Server.Items
                     else if (type == 3) pois = 100;
                     else if (type == 4) nrgy = 100;
                 }
-                else if (ranged)
+                else if (ranged && attacker.FindItemOnLayer(Layer.Cloak) is IRangeDamage rangeDamage)
                 {
-                    IRangeDamage rangeDamage = attacker.FindItemOnLayer(Layer.Cloak) as IRangeDamage;
-
-                    if (rangeDamage != null)
-                    {
-                        rangeDamage.AlterRangedDamage(ref phys, ref fire, ref cold, ref pois, ref nrgy, ref chaos, ref direct);
-                    }
+                    rangeDamage.AlterRangedDamage(ref phys, ref fire, ref cold, ref pois, ref nrgy, ref chaos, ref direct);
                 }
             }
 
@@ -2029,15 +2020,17 @@ namespace Server.Items
                 int max = ((BaseThrown)this).MaxThrowRange;
 
                 if (dist > max)
+                {
                     percentageBonus -= 47;
+                }
             }
 
             if (RunedSashOfWarding.IsUnderEffects(defender, WardingEffect.WeaponDamage))
+            {
                 percentageBonus -= 10;
+            }
 
-            BaseTalisman talisman = attacker.Talisman as BaseTalisman;
-
-            if (talisman != null && talisman.Killer != null)
+            if (attacker.Talisman is BaseTalisman talisman && talisman.Killer != null)
             {
                 percentageBonus += talisman.Killer.DamageBonus(defender);
             }
@@ -2842,9 +2835,7 @@ namespace Server.Items
 
         public CheckSlayerResult CheckTalismanSlayer(Mobile attacker, Mobile defender)
         {
-            BaseTalisman talisman = attacker.Talisman as BaseTalisman;
-
-            if (talisman != null && TalismanSlayer.Slays(talisman.Slayer, defender))
+            if (attacker.Talisman is BaseTalisman talisman && TalismanSlayer.Slays(talisman.Slayer, defender))
             {
                 return CheckSlayerResult.Slayer;
             }

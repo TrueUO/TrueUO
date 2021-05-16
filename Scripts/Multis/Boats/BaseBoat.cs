@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Server.Accounting;
 
 namespace Server.Multis
 {
@@ -1095,10 +1096,7 @@ namespace Server.Multis
             if (Owner == null)
                 return false;
 
-            Accounting.Account acct1 = from.Account as Accounting.Account;
-            Accounting.Account acct2 = Owner.Account as Accounting.Account;
-
-            return acct1 != null && acct2 != null && acct1 == acct2;
+            return from.Account is Account acct1 && Owner.Account is Account acct2 && acct1 == acct2;
         }
 
         public virtual bool IsComponentItem(IEntity item)
@@ -1107,7 +1105,10 @@ namespace Server.Multis
                 return false;
 
             if (item == this || TillerMan is Item man && item == man || item == SPlank || item == PPlank || item == Hold)
+            {
                 return true;
+            }
+
             return false;
         }
 

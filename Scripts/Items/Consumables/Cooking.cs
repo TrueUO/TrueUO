@@ -568,16 +568,18 @@ namespace Server.Items
         public virtual void OnTarget(Mobile from, object obj)
         {
             if (obj is AddonComponent component)
+            {
                 obj = component.Addon;
+            }
 
-            IFlourMill mill = obj as IFlourMill;
-
-            if (mill != null)
+            if (obj is IFlourMill mill)
             {
                 int needs = mill.MaxFlour - mill.CurFlour;
 
                 if (needs > Amount)
+                {
                     needs = Amount;
+                }
 
                 mill.CurFlour += needs;
                 Consume(needs);

@@ -1228,11 +1228,9 @@ namespace Server.Spells
 
                     if (!reflect)
                     {
-                        var bc = defender as BaseCreature;
-
-                        if (bc != null)
+                        if (defender is BaseCreature bc)
                         {
-                            ((BaseCreature)target).CheckReflect(caster, ref reflect);
+                            bc.CheckReflect(caster, ref reflect);
 
                             if (reflect)
                             {
@@ -1599,9 +1597,7 @@ namespace Server.Spells
 
         public static void CheckCastSkill(Mobile m, TransformContext context)
         {
-            Spell spell = context.Spell as Spell;
-
-            if (spell != null)
+            if (context.Spell is Spell spell)
             {
                 double min, max;
 

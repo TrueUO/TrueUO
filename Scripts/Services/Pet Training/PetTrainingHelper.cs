@@ -1708,50 +1708,45 @@ namespace Server.Mobiles
                 {
                     Type t = ScriptCompiler.FindTypeByName(arg);
 
-                    if (t != null && t.IsSubclassOf(typeof(BaseCreature)))
+                    if (t != null && t.IsSubclassOf(typeof(BaseCreature)) && Activator.CreateInstance(t) is BaseCreature bc)
                     {
-                        BaseCreature bc = Activator.CreateInstance(t) as BaseCreature;
-
-                        if (bc != null)
+                        if (!bc.Tamable)
                         {
-                            if (!bc.Tamable)
+                            m.SendMessage("That cannot be tamed!");
+                        }
+                        else if (m.Followers + bc.ControlSlots > m.FollowersMax)
+                        {
+                            m.SendLocalizedMessage(1049611); // You have too many followers to tame that creature.
+                            bc.Delete();
+                        }
+                        else
+                        {
+                            bc.MoveToWorld(m.Location, m.Map);
+
+                            if (bc is GreaterDragon)
                             {
-                                m.SendMessage("That cannot be tamed!");
-                            }
-                            else if (m.Followers + bc.ControlSlots > m.FollowersMax)
-                            {
-                                m.SendLocalizedMessage(1049611); // You have too many followers to tame that creature.
-                                bc.Delete();
+                                AnimalTaming.ScaleSkills(bc, 0.72, 0.90, true); // 72% of original skills trainable to 90%
+                                bc.Skills[SkillName.Magery].Base = bc.Skills[SkillName.Magery].Cap;
+                                // Greater dragons have a 90% cap reduction and 90% skill reduction on magery
                             }
                             else
                             {
-                                bc.MoveToWorld(m.Location, m.Map);
-
-                                if (bc is GreaterDragon)
-                                {
-                                    AnimalTaming.ScaleSkills(bc, 0.72, 0.90, true); // 72% of original skills trainable to 90%
-                                    bc.Skills[SkillName.Magery].Base = bc.Skills[SkillName.Magery].Cap;
-                                    // Greater dragons have a 90% cap reduction and 90% skill reduction on magery
-                                }
-                                else
-                                {
-                                    AnimalTaming.ScaleSkills(bc, 0.90, true);
-                                }
-
-                                Timer.DelayCall(TimeSpan.FromSeconds(.25), () =>
-                                {
-                                    bc.PrivateOverheadMessage(Network.MessageType.Regular, 0x3B2, 502799, m.NetState);
-                                    // It seems to accept you as master.
-                                    bc.OnAfterTame(m);
-
-                                    bc.SetControlMaster(m);
-                                    bc.IsBonded = true;
-
-                                    bc.Owners.Add(m);
-
-                                    GetAbilityProfile(bc, true).OnTame();
-                                });
+                                AnimalTaming.ScaleSkills(bc, 0.90, true);
                             }
+
+                            Timer.DelayCall(TimeSpan.FromSeconds(.25), () =>
+                            {
+                                bc.PrivateOverheadMessage(Network.MessageType.Regular, 0x3B2, 502799, m.NetState);
+                                // It seems to accept you as master.
+                                bc.OnAfterTame(m);
+
+                                bc.SetControlMaster(m);
+                                bc.IsBonded = true;
+
+                                bc.Owners.Add(m);
+
+                                GetAbilityProfile(bc, true).OnTame();
+                            });
                         }
                     }
                 }

@@ -594,20 +594,20 @@ namespace Server.Engines.Shadowguard
 
         public static ShadowguardEncounter GetEncounter(Point3D p, Map map)
         {
-            ShadowguardRegion r = Region.Find(p, map) as ShadowguardRegion;
-
-            if (r != null)
+            if (Region.Find(p, map) is ShadowguardRegion r)
+            {
                 return r.Instance.Encounter;
+            }
 
             return null;
         }
 
         public static ShadowguardInstance GetInstance(Point3D p, Map map)
         {
-            ShadowguardRegion r = Region.Find(p, map) as ShadowguardRegion;
-
-            if (r != null)
+            if (Region.Find(p, map) is ShadowguardRegion r)
+            {
                 return r.Instance;
+            }
 
             return null;
         }
@@ -757,10 +757,10 @@ namespace Server.Engines.Shadowguard
             count = reader.ReadInt();
             for (int i = 0; i < count; i++)
             {
-                BaseAddon addon = reader.ReadItem() as BaseAddon;
-
-                if (addon != null)
+                if (reader.ReadItem() is BaseAddon addon)
+                {
                     Addons.Add(addon);
+                }
             }
 
             StartTimer();

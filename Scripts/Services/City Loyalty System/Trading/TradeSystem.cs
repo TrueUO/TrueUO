@@ -484,9 +484,7 @@ namespace Server.Engines.CityLoyalty
 
             for (int i = 0; i < amount; i++)
             {
-                BaseCreature bc = Activator.CreateInstance(types[Utility.Random(types.Length)]) as BaseCreature;
-
-                if (bc != null)
+                if (Activator.CreateInstance(types[Utility.Random(types.Length)]) is BaseCreature bc)
                 {
                     if (KrampusEncounterActive)
                     {

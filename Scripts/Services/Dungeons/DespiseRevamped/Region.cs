@@ -299,9 +299,7 @@ namespace Server.Engines.Despise
 
         public void Kick_Callback(object o)
         {
-            Mobile m = o as Mobile;
-
-            if (m != null)
+            if (o is Mobile m)
             {
                 KickFromRegion(m, true);
                 m.SendLocalizedMessage(1153347); // Without the presence of a Wisp Orb, strong magical forces send you back to whence you came...

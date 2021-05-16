@@ -680,20 +680,25 @@ namespace Server.Engines.Craft
 
                 for (int j = 0; j < items[i].Length; ++j)
                 {
-                    IPlantHue plantHue = items[i][j] as IPlantHue;
                     IPigmentHue pigmentHue = items[i][j] as IPigmentHue;
 
-                    if (plantHue != null && plantHue.PlantHue != context.RequiredPlantHue)
+                    if (items[i][j] is IPlantHue plantHue && plantHue.PlantHue != context.RequiredPlantHue)
+                    {
                         continue;
+                    }
 
                     if (pigmentHue != null && pigmentHue.PigmentHue != context.RequiredPigmentHue)
+                    {
                         continue;
+                    }
 
                     totals[i] += items[i][j].Amount;
                 }
 
                 if (totals[i] < amounts[i])
+                {
                     return i;
+                }
             }
 
             for (int i = 0; i < types.Length; ++i)
