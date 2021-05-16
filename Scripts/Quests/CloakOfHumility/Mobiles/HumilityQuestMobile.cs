@@ -46,22 +46,19 @@ namespace Server.Engines.Quests
             PlayerMobile pm = m as PlayerMobile;
 
             if (pm == null || !pm.InRange(Location, 3))
-                return;
-
-            WhosMostHumbleQuest quest = QuestHelper.GetQuest(pm, typeof(WhosMostHumbleQuest)) as WhosMostHumbleQuest;
-
-            if (quest != null)
             {
-                if (m_NextGreet < DateTime.UtcNow && pm is PlayerMobile)
+                return;
+            }
+
+            if (QuestHelper.GetQuest(pm, typeof(WhosMostHumbleQuest)) is WhosMostHumbleQuest && m_NextGreet < DateTime.UtcNow)
+            {
+                Item item = pm.FindItemOnLayer(Layer.Cloak);
+
+                if (item is GreyCloak cloak && cloak.Owner == null && Greeting > 0)
                 {
-                    Item item = pm.FindItemOnLayer(Layer.Cloak);
+                    SayTo(pm, Greeting);
 
-                    if (item is GreyCloak cloak && cloak.Owner == null && Greeting > 0)
-                    {
-                        SayTo(pm, Greeting);
-
-                        m_NextGreet = DateTime.UtcNow + TimeSpan.FromSeconds(5);
-                    }
+                    m_NextGreet = DateTime.UtcNow + TimeSpan.FromSeconds(5);
                 }
             }
         }
@@ -71,11 +68,11 @@ namespace Server.Engines.Quests
             PlayerMobile pm = from as PlayerMobile;
 
             if (pm == null || !InRange(from.Location, 3))
+            {
                 return;
+            }
 
-            WhosMostHumbleQuest quest = QuestHelper.GetQuest(pm, typeof(WhosMostHumbleQuest)) as WhosMostHumbleQuest;
-
-            if (quest != null && pm.Backpack != null && !quest.HasGivenTo(this))
+            if (QuestHelper.GetQuest(pm, typeof(WhosMostHumbleQuest)) is WhosMostHumbleQuest quest && pm.Backpack != null && !quest.HasGivenTo(this))
             {
                 Item item = from.FindItemOnLayer(Layer.Cloak);
 

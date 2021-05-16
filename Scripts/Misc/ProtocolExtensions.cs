@@ -33,19 +33,22 @@ namespace Server.Misc
         private static void QueryGuildsLocations(NetState state, PacketReader pvSrc)
         {
             Mobile from = state.Mobile;
-            Guild guild = from.Guild as Guild;
 
-            if (guild != null)
+            if (from.Guild is Guild guild)
             {
                 bool locations = pvSrc.ReadByte() != 0;
 
                 AckGuildsLocations packet = new AckGuildsLocations(from, guild, locations);
 
                 if (packet.UnderlyingStream.Length > (locations ? 9 : 5))
+                {
                     state.Send(packet);
+                }
             }
             else
+            {
                 state.Send(new AckGuildsLocations());
+            }
         }
 
         public static void Register(int packetID, bool ingame, OnPacketReceive onReceive)

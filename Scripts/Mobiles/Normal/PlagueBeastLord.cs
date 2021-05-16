@@ -66,10 +66,10 @@ namespace Server.Mobiles
                 {
                     for (int i = 0; i < pack.Items.Count; i++)
                     {
-                        PlagueBeastBlood blood = pack.Items[i] as PlagueBeastBlood;
-
-                        if (blood != null && !blood.Patched)
+                        if (pack.Items[i] is PlagueBeastBlood blood && !blood.Patched)
+                        {
                             return true;
+                        }
                     }
                 }
 

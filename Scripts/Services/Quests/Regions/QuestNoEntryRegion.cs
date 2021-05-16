@@ -42,10 +42,8 @@ namespace Server.Engines.Quests
             if (m_Quest == null)
                 return true;
 
-            PlayerMobile player = m as PlayerMobile;
-
-            if (player != null && player.Quest != null && player.Quest.GetType() == m_Quest && (m_MinObjective == null || player.Quest.FindObjective(m_MinObjective) != null) &&
-                (m_MaxObjective == null || player.Quest.FindObjective(m_MaxObjective) == null))
+            if (m is PlayerMobile pm && pm.Quest != null && pm.Quest.GetType() == m_Quest && (m_MinObjective == null || pm.Quest.FindObjective(m_MinObjective) != null) &&
+                (m_MaxObjective == null || pm.Quest.FindObjective(m_MaxObjective) == null))
             {
                 return true;
             }

@@ -50,10 +50,10 @@ namespace Server.Items
 
         public void AddComponent(PlagueBeastComponent c, int x, int y)
         {
-            Container pack = Parent as Container;
-
-            if (pack != null)
+            if (Parent is Container pack)
+            {
                 pack.DropItem(c);
+            }
 
             c.Organ = this;
             c.Location = new Point3D(X + x, Y + y, Z);

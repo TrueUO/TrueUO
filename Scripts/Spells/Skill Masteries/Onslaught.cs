@@ -35,11 +35,11 @@ namespace Server.Spells.SkillMasteries
         public override void OnHit(Mobile attacker, Mobile defender, int damage)
         {
             if (!Validate(attacker) || !CheckMana(attacker, true))
+            {
                 return;
+            }
 
-            BaseWeapon weapon = attacker.Weapon as BaseWeapon;
-
-            if (weapon != null && !HasOnslaught(attacker, defender))
+            if (attacker.Weapon is BaseWeapon weapon && !HasOnslaught(attacker, defender))
             {
                 ClearCurrentMove(attacker);
 

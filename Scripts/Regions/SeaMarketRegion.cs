@@ -199,9 +199,7 @@ namespace Server.Regions
 
             foreach (BaseMulti multi in GetEnumeratedMultis())
             {
-                BaseBoat boat = multi as BaseBoat;
-
-                if (boat != null)
+                if (multi is BaseBoat boat)
                 {
                     list.Add(boat);
                 }
@@ -245,14 +243,22 @@ namespace Server.Regions
                 }
             }
 
-            foreach (BaseBoat boat in boats)
+            for (var index = 0; index < boats.Count; index++)
             {
+                BaseBoat boat = boats[index];
+
                 if (!m_BoatTable.ContainsKey(boat) && !boat.IsMoving && boat.Owner != null && boat.Owner.AccessLevel == AccessLevel.Player)
+                {
                     AddToTable(boat);
+                }
             }
 
-            foreach (BaseBoat b in toRemove)
+            for (var index = 0; index < toRemove.Count; index++)
+            {
+                BaseBoat b = toRemove[index];
+
                 m_BoatTable.Remove(b);
+            }
 
             ColUtility.Free(toRemove);
             ColUtility.Free(boats);

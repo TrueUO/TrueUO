@@ -47,9 +47,7 @@ namespace Server.Engines.BulkOrders
 
         public override void OnConfirmed(CollectionItem citem, int index)
         {
-            BODCollectionItem item = citem as BODCollectionItem;
-
-            if (item != null && GetPoints(User) >= item.Points && item.Constructor != null)
+            if (citem is BODCollectionItem item && GetPoints(User) >= item.Points && item.Constructor != null)
             {
                 Item i = item.Constructor(item.RewardType);
 
