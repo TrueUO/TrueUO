@@ -137,14 +137,9 @@ namespace Server.Items
 
         public static int GetLuckBonus(Mobile from)
         {
-            if (m_LuckTable.ContainsKey(from))
+            if (m_LuckTable.ContainsKey(from) && from.Account is Account account)
             {
-                Account account = from.Account as Account;
-
-                if (account != null)
-                {
-                    return Math.Min(MaxLuckBonus, 200 + (RewardSystem.GetRewardLevel(account)) * 50);
-                }
+                return Math.Min(MaxLuckBonus, 200 + RewardSystem.GetRewardLevel(account) * 50);
             }
 
             return 0;

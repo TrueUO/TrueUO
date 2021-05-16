@@ -123,9 +123,7 @@ namespace Server.Items
         {
             if (attacker.Player && 0.4 >= Utility.RandomDouble())
             {
-                PlayerMobile p = attacker as PlayerMobile;
-
-                if (p != null && AmmoType != null)
+                if (attacker is PlayerMobile p && AmmoType != null)
                 {
                     Type ammo = AmmoType;
 

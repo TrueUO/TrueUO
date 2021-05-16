@@ -140,9 +140,7 @@ namespace Server.Items
                 m_Timer = null;
             }
 
-            Mobile from = state as Mobile;
-
-            if (from != null && !from.Deleted && !Deleted && IsFull)
+            if (state is Mobile from && !from.Deleted && !Deleted && IsFull)
             {
                 SackFlour flour = new SackFlour
                 {

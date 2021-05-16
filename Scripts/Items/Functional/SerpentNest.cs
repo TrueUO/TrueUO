@@ -110,9 +110,7 @@ namespace Server.Items
 
         public override bool OnMoveOver(Mobile m)
         {
-            BaseCreature snake = m as BaseCreature;
-
-            if (snake != null && snake.CharmMaster != null)
+            if (m is BaseCreature snake && snake.CharmMaster != null)
             {
                 snake.CharmMaster.SendLocalizedMessage(1112588); // The snake begins searching for rare eggs.
                 snake.Frozen = true;
@@ -173,15 +171,12 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            /*int version = */
             reader.ReadInt();
         }
     }

@@ -107,16 +107,16 @@ namespace Server.Items
 
             private void MoveItem_Callback(object o)
             {
-                object[] objs = o as object[];
-
-                if (objs != null)
+                if (o is object[] objs)
                 {
                     Item dirt = objs[0] as Item;
                     Point3D p = (Point3D)objs[1];
                     Map map = objs[2] as Map;
 
                     if (dirt != null)
+                    {
                         dirt.MoveToWorld(p, map);
+                    }
                 }
             }
         }

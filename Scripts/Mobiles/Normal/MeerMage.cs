@@ -101,9 +101,7 @@ namespace Server.Mobiles
         {
             if (DateTime.UtcNow >= m_NextAbilityTime)
             {
-                Mobile combatant = Combatant as Mobile;
-
-                if (combatant != null && combatant.Map == Map && combatant.InRange(this, 12) && IsEnemy(combatant) && !UnderEffect(combatant))
+                if (Combatant is Mobile combatant && combatant.Map == Map && combatant.InRange(this, 12) && IsEnemy(combatant) && !UnderEffect(combatant))
                 {
                     m_NextAbilityTime = DateTime.UtcNow + TimeSpan.FromSeconds(Utility.RandomMinMax(20, 30));
 
@@ -182,9 +180,7 @@ namespace Server.Mobiles
             }
             else
             {
-                Torch torch = m.FindItemOnLayer(Layer.TwoHanded) as Torch;
-
-                if (torch != null && torch.Burning)
+                if (m.FindItemOnLayer(Layer.TwoHanded) is Torch torch && torch.Burning)
                 {
                     StopEffect(m, true);
                 }

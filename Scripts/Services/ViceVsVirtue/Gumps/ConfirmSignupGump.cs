@@ -60,9 +60,7 @@ namespace Server.Engines.VvV
                     User.SendGump(new ConfirmSignupGump(User));
                     break;
                 case 2:
-                    Guild g = User.Guild as Guild;
-
-                    if (g != null)
+                    if (User.Guild is Guild g)
                     {
                         ViceVsVirtueSystem.Instance.AddPlayer(User);
                     }
