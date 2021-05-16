@@ -65,15 +65,17 @@ namespace Server.Mobiles
         {
             base.OnThink();
 
-            Mobile combatant = Combatant as Mobile;
-
-            if (combatant != null)
+            if (Combatant is Mobile combatant)
             {
                 if (CanTakeLife(combatant))
+                {
                     TakeLife(combatant);
+                }
 
                 if (CanSmackTalk())
+                {
                     SmackTalk();
+                }
             }
         }
 

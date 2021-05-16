@@ -87,9 +87,7 @@ namespace Server.Items
 
         public override void OnDelete()
         {
-            Mobile m = RootParent as Mobile;
-
-            if (m != null)
+            if (RootParent is Mobile m)
             {
                 if (m.HasGump(typeof(CircuitTrapGump)))
                 {

@@ -38,14 +38,12 @@ namespace Server.Mobiles
                     pets.Add(bc);
                 }
             }
+
             eable.Free();
 
-            if (from.Backpack != null)
+            if (from.Backpack != null && from.Backpack.FindItemByType(typeof(BrokenAutomatonHead)) is BrokenAutomatonHead head && head.Automaton != null && !head.Automaton.Deleted)
             {
-                if (from.Backpack.FindItemByType(typeof(BrokenAutomatonHead)) is BrokenAutomatonHead head && head.Automaton != null && !head.Automaton.Deleted)
-                {
-                    pets.Add(head.Automaton);
-                }
+                pets.Add(head.Automaton);
             }
 
             return pets.ToArray();

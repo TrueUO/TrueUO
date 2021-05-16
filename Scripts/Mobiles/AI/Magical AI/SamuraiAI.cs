@@ -82,9 +82,7 @@ namespace Server.Mobiles
         {
             base.DoActionCombat();
 
-            Mobile c = m_Mobile.Combatant as Mobile;
-
-            if (c != null)
+            if (m_Mobile.Combatant is Mobile c)
             {
                 SpecialMove move = SpecialMove.GetCurrentMove(m_Mobile);
 

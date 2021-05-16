@@ -317,8 +317,7 @@ namespace Server.Engines.Plants
 
         public virtual bool IsUsableBy(Mobile from)
         {
-            Item root = RootParent as Item;
-            return IsChildOf(from.Backpack) || IsChildOf(from.FindBankNoCreate()) || IsLockedDown && IsAccessibleTo(from) || root != null && root.IsSecure && root.IsAccessibleTo(from);
+            return IsChildOf(from.Backpack) || IsChildOf(from.FindBankNoCreate()) || IsLockedDown && IsAccessibleTo(from) || RootParent is Item root && root.IsSecure && root.IsAccessibleTo(from);
         }
 
         public override void OnDoubleClick(Mobile from)

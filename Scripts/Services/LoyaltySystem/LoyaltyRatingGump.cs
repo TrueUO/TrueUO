@@ -22,23 +22,33 @@ namespace Server.Engines.Points
 
             int y = 40;
 
-            foreach (PointsSystem sys in PointsSystem.Systems)
+            for (var index = 0; index < PointsSystem.Systems.Count; index++)
             {
+                PointsSystem sys = PointsSystem.Systems[index];
+
                 if (sys.ShowOnLoyaltyGump)
                 {
                     if (sys.Name.Number > 0)
+                    {
                         AddHtmlLocalized(50, y, 150, 20, sys.Name.Number, false, false);
+                    }
                     else if (sys.Name.String != null)
+                    {
                         AddHtml(50, y, 150, 20, sys.Name.String, false, false);
+                    }
 
                     TextDefinition title = sys.GetTitle(pm);
 
                     if (title != null)
                     {
                         if (title.Number > 0)
+                        {
                             AddHtmlLocalized(68, y + 20, 100, 20, title.Number, false, false);
+                        }
                         else if (title.String != null)
+                        {
                             AddHtml(68, y + 20, 100, 20, title.String, false, false);
+                        }
                     }
 
                     AddHtmlLocalized(175, y + 20, 100, 20, 1095171, ((int) sys.GetPoints(pm)).ToString(), 0, false, false); // (~1_AMT~ points)
@@ -59,10 +69,10 @@ namespace Server.Engines.Points
 
         public override void OnResponse(NetState state, RelayInfo info)
         {
-            PlayerMobile pm = state.Mobile as PlayerMobile;
-
-            if (CityLoyaltySystem.Enabled && CityLoyaltySystem.Cities != null && pm != null && info.ButtonID == 1)
+            if (CityLoyaltySystem.Enabled && CityLoyaltySystem.Cities != null && state.Mobile is PlayerMobile pm && info.ButtonID == 1)
+            {
                 BaseGump.SendGump(new CityLoyaltyGump(pm));
+            }
         }
     }
 }

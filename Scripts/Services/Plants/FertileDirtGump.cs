@@ -44,9 +44,12 @@ namespace Server.Engines.Plants
         public override void OnResponse(NetState state, RelayInfo info)
         {
             if (info.ButtonID == 0)
+            {
                 return;
+            }
 
             Mobile from = state.Mobile;
+
             bool fertile = info.ButtonID == 1;
 
             if (fertile && (from.Backpack == null || !from.Backpack.ConsumeTotal(typeof(FertileDirt), 20, false)))
@@ -55,10 +58,7 @@ namespace Server.Engines.Plants
                 return;
             }
 
-            GardenAddonComponent comp = m_AttachTo as GardenAddonComponent;
-            LandTarget lt = m_AttachTo as LandTarget;
-
-            if (comp != null && m_Seed != null)
+            if (m_AttachTo is GardenAddonComponent comp && m_Seed != null)
             {
                 GardenBedPlantItem dirt = new GardenBedPlantItem(fertile);
                 dirt.MoveToWorld(new Point3D(comp.X, comp.Y, comp.Z + 5), comp.Map);
@@ -66,10 +66,10 @@ namespace Server.Engines.Plants
                 comp.Plant = dirt;
                 dirt.PlantSeed(from, m_Seed);
             }
-            else if (lt != null)
+            else if (m_AttachTo is LandTarget lt)
             {
                 MaginciaPlantItem dirt = new MaginciaPlantItem(fertile);
-                dirt.MoveToWorld(((LandTarget)m_AttachTo).Location, from.Map);
+                dirt.MoveToWorld(lt.Location, from.Map);
                 dirt.Owner = from;
                 dirt.StartTimer();
             }

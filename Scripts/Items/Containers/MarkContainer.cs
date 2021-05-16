@@ -184,40 +184,31 @@ namespace Server.Items
 
         public override bool OnDragDrop(Mobile from, Item dropped)
         {
-            RecallRune rune = dropped as RecallRune;
-
-            if (rune != null && base.OnDragDrop(from, dropped))
+            if (dropped is RecallRune rune && base.OnDragDrop(from, dropped))
             {
                 Mark(rune);
 
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
 
         public override bool OnDragDropInto(Mobile from, Item dropped, Point3D p)
         {
-            RecallRune rune = dropped as RecallRune;
-
-            if (rune != null && base.OnDragDropInto(from, dropped, p))
+            if (dropped is RecallRune rune && base.OnDragDropInto(from, dropped, p))
             {
                 Mark(rune);
 
                 return true;
             }
-            else
-            {
-                return false;
-            }
+
+            return false;
         }
 
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
 
             writer.Write(m_AutoLock);
@@ -233,8 +224,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             m_AutoLock = reader.ReadBool();
 

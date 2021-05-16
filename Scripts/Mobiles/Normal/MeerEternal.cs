@@ -82,9 +82,7 @@ namespace Server.Mobiles
         {
             if (DateTime.UtcNow >= m_NextAbilityTime)
             {
-                Mobile combatant = Combatant as Mobile;
-
-                if (combatant != null && combatant.Map == Map && combatant.InRange(this, 12))
+                if (Combatant is Mobile combatant && combatant.Map == Map && combatant.InRange(this, 12))
                 {
                     m_NextAbilityTime = DateTime.UtcNow + TimeSpan.FromSeconds(Utility.RandomMinMax(10, 15));
 

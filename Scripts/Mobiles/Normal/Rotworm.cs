@@ -76,9 +76,7 @@ namespace Server.Mobiles
 
         public override void OnMovement(Mobile m, Point3D oldLocation)
         {
-            CandlewoodTorch torch = m.FindItemOnLayer(Layer.TwoHanded) as CandlewoodTorch;
-
-            if (torch != null && torch.Burning)
+            if (m.FindItemOnLayer(Layer.TwoHanded) is CandlewoodTorch torch && torch.Burning)
             {
                 ForceFleeUntil = DateTime.UtcNow + TimeSpan.FromSeconds(5.0);
             }
