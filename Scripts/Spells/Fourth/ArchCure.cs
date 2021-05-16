@@ -104,12 +104,12 @@ namespace Server.Spells.Fourth
 
         private static bool IsInnocentTo(Mobile from, Mobile to)
         {
-            return (Notoriety.Compute(from, to) == Notoriety.Innocent);
+            return Notoriety.Compute(from, to) == Notoriety.Innocent;
         }
 
         private static bool IsAllyTo(Mobile from, Mobile to)
         {
-            return (Notoriety.Compute(from, to) == Notoriety.Ally);
+            return Notoriety.Compute(from, to) == Notoriety.Ally;
         }
 
         private bool AreaCanTarget(Mobile target, bool feluccaRules)
@@ -138,10 +138,14 @@ namespace Server.Spells.Fourth
 
         private bool IsAggressor(Mobile m)
         {
-            foreach (AggressorInfo info in Caster.Aggressors)
+            for (var index = 0; index < Caster.Aggressors.Count; index++)
             {
+                AggressorInfo info = Caster.Aggressors[index];
+
                 if (m == info.Attacker && !info.Expired)
+                {
                     return true;
+                }
             }
 
             return false;
@@ -149,10 +153,14 @@ namespace Server.Spells.Fourth
 
         private bool IsAggressed(Mobile m)
         {
-            foreach (AggressorInfo info in Caster.Aggressed)
+            for (var index = 0; index < Caster.Aggressed.Count; index++)
             {
+                AggressorInfo info = Caster.Aggressed[index];
+
                 if (m == info.Defender && !info.Expired)
+                {
                     return true;
+                }
             }
 
             return false;
@@ -169,10 +177,10 @@ namespace Server.Spells.Fourth
 
             protected override void OnTarget(Mobile from, object o)
             {
-                IPoint3D p = o as IPoint3D;
-
-                if (p != null)
+                if (o is IPoint3D p)
+                {
                     m_Owner.Target(p);
+                }
             }
 
             protected override void OnTargetFinish(Mobile from)

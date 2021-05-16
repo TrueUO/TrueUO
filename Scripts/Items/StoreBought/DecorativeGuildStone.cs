@@ -165,9 +165,7 @@ namespace Server.Items
 
                 if (objs != null && objs.Length > 0)
                 {
-                    var fp = objs[0] as FlipableAttribute;
-
-                    if (fp != null)
+                    if (objs[0] is FlipableAttribute fp)
                     {
                         itemIDs = fp.ItemIDs;
                     }

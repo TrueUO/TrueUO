@@ -137,9 +137,7 @@ namespace Server.Items
 
                 for (int i = Items.Count - 1; i >= 0; i--)
                 {
-                    PlagueBeastComponent innard = Items[i] as PlagueBeastComponent;
-
-                    if (innard != null)
+                    if (Items[i] is PlagueBeastComponent innard)
                     {
                         Rectangle2D r = ItemBounds.Table[innard.ItemID];
 
@@ -175,15 +173,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.WriteEncodedInt(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadEncodedInt();
+            reader.ReadEncodedInt();
         }
     }
 }

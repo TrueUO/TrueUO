@@ -169,15 +169,20 @@ namespace Server.Engines.CityLoyalty
         public bool TryTurnIn(Mobile from, TradeOrderCrate order, Mobile turninMobile)
         {
             if (order == null || from == null || turninMobile == null || order.Entry == null)
+            {
                 return false;
+            }
 
             TradeEntry entry = order.Entry;
-            TradeMinister minister = turninMobile as TradeMinister;
 
-            if (from.AccessLevel == AccessLevel.Player && minister != null && minister.City != entry.Destination)
+            if (from.AccessLevel == AccessLevel.Player && turninMobile is TradeMinister minister && minister.City != entry.Destination)
+            {
                 turninMobile.SayTo(from, 1151738, string.Format("#{0}", CityLoyaltySystem.GetCityLocalization(entry.Destination))); // Begging thy pardon, but those goods are destined for the City of ~1_city~
+            }
             else if (!order.Fulfilled)
+            {
                 turninMobile.SayTo(from, 1151732); // This trade order has not been fulfilled.  Fill the trade order with all necessary items and try again.
+            }
             else
             {
                 CityLoyaltySystem.OnTradeComplete(from, order.Entry);

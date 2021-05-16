@@ -244,14 +244,16 @@ namespace Server.Items
 
                 Active = reader.ReadBool();
 
-                MoonstonePowerGeneratorAddon chamber = Addon as MoonstonePowerGeneratorAddon;
-
-                if (chamber != null)
+                if (Addon is MoonstonePowerGeneratorAddon chamber)
                 {
                     if (chamber.Activator1 == null)
+                    {
                         chamber.Activator1 = this;
+                    }
                     else
+                    {
                         chamber.Activator2 = this;
+                    }
                 }
             }
         }

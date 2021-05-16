@@ -197,14 +197,11 @@ namespace Server.Services.Virtues
             }
             else
             {
-                PlayerMobile pm = from as PlayerMobile;
-
-                if (pm != null)
+                if (from is PlayerMobile pm)
                 {
                     HuntTable[pm] = new HumilityHuntContext(pm, new List<Mobile>(pm.AllFollowers));
 
-                    pm.SendLocalizedMessage(
-                        1155802,
+                    pm.SendLocalizedMessage(1155802,
                         "70"); // You have begun your journey on the Path of Humility.  Your resists have been debuffed by ~1_DEBUFF~.
                     pm.SendLocalizedMessage(
                         1155858); // You are now on a Humility Hunt. For each kill while you forgo the protection of resists," you shall continue on your path to Humility.  You may end your Hunt by speaking ""Lum Lum Lum"" at any time.

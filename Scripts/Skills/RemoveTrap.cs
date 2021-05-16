@@ -137,10 +137,9 @@ namespace Server.SkillHandlers
 
                             if (trap.Owner != null && from != trap.Owner)
                             {
-                                Guild fromG = from.Guild as Guild;
                                 Guild ownerG = trap.Owner.Guild as Guild;
 
-                                if (fromG != null && fromG != ownerG && !fromG.IsAlly(ownerG) && ViceVsVirtueSystem.Instance != null
+                                if (from.Guild is Guild fromG && fromG != ownerG && !fromG.IsAlly(ownerG) && ViceVsVirtueSystem.Instance != null
                                     && ViceVsVirtueSystem.Instance.Battle != null && ViceVsVirtueSystem.Instance.Battle.OnGoing)
                                 {
                                     ViceVsVirtueSystem.Instance.Battle.Update(from, UpdateType.Disarm);

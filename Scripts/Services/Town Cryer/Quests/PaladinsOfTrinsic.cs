@@ -172,17 +172,13 @@ namespace Server.Engines.Quests
         {
             if (m is PlayerMobile mobile && mobile.InRange(Location, 5))
             {
-                PaladinsOfTrinsic quest = QuestHelper.GetQuest(mobile, typeof(PaladinsOfTrinsic)) as PaladinsOfTrinsic;
-
-                if (quest != null)
+                if (QuestHelper.GetQuest(mobile, typeof(PaladinsOfTrinsic)) is PaladinsOfTrinsic quest)
                 {
                     quest.GiveRewards();
                 }
                 else
                 {
-                    PaladinsOfTrinsic2 quest2 = QuestHelper.GetQuest(mobile, typeof(PaladinsOfTrinsic2)) as PaladinsOfTrinsic2;
-
-                    if (quest2 != null)
+                    if (QuestHelper.GetQuest(mobile, typeof(PaladinsOfTrinsic2)) is PaladinsOfTrinsic2 quest2)
                     {
                         if (quest2.Completed)
                         {
