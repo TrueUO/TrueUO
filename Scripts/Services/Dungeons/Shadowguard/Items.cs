@@ -939,17 +939,14 @@ namespace Server.Engines.Shadowguard
 
         public override void OnComponentUsed(AddonComponent c, Mobile from)
         {
-            if (from.InRange(c.Location, 2) && c.ItemID == 19548)
+            if (from.InRange(c.Location, 2) && c.ItemID == 19548 && ShadowguardController.GetEncounter(c.Location, c.Map) is BelfryEncounter encounter && encounter.Drakes != null && encounter.Drakes.Count == 0)
             {
-                if (ShadowguardController.GetEncounter(c.Location, c.Map) is BelfryEncounter encounter && encounter.Drakes != null && encounter.Drakes.Count == 0)
-                {
-                    int toSpawn = 2 + (encounter.PartySize() * 3);
+                int toSpawn = 2 + encounter.PartySize() * 3;
 
-                    for (int i = 0; i < toSpawn; i++)
-                    {
-                        encounter.SpawnDrake(Location, from);
-                        Effects.PlaySound(Location, Map, 0x66C);
-                    }
+                for (int i = 0; i < toSpawn; i++)
+                {
+                    encounter.SpawnDrake(Location, from);
+                    Effects.PlaySound(Location, Map, 0x66C);
                 }
             }
         }

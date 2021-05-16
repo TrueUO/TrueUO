@@ -1226,20 +1226,17 @@ namespace Server.Spells
                         }
                     }
 
-                    if (!reflect)
+                    if (!reflect && defender is BaseCreature bc)
                     {
-                        if (defender is BaseCreature bc)
+                        bc.CheckReflect(caster, ref reflect);
+
+                        if (reflect)
                         {
-                            bc.CheckReflect(caster, ref reflect);
+                            target.FixedEffect(0x37B9, 10, 5);
 
-                            if (reflect)
-                            {
-                                target.FixedEffect(0x37B9, 10, 5);
-
-                                IDamageable temp = source;
-                                source = defender;
-                                defender = temp;
-                            }
+                            IDamageable temp = source;
+                            source = defender;
+                            defender = temp;
                         }
                     }
                 }

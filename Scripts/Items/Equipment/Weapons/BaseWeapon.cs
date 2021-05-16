@@ -1528,16 +1528,13 @@ namespace Server.Items
                 }
             }
 
-            if (!blocked)
+            if (!blocked && GetRandomValidItem(defender) is IWearableDurability toHit)
             {
-                if (GetRandomValidItem(defender) is IWearableDurability toHit)
-                {
-                    toHit.OnHit(this, damage); // call OnHit to lose durability
+                toHit.OnHit(this, damage); // call OnHit to lose durability
 
-                    if (toHit is Item hit && !hit.Deleted && (attacker is VeriteElemental || attacker is ValoriteElemental))
-                    {
-                        VeriteElemental.OnHit(defender, hit, damage);
-                    }
+                if (toHit is Item hit && !hit.Deleted && (attacker is VeriteElemental || attacker is ValoriteElemental))
+                {
+                    VeriteElemental.OnHit(defender, hit, damage);
                 }
             }
 

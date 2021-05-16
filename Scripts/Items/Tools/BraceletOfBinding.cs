@@ -381,20 +381,14 @@ namespace Server.Items
                     if (m_Bracelet.Bound.RootParent is Mobile boundRoot)
                     {
                         m_Bracelet.Charges--;
-                        Point3D loc = boundRoot.Location;
-
-                        BaseHouse house = BaseHouse.FindHouseAt(boundRoot);
-
-                        if (house != null)
-                        {
-                            loc = house.BanLocation;
-                        }
 
                         BaseCreature.TeleportPets(m_From, boundRoot.Location, boundRoot.Map, true);
 
                         m_From.PlaySound(0x1FC);
                         m_From.MoveToWorld(boundRoot.Location, boundRoot.Map);
                         m_From.PlaySound(0x1FC);
+
+                        BaseHouse house = BaseHouse.FindHouseAt(boundRoot);
 
                         if (house != null)
                         {
