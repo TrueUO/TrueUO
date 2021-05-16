@@ -28,9 +28,7 @@ namespace Server.Items
             {
                 int baseRange = MaxThrowRange;
 
-                Mobile attacker = Parent as Mobile;
-
-                if (attacker != null)
+                if (Parent is Mobile attacker)
                 {
                     /*
                      * Each weapon has a base and max range available to it, where the base

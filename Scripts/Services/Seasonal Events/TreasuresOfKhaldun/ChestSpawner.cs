@@ -21,9 +21,7 @@ namespace Server.Engines.Khaldun
 
         public void Remove(ISpawnable spawn)
         {
-            var chest = spawn as KhaldunChest;
-
-            if (chest != null)
+            if (spawn is KhaldunChest chest)
             {
                 RemoveChest(chest);
             }

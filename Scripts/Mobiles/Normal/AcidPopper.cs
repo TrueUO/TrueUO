@@ -37,9 +37,7 @@ namespace Server.Items
 
         private void BurnWeb_Callback(Mobile from, object targeted)
         {
-            SpiderWebbing web = targeted as SpiderWebbing;
-
-            if (web != null)
+            if (targeted is SpiderWebbing web)
             {
                 from.SendLocalizedMessage(1113240); // The acid popper bursts and burns away the webbing.
 

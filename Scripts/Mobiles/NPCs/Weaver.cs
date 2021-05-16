@@ -30,9 +30,7 @@ namespace Server.Mobiles
 
         public override Item CreateBulkOrder(Mobile from, bool fromContextMenu)
         {
-            PlayerMobile pm = from as PlayerMobile;
-
-            if (pm != null && pm.NextTailorBulkOrder == TimeSpan.Zero && (fromContextMenu || 0.2 > Utility.RandomDouble()))
+            if (from is PlayerMobile pm && pm.NextTailorBulkOrder == TimeSpan.Zero && (fromContextMenu || 0.2 > Utility.RandomDouble()))
             {
                 double theirSkill = pm.Skills[SkillName.Tailoring].Base;
 

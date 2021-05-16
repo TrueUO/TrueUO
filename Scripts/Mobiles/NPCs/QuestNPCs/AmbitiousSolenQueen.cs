@@ -37,9 +37,7 @@ namespace Server.Engines.Quests.Ambitious
         {
             Direction = GetDirectionTo(player);
 
-            AmbitiousQueenQuest qs = player.Quest as AmbitiousQueenQuest;
-
-            if (qs != null && qs.RedSolen == RedSolen)
+            if (player.Quest is AmbitiousQueenQuest qs && qs.RedSolen == RedSolen)
             {
                 if (qs.IsObjectiveInProgress(typeof(KillQueensObjective)))
                 {
@@ -59,9 +57,7 @@ namespace Server.Engines.Quests.Ambitious
                     }
                     else
                     {
-                        GetRewardObjective lastObj = qs.FindObjective(typeof(GetRewardObjective)) as GetRewardObjective;
-
-                        if (lastObj != null && !lastObj.Completed)
+                        if (qs.FindObjective(typeof(GetRewardObjective)) is GetRewardObjective lastObj && !lastObj.Completed)
                         {
                             bool bagOfSending = lastObj.BagOfSending;
                             bool powderOfTranslocation = lastObj.PowderOfTranslocation;
@@ -104,38 +100,31 @@ namespace Server.Engines.Quests.Ambitious
         {
             Direction = GetDirectionTo(from);
 
-            PlayerMobile player = from as PlayerMobile;
-
-            if (player != null)
+            if (from is PlayerMobile player && player.Quest is AmbitiousQueenQuest qs && qs.RedSolen == RedSolen)
             {
-                AmbitiousQueenQuest qs = player.Quest as AmbitiousQueenQuest;
+                QuestObjective obj = qs.FindObjective(typeof(GatherFungiObjective));
 
-                if (qs != null && qs.RedSolen == RedSolen)
+                if (obj != null && !obj.Completed)
                 {
-                    QuestObjective obj = qs.FindObjective(typeof(GatherFungiObjective));
-
-                    if (obj != null && !obj.Completed)
+                    if (dropped is ZoogiFungus fungi)
                     {
-                        if (dropped is ZoogiFungus fungi)
+                        if (fungi.Amount >= 50)
                         {
-                            if (fungi.Amount >= 50)
+                            obj.Complete();
+
+                            fungi.Amount -= 50;
+
+                            if (fungi.Amount == 0)
                             {
-                                obj.Complete();
-
-                                fungi.Amount -= 50;
-
-                                if (fungi.Amount == 0)
-                                {
-                                    fungi.Delete();
-                                    return true;
-                                }
-
-                                return false;
+                                fungi.Delete();
+                                return true;
                             }
 
-                            SayTo(player, 1054072); // Our arrangement was for 50 of the zoogi fungus. Please return to me when you have that amount.
                             return false;
                         }
+
+                        SayTo(player, 1054072); // Our arrangement was for 50 of the zoogi fungus. Please return to me when you have that amount.
+                        return false;
                     }
                 }
             }

@@ -17,14 +17,15 @@ namespace Server.Spells.Bushido
         public override bool Validate(Mobile from)
         {
             bool isValid = base.Validate(from);
+
             if (isValid)
             {
-                PlayerMobile ThePlayer = from as PlayerMobile;
-                if (ThePlayer != null)
+                if (from is PlayerMobile thePlayer)
                 {
-                    ThePlayer.ExecutesLightningStrike = BaseMana;
+                    thePlayer.ExecutesLightningStrike = BaseMana;
                 }
             }
+
             return isValid;
         }
 
