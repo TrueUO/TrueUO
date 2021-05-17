@@ -577,6 +577,7 @@ namespace Server.Engines.CityLoyalty
                     bc.EnergyResistSeed += (int)(bc.EnergyResistSeed * (difficulty / 3));
 
                     bc.IsAmbusher = true;
+                    bc.Tamable = false;
 
                     if (Ambushers == null)
                         Ambushers = new Dictionary<BaseCreature, DateTime>();
