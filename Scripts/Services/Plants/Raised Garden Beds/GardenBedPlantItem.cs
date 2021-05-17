@@ -5,11 +5,11 @@ using System;
 
 namespace Server.Engines.Plants
 {
-    [TypeAlias("Server.Engines.Plants.RaisedGardenPlantItem")]
     public class GardenBedPlantItem : PlantItem
     {
         public override bool RequiresUpkeep => false;
         public override int BowlOfDirtID => 2323;
+
         public override int GreenBowlID
         {
             get
@@ -76,7 +76,10 @@ namespace Server.Engines.Plants
             get
             {
                 if (PlantSystem != null)
+                {
                     return PlantSystem.NextGrowth;
+                }
+
                 return DateTime.MinValue;
             }
         }
@@ -87,7 +90,10 @@ namespace Server.Engines.Plants
             get
             {
                 if (PlantSystem != null)
+                {
                     return PlantSystem.GrowthIndicator;
+                }
+
                 return PlantGrowthIndicator.None;
             }
         }

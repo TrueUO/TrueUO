@@ -190,7 +190,9 @@ namespace Server.Engines.Plants
             protected override void OnTarget(Mobile from, object targeted)
             {
                 if (m_Seed.Deleted)
+                {
                     return;
+                }
 
                 if (!m_Seed.IsChildOf(from.Backpack))
                 {
@@ -205,17 +207,21 @@ namespace Server.Engines.Plants
                 else if (targeted is GardenAddonComponent addon)
                 {
                     if (addon.Plant != null)
+                    {
                         from.SendLocalizedMessage(1150367); // This plot already has a plant!
+                    }
                     else
                     {
                         Multis.BaseHouse house = Multis.BaseHouse.FindHouseAt(addon);
 
-                        if (house != null)
+                        if (house != null && house.IsCoOwner(from) && house.IsAccessibleTo(from))
                         {
                             int fertileDirt = from.Backpack == null ? 0 : from.Backpack.GetAmount(typeof(FertileDirt), false);
 
                             if (fertileDirt > 0)
+                            {
                                 from.SendGump(new FertileDirtGump(m_Seed, fertileDirt, addon));
+                            }
                             else
                             {
                                 GardenBedPlantItem dirt = new GardenBedPlantItem();
@@ -225,6 +231,10 @@ namespace Server.Engines.Plants
                                 addon.Plant = dirt;
                                 dirt.Component = addon;
                             }
+                        }
+                        else
+                        {
+                            from.SendLocalizedMessage(500364); // You can't use that, it belongs to someone else.
                         }
                     }
                 }
@@ -242,7 +252,6 @@ namespace Server.Engines.Plants
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(2); // version
 
             writer.Write((int)m_PlantType);
@@ -253,21 +262,11 @@ namespace Server.Engines.Plants
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             m_PlantType = (PlantType)reader.ReadInt();
             m_PlantHue = (PlantHue)reader.ReadInt();
             m_ShowType = reader.ReadBool();
-
-            if (Weight != 1.0)
-                Weight = 1.0;
-
-            if (version < 1)
-                Stackable = true;
-
-            if (version < 2 && PlantHueInfo.IsCrossable(m_PlantHue))
-                m_PlantHue |= PlantHue.Reproduces;
         }
     }
 }
