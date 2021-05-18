@@ -24,8 +24,8 @@ namespace Server.Items
             {
                 Title = "A Large Heart Embroidered on a Fluffy Pillow",
                 Description = "Given by Iolo for Providing Provisions to the Children of the Poorhouse",
-                Line1 = "Despite the artisan being a mere child, the embroidery wor is impressive.",
-                Line2 = "Provisions provided to the poorhouse webt a long way to ease the suffering of those in need, a compassionate gift indeed."
+                Line1 = "Despite the artisan being a mere child, the embroidery work is impressive.",
+                Line2 = "Provisions provided to the poorhouse went a long way to ease the suffering of those in need, a compassionate gift indeed."
             };
 
             g.RenderString(from);
