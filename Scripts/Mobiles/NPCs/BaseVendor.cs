@@ -106,8 +106,10 @@ namespace Server.Mobiles
 
             IBuyItemInfo[] buyinfo = (IBuyItemInfo[])m_ArmorBuyInfo.ToArray(typeof(IBuyItemInfo));
 
-            foreach (IBuyItemInfo info in buyinfo)
+            for (var index = 0; index < buyinfo.Length; index++)
             {
+                IBuyItemInfo info = buyinfo[index];
+
                 info.PriceScalar = priceScalar;
             }
         }
@@ -2081,15 +2083,19 @@ namespace Server.Mobiles
             int Sold = 0;
             Container cont;
 
-            foreach (SellItemResponse resp in list)
+            for (var index = 0; index < list.Count; index++)
             {
+                SellItemResponse resp = list[index];
+
                 if (resp.Item.RootParent != seller || resp.Amount <= 0 || !resp.Item.IsStandardLoot() || !resp.Item.Movable || resp.Item is Container && resp.Item.Items.Count != 0)
                 {
                     continue;
                 }
 
-                foreach (IShopSellInfo ssi in info)
+                for (var i = 0; i < info.Length; i++)
                 {
+                    IShopSellInfo ssi = info[i];
+
                     if (ssi.IsSellable(resp.Item))
                     {
                         Sold++;
@@ -2109,15 +2115,19 @@ namespace Server.Mobiles
                 return true;
             }
 
-            foreach (SellItemResponse resp in list)
+            for (var index = 0; index < list.Count; index++)
             {
+                SellItemResponse resp = list[index];
+
                 if (resp.Item.RootParent != seller || resp.Amount <= 0 || !resp.Item.IsStandardLoot() || !resp.Item.Movable || resp.Item is Container && resp.Item.Items.Count != 0)
                 {
                     continue;
                 }
 
-                foreach (IShopSellInfo ssi in info)
+                for (var i = 0; i < info.Length; i++)
                 {
+                    IShopSellInfo ssi = info[i];
+
                     if (ssi.IsSellable(resp.Item))
                     {
                         int amount = resp.Amount;
@@ -2131,8 +2141,10 @@ namespace Server.Mobiles
                         {
                             bool found = false;
 
-                            foreach (IBuyItemInfo bii in buyInfo)
+                            for (var index1 = 0; index1 < buyInfo.Length; index1++)
                             {
+                                IBuyItemInfo bii = buyInfo[index1];
+
                                 if (bii.Restock(resp.Item, amount))
                                 {
                                     bii.OnSold(this, amount);
@@ -2185,7 +2197,8 @@ namespace Server.Mobiles
                         int singlePrice = ssi.GetSellPriceFor(resp.Item, this);
                         GiveGold += singlePrice * amount;
 
-                        EventSink.InvokeValidVendorSell(new ValidVendorSellEventArgs(seller, this, resp.Item, singlePrice));
+                        EventSink.InvokeValidVendorSell(new ValidVendorSellEventArgs(seller, this, resp.Item,
+                            singlePrice));
 
                         break;
                     }
