@@ -147,9 +147,7 @@ namespace Server.Engines.CityLoyalty
 
                 protected override void OnTarget(Mobile from, object targeted)
                 {
-                    TradeOrderCrate order = targeted as TradeOrderCrate;
-
-                    if (order != null)
+                    if (targeted is TradeOrderCrate order)
                     {
                         if (CityLoyaltySystem.CityTrading.TryTurnIn(from, order, Minister))
                         {

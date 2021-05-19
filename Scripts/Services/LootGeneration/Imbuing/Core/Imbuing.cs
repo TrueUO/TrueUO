@@ -287,15 +287,17 @@ namespace Server.SkillHandlers
 
         public static int GetQualityBonus(Item item)
         {
-            IQuality quality = item as IQuality;
-
-            if (quality != null)
+            if (item is IQuality quality)
             {
                 if (quality.Quality == ItemQuality.Exceptional)
+                {
                     return 20;
+                }
 
                 if (quality.PlayerConstructed)
+                {
                     return 10;
+                }
             }
 
             return 0;
@@ -849,10 +851,10 @@ namespace Server.SkillHandlers
         {
             int maxWeight = 450;
 
-            IQuality quality = item as IQuality;
-
-            if (quality != null && quality.Quality == ItemQuality.Exceptional)
+            if (item is IQuality quality && quality.Quality == ItemQuality.Exceptional)
+            {
                 maxWeight += 50;
+            }
 
             if (item is BaseWeapon itemToImbue)
             {

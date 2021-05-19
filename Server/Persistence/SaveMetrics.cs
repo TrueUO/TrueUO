@@ -5,8 +5,8 @@ namespace Server
 {
 	public sealed class SaveMetrics : IDisposable
 	{
-		private const string PerformanceCategoryName = "ServUO";
-		private const string PerformanceCategoryDesc = "Performance counters for ServUO";
+		private const string PerformanceCategoryName = "TrueUO";
+		private const string PerformanceCategoryDesc = "Performance counters for TrueUO";
 
 		private readonly PerformanceCounter numberOfWorldSaves;
 
@@ -63,7 +63,7 @@ namespace Server
 					catch (Exception ex)
 					{
 						if (Core.Debug)
-							Console.WriteLine("Metrics: Metrics enabled. Performance counters creation requires ServUO to be run as Administrator once!");
+							Console.WriteLine("Metrics: Metrics enabled. Performance counters creation requires TrueUO to be run as Administrator once!");
 
                         Diagnostics.ExceptionLogging.LogException(ex);
 					}

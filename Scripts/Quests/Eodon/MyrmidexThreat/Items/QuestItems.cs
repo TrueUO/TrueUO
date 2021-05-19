@@ -182,11 +182,11 @@ namespace Server.Items
         public override void OnDoubleClick(Mobile from)
         {
             if (!(from is PlayerMobile))
+            {
                 return;
+            }
 
-            DestructionOfZipactriotlQuest q = QuestHelper.GetQuest((PlayerMobile)from, typeof(DestructionOfZipactriotlQuest)) as DestructionOfZipactriotlQuest;
-
-            if (q != null || from.AccessLevel > AccessLevel.Player)
+            if (QuestHelper.GetQuest((PlayerMobile)from, typeof(DestructionOfZipactriotlQuest)) is DestructionOfZipactriotlQuest q || from.AccessLevel > AccessLevel.Player)
             {
                 BaseCreature.TeleportPets(from, _Destination, Map.TerMur);
                 from.MoveToWorld(_Destination, Map.TerMur);

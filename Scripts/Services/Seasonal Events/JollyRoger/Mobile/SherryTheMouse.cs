@@ -508,7 +508,7 @@ namespace Server.Engines.JollyRoger
                 InstanceFel = this;
             }
 
-            Timer.DelayCall(TimeSpan.FromSeconds(10), () => { ChangeNotes(); });
+            Timer.DelayCall(TimeSpan.FromSeconds(10), ChangeNotes);
         }
     }
 }

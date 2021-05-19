@@ -102,7 +102,18 @@ namespace Server.Engines.CityLoyalty
                             continue;
                         }
 
-                        BallotEntry ballot = Candidates.FirstOrDefault(entry => entry.Player == m);
+                        BallotEntry ballot = null;
+
+                        for (var index = 0; index < Candidates.Count; index++)
+                        {
+                            var entry = Candidates[index];
+
+                            if (entry.Player == m)
+                            {
+                                ballot = entry;
+                                break;
+                            }
+                        }
 
                         if (ballot != null)
                         {
@@ -708,17 +719,19 @@ namespace Server.Engines.CityLoyalty
             int c = reader.ReadInt();
             for (int i = 0; i < c; i++)
             {
-                PlayerMobile p = reader.ReadMobile() as PlayerMobile;
-                if (p != null)
+                if (reader.ReadMobile() is PlayerMobile p)
+                {
                     Endorsements.Add(p);
+                }
             }
 
             c = reader.ReadInt();
             for (int i = 0; i < c; i++)
             {
-                PlayerMobile p = reader.ReadMobile() as PlayerMobile;
-                if (p != null)
+                if (reader.ReadMobile() is PlayerMobile p)
+                {
                     Votes.Add(p);
+                }
             }
         }
     }

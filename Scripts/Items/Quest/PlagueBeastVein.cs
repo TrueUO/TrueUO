@@ -65,17 +65,23 @@ namespace Server.Items
             m_Cut = true;
 
             if (ItemID == 0x1B1C)
+            {
                 ItemID = 0x1B1B;
+            }
             else
+            {
                 ItemID = 0x1B1C;
+            }
 
             if (Owner != null)
+            {
                 Owner.PlaySound(0x199);
+            }
 
-            PlagueBeastRubbleOrgan organ = Organ as PlagueBeastRubbleOrgan;
-
-            if (organ != null)
+            if (Organ is PlagueBeastRubbleOrgan organ)
+            {
                 organ.OnVeinCut(from, this);
+            }
         }
     }
 }

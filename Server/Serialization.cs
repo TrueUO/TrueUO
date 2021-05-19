@@ -1404,9 +1404,7 @@ namespace Server
 
 				for (int i = 0; i < count; ++i)
 				{
-					T item = ReadItem() as T;
-
-					if (item != null)
+                    if (ReadItem() is T item)
 					{
 						list.Add(item);
 					}
@@ -1433,9 +1431,7 @@ namespace Server
 
 				for (int i = 0; i < count; ++i)
 				{
-					T item = ReadItem() as T;
-
-					if (item != null)
+                    if (ReadItem() is T item)
 					{
 						set.Add(item);
 					}
@@ -1462,9 +1458,7 @@ namespace Server
 
 				for (int i = 0; i < count; ++i)
 				{
-					T m = ReadMobile() as T;
-
-					if (m != null)
+                    if (ReadMobile() is T m)
 					{
 						list.Add(m);
 					}
@@ -1491,9 +1485,7 @@ namespace Server
 
 				for (int i = 0; i < count; ++i)
 				{
-					T item = ReadMobile() as T;
-
-					if (item != null)
+                    if (ReadMobile() is T item)
 					{
 						set.Add(item);
 					}
@@ -1520,9 +1512,7 @@ namespace Server
 
 				for (int i = 0; i < count; ++i)
 				{
-					T g = ReadGuild() as T;
-
-					if (g != null)
+                    if (ReadGuild() is T g)
 					{
 						list.Add(g);
 					}
@@ -1549,9 +1539,7 @@ namespace Server
 
 				for (int i = 0; i < count; ++i)
 				{
-					T item = ReadGuild() as T;
-
-					if (item != null)
+                    if (ReadGuild() is T item)
 					{
 						set.Add(item);
 					}

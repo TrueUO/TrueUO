@@ -440,9 +440,7 @@ namespace Server.Engines.CannedEvil
                     {
                         prot.SendLocalizedMessage(1049368); // You have been rewarded for your dedication to Justice!
 
-                        SpecialScroll scrollDupe = Activator.CreateInstance(scroll.GetType()) as SpecialScroll;
-
-                        if (scrollDupe != null)
+                        if (Activator.CreateInstance(scroll.GetType()) is SpecialScroll scrollDupe)
                         {
                             scrollDupe.Skill = scroll.Skill;
                             scrollDupe.Value = scroll.Value;

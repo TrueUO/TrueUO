@@ -102,8 +102,10 @@ namespace Server.Regions
         {
             if (m_RemoveList != null)
             {
-                foreach (IEntity ent in m_RemoveList)
+                for (var index = 0; index < m_RemoveList.Count; index++)
                 {
+                    IEntity ent = m_RemoveList[index];
+
                     ent.Delete();
                 }
 
@@ -212,10 +214,11 @@ namespace Server.Regions
             for (int i = 0; i < count; i++)
             {
                 int serial = reader.ReadInt();
-                ISpawnable spawnableEntity = World.FindEntity(serial) as ISpawnable;
 
-                if (spawnableEntity != null)
+                if (World.FindEntity(serial) is ISpawnable spawnableEntity)
+                {
                     Add(spawnableEntity);
+                }
             }
 
             m_Running = reader.ReadBool();
@@ -444,14 +447,18 @@ namespace Server.Regions
 
         private void InternalDeleteSpawnedObjects()
         {
-            foreach (ISpawnable spawnable in m_SpawnedObjects)
+            for (var index = 0; index < m_SpawnedObjects.Count; index++)
             {
+                ISpawnable spawnable = m_SpawnedObjects[index];
+
                 spawnable.Spawner = null;
 
-                bool uncontrolled = !(spawnable is BaseCreature) || !((BaseCreature)spawnable).Controlled;
+                bool uncontrolled = !(spawnable is BaseCreature) || !((BaseCreature) spawnable).Controlled;
 
                 if (uncontrolled)
+                {
                     spawnable.Delete();
+                }
             }
 
             m_SpawnedObjects.Clear();

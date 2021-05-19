@@ -1226,22 +1226,17 @@ namespace Server.Spells
                         }
                     }
 
-                    if (!reflect)
+                    if (!reflect && defender is BaseCreature bc)
                     {
-                        var bc = defender as BaseCreature;
+                        bc.CheckReflect(caster, ref reflect);
 
-                        if (bc != null)
+                        if (reflect)
                         {
-                            ((BaseCreature)target).CheckReflect(caster, ref reflect);
+                            target.FixedEffect(0x37B9, 10, 5);
 
-                            if (reflect)
-                            {
-                                target.FixedEffect(0x37B9, 10, 5);
-
-                                IDamageable temp = source;
-                                source = defender;
-                                defender = temp;
-                            }
+                            IDamageable temp = source;
+                            source = defender;
+                            defender = temp;
                         }
                     }
                 }
@@ -1599,9 +1594,7 @@ namespace Server.Spells
 
         public static void CheckCastSkill(Mobile m, TransformContext context)
         {
-            Spell spell = context.Spell as Spell;
-
-            if (spell != null)
+            if (context.Spell is Spell spell)
             {
                 double min, max;
 
@@ -1717,7 +1710,7 @@ namespace Server.Spells
 
                     transformSpell.DoEffect(caster);
 
-                    TimerRegistry.Register(_TimerID, transformSpell, TimeSpan.FromSeconds(transformSpell.TickRate), TimeSpan.FromSeconds(transformSpell.TickRate), false, transSpell => OnTick(transSpell));
+                    TimerRegistry.Register(_TimerID, transformSpell, TimeSpan.FromSeconds(transformSpell.TickRate), TimeSpan.FromSeconds(transformSpell.TickRate), false, OnTick);
 
                     AddContext(caster, new TransformContext(mods, ourType, transformSpell));
                     return true;

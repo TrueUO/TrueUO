@@ -766,17 +766,12 @@ namespace Server.Mobiles
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(7); // version
 
             writer.Write(GuardImmune);
-
             writer.Write(m_SpawnRange);
-
             writer.Write(m_WalkingRange);
-
             writer.Write(WayPoint);
-
             writer.Write(m_Group);
 
             writer.Write(m_MinDelay);
@@ -787,7 +782,9 @@ namespace Server.Mobiles
             writer.Write(m_Running);
 
             if (m_Running)
+            {
                 writer.WriteDeltaTime(End);
+            }
 
             writer.Write(m_SpawnObjects.Count);
             for (int i = 0; i < m_SpawnObjects.Count; ++i)
@@ -799,122 +796,54 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
+            GuardImmune = reader.ReadBool();
+            m_SpawnRange = reader.ReadInt();
+            m_WalkingRange = reader.ReadInt();
+            WayPoint = reader.ReadItem() as WayPoint;
+            m_Group = reader.ReadBool();
 
-            switch (version)
+            m_MinDelay = reader.ReadTimeSpan();
+            m_MaxDelay = reader.ReadTimeSpan();
+            m_MaxCount = reader.ReadInt();
+            m_Team = reader.ReadInt();
+            m_HomeRange = reader.ReadInt();
+            m_Running = reader.ReadBool();
+
+            TimeSpan ts = TimeSpan.Zero;
+
+            if (m_Running)
             {
-                case 7:
+                ts = reader.ReadDeltaTime() - DateTime.UtcNow;
+            }
+
+            int size = reader.ReadInt();
+
+            m_SpawnObjects = new List<SpawnObject>(size);
+
+            for (int i = 0; i < size; ++i)
+            {
+                SpawnObject so = new SpawnObject(reader);
+
+                if (AddSpawnObject(so))
                 {
-                    GuardImmune = reader.ReadBool();
+                    string typeName = ParseType(so.SpawnName);
 
-                    goto case 6;
-                }
-                case 6:
-                {
-                    m_SpawnRange = reader.ReadInt();
-
-                    goto case 5;
-                }
-                case 5:
-                case 4:
-                {
-                    m_WalkingRange = reader.ReadInt();
-
-                    goto case 3;
-                }
-                case 3:
-                case 2:
-                {
-                    WayPoint = reader.ReadItem() as WayPoint;
-
-                    goto case 1;
-                }
-
-                case 1:
-                {
-                    m_Group = reader.ReadBool();
-
-                    goto case 0;
-                }
-
-                case 0:
-                {
-                    m_MinDelay = reader.ReadTimeSpan();
-                    m_MaxDelay = reader.ReadTimeSpan();
-                    m_MaxCount = reader.ReadInt();
-                    m_Team = reader.ReadInt();
-                    m_HomeRange = reader.ReadInt();
-                    m_Running = reader.ReadBool();
-
-                    TimeSpan ts = TimeSpan.Zero;
-
-                    if (m_Running)
-                        ts = reader.ReadDeltaTime() - DateTime.UtcNow;
-
-                    int size = reader.ReadInt();
-
-                    m_SpawnObjects = new List<SpawnObject>(size);
-
-                    for (int i = 0; i < size; ++i)
+                    if (ScriptCompiler.FindTypeByName(typeName) == null)
                     {
-                        if (version > 4)
-                        {
-                            SpawnObject so = new SpawnObject(reader);
+                        if (m_WarnTimer == null)
+                            m_WarnTimer = new WarnTimer();
 
-                            if (AddSpawnObject(so))
-                            {
-                                string typeName = ParseType(so.SpawnName);
-
-                                if (ScriptCompiler.FindTypeByName(typeName) == null)
-                                {
-                                    if (m_WarnTimer == null)
-                                        m_WarnTimer = new WarnTimer();
-
-                                    m_WarnTimer.Add(Location, Map, typeName);
-                                }
-                            }
-                        }
-                        else
-                        {
-                            string creatureString = reader.ReadString();
-
-                            AddSpawnObject(new SpawnObject(creatureString));
-                            string typeName = ParseType(creatureString);
-
-                            if (ScriptCompiler.FindTypeByName(typeName) == null)
-                            {
-                                if (m_WarnTimer == null)
-                                    m_WarnTimer = new WarnTimer();
-
-                                m_WarnTimer.Add(Location, Map, typeName);
-                            }
-                        }
+                        m_WarnTimer.Add(Location, Map, typeName);
                     }
-
-                    if (version < 5)
-                    {
-                        int count = reader.ReadInt();
-                        for (int i = 0; i < count; ++i)
-                        {
-                            ISpawnable e = World.FindEntity(reader.ReadInt()) as ISpawnable;
-
-                            if (e != null)
-                            {
-                                e.Delete(); // lets make this easy
-                            }
-                        }
-                    }
-
-                    if (m_Running)
-                        DoTimer(ts);
-
-                    break;
                 }
             }
 
-            if (version < 3 && Weight == 0)
-                Weight = -1;
+            if (m_Running)
+            {
+                DoTimer(ts);
+            }
         }
 
         protected virtual ISpawnable CreateSpawnedObject(SpawnObject obj)
@@ -961,8 +890,10 @@ namespace Server.Mobiles
 
             if (spawnObjects != null)
             {
-                foreach (SpawnObject obj in spawnObjects)
+                for (var index = 0; index < spawnObjects.Count; index++)
                 {
+                    SpawnObject obj = spawnObjects[index];
+
                     max += obj.MaxCount;
                 }
             }
@@ -1166,9 +1097,12 @@ namespace Server.Mobiles
                         op.WriteLine("# Format: X Y Z F Name");
                         op.WriteLine();
 
-                        foreach (WarnEntry e in m_List)
-                            op.WriteLine("{0}\t{1}\t{2}\t{3}\t{4}", e.m_Point.X, e.m_Point.Y, e.m_Point.Z, e.m_Map,
-                                e.m_Name);
+                        for (var index = 0; index < m_List.Count; index++)
+                        {
+                            WarnEntry e = m_List[index];
+
+                            op.WriteLine("{0}\t{1}\t{2}\t{3}\t{4}", e.m_Point.X, e.m_Point.Y, e.m_Point.Z, e.m_Map, e.m_Name);
+                        }
 
                         op.WriteLine();
                         op.WriteLine();

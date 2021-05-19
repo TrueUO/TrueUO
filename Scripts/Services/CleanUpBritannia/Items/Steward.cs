@@ -299,9 +299,9 @@ namespace Server.Mobiles
                 }
                 else
                 {
-                    if (_Mannequin is Steward)
+                    if (_Mannequin is Steward steward)
                     {
-                        ((Steward)_Mannequin).Keyword = text;
+                        steward.Keyword = text;
                         from.SendLocalizedMessage(1153257); // The keyword has been set.
                     }
                 }
@@ -310,11 +310,16 @@ namespace Server.Mobiles
 
         private static bool ContainsDisallowedSpeech(string text)
         {
-            foreach (string word in ProfanityProtection.Disallowed)
+            for (var index = 0; index < ProfanityProtection.Disallowed.Length; index++)
             {
+                string word = ProfanityProtection.Disallowed[index];
+
                 if (text.Contains(word))
+                {
                     return true;
+                }
             }
+
             return false;
         }
 
@@ -375,8 +380,7 @@ namespace Server.Mobiles
 
         public static bool IsEquipped(Item item)
         {
-            return item != null && item.Parent is Mobile && ((Mobile)item.Parent).FindItemOnLayer(item.Layer) == item &&
-                   item.Layer != Layer.Mount && item.Layer != Layer.Bank &&
+            return item != null && item.Parent is Mobile m && m.FindItemOnLayer(item.Layer) == item && item.Layer != Layer.Mount && item.Layer != Layer.Bank &&
                    item.Layer != Layer.Invalid && item.Layer != Layer.Backpack && !(item is Backpack);
         }
 
@@ -406,8 +410,19 @@ namespace Server.Mobiles
                 }
             }
 
-            MannequinItems.ForEach(x => m.RemoveItem(x));
-            MobileItems.ForEach(x => from.RemoveItem(x));
+            for (var index = 0; index < MannequinItems.Count; index++)
+            {
+                var x = MannequinItems[index];
+
+                m.RemoveItem(x);
+            }
+
+            for (var index = 0; index < MobileItems.Count; index++)
+            {
+                var x = MobileItems[index];
+
+                from.RemoveItem(x);
+            }
 
             List<Item> ExceptItems = new List<Item>();
 
@@ -490,8 +505,19 @@ namespace Server.Mobiles
                     return;
                 }
 
-                List<Item> mannequinItems = _Mannequin.Items.Where(x => IsEquipped(x)).ToList();
-                mannequinItems.ForEach(x => _From.AddToBackpack(x));
+                List<Item> mannequinItems = new List<Item>();
+
+                foreach (var item in _Mannequin.Items.Where(IsEquipped))
+                {
+                    mannequinItems.Add(item);
+                }
+
+                for (var index = 0; index < mannequinItems.Count; index++)
+                {
+                    var x = mannequinItems[index];
+
+                    _From.AddToBackpack(x);
+                }
 
                 _Mannequin.Delete();
 
@@ -659,13 +685,26 @@ namespace Server.Mobiles
 
         public void ValidateItems(Mobile from, Mobile m)
         {
-            List<Item> MannequinItems = m.Items.Where(x => Steward.IsEquipped(x)).ToList();
-            MannequinItems.ForEach(x => _Mannequin.RemoveItem(x));
+            List<Item> MannequinItems = new List<Item>();
+
+            foreach (var item in m.Items.Where(Steward.IsEquipped))
+            {
+                MannequinItems.Add(item);
+            }
+
+            for (var index = 0; index < MannequinItems.Count; index++)
+            {
+                var x = MannequinItems[index];
+
+                _Mannequin.RemoveItem(x);
+            }
 
             List<Item> ExceptItems = new List<Item>();
 
-            MannequinItems.ForEach(x =>
+            for (var index = 0; index < MannequinItems.Count; index++)
             {
+                var x = MannequinItems[index];
+
                 if (x.CanEquip(m))
                 {
                     m.EquipItem(x);
@@ -674,11 +713,17 @@ namespace Server.Mobiles
                 {
                     ExceptItems.Add(x);
                 }
-            });
+            }
 
             if (ExceptItems.Count > 0)
             {
-                ExceptItems.ForEach(x => from.AddToBackpack(x));
+                for (var index = 0; index < ExceptItems.Count; index++)
+                {
+                    var x = ExceptItems[index];
+
+                    from.AddToBackpack(x);
+                }
+
                 from.SendLocalizedMessage(1151641, ExceptItems.Count.ToString(), 0x22); // ~1_COUNT~ items could not be swapped between you and the mannequin. These items are now in your backpack, or on the floor at your feet if your backpack is too full to hold them.
             }
         }
@@ -851,7 +896,7 @@ namespace Server.Mobiles
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 
@@ -868,11 +913,16 @@ namespace Server.Mobiles
         public static AddonFitResult CouldFit(Point3D p, Map map, Mobile from, ref BaseHouse house)
         {
             if (!map.CanFit(p.X, p.Y, p.Z, 20, true, true, true))
+            {
                 return AddonFitResult.Blocked;
-            else if (!BaseAddon.CheckHouse(from, p, map, 20, ref house))
+            }
+
+            if (!BaseAddon.CheckHouse(@from, p, map, 20, ref house))
+            {
                 return AddonFitResult.NotInHouse;
-            else
-                return CheckDoors(p, 20, house);
+            }
+
+            return CheckDoors(p, 20, house);
         }
 
         public static AddonFitResult CheckDoors(Point3D p, int height, BaseHouse house)
@@ -910,7 +960,7 @@ namespace Server.Mobiles
                 BaseHouse house = null;
                 Point3D loc = new Point3D(p);
 
-                if (targeted is Item && !((Item)targeted).IsLockedDown && !((Item)targeted).IsSecure && !(targeted is AddonComponent))
+                if (targeted is Item item && !item.IsLockedDown && !item.IsSecure && !(item is AddonComponent))
                 {
                     from.SendLocalizedMessage(1151655); // The mannequin cannot fit there.
                     return;

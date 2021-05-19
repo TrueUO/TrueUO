@@ -36,27 +36,13 @@ namespace Server.Mobiles
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int v = reader.ReadInt();
-
-            if (v > 0)
-            {
-                return;
-            }
-
-            Robe robe = FindItemOnLayer(Layer.OuterTorso) as Robe;
-
-            if (robe != null)
-            {
-                Timer.DelayCall(robe.Delete);
-            }
+            reader.ReadInt();
         }
     }
 }

@@ -91,12 +91,11 @@ namespace Server.Engines.Quests
         public override void OnDelete()
         {
             if (Instances != null && Instances.Contains(this))
-                Instances.Remove(this);
-
-            Timer.DelayCall(TimeSpan.FromSeconds(3), delegate
             {
-                Spawn();
-            });
+                Instances.Remove(this);
+            }
+
+            Timer.DelayCall(TimeSpan.FromSeconds(3), Spawn);
 
             base.OnDelete();
         }

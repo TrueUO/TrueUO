@@ -42,15 +42,17 @@ namespace Server.Items
                 return;
             }
 
-            ThrowTarget targ = from.Target as ThrowTarget;
-
-            if (targ != null && targ.Potion == this)
+            if (from.Target is ThrowTarget targ && targ.Potion == this)
+            {
                 return;
+            }
 
             from.RevealingAction();
 
             if (!m_Users.Contains(from))
+            {
                 m_Users.Add(from);
+            }
 
             from.Target = new ThrowTarget(this);
         }
@@ -86,10 +88,10 @@ namespace Server.Items
             // Check if any other players are using this potion
             for (int i = 0; i < m_Users.Count; i++)
             {
-                ThrowTarget targ = m_Users[i].Target as ThrowTarget;
-
-                if (targ != null && targ.Potion == this)
+                if (m_Users[i].Target is ThrowTarget targ && targ.Potion == this)
+                {
                     Target.Cancel(from);
+                }
             }
 
             Timer.DelayCall(TimeSpan.FromSeconds(1), new TimerStateCallback(TarEffect), new object[] { loc, map });
@@ -144,20 +146,20 @@ namespace Server.Items
 
         public static void AddDelay(Mobile m)
         {
-            Timer timer = m_Delay[m] as Timer;
-
-            if (timer != null)
+            if (m_Delay[m] is Timer timer)
+            {
                 timer.Stop();
+            }
 
             m_Delay[m] = Timer.DelayCall(TimeSpan.FromSeconds(60), new TimerStateCallback(EndDelay_Callback), m);
         }
 
         public static int GetDelay(Mobile m)
         {
-            Timer timer = m_Delay[m] as Timer;
-
-            if (timer != null && timer.Next > DateTime.UtcNow)
+            if (m_Delay[m] is Timer timer && timer.Next > DateTime.UtcNow)
+            {
                 return (int)(timer.Next - DateTime.UtcNow).TotalSeconds;
+            }
 
             return 0;
         }
@@ -165,14 +167,14 @@ namespace Server.Items
         private static void EndDelay_Callback(object obj)
         {
             if (obj is Mobile mobile)
+            {
                 EndDelay(mobile);
+            }
         }
 
         public static void EndDelay(Mobile m)
         {
-            Timer timer = m_Delay[m] as Timer;
-
-            if (timer != null)
+            if (m_Delay[m] is Timer timer)
             {
                 timer.Stop();
                 m_Delay.Remove(m);

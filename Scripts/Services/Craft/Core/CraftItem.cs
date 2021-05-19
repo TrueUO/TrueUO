@@ -180,11 +180,11 @@ namespace Server.Engines.Craft
 
             if (!_itemIds.TryGetValue(type, out itemId))
             {
-                if (type == typeof(ArcaneBookshelfSouthDeed))
+                if (type == typeof(ArcaneBookShelfDeedSouth))
                 {
                     itemId = 0x2DEF;
                 }
-                else if (type == typeof(ArcaneBookshelfEastDeed))
+                else if (type == typeof(ArcaneBookShelfDeedEast))
                 {
                     itemId = 0x2DF0;
                 }
@@ -196,21 +196,19 @@ namespace Server.Engines.Craft
                 {
                     itemId = 0x2DEA;
                 }
-                else if (type == typeof(ElvenWashBasinSouthDeed) ||
-                    type == typeof(ElvenWashBasinSouthAddonWithDrawer))
+                else if (type == typeof(ElvenWashBasinSouthDeed) || type == typeof(ElvenWashBasinSouthAddonWithDrawer))
                 {
                     itemId = 0x2D0B;
                 }
-                else if (type == typeof(ElvenWashBasinEastDeed) ||
-                    type == typeof(ElvenWashBasinEastAddonWithDrawer))
+                else if (type == typeof(ElvenWashBasinEastDeed) || type == typeof(ElvenWashBasinEastAddonWithDrawer))
                 {
                     itemId = 0x2D0C;
                 }
-                else if (type == typeof(ElvenDresserSouthDeed))
+                else if (type == typeof(ElvenDresserDeedSouth))
                 {
                     itemId = 0x2D09;
                 }
-                else if (type == typeof(ElvenDresserEastDeed))
+                else if (type == typeof(ElvenDresserDeedEast))
                 {
                     itemId = 0x2D0A;
                 }
@@ -682,20 +680,25 @@ namespace Server.Engines.Craft
 
                 for (int j = 0; j < items[i].Length; ++j)
                 {
-                    IPlantHue plantHue = items[i][j] as IPlantHue;
                     IPigmentHue pigmentHue = items[i][j] as IPigmentHue;
 
-                    if (plantHue != null && plantHue.PlantHue != context.RequiredPlantHue)
+                    if (items[i][j] is IPlantHue plantHue && plantHue.PlantHue != context.RequiredPlantHue)
+                    {
                         continue;
+                    }
 
                     if (pigmentHue != null && pigmentHue.PigmentHue != context.RequiredPigmentHue)
+                    {
                         continue;
+                    }
 
                     totals[i] += items[i][j].Amount;
                 }
 
                 if (totals[i] < amounts[i])
+                {
                     return i;
+                }
             }
 
             for (int i = 0; i < types.Length; ++i)

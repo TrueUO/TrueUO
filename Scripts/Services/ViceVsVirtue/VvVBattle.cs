@@ -1164,8 +1164,7 @@ namespace Server.Engines.VvV
                 int count = reader.ReadInt();
                 for (int i = 0; i < count; i++)
                 {
-                    VvVAltar altar = reader.ReadItem() as VvVAltar;
-                    if (altar != null)
+                    if (reader.ReadItem() is VvVAltar altar)
                     {
                         altar.Battle = this;
                         Altars.Add(altar);
@@ -1194,10 +1193,10 @@ namespace Server.Engines.VvV
                 count = reader.ReadInt();
                 for (int i = 0; i < count; i++)
                 {
-                    VvVTrap t = reader.ReadItem() as VvVTrap;
-
-                    if (t != null)
+                    if (reader.ReadItem() is VvVTrap t)
+                    {
                         Traps.Add(t);
+                    }
                 }
 
                 Timer.DelayCall(TimeSpan.FromSeconds(10), () =>

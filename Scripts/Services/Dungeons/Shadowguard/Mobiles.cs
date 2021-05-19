@@ -154,11 +154,10 @@ namespace Server.Engines.Shadowguard
 
         public override bool OnBeforeDeath()
         {
-            FountainEncounter encounter = ShadowguardController.GetEncounter(Location, Map) as FountainEncounter;
-
-            if (encounter != null)
+            if (ShadowguardController.GetEncounter(Location, Map) is FountainEncounter encounter)
             {
                 ShadowguardCanal canal = new ShadowguardCanal();
+
                 canal.MoveToWorld(Location, Map);
                 encounter.AddShadowguardCanal(canal);
             }
@@ -453,9 +452,7 @@ namespace Server.Engines.Shadowguard
 
         public override void OnDeath(Container c)
         {
-            BelfryEncounter encounter = ShadowguardController.GetEncounter(c.Location, c.Map) as BelfryEncounter;
-
-            if (encounter != null)
+            if (ShadowguardController.GetEncounter(c.Location, c.Map) is BelfryEncounter)
             {
                 c.DropItem(new MagicDrakeWing());
             }
@@ -512,9 +509,7 @@ namespace Server.Engines.Shadowguard
         {
             base.OnThink();
 
-            BelfryEncounter encounter = ShadowguardController.GetEncounter(Location, Map) as BelfryEncounter;
-
-            if (encounter != null && Z == -20)
+            if (ShadowguardController.GetEncounter(Location, Map) is BelfryEncounter encounter && Z == -20)
             {
                 Point3D p = encounter.SpawnPoints[0];
                 encounter.ConvertOffset(ref p);
@@ -547,18 +542,24 @@ namespace Server.Engines.Shadowguard
 
                 StaticTile[] staticTiles = Map.Tiles.GetStaticTiles(x, y, true);
 
-                foreach (StaticTile tile in staticTiles)
+                for (var index = 0; index < staticTiles.Length; index++)
                 {
+                    StaticTile tile = staticTiles[index];
+
                     ItemData itemData = TileData.ItemTable[tile.ID & TileData.MaxItemValue];
 
                     if (tile.Z + itemData.CalcHeight > z)
+                    {
                         z = tile.Z + itemData.CalcHeight;
+                    }
                 }
 
                 eable.Free();
 
                 if (z < Z)
+                {
                     return false;
+                }
             }
 
             return base.OnMove(d);
@@ -613,12 +614,16 @@ namespace Server.Engines.Shadowguard
 
                 StaticTile[] staticTiles = Map.Tiles.GetStaticTiles(x, y, true);
 
-                foreach (StaticTile tile in staticTiles)
+                for (var index = 0; index < staticTiles.Length; index++)
                 {
+                    StaticTile tile = staticTiles[index];
+
                     ItemData itemData = TileData.ItemTable[tile.ID & TileData.MaxItemValue];
 
                     if (tile.Z + itemData.CalcHeight > z)
+                    {
                         z = tile.Z + itemData.CalcHeight;
+                    }
                 }
 
                 defender.MoveToWorld(new Point3D(x, y, Z), Map);
@@ -693,9 +698,7 @@ namespace Server.Engines.Shadowguard
 
         protected override bool OnMove(Direction d)
         {
-            RoofEncounter encounter = ShadowguardController.GetEncounter(Location, Map) as RoofEncounter;
-
-            if (encounter != null)
+            if (ShadowguardController.GetEncounter(Location, Map) is RoofEncounter encounter)
             {
                 Point3D spawn = encounter.SpawnPoints[0];
 
@@ -708,34 +711,40 @@ namespace Server.Engines.Shadowguard
                 int z = p.Z;
 
                 if (p.Y < spawn.Y - 5 || p.Y > spawn.Y + 4 || p.X > spawn.X + 4 || p.X < spawn.X - 5)
+                {
                     return false;
+                }
 
                 IPooledEnumerable eable = Map.GetItemsInRange(p, 0);
-                Item i = null;
 
                 foreach (Item item in eable)
                 {
                     if (item.Z + item.ItemData.CalcHeight > z)
                     {
-                        i = item;
                         z = item.Z + item.ItemData.CalcHeight;
                     }
                 }
 
                 StaticTile[] staticTiles = Map.Tiles.GetStaticTiles(x, y, true);
 
-                foreach (StaticTile tile in staticTiles)
+                for (var index = 0; index < staticTiles.Length; index++)
                 {
+                    StaticTile tile = staticTiles[index];
+
                     ItemData itemData = TileData.ItemTable[tile.ID & TileData.MaxItemValue];
 
                     if (tile.Z + itemData.CalcHeight > z)
+                    {
                         z = tile.Z + itemData.CalcHeight;
+                    }
                 }
 
                 eable.Free();
 
                 if (z < Z)
+                {
                     return false;
+                }
             }
 
             return base.OnMove(d);
@@ -745,9 +754,7 @@ namespace Server.Engines.Shadowguard
         {
             base.OnThink();
 
-            RoofEncounter encounter = ShadowguardController.GetEncounter(Location, Map) as RoofEncounter;
-
-            if (encounter != null)
+            if (ShadowguardController.GetEncounter(Location, Map) is RoofEncounter encounter)
             {
                 Point3D spawn = encounter.SpawnPoints[0];
                 Point3D p = Location;
@@ -762,9 +769,7 @@ namespace Server.Engines.Shadowguard
 
         public override int Damage(int amount, Mobile from, bool informMount, bool checkfizzle)
         {
-            RoofEncounter encounter = ShadowguardController.GetEncounter(Location, Map) as RoofEncounter;
-
-            if (encounter != null && from != null)
+            if (ShadowguardController.GetEncounter(Location, Map) is RoofEncounter encounter && from != null)
             {
                 from.SendLocalizedMessage(1156254); // Minax laughs as she deflects your puny attacks! Defeat her minions to close the Time Gate!
                 return 0;

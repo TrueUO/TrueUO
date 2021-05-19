@@ -131,7 +131,7 @@ namespace Server.Items
             writer.Write(History == null ? 0 : History.Count);
 
             if (History != null)
-                History.ForEach(s => writer.Write(s));
+                History.ForEach(writer.Write);
         }
 
         public override void Deserialize(GenericReader reader)

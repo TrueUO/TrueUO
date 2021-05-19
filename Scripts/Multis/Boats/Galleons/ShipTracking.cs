@@ -52,10 +52,14 @@ namespace Server.Multis
         {
             if (item is BaseBoat || item is PlunderBeaconAddon)
             {
-                foreach (BoatTrackingArrow arrow in m_Arrows)
+                for (var index = 0; index < m_Arrows.Count; index++)
                 {
+                    BoatTrackingArrow arrow = m_Arrows[index];
+
                     if (arrow.Boat == item)
+                    {
                         return true;
+                    }
                 }
             }
             return false;

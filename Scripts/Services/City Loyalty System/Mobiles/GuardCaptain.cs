@@ -134,9 +134,7 @@ namespace Server.Engines.CityLoyalty
 
         private void OnConfirm(Mobile m, object o)
         {
-            PlayerMobile pm = m as PlayerMobile;
-
-            if (pm != null)
+            if (m is PlayerMobile pm)
             {
                 if (Banker.Withdraw(pm, CityLoyaltySystem.BannerCost))
                 {
@@ -149,12 +147,16 @@ namespace Server.Engines.CityLoyalty
                         pm.SendMessage("The deed has been placed in your bank box.");
                     }
                     else
+                    {
                         pm.SendMessage("The deed has been placed in your backpack.");
+                    }
 
                     AddToCooldown(pm);
                 }
                 else
+                {
                     SayTo(pm, 1152302); // I am afraid your bank box does not contain the funds needed to complete this transaction.
+                }
             }
         }
 
@@ -168,10 +170,9 @@ namespace Server.Engines.CityLoyalty
 
         public bool IsInBannerCooldown(PlayerMobile m)
         {
-            if (_BannerCooldown != null && m is PlayerMobile)
+            if (_BannerCooldown != null && m != null && _BannerCooldown.ContainsKey(m))
             {
-                if (_BannerCooldown.ContainsKey(m))
-                    return _BannerCooldown[m] > DateTime.UtcNow;
+                return _BannerCooldown[m] > DateTime.UtcNow;
             }
 
             return false;

@@ -536,10 +536,10 @@ namespace Server.Engines.Shadowguard
                                 };
                                 item.MoveToWorld(p, Map.TerMur);
 
-                                ArmoryEncounter encounter = ShadowguardController.GetEncounter(p, Map.TerMur) as ArmoryEncounter;
-
-                                if (encounter != null)
+                                if (ShadowguardController.GetEncounter(p, Map.TerMur) is ArmoryEncounter encounter)
+                                {
                                     encounter.AddDestroyedArmor(item);
+                                }
 
                                 int ticks = 1;
                                 Timer.DelayCall(TimeSpan.FromMilliseconds(50), TimeSpan.FromMilliseconds(50), 2, () =>
@@ -894,9 +894,7 @@ namespace Server.Engines.Shadowguard
 
         public override void OnDoubleClick(Mobile from)
         {
-            BelfryEncounter encounter = ShadowguardController.GetEncounter(from.Location, from.Map) as BelfryEncounter;
-
-            if (encounter != null && IsChildOf(from.Backpack))
+            if (ShadowguardController.GetEncounter(from.Location, from.Map) is BelfryEncounter encounter && IsChildOf(from.Backpack))
             {
                 Point3D p = encounter.SpawnPoints[1];
                 encounter.ConvertOffset(ref p);
@@ -941,19 +939,14 @@ namespace Server.Engines.Shadowguard
 
         public override void OnComponentUsed(AddonComponent c, Mobile from)
         {
-            if (from.InRange(c.Location, 2) && c.ItemID == 19548)
+            if (from.InRange(c.Location, 2) && c.ItemID == 19548 && ShadowguardController.GetEncounter(c.Location, c.Map) is BelfryEncounter encounter && encounter.Drakes != null && encounter.Drakes.Count == 0)
             {
-                BelfryEncounter encounter = ShadowguardController.GetEncounter(c.Location, c.Map) as BelfryEncounter;
+                int toSpawn = 2 + encounter.PartySize() * 3;
 
-                if (encounter != null && encounter.Drakes != null && encounter.Drakes.Count == 0)
+                for (int i = 0; i < toSpawn; i++)
                 {
-                    int toSpawn = 2 + (encounter.PartySize() * 3);
-
-                    for (int i = 0; i < toSpawn; i++)
-                    {
-                        encounter.SpawnDrake(Location, from);
-                        Effects.PlaySound(Location, Map, 0x66C);
-                    }
+                    encounter.SpawnDrake(Location, from);
+                    Effects.PlaySound(Location, Map, 0x66C);
                 }
             }
         }

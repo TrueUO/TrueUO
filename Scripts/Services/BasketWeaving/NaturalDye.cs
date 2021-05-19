@@ -120,9 +120,7 @@ namespace Server.Items
                 if (m_Item.Deleted)
                     return;
 
-                Item item = targeted as Item;
-
-                if (item != null)
+                if (targeted is Item item)
                 {
                     bool valid = item is IDyable || item is BaseTalisman ||
                                  item is BaseBook || item is BaseClothing ||

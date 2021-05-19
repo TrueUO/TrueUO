@@ -81,14 +81,16 @@ namespace Server.SkillHandlers
 
             protected override void OnTarget(Mobile from, object targeted)
             {
-                BaseBook book = targeted as BaseBook;
-
-                if (book != null)
+                if (targeted is BaseBook book)
                 {
                     if (IsEmpty(book))
+                    {
                         from.SendLocalizedMessage(501611); // Can't copy an empty book.
+                    }
                     else if (GetUser(book) != null)
+                    {
                         from.SendLocalizedMessage(501621); // Someone else is inscribing that item.
+                    }
                     else
                     {
                         Target target = new InternalTargetDst(book);

@@ -349,11 +349,11 @@ namespace Server.Items
         protected override void OnTarget(Mobile from, object o)
         {
             if (!from.CheckAlive() || from.Backpack == null || !m_Tool.IsChildOf(from.Backpack))
+            {
                 return;
+            }
 
-            IPoint3D ip = o as IPoint3D;
-
-            if (ip != null)
+            if (o is IPoint3D ip)
             {
                 if (ip is Item item)
                 {

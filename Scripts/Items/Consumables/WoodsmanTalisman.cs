@@ -107,12 +107,13 @@ namespace Server.Items
         public static int CheckHarvest(Mobile from, Type type, HarvestSystem system)
         {
             if (system != Lumberjacking.System)
+            {
                 return 0;
+            }
 
             CraftResource res = CraftResources.GetFromType(type);
-            WoodsmansTalisman talisman = from.FindItemOnLayer(Layer.Talisman) as WoodsmansTalisman;
 
-            if (talisman != null && talisman.UsesRemaining > 0 && res == talisman.Resource)
+            if (from.FindItemOnLayer(Layer.Talisman) is WoodsmansTalisman talisman && talisman.UsesRemaining > 0 && res == talisman.Resource)
             {
                 talisman.UsesRemaining--;
                 from.SendLocalizedMessage(1152625); // The magic of your talisman guides your hands as you cut the wood.

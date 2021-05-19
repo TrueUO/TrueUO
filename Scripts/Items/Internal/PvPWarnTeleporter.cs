@@ -18,9 +18,7 @@ namespace Server.Items
 
         public override bool OnMoveOver(Mobile m)
         {
-            PlayerMobile pm = m as PlayerMobile;
-
-            if (pm != null)
+            if (m is PlayerMobile pm)
             {
                 if (pm.DisabledPvpWarning)
                 {

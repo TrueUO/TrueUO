@@ -121,34 +121,29 @@ namespace Server.Items
 
         public override void OnMiss(Mobile attacker, IDamageable damageable)
         {
-            if (attacker.Player && 0.4 >= Utility.RandomDouble())
+            if (attacker.Player && 0.4 >= Utility.RandomDouble() && attacker is PlayerMobile p && AmmoType != null)
             {
-                PlayerMobile p = attacker as PlayerMobile;
+                Type ammo = AmmoType;
 
-                if (p != null && AmmoType != null)
+                if (p.RecoverableAmmo.ContainsKey(ammo))
                 {
-                    Type ammo = AmmoType;
+                    p.RecoverableAmmo[ammo]++;
+                }
+                else
+                {
+                    p.RecoverableAmmo.Add(ammo, 1);
+                }
 
-                    if (p.RecoverableAmmo.ContainsKey(ammo))
+                if (!p.Warmode)
+                {
+                    if (m_RecoveryTimer == null)
                     {
-                        p.RecoverableAmmo[ammo]++;
+                        m_RecoveryTimer = Timer.DelayCall(TimeSpan.FromSeconds(10), p.RecoverAmmo);
                     }
-                    else
-                    {
-                        p.RecoverableAmmo.Add(ammo, 1);
-                    }
 
-                    if (!p.Warmode)
+                    if (!m_RecoveryTimer.Running)
                     {
-                        if (m_RecoveryTimer == null)
-                        {
-                            m_RecoveryTimer = Timer.DelayCall(TimeSpan.FromSeconds(10), p.RecoverAmmo);
-                        }
-
-                        if (!m_RecoveryTimer.Running)
-                        {
-                            m_RecoveryTimer.Start();
-                        }
+                        m_RecoveryTimer.Start();
                     }
                 }
             }

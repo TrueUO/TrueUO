@@ -33,19 +33,17 @@ namespace Server.Mobiles
 
             foreach (Mobile m in eable)
             {
-                BaseCreature bc = m as BaseCreature;
-
-                if (bc != null && bc.IsDeadBondedPet && bc.ControlMaster == from && from.InLOS(bc))
+                if (m is BaseCreature bc && bc.IsDeadBondedPet && bc.ControlMaster == from && from.InLOS(bc))
+                {
                     pets.Add(bc);
+                }
             }
+
             eable.Free();
 
-            if (from.Backpack != null)
+            if (from.Backpack != null && from.Backpack.FindItemByType(typeof(BrokenAutomatonHead)) is BrokenAutomatonHead head && head.Automaton != null && !head.Automaton.Deleted)
             {
-                BrokenAutomatonHead head = from.Backpack.FindItemByType(typeof(BrokenAutomatonHead)) as BrokenAutomatonHead;
-
-                if (head != null && head.Automaton != null && !head.Automaton.Deleted)
-                    pets.Add(head.Automaton);
+                pets.Add(head.Automaton);
             }
 
             return pets.ToArray();
@@ -123,16 +121,11 @@ namespace Server.Mobiles
 
     public class VetResurrectGump : Gump
     {
-        //public override int TypeID { get { return 0xF3E96; } }
-
-
-        private readonly Veterinarian m_Vet;
         private readonly BaseCreature[] m_Pets;
 
         public VetResurrectGump(Veterinarian vet, BaseCreature[] pets)
             : base(150, 50)
         {
-            m_Vet = vet;
             m_Pets = pets;
 
             AddPage(0);

@@ -82,9 +82,7 @@ namespace Server.Engines.CreatureStealing
 
                     if (chance >= Utility.Random(100))
                     {
-                        Item item = Activator.CreateInstance(SpecialItemList[Utility.Random(SpecialItemList.Length)]) as Item;
-
-                        if (item != null)
+                        if (Activator.CreateInstance(SpecialItemList[Utility.Random(SpecialItemList.Length)]) is Item item)
                         {
                             thief.AddToBackpack(item);
 
@@ -121,7 +119,7 @@ namespace Server.Engines.CreatureStealing
 
         private static bool CheckLocation(Mobile thief, Mobile from)
         {
-            if (!((thief.Map == Map.Felucca && thief.Region is DungeonRegion) || thief.Region is ChampionSpawnRegion || from is ExodusZealot))
+            if (!(thief.Map == Map.Felucca && thief.Region is DungeonRegion || thief.Region is ChampionSpawnRegion || from is ExodusZealot))
             {
                 return false;
             }

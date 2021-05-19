@@ -1326,10 +1326,14 @@ namespace Server.Items
                     }
                     else
                     {
-                        foreach (var bc in m_Chest.Guardians)
+                        for (var index = 0; index < m_Chest.Guardians.Count; index++)
                         {
+                            var bc = m_Chest.Guardians[index];
+
                             if (!bc.InRange(m_Chest, 25))
+                            {
                                 ReturnToHome(bc);
+                            }
                         }
                     }
                 }
@@ -1339,7 +1343,9 @@ namespace Server.Items
                     var loc = GetRandomSpawnLocation(m_Chest.Location, m_Chest.Map);
 
                     if (loc != Point3D.Zero)
+                    {
                         m.MoveToWorld(loc, m_Chest.Map);
+                    }
                 }
             }
 

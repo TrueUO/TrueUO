@@ -547,10 +547,7 @@ namespace Server.Engines.ArtisanFestival
             {
                 Timer.DelayCall(TimeSpan.FromMilliseconds((i - 2) * 600), o =>
                 {
-                    Misc.Geometry.Circle2D(e.Location, e.Map, o, (pnt, map) =>
-                    {
-                        VvV.VvVAltar.LaunchFireworks(pnt, map);
-                    });
+                    Misc.Geometry.Circle2D(e.Location, e.Map, o, VvV.VvVAltar.LaunchFireworks);
                 }, i);
             }
         }

@@ -177,16 +177,15 @@ namespace Server.Engines.VvV
         public void DoFireworks()
         {
             if (Deleted)
+            {
                 return;
+            }
 
             for (int i = 2; i <= 8; i += 2)
             {
                 Timer.DelayCall(TimeSpan.FromMilliseconds((i - 2) * 600), o =>
                 {
-                    Misc.Geometry.Circle2D(Location, Map, o, (pnt, map) =>
-                    {
-                        LaunchFireworks(pnt, map);
-                    });
+                    Misc.Geometry.Circle2D(Location, Map, o, LaunchFireworks);
                 }, i);
             }
         }

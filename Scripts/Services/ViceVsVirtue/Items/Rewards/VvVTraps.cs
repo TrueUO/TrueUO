@@ -108,17 +108,23 @@ namespace Server.Engines.VvV
 
             if (Links != null)
             {
-                Links.ForEach(l =>
+                for (var index = 0; index < Links.Count; index++)
+                {
+                    var l = Links[index];
+
+                    if (!l.Deleted && l.ItemID == HiddenID)
                     {
-                        if (!l.Deleted && l.ItemID == HiddenID)
-                            l.ItemID = VisibleID;
-                    });
+                        l.ItemID = VisibleID;
+                    }
+                }
             }
 
             if (ParentTrap != null)
             {
                 if (ParentTrap.ItemID == HiddenID)
+                {
                     ParentTrap.ItemID = VisibleID;
+                }
 
                 ParentTrap.OnRevealed(m);
             }
@@ -169,11 +175,15 @@ namespace Server.Engines.VvV
 
             if (Links != null)
             {
-                Links.ForEach(l =>
+                for (var index = 0; index < Links.Count; index++)
+                {
+                    var l = Links[index];
+
+                    if (!l.Deleted)
                     {
-                        if (!l.Deleted)
-                            l.Delete();
-                    });
+                        l.Delete();
+                    }
+                }
             }
 
             if (ParentTrap != null && !ParentTrap.Deleted)
@@ -196,7 +206,7 @@ namespace Server.Engines.VvV
 
             if (Links != null)
             {
-                Links.ForEach(l => writer.Write(l));
+                Links.ForEach(writer.Write);
             }
 
             writer.Write(ParentTrap);
@@ -215,12 +225,14 @@ namespace Server.Engines.VvV
             for (int i = 0; i < count; i++)
             {
                 if (Links == null)
+                {
                     Links = new List<VvVTrap>();
+                }
 
-                VvVTrap link = reader.ReadItem() as VvVTrap;
-
-                if (link != null)
+                if (reader.ReadItem() is VvVTrap link)
+                {
                     Links.Add(link);
+                }
             }
 
             ParentTrap = reader.ReadItem() as VvVTrap;

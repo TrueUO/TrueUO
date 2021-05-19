@@ -164,9 +164,7 @@ namespace Server.Items
 
             private bool IsOnlyAttacker(Mobile from, Mobile creature)
             {
-                BaseCreature bc = creature as BaseCreature;
-
-                if (bc != null)
+                if (creature is BaseCreature bc)
                 {
                     List<DamageStore> rights = bc.GetLootingRights();
 
@@ -187,10 +185,14 @@ namespace Server.Items
 
         public static bool HasPermit(Mobile from)
         {
-            foreach (HuntingPermit permit in m_Permits)
+            for (var index = 0; index < m_Permits.Count; index++)
             {
+                HuntingPermit permit = m_Permits[index];
+
                 if (permit.Owner == from)
+                {
                     return true;
+                }
             }
 
             return false;

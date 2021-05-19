@@ -211,10 +211,7 @@ namespace Server.Engines.SorcerersDungeon
 
             EndTimer();
 
-            Timer.DelayCall(TimeSpan.FromMinutes(Utility.RandomMinMax(1, 3)), () =>
-            {
-                BeginTimer();
-            });
+            Timer.DelayCall(TimeSpan.FromMinutes(Utility.RandomMinMax(1, 3)), BeginTimer);
         }
 
         public void Serialize(GenericWriter writer)

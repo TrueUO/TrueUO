@@ -1,8 +1,8 @@
 @SET CURPATH=%~dp0
 
-@SET EXENAME=ServUO
+@SET EXENAME=TrueUO
 
-@TITLE: %EXENAME% - https://www.servuo.com
+@TITLE: %EXENAME% - https://github.com/TrueUO/TrueUO
 
 ::##########
 

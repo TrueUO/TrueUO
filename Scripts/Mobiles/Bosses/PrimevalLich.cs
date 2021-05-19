@@ -103,12 +103,9 @@ namespace Server.Mobiles
 
         public override void OnThink()
         {
-            if (m_NextDiscordTime <= DateTime.UtcNow)
+            if (m_NextDiscordTime <= DateTime.UtcNow && Combatant is Mobile target && target.InRange(this, 8) && CanBeHarmful(target))
             {
-                Mobile target = Combatant as Mobile;
-
-                if (target != null && target.InRange(this, 8) && CanBeHarmful(target))
-                    Discord(target);
+                Discord(target);
             }
         }
 

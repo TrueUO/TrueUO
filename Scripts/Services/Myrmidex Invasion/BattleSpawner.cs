@@ -653,52 +653,52 @@ namespace Server.Engines.MyrmidexInvasion
             {
                 DamageStore ds = rights[index];
 
-                if (ds.m_Mobile is PlayerMobile && ds.m_HasRight && MyrmidexInvasionSystem.AreEnemies(ds.m_Mobile, bc))
+                if (ds.m_Mobile is PlayerMobile pm && ds.m_HasRight && MyrmidexInvasionSystem.AreEnemies(pm, bc))
                 {
                     if (MyrmidexInvasionSystem.IsAlliedWith(bc, Allegiance.Myrmidex))
                     {
                         int points = 1;
 
-                        if (IsFrontLine(ds.m_Mobile, bc))
+                        if (IsFrontLine(pm, bc))
                         {
-                            ds.m_Mobile.SendLocalizedMessage(1156599); // You assist the Eodonians in pushing back the Myrmidex!
+                            pm.SendLocalizedMessage(1156599); // You assist the Eodonians in pushing back the Myrmidex!
                             points *= 4;
                         }
                         else
                         {
-                            ds.m_Mobile.SendLocalizedMessage(1156600); // You kill one of the Myrmidex away from the front ranks and gain little recognition.
+                            pm.SendLocalizedMessage(1156600); // You kill one of the Myrmidex away from the front ranks and gain little recognition.
                         }
 
-                        if (!Players.ContainsKey((PlayerMobile) ds.m_Mobile))
+                        if (!Players.ContainsKey(pm))
                         {
-                            Players[(PlayerMobile) ds.m_Mobile] = points;
+                            Players[pm] = points;
                         }
                         else
                         {
-                            Players[(PlayerMobile) ds.m_Mobile] += points;
+                            Players[pm] += points;
                         }
                     }
                     else
                     {
                         int points = 1;
 
-                        if (IsFrontLine(ds.m_Mobile, bc))
+                        if (IsFrontLine(pm, bc))
                         {
-                            ds.m_Mobile.SendLocalizedMessage(1156598); // You assist the Myrmidex in pushing back the Eodonians!
+                            pm.SendLocalizedMessage(1156598); // You assist the Myrmidex in pushing back the Eodonians!
                             points *= 4;
                         }
                         else
                         {
-                            ds.m_Mobile.SendLocalizedMessage(1156601); // You kill one of the Eodonians away from the front ranks and gain little recognition.
+                            pm.SendLocalizedMessage(1156601); // You kill one of the Eodonians away from the front ranks and gain little recognition.
                         }
 
-                        if (!Players.ContainsKey((PlayerMobile) ds.m_Mobile))
+                        if (!Players.ContainsKey(pm))
                         {
-                            Players[(PlayerMobile) ds.m_Mobile] = points;
+                            Players[pm] = points;
                         }
                         else
                         {
-                            Players[(PlayerMobile) ds.m_Mobile] += points;
+                            Players[pm] += points;
                         }
                     }
                 }
@@ -1111,9 +1111,7 @@ namespace Server.Engines.MyrmidexInvasion
 
                 for (int j = 0; j < c; j++)
                 {
-                    BaseCreature bc = reader.ReadMobile() as BaseCreature;
-
-                    if (bc != null)
+                    if (reader.ReadMobile() is BaseCreature bc)
                     {
                         MyrmidexTeam[wave].Add(bc);
                         //AssignNavpoints(bc, Allegiance.Myrmidex);
@@ -1131,9 +1129,7 @@ namespace Server.Engines.MyrmidexInvasion
 
                 for (int j = 0; j < c; j++)
                 {
-                    BaseCreature bc = reader.ReadMobile() as BaseCreature;
-
-                    if (bc != null)
+                    if (reader.ReadMobile() is BaseCreature bc)
                     {
                         TribeTeam[wave].Add(bc);
                         //AssignNavpoints(bc, Allegiance.Tribes);

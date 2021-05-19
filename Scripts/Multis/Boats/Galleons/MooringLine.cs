@@ -157,16 +157,23 @@ namespace Server.Items
             Map map = from.Map;
 
             if (Spells.SpellHelper.CheckMulti(p, map))
+            {
                 return false;
+            }
 
             StaticTile[] staticTiles = map.Tiles.GetStaticTiles(x, y, true);
+
             object highest = null;
 
             //Gets highest tile, which will be used to determine if we can walk on it.
-            foreach (StaticTile tile in staticTiles)
+            for (var index = 0; index < staticTiles.Length; index++)
             {
-                if (highest == null || tile.Z + tile.Height > ((StaticTile)highest).Z + ((StaticTile)highest).Height)
+                StaticTile tile = staticTiles[index];
+
+                if (highest == null || tile.Z + tile.Height > ((StaticTile) highest).Z + ((StaticTile) highest).Height)
+                {
                     highest = tile;
+                }
             }
 
             if (highest != null)

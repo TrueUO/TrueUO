@@ -125,21 +125,35 @@ namespace Server.Mobiles
         public void Earthquake()
         {
             Map map = Map;
+
             if (map == null)
+            {
                 return;
+            }
+
             ArrayList targets = new ArrayList();
             IPooledEnumerable eable = GetMobilesInRange(8);
+
             foreach (Mobile m in eable)
             {
                 if (m == this || !CanBeHarmful(m))
+                {
                     continue;
-                if (m is BaseCreature && (((BaseCreature)m).Controlled || ((BaseCreature)m).Summoned || ((BaseCreature)m).Team != Team))
+                }
+
+                if (m is BaseCreature bc && (bc.Controlled || bc.Summoned || bc.Team != Team))
+                {
                     targets.Add(m);
+                }
                 else if (m.Player)
+                {
                     targets.Add(m);
+                }
             }
+
             eable.Free();
             PlaySound(0x2F3);
+
             for (int i = 0; i < targets.Count; ++i)
             {
                 Mobile m = (Mobile)targets[i];

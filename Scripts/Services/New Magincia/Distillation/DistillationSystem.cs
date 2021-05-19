@@ -90,10 +90,14 @@ namespace Server.Engines.Distillation
 
         public static Liquor GetFirstLiquor(Group group)
         {
-            foreach (CraftDefinition def in m_CraftDefs)
+            for (var index = 0; index < m_CraftDefs.Count; index++)
             {
+                CraftDefinition def = m_CraftDefs[index];
+
                 if (def.Group == group)
+                {
                     return def.Liquor;
+                }
             }
 
             return Liquor.Whiskey;
@@ -101,10 +105,14 @@ namespace Server.Engines.Distillation
 
         public static CraftDefinition GetFirstDefForGroup(Group group)
         {
-            foreach (CraftDefinition def in m_CraftDefs)
+            for (var index = 0; index < m_CraftDefs.Count; index++)
             {
+                CraftDefinition def = m_CraftDefs[index];
+
                 if (def.Group == group)
+                {
                     return def;
+                }
             }
 
             return null;
@@ -112,10 +120,14 @@ namespace Server.Engines.Distillation
 
         public static CraftDefinition GetDefinition(Liquor liquor, Group group)
         {
-            foreach (CraftDefinition def in m_CraftDefs)
+            for (var index = 0; index < m_CraftDefs.Count; index++)
             {
+                CraftDefinition def = m_CraftDefs[index];
+
                 if (def.Liquor == liquor && def.Group == group)
+                {
                     return def;
+                }
             }
 
             return GetFirstDefForGroup(group);
@@ -128,10 +140,10 @@ namespace Server.Engines.Distillation
 
         public static void SendGump(object o)
         {
-            Mobile from = o as Mobile;
-
-            if (from != null)
+            if (o is Mobile from)
+            {
                 from.SendGump(new DistillationGump(from));
+            }
         }
     }
 }

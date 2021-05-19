@@ -25,13 +25,13 @@ namespace Server
 
 	public delegate void TargetStateCallback(Mobile from, object targeted, object state);
 
-	public delegate void TargetStateCallback<T>(Mobile from, object targeted, T state);
+	public delegate void TargetStateCallback<in T>(Mobile from, object targeted, T state);
 
 	public delegate void PromptCallback(Mobile from, string text);
 
 	public delegate void PromptStateCallback(Mobile from, string text, object state);
 
-	public delegate void PromptStateCallback<T>(Mobile from, string text, T state);
+	public delegate void PromptStateCallback<in T>(Mobile from, string text, T state);
 	#endregion
 
 	#region [...]Mods
@@ -9859,9 +9859,7 @@ namespace Server
 		{
 			get
 			{
-				Item item = m_Weapon as Item;
-
-				if (item != null && !item.Deleted && item.Parent == this && CanSee(item))
+                if (m_Weapon is Item item && !item.Deleted && item.Parent == this && CanSee(item))
 				{
 					return m_Weapon;
 				}
@@ -11774,9 +11772,7 @@ namespace Server
 				Send(new StatLockInfo(this));
 			}
 
-			IParty ip = m_Party as IParty;
-
-			if (ip != null)
+            if (m_Party is IParty ip)
 			{
 				ip.OnStatsQuery(from, this);
 			}

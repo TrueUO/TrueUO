@@ -752,8 +752,7 @@ namespace Server.Engines.Quests
                 int c = reader.ReadInt();
                 for (int j = 0; j < c; j++)
                 {
-                    BaseShipCaptain capt = reader.ReadMobile() as BaseShipCaptain;
-                    if (capt != null && !capt.Deleted && capt.Alive)
+                    if (reader.ReadMobile() is BaseShipCaptain capt && !capt.Deleted && capt.Alive)
                     {
                         m_ActiveZones[zone].Add(capt);
                     }

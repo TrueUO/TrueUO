@@ -17,14 +17,12 @@ namespace Server.Spells.Bushido
         public override bool Validate(Mobile from)
         {
             bool isValid = base.Validate(from);
-            if (isValid)
+
+            if (isValid && from is PlayerMobile thePlayer)
             {
-                PlayerMobile ThePlayer = from as PlayerMobile;
-                if (ThePlayer != null)
-                {
-                    ThePlayer.ExecutesLightningStrike = BaseMana;
-                }
+                thePlayer.ExecutesLightningStrike = BaseMana;
             }
+
             return isValid;
         }
 
@@ -90,10 +88,9 @@ namespace Server.Spells.Bushido
 
         public override void OnClearMove(Mobile attacker)
         {
-            PlayerMobile ThePlayer = attacker as PlayerMobile; // this can be deletet if the PlayerMobile parts are moved to Server.Mobile 
-            if (ThePlayer != null)
+            if (attacker is PlayerMobile thePlayer) // this can be deleted if the PlayerMobile parts are moved to Server.Mobile 
             {
-                ThePlayer.ExecutesLightningStrike = 0;
+                thePlayer.ExecutesLightningStrike = 0;
             }
 
             attacker.Delta(MobileDelta.WeaponDamage);

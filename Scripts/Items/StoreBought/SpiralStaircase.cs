@@ -4,7 +4,6 @@ using Server.Mobiles;
 using Server.Multis;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
@@ -51,7 +50,20 @@ namespace Server.Items
                 map = m.Map;
             }
 
-            if (Addon.Components.FirstOrDefault(x => x is TeleporterComponent && x != this) is TeleporterComponent c)
+            AddonComponent first = null;
+
+            for (var index = 0; index < Addon.Components.Count; index++)
+            {
+                var x = Addon.Components[index];
+
+                if (x is TeleporterComponent && x != this)
+                {
+                    first = x;
+                    break;
+                }
+            }
+
+            if (first is TeleporterComponent c)
             {
                 Point3D p = new Point3D(c.Location.X, c.Location.Y, c._Direction == Direction.Up ? Location.Z + 20 : c.Location.Z);
 
@@ -72,7 +84,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             _Direction = (Direction)reader.ReadInt();
         }
@@ -154,7 +166,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
 
             Level = (SecureLevel)reader.ReadInt();
         }
@@ -203,11 +215,6 @@ namespace Server.Items
         {
         }
 
-        private void SendTarget(Mobile m)
-        {
-            base.OnDoubleClick(m);
-        }
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
@@ -217,7 +224,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

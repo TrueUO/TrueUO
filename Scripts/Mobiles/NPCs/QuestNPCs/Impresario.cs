@@ -53,23 +53,18 @@ namespace Server.Engines.Quests.Collector
         {
             QuestSystem qs = player.Quest;
 
-            if (qs is CollectorQuest)
+            if (qs is CollectorQuest && qs.FindObjective(typeof(FindSheetMusicObjective)) is FindSheetMusicObjective obj && !obj.Completed)
             {
-                FindSheetMusicObjective obj = qs.FindObjective(typeof(FindSheetMusicObjective)) as FindSheetMusicObjective;
+                Direction = GetDirectionTo(player);
 
-                if (obj != null && !obj.Completed)
+                if (obj.IsInRightTheater())
                 {
-                    Direction = GetDirectionTo(player);
-
-                    if (obj.IsInRightTheater())
-                    {
-                        player.CloseGump(typeof(SheetMusicOfferGump));
-                        player.SendGump(new SheetMusicOfferGump());
-                    }
-                    else
-                    {
-                        qs.AddConversation(new NoSheetMusicConversation());
-                    }
+                    player.CloseGump(typeof(SheetMusicOfferGump));
+                    player.SendGump(new SheetMusicOfferGump());
+                }
+                else
+                {
+                    qs.AddConversation(new NoSheetMusicConversation());
                 }
             }
         }
@@ -131,36 +126,26 @@ namespace Server.Engines.Quests.Collector
 
         public override void OnResponse(NetState sender, RelayInfo info)
         {
-            if (info.ButtonID == 1 && info.IsSwitched(1))
+            if (info.ButtonID == 1 && info.IsSwitched(1) && sender.Mobile is PlayerMobile player)
             {
-                PlayerMobile player = sender.Mobile as PlayerMobile;
+                QuestSystem qs = player.Quest;
 
-                if (player != null)
+                if (qs is CollectorQuest && qs.FindObjective(typeof(FindSheetMusicObjective)) is FindSheetMusicObjective obj && !obj.Completed)
                 {
-                    QuestSystem qs = player.Quest;
-
-                    if (qs is CollectorQuest)
+                    if (player.Backpack != null && player.Backpack.ConsumeTotal(typeof(Gold), 10))
                     {
-                        FindSheetMusicObjective obj = qs.FindObjective(typeof(FindSheetMusicObjective)) as FindSheetMusicObjective;
-
-                        if (obj != null && !obj.Completed)
+                        obj.Complete();
+                    }
+                    else
+                    {
+                        BankBox bank = player.FindBankNoCreate();
+                        if (bank != null && bank.ConsumeTotal(typeof(Gold), 10))
                         {
-                            if (player.Backpack != null && player.Backpack.ConsumeTotal(typeof(Gold), 10))
-                            {
-                                obj.Complete();
-                            }
-                            else
-                            {
-                                BankBox bank = player.FindBankNoCreate();
-                                if (bank != null && bank.ConsumeTotal(typeof(Gold), 10))
-                                {
-                                    obj.Complete();
-                                }
-                                else
-                                {
-                                    player.SendLocalizedMessage(1055108); // You don't have enough gold to buy the sheet music.
-                                }
-                            }
+                            obj.Complete();
+                        }
+                        else
+                        {
+                            player.SendLocalizedMessage(1055108); // You don't have enough gold to buy the sheet music.
                         }
                     }
                 }

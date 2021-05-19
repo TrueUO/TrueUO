@@ -475,18 +475,22 @@ namespace Server.Items
                 double healing = m_Healer.Skills[primarySkill].Value;
                 double anatomy = m_Healer.Skills[secondarySkill].Value;
 
-                FirstAidBelt belt = m_Healer.FindItemOnLayer(Layer.Waist) as FirstAidBelt;
-
-                if (belt != null)
+                if (m_Healer.FindItemOnLayer(Layer.Waist) is FirstAidBelt belt)
+                {
                     m_HealingBonus += belt.HealingBonus;
+                }
 
                 Item item = m_Healer.FindItemOnLayer(Layer.TwoHanded);
 
                 if (item is Asclepius || item is GargishAsclepius)
+                {
                     m_HealingBonus += 15;
+                }
 
                 if (m_HealingBonus > 0)
+                {
                     healing += m_HealingBonus;
+                }
 
                 double chance = (healing + 10.0) / 100.0 - m_Slips * 0.02;
 

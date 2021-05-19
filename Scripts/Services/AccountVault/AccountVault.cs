@@ -878,7 +878,7 @@ namespace Server.AccountVault
             {
                 var item = items[i];
 
-                if (item is ICommodity && ((ICommodity)item).IsDeedable)
+                if (item is ICommodity commodity && commodity.IsDeedable)
                 {
                     var deed = new CommodityDeed();
 

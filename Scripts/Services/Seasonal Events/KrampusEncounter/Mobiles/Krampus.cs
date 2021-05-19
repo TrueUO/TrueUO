@@ -484,12 +484,12 @@ namespace Server.Mobiles
             {
                 for (int i = 0; i < count; i++)
                 {
-                    BaseCreature summon = reader.ReadMobile() as BaseCreature;
-
-                    if (summon != null)
+                    if (reader.ReadMobile() is BaseCreature summon)
                     {
                         if (SummonedHelpers == null)
+                        {
                             SummonedHelpers = new List<BaseCreature>();
+                        }
 
                         SummonedHelpers.Add(summon);
                     }
@@ -502,12 +502,12 @@ namespace Server.Mobiles
             {
                 for (int i = 0; i < count; i++)
                 {
-                    BaseCreature summon = reader.ReadMobile() as BaseCreature;
-
-                    if (summon != null)
+                    if (reader.ReadMobile() is BaseCreature summon)
                     {
                         if (InitialSpawn == null)
+                        {
                             InitialSpawn = new List<BaseCreature>();
+                        }
 
                         InitialSpawn.Add(summon);
                     }

@@ -101,9 +101,7 @@ namespace Server.Items
         {
             if (from.Backpack != null)
             {
-                BaseEngravingTool tool = from.Backpack.FindItemByType(typeof(BaseEngravingTool)) as BaseEngravingTool;
-
-                if (tool != null && !tool.DeletedItem && tool.UsesRemaining <= 0)
+                if (from.Backpack.FindItemByType(typeof(BaseEngravingTool)) is BaseEngravingTool tool && !tool.DeletedItem && tool.UsesRemaining <= 0)
                 {
                     return tool;
                 }

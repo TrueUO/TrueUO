@@ -554,9 +554,7 @@ namespace Server.Items
 
         public override void OnAdded(object parent)
         {
-            Mobile mob = parent as Mobile;
-
-            if (mob != null)
+            if (parent is Mobile mob)
             {
                 m_AosSkillBonuses.AddTo(mob);
 
@@ -580,9 +578,7 @@ namespace Server.Items
 
         public override void OnRemoved(object parent)
         {
-            Mobile mob = parent as Mobile;
-
-            if (mob != null)
+            if (parent is Mobile mob)
             {
                 m_AosSkillBonuses.Remove();
 
@@ -1625,9 +1621,7 @@ namespace Server.Items
             if (m_MaxHitPoints == 0 && m_HitPoints == 0)
                 m_HitPoints = m_MaxHitPoints = Utility.RandomMinMax(InitMinHits, InitMaxHits);
 
-            Mobile parent = Parent as Mobile;
-
-            if (parent != null)
+            if (Parent is Mobile parent)
             {
                 m_AosSkillBonuses.AddTo(parent);
 

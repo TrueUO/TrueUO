@@ -422,9 +422,7 @@ namespace Server.Engines.ArenaSystem
         [Description("Gives gump for arena setup.")]
         public static void ArenaSetup(CommandEventArgs e)
         {
-            PlayerMobile pm = e.Mobile as PlayerMobile;
-
-            if (pm != null)
+            if (e.Mobile is PlayerMobile pm)
             {
                 BaseGump.SendGump(new PVPArenaSystemSetupGump(pm));
             }

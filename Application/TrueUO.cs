@@ -1,8 +1,8 @@
 using Server;
 
-namespace ServUO
+namespace TrueUO
 {
-	public static class ServUO
+	public static class TrueUO
 	{
 		static void Main(string[] args)
 		{

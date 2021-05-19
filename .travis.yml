@@ -1,5 +1,5 @@
 language: csharp
-solution: ServUO.sln
+solution: TrueUO.sln
 mono: latest
 
 dist: trusty

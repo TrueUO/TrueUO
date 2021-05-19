@@ -4,14 +4,14 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net48</TargetFramework>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <ApplicationIcon>servuo.ico</ApplicationIcon>
+    <ApplicationIcon>trueuo.ico</ApplicationIcon>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
     <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
     <OutputPath>..\</OutputPath>
     <ServerGarbageCollection>true</ServerGarbageCollection>
     <ConcurrentGarbageCollection>true</ConcurrentGarbageCollection>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <StartupObject>ServUO.ServUO</StartupObject>
+    <StartupObject>TrueUO.TrueUO</StartupObject>
     <RootNamespace>Server</RootNamespace>
   </PropertyGroup>
 
@@ -20,7 +20,7 @@
   </PropertyGroup>
   
   <PropertyGroup>
-    <DefineConstants>NEWTIMERS;ServUO</DefineConstants>
+    <DefineConstants>NEWTIMERS;TrueUO</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

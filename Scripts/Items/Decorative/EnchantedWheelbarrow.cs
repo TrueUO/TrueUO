@@ -128,9 +128,7 @@ namespace Server.Items
                 {
                     if (Harvest)
                     {
-                        Item i = Activator.CreateInstance(DecorativePlants[Utility.Random(DecorativePlants.Length)]) as Item;
-
-                        if (i != null)
+                        if (Activator.CreateInstance(DecorativePlants[Utility.Random(DecorativePlants.Length)]) is Item i)
                         {
                             if (Utility.RandomDouble() < 0.1)
                             {
