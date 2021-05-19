@@ -18,7 +18,7 @@
   </PropertyGroup>
   
   <PropertyGroup>
-    <DefineConstants>NEWTIMERS;ServUO</DefineConstants>
+    <DefineConstants>NEWTIMERS;TrueUO</DefineConstants>
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
   

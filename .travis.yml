@@ -1,7 +1,7 @@
 language: csharp
 solution: TrueUO.sln
 mono: none
-dotnet: 3.1.402
+dotnet: 5.0.202
 
 addons:
   sonarcloud:
