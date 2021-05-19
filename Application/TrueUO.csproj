@@ -27,6 +27,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
+  
+  <ItemGroup>
+    <None Remove="4119df95-33ef-4727-99a5-f706f32938f3.tmp" />
+  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Scripts\Scripts.csproj" />
