@@ -48,9 +48,7 @@ namespace Server.Spells.Ninjitsu
                 return false;
             }
 
-            BaseRanged ranged = from.Weapon as BaseRanged;
-
-            if (ranged != null)
+            if (from.Weapon is BaseRanged)
             {
                 from.SendLocalizedMessage(1075858); // You can only use this with melee attacks.
                 return false;
@@ -92,9 +90,7 @@ namespace Server.Spells.Ninjitsu
 
         public override void OnClearMove(Mobile from)
         {
-            KiAttackInfo info = m_Table[from] as KiAttackInfo;
-
-            if (info != null)
+            if (m_Table[from] is KiAttackInfo info)
             {
                 info.m_Timer?.Stop();
 

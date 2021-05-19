@@ -639,15 +639,10 @@ namespace Server.Spells.Ninjitsu
                 {
                     if (m_Counter++ >= 8)
                     {
-                        if (m_Mobile.Hits < m_Mobile.HitsMax && m_Mobile.Backpack != null)
+                        if (m_Mobile.Hits < m_Mobile.HitsMax && m_Mobile.Backpack != null && m_Mobile.Backpack.FindItemByType(typeof(Bandage)) is Bandage b)
                         {
-                            Bandage b = m_Mobile.Backpack.FindItemByType(typeof(Bandage)) as Bandage;
-
-                            if (b != null)
-                            {
-                                m_Mobile.Hits += Utility.RandomMinMax(20, 50);
-                                b.Consume();
-                            }
+                            m_Mobile.Hits += Utility.RandomMinMax(20, 50);
+                            b.Consume();
                         }
 
                         m_Counter = 0;

@@ -290,12 +290,12 @@ namespace Server.Items
 
             for (int i = 0; i < count; i++)
             {
-                BeaconRubble item = reader.ReadItem() as BeaconRubble;
-
-                if (item != null)
+                if (reader.ReadItem() is BeaconRubble item)
                 {
                     if (Rubble == null)
+                    {
                         Rubble = new List<BeaconRubble>();
+                    }
 
                     Rubble.Add(item);
                 }

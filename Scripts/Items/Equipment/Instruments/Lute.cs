@@ -55,9 +55,7 @@ namespace Server.Items
 
         public override void PlayInstrumentWell(Mobile from)
         {
-            var smfs = from.Backpack.FindItemByType(typeof(SheetMusicForStones)) as SheetMusicForStones;
-
-            if (smfs != null && !smfs.Active)
+            if (from.Backpack.FindItemByType(typeof(SheetMusicForStones)) is SheetMusicForStones smfs && !smfs.Active)
             {
                 var box = from.Map.GetItemsInRange(from.Location, 3).FirstOrDefault(x => x.ItemID == 19724 && x.Hue == 1111);
 
@@ -78,6 +76,7 @@ namespace Server.Items
                     smfs.Active = true;
 
                     Gump g = new Gump(100, 100);
+
                     g.AddBackground(0, 0, 620, 290, 0x2454);
                     g.AddImage(0, 0, 0x9D3F);
                     g.AddHtmlLocalized(280, 14, 328, 18, 1114513, "#1159384", 0xC63, false, false); // <DIV ALIGN=CENTER>~1_TOKEN~</DIV>

@@ -98,9 +98,7 @@ namespace Server.Engines.TreasuresOfKotlCity
                 RandomizeOrder();
             }
 
-            KotlCityPuzzleComponent comp = component as KotlCityPuzzleComponent;
-
-            if (comp != null && comp.Active)
+            if (component is KotlCityPuzzleComponent comp && comp.Active)
             {
                 if (comp.Offset.X == _Order[_Index])
                 {

@@ -72,7 +72,8 @@ namespace Server.Items
         public static bool CanReforge(Mobile from, Item item, CraftSystem crsystem)
         {
             bool allowableSpecial = m_AllowableTable.ContainsKey(item.GetType());
-            CraftSystem system = null;
+
+            CraftSystem system;
 
             if (!allowableSpecial)
             {

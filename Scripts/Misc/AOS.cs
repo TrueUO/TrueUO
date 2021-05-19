@@ -424,9 +424,7 @@ namespace Server
                 }
                 else if (context.Type == typeof(VampiricEmbraceSpell))
                 {
-                    var bc = target as BaseCreature;
-
-                    if (bc != null && bc.TaintedLifeAura)
+                    if (target is BaseCreature bc && bc.TaintedLifeAura)
                     {
                         Damage(from, target, Scale(damageGiven, 20), false, 0, 0, 0, 0, 0, 0, 100, false, false, false);
                         from.SendLocalizedMessage(1116778); //The tainted life force energy damages you as your body tries to absorb it.

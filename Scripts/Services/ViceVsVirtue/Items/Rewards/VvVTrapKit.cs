@@ -55,9 +55,7 @@ namespace Server.Engines.VvV
                         from.SendLocalizedMessage(1155409); // Where do you want to place the trap?
                         from.BeginTarget(2, true, TargetFlags.None, (m, targeted) =>
                         {
-                            IPoint3D p = targeted as IPoint3D;
-
-                            if (p != null)
+                            if (targeted is IPoint3D p)
                             {
                                 if (!sys.Battle.OnGoing || !m.Region.IsPartOf(sys.Battle.Region))
                                 {
@@ -77,7 +75,9 @@ namespace Server.Engines.VvV
                                 }
                             }
                             else
+                            {
                                 m.SendLocalizedMessage(1042261); // You cannot place the trap there.
+                            }
                         });
                     }
                 }
@@ -97,9 +97,7 @@ namespace Server.Engines.VvV
                 m.SendLocalizedMessage(1155410); // Target the location to run the tripwire...
                 m.BeginTarget(5, true, TargetFlags.None, (from, targeted) =>
                 {
-                    IPoint3D p = targeted as IPoint3D;
-
-                    if (p != null)
+                    if (targeted is IPoint3D p)
                     {
                         Point3D point = new Point3D(p);
 
@@ -157,8 +155,10 @@ namespace Server.Engines.VvV
 
             List<Mobile> mobs = new List<Mobile>(_Cooldown.Keys);
 
-            foreach (Mobile m in mobs)
+            for (var index = 0; index < mobs.Count; index++)
             {
+                Mobile m = mobs[index];
+
                 if (_Cooldown[m] < DateTime.UtcNow)
                 {
                     _Cooldown.Remove(m);

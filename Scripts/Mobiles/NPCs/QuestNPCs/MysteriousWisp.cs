@@ -349,9 +349,7 @@ namespace Server.Mobiles
 
                 list.Add(new SimpleContextMenuEntry<Item>(from, 1062219, (m, i) => // Buy
                 {
-                    var wisp = RootParent as MysteriousWisp;
-
-                    if (wisp != null && i.IsChildOf(this))
+                    if (RootParent is MysteriousWisp wisp && i.IsChildOf(this))
                     {
                         wisp.TryBuyItem(m, i);
                     }

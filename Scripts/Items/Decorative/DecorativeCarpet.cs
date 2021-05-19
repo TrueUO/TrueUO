@@ -44,9 +44,7 @@ namespace Server.Items
 
         public override void OnDoubleClick(Mobile from)
         {
-            HouseRegion region = Region.Find(Location, Map) as HouseRegion;
-
-            if (region != null)
+            if (Region.Find(Location, Map) is HouseRegion region)
             {
                 BaseHouse house = region.House;
 

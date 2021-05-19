@@ -44,11 +44,10 @@ namespace Server.Items
         {
             object[] ojs = (object[])o;
 
-            Corpse c = ojs[0] as Corpse;
-            Mobile from = ojs[1] as Mobile;
-
-            if (c != null && from != null)
+            if (ojs[0] is Corpse c && ojs[1] is Mobile from)
+            {
                 c.MoveToWorld(from.Location, from.Map);
+            }
         }
 
         public override void AddNameProperties(ObjectPropertyList list)
@@ -71,7 +70,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 

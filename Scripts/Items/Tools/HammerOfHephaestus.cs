@@ -22,7 +22,7 @@ namespace Server.Items
                 {
                     if (!TimerRegistry.UpdateRegistry(TimerID, this, RechargDuration))
                     {
-                        TimerRegistry.Register(TimerID, this, RechargDuration, false, hammer => Tick_Callback(hammer));
+                        TimerRegistry.Register(TimerID, this, RechargDuration, false, Tick_Callback);
                     }
                 }
                 else
@@ -107,7 +107,7 @@ namespace Server.Items
 
             if (UsesRemaining < 20)
             {
-                TimerRegistry.Register(TimerID, this, RechargDuration, false, hammer => Tick_Callback(hammer));
+                TimerRegistry.Register(TimerID, this, RechargDuration, false, Tick_Callback);
             }
         }
     }

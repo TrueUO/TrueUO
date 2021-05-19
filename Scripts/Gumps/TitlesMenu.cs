@@ -1161,7 +1161,7 @@ namespace Server.Gumps
 
         public List<int> GetCityTitles()
         {
-            IEnumerable<int> list = User.RewardTitles.OfType<int>().Where(i => IsCityTitle(i));
+            IEnumerable<int> list = User.RewardTitles.OfType<int>().Where(IsCityTitle);
 
             List<int> ownedTitles = new List<int>();
 

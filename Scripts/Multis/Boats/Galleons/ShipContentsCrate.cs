@@ -101,8 +101,13 @@ namespace Server.Items
                 if (m_From.InRange(m_Crate.Boat.Location, Mobiles.DockMaster.DryDockDistance))
                 {
                     List<Item> items = new List<Item>(m_Crate.Items);
-                    foreach (Item item in items)
+
+                    for (var index = 0; index < items.Count; index++)
+                    {
+                        Item item = items[index];
+
                         hold.DropItem(item);
+                    }
 
                     m_From.SendMessage("You hold has been loaded from the shipping crate.");
                 }

@@ -268,9 +268,7 @@ namespace Server.Engines.Shadowguard
                     }
                 }
 
-                BaseCreature spawn = Activator.CreateInstance(SummonTypes[Utility.Random(SummonTypes.Length)]) as BaseCreature;
-
-                if (spawn != null)
+                if (Activator.CreateInstance(SummonTypes[Utility.Random(SummonTypes.Length)]) is BaseCreature spawn)
                 {
                     spawn.MoveToWorld(p, map);
                     spawn.Team = Team;
@@ -283,7 +281,9 @@ namespace Server.Engines.Shadowguard
                         if (s != null && s.Combatant != null)
                         {
                             if (!(s.Combatant is PlayerMobile) || !((PlayerMobile)s.Combatant).HonorActive)
+                            {
                                 s.Combatant = Combatant;
+                            }
                         }
 
                     }, spawn);
@@ -347,12 +347,12 @@ namespace Server.Engines.Shadowguard
             {
                 for (int i = 0; i < count; i++)
                 {
-                    BaseCreature summon = reader.ReadMobile() as BaseCreature;
-
-                    if (summon != null)
+                    if (reader.ReadMobile() is BaseCreature summon)
                     {
                         if (SummonedHelpers == null)
+                        {
                             SummonedHelpers = new List<BaseCreature>();
+                        }
 
                         SummonedHelpers.Add(summon);
                     }
@@ -583,9 +583,7 @@ namespace Server.Engines.Shadowguard
         {
             base.AlterMeleeDamageFrom(m, ref damage);
 
-            BaseWeapon weapon = m.Weapon as BaseWeapon;
-
-            if (weapon != null)
+            if (m.Weapon is BaseWeapon weapon)
             {
                 SlayerEntry slayer = SlayerGroup.GetEntryByName(weapon.Slayer);
 

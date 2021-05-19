@@ -123,20 +123,20 @@ namespace Server.Engines.SeasonalEvents
 
             SpawnLocation = p;
 
-            foreach (NetState ns in NetState.Instances)
+            for (var index = 0; index < NetState.Instances.Count; index++)
             {
+                NetState ns = NetState.Instances[index];
+
                 Mobile mob = ns.Mobile;
 
                 if (mob != null && CityTradeSystem.HasTrade(mob))
                 {
-                    mob.LocalOverheadMessage(MessageType.Regular, 1150, 1158832, string.Format("{0}\t{1}", WorldLocationInfo.GetLocationString(SpawnLocation, SpawnMap), Sextant.GetCoords(SpawnLocation, SpawnMap))); // *You sense Krampus has been spotted near ~2_where~ at ~1_coords~!*
+                    mob.LocalOverheadMessage(MessageType.Regular, 1150, 1158832, string.Format("{0}\t{1}", WorldLocationInfo.GetLocationString(SpawnLocation, SpawnMap), Sextant.GetCoords(SpawnLocation,
+                                SpawnMap))); // *You sense Krampus has been spotted near ~2_where~ at ~1_coords~!*
                 }
             }
 
-            Timer.DelayCall(TimeSpan.FromMinutes(5), () =>
-            {
-                SpawnKrampus();
-            });
+            Timer.DelayCall(TimeSpan.FromMinutes(5), SpawnKrampus);
         }
 
         private void SpawnKrampus()

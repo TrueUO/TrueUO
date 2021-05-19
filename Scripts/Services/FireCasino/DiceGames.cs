@@ -125,12 +125,9 @@ namespace Server.Engines.ResortAndCasino
 
         public virtual void OnWin()
         {
-            if (Player != null)
+            if (Player != null && QuestHelper.GetQuest(Player, typeof(GettingEvenQuest)) is GettingEvenQuest q)
             {
-                GettingEvenQuest q = QuestHelper.GetQuest(Player, typeof(GettingEvenQuest)) as GettingEvenQuest;
-
-                if (q != null)
-                    q.Update(GetType());
+                q.Update(GetType());
             }
         }
 
@@ -187,10 +184,10 @@ namespace Server.Engines.ResortAndCasino
 
         public override void SendGump()
         {
-            ChucklesLuckGump g = Player.FindGump(typeof(ChucklesLuckGump)) as ChucklesLuckGump;
-
-            if (g != null)
+            if (Player.FindGump(typeof(ChucklesLuckGump)) is ChucklesLuckGump g)
+            {
                 g.Refresh();
+            }
             else
             {
                 Player.SendGump(new ChucklesLuckGump(Player, this));
@@ -278,10 +275,10 @@ namespace Server.Engines.ResortAndCasino
 
         public override void SendGump()
         {
-            HiMiddleLowGump g = Player.FindGump(typeof(HiMiddleLowGump)) as HiMiddleLowGump;
-
-            if (g != null)
+            if (Player.FindGump(typeof(HiMiddleLowGump)) is HiMiddleLowGump g)
+            {
                 g.Refresh();
+            }
             else
             {
                 Player.SendGump(new HiMiddleLowGump(Player, this));
@@ -305,7 +302,7 @@ namespace Server.Engines.ResortAndCasino
 
         public bool WinsOutside(int total)
         {
-            return (total >= 4 && total <= 6) || (total >= 15 && total <= 17);
+            return total >= 4 && total <= 6 || total >= 15 && total <= 17;
         }
     }
 
@@ -419,10 +416,10 @@ namespace Server.Engines.ResortAndCasino
 
         public override void SendGump()
         {
-            DiceRiderGump g = Player.FindGump(typeof(DiceRiderGump)) as DiceRiderGump;
-
-            if (g != null)
+            if (Player.FindGump(typeof(DiceRiderGump)) is DiceRiderGump g)
+            {
                 g.Refresh();
+            }
             else
             {
                 Player.SendGump(new DiceRiderGump(Player, this));
@@ -437,50 +434,57 @@ namespace Server.Engines.ResortAndCasino
         public bool IsFourOfAKind()
         {
             if (Roll == null || Roll.Count < 4)
+            {
                 return false;
+            }
 
             int[] roll = Roll.ToArray();
+
             Array.Sort(roll);
 
-            return (roll[0] == roll[1] && roll[0] == roll[2] && roll[0] == roll[3])
-                || (roll[1] == roll[2] && roll[1] == roll[3] && roll[1] == roll[4]);
+            return roll[0] == roll[1] && roll[0] == roll[2] && roll[0] == roll[3] || roll[1] == roll[2] && roll[1] == roll[3] && roll[1] == roll[4];
         }
 
         public bool IsStraight()
         {
             if (Roll == null || Roll.Count < 5)
+            {
                 return false;
+            }
 
             int[] roll = Roll.ToArray();
+
             Array.Sort(roll);
 
-            return (roll[0] == 1 && roll[1] == 2 && roll[2] == 3 && roll[3] == 4 && roll[4] == 5) ||
-                   (roll[0] == 2 && roll[1] == 3 && roll[2] == 4 && roll[3] == 5 && roll[4] == 6);
+            return roll[0] == 1 && roll[1] == 2 && roll[2] == 3 && roll[3] == 4 && roll[4] == 5 || roll[0] == 2 && roll[1] == 3 && roll[2] == 4 && roll[3] == 5 && roll[4] == 6;
         }
 
         public bool IsFullHouse()
         {
             if (Roll == null || Roll.Count < 5)
+            {
                 return false;
+            }
 
             int[] roll = Roll.ToArray();
+
             Array.Sort(roll);
 
-            return (roll[0] == roll[1] && roll[0] == roll[2] && roll[3] == roll[4]) ||
-                   (roll[0] == roll[1] && roll[2] == roll[3] && roll[2] == roll[4]);
+            return roll[0] == roll[1] && roll[0] == roll[2] && roll[3] == roll[4] || roll[0] == roll[1] && roll[2] == roll[3] && roll[2] == roll[4];
         }
 
         public bool IsThreeOfAKind()
         {
             if (Roll == null || Roll.Count < 3)
+            {
                 return false;
+            }
 
             int[] roll = Roll.ToArray();
+
             Array.Sort(roll);
 
-            return (roll[0] == roll[1] && roll[0] == roll[2])
-                  || (roll[1] == roll[2] && roll[1] == roll[3])
-                  || (roll[2] == roll[3] && roll[2] == roll[4]);
+            return roll[0] == roll[1] && roll[0] == roll[2] || roll[1] == roll[2] && roll[1] == roll[3] || roll[2] == roll[3] && roll[2] == roll[4];
         }
     }
 }

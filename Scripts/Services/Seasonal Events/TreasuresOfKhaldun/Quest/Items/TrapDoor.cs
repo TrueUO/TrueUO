@@ -37,7 +37,7 @@ namespace Server.Engines.Khaldun
 
                 if (!current && _HasBeenExamined)
                 {
-                    HideTimer = Timer.DelayCall(TimeSpan.FromMinutes(20), () => Hide());
+                    HideTimer = Timer.DelayCall(TimeSpan.FromMinutes(20), Hide);
                 }
             }
         }
@@ -121,7 +121,7 @@ namespace Server.Engines.Khaldun
                     HideTimer.Stop();
                     HideTimer = null;
 
-                    HideTimer = Timer.DelayCall(TimeSpan.FromMinutes(20), () => Hide());
+                    HideTimer = Timer.DelayCall(TimeSpan.FromMinutes(20), Hide);
                 }
             }
         }

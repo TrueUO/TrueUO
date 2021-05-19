@@ -339,10 +339,7 @@ namespace Server.Items
 
             writer.Write(Content.Count);
 
-            Content.ForEach(s =>
-            {
-                writer.Write(s);
-            });
+            Content.ForEach(writer.Write);
 
         }
 

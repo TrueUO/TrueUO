@@ -145,10 +145,10 @@ namespace Server.Spells.Seventh
 
             protected override void OnTarget(Mobile from, object o)
             {
-                IPoint3D p = o as IPoint3D;
-
-                if (p != null)
+                if (o is IPoint3D p)
+                {
                     m_Owner.Target(p, m_Item);
+                }
             }
 
             protected override void OnTargetFinish(Mobile from)

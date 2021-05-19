@@ -1,4 +1,4 @@
-﻿using Server.Accounting;
+using Server.Accounting;
 using Server.Gumps;
 using Server.Mobiles;
 using Server.Network;
@@ -66,9 +66,7 @@ namespace Server.Items
 
         public void OnUsed(Mobile from)
         {
-            PlayerMobile pm = from as PlayerMobile;
-
-            if (pm != null)
+            if (from is PlayerMobile pm)
             {
                 if (pm.RewardStableSlots >= 21)
                 {

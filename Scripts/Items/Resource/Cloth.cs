@@ -91,10 +91,10 @@ namespace Server.Items
 
             for (int i = 0; i < items.Length; i++)
             {
-                BoltOfCloth boc = items[i] as BoltOfCloth;
-
-                if (boc != null)
+                if (items[i] is BoltOfCloth boc)
+                {
                     boc.Scissor(from, null);
+                }
             }
         }
     }
@@ -154,9 +154,7 @@ namespace Server.Items
 
             for (int i = 0; i < items.Length; i++)
             {
-                Cloth c = items[i] as Cloth;
-
-                if (c != null)
+                if (items[i] is Cloth c)
                 {
                     int count;
 

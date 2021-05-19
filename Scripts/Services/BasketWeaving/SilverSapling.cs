@@ -43,9 +43,7 @@ namespace Server.Items
 
         public override void OnDoubleClick(Mobile m)
         {
-            PlayerMobile pm = m as PlayerMobile;
-
-            if (pm != null && pm.Backpack != null)
+            if (m is PlayerMobile pm && pm.Backpack != null)
             {
                 if (pm.SSNextSeed > DateTime.UtcNow)
                 {

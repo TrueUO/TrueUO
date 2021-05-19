@@ -1469,9 +1469,7 @@ namespace Server.Guilds
                     mobile.GuildRank = RankDefinition.Lowest;
                 }
 
-                Guild guild = m.Guild as Guild;
-
-                if (guild != null)
+                if (m.Guild is Guild guild)
                 {
                     guild.InvalidateWarNotoriety();
                 }

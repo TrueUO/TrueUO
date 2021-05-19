@@ -44,9 +44,7 @@ namespace Server.Engines.Blackthorn
 
         public override WeaponAbility GetWeaponAbility()
         {
-            BaseWeapon wep = Weapon as BaseWeapon;
-
-            if (wep != null)
+            if (Weapon is BaseWeapon wep)
             {
                 return 0.6 > Utility.RandomDouble() ? wep.PrimaryAbility : wep.SecondaryAbility;
             }

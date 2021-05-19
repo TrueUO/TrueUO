@@ -239,10 +239,14 @@ namespace Server.Gumps
         {
             int count = 1;
 
-            foreach (ReforgingOption option in Options)
+            for (var index = 0; index < Options.Length; index++)
             {
+                ReforgingOption option = Options[index];
+
                 if ((m_Options & option) != 0)
+                {
                     count++;
+                }
             }
 
             return Math.Min(10, count);

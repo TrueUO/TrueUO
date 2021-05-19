@@ -741,11 +741,10 @@ namespace Server.Mobiles
                     }
                 }
 
-                GuardedRegion r = Region as GuardedRegion;
-
-                if (r != null && mob.Alive)
+                if (Region is GuardedRegion r && mob.Alive)
                 {
                     IPooledEnumerable eable = GetMobilesInRange(2);
+
                     foreach (Mobile m in eable)
                     {
                         if (!mob.CanBeHarmful(m))

@@ -62,11 +62,11 @@ namespace Server.Spells.SkillMasteries
         public bool CheckWeapon(Mobile from)
         {
             if (!from.Player)
+            {
                 return true;
+            }
 
-            BaseWeapon wep = from.Weapon as BaseWeapon;
-
-            return wep != null && wep.DefSkill == MoveSkill;
+            return from.Weapon is BaseWeapon wep && wep.DefSkill == MoveSkill;
         }
 
         public virtual bool IsInCooldown(Mobile m)

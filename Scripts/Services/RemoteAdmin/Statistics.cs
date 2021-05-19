@@ -79,9 +79,7 @@ namespace Server.RemoteAdmin
             {
                 if (!i.Deleted && (i is Gold || i is BankCheck))
                 {
-                    var p = i.RootParent as Mobile;
-
-                    if (p != null && p.AccessLevel > AccessLevel.Player)
+                    if (i.RootParent is Mobile p && p.AccessLevel > AccessLevel.Player)
                     {
                         continue;
                     }
@@ -97,8 +95,10 @@ namespace Server.RemoteAdmin
                 }
             }
 
-            foreach (var vendor in PlayerVendor.PlayerVendors)
+            for (var index = 0; index < PlayerVendor.PlayerVendors.Count; index++)
             {
+                var vendor = PlayerVendor.PlayerVendors[index];
+
                 gold += vendor.BankAccount + vendor.HoldGold;
             }
 

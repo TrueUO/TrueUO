@@ -99,70 +99,62 @@ namespace Server.Mobiles
 
         public override void OnThink()
         {
-            if (DateTime.UtcNow >= m_NextAbilityTime)
+            if (DateTime.UtcNow >= m_NextAbilityTime && Combatant is Mobile combatant && combatant.Map == Map && combatant.InRange(this, 12) && IsEnemy(combatant) && !UnderEffect(combatant))
             {
-                Mobile combatant = Combatant as Mobile;
+                m_NextAbilityTime = DateTime.UtcNow + TimeSpan.FromSeconds(Utility.RandomMinMax(20, 30));
 
-                if (combatant != null && combatant.Map == Map && combatant.InRange(this, 12) && IsEnemy(combatant) && !UnderEffect(combatant))
+                if (combatant is BaseCreature bc && bc.Controlled && bc.ControlMaster != null && !bc.ControlMaster.Deleted && bc.ControlMaster.Alive && bc.ControlMaster.Map == Map && bc.ControlMaster.InRange(this, 12) && !UnderEffect(bc.ControlMaster))
                 {
-                    m_NextAbilityTime = DateTime.UtcNow + TimeSpan.FromSeconds(Utility.RandomMinMax(20, 30));
+                    Combatant = combatant = bc.ControlMaster;
+                }
 
-                    if (combatant is BaseCreature bc && bc.Controlled && bc.ControlMaster != null && !bc.ControlMaster.Deleted && bc.ControlMaster.Alive)
+                if (Utility.RandomDouble() < .1)
+                {
+                    int[][] coord =
                     {
-                        if (bc.ControlMaster.Map == Map && bc.ControlMaster.InRange(this, 12) && !UnderEffect(bc.ControlMaster))
+                        new[] { -4, -6 }, new[] { 4, -6 }, new[] { 0, -8 }, new[] { -5, 5 }, new[] { 5, 5 }
+                    };
+
+                    BaseCreature rabid;
+
+                    for (int i = 0; i < 5; i++)
+                    {
+                        int x = combatant.X + coord[i][0];
+                        int y = combatant.Y + coord[i][1];
+
+                        Point3D loc = new Point3D(x, y, combatant.Map.GetAverageZ(x, y));
+
+                        if (!combatant.Map.CanSpawnMobile(loc))
+                            continue;
+
+                        switch (i)
                         {
-                            Combatant = combatant = bc.ControlMaster;
+                            case 0:
+                                rabid = new EnragedRabbit(this);
+                                break;
+                            case 1:
+                                rabid = new EnragedHind(this);
+                                break;
+                            case 2:
+                                rabid = new EnragedHart(this);
+                                break;
+                            case 3:
+                                rabid = new EnragedBlackBear(this);
+                                break;
+                            default:
+                                rabid = new EnragedEagle(this);
+                                break;
                         }
+
+                        rabid.FocusMob = combatant;
+                        rabid.MoveToWorld(loc, combatant.Map);
                     }
-
-                    if (Utility.RandomDouble() < .1)
-                    {
-                        int[][] coord =
-                        {
-                            new[] { -4, -6 }, new[] { 4, -6 }, new[] { 0, -8 }, new[] { -5, 5 }, new[] { 5, 5 }
-                        };
-
-                        BaseCreature rabid;
-
-                        for (int i = 0; i < 5; i++)
-                        {
-                            int x = combatant.X + coord[i][0];
-                            int y = combatant.Y + coord[i][1];
-
-                            Point3D loc = new Point3D(x, y, combatant.Map.GetAverageZ(x, y));
-
-                            if (!combatant.Map.CanSpawnMobile(loc))
-                                continue;
-
-                            switch (i)
-                            {
-                                case 0:
-                                    rabid = new EnragedRabbit(this);
-                                    break;
-                                case 1:
-                                    rabid = new EnragedHind(this);
-                                    break;
-                                case 2:
-                                    rabid = new EnragedHart(this);
-                                    break;
-                                case 3:
-                                    rabid = new EnragedBlackBear(this);
-                                    break;
-                                default:
-                                    rabid = new EnragedEagle(this);
-                                    break;
-                            }
-
-                            rabid.FocusMob = combatant;
-                            rabid.MoveToWorld(loc, combatant.Map);
-                        }
-                        Say(1071932); //Creatures of the forest, I call to thee!  Aid me in the fight against all that is evil!
-                    }
-                    else if (combatant.Player)
-                    {
-                        Say(true, "I call a plague of insects to sting your flesh!");
-                        m_Table[combatant] = Timer.DelayCall(TimeSpan.FromSeconds(0.5), TimeSpan.FromSeconds(7.0), new TimerStateCallback(DoEffect), new object[] { combatant, 0 });
-                    }
+                    Say(1071932); //Creatures of the forest, I call to thee!  Aid me in the fight against all that is evil!
+                }
+                else if (combatant.Player)
+                {
+                    Say(true, "I call a plague of insects to sting your flesh!");
+                    m_Table[combatant] = Timer.DelayCall(TimeSpan.FromSeconds(0.5), TimeSpan.FromSeconds(7.0), new TimerStateCallback(DoEffect), new object[] { combatant, 0 });
                 }
             }
 
@@ -182,9 +174,7 @@ namespace Server.Mobiles
             }
             else
             {
-                Torch torch = m.FindItemOnLayer(Layer.TwoHanded) as Torch;
-
-                if (torch != null && torch.Burning)
+                if (m.FindItemOnLayer(Layer.TwoHanded) is Torch torch && torch.Burning)
                 {
                     StopEffect(m, true);
                 }

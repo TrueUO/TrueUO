@@ -158,9 +158,7 @@ namespace Server.Engines.Harvest
 
         public override bool SpecialHarvest(Mobile from, Item tool, HarvestDefinition def, Map map, Point3D loc)
         {
-            PlayerMobile player = from as PlayerMobile;
-
-            if (player != null)
+            if (from is PlayerMobile player)
             {
                 QuestSystem qs = player.Quest;
 
@@ -187,8 +185,10 @@ namespace Server.Engines.Harvest
 
                 if (from.Region.IsPartOf("Underworld"))
                 {
-                    foreach (BaseQuest quest in player.Quests)
+                    for (var index = 0; index < player.Quests.Count; index++)
                     {
+                        BaseQuest quest = player.Quests[index];
+
                         if (quest is SomethingFishy && Utility.RandomDouble() < 0.1)
                         {
                             Item red = new RedHerring();
@@ -520,12 +520,12 @@ namespace Server.Engines.Harvest
         {
             if (item is TreasureMap || item is MessageInABottle || item is SpecialFishingNet)
             {
-                BaseCreature serp;
+                BaseCreature serpent;
 
                 if (0.25 > Utility.RandomDouble())
-                    serp = new DeepSeaSerpent();
+                    serpent = new DeepSeaSerpent();
                 else
-                    serp = new SeaSerpent();
+                    serpent = new SeaSerpent();
 
                 int x = m.X, y = m.Y;
 
@@ -546,12 +546,12 @@ namespace Server.Engines.Harvest
                     }
                 }
 
-                serp.MoveToWorld(new Point3D(x, y, -5), map);
+                serpent.MoveToWorld(new Point3D(x, y, -5), map);
 
-                serp.Home = serp.Location;
-                serp.RangeHome = 10;
+                serpent.Home = serpent.Location;
+                serpent.RangeHome = 10;
 
-                serp.PackItem(item);
+                serpent.PackItem(item);
 
                 m.SendLocalizedMessage(503170); // Uh oh! That doesn't look like a fish!
 
@@ -632,7 +632,7 @@ namespace Server.Engines.Harvest
                 else if (item is SpecialFishingNet)
                 {
                     number = 1008125;
-                    name = "a special fishing net"; // TODO: this is just a guess--what should it really be named?
+                    name = "a special fishing net"; 
                 }
                 else if (item is BaseHighseasFish)
                 {
@@ -857,11 +857,16 @@ namespace Server.Engines.Harvest
 
         public bool ValidateSpecialTile(int tileID)
         {
-            foreach (int id in m_LavaTiles)
+            for (var index = 0; index < m_LavaTiles.Length; index++)
             {
+                int id = m_LavaTiles[index];
+
                 if (tileID == id)
+                {
                     return true;
+                }
             }
+
             return false;
         }
 

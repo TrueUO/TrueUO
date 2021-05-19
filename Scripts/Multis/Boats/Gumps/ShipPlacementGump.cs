@@ -88,9 +88,7 @@ namespace Server.Gumps
 
             protected override void OnTarget(Mobile from, object o)
             {
-                IPoint3D ip = o as IPoint3D;
-
-                if (ip != null)
+                if (o is IPoint3D ip)
                 {
                     if (ip is Item item)
                         ip = item.GetWorldTop();

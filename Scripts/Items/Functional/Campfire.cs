@@ -15,10 +15,12 @@ namespace Server.Items
     public class Campfire : Item
     {
         public static readonly int SecureRange = 7;
+
         private static readonly Hashtable m_Table = new Hashtable();
         private readonly Timer m_Timer;
         private readonly DateTime m_Created;
         private readonly ArrayList m_Entries;
+
         public Campfire()
             : base(0xDE3)
         {
@@ -38,6 +40,7 @@ namespace Server.Items
 
         [CommandProperty(AccessLevel.GameMaster)]
         public DateTime Created => m_Created;
+
         [CommandProperty(AccessLevel.GameMaster)]
         public CampfireStatus Status
         {
@@ -117,17 +120,29 @@ namespace Server.Items
             TimeSpan age = now - Created;
 
             if (age >= TimeSpan.FromSeconds(100.0))
+            {
                 Delete();
+            }
             else if (age >= TimeSpan.FromSeconds(90.0))
+            {
                 Status = CampfireStatus.Off;
+            }
             else if (age >= TimeSpan.FromSeconds(60.0))
+            {
                 Status = CampfireStatus.Extinguishing;
+            }
 
             if (Status == CampfireStatus.Off || Deleted)
-                return;
-
-            foreach (CampfireEntry entry in new ArrayList(m_Entries))
             {
+                return;
+            }
+
+            var list = new ArrayList(m_Entries);
+
+            for (var index = 0; index < list.Count; index++)
+            {
+                var entry = (CampfireEntry) list[index];
+
                 if (!entry.Valid || entry.Player.NetState == null)
                 {
                     RemoveEntry(entry);
@@ -143,9 +158,7 @@ namespace Server.Items
 
             foreach (NetState state in eable)
             {
-                PlayerMobile pm = state.Mobile as PlayerMobile;
-
-                if (pm != null && GetEntry(pm) == null)
+                if (state.Mobile is PlayerMobile pm && GetEntry(pm) == null)
                 {
                     CampfireEntry entry = new CampfireEntry(pm, this);
 
@@ -162,10 +175,16 @@ namespace Server.Items
         private void ClearEntries()
         {
             if (m_Entries == null)
-                return;
-
-            foreach (CampfireEntry entry in new ArrayList(m_Entries))
             {
+                return;
+            }
+
+            var list = new ArrayList(m_Entries);
+
+            for (var index = 0; index < list.Count; index++)
+            {
+                var entry = (CampfireEntry) list[index];
+
                 RemoveEntry(entry);
             }
         }
@@ -177,6 +196,7 @@ namespace Server.Items
         private readonly Campfire m_Fire;
         private readonly DateTime m_Start;
         private bool m_Safe;
+
         public CampfireEntry(PlayerMobile player, Campfire fire)
         {
             m_Player = player;
@@ -189,6 +209,7 @@ namespace Server.Items
         public Campfire Fire => m_Fire;
         public DateTime Start => m_Start;
         public bool Valid => !Fire.Deleted && Fire.Status != CampfireStatus.Off && Player.Map == Fire.Map && Player.InRange(Fire, Campfire.SecureRange);
+
         public bool Safe
         {
             get => Valid && m_Safe;

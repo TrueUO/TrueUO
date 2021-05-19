@@ -71,9 +71,7 @@ namespace Server.Items
         {
             base.GetProperties(list);
 
-            CustomizableSquaredDoorMatAddon addon = Addon as CustomizableSquaredDoorMatAddon;
-
-            if (addon != null)
+            if (Addon is CustomizableSquaredDoorMatAddon addon)
             {
                 if (addon.Lines != null)
                 {

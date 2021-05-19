@@ -310,14 +310,10 @@ namespace Server.Misc
                 {
                     Mobile master = bc.GetMaster();
 
-                    if (master != null)
+                    if (master != null && SkillMasterySpell.GetSpell(master, typeof(WhisperingSpell)) is WhisperingSpell spell &&
+                        master.InRange(bc.Location, spell.PartyRange) && master.Map == bc.Map && spell.EnhancedGainChance >= Utility.Random(100))
                     {
-                        WhisperingSpell spell = SkillMasterySpell.GetSpell(master, typeof(WhisperingSpell)) as WhisperingSpell;
-
-                        if (spell != null && master.InRange(bc.Location, spell.PartyRange) && master.Map == bc.Map && spell.EnhancedGainChance >= Utility.Random(100))
-                        {
-                            toGain = Utility.RandomMinMax(2, 5);
-                        }
+                        toGain = Utility.RandomMinMax(2, 5);
                     }
                 }
                 #endregion

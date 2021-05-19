@@ -587,9 +587,7 @@ namespace Server.Commands
         {
             if (map == null || map == Map.Internal)
             {
-                Mobile m = item.RootParent as Mobile;
-
-                return m != null && FixMap(ref map, ref loc, m);
+                return item.RootParent is Mobile m && FixMap(ref map, ref loc, m);
             }
 
             return true;

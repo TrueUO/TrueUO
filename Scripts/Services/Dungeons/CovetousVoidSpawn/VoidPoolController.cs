@@ -279,11 +279,10 @@ namespace Server.Engines.VoidPool
                     case 14: case 15: t = SpawnTable[(int)VoidType][4]; break;
                 }
 
-                BaseCreature bc = Activator.CreateInstance(t, Wave, true) as BaseCreature;
-
-                if (bc != null)
+                if (Activator.CreateInstance(t, Wave, true) is BaseCreature bc)
                 {
                     bc.NoLootOnDeath = true;
+
                     Timer.DelayCall(TimeSpan.FromSeconds(i * .75), () =>
                     {
                         if (OnGoing)
@@ -758,16 +757,6 @@ namespace Server.Engines.VoidPool
                     }
                     goto case 0;
                 case 0:
-                    if (version == 0)
-                    {
-                        Level3Spawner = new Level3Spawner(this);
-
-                        Timer.DelayCall(() =>
-                            {
-                                ResetLevel3Spawners();
-                            });
-                    }
-
                     RespawnMin = reader.ReadInt();
                     RespawnMax = reader.ReadInt();
 
@@ -782,18 +771,18 @@ namespace Server.Engines.VoidPool
 
                     for (int i = 0; i < counta; i++)
                     {
-                        WayPoint wp = reader.ReadItem() as WayPoint;
-
-                        if (wp != null)
+                        if (reader.ReadItem() is WayPoint wp)
+                        {
                             WaypointsA.Add(wp);
+                        }
                     }
 
                     for (int i = 0; i < countb; i++)
                     {
-                        WayPoint wp = reader.ReadItem() as WayPoint;
-
-                        if (wp != null)
+                        if (reader.ReadItem() is WayPoint wp)
+                        {
                             WaypointsB.Add(wp);
+                        }
                     }
 
                     break;

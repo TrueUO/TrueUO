@@ -333,9 +333,7 @@ namespace Server.Engines.Shadowguard
 
         public static void MovePlayer(Mobile m, Point3D p, bool pets = true)
         {
-            var pm = m as PlayerMobile;
-
-            if (pm != null && pets)
+            if (m is PlayerMobile pm && pets)
             {
                 MovePets(pm, p, m.Map);
             }

@@ -374,34 +374,25 @@ namespace Server.Items
                 m_From.Frozen = false;
 
                 if (m_Bracelet.Deleted || m_From.Deleted)
-                    return;
-
-                if (m_Bracelet.CheckUse(m_From, false))
                 {
-                    Mobile boundRoot = m_Bracelet.Bound.RootParent as Mobile;
+                    return;
+                }
 
-                    if (boundRoot != null)
+                if (m_Bracelet.CheckUse(m_From, false) && m_Bracelet.Bound.RootParent is Mobile boundRoot)
+                {
+                    m_Bracelet.Charges--;
+
+                    BaseCreature.TeleportPets(m_From, boundRoot.Location, boundRoot.Map, true);
+
+                    m_From.PlaySound(0x1FC);
+                    m_From.MoveToWorld(boundRoot.Location, boundRoot.Map);
+                    m_From.PlaySound(0x1FC);
+
+                    BaseHouse house = BaseHouse.FindHouseAt(boundRoot);
+
+                    if (house != null)
                     {
-                        m_Bracelet.Charges--;
-                        Point3D loc = boundRoot.Location;
-
-                        BaseHouse house = BaseHouse.FindHouseAt(boundRoot);
-
-                        if (house != null)
-                        {
-                            loc = house.BanLocation;
-                        }
-
-                        BaseCreature.TeleportPets(m_From, boundRoot.Location, boundRoot.Map, true);
-
-                        m_From.PlaySound(0x1FC);
-                        m_From.MoveToWorld(boundRoot.Location, boundRoot.Map);
-                        m_From.PlaySound(0x1FC);
-
-                        if (house != null)
-                        {
-                            m_From.SendLocalizedMessage(1070905); // Strong magics have redirected you to a safer location!
-                        }
+                        m_From.SendLocalizedMessage(1070905); // Strong magics have redirected you to a safer location!
                     }
                 }
             }

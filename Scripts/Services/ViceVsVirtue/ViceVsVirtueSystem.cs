@@ -1046,10 +1046,9 @@ namespace Server.Engines.VvV
 
         public static bool RestrictSilver(Mobile a, Mobile b)
         {
-            Account accountA = a.Account as Account;
             Account accountB = b.Account as Account;
 
-            return accountA != null && (accountA == accountB || PVPArenaSystem.IsSameIP(a, b));
+            return a.Account is Account accountA && (accountA == accountB || PVPArenaSystem.IsSameIP(a, b));
         }
     }
 

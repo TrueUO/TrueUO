@@ -583,9 +583,7 @@ namespace Server.Mobiles
                 Mobile active = null, inactive = null;
                 double actPrio = 0.0, inactPrio = 0.0;
 
-                Mobile comb = m_Mobile.Combatant as Mobile;
-
-                if (comb != null && !comb.Deleted && comb.Alive && !comb.IsDeadBondedPet && CanDispel(comb))
+                if (m_Mobile.Combatant is Mobile comb && !comb.Deleted && comb.Alive && !comb.IsDeadBondedPet && CanDispel(comb))
                 {
                     active = inactive = comb;
                     actPrio = inactPrio = m_Mobile.GetDistanceToSqrt(comb);
@@ -1519,11 +1517,10 @@ namespace Server.Mobiles
         public Item FindCorpseToAnimate()
         {
             IPooledEnumerable eable = m_Mobile.GetItemsInRange(12);
+
             foreach (Item item in eable)
             {
-                Corpse c = item as Corpse;
-
-                if (c != null)
+                if (item is Corpse c)
                 {
                     Type type = null;
 

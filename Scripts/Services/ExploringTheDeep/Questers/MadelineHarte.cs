@@ -55,9 +55,7 @@ namespace Server.Mobiles
 
         public override bool OnDragDrop(Mobile from, Item dropped)
         {
-            PlayerMobile m = from as PlayerMobile;
-
-            if (m != null)
+            if (from is PlayerMobile m)
             {
                 if (m.ExploringTheDeepQuest == ExploringTheDeepQuestChain.CollectTheComponent)
                 {
@@ -81,6 +79,7 @@ namespace Server.Mobiles
                     m.SendLocalizedMessage(1154325); // You feel as though by doing this you are missing out on an important part of your journey...
                 }
             }
+
             return false;
         }
 

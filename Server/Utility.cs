@@ -1540,9 +1540,7 @@ namespace Server
 
 			for (int i = 0; i < list.Count; i++)
 			{
-				TOutput t = list[i] as TOutput;
-
-				if (t != null)
+                if (list[i] is TOutput t)
 				{
 					output.Add(t);
 				}
@@ -1781,15 +1779,10 @@ namespace Server
 
 			while (--i >= 0)
 			{
-				if (i < list.Count)
+				if (i < list.Count && list[i] is IEntity entity && !entity.Deleted && (predicate == null || predicate((T)entity)))
 				{
-					IEntity entity = list[i] as IEntity;
-
-					if (entity != null && !entity.Deleted && (predicate == null || predicate((T)entity)))
-					{
-						entity.Delete();
-					}
-				}
+                    entity.Delete();
+                }
 			}
 		}
 

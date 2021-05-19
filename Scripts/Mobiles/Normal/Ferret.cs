@@ -71,12 +71,16 @@ namespace Server.Mobiles
             if (m_CanTalk)
             {
                 if (to != null)
+                {
                     QuestSystem.FocusTo(this, to);
+                }
 
                 Say(m_Vocabulary[Utility.Random(m_Vocabulary.Length)]);
 
                 if (to != null && Utility.RandomBool())
-                    Timer.DelayCall(TimeSpan.FromSeconds(Utility.RandomMinMax(5, 8)), delegate { to.Talk(); });
+                {
+                    Timer.DelayCall(TimeSpan.FromSeconds(Utility.RandomMinMax(5, 8)), to.Talk);
+                }
 
                 m_CanTalk = false;
 

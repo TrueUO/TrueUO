@@ -126,9 +126,8 @@ namespace Server.Mobiles
                         Timer.DelayCall(TimeSpan.FromSeconds(Utility.RandomMinMax(2, 3)), () =>
                             {
                                 Type t = Utility.RandomList(typeof(MyrmidexWarrior), typeof(MyrmidexDrone), typeof(MyrmidexLarvae));
-                                BaseCreature bc = Activator.CreateInstance(t) as BaseCreature;
 
-                                if (bc != null)
+                                if (Activator.CreateInstance(t) is BaseCreature bc)
                                 {
                                     bc.MoveToWorld(p, Map);
                                     _Spawn.Add(bc);
@@ -392,7 +391,7 @@ namespace Server.Mobiles
             writer.Write(0);
 
             writer.Write(_Spawn.Count);
-            _Spawn.ForEach(sp => writer.Write(sp));
+            _Spawn.ForEach(writer.Write);
         }
 
         public override void Deserialize(GenericReader reader)
@@ -405,10 +404,10 @@ namespace Server.Mobiles
             int c = reader.ReadInt();
             for (int i = 0; i < c; i++)
             {
-                BaseCreature bc = reader.ReadMobile() as BaseCreature;
-
-                if (bc != null)
+                if (reader.ReadMobile() is BaseCreature bc)
+                {
                     _Spawn.Add(bc);
+                }
             }
 
             _NextCombo1 = DateTime.UtcNow;

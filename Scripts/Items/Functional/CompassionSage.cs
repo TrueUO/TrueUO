@@ -43,7 +43,7 @@ namespace Server.Items
 
             bool gainedPath = false;
 
-            if (VirtueHelper.Award(from, VirtueName.Compassion, 7000, ref gainedPath))
+            if (VirtueHelper.Award(from, VirtueName.Compassion, 1000, ref gainedPath))
             {
                 from.SendLocalizedMessage(1053002); // You have gained in compassion.
 

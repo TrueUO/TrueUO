@@ -59,9 +59,7 @@ namespace Server.Engines.Khaldun
 
         public bool OnSpiritSpeak(Mobile m)
         {
-            PlayerMobile pm = m as PlayerMobile;
-
-            if (pm != null)
+            if (m is PlayerMobile pm)
             {
                 GoingGumshoeQuest4 quest = QuestHelper.GetQuest<GoingGumshoeQuest4>(pm);
 

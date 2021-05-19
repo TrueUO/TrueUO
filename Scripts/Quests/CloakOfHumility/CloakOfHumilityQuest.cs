@@ -451,9 +451,7 @@ namespace Server.Engines.Quests
 
         private static void OnLogin(LoginEventArgs e)
         {
-            PlayerMobile pm = e.Mobile as PlayerMobile;
-
-            if (pm != null && Gareth.CheckQuestStatus(pm, HumilityQuestStatus.RewardPending))
+            if (e.Mobile is PlayerMobile pm && Gareth.CheckQuestStatus(pm, HumilityQuestStatus.RewardPending))
             {
                 var quest = new HumilityProofGump
                 {

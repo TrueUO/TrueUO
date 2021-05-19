@@ -14,27 +14,26 @@ namespace Server.Items
 
         public override void OnDoubleClick(Mobile from)
         {
-            if (IsChildOf(from.Backpack))
+            if (IsChildOf(from.Backpack) && (Title != null && (Title.String != null || Title.Number > 0)))
             {
-                if (Title != null && (Title.String != null || Title.Number > 0))
+                if (from is PlayerMobile pm)
                 {
-                    PlayerMobile pm = from as PlayerMobile;
-
-                    if (pm != null)
+                    if (Title.Number > 0 && pm.AddRewardTitle(Title.Number) || Title.String != null && pm.AddRewardTitle(Title.String))
                     {
-                        if (Title.Number > 0 && pm.AddRewardTitle(Title.Number) || Title.String != null && pm.AddRewardTitle(Title.String))
-                        {
 
-                            pm.SendLocalizedMessage(1155605, Title.ToString());  //Thou hath been bestowed the title ~1_TITLE~!
-                            Delete();
-                        }
-                        else
-                            pm.SendLocalizedMessage(1073626); // You already have that title!
+                        pm.SendLocalizedMessage(1155605, Title.ToString()); //Thou hath been bestowed the title ~1_TITLE~!
+                        Delete();
+                    }
+                    else
+                    {
+                        pm.SendLocalizedMessage(1073626); // You already have that title!
                     }
                 }
             }
             else
+            {
                 from.SendLocalizedMessage(1042001); // That must be in your pack for you to use it.
+            }
         }
 
         public override void GetProperties(ObjectPropertyList list)

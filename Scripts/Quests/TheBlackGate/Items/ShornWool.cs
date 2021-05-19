@@ -24,7 +24,7 @@ namespace Server.Items
             {
                 Title = "Premium Shorn Wool",
                 Description = "Given to you by Katrina",
-                Line1 = "You have killed the trogdolytes that were tormenting the sheep farmers.",
+                Line1 = "You have killed the troglodytes that were tormenting the sheep farmers.",
                 Line2 = "In performing such a task for those who cannot defend themselves you have humbled yourself in their service."
             };
 

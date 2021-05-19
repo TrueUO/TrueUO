@@ -885,6 +885,29 @@ namespace Server.Items
             NightDecoration = reader.ReadItem();
             DayDecoration = reader.ReadItem();
 
+            BaseAddon addon;
+
+            if (CastleCarpet == null)
+            {
+                addon = new CastleCarpetAddon();
+                addon.MoveToWorld(new Point3D(Location.X + 3, Location.Y + 3, Location.Z + 5), Map);
+                CastleCarpet = addon;
+            }
+
+            if (DayDecoration == null)
+            {
+                addon = new DayDecorationAddon();
+                addon.MoveToWorld(Point3D.Zero, Map.Internal);
+                DayDecoration = addon;
+            }
+
+            if (NightDecoration == null)
+            {
+                addon = new NightDecorationAddon();
+                addon.MoveToWorld(Point3D.Zero, Map.Internal);
+                NightDecoration = addon;
+            }
+
             Instance = this;
 
             _Timer = new InternalTimer(this);

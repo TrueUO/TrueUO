@@ -55,18 +55,20 @@ namespace Server.Spells.Bushido
         public override void OnHit(Mobile attacker, Mobile defender, int damage)
         {
             if (!Validate(attacker) || !CheckMana(attacker, true))
+            {
                 return;
+            }
 
             ClearCurrentMove(attacker);
 
-            HonorableExecutionInfo info = m_Table[attacker] as HonorableExecutionInfo;
-
-            if (info != null)
+            if (m_Table[attacker] is HonorableExecutionInfo info)
             {
                 info.Clear();
 
                 if (info.m_Timer != null)
+                {
                     info.m_Timer.Stop();
+                }
             }
 
             if (!defender.Alive)

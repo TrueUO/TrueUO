@@ -20,7 +20,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <DefineConstants>NEWTIMERS;ServUO</DefineConstants>
+    <DefineConstants>NEWTIMERS;TrueUO</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">

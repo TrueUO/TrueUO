@@ -62,9 +62,7 @@ namespace Server.Spells.Ninjitsu
 
         public override void OnUse(Mobile from)
         {
-            BaseWeapon wep = from.Weapon as BaseWeapon;
-
-            if (wep != null)
+            if (from.Weapon is BaseWeapon wep)
             {
                 wep.FocusWeilder = from;
                 wep.InvalidateProperties();
@@ -73,9 +71,7 @@ namespace Server.Spells.Ninjitsu
 
         public override void OnClearMove(Mobile from)
         {
-            BaseWeapon wep = from.Weapon as BaseWeapon;
-
-            if (wep != null && wep.FocusWeilder != null)
+            if (from.Weapon is BaseWeapon wep && wep.FocusWeilder != null)
             {
                 wep.FocusWeilder = null;
                 wep.InvalidateProperties();

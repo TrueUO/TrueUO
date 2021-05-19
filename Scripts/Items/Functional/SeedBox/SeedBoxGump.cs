@@ -286,9 +286,7 @@ namespace Server.Engines.Plants
                     User.SendLocalizedMessage(1151849); // Click this button and target a seed to add it here.
                     User.BeginTarget(-1, false, TargetFlags.None, (from, targeted) =>
                         {
-                            Seed seed = targeted as Seed;
-
-                            if (seed != null)
+                            if (targeted is Seed seed)
                             {
                                 if (Box != null && !Box.Deleted && index >= 0)
                                 {
@@ -296,7 +294,9 @@ namespace Server.Engines.Plants
                                 }
                             }
                             else
+                            {
                                 from.SendLocalizedMessage(1151838); // This item cannot be stored in the seed box.
+                            }
 
                             RefreshParent();
                         });
@@ -307,9 +307,7 @@ namespace Server.Engines.Plants
                         User.SendLocalizedMessage(1151849); // Click this button and target a seed to add it here.
                         User.BeginTarget(-1, false, TargetFlags.None, (from, targeted) =>
                             {
-                                Seed seed = targeted as Seed;
-
-                                if (seed != null)
+                                if (targeted is Seed seed)
                                 {
                                     if (Box != null && !Box.Deleted && index >= 0)
                                     {
@@ -317,7 +315,9 @@ namespace Server.Engines.Plants
                                     }
                                 }
                                 else
+                                {
                                     from.SendLocalizedMessage(1151838); // This item cannot be stored in the seed box.
+                                }
 
                                 RefreshParent();
                             });

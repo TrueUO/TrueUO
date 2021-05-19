@@ -33,10 +33,10 @@ namespace Server.Mobiles
             int count = reader.ReadInt();
             for (int i = 0; i < count; i++)
             {
-                ISpawnable e = World.FindEntity(reader.ReadInt()) as ISpawnable;
-
-                if (e != null)
+                if (World.FindEntity(reader.ReadInt()) is ISpawnable e)
+                {
                     SpawnedObjects.Add(e);
+                }
             }
 
             SpawnName = reader.ReadString();
@@ -48,8 +48,9 @@ namespace Server.Mobiles
             writer.Write(0);
 
             writer.Write(SpawnedObjects.Count);
-            foreach (ISpawnable sp in SpawnedObjects)
+            for (var index = 0; index < SpawnedObjects.Count; index++)
             {
+                ISpawnable sp = SpawnedObjects[index];
                 if (sp is Item item)
                     writer.Write(item);
                 else if (sp is Mobile mobile)

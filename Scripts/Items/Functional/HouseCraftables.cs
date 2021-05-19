@@ -485,10 +485,7 @@ namespace Server.Items
             Type = (DoorType)reader.ReadInt();
             _Resource = (CraftResource)reader.ReadInt();
 
-            Timer.DelayCall(TimeSpan.FromSeconds(30), () =>
-            {
-                Replace();
-            });
+            Timer.DelayCall(TimeSpan.FromSeconds(30), Replace);
         }
 
         public void Replace()

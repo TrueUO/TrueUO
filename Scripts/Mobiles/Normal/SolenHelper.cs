@@ -42,9 +42,7 @@ namespace Server.Mobiles
                     }
                 }
 
-                PlayerMobile player = m as PlayerMobile;
-
-                return player != null && player.SolenFriendship == SolenFriendship.Red;
+                return m is PlayerMobile player && player.SolenFriendship == SolenFriendship.Red;
             }
         }
 
@@ -67,9 +65,7 @@ namespace Server.Mobiles
                     }
                 }
 
-                PlayerMobile player = m as PlayerMobile;
-
-                return player != null && player.SolenFriendship == SolenFriendship.Black;
+                return m is PlayerMobile player && player.SolenFriendship == SolenFriendship.Black;
             }
         }
 
@@ -78,14 +74,16 @@ namespace Server.Mobiles
             if (from is BaseCreature bc)
             {
                 if (bc.Controlled && bc.ControlMaster is PlayerMobile)
+                {
                     OnRedDamage(bc.ControlMaster);
+                }
                 else if (bc.Summoned && bc.SummonMaster is PlayerMobile)
+                {
                     OnRedDamage(bc.SummonMaster);
+                }
             }
 
-            PlayerMobile player = from as PlayerMobile;
-
-            if (player != null && player.SolenFriendship == SolenFriendship.Red)
+            if (from is PlayerMobile player && player.SolenFriendship == SolenFriendship.Red)
             {
                 player.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1054103); // The solen revoke their friendship. You will now be considered an intruder.
 
@@ -98,14 +96,16 @@ namespace Server.Mobiles
             if (from is BaseCreature bc)
             {
                 if (bc.Controlled && bc.ControlMaster is PlayerMobile)
+                {
                     OnBlackDamage(bc.ControlMaster);
+                }
                 else if (bc.Summoned && bc.SummonMaster is PlayerMobile)
+                {
                     OnBlackDamage(bc.SummonMaster);
+                }
             }
 
-            PlayerMobile player = from as PlayerMobile;
-
-            if (player != null && player.SolenFriendship == SolenFriendship.Black)
+            if (from is PlayerMobile player && player.SolenFriendship == SolenFriendship.Black)
             {
                 player.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1054103); // The solen revoke their friendship. You will now be considered an intruder.
 

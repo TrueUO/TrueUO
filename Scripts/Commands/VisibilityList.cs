@@ -106,8 +106,12 @@ namespace Server.Commands
 
                                     ns.Send(pm.OPLPacket);
 
-                                    foreach (Item item in pm.Items)
+                                    for (var index = 0; index < pm.Items.Count; index++)
+                                    {
+                                        Item item = pm.Items[index];
+
                                         ns.Send(item.OPLPacket);
+                                    }
                                 }
                                 else
                                 {

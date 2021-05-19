@@ -32,6 +32,7 @@ namespace Server.Engines.Quests.Matriarch
 
         public abstract bool RedSolen { get; }
         public override bool DisallowAllMoves => false;
+
         public override int GetIdleSound()
         {
             return 0x10D;
@@ -40,20 +41,18 @@ namespace Server.Engines.Quests.Matriarch
         public override bool CanTalkTo(PlayerMobile to)
         {
             if (SolenMatriarchQuest.IsFriend(to, RedSolen))
+            {
                 return true;
+            }
 
-            SolenMatriarchQuest qs = to.Quest as SolenMatriarchQuest;
-
-            return qs != null && qs.RedSolen == RedSolen;
+            return to.Quest is SolenMatriarchQuest qs && qs.RedSolen == RedSolen;
         }
 
         public override void OnTalk(PlayerMobile player, bool contextMenu)
         {
             Direction = GetDirectionTo(player);
 
-            SolenMatriarchQuest qs = player.Quest as SolenMatriarchQuest;
-
-            if (qs != null && qs.RedSolen == RedSolen)
+            if (player.Quest is SolenMatriarchQuest qs && qs.RedSolen == RedSolen)
             {
                 if (qs.IsObjectiveInProgress(typeof(KillInfiltratorsObjective)))
                 {
@@ -119,15 +118,11 @@ namespace Server.Engines.Quests.Matriarch
 
         public override bool OnDragDrop(Mobile from, Item dropped)
         {
-            PlayerMobile player = from as PlayerMobile;
-
-            if (player != null)
+            if (from is PlayerMobile player)
             {
                 if (dropped is Seed)
                 {
-                    SolenMatriarchQuest qs = player.Quest as SolenMatriarchQuest;
-
-                    if (qs != null && qs.RedSolen == RedSolen)
+                    if (player.Quest is SolenMatriarchQuest qs && qs.RedSolen == RedSolen)
                     {
                         SayTo(player, 1054080); // Thank you for that plant seed. Those have such wonderful flavor.
                     }
@@ -164,22 +159,9 @@ namespace Server.Engines.Quests.Matriarch
         {
             base.GetContextMenuEntries(from, list);
 
-            if (from.Alive)
+            if (from.Alive && from is PlayerMobile pm && pm.Quest is SolenMatriarchQuest qs && qs.RedSolen == RedSolen && qs.IsObjectiveInProgress(typeof(ProcessFungiObjective)))
             {
-                PlayerMobile pm = from as PlayerMobile;
-
-                if (pm != null)
-                {
-                    SolenMatriarchQuest qs = pm.Quest as SolenMatriarchQuest;
-
-                    if (qs != null && qs.RedSolen == RedSolen)
-                    {
-                        if (qs.IsObjectiveInProgress(typeof(ProcessFungiObjective)))
-                        {
-                            list.Add(new ProcessZoogiFungusEntry(this, pm));
-                        }
-                    }
-                }
+                list.Add(new ProcessZoogiFungusEntry(this, pm));
             }
         }
 
@@ -187,9 +169,7 @@ namespace Server.Engines.Quests.Matriarch
         {
             Direction = GetDirectionTo(player);
 
-            SolenMatriarchQuest qs = player.Quest as SolenMatriarchQuest;
-
-            if (qs != null && qs.RedSolen == RedSolen)
+            if (player.Quest is SolenMatriarchQuest qs && qs.RedSolen == RedSolen)
             {
                 QuestObjective obj = qs.FindObjective(typeof(ProcessFungiObjective));
 

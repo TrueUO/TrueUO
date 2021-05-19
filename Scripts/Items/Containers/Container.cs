@@ -465,15 +465,12 @@ namespace Server.Items
         {
             get
             {
-                Mobile m = ParentEntity as Mobile;
-                if (m != null && m.Player && m.Backpack == this)
+                if (ParentEntity is Mobile m && m.Player && m.Backpack == this)
                 {
                     return 550;
                 }
-                else
-                {
-                    return base.DefaultMaxWeight;
-                }
+
+                return base.DefaultMaxWeight;
             }
         }
         public bool Dye(Mobile from, DyeTub sender)

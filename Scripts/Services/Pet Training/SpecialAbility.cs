@@ -2236,10 +2236,10 @@ namespace Server.Mobiles
             creature.PlaySound(0xEE);
             defender.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1070696); // You have been stunned by a colossal blow!
 
-            BaseWeapon weapon = creature.Weapon as BaseWeapon;
-
-            if (weapon != null)
+            if (creature.Weapon is BaseWeapon weapon)
+            {
                 weapon.OnHit(creature, defender);
+            }
 
             if (defender.Alive)
             {

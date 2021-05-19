@@ -205,9 +205,7 @@ namespace Server.Mobiles
             {
                 for (int i = 0; i < m.Items.Count; i++)
                 {
-                    IDurability item = m.Items[i] as IDurability;
-
-                    if (item != null && Utility.RandomDouble() < 0.25)
+                    if (m.Items[i] is IDurability item && Utility.RandomDouble() < 0.25)
                     {
                         if (item.HitPoints > 10)
                             item.HitPoints -= 10;

@@ -170,9 +170,7 @@ namespace Server.Engines.NewMagincia
                 return m_NameBuffer[t];
             }
 
-            BaseCreature c = Activator.CreateInstance(t) as BaseCreature;
-
-            if (c != null)
+            if (Activator.CreateInstance(t) is BaseCreature c)
             {
                 c.Delete();
                 AddToBuffer(t, c.Name);
