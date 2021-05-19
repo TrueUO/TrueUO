@@ -1,5 +1,5 @@
 language: csharp
-solution: ServUO.sln
+solution: TrueUO.sln
 mono: none
 dotnet: 3.1.402
 

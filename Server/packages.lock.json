@@ -36,9 +36,9 @@
       },
       "Zlib.Bindings": {
         "type": "Direct",
-        "requested": "[1.4.0, )",
-        "resolved": "1.4.0",
-        "contentHash": "ynaf1cOY3jLmD9Z+JwI0/CVWY7PP7TVGNPmU2Avo/nR/tciaL0eL7FfxAVdo8xjUj1CfCpW/Og1+FFVdfADHHg=="
+        "requested": "[1.5.0, )",
+        "resolved": "1.5.0",
+        "contentHash": "OmH15iciKDzx8WrVRXuBNg6++UPb2YNRNwzFVsqenG/q5P8b3iuxYOHJdnYWjzFznTywD0ZUno5GrfxqIni7xA=="
       },
       "Microsoft.NETCore.Platforms": {
         "type": "Transitive",
@@ -143,9 +143,9 @@
       },
       "Zlib.Bindings": {
         "type": "Direct",
-        "requested": "[1.4.0, )",
-        "resolved": "1.4.0",
-        "contentHash": "ynaf1cOY3jLmD9Z+JwI0/CVWY7PP7TVGNPmU2Avo/nR/tciaL0eL7FfxAVdo8xjUj1CfCpW/Og1+FFVdfADHHg=="
+        "requested": "[1.5.0, )",
+        "resolved": "1.5.0",
+        "contentHash": "OmH15iciKDzx8WrVRXuBNg6++UPb2YNRNwzFVsqenG/q5P8b3iuxYOHJdnYWjzFznTywD0ZUno5GrfxqIni7xA=="
       },
       "Microsoft.Win32.Registry": {
         "type": "Transitive",
@@ -227,9 +227,9 @@
       },
       "Zlib.Bindings": {
         "type": "Direct",
-        "requested": "[1.4.0, )",
-        "resolved": "1.4.0",
-        "contentHash": "ynaf1cOY3jLmD9Z+JwI0/CVWY7PP7TVGNPmU2Avo/nR/tciaL0eL7FfxAVdo8xjUj1CfCpW/Og1+FFVdfADHHg=="
+        "requested": "[1.5.0, )",
+        "resolved": "1.5.0",
+        "contentHash": "OmH15iciKDzx8WrVRXuBNg6++UPb2YNRNwzFVsqenG/q5P8b3iuxYOHJdnYWjzFznTywD0ZUno5GrfxqIni7xA=="
       },
       "Microsoft.Win32.Registry": {
         "type": "Transitive",
@@ -311,9 +311,9 @@
       },
       "Zlib.Bindings": {
         "type": "Direct",
-        "requested": "[1.4.0, )",
-        "resolved": "1.4.0",
-        "contentHash": "ynaf1cOY3jLmD9Z+JwI0/CVWY7PP7TVGNPmU2Avo/nR/tciaL0eL7FfxAVdo8xjUj1CfCpW/Og1+FFVdfADHHg=="
+        "requested": "[1.5.0, )",
+        "resolved": "1.5.0",
+        "contentHash": "OmH15iciKDzx8WrVRXuBNg6++UPb2YNRNwzFVsqenG/q5P8b3iuxYOHJdnYWjzFznTywD0ZUno5GrfxqIni7xA=="
       },
       "Microsoft.Win32.Registry": {
         "type": "Transitive",
@@ -395,9 +395,9 @@
       },
       "Zlib.Bindings": {
         "type": "Direct",
-        "requested": "[1.4.0, )",
-        "resolved": "1.4.0",
-        "contentHash": "ynaf1cOY3jLmD9Z+JwI0/CVWY7PP7TVGNPmU2Avo/nR/tciaL0eL7FfxAVdo8xjUj1CfCpW/Og1+FFVdfADHHg=="
+        "requested": "[1.5.0, )",
+        "resolved": "1.5.0",
+        "contentHash": "OmH15iciKDzx8WrVRXuBNg6++UPb2YNRNwzFVsqenG/q5P8b3iuxYOHJdnYWjzFznTywD0ZUno5GrfxqIni7xA=="
       },
       "Microsoft.Win32.Registry": {
         "type": "Transitive",
@@ -479,9 +479,9 @@
       },
       "Zlib.Bindings": {
         "type": "Direct",
-        "requested": "[1.4.0, )",
-        "resolved": "1.4.0",
-        "contentHash": "ynaf1cOY3jLmD9Z+JwI0/CVWY7PP7TVGNPmU2Avo/nR/tciaL0eL7FfxAVdo8xjUj1CfCpW/Og1+FFVdfADHHg=="
+        "requested": "[1.5.0, )",
+        "resolved": "1.5.0",
+        "contentHash": "OmH15iciKDzx8WrVRXuBNg6++UPb2YNRNwzFVsqenG/q5P8b3iuxYOHJdnYWjzFznTywD0ZUno5GrfxqIni7xA=="
       },
       "Microsoft.Win32.Registry": {
         "type": "Transitive",
@@ -563,9 +563,9 @@
       },
       "Zlib.Bindings": {
         "type": "Direct",
-        "requested": "[1.4.0, )",
-        "resolved": "1.4.0",
-        "contentHash": "ynaf1cOY3jLmD9Z+JwI0/CVWY7PP7TVGNPmU2Avo/nR/tciaL0eL7FfxAVdo8xjUj1CfCpW/Og1+FFVdfADHHg=="
+        "requested": "[1.5.0, )",
+        "resolved": "1.5.0",
+        "contentHash": "OmH15iciKDzx8WrVRXuBNg6++UPb2YNRNwzFVsqenG/q5P8b3iuxYOHJdnYWjzFznTywD0ZUno5GrfxqIni7xA=="
       },
       "Microsoft.Win32.Registry": {
         "type": "Transitive",
@@ -647,9 +647,9 @@
       },
       "Zlib.Bindings": {
         "type": "Direct",
-        "requested": "[1.4.0, )",
-        "resolved": "1.4.0",
-        "contentHash": "ynaf1cOY3jLmD9Z+JwI0/CVWY7PP7TVGNPmU2Avo/nR/tciaL0eL7FfxAVdo8xjUj1CfCpW/Og1+FFVdfADHHg=="
+        "requested": "[1.5.0, )",
+        "resolved": "1.5.0",
+        "contentHash": "OmH15iciKDzx8WrVRXuBNg6++UPb2YNRNwzFVsqenG/q5P8b3iuxYOHJdnYWjzFznTywD0ZUno5GrfxqIni7xA=="
       },
       "Microsoft.Win32.Registry": {
         "type": "Transitive",
@@ -731,9 +731,9 @@
       },
       "Zlib.Bindings": {
         "type": "Direct",
-        "requested": "[1.4.0, )",
-        "resolved": "1.4.0",
-        "contentHash": "ynaf1cOY3jLmD9Z+JwI0/CVWY7PP7TVGNPmU2Avo/nR/tciaL0eL7FfxAVdo8xjUj1CfCpW/Og1+FFVdfADHHg=="
+        "requested": "[1.5.0, )",
+        "resolved": "1.5.0",
+        "contentHash": "OmH15iciKDzx8WrVRXuBNg6++UPb2YNRNwzFVsqenG/q5P8b3iuxYOHJdnYWjzFznTywD0ZUno5GrfxqIni7xA=="
       },
       "Microsoft.Win32.Registry": {
         "type": "Transitive",
@@ -815,9 +815,9 @@
       },
       "Zlib.Bindings": {
         "type": "Direct",
-        "requested": "[1.4.0, )",
-        "resolved": "1.4.0",
-        "contentHash": "ynaf1cOY3jLmD9Z+JwI0/CVWY7PP7TVGNPmU2Avo/nR/tciaL0eL7FfxAVdo8xjUj1CfCpW/Og1+FFVdfADHHg=="
+        "requested": "[1.5.0, )",
+        "resolved": "1.5.0",
+        "contentHash": "OmH15iciKDzx8WrVRXuBNg6++UPb2YNRNwzFVsqenG/q5P8b3iuxYOHJdnYWjzFznTywD0ZUno5GrfxqIni7xA=="
       },
       "Microsoft.Win32.Registry": {
         "type": "Transitive",
