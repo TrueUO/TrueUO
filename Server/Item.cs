@@ -2415,7 +2415,16 @@ namespace Server
 
 					OnMapChange();
 
-					if (old == null || old == Map.Internal)
+                    if (Sockets != null)
+                    {
+                        for (var index = 0; index < Sockets.Count; index++)
+                        {
+                            ItemSocket socket = Sockets[index];
+                            socket.OnMapChange();
+                        }
+                    }
+
+                    if (old == null || old == Map.Internal)
 					{
 						InvalidateProperties();
 					}
@@ -6141,7 +6150,11 @@ namespace Server
 		{
 		}
 
-		public virtual void GetProperties(ObjectPropertyList list)
+        public virtual void OnMapChange()
+        {
+        }
+
+        public virtual void GetProperties(ObjectPropertyList list)
 		{
 		}
 

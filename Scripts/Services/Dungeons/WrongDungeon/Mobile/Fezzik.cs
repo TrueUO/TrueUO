@@ -85,6 +85,11 @@ namespace Server.Mobiles
             {
                 c.DropItem(new RecipeScroll(603));
             }
+
+            if (0.1 > Utility.RandomDouble())
+            {
+                c.DropItem(new MoonstoneJewelry());
+            }
         }
 
         public override int TreasureMapLevel => 3;
