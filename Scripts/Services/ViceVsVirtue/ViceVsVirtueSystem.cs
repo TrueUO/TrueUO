@@ -86,15 +86,8 @@ namespace Server.Engines.VvV
 
             if (ventry != null && ventry.Active)
             {
-                List<DamageEntry> list = new List<DamageEntry>();
-
-                foreach (var entry in victim.DamageEntries.OrderBy(d => -d.DamageGiven))
-                {
-                    list.Add(entry);
-                }
-
+                List<DamageEntry> list = victim.DamageEntries.OrderBy(d => -d.DamageGiven).ToList();
                 List<Mobile> handled = new List<Mobile>();
-
                 bool statloss = false;
 
                 for (int i = 0; i < list.Count; i++)
@@ -648,20 +641,7 @@ namespace Server.Engines.VvV
         {
             CheckTempCombatants();
 
-            bool any = false;
-
-            for (var index = 0; index < TempCombatants.Count; index++)
-            {
-                var c = TempCombatants[index];
-
-                if (c.From == mobile)
-                {
-                    any = true;
-                    break;
-                }
-            }
-
-            return IsVvV(mobile) || TempCombatants != null && any;
+            return IsVvV(mobile) || TempCombatants != null && TempCombatants.Any(c => c.From == mobile);
         }
 
         public static void CheckHarmful(Mobile attacker, Mobile defender)
@@ -701,33 +681,7 @@ namespace Server.Engines.VvV
                 return;
             }
 
-            bool attacker = false;
-
-            for (var index = 0; index < target.Aggressors.Count; index++)
-            {
-                var info = target.Aggressors[index];
-
-                if (IsVvV(info.Attacker))
-                {
-                    attacker = true;
-                    break;
-                }
-            }
-
-            bool defender = false;
-
-            for (var index = 0; index < target.Aggressed.Count; index++)
-            {
-                var info = target.Aggressed[index];
-
-                if (IsVvV(info.Defender))
-                {
-                    defender = true;
-                    break;
-                }
-            }
-
-            if (!IsVvV(from) && IsVvV(target) && (attacker || defender))
+            if (!IsVvV(from) && IsVvV(target) && (target.Aggressors.Any(info => IsVvV(info.Attacker)) || target.Aggressed.Any(info => IsVvV(info.Defender))))
             {
                 AddTempParticipant(from, target);
             }
