@@ -86,7 +86,7 @@ namespace Server.Mobiles
                 c.DropItem(new RecipeScroll(603));
             }
 
-            if (0.1 > Utility.RandomDouble())
+            if (Utility.RandomDouble() < 0.001) // 1/1000 chance
             {
                 c.DropItem(new MoonstoneJewelry());
             }
