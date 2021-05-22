@@ -3703,19 +3703,25 @@ namespace Server
 
 		public virtual int HuedItemID => m_ItemID;
 
-		[Hue, CommandProperty(AccessLevel.GameMaster)]
+        public virtual int DefaultHue => 0;
+
+        [Hue, CommandProperty(AccessLevel.GameMaster)]
 		public virtual int Hue
 		{
 			get => m_Hue;
 			set
 			{
-				if (m_Hue != value)
+                if (m_Hue != value)
 				{
 					m_Hue = value;
 					ReleaseWorldPackets();
 
 					Delta(ItemDelta.Update);
 				}
+                else
+                {
+                    m_Hue = DefaultHue;
+                }
 			}
 		}
 

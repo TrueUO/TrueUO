@@ -4,6 +4,7 @@ namespace Server.Items
     {
         public override bool IsArtifact => true;
         public override int LabelNumber => 1061098;// Armor of Fortune
+        public override int DefaultHue => 0x501;
         public override int ArtifactRarity => 11;
         public override int InitMinHits => 255;
         public override int InitMaxHits => 255;
@@ -11,7 +12,6 @@ namespace Server.Items
         [Constructable]
         public ArmorOfFortune()
         {
-            Hue = 0x501;
             Attributes.Luck = 200;
             Attributes.DefendChance = 15;
             Attributes.LowerRegCost = 40;
