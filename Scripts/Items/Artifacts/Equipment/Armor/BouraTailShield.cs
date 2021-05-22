@@ -16,7 +16,7 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1112361; // boura tail shield
-        public override int DefaultHue => 2310;
+        public override int DefaultHue => 554;
 
         public override int BasePhysicalResistance => 8;
         public override int BaseFireResistance => 0;
