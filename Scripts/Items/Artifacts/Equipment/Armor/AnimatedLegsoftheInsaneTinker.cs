@@ -5,9 +5,7 @@ namespace Server.Items
         public override bool IsArtifact => true;
         [Constructable]
         public AnimatedLegsoftheInsaneTinker()
-            : base()
         {
-            Hue = 2310;
             Attributes.BonusDex = 5;
             Attributes.RegenStam = 2;
             Attributes.WeaponDamage = 10;
@@ -21,6 +19,7 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1113760; // Animated Legs of the Insane Tinker
+        public override int DefaultHue => 2310;
 
         public override int BasePhysicalResistance => 17;
         public override int BaseFireResistance => 15;
@@ -29,10 +28,11 @@ namespace Server.Items
         public override int BaseEnergyResistance => 2;
         public override int InitMinHits => 255;
         public override int InitMaxHits => 255;
+
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         public override void Serialize(GenericWriter writer)

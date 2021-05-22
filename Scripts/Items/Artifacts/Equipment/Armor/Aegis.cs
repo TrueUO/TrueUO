@@ -4,6 +4,7 @@ namespace Server.Items
     {
         public override bool IsArtifact => true;
         public override int LabelNumber => 1061602;// Ægis
+        public override int DefaultHue => 0x47E;
         public override int ArtifactRarity => 11;
         public override int BasePhysicalResistance => 15;
         public override int InitMinHits => 255;
@@ -12,7 +13,6 @@ namespace Server.Items
         [Constructable]
         public Aegis()
         {
-            Hue = 0x47E;
             ArmorAttributes.SelfRepair = 5;
             Attributes.ReflectPhysical = 15;
             Attributes.DefendChance = 15;

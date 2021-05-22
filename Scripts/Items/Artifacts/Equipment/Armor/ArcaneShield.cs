@@ -3,7 +3,8 @@ namespace Server.Items
     public class ArcaneShield : WoodenKiteShield
     {
         public override bool IsArtifact => true;
-        public override int LabelNumber => 1061101;// Arcane Shield 
+        public override int LabelNumber => 1061101;// Arcane Shield
+        public override int DefaultHue => 0x556;
         public override int ArtifactRarity => 11;
         public override int InitMinHits => 255;
         public override int InitMaxHits => 255;
@@ -11,7 +12,6 @@ namespace Server.Items
         [Constructable]
         public ArcaneShield()
         {
-            Hue = 0x556;
             Attributes.NightSight = 1;
             Attributes.SpellChanneling = 1;
             Attributes.DefendChance = 15;
