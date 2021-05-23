@@ -59,7 +59,8 @@ namespace Server.Mobiles
 
         public override int TreasureMapLevel => 3;
 
-        public override int Meat => 7;
+        public override int Meat => 2;
+        public override MeatType MeatType => MeatType.DinoRibs;
 
         public override int Hides => 11;
 
