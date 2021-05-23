@@ -58,6 +58,7 @@ namespace Server.Mobiles
         public override int Hides => 11;
         public override HideType HideType => HideType.Regular;
         public override int Meat => 3;
+        public override MeatType MeatType => MeatType.DinoRibs;
         public override FoodType FavoriteFood => FoodType.FruitsAndVegies;
         public override int TreasureMapLevel => 2;
 
