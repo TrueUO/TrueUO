@@ -51,14 +51,14 @@ namespace Server.Mobiles
             SetSpecialAbility(SpecialAbility.TailSwipe);
         }
 
+        public override int Meat => 4;
+        public override MeatType MeatType => MeatType.DinoRibs;
         public override bool AutoDispel => true;
         public override Poison PoisonImmune => Poison.Lethal;
         public override bool ReacquireOnMovement => true;
         public override bool AttacksFocus => true;
         public override bool CanFlee => false;
         public override int TreasureMapLevel => 5;
-
-        // Missing Tail Swipe Ability
 
         public override void OnThink()
         {
