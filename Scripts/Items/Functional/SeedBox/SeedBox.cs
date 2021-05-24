@@ -7,6 +7,7 @@ using Server.Multis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Server.Network;
 
 namespace Server.Engines.Plants
 {
@@ -59,10 +60,7 @@ namespace Server.Engines.Plants
             : base(19288)
         {
             Entries = new List<SeedEntry>();
-
             LootType = LootType.Blessed;
-
-            Level = SecureLevel.Owner;
         }
 
         public override int GetTotal(TotalType type)
@@ -72,11 +70,22 @@ namespace Server.Engines.Plants
 
         public override void OnDoubleClick(Mobile m)
         {
-            if (m.InRange(GetWorldLocation(), 3))
+            if (m.InRange(GetWorldLocation(), 3) && m is PlayerMobile mobile)
             {
-                if (m is PlayerMobile mobile)
+                if (CheckAccessible(m, this))
+                {
                     BaseGump.SendGump(new SeedBoxGump(mobile, this));
+                }
+                else
+                {
+                    PrivateOverheadMessage(MessageType.Regular, 946, 1010563, m.NetState); // This container is secure.
+                }
             }
+            else
+            {
+                m.SendLocalizedMessage(500446); // That is too far away.
+            }
+
         }
 
         public override void GetContextMenuEntries(Mobile from, List<ContextMenuEntry> list)
@@ -102,8 +111,40 @@ namespace Server.Engines.Plants
             return false;
         }
 
+        private bool CheckAccessible(Mobile from, Item item)
+        {
+            if (from.AccessLevel >= AccessLevel.GameMaster)
+            {
+                return true; // Staff can access anything
+            }
+
+            BaseHouse house = BaseHouse.FindHouseAt(item);
+
+            if (house == null)
+            {
+                return false;
+            }
+
+            switch (Level)
+            {
+                case SecureLevel.Owner: return house.IsOwner(from);
+                case SecureLevel.CoOwners: return house.IsCoOwner(from);
+                case SecureLevel.Friends: return house.IsFriend(from);
+                case SecureLevel.Anyone: return true;
+                case SecureLevel.Guild: return house.IsGuildMember(from);
+            }
+
+            return false;
+        }
+
         public bool TryAddSeed(Mobile from, Seed seed, int index = -1)
         {
+            if (!CheckAccessible(from, seed))
+            {
+                PrivateOverheadMessage(MessageType.Regular, 946, 1010563, from.NetState); // This container is secure.
+                return false;
+            }
+
             if (!from.Backpack.CheckHold(from, seed, true, true) || seed.Amount <= 0)
             {
                 return false;
