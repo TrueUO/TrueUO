@@ -139,7 +139,7 @@ namespace Server.Engines.Plants
 
         public bool TryAddSeed(Mobile from, Seed seed, int index = -1)
         {
-            if (!CheckAccessible(from, seed))
+            if (!CheckAccessible(from, this))
             {
                 PrivateOverheadMessage(MessageType.Regular, 946, 1010563, from.NetState); // This container is secure.
                 return false;
