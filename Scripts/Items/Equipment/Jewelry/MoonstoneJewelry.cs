@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Server.Items
 {
-    public class MoonstoneJewelry
+    public static class MoonstoneJewelry
     {
         private static readonly List<BaseJewel> _JewelryList = new List<BaseJewel>();
 
@@ -13,10 +13,14 @@ namespace Server.Items
         {
             Timer.DelayCall(TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1), () =>
             {
-                foreach (var j in _JewelryList)
+                for (var index = 0; index < _JewelryList.Count; index++)
                 {
+                    var j = _JewelryList[index];
+
                     if (j == null || j.Deleted || j.Map == Map.Internal)
+                    {
                         continue;
+                    }
 
                     ChangeHue(j);
                 }
@@ -81,6 +85,11 @@ namespace Server.Items
             MoonstoneJewelry.JewelryList.Add(this);
         }
 
+        public MoonstoneBracelet(Serial serial)
+            : base(serial)
+        {
+        }  
+
         public override void AddNameProperty(ObjectPropertyList list)
         {
             list.Add(1115189, string.Format("#{0}", LabelNumber)); // moonstone ~1_NAME~
@@ -98,11 +107,6 @@ namespace Server.Items
             if (MoonstoneJewelry.JewelryList.Contains(this))
                 MoonstoneJewelry.JewelryList.Remove(this);
         }
-
-        public MoonstoneBracelet(Serial serial)
-            : base(serial)
-        {
-        }        
 
         public override void Serialize(GenericWriter writer)
         {
@@ -128,6 +132,11 @@ namespace Server.Items
             MoonstoneJewelry.JewelryList.Add(this);
         }
 
+        public MoonstoneEarrings(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void AddNameProperty(ObjectPropertyList list)
         {
             list.Add(1115189, string.Format("#{0}", LabelNumber)); // moonstone ~1_NAME~
@@ -144,11 +153,6 @@ namespace Server.Items
 
             if (MoonstoneJewelry.JewelryList.Contains(this))
                 MoonstoneJewelry.JewelryList.Remove(this);
-        }
-
-        public MoonstoneEarrings(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
@@ -175,6 +179,11 @@ namespace Server.Items
             MoonstoneJewelry.JewelryList.Add(this);
         }
 
+        public MoonstoneRing(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void AddNameProperty(ObjectPropertyList list)
         {
             list.Add(1115189, string.Format("#{0}", LabelNumber)); // moonstone ~1_NAME~
@@ -191,11 +200,6 @@ namespace Server.Items
 
             if (MoonstoneJewelry.JewelryList.Contains(this))
                 MoonstoneJewelry.JewelryList.Remove(this);
-        }
-
-        public MoonstoneRing(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
@@ -222,6 +226,11 @@ namespace Server.Items
             MoonstoneJewelry.JewelryList.Add(this);
         }
 
+        public MoonstoneNecklace(Serial serial)
+            : base(serial)
+        {
+        }
+
         public override void AddNameProperty(ObjectPropertyList list)
         {
             list.Add(1115189, string.Format("#{0}", LabelNumber)); // moonstone ~1_NAME~
@@ -238,11 +247,6 @@ namespace Server.Items
 
             if (MoonstoneJewelry.JewelryList.Contains(this))
                 MoonstoneJewelry.JewelryList.Remove(this);
-        }
-
-        public MoonstoneNecklace(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
