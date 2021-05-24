@@ -1,40 +1,199 @@
+using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Server.Items
 {
-    public class MoonstoneJewelry : BaseJewel
+    public class MoonstoneJewelry
+    {
+        private static readonly List<BaseJewel> _JewelryList = new List<BaseJewel>();
+
+        public static readonly List<BaseJewel> JewelryList = _JewelryList;
+
+        public static void Initialize()
+        {
+            Timer.DelayCall(TimeSpan.FromMinutes(1), TimeSpan.FromMinutes(1), () =>
+            {
+                foreach (var j in _JewelryList)
+                {
+                    if (j == null || j.Deleted || j.Map == Map.Internal)
+                        continue;
+
+                    ChangeHue(j);
+                }
+            });
+        }
+
+        public static void ChangeHue(Item item)
+        {
+            var p = item.Location;
+            var map = item.Map;
+            var hue = 960;
+
+            if (item.RootParent is Mobile m)
+            {
+                p = m.Location;
+            }
+
+            if (map == Map.Felucca || map == Map.Trammel)
+            {
+                if (map == Map.Felucca)
+                {
+                    hue = 1628;
+                }
+
+                if (map == Map.Trammel)
+                {
+                    hue = 1319;
+                }
+
+                var moonhue = hue + (int)Clock.GetMoonPhase(map, p.X, p.Y);
+
+                Clock.GetTime(map, p.X, p.Y, out int hours, out int minutes);
+
+                if (hours >= 20)
+                {
+                    hue = moonhue;
+                }
+                else if (hours >= 19)
+                {
+                    hue = moonhue - 1;
+                }
+                else if (hours >= 18)
+                {
+                    hue = moonhue - 2;
+                }
+                else if (hours >= 17)
+                {
+                    hue = moonhue - 3;
+                }
+            }
+
+            item.Hue = hue;
+        }
+    }
+
+    public class MoonstoneBracelet : BaseBracelet
     {
         [Constructable]
-        public MoonstoneJewelry()
-            : this(_JewelryType.ElementAt(Utility.Random(_JewelryType.Count)))
+        public MoonstoneBracelet()
+            : base(Utility.RandomList(0x1086, 0x1F06))
         {
+            MoonstoneJewelry.JewelryList.Add(this);
         }
-
-        public MoonstoneJewelry(KeyValuePair<int, Layer> random)
-           : base(random.Key, random.Value)
-        {
-            AttachSocket(new MoonstoneJewelryItem());
-        }
-
-        public static Dictionary<int, Layer> _JewelryType = new Dictionary<int, Layer>()
-        {
-            {0x108A, Layer.Ring},
-            {0x1F09, Layer.Ring},
-            {0x1089, Layer.Neck},
-            {0x1F05, Layer.Neck},
-            {0x1087, Layer.Earrings},
-            {0x1086, Layer.Bracelet},
-            {0x1F06, Layer.Bracelet},
-            {0x1088, Layer.Neck},
-        };
 
         public override void AddNameProperty(ObjectPropertyList list)
         {
             list.Add(1115189, string.Format("#{0}", LabelNumber)); // moonstone ~1_NAME~
         }
 
-        public MoonstoneJewelry(Serial serial)
+        public override void OnMapChange()
+        {
+            MoonstoneJewelry.ChangeHue(this);
+        }
+
+        public override void Delete()
+        {
+            base.Delete();
+
+            if (MoonstoneJewelry.JewelryList.Contains(this))
+                MoonstoneJewelry.JewelryList.Remove(this);
+        }
+
+        public MoonstoneBracelet(Serial serial)
+            : base(serial)
+        {
+        }        
+
+        public override void Serialize(GenericWriter writer)
+        {
+            base.Serialize(writer);
+            writer.Write(0);
+        }
+
+        public override void Deserialize(GenericReader reader)
+        {
+            base.Deserialize(reader);
+            reader.ReadInt();
+
+            MoonstoneJewelry.JewelryList.Add(this);
+        }
+    }
+
+    public class MoonstoneEarrings : BaseEarrings
+    {
+        [Constructable]
+        public MoonstoneEarrings()
+            : base(0x1087)
+        {
+            MoonstoneJewelry.JewelryList.Add(this);
+        }
+
+        public override void AddNameProperty(ObjectPropertyList list)
+        {
+            list.Add(1115189, string.Format("#{0}", LabelNumber)); // moonstone ~1_NAME~
+        }
+
+        public override void OnMapChange()
+        {
+            MoonstoneJewelry.ChangeHue(this);
+        }
+
+        public override void Delete()
+        {
+            base.Delete();
+
+            if (MoonstoneJewelry.JewelryList.Contains(this))
+                MoonstoneJewelry.JewelryList.Remove(this);
+        }
+
+        public MoonstoneEarrings(Serial serial)
+            : base(serial)
+        {
+        }
+
+        public override void Serialize(GenericWriter writer)
+        {
+            base.Serialize(writer);
+            writer.Write(0); 
+        }
+
+        public override void Deserialize(GenericReader reader)
+        {
+            base.Deserialize(reader);
+            reader.ReadInt();
+
+            MoonstoneJewelry.JewelryList.Add(this);
+        }
+    }
+
+    public class MoonstoneRing : BaseRing
+    {
+        [Constructable]
+        public MoonstoneRing()
+            : base(Utility.RandomList(0x108A, 0x1F09))
+        {
+            MoonstoneJewelry.JewelryList.Add(this);
+        }
+
+        public override void AddNameProperty(ObjectPropertyList list)
+        {
+            list.Add(1115189, string.Format("#{0}", LabelNumber)); // moonstone ~1_NAME~
+        }
+
+        public override void OnMapChange()
+        {
+            MoonstoneJewelry.ChangeHue(this);
+        }
+
+        public override void Delete()
+        {
+            base.Delete();
+
+            if (MoonstoneJewelry.JewelryList.Contains(this))
+                MoonstoneJewelry.JewelryList.Remove(this);
+        }
+
+        public MoonstoneRing(Serial serial)
             : base(serial)
         {
         }
@@ -49,6 +208,55 @@ namespace Server.Items
         {
             base.Deserialize(reader);
             reader.ReadInt();
+
+            MoonstoneJewelry.JewelryList.Add(this);
+        }
+    }
+
+    public class MoonstoneNecklace : BaseNecklace
+    {
+        [Constructable]
+        public MoonstoneNecklace()
+            : base(Utility.RandomList(0x1088, 0x1089, 0x1F05))
+        {
+            MoonstoneJewelry.JewelryList.Add(this);
+        }
+
+        public override void AddNameProperty(ObjectPropertyList list)
+        {
+            list.Add(1115189, string.Format("#{0}", LabelNumber)); // moonstone ~1_NAME~
+        }
+
+        public override void OnMapChange()
+        {
+            MoonstoneJewelry.ChangeHue(this);
+        }
+
+        public override void Delete()
+        {
+            base.Delete();
+
+            if (MoonstoneJewelry.JewelryList.Contains(this))
+                MoonstoneJewelry.JewelryList.Remove(this);
+        }
+
+        public MoonstoneNecklace(Serial serial)
+            : base(serial)
+        {
+        }
+
+        public override void Serialize(GenericWriter writer)
+        {
+            base.Serialize(writer);
+            writer.Write(0);
+        }
+
+        public override void Deserialize(GenericReader reader)
+        {
+            base.Deserialize(reader);
+            reader.ReadInt();
+
+            MoonstoneJewelry.JewelryList.Add(this);
         }
     }
 }
