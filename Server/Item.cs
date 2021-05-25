@@ -2415,7 +2415,7 @@ namespace Server
 
 					OnMapChange();
 
-					if (old == null || old == Map.Internal)
+                    if (old == null || old == Map.Internal)
 					{
 						InvalidateProperties();
 					}
@@ -6141,7 +6141,7 @@ namespace Server
 		{
 		}
 
-		public virtual void GetProperties(ObjectPropertyList list)
+        public virtual void GetProperties(ObjectPropertyList list)
 		{
 		}
 
