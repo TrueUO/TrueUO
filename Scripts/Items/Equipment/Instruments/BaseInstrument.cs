@@ -329,7 +329,17 @@ namespace Server.Items
             */
             double val = targ.HitsMax * 1.6 + targ.StamMax + targ.ManaMax;
 
-            val += targ.SkillsTotal / 10;
+            if (SkillHandlers.Discordance.UnderEffects(targ))
+            {
+                foreach (Skill skill in targ.Skills)
+                {
+                    val += skill.Value;
+                }
+            }
+            else
+            {
+                val += targ.SkillsTotal / 10;
+            }
 
             BaseCreature bc = targ as BaseCreature;
 
@@ -357,6 +367,11 @@ namespace Server.Items
 
             if (val > MaxBardingDifficulty)
                 val = MaxBardingDifficulty;
+
+            if (SkillHandlers.Discordance.UnderEffects(targ))
+            {
+                val -= 5;
+            }
 
             return val;
         }
