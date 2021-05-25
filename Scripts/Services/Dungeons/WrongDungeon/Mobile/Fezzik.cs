@@ -85,6 +85,30 @@ namespace Server.Mobiles
             {
                 c.DropItem(new RecipeScroll(603));
             }
+
+            if (Utility.RandomDouble() < 0.001) // 1/1000 chance
+            {
+                Item item = null;
+
+                switch (Utility.Random(4))
+                {
+                    default:
+                    case 0:
+                        item = new MoonstoneBracelet();
+                        break;
+                    case 1:
+                        item = new MoonstoneEarrings();
+                        break;
+                    case 2:
+                        item = new MoonstoneRing();
+                        break;
+                    case 3:
+                        item = new MoonstoneNecklace();
+                        break;
+                }
+
+                c.DropItem(item);
+            }
         }
 
         public override int TreasureMapLevel => 3;
