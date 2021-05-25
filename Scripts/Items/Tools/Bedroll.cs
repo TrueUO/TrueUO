@@ -111,8 +111,8 @@ namespace Server.Items
                     m_Bedroll.VerifyMove(pm) && m_Bedroll.Map == pm.Map && pm.InRange(m_Bedroll, 2))
                 {
                     pm.PlaceInBackpack(m_Bedroll);
-
                     pm.BedrollLogout = true;
+
                     sender.Dispose();
                 }
 

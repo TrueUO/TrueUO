@@ -1511,11 +1511,10 @@ namespace Server.Mobiles
                 pm.m_SessionStart = DateTime.UtcNow;
 
                 pm.m_Quest?.StartTimer();
-
                 QuestHelper.StartTimer(pm);
 
                 pm.BedrollLogout = false;
-                pm.BlanketOfDarknessLogout = false;
+
                 pm.LastOnline = DateTime.UtcNow;
             }
             
@@ -4882,7 +4881,6 @@ namespace Server.Mobiles
         }
 
         public bool BedrollLogout { get; set; }
-        public bool BlanketOfDarknessLogout { get; set; }
 
         [CommandProperty(AccessLevel.GameMaster)]
         public override bool Paralyzed
@@ -5452,7 +5450,7 @@ namespace Server.Mobiles
 
         public override TimeSpan GetLogoutDelay()
         {
-            if (Young || BedrollLogout || BlanketOfDarknessLogout || TestCenter.Enabled)
+            if (Young || BedrollLogout || TestCenter.Enabled)
             {
                 return TimeSpan.Zero;
             }

@@ -1,6 +1,4 @@
 using Server.Items;
-using System;
-using System.Linq;
 
 namespace Server.Services.Virtues
 {
@@ -26,13 +24,6 @@ namespace Server.Services.Virtues
 
     public class VirtueHelper
     {
-        public static readonly VirtueName[] Virtues = Enum.GetValues(typeof(VirtueName)).Cast<VirtueName>().ToArray();
-
-        public static bool HasAny(Mobile from, VirtueName virtue)
-        {
-            return from.Virtues.GetValue((int)virtue) > 0;
-        }
-
         public static bool IsHighestPath(Mobile from, VirtueName virtue)
         {
             return from.Virtues.GetValue((int)virtue) >= GetMaxAmount(virtue);
@@ -72,13 +63,19 @@ namespace Server.Services.Virtues
             int maxAmount = GetMaxAmount(virtue);
 
             if (current >= maxAmount)
+            {
                 return false;
+            }
 
             if (from.FindItemOnLayer(Layer.TwoHanded) is VirtueShield)
+            {
                 amount = amount + (int)(amount * 1.5);
+            }
 
-            if ((current + amount) >= maxAmount)
+            if (current + amount >= maxAmount)
+            {
                 amount = maxAmount - current;
+            }
 
             VirtueLevel oldLevel = GetLevel(from, virtue);
 
@@ -95,19 +92,18 @@ namespace Server.Services.Virtues
             return true;
         }
 
-        public static bool Atrophy(Mobile from, VirtueName virtue)
-        {
-            return Atrophy(from, virtue, 1);
-        }
-
         public static bool Atrophy(Mobile from, VirtueName virtue, int amount)
         {
             int current = from.Virtues.GetValue((int)virtue);
 
-            if ((current - amount) >= 0)
+            if (current - amount >= 0)
+            {
                 from.Virtues.SetValue((int)virtue, current - amount);
+            }
             else
+            {
                 from.Virtues.SetValue((int)virtue, 0);
+            }
 
             return current > 0;
         }
