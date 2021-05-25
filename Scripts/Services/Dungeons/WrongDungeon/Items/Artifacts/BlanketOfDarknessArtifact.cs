@@ -114,14 +114,16 @@ namespace Server.Items
                 m_CloseTimer.Stop();
 
                 if (Campfire.GetEntry(pm) != m_Entry)
+                {
                     return;
+                }
 
                 if (info.ButtonID == 1 && m_Entry.Safe && m_BlanketOfDarkness.Parent == null && m_BlanketOfDarkness.IsAccessibleTo(pm) &&
                     m_BlanketOfDarkness.VerifyMove(pm) && m_BlanketOfDarkness.Map == pm.Map && pm.InRange(m_BlanketOfDarkness, 2))
                 {
                     pm.PlaceInBackpack(m_BlanketOfDarkness);
+                    pm.BedrollLogout = true;
 
-                    pm.BlanketOfDarknessLogout = true;
                     sender.Dispose();
                 }
 
