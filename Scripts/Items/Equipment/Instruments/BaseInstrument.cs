@@ -331,8 +331,10 @@ namespace Server.Items
 
             if (SkillHandlers.Discordance.UnderEffects(targ))
             {
-                foreach (Skill skill in targ.Skills)
+                for (var index = 0; index < targ.Skills.Length; index++)
                 {
+                    Skill skill = targ.Skills[index];
+
                     val += skill.Value;
                 }
             }
