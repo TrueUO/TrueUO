@@ -607,7 +607,7 @@ namespace Server.Mobiles
         {
             if (color == null)
             {
-                if (val <= 0)
+                if (val == 0)
                 {
                     return "<div align=right>---</div>";
                 }
@@ -615,7 +615,7 @@ namespace Server.Mobiles
                 return $"<div align=right>{val}%</div>";
             }
 
-            if (val <= 0)
+            if (val == 0)
             {
                 return $"<BASEFONT COLOR={color}><div align=right>---</div>";
             }
