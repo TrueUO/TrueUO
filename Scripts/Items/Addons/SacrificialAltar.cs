@@ -39,6 +39,12 @@ namespace Server.Items
             if (!base.OnDragDrop(from, dropped))
                 return false;
 
+            if (dropped is SpellbookStrap)
+            {
+                from.SendLocalizedMessage(1075256); // That is blessed; you cannot throw it away.
+                return false;
+            }
+
             if (TotalItems >= 50)
             {
                 SendLocalizedMessageTo(from, 501478); // The trash is full!  Emptying!
@@ -61,6 +67,12 @@ namespace Server.Items
         {
             if (!base.OnDragDropInto(from, item, p))
                 return false;
+
+            if (item is SpellbookStrap)
+            {
+                from.SendLocalizedMessage(1075256); // That is blessed; you cannot throw it away.
+                return false;
+            }
 
             if (TotalItems >= 50)
             {

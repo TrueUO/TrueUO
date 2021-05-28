@@ -56,15 +56,13 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
 
         public virtual bool AddCleanupItem(Mobile from, Item item)
@@ -118,7 +116,7 @@ namespace Server.Items
 
                 List<Item> list = c.FindItemsByType<Item>();
 
-                List<CleanupArray> list1 = new List<CleanupArray>();
+                List<CleanupArray> containerList = new List<CleanupArray>();
 
                 for (var index = 0; index < m_Cleanup.Count; index++)
                 {
@@ -131,13 +129,18 @@ namespace Server.Items
 
                         if (Equals(serial, r.items.Serial))
                         {
-                            list1.Add(r);
+                            containerList.Add(r);
                             break;
                         }
                     }
                 }
 
-                list1.ForEach(k => k.confirm = true);
+                for (var index = 0; index < containerList.Count; index++)
+                {
+                    var k = containerList[index];
+
+                    k.confirm = true;
+                }
             }
             else
             {
@@ -153,7 +156,12 @@ namespace Server.Items
                     }
                 }
 
-                list.ForEach(k => k.confirm = true);
+                for (var index = 0; index < list.Count; index++)
+                {
+                    var k = list[index];
+
+                    k.confirm = true;
+                }
             }
         }
     }
