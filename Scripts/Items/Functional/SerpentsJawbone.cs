@@ -14,25 +14,26 @@ namespace Server.Items
 
         public static void Initialize()
         {
-            Locations = new Dictionary<int, Point3D>();
-
-            Locations[1157135] = new Point3D(1156, 1143, -24); // The Village of Lakeshire		
-            Locations[1157619] = new Point3D(644, 854, -56); // The Rat Fort		
-            Locations[1157620] = new Point3D(1363, 1075, -13);  // Reg Volom			
-            Locations[1016410] = new Point3D(1572, 1046, -8); // Twin Oaks Tavern			
-            Locations[1157621] = new Point3D(984, 622, -80); // The Oasis			
-            Locations[1078308] = new Point3D(1746, 1221, -1); // Blood Dungeon		
-            Locations[1111764] = new Point3D(912, 1362, -21); // Cyclops Dungeon			
-            Locations[1111765] = new Point3D(824, 774, -80); // Exodus Dungeon		
-            Locations[1111766] = new Point3D(349, 1434, 16); // The Kirin Passage			
-            Locations[1157622] = new Point3D(971, 303, 54); // Pass of Karnaugh			
-            Locations[1157623] = new Point3D(1033, 1154, -24); // The Rat Cave		
-            Locations[1078315] = new Point3D(541, 466, -72); // Terort Skitas			
-            Locations[1111825] = new Point3D(1450, 1477, -29); // Twisted Weald			
-            Locations[1113002] = new Point3D(642, 1307, -55); // Wisp Dungeon			
-            Locations[1157624] = new Point3D(753, 497, -62); // Gwenno's Memorial			
-            Locations[1157625] = new Point3D(1504, 628, -14); // Desert Gypsy Camp			
-            Locations[1113000] = new Point3D(1785, 573, 71); // Rock Dungeon
+            Locations = new Dictionary<int, Point3D>
+            {
+                [1157135] = new Point3D(1156, 1143, -24), // The Village of Lakeshire		
+                [1157619] = new Point3D(644, 854, -56), // The Rat Fort		
+                [1157620] = new Point3D(1363, 1075, -13),  // Reg Volom			
+                [1016410] = new Point3D(1572, 1046, -8), // Twin Oaks Tavern			
+                [1157621] = new Point3D(984, 622, -80), // The Oasis			
+                [1078308] = new Point3D(1746, 1221, -1), // Blood Dungeon		
+                [1111764] = new Point3D(912, 1362, -21), // Cyclops Dungeon			
+                [1111765] = new Point3D(824, 774, -80), // Exodus Dungeon		
+                [1111766] = new Point3D(349, 1434, 16), // The Kirin Passage			
+                [1157622] = new Point3D(971, 303, 54), // Pass of Karnaugh			
+                [1157623] = new Point3D(1033, 1154, -24), // The Rat Cave		
+                [1078315] = new Point3D(541, 466, -72), // Terort Skitas			
+                [1111825] = new Point3D(1450, 1477, -29), // Twisted Weald			
+                [1113002] = new Point3D(642, 1307, -55), // Wisp Dungeon			
+                [1157624] = new Point3D(753, 497, -62), // Gwenno's Memorial			
+                [1157625] = new Point3D(1504, 628, -14), // Desert Gypsy Camp			
+                [1113000] = new Point3D(1785, 573, 71) // Rock Dungeon
+            };
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
@@ -56,13 +57,15 @@ namespace Server.Items
 
         public override void OnDoubleClick(Mobile from)
         {
-            if ((IsLockedDown || IsSecure) && from.InRange(GetWorldLocation(), 2))
+            if (!from.InRange(GetWorldLocation(), 2))
+            {
+                from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1019045); // I can't reach that.
+                return;
+            }
+
+            if (IsLockedDown || IsSecure)
             {
                 from.SendGump(new InternalGump(from as PlayerMobile, this));
-            }
-            else if (!from.InRange(GetWorldLocation(), 2))
-            {
-                from.SendLocalizedMessage(500295); // You are too far away to do that.
             }
             else
             {
@@ -86,6 +89,8 @@ namespace Server.Items
 
             public void AddGumpLayout()
             {
+                AddPage(0);
+
                 AddBackground(0, 0, 370, 428, 0x1400);
 
                 AddHtmlLocalized(10, 10, 350, 18, 1114513, "#1156704", 0x56BA, false, false); // <DIV ALIGN=CENTER>~1_TOKEN~</DIV>
@@ -109,13 +114,11 @@ namespace Server.Items
 
                         if (CheckTravel(p))
                         {
+                            Effects.SendPacket(User.Location, User.Map, new ParticleEffect(EffectType.FixedFrom, User.Serial, Server.Serial.Zero, 0x3728, User.Location, User.Location, 10, 10, false, false, 0, 0, 0, 2023, 1, User.Serial, 80, 0));
+                            Effects.PlaySound(User.Location, User.Map, 496);
+
                             BaseCreature.TeleportPets(User, p, Map.Ilshenar);
-                            User.Combatant = null;
-                            User.Warmode = false;
-                            User.Hidden = true;
-
                             User.MoveToWorld(p, Map.Ilshenar);
-
                             Effects.PlaySound(p, Map.Ilshenar, 0x1FE);
                         }
                     }
@@ -126,7 +129,7 @@ namespace Server.Items
             {
                 if (!User.InRange(Jawbone.GetWorldLocation(), 2) || User.Map != Jawbone.Map)
                 {
-                    User.SendLocalizedMessage(500295); // You are too far away to do that.
+                    User.SendLocalizedMessage(1076766); // That is too far away.
                 }
                 else if (SpellHelper.RestrictRedTravel && User.Murderer)
                 {
