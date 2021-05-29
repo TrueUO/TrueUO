@@ -88,20 +88,21 @@ namespace Server.Items
 
         public static void Initialize()
         {
-            Locations = new Dictionary<int, Point3D>();
-
-            Locations[1156705] = new Point3D(715, 1866, 40); // Eodon Moongate
-            Locations[1156706] = new Point3D(642, 1721, 40); // Barako Village
-            Locations[1156707] = new Point3D(701, 2106, 40); // Jukari Village
-            Locations[1156708] = new Point3D(355, 1873, 0);  // Kurak Village
-            Locations[1156709] = new Point3D(552, 1471, 40); // Sakkhra Village
-            Locations[1156710] = new Point3D(412, 1595, 40); // Urali Village
-            Locations[1156711] = new Point3D(167, 1800, 80); // Barrab Village
-            Locations[1156712] = new Point3D(929, 2016, 50); // Shadowguard
-            Locations[1156713] = new Point3D(731, 1603, 40); // The great ape cave
-            Locations[1156714] = new Point3D(878, 2105, 40); // The Volcano
-            Locations[1156715] = new Point3D(390, 1690, 40); // Dragon Turtle Habitat
-            Locations[1156716] = new Point3D(269, 1726, 80); // Britannian Encampment
+            Locations = new Dictionary<int, Point3D>
+            {
+                [1156705] = new Point3D(715, 1866, 40), // Eodon Moongate
+                [1156706] = new Point3D(686, 1762, 40), // Barako Village
+                [1156707] = new Point3D(704, 2046, 40), // Jukari Village
+                [1156708] = new Point3D(348, 1898, 0),  // Kurak Village
+                [1156709] = new Point3D(565, 1579, 40), // Sakkhra Village
+                [1156710] = new Point3D(439, 1588, 35), // Urali Village
+                [1156711] = new Point3D(205, 1764, 80), // Barrab Village
+                [1156712] = new Point3D(527, 2191, 25), // Shadowguard
+                [1156713] = new Point3D(730, 1604, 40), // The Great Ape Cave
+                [1156714] = new Point3D(876, 2105, 40), // The Volcano
+                [1156715] = new Point3D(538, 1716, 40), // Dragon Turtle Habitat
+                [1156716] = new Point3D(267, 1749, 80) // Britannian Encampment
+            };
         }
 
         [CommandProperty(AccessLevel.GameMaster)]
@@ -117,7 +118,7 @@ namespace Server.Items
             SetSecureLevelEntry.AddTo(from, this, list);
         }
 
-        public override int LabelNumber => 1124143;  // Moonstone Crystal
+        public override int LabelNumber => 1124143; // Moonstone Crystal
 
         [Constructable]
         public MoonstoneCrystal() : base(0x9CBB)
@@ -127,16 +128,20 @@ namespace Server.Items
 
         public override void OnDoubleClick(Mobile from)
         {
-            if ((IsLockedDown || IsSecure) && from.InRange(GetWorldLocation(), 2))
+            if (!from.InRange(GetWorldLocation(), 2))
+            {
+                from.LocalOverheadMessage(MessageType.Regular, 0x3B2, 1019045); // I can't reach that.
+                return;
+            }
+
+            if (IsLockedDown || IsSecure)
             {
                 from.SendGump(new InternalGump(from as PlayerMobile, this));
             }
-            else if (!from.InRange(GetWorldLocation(), 2))
-            {
-                from.SendLocalizedMessage(500295); // You are too far away to do that.
-            }
             else
+            {
                 from.SendLocalizedMessage(502692); // This must be in a house and be locked down to work.
+            }
         }
 
         private class InternalGump : Gump
@@ -144,7 +149,7 @@ namespace Server.Items
             public Item Moonstone { get; }
             public PlayerMobile User { get; }
 
-            public InternalGump(PlayerMobile pm, Item moonstone) : base(75, 75)
+            public InternalGump(PlayerMobile pm, Item moonstone) : base(100, 100)
             {
                 Moonstone = moonstone;
                 User = pm;
@@ -154,14 +159,16 @@ namespace Server.Items
 
             public void AddGumpLayout()
             {
-                AddBackground(0, 0, 400, 400, 9270);
+                AddPage(0);
 
-                AddHtmlLocalized(0, 15, 400, 16, 1154645, "#1156704", 0xFFFF, false, false); // Select your destination:
+                AddBackground(0, 0, 370, 308, 0x1400);
+
+                AddHtmlLocalized(10, 10, 350, 18, 1114513, "#1156704", 0x56BA, false, false); // <DIV ALIGN=CENTER>~1_TOKEN~</DIV>
 
                 ColUtility.For(Locations, (i, key, value) =>
                 {
-                    AddHtmlLocalized(60, 45 + (i * 25), 250, 16, key, 0xFFFF, false, false);
-                    AddButton(20, 50 + (i * 25), 2117, 2118, key, GumpButtonType.Reply, 0);
+                    AddButton(10, 41 + (i * 20), 0x4B9, 0x4BA, key, GumpButtonType.Reply, 0);
+                    AddHtmlLocalized(50, 41 + (i * 20), 150, 20, key, 0x7FFF, false, false);                    
                 });
             }
 
@@ -177,13 +184,11 @@ namespace Server.Items
 
                         if (CheckTravel(p))
                         {
+                            Effects.SendPacket(User.Location, User.Map, new ParticleEffect(EffectType.FixedFrom, User.Serial, Server.Serial.Zero, 0x3728, User.Location, User.Location, 10, 10, false, false, 0, 0, 0, 2023, 1, User.Serial, 80, 0));
+                            Effects.PlaySound(User.Location, User.Map, 496);
+
                             BaseCreature.TeleportPets(User, p, Map.TerMur);
-                            User.Combatant = null;
-                            User.Warmode = false;
-                            User.Hidden = true;
-
                             User.MoveToWorld(p, Map.TerMur);
-
                             Effects.PlaySound(p, Map.TerMur, 0x1FE);
                         }
                     }
@@ -194,7 +199,7 @@ namespace Server.Items
             {
                 if (!User.InRange(Moonstone.GetWorldLocation(), 2) || User.Map != Moonstone.Map)
                 {
-                    User.SendLocalizedMessage(500295); // You are too far away to do that.
+                    User.SendLocalizedMessage(1076766); // That is too far away.
                 }
                 else if (User.Murderer)
                 {
