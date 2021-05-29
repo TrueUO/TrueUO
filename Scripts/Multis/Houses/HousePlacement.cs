@@ -53,7 +53,7 @@ namespace Server.Multis
             if (from.AccessLevel >= AccessLevel.GameMaster)
                 return HousePlacementResult.Valid; // Staff can place anywhere
 
-            if (map == Map.Ilshenar || SpellHelper.IsFeluccaT2A(map, center) || SpellHelper.IsEodon(map, center))
+            if (map == Map.Ilshenar || SpellHelper.IsAnyT2A(map, center) || SpellHelper.IsEodon(map, center))
                 return HousePlacementResult.BadRegion; // No houses in Ilshenar/T2A/Eodon
 
             if (map == Map.Malas && (multiID == 0x007C || multiID == 0x007E))
