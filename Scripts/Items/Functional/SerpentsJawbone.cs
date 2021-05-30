@@ -65,6 +65,7 @@ namespace Server.Items
 
             if (IsLockedDown || IsSecure)
             {
+                from.CloseGump(typeof(InternalGump));
                 from.SendGump(new InternalGump(from as PlayerMobile, this));
             }
             else
