@@ -1183,7 +1183,7 @@ namespace Server.Items
         public override void OnAosSingleClick(Mobile from)
         {
             int hue = Notoriety.GetHue(NotorietyHandlers.CorpseNotoriety(from, this));
-            ObjectPropertyList opl = PropertyList;
+            ObjectPropertyListPacket opl = PropertyList;
 
             if (opl.Header > 0)
             {

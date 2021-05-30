@@ -56,7 +56,7 @@ namespace Server
                 return;
             }
 
-            m_Table = new int[1500];
+            m_Table = new int[1528];
 
             using (StreamReader ip = new StreamReader(path))
             {
