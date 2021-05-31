@@ -4,6 +4,7 @@ using Server.Mobiles;
 using Server.Multis;
 using Server.Prompts;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Server.Items
 {
@@ -284,62 +285,10 @@ namespace Server.Items
 
         public void ReLoadDefinitions()
         {
-            List<RecipeScrollDefinition> list = new List<RecipeScrollDefinition>();
-
-            for (var index = 0; index < Definitions.Length; index++)
+            Definitions.Where(n => Recipes.All(o => o.RecipeID != n.RecipeID)).ToList().ForEach(x =>
             {
-                var n = Definitions[index];
-
-                bool all = true;
-
-                for (var i = 0; i < Recipes.Count; i++)
-                {
-                    var o = Recipes[i];
-
-                    if (o.RecipeID == n.RecipeID)
-                    {
-                        all = false;
-                        break;
-                    }
-                }
-
-                if (all)
-                {
-                    list.Add(n);
-                }
-            }
-
-            for (var index = 0; index < list.Count; index++)
-            {
-                List<RecipeScrollDefinition> defList = new List<RecipeScrollDefinition>();
-
-                for (var i = 0; i < Definitions.Length; i++)
-                {
-                    var n = Definitions[i];
-
-                    bool all = true;
-
-                    for (var recipe = 0; recipe < Recipes.Count; recipe++)
-                    {
-                        var o = Recipes[recipe];
-
-                        if (o.RecipeID == n.RecipeID)
-                        {
-                            all = false;
-                            break;
-                        }
-                    }
-
-                    if (all)
-                    {
-                        defList.Add(n);
-                    }
-                }
-
-                var x = defList[index];
-
                 Recipes.Add(x);
-            }
+            });
         }
 
         public bool CheckAccessible(Mobile from, Item item)
