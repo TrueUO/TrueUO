@@ -714,7 +714,7 @@ namespace Server
 		private Packet m_RemovePacket;
 
 		private Packet m_OPLPacket;
-		private ObjectPropertyList m_PropertyList;
+		private ObjectPropertyListPacket m_PropertyList;
 		#endregion
 
 		public int TempFlags
@@ -2176,13 +2176,13 @@ namespace Server
 			}
 		}
 
-		public ObjectPropertyList PropertyList
+		public ObjectPropertyListPacket PropertyList
 		{
 			get
 			{
 				if (m_PropertyList == null)
 				{
-					m_PropertyList = new ObjectPropertyList(this);
+					m_PropertyList = new ObjectPropertyListPacket(this);
 
 					GetProperties(m_PropertyList);
 					AppendChildProperties(m_PropertyList);
@@ -2229,9 +2229,9 @@ namespace Server
 		{
 			if (m_Map != null && m_Map != Map.Internal && !World.Loading)
 			{
-				ObjectPropertyList oldList = m_PropertyList;
+                ObjectPropertyListPacket oldList = m_PropertyList;
 				m_PropertyList = null;
-				ObjectPropertyList newList = PropertyList;
+                ObjectPropertyListPacket newList = PropertyList;
 
 				if (oldList == null || oldList.Hash != newList.Hash)
 				{
@@ -5655,7 +5655,7 @@ namespace Server
 
 		public virtual void OnAosSingleClick(Mobile from)
 		{
-			ObjectPropertyList opl = PropertyList;
+            ObjectPropertyListPacket opl = PropertyList;
 
 			if (opl.Header > 0)
 			{

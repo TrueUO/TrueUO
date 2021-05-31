@@ -868,7 +868,7 @@ namespace Server.Mobiles
             list = new List<BuyItemState>(buyInfo.Length);
             Container cont = BuyPack;
 
-            List<ObjectPropertyList> opls = null;
+            List<ObjectPropertyListPacket> opls = null;
 
             for (int idx = 0; idx < buyInfo.Length; idx++)
             {
@@ -901,7 +901,7 @@ namespace Server.Mobiles
 
                 if (opls == null)
                 {
-                    opls = new List<ObjectPropertyList>();
+                    opls = new List<ObjectPropertyListPacket>();
                 }
 
                 if (disp is Item item)
@@ -962,7 +962,7 @@ namespace Server.Mobiles
 
                     if (opls == null)
                     {
-                        opls = new List<ObjectPropertyList>();
+                        opls = new List<ObjectPropertyListPacket>();
                     }
 
                     opls.Add(item.PropertyList);
