@@ -795,7 +795,9 @@ namespace Server.Spells
             if (IsInvalid(map, loc)) // null, internal, out of bounds
             {
                 if (caster != null)
+                {
                     SendInvalidMessage(caster, type);
+                }
 
                 return false;
             }
@@ -838,33 +840,46 @@ namespace Server.Spells
             if (caster != null)
             {
                 BaseRegion destination = Region.Find(loc, map) as BaseRegion;
-                BaseRegion current = Region.Find(caster.Location, map) as BaseRegion;
+                BaseRegion current = Region.Find(caster.Location, caster.Map) as BaseRegion;
 
                 if (destination != null && !destination.CheckTravel(caster, loc, type))
+                {
                     isValid = false;
+                }
 
                 if (isValid && current != null && !current.CheckTravel(caster, loc, type))
+                {
                     isValid = false;
+                }
 
                 if (caster.Region != null)
                 {
                     if (caster.Region.IsPartOf("Blighted Grove") && loc.Z < -10)
+                    {
                         isValid = false;
+                    }
                 }
 
                 if ((int)type <= 4 && (IsNewDungeon(caster.Map, caster.Location) || IsNewDungeon(map, loc)))
+                {
                     isValid = false;
+                }
 
                 if (BaseBoat.IsDriving(caster))
+                {
                     return false;
-
+                }
             }
 
             for (int i = 0; isValid && i < m_Validators.Length; ++i)
-                isValid = (m_Rules[v, i] || !m_Validators[i](map, loc));
+            {
+                isValid = m_Rules[v, i] || !m_Validators[i](map, loc);
+            }
 
             if (!isValid && caster != null)
+            {
                 SendInvalidMessage(caster, type);
+            }
 
             return isValid;
         }
