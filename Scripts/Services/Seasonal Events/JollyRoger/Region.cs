@@ -86,18 +86,7 @@ namespace Server.Regions
 
             if (list != null && list.Shrine != null)
             {
-                ShrineArray s = null;
-
-                for (var index = 0; index < list.Shrine.Count; index++)
-                {
-                    var x = list.Shrine[index];
-
-                    if (virtue != null && x.Shrine == virtue.Shrine)
-                    {
-                        s = x;
-                        break;
-                    }
-                }
+                var s = list.Shrine.FirstOrDefault(x => virtue != null && x.Shrine == virtue.Shrine);
 
                 if (s != null && s.MasterDeath >= 3)
                 {
@@ -118,7 +107,6 @@ namespace Server.Regions
                             JollyRogerData.SetCloak(m, true);
 
                             m.SendLocalizedMessage(1152339, item.ToString()); // A reward of ~1_ITEM~ has been placed in your backpack.
-
                             m.PlaySound(0x419);
                         }
                     }
@@ -132,18 +120,12 @@ namespace Server.Regions
                 }
                 else
                 {
-                    if (virtue != null)
-                    {
-                        m.PrivateOverheadMessage(MessageType.Regular, 0x47E, false, $"*Thou are not truly {virtue.Title}...*", m.NetState);
-                    }
+                    m.PrivateOverheadMessage(MessageType.Regular, 0x47E, false, $"*Thou are not truly {virtue.Title}...*", m.NetState);
                 }
             }
             else
             {
-                if (virtue != null)
-                {
-                    m.PrivateOverheadMessage(MessageType.Regular, 0x47E, false, $"*Thou are not truly {virtue.Title}...*", m.NetState);
-                }
+                m.PrivateOverheadMessage(MessageType.Regular, 0x47E, false, $"*Thou are not truly {virtue.Title}...*", m.NetState);
             }
         }
     }
