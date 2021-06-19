@@ -57,7 +57,9 @@ namespace Server.Items
         public static bool IsUnderEffects(Mobile from, FishPieEffect type)
         {
             if (!m_EffectsList.ContainsKey(from) || m_EffectsList[from] == null)
+            {
                 return false;
+            }
 
             return m_EffectsList[from].Contains(type);
         }
@@ -65,10 +67,14 @@ namespace Server.Items
         public static bool TryAddBuff(Mobile from, FishPieEffect type)
         {
             if (IsUnderEffects(from, type))
+            {
                 return false;
+            }
 
             if (!m_EffectsList.ContainsKey(from))
+            {
                 m_EffectsList.Add(from, new List<FishPieEffect>());
+            }
 
             m_EffectsList[from].Add(type);
             return true;
@@ -77,15 +83,22 @@ namespace Server.Items
         public static void RemoveBuff(Mobile from, FishPieEffect type)
         {
             if (!m_EffectsList.ContainsKey(from))
+            {
                 return;
+            }
 
             if (m_EffectsList[from] != null && m_EffectsList[from].Contains(type))
+            {
                 m_EffectsList[from].Remove(type);
+            }
 
             if (m_EffectsList[from] == null || m_EffectsList[from].Count == 0)
+            {
                 m_EffectsList.Remove(from);
+            }
 
             BuffInfo.RemoveBuff(from, BuffIcon.FishPie);
+
             from.Delta(MobileDelta.WeaponDamage);
         }
 
@@ -97,19 +110,29 @@ namespace Server.Items
             }
 
             if (IsUnderEffects(to, FishPieEffect.PhysicalSoak) && phys > 0)
+            {
                 totalDamage -= (int)Math.Min(5.0, totalDamage * (phys / 100.0));
+            }
 
             if (IsUnderEffects(to, FishPieEffect.FireSoak) && fire > 0)
+            {
                 totalDamage -= (int)Math.Min(5.0, totalDamage * (fire / 100.0));
+            }
 
             if (IsUnderEffects(to, FishPieEffect.ColdSoak) && cold > 0)
+            {
                 totalDamage -= (int)Math.Min(5.0, totalDamage * (cold / 100.0));
+            }
 
             if (IsUnderEffects(to, FishPieEffect.PoisonSoak) && pois > 0)
+            {
                 totalDamage -= (int)Math.Min(5.0, totalDamage * (pois / 100.0));
+            }
 
             if (IsUnderEffects(to, FishPieEffect.EnergySoak) && nrgy > 0)
+            {
                 totalDamage -= (int)Math.Min(5.0, totalDamage * (nrgy / 100.0));
+            }
         }
 
         public virtual bool Apply(Mobile from)
@@ -207,8 +230,10 @@ namespace Server.Items
             {
                 from.FixedEffect(0x375A, 10, 15);
                 from.PlaySound(0x1E7);
-                from.SendLocalizedMessage(1116285, string.Format("#{0}", LabelNumber)); //You eat the ~1_val~.  Mmm, tasty!
-                Delete();
+
+                from.SendLocalizedMessage(1116285, $"#{LabelNumber}"); //You eat the ~1_val~.  Mmm, tasty!
+
+                Consume();
             }
         }
 
@@ -217,7 +242,6 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1); // version
 
             writer.Write((int)_Quality);
@@ -226,11 +250,9 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
+            reader.ReadInt();
 
-            int version = reader.ReadInt();
-
-            if (version > 0)
-                _Quality = (ItemQuality)reader.ReadInt();
+            _Quality = (ItemQuality)reader.ReadInt();
         }
     }
 
