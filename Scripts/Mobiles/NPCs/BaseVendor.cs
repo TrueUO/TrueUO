@@ -772,35 +772,17 @@ namespace Server.Mobiles
                 }
             }
 
-            if (Female)
+            switch (Utility.Random(2))
             {
-                switch (Utility.Random(2))
-                {
-                    case 0:
-                        SetWearable(new FemaleGargishClothLegs(GetRandomHue()));
-                        SetWearable(new FemaleGargishClothKilt(GetRandomHue()));
-                        SetWearable(new FemaleGargishClothChest(GetRandomHue()));
-                        break;
-                    case 1:
-                        SetWearable(new FemaleGargishClothKilt(GetRandomHue()));
-                        SetWearable(new FemaleGargishClothChest(GetRandomHue()));
-                        break;
-                }
-            }
-            else
-            {
-                switch (Utility.Random(2))
-                {
-                    case 0:
-                        SetWearable(new MaleGargishClothLegs(GetRandomHue()));
-                        SetWearable(new MaleGargishClothKilt(GetRandomHue()));
-                        SetWearable(new MaleGargishClothChest(GetRandomHue()));
-                        break;
-                    case 1:
-                        SetWearable(new MaleGargishClothKilt(GetRandomHue()));
-                        SetWearable(new MaleGargishClothChest(GetRandomHue()));
-                        break;
-                }
+                case 0:
+                    SetWearable(new GargishClothLegs(GetRandomHue()));
+                    SetWearable(new GargishClothKilt(GetRandomHue()));
+                    SetWearable(new GargishClothChest(GetRandomHue()));
+                    break;
+                case 1:
+                    SetWearable(new GargishClothKilt(GetRandomHue()));
+                    SetWearable(new GargishClothChest(GetRandomHue()));
+                    break;
             }
         }
         #endregion
