@@ -82,50 +82,53 @@ namespace Server.Regions
         {
             var virtue = Virtue.FirstOrDefault(x => x.Area.Contains(m.Location));
 
-            var list = JollyRogerData.GetList(m);
-
-            if (list != null && list.Shrine != null)
+            if (virtue != null)
             {
-                var s = list.Shrine.FirstOrDefault(x => virtue != null && x.Shrine == virtue.Shrine);
+                var list = JollyRogerData.GetList(m);
 
-                if (s != null && s.MasterDeath >= 3)
+                if (list != null && list.Shrine != null)
                 {
-                    if (!list.Cloak && list.Shrine.Count == 8 && !list.Shrine.Any(x => x.MasterDeath < 3))
+                    var s = list.Shrine.FirstOrDefault(x => x.Shrine == virtue.Shrine);
+
+                    if (s != null && s.MasterDeath >= 3)
                     {
-                        var item = new CloakOfTheVirtuous();
-
-                        if (m.Backpack == null || !m.Backpack.TryDropItem(m, item, false))
+                        if (!list.Cloak && list.Shrine.Count == 8 && !list.Shrine.Any(x => x.MasterDeath < 3))
                         {
-                            m.SendLocalizedMessage(1152337, item.ToString()); // A reward of ~1_ITEM~ will be delivered to you once you free up room in your backpack.
+                            var item = new CloakOfTheVirtuous();
 
-                            item.Delete();
+                            if (m.Backpack == null || !m.Backpack.TryDropItem(m, item, false))
+                            {
+                                m.SendLocalizedMessage(1152337, item.ToString()); // A reward of ~1_ITEM~ will be delivered to you once you free up room in your backpack.
+
+                                item.Delete();
+                            }
+                            else
+                            {
+                                m.PrivateOverheadMessage(MessageType.Regular, 0x47E, 1159339, m.NetState); // Thous hast proven thou walks the path of Virtue!
+
+                                JollyRogerData.SetCloak(m, true);
+
+                                m.SendLocalizedMessage(1152339, item.ToString()); // A reward of ~1_ITEM~ has been placed in your backpack.
+                                m.PlaySound(0x419);
+                            }
                         }
                         else
                         {
-                            m.PrivateOverheadMessage(MessageType.Regular, 0x47E, 1159339, m.NetState); // Thous hast proven thou walks the path of Virtue!
+                            m.PrivateOverheadMessage(MessageType.Regular, 0x47E, false, $"*Thou are truly {virtue.Title}...*", m.NetState);
 
-                            JollyRogerData.SetCloak(m, true);
-
-                            m.SendLocalizedMessage(1152339, item.ToString()); // A reward of ~1_ITEM~ has been placed in your backpack.
-                            m.PlaySound(0x419);
+                            m.FixedParticles(0x376A, 1, 72, 0x13B5, EffectLayer.Waist);
+                            m.PlaySound(0x1F2);
                         }
                     }
                     else
                     {
-                        m.PrivateOverheadMessage(MessageType.Regular, 0x47E, false, $"*Thou are truly {virtue.Title}...*", m.NetState);
-
-                        m.FixedParticles(0x376A, 1, 72, 0x13B5, EffectLayer.Waist);
-                        m.PlaySound(0x1F2);
+                        m.PrivateOverheadMessage(MessageType.Regular, 0x47E, false, $"*Thou are not truly {virtue.Title}...*", m.NetState);
                     }
                 }
                 else
                 {
                     m.PrivateOverheadMessage(MessageType.Regular, 0x47E, false, $"*Thou are not truly {virtue.Title}...*", m.NetState);
                 }
-            }
-            else
-            {
-                m.PrivateOverheadMessage(MessageType.Regular, 0x47E, false, $"*Thou are not truly {virtue.Title}...*", m.NetState);
             }
         }
     }
