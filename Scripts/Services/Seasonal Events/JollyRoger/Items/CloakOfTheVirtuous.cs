@@ -2,7 +2,7 @@ namespace Server.Items
 {
     public class CloakOfTheVirtuous : BaseCloak
     {
-        public override int LabelNumber => 159340; // Cloak of the Virtuous
+        public override int LabelNumber => 1159340; // Cloak of the Virtuous
 
         public override bool IsArtifact => true;
 
