@@ -2755,7 +2755,7 @@ namespace Server.Items
                 return;
             }
 
-            IEnumerable<IDamageable> list = SpellHelper.AcquireIndirectTargets(from, from, from.Map, 5);
+            IEnumerable<IDamageable> list = SpellHelper.AcquireIndirectTargets(from, defender, defender.Map, 5);
 
             int count = 0;
 
