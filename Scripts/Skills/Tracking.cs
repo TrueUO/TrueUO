@@ -234,14 +234,14 @@ namespace Server.SkillHandlers
             from.CheckSkill(SkillName.Tracking, 21.1, 100.0); // Passive gain
 
             int range = 10 + (int)(from.Skills[SkillName.Tracking].Value / 10);
-
+            
             List<Mobile> list = new List<Mobile>();
             IPooledEnumerable eable = from.GetMobilesInRange(range);
 
             foreach (Mobile m in eable)
             {
                 // Ghosts can no longer be tracked 
-                if (m != from && m.Alive && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel) && check(m) && CheckDifficulty(from, m))
+                if (list.Count <= 12 && m != from && m.Alive && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel) && check(m) && CheckDifficulty(from, m) && CanPath(from, m, range))
                     list.Add(m);
             }
             eable.Free();
@@ -272,7 +272,7 @@ namespace Server.SkillHandlers
             {
                 Mobile m = m_List[index];
 
-                m_From.QuestArrow = new TrackArrow(m_From, m, m_Range * 2);
+                m_From.QuestArrow = new TrackArrow(m_From, m, m_Range * 5);
 
                 Tracking.AddInfo(m_From, m);
             }
@@ -358,6 +358,20 @@ namespace Server.SkillHandlers
 
                 return m_From.GetDistanceToSqrt(x).CompareTo(m_From.GetDistanceToSqrt(y));
             }
+        }
+
+        private static bool CanPath(Mobile tracker, Mobile target, int range)
+        {
+            IPoint3D p = tracker;
+
+            if (p == null)
+            {
+                return false;
+            }
+            if(tracker.InRange(p,range/2))
+                return true;
+            MovementPath path = new MovementPath(target, new Point3D(p));
+            return path.Success;
         }
     }
 
