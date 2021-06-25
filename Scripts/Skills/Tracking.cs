@@ -1,14 +1,15 @@
 using Server.Gumps;
+using Server.Mobiles;
 using Server.Network;
 using Server.Spells;
 using Server.Spells.Necromancy;
+using Server.Spells.Seventh;
 using System;
 using System.Collections.Generic;
 
 namespace Server.SkillHandlers
 {
     public delegate bool TrackTypeDelegate(Mobile m);
-
     public class Tracking
     {
         private static readonly Dictionary<Mobile, TrackingInfo> m_Table = new Dictionary<Mobile, TrackingInfo>();
@@ -114,6 +115,46 @@ namespace Server.SkillHandlers
 
     public class TrackWhoGump : Gump
     {
+        private Dictionary<Body, string> bodyNames = new Dictionary<Body, string>(){
+                                  {747, "a wraith"},
+                                  {748, "a wraith"},
+                                    {749, "a lich"},
+                                    {746, "a lich"},
+ {0x7A, "a unicorn"},
+ {0xF6, "a bake-kitsune"},
+ {0x90E, "a wolf"},
+ {0xDC, "a llama"},
+ {0x8B0, "a ostard"},
+ {0x7D6, "a bullfrog"},
+ {0x7E2, "a giant serpent"},
+ {0x90E, "a dog"},
+ {0x90E, "a cat"},
+ {0x90E, "a rat"},
+ {0x90E, "a rabbit"},
+ {0x116, "a squirrel"},
+ {0x117, "a ferret"},
+ {0x115, "a cu sidhe"},
+ {0x114, "a reptalon"},
+ {0x4E7, "a white tiger"},
+  {0xD0, "a chicken"},
+ {0xD9, "a dog"},
+ {0xE1, "a wolf"},
+ {0xD6, "a panther"},
+ {0x1D, "a gorilla"},
+ {0xD3, "a black bear"},
+ {0xD4, "a grizzly bear"},
+ {0xD5, "a polar bear"},
+ {0x33, "a slime"},
+ {0x11, "a orc"},
+ {0x21, "a lizardMan"},
+ {0x04, "a gargoyle"},
+ {0x01, "a ogre"},
+ {0x36, "a troll"},
+ {0x02, "a ettin"},
+ {0x09, NameList.RandomName("daemon")}
+
+    };
+
         private static readonly TrackTypeDelegate[] m_Delegates =
         {
             IsAnimal,
@@ -161,8 +202,17 @@ namespace Server.SkillHandlers
                 AddItem(20 + i % 4 * 100, 20 + i / 4 * 155, ShrinkTable.Lookup(m));
                 AddButton(20 + i % 4 * 100, 130 + i / 4 * 155, 4005, 4007, i + 1, GumpButtonType.Reply, 0);
 
-                if (m.Name != null)
-                    AddHtml(20 + i % 4 * 100, 90 + i / 4 * 155, 90, 40, m.Name, false, false);
+                string name = m.Name;
+                if (TransformationSpellHelper.UnderTransformation(m, typeof(VampiricEmbraceSpell)) || m.Player && m.Body.IsHuman && m.IsBodyMod)
+                {
+                    name = m.Body.IsFemale ? NameList.RandomName("female") : NameList.RandomName("male");
+                }
+                else if (m.Player && (m.Body.IsAnimal || m.Body.IsMonster) && bodyNames.ContainsKey(m.Body))
+                {
+                    bodyNames.TryGetValue(m.Body, out name);
+                }
+                if (name != null)
+                    AddHtml(20 + i % 4 * 100, 90 + i / 4 * 155, 90, 40, name, false, false);
             }
         }
 
@@ -231,8 +281,10 @@ namespace Server.SkillHandlers
         // Tracking players uses tracking and detect hidden vs. hiding and stealth 
         private static bool CheckDifficulty(Mobile from, Mobile m)
         {
-            if (!m.Player)
-                return true;
+            if (!m.IsPlayer() && (IsAnimal(m) || IsMonster(m)))
+                return from.Skills[SkillName.Tracking].Fixed > Math.Min(m.Fame, 18000) / 1800-10+ Utility.Random(20);
+            if (!m.IsPlayer() && IsHumanNPC(m))
+                return from.Skills[SkillName.Tracking].Fixed > 200;
 
             int tracking = from.Skills[SkillName.Tracking].Fixed;
             int detectHidden = from.Skills[SkillName.DetectHidden].Fixed;
@@ -249,14 +301,15 @@ namespace Server.SkillHandlers
                 divisor -= 200;
             else if (TransformationSpellHelper.UnderTransformation(m, typeof(VampiricEmbraceSpell)) && divisor < 500)
                 divisor = 500;
-            else if (TransformationSpellHelper.UnderTransformation(m, typeof(WraithFormSpell)) && divisor <= 2000)
+            else if (TransformationSpellHelper.UnderTransformation(m, typeof(WraithFormSpell)))
                 divisor += 200;
-
+            if (divisor >= 2200)
+                divisor = 2200;
             int chance;
 
             if (divisor > 0)
             {
-                chance = 50 * (tracking * 2 + detectHidden) / divisor;
+                chance = 50 * (tracking + detectHidden + Math.Max(1, Utility.Random(200))) / divisor;
             }
             else
                 chance = 100;
@@ -266,22 +319,22 @@ namespace Server.SkillHandlers
 
         private static bool IsAnimal(Mobile m)
         {
-            return !m.Player && m.Body.IsAnimal;
+            return m.Body.IsAnimal;
         }
 
         private static bool IsMonster(Mobile m)
         {
-            return !m.Player && m.Body.IsMonster;
+            return m.Body.IsHuman && m.Murderer || m.Body.IsMonster || TransformationSpellHelper.UnderTransformation(m, typeof(VampiricEmbraceSpell));
         }
 
         private static bool IsHumanNPC(Mobile m)
         {
-            return !m.Player && m.Body.IsHuman;
+            return (!m.Player && m.Body.IsHuman) || m.Player && !m.CanBeginAction(typeof(PolymorphSpell)) && m.Body.IsHuman;
         }
 
         private static bool IsPlayer(Mobile m)
         {
-            return m.Player;
+            return m.Player && !m.Body.IsMonster && !m.Body.IsAnimal;
         }
 
         private class InternalSorter : IComparer<Mobile>
