@@ -6,6 +6,7 @@ using Server.Spells.Necromancy;
 using Server.Spells.Seventh;
 using System;
 using System.Collections.Generic;
+using Server.Items;
 
 namespace Server.SkillHandlers
 {
@@ -116,43 +117,42 @@ namespace Server.SkillHandlers
     public class TrackWhoGump : Gump
     {
         private Dictionary<Body, string> bodyNames = new Dictionary<Body, string>(){
-                                  {747, "a wraith"},
-                                  {748, "a wraith"},
-                                    {749, "a lich"},
-                                    {746, "a lich"},
- {0x84, "a kirin"},
- {0x7A, "a unicorn"},
- {0xF6, "a bake-kitsune"},
- {0x19, "a wolf"},
- {0xDC, "a llama"},
- {0xDB, "a ostard"},
- {0x51, "a bullfrog"},
- {0x15, "a giant serpent"},
- {0xD9, "a dog"},
- {0xC9, "a cat"},
- {0xEE, "a rat"},
- {0xCD, "a rabbit"},
- {0x116, "a squirrel"},
- {0x117, "a ferret"},
- {0x115, "a cu sidhe"},
- {0x114, "a reptalon"},
- {0x4E7, "a white tiger"},
-  {0xD0, "a chicken"},
- {0xE1, "a wolf"},
- {0xD6, "a panther"},
- {0x1D, "a gorilla"},
- {0xD3, "a black bear"},
- {0xD4, "a grizzly bear"},
- {0xD5, "a polar bear"},
- {0x33, "a slime"},
- {0x11, "a orc"},
- {0x21, "a lizardMan"},
- {0x04, "a gargoyle"},
- {0x01, "a ogre"},
- {0x36, "a troll"},
- {0x02, "a ettin"},
- {0x09, NameList.RandomName("daemon")}
-
+            {0x2EB, "a wraith"},
+            {0x2EC, "a wraith"},
+            {0x2ED, "a lich"},
+            {0x2EA, "a horrific beast"},
+            {0x84, "a ki-rin"},
+            {0x7A, "a unicorn"},
+            {0xF6, "a bake kitsune"},
+            {0x19, "a wolf"},
+            {0xDC, "a llama"},
+            {0xDB, "a ostard"},
+            {0x51, "a bullfrog"},
+            {0x15, "a giant serpent"},
+            {0xD9, "a dog"},
+            {0xC9, "a cat"},
+            {0xEE, "a rat"},
+            {0xCD, "a rabbit"},
+            {0x116, "a squirrel"},
+            {0x117, "a ferret"},
+            {0x115, "a cu sidhe"},
+            {0x114, "a reptalon"},
+            {0x4E7, "a white tiger"},
+            {0xD0, "a chicken"},
+            {0xE1, "a wolf"},
+            {0xD6, "a panther"},
+            {0x1D, "a gorilla"},
+            {0xD3, "a black bear"},
+            {0xD4, "a grizzly bear"},
+            {0xD5, "a polar bear"},
+            {0x33, "a slime"},
+            {0x11, "a orc"},
+            {0x21, "a lizardMan"},
+            {0x04, "a gargoyle"},
+            {0x01, "a ogre"},
+            {0x36, "a troll"},
+            {0x02, "a ettin"},
+            {0x09, NameList.RandomName("daemon")}
     };
 
         private static readonly TrackTypeDelegate[] m_Delegates =
@@ -324,17 +324,19 @@ namespace Server.SkillHandlers
 
         private static bool IsMonster(Mobile m)
         {
-            return m.Body.IsHuman && m.Murderer || m.Body.IsMonster || TransformationSpellHelper.UnderTransformation(m, typeof(VampiricEmbraceSpell));
+            return m.Body.IsHuman && m.Murderer || m.Body.IsMonster || TransformationSpellHelper.UnderTransformation(m);
         }
 
         private static bool IsHumanNPC(Mobile m)
         {
-            return (!m.Player && m.Body.IsHuman) || m.Player && !m.CanBeginAction(typeof(PolymorphSpell)) && m.Body.IsHuman;
+            return (!m.Player && m.Body.IsHuman)
+                || m.Player && (!m.CanBeginAction(typeof(PolymorphSpell)) || DisguiseTimers.IsDisguised(m)) && m.Body.IsHuman;
         }
 
         private static bool IsPlayer(Mobile m)
         {
-            return m.Player && !m.Body.IsMonster && !m.Body.IsAnimal;
+            return m.Player && !m.Body.IsMonster && !m.Body.IsAnimal && !TransformationSpellHelper.UnderTransformation(m)
+                && !(IsHumanNPC(m));
         }
 
         private class InternalSorter : IComparer<Mobile>
