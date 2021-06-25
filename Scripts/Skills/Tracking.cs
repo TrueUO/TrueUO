@@ -117,41 +117,41 @@ namespace Server.SkillHandlers
     public class TrackWhoGump : Gump
     {
         private Dictionary<Body, string> bodyNames = new Dictionary<Body, string>(){
-            {0x2EB, "a wraith"},
-            {0x2EC, "a wraith"},
-            {0x2ED, "a lich"},
-            {0x2EA, "a horrific beast"},
-            {0x84, "a ki-rin"},
-            {0x7A, "a unicorn"},
-            {0xF6, "a bake kitsune"},
-            {0x19, "a wolf"},
-            {0xDC, "a llama"},
-            {0xDB, "a ostard"},
-            {0x51, "a bullfrog"},
-            {0x15, "a giant serpent"},
-            {0xD9, "a dog"},
-            {0xC9, "a cat"},
-            {0xEE, "a rat"},
-            {0xCD, "a rabbit"},
-            {0x116, "a squirrel"},
-            {0x117, "a ferret"},
-            {0x115, "a cu sidhe"},
-            {0x114, "a reptalon"},
-            {0x4E7, "a white tiger"},
-            {0xD0, "a chicken"},
-            {0xE1, "a wolf"},
-            {0xD6, "a panther"},
-            {0x1D, "a gorilla"},
-            {0xD3, "a black bear"},
-            {0xD4, "a grizzly bear"},
-            {0xD5, "a polar bear"},
-            {0x33, "a slime"},
-            {0x11, "a orc"},
-            {0x21, "a lizardMan"},
-            {0x04, "a gargoyle"},
-            {0x01, "a ogre"},
-            {0x36, "a troll"},
-            {0x02, "a ettin"},
+            {0x2EB, "wraith"},
+            {0x2EC, "wraith"},
+            {0x2ED, "lich"},
+            {0x2EA, "moloch"},
+            {0x84, "ki-rin"},
+            {0x7A, "unicorn"},
+            {0xF6, "bake kitsune"},
+            {0x19, "wolf"},
+            {0xDC, "llama"},
+            {0xDB, "ostard"},
+            {0x51, "bullfrog"},
+            {0x15, "giant serpent"},
+            {0xD9, "dog"},
+            {0xC9, "cat"},
+            {0xEE, "rat"},
+            {0xCD, "rabbit"},
+            {0x116, "squirrel"},
+            {0x117, "ferret"},
+            {0x115, "cu sidhe"},
+            {0x114, "reptalon"},
+            {0x4E7, "white tiger"},
+            {0xD0, "chicken"},
+            {0xE1, "wolf"},
+            {0xD6, "panther"},
+            {0x1D, "gorilla"},
+            {0xD3, "black bear"},
+            {0xD4, "grizzly bear"},
+            {0xD5, "polar bear"},
+            {0x33, "slime"},
+            {0x11, "orc"},
+            {0x21, "lizardMan"},
+            {0x04, "gargoyle"},
+            {0x01, "ogre"},
+            {0x36, "troll"},
+            {0x02, "ettin"},
             {0x09, NameList.RandomName("daemon")}
     };
 
@@ -203,13 +203,17 @@ namespace Server.SkillHandlers
                 AddButton(20 + i % 4 * 100, 130 + i / 4 * 155, 4005, 4007, i + 1, GumpButtonType.Reply, 0);
 
                 string name = m.Name;
-                if (TransformationSpellHelper.UnderTransformation(m, typeof(VampiricEmbraceSpell)) || m.Player && m.Body.IsHuman && m.IsBodyMod)
+                if (TransformationSpellHelper.UnderTransformation(m, typeof(VampiricEmbraceSpell)))
                 {
                     name = m.Body.IsFemale ? NameList.RandomName("female") : NameList.RandomName("male");
                 }
                 else if (m.Player && (m.Body.IsAnimal || m.Body.IsMonster) && bodyNames.ContainsKey(m.Body))
                 {
                     bodyNames.TryGetValue(m.Body, out name);
+                }
+                if(name.StartsWith("a "))
+                {
+                    name = name.Substring(2);
                 }
                 if (name != null)
                     AddHtml(20 + i % 4 * 100, 90 + i / 4 * 155, 90, 40, name, false, false);
@@ -324,13 +328,13 @@ namespace Server.SkillHandlers
 
         private static bool IsMonster(Mobile m)
         {
-            return m.Body.IsHuman && m.Murderer || m.Body.IsMonster || TransformationSpellHelper.UnderTransformation(m);
+            return !m.Player && m.Body.IsHuman && m.Murderer || m.Body.IsMonster || TransformationSpellHelper.UnderTransformation(m);
         }
 
         private static bool IsHumanNPC(Mobile m)
         {
             return (!m.Player && m.Body.IsHuman)
-                || m.Player && (!m.CanBeginAction(typeof(PolymorphSpell)) || DisguiseTimers.IsDisguised(m)) && m.Body.IsHuman;
+                || m.Player && DisguiseTimers.IsDisguised(m) && m.Body.IsHuman;
         }
 
         private static bool IsPlayer(Mobile m)
