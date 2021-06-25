@@ -234,14 +234,14 @@ namespace Server.SkillHandlers
             from.CheckSkill(SkillName.Tracking, 21.1, 100.0); // Passive gain
 
             int range = 10 + (int)(from.Skills[SkillName.Tracking].Value / 10);
-            
+
             List<Mobile> list = new List<Mobile>();
-            IPooledEnumerable eable = from.GetMobilesInRange(range);
+            IPooledEnumerable eable = from.GetMobilesInRange(range * 2);
 
             foreach (Mobile m in eable)
             {
                 // Ghosts can no longer be tracked 
-                if (list.Count <= 12 && m != from && m.Alive && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel) && check(m) && CheckDifficulty(from, m) && CanPath(from, m, range))
+                if (list.Count <= 12 && m != from && m.Alive && (!m.Hidden || m.IsPlayer() && m.InRange(from, range) || from.AccessLevel > m.AccessLevel) && check(m) && CheckDifficulty(from, m) && CanPath(from, m, range))
                     list.Add(m);
             }
             eable.Free();
@@ -282,7 +282,7 @@ namespace Server.SkillHandlers
         private static bool CheckDifficulty(Mobile from, Mobile m)
         {
             if (!m.IsPlayer() && (IsAnimal(m) || IsMonster(m)))
-                return from.Skills[SkillName.Tracking].Fixed > Math.Min(m.Fame, 18000) / 1800-10+ Utility.Random(20);
+                return from.Skills[SkillName.Tracking].Fixed > Math.Min(m.Fame, 18000) / 1800 - 10 + Utility.Random(20);
             if (!m.IsPlayer() && IsHumanNPC(m))
                 return from.Skills[SkillName.Tracking].Fixed > 200;
 
@@ -368,7 +368,7 @@ namespace Server.SkillHandlers
             {
                 return false;
             }
-            if(tracker.InRange(p,range/2))
+            if (tracker.InRange(target, range / 2))
                 return true;
             MovementPath path = new MovementPath(target, new Point3D(p));
             return path.Success;
@@ -406,8 +406,6 @@ namespace Server.SkillHandlers
             if (m_From != null)
             {
                 Tracking.ClearTrackingInfo(m_From);
-
-                m_From.SendLocalizedMessage(503177); // You have lost your quarry.
             }
         }
     }
@@ -441,6 +439,7 @@ namespace Server.SkillHandlers
             {
                 m_Arrow.Stop();
                 Stop();
+                m_From.SendLocalizedMessage(503177); // You have lost your quarry.
                 return;
             }
 
