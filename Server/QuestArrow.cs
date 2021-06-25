@@ -18,8 +18,52 @@ namespace Server
 
 		public void Update()
 		{
-			Update(m_Target.X, m_Target.Y);
-		}
+            int xOffset = 0;
+            int yOffset = 0;
+            int zOffset = m_Target.Z / 10;
+            Direction direction = m_Mobile.GetDirectionTo(m_Target);
+            switch (direction)
+            {
+                case Direction.North:
+                    xOffset = 0;
+                    yOffset = 1;
+                    break;
+                case Direction.Right:
+                    xOffset = -1;
+                    yOffset = 1;
+                    break;
+                case Direction.East:
+                    xOffset = -1;
+                    yOffset = 0;
+                    break;
+                case Direction.Down:
+                    xOffset = -1;
+                    yOffset = -1;
+                    break;
+                case Direction.South:
+                    xOffset = 0;
+                    yOffset = -1;
+                    break;
+                case Direction.Left:
+                    xOffset = 1;
+                    yOffset = -1;
+                    break;
+                case Direction.West:
+                    xOffset = 1;
+                    yOffset = 0;
+                    break;
+                case Direction.Up:
+                    xOffset = 1;
+                    yOffset = 1;
+                    break;
+                default:
+                    break;
+            }
+
+            xOffset -= zOffset;
+            yOffset -= zOffset;
+            Update(m_Target.X+ xOffset, m_Target.Y+ yOffset);
+        }
 
 		public void Update(int x, int y)
 		{
