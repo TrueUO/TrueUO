@@ -26,6 +26,11 @@ namespace Server.Engines.Exodus
         {
         }
 
+        public override bool CanUseStuckMenu(Mobile m)
+        {
+            return false;
+        }
+
         public class ExitTimer : Timer
         {
             private static readonly TimeSpan m_Delay = TimeSpan.FromMinutes(2);
