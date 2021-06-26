@@ -240,7 +240,7 @@ namespace Server.SkillHandlers
             int range = 10 + (int)(from.Skills[SkillName.Tracking].Value / 10);
 
             List<Mobile> list = new List<Mobile>();
-            IPooledEnumerable eable = from.GetMobilesInRange(range * 2);
+            IPooledEnumerable eable = from.GetMobilesInRange(range);
 
             foreach (Mobile m in eable)
             {
@@ -248,7 +248,7 @@ namespace Server.SkillHandlers
                 if (list.Count <= 12
                     && m != from
                     && m.Alive
-                    && (!m.Hidden || m.IsPlayer() && m.InRange(from, range) || from.AccessLevel > m.AccessLevel)
+                    && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel)
                     && check(m)
                     && CheckDifficulty(from, m))
                     list.Add(m);
