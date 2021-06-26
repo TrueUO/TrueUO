@@ -245,7 +245,12 @@ namespace Server.SkillHandlers
             foreach (Mobile m in eable)
             {
                 // Ghosts can no longer be tracked 
-                if (list.Count <= 12 && m != from && m.Alive && (!m.Hidden || m.IsPlayer() && m.InRange(from, range) || from.AccessLevel > m.AccessLevel) && check(m) && CheckDifficulty(from, m) && CanPath(from, m, range))
+                if (list.Count <= 12
+                    && m != from
+                    && m.Alive
+                    && (!m.Hidden || m.IsPlayer() && m.InRange(from, range) || from.AccessLevel > m.AccessLevel)
+                    && check(m)
+                    && CheckDifficulty(from, m))
                     list.Add(m);
             }
             eable.Free();
@@ -362,20 +367,6 @@ namespace Server.SkillHandlers
 
                 return m_From.GetDistanceToSqrt(x).CompareTo(m_From.GetDistanceToSqrt(y));
             }
-        }
-
-        private static bool CanPath(Mobile tracker, Mobile target, int range)
-        {
-            IPoint3D p = tracker;
-
-            if (p == null)
-            {
-                return false;
-            }
-            if (tracker.InRange(target, range / 2))
-                return true;
-            MovementPath path = new MovementPath(target, new Point3D(p));
-            return path.Success;
         }
     }
 
