@@ -340,31 +340,47 @@ namespace Server.Items
 
             Item arty = null;
             Item special = null;
-            Item newSpecial = null;
 
             if (0.004 * level > Utility.RandomDouble())
+            {
                 arty = Loot.Construct(m_SOSArtifacts);
+            }
+
             if (0.006 * level > Utility.RandomDouble())
+            {
                 special = Loot.Construct(m_SOSDecor);
+            }
             else if (0.009 * level > Utility.RandomDouble())
+            {
                 special = new TreasureMap(Utility.RandomMinMax(level, Math.Min(7, level + 1)), cont.Map);
+            }
 
             if (level >= 4)
             {
-                switch (Utility.Random(4))
+                cont.DropItem(new LiveRock());
+
+                switch (Utility.Random(2))
                 {
                     case 0:
-                        newSpecial = new AncientAquariumFishNet();
+                        cont.DropItem(new AncientAquariumFishNet());
                         break;
                     case 1:
-                        newSpecial = new LiveRock();
+                        cont.DropItem(new AncientAquariumFishNet());
+                        cont.DropItem(new AncientAquariumFishNet());
                         break;
-                    case 2:
-                        newSpecial = new SaltedSerpentSteaks();
-                        break;
-                    case 3:
-                        newSpecial = new OceanSapphire();
-                        break;
+                }
+
+                if (0.50 > Utility.RandomDouble())
+                {
+                    switch (Utility.Random(2))
+                    {
+                        case 0:
+                            cont.DropItem(new SaltedSerpentSteaks());
+                            break;
+                        case 1:
+                            cont.DropItem(new OceanSapphire());
+                            break;
+                    }
                 }
             }
 
@@ -380,15 +396,16 @@ namespace Server.Items
             }
 
             if (special != null)
+            {
                 cont.DropItem(special);
-
-            if (newSpecial != null)
-                cont.DropItem(newSpecial);
+            }
 
             int rolls = 2;
 
             if (level >= 5)
+            {
                 rolls += level - 2;
+            }
 
             RefinementComponent.Roll(cont, rolls, 0.10);
         }
