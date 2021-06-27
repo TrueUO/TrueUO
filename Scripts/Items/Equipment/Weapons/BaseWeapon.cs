@@ -4094,12 +4094,6 @@ namespace Server.Items
             {
                 m_Hits = m_MaxHits = Utility.RandomMinMax(InitMinHits, InitMaxHits);
             }
-
-            if (m_Slayer == SlayerName.DaemonDismissal || m_Slayer == SlayerName.BalronDamnation)
-                m_Slayer = SlayerName.Exorcism;
-
-            if (m_Slayer2 == SlayerName.DaemonDismissal || m_Slayer2 == SlayerName.BalronDamnation)
-                m_Slayer2 = SlayerName.Exorcism;
         }
         #endregion
 
