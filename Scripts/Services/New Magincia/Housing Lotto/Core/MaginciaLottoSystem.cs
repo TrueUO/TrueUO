@@ -629,8 +629,11 @@ namespace Server.Engines.NewMagincia
                 writer.Write(kvp.Key);
 
                 writer.Write(kvp.Value.Count);
-                foreach (NewMaginciaMessage message in kvp.Value)
+                for (var index = 0; index < kvp.Value.Count; index++)
+                {
+                    NewMaginciaMessage message = kvp.Value[index];
                     message.Serialize(writer);
+                }
             }
 
             Timer.DelayCall(TimeSpan.FromSeconds(30), PruneMessages);
