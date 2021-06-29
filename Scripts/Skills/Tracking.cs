@@ -120,6 +120,7 @@ namespace Server.SkillHandlers
         private static readonly bool TrackThiefAsNPC = Config.Get("Tracking.ThiefDisguiseShowsAsNPC", false);
         private static readonly int BaseTrackingDetectionRange = Config.Get("Tracking.BaseTrackingDetectionRange", 10);
         private static readonly int TrackDistanceMultiplier = Config.Get("Tracking.TrackDistanceMultiplier", 5);
+        private static readonly int NonPlayerRangeMultiplier = Config.Get("Tracking.NonPlayerRangeMultiplier", 1);
 
 
         private Dictionary<Body, string> bodyNames = new Dictionary<Body, string>(){
@@ -240,11 +241,11 @@ namespace Server.SkillHandlers
 
             from.CheckSkill(SkillName.Tracking, 21.1, 100.0); // Passive gain
 
-            int range = BaseTrackingDetectionRange + (int)(from.Skills[SkillName.Tracking].Value / 10);
+            int range = (BaseTrackingDetectionRange + (int)(from.Skills[SkillName.Tracking].Value / 10)) * NonPlayerRangeMultiplier;
 
             List<Mobile> list = new List<Mobile>();
             IPooledEnumerable eable = from.GetMobilesInRange(range);
-
+            
             foreach (Mobile m in eable)
             {
                 // Ghosts can no longer be tracked 
@@ -253,7 +254,8 @@ namespace Server.SkillHandlers
                     && m.Alive
                     && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel)
                     && check(m)
-                    && CheckDifficulty(from, m))
+                    && CheckDifficulty(from, m)
+                    && (m.IsPlayer() && NonPlayerRangeMultiplier == 1 ? m.InRange(from, range / NonPlayerRangeMultiplier) : m.InRange(from, range)))
                     list.Add(m);
             }
             eable.Free();
