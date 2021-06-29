@@ -116,6 +116,12 @@ namespace Server.SkillHandlers
 
     public class TrackWhoGump : Gump
     {
+        private static readonly bool TrackNecroAsMonster = Config.Get("Tracking.NecroTransformsShowAsMonsters", false);
+        private static readonly bool TrackThiefAsNPC = Config.Get("Tracking.ThiefDisguiseShowsAsNPC", false);
+        private static readonly int BaseTrackingDetectionRange = Config.Get("Tracking.BaseTrackingDetectionRange", 10);
+        private static readonly int TrackDistanceMultiplier = Config.Get("Tracking.TrackDistanceMultiplier", 5);
+
+
         private Dictionary<Body, string> bodyNames = new Dictionary<Body, string>(){
             {0x2EB, "wraith"},
             {0x2EC, "wraith"},
@@ -203,15 +209,12 @@ namespace Server.SkillHandlers
                 AddButton(20 + i % 4 * 100, 130 + i / 4 * 155, 4005, 4007, i + 1, GumpButtonType.Reply, 0);
 
                 string name = m.Name;
-                if (TransformationSpellHelper.UnderTransformation(m, typeof(VampiricEmbraceSpell)))
-                {
-                    name = m.Body.IsFemale ? NameList.RandomName("female") : NameList.RandomName("male");
-                }
-                else if (m.Player && (m.Body.IsAnimal || m.Body.IsMonster) && bodyNames.ContainsKey(m.Body))
+
+                if (m.Player && (m.Body.IsAnimal || m.Body.IsMonster) && bodyNames.ContainsKey(m.Body))
                 {
                     bodyNames.TryGetValue(m.Body, out name);
                 }
-                if(name.StartsWith("a "))
+                if (name.StartsWith("a "))
                 {
                     name = name.Substring(2);
                 }
@@ -237,7 +240,7 @@ namespace Server.SkillHandlers
 
             from.CheckSkill(SkillName.Tracking, 21.1, 100.0); // Passive gain
 
-            int range = 10 + (int)(from.Skills[SkillName.Tracking].Value / 10);
+            int range = BaseTrackingDetectionRange + (int)(from.Skills[SkillName.Tracking].Value / 10);
 
             List<Mobile> list = new List<Mobile>();
             IPooledEnumerable eable = from.GetMobilesInRange(range);
@@ -281,7 +284,7 @@ namespace Server.SkillHandlers
             {
                 Mobile m = m_List[index];
 
-                m_From.QuestArrow = new TrackArrow(m_From, m, m_Range * 5);
+                m_From.QuestArrow = new TrackArrow(m_From, m, m_Range * TrackDistanceMultiplier == 0 ? 1000 : TrackDistanceMultiplier);
 
                 Tracking.AddInfo(m_From, m);
             }
@@ -333,19 +336,27 @@ namespace Server.SkillHandlers
 
         private static bool IsMonster(Mobile m)
         {
-            return !m.Player && m.Body.IsHuman && m.Murderer || m.Body.IsMonster || TransformationSpellHelper.UnderTransformation(m);
+            return !m.Player && m.Body.IsHuman && m.Murderer || m.Body.IsMonster || TrackedNecro(m);
         }
 
         private static bool IsHumanNPC(Mobile m)
         {
             return (!m.Player && m.Body.IsHuman)
-                || m.Player && DisguiseTimers.IsDisguised(m) && m.Body.IsHuman;
+                || TrackedThief(m);
         }
 
         private static bool IsPlayer(Mobile m)
         {
-            return m.Player && !m.Body.IsMonster && !m.Body.IsAnimal && !TransformationSpellHelper.UnderTransformation(m)
-                && !(IsHumanNPC(m));
+            return m.Player && !m.Body.IsMonster && !m.Body.IsAnimal && !TrackedNecro(m) && !IsHumanNPC(m);
+        }
+
+        private static bool TrackedNecro(Mobile m)
+        {
+            return TrackNecroAsMonster && TransformationSpellHelper.UnderTransformation(m);
+        }
+        private static bool TrackedThief(Mobile m)
+        {
+            return TrackThiefAsNPC && m.Player && DisguiseTimers.IsDisguised(m) && m.Body.IsHuman;
         }
 
         private class InternalSorter : IComparer<Mobile>
