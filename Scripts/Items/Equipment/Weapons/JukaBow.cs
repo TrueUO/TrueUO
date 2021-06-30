@@ -35,16 +35,16 @@ namespace Server.Items
             }
             else if (!IsChildOf(from.Backpack))
             {
-                from.SendMessage("This must be in your backpack to modify it.");
+                from.SendLocalizedMessage(1080058); // This must be in your backpack to use it.
             }
             else if (from.Skills[SkillName.Fletching].Base < 100.0)
             {
-                from.SendMessage("Only a grandmaster bowcrafter can modify this weapon.");
+                from.SendMessage("Only a grandmaster bowyer can modify this weapon.");
             }
             else
             {
                 from.BeginTarget(2, false, Targeting.TargetFlags.None, OnTargetGears);
-                from.SendMessage("Select the gears you wish to use.");
+                from.SendLocalizedMessage(1010614); // Which set of gears will you use?
             }
         }
 
@@ -54,7 +54,7 @@ namespace Server.Items
 
             if (g == null || !g.IsChildOf(from.Backpack))
             {
-                from.SendMessage("Those are not gears."); 
+                from.SendLocalizedMessage(1010623); // You must use gears.
             }
             else if (IsModified)
             {
@@ -62,20 +62,20 @@ namespace Server.Items
             }
             else if (!IsChildOf(from.Backpack))
             {
-                from.SendMessage("This must be in your backpack to modify it.");
+                from.SendLocalizedMessage(1080058); // This must be in your backpack to use it.
             }
             else if (from.Skills[SkillName.Fletching].Base < 100.0)
             {
-                from.SendMessage("Only a grandmaster bowcrafter can modify this weapon.");
+                from.SendMessage("Only a grandmaster bowyer can modify this weapon.");
             }
             else
             {
                 g.Consume();
 
                 Hue = 0x453;
-                Slayer = (SlayerName)Utility.Random(2, 25);
+                Slayer = BaseRunicTool.GetRandomSlayer();
 
-                from.SendMessage("You modify it.");
+                from.SendMessage("You modify the bow.");
             }
         }
 
