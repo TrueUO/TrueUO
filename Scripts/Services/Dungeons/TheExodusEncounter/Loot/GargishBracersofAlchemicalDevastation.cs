@@ -3,6 +3,7 @@ namespace Server.Items
     public class GargishBracersofAlchemicalDevastation : GargishLeatherArms
     {
         public override bool IsArtifact => true;
+        public override int LabelNumber => 1153523;//Bracers of Alchemical Devastation [Replica]
 
         [Constructable]
         public GargishBracersofAlchemicalDevastation()
@@ -10,14 +11,18 @@ namespace Server.Items
             Attributes.RegenMana = 4;
             Attributes.CastRecovery = 3;
             ArmorAttributes.MageArmor = 1;
-            WeaponAttributes.HitLightning = 35;
         }
 
         public GargishBracersofAlchemicalDevastation(Serial serial) : base(serial)
         {
         }
 
-        public override int LabelNumber => 1153523;//Bracers of Alchemical Devastation [Replica]
+        public override void AddWeightProperty(ObjectPropertyList list)
+        {
+            base.AddWeightProperty(list); // Property arguments handled in BaseWeapon.cs
+
+            list.Add(1060423, "35"); // hit lightning ~1_val~%
+        }
 
         public override int BasePhysicalResistance => 10;
         public override int BaseFireResistance => 8;
@@ -39,6 +44,8 @@ namespace Server.Items
         {
             base.Deserialize(reader);
             reader.ReadInt();
+
+            WeaponAttributes.HitLightning = 0;
         }
     }
 }

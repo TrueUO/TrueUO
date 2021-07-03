@@ -2411,6 +2411,18 @@ namespace Server.Items
                 }
             }
 
+            #region Bracers Of Alchemical Devastation
+            var arms = attacker.FindItemOnLayer(Layer.Arms);
+
+            if (attacker.FindItemOnLayer(Layer.OneHanded) == null && attacker.FindItemOnLayer(Layer.TwoHanded) == null)
+            {
+                if (0.35 > Utility.RandomDouble() && arms != null && (arms is BracersofAlchemicalDevastation || arms is GargishBracersofAlchemicalDevastation))
+                {
+                    DoLightning(attacker, defender);
+                }
+            }
+            #endregion
+
             if (attacker is BaseCreature aBc)
             {
                 aBc.OnGaveMeleeAttack(defender);
@@ -2453,6 +2465,16 @@ namespace Server.Items
 
             BaseFamiliar.OnHit(attacker, damageable);
             WhiteTigerFormSpell.OnHit(attacker, defender);
+        }
+
+        private static bool HasFreeHands(Mobile m)
+        {
+            Item item = m.FindItemOnLayer(Layer.OneHanded);
+
+            if (item != null && !(item is Spellbook))
+                return false;
+
+            return m.FindItemOnLayer(Layer.TwoHanded) == null;
         }
 
         public Direction GetOppositeDir(Direction d)
