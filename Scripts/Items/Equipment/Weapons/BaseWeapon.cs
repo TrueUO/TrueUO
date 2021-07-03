@@ -2467,16 +2467,6 @@ namespace Server.Items
             WhiteTigerFormSpell.OnHit(attacker, defender);
         }
 
-        private static bool HasFreeHands(Mobile m)
-        {
-            Item item = m.FindItemOnLayer(Layer.OneHanded);
-
-            if (item != null && !(item is Spellbook))
-                return false;
-
-            return m.FindItemOnLayer(Layer.TwoHanded) == null;
-        }
-
         public Direction GetOppositeDir(Direction d)
         {
             Direction direction = Direction.Down;
