@@ -298,17 +298,17 @@ namespace Server.SkillHandlers
             if (!m.IsPlayer() && (IsAnimal(m) || IsMonster(m)))
                 return from.Skills[SkillName.Tracking].Fixed > Math.Min(m.Fame, 18000) / 1800 - 10 + Utility.Random(20);
             if (!m.IsPlayer() && IsHumanNPC(m))
-                return from.Skills[SkillName.Tracking].Fixed > 200;
+                return from.Skills[SkillName.Tracking].Fixed >= 200;
 
             int tracking = from.Skills[SkillName.Tracking].Fixed;
             int detectHidden = from.Skills[SkillName.DetectHidden].Fixed;
 
-            if (m.Race == Race.Elf)
-                tracking /= 2; //The 'Guide' says that it requires twice as Much tracking SKILL to track an elf.  Not the total difficulty to track.
-
             int hiding = m.Skills[SkillName.Hiding].Fixed;
             int stealth = m.Skills[SkillName.Stealth].Fixed;
             int divisor = hiding + stealth;
+
+            if (m.Race == Race.Elf)
+                divisor /= 2; //Previous assumption was wrong. From testing OSI Humans track at ~70%, elves at ~35%, which is half the total chance
 
             // Necromancy forms affect tracking difficulty 
             if (TransformationSpellHelper.UnderTransformation(m, typeof(HorrificBeastSpell)))
@@ -317,16 +317,12 @@ namespace Server.SkillHandlers
                 divisor = 500;
             else if (TransformationSpellHelper.UnderTransformation(m, typeof(WraithFormSpell)))
                 divisor += 200;
+            else if (TransformationSpellHelper.UnderTransformation(m, typeof(LichFormSpell)))
+                divisor -= 200;
             if (divisor >= 2200)
                 divisor = 2200;
-            int chance;
 
-            if (divisor > 0)
-            {
-                chance = 50 * (tracking + detectHidden + Math.Max(1, Utility.Random(200))) / divisor;
-            }
-            else
-                chance = 100;
+            int chance = divisor > 0 ? (70 * (tracking + detectHidden) / divisor) : 0;
 
             return chance > Utility.Random(100);
         }
