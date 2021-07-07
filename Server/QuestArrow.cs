@@ -20,8 +20,9 @@ namespace Server
 		{
             int xOffset = 0;
             int yOffset = 0;
-            int zOffset = m_Target.Z / 10;
+            int zOffset = (int)System.Math.Round((double)m_Target.Z / 10);
             Direction direction = m_Mobile.GetDirectionTo(m_Target);
+
             switch (direction)
             {
                 case Direction.North:
