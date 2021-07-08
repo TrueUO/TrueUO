@@ -21,7 +21,13 @@ namespace Server
             int xOffset = 0;
             int yOffset = 0;
             int zOffset = (int)System.Math.Round((double)m_Target.Z / 10);
-            Direction direction = m_Mobile.GetDirectionTo(m_Target);
+            if (m_Mobile.InRange(new Point2D(m_Target.X- zOffset, m_Target.Y - zOffset), zOffset))
+            {
+                Update(m_Target.X- zOffset, m_Target.Y-zOffset);
+                return;
+            }
+
+            Direction direction = m_Mobile.GetDirectionTo(m_Target.X - zOffset, m_Target.Y - zOffset);
 
             switch (direction)
             {
@@ -63,10 +69,10 @@ namespace Server
 
             xOffset -= zOffset;
             yOffset -= zOffset;
-            Update(m_Target.X+ xOffset, m_Target.Y+ yOffset);
+            Update(m_Target.X + xOffset, m_Target.Y + yOffset);
         }
 
-		public void Update(int x, int y)
+        public void Update(int x, int y)
 		{
 			if (!m_Running)
 			{

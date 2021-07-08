@@ -349,8 +349,7 @@ namespace Server.SkillHandlers
         private readonly IEntity m_Target;
         private readonly int m_Range;
         private readonly QuestArrow m_Arrow;
-        private int m_LastX, m_LastY;
-        private Direction m_LastDirection;
+        private int m_LastX, m_LastY, p_LastX, p_LastY;
         public TrackTimer(Mobile from, IEntity target, int range, QuestArrow arrow)
             : base(TimeSpan.FromSeconds(0.25), TimeSpan.FromSeconds(2.5))
         {
@@ -377,12 +376,12 @@ namespace Server.SkillHandlers
             }
 
 
-            if (m_LastDirection != m_From.GetDirectionTo(m_Target) || m_LastX != m_Target.Location.X || m_LastY != m_Target.Location.Y)
+            if (p_LastX != m_From.Location.X || p_LastY != m_From.Location.Y || m_LastX != m_Target.Location.X || m_LastY != m_Target.Location.Y)
             {
-                m_LastDirection = m_From.GetDirectionTo(m_Target);
                 m_LastX = m_Target.Location.X;
                 m_LastY = m_Target.Location.Y;
-
+                p_LastX = m_From.Location.X;
+                p_LastY = m_From.Location.Y;
                 m_Arrow.Update();
             }
         }
