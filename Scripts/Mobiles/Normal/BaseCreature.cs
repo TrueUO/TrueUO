@@ -5221,7 +5221,16 @@ namespace Server.Mobiles
                         Map map = Map;
 
                         if (map == Map.Trammel && Siege.SiegeShard)
+                        {
                             map = Map.Felucca;
+                        }
+
+                        Region r = Region;
+
+                        if (r.IsPartOf("Yomotsu Mines") || r.IsPartOf("Fan Dancer's Dojo") || r.IsPartOf("TheCitadel"))
+                        {
+                            map = Map.Tokuno; // Tokuno Dungeons are on the Malas Map.
+                        }
 
                         PackItem(new TreasureMap(treasureLevel, map, SpellHelper.IsEodon(map, Location)));
                     }

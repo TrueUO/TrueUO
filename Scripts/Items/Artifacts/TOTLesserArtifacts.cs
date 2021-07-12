@@ -893,21 +893,17 @@ namespace Server.Items
         public override int LabelNumber => 1070927;// Flute of Renewal
         public override int InitMinUses => 300;
         public override int InitMaxUses => 300;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
-
-            if (version == 0 && Slayer == SlayerName.Fey)
-                Slayer = SlayerGroup.Groups[Utility.Random(SlayerGroup.Groups.Length - 1)].Super.Name;
+            reader.ReadInt();
         }
     }
 

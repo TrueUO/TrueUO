@@ -986,10 +986,8 @@ namespace Server.Engines.ArenaSystem
 
         public void Closeout()
         {
-            for (var index = 0; index < Teams.Count; index++)
+            foreach (ArenaTeam team in Teams)
             {
-                ArenaTeam team = Teams[index];
-
                 team.Players.Clear();
                 team.Players = null;
                 team.PlayerZero = null;

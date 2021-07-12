@@ -648,11 +648,15 @@ namespace Server.Engines.Craft
 
                     Dictionary<int, int> bolts = new Dictionary<int, int>();
                     List<Item> toConsume = new List<Item>();
+
                     object num = null;
+
                     Container pack = m.Backpack;
 
-                    foreach (Item item in pack.Items)
+                    for (var index = 0; index < pack.Items.Count; index++)
                     {
+                        Item item = pack.Items[index];
+
                         if (item.GetType() == typeof(BoltOfCloth))
                         {
                             if (!bolts.ContainsKey(item.Hue))
@@ -674,8 +678,10 @@ namespace Server.Engines.Craft
                     }
                     else
                     {
-                        foreach (Item item in toConsume)
+                        for (var index = 0; index < toConsume.Count; index++)
                         {
+                            Item item = toConsume[index];
+
                             item.Delete();
                         }
 
@@ -725,10 +731,12 @@ namespace Server.Engines.Craft
 
                     Dictionary<int, int> cloth = new Dictionary<int, int>();
                     List<Item> toConsume = new List<Item>();
+
                     object num = null;
 
-                    foreach (Item item in pack.Items)
+                    for (var index = 0; index < pack.Items.Count; index++)
                     {
+                        Item item = pack.Items[index];
                         Type t = item.GetType();
 
                         if (t == typeof(UncutCloth) || t == typeof(Cloth) || t == typeof(CutUpCloth))
@@ -752,8 +760,10 @@ namespace Server.Engines.Craft
                     }
                     else
                     {
-                        foreach (Item item in toConsume)
+                        for (var index = 0; index < toConsume.Count; index++)
                         {
+                            Item item = toConsume[index];
+
                             item.Delete();
                         }
 
@@ -795,9 +805,13 @@ namespace Server.Engines.Craft
                 if (!cntnr.TryDropItem(from, item, false))
                 {
                     if (cntnr != from.Backpack)
+                    {
                         from.AddToBackpack(item);
+                    }
                     else
+                    {
                         item.MoveToWorld(from.Location, from.Map);
+                    }
                 }
             }
             else
