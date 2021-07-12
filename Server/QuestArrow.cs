@@ -4,30 +4,38 @@ using Server.Network;
 
 namespace Server
 {
-	public class QuestArrow
-	{
-		private readonly Mobile m_Mobile;
-		private readonly IPoint3D m_Target;
-		private bool m_Running;
+    public class QuestArrow
+    {
+        private readonly Mobile m_Mobile;
+        private readonly IPoint3D m_Target;
+        private bool m_Running;
 
-		public Mobile Mobile => m_Mobile;
+        public Mobile Mobile => m_Mobile;
 
-		public IPoint3D Target => m_Target;
+        public IPoint3D Target => m_Target;
 
-		public bool Running => m_Running;
+        public bool Running => m_Running;
 
-		public void Update()
-		{
+        public void Update()
+        {
             int xOffset = 0;
             int yOffset = 0;
             int zOffset = (int)System.Math.Round((double)m_Target.Z / 10);
-            if (m_Mobile.InRange(new Point2D(m_Target.X- zOffset, m_Target.Y - zOffset), zOffset))
-            {
-                Update(m_Target.X- zOffset, m_Target.Y-zOffset);
-                return;
-            }
+
+            if (zOffset > 0)
+                zOffset -= 1;
+            else if (zOffset < 0)
+                zOffset += 1;
+
+            Point2D fakeTarget = new Point2D(m_Target.X - zOffset, m_Target.Y - zOffset);
 
             Direction direction = m_Mobile.GetDirectionTo(m_Target.X - zOffset, m_Target.Y - zOffset);
+
+            if (m_Mobile.InRange(fakeTarget, 2))
+            {
+                direction = Direction.Up;
+            }
+
 
             switch (direction)
             {
@@ -67,84 +75,84 @@ namespace Server
                     break;
             }
 
-            xOffset -= zOffset;
-            yOffset -= zOffset;
+            xOffset -= zOffset + 1;
+            yOffset -= zOffset + 1;
             Update(m_Target.X + xOffset, m_Target.Y + yOffset);
         }
 
         public void Update(int x, int y)
-		{
-			if (!m_Running)
-			{
-				return;
-			}
+        {
+            if (!m_Running)
+            {
+                return;
+            }
 
-			NetState ns = m_Mobile.NetState;
+            NetState ns = m_Mobile.NetState;
 
-			if (ns == null)
-			{
-				return;
-			}
+            if (ns == null)
+            {
+                return;
+            }
 
-			if (m_Target is IEntity entity)
-			{
-				ns.Send(new SetArrow(x, y, entity.Serial));
-			}
-			else
-			{
-				ns.Send(new SetArrow(x, y, Serial.MinusOne));
-			}
-		}
+            if (m_Target is IEntity entity)
+            {
+                ns.Send(new SetArrow(x, y, entity.Serial));
+            }
+            else
+            {
+                ns.Send(new SetArrow(x, y, Serial.MinusOne));
+            }
+        }
 
-		public void Stop()
-		{
-			Stop(m_Target.X, m_Target.Y);
-		}
+        public void Stop()
+        {
+            Stop(m_Target.X, m_Target.Y);
+        }
 
-		public void Stop(int x, int y)
-		{
-			if (!m_Running)
-			{
-				return;
-			}
+        public void Stop(int x, int y)
+        {
+            if (!m_Running)
+            {
+                return;
+            }
 
-			m_Mobile.ClearQuestArrow();
+            m_Mobile.ClearQuestArrow();
 
-			NetState ns = m_Mobile.NetState;
+            NetState ns = m_Mobile.NetState;
 
-			if (ns != null)
-			{
-				if (m_Target is IEntity entity)
-				{
-					ns.Send(new CancelArrow(x, y, entity.Serial));
-				}
-				else
-				{
-					ns.Send(new CancelArrow(x, y, Serial.MinusOne));
-				}
-			}
+            if (ns != null)
+            {
+                if (m_Target is IEntity entity)
+                {
+                    ns.Send(new CancelArrow(x, y, entity.Serial));
+                }
+                else
+                {
+                    ns.Send(new CancelArrow(x, y, Serial.MinusOne));
+                }
+            }
 
-			m_Running = false;
-			OnStop();
-		}
+            m_Running = false;
+            OnStop();
+        }
 
-		public virtual void OnStop()
-		{ }
+        public virtual void OnStop()
+        { }
 
-		public virtual void OnClick(bool rightClick)
-		{ }
+        public virtual void OnClick(bool rightClick)
+        { }
 
-		public QuestArrow(Mobile m, IPoint3D t)
-		{
-			m_Running = true;
-			m_Mobile = m;
-			m_Target = t;
-		}
+        public QuestArrow(Mobile m, IPoint3D t)
+        {
+            m_Running = true;
+            m_Mobile = m;
+            m_Target = t;
+        }
 
-		public QuestArrow(Mobile m, IPoint3D t, int x, int y)
-			: this(m, t)
-		{
-			Update(x, y);
-		}
-	}
+        public QuestArrow(Mobile m, IPoint3D t, int x, int y)
+            : this(m, t)
+        {
+            Update(x, y);
+        }
+    }
 }
