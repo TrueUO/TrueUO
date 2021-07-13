@@ -2755,17 +2755,20 @@ namespace Server.Items
                 return;
             }
 
-            IEnumerable<IDamageable> list = SpellHelper.AcquireIndirectTargets(from, defender, defender.Map, 5);
+            IEnumerable<IDamageable> list = SpellHelper.AcquireIndirectTargets(from, defender, from.Map, 5);
 
             int count = 0;
 
             foreach (IDamageable m in list)
             {
-                ++count;
+                if (m !=null && !m.Equals(defender))
+                {
+                    ++count;
 
-                from.DoHarmful(m, true);
-                m.FixedEffect(0x3779, 1, 15, hue, 0);
-                AOS.Damage(m, from, damageGiven / 2, phys, fire, cold, pois, nrgy, Server.DamageType.SpellAOE);
+                    from.DoHarmful(m, true);
+                    m.FixedEffect(0x3779, 1, 15, hue, 0);
+                    AOS.Damage(m, from, damageGiven / 2, phys, fire, cold, pois, nrgy, Server.DamageType.SpellAOE);
+                }
             }
 
             if (count > 0)
