@@ -824,7 +824,7 @@ namespace Server.Items
     {
         private int m_UsesRemaining;
 
-        public override int LabelNumber => 1071000;// soulstone fragment
+        public override int LabelNumber => 1071000; // soulstone fragment
 
         [Constructable]
         public SoulstoneFragment()
@@ -1065,7 +1065,7 @@ namespace Server.Items
 
         [Constructable]
         public VioletSoulstone(string account)
-            : base(account)
+            : base(account, 0x32F3, 0x32F4)
         {
             Hue = 2598;
         }
@@ -1098,7 +1098,7 @@ namespace Server.Items
 
         [Constructable]
         public OrangeSoulstone(string account)
-            : base(account)
+            : base(account, 0x32F3, 0x32F4)
         {
             Hue = 43;
         }
@@ -1131,7 +1131,7 @@ namespace Server.Items
 
         [Constructable]
         public YellowSoulstone(string account)
-            : base(account)
+            : base(account, 0x32F3, 0x32F4)
         {
             Hue = 53;
         }
@@ -1164,7 +1164,7 @@ namespace Server.Items
 
         [Constructable]
         public WhiteSoulstone(string account)
-            : base(account)
+            : base(account, 0x32F3, 0x32F4)
         {
             Hue = 1150;
         }
@@ -1197,12 +1197,45 @@ namespace Server.Items
 
         [Constructable]
         public BlackSoulstone(string account)
-            : base(account)
+            : base(account, 0x32F3, 0x32F4)
         {
             Hue = 1106;
         }
 
         public BlackSoulstone(Serial serial)
+            : base(serial)
+        {
+        }
+
+        public override void Serialize(GenericWriter writer)
+        {
+            base.Serialize(writer);
+            writer.Write(0);
+        }
+
+        public override void Deserialize(GenericReader reader)
+        {
+            base.Deserialize(reader);
+            reader.ReadInt();
+        }
+    }
+
+    public class GoldSoulstone : SoulStone
+    {
+        [Constructable]
+        public GoldSoulstone()
+            : this(null)
+        {
+        }
+
+        [Constructable]
+        public GoldSoulstone(string account)
+            : base(account, 0x32F3, 0x32F4)
+        {
+            Hue = 2721;
+        }
+
+        public GoldSoulstone(Serial serial)
             : base(serial)
         {
         }

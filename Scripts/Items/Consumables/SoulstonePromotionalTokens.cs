@@ -9,7 +9,8 @@ namespace Server.Items
         Orange,
         Yellow,
         White,
-        Black
+        Black,
+        Gold
     }
 
     public class SoulstoneFragmentToken : PromotionalToken
@@ -88,6 +89,7 @@ namespace Server.Items
                     case SoulstoneType.Yellow: return 1158870;
                     case SoulstoneType.White: return 1158868;
                     case SoulstoneType.Black: return 1158867;
+                    case SoulstoneType.Gold: return 1159573;
                 }
             }
         }
@@ -108,6 +110,7 @@ namespace Server.Items
                     case SoulstoneType.Yellow: return 1158870;
                     case SoulstoneType.White: return 1158868;
                     case SoulstoneType.Black: return 1158867;
+                    case SoulstoneType.Gold: return 1159573;
                 }
             }
         }//soulstone
@@ -126,6 +129,7 @@ namespace Server.Items
                     case SoulstoneType.Yellow: return new YellowSoulstone(from.Account.ToString()) { LastUserName = from.RawName };
                     case SoulstoneType.White: return new WhiteSoulstone(from.Account.ToString()) { LastUserName = from.RawName };
                     case SoulstoneType.Black: return new BlackSoulstone(from.Account.ToString()) { LastUserName = from.RawName };
+                    case SoulstoneType.Gold: return new GoldSoulstone(from.Account.ToString()) { LastUserName = from.RawName };
                 }
             }
 

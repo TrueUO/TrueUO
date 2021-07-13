@@ -8,7 +8,7 @@ namespace Server.Items
         public override int LabelNumber => 1159228;  // cowl of the mace & shield
         public override bool IsArtifact => true;
 
-        public override int BasePhysicalResistance => 10;
+        public override int BasePhysicalResistance => 25;
         public override int BaseFireResistance => 10;
         public override int BaseColdResistance => 10;
         public override int BasePoisonResistance => 10;
@@ -44,14 +44,8 @@ namespace Server.Items
             PlayerConstructed = true;
 
             if (makersMark)
-                Crafter = from;
-
-            if (!craftItem.ForceNonExceptional)
             {
-                if (typeRes == null)
-                    typeRes = craftItem.Resources.GetAt(0).ItemType;
-
-                Resource = CraftResources.GetFromType(typeRes);
+                Crafter = from;
             }
 
             return quality;

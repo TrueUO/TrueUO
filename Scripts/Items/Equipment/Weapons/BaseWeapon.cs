@@ -2411,6 +2411,15 @@ namespace Server.Items
                 }
             }
 
+            #region Bracers Of Alchemical Devastation
+            var arms = attacker.FindItemOnLayer(Layer.Arms);
+
+            if (attacker.FindItemOnLayer(Layer.OneHanded) == null && attacker.FindItemOnLayer(Layer.TwoHanded) == null && 0.35 > Utility.RandomDouble() && arms != null && (arms is BracersofAlchemicalDevastation || arms is GargishBracersofAlchemicalDevastation))
+            {
+                DoLightning(attacker, defender);
+            }
+            #endregion
+
             if (attacker is BaseCreature aBc)
             {
                 aBc.OnGaveMeleeAttack(defender);

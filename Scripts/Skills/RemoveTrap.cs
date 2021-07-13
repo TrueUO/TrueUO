@@ -306,7 +306,7 @@ namespace Server.SkillHandlers
                 From.SendLocalizedMessage(1159061); // Your ghostly fingers cannot manipulate the mechanism...
                 RemoveTrap.EndChestDisarmTimer(From);
             }
-            else if (!From.InRange(Chest.GetWorldLocation(), 2) || Chest.Deleted)
+            else if (!From.InRange(Chest.GetWorldLocation(), 16) || Chest.Deleted)
             {
                 From.SendLocalizedMessage(1159058); // You are too far away from the chest to manipulate the trigger mechanism.
                 RemoveTrap.EndChestDisarmTimer(From);

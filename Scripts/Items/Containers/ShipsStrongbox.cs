@@ -5,6 +5,9 @@ namespace Server.Items
     [Flipable(0xE80, 0x9A8)]
     public class ShipsStrongbox : LockableContainer
     {
+        public override int LabelNumber => 1149959; // A ship's strongbox
+        public override int DefaultMaxWeight => 400;
+
         [Constructable]
         public ShipsStrongbox()
             : this(Utility.RandomMinMax(1, 3))
@@ -15,6 +18,7 @@ namespace Server.Items
         public ShipsStrongbox(int level)
             : base(0xE80)
         {
+            Weight = 1.0;
             Hue = level >= 4 ? 0x481 : 0x836;
             level = Math.Min(4, Math.Max(1, level));
 
@@ -25,7 +29,7 @@ namespace Server.Items
                 DropItemStacked(Loot.RandomGem());
             }
 
-            for (int i = 0; i < (level * 5) + Utility.Random(5); i++)
+            for (int i = 0; i < level * 5 + Utility.Random(5); i++)
             {
                 switch (Utility.Random(8))
                 {
@@ -55,21 +59,16 @@ namespace Server.Items
         {
         }
 
-        public override int LabelNumber => 1149959; // A ship's strongbox
-        public override int DefaultMaxWeight => 400;
-
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(0); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }
