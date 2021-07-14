@@ -47,6 +47,8 @@ namespace Server.Engines.Quests.TimeLord
             {
                 Direction = GetDirectionTo(player);
                 TimeForLegendsQuest quest = new TimeForLegendsQuest(player);
+
+                player.CloseGump(typeof(QuestOfferGump));
                 quest.SendOffer();
             }
         }
