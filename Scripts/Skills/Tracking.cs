@@ -37,6 +37,7 @@ namespace Server.SkillHandlers
         public static double GetStalkingBonus(Mobile tracker, Mobile target)
         {
             TrackingInfo info;
+
             m_Table.TryGetValue(tracker, out info);
 
             if (info == null || info.m_Target != target || info.m_Map != target.Map)
@@ -62,6 +63,7 @@ namespace Server.SkillHandlers
             public Mobile m_Target;
             public Point2D m_Location;
             public Map m_Map;
+
             public TrackingInfo(Mobile target)
             {
                 m_Target = target;
@@ -75,6 +77,7 @@ namespace Server.SkillHandlers
     {
         private readonly Mobile m_From;
         private readonly bool m_Success;
+
         public TrackWhatGump(Mobile from)
             : base(20, 30)
         {
@@ -108,7 +111,9 @@ namespace Server.SkillHandlers
         public override void OnResponse(NetState state, RelayInfo info)
         {
             if (info.ButtonID >= 1 && info.ButtonID <= 4)
+            {
                 TrackWhoGump.DisplayTo(m_Success, m_From, info.ButtonID - 1);
+            }
         }
     }
 
@@ -121,9 +126,11 @@ namespace Server.SkillHandlers
             IsHumanNPC,
             IsPlayer
         };
+
         private readonly Mobile m_From;
         private readonly int m_Range;
         private readonly List<Mobile> m_List;
+
         private TrackWhoGump(Mobile from, List<Mobile> list, int range)
             : base(20, 30)
         {
@@ -162,7 +169,9 @@ namespace Server.SkillHandlers
                 AddButton(20 + i % 4 * 100, 130 + i / 4 * 155, 4005, 4007, i + 1, GumpButtonType.Reply, 0);
 
                 if (m.Name != null)
+                {
                     AddHtml(20 + i % 4 * 100, 90 + i / 4 * 155, 90, 40, m.Name, false, false);
+                }
             }
         }
 
@@ -177,7 +186,9 @@ namespace Server.SkillHandlers
             Map map = from.Map;
 
             if (map == null)
+            {
                 return;
+            }
 
             TrackTypeDelegate check = m_Delegates[type];
 
@@ -192,7 +203,9 @@ namespace Server.SkillHandlers
             {
                 // Ghosts can no longer be tracked 
                 if (m != from && m.Alive && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel) && check(m) && CheckDifficulty(from, m))
+                {
                     list.Add(m);
+                }
             }
             eable.Free();
 
@@ -206,11 +219,17 @@ namespace Server.SkillHandlers
             else
             {
                 if (type == 0)
+                {
                     from.SendLocalizedMessage(502991); // You see no evidence of animals in the area.
+                }
                 else if (type == 1)
+                {
                     from.SendLocalizedMessage(502993); // You see no evidence of creatures in the area.
+                }
                 else
+                {
                     from.SendLocalizedMessage(502995); // You see no evidence of people in the area.
+                }
             }
         }
 
@@ -232,13 +251,17 @@ namespace Server.SkillHandlers
         private static bool CheckDifficulty(Mobile from, Mobile m)
         {
             if (!m.Player)
+            {
                 return true;
+            }
 
             int tracking = from.Skills[SkillName.Tracking].Fixed;
             int detectHidden = from.Skills[SkillName.DetectHidden].Fixed;
 
             if (m.Race == Race.Elf)
+            {
                 tracking /= 2; //The 'Guide' says that it requires twice as Much tracking SKILL to track an elf.  Not the total difficulty to track.
+            }
 
             int hiding = m.Skills[SkillName.Hiding].Fixed;
             int stealth = m.Skills[SkillName.Stealth].Fixed;
@@ -246,11 +269,17 @@ namespace Server.SkillHandlers
 
             // Necromancy forms affect tracking difficulty 
             if (TransformationSpellHelper.UnderTransformation(m, typeof(HorrificBeastSpell)))
+            {
                 divisor -= 200;
+            }
             else if (TransformationSpellHelper.UnderTransformation(m, typeof(VampiricEmbraceSpell)) && divisor < 500)
+            {
                 divisor = 500;
+            }
             else if (TransformationSpellHelper.UnderTransformation(m, typeof(WraithFormSpell)) && divisor <= 2000)
+            {
                 divisor += 200;
+            }
 
             int chance;
 
@@ -259,7 +288,9 @@ namespace Server.SkillHandlers
                 chance = 50 * (tracking * 2 + detectHidden) / divisor;
             }
             else
+            {
                 chance = 100;
+            }
 
             return chance > Utility.Random(100);
         }
@@ -287,6 +318,7 @@ namespace Server.SkillHandlers
         private class InternalSorter : IComparer<Mobile>
         {
             private readonly Mobile m_From;
+
             public InternalSorter(Mobile from)
             {
                 m_From = from;
@@ -295,11 +327,19 @@ namespace Server.SkillHandlers
             public int Compare(Mobile x, Mobile y)
             {
                 if (x == null && y == null)
+                {
                     return 0;
+                }
+
                 if (x == null)
+                {
                     return -1;
+                }
+
                 if (y == null)
+                {
                     return 1;
+                }
 
                 return m_From.GetDistanceToSqrt(x).CompareTo(m_From.GetDistanceToSqrt(y));
             }
@@ -310,6 +350,7 @@ namespace Server.SkillHandlers
     {
         private readonly Timer m_Timer;
         private Mobile m_From;
+
         public TrackArrow(Mobile from, IEntity target, int range)
             : base(from, target)
         {
@@ -350,6 +391,7 @@ namespace Server.SkillHandlers
         private readonly int m_Range;
         private readonly QuestArrow m_Arrow;
         private int m_LastX, m_LastY, p_LastX, p_LastY;
+
         public TrackTimer(Mobile from, IEntity target, int range, QuestArrow arrow)
             : base(TimeSpan.FromSeconds(0.25), TimeSpan.FromSeconds(2.5))
         {
@@ -382,6 +424,7 @@ namespace Server.SkillHandlers
                 m_LastY = m_Target.Location.Y;
                 p_LastX = m_From.Location.X;
                 p_LastY = m_From.Location.Y;
+
                 m_Arrow.Update();
             }
         }
