@@ -201,8 +201,8 @@ namespace Server.SkillHandlers
 
             foreach (Mobile m in eable)
             {
-                // Ghosts can no longer be tracked 
-                if (m != from && m.Alive && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel) && check(m) && CheckDifficulty(from, m))
+                // Ghosts can't be tracked and region must be same as target. Region is unique emulation fix due to no "server lines"
+                if (m != from && m.Alive && from.Region == m.Region && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel) && check(m) && CheckDifficulty(from, m))
                 {
                     list.Add(m);
                 }
