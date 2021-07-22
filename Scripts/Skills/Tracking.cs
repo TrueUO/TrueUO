@@ -20,8 +20,6 @@ namespace Server.SkillHandlers
 
         public static TimeSpan OnUse(Mobile m)
         {
-            m.SendMessage(m.Region.ToString());
-
             m.SendLocalizedMessage(1011350); // What do you wish to track?
 
             m.CloseGump(typeof(TrackWhatGump));
@@ -228,8 +226,7 @@ namespace Server.SkillHandlers
                 {
                     name = name.Substring(2);
                 }
-                if (name != null)
-                    AddHtml(20 + i % 4 * 100, 90 + i / 4 * 155, 90, 40, name, false, false);
+                AddHtml(20 + i % 4 * 100, 90 + i / 4 * 155, 90, 40, name, false, false);
             }
         }
 
@@ -257,14 +254,20 @@ namespace Server.SkillHandlers
             List<Mobile> list = new List<Mobile>();
             if (RegionTracking)
             {
-                List<Mobile> mobiles = new List<Mobile>();
-                mobiles = FilterRegionMobs(from, range);
+                List<Mobile> mobiles = FilterRegionMobs(from, range);
+
+                ///TODO - Remove this for production
+                from.SendMessage(String.Format("{0} mobiles found in this area",mobiles.Count));
+
                 mobiles = mobiles.FindAll(m => m != from
                         && m.Alive
                         && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel)
                         && check(m)
                         && CheckDifficulty(from, m)
                         && ReachableTarget(from, m, range));
+                ///TODO - Remove this for production
+                from.SendMessage(String.Format("{0} {1} mobiles found in this area", mobiles.Count, m_Delegates[type].Method.Name.Substring(2)));
+
                 mobiles.Sort((x, y) => x.GetDistanceToSqrt(from).CompareTo(y.GetDistanceToSqrt(from)));
 
                 list = mobiles.GetRange(0, Math.Min(12, mobiles.Count));
@@ -283,7 +286,13 @@ namespace Server.SkillHandlers
                         && check(m)
                         && CheckDifficulty(from, m)
                         && (m.IsPlayer() && NonPlayerRangeMultiplier == 1 ? m.InRange(from, range / NonPlayerRangeMultiplier) : m.InRange(from, range)))
+                    {
                         list.Add(m);
+                    }
+                    if(list.Count>=12)
+                    {
+                        break;
+                    }
                 }
                 eable.Free();
             }
@@ -326,6 +335,10 @@ namespace Server.SkillHandlers
                 else
                 {
                     m_From.QuestArrow = new TrackArrow(m_From, m, m_Range * TrackDistanceMultiplier == 0 ? 1000 : TrackDistanceMultiplier);
+                }
+                if(m.Player)
+                {
+                    m.SendMessage("Your presence has been detected in this area.");
                 }
                 Tracking.AddInfo(m_From, m);
             }
@@ -407,7 +420,6 @@ namespace Server.SkillHandlers
                     mobiles = new List<Mobile>();
                     foreach (Rectangle2D area in areas)
                     {
-                        from.SendMessage("Outside world mobs");
                         mobiles.AddRange(ConvertToList(from.Map.GetMobilesInBounds(area)));
                     }
                 }
@@ -425,13 +437,11 @@ namespace Server.SkillHandlers
 
             if (mobiles == null && from.TopRegion.Area.Length != 0)
             {
-                from.SendMessage("Region Mobs");
                 mobiles = from.Region.GetMobiles();
             }
 
             if (mobiles == null)
             {
-                from.SendMessage("default range");
                 mobiles = ConvertToList(from.Map.GetMobilesInRange(from.Location, range));
             }
 
