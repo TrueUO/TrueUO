@@ -417,12 +417,14 @@ namespace Server.SkillHandlers
 
             foreach (Rectangle2D[] areas in mapAreas[from.Map])
             {
-                if (areas.Any(area => @from.X > area.X && @from.Y > area.Y && @from.X < area.X + area.Width && @from.Y < area.Y + area.Height))
+                if (areas.Any(area => from.X > area.X && from.Y > area.Y && from.X < area.X + area.Width && from.Y < area.Y + area.Height))
                 {
                     mobiles = new List<Mobile>();
 
-                    foreach (Rectangle2D area in areas)
+                    for (var index = 0; index < areas.Length; index++)
                     {
+                        Rectangle2D area = areas[index];
+
                         from.SendMessage("Outside world mobs");
                         mobiles.AddRange(ConvertToList(from.Map.GetMobilesInBounds(area)));
                     }
