@@ -500,10 +500,12 @@ namespace Server.Engines.Quests
                     {
                         AddHtmlLocalized(98, offset, 350, 16, 1072205, 0x15F90, false, false); // Obtain						
                         AddLabel(143, offset, 0x481, obtain.MaxProgress.ToString()); // %count%
-                        AddLabel(158, offset, 0x481, obtain.Name); // %name%
+                        AddLabel(185, offset, 0x481, obtain.Name); // %name%
 
                         if (obtain.Image > 0)
-                            AddItem(283, offset, obtain.Image, obtain.Hue); // Image
+                        {
+                            AddItem(285, offset, obtain.Image, obtain.Hue); // Image
+                        }
 
                         offset += 16;
 
@@ -517,7 +519,9 @@ namespace Server.Engines.Quests
                                 offset += 16;
                             }
                             else if (obtain.Image > 0)
+                            {
                                 offset += 16;
+                            }
 
                             continue;
                         }

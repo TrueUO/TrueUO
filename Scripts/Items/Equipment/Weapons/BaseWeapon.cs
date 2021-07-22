@@ -2320,16 +2320,10 @@ namespace Server.Items
                 int lightningChance = (int)(AosWeaponAttributes.GetValue(attacker, AosWeaponAttribute.HitLightning) * propertyBonus);
                 int dispelChance = (int)(AosWeaponAttributes.GetValue(attacker, AosWeaponAttribute.HitDispel) * propertyBonus);
                 int explosChance = (int)(ExtendedWeaponAttributes.GetValue(attacker, ExtendedWeaponAttribute.HitExplosion) * propertyBonus);
-
-                #region Mondains Legacy
                 int velocityChance = this is BaseRanged ? ((BaseRanged)this).Velocity : 0;
-                #endregion
-
-                #region Stygian Abyss
                 int curseChance = (int)(m_AosWeaponAttributes.HitCurse * propertyBonus);
                 int fatigueChance = (int)(m_AosWeaponAttributes.HitFatigue * propertyBonus);
                 int manadrainChance = (int)(m_AosWeaponAttributes.HitManaDrain * propertyBonus);
-                #endregion
 
                 if (maChance != 0 && maChance > Utility.Random(100))
                 {
@@ -2361,14 +2355,11 @@ namespace Server.Items
                     DoExplosion(attacker, defender);
                 }
 
-                #region Mondains Legacy
                 if (velocityChance != 0 && velocityChance > Utility.Random(100))
                 {
                     DoHitVelocity(attacker, damageable);
                 }
-                #endregion
 
-                #region Stygian Abyss
                 if (curseChance != 0 && curseChance > Utility.Random(100))
                 {
                     DoCurse(attacker, defender);
@@ -2383,7 +2374,6 @@ namespace Server.Items
                 {
                     DoManaDrain(attacker, defender, damageGiven);
                 }
-                #endregion
 
                 int laChance = (int)(AosWeaponAttributes.GetValue(attacker, AosWeaponAttribute.HitLowerAttack) * propertyBonus);
 
@@ -2410,6 +2400,15 @@ namespace Server.Items
                     DoLowerDefense(attacker, defender);
                 }
             }
+
+            #region Bracers Of Alchemical Devastation
+            var arms = attacker.FindItemOnLayer(Layer.Arms);
+
+            if (attacker.FindItemOnLayer(Layer.OneHanded) == null && attacker.FindItemOnLayer(Layer.TwoHanded) == null && 0.35 > Utility.RandomDouble() && arms != null && (arms is BracersofAlchemicalDevastation || arms is GargishBracersofAlchemicalDevastation))
+            {
+                DoLightning(attacker, defender);
+            }
+            #endregion
 
             if (attacker is BaseCreature aBc)
             {
@@ -2755,17 +2754,20 @@ namespace Server.Items
                 return;
             }
 
-            IEnumerable<IDamageable> list = SpellHelper.AcquireIndirectTargets(from, from, from.Map, 5);
+            IEnumerable<IDamageable> list = SpellHelper.AcquireIndirectTargets(from, defender, from.Map, 5);
 
             int count = 0;
 
             foreach (IDamageable m in list)
             {
-                ++count;
+                if (m !=null && !m.Equals(defender))
+                {
+                    ++count;
 
-                from.DoHarmful(m, true);
-                m.FixedEffect(0x3779, 1, 15, hue, 0);
-                AOS.Damage(m, from, damageGiven / 2, phys, fire, cold, pois, nrgy, Server.DamageType.SpellAOE);
+                    from.DoHarmful(m, true);
+                    m.FixedEffect(0x3779, 1, 15, hue, 0);
+                    AOS.Damage(m, from, damageGiven / 2, phys, fire, cold, pois, nrgy, Server.DamageType.SpellAOE);
+                }
             }
 
             if (count > 0)
@@ -2909,20 +2911,6 @@ namespace Server.Items
         #endregion
 
         #region Elemental Damage
-        public static int[] GetElementDamages(Mobile m)
-        {
-            int[] o = { 100, 0, 0, 0, 0, 0, 0 };
-
-            BaseWeapon w = m.Weapon as BaseWeapon ?? Fists;
-
-            if (w != null)
-            {
-                w.GetDamageTypes(m, out o[0], out o[1], out o[2], out o[3], out o[4], out o[5], out o[6]);
-            }
-
-            return o;
-        }
-
         public virtual void GetDamageTypes(
             Mobile wielder, out int phys, out int fire, out int cold, out int pois, out int nrgy, out int chaos, out int direct)
         {
@@ -3146,18 +3134,6 @@ namespace Server.Items
         public virtual int ComputeDamageAOS(Mobile attacker, Mobile defender)
         {
             return (int)ScaleDamageAOS(attacker, GetBaseDamage(attacker), true);
-        }
-
-        public virtual int ScaleDamageByDurability(int damage)
-        {
-            int scale = 100;
-
-            if (m_MaxHits > 0 && m_Hits < m_MaxHits)
-            {
-                scale = 50 + 50 * m_Hits / m_MaxHits;
-            }
-
-            return AOS.Scale(damage, scale);
         }
 
         public virtual int ComputeDamage(Mobile attacker, Mobile defender)
@@ -4280,8 +4256,6 @@ namespace Server.Items
                 case CraftResource.BlueScales:
                     oreType = 1060815;
                     break; // blue
-
-                #region Mondain's Legacy
                 case CraftResource.OakWood:
                     oreType = 1072533;
                     break; // oak
@@ -4300,7 +4274,6 @@ namespace Server.Items
                 case CraftResource.Frostwood:
                     oreType = 1072539;
                     break; // frostwood
-                #endregion
 
                 default:
                     oreType = 0;
@@ -4327,12 +4300,10 @@ namespace Server.Items
             {
                 list.Add(1053099, "#{0}\t{1}", oreType, GetNameString()); // ~1_oretype~ ~2_armortype~
             }
-            #region High Seas
             else if (SearingWeapon)
             {
                 list.Add(1151318, string.Format("#{0}", LabelNumber));
             }
-            #endregion
             else if (Name == null)
             {
                 list.Add(LabelNumber);
@@ -4386,12 +4357,10 @@ namespace Server.Items
 
         public virtual int GetLuckBonus()
         {
-            #region Mondain's Legacy
             if (m_Resource == CraftResource.Heartwood)
             {
                 return 0;
             }
-            #endregion
 
             CraftResourceInfo resInfo = CraftResources.GetInfo(m_Resource);
 

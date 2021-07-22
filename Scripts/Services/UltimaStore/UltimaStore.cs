@@ -318,6 +318,7 @@ namespace Server.Engines.UOStore
 
             // misc
             cat = StoreCategory.Misc;
+            Register<SoulstoneToken>(1159573, 1158405, 0x32F4, 0, 2721, 1000, cat, ConstructSoulstone);
             Register<EnchantedSoulstoneVessel>(1126839, 1159627, 0xA73F, 0, 0, 1000, cat);
             Register<PotionOfGloriousFortune>(1158688, 1158739, 0xA1E6, 0, 1195, 200, cat);
             Register<RookChessPieceGuildstone>(1159490, 1159491, 0xA583, 0, 0, 500, cat);
@@ -601,6 +602,7 @@ namespace Server.Engines.UOStore
                 case 1158870: return new SoulstoneToken(SoulstoneType.Yellow);
                 case 1158868: return new SoulstoneToken(SoulstoneType.White);
                 case 1158867: return new SoulstoneToken(SoulstoneType.Black);
+                case 1159573: return new SoulstoneToken(SoulstoneType.Gold);
             }
 
             return null;
