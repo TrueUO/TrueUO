@@ -126,6 +126,7 @@ namespace Server.SkillHandlers
         private static readonly int TrackDistanceMultiplier = Config.Get("Tracking.TrackDistanceMultiplier", 5);
         private static readonly int NonPlayerRangeMultiplier = Config.Get("Tracking.NonPlayerRangeMultiplier", 1);
         private static readonly bool RegionTracking = Config.Get("Tracking.RegionTracking", false);
+        private static readonly bool NotifyPlayer = Config.Get("Tracking.NotifyPlayer", false);
 
 
         private Dictionary<Body, string> bodyNames = new Dictionary<Body, string>(){
@@ -336,7 +337,7 @@ namespace Server.SkillHandlers
                 {
                     m_From.QuestArrow = new TrackArrow(m_From, m, m_Range * TrackDistanceMultiplier == 0 ? 1000 : TrackDistanceMultiplier);
                 }
-                if(m.Player)
+                if(NotifyPlayer && m.Player)
                 {
                     m.SendMessage("Your presence has been detected in this area.");
                 }
