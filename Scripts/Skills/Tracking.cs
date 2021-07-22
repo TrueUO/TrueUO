@@ -7,12 +7,16 @@ using System;
 using System.Collections.Generic;
 using Server.Items;
 using System.Linq;
+
 namespace Server.SkillHandlers
 {
+
     public delegate bool TrackTypeDelegate(Mobile m);
+
     public class Tracking
     {
         private static readonly Dictionary<Mobile, TrackingInfo> m_Table = new Dictionary<Mobile, TrackingInfo>();
+
         public static void Initialize()
         {
             SkillInfo.Table[(int)SkillName.Tracking].Callback = OnUse;
@@ -34,6 +38,7 @@ namespace Server.SkillHandlers
         public static void AddInfo(Mobile tracker, Mobile target)
         {
             TrackingInfo info = new TrackingInfo(target);
+
             m_Table[tracker] = info;
         }
 
@@ -44,7 +49,9 @@ namespace Server.SkillHandlers
             m_Table.TryGetValue(tracker, out info);
 
             if (info == null || info.m_Target != target || info.m_Map != target.Map)
+            {
                 return 0.0;
+            }
 
             int xDelta = info.m_Location.X - target.X;
             int yDelta = info.m_Location.Y - target.Y;
@@ -129,8 +136,7 @@ namespace Server.SkillHandlers
         private static readonly int NonPlayerRangeMultiplier = Config.Get("Tracking.NonPlayerRangeMultiplier", 1);
         private static readonly bool RegionTracking = Config.Get("Tracking.RegionTracking", false);
 
-
-        private Dictionary<Body, string> bodyNames = new Dictionary<Body, string>(){
+        private readonly Dictionary<Body, string> bodyNames = new Dictionary<Body, string>(){
             {0x2EB, "wraith"},
             {0x2EC, "wraith"},
             {0x2ED, "lich"},
@@ -224,12 +230,13 @@ namespace Server.SkillHandlers
                 {
                     bodyNames.TryGetValue(m.Body, out name);
                 }
-                if (name.StartsWith("a "))
+
+                if (name != null && name.StartsWith("a "))
                 {
                     name = name.Substring(2);
                 }
-                if (name != null)
-                    AddHtml(20 + i % 4 * 100, 90 + i / 4 * 155, 90, 40, name, false, false);
+
+                AddHtml(20 + i % 4 * 100, 90 + i / 4 * 155, 90, 40, name, false, false);
             }
         }
 
@@ -255,16 +262,20 @@ namespace Server.SkillHandlers
             int range = (BaseTrackingDetectionRange + (int)(from.Skills[SkillName.Tracking].Value / 10)) * NonPlayerRangeMultiplier;
 
             List<Mobile> list = new List<Mobile>();
+
             if (RegionTracking)
             {
                 List<Mobile> mobiles = new List<Mobile>();
+
                 mobiles = FilterRegionMobs(from, range);
+
                 mobiles = mobiles.FindAll(m => m != from
                         && m.Alive
                         && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel)
                         && check(m)
                         && CheckDifficulty(from, m)
                         && ReachableTarget(from, m, range));
+
                 mobiles.Sort((x, y) => x.GetDistanceToSqrt(from).CompareTo(y.GetDistanceToSqrt(from)));
 
                 list = mobiles.GetRange(0, Math.Min(12, mobiles.Count));
@@ -319,6 +330,7 @@ namespace Server.SkillHandlers
             if (index >= 0 && index < m_List.Count && index < 12)
             {
                 Mobile m = m_List[index];
+
                 if (RegionTracking)
                 {
                     m_From.QuestArrow = new TrackArrow(m_From, m, m_Range);
@@ -327,6 +339,7 @@ namespace Server.SkillHandlers
                 {
                     m_From.QuestArrow = new TrackArrow(m_From, m, m_Range * TrackDistanceMultiplier == 0 ? 1000 : TrackDistanceMultiplier);
                 }
+
                 Tracking.AddInfo(m_From, m);
             }
         }
@@ -336,10 +349,12 @@ namespace Server.SkillHandlers
             {
                 return true;
             }
+
             if (NonPlayerRangeMultiplier == 1 || !m.Player)
             {
                 return m.InRange(from, range);
             }
+
             return m.InRange(from, range / NonPlayerRangeMultiplier);
         }
 
@@ -402,9 +417,10 @@ namespace Server.SkillHandlers
 
             foreach (Rectangle2D[] areas in mapAreas[from.Map])
             {
-                if (areas.Any(area => (from.X > area.X && from.Y > area.Y && from.X < (area.X + area.Width) && from.Y < (area.Y + area.Height))))
+                if (areas.Any(area => @from.X > area.X && @from.Y > area.Y && @from.X < area.X + area.Width && @from.Y < area.Y + area.Height))
                 {
                     mobiles = new List<Mobile>();
+
                     foreach (Rectangle2D area in areas)
                     {
                         from.SendMessage("Outside world mobs");
@@ -442,9 +458,14 @@ namespace Server.SkillHandlers
         private static bool CheckDifficulty(Mobile from, Mobile m)
         {
             if (!m.Player && (IsAnimal(m) || IsMonster(m)))
+            {
                 return from.Skills[SkillName.Tracking].Fixed > Math.Min(m.Fame, 18000) / 1800 - 10 + Utility.Random(20);
+            }
+
             if (!m.Player && IsHumanNPC(m))
+            {
                 return from.Skills[SkillName.Tracking].Fixed >= 200;
+            }
 
             int tracking = from.Skills[SkillName.Tracking].Fixed;
             int detectHidden = from.Skills[SkillName.DetectHidden].Fixed;
@@ -453,7 +474,9 @@ namespace Server.SkillHandlers
             int divisor = hiding + stealth;
 
             if (m.Race == Race.Elf)
+            {
                 divisor /= 2; //Previous assumption was wrong. From testing OSI Humans track at ~70%, elves at ~35%, which is half the total chance
+            }
 
             // Necromancy forms affect tracking difficulty 
             if (TransformationSpellHelper.UnderTransformation(m, typeof(HorrificBeastSpell)))
@@ -472,12 +495,13 @@ namespace Server.SkillHandlers
             {
                 divisor -= 200;
             }
-            if (divisor >= 2200)
+
+            if (divisor > 2200)
             {
                 divisor = 2200;
             }
 
-            int chance = divisor > 0 ? (70 * (tracking + detectHidden) / divisor) : 0;
+            int chance = divisor > 0 ? 70 * (tracking + detectHidden) / divisor : 0;
             
             return chance > Utility.Random(100);
         }
@@ -489,13 +513,12 @@ namespace Server.SkillHandlers
 
         private static bool IsMonster(Mobile m)
         {
-            return (!m.Player && m.Body.IsHuman && (m is BaseCreature bc) && bc.IsAggressiveMonster) || m.Body.IsMonster || TrackedNecro(m);
+            return !m.Player && m.Body.IsHuman && m is BaseCreature bc && bc.IsAggressiveMonster || m.Body.IsMonster || TrackedNecro(m);
         }
 
         private static bool IsHumanNPC(Mobile m)
         {
-            return (!m.Player && m.Body.IsHuman && (m is BaseCreature bc) && !bc.IsAggressiveMonster)
-                || TrackedThief(m);
+            return !m.Player && m.Body.IsHuman && m is BaseCreature bc && !bc.IsAggressiveMonster || TrackedThief(m);
         }
 
         private static bool IsPlayer(Mobile m)
@@ -507,6 +530,7 @@ namespace Server.SkillHandlers
         {
             return TrackNecroAsMonster && TransformationSpellHelper.UnderTransformation(m);
         }
+
         private static bool TrackedThief(Mobile m)
         {
             return TrackThiefAsNPC && m.Player && DisguiseTimers.IsDisguised(m) && m.Body.IsHuman;
@@ -600,6 +624,7 @@ namespace Server.SkillHandlers
             m_Arrow = arrow;
             p_LastX = m_From.Location.X;
             p_LastY = m_From.Location.Y;
+
             if (RegionTracking)
             {
                 m_LastDistance = Math.Max(Math.Abs(m_Target.Location.Y - m_From.Location.Y), Math.Abs(m_Target.Location.X - m_From.Location.X));
@@ -631,6 +656,7 @@ namespace Server.SkillHandlers
                 {
                     m_Arrow.Stop();
                 }
+
                 Stop();
                 m_From.SendLocalizedMessage(503177); // You have lost your quarry.
                 return;
@@ -641,12 +667,13 @@ namespace Server.SkillHandlers
             {
                 m_LastX = m_Target.Location.X;
                 m_LastY = m_Target.Location.Y;
+                p_LastX = m_From.Location.X;
+                p_LastY = m_From.Location.Y;
+
                 if (RegionTracking)
                 {
                     m_LastDistance = m_newDistance;
                 }
-                p_LastX = m_From.Location.X;
-                p_LastY = m_From.Location.Y;
 
                 m_Arrow.Update();
             }
