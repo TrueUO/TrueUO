@@ -589,7 +589,7 @@ namespace Server.SkillHandlers
         private readonly int m_Range;
 
         private readonly QuestArrow m_Arrow;
-        private int m_LastX, m_LastY, m_LastDistance, m_newDistance;
+        private int p_LastX, p_LastY, m_LastX, m_LastY, m_LastDistance, m_newDistance;
 
         public TrackTimer(Mobile from, IEntity target, int range, QuestArrow arrow)
             : base(TimeSpan.FromSeconds(0.25), TimeSpan.FromSeconds(2.5))
@@ -598,6 +598,8 @@ namespace Server.SkillHandlers
             m_Target = target;
             m_Range = range;
             m_Arrow = arrow;
+            p_LastX = m_From.Location.X;
+            p_LastY = m_From.Location.Y;
             if (RegionTracking)
             {
                 m_LastDistance = Math.Max(Math.Abs(m_Target.Location.Y - m_From.Location.Y), Math.Abs(m_Target.Location.X - m_From.Location.X));
