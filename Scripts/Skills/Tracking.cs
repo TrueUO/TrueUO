@@ -272,6 +272,8 @@ namespace Server.SkillHandlers
             }
             else
             {
+                IPooledEnumerable eable = from.GetMobilesInRange(range);
+
                 foreach (Mobile m in eable)
                 {
                     if (list.Count <= 12
@@ -461,6 +463,7 @@ namespace Server.SkillHandlers
             else if (TransformationSpellHelper.UnderTransformation(m, typeof(VampiricEmbraceSpell)) && divisor < 500)
             {
                 divisor = 500;
+            }
             else if (TransformationSpellHelper.UnderTransformation(m, typeof(WraithFormSpell)))
             {
                 divisor += 200;
