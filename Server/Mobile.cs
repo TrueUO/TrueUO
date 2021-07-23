@@ -4699,7 +4699,7 @@ namespace Server
 			return map.GetMobilesInRange(m_Location, range);
 		}
 
-		public IPooledEnumerable<NetState> GetClientsInRange(int range)
+        public IPooledEnumerable<NetState> GetClientsInRange(int range)
 		{
 			Map map = m_Map;
 
@@ -9260,7 +9260,23 @@ namespace Server
             }
 		}
 
-		public void FreeCache()
+        public Region TopRegion
+        {
+            get
+            {
+                Region top = Region;
+                for (int i = 0; i < top.ChildLevel; i++)
+                {
+                    if (Region.Parent != null)
+                    {
+                        top = Region.Parent;
+                    }
+                }
+                return top;
+            }
+        }
+
+        public void FreeCache()
 		{
 			Packet.Release(ref m_RemovePacket);
 			Packet.Release(ref m_PropertyList);
