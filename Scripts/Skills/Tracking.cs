@@ -263,7 +263,6 @@ namespace Server.SkillHandlers
 
             if (RegionTracking)
             {
-                long start = DateTime.Now.Ticks;
                 IEnumerable<Mobile> mobiles = FilterRegionMobs(from, range);
 
                 list = mobiles.AsParallel().Where<Mobile>(m => m != from
@@ -274,7 +273,6 @@ namespace Server.SkillHandlers
                         && ReachableTarget(from, m, range))
                     .OrderBy(x => x.GetDistanceToSqrt(from))
                     .Select(x => x).Take(12).ToList<Mobile>();
-                from.SendMessage(String.Format("{0}",DateTime.Now.Ticks - start));
             }   
             else
             {
