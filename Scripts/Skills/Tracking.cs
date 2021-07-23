@@ -336,7 +336,7 @@ namespace Server.SkillHandlers
                 }
                 else
                 {
-                    m_From.QuestArrow = new TrackArrow(m_From, m, m_Range * TrackDistanceMultiplier == 0 ? 1000 : TrackDistanceMultiplier);
+                    m_From.QuestArrow = new TrackArrow(m_From, m, m_Range * (TrackDistanceMultiplier == 0 ? 1000 : TrackDistanceMultiplier));
                 }
                 if(NotifyPlayer && m.Player)
                 {
