@@ -10,7 +10,6 @@ using System.Linq;
 
 namespace Server.SkillHandlers
 {
-
     public delegate bool TrackTypeDelegate(Mobile m);
 
     public class Tracking
@@ -135,7 +134,8 @@ namespace Server.SkillHandlers
         private static readonly bool RegionTracking = Config.Get("Tracking.RegionTracking", false);
         private static readonly bool NotifyPlayer = Config.Get("Tracking.NotifyPlayer", false);
 
-        private readonly Dictionary<Body, string> bodyNames = new Dictionary<Body, string>(){
+        private readonly Dictionary<Body, string> bodyNames = new Dictionary<Body, string>
+        {
             {0x2EB, "wraith"},
             {0x2EC, "wraith"},
             {0x2ED, "lich"},
@@ -172,7 +172,7 @@ namespace Server.SkillHandlers
             {0x36, "troll"},
             {0x02, "ettin"},
             {0x09, NameList.RandomName("daemon")}
-    };
+        };
 
         private static readonly TrackTypeDelegate[] m_Delegates =
         {
@@ -234,6 +234,7 @@ namespace Server.SkillHandlers
                 {
                     name = name.Substring(2);
                 }
+
                 AddHtml(20 + i % 4 * 100, 90 + i / 4 * 155, 90, 40, name, false, false);
             }
         }
@@ -265,14 +266,14 @@ namespace Server.SkillHandlers
             {
                 IEnumerable<Mobile> mobiles = FilterRegionMobs(from, range);
 
-                list = mobiles.AsParallel().Where<Mobile>(m => m != from
+                list = mobiles.AsParallel().Where(m => m != from
                         && m.Alive
                         && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel)
                         && check(m)
                         && CheckDifficulty(from, m)
                         && ReachableTarget(from, m, range))
                     .OrderBy(x => x.GetDistanceToSqrt(from))
-                    .Select(x => x).Take(12).ToList<Mobile>();
+                    .Select(x => x).Take(12).ToList();
             }   
             else
             {
@@ -290,11 +291,13 @@ namespace Server.SkillHandlers
                     {
                         list.Add(m);
                     }
+
                     if(list.Count>=12)
                     {
                         break;
                     }
                 }
+
                 eable.Free();
             }
 
@@ -338,10 +341,12 @@ namespace Server.SkillHandlers
                 {
                     m_From.QuestArrow = new TrackArrow(m_From, m, m_Range * (TrackDistanceMultiplier == 0 ? 1000 : TrackDistanceMultiplier));
                 }
+
                 if(NotifyPlayer && m.Player)
                 {
-                    m.SendMessage("Your presence has been detected in this area.");
+                    m.SendLocalizedMessage(1042971, "Your presence has been detected in this area."); // ~1_NOTHING~
                 }
+
                 Tracking.AddInfo(m_From, m);
             }
         }
@@ -377,38 +382,42 @@ namespace Server.SkillHandlers
         {
             {Map.Trammel, new List<Rectangle2D[]> {
             //Tram
-            new Rectangle2D[]{new Rectangle2D(new Point2D(0,0), new Point2D(5120,4096)) },
+            new[]{new Rectangle2D(new Point2D(0,0), new Point2D(5120,4096)) },
             //T2A
-            new Rectangle2D[]{new Rectangle2D(new Point2D(5120,2300), new Point2D(6152,4096)) },
+            new[]{new Rectangle2D(new Point2D(5120,2300), new Point2D(6152,4096)) }
             }
             },
+
             {Map.Felucca, new List<Rectangle2D[]> {
             //Fel
-            new Rectangle2D[]{new Rectangle2D(new Point2D(0,0), new Point2D(5120,4096)) },
+            new[]{new Rectangle2D(new Point2D(0,0), new Point2D(5120,4096)) },
             //T2A
-            new Rectangle2D[]{new Rectangle2D(new Point2D(5120,2300), new Point2D(6152,4096)) },
+            new[]{new Rectangle2D(new Point2D(5120,2300), new Point2D(6152,4096)) }
             }
             },
+
             {Map.Ilshenar, new List<Rectangle2D[]> {
             //Ilsh land
-            new Rectangle2D[]{
+            new[]{
                 new Rectangle2D(new Point2D(185,265), new Point2D(1878,943)),
                 new Rectangle2D(new Point2D(185,944), new Point2D(1752,1000)),
                 new Rectangle2D(new Point2D(185,1001), new Point2D(1878,1421)),
                 new Rectangle2D(new Point2D(185,1422), new Point2D(580,1480))
             },
             //MeerRoom
-            new Rectangle2D[]{new Rectangle2D(new Point2D(1748,35), new Point2D(1824,97)) },
+            new[]{new Rectangle2D(new Point2D(1748,35), new Point2D(1824,97)) }
             }
             },
+
             {Map.Tokuno, new List<Rectangle2D[]> {
             //TokunoLand
-            new Rectangle2D[]{new Rectangle2D(new Point2D(0,0), new Point2D(1448, 1448)) },
+            new[]{new Rectangle2D(new Point2D(0,0), new Point2D(1448, 1448)) }
             }
             },
+
             {Map.Malas, new List<Rectangle2D[]> {
             //Malas
-            new Rectangle2D[]{new Rectangle2D(new Point2D(512, 0), new Point2D(2560, 2048)) },
+            new[]{new Rectangle2D(new Point2D(512, 0), new Point2D(2560, 2048)) }
             }
             }
         };
@@ -650,7 +659,7 @@ namespace Server.SkillHandlers
                 || m_From.Map != m_Target.Map
                 || RegionTracking && m_Target is Mobile mt && m_From.TopRegion != mt.TopRegion && Math.Abs(m_LastDistance - m_newDistance) > 20
                 || !RegionTracking && !m_From.InRange(m_Target, m_Range)
-                || m_Target is Mobile m && m.Hidden && m.AccessLevel > m_From.AccessLevel)
+                || m_Target is Mobile m && m.Hidden && m.AccessLevel > AccessLevel.Player)
             {
                 if (!KeepMarkerOnRangeLost)
                 {
