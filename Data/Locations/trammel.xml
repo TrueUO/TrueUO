@@ -150,8 +150,8 @@
 		</parent>
 		<parent name="Towns">
 			<parent name="Britain">
-				<child name="Blackthorn Castle" x="1533" y="1415" z="56" />
-				<child name="Blackthorn Entrance" x="1523" y="1456" z="15" />
+				<child name="Blackthorn Castle" x="1532" y="1405" z="20" />
+				<child name="Blackthorn Entrance" x="1521" y="1509" z="0" />
 				<child name="British Castle" x="1323" y="1624" z="55" />
 				<child name="British Entrance" x="1401" y="1625" z="28" />
 				<child name="Cemetery" x="1384" y="1497" z="10" />
@@ -275,4 +275,4 @@
 			</parent>
 		</parent>
 	</parent>
-</places>
+</places>>
