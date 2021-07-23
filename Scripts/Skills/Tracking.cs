@@ -263,26 +263,19 @@ namespace Server.SkillHandlers
 
             if (RegionTracking)
             {
-                List<Mobile> mobiles = FilterRegionMobs(from, range);
+                long start = DateTime.Now.Ticks;
+                IEnumerable<Mobile> mobiles = FilterRegionMobs(from, range);
 
-                ///TODO - Remove this for production
-                from.SendMessage(String.Format("{0} mobiles found in this area",mobiles.Count));
-
-
-                mobiles = mobiles.FindAll(m => m != from
+                list = mobiles.AsParallel().Where<Mobile>(m => m != from
                         && m.Alive
                         && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel)
                         && check(m)
                         && CheckDifficulty(from, m)
-                        && ReachableTarget(from, m, range));
-                ///TODO - Remove this for production
-                from.SendMessage(String.Format("{0} {1} mobiles found in this area", mobiles.Count, m_Delegates[type].Method.Name.Substring(2)));
-
-                mobiles.Sort((x, y) => x.GetDistanceToSqrt(from).CompareTo(y.GetDistanceToSqrt(from)));
-
-                list = mobiles.GetRange(0, Math.Min(12, mobiles.Count));
-
-            }
+                        && ReachableTarget(from, m, range))
+                    .OrderBy(x => x.GetDistanceToSqrt(from))
+                    .Select(x => x).Take(12).ToList<Mobile>();
+                from.SendMessage(String.Format("{0}",DateTime.Now.Ticks - start));
+            }   
             else
             {
                 IPooledEnumerable eable = from.GetMobilesInRange(range);
