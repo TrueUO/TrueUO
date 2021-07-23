@@ -393,6 +393,17 @@ namespace Server.Items
 
             int index = info.ButtonID;
 
+            if (m_Book.Deleted)
+            {
+                return;
+            }
+
+            if (!from.InRange(m_Book.GetWorldLocation(), 2))
+            {
+                from.SendLocalizedMessage(500446); // That is too far away.
+                return;
+            }
+
             switch (index)
             {
                 case 0: { m_Book.Using = false; break; }

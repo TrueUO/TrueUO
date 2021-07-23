@@ -2,6 +2,8 @@ using Server.Gumps;
 using Server.Network;
 using Server.Targeting;
 using System.Collections.Generic;
+using Server.Engines.Plants;
+using Server.Mobiles;
 
 namespace Server.Items
 {
@@ -289,17 +291,24 @@ namespace Server.Items
             if (!m_Box.CheckAccessible(m_From, m_Box))
             {
                 m_From.SendLocalizedMessage(1061637); // You are not allowed to access this.
-                return;
             }
-
-            JewelryBoxFilter f = m_Box.Filter;
-
-            int index = info.ButtonID;
-
-            switch (index)
+            else if (!m_From.InRange(m_Box.GetWorldLocation(), 2))
             {
-                case 0: { break; }
-                case 1: // Previous page
+                m_From.SendLocalizedMessage(500446); // That is too far away.
+            }
+            else
+            {
+                JewelryBoxFilter f = m_Box.Filter;
+
+                int index = info.ButtonID;
+
+                switch (index)
+                {
+                    case 0:
+                    {
+                        break;
+                    }
+                    case 1: // Previous page
                     {
                         if (m_Page > 0)
                         {
@@ -312,7 +321,7 @@ namespace Server.Items
 
                         break;
                     }
-                case 2: // Next Page
+                    case 2: // Next Page
                     {
                         if (GetIndexForPage(m_Page + 1) < m_List.Count)
                         {
@@ -325,14 +334,15 @@ namespace Server.Items
 
                         return;
                     }
-                case 3: // ADD JEWELRY
+                    case 3: // ADD JEWELRY
                     {
                         m_From.Target = new InternalTarget(m_Box, m_Page);
-                        m_From.SendLocalizedMessage(1157725); // Target rings, bracelets, necklaces, earrings, or talisman in your backpack. You may also target a sub-container to add contents to the the jewelry box. When done, press ESC.
+                        m_From.SendLocalizedMessage(
+                            1157725); // Target rings, bracelets, necklaces, earrings, or talisman in your backpack. You may also target a sub-container to add contents to the the jewelry box. When done, press ESC.
                         m_From.SendGump(new JewelryBoxGump(m_From, m_Box));
                         break;
                     }
-                case 11: // First page
+                    case 11: // First page
                     {
                         if (m_Page > 0)
                         {
@@ -345,7 +355,7 @@ namespace Server.Items
 
                         break;
                     }
-                case 12: // Last Page
+                    case 12: // Last Page
                     {
                         int pagecount = GetPageCount(m_List.Count);
 
@@ -360,49 +370,49 @@ namespace Server.Items
 
                         break;
                     }
-                case 101: // Ring
+                    case 101: // Ring
                     {
                         f.Ring = true;
                         m_From.SendGump(new JewelryBoxGump(m_From, m_Box));
 
                         break;
                     }
-                case 102: // Bracelet
+                    case 102: // Bracelet
                     {
                         f.Bracelet = true;
                         m_From.SendGump(new JewelryBoxGump(m_From, m_Box));
 
                         break;
                     }
-                case 104: // Earrings
+                    case 104: // Earrings
                     {
                         f.Earrings = true;
                         m_From.SendGump(new JewelryBoxGump(m_From, m_Box));
 
                         break;
                     }
-                case 108: // Necklace
+                    case 108: // Necklace
                     {
                         f.Necklace = true;
                         m_From.SendGump(new JewelryBoxGump(m_From, m_Box));
 
                         break;
                     }
-                case 116: // Talisman
+                    case 116: // Talisman
                     {
                         f.Talisman = true;
                         m_From.SendGump(new JewelryBoxGump(m_From, m_Box));
 
                         break;
                     }
-                case 132: // ALL
+                    case 132: // ALL
                     {
                         f.Clear();
                         m_From.SendGump(new JewelryBoxGump(m_From, m_Box));
 
                         break;
                     }
-                default:
+                    default:
                     {
                         Item item = m_Box.Items.Find(x => x.Serial == index);
 
@@ -414,6 +424,7 @@ namespace Server.Items
 
                         break;
                     }
+                }
             }
         }
     }
