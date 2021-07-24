@@ -218,6 +218,9 @@
 				<child name="New Haven North" x="3502" y="2475" z="34" />
 				<child name="Farmlands" x="3722" y="2647" z="20" />
 			</parent>
+			<parent name="Sea Market">
+				<child name="Winds Tavern" x="4545" y="2299" z="-1" />
+			</parent>
 			<parent name="Serpents Hold">
 				<child name="North" x="3023" y="3417" z="15" />
 				<child name="South" x="2906" y="3505" z="10" />
