@@ -21,7 +21,7 @@ namespace Server.SkillHandlers
             SkillInfo.Table[(int)SkillName.Tracking].Callback = OnUse;
         }
 
-        public static TimeSpan OnUse(Mobile m)
+        private static TimeSpan OnUse(Mobile m)
         {
             m.SendLocalizedMessage(1011350); // What do you wish to track?
 
@@ -65,11 +65,12 @@ namespace Server.SkillHandlers
             m_Table.Remove(tracker);
         }
 
-        public class TrackingInfo
+        private class TrackingInfo
         {
-            public Mobile m_Target;
+            public readonly Mobile m_Target;
+            public readonly Map m_Map;
+
             public Point2D m_Location;
-            public Map m_Map;
 
             public TrackingInfo(Mobile target)
             {
@@ -264,17 +265,29 @@ namespace Server.SkillHandlers
 
             if (RegionTracking)
             {
-                IEnumerable<Mobile> mobiles = FilterRegionMobs(from, range);
+                if (type == 3)
+                {
+                    list = NetState.Instances.AsParallel().Select(m => m.Mobile).Where(m => m != from
+                            && m.Alive
+                            && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel)
+                            && check(m)
+                            && CheckDifficulty(from, m)
+                            && ReachableTarget(from, m, range))
+                        .OrderBy(x => x.GetDistanceToSqrt(from)).Select(x => x).Take(12).ToList();
+                }
+                else
+                {
+                    IEnumerable<Mobile> mobiles = FilterRegionMobs(from, range);
 
-                list = mobiles.AsParallel().Where(m => m != from
-                        && m.Alive
-                        && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel)
-                        && check(m)
-                        && CheckDifficulty(from, m)
-                        && ReachableTarget(from, m, range))
-                    .OrderBy(x => x.GetDistanceToSqrt(from))
-                    .Select(x => x).Take(12).ToList();
-            }   
+                    list = mobiles.AsParallel().Where(m => m != from
+                            && m.Alive
+                            && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel)
+                            && check(m)
+                            && CheckDifficulty(from, m)
+                            && ReachableTarget(from, m, range))
+                        .OrderBy(x => x.GetDistanceToSqrt(from)).Select(x => x).Take(12).ToList();
+                }
+            }
             else
             {
                 IPooledEnumerable eable = from.GetMobilesInRange(range);
@@ -282,17 +295,15 @@ namespace Server.SkillHandlers
                 foreach (Mobile m in eable)
                 {
                     if (list.Count <= 12
-                        && m != from
-                        && m.Alive
+                        && m != from && m.Alive
                         && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel)
-                        && check(m)
-                        && CheckDifficulty(from, m)
+                        && check(m) && CheckDifficulty(from, m)
                         && (m.IsPlayer() && NonPlayerRangeMultiplier == 1 ? m.InRange(from, range / NonPlayerRangeMultiplier) : m.InRange(from, range)))
                     {
                         list.Add(m);
                     }
 
-                    if(list.Count>=12)
+                    if (list.Count >= 12)
                     {
                         break;
                     }
@@ -342,7 +353,7 @@ namespace Server.SkillHandlers
                     m_From.QuestArrow = new TrackArrow(m_From, m, m_Range * (TrackDistanceMultiplier == 0 ? 1000 : TrackDistanceMultiplier));
                 }
 
-                if(NotifyPlayer && m.Player)
+                if (NotifyPlayer && m.Player)
                 {
                     m.SendLocalizedMessage(1042971, "Your presence has been detected in this area."); // ~1_NOTHING~
                 }
@@ -350,6 +361,7 @@ namespace Server.SkillHandlers
                 Tracking.AddInfo(m_From, m);
             }
         }
+
         private static bool ReachableTarget(Mobile from, Mobile m, int range)
         {
             if (RegionTracking)
@@ -365,8 +377,7 @@ namespace Server.SkillHandlers
             return m.InRange(from, range / NonPlayerRangeMultiplier);
         }
 
-
-        public static List<Mobile> ConvertToList(IEnumerable<Mobile> ienum)
+        private static List<Mobile> ConvertToList(IEnumerable<Mobile> ienum)
         {
             List<Mobile> list = new List<Mobile>();
 
@@ -378,7 +389,7 @@ namespace Server.SkillHandlers
             return list;
         }
 
-        private static Dictionary<Map, List<Rectangle2D[]>> mapAreas = new Dictionary<Map, List<Rectangle2D[]>>
+        private static readonly Dictionary<Map, List<Rectangle2D[]>> mapAreas = new Dictionary<Map, List<Rectangle2D[]>>
         {
             {Map.Trammel, new List<Rectangle2D[]> {
             //Tram
@@ -426,8 +437,10 @@ namespace Server.SkillHandlers
         {
             List<Mobile> mobiles = null;
 
-            foreach (Rectangle2D[] areas in mapAreas[from.Map])
+            for (var i = 0; i < mapAreas[from.Map].Count; i++)
             {
+                Rectangle2D[] areas = mapAreas[from.Map][i];
+
                 if (areas.Any(area => from.X > area.X && from.Y > area.Y && from.X < area.X + area.Width && from.Y < area.Y + area.Height))
                 {
                     mobiles = new List<Mobile>();
@@ -439,8 +452,10 @@ namespace Server.SkillHandlers
                     }
                 }
             }
+
             return mobiles;
         }
+
         private static List<Mobile> FilterRegionMobs(Mobile from, int range)
         {
             List<Mobile> mobiles = null;
@@ -484,7 +499,7 @@ namespace Server.SkillHandlers
 
             if (m.Race == Race.Elf)
             {
-                divisor /= 2; //Previous assumption was wrong. From testing OSI Humans track at ~70%, elves at ~35%, which is half the total chance
+                divisor /= 2; // From testing OSI Humans track at ~70%, elves at ~35%, which is half the total chance
             }
 
             // Necromancy forms affect tracking difficulty 
@@ -510,29 +525,29 @@ namespace Server.SkillHandlers
                 divisor = 2200;
             }
 
-            int chance = divisor > 0 ? 70 * (tracking + detectHidden) / divisor : 0;
-            
+            int chance = divisor > 0 ? 70 * (tracking + detectHidden) / divisor : 100;
+
             return chance > Utility.Random(100);
         }
 
         private static bool IsAnimal(Mobile m)
         {
-            return m.Body.IsAnimal;
+            return m.Body.IsAnimal && !(m.Region.IsPartOf<Regions.HouseRegion>() && m.Blessed);
         }
 
         private static bool IsMonster(Mobile m)
         {
-            return !m.Player && m.Body.IsHuman && m is BaseCreature bc && bc.IsAggressiveMonster || m.Body.IsMonster || TrackedNecro(m);
+            return !m.Player && m.Body.IsHuman && m is BaseCreature bc && bc.IsAggressiveMonster || (m.Body.IsMonster || TrackedNecro(m)) && !(m.Region.IsPartOf<Regions.HouseRegion>() && m.Blessed);
         }
 
         private static bool IsHumanNPC(Mobile m)
         {
-            return !m.Player && m.Body.IsHuman && m is BaseCreature bc && !bc.IsAggressiveMonster || TrackedThief(m);
+            return !m.Player && m.Body.IsHuman && m is BaseCreature bc && !bc.IsAggressiveMonster || TrackedThief(m) || m.Region.IsPartOf<Regions.HouseRegion>() && m.Blessed;
         }
 
         private static bool IsPlayer(Mobile m)
         {
-            return m.Player && !m.Body.IsMonster && !m.Body.IsAnimal && !TrackedNecro(m) && !IsHumanNPC(m);
+            return m.Player && !m.Body.IsMonster && !m.Body.IsAnimal && !TrackedNecro(m) && !TrackedThief(m);
         }
 
         private static bool TrackedNecro(Mobile m)
@@ -653,8 +668,7 @@ namespace Server.SkillHandlers
                 return;
             }
 
-            if (m_From.NetState == null
-                || m_From.Deleted
+            if (m_From.Deleted
                 || m_Target.Deleted
                 || m_From.Map != m_Target.Map
                 || RegionTracking && m_Target is Mobile mt && m_From.TopRegion != mt.TopRegion && Math.Abs(m_LastDistance - m_newDistance) > 20
@@ -667,10 +681,10 @@ namespace Server.SkillHandlers
                 }
 
                 Stop();
+
                 m_From.SendLocalizedMessage(503177); // You have lost your quarry.
                 return;
             }
-
 
             if (p_LastX != m_From.Location.X || p_LastY != m_From.Location.Y || m_LastX != m_Target.Location.X || m_LastY != m_Target.Location.Y)
             {
@@ -686,7 +700,6 @@ namespace Server.SkillHandlers
 
                 m_Arrow.Update();
             }
-
         }
     }
 }
