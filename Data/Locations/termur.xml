@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <places>
-	<parent name="Ter Mur">
+	<parent name="Ter Mur/Eodon">
 		<parent name="Towns">
 			<parent name="Royal City">
 				<child name="Royal City Moongate" x="855" y="3526" z="-43" />
@@ -41,6 +41,9 @@
 			<parent name="Underworld">
 				<child name="Entrance" x="1128" y="1211" z="-2" />
 			</parent>
+			<parent name="Shadowguard">
+				<child name="Grand Hall" x="528" y="2191" z="25" />
+			</parent>
 		</parent>
 		<parent name="Sites">
 			<parent name="Regions">
@@ -68,7 +71,15 @@
 				<child name="Void Isle" x="440" y="3577" z="38" />
 				<child name="Walled Circus" x="370" y="3273" z="0" />
 				<child name="Waterfall Point" x="661" y="2894" z="39" />
-                       </parent>
+            </parent>
+			<parent name="Tribes">
+				<child name="Barako" x="656" y="1708" z="100" />
+				<child name="Sakkhra" x="548" y="1467" z="40" />
+				<child name="Urali" x="411" y="1592" z="40" />
+				<child name="Barrab" x="162" y="1801" z="80" />
+				<child name="Kurak" x="355" y="1848" z="0" />
+				<child name="Jukari" x="677" y="2076" z="40" />
+			</parent>
 		</parent>
 		
 	</parent>
