@@ -153,6 +153,17 @@ namespace Server.Gumps
 
         public override void OnResponse(RelayInfo info)
         {
+            if (Book.Deleted)
+            {
+                return;
+            }
+
+            if (!User.InRange(Book.GetWorldLocation(), 2))
+            {
+                User.SendLocalizedMessage(500446); // That is too far away.
+                return;
+            }
+
             if (info.ButtonID == 1)
             {
                 Skill = -1;
