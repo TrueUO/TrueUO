@@ -267,7 +267,8 @@ namespace Server.SkillHandlers
             {
                 if (type == 3)
                 {
-                    list = NetState.Instances.AsParallel().Select(m => m.Mobile).Where(m => m != from
+                    list = NetState.Instances.AsParallel().Select(m => m.Mobile).Where(m => m != null
+                            && m != from
                             && m.Alive
                             && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel)
                             && check(m)
@@ -279,11 +280,11 @@ namespace Server.SkillHandlers
                 {
                     IEnumerable<Mobile> mobiles = FilterRegionMobs(from, range);
 
-                    list = mobiles.AsParallel().Where(m => m != from
+                    list = mobiles.AsParallel().Where(m => m != null
+                            && m != from
                             && m.Alive
                             && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel)
-                            && check(m)
-                            && CheckDifficulty(from, m)
+                            && check(m) && CheckDifficulty(from, m)
                             && ReachableTarget(from, m, range))
                         .OrderBy(x => x.GetDistanceToSqrt(from)).Select(x => x).Take(12).ToList();
                 }
