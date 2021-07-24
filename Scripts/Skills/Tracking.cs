@@ -21,7 +21,7 @@ namespace Server.SkillHandlers
             SkillInfo.Table[(int)SkillName.Tracking].Callback = OnUse;
         }
 
-        public static TimeSpan OnUse(Mobile m)
+        private static TimeSpan OnUse(Mobile m)
         {
             m.SendLocalizedMessage(1011350); // What do you wish to track?
 
@@ -65,11 +65,12 @@ namespace Server.SkillHandlers
             m_Table.Remove(tracker);
         }
 
-        public class TrackingInfo
+        private class TrackingInfo
         {
-            public Mobile m_Target;
+            public readonly Mobile m_Target;
+            public readonly Map m_Map;
+
             public Point2D m_Location;
-            public Map m_Map;
 
             public TrackingInfo(Mobile target)
             {
@@ -261,31 +262,30 @@ namespace Server.SkillHandlers
             int range = (BaseTrackingDetectionRange + (int)(from.Skills[SkillName.Tracking].Value / 10)) * NonPlayerRangeMultiplier;
 
             List<Mobile> list = new List<Mobile>();
-            IEnumerable<Mobile> mobiles = null;
+
             if (RegionTracking)
             {
                 if (type == 3)
                 {
                     list = NetState.Instances.AsParallel().Select(m => m.Mobile).Where(m => m != from
-                        && m.Alive
-                        && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel)
-                        && check(m)
-                        && CheckDifficulty(from, m)
-                        && ReachableTarget(from, m, range))
-                    .OrderBy(x => x.GetDistanceToSqrt(from))
-                    .Select(x => x).Take(12).ToList();
+                            && m.Alive
+                            && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel)
+                            && check(m)
+                            && CheckDifficulty(from, m)
+                            && ReachableTarget(from, m, range))
+                        .OrderBy(x => x.GetDistanceToSqrt(from)).Select(x => x).Take(12).ToList();
                 }
                 else
                 {
-                    mobiles = FilterRegionMobs(from, range);
+                    IEnumerable<Mobile> mobiles = FilterRegionMobs(from, range);
+
                     list = mobiles.AsParallel().Where(m => m != from
-        && m.Alive
-        && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel)
-        && check(m)
-        && CheckDifficulty(from, m)
-        && ReachableTarget(from, m, range))
-    .OrderBy(x => x.GetDistanceToSqrt(from))
-    .Select(x => x).Take(12).ToList();
+                            && m.Alive
+                            && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel)
+                            && check(m)
+                            && CheckDifficulty(from, m)
+                            && ReachableTarget(from, m, range))
+                        .OrderBy(x => x.GetDistanceToSqrt(from)).Select(x => x).Take(12).ToList();
                 }
             }
             else
@@ -295,11 +295,9 @@ namespace Server.SkillHandlers
                 foreach (Mobile m in eable)
                 {
                     if (list.Count <= 12
-                        && m != from
-                        && m.Alive
+                        && m != from && m.Alive
                         && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel)
-                        && check(m)
-                        && CheckDifficulty(from, m)
+                        && check(m) && CheckDifficulty(from, m)
                         && (m.IsPlayer() && NonPlayerRangeMultiplier == 1 ? m.InRange(from, range / NonPlayerRangeMultiplier) : m.InRange(from, range)))
                     {
                         list.Add(m);
@@ -363,6 +361,7 @@ namespace Server.SkillHandlers
                 Tracking.AddInfo(m_From, m);
             }
         }
+
         private static bool ReachableTarget(Mobile from, Mobile m, int range)
         {
             if (RegionTracking)
@@ -378,8 +377,7 @@ namespace Server.SkillHandlers
             return m.InRange(from, range / NonPlayerRangeMultiplier);
         }
 
-
-        public static List<Mobile> ConvertToList(IEnumerable<Mobile> ienum)
+        private static List<Mobile> ConvertToList(IEnumerable<Mobile> ienum)
         {
             List<Mobile> list = new List<Mobile>();
 
@@ -391,7 +389,7 @@ namespace Server.SkillHandlers
             return list;
         }
 
-        private static Dictionary<Map, List<Rectangle2D[]>> mapAreas = new Dictionary<Map, List<Rectangle2D[]>>
+        private static readonly Dictionary<Map, List<Rectangle2D[]>> mapAreas = new Dictionary<Map, List<Rectangle2D[]>>
         {
             {Map.Trammel, new List<Rectangle2D[]> {
             //Tram
@@ -439,8 +437,10 @@ namespace Server.SkillHandlers
         {
             List<Mobile> mobiles = null;
 
-            foreach (Rectangle2D[] areas in mapAreas[from.Map])
+            for (var i = 0; i < mapAreas[from.Map].Count; i++)
             {
+                Rectangle2D[] areas = mapAreas[from.Map][i];
+
                 if (areas.Any(area => from.X > area.X && from.Y > area.Y && from.X < area.X + area.Width && from.Y < area.Y + area.Height))
                 {
                     mobiles = new List<Mobile>();
@@ -452,8 +452,10 @@ namespace Server.SkillHandlers
                     }
                 }
             }
+
             return mobiles;
         }
+
         private static List<Mobile> FilterRegionMobs(Mobile from, int range)
         {
             List<Mobile> mobiles = null;
@@ -497,7 +499,7 @@ namespace Server.SkillHandlers
 
             if (m.Race == Race.Elf)
             {
-                divisor /= 2; //Previous assumption was wrong. From testing OSI Humans track at ~70%, elves at ~35%, which is half the total chance
+                divisor /= 2; // From testing OSI Humans track at ~70%, elves at ~35%, which is half the total chance
             }
 
             // Necromancy forms affect tracking difficulty 
@@ -679,10 +681,10 @@ namespace Server.SkillHandlers
                 }
 
                 Stop();
+
                 m_From.SendLocalizedMessage(503177); // You have lost your quarry.
                 return;
             }
-
 
             if (p_LastX != m_From.Location.X || p_LastY != m_From.Location.Y || m_LastX != m_Target.Location.X || m_LastY != m_Target.Location.Y)
             {
@@ -698,7 +700,6 @@ namespace Server.SkillHandlers
 
                 m_Arrow.Update();
             }
-
         }
     }
 }
