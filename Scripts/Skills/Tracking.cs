@@ -261,12 +261,12 @@ namespace Server.SkillHandlers
             int range = (BaseTrackingDetectionRange + (int)(from.Skills[SkillName.Tracking].Value / 10)) * NonPlayerRangeMultiplier;
 
             List<Mobile> list = new List<Mobile>();
-
+            IEnumerable<Mobile> mobiles = null;
             if (RegionTracking)
             {
-                IEnumerable<Mobile> mobiles = FilterRegionMobs(from, range);
-
-                list = mobiles.AsParallel().Where(m => m != from
+                if (type == 3)
+                {
+                    list = NetState.Instances.AsParallel().Select(m => m.Mobile).Where(m => m != from
                         && m.Alive
                         && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel)
                         && check(m)
@@ -274,7 +274,20 @@ namespace Server.SkillHandlers
                         && ReachableTarget(from, m, range))
                     .OrderBy(x => x.GetDistanceToSqrt(from))
                     .Select(x => x).Take(12).ToList();
-            }   
+                }
+                else
+                {
+                    mobiles = FilterRegionMobs(from, range);
+                    list = mobiles.AsParallel().Where(m => m != from
+        && m.Alive
+        && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel)
+        && check(m)
+        && CheckDifficulty(from, m)
+        && ReachableTarget(from, m, range))
+    .OrderBy(x => x.GetDistanceToSqrt(from))
+    .Select(x => x).Take(12).ToList();
+                }
+            }
             else
             {
                 IPooledEnumerable eable = from.GetMobilesInRange(range);
@@ -292,7 +305,7 @@ namespace Server.SkillHandlers
                         list.Add(m);
                     }
 
-                    if(list.Count>=12)
+                    if (list.Count >= 12)
                     {
                         break;
                     }
@@ -342,7 +355,7 @@ namespace Server.SkillHandlers
                     m_From.QuestArrow = new TrackArrow(m_From, m, m_Range * (TrackDistanceMultiplier == 0 ? 1000 : TrackDistanceMultiplier));
                 }
 
-                if(NotifyPlayer && m.Player)
+                if (NotifyPlayer && m.Player)
                 {
                     m.SendLocalizedMessage(1042971, "Your presence has been detected in this area."); // ~1_NOTHING~
                 }
@@ -510,29 +523,29 @@ namespace Server.SkillHandlers
                 divisor = 2200;
             }
 
-            int chance = divisor > 0 ? 70 * (tracking + detectHidden) / divisor : 0;
-            
+            int chance = divisor > 0 ? 70 * (tracking + detectHidden) / divisor : 100;
+
             return chance > Utility.Random(100);
         }
 
         private static bool IsAnimal(Mobile m)
         {
-            return m.Body.IsAnimal;
+            return m.Body.IsAnimal && !(m.Region.IsPartOf<Regions.HouseRegion>() && m.Blessed);
         }
 
         private static bool IsMonster(Mobile m)
         {
-            return !m.Player && m.Body.IsHuman && m is BaseCreature bc && bc.IsAggressiveMonster || m.Body.IsMonster || TrackedNecro(m);
+            return !m.Player && m.Body.IsHuman && m is BaseCreature bc && bc.IsAggressiveMonster || (m.Body.IsMonster || TrackedNecro(m)) && !(m.Region.IsPartOf<Regions.HouseRegion>() && m.Blessed);
         }
 
         private static bool IsHumanNPC(Mobile m)
         {
-            return !m.Player && m.Body.IsHuman && m is BaseCreature bc && !bc.IsAggressiveMonster || TrackedThief(m);
+            return !m.Player && m.Body.IsHuman && m is BaseCreature bc && !bc.IsAggressiveMonster || TrackedThief(m) || m.Region.IsPartOf<Regions.HouseRegion>() && m.Blessed;
         }
 
         private static bool IsPlayer(Mobile m)
         {
-            return m.Player && !m.Body.IsMonster && !m.Body.IsAnimal && !TrackedNecro(m) && !IsHumanNPC(m);
+            return m.Player && !m.Body.IsMonster && !m.Body.IsAnimal && !TrackedNecro(m) && !TrackedThief(m);
         }
 
         private static bool TrackedNecro(Mobile m)
@@ -653,8 +666,7 @@ namespace Server.SkillHandlers
                 return;
             }
 
-            if (m_From.NetState == null
-                || m_From.Deleted
+            if (m_From.Deleted
                 || m_Target.Deleted
                 || m_From.Map != m_Target.Map
                 || RegionTracking && m_Target is Mobile mt && m_From.TopRegion != mt.TopRegion && Math.Abs(m_LastDistance - m_newDistance) > 20
