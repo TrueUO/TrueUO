@@ -269,6 +269,7 @@ namespace Server.SkillHandlers
                 {
                     list = NetState.Instances.AsParallel().Select(m => m.Mobile).Where(m => m != null
                             && m != from
+                            && m.Map == from.Map
                             && m.Alive
                             && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel)
                             && check(m)
@@ -282,9 +283,11 @@ namespace Server.SkillHandlers
 
                     list = mobiles.AsParallel().Where(m => m != null
                             && m != from
+                            && m.Map == from.Map
                             && m.Alive
                             && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel)
-                            && check(m) && CheckDifficulty(from, m)
+                            && check(m)
+                            && CheckDifficulty(from, m)
                             && ReachableTarget(from, m, range))
                         .OrderBy(x => x.GetDistanceToSqrt(from)).Select(x => x).Take(12).ToList();
                 }
@@ -296,9 +299,12 @@ namespace Server.SkillHandlers
                 foreach (Mobile m in eable)
                 {
                     if (list.Count <= 12
-                        && m != from && m.Alive
+                        && m != from
+                        && m.Map == from.Map
+                        && m.Alive
                         && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel)
-                        && check(m) && CheckDifficulty(from, m)
+                        && check(m)
+                        && CheckDifficulty(from, m)
                         && (m.IsPlayer() && NonPlayerRangeMultiplier == 1 ? m.InRange(from, range / NonPlayerRangeMultiplier) : m.InRange(from, range)))
                     {
                         list.Add(m);
