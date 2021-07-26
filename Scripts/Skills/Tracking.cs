@@ -414,7 +414,6 @@ namespace Server.SkillHandlers
             }
 
             return totalTargets;
-
         }
 
         private static List<Mobile> ConvertToList(IEnumerable<Mobile> ienum)
