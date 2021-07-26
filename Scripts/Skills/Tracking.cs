@@ -406,12 +406,15 @@ namespace Server.SkillHandlers
                 return 12;
             }
 
-            if (m is PlayerMobile pm && pm.Skills[SkillName.Tracking].Value >= 100)
+            int totalTargets = (int) (m.Skills[SkillName.Tracking].Value / 5.0); // 20 targets at 100 skill.
+
+            if (totalTargets > 20)
             {
                 return 20;
             }
 
-            return 12;
+            return totalTargets;
+
         }
 
         private static List<Mobile> ConvertToList(IEnumerable<Mobile> ienum)
