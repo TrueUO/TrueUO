@@ -446,14 +446,19 @@ namespace Server.SkillHandlers
             {
                 Rectangle2D[] areas = mapAreas[from.Map][i];
 
-                if (areas.Any(area => from.X > area.X && from.Y > area.Y && from.X < area.X + area.Width && from.Y < area.Y + area.Height))
+                foreach (var defined in areas)
                 {
-                    mobiles = new List<Mobile>();
-
-                    for (var index = 0; index < areas.Length; index++)
+                    if (from.X > defined.X && from.Y > defined.Y && from.X < defined.X + defined.Width && from.Y < defined.Y + defined.Height)
                     {
-                        Rectangle2D area = areas[index];
-                        mobiles.AddRange(ConvertToList(from.Map.GetMobilesInBounds(area)));
+                        mobiles = new List<Mobile>();
+
+                        for (var index = 0; index < areas.Length; index++)
+                        {
+                            Rectangle2D area = areas[index];
+                            mobiles.AddRange(ConvertToList(from.Map.GetMobilesInBounds(area)));
+                        }
+
+                        break;
                     }
                 }
             }
