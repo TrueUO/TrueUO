@@ -283,7 +283,6 @@ namespace Server.SkillHandlers
 
                     list = mobiles.AsParallel().Where(m => m != null
                             && m != from
-                            && m.Map == from.Map
                             && m.Alive
                             && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel)
                             && check(m)
@@ -300,7 +299,6 @@ namespace Server.SkillHandlers
                 {
                     if (list.Count <= 12
                         && m != from
-                        && m.Map == from.Map
                         && m.Alive
                         && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel)
                         && check(m)
