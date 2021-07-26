@@ -269,6 +269,7 @@ namespace Server.SkillHandlers
                 {
                     list = NetState.Instances.AsParallel().Select(m => m.Mobile).Where(m => m != null
                             && m != from
+                            && m.Map == from.Map
                             && m.Alive
                             && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel)
                             && check(m)
@@ -284,7 +285,8 @@ namespace Server.SkillHandlers
                             && m != from
                             && m.Alive
                             && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel)
-                            && check(m) && CheckDifficulty(from, m)
+                            && check(m)
+                            && CheckDifficulty(from, m)
                             && ReachableTarget(from, m, range))
                         .OrderBy(x => x.GetDistanceToSqrt(from)).Select(x => x).Take(12).ToList();
                 }
@@ -296,9 +298,11 @@ namespace Server.SkillHandlers
                 foreach (Mobile m in eable)
                 {
                     if (list.Count <= 12
-                        && m != from && m.Alive
+                        && m != from
+                        && m.Alive
                         && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel)
-                        && check(m) && CheckDifficulty(from, m)
+                        && check(m)
+                        && CheckDifficulty(from, m)
                         && (m.IsPlayer() && NonPlayerRangeMultiplier == 1 ? m.InRange(from, range / NonPlayerRangeMultiplier) : m.InRange(from, range)))
                     {
                         list.Add(m);
@@ -442,14 +446,19 @@ namespace Server.SkillHandlers
             {
                 Rectangle2D[] areas = mapAreas[from.Map][i];
 
-                if (areas.Any(area => from.X > area.X && from.Y > area.Y && from.X < area.X + area.Width && from.Y < area.Y + area.Height))
+                foreach (var defined in areas)
                 {
-                    mobiles = new List<Mobile>();
-
-                    for (var index = 0; index < areas.Length; index++)
+                    if (from.X > defined.X && from.Y > defined.Y && from.X < defined.X + defined.Width && from.Y < defined.Y + defined.Height)
                     {
-                        Rectangle2D area = areas[index];
-                        mobiles.AddRange(ConvertToList(from.Map.GetMobilesInBounds(area)));
+                        mobiles = new List<Mobile>();
+
+                        for (var index = 0; index < areas.Length; index++)
+                        {
+                            Rectangle2D area = areas[index];
+                            mobiles.AddRange(ConvertToList(from.Map.GetMobilesInBounds(area)));
+                        }
+
+                        break;
                     }
                 }
             }
