@@ -133,6 +133,7 @@ namespace Server.SkillHandlers
         private static readonly int TrackDistanceMultiplier = Config.Get("Tracking.TrackDistanceMultiplier", 5);
         private static readonly int NonPlayerRangeMultiplier = Config.Get("Tracking.NonPlayerRangeMultiplier", 1);
         private static readonly bool RegionTracking = Config.Get("Tracking.RegionTracking", false);
+        private static readonly bool CustomTargetNumbers = Config.Get("Tracking.CustomTargetNumbers", false);
         private static readonly bool NotifyPlayer = Config.Get("Tracking.NotifyPlayer", false);
 
         private readonly Dictionary<Body, string> bodyNames = new Dictionary<Body, string>
@@ -207,17 +208,33 @@ namespace Server.SkillHandlers
 
                 AddBackground(10, 165, 420, 75, 2620);
                 AddBackground(10, 240, 420, 45, 3000);
-
-                if (list.Count > 8)
-                {
-                    AddBackground(0, 310, 440, 155, 5054);
-
-                    AddBackground(10, 320, 420, 75, 2620);
-                    AddBackground(10, 395, 420, 45, 3000);
-                }
             }
 
-            for (int i = 0; i < list.Count && i < 12; ++i)
+            if (list.Count > 8)
+            {
+                AddBackground(0, 310, 440, 155, 5054);
+
+                AddBackground(10, 320, 420, 75, 2620);
+                AddBackground(10, 395, 420, 45, 3000);
+            }
+
+            if (list.Count > 12)
+            {
+                AddBackground(0, 465, 440, 155, 5054);
+
+                AddBackground(10, 475, 420, 75, 2620);
+                AddBackground(10, 550, 420, 45, 3000);
+            }
+
+            if (list.Count > 16)
+            {
+                AddBackground(0, 620, 440, 155, 5054);
+
+                AddBackground(10, 630, 420, 75, 2620);
+                AddBackground(10, 705, 420, 45, 3000);
+            }
+
+            for (int i = 0; i < list.Count && i < TotalNumberOfTargets(from); ++i)
             {
                 Mobile m = list[i];
 
@@ -275,7 +292,7 @@ namespace Server.SkillHandlers
                             && check(m)
                             && CheckDifficulty(from, m)
                             && ReachableTarget(from, m, range))
-                        .OrderBy(x => x.GetDistanceToSqrt(from)).Select(x => x).Take(12).ToList();
+                        .OrderBy(x => x.GetDistanceToSqrt(from)).Select(x => x).Take(TotalNumberOfTargets(from)).ToList();
                 }
                 else
                 {
@@ -288,7 +305,7 @@ namespace Server.SkillHandlers
                             && check(m)
                             && CheckDifficulty(from, m)
                             && ReachableTarget(from, m, range))
-                        .OrderBy(x => x.GetDistanceToSqrt(from)).Select(x => x).Take(12).ToList();
+                        .OrderBy(x => x.GetDistanceToSqrt(from)).Select(x => x).Take(TotalNumberOfTargets(from)).ToList();
                 }
             }
             else
@@ -297,7 +314,7 @@ namespace Server.SkillHandlers
 
                 foreach (Mobile m in eable)
                 {
-                    if (list.Count <= 12
+                    if (list.Count <= TotalNumberOfTargets(from)
                         && m != from
                         && m.Alive
                         && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel)
@@ -308,7 +325,7 @@ namespace Server.SkillHandlers
                         list.Add(m);
                     }
 
-                    if (list.Count >= 12)
+                    if (list.Count >= TotalNumberOfTargets(from))
                     {
                         break;
                     }
@@ -345,7 +362,7 @@ namespace Server.SkillHandlers
         {
             int index = info.ButtonID - 1;
 
-            if (index >= 0 && index < m_List.Count && index < 12)
+            if (index >= 0 && index < m_List.Count && index < TotalNumberOfTargets(m_From))
             {
                 Mobile m = m_List[index];
 
@@ -380,6 +397,21 @@ namespace Server.SkillHandlers
             }
 
             return m.InRange(from, range / NonPlayerRangeMultiplier);
+        }
+
+        private static int TotalNumberOfTargets(Mobile m)
+        {
+            if (!CustomTargetNumbers)
+            {
+                return 12;
+            }
+
+            if (m is PlayerMobile pm && pm.Skills[SkillName.Tracking].Value >= 100)
+            {
+                return 20;
+            }
+
+            return 12;
         }
 
         private static List<Mobile> ConvertToList(IEnumerable<Mobile> ienum)
