@@ -234,7 +234,7 @@ namespace Server.SkillHandlers
                 AddBackground(10, 705, 420, 45, 3000);
             }
 
-            for (int i = 0; i < list.Count && i < TotalNumberOfTargets(from); ++i)
+            for (int i = 0; i < list.Count && i < TotalTargetsBySkill(from); ++i)
             {
                 Mobile m = list[i];
 
@@ -292,7 +292,7 @@ namespace Server.SkillHandlers
                             && check(m)
                             && CheckDifficulty(from, m)
                             && ReachableTarget(from, m, range))
-                        .OrderBy(x => x.GetDistanceToSqrt(from)).Select(x => x).Take(TotalNumberOfTargets(from)).ToList();
+                        .OrderBy(x => x.GetDistanceToSqrt(from)).Select(x => x).Take(TotalTargetsBySkill(from)).ToList();
                 }
                 else
                 {
@@ -305,7 +305,7 @@ namespace Server.SkillHandlers
                             && check(m)
                             && CheckDifficulty(from, m)
                             && ReachableTarget(from, m, range))
-                        .OrderBy(x => x.GetDistanceToSqrt(from)).Select(x => x).Take(TotalNumberOfTargets(from)).ToList();
+                        .OrderBy(x => x.GetDistanceToSqrt(from)).Select(x => x).Take(TotalTargetsBySkill(from)).ToList();
                 }
             }
             else
@@ -314,7 +314,7 @@ namespace Server.SkillHandlers
 
                 foreach (Mobile m in eable)
                 {
-                    if (list.Count <= TotalNumberOfTargets(from)
+                    if (list.Count <= TotalTargetsBySkill(from)
                         && m != from
                         && m.Alive
                         && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel)
@@ -325,7 +325,7 @@ namespace Server.SkillHandlers
                         list.Add(m);
                     }
 
-                    if (list.Count >= TotalNumberOfTargets(from))
+                    if (list.Count >= TotalTargetsBySkill(from))
                     {
                         break;
                     }
@@ -362,7 +362,7 @@ namespace Server.SkillHandlers
         {
             int index = info.ButtonID - 1;
 
-            if (index >= 0 && index < m_List.Count && index < TotalNumberOfTargets(m_From))
+            if (index >= 0 && index < m_List.Count && index < TotalTargetsBySkill(m_From))
             {
                 Mobile m = m_List[index];
 
@@ -399,7 +399,7 @@ namespace Server.SkillHandlers
             return m.InRange(from, range / NonPlayerRangeMultiplier);
         }
 
-        private static int TotalNumberOfTargets(Mobile m)
+        private static int TotalTargetsBySkill(Mobile m)
         {
             if (!CustomTargetNumbers)
             {
@@ -411,6 +411,11 @@ namespace Server.SkillHandlers
             if (totalTargets > 20)
             {
                 return 20;
+            }
+
+            if (totalTargets < 1)
+            {
+                return 1;
             }
 
             return totalTargets;
