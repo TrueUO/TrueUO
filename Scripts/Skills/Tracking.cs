@@ -426,40 +426,11 @@ namespace Server.SkillHandlers
 
             foreach (var mobile in ienum)
             {
-                if (!CantBeTracked(mobile))
-                {
-                    list.Add(mobile);
-                }
+                list.Add(mobile);
             }
             
             return list;
         }
-
-        private static bool CantBeTracked(Mobile m)
-        {
-            return CantBeTracked(m.GetType());
-        }
-
-        private static bool CantBeTracked(Type type)
-        {
-            for (var index = 0; index < _Untrackables.Length; index++)
-            {
-                var i = _Untrackables[index];
-
-                if (i == type)
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        private static readonly Type[] _Untrackables =
-        {
-            typeof(PlayerVendor), typeof(Barkeeper), typeof(Steward),
-            typeof(Mannequin), typeof(CharacterStatue), typeof(ParrotItem)
-        };
 
         private static readonly Dictionary<Map, List<Rectangle2D[]>> mapAreas = new Dictionary<Map, List<Rectangle2D[]>>
         {
@@ -609,17 +580,18 @@ namespace Server.SkillHandlers
 
         private static bool IsAnimal(Mobile m)
         {
-            return m.Body.IsAnimal;
+            return m.Body.IsAnimal && !(m.Region.IsPartOf<Regions.HouseRegion>() && (m is BaseVendor || m is PlayerVendor || m is BaseCreature bc && bc.Blessed));
         }
 
         private static bool IsMonster(Mobile m)
         {
-            return !m.Player && m.Body.IsHuman && m is BaseCreature bc && bc.IsAggressiveMonster || m.Body.IsMonster || TrackedNecro(m);
+            return (!m.Player && m.Body.IsHuman && m is BaseCreature bc && bc.IsAggressiveMonster || m.Body.IsMonster || TrackedNecro(m))
+                   && !(m.Region.IsPartOf<Regions.HouseRegion>() && (m is BaseVendor || m is PlayerVendor));
         }
 
         private static bool IsHumanNPC(Mobile m)
         {
-            return !m.Player && m.Body.IsHuman && m is BaseCreature bc && !bc.IsAggressiveMonster || TrackedThief(m);
+            return !m.Player && m.Body.IsHuman && !(m.Region.IsPartOf<Regions.HouseRegion>() && (m is BaseVendor || m is PlayerVendor || m is Mannequin)) && m is BaseCreature bc && !bc.IsAggressiveMonster || TrackedThief(m);
         }
 
         private static bool IsPlayer(Mobile m)
