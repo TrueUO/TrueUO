@@ -591,7 +591,7 @@ namespace Server.SkillHandlers
 
         private static bool IsHumanNPC(Mobile m)
         {
-            return !m.Player && m.Body.IsHuman && m is BaseCreature bc && !bc.IsAggressiveMonster || TrackedThief(m) || m.Region.IsPartOf<Regions.HouseRegion>() && (m is BaseVendor || m is PlayerVendor);
+            return !m.Player && m.Body.IsHuman && !(m.Region.IsPartOf<Regions.HouseRegion>() && (m is BaseVendor || m is PlayerVendor || m is Mannequin)) && m is BaseCreature bc && !bc.IsAggressiveMonster || TrackedThief(m);
         }
 
         private static bool IsPlayer(Mobile m)
