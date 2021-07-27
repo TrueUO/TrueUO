@@ -560,7 +560,7 @@ namespace Server.SkillHandlers
         {
             if (!m.Player && (IsAnimal(m) || IsMonster(m)))
             {
-                return from.Skills[SkillName.Tracking].Fixed > Math.Min(m.Fame, 18000) / 1800 - 10 + Utility.Random(20);
+                return from.Skills[SkillName.Tracking].Fixed > Math.Min(m.Fame, 18000) / 180 - 10 + Utility.Random(20);
             }
 
             if (!m.Player && IsHumanNPC(m))
