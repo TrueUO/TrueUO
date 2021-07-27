@@ -427,11 +427,39 @@ namespace Server.SkillHandlers
 
             foreach (var mobile in ienum)
             {
-                list.Add(mobile);
+                if (!CantBeTracked(mobile))
+                {
+                    list.Add(mobile);
+                }
             }
-
+            
             return list;
         }
+
+        private static bool CantBeTracked(Mobile m)
+        {
+            return CantBeTracked(m.GetType());
+        }
+
+        private static bool CantBeTracked(Type type)
+        {
+            for (var index = 0; index < _Untrackables.Length; index++)
+            {
+                var i = _Untrackables[index];
+
+                if (i == type)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static readonly Type[] _Untrackables =
+        {
+            typeof(PlayerVendor), typeof(ParrotItem)
+        };
 
         private static readonly Dictionary<Map, List<Rectangle2D[]>> mapAreas = new Dictionary<Map, List<Rectangle2D[]>>
         {
