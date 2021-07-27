@@ -458,7 +458,8 @@ namespace Server.SkillHandlers
 
         private static readonly Type[] _Untrackables =
         {
-            typeof(PlayerVendor), typeof(ParrotItem)
+            typeof(PlayerVendor), typeof(ParrotItem), typeof(Steward),
+            typeof(Mannequin), typeof(CharacterStatue)
         };
 
         private static readonly Dictionary<Map, List<Rectangle2D[]>> mapAreas = new Dictionary<Map, List<Rectangle2D[]>>
