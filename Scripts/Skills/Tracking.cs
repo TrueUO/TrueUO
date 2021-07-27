@@ -132,6 +132,7 @@ namespace Server.SkillHandlers
         private static readonly int TrackDistanceMultiplier = Config.Get("Tracking.TrackDistanceMultiplier", 5);
         private static readonly int NonPlayerRangeMultiplier = Config.Get("Tracking.NonPlayerRangeMultiplier", 1);
         private static readonly bool RegionTracking = Config.Get("Tracking.RegionTracking", false);
+        private static readonly bool CustomTargetNumbers = Config.Get("Tracking.CustomTargetNumbers", false);
         private static readonly bool NotifyPlayer = Config.Get("Tracking.NotifyPlayer", false);
 
         private readonly Dictionary<Body, string> bodyNames = new Dictionary<Body, string>
@@ -206,17 +207,33 @@ namespace Server.SkillHandlers
 
                 AddBackground(10, 165, 420, 75, 2620);
                 AddBackground(10, 240, 420, 45, 3000);
-
-                if (list.Count > 8)
-                {
-                    AddBackground(0, 310, 440, 155, 5054);
-
-                    AddBackground(10, 320, 420, 75, 2620);
-                    AddBackground(10, 395, 420, 45, 3000);
-                }
             }
 
-            for (int i = 0; i < list.Count && i < 12; ++i)
+            if (list.Count > 8)
+            {
+                AddBackground(0, 310, 440, 155, 5054);
+
+                AddBackground(10, 320, 420, 75, 2620);
+                AddBackground(10, 395, 420, 45, 3000);
+            }
+
+            if (list.Count > 12)
+            {
+                AddBackground(0, 465, 440, 155, 5054);
+
+                AddBackground(10, 475, 420, 75, 2620);
+                AddBackground(10, 550, 420, 45, 3000);
+            }
+
+            if (list.Count > 16)
+            {
+                AddBackground(0, 620, 440, 155, 5054);
+
+                AddBackground(10, 630, 420, 75, 2620);
+                AddBackground(10, 705, 420, 45, 3000);
+            }
+
+            for (int i = 0; i < list.Count && i < TotalTargetsBySkill(from); ++i)
             {
                 Mobile m = list[i];
 
@@ -274,7 +291,7 @@ namespace Server.SkillHandlers
                             && check(m)
                             && CheckDifficulty(from, m)
                             && ReachableTarget(from, m, range))
-                        .OrderBy(x => x.GetDistanceToSqrt(from)).Select(x => x).Take(12).ToList();
+                        .OrderBy(x => x.GetDistanceToSqrt(from)).Select(x => x).Take(TotalTargetsBySkill(from)).ToList();
                 }
                 else
                 {
@@ -287,7 +304,7 @@ namespace Server.SkillHandlers
                             && check(m)
                             && CheckDifficulty(from, m)
                             && ReachableTarget(from, m, range))
-                        .OrderBy(x => x.GetDistanceToSqrt(from)).Select(x => x).Take(12).ToList();
+                        .OrderBy(x => x.GetDistanceToSqrt(from)).Select(x => x).Take(TotalTargetsBySkill(from)).ToList();
                 }
             }
             else
@@ -296,7 +313,7 @@ namespace Server.SkillHandlers
 
                 foreach (Mobile m in eable)
                 {
-                    if (list.Count <= 12
+                    if (list.Count <= TotalTargetsBySkill(from)
                         && m != from
                         && m.Alive
                         && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel)
@@ -307,7 +324,7 @@ namespace Server.SkillHandlers
                         list.Add(m);
                     }
 
-                    if (list.Count >= 12)
+                    if (list.Count >= TotalTargetsBySkill(from))
                     {
                         break;
                     }
@@ -344,7 +361,7 @@ namespace Server.SkillHandlers
         {
             int index = info.ButtonID - 1;
 
-            if (index >= 0 && index < m_List.Count && index < 12)
+            if (index >= 0 && index < m_List.Count && index < TotalTargetsBySkill(m_From))
             {
                 Mobile m = m_List[index];
 
@@ -381,17 +398,68 @@ namespace Server.SkillHandlers
             return m.InRange(from, range / NonPlayerRangeMultiplier);
         }
 
+        private static int TotalTargetsBySkill(Mobile m)
+        {
+            if (!CustomTargetNumbers)
+            {
+                return 12;
+            }
+
+            int totalTargets = (int) (m.Skills[SkillName.Tracking].Value / 5.0); // 20 targets at 100 skill.
+
+            if (totalTargets > 20)
+            {
+                return 20;
+            }
+
+            if (totalTargets < 1)
+            {
+                return 1;
+            }
+
+            return totalTargets;
+        }
+
         private static List<Mobile> ConvertToList(IEnumerable<Mobile> ienum)
         {
             List<Mobile> list = new List<Mobile>();
 
             foreach (var mobile in ienum)
             {
-                list.Add(mobile);
+                if (!CantBeTracked(mobile))
+                {
+                    list.Add(mobile);
+                }
             }
-
+            
             return list;
         }
+
+        private static bool CantBeTracked(Mobile m)
+        {
+            return CantBeTracked(m.GetType());
+        }
+
+        private static bool CantBeTracked(Type type)
+        {
+            for (var index = 0; index < _Untrackables.Length; index++)
+            {
+                var i = _Untrackables[index];
+
+                if (i == type)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static readonly Type[] _Untrackables =
+        {
+            typeof(PlayerVendor), typeof(Barkeeper), typeof(Steward),
+            typeof(Mannequin), typeof(CharacterStatue), typeof(ParrotItem)
+        };
 
         private static readonly Dictionary<Map, List<Rectangle2D[]>> mapAreas = new Dictionary<Map, List<Rectangle2D[]>>
         {
@@ -492,7 +560,7 @@ namespace Server.SkillHandlers
         {
             if (!m.Player && (IsAnimal(m) || IsMonster(m)))
             {
-                return from.Skills[SkillName.Tracking].Fixed > Math.Min(m.Fame, 18000) / 1800 - 10 + Utility.Random(20);
+                return from.Skills[SkillName.Tracking].Fixed > Math.Min(m.Fame, 18000) / 18 - 10 + Utility.Random(20);
             }
 
             if (!m.Player && IsHumanNPC(m))
@@ -541,22 +609,17 @@ namespace Server.SkillHandlers
 
         private static bool IsAnimal(Mobile m)
         {
-            return m.Body.IsAnimal && !(m.Region.IsPartOf<Regions.HouseRegion>() && (m is BaseVendor || m is PlayerVendor || m is BaseCreature bc && bc.Blessed));
+            return m.Body.IsAnimal;
         }
 
         private static bool IsMonster(Mobile m)
         {
-            return (
-                    !m.Player && m.Body.IsHuman && m is BaseCreature bc && bc.IsAggressiveMonster
-                    || m.Body.IsMonster
-                    || TrackedNecro(m)
-                )
-                && !(m.Region.IsPartOf<Regions.HouseRegion>() && (m is BaseVendor || m is PlayerVendor));
+            return !m.Player && m.Body.IsHuman && m is BaseCreature bc && bc.IsAggressiveMonster || m.Body.IsMonster || TrackedNecro(m);
         }
 
         private static bool IsHumanNPC(Mobile m)
         {
-            return !m.Player && m.Body.IsHuman && m is BaseCreature bc && !bc.IsAggressiveMonster || TrackedThief(m) || m.Region.IsPartOf<Regions.HouseRegion>() && (m is BaseVendor || m is PlayerVendor);
+            return !m.Player && m.Body.IsHuman && m is BaseCreature bc && !bc.IsAggressiveMonster || TrackedThief(m);
         }
 
         private static bool IsPlayer(Mobile m)
