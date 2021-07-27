@@ -172,31 +172,18 @@ namespace Server
 					_CSP.GetBytes(_Buffer);
 		}
 
-		private void _GetBytes(byte[] b)
-		{
-			int c = b.Length;
-
-			CheckSwap(c);
-
-			lock (_sync)
-			{
-				Buffer.BlockCopy(_Working, _Index, b, 0, c);
-				_Index += c;
-			}
-		}
-
 		private void _GetBytes(byte[] b, int offset, int count)
 		{
-			CheckSwap(count);
 
-			lock (_sync)
-			{
-				Buffer.BlockCopy(_Working, _Index, b, offset, count);
-				_Index += count;
-			}
+                lock (_sync)
+                {
+                    CheckSwap(count);
+                    Buffer.BlockCopy(_Working, _Index, b, offset, count);
+                    _Index += count;
+                }
 		}
 
-		public int Next(int c)
+        public int Next(int c)
 		{
 			return (int)(c * NextDouble());
 		}
@@ -206,13 +193,14 @@ namespace Server
 			return (NextByte() & 1) == 1;
 		}
 
-		private byte NextByte()
-		{
-			CheckSwap(1);
-
-			lock (_sync)
-				return _Working[_Index++];
-		}
+        private byte NextByte()
+        {
+            lock (_sync)
+            {
+                CheckSwap(1);
+                return _Working[_Index++];
+            }
+        }
 
 		public void NextBytes(byte[] b)
 		{
@@ -224,7 +212,7 @@ namespace Server
 					_CSP.GetBytes(b);
 				return;
 			}
-			_GetBytes(b);
+			_GetBytes(b, 0, b.Length);
 		}
 
 		public unsafe double NextDouble()
