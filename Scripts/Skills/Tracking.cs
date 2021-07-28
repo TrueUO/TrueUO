@@ -237,7 +237,7 @@ namespace Server.SkillHandlers
             {
                 Mobile m = list[i];
 
-                AddItem(20 + i % 4 * 100, 20 + i / 4 * 155, ShrinkTable.Lookup(m));
+                AddItem(20 + i % 4 * 100, 20 + i / 4 * 155, ShrinkTable.Lookup(m), m.Hue);
                 AddButton(20 + i % 4 * 100, 130 + i / 4 * 155, 4005, 4007, i + 1, GumpButtonType.Reply, 0);
 
                 string name = m.Name;
