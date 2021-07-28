@@ -318,6 +318,15 @@ namespace Server.Engines.CannedEvil
             }
         }
 
+        public int GetMobileCurrentDamage(Mobile mobile)
+        {
+            if (m_DamageEntries.ContainsKey(mobile))
+            {
+                return m_DamageEntries[mobile];
+            }
+            return 0;
+        }
+
         public void Stop()
         {
             if (!m_Active || Deleted)

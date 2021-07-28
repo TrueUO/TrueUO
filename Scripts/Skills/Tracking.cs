@@ -231,7 +231,7 @@ namespace Server.SkillHandlers
                     bodyNames.TryGetValue(m.Body, out name);
                 }
 
-                if (name != null && name.StartsWith("a "))
+                if (!m.Player && m is BaseCreature bc && !(bc.Controlled && bc.ControlMaster is PlayerMobile) && name != null && name.StartsWith("a "))
                 {
                     name = name.Substring(2);
                 }
@@ -274,7 +274,8 @@ namespace Server.SkillHandlers
                             && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel)
                             && check(m)
                             && CheckDifficulty(from, m)
-                            && ReachableTarget(from, m, range))
+                            && ReachableTarget(from, m, range)
+                            && !(m.Region is Engines.CannedEvil.ChampionSpawnRegion csr && (csr.ChampionSpawn.GetMobileCurrentDamage(m) > 1000) || from.Region != m.Region))
                         .OrderBy(x => x.GetDistanceToSqrt(from)).Select(x => x).Take(12).ToList();
                 }
                 else
