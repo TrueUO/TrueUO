@@ -7,6 +7,8 @@ using System;
 using System.Collections.Generic;
 using Server.Items;
 using System.Linq;
+using System.Drawing;
+
 namespace Server.SkillHandlers
 {
     public delegate bool TrackTypeDelegate(Mobile m);
@@ -409,7 +411,7 @@ namespace Server.SkillHandlers
                 return 12;
             }
 
-            int totalTargets = (int) (m.Skills[SkillName.Tracking].Value / 5.0); // 20 targets at 100 skill.
+            int totalTargets = (int)(m.Skills[SkillName.Tracking].Value / 5.0); // 20 targets at 100 skill.
 
             if (totalTargets > 20)
             {
@@ -432,7 +434,7 @@ namespace Server.SkillHandlers
             {
                 list.Add(mobile);
             }
-            
+
             return list;
         }
 
@@ -480,7 +482,7 @@ namespace Server.SkillHandlers
             }
         };
 
-        private static List<Mobile> GetMobsFromArrayBounds(Mobile from)
+        private static List<Mobile> GetMobsFromArrayBounds(Mobile from, int range)
         {
             List<Mobile> mobiles = null;
 
@@ -497,7 +499,13 @@ namespace Server.SkillHandlers
                         for (var index = 0; index < areas.Length; index++)
                         {
                             Rectangle2D area = areas[index];
-                            mobiles.AddRange(ConvertToList(from.Map.GetMobilesInBounds(area)));
+                            Rectangle2D playerBox = new Rectangle2D(new Point2D(from.X - range, from.Y - range), new Point2D(from.X + range, from.Y + range));
+                            Rectangle intersect = Rectangle.Intersect(new Rectangle(from.X - range, from.Y - range, range * 2, range * 2), new Rectangle(area.X, area.Y, area.Width, area.Height));
+
+                            Rectangle2D search = new Rectangle2D(new Point2D(intersect.Left, intersect.Top), new Point2D(intersect.Right, intersect.Bottom));
+
+                            mobiles.AddRange(ConvertToList(from.Map.GetMobilesInBounds(search)));
+
                         }
 
                         break;
@@ -514,7 +522,7 @@ namespace Server.SkillHandlers
 
             if (mapAreas.ContainsKey(from.Map))
             {
-                mobiles = GetMobsFromArrayBounds(from);
+                mobiles = GetMobsFromArrayBounds(from, range);
             }
 
             if (mobiles == null && from.TopRegion.Area.Length != 0)
