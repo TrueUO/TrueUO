@@ -48,6 +48,7 @@ namespace Server.Items
             }
             else if (from is Mannequin || from is Steward)
             {
+                // On EA Mannequins and Stewards can hold costumes but doing so does not change their own BodyID.
                 return true;
             }
             else
