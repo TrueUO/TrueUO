@@ -503,9 +503,7 @@ namespace Server.SkillHandlers
                         for (var index = 0; index < areas.Length; index++)
                         {
                             Rectangle2D area = areas[index];
-                            Rectangle2D playerBox = new Rectangle2D(new Point2D(from.X - range, from.Y - range), new Point2D(from.X + range, from.Y + range));
                             Rectangle intersect = Rectangle.Intersect(new Rectangle(from.X - range, from.Y - range, range * 2, range * 2), new Rectangle(area.X, area.Y, area.Width, area.Height));
-
                             Rectangle2D search = new Rectangle2D(new Point2D(intersect.Left, intersect.Top), new Point2D(intersect.Right, intersect.Bottom));
 
                             mobiles.AddRange(ConvertToList(from.Map.GetMobilesInBounds(search)));
