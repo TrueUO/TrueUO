@@ -584,18 +584,17 @@ namespace Server.SkillHandlers
 
         private static bool IsAnimal(Mobile m)
         {
-            return m.Body.IsAnimal && !(m.Region.IsPartOf<Regions.HouseRegion>() && (m is BaseVendor || m is PlayerVendor || m is BaseCreature bc && bc.Blessed));
+            return m.Body.IsAnimal && !(m.Region.IsPartOf<Regions.HouseRegion>() && m.Blessed);
         }
 
         private static bool IsMonster(Mobile m)
         {
-            return (!m.Player && m.Body.IsHuman && m is BaseCreature bc && bc.IsAggressiveMonster || m.Body.IsMonster || TrackedNecro(m))
-                   && !(m.Region.IsPartOf<Regions.HouseRegion>() && (m is BaseVendor || m is PlayerVendor));
+            return (!m.Player && m.Body.IsHuman && m is BaseCreature bc && bc.IsAggressiveMonster || m.Body.IsMonster || TrackedNecro(m)) && !(m.Region.IsPartOf<Regions.HouseRegion>() && m.Blessed);
         }
 
         private static bool IsHumanNPC(Mobile m)
         {
-            return !m.Player && m.Body.IsHuman && !(m.Region.IsPartOf<Regions.HouseRegion>() && (m is BaseVendor || m is PlayerVendor || m is Mannequin)) && m is BaseCreature bc && !bc.IsAggressiveMonster || TrackedThief(m);
+            return !m.Player && m.Body.IsHuman && !(m.Region.IsPartOf<Regions.HouseRegion>() && m.Blessed) && m is BaseCreature bc && !bc.IsAggressiveMonster || TrackedThief(m);
         }
 
         private static bool IsPlayer(Mobile m)
