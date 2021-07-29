@@ -290,7 +290,7 @@ namespace Server.SkillHandlers
             {
                 range = from.Skills[SkillName.Tracking].Fixed;
 
-                range = range < BaseTrackingDetectionRange  ? BaseTrackingDetectionRange : range;
+                range = range < BaseTrackingDetectionRange ? BaseTrackingDetectionRange : range;
 
                 if (type == 3)
                 {
