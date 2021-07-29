@@ -134,6 +134,7 @@ namespace Server.SkillHandlers
         private static readonly bool RegionTracking = Config.Get("Tracking.RegionTracking", false);
         private static readonly bool CustomTargetNumbers = Config.Get("Tracking.CustomTargetNumbers", false);
         private static readonly bool NotifyPlayer = Config.Get("Tracking.NotifyPlayer", false);
+        private static readonly bool FamousTracker = Config.Get("Tracking.FamousTracker", false);
 
         private readonly Dictionary<Body, string> bodyNames = new Dictionary<Body, string>
         {
@@ -281,6 +282,8 @@ namespace Server.SkillHandlers
 
             if (RegionTracking)
             {
+                range = (BaseTrackingDetectionRange + (int)(from.Skills[SkillName.Tracking].Value)) * NonPlayerRangeMultiplier;
+
                 if (type == 3)
                 {
                     list = NetState.Instances.AsParallel().Select(m => m.Mobile).Where(m => m != null
@@ -388,7 +391,7 @@ namespace Server.SkillHandlers
         {
             if (RegionTracking)
             {
-                return true;
+                return m.InRange(from, range);
             }
 
             if (NonPlayerRangeMultiplier == 1 || !m.Player)
@@ -532,12 +535,13 @@ namespace Server.SkillHandlers
         {
             if (!m.Player && (IsAnimal(m) || IsMonster(m)))
             {
-                return from.Skills[SkillName.Tracking].Fixed > Math.Min(m.Fame, 18000) / 18 - 10 + Utility.Random(20);
+                int fame = FamousTracker ? Math.Min(m.Fame, 18000) - from.Fame : Math.Min(m.Fame, 18000);
+                return from.Skills[SkillName.Tracking].Fixed > fame / 18 - 100 + Utility.Random(200);
             }
 
             if (!m.Player && IsHumanNPC(m))
             {
-                return from.Skills[SkillName.Tracking].Fixed >= 200;
+                return true;
             }
 
             int tracking = from.Skills[SkillName.Tracking].Fixed;
