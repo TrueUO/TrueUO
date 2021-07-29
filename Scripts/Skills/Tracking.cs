@@ -288,7 +288,9 @@ namespace Server.SkillHandlers
 
             if (RegionTracking)
             {
-                range = (BaseTrackingDetectionRange + (int)(from.Skills[SkillName.Tracking].Value)) * NonPlayerRangeMultiplier;
+                range = from.Skills[SkillName.Tracking].Fixed;
+
+                range = range < BaseTrackingDetectionRange ? BaseTrackingDetectionRange : range;
 
                 if (type == 3)
                 {
@@ -546,6 +548,7 @@ namespace Server.SkillHandlers
             if (!m.Player && (IsAnimal(m) || IsMonster(m)))
             {
                 int fame = FamousTracker ? Math.Min(m.Fame, 18000) - from.Fame : Math.Min(m.Fame, 18000);
+
                 return from.Skills[SkillName.Tracking].Fixed > fame / 18 - 100 + Utility.Random(200);
             }
 
@@ -600,7 +603,8 @@ namespace Server.SkillHandlers
 
         private static bool IsMonster(Mobile m)
         {
-            return (!m.Player && m.Body.IsHuman && m is BaseCreature bc && bc.IsAggressiveMonster || m.Body.IsMonster || TrackedNecro(m)) && !(m.Region.IsPartOf<Regions.HouseRegion>() && m.Blessed);
+            return (!m.Player && m.Body.IsHuman && m is BaseCreature bc && bc.IsAggressiveMonster || m.Body.IsMonster || TrackedNecro(m)) &&
+                   !(m.Region.IsPartOf<Regions.HouseRegion>() && m is PlayerVendor);
         }
 
         private static bool IsHumanNPC(Mobile m)
