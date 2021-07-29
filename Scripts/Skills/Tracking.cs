@@ -313,7 +313,7 @@ namespace Server.SkillHandlers
                             && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel)
                             && check(m)
                             && CheckDifficulty(from, m)
-                            && ReachableTarget(from, m, range))
+                            && ReachableTarget(from, m, range < 10 ? 10 : range))
                         .OrderBy(x => x.GetDistanceToSqrt(from)).Select(x => x).Take(TotalTargetsBySkill(from)).ToList();
                 }
             }
