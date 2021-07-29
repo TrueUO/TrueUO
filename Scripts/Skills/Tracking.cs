@@ -288,7 +288,8 @@ namespace Server.SkillHandlers
 
             if (RegionTracking)
             {
-                range = from.Skills[SkillName.Tracking].Fixed * NonPlayerRangeMultiplier;
+                range = from.Skills[SkillName.Tracking].Fixed;
+
                 range = range < BaseTrackingDetectionRange  ? BaseTrackingDetectionRange : range;
 
                 if (type == 3)
