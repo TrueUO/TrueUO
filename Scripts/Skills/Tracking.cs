@@ -240,7 +240,11 @@ namespace Server.SkillHandlers
             {
                 Mobile m = list[i];
 
-                AddItem(20 + i % 4 * 100, 20 + i / 4 * 155, ShrinkTable.Lookup(m), m.Hue);
+                int displayHue;
+
+                displayHue = m.Hue > 0x8000 ? 0 : m.Hue;
+
+                AddItem(20 + i % 4 * 100, 20 + i / 4 * 155, ShrinkTable.Lookup(m), displayHue);
                 AddButton(20 + i % 4 * 100, 130 + i / 4 * 155, 4005, 4007, i + 1, GumpButtonType.Reply, 0);
 
                 string name = m.Name;
@@ -593,18 +597,17 @@ namespace Server.SkillHandlers
 
         private static bool IsAnimal(Mobile m)
         {
-            return m.Body.IsAnimal && !(m.Region.IsPartOf<Regions.HouseRegion>() && (m is BaseVendor || m is PlayerVendor || m is BaseCreature bc && bc.Blessed));
+            return m.Body.IsAnimal && !(m.Region.IsPartOf<Regions.HouseRegion>() && m.Blessed);
         }
 
         private static bool IsMonster(Mobile m)
         {
-            return (!m.Player && m.Body.IsHuman && m is BaseCreature bc && bc.IsAggressiveMonster || m.Body.IsMonster || TrackedNecro(m))
-                   && !(m.Region.IsPartOf<Regions.HouseRegion>() && (m is BaseVendor || m is PlayerVendor));
+            return (!m.Player && m.Body.IsHuman && m is BaseCreature bc && bc.IsAggressiveMonster || m.Body.IsMonster || TrackedNecro(m)) && !(m.Region.IsPartOf<Regions.HouseRegion>() && m.Blessed);
         }
 
         private static bool IsHumanNPC(Mobile m)
         {
-            return !m.Player && m.Body.IsHuman && !(m.Region.IsPartOf<Regions.HouseRegion>() && (m is BaseVendor || m is PlayerVendor || m is Mannequin)) && m is BaseCreature bc && !bc.IsAggressiveMonster || TrackedThief(m);
+            return !m.Player && m.Body.IsHuman && !(m.Region.IsPartOf<Regions.HouseRegion>() && m.Blessed) && m is BaseCreature bc && !bc.IsAggressiveMonster || TrackedThief(m);
         }
 
         private static bool IsPlayer(Mobile m)
