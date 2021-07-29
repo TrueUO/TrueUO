@@ -237,7 +237,11 @@ namespace Server.SkillHandlers
             {
                 Mobile m = list[i];
 
-                AddItem(20 + i % 4 * 100, 20 + i / 4 * 155, ShrinkTable.Lookup(m), m.Hue);
+                int displayHue;
+
+                displayHue = m.Hue > 0x8000 ? 0 : m.Hue;
+
+                AddItem(20 + i % 4 * 100, 20 + i / 4 * 155, ShrinkTable.Lookup(m), displayHue);
                 AddButton(20 + i % 4 * 100, 130 + i / 4 * 155, 4005, 4007, i + 1, GumpButtonType.Reply, 0);
 
                 string name = m.Name;
