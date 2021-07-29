@@ -291,7 +291,7 @@ namespace Server.SkillHandlers
                             && check(m)
                             && CheckDifficulty(from, m)
                             && ReachableTarget(from, m, range)
-                            && !(m.Region is Engines.CannedEvil.ChampionSpawnRegion csr && csr.Map == Map.Felucca  && csr.ChampionSpawn.GetMobileCurrentDamage(m) > 1000))
+                            && !(m.Region is Engines.CannedEvil.ChampionSpawnRegion csr && csr.Map == Map.Felucca && csr.ChampionSpawn.GetMobileCurrentDamage(m) > 1000))
                         .OrderBy(x => x.GetDistanceToSqrt(from)).Select(x => x).Take(TotalTargetsBySkill(from)).ToList();
                 }
                 else
