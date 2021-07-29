@@ -289,6 +289,7 @@ namespace Server.SkillHandlers
             if (RegionTracking)
             {
                 range = from.Skills[SkillName.Tracking].Fixed * NonPlayerRangeMultiplier;
+                range = range < BaseTrackingDetectionRange  ? BaseTrackingDetectionRange : range;
 
                 if (type == 3)
                 {
@@ -299,7 +300,7 @@ namespace Server.SkillHandlers
                             && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel)
                             && check(m)
                             && CheckDifficulty(from, m)
-                            && ReachableTarget(from, m, range < 10 ? 10 : range)
+                            && ReachableTarget(from, m, range)
                             && !(m.Region is Engines.CannedEvil.ChampionSpawnRegion csr && csr.Map == Map.Felucca && csr.ChampionSpawn.GetMobileCurrentDamage(m) > 1000))
                         .OrderBy(x => x.GetDistanceToSqrt(from)).Select(x => x).Take(TotalTargetsBySkill(from)).ToList();
                 }
@@ -313,7 +314,7 @@ namespace Server.SkillHandlers
                             && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel)
                             && check(m)
                             && CheckDifficulty(from, m)
-                            && ReachableTarget(from, m, range < 10 ? 10 : range))
+                            && ReachableTarget(from, m, range))
                         .OrderBy(x => x.GetDistanceToSqrt(from)).Select(x => x).Take(TotalTargetsBySkill(from)).ToList();
                 }
             }
