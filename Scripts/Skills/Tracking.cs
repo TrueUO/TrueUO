@@ -459,7 +459,7 @@ namespace Server.SkillHandlers
             {Map.Ilshenar, new List<Rectangle2D[]> {
             //Ilsh land
             new[]{
-                new Rectangle2D(new Point2D(185,265), new Point2D(1878,943)),
+                new Rectangle2D(new Point2D(185,150), new Point2D(1878,943)),
                 new Rectangle2D(new Point2D(185,944), new Point2D(1752,1000)),
                 new Rectangle2D(new Point2D(185,1001), new Point2D(1878,1421)),
                 new Rectangle2D(new Point2D(185,1422), new Point2D(580,1480))
