@@ -240,9 +240,7 @@ namespace Server.SkillHandlers
             {
                 Mobile m = list[i];
 
-                int displayHue;
-
-                displayHue = m.Hue > 0x8000 ? 0 : m.Hue;
+                var displayHue = m.Hue > 0x8000 ? 0 : m.Hue;
 
                 AddItem(20 + i % 4 * 100, 20 + i / 4 * 155, ShrinkTable.Lookup(m), displayHue);
                 AddButton(20 + i % 4 * 100, 130 + i / 4 * 155, 4005, 4007, i + 1, GumpButtonType.Reply, 0);
@@ -298,7 +296,7 @@ namespace Server.SkillHandlers
                             && m != from
                             && m.Map == from.Map
                             && m.Alive
-                            && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel)
+                            && m.AccessLevel == AccessLevel.Player
                             && check(m)
                             && CheckDifficulty(from, m)
                             && ReachableTarget(from, m, range)
@@ -312,7 +310,7 @@ namespace Server.SkillHandlers
                     list = mobiles.AsParallel().Where(m => m != null
                             && m != from
                             && m.Alive
-                            && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel)
+                            && m.AccessLevel == AccessLevel.Player
                             && check(m)
                             && CheckDifficulty(from, m)
                             && ReachableTarget(from, m, range))
@@ -328,7 +326,7 @@ namespace Server.SkillHandlers
                     if (list.Count <= TotalTargetsBySkill(from)
                         && m != from
                         && m.Alive
-                        && (!m.Hidden || m.IsPlayer() || from.AccessLevel > m.AccessLevel)
+                        && m.AccessLevel == AccessLevel.Player
                         && check(m)
                         && CheckDifficulty(from, m)
                         && (m.IsPlayer() && NonPlayerRangeMultiplier == 1 ? m.InRange(from, range / NonPlayerRangeMultiplier) : m.InRange(from, range)))
