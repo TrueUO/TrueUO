@@ -1118,22 +1118,23 @@ namespace Server.Items
 
         public static void Initialize()
         {
-            m_AllowableTable[typeof(LeatherGlovesOfMining)] = DefTailoring.CraftSystem;
-            m_AllowableTable[typeof(RingmailGlovesOfMining)] = DefBlacksmithy.CraftSystem;
-            m_AllowableTable[typeof(StuddedGlovesOfMining)] = DefTailoring.CraftSystem;
-            m_AllowableTable[typeof(JukaBow)] = DefBowFletching.CraftSystem;
-            m_AllowableTable[typeof(TribalSpear)] = DefBlacksmithy.CraftSystem;
-            m_AllowableTable[typeof(Pickaxe)] = DefBlacksmithy.CraftSystem;
-            m_AllowableTable[typeof(Cleaver)] = DefBlacksmithy.CraftSystem;
-            m_AllowableTable[typeof(SkinningKnife)] = DefBlacksmithy.CraftSystem;
             m_AllowableTable[typeof(ButcherKnife)] = DefBlacksmithy.CraftSystem;
+            m_AllowableTable[typeof(Cleaver)] = DefBlacksmithy.CraftSystem;
+            m_AllowableTable[typeof(GargishOctopusNecklace)] = DefBlacksmithy.CraftSystem;
             m_AllowableTable[typeof(GargishNecklace)] = DefBlacksmithy.CraftSystem;
             m_AllowableTable[typeof(GargishEarrings)] = DefBlacksmithy.CraftSystem;
             m_AllowableTable[typeof(GargishAmulet)] = DefBlacksmithy.CraftSystem;
+            m_AllowableTable[typeof(Pickaxe)] = DefBlacksmithy.CraftSystem;
+            m_AllowableTable[typeof(RingmailGlovesOfMining)] = DefBlacksmithy.CraftSystem;
+            m_AllowableTable[typeof(SkinningKnife)] = DefBlacksmithy.CraftSystem;
+            m_AllowableTable[typeof(TribalSpear)] = DefBlacksmithy.CraftSystem;
+            m_AllowableTable[typeof(JukaBow)] = DefBowFletching.CraftSystem;
             m_AllowableTable[typeof(GargishStoneAmulet)] = DefMasonry.CraftSystem;
             m_AllowableTable[typeof(BarbedWhip)] = DefTailoring.CraftSystem;
-            m_AllowableTable[typeof(SpikedWhip)] = DefTailoring.CraftSystem;
             m_AllowableTable[typeof(BladedWhip)] = DefTailoring.CraftSystem;
+            m_AllowableTable[typeof(LeatherGlovesOfMining)] = DefTailoring.CraftSystem;
+            m_AllowableTable[typeof(StuddedGlovesOfMining)] = DefTailoring.CraftSystem;
+            m_AllowableTable[typeof(SpikedWhip)] = DefTailoring.CraftSystem;
         }
 
         public static void Configure()
