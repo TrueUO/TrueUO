@@ -1138,14 +1138,14 @@ namespace Server.Items
                     GemType = GemType.Diamond;
             }
 
-            #region Mondain's Legacy
             m_Quality = (ItemQuality)quality;
 
             if (makersMark)
+            {
                 m_Crafter = from;
-            #endregion
+            }
 
-            return 1;
+            return quality;
         }
 
         #endregion
