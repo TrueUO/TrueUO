@@ -473,6 +473,11 @@ namespace Server.Gumps
 
             int durability = 0;
 
+            if (item is GargishOctopusNecklace)
+            {
+                durability = 255;
+            }
+
             if (item is BaseWeapon weapon)
             {
                 attr = weapon.Attributes;
@@ -509,12 +514,6 @@ namespace Server.Gumps
             {
                 dura.MaxHitPoints = durability;
                 dura.HitPoints = durability;
-            }
-
-            if (item is GargishOctopusNecklace necklace)
-            {
-                necklace.MaxHitPoints = 255;
-                necklace.HitPoints = 255;
             }
 
             RunicReforging.ApplyItemPower(item, true);
