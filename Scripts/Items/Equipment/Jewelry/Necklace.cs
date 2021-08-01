@@ -230,9 +230,6 @@ namespace Server.Items
 
     public class GargishOctopusNecklace : BaseNecklace
     {
-        public override int InitMinHits => 255;
-        public override int InitMaxHits => 255;
-
         [Constructable]
         public GargishOctopusNecklace()
             : base(0xA34A)

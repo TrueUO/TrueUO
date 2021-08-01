@@ -511,6 +511,12 @@ namespace Server.Gumps
                 dura.HitPoints = durability;
             }
 
+            if (item is GargishOctopusNecklace necklace)
+            {
+                necklace.MaxHitPoints = 255;
+                necklace.HitPoints = 255;
+            }
+
             RunicReforging.ApplyItemPower(item, true);
         }
 
