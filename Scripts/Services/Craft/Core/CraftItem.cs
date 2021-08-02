@@ -1809,28 +1809,26 @@ namespace Server.Engines.Craft
                     MultipleSkillCheck(from, maxAmount);
                 }
 
+                if (craftSystem is DefBlacksmithy && from.FindItemOnLayer(Layer.OneHanded) is HammerOfHephaestus hepHammer && hepHammer != tool)
+                {
+                    if (hepHammer.UsesRemaining > 0)
+                    {
+                        hepHammer.UsesRemaining--;
+                    }
+
+                    if (hepHammer.UsesRemaining < 1)
+                    {
+                        from.PlaceInBackpack(hepHammer);
+                    }
+                }
+
                 if (craftSystem is DefBlacksmithy && from.FindItemOnLayer(Layer.OneHanded) is AncientSmithyHammer hammer && hammer != tool)
                 {
-                    if (hammer is HammerOfHephaestus)
-                    {
-                        if (hammer.UsesRemaining > 0)
-                        {
-                            hammer.UsesRemaining--;
-                        }
+                    hammer.UsesRemaining--;
 
-                        if (hammer.UsesRemaining < 1)
-                        {
-                            from.PlaceInBackpack(hammer);
-                        }
-                    }
-                    else
+                    if (hammer.UsesRemaining < 1)
                     {
-                        hammer.UsesRemaining--;
-
-                        if (hammer.UsesRemaining < 1)
-                        {
-                            hammer.Delete();
-                        }
+                        hammer.Delete();
                     }
                 }
 
