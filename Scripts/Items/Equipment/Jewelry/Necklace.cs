@@ -237,6 +237,11 @@ namespace Server.Items
             AssignRandomGem();
         }
 
+        public GargishOctopusNecklace(Serial serial)
+            : base(serial)
+        {
+        }
+
         protected void AssignRandomGem()
         {
             int ran = Utility.RandomMinMax(1, 9);
@@ -274,11 +279,6 @@ namespace Server.Items
             {
                 list.Add(1125826); // gargish octopus necklace
             }
-        }
-
-        public GargishOctopusNecklace(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
