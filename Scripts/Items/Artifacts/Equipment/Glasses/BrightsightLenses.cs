@@ -21,6 +21,7 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1075039;// Brightsight Lenses
+
         public override int BasePhysicalResistance => 9;
         public override int BaseFireResistance => 29;
         public override int BaseColdResistance => 7;
@@ -28,28 +29,20 @@ namespace Server.Items
         public override int BaseEnergyResistance => 7;
         public override int InitMinHits => 255;
         public override int InitMaxHits => 255;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
-
-            if (version < 1)
-            {
-                WeaponAttributes.SelfRepair = 0;
-                ArmorAttributes.SelfRepair = 3;
-            }
+            reader.ReadInt();
         }
     }
 
-    [Alterable(typeof(DefTinkering), typeof(GargishBrightsightLenses))]
     public class GargishBrightsightLenses : GargishGlasses
     {
         public override bool IsArtifact => true;
@@ -69,6 +62,7 @@ namespace Server.Items
         }
 
         public override int LabelNumber => 1075039;// Brightsight Lenses
+
         public override int BasePhysicalResistance => 9;
         public override int BaseFireResistance => 29;
         public override int BaseColdResistance => 7;
@@ -76,18 +70,17 @@ namespace Server.Items
         public override int BaseEnergyResistance => 7;
         public override int InitMinHits => 255;
         public override int InitMaxHits => 255;
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-
             writer.Write(1); // version
         }
 
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }
