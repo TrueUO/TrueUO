@@ -78,6 +78,10 @@ namespace Server.Items
                 case 0x0EA6: ItemID = 0x0EA8; break;
                 case 0x0EA7: ItemID = 0x0EA5; break;
                 case 0x0EA8: ItemID = 0x0EA6; break;
+                case 0xA32B: ItemID = 0xA32D; break;
+                case 0xA32D: ItemID = 0xA32B; break;
+                case 0xA321: ItemID++; break;
+                case 0xA322: ItemID--; break;
             }
         }
 

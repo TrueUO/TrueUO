@@ -410,7 +410,10 @@ namespace Server.Engines.Harvest
                                         0xA2A, // stool
                                         0xC1F, // broken clock
                                         0x1047, 0x1048, // globe
-                                        0x1EB1, 0x1EB2, 0x1EB3, 0x1EB4 // barrel staves
+                                        0x1EB1, 0x1EB2, 0x1EB3, 0x1EB4, // barrel staves
+                                        0xA32B, 0xA32D, // Anchor
+                                        0xA32C, // Anchor Chain
+                                        0xA321, 0xA322 // Ship In Bottle
                                     };
 
                                     if (Utility.Random(list.Length + 1) == 0)
