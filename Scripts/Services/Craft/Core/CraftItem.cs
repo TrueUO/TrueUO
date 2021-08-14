@@ -1423,14 +1423,14 @@ namespace Server.Engines.Craft
                 bonus = talisman.ExceptionalBonus / 100.0;
             }
 
-            if (from.FindItemOnLayer(Layer.MiddleTorso) is MasterChefsApron apron)
+            if (from.FindItemOnLayer(Layer.MiddleTorso) is MasterChefsApron apron && system is DefCooking)
             {
                 bonus += apron.Bonus / 100.0;
             }
 
             if (WoodworkersBench.HasBonus(from, system.MainSkill))
             {
-                bonus += .3;
+                bonus += 0.03;
             }
 
             switch (system.ECA)
