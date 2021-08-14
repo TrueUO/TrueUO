@@ -40,6 +40,32 @@ namespace Server.Items
             }
         }
 
+        public override void OnDoubleClick(Mobile from)
+        {
+            if (!from.InRange(GetWorldLocation(), 1))
+            {
+                return;
+            }
+
+            switch (ItemID)
+            {
+                case 0xA325:
+                    ItemID = 0xA326;
+                    break;
+                case 0xA327:
+                    ItemID = 0xA328;
+                    break;
+                case 0xA326:
+                    ItemID = 0xA325;
+                    break;
+                case 0xA328:
+                    ItemID = 0xA327;
+                    break;
+                default:
+                    return;
+            }
+        }
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
