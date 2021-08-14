@@ -424,7 +424,7 @@ namespace Server.Engines.Harvest
 
                                     if (Utility.Random(list.Length + 1) == 0)
                                     {
-                                        switch (Utility.Random(4))
+                                        switch (Utility.Random(5))
                                         {
                                             case 0:
                                                 preLoot = new Candelabra();
@@ -437,6 +437,9 @@ namespace Server.Engines.Harvest
                                                 break;
                                             case 3:
                                                 preLoot = new ShipChain();
+                                                break;
+                                            case 4:
+                                                preLoot = new ShipPorthole();
                                                 break;
                                         }
                                     }
