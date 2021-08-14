@@ -376,7 +376,16 @@ namespace Server.Engines.Harvest
                             case 4: // Paintings and portraits
                             case 5:
                                 {
-                                    preLoot = new ShipwreckedItem(Utility.Random(0xE9F, 10), dredge);
+                                    switch (Utility.Random(2))
+                                    {
+                                        case 0:
+                                            preLoot = new ShipwreckedItem(Utility.Random(0xE9F, 10), dredge);
+                                            break;
+                                        case 1:
+                                            preLoot = new ShipwreckedItem(Utility.Random(0xA2DC, 26), dredge);
+                                            break;
+                                    }
+                                   
                                     break;
                                 }
                             case 6: // Pillows
@@ -414,13 +423,30 @@ namespace Server.Engines.Harvest
                                     };
 
                                     if (Utility.Random(list.Length + 1) == 0)
-                                        preLoot = new Candelabra();
+                                    {
+                                        switch (Utility.Random(4))
+                                        {
+                                            case 0:
+                                                preLoot = new Candelabra();
+                                                break;
+                                            case 1:
+                                                preLoot = new ShipAnchor();
+                                                break;
+                                            case 2:
+                                                preLoot = new ShipInBottle();
+                                                break;
+                                            case 3:
+                                                preLoot = new ShipChain();
+                                                break;
+                                        }
+                                    }
                                     else
+                                    {
                                         preLoot = new ShipwreckedItem(Utility.RandomList(list), dredge);
+                                    }
 
                                     break;
                                 }
-                            #region High Seas
                             case 14:
                                 {
                                     int[] list =
@@ -441,7 +467,6 @@ namespace Server.Engines.Harvest
                                         preLoot = new ShipwreckedItem(list[Utility.Random(3)], dredge);
                                     break;
                                 }
-                                #endregion
                         }
 
                         if (preLoot != null)
