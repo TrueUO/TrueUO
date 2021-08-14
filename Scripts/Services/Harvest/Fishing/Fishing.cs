@@ -382,7 +382,7 @@ namespace Server.Engines.Harvest
                                             preLoot = new ShipwreckedItem(Utility.Random(0xE9F, 10), dredge);
                                             break;
                                         case 1:
-                                            preLoot = new ShipwreckedItem(Utility.Random(0xA2DC, 26), dredge);
+                                            preLoot = new NewShipPaintings();
                                             break;
                                     }
                                    
