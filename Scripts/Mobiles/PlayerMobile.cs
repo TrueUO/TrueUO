@@ -3675,6 +3675,7 @@ namespace Server.Mobiles
             ClumsySpell.RemoveEffects(this);
             FeeblemindSpell.RemoveEffects(this);
             CurseSpell.RemoveEffect(this);
+            StrangleSpell.RemoveCurse(this);
             Spells.Second.ProtectionSpell.EndProtection(this);
 
 
