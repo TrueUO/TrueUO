@@ -322,7 +322,7 @@ namespace Server.Engines.Harvest
                     return new TreasureMap(0, Map.Tokuno);
                 }
 
-                return new TreasureMap(0, @from.Map == Map.Felucca ? Map.Felucca : Map.Trammel);
+                return new TreasureMap(0, from.Map == Map.Felucca ? Map.Felucca : Map.Trammel);
             }
 
             if (type == typeof(MessageInABottle))
