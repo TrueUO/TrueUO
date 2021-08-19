@@ -35,7 +35,6 @@ namespace Server.Engines.Harvest
             #region Fishing
             HarvestDefinition fish = new HarvestDefinition
             {
-
                 // Resource banks are every 8x8 tiles
                 BankWidth = 8,
                 BankHeight = 8,
@@ -247,7 +246,9 @@ namespace Server.Engines.Harvest
         public override Type MutateType(Type type, Mobile from, Item tool, HarvestDefinition def, Map map, Point3D loc, HarvestResource resource)
         {
             if (FishInfo.IsRareFish(type))
+            {
                 return type;
+            }
 
             bool deepWater = IsDeepWater(loc, map);
             bool junkproof = HasTypeHook(tool, HookType.JunkProof);
@@ -316,6 +317,11 @@ namespace Server.Engines.Harvest
 
             if (type == typeof(TreasureMap))
             {
+                if (from.Map == Map.Tokuno)
+                {
+                    return new TreasureMap(0, Map.Tokuno);
+                }
+
                 return new TreasureMap(0, from.Map == Map.Felucca ? Map.Felucca : Map.Trammel);
             }
 
