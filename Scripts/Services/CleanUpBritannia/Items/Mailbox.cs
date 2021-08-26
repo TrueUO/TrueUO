@@ -151,9 +151,9 @@ namespace Server.Items
         public override void OnDoubleClick(Mobile from)
         {
             BaseHouse house = BaseHouse.FindHouseAt(this);
-            SecureInfo secure = house.GetSecureInfoFor(this);
+            SecureInfo secure = house?.GetSecureInfoFor(this);
 
-            if (!house.HasSecureAccess(from, secure))
+            if (house != null && !house.HasSecureAccess(from, secure))
             {
                 if (IsSecure)
                 {
