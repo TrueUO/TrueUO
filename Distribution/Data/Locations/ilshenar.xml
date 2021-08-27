@@ -5,10 +5,6 @@
 			<parent name="Ancient Citadel">
 				<child name="Entrance" x="1518" y="568" z="-14" />
 			</parent>
-			<parent name="Gargoyle City">
-				<child name="Bank" x="852" y="602" z="-40" />
-				<child name="Central Area" x="836" y="641" z="-20" />
-			</parent>
 			<parent name="Lakeshire">
 				<child name="Central Area" x="1203" y="1124" z="-25" />
 			</parent>
