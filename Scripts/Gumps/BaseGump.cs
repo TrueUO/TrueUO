@@ -642,15 +642,15 @@ namespace Server.Gumps
                 _SpoofPool.Add(this);
             }
 
-            private ObjectPropertyList _PropertyList;
+            private ObjectPropertyListPacket _PropertyList;
 
-            public ObjectPropertyList PropertyList
+            public ObjectPropertyListPacket PropertyList
             {
                 get
                 {
                     if (_PropertyList == null)
                     {
-                        _PropertyList = new ObjectPropertyList(this);
+                        _PropertyList = new ObjectPropertyListPacket(this);
 
                         if (!string.IsNullOrEmpty(Text))
                         {

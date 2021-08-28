@@ -307,6 +307,11 @@ namespace Server.Engines.CityLoyalty
                     name = item.LabelNumber.ToString();
                 }
 
+                if (item is FletcherTools) // Shows as Arrow Fletchings for some reason.
+                {
+                    item.Name = item.LabelNumber.ToString();
+                }
+
                 _NameBuffer[t] = name;
                 item.Delete();
 

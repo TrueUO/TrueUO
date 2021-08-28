@@ -1,9 +1,10 @@
-using MimeKit;
 using Server.Accounting;
 using Server.Network;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Net.Mail;
 
 namespace Server.Misc
 {
@@ -13,7 +14,6 @@ namespace Server.Misc
         private static readonly bool SaveBackup = true;
         private static readonly bool RestartServer = true;
         private static readonly bool GenerateReport = true;
-
         public static void Initialize()
         {
             if (Enabled) // If enabled, register our crash event handler
@@ -38,16 +38,14 @@ namespace Server.Misc
         {
             Console.Write("Crash: Sending email...");
 
-            var message = new MimeMessage();
-            message.From.Add(new MailboxAddress("", Email.FromAddress));
-            message.To.Add(new MailboxAddress("", Email.CrashAddresses));
-            message.Subject = "Automated ServUO Crash Report";
+            MailMessage message = new MailMessage(Email.FromAddress, Email.CrashAddresses)
+            {
+                Subject = "Automated TrueUO Crash Report",
 
-            var builder = new BodyBuilder();
-            builder.TextBody = "Automated ServUO Crash Report. See attachment for details.";
-            builder.Attachments.Add(filePath);
+                Body = "Automated TrueUO Crash Report. See attachment for details."
+            };
 
-            message.Body = builder.ToMessageBody();
+            message.Attachments.Add(new Attachment(filePath));
 
             if (Email.Send(message))
                 Console.WriteLine("done");
@@ -84,7 +82,7 @@ namespace Server.Misc
 
             try
             {
-                Core.Restart();
+                Process.Start(Core.ExePath, Core.Arguments);
                 Console.WriteLine("done");
 
                 e.Close = true;
@@ -186,9 +184,9 @@ namespace Server.Misc
                     op.WriteLine("Server Crash Report");
                     op.WriteLine("===================");
                     op.WriteLine();
-                    op.WriteLine("ServUO Version {0}.{1}, Build {2}.{3}", ver.Major, ver.Minor, ver.Build, ver.Revision);
+                    op.WriteLine("TrueUO Version {0}.{1}, Build {2}.{3}", ver.Major, ver.Minor, ver.Build, ver.Revision);
                     op.WriteLine("Operating System: {0}", Environment.OSVersion);
-                    op.WriteLine(".NET Core: {0}", Environment.Version);
+                    op.WriteLine(".NET Framework: {0}", Environment.Version);
                     op.WriteLine("Time: {0}", DateTime.UtcNow);
 
                     try
@@ -227,15 +225,17 @@ namespace Server.Misc
 
                             op.Write("+ {0}:", state);
 
-                            Account a = state.Account as Account;
-
-                            if (a != null)
+                            if (state.Account is Account a)
+                            {
                                 op.Write(" (account = {0})", a.Username);
+                            }
 
                             Mobile m = state.Mobile;
 
                             if (m != null)
+                            {
                                 op.Write(" (mobile = 0x{0:X} '{1}')", m.Serial.Value, m.Name);
+                            }
 
                             op.WriteLine();
                         }
@@ -249,7 +249,9 @@ namespace Server.Misc
                 Console.WriteLine("done");
 
                 if (Email.FromAddress != null && Email.CrashAddresses != null)
+                {
                     SendEmail(filePath);
+                }
             }
             catch
             {
@@ -261,13 +263,7 @@ namespace Server.Misc
         {
             DateTime now = DateTime.UtcNow;
 
-            return string.Format("{0}-{1}-{2}-{3}-{4}-{5}",
-                now.Day,
-                now.Month,
-                now.Year,
-                now.Hour,
-                now.Minute,
-                now.Second);
+            return $"{now.Day}-{now.Month}-{now.Year}-{now.Hour}-{now.Minute}-{now.Second}";
         }
     }
 }

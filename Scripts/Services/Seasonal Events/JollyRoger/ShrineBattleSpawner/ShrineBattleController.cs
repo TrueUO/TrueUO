@@ -357,7 +357,7 @@ namespace Server.Engines.JollyRoger
 
             if (i != null)
             {
-                RunicReforging.GenerateRandomItem(i, damager, Utility.RandomMinMax(700, 800), damager is PlayerMobile pm ? pm.RealLuck : 0, ReforgedPrefix.None, ReforgedSuffix.Fellowship);
+                RunicReforging.GenerateRandomItem(i, damager, Utility.RandomMinMax(600, 800), damager is PlayerMobile pm ? pm.RealLuck : 0, ReforgedPrefix.None, ReforgedSuffix.Fellowship);
             }
 
             return i;

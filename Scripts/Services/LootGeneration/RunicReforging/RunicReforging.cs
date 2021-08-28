@@ -3003,12 +3003,12 @@ namespace Server.Items
 
         public static readonly int[][] MageWeaponTable =
         {
-            new[] { 25, 20, 20, 20, 20, 15, 15 },
-            new[] { 20, 20, 20, 15, 15, 15, 15 },
-            new[] { 20, 15, 15, 15, 15, 15, 15 },
+            new[] { 15, 10, 10, 10, 10, 5, 5 },
+            new[] { 10, 10, 10, 5, 5, 5, 5 },
+            new[] { 10, 5, 5, 5, 5, 5, 5 },
             new int[] { },
-            new[] { 20, 20, 20, 15, 15, 15, 15 },
-            new[] { 15, 15, 15, 15, 15, 15, 15 }
+            new[] { 10, 10, 10, 5, 5, 5, 5 },
+            new[] { 5, 5, 5, 5, 5, 5, 5 }
         };
 
         public static readonly int[][] WeaponRegenTable =

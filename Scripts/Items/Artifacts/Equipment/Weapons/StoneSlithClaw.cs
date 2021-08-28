@@ -3,12 +3,13 @@ namespace Server.Items
     public class StoneSlithClaw : Cyclone
     {
         public override bool IsArtifact => true;
+
         [Constructable]
         public StoneSlithClaw()
         {
             Hue = 1150;
             WeaponAttributes.HitHarm = 40;
-            Slayer = SlayerName.DaemonDismissal;
+            Slayer = SlayerName.Exorcism;
             WeaponAttributes.HitLowerDefend = 40;
             Attributes.WeaponSpeed = 25;
             Attributes.WeaponDamage = 45;
@@ -33,7 +34,7 @@ namespace Server.Items
         public override void Deserialize(GenericReader reader)
         {
             base.Deserialize(reader);
-            int version = reader.ReadInt();
+            reader.ReadInt();
         }
     }
 }

@@ -11,7 +11,8 @@ namespace Server
         public static event ValidationEventHandler StartValidation;
         public static void Initialize()
         {
-            StartValidation?.Invoke();
+            if (StartValidation != null)
+                StartValidation();
 
             StartValidation = null;
         }

@@ -242,10 +242,10 @@ namespace Server
 
 	public class WorldBroadcastEventArgs : EventArgs
 	{
-		public int Hue { get; set; }
-		public bool Ascii { get; set; }
-		public AccessLevel Access { get; set; }
-		public string Text { get; set; }
+		public int Hue { get; }
+		public bool Ascii { get; }
+		public AccessLevel Access { get; }
+		public string Text { get; }
 
 		public WorldBroadcastEventArgs(int hue, bool ascii, AccessLevel access, string text)
 		{
@@ -844,12 +844,12 @@ namespace Server
 		public bool Rejected { get; set; }
 		public List<ServerInfo> Servers => m_Servers;
 
-        public void AddServer(string name, IPEndPoint address)
+		public void AddServer(string name, IPEndPoint address)
 		{
 			AddServer(name, 0, TimeZoneInfo.Local, address);
 		}
 
-        public void AddServer(string name, int fullPercent, TimeZoneInfo tz, IPEndPoint address)
+		public void AddServer(string name, int fullPercent, TimeZoneInfo tz, IPEndPoint address)
 		{
 			m_Servers.Add(new ServerInfo(name, fullPercent, tz, address));
 		}
@@ -862,7 +862,7 @@ namespace Server
 		}
 	}
 
-	public struct SkillNameValue
+	public readonly struct SkillNameValue
 	{
 		private readonly SkillName m_Name;
 		private readonly int m_Value;
@@ -1785,457 +1785,457 @@ namespace Server
 		public static event MultiDesignQueryHandler MultiDesign;
 
 		public static void InvokeOnItemObtained(OnItemObtainedEventArgs e)
-		{
+        {
             OnItemObtained?.Invoke(e);
         }
 
 		public static void InvokeCheckEquipItem(CheckEquipItemEventArgs e)
-		{
+        {
             CheckEquipItem?.Invoke(e);
         }
 
 		public static void InvokeContextMenu(ContextMenuEventArgs e)
-		{
+        {
             ContextMenu?.Invoke(e);
         }
 
 		public static void InvokeWorldBroadcast(WorldBroadcastEventArgs e)
-		{
+        {
             WorldBroadcast?.Invoke(e);
         }
 
 		public static void InvokeClientVersionReceived(ClientVersionReceivedArgs e)
-		{
+        {
             ClientVersionReceived?.Invoke(e);
         }
 
 		public static void InvokeClientTypeReceived(ClientTypeReceivedArgs e)
-		{
+        {
             ClientTypeReceived?.Invoke(e);
         }
 
 		public static void InvokeServerStarted()
-		{
+        {
             ServerStarted?.Invoke();
         }
 
 		public static void InvokeCreateGuild(CreateGuildEventArgs e)
-		{
+        {
             CreateGuild?.Invoke(e);
         }
 
 		public static void InvokeSetAbility(SetAbilityEventArgs e)
-		{
+        {
             SetAbility?.Invoke(e);
         }
 
 		public static void InvokeGuildGumpRequest(GuildGumpRequestArgs e)
-		{
+        {
             GuildGumpRequest?.Invoke(e);
         }
 
 		public static void InvokeQuestGumpRequest(QuestGumpRequestArgs e)
-		{
+        {
             QuestGumpRequest?.Invoke(e);
         }
 
 		public static void InvokeFastWalk(FastWalkEventArgs e)
-		{
+        {
             FastWalk?.Invoke(e);
         }
 
 		public static void InvokeDeleteRequest(DeleteRequestEventArgs e)
-		{
+        {
             DeleteRequest?.Invoke(e);
         }
 
 		public static void InvokeGameLogin(GameLoginEventArgs e)
-		{
+        {
             GameLogin?.Invoke(e);
         }
 
 		public static void InvokeCommand(CommandEventArgs e)
-		{
+        {
             Command?.Invoke(e);
         }
 
 		public static void InvokeAggressiveAction(AggressiveActionEventArgs e)
-		{
+        {
             AggressiveAction?.Invoke(e);
         }
 
 		public static void InvokeProfileRequest(ProfileRequestEventArgs e)
-		{
+        {
             ProfileRequest?.Invoke(e);
         }
 
 		public static void InvokeChangeProfileRequest(ChangeProfileRequestEventArgs e)
-		{
+        {
             ChangeProfileRequest?.Invoke(e);
         }
 
 		public static void InvokePaperdollRequest(PaperdollRequestEventArgs e)
-		{
+        {
             PaperdollRequest?.Invoke(e);
         }
 
 		public static void InvokeAccountLogin(AccountLoginEventArgs e)
-		{
+        {
             AccountLogin?.Invoke(e);
         }
 
 		public static void InvokeVirtueItemRequest(VirtueItemRequestEventArgs e)
-		{
+        {
             VirtueItemRequest?.Invoke(e);
         }
 
 		public static void InvokeVirtueGumpRequest(VirtueGumpRequestEventArgs e)
-		{
+        {
             VirtueGumpRequest?.Invoke(e);
         }
 
 		public static void InvokeVirtueMacroRequest(VirtueMacroRequestEventArgs e)
-		{
+        {
             VirtueMacroRequest?.Invoke(e);
         }
 
 		public static void InvokePlayerDeath(PlayerDeathEventArgs e)
-		{
+        {
             PlayerDeath?.Invoke(e);
         }
 
 		public static void InvokeCreatureDeath(CreatureDeathEventArgs e)
-		{
+        {
             CreatureDeath?.Invoke(e);
         }
 
 		public static void InvokeRenameRequest(RenameRequestEventArgs e)
-		{
+        {
             RenameRequest?.Invoke(e);
         }
 
 		public static void InvokeLogout(LogoutEventArgs e)
-		{
+        {
             Logout?.Invoke(e);
         }
 
 		public static void InvokeSocketConnect(SocketConnectEventArgs e)
-		{
+        {
             SocketConnect?.Invoke(e);
         }
 
 		public static void InvokeConnected(ConnectedEventArgs e)
-		{
+        {
             Connected?.Invoke(e);
         }
 
 		public static void InvokeDisconnected(DisconnectedEventArgs e)
-		{
+        {
             Disconnected?.Invoke(e);
         }
 
 		public static void InvokeAnimateRequest(AnimateRequestEventArgs e)
-		{
+        {
             AnimateRequest?.Invoke(e);
         }
 
 		public static void InvokeCastSpellRequest(CastSpellRequestEventArgs e)
-		{
+        {
             CastSpellRequest?.Invoke(e);
         }
 
 		public static void InvokeBandageTargetRequest(BandageTargetRequestEventArgs e)
-		{
+        {
             BandageTargetRequest?.Invoke(e);
         }
 
 		public static void InvokeOpenSpellbookRequest(OpenSpellbookRequestEventArgs e)
-		{
+        {
             OpenSpellbookRequest?.Invoke(e);
         }
 
 		public static void InvokeDisarmRequest(DisarmRequestEventArgs e)
-		{
+        {
             DisarmRequest?.Invoke(e);
         }
 
 		public static void InvokeStunRequest(StunRequestEventArgs e)
-		{
+        {
             StunRequest?.Invoke(e);
         }
 
 		public static void InvokeHelpRequest(HelpRequestEventArgs e)
-		{
+        {
             HelpRequest?.Invoke(e);
         }
 
 		public static void InvokeShutdown(ShutdownEventArgs e)
-		{
+        {
             Shutdown?.Invoke(e);
         }
 
 		public static void InvokeCrashed(CrashedEventArgs e)
-		{
+        {
             Crashed?.Invoke(e);
         }
 
 		public static void InvokeHungerChanged(HungerChangedEventArgs e)
-		{
+        {
             HungerChanged?.Invoke(e);
         }
 
 		public static void InvokeMovement(MovementEventArgs e)
-		{
+        {
             Movement?.Invoke(e);
         }
 
 		public static void InvokeServerList(ServerListEventArgs e)
-		{
+        {
             ServerList?.Invoke(e);
         }
 
 		public static void InvokeLogin(LoginEventArgs e)
-		{
+        {
             Login?.Invoke(e);
         }
 
 		public static void InvokeSpeech(SpeechEventArgs e)
-		{
+        {
             Speech?.Invoke(e);
         }
 
 		public static void InvokeCharacterCreated(CharacterCreatedEventArgs e)
-		{
+        {
             CharacterCreated?.Invoke(e);
         }
 
 		public static void InvokeOpenDoorMacroUsed(OpenDoorMacroEventArgs e)
-		{
+        {
             OpenDoorMacroUsed?.Invoke(e);
         }
 
 		public static void InvokeWorldLoad()
-		{
+        {
             WorldLoad?.Invoke();
         }
 
 		public static void InvokeWorldSave(WorldSaveEventArgs e)
-		{
+        {
             WorldSave?.Invoke(e);
         }
 
 		public static void InvokeBeforeWorldSave(BeforeWorldSaveEventArgs e)
-		{
+        {
             BeforeWorldSave?.Invoke(e);
         }
 
 		public static void InvokeAfterWorldSave(AfterWorldSaveEventArgs e)
-		{
+        {
             AfterWorldSave?.Invoke(e);
         }
 
 		public static void InvokeOnKilledBy(OnKilledByEventArgs e)
-		{
+        {
             OnKilledBy?.Invoke(e);
         }
 
 		public static void InvokeOnItemUse(OnItemUseEventArgs e)
-		{
+        {
             OnItemUse?.Invoke(e);
         }
 
 		public static void InvokeOnEnterRegion(OnEnterRegionEventArgs e)
-		{
+        {
             OnEnterRegion?.Invoke(e);
         }
 
 		public static void InvokeOnConsume(OnConsumeEventArgs e)
-		{
+        {
             OnConsume?.Invoke(e);
         }
 
 		public static void InvokeOnPropertyChanged(OnPropertyChangedEventArgs e)
-		{
+        {
             OnPropertyChanged?.Invoke(e);
         }
 
 		public static void InvokeBODUsed(BODUsedEventArgs e)
-		{
+        {
             BODUsed?.Invoke(e);
         }
 
 		public static void InvokeBODOffered(BODOfferEventArgs e)
-		{
+        {
             BODOffered?.Invoke(e);
         }
 
 		public static void InvokeResourceHarvestAttempt(ResourceHarvestAttemptEventArgs e)
-		{
+        {
             ResourceHarvestAttempt?.Invoke(e);
         }
 
 		public static void InvokeResourceHarvestSuccess(ResourceHarvestSuccessEventArgs e)
-		{
+        {
             ResourceHarvestSuccess?.Invoke(e);
         }
 
 		public static void InvokeCraftSuccess(CraftSuccessEventArgs e)
-		{
+        {
             CraftSuccess?.Invoke(e);
         }
 
 		public static void InvokeSkillGain(SkillGainEventArgs e)
-		{
+        {
             SkillGain?.Invoke(e);
         }
 
 		public static void InvokeSkillCheck(SkillCheckEventArgs e)
-		{
+        {
             SkillCheck?.Invoke(e);
         }
 
 		public static void InvokeSkillCapChange(SkillCapChangeEventArgs e)
-		{
+        {
             SkillCapChange?.Invoke(e);
         }
 
 		public static void InvokeStatCapChange(StatCapChangeEventArgs e)
-		{
+        {
             StatCapChange?.Invoke(e);
         }
 
 		public static void InvokeQuestComplete(QuestCompleteEventArgs e)
-		{
+        {
             QuestComplete?.Invoke(e);
         }
 
 		public static void InvokeItemCreated(ItemCreatedEventArgs e)
-		{
+        {
             ItemCreated?.Invoke(e);
         }
 
 		public static void InvokeItemDeleted(ItemDeletedEventArgs e)
-		{
+        {
             ItemDeleted?.Invoke(e);
         }
 
 		public static void InvokeMobileCreated(MobileCreatedEventArgs e)
-		{
+        {
             MobileCreated?.Invoke(e);
         }
 
 		public static void InvokeMobileDeleted(MobileDeletedEventArgs e)
-		{
+        {
             MobileDeleted?.Invoke(e);
         }
 
 		public static void InvokeTargetedSpell(TargetedSpellEventArgs e)
-		{
+        {
             TargetedSpell?.Invoke(e);
         }
 
 		public static void InvokeTargetedSkill(TargetedSkillEventArgs e)
-		{
+        {
             TargetedSkill?.Invoke(e);
         }
 
 		public static void InvokeTargetedItemUse(TargetedItemUseEventArgs e)
-		{
+        {
             TargetedItemUse?.Invoke(e);
         }
 
 		public static void InvokeTargetByResourceMacro(TargetByResourceMacroEventArgs e)
-		{
+        {
             TargetByResourceMacro?.Invoke(e);
         }
 
 		public static void InvokeEquipMacro(EquipMacroEventArgs e)
-		{
+        {
             EquipMacro?.Invoke(e);
         }
 
 		public static void InvokeUnequipMacro(UnequipMacroEventArgs e)
-		{
+        {
             UnequipMacro?.Invoke(e);
         }
 
 		public static void InvokeJoinGuild(JoinGuildEventArgs e)
-		{
+        {
             JoinGuild?.Invoke(e);
         }
 
 		public static void InvokeTameCreature(TameCreatureEventArgs e)
-		{
+        {
             TameCreature?.Invoke(e);
         }
 
 		public static void InvokeValidVendorPurchase(ValidVendorPurchaseEventArgs e)
-		{
+        {
             ValidVendorPurchase?.Invoke(e);
         }
 
 		public static void InvokeValidVendorSell(ValidVendorSellEventArgs e)
-		{
+        {
             ValidVendorSell?.Invoke(e);
         }
 
 		public static void InvokeCorpseLoot(CorpseLootEventArgs e)
-		{
+        {
             CorpseLoot?.Invoke(e);
         }
 
 		public static void InvokeRepairItem(RepairItemEventArgs e)
-		{
+        {
             RepairItem?.Invoke(e);
         }
 
 		public static void InvokeAlterItem(AlterItemEventArgs e)
-		{
+        {
             AlterItem?.Invoke(e);
         }
 
 		public static void InvokePlacePlayerVendor(PlacePlayerVendorEventArgs e)
-		{
+        {
             PlacePlayerVendor?.Invoke(e);
         }
 
 		public static void InvokeFameChange(FameChangeEventArgs e)
-		{
+        {
             FameChange?.Invoke(e);
         }
 
 		public static void InvokeKarmaChange(KarmaChangeEventArgs e)
-		{
+        {
             KarmaChange?.Invoke(e);
         }
 
 		public static void InvokeVirtueLevelChange(VirtueLevelChangeEventArgs e)
-		{
+        {
             VirtueLevelChange?.Invoke(e);
         }
 
 		public static void InvokePlayerMurdered(PlayerMurderedEventArgs e)
-		{
+        {
             PlayerMurdered?.Invoke(e);
         }
 
 		public static void InvokeAccountGoldChange(AccountGoldChangeEventArgs e)
-		{
+        {
             AccountGoldChange?.Invoke(e);
         }
 
 		public static void InvokeContainerDroppedTo(ContainerDroppedToEventArgs e)
-		{
+        {
             ContainerDroppedTo?.Invoke(e);
         }
 
 		public static void InvokeTeleportMovement(TeleportMovementEventArgs e)
-		{
+        {
             TeleportMovement?.Invoke(e);
         }
 
 		public static void InvokeMultiDesignQuery(MultiDesignQueryEventArgs e)
-		{
+        {
             MultiDesign?.Invoke(e);
         }
 

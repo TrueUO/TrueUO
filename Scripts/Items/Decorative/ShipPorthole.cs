@@ -1,11 +1,9 @@
-using System;
-
 namespace Server.Items
 {
-    public class Candelabra : BaseLight, IShipwreckedItem
+    [Flipable(0xA325, 0xA327)]
+    public class ShipPorthole : Item, IShipwreckedItem
     {
-        public override int LitItemID => 0xB1D;
-        public override int UnlitItemID => 0xA27;
+        public override int LabelNumber => 1125789;  // porthole
 
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsShipwreckedItem { get; set; }
@@ -14,16 +12,13 @@ namespace Server.Items
         public string ShipwreckName { get; set; }
 
         [Constructable]
-        public Candelabra()
-            : base(0xA27)
+        public ShipPorthole()
+            : base(0xA325)
         {
-            Duration = TimeSpan.Zero; // Never burnt out
-            Burning = false;
-            Light = LightType.Circle225;
-            Weight = 3.0;
+            Weight = 1.0;
         }
 
-        public Candelabra(Serial serial)
+        public ShipPorthole(Serial serial)
             : base(serial)
         {
         }
@@ -45,10 +40,36 @@ namespace Server.Items
             }
         }
 
+        public override void OnDoubleClick(Mobile from)
+        {
+            if (!from.InRange(GetWorldLocation(), 1))
+            {
+                return;
+            }
+
+            switch (ItemID)
+            {
+                case 0xA325:
+                    ItemID = 0xA326;
+                    break;
+                case 0xA327:
+                    ItemID = 0xA328;
+                    break;
+                case 0xA326:
+                    ItemID = 0xA325;
+                    break;
+                case 0xA328:
+                    ItemID = 0xA327;
+                    break;
+                default:
+                    return;
+            }
+        }
+
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(2);
+            writer.Write(0);
 
             writer.Write(ShipwreckName);
             writer.Write(IsShipwreckedItem);

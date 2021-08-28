@@ -26,7 +26,8 @@ namespace Server.Commands.Generic
 
         public void Compile(ref AssemblyEmitter emitter)
         {
-            emitter ??= new AssemblyEmitter("__dynamic");
+            if (emitter == null)
+                emitter = new AssemblyEmitter("__dynamic");
 
             m_Conditionals = new IConditional[m_Conditions.Length];
 

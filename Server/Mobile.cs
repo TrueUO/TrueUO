@@ -1051,7 +1051,7 @@ namespace Server
 
         public virtual void OnAosSingleClick(Mobile from)
         {
-            ObjectPropertyList opl = PropertyList;
+            ObjectPropertyListPacket opl = PropertyList;
 
             if (opl.Header > 0)
             {
@@ -4699,7 +4699,7 @@ namespace Server
 			return map.GetMobilesInRange(m_Location, range);
 		}
 
-		public IPooledEnumerable<NetState> GetClientsInRange(int range)
+        public IPooledEnumerable<NetState> GetClientsInRange(int range)
 		{
 			Map map = m_Map;
 
@@ -9260,7 +9260,23 @@ namespace Server
             }
 		}
 
-		public void FreeCache()
+        public Region TopRegion
+        {
+            get
+            {
+                Region top = Region;
+                for (int i = 0; i < top.ChildLevel; i++)
+                {
+                    if (Region.Parent != null)
+                    {
+                        top = Region.Parent;
+                    }
+                }
+                return top;
+            }
+        }
+
+        public void FreeCache()
 		{
 			Packet.Release(ref m_RemovePacket);
 			Packet.Release(ref m_PropertyList);
@@ -9313,15 +9329,15 @@ namespace Server
 			}
 		}
 
-		private ObjectPropertyList m_PropertyList;
+		private ObjectPropertyListPacket m_PropertyList;
 
-		public ObjectPropertyList PropertyList
+		public ObjectPropertyListPacket PropertyList
 		{
 			get
 			{
 				if (m_PropertyList == null)
 				{
-					m_PropertyList = new ObjectPropertyList(this);
+					m_PropertyList = new ObjectPropertyListPacket(this);
 
 					GetProperties(m_PropertyList);
 
@@ -9343,9 +9359,9 @@ namespace Server
 		{
 			if (m_Map != null && m_Map != Map.Internal && !World.Loading)
 			{
-				ObjectPropertyList oldList = m_PropertyList;
+                ObjectPropertyListPacket oldList = m_PropertyList;
 				Packet.Release(ref m_PropertyList);
-				ObjectPropertyList newList = PropertyList;
+                ObjectPropertyListPacket newList = PropertyList;
 
 				if (oldList == null || oldList.Hash != newList.Hash)
 				{
@@ -11762,7 +11778,7 @@ namespace Server
 		/// <param name="from"></param>
 		public virtual void OnStatsQuery(Mobile from)
 		{
-			if (from.Map == Map && Utility.InUpdateRange(this, from) && from.CanSee(this))
+			if (from.Map == Map && Utility.InUpdateRange(from, this) && from.CanSee(this))
 			{
 				from.Send(new MobileStatus(from, this));
 			}

@@ -435,8 +435,11 @@ namespace Server.Network
 
 			UpdateRange = Core.GlobalUpdateRange;
 
-            CreatedCallback?.Invoke(this);
-        }
+			if (CreatedCallback != null)
+			{
+				CreatedCallback(this);
+			}
+		}
 
 		private bool _Sending;
 

@@ -75,7 +75,8 @@ namespace Server.Items
                 }
             }
 
-            callback?.Invoke(this, from, hue);
+            if (callback != null)
+                callback(this, from, hue);
         }
 
         private class SpinTimer : Timer

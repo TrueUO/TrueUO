@@ -254,7 +254,8 @@ namespace Server.Items
 
             if (instrument != null)
             {
-                callback?.Invoke(from, instrument);
+                if (callback != null)
+                    callback(from, instrument);
             }
             else
             {
@@ -274,7 +275,11 @@ namespace Server.Items
             else
             {
                 SetInstrument(from, instrument);
-                (state as InstrumentPickedCallback)?.Invoke(from, instrument);
+
+                if (state is InstrumentPickedCallback callback)
+                {
+                    callback(from, instrument);
+                }
             }
         }
 

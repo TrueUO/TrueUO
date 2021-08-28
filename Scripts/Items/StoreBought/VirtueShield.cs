@@ -27,7 +27,7 @@ namespace Server.Items
         {
             bool yes = base.OnEquip(from);
 
-            if (yes)
+            if (yes && !from.Hidden)
             {
                 Effects.PlaySound(from.Location, from.Map, 0x1F7);
                 from.FixedParticles(0x376A, 9, 32, 5030, EffectLayer.Waist);

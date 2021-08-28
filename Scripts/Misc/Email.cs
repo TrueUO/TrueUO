@@ -1,7 +1,7 @@
 using System;
+using System.Net.Mail;
 using System.Text.RegularExpressions;
 using System.Threading;
-using MimeKit;
 
 namespace Server.Misc
 {
@@ -33,7 +33,7 @@ namespace Server.Misc
 
         private static readonly Regex _pattern = new Regex(@"^[a-z0-9.+_-]+@([a-z0-9-]+\.)+[a-z]+$", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        private static MailKit.Net.Smtp.SmtpClient _Client;
+        private static SmtpClient _Client;
 
         public static bool IsValid(string address)
         {
@@ -45,31 +45,25 @@ namespace Server.Misc
 
         public static void Configure()
         {
-            if (EmailServer != null && EmailUsername != null)
+            if (EmailServer != null)
             {
-                _Client = new MailKit.Net.Smtp.SmtpClient();
+                _Client = new SmtpClient(EmailServer, EmailPort);
+                if (EmailUsername != null)
+                {
+                    _Client.Credentials = new System.Net.NetworkCredential(EmailUsername, EmailPassword);
+                }
+                if (EmailSsl)
+                    _Client.EnableSsl = true;
             }
         }
 
-        public static bool Send(MimeMessage message)
+        public static bool Send(MailMessage message)
         {
             try
             {
                 lock (_Client)
                 {
-                    if (EmailServer != null && EmailUsername != null)
-                    {
-                        /* Optional Use
-                         * using MailKit.Security;
-                         * _Client.ServerCertificateValidationCallback = (s, c, h, e) => true;
-                         * _Client.Connect(EmailServer, EmailPort, SecureSocketOptions.StartTls);
-                        */
-
-                        _Client.Connect(EmailServer, EmailPort, EmailSsl);
-                        _Client.Authenticate(EmailUsername, EmailPassword);
-                        _Client.Send(message);
-                        _Client.Disconnect(true);
-                    }
+                    _Client.Send(message);
                 }
             }
             catch (Exception e)
@@ -81,14 +75,14 @@ namespace Server.Misc
             return true;
         }
 
-        public static void AsyncSend(MimeMessage message)
+        public static void AsyncSend(MailMessage message)
         {
             ThreadPool.QueueUserWorkItem(SendCallback, message);
         }
 
         private static void SendCallback(object state)
         {
-            MimeMessage message = (MimeMessage)state;
+            MailMessage message = (MailMessage)state;
 
             if (Send(message))
                 Console.WriteLine("Sent e-mail '{0}' to '{1}'.", message.Subject, message.To);

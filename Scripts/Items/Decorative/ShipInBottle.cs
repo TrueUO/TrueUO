@@ -1,11 +1,9 @@
-using System;
-
 namespace Server.Items
 {
-    public class Candelabra : BaseLight, IShipwreckedItem
+    [Flipable(0xA321, 0xA322)]
+    public class ShipInBottle : Item, IShipwreckedItem
     {
-        public override int LitItemID => 0xB1D;
-        public override int UnlitItemID => 0xA27;
+        public override int LabelNumber => 1125786;  // ship in a bottle
 
         [CommandProperty(AccessLevel.GameMaster)]
         public bool IsShipwreckedItem { get; set; }
@@ -14,16 +12,13 @@ namespace Server.Items
         public string ShipwreckName { get; set; }
 
         [Constructable]
-        public Candelabra()
-            : base(0xA27)
+        public ShipInBottle()
+            : base(0xA321)
         {
-            Duration = TimeSpan.Zero; // Never burnt out
-            Burning = false;
-            Light = LightType.Circle225;
-            Weight = 3.0;
+            Weight = 1.0;
         }
 
-        public Candelabra(Serial serial)
+        public ShipInBottle(Serial serial)
             : base(serial)
         {
         }
@@ -48,7 +43,7 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(2);
+            writer.Write(0);
 
             writer.Write(ShipwreckName);
             writer.Write(IsShipwreckedItem);

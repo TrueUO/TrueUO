@@ -2321,7 +2321,7 @@ namespace Server.Network
 
             Zlib.Pack(m_PackBuffer, ref packLength, buffer, length, ZlibQuality.Default);
 
-            m_Stream.Write(4 + packLength);
+			m_Stream.Write(4 + packLength);
 			m_Stream.Write(length);
 			m_Stream.Write(m_PackBuffer, 0, packLength);
 
@@ -4164,7 +4164,7 @@ namespace Server.Network
 
                 NetworkCompression.Compress(m_CompiledBuffer, 0, length, buffer, out length);
 
-                if (length <= 0)
+				if (length <= 0)
 				{
 					Console.WriteLine(
 						"Warning: Compression buffer overflowed on packet 0x{0:X2} ('{1}') (length={2})",

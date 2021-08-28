@@ -455,7 +455,10 @@ namespace Server.Mobiles
         {
             var entity = base.GetEntity();
 
-            CreateCallback?.Invoke((T)entity, this);
+            if (CreateCallback != null)
+            {
+                CreateCallback((T)entity, this);
+            }
 
             return entity;
         }

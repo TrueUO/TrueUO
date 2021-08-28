@@ -2525,13 +2525,7 @@ namespace Server.Multis
 
                 int deflatedLength = m_DeflatedBuffer.Length;
 
-                var ce = Zlib.Pack(
-                    m_DeflatedBuffer,
-                    ref deflatedLength,
-                    inflatedBuffer,
-                    size,
-                    ZlibQuality.Default
-                );
+                var ce = Zlib.Pack(m_DeflatedBuffer, ref deflatedLength, inflatedBuffer, size, ZlibQuality.Default);
 
                 if (ce != ZlibError.Okay)
                 {
@@ -2568,13 +2562,7 @@ namespace Server.Multis
 
                 int deflatedLength = m_DeflatedBuffer.Length;
 
-                var ce = Zlib.Pack(
-                    m_DeflatedBuffer,
-                    ref deflatedLength,
-                    inflatedBuffer,
-                    size,
-                    ZlibQuality.Default
-                );
+                var ce = Zlib.Pack(m_DeflatedBuffer, ref deflatedLength, inflatedBuffer, size, ZlibQuality.Default);
 
                 if (ce != ZlibError.Okay)
                 {

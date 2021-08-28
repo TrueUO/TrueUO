@@ -177,7 +177,7 @@ namespace Server
 		private readonly bool PrefixStrings;
 		private readonly Stream m_File;
 
-		protected virtual int BufferSize => 81920;
+		protected virtual int BufferSize => 64 * 1024;
 
 		private readonly byte[] m_Buffer;
 
@@ -197,7 +197,7 @@ namespace Server
 		{
 			PrefixStrings = prefixStr;
 			m_Buffer = new byte[BufferSize];
-			m_File = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None, BufferSize, FileOptions.WriteThrough);
+			m_File = new FileStream(filename, FileMode.Create, FileAccess.Write, FileShare.None);
 			m_Encoding = Utility.UTF8WithEncoding;
 		}
 

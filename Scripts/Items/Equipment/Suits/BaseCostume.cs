@@ -1,3 +1,5 @@
+using Server.Mobiles;
+
 namespace Server.Items
 {
     [Flipable(0x19BC, 0x19BD)]
@@ -32,10 +34,9 @@ namespace Server.Items
         public BaseCostume(Serial serial)
             : base(serial)
         {
-
         }
 
-        private bool EnMask(Mobile from)
+        private bool MaskOn(Mobile from)
         {
             if (from.Mounted || from.Flying) // You cannot use this while mounted or flying. 
             {
@@ -44,6 +45,11 @@ namespace Server.Items
             else if (from.IsBodyMod || from.HueMod > -1)
             {
                 from.SendLocalizedMessage(1158010); // You cannot use that item in this form.
+            }
+            else if (from is Mannequin || from is Steward)
+            {
+                // On EA Mannequins and Stewards can hold costumes but doing so does not change their own BodyID.
+                return true;
             }
             else
             {
@@ -57,38 +63,24 @@ namespace Server.Items
             return false;
         }
 
-        private void DeMask(Mobile from)
+        private void MaskOff(Mobile from)
         {
             from.BodyMod = 0;
             from.HueMod = -1;
             Transformed = false;
         }
 
-        public virtual bool Dye(Mobile from, DyeTub sender)
-        {
-            if (Deleted)
-            {
-                return false;
-            }
-
-            if (RootParent is Mobile && from != RootParent)
-            {
-                return false;
-            }
-
-            Hue = sender.DyedHue;
-            return true;
-        }
-
         public override bool OnEquip(Mobile from)
         {
             if (!Transformed)
             {
-                if (EnMask(from))
+                if (MaskOn(from))
+                {
                     return true;
+                }
 
                 return false;
-            }
+            }         
 
             return base.OnEquip(from);
         }
@@ -99,7 +91,7 @@ namespace Server.Items
 
             if (parent is Mobile mobile && Transformed)
             {
-                DeMask(mobile);
+                MaskOff(mobile);
             }
 
             base.OnRemoved(parent);
@@ -116,7 +108,7 @@ namespace Server.Items
         public override void Serialize(GenericWriter writer)
         {
             base.Serialize(writer);
-            writer.Write(3);
+            writer.Write(0);
 
             writer.Write(m_Body);
             writer.Write(m_Hue);
@@ -132,7 +124,7 @@ namespace Server.Items
 
             if (RootParent is Mobile mobile && mobile.Items.Contains(this))
             {
-                EnMask(mobile);
+                MaskOn(mobile);
             }
         }
     }

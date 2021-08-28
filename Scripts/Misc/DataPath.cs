@@ -73,9 +73,7 @@ namespace Server.Misc
         {
             try
             {
-                string keyString;
-
-                keyString = @"SOFTWARE\Wow6432Node\{0}";
+                var keyString = @"SOFTWARE\Wow6432Node\{0}";
 
                 using (RegistryKey key = Registry.LocalMachine.OpenSubKey(string.Format(keyString, subName)))
                 {

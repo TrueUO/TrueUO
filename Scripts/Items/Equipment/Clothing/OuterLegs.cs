@@ -193,76 +193,14 @@ namespace Server.Items
             if (parent is Mobile mobile)
             {
                 if (mobile.Female)
+                {
                     ItemID = 0x0407;
+                }
                 else
+                {
                     ItemID = 0x0408;
+                }
             }
-        }
-
-        public override void Serialize(GenericWriter writer)
-        {
-            base.Serialize(writer);
-            writer.Write(0); // version
-        }
-
-        public override void Deserialize(GenericReader reader)
-        {
-            base.Deserialize(reader);
-            reader.ReadInt();
-        }
-    }
-
-    public class FemaleGargishClothKilt : BaseClothing
-    {
-        [Constructable]
-        public FemaleGargishClothKilt()
-            : this(0)
-        {
-        }
-
-        [Constructable]
-        public FemaleGargishClothKilt(int hue)
-            : base(0x0407, Layer.Gloves, hue)
-        {
-            Weight = 2.0;
-        }
-
-        public FemaleGargishClothKilt(Serial serial)
-            : base(serial)
-        {
-        }
-
-        public override void Serialize(GenericWriter writer)
-        {
-            base.Serialize(writer);
-            writer.Write(0); // version
-        }
-
-        public override void Deserialize(GenericReader reader)
-        {
-            base.Deserialize(reader);
-            reader.ReadInt();
-        }
-    }
-
-    public class MaleGargishClothKilt : BaseClothing
-    {
-        [Constructable]
-        public MaleGargishClothKilt()
-            : this(0)
-        {
-        }
-
-        [Constructable]
-        public MaleGargishClothKilt(int hue)
-            : base(0x0408, Layer.Gloves, hue)
-        {
-            Weight = 2.0;
-        }
-
-        public MaleGargishClothKilt(Serial serial)
-            : base(serial)
-        {
         }
 
         public override void Serialize(GenericWriter writer)
