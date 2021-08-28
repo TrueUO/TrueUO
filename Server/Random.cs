@@ -17,7 +17,7 @@ namespace Server
 
 		static RandomImpl()
 		{
-			if (Core.Unix && Core.MultiProcessor && File.Exists("libdrng.so"))
+			if (Core.Unix && Core.Is64Bit && File.Exists("libdrng.so"))
 			{
 				_Random = new RDRand64();
 			}
@@ -29,11 +29,11 @@ namespace Server
 			{
 				_Random = new SimpleRandom();
 			}
-			else if (Core.MultiProcessor && File.Exists("drng64.dll"))
+			else if (Core.Is64Bit && File.Exists("drng64.dll"))
 			{
 				_Random = new RDRand64();
 			}
-			else if (!Core.MultiProcessor && File.Exists("drng32.dll"))
+			else if (!Core.Is64Bit && File.Exists("drng32.dll"))
 			{
 				_Random = new RDRand32();
 			}

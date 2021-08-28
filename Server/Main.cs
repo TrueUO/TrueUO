@@ -133,6 +133,8 @@ namespace Server
 			}
 		}
 
+        public static readonly bool Is64Bit = Environment.Is64BitProcess;
+
 		public static bool MultiProcessor { get; private set; }
 		public static int ProcessorCount { get; private set; }
 
