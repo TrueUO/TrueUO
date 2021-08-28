@@ -9,7 +9,7 @@ GOTO :CMDSCRIPT
 
 CURPATH=`pwd`
 PUBLISHPATH=${CURPATH}/Distribution
-EXENAME=ServUO
+EXENAME=TrueUO
 
 os=$2
 
@@ -30,8 +30,8 @@ else
   c="-c $config"
 fi
 
-echo dotnet publish ${c} ${r} --no-restore --self-contained=false -o Distribution Application/ServUO.csproj
-dotnet publish ${c} ${r} --no-restore --self-contained=false -o Distribution Application/ServUO.csproj
+echo dotnet publish ${c} ${r} --no-restore --self-contained=false -o Distribution Application/TrueUO.csproj
+dotnet publish ${c} ${r} --no-restore --self-contained=false -o Distribution Application/TrueUO.csproj
 
 dotnet ${PUBLISHPATH}/${EXENAME}.dll
 
@@ -40,7 +40,7 @@ exit $?
 :CMDSCRIPT
 
 SET CURPATH=%~dp0%Distribution\
-SET EXENAME=ServUO
+SET EXENAME=TrueUO
 
 set result=false
 if "%~1" == "" set result=true
@@ -58,7 +58,7 @@ IF "%~2" == "" (
   SET r=-r %~1-x64
 )
 
-echo dotnet publish %c% %r% --no-restore --self-contained=false -o Distribution Application/ServUO.csproj
-dotnet publish %c% %r% --no-restore --self-contained=false -o Distribution Application/ServUO.csproj
+echo dotnet publish %c% %r% --no-restore --self-contained=false -o Distribution Application/TrueUO.csproj
+dotnet publish %c% %r% --no-restore --self-contained=false -o Distribution Application/TrueUO.csproj
 
 "%CURPATH%%EXENAME%.exe"

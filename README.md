@@ -1,10 +1,10 @@
-# [ServUO]
+# [TrueUO]
 
 [![GitHub issues](https://img.shields.io/github/issues/trueuo/trueuo.svg)](https://github.com/TrueUO/TrueUO/issues)
 [![GitHub](https://img.shields.io/github/license/servuo/servuo.svg?color=a)](https://github.com/TrueUO/TrueUO/blob/master/LICENSE)
 
 
-ServUO is a community driven Ultima Online Server Emulator written in C#.
+TrueUO is a community driven Ultima Online Server Emulator written in C#.
 
 ## Publishing a build
 #### Requirements
@@ -26,7 +26,7 @@ ServUO is a community driven Ultima Online Server Emulator written in C#.
 - Windows (Debug Mode): `./publish.cmd Debug core win`
 - Windows (Release Mode): `./publish.cmd Release core win`
 
-https://www.servuo.com
+https://www.trueuo.com
 
 ### Development
 
@@ -40,5 +40,4 @@ License
 GPL v2
 
 
-   [ServUO]: <https://www.servuo.com>
-   [Quickstart]: <https://www.servuo.com/wiki/startup/>
+   [TrueUO]: <https://www.trueuo.com>

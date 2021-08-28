@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
     <PropertyGroup>
-        <Authors>ServUO</Authors>
-        <Company>ServUO</Company>
-        <Copyright>2019-2020</Copyright>
+        <Authors>TrueUO</Authors>
+        <Company>TrueUO</Company>
+        <Copyright>2020-2021</Copyright>
         <TargetFramework>net5.0</TargetFramework>
         <Platforms>x64</Platforms>
         <PlatformTarget>x64</PlatformTarget>
